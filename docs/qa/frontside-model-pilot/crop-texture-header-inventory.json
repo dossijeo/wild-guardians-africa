@@ -1,0 +1,278 @@
+{
+  "status": "HEADER_INVENTORY_NOT_RESIDENT_GPU_MEASUREMENT",
+  "source": {
+    "url": "/assets/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+    "sha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+    "bytes": 17895972,
+    "images": [
+      {
+        "image": 0,
+        "format": "PNG",
+        "width": 1024,
+        "height": 1024,
+        "encodedBytes": 2342352,
+        "sha256": "2afba17fd9dfed6634810a43bd3f94f53f5b7295e2d10fb4a9354ff2a9c0cee6",
+        "hypotheticalRGBA8MipBytes": 5592404
+      },
+      {
+        "image": 1,
+        "format": "JPEG",
+        "width": 2048,
+        "height": 2048,
+        "encodedBytes": 2678012,
+        "sha256": "3d63ac28cdce13f1ffde5f063c7708142918340d551512b5445b3ba5fc3dfff1",
+        "hypotheticalRGBA8MipBytes": 22369620
+      },
+      {
+        "image": 2,
+        "format": "JPEG",
+        "width": 1024,
+        "height": 1024,
+        "encodedBytes": 346840,
+        "sha256": "41d6ccb620218add122278c441ee02de7e6bdb6bbdeb9da2454a197d4efc308d",
+        "hypotheticalRGBA8MipBytes": 5592404
+      },
+      {
+        "image": 3,
+        "format": "PNG",
+        "width": 1024,
+        "height": 1024,
+        "encodedBytes": 2391603,
+        "sha256": "45437001a7e8bbfce914b843812faf4ddba04eb9a0fb5f17f8a4e2186f5167b3",
+        "hypotheticalRGBA8MipBytes": 5592404
+      },
+      {
+        "image": 4,
+        "format": "JPEG",
+        "width": 2048,
+        "height": 2048,
+        "encodedBytes": 2569141,
+        "sha256": "157ed6ab95fa7c5b94e659db59f05d4a3d79c2e56afda3bd6738a4b71309cce1",
+        "hypotheticalRGBA8MipBytes": 22369620
+      },
+      {
+        "image": 5,
+        "format": "JPEG",
+        "width": 1024,
+        "height": 1024,
+        "encodedBytes": 312138,
+        "sha256": "82a1a2c1809a5190a5e6584417eab475e462075ac0a8e45ce9562cf1a872199e",
+        "hypotheticalRGBA8MipBytes": 5592404
+      }
+    ],
+    "textures": [
+      {
+        "source": 0,
+        "sampler": 0
+      },
+      {
+        "source": 1,
+        "sampler": 0
+      },
+      {
+        "source": 2,
+        "sampler": 0
+      },
+      {
+        "source": 3,
+        "sampler": 0
+      },
+      {
+        "source": 4,
+        "sampler": 0
+      },
+      {
+        "source": 5,
+        "sampler": 0
+      }
+    ],
+    "materials": [
+      {
+        "name": "atlas_0",
+        "doubleSided": true,
+        "normalTexture": {
+          "index": 0
+        },
+        "pbrMetallicRoughness": {
+          "baseColorTexture": {
+            "index": 1
+          },
+          "metallicRoughnessTexture": {
+            "index": 2
+          },
+          "metallicFactor": 1,
+          "roughnessFactor": 1
+        }
+      },
+      {
+        "name": "atlas_1",
+        "doubleSided": true,
+        "normalTexture": {
+          "index": 3
+        },
+        "pbrMetallicRoughness": {
+          "baseColorTexture": {
+            "index": 4
+          },
+          "metallicRoughnessTexture": {
+            "index": 5
+          },
+          "metallicFactor": 1,
+          "roughnessFactor": 1
+        }
+      }
+    ]
+  },
+  "runtime": {
+    "url": "assets/web/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+    "sha256": "617568fc66595c635739ff83bc0256535a72fdf7bfcb016dc68a7f7f1e1a8a52",
+    "bytes": 13626668,
+    "images": [
+      {
+        "image": 0,
+        "format": "WebP",
+        "width": 1024,
+        "height": 1024,
+        "encodedBytes": 2239664,
+        "sha256": "15252f23f992e780e8e5aa328d6e58e1b68d7c58d604d1cd9bdbb6ca1319a605",
+        "hypotheticalRGBA8MipBytes": 5592404
+      },
+      {
+        "image": 1,
+        "format": "WebP",
+        "width": 2048,
+        "height": 2048,
+        "encodedBytes": 1371082,
+        "sha256": "6f9023998bc0853a50beaeafe984bc204639ba886a1f64a450dba998cd239e51",
+        "hypotheticalRGBA8MipBytes": 22369620
+      },
+      {
+        "image": 2,
+        "format": "WebP",
+        "width": 1024,
+        "height": 1024,
+        "encodedBytes": 238208,
+        "sha256": "6dd33b3bd7eaf625c4f386353466fe456f5b3b2cc3e926fc9e8974ad45610422",
+        "hypotheticalRGBA8MipBytes": 5592404
+      },
+      {
+        "image": 3,
+        "format": "WebP",
+        "width": 1024,
+        "height": 1024,
+        "encodedBytes": 2285832,
+        "sha256": "919a0e1460f95cd86527210d16442a6bbc1a457ccc18e50a50c1096584f4629c",
+        "hypotheticalRGBA8MipBytes": 5592404
+      },
+      {
+        "image": 4,
+        "format": "WebP",
+        "width": 2048,
+        "height": 2048,
+        "encodedBytes": 1310498,
+        "sha256": "bfbdf6826eb1625288e0e3c3e8f645d46ca13d3dc500e8a348c52462c8b3c018",
+        "hypotheticalRGBA8MipBytes": 22369620
+      },
+      {
+        "image": 5,
+        "format": "WebP",
+        "width": 1024,
+        "height": 1024,
+        "encodedBytes": 203030,
+        "sha256": "4a1d3be8ba489b904db99d3c40ec0a4ee75e3469c13d365211c1837f61a7f8c2",
+        "hypotheticalRGBA8MipBytes": 5592404
+      }
+    ],
+    "textures": [
+      {
+        "sampler": 0,
+        "extensions": {
+          "EXT_texture_webp": {
+            "source": 0
+          }
+        }
+      },
+      {
+        "sampler": 0,
+        "extensions": {
+          "EXT_texture_webp": {
+            "source": 1
+          }
+        }
+      },
+      {
+        "sampler": 0,
+        "extensions": {
+          "EXT_texture_webp": {
+            "source": 2
+          }
+        }
+      },
+      {
+        "sampler": 0,
+        "extensions": {
+          "EXT_texture_webp": {
+            "source": 3
+          }
+        }
+      },
+      {
+        "sampler": 0,
+        "extensions": {
+          "EXT_texture_webp": {
+            "source": 4
+          }
+        }
+      },
+      {
+        "sampler": 0,
+        "extensions": {
+          "EXT_texture_webp": {
+            "source": 5
+          }
+        }
+      }
+    ],
+    "materials": [
+      {
+        "name": "atlas_0",
+        "doubleSided": true,
+        "normalTexture": {
+          "index": 0
+        },
+        "pbrMetallicRoughness": {
+          "baseColorTexture": {
+            "index": 1
+          },
+          "metallicRoughnessTexture": {
+            "index": 2
+          },
+          "metallicFactor": 1,
+          "roughnessFactor": 1
+        }
+      },
+      {
+        "name": "atlas_1",
+        "doubleSided": true,
+        "normalTexture": {
+          "index": 3
+        },
+        "pbrMetallicRoughness": {
+          "baseColorTexture": {
+            "index": 4
+          },
+          "metallicRoughnessTexture": {
+            "index": 5
+          },
+          "metallicFactor": 1,
+          "roughnessFactor": 1
+        }
+      }
+    ]
+  },
+  "limitations": [
+    "RGBA8 complete mip-chain size is a hypothetical format bound; allocation, sharing, compression, uploaded levels and GPU ownership are not observed.",
+    "Image dimensions/hashes do not establish pixel parity or normal-map shader equivalence.",
+    "Original/runtime files are read only; no asset or decoder configuration changes."
+  ]
+}
