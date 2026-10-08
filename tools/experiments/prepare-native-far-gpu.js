@@ -1,3 +1,4 @@
+import {compileLoadingPrograms} from '../../src/rendering/loading-programs.js';
 import {withScreenTarget} from '../../src/rendering/screen-target.js';
 import {Vector4} from 'three';
 import {withGpuRootIsolation} from './isolated-gpu-root.js';
@@ -40,8 +41,8 @@ export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{c
  if(typeof ownedWaits!=='boolean'||ownedWaits&&!ownedCompilation)throw Error('Owned GPU waits require owned compilation');
  if(!Number.isInteger(texturesPerFrame)||texturesPerFrame<1)throw Error('Invalid texture preparation budget');
  const unique=[...new Set(textures)],textureUploads=[],gl=renderer.getContext(),begin=performance.now();let cache,cacheEpoch,sync,textureBatches=0,maxTextureBatchMs=0,maxTextureBatchCount=0;
- const check=()=>{if(cancelled()||cache?.released||unique.some(texture=>textureOwnerSignals.get(texture)?.aborted))throw new NativeFarGpuCancelled('owner-cancelled');if(gl.isContextLost()||cache?.contextLost||cache&&cache.epoch!==cacheEpoch||ownedWaits&&renderer.getContext()!==gl)throw new NativeFarGpuCancelled('context-changed');if(performance.now()-begin>timeout)throw Error('Native GPU preparation timed out');};
- const frame=()=>ownedWaits?waitGpuFrame({check,nextFrame}):(nextFrame?nextFrame():new Promise(resolve=>requestAnimationFrame(resolve)));
+ const check=()=>{if(cancelled()||cache?.released||unique.some(texture=>textureOwnerSignals.get(texture)?.aborted))throw new NativeFarGpuCancelled('owner-cancelled');if(gl.isContextLost()||cache?.contextLost||cache&&cache.epoch!==cacheEpoch||(ownedWaits||cooperative)&&renderer.getContext()!==gl)throw new NativeFarGpuCancelled('context-changed');if(performance.now()-begin>timeout)throw Error('Native GPU preparation timed out');};
+ const frame=()=>(ownedWaits||cooperative)?waitGpuFrame({check,nextFrame}):(nextFrame?nextFrame():new Promise(resolve=>requestAnimationFrame(resolve)));
  const checkErrors=stage=>{if(!diagnoseErrors)return;const code=gl.getError();if(code!==gl.NO_ERROR)throw Error('Native GPU preparation error 0x'+code.toString(16)+' ('+stage+')');};
  check();checkErrors('before preparation');cache=textureCache(renderer);cacheEpoch=cache.epoch;check();const pending=unique.filter(t=>{const record=cache.textures.get(t);return !record||record.version!==(t.version??0)||record.sourceVersion!==(t.source?.version??0);});
  try{
@@ -62,8 +63,9 @@ export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{c
   const compileDrawAndFence=async()=>{check();
   // Explicit QA gate: preserve the original recipe until native cancellation,
   // visual and traveling checks validate the owned readiness poll.
-  if(ownedCompilation){const compiler=cooperative?{compile:(...args)=>withScreenTarget(renderer,()=>renderer.compile(...args)),properties:renderer.properties}:renderer;await compileGpuPreparation(compiler,root,camera,scene,{check});}
-  else await (cooperative?withScreenTarget(renderer,()=>renderer.compileAsync(root,camera,scene)):renderer.compileAsync(root,camera,scene));
+  if(cooperative)await compileLoadingPrograms(renderer,root,camera,scene,{screen:true,timeout,cancelled:()=>{check();return false;}});
+  else if(ownedCompilation)await compileGpuPreparation(renderer,root,camera,scene,{check});
+  else await renderer.compileAsync(root,camera,scene);
   check();checkErrors('after compilation');
   // Keep the normal target/output recipe: another render target creates shader
   // variants. A zero viewport/scissor uploads vertex buffers without touching
@@ -74,17 +76,17 @@ export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{c
   try{root.traverse(o=>{if(o.isMesh){culled.push([o,o.frustumCulled]);o.frustumCulled=false;}});scene.add(root);renderer.autoClear=false;renderer.setViewport(0,0,0,0);renderer.setScissor(0,0,0,0);renderer.setScissorTest(true);const draw=()=>{if(cooperative)return withScreenTarget(renderer,()=>{renderer.setViewport(0,0,0,0);renderer.setScissor(0,0,0,0);renderer.setScissorTest(true);return renderer.render(scene,camera);});return renderer.render(scene,camera);};if(isolateRoot)withGpuRootIsolation(renderer,root,scene,draw);else draw();checkErrors('after upload draw');}
   finally{for(const [mesh,value] of culled)mesh.frustumCulled=value;renderer.autoClear=autoClear;renderer.setViewport(viewport);renderer.setScissor(scissor);renderer.setScissorTest(scissorTest);root.removeFromParent();if(parent)parent.add(root);}
   sync=gl.fenceSync(gl.SYNC_GPU_COMMANDS_COMPLETE,0);if(!sync)throw Error('Native GPU fence unavailable');gl.flush();
-  for(;;){check();const status=gl.clientWaitSync(sync,0,0);if(status===gl.WAIT_FAILED)throw Error('Native GPU fence failed');if(ownedWaits)check();if(status===gl.ALREADY_SIGNALED||status===gl.CONDITION_SATISFIED)break;await frame();}
+  for(;;){check();const status=gl.clientWaitSync(sync,0,0);if(status===gl.WAIT_FAILED)throw Error('Native GPU fence failed');if(ownedWaits||cooperative)check();if(status===gl.ALREADY_SIGNALED||status===gl.CONDITION_SATISFIED)break;await frame();}
   // getError can synchronously wait for commands submitted after this fence,
   // including the next gameplay frame. Keep that expensive round trip in
   // explicit diagnostics; readiness still requires the successful GPU fence,
   // a live context, current resource epoch and an uncancelled owner.
   checkErrors('after fence');
-  if(ownedWaits)check();
+  if(ownedWaits||cooperative)check();
   return {elapsedMs:performance.now()-begin,textures:unique.length,cachedTextures:unique.length-pending.length,textureBatches,maxTextureBatchCount,maxTextureBatchMs,textureUploads};
   };
   return cooperative?await queueLoadingFarPrograms(renderer,compileDrawAndFence,{check,nextFrame:frame}):await compileDrawAndFence();
- }finally{if(sync&&(!ownedWaits||renderer.getContext()===gl&&!gl.isContextLost()&&!cache.contextLost&&cache.epoch===cacheEpoch))gl.deleteSync(sync);}
+ }finally{if(sync&&(!(ownedWaits||cooperative)||renderer.getContext()===gl&&!gl.isContextLost()&&!cache.contextLost&&cache.epoch===cacheEpoch))gl.deleteSync(sync);}
 }
 
 // Loading-only compile/draw queue. Texture preparation remains concurrent;
@@ -97,5 +99,8 @@ function queueLoadingFarPrograms(renderer,draw,{check,nextFrame}){
  const previous=loadingPreparations.get(renderer)??Promise.resolve();let release;
  const gate=new Promise(resolve=>{release=resolve;}),tail=previous.catch(()=>{}).then(()=>gate);loadingPreparations.set(renderer,tail);
  const clear=()=>{if(loadingPreparations.get(renderer)===tail)loadingPreparations.delete(renderer);};tail.then(clear,clear);
- return (async()=>{try{await previous.catch(()=>{});check();await nextFrame();check();return await draw();}finally{release();}})();
+ // Waiting for the previous owner must remain cancellable even if its RAF is
+ // suspended. Only the explicit frame after admission consumes a RAF; the
+ // shared waiter checks the owner/deadline independently while the gate waits.
+ return (async()=>{try{await waitGpuPreparation(previous.catch(()=>{}),{check,nextFrame:()=>new Promise(()=>{})});check();await nextFrame();check();return await draw();}finally{release();}})();
 }

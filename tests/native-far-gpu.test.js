@@ -10,7 +10,7 @@ import {compileGpuPreparation} from '../tools/experiments/compile-gpu-preparatio
 function fixture({renderError=false}={}){
  const scene=new Scene(),parent=new Group(),root=new Group();parent.add(root);const original={},calls=[];let current=original,waits=0,viewport=new Vector4(2,3,100,200),scissor=new Vector4(4,5,60,70),scissorTest=false;
  const gl={SYNC_GPU_COMMANDS_COMPLETE:1,ALREADY_SIGNALED:2,CONDITION_SATISFIED:3,WAIT_FAILED:4,NO_ERROR:0,isContextLost:()=>false,fenceSync:()=>{calls.push('fence');return {};},flush:()=>calls.push('flush'),clientWaitSync:()=>++waits<2?0:3,deleteSync:()=>calls.push('delete'),getError:()=>0};
- const renderer={target:null,getRenderTarget(){return this.target;},setRenderTarget(value){this.target=value;},getContext:()=>gl,initTexture:()=>calls.push('texture'),compileAsync:async(r,c,s)=>{assert.equal(r,root);assert.equal(s,scene);calls.push('compile');},autoClear:true,getViewport:v=>v.copy(viewport),getScissor:v=>v.copy(scissor),getScissorTest:()=>scissorTest,setViewport:(...v)=>{viewport=v[0]?.isVector4?v[0].clone():new Vector4(...v);},setScissor:(...v)=>{scissor=v[0]?.isVector4?v[0].clone():new Vector4(...v);},setScissorTest:v=>{scissorTest=v;if(!v)calls.push('restore');},render:()=>{assert.equal(root.parent,scene);assert.deepEqual(viewport.toArray(),[0,0,0,0]);assert.deepEqual(scissor.toArray(),[0,0,0,0]);assert.equal(scissorTest,true);assert.equal(renderer.autoClear,false);calls.push('render');if(renderError)throw Error('Draw failed');}};
+ const renderer={compile:(r,c,s)=>{assert.equal(r,root);assert.equal(s,scene);calls.push('compile');return new Set();},properties:{get:()=>assert.fail('No program required')},target:null,getRenderTarget(){return this.target;},setRenderTarget(value){this.target=value;},getContext:()=>gl,initTexture:()=>calls.push('texture'),compileAsync:async(r,c,s)=>{assert.equal(r,root);assert.equal(s,scene);calls.push('compile');},autoClear:true,getViewport:v=>v.copy(viewport),getScissor:v=>v.copy(scissor),getScissorTest:()=>scissorTest,setViewport:(...v)=>{viewport=v[0]?.isVector4?v[0].clone():new Vector4(...v);},setScissor:(...v)=>{scissor=v[0]?.isVector4?v[0].clone():new Vector4(...v);},setScissorTest:v=>{scissorTest=v;if(!v)calls.push('restore');},render:()=>{assert.equal(root.parent,scene);assert.deepEqual(viewport.toArray(),[0,0,0,0]);assert.deepEqual(scissor.toArray(),[0,0,0,0]);assert.equal(scissorTest,true);assert.equal(renderer.autoClear,false);calls.push('render');if(renderError)throw Error('Draw failed');}};
  return {scene,parent,root,original,calls,renderer,current:()=>current,restored(){assert.deepEqual(viewport.toArray(),[2,3,100,200]);assert.deepEqual(scissor.toArray(),[4,5,60,70]);assert.equal(scissorTest,false);assert.equal(renderer.autoClear,true);}};
 }
 
@@ -380,8 +380,23 @@ test('a real draw fault is not reclassified when ownership changes during that f
 
 
 test('loading queue preserves concurrent texture uploads but serializes compilation/fences and rejects stale jobs',async()=>{
- const f=fixture();let releaseFirst,started,compiles=0,frames=0,stale=false,held=false;const entered=new Promise(resolve=>started=resolve);f.renderer.compileAsync=async()=>{compiles++;};
+ const f=fixture();let releaseFirst,started,compiles=0,frames=0,stale=false,held=false;const entered=new Promise(resolve=>started=resolve);f.renderer.compile=()=>{compiles++;return new Set();};f.renderer.compileAsync=()=>assert.fail('Unowned Three timer');
  const options={cooperative:true,nextFrame:async()=>{frames++;if(!held&&f.calls.includes('fence')){held=true;started();await new Promise(resolve=>releaseFirst=resolve);}}},first=prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],options);await entered;
  const second=prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[new Texture()],{...options,cancelled:()=>stale}),rejected=assert.rejects(second,e=>e instanceof NativeFarGpuCancelled);stale=true;const third=prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[new Texture()],options);assert.equal(compiles,1);assert.equal(f.calls.filter(c=>c==='texture').length,2);assert.equal(f.calls.filter(c=>c==='render').length,1);releaseFirst();await first;await rejected;await third;assert.equal(compiles,2);assert.equal(f.calls.filter(c=>c==='render').length,2);assert.equal(f.calls.filter(c=>c==='delete').length,2);assert.ok(frames>=3);f.restored();
  await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],options);assert.equal(compiles,3);
+});
+
+
+test('loading-only preparation cancels owned program polls without Three async timers',async()=>{
+ const f=fixture(),material={};let queries=0,started,cancelled=false;const entered=new Promise(resolve=>started=resolve);
+ const program={isReady:()=>{queries++;started();return false;}};f.renderer.compile=()=>new Set([material]);f.renderer.properties.get=()=>({currentProgram:program,programs:new Map([['screen',program]])});f.renderer.compileAsync=()=>assert.fail('Three async timer');
+ const pending=prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{cooperative:true,cancelled:()=>cancelled,nextFrame:async()=>{}});await entered;cancelled=true;
+ await assert.rejects(pending,error=>error instanceof NativeFarGpuCancelled);const count=queries;await new Promise(resolve=>setTimeout(resolve,20));assert.equal(queries,count);assert.equal(f.calls.includes('render'),false);assert.equal(f.calls.includes('fence'),false);f.restored();releaseNativeFarGpuCache(f.renderer);
+});
+
+test('queued loading job can stop waiting while an older owner remains pending',async()=>{
+ const f=fixture();let releaseFrame,started,cancelled=false,held=false;const entered=new Promise(resolve=>started=resolve);
+ const options={cooperative:true,nextFrame:()=>{if(!held){held=true;started();return new Promise(resolve=>releaseFrame=resolve);}return Promise.resolve();}};
+ const first=prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],options);await entered;
+ const second=prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{...options,cancelled:()=>cancelled});cancelled=true;try{await assert.rejects(second,error=>error instanceof NativeFarGpuCancelled);assert.equal(f.calls.includes('compile'),false);}finally{releaseFrame();await first;f.restored();releaseNativeFarGpuCache(f.renderer);}
 });
