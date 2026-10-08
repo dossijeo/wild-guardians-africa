@@ -85,5 +85,5 @@ export class LoadingDiorama {
   }
   stopPlanting(){this.interactive=false;this.plants.stopPlanting();}
 
-  dispose(){if(this.disposed)return;this.disposed=true;this.interactive=false;this.abort.abort();this.batch?.dispose();this.mist.dispose();this.ground.geometry.dispose();this.ground.material.dispose();this.textureOwner.dispose();this.scene.clear();}
+  dispose(){if(this.disposed)return;this.disposed=true;this.interactive=false;this.abort.abort();this.batch?.dispose();this.mist.dispose();this.ground.geometry.dispose();this.ground.material.dispose();this.textureOwner.dispose();this.toon.shadowUniforms.uNativeShadowFiltered.value=null;this.toon.shadowUniforms.fallback.dispose();this.scene.clear();}
 }
