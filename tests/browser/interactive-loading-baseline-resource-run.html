@@ -1,6 +1,7 @@
 <!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Interactive loading baseline QA</title><style>body{margin:0;background:#735b3d;color:white;font:15px system-ui}canvas{width:100vw;height:100vh}aside{position:fixed;top:0;left:0;padding:12px;background:#172019e8;max-height:45vh;overflow:auto}button{padding:12px}pre{white-space:pre-wrap}</style><script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js","three/addons/":"/node_modules/three/examples/jsm/"}}</script><canvas></canvas><aside><button id="run">Run native loading baseline</button><button id="dispose" disabled>Dispose</button><pre id="status">Ready. No world or renderer initialized.</pre></aside><script type="application/json" id="report">{}</script><script type="module">
 import * as Game from '/src/simulation/game.js';
 import {BufferRequests} from './buffer-requests.js';
+import {loadingAssetInventory} from './loading-asset-inventory.js';
 import {deserialize,serialize} from '/src/persistence/snapshots.js';
 import {resumeLoadedWorld} from '/src/app/resume-loaded-world.js';
 import {Navigation,BIOME_IDS} from '/src/world/navigation.js';
@@ -19,7 +20,7 @@ run.onclick=async()=>{
  const started=performance.now();let previous=started;
  const heartbeat=now=>{report.frames.push(now-previous);previous=now;raf=requestAnimationFrame(heartbeat);};raf=requestAnimationFrame(heartbeat);
  try{observer=new PerformanceObserver(list=>report.longTasks.push(...list.getEntries().map(e=>({start:e.startTime-started,duration:e.duration}))));observer.observe({type:'longtask',buffered:false});}catch{report.longTasksSupported=false;}
- const sample=stage=>{report.stages.push({stage,at:performance.now()-started,memory:performance.memory?{usedJSHeapSize:performance.memory.usedJSHeapSize,totalJSHeapSize:performance.memory.totalJSHeapSize}:null,bufferRequests:bufferAudit?.snapshot(),resources:world?{geometries:world.renderer.info.memory.geometries,textures:world.renderer.info.memory.textures,programs:world.renderer.info.programs.length,owned:world.assets.ownedResources.size}:null});update();};
+ const sample=stage=>{report.stages.push({stage,at:performance.now()-started,memory:performance.memory?{usedJSHeapSize:performance.memory.usedJSHeapSize,totalJSHeapSize:performance.memory.totalJSHeapSize}:null,bufferRequests:bufferAudit?.snapshot(),assetInventory:world?loadingAssetInventory(world):null,resources:world?{geometries:world.renderer.info.memory.geometries,textures:world.renderer.info.memory.textures,programs:world.renderer.info.programs.length,owned:world.assets.ownedResources.size}:null});update();};
  try{
   if(!Game.BIOMES.includes(biome)||!Game.CULTURES.includes(culture))throw Error('Invalid native fixture');
   let state=Game.newGame({seed:712,biome,culture});
