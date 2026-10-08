@@ -53,3 +53,25 @@ resultado terminal todavía. No se declara pasada ni se reinicia por tardar.
 
 Pendiente: determinar el origen de estos conectores históricos y reproducir
 el atasco independiente de Gran Cañón; esta corrección no lo declara resuelto.
+
+## Reproducción de un conector que pasa por alto pendiente
+
+Seguimiento sobre main a52ceb6d, sin cambiar producción. Un sondeo local
+construye conectores alrededor de los orígenes históricos, sobre el terreno
+y obstáculos nativos. El intento 1094 encuentra un tramo de 0,1 m:
+(112,754572642; 9,807730669) → (112,825283321; 9,878441347).
+Ambos extremos pasan walkable con radio 0,28 y segmentClear acepta el tramo.
+Un trabajador de prueba, status walking, avanza físicamente 0,05 m usando
+walkTo y la velocidad original: llega a (112,789927981; 9,843086008), que
+falla walkable. No se utiliza la recuperación nueva en ese estado.
+
+Esto reproduce un mecanismo de entrada en terreno inválido por aliasing del
+muestreo: un tramo menor de 0,25 m comprueba únicamente los extremos. No
+demuestra que el trabajador histórico siguiera ese conector. El actor y el
+tramo son construidos para el diagnóstico; no es una continuación ordinaria
+de la campaña ni un benchmark. Script e informe exactos añadidos al recibo.
+
+La recuperación es una mitigación de regresos ya bloqueados. La prevención
+requiere comprobar también posiciones intermedias sin multiplicar el coste
+de todos los recorridos. Antes de integrar esa comprobación hay que comparar
+candidatos de muestreo/validación y medir su coste en la finca densa.

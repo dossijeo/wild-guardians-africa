@@ -45,6 +45,16 @@
       "path": "package.log.gz",
       "rawBytes": 323,
       "sha256": "d76039481efcdecb37dd14482f1c5e0c54673970bed8ecb1b1a52ab2a0df1677"
+    },
+    {
+      "path": "segment-alias-probe.json.gz",
+      "rawBytes": 1218,
+      "sha256": "0eec2c53bcbab021202b71a5e773af9d346e8b8f98bdb3da376ce9b25751c5c0"
+    },
+    {
+      "path": "segment-alias-runner.mjs.gz",
+      "rawBytes": 1990,
+      "sha256": "48b58abb6a2d8824cd62faf927a0e5a2abda9adfc06551535c136d2cc3e7dc72"
     }
   ],
   "directedTests": {
@@ -69,5 +79,11 @@
       43612
     ],
     "log": ".cache/worker-slope-full-tests.log"
+  },
+  "segmentFollowup": {
+    "main": "a52ceb6d",
+    "exitCode": 0,
+    "benchmark": false,
+    "productionChanged": false
   }
 }
