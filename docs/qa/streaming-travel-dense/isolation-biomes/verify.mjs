@@ -4,7 +4,7 @@ import {gunzipSync} from 'node:zlib';
 import {createHash} from 'node:crypto';
 
 const receipt=JSON.parse(await readFile(new URL('receipt.json',import.meta.url),'utf8'));
-assert.equal(receipt.runs.length,2);
+assert.deepEqual(receipt.runs.map(run=>run.biome).toSorted(),['desierto','gran-canon','manglares','volcanes']);
 const summarize=values=>{
  const sorted=values.toSorted((a,b)=>a-b),q=p=>sorted[Math.ceil(sorted.length*p)-1];
  return {count:values.length,p50:q(.5),p95:q(.95),p99:q(.99),max:sorted.at(-1),over33:values.filter(v=>v>1000/30).length,over50:values.filter(v=>v>50).length,over100:values.filter(v=>v>100).length};
@@ -25,4 +25,4 @@ for(const run of receipt.runs){
  const summary=summarize(report.frames.flatMap(frame=>frame.intervalMs===null?[]:[frame.intervalMs]));
  assert.deepEqual(summary,report.frameSummary);assert.deepEqual(summary,run.frameSummary);
 }
-console.log('PASS: two archived functional routes, hashes, frame summaries and reported invariants. No browser rerun or performance comparison.');
+console.log('PASS: four archived functional routes, hashes, frame summaries and reported invariants. No browser rerun or performance comparison.');

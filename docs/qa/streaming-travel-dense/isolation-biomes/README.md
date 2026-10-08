@@ -8,8 +8,14 @@ Four CPU campaign processes remained active; one QA graphics context at a time.
 |---|---:|---:|---:|---:|---:|
 | Volcanes/Mapungubwe | 15 | 66.5 | 83.1 | 83.3 | 0 |
 | Gran Canon/Musgum | 25 | 49.6 | 50.0 | 66.6 | 0 |
+| Manglares/Suajili | 15 | 83.0 | 99.7 | 99.8 | 0 |
+| Desierto/Etiope | 15 | 33.4 | 49.8 | 66.5 | 0 |
 
-Both completed with unchanged serialized state, no reported errors, no failed
+Manglares/Desierto follow-up source: `6030c2f3`; only tests/evidence changed
+since the first two routes. Four CPU campaigns remained live. Contexts were
+disposed and tabs closed sequentially. No concurrent loading-screen GPU probe.
+
+All completed with unchanged serialized state, no reported errors, no failed
 chunks/fallbacks or hidden samples. Each scene reported disposed before its tab
 closed. These new-village scenes have no workers or crops: this does not establish
 dense-farm coverage in these biomes, dynamic shadows, or saved-game compatibility.
