@@ -1,6 +1,6 @@
 <!doctype html><html lang="es"><meta charset="utf-8"><title>QA · Traveling y estabilidad de frames</title>
 <style>body{margin:0;font:13px system-ui}canvas{display:block;width:100vw;height:100vh}header{position:fixed;z-index:2;top:8px;left:8px;background:#fff9e8e8;padding:12px;max-width:360px;max-height:85vh;overflow:auto}pre{white-space:pre-wrap;font-size:11px}button{padding:8px}</style>
-<header><b>Traveling nativo continuo</b><p>Sin guardados ni cambios de gameplay. Chunks, impostores, sombras y modelos con ajustes de producción. FPS medio no es el criterio.</p><button id="run" disabled>Iniciar recorrido</button><button id="dispose" disabled>Cerrar escena</button><pre id="report">Cargando…</pre></header><canvas></canvas>
+<header><b>Traveling nativo continuo</b><p>Sin cambios persistidos ni cambios de gameplay. Chunks, impostores, sombras y modelos con ajustes de producción. FPS medio no es el criterio.</p><button id="run" disabled>Iniciar recorrido</button><button id="dispose" disabled>Cerrar escena</button><pre id="report">Cargando…</pre></header><canvas></canvas>
 <script type="module">
 import * as Game from '../../src/simulation/game.js';
 import {Navigation,BIOME_IDS} from '../../src/world/navigation.js';
@@ -9,10 +9,10 @@ import {WorldScene} from '../../src/rendering/scene.js';
 import {farVegetationProfile} from '../../src/rendering/far-vegetation-profile.js';
 import {prepareInitialFarWorld} from '../../src/app/far-world-loading.js';
 import {json} from '../../src/rendering/assets.js';
-import {serialize} from '../../src/persistence/snapshots.js';
+import {serialize,deserialize} from '../../src/persistence/snapshots.js';
 import {GpuTimer} from './gpu-timer.js';
 
-const params=new URLSearchParams(location.search),biome=params.get('biome')??'sabana',quality=params.get('quality')??'media',culture=params.get('culture')??'mapungubwe';
+const params=new URLSearchParams(location.search),quality=params.get('quality')??'media',fixture=params.get('fixture');let biome=params.get('biome')??'sabana',culture=params.get('culture')??'mapungubwe';
 const duration=Number(params.get('seconds')??30),speed=Number(params.get('speed')??12),angle=Number(params.get('angle')??0)*Math.PI/180;
 const errors=[],frames=[],installs=[],longTasks=[],segments=[];let world,timer,dead=false,running=false,started=0,previous=0,last=performance.now(),raf,report=null,observer,finishedAt=0;
 const output=value=>document.querySelector('#report').textContent=JSON.stringify(value,null,2);
@@ -24,14 +24,25 @@ const dispose=()=>{if(dead)return;dead=true;running=false;cancelAnimationFrame(r
 addEventListener('pagehide',dispose,{once:true});
 addEventListener('error',e=>errors.push(String(e.message)));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
 try{
+ let restored=null;
+ if(fixture){
+  if(fixture!=='gran-rio-suajili-100')throw Error('Unknown archived fixture');
+  const response=await fetch('/docs/qa/intensive-gran-rio-suajili-e461b550/state.json.gz');if(!response.ok)throw Error('Archived fixture unavailable');
+  const bytes=await response.arrayBuffer(),signature=new Uint8Array(bytes,0,2);
+  const text=signature[0]===31&&signature[1]===139?await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).text():new TextDecoder().decode(bytes);
+  restored=deserialize(text);
+  if(params.has('biome')&&biome!==restored.biome||params.has('culture')&&culture!==restored.culture)throw Error('Configuration differs from archived farm');
+  biome=restored.biome;culture=restored.culture;
+ }
  if(!BIOME_IDS[biome]||!Number.isFinite(duration)||duration<5||duration>120||!Number.isFinite(speed)||speed<0||speed>40||!Number.isFinite(angle))throw Error('Invalid travel configuration');
- const pack=await json('/content/biome-'+BIOME_IDS[biome]+'.json'),payload=(await json('/content/villages.json')).find(v=>v.id===culture);
+ const pack=await json('/content/biome-'+BIOME_IDS[biome]+'.json'),payload=(await json('/content/villages.json')).find(v=>v.id===(culture==='saheliana'?'saheliano':culture));
  if(!payload)throw Error('Invalid culture');
- const state=Game.newGame({seed:712,biome,culture}),nav=new Navigation(712,biome,pack.profile),site=await findInitialLocationAsync(nav,payload);
- Object.assign(state.villages[0],site);state.suppressed.push(...site.suppress);nav.setState(state);Game.pause(state,'qa');state.tutorial.step='done';
+ const state=restored??Game.newGame({seed:712,biome,culture}),nav=new Navigation(state.seed,biome,pack.profile),site=restored?null:await findInitialLocationAsync(nav,payload);
+ if(site){Object.assign(state.villages[0],site);state.suppressed.push(...site.suppress);}nav.setState(state);Game.pause(state,'qa');state.tutorial.step='done';
  const snapshot=serialize(state);world=new WorldScene(document.querySelector('canvas'),()=>{});world.onError=e=>errors.push(String(e));world.qualitySetting(quality);
  await world.load(state,nav,payload,{farVegetation:farVegetationProfile({quality,biome:nav.config.biome})});await prepareInitialFarWorld(world);
- world.focus(site.center);world.render(0);
+ if(site)world.focus(site.center);else world.focusFarm();world.render(0);
+ const farm={fixture:fixture??'new-village',historicalSource:fixture?'e461b550':null,plants:state.plants.length,livingPlants:state.plants.filter(p=>p.alive).length,workers:state.workers.length,structures:state.structures.length,result:state.result};
  const startEye=world.camera.position.clone(),startTarget=world.controls.target.clone();
  const initialStream=world.chunkStream.summary();
  if(params.has('trace'))for(const name of ['compileAsync','render','initTexture']){
@@ -69,12 +80,12 @@ try{
     const id=frames.length,timed=timer.begin(id),cpuStart=performance.now();try{world.render(dt);}finally{if(timed)timer.end();}const cpuMs=performance.now()-cpuStart;timer.poll();
     frames.push({at:timestamp-started,intervalMs:previous?timestamp-previous:null,cpuMs,chunks:world.chunks.size,created:world.chunkStream.stats.created,queued:world.chunkStream.queue.length,busy:!!world.chunkStream.busy,geometries:world.renderer.info.memory.geometries,textures:world.renderer.info.memory.textures,programs:world.renderer.info.programs.length,hidden:document.hidden});previous=timestamp;
     if(elapsed>=duration){
-     running=false;finishedAt=performance.now();report={done:true,device,initialStream,finalStream:world.chunkStream.summary(),biome,culture,quality,seed:712,duration,speed,distance:duration*speed,initialEye:startEye.toArray(),initialTarget:startTarget.toArray(),finalEye:world.camera.position.toArray(),finalTarget:world.controls.target.toArray(),logicalUnchanged:snapshot===serialize(state),frames,installs,longTasks,segments,errors,frameSummary:summarize(frames.flatMap(f=>f.intervalMs===null?[]:[f.intervalMs])),cpuSummary:summarize(frames.map(f=>f.cpuMs)),gpu:timer.report(),scope:'Native paused world; linear camera movement with production chunks/far/LOD/shadows. Frame intervals include scheduling and GPU backpressure; CPU rendering and async GPU queries reported separately. No optimization claim or saved-game changes.'};output(report);
+     running=false;finishedAt=performance.now();report={done:true,farm,device,initialStream,finalStream:world.chunkStream.summary(),biome,culture,quality,seed:state.seed,duration,speed,distance:duration*speed,initialEye:startEye.toArray(),initialTarget:startTarget.toArray(),finalEye:world.camera.position.toArray(),finalTarget:world.controls.target.toArray(),logicalUnchanged:snapshot===serialize(state),frames,installs,longTasks,segments,errors,frameSummary:summarize(frames.flatMap(f=>f.intervalMs===null?[]:[f.intervalMs])),cpuSummary:summarize(frames.map(f=>f.cpuMs)),gpu:timer.report(),scope:'Native paused world; linear camera movement with production chunks/far/LOD/shadows. Frame intervals include scheduling and GPU backpressure; CPU rendering and async GPU queries reported separately. No optimization claim or saved-game changes.'};output(report);
     }
    }else {world.render(dt);if(report&&timer.pending.length&&performance.now()-finishedAt<5000){timer.poll();report.gpu=timer.report();output(report);}}
   }catch(error){errors.push(String(error));dispose();output({done:true,failed:true,errors});return;}
   raf=requestAnimationFrame(frame);
  };
- output({ready:true,biome,culture,quality,duration,speed,initialChunks:world.chunks.size});raf=requestAnimationFrame(frame);
+ output({ready:true,farm,biome,culture,quality,duration,speed,initialChunks:world.chunks.size});raf=requestAnimationFrame(frame);
 }catch(error){errors.push(String(error.stack??error));output({done:true,failed:true,errors});}
 </script></html>
