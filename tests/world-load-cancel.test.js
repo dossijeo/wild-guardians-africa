@@ -44,3 +44,26 @@ test('cancelled waiting still releases a late uniquely owned result once',async(
 test('cancelled waiting observes a late loader rejection without adoption',async()=>{
  const world=Object.create(WorldScene.prototype);world.loading=new AbortController();let fail;const pending=world.loadReady(new Promise((resolve,reject)=>fail=reject));world.loading.abort();await assert.rejects(pending,/cancelada/);fail(Error('late decode failure'));await new Promise(resolve=>setImmediate(resolve));
 });
+
+
+test('loading milestone aborts even if its actual frame never arrives',async()=>{
+ const world=Object.create(WorldScene.prototype);world.loading=new AbortController();const updates=[];world.loadingProgress={update:id=>updates.push(id)};
+ const pending=world.loadingMilestone('sky',{nextFrame:()=>new Promise(()=>{})});world.loading.abort();await assert.rejects(pending,/cancelled/);assert.deepEqual(updates,['sky']);
+});
+test('loading milestone uses one real frame and rejects a stalled deadline',async()=>{
+ const world=Object.create(WorldScene.prototype);world.loading=new AbortController();world.loadingProgress={update:()=>{}};let frames=0;
+ await world.loadingMilestone('sky',{nextFrame:async()=>{frames++;}});assert.equal(frames,1);
+ let clock=0;await assert.rejects(world.loadingMilestone('biome',{timeout:5,now:()=>clock,nextFrame:()=>{clock=6;return new Promise(()=>{});}}),/timed out/);
+});
+test('cancelled milestone cannot publish another stage; ordinary worlds acquire no frame',async()=>{
+ const world=Object.create(WorldScene.prototype);world.loading=new AbortController();let updates=0,frames=0;world.loadingProgress={update:()=>updates++};world.loading.abort();
+ await assert.rejects(world.loadingMilestone('sky',{nextFrame:async()=>frames++}),/cancelled/);assert.equal(updates,0);assert.equal(frames,0);
+ world.loadingProgress=null;await world.loadingMilestone('sky',{nextFrame:async()=>frames++});assert.equal(frames,0);
+});
+
+test('cancelled milestone releases its owned suspended RAF handle',async t=>{
+ const world=Object.create(WorldScene.prototype);world.loading=new AbortController();world.loadingProgress={update:()=>{}};let requested=0;const cancelled=[];
+ for(const name of ['requestAnimationFrame','cancelAnimationFrame']){const descriptor=Object.getOwnPropertyDescriptor(globalThis,name);t.after(()=>{if(descriptor)Object.defineProperty(globalThis,name,descriptor);else delete globalThis[name];});}
+ Object.defineProperty(globalThis,'requestAnimationFrame',{configurable:true,value:()=>{requested++;return 47;}});Object.defineProperty(globalThis,'cancelAnimationFrame',{configurable:true,value:handle=>cancelled.push(handle)});
+ const pending=world.loadingMilestone('sky');world.loading.abort();await assert.rejects(pending,/cancelled/);assert.equal(requested,1);assert.deepEqual(cancelled,[47]);
+});

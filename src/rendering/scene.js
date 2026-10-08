@@ -1,3 +1,4 @@
+import {waitGpuFrame} from '../../tools/experiments/wait-gpu-frame.js';
 import {waitGpuPreparation} from '../../tools/experiments/wait-gpu-preparation.js';
 import {initializeLoadingTextures} from './loading-textures.js';
 import {compileLoadingPrograms,compileLoadingProgramsBatched} from './loading-programs.js';
@@ -126,9 +127,16 @@ export class WorldScene {
     const observed=Promise.resolve(pending).then(result=>{if(this.disposed||signal?.aborted)releaseLate?.(result);value=result;});
     await waitGpuPreparation(observed,{check,signal,nextFrame:()=>new Promise(()=>{})});check();return value;
   }
+  async loadingMilestone(id,{nextFrame,timeout=30000,now=()=>performance.now()}={}) {
+    if(!this.loadingProgress)return;
+    const started=now(),signal=this.loading.signal;
+    const check=()=>{if(this.disposed||signal.aborted)throw Error('World loading cancelled');if(now()-started>timeout)throw Error('World loading milestone timed out');};
+    check();this.loadingProgress.update(id);
+    await waitGpuFrame({check,nextFrame,signal});check();
+  }
   async load(state,nav,villagePayload,{farVegetation=false,loadingProgress=null}={}) {
     this.loadingProgress=loadingProgress;
-    const milestone=async id=>{loadingProgress?.update(id);if(loadingProgress){await new Promise(resolve=>requestAnimationFrame(resolve));if(this.disposed)throw Error('World loading cancelled');}};
+    const milestone=id=>this.loadingMilestone(id);
     await this.loadReady(this.sky.load());this.toon.environment(this.sky.environmentTextures,this.sky.uniforms.uSkyYaw);this.destructionPass.environmentUniforms=this.toon.environmentUniforms;await milestone('sky');this.state=state;this.simElapsed=state.elapsed;this.nav=nav;this.destructionPass.surface=(x,z)=>nav.field.surface(x,z);this.pack=await this.loadReady(json('/content/biome-'+BIOME_IDS[state.biome]+'.json',{signal:this.loading.signal}));this.prototypes=await this.loadReady(this.assets.biome(this.pack));this.biomeGround=new BiomeGround();await this.loadReady(this.biomeGround.load(this.assets,BIOME_IDS[state.biome],this.pack.profile,this.nav.field));if(this.biomeGround.tile.mudPatches){this.mudPatches=new MudPatches();await this.loadReady(this.mudPatches.load(this.assets,this.biomeGround.tile.mudPatches));}this.contactPrototypes=contactPrototypes(this.pack,this.prototypes);this.waterPrototypes=this.pack.assets.map(nativeAssetWater);this.fluidLighting={textures:this.sky.environmentTextures,yaw:this.sky.uniforms.uSkyYaw,uniforms:this.toon.uniforms,shadowUniforms:this.toon.shadowUniforms};this.fluidMaterial=paintedWaterMaterial(this.pack.profile.colors.water,this.state.biome==='volcanes',this.nav.field.seed,null,this.fluidLighting);await milestone('biome');
     this.villagePrototypes=await this.loadReady(this.assets.village(villagePayload));this.villageTemplates=new Map([[state.culture,this.villagePrototypes]]);
     this.buildingCatalogue=(await this.loadReady(json('/content/destruction.json',{signal:this.loading.signal}))).buildings;
