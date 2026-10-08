@@ -1,0 +1,49 @@
+{
+  "status": "source-only diagnosis; no candidate acceptance",
+  "main": "da675743",
+  "workerSourceCommit": "c340c8cfd306f28708cc4ebf49e3eaaa400ec9ad",
+  "workerScriptSha256": "25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238",
+  "conditions": {
+    "cpuCampaigns": "43808/49032/41320/41304-active-main-suite44690-finished",
+    "gpuTiming": false
+  },
+  "rootSuite44690": "terminal exit0 3142/3142 before browser diagnosis",
+  "pieces": [
+    {
+      "path": "report.json.gz",
+      "gzip": true,
+      "rawBytes": 794212,
+      "sha256": "66c77277e115b701d3b196907cfe4ee0780e021ed9f2bb1dfb3c0b5196c2d955"
+    },
+    {
+      "path": "analysis.json.gz",
+      "gzip": true,
+      "rawBytes": 3029,
+      "sha256": "8218374d035cadd18dba219875f60f835480953e40169d2b0c03e74645d5ac7e"
+    },
+    {
+      "path": "console.json.gz",
+      "gzip": true,
+      "rawBytes": 2,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "compare-tool.mjs.gz",
+      "gzip": true,
+      "rawBytes": 1638,
+      "sha256": "02652f4d22734ab16956a2306400b951b7acb73b6c7bad3b5aa2541aa5c35388"
+    },
+    {
+      "path": "browser.png",
+      "gzip": false,
+      "rawBytes": 55009,
+      "sha256": "0e4574ed274d6ff7e50c957997e510b4a9008c89a337407fe017c0372302cf6f"
+    },
+    {
+      "path": "comparison.png",
+      "gzip": false,
+      "rawBytes": 399532,
+      "sha256": "c97dce909aa5ae5a3f6aae0df34ed044ced0306bb445f292caac868495a5bdee"
+    }
+  ]
+}
