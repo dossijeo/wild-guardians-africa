@@ -1,0 +1,23 @@
+{
+  "status": "NATIVE_DISPATCH_NOT_STARTED_PROVIDER_UNAVAILABLE",
+  "fixtureSourceCommit": "519f7d01",
+  "fixtureJsSha256": "c55fa37dd9e84b82f61fac2613f2cb54a62374489c54f3e776f2b5638c7c86a5",
+  "campaign": "timing",
+  "url": "http://127.0.0.1:5284/tests/browser/frontside-crop-leaf-shared-gpu.html?campaign=timing&cpuCampaigns=none-confirmed-before-dispatch",
+  "authority": {"call": "cua.getState()", "apps": [], "browsers": []},
+  "attempt": {"call": "cua.createBrowserTab('iab', url, {visible:true})", "result": "Browser is not available: iab"},
+  "gpuContextCreated": false,
+  "gpuDraws": 0,
+  "samples": 0,
+  "ownListenerPid": 19668,
+  "preDispatchSelectedProcessInventory": [
+    {"pid": 19668, "command": "tools/frontside_pilot_server.mjs"},
+    {"pid": 48948, "command": "tools/experiments/loading-transfer-server.mjs"},
+    {"pid": 32948, "command": ".cache/loading-baseline-server.mjs"}
+  ],
+  "limitations": [
+    "This inventory filtered Blender/Node commands matching campaign/frontside/test/benchmark/loading. It is not an exhaustive machine-idleness audit.",
+    "Root separately reported no current historical CPU campaigns and requested the isolated window. Actual native dispatch requires a fresh root inventory.",
+    "Provider failure does not reject the candidate or invalidate a GPU collection: no collection started. No browser ID guessing, CDP or shell browser fallback used."
+  ]
+}

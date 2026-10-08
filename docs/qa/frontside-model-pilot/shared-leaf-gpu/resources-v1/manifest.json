@@ -1,0 +1,106 @@
+{
+  "status": "NATIVE_GPU_EXPERIMENT_ARCHIVED_NOT_CATEGORY_APPROVAL",
+  "runId": "resources-v1",
+  "fixtureSourceCommit": "519f7d01",
+  "fixtureJsSha256": "c55fa37dd9e84b82f61fac2613f2cb54a62374489c54f3e776f2b5638c7c86a5",
+  "rawJsonSha256": "10810da21e187623ca7a99edaf8d43482e5f36f4e73798fbc9d2bf0b470b1b7f",
+  "gzipSha256": "fac9772e81105a7ac132eed38a8c49ced22393f8fba790909cddd5a7875acbfb",
+  "pngSha256": "08e65dfceb54f2d735a75dd7eaadae3f02eb6003830d3e1d8ae8d4500240c305",
+  "sourceMapping": {
+    "source": "assets/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+    "runtime": "assets/web/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+    "sourceSha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+    "runtimeSha256": "617568fc66595c635739ff83bc0256535a72fdf7bfcb016dc68a7f7f1e1a8a52"
+  },
+  "archiveSha256": "4d6d5dd729211e9ed5e429915ec81960da5e6b2197d1c8982a3dbb6a92893065",
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "browser": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+  "contextAttributes": {
+    "alpha": false,
+    "antialias": true,
+    "depth": true,
+    "desynchronized": false,
+    "failIfMajorPerformanceCaveat": false,
+    "powerPreference": "default",
+    "premultipliedAlpha": true,
+    "preserveDrawingBuffer": true,
+    "stencil": false,
+    "xrCompatible": false
+  },
+  "campaignConditions": {
+    "cpuCampaigns": "unspecified",
+    "gpuTiming": false,
+    "bufferMetadataQueries": true
+  },
+  "analysis": null,
+  "analysisError": null,
+  "blocks": [
+    {
+      "arm": 0,
+      "warmupFrames": 120,
+      "queryFailures": null,
+      "submissions": {
+        "frame": 240,
+        "calls": 4,
+        "triangles": 10748433,
+        "points": 0,
+        "lines": 0
+      },
+      "rendererMemory": {
+        "geometries": 3,
+        "textures": 7
+      },
+      "programCount": 4
+    },
+    {
+      "arm": 3,
+      "warmupFrames": 120,
+      "queryFailures": null,
+      "submissions": {
+        "frame": 480,
+        "calls": 8,
+        "triangles": 10741899,
+        "points": 0,
+        "lines": 0
+      },
+      "rendererMemory": {
+        "geometries": 4,
+        "textures": 7
+      },
+      "programCount": 7
+    }
+  ],
+  "cleanup": {
+    "closed": true,
+    "disposed": [
+      "restore source material",
+      "derived material 2",
+      "derived material 1",
+      "derived material 0",
+      "derived geometry 3",
+      "derived geometry 2",
+      "indexed control 1",
+      "crop batch 3",
+      "crop batch 2",
+      "crop batch 1",
+      "crop batch 0",
+      "receiver material",
+      "receiver geometry",
+      "native shadow hook",
+      "directional shadow targets",
+      "NativeSky",
+      "material registry",
+      "source Assets",
+      "renderer resources",
+      "renderer context"
+    ],
+    "errors": []
+  },
+  "contextLost": true,
+  "limitations": [
+    "Elapsed query blocks are retained without reroll; pooled, paired and tail statistics refer only to this synthetic mature lot.",
+    "Actual authoritative process inventory and native console observations must accompany this archive; URL condition text alone is not proof of liveness.",
+    "Double-shadow isolation remains; complete Front shadow correctness, mixed-world regression, resident memory, deployment and category visual/functional evidence remain separate.",
+    "Final PNG is one draw, not the multiview appearance inspection or proof of human acceptance."
+  ]
+}

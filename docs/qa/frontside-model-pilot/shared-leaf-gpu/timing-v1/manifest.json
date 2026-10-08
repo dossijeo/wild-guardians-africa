@@ -1,0 +1,562 @@
+{
+  "status": "NATIVE_GPU_EXPERIMENT_ARCHIVED_NOT_CATEGORY_APPROVAL",
+  "runId": "timing-v1",
+  "fixtureSourceCommit": "519f7d01",
+  "fixtureJsSha256": "c55fa37dd9e84b82f61fac2613f2cb54a62374489c54f3e776f2b5638c7c86a5",
+  "rawJsonSha256": "cbb11c9f238c7d75a36d438fb560ac9f36c5a036ea415b14efdfa02cf3375187",
+  "gzipSha256": "2f6e6b48888fdd9b89c1f17824f62564ec66b8cf388b03bd26d851407c646b22",
+  "pngSha256": "c877a374db2f44f6619fce7c9dfcf3a888e4ff8461675985c75493d6e95fbe14",
+  "sourceMapping": {
+    "source": "assets/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+    "runtime": "assets/web/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+    "sourceSha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+    "runtimeSha256": "617568fc66595c635739ff83bc0256535a72fdf7bfcb016dc68a7f7f1e1a8a52"
+  },
+  "archiveSha256": "4d6d5dd729211e9ed5e429915ec81960da5e6b2197d1c8982a3dbb6a92893065",
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "browser": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+  "contextAttributes": {
+    "alpha": false,
+    "antialias": true,
+    "depth": true,
+    "desynchronized": false,
+    "failIfMajorPerformanceCaveat": false,
+    "powerPreference": "default",
+    "premultipliedAlpha": true,
+    "preserveDrawingBuffer": true,
+    "stencil": false,
+    "xrCompatible": false
+  },
+  "campaignConditions": {
+    "cpuCampaigns": "unspecified",
+    "gpuTiming": true,
+    "bufferMetadataQueries": false
+  },
+  "analysis": {
+    "status": "PAIRED_GPU_DIAGNOSTIC_NOT_CATEGORY_APPROVAL",
+    "reference": {
+      "count": 1800,
+      "mean": 82.07479518611105,
+      "median": 81.980286,
+      "p95": 83.314322
+    },
+    "candidate": {
+      "count": 1800,
+      "mean": 68.00108876833342,
+      "median": 67.653463,
+      "p95": 69.146354
+    },
+    "pairs": [
+      {
+        "pair": 0,
+        "order": "AB",
+        "reference": {
+          "count": 300,
+          "mean": 82.08367044000002,
+          "median": 81.9780205,
+          "p95": 83.341509
+        },
+        "candidate": {
+          "count": 300,
+          "mean": 67.55750063666667,
+          "median": 67.458932,
+          "p95": 68.965364
+        },
+        "savedMs": 14.519088499999995,
+        "savedPercent": 17.710952779104975
+      },
+      {
+        "pair": 1,
+        "order": "BA",
+        "reference": {
+          "count": 300,
+          "mean": 82.14988397999993,
+          "median": 82.124218,
+          "p95": 83.345781
+        },
+        "candidate": {
+          "count": 300,
+          "mean": 69.53174536333339,
+          "median": 67.989374,
+          "p95": 77.441041
+        },
+        "savedMs": 14.134844000000001,
+        "savedPercent": 17.211541667282603
+      },
+      {
+        "pair": 2,
+        "order": "AB",
+        "reference": {
+          "count": 300,
+          "mean": 82.16170827666672,
+          "median": 82.10187450000001,
+          "p95": 83.406718
+        },
+        "candidate": {
+          "count": 300,
+          "mean": 67.86763185,
+          "median": 67.957577,
+          "p95": 69.074791
+        },
+        "savedMs": 14.144297500000008,
+        "savedPercent": 17.227740031684668
+      },
+      {
+        "pair": 3,
+        "order": "BA",
+        "reference": {
+          "count": 300,
+          "mean": 81.93080390000003,
+          "median": 81.8011715,
+          "p95": 83.123228
+        },
+        "candidate": {
+          "count": 300,
+          "mean": 67.72802508000007,
+          "median": 67.5800515,
+          "p95": 69.14927
+        },
+        "savedMs": 14.221119999999999,
+        "savedPercent": 17.384983294524087
+      },
+      {
+        "pair": 4,
+        "order": "AB",
+        "reference": {
+          "count": 300,
+          "mean": 82.06632474666652,
+          "median": 81.93273350000001,
+          "p95": 83.345208
+        },
+        "candidate": {
+          "count": 300,
+          "mean": 67.60270375333339,
+          "median": 67.5198175,
+          "p95": 68.774947
+        },
+        "savedMs": 14.41291600000001,
+        "savedPercent": 17.591157263171265
+      },
+      {
+        "pair": 5,
+        "order": "BA",
+        "reference": {
+          "count": 300,
+          "mean": 82.05637977333336,
+          "median": 81.971067,
+          "p95": 83.219166
+        },
+        "candidate": {
+          "count": 300,
+          "mean": 67.71892592666669,
+          "median": 67.5621605,
+          "p95": 68.969843
+        },
+        "savedMs": 14.4089065,
+        "savedPercent": 17.578039456287666
+      }
+    ],
+    "savedMs": 14.326823000000005,
+    "savedPercent": 17.47593683681465,
+    "pairedMeanSavedMsConfidence95": [
+      14.195568666666668,
+      14.421232500000002
+    ],
+    "p95RegressionMs": -14.167968000000002,
+    "gates": {
+      "medianPercent": true,
+      "medianMs": true,
+      "pairedConfidence": true,
+      "p95": true
+    },
+    "performanceThresholdsSatisfied": true,
+    "limitations": [
+      "Six paired blocks give limited temporal coverage; persistent power/load drift must be examined separately.",
+      "This computes only specified GPU query data. Human appearance review, resource budgets, compatibility, full-world regression and category evidence remain independent."
+    ]
+  },
+  "analysisError": null,
+  "blocks": [
+    {
+      "pair": 0,
+      "order": "AB",
+      "arm": 0,
+      "warmupFrames": 120,
+      "validQuerySamples": 300,
+      "queryFailures": {
+        "pending": 0,
+        "disjointEvents": 0,
+        "discarded": 0,
+        "overflowSkipped": 0,
+        "foreignQuerySkipped": 0,
+        "allocationFailures": 0,
+        "contextLost": false
+      },
+      "submissions": {
+        "frame": 840,
+        "calls": 4,
+        "triangles": 10748433,
+        "points": 0,
+        "lines": 0
+      },
+      "rendererMemory": {
+        "geometries": 3,
+        "textures": 7
+      },
+      "programCount": 4
+    },
+    {
+      "pair": 0,
+      "order": "AB",
+      "arm": 3,
+      "warmupFrames": 120,
+      "validQuerySamples": 300,
+      "queryFailures": {
+        "pending": 0,
+        "disjointEvents": 0,
+        "discarded": 0,
+        "overflowSkipped": 0,
+        "foreignQuerySkipped": 0,
+        "allocationFailures": 0,
+        "contextLost": false
+      },
+      "submissions": {
+        "frame": 1680,
+        "calls": 8,
+        "triangles": 10741899,
+        "points": 0,
+        "lines": 0
+      },
+      "rendererMemory": {
+        "geometries": 4,
+        "textures": 7
+      },
+      "programCount": 7
+    },
+    {
+      "pair": 1,
+      "order": "BA",
+      "arm": 3,
+      "warmupFrames": 120,
+      "validQuerySamples": 300,
+      "queryFailures": {
+        "pending": 0,
+        "disjointEvents": 0,
+        "discarded": 0,
+        "overflowSkipped": 0,
+        "foreignQuerySkipped": 0,
+        "allocationFailures": 0,
+        "contextLost": false
+      },
+      "submissions": {
+        "frame": 2520,
+        "calls": 8,
+        "triangles": 10741899,
+        "points": 0,
+        "lines": 0
+      },
+      "rendererMemory": {
+        "geometries": 4,
+        "textures": 7
+      },
+      "programCount": 7
+    },
+    {
+      "pair": 1,
+      "order": "BA",
+      "arm": 0,
+      "warmupFrames": 120,
+      "validQuerySamples": 300,
+      "queryFailures": {
+        "pending": 0,
+        "disjointEvents": 0,
+        "discarded": 0,
+        "overflowSkipped": 0,
+        "foreignQuerySkipped": 0,
+        "allocationFailures": 0,
+        "contextLost": false
+      },
+      "submissions": {
+        "frame": 3360,
+        "calls": 4,
+        "triangles": 10748433,
+        "points": 0,
+        "lines": 0
+      },
+      "rendererMemory": {
+        "geometries": 4,
+        "textures": 7
+      },
+      "programCount": 7
+    },
+    {
+      "pair": 2,
+      "order": "AB",
+      "arm": 0,
+      "warmupFrames": 120,
+      "validQuerySamples": 300,
+      "queryFailures": {
+        "pending": 0,
+        "disjointEvents": 0,
+        "discarded": 0,
+        "overflowSkipped": 0,
+        "foreignQuerySkipped": 0,
+        "allocationFailures": 0,
+        "contextLost": false
+      },
+      "submissions": {
+        "frame": 4200,
+        "calls": 4,
+        "triangles": 10748433,
+        "points": 0,
+        "lines": 0
+      },
+      "rendererMemory": {
+        "geometries": 4,
+        "textures": 7
+      },
+      "programCount": 7
+    },
+    {
+      "pair": 2,
+      "order": "AB",
+      "arm": 3,
+      "warmupFrames": 120,
+      "validQuerySamples": 300,
+      "queryFailures": {
+        "pending": 0,
+        "disjointEvents": 0,
+        "discarded": 0,
+        "overflowSkipped": 0,
+        "foreignQuerySkipped": 0,
+        "allocationFailures": 0,
+        "contextLost": false
+      },
+      "submissions": {
+        "frame": 5040,
+        "calls": 8,
+        "triangles": 10741899,
+        "points": 0,
+        "lines": 0
+      },
+      "rendererMemory": {
+        "geometries": 4,
+        "textures": 7
+      },
+      "programCount": 7
+    },
+    {
+      "pair": 3,
+      "order": "BA",
+      "arm": 3,
+      "warmupFrames": 120,
+      "validQuerySamples": 300,
+      "queryFailures": {
+        "pending": 0,
+        "disjointEvents": 0,
+        "discarded": 0,
+        "overflowSkipped": 0,
+        "foreignQuerySkipped": 0,
+        "allocationFailures": 0,
+        "contextLost": false
+      },
+      "submissions": {
+        "frame": 5880,
+        "calls": 8,
+        "triangles": 10741899,
+        "points": 0,
+        "lines": 0
+      },
+      "rendererMemory": {
+        "geometries": 4,
+        "textures": 7
+      },
+      "programCount": 7
+    },
+    {
+      "pair": 3,
+      "order": "BA",
+      "arm": 0,
+      "warmupFrames": 120,
+      "validQuerySamples": 300,
+      "queryFailures": {
+        "pending": 0,
+        "disjointEvents": 0,
+        "discarded": 0,
+        "overflowSkipped": 0,
+        "foreignQuerySkipped": 0,
+        "allocationFailures": 0,
+        "contextLost": false
+      },
+      "submissions": {
+        "frame": 6720,
+        "calls": 4,
+        "triangles": 10748433,
+        "points": 0,
+        "lines": 0
+      },
+      "rendererMemory": {
+        "geometries": 4,
+        "textures": 7
+      },
+      "programCount": 7
+    },
+    {
+      "pair": 4,
+      "order": "AB",
+      "arm": 0,
+      "warmupFrames": 120,
+      "validQuerySamples": 300,
+      "queryFailures": {
+        "pending": 0,
+        "disjointEvents": 0,
+        "discarded": 0,
+        "overflowSkipped": 0,
+        "foreignQuerySkipped": 0,
+        "allocationFailures": 0,
+        "contextLost": false
+      },
+      "submissions": {
+        "frame": 7560,
+        "calls": 4,
+        "triangles": 10748433,
+        "points": 0,
+        "lines": 0
+      },
+      "rendererMemory": {
+        "geometries": 4,
+        "textures": 7
+      },
+      "programCount": 7
+    },
+    {
+      "pair": 4,
+      "order": "AB",
+      "arm": 3,
+      "warmupFrames": 120,
+      "validQuerySamples": 300,
+      "queryFailures": {
+        "pending": 0,
+        "disjointEvents": 0,
+        "discarded": 0,
+        "overflowSkipped": 0,
+        "foreignQuerySkipped": 0,
+        "allocationFailures": 0,
+        "contextLost": false
+      },
+      "submissions": {
+        "frame": 8400,
+        "calls": 8,
+        "triangles": 10741899,
+        "points": 0,
+        "lines": 0
+      },
+      "rendererMemory": {
+        "geometries": 4,
+        "textures": 7
+      },
+      "programCount": 7
+    },
+    {
+      "pair": 5,
+      "order": "BA",
+      "arm": 3,
+      "warmupFrames": 120,
+      "validQuerySamples": 300,
+      "queryFailures": {
+        "pending": 0,
+        "disjointEvents": 0,
+        "discarded": 0,
+        "overflowSkipped": 0,
+        "foreignQuerySkipped": 0,
+        "allocationFailures": 0,
+        "contextLost": false
+      },
+      "submissions": {
+        "frame": 9240,
+        "calls": 8,
+        "triangles": 10741899,
+        "points": 0,
+        "lines": 0
+      },
+      "rendererMemory": {
+        "geometries": 4,
+        "textures": 7
+      },
+      "programCount": 7
+    },
+    {
+      "pair": 5,
+      "order": "BA",
+      "arm": 0,
+      "warmupFrames": 120,
+      "validQuerySamples": 300,
+      "queryFailures": {
+        "pending": 0,
+        "disjointEvents": 0,
+        "discarded": 0,
+        "overflowSkipped": 0,
+        "foreignQuerySkipped": 0,
+        "allocationFailures": 0,
+        "contextLost": false
+      },
+      "submissions": {
+        "frame": 10080,
+        "calls": 4,
+        "triangles": 10748433,
+        "points": 0,
+        "lines": 0
+      },
+      "rendererMemory": {
+        "geometries": 4,
+        "textures": 7
+      },
+      "programCount": 7
+    }
+  ],
+  "cleanup": {
+    "closed": true,
+    "disposed": [
+      "query recorder 5-0",
+      "query recorder 5-3",
+      "query recorder 4-3",
+      "query recorder 4-0",
+      "query recorder 3-0",
+      "query recorder 3-3",
+      "query recorder 2-3",
+      "query recorder 2-0",
+      "query recorder 1-0",
+      "query recorder 1-3",
+      "query recorder 0-3",
+      "query recorder 0-0",
+      "restore source material",
+      "derived material 2",
+      "derived material 1",
+      "derived material 0",
+      "derived geometry 3",
+      "derived geometry 2",
+      "indexed control 1",
+      "crop batch 3",
+      "crop batch 2",
+      "crop batch 1",
+      "crop batch 0",
+      "receiver material",
+      "receiver geometry",
+      "native shadow hook",
+      "directional shadow targets",
+      "NativeSky",
+      "material registry",
+      "source Assets",
+      "renderer resources",
+      "renderer context"
+    ],
+    "errors": []
+  },
+  "contextLost": true,
+  "limitations": [
+    "Elapsed query blocks are retained without reroll; pooled, paired and tail statistics refer only to this synthetic mature lot.",
+    "Actual authoritative process inventory and native console observations must accompany this archive; URL condition text alone is not proof of liveness.",
+    "Double-shadow isolation remains; complete Front shadow correctness, mixed-world regression, resident memory, deployment and category visual/functional evidence remain separate.",
+    "Final PNG is one draw, not the multiview appearance inspection or proof of human acceptance."
+  ]
+}
