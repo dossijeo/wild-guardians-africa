@@ -1,0 +1,11 @@
+# First direct shared-leaf capture under visual policy3
+
+Root executed native tab833 on frozen80eb9303, JS062eaae53623a694611ceb639c1728b1e852a63e6a30009867b03e84bc0da898. The raw report and full comparative PNG are archived as maize-leaf-shared-training-v1.json/.png. Root separately archived them in mainc77d6ad8. Cleanup closed=true/contextLost=true, eighteen grouped disposal actions, errors[]. Root confirmed terminal status, disposal and tab closure.
+
+This is one existing TRAINING view: mature maize, Sabana/day, growth1, clock1.75, azimuth26.25/elevation32.5. Root's limited image inspection found the Double and Front derivatives clearly recognizable as maize, with leaves/cobs/general shape present, and no obvious disappearance or deformation in this view. This is a provisional assistant image-inspection observation; it is not a named human review or gameplay/category acceptance. The raw report remains HUMAN_REVIEW_PENDING with reviewer/decision=null.
+
+All three repeated originals and the cloned-indexed original control are byte-exact. The historic diagnostic thresholds remain exceeded: derivedDouble IoU.95252555/MAE.03346864/tile.38134378, and derivedFront IoU.95218264/MAE.03408228/tile.38134378. These values are diagnostic under the new explicit user policy, not automatic rejection and not evidence of acceptance. The earlier .5 rejection under policy2 remains unchanged.
+
+The actual candidate has6903vertices/4932triangles,220896P/N/UVbytes plus29592indexbytes. Live iGrowth sharing is confirmed in the report. Candidate color sides are[Front,Front,Front], shadowSides[Double,Double,Double]. Renderer.info reports color calls1→3 and4935→4932triangles for the final arms. These counters reset across renderer internals and do not establish total shadow submissions, GPU invocation counts, resident allocations or elapsed time; later shadow instrumentation and net timing are required.
+
+Pending: more angles/day/night/biomes at realistic game distances, all growth and original-to-derived transition behavior, shadows/depth with FrontSide, whole-state/category resources and bridge provenance, and coordinated net GPU benchmarks. No source model, production flag or default asset has been changed. The field-exact experiment is optional and is not pursued as a prerequisite to this human-policy pilot.
