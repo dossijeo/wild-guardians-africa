@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import {json} from './assets.js';
 import {createCropBatchAsync} from './crop-batch.js';
 import {LoadingPlants} from './loading-plants.js';
+import {LoadingTextureOwner} from './loading-texture-owner.js';
 import {LoadingOrbit} from './loading-orbit.js';
 import {LoadingMist} from './loading-mist.js';
 import {withScreenTarget} from './screen-target.js';
@@ -14,7 +15,7 @@ import {renderScreenPreload,waitForGpuPreload} from './screen-preload.js';
 // cloned materials and the small instanced crop batch belong to this owner.
 export class LoadingDiorama {
   constructor(world,{state={day:1,time:0,biome:'sabana'},reducedMotion=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches??false}={}) {
-    this.world=world;world.assets.asyncTextureImages=true;this.state=state;this.scene=new THREE.Scene();this.plants=new LoadingPlants();this.camera=new THREE.PerspectiveCamera(42,1,.1,80);this.camera.position.set(6,3.3,8);this.camera.lookAt(0,1.15,0);this.baseQuaternion=this.camera.quaternion.clone();
+    this.world=world;this.textureOwner=new LoadingTextureOwner();world.assets.asyncTextureImages=true;this.state=state;this.scene=new THREE.Scene();this.plants=new LoadingPlants();this.camera=new THREE.PerspectiveCamera(42,1,.1,80);this.camera.position.set(6,3.3,8);this.camera.lookAt(0,1.15,0);this.baseQuaternion=this.camera.quaternion.clone();
     this.sun=new THREE.DirectionalLight('#ffe2a8',3);this.sun.position.set(-30,55,25);this.ambient=new THREE.HemisphereLight('#ebf1d9','#765b3b',2);this.scene.add(this.sun,this.ambient);
     this.toon=new AfricanToon();this.toon.uniforms.uFineNoise.value=0;
     this.orbit=new LoadingOrbit({reducedMotion});this.focus=new THREE.Vector3(0,1.15,0);
@@ -48,10 +49,11 @@ export class LoadingDiorama {
     const descriptor=models.find(m=>m.source.includes('Cultivos'));if(!descriptor)throw Error('Missing native maize model');
     const gltf=await world.loadReady(world.assets.model(descriptor.url));if(this.disposed)throw Error('Loading diorama cancelled');
     // Reuse the existing canyon earth bitmap through the world's cache. The
-    // diorama borrows it and does not clone/upload another texture.
-    this.ground.material.map=await world.loadReady(world.assets.texture(ground.canyons.base,false));
+    // diorama borrows its pixel Source through a locally owned Texture object.
+    // This does not decode/copy pixels or require separate shared GL storage.
+    this.ground.material.map=this.textureOwner.borrow(await world.loadReady(world.assets.texture(ground.canyons.base,false)));
     this.ground.material.color.set('#c9865e');this.ground.material.needsUpdate=true;
-    this.batch=await createCropBatchAsync(this.scene,world.renderer,gltf,bridges,this.plants.capacity,{species:['maiz'],shadows:false,cancelled:()=>this.disposed||world.disposed});this.toon.environment(world.sky.environmentTextures,world.sky.uniforms.uSkyYaw);this.toon.apply(this.scene);
+    this.batch=await createCropBatchAsync(this.scene,world.renderer,gltf,bridges,this.plants.capacity,{species:['maiz'],shadows:false,cancelled:()=>this.disposed||world.disposed});this.scene.traverse(object=>{for(const material of [object.material].flat().filter(Boolean))this.textureOwner.material(material);});this.toon.environment(world.sky.environmentTextures,world.sky.uniforms.uSkyYaw);this.toon.apply(this.scene);
     // Warm all five stages and four morph bridges, including ones not present in
     // the first frame. Counts/visibility restored before accepting interaction.
     const saved=[];this.scene.traverse(mesh=>{if(mesh.isInstancedMesh){saved.push([mesh,mesh.count,mesh.visible]);mesh.count=1;mesh.visible=true;}});
@@ -83,5 +85,5 @@ export class LoadingDiorama {
   }
   stopPlanting(){this.interactive=false;this.plants.stopPlanting();}
 
-  dispose(){if(this.disposed)return;this.disposed=true;this.interactive=false;this.abort.abort();this.batch?.dispose();this.mist.dispose();this.ground.geometry.dispose();this.ground.material.dispose();this.scene.clear();}
+  dispose(){if(this.disposed)return;this.disposed=true;this.interactive=false;this.abort.abort();this.batch?.dispose();this.mist.dispose();this.ground.geometry.dispose();this.ground.material.dispose();this.textureOwner.dispose();this.scene.clear();}
 }
