@@ -9,3 +9,5 @@ During the synchronous compile submission it borrows exactly the source properti
 The helper owns a context-loss latch/abort signal and checks context identity/epoch. Failure and owner cancellation remove its listeners and polling, never adopt stale readiness. Synchronous driver calls cannot be interrupted. Native resources, key fidelity, startup cost, visual parity and unprobed first-crop performance are still unverified; do not promote based on unit tests.
 
 Six tests pass using real Three objects and stub GL submission: native source/lighting recipe and identity; restoration before pending readiness; thrown compile; owner abort; loss/restoration before polling; a never-ready deadline. No browser/GPU scene was opened for those tests. Runtime remains `08fe1462`.
+
+Pilot 81 verifies exact native shadow keys and unchanged geometry/texture counts at program preparation. Remaining atlas submissions take 43–53 ms. This is not a paired acceptance benchmark. See `crop-shadow-programs-native-08fe1462.md`; broader gates remain open.
