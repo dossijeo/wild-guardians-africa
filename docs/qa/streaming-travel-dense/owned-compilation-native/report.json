@@ -1,0 +1,48 @@
+{
+  "done": true,
+  "ownedCompilation": true,
+  "rows": [
+    {
+      "case": "real-selected-program-ready",
+      "passed": true,
+      "elapsedMs": 25,
+      "scope": "Native compile, readiness, zero-pixel upload and real GL fence; no forced program readiness."
+    },
+    {
+      "case": "owner-cancel",
+      "passed": true,
+      "queriesAtExit": 1,
+      "lateQueries": 0,
+      "errorName": "AbortError",
+      "errorMessage": "Native GPU preparation cancelled: owner-cancelled",
+      "scope": "Real submitted/cached native program, readiness deliberately held false. RAF deliberately suspended; no physical driver stall claim."
+    },
+    {
+      "case": "deadline",
+      "passed": true,
+      "queriesAtExit": 3,
+      "lateQueries": 0,
+      "errorName": "Error",
+      "errorMessage": "Native GPU preparation timed out",
+      "scope": "Real submitted/cached native program, readiness deliberately held false. RAF deliberately suspended; no physical driver stall claim."
+    },
+    {
+      "case": "render-after-cancellation",
+      "passed": true,
+      "render": {
+        "frame": 3,
+        "calls": 1,
+        "triangles": 12,
+        "points": 0,
+        "lines": 0
+      }
+    }
+  ],
+  "errors": [],
+  "disposed": true,
+  "contextLost": true,
+  "limitations": [
+    "No real pending driver duration, full-world traveling, texture/fence cancellation or context-restoration acceptance.",
+    "Synthetic readiness hold is lifecycle evidence only, not GPU performance."
+  ]
+}
