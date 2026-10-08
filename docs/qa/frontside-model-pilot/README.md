@@ -1207,3 +1207,29 @@ Sharing attributes removes private-vertex buffer growth, but cannot waive the
 same triangle gates (three native states and two bridges category-wide still
 exceed them), or assume benefit from the raw forced-Front ceiling. Category
 adaptation remains incomplete and no production assets are replaced.
+
+Native stemReverses guided at HEADf021bd7c is archived maize-stem-reverses-guided-*
+as a training PASS only: source repeats/indexed/groupedDouble are exact, IoU1,
+MAE0.00000049304, tile0.00039405 and one RGB outlier pixel. No visual result of
+this view is called independent acceptance. The next CULT_STEM_REVERSE_V3 is
+generated before drawing by tools/frontside_crop_independent_profile.py from
+fixed seed f021bd7c:stem-reverse-independent-v3 and SHA256(seed:index). It reads
+no result file and deterministically stratifies12angles/elevations/clocks,
+five native states/seed/three transitions, all6biomes andday/dawn/night. Its
+old V1/V2/guided failures remain immutable. It stops first invalid original or
+failing candidate and cannot promote the category. onBeforeShadow now records
+actual depth material.side per mesh/group/arm at draw time; this initial screen
+still requests DoubleSide shadows, so no Front shadow gate is inferred.
+
+An additional OFFLINE separate worker Crate11 pilot reconstructs57 undefined
+normals with consistent support (maximum15degrees), leaving every defined
+normal bit unchanged. Raw732f0e69c12fb5b53ed9b7b76d0f6455fa89fc0cd962af10d841996e73935bed,
+web4053b9b717e840313b7346fc85ead6b24e15e45b128ea5f876f711b0cf46bc9b;
+web5243648bytes. The generator independently rereads all12clips/440056sampler
+bytes, other meshes/UV/materials/images/nodes/skin inverse binds unchanged.
+It is separate from Nozzle/Badge, not an aggregate repair. Original57zero
+vertices touch108faces:54 have exactly repeated positions and54 do not; only
+three of the zero vertices are incident exclusively to repeated-position faces.
+Thus zero normals cannot all be dismissed as unrasterizable debris. This pilot
+has not been served, covered, shadow-tested or visually approved; Badge's
+rejection does not automatically prove all accessory repairs fail.

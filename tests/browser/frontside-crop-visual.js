@@ -29,6 +29,7 @@ async function run(){
  const sidePartition=options.has('sidePartition');if(sidePartition&&(sourceNormalPath||interleaveReverses||colorGuided||options.has('mapRgb')))throw Error('Partition design must remain isolated from reversal training and legacy single-material ID mapping');
  const stemOnly=options.has('stemOnly');if(stemOnly&&!sidePartition)throw Error('Stem subset requires isolated sidePartition');
  const stemReverses=options.has('stemReverses');if(stemReverses&&(!stemOnly||!options.has('preserveDoubleShader')||options.has('withheldV1')||options.has('withheldV2')||options.has('mapSourceRgb')))throw Error('Stem reverse derivative requires isolated source-shader training profile, not reused withheld or original-ID diagnostics');
+ const independentV3=options.has('independentV3');if(independentV3&&!stemReverses)throw Error('New independent profile requires its frozen stem derivative');
  const preserveDoubleShader=options.has('preserveDoubleShader');if(preserveDoubleShader&&!sidePartition)throw Error('Original DoubleSide shader diagnostic requires sidePartition');
  const mapSourceRgb=options.has('mapSourceRgb');if(mapSourceRgb&&(!sidePartition||bridgeOnly||limit!==1))throw Error('Source-only RGB diagnosis requires one isolated native-state partition view');
  const blenderLeafReduction=options.has('blenderLeafReduction');if(blenderLeafReduction&&(sidePartition||bridgeOnly||sourceNormalPath||interleaveReverses||colorGuided||options.has('mapRgb')))throw Error('Derived leaf pilot is isolated mature-state geometry; bridges and original-ID diagnostics are unavailable');
@@ -37,6 +38,8 @@ async function run(){
  const [gltf,data,selection,pairSelection]=await Promise.all([sourceAssets.model(url),fetch('/content/crop-bridges.json').then(r=>r.json()),fetch('/docs/qa/frontside-model-pilot/runtime-visibility-selection.json').then(r=>r.json()),fetch('/docs/qa/frontside-model-pilot/runtime-visibility-crop-pairs-selection.json').then(r=>r.json())]);
  const training=colorGuided?await fetch('/docs/qa/frontside-model-pilot/crop-color-guided-training.json').then(r=>r.json()):null;
  const stemBudget=stemReverses?await fetch('/docs/qa/frontside-model-pilot/crop-stem-reverse-budget.json').then(r=>r.json()):null;
+ const independentProfile=independentV3?await fetch('/docs/qa/frontside-model-pilot/crop-stem-reverse-independent-v3.json').then(r=>r.json()):null;
+ if(independentProfile&&(independentProfile.status!=='PROSPECTIVE_INDEPENDENT_CASES_NOT_APPROVAL'||independentProfile.profile!=='CULT_STEM_REVERSE_V3'))throw Error('Independent profile identity mismatch');
  if(stemBudget&&(stemBudget.status!=='STEM_DERIVATIVE_COST_ONLY_NOT_APPROVED'||stemBudget.sourceSha256!==url.split('/').at(-1).replace('.glb','')))throw Error('Stem training source/budget mismatch');
  let derivedPayload=null,derivedReceipt=null;
  if(blenderLeafReduction){derivedReceipt=await fetch('/docs/qa/frontside-model-pilot/maize-blender-leaf-reduction-diagnostic.json').then(r=>r.json());const response=await fetch('/__frontside_candidate/maize-leaf-reduction');if(!response.ok)throw Error('Derived archive unavailable');const bytes=await response.arrayBuffer(),hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)),v=>v.toString(16).padStart(2,'0')).join('');if(hash!==derivedReceipt.archiveSha256)throw Error('Derived archive hash mismatch');derivedPayload=JSON.parse(new TextDecoder().decode(bytes));if(derivedPayload.sourceSha256!==derivedReceipt.sourceSha256||derivedPayload.mesh!=='maiz_05_maduro')throw Error('Derived source/mesh mismatch');}
@@ -46,7 +49,7 @@ async function run(){
  const scene=new THREE.Scene(),toon=new AfricanToon(),registry=new SceneMaterialRegistry(scene,toon),sky=new NativeSky();await sky.load();toon.environment(sky.environmentTextures,sky.uniforms.uSkyYaw);
  const sun=new THREE.DirectionalLight('#ffe2a8',3),ambient=new THREE.HemisphereLight('#ebf1d9','#765b3b',2);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);configureShadowCamera(sun);updateShadowCamera(sun,new THREE.Vector3());scene.add(sun,sun.target,ambient);
  const release=installNativeShadow(renderer,sun,toon.shadowUniforms);release.cache.enabled=false;
- const rigs=[],resourceRows=[],ownedCandidateGeometries=[],partitionMaterials=[];
+ const rigs=[],resourceRows=[],ownedCandidateGeometries=[],partitionMaterials=[],effectiveShadowDraws={};
  for(let arm=0;arm<4;arm++){
   const group=new THREE.Group();const batch=createCropBatch(group,renderer,gltf,data,2),speciesBudgets={},meshBudgets=[];let sourceTriangles=0,candidateTriangles=0,bytes=0;
   group.traverse(mesh=>{if(!mesh.isMesh)return;const match=mesh.name.match(/^puente_(.+)_(\d+)_(\d+)$/),originalGeometry=mesh.geometry,originalFaceCount=(originalGeometry.index?.count??originalGeometry.getAttribute('position').count)/3,species=match?match[1]:sourceModels.find(m=>m.name===mesh.name).userData.crop;let changed=false;
@@ -71,6 +74,7 @@ async function run(){
    const candidateFaceCount=(mesh.geometry.index?.count??mesh.geometry.getAttribute('position').count)/3,meshBytes=Object.values(mesh.geometry.attributes).reduce((n,a)=>n+a.array.byteLength,0)+(mesh.geometry.index?.array.byteLength??0)+mesh.instanceMatrix.array.byteLength;
    meshBudgets.push({mesh:mesh.name,sourceTriangles:originalFaceCount,candidateTriangles:candidateFaceCount,sourceVertices:originalGeometry.getAttribute('position').count,candidateVertices:mesh.geometry.getAttribute('position').count,sourceDecodedGeometryBytes:Object.values(originalGeometry.attributes).reduce((n,a)=>n+a.array.byteLength,0)+(originalGeometry.index?.array.byteLength??0),candidateDecodedGeometryBytes:meshBytes-mesh.instanceMatrix.array.byteLength,indexEntries:mesh.geometry.index?.count??0,indexBytes:mesh.geometry.index?.array.byteLength??0,instanceMatrixBytes:mesh.instanceMatrix.array.byteLength,meaning:'CPU typed-array storage for this arm; not measured GPU allocations or shader invocation count'});
    candidateTriangles+=candidateFaceCount;bytes+=meshBytes;const speciesRow=speciesBudgets[species]??={sourceTriangles:0,candidateTriangles:0,geometryAndInstanceBufferBytes:0};speciesRow.sourceTriangles+=originalFaceCount;speciesRow.candidateTriangles+=candidateFaceCount;speciesRow.geometryAndInstanceBufferBytes+=meshBytes;mesh.castShadow=mesh.receiveShadow=true;
+   const beforeShadow=mesh.onBeforeShadow;mesh.onBeforeShadow=function(...args){beforeShadow?.apply(this,args);const material=args[5],group=args[6],key=JSON.stringify({arm,mesh:this.name,group:group?.materialIndex??null,side:material.side});effectiveShadowDraws[key]=(effectiveShadowDraws[key]??0)+1;};
   });for(const row of Object.values(speciesBudgets))row.triGrowthPercent=100*(row.candidateTriangles/row.sourceTriangles-1);
   scene.add(group);rigs.push({group,batch});resourceRows.push({arm,sourceTriangles,candidateTriangles,triGrowthPercent:100*(candidateTriangles/sourceTriangles-1),geometryAndInstanceBufferBytes:bytes,speciesBudgets,meshes:meshBudgets});
  }
@@ -88,7 +92,10 @@ async function run(){
  const transitionWidth=Math.min(.34,2/(.25*cropSpec('maiz').growth_seconds)),bridgeGrowths=(withheldV1?[.375,.875]:[.25,.5,.75]).map(t=>.53+.25*(.81-transitionWidth*.5+transitionWidth*t));
  const camera=new THREE.PerspectiveCamera(35,1,.01,100),pixels=Array.from({length:4},()=>new Uint8Array(size*size*4)),growths=blenderLeafReduction?[1]:bridgeOnly?bridgeGrowths:[1,...bridgeGrowths,.065,.27,.53,.78];let stop=false;
  const cases=[];
- if(withheldV2){
+ if(independentV3){
+  for(const row of independentProfile.cases){const growth=typeof row.growth==='string'?.53+.25*(.81-transitionWidth*.5+transitionWidth*Number(row.growth.split(':')[1])):row.growth;cases.push({...row,growth});}
+  report.viewProfile=independentProfile.profile;report.independentProfile=independentProfile;report.prospectiveCases=cases;
+ }else if(withheldV2){
   if(!stemOnly)throw Error('V2 prospective partial candidate profile requires stemOnly');
   const bg=t=>.53+.25*(.81-transitionWidth*.5+transitionWidth*t);
   const rows=[
@@ -114,5 +121,6 @@ async function run(){
   if(options.has('mapRgb')){report.rgbFaceProvenance=[];for(const arm of [0,3]){rigs.forEach((r,i)=>r.group.visible=i===arm);report.rgbFaceProvenance.push({arm,faces:mapColorProvenance(renderer,rigs[arm].group,scene,camera,pixels[0],pixels[3],size)});}}
   if(mapSourceRgb){rigs.forEach((r,i)=>r.group.visible=i===0);const faces=mapColorProvenance(renderer,rigs[0].group,scene,camera,pixels[0],pixels[3],size);for(const face of faces){const source=sourceModels.find(m=>m.name===face.mesh);if(!source)throw Error('Source RGB face label mapping currently requires a native state, not a bridge');const meta=source.userData;face.faceLabel=data.models[meta.cropIndex*5+meta.stage-1].faceLabels[face.sourceFace];if(face.faceLabel===undefined)throw Error('Source RGB face outside original labels');}report.sourceRgbFaceProvenance={sourceArm:0,faces,meaning:'Later single-material original-source ID draw, joined to saved nominal RGB outliers and original face labels. No candidate array-material ID draw, no causal or acceptance inference.'};}
  }
+ report.effectiveShadowDraws=Object.entries(effectiveShadowDraws).map(([key,draws])=>({...JSON.parse(key),draws}));
  await fetch('/__frontside_report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)});release();registry.dispose();for(const p of partitionMaterials){p.mesh.material=p.originalMaterial;for(const material of p.materials)material.dispose();}for(const geo of ownedCandidateGeometries)geo.dispose();for(const r of rigs)r.batch.dispose();sourceAssets.disposeModels();renderer.dispose();renderer.forceContextLoss();status.textContent+='\nInforme guardado, GPU liberada. NOT APPROVED.';
 }

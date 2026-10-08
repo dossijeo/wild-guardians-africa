@@ -1,0 +1,109 @@
+{
+  "status": "PROSPECTIVE_INDEPENDENT_CASES_NOT_APPROVAL",
+  "profile": "CULT_STEM_REVERSE_V3",
+  "seed": "f021bd7c:stem-reverse-independent-v3",
+  "algorithm": "SHA256(seed:index), deterministic angular/elevation/time stratification; no input result files.",
+  "cases": [
+    {
+      "growth": 1,
+      "clock": 3.1846084594726562,
+      "biome": "sabana",
+      "night": 0,
+      "elevation": 20.598039215686274,
+      "azimuth": 14.435310363769531
+    },
+    {
+      "growth": 0.065,
+      "clock": 4.345184326171875,
+      "biome": "manglares",
+      "night": 0,
+      "elevation": 51.970588235294116,
+      "azimuth": 150.89525331884767
+    },
+    {
+      "growth": 0.27,
+      "clock": 3.80908203125,
+      "biome": "gran-rio",
+      "night": 0,
+      "elevation": 81.57843137254902,
+      "azimuth": 291.28372410595705
+    },
+    {
+      "growth": 0.53,
+      "clock": 6.278526306152344,
+      "biome": "volcanes",
+      "night": 0.5,
+      "elevation": 17.57843137254902,
+      "azimuth": 57.73435919970706
+    },
+    {
+      "growth": 0.78,
+      "clock": 3.8176422119140625,
+      "biome": "gran-canon",
+      "night": 0.5,
+      "elevation": 50.34313725490196,
+      "azimuth": 198.22109658837894
+    },
+    {
+      "growth": 1,
+      "clock": 2.124237060546875,
+      "biome": "desierto",
+      "night": 0.5,
+      "elevation": 79.32352941176471,
+      "azimuth": 342.2363526538086
+    },
+    {
+      "growth": "bridge:.21875",
+      "clock": 5.252815246582031,
+      "biome": "sabana",
+      "night": 1,
+      "elevation": 19.754901960784313,
+      "azimuth": 121.74015699804693
+    },
+    {
+      "growth": "bridge:.46875",
+      "clock": 2.7706985473632812,
+      "biome": "manglares",
+      "night": 1,
+      "elevation": 52.14705882352941,
+      "azimuth": 258.0823402485353
+    },
+    {
+      "growth": "bridge:.78125",
+      "clock": 3.8068161010742188,
+      "biome": "gran-rio",
+      "night": 1,
+      "elevation": 82.16666666666667,
+      "azimuth": 21.210335876953195
+    },
+    {
+      "growth": 0.005,
+      "clock": 6.051094055175781,
+      "biome": "volcanes",
+      "night": 0,
+      "elevation": 20.029411764705884,
+      "azimuth": 161.98519735009768
+    },
+    {
+      "growth": 0.865,
+      "clock": 1.83587646484375,
+      "biome": "gran-canon",
+      "night": 0,
+      "elevation": -12.127450980392156,
+      "azimuth": 301.62438530029294
+    },
+    {
+      "growth": 1,
+      "clock": 4.6649322509765625,
+      "biome": "desierto",
+      "night": 0,
+      "elevation": 81.81372549019608,
+      "azimuth": 73.13121088476578
+    }
+  ],
+  "limitations": [
+    "New partial candidate; prior V1/V2/guided negatives preserved and not reused as acceptance.",
+    "Stop first source invalidity or candidate failure; no reroll, threshold relaxation or training from these pixels.",
+    "Color isolation with DoubleSide shadows; full angular/culture coverage and effective Front shadow/depth/resource/GPU gates remain."
+  ]
+}
