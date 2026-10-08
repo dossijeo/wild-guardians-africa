@@ -1,0 +1,61 @@
+{
+  "status": "SHARED_REVERSE_RESOURCE_AUDIT_NOT_VISUAL_OR_GPU_APPROVAL",
+  "sourceSha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+  "archiveSha256": "4d6d5dd729211e9ed5e429915ec81960da5e6b2197d1c8982a3dbb6a92893065",
+  "mesh": "maiz_05_maduro",
+  "ratio": 0.5,
+  "originalTriangles": 4935,
+  "forwardTriangles": 3429,
+  "bilateralTriangles": 4932,
+  "uniquePNUVVertices": 6903,
+  "indexType": "Uint16Array",
+  "vertexBytes": 220896,
+  "indexBytes": 29592,
+  "geometryBytes": 250488,
+  "sourceGeometryBytes": 317066,
+  "geometryChangePercent": -20.99815180435619,
+  "triangleChangePercent": -0.06079027355623268,
+  "controlledWriterVerified": true,
+  "liveGrowthBorrowed": true,
+  "actualGroups": [
+    {
+      "start": 0,
+      "count": 5778,
+      "materialIndex": 0
+    },
+    {
+      "start": 5778,
+      "count": 4509,
+      "materialIndex": 1
+    },
+    {
+      "start": 10287,
+      "count": 4509,
+      "materialIndex": 2
+    }
+  ],
+  "groups": [
+    {
+      "meaning": "original core",
+      "triangles": 1926
+    },
+    {
+      "meaning": "derived leaf forward",
+      "triangles": 1503
+    },
+    {
+      "meaning": "same derived leaf reverse; original back-facing material recipe required",
+      "triangles": 1503
+    }
+  ],
+  "nominalOriginalPlusCandidateGeometryBytes": 567554,
+  "nominalStandaloneGeometryPass": true,
+  "trianglePass": true,
+  "limitations": [
+    "No new model exported or native draw executed; historical .5 visual rejection remains unchanged. Human policy3 reevaluation is pending.",
+    "No reverse normal/UV/flag vertex copies; uniform per-material source-back-facing recipe must be validated with real normal maps.",
+    "Three groups may increase color/shadow submissions, even with fewer unique vertices. Invocation counts, net GPU timing and resident memory are unmeasured.",
+    "Original/candidate coexistence shown separately; category, bridge, material, driver, full web bytes and measured peak GPU budgets remain unverified.",
+    "All leaf faces get geometric reverses, independent of camera visibility. Leaf driver labels remain explicit, but new bridge topology correspondence is still required."
+  ]
+}
