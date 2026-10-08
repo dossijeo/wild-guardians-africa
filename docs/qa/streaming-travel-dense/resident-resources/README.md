@@ -92,3 +92,20 @@ three programs before context/tab destruction. Tab closed.
 `textures-receipt.json` hashes the uncompressed raw report; `verify.mjs` checks
 the phase arithmetic, farm/device, fence and cleanup. Separate uninstrumented
 ABBA and visual checks are still required before production integration.
+### Rigid crate shadow-program resource interval
+
+Native tab 832, source `8726ceeb`, repeats the same stationary dense Gran Río
+fixture and awaits all 34 actors. Immediately before/after the no-draw depth
+primer, tracked buffer storage stays at 80,424,806 B / 1,476 buffers,
+geometries at 234, texture objects at 101. Programs increase from 81 to 82.
+The stationary five-second phase retains those counts. Disposal records zero
+live tracked bytes/buffers and geometries; five texture objects and three
+programs remain before renderer/context destruction, as in the preceding arm.
+
+The raw report, hash receipt and endpoint screenshot are `crate-closed.json.gz`,
+`crate-receipt.json` and `crate-final.jpg`. The existing verifier now checks
+farm/device identity, interval arithmetic, one-program delta, cancellation-free
+completion and cleanup. This measures requested buffer storage and object
+counts, excluding physical VRAM/RAM and driver shader caches. Instrumented
+frame times are not performance evidence. Fresh uninstrumented AB/BA and
+visual/shadow regression remain open before production integration.

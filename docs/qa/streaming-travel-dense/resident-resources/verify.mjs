@@ -59,3 +59,22 @@ assert.equal(ts.get('after-resident-textures').renderer.textures-ts.get('after-r
 assert.equal(textureReceipt.textureCountDelta,2);
 assert.equal(ts.get('after-world-dispose').buffers.liveBytes,0);assert.equal(ts.get('after-world-dispose').buffers.liveBuffers,0);
 console.log('PASS: resident texture interval, 27 initializations/fence, no additional tracked buffer bytes, two more texture allocations. Not physical memory or performance acceptance.');
+
+const crateReceipt=JSON.parse(await readFile(new URL('crate-receipt.json',import.meta.url),'utf8'));
+const crateRaw=gunzipSync(await readFile(new URL('crate-closed.json.gz',import.meta.url)));
+assert.equal(createHash('sha256').update(crateRaw).digest('hex'),crateReceipt.sha256);
+const crateReport=JSON.parse(crateRaw),cs=new Map(crateReport.resourceStages.map(s=>[s.name,s]));
+assert.equal(crateReport.done,true);assert.equal(crateReport.disposed,true);assert.equal(crateReport.logicalUnchanged,true);
+assert.deepEqual(crateReport.errors,[]);assert.deepEqual(crateReport.farm,textureReport.farm);assert.deepEqual(crateReport.device,textureReport.device);
+assert.equal(crateReport.speed,0);assert.equal(crateReport.duration,5);assert.equal(crateReport.actorReadiness.awaited,34);
+assert.equal(crateReport.residentShadowPreparation.source,'Prop_FruitCrate_geometry_7');
+const pre=cs.get('after-resident-textures'),post=cs.get('after-crate-shadow');
+assert.equal(post.buffers.liveBytes-pre.buffers.liveBytes,crateReceipt.bufferDelta);
+assert.equal(post.buffers.liveBuffers,pre.buffers.liveBuffers);
+assert.equal(post.renderer.geometries,pre.renderer.geometries);
+assert.equal(post.renderer.textures-pre.renderer.textures,crateReceipt.textureCountDelta);
+assert.equal(post.renderer.programs-pre.renderer.programs,crateReceipt.programCountDelta);
+assert.equal(crateReceipt.bufferDelta,0);assert.equal(crateReceipt.textureCountDelta,0);assert.equal(crateReceipt.programCountDelta,1);
+for(const stage of cs.values()){const b=stage.buffers;assert.equal(b.unattributed,0);assert.equal(b.liveBytes,b.requestedBytes-b.replacedBytes-b.deletedBytes);}
+assert.equal(cs.get('after-world-dispose').buffers.liveBytes,0);assert.equal(cs.get('after-world-dispose').buffers.liveBuffers,0);
+console.log('PASS: crate depth-primer interval adds one program, no tracked buffers/geometries/texture objects, and tracked buffers close at zero. Not physical memory or performance acceptance.');
