@@ -1,8 +1,5 @@
 <!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Native baseline first crops QA</title><style>body{margin:0;background:#735b3d;color:white;font:15px system-ui}canvas{width:100vw;height:100vh}aside{position:fixed;top:0;left:0;padding:12px;background:#172019e8;max-height:45vh;overflow:auto}button{padding:12px}pre{white-space:pre-wrap}</style><script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js","three/addons/":"/node_modules/three/examples/jsm/"}}</script><canvas></canvas><aside><button id="run">Run native loading baseline</button><button id="dispose" disabled>Dispose</button><button id="qa-center" disabled>Build paid QA centre</button><button id="qa-maize" disabled>Plant first native maize</button><button id="qa-millet" disabled>Plant first native millet</button><pre id="status">Ready. No world or renderer initialized.</pre></aside><script type="application/json" id="report">{}</script><script type="module">
 import * as Game from '/src/simulation/game.js';
-import {BufferRequests} from './buffer-requests.js';
-import {TextureRequests} from './texture-requests.js';
-import {loadingAssetInventory} from './loading-asset-inventory.js';
 import {deserialize,serialize} from '/src/persistence/snapshots.js';
 import {resumeLoadedWorld} from '/src/app/resume-loaded-world.js';
 import {Navigation,BIOME_IDS} from '/src/world/navigation.js';
