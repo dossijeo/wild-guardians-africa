@@ -202,6 +202,30 @@
       "path": "production-game.mjs.gz",
       "rawBytes": 45371,
       "sha256": "b931b1e14d23185bdc3709f39718ff6bae13a2ae02bf1033449c11ea3b270078"
+    },
+    {
+      "source": ".cache/check-v6-full-workday.mjs",
+      "path": "full-workday-runner.mjs.gz",
+      "rawBytes": 5037,
+      "sha256": "1fa3cb32947ec1f023eb470abc7741e5b7e7d1787fa748cfcd789cb3ab7871d4"
+    },
+    {
+      "source": ".cache/worker-route-refinement/full-workday-v6.json",
+      "path": "full-workday.json.gz",
+      "rawBytes": 8280,
+      "sha256": "31daf51e1780cba20dc859c7f3ad12f70890db38e0806db9315295d4ecbe2fd1"
+    },
+    {
+      "source": ".cache/worker-route-refinement/full-workday-v6-state.json",
+      "path": "full-workday-state.json.gz",
+      "rawBytes": 14191660,
+      "sha256": "9c10ed33b8decc4e408926b0b078ad649048a61c6255bf4da2870037b0827a73"
+    },
+    {
+      "source": "public/content/biome-savanna.json",
+      "path": "full-workday-profile.json.gz",
+      "rawBytes": 21482,
+      "sha256": "adb68fd97b2c45ef681313d4bc3418c3aac76101857391b961521f5cddfc4411"
     }
   ],
   "benchmarkExitCode": 0,
@@ -212,5 +236,7 @@
   "nativeTrafficExitCode": 0,
   "fluidBoundaryExitCode": 0,
   "productionCostExitCode": 0,
-  "productionCostAmbientHead": "441051d978f5f89e2964dc24da73799bc35f2c0e"
+  "productionCostAmbientHead": "441051d978f5f89e2964dc24da73799bc35f2c0e",
+  "fullWorkdayExitCode": 0,
+  "fullWorkdayAmbientHead": "b84b0a539b22d97ab4d31ba21b21c19dacb66464"
 }
