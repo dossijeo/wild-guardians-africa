@@ -3,6 +3,34 @@ import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import {withDepthCaptureMaterials} from '../src/rendering/depth-capture.js';
 
+test('grouped depth opt-in preserves separate shadow recipe and restores material array identity after draw failure',()=>{
+ const world=new THREE.Scene(),geometry=new THREE.BoxGeometry(),sources=[new THREE.MeshStandardMaterial(),new THREE.MeshStandardMaterial()],mesh=new THREE.Mesh(geometry,sources);
+ const shadow=new THREE.MeshDepthMaterial({side:THREE.DoubleSide}),depth=new THREE.MeshDepthMaterial();depth.userData.worldDepthCompatible=true;
+ mesh.customDepthMaterial=shadow;mesh.customWorldDepthMaterial=depth;world.add(mesh);
+ assert.throws(()=>withDepthCaptureMaterials(world,stats=>{assert.equal(stats.specialized,1);assert.ok(Array.isArray(mesh.material));assert.ok(mesh.material.every(m=>m===depth));assert.equal(mesh.customDepthMaterial,shadow);assert.equal(depth.side,THREE.FrontSide);assert.equal(depth.colorWrite,false);throw Error('draw failed');},{materialArrays:true}),/draw failed/);
+ assert.equal(mesh.material,sources);assert.equal(depth.colorWrite,true);assert.equal(shadow.colorWrite,true);
+ const defaultStats=withDepthCaptureMaterials(world,()=>assert.equal(mesh.material,sources));assert.equal(defaultStats.specialized,0);
+ geometry.dispose();for(const m of [...sources,shadow,depth])m.dispose();
+});
+
+test('grouped stock depths preserve per-group alpha and side, while one unknown group keeps the entire original route',()=>{
+ const world=new THREE.Scene(),geometry=new THREE.BoxGeometry(),map=new THREE.Texture(),sources=[new THREE.MeshStandardMaterial(),new THREE.MeshStandardMaterial({side:THREE.BackSide,alphaTest:.3,map})],mesh=new THREE.Mesh(geometry,sources);world.add(mesh);
+ let depths;
+ const stats=withDepthCaptureMaterials(world,()=>{depths=mesh.material;assert.ok(Array.isArray(depths));assert.equal(depths[0].side,THREE.FrontSide);assert.equal(depths[1].side,THREE.BackSide);assert.equal(depths[1].map,map);assert.equal(depths[1].alphaTest,.3);assert.ok(depths.every(m=>m.colorWrite===false));},{materialArrays:true,stockAlpha:true});
+ assert.equal(stats.specialized,1);assert.equal(stats.stockAlphaSpecialized,1);assert.equal(mesh.material,sources);assert.ok(depths.every(m=>m.colorWrite===true));
+ sources[1].onBeforeCompile=()=>{};
+ const fallback=withDepthCaptureMaterials(world,()=>assert.equal(mesh.material,sources),{materialArrays:true,stockAlpha:true});assert.equal(fallback.specialized,0);assert.equal(fallback.fallback,1);
+ geometry.dispose();for(const m of sources)m.dispose();map.dispose();
+});
+
+test('grouped authored depth rejects any mismatched side or alpha and retains original depth ownership',()=>{
+ const world=new THREE.Scene(),geometry=new THREE.BoxGeometry(),sources=[new THREE.MeshStandardMaterial(),new THREE.MeshStandardMaterial({side:THREE.BackSide})],mesh=new THREE.Mesh(geometry,sources),depth=new THREE.MeshDepthMaterial();depth.userData.worldDepthCompatible=true;mesh.customWorldDepthMaterial=depth;world.add(mesh);
+ assert.equal(withDepthCaptureMaterials(world,()=>assert.equal(mesh.material,sources),{materialArrays:true}).specialized,0);
+ sources[1].side=THREE.FrontSide;sources[1].alphaTest=.2;
+ assert.equal(withDepthCaptureMaterials(world,()=>assert.equal(mesh.material,sources),{materialArrays:true,stockAlpha:true}).specialized,0);
+ assert.equal(mesh.customWorldDepthMaterial,depth);assert.equal(depth.colorWrite,true);geometry.dispose();for(const m of [...sources,depth])m.dispose();
+});
+
 function fixture(){
  const world=new THREE.Scene(),source=new THREE.MeshStandardMaterial({side:THREE.DoubleSide}),depth=new THREE.MeshDepthMaterial({side:THREE.DoubleSide}),mesh=new THREE.Mesh(new THREE.BoxGeometry(),source);
  depth.userData.worldDepthCompatible=true;mesh.customDepthMaterial=depth;world.add(mesh);return {world,mesh,source,depth};
