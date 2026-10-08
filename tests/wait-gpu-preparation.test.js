@@ -71,3 +71,53 @@ test('an already failed compilation does not yield and preserves even non-Error 
   check:()=>assert.fail('failure should propagate'),nextFrame:()=>assert.fail('extra frame')
  }),error=>error===rejection);
 });
+
+test('owner cancellation wakes a suspended frame wait and removes its signal listener',async()=>{
+ const owner=new AbortController();let listenerCount=0,frameStarted=false;
+ const signal={
+  get aborted(){return owner.signal.aborted;},get reason(){return owner.signal.reason;},
+  addEventListener:(...args)=>{listenerCount++;owner.signal.addEventListener(...args);},
+  removeEventListener:(...args)=>{listenerCount--;owner.signal.removeEventListener(...args);}
+ };
+ const reason=Error('world disposed');
+ const waiting=waitGpuPreparation(new Promise(()=>{}),{
+  signal,pollIntervalMs:5,
+  check:()=>{if(signal.aborted)throw reason;},
+  nextFrame:()=>{frameStarted=true;return new Promise(()=>{});}
+ });
+ await new Promise(resolve=>setImmediate(resolve));
+ assert.equal(frameStarted,true);owner.abort(reason);
+ await assert.rejects(waiting,error=>error===reason);
+ assert.equal(listenerCount,0);
+});
+
+test('deadline checks continue when neither driver compilation nor RAF settles',async()=>{
+ const started=performance.now();let checks=0;
+ await assert.rejects(waitGpuPreparation(new Promise(()=>{}),{
+  pollIntervalMs:5,
+  check:()=>{checks++;if(performance.now()-started>=15)throw Error('deadline');},
+  nextFrame:()=>new Promise(()=>{})
+ }),/deadline/);
+ const finishedChecks=checks;
+ await new Promise(resolve=>setTimeout(resolve,15));
+ assert.equal(checks,finishedChecks,'deadline timer must be cleared after exit');
+});
+
+test('driver readiness wakes a suspended RAF and releases owner/timer checks',async()=>{
+ let resolve,checks=0;const pending=new Promise(done=>resolve=done);
+ const waiting=waitGpuPreparation(pending,{
+  pollIntervalMs:5,check:()=>checks++,nextFrame:()=>new Promise(()=>{})
+ });
+ await new Promise(done=>setImmediate(done));resolve();await waiting;
+ const finishedChecks=checks;
+ await new Promise(done=>setTimeout(done,15));
+ assert.equal(checks,finishedChecks);
+});
+
+test('an already aborted owner fails without submitting a frame',async()=>{
+ const owner=new AbortController(),reason=Error('already closed');owner.abort(reason);
+ await assert.rejects(waitGpuPreparation(new Promise(()=>{}),{
+  signal:owner.signal,check:()=>{if(owner.signal.aborted)throw reason;},
+  nextFrame:()=>assert.fail('frame after cancellation')
+ }),error=>error===reason);
+});
