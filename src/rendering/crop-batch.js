@@ -4,6 +4,7 @@ import {cropSpec} from '../simulation/rules.js';
 const ids=['maiz','algodon','girasol','platano','sorgo','mijo','yuca','batata'];
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),mix=(a,b,t)=>a+(b-a)*t,smooth=t=>{t=clamp(t,0,1);return t*t*(3-2*t);};
 const MARKS=[.065,.27,.53,.78,1];
+const ZERO_ORIGIN={x:0,z:0};
 export function createCropBatch(scene,renderer,gltf,bridgeData,MAX_PLANTS=128) {
  const state={morphSeconds:2},renderOrigin={x:0,z:0};
  let models=[],bridges=[],counts=new Uint32Array(40),bridgeCounts=new Uint32Array(32);
@@ -253,11 +254,14 @@ function writeInstance(modelIndex,plant,part){
 }
 
  prepareModels(gltf);prepareBridges(bridgeData);
+ // Model ownership is fixed for this batch. Reuse the same list while animating
+ // growth/wind instead of constructing a combined array every rendered frame.
+ const renderables=[...models,...bridges];
  return {
   capacity:MAX_PLANTS,
-  update(plants,clock,ground,origin={x:0,z:0},groundKey=null) {
+  update(plants,clock,ground,origin=ZERO_ORIGIN,groundKey=null) {
    if(groundKey!==terrainIdentity){entitySamples=new WeakMap();terrainIdentity=groundKey;}
-   renderOrigin.x=origin.x;renderOrigin.z=origin.z;for(const model of [...models,...bridges])model.mesh.position.set(origin.x,0,origin.z);
+   renderOrigin.x=origin.x;renderOrigin.z=origin.z;for(const model of renderables)model.mesh.position.set(origin.x,0,origin.z);
    uniforms.clock.value=clock;counts.fill(0);bridgeCounts.fill(0);dirty.clear();
    for(const entity of plants){
     let entry=entitySamples.get(entity);
@@ -278,7 +282,7 @@ function writeInstance(modelIndex,plant,part){
    for(let i=0;i<bridges.length;i++){const b=bridges[i];b.mesh.count=Math.min(MAX_PLANTS,bridgeCounts[i]);b.mesh.visible=b.mesh.count>0;}
    for(const [attribute,[first,last]] of dirty){attribute.addUpdateRange(first,last-first+1);attribute.needsUpdate=true;}
   },
-  dispose(){entitySamples=new WeakMap();terrainIdentity=null;for(const model of [...models,...bridges]){scene.remove(model.mesh);model.mesh.dispose();model.geo.dispose();model.mesh.material.dispose();model.mesh.customDepthMaterial?.dispose();}},
+  dispose(){entitySamples=new WeakMap();terrainIdentity=null;for(const model of renderables){scene.remove(model.mesh);model.mesh.dispose();model.geo.dispose();model.mesh.material.dispose();model.mesh.customDepthMaterial?.dispose();}},
   sample:(id,growth)=>stageSample(ids.indexOf(id),growth/cropSpec(id).growth_seconds)
  };
 }
