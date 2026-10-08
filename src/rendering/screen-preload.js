@@ -1,3 +1,4 @@
+import {loadingYieldBudget} from './loading-yield-budget.js';
 import {Vector4} from 'three';
 import {withScreenTarget} from './screen-target.js';
 
@@ -22,7 +23,8 @@ export async function waitForGpuPreload(renderer,{cancelled=()=>false,nextFrame=
 // Submit the same native screen/shadow recipes in small groups, so first-use
 // buffer/texture uploads and shadow variants are spread across real frames.
 // Color batches reuse shadows; one complete native shadow pass precedes readiness.
-export async function renderScreenPreloadBatched(renderer,scene,camera,{batchSize=4,warmShadows=false,cancelled=()=>false,nextFrame=()=>new Promise(resolve=>requestAnimationFrame(resolve)),onBatch=()=>{}}={}){
+export async function renderScreenPreloadBatched(renderer,scene,camera,{batchSize=4,frameBudget=0,now=()=>performance.now(),warmShadows=false,cancelled=()=>false,nextFrame=()=>new Promise(resolve=>requestAnimationFrame(resolve)),onBatch=()=>{}}={}){
+ const yieldWork=loadingYieldBudget({frameBudget,now,nextFrame});
  const meshes=[];scene.traverseVisible(object=>{if(object.isMesh||object.isLine||object.isPoints)meshes.push(object);});
  const visible=new Map(meshes.map(mesh=>[mesh,mesh.visible])),shadows=renderer.shadowMap;
  const lights=[];scene.traverseVisible(object=>{if(object.isLight&&object.shadow)lights.push([object.shadow,object.shadow.needsUpdate,object.shadow.autoUpdate]);});
@@ -37,7 +39,7 @@ export async function renderScreenPreloadBatched(renderer,scene,camera,{batchSiz
    check();const batch=new Set(meshes.slice(start,start+batchSize));
    for(const mesh of batch)for(let parent=mesh.parent;parent;parent=parent.parent)if(visible.has(parent))batch.add(parent);
    try{for(const mesh of meshes)mesh.visible=batch.has(mesh);if(warmShadows)invalidate();else suppressShadows();renderScreenPreload(renderer,scene,camera);}finally{restore();restoreShadows();}
-   onBatch(Math.min(meshes.length,start+batchSize),meshes.length);await nextFrame();
+   onBatch(Math.min(meshes.length,start+batchSize),meshes.length);await yieldWork();
   }
   check();invalidate();renderScreenPreload(renderer,scene,camera);
  }finally{restore();restoreShadows();}

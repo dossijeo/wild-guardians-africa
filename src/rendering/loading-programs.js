@@ -1,3 +1,4 @@
+import {loadingYieldBudget} from './loading-yield-budget.js';
 import {withScreenTarget} from './screen-target.js';
 // Three r180 compileAsync uses properties.currentProgram.isReady internally.
 // Snapshot those programs before borrowed depth materials are restored. Polling
@@ -22,14 +23,15 @@ export function compileLoadingPrograms(renderer,scene,camera,targetScene,{signal
 // scene. No mesh is cloned, reparented or hidden: lights, fog, clipping, skinning
 // and instancing retain the actual target-scene/object recipe. Restore screen
 // state synchronously in each submission before yielding to the loading RAF.
-export async function compileLoadingProgramsBatched(renderer,scene,camera,targetScene,{batchSize=4,nextFrame=()=>new Promise(resolve=>requestAnimationFrame(resolve)),...options}={}) {
+export async function compileLoadingProgramsBatched(renderer,scene,camera,targetScene,{batchSize=4,frameBudget=0,now=()=>performance.now(),nextFrame=()=>new Promise(resolve=>requestAnimationFrame(resolve)),...options}={}) {
  if(!Number.isInteger(batchSize)||batchSize<1)throw Error('Loading compile batch size must be positive');
  const objects=[];scene.traverse(object=>{if(object.isMesh||object.isPoints||object.isLine||object.isSprite)objects.push(object);});
  const target=targetScene??scene;
+ const yieldWork=loadingYieldBudget({frameBudget,now,nextFrame});
  for(let start=0;start<objects.length;start+=batchSize){
   const batch=objects.slice(start,start+batchSize);
   const view={traverse:callback=>{for(const object of batch)callback(object);},traverseVisible:()=>{}};
   await compileLoadingPrograms(renderer,view,camera,target,options);
-  await nextFrame();
+  await yieldWork();
  }
 }

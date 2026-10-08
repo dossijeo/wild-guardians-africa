@@ -1,0 +1,153 @@
+{
+  "baseline": "8105979699c71a33c7cc8cfffd878fc0639bf451",
+  "candidate": "26ff8699",
+  "nativeCase": "sabana/mapungubwe/media/712",
+  "backgroundCPU": [
+    41320,
+    41304,
+    49032,
+    49608
+  ],
+  "warmupsDiscarded": true,
+  "arms": [
+    {
+      "arm": "a1",
+      "initializationMs": 18714.799999952316,
+      "controlMs": 18714.799999952316,
+      "frameSummary": {
+        "count": 859,
+        "max": 1593.2999999999993,
+        "over50": 12,
+        "over100": 8
+      },
+      "errors": [],
+      "lastResources": {
+        "geometries": 161,
+        "textures": 55,
+        "programs": 60,
+        "owned": 199
+      },
+      "camera": {
+        "eye": [
+          76.70247532024266,
+          27.37682490650652,
+          30.57367599590944
+        ],
+        "target": [
+          60,
+          12.20192278906814,
+          0
+        ]
+      }
+    },
+    {
+      "arm": "b1",
+      "initializationMs": 23929.799999952316,
+      "controlMs": 28081.299999952316,
+      "frameSummary": {
+        "count": 1556,
+        "max": 116.10000000000036,
+        "over50": 9,
+        "over100": 1
+      },
+      "errors": [],
+      "lastResources": {
+        "geometries": 176,
+        "textures": 67,
+        "programs": 41,
+        "owned": 200,
+        "imageDecoder": {
+          "requests": 13,
+          "peakActive": 2,
+          "peakTransferBytes": 2751072,
+          "peakQueued": 1
+        }
+      },
+      "camera": {
+        "eye": [
+          76.70247532024266,
+          27.37682490650652,
+          30.57367599590944
+        ],
+        "target": [
+          60,
+          12.20192278906814,
+          0
+        ]
+      }
+    },
+    {
+      "arm": "b2",
+      "initializationMs": 23151.699999928474,
+      "controlMs": 27366,
+      "frameSummary": {
+        "count": 1499,
+        "max": 99.69999999999982,
+        "over50": 10,
+        "over100": 0
+      },
+      "errors": [],
+      "lastResources": {
+        "geometries": 176,
+        "textures": 67,
+        "programs": 41,
+        "owned": 200,
+        "imageDecoder": {
+          "requests": 13,
+          "peakActive": 2,
+          "peakTransferBytes": 2751072,
+          "peakQueued": 1
+        }
+      },
+      "camera": {
+        "eye": [
+          76.70247532024266,
+          27.37682490650652,
+          30.57367599590944
+        ],
+        "target": [
+          60,
+          12.20192278906814,
+          0
+        ]
+      }
+    },
+    {
+      "arm": "a2",
+      "initializationMs": 10751.5,
+      "controlMs": 10751.5,
+      "frameSummary": {
+        "count": 412,
+        "max": 1430,
+        "over50": 11,
+        "over100": 8
+      },
+      "errors": [],
+      "lastResources": {
+        "geometries": 161,
+        "textures": 55,
+        "programs": 60,
+        "owned": 199
+      },
+      "camera": {
+        "eye": [
+          76.70247532024266,
+          27.37682490650652,
+          30.57367599590944
+        ],
+        "target": [
+          60,
+          12.20192278906814,
+          0
+        ]
+      }
+    }
+  ],
+  "limitations": [
+    "Two browser origins warmed separately; driver and resource caches may still drift.",
+    "Four historical CPU campaigns remained active; no perfect isolation.",
+    "CPU scheduling/frame intervals and heap counters are not GPU timer/RAM measurements.",
+    "Reference drift is large; no causal overall speedup claim.",
+    "Candidate still violates no-significant-initialization-regression gate."
+  ]
+}
