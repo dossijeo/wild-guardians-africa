@@ -9,6 +9,7 @@ import {NativeFarLayer} from './native-far-layer.js';
 import {NativeTreeCoverage} from './native-tree-coverage.js';
 import {NativePreparedTreeCoverage} from './native-prepared-tree-coverage.js';
 import {NativePreparationCadence} from './native-preparation-cadence.js';
+import {prepareSharedNativeWorld} from './shared-native-world-preparation.js';
 import {FarRegionTracker,farRegionRequest} from './far-region-tracker.js';
 import {NativeFarGpuCancelled,prepareNativeFarGpu,releaseNativeFarGpuCache,nativeFarGpuRevision,nativeFarGpuContextLost} from './prepare-native-far-gpu.js';
 import {nativeChunkBounds} from '../../src/rendering/asset-groups.js';
@@ -83,7 +84,7 @@ export async function attachNativeFarWorld(world,{cancelled:ownerCancelled=()=>f
    const snapshot=prepared.capture(),cancelled=()=>isCancelled()||snapshot.signature!==signature();
    standby.request(frozenEntries(snapshot),world.camera.position);
    try{
-    const result=await prepareNativeFarGpu(world.renderer,world.assetGroups.root,world.scene,world.camera,textures,{cancelled,diagnoseErrors:world.farGpuDiagnostics===true,isolateRoot:world.farIsolatedPreparation===true,ownedCompilation:world.farOwnedCompilation===true,ownedWaits:world.farOwnedWaits===true});
+    const result=await (world.farSharedPreparation===true?prepareSharedNativeWorld(world,textures,cancelled):prepareNativeFarGpu(world.renderer,world.assetGroups.root,world.scene,world.camera,textures,{cancelled,diagnoseErrors:world.farGpuDiagnostics===true,isolateRoot:world.farIsolatedPreparation===true,ownedCompilation:world.farOwnedCompilation===true,ownedWaits:world.farOwnedWaits===true}));
     stats.fencedPreparations++;stats.cachedTextures+=result.cachedTextures;stats.textureUploads+=result.textureUploads.length;if(prepared.complete(snapshot))stats.nativePreparations++;else stats.rejectedPacking++;
    }catch(error){if(!closed){if(error instanceof NativeFarGpuCancelled)stats.stalePreparations++;else errors.push(String(error));}}
   }).finally(()=>busy=false);
