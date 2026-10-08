@@ -1,0 +1,34 @@
+{
+  "date": "2026-10-08",
+  "fixtureCommit": "519f7d01",
+  "fixtureJsSha256": "c55fa37dd9e84b82f61fac2613f2cb54a62374489c54f3e776f2b5638c7c86a5",
+  "tabs": {
+    "timing": 856,
+    "resources": 857
+  },
+  "sources": {
+    "tests/browser/frontside-crop-leaf-shared-gpu.js": "c55fa37dd9e84b82f61fac2613f2cb54a62374489c54f3e776f2b5638c7c86a5",
+    "tools/lib/frontside-paired-gpu-analysis.mjs": "ab51585476a686d3568fa2db4512a5bd9c7e45eb872c5c83ac31e2f54e312310",
+    "tools/lib/frontside-gpu-query-recorder.mjs": "98ba17865058a4105174aa135922711d4d25b1693468e4951d41c8437dd567eb",
+    "tools/lib/frontside-gpu-buffer-budget.mjs": "d7edd5846cf0442dc62dcdca41c7385eb46cf8ebc934fff52624bc8dc58ab15f",
+    "tools/lib/frontside-shared-leaf-runtime-rigs.mjs": "540471c9eacf00904b30adcdf016c45a351a401acb4efc9915188fb947561715",
+    "src/rendering/african-toon.js": "f576f882d0e1af5ec69137e79aa0f8d0fc2f6639bfa7bd01307821cbd8cdc8f4",
+    "src/rendering/crop-batch.js": "982cdd49e48416596d9c50935d4d910b46ad9752f8fcec5c568ec4d96d206311",
+    "src/rendering/native-shadow.js": "3fadd82d2e4dd37b25d07d99539302ae661ce92ae62636ad93665741d5729aa8"
+  },
+  "artifacts": {
+    "timing": {
+      "rawSha256": "cbb11c9f238c7d75a36d438fb560ac9f36c5a036ea415b14efdfa02cf3375187",
+      "gzipSha256": "2f6e6b48888fdd9b89c1f17824f62564ec66b8cf388b03bd26d851407c646b22",
+      "pngSha256": "c877a374db2f44f6619fce7c9dfcf3a888e4ff8461675985c75493d6e95fbe14"
+    },
+    "resources": {
+      "rawSha256": "10810da21e187623ca7a99edaf8d43482e5f36f4e73798fbc9d2bf0b470b1b7f",
+      "gzipSha256": "fac9772e81105a7ac132eed38a8c49ced22393f8fba790909cddd5a7875acbfb",
+      "pngSha256": "08e65dfceb54f2d735a75dd7eaadae3f02eb6003830d3e1d8ae8d4500240c305"
+    }
+  },
+  "analyzerSha256": "ab51585476a686d3568fa2db4512a5bd9c7e45eb872c5c83ac31e2f54e312310",
+  "conditions": "One native context at a time; old four campaign commands absent. No Blender/build/full-suite. Small CPU-only loading-helper checks and repository/source reads occurred; CPU/thermal state was not isolated. Timing and BUFFER_SIZE campaigns separated.",
+  "scope": "Representative mature-maize net GPU/resource evidence; no category or production acceptance"
+}
