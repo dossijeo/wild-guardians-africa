@@ -226,6 +226,42 @@
       "path": "full-workday-profile.json.gz",
       "rawBytes": 21482,
       "sha256": "adb68fd97b2c45ef681313d4bc3418c3aac76101857391b961521f5cddfc4411"
+    },
+    {
+      "source": ".cache/prepare-v6-early-campaign.mjs",
+      "path": "early-prepare.mjs.gz",
+      "rawBytes": 737,
+      "sha256": "b518f0c7b02d461347cbe323f79338e1c000ce3cad9d2daa05f129593fe94f03"
+    },
+    {
+      "source": ".cache/opening-v6.mjs",
+      "path": "early-opening.mjs.gz",
+      "rawBytes": 3503,
+      "sha256": "07486a64f1c4262e8a48386e0856b37d5eedfdde07806a15435cd9b0bad3bb74"
+    },
+    {
+      "source": ".cache/intensive-v6.mjs",
+      "path": "early-intensive.mjs.gz",
+      "rawBytes": 12781,
+      "sha256": "bd60c093dc2d68bfaca786924962f6c32cef76a1696fa31edecd27a014923b27"
+    },
+    {
+      "source": ".cache/check-v6-early-campaign.mjs",
+      "path": "early-runner.mjs.gz",
+      "rawBytes": 1772,
+      "sha256": "3401b86b9d87d1012a72e87013f84a36d47b1b664b2b6e0826dd62724a9dc350"
+    },
+    {
+      "source": ".cache/worker-route-refinement/early-campaign-v6.json",
+      "path": "early-campaign.json.gz",
+      "rawBytes": 4397,
+      "sha256": "41e8ddf7916263f251d70bd86020b49be260670bd012838b36a78f9c0b9f6893"
+    },
+    {
+      "source": ".cache/worker-route-refinement/early-campaign-v6-state.json",
+      "path": "early-state.json.gz",
+      "rawBytes": 304719,
+      "sha256": "8bfb70fafcfca9a517e5cd62b197f20378c84b5c0cac5fc161dc9bda178185c7"
     }
   ],
   "benchmarkExitCode": 0,
@@ -238,5 +274,7 @@
   "productionCostExitCode": 0,
   "productionCostAmbientHead": "441051d978f5f89e2964dc24da73799bc35f2c0e",
   "fullWorkdayExitCode": 0,
-  "fullWorkdayAmbientHead": "b84b0a539b22d97ab4d31ba21b21c19dacb66464"
+  "fullWorkdayAmbientHead": "b84b0a539b22d97ab4d31ba21b21c19dacb66464",
+  "earlyCampaignExitCode": 0,
+  "earlyCampaignAmbientHead": "8eed5c4f"
 }
