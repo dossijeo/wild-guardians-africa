@@ -1,0 +1,387 @@
+{
+  "source": "2bd9235",
+  "accepted": false,
+  "camera": [
+    143.20690623333192,
+    110.25234832156283,
+    -46.973626642559324
+  ],
+  "backgroundCampaignPids": [
+    40968,
+    41304
+  ],
+  "controls": {
+    "abba-night-all": {
+      "mode": "all",
+      "rows": [
+        {
+          "enabled": false,
+          "gpuMedianMs": 4.244765,
+          "cpu": {
+            "count": 120,
+            "p50": 5.100000023841858,
+            "p95": 6.800000071525574,
+            "mean": 5.753333327174187
+          },
+          "calls": {
+            "count": 120,
+            "p50": 14,
+            "p95": 14,
+            "mean": 14
+          },
+          "triangles": {
+            "count": 120,
+            "p50": 53762,
+            "p95": 53762,
+            "mean": 53762
+          }
+        },
+        {
+          "enabled": true,
+          "gpuMedianMs": 11.192031,
+          "cpu": {
+            "count": 120,
+            "p50": 5.700000047683716,
+            "p95": 8.100000023841858,
+            "mean": 6.367499996225039
+          },
+          "calls": {
+            "count": 120,
+            "p50": 19,
+            "p95": 19,
+            "mean": 19
+          },
+          "triangles": {
+            "count": 120,
+            "p50": 93478,
+            "p95": 93478,
+            "mean": 93478
+          }
+        },
+        {
+          "enabled": true,
+          "gpuMedianMs": 10.680364,
+          "cpu": {
+            "count": 120,
+            "p50": 6.200000047683716,
+            "p95": 9,
+            "mean": 6.839166662096977
+          },
+          "calls": {
+            "count": 120,
+            "p50": 19,
+            "p95": 19,
+            "mean": 19
+          },
+          "triangles": {
+            "count": 120,
+            "p50": 93478,
+            "p95": 93478,
+            "mean": 93478
+          }
+        },
+        {
+          "enabled": false,
+          "gpuMedianMs": 3.9099215000000003,
+          "cpu": {
+            "count": 120,
+            "p50": 5,
+            "p95": 6.899999976158142,
+            "mean": 5.639166659116745
+          },
+          "calls": {
+            "count": 120,
+            "p50": 14,
+            "p95": 14,
+            "mean": 14
+          },
+          "triangles": {
+            "count": 120,
+            "p50": 53762,
+            "p95": 53762,
+            "mean": 53762
+          }
+        }
+      ],
+      "queries": 480,
+      "disjoint": 0,
+      "stateExact": true,
+      "errors": [],
+      "webglError": 0,
+      "layers": [
+        {
+          "slot": 0,
+          "nativePreparations": 14,
+          "packingChanges": 21,
+          "standbyPreparations": 82
+        },
+        {
+          "slot": 1,
+          "nativePreparations": 9,
+          "packingChanges": 13,
+          "standbyPreparations": 67
+        },
+        {
+          "slot": 2,
+          "nativePreparations": 5,
+          "packingChanges": 8,
+          "standbyPreparations": 41
+        },
+        {
+          "slot": 3,
+          "nativePreparations": 5,
+          "packingChanges": 12,
+          "standbyPreparations": 59
+        }
+      ]
+    },
+    "abba-night-no-sprites": {
+      "mode": "no-sprites",
+      "rows": [
+        {
+          "enabled": false,
+          "gpuMedianMs": 4.585755,
+          "cpu": {
+            "count": 120,
+            "p50": 4.5,
+            "p95": 5.799999952316284,
+            "mean": 5.0708333313465115
+          },
+          "calls": {
+            "count": 120,
+            "p50": 14,
+            "p95": 14,
+            "mean": 14
+          },
+          "triangles": {
+            "count": 120,
+            "p50": 53762,
+            "p95": 53762,
+            "mean": 53762
+          }
+        },
+        {
+          "enabled": true,
+          "gpuMedianMs": 10.8411975,
+          "cpu": {
+            "count": 120,
+            "p50": 5.5,
+            "p95": 8.200000047683716,
+            "mean": 6.079999998211861
+          },
+          "calls": {
+            "count": 120,
+            "p50": 15,
+            "p95": 15,
+            "mean": 15
+          },
+          "triangles": {
+            "count": 120,
+            "p50": 90796,
+            "p95": 90796,
+            "mean": 90796
+          }
+        },
+        {
+          "enabled": true,
+          "gpuMedianMs": 9.772395,
+          "cpu": {
+            "count": 120,
+            "p50": 5.899999976158142,
+            "p95": 8.100000023841858,
+            "mean": 6.505833334724108
+          },
+          "calls": {
+            "count": 120,
+            "p50": 15,
+            "p95": 15,
+            "mean": 15
+          },
+          "triangles": {
+            "count": 120,
+            "p50": 90796,
+            "p95": 90796,
+            "mean": 90796
+          }
+        },
+        {
+          "enabled": false,
+          "gpuMedianMs": 4.213437000000001,
+          "cpu": {
+            "count": 120,
+            "p50": 4.600000023841858,
+            "p95": 5.899999976158142,
+            "mean": 5.152499998609225
+          },
+          "calls": {
+            "count": 120,
+            "p50": 14,
+            "p95": 14,
+            "mean": 14
+          },
+          "triangles": {
+            "count": 120,
+            "p50": 53762,
+            "p95": 53762,
+            "mean": 53762
+          }
+        }
+      ],
+      "queries": 480,
+      "disjoint": 0,
+      "stateExact": true,
+      "errors": [],
+      "webglError": 0,
+      "layers": [
+        {
+          "slot": 0,
+          "nativePreparations": 14,
+          "packingChanges": 21,
+          "standbyPreparations": 82
+        },
+        {
+          "slot": 1,
+          "nativePreparations": 9,
+          "packingChanges": 13,
+          "standbyPreparations": 67
+        },
+        {
+          "slot": 2,
+          "nativePreparations": 5,
+          "packingChanges": 8,
+          "standbyPreparations": 41
+        },
+        {
+          "slot": 3,
+          "nativePreparations": 5,
+          "packingChanges": 12,
+          "standbyPreparations": 59
+        }
+      ]
+    },
+    "abba-night-no-standby": {
+      "mode": "no-standby",
+      "rows": [
+        {
+          "enabled": false,
+          "gpuMedianMs": 4.161041,
+          "cpu": {
+            "count": 120,
+            "p50": 5.099999904632568,
+            "p95": 6.799999952316284,
+            "mean": 5.719999991854032
+          },
+          "calls": {
+            "count": 120,
+            "p50": 14,
+            "p95": 14,
+            "mean": 14
+          },
+          "triangles": {
+            "count": 120,
+            "p50": 53762,
+            "p95": 53762,
+            "mean": 53762
+          }
+        },
+        {
+          "enabled": true,
+          "gpuMedianMs": 5.8306765,
+          "cpu": {
+            "count": 120,
+            "p50": 6.299999952316284,
+            "p95": 9.100000023841858,
+            "mean": 7.133333332339922
+          },
+          "calls": {
+            "count": 120,
+            "p50": 15,
+            "p95": 15,
+            "mean": 15
+          },
+          "triangles": {
+            "count": 120,
+            "p50": 74003,
+            "p95": 74003,
+            "mean": 74003
+          }
+        },
+        {
+          "enabled": true,
+          "gpuMedianMs": 6.0105205,
+          "cpu": {
+            "count": 120,
+            "p50": 6.099999904632568,
+            "p95": 8.399999976158142,
+            "mean": 6.691666664679845
+          },
+          "calls": {
+            "count": 120,
+            "p50": 15,
+            "p95": 15,
+            "mean": 15
+          },
+          "triangles": {
+            "count": 120,
+            "p50": 74003,
+            "p95": 74003,
+            "mean": 74003
+          }
+        },
+        {
+          "enabled": false,
+          "gpuMedianMs": 4.1627595,
+          "cpu": {
+            "count": 120,
+            "p50": 4.599999904632568,
+            "p95": 6,
+            "mean": 5.221666664878527
+          },
+          "calls": {
+            "count": 120,
+            "p50": 14,
+            "p95": 14,
+            "mean": 14
+          },
+          "triangles": {
+            "count": 120,
+            "p50": 53762,
+            "p95": 53762,
+            "mean": 53762
+          }
+        }
+      ],
+      "queries": 480,
+      "disjoint": 0,
+      "stateExact": true,
+      "errors": [],
+      "webglError": 0,
+      "layers": [
+        {
+          "slot": 0,
+          "nativePreparations": 14,
+          "packingChanges": 21,
+          "standbyPreparations": 82
+        },
+        {
+          "slot": 1,
+          "nativePreparations": 9,
+          "packingChanges": 13,
+          "standbyPreparations": 67
+        },
+        {
+          "slot": 2,
+          "nativePreparations": 5,
+          "packingChanges": 8,
+          "standbyPreparations": 41
+        },
+        {
+          "slot": 3,
+          "nativePreparations": 5,
+          "packingChanges": 12,
+          "standbyPreparations": 59
+        }
+      ]
+    }
+  }
+}

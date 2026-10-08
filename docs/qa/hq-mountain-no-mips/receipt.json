@@ -1,0 +1,45 @@
+{
+  "date": "2026-10-07T21:03:51.059Z",
+  "branchGitHead": "55441e5e",
+  "sources": {
+    "tests/browser/hq-mountain-horizon.html": "b87c21ac0e618a7492a45acddf03fd28604b7f66f9c8f37ea5b5c34cd3dd893b",
+    "src/rendering/mountain-arc-composition.js": "24f2334e55ad4a13967dbe6a9aa082ce33f2af96a151ed1fa2711bf662814b87",
+    "src/rendering/mountain-arcs.js": "fc64efaa3cc4168fda88292688572ba0135fc59d9e71647f93510f3f8e6dff04",
+    "assets-source/far-backdrops-hq/savanna-four-export-contract.json": "a857343f408d6291ff0234d8f33f1b92a862ff413798e17fb70d45d3a8dfb4d3"
+  },
+  "atlas": {
+    "bytes": 787504,
+    "sha256": "151312cc3dec8bf2bca0d2791fb6db10808b5d212042a904453614886aa19666"
+  },
+  "files": {
+    "sabana-no-mips-day.json": {
+      "rawSha256": "233f1a23f3ab37c07e72c29ab976a5c630b42bde3ae5a2edda83f6abf1b0d7b0",
+      "gzipSha256": "33afd9d93563dcb1e24770b6e011aa4c678ab31852946910f1202569437b8cc7",
+      "gzipBytes": 2585,
+      "poses": 73
+    },
+    "sabana-no-mips-day-0.png": {
+      "bytes": 131659,
+      "sha256": "913ed8ef174cadc03f2baa19676a488d2c06cf37c691b6a9820ced27710969da"
+    },
+    "sabana-no-mips-day-95.png": {
+      "bytes": 110390,
+      "sha256": "7ef056b04ae28c16af50ab8dd81bb60e20ef9bc60b0c86ce5a1a79e5581b0daa"
+    },
+    "sabana-no-mips-night.json": {
+      "rawSha256": "32f70d13a90838f177730861cc623ebb46b295759f7e89fdb1ceb276f383aeb7",
+      "gzipSha256": "07e1ee96633da30951e158285e6d5f07226a9e978d59ca31f1c1166cf2d18480",
+      "gzipBytes": 2537,
+      "poses": 73
+    },
+    "sabana-no-mips-night-0.png": {
+      "bytes": 91163,
+      "sha256": "950eccfd21e8a5aca1af37fe2cc607b497a49f919eac6137b98f2f88443caca8"
+    },
+    "sabana-no-mips-night-95.png": {
+      "bytes": 81814,
+      "sha256": "79b9fa934af27545536b98c83e80c8ff2ce175323cd13322f00a41f94481a26a"
+    }
+  },
+  "scope": "QA-only LinearFilter without mipmaps. Two fixed-eye rotations, selected day/night yaw0/95 visual inspection. Not temporal shimmer, GPU, mobile or complete mip-policy acceptance. Prior mipped reference snapshots in ../hq-mountain-four-arcs use the same atlas and effective framing but are a separate historical capture."
+}

@@ -1,0 +1,75 @@
+{
+  "sessionNative": 77797,
+  "sessionDirected": 75486,
+  "directedPass": 48,
+  "sessionBuild": 12279,
+  "exitCodes": {
+    "native": 0,
+    "directed": 0,
+    "buildPackage": 0
+  },
+  "scope": "Physical landing rejection, not a continuous swept-fluid proof or global campaign acceptance. Native parity report compares experimental V6 against current production with terrainAvoidance name normalized for cross-version state equality; restored production equality needs no normalization.",
+  "nativeSearch": "No alias found in6240 generated tangent candidates across Sabana,GranRio,Manglares,Volcanes with props excluded. This finite negative search does not establish absence. The positive reproducer uses a synthetic narrow fluid strip and native Navigation/Game movement.",
+  "sources": {
+    "src/simulation/actor-fluid-clearance.js": "69574bea4d1b7793630411f0266fbe5a5dfb54fd51338a482679b26214f70aae",
+    "src/simulation/worker-route-clearance.js": "2e59f9848680d3227dc940d613df39b74d0006bd2cbb5fd252e19d38eed2122f",
+    "src/simulation/animal-route-clearance.js": "29b1a76eaf76c2f676a8fbe061a5ad35f9f5c4cc9a77c193f73ab395eb8ac200",
+    "tests/actor-fluid-clearance.test.js": "c9aeb03e367c0b17b9a0fec552170ed9623bd475ea629e8689a74d0998849115"
+  },
+  "pieces": [
+    {
+      "source": ".cache/reproduce-worker-fluid-landing.mjs",
+      "path": "piece-0.gz",
+      "bytes": 762,
+      "sha256": "2a49e94a0bda0d4688e244fbcc88d92f065aac7189286fba85952064cfc2c5b8"
+    },
+    {
+      "source": ".cache/find-native-fluid-alias.mjs",
+      "path": "piece-1.gz",
+      "bytes": 1404,
+      "sha256": "5d88e477c3a51689d922c4d2b5f46d0238fcb4393b6bd58c5eaa88cb9c6aa75f"
+    },
+    {
+      "source": ".cache/actor-fluid-native-report.json",
+      "path": "piece-2.gz",
+      "bytes": 14211,
+      "sha256": "b5a41799f145bc22d87f537156c74cb371347d6afc5831d35e3ac14c46aa1b79"
+    },
+    {
+      "source": ".cache/actor-fluid-build.log",
+      "path": "piece-3.gz",
+      "bytes": 1235,
+      "sha256": "a27c45fdd9493f5844165894da1d88db2064cd7f91dac20f2180c0fd949e1c11"
+    },
+    {
+      "source": ".cache/actor-fluid-package.log",
+      "path": "piece-4.gz",
+      "bytes": 411,
+      "sha256": "a1610d3a380bdb8ad86356f10d3a047d4818e266c132de5de89aded82d2dc1a0"
+    },
+    {
+      "source": "src/simulation/actor-fluid-clearance.js",
+      "path": "piece-5.gz",
+      "bytes": 615,
+      "sha256": "69574bea4d1b7793630411f0266fbe5a5dfb54fd51338a482679b26214f70aae"
+    },
+    {
+      "source": "src/simulation/worker-route-clearance.js",
+      "path": "piece-6.gz",
+      "bytes": 3221,
+      "sha256": "2e59f9848680d3227dc940d613df39b74d0006bd2cbb5fd252e19d38eed2122f"
+    },
+    {
+      "source": "src/simulation/animal-route-clearance.js",
+      "path": "piece-7.gz",
+      "bytes": 2157,
+      "sha256": "29b1a76eaf76c2f676a8fbe061a5ad35f9f5c4cc9a77c193f73ab395eb8ac200"
+    },
+    {
+      "source": "tests/actor-fluid-clearance.test.js",
+      "path": "piece-8.gz",
+      "bytes": 3014,
+      "sha256": "c9aeb03e367c0b17b9a0fec552170ed9623bd475ea629e8689a74d0998849115"
+    }
+  ]
+}

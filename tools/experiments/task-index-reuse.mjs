@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {cpSync,existsSync,mkdirSync,readFileSync,writeFileSync} from 'node:fs';
+import {resolve} from 'node:path';
+assert.ok(process.argv[2]&&process.argv[3],'Pass frozen source and NEW candidate roots');
+const source=resolve(process.argv[2]),dest=resolve(process.argv[3]);assert.ok(!existsSync(dest));
+const file=resolve(source,'src/simulation/game.js'),text=readFileSync(file,'utf8'),needle='findTask=workerEntityLookup(()=>s.tasks);';
+assert.equal(text.split(needle).length,2,'Source must have original local task lookup');
+mkdirSync(dest,{recursive:true});cpSync(resolve(source,'src'),resolve(dest,'src'),{recursive:true});cpSync(resolve(source,'package.json'),resolve(dest,'package.json'));
+writeFileSync(resolve(dest,'src/simulation/game.js'),text.replace(needle,'findTask=workerEntityLookup(()=>s.tasks,{reuse:true});'));
+console.log(JSON.stringify({source,dest,scope:'Independent candidate, production untouched'}));

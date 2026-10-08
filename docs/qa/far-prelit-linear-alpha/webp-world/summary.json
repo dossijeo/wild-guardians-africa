@@ -1,0 +1,78 @@
+{
+  "source": "7bc87bf6",
+  "routes": [
+    {
+      "route": "night-orbit-stable",
+      "age": 20,
+      "done": true,
+      "unchanged": true,
+      "minimumDistance": 219.9999999999999,
+      "nearFrames": 0,
+      "nearReadyFrames": 0,
+      "transitionFrames": 1621,
+      "transitionReadyFrames": 1621,
+      "allNear": {
+        "observations": 149766,
+        "readyObservations": 22595,
+        "descents": 462,
+        "offscreenBoundsDescents": 462,
+        "potentiallyVisibleDescents": 0,
+        "unknownDescents": 0
+      },
+      "errors": [],
+      "webglError": 0
+    },
+    {
+      "route": "day-lateral",
+      "age": 20,
+      "done": true,
+      "unchanged": true,
+      "minimumDistance": 220,
+      "nearFrames": 0,
+      "nearReadyFrames": 0,
+      "transitionFrames": 768,
+      "transitionReadyFrames": 768,
+      "allNear": {
+        "observations": 802802,
+        "readyObservations": 82514,
+        "descents": 68,
+        "offscreenBoundsDescents": 68,
+        "potentiallyVisibleDescents": 0,
+        "unknownDescents": 0
+      },
+      "errors": [],
+      "webglError": 0
+    },
+    {
+      "route": "day-approach",
+      "age": 20,
+      "done": true,
+      "unchanged": true,
+      "minimumDistance": 25.00008143841917,
+      "nearFrames": 1751,
+      "nearReadyFrames": 1751,
+      "transitionFrames": 1873,
+      "transitionReadyFrames": 1873,
+      "allNear": {
+        "observations": 145532,
+        "readyObservations": 71637,
+        "descents": 48,
+        "offscreenBoundsDescents": 48,
+        "potentiallyVisibleDescents": 0,
+        "unknownDescents": 0
+      },
+      "errors": [],
+      "webglError": 0
+    }
+  ],
+  "technicalPassed": true,
+  "visualAccepted": false,
+  "performanceAccepted": false,
+  "backgroundCPU": [
+    "40968",
+    "41304",
+    "49032",
+    "matrix100 sequential worker frozen e461b550"
+  ],
+  "invalidKept": "candidate-night-orbit.json.gz phase changed after snapshot; unchanged:false; excluded from stable-route acceptance"
+}

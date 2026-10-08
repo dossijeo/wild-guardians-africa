@@ -4,6 +4,7 @@ import {simulateIntensiveFarm,auditIntensiveFarm} from './check_intensive_farm.m
 import {summarizeIntensiveFarm} from './summarize_intensive_farm.mjs';
 import {intensiveRunProvenance} from './intensive-run-provenance.mjs';
 import {createIntensiveHeartbeat} from './intensive-heartbeat.mjs';
+import {createBlockedCheckpoint,createBlockedCheckpointWriter} from './intensive-blocked-checkpoint.mjs';
 import {serialize} from '../src/persistence/snapshots.js';
 import {BIOMES,CULTURES} from '../src/simulation/game.js';
 
@@ -16,8 +17,9 @@ const save=()=>writeFileSync(new URL(key+'-status.json',output),JSON.stringify(r
 save();
 let lastState=null;
 const heartbeat=createIntensiveHeartbeat();
+const checkpoint=createBlockedCheckpoint({capture:createBlockedCheckpointWriter(directory,key,provenance)});
 try {
-  const result=simulateIntensiveFarm({days,seed:712,biome,culture,mixed:true,onTick:state=>{lastState=state;const live=heartbeat(state);if(live){row.live=live;save();}},onDay:day=>{row.lastDay=day;save();}});
+  const result=simulateIntensiveFarm({days,seed:712,biome,culture,mixed:true,onTick:(state,nav)=>{lastState=state;const live=heartbeat(state);if(live){row.live=live;const captured=checkpoint(state,nav,live);if(captured)row.blockedCheckpoint=captured;save();}},onDay:day=>{row.lastDay=day;save();}});
   const {state,nav,...report}=result;
   writeFileSync(new URL(key+'-state.json',output),serialize(state));
   writeFileSync(new URL(key+'-report.json',output),JSON.stringify({...report,provenance},null,2)+'\n');

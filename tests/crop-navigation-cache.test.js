@@ -25,10 +25,10 @@ test('paid planting on cleared native ground preserves static caches, route epoc
  const names=['walkCache','segmentCache','searchNeighborCache','failedPaths','closedRegions','searchedRegions','portalGraphs','obstacles','obstacleBounds'];
  const references=names.map(name=>nav[name]),walkEntries=[...nav.walkCache],segmentEntries=[...nav.segmentCache],version=nav.version;
  Game.plant(s,'empty-crop-1','mijo',first.p.x,first.p.z,nav);
- assert.equal(nav.version,version+1);assert.equal(s.navigationVersion,nav.version);assert.equal(nav.state,s);
+ assert.equal(nav.version,version);assert.equal(s.navigationVersion,nav.version);assert.equal(nav.state,s);
  names.forEach((name,i)=>assert.equal(nav[name],references[i],name));
  assert.deepEqual([...nav.walkCache],walkEntries);assert.deepEqual([...nav.segmentCache],segmentEntries);
- Game.plant(s,'empty-crop-2','mijo',second.p.x,second.p.z,nav);assert.equal(nav.version,version+2);
+ Game.plant(s,'empty-crop-2','mijo',second.p.x,second.p.z,nav);assert.equal(nav.version,version);
  const loaded=deserialize(serialize(s)),fresh=new Navigation(s.seed,s.biome,nav.profile);fresh.setState(loaded);
  assert.deepEqual(nav.path(first.origin,first.p,.28,null,true),fresh.path(first.origin,first.p,.28,null,true));
  assert.deepEqual(nav.path(second.p,first.origin,.28,null,true),fresh.path(second.p,first.origin,.28,null,true));
@@ -68,4 +68,28 @@ test('crop synchronization of a different loaded state rebuilds rather than reus
  nav.syncCropPlacement(loaded,[]);
  assert.equal(nav.state,loaded);assert.notEqual(nav.obstacles,oldObstacles);assert.equal(nav.walkCache.size,0);
  assert.equal(nav.version,version+1);assert.equal(loaded.navigationVersion,nav.version);
+});
+
+test('native moving worker remains full-state equivalent across cold restore and another cleared-ground purchase',()=>{
+ const {s,nav}=createOpeningWorld(),plots=[];
+ for(let i=0;i<4;i++)plots.push(site(s,nav,{away:plots.map(x=>x.p)}));
+ for(let i=0;i<3;i++)Game.plant(s,'restore-seed-'+i,'mijo',plots[i].p.x,plots[i].p.z,nav);
+ Game.openInitialHiring(s);Game.hire(s,'restore-paid-worker',{olderFemale:1});
+ assert.equal(s.workers.length,1);assert.equal(s.pauses.length,0);
+ const start={x:s.workers[0].x,z:s.workers[0].z};
+ for(let i=0;i<80;i++)Game.tick(s,.1,nav);
+ assert(Math.hypot(s.workers[0].x-start.x,s.workers[0].z-start.z)>1e-6,'Worker must physically move before restore');
+ assert.notEqual(s.workers[0].status,'home');
+ const loaded=deserialize(serialize(s)),cold=new Navigation(s.seed,s.biome,nav.profile);cold.setState(loaded);
+ const epoch=nav.version;assert.equal(cold.version,epoch);let compared=0,movingTicks=0;
+ for(let i=0;i<50;i++){
+  if(i===10)for(const [state,n] of [[s,nav],[loaded,cold]]){
+   const p=plots[3].p,check=n.placement(p.x,p.z,.4);assert(check.valid&&check.suppress.length===0);
+   Game.plant(state,'restore-after-load-plant','mijo',p.x,p.z,n);assert.equal(n.version,epoch);
+  }
+  const before={x:s.workers[0].x,z:s.workers[0].z};
+  Game.tick(s,.1,nav);Game.tick(loaded,.1,cold);assert.equal(serialize(s),serialize(loaded));compared++;
+  if(Math.hypot(s.workers[0].x-before.x,s.workers[0].z-before.z)>1e-6)movingTicks++;
+ }
+ assert.equal(compared,50);assert(movingTicks>0,'Cold comparison must exercise physical movement');
 });

@@ -1,0 +1,335 @@
+{
+  "source": "aed394ff",
+  "accepted": false,
+  "nativeUniformReadbackPending": true,
+  "backgroundCampaignPids": [
+    40968,
+    41304
+  ],
+  "controls": {
+    "abba-night-basic": {
+      "standbyMaterial": "basic",
+      "nativeShaderProofApplicable": false,
+      "rows": [
+        {
+          "enabled": false,
+          "gpuMedianMs": 4.3292705,
+          "cpu": {
+            "count": 120,
+            "p50": 6.100000023841858,
+            "p95": 9.199999928474426,
+            "mean": 6.408333331346512
+          },
+          "calls": {
+            "count": 120,
+            "p50": 14,
+            "p95": 14,
+            "mean": 14
+          },
+          "triangles": {
+            "count": 120,
+            "p50": 53762,
+            "p95": 53762,
+            "mean": 53762
+          }
+        },
+        {
+          "enabled": true,
+          "gpuMedianMs": 6.70776,
+          "cpu": {
+            "count": 120,
+            "p50": 7.100000023841858,
+            "p95": 11.100000023841858,
+            "mean": 7.400000000993411
+          },
+          "calls": {
+            "count": 120,
+            "p50": 19,
+            "p95": 19,
+            "mean": 19
+          },
+          "triangles": {
+            "count": 120,
+            "p50": 93478,
+            "p95": 93478,
+            "mean": 93478
+          }
+        },
+        {
+          "enabled": true,
+          "gpuMedianMs": 9.8892185,
+          "cpu": {
+            "count": 120,
+            "p50": 7.099999904632568,
+            "p95": 13.700000047683716,
+            "mean": 7.7558333297570545
+          },
+          "calls": {
+            "count": 120,
+            "p50": 19,
+            "p95": 19,
+            "mean": 19
+          },
+          "triangles": {
+            "count": 120,
+            "p50": 93478,
+            "p95": 93478,
+            "mean": 93478
+          }
+        },
+        {
+          "enabled": false,
+          "gpuMedianMs": 4.42638,
+          "cpu": {
+            "count": 120,
+            "p50": 6.400000095367432,
+            "p95": 10.600000023841858,
+            "mean": 6.950833333532016
+          },
+          "calls": {
+            "count": 120,
+            "p50": 14,
+            "p95": 14,
+            "mean": 14
+          },
+          "triangles": {
+            "count": 120,
+            "p50": 53762,
+            "p95": 53762,
+            "mean": 53762
+          }
+        }
+      ],
+      "queries": 480,
+      "disjoint": 0,
+      "stateExact": true,
+      "errors": [],
+      "webglError": 0,
+      "camera": [
+        143.20690623333192,
+        110.25234832156283,
+        -46.973626642559324
+      ],
+      "framebuffer": [
+        1600,
+        900
+      ]
+    },
+    "abba-night-native": {
+      "standbyMaterial": "native",
+      "nativeShaderProofApplicable": true,
+      "rows": [
+        {
+          "enabled": false,
+          "gpuMedianMs": 4.1634895,
+          "cpu": {
+            "count": 120,
+            "p50": 4.899999976158142,
+            "p95": 6.699999928474426,
+            "mean": 4.979166664679846
+          },
+          "calls": {
+            "count": 120,
+            "p50": 14,
+            "p95": 14,
+            "mean": 14
+          },
+          "triangles": {
+            "count": 120,
+            "p50": 53762,
+            "p95": 53762,
+            "mean": 53762
+          }
+        },
+        {
+          "enabled": true,
+          "gpuMedianMs": 11.053332999999999,
+          "cpu": {
+            "count": 120,
+            "p50": 5.399999976158142,
+            "p95": 7.699999928474426,
+            "mean": 5.714999999602636
+          },
+          "calls": {
+            "count": 120,
+            "p50": 19,
+            "p95": 19,
+            "mean": 19
+          },
+          "triangles": {
+            "count": 120,
+            "p50": 93478,
+            "p95": 93478,
+            "mean": 93478
+          }
+        },
+        {
+          "enabled": true,
+          "gpuMedianMs": 10.9332545,
+          "cpu": {
+            "count": 120,
+            "p50": 5.100000023841858,
+            "p95": 7.5,
+            "mean": 5.495000003774961
+          },
+          "calls": {
+            "count": 120,
+            "p50": 19,
+            "p95": 19,
+            "mean": 19
+          },
+          "triangles": {
+            "count": 120,
+            "p50": 93478,
+            "p95": 93478,
+            "mean": 93478
+          }
+        },
+        {
+          "enabled": false,
+          "gpuMedianMs": 4.0639579999999995,
+          "cpu": {
+            "count": 120,
+            "p50": 4.399999976158142,
+            "p95": 5.599999904632568,
+            "mean": 4.641666669646899
+          },
+          "calls": {
+            "count": 120,
+            "p50": 14,
+            "p95": 14,
+            "mean": 14
+          },
+          "triangles": {
+            "count": 120,
+            "p50": 53762,
+            "p95": 53762,
+            "mean": 53762
+          }
+        }
+      ],
+      "queries": 480,
+      "disjoint": 0,
+      "stateExact": true,
+      "errors": [],
+      "webglError": 0,
+      "camera": [
+        143.20690623333192,
+        110.25234832156283,
+        -46.973626642559324
+      ],
+      "framebuffer": [
+        1600,
+        900
+      ]
+    },
+    "abba-night-no-noise": {
+      "standbyMaterial": "no-noise",
+      "nativeShaderProofApplicable": false,
+      "rows": [
+        {
+          "enabled": false,
+          "gpuMedianMs": 4.170052,
+          "cpu": {
+            "count": 120,
+            "p50": 4.299999952316284,
+            "p95": 5.5,
+            "mean": 4.459166668852171
+          },
+          "calls": {
+            "count": 120,
+            "p50": 14,
+            "p95": 14,
+            "mean": 14
+          },
+          "triangles": {
+            "count": 120,
+            "p50": 53762,
+            "p95": 53762,
+            "mean": 53762
+          }
+        },
+        {
+          "enabled": true,
+          "gpuMedianMs": 11.426354,
+          "cpu": {
+            "count": 120,
+            "p50": 5.299999952316284,
+            "p95": 7.5,
+            "mean": 5.6099999994039536
+          },
+          "calls": {
+            "count": 120,
+            "p50": 19,
+            "p95": 19,
+            "mean": 19
+          },
+          "triangles": {
+            "count": 120,
+            "p50": 93478,
+            "p95": 93478,
+            "mean": 93478
+          }
+        },
+        {
+          "enabled": true,
+          "gpuMedianMs": 11.3826815,
+          "cpu": {
+            "count": 120,
+            "p50": 5.600000023841858,
+            "p95": 7.099999904632568,
+            "mean": 5.6599999944369
+          },
+          "calls": {
+            "count": 120,
+            "p50": 19,
+            "p95": 19,
+            "mean": 19
+          },
+          "triangles": {
+            "count": 120,
+            "p50": 93478,
+            "p95": 93478,
+            "mean": 93478
+          }
+        },
+        {
+          "enabled": false,
+          "gpuMedianMs": 4.244635000000001,
+          "cpu": {
+            "count": 120,
+            "p50": 4.600000023841858,
+            "p95": 5.900000095367432,
+            "mean": 4.878333329161008
+          },
+          "calls": {
+            "count": 120,
+            "p50": 14,
+            "p95": 14,
+            "mean": 14
+          },
+          "triangles": {
+            "count": 120,
+            "p50": 53762,
+            "p95": 53762,
+            "mean": 53762
+          }
+        }
+      ],
+      "queries": 480,
+      "disjoint": 0,
+      "stateExact": true,
+      "errors": [],
+      "webglError": 0,
+      "camera": [
+        143.20690623333192,
+        110.25234832156283,
+        -46.973626642559324
+      ],
+      "framebuffer": [
+        1600,
+        900
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "source": "fde323b",
+  "testExitCode": 1,
+  "tests": 2864,
+  "passed": 2863,
+  "failed": 1,
+  "durationMs": 1177140.9215,
+  "failure": "impostor-hull.test.js compared historical atlas byte hashes after native sunlight rebake",
+  "fixSource": "ed5a46f",
+  "fixDirectedTests": {
+    "tests": 4,
+    "passed": 4,
+    "failed": 0,
+    "allAtlasPhases": 44,
+    "silhouettesExactVersusHistorical": 22
+  },
+  "note": "The corrected directed test is not a new full suite on ed5a46f.",
+  "otherGatesObserved": {
+    "build": {
+      "exitCode": 0,
+      "modules": 252
+    },
+    "package": {
+      "exitCode": 0,
+      "files": 694,
+      "bytes": 403491791,
+      "relativeLinks": 859,
+      "runtimeGLBs": 20
+    },
+    "verifyWebAssets": {
+      "exitCode": 0
+    },
+    "verifyAudioRuntime": {
+      "exitCode": 0
+    }
+  }
+}

@@ -1,0 +1,149 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Animal preload QA</title><style>body{margin:0;background:#172019;color:#fff;font:14px system-ui}canvas{width:100vw;height:100vh}pre{position:fixed;top:0;left:0;max-width:520px;padding:12px;background:#172019ed;white-space:pre-wrap;max-height:25vh;overflow:auto}</style><script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js","three/addons/":"/node_modules/three/examples/jsm/"}}</script></head><body><canvas></canvas><pre id="report">Loading native world and five species…</pre><button id="inspect" disabled style="position:fixed;right:16px;bottom:16px;z-index:3;padding:12px">Inspect animal after contact</button><script type="module">
+import * as Game from '/src/simulation/game.js';
+import {Box3,Frustum,Matrix4,PerspectiveCamera,Vector3} from 'three';
+import {BufferRequests} from './buffer-requests.js';
+import {RenderGlCalls} from './render-gl-calls.js';
+import {RenderCpuCalls} from './render-cpu-calls.js';
+import {ActorArrivalCpu} from './actor-arrival-cpu.js';
+import {AssetGroupAllocations} from './asset-group-allocations.js';
+import {skinCullingSweep} from './skin-culling-sweep.js';
+import {applySingleExitEnvironmentQA,singleExitEnvironmentQAReport} from './single-exit-shader.js';
+import {Navigation,BIOME_IDS} from '/src/world/navigation.js';
+import {findInitialLocationAsync} from '/src/world/villages.js';
+import {WorldScene} from '/src/rendering/scene.js';
+import {json} from '/src/rendering/assets.js';
+import {spawnRaid} from '/src/simulation/raids.js';
+import {focusTerrainCamera} from '/src/rendering/terrain-camera.js';
+import {activeChunkRegion} from '/src/world/active-region.js';
+import {serialize,deserialize} from '/src/persistence/snapshots.js';
+const params=new URLSearchParams(location.search),biome=params.get('biome')??'gran-canon',culture=params.get('culture')??'mapungubwe',quality=params.get('quality')??'media',measureTiming=params.get('timing')==='1',errors=[];
+let failureContext=null,arrivalCpu=null;
+addEventListener('pagehide',()=>arrivalCpu?.dispose());
+addEventListener('error',e=>errors.push(e.message));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
+try{
+if(!Game.BIOMES.includes(biome)||!Game.CULTURES.includes(culture)||!['muy_baja','baja','media','alta'].includes(quality))throw Error('Invalid preload QA biome/culture/quality');
+const pack=await json('/content/biome-'+BIOME_IDS[biome]+'.json'),payload=(await json('/content/villages.json')).find(v=>v.id===culture);
+if(!payload)throw Error('Missing native village payload');
+let state=Game.newGame({seed:712,biome,culture,slotId:'qa-animal-preload'});const nav=new Navigation(712,biome,pack.profile),site=await findInitialLocationAsync(nav,payload);
+Object.assign(state.villages[0],site);state.suppressed.push(...site.suppress);nav.setState(state);Game.placeStructure(state,'paid-center',site.center,nav);state.tutorial.step='done';
+if(params.get('motion')==='1'&&params.has('attack-species')||params.get('load-reserves')==='1'||params.get('load-active')==='1'){
+ let planted=false;for(let dz=-9;dz<=9&&!planted;dz+=1.5)for(let dx=6;dx<=15&&!planted;dx+=1.5){const point={x:site.center.x+dx,z:site.center.z+dz};try{Game.plant(state,'qa-paid-seed','mijo',point.x,point.z,nav);planted=true;}catch{}}
+ if(!planted)throw Error('No legal paid seed for initial hiring');Game.openInitialHiring(state);Game.hire(state,'qa-empty-contract',{});
+}
+const savedReserves=params.get('load-reserves')==='1',savedActive=params.get('load-active')==='1';let savedPlan=null,savedRaid=null;
+if(savedActive){const camera=new PerspectiveCamera(),controls={target:new Vector3(),update(){}};focusTerrainCamera(camera,controls,nav.field,state.structures[0]);nav.setRaidView(camera.position,controls.target);nav.setActiveBounds(activeChunkRegion(camera.position).bounds);}
+if(savedReserves||savedActive){const count=Number(params.get('copies')??1);if(!Number.isInteger(count)||count<1||count>4)throw Error('Invalid saved group copies');Game.tick(state,300,nav);state.nightPlan={at:400,group:Array.from({length:count},()=>params.has('attack-species')?[params.get('attack-species')]:['warthog','hyena','buffalo','lion','rhino']).flat(),done:false};Game.tick(state,99.9,nav);if(savedActive){Game.tick(state,.2,nav);savedRaid=JSON.stringify(state.raid);}savedPlan=JSON.stringify(state.nightPlan);state=deserialize(serialize(state));nav.setState(state);}
+const world=new WorldScene(document.querySelector('canvas'),()=>{});world.onError=e=>errors.push(e.message);world.qualitySetting(quality);
+world.animalSkinEnvelope=params.get('skin-envelope')==='1';
+let loadedModelIds=[];if(savedActive){const reserve=world.prepareSavedAnimalRigs.bind(world);world.prepareSavedAnimalRigs=async state=>{await reserve(state);loadedModelIds=(await world.animalPreload.spares()).map(r=>r.model.uuid);};}
+const resources=params.get('resource-profile')==='1'?new BufferRequests(world.renderer.getContext()):null,resourceStages=[];
+const resourceSample=stage=>{if(resources)resourceStages.push({stage,assets:{cached:world.assets.cache.size,modelSources:world.assets.modelSources.size,ownedResources:world.assets.ownedResources.size},contextLost:world.renderer.getContext().isContextLost(),buffers:resources.snapshot(),geometries:world.renderer.info.memory.geometries,textures:world.renderer.info.memory.textures,programs:world.renderer.info.programs.length});};
+if(resources){const warm=world.warmAnimalGpu.bind(world);world.warmAnimalGpu=async(...args)=>{resourceSample('before-gpu-warm');try{return await warm(...args);}finally{resourceSample('after-gpu-warm');}};}
+let downloads=0;const original=world.assets.loader.loadAsync.bind(world.assets.loader);world.assets.loader.loadAsync=(...args)=>{downloads++;return original(...args);};
+const started=performance.now();await world.load(state,nav,payload);world.render(0);
+const loadingMs=performance.now()-started,loadReservedRigs=(await world.animalPreload.spares()).length;if(savedReserves&&(loadReservedRigs!==state.nightPlan.group.length||JSON.stringify(state.nightPlan)!==savedPlan))throw Error('Saved group not ready when world load completed');if(savedActive&&(!world.raidReady()||JSON.stringify(state.raid)!==savedRaid))throw Error('Active saved raid changed or not ready at load');resourceSample('after-load');
+// Optional diagnosis, not a pass/fail FPS threshold. RAF intervals include
+// browser scheduling; CPU render time is not GPU time or phone performance.
+const timing={settle:[],baseline:[],appearance:[],takes:[],creations:[],firstRenderCalls:[],scope:'Desktop browser; CPU render-call duration and RAF intervals, including camera/chunk work. Rig take duration includes async scheduling, not exclusive CPU work. No GPU timer or simulated worker movement.'};
+const percentile=(values,p)=>values.length?[...values].sort((a,b)=>a-b)[Math.min(values.length-1,Math.floor((values.length-1)*p))]:null;
+const summarize=frames=>({frames:frames.length,cpuMs:{median:percentile(frames.map(f=>f.cpuMs),.5),p95:percentile(frames.map(f=>f.cpuMs),.95),maximum:Math.max(...frames.map(f=>f.cpuMs))},intervalMs:{median:percentile(frames.map(f=>f.intervalMs).filter(v=>v!==null),.5),p95:percentile(frames.map(f=>f.intervalMs).filter(v=>v!==null),.95),maximum:Math.max(...frames.map(f=>f.intervalMs??0))}});
+async function sampleFrames(target,count){let previous=null;for(let i=0;i<count;i++){const stamp=await new Promise(requestAnimationFrame),cpuStart=performance.now();world.render(0);target.push({cpuMs:performance.now()-cpuStart,intervalMs:previous===null?null:stamp-previous,actorsReady:world.mixers.size,queuedChunks:world.chunkStream?.queue.length??null});previous=stamp;}}
+if(measureTiming){await sampleFrames(timing.settle,24);await Promise.all([world.chunkStream.whenIdle(),world.horizon.whenReady()]);world.render(0);await world.chunkStream.whenIdle();await sampleFrames(timing.baseline,24);const take=world.animalPreload.take.bind(world.animalPreload);world.animalPreload.take=async species=>{const stamp=performance.now(),rig=await take(species);timing.takes.push({species,ms:performance.now()-stamp});return rig;};const create=world.animalPreload.create.bind(world.animalPreload);world.animalPreload.create=(species,entry)=>{const stamp=performance.now();try{return create(species,entry);}finally{timing.creations.push({species,cpuMs:performance.now()-stamp});}};}
+const animalPrograms=models=>{const ids=new Set();for(const model of models)model.traverse(mesh=>{if(mesh.isMesh)for(const material of Array.isArray(mesh.material)?mesh.material:[mesh.material])for(const program of world.renderer.properties.get(material).programs?.values()??[])ids.add(program.id);});return [...ids];};
+const preparedVfx=()=>({fluidPrograms:[...world.renderer.properties.get(world.fluidMaterial).programs?.values()??[]].map(p=>({id:p.id,key:p.cacheKey})),remainingFluidPrimers:world.scene.getObjectsByProperty('name','fluid-gpu-preload').length,bindings:world.programBindings,materials:world.vfxLibrary.preparedMaterials.size,programIds:[...new Set([...world.vfxLibrary.preparedMaterials].flatMap(material=>[...world.renderer.properties.get(material).programs?.values()??[]].map(program=>program.id)))],activeInstances:world.vfxLibrary.instances.size});
+const before={preparedVfx:preparedVfx(),downloads,programs:world.renderer.info.programs.length,programIds:world.renderer.info.programs.map(p=>p.id),spareModelIds:savedActive?loadedModelIds:(await world.animalPreload.spares()).map(r=>r.model.uuid),animalPrograms:animalPrograms(savedActive?state.raid.animals.map(a=>world.mixers.get(a.id).model):(await world.animalPreload.spares()).map(r=>r.model))},species=['warthog','hyena','buffalo','lion','rhino'];
+if(params.get('prepare')==='1'){
+ // Controlled spawn diagnosis, not a naturally reached campaign night.
+ state.nightPlan={at:400,group:species,done:false};
+ const started=performance.now();world.raidEntryPreparer.update(state);
+ while(!world.raidEntryPreparer.ready&&performance.now()-started<30000&& !world.raidEntryPreparer.stats.failed){await new Promise(requestAnimationFrame);world.render(0);}
+ if(!world.raidEntryPreparer.ready)throw Error('Native entry worker did not prepare the unchanged camera');
+ timing.preparation={ms:performance.now()-started,stats:{...world.raidEntryPreparer.stats},scope:'Native module worker; original entry search before a controlled five-species spawn. No simulated time is advanced.'};
+}
+const originals=new Map();
+if(measureTiming&&params.get('profile')==='1'){
+ timing.navigationContext={state:serialize(state),activeBounds:nav.activeBounds,raidView:nav.raidView,warmedChunks:[...nav.chunks.keys()]};
+ timing.navigation={scope:'Inclusive nested CPU times; do not add them. Walkability/terrain/props counters omit per-call clocks to reduce measurement overhead.',methods:{}};
+ for(const name of ['path','approachPath','segmentClear','walkable','terrainValid','testTerrainValid','propsAt']){const original=nav[name];if(typeof original!=='function')continue;originals.set(name,original);const row=timing.navigation.methods[name]={calls:0,ms:0,maximumMs:0};nav[name]=function(...args){row.calls++;const clock=['path','approachPath','segmentClear'].includes(name),started=clock?performance.now():0;try{return original.apply(this,args);}finally{if(clock){const ms=performance.now()-started;row.ms+=ms;row.maximumMs=Math.max(row.maximumMs,ms);}}};}
+}
+const requestedSpecies=params.get('attack-species');
+if(requestedSpecies&&!species.includes(requestedSpecies))throw Error('Unknown QA attack species');
+const copies=Number(params.get('copies')??1);if(!Number.isInteger(copies)||copies<1||copies>4)throw Error('QA copies must be an integer from 1 to 4');
+const spawnSpecies=Array.from({length:copies},()=>requestedSpecies?[requestedSpecies]:species).flat();
+const plannedReserves=params.get('plan-reserves')==='1';
+if(plannedReserves){state.nightPlan={at:400,group:spawnSpecies,done:false};world.render(0);await world.animalReservePreparation;before.spareModelIds=(await world.animalPreload.spares()).map(r=>r.model.uuid);timing.plannedReserves={ready:before.spareModelIds.length,creations:timing.creations.splice(0),scope:'Native WorldScene planned group; no simulated clock advancement, one new reserve per frame and GPU bone texture preparation'};}
+if(measureTiming&&params.get('actor-profile')==='1')arrivalCpu=new ActorArrivalCpu(world);
+const appearance=performance.now();if(savedReserves)Game.tick(state,.2,nav);else if(!savedActive)spawnRaid(state,{group:spawnSpecies},nav);
+if(timing.preparation){timing.preparation.used=world.raidEntryPreparer.stats.used;timing.preparation.postState=serialize(state);}
+for(const [name,original] of originals)nav[name]=original;
+if(measureTiming)timing.spawnMs=performance.now()-appearance;
+const focusStarted=performance.now();
+world.focus({x:state.raid.animals.reduce((sum,a)=>sum+a.x,0)/state.raid.animals.length,z:state.raid.animals.reduce((sum,a)=>sum+a.z,0)/state.raid.animals.length});
+if(measureTiming)timing.focusMs=performance.now()-focusStarted;
+const firstRender=()=>{const stamp=performance.now(),actorsBefore=world.mixers.size,update=world.horizon?.update,glProbe=measureTiming&&params.get('appearance-profile')==='1'?new RenderGlCalls(world.renderer.getContext(),world.renderer,{programDetails:true}):null,cpuProbe=glProbe?new RenderCpuCalls(world,undefined,{submission:true}):null;let horizonCpuMs=0,calls,cpuCalls,groupAllocations;const groupProbe=measureTiming&&params.get('groups-profile')==='1'?new AssetGroupAllocations(world.assetGroups):null;glProbe?.begin();cpuProbe?.begin();groupProbe?.begin();
+ if(measureTiming&&update)world.horizon.update=function(...args){const started=performance.now();try{return update.apply(this,args);}finally{horizonCpuMs+=performance.now()-started;}};
+ try{world.render(0);}finally{calls=glProbe?.end();cpuCalls=cpuProbe?.end();cpuProbe?.dispose();glProbe?.dispose();groupAllocations=groupProbe?.end();groupProbe?.dispose();if(measureTiming&&update)world.horizon.update=update;}
+ if(measureTiming)timing.firstRenderCalls.push({cpuMs:performance.now()-stamp,horizonCpuMs,actorsBefore,actorsAfter:world.mixers.size,...(glProbe?{calls,cpuCalls}:{} ),...(groupProbe?{groupAllocations}:{})});};
+firstRender();await new Promise(resolve=>setTimeout(resolve,0));firstRender();
+const firstAppearanceMs=performance.now()-appearance;
+if(measureTiming){await sampleFrames(timing.appearance,60);timing.summary={baseline:summarize(timing.baseline),appearance:summarize(timing.appearance)};timing.horizonWorker={available:!!world.horizon.generator.worker,disabled:world.horizon.generator.disabled,pending:!!world.horizon.generator.busy,region:world.horizon.region};}
+if(arrivalCpu){timing.actorArrival=arrivalCpu.finish();arrivalCpu=null;}
+const rigs=state.raid.animals.map(a=>{const rig=world.mixers.get(a.id),skeletons=new Set(),geometry=new Set(),materials=new Set(),boneTextures=new Set();rig?.model.traverse(mesh=>{if(!mesh.isMesh)return;geometry.add(mesh.geometry.uuid);for(const material of Array.isArray(mesh.material)?mesh.material:[mesh.material])materials.add(material.uuid);if(mesh.isSkinnedMesh){skeletons.add(mesh.skeleton.uuid);if(mesh.skeleton.boneTexture)boneTextures.add(mesh.skeleton.boneTexture.uuid);}});return {species:a.species,ready:!!rig,modelId:rig?.model.uuid,fromSpare:before.spareModelIds.includes(rig?.model.uuid),skeletons:[...skeletons],boneTextures:[...boneTextures],geometry:[...geometry],materials:[...materials]};});
+const repeatedRigResources=Object.fromEntries([...new Set(spawnSpecies)].map(species=>{const matches=rigs.filter(r=>r.species===species),ids=field=>matches.flatMap(r=>r[field]);return [species,{copies:matches.length,sparesUsed:matches.filter(r=>r.fromSpare).length,uniqueModels:new Set(matches.map(r=>r.modelId)).size,privateSkeletons:new Set(ids('skeletons')).size===ids('skeletons').length,privateBoneTextures:new Set(ids('boneTextures')).size===ids('boneTextures').length,sharedGeometry:matches.every(r=>JSON.stringify(r.geometry)===JSON.stringify(matches[0].geometry)),sharedMaterials:matches.every(r=>JSON.stringify(r.materials)===JSON.stringify(matches[0].materials))}];}));
+if(Object.values(repeatedRigResources).some(r=>r.sparesUsed!==((plannedReserves||savedReserves||savedActive)?r.copies:1)||r.uniqueModels!==r.copies||!r.privateSkeletons||!r.privateBoneTextures||!r.sharedGeometry||!r.sharedMaterials))throw Error('Repeated rigs failed ownership checks');
+const after={preparedVfx:preparedVfx(),downloads,programs:world.renderer.info.programs.length,newPrograms:world.renderer.info.programs.filter(p=>!before.programIds.includes(p.id)).map(p=>({id:p.id,name:p.name})),animalPrograms:animalPrograms(state.raid.animals.map(a=>world.mixers.get(a.id).model))};
+if(measureTiming){const ids=new Set(after.newPrograms.map(p=>p.id));timing.newProgramUsers=[];world.scene.traverse(mesh=>{if(mesh.isMesh)for(const material of Array.isArray(mesh.material)?mesh.material:[mesh.material])if([...world.renderer.properties.get(material).programs?.values()??[]].some(p=>ids.has(p.id)))timing.newProgramUsers.push({mesh:mesh.name,parent:mesh.parent?.name,material:material.type,userDataKeys:Object.keys(mesh.userData),transparent:material.transparent,alphaTest:material.alphaTest,skinned:!!mesh.isSkinnedMesh,instanced:!!mesh.isInstancedMesh});});}
+after.newAnimalPrograms=after.animalPrograms.filter(id=>!before.animalPrograms.includes(id));
+if(params.get('motion')==='1'){
+ Game.resume(state,'intro');
+ if(requestedSpecies){state.dayPlan={done:true};state.nightPlan={done:true};}
+ const hp=state.structures[0].hp,updates=[],renderFrames=[],glProbe=params.get('frame-profile')==='1'?new RenderGlCalls(world.renderer.getContext(),world.renderer,{programDetails:params.get('program-details')==='1'}):null,cpuProbe=glProbe&&params.get('cpu-passes')==='1'?new RenderCpuCalls(world,undefined,{submission:params.get('submission')==='1'}):null;let steps=0,heldFrames=0;
+ try{while((requestedSpecies?!state.events.some(e=>e.type==='AnimalLogicalHit'):state.structures[0].hp===hp)&&state.raid&&steps<600){
+  if(errors.length)throw Error(errors.join('; '));
+  if(!world.raidReady()){if(++heldFrames>600)throw Error('Actor readiness budget exhausted');world.render(0);await new Promise(requestAnimationFrame);continue;}
+  const started=performance.now();Game.tick(state,.05,nav);updates.push(performance.now()-started);
+  const programsBefore=new Set(world.renderer.info.programs.map(p=>p.id)),renderStarted=performance.now();glProbe?.begin();cpuProbe?.begin();
+  try{world.render(.05);}finally{const cpuMs=performance.now()-renderStarted,calls=glProbe?.end(),cpuCalls=cpuProbe?.end();if(glProbe)renderFrames.push({step:steps,elapsed:state.elapsed,cpuMs,calls,...(cpuProbe?{cpuCalls}:{}),statuses:state.raid?.animals.map(a=>({species:a.species,status:a.status,rigClip:world.mixers.get(a.id)?.name})),effects:[...world.attackVfx.effects.values()].map(e=>({id:e.native.definition.id,sprites:e.sprites.geometry.instanceCount})),pointLights:[],newProgramUsers:[],newPrograms:world.renderer.info.programs.filter(p=>!programsBefore.has(p.id)).map(p=>({id:p.id,name:p.name}))});}
+  if(glProbe){const row=renderFrames.at(-1),ids=new Set(row.newPrograms.map(p=>p.id));world.scene.traverseVisible(object=>{if(object.isPointLight)row.pointLights.push({id:object.id,intensity:object.intensity,color:object.color.toArray(),effect:object.parent?.native?.definition?.id});if(ids.size&&object.material)for(const material of Array.isArray(object.material)?object.material:[object.material]){const used=[...world.renderer.properties.get(material).programs?.values()??[]].filter(p=>ids.has(p.id)).map(p=>p.id);if(used.length)row.newProgramUsers.push({object:object.name,material:material.type,metadata:Object.keys(material.userData),programs:used});}});}
+  steps++;await new Promise(requestAnimationFrame);
+ }
+ }finally{cpuProbe?.dispose();glProbe?.dispose();}
+ timing.motion={steps,heldFrames,spawnSpecies,simulatedSeconds:steps*.05,centerHpBefore:hp,centerHpAfter:state.structures[0].hp,
+  ...(glProbe?{renderFrames,renderProbeScope:'CPU world.render call and GL API counts per controlled frame; no GPU timing, exclusive shader cost or RAM bytes'}:{}),logicalHits:state.events.filter(e=>e.type==='AnimalLogicalHit'),actors:state.raid?.animals.map(a=>({species:a.species,status:a.status,animation:a.animation,ready:world.mixers.has(a.id),position:[a.x,a.z],renderY:world.objects.get(a.id)?.position.y})),attackEffects:[...world.attackVfx.effects.values()].map(e=>({id:e.native.definition.id,sprites:e.sprites.geometry.instanceCount})),
+  contactRequirement:requestedSpecies?'selected-species-paid-crop-or-center':'original-structure-hit',firstHit:state.events.find(e=>e.type===(requestedSpecies?'AnimalLogicalHit':'StructureHit'))??null,firstStructureHit:state.events.find(e=>e.type==='StructureHit')??null,maximumGameTickMs:Math.max(...updates),medianGameTickMs:percentile(updates,.5)};
+ const frustum=new Frustum().setFromProjectionMatrix(new Matrix4().multiplyMatrices(world.camera.projectionMatrix,world.camera.matrixWorldInverse));
+ timing.motion.renderedActors=(state.raid?.animals??[]).map(a=>{const root=world.objects.get(a.id);if(!root)return {species:a.species,status:a.status,meshPresent:false,visibleMeshes:0,intersectsCamera:false};const box=new Box3().setFromObject(root,true);let meshes=0,visibleMeshes=0;root.traverse(mesh=>{if(mesh.isMesh){meshes++;if(mesh.visible)visibleMeshes++;}});return {id:a.id,species:a.species,status:a.status,bounds:{min:box.min.toArray(),max:box.max.toArray()},intersectsCamera:frustum.intersectsBox(box),meshes,visibleMeshes};});
+ failureContext={savedRaid:savedRaid?JSON.parse(savedRaid):null,motion:timing.motion,pauses:state.pauses,time:state.time,elapsed:state.elapsed,raid:state.raid};
+ if(requestedSpecies&&timing.motion.renderedActors.some(a=>a.status!=='gone'&&(!a.visibleMeshes||!a.intersectsCamera)))throw Error('Actor outside camera or hidden at contact');
+ if(!timing.motion.firstHit)throw Error('Animals did not reach and hit a paid farm target');
+ if(!timing.motion.logicalHits.length||requestedSpecies&&!timing.motion.logicalHits.some(e=>e.species===requestedSpecies))throw Error('Requested species did not perform a logical hit');
+}
+const postMotion={downloads,animalPrograms:animalPrograms((state.raid?.animals??[]).filter(a=>a.status!=='gone').map(a=>world.mixers.get(a.id).model)),creations:timing.creations};postMotion.newAnimalPrograms=postMotion.animalPrograms.filter(id=>!before.animalPrograms.includes(id));if(savedActive&&(postMotion.downloads!==before.downloads||postMotion.newAnimalPrograms.length||postMotion.creations.length))throw Error('Restored motion requested new animal resources');
+resourceSample('after-contact-or-appearance');
+if(resources&&params.get('dispose-world')==='1'){const original=world.renderer.forceContextLoss.bind(world.renderer);world.renderer.forceContextLoss=()=>{resourceSample('before-context-loss');return original();};const lost=new Promise(resolve=>{const canvas=world.renderer.domElement;let timer;const done=()=>{clearTimeout(timer);canvas.removeEventListener('webglcontextlost',done);resolve();};canvas.addEventListener('webglcontextlost',done,{once:true});timer=setTimeout(done,5000);});world.dispose();resourceSample('after-dispose');await lost;resourceSample('after-context-loss-event');if(!world.renderer.getContext().isContextLost())throw Error('QA context loss not observed after disposal');}
+resources?.dispose();
+const skinEnvelope={enabled:world.animalSkinEnvelope,preparedMeshes:[...world.mixers.values()].reduce((n,r)=>n+(r.skinEnvelopes?.size??0),0)};
+const report={...(resources?{resourceStages}:{}),skinEnvelope,ok:world.animalGpuReady&&rigs.every(r=>r.ready)&&before.animalPrograms.length>0&&after.downloads===before.downloads&&after.newAnimalPrograms.length===0&&errors.length===0,biome,culture:state.culture,quality:world.quality,drawingBuffer:[world.renderer.domElement.width,world.renderer.domElement.height],gpuReady:world.animalGpuReady,warmed:[...world.warmedAnimals],copies,plannedReserves,savedReserves,savedActive,savedRaidUnchangedAtLoad:savedActive?true:null,loadReservedRigs,repeatedRigResources,rigs,before,after,postMotion,appearanceMs:firstAppearanceMs,loadingMs,errors,...((measureTiming||params.get('motion')==='1')?{timing}:{}),spawnSpecies,scope:'Native WorldScene, normal paid center (plus legal paid seed/empty hiring for motion) and controlled native spawn (all five or selected species). Camera focuses actual spawn positions; terrain programs may change with chunks. First rendered appearance: no further GLB downloads or new animal material shader program IDs. Single browser sample; not physical phone frametime.'};
+if(params.get('skin-culling')==='1'){
+ if(!world.animalSkinEnvelope||world.disposed)throw Error('Skin-culling requires a live envelope pilot');
+ const singleExit=params.get('skin-culling-single-exit')==='1',shaderState=serialize(state);
+ try{
+  if(singleExit){
+   const materialAssignments=applySingleExitEnvironmentQA(world.scene,true);
+   // Compile/render the altered programs before either native-control capture.
+   // dt=0 warms rendering only; the serialized simulation must remain exact.
+   world.render(0);world.render(0);
+   if(serialize(state)!==shaderState)throw Error('Single-exit shader preparation changed logical state');
+   report.skinCullingShader={singleExit:true,materialAssignments,...singleExitEnvironmentQAReport(world.scene)};
+  }
+  report.skinCulling=skinCullingSweep(world,state,{holdSnapshot:params.get('skin-culling-hold')==='1',disableDither:params.get('skin-culling-no-dither')==='1',offscreen:params.get('skin-culling-offscreen')==='1',drawOnly:params.get('skin-culling-draw-only')==='1'});report.ok&&=report.skinCulling.ok;
+  if(singleExit)report.skinCullingShader={...report.skinCullingShader,...singleExitEnvironmentQAReport(world.scene)};
+ }finally{
+  if(singleExit){applySingleExitEnvironmentQA(world.scene,false);world.render(0);}
+ }
+}
+document.querySelector('#report').textContent=JSON.stringify(report,null,2);
+if(!world.disposed&&params.get('motion')==='1'){const button=document.querySelector('#inspect');button.disabled=false;button.onclick=()=>{const animal=state.raid?.animals[0],before=serialize(state);if(!animal)return;world.focus({x:animal.x,z:animal.z,distance:8});world.render(0);if(serialize(state)!==before)throw Error('Inspection changed logical state');report.inspection={scope:'Close camera after first hit; no subsequent simulation ticks',logicalStateUnchanged:true,eye:world.camera.position.toArray(),target:world.controls.target.toArray()};document.querySelector('#report').textContent=JSON.stringify(report,null,2);};}
+let last=performance.now();function frame(now){world.render(Math.min(.05,(now-last)/1000));last=now;requestAnimationFrame(frame);}if(!world.disposed)requestAnimationFrame(frame);
+}catch(error){arrivalCpu?.dispose();arrivalCpu=null;document.querySelector('#report').textContent=JSON.stringify({ok:false,error:error.stack,errors,failureContext},null,2);}
+</script></body></html>

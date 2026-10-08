@@ -1,0 +1,261 @@
+{
+  "runtimeBaseline": "68447e149019be082d7b9815e475fc42edd5588b",
+  "directedTests": 119,
+  "inventoryErrors": [],
+  "unparsedInline": [],
+  "inventorySummary": {
+    "all": {
+      "count": 393,
+      "bytes": 685670717,
+      "formats": {
+        "jpeg": 37,
+        "png": 69,
+        "svg": 1,
+        "webp": 286
+      },
+      "exactPixels": 195,
+      "unclassified": 59,
+      "uniqueHashes": 373
+    },
+    "distributed": {
+      "count": 281,
+      "bytes": 220327249,
+      "formats": {
+        "jpeg": 23,
+        "svg": 1,
+        "webp": 257
+      },
+      "exactPixels": 134,
+      "unclassified": 50,
+      "uniqueHashes": 273
+    },
+    "standalone": {
+      "count": 218,
+      "bytes": 110354271,
+      "formats": {
+        "jpeg": 23,
+        "svg": 1,
+        "webp": 194
+      },
+      "exactPixels": 92,
+      "unclassified": 50,
+      "uniqueHashes": 218
+    },
+    "embedded": {
+      "count": 63,
+      "bytes": 109972978,
+      "formats": {
+        "webp": 63
+      },
+      "exactPixels": 42,
+      "unclassified": 0,
+      "uniqueHashes": 55
+    },
+    "inline": {
+      "count": 0,
+      "bytes": 0,
+      "formats": {},
+      "exactPixels": 0,
+      "unclassified": 0,
+      "uniqueHashes": 0
+    }
+  },
+  "hqAtlases": [
+    {
+      "path": "assets/far-vegetation/canyons-hq-backdrop.webp",
+      "distributed": true,
+      "sha256": "ff8bf010ed3bc84eeaf86b464a7cabff99cba656121d198d300232a7bd151ed1",
+      "bytes": 826140,
+      "format": "webp",
+      "width": 2048,
+      "height": 512,
+      "pageHeight": null,
+      "pages": 1,
+      "alpha": true,
+      "channels": 4,
+      "space": "srgb",
+      "orientation": null,
+      "icc": false,
+      "roles": [
+        "color-atlas"
+      ],
+      "origins": [],
+      "references": [
+        {
+          "catalog": "src/rendering/mountain-backdrop-profile.js",
+          "field": "canyons.atlas",
+          "role": "color-atlas",
+          "encodedContract": true,
+          "sha256": "ff8bf010ed3bc84eeaf86b464a7cabff99cba656121d198d300232a7bd151ed1",
+          "bytes": 826140
+        }
+      ],
+      "requiresExactPixels": true
+    },
+    {
+      "path": "assets/far-vegetation/desert-hq-backdrop.webp",
+      "distributed": true,
+      "sha256": "cf78ca8f99dafa06eadd83139d560da598deae8a21426d2f7da61bfb03c0ccdb",
+      "bytes": 839410,
+      "format": "webp",
+      "width": 2048,
+      "height": 512,
+      "pageHeight": null,
+      "pages": 1,
+      "alpha": true,
+      "channels": 4,
+      "space": "srgb",
+      "orientation": null,
+      "icc": false,
+      "roles": [
+        "color-atlas"
+      ],
+      "origins": [],
+      "references": [
+        {
+          "catalog": "src/rendering/mountain-backdrop-profile.js",
+          "field": "desert.atlas",
+          "role": "color-atlas",
+          "encodedContract": true,
+          "sha256": "cf78ca8f99dafa06eadd83139d560da598deae8a21426d2f7da61bfb03c0ccdb",
+          "bytes": 839410
+        }
+      ],
+      "requiresExactPixels": true
+    },
+    {
+      "path": "assets/far-vegetation/grand_river-hq-backdrop.webp",
+      "distributed": true,
+      "sha256": "3ab8bd01b1026a83558a95f2bdd30677c631d6a75315f17821d1c5bf2f69c287",
+      "bytes": 737754,
+      "format": "webp",
+      "width": 2048,
+      "height": 512,
+      "pageHeight": null,
+      "pages": 1,
+      "alpha": true,
+      "channels": 4,
+      "space": "srgb",
+      "orientation": null,
+      "icc": false,
+      "roles": [
+        "color-atlas"
+      ],
+      "origins": [],
+      "references": [
+        {
+          "catalog": "src/rendering/mountain-backdrop-profile.js",
+          "field": "grand_river.atlas",
+          "role": "color-atlas",
+          "encodedContract": true,
+          "sha256": "3ab8bd01b1026a83558a95f2bdd30677c631d6a75315f17821d1c5bf2f69c287",
+          "bytes": 737754
+        }
+      ],
+      "requiresExactPixels": true
+    },
+    {
+      "path": "assets/far-vegetation/mangrove-hq-backdrop.webp",
+      "distributed": true,
+      "sha256": "d656c67f54a6da0cf19b95ca74671d673e1be633fa9f3307202c2d3bbeca8e95",
+      "bytes": 791354,
+      "format": "webp",
+      "width": 2048,
+      "height": 512,
+      "pageHeight": null,
+      "pages": 1,
+      "alpha": true,
+      "channels": 4,
+      "space": "srgb",
+      "orientation": null,
+      "icc": false,
+      "roles": [
+        "color-atlas"
+      ],
+      "origins": [],
+      "references": [
+        {
+          "catalog": "src/rendering/mountain-backdrop-profile.js",
+          "field": "mangrove.atlas",
+          "role": "color-atlas",
+          "encodedContract": true,
+          "sha256": "d656c67f54a6da0cf19b95ca74671d673e1be633fa9f3307202c2d3bbeca8e95",
+          "bytes": 791354
+        }
+      ],
+      "requiresExactPixels": true
+    },
+    {
+      "path": "assets/far-vegetation/savanna-hq-backdrop.webp",
+      "distributed": true,
+      "sha256": "151312cc3dec8bf2bca0d2791fb6db10808b5d212042a904453614886aa19666",
+      "bytes": 787504,
+      "format": "webp",
+      "width": 2048,
+      "height": 512,
+      "pageHeight": null,
+      "pages": 1,
+      "alpha": true,
+      "channels": 4,
+      "space": "srgb",
+      "orientation": null,
+      "icc": false,
+      "roles": [
+        "color-atlas"
+      ],
+      "origins": [],
+      "references": [
+        {
+          "catalog": "src/rendering/mountain-backdrop-profile.js",
+          "field": "savanna.atlas",
+          "role": "color-atlas",
+          "encodedContract": true,
+          "sha256": "151312cc3dec8bf2bca0d2791fb6db10808b5d212042a904453614886aa19666",
+          "bytes": 787504
+        }
+      ],
+      "requiresExactPixels": true
+    },
+    {
+      "path": "assets/far-vegetation/volcanoes-hq-backdrop.webp",
+      "distributed": true,
+      "sha256": "ce51252c27c05f7446edf83e039c9163b753f044eddb94f42608aa5ce1670d5b",
+      "bytes": 718398,
+      "format": "webp",
+      "width": 2048,
+      "height": 512,
+      "pageHeight": null,
+      "pages": 1,
+      "alpha": true,
+      "channels": 4,
+      "space": "srgb",
+      "orientation": null,
+      "icc": false,
+      "roles": [
+        "color-atlas"
+      ],
+      "origins": [],
+      "references": [
+        {
+          "catalog": "src/rendering/mountain-backdrop-profile.js",
+          "field": "volcanoes.atlas",
+          "role": "color-atlas",
+          "encodedContract": true,
+          "sha256": "ce51252c27c05f7446edf83e039c9163b753f044eddb94f42608aa5ce1670d5b",
+          "bytes": 718398
+        }
+      ],
+      "requiresExactPixels": true
+    }
+  ],
+  "zip": {
+    "fileCount": 701,
+    "uncompressedBytes": 403013176,
+    "encodedBytes": 353085120,
+    "sha256": "ecffe9a87f6a23e38f9f9a869700f70d45f2139aeed07bf79cae7f41fbc8384b",
+    "nestedZip": [],
+    "rootIndex": true,
+    "crcCheck": "passed by package_itch.py, terminal exit 0"
+  },
+  "mainCIObserved": "in_progress; not accepted as success"
+}

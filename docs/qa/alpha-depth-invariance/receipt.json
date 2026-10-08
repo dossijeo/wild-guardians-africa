@@ -1,0 +1,292 @@
+{
+  "base": "67907fbd6498dfc91807b3afb67596f1d03e6619",
+  "url": "http://127.0.0.1:5173/tests/browser/depth-capture.html?biome=volcanes&culture=mapungubwe&invariant=MODE",
+  "positionUvRepeatsInSameContext": true,
+  "scope": "QA-only negative hypothesis. One positive first UV sequence is not reproducible; no production adoption or FPS/GPU benefit claim.",
+  "cases": [
+    {
+      "name": "position",
+      "width": 1280,
+      "height": 720,
+      "errors": [],
+      "mode": "position",
+      "wrappedMaterials": 74,
+      "compileCallbacks": 107,
+      "depthCompileCallbacks": 40,
+      "alphaApplicationsCumulative": 2206,
+      "pairs": [
+        {
+          "pair": "N1/N2",
+          "differentPixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "N2/G",
+          "differentPixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "G/B1",
+          "differentPixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "N2/B1",
+          "differentPixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "B1/B2",
+          "differentPixels": 7,
+          "maxDepthDelta": 0.00001996755599975586
+        },
+        {
+          "pair": "B2/N3",
+          "differentPixels": 7,
+          "maxDepthDelta": 0.00001996755599975586
+        },
+        {
+          "pair": "N2/N3",
+          "differentPixels": 0,
+          "maxDepthDelta": 0
+        }
+      ]
+    },
+    {
+      "name": "position-uv",
+      "width": 1280,
+      "height": 720,
+      "errors": [],
+      "mode": "position-uv",
+      "wrappedMaterials": 74,
+      "compileCallbacks": 107,
+      "depthCompileCallbacks": 40,
+      "alphaApplicationsCumulative": 2206,
+      "pairs": [
+        {
+          "pair": "N1/N2",
+          "differentPixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "N2/G",
+          "differentPixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "G/B1",
+          "differentPixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "N2/B1",
+          "differentPixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "B1/B2",
+          "differentPixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "B2/N3",
+          "differentPixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "N2/N3",
+          "differentPixels": 0,
+          "maxDepthDelta": 0
+        }
+      ]
+    },
+    {
+      "name": "position-uv-repeat",
+      "width": 1280,
+      "height": 720,
+      "errors": [],
+      "mode": "position-uv",
+      "wrappedMaterials": 74,
+      "compileCallbacks": 107,
+      "depthCompileCallbacks": 40,
+      "alphaApplicationsCumulative": 4412,
+      "pairs": [
+        {
+          "pair": "N1/N2",
+          "differentPixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "N2/G",
+          "differentPixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "G/B1",
+          "differentPixels": 7,
+          "maxDepthDelta": 0.00001996755599975586
+        },
+        {
+          "pair": "N2/B1",
+          "differentPixels": 7,
+          "maxDepthDelta": 0.00001996755599975586
+        },
+        {
+          "pair": "B1/B2",
+          "differentPixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "B2/N3",
+          "differentPixels": 7,
+          "maxDepthDelta": 0.00001996755599975586
+        },
+        {
+          "pair": "N2/N3",
+          "differentPixels": 0,
+          "maxDepthDelta": 0
+        }
+      ]
+    },
+    {
+      "name": "position-uv-third",
+      "width": 1280,
+      "height": 720,
+      "errors": [],
+      "mode": "position-uv",
+      "wrappedMaterials": 74,
+      "compileCallbacks": 107,
+      "depthCompileCallbacks": 40,
+      "alphaApplicationsCumulative": 6618,
+      "pairs": [
+        {
+          "pair": "N1/N2",
+          "differentPixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "N2/G",
+          "differentPixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "G/B1",
+          "differentPixels": 7,
+          "maxDepthDelta": 0.00001996755599975586
+        },
+        {
+          "pair": "N2/B1",
+          "differentPixels": 7,
+          "maxDepthDelta": 0.00001996755599975586
+        },
+        {
+          "pair": "B1/B2",
+          "differentPixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "B2/N3",
+          "differentPixels": 7,
+          "maxDepthDelta": 0.00001996755599975586
+        },
+        {
+          "pair": "N2/N3",
+          "differentPixels": 0,
+          "maxDepthDelta": 0
+        }
+      ]
+    }
+  ],
+  "files": [
+    {
+      "source": ".cache/depth-invariance/position.json",
+      "archive": "position.json.gz",
+      "bytes": 52951,
+      "sha256": "6c6dadda05318d4622f6db8f3be6c629fe15924e148d12c8182d2cd7bc524304"
+    },
+    {
+      "source": ".cache/depth-invariance/position-uv.json",
+      "archive": "position-uv.json.gz",
+      "bytes": 48567,
+      "sha256": "509f31fdb712505e38b626632596c599bd0ca123590c9ac90303dc4d71eef0dc"
+    },
+    {
+      "source": ".cache/depth-invariance/position-uv-repeat.json",
+      "archive": "position-uv-repeat.json.gz",
+      "bytes": 55515,
+      "sha256": "880efebf8e4e03299937f8f078ca23651221693949277f4a3e467f3e0932f818"
+    },
+    {
+      "source": ".cache/depth-invariance/position-uv-third.json",
+      "archive": "position-uv-third.json.gz",
+      "bytes": 55510,
+      "sha256": "e513fcde50ce0d1e7e35e08618fa2445de59734ba7eddd40feae45d15617e18a"
+    },
+    {
+      "source": ".cache/depth-invariance/position.png",
+      "archive": "position.png",
+      "bytes": 201001,
+      "sha256": "4b937fa0165405372d77c77c3c25d946ea1d7884a4a3be8ba556cb2e7d95d223"
+    },
+    {
+      "source": ".cache/depth-invariance/position-console.json",
+      "archive": "position-console.json",
+      "bytes": 1932,
+      "sha256": "dd8c20e684d5435476621468518e3d969bc0636453edefc41d24017eb545513b"
+    },
+    {
+      "source": ".cache/depth-invariance/position-uv.png",
+      "archive": "position-uv.png",
+      "bytes": 201022,
+      "sha256": "c836535e767dda6885eac23976b562bdb87501149c9988e6f71a822b17ccb1df"
+    },
+    {
+      "source": ".cache/depth-invariance/position-uv-console.json",
+      "archive": "position-uv-console.json",
+      "bytes": 774,
+      "sha256": "cae5d27f0432d0946ffe89c0d9dfe83e711179aea40cd936a419ba3fd7dbadcf"
+    },
+    {
+      "source": ".cache/depth-invariance/directed-tests.log",
+      "archive": "directed-tests.log.gz",
+      "bytes": 7453,
+      "sha256": "290a2ef00bdf5adbb2f492fdf875b08b7253da1b42d6ba8224242a7f0f696b87"
+    },
+    {
+      "source": ".cache/depth-invariance/syntax.json",
+      "archive": "syntax.json.gz",
+      "bytes": 266,
+      "sha256": "a902dc60223702015a6f099bb03f9923d69f305042f72ee5af0b487380519811"
+    },
+    {
+      "source": "tests/browser/invariant-depth-shaders.js",
+      "archive": "invariant-depth-shaders.js.gz",
+      "bytes": 2731,
+      "sha256": "78f018841819584978d5e6d873513a27f5c0f2625ef8b6127fed0442d4b9a3b6"
+    },
+    {
+      "source": "tests/invariant-depth-shaders.test.js",
+      "archive": "invariant-depth-shaders.test.js.gz",
+      "bytes": 4170,
+      "sha256": "21306043eb2f5bfcacc07b9955aa5f794aa8d701b0059fd117528e6cd56ea1c3"
+    },
+    {
+      "source": "tests/browser/depth-capture.html",
+      "archive": "depth-capture.html.gz",
+      "bytes": 33214,
+      "sha256": "06cadb318e44af2817012eaf9ceb5c8566b44ab999e0e6f31b8598e3d4a465ff"
+    },
+    {
+      "source": "src/rendering/depth-recipes.js",
+      "archive": "depth-recipes.js.gz",
+      "bytes": 911,
+      "sha256": "8a4fff986eef87f820ce33852ae475e758315169d64897d2b863ecefef27426a"
+    },
+    {
+      "source": "src/rendering/standard-depth.js",
+      "archive": "standard-depth.js.gz",
+      "bytes": 5574,
+      "sha256": "b65c8d7399d506855fcb64e0b3abf7b4b924459949b16f8d0852427ce5af848b"
+    }
+  ]
+}

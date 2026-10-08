@@ -1,0 +1,59 @@
+{
+  "runtimeBaseline": "5a1ba787bc49a90f2a88d32146bcfcad4447955b",
+  "gpuTiming": false,
+  "cpuCampaignsVerifiedLive": [
+    44164,
+    49032
+  ],
+  "reportSha256": "5e29bf15782134d99f84b21d62730b3efc9eb7a4f4ed61336b1b70ee70ab77e7",
+  "compressedReportSha256": "65096e1973066ddfedadb93ab9738fbdd3183e920f49d1dbbb224e438559613c",
+  "frames": [
+    {
+      "cpuMs": 38.700000047683716,
+      "calls": {
+        "compileShader": 0,
+        "linkProgram": 0,
+        "bufferData": 171,
+        "bufferSubData": 59,
+        "texImage2D": 0,
+        "texSubImage2D": 5,
+        "texImage3D": 0,
+        "texSubImage3D": 0,
+        "drawCompiles": []
+      },
+      "prepares": 58,
+      "newMesh": 21,
+      "newKeys": 6,
+      "growth": 13,
+      "shrink": 2,
+      "retired": 18,
+      "instanceArrayBytes": 147008
+    },
+    {
+      "cpuMs": 16.200000047683716,
+      "calls": {
+        "compileShader": 0,
+        "linkProgram": 0,
+        "bufferData": 0,
+        "bufferSubData": 0,
+        "texImage2D": 0,
+        "texSubImage2D": 1,
+        "texImage3D": 0,
+        "texSubImage3D": 0,
+        "drawCompiles": []
+      },
+      "prepares": 58,
+      "newMesh": 0,
+      "newKeys": 0,
+      "growth": 0,
+      "shrink": 0,
+      "retired": 0,
+      "instanceArrayBytes": 147008
+    }
+  ],
+  "sources": {
+    "tests/browser/asset-group-allocations.js": "39a6f16ca51fdb89ddbfc966cf86879a48b9c0e98c700b5490fe3e5754bb37e1",
+    "tests/browser/animal-preload.html": "fdbcc1e83b2a22a60c3cfa1ef925c0aae909b68f9c9847f7cc9cfd29ad5b2a71",
+    "src/rendering/asset-groups.js": "8fa8e5885b962131148d6b96509ebdaa01734b2b6546c6b2fab7b6d7e5753e92"
+  }
+}

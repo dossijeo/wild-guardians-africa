@@ -1,0 +1,95 @@
+TAP version 13
+# Subtest: group probe preserves receiver/results and attributes capacity replacement, reuse and retirement
+ok 1 - group probe preserves receiver/results and attributes capacity replacement, reuse and retirement
+  ---
+  duration_ms: 9.1297
+  ...
+# Subtest: failed prepare reports failure without replacing errors or restoring over newer hooks
+ok 2 - failed prepare reports failure without replacing errors or restoring over newer hooks
+  ---
+  duration_ms: 0.911
+  ...
+# Subtest: partial installation failure restores inherited prepare ownership
+ok 3 - partial installation failure restores inherited prepare ownership
+  ---
+  duration_ms: 0.5884
+  ...
+# Subtest: draw snapshot retains exact submitted prefixes and ignores unused instance backing storage
+ok 4 - draw snapshot retains exact submitted prefixes and ignores unused instance backing storage
+  ---
+  duration_ms: 6.8658
+  ...
+# Subtest: real Three geometry disposal preserves transferred buffers across growth/shrink and deletes them on final retirement
+ok 5 - real Three geometry disposal preserves transferred buffers across growth/shrink and deletes them on final retirement
+  ---
+  duration_ms: 22.5366
+  ...
+# Subtest: matrices, visibility, capacities and byte accounting match native grouping through resize, stable frame and compact coverage
+ok 6 - matrices, visibility, capacities and byte accounting match native grouping through resize, stable frame and compact coverage
+  ---
+  duration_ms: 9.6816
+  ...
+# Subtest: different source arrays fall back to new private identities; shadows remain borrowed and untouched
+ok 7 - different source arrays fall back to new private identities; shadows remain borrowed and untouched
+  ---
+  duration_ms: 5.5091
+  ...
+# Subtest: failed packing releases the previous geometry without transferring its attributes or retaining scope
+ok 8 - failed packing releases the previous geometry without transferring its attributes or retaining scope
+  ---
+  duration_ms: 4.5472
+  ...
+# Subtest: transition chunks retain tree color and shadows without bringing back nearby small props
+ok 9 - transition chunks retain tree color and shadows without bringing back nearby small props
+  ---
+  duration_ms: 56.0315
+  ...
+# Subtest: full native chunk boxes match the original plane culling and remain independent of reduced render geometry
+ok 10 - full native chunk boxes match the original plane culling and remain independent of reduced render geometry
+  ---
+  duration_ms: 15.4444
+  ...
+# Subtest: global groups retain native matrices and per-instance coverage, cull main chunks but keep shadow populations
+ok 11 - global groups retain native matrices and per-instance coverage, cull main chunks but keep shadow populations
+  ---
+  duration_ms: 23.2895
+  ...
+# Subtest: clip exceptions, hidden chunks and vegetation retain the original pass eligibility
+ok 12 - clip exceptions, hidden chunks and vegetation retain the original pass eligibility
+  ---
+  duration_ms: 6.5109
+  ...
+# Subtest: retired groups release their own buffers once, preserve borrowed arrays and switch back to individual drawing
+ok 13 - retired groups release their own buffers once, preserve borrowed arrays and switch back to individual drawing
+  ---
+  duration_ms: 11.8906
+  ...
+# Subtest: light volume retains offscreen casters, excludes remote/clip chunks and follows focus independently of color
+ok 14 - light volume retains offscreen casters, excludes remote/clip chunks and follows focus independently of color
+  ---
+  duration_ms: 14.28
+  ...
+# Subtest: shadow selection includes bounds of the final native variant even if they exceed LOD0
+ok 15 - shadow selection includes bounds of the final native variant even if they exceed LOD0
+  ---
+  duration_ms: 8.6917
+  ...
+# Subtest: optional far color compaction removes only fully hidden instances and preserves native shadows
+ok 16 - optional far color compaction removes only fully hidden instances and preserves native shadows
+  ---
+  duration_ms: 5.3297
+  ...
+# Subtest: shortened prop residency preserves logical instances and terrain group visibility in merged and fallback paths
+ok 17 - shortened prop residency preserves logical instances and terrain group visibility in merged and fallback paths
+  ---
+  duration_ms: 5.4198
+  ...
+1..17
+# tests 17
+# suites 0
+# pass 17
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 841.6711

@@ -1,0 +1,351 @@
+{
+  "runs": [
+    {
+      "name": "base-A1",
+      "drawingBuffer": [
+        1280,
+        720
+      ],
+      "candidate": null,
+      "frames": [
+        {
+          "cpuMs": 41.89999997615814,
+          "bufferData": 171,
+          "bufferSubData": 59,
+          "memory": {
+            "geometries": 170,
+            "textures": 57
+          },
+          "render": {
+            "frame": 106,
+            "calls": 75,
+            "triangles": 754661,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "cpuMs": 18.5,
+          "bufferData": 0,
+          "bufferSubData": 0,
+          "memory": {
+            "geometries": 170,
+            "textures": 57
+          },
+          "render": {
+            "frame": 108,
+            "calls": 76,
+            "triangles": 783053,
+            "points": 0,
+            "lines": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "candidate-B1-fixed",
+      "drawingBuffer": [
+        1280,
+        720
+      ],
+      "candidate": {
+        "attempts": 20,
+        "transferred": 20,
+        "rejected": 0
+      },
+      "frames": [
+        {
+          "cpuMs": 40.39999997615814,
+          "bufferData": 121,
+          "bufferSubData": 59,
+          "memory": {
+            "geometries": 170,
+            "textures": 57
+          },
+          "render": {
+            "frame": 106,
+            "calls": 75,
+            "triangles": 754661,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "cpuMs": 21.100000023841858,
+          "bufferData": 0,
+          "bufferSubData": 0,
+          "memory": {
+            "geometries": 170,
+            "textures": 57
+          },
+          "render": {
+            "frame": 108,
+            "calls": 76,
+            "triangles": 783053,
+            "points": 0,
+            "lines": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "candidate-B2-fixed",
+      "drawingBuffer": [
+        1280,
+        720
+      ],
+      "candidate": {
+        "attempts": 20,
+        "transferred": 20,
+        "rejected": 0
+      },
+      "frames": [
+        {
+          "cpuMs": 42.59999990463257,
+          "bufferData": 121,
+          "bufferSubData": 59,
+          "memory": {
+            "geometries": 170,
+            "textures": 57
+          },
+          "render": {
+            "frame": 106,
+            "calls": 75,
+            "triangles": 754661,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "cpuMs": 17.300000071525574,
+          "bufferData": 0,
+          "bufferSubData": 0,
+          "memory": {
+            "geometries": 170,
+            "textures": 57
+          },
+          "render": {
+            "frame": 108,
+            "calls": 76,
+            "triangles": 783053,
+            "points": 0,
+            "lines": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "base-A2",
+      "drawingBuffer": [
+        1280,
+        720
+      ],
+      "candidate": null,
+      "frames": [
+        {
+          "cpuMs": 44.299999952316284,
+          "bufferData": 171,
+          "bufferSubData": 59,
+          "memory": {
+            "geometries": 170,
+            "textures": 57
+          },
+          "render": {
+            "frame": 106,
+            "calls": 75,
+            "triangles": 754661,
+            "points": 0,
+            "lines": 0
+          }
+        },
+        {
+          "cpuMs": 17.399999976158142,
+          "bufferData": 0,
+          "bufferSubData": 0,
+          "memory": {
+            "geometries": 170,
+            "textures": 57
+          },
+          "render": {
+            "frame": 108,
+            "calls": 76,
+            "triangles": 783053,
+            "points": 0,
+            "lines": 0
+          }
+        }
+      ]
+    }
+  ],
+  "comparisons": [
+    {
+      "a": "base-A1",
+      "b": "candidate-B1-fixed",
+      "frames": [
+        {
+          "frame": 0,
+          "drawEqual": true,
+          "renderEqual": true,
+          "memoryEqual": true
+        },
+        {
+          "frame": 1,
+          "drawEqual": true,
+          "renderEqual": true,
+          "memoryEqual": true
+        }
+      ],
+      "pixels": {
+        "dimensionsMatch": true,
+        "alphaDifferences": 0,
+        "maxAlphaDifference": 0,
+        "rgbMeanAbsoluteDifference": 0.00004304108796296296,
+        "maxRgbDifference": 22,
+        "changedPixels": 10,
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "a": "base-A1",
+      "b": "candidate-B2-fixed",
+      "frames": [
+        {
+          "frame": 0,
+          "drawEqual": true,
+          "renderEqual": true,
+          "memoryEqual": true
+        },
+        {
+          "frame": 1,
+          "drawEqual": true,
+          "renderEqual": true,
+          "memoryEqual": true
+        }
+      ],
+      "pixels": {
+        "dimensionsMatch": true,
+        "alphaDifferences": 0,
+        "maxAlphaDifference": 0,
+        "rgbMeanAbsoluteDifference": 0.000006510416666666667,
+        "maxRgbDifference": 5,
+        "changedPixels": 3,
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "a": "base-A1",
+      "b": "base-A2",
+      "frames": [
+        {
+          "frame": 0,
+          "drawEqual": true,
+          "renderEqual": true,
+          "memoryEqual": true
+        },
+        {
+          "frame": 1,
+          "drawEqual": true,
+          "renderEqual": true,
+          "memoryEqual": true
+        }
+      ],
+      "pixels": {
+        "dimensionsMatch": true,
+        "alphaDifferences": 0,
+        "maxAlphaDifference": 0,
+        "rgbMeanAbsoluteDifference": 0.00021122685185185185,
+        "maxRgbDifference": 87,
+        "changedPixels": 17,
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "a": "candidate-B1-fixed",
+      "b": "candidate-B2-fixed",
+      "frames": [
+        {
+          "frame": 0,
+          "drawEqual": true,
+          "renderEqual": true,
+          "memoryEqual": true
+        },
+        {
+          "frame": 1,
+          "drawEqual": true,
+          "renderEqual": true,
+          "memoryEqual": true
+        }
+      ],
+      "pixels": {
+        "dimensionsMatch": true,
+        "alphaDifferences": 0,
+        "maxAlphaDifference": 0,
+        "rgbMeanAbsoluteDifference": 0.0000365306712962963,
+        "maxRgbDifference": 22,
+        "changedPixels": 7,
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "a": "candidate-B1-fixed",
+      "b": "base-A2",
+      "frames": [
+        {
+          "frame": 0,
+          "drawEqual": true,
+          "renderEqual": true,
+          "memoryEqual": true
+        },
+        {
+          "frame": 1,
+          "drawEqual": true,
+          "renderEqual": true,
+          "memoryEqual": true
+        }
+      ],
+      "pixels": {
+        "dimensionsMatch": true,
+        "alphaDifferences": 0,
+        "maxAlphaDifference": 0,
+        "rgbMeanAbsoluteDifference": 0.00024124710648148147,
+        "maxRgbDifference": 87,
+        "changedPixels": 21,
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "a": "candidate-B2-fixed",
+      "b": "base-A2",
+      "frames": [
+        {
+          "frame": 0,
+          "drawEqual": true,
+          "renderEqual": true,
+          "memoryEqual": true
+        },
+        {
+          "frame": 1,
+          "drawEqual": true,
+          "renderEqual": true,
+          "memoryEqual": true
+        }
+      ],
+      "pixels": {
+        "dimensionsMatch": true,
+        "alphaDifferences": 0,
+        "maxAlphaDifference": 0,
+        "rgbMeanAbsoluteDifference": 0.0002047164351851852,
+        "maxRgbDifference": 87,
+        "changedPixels": 14,
+        "width": 1280,
+        "height": 720
+      }
+    }
+  ],
+  "scope": "QA-only static group ownership candidate. CPU samples include observer overhead; no GPU/FPS inference. Same-arm controls are retained, including any residual pixel differences."
+}

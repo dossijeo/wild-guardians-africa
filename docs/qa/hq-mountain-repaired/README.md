@@ -1,0 +1,11 @@
+# Volcanes HQ v2 y datum estable de Gran Cañón
+
+Volcanes: ocho capturas nativas revisadas, cuatro direcciones (0/95/185/275) de día/noche. Las fuentes regeneradas mediante imagegen sustituyen los flancos con cortes horizontales del negativo anterior. En estas vistas no aparecen esas puntas ni franjas transparentes; las siluetas tienen relieve detallado y mantienen integración con la bruma y el tono nocturno. El atlas completo pesa 718.398 bytes (aprox. 702 KiB), 2048×512, una textura/sampler. No se promueven aún los assets públicos.
+
+Gran Cañón: cinco recibos de pose, incluido desplazamiento horizontal +20m y retorno, elevación 80→100→80 sobre la cámara inicial. AnchorY permanece exactamente 2.36; el ojo vuelve a sus coordenadas iniciales. Antes el mismo desplazamiento levantaba el fondo casi 19m. El datum ahora deriva de la primera aldea persistida y no del suelo bajo la cámara. Captura final revisada: silueta integrada en la dirección 0. No acredita la cuarta silueta oculta, todas las alturas ni una trayectoria continua interpolada.
+
+Branch fuente 67e8a500; hashes del harness y renderizador, atlases y archivos en receipt.json. El branch avanzó posteriormente con una fixture de coste separada y documentación, sin cambiar estos archivos ni las texturas durante las capturas. Todos los recibos tienen GL0/errors[], buffer1600×900, viewport1280×720/DPR1.25, media, Mapungubwe, cuatro celdas, mipmaps y bruma activos. Son snapshots estáticos, no el recibo de giro de 73 poses ni una comprobación de igualdad lógica de la partida.
+
+La primera secuencia de controles de Cañón tuvo clicks mal dirigidos (cámara sin desplazar y azimut45); no se usa como evidencia de ida/vuelta. Permanece íntegra en .cache/root-hq-repaired. Se repitieron acciones con snapshots frescos y aserciones explícitas de coordenadas; únicamente los recibos verificados se archivan aquí. Las dos capturas de esa repetición previas a limpiar controles tampoco se presentan como comparación visual; la imagen final corresponde al recibo verified-height-return.
+
+Pendientes: contacto/composición de la cuarta silueta de Cañón, recorridos continuos, coste ABBA de fondo anterior frente a cuatro arcos HQ, paquete e integración pública/PR. No se acredita GPU, FPS, estabilidad en móvil ni beneficio de RAM. Tabs716/717 dispuestas y cerradas sin override.

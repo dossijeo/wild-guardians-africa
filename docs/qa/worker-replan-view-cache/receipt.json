@@ -1,0 +1,330 @@
+{
+  "productionChanged": false,
+  "benchmark": true,
+  "viewTests": 6,
+  "exitCodes": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "base": "824bd2e0",
+  "scope": "V6 QA private avoidance view caching plus scoped ordinary-farm CPU overhead. No production promotion.",
+  "pieces": [
+    {
+      "path": "candidate-navigation.mjs.gz",
+      "source": ".cache/worker-route-refinement/candidate-navigation-v6.mjs",
+      "rawBytes": 31028,
+      "sha256": "be0c24f261330444d529481a48dc98d7cfeca1f81f43f154766060c41fb6669f"
+    },
+    {
+      "path": "candidate-game.mjs.gz",
+      "source": ".cache/candidate-game-v5.mjs",
+      "rawBytes": 47416,
+      "sha256": "62f8589c7c9a33faf388c35a7fc785973d5e62d056f58a83360ad1a11125c293"
+    },
+    {
+      "path": "guard.mjs.gz",
+      "source": ".cache/worker-risk-clearance-v5.mjs",
+      "rawBytes": 2848,
+      "sha256": "c3e735107fb42bef16db6ce842d6a19765f50f7b4a605593cc31495ecfb8f6f3"
+    },
+    {
+      "path": "bounded-views.mjs.gz",
+      "source": ".cache/bounded-worker-view-cache.mjs",
+      "rawBytes": 768,
+      "sha256": "e2ab2c508bd2be1590cf9db75163eb5f9ac70081d9576cb8c7a3ce8e2703467c"
+    },
+    {
+      "path": "prepare.mjs.gz",
+      "source": ".cache/prepare-refinement-v6.mjs",
+      "rawBytes": 2862,
+      "sha256": "5941d3d66b2f604500f8c71208360b3a15d202343f7e0d6af267b554de1062f3"
+    },
+    {
+      "path": "view-tests.mjs.gz",
+      "source": ".cache/test-refinement-v6-views.mjs",
+      "rawBytes": 4056,
+      "sha256": "1df2d867137b05d0d8e7b2b996d3a156ae7e8bb6b35c8e305333371b29859c64"
+    },
+    {
+      "path": "replan-runner.mjs.gz",
+      "source": ".cache/probe-refinement-v6-replan.mjs",
+      "rawBytes": 1823,
+      "sha256": "b853561e2d5e57f75415068bd91d8aa89c6ccb0f4f10a8e9c3f60649b1e4711d"
+    },
+    {
+      "path": "blocked-restore-runner.mjs.gz",
+      "source": ".cache/check-refinement-v6-blocked-restore.mjs",
+      "rawBytes": 2348,
+      "sha256": "3adb6a0633e7d08075f0c6287b84ed380a3b17ac8034d8e2f82ab28b44d3e726"
+    },
+    {
+      "path": "quality-runner.mjs.gz",
+      "source": ".cache/check-refinement-native-quality-v6.mjs",
+      "rawBytes": 1959,
+      "sha256": "e736c6ad0b4a6d6a25b722e6c8461594e4ff7fa775dd7be587ca4e5226c8929a"
+    },
+    {
+      "path": "failed-views-runner.mjs.gz",
+      "source": ".cache/probe-refinement-v6-failed-views.mjs",
+      "rawBytes": 1751,
+      "sha256": "93d44abbb01c178a6ceba38424eb14a99a765e6a63390df21c0aa465f0531afd"
+    },
+    {
+      "path": "replan.json.gz",
+      "source": ".cache/worker-route-refinement/replan-v6.json",
+      "rawBytes": 26913,
+      "sha256": "105e1657fd5db176fbf266e9b141df63403a3915c386ce9ca815d212206a7def"
+    },
+    {
+      "path": "blocked-restore.json.gz",
+      "source": ".cache/worker-route-refinement/blocked-restore-v6.json",
+      "rawBytes": 11240,
+      "sha256": "e0e03790b36ef5fd3f0b87b8419ec4a131390ef676c714354542f4fa574e4a4b"
+    },
+    {
+      "path": "quality.json.gz",
+      "source": ".cache/worker-route-refinement/quality-v6.json",
+      "rawBytes": 15005,
+      "sha256": "2ae05e29f55121c126f71e5d29b304562ea4c31e7342cf5f4b68c6c6a03edcd8"
+    },
+    {
+      "path": "failed-views.json.gz",
+      "source": ".cache/worker-route-refinement/failed-views-v6.json",
+      "rawBytes": 500,
+      "sha256": "d1632b48c1950f38114a2ab94be32f65c779445db4459e4532d423fe9d017b98"
+    },
+    {
+      "path": "benchmark-runner.mjs.gz",
+      "source": ".cache/benchmark-worker-route-refinement-v6-guard-cost.mjs",
+      "rawBytes": 3528,
+      "sha256": "8c0a4102f1ef8f414a53970b3240e7cfe43b57de92912026c7b2068d5d22d3a5"
+    },
+    {
+      "path": "benchmark.json.gz",
+      "source": ".cache/worker-route-refinement/report-v6-guard-cost.json",
+      "rawBytes": 42027,
+      "sha256": "1706d9a2f302748e0ef08c9073ecfe7a4d8f6a89f7f0ff93995c4e2a91f0ae6a"
+    },
+    {
+      "path": "native-shores-runner.mjs.gz",
+      "source": ".cache/check-v6-native-shores.mjs",
+      "rawBytes": 3546,
+      "sha256": "185c9c4861f027493e6bed0201a74e8670714667543a1061e3d7502c06877fc4"
+    },
+    {
+      "path": "native-shores.json.gz",
+      "source": ".cache/worker-route-refinement/native-shores-v6.json",
+      "rawBytes": 469749,
+      "sha256": "88e64c9a6e6c09c4b446f0fdea43393cccb83a1f56969d88fc1ea76835026e20"
+    },
+    {
+      "path": "replan-cost-runner.mjs.gz",
+      "source": ".cache/benchmark-v6-native-replan.mjs",
+      "rawBytes": 3573,
+      "sha256": "3792f0dc775de1c9727c349987d18944452f5c41ee1dc9c92eb93efac91c576c"
+    },
+    {
+      "path": "replan-cost.json.gz",
+      "source": ".cache/worker-route-refinement/replan-cost-v6.json",
+      "rawBytes": 41636,
+      "sha256": "997c48e1eab987c36779c1e732c4ebd15eefe5e6388968f7aeee06a166025c26"
+    },
+    {
+      "path": "reference-navigation-v5.mjs.gz",
+      "source": ".cache/worker-route-refinement/candidate-navigation-v5.mjs",
+      "rawBytes": 29898,
+      "sha256": "daeae03fe697268555d0e7ee8367e6e6ee75169be2a7d29847dab3315ae2d1bc"
+    },
+    {
+      "path": "boundary-v3.json.gz",
+      "source": ".cache/worker-route-refinement/boundary-v3.json",
+      "rawBytes": 2829,
+      "sha256": "541a018ba574e7cda351769f4c5c34824bf1bd161978048edec426ed235a0623"
+    },
+    {
+      "source": ".cache/check-v6-native-gates.mjs",
+      "path": "native-gates-runner.mjs.gz",
+      "rawBytes": 4944,
+      "sha256": "b3fad2c23b4c5d51539c17128133fe357626c91d5c16f47860028a644f399b08"
+    },
+    {
+      "source": ".cache/worker-route-refinement/native-gates-v6.json",
+      "path": "native-gates.json.gz",
+      "rawBytes": 518306,
+      "sha256": "fb814ffa28850cde4213d027de6d20eda9690dfe7494a2542ef40b205ea7902a"
+    },
+    {
+      "source": ".cache/check-v6-native-traffic.mjs",
+      "path": "native-traffic-runner.mjs.gz",
+      "rawBytes": 4434,
+      "sha256": "678b67cb85388f5981bcb4044280484d403ea9ea093c9eb535d94e5594996742"
+    },
+    {
+      "source": ".cache/worker-route-refinement/native-traffic-v6.json",
+      "path": "native-traffic.json.gz",
+      "rawBytes": 324258,
+      "sha256": "0175e838a2078f5b017b60e02919ea09836c9a0f86b8fc1ead1a1774ca7c089e"
+    },
+    {
+      "source": ".cache/probe-v6-fluid-boundary.mjs",
+      "path": "fluid-boundary-runner.mjs.gz",
+      "rawBytes": 3246,
+      "sha256": "9d7098d4b12c30b79f2f5a6dce61c5561ad794d755888913006a9ad38a5c6aa0"
+    },
+    {
+      "source": ".cache/worker-route-refinement/fluid-boundary-v6.json",
+      "path": "fluid-boundary.json.gz",
+      "rawBytes": 1065,
+      "sha256": "a17786839e139eda90d1dccdab0e6f726390fd8ed44a28bfa2cd84d490332355"
+    },
+    {
+      "source": ".cache/benchmark-v6-production-cost.mjs",
+      "path": "production-cost-runner.mjs.gz",
+      "rawBytes": 3582,
+      "sha256": "6a28bb24541674489daa01332d51c12329ec58d4df8c7bad459f55954be1781c"
+    },
+    {
+      "source": ".cache/worker-route-refinement/report-v6-production-cost.json",
+      "path": "production-cost.json.gz",
+      "rawBytes": 41801,
+      "sha256": "afe20b8673419680526680d200cef6d79eda90cc6cf69b97687d9854eb026bb2"
+    },
+    {
+      "source": "src/world/navigation.js",
+      "path": "production-navigation.mjs.gz",
+      "rawBytes": 26337,
+      "sha256": "2ed816c61bd0eb4fedcb3b41c1f9c1b9fb71be14b6d1dcdbeb21e5d46253609c"
+    },
+    {
+      "source": "src/simulation/game.js",
+      "path": "production-game.mjs.gz",
+      "rawBytes": 45371,
+      "sha256": "b931b1e14d23185bdc3709f39718ff6bae13a2ae02bf1033449c11ea3b270078"
+    },
+    {
+      "source": ".cache/check-v6-full-workday.mjs",
+      "path": "full-workday-runner.mjs.gz",
+      "rawBytes": 5037,
+      "sha256": "1fa3cb32947ec1f023eb470abc7741e5b7e7d1787fa748cfcd789cb3ab7871d4"
+    },
+    {
+      "source": ".cache/worker-route-refinement/full-workday-v6.json",
+      "path": "full-workday.json.gz",
+      "rawBytes": 8280,
+      "sha256": "31daf51e1780cba20dc859c7f3ad12f70890db38e0806db9315295d4ecbe2fd1"
+    },
+    {
+      "source": ".cache/worker-route-refinement/full-workday-v6-state.json",
+      "path": "full-workday-state.json.gz",
+      "rawBytes": 14191660,
+      "sha256": "9c10ed33b8decc4e408926b0b078ad649048a61c6255bf4da2870037b0827a73"
+    },
+    {
+      "source": "public/content/biome-savanna.json",
+      "path": "full-workday-profile.json.gz",
+      "rawBytes": 21482,
+      "sha256": "adb68fd97b2c45ef681313d4bc3418c3aac76101857391b961521f5cddfc4411"
+    },
+    {
+      "source": ".cache/prepare-v6-early-campaign.mjs",
+      "path": "early-prepare.mjs.gz",
+      "rawBytes": 737,
+      "sha256": "b518f0c7b02d461347cbe323f79338e1c000ce3cad9d2daa05f129593fe94f03"
+    },
+    {
+      "source": ".cache/opening-v6.mjs",
+      "path": "early-opening.mjs.gz",
+      "rawBytes": 3503,
+      "sha256": "07486a64f1c4262e8a48386e0856b37d5eedfdde07806a15435cd9b0bad3bb74"
+    },
+    {
+      "source": ".cache/intensive-v6.mjs",
+      "path": "early-intensive.mjs.gz",
+      "rawBytes": 12781,
+      "sha256": "bd60c093dc2d68bfaca786924962f6c32cef76a1696fa31edecd27a014923b27"
+    },
+    {
+      "source": ".cache/check-v6-early-campaign.mjs",
+      "path": "early-runner.mjs.gz",
+      "rawBytes": 1772,
+      "sha256": "3401b86b9d87d1012a72e87013f84a36d47b1b664b2b6e0826dd62724a9dc350"
+    },
+    {
+      "source": ".cache/worker-route-refinement/early-campaign-v6.json",
+      "path": "early-campaign.json.gz",
+      "rawBytes": 4397,
+      "sha256": "41e8ddf7916263f251d70bd86020b49be260670bd012838b36a78f9c0b9f6893"
+    },
+    {
+      "source": ".cache/worker-route-refinement/early-campaign-v6-state.json",
+      "path": "early-state.json.gz",
+      "rawBytes": 304719,
+      "sha256": "8bfb70fafcfca9a517e5cd62b197f20378c84b5c0cac5fc161dc9bda178185c7"
+    },
+    {
+      "source": ".cache/check-v6-biome-campaigns.mjs",
+      "path": "early-biomes-runner.mjs.gz",
+      "rawBytes": 2913,
+      "sha256": "961b5fd0a6ca5245122ce43977b6c996e73de88655d16768b0e1ade779f25872"
+    },
+    {
+      "source": ".cache/worker-route-refinement/early-biomes-v6.json",
+      "path": "early-biomes.json.gz",
+      "rawBytes": 28239,
+      "sha256": "9defb57ae5ebfc06b25376e7e5679fc7750823cdc7e76b33b6192497753aa7e7"
+    },
+    {
+      "source": "public/content/villages.json",
+      "path": "early-villages.json.gz",
+      "rawBytes": 71831,
+      "sha256": "316ca88b0dc20e6c15a7d9e877480ba0c013bde8f8c21efa5438e064d004603f"
+    },
+    {
+      "source": ".cache/worker-route-refinement/early-gran-rio-saheliana-v6-state.json",
+      "path": "early-gran-rio-saheliana-state.json.gz",
+      "rawBytes": 285906,
+      "sha256": "3f33294f1c67f48e54947ae8a28aeb49b3d7b1415b91ecee6f662f76aff74425"
+    },
+    {
+      "source": ".cache/worker-route-refinement/early-manglares-suajili-v6-state.json",
+      "path": "early-manglares-suajili-state.json.gz",
+      "rawBytes": 267545,
+      "sha256": "53e97c1e6010f4b666007dde69b48ff442efe6d1c9d363b2b24658eaa1fc37e3"
+    },
+    {
+      "source": ".cache/worker-route-refinement/early-volcanes-etiope-v6-state.json",
+      "path": "early-volcanes-etiope-state.json.gz",
+      "rawBytes": 286743,
+      "sha256": "6e0e6694d5c2573e3dc30a6a604b96c168f8800468e6231895a1a44f5cdd7ae8"
+    },
+    {
+      "source": ".cache/worker-route-refinement/early-gran-canon-mapungubwe-v6-state.json",
+      "path": "early-gran-canon-mapungubwe-state.json.gz",
+      "rawBytes": 200268,
+      "sha256": "7326c1203d0aaf841a92d57c14a3913321af34eaac3ba37c16b51e47ba7ee3af"
+    },
+    {
+      "source": ".cache/worker-route-refinement/early-desierto-musgum-v6-state.json",
+      "path": "early-desierto-musgum-state.json.gz",
+      "rawBytes": 215360,
+      "sha256": "11becc0a81d225884e6b43294126180f5f2f805b24058a059e30890b18350b96"
+    }
+  ],
+  "benchmarkExitCode": 0,
+  "benchmarkScope": "V3/originalGame versus V6/guardedGame ABBA,100ticks per arm. Four live CPU campaigns confirmed before dispatch, no Blender/GPU root. Avoidance views not exercised: zero guard rejections. CPU tick timing only, not production baseline, GPU/phone or proven cache speedup.",
+  "shoreExitCode": 0,
+  "replanCostExitCode": 0,
+  "nativeGateExitCode": 0,
+  "nativeTrafficExitCode": 0,
+  "fluidBoundaryExitCode": 0,
+  "productionCostExitCode": 0,
+  "productionCostAmbientHead": "441051d978f5f89e2964dc24da73799bc35f2c0e",
+  "fullWorkdayExitCode": 0,
+  "fullWorkdayAmbientHead": "b84b0a539b22d97ab4d31ba21b21c19dacb66464",
+  "earlyCampaignExitCode": 0,
+  "earlyCampaignAmbientHead": "8eed5c4f",
+  "earlyBiomesExitCode": 0,
+  "earlyBiomesAmbientHead": "106ae6434068f2ff9e747263a6ccf5c47400b79d"
+}

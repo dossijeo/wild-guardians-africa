@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {nativePropBatchVisible} from './prop-transition-residency.js';
 
 // The original drawBatch(shadow=true) uses the final variant for all active
 // instances. Detached proxies enter only Three's shadow traversal, after the
@@ -29,7 +30,7 @@ export function updateAssetShadow(batch){
 export function disposeAssetShadows(group){for(const batch of group.userData.lodBatches??[])batch.shadow?.dispose();}
 
 export function installAssetShadows(renderer,chunks){
-  const map=renderer.shadowMap,original=map.render,proxies=new THREE.Group();proxies.name='native_asset_shadow_pass';proxies.matrixAutoUpdate=false;
+  let map=renderer.shadowMap,original=map.render;const proxies=new THREE.Group();proxies.name='native_asset_shadow_pass';proxies.matrixAutoUpdate=false;
   // These borrowed solid materials are temporary shadow-pass inputs, not world
   // color materials or animated water. Avoid scene material discovery per pass.
   proxies.userData.materialRegistryExcluded=true;
@@ -47,6 +48,7 @@ export function installAssetShadows(renderer,chunks){
       for(const group of chunks().values()){
         if(!group.visible)continue;
         for(const batch of group.userData.lodBatches??[]){
+          if(!nativePropBatchVisible(group,batch))continue;
           const mesh=batch.shadow;if(!mesh?.castShadow||!mesh.count||!batch.meshes.some(m=>m.visible&&m.count))continue;
           materials.set(mesh,mesh.material);mesh.material=solid;
           mesh.userData.nativeShadowStats=stats;
@@ -58,7 +60,9 @@ export function installAssetShadows(renderer,chunks){
     }finally{for(const [mesh,material] of materials){mesh.material=material;delete mesh.userData.nativeShadowStats;}scene.remove(proxies);proxies.clear();}
   }
   map.render=render;
+  const canvas=renderer.domElement,restore=()=>{const next=renderer.shadowMap;if(next===map)return;if(map.render===render)map.render=original;map=next;original=map.render;map.render=render;};
+  canvas?.addEventListener('webglcontextrestored',restore);
   let released=false;
-  const release=()=>{if(released)return;released=true;if(map.render===render)map.render=original;proxies.removeFromParent();proxies.clear();solid.dispose();};
+  const release=()=>{if(released)return;released=true;canvas?.removeEventListener('webglcontextrestored',restore);if(map.render===render)map.render=original;proxies.removeFromParent();proxies.clear();solid.dispose();};
   release.stats=stats;return release;
 }

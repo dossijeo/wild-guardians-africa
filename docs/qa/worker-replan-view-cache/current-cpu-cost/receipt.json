@@ -1,0 +1,78 @@
+{
+  "baseCommit": "37029703",
+  "session": 86224,
+  "exitCode": 0,
+  "productionChanged": false,
+  "confirmedHistoricalCpuBeforeDispatch": [
+    41320,
+    41304,
+    49032,
+    49608
+  ],
+  "noBlenderInPreDispatchSnapshot": true,
+  "loadingPilot11ClosedBeforeDispatch": true,
+  "noRootGpu": true,
+  "input": "../../intensive-sabana-musgum-e461b550/state.json.gz",
+  "pieces": [
+    {
+      "source": ".cache/prepare-v6-current-cost.mjs",
+      "path": "prepare-v6-current-cost.mjs.gz",
+      "bytes": 1366,
+      "sha256": "31fc036a36fc90ffd88791a7c970d8b5d99d26fe072a54d2c47507aec8cdfd59"
+    },
+    {
+      "source": ".cache/benchmark-v6-current-cost.mjs",
+      "path": "benchmark-v6-current-cost.mjs.gz",
+      "bytes": 3834,
+      "sha256": "3b04d21fb28541de33a6d6847b56b439da2901d458486f39d943e9e686f17730"
+    },
+    {
+      "source": ".cache/worker-route-refinement/report-v6-current-cost.json",
+      "path": "worker-route-refinement__report-v6-current-cost.json.gz",
+      "bytes": 41806,
+      "sha256": "47d99469602161c01b6f3ea1ba1dda250bc7bc8b6ce497112f259f5df684b60a"
+    },
+    {
+      "source": ".cache/candidate-game-v6-current.mjs",
+      "path": "candidate-game-v6-current.mjs.gz",
+      "bytes": 47416,
+      "sha256": "62f8589c7c9a33faf388c35a7fc785973d5e62d056f58a83360ad1a11125c293"
+    },
+    {
+      "source": ".cache/worker-route-refinement/candidate-navigation-v6-current.mjs",
+      "path": "worker-route-refinement__candidate-navigation-v6-current.mjs.gz",
+      "bytes": 31015,
+      "sha256": "e702662b9e0ffefa7696c4eb12524fceeb438b008ee645c9a7e2fb8b8d9ce372"
+    },
+    {
+      "source": ".cache/worker-risk-clearance-v5.mjs",
+      "path": "worker-risk-clearance-v5.mjs.gz",
+      "bytes": 2848,
+      "sha256": "c3e735107fb42bef16db6ce842d6a19765f50f7b4a605593cc31495ecfb8f6f3"
+    },
+    {
+      "source": ".cache/bounded-worker-view-cache.mjs",
+      "path": "bounded-worker-view-cache.mjs.gz",
+      "bytes": 768,
+      "sha256": "e2ab2c508bd2be1590cf9db75163eb5f9ac70081d9576cb8c7a3ce8e2703467c"
+    },
+    {
+      "source": "src/simulation/game.js",
+      "path": "src__simulation__game.js.gz",
+      "bytes": 45371,
+      "sha256": "b931b1e14d23185bdc3709f39718ff6bae13a2ae02bf1033449c11ea3b270078"
+    },
+    {
+      "source": "src/world/navigation.js",
+      "path": "src__world__navigation.js.gz",
+      "bytes": 26324,
+      "sha256": "c84810354895210c8485d8d2602fc3d817cc1980a2c8a24d5b0d82bea6ee6923"
+    },
+    {
+      "source": "public/content/biome-savanna.json",
+      "path": "public__content__biome-savanna.json.gz",
+      "bytes": 21482,
+      "sha256": "adb68fd97b2c45ef681313d4bc3418c3aac76101857391b961521f5cddfc4411"
+    }
+  ]
+}

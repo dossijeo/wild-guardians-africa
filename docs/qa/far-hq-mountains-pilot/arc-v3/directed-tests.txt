@@ -1,0 +1,152 @@
+TAP version 13
+# Subtest: decorative backdrop follows authored terrain height with bounded parallax and borrows its atlas
+ok 1 - decorative backdrop follows authored terrain height with bounded parallax and borrows its atlas
+  ---
+  duration_ms: 8.4421
+  ...
+# Subtest: invalid backdrop fog mix rejects before mutating the scene or texture
+ok 2 - invalid backdrop fog mix rejects before mutating the scene or texture
+  ---
+  duration_ms: 1.2573
+  ...
+# Subtest: decorative fog uses the shared atmosphere palette through the day/night transition
+ok 3 - decorative fog uses the shared atmosphere palette through the day/night transition
+  ---
+  duration_ms: 1.7393
+  ...
+# Subtest: optional backdrop base grading preserves one atlas/draw and rejects unsafe settings before scene mutation
+ok 4 - optional backdrop base grading preserves one atlas/draw and rejects unsafe settings before scene mutation
+  ---
+  duration_ms: 1.8454
+  ...
+# Subtest: mirrored panorama joins both cylinder ends with identical texels and no additional sampler or geometry
+ok 5 - mirrored panorama joins both cylinder ends with identical texels and no additional sampler or geometry
+  ---
+  duration_ms: 3.2816
+  ...
+# Subtest: optional proportionate arcs retain shared day/night fog, one sample and idempotent borrowed texture ownership
+ok 6 - optional proportionate arcs retain shared day/night fog, one sample and idempotent borrowed texture ownership
+  ---
+  duration_ms: 4.8128
+  ...
+# (node:36932) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: integrated quality changes reuse owned adapters and atlas resources within the prepared extent
+ok 7 - integrated quality changes reuse owned adapters and atlas resources within the prepared extent
+  ---
+  duration_ms: 8.921
+  ...
+# Subtest: attachment loads only selected biome resources and releases them once on world close
+ok 8 - attachment loads only selected biome resources and releases them once on world close
+  ---
+  duration_ms: 1.0201
+  ...
+# Subtest: atmosphere options reach the biome adapter and invalid distances allocate no resources
+ok 9 - atmosphere options reach the biome adapter and invalid distances allocate no resources
+  ---
+  duration_ms: 1.2931
+  ...
+# Subtest: late texture arriving after attachment cancellation is immediately released
+ok 10 - late texture arriving after attachment cancellation is immediately released
+  ---
+  duration_ms: 7.9557
+  ...
+# Subtest: late prepared species is disposed after world close without double-releasing earlier textures
+ok 11 - late prepared species is disposed after world close without double-releasing earlier textures
+  ---
+  duration_ms: 2.02
+  ...
+# Subtest: configured visual radius is reversible on disable/dispose and validated before resource loading
+ok 12 - configured visual radius is reversible on disable/dispose and validated before resource loading
+  ---
+  duration_ms: 1.5872
+  ...
+# Subtest: visual-only radius retains loaded radius ownership and restores both preceding values
+ok 13 - visual-only radius retains loaded radius ownership and restores both preceding values
+  ---
+  duration_ms: 1.1453
+  ...
+# Subtest: prop transition circle is owned and restored independently of exact terrain residency
+ok 14 - prop transition circle is owned and restored independently of exact terrain residency
+  ---
+  duration_ms: 1.277
+  ...
+# Subtest: closing the biome owner releases native upload cache listeners before disposing its atlas textures
+ok 15 - closing the biome owner releases native upload cache listeners before disposing its atlas textures
+  ---
+  duration_ms: 6.6042
+  ...
+# Subtest: late GPU callback cannot resurrect closed owner or disturb replacement false
+ok 16 - late GPU callback cannot resurrect closed owner or disturb replacement false
+  ---
+  duration_ms: 1.1456
+  ...
+# Subtest: late GPU callback cannot resurrect closed owner or disturb replacement true
+ok 17 - late GPU callback cannot resurrect closed owner or disturb replacement true
+  ---
+  duration_ms: 1.7513
+  ...
+# Subtest: faithful impostors remain exact until the atmospheric far landscape and distances stay configurable
+ok 18 - faithful impostors remain exact until the atmospheric far landscape and distances stay configurable
+  ---
+  duration_ms: 4.0841
+  ...
+# Subtest: far ground is independently configurable without changing exact terrain ownership
+ok 19 - far ground is independently configurable without changing exact terrain ownership
+  ---
+  duration_ms: 1.1997
+  ...
+# Subtest: logical native prewarm stays opt-in and invalid options allocate no atlas
+ok 20 - logical native prewarm stays opt-in and invalid options allocate no atlas
+  ---
+  duration_ms: 2.8898
+  ...
+# Subtest: seed changes invalidate the whole far owner and release borrowed preparations once
+ok 21 - seed changes invalidate the whole far owner and release borrowed preparations once
+  ---
+  duration_ms: 0.4912
+  ...
+# Subtest: texture storage estimates use loaded atlas dimensions rather than a uniform species size
+ok 22 - texture storage estimates use loaded atlas dimensions rather than a uniform species size
+  ---
+  duration_ms: 0.4524
+  ...
+# Subtest: landscape composition forwards existing backdrop controls without altering atlas ownership
+ok 23 - landscape composition forwards existing backdrop controls without altering atlas ownership
+  ---
+  duration_ms: 0.5536
+  ...
+# Subtest: runtime metadata selects linear premultiplied atlases without changing unmarked species
+ok 24 - runtime metadata selects linear premultiplied atlases without changing unmarked species
+  ---
+  duration_ms: 0.7159
+  ...
+# Subtest: authored large-tree policy preserves the native color transition envelope and rejects invalid policy before assets
+ok 25 - authored large-tree policy preserves the native color transition envelope and rejects invalid policy before assets
+  ---
+  duration_ms: 0.8293
+  ...
+# Subtest: one batched arc preserves radius, source aspect, foot anchor and padded atlas bounds
+ok 26 - one batched arc preserves radius, source aspect, foot anchor and padded atlas bounds
+  ---
+  duration_ms: 9.4284
+  ...
+# Subtest: several distinct decorative sectors share a renderable without mirroring source UVs
+ok 27 - several distinct decorative sectors share a renderable without mirroring source UVs
+  ---
+  duration_ms: 1.4437
+  ...
+# Subtest: invalid layout cannot allocate a partial batch
+ok 28 - invalid layout cannot allocate a partial batch
+  ---
+  duration_ms: 0.7689
+  ...
+1..28
+# tests 28
+# suites 0
+# pass 28
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 403.8195

@@ -1,0 +1,108 @@
+{
+  "sessions": {
+    "fullSuite": {
+      "id": 56760,
+      "exitCode": 1,
+      "passed": 3153,
+      "failed": 1
+    },
+    "goldenComparison": {
+      "exitCode": 0
+    },
+    "correctedDirected": {
+      "id": 10155,
+      "exitCode": 0,
+      "passed": 25,
+      "failed": 0
+    },
+    "build": {
+      "id": 9132,
+      "exitCode": 0
+    },
+    "package": {
+      "id": 13686,
+      "exitCode": 0
+    }
+  },
+  "scope": "Full suite before golden expectation correction:3153pass/1knownhashfail, then corrected25directedpass. No claim of a second complete green local suite. Runtime unchanged during expectation correction. Reference generator first had missing copied-relative helper imports; fixed paths to original tools, no gameplay edits.",
+  "pieces": [
+    {
+      "source": ".cache/prepare-crop-epoch-golden.mjs",
+      "path": "prepare-crop-epoch-golden.mjs.gz",
+      "bytes": 814,
+      "sha256": "78bbf4eee1c35d854c7f3776ef1ce0d88d028ed6fb70a40a8a15148c53b1d20a"
+    },
+    {
+      "source": ".cache/check-crop-epoch-golden.mjs",
+      "path": "check-crop-epoch-golden.mjs.gz",
+      "bytes": 2305,
+      "sha256": "fa9145b3bc17d0311f2fc27f1d9c90338c89577f192a0727ef402c84bbd97395"
+    },
+    {
+      "source": ".cache/golden-reference-navigation.mjs",
+      "path": "golden-reference-navigation.mjs.gz",
+      "bytes": 26480,
+      "sha256": "683415286e7a7bde427ad286b9981be349f549059999fb5b0c774cab760c1f69"
+    },
+    {
+      "source": ".cache/golden-reference-opening.mjs",
+      "path": "golden-reference-opening.mjs.gz",
+      "bytes": 3485,
+      "sha256": "4e062c95f6d4a53e79ea109ccc4d46edb3dda4491c77b410fa581e2a59e4dffe"
+    },
+    {
+      "source": ".cache/golden-reference-intensive.mjs",
+      "path": "golden-reference-intensive.mjs.gz",
+      "bytes": 12797,
+      "sha256": "404960974db69a55c94629399d4b5c59a992e06069327414d0f4fa5d32a8d26f"
+    },
+    {
+      "source": ".cache/crop-epoch-golden-report.json",
+      "path": "crop-epoch-golden-report.json.gz",
+      "bytes": 126820,
+      "sha256": "f6847891261d59f650ba8a0074c926b5df6e3665804dc2b92cc8d2577a700812"
+    },
+    {
+      "source": ".cache/crop-epoch-golden-reference-state.json",
+      "path": "crop-epoch-golden-reference-state.json.gz",
+      "bytes": 75891,
+      "sha256": "f55025303b01f7305e4d3b459c39bede2f81e0084994ddcb143abd75293432b6"
+    },
+    {
+      "source": ".cache/crop-epoch-golden-current-state.json",
+      "path": "crop-epoch-golden-current-state.json.gz",
+      "bytes": 75345,
+      "sha256": "5df191a540b7b584a9d45cf1c20e9f15b80b39e0779c0545bdf92417572de389"
+    },
+    {
+      "source": ".cache/crop-route-epoch-integration-suite.tap",
+      "path": "crop-route-epoch-integration-suite.tap.gz",
+      "bytes": 776530,
+      "sha256": "d66f5cbbee5d06f124362432661454c32e970f5998296939c251da0a9da8b382"
+    },
+    {
+      "source": ".cache/crop-route-epoch-integration-directed.tap",
+      "path": "crop-route-epoch-integration-directed.tap.gz",
+      "bytes": 6737,
+      "sha256": "a35fcba8edb4050acd879a0bff84f85d7a48a286a6e3ed024184dc0f158eccc5"
+    },
+    {
+      "source": ".cache/crop-route-epoch-integration-build.log",
+      "path": "crop-route-epoch-integration-build.log.gz",
+      "bytes": 1235,
+      "sha256": "cfc4d45ccfcec716aa49cff9d67ce745089c9352d3bb11c89825fe6e56382064"
+    },
+    {
+      "source": ".cache/crop-route-epoch-integration-package.log",
+      "path": "crop-route-epoch-integration-package.log.gz",
+      "bytes": 411,
+      "sha256": "1c374d1b20ef424e0338d04e39625d1a3d485bac8f6e2629b470d98d500542b0"
+    },
+    {
+      "source": "tests/crop-lifecycle.test.js",
+      "path": "tests__crop-lifecycle.test.js.gz",
+      "bytes": 6165,
+      "sha256": "c19796984f6ef076bec9c986bbd242375afdd2afc653c5209065c33066bf4a84"
+    }
+  ]
+}

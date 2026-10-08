@@ -37,12 +37,13 @@ test('prepared successful paths require exact query parameters and give callers 
   nav.failedPaths.add(key);assert.equal(nav.path(start,end,.7,null,false,16),null);
 });
 
-test('crop epochs, rebuilt obstacles and proposed construction cannot reuse old prepared paths',()=>{
+test('clear crops retain prepared routes but removed props, rebuilt obstacles and proposed construction invalidate',()=>{
   const {s,nav}=createOpeningWorld(),start={x:100,z:100},end={x:104,z:104};
   const install=()=>warmRaidNavigation(nav,{version:nav.version,chunks:[],walk:[],segments:[],paths:[[navigationPathKey(start,end,.7,null,false,16),[{x:123,z:456}]]]});
   install();const preview=nav.forBuildingPlacement({x:1,z:1,radius:3});assert.equal(preview.preparedPaths,null);
   let searches=0;nav.findPath=()=>{searches++;return [{x:999,z:999}];};
-  nav.syncCropPlacement(s);assert.equal(nav.path(start,end,.7,null,false)[0].x,999);assert.equal(searches,1);
+  nav.syncCropPlacement(s);assert.equal(nav.path(start,end,.7,null,false)[0].x,123);assert.equal(searches,0);
+  nav.syncCropPlacement(s,['removed-prop']);assert.equal(nav.preparedPaths,null);assert.equal(nav.path(start,end,.7,null,false)[0].x,999);assert.equal(searches,1);
   install();nav.setState(s);assert.equal(nav.preparedPaths,null);assert.equal(nav.path(start,end,.7,null,false)[0].x,999);
 });
 

@@ -1,0 +1,184 @@
+{
+  "loaded": true,
+  "benchmark": null,
+  "motion": {
+    "mode": "approach",
+    "age": 11.526799999999993,
+    "hold": 10,
+    "done": false,
+    "tree": "0:9:2",
+    "treePosition": [
+      129.92206394326368,
+      29.92956575309914
+    ],
+    "minimumDistance": 25,
+    "nearFrames": 132,
+    "nearReadyFrames": 90,
+    "firstReadyAt": 6.487800000000008,
+    "initial": [
+      {
+        "regions": 1,
+        "nativePreparations": 1,
+        "stalePreparations": 1,
+        "preparationAttempts": 2,
+        "fencedPreparations": 1,
+        "rejectedPacking": 0,
+        "signatureChanges": 2,
+        "packingChanges": 2,
+        "cachedTextures": 5,
+        "textureUploads": 0,
+        "errors": [],
+        "coverage": 7,
+        "prepared": 7
+      },
+      {
+        "regions": 1,
+        "nativePreparations": 1,
+        "stalePreparations": 1,
+        "preparationAttempts": 2,
+        "fencedPreparations": 1,
+        "rejectedPacking": 0,
+        "signatureChanges": 2,
+        "packingChanges": 2,
+        "cachedTextures": 5,
+        "textureUploads": 0,
+        "errors": [],
+        "coverage": 4,
+        "prepared": 4
+      },
+      {
+        "regions": 1,
+        "nativePreparations": 1,
+        "stalePreparations": 1,
+        "preparationAttempts": 2,
+        "fencedPreparations": 1,
+        "rejectedPacking": 0,
+        "signatureChanges": 2,
+        "packingChanges": 2,
+        "cachedTextures": 5,
+        "textureUploads": 0,
+        "errors": [],
+        "coverage": 1,
+        "prepared": 1
+      },
+      {
+        "regions": 1,
+        "nativePreparations": 1,
+        "stalePreparations": 1,
+        "preparationAttempts": 2,
+        "fencedPreparations": 1,
+        "rejectedPacking": 0,
+        "signatureChanges": 2,
+        "packingChanges": 2,
+        "cachedTextures": 5,
+        "textureUploads": 0,
+        "errors": [],
+        "coverage": 1,
+        "prepared": 1
+      }
+    ],
+    "ready": {
+      "ready": 1,
+      "enabled": true
+    }
+  },
+  "biome": "sabana",
+  "quality": "media",
+  "culture": "mapungubwe",
+  "enabled": true,
+  "camera": [
+    129.92206394326368,
+    24.615823054075214,
+    54.92956575309914
+  ],
+  "chunks": 25,
+  "night": 0,
+  "render": {
+    "calls": 59,
+    "triangles": 1013928
+  },
+  "gpuMemory": {
+    "geometries": 119,
+    "textures": 66
+  },
+  "programs": 54,
+  "resources": {
+    "species": 4,
+    "estimatedAtlasTextureBytes": 44739242.666666664,
+    "estimatedBackdropTextureBytes": 5592405.333333333,
+    "errors": []
+  },
+  "residentRange": null,
+  "visualRange": 1,
+  "visibleChunks": 25,
+  "propChunks": 9,
+  "pickMeshes": 25,
+  "logicalBounds": [
+    24,
+    -72,
+    264,
+    168
+  ],
+  "visibleBounds": [
+    24,
+    -72,
+    264,
+    168
+  ],
+  "removed": null,
+  "layers": [
+    {
+      "slot": 0,
+      "key": "96:96",
+      "trees": 660,
+      "ready": 12,
+      "preparations": 16,
+      "coverage": 12,
+      "prepared": 12,
+      "stale": 3,
+      "errors": []
+    },
+    {
+      "slot": 1,
+      "key": "96:96",
+      "trees": 358,
+      "ready": 5,
+      "preparations": 12,
+      "coverage": 5,
+      "prepared": 5,
+      "stale": 3,
+      "errors": []
+    },
+    {
+      "slot": 2,
+      "key": "96:96",
+      "trees": 126,
+      "ready": 3,
+      "preparations": 6,
+      "coverage": 3,
+      "prepared": 3,
+      "stale": 1,
+      "errors": []
+    },
+    {
+      "slot": 3,
+      "key": "96:96",
+      "trees": 211,
+      "ready": 2,
+      "preparations": 10,
+      "coverage": 2,
+      "prepared": 2,
+      "stale": 2,
+      "errors": []
+    }
+  ],
+  "errors": [],
+  "webglError": 0,
+  "evidence": {
+    "runtimeBase": "89373e3, before main Tinify merge",
+    "variant": "warm texture cache + per-species render generation + context epoch; temporary alias 5194",
+    "helperSha256": "e942558de18d9fdecacacef1fdec64113a52046b789c7d0ebb29937ef5322867",
+    "signatureSha256": "d6fcd287fbf72dd7817f493917de9ccd06ddf81cc8a8fb23254c86ed95edc2a8",
+    "measurement": "native visual/coverage counters, not GPU timing"
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "baseGitHead": "6742df2d",
+  "productionChanged": false,
+  "gpuTiming": false,
+  "backgroundPidsConfirmedLive": [
+    20024,
+    49032,
+    41320,
+    41304
+  ],
+  "terminalSessions": [
+    83742,
+    81501,
+    26484
+  ],
+  "exitCodes": [
+    0,
+    0,
+    0
+  ],
+  "metadataTests": {
+    "tests": 8,
+    "pass": 8,
+    "fail": 0
+  },
+  "promotionDecision": "QA only; improve risk-local guard cost and failed-view caching, extend acceptance before integration",
+  "pieces": [
+    {
+      "path": "guard.mjs.gz",
+      "rawBytes": 2848,
+      "sha256": "c3e735107fb42bef16db6ce842d6a19765f50f7b4a605593cc31495ecfb8f6f3"
+    },
+    {
+      "path": "candidate-game.mjs.gz",
+      "rawBytes": 47416,
+      "sha256": "62f8589c7c9a33faf388c35a7fc785973d5e62d056f58a83360ad1a11125c293"
+    },
+    {
+      "path": "candidate-navigation.mjs.gz",
+      "rawBytes": 29898,
+      "sha256": "daeae03fe697268555d0e7ee8367e6e6ee75169be2a7d29847dab3315ae2d1bc"
+    },
+    {
+      "path": "prepare.mjs.gz",
+      "rawBytes": 3313,
+      "sha256": "895b6686538e7795f16c457974164117e9d20cd60a3d2b58227196d2a01bae8f"
+    },
+    {
+      "path": "replan-runner.mjs.gz",
+      "rawBytes": 1823,
+      "sha256": "f337602a3b078f4816c79fdcaed8fe30217aaa8e2565a2f43b8647173ed72672"
+    },
+    {
+      "path": "replan.json.gz",
+      "rawBytes": 26913,
+      "sha256": "105e1657fd5db176fbf266e9b141df63403a3915c386ce9ca815d212206a7def"
+    },
+    {
+      "path": "quality-runner.mjs.gz",
+      "rawBytes": 1959,
+      "sha256": "65e5e65fd5299cb05f6de17f32c7a9e28efac05fb025b1af6dad5d6666e54018"
+    },
+    {
+      "path": "quality.json.gz",
+      "rawBytes": 15005,
+      "sha256": "2ae05e29f55121c126f71e5d29b304562ea4c31e7342cf5f4b68c6c6a03edcd8"
+    },
+    {
+      "path": "return-runner.mjs.gz",
+      "rawBytes": 3036,
+      "sha256": "24a6820554df6c6ef75fc4d8d2a3f39d552357acc5c03a1387d644069baef749"
+    },
+    {
+      "path": "native-return.json.gz",
+      "rawBytes": 12444,
+      "sha256": "b6147c07e1ac166c7934df8c8c2ed28ba635a169d558984f06ab1801bd0b29f1"
+    },
+    {
+      "path": "restore-runner.mjs.gz",
+      "rawBytes": 1652,
+      "sha256": "92a21c50002935dadce442f12df00b0510da4b3f5366bc52d66be37e1904f1fe"
+    },
+    {
+      "path": "restore.json.gz",
+      "rawBytes": 4873,
+      "sha256": "602346e7d2911379f55278ea7c3b6740731cf2cb7a0dc149ef3d50cb84254a99"
+    },
+    {
+      "path": "blocked-restore-runner.mjs.gz",
+      "rawBytes": 2348,
+      "sha256": "2a400ab66db3db1670806a1ab25bd147197f35f5fefe7ba6dc6821bdd689d148"
+    },
+    {
+      "path": "blocked-restore.json.gz",
+      "rawBytes": 11240,
+      "sha256": "e0e03790b36ef5fd3f0b87b8419ec4a131390ef676c714354542f4fa574e4a4b"
+    },
+    {
+      "path": "benchmark-runner.mjs.gz",
+      "rawBytes": 3467,
+      "sha256": "092de215ce1fa69c1cf59003292b4b6c069e1e4634ad02b2267f69d33efd5748"
+    },
+    {
+      "path": "benchmark.json.gz",
+      "rawBytes": 41967,
+      "sha256": "6a08f3d2c5f2274204032d381e2d79eb79dbef6c3fbb5f085300c41387bc3a55"
+    },
+    {
+      "path": "metadata-tests.mjs.gz",
+      "rawBytes": 4078,
+      "sha256": "17756cc294e1ae7ab7dbf0cf7db925babab6cb8452cdf9baa645665b15fa9ab5"
+    }
+  ]
+}

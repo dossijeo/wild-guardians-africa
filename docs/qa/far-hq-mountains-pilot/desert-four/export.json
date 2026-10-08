@@ -1,0 +1,125 @@
+{
+  "version": 1,
+  "dimensions": [
+    2048,
+    512
+  ],
+  "tileDimensions": [
+    960,
+    240
+  ],
+  "padding": [
+    32,
+    8
+  ],
+  "bytes": 839410,
+  "atlasSha256": "cf78ca8f99dafa06eadd83139d560da598deae8a21426d2f7da61bfb03c0ccdb",
+  "versions": {
+    "sharp": "0.35.5",
+    "vips": "8.18.7",
+    "webp": "1.6.0"
+  },
+  "assets": [
+    {
+      "cell": 0,
+      "source": "assets-source/far-backdrops-hq/desert-isolated-v4.png",
+      "sourceSha256": "40ead8884d91299f25f02db5915cdb9666e46f059954b881729e4876fa8f46a4",
+      "crop": {
+        "left": 0,
+        "top": 181,
+        "width": 2172,
+        "height": 543
+      },
+      "tile": [
+        32,
+        8,
+        960,
+        240
+      ],
+      "uv": [
+        0.015625,
+        0.515625,
+        0.484375,
+        0.984375
+      ],
+      "baseline": 0.001841620626151013,
+      "extremeVisible": 0
+    },
+    {
+      "cell": 1,
+      "source": "assets-source/far-backdrops-hq/desert-ridge-b-v1.png",
+      "sourceSha256": "5821afd0369eeb40f98cfc4ce17bf2ba2a9507e8aa63f03561121d970b335ee1",
+      "crop": {
+        "left": 0,
+        "top": 181,
+        "width": 2172,
+        "height": 543
+      },
+      "tile": [
+        1056,
+        8,
+        960,
+        240
+      ],
+      "uv": [
+        0.515625,
+        0.515625,
+        0.984375,
+        0.984375
+      ],
+      "baseline": 0.001841620626151013,
+      "extremeVisible": 0
+    },
+    {
+      "cell": 2,
+      "source": "assets-source/far-backdrops-hq/desert-ridge-c-v1.png",
+      "sourceSha256": "b95e5f90b610e0d044eff271f854c34a420d9e679abacd29a27c0303f4f3a2a0",
+      "crop": {
+        "left": 0,
+        "top": 181,
+        "width": 2172,
+        "height": 543
+      },
+      "tile": [
+        32,
+        264,
+        960,
+        240
+      ],
+      "uv": [
+        0.015625,
+        0.015625,
+        0.484375,
+        0.484375
+      ],
+      "baseline": 0.001841620626151013,
+      "extremeVisible": 0
+    },
+    {
+      "cell": 3,
+      "source": "assets-source/far-backdrops-hq/desert-ridge-d-v1.png",
+      "sourceSha256": "96a47f6dec36f8b1bb5a68484ec78e5039f5287f5270987402becd0f3ca7bee5",
+      "crop": {
+        "left": 0,
+        "top": 181,
+        "width": 2172,
+        "height": 543
+      },
+      "tile": [
+        1056,
+        264,
+        960,
+        240
+      ],
+      "uv": [
+        0.515625,
+        0.015625,
+        0.984375,
+        0.484375
+      ],
+      "baseline": 0.001841620626151013,
+      "extremeVisible": 0
+    }
+  ],
+  "limit": "Four populated candidate cells; native composition and cross-variant mip filtering still pending."
+}

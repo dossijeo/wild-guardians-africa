@@ -1,0 +1,113 @@
+{
+  "baseCommit": "d5638fad999dec6e60962de5da1ec07da40fde12",
+  "session": 14748,
+  "pid": 49456,
+  "terminalExitCode": 0,
+  "liveCpuBeforeDispatch": [
+    41320,
+    41304,
+    49032,
+    49608
+  ],
+  "productionChanged": false,
+  "benchmark": false,
+  "input": "../../intensive-sabana-musgum-e461b550/state.json.gz",
+  "pieces": [
+    {
+      "source": ".cache/prepare-v6-current-dense.mjs",
+      "path": "prepare-v6-current-dense.mjs.gz",
+      "bytes": 3183,
+      "sha256": "355f12ccba5f0b6291bb0df2b727787e5a47901fe7662913686ff120a8229b0d"
+    },
+    {
+      "source": ".cache/check-v6-current-dense-workday.mjs",
+      "path": "check-v6-current-dense-workday.mjs.gz",
+      "bytes": 6521,
+      "sha256": "e3e17a8422c6d90b869ce03430fea803715281b0eab9e093b233f2f76eec631e"
+    },
+    {
+      "source": ".cache/check-v6-current-main.mjs",
+      "path": "check-v6-current-main.mjs.gz",
+      "bytes": 5997,
+      "sha256": "1abe8352db53bf39744a48a9d6ebfc7006f5096ba3dd39c389b193cdd1cf6902"
+    },
+    {
+      "source": ".cache/v6-current-dense-report.json",
+      "path": "v6-current-dense-report.json.gz",
+      "bytes": 11694,
+      "sha256": "53f805720e894e4df40a5ab7342c52ea8319b9a96ae737d176a0ba6f32bb3069"
+    },
+    {
+      "source": ".cache/v6-current-dense-candidate-state.json",
+      "path": "v6-current-dense-candidate-state.json.gz",
+      "bytes": 14195595,
+      "sha256": "fc3c699261e705c0c4e3c12d4c636b104e49ce1d9939604791b877b1f311cb08"
+    },
+    {
+      "source": ".cache/v6-current-dense-status.json",
+      "path": "v6-current-dense-status.json.gz",
+      "bytes": 96,
+      "sha256": "c75d6a6d35efaf98ad8b462ceeb027a35b1cdefc09db05fc84405ef73efc487c"
+    },
+    {
+      "source": ".cache/candidate-game-v6-current.mjs",
+      "path": "candidate-game-v6-current.mjs.gz",
+      "bytes": 47416,
+      "sha256": "62f8589c7c9a33faf388c35a7fc785973d5e62d056f58a83360ad1a11125c293"
+    },
+    {
+      "source": ".cache/worker-route-refinement/candidate-navigation-v6-current.mjs",
+      "path": "worker-route-refinement__candidate-navigation-v6-current.mjs.gz",
+      "bytes": 31015,
+      "sha256": "e702662b9e0ffefa7696c4eb12524fceeb438b008ee645c9a7e2fb8b8d9ce372"
+    },
+    {
+      "source": ".cache/worker-risk-clearance-v5.mjs",
+      "path": "worker-risk-clearance-v5.mjs.gz",
+      "bytes": 2848,
+      "sha256": "c3e735107fb42bef16db6ce842d6a19765f50f7b4a605593cc31495ecfb8f6f3"
+    },
+    {
+      "source": ".cache/bounded-worker-view-cache.mjs",
+      "path": "bounded-worker-view-cache.mjs.gz",
+      "bytes": 768,
+      "sha256": "e2ab2c508bd2be1590cf9db75163eb5f9ac70081d9576cb8c7a3ce8e2703467c"
+    },
+    {
+      "source": ".cache/no-crop-epoch-report.json",
+      "path": "no-crop-epoch-report.json.gz",
+      "bytes": 79535,
+      "sha256": "478b14589420d27e96ce8c90003c874de6d5b24a1bff47effa28aab5ff30cebc"
+    },
+    {
+      "source": ".cache/check-no-crop-epoch-dense-workday.mjs",
+      "path": "check-no-crop-epoch-dense-workday.mjs.gz",
+      "bytes": 5934,
+      "sha256": "cd771e49cc7354d3436a4650d7cd243ab826a85e44d0a68a191c86208ec3d056"
+    },
+    {
+      "source": "src/world/navigation.js",
+      "path": "src__world__navigation.js.gz",
+      "bytes": 26324,
+      "sha256": "c84810354895210c8485d8d2602fc3d817cc1980a2c8a24d5b0d82bea6ee6923"
+    },
+    {
+      "source": "src/simulation/game.js",
+      "path": "src__simulation__game.js.gz",
+      "bytes": 45371,
+      "sha256": "b931b1e14d23185bdc3709f39718ff6bae13a2ae02bf1033449c11ea3b270078"
+    },
+    {
+      "source": "tools/check_intensive_farm.mjs",
+      "path": "tools__check_intensive_farm.mjs.gz",
+      "bytes": 12772,
+      "sha256": "2064cd442109b79e8a2b3e24c9af3dbeed3c81cf3f87a616c5a6d2ac968718cf"
+    },
+    {
+      "source": "public/content/biome-savanna.json",
+      "path": "public__content__biome-savanna.json.gz",
+      "bytes": 21482,
+      "sha256": "adb68fd97b2c45ef681313d4bc3418c3aac76101857391b961521f5cddfc4411"
+    }
+  ]
+}

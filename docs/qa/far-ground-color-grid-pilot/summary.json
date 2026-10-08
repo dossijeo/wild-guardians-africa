@@ -1,0 +1,72 @@
+[
+  {
+    "name": "day-all",
+    "source": "e26361c2",
+    "nightReported": 0,
+    "camera": [
+      143.20690623333192,
+      110.25234832156283,
+      -46.973626642559324
+    ],
+    "bounds": [
+      24,
+      -168,
+      264,
+      72
+    ],
+    "render": {
+      "calls": 18,
+      "triangles": 65100
+    },
+    "ground": [
+      {
+        "visible": true,
+        "material": "MeshBasicMaterial",
+        "vertices": 2125,
+        "waterAttribute": false,
+        "colorMap": {
+          "width": 217,
+          "height": 217,
+          "rgbaBytes": 188356
+        }
+      }
+    ],
+    "errors": [],
+    "gl": 0
+  },
+  {
+    "name": "night-all",
+    "source": "e26361c2",
+    "nightReported": 0,
+    "camera": [
+      143.20690623333192,
+      110.25234832156283,
+      -46.973626642559324
+    ],
+    "bounds": [
+      24,
+      -168,
+      264,
+      72
+    ],
+    "render": {
+      "calls": 17,
+      "triangles": 60960
+    },
+    "ground": [
+      {
+        "visible": false,
+        "material": "MeshBasicMaterial",
+        "vertices": 2125,
+        "waterAttribute": false,
+        "colorMap": {
+          "width": 217,
+          "height": 217,
+          "rgbaBytes": 188356
+        }
+      }
+    ],
+    "errors": [],
+    "gl": 0
+  }
+]

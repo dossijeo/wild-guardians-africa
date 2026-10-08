@@ -1,0 +1,109 @@
+{
+  "baseGitHead": "cbfbf50a5dba607e76d3ae8dcc2bf7be4f2132fa",
+  "input": "docs/qa/intensive-sabana-musgum-e461b550/state.json.gz",
+  "inputSha256": "090bc508ca2d6dcd45bc310c322ebb92fd01bb04cffa44bde12fa5af73bf5d39",
+  "backgroundCampaigns": [
+    20024,
+    49032,
+    41320,
+    41304
+  ],
+  "terminalSessions": [
+    89412,
+    72256
+  ],
+  "exitCodes": [
+    0,
+    0
+  ],
+  "benchmark": false,
+  "productionChanged": false,
+  "pieces": [
+    {
+      "path": "before.json.gz",
+      "rawBytes": 2050,
+      "sha256": "f616d7120a6cb4258eacd990da4b0af7b14e609e7908ab08657fa07a5051fb4d"
+    },
+    {
+      "path": "attribution.json.gz",
+      "rawBytes": 14278,
+      "sha256": "880d6517220de075dd16ba850edee164a431bad6ad9b45caa854d6dfa6ff9519"
+    },
+    {
+      "path": "return-probe.json.gz",
+      "rawBytes": 4370,
+      "sha256": "86ef873baefc642d654bfacd1a439498f7e40538f92eaabeaef5be308893aae2"
+    },
+    {
+      "path": "probe.mjs.gz",
+      "rawBytes": 1630,
+      "sha256": "1e28cf105c60ddf594556b8ea218462463d755d0efb231a4d534ae3cc0d3bb46"
+    },
+    {
+      "path": "runner-before.mjs.gz",
+      "rawBytes": 6099,
+      "sha256": "41505d8bae44dceb08a177a5035b4e443acd23aae64b8a8ad08e1112eb459bfa"
+    },
+    {
+      "path": "runner-after.mjs.gz",
+      "rawBytes": 6842,
+      "sha256": "02b4db995321ea097876aed62b757e23e5fea5f45a6085ceff8591a4537e5952"
+    },
+    {
+      "path": "before-observed-work-points.mjs.gz",
+      "rawBytes": 3275,
+      "sha256": "d17f5963872093792dc957ae81b8464d13e061d0e4c514b6d13938f26b611f3a"
+    },
+    {
+      "path": "before-observed-game.mjs.gz",
+      "rawBytes": 46964,
+      "sha256": "5c61f04dfb390323ffc50e69baab7281d14c9ffbbaa635b7780102cb7bc4db8f"
+    },
+    {
+      "path": "after-observed-work-points.mjs.gz",
+      "rawBytes": 3275,
+      "sha256": "d17f5963872093792dc957ae81b8464d13e061d0e4c514b6d13938f26b611f3a"
+    },
+    {
+      "path": "after-observed-game.mjs.gz",
+      "rawBytes": 46976,
+      "sha256": "2c3d024dc6415429ad45dfc9d92d3da85aa0239ad9034b1a8295b6d3e7d6bbfd"
+    },
+    {
+      "path": "terrain-classification.json.gz",
+      "rawBytes": 32980,
+      "sha256": "7d479e25fabd35f4b94dc74cf864c98f922d4a85d7210a4a6f8c2c39c5ae5c55"
+    },
+    {
+      "path": "slope-exit-feasibility.json.gz",
+      "rawBytes": 39888,
+      "sha256": "fe1ac42beb81152ca717d2347ff58e4a7d20d705d015beea3d461bf21f867a06"
+    },
+    {
+      "path": "terrain-classification-probe.mjs.gz",
+      "rawBytes": 2066,
+      "sha256": "23c432545eeb5438b3e18ee8ae40209ed4bbb2fedc08de4c64aca4ae471b73a6"
+    },
+    {
+      "path": "slope-exit-probe.mjs.gz",
+      "rawBytes": 2766,
+      "sha256": "55604ff43091ba1d44b55a8ff02a9aa50ae24b5520b9c0d76b4747fcddf823f5"
+    }
+  ],
+  "terrainFollowup": {
+    "baseGitHead": "a172a24fae8dad35851b2ec9970d91a609126b16",
+    "exitCodes": [
+      0,
+      0
+    ],
+    "ticks": 0,
+    "productionChanged": false,
+    "benchmark": false,
+    "backgroundPidsConfirmedLive": [
+      20024,
+      49032,
+      41320,
+      41304
+    ]
+  }
+}

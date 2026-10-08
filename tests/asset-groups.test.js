@@ -19,6 +19,15 @@ function fixture(){
  updateAssetLods(chunks,camera,'media');return {scene,groups,chunks,camera,levels};
 }
 
+test('transition chunks retain tree color and shadows without bringing back nearby small props',()=>{
+ const f=fixture();
+ for(const [key,group]of f.chunks){group.userData.farPropsVisible=false;group.userData.farTreesVisible=true;group.userData.farTransitionTreeSlots=[0];if(key==='other')group.userData.lodBatches[0].slot=5;}
+ f.groups.update(f.chunks,f.camera);assert.ok([...f.groups.colors.keys()].every(key=>key.startsWith('0:')));assert.deepEqual([...f.groups.shadows.keys()],['0']);assert.equal([...f.groups.colors.values()].reduce((n,g)=>n+g.mesh.count,0),3);
+ const original=f.chunks.get('other').userData.lodBatches[0];assert.equal(original.instances.length,3);assert.equal(original.orders.flat().length,3);
+ f.groups.enabled=false;f.groups.update(f.chunks,f.camera);assert.ok(f.chunks.get('front').userData.lodBatches[0].meshes.every(m=>m.layers.mask===1));assert.ok(original.meshes.every(m=>m.layers.mask===(1<<31)>>>0));
+ f.groups.enabled=true;for(const group of f.chunks.values())group.userData.farPropsVisible=true;f.groups.update(f.chunks,f.camera);assert.equal([...f.groups.colors.values()].reduce((n,g)=>n+g.mesh.count,0),6);f.groups.dispose();
+});
+
 test('full native chunk boxes match the original plane culling and remain independent of reduced render geometry',()=>{
  const {chunks,camera}=fixture();
  const vp=new THREE.Matrix4();for(const eye of [[0,10,25],[80,20,0],[-80,5,0],[0,150,0]]){
@@ -85,4 +94,22 @@ test('shadow selection includes bounds of the final native variant even if they 
  Object.assign(light.shadow.camera,{left:-20,right:20,top:20,bottom:-20,near:.1,far:200});light.shadow.camera.updateProjectionMatrix();
  assert.ok(nativeChunkBounds(chunks.get('front')).max.z>160);
  groups.update(chunks,camera,{x:0,z:0},light);assert.ok(groups.shadows.get('0').mesh.count>=3);groups.dispose();
+});
+
+test('optional far color compaction removes only fully hidden instances and preserves native shadows',()=>{
+ const {groups,chunks,camera}=fixture(),batch=chunks.get('front').userData.lodBatches[0],attribute=batch.meshes[0].geometry.attributes.nativeVisibility;
+ attribute.array.set([0,.001,1]);attribute.needsUpdate=true;groups.omitZeroColor=true;
+ groups.update(chunks,camera);const color=groups.colors.get('0:0').mesh,shadow=groups.shadows.get('0').mesh;
+ assert.equal(color.count,5);assert.equal(shadow.count,9);assert.ok(Math.abs(color.geometry.attributes.nativeVisibility.getX(0)-.001)<1e-8);
+ const version=color.instanceMatrix.version;groups.update(chunks,camera);assert.equal(color.count,5);assert.equal(color.instanceMatrix.version,version);
+ attribute.setX(0,.25);attribute.needsUpdate=true;groups.update(chunks,camera);assert.equal(color.count,6);assert.equal(shadow.count,9);
+ attribute.setX(0,0);attribute.needsUpdate=true;groups.update(chunks,camera);assert.equal(color.count,5);
+ groups.omitZeroColor=false;groups.update(chunks,camera);assert.equal(color.count,6);assert.equal(color.geometry.attributes.nativeVisibility.getX(0),0);groups.dispose();
+});
+
+test('shortened prop residency preserves logical instances and terrain group visibility in merged and fallback paths',()=>{
+ const {groups,chunks,camera}=fixture(),front=chunks.get('front'),batch=front.userData.lodBatches[0],ids=batch.instances.map(p=>p.id),matrices=batch.meshes[0].instanceMatrix.array.slice();
+ front.userData.farPropsVisible=false;groups.update(chunks,camera);assert.equal(front.visible,true);assert.equal(groups.colors.get('0:0').mesh.count,3);assert.equal(groups.shadows.get('0').mesh.count,6);assert.deepEqual(batch.instances.map(p=>p.id),ids);assert.deepEqual(batch.meshes[0].instanceMatrix.array,matrices);
+ groups.enabled=false;groups.update(chunks,camera);assert.equal(batch.meshes[0].layers.mask,((1<<31)>>>0));assert.equal(chunks.get('other').userData.lodBatches[0].meshes[0].layers.mask,1);
+ front.userData.farPropsVisible=true;groups.update(chunks,camera);assert.equal(batch.meshes[0].layers.mask,1);groups.dispose();
 });

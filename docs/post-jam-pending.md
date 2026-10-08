@@ -1,5 +1,170 @@
 # Tareas pendientes posteriores a la Jam
 
+Criterio vigente de actividad (aclaración explícita del usuario, 2026-10-08):
+tiempo diurno sin acciones **inferior al 25%** aceptado. Sustituye el límite
+anterior del20%, sin alterar valores medidos ni aceptar campañas con otras
+comprobaciones pendientes. [Política](qa/intensive-acceptance-policy.json).
+Gran Río/Musgum20,33% y Sabana/Musgum20,283% quedan aprobados en esa métrica;
+Gran Río/Saheliana25,40% sigue por encima del límite. Se conserva el alcance
+histórico de cada campaña, sin equivalencia automática a main actual.
+
+FrontSide: prevalece la política visual flexible solicitada por el usuario.
+Las diferencias de píxeles, color, silueta y pequeños agujeros son diagnósticos;
+las notas inferiores de rechazos por umbrales describen ensayos históricos y
+no establecen el criterio vigente. La aceptación exige apariencia convincente
+en juego, funcionalidad/compatibilidad y beneficio GPU neto. El candidato de
+maíz sigue en la rama de reparación. Su benchmark propio ya acredita ahorro
+GPU neto representativo; falta integración visual/funcional en WorldScene y
+ampliación a otros cultivos/trabajadores. No se han promovido assets por la
+sola inspección de capturas.
+
+[Maíz maduro reparado: beneficio neto](qa/frontside-source-control/shared-leaf-net-gpu/README.md):
+1089 plantas, seis pares AB/BA y3600 consultas válidas. Mediana81,980→67,653ms,
+ahorro17,476%, incluidos cielo/color/sombras y grupos adicionales. La auditoría
+separada de buffers termina con cero bytes pendientes; coexistir original y
+candidato aumenta el total, aunque la geometría candidata sea menor. No es
+mejora general de FPS ni aprobación de toda la categoría. Sin promover assets.
+
+[Compilación cancelable: AB/BA denso](qa/streaming-travel-dense/owned-compilation-abba/README.md):
+cuatro recorridos de180m conservan estado/cámara/15chunks nuevos y no registran
+errores. Ambos candidatos tienen peor p95 y más frames lentos que los controles;
+no se acepta la activación de rendimiento. La cancelación nativa controlada
+pasa, pero no equivale a estabilidad durante traveling. Las nuevas esperas de
+texturas/decodificación/fence están detrás de otra opción QA, con77 tests
+dirigidos y validación nativa/rendimiento aún pendiente.
+
+[Campañas interrumpidas: procesos revalidados](qa/intensive-process-interruption-2026-10-08.md):
+los cuatro handles antiguos ya no corresponden a campañas activas. Los estados
+parciales y campos running obsoletos se conservan; Gran Río/Etíope llegó al día58
+sin resultado final. No contar estos casos como cien noches terminadas. Revisar
+checkpoint, logs y fidelidad de fuentes antes de documentar la continuación.
+
+[Gran Río/Suajili: cien noches auditadas](qa/intensive-gran-rio-suajili-e461b550/README.md):
+campaña histórica e461b550,291hashes congelados iguales; exit0/victoria,
+1439plantas vivas máximas,23700siembras y22043entregas físicas cobradas.
+Auditoría monetaria/cajas/restauración y síntesis completa exactas. Inactividad
+estratégica19,93% aprobada por el usuario el 2026-10-08 (criterio vigente: menos del25%).
+No queda pendiente reducirla para este caso; no es replay de main actual ni GPU/móvil.
+
+[Traveling y streaming: dos bloqueos corregidos](qa/streaming-travel/README.md):
+consulta GL síncrona repetida y serialización de texturas al clonar material
+del borde del suelo lejano. Sabana A/C/C/A conserva35chunksnuevos/cámara/estado;
+frames>100ms pasan de72/70 a7/8. GranRío15s sin errores ni frames>100ms.
+Sin reducir calidad. Persisten picos de compilación inicial; falta ampliar a
+fincas densas, otros biomas/calidades y móvil. No equivale a60FPS estables.
+
+[Sorgo: tallo FrontSide parcial rechazado](qa/frontside-native-inputs/sorgo-state-stem/README.md):
+primera vista nativa conserva silueta, pero falla color local (tile0,019>
+0,01; región115px>16). Original/indexado y agrupado DoubleSide pasan.
+Sin caras añadidas; hojas/suelo/puentes y sombras permanecen DoubleSide.
+No ampliar ni medir GPU antes de corregir calidad; fuentes y negativo archivados.
+
+[Retención de rutas al plantar: ensayo de CPU](qa/crop-route-epoch-experiment/README.md):
+en finca densa nativa, diez siembras pagadas reducen consultas de1539 a299
+y mediana de tick de4,7174 a4,0576ms. La comparación cambia las trayectorias
+y el momento de un riego; conserva dos incidencias de terreno en cada brazo.
+Cinco contratos nativos pasan, incluidos50 estados completos iguales tras
+restaurar con movimiento físico y otra siembra. No se integra: falta aceptación
+de recorridos/tareas en finca densa, terreno adverso e incursiones.
+Producción ya reutiliza cachés estáticas y conserva la invalidación de rutas.
+
+[Caché privada de replanteo de trabajadores, V6](qa/worker-replan-view-cache/README.md):
+seis pruebas de aislamiento/invalidation y límites;100 consultas fallidas iguales
+invocan una búsqueda frente a100 de V5. El conector nativo problemático llega en70
+pasos válidos y restaura63 estados completos iguales tras el rechazo. ABBA frente
+a V3 conserva400 hashes iguales y mide+4,84% de CPU, sin ejercer la caché de
+fallos. El ABBA de replanteo nativo válido conserva400 rutas exactas y reduce
+esa consulta de7,8163 a0,1781ms; no es una mejora del97% del juego completo.
+1008 recorridos cortos de orilla pasan, con alcance limitado documentado.
+Sigue en QA: falta aceptación amplia antes de integrar.
+
+[Campaña Gran Río/Mapungubwe: cien noches archivadas](qa/intensive-gran-rio-mapungubwe-e461b550/README.md):
+victoria con1363 plantas vivas máximas, ocho especies y entregas físicas diarias;
+contabilidad y resumen completo reconciliados.18,22% de jornada sin acciones
+aprobado bajo el criterio vigente del25%. Fuentes congeladas e461b550,23 archivos
+distintos de main; no es replay actual ni cierre de la matriz de treinta casos.
+
+[Reutilización de buffers al redimensionar lotes](qa/asset-group-production/README.md):
+integración limitada a cambios de capacidad; matrices/cobertura/envíos
+iguales,121 frente a171 bufferData al aparecer el búfalo en Gran Río/Musgum.
+Ciclo WebGL acaba con cero buffers observados pendientes;60 pruebas dirigidas,
+build y paquete pasan. Suite completa termina con3.117 pruebas correctas;
+la evidencia conserva controles y negativos. No se acredita mejora general de FPS.
+
+[Asignaciones de lotes durante aparición](qa/asset-group-appearance/README.md):
+Gran Río/Musgum alta recrea15 lotes por capacidad (13 crecen/2 menguan), añade6
+claves y retira3 claves de visibilidad;171 bufferData en el primer render.
+Observador QA y12 pruebas, producción sin cambios. Evitar solo reducciones no
+basta en este caso: investigar conservación de buffers estáticos al redimensionar,
+con propiedad/liberación, imagen y coste incluidos antes de adoptar el candidato.
+
+[Montañas HQ integradas y paquete verificado](qa/hq-main-integration/README.md):
+PR #7 mergeada, seis atlas byte-exactos y ZIP sin ZIP anidado. Validate game del
+merge pasa 3.104 tests; Windows termina correctamente, incluidos WebView2 y
+minimización/restauración nativa (runtime68447e14, no commits posteriores). Las
+notas inferiores conservan etapas históricas rechazadas/apagadas y no describen
+el estado actual de activación. Siguen pendientes aceptación temporal/móvil y
+coste amplio; la integración no cierra esas comprobaciones.
+
+[Precarga actual en otras culturas/calidades](qa/preload-current-cultures/README.md):
+Gran Río/Etíope baja y Musgum alta alcanzan primer golpe real del búfalo, sin
+compile/link ni nuevas descargas GLB, con actor visible y cero esperas. El primer
+render conserva subidas de buffers y llega a42,2ms en el caso alta. No acredita
+ausencia global de tirones, todas las combinaciones ni teléfono físico; próximo
+diagnóstico: atribuir trabajo de aparición con coste de chunks/LOD/subidas.
+
+[Montañas HQ: alternativa sin mipmaps](qa/hq-mountain-no-mips/README.md):
+146 poses nativas día/noche y cuatro capturas conservan el acabado. No basta
+para elegir filtro: verificar niveles efectivos y parpadeo/móvil; el negativo
+CPU de mezcla entre celdas desde mip5 permanece registrado.
+
+[Montañas HQ: pilotos de los otros cinco biomas](qa/hq-mountain-biome-pilots/README.md):
+730 poses nativas día/noche sin errores, diez capturas revisadas. Gran Río,
+Manglares, Volcanes y Desierto siguen una dirección artística aceptable; revisar
+contacto y composición final. Cañón necesita cámara elevada: sus paredes ocultan
+el atlas en la vista inicial, por lo que no se acepta visualmente todavía.
+
+[Montañas HQ: cuatro siluetas Sabana](qa/hq-mountain-four-arcs/README.md):
+dirección de composición aceptable en vistas día/noche y valles abiertos;
+dos giros nativos de 73 poses sin errores, estado invariado. Falta filtrado
+entre celdas, móvil/coste e integración de los demás biomas; fondos sin activar.
+
+[Piloto de montañas HQ con arcos](qa/hq-mountain-arc-pilot/README.md):
+Sabana conserva proporciones y elimina simetría por espejo. La mezcla existente
+de bruma en la base mejora el contacto; bajar 30 m recorta laderas y se descarta.
+Dos giros nativos sin errores, vistas diurnas/nocturnas y negativos conservados.
+Continuar composición de cuatro siluetas antes de los demás biomas; no activado.
+
+[Campaña Sabana/Saheliana: cien noches archivadas](qa/intensive-sabana-saheliana-e461b550/README.md):
+segundo caso terminal de la matriz congelada, ocho especies, contratación y
+entregas físicas diarias; contabilidad y resumen completos reconciliados.
+25,40 % de jornada sin acciones sigue siendo un asunto de diseño. Los hashes
+prueban fuentes congeladas e461b550; el HEAD ambiental del hijo no identifica
+su código. No es replay de main ni cierre de la matriz de treinta casos.
+
+[Montañas HQ: primera integración visual rechazada](qa/hq-mountain-sabana-negative/README.md):
+Sabana carga y gira día/noche sin errores, pero el empalme por reflejo produce
+simetría artificial. Conservar fuentes/evidencia y terminar una composición
+natural de 360° antes de promover los seis fondos; también revisar proporciones.
+
+[Impostores y horizonte integrados en main](qa/far-merge-e4afdcbd/README.md): PR #6
+revisada/mergeada/pull, 44 atlas reproducibles exactos, CI de rama web/Windows
+aprobada y 208 pruebas combinadas + build/paquete correctos. Montañas HQ siguen
+en rama separada para aceptación de costuras/composición/luz y coste; la matriz
+intensiva y aceptación física más amplia continúan pendientes.
+
+[SFX del gesto de muralla 094/095](qa/wall-gesture-audio/README.md): arrastre una
+vez al superar umbral, release una vez, cancelación y protección de decode tardío;
+101 pruebas dirigidas y voces nativas Opus aceptadas en navegador. Matriz vigente:
+99 asignados y 27 reservas. Sigue pendiente la escucha/contexto del barrido completo.
+
+[Montañas de horizonte HQ generadas](../assets-source/far-backdrops-hq/README.md):
+seis candidatos imagegen por bioma, fuentes originales y prompts conservados.
+Relieve natural sin facetas low poly. Antes de sustituir los fondos: corregir
+costura 360°, reencuadrar Desierto sin recortar picos, exportar WebP a presupuesto
+equivalente y comprobar alpha/mips, escala, bruma y luz día/noche en el juego.
+No están activados; generación de fuentes no equivale a aceptación integrada.
+
 [Filtro topológico para caras traseras](qa/mesh-sidedness-audit/README.md): 406 entradas de props/poblados, cinco controles sintéticos; cuatro candidatos pequeños y ningún prop válido en todos sus LODs según el filtro conservador. No se modifica `DoubleSide` ni se consideran rotos los modelos rechazados. Pendientes imagen/sombras por categoría y beneficio medido; priorizar dibujo/shader/profundidad antes que un cambio global no acreditado.
 
 [Índice de cultivos comprobado en finca renderizada](qa/active-crops-rendered/README.md): 800 muestras y queries, estado/eventos/rutas/envíos idénticos. CPU simulación mediana 2,1–2,2 a 0,95–1,0 ms; RAF permanece ~70 ms y render sigue dominante. Framebuffer 1600×900, distinto del ensayo anterior de audio; no comparar absolutos entre ellos. Próxima prioridad: coste de dibujo/materiales/pases y fincas actuales mayores, sin atribuir mejora general de FPS a este ahorro.
@@ -285,6 +450,11 @@ Integración terminada en 834a075; queda pendiente la aceptación móvil complet
 [Tuplas temporales de cultivos reutilizadas](qa/crop-instance-scratch/README.md): 32 pruebas y build correctos; cinco casos CPU aislados con buffers idénticos. Maduras: mediana aproximada 0,55 a 0,26 ms para 1.200 plantas, sin mejora amplia de FPS acreditada. Pendientes GC/RAM y coste integrado/móvil.
 
 
+### Integración optativa de impostores en seis biomas
+
+La rama de integración añade 22 especies con 44 atlas offline de día/noche y sol fijo, selección determinista lejana, bruma, suelo regional lavado y backdrop 2D por bioma. `WorldScene.load(..., {farVegetation: options})` permite probarlo; su valor por defecto continúa siendo `false`. El experimento `compact=trees` acorta props nativos y conserva terreno exacto, picking y límites lógicos de incursión. [Evidencia, variantes y límites](qa/far-biome-integration/README.md).
+
+No dar por aprobada la activación: la deriva ABBA no acredita un ahorro GPU sólido; el fondo bajo de Sabana y la simplificación visible de árboles próximos necesitan otra ronda visual. Falta validar movimiento lento, transiciones/chunks tardíos, shoreline distante, móvil/memoria real y otras culturas. La integración optativa no equivale a cerrar esos criterios.
 [Usos de imágenes distribuidas completos](qa/image-display-classification/README.md): 225 entradas, cero desconocidas y cero errores. Preflight actual: 95 candidatas de color, 45 de revisión y 22 variantes integradas; SVG y prueba de soporte WebP preservados. No son nuevas conversiones ni ahorro; pendientes API/aceptación, perfiles y mapas embebidos.
 
 
@@ -323,6 +493,122 @@ El usuario ha revisado los benchmarks y acepta el sobrecoste observado como prop
 
 [Auditoría espacial del ruido fino experimental](qa/noise-volume-spatial/README.md): 4.096 muestras deterministas por región, cuantización interior acotada y campo envuelto continuo. Fuera del primer bloque cambia la realización analítica; pendiente revisión visual recorriendo varios periodos y cruzando coordenadas negativas/origen antes de promover el candidato. No cambia el shader del juego ni acredita un nuevo ahorro de frametime.
 
+[Revisión nativa espacial en Gran Río](qa/noise-volume-river-spatial/README.md): 60 grupos/300 fotogramas con cámara fija, tres fases y coordenadas negativas/origen. Estado restaurado, calls/triángulos iguales por grupo; persisten pequeñas diferencias en controles repetidos. Tres parejas visuales coherentes, siete tests dirigidos e integridad del archivo verificados. Sigue QA-only: faltan revisión continua de periodicidad, otros biomas/culturas, causa de controles variables y aceptación móvil; no es un nuevo benchmark.
+
 [Candidatos adicionales de historial no promovidos](qa/crop-history-followups/README.md): el índice para paseo inactivo no se ejercita durante 130 s de continuación nativa ocupada; la resolución FIFO por ID conserva todos los estados/entregas en 36 lotes, pero sus tiempos son mixtos entre tres fincas. Producción sin cambios; priorizar el coste integrado de render antes de añadir otra caché sin beneficio consistente.
 
 [Caché de rutas fallidas con expulsión acotada](qa/navigation-failure-capacity/README.md): al alcanzar 50.000 entradas ya no borra todo el conjunto por una consulta nueva; expulsa solo la más antigua. 83 pruebas, build/paquete y paridad por paso en 100 ticks de Gran Cañón. Ese recorrido no alcanza el límite; sigue pendiente atribuir el atasco de la campaña grande distinguiendo rechazo de altura/punto de riego y fallos de navegación.
+
+[Reparación de cultivos/trabajadores para FrontSide](frontside-model-repair-post-jam.md): encargo delegado en rama independiente, Blender headless/Python, originales conservados y pilotos representativos antes de ampliarlo. El usuario autoriza también modelos derivados hechos para FrontSide, conservando los mismos criterios. Requiere conservación de rigs/morphs/UV/comportamiento, comparación automatizada multivista y ganancia GPU suficiente. Ningún candidato aceptado ni activado; PR, revisión/merge y activación controlada posteriores condicionados a esa evidencia.
+
+[Exclusión nativa de dibujos de profundidad](qa/alpha-depth-draw-exclusion/README.md): main `65fb9114`, Volcanes/Mapungubwe 1280×720 reproduce 12 píxeles distintos en B1/B2 con 67 envíos iguales. Excluir 67 meshes identifica participación de dos superficies alpha en ocho sondas, corroborada por candidatos CPU de instancias 0/4. Control nativo estable en esas sondas y nueve pruebas correctas; especie y causa sin acreditar. Alpha especializado continúa desactivado, sin evidencia de mejora GPU.
+
+[Sonda WebGL por dibujo alpha](qa/alpha-depth-gpu-state/README.md): main `307b8dc9`, mismo encuadre, siete píxeles distintos frente al candidato y controles nativos iguales. Grupo `18:2` identificado; textura, bindings comunes, matrices/alpha y pipeline registrado coinciden. B1/B2 estable en esta repetición; causa aún pendiente. Doce pruebas correctas; consultas sincronizantes sin valor de benchmark. Validate y Windows de `65fb9114` terminan success, incluidos WebView2 y minimizar/restaurar.
+
+[Invariancia de proyección/UV descartada como solución suficiente](qa/alpha-depth-invariance/README.md): dos variantes solo QA, 29 pruebas correctas. Position conserva siete píxeles distintos; position+UV coincide inicialmente pero dos repeticiones vuelven a diferir en siete. Controles nativos estables; no activación ni causa probada. Pendiente contenido de buffers y estado inicial/repetido, sin asumir igualdad de bytes a partir de bindings iguales.
+
+[Diagnóstico de reservas de riego](qa/watering-route-diagnostics/README.md): observador QA distingue altura/alcance, destino bloqueado y ruta fallida sin muestras extra ni modificar la simulación. 24 pruebas y paridad completa por paso en checkpoints históricos de Gran Cañón y Gran Río. No reproduce todavía el atasco del día 76; producción intacta, pendiente checkpoint representativo.
+
+[Checkpoints de colas bloqueadas](qa/intensive-blocked-checkpoints/README.md): nuevas campañas conservan el primer y el mayor backlog capturado, con estado completo/contexto/hashes y límites de frecuencia. 16 pruebas, dos jornadas nativas con paridad por tick y CLI normal aprobadas; esos recorridos no dispararon capturas. Las campañas vivas siguen congeladas; falta reproducir un atasco real a partir de uno de estos recibos.
+
+[Montañas HQ: altura y muestreo del atlas](qa/hq-mountain-elevation-lod/README.md): 438 poses nativas sin errores ni cambios lógicos. Gran Cañón a altura intermedia permite revisar la nueva silueta de día/noche; la vista muy elevada no representa el encuadre final. Ocho capturas seleccionadas de Sabana, también con buffer 320×180, muestran estimaciones de LOD inferiores a la zona de mezcla entre celdas. No acredita todos los píxeles/poses, niveles reales del driver, estabilidad temporal, móvil físico ni política definitiva de mipmaps. Pendientes composiciones de cuatro siluetas por bioma y validación integrada antes de promover assets públicos.
+
+[Gran Río con cuatro montañas HQ](qa/hq-mountain-river-four/README.md): 146 poses día/noche sin errores ni cambios lógicos; ocho capturas seleccionadas revisadas. Relieve variado y abierto, bases integradas con bruma y tono nocturno coherente. Atlas de 737.754 bytes, una textura/sampler; no es un benchmark GPU ni aprobación de todos los encuadres. Pendientes los otros biomas con cuatro siluetas y la integración pública.
+
+[Manglares/Volcanes con cuatro montañas HQ](qa/hq-mountain-mangrove-volcanoes/README.md): 292 poses día/noche, 16 capturas y desplazamiento nativo de 20m en Volcanes. Manglares conserva horizonte discreto y abierto. Volcanes necesita corregir puntas horizontales superpuestas en los flancos, especialmente visibles contra el cielo nocturno; candidato no aprobado aunque el export y GL sean correctos. Evidencia negativa conservada y revisión delegada al autor de los assets.
+
+[Desierto/Gran Cañón con cuatro montañas HQ](qa/hq-mountain-desert-canyons/README.md): otras292 poses día/noche y16 capturas. Desierto mantiene perfiles detallados y abiertos. En Gran Cañón tres orientaciones muestran mesas, pero la cuarta queda oculta; además un pan de20m desplaza verticalmente el fondo19m por seguir la altura local bajo la cámara. Corregir anclaje/composición y verificar recorrido ida/vuelta antes de aprobar la integración.
+
+[Recorrido directo de obstrucciones](qa/obstruction-traversal/README.md): candidato con menos listas temporales, 1600 frames de equivalencia exacta y ocho lotes alternados por escenario. No demuestra mejora consistente y empeora el P95 móvil en la muestra de 49 chunks; no se promueve al runtime. Evidencia y reproducción conservadas, sin atribuir resultados a GPU/FPS ni a una causa concreta de la variabilidad.
+
+[Volcanes HQ v2 y datum estable de Cañón](qa/hq-mountain-repaired/README.md): ocho vistas de volcanes regenerados con imagegen, revisadas de día/noche sin los cortes anteriores; atlas de 718.398 bytes. Cinco recibos verificados de Cañón mantienen anchorY2.36 en pan +20/−20 y elevación80→100→80. Pendientes cuarta silueta de Cañón, recorrido continuo, benchmark e integración pública/PR; no acredita aún coste GPU ni móvil.
+
+[Coste HQ y recorrido continuo](qa/hq-mountain-cost-path/README.md): ABBA nativo de Sabana, 480 muestras GPU válidas; mediana14,629ms anterior frente14,118ms HQ en este encuadre, mismas54 llamadas. CPU7,1→7,3ms con campañas activas, sin promesa general de FPS. Cañón161poses confirma datum2,36 fijo y estado lógico intacto. Cuarta silueta sigue invisible en120/180m; alpha/composición confirma cima bajo meseta y se corrige individualmente con imagegen antes de PR.
+
+[Sabana/Suajili: cien noches terminadas](qa/intensive-sabana-suajili-e461b550/README.md): tercer caso de la matriz congelada e461b550, 100 noches/victoria, ocho cultivos, hasta1.460 plantas vivas y cuentas exactas. Archivo completo auditado en main, resumen idéntico; no es replay de navegación actual. Inactividad de estrategia19,92% diurno pendiente de reducir. El padre avanzó a Musgum sin reiniciar; Gran Cañón sigue independiente.
+
+[Sabana/Musgum: cien noches terminadas](qa/intensive-sabana-musgum-e461b550/README.md): cuarto caso congelado, victoria con hasta 1.551 plantas vivas y cuentas exactas. Archivo auditado y resumen idéntico en main; inactividad diurna 20,283% aceptada bajo el nuevo criterio del25%. El padre avanzó a Etíope; no es replay de main actual ni aceptación de toda la matriz.
+
+[Contenido de buffers GPU alpha](qa/alpha-depth-buffer-content/README.md): dos secuencias nativas copian los buffers completos del afloramiento volcánico. Hashes estables de posición/UV/instancias/visibilidad/índices mientras persisten siete píxeles de profundidad distintos. No aceptar alpha experimental; investigar evaluación/rasterización del shader. No es benchmark ni prueba de texels/propiedad exclusiva del fragmento.
+
+[Aislamiento del filtro alpha](qa/alpha-depth-sampler/README.md): filtros lineal y vecino más cercano sin mipmaps reproducen los mismos siete píxeles distintos. Filtros efectivos comprobados por WebGL, cuatro secuencias y doce pruebas correctas. No cambia producción ni acredita GPU; siguiente aislamiento: discard frente a evaluación/rasterización entre programas.
+
+[Descarte alpha aislado por uniforme](qa/alpha-depth-discard/README.md): cinco secuencias en un contexto, controles nativos estables, uniforme efectivo 1/0 y programas/otro estado observado iguales. Desactivar el descarte sigue reproduciendo siete coordenadas sin sonda; la observación posterior difiere en doce píxeles. Veinte pruebas correctas; no cambiar protección de producción ni atribuir una causa única. Priorizar evaluación/rasterización/profundidad y estados aún no observados.
+
+[Cuarta silueta HQ de Gran Cañón corregida](qa/hq-canyon-d-v2/README.md): cuatro capturas raíz verificadas, azimut275°, elevaciones80/120m día/noche. D-v2 aparece sobre la meseta y conserva relieve detallado/valles abiertos, datum2,36 y GL0. Atlas826.140bytes; fuentes1f9acab5. Desbloquea preparación de integración pública/PR; quedan aceptación temporal/móvil y coste de los demás biomas, sin extrapolar el benchmark de Sabana.
+
+[Cachés acotadas de terreno y segmentos](qa/navigation-query-capacity/README.md): expulsión FIFO de una entrada en lugar de vaciar 50.000/100.000 respuestas al llenarse. 38 pruebas, build/paquete y paridad completa en100ticks nativos de Cañón. Ensayo de capacidad artificial con consultas nativas conserva respuestas y reduce258→2recálculos por lote; no demuestra frecuencia de overflow ni mejora de FPS en gameplay. Invalidación geométrica preservada.
+
+[Urgencia compartida en equipos grandes](qa/worker-urgency-pass/README.md): ámbito local por actualización para al menos 64 trabajadores, cambios individuales y reconstrucciones observados. Cuatro continuaciones nativas conservan estados/eventos/rutas; Musgum112 baja13,1% de mediana CPU en el ensayo final, sin mejora uniforme en equipos pequeños ni claim de FPS. Pico frío de navegación y campañas actuales siguen pendientes.
+
+[Descarte por ejes de charcas rechazado](qa/height-pond-axis-rejected/README.md): 46.440 muestras exactas y72checkpoints de fincas nativas coinciden, pero seis pares con charcas empeoran CPU total y el pico frío de Gran Río se invierte con AB/BA. Candidato fuera de producción; investigar estructura de búsqueda y rutas bloqueadas, sin repetir una caché de terreno ya descartada.
+
+[Reutilización de índices de tareas](qa/task-index-reuse/README.md): 72 checkpoints completos coinciden en cuatro continuaciones nativas AB/BA; 52→17 reconstrucciones en 50 ticks Musgum. Mejora pequeña en la finca de112 trabajadores, sin claim general de FPS ni del pico frío. 75 pruebas dirigidas, 3139/3139 en suite completa, build y paquete web pasan. Queda la aceptación global/campañas y GPU.
+
+[Índices incrementales de historiales](qa/append-history-index-candidate/README.md): 72 checkpoints nativos AB/BA y 1568 pares de apertura pequeña conservan estados. Ocho totales de fincas grandes bajan 7,6–24,2% bajo carga de fondo no exhaustivamente inventariada; apertura pequeña y pico frío mixtos. 78 pruebas dirigidas, 3142/3142 en suite completa, build y paquete pasan; opt-in integrado en main para cultivos/cajas. No acredita GPU, móvil ni campaña actual de cien noches.
+
+[Estado GL de la fuente YoungMale](qa/worker-source-state-audit/README.md): 30 repeticiones nativas conservan programa/uniformes/estado/bindings/buffers observados de Mesh0 mientras persiste la variación de 0/21 bytes. Solo diagnóstico de original, sin brazo candidato; no prueba texels GPU, causalidad ni acepta FrontSide. Evidencia entregada al subagente para continuar el aislamiento.
+
+[Sabana/Etíope: cien noches terminadas](qa/intensive-sabana-etiope-e461b550/README.md): quinto caso de la matriz congelada e461b550, victoria con hasta1440 plantas vivas y cuentas/resumen exactos. Inactividad diurna18,657% pendiente de reducir. El padre avanzó a Gran Río/Mapungubwe sin reiniciar; evidencia histórica, no replay de main actual ni aceptación de toda la matriz.
+
+[Derivado de maíz rechazado antes de FrontSide](qa/crop-derived-double-rejected/README.md): controles/original reindexado exactos, pero .75 del tallo en uno/dos grupos DoubleSide falla contorno y regiones RGB en una vista TRAINING. Sin promoción; continuar alternativas conservadoras. [Fuente sin sombras](qa/worker-source-state-audit/README.md): 30 controles mantienen variación0/21bytes con uNativeShadowOn0 y metadata samplerShadow ampliada; sin causa probada ni aceptación del candidato.
+
+[Contratos del maíz derivado capturados](qa/crop-derived-contract-audit/README.md): .75 sigue rechazado; mismo programa/uniformes/materiales/matrices/iGrowth en los brazos, con esfera de geometría diferente. No demuestra identidad de interpolación/texels GPU ni causa del fallo. Evidencia entregada al subagente antes de avanzar otra reparación; no cambia assets del juego.
+
+[Rutas de regreso en finca grande](qa/watering-large-farm-return/README.md): dos continuaciones Musgum/112 contratadas, 100 ticks con paridad completa e iguales trayectorias. 3100 consultas fallidas son regresos al poblado; 122 riegos encuentran ruta. Orígenes muestreados fallan terreno, destino válido, sin props/edificios solapados. Revisar recuperación física de trabajadores en terreno inválido y causa de llegada; no acredita aún el atasco de Gran Cañón ni un ahorro CPU.
+
+[Recuperación física de pendientes marginales](qa/worker-slope-recovery/README.md): integrada en main para regreso/huida/incapacitación, con movimiento gradual sin teletransporte y cola de navegación ordinaria. Suite completa 3153/3153, build y paquete correctos en la revisión documentada. No autoriza tareas normales sobre terreno inválido ni acredita toda la matriz de cien noches.
+
+[Candidato de navegación con vistas privadas reutilizadas](qa/worker-replan-view-cache/README.md): [integrado en main con protección V6](qa/worker-replan-view-cache/integration.md). Reconsulta estacionaria repetida baja 97,72 % en el ensayo específico histórico; no es ahorro total del juego. Quince puertas y cruces con cinco especies conservan movimientos originales, con restauración de las proyecciones trabajador/puerta. La jornada densa pagada y seis aperturas con incursiones corresponden al candidato histórico; la producción tiene su propia equivalencia y dirigidas, sin aceptación global de límites de terreno/fluidos.
+
+[Mipmaps del original YoungMale](qa/frontside-native-inputs/worker-mip-tail/README.md): lectura nativa estable de niveles 1–8 de entornos y 1–11 de materiales en 31 draws; complementa el nivel cero medido en otra ejecución. El control redibujado continúa por encima del umbral visual. No demuestra causalidad, identidad simultánea completa ni aceptación de modelos FrontSide; el subagente continúa con reparación o derivados autorizados.
+
+[Gran Río/Mapungubwe: cien noches terminadas](qa/intensive-gran-rio-mapungubwe-e461b550/README.md): victoria histórica congelada, hasta 1363 plantas vivas y cuentas exactas; inactividad diurna 18,22 %. Archivo y resumen auditados en main, sin equivalencia a replay de navegación actual ni aceptación global de la matriz.
+[Pantalla de carga interactiva — autorización de integración, 2026-10-08]: el usuario autoriza revisar y fusionar autónomamente la PR de `feature/interactive-loading-screen` cuando la implementación esté completa y validada, y después actualizar el checkout de `main`. Esta instrucción sustituye la espera de aprobación explícita de la especificación original. Se mantienen sus criterios de funcionalidad, QA visual, rendimiento, compatibilidad y limpieza de recursos; no abrir una PR incompleta ni publicar en itch.io con esta autorización. Trabajo delegado al subagente de carga en su rama independiente.
+[Conservación de rutas al plantar: validación funcional ampliada](qa/crop-route-epoch-experiment/dense-workday/README.md): seis aperturas nativas de cinco noches terminan sin derrota, con pagos y entregas físicas; 2606 plantaciones en terreno despejado conservan rutas y 18 retiradas reales de props reconstruyen navegación. Jornada densa pareada de 6000 ticks y 30 estados restaurados por brazo: 205 entregas originales frente a 201 del candidato, con diferencias reales de tareas/ingresos y dos incidencias de pendiente todavía presentes. Evidencia y dos fallos del harness conservados; candidato sigue fuera de producción, sin claim de paridad o ahorro GPU.
+[Cuerpo original YoungMale aislado](qa/frontside-native-inputs/worker-body-isolation/README.md): al ocultar 24 accesorios se reproduce la variación de 21 bytes RGB / siete píxeles, con cuerpo completo, rig/material/shader originales e inputs observados estables. No hay candidato ni benchmark, no se amplían tolerancias. El solapamiento posible con una auditoría Blender breve queda declarado; no atribuir causa única ni aceptar FrontSide todavía.
+[Gran Río/Saheliana: cien noches terminadas](qa/intensive-gran-rio-saheliana-e461b550/README.md): victoria congelada e461b550, ocho cultivos, hasta 1482 plantas vivas y cuentas/entregas físicas auditadas. Inactividad de estrategia 25,4 % del tiempo diurno, todavía pendiente de reducir. El padre avanzó a Gran Río/Suajili; no es replay de navegación actual ni aceptación global.
+[Pulido visual obligatorio de carga interactiva, 2026-10-08]: continuar en `feature/interactive-loading-screen`, después de estabilizar fluidez. Parcela pequeña con bordes desvanecidos en bruma económica, cielo original con sus variaciones, tonos crema/arena de día y azul grisáceo de noche; sin decoración adicional ni volumétricos costosos. Interfaz inferior mínima con porcentaje/barra del progreso real, mensajes de hitos y ayuda de toque/clic en ES/EN, áreas seguras y plantas visibles. Nueva partida diurna y Continue acorde a la hora guardada si su lectura es rápida, con transición de cielo/exposición coherente. Capturas nuevas diferenciadas en `docs/qa/interactive-loading-development/`: día/noche, portrait/landscape, interacción, legibilidad y crecimiento; medir coste sin regresión significativa. No alterar procedural, mecánicas ni saves para el pulido. No PR ni merge hasta superar criterios originales de rendimiento/integración/QA y estos criterios visuales; merge autónomo posterior sigue autorizado. Especificación comunicada y aceptada por el subagente.
+[Rutas conservadas al plantar integradas](qa/crop-route-epoch-experiment/integration.md): suelo despejado mantiene el epoch y las rutas; retiradas reales de props, construcciones y cambio de estado siguen reconstruyendo. Suite local completa: 3153 correctas y una expectativa de hash desactualizada; comparación con navegación archivada explica 27 frente a 28 entregas y 409 frente a 418 monedas en esa apertura. Expectativa corregida sin alterar economía/supervivencia y 25 pruebas relacionadas correctas; build/paquete pasan. [CI posterior cerrada con 3154/3154](qa/crop-route-epoch-experiment/ci-65bb2148/receipt.json). No resuelve las incidencias de pendiente ni acredita FPS/GPU/móvil.
+
+[Audio obligatorio de carga interactiva, 2026-10-08]: el usuario pide SFX 004 en bucle para día, SFX 005 en bucle para noche y SFX 028 una sola vez al plantar un brote adicional en el diorama. Implementación delegada en `feature/interactive-loading-screen` mediante catálogo/buses existentes, con mute/volumen/autoplay, limpieza al cancelar/error/transición y sin duplicar ambiente al entregar al mundo. No disparar 028 por plantas iniciales o animación de crecimiento. Verificar selección día/noche, plantación, cierre y reinicios antes de completar la PR. Se mantienen todos los criterios visuales, de fluidez y memoria y la autorización de merge autónomo posterior.
+
+[Protección V6 con rutas conservadas y replantación pagada](qa/worker-replan-view-cache/current-paid-replant-workday/README.md): candidato aislado sobre main, jornada densa de6000ticks,112contrataciones pagadas y diez brotes cobrados. Cero nuevas posiciones inválidas, treinta pares completos warm/cold iguales,201entregas físicas y auditoría económica correcta. No hay incursión en esta continuación postgame ni benchmark; no equivale a aceptación de campaña/biomas/móvil. Guard y navegación candidatos siguen fuera de producción, con evidencia separada de rechazo/restauración del conector adversarial.
+
+[CI de rutas conservadas cerrada](qa/crop-route-epoch-experiment/ci-65bb2148/receipt.json): Validate game37774080698 de65bb2148 termina success con3154/3154pruebas, build/paquete web/ZIPitch correctos. No hay cambios en runtime/tests/tools/package/workflows hasta84de13b2; los commits intermedios solo archivan QA. No acredita las ramas de carga ni reparación FrontSide ni un segundo run completo local.
+
+[Protección V6 con incursiones en seis biomas](qa/worker-replan-view-cache/current-biome-openings/README.md): seis aperturas nativas de cinco noches del candidato histórico, todas las culturas representadas, compras/reinversión/contratación pagadas y entregas físicas. Treinta incursiones resueltas y treinta recargas ordinarias;11326observaciones de endpoints de trabajadores sin nueva posición inválida. No es barrido de cada paso interno ni las treinta combinaciones/cien noches. Auditorías económicas y roundtrips correctos; catorce cultivos destruidos por daño nativo en dos biomas. Integración posterior y sus límites documentados por separado; no implica replay de esta cobertura sobre cada revisión de producción.
+
+[Coste de protección V6](qa/worker-replan-view-cache/current-cpu-cost/README.md): producción anterior frente al candidato protegido, ABBA con estado divergente desde el primer tick, +0,2823 ms/+6,50 % en medianas combinadas y deriva entre referencias mayor que esa diferencia. No acredita mejora CPU. [Claves compactas, trabajo idéntico](qa/worker-replan-view-cache/key-cpu-cost/README.md): 100 estados completos y contadores iguales entre los cuatro brazos; −0,0933 ms/−1,835 % con deriva de referencia de 0,2830 ms, sin ahorro general demostrado. [Equivalencia funcional](qa/worker-replan-view-cache/key-equivalence/README.md) incluye dos brotes pagados y 70 estados del conector problemático. Las claves no se promueven; el guard se integra como protección de corrección, sin prometer mejora de rendimiento.
+
+[Integración de protección de trabajadores en main](qa/worker-replan-view-cache/production-equivalence/README.md): 2fbe9a7e, 52 pruebas dirigidas, 100 estados completos iguales al V6 previo con dos brotes pagados y 70 estados del conector; 63 continuaciones de producción warm/cold exactamente iguales. Solo se normaliza el nombre experimental del campo de desvíos al comparar con el candidato. Build y paquete web correctos. [Validate game37782785754 terminado con3160/3160](qa/worker-replan-view-cache/ci-2fbe9a7e/README.md), assets/build/ZIP correctos; no acredita FPS/GPU/móvil ni matriz de cien noches. No publicación en itch.io.
+
+[Maíz joven Front parcial: perfil independiente V1 rechazado](qa/frontside-native-inputs/maize-young-independent-v1/README.md): controles Double válidos y fuente redibujada exacta en las 16 vistas ejecutadas. La muestra 16 supera el umbral local RGB (0,020548 frente a 0,01), sin agujeros ni cambios de silueta. No ejecutar bloques posteriores ni reinterpretar el PASS de una vista de entrenamiento como aceptación. Reparación/creación geométrica sigue delegada, conservando originales y criterios; sin asset promovido ni PR.
+
+[Caché exacta de pendientes descartada](qa/worker-replan-view-cache/slope-cache-cost/README.md): experimento aislado sobre producción protegida, cuatro brazos ABBA de cien ticks con estados completos y contadores iguales. Mediana combinada 4,9536→5,4452 ms, con deriva de referencia de 1,1399 ms y procesos históricos/QA funcional concurrentes; no acredita ahorro ni degradación general. Solo 72.066 de 569.529 consultas encuentran una entrada reutilizable con capacidad 8.192, incluyendo warm-up y scatter. No se integra ni se aumenta capacidad sin evidencia; producción permanece intacta. Fuentes, entrada y resultado archivados con verificador de integridad.
+
+[Llegadas físicas sobre fluidos entre muestras](qa/actor-fluid-landings/README.md): regresión controlada con una franja estrecha de agua, rutas/movimiento nativos y campo de prueba; no reproducción acreditada en un bioma real. Trabajadores y bestias rechazan el siguiente apoyo húmedo aun con un prefijo seco validado, sin repetir cálculo de pendiente; se conserva agua transitable de Gran Cañón. 48 dirigidas,100 estados nativos con dos brotes pagados,70 del conector y63 continuaciones restauradas correctos; build/paquete pasan. Una búsqueda finita de6240 candidatos nativos no encontró el alias. No es barrido continuo analítico ni prueba de llegada de todo desvío animal; coste de consultas adicionales y regresión global siguen pendientes. CI pendiente al archivar, sin publicación.
+
+[Revisión funcional de audio y pulido de carga, 2026-10-08]: el autor de `feature/interactive-loading-screen` ejercita AudioSystem/LoadingAudio/LoadingOverlay reales en el fixture integrado desde 3e90c9ca. Reporta ambientes 004/005 únicos, un 028 por brote adicional aceptado, buses ambient/world, mute masterGain 0 frente a 0,7 y cero voces en handoff/cancelación. Es evidencia del fixture con unlock explícito, no aceptación de autoplay ni de integración completa del menú. El root inspecciona `polish-day-portrait-real-loading.png` y `polish-night-landscape-real-loading.png` de la rama: terreno sin borde duro, pero cielo excesivamente uniforme y maíz nocturno demasiado oscuro/pequeño; solicita nuevo ajuste de pose/bruma/legibilidad sin decoración ni efectos volumétricos. Capturas y trazas permanecen en la rama para conservar el resultado negativo. El doble dispose de AudioContext encontrado en el fixture requiere corrección; no se atribuye ese fallo al AudioSystem de producción. Siguen abiertos rendimiento, cobertura completa, recursos y QA visual; sin PR, merge ni publicación.
+
+[CI de apoyos fluidos cerrada](qa/actor-fluid-landings/ci-b16457b3/README.md): Validate37789639759 de b16457b3 termina success con3167/3167 pruebas, assets/audio/plan/build/paquete/ZIP correctos. El commit16189eaa posterior solo preserva fuentes de QA, sin cambios a runtime/tests/workflows. Esto cierra la CI pendiente en el archivo anterior; no acredita campañas globales, coste CPU/GPU, móvil ni las ramas de carga/reparación.
+
+[Coste CPU del apoyo sobre fluidos](qa/actor-fluid-landings/cpu-cost/README.md): ABBA de producción frente al mismo Game con los dos guards anteriores, finca histórica nativa Sabana/Musgum y112 trabajadores pagados. Los100 estados completos y contadores coinciden en los cuatro brazos sin normalización. Medianas de ticks5,2048→5,3629ms (+0,1581ms/+3,04%), deriva de referencia0,0362ms; cuatro campañas CPU históricas activas, sin nuevos pilotos/cargas pesadas de los autores. Se conserva la protección de corrección, declarando este coste local; no es mejora, margen global, FPS/GPU/móvil ni medición de bestias o de todos los biomas.
+
+[Refinamiento final de cámara y ambiente de carga, 2026-10-08]: el usuario acepta la dirección visual actual y pide continuar en `feature/interactive-loading-screen` sin interrumpir las optimizaciones. Aumentar20–30% la presencia en pantalla del maíz ajustando cámara/FOV, manteniendo cuatro plantas iniciales, cielo, tierra libre para plantar y maduras completas en portrait/landscape. Órbita sinusoidal limitada a±8–12°, ciclo15–25s, distancia casi constante y centro del cultivo como foco; pausar durante interacción, reanudar suavemente tras inactividad y raycast desde pose actual. Detener progresivamente y entregar esa misma pose a LoadingCinematic, preservando cámara definitiva/estado del jugador. Brisa GPU mínima por planta con fases distintas, base fija y morph/brotes compatibles; sin física ni trabajo CPU individual costoso. Bruma ligeramente animada solo si económica y coherente; mantenerla estática si no. Relleno nocturno local frío/tenue solo si mejora legibilidad, sin sombras extra, suelo sobreiluminado ni cambios al skybox/iluminación real. Mantener UI actual ES/EN, hitos/porcentaje/barra/hint/cancel y áreas seguras. Reutilizar RAF/renderer/recursos; sin geometrías/materiales/texturas/buffers por frame ni recompilaciones, y reduced-motion sin órbita y con menor brisa/bruma. QA día/noche, ambas orientaciones, crecimiento pequeño/intermedio/maduro, plantar en movimiento, transición y cancelación; capturas/vídeo si viable en `docs/qa/interactive-loading-development/` y comparación antes/después de render/frametime sin regresión significativa. Sigue prohibido abrir PR o integrar mientras rendimiento/estabilidad/QA originales y estos ajustes estén pendientes. Especificación comunicada al subagente; no es aceptación de implementación.
+
+[Órbita de carga: módulo y revisión del piloto 22, 2026-10-08]: `649e95ab` de `feature/interactive-loading-screen` publica LoadingOrbit y siete pruebas aprobadas; todavía sin importar en el diorama. La clase conserva fase al pulsar, espera y reanuda con velocidad suave, desacelera para la transición sin recentrar y respeta reduced-motion/limitación de delta. No acredita integración, raycast, encuadre ni QA visual. El root inspecciona `pilot-depth-batched-sabana.json` de esa rama (SHA256 bb6f47da54f0402990a9a37d359f62d834da743503cb606cd0452c01b5b8d5a3): recalcula exactamente 1581 intervalos, máximo99,8ms, nueve>50ms y cero>100ms; conserva un intervalo cero inicial pendiente de explicación instrumental. Inicialización24769,2ms/control28884,4ms, ready/done verdaderos, pending/errors vacíos, cámara/estado lógico registrados intactos y cero voces al handoff. No observa compile-submit>30ms entre206 segmentos; los20 segmentos>30ms registrados son18subidas de textura, far-update44,4ms y draw48,4ms. Es un piloto individual con cuatro campañas CPU históricas vivas, no ABBA, GPU timer ni prueba de regresión global/RAM real. No integrar aún: quedan baseline congelada, picos de uploads/paisaje, pulido y cobertura original. El viento GPU/fases por ID ya existe en crop-batch; reutilizarlo y comprobar brotes/morph/reduced-motion, evitando una segunda deformación.
+
+[Recursos fijos del lote de cultivos, 2026-10-08]: `crop-batch` construye una sola lista de los40 modelos y32 puentes al prepararse, reutilizándola en update/dispose; el origen por defecto también se comparte sin mutarlo. Se eliminan esas dos asignaciones temporales por actualización, sin cambiar API, uniforms, geometría ni datos de plantas. Veintitrés pruebas existentes pasan: corners nativos de40/32, morph/recarga de ocho especies, estabilidad y rangos de buffers, origen/recentrado y liberación de todos los meshes. No se afirma ahorro de tiempo CPU/GPU/FPS ni ausencia de todas las asignaciones del batch. La rama de carga mantiene su fuente congelada para ABBA y recibirá el cambio después, sin contaminar la comparación.
+
+
+[Progreso de descarga y preparación de carga interactiva, 2026-10-08]: requisito
+adicional del usuario enviado al subagente de feature/interactive-loading-screen.
+El progreso ponderado por tiempo debe incluir descarga de assets pendientes,
+descodificación/carga, preparación GPU y mundo. Assets ya en caché aportan cero
+trabajo de descarga; no simular una fase de red. Descargas faltantes aumentan el
+trabajo total estimado, manteniendo progreso monótono y100% solamente tras
+readiness real. Verificar caché fría/caliente/parcial y red lenta, sin descargar
+recursos dos veces para medir. Distinguir observación real de estimaciones cuando
+caché o longitud de transferencia no sean observables. Pendiente de implementación
+y evidencia en rama; no aprobado por mera comunicación del requisito.

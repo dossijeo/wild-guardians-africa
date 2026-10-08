@@ -1,0 +1,72 @@
+{
+  "sourceDirectory": ".cache/qa-current-e461b550/test-results/intensive-parallel-100-1791374253234",
+  "frozenRevision": "e461b5502212fd6116e0cf37d270a2836134438a",
+  "childAmbientGitHead": "c10f77315c92fc78bbac1084ef70be6515157741",
+  "childSourcesMatchFrozenParent": true,
+  "frozenSourceHashesMatch": true,
+  "sourceCount": 291,
+  "currentHead": "cdb822f592e8cdd8ac0fd66cc70e75fea4a47327",
+  "changedSourcesInMain": [
+    "src/app/main.js",
+    "src/audio/ui-audio.js",
+    "src/persistence/snapshots.js",
+    "src/rendering/asset-groups.js",
+    "src/rendering/asset-shadows.js",
+    "src/rendering/crop-batch.js",
+    "src/rendering/native-shadow.js",
+    "src/rendering/scene.js",
+    "src/rendering/terrain-surface.js",
+    "src/rendering/wall-drawing.js",
+    "src/simulation/animal-route-clearance.js",
+    "src/simulation/game.js",
+    "src/simulation/raids.js",
+    "src/simulation/worker-entity-lookup.js",
+    "src/ui/native-hud.js",
+    "src/world/active-region.js",
+    "src/world/fluid-placement.js",
+    "src/world/navigation.js",
+    "public/content/sfx-routing-opus.json",
+    "public/content/sfx-routing.json",
+    "content/manifests/embedded-color-recipes.json",
+    "content/manifests/image-runtime.json",
+    "content/manifests/sfx-runtime.json",
+    "content/manifests/web-assets-verification.json",
+    "content/manifests/web-assets.json",
+    "tools/check_intensive_case.mjs",
+    "tools/intensive-run-provenance.mjs"
+  ],
+  "nativeAuditPassed": true,
+  "summaryRecalculationExact": true,
+  "files": {
+    "process": {
+      "sha256": "31a73a4a4fd0234dc9f2607dd8e308c625d7fcec3bc3875d66b3b6fdecfda4c2",
+      "bytes": 185,
+      "gzipSha256": "122a3cc3746edd7188f20005179d2e91825167737ef8a4d5e7c147b71a0a05c5",
+      "gzipBytes": 150
+    },
+    "report": {
+      "sha256": "e103ca0b7eff233c6389da9bd6a9fb576eb9de04ee9e6295c74a227dfa764ad3",
+      "bytes": 93450,
+      "gzipSha256": "574e152ee11fd92d1bca35750a1fed0d67d016cfa88a88bc3b294ddd7fcc0a7a",
+      "gzipBytes": 18795
+    },
+    "summary": {
+      "sha256": "fbc64fee56a703ed4526ada866d28a7a6fb24137223725ce7d114e6e7bb17234",
+      "bytes": 73180,
+      "gzipSha256": "123d547064f72a181cba196af0581f4d733827744a88bf3907003178de3081ec",
+      "gzipBytes": 17526
+    },
+    "status": {
+      "sha256": "57a321b5b2a8edacb7c8ebdf1a61643675578f38a118eed92881e202179eff39",
+      "bytes": 33300,
+      "gzipSha256": "1f38a13739b51d4882a157c3bec3c1b9adfa17943dbc71ad626e88666b1c0254",
+      "gzipBytes": 14267
+    },
+    "state": {
+      "sha256": "3b685ffc0bb0aae1c8e9381b84ab8278340089d44aa25cbaea5feaf5f8715270",
+      "bytes": 14768103,
+      "gzipSha256": "705d3045375df61e3e23282b5c59172f76006946b9a058149451447a2b10a6c2",
+      "gzipBytes": 1118732
+    }
+  }
+}

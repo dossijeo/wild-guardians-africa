@@ -1,0 +1,97 @@
+{
+  "productionChanged": false,
+  "benchmarkExitCode": 0,
+  "diagnosticExitCode": 0,
+  "input": {
+    "path": "docs/qa/intensive-sabana-musgum-e461b550/state.json.gz",
+    "compressedSha256": "090bc508ca2d6dcd45bc310c322ebb92fd01bb04cffa44bde12fa5af73bf5d39"
+  },
+  "pieces": [
+    {
+      "path": "candidate-navigation.mjs.gz",
+      "source": ".cache/no-crop-epoch-navigation.mjs",
+      "rawBytes": 307,
+      "sha256": "72b018520958e596e5c8e6e58c080820b2469a98aa871e805d1a33949063ea45"
+    },
+    {
+      "path": "benchmark.mjs.gz",
+      "source": ".cache/benchmark-no-crop-epoch.mjs",
+      "rawBytes": 4960,
+      "sha256": "749540c775941743f58334e3f1b0172ca51e06d0454c70938508108bcb3d8a9c"
+    },
+    {
+      "path": "benchmark.json.gz",
+      "source": ".cache/no-crop-epoch-report.json",
+      "rawBytes": 79535,
+      "sha256": "478b14589420d27e96ce8c90003c874de6d5b24a1bff47effa28aab5ff30cebc"
+    },
+    {
+      "path": "diagnosis-generator.mjs.gz",
+      "source": ".cache/diagnose-no-crop-epoch.mjs",
+      "rawBytes": 2400,
+      "sha256": "8a15ebd9b96efab042b8f8bd8533b02d119cc2c55d02a77040e782cf1a84a7a1"
+    },
+    {
+      "path": "diagnosis-runner.mjs.gz",
+      "source": ".cache/no-crop-epoch-diagnostic-run.mjs",
+      "rawBytes": 3753,
+      "sha256": "3edec1e2318bd432592fed3f9e979c36baaed7cead3cee3598bcd363d5997a5c"
+    },
+    {
+      "path": "diagnosis.json.gz",
+      "source": ".cache/no-crop-epoch-diagnosis.json",
+      "rawBytes": 58680354,
+      "sha256": "e72af8f986491db6edcfb2ed04ba546608efc202ca3a31bd66ea9eeed83a72f5"
+    },
+    {
+      "path": "production-navigation.js.gz",
+      "source": "src/world/navigation.js",
+      "rawBytes": 26337,
+      "sha256": "2ed816c61bd0eb4fedcb3b41c1f9c1b9fb71be14b6d1dcdbeb21e5d46253609c"
+    },
+    {
+      "path": "production-game.js.gz",
+      "source": "src/simulation/game.js",
+      "rawBytes": 45371,
+      "sha256": "b931b1e14d23185bdc3709f39718ff6bae13a2ae02bf1033449c11ea3b270078"
+    },
+    {
+      "path": "savanna-profile.json.gz",
+      "source": "public/content/biome-savanna.json",
+      "rawBytes": 21482,
+      "sha256": "adb68fd97b2c45ef681313d4bc3418c3aac76101857391b961521f5cddfc4411"
+    },
+    {
+      "path": "restore-generator.mjs.gz",
+      "source": ".cache/prepare-no-crop-epoch-restore.mjs",
+      "rawBytes": 2698,
+      "sha256": "3e7c0d0a5b4d4a3d5c516a16e8339a533954619a5ac3fd98a07c5a06099da0de"
+    },
+    {
+      "path": "restore.test.mjs.gz",
+      "source": ".cache/no-crop-epoch-restore.test.mjs",
+      "rawBytes": 6877,
+      "sha256": "b5a461384b04a30b5409dd9384828a264fd553ed0ce513305a595915294725bd"
+    },
+    {
+      "path": "production-cache.test.js.gz",
+      "source": "tests/crop-navigation-cache.test.js",
+      "rawBytes": 5146,
+      "sha256": "97222057f38f0ae0de205885767fc2346cf1cd7024f8e963ebd9e1fb6765f6c3"
+    },
+    {
+      "path": "restore-tests.tap.gz",
+      "source": "docs/qa/crop-route-epoch-experiment/restore-tests.tap",
+      "rawBytes": 1439,
+      "sha256": "bbb8fb781d9a82c7fb741350b028398ed399789332b60a0c29e2e54ae213511b"
+    }
+  ],
+  "background": "Four CPU campaigns 35912/49032/41320/41304 confirmed live. Loading agent deferred QA until benchmark terminal. Repair agent says its last Blender ended 3.24 seconds before receiving reservation; reservation was sent after dispatch, so pre-reservation overlap cannot be excluded. Untimed diagnosis is not a benchmark.",
+  "restoreTests": {
+    "exitCode": 0,
+    "passed": 5,
+    "coldPairs": 50,
+    "command": "node --test .cache/no-crop-epoch-restore.test.mjs",
+    "scope": "Native seed712 Sabana/Mapungubwe opening, one paid older woman; real movement before/after cold restore and a fourth paid clear-ground planting during comparison. Four additional native cache/prop/wall/state-replacement contracts adapted from existing production tests, without modifying production tests."
+  }
+}

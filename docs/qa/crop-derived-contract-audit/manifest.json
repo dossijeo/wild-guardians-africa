@@ -1,0 +1,93 @@
+{
+  "status": "diagnostic, .75 candidate still rejected",
+  "sourceCommit": "25210ffcbc9d1850429d513e6534b1cf2c5409a7",
+  "mainAuditCommit": "ca259c8936bfae80f38b1826b602193861f4b593",
+  "tab": 777,
+  "sourceHashes": {
+    "tests/browser/frontside-crop-visual.js": "d02b2481d0fb11c8d5ec8e655676fb803ecd5039a3008a1e30fa8b197d5530cd",
+    "tools/lib/frontside-derived-stem.mjs": "ea8500cf35ae7d0c91c1c5539caf41598c12a0041f6e0ebb44b949caa489f965",
+    "tools/lib/frontside-source-draw-audit.mjs": "913afd13209a2e116885b6a1dc7f20a603345ea70e6e6c660af880d09a7e80f8",
+    "tools/lib/frontside-source-texture-state.mjs": "ceee843774314f200dcd93e3b9fe543bc2c9c6f5112658fd0ade99088de58042",
+    "tools/lib/frontside-crop-contract-audit.mjs": "9f13c61d6bf0d64110b7c37885476a8e7fd967cef79d9d032b33f4050e1c4ba3",
+    "tools/frontside_crop_contract_compare.mjs": "9c8f80427ae537aa8d4b84912d2186b8f0b2f920376b8554ffd4003e89d48e28"
+  },
+  "trainingViews": 1,
+  "promoted": false,
+  "gpuBenchmark": false,
+  "backgroundCampaignPidsObserved": [
+    20024,
+    49032,
+    41320,
+    41304
+  ],
+  "url": "http://localhost:5284/tests/browser/frontside-crop-visual.html?blenderStemReduction&derivedContractAudit&limit=1&cpuCampaigns=20024%2F49032%2F41320%2F41304-active",
+  "worldAndTabClosed": true,
+  "pieces": [
+    {
+      "path": "report.json.gz",
+      "gzip": true,
+      "rawBytes": 1731431,
+      "sha256": "93fe1c792aadb079a658e9fe35dfe7bb76fcca4a4184aaa773cd3087ec82316f"
+    },
+    {
+      "path": "console.json.gz",
+      "gzip": true,
+      "rawBytes": 2,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "browser.png",
+      "gzip": false,
+      "rawBytes": 69288,
+      "sha256": "787dd286b898d54bc473b7c7134fd669628ba6bc6be15b69301e57e9d9302a70"
+    },
+    {
+      "path": "comparison.png",
+      "gzip": false,
+      "rawBytes": 689005,
+      "sha256": "076d02793042aeaf8a89c3912907122c29db4cf61f4742abd5b122e45065c8b1"
+    },
+    {
+      "path": "frontside-crop-visual.js.gz",
+      "gzip": true,
+      "rawBytes": 29743,
+      "sha256": "d02b2481d0fb11c8d5ec8e655676fb803ecd5039a3008a1e30fa8b197d5530cd"
+    },
+    {
+      "path": "frontside-derived-stem.mjs.gz",
+      "gzip": true,
+      "rawBytes": 4054,
+      "sha256": "ea8500cf35ae7d0c91c1c5539caf41598c12a0041f6e0ebb44b949caa489f965"
+    },
+    {
+      "path": "frontside-source-draw-audit.mjs.gz",
+      "gzip": true,
+      "rawBytes": 5089,
+      "sha256": "913afd13209a2e116885b6a1dc7f20a603345ea70e6e6c660af880d09a7e80f8"
+    },
+    {
+      "path": "frontside-source-texture-state.mjs.gz",
+      "gzip": true,
+      "rawBytes": 2707,
+      "sha256": "ceee843774314f200dcd93e3b9fe543bc2c9c6f5112658fd0ade99088de58042"
+    },
+    {
+      "path": "frontside-crop-contract-audit.mjs.gz",
+      "gzip": true,
+      "rawBytes": 3272,
+      "sha256": "9f13c61d6bf0d64110b7c37885476a8e7fd967cef79d9d032b33f4050e1c4ba3"
+    },
+    {
+      "path": "frontside_crop_contract_compare.mjs.gz",
+      "gzip": true,
+      "rawBytes": 2990,
+      "sha256": "9c8f80427ae537aa8d4b84912d2186b8f0b2f920376b8554ffd4003e89d48e28"
+    },
+    {
+      "path": "analysis.json.gz",
+      "gzip": true,
+      "rawBytes": 6057,
+      "sha256": "9cdae7f8d73b57ee5aac822594171563becb0fc58ba78bd6d6ff6e98e924d378"
+    }
+  ]
+}

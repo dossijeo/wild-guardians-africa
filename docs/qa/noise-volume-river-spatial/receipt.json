@@ -1,0 +1,103 @@
+{
+  "capturedAt": "2026-10-08T05:56:46.936Z",
+  "baseGitHead": "33a768539336266f34c12eb2e507317b8f4800d2",
+  "url": "http://localhost:5183/tests/browser/african-toon.html?case=6&noise-volume-single-exit=1",
+  "tab": "776",
+  "biome": "gran-rio",
+  "culture": "mapungubwe",
+  "sourceHashes": {
+    "tests/browser/african-toon.html": "d62e027cfefec0a55ef76cf85d437d7eb9f2694ea4deb3a7d79b11ae9478eb66",
+    "tests/browser/noise-spatial-review.js": "d294cff1f039756cc74bbca3eedcce683c3d6ee33adc6d91c28503c73e43fd99",
+    "tests/browser/noise-spatial-metrics.js": "5cd6d2c2b8998d67932ac1f7441f44eb6d0243955b273d56fa3e90e4a9ab6eee",
+    "tests/browser/noise-volume.js": "99b7ad665794a700ab8a2a564d3c7ca527c0b7493fc039c51d2c5202011b3329"
+  },
+  "sourceHashesStableThroughExport": true,
+  "rawReportSha256": "1a2a3e5c969e6446769f1a7f512e37e5c493dc30739fb710ff01c05fdc778c38",
+  "files": {
+    "report.json.gz": {
+      "bytes": 31139,
+      "sha256": "a3838963c175d32a7caedc12ab52ef387f7af98a3b71397da4951159e5e42e40"
+    },
+    "console.json": {
+      "bytes": 2760,
+      "sha256": "692e3e97a1e786c817ad49fb703c74866201f99fb6ec541d21ddb61886b60c62"
+    },
+    "negative-day-analytic.png": {
+      "bytes": 239707,
+      "sha256": "1ec3c73f30dd32ab33e4706d3fbbedb14de335280c34499f93b3b7395c480187"
+    },
+    "negative-day-volume.png": {
+      "bytes": 239707,
+      "sha256": "1ec3c73f30dd32ab33e4706d3fbbedb14de335280c34499f93b3b7395c480187"
+    },
+    "crops-dusk-analytic.png": {
+      "bytes": 197748,
+      "sha256": "ff6ab0cbbc35a5b88201a40a69adb3b69f8bdcb82d679bdacc9e577bb187f72e"
+    },
+    "crops-dusk-volume.png": {
+      "bytes": 197724,
+      "sha256": "51a4c26b1d18e2305c3dcbf96a253623f8163fab005508f657a07e51e6f578fb"
+    },
+    "actors-night-analytic.png": {
+      "bytes": 136352,
+      "sha256": "e5b6c6c54c4602b650daa7f5aa6571d0c6edfc5721ebae5dfba27bc545dbe73c"
+    },
+    "actors-night-volume.png": {
+      "bytes": 136400,
+      "sha256": "ee7e18eb954852dd820aca9e8f5b1cdcc4ea4146c671e0aa255974a60618a278"
+    }
+  },
+  "comparisons": {
+    "A1/A2": {
+      "groups": 60,
+      "changedGroups": 43,
+      "maxChangedPixels": 49,
+      "maxTileMae": 0.005131740196078431,
+      "maxError": 112,
+      "maxAlphaDifferences": 0
+    },
+    "A2/B1": {
+      "groups": 60,
+      "changedGroups": 48,
+      "maxChangedPixels": 104764,
+      "maxTileMae": 0.005918096405228758,
+      "maxError": 80,
+      "maxAlphaDifferences": 0
+    },
+    "B1/B2": {
+      "groups": 60,
+      "changedGroups": 41,
+      "maxChangedPixels": 20,
+      "maxTileMae": 0.003880718954248366,
+      "maxError": 47,
+      "maxAlphaDifferences": 0
+    },
+    "B2/A3": {
+      "groups": 60,
+      "changedGroups": 48,
+      "maxChangedPixels": 104762,
+      "maxTileMae": 0.005918096405228758,
+      "maxError": 137,
+      "maxAlphaDifferences": 0
+    },
+    "A2/A3": {
+      "groups": 60,
+      "changedGroups": 40,
+      "maxChangedPixels": 55,
+      "maxTileMae": 0.004866217320261438,
+      "maxError": 137,
+      "maxAlphaDifferences": 0
+    }
+  },
+  "promoted": false,
+  "gpuTiming": false,
+  "backgroundCampaignPidsObserved": [
+    20024,
+    49032,
+    41320,
+    41304
+  ],
+  "directedTests": 7,
+  "worldAndTabClosed": true,
+  "scope": "Authored visual fixture, medium/shadows, fixed elapsed, single-exit QA noise helper. Screenshot selections after restored runner change explicit phase/camera and are not new state-equality proofs. No framebuffer images saved, no mobile or all-biome acceptance; full report retains per-frame hashes and descriptive comparisons."
+}

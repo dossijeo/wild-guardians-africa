@@ -1,0 +1,146 @@
+{
+  "version": 1,
+  "dimensions": [
+    2048,
+    512
+  ],
+  "tileDimensions": [
+    960,
+    240
+  ],
+  "padding": [
+    32,
+    8
+  ],
+  "bytes": 826140,
+  "atlasSha256": "ff8bf010ed3bc84eeaf86b464a7cabff99cba656121d198d300232a7bd151ed1",
+  "versions": {
+    "sharp": "0.35.5",
+    "vips": "8.18.7",
+    "webp": "1.6.0"
+  },
+  "limit": "Four populated candidate cells; native composition and cross-variant mip filtering still pending.",
+  "sourceAssets": [
+    {
+      "cell": 0,
+      "source": "assets-source/far-backdrops-hq/canyons-isolated-v5.png",
+      "sourceSha256": "9f471670ee9e89c4e2e2a84adcd146b7c77f25f2ca756d3a725cd8799bf357de",
+      "crop": {
+        "left": 0,
+        "top": 181,
+        "width": 2172,
+        "height": 543
+      },
+      "tile": [
+        32,
+        8,
+        960,
+        240
+      ],
+      "uv": [
+        0.015625,
+        0.515625,
+        0.484375,
+        0.984375
+      ],
+      "baseline": 0.001841620626151013,
+      "extremeVisible": 0
+    },
+    {
+      "cell": 1,
+      "source": "assets-source/far-backdrops-hq/canyons-ridge-b-v1.png",
+      "sourceSha256": "880637aed31cc975b1e4f426a38205504802d814c79897dd05db568899277b89",
+      "crop": {
+        "left": 0,
+        "top": 181,
+        "width": 2172,
+        "height": 543
+      },
+      "tile": [
+        1056,
+        8,
+        960,
+        240
+      ],
+      "uv": [
+        0.515625,
+        0.515625,
+        0.984375,
+        0.984375
+      ],
+      "baseline": 0.001841620626151013,
+      "extremeVisible": 0
+    },
+    {
+      "cell": 2,
+      "source": "assets-source/far-backdrops-hq/canyons-ridge-c-v1.png",
+      "sourceSha256": "409e6a7efd4bf847e13f086ca488134abcd82dc5c14e7829b0f53e8c200faf20",
+      "crop": {
+        "left": 0,
+        "top": 181,
+        "width": 2172,
+        "height": 543
+      },
+      "tile": [
+        32,
+        264,
+        960,
+        240
+      ],
+      "uv": [
+        0.015625,
+        0.015625,
+        0.484375,
+        0.484375
+      ],
+      "baseline": 0.001841620626151013,
+      "extremeVisible": 0
+    },
+    {
+      "cell": 3,
+      "source": "assets-source/far-backdrops-hq/canyons-ridge-d-v2.png",
+      "sourceSha256": "0b435e0bcb6c1bc8c57941ac51a41e0d8c0fc5cae0367f0a592d90df27bb5555",
+      "heightScale": 1.1634615384615385,
+      "crop": {
+        "left": 0,
+        "top": 181,
+        "width": 2172,
+        "height": 543
+      },
+      "tile": [
+        1056,
+        264,
+        960,
+        240
+      ],
+      "uv": [
+        0.515625,
+        0.015625,
+        0.984375,
+        0.484375
+      ],
+      "baseline": 0.001841620626151013,
+      "extremeVisible": 1,
+      "interiorSaturated": 1,
+      "interiorColorExamples": [
+        {
+          "x": 1820,
+          "y": 632,
+          "rgba": [
+            244,
+            136,
+            83,
+            253
+          ],
+          "minimumAlpha": 253
+        }
+      ]
+    }
+  ],
+  "assets": [
+    {
+      "biome": "canyons",
+      "file": "atlas.webp"
+    }
+  ]
+}

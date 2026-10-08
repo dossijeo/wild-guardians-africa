@@ -32,9 +32,10 @@ export function updateNativeShadowUniforms(uniforms,renderer,light){
 }
 
 export function installNativeShadow(renderer,light,uniforms){
-  const map=renderer.shadowMap,original=map.render,cache=new ShadowCache();
+  let map=renderer.shadowMap,original=map.render;const cache=new ShadowCache();
   const canvas=renderer.domElement,reset=()=>cache.invalidate();
-  canvas?.addEventListener('webglcontextlost',reset);canvas?.addEventListener('webglcontextrestored',reset);
+  const restore=()=>{reset();const next=renderer.shadowMap;if(next===map)return;if(map.render===render)map.render=original;map=next;original=map.render;map.render=render;};
+  canvas?.addEventListener('webglcontextlost',reset);canvas?.addEventListener('webglcontextrestored',restore);
   function render(lights,scene,camera){
     const active=map.enabled&&(map.autoUpdate||map.needsUpdate)&&lights.includes(light)&&light.castShadow&&(light.shadow.autoUpdate||light.shadow.needsUpdate);
     if(!active){updateNativeShadowUniforms(uniforms,renderer,light);return original.call(this,lights,scene,camera);}
@@ -51,7 +52,7 @@ export function installNativeShadow(renderer,light,uniforms){
     finally{if(renderer.renderBufferDirect===draw)renderer.renderBufferDirect=originalDraw;for(const [material,saved] of materials)[material.polygonOffset,material.polygonOffsetFactor,material.polygonOffsetUnits]=saved;updateNativeShadowUniforms(uniforms,renderer,light);}
   }
   map.render=render;let released=false;
-  const release=()=>{if(released)return;released=true;canvas?.removeEventListener('webglcontextlost',reset);canvas?.removeEventListener('webglcontextrestored',reset);cache.invalidate();if(map.render===render)map.render=original;uniforms.uNativeShadowOn.value=0;uniforms.uNativeShadowFiltered.value=null;uniforms.fallback.dispose();};
+  const release=()=>{if(released)return;released=true;canvas?.removeEventListener('webglcontextlost',reset);canvas?.removeEventListener('webglcontextrestored',restore);cache.invalidate();if(map.render===render)map.render=original;uniforms.uNativeShadowOn.value=0;uniforms.uNativeShadowFiltered.value=null;uniforms.fallback.dispose();};
   release.cache=cache;return release;
 }
 

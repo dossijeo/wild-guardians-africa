@@ -1,0 +1,26 @@
+- main:
+  - generic "Mundo de Wild Guardians Africa"
+  - img "Reloj solar"
+  - generic: 07:49
+  - img "Dinero"
+  - generic: 1,5K
+  - generic "0/100 noches superadas":
+    - img "Supervivencia"
+    - generic: Día 1
+  - button "Abrir menú de pausa"
+  - navigation "Acciones de la granja":
+    - button "Volver":
+      - generic: Volver
+    - button "Construir":
+      - generic: Construir
+    - button "Cultivar":
+      - generic: Cultivar
+    - button "Magia":
+      - generic: Magia
+  - complementary
+  - complementary
+  - region "El Espíritu":
+    - img "El Espíritu"
+    - paragraph: "Toda cosecha necesita un hogar. Elige Centro de trabajo en Construir: 800 monedas para alzarlo en suelo libre junto al poblado, donde señala mi mano. Desde allí se ordenarán las tareas; allí volverán las cajas de cosecha."
+    - button "Continuar":
+    - button "Cerrar": ×

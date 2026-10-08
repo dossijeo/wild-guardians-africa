@@ -1,0 +1,643 @@
+{
+  "reports": [
+    {
+      "mode": "legacy",
+      "candidate": false,
+      "frames": [
+        {
+          "count": 8,
+          "calls": {
+            "compileShader": 2,
+            "linkProgram": 1,
+            "bufferData": 6,
+            "bufferSubData": 0,
+            "texImage2D": 0,
+            "texSubImage2D": 0,
+            "texImage3D": 0,
+            "texSubImage3D": 0,
+            "drawCompiles": [
+              {
+                "links": 1,
+                "object": "",
+                "material": "MeshBasicMaterial",
+                "uniforms": [],
+                "metadata": [],
+                "colorWrite": true,
+                "camera": "PerspectiveCamera"
+              }
+            ]
+          },
+          "requests": {
+            "requests": 6,
+            "requestedBytes": 1384,
+            "replacedBytes": 0,
+            "deletedBytes": 0,
+            "liveBytes": 1384,
+            "peakBytes": 1384,
+            "unattributed": 0,
+            "liveBuffers": 6,
+            "scope": "Observed bufferData requests minus replacement/deleteBuffer calls, after probe installation. WebGL errors are not polled. Excludes textures, programs, driver caches, JavaScript heap, earlier allocations and implicit context-loss release. Binding queries add QA overhead; do not use this run for frametime comparisons."
+          },
+          "geometries": 1
+        },
+        {
+          "count": 9,
+          "calls": {
+            "compileShader": 0,
+            "linkProgram": 0,
+            "bufferData": 6,
+            "bufferSubData": 0,
+            "texImage2D": 0,
+            "texSubImage2D": 0,
+            "texImage3D": 0,
+            "texSubImage3D": 0,
+            "drawCompiles": []
+          },
+          "requests": {
+            "requests": 12,
+            "requestedBytes": 3312,
+            "replacedBytes": 0,
+            "deletedBytes": 1384,
+            "liveBytes": 1928,
+            "peakBytes": 1928,
+            "unattributed": 0,
+            "liveBuffers": 6,
+            "scope": "Observed bufferData requests minus replacement/deleteBuffer calls, after probe installation. WebGL errors are not polled. Excludes textures, programs, driver caches, JavaScript heap, earlier allocations and implicit context-loss release. Binding queries add QA overhead; do not use this run for frametime comparisons."
+          },
+          "geometries": 1
+        },
+        {
+          "count": 17,
+          "calls": {
+            "compileShader": 0,
+            "linkProgram": 0,
+            "bufferData": 6,
+            "bufferSubData": 0,
+            "texImage2D": 0,
+            "texSubImage2D": 0,
+            "texImage3D": 0,
+            "texSubImage3D": 0,
+            "drawCompiles": []
+          },
+          "requests": {
+            "requests": 18,
+            "requestedBytes": 6328,
+            "replacedBytes": 0,
+            "deletedBytes": 3312,
+            "liveBytes": 3016,
+            "peakBytes": 3016,
+            "unattributed": 0,
+            "liveBuffers": 6,
+            "scope": "Observed bufferData requests minus replacement/deleteBuffer calls, after probe installation. WebGL errors are not polled. Excludes textures, programs, driver caches, JavaScript heap, earlier allocations and implicit context-loss release. Binding queries add QA overhead; do not use this run for frametime comparisons."
+          },
+          "geometries": 1
+        },
+        {
+          "count": 4,
+          "calls": {
+            "compileShader": 0,
+            "linkProgram": 0,
+            "bufferData": 6,
+            "bufferSubData": 0,
+            "texImage2D": 0,
+            "texSubImage2D": 0,
+            "texImage3D": 0,
+            "texSubImage3D": 0,
+            "drawCompiles": []
+          },
+          "requests": {
+            "requests": 24,
+            "requestedBytes": 7712,
+            "replacedBytes": 0,
+            "deletedBytes": 6328,
+            "liveBytes": 1384,
+            "peakBytes": 3016,
+            "unattributed": 0,
+            "liveBuffers": 6,
+            "scope": "Observed bufferData requests minus replacement/deleteBuffer calls, after probe installation. WebGL errors are not polled. Excludes textures, programs, driver caches, JavaScript heap, earlier allocations and implicit context-loss release. Binding queries add QA overhead; do not use this run for frametime comparisons."
+          },
+          "geometries": 1
+        },
+        {
+          "count": 8,
+          "calls": {
+            "compileShader": 0,
+            "linkProgram": 0,
+            "bufferData": 0,
+            "bufferSubData": 2,
+            "texImage2D": 0,
+            "texSubImage2D": 0,
+            "texImage3D": 0,
+            "texSubImage3D": 0,
+            "drawCompiles": []
+          },
+          "requests": {
+            "requests": 24,
+            "requestedBytes": 7712,
+            "replacedBytes": 0,
+            "deletedBytes": 6328,
+            "liveBytes": 1384,
+            "peakBytes": 3016,
+            "unattributed": 0,
+            "liveBuffers": 6,
+            "scope": "Observed bufferData requests minus replacement/deleteBuffer calls, after probe installation. WebGL errors are not polled. Excludes textures, programs, driver caches, JavaScript heap, earlier allocations and implicit context-loss release. Binding queries add QA overhead; do not use this run for frametime comparisons."
+          },
+          "geometries": 1
+        },
+        {
+          "count": 9,
+          "calls": {
+            "compileShader": 0,
+            "linkProgram": 0,
+            "bufferData": 6,
+            "bufferSubData": 0,
+            "texImage2D": 0,
+            "texSubImage2D": 0,
+            "texImage3D": 0,
+            "texSubImage3D": 0,
+            "drawCompiles": []
+          },
+          "requests": {
+            "requests": 30,
+            "requestedBytes": 9640,
+            "replacedBytes": 0,
+            "deletedBytes": 7712,
+            "liveBytes": 1928,
+            "peakBytes": 3016,
+            "unattributed": 0,
+            "liveBuffers": 6,
+            "scope": "Observed bufferData requests minus replacement/deleteBuffer calls, after probe installation. WebGL errors are not polled. Excludes textures, programs, driver caches, JavaScript heap, earlier allocations and implicit context-loss release. Binding queries add QA overhead; do not use this run for frametime comparisons."
+          },
+          "geometries": 1
+        },
+        {
+          "count": 4,
+          "calls": {
+            "compileShader": 0,
+            "linkProgram": 0,
+            "bufferData": 6,
+            "bufferSubData": 0,
+            "texImage2D": 0,
+            "texSubImage2D": 0,
+            "texImage3D": 0,
+            "texSubImage3D": 0,
+            "drawCompiles": []
+          },
+          "requests": {
+            "requests": 36,
+            "requestedBytes": 11024,
+            "replacedBytes": 0,
+            "deletedBytes": 9640,
+            "liveBytes": 1384,
+            "peakBytes": 3016,
+            "unattributed": 0,
+            "liveBuffers": 6,
+            "scope": "Observed bufferData requests minus replacement/deleteBuffer calls, after probe installation. WebGL errors are not polled. Excludes textures, programs, driver caches, JavaScript heap, earlier allocations and implicit context-loss release. Binding queries add QA overhead; do not use this run for frametime comparisons."
+          },
+          "geometries": 1
+        }
+      ],
+      "after": {
+        "requests": 36,
+        "requestedBytes": 11024,
+        "replacedBytes": 0,
+        "deletedBytes": 11024,
+        "liveBytes": 0,
+        "peakBytes": 3016,
+        "unattributed": 0,
+        "liveBuffers": 0,
+        "scope": "Observed bufferData requests minus replacement/deleteBuffer calls, after probe installation. WebGL errors are not polled. Excludes textures, programs, driver caches, JavaScript heap, earlier allocations and implicit context-loss release. Binding queries add QA overhead; do not use this run for frametime comparisons."
+      },
+      "geometries": 0,
+      "resizeStats": null
+    },
+    {
+      "mode": "production",
+      "candidate": false,
+      "frames": [
+        {
+          "count": 8,
+          "calls": {
+            "compileShader": 2,
+            "linkProgram": 1,
+            "bufferData": 6,
+            "bufferSubData": 0,
+            "texImage2D": 0,
+            "texSubImage2D": 0,
+            "texImage3D": 0,
+            "texSubImage3D": 0,
+            "drawCompiles": [
+              {
+                "links": 1,
+                "object": "",
+                "material": "MeshBasicMaterial",
+                "uniforms": [],
+                "metadata": [],
+                "colorWrite": true,
+                "camera": "PerspectiveCamera"
+              }
+            ]
+          },
+          "requests": {
+            "requests": 42,
+            "requestedBytes": 12408,
+            "replacedBytes": 0,
+            "deletedBytes": 11024,
+            "liveBytes": 1384,
+            "peakBytes": 3016,
+            "unattributed": 0,
+            "liveBuffers": 6,
+            "scope": "Observed bufferData requests minus replacement/deleteBuffer calls, after probe installation. WebGL errors are not polled. Excludes textures, programs, driver caches, JavaScript heap, earlier allocations and implicit context-loss release. Binding queries add QA overhead; do not use this run for frametime comparisons."
+          },
+          "geometries": 1
+        },
+        {
+          "count": 9,
+          "calls": {
+            "compileShader": 0,
+            "linkProgram": 0,
+            "bufferData": 2,
+            "bufferSubData": 0,
+            "texImage2D": 0,
+            "texSubImage2D": 0,
+            "texImage3D": 0,
+            "texSubImage3D": 0,
+            "drawCompiles": []
+          },
+          "requests": {
+            "requests": 44,
+            "requestedBytes": 13496,
+            "replacedBytes": 0,
+            "deletedBytes": 11568,
+            "liveBytes": 1928,
+            "peakBytes": 3016,
+            "unattributed": 0,
+            "liveBuffers": 6,
+            "scope": "Observed bufferData requests minus replacement/deleteBuffer calls, after probe installation. WebGL errors are not polled. Excludes textures, programs, driver caches, JavaScript heap, earlier allocations and implicit context-loss release. Binding queries add QA overhead; do not use this run for frametime comparisons."
+          },
+          "geometries": 1
+        },
+        {
+          "count": 17,
+          "calls": {
+            "compileShader": 0,
+            "linkProgram": 0,
+            "bufferData": 2,
+            "bufferSubData": 0,
+            "texImage2D": 0,
+            "texSubImage2D": 0,
+            "texImage3D": 0,
+            "texSubImage3D": 0,
+            "drawCompiles": []
+          },
+          "requests": {
+            "requests": 46,
+            "requestedBytes": 15672,
+            "replacedBytes": 0,
+            "deletedBytes": 12656,
+            "liveBytes": 3016,
+            "peakBytes": 3016,
+            "unattributed": 0,
+            "liveBuffers": 6,
+            "scope": "Observed bufferData requests minus replacement/deleteBuffer calls, after probe installation. WebGL errors are not polled. Excludes textures, programs, driver caches, JavaScript heap, earlier allocations and implicit context-loss release. Binding queries add QA overhead; do not use this run for frametime comparisons."
+          },
+          "geometries": 1
+        },
+        {
+          "count": 4,
+          "calls": {
+            "compileShader": 0,
+            "linkProgram": 0,
+            "bufferData": 2,
+            "bufferSubData": 0,
+            "texImage2D": 0,
+            "texSubImage2D": 0,
+            "texImage3D": 0,
+            "texSubImage3D": 0,
+            "drawCompiles": []
+          },
+          "requests": {
+            "requests": 48,
+            "requestedBytes": 16216,
+            "replacedBytes": 0,
+            "deletedBytes": 14832,
+            "liveBytes": 1384,
+            "peakBytes": 3016,
+            "unattributed": 0,
+            "liveBuffers": 6,
+            "scope": "Observed bufferData requests minus replacement/deleteBuffer calls, after probe installation. WebGL errors are not polled. Excludes textures, programs, driver caches, JavaScript heap, earlier allocations and implicit context-loss release. Binding queries add QA overhead; do not use this run for frametime comparisons."
+          },
+          "geometries": 1
+        },
+        {
+          "count": 8,
+          "calls": {
+            "compileShader": 0,
+            "linkProgram": 0,
+            "bufferData": 0,
+            "bufferSubData": 2,
+            "texImage2D": 0,
+            "texSubImage2D": 0,
+            "texImage3D": 0,
+            "texSubImage3D": 0,
+            "drawCompiles": []
+          },
+          "requests": {
+            "requests": 48,
+            "requestedBytes": 16216,
+            "replacedBytes": 0,
+            "deletedBytes": 14832,
+            "liveBytes": 1384,
+            "peakBytes": 3016,
+            "unattributed": 0,
+            "liveBuffers": 6,
+            "scope": "Observed bufferData requests minus replacement/deleteBuffer calls, after probe installation. WebGL errors are not polled. Excludes textures, programs, driver caches, JavaScript heap, earlier allocations and implicit context-loss release. Binding queries add QA overhead; do not use this run for frametime comparisons."
+          },
+          "geometries": 1
+        },
+        {
+          "count": 9,
+          "calls": {
+            "compileShader": 0,
+            "linkProgram": 0,
+            "bufferData": 2,
+            "bufferSubData": 0,
+            "texImage2D": 0,
+            "texSubImage2D": 0,
+            "texImage3D": 0,
+            "texSubImage3D": 0,
+            "drawCompiles": []
+          },
+          "requests": {
+            "requests": 50,
+            "requestedBytes": 17304,
+            "replacedBytes": 0,
+            "deletedBytes": 15376,
+            "liveBytes": 1928,
+            "peakBytes": 3016,
+            "unattributed": 0,
+            "liveBuffers": 6,
+            "scope": "Observed bufferData requests minus replacement/deleteBuffer calls, after probe installation. WebGL errors are not polled. Excludes textures, programs, driver caches, JavaScript heap, earlier allocations and implicit context-loss release. Binding queries add QA overhead; do not use this run for frametime comparisons."
+          },
+          "geometries": 1
+        },
+        {
+          "count": 4,
+          "calls": {
+            "compileShader": 0,
+            "linkProgram": 0,
+            "bufferData": 2,
+            "bufferSubData": 0,
+            "texImage2D": 0,
+            "texSubImage2D": 0,
+            "texImage3D": 0,
+            "texSubImage3D": 0,
+            "drawCompiles": []
+          },
+          "requests": {
+            "requests": 52,
+            "requestedBytes": 17848,
+            "replacedBytes": 0,
+            "deletedBytes": 16464,
+            "liveBytes": 1384,
+            "peakBytes": 3016,
+            "unattributed": 0,
+            "liveBuffers": 6,
+            "scope": "Observed bufferData requests minus replacement/deleteBuffer calls, after probe installation. WebGL errors are not polled. Excludes textures, programs, driver caches, JavaScript heap, earlier allocations and implicit context-loss release. Binding queries add QA overhead; do not use this run for frametime comparisons."
+          },
+          "geometries": 1
+        }
+      ],
+      "after": {
+        "requests": 52,
+        "requestedBytes": 17848,
+        "replacedBytes": 0,
+        "deletedBytes": 17848,
+        "liveBytes": 0,
+        "peakBytes": 3016,
+        "unattributed": 0,
+        "liveBuffers": 0,
+        "scope": "Observed bufferData requests minus replacement/deleteBuffer calls, after probe installation. WebGL errors are not polled. Excludes textures, programs, driver caches, JavaScript heap, earlier allocations and implicit context-loss release. Binding queries add QA overhead; do not use this run for frametime comparisons."
+      },
+      "geometries": 0,
+      "resizeStats": null
+    },
+    {
+      "mode": "candidate",
+      "candidate": true,
+      "frames": [
+        {
+          "count": 8,
+          "calls": {
+            "compileShader": 2,
+            "linkProgram": 1,
+            "bufferData": 6,
+            "bufferSubData": 0,
+            "texImage2D": 0,
+            "texSubImage2D": 0,
+            "texImage3D": 0,
+            "texSubImage3D": 0,
+            "drawCompiles": [
+              {
+                "links": 1,
+                "object": "",
+                "material": "MeshBasicMaterial",
+                "uniforms": [],
+                "metadata": [],
+                "colorWrite": true,
+                "camera": "PerspectiveCamera"
+              }
+            ]
+          },
+          "requests": {
+            "requests": 58,
+            "requestedBytes": 19232,
+            "replacedBytes": 0,
+            "deletedBytes": 17848,
+            "liveBytes": 1384,
+            "peakBytes": 3016,
+            "unattributed": 0,
+            "liveBuffers": 6,
+            "scope": "Observed bufferData requests minus replacement/deleteBuffer calls, after probe installation. WebGL errors are not polled. Excludes textures, programs, driver caches, JavaScript heap, earlier allocations and implicit context-loss release. Binding queries add QA overhead; do not use this run for frametime comparisons."
+          },
+          "geometries": 1
+        },
+        {
+          "count": 9,
+          "calls": {
+            "compileShader": 0,
+            "linkProgram": 0,
+            "bufferData": 2,
+            "bufferSubData": 0,
+            "texImage2D": 0,
+            "texSubImage2D": 0,
+            "texImage3D": 0,
+            "texSubImage3D": 0,
+            "drawCompiles": []
+          },
+          "requests": {
+            "requests": 60,
+            "requestedBytes": 20320,
+            "replacedBytes": 0,
+            "deletedBytes": 18392,
+            "liveBytes": 1928,
+            "peakBytes": 3016,
+            "unattributed": 0,
+            "liveBuffers": 6,
+            "scope": "Observed bufferData requests minus replacement/deleteBuffer calls, after probe installation. WebGL errors are not polled. Excludes textures, programs, driver caches, JavaScript heap, earlier allocations and implicit context-loss release. Binding queries add QA overhead; do not use this run for frametime comparisons."
+          },
+          "geometries": 1
+        },
+        {
+          "count": 17,
+          "calls": {
+            "compileShader": 0,
+            "linkProgram": 0,
+            "bufferData": 2,
+            "bufferSubData": 0,
+            "texImage2D": 0,
+            "texSubImage2D": 0,
+            "texImage3D": 0,
+            "texSubImage3D": 0,
+            "drawCompiles": []
+          },
+          "requests": {
+            "requests": 62,
+            "requestedBytes": 22496,
+            "replacedBytes": 0,
+            "deletedBytes": 19480,
+            "liveBytes": 3016,
+            "peakBytes": 3016,
+            "unattributed": 0,
+            "liveBuffers": 6,
+            "scope": "Observed bufferData requests minus replacement/deleteBuffer calls, after probe installation. WebGL errors are not polled. Excludes textures, programs, driver caches, JavaScript heap, earlier allocations and implicit context-loss release. Binding queries add QA overhead; do not use this run for frametime comparisons."
+          },
+          "geometries": 1
+        },
+        {
+          "count": 4,
+          "calls": {
+            "compileShader": 0,
+            "linkProgram": 0,
+            "bufferData": 2,
+            "bufferSubData": 0,
+            "texImage2D": 0,
+            "texSubImage2D": 0,
+            "texImage3D": 0,
+            "texSubImage3D": 0,
+            "drawCompiles": []
+          },
+          "requests": {
+            "requests": 64,
+            "requestedBytes": 23040,
+            "replacedBytes": 0,
+            "deletedBytes": 21656,
+            "liveBytes": 1384,
+            "peakBytes": 3016,
+            "unattributed": 0,
+            "liveBuffers": 6,
+            "scope": "Observed bufferData requests minus replacement/deleteBuffer calls, after probe installation. WebGL errors are not polled. Excludes textures, programs, driver caches, JavaScript heap, earlier allocations and implicit context-loss release. Binding queries add QA overhead; do not use this run for frametime comparisons."
+          },
+          "geometries": 1
+        },
+        {
+          "count": 8,
+          "calls": {
+            "compileShader": 0,
+            "linkProgram": 0,
+            "bufferData": 0,
+            "bufferSubData": 2,
+            "texImage2D": 0,
+            "texSubImage2D": 0,
+            "texImage3D": 0,
+            "texSubImage3D": 0,
+            "drawCompiles": []
+          },
+          "requests": {
+            "requests": 64,
+            "requestedBytes": 23040,
+            "replacedBytes": 0,
+            "deletedBytes": 21656,
+            "liveBytes": 1384,
+            "peakBytes": 3016,
+            "unattributed": 0,
+            "liveBuffers": 6,
+            "scope": "Observed bufferData requests minus replacement/deleteBuffer calls, after probe installation. WebGL errors are not polled. Excludes textures, programs, driver caches, JavaScript heap, earlier allocations and implicit context-loss release. Binding queries add QA overhead; do not use this run for frametime comparisons."
+          },
+          "geometries": 1
+        },
+        {
+          "count": 9,
+          "calls": {
+            "compileShader": 0,
+            "linkProgram": 0,
+            "bufferData": 2,
+            "bufferSubData": 0,
+            "texImage2D": 0,
+            "texSubImage2D": 0,
+            "texImage3D": 0,
+            "texSubImage3D": 0,
+            "drawCompiles": []
+          },
+          "requests": {
+            "requests": 66,
+            "requestedBytes": 24128,
+            "replacedBytes": 0,
+            "deletedBytes": 22200,
+            "liveBytes": 1928,
+            "peakBytes": 3016,
+            "unattributed": 0,
+            "liveBuffers": 6,
+            "scope": "Observed bufferData requests minus replacement/deleteBuffer calls, after probe installation. WebGL errors are not polled. Excludes textures, programs, driver caches, JavaScript heap, earlier allocations and implicit context-loss release. Binding queries add QA overhead; do not use this run for frametime comparisons."
+          },
+          "geometries": 1
+        },
+        {
+          "count": 4,
+          "calls": {
+            "compileShader": 0,
+            "linkProgram": 0,
+            "bufferData": 2,
+            "bufferSubData": 0,
+            "texImage2D": 0,
+            "texSubImage2D": 0,
+            "texImage3D": 0,
+            "texSubImage3D": 0,
+            "drawCompiles": []
+          },
+          "requests": {
+            "requests": 68,
+            "requestedBytes": 24672,
+            "replacedBytes": 0,
+            "deletedBytes": 23288,
+            "liveBytes": 1384,
+            "peakBytes": 3016,
+            "unattributed": 0,
+            "liveBuffers": 6,
+            "scope": "Observed bufferData requests minus replacement/deleteBuffer calls, after probe installation. WebGL errors are not polled. Excludes textures, programs, driver caches, JavaScript heap, earlier allocations and implicit context-loss release. Binding queries add QA overhead; do not use this run for frametime comparisons."
+          },
+          "geometries": 1
+        }
+      ],
+      "after": {
+        "requests": 68,
+        "requestedBytes": 24672,
+        "replacedBytes": 0,
+        "deletedBytes": 24672,
+        "liveBytes": 0,
+        "peakBytes": 3016,
+        "unattributed": 0,
+        "liveBuffers": 0,
+        "scope": "Observed bufferData requests minus replacement/deleteBuffer calls, after probe installation. WebGL errors are not polled. Excludes textures, programs, driver caches, JavaScript heap, earlier allocations and implicit context-loss release. Binding queries add QA overhead; do not use this run for frametime comparisons."
+      },
+      "geometries": 0,
+      "resizeStats": {
+        "attempts": 5,
+        "transferred": 5,
+        "rejected": 0
+      }
+    }
+  ],
+  "error": 0,
+  "scope": "Actual Three.js/WebGL buffer disposal for isolated box groups. Not WorldScene image quality or GPU timing."
+}

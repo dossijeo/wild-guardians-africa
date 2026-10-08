@@ -1,0 +1,55 @@
+TAP version 13
+# Subtest: exclusion withholds all groups for selected mesh only in the real depth target
+ok 1 - exclusion withholds all groups for selected mesh only in the real depth target
+  ---
+  duration_ms: 3.7425
+  ...
+# Subtest: observer restores original method and preserves errors from render or draw
+ok 2 - observer restores original method and preserves errors from render or draw
+  ---
+  duration_ms: 1.0087
+  ...
+# Subtest: missing selector is reported with zero skips; invalid selectors cannot install a hook
+ok 3 - missing selector is reported with zero skips; invalid selectors cannot install a hook
+  ---
+  duration_ms: 0.5196
+  ...
+# Subtest: GL bottom-origin pixel centers map to the geometry ray and preserve state
+ok 4 - GL bottom-origin pixel centers map to the geometry ray and preserve state
+  ---
+  duration_ms: 8.5091
+  ...
+# Subtest: invisible subtrees, disabled depth, transparent surfaces and empty instances are excluded
+ok 5 - invisible subtrees, disabled depth, transparent surfaces and empty instances are excluded
+  ---
+  duration_ms: 2.5475
+  ...
+# Subtest: alpha surfaces remain candidates and bounded queries reject invalid inputs
+ok 6 - alpha surfaces remain candidates and bounded queries reject invalid inputs
+  ---
+  duration_ms: 1.344
+  ...
+# Subtest: geometry beyond the camera clip planes cannot be a candidate
+ok 7 - geometry beyond the camera clip planes cannot be a candidate
+  ---
+  duration_ms: 0.7269
+  ...
+# Subtest: depth observation retains the original callback and restores it on failure
+ok 8 - depth observation retains the original callback and restores it on failure
+  ---
+  duration_ms: 3.8925
+  ...
+# Subtest: comparison distinguishes draw order, buffers and transforms while reporting bounded differences
+ok 9 - comparison distinguishes draw order, buffers and transforms while reporting bounded differences
+  ---
+  duration_ms: 1.134
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 248.4665

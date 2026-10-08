@@ -1,0 +1,356 @@
+{
+  "base": "65fb911404b7d7bc91ad708c5820f298209f49a3",
+  "url": "http://127.0.0.1:5173/tests/browser/depth-capture.html?biome=volcanes&culture=mapungubwe",
+  "width": 1280,
+  "height": 720,
+  "errors": [],
+  "pairs": [
+    {
+      "pair": "N1/N2",
+      "differentPixels": 0,
+      "maxDepthDelta": 0,
+      "submissionStateSame": true,
+      "leftDraws": 67,
+      "rightDraws": 67
+    },
+    {
+      "pair": "N2/G",
+      "differentPixels": 0,
+      "maxDepthDelta": 0,
+      "submissionStateSame": false,
+      "leftDraws": 67,
+      "rightDraws": 67
+    },
+    {
+      "pair": "G/B1",
+      "differentPixels": 0,
+      "maxDepthDelta": 0,
+      "submissionStateSame": false,
+      "leftDraws": 67,
+      "rightDraws": 67
+    },
+    {
+      "pair": "N2/B1",
+      "differentPixels": 0,
+      "maxDepthDelta": 0,
+      "submissionStateSame": false,
+      "leftDraws": 67,
+      "rightDraws": 67
+    },
+    {
+      "pair": "B1/B2",
+      "differentPixels": 12,
+      "maxDepthDelta": 0.00001996755599975586,
+      "submissionStateSame": true,
+      "leftDraws": 67,
+      "rightDraws": 67
+    },
+    {
+      "pair": "B2/N3",
+      "differentPixels": 12,
+      "maxDepthDelta": 0.00001996755599975586,
+      "submissionStateSame": false,
+      "leftDraws": 67,
+      "rightDraws": 67
+    },
+    {
+      "pair": "N2/N3",
+      "differentPixels": 0,
+      "maxDepthDelta": 0,
+      "submissionStateSame": true,
+      "leftDraws": 67,
+      "rightDraws": 67
+    }
+  ],
+  "exclusion": {
+    "objects": 67,
+    "probedPixels": 8,
+    "controlPixelsIdentical": true,
+    "affected": [
+      {
+        "object": "e6c47b08-81ea-4f6b-ab4c-09f7c70ffc48",
+        "name": "",
+        "geometry": "fb33f297-02a5-48b6-85f6-3011806f91dc",
+        "type": "MeshStandardMaterial",
+        "map": "a11f9d8f-4c4e-485c-81f5-396254774fdb",
+        "alphaTest": 0.35,
+        "skipped": 1,
+        "pixels": [
+          {
+            "x": 512,
+            "y": 628,
+            "rgba": [
+              255,
+              197,
+              205,
+              0
+            ],
+            "changed": true
+          },
+          {
+            "x": 513,
+            "y": 628,
+            "rgba": [
+              255,
+              197,
+              155,
+              0
+            ],
+            "changed": true
+          },
+          {
+            "x": 514,
+            "y": 628,
+            "rgba": [
+              255,
+              197,
+              103,
+              0
+            ],
+            "changed": true
+          },
+          {
+            "x": 515,
+            "y": 628,
+            "rgba": [
+              255,
+              197,
+              49,
+              0
+            ],
+            "changed": true
+          },
+          {
+            "x": 513,
+            "y": 629,
+            "rgba": [
+              255,
+              199,
+              165,
+              0
+            ],
+            "changed": true
+          },
+          {
+            "x": 591,
+            "y": 656,
+            "rgba": [
+              255,
+              214,
+              139,
+              0
+            ],
+            "changed": false
+          },
+          {
+            "x": 592,
+            "y": 656,
+            "rgba": [
+              255,
+              214,
+              144,
+              0
+            ],
+            "changed": false
+          },
+          {
+            "x": 593,
+            "y": 656,
+            "rgba": [
+              255,
+              214,
+              149,
+              0
+            ],
+            "changed": false
+          }
+        ]
+      },
+      {
+        "object": "228b336c-2cae-42df-9736-4f9f9baf7ce9",
+        "name": "",
+        "geometry": "e3dccb12-22d9-41ff-8f0f-327b86f44bf1",
+        "type": "MeshStandardMaterial",
+        "map": "a11f9d8f-4c4e-485c-81f5-396254774fdb",
+        "alphaTest": 0.35,
+        "skipped": 1,
+        "pixels": [
+          {
+            "x": 512,
+            "y": 628,
+            "rgba": [
+              255,
+              194,
+              116,
+              0
+            ],
+            "changed": false
+          },
+          {
+            "x": 513,
+            "y": 628,
+            "rgba": [
+              255,
+              194,
+              134,
+              0
+            ],
+            "changed": false
+          },
+          {
+            "x": 514,
+            "y": 628,
+            "rgba": [
+              255,
+              194,
+              152,
+              0
+            ],
+            "changed": false
+          },
+          {
+            "x": 515,
+            "y": 628,
+            "rgba": [
+              255,
+              194,
+              170,
+              0
+            ],
+            "changed": false
+          },
+          {
+            "x": 513,
+            "y": 629,
+            "rgba": [
+              255,
+              194,
+              204,
+              0
+            ],
+            "changed": false
+          },
+          {
+            "x": 591,
+            "y": 656,
+            "rgba": [
+              255,
+              215,
+              73,
+              0
+            ],
+            "changed": true
+          },
+          {
+            "x": 592,
+            "y": 656,
+            "rgba": [
+              255,
+              215,
+              73,
+              0
+            ],
+            "changed": true
+          },
+          {
+            "x": 593,
+            "y": 656,
+            "rgba": [
+              255,
+              215,
+              72,
+              0
+            ],
+            "changed": true
+          }
+        ]
+      }
+    ]
+  },
+  "files": [
+    {
+      "source": ".cache/depth-exclusion-native/comparison.json",
+      "archive": "comparison.json.gz",
+      "bytes": 35016,
+      "sha256": "0685cce91a14cebef4d874d0450f32c9a8c21db56d75aa720755d0ab518bde0b"
+    },
+    {
+      "source": ".cache/depth-exclusion-native/exclusions.json",
+      "archive": "exclusions.json.gz",
+      "bytes": 184156,
+      "sha256": "1fc98408365238a2b2feaca3e41ecc3eaa54e285c149bdcb6fe08326de5a0639"
+    },
+    {
+      "source": ".cache/depth-exclusion-native/candidates.json",
+      "archive": "candidates.json.gz",
+      "bytes": 206043,
+      "sha256": "76aacf7dc104cf0345ae59a5b9c1b30797abb948561748b5ce4cdb81e614cb99"
+    },
+    {
+      "source": ".cache/depth-exclusion-native/context.png",
+      "archive": "context.png",
+      "bytes": 181545,
+      "sha256": "cd701714e1f41f829e0f3ca2b1b8a6a4c3e0f854df0b7c50980e09b08edb5bec"
+    },
+    {
+      "source": ".cache/depth-exclusion-tests.log",
+      "archive": "directed-tests.log",
+      "bytes": 2060,
+      "sha256": "c55f8a2e4c7282a1cfe2320d592c0dc3bb1acd3156f9095765d5d3d8e244b829"
+    },
+    {
+      "source": ".cache/depth-exclusion-syntax.json",
+      "archive": "syntax.json",
+      "bytes": 253,
+      "sha256": "23a55d4964e6c67d8b8a3b28a05c6da8cddd1ea2ecc99e990d1fcd720875f094"
+    },
+    {
+      "source": "tests/browser/depth-capture.html",
+      "archive": "depth-capture.html.gz",
+      "bytes": 31107,
+      "sha256": "212af9c6bde88b8f6a8b9509698ad55b6d0772f684a3dc6500a28d2499f6274b"
+    },
+    {
+      "source": "tests/browser/depth-draw-exclusion.js",
+      "archive": "depth-draw-exclusion.js.gz",
+      "bytes": 784,
+      "sha256": "d2a3f7825f4bb113f9fc3bcdeb1e4acd846aebb311f35e389a3c83a15c581c6f"
+    },
+    {
+      "source": "tests/browser/depth-submission-state.js",
+      "archive": "depth-submission-state.js.gz",
+      "bytes": 2165,
+      "sha256": "ffd498445fa9277015216b48485311dbae9a16418591ddffbdc9af83b4beee0a"
+    },
+    {
+      "source": "tests/browser/depth-pixel-candidates.js",
+      "archive": "depth-pixel-candidates.js.gz",
+      "bytes": 2367,
+      "sha256": "11bbd4a6dca5dd0bbfee101a6ee5d13a57db51095a05cf0b88f27554fab45877"
+    },
+    {
+      "source": "tests/browser/single-pass-alpha-depth.js",
+      "archive": "single-pass-alpha-depth.js.gz",
+      "bytes": 861,
+      "sha256": "6b5de715325f94c11ede16381c61ea2b2b65cca49786772570005e605c2fef4e"
+    },
+    {
+      "source": "tests/depth-draw-exclusion.test.js",
+      "archive": "depth-draw-exclusion.test.js.gz",
+      "bytes": 2308,
+      "sha256": "56b289143ea20f529474ae1e00cb4cca171e8333babc52c3f74680934ea9dae6"
+    },
+    {
+      "source": "src/rendering/standard-depth.js",
+      "archive": "standard-depth.js.gz",
+      "bytes": 5574,
+      "sha256": "b65c8d7399d506855fcb64e0b3abf7b4b924459949b16f8d0852427ce5af848b"
+    },
+    {
+      "source": "src/rendering/depth-capture.js",
+      "archive": "depth-capture.js.gz",
+      "bytes": 4790,
+      "sha256": "3f758cf0db8363032668d6ee68021133df0a658b3feac4bdf1ef13784bb0cf01"
+    }
+  ]
+}

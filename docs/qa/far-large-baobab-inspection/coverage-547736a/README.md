@@ -1,0 +1,9 @@
+# Fixed-pose baobab representation isolation
+
+Source 547736a, Sabana / Mapungubwe / medium, selected tree `0:-6:-4`, slot 2. QA `path-focus=tree` releases terrain-following constraints to retain an analytic camera targeting the crown at 140 m horizontal distance. This is not an acceptance run of the normal camera. The native representation is already prepared; both owned banks report LOD 2.
+
+Eight images/reports preserve exactly the same eye and target. Coverage selector temporarily forces native (1e6..1e6+1), sprite (0..0.01), or restores configured blend (120..160). Readiness, identities, transforms, resource/packing generations and logical range are not changed. Changing the selector affects the selected species, not only one tree. Unprepared trees retain their sprite fallback; the identified tree is ready in all cases. No runtime default is changed.
+
+The model-only and sprite-only day/night pairs expose a contour and color mismatch, with fuller/softer crown under angular interpolation. Nearest-view sprite is closer in some regions, but this does not establish interpolation as the sole cause; the 50% blend still reveals the screen-door pattern. Fixed camera elevation is about 0.789 degrees relative to crown center; the atlas was baked at 8 degrees. That difference and nonuniform scale need controlled isolation before attributing cause. Native procedural `tint` is not consumed by the rendering path either, so it is not treated as a demonstrated missing sprite effect.
+
+All eight reports have the same camera/target, readiness 1 for the identified tree, empty application errors and GL error 0. Final restored-night case retains the configured 50% blend and night factor 1. Console log is archived separately. These are counterexamples, not visual acceptance or FPS evidence. Current shader/atlas remain experimental and OFF in normal gameplay.

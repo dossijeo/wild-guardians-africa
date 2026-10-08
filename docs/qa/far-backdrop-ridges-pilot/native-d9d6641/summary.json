@@ -1,0 +1,98 @@
+{
+  "runtimeSource": "8b8a931",
+  "baselineFixture": "232a36d",
+  "candidateFixture": "d9d6641",
+  "cameraAndTargetExact": true,
+  "results": [
+    {
+      "variant": "baseline",
+      "phase": "day",
+      "camera": [
+        51.54259579985163,
+        14.02192278906814,
+        14.848751295665068
+      ],
+      "cameraTarget": [
+        -3.2975246797573448,
+        4.129705485134101,
+        -19.426324004090553
+      ],
+      "night": 0,
+      "errors": [],
+      "webglError": 0,
+      "render": {
+        "calls": 65,
+        "triangles": 718574
+      },
+      "backdropPilot": false
+    },
+    {
+      "variant": "baseline",
+      "phase": "night",
+      "camera": [
+        51.54259579985163,
+        14.02192278906814,
+        14.848751295665068
+      ],
+      "cameraTarget": [
+        -3.2975246797573448,
+        4.129705485134101,
+        -19.426324004090553
+      ],
+      "night": 1,
+      "errors": [],
+      "webglError": 0,
+      "render": {
+        "calls": 65,
+        "triangles": 718574
+      },
+      "backdropPilot": false
+    },
+    {
+      "variant": "ridges18",
+      "phase": "day",
+      "camera": [
+        51.54259579985163,
+        14.02192278906814,
+        14.848751295665068
+      ],
+      "cameraTarget": [
+        -3.2975246797573448,
+        4.129705485134101,
+        -19.426324004090553
+      ],
+      "night": 0,
+      "errors": [],
+      "webglError": 0,
+      "render": {
+        "calls": 65,
+        "triangles": 718574
+      },
+      "backdropPilot": true
+    },
+    {
+      "variant": "ridges18",
+      "phase": "night",
+      "camera": [
+        51.54259579985163,
+        14.02192278906814,
+        14.848751295665068
+      ],
+      "cameraTarget": [
+        -3.2975246797573448,
+        4.129705485134101,
+        -19.426324004090553
+      ],
+      "night": 1,
+      "errors": [],
+      "webglError": 0,
+      "render": {
+        "calls": 65,
+        "triangles": 718574
+      },
+      "backdropPilot": true
+    }
+  ],
+  "visualAccepted": false,
+  "reason": "18 ridges improve skyline variation but remain broad trapezoids; identified baobab dither remains. No production asset replacement or GPU timing claim."
+}

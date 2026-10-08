@@ -1,0 +1,28 @@
+{
+  "base": "112a53c8",
+  "productionChanged": false,
+  "command": "node --cpu-prof --cpu-prof-dir=.cache/navigation-cpu-diagnostic --cpu-prof-name=native-farms.cpuprofile tools/benchmark_late_farm_terrain_height.mjs . . .cache/navigation-cpu-diagnostic/control.json",
+  "scope": "Four archived victories, two identical current-code worlds per case. Sampling CPU diagnostic only; no candidate or GPU benchmark.",
+  "pieces": [
+    {
+      "path": "profile.cpuprofile.gz",
+      "rawBytes": 758041,
+      "rawSha256": "764a60d527f523bb5535239c723d54c07d88d57cca4caed5ffce07a2247f1cdb"
+    },
+    {
+      "path": "control.json.gz",
+      "rawBytes": 154544,
+      "rawSha256": "45bce6187e4a3bef699c8d79e5d398ca1fd2290383833590c81c09311287b1c3"
+    },
+    {
+      "path": "tick-summary.json.gz",
+      "rawBytes": 30256,
+      "rawSha256": "4629631db965cec7100962ccf400364f727b009c3631dc99b831e42c8a47821c"
+    },
+    {
+      "path": "analyzer.mjs.gz",
+      "rawBytes": 2077,
+      "rawSha256": "dcb80b104852731542fe3817e36455b108d89d9ec4708463e4047803c7cb3f6e"
+    }
+  ]
+}

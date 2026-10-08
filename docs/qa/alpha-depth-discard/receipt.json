@@ -1,0 +1,350 @@
+{
+  "base": "0575f07e542a62853a5b12a580194add68c14691",
+  "url": "http://127.0.0.1:5173/tests/browser/depth-capture.html?biome=volcanes&culture=mapungubwe&probeAssetGroup=18%3A2&alphaDiscard=on",
+  "scope": "Same-context uniform discard isolation; off changes silhouettes. Not GPU timing or production adoption.",
+  "cases": [
+    {
+      "name": "on-before",
+      "errors": [],
+      "width": 1280,
+      "height": 720,
+      "alphaDiscard": {
+        "enabled": true,
+        "uniform": 1,
+        "wrappedMaterials": 38,
+        "compileCallbacks": 57
+      },
+      "pairs": [
+        {
+          "pair": "N1/N2",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "N2/G",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "G/B1",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "N2/B1",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "B1/B2",
+          "pixels": 7,
+          "maxDepthDelta": 0.00001996755599975586
+        },
+        {
+          "pair": "B2/N3",
+          "pixels": 7,
+          "maxDepthDelta": 0.00001996755599975586
+        },
+        {
+          "pair": "N2/N3",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        }
+      ]
+    },
+    {
+      "name": "on-probe",
+      "errors": [],
+      "width": 1280,
+      "height": 720,
+      "alphaDiscard": {
+        "enabled": true,
+        "uniform": 1,
+        "wrappedMaterials": 38,
+        "compileCallbacks": 57
+      },
+      "pairs": [
+        {
+          "pair": "N1/N2",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "N2/G",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "G/B1",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "N2/B1",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "B1/B2",
+          "pixels": 7,
+          "maxDepthDelta": 0.00001996755599975586
+        },
+        {
+          "pair": "B2/N3",
+          "pixels": 7,
+          "maxDepthDelta": 0.00001996755599975586
+        },
+        {
+          "pair": "N2/N3",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        }
+      ]
+    },
+    {
+      "name": "off-before",
+      "errors": [],
+      "width": 1280,
+      "height": 720,
+      "alphaDiscard": {
+        "enabled": false,
+        "uniform": 0,
+        "wrappedMaterials": 38,
+        "compileCallbacks": 57
+      },
+      "pairs": [
+        {
+          "pair": "N1/N2",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "N2/G",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "G/B1",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "N2/B1",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "B1/B2",
+          "pixels": 7,
+          "maxDepthDelta": 0.00001996755599975586
+        },
+        {
+          "pair": "B2/N3",
+          "pixels": 7,
+          "maxDepthDelta": 0.00001996755599975586
+        },
+        {
+          "pair": "N2/N3",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        }
+      ]
+    },
+    {
+      "name": "off-probe",
+      "errors": [],
+      "width": 1280,
+      "height": 720,
+      "alphaDiscard": {
+        "enabled": false,
+        "uniform": 0,
+        "wrappedMaterials": 38,
+        "compileCallbacks": 57
+      },
+      "pairs": [
+        {
+          "pair": "N1/N2",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "N2/G",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "G/B1",
+          "pixels": 12,
+          "maxDepthDelta": 0.00001996755599975586
+        },
+        {
+          "pair": "N2/B1",
+          "pixels": 12,
+          "maxDepthDelta": 0.00001996755599975586
+        },
+        {
+          "pair": "B1/B2",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "B2/N3",
+          "pixels": 12,
+          "maxDepthDelta": 0.00001996755599975586
+        },
+        {
+          "pair": "N2/N3",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        }
+      ]
+    },
+    {
+      "name": "on-restored",
+      "errors": [],
+      "width": 1280,
+      "height": 720,
+      "alphaDiscard": {
+        "enabled": true,
+        "uniform": 1,
+        "wrappedMaterials": 38,
+        "compileCallbacks": 57
+      },
+      "pairs": [
+        {
+          "pair": "N1/N2",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "N2/G",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "G/B1",
+          "pixels": 7,
+          "maxDepthDelta": 0.00001996755599975586
+        },
+        {
+          "pair": "N2/B1",
+          "pixels": 7,
+          "maxDepthDelta": 0.00001996755599975586
+        },
+        {
+          "pair": "B1/B2",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "B2/N3",
+          "pixels": 7,
+          "maxDepthDelta": 0.00001996755599975586
+        },
+        {
+          "pair": "N2/N3",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        }
+      ]
+    }
+  ],
+  "files": [
+    {
+      "source": ".cache/depth-discard/on-before.json",
+      "archive": "on-before.json.gz",
+      "bytes": 39575,
+      "sha256": "938fcf6dbf4816809446b1f5845af597b7d5dfab3e1fdd4aa7fe0537a60054ac"
+    },
+    {
+      "source": ".cache/depth-discard/on-probe.json",
+      "archive": "on-probe.json.gz",
+      "bytes": 302604,
+      "sha256": "9b4d358f9bba30e1f3a33cc5e00d9f0610aedceeda0aa94e088fb0285c986d4c"
+    },
+    {
+      "source": ".cache/depth-discard/off-before.json",
+      "archive": "off-before.json.gz",
+      "bytes": 39573,
+      "sha256": "33fabed8dbb68862c7705c9881a99459e63caff72cf8c7813bb2bccb34926f65"
+    },
+    {
+      "source": ".cache/depth-discard/off-probe.json",
+      "archive": "off-probe.json.gz",
+      "bytes": 305883,
+      "sha256": "f31508759c2640ddf8e6d0d718362c60976c49dfb225cfe78d8e3aba489cf77e"
+    },
+    {
+      "source": ".cache/depth-discard/on-restored.json",
+      "archive": "on-restored.json.gz",
+      "bytes": 41871,
+      "sha256": "48422fac1e97290dd6f241b1c5f74660094de74adaae63c14668b73d55bf96f4"
+    },
+    {
+      "source": ".cache/depth-discard/console.json",
+      "archive": "console.json.gz",
+      "bytes": 2,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "source": ".cache/depth-discard/on.png",
+      "archive": "on.png",
+      "bytes": 200646,
+      "sha256": "d953483eb936a1521077e3afb91b2da73c440d8f6d23f3fe0b68581c8b6c0821"
+    },
+    {
+      "source": ".cache/depth-discard/off.png",
+      "archive": "off.png",
+      "bytes": 200583,
+      "sha256": "2f0a601f650583aef83bfe51a9c86992173f2a67b7fe38e280a3e3fbf3176d56"
+    },
+    {
+      "source": ".cache/depth-discard/tests.log",
+      "archive": "tests.log.gz",
+      "bytes": 4855,
+      "sha256": "be37c55cda0d68e177d42c83fb7c4dd3b7ff0a4f1d7cf5a15e1e09e200e73697"
+    },
+    {
+      "source": ".cache/depth-discard/syntax.json",
+      "archive": "syntax.json.gz",
+      "bytes": 27607,
+      "sha256": "32f194378630ab5c22fbccae68c7dde56315bbe5ee829216a8849a425f4d9e4e"
+    },
+    {
+      "source": "tests/browser/alpha-discard.js",
+      "archive": "alpha-discard.js.gz",
+      "bytes": 2689,
+      "sha256": "ae170b0aebac0496dd013bc1db7ebdee126041b69a4f58a41c5a54559568f4c4"
+    },
+    {
+      "source": "tests/alpha-discard.test.js",
+      "archive": "alpha-discard.test.js.gz",
+      "bytes": 3197,
+      "sha256": "a707bd3abe83340b4d51d6d8a3ab9ab2a7457d38213f87d1f9d9995e9e501ec3"
+    },
+    {
+      "source": "tests/browser/depth-capture.html",
+      "archive": "depth-capture.html.gz",
+      "bytes": 34790,
+      "sha256": "7ce26c5640a80c7f380f03153ed7cfc41ff338ed6079cbe526ad3fd72d157afa"
+    },
+    {
+      "source": "tests/browser/depth-gpu-state.js",
+      "archive": "depth-gpu-state.js.gz",
+      "bytes": 4989,
+      "sha256": "c2143113ee24f31ac3944e987d8d284929e0e847a96e25c7b7457ebacc8686dd"
+    },
+    {
+      "source": "src/rendering/standard-depth.js",
+      "archive": "standard-depth.js.gz",
+      "bytes": 5574,
+      "sha256": "b65c8d7399d506855fcb64e0b3abf7b4b924459949b16f8d0852427ce5af848b"
+    },
+    {
+      "source": "src/rendering/depth-recipes.js",
+      "archive": "depth-recipes.js.gz",
+      "bytes": 911,
+      "sha256": "8a4fff986eef87f820ce33852ae475e758315169d64897d2b863ecefef27426a"
+    }
+  ]
+}

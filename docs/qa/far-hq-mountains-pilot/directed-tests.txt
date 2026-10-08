@@ -1,0 +1,154 @@
+TAP version 13
+# Subtest: decorative backdrop follows authored terrain height with bounded parallax and borrows its atlas
+ok 1 - decorative backdrop follows authored terrain height with bounded parallax and borrows its atlas
+  ---
+  duration_ms: 14.6694
+  ...
+# Subtest: invalid backdrop fog mix rejects before mutating the scene or texture
+ok 2 - invalid backdrop fog mix rejects before mutating the scene or texture
+  ---
+  duration_ms: 1.5001
+  ...
+# Subtest: decorative fog uses the shared atmosphere palette through the day/night transition
+ok 3 - decorative fog uses the shared atmosphere palette through the day/night transition
+  ---
+  duration_ms: 3.5679
+  ...
+# Subtest: optional backdrop base grading preserves one atlas/draw and rejects unsafe settings before scene mutation
+ok 4 - optional backdrop base grading preserves one atlas/draw and rejects unsafe settings before scene mutation
+  ---
+  duration_ms: 2.8433
+  ...
+# Subtest: mirrored panorama joins both cylinder ends with identical texels and no additional sampler or geometry
+ok 5 - mirrored panorama joins both cylinder ends with identical texels and no additional sampler or geometry
+  ---
+  duration_ms: 4.8388
+  ...
+# (node:41756) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: integrated quality changes reuse owned adapters and atlas resources within the prepared extent
+ok 6 - integrated quality changes reuse owned adapters and atlas resources within the prepared extent
+  ---
+  duration_ms: 12.1556
+  ...
+# Subtest: attachment loads only selected biome resources and releases them once on world close
+ok 7 - attachment loads only selected biome resources and releases them once on world close
+  ---
+  duration_ms: 0.9348
+  ...
+# Subtest: atmosphere options reach the biome adapter and invalid distances allocate no resources
+ok 8 - atmosphere options reach the biome adapter and invalid distances allocate no resources
+  ---
+  duration_ms: 1.6294
+  ...
+# Subtest: late texture arriving after attachment cancellation is immediately released
+ok 9 - late texture arriving after attachment cancellation is immediately released
+  ---
+  duration_ms: 19.8793
+  ...
+# Subtest: late prepared species is disposed after world close without double-releasing earlier textures
+ok 10 - late prepared species is disposed after world close without double-releasing earlier textures
+  ---
+  duration_ms: 3.4747
+  ...
+# Subtest: configured visual radius is reversible on disable/dispose and validated before resource loading
+ok 11 - configured visual radius is reversible on disable/dispose and validated before resource loading
+  ---
+  duration_ms: 1.7366
+  ...
+# Subtest: visual-only radius retains loaded radius ownership and restores both preceding values
+ok 12 - visual-only radius retains loaded radius ownership and restores both preceding values
+  ---
+  duration_ms: 1.1662
+  ...
+# Subtest: prop transition circle is owned and restored independently of exact terrain residency
+ok 13 - prop transition circle is owned and restored independently of exact terrain residency
+  ---
+  duration_ms: 2.1064
+  ...
+# Subtest: closing the biome owner releases native upload cache listeners before disposing its atlas textures
+ok 14 - closing the biome owner releases native upload cache listeners before disposing its atlas textures
+  ---
+  duration_ms: 8.0297
+  ...
+# Subtest: late GPU callback cannot resurrect closed owner or disturb replacement false
+ok 15 - late GPU callback cannot resurrect closed owner or disturb replacement false
+  ---
+  duration_ms: 2.844
+  ...
+# Subtest: late GPU callback cannot resurrect closed owner or disturb replacement true
+ok 16 - late GPU callback cannot resurrect closed owner or disturb replacement true
+  ---
+  duration_ms: 2.5929
+  ...
+# Subtest: faithful impostors remain exact until the atmospheric far landscape and distances stay configurable
+ok 17 - faithful impostors remain exact until the atmospheric far landscape and distances stay configurable
+  ---
+  duration_ms: 11.9317
+  ...
+# Subtest: far ground is independently configurable without changing exact terrain ownership
+ok 18 - far ground is independently configurable without changing exact terrain ownership
+  ---
+  duration_ms: 1.9811
+  ...
+# Subtest: logical native prewarm stays opt-in and invalid options allocate no atlas
+ok 19 - logical native prewarm stays opt-in and invalid options allocate no atlas
+  ---
+  duration_ms: 1.3214
+  ...
+# Subtest: seed changes invalidate the whole far owner and release borrowed preparations once
+ok 20 - seed changes invalidate the whole far owner and release borrowed preparations once
+  ---
+  duration_ms: 0.6259
+  ...
+# Subtest: texture storage estimates use loaded atlas dimensions rather than a uniform species size
+ok 21 - texture storage estimates use loaded atlas dimensions rather than a uniform species size
+  ---
+  duration_ms: 0.6111
+  ...
+# Subtest: landscape composition forwards existing backdrop controls without altering atlas ownership
+ok 22 - landscape composition forwards existing backdrop controls without altering atlas ownership
+  ---
+  duration_ms: 1.3509
+  ...
+# Subtest: runtime metadata selects linear premultiplied atlases without changing unmarked species
+ok 23 - runtime metadata selects linear premultiplied atlases without changing unmarked species
+  ---
+  duration_ms: 3.9431
+  ...
+# Subtest: authored large-tree policy preserves the native color transition envelope and rejects invalid policy before assets
+ok 24 - authored large-tree policy preserves the native color transition envelope and rejects invalid policy before assets
+  ---
+  duration_ms: 5.8149
+  ...
+# (node:47612) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: original desert framing is rejected rather than cutting 52 runtime-visible pixels
+ok 25 - original desert framing is rejected rather than cutting 52 runtime-visible pixels
+  ---
+  duration_ms: 100.5878
+  ...
+# Subtest: imagegen-reframed desert retains every visible peak under a proportional 4:1 crop
+ok 26 - imagegen-reframed desert retains every visible peak under a proportional 4:1 crop
+  ---
+  duration_ms: 71.3014
+  ...
+# Subtest: all five untouched original biome sources fit the same no-distortion crop
+ok 27 - all five untouched original biome sources fit the same no-distortion crop
+  ---
+  duration_ms: 364.7783
+  ...
+# Subtest: unsafe dimensions and malformed RGBA input fail closed
+ok 28 - unsafe dimensions and malformed RGBA input fail closed
+  ---
+  duration_ms: 0.7491
+  ...
+1..28
+# tests 28
+# suites 0
+# pass 28
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1022.1093

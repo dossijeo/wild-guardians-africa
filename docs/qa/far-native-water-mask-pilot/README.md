@@ -1,0 +1,9 @@
+# Native ground with independent water coverage — source 803f9a43
+
+Explicit QA flags native-water-mask=1, ground-color-step=4, ground-step=32, ground-seam=1. Sabana/Mapungubwe/media with small trees90–120m and authored large trees200–240m, bounded16m preload plus immutable-size exception. The native material keeps biome tile/toon treatment and micro/detail disabled. A fragment alpha read from the existing regional4m map determines water independently of the2125-vertex proxy mesh. Its water RGB is uniform profile color rather than a mixture of land vertex colors. No additional land geometry or shadows are added.
+
+The2088-vertex edge bridge has explicit vertex RGB/up-normal/zero-water attributes; map RGB is sampled bilinearly only when a discrete adopted rectangle changes. Fragment alpha determines water for both surfaces. Native shader warming uses the live world scene to preserve lighting/recipe; Basic-only seams retain isolated warming. Owned attribute bytes are counted (125184 in this case), not driver RAM. The regional mask estimates remain188356CPU bytes /250452mip GPU bytes; the existing renderer receives one extra fragment alpha read in this opt-in native route.
+
+Fixed220m day/night camera identical. The river stretches absent in the per-vertex native control reappear without increasing the ground mesh; the thin blue edge is covered in these retained captures. GL0/errors[]; four known ANGLE environment4 potentially-uninitialized warnings are retained in logs. The target is ready1.
+
+This is limited coverage evidence, not all-biome or transient-motion acceptance. Water remains matte/cyan, backdrop is a simple band, and tree dither remains visible. No CPU/GPU timings: root suite was active. User acceptance of sprite overhead is separate from these concrete visual limitations. Defaults remain unchanged pending profile integration and review.

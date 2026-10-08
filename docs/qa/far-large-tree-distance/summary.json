@@ -1,0 +1,818 @@
+{
+  "source": "6fd4ee0",
+  "accepted": false,
+  "globalDistancePilot": true,
+  "records": [
+    {
+      "camera": [
+        143.20690623333192,
+        24.25234832156285,
+        -46.973626642559324
+      ],
+      "cameraTarget": [
+        -76.79309376666808,
+        22.078297822406093,
+        -46.97362664255934
+      ],
+      "coverageMode": "blend",
+      "night": 0,
+      "render": {
+        "calls": 72,
+        "triangles": 1542467
+      },
+      "layers": [
+        {
+          "slot": 0,
+          "key": "96:0",
+          "trees": 635,
+          "ready": 192,
+          "preparations": 21,
+          "coverage": 23,
+          "prepared": 23,
+          "stale": 5,
+          "attempts": 27,
+          "fenced": 22,
+          "rejectedPacking": 1,
+          "signatureChanges": 10,
+          "packingChanges": 45,
+          "textureUploads": 0,
+          "cachedTextures": 110,
+          "standby": {
+            "cancelledPreparations": 0,
+            "preparations": 55,
+            "rendered": 119,
+            "trees": 236,
+            "estimatedOwnedGpuBytes": 3106008,
+            "errors": []
+          },
+          "errors": []
+        },
+        {
+          "slot": 1,
+          "key": "96:0",
+          "trees": 370,
+          "ready": 108,
+          "preparations": 15,
+          "coverage": 9,
+          "prepared": 9,
+          "stale": 6,
+          "attempts": 22,
+          "fenced": 16,
+          "rejectedPacking": 1,
+          "signatureChanges": 18,
+          "packingChanges": 32,
+          "textureUploads": 0,
+          "cachedTextures": 80,
+          "standby": {
+            "cancelledPreparations": 0,
+            "preparations": 51,
+            "rendered": 73,
+            "trees": 127,
+            "estimatedOwnedGpuBytes": 1960608,
+            "errors": []
+          },
+          "errors": []
+        },
+        {
+          "slot": 2,
+          "key": "96:0",
+          "trees": 129,
+          "ready": 44,
+          "preparations": 8,
+          "coverage": 2,
+          "prepared": 2,
+          "stale": 3,
+          "attempts": 11,
+          "fenced": 8,
+          "rejectedPacking": 0,
+          "signatureChanges": 13,
+          "packingChanges": 14,
+          "textureUploads": 0,
+          "cachedTextures": 40,
+          "standby": {
+            "cancelledPreparations": 0,
+            "preparations": 39,
+            "rendered": 26,
+            "trees": 49,
+            "estimatedOwnedGpuBytes": 1841640,
+            "errors": []
+          },
+          "errors": []
+        },
+        {
+          "slot": 3,
+          "key": "96:0",
+          "trees": 207,
+          "ready": 54,
+          "preparations": 13,
+          "coverage": 3,
+          "prepared": 3,
+          "stale": 5,
+          "attempts": 18,
+          "fenced": 13,
+          "rejectedPacking": 0,
+          "signatureChanges": 18,
+          "packingChanges": 23,
+          "textureUploads": 0,
+          "cachedTextures": 65,
+          "standby": {
+            "cancelledPreparations": 0,
+            "preparations": 52,
+            "rendered": 38,
+            "trees": 62,
+            "estimatedOwnedGpuBytes": 974232,
+            "errors": []
+          },
+          "errors": []
+        }
+      ],
+      "resources": {
+        "logicalStandbyPreload": true,
+        "species": 4,
+        "estimatedAtlasTextureBytes": 44739242.666666664,
+        "estimatedBackdropTextureBytes": 5592405.333333333,
+        "errors": []
+      },
+      "configuredNear": [
+        200,
+        240
+      ]
+    },
+    {
+      "camera": [
+        143.20690623333192,
+        24.25234832156285,
+        -46.973626642559324
+      ],
+      "cameraTarget": [
+        -76.79309376666808,
+        22.078297822406093,
+        -46.97362664255934
+      ],
+      "coverageMode": "native",
+      "night": 0,
+      "render": {
+        "calls": 72,
+        "triangles": 1562419
+      },
+      "layers": [
+        {
+          "slot": 0,
+          "key": "96:0",
+          "trees": 635,
+          "ready": 192,
+          "preparations": 21,
+          "coverage": 23,
+          "prepared": 23,
+          "stale": 5,
+          "attempts": 27,
+          "fenced": 22,
+          "rejectedPacking": 1,
+          "signatureChanges": 10,
+          "packingChanges": 45,
+          "textureUploads": 0,
+          "cachedTextures": 110,
+          "standby": {
+            "cancelledPreparations": 0,
+            "preparations": 55,
+            "rendered": 119,
+            "trees": 236,
+            "estimatedOwnedGpuBytes": 3106008,
+            "errors": []
+          },
+          "errors": []
+        },
+        {
+          "slot": 1,
+          "key": "96:0",
+          "trees": 370,
+          "ready": 108,
+          "preparations": 15,
+          "coverage": 9,
+          "prepared": 9,
+          "stale": 6,
+          "attempts": 22,
+          "fenced": 16,
+          "rejectedPacking": 1,
+          "signatureChanges": 18,
+          "packingChanges": 32,
+          "textureUploads": 0,
+          "cachedTextures": 80,
+          "standby": {
+            "cancelledPreparations": 0,
+            "preparations": 51,
+            "rendered": 73,
+            "trees": 127,
+            "estimatedOwnedGpuBytes": 1960608,
+            "errors": []
+          },
+          "errors": []
+        },
+        {
+          "slot": 2,
+          "key": "96:0",
+          "trees": 129,
+          "ready": 44,
+          "preparations": 8,
+          "coverage": 2,
+          "prepared": 2,
+          "stale": 3,
+          "attempts": 11,
+          "fenced": 8,
+          "rejectedPacking": 0,
+          "signatureChanges": 13,
+          "packingChanges": 14,
+          "textureUploads": 0,
+          "cachedTextures": 40,
+          "standby": {
+            "cancelledPreparations": 0,
+            "preparations": 39,
+            "rendered": 42,
+            "trees": 49,
+            "estimatedOwnedGpuBytes": 1841640,
+            "errors": []
+          },
+          "errors": []
+        },
+        {
+          "slot": 3,
+          "key": "96:0",
+          "trees": 207,
+          "ready": 54,
+          "preparations": 13,
+          "coverage": 3,
+          "prepared": 3,
+          "stale": 5,
+          "attempts": 18,
+          "fenced": 13,
+          "rejectedPacking": 0,
+          "signatureChanges": 18,
+          "packingChanges": 23,
+          "textureUploads": 0,
+          "cachedTextures": 65,
+          "standby": {
+            "cancelledPreparations": 0,
+            "preparations": 52,
+            "rendered": 38,
+            "trees": 62,
+            "estimatedOwnedGpuBytes": 974232,
+            "errors": []
+          },
+          "errors": []
+        }
+      ],
+      "resources": {
+        "logicalStandbyPreload": true,
+        "species": 4,
+        "estimatedAtlasTextureBytes": 44739242.666666664,
+        "estimatedBackdropTextureBytes": 5592405.333333333,
+        "errors": []
+      },
+      "configuredNear": [
+        200,
+        240
+      ]
+    },
+    {
+      "camera": [
+        143.20690623333192,
+        24.25234832156285,
+        -46.973626642559324
+      ],
+      "cameraTarget": [
+        -76.79309376666808,
+        22.078297822406093,
+        -46.97362664255934
+      ],
+      "coverageMode": "sprite",
+      "night": 0,
+      "render": {
+        "calls": 69,
+        "triangles": 1500120
+      },
+      "layers": [
+        {
+          "slot": 0,
+          "key": "96:0",
+          "trees": 635,
+          "ready": 192,
+          "preparations": 21,
+          "coverage": 23,
+          "prepared": 23,
+          "stale": 5,
+          "attempts": 27,
+          "fenced": 22,
+          "rejectedPacking": 1,
+          "signatureChanges": 10,
+          "packingChanges": 45,
+          "textureUploads": 0,
+          "cachedTextures": 110,
+          "standby": {
+            "cancelledPreparations": 0,
+            "preparations": 55,
+            "rendered": 119,
+            "trees": 236,
+            "estimatedOwnedGpuBytes": 3106008,
+            "errors": []
+          },
+          "errors": []
+        },
+        {
+          "slot": 1,
+          "key": "96:0",
+          "trees": 370,
+          "ready": 108,
+          "preparations": 15,
+          "coverage": 9,
+          "prepared": 9,
+          "stale": 6,
+          "attempts": 22,
+          "fenced": 16,
+          "rejectedPacking": 1,
+          "signatureChanges": 18,
+          "packingChanges": 32,
+          "textureUploads": 0,
+          "cachedTextures": 80,
+          "standby": {
+            "cancelledPreparations": 0,
+            "preparations": 51,
+            "rendered": 73,
+            "trees": 127,
+            "estimatedOwnedGpuBytes": 1960608,
+            "errors": []
+          },
+          "errors": []
+        },
+        {
+          "slot": 2,
+          "key": "96:0",
+          "trees": 129,
+          "ready": 44,
+          "preparations": 8,
+          "coverage": 2,
+          "prepared": 2,
+          "stale": 3,
+          "attempts": 11,
+          "fenced": 8,
+          "rejectedPacking": 0,
+          "signatureChanges": 13,
+          "packingChanges": 14,
+          "textureUploads": 0,
+          "cachedTextures": 40,
+          "standby": {
+            "cancelledPreparations": 0,
+            "preparations": 39,
+            "rendered": 0,
+            "trees": 49,
+            "estimatedOwnedGpuBytes": 1841640,
+            "errors": []
+          },
+          "errors": []
+        },
+        {
+          "slot": 3,
+          "key": "96:0",
+          "trees": 207,
+          "ready": 54,
+          "preparations": 13,
+          "coverage": 3,
+          "prepared": 3,
+          "stale": 5,
+          "attempts": 18,
+          "fenced": 13,
+          "rejectedPacking": 0,
+          "signatureChanges": 18,
+          "packingChanges": 23,
+          "textureUploads": 0,
+          "cachedTextures": 65,
+          "standby": {
+            "cancelledPreparations": 0,
+            "preparations": 52,
+            "rendered": 38,
+            "trees": 62,
+            "estimatedOwnedGpuBytes": 974232,
+            "errors": []
+          },
+          "errors": []
+        }
+      ],
+      "resources": {
+        "logicalStandbyPreload": true,
+        "species": 4,
+        "estimatedAtlasTextureBytes": 44739242.666666664,
+        "estimatedBackdropTextureBytes": 5592405.333333333,
+        "errors": []
+      },
+      "configuredNear": [
+        200,
+        240
+      ]
+    },
+    {
+      "camera": [
+        143.20690623333192,
+        24.25234832156285,
+        -46.973626642559324
+      ],
+      "cameraTarget": [
+        -76.79309376666808,
+        22.078297822406093,
+        -46.97362664255934
+      ],
+      "coverageMode": "blend",
+      "night": 1,
+      "render": {
+        "calls": 72,
+        "triangles": 1542467
+      },
+      "layers": [
+        {
+          "slot": 0,
+          "key": "96:0",
+          "trees": 635,
+          "ready": 192,
+          "preparations": 21,
+          "coverage": 23,
+          "prepared": 23,
+          "stale": 5,
+          "attempts": 27,
+          "fenced": 22,
+          "rejectedPacking": 1,
+          "signatureChanges": 10,
+          "packingChanges": 45,
+          "textureUploads": 0,
+          "cachedTextures": 110,
+          "standby": {
+            "cancelledPreparations": 0,
+            "preparations": 55,
+            "rendered": 119,
+            "trees": 236,
+            "estimatedOwnedGpuBytes": 3106008,
+            "errors": []
+          },
+          "errors": []
+        },
+        {
+          "slot": 1,
+          "key": "96:0",
+          "trees": 370,
+          "ready": 108,
+          "preparations": 15,
+          "coverage": 9,
+          "prepared": 9,
+          "stale": 6,
+          "attempts": 22,
+          "fenced": 16,
+          "rejectedPacking": 1,
+          "signatureChanges": 18,
+          "packingChanges": 32,
+          "textureUploads": 0,
+          "cachedTextures": 80,
+          "standby": {
+            "cancelledPreparations": 0,
+            "preparations": 51,
+            "rendered": 73,
+            "trees": 127,
+            "estimatedOwnedGpuBytes": 1960608,
+            "errors": []
+          },
+          "errors": []
+        },
+        {
+          "slot": 2,
+          "key": "96:0",
+          "trees": 129,
+          "ready": 44,
+          "preparations": 8,
+          "coverage": 2,
+          "prepared": 2,
+          "stale": 3,
+          "attempts": 11,
+          "fenced": 8,
+          "rejectedPacking": 0,
+          "signatureChanges": 13,
+          "packingChanges": 14,
+          "textureUploads": 0,
+          "cachedTextures": 40,
+          "standby": {
+            "cancelledPreparations": 0,
+            "preparations": 39,
+            "rendered": 26,
+            "trees": 49,
+            "estimatedOwnedGpuBytes": 1841640,
+            "errors": []
+          },
+          "errors": []
+        },
+        {
+          "slot": 3,
+          "key": "96:0",
+          "trees": 207,
+          "ready": 54,
+          "preparations": 13,
+          "coverage": 3,
+          "prepared": 3,
+          "stale": 5,
+          "attempts": 18,
+          "fenced": 13,
+          "rejectedPacking": 0,
+          "signatureChanges": 18,
+          "packingChanges": 23,
+          "textureUploads": 0,
+          "cachedTextures": 65,
+          "standby": {
+            "cancelledPreparations": 0,
+            "preparations": 52,
+            "rendered": 38,
+            "trees": 62,
+            "estimatedOwnedGpuBytes": 974232,
+            "errors": []
+          },
+          "errors": []
+        }
+      ],
+      "resources": {
+        "logicalStandbyPreload": true,
+        "species": 4,
+        "estimatedAtlasTextureBytes": 44739242.666666664,
+        "estimatedBackdropTextureBytes": 5592405.333333333,
+        "errors": []
+      },
+      "configuredNear": [
+        200,
+        240
+      ]
+    },
+    {
+      "camera": [
+        143.20690623333192,
+        24.25234832156285,
+        -46.973626642559324
+      ],
+      "cameraTarget": [
+        -76.79309376666808,
+        22.078297822406093,
+        -46.97362664255934
+      ],
+      "coverageMode": "native",
+      "night": 1,
+      "render": {
+        "calls": 72,
+        "triangles": 1562419
+      },
+      "layers": [
+        {
+          "slot": 0,
+          "key": "96:0",
+          "trees": 635,
+          "ready": 192,
+          "preparations": 21,
+          "coverage": 23,
+          "prepared": 23,
+          "stale": 5,
+          "attempts": 27,
+          "fenced": 22,
+          "rejectedPacking": 1,
+          "signatureChanges": 10,
+          "packingChanges": 45,
+          "textureUploads": 0,
+          "cachedTextures": 110,
+          "standby": {
+            "cancelledPreparations": 0,
+            "preparations": 55,
+            "rendered": 119,
+            "trees": 236,
+            "estimatedOwnedGpuBytes": 3106008,
+            "errors": []
+          },
+          "errors": []
+        },
+        {
+          "slot": 1,
+          "key": "96:0",
+          "trees": 370,
+          "ready": 108,
+          "preparations": 15,
+          "coverage": 9,
+          "prepared": 9,
+          "stale": 6,
+          "attempts": 22,
+          "fenced": 16,
+          "rejectedPacking": 1,
+          "signatureChanges": 18,
+          "packingChanges": 32,
+          "textureUploads": 0,
+          "cachedTextures": 80,
+          "standby": {
+            "cancelledPreparations": 0,
+            "preparations": 51,
+            "rendered": 73,
+            "trees": 127,
+            "estimatedOwnedGpuBytes": 1960608,
+            "errors": []
+          },
+          "errors": []
+        },
+        {
+          "slot": 2,
+          "key": "96:0",
+          "trees": 129,
+          "ready": 44,
+          "preparations": 8,
+          "coverage": 2,
+          "prepared": 2,
+          "stale": 3,
+          "attempts": 11,
+          "fenced": 8,
+          "rejectedPacking": 0,
+          "signatureChanges": 13,
+          "packingChanges": 14,
+          "textureUploads": 0,
+          "cachedTextures": 40,
+          "standby": {
+            "cancelledPreparations": 0,
+            "preparations": 39,
+            "rendered": 42,
+            "trees": 49,
+            "estimatedOwnedGpuBytes": 1841640,
+            "errors": []
+          },
+          "errors": []
+        },
+        {
+          "slot": 3,
+          "key": "96:0",
+          "trees": 207,
+          "ready": 54,
+          "preparations": 13,
+          "coverage": 3,
+          "prepared": 3,
+          "stale": 5,
+          "attempts": 18,
+          "fenced": 13,
+          "rejectedPacking": 0,
+          "signatureChanges": 18,
+          "packingChanges": 23,
+          "textureUploads": 0,
+          "cachedTextures": 65,
+          "standby": {
+            "cancelledPreparations": 0,
+            "preparations": 52,
+            "rendered": 38,
+            "trees": 62,
+            "estimatedOwnedGpuBytes": 974232,
+            "errors": []
+          },
+          "errors": []
+        }
+      ],
+      "resources": {
+        "logicalStandbyPreload": true,
+        "species": 4,
+        "estimatedAtlasTextureBytes": 44739242.666666664,
+        "estimatedBackdropTextureBytes": 5592405.333333333,
+        "errors": []
+      },
+      "configuredNear": [
+        200,
+        240
+      ]
+    },
+    {
+      "camera": [
+        143.20690623333192,
+        24.25234832156285,
+        -46.973626642559324
+      ],
+      "cameraTarget": [
+        -76.79309376666808,
+        22.078297822406093,
+        -46.97362664255934
+      ],
+      "coverageMode": "sprite",
+      "night": 1,
+      "render": {
+        "calls": 69,
+        "triangles": 1500120
+      },
+      "layers": [
+        {
+          "slot": 0,
+          "key": "96:0",
+          "trees": 635,
+          "ready": 192,
+          "preparations": 21,
+          "coverage": 23,
+          "prepared": 23,
+          "stale": 5,
+          "attempts": 27,
+          "fenced": 22,
+          "rejectedPacking": 1,
+          "signatureChanges": 10,
+          "packingChanges": 45,
+          "textureUploads": 0,
+          "cachedTextures": 110,
+          "standby": {
+            "cancelledPreparations": 0,
+            "preparations": 55,
+            "rendered": 119,
+            "trees": 236,
+            "estimatedOwnedGpuBytes": 3106008,
+            "errors": []
+          },
+          "errors": []
+        },
+        {
+          "slot": 1,
+          "key": "96:0",
+          "trees": 370,
+          "ready": 108,
+          "preparations": 15,
+          "coverage": 9,
+          "prepared": 9,
+          "stale": 6,
+          "attempts": 22,
+          "fenced": 16,
+          "rejectedPacking": 1,
+          "signatureChanges": 18,
+          "packingChanges": 32,
+          "textureUploads": 0,
+          "cachedTextures": 80,
+          "standby": {
+            "cancelledPreparations": 0,
+            "preparations": 51,
+            "rendered": 73,
+            "trees": 127,
+            "estimatedOwnedGpuBytes": 1960608,
+            "errors": []
+          },
+          "errors": []
+        },
+        {
+          "slot": 2,
+          "key": "96:0",
+          "trees": 129,
+          "ready": 44,
+          "preparations": 8,
+          "coverage": 2,
+          "prepared": 2,
+          "stale": 3,
+          "attempts": 11,
+          "fenced": 8,
+          "rejectedPacking": 0,
+          "signatureChanges": 13,
+          "packingChanges": 14,
+          "textureUploads": 0,
+          "cachedTextures": 40,
+          "standby": {
+            "cancelledPreparations": 0,
+            "preparations": 39,
+            "rendered": 0,
+            "trees": 49,
+            "estimatedOwnedGpuBytes": 1841640,
+            "errors": []
+          },
+          "errors": []
+        },
+        {
+          "slot": 3,
+          "key": "96:0",
+          "trees": 207,
+          "ready": 54,
+          "preparations": 13,
+          "coverage": 3,
+          "prepared": 3,
+          "stale": 5,
+          "attempts": 18,
+          "fenced": 13,
+          "rejectedPacking": 0,
+          "signatureChanges": 18,
+          "packingChanges": 23,
+          "textureUploads": 0,
+          "cachedTextures": 65,
+          "standby": {
+            "cancelledPreparations": 0,
+            "preparations": 52,
+            "rendered": 38,
+            "trees": 62,
+            "estimatedOwnedGpuBytes": 974232,
+            "errors": []
+          },
+          "errors": []
+        }
+      ],
+      "resources": {
+        "logicalStandbyPreload": true,
+        "species": 4,
+        "estimatedAtlasTextureBytes": 44739242.666666664,
+        "estimatedBackdropTextureBytes": 5592405.333333333,
+        "errors": []
+      },
+      "configuredNear": [
+        200,
+        240
+      ]
+    }
+  ],
+  "benchmarkPerformed": false
+}

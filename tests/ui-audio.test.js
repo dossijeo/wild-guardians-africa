@@ -19,7 +19,7 @@ test('audio failure cannot throw into a successful interface or game action',asy
  for(const play of [()=>{throw Error('device');},()=>Promise.reject(Error('decode'))]){const ui=new UiAudio(play);ui.surface('panel');ui.error();ui.pause([],['menu']);ui.close();await new Promise(done=>setImmediate(done));}
 });
 test('all transition cues retain original one-shot IDs from the supplied bank',()=>{
- const bank=JSON.parse(readFileSync(new URL('../public/content/sfx.json',import.meta.url),'utf8'));assert.equal(UI_SOUND_IDS.length,8);for(const id of UI_SOUND_IDS){const item=bank.items.find(i=>i.id===id);assert.ok(item,id);assert.equal(item.loop,false);}
+ const bank=JSON.parse(readFileSync(new URL('../public/content/sfx.json',import.meta.url),'utf8'));assert.equal(UI_SOUND_IDS.length,10);for(const id of UI_SOUND_IDS){const item=bank.items.find(i=>i.id===id);assert.ok(item,id);assert.equal(item.loop,false);}
 });
 
 

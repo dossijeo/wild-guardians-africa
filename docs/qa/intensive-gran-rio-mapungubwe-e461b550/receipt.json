@@ -1,0 +1,106 @@
+{
+  "sourceDirectory": ".cache/qa-current-e461b550/test-results/intensive-parallel-100-1791374253234",
+  "frozenRevision": "e461b5502212fd6116e0cf37d270a2836134438a",
+  "childAmbientGitHead": "4e1ac82d799b40bc4d6e6b63a0a0aad209c4d5ed",
+  "childSourcesMatchFrozenParent": true,
+  "currentHead": "89aa8dbba27f05af329d3cba2ad52c6f24218d89",
+  "files": {
+    "state": {
+      "sha256": "e097b201fe9b4e633c5b1ce9c6c9f4c6a9c27fc0a9772bd8caf908ff1b4c0722",
+      "bytes": 15012364,
+      "gzipSha256": "e6b4bc932841261b56d97cec1b29442f1e75740a5525155210aca21e3c9baf99",
+      "gzipBytes": 1124011
+    },
+    "report": {
+      "sha256": "3dcadd6d00bd76b3456d96cac3b3da838783c9862f6635a8b1a5c4890a7abee5",
+      "bytes": 93470,
+      "gzipSha256": "8d2fba1e2eac0a00fff4e9cb61c81ceea8c5ddbdf5f006618fbef38a7101ee9c",
+      "gzipBytes": 18678
+    },
+    "summary": {
+      "sha256": "5ff0beafe7fa7dabd6da0738a291df7d470f5e04488848328a1e86619e878b8d",
+      "bytes": 73188,
+      "gzipSha256": "b55fee00e6cd50a82a0fc4d858e5068a66a709bcbfb43956f90026595214c6db",
+      "gzipBytes": 17494
+    },
+    "status": {
+      "sha256": "eb23bf20e004bb4da9f702ecd39365f4028172922b899dfc35b929cc79ae4358",
+      "bytes": 34524,
+      "gzipSha256": "cfdc1ed20070e27f4bec39b43a7351c640687ba633a5266c73b3161c53ef6ff5",
+      "gzipBytes": 14553
+    },
+    "process": {
+      "sha256": "8556b5d2f2f527abe341ead3f5e9592390b17bd67dcb1cd4991153a774cf6781",
+      "bytes": 188,
+      "gzipSha256": "0e9206eeda7321d2a594e89a45d1185cf2d46ad5d43702681aa67bb1680c04b8",
+      "gzipBytes": 152
+    }
+  },
+  "sourceCount": 291,
+  "frozenSourceHashesMatch": true,
+  "changedCurrentSources": [
+    "src/app/main.js",
+    "src/audio/ui-audio.js",
+    "src/rendering/asset-groups.js",
+    "src/rendering/asset-shadows.js",
+    "src/rendering/native-shadow.js",
+    "src/rendering/scene.js",
+    "src/rendering/terrain-surface.js",
+    "src/rendering/wall-drawing.js",
+    "src/simulation/game.js",
+    "src/simulation/raids.js",
+    "src/simulation/worker-entity-lookup.js",
+    "src/ui/native-hud.js",
+    "src/world/active-region.js",
+    "src/world/fluid-placement.js",
+    "src/world/navigation.js",
+    "public/content/sfx-routing-opus.json",
+    "public/content/sfx-routing.json",
+    "content/manifests/embedded-color-recipes.json",
+    "content/manifests/sfx-runtime.json",
+    "content/manifests/web-assets-verification.json",
+    "content/manifests/web-assets.json",
+    "tools/check_intensive_case.mjs",
+    "tools/intensive-run-provenance.mjs"
+  ],
+  "terminal": {
+    "pid": 20024,
+    "exitCode": 0,
+    "status": "passed",
+    "result": "victory",
+    "completedNights": 100
+  },
+  "verification": "Current native deserialize/audit and complete summary recalculation match original frozen summary exactly. Source hashes match the frozen parent and frozen directory. The child Git HEAD was inherited from the enclosing repository at child spawn; it is not the loaded source revision. This is not a replay on current main.",
+  "metrics": {
+    "money": 538840,
+    "maximumLiving": 1363,
+    "speciesObserved": 8,
+    "cashflow": {
+      "openingBalance": "1500",
+      "harvestIncome": "1639343",
+      "seedCosts": "858816",
+      "wageCosts": "241920",
+      "repairCosts": "467",
+      "centreCosts": "800",
+      "wallCosts": "0",
+      "otherNet": "0",
+      "operatingCashFlow": "538140",
+      "netCashFlowAfterConstruction": "537340",
+      "endingBalance": "538840"
+    },
+    "activity": {
+      "daylightSeconds": 30000,
+      "unoccupiedSeconds": 5465,
+      "unoccupiedFraction": 0.18216666666666667,
+      "idleSecondsByReason": {
+        "budget": 3498,
+        "space": 0,
+        "shift-end": 1967,
+        "incursion": 7066,
+        "night": 23435
+      },
+      "longestIdle": 127,
+      "p90LongestIdle": 46
+    }
+  }
+}

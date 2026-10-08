@@ -1,0 +1,473 @@
+{
+  "source": "1d1d79a",
+  "backgroundCampaignPids": [
+    40968,
+    41304
+  ],
+  "normalGameplayEnabled": false,
+  "acceptance": false,
+  "withGround": {
+    "lots": [
+      {
+        "enabled": false,
+        "gpuMedianMs": 4.601249,
+        "cpu": {
+          "count": 120,
+          "p50": 4.800000071525574,
+          "p95": 7.800000071525574,
+          "mean": 10.84750000735124
+        },
+        "triangles": {
+          "count": 120,
+          "p50": 53762,
+          "p95": 53762,
+          "mean": 53762
+        },
+        "calls": {
+          "count": 120,
+          "p50": 14,
+          "p95": 14,
+          "mean": 14
+        }
+      },
+      {
+        "enabled": true,
+        "gpuMedianMs": 8.1590095,
+        "cpu": {
+          "count": 120,
+          "p50": 5.799999952316284,
+          "p95": 10.100000023841858,
+          "mean": 11.891666662693023
+        },
+        "triangles": {
+          "count": 120,
+          "p50": 93478,
+          "p95": 93478,
+          "mean": 93478
+        },
+        "calls": {
+          "count": 120,
+          "p50": 19,
+          "p95": 19,
+          "mean": 19
+        }
+      },
+      {
+        "enabled": true,
+        "gpuMedianMs": 8.5876035,
+        "cpu": {
+          "count": 120,
+          "p50": 6.199999928474426,
+          "p95": 10,
+          "mean": 12.026666668057441
+        },
+        "triangles": {
+          "count": 120,
+          "p50": 93478,
+          "p95": 93478,
+          "mean": 93478
+        },
+        "calls": {
+          "count": 120,
+          "p50": 19,
+          "p95": 19,
+          "mean": 19
+        }
+      },
+      {
+        "enabled": false,
+        "gpuMedianMs": 4.495468499999999,
+        "cpu": {
+          "count": 120,
+          "p50": 4.700000047683716,
+          "p95": 6.600000023841858,
+          "mean": 10.211666663487753
+        },
+        "triangles": {
+          "count": 120,
+          "p50": 53762,
+          "p95": 53762,
+          "mean": 53762
+        },
+        "calls": {
+          "count": 120,
+          "p50": 14,
+          "p95": 14,
+          "mean": 14
+        }
+      }
+    ],
+    "camera": [
+      143.20690623333192,
+      110.25234832156283,
+      -46.973626642559324
+    ],
+    "viewport": [
+      1280,
+      720
+    ],
+    "framebuffer": [
+      1600,
+      900
+    ],
+    "queries": 480,
+    "disjoint": 0,
+    "stateExact": true,
+    "errors": [],
+    "webglError": 0,
+    "groundIsolated": false
+  },
+  "withoutGround": {
+    "lots": [
+      {
+        "enabled": false,
+        "gpuMedianMs": 4.5824735,
+        "cpu": {
+          "count": 120,
+          "p50": 5.099999904632568,
+          "p95": 19.200000047683716,
+          "mean": 11.0666666696469
+        },
+        "triangles": {
+          "count": 120,
+          "p50": 53762,
+          "p95": 53762,
+          "mean": 53762
+        },
+        "calls": {
+          "count": 120,
+          "p50": 14,
+          "p95": 14,
+          "mean": 14
+        }
+      },
+      {
+        "enabled": true,
+        "gpuMedianMs": 6.639947,
+        "cpu": {
+          "count": 120,
+          "p50": 5.700000047683716,
+          "p95": 9,
+          "mean": 11.44000000456969
+        },
+        "triangles": {
+          "count": 120,
+          "p50": 67468,
+          "p95": 67468,
+          "mean": 67468
+        },
+        "calls": {
+          "count": 120,
+          "p50": 18,
+          "p95": 18,
+          "mean": 18
+        }
+      },
+      {
+        "enabled": true,
+        "gpuMedianMs": 8.245677,
+        "cpu": {
+          "count": 120,
+          "p50": 5.200000047683716,
+          "p95": 9,
+          "mean": 11.367499992251396
+        },
+        "triangles": {
+          "count": 120,
+          "p50": 67468,
+          "p95": 67468,
+          "mean": 67468
+        },
+        "calls": {
+          "count": 120,
+          "p50": 18,
+          "p95": 18,
+          "mean": 18
+        }
+      },
+      {
+        "enabled": false,
+        "gpuMedianMs": 4.5745045,
+        "cpu": {
+          "count": 120,
+          "p50": 4.600000023841858,
+          "p95": 7,
+          "mean": 10.444999999801318
+        },
+        "triangles": {
+          "count": 120,
+          "p50": 53762,
+          "p95": 53762,
+          "mean": 53762
+        },
+        "calls": {
+          "count": 120,
+          "p50": 14,
+          "p95": 14,
+          "mean": 14
+        }
+      }
+    ],
+    "camera": [
+      143.20690623333192,
+      110.25234832156283,
+      -46.973626642559324
+    ],
+    "viewport": [
+      1280,
+      720
+    ],
+    "framebuffer": [
+      1600,
+      900
+    ],
+    "queries": 480,
+    "disjoint": 0,
+    "stateExact": true,
+    "errors": [],
+    "webglError": 0,
+    "groundIsolated": true
+  },
+  "elevated-night-upload": {
+    "render": {
+      "calls": 18,
+      "triangles": 93477
+    },
+    "upload": {
+      "errors": [],
+      "instances": 15,
+      "matrixExact": 15,
+      "visibilityExact": 15,
+      "identityExact": 15,
+      "passed": true,
+      "webglError": 0
+    },
+    "draws": [
+      {
+        "slot": 0,
+        "level": 2,
+        "count": 6
+      },
+      {
+        "slot": 1,
+        "level": 2,
+        "count": 1
+      },
+      {
+        "slot": 2,
+        "level": 2,
+        "count": 7
+      },
+      {
+        "slot": 3,
+        "level": 2,
+        "count": 1
+      }
+    ],
+    "stateExact": null,
+    "targetDrops": 0,
+    "allNear": {
+      "observations": 162002,
+      "readyObservations": 19175,
+      "descents": 152,
+      "offscreenBoundsDescents": 152,
+      "potentiallyVisibleDescents": 0,
+      "unknownDescents": 0,
+      "dropsCount": 64,
+      "nonOffscreenDropsCount": 0,
+      "omissionsCount": 0
+    },
+    "selectedSpeciesNear": {
+      "observations": 33135,
+      "readyObservations": 21812,
+      "descents": 14,
+      "offscreenBoundsDescents": 14,
+      "potentiallyVisibleDescents": 0,
+      "unknownDescents": 0,
+      "dropsCount": 14,
+      "nonOffscreenDropsCount": 0,
+      "omissionsCount": 0
+    },
+    "errors": [],
+    "webglError": 0
+  },
+  "orbit-night-final": {
+    "render": {
+      "calls": 24,
+      "triangles": 127142
+    },
+    "upload": {
+      "errors": [],
+      "instances": 19,
+      "matrixExact": 19,
+      "visibilityExact": 19,
+      "identityExact": 19,
+      "passed": true,
+      "webglError": 0
+    },
+    "draws": [
+      {
+        "slot": 0,
+        "level": 2,
+        "count": 7
+      },
+      {
+        "slot": 1,
+        "level": 2,
+        "count": 3
+      },
+      {
+        "slot": 2,
+        "level": 2,
+        "count": 8
+      },
+      {
+        "slot": 3,
+        "level": 2,
+        "count": 1
+      }
+    ],
+    "stateExact": true,
+    "targetDrops": 0,
+    "allNear": {
+      "observations": 192862,
+      "readyObservations": 27259,
+      "descents": 537,
+      "offscreenBoundsDescents": 537,
+      "potentiallyVisibleDescents": 0,
+      "unknownDescents": 0,
+      "dropsCount": 64,
+      "nonOffscreenDropsCount": 0,
+      "omissionsCount": 0
+    },
+    "selectedSpeciesNear": {
+      "observations": 41015,
+      "readyObservations": 26710,
+      "descents": 57,
+      "offscreenBoundsDescents": 57,
+      "potentiallyVisibleDescents": 0,
+      "unknownDescents": 0,
+      "dropsCount": 57,
+      "nonOffscreenDropsCount": 0,
+      "omissionsCount": 0
+    },
+    "errors": [],
+    "webglError": 0
+  },
+  "approach-night-pause": {
+    "render": {
+      "calls": 38,
+      "triangles": 165206
+    },
+    "upload": {
+      "errors": [],
+      "instances": 14,
+      "matrixExact": 14,
+      "visibilityExact": 14,
+      "identityExact": 14,
+      "passed": true,
+      "webglError": 0
+    },
+    "draws": [
+      {
+        "slot": 0,
+        "level": 2,
+        "count": 2
+      },
+      {
+        "slot": 1,
+        "level": 2,
+        "count": 2
+      },
+      {
+        "slot": 2,
+        "level": 2,
+        "count": 7
+      },
+      {
+        "slot": 3,
+        "level": 2,
+        "count": 3
+      }
+    ],
+    "stateExact": null,
+    "targetDrops": 0,
+    "allNear": {
+      "observations": 152072,
+      "readyObservations": 78262,
+      "descents": 22,
+      "offscreenBoundsDescents": 22,
+      "potentiallyVisibleDescents": 0,
+      "unknownDescents": 0,
+      "dropsCount": 22,
+      "nonOffscreenDropsCount": 0,
+      "omissionsCount": 0
+    },
+    "selectedSpeciesNear": {
+      "observations": 40496,
+      "readyObservations": 36026,
+      "descents": 2,
+      "offscreenBoundsDescents": 2,
+      "potentiallyVisibleDescents": 0,
+      "unknownDescents": 0,
+      "dropsCount": 2,
+      "nonOffscreenDropsCount": 0,
+      "omissionsCount": 0
+    },
+    "errors": [],
+    "webglError": 0
+  },
+  "approach-night-final": {
+    "render": {
+      "calls": 30,
+      "triangles": 177348
+    },
+    "upload": {
+      "errors": [],
+      "instances": 5,
+      "matrixExact": 5,
+      "visibilityExact": 5,
+      "identityExact": 5,
+      "passed": true,
+      "webglError": 0
+    },
+    "draws": [
+      {
+        "slot": 0,
+        "level": 2,
+        "count": 2
+      },
+      {
+        "slot": 2,
+        "level": 2,
+        "count": 3
+      }
+    ],
+    "stateExact": true,
+    "targetDrops": 0,
+    "allNear": {
+      "observations": 183400,
+      "readyObservations": 94743,
+      "descents": 48,
+      "offscreenBoundsDescents": 48,
+      "potentiallyVisibleDescents": 0,
+      "unknownDescents": 0,
+      "dropsCount": 48,
+      "nonOffscreenDropsCount": 0,
+      "omissionsCount": 0
+    },
+    "selectedSpeciesNear": {
+      "observations": 49082,
+      "readyObservations": 43244,
+      "descents": 8,
+      "offscreenBoundsDescents": 8,
+      "potentiallyVisibleDescents": 0,
+      "unknownDescents": 0,
+      "dropsCount": 8,
+      "nonOffscreenDropsCount": 0,
+      "omissionsCount": 0
+    },
+    "errors": [],
+    "webglError": 0
+  }
+}

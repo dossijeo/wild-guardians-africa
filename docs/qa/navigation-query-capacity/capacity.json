@@ -1,0 +1,787 @@
+{
+  "scope": "native queries under artificial capacity pressure; no GPU/FPS claim",
+  "sourceHash": "2ed816c61bd0eb4fedcb3b41c1f9c1b9fb71be14b6d1dcdbeb21e5d46253609c",
+  "cases": [
+    {
+      "biome": "sabana",
+      "kind": "walk",
+      "capacity": 50000,
+      "hotQueries": 256,
+      "coldQueries": 2,
+      "trueResults": 211,
+      "falseResults": 47,
+      "blocks": [
+        {
+          "block": 0,
+          "arm": "baseline",
+          "ms": 15.14390000000003,
+          "misses": 258,
+          "cacheSize": 257
+        },
+        {
+          "block": 0,
+          "arm": "candidate",
+          "ms": 0.7522000000000162,
+          "misses": 2,
+          "cacheSize": 50000
+        },
+        {
+          "block": 1,
+          "arm": "candidate",
+          "ms": 0.6419999999999391,
+          "misses": 2,
+          "cacheSize": 50000
+        },
+        {
+          "block": 1,
+          "arm": "baseline",
+          "ms": 4.193699999999922,
+          "misses": 258,
+          "cacheSize": 257
+        },
+        {
+          "block": 2,
+          "arm": "baseline",
+          "ms": 4.889899999999898,
+          "misses": 258,
+          "cacheSize": 257
+        },
+        {
+          "block": 2,
+          "arm": "candidate",
+          "ms": 0.375,
+          "misses": 2,
+          "cacheSize": 50000
+        },
+        {
+          "block": 3,
+          "arm": "candidate",
+          "ms": 0.3127999999999247,
+          "misses": 2,
+          "cacheSize": 50000
+        },
+        {
+          "block": 3,
+          "arm": "baseline",
+          "ms": 4.442600000000084,
+          "misses": 258,
+          "cacheSize": 257
+        },
+        {
+          "block": 4,
+          "arm": "baseline",
+          "ms": 2.3939000000000306,
+          "misses": 258,
+          "cacheSize": 257
+        },
+        {
+          "block": 4,
+          "arm": "candidate",
+          "ms": 0.4419000000000324,
+          "misses": 2,
+          "cacheSize": 50000
+        },
+        {
+          "block": 5,
+          "arm": "candidate",
+          "ms": 0.4150999999999385,
+          "misses": 2,
+          "cacheSize": 50000
+        },
+        {
+          "block": 5,
+          "arm": "baseline",
+          "ms": 4.29079999999999,
+          "misses": 258,
+          "cacheSize": 257
+        },
+        {
+          "block": 6,
+          "arm": "baseline",
+          "ms": 11.521399999999858,
+          "misses": 258,
+          "cacheSize": 257
+        },
+        {
+          "block": 6,
+          "arm": "candidate",
+          "ms": 0.4436000000000604,
+          "misses": 2,
+          "cacheSize": 50000
+        },
+        {
+          "block": 7,
+          "arm": "candidate",
+          "ms": 0.3453999999999269,
+          "misses": 2,
+          "cacheSize": 50000
+        },
+        {
+          "block": 7,
+          "arm": "baseline",
+          "ms": 4.257500000000164,
+          "misses": 258,
+          "cacheSize": 257
+        },
+        {
+          "block": 8,
+          "arm": "baseline",
+          "ms": 4.583799999999883,
+          "misses": 258,
+          "cacheSize": 257
+        },
+        {
+          "block": 8,
+          "arm": "candidate",
+          "ms": 0.4652000000000953,
+          "misses": 2,
+          "cacheSize": 50000
+        },
+        {
+          "block": 9,
+          "arm": "candidate",
+          "ms": 0.7716999999997824,
+          "misses": 2,
+          "cacheSize": 50000
+        },
+        {
+          "block": 9,
+          "arm": "baseline",
+          "ms": 4.220399999999927,
+          "misses": 258,
+          "cacheSize": 257
+        },
+        {
+          "block": 10,
+          "arm": "baseline",
+          "ms": 4.033200000000079,
+          "misses": 258,
+          "cacheSize": 257
+        },
+        {
+          "block": 10,
+          "arm": "candidate",
+          "ms": 0.2985999999998512,
+          "misses": 2,
+          "cacheSize": 50000
+        },
+        {
+          "block": 11,
+          "arm": "candidate",
+          "ms": 0.37970000000018445,
+          "misses": 2,
+          "cacheSize": 50000
+        },
+        {
+          "block": 11,
+          "arm": "baseline",
+          "ms": 3.810699999999997,
+          "misses": 258,
+          "cacheSize": 257
+        }
+      ],
+      "summary": {
+        "baseline": {
+          "medianMs": 4.257500000000164,
+          "p95Ms": 15.14390000000003,
+          "missesPerBlock": [
+            258
+          ]
+        },
+        "candidate": {
+          "medianMs": 0.4150999999999385,
+          "p95Ms": 0.7716999999997824,
+          "missesPerBlock": [
+            2
+          ]
+        }
+      }
+    },
+    {
+      "biome": "sabana",
+      "kind": "segment",
+      "capacity": 100000,
+      "hotQueries": 256,
+      "coldQueries": 2,
+      "trueResults": 196,
+      "falseResults": 62,
+      "blocks": [
+        {
+          "block": 0,
+          "arm": "baseline",
+          "ms": 20.144799999999805,
+          "misses": 258,
+          "cacheSize": 258
+        },
+        {
+          "block": 0,
+          "arm": "candidate",
+          "ms": 0.6514999999999418,
+          "misses": 2,
+          "cacheSize": 100000
+        },
+        {
+          "block": 1,
+          "arm": "candidate",
+          "ms": 0.6870000000001255,
+          "misses": 2,
+          "cacheSize": 100000
+        },
+        {
+          "block": 1,
+          "arm": "baseline",
+          "ms": 16.453500000000076,
+          "misses": 258,
+          "cacheSize": 258
+        },
+        {
+          "block": 2,
+          "arm": "baseline",
+          "ms": 26.8412000000003,
+          "misses": 258,
+          "cacheSize": 258
+        },
+        {
+          "block": 2,
+          "arm": "candidate",
+          "ms": 0.6692000000002736,
+          "misses": 2,
+          "cacheSize": 100000
+        },
+        {
+          "block": 3,
+          "arm": "candidate",
+          "ms": 0.4190000000003238,
+          "misses": 2,
+          "cacheSize": 100000
+        },
+        {
+          "block": 3,
+          "arm": "baseline",
+          "ms": 14.565999999999804,
+          "misses": 258,
+          "cacheSize": 258
+        },
+        {
+          "block": 4,
+          "arm": "baseline",
+          "ms": 28.29150000000027,
+          "misses": 258,
+          "cacheSize": 258
+        },
+        {
+          "block": 4,
+          "arm": "candidate",
+          "ms": 0.5722000000000662,
+          "misses": 2,
+          "cacheSize": 100000
+        },
+        {
+          "block": 5,
+          "arm": "candidate",
+          "ms": 0.4772000000002663,
+          "misses": 2,
+          "cacheSize": 100000
+        },
+        {
+          "block": 5,
+          "arm": "baseline",
+          "ms": 25.246399999999994,
+          "misses": 258,
+          "cacheSize": 258
+        },
+        {
+          "block": 6,
+          "arm": "baseline",
+          "ms": 24.632700000000114,
+          "misses": 258,
+          "cacheSize": 258
+        },
+        {
+          "block": 6,
+          "arm": "candidate",
+          "ms": 0.4045000000000982,
+          "misses": 2,
+          "cacheSize": 100000
+        },
+        {
+          "block": 7,
+          "arm": "candidate",
+          "ms": 0.4821999999999207,
+          "misses": 2,
+          "cacheSize": 100000
+        },
+        {
+          "block": 7,
+          "arm": "baseline",
+          "ms": 27.250100000000202,
+          "misses": 258,
+          "cacheSize": 258
+        },
+        {
+          "block": 8,
+          "arm": "baseline",
+          "ms": 28.064900000000307,
+          "misses": 258,
+          "cacheSize": 258
+        },
+        {
+          "block": 8,
+          "arm": "candidate",
+          "ms": 0.5125999999995656,
+          "misses": 2,
+          "cacheSize": 100000
+        },
+        {
+          "block": 9,
+          "arm": "candidate",
+          "ms": 0.4992000000002008,
+          "misses": 2,
+          "cacheSize": 100000
+        },
+        {
+          "block": 9,
+          "arm": "baseline",
+          "ms": 29.40020000000004,
+          "misses": 258,
+          "cacheSize": 258
+        },
+        {
+          "block": 10,
+          "arm": "baseline",
+          "ms": 81.81780000000072,
+          "misses": 258,
+          "cacheSize": 258
+        },
+        {
+          "block": 10,
+          "arm": "candidate",
+          "ms": 0.30870000000049913,
+          "misses": 2,
+          "cacheSize": 100000
+        },
+        {
+          "block": 11,
+          "arm": "candidate",
+          "ms": 0.3506999999999607,
+          "misses": 2,
+          "cacheSize": 100000
+        },
+        {
+          "block": 11,
+          "arm": "baseline",
+          "ms": 25.515000000000327,
+          "misses": 258,
+          "cacheSize": 258
+        }
+      ],
+      "summary": {
+        "baseline": {
+          "medianMs": 25.515000000000327,
+          "p95Ms": 81.81780000000072,
+          "missesPerBlock": [
+            258
+          ]
+        },
+        "candidate": {
+          "medianMs": 0.4821999999999207,
+          "p95Ms": 0.6870000000001255,
+          "missesPerBlock": [
+            2
+          ]
+        }
+      }
+    },
+    {
+      "biome": "gran-canon",
+      "kind": "walk",
+      "capacity": 50000,
+      "hotQueries": 256,
+      "coldQueries": 2,
+      "trueResults": 208,
+      "falseResults": 50,
+      "blocks": [
+        {
+          "block": 0,
+          "arm": "baseline",
+          "ms": 3.404899999999543,
+          "misses": 258,
+          "cacheSize": 257
+        },
+        {
+          "block": 0,
+          "arm": "candidate",
+          "ms": 0.597700000000259,
+          "misses": 2,
+          "cacheSize": 50000
+        },
+        {
+          "block": 1,
+          "arm": "candidate",
+          "ms": 0.45570000000043365,
+          "misses": 2,
+          "cacheSize": 50000
+        },
+        {
+          "block": 1,
+          "arm": "baseline",
+          "ms": 13.735500000000684,
+          "misses": 258,
+          "cacheSize": 257
+        },
+        {
+          "block": 2,
+          "arm": "baseline",
+          "ms": 3.2724000000007436,
+          "misses": 258,
+          "cacheSize": 257
+        },
+        {
+          "block": 2,
+          "arm": "candidate",
+          "ms": 0.43320000000039727,
+          "misses": 2,
+          "cacheSize": 50000
+        },
+        {
+          "block": 3,
+          "arm": "candidate",
+          "ms": 0.7467999999998938,
+          "misses": 2,
+          "cacheSize": 50000
+        },
+        {
+          "block": 3,
+          "arm": "baseline",
+          "ms": 13.382200000000012,
+          "misses": 258,
+          "cacheSize": 257
+        },
+        {
+          "block": 4,
+          "arm": "baseline",
+          "ms": 2.5039000000006126,
+          "misses": 258,
+          "cacheSize": 257
+        },
+        {
+          "block": 4,
+          "arm": "candidate",
+          "ms": 0.3993000000000393,
+          "misses": 2,
+          "cacheSize": 50000
+        },
+        {
+          "block": 5,
+          "arm": "candidate",
+          "ms": 0.20669999999972788,
+          "misses": 2,
+          "cacheSize": 50000
+        },
+        {
+          "block": 5,
+          "arm": "baseline",
+          "ms": 12.721000000000458,
+          "misses": 258,
+          "cacheSize": 257
+        },
+        {
+          "block": 6,
+          "arm": "baseline",
+          "ms": 3.6729999999997744,
+          "misses": 258,
+          "cacheSize": 257
+        },
+        {
+          "block": 6,
+          "arm": "candidate",
+          "ms": 0.3613000000004831,
+          "misses": 2,
+          "cacheSize": 50000
+        },
+        {
+          "block": 7,
+          "arm": "candidate",
+          "ms": 0.4095000000006621,
+          "misses": 2,
+          "cacheSize": 50000
+        },
+        {
+          "block": 7,
+          "arm": "baseline",
+          "ms": 3.7542999999996027,
+          "misses": 258,
+          "cacheSize": 257
+        },
+        {
+          "block": 8,
+          "arm": "baseline",
+          "ms": 2.640599999999722,
+          "misses": 258,
+          "cacheSize": 257
+        },
+        {
+          "block": 8,
+          "arm": "candidate",
+          "ms": 0.5662000000002081,
+          "misses": 2,
+          "cacheSize": 50000
+        },
+        {
+          "block": 9,
+          "arm": "candidate",
+          "ms": 0.5555999999996857,
+          "misses": 2,
+          "cacheSize": 50000
+        },
+        {
+          "block": 9,
+          "arm": "baseline",
+          "ms": 3.551300000000083,
+          "misses": 258,
+          "cacheSize": 257
+        },
+        {
+          "block": 10,
+          "arm": "baseline",
+          "ms": 3.913800000000265,
+          "misses": 258,
+          "cacheSize": 257
+        },
+        {
+          "block": 10,
+          "arm": "candidate",
+          "ms": 0.42669999999998254,
+          "misses": 2,
+          "cacheSize": 50000
+        },
+        {
+          "block": 11,
+          "arm": "candidate",
+          "ms": 0.3602000000000771,
+          "misses": 2,
+          "cacheSize": 50000
+        },
+        {
+          "block": 11,
+          "arm": "baseline",
+          "ms": 3.286599999999453,
+          "misses": 258,
+          "cacheSize": 257
+        }
+      ],
+      "summary": {
+        "baseline": {
+          "medianMs": 3.551300000000083,
+          "p95Ms": 13.735500000000684,
+          "missesPerBlock": [
+            258
+          ]
+        },
+        "candidate": {
+          "medianMs": 0.42669999999998254,
+          "p95Ms": 0.7467999999998938,
+          "missesPerBlock": [
+            2
+          ]
+        }
+      }
+    },
+    {
+      "biome": "gran-canon",
+      "kind": "segment",
+      "capacity": 100000,
+      "hotQueries": 256,
+      "coldQueries": 2,
+      "trueResults": 184,
+      "falseResults": 74,
+      "blocks": [
+        {
+          "block": 0,
+          "arm": "baseline",
+          "ms": 24.025800000000345,
+          "misses": 258,
+          "cacheSize": 258
+        },
+        {
+          "block": 0,
+          "arm": "candidate",
+          "ms": 0.511000000000422,
+          "misses": 2,
+          "cacheSize": 100000
+        },
+        {
+          "block": 1,
+          "arm": "candidate",
+          "ms": 0.5729000000001179,
+          "misses": 2,
+          "cacheSize": 100000
+        },
+        {
+          "block": 1,
+          "arm": "baseline",
+          "ms": 15.284599999999955,
+          "misses": 258,
+          "cacheSize": 258
+        },
+        {
+          "block": 2,
+          "arm": "baseline",
+          "ms": 23.495700000000397,
+          "misses": 258,
+          "cacheSize": 258
+        },
+        {
+          "block": 2,
+          "arm": "candidate",
+          "ms": 0.57129999999961,
+          "misses": 2,
+          "cacheSize": 100000
+        },
+        {
+          "block": 3,
+          "arm": "candidate",
+          "ms": 0.5925999999999476,
+          "misses": 2,
+          "cacheSize": 100000
+        },
+        {
+          "block": 3,
+          "arm": "baseline",
+          "ms": 25.09020000000055,
+          "misses": 258,
+          "cacheSize": 258
+        },
+        {
+          "block": 4,
+          "arm": "baseline",
+          "ms": 23.59729999999945,
+          "misses": 258,
+          "cacheSize": 258
+        },
+        {
+          "block": 4,
+          "arm": "candidate",
+          "ms": 0.5938000000005559,
+          "misses": 2,
+          "cacheSize": 100000
+        },
+        {
+          "block": 5,
+          "arm": "candidate",
+          "ms": 0.64679999999953,
+          "misses": 2,
+          "cacheSize": 100000
+        },
+        {
+          "block": 5,
+          "arm": "baseline",
+          "ms": 23.83510000000024,
+          "misses": 258,
+          "cacheSize": 258
+        },
+        {
+          "block": 6,
+          "arm": "baseline",
+          "ms": 20.461199999999735,
+          "misses": 258,
+          "cacheSize": 258
+        },
+        {
+          "block": 6,
+          "arm": "candidate",
+          "ms": 0.6603999999997541,
+          "misses": 2,
+          "cacheSize": 100000
+        },
+        {
+          "block": 7,
+          "arm": "candidate",
+          "ms": 0.9124000000001615,
+          "misses": 2,
+          "cacheSize": 100000
+        },
+        {
+          "block": 7,
+          "arm": "baseline",
+          "ms": 23.001500000000306,
+          "misses": 258,
+          "cacheSize": 258
+        },
+        {
+          "block": 8,
+          "arm": "baseline",
+          "ms": 23.640699999999924,
+          "misses": 258,
+          "cacheSize": 258
+        },
+        {
+          "block": 8,
+          "arm": "candidate",
+          "ms": 0.6955000000016298,
+          "misses": 2,
+          "cacheSize": 100000
+        },
+        {
+          "block": 9,
+          "arm": "candidate",
+          "ms": 0.6992000000009284,
+          "misses": 2,
+          "cacheSize": 100000
+        },
+        {
+          "block": 9,
+          "arm": "baseline",
+          "ms": 23.56000000000131,
+          "misses": 258,
+          "cacheSize": 258
+        },
+        {
+          "block": 10,
+          "arm": "baseline",
+          "ms": 17.49409999999989,
+          "misses": 258,
+          "cacheSize": 258
+        },
+        {
+          "block": 10,
+          "arm": "candidate",
+          "ms": 0.4025000000001455,
+          "misses": 2,
+          "cacheSize": 100000
+        },
+        {
+          "block": 11,
+          "arm": "candidate",
+          "ms": 0.860499999998865,
+          "misses": 2,
+          "cacheSize": 100000
+        },
+        {
+          "block": 11,
+          "arm": "baseline",
+          "ms": 23.129899999999907,
+          "misses": 258,
+          "cacheSize": 258
+        }
+      ],
+      "summary": {
+        "baseline": {
+          "medianMs": 23.495700000000397,
+          "p95Ms": 25.09020000000055,
+          "missesPerBlock": [
+            258
+          ]
+        },
+        "candidate": {
+          "medianMs": 0.5938000000005559,
+          "p95Ms": 0.9124000000001615,
+          "missesPerBlock": [
+            2
+          ]
+        }
+      }
+    }
+  ],
+  "baselineFunctionsHash": "b6d30d7ebea6967d825d0cebeeeb4fdb6fb5f0f7d542e8b743ca7ed857b2b407"
+}
