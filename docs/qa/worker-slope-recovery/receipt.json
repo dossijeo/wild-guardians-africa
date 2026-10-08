@@ -55,6 +55,11 @@
       "path": "segment-alias-runner.mjs.gz",
       "rawBytes": 1990,
       "sha256": "48b58abb6a2d8824cd62faf927a0e5a2abda9adfc06551535c136d2cc3e7dc72"
+    },
+    {
+      "path": "full-tests.log.gz",
+      "rawBytes": 775297,
+      "sha256": "9f4495a6fb655b5fa64b5a56d902b036424e1f740d71211e9ca25b4af25d4ba6"
     }
   ],
   "directedTests": {
@@ -69,16 +74,16 @@
   "fullSuite": {
     "session": 94839,
     "parentNodePid": 49328,
-    "status": "running",
-    "remainingFilesAtObservation": [
-      "tests/active-farm.test.js",
-      "tests/campaign.test.js"
-    ],
-    "childPids": [
-      26996,
-      43612
-    ],
-    "log": ".cache/worker-slope-full-tests.log"
+    "status": "completed",
+    "exitCode": 0,
+    "tests": 3153,
+    "passed": 3153,
+    "failed": 0,
+    "skipped": 0,
+    "todo": 0,
+    "durationMs": 1066739.1767,
+    "runtimeSourcesMatchArchive": true,
+    "benchmark": false
   },
   "segmentFollowup": {
     "main": "a52ceb6d",

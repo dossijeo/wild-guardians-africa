@@ -15,6 +15,8 @@ assert.deepEqual(receipt.exitCodes,[0,0,0]);assert.equal(receipt.benchmark,false
 const alias=read('segment-alias-probe').result;
 assert(alias.startValid&&alias.endValid&&alias.segmentAccepted);
 assert.equal(alias.actualPointValid,false);assert.equal(alias.worker.status,'walking');
+assert.equal(receipt.fullSuite.status,'completed');assert.equal(receipt.fullSuite.exitCode,0);
+assert.equal(receipt.fullSuite.tests,3153);assert.equal(receipt.fullSuite.failed,0);
 assert(Math.abs(Math.hypot(alias.end.x-alias.start.x,alias.end.z-alias.start.z)-.1)<1e-10);
 assert(Math.abs(Math.hypot(alias.worker.x-alias.start.x,alias.worker.z-alias.start.z)-.05)<1e-10);
 console.log('PASS: 27 native workers physically return; observer parity and unchanged watering; scoped recovery evidence');

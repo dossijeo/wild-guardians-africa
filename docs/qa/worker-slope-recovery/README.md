@@ -47,9 +47,13 @@ recibo. Verificar: `node docs/qa/worker-slope-recovery/verify.mjs`.
 67 pruebas de regresión dirigidas pasan; las once pruebas finales de la nueva
 recuperación también pasan (incluyen dos añadidas después del primer grupo).
 El paquete web se valida: 701 archivos, 859 enlaces relativos, 20 GLB runtime.
-La suite completa fue lanzada una sola vez, sesión 94839; en la observación
-del recibo permanecen vivos los procesos de active-farm y campaign, sin
-resultado terminal todavía. No se declara pasada ni se reinicia por tardar.
+La suite completa fue lanzada una sola vez, sesión 94839, y termina exit 0:
+3153 pruebas pasan, cero fallos, skipped o todo. Se han comprobado los bytes
+de Game y worker-slope-recovery frente a las fuentes archivadas del ensayo.
+El log completo y su hash quedan archivados. La duración de 1066739 ms bajo
+carga CPU concurrente no se interpreta como benchmark de rendimiento.
+Incluye campañas de la suite, pero no sustituye la aceptación de fincas densas
+de cien noches en la matriz completa de biomas/culturas, que sigue pendiente.
 
 Pendiente: determinar el origen de estos conectores históricos y reproducir
 el atasco independiente de Gran Cañón; esta corrección no lo declara resuelto.

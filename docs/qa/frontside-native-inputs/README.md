@@ -49,3 +49,24 @@ Verificar archivo: `node docs/qa/frontside-native-inputs/verify.mjs`.
 Siguiente paso: el subagente prepara una variante que restaura normales por
 correspondencias verificables P+UV; deberá pasar sus propias comparaciones,
 incluida silueta, y no hereda ninguna aprobación de este diagnóstico.
+
+## Seguimiento: 1738 normales originales restauradas
+
+Nuevo TRAINING Double-only, commit fa4a03bd, mismo caso y contratos,
+stemAnchorNormals. Conserva P/UV/topología de 658; restaura únicamente las
+1738 correspondencias P+UV con normal original única. Cuatro esquinas
+ambiguas y 232 nuevas/movidas permanecen sin restaurar. No usa el resultado
+visual para resolver esas correspondencias. Todos los controles originales
+siguen exactos; el original reindexado coincide. Consola warn/error vacía.
+
+Ambos brazos derivados FAIL. El alpha permanece igual al de 658: 55 ausentes,
+193 añadidos y 13/149 más allá de un píxel. La MAE del brazo sin partición baja
+de 0,00224052745 a 0,00211543989; maxTileMae baja de 0,14401417527 a
+0,14147551171. La mayor región RGB aún tiene 1268 píxeles. El brazo con dos
+grupos tiene MAE 0,00211507539 y el mismo maxTileMae. Es una mejora modesta,
+insuficiente para aprobar calidad. No demuestra la causa general de los
+errores restantes ni beneficio FrontSide; no se cambia el gate.
+
+Tab 780 cerrada tras exportar informe/framebuffer/captura y liberar GPU.
+Las cuatro campañas CPU seguían vivas; la suite de root ya había terminado.
+Fuentes exactas y commit independiente en anchorFollowup del recibo.

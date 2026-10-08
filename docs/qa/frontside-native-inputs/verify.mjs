@@ -20,4 +20,14 @@ const frames=worker.sourceDrawAudit.frames;assert.equal(frames.length,31);
 assert(frames.every(f=>f.mesh==='Mesh0'&&JSON.stringify(f.gpuInputs)===JSON.stringify(frames[0].gpuInputs)));
 assert(frames.every(f=>f.gpuInputs.boneTexture.framebufferStatus===36053&&f.gpuInputs.boneTexture.cpuGpuFingerprintEqual&&f.gpuInputs.boneTexture.nonfiniteReadValues===0));
 assert.equal(receipt.productionChanged,false);assert.equal(receipt.benchmark,false);
+const anchor=JSON.parse(gunzipSync(readFileSync(new URL('anchor-report.json.gz',dir))));
+assert.equal(anchor.stemAnchorNormals,true);assert.equal(anchor.samples.length,1);
+assert(anchor.samples[0].controls.every(c=>c.differentBytes===0));
+assert.equal(anchor.samples[0].comparisons[0].passes,true);
+for(const c of anchor.samples[0].comparisons.slice(1)){
+ assert.equal(c.passes,false);assert.equal(c.missingPixels,55);assert.equal(c.addedPixels,193);
+ assert.equal(c.alphaDistanceGate.missingBeyondOnePixel,13);assert.equal(c.alphaDistanceGate.addedBeyondOnePixel,149);
+ assert(c.maxTileMae>.14);assert(c.linearRgbMae<crop.samples[0].comparisons[c.arm-1].linearRgbMae);
+}
 console.log('PASS: 658 quality rejection retained; repeated framebuffer exact, worker redraw control invalid, observed GPU input fingerprints stable');
+console.log('PASS: original-anchor normal restoration improves training RGB slightly, but remains rejected');
