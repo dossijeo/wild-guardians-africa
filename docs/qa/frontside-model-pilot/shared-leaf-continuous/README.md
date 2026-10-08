@@ -10,8 +10,13 @@ Root inspected the retained rows at original detail and reported recognizable pl
 
 Pixel differences are diagnostic under the user's revised policy. Functional contracts, effective shadows, resource budgets and net paired GPU performance remain separate requirements; none is approved by this archive.
 
+`game-night-v1` preserves tab850's 442-frame run. Root observed a morph status at elapsed5.68s/growth.96104 with the derivative inactive, but the following screenshot arrived after12s with mature geometry active. Neither sustained playback nor the crossing instant was observed, so live continuity remains pending. Retained nocturnal rows keep broadly similar masses/forms and coarse shadows; darkness and distance limit assessment of leaf detail.
+
+The original-original preparation is a display diagnostic, not an exact control: day changed31pixels/40channels with maximum byte delta10, night changed15pixels/24channels with maximum delta6. These are explicitly retained rather than hidden or assigned to the derivative. Combined two-column sky/color/shadow submissions rise from8calls in the original/bridge states to12calls when the derivative mature mesh becomes active. Mature combined triangles are966972 in both day and night; these counters do not measure GPU time or prove net benefit.
+
 Verify the immutable day capture from the worktree root:
 
 ```powershell
 node tools/frontside_shared_leaf_verify_continuous.mjs docs/qa/frontside-model-pilot/shared-leaf-continuous/game-day-v1
+node tools/frontside_shared_leaf_verify_continuous.mjs docs/qa/frontside-model-pilot/shared-leaf-continuous/game-night-v1
 ```

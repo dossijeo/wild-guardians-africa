@@ -1,0 +1,512 @@
+{
+  "status": "NATIVE_CONTINUOUS_CAPTURE_ARCHIVED_HUMAN_REVIEW_PENDING",
+  "visualAcceptancePolicyVersion": 3,
+  "runId": "game-night-v1",
+  "fixtureSourceCommit": "3bb0c41c16d2f4b833703aff4129d1088ac3754d",
+  "fixtureJsSha256": "2f11e4ec6dab786272d894b70e2f97c96eef2b993e911c13ba0f362177f5441e",
+  "rawJsonSha256": "327a997b44819ca7b2abed7fac4c6ab16611b032adeff5102148d4a687e898e6",
+  "gzipSha256": "6497594756c8f60116af33af65efaed6f4634d4c47b24b643f6fe64ad32e0969",
+  "pngSha256": "e1f0a9c550a6330c0db01fac146f005200f6980b727ba2d642c26de2b493bfa5",
+  "mode": "game",
+  "night": 1,
+  "plantCount": 49,
+  "cameraPosition": [
+    40,
+    35,
+    50
+  ],
+  "framesRecorded": 442,
+  "preparation": [
+    {
+      "row": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "growth": 0.984,
+      "clock": 6.1875,
+      "meaning": "Same original on both columns; source/display diagnostic only.",
+      "state": [
+        {
+          "arm": 0,
+          "phase": "original",
+          "stage": 4,
+          "matureActive": true,
+          "count": 49
+        },
+        {
+          "arm": 1,
+          "phase": "original",
+          "stage": 4,
+          "matureActive": true,
+          "count": 49
+        },
+        {
+          "arm": 2,
+          "phase": "original",
+          "stage": 4,
+          "matureActive": true,
+          "count": 49
+        },
+        {
+          "arm": 3,
+          "phase": "original",
+          "stage": 4,
+          "matureActive": true,
+          "count": 49
+        }
+      ],
+      "diagnostic": {
+        "changedChannels": 24,
+        "changedPixels": 15,
+        "maxChannelDelta": 6
+      }
+    },
+    {
+      "row": 1,
+      "leftArm": 0,
+      "rightArm": 2,
+      "growth": 0.984,
+      "clock": 6.1875,
+      "meaning": "Original versus reduced Double geometry; review before Front.",
+      "state": [
+        {
+          "arm": 0,
+          "phase": "original",
+          "stage": 4,
+          "matureActive": true,
+          "count": 49
+        },
+        {
+          "arm": 1,
+          "phase": "original",
+          "stage": 4,
+          "matureActive": true,
+          "count": 49
+        },
+        {
+          "arm": 2,
+          "phase": "original",
+          "stage": 4,
+          "matureActive": true,
+          "count": 49
+        },
+        {
+          "arm": 3,
+          "phase": "original",
+          "stage": 4,
+          "matureActive": true,
+          "count": 49
+        }
+      ]
+    }
+  ],
+  "captures": [
+    {
+      "row": 2,
+      "requestedGrowth": 0.95438,
+      "actualGrowth": 0.9543855555556437,
+      "elapsed": 3.884100000023842,
+      "state": [
+        {
+          "arm": 0,
+          "phase": "original",
+          "stage": 3,
+          "matureActive": false,
+          "count": 0
+        },
+        {
+          "arm": 1,
+          "phase": "original",
+          "stage": 3,
+          "matureActive": false,
+          "count": 0
+        },
+        {
+          "arm": 2,
+          "phase": "original",
+          "stage": 3,
+          "matureActive": false,
+          "count": 0
+        },
+        {
+          "arm": 3,
+          "phase": "original",
+          "stage": 3,
+          "matureActive": false,
+          "count": 0
+        }
+      ],
+      "shadowDraws": [
+        {
+          "arm": 0,
+          "activeArm": 0,
+          "mesh": "maiz_04_desarrollo",
+          "instances": 49,
+          "depthSide": 2,
+          "group": null,
+          "groupIndexCount": 9615
+        },
+        {
+          "arm": 3,
+          "activeArm": 3,
+          "mesh": "maiz_04_desarrollo",
+          "instances": 49,
+          "depthSide": 2,
+          "group": null,
+          "groupIndexCount": 9615
+        }
+      ],
+      "shadowOn": 1,
+      "combinedDualViewSubmission": {
+        "frame": 680,
+        "calls": 8,
+        "triangles": 628186,
+        "points": 0,
+        "lines": 0
+      },
+      "submissionScope": "Both columns, sky, color and native shadows; counts only, no timing."
+    },
+    {
+      "row": 3,
+      "requestedGrowth": 0.9582,
+      "actualGrowth": 0.9583303703705469,
+      "elapsed": 4.949200000047684,
+      "state": [
+        {
+          "arm": 0,
+          "phase": "morph",
+          "stage": 4,
+          "matureActive": false,
+          "count": 0
+        },
+        {
+          "arm": 1,
+          "phase": "morph",
+          "stage": 4,
+          "matureActive": false,
+          "count": 0
+        },
+        {
+          "arm": 2,
+          "phase": "morph",
+          "stage": 4,
+          "matureActive": false,
+          "count": 0
+        },
+        {
+          "arm": 3,
+          "phase": "morph",
+          "stage": 4,
+          "matureActive": false,
+          "count": 0
+        }
+      ],
+      "shadowDraws": [
+        {
+          "arm": 0,
+          "activeArm": 0,
+          "mesh": "puente_maiz_4_5",
+          "instances": 49,
+          "depthSide": 2,
+          "group": null,
+          "groupIndexCount": 24420
+        },
+        {
+          "arm": 3,
+          "activeArm": 3,
+          "mesh": "puente_maiz_4_5",
+          "instances": 49,
+          "depthSide": 2,
+          "group": null,
+          "groupIndexCount": 24420
+        }
+      ],
+      "shadowOn": 1,
+      "combinedDualViewSubmission": {
+        "frame": 792,
+        "calls": 8,
+        "triangles": 1595446,
+        "points": 0,
+        "lines": 0
+      },
+      "submissionScope": "Both columns, sky, color and native shadows; counts only, no timing."
+    },
+    {
+      "row": 4,
+      "requestedGrowth": 0.96179,
+      "actualGrowth": 0.9618407407407407,
+      "elapsed": 5.897,
+      "state": [
+        {
+          "arm": 0,
+          "phase": "morph",
+          "stage": 4,
+          "matureActive": false,
+          "count": 0
+        },
+        {
+          "arm": 1,
+          "phase": "morph",
+          "stage": 4,
+          "matureActive": false,
+          "count": 0
+        },
+        {
+          "arm": 2,
+          "phase": "morph",
+          "stage": 4,
+          "matureActive": false,
+          "count": 0
+        },
+        {
+          "arm": 3,
+          "phase": "morph",
+          "stage": 4,
+          "matureActive": false,
+          "count": 0
+        }
+      ],
+      "shadowDraws": [
+        {
+          "arm": 0,
+          "activeArm": 0,
+          "mesh": "puente_maiz_4_5",
+          "instances": 49,
+          "depthSide": 2,
+          "group": null,
+          "groupIndexCount": 24420
+        },
+        {
+          "arm": 3,
+          "activeArm": 3,
+          "mesh": "puente_maiz_4_5",
+          "instances": 49,
+          "depthSide": 2,
+          "group": null,
+          "groupIndexCount": 24420
+        }
+      ],
+      "shadowOn": 1,
+      "combinedDualViewSubmission": {
+        "frame": 884,
+        "calls": 8,
+        "triangles": 1595446,
+        "points": 0,
+        "lines": 0
+      },
+      "submissionScope": "Both columns, sky, color and native shadows; counts only, no timing."
+    },
+    {
+      "row": 5,
+      "requestedGrowth": 0.96202,
+      "actualGrowth": 0.9621340740742507,
+      "elapsed": 5.976200000047684,
+      "state": [
+        {
+          "arm": 0,
+          "phase": "original",
+          "stage": 4,
+          "matureActive": true,
+          "count": 49
+        },
+        {
+          "arm": 1,
+          "phase": "original",
+          "stage": 4,
+          "matureActive": true,
+          "count": 49
+        },
+        {
+          "arm": 2,
+          "phase": "original",
+          "stage": 4,
+          "matureActive": true,
+          "count": 49
+        },
+        {
+          "arm": 3,
+          "phase": "original",
+          "stage": 4,
+          "matureActive": true,
+          "count": 49
+        }
+      ],
+      "shadowDraws": [
+        {
+          "arm": 0,
+          "activeArm": 0,
+          "mesh": "maiz_05_maduro",
+          "instances": 49,
+          "depthSide": 2,
+          "group": null,
+          "groupIndexCount": 14805
+        },
+        {
+          "arm": 3,
+          "activeArm": 3,
+          "mesh": "maiz_05_maduro",
+          "instances": 49,
+          "depthSide": 2,
+          "group": 0,
+          "groupIndexCount": 5778
+        },
+        {
+          "arm": 3,
+          "activeArm": 3,
+          "mesh": "maiz_05_maduro",
+          "instances": 49,
+          "depthSide": 2,
+          "group": 1,
+          "groupIndexCount": 4509
+        },
+        {
+          "arm": 3,
+          "activeArm": 3,
+          "mesh": "maiz_05_maduro",
+          "instances": 49,
+          "depthSide": 2,
+          "group": 2,
+          "groupIndexCount": 4509
+        }
+      ],
+      "shadowOn": 1,
+      "combinedDualViewSubmission": {
+        "frame": 892,
+        "calls": 12,
+        "triangles": 966972,
+        "points": 0,
+        "lines": 0
+      },
+      "submissionScope": "Both columns, sky, color and native shadows; counts only, no timing."
+    },
+    {
+      "row": 6,
+      "requestedGrowth": 0.983,
+      "actualGrowth": 0.9831170370371253,
+      "elapsed": 11.641600000023843,
+      "state": [
+        {
+          "arm": 0,
+          "phase": "original",
+          "stage": 4,
+          "matureActive": true,
+          "count": 49
+        },
+        {
+          "arm": 1,
+          "phase": "original",
+          "stage": 4,
+          "matureActive": true,
+          "count": 49
+        },
+        {
+          "arm": 2,
+          "phase": "original",
+          "stage": 4,
+          "matureActive": true,
+          "count": 49
+        },
+        {
+          "arm": 3,
+          "phase": "original",
+          "stage": 4,
+          "matureActive": true,
+          "count": 49
+        }
+      ],
+      "shadowDraws": [
+        {
+          "arm": 0,
+          "activeArm": 0,
+          "mesh": "maiz_05_maduro",
+          "instances": 49,
+          "depthSide": 2,
+          "group": null,
+          "groupIndexCount": 14805
+        },
+        {
+          "arm": 3,
+          "activeArm": 3,
+          "mesh": "maiz_05_maduro",
+          "instances": 49,
+          "depthSide": 2,
+          "group": 0,
+          "groupIndexCount": 5778
+        },
+        {
+          "arm": 3,
+          "activeArm": 3,
+          "mesh": "maiz_05_maduro",
+          "instances": 49,
+          "depthSide": 2,
+          "group": 1,
+          "groupIndexCount": 4509
+        },
+        {
+          "arm": 3,
+          "activeArm": 3,
+          "mesh": "maiz_05_maduro",
+          "instances": 49,
+          "depthSide": 2,
+          "group": 2,
+          "groupIndexCount": 4509
+        }
+      ],
+      "shadowOn": 1,
+      "combinedDualViewSubmission": {
+        "frame": 1740,
+        "calls": 12,
+        "triangles": 966972,
+        "points": 0,
+        "lines": 0
+      },
+      "submissionScope": "Both columns, sky, color and native shadows; counts only, no timing."
+    }
+  ],
+  "cleanup": {
+    "closed": true,
+    "disposed": [
+      "restore source material",
+      "derived material 2",
+      "derived material 1",
+      "derived material 0",
+      "derived geometry 3",
+      "derived geometry 2",
+      "indexed control 1",
+      "crop batch 3",
+      "crop batch 2",
+      "crop batch 1",
+      "crop batch 0",
+      "receiver material",
+      "receiver geometry",
+      "native shadow hook",
+      "directional shadow targets",
+      "NativeSky",
+      "material registry",
+      "source Assets",
+      "renderer resources",
+      "renderer context"
+    ],
+    "errors": []
+  },
+  "contextLost": true,
+  "visualReview": {
+    "status": "HUMAN_REVIEW_PENDING",
+    "reviewer": null,
+    "decision": null,
+    "basis": "Explicit user instruction, 8 October 2026: pixel/color/silhouette/small-hole thresholds are diagnostic; inspect perceptible defects in real conditions.",
+    "numericPassMeaning": "Every passes/colorPasses/quantitativeGate field is a historical-threshold diagnostic, never model acceptance.",
+    "required": [
+      "Recognizable shape, leaves and continuous growth; no perceptible deformation, disappearance or defects.",
+      "Real game distances, day/night, relevant biomes, transitions/actions and effective shadows.",
+      "Functional contracts and stability, resources and measured net GPU benefit before integration."
+    ],
+    "captureScope": "Only retained captures and actually inspected live views may support review; uncaptured metrics do not prove human inspection."
+  },
+  "limitations": [
+    "Filmstrip is retained evidence of sampled frames. Continuous motion requires an observer of the live run.",
+    "Requested growth thresholds are distinct from actual rendered growth; a delayed frame can overshoot.",
+    "This native-shader synthetic plot uses a simple receiver, not the complete production WorldScene.",
+    "ShadowSide/customDepth remain Double isolation; no net GPU timing or category acceptance is established.",
+    "Pixel metrics remain diagnostic under policy3. Human reviewer and decision remain unassigned."
+  ]
+}
