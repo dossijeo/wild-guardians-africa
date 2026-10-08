@@ -5,6 +5,7 @@ import assert from 'node:assert/strict';
 import {Texture,Scene,Group,Vector4,Mesh} from 'three';
 import {NativeFarGpuCancelled,prepareNativeFarGpu,releaseNativeFarGpuCache,nativeFarGpuRevision,nativeFarGpuContextLost} from '../tools/experiments/prepare-native-far-gpu.js';
 import {waitGpuPreparation} from '../tools/experiments/wait-gpu-preparation.js';
+import {compileGpuPreparation} from '../tools/experiments/compile-gpu-preparation.js';
 
 function fixture({renderError=false}={}){
  const scene=new Scene(),parent=new Group(),root=new Group();parent.add(root);const original={},calls=[];let current=original,waits=0,viewport=new Vector4(2,3,100,200),scissor=new Vector4(4,5,60,70),scissorTest=false;
@@ -12,6 +13,38 @@ function fixture({renderError=false}={}){
  const renderer={getContext:()=>gl,initTexture:()=>calls.push('texture'),compileAsync:async(r,c,s)=>{assert.equal(r,root);assert.equal(s,scene);calls.push('compile');},autoClear:true,getViewport:v=>v.copy(viewport),getScissor:v=>v.copy(scissor),getScissorTest:()=>scissorTest,setViewport:(...v)=>{viewport=v[0]?.isVector4?v[0].clone():new Vector4(...v);},setScissor:(...v)=>{scissor=v[0]?.isVector4?v[0].clone():new Vector4(...v);},setScissorTest:v=>{scissorTest=v;if(!v)calls.push('restore');},render:()=>{assert.equal(root.parent,scene);assert.deepEqual(viewport.toArray(),[0,0,0,0]);assert.deepEqual(scissor.toArray(),[0,0,0,0]);assert.equal(scissorTest,true);assert.equal(renderer.autoClear,false);calls.push('render');if(renderError)throw Error('Draw failed');}};
  return {scene,parent,root,original,calls,renderer,current:()=>current,restored(){assert.deepEqual(viewport.toArray(),[2,3,100,200]);assert.deepEqual(scissor.toArray(),[4,5,60,70]);assert.equal(scissorTest,false);assert.equal(renderer.autoClear,true);}};
 }
+
+test('owned compiler candidate cancels the real preparation and stops its readiness queries',async()=>{
+ const f=fixture(),texture=new Texture(),owner=new AbortController(),material={};let queries=0;
+ f.renderer.compile=(root,camera,scene)=>{assert.equal(root,f.root);assert.equal(scene,f.scene);f.calls.push('compile-owned');return new Set([material]);};
+ f.renderer.properties={get:()=>({currentProgram:{isReady:()=>{assert.equal(owner.signal.aborted,false);queries++;return false;}}})};
+ f.renderer.compileAsync=(root,camera,scene)=>compileGpuPreparation(f.renderer,root,camera,scene,{
+  signal:owner.signal,pollIntervalMs:5,check:()=>{if(owner.signal.aborted)throw new NativeFarGpuCancelled('owner-cancelled');}
+ });
+ const preparing=prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[texture],{cancelled:()=>owner.signal.aborted});
+ await new Promise(resolve=>setImmediate(resolve));owner.abort();
+ await assert.rejects(preparing,error=>error instanceof NativeFarGpuCancelled&&error.reason==='owner-cancelled');
+ const finalQueries=queries;await new Promise(resolve=>setTimeout(resolve,15));assert.equal(queries,finalQueries);
+ assert.deepEqual(f.calls,['texture','compile-owned']);f.restored();assert.equal(f.root.parent,f.parent);
+ releaseNativeFarGpuCache(f.renderer);assert.equal(texture._listeners.dispose.length,0);
+});
+
+test('owned compiler candidate cannot fence programs from a lost and restored native cache epoch',async()=>{
+ const f=fixture(),material={};f.renderer.domElement=new EventTarget();let queries=0;
+ f.renderer.compile=()=>new Set([material]);
+ f.renderer.properties={get:()=>({currentProgram:{isReady:()=>{assert.equal(nativeFarGpuRevision(f.renderer),0);queries++;return false;}}})};
+ f.renderer.compileAsync=(root,camera,scene)=>{
+  const epoch=nativeFarGpuRevision(f.renderer);
+  return compileGpuPreparation(f.renderer,root,camera,scene,{pollIntervalMs:5,check:()=>{if(nativeFarGpuRevision(f.renderer)!==epoch)throw new NativeFarGpuCancelled('context-changed');}});
+ };
+ const preparing=prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[]);
+ await new Promise(resolve=>setImmediate(resolve));
+ f.renderer.domElement.dispatchEvent(new Event('webglcontextlost'));f.renderer.domElement.dispatchEvent(new Event('webglcontextrestored'));
+ await assert.rejects(preparing,error=>error instanceof NativeFarGpuCancelled&&error.reason==='context-changed');
+ const finalQueries=queries;await new Promise(resolve=>setTimeout(resolve,15));assert.equal(queries,finalQueries);
+ assert.equal(f.calls.includes('render'),false);assert.equal(f.calls.includes('fence'),false);f.restored();
+ assert.equal(f.root.parent,f.parent);releaseNativeFarGpuCache(f.renderer);
+});
 
 test('candidate compile waiter lets real preparation unwind an owner abort without late drawing',async()=>{
  const f=fixture(),texture=new Texture(),owner=new AbortController();let rejectDriver;

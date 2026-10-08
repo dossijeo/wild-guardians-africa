@@ -41,6 +41,21 @@ and removes its own timers/listeners on cancellation. Wrapping the existing
 Three promise alone is insufficient for complete resource-lifecycle acceptance.
 This source finding is still not evidence of what happened to tab 846.
 
+`tools/experiments/compile-gpu-preparation.js` now implements that owned-poll
+candidate for the normal target recipe. It calls `renderer.compile`, captures
+each selected program once, deduplicates shared programs, checks the caller's
+lifetime/generation before queries, and clears its timer on every exit. It uses
+the shared cancellable waiter instead of starting Three's internal async poll.
+The synchronous submission and readiness-query costs are not made nonblocking
+by this wrapper; no native performance improvement is claimed.
+
+Ten directed compiler tests and two additional real preparation-API injection
+tests pass. Combined compiler/waiter/native-preparation/isolation checks total
+61 passing tests. They exercise discarded borrowed materials, owner abort,
+lost/restored epoch, never-ready deadline, query fault, and no late queries,
+draws or readiness fences after cancellation. The candidate remains unimported
+by runtime while the original resource audit recipe is being measured.
+
 This candidate is not imported by production or the pending native resource
 fixture, preserving its source while browser recovery remains unresolved.
 Next: connect it at the compilation wait, validate the direct integration,
