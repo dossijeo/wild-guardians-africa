@@ -1,0 +1,9 @@
+import fs from 'node:fs';import crypto from 'node:crypto';
+import {encodeCompactLeafPayload} from './lib/frontside-compact-leaf-payload.mjs';
+const source='.cache/frontside-model-pilot/candidates/archive/4d6d5dd729211e9ed5e429915ec81960da5e6b2197d1c8982a3dbb6a92893065.json',sha=b=>crypto.createHash('sha256').update(b).digest('hex'),raw=fs.readFileSync(source);
+if(sha(raw)!=='4d6d5dd729211e9ed5e429915ec81960da5e6b2197d1c8982a3dbb6a92893065')throw Error('Archived Blender payload changed');
+const result=encodeCompactLeafPayload(JSON.parse(raw)),digest=sha(result.bytes),output='.cache/frontside-model-pilot/candidates/archive/'+digest+'.wgleaf';
+if(fs.existsSync(output)&&sha(fs.readFileSync(output))!==digest)throw Error('Refusing candidate overwrite');fs.writeFileSync(output,result.bytes);
+const webBytes=fs.statSync('public/assets/web/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb').size;
+const receipt={status:'COMPACT_PAYLOAD_CPU_CONTRACT_NOT_NATIVE_OR_PACKAGE_APPROVAL',sourceArchive:source,sourceArchiveSha256:sha(raw),output,outputSha256:digest,counts:result.counts,jsonBytes:raw.length,webGlbBytes:webBytes,additionalRawPayloadPercentOfWebGlb:result.bytes.byteLength/webBytes*100,limitations:['Existing frozen native fixtures still fetch the original JSON. No transport/decoder swap has been accepted in browser.','Float32 corner values are exact relative to the runtime writer; source JSON Float64 text is retained separately.','This additional isolated binary is not a compressed GLB or a complete category package. HTTP compression, bridges, metadata and peak allocations remain unmeasured.','Nominal web bytes do not establish GPU benefit, perceptual quality or category acceptance.']};
+fs.writeFileSync('docs/qa/frontside-model-pilot/maize-leaf-compact-payload-receipt.json',JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify(receipt));

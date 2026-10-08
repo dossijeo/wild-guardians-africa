@@ -1,0 +1,23 @@
+{
+  "status": "COMPACT_PAYLOAD_CPU_CONTRACT_NOT_NATIVE_OR_PACKAGE_APPROVAL",
+  "sourceArchive": ".cache/frontside-model-pilot/candidates/archive/4d6d5dd729211e9ed5e429915ec81960da5e6b2197d1c8982a3dbb6a92893065.json",
+  "sourceArchiveSha256": "4d6d5dd729211e9ed5e429915ec81960da5e6b2197d1c8982a3dbb6a92893065",
+  "output": ".cache/frontside-model-pilot/candidates/archive/3eba51ae256663c20bdfcfc4f9e0133a304e8a6dfa25b072a07154b82f0ee65c.wgleaf",
+  "outputSha256": "3eba51ae256663c20bdfcfc4f9e0133a304e8a6dfa25b072a07154b82f0ee65c",
+  "counts": {
+    "vertices": 6903,
+    "faces": 3429,
+    "coreIds": 1926,
+    "metadataBytes": 695,
+    "totalBytes": 253326
+  },
+  "jsonBytes": 1668588,
+  "webGlbBytes": 13626668,
+  "additionalRawPayloadPercentOfWebGlb": 1.8590458063555964,
+  "limitations": [
+    "Existing frozen native fixtures still fetch the original JSON. No transport/decoder swap has been accepted in browser.",
+    "Float32 corner values are exact relative to the runtime writer; source JSON Float64 text is retained separately.",
+    "This additional isolated binary is not a compressed GLB or a complete category package. HTTP compression, bridges, metadata and peak allocations remain unmeasured.",
+    "Nominal web bytes do not establish GPU benefit, perceptual quality or category acceptance."
+  ]
+}
