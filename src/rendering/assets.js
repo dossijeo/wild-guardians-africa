@@ -45,7 +45,7 @@ export class Assets {
   }
   async texture(url,color=false) {
     this.assertOpen();const key=url+color;
-    if(!this.cache.has(key)){const pending=this.textures.loadAsync(assetUrl(url)).then(async texture=>{if(color)texture.colorSpace=THREE.SRGBColorSpace;texture.flipY=false;if(this.asyncTextureImages){try{await prepareLoadingImage(texture,{cancelled:()=>this.modelsDisposed});}catch(error){this.release(texture);throw error;}}return this.own(texture);});this.cache.set(key,pending);pending.catch(()=>{if(this.cache.get(key)===pending)this.cache.delete(key);});}
+    if(!this.cache.has(key)){const pending=this.textures.loadAsync(assetUrl(url)).then(async texture=>{if(color)texture.colorSpace=THREE.SRGBColorSpace;texture.flipY=false;if(this.asyncTextureImages){try{await prepareLoadingImage(texture,{cancelled:()=>this.modelsDisposed,onDiagnostic:this.loadingDiagnostics});}catch(error){this.release(texture);throw error;}}return this.own(texture);});this.cache.set(key,pending);pending.catch(()=>{if(this.cache.get(key)===pending)this.cache.delete(key);});}
     return this.cache.get(key);
   }
   async biome(pack) {
