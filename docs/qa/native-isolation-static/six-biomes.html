@@ -1,0 +1,62 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA · Aislamiento de subida en WorldScene</title>
+<style>body{margin:0;background:#18271f;color:#eee;font:13px system-ui}button{padding:10px}canvas{width:960px;height:540px}pre{white-space:pre-wrap}img{width:480px;max-width:48vw}</style>
+<h1>WorldScene: conservar imagen y sombras al preparar un lote</h1>
+<p>Regresión visual estática, sin benchmark ni cambios persistidos. Seis biomas secuenciales. La lectura de píxeles altera los tiempos.</p>
+<button id="run">Ejecutar seis biomas</button><p id="status">Preparado; GPU inactiva.</p><canvas></canvas><div id="captures"></div><pre id="report"></pre>
+<script type="module">
+import * as Game from '../../src/simulation/game.js';
+import {Navigation,BIOME_IDS} from '../../src/world/navigation.js';
+import {findInitialLocationAsync} from '../../src/world/villages.js';
+import {WorldScene} from '../../src/rendering/scene.js';
+import {farVegetationProfile} from '../../src/rendering/far-vegetation-profile.js';
+import {prepareInitialFarWorld} from '../../src/app/far-world-loading.js';
+import {json} from '../../src/rendering/assets.js';
+import {serialize} from '../../src/persistence/snapshots.js';
+import {Vector4} from 'three';
+import {withGpuRootIsolation} from '../../tools/experiments/isolated-gpu-root.js';
+const button=document.querySelector('#run'),status=document.querySelector('#status'),rows=[],errors=[];
+let active;
+const close=()=>{active?.dispose();active=null;};addEventListener('pagehide',close);
+const assert=(condition,message)=>{if(!condition)throw Error(message);};
+function pixels(renderer){const gl=renderer.getContext(),data=new Uint8Array(gl.drawingBufferWidth*gl.drawingBufferHeight*4);gl.readPixels(0,0,gl.drawingBufferWidth,gl.drawingBufferHeight,gl.RGBA,gl.UNSIGNED_BYTE,data);return data;}
+function compare(a,b){assert(a.length===b.length,'Pixel size differs');let differingChannels=0,maxByte=0;for(let i=0;i<a.length;i++){const delta=Math.abs(a[i]-b[i]);if(delta)differingChannels++;maxByte=Math.max(maxByte,delta);}return{channels:a.length,differingChannels,maxByte};}
+button.onclick=async()=>{
+ button.disabled=true;
+ try{
+  const cases=[['sabana','mapungubwe'],['gran-rio','suajili'],['gran-canon','musgum'],['volcanes','etiope'],['manglares','saheliana'],['desierto','mapungubwe']];
+  for(const [biome,culture] of cases){
+   status.textContent='Preparando '+biome+'/'+culture;
+   const pack=await json('/content/biome-'+BIOME_IDS[biome]+'.json'),payload=(await json('/content/villages.json')).find(v=>v.id===(culture==='saheliana'?'saheliano':culture));
+   const state=Game.newGame({seed:712,biome,culture}),nav=new Navigation(state.seed,biome,pack.profile),site=await findInitialLocationAsync(nav,payload);
+   Object.assign(state.villages[0],site);state.suppressed.push(...site.suppress);nav.setState(state);Game.pause(state,'qa');state.tutorial.step='done';
+   // dispose() loses the previous canvas context; a new element is required.
+   const canvas=document.createElement('canvas');document.querySelector('canvas').replaceWith(canvas);
+   const logical=serialize(state),world=active=new WorldScene(canvas,()=>{});world.onError=e=>errors.push(String(e));world.qualitySetting('media');
+   const row={biome,culture};
+   try{
+    await world.load(state,nav,payload,{farVegetation:farVegetationProfile({quality:'media',biome:nav.config.biome})});await prepareInitialFarWorld(world);world.focus(site.center);
+    const actors=[...world.objects.values()].map(root=>root.userData.actorReady).filter(Boolean);await Promise.all(actors);
+    // All comparisons below are one synchronous turn: no loader/worker callback
+    // can install a chunk between the reference and isolated upload draw.
+    world.render(0);world.render(0);const renderer=world.renderer,root=world.assetGroups.root;
+    const reference=pixels(renderer),before=document.querySelector('canvas').toDataURL('image/png'),visibility=new Map(),culling=new Map();
+    world.scene.traverse(object=>{visibility.set(object,object.visible);if(object.isMesh)culling.set(object,object.frustumCulled);});
+    const viewport=renderer.getViewport(new Vector4()),scissor=renderer.getScissor(new Vector4()),scissorTest=renderer.getScissorTest(),autoClear=renderer.autoClear,shadowFlags={enabled:renderer.shadowMap.enabled,autoUpdate:renderer.shadowMap.autoUpdate,needsUpdate:renderer.shadowMap.needsUpdate},shadowTexture=world.sun.shadow.map?.depthTexture;
+    try{
+     renderer.autoClear=false;renderer.setViewport(0,0,0,0);renderer.setScissor(0,0,0,0);renderer.setScissorTest(true);
+     withGpuRootIsolation(renderer,root,world.scene,()=>renderer.render(world.scene,world.camera));
+    }finally{renderer.autoClear=autoClear;renderer.setViewport(viewport);renderer.setScissor(scissor);renderer.setScissorTest(scissorTest);}
+    row.framebufferAfterUpload=compare(reference,pixels(renderer));
+    for(const [object,value] of visibility)assert(object.visible===value,'Visibility not restored');for(const [object,value] of culling)assert(object.frustumCulled===value,'Culling changed');
+    for(const [key,value] of Object.entries(shadowFlags))assert(renderer.shadowMap[key]===value,'Shadow flag changed '+key);assert(world.sun.shadow.map?.depthTexture===shadowTexture,'Shadow texture replaced');
+    world.render(0);row.nextWorldFrame=compare(reference,pixels(renderer));row.logicalUnchanged=logical===serialize(state);row.shadowOn=world.toon.shadowUniforms.uNativeShadowOn.value;row.chunks=world.chunkStream.summary();row.actorRequests=actors.length;
+    row.beforePng=before;row.afterPng=document.querySelector('canvas').toDataURL('image/png');row.restored=true;
+    assert(row.framebufferAfterUpload.differingChannels===0,'Zero-pixel upload changed framebuffer');assert(row.logicalUnchanged,'Game state changed');
+   }finally{const gl=world.renderer.getContext();close();row.disposed=world.disposed;row.contextLost=gl.isContextLost();rows.push(row);}
+  }
+ }catch(error){errors.push(String(error));close();}
+ const report={done:true,rows,errors,scope:'Synchronous stationary WorldScene image/state/visibility/native-shadow resource regression only. No traveling continuity, gameplay entities, physical memory or performance acceptance.'};
+ document.querySelector('#report').textContent=JSON.stringify(report);status.textContent='Terminado, GPU liberada. '+rows.length+' casos; errores '+errors.length;
+ for(const row of rows){const label=document.createElement('p');label.textContent=row.biome+' '+JSON.stringify(row.nextWorldFrame);document.querySelector('#captures').append(label);for(const key of ['beforePng','afterPng']){if(!row[key])continue;const image=document.createElement('img');image.src=row[key];image.alt=row.biome+' '+key;document.querySelector('#captures').append(image);}}
+};
+</script></html>
