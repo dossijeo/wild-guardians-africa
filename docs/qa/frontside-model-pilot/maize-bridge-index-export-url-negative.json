@@ -1,0 +1,13 @@
+{
+  "status": "CPU_PREFLIGHT_URL_CONSTRUCTION_FAILURE_NOT_MODEL_REJECTION",
+  "command": "node tools/frontside_bridge_index_preflight.mjs",
+  "exitCode": 1,
+  "observedCommandSeconds": 0.4238895,
+  "error": "TypeError: Failed to parse URL from http://127.0.0.1:5284assets/web/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+  "cause": "ERR_INVALID_URL",
+  "gpuContextCreated": false,
+  "gpuDraws": 0,
+  "nativeSamples": 0,
+  "correction": "Resolve the fixed runtime asset path from origin root in both CPU preflight and browser manual byte fetch.",
+  "subsequentCpuPreflight": "maize-bridge-index-export-preflight.json"
+}
