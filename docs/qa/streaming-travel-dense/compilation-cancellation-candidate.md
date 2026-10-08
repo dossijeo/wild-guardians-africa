@@ -26,6 +26,21 @@ prove owner/context cancellation leaves parent/render flags unchanged, submits
 no draw/fence, releases cache listeners and never adopts late completion. This
 CPU injection is not production integration or native-browser evidence.
 
+Additional source audit: Three r180 `WebGLRenderer.compileAsync` owns an
+uncancellable 10-ms `checkMaterialsReady` timer (local source lines 1408–1461).
+It re-reads each material's `properties.currentProgram` and calls `isReady`
+without a rejection/cancellation handler. Disposing a pending material can
+therefore invalidate that lookup; an outer Promise race does not remove this
+internal timer or turn an exception from its callback into a rejection. The
+controlled pending-promise tests do not validate this third-party lifecycle.
+
+Before adopting native compilation cancellation, use an owned bounded compiler
+poll (like the loading feature's `compileLoadingPrograms`) that snapshots the
+submitted programs, checks owner/context generation before readiness queries,
+and removes its own timers/listeners on cancellation. Wrapping the existing
+Three promise alone is insufficient for complete resource-lifecycle acceptance.
+This source finding is still not evidence of what happened to tab 846.
+
 This candidate is not imported by production or the pending native resource
 fixture, preserving its source while browser recovery remains unresolved.
 Next: connect it at the compilation wait, validate the direct integration,
