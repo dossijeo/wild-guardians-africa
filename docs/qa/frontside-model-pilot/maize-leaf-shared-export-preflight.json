@@ -1,9 +1,78 @@
 {
   "status": "SHARED_LEAF_CPU_EXPORT_PREFLIGHT_PASS_NOT_NATIVE",
   "gpuDraws": 0,
-  "prefix": "crop-leaf-shared-human",
   "source": "assets/web/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
-  "httpStatus": 200,
-  "response": "{\"status\":\"EXPORT_PREFLIGHT_PASS_NOT_NATIVE\",\"prefix\":\"crop-leaf-shared-human\",\"artifactsWritten\":false}",
+  "cases": [
+    {
+      "viewCaseIndex": 0,
+      "id": "training-mature",
+      "prefix": "crop-leaf-shared-human",
+      "httpStatus": 200,
+      "response": "{\"status\":\"EXPORT_PREFLIGHT_PASS_NOT_NATIVE\",\"prefix\":\"crop-leaf-shared-human\",\"artifactsWritten\":false}"
+    },
+    {
+      "viewCaseIndex": 1,
+      "id": "mature-day-gran-rio",
+      "prefix": "crop-leaf-shared-human",
+      "httpStatus": 200,
+      "response": "{\"status\":\"EXPORT_PREFLIGHT_PASS_NOT_NATIVE\",\"prefix\":\"crop-leaf-shared-human\",\"artifactsWritten\":false}"
+    },
+    {
+      "viewCaseIndex": 2,
+      "id": "mature-night-volcanes",
+      "prefix": "crop-leaf-shared-human",
+      "httpStatus": 200,
+      "response": "{\"status\":\"EXPORT_PREFLIGHT_PASS_NOT_NATIVE\",\"prefix\":\"crop-leaf-shared-human\",\"artifactsWritten\":false}"
+    },
+    {
+      "viewCaseIndex": 3,
+      "id": "mature-dawn-manglares",
+      "prefix": "crop-leaf-shared-human",
+      "httpStatus": 200,
+      "response": "{\"status\":\"EXPORT_PREFLIGHT_PASS_NOT_NATIVE\",\"prefix\":\"crop-leaf-shared-human\",\"artifactsWritten\":false}"
+    },
+    {
+      "viewCaseIndex": 4,
+      "id": "before-final-bridge",
+      "prefix": "crop-leaf-shared-human",
+      "httpStatus": 200,
+      "response": "{\"status\":\"EXPORT_PREFLIGHT_PASS_NOT_NATIVE\",\"prefix\":\"crop-leaf-shared-human\",\"artifactsWritten\":false}"
+    },
+    {
+      "viewCaseIndex": 5,
+      "id": "start-final-bridge",
+      "prefix": "crop-leaf-shared-human",
+      "httpStatus": 200,
+      "response": "{\"status\":\"EXPORT_PREFLIGHT_PASS_NOT_NATIVE\",\"prefix\":\"crop-leaf-shared-human\",\"artifactsWritten\":false}"
+    },
+    {
+      "viewCaseIndex": 6,
+      "id": "mid-final-bridge",
+      "prefix": "crop-leaf-shared-human",
+      "httpStatus": 200,
+      "response": "{\"status\":\"EXPORT_PREFLIGHT_PASS_NOT_NATIVE\",\"prefix\":\"crop-leaf-shared-human\",\"artifactsWritten\":false}"
+    },
+    {
+      "viewCaseIndex": 7,
+      "id": "end-final-bridge",
+      "prefix": "crop-leaf-shared-human",
+      "httpStatus": 200,
+      "response": "{\"status\":\"EXPORT_PREFLIGHT_PASS_NOT_NATIVE\",\"prefix\":\"crop-leaf-shared-human\",\"artifactsWritten\":false}"
+    },
+    {
+      "viewCaseIndex": 8,
+      "id": "first-derived-native",
+      "prefix": "crop-leaf-shared-human",
+      "httpStatus": 200,
+      "response": "{\"status\":\"EXPORT_PREFLIGHT_PASS_NOT_NATIVE\",\"prefix\":\"crop-leaf-shared-human\",\"artifactsWritten\":false}"
+    },
+    {
+      "viewCaseIndex": 9,
+      "id": "later-derived-native",
+      "prefix": "crop-leaf-shared-human",
+      "httpStatus": 200,
+      "response": "{\"status\":\"EXPORT_PREFLIGHT_PASS_NOT_NATIVE\",\"prefix\":\"crop-leaf-shared-human\",\"artifactsWritten\":false}"
+    }
+  ],
   "limitations": "Dynamic fields are placeholders. No native shader compilation, pixels, human decision or quality artifact created."
 }

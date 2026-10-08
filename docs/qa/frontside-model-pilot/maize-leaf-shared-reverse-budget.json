@@ -17,6 +17,32 @@
   "triangleChangePercent": -0.06079027355623268,
   "controlledWriterVerified": true,
   "liveGrowthBorrowed": true,
+  "perDrawUnique": {
+    "original": 8983,
+    "candidate": [
+      3610,
+      3293,
+      3293
+    ],
+    "meaning": "Unique-index lower bound per separate draw; not measured shader invocation count."
+  },
+  "simulatedVertexInvocations": [
+    {
+      "lruCacheEntries": 16,
+      "original": 14433,
+      "candidate": 13666
+    },
+    {
+      "lruCacheEntries": 32,
+      "original": 14149,
+      "candidate": 12785
+    },
+    {
+      "lruCacheEntries": 64,
+      "original": 13589,
+      "candidate": 11861
+    }
+  ],
   "actualGroups": [
     {
       "start": 0,

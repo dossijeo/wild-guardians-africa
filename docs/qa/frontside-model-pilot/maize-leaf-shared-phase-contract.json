@@ -1,0 +1,165 @@
+{
+  "status": "CPU_PHASE_CONTRACT_PASS_NOT_VISUAL_OR_GPU_APPROVAL",
+  "sourceSha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+  "archiveSha256": "4d6d5dd729211e9ed5e429915ec81960da5e6b2197d1c8982a3dbb6a92893065",
+  "bridgeSha256": "88c4bdb959b1debb7456e6c1708840330b459a6ede6649e8f690583953428309",
+  "cropBatchSha256": "982cdd49e48416596d9c50935d4d910b46ad9752f8fcec5c568ec4d96d206311",
+  "casesSha256": "599aac0112719e8d9841adef3acb62fb55534ef581785cc5e4a326c8944eb8bb",
+  "rows": [
+    {
+      "id": "training-mature",
+      "growth": 1,
+      "phase": "original",
+      "stage": 4,
+      "matureActive": true,
+      "active": [
+        {
+          "name": "maiz_05_maduro",
+          "instances": 1,
+          "indexCount": 14796
+        }
+      ],
+      "liveGrowthShared": true
+    },
+    {
+      "id": "mature-day-gran-rio",
+      "growth": 1,
+      "phase": "original",
+      "stage": 4,
+      "matureActive": true,
+      "active": [
+        {
+          "name": "maiz_05_maduro",
+          "instances": 1,
+          "indexCount": 14796
+        }
+      ],
+      "liveGrowthShared": true
+    },
+    {
+      "id": "mature-night-volcanes",
+      "growth": 1,
+      "phase": "original",
+      "stage": 4,
+      "matureActive": true,
+      "active": [
+        {
+          "name": "maiz_05_maduro",
+          "instances": 1,
+          "indexCount": 14796
+        }
+      ],
+      "liveGrowthShared": true
+    },
+    {
+      "id": "mature-dawn-manglares",
+      "growth": 1,
+      "phase": "original",
+      "stage": 4,
+      "matureActive": true,
+      "active": [
+        {
+          "name": "maiz_05_maduro",
+          "instances": 1,
+          "indexCount": 14796
+        }
+      ],
+      "liveGrowthShared": true
+    },
+    {
+      "id": "before-final-bridge",
+      "growth": 0.9543862962962963,
+      "phase": "original",
+      "stage": 3,
+      "matureActive": false,
+      "active": [
+        {
+          "name": "maiz_04_desarrollo",
+          "instances": 1,
+          "indexCount": 9615
+        }
+      ],
+      "liveGrowthShared": true
+    },
+    {
+      "id": "start-final-bridge",
+      "growth": 0.9546062962962963,
+      "phase": "morph",
+      "stage": 3,
+      "matureActive": false,
+      "active": [
+        {
+          "name": "puente_maiz_4_5",
+          "instances": 1,
+          "indexCount": null
+        }
+      ],
+      "liveGrowthShared": true
+    },
+    {
+      "id": "mid-final-bridge",
+      "growth": 0.9582,
+      "phase": "morph",
+      "stage": 3,
+      "matureActive": false,
+      "active": [
+        {
+          "name": "puente_maiz_4_5",
+          "instances": 1,
+          "indexCount": null
+        }
+      ],
+      "liveGrowthShared": true
+    },
+    {
+      "id": "end-final-bridge",
+      "growth": 0.9617937037037037,
+      "phase": "morph",
+      "stage": 4,
+      "matureActive": false,
+      "active": [
+        {
+          "name": "puente_maiz_4_5",
+          "instances": 1,
+          "indexCount": null
+        }
+      ],
+      "liveGrowthShared": true
+    },
+    {
+      "id": "first-derived-native",
+      "growth": 0.9620137037037036,
+      "phase": "original",
+      "stage": 4,
+      "matureActive": true,
+      "active": [
+        {
+          "name": "maiz_05_maduro",
+          "instances": 1,
+          "indexCount": 14796
+        }
+      ],
+      "liveGrowthShared": true
+    },
+    {
+      "id": "later-derived-native",
+      "growth": 0.9865,
+      "phase": "original",
+      "stage": 4,
+      "matureActive": true,
+      "active": [
+        {
+          "name": "maiz_05_maduro",
+          "instances": 1,
+          "indexCount": 14796
+        }
+      ],
+      "liveGrowthShared": true
+    }
+  ],
+  "limitations": [
+    "Texture references omitted only from the temporary in-memory loader; original files unchanged. No shader compilation or GPU draw.",
+    "Bridge geometry remains original. Bridge-only cases do not establish active derivative coverage or continuity of the changed mature leaf topology.",
+    "Prospective camera cases are fixed before native captures. Appearance and transition continuity need inspection; no automatic pixel rejection."
+  ]
+}
