@@ -96,3 +96,16 @@ geometry uploads are requested. Four tests cover restoration, borrowed ownership
 unsupported recipes, shader failure and cancellation. Native cache-key matching,
 buffer accounting, visual regression and ABBA remain open; compiling a plausible
 recipe alone does not establish actual shadow readiness or performance benefit.
+
+Native run e70c7d08/tab 831 confirms the exact cache key that first appeared in
+the texture-only run is already present at readiness. 82 ready programs, zero
+new programs during the 180 m route; no traced call exceeds 20.4 ms. The crate
+preparation takes 32.9 ms in this diagnostic run. The endpoint image was inspected
+without an obvious rendering defect, but this is not multivista/shadow regression.
+
+216 intervals: p95 133 ms, p99/max 166.3 ms, 33 above 100 ms. Global stability
+has not improved convincingly: slow delivery persists after the first-use shader
+work is removed. No production activation. Logical state/camera/farm match the
+texture-only run, queries pending zero, errors empty, disposed/tab closed.
+`verify-crate.mjs` reproduces hashes, the exact cache-key comparison and recorded
+metrics; full buffer audit and uninstrumented ABBA remain required.
