@@ -1,0 +1,62 @@
+{
+  "status": "TARGET_SOURCE_RUNTIME_BITS_VERIFIED_NOT_VISUAL_GPU_APPROVAL",
+  "mesh": "maiz_02_joven",
+  "source": "assets/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+  "runtime": "assets/web/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+  "sourceSha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+  "runtimeSha256": "617568fc66595c635739ff83bc0256535a72fdf7bfcb016dc68a7f7f1e1a8a52",
+  "runtimeBytes": 13626668,
+  "codec": "EXT_meshopt_compression (v0, lossless, no reorder)",
+  "accessors": [
+    {
+      "name": "POSITION",
+      "count": 2132,
+      "type": "VEC3",
+      "componentType": 5126,
+      "normalized": false,
+      "bytes": 25584,
+      "sourceSha256": "561baf5e78036e724621831202c867172e00ebe26d396e313011885f4a9d72e0",
+      "runtimeDecodedSha256": "561baf5e78036e724621831202c867172e00ebe26d396e313011885f4a9d72e0",
+      "bitExact": true
+    },
+    {
+      "name": "NORMAL",
+      "count": 2132,
+      "type": "VEC3",
+      "componentType": 5126,
+      "normalized": false,
+      "bytes": 25584,
+      "sourceSha256": "0b34fd23ac65442208f7d7c91eb534157ada9204fc7ce065583c8334799b1446",
+      "runtimeDecodedSha256": "0b34fd23ac65442208f7d7c91eb534157ada9204fc7ce065583c8334799b1446",
+      "bitExact": true
+    },
+    {
+      "name": "TEXCOORD_0",
+      "count": 2132,
+      "type": "VEC2",
+      "componentType": 5126,
+      "normalized": false,
+      "bytes": 17056,
+      "sourceSha256": "f2470097c1c187fb2027f8c11cf5bc7a8ebf62641a59c9cc9336b00e9c98d7ef",
+      "runtimeDecodedSha256": "f2470097c1c187fb2027f8c11cf5bc7a8ebf62641a59c9cc9336b00e9c98d7ef",
+      "bitExact": true
+    },
+    {
+      "name": "indices",
+      "count": 3762,
+      "type": "SCALAR",
+      "componentType": 5123,
+      "normalized": false,
+      "bytes": 7524,
+      "sourceSha256": "34f67ed2d3c34b5c6696fc8de09282809d494ed05223fa5aa016fb22a974ca42",
+      "runtimeDecodedSha256": "34f67ed2d3c34b5c6696fc8de09282809d494ed05223fa5aa016fb22a974ca42",
+      "bitExact": true
+    }
+  ],
+  "limitations": [
+    "URL basename is original source hash, not compressed runtime byte hash. Assets.model resolves original URL to web counterpart.",
+    "Only target PN/UV/index accessors decoded and compared; no statement about every state/bridge, GPU texels, skin/animations or runtime rendering follows.",
+    "Web atlas images use the established web compression recipes, not source image byte equality; all pilot arms borrow the same original runtime maps.",
+    "No source or runtime model written, no browser/driver/quality/cost measurement."
+  ]
+}
