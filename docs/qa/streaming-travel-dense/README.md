@@ -32,3 +32,21 @@ esos picos; compileAsync máximo36,9ms. La lista GL inicial no captura una llama
 que explique los principales picos. Se amplía el fixture para inspeccionar
 compilación/reflexión y uploads en la siguiente ejecución. Estado idéntico,
 cero errores, contexto liberado al terminar. Aún no es una solución aprobada.
+
+## Consulta inicial de shaders localizada
+
+Traza WebGL ampliada:174 intervalos, p95 166,3ms, p99 299,5ms, máximo349,3ms;
+45 intervalos sobre100ms. Diagnóstico, no benchmark comparativo de mejora.
+`gl.getProgramInfoLog` consume255,3ms en vegetación nativa con clipping,
+189,7ms en material african-water,128,3ms en MeshDepthMaterial de FruitCrate
+y225ms en BakedMaterial MeshPhysicalMaterial. Las llamadas están contenidas
+en los renderBufferDirect lentos correspondientes, con tipo/nombre/clave
+registrados en el informe. Esto identifica bloqueos concretos del primer uso;
+no atribuye todos los intervalos lentos a una sola causa.
+
+Three.js r180 consulta estos logs en onFirstUse, aun después de compilar.
+El juego ya dispone de compileAsync/calientamiento y detección de errores:
+no eliminar esa protección para ocultar el problema. Preparar y conservar
+las variantes exactas que aparecen durante traveling requiere todavía diseño,
+candidato, medición comparable y regresión visual. Sin cambios a producción,
+sin errores, estado lógico idéntico y contexto liberado al terminar.

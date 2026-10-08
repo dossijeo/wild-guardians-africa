@@ -57,6 +57,10 @@ try{
   wrap(world.farVegetation,'update','far.update');wrap(world.assetGroups,'update','assetGroups.update');
   wrap(world.materialRegistry,'update','materials.update');wrap(world.destructionPass,'render','destruction.render');
  }
+ if(params.has('trace')){
+  const original=world.renderer.renderBufferDirect;
+  world.renderer.renderBufferDirect=function(...args){const begin=performance.now();try{return original.apply(this,args);}finally{const cpuMs=performance.now()-begin;if(running&&cpuMs>2){const material=args[3],object=args[4];segments.push({name:'renderBufferDirect',at:begin-started,cpuMs,materialType:material?.type,materialName:material?.name,objectName:object?.name,mergedPass:object?.userData.nativeMergedPass,ground:!!object?.userData.ground,farGround:!!object?.userData.farGround,cacheKey:material?.customProgramCacheKey?.()});}}};
+ }
  const gl=world.renderer.getContext(),rendererInfo=gl.getExtension('WEBGL_debug_renderer_info');
  if(params.has('glTrace'))for(const name of ['getError','clientWaitSync','fenceSync','flush','getProgramParameter','getShaderParameter','getProgramInfoLog','getShaderInfoLog','getActiveUniform','getUniformLocation','getActiveAttrib','getAttribLocation','compileShader','linkProgram','bufferData','bufferSubData','texImage2D','texSubImage2D','generateMipmap']){
   const original=gl[name];gl[name]=function(...args){const begin=performance.now();try{return original.apply(this,args);}finally{if(running){const cpuMs=performance.now()-begin;if(cpuMs>2)segments.push({name:'gl.'+name,at:begin-started,cpuMs});}}};
