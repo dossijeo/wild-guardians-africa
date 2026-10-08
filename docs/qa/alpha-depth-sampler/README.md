@@ -1,0 +1,11 @@
+# Alpha depth: aislamiento del filtro de textura
+
+QA sobre main 038c049e más las fuentes exactas comprimidas de este experimento. Volcanes/Mapungubwe, seed 712, media, cámara/reloj fijos, framebuffer 1280×720. Se mantienen los texels originales y se cambian los filtros de los mapas alpha compartidos por ambas rutas. Esto cambia el aspecto de la escena: no es una propuesta visual ni una optimización integrada.
+
+Dos modos: lineal sin mipmaps y vecino más cercano sin mipmaps. Cada modo ejecuta una comparación N1/N2/G/B1/B2/N3 sin consultas WebGL y después otra con observación del dibujo del lote residente `18:2` (Afloramiento volcánico). La sonda confirma filtros efectivos GL_LINEAR 9729 o GL_NEAREST 9728, respectivamente, tanto en el material nativo como en el de profundidad. La textura observada mantiene su identidad dentro de cada secuencia. No se infiere igualdad de bytes entre contextos a partir del ID local.
+
+Las cuatro secuencias dan los mismos siete píxeles distintos en G/B1, N2/B1 y B2/N3; los cuatro restantes pares son cero. Las coordenadas son idénticas en los dos modos y ambas observaciones: (591,656), (592,656), (593,656), (592,657), (593,657), (593,658), (593,659), con origen inferior WebGL. Máximo delta normalizado 0,00001996755599975586. No hay errores de fixture ni avisos/errores de consola archivados.
+
+Eliminar selección de mip y después interpolación bilineal no elimina este contraejemplo. El resultado no prueba que cualquier muestreo alpha sea inocuo, ni identifica una causa única; sí evita seguir proponiendo el filtro mip como explicación suficiente de estas diferencias. Los filtros authored permanecen intactos en producción. El candidato de profundidad alpha sigue desactivado; próximo aislamiento: contribución del discard alpha frente a diferencias de evaluación/rasterización/profundidad entre programas.
+
+Doce pruebas dirigidas pasan. Syntax checker: 149 HTML, 146 scripts, cero fallos. El módulo QA deduplica mapas compartidos, conserva las imágenes y restaura min/mag filters al liberar la escena. `node docs/qa/alpha-depth-sampler/verify.mjs` verifica hashes, controles, coordenadas y filtros realmente observados; no mide frametime/GPU ni acredita todos los biomas.

@@ -23,6 +23,7 @@ import {depthPixelCandidates} from './depth-pixel-candidates.js';
 import {withExcludedDepthObject} from './depth-draw-exclusion.js';
 import {createDepthGpuProbe} from './depth-gpu-state.js';
 import {InvariantDepthShaders} from './invariant-depth-shaders.js';
+import {AlphaSamplerExperiment} from './alpha-sampler.js';
 import {withDepthCaptureMaterials} from '../../src/rendering/depth-capture.js';
 import {renderOriginBounds,withRenderOrigin} from '../../src/rendering/render-origin.js';
 import {withDepthCaptureMaterials as beforeCompatibility} from './depth-capture-before-compatibility.js';
@@ -39,6 +40,8 @@ Game.plant(state,'qa-plant','mijo',site.x,site.z,nav);Game.openInitialHiring(sta
 const world=new WorldScene(document.querySelector('#world'),()=>{});
 const invariantShaders=params.has('invariant')?new InvariantDepthShaders(world,params.get('invariant')):null;
 world.onError=showError;world.destructionPass.auxiliaryDepth=params.get('auxiliary')==='1';world.qualitySetting('media');await world.load(state,nav,payload);
+const alphaSampler=params.has('alphaSampler')?new AlphaSamplerExperiment(world,params.get('alphaSampler')):null;
+addEventListener('pagehide',()=>alphaSampler?.dispose(),{once:true});
 world.focus(place.center);const ground=nav.field.surface(place.center.x,place.center.z);world.controls.target.set(place.center.x,ground+1,place.center.z);world.camera.position.set(place.center.x+10,ground+9,place.center.z+14);world.controls.update();
 // Request capture in every diagnostic frame, including frames without VFX.
 const prepare=world.workVfx.prepare.bind(world.workVfx);world.workVfx.prepare=camera=>{prepare(camera);return true;};
@@ -152,6 +155,7 @@ async function comparePreparation(kind,gpuProbe=null){
   result={kind,frames:frames.map(({color,depth,submissionState,...frame})=>({...frame,depthSubmissionDraws:submissionState.length})),mode:nativeComparison?'native-full-vs-guarded-vs-single-pass-alpha':kind==='empty'?'prepare-all-vs-known-empty-skipped':singleComparison?'current-depth-vs-single-pass-alpha':'current-depth-vs-QA-stock-alpha',scope:nativeComparison?'Six fixed-clock native world renders: full native N/N, production guard G, single-traversal alpha B/B, native N. Direct final color and packed actual depth attachment; no GPU/all-biome/mobile acceptance.':'Five fixed-clock native world renders, direct final color and packed actual depth attachment. Selected preparation comparison; no GPU benchmark/all-biome/mobile acceptance.',...summarizeDepthComparisons(comparisons),comparisons,alphaApplications:singleComparison?singleAlpha.applications:alphaExperiment.applications,logicalStateUnchanged:true,width:world.canvas.width,height:world.canvas.height};comparisonSnapshot=before;
   if(gpuProbe)result.gpuProbe={scope:'Post-draw WebGL queries, driver synchronization possible; not GPU timing or alpha acceptance. Optional hashes cover complete enabled attribute/index buffers only, not textures or fragment ownership.',bufferReadback:await gpuProbe.finish(),frames:gpuFrames,programs:gpuProbe.programs};
   if(invariantShaders)result.invariance=invariantShaders.report();
+  if(alphaSampler)result.alphaSampler=alphaSampler.report();
  }catch(e){showError(e);}finally{singleAlpha.setEnabled(false);alphaExperiment.setEnabled(false);world.destructionPass.nonEmptyDepthOnly=previousEmpty;world.destructionPass.optimizedDepth=previous;benchRunning=false;document.querySelectorAll('button').forEach(b=>b.disabled=false);status();}
 }
 

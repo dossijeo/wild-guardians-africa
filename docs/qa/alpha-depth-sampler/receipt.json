@@ -1,0 +1,337 @@
+{
+  "base": "038c049ec1354ef57853d163c78c26bc13d0cdf4",
+  "url": "http://127.0.0.1:5173/tests/browser/depth-capture.html?biome=volcanes&culture=mapungubwe&probeAssetGroup=18%3A2&alphaSampler=MODE",
+  "scope": "QA filter isolation, changes appearance; no production adoption or GPU timing.",
+  "cases": [
+    {
+      "name": "linear-before",
+      "errors": [],
+      "width": 1280,
+      "height": 720,
+      "alphaSampler": {
+        "mode": "linear",
+        "scope": "QA filtering changes appearance in both routes; not visual acceptance or GPU benchmark.",
+        "textures": [
+          {
+            "uuid": "b9e1551c-25e1-4e7e-b432-6a87b7b29f95",
+            "original": {
+              "minFilter": 1008,
+              "magFilter": 1006
+            },
+            "minFilter": 1006,
+            "magFilter": 1006
+          }
+        ]
+      },
+      "pairs": [
+        {
+          "pair": "N1/N2",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "N2/G",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "G/B1",
+          "pixels": 7,
+          "maxDepthDelta": 0.00001996755599975586
+        },
+        {
+          "pair": "N2/B1",
+          "pixels": 7,
+          "maxDepthDelta": 0.00001996755599975586
+        },
+        {
+          "pair": "B1/B2",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "B2/N3",
+          "pixels": 7,
+          "maxDepthDelta": 0.00001996755599975586
+        },
+        {
+          "pair": "N2/N3",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        }
+      ]
+    },
+    {
+      "name": "linear-probe",
+      "errors": [],
+      "width": 1280,
+      "height": 720,
+      "alphaSampler": {
+        "mode": "linear",
+        "scope": "QA filtering changes appearance in both routes; not visual acceptance or GPU benchmark.",
+        "textures": [
+          {
+            "uuid": "b9e1551c-25e1-4e7e-b432-6a87b7b29f95",
+            "original": {
+              "minFilter": 1008,
+              "magFilter": 1006
+            },
+            "minFilter": 1006,
+            "magFilter": 1006
+          }
+        ]
+      },
+      "pairs": [
+        {
+          "pair": "N1/N2",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "N2/G",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "G/B1",
+          "pixels": 7,
+          "maxDepthDelta": 0.00001996755599975586
+        },
+        {
+          "pair": "N2/B1",
+          "pixels": 7,
+          "maxDepthDelta": 0.00001996755599975586
+        },
+        {
+          "pair": "B1/B2",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "B2/N3",
+          "pixels": 7,
+          "maxDepthDelta": 0.00001996755599975586
+        },
+        {
+          "pair": "N2/N3",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        }
+      ]
+    },
+    {
+      "name": "nearest-before",
+      "errors": [],
+      "width": 1280,
+      "height": 720,
+      "alphaSampler": {
+        "mode": "nearest",
+        "scope": "QA filtering changes appearance in both routes; not visual acceptance or GPU benchmark.",
+        "textures": [
+          {
+            "uuid": "cd2a35ab-c3ae-4ad0-9252-c19c61d23fae",
+            "original": {
+              "minFilter": 1008,
+              "magFilter": 1006
+            },
+            "minFilter": 1003,
+            "magFilter": 1003
+          }
+        ]
+      },
+      "pairs": [
+        {
+          "pair": "N1/N2",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "N2/G",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "G/B1",
+          "pixels": 7,
+          "maxDepthDelta": 0.00001996755599975586
+        },
+        {
+          "pair": "N2/B1",
+          "pixels": 7,
+          "maxDepthDelta": 0.00001996755599975586
+        },
+        {
+          "pair": "B1/B2",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "B2/N3",
+          "pixels": 7,
+          "maxDepthDelta": 0.00001996755599975586
+        },
+        {
+          "pair": "N2/N3",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        }
+      ]
+    },
+    {
+      "name": "nearest-probe",
+      "errors": [],
+      "width": 1280,
+      "height": 720,
+      "alphaSampler": {
+        "mode": "nearest",
+        "scope": "QA filtering changes appearance in both routes; not visual acceptance or GPU benchmark.",
+        "textures": [
+          {
+            "uuid": "cd2a35ab-c3ae-4ad0-9252-c19c61d23fae",
+            "original": {
+              "minFilter": 1008,
+              "magFilter": 1006
+            },
+            "minFilter": 1003,
+            "magFilter": 1003
+          }
+        ]
+      },
+      "pairs": [
+        {
+          "pair": "N1/N2",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "N2/G",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "G/B1",
+          "pixels": 7,
+          "maxDepthDelta": 0.00001996755599975586
+        },
+        {
+          "pair": "N2/B1",
+          "pixels": 7,
+          "maxDepthDelta": 0.00001996755599975586
+        },
+        {
+          "pair": "B1/B2",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        },
+        {
+          "pair": "B2/N3",
+          "pixels": 7,
+          "maxDepthDelta": 0.00001996755599975586
+        },
+        {
+          "pair": "N2/N3",
+          "pixels": 0,
+          "maxDepthDelta": 0
+        }
+      ]
+    }
+  ],
+  "files": [
+    {
+      "source": ".cache/depth-sampler/linear-before.json",
+      "archive": "linear-before.json.gz",
+      "bytes": 37090,
+      "sha256": "7249a4c159749d86d943968d61abda60c4ff5611fbdad08d4087d0f4c6df56d8"
+    },
+    {
+      "source": ".cache/depth-sampler/linear-probe.json",
+      "archive": "linear-probe.json.gz",
+      "bytes": 299099,
+      "sha256": "95c8b550e052277e6224d7cdc6627a0d70c13cc2e14f079954422ac0ad6ff338"
+    },
+    {
+      "source": ".cache/depth-sampler/nearest-before.json",
+      "archive": "nearest-before.json.gz",
+      "bytes": 37101,
+      "sha256": "38843c46ea35b57c6f20803bc4359fc5aa00276217aefdf595bfa9241831c206"
+    },
+    {
+      "source": ".cache/depth-sampler/nearest-probe.json",
+      "archive": "nearest-probe.json.gz",
+      "bytes": 299101,
+      "sha256": "3c95f1c221dd69ec0c00f40cc669fbc13012b973f1aa54d119a9a0b4806b9316"
+    },
+    {
+      "source": ".cache/depth-sampler/linear-console.json",
+      "archive": "linear-console.json.gz",
+      "bytes": 2,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "source": ".cache/depth-sampler/nearest-console.json",
+      "archive": "nearest-console.json.gz",
+      "bytes": 2,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "source": ".cache/depth-sampler/linear.png",
+      "archive": "linear.png",
+      "bytes": 201331,
+      "sha256": "b62a46f7366d4ce9c28681e699cee596587a73eb28493a421f387ad189c171cc"
+    },
+    {
+      "source": ".cache/depth-sampler/nearest.png",
+      "archive": "nearest.png",
+      "bytes": 201502,
+      "sha256": "303c03dbd714f68f403e4310d3aedc90b478dd2af1e441eb53cfb07a435c589d"
+    },
+    {
+      "source": ".cache/depth-sampler/tests.log",
+      "archive": "tests.log.gz",
+      "bytes": 2737,
+      "sha256": "865659c505478b4bb22aa1f32b451437d60e031ef6a2a93bef16f5f7eea597c0"
+    },
+    {
+      "source": ".cache/depth-sampler/syntax.json",
+      "archive": "syntax.json.gz",
+      "bytes": 27607,
+      "sha256": "18aef2bb868d88eb7d88afba8ecb4d56e21e192acdfd8bdfb43de1219c417387"
+    },
+    {
+      "source": "tests/browser/alpha-sampler.js",
+      "archive": "alpha-sampler.js.gz",
+      "bytes": 1204,
+      "sha256": "c6e07510c1b5aa11f0d14cb16df2e082b5f8a8f01eed83476714979f5e07e87f"
+    },
+    {
+      "source": "tests/alpha-sampler.test.js",
+      "archive": "alpha-sampler.test.js.gz",
+      "bytes": 1446,
+      "sha256": "36d0c43cd3a10282fe14a24dc9382fca59b241ac29fe1e684b88fb23d861d454"
+    },
+    {
+      "source": "tests/browser/depth-capture.html",
+      "archive": "depth-capture.html.gz",
+      "bytes": 34175,
+      "sha256": "91fbed34a37785445de89ea706c44d0d2a462325c19b0e54af36c510bf3713d1"
+    },
+    {
+      "source": "tests/browser/depth-gpu-state.js",
+      "archive": "depth-gpu-state.js.gz",
+      "bytes": 4989,
+      "sha256": "c2143113ee24f31ac3944e987d8d284929e0e847a96e25c7b7457ebacc8686dd"
+    },
+    {
+      "source": "src/rendering/standard-depth.js",
+      "archive": "standard-depth.js.gz",
+      "bytes": 5574,
+      "sha256": "b65c8d7399d506855fcb64e0b3abf7b4b924459949b16f8d0852427ce5af848b"
+    },
+    {
+      "source": "src/rendering/asset-surface.js",
+      "archive": "asset-surface.js.gz",
+      "bytes": 3246,
+      "sha256": "0ee648d56f516af3feb66a18d4ebcd04fad9f286cc9bee6bf98a8601341e16db"
+    }
+  ]
+}
