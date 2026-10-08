@@ -1,0 +1,46 @@
+<!doctype html><html lang="es"><meta charset="utf-8">
+<title>QA · Compilación GPU con propietario</title>
+<style>body{font:14px system-ui;background:#18251b;color:#eee}canvas{width:480px;height:280px}pre{white-space:pre-wrap}button{padding:12px}</style>
+<h1>Compilación nativa y cancelación</h1>
+<p>Escena aislada. La prueba pendiente retiene deliberadamente isReady; no simula el coste real del driver ni mide rendimiento.</p>
+<button id="run">Ejecutar QA de compilación</button><canvas></canvas><pre id="report">Preparado; GPU inactiva.</pre>
+<script type="module">
+import {WebGLRenderer,Scene,Group,Mesh,BoxGeometry,MeshBasicMaterial,PerspectiveCamera} from 'three';
+import {prepareNativeFarGpu,releaseNativeFarGpuCache,NativeFarGpuCancelled} from '../../tools/experiments/prepare-native-far-gpu.js';
+const button=document.querySelector('#run'),output=document.querySelector('#report');
+button.onclick=async()=>{
+ button.disabled=true;let renderer,geometry,material;const rows=[],errors=[];
+ const assert=(condition,message)=>{if(!condition)throw Error(message);};
+ const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+ try{
+  renderer=new WebGLRenderer({canvas:document.querySelector('canvas'),antialias:false});renderer.setSize(480,280,false);
+  const gl=renderer.getContext(),scene=new Scene(),parent=new Group(),root=new Group(),camera=new PerspectiveCamera(42,480/280,.1,100);
+  geometry=new BoxGeometry();material=new MeshBasicMaterial({color:0x87b952});root.add(new Mesh(geometry,material));parent.add(root);scene.add(parent);camera.position.set(0,2,5);camera.lookAt(0,0,0);
+  renderer.render(scene,camera);
+  const normal=await prepareNativeFarGpu(renderer,root,scene,camera,[],{ownedCompilation:true,isolateRoot:true,timeout:10000});
+  assert(root.parent===parent,'Native parent changed');assert(renderer.autoClear,'autoClear not restored');
+  rows.push({case:'real-selected-program-ready',passed:true,elapsedMs:normal.elapsedMs,scope:'Native compile, readiness, zero-pixel upload and real GL fence; no forced program readiness.'});
+  const program=renderer.properties.get(material).currentProgram,originalReady=program.isReady;
+  assert(typeof originalReady==='function','No native selected program');
+  for(const kind of ['owner-cancel','deadline']){
+   let queries=0,cancelled=false,timer,caught;
+   program.isReady=()=>{queries++;return false;};
+   try{
+    if(kind==='owner-cancel')timer=setTimeout(()=>{cancelled=true;},5);
+    await prepareNativeFarGpu(renderer,root,scene,camera,[],{ownedCompilation:true,isolateRoot:true,cancelled:()=>cancelled,timeout:kind==='deadline'?25:10000,nextFrame:()=>new Promise(()=>{})});
+   }catch(error){caught=error;}
+   finally{clearTimeout(timer);program.isReady=originalReady;}
+   assert(kind==='owner-cancel'?caught instanceof NativeFarGpuCancelled&&caught.reason==='owner-cancelled':caught?.message==='Native GPU preparation timed out','Incorrect cancellation result');
+   const queriesAtExit=queries;let lateQueries=0;program.isReady=()=>{lateQueries++;return originalReady.call(program);};
+   await pause(40);program.isReady=originalReady;
+   assert(lateQueries===0,'Readiness poll continued after exit');assert(root.parent===parent,'Cancelled parent changed');assert(renderer.autoClear,'Cancelled renderer state changed');
+   rows.push({case:kind,passed:true,queriesAtExit,lateQueries,errorName:caught.name,errorMessage:caught.message,scope:'Real submitted/cached native program, readiness deliberately held false. RAF deliberately suspended; no physical driver stall claim.'});
+  }
+  renderer.render(scene,camera);rows.push({case:'render-after-cancellation',passed:true,render:{...renderer.info.render}});
+ }catch(error){errors.push(String(error));}
+ finally{
+  if(renderer){releaseNativeFarGpuCache(renderer);geometry?.dispose();material?.dispose();renderer.dispose();renderer.forceContextLoss();}
+  output.textContent=JSON.stringify({done:true,ownedCompilation:true,rows,errors,disposed:!!renderer,contextLost:renderer?.getContext().isContextLost()??null,limitations:['No real pending driver duration, full-world traveling, texture/fence cancellation or context-restoration acceptance.','Synthetic readiness hold is lifecycle evidence only, not GPU performance.']},null,2);
+ }
+};
+</script></html>

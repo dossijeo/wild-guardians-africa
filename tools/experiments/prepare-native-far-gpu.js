@@ -1,5 +1,9 @@
-import {Vector4} from 'three';
 import {withScreenTarget} from '../../src/rendering/screen-target.js';
+import {Vector4} from 'three';
+import {withGpuRootIsolation} from './isolated-gpu-root.js';
+import {compileGpuPreparation} from './compile-gpu-preparation.js';
+import {waitGpuPreparation} from './wait-gpu-preparation.js';
+import {waitGpuFrame} from './wait-gpu-frame.js';
 // Active renderer owners release the dispose/context listeners on world close.
 // Warm images need no repeated upload budget; every packing still draws/fences.
 const textureCaches=new WeakMap(),textureOwnerSignals=new WeakMap();
@@ -30,10 +34,14 @@ function rememberTexture(entry,texture){
 
 // Prepare the current root using the normal output/shader recipe. Callers bind
 // the completed fence to their exact packing and renderable generation.
-export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{cancelled=()=>false,nextFrame=()=>new Promise(resolve=>requestAnimationFrame(resolve)),timeout=30000,texturesPerFrame=1,decodeImages=false,diagnoseErrors=false,cooperative=false}={}){
+export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{cancelled=()=>false,nextFrame,timeout=30000,texturesPerFrame=1,decodeImages=false,diagnoseErrors=false,isolateRoot=false,ownedCompilation=false,ownedWaits=false,cooperative=false}={}){
+ if(typeof isolateRoot!=='boolean')throw Error('Invalid isolated GPU preparation option');
+ if(typeof ownedCompilation!=='boolean')throw Error('Invalid owned GPU compilation option');
+ if(typeof ownedWaits!=='boolean'||ownedWaits&&!ownedCompilation)throw Error('Owned GPU waits require owned compilation');
  if(!Number.isInteger(texturesPerFrame)||texturesPerFrame<1)throw Error('Invalid texture preparation budget');
  const unique=[...new Set(textures)],textureUploads=[],gl=renderer.getContext(),begin=performance.now();let cache,cacheEpoch,sync,textureBatches=0,maxTextureBatchMs=0,maxTextureBatchCount=0;
- const check=()=>{if(cancelled()||cache?.released||unique.some(texture=>textureOwnerSignals.get(texture)?.aborted))throw new NativeFarGpuCancelled('owner-cancelled');if(gl.isContextLost()||cache?.contextLost||cache&&cache.epoch!==cacheEpoch)throw new NativeFarGpuCancelled('context-changed');if(performance.now()-begin>timeout)throw Error('Native GPU preparation timed out');};
+ const check=()=>{if(cancelled()||cache?.released||unique.some(texture=>textureOwnerSignals.get(texture)?.aborted))throw new NativeFarGpuCancelled('owner-cancelled');if(gl.isContextLost()||cache?.contextLost||cache&&cache.epoch!==cacheEpoch||ownedWaits&&renderer.getContext()!==gl)throw new NativeFarGpuCancelled('context-changed');if(performance.now()-begin>timeout)throw Error('Native GPU preparation timed out');};
+ const frame=()=>ownedWaits?waitGpuFrame({check,nextFrame}):(nextFrame?nextFrame():new Promise(resolve=>requestAnimationFrame(resolve)));
  const checkErrors=stage=>{if(!diagnoseErrors)return;const code=gl.getError();if(code!==gl.NO_ERROR)throw Error('Native GPU preparation error 0x'+code.toString(16)+' ('+stage+')');};
  check();checkErrors('before preparation');cache=textureCache(renderer);cacheEpoch=cache.epoch;check();const pending=unique.filter(t=>{const record=cache.textures.get(t);return !record||record.version!==(t.version??0)||record.sourceVersion!==(t.source?.version??0);});
  try{
@@ -41,35 +49,42 @@ export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{c
    check();const start=performance.now(),end=Math.min(pending.length,first+texturesPerFrame);
    for(let i=first;i<end;i++){
     check();const texture=pending[i],image=texture.image,decodeStart=performance.now();
-    if(decodeImages&&typeof image?.decode==='function')await image.decode();check();const decodeMs=performance.now()-decodeStart,before=performance.now();renderer.initTexture(texture);check();checkErrors('after texture upload');rememberTexture(cache,texture);
+    if(decodeImages&&typeof image?.decode==='function'){
+     const decoding=image.decode();
+     if(ownedWaits)await waitGpuPreparation(decoding,{check,nextFrame:()=>new Promise(()=>{})});else await decoding;
+    }check();const decodeMs=performance.now()-decodeStart,before=performance.now();renderer.initTexture(texture);check();checkErrors('after texture upload');rememberTexture(cache,texture);
     textureUploads.push({index:unique.indexOf(texture),width:image?.width??null,height:image?.height??null,imageType:image?.constructor?.name??null,mipmaps:!!texture.generateMipmaps,colorSpace:texture.colorSpace??null,decodeMs,cpuMs:performance.now()-before});
    }
    textureBatches++;maxTextureBatchCount=Math.max(maxTextureBatchCount,end-first);maxTextureBatchMs=Math.max(maxTextureBatchMs,performance.now()-start);
-   if(end<pending.length)await nextFrame();
+   if(end<pending.length)await frame();
   }
   check();
   const compileDrawAndFence=async()=>{check();
-  const compilation=cooperative?withScreenTarget(renderer,()=>renderer.compileAsync(root,camera,scene)):renderer.compileAsync(root,camera,scene);
-  await compilation;check();checkErrors('after compilation');
+  // Explicit QA gate: preserve the original recipe until native cancellation,
+  // visual and traveling checks validate the owned readiness poll.
+  if(ownedCompilation){const compiler=cooperative?{compile:(...args)=>withScreenTarget(renderer,()=>renderer.compile(...args)),properties:renderer.properties}:renderer;await compileGpuPreparation(compiler,root,camera,scene,{check});}
+  else await (cooperative?withScreenTarget(renderer,()=>renderer.compileAsync(root,camera,scene)):renderer.compileAsync(root,camera,scene));
+  check();checkErrors('after compilation');
   // Keep the normal target/output recipe: another render target creates shader
   // variants. A zero viewport/scissor uploads vertex buffers without touching
   // visible pixels or clearing the player's framebuffer.
   const viewport=renderer.getViewport(new Vector4()),scissor=renderer.getScissor(new Vector4()),scissorTest=renderer.getScissorTest(),autoClear=renderer.autoClear,parent=root.parent,culled=[];
   // Scope this mutation to the synchronous upload draw. Other species may be
   // awaiting compilation concurrently; none may inherit another one's flags.
-  try{root.traverse(o=>{if(o.isMesh){culled.push([o,o.frustumCulled]);o.frustumCulled=false;}});scene.add(root);renderer.autoClear=false;renderer.setViewport(0,0,0,0);renderer.setScissor(0,0,0,0);renderer.setScissorTest(true);if(cooperative)withScreenTarget(renderer,()=>{renderer.setViewport(0,0,0,0);renderer.setScissor(0,0,0,0);renderer.setScissorTest(true);renderer.render(scene,camera);});else renderer.render(scene,camera);checkErrors('after upload draw');}
+  try{root.traverse(o=>{if(o.isMesh){culled.push([o,o.frustumCulled]);o.frustumCulled=false;}});scene.add(root);renderer.autoClear=false;renderer.setViewport(0,0,0,0);renderer.setScissor(0,0,0,0);renderer.setScissorTest(true);const draw=()=>{if(cooperative)return withScreenTarget(renderer,()=>{renderer.setViewport(0,0,0,0);renderer.setScissor(0,0,0,0);renderer.setScissorTest(true);return renderer.render(scene,camera);});return renderer.render(scene,camera);};if(isolateRoot)withGpuRootIsolation(renderer,root,scene,draw);else draw();checkErrors('after upload draw');}
   finally{for(const [mesh,value] of culled)mesh.frustumCulled=value;renderer.autoClear=autoClear;renderer.setViewport(viewport);renderer.setScissor(scissor);renderer.setScissorTest(scissorTest);root.removeFromParent();if(parent)parent.add(root);}
   sync=gl.fenceSync(gl.SYNC_GPU_COMMANDS_COMPLETE,0);if(!sync)throw Error('Native GPU fence unavailable');gl.flush();
-  for(;;){check();const status=gl.clientWaitSync(sync,0,0);if(status===gl.ALREADY_SIGNALED||status===gl.CONDITION_SATISFIED)break;if(status===gl.WAIT_FAILED)throw Error('Native GPU fence failed');await nextFrame();}
+  for(;;){check();const status=gl.clientWaitSync(sync,0,0);if(status===gl.WAIT_FAILED)throw Error('Native GPU fence failed');if(ownedWaits)check();if(status===gl.ALREADY_SIGNALED||status===gl.CONDITION_SATISFIED)break;await frame();}
   // getError can synchronously wait for commands submitted after this fence,
   // including the next gameplay frame. Keep that expensive round trip in
   // explicit diagnostics; readiness still requires the successful GPU fence,
   // a live context, current resource epoch and an uncancelled owner.
   checkErrors('after fence');
+  if(ownedWaits)check();
   return {elapsedMs:performance.now()-begin,textures:unique.length,cachedTextures:unique.length-pending.length,textureBatches,maxTextureBatchCount,maxTextureBatchMs,textureUploads};
   };
-  return cooperative?await queueLoadingFarPrograms(renderer,compileDrawAndFence,{check,nextFrame}):await compileDrawAndFence();
- }finally{if(sync)gl.deleteSync(sync);}
+  return cooperative?await queueLoadingFarPrograms(renderer,compileDrawAndFence,{check,nextFrame:frame}):await compileDrawAndFence();
+ }finally{if(sync&&(!ownedWaits||renderer.getContext()===gl&&!gl.isContextLost()&&!cache.contextLost&&cache.epoch===cacheEpoch))gl.deleteSync(sync);}
 }
 
 // Loading-only compile/draw queue. Texture preparation remains concurrent;

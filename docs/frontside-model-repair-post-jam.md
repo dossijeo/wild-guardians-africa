@@ -10,8 +10,8 @@ ningún modelo candidato ni cambio de sidedness aceptado todavía.
 Ampliación autorizada por el usuario el 8 de octubre de 2026: continuar tanto
 con reparaciones como con modelos derivados de los existentes, hechos
 expresamente para FrontSide, eligiendo el enfoque que mejor funcione. Esta
-autorización se ha transmitido al subagente y no rebaja los criterios de
-conservación, calidad visual, coste ni beneficio GPU descritos abajo. Los
+autorización se ha transmitido al subagente. El refinamiento posterior del
+8 de octubre flexibiliza la aceptación visual como se describe abajo. Los
 originales permanecen conservados y ningún candidato está aceptado todavía.
 
 Priorizar cultivos y trabajadores por su repetición en fincas avanzadas.
@@ -37,24 +37,28 @@ comportamiento, interacción física, tiempos y compatibilidad de guardados.
   cierre de la auditoría anterior de props no constituye una aprobación visual
   ni un requisito universal suficiente para todas las superficies.
 - Materiales, UV, animaciones, skinning, morphs y comportamiento conservados.
-- Ningún agujero, cara desaparecida, sombra incorrecta o artefacto en ángulos,
-  poses y fases de crecimiento relevantes. Validar también shadowSide, materiales
-  de profundidad y shaders del juego, no solo un viewport de Blender.
-- Comparaciones visuales automatizadas y multivista contra el original. Definir,
-  justificar y documentar thresholds cuantitativos antes de aprobar candidatos;
-  examinar silueta/alpha, regiones y outliers además de métricas globales. Solo se
-  permiten diferencias mínimas de reparación, sin sacrificar calidad para pasar
-  una auditoría topológica.
+- Calidad convincente en condiciones reales de juego: cultivo reconocible,
+  hojas y forma general conservadas, crecimiento/animaciones correctos, sin
+  deformaciones, desapariciones evidentes ni defectos perceptibles. Revisar
+  ángulos, poses, fases, sombras y shaders reales, no solo Blender.
+- Comparaciones automatizadas y multivista como diagnóstico. Los umbrales de
+  píxeles, color, silueta y pequeños agujeros no provocan rechazo automático.
+  Priorizar evaluación visual humana del resultado; admitir diferencias técnicas
+  pequeñas que no deterioren la experiencia. No exigir equivalencia matemática
+  ni complicar la geometría para corregir detalles imperceptibles. Aplicar este
+  criterio a todas las categorías conservando funcionalidad y compatibilidad.
 - Triángulos, memoria y tamaño sin aumentos desproporcionados; documentar
   presupuestos y mediciones antes/después.
 - Benchmark GPU con beneficio suficiente para justificar la adaptación, con
   criterio de aceptación explícito y condiciones reproducibles. No asumir que
   FrontSide reduce a la mitad los triángulos enviados ni extrapolar FPS/móvil.
 
-Los thresholds visuales y de beneficio no están aprobados ni fijados en este
-registro: el piloto debe proponerlos con justificación y evidencia. Si un piloto
-no cumple, investigar otra reparación o conservar el original, documentando el
-resultado; no promover candidatos solamente porque pasan un verificador.
+Refinamiento explícito del usuario, 8 de octubre de 2026: los thresholds visuales
+son herramientas de diagnóstico, no barreras automáticas de aceptación. La
+inspección visual y el beneficio GPU neto siguen siendo necesarios antes de
+integrar. Conservar métricas y resultados históricos con sus criterios originales;
+reevaluar candidatos bajo la nueva política sin convertir rechazos antiguos en
+aprobaciones sin inspección ni benchmark. No promover por pasar un verificador.
 
 ## Integración y revisión
 

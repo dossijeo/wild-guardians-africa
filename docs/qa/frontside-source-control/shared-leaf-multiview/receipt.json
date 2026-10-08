@@ -1,0 +1,43 @@
+{
+  "fixtureSource": "353036e9fe7d450889530298ba3e8213ecd26f4f",
+  "fixtureJsSha256": "60c79fe48cd9ee4f807f4d460814739cf4c8b2c9129f808d5c1d90bc363b0bf6",
+  "scope": "Prospective multiview and boundary still comparisons; no human, continuous-growth, shadow or GPU approval.",
+  "cases": [
+    {
+      "index": 1,
+      "id": "mature-day-gran-rio",
+      "tab": 842,
+      "expectedPhase": "original",
+      "expectedMatureActive": true,
+      "reportSha256": "e689b4c9fb73ef9e566e8378226f1b8719dc513a5f743907295e7a167ab26797",
+      "imageSha256": "1907b0b34d8bd6ee970cfc14cd3f76ccc70fab15e9a7db182b2cbaccdb9af363"
+    },
+    {
+      "index": 2,
+      "id": "mature-night-volcanes",
+      "tab": 843,
+      "expectedPhase": "original",
+      "expectedMatureActive": true,
+      "reportSha256": "9c77b4b896ec7aeadbafb7e337baeb9db90d15ac9a6a8a74b69671ab200f9cea",
+      "imageSha256": "553a391bcca449416254a1124fe72ba4b946160a7a73771ff5a5073d49ff3655"
+    },
+    {
+      "index": 7,
+      "id": "end-final-bridge",
+      "tab": 844,
+      "expectedPhase": "morph",
+      "expectedMatureActive": false,
+      "reportSha256": "8b63156ebb777b711bb401bb57e3fc5d92d89d3293a542823830ddcad447e68e",
+      "imageSha256": "6cf59beda14242c98c40221d944d7b394a622d1986c38727608132702cf2e1b9"
+    },
+    {
+      "index": 8,
+      "id": "first-derived-native",
+      "tab": 845,
+      "expectedPhase": "original",
+      "expectedMatureActive": true,
+      "reportSha256": "03bd3cf9b9479b01b604ffb1fb8c1c3a9e4fa6d2a616d2bf48e55bcf5460efea",
+      "imageSha256": "0218a697cd7e05634f692e11b3d6737cb94235e50aa4fed26f69ccd63cce2375"
+    }
+  ]
+}

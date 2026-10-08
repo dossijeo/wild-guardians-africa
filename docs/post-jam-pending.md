@@ -1,10 +1,50 @@
 # Tareas pendientes posteriores a la Jam
 
+Criterio vigente de actividad (aclaración explícita del usuario, 2026-10-08):
+tiempo diurno sin acciones **inferior al 25%** aceptado. Sustituye el límite
+anterior del20%, sin alterar valores medidos ni aceptar campañas con otras
+comprobaciones pendientes. [Política](qa/intensive-acceptance-policy.json).
+Gran Río/Musgum20,33% y Sabana/Musgum20,283% quedan aprobados en esa métrica;
+Gran Río/Saheliana25,40% sigue por encima del límite. Se conserva el alcance
+histórico de cada campaña, sin equivalencia automática a main actual.
+
+FrontSide: prevalece la política visual flexible solicitada por el usuario.
+Las diferencias de píxeles, color, silueta y pequeños agujeros son diagnósticos;
+las notas inferiores de rechazos por umbrales describen ensayos históricos y
+no establecen el criterio vigente. La aceptación exige apariencia convincente
+en juego, funcionalidad/compatibilidad y beneficio GPU neto. El candidato de
+maíz sigue en la rama de reparación. Su benchmark propio ya acredita ahorro
+GPU neto representativo; falta integración visual/funcional en WorldScene y
+ampliación a otros cultivos/trabajadores. No se han promovido assets por la
+sola inspección de capturas.
+
+[Maíz maduro reparado: beneficio neto](qa/frontside-source-control/shared-leaf-net-gpu/README.md):
+1089 plantas, seis pares AB/BA y3600 consultas válidas. Mediana81,980→67,653ms,
+ahorro17,476%, incluidos cielo/color/sombras y grupos adicionales. La auditoría
+separada de buffers termina con cero bytes pendientes; coexistir original y
+candidato aumenta el total, aunque la geometría candidata sea menor. No es
+mejora general de FPS ni aprobación de toda la categoría. Sin promover assets.
+
+[Compilación cancelable: AB/BA denso](qa/streaming-travel-dense/owned-compilation-abba/README.md):
+cuatro recorridos de180m conservan estado/cámara/15chunks nuevos y no registran
+errores. Ambos candidatos tienen peor p95 y más frames lentos que los controles;
+no se acepta la activación de rendimiento. La cancelación nativa controlada
+pasa, pero no equivale a estabilidad durante traveling. Las nuevas esperas de
+texturas/decodificación/fence están detrás de otra opción QA, con77 tests
+dirigidos y validación nativa/rendimiento aún pendiente.
+
+[Campañas interrumpidas: procesos revalidados](qa/intensive-process-interruption-2026-10-08.md):
+los cuatro handles antiguos ya no corresponden a campañas activas. Los estados
+parciales y campos running obsoletos se conservan; Gran Río/Etíope llegó al día58
+sin resultado final. No contar estos casos como cien noches terminadas. Revisar
+checkpoint, logs y fidelidad de fuentes antes de documentar la continuación.
+
 [Gran Río/Suajili: cien noches auditadas](qa/intensive-gran-rio-suajili-e461b550/README.md):
 campaña histórica e461b550,291hashes congelados iguales; exit0/victoria,
 1439plantas vivas máximas,23700siembras y22043entregas físicas cobradas.
 Auditoría monetaria/cajas/restauración y síntesis completa exactas. Inactividad
-estratégica19,93% pendiente de mejorar; no es replay de main actual ni GPU/móvil.
+estratégica19,93% aprobada por el usuario el 2026-10-08 (criterio vigente: menos del25%).
+No queda pendiente reducirla para este caso; no es replay de main actual ni GPU/móvil.
 
 [Traveling y streaming: dos bloqueos corregidos](qa/streaming-travel/README.md):
 consulta GL síncrona repetida y serialización de texturas al clonar material
@@ -41,7 +81,7 @@ Sigue en QA: falta aceptación amplia antes de integrar.
 [Campaña Gran Río/Mapungubwe: cien noches archivadas](qa/intensive-gran-rio-mapungubwe-e461b550/README.md):
 victoria con1363 plantas vivas máximas, ocho especies y entregas físicas diarias;
 contabilidad y resumen completo reconciliados.18,22% de jornada sin acciones
-sigue abierto como asunto de diseño. Fuentes congeladas e461b550,23 archivos
+aprobado bajo el criterio vigente del25%. Fuentes congeladas e461b550,23 archivos
 distintos de main; no es replay actual ni cierre de la matriz de treinta casos.
 
 [Reutilización de buffers al redimensionar lotes](qa/asset-group-production/README.md):
@@ -487,7 +527,7 @@ El usuario ha revisado los benchmarks y acepta el sobrecoste observado como prop
 
 [Sabana/Suajili: cien noches terminadas](qa/intensive-sabana-suajili-e461b550/README.md): tercer caso de la matriz congelada e461b550, 100 noches/victoria, ocho cultivos, hasta1.460 plantas vivas y cuentas exactas. Archivo completo auditado en main, resumen idéntico; no es replay de navegación actual. Inactividad de estrategia19,92% diurno pendiente de reducir. El padre avanzó a Musgum sin reiniciar; Gran Cañón sigue independiente.
 
-[Sabana/Musgum: cien noches terminadas](qa/intensive-sabana-musgum-e461b550/README.md): cuarto caso congelado, victoria con hasta 1.551 plantas vivas y cuentas exactas. Archivo auditado y resumen idéntico en main; inactividad diurna 20,283% pendiente de reducir. El padre avanzó a Etíope; no es replay de main actual ni aceptación de toda la matriz.
+[Sabana/Musgum: cien noches terminadas](qa/intensive-sabana-musgum-e461b550/README.md): cuarto caso congelado, victoria con hasta 1.551 plantas vivas y cuentas exactas. Archivo auditado y resumen idéntico en main; inactividad diurna 20,283% aceptada bajo el nuevo criterio del25%. El padre avanzó a Etíope; no es replay de main actual ni aceptación de toda la matriz.
 
 [Contenido de buffers GPU alpha](qa/alpha-depth-buffer-content/README.md): dos secuencias nativas copian los buffers completos del afloramiento volcánico. Hashes estables de posición/UV/instancias/visibilidad/índices mientras persisten siete píxeles de profundidad distintos. No aceptar alpha experimental; investigar evaluación/rasterización del shader. No es benchmark ni prueba de texels/propiedad exclusiva del fragmento.
 
@@ -560,3 +600,15 @@ El usuario ha revisado los benchmarks y acepta el sobrecoste observado como prop
 [Órbita de carga: módulo y revisión del piloto 22, 2026-10-08]: `649e95ab` de `feature/interactive-loading-screen` publica LoadingOrbit y siete pruebas aprobadas; todavía sin importar en el diorama. La clase conserva fase al pulsar, espera y reanuda con velocidad suave, desacelera para la transición sin recentrar y respeta reduced-motion/limitación de delta. No acredita integración, raycast, encuadre ni QA visual. El root inspecciona `pilot-depth-batched-sabana.json` de esa rama (SHA256 bb6f47da54f0402990a9a37d359f62d834da743503cb606cd0452c01b5b8d5a3): recalcula exactamente 1581 intervalos, máximo99,8ms, nueve>50ms y cero>100ms; conserva un intervalo cero inicial pendiente de explicación instrumental. Inicialización24769,2ms/control28884,4ms, ready/done verdaderos, pending/errors vacíos, cámara/estado lógico registrados intactos y cero voces al handoff. No observa compile-submit>30ms entre206 segmentos; los20 segmentos>30ms registrados son18subidas de textura, far-update44,4ms y draw48,4ms. Es un piloto individual con cuatro campañas CPU históricas vivas, no ABBA, GPU timer ni prueba de regresión global/RAM real. No integrar aún: quedan baseline congelada, picos de uploads/paisaje, pulido y cobertura original. El viento GPU/fases por ID ya existe en crop-batch; reutilizarlo y comprobar brotes/morph/reduced-motion, evitando una segunda deformación.
 
 [Recursos fijos del lote de cultivos, 2026-10-08]: `crop-batch` construye una sola lista de los40 modelos y32 puentes al prepararse, reutilizándola en update/dispose; el origen por defecto también se comparte sin mutarlo. Se eliminan esas dos asignaciones temporales por actualización, sin cambiar API, uniforms, geometría ni datos de plantas. Veintitrés pruebas existentes pasan: corners nativos de40/32, morph/recarga de ocho especies, estabilidad y rangos de buffers, origen/recentrado y liberación de todos los meshes. No se afirma ahorro de tiempo CPU/GPU/FPS ni ausencia de todas las asignaciones del batch. La rama de carga mantiene su fuente congelada para ABBA y recibirá el cambio después, sin contaminar la comparación.
+
+
+[Progreso de descarga y preparación de carga interactiva, 2026-10-08]: requisito
+adicional del usuario enviado al subagente de feature/interactive-loading-screen.
+El progreso ponderado por tiempo debe incluir descarga de assets pendientes,
+descodificación/carga, preparación GPU y mundo. Assets ya en caché aportan cero
+trabajo de descarga; no simular una fase de red. Descargas faltantes aumentan el
+trabajo total estimado, manteniendo progreso monótono y100% solamente tras
+readiness real. Verificar caché fría/caliente/parcial y red lenta, sin descargar
+recursos dos veces para medir. Distinguir observación real de estimaciones cuando
+caché o longitud de transferencia no sean observables. Pendiente de implementación
+y evidencia en rama; no aprobado por mera comunicación del requisito.

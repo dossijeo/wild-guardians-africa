@@ -1,0 +1,44 @@
+{
+  "head": "c77d6ad80e708fbc68357f851e975dce81b96065",
+  "files": {
+    "tests/browser/streaming-travel.html": "9373abe7b927ca816e5d037e793aa524a9d19ddcccd131b8026a40869ac34d8c",
+    "tools/experiments/prepare-crate-shadow.js": "60e82eb66a420828e12a0f0b11489b2141baf9a48a405f24bdd6d02712f01eb9",
+    "tools/experiments/prepare-resident-textures.js": "8cb3f3893cc5a9ad446186bb9995032855a987dbee5877293ef70b04ff60d85c",
+    "tools/experiments/prepare-resident-travel-variants.js": "8477c4c622d093a241261d6ace9bda7e96609992e5a004b544bde14e3f5e4ddb",
+    "src/rendering/scene.js": "dd23d212668a78315cfbf625235e9ff5e839421f7eb509619ce7d05650984dc1",
+    "tests/browser/gpu-timer.js": "a59cf9c7419810d687ffd91a9c88d9efc4693a4a5489a7351b994ce1d1100a4b"
+  },
+  "order": [
+    "A1",
+    "B1",
+    "B2",
+    "A2"
+  ],
+  "condition": "Intel UHD native IAB. Four live CPU campaigns; no added test/build workload during measured runs. No trace or resource binding queries; timer queries bracket world.render.",
+  "runs": [
+    {
+      "name": "A1",
+      "tab": 834,
+      "sha256": "77f7b3e969d07c0f3e5093b8d83f9ef4eff614e2c52afd7240c91c62988d0d11",
+      "imageSha256": "e6c2277c8b3096e337901569faa9b7b31f85cee0800ec3d2fdcb1a3e8f5ca22e"
+    },
+    {
+      "name": "B1",
+      "tab": 835,
+      "sha256": "ccae0afe6ce1d8c2826e11c8ae15eaa51bda0b80b3d75505ac9dde2fb497f514",
+      "imageSha256": "47289b9c328338323cb5f429b2e8b7a467fbd470e7b8868dc27e84c09ddf0bcd"
+    },
+    {
+      "name": "B2",
+      "tab": 836,
+      "sha256": "9ae783346098ab664f5791bf2934bcf4bdde93459b89d054fa54ad455be0e06a",
+      "imageSha256": "adb067d053bb2e1c0070f75eae04686158f1b772af63a4679c27fedae762bed9"
+    },
+    {
+      "name": "A2",
+      "tab": 837,
+      "sha256": "d0fe7d5bac9fc168e7c27a47b6c8874fcb27e921164e4718b9aab63d926fc425",
+      "imageSha256": "0cad9cb24f24560d61169c9016f26fc3ea7e0c5a490146d21348581250e7fd1c"
+    }
+  ]
+}
