@@ -30,3 +30,5 @@ test('a new owned presentation starts without preceding frames or decode markers
  qa.begin(500);qa.frame(525);qa.close(progress,owner,{cancelled:true});const report=read();
  assert.deepEqual(report.frames,[{at:525,interval:25}]);assert.equal(report.snapshotDecode,undefined);
 });
+
+test('synchronous loading witnesses retain attribution and are reset with their owned presentation',()=>{const {qa,read}=fixture();const row={label:'restore-sync',start:10,end:200,duration:190,failed:false};qa.loadingSpan(row);qa.close(progress,owner);assert.deepEqual(read().loadingSpans,[row]);qa.begin(500);qa.close(progress,owner);assert.equal(read().loadingSpans,undefined);});

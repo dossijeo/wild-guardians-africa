@@ -1,3 +1,4 @@
+import {loadingSyncWitness} from './loading-sync-witness.js';
 import {waitGpuFrame} from '../../tools/experiments/wait-gpu-frame.js';
 import {waitGpuPreparation} from '../../tools/experiments/wait-gpu-preparation.js';
 import {initializeLoadingTextures} from './loading-textures.js';
@@ -162,8 +163,8 @@ export class WorldScene {
     this.raidCamera=new RaidCameraDirector(this.camera,this.controls,nav.field);this.focusFarm();
     this.chunkStream=new NativeChunkStream(this.nav.config,this.pack.profile,{loaded:()=>this.chunks,onData:data=>this.installChunk(data),onError:error=>this.onError?.(error),onFallback:error=>console.warn('Generación local de chunks:',error.message??error)});
     this.syncChunks();await this.loadReady(Promise.all([this.chunkStream.whenReady(),this.horizon.whenReady()]));if(this.disposed)throw new Error('Carga de mundo cancelada');this.syncChunks();await milestone('chunks');
-    await this.loadReady(this.prepareSavedAnimalRigs(state));this.sync(0);
-    this.hands=new NativeHands(this.scene,(x,z)=>this.nav.field.surface(x,z),{motion:!matchMedia('(prefers-reduced-motion: reduce)').matches,onError:e=>this.onError?.(e)});
+    await this.loadReady(this.prepareSavedAnimalRigs(state));loadingSyncWitness(this.onLoadingSpan,'restore-sync',()=>this.sync(0));
+    this.hands=loadingSyncWitness(this.onLoadingSpan,'hands-constructor',()=>new NativeHands(this.scene,(x,z)=>this.nav.field.surface(x,z),{motion:!matchMedia('(prefers-reduced-motion: reduce)').matches,onError:e=>this.onError?.(e)}));
     await this.loadReady(this.hands.ready);
     await this.loadReady(this.loadedAnimalActors());
     if(this.loadingProgress&&farVegetation){
@@ -344,7 +345,7 @@ export class WorldScene {
       // Warm that actual pass while the loading screen still covers the world,
       // including the staged animal skinning variants. Cached depth materials
       // retain their programs until their source material is disposed.
-      this.destructionPass.captureDepth(this.camera,this.scene);
+      loadingSyncWitness(this.onLoadingSpan,'warm-depth-capture',()=>this.destructionPass.captureDepth(this.camera,this.scene));
       await waitForGpuPreload(this.renderer,{signal:this.loading.signal,cancelled:()=>this.disposed,getEpoch:()=>this.glResourceEpoch?.stats.epoch??0});if(this.disposed)return;
       prepared=true;this.animalGpuReady=true;
     }finally{
@@ -434,8 +435,9 @@ export class WorldScene {
     const desired=new Set();
     for(const v of s.villages){desired.add(v.id);if(!this.objects.has(v.id)){const mesh=this.villageMesh(v);this.objects.set(v.id,mesh);this.scene.add(mesh);}}
     const visiblePlants=s.plants.filter(p=>p.alive&&Math.hypot(p.x-this.controls.target.x,p.z-this.controls.target.z)<140);
-    if(visiblePlants.length>this.cropBatch.capacity){this.cropBatch.dispose();this.cropBatch=createCropBatch(this.scene,this.renderer,this.cropGltf,this.cropBridgeData,2**Math.ceil(Math.log2(visiblePlants.length)));}
-    this.cropBatch.update(visiblePlants,s.elapsed,(x,z)=>this.nav.field.surface(x,z),this.renderOrigin,this.nav.field);
+    if(visiblePlants.length>this.cropBatch.capacity)loadingSyncWitness(this.onLoadingSpan,'sync-crop-resize',()=>{this.cropBatch.dispose();this.cropBatch=createCropBatch(this.scene,this.renderer,this.cropGltf,this.cropBridgeData,2**Math.ceil(Math.log2(visiblePlants.length)));});
+    if(this.onLoadingSpan)loadingSyncWitness(this.onLoadingSpan,'sync-crop-update',()=>this.cropBatch.update(visiblePlants,s.elapsed,(x,z)=>this.nav.field.surface(x,z),this.renderOrigin,this.nav.field));
+    else this.cropBatch.update(visiblePlants,s.elapsed,(x,z)=>this.nav.field.surface(x,z),this.renderOrigin,this.nav.field);
     for(const e of [...s.structures,...s.crates.filter(c=>!c.delivered),...s.workers,...(s.raid?.animals.filter(a=>a.status!=='gone')??[]),...s.spells]) {
       desired.add(e.id);let mesh=this.objects.get(e.id);
       if(!mesh) {
