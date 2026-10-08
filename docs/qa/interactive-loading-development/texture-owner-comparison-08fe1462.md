@@ -1,6 +1,6 @@
-# Loading texture ownership / deferred empty-batch uploads — native QA
+# Loading texture ownership / deferred empty-batch uploads â€” native QA
 
-Source: `08fe146200801211bda5f647331f74eee3d9f082`. Two sequential native IAB contexts, 75 (New Game) and 76 (archived dense Continue), 1280×720, media/Sabana/Mapungubwe. Both were disposed, confirmed context-lost, and closed before releasing GPU. These are resource-instrumented functional observations, not FPS/GPU benchmarks: BufferRequests performs binding queries and modifies scheduling. Historical CPU campaigns remained active. No production assets were resized, recompressed or changed.
+Source: `08fe146200801211bda5f647331f74eee3d9f082`. Two sequential native IAB contexts, 75 (New Game) and 76 (archived dense Continue), 1280Ã—720, media/Sabana/Mapungubwe. Both were disposed, confirmed context-lost, and closed before releasing GPU. These are resource-instrumented functional observations, not FPS/GPU benchmarks: BufferRequests performs binding queries and modifies scheduling. Historical CPU campaigns remained active. No production assets were resized, recompressed or changed.
 
 ## Native ownership observations
 
@@ -18,13 +18,13 @@ The diorama creates local Texture objects with the original pixel Source and ide
 
 Dense crops still use the exact original IDs 4/5 after the local diorama Texture objects are disposed. This is direct evidence of native storage sharing and retention by the world in this particular scene. New Game has no crops, so those two storages and the local ground are released instead. The latter does not imply CPU bitmap deletion: original Assets retain their Source and pixel ownership. No unhandled errors occurred, and ready/camera/logical/restoredLogical checks passed in both scenes.
 
-The six remaining explicit-delete records are the previously observed five 12×12 RGBA32F entries plus a 1×1 depth entry. Context loss was confirmed after disposal; implicit context-loss release is not represented by deleteTexture records. These observations neither establish an application leak nor prove complete RAM/VRAM neutrality.
+The six remaining explicit-delete records are the previously observed five 12Ã—12 RGBA32F entries plus a 1Ã—1 depth entry. Context loss was confirmed after disposal; implicit context-loss release is not represented by deleteTexture records. These observations neither establish an application leak nor prove complete RAM/VRAM neutrality.
 
 ## Compared with previous resource observations
 
-Against the earlier New Game feature observation `0473b5db`, controls-ready no longer records two 2048² sRGB mipmapped storages and three 1024² RGBA mipmapped storages. One additional 35² RGBA entry appears. The absent definitions correspond to the unused second crop-atlas pair and the disposed diorama-only pair/soil; dimensions alone are insufficient to match individual assets without the recorded IDs and ownership observations.
+Against the earlier New Game feature observation `0473b5db`, controls-ready no longer records two 2048Â² sRGB mipmapped storages and three 1024Â² RGBA mipmapped storages. One additional 35Â² RGBA entry appears. The absent definitions correspond to the unused second crop-atlas pair and the disposed diorama-only pair/soil; dimensions alone are insufficient to match individual assets without the recorded IDs and ownership observations.
 
-The removed RGBA/sRGB definitions sum to 61,516,452 nominal bytes under a four-bytes-per-texel mip recipe. This is arithmetic over reported storage definitions, **not physical VRAM, total RAM, simultaneous peak residency or a measured memory saving**. Compared with the previous archived main New Game observation, the final multiset has only one extra 2048×1024 RGBA definition, four 35² RGBA definitions and two 1×1 depth definitions; its RGBA-only nominal excess is 8,408,208 bytes. Sources/driver layout, initialization scheduling and the different small masks limit comparisons with historical controls.
+The removed RGBA/sRGB definitions sum to 61,516,452 nominal bytes under a four-bytes-per-texel mip recipe. This is arithmetic over reported storage definitions, **not physical VRAM, total RAM, simultaneous peak residency or a measured memory saving**. Compared with the previous archived main New Game observation, the final multiset has only one extra 2048Ã—1024 RGBA definition, four 35Â² RGBA definitions and two 1Ã—1 depth definitions; its RGBA-only nominal excess is 8,408,208 bytes. Sources/driver layout, initialization scheduling and the different small masks limit comparisons with historical controls.
 
 Requested buffer peaks remain unchanged relative to the previous feature resource scenes. This change does not resolve their approximately 9.4/10.7 MiB excess against earlier main controls, nor provide total peak RAM/VRAM measurements.
 
