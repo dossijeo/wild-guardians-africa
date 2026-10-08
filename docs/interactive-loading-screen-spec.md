@@ -82,3 +82,8 @@ This mandatory extension was relayed by root after the initial implementation pi
 - This polish must not change procedural generation, gameplay or save data.
 
 Autonomous root review/merge remains authorized only after the original and extended acceptance gates pass.
+
+
+### Additional authorized audio requirement
+
+Use existing AudioManager, buses and catalog for one loading ambience loop: SFX 004 by day or 005 by night, chosen from the diorama's real initial/saved time. Play SFX 028 once per successful player-added seedling; initial plants and catch-up growth emit nothing. Respect mute/volume/autoplay and a first gesture when needed. Stop loading loops on cancellation, errors and handoff, before world ambience; no duplicate sources. Integration tests and functional audio/ownership QA remain acceptance gates.

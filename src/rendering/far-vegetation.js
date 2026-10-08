@@ -26,17 +26,19 @@ export async function attachBiomeFarVegetation(world,{start=60,end=90,residentRa
  for(const radius of [residentRange,visualRange])if(radius!==null&&(!Number.isInteger(radius)||radius<1||radius>3))throw Error('Invalid far resident radius');
  if(visualRange!==null&&visualRange>(residentRange??(world.quality==='alta'?3:2)))throw Error('Visual radius exceeds terrain residency');
  const transitionHeight=validateTreeTransitionPolicy(options.transitionHeight,start,end);if(transitionHeight)options.transitionHeight=transitionHeight;const transitionEnd=Math.max(end,transitionHeight?.end??end);
- const loader=new TextureLoader(),loadManifest=services.loadManifest??json,loadTexture=services.loadTexture??(path=>loader.loadAsync(path)),attachSpecies=services.attachSpecies??attachNativeFarWorld,makeBackdrop=services.makeBackdrop??createBiomeBackdrop;
+ // Preserve native HTML upload for straight-alpha atlases: Worker bitmap
+ // premultiplication differs at translucent edges and failed the pixel gate.
+ const loader=new TextureLoader(),loadManifest=services.loadManifest??json,loadTexture=services.loadTexture??(world.loadingProgress&&typeof Worker!=='undefined'&&typeof createImageBitmap==='function'?(path,options)=>options?.premultiplyAlpha?loader.loadAsync(path):world.assets.loadingTexture(path,{flipY:true,...options}):path=>loader.loadAsync(path)),attachSpecies=services.attachSpecies??attachNativeFarWorld,makeBackdrop=services.makeBackdrop??createBiomeBackdrop;
  const attachedSeed=world.state?.seed,ownership=new AbortController(),textures=new Set(),adapters=[],previousCompaction=world.assetGroups.omitZeroColor,previousFog=world.scene.fog,previousRange=world.farResidentRange,previousVisual=world.farVisualRange,previousPreserve=world.farPreserveTerrain,previousTransition=world.farPropTransitionDistance,previousSlots=world.farPropTransitionSlots;
  let closed=false,backdrop=null,owner;
  const cancelled=()=>closed||world.disposed||world.state?.seed!==attachedSeed||world.loading.signal.aborted;
  const release=()=>{if(closed)return;closed=true;ownership.abort();backdrop?.dispose();for(const adapter of adapters)adapter.dispose();adapters.length=0;releaseNativeFarGpuCache(world.renderer);for(const texture of textures)texture.dispose();textures.clear();world.assetGroups.omitZeroColor=previousCompaction;world.scene.fog=previousFog;world.farResidentRange=previousRange;world.farVisualRange=previousVisual;world.farPreserveTerrain=previousPreserve;world.farPropTransitionDistance=previousTransition;world.farPropTransitionSlots=previousSlots;if(world.farVegetation===owner)world.farVegetation=null;};
  owner={update(){},dispose:release};world.farVegetation=owner;
- const load=async path=>{if(cancelled())throw Error('Far vegetation attachment cancelled');const texture=await loadTexture(assetUrl(path.replace(/^\.\//,'')));registerNativeFarTextureOwner(texture,ownership.signal);if(cancelled()){texture.dispose();throw Error('Far vegetation attachment cancelled');}textures.add(texture);return texture;};
+ const load=async (path,options)=>{if(cancelled())throw Error('Far vegetation attachment cancelled');const texture=await loadTexture(assetUrl(path.replace(/^\.\//,'')),options);registerNativeFarTextureOwner(texture,ownership.signal);if(cancelled()){texture.dispose();throw Error('Far vegetation attachment cancelled');}textures.add(texture);return texture;};
  try{
   const manifest=await loadManifest('/content/far-vegetation.json',{signal:world.loading.signal}),species=manifest.biomes[world.nav.config.biome];
   if(cancelled())throw Error('Far vegetation attachment cancelled');if(!species?.length)throw Error('Missing biome impostors');
-  const results=await Promise.allSettled(species.map(async metadata=>({metadata,day:await load(metadata.day),night:await load(metadata.night)})));
+  const results=await Promise.allSettled(species.map(async metadata=>({metadata,day:await load(metadata.day,{premultiplyAlpha:metadata.prelitAlphaEncoding!=='srgb-encoded-linear-premultiplied'}),night:await load(metadata.night,{premultiplyAlpha:metadata.prelitAlphaEncoding!=='srgb-encoded-linear-premultiplied'})})));
   const failed=results.find(r=>r.status==='rejected');if(failed)throw failed.reason;
   const transitionSlots=species.map(s=>s.slot);
   const groundTreeBases=Object.fromEntries(species.map(s=>[s.slot,s.localBase]));

@@ -8,9 +8,9 @@ export class LoadingImageDecoder {
   this.worker.onerror=event=>this.dispose(Error(event.message??'Image decoder failed'));
   if(signal?.aborted)this.dispose();
  }
- decode(buffer,type=''){
+ decode(buffer,type='',{flipY=false,premultiplyAlpha=false}={}){
   if(this.closed)return Promise.reject(Error('Image decoder cancelled'));
-  return new Promise((resolve,reject)=>{const id=++this.serial;this.pending.set(id,{resolve,reject});try{const copy=buffer.slice(0);this.worker.postMessage({id,buffer:copy,type},[copy]);}catch(error){this.pending.delete(id);reject(error);}});
+  return new Promise((resolve,reject)=>{const id=++this.serial;this.pending.set(id,{resolve,reject});try{const copy=buffer.slice(0);this.worker.postMessage({id,buffer:copy,type,flipY,premultiplyAlpha},[copy]);}catch(error){this.pending.delete(id);reject(error);}});
  }
  dispose(error=Error('Image decoder cancelled')){if(this.closed)return;this.closed=true;this.signal?.removeEventListener('abort',this.abort);this.worker.terminate();for(const request of this.pending.values())request.reject(error);this.pending.clear();}
 }

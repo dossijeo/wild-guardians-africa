@@ -98,3 +98,11 @@ test('authored large-tree policy preserves the native color transition envelope 
  const f=fixture(),policy={minimumHeight:24,start:200,end:240};const owner=await attachBiomeFarVegetation(f.world,{start:90,end:120,visualRange:1,transitionHeight:policy},f.services);policy.end=400;owner.update(0);assert.equal(f.world.farPropTransitionDistance,248);owner.dispose();assert.equal(f.world.farPropTransitionDistance,undefined);
  const bad=fixture();await assert.rejects(attachBiomeFarVegetation(bad.world,{transitionHeight:{minimumHeight:24,start:20,end:240}},bad.services),/height policy/);assert.equal(bad.textures.length,0);
 });
+
+
+test('loading-only bitmap textures retain far-owner disposal and native vertical orientation',async()=>{
+ const f=fixture(),oldWorker=globalThis.Worker,oldBitmap=globalThis.createImageBitmap,requests=[],nativeLoad=f.services.loadTexture;
+ try{globalThis.Worker=function(){};globalThis.createImageBitmap=()=>{};f.world.loadingProgress={};f.world.assets={loadingTexture:async(path,options)=>{requests.push({path,options});return nativeLoad(path);}};delete f.services.loadTexture;f.services.loadManifest=async()=>({biomes:{savanna:[{...metadata,prelitAlphaEncoding:'srgb-encoded-linear-premultiplied'}]}});
+ const owner=await attachBiomeFarVegetation(f.world,{},f.services);assert.equal(requests.length,3);assert.ok(requests.every(r=>r.options.flipY===true&&!r.options.premultiplyAlpha));owner.dispose();assert.ok(f.textures.every(t=>t.releases===1));
+ }finally{if(oldWorker===undefined)delete globalThis.Worker;else globalThis.Worker=oldWorker;if(oldBitmap===undefined)delete globalThis.createImageBitmap;else globalThis.createImageBitmap=oldBitmap;}
+});

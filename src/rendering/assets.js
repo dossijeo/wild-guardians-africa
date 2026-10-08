@@ -50,16 +50,16 @@ export class Assets {
     return this.cache.get(key);
   }
   releaseLoadingImageDecoder(){this.loadingImageDecoder?.dispose();this.loadingImageDecoder=null;}
-  async loadingTexture(url){
+  async loadingTexture(url,{flipY=false,premultiplyAlpha=false}={}){
     this.assertOpen();const buffer=await bytes(url,{signal:this.preparation.signal});this.assertOpen();
     this.loadingImageDecoder??=new LoadingImageDecoder({signal:this.preparation.signal});
-    let bitmap;try{bitmap=await this.loadingImageDecoder.decode(buffer);}catch(error){
+    let bitmap;try{bitmap=await this.loadingImageDecoder.decode(buffer,'',{flipY,premultiplyAlpha});}catch(error){
       if(!error.unsupported)throw error;
       // Older Worker implementations retain the native synchronous-image path.
-      const texture=await this.textures.loadAsync(assetUrl(url));try{await prepareLoadingImage(texture,{cancelled:()=>this.modelsDisposed,onDiagnostic:this.loadingDiagnostics});return texture;}catch(failure){this.release(texture);throw failure;}
+      const texture=await this.textures.loadAsync(assetUrl(url));texture.flipY=flipY;texture.premultiplyAlpha=premultiplyAlpha;try{if(!flipY&&!premultiplyAlpha)await prepareLoadingImage(texture,{cancelled:()=>this.modelsDisposed,onDiagnostic:this.loadingDiagnostics});return texture;}catch(failure){this.release(texture);throw failure;}
     }
     if(this.modelsDisposed){bitmap.close();throw Error('Loading image decode cancelled');}
-    return ownLoadingBitmap(new THREE.Texture(),bitmap);
+    const texture=ownLoadingBitmap(new THREE.Texture(),bitmap);texture.flipY=flipY;texture.premultiplyAlpha=premultiplyAlpha;return texture;
   }
   async biome(pack) {
     this.assertOpen();
