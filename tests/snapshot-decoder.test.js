@@ -71,9 +71,12 @@ test('actual worker module preserves the complete native snapshot and validator 
  };
  try{
   const state=newGame({seed:712});state.day=14;state.time=310;state.savedAt=12345;
-  state.plants=Array.from({length:256},(_,i)=>({id:'worker-parity-'+i,species:'maiz',x:i*1.5,z:3,alive:true,growth:i%100,multiplyHarvest:i%2===0}));
+  state.plants=Array.from({length:1300},(_,i)=>({id:'worker-parity-'+i,species:'maiz',x:i*1.5,z:3,alive:true,growth:i%100,multiplyHarvest:i%2===0}));
+  for(let i=0;i<1300;i++)state.ledger.entries['worker-zero-'+i]={n:'0',d:'1'};
   const text=serialize(state);
-  assert.deepEqual(await decodeSnapshotAsync(text,{workerAvailable:true,createWorker}),deserialize(text));
+  const diagnostics=[];
+  assert.deepEqual(await decodeSnapshotAsync(text,{workerAvailable:true,createWorker,nextFrame:()=>Promise.resolve(),onDiagnostic:d=>diagnostics.push(d)}),deserialize(text));
+  assert.equal(diagnostics[0].streamed,true);assert.ok(diagnostics[0].chunks>10);assert.ok(Number.isFinite(diagnostics[0].assemblyCpuMs));
   await assert.rejects(decodeSnapshotAsync('{}',{workerAvailable:true,createWorker}),/Guardado incompatible/);
  }finally{await Promise.all(terminations);}
 });
