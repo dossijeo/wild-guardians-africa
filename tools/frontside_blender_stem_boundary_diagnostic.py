@@ -15,6 +15,11 @@ raw,doc,binary=read_glb(ROOT/'public'/s['source'].lstrip('/'));assert hashlib.sh
 node=next(n for n in doc['nodes'] if n.get('name')=='sorgo_05_maduro');prim=doc['meshes'][node['mesh']]['primitives'][0]
 p,n,uv=[accessor(doc,binary,prim['attributes'][k]) for k in ['POSITION','NORMAL','TEXCOORD_0']];ix=accessor(doc,binary,prim['indices']).reshape(-1,3)
 bridges=json.loads((ROOT/'public/content/crop-bridges.json').read_text(encoding='utf8'));labels=np.asarray(bridges['models'][node['extras']['cropIndex']*5+node['extras']['stage']-1]['faceLabels']);faces=np.flatnonzero(labels==1)
+whole_edges=defaultdict(list)
+for source_face,tri in enumerate(ix):
+    for a,z in zip(tri,np.roll(tri,-1)):
+        ka,kz=tuple(map(float,p[a])),tuple(map(float,p[z]))
+        whole_edges[tuple(sorted((ka,kz)))].append(dict(sourceFaceId=source_face,driver=int(labels[source_face]),sourceVertexIds=[int(a),int(z)],direction=1 if ka<kz else -1))
 table={};points=[];triangles=[]
 for face in faces:
     tri=[]
@@ -40,7 +45,18 @@ for start in sorted(adjacency):
         if v in vertices:continue
         vertices.add(v);visited.add(v)
         for other,e in adjacency[v]:edge_ids.add(e.index);pending.append(other)
-    row=dict(vertexIds=sorted(vertices),boundaryEdges=len(edge_ids),degrees={str(v):len(adjacency[v]) for v in sorted(vertices)},simpleCycle=all(len(adjacency[v])==2 for v in vertices))
+    ownership=[]
+    for edge_id in sorted(edge_ids):
+        e=bm.edges[edge_id];a,z=[v.index for v in e.verts]
+        key=tuple(sorted((tuple(map(float,points[a])),tuple(map(float,points[z])))))
+        owners=whole_edges[key]
+        ownership.append(dict(stemBoundaryVertexIds=[a,z],wholeSourceOwners=owners,wholeModelBoundary=len(owners)==1,
+            regionalAttachmentOnly=len(owners)==2 and owners[0]['direction']!=owners[1]['direction'] and any(o['driver']!=1 for o in owners),
+            wholeModelJunctionOrWindingConflict=len(owners)>2 or len(owners)==2 and owners[0]['direction']==owners[1]['direction']))
+    row=dict(vertexIds=sorted(vertices),boundaryEdges=len(edge_ids),degrees={str(v):len(adjacency[v]) for v in sorted(vertices)},simpleCycle=all(len(adjacency[v])==2 for v in vertices),
+        wholeSourceBoundaryOwnership=ownership,allEdgesAreWholeModelBoundary=all(o['wholeModelBoundary'] for o in ownership),
+        wholeModelBoundaryEdges=sum(o['wholeModelBoundary'] for o in ownership),regionalAttachmentOnlyEdges=sum(o['regionalAttachmentOnly'] for o in ownership),
+        wholeModelJunctionOrWindingConflictEdges=sum(o['wholeModelJunctionOrWindingConflict'] for o in ownership))
     if not row['simpleCycle'] or len(vertices)<3:row['classification']='BRANCHED_OR_DEGENERATE_UNRESOLVED';components.append(row);continue
     edge=bm.edges[min(edge_ids)];face=edge.link_faces[0]
     loop=next(loop for loop in face.loops if loop.edge==edge);a=loop.vert.index;z=loop.link_loop_next.vert.index;order=[a];previous=a;current=z
@@ -110,7 +126,7 @@ for start in sorted(adjacency):
                 if length<=1e-14:zero_area.append(t);corner_dots.extend([0.,0.,0.])
                 else:corner_dots.extend(float(np.dot(n[v],cross/length)) for v in tri)
             closure.update(triangles=len(cap_ids),expectedTriangles=len(order)-2,originalSourceVertexTriangles=cap_vertices,reversedBoundaryMatched=boundary_matched,zeroAreaTriangleIds=zero_area,minOriginalNormalDotNewFace=min(corner_dots,default=None),nonPositiveNormalCorners=sum(x<=0 for x in corner_dots))
-            closure['status']='CURVED_EXISTING_FIELD_CAP_HYPOTHESIS_NOT_APPROVED' if len(cap_ids)==len(order)-2 and boundary_matched and not zero_area and corner_dots and min(corner_dots)>0 else 'UNRESOLVED_CAP_WINDING_OR_ORIGINAL_NORMAL_FIELD'
+            closure['status']='CURVED_EXISTING_FIELD_CAP_HYPOTHESIS_NOT_APPROVED' if row['allEdgesAreWholeModelBoundary'] and len(cap_ids)==len(order)-2 and boundary_matched and not zero_area and corner_dots and min(corner_dots)>0 else 'UNRESOLVED_CAP_WINDING_OR_ORIGINAL_NORMAL_FIELD_OR_OWNERSHIP'
     elif not ambiguous:closure['status']='UNRESOLVED_BOUNDARY_ORIENTATION_OR_AREA'
     row['curvedExistingFieldClosure']=closure
     # Preserve independent per-edge fields instead of merging every chart at a
@@ -147,9 +163,9 @@ for start in sorted(adjacency):
         triangle_rows.append(dict(boundaryVertexIds=tri,area=length/2,corners=corner_rows))
     matched=all(edge_count[(order[(i+1)%len(order)],v)]==1 and edge_count[(v,order[(i+1)%len(order)])]==0 for i,v in enumerate(order))
     corner_statuses=[c['status'] for t in triangle_rows for c in t['corners']]
-    row['edgeCornerClosure']=dict(status='EDGE_CORNER_TRIANGULATION_HYPOTHESIS_NOT_APPROVED' if consistent and matched and len(cap_ids)==len(order)-2 and all(t['area']>1e-14 for t in triangle_rows) and all(s=='UNIQUE_EXISTING_FIELD' for s in corner_statuses) else 'UNRESOLVED_EDGE_CORNER_TRIANGULATION',
+    row['edgeCornerClosure']=dict(status='EDGE_CORNER_TRIANGULATION_HYPOTHESIS_NOT_APPROVED' if row['allEdgesAreWholeModelBoundary'] and consistent and matched and len(cap_ids)==len(order)-2 and all(t['area']>1e-14 for t in triangle_rows) and all(s=='UNIQUE_EXISTING_FIELD' for s in corner_statuses) else 'UNRESOLVED_EDGE_CORNER_TRIANGULATION',
         triangles=triangle_rows,reversedBoundaryMatched=matched,expectedTriangles=len(order)-2,boundaryOrientationConsistent=bool(consistent),
-        limitations=['One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof.',
+        limitations=['One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof. A source-driver boundary is not necessarily a hole: inspect whole-model ownership before closure.',
             'Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported.'])
     components.append(row)
 report=dict(status='BLENDER_SOURCE_STEM_BOUNDARIES_NOT_APPROVED',sourceSha256=s['sourceSha256'],mesh=node['name'],cropIndex=node['extras']['cropIndex'],stemTriangles=len(faces),wholeModelTriangles=len(ix),blenderVersion=bpy.app.version_string,blenderBuildHash=bpy.app.build_hash.decode(),boundaryEdges=len(boundary),nonManifoldJunctionEdges=sum(len(e.link_faces)>2 for e in bm.edges),components=components,

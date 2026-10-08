@@ -29,6 +29,186 @@
         "70": 2
       },
       "simpleCycle": true,
+      "wholeSourceBoundaryOwnership": [
+        {
+          "stemBoundaryVertexIds": [
+            0,
+            1
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1007,
+              "driver": 5,
+              "sourceVertexIds": [
+                7187,
+                7188
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 1106,
+              "driver": 1,
+              "sourceVertexIds": [
+                7348,
+                7349
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            1,
+            2
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1039,
+              "driver": 5,
+              "sourceVertexIds": [
+                7243,
+                7241
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 1106,
+              "driver": 1,
+              "sourceVertexIds": [
+                7349,
+                7350
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            18,
+            19
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1398,
+              "driver": 1,
+              "sourceVertexIds": [
+                7788,
+                7186
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 1509,
+              "driver": 5,
+              "sourceVertexIds": [
+                7186,
+                7788
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            0,
+            18
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1007,
+              "driver": 5,
+              "sourceVertexIds": [
+                7188,
+                7186
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 1398,
+              "driver": 1,
+              "sourceVertexIds": [
+                7186,
+                7188
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            2,
+            70
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1039,
+              "driver": 5,
+              "sourceVertexIds": [
+                7242,
+                7243
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 1786,
+              "driver": 1,
+              "sourceVertexIds": [
+                7243,
+                7242
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            19,
+            70
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1714,
+              "driver": 5,
+              "sourceVertexIds": [
+                8112,
+                7276
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 1933,
+              "driver": 1,
+              "sourceVertexIds": [
+                8304,
+                8305
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        }
+      ],
+      "allEdgesAreWholeModelBoundary": false,
+      "wholeModelBoundaryEdges": 0,
+      "regionalAttachmentOnlyEdges": 6,
+      "wholeModelJunctionOrWindingConflictEdges": 0,
       "orderedVertexIds": [
         0,
         1,
@@ -340,7 +520,7 @@
         "expectedTriangles": 4,
         "boundaryOrientationConsistent": true,
         "limitations": [
-          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof.",
+          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof. A source-driver boundary is not necessarily a hole: inspect whole-model ownership before closure.",
           "Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported."
         ]
       }
@@ -364,6 +544,186 @@
         "22": 2
       },
       "simpleCycle": true,
+      "wholeSourceBoundaryOwnership": [
+        {
+          "stemBoundaryVertexIds": [
+            3,
+            5
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1073,
+              "driver": 4,
+              "sourceVertexIds": [
+                6905,
+                7296
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 1221,
+              "driver": 1,
+              "sourceVertexIds": [
+                7535,
+                7533
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            15,
+            17
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1053,
+              "driver": 4,
+              "sourceVertexIds": [
+                7267,
+                7216
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 1360,
+              "driver": 1,
+              "sourceVertexIds": [
+                7740,
+                7738
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            16,
+            17
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1288,
+              "driver": 4,
+              "sourceVertexIds": [
+                7220,
+                7648
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 1360,
+              "driver": 1,
+              "sourceVertexIds": [
+                7739,
+                7740
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            5,
+            22
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1310,
+              "driver": 4,
+              "sourceVertexIds": [
+                7683,
+                6668
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 1410,
+              "driver": 1,
+              "sourceVertexIds": [
+                7809,
+                7807
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            15,
+            22
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1053,
+              "driver": 4,
+              "sourceVertexIds": [
+                6974,
+                7267
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 1410,
+              "driver": 1,
+              "sourceVertexIds": [
+                7808,
+                7809
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            3,
+            16
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1288,
+              "driver": 4,
+              "sourceVertexIds": [
+                7648,
+                6905
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 1490,
+              "driver": 1,
+              "sourceVertexIds": [
+                6905,
+                7648
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        }
+      ],
+      "allEdgesAreWholeModelBoundary": false,
+      "wholeModelBoundaryEdges": 0,
+      "regionalAttachmentOnlyEdges": 6,
+      "wholeModelJunctionOrWindingConflictEdges": 0,
       "orderedVertexIds": [
         5,
         3,
@@ -672,7 +1032,7 @@
         "expectedTriangles": 4,
         "boundaryOrientationConsistent": true,
         "limitations": [
-          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof.",
+          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof. A source-driver boundary is not necessarily a hole: inspect whole-model ownership before closure.",
           "Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported."
         ]
       }
@@ -692,6 +1052,128 @@
         "24": 2
       },
       "simpleCycle": true,
+      "wholeSourceBoundaryOwnership": [
+        {
+          "stemBoundaryVertexIds": [
+            6,
+            7
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1131,
+              "driver": 2,
+              "sourceVertexIds": [
+                7393,
+                6988
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 1295,
+              "driver": 1,
+              "sourceVertexIds": [
+                7659,
+                7660
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            6,
+            21
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 971,
+              "driver": 2,
+              "sourceVertexIds": [
+                6988,
+                7107
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 1404,
+              "driver": 1,
+              "sourceVertexIds": [
+                7107,
+                6988
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            7,
+            24
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1230,
+              "driver": 2,
+              "sourceVertexIds": [
+                7550,
+                7551
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 1462,
+              "driver": 1,
+              "sourceVertexIds": [
+                7859,
+                7857
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            21,
+            24
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1223,
+              "driver": 2,
+              "sourceVertexIds": [
+                7028,
+                7539
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 1469,
+              "driver": 1,
+              "sourceVertexIds": [
+                7539,
+                7028
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        }
+      ],
+      "allEdgesAreWholeModelBoundary": false,
+      "wholeModelBoundaryEdges": 0,
+      "regionalAttachmentOnlyEdges": 4,
+      "wholeModelJunctionOrWindingConflictEdges": 0,
       "orderedVertexIds": [
         6,
         7,
@@ -900,7 +1382,7 @@
         "expectedTriangles": 2,
         "boundaryOrientationConsistent": true,
         "limitations": [
-          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof.",
+          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof. A source-driver boundary is not necessarily a hole: inspect whole-model ownership before closure.",
           "Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported."
         ]
       }
@@ -922,6 +1404,157 @@
         "32": 2
       },
       "simpleCycle": true,
+      "wholeSourceBoundaryOwnership": [
+        {
+          "stemBoundaryVertexIds": [
+            9,
+            10
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1085,
+              "driver": 0,
+              "sourceVertexIds": [
+                7314,
+                7315
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 1297,
+              "driver": 1,
+              "sourceVertexIds": [
+                7315,
+                7314
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            10,
+            11
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1297,
+              "driver": 1,
+              "sourceVertexIds": [
+                7314,
+                7662
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 1305,
+              "driver": 0,
+              "sourceVertexIds": [
+                7662,
+                7314
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            9,
+            29
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1027,
+              "driver": 6,
+              "sourceVertexIds": [
+                7222,
+                7223
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 1500,
+              "driver": 1,
+              "sourceVertexIds": [
+                7892,
+                7893
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            29,
+            32
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1408,
+              "driver": 6,
+              "sourceVertexIds": [
+                7805,
+                7806
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 1529,
+              "driver": 1,
+              "sourceVertexIds": [
+                7926,
+                7892
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            11,
+            32
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1529,
+              "driver": 1,
+              "sourceVertexIds": [
+                7894,
+                7926
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 1621,
+              "driver": 0,
+              "sourceVertexIds": [
+                7926,
+                7894
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        }
+      ],
+      "allEdgesAreWholeModelBoundary": false,
+      "wholeModelBoundaryEdges": 0,
+      "regionalAttachmentOnlyEdges": 5,
+      "wholeModelJunctionOrWindingConflictEdges": 0,
       "orderedVertexIds": [
         9,
         10,
@@ -1137,7 +1770,7 @@
         "expectedTriangles": 3,
         "boundaryOrientationConsistent": true,
         "limitations": [
-          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof.",
+          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof. A source-driver boundary is not necessarily a hole: inspect whole-model ownership before closure.",
           "Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported."
         ]
       }
@@ -1181,6 +1814,411 @@
         "111": 2
       },
       "simpleCycle": false,
+      "wholeSourceBoundaryOwnership": [
+        {
+          "stemBoundaryVertexIds": [
+            12,
+            23
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1440,
+              "driver": 1,
+              "sourceVertexIds": [
+                455,
+                456
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 1534,
+              "driver": 10,
+              "sourceVertexIds": [
+                456,
+                455
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            36,
+            37
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1394,
+              "driver": 10,
+              "sourceVertexIds": [
+                402,
+                403
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 1589,
+              "driver": 1,
+              "sourceVertexIds": [
+                599,
+                600
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            23,
+            43
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1534,
+              "driver": 10,
+              "sourceVertexIds": [
+                545,
+                456
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 1606,
+              "driver": 1,
+              "sourceVertexIds": [
+                630,
+                628
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            36,
+            43
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1394,
+              "driver": 10,
+              "sourceVertexIds": [
+                403,
+                401
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 1606,
+              "driver": 1,
+              "sourceVertexIds": [
+                628,
+                629
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            40,
+            52
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1626,
+              "driver": 1,
+              "sourceVertexIds": [
+                651,
+                649
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": true,
+          "regionalAttachmentOnly": false,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            41,
+            52
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1626,
+              "driver": 1,
+              "sourceVertexIds": [
+                649,
+                650
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": true,
+          "regionalAttachmentOnly": false,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            12,
+            54
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1577,
+              "driver": 10,
+              "sourceVertexIds": [
+                588,
+                589
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 1669,
+              "driver": 1,
+              "sourceVertexIds": [
+                699,
+                700
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            37,
+            55
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1514,
+              "driver": 10,
+              "sourceVertexIds": [
+                532,
+                530
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 1675,
+              "driver": 1,
+              "sourceVertexIds": [
+                530,
+                532
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            53,
+            60
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1735,
+              "driver": 1,
+              "sourceVertexIds": [
+                789,
+                787
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": true,
+          "regionalAttachmentOnly": false,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            36,
+            60
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1735,
+              "driver": 1,
+              "sourceVertexIds": [
+                788,
+                789
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": true,
+          "regionalAttachmentOnly": false,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            40,
+            65
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1595,
+              "driver": 10,
+              "sourceVertexIds": [
+                609,
+                610
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 1760,
+              "driver": 1,
+              "sourceVertexIds": [
+                610,
+                609
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            65,
+            67
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1650,
+              "driver": 10,
+              "sourceVertexIds": [
+                678,
+                679
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 1773,
+              "driver": 1,
+              "sourceVertexIds": [
+                679,
+                678
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            66,
+            67
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1773,
+              "driver": 1,
+              "sourceVertexIds": [
+                820,
+                679
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 2044,
+              "driver": 10,
+              "sourceVertexIds": [
+                779,
+                1173
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            66,
+            111
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 2044,
+              "driver": 10,
+              "sourceVertexIds": [
+                1173,
+                676
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 2072,
+              "driver": 1,
+              "sourceVertexIds": [
+                1217,
+                1218
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            55,
+            111
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1648,
+              "driver": 10,
+              "sourceVertexIds": [
+                676,
+                581
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 2130,
+              "driver": 1,
+              "sourceVertexIds": [
+                581,
+                676
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        }
+      ],
+      "allEdgesAreWholeModelBoundary": false,
+      "wholeModelBoundaryEdges": 4,
+      "regionalAttachmentOnlyEdges": 11,
+      "wholeModelJunctionOrWindingConflictEdges": 0,
       "classification": "BRANCHED_OR_DEGENERATE_UNRESOLVED"
     },
     {
@@ -1206,6 +2244,226 @@
         "159": 2
       },
       "simpleCycle": false,
+      "wholeSourceBoundaryOwnership": [
+        {
+          "stemBoundaryVertexIds": [
+            26,
+            28
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1369,
+              "driver": 3,
+              "sourceVertexIds": [
+                7756,
+                7757
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 1470,
+              "driver": 1,
+              "sourceVertexIds": [
+                7863,
+                7861
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            26,
+            27
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1470,
+              "driver": 1,
+              "sourceVertexIds": [
+                7861,
+                7862
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 1690,
+              "driver": 3,
+              "sourceVertexIds": [
+                8090,
+                8088
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            28,
+            51
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1263,
+              "driver": 3,
+              "sourceVertexIds": [
+                7608,
+                7606
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 1623,
+              "driver": 1,
+              "sourceVertexIds": [
+                8014,
+                8012
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            27,
+            80
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1690,
+              "driver": 3,
+              "sourceVertexIds": [
+                8089,
+                8090
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 1851,
+              "driver": 1,
+              "sourceVertexIds": [
+                8090,
+                8089
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            51,
+            85
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1694,
+              "driver": 3,
+              "sourceVertexIds": [
+                8094,
+                8095
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 1879,
+              "driver": 1,
+              "sourceVertexIds": [
+                8244,
+                8014
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            80,
+            85
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1694,
+              "driver": 3,
+              "sourceVertexIds": [
+                8095,
+                8096
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 2181,
+              "driver": 1,
+              "sourceVertexIds": [
+                8096,
+                8095
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            157,
+            159
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 2496,
+              "driver": 1,
+              "sourceVertexIds": [
+                8685,
+                8683
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": true,
+          "regionalAttachmentOnly": false,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            27,
+            159
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 2496,
+              "driver": 1,
+              "sourceVertexIds": [
+                8683,
+                8684
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": true,
+          "regionalAttachmentOnly": false,
+          "wholeModelJunctionOrWindingConflict": false
+        }
+      ],
+      "allEdgesAreWholeModelBoundary": false,
+      "wholeModelBoundaryEdges": 2,
+      "regionalAttachmentOnlyEdges": 6,
+      "wholeModelJunctionOrWindingConflictEdges": 0,
       "classification": "BRANCHED_OR_DEGENERATE_UNRESOLVED"
     },
     {
@@ -1239,6 +2497,380 @@
         "148": 2
       },
       "simpleCycle": false,
+      "wholeSourceBoundaryOwnership": [
+        {
+          "stemBoundaryVertexIds": [
+            33,
+            35
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1580,
+              "driver": 1,
+              "sourceVertexIds": [
+                590,
+                552
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": true,
+          "regionalAttachmentOnly": false,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            33,
+            34
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1537,
+              "driver": 10,
+              "sourceVertexIds": [
+                554,
+                552
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 1580,
+              "driver": 1,
+              "sourceVertexIds": [
+                552,
+                554
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            34,
+            35
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1580,
+              "driver": 1,
+              "sourceVertexIds": [
+                554,
+                590
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": true,
+          "regionalAttachmentOnly": false,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            47,
+            48
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1617,
+              "driver": 1,
+              "sourceVertexIds": [
+                648,
+                646
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 1789,
+              "driver": 10,
+              "sourceVertexIds": [
+                847,
+                848
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            34,
+            47
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1617,
+              "driver": 1,
+              "sourceVertexIds": [
+                646,
+                647
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 1637,
+              "driver": 10,
+              "sourceVertexIds": [
+                666,
+                664
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            34,
+            58
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1537,
+              "driver": 10,
+              "sourceVertexIds": [
+                553,
+                554
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 1637,
+              "driver": 10,
+              "sourceVertexIds": [
+                665,
+                666
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 1716,
+              "driver": 1,
+              "sourceVertexIds": [
+                666,
+                665
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": false,
+          "wholeModelJunctionOrWindingConflict": true
+        },
+        {
+          "stemBoundaryVertexIds": [
+            58,
+            59
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1615,
+              "driver": 10,
+              "sourceVertexIds": [
+                644,
+                521
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 1716,
+              "driver": 1,
+              "sourceVertexIds": [
+                665,
+                757
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            48,
+            129
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 2055,
+              "driver": 10,
+              "sourceVertexIds": [
+                1188,
+                961
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 2232,
+              "driver": 1,
+              "sourceVertexIds": [
+                961,
+                1188
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            128,
+            129
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 2232,
+              "driver": 1,
+              "sourceVertexIds": [
+                1428,
+                961
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 2297,
+              "driver": 10,
+              "sourceVertexIds": [
+                902,
+                1500
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            59,
+            138
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1860,
+              "driver": 10,
+              "sourceVertexIds": [
+                918,
+                916
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 2262,
+              "driver": 1,
+              "sourceVertexIds": [
+                1460,
+                1461
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            147,
+            148
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 2306,
+              "driver": 1,
+              "sourceVertexIds": [
+                1509,
+                1386
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 2460,
+              "driver": 10,
+              "sourceVertexIds": [
+                1555,
+                1725
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            128,
+            147
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 2297,
+              "driver": 10,
+              "sourceVertexIds": [
+                1500,
+                1386
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 2306,
+              "driver": 1,
+              "sourceVertexIds": [
+                1386,
+                1500
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            138,
+            148
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 2151,
+              "driver": 10,
+              "sourceVertexIds": [
+                1320,
+                1008
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 2396,
+              "driver": 1,
+              "sourceVertexIds": [
+                1008,
+                1320
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        }
+      ],
+      "allEdgesAreWholeModelBoundary": false,
+      "wholeModelBoundaryEdges": 2,
+      "regionalAttachmentOnlyEdges": 10,
+      "wholeModelJunctionOrWindingConflictEdges": 1,
       "classification": "BRANCHED_OR_DEGENERATE_UNRESOLVED"
     },
     {
@@ -1266,6 +2898,264 @@
         "153": 2
       },
       "simpleCycle": false,
+      "wholeSourceBoundaryOwnership": [
+        {
+          "stemBoundaryVertexIds": [
+            44,
+            46
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1432,
+              "driver": 7,
+              "sourceVertexIds": [
+                439,
+                440
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 1607,
+              "driver": 1,
+              "sourceVertexIds": [
+                633,
+                631
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            46,
+            57
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1336,
+              "driver": 7,
+              "sourceVertexIds": [
+                343,
+                344
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 1693,
+              "driver": 1,
+              "sourceVertexIds": [
+                344,
+                343
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            44,
+            68
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1774,
+              "driver": 1,
+              "sourceVertexIds": [
+                823,
+                821
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 1808,
+              "driver": 7,
+              "sourceVertexIds": [
+                870,
+                439
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            97,
+            113
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 2077,
+              "driver": 1,
+              "sourceVertexIds": [
+                1225,
+                1117
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": true,
+          "regionalAttachmentOnly": false,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            57,
+            113
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 2111,
+              "driver": 1,
+              "sourceVertexIds": [
+                6098,
+                344
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 2147,
+              "driver": 7,
+              "sourceVertexIds": [
+                1314,
+                1315
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            149,
+            150
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 2131,
+              "driver": 7,
+              "sourceVertexIds": [
+                1068,
+                1298
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 2316,
+              "driver": 1,
+              "sourceVertexIds": [
+                1527,
+                1528
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            68,
+            153
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 2029,
+              "driver": 7,
+              "sourceVertexIds": [
+                1161,
+                870
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 2335,
+              "driver": 1,
+              "sourceVertexIds": [
+                1557,
+                1558
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            149,
+            153
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 2197,
+              "driver": 7,
+              "sourceVertexIds": [
+                1371,
+                1372
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 2335,
+              "driver": 1,
+              "sourceVertexIds": [
+                1558,
+                1559
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            113,
+            150
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 2147,
+              "driver": 7,
+              "sourceVertexIds": [
+                1315,
+                1316
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 2345,
+              "driver": 1,
+              "sourceVertexIds": [
+                1577,
+                1575
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        }
+      ],
+      "allEdgesAreWholeModelBoundary": false,
+      "wholeModelBoundaryEdges": 1,
+      "regionalAttachmentOnlyEdges": 8,
+      "wholeModelJunctionOrWindingConflictEdges": 0,
       "classification": "BRANCHED_OR_DEGENERATE_UNRESOLVED"
     },
     {
@@ -1287,6 +3177,186 @@
         "173": 2
       },
       "simpleCycle": true,
+      "wholeSourceBoundaryOwnership": [
+        {
+          "stemBoundaryVertexIds": [
+            73,
+            75
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1672,
+              "driver": 2,
+              "sourceVertexIds": [
+                8073,
+                8074
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 1821,
+              "driver": 1,
+              "sourceVertexIds": [
+                8204,
+                8202
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            75,
+            78
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1405,
+              "driver": 2,
+              "sourceVertexIds": [
+                7799,
+                7800
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 1846,
+              "driver": 1,
+              "sourceVertexIds": [
+                8215,
+                8216
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            78,
+            91
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1904,
+              "driver": 1,
+              "sourceVertexIds": [
+                8277,
+                8275
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 2305,
+              "driver": 2,
+              "sourceVertexIds": [
+                8054,
+                8574
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            73,
+            124
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 2409,
+              "driver": 1,
+              "sourceVertexIds": [
+                8631,
+                8480
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 2925,
+              "driver": 2,
+              "sourceVertexIds": [
+                9003,
+                9001
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            91,
+            173
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 2552,
+              "driver": 2,
+              "sourceVertexIds": [
+                8277,
+                8715
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 2723,
+              "driver": 1,
+              "sourceVertexIds": [
+                8715,
+                8277
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            124,
+            173
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 2925,
+              "driver": 2,
+              "sourceVertexIds": [
+                9002,
+                9003
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 3156,
+              "driver": 1,
+              "sourceVertexIds": [
+                9003,
+                9002
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        }
+      ],
+      "allEdgesAreWholeModelBoundary": false,
+      "wholeModelBoundaryEdges": 0,
+      "regionalAttachmentOnlyEdges": 6,
+      "wholeModelJunctionOrWindingConflictEdges": 0,
       "orderedVertexIds": [
         75,
         73,
@@ -1615,7 +3685,7 @@
         "expectedTriangles": 4,
         "boundaryOrientationConsistent": true,
         "limitations": [
-          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof.",
+          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof. A source-driver boundary is not necessarily a hole: inspect whole-model ownership before closure.",
           "Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported."
         ]
       }
@@ -1635,6 +3705,128 @@
         "236": 2
       },
       "simpleCycle": true,
+      "wholeSourceBoundaryOwnership": [
+        {
+          "stemBoundaryVertexIds": [
+            76,
+            190
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 3117,
+              "driver": 1,
+              "sourceVertexIds": [
+                9135,
+                9133
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 3259,
+              "driver": 5,
+              "sourceVertexIds": [
+                9209,
+                8871
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            76,
+            197
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 2669,
+              "driver": 5,
+              "sourceVertexIds": [
+                8816,
+                8814
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 3183,
+              "driver": 1,
+              "sourceVertexIds": [
+                8814,
+                8816
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            197,
+            236
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 3881,
+              "driver": 1,
+              "sourceVertexIds": [
+                8816,
+                9577
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 4366,
+              "driver": 5,
+              "sourceVertexIds": [
+                9577,
+                8816
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            190,
+            236
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 4084,
+              "driver": 1,
+              "sourceVertexIds": [
+                9745,
+                9170
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 4305,
+              "driver": 16,
+              "sourceVertexIds": [
+                9170,
+                9745
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        }
+      ],
+      "allEdgesAreWholeModelBoundary": false,
+      "wholeModelBoundaryEdges": 0,
+      "regionalAttachmentOnlyEdges": 4,
+      "wholeModelJunctionOrWindingConflictEdges": 0,
       "orderedVertexIds": [
         190,
         76,
@@ -1830,7 +4022,7 @@
         "expectedTriangles": 2,
         "boundaryOrientationConsistent": true,
         "limitations": [
-          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof.",
+          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof. A source-driver boundary is not necessarily a hole: inspect whole-model ownership before closure.",
           "Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported."
         ]
       }
@@ -1858,6 +4050,244 @@
         "166": 2
       },
       "simpleCycle": true,
+      "wholeSourceBoundaryOwnership": [
+        {
+          "stemBoundaryVertexIds": [
+            77,
+            115
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1887,
+              "driver": 3,
+              "sourceVertexIds": [
+                8249,
+                8250
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 2104,
+              "driver": 1,
+              "sourceVertexIds": [
+                8274,
+                8426
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            115,
+            122
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1901,
+              "driver": 3,
+              "sourceVertexIds": [
+                8274,
+                7958
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 2169,
+              "driver": 1,
+              "sourceVertexIds": [
+                7958,
+                8274
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            77,
+            123
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1887,
+              "driver": 3,
+              "sourceVertexIds": [
+                8248,
+                8249
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 2176,
+              "driver": 1,
+              "sourceVertexIds": [
+                8477,
+                8478
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            116,
+            130
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 2236,
+              "driver": 1,
+              "sourceVertexIds": [
+                8517,
+                8518
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 2373,
+              "driver": 3,
+              "sourceVertexIds": [
+                8298,
+                8412
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            122,
+            130
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 2236,
+              "driver": 1,
+              "sourceVertexIds": [
+                8518,
+                8519
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 2321,
+              "driver": 3,
+              "sourceVertexIds": [
+                8519,
+                8518
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            123,
+            131
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 2039,
+              "driver": 3,
+              "sourceVertexIds": [
+                8382,
+                7888
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 2243,
+              "driver": 1,
+              "sourceVertexIds": [
+                7888,
+                8382
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            131,
+            166
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 2039,
+              "driver": 3,
+              "sourceVertexIds": [
+                8381,
+                8382
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 2599,
+              "driver": 1,
+              "sourceVertexIds": [
+                8761,
+                8563
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            116,
+            166
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 2291,
+              "driver": 3,
+              "sourceVertexIds": [
+                8562,
+                8563
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 2599,
+              "driver": 1,
+              "sourceVertexIds": [
+                8563,
+                8562
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        }
+      ],
+      "allEdgesAreWholeModelBoundary": false,
+      "wholeModelBoundaryEdges": 0,
+      "regionalAttachmentOnlyEdges": 8,
+      "wholeModelJunctionOrWindingConflictEdges": 0,
       "orderedVertexIds": [
         115,
         77,
@@ -2280,7 +4710,7 @@
         "expectedTriangles": 6,
         "boundaryOrientationConsistent": true,
         "limitations": [
-          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof.",
+          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof. A source-driver boundary is not necessarily a hole: inspect whole-model ownership before closure.",
           "Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported."
         ]
       }
@@ -2298,6 +4728,52 @@
         "86": 1
       },
       "simpleCycle": false,
+      "wholeSourceBoundaryOwnership": [
+        {
+          "stemBoundaryVertexIds": [
+            82,
+            83
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1872,
+              "driver": 1,
+              "sourceVertexIds": [
+                938,
+                939
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": true,
+          "regionalAttachmentOnly": false,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            82,
+            86
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 2066,
+              "driver": 1,
+              "sourceVertexIds": [
+                1204,
+                1205
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": true,
+          "regionalAttachmentOnly": false,
+          "wholeModelJunctionOrWindingConflict": false
+        }
+      ],
+      "allEdgesAreWholeModelBoundary": true,
+      "wholeModelBoundaryEdges": 2,
+      "regionalAttachmentOnlyEdges": 0,
+      "wholeModelJunctionOrWindingConflictEdges": 0,
       "classification": "BRANCHED_OR_DEGENERATE_UNRESOLVED"
     },
     {
@@ -2331,6 +4807,360 @@
         "255": 2
       },
       "simpleCycle": true,
+      "wholeSourceBoundaryOwnership": [
+        {
+          "stemBoundaryVertexIds": [
+            94,
+            96
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1827,
+              "driver": 0,
+              "sourceVertexIds": [
+                8063,
+                8206
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 1940,
+              "driver": 1,
+              "sourceVertexIds": [
+                8313,
+                8311
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            96,
+            114
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 2080,
+              "driver": 0,
+              "sourceVertexIds": [
+                8242,
+                8408
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 2099,
+              "driver": 1,
+              "sourceVertexIds": [
+                8419,
+                8417
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            94,
+            121
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1912,
+              "driver": 0,
+              "sourceVertexIds": [
+                8284,
+                8063
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 2167,
+              "driver": 1,
+              "sourceVertexIds": [
+                8309,
+                8472
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            114,
+            125
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 2187,
+              "driver": 1,
+              "sourceVertexIds": [
+                8489,
+                8419
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 2624,
+              "driver": 0,
+              "sourceVertexIds": [
+                8795,
+                8793
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            121,
+            163
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 2545,
+              "driver": 1,
+              "sourceVertexIds": [
+                8709,
+                8710
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 2714,
+              "driver": 0,
+              "sourceVertexIds": [
+                8710,
+                8709
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            125,
+            184
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 2624,
+              "driver": 0,
+              "sourceVertexIds": [
+                8793,
+                8794
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 3002,
+              "driver": 1,
+              "sourceVertexIds": [
+                8794,
+                8793
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            163,
+            222
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 3417,
+              "driver": 0,
+              "sourceVertexIds": [
+                9302,
+                9300
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 3606,
+              "driver": 1,
+              "sourceVertexIds": [
+                9309,
+                9395
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            184,
+            225
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 3686,
+              "driver": 1,
+              "sourceVertexIds": [
+                9439,
+                9440
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 3900,
+              "driver": 0,
+              "sourceVertexIds": [
+                9594,
+                9595
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            222,
+            235
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 3875,
+              "driver": 1,
+              "sourceVertexIds": [
+                9395,
+                9574
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 4108,
+              "driver": 0,
+              "sourceVertexIds": [
+                9755,
+                9681
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            230,
+            235
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 4006,
+              "driver": 1,
+              "sourceVertexIds": [
+                9574,
+                9485
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 4223,
+              "driver": 0,
+              "sourceVertexIds": [
+                9829,
+                9830
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            230,
+            255
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 4150,
+              "driver": 1,
+              "sourceVertexIds": [
+                9794,
+                9795
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 4817,
+              "driver": 6,
+              "sourceVertexIds": [
+                10236,
+                9829
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            225,
+            255
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 4011,
+              "driver": 6,
+              "sourceVertexIds": [
+                9595,
+                9640
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 4150,
+              "driver": 1,
+              "sourceVertexIds": [
+                9795,
+                9796
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        }
+      ],
+      "allEdgesAreWholeModelBoundary": false,
+      "wholeModelBoundaryEdges": 0,
+      "regionalAttachmentOnlyEdges": 12,
+      "wholeModelJunctionOrWindingConflictEdges": 0,
       "orderedVertexIds": [
         96,
         94,
@@ -3014,7 +5844,7 @@
         "expectedTriangles": 10,
         "boundaryOrientationConsistent": true,
         "limitations": [
-          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof.",
+          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof. A source-driver boundary is not necessarily a hole: inspect whole-model ownership before closure.",
           "Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported."
         ]
       }
@@ -3038,6 +5868,186 @@
         "172": 2
       },
       "simpleCycle": true,
+      "wholeSourceBoundaryOwnership": [
+        {
+          "stemBoundaryVertexIds": [
+            104,
+            106
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 2007,
+              "driver": 1,
+              "sourceVertexIds": [
+                8365,
+                7865
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 2255,
+              "driver": 8,
+              "sourceVertexIds": [
+                7865,
+                8365
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            104,
+            118
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 2124,
+              "driver": 1,
+              "sourceVertexIds": [
+                8441,
+                8442
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 2202,
+              "driver": 8,
+              "sourceVertexIds": [
+                8504,
+                8502
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            118,
+            140
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 2202,
+              "driver": 8,
+              "sourceVertexIds": [
+                8503,
+                8504
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 2278,
+              "driver": 1,
+              "sourceVertexIds": [
+                8548,
+                8217
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            140,
+            141
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 2278,
+              "driver": 1,
+              "sourceVertexIds": [
+                8217,
+                8547
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 2915,
+              "driver": 8,
+              "sourceVertexIds": [
+                8547,
+                8217
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            106,
+            172
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 2255,
+              "driver": 8,
+              "sourceVertexIds": [
+                8365,
+                7776
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 2719,
+              "driver": 1,
+              "sourceVertexIds": [
+                7776,
+                8365
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            141,
+            172
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 2719,
+              "driver": 1,
+              "sourceVertexIds": [
+                8849,
+                7776
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 2821,
+              "driver": 8,
+              "sourceVertexIds": [
+                7776,
+                8849
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        }
+      ],
+      "allEdgesAreWholeModelBoundary": false,
+      "wholeModelBoundaryEdges": 0,
+      "regionalAttachmentOnlyEdges": 6,
+      "wholeModelJunctionOrWindingConflictEdges": 0,
       "orderedVertexIds": [
         106,
         104,
@@ -3344,7 +6354,7 @@
         "expectedTriangles": 4,
         "boundaryOrientationConsistent": true,
         "limitations": [
-          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof.",
+          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof. A source-driver boundary is not necessarily a hole: inspect whole-model ownership before closure.",
           "Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported."
         ]
       }
@@ -3364,6 +6374,128 @@
         "161": 2
       },
       "simpleCycle": true,
+      "wholeSourceBoundaryOwnership": [
+        {
+          "stemBoundaryVertexIds": [
+            134,
+            136
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1706,
+              "driver": 3,
+              "sourceVertexIds": [
+                748,
+                749
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 2254,
+              "driver": 1,
+              "sourceVertexIds": [
+                1452,
+                1450
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            134,
+            135
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 2116,
+              "driver": 3,
+              "sourceVertexIds": [
+                1279,
+                1277
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 2254,
+              "driver": 1,
+              "sourceVertexIds": [
+                1450,
+                1451
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            135,
+            161
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 2116,
+              "driver": 3,
+              "sourceVertexIds": [
+                1278,
+                1279
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 2542,
+              "driver": 1,
+              "sourceVertexIds": [
+                1279,
+                1278
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            136,
+            161
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 1706,
+              "driver": 3,
+              "sourceVertexIds": [
+                749,
+                750
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 2584,
+              "driver": 1,
+              "sourceVertexIds": [
+                1913,
+                1914
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        }
+      ],
+      "allEdgesAreWholeModelBoundary": false,
+      "wholeModelBoundaryEdges": 0,
+      "regionalAttachmentOnlyEdges": 4,
+      "wholeModelJunctionOrWindingConflictEdges": 0,
       "orderedVertexIds": [
         136,
         134,
@@ -3558,7 +6690,7 @@
         "expectedTriangles": 2,
         "boundaryOrientationConsistent": true,
         "limitations": [
-          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof.",
+          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof. A source-driver boundary is not necessarily a hole: inspect whole-model ownership before closure.",
           "Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported."
         ]
       }
@@ -3580,6 +6712,148 @@
         "220": 2
       },
       "simpleCycle": false,
+      "wholeSourceBoundaryOwnership": [
+        {
+          "stemBoundaryVertexIds": [
+            192,
+            212
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 3464,
+              "driver": 1,
+              "sourceVertexIds": [
+                3185,
+                3186
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 3924,
+              "driver": 14,
+              "sourceVertexIds": [
+                3186,
+                3185
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            162,
+            212
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 3464,
+              "driver": 1,
+              "sourceVertexIds": [
+                3186,
+                3187
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 3714,
+              "driver": 14,
+              "sourceVertexIds": [
+                3374,
+                3536
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            192,
+            214
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 3487,
+              "driver": 1,
+              "sourceVertexIds": [
+                3237,
+                3238
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": true,
+          "regionalAttachmentOnly": false,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            192,
+            220
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 3568,
+              "driver": 1,
+              "sourceVertexIds": [
+                3347,
+                3348
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 4014,
+              "driver": 14,
+              "sourceVertexIds": [
+                3348,
+                3347
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            162,
+            220
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 3584,
+              "driver": 1,
+              "sourceVertexIds": [
+                3374,
+                3375
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 3714,
+              "driver": 14,
+              "sourceVertexIds": [
+                3375,
+                3374
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        }
+      ],
+      "allEdgesAreWholeModelBoundary": false,
+      "wholeModelBoundaryEdges": 1,
+      "regionalAttachmentOnlyEdges": 4,
+      "wholeModelJunctionOrWindingConflictEdges": 0,
       "classification": "BRANCHED_OR_DEGENERATE_UNRESOLVED"
     },
     {
@@ -3607,6 +6881,302 @@
         "213": 2
       },
       "simpleCycle": false,
+      "wholeSourceBoundaryOwnership": [
+        {
+          "stemBoundaryVertexIds": [
+            171,
+            188
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 3078,
+              "driver": 1,
+              "sourceVertexIds": [
+                2594,
+                2624
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 3130,
+              "driver": 10,
+              "sourceVertexIds": [
+                2694,
+                2692
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            188,
+            195
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 3165,
+              "driver": 1,
+              "sourceVertexIds": [
+                2747,
+                2748
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 3281,
+              "driver": 10,
+              "sourceVertexIds": [
+                2748,
+                2747
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            195,
+            196
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 3169,
+              "driver": 1,
+              "sourceVertexIds": [
+                2753,
+                2754
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 3337,
+              "driver": 11,
+              "sourceVertexIds": [
+                2972,
+                2973
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            185,
+            196
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 3169,
+              "driver": 1,
+              "sourceVertexIds": [
+                2754,
+                2755
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 3274,
+              "driver": 11,
+              "sourceVertexIds": [
+                2883,
+                2881
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            205,
+            206
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 3333,
+              "driver": 1,
+              "sourceVertexIds": [
+                2968,
+                2966
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 3402,
+              "driver": 10,
+              "sourceVertexIds": [
+                2682,
+                3086
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            171,
+            205
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 3130,
+              "driver": 10,
+              "sourceVertexIds": [
+                2692,
+                2693
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 3333,
+              "driver": 1,
+              "sourceVertexIds": [
+                2966,
+                2967
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            185,
+            210
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 3274,
+              "driver": 11,
+              "sourceVertexIds": [
+                2882,
+                2883
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 3446,
+              "driver": 1,
+              "sourceVertexIds": [
+                3164,
+                3162
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            195,
+            210
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 3337,
+              "driver": 11,
+              "sourceVertexIds": [
+                2973,
+                2974
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 3446,
+              "driver": 1,
+              "sourceVertexIds": [
+                3162,
+                3163
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            195,
+            213
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 3281,
+              "driver": 10,
+              "sourceVertexIds": [
+                2891,
+                2748
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 3481,
+              "driver": 1,
+              "sourceVertexIds": [
+                3222,
+                3223
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            206,
+            213
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 3402,
+              "driver": 10,
+              "sourceVertexIds": [
+                3086,
+                2683
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 3481,
+              "driver": 1,
+              "sourceVertexIds": [
+                3223,
+                3224
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        }
+      ],
+      "allEdgesAreWholeModelBoundary": false,
+      "wholeModelBoundaryEdges": 0,
+      "regionalAttachmentOnlyEdges": 10,
+      "wholeModelJunctionOrWindingConflictEdges": 0,
       "classification": "BRANCHED_OR_DEGENERATE_UNRESOLVED"
     },
     {
@@ -3624,6 +7194,128 @@
         "242": 2
       },
       "simpleCycle": true,
+      "wholeSourceBoundaryOwnership": [
+        {
+          "stemBoundaryVertexIds": [
+            178,
+            179
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 2848,
+              "driver": 1,
+              "sourceVertexIds": [
+                8943,
+                8944
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 3735,
+              "driver": 8,
+              "sourceVertexIds": [
+                8944,
+                8943
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            177,
+            178
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 2882,
+              "driver": 1,
+              "sourceVertexIds": [
+                8933,
+                8968
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 3534,
+              "driver": 8,
+              "sourceVertexIds": [
+                8968,
+                8933
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            179,
+            242
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 3970,
+              "driver": 1,
+              "sourceVertexIds": [
+                9506,
+                9653
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 4284,
+              "driver": 8,
+              "sourceVertexIds": [
+                9653,
+                9506
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            177,
+            242
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 3971,
+              "driver": 1,
+              "sourceVertexIds": [
+                9654,
+                9655
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 4098,
+              "driver": 8,
+              "sourceVertexIds": [
+                9655,
+                9654
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        }
+      ],
+      "allEdgesAreWholeModelBoundary": false,
+      "wholeModelBoundaryEdges": 0,
+      "regionalAttachmentOnlyEdges": 4,
+      "wholeModelJunctionOrWindingConflictEdges": 0,
       "orderedVertexIds": [
         178,
         179,
@@ -3832,7 +7524,7 @@
         "expectedTriangles": 2,
         "boundaryOrientationConsistent": true,
         "limitations": [
-          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof.",
+          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof. A source-driver boundary is not necessarily a hole: inspect whole-model ownership before closure.",
           "Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported."
         ]
       }
@@ -3860,6 +7552,244 @@
         "259": 2
       },
       "simpleCycle": true,
+      "wholeSourceBoundaryOwnership": [
+        {
+          "stemBoundaryVertexIds": [
+            209,
+            239
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 3932,
+              "driver": 1,
+              "sourceVertexIds": [
+                9625,
+                9623
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 4146,
+              "driver": 16,
+              "sourceVertexIds": [
+                9623,
+                9625
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            182,
+            239
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 3932,
+              "driver": 1,
+              "sourceVertexIds": [
+                9624,
+                9625
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 4215,
+              "driver": 16,
+              "sourceVertexIds": [
+                9625,
+                9662
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            182,
+            243
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 3981,
+              "driver": 1,
+              "sourceVertexIds": [
+                9661,
+                9662
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 4215,
+              "driver": 16,
+              "sourceVertexIds": [
+                9662,
+                9661
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            232,
+            244
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 3986,
+              "driver": 1,
+              "sourceVertexIds": [
+                9667,
+                9538
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 4322,
+              "driver": 16,
+              "sourceVertexIds": [
+                9815,
+                9891
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            209,
+            244
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 3986,
+              "driver": 1,
+              "sourceVertexIds": [
+                9666,
+                9667
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 4240,
+              "driver": 16,
+              "sourceVertexIds": [
+                12313,
+                12312
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            226,
+            243
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 4109,
+              "driver": 1,
+              "sourceVertexIds": [
+                9756,
+                9661
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 4442,
+              "driver": 16,
+              "sourceVertexIds": [
+                9661,
+                9756
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            232,
+            259
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 4198,
+              "driver": 1,
+              "sourceVertexIds": [
+                9815,
+                9816
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 4322,
+              "driver": 16,
+              "sourceVertexIds": [
+                9816,
+                9815
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            226,
+            259
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 4198,
+              "driver": 1,
+              "sourceVertexIds": [
+                9816,
+                9817
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 4430,
+              "driver": 16,
+              "sourceVertexIds": [
+                12314,
+                12315
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        }
+      ],
+      "allEdgesAreWholeModelBoundary": false,
+      "wholeModelBoundaryEdges": 0,
+      "regionalAttachmentOnlyEdges": 8,
+      "wholeModelJunctionOrWindingConflictEdges": 0,
       "orderedVertexIds": [
         239,
         209,
@@ -4277,7 +8207,7 @@
         "expectedTriangles": 6,
         "boundaryOrientationConsistent": true,
         "limitations": [
-          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof.",
+          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof. A source-driver boundary is not necessarily a hole: inspect whole-model ownership before closure.",
           "Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported."
         ]
       }
@@ -4301,6 +8231,186 @@
         "264": 2
       },
       "simpleCycle": true,
+      "wholeSourceBoundaryOwnership": [
+        {
+          "stemBoundaryVertexIds": [
+            198,
+            228
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 3713,
+              "driver": 1,
+              "sourceVertexIds": [
+                9477,
+                9478
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 4100,
+              "driver": 12,
+              "sourceVertexIds": [
+                9750,
+                9715
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            216,
+            228
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 3713,
+              "driver": 1,
+              "sourceVertexIds": [
+                9478,
+                9479
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 4063,
+              "driver": 12,
+              "sourceVertexIds": [
+                9729,
+                9727
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            249,
+            250
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 4037,
+              "driver": 1,
+              "sourceVertexIds": [
+                9703,
+                9701
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 4224,
+              "driver": 12,
+              "sourceVertexIds": [
+                9833,
+                9834
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            198,
+            249
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 4050,
+              "driver": 1,
+              "sourceVertexIds": [
+                9714,
+                9715
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 4100,
+              "driver": 12,
+              "sourceVertexIds": [
+                9715,
+                9714
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            216,
+            264
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 4346,
+              "driver": 1,
+              "sourceVertexIds": [
+                9906,
+                9907
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 4618,
+              "driver": 12,
+              "sourceVertexIds": [
+                10076,
+                10074
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            250,
+            264
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 4224,
+              "driver": 12,
+              "sourceVertexIds": [
+                9834,
+                9832
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 4346,
+              "driver": 1,
+              "sourceVertexIds": [
+                9907,
+                9908
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        }
+      ],
+      "allEdgesAreWholeModelBoundary": false,
+      "wholeModelBoundaryEdges": 0,
+      "regionalAttachmentOnlyEdges": 6,
+      "wholeModelJunctionOrWindingConflictEdges": 0,
       "orderedVertexIds": [
         198,
         228,
@@ -4621,7 +8731,7 @@
         "expectedTriangles": 4,
         "boundaryOrientationConsistent": true,
         "limitations": [
-          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof.",
+          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof. A source-driver boundary is not necessarily a hole: inspect whole-model ownership before closure.",
           "Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported."
         ]
       }
@@ -4641,6 +8751,128 @@
         "221": 2
       },
       "simpleCycle": true,
+      "wholeSourceBoundaryOwnership": [
+        {
+          "stemBoundaryVertexIds": [
+            199,
+            217
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 3529,
+              "driver": 1,
+              "sourceVertexIds": [
+                3292,
+                3293
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 3741,
+              "driver": 13,
+              "sourceVertexIds": [
+                3577,
+                3578
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            202,
+            217
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 3529,
+              "driver": 1,
+              "sourceVertexIds": [
+                3293,
+                3294
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 4035,
+              "driver": 13,
+              "sourceVertexIds": [
+                3962,
+                3963
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            199,
+            221
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 3575,
+              "driver": 1,
+              "sourceVertexIds": [
+                3358,
+                3356
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 3779,
+              "driver": 13,
+              "sourceVertexIds": [
+                3356,
+                3358
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            202,
+            221
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 3575,
+              "driver": 1,
+              "sourceVertexIds": [
+                3357,
+                3358
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 4035,
+              "driver": 13,
+              "sourceVertexIds": [
+                3964,
+                3962
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        }
+      ],
+      "allEdgesAreWholeModelBoundary": false,
+      "wholeModelBoundaryEdges": 0,
+      "regionalAttachmentOnlyEdges": 4,
+      "wholeModelJunctionOrWindingConflictEdges": 0,
       "orderedVertexIds": [
         199,
         217,
@@ -4821,7 +9053,7 @@
         "expectedTriangles": 2,
         "boundaryOrientationConsistent": true,
         "limitations": [
-          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof.",
+          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof. A source-driver boundary is not necessarily a hole: inspect whole-model ownership before closure.",
           "Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported."
         ]
       }
@@ -4841,6 +9073,128 @@
         "240": 2
       },
       "simpleCycle": true,
+      "wholeSourceBoundaryOwnership": [
+        {
+          "stemBoundaryVertexIds": [
+            227,
+            238
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 3631,
+              "driver": 8,
+              "sourceVertexIds": [
+                9409,
+                9407
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 3925,
+              "driver": 1,
+              "sourceVertexIds": [
+                9407,
+                9409
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            200,
+            238
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 3925,
+              "driver": 1,
+              "sourceVertexIds": [
+                9409,
+                9614
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 4046,
+              "driver": 8,
+              "sourceVertexIds": [
+                9709,
+                9710
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            200,
+            240
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 3947,
+              "driver": 1,
+              "sourceVertexIds": [
+                9638,
+                9639
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 4046,
+              "driver": 8,
+              "sourceVertexIds": [
+                9711,
+                9709
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            227,
+            240
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 4154,
+              "driver": 1,
+              "sourceVertexIds": [
+                9798,
+                9799
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 4493,
+              "driver": 8,
+              "sourceVertexIds": [
+                9799,
+                9798
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        }
+      ],
+      "allEdgesAreWholeModelBoundary": false,
+      "wholeModelBoundaryEdges": 0,
+      "regionalAttachmentOnlyEdges": 4,
+      "wholeModelJunctionOrWindingConflictEdges": 0,
       "orderedVertexIds": [
         227,
         238,
@@ -5041,7 +9395,7 @@
         "expectedTriangles": 2,
         "boundaryOrientationConsistent": true,
         "limitations": [
-          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof.",
+          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof. A source-driver boundary is not necessarily a hole: inspect whole-model ownership before closure.",
           "Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported."
         ]
       }
@@ -5069,6 +9423,244 @@
         "262": 2
       },
       "simpleCycle": true,
+      "wholeSourceBoundaryOwnership": [
+        {
+          "stemBoundaryVertexIds": [
+            246,
+            247
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 4026,
+              "driver": 1,
+              "sourceVertexIds": [
+                3950,
+                3951
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 4103,
+              "driver": 17,
+              "sourceVertexIds": [
+                3951,
+                3950
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            231,
+            247
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 4137,
+              "driver": 1,
+              "sourceVertexIds": [
+                4094,
+                4095
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 4222,
+              "driver": 17,
+              "sourceVertexIds": [
+                4095,
+                4094
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            231,
+            258
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 4171,
+              "driver": 1,
+              "sourceVertexIds": [
+                4148,
+                4146
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 4289,
+              "driver": 17,
+              "sourceVertexIds": [
+                4321,
+                4319
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            241,
+            258
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 4171,
+              "driver": 1,
+              "sourceVertexIds": [
+                4147,
+                4148
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 4384,
+              "driver": 17,
+              "sourceVertexIds": [
+                4452,
+                4450
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            260,
+            261
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 4144,
+              "driver": 17,
+              "sourceVertexIds": [
+                4105,
+                4106
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 4204,
+              "driver": 1,
+              "sourceVertexIds": [
+                4106,
+                4105
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            246,
+            260
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 4103,
+              "driver": 17,
+              "sourceVertexIds": [
+                4051,
+                3951
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 4216,
+              "driver": 1,
+              "sourceVertexIds": [
+                4220,
+                4221
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            261,
+            262
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 4297,
+              "driver": 1,
+              "sourceVertexIds": [
+                4307,
+                4331
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 4298,
+              "driver": 17,
+              "sourceVertexIds": [
+                4331,
+                4307
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            241,
+            262
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 4297,
+              "driver": 1,
+              "sourceVertexIds": [
+                4331,
+                4332
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 4384,
+              "driver": 17,
+              "sourceVertexIds": [
+                4450,
+                4451
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        }
+      ],
+      "allEdgesAreWholeModelBoundary": false,
+      "wholeModelBoundaryEdges": 0,
+      "regionalAttachmentOnlyEdges": 8,
+      "wholeModelJunctionOrWindingConflictEdges": 0,
       "orderedVertexIds": [
         247,
         246,
@@ -5511,7 +10103,7 @@
         "expectedTriangles": 6,
         "boundaryOrientationConsistent": true,
         "limitations": [
-          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof.",
+          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof. A source-driver boundary is not necessarily a hole: inspect whole-model ownership before closure.",
           "Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported."
         ]
       }
@@ -5539,6 +10131,244 @@
         "266": 2
       },
       "simpleCycle": true,
+      "wholeSourceBoundaryOwnership": [
+        {
+          "stemBoundaryVertexIds": [
+            233,
+            256
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 4165,
+              "driver": 1,
+              "sourceVertexIds": [
+                4138,
+                4136
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 4684,
+              "driver": 15,
+              "sourceVertexIds": [
+                4136,
+                4138
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            253,
+            257
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 4088,
+              "driver": 15,
+              "sourceVertexIds": [
+                4028,
+                4026
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 4169,
+              "driver": 1,
+              "sourceVertexIds": [
+                4140,
+                4141
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            254,
+            257
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 4169,
+              "driver": 1,
+              "sourceVertexIds": [
+                4141,
+                4142
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 4356,
+              "driver": 15,
+              "sourceVertexIds": [
+                4407,
+                4408
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            254,
+            265
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 4356,
+              "driver": 15,
+              "sourceVertexIds": [
+                4406,
+                4407
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 4361,
+              "driver": 1,
+              "sourceVertexIds": [
+                4420,
+                4418
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            234,
+            265
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 4360,
+              "driver": 15,
+              "sourceVertexIds": [
+                4417,
+                4415
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 4361,
+              "driver": 1,
+              "sourceVertexIds": [
+                4418,
+                4419
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            234,
+            256
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 4362,
+              "driver": 1,
+              "sourceVertexIds": [
+                4422,
+                4423
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 4497,
+              "driver": 15,
+              "sourceVertexIds": [
+                4601,
+                4599
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            233,
+            266
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 4408,
+              "driver": 1,
+              "sourceVertexIds": [
+                4482,
+                4480
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 4463,
+              "driver": 15,
+              "sourceVertexIds": [
+                4480,
+                4482
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            253,
+            266
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 4286,
+              "driver": 15,
+              "sourceVertexIds": [
+                4314,
+                4315
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 4408,
+              "driver": 1,
+              "sourceVertexIds": [
+                4480,
+                4481
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        }
+      ],
+      "allEdgesAreWholeModelBoundary": false,
+      "wholeModelBoundaryEdges": 0,
+      "regionalAttachmentOnlyEdges": 8,
+      "wholeModelJunctionOrWindingConflictEdges": 0,
       "orderedVertexIds": [
         256,
         233,
@@ -5973,7 +10803,7 @@
         "expectedTriangles": 6,
         "boundaryOrientationConsistent": true,
         "limitations": [
-          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof.",
+          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof. A source-driver boundary is not necessarily a hole: inspect whole-model ownership before closure.",
           "Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported."
         ]
       }
@@ -5993,6 +10823,128 @@
         "267": 2
       },
       "simpleCycle": true,
+      "wholeSourceBoundaryOwnership": [
+        {
+          "stemBoundaryVertexIds": [
+            252,
+            263
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 4336,
+              "driver": 1,
+              "sourceVertexIds": [
+                9748,
+                9899
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 4876,
+              "driver": 18,
+              "sourceVertexIds": [
+                10283,
+                10281
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            251,
+            263
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 4336,
+              "driver": 1,
+              "sourceVertexIds": [
+                9899,
+                9874
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 4896,
+              "driver": 18,
+              "sourceVertexIds": [
+                9874,
+                9899
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            251,
+            267
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 4414,
+              "driver": 1,
+              "sourceVertexIds": [
+                9836,
+                9947
+              ],
+              "direction": 1
+            },
+            {
+              "sourceFaceId": 4519,
+              "driver": 18,
+              "sourceVertexIds": [
+                10014,
+                10015
+              ],
+              "direction": -1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        },
+        {
+          "stemBoundaryVertexIds": [
+            252,
+            267
+          ],
+          "wholeSourceOwners": [
+            {
+              "sourceFaceId": 4414,
+              "driver": 1,
+              "sourceVertexIds": [
+                9947,
+                9801
+              ],
+              "direction": -1
+            },
+            {
+              "sourceFaceId": 4877,
+              "driver": 18,
+              "sourceVertexIds": [
+                10286,
+                10284
+              ],
+              "direction": 1
+            }
+          ],
+          "wholeModelBoundary": false,
+          "regionalAttachmentOnly": true,
+          "wholeModelJunctionOrWindingConflict": false
+        }
+      ],
+      "allEdgesAreWholeModelBoundary": false,
+      "wholeModelBoundaryEdges": 0,
+      "regionalAttachmentOnlyEdges": 4,
+      "wholeModelJunctionOrWindingConflictEdges": 0,
       "orderedVertexIds": [
         252,
         263,
@@ -6168,7 +11120,7 @@
         "expectedTriangles": 2,
         "boundaryOrientationConsistent": true,
         "limitations": [
-          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof.",
+          "One triangulation of a curved source-space ring; no global cap existence, self-intersection, volume, growth mapping or visual proof. A source-driver boundary is not necessarily a hole: inspect whole-model ownership before closure.",
           "Required original edge fields are retained separately; no averaging, field flipping, new vertices or source modifications. No cap exported."
         ]
       }
