@@ -1051,3 +1051,13 @@ subsets mix upward/downward faces, and are not independent closed volumes.
 Signed volume is withheld for these open components. This prevents a blanket
 'inverted soil' claim or global normal/winding flip based on the RGB ownership.
 No source attributes, regional labels, bridges or runtime shader were altered.
+
+
+The native unchanged-Badge baseline at HEAD6180627c is independently REJECTED,
+archived worker-badge-unchanged-normal-baseline-*. Source/frozen Badge5 normal
+and geometry lanes are unchanged and both cover4434 affected pixels. AlphaIoU1,
+MAE0.00002406851 do not rescue tile0.01536673187 and region157pixels. Its local
+failure predates normal reconstruction, but does not excuse the derived cap's
+new4323pixel region/tile0.310800. Both negatives retain their original gates.
+Next work must inspect the actual post-vertex/interpolated normal path rather
+than treating local-space sampled chord error as a shader/map bound.
