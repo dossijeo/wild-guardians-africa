@@ -3,15 +3,16 @@
 Solicitudes añadidas el 9 de octubre de 2026:
 
 - Biblioteca: abrir los labs a pantalla completa e integrar su navegación,
-  salida, estilo y adaptación móvil con la interfaz del juego. Subagente de
-  voces/tarjetas asignado en rama independiente; integración pendiente de QA/PR.
+  salida, estilo y adaptación móvil con la interfaz del juego. Integrado en
+  main mediante PR 8, tras QA nativa, 3272 tests de CI y compilación Windows.
 - Espíritu: verificar que ningún avance/cierre automático ocurre antes del
   final real del audio; conservar salto/cierre manual que detiene la voz.
-  Investigación y corrección asignadas al mismo subagente.
+  Corrección integrada mediante PR 8; ended español, interrupción manual y
+  fallback verificados. [Evidencia y límites](qa/library-spirit-ended/README.md).
 - Incursiones: tras enfocar al animal, seguir su aproximación hasta la primera
   entrada en la finca y dejar allí la cámara. Mantener cancelación por control
   manual y protección de terreno. Implementado en main, con 13 pruebas
-  dirigidas aprobadas; comprobación visual nativa aún pendiente.
+  dirigidas aprobadas y comprobación nativa Gran Cañón/Mapungubwe.
   [Evidencia y alcance](qa/raid-camera-approach.md).
 
 Criterio vigente de actividad (aclaración explícita del usuario, 2026-10-08):
