@@ -12,6 +12,11 @@ test('pending shared GLTF promises are not cache hits and a completed model is',
  const first=assets.model('/same.glb'),second=assets.model('/same.glb');assert.equal(owner.downloads.snapshot().pending,1);assert.equal(owner.downloads.snapshot().cacheHits,0);
  finish({scene:new THREE.Group()});await Promise.all([first,second]);assert.equal(owner.downloads.snapshot().pending,0);await assets.model('/same.glb');assert.equal(owner.downloads.snapshot().cacheHits,1);owner.dispose();assets.disposeModels();
 });
+test('closing the packed biome owner aborts its original binary request',async t=>{
+ const assets=new Assets();let received;
+ t.mock.method(globalThis,'fetch',(_,options)=>new Promise((resolve,reject)=>{received=options.signal;options.signal.addEventListener('abort',()=>reject(new DOMException('aborted','AbortError')),{once:true});}));
+ const pending=assets.biome({binary:{url:'/pending.bin'},textures:[],assets:[]});assert.equal(received,assets.preparation.signal);assets.disposeModels();await assert.rejects(pending,error=>error.name==='AbortError');assert.equal(received.aborted,true);assert.equal(assets.ownedResources.size,0);
+});
 test('offscene packed prototypes and standalone textures are owned and released once; caches clear',async t=>{
  t.mock.method(globalThis,'fetch',async url=>{const b=readFileSync(new URL('../public'+url,import.meta.url));return {ok:true,arrayBuffer:async()=>b.buffer.slice(b.byteOffset,b.byteOffset+b.byteLength)};});
  const assets=new Assets();assets.textures={loadAsync:async()=>new THREE.Texture()};

@@ -65,7 +65,7 @@ export class Assets {
   }
   async biome(pack) {
     this.assertOpen();
-    const [buffer,entries]=await Promise.all([bytes(pack.binary.url),Promise.all(pack.textures.map(async t=>[t.role,await this.texture(t.base64.url,t.role==='baseColor')]))]),textures=Object.fromEntries(entries);this.assertOpen();
+    const [buffer,entries]=await Promise.all([bytes(pack.binary.url,{signal:this.preparation.signal}),Promise.all(pack.textures.map(async t=>[t.role,await this.texture(t.base64.url,t.role==='baseColor')]))]),textures=Object.fromEntries(entries);this.assertOpen();
     const preparedTangents=this.asyncTextureImages?await prepareBiomeTangentsAsync(buffer,pack.assets,{signal:this.preparation.signal}):null;this.assertOpen();
     let preparationFrame=performance.now();
     const types={'<f4':Float32Array,'<u2':Uint16Array,'<u4':Uint32Array};
@@ -79,7 +79,7 @@ export class Assets {
   }
   async village(payload) {
     this.assertOpen();
-    const buffer=await bytes(payload.binary.url),vertices=new Float32Array(buffer,0,payload.vertexBytes/4),index=new Uint32Array(buffer,payload.vertexBytes,payload.indexCount);
+    const buffer=await bytes(payload.binary.url,{signal:this.preparation.signal}),vertices=new Float32Array(buffer,0,payload.vertexBytes/4),index=new Uint32Array(buffer,payload.vertexBytes,payload.indexCount);
     const interleaved=new THREE.InterleavedBuffer(vertices,8),map=await this.texture(payload.textures.color,true);
     this.assertOpen();const material=this.own(new THREE.MeshStandardMaterial({map,roughness:.95,metalness:0,side:THREE.DoubleSide}));
     material.userData.artSurface=5;material.userData.artBounds={min:new THREE.Vector3(),size:new THREE.Vector3(1,1,1),crown:.43};
@@ -96,9 +96,9 @@ export class Assets {
     this.assertOpen();
     const map=await this.texture(pack.texture,true);this.assertOpen();const material=this.own(new THREE.MeshStandardMaterial({map,roughness:.95,metalness:0,side:THREE.DoubleSide})),result={};
     await Promise.all(Object.entries(pack.pieces).map(async([key,piece])=>{
-      const [positions,normals,uv,index,faceRegions]=await Promise.all([piece.p,piece.n,piece.uv,piece.i,piece.faceRegions].map(p=>bytes(p.url)));
+      const [positions,normals,uv,index,faceRegions]=await Promise.all([piece.p,piece.n,piece.uv,piece.i,piece.faceRegions].map(p=>bytes(p.url,{signal:this.preparation.signal})));
       const morph=Object.fromEntries(await Promise.all(Object.entries(piece.morph).map(async([dest,bridge])=>{
-        const [p,n]=await Promise.all([bytes(bridge.p.url),bytes(bridge.n.url)]);return [dest,{peers:bridge.peers,p:new Float32Array(p),n:new Float32Array(n)}];
+        const [p,n]=await Promise.all([bytes(bridge.p.url,{signal:this.preparation.signal}),bytes(bridge.n.url,{signal:this.preparation.signal})]);return [dest,{peers:bridge.peers,p:new Float32Array(p),n:new Float32Array(n)}];
       })));
       this.assertOpen();const geometry=this.own(new THREE.BufferGeometry());geometry.setAttribute('position',new THREE.BufferAttribute(new Float32Array(positions),3));geometry.setAttribute('normal',new THREE.BufferAttribute(new Float32Array(normals),3));geometry.setAttribute('uv',new THREE.BufferAttribute(new Float32Array(uv),2));geometry.setIndex(new THREE.BufferAttribute(new Uint16Array(index),1));geometry.computeBoundingBox();geometry.computeBoundingSphere();
       const mesh=new THREE.Mesh(geometry,material);mesh.userData.nativePiece={p:new Float32Array(positions),n:new Float32Array(normals),uv:new Float32Array(uv),i:new Uint16Array(index),faceRegions:new Uint16Array(faceRegions),regions:piece.regions,morph};mesh.castShadow=mesh.receiveShadow=true;result[key]=mesh;
