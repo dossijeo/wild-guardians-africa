@@ -1,0 +1,30 @@
+{
+  "status": "CUSTOM_NORMAL_TRANSPORT_DIAGNOSTIC_NOT_APPROVED",
+  "sourceSha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+  "blenderVersion": "4.5.9 LTS",
+  "blenderBuildHash": "8bf95cbd38d1",
+  "originalCustomNormalVersusRaw": {
+    "count": 2472,
+    "maximum": 0.001203767688742177,
+    "mean": 3.0198641869267997e-05,
+    "p99": 9.131515131723763e-05
+  },
+  "genericOriginalNormalBitsBeforeModifierExact": true,
+  "reducedTriangles": 658,
+  "reducedCustomNormalVersusGenericPointField": {
+    "count": 1974,
+    "maximum": 1.300650348938032,
+    "mean": 0.08298815522327285,
+    "p99": 0.8182125254620664
+  },
+  "genericFieldLengthRange": [
+    0.9621531537076462,
+    1.0000001230448712
+  ],
+  "limitations": [
+    "No candidate exported; original geometry and frozen native imports remain untouched.",
+    "Blender generic attribute interpolation is not verified original chart/normal correspondence at changed vertices.",
+    "Angular transport differences do not identify a native RGB or alpha cause.",
+    "Generic field is not automatically an acceptable unit normal field; original shader normalization/interpolation and multiview quality remain gates."
+  ]
+}

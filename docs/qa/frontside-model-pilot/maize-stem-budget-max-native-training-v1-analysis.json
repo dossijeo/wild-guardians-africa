@@ -1,0 +1,236 @@
+{
+  "status": "DERIVED_CONTRACT_DIAGNOSTIC_NOT_APPROVAL",
+  "file": "docs/qa/frontside-model-pilot/maize-stem-budget-max-native-training-v1.json",
+  "sourceDraws": 1,
+  "rows": [
+    {
+      "arm": 1,
+      "draws": 1,
+      "cpuMatricesEqual": true,
+      "iGrowthEqual": true,
+      "instanceMatrixEqual": true,
+      "sourceTangentPresent": false,
+      "candidateTangentPresent": false,
+      "boundsEqual": true,
+      "sourceBounds": {
+        "box": {
+          "min": [
+            -0.5512350797653198,
+            0,
+            -0.6107652187347412
+          ],
+          "max": [
+            0.6757703423500061,
+            1.7827048301696777,
+            0.520395040512085
+          ]
+        },
+        "sphere": {
+          "center": [
+            0.06226763129234314,
+            0.8913524150848389,
+            -0.045185089111328125
+          ],
+          "radius": 1.2209732132104758
+        }
+      },
+      "candidateBounds": {
+        "box": {
+          "min": [
+            -0.5512350797653198,
+            0,
+            -0.6107652187347412
+          ],
+          "max": [
+            0.6757703423500061,
+            1.7827048301696777,
+            0.520395040512085
+          ]
+        },
+        "sphere": {
+          "center": [
+            0.06226763129234314,
+            0.8913524150848389,
+            -0.045185089111328125
+          ],
+          "radius": 1.2209732132104758
+        }
+      },
+      "materialDifferences": [
+        []
+      ],
+      "shaderDraws": [
+        {
+          "group": null,
+          "programId": 1,
+          "sameProgram": true,
+          "programSourcesEqual": true,
+          "uniformsEqual": true,
+          "changedUniforms": [],
+          "texturesEqual": true,
+          "matricesEqual": true,
+          "vertexAttributeLayoutDifferences": []
+        }
+      ]
+    },
+    {
+      "arm": 2,
+      "draws": 1,
+      "cpuMatricesEqual": true,
+      "iGrowthEqual": true,
+      "instanceMatrixEqual": true,
+      "sourceTangentPresent": false,
+      "candidateTangentPresent": false,
+      "boundsEqual": false,
+      "sourceBounds": {
+        "box": {
+          "min": [
+            -0.5512350797653198,
+            0,
+            -0.6107652187347412
+          ],
+          "max": [
+            0.6757703423500061,
+            1.7827048301696777,
+            0.520395040512085
+          ]
+        },
+        "sphere": {
+          "center": [
+            0.06226763129234314,
+            0.8913524150848389,
+            -0.045185089111328125
+          ],
+          "radius": 1.2209732132104758
+        }
+      },
+      "candidateBounds": {
+        "box": {
+          "min": [
+            -0.5512350797653198,
+            0,
+            -0.6107652187347412
+          ],
+          "max": [
+            0.6757703423500061,
+            1.7827048301696777,
+            0.520395040512085
+          ]
+        },
+        "sphere": {
+          "center": [
+            0.06226763129234314,
+            0.8913524150848389,
+            -0.045185089111328125
+          ],
+          "radius": 1.0665873530596046
+        }
+      },
+      "materialDifferences": [
+        []
+      ],
+      "shaderDraws": [
+        {
+          "group": null,
+          "programId": 1,
+          "sameProgram": true,
+          "programSourcesEqual": true,
+          "uniformsEqual": true,
+          "changedUniforms": [],
+          "texturesEqual": true,
+          "matricesEqual": true,
+          "vertexAttributeLayoutDifferences": []
+        }
+      ]
+    },
+    {
+      "arm": 3,
+      "draws": 2,
+      "cpuMatricesEqual": true,
+      "iGrowthEqual": true,
+      "instanceMatrixEqual": true,
+      "sourceTangentPresent": false,
+      "candidateTangentPresent": false,
+      "boundsEqual": false,
+      "sourceBounds": {
+        "box": {
+          "min": [
+            -0.5512350797653198,
+            0,
+            -0.6107652187347412
+          ],
+          "max": [
+            0.6757703423500061,
+            1.7827048301696777,
+            0.520395040512085
+          ]
+        },
+        "sphere": {
+          "center": [
+            0.06226763129234314,
+            0.8913524150848389,
+            -0.045185089111328125
+          ],
+          "radius": 1.2209732132104758
+        }
+      },
+      "candidateBounds": {
+        "box": {
+          "min": [
+            -0.5512350797653198,
+            0,
+            -0.6107652187347412
+          ],
+          "max": [
+            0.6757703423500061,
+            1.7827048301696777,
+            0.520395040512085
+          ]
+        },
+        "sphere": {
+          "center": [
+            0.06226763129234314,
+            0.8913524150848389,
+            -0.045185089111328125
+          ],
+          "radius": 1.0665873530596046
+        }
+      },
+      "materialDifferences": [
+        [],
+        []
+      ],
+      "shaderDraws": [
+        {
+          "group": 0,
+          "programId": 1,
+          "sameProgram": true,
+          "programSourcesEqual": true,
+          "uniformsEqual": true,
+          "changedUniforms": [],
+          "texturesEqual": true,
+          "matricesEqual": true,
+          "vertexAttributeLayoutDifferences": []
+        },
+        {
+          "group": 1,
+          "programId": 1,
+          "sameProgram": true,
+          "programSourcesEqual": true,
+          "uniformsEqual": true,
+          "changedUniforms": [],
+          "texturesEqual": true,
+          "matricesEqual": true,
+          "vertexAttributeLayoutDifferences": []
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "CPU texture/mipmap and instance hashes do not read GPU texture contents.",
+    "Different vertex/index data and primitive ordering are expected; attributes/payload must be interpreted separately.",
+    "Geometry bounds changes do not by themselves prove active shader bounds changes; inspect active uniforms and frustum/recipe use.",
+    "Equal program/metadata snapshots do not prove identical raster interpolation, normal-map derivatives, occlusion, quality or causality.",
+    "Native DoubleSide image-quality results remain separate gates; no performance benefit or acceptance follows from this audit."
+  ]
+}

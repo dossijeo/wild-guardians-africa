@@ -1,0 +1,32 @@
+{
+  "status": "EXACT_TRIANGLE_CORRESPONDENCE_DIAGNOSTIC_NOT_APPROVED",
+  "sourceSha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+  "candidateSha256": "1a0b22844303e38748162a03c2cdb333e671caccd092de68cd3926e78262a8e8",
+  "stemTriangleCounts": {
+    "uniqueNormalField": 464,
+    "ambiguousNormalField": 0,
+    "unmapped": 194
+  },
+  "ambiguousAnchorTriangleCorrespondence": [
+    {
+      "derivedFace": 4555,
+      "sourceFaceIds": [
+        3145
+      ],
+      "distinctOriginalCornerNormalFields": 1
+    },
+    {
+      "derivedFace": 4629,
+      "sourceFaceIds": [
+        3331
+      ],
+      "distinctOriginalCornerNormalFields": 1
+    }
+  ],
+  "limitations": [
+    "No normal or geometry changes applied; unresolved anchor candidate remains immutable.",
+    "Only exact all-three-corner P/UV and cyclic forward winding qualify as source triangle identity.",
+    "No nearest-chart choice and no view/visibility masks; new/retriangulated faces remain unmapped.",
+    "Source triangle matching does not prove shader, raster, maps, bridge or GPU acceptance."
+  ]
+}

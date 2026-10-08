@@ -1,0 +1,94 @@
+{
+  "status": "STEM_ATTRIBUTE_FIELD_DIAGNOSTIC_NOT_APPROVED",
+  "sourceSha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+  "blenderVersion": "4.5.9 LTS",
+  "rows": [
+    {
+      "receipt": "maize-blender-stem-reduction-diagnostic.json",
+      "archiveSha256": "8ee78b05ef4c647fa8f3f5a27be17767a4dc455893452ad1f70c1434de35394e",
+      "stemCorners": 1854,
+      "exactOriginalPositionCorners": 1594,
+      "exactOriginalPositionAndUvCorners": 1594,
+      "normalNumericExactAtPositionUv": 0,
+      "normalBitsExactAtPositionUv": 0,
+      "ambiguousOriginalNormalAtPositionUvCorners": 4,
+      "fixedPositionUvNormalAngleRadians": {
+        "count": 1594,
+        "maximum": 1.007675031621993,
+        "mean": 0.061010374229323906,
+        "p99": 0.8175524683059298
+      },
+      "fixedPositionNearestOriginalUvDistance": {
+        "count": 1594,
+        "maximum": 0.0,
+        "mean": 0.0,
+        "p99": 0.0
+      },
+      "nearestOriginalSurfaceDistance": {
+        "count": 1854,
+        "maximum": 0.03894951567053795,
+        "mean": 0.0008844019661537491,
+        "p99": 0.01624630205333233
+      },
+      "nearestSingleTriangleNormalAngleRadians": {
+        "count": 1854,
+        "maximum": 3.122381807907647,
+        "mean": 1.0339047211275243,
+        "p99": 2.9282345189311156
+      },
+      "nearestSingleTriangleUvDistance": {
+        "count": 1854,
+        "maximum": 1.2012884650582862,
+        "mean": 0.3689452262479525,
+        "p99": 1.1131580223485569
+      }
+    },
+    {
+      "receipt": "maize-blender-stem-budget-max-diagnostic.json",
+      "archiveSha256": "cb6b139a611ea35f6cbf5a5c80c2fc9d1fed8999ec477b70b68e560a3586dbc9",
+      "stemCorners": 1974,
+      "exactOriginalPositionCorners": 1742,
+      "exactOriginalPositionAndUvCorners": 1742,
+      "normalNumericExactAtPositionUv": 0,
+      "normalBitsExactAtPositionUv": 0,
+      "ambiguousOriginalNormalAtPositionUvCorners": 4,
+      "fixedPositionUvNormalAngleRadians": {
+        "count": 1742,
+        "maximum": 1.3006503356280006,
+        "mean": 0.04963709704721538,
+        "p99": 0.7497639770212149
+      },
+      "fixedPositionNearestOriginalUvDistance": {
+        "count": 1742,
+        "maximum": 0.0,
+        "mean": 0.0,
+        "p99": 0.0
+      },
+      "nearestOriginalSurfaceDistance": {
+        "count": 1974,
+        "maximum": 0.022629965096712112,
+        "mean": 0.0007155447906465421,
+        "p99": 0.014673120137304067
+      },
+      "nearestSingleTriangleNormalAngleRadians": {
+        "count": 1974,
+        "maximum": 3.122381807907647,
+        "mean": 1.0151244777546842,
+        "p99": 2.915026581831945
+      },
+      "nearestSingleTriangleUvDistance": {
+        "count": 1974,
+        "maximum": 1.2296973935422777,
+        "mean": 0.3691413224896193,
+        "p99": 1.1141188419381869
+      }
+    }
+  ],
+  "limitations": [
+    "Only .75 and658 mature maize pilots, original archives remain immutable; no candidate exported or altered.",
+    "Exact position/UV comparisons inspect original raw field values; no arbitrary normal correction is applied.",
+    "Nearest original triangle is one BVH tie winner; charts/coincident interfaces can be ambiguous and it is not a verified UV correspondence.",
+    "Barycentric field diagnostics are not shader evaluation, TBN/map/raster bounds, causal attribution or image approval.",
+    "GPU objectNormal normalization, wind deformation, normal-map derivatives and occlusion remain separate native concerns."
+  ]
+}
