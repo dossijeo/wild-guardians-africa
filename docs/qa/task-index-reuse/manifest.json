@@ -55,6 +55,16 @@
       "path": "benchmark-tool.mjs.gz",
       "rawBytes": 6032,
       "rawSha256": "343c129433a282feff1176ee03e2c437b670f42bb989466daf7bf4d4daeb1427"
+    },
+    {
+      "path": "build.log.gz",
+      "rawBytes": 1234,
+      "rawSha256": "578718e47dc21d2c8f78b8eac363ffd9c710c6b078d90d7351f47ab897255b07"
+    },
+    {
+      "path": "package.log.gz",
+      "rawBytes": 411,
+      "rawSha256": "248a549298474b378a30e83c5a7435378a7ef27664fd6b832ccd4dba50fe99ba"
     }
   ],
   "directedTests": {
@@ -301,5 +311,13 @@
     "src/world/wall-layout.js": "c74a70ecd45e121d0e5d04b406962c1dff1039bda6d5df593333fbd63e1d4d8a",
     "src/world/wall-stroke-sampling.js": "0b2da0982b076f4fdf34af03967c04606cc574cf1b54956fdf1cbc347c22ecd2",
     "src/world/work-points.js": "32005dd48b01b4485febee5453a4b48afc81ee3a68a2f40a40a2409eb7883bf2"
+  },
+  "buildAndPackage": {
+    "status": "passed",
+    "exitCode": 0,
+    "runtimeCommit": "8ef6b9ce168d0ad51198f5b041bcf8d64b57280f",
+    "files": 701,
+    "relativeLinks": 859,
+    "runtimeGLBs": 20
   }
 }

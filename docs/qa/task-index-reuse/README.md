@@ -19,7 +19,7 @@ Musgum reduce total 2,6/4,0 % y mediana 1,5/5,8 %. Manglares reduce total en amb
 
 Instrumentación independiente, sin usar sus tiempos como benchmark: cincuenta ticks Musgum, 5600 consultas de tareas por brazo, reconstrucciones **52→17**, entidades indexadas **55712→18229**. Las restantes colecciones conservan contadores; estado final hash idéntico `23999ce5e0dedb4e0b553deeadf3b0398bc6969dd92b1852fdb335cec3f53f26`, 142 búsquedas en ambos. El observador solo añade contadores, no toca RNG ni comandos. Se archiva separado de AB/BA.
 
-75 pruebas dirigidas pasan: reservas, rutas laborales, cajas físicas, reconstrucción/restauración y límites económicos. Nueva regresión comprueba reservas vivas, sustitución de cola de igual longitud, objetos restaurados y altas después de consultar un ID ausente. Suite completa y build/paquete están en curso al registrar este archivo; no se les atribuye PASS antes de finalizar.
+75 pruebas dirigidas pasan: reservas, rutas laborales, cajas físicas, reconstrucción/restauración y límites económicos. Nueva regresión comprueba reservas vivas, sustitución de cola de igual longitud, objetos restaurados y altas después de consultar un ID ausente. Build y paquete web pasan (logs archivados): 701 archivos, 859 enlaces relativos y 20 GLBs runtime. La suite completa sigue ejecutándose; no se le atribuye PASS antes de finalizar.
 
 ## Reproducción
 
