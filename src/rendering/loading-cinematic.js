@@ -28,7 +28,7 @@ export class LoadingCinematic {
       for(const [eye,quaternion] of [[this.panorama,this.panoramaQuaternion],[this.gameplay.eye,this.gameplay.quaternion]]) {
         if(this.world.disposed||this.diorama.disposed||this.done)throw Error('Loading cinematic preparation cancelled');
         this.world.camera.position.copy(eye);this.world.camera.quaternion.copy(quaternion);this.world.camera.updateMatrixWorld();
-        this.world.render(0);afterRender();
+        if(this.world.renderLoadingFrame)await this.world.renderLoadingFrame({nextFrame,afterRender});else this.world.render(0);afterRender();
         this.restore();this.world.cinematic=true;
         await nextFrame();
       }

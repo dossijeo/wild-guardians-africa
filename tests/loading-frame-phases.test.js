@@ -1,0 +1,7 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {WorldScene} from '../src/rendering/scene.js';
+function fixture(){const calls=[],owner={disposed:false,loading:new AbortController(),*renderFrameUpdates(){for(const phase of ['chunks','entities','far','batches','vfx']){calls.push(phase);yield;}},drawRenderFrame(){calls.push('draw');return 'rendered';}};return {owner,calls};}
+test('loading render yields only between the shared update phases and draws after every phase',async()=>{const f=fixture();let yields=0;const result=await WorldScene.prototype.renderLoadingFrame.call(f.owner,{nextFrame:async()=>{yields++;f.calls.push('frame');},afterRender:()=>f.calls.push('diorama')});assert.equal(result,'rendered');assert.equal(yields,5);assert.deepEqual(f.calls,['chunks','diorama','frame','entities','diorama','frame','far','diorama','frame','batches','diorama','frame','vfx','diorama','frame','draw']);});
+test('cancelled loading cannot execute the next phase or draw a disposed world',async()=>{const f=fixture();await assert.rejects(WorldScene.prototype.renderLoadingFrame.call(f.owner,{nextFrame:async()=>{f.owner.disposed=true;}}),/cancelled/);assert.deepEqual(f.calls,['chunks']);});
+test('ordinary gameplay consumes the same phases without yielding or changing delta',()=>{const f=fixture();let delta;f.owner.renderFrameUpdates=function*(dt){delta=dt;yield;f.calls.push('updates');};assert.equal(WorldScene.prototype.render.call(f.owner,.016),'rendered');assert.equal(delta,.016);assert.deepEqual(f.calls,['updates','draw']);});

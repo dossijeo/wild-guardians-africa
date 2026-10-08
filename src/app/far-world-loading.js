@@ -5,7 +5,7 @@ export async function prepareInitialFarWorld(world,{nextFrame=()=>new Promise(re
  const started=now();
  for(;;){
   if(world.disposed||world.loading.signal.aborted||world.farVegetation!==owner)throw Error('Far world loading cancelled');
-  world.render(0);afterRender();
+  if(world.renderLoadingFrame)await world.renderLoadingFrame({nextFrame,afterRender});else world.render(0);afterRender();
   const adapters=owner.adapters??[];
   const errors=adapters.flatMap(adapter=>adapter.stats.errors);
   if(errors.length)throw Error('Far world preparation failed: '+errors[0]);
