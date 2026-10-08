@@ -1,0 +1,14 @@
+import fs from 'node:fs';
+import crypto from 'node:crypto';
+import {gunzipSync} from 'node:zlib';
+import {sharedLeafContinuousReportPrefix} from './lib/frontside-shared-leaf-continuous-report.mjs';
+const folder=process.argv[2];
+if(!folder)throw Error('Usage: continuous archive directory');
+const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
+const manifest=JSON.parse(fs.readFileSync(folder+'/manifest.json'));
+const zipped=fs.readFileSync(folder+'/report.json.gz'),raw=gunzipSync(zipped),png=fs.readFileSync(folder+'/filmstrip.png');
+for(const [field,bytes] of [['rawJsonSha256',raw],['gzipSha256',zipped],['pngSha256',png]])if(sha(bytes)!==manifest[field])throw Error('Archive digest mismatch '+field);
+const report=JSON.parse(raw);sharedLeafContinuousReportPrefix(report);
+if(manifest.mode!==report.mode||manifest.night!==report.night||manifest.framesRecorded!==report.frames.length||JSON.stringify(manifest.captures)!==JSON.stringify(report.captures))throw Error('Manifest differs from raw report');
+if(png.readUInt32BE(16)!==1280||png.readUInt32BE(20)!==5040)throw Error('Filmstrip dimensions changed');
+console.log(JSON.stringify({status:'ARCHIVE_VERIFIED_NOT_CATEGORY_APPROVAL',runId:manifest.runId,frames:report.frames.length,contextLost:report.contextLost,humanDecision:report.visualReview?.decision??null}));
