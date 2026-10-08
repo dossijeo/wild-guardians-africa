@@ -1,6 +1,7 @@
 // Isolated source-only readback. No source texture/sampler writes or shaders.
 // Unsupported or incomplete reads must never be interpreted as equal texels.
-export function readSourceColorTexels(renderer,material,uniforms){
+export function readSourceColorTexels(renderer,material,uniforms,requestedFirstLevel=0){
+ if(![0,1].includes(requestedFirstLevel))throw Error('Only original base-inclusive or isolated mip-tail diagnosis supported');
  const gl=renderer.getContext(),properties=renderer.properties.get(material),values=properties.uniforms??{};
  const prior={active:gl.getParameter(gl.ACTIVE_TEXTURE),framebuffer:gl.getParameter(gl.READ_FRAMEBUFFER_BINDING),readBuffer:gl.getParameter(gl.READ_BUFFER),packBuffer:gl.getParameter(gl.PIXEL_PACK_BUFFER_BINDING),alignment:gl.getParameter(gl.PACK_ALIGNMENT),rowLength:gl.getParameter(gl.PACK_ROW_LENGTH),skipRows:gl.getParameter(gl.PACK_SKIP_ROWS),skipPixels:gl.getParameter(gl.PACK_SKIP_PIXELS)};
  const fingerprint=array=>{const bytes=new Uint8Array(array.buffer,array.byteOffset,array.byteLength);let h=2166136261;for(const v of bytes)h=Math.imul(h^v,16777619);return{bytes:bytes.length,fnv1a32:(h>>>0).toString(16).padStart(8,'0')};};
@@ -19,9 +20,9 @@ export function readSourceColorTexels(renderer,material,uniforms){
    gl.activeTexture(gl.TEXTURE0+uniform.value);const bound=gl.getParameter(gl.TEXTURE_BINDING_2D);
    row.boundMatchesMaterialTexture=!!bound&&bound===boundExpected;row.dimensionsSource='Material texture CPU image metadata; not queried GPU storage extent';row.width=image.width;row.height=image.height;
    if(!row.boundMatchesMaterialTexture){row.reason='Actual bound texture does not match material uniform texture';continue;}
-   const levels=texture.generateMipmaps?Math.floor(Math.log2(Math.max(image.width,image.height)))+1:Math.max(1,texture.mipmaps?.length??0);row.expectedLevels=levels;
+   const levels=texture.generateMipmaps?Math.floor(Math.log2(Math.max(image.width,image.height)))+1:Math.max(1,texture.mipmaps?.length??0);row.expectedLevels=levels;row.requestedFirstLevel=requestedFirstLevel;
    let totalBytes=0;
-   for(let level=0;level<levels;level++){
+   for(let level=requestedFirstLevel;level<levels;level++){
     const width=Math.max(1,image.width>>level),height=Math.max(1,image.height>>level),entry={level,width,height,status:'UNSUPPORTED_NOT_READ'};row.levels.push(entry);
     gl.framebufferTexture2D(gl.READ_FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,bound,level);entry.framebufferStatus=gl.checkFramebufferStatus(gl.READ_FRAMEBUFFER);
     if(entry.framebufferStatus!==gl.FRAMEBUFFER_COMPLETE){entry.reason='Color attachment incomplete or format not renderable';continue;}
@@ -33,7 +34,7 @@ export function readSourceColorTexels(renderer,material,uniforms){
     const data=new constructor(width*height*4);gl.readPixels(0,0,width,height,format,type,data);totalBytes+=byteLength;
     entry.status='COLOR_RECTANGLE_READ';entry.fingerprint=fingerprint(data);if(type===gl.FLOAT)entry.nonfiniteValues=data.reduce((count,value)=>count+!Number.isFinite(value),0);
    }
-   row.status=row.levels.length&&row.levels.every(level=>level.status==='COLOR_RECTANGLE_READ')?'EXPECTED_COLOR_LEVELS_READ':'PARTIAL_OR_UNSUPPORTED_NOT_EQUALITY';row.totalReadBytes=totalBytes;
+   row.status=row.levels.length&&row.levels.every(level=>level.status==='COLOR_RECTANGLE_READ')?(requestedFirstLevel?'REQUESTED_MIP_TAIL_READ':'EXPECTED_COLOR_LEVELS_READ'):'PARTIAL_OR_UNSUPPORTED_NOT_EQUALITY';row.totalReadBytes=totalBytes;
   }
  }finally{
   gl.bindFramebuffer(gl.READ_FRAMEBUFFER,prior.framebuffer);gl.readBuffer(prior.readBuffer);gl.bindBuffer(gl.PIXEL_PACK_BUFFER,prior.packBuffer);gl.pixelStorei(gl.PACK_ALIGNMENT,prior.alignment);gl.pixelStorei(gl.PACK_ROW_LENGTH,prior.rowLength);gl.pixelStorei(gl.PACK_SKIP_ROWS,prior.skipRows);gl.pixelStorei(gl.PACK_SKIP_PIXELS,prior.skipPixels);gl.activeTexture(prior.active);gl.deleteFramebuffer(temporary);

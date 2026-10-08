@@ -1,0 +1,9 @@
+# Actual color texel input diagnostic: source control still invalid
+
+Frozen HEAD0511372697d6ab595f2c3c3fa0ff52e80513c27d executed by root in native tab782, exported and closed/disposed. Report matches root's preserved copy byte-for-byte: SHA256 `3fec2bb7d58dce236c0b2dd38fe0f65c002844328c9a8d8b9b156c3e11b62102`. Root preserved18 sources and report/frame/browser in `docs/qa/frontside-native-inputs/worker-color-texels`. Console warnings/errors were empty. Four campaigns35912/49032/41320/41304 confirmed active before draw; no own Blender/tests/GPU running. No temporal benchmark or candidate samples.
+
+All12 synchronous same-framebuffer readbacks remain exact.30 source redraws still alternate0/21 changed bytes, maximum59, alpha0, source maxTileMae0.010757437286277613: invalid control under the existing gate. No original heldout failure is accepted or trained from this diagnosis.
+
+31 original Mesh0 draws observe identical diagnostic fingerprints for every successfully read color rectangle. Day and night environment textures256×128 have all9 expected mip levels observed, RGBA/UNSIGNED_BYTE. Each of map/normalMap/roughnessMap/metalnessMap is2048×2048; only level0 was read (16MiB per uniform). Levels1..11 were explicitly skipped under the prospective16MiB budget, not declared equal. Bone/depth are unsupported by this color instrument; bone's separate GPU-input probe remains separate evidence. The helper does not query actual GPU storage dimensions, establish cryptographic equality, sample every shader invocation or identify a cause.
+
+Next diagnostic will request only mip1..11 under the unchanged16MiB per-uniform budget, keeping level0 observations separate. No renderer/shader/threshold change or source-repeat selection is proposed to force a pass. Neither this input audit nor a future equality result approves worker geometry, maps/rig/animations or GPU benefit.
