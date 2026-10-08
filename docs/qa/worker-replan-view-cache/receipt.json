@@ -1,6 +1,6 @@
 {
   "productionChanged": false,
-  "benchmark": false,
+  "benchmark": true,
   "viewTests": 6,
   "exitCodes": [
     0,
@@ -9,7 +9,7 @@
     0
   ],
   "base": "824bd2e0",
-  "scope": "V6 QA private avoidance view caching. No measured CPU/GPU benefit or production promotion.",
+  "scope": "V6 QA private avoidance view caching plus scoped ordinary-farm CPU overhead. No production promotion.",
   "pieces": [
     {
       "path": "candidate-navigation.mjs.gz",
@@ -44,8 +44,8 @@
     {
       "path": "view-tests.mjs.gz",
       "source": ".cache/test-refinement-v6-views.mjs",
-      "rawBytes": 3872,
-      "sha256": "47428e5a8fc94517d1050e98e051ea24f5fba902a55ed2bba05e0d58576b08d9"
+      "rawBytes": 4056,
+      "sha256": "1df2d867137b05d0d8e7b2b996d3a156ae7e8bb6b35c8e305333371b29859c64"
     },
     {
       "path": "replan-runner.mjs.gz",
@@ -94,6 +94,58 @@
       "source": ".cache/worker-route-refinement/failed-views-v6.json",
       "rawBytes": 500,
       "sha256": "d1632b48c1950f38114a2ab94be32f65c779445db4459e4532d423fe9d017b98"
+    },
+    {
+      "path": "benchmark-runner.mjs.gz",
+      "source": ".cache/benchmark-worker-route-refinement-v6-guard-cost.mjs",
+      "rawBytes": 3528,
+      "sha256": "8c0a4102f1ef8f414a53970b3240e7cfe43b57de92912026c7b2068d5d22d3a5"
+    },
+    {
+      "path": "benchmark.json.gz",
+      "source": ".cache/worker-route-refinement/report-v6-guard-cost.json",
+      "rawBytes": 42027,
+      "sha256": "1706d9a2f302748e0ef08c9073ecfe7a4d8f6a89f7f0ff93995c4e2a91f0ae6a"
+    },
+    {
+      "path": "native-shores-runner.mjs.gz",
+      "source": ".cache/check-v6-native-shores.mjs",
+      "rawBytes": 3546,
+      "sha256": "185c9c4861f027493e6bed0201a74e8670714667543a1061e3d7502c06877fc4"
+    },
+    {
+      "path": "native-shores.json.gz",
+      "source": ".cache/worker-route-refinement/native-shores-v6.json",
+      "rawBytes": 469749,
+      "sha256": "88e64c9a6e6c09c4b446f0fdea43393cccb83a1f56969d88fc1ea76835026e20"
+    },
+    {
+      "path": "replan-cost-runner.mjs.gz",
+      "source": ".cache/benchmark-v6-native-replan.mjs",
+      "rawBytes": 3573,
+      "sha256": "3792f0dc775de1c9727c349987d18944452f5c41ee1dc9c92eb93efac91c576c"
+    },
+    {
+      "path": "replan-cost.json.gz",
+      "source": ".cache/worker-route-refinement/replan-cost-v6.json",
+      "rawBytes": 41636,
+      "sha256": "997c48e1eab987c36779c1e732c4ebd15eefe5e6388968f7aeee06a166025c26"
+    },
+    {
+      "path": "reference-navigation-v5.mjs.gz",
+      "source": ".cache/worker-route-refinement/candidate-navigation-v5.mjs",
+      "rawBytes": 29898,
+      "sha256": "daeae03fe697268555d0e7ee8367e6e6ee75169be2a7d29847dab3315ae2d1bc"
+    },
+    {
+      "path": "boundary-v3.json.gz",
+      "source": ".cache/worker-route-refinement/boundary-v3.json",
+      "rawBytes": 2829,
+      "sha256": "541a018ba574e7cda351769f4c5c34824bf1bd161978048edec426ed235a0623"
     }
-  ]
+  ],
+  "benchmarkExitCode": 0,
+  "benchmarkScope": "V3/originalGame versus V6/guardedGame ABBA,100ticks per arm. Four live CPU campaigns confirmed before dispatch, no Blender/GPU root. Avoidance views not exercised: zero guard rejections. CPU tick timing only, not production baseline, GPU/phone or proven cache speedup.",
+  "shoreExitCode": 0,
+  "replanCostExitCode": 0
 }

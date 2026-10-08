@@ -1,5 +1,21 @@
 # Tareas pendientes posteriores a la Jam
 
+[Caché privada de replanteo de trabajadores, V6](qa/worker-replan-view-cache/README.md):
+seis pruebas de aislamiento/invalidation y límites;100 consultas fallidas iguales
+invocan una búsqueda frente a100 de V5. El conector nativo problemático llega en70
+pasos válidos y restaura63 estados completos iguales tras el rechazo. ABBA frente
+a V3 conserva400 hashes iguales y mide+4,84% de CPU, sin ejercer la caché de
+fallos. El ABBA de replanteo nativo válido conserva400 rutas exactas y reduce
+esa consulta de7,8163 a0,1781ms; no es una mejora del97% del juego completo.
+1008 recorridos cortos de orilla pasan, con alcance limitado documentado.
+Sigue en QA: falta aceptación amplia antes de integrar.
+
+[Campaña Gran Río/Mapungubwe: cien noches archivadas](qa/intensive-gran-rio-mapungubwe-e461b550/README.md):
+victoria con1363 plantas vivas máximas, ocho especies y entregas físicas diarias;
+contabilidad y resumen completo reconciliados.18,22% de jornada sin acciones
+sigue abierto como asunto de diseño. Fuentes congeladas e461b550,23 archivos
+distintos de main; no es replay actual ni cierre de la matriz de treinta casos.
+
 [Reutilización de buffers al redimensionar lotes](qa/asset-group-production/README.md):
 integración limitada a cambios de capacidad; matrices/cobertura/envíos
 iguales,121 frente a171 bufferData al aparecer el búfalo en Gran Río/Musgum.
