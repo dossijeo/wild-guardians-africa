@@ -1,0 +1,9 @@
+# Native source-fine export failure
+
+Root executed the frozen source-fine TRAINING control on HEAD `da68f36d` in native tab824. The JavaScript SHA256 was `3c50806900589e9c0fbec0a39a8901aae2ca3e6763cd804dbb8264ffe79dd643`. The retained screenshot contains the four crop images, followed by `Error: Unexpected report` from the private POST endpoint. No metric payload was exported or made visible, so no visual pass, candidate rejection score or approval is inferred from those images.
+
+The DOM cleanup record reports `closed: true`, 21 disposed owners (including NativeSky, Assets, renderer and context), and no disposal errors. Root confirmed tab closure and GPU release. Its raw DOM text and JPEG are preserved here as `source-fine-export-failure-da68.txt` and `.jpg`; root also archived the failure in main `f00d91c2`.
+
+The cause of this instrument failure is the private server's status whitelist: it previously accepted only selection and legacy visual-screen statuses. The fix accepts the new NOT_APPROVED status only with exact `SOURCE_FINE_FIELD_TRAINING_V1`, metric policy2, the original source SHA, the frozen field payload SHA, mature-maize identity, the precommitted case and four DoubleSide arms. It writes fixed separate artifacts `crop-source-fine-field-training-selection.json` and `crop-source-fine-field-training-last-frame.png`. Invalid source controls and failed comparisons remain exportable, without converting any metric into approval.
+
+Two endpoint-validator tests pass, including rejection of changed source/profile/policy/payload/case and retention of failed/invalid reports. The rerun changes the export contract only: shader, materials, camera, data and quality gates are unchanged. Source-fine quality, coarse proxy, FrontSide, transitions, shadows, resource gates and net GPU benefit remain pending.
