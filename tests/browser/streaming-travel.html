@@ -106,5 +106,5 @@ try{
   raf=requestAnimationFrame(frame);
  };
  output({ready:true,residentPreparation,actorReadiness,resourceStages,farm,biome,culture,quality,duration,speed,initialChunks:world.chunks.size});raf=requestAnimationFrame(frame);
-}catch(error){resources?.dispose();errors.push(String(error.stack??error));output({done:true,failed:true,resourceStages,errors});}
+}catch(error){errors.push(String(error.stack??error));try{dispose();}catch(cleanupError){errors.push('QA cleanup: '+String(cleanupError));}output({done:true,failed:true,disposed:dead,resourceStages,errors});}
 </script></html>
