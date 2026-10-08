@@ -10,6 +10,7 @@ import {configureShadowCamera,updateShadowCamera} from '../../src/rendering/shad
 import {loadSupportedFieldData,createSupportedFieldTextures,createSupportedFieldGeometry} from '../../tools/lib/frontside-supported-field-data.mjs';
 import {createSourceFineFieldMaterial} from '../../tools/lib/frontside-source-fine-field-material.mjs';
 import {createQaResourceScope} from '../../tools/lib/frontside-qa-resource-scope.mjs';
+import {createSourceFineReport} from '../../tools/lib/frontside-source-fine-report-data.mjs';
 import {regions,alphaDistanceGate,accumulateControlEnvelope,controlEnvelopeMetrics} from '../../tools/lib/frontside-visual-metrics.mjs';
 const size=1024,status=document.querySelector('#status'),linear=Float64Array.from({length:256},(_,i)=>{const v=i/255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4;});let renderer,activeScope,lastCleanup;
 function metrics(a,b,envelope){
@@ -53,7 +54,7 @@ async function run(){
  for(const rig of rigs){rig.batch.update([{id:'1',species:'maiz',x:0,z:0,growth:cropSpec('maiz').growth_seconds}],sample.clock,()=>0);if(rig.fine)rig.fine.count=rig.original.count;}
  toon.update(sample.night,sun,sample.biome);registry.update(sample.clock);
  const height=rigs[0].batch.sample('maiz',cropSpec('maiz').growth_seconds).height,center=new THREE.Vector3(0,height*.5,0),a=sample.azimuth*Math.PI/180,e=sample.elevation*Math.PI/180;camera.position.copy(center).add(new THREE.Vector3(Math.sin(a)*Math.cos(e),Math.sin(e),Math.cos(a)*Math.cos(e)).multiplyScalar(Math.max(.65,height*.7)*3));camera.lookAt(center);camera.updateMatrixWorld();
- report={status:'SOURCE_FINE_FIELD_TRAINING_NOT_APPROVED',cropVisual:true,metricPolicyVersion:2,source:url,sourceField:data.metadata,viewProfile:'SOURCE_FINE_FIELD_TRAINING_V1',arms:['original DoubleSide','fine original and fallback DoubleSide','same fine source direct field DoubleSide','same fine source grid field DoubleSide'],prospectiveCase:sample,campaignConditions:{cpuCampaigns:options.get('cpuCampaigns')??'unspecified',gpuTiming:false},contextAttributes:gl.getContextAttributes(),controls:[],comparisons:[],drawInfo:[],limitations:['No coarse proxy or FrontSide rendered.','Only one existing TRAINING view; no independent, growth/bridge, shadowFront, resource or net GPU approval.','Original view-position derivatives are valid only for fine geometry. No coarse field derivative recipe is implemented.']};
+ report=createSourceFineReport({source:url,metadata:data.metadata,sample,cpuCampaigns:options.get('cpuCampaigns'),contextAttributes:gl.getContextAttributes()});
  const pixels=[],envelope=new Float64Array(size*size*3);let invalid=false;
  for(let arm=0;arm<4;arm++){
   rigs.forEach((r,i)=>r.group.visible=i===arm);renderer.render(scene,camera);const frame=new Uint8Array(size*size*4);gl.readPixels(0,0,size,size,gl.RGBA,gl.UNSIGNED_BYTE,frame);pixels.push(frame);report.drawInfo.push({...renderer.info.render});
@@ -62,7 +63,9 @@ async function run(){
  }
  const canvas=document.createElement('canvas');canvas.width=size*pixels.length;canvas.height=size;const ctx=canvas.getContext('2d');pixels.forEach((frame,arm)=>{const image=ctx.createImageData(size,size);for(let y=0;y<size;y++)image.data.set(frame.subarray((size-1-y)*size*4,(size-y)*size*4),y*size*4);ctx.putImageData(image,arm*size,0);});report.capturePng=canvas.toDataURL('image/png');report.invalidControl=invalid;
  const retained=document.createElement('img');retained.src=report.capturePng;await retained.decode();document.querySelector('#view').replaceChildren(retained);
- scope.assertOpen();report.cleanup=scope.cleanup();report.contextLost=gl.isContextLost();const response=await fetch('/__frontside_report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)});if(!response.ok)throw Error(await response.text());status.textContent=JSON.stringify({controls:report.control,comparisons:report.comparisons,cleanup:report.cleanup,contextLost:report.contextLost},null,2)+'\nExportado. GPU liberada. NOT APPROVED.';
+ scope.assertOpen();report.cleanup=scope.cleanup();report.contextLost=gl.isContextLost();
+ const details=document.createElement('details'),summary=document.createElement('summary'),payload=document.createElement('pre');summary.textContent='Informe medido antes de POST — NOT APPROVED';const {capturePng,...visibleReport}=report;payload.textContent=JSON.stringify(visibleReport,null,2);details.append(summary,payload);document.querySelector('#view').after(details);
+ const response=await fetch('/__frontside_report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)});if(!response.ok)throw Error(await response.text());status.textContent=JSON.stringify({controls:report.control,comparisons:report.comparisons,cleanup:report.cleanup,contextLost:report.contextLost},null,2)+'\nExportado. GPU liberada. NOT APPROVED.';
  }finally{lastCleanup=scope.cleanup();if(activeScope===scope)activeScope=null;}
 }
 document.querySelector('#stop').onclick=()=>{const cleanup=activeScope?.cleanup();status.textContent+='\nCancelado; recursos liberados '+JSON.stringify(cleanup);};

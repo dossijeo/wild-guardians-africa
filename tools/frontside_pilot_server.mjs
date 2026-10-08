@@ -3,10 +3,20 @@ import {createServer} from 'vite';
 import {mkdir,writeFile} from 'node:fs/promises';
 import {sourceFineReportPrefix} from './lib/frontside-source-fine-report.mjs';
 const server=await createServer({server:{host:'127.0.0.1',port:5284,strictPort:true},plugins:[{
-  name:'frontside-pilot-report',configureServer(server){server.middlewares.use('/__frontside_report',async(req,res)=>{
+  name:'frontside-pilot-report',configureServer(server){server.middlewares.use('/__frontside_export_preflight',async(req,res)=>{
     if(req.method!=='POST'){res.statusCode=405;res.end();return;}
+    try{let body='';for await(const chunk of req){body+=chunk;if(body.length>100_000)throw Error('Preflight limit');}
+      const preflight=JSON.parse(body);if(preflight.status!=='SOURCE_FINE_EXPORT_PREFLIGHT_ONLY'||preflight.gpuDraws!==0)throw Error('Unexpected export preflight');
+      const prefix=sourceFineReportPrefix(preflight.report);
+      // Deliberately writes no visual artifact: placeholder fields exercise
+      // construction/JSON transport, not measured native quality.
+      res.setHeader('Content-Type','application/json');res.end(JSON.stringify({status:'EXPORT_PREFLIGHT_PASS_NOT_NATIVE',prefix,artifactsWritten:false}));
+    }catch(error){res.statusCode=400;res.end(String(error));}
+  });server.middlewares.use('/__frontside_report',async(req,res)=>{
+    if(req.method!=='POST'){res.statusCode=405;res.end();return;}
+    let report;
     try{let body='';for await(const chunk of req){body+=chunk;if(body.length>20_000_000)throw Error('Report limit');}
-      const report=JSON.parse(body),sourceFine=report.status==='SOURCE_FINE_FIELD_TRAINING_NOT_APPROVED';if(!sourceFine&&!['SELECTION_ONLY_NOT_APPROVED','VISUAL_SCREEN_NOT_APPROVED'].includes(report.status))throw Error('Unexpected report');
+      report=JSON.parse(body);const sourceFine=report.status==='SOURCE_FINE_FIELD_TRAINING_NOT_APPROVED';if(!sourceFine&&!['SELECTION_ONLY_NOT_APPROVED','VISUAL_SCREEN_NOT_APPROVED'].includes(report.status))throw Error('Unexpected report');
       const prefix=sourceFine?sourceFineReportPrefix(report):report.status==='SELECTION_ONLY_NOT_APPROVED'?(report.cropOnly?'runtime-visibility-crop-pairs':report.workerOnly?'runtime-visibility-worker1024':'runtime-visibility'):report.cropVisual?'crop-runtime-visual':'worker-runtime-visual';
       await mkdir('docs/qa/frontside-model-pilot',{recursive:true});
       if(report.capturePng){if(!/^data:image\/png;base64,/.test(report.capturePng))throw Error('Invalid capture');
@@ -14,7 +24,15 @@ const server=await createServer({server:{host:'127.0.0.1',port:5284,strictPort:t
         delete report.capturePng;report.capture=prefix+'-last-frame.png';}
       await writeFile('docs/qa/frontside-model-pilot/'+prefix+'-selection.json',JSON.stringify(report,null,2)+'\n');
       res.setHeader('Content-Type','application/json');res.end('{"saved":true}');
-    }catch(error){res.statusCode=400;res.end(String(error));}
+    }catch(error){
+      if(error.validationFailures&&report?.status==='SOURCE_FINE_FIELD_TRAINING_NOT_APPROVED'){
+        // Preserve a rejected native request in a distinct fixed instrument
+        // artifact. It is never mistaken for the validated report route.
+        await mkdir('docs/qa/frontside-model-pilot',{recursive:true});
+        await writeFile('docs/qa/frontside-model-pilot/crop-source-fine-field-rejected-request.json',JSON.stringify({status:'INSTRUMENT_SCHEMA_REJECTED_NOT_APPROVED',validationFailures:error.validationFailures,report},null,2)+'\n');
+      }
+      res.statusCode=400;res.end(String(error));
+    }
   });server.middlewares.use('/__frontside_candidate',async(req,res)=>{
     if(req.method==='GET'&&req.url==='/maize-soil-budget'){try{const file=await import('node:fs/promises').then(fs=>fs.readFile('.cache/frontside-model-pilot/candidates/archive/e1e5886daaef7291b0553c46ea7e985661afb5e015cae7737958742bbd0185ff.json'));res.setHeader('Content-Type','application/json');res.end(file);}catch(error){res.statusCode=500;res.end(String(error));}return;}
     const stemArchives={'/maize-stem-reduction':'8ee78b05ef4c647fa8f3f5a27be17767a4dc455893452ad1f70c1434de35394e','/maize-stem-budget-max':'cb6b139a611ea35f6cbf5a5c80c2fc9d1fed8999ec477b70b68e560a3586dbc9','/maize-stem-anchor-normals':'1a0b22844303e38748162a03c2cdb333e671caccd092de68cd3926e78262a8e8'};

@@ -8,5 +8,5 @@ test('fixed field route preserves failed comparisons and invalid control reports
 });
 test('different profile, policy, source, payload or training pose is rejected',()=>{
  const mutate=[r=>r.status='APPROVED',r=>r.viewProfile='SOURCE_FINE_FIELD_V2',r=>r.metricPolicyVersion=3,r=>r.source+='?different',r=>r.sourceField.payloadSha256='0'.repeat(64),r=>r.prospectiveCase.clock=2,r=>r.cleanup.closed=false];
- for(const change of mutate){const r=report();change(r);assert.throws(()=>sourceFineReportPrefix(r),/Unexpected/);}
+ for(const change of mutate){const r=report();change(r);assert.throws(()=>sourceFineReportPrefix(r),error=>error.message.includes('Unexpected')&&Array.isArray(error.validationFailures)&&error.validationFailures.length>0);}
 });
