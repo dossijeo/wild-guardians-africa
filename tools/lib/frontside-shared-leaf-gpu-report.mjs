@@ -1,0 +1,12 @@
+import {sourceFineIdentity} from './frontside-source-fine-report.mjs';
+export function sharedLeafGpuReportPrefix(report){
+ const failures=[],check=(field,actual,expected)=>{if(actual!==expected)failures.push({field,actual:actual??null,expected});};
+ check('status',report.status,'GPU_CANDIDATE_EXPERIMENT_NOT_APPROVED');check('sharedLeafGpuNet',report.sharedLeafGpuNet,true);check('viewProfile',report.viewProfile,'SHARED_LEAF_MATURE_NET_GPU_V1');check('visualAcceptancePolicyVersion',report.visualAcceptancePolicyVersion,3);
+ check('source',report.source?.replace(/^\//,''),sourceFineIdentity.runtime);check('sourceOriginal',report.sourceOriginal,sourceFineIdentity.source);check('runtimeSource',report.runtimeSource,sourceFineIdentity.runtime);for(const [key,value] of Object.entries(sourceFineIdentity))check('sourceMapping.'+key,report.sourceMapping?.[key],value);
+ check('archiveSha256',report.archiveSha256,'4d6d5dd729211e9ed5e429915ec81960da5e6b2197d1c8982a3dbb6a92893065');check('plantCount',report.plantCount,1089);check('growth',report.growth,1);check('clock',report.clock,1.75);check('resolution',JSON.stringify(report.resolution),'[1280,720]');check('cameraPosition',JSON.stringify(report.cameraPosition),'[40,35,50]');check('cameraFov',report.cameraFov,42);
+ check('campaign.valid',['timing','resources'].includes(report.campaign),true);check('blocks.present',Array.isArray(report.blocks)&&report.blocks.length>0,true);check('blocks.arms',report.blocks?.every(b=>[0,3].includes(b.arm)),true);check('cleanup.closed',report.cleanup?.closed,true);check('cleanup.errors',report.cleanup?.errors?.length,0);check('contextLost',report.contextLost,true);
+ check('campaignConditions.gpuTiming',report.campaignConditions?.gpuTiming,report.campaign==='timing');check('campaignConditions.bufferMetadataQueries',report.campaignConditions?.bufferMetadataQueries,report.campaign==='resources');
+ if(report.campaign==='timing'){check('noBufferAudit',report.bufferAudit===undefined,true);check('queryBlocks',report.blocks?.every(b=>!!b.gpu),true);}else{check('resourceBlocks',JSON.stringify(report.blocks?.map(b=>b.arm)),'[0,3]');check('bufferAudit.present',!!report.bufferAudit,true);check('noAnalysis',report.analysis===undefined,true);}
+ if(failures.length)throw Object.assign(Error('Unexpected GPU net report: '+JSON.stringify(failures)),{validationFailures:failures});
+ return 'crop-leaf-shared-gpu-'+report.campaign;
+}
