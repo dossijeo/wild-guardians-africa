@@ -21,3 +21,14 @@ test('explicit history reuse avoids rebuilding or scanning immutable memberships
 test('reused history indexes observe appends, removals, replacement and restored objects on later passes',()=>{
  let rows=Array.from({length:100},(_,i)=>({id:'p'+i}));let lookup=workerEntityLookup(()=>rows,{reuse:true});lookup('p0');lookup('p99');rows.push({id:'new'});lookup=workerEntityLookup(()=>rows,{reuse:true});assert.equal(lookup('new'),rows.at(-1));lookup('p0');rows.pop();lookup=workerEntityLookup(()=>rows,{reuse:true});assert.equal(lookup('new'),undefined);lookup('p0');const prior=rows[0];rows=rows.map(p=>({...p}));lookup=workerEntityLookup(()=>rows,{reuse:true});assert.equal(lookup('p0'),rows[0]);assert.notEqual(lookup('p0'),prior);
 });
+test('reused task queues keep reservations live and discard same-length rebuilt or restored queues',()=>{
+ let rows=Array.from({length:100},(_,i)=>({id:'task-'+i,workerId:null,blocked:false}));
+ let lookup=workerEntityLookup(()=>rows,{reuse:true});lookup('task-99');lookup('task-98');
+ rows[99].workerId='worker-a';rows[99].blocked=true;
+ lookup=workerEntityLookup(()=>rows,{reuse:true});assert.equal(lookup('task-99').workerId,'worker-a');assert.equal(lookup('task-99').blocked,true);
+ const old=rows[99];rows=rows.filter(t=>t!==old);rows.push({id:'replacement',workerId:'worker-b',blocked:false});
+ lookup=workerEntityLookup(()=>rows,{reuse:true});assert.equal(lookup('task-99'),undefined);assert.equal(lookup('replacement').workerId,'worker-b');
+ const prior=lookup('replacement');rows=JSON.parse(JSON.stringify(rows));lookup=workerEntityLookup(()=>rows,{reuse:true});
+ assert.notEqual(lookup('replacement'),prior);rows.at(-1).workerId=null;assert.equal(lookup('replacement').workerId,null);
+ assert.equal(lookup('appended'),undefined);rows.push({id:'appended',workerId:null});assert.equal(lookup('appended'),rows.at(-1));
+});

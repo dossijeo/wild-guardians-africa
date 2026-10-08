@@ -1,0 +1,25 @@
+// Offline counter instrumentation; never writes production or existing roots.
+import assert from 'node:assert/strict';
+import {cpSync,existsSync,mkdirSync,readFileSync,writeFileSync} from 'node:fs';
+import {resolve} from 'node:path';
+assert.ok(process.argv[2]&&process.argv[3],'Pass source root and NEW diagnostic root');
+const source=resolve(process.argv[2]),dest=resolve(process.argv[3]);assert.ok(!existsSync(dest));
+mkdirSync(dest,{recursive:true});cpSync(resolve(source,'src'),resolve(dest,'src'),{recursive:true});cpSync(resolve(source,'package.json'),resolve(dest,'package.json'));
+const helper=resolve(dest,'src/simulation/worker-entity-lookup.js');
+let text=readFileSync(helper,'utf8');
+const replace=(from,to)=>{assert.equal(text.split(from).length,2,from);text=text.replace(from,to);};
+text='export const qaLookupCounts={};\n'+text;
+replace(' let collection=null,length=-1,index=null,queries=0;',` const label=collectionOf.toString(),qa=qaLookupCounts[label]??={queries:0,builds:0,indexedEntities:0,scans:0,reuses:0};
+ let collection=null,length=-1,index=null,queries=0;`);
+replace('  const current=collectionOf();','  qa.queries++;const current=collectionOf();');
+replace('if(length<64)return collection.find(entity=>entity.id===id);','if(length<64){qa.scans++;return collection.find(entity=>entity.id===id);}');
+replace('index=cached.index;return index.get(id);','qa.reuses++;index=cached.index;return index.get(id);');
+replace('if(++queries===1)return collection.find(entity=>entity.id===id);','if(++queries===1){qa.scans++;return collection.find(entity=>entity.id===id);}');
+replace('  index=new Map();','  qa.builds++;qa.indexedEntities+=length;index=new Map();');
+writeFileSync(helper,text);
+mkdirSync(resolve(dest,'tools'));
+let runner=readFileSync(new URL('../profile_late_farm.mjs',import.meta.url),'utf8');
+runner="import {qaLookupCounts} from '../src/simulation/worker-entity-lookup.js';\n"+runner;
+runner+='\nwriteFileSync(output+".counts.json",JSON.stringify(qaLookupCounts,null,2)+"\\n");\nconsole.log(JSON.stringify(qaLookupCounts));\n';
+writeFileSync(resolve(dest,'tools/profile-lookups.mjs'),runner);
+console.log(JSON.stringify({source,dest,scope:'Offline diagnostic counts, no timing acceptance or production change'}));
