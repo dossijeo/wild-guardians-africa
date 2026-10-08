@@ -4,7 +4,7 @@ User specification received 2026-10-08. Dedicated branch `feature/interactive-lo
 
 ## 1. Mission and workflow
 
-Replace New Game and Continue loading with a fully functional, polished, interactive, GPU-optimized loading experience. Inspect architecture, rendering, assets, saves, menu transitions and world initialization. Work only in the dedicated branch from latest main. Implement, benchmark, test and visually inspect, fix failures, commit and push. Open a main PR only once complete and validated. **Do not merge: explicit user approval is required.** No unrelated gameplay changes. Loading refactors must preserve compatibility. Critical requirements cannot be silently weakened or bypassed; impractical architectural requirements must be reported explicitly.
+Replace New Game and Continue loading with a fully functional, polished, interactive, GPU-optimized loading experience. Inspect architecture, rendering, assets, saves, menu transitions and world initialization. Work only in the dedicated branch from latest main. Implement, benchmark, test and visually inspect, fix failures, commit and push. Open a main PR only once complete and validated. **Updated user authorization: root reviews code, evidence and CI and merges autonomously when ready, then pulls main; further human approval is not required.** No unrelated gameplay changes. Loading refactors must preserve compatibility. Critical requirements cannot be silently weakened or bypassed; impractical architectural requirements must be reported explicitly.
 
 ## 2. Creative concept
 
@@ -62,7 +62,9 @@ Existing conventions/assets/morph/sky/camera utilities, modular maintainable imp
 - [ ] Visual and performance QA completed across compatibility scope.
 - [ ] No known blocking defects; no prematurely opened PR.
 
-Final PR must include implementation summary, architecture/files, real-progress method, CPU/GPU optimization, cinematic behavior, measured baseline/comparison, tests/coverage, explicit limitations and screenshots/demo where feasible. Push feature branch and await approval; never automatically merge.
+Final PR must include implementation summary, architecture/files, real-progress method, CPU/GPU optimization, cinematic behavior, measured baseline/comparison, tests/coverage, explicit limitations and screenshots/demo where feasible. Push feature branch and request root review. Root may merge autonomously only after those gates pass.
+
+User amendment relayed by root: «Prefiero que la rama feature/interactive-loading-screen te encargues de mergearla de forma autónoma cuando consideres que está lista en lugar de esperar mi aprobación explícita, igual que hemos hecho en otras implementaciones». This changes the human-approval wait only; no acceptance gate is removed.
 
 ## Initial architecture findings
 
