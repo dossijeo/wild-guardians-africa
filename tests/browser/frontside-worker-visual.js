@@ -47,6 +47,7 @@ async function campaign(){
  const options=new URLSearchParams(location.search),noShadows=options.has('noShadows'),positiveControl=options.has('doubleControl'),sourceTwin=options.has('sourceTwin'),originalShadow=options.has('originalShadow'),frontShadow=options.has('frontShadow'),maxSamples=Number(options.get('limit')??Infinity);renderer.shadowMap.enabled=!noShadows;
  const controlDiagnosis=options.has('controlDiagnosis');if(controlDiagnosis&&!sourceTwin)throw Error('Source-only diagnosis requires sourceTwin');
  if(options.has('sourceStateAudit')&&!controlDiagnosis)throw Error('Draw state audit is source-only and cannot participate in candidate acceptance');
+ const sourceGpuInputs=options.has('sourceGpuInputs');if(sourceGpuInputs&&(!sourceTwin||!controlDiagnosis||!options.has('sourceStateAudit')||!noShadows||options.get('limit')!=='1'))throw Error('GPU input diagnostic requires source-only noShadows state audit limit1');
  const clipFilter=options.get('clip');
  const caseOffset=Number(options.get('caseOffset')??0);if(!Number.isInteger(caseOffset)||caseOffset<0)throw Error('Invalid caseOffset');
  const withheldVersion=options.has('withheldV6')?6:options.has('withheldV5')?5:options.has('withheldV4')?4:options.has('withheldV3')?3:options.has('withheldV2')?2:1;
@@ -130,7 +131,7 @@ async function campaign(){
  report.shadowSide=closedSubset?`Five selected rigid meshes shadow${frontShadow?'Front':'Double'}; nonselected accessories original DoubleSide; body original default shadowSide`:sourceTwin||sourceRepackControl||crateDegenerate?'All original shadowSide values/defaults retained':frontShadow?'Originally DoubleSide accessories shadowFront; original body default shadowSide retained':'Originally DoubleSide accessories shadowDouble color isolation; original body default shadowSide retained';
  if(closedViews)report.independentProfile=closedViews;
  if(closedSubset)report.selectedPartCoverage=[];
- const sourceDrawAudit=options.has('sourceStateAudit')?installSourceDrawAudit(renderer,rigs[0].model):null;
+ const sourceDrawAudit=options.has('sourceStateAudit')?installSourceDrawAudit(renderer,rigs[0].model,'SOURCE_ONLY',sourceGpuInputs):null;
  if(noShadows)report.shadowSide='No shadow draws or native shadow sampling; source-only exclusion is diagnostic, not shadow acceptance';
  let failed=false;
  report.caseOffset=caseOffset;let campaignIndex=0;
@@ -146,7 +147,7 @@ async function campaign(){
   const shadowPixels=[],drawInfo=[];let shadowDifference=null;const originalControls=[],controlEnvelope=new Float64Array(size*size*3);let controlAlphaDifferences=0,controlMetrics=null,lastSourceRepeat=null,worstSourceRepeat=null,worstSourceBytes=-1;
   for(let side=0;side<2;side++){const rig=rigs[side];rigs.forEach((r,i)=>r.model.visible=i===side);sourceDrawAudit?.frame('reference');if(closedSubset||sourceRepackControl)renderer.info.reset();renderer.render(rig.scene,camera);if(closedSubset||sourceRepackControl)drawInfo.push({side,...renderer.info.render,meaning:'Renderer info with autoReset=false and reset before this frame; includes shadow draws. Logical triangle submissions, not GPU culling or vertex invocation timings.'});gl.readPixels(0,0,size,size,gl.RGBA,gl.UNSIGNED_BYTE,pixels[side]);
    if(rig.sun.shadow.map){const map=rig.sun.shadow.map,packed=new Uint8Array(map.width*map.height*4);renderer.readRenderTargetPixels(map,0,0,map.width,map.height,packed);shadowPixels[side]=packed;}
-   if(side===0){for(let capture=0;capture<(controlDiagnosis?30:3);capture++){
+   if(side===0){if(sourceGpuInputs){report.sameFramebufferReadbacks=[];for(let read=0;read<12;read++){const same=new Uint8Array(pixels[0].length);gl.readPixels(0,0,size,size,gl.RGBA,gl.UNSIGNED_BYTE,same);let changed=0,maxByteDelta=0,alphaDifferences=0;for(let i=0;i<same.length;i++){const delta=Math.abs(same[i]-pixels[0][i]);changed+=delta>0;maxByteDelta=Math.max(maxByteDelta,delta);if(i%4===3)alphaDifferences+=delta>0;}report.sameFramebufferReadbacks.push({read,changedBytes:changed,maxByteDelta,alphaDifferences});}report.sameFramebufferMeaning='12 synchronous reads of the original first framebuffer, no draw/update/RAF/promise between reads; source-only instrument diagnosis, not candidate acceptance.';}for(let capture=0;capture<(controlDiagnosis?30:3);capture++){
     const repeat=new Uint8Array(pixels[0].length);sourceDrawAudit?.frame('repeat-'+capture);renderer.render(rig.scene,camera);gl.readPixels(0,0,size,size,gl.RGBA,gl.UNSIGNED_BYTE,repeat);
     lastSourceRepeat=repeat;
     const control=accumulateControlEnvelope(controlEnvelope,pixels[0],repeat,linear);

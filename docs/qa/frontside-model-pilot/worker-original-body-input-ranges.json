@@ -1,0 +1,150 @@
+{
+  "status": "ORIGINAL_BODY_CPU_INPUT_RANGES_NOT_APPROVAL",
+  "sourceSha256": "25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238",
+  "node": "Mesh0",
+  "skin": 0,
+  "bodyAlreadyFrontSideInRuntime": true,
+  "triangles": 19951,
+  "attributes": {
+    "POSITION": {
+      "dtype": "float32",
+      "count": 15080,
+      "lanes": 3,
+      "finite": true,
+      "minimum": [
+        -0.33746951818466187,
+        0.0,
+        -0.27241793274879456
+      ],
+      "maximum": [
+        0.3357490301132202,
+        1.6999998092651367,
+        0.2746312916278839
+      ]
+    },
+    "NORMAL": {
+      "dtype": "float32",
+      "count": 15080,
+      "lanes": 3,
+      "finite": true,
+      "minimum": [
+        -0.999977707862854,
+        -0.9999995827674866,
+        -0.999834418296814
+      ],
+      "maximum": [
+        0.9997556805610657,
+        1.0,
+        0.999968409538269
+      ]
+    },
+    "TEXCOORD_0": {
+      "dtype": "float32",
+      "count": 15080,
+      "lanes": 2,
+      "finite": true,
+      "minimum": [
+        0.0,
+        0.00033599138259887695
+      ],
+      "maximum": [
+        1.0,
+        1.0
+      ]
+    },
+    "TANGENT": {
+      "dtype": "float32",
+      "count": 15080,
+      "lanes": 4,
+      "finite": true,
+      "minimum": [
+        -1.0,
+        -0.9975000023841858,
+        -1.0,
+        1.0
+      ],
+      "maximum": [
+        1.0,
+        1.0,
+        0.9995999932289124,
+        1.0
+      ]
+    },
+    "JOINTS_0": {
+      "dtype": "uint8",
+      "count": 15080,
+      "lanes": 4,
+      "finite": true,
+      "minimum": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "maximum": [
+        26,
+        27,
+        27,
+        27
+      ]
+    },
+    "WEIGHTS_0": {
+      "dtype": "float32",
+      "count": 15080,
+      "lanes": 4,
+      "finite": true,
+      "minimum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maximum": [
+        1.0,
+        0.9551854133605957,
+        0.3132242262363434,
+        0.23097020387649536
+      ]
+    }
+  },
+  "normal": {
+    "zeroLength": 0,
+    "nonfinite": 0,
+    "minLength": 0.9999999196628043,
+    "maxLength": 1.0000001083563725,
+    "unitErrorThreshold": 0.0001,
+    "nonunitBeyondThreshold": 0
+  },
+  "tangent": {
+    "zeroLength": 0,
+    "nonfinite": 0,
+    "minLength": 0.9999267063889309,
+    "maxLength": 1.0000701471332625,
+    "maxAbsNormalDot": 0.07000000029802322,
+    "minNormalTangentCrossLength": 0.9975410859804219,
+    "handednessValues": [
+      1.0
+    ]
+  },
+  "uvTriangles": {
+    "zeroDeterminant": 0,
+    "minAbsDeterminant": 3.0558386043821884e-08,
+    "maxAbsDeterminant": 0.000516055197628873
+  },
+  "skinWeights": {
+    "normalizedAccessor": false,
+    "minWeight": 0.0,
+    "maxWeight": 1.0,
+    "minSum": 0.9999998770654202,
+    "maxSum": 1.0000001266598701,
+    "sumErrorThreshold": 0.0001,
+    "sumErrorBeyondThreshold": 0
+  },
+  "limitations": [
+    "Original lossless GLB accessors only, not posed/skinned/interpolated GPU values or actual texture texels.",
+    "No source geometry, weights, joint indices, shaders, materials, rig or clips changed.",
+    "No heldout view or face-specific mask used; whole raw body inventory only.",
+    "Finite/nonzero raw normal/tangent data cannot rule out per-fragment TBN/normal-map/environment singularities or driver behavior.",
+    "Body already uses FrontSide in the actual game; it cannot be credited as a new culling gain."
+  ]
+}
