@@ -1,9 +1,11 @@
 // QA only: actual GPU state after selected depth draws. Queries may synchronize
 // the driver and must never be interpreted as performance evidence.
-export function createDepthGpuProbe(world,objectIds){
+import {createGpuBufferReader} from './depth-gpu-buffers.js';
+export function createDepthGpuProbe(world,objectIds,{bufferContent=false}={}){
  if(!Array.isArray(objectIds)||!objectIds.length||objectIds.length>8||objectIds.some(id=>typeof id!=='string'||!id))throw Error('Invalid GPU probe selection');
  const selected=new Set(objectIds),renderer=world.renderer,gl=renderer.getContext(),ids=new WeakMap(),programs=[];let serial=0;
  const id=object=>{if(!object)return null;if(!ids.has(object))ids.set(object,++serial);return ids.get(object);};
+ const bufferReader=bufferContent?createGpuBufferReader(gl):null;
  const value=v=>ArrayBuffer.isView(v)?Array.from(v):v;
  const samplerTypes=new Map([[gl.SAMPLER_2D,gl.TEXTURE_2D],[gl.SAMPLER_CUBE,gl.TEXTURE_CUBE_MAP],[gl.SAMPLER_2D_SHADOW,gl.TEXTURE_2D],[gl.INT_SAMPLER_2D,gl.TEXTURE_2D],[gl.UNSIGNED_INT_SAMPLER_2D,gl.TEXTURE_2D]]);
  function snapshot(){
@@ -28,14 +30,16 @@ export function createDepthGpuProbe(world,objectIds){
     }
    }
   }finally{gl.activeTexture(active);}
-  const attributes=[];
+  const attributes=[],buffers=new Set();
   for(let index=0;index<gl.getParameter(gl.MAX_VERTEX_ATTRIBS);index++){
    const enabled=gl.getVertexAttrib(index,gl.VERTEX_ATTRIB_ARRAY_ENABLED);
+   if(enabled)buffers.add(gl.getVertexAttrib(index,gl.VERTEX_ATTRIB_ARRAY_BUFFER_BINDING));
    attributes.push({index,enabled,buffer:id(gl.getVertexAttrib(index,gl.VERTEX_ATTRIB_ARRAY_BUFFER_BINDING)),size:gl.getVertexAttrib(index,gl.VERTEX_ATTRIB_ARRAY_SIZE),type:gl.getVertexAttrib(index,gl.VERTEX_ATTRIB_ARRAY_TYPE),normalized:gl.getVertexAttrib(index,gl.VERTEX_ATTRIB_ARRAY_NORMALIZED),stride:gl.getVertexAttrib(index,gl.VERTEX_ATTRIB_ARRAY_STRIDE),divisor:gl.getVertexAttrib(index,gl.VERTEX_ATTRIB_ARRAY_DIVISOR),offset:gl.getVertexAttribOffset(index,gl.VERTEX_ATTRIB_ARRAY_POINTER),...(!enabled?{constant:value(gl.getVertexAttrib(index,gl.CURRENT_VERTEX_ATTRIB))}:{})});
   }
-  return {program:programId,uniforms,textures,attributes,indexBuffer:id(gl.getParameter(gl.ELEMENT_ARRAY_BUFFER_BINDING)),pipeline:{depthTest:gl.isEnabled(gl.DEPTH_TEST),depthFunc:gl.getParameter(gl.DEPTH_FUNC),depthMask:gl.getParameter(gl.DEPTH_WRITEMASK),cull:gl.isEnabled(gl.CULL_FACE),cullMode:gl.getParameter(gl.CULL_FACE_MODE),frontFace:gl.getParameter(gl.FRONT_FACE),blend:gl.isEnabled(gl.BLEND),stencil:gl.isEnabled(gl.STENCIL_TEST),viewport:value(gl.getParameter(gl.VIEWPORT)),colorMask:value(gl.getParameter(gl.COLOR_WRITEMASK))}};
+  const indexBuffer=gl.getParameter(gl.ELEMENT_ARRAY_BUFFER_BINDING);buffers.add(indexBuffer);
+  return {program:programId,uniforms,textures,attributes,indexBuffer:id(indexBuffer),...(bufferReader?{bufferContents:[...buffers].filter(Boolean).map(buffer=>bufferReader.read(buffer,id(buffer)))}:{}),pipeline:{depthTest:gl.isEnabled(gl.DEPTH_TEST),depthFunc:gl.getParameter(gl.DEPTH_FUNC),depthMask:gl.getParameter(gl.DEPTH_WRITEMASK),cull:gl.isEnabled(gl.CULL_FACE),cullMode:gl.getParameter(gl.CULL_FACE_MODE),frontFace:gl.getParameter(gl.FRONT_FACE),blend:gl.isEnabled(gl.BLEND),stencil:gl.isEnabled(gl.STENCIL_TEST),viewport:value(gl.getParameter(gl.VIEWPORT)),colorMask:value(gl.getParameter(gl.COLOR_WRITEMASK))}};
  }
- return {programs,capture(render){
+ return {programs,async finish(){return bufferReader?await bufferReader.finish():null;},capture(render){
   const original=renderer.renderBufferDirect,rows=[];
   renderer.renderBufferDirect=function(camera,scene,geometry,material,object,group){
    const result=original.call(this,camera,scene,geometry,material,object,group);

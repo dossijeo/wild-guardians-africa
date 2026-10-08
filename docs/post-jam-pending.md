@@ -443,6 +443,8 @@ El usuario ha revisado los benchmarks y acepta el sobrecoste observado como prop
 
 [Sabana/Musgum: cien noches terminadas](qa/intensive-sabana-musgum-e461b550/README.md): cuarto caso congelado, victoria con hasta 1.551 plantas vivas y cuentas exactas. Archivo auditado y resumen idéntico en main; inactividad diurna 20,283% pendiente de reducir. El padre avanzó a Etíope; no es replay de main actual ni aceptación de toda la matriz.
 
+[Contenido de buffers GPU alpha](qa/alpha-depth-buffer-content/README.md): dos secuencias nativas copian los buffers completos del afloramiento volcánico. Hashes estables de posición/UV/instancias/visibilidad/índices mientras persisten siete píxeles de profundidad distintos. No aceptar alpha experimental; investigar evaluación/rasterización del shader. No es benchmark ni prueba de texels/propiedad exclusiva del fragmento.
+
 [Cuarta silueta HQ de Gran Cañón corregida](qa/hq-canyon-d-v2/README.md): cuatro capturas raíz verificadas, azimut275°, elevaciones80/120m día/noche. D-v2 aparece sobre la meseta y conserva relieve detallado/valles abiertos, datum2,36 y GL0. Atlas826.140bytes; fuentes1f9acab5. Desbloquea preparación de integración pública/PR; quedan aceptación temporal/móvil y coste de los demás biomas, sin extrapolar el benchmark de Sabana.
 
 [Cachés acotadas de terreno y segmentos](qa/navigation-query-capacity/README.md): expulsión FIFO de una entrada en lugar de vaciar 50.000/100.000 respuestas al llenarse. 38 pruebas, build/paquete y paridad completa en100ticks nativos de Cañón. Ensayo de capacidad artificial con consultas nativas conserva respuestas y reduce258→2recálculos por lote; no demuestra frecuencia de overflow ni mejora de FPS en gameplay. Invalidación geométrica preservada.
