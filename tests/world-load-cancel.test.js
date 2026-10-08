@@ -31,3 +31,16 @@ test('mud failure frees completed private clones without disposing borrowed orig
  const component=new MudPatches(),source=new THREE.Texture();let calls=0,cloneDisposals=0,sourceDisposals=0;source.addEventListener('dispose',()=>sourceDisposals++);const clone=source.clone;source.clone=function(){const result=clone.call(this);result.addEventListener('dispose',()=>cloneDisposals++);return result;};
  await assert.rejects(component.load({texture:async()=>{if(++calls===2)throw Error('network');return source;}},{base:'base',normal:'normal'}),/network/);assert.equal(cloneDisposals,1);assert.equal(sourceDisposals,0);assert.equal(component.textures.length,0);component.dispose();assert.equal(cloneDisposals,1);
 });
+
+
+test('owner cancellation stops waiting for a loader that never resolves',async()=>{
+ const world=Object.create(WorldScene.prototype);world.loading=new AbortController();const pending=world.loadReady(new Promise(()=>{}));world.loading.abort();await assert.rejects(pending,/cancelada/);
+});
+
+test('cancelled waiting still releases a late uniquely owned result once',async()=>{
+ const world=Object.create(WorldScene.prototype);world.loading=new AbortController();let finish,releases=0;const asset={};const pending=world.loadReady(new Promise(resolve=>finish=resolve),value=>{assert.equal(value,asset);releases++;});world.loading.abort();await assert.rejects(pending,/cancelada/);assert.equal(releases,0);finish(asset);await new Promise(resolve=>setImmediate(resolve));assert.equal(releases,1);
+});
+
+test('cancelled waiting observes a late loader rejection without adoption',async()=>{
+ const world=Object.create(WorldScene.prototype);world.loading=new AbortController();let fail;const pending=world.loadReady(new Promise((resolve,reject)=>fail=reject));world.loading.abort();await assert.rejects(pending,/cancelada/);fail(Error('late decode failure'));await new Promise(resolve=>setImmediate(resolve));
+});

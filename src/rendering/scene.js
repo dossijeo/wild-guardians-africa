@@ -1,3 +1,4 @@
+import {waitGpuPreparation} from '../../tools/experiments/wait-gpu-preparation.js';
 import {initializeLoadingTextures} from './loading-textures.js';
 import {compileLoadingPrograms,compileLoadingProgramsBatched} from './loading-programs.js';
 import {createRendererWithGlEpoch} from './gl-resource-epoch.js';
@@ -117,7 +118,14 @@ export class WorldScene {
   clearSpellPreview(){this.spellPreview.clear();}
   clearWallPreview(){if(this.wallPreview){for(const wall of this.wallPreview.children)wall.dispose();this.scene.remove(this.wallPreview);this.wallPreview=null;}}
   qualitySetting(quality) {this.quality=quality;this.farVegetation?.configureQuality?.(quality);this.toon.uniforms.uGroundDetail.value=quality==='muy_baja'?0:1;this.destructionPass.quality=['muy_baja','baja'].includes(quality)?0:1;this.destructionPass.effectQuality=quality==='alta'?'high':['muy_baja','baja'].includes(quality)?'low':'medium';updateGroundQuality(this.terrainMeshes,quality,mesh=>this.materialRegistry?.refresh(mesh));this.renderer.shadowMap.enabled=['media','alta'].includes(quality);resizeShadowMap(this.sun,quality);this.resize();}
-  async loadReady(pending,releaseLate){const value=await pending;if(this.disposed){releaseLate?.(value);throw new Error('Carga de mundo cancelada');}return value;}
+  async loadReady(pending,releaseLate){
+    const signal=this.loading?.signal;let value;
+    const check=()=>{if(this.disposed||signal?.aborted)throw new Error('Carga de mundo cancelada');};
+    // Observe late completion once, even when owner cancellation wins first.
+    // Waiting is cancellable; decoder/driver work itself is not interrupted here.
+    const observed=Promise.resolve(pending).then(result=>{if(this.disposed||signal?.aborted)releaseLate?.(result);value=result;});
+    await waitGpuPreparation(observed,{check,signal,nextFrame:()=>new Promise(()=>{})});check();return value;
+  }
   async load(state,nav,villagePayload,{farVegetation=false,loadingProgress=null}={}) {
     this.loadingProgress=loadingProgress;
     const milestone=async id=>{loadingProgress?.update(id);if(loadingProgress){await new Promise(resolve=>requestAnimationFrame(resolve));if(this.disposed)throw Error('World loading cancelled');}};
