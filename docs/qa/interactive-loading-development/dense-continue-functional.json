@@ -1,0 +1,129 @@
+{
+  "scope": "Functional archived Continue only. Root CPU suite concurrent; timing fields deliberately excluded and not accepted as benchmark evidence. QA time set to310 and reduced-motion enabled before world restoration.",
+  "archive": {
+    "sha256": "b485768f1cc172c5b174138f2c678e2bfa2d0b544d5316a3e9cb3dddf33f9103",
+    "plants": 23894,
+    "workers": 36,
+    "day": 101
+  },
+  "logicalUnchanged": true,
+  "cameraPreserved": true,
+  "camera": {
+    "eye": [
+      99.70247532024266,
+      27.37682490650652,
+      30.57367599590944
+    ],
+    "target": [
+      83,
+      12.20192278906814,
+      0
+    ]
+  },
+  "progress": {
+    "progress": 1,
+    "ready": true,
+    "estimated": false,
+    "error": null,
+    "elapsed": 23629.299999952316,
+    "unchangedFor": 0,
+    "pending": [],
+    "stages": [
+      {
+        "id": "configuration",
+        "weight": 8,
+        "progress": 1,
+        "started": 7925.5,
+        "finished": 7925.5
+      },
+      {
+        "id": "sky",
+        "weight": 4,
+        "progress": 1,
+        "started": 7928.399999976158,
+        "finished": 7928.399999976158
+      },
+      {
+        "id": "biome",
+        "weight": 4,
+        "progress": 1,
+        "started": 9361.199999928474,
+        "finished": 9361.199999928474
+      },
+      {
+        "id": "buildings",
+        "weight": 8,
+        "progress": 1,
+        "started": 10452.199999928474,
+        "finished": 10452.199999928474
+      },
+      {
+        "id": "animals",
+        "weight": 10,
+        "progress": 1,
+        "started": 11473.899999976158,
+        "finished": 11474
+      },
+      {
+        "id": "crops",
+        "weight": 6,
+        "progress": 1,
+        "started": 12841,
+        "finished": 12841
+      },
+      {
+        "id": "walls",
+        "weight": 4,
+        "progress": 1,
+        "started": 13501.299999952316,
+        "finished": 13501.399999976158
+      },
+      {
+        "id": "vfx",
+        "weight": 2,
+        "progress": 1,
+        "started": 13971,
+        "finished": 13971
+      },
+      {
+        "id": "chunks",
+        "weight": 8,
+        "progress": 1,
+        "started": 15184.799999952316,
+        "finished": 15184.799999952316
+      },
+      {
+        "id": "gpu",
+        "weight": 15,
+        "progress": 1,
+        "started": 17861.299999952316,
+        "finished": 24496.699999928474
+      },
+      {
+        "id": "far-assets",
+        "weight": 25,
+        "progress": 1,
+        "started": 30307.899999976158,
+        "finished": 30307.899999976158
+      },
+      {
+        "id": "visible-ready",
+        "weight": 6,
+        "progress": 1,
+        "started": 31035.299999952316,
+        "finished": 31035.299999952316
+      }
+    ]
+  },
+  "errors": [],
+  "disposed": true,
+  "contextLost": true,
+  "console": [
+    {
+      "level": "warn",
+      "message": "THREE.WebGLProgram: Program Info Log: (761,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(766,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+      "timestamp": "2026-10-08T11:40:45.564Z",
+      "url": "http://127.0.0.1:5290/node_modules/.vite/deps/chunk-TKFENS4F.js?v=1469e00d"
+    }
+  ]
+}
