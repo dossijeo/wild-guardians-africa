@@ -1,5 +1,12 @@
 # Tareas pendientes posteriores a la Jam
 
+[Traveling y streaming: dos bloqueos corregidos](qa/streaming-travel/README.md):
+consulta GL síncrona repetida y serialización de texturas al clonar material
+del borde del suelo lejano. Sabana A/C/C/A conserva35chunksnuevos/cámara/estado;
+frames>100ms pasan de72/70 a7/8. GranRío15s sin errores ni frames>100ms.
+Sin reducir calidad. Persisten picos de compilación inicial; falta ampliar a
+fincas densas, otros biomas/calidades y móvil. No equivale a60FPS estables.
+
 [Sorgo: tallo FrontSide parcial rechazado](qa/frontside-native-inputs/sorgo-state-stem/README.md):
 primera vista nativa conserva silueta, pero falla color local (tile0,019>
 0,01; región115px>16). Original/indexado y agrupado DoubleSide pasan.
