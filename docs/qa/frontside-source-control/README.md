@@ -23,3 +23,13 @@ multiple resources), closed true and errors empty; the tab was closed. Neither
 execution exposes quantitative comparison results, so neither establishes
 visual acceptance. Diagnose the producer/validator contract before repeating
 GPU work; do not relax the visual thresholds to make export pass.
+
+DOM-only preflight b1de3ce3 (tab 827, no renderer/WebGL) exposes a concrete
+source-path mismatch: the browser factory obtains `assets/web/be4bb…glb` from
+the runtime asset mapping, while the validator expects `assets/be4bb…glb`.
+Its status and screenshot are preserved separately, with hashes. This proves
+the preflight rejection; the lost POST payload of 825 prevents confirming that
+all fields there were identical. The branch author must distinguish original
+source provenance from runtime transport provenance and verify the mapping,
+then repeat this preflight before another measured render. No visual gate has
+been relaxed and no model accepted. Tab 827 closed without a GPU context.
