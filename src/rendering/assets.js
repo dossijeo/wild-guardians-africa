@@ -1,4 +1,5 @@
-import {prepareLoadingImage} from './loading-image.js';
+import {prepareLoadingImage,ownLoadingBitmap} from './loading-image.js';
+import {LoadingImageDecoder} from './loading-image-decoder.js';
 import {prepareBiomeTangentsAsync} from './prepare-biome-tangents.js';
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
@@ -32,7 +33,7 @@ export class Assets {
     // Also owns packed biome/village/wall prototypes and standalone textures,
     // including resources whose meshes never entered the rendered scene.
     for(const resource of this.ownedResources)this.release(resource);
-    this.preparation.abort();this.ownedResources.clear();this.modelSources.clear();this.cache.clear();
+    this.preparation.abort();this.releaseLoadingImageDecoder();this.ownedResources.clear();this.modelSources.clear();this.cache.clear();
   }
   async building(descriptor){
     this.assertOpen();const key='building:'+descriptor.url;
@@ -45,8 +46,20 @@ export class Assets {
   }
   async texture(url,color=false) {
     this.assertOpen();const key=url+color;
-    if(!this.cache.has(key)){const pending=this.textures.loadAsync(assetUrl(url)).then(async texture=>{if(color)texture.colorSpace=THREE.SRGBColorSpace;texture.flipY=false;if(this.asyncTextureImages){try{await prepareLoadingImage(texture,{cancelled:()=>this.modelsDisposed,onDiagnostic:this.loadingDiagnostics});}catch(error){this.release(texture);throw error;}}return this.own(texture);});this.cache.set(key,pending);pending.catch(()=>{if(this.cache.get(key)===pending)this.cache.delete(key);});}
+    if(!this.cache.has(key)){const bitmapPath=this.asyncTextureImages&&typeof Worker!=='undefined'&&typeof createImageBitmap==='function',load=bitmapPath?this.loadingTexture(url):this.textures.loadAsync(assetUrl(url));const pending=load.then(async texture=>{if(color)texture.colorSpace=THREE.SRGBColorSpace;texture.flipY=false;if(this.asyncTextureImages&&!bitmapPath){try{await prepareLoadingImage(texture,{cancelled:()=>this.modelsDisposed,onDiagnostic:this.loadingDiagnostics});}catch(error){this.release(texture);throw error;}}return this.own(texture);});this.cache.set(key,pending);pending.catch(()=>{if(this.cache.get(key)===pending)this.cache.delete(key);});}
     return this.cache.get(key);
+  }
+  releaseLoadingImageDecoder(){this.loadingImageDecoder?.dispose();this.loadingImageDecoder=null;}
+  async loadingTexture(url){
+    this.assertOpen();const buffer=await bytes(url,{signal:this.preparation.signal});this.assertOpen();
+    this.loadingImageDecoder??=new LoadingImageDecoder({signal:this.preparation.signal});
+    let bitmap;try{bitmap=await this.loadingImageDecoder.decode(buffer);}catch(error){
+      if(!error.unsupported)throw error;
+      // Older Worker implementations retain the native synchronous-image path.
+      const texture=await this.textures.loadAsync(assetUrl(url));try{await prepareLoadingImage(texture,{cancelled:()=>this.modelsDisposed,onDiagnostic:this.loadingDiagnostics});return texture;}catch(failure){this.release(texture);throw failure;}
+    }
+    if(this.modelsDisposed){bitmap.close();throw Error('Loading image decode cancelled');}
+    return ownLoadingBitmap(new THREE.Texture(),bitmap);
   }
   async biome(pack) {
     this.assertOpen();

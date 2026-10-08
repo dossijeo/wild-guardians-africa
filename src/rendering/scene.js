@@ -159,7 +159,7 @@ export class WorldScene {
     await this.loadReady(this.warmAnimalGpu());await milestone('gpu');
     // Callers choose a configured horizon through the same loading/cancellation
     // boundary as every other asset; generic worlds may still omit it.
-    if(farVegetation){const {attachBiomeFarVegetation}=await import('./far-vegetation.js');await this.loadReady(attachBiomeFarVegetation(this,farVegetation===true?{}:farVegetation));}await milestone('far-assets');
+    if(farVegetation){const {attachBiomeFarVegetation}=await import('./far-vegetation.js');await this.loadReady(attachBiomeFarVegetation(this,farVegetation===true?{}:farVegetation));}await milestone('far-assets');if(loadingProgress)this.assets.releaseLoadingImageDecoder();
   }
   prepareSavedAnimalRigs(state){
     const group=state.raid?state.raid.animals.filter(a=>a.status!=='gone').map(a=>a.species):state.nightPlan&&!state.nightPlan.done?state.nightPlan.group??[]:[];
