@@ -3,20 +3,25 @@ import {waitGpuPreparation} from './wait-gpu-preparation.js';
 // Candidate for Three r180's normal target/output recipe. Own the readiness
 // polling rather than leaving compileAsync's internal timer alive on abort.
 // compile() still submits synchronously; this does not interrupt driver work.
-export async function compileGpuPreparation(renderer,root,camera,scene,{check,signal,pollIntervalMs=10}={}) {
+export async function compileGpuPreparation(renderer,root,camera,scene,{check,signal,pollIntervalMs=10,selectPrograms}={}) {
  if(typeof check!=='function')throw Error('GPU compilation requires a lifetime check');
+ if(selectPrograms!==undefined&&typeof selectPrograms!=='function')throw Error('Invalid GPU program selector');
  if(!Number.isFinite(pollIntervalMs)||pollIntervalMs<=0)throw Error('Invalid GPU compilation polling interval');
  const guard=()=>{check();if(signal?.aborted)throw signal.reason??new DOMException('GPU compilation cancelled','AbortError');};
  guard();
  const materials=renderer.compile(root,camera,scene);guard();
  // Capture selected programs before borrowed materials can be restored or
  // disposed. This matches compileAsync's currentProgram choice, not unrelated
- // variants previously compiled for the same material.
+ // variants previously compiled for the same material. A caller may explicitly
+ // select all borrowed variants; selection is snapshotted before any await.
  const programs=new Set();
  for(const material of materials){
-  const program=renderer.properties.get(material).currentProgram;
-  if(typeof program?.isReady!=='function')throw Error('GPU compilation has no selected readiness program');
-  programs.add(program);
+  guard();const properties=renderer.properties.get(material);
+  const selected=selectPrograms?selectPrograms(properties,material):[properties.currentProgram];
+  if(!selected||typeof selected[Symbol.iterator]!=='function')throw Error('GPU compilation has no selected readiness program');
+  let count=0;
+  for(const program of selected){guard();if(typeof program?.isReady!=='function')throw Error('GPU compilation has no selected readiness program');programs.add(program);count++;}
+  if(count===0)throw Error('GPU compilation has no selected readiness program');
  }
  let resolveReady,timer;
  const ready=new Promise(resolve=>{resolveReady=resolve;});
