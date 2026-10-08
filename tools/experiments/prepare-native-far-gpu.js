@@ -29,7 +29,7 @@ function rememberTexture(entry,texture){
 
 // Prepare the current root using the normal output/shader recipe. Callers bind
 // the completed fence to their exact packing and renderable generation.
-async function prepareNativeFarGpuNow(renderer,root,scene,camera,textures,{cancelled=()=>false,nextFrame=()=>new Promise(resolve=>requestAnimationFrame(resolve)),timeout=30000,texturesPerFrame=1,decodeImages=false,diagnoseErrors=false}={}){
+export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{cancelled=()=>false,nextFrame=()=>new Promise(resolve=>requestAnimationFrame(resolve)),timeout=30000,texturesPerFrame=1,decodeImages=false,diagnoseErrors=false,cooperative=false}={}){
  if(!Number.isInteger(texturesPerFrame)||texturesPerFrame<1)throw Error('Invalid texture preparation budget');
  const unique=[...new Set(textures)],textureUploads=[],gl=renderer.getContext(),begin=performance.now();let cache,cacheEpoch,sync,textureBatches=0,maxTextureBatchMs=0,maxTextureBatchCount=0;
  const check=()=>{if(cancelled()||cache?.released||unique.some(texture=>textureOwnerSignals.get(texture)?.aborted))throw new NativeFarGpuCancelled('owner-cancelled');if(gl.isContextLost()||cache?.contextLost||cache&&cache.epoch!==cacheEpoch)throw new NativeFarGpuCancelled('context-changed');if(performance.now()-begin>timeout)throw Error('Native GPU preparation timed out');};
@@ -48,6 +48,7 @@ async function prepareNativeFarGpuNow(renderer,root,scene,camera,textures,{cance
   }
   check();
   await renderer.compileAsync(root,camera,scene);check();checkErrors('after compilation');
+  const drawAndFence=async()=>{check();
   // Keep the normal target/output recipe: another render target creates shader
   // variants. A zero viewport/scissor uploads vertex buffers without touching
   // visible pixels or clearing the player's framebuffer.
@@ -60,17 +61,19 @@ async function prepareNativeFarGpuNow(renderer,root,scene,camera,textures,{cance
   for(;;){check();const status=gl.clientWaitSync(sync,0,0);if(status===gl.ALREADY_SIGNALED||status===gl.CONDITION_SATISFIED)break;if(status===gl.WAIT_FAILED)throw Error('Native GPU fence failed');await nextFrame();}
   const errorCode=gl.getError();if(errorCode!==gl.NO_ERROR)throw Error('Native GPU preparation error 0x'+errorCode.toString(16));
   return {elapsedMs:performance.now()-begin,textures:unique.length,cachedTextures:unique.length-pending.length,textureBatches,maxTextureBatchCount,maxTextureBatchMs,textureUploads};
+  };
+  return cooperative?await queueLoadingFarDraw(renderer,drawAndFence,{check,nextFrame}):await drawAndFence();
  }finally{if(sync)gl.deleteSync(sync);}
 }
 
-// Loading-only queue: native draw/fence continuations from different species
-// must not all resume in one browser task. Ordinary gameplay keeps its prior
-// scheduling. A renderer owns its tail only until the last preparation settles.
+// Loading-only draw queue. Texture preparation and asynchronous compilation
+// remain concurrent; only upload draws/fences are admitted one at a time.
+// This avoids serializing long image preparations just to separate native draw
+// continuations. Ordinary gameplay retains its existing scheduling.
 const loadingPreparations=new WeakMap();
-export function prepareNativeFarGpu(renderer,root,scene,camera,textures,options={}){
- if(!options.cooperative)return prepareNativeFarGpuNow(renderer,root,scene,camera,textures,options);
+function queueLoadingFarDraw(renderer,draw,{check,nextFrame}){
  const previous=loadingPreparations.get(renderer)??Promise.resolve();let release;
  const gate=new Promise(resolve=>{release=resolve;}),tail=previous.catch(()=>{}).then(()=>gate);loadingPreparations.set(renderer,tail);
  const clear=()=>{if(loadingPreparations.get(renderer)===tail)loadingPreparations.delete(renderer);};tail.then(clear,clear);
- return (async()=>{try{await previous.catch(()=>{});if(options.cancelled?.()||renderer.getContext().isContextLost())throw new NativeFarGpuCancelled('owner-cancelled');await (options.nextFrame??(()=>new Promise(resolve=>requestAnimationFrame(resolve))))();return await prepareNativeFarGpuNow(renderer,root,scene,camera,textures,options);}finally{release();}})();
+ return (async()=>{try{await previous.catch(()=>{});check();await nextFrame();check();return await draw();}finally{release();}})();
 }
