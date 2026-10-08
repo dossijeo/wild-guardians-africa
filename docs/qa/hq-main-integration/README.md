@@ -38,7 +38,12 @@ assets or sidedness.
 Update: [Validate game on the merge runtime](https://github.com/dossijeo/wild-guardians-africa/actions/runs/37703151920)
 completed successfully at 2026-10-07 23:52:45 UTC: 3,104 tests passed, zero
 failures, asset/audio/plan/balance/browser-syntax checks, build, package and ZIP
-CRC checks passed. `validate-ci.log.gz` preserves the complete log. Windows
-37703152016 subsequently completed compilation and installer checks but was
-still running packaged WebView2 smoke/visibility checks at inspection; its
-terminal success remains unproven here.
+CRC checks passed. `validate-ci.log.gz` preserves the complete log.
+
+Terminal update: [Windows on the same merge runtime](https://github.com/dossijeo/wild-guardians-africa/actions/runs/37703152016)
+completed successfully. The packaged WebView2 smoke and genuine native
+minimization/restoration steps also completed successfully. The run's exact
+head is `68447e149019be082d7b9815e475fc42edd5588b`; this does not assert CI
+success for later commits. `windows-terminal.json` preserves job/step conclusions
+and `windows-terminal.log.gz` the complete log. Physical mobile acceptance and
+the other visual gates listed above remain separate.
