@@ -1,6 +1,12 @@
 # Geometry draft for separate source fields
 
-`tools/frontside_blender_chart_proxy.py` is a prepared, syntax-checked generator. At this revision it has not been executed; no payload, output count or measured benefit is claimed.
+`tools/frontside_blender_chart_proxy.py` ran in Blender 4.5.9 and ended with exit code 0 inside the exec call (wall 3.98 seconds, no ongoing handle/live PID returned). Root's CPU run 57382 was terminal before this authorized generation; loading was notified and started its next pilot afterward. No GPU was used.
+
+The isolated draft has 1519 leaf triangles and 1197 vertices, against 3009 original leaf triangles. There are 83 charts; 43 charts with at most three input faces triggered Blender's modifier-size warnings. Their 58 source faces were retained as 58 output faces. No chart had collapsed-position input degeneracy. These facts describe generation, not field correspondence or topology/visual acceptance.
+
+The archived NPZ is 227374 compressed bytes, SHA256 `f0a9359ad04e663d8fda2a9e9c4a329f9bbf33dd23acfdb5e00b0ca0138418ed`. Its decoded arrays total 395214 bytes. `frontside_verify_chart_proxy.py` verifies original P/normal/UV/index bits against source GLB accessors, labels against the original bridge metadata, every source leaf face's chart assignment, finite proxy positions and index ranges. It passes; it does not evaluate field lookup, geometric error, shading, growth or GPU memory. The archived file is a reproducible CPU draft, not a replacement asset.
+
+Even before auxiliary-field costs, a hypothetical fully bilateral stem and leaf construction would have 1102 soil + 1648 stem + 3038 leaf = 5788 triangles, 17.285% above the original 4935. That exceeds the current 10% gate. A partial construction with DoubleSide leaves would have a different count and must state that partial scope, preserve quality and demonstrate sufficient net benefit. Neither route is accepted by this generation.
 
 It partitions original mature-maize leaf faces by regular geometric edge adjacency with opposite winding. Coincident non-manifold edges and same-direction edge pairs are not connected. The new chart interfaces are bookkeeping cuts through the original surface; they are not physical holes and will not receive caps. Original P/normal/UV lanes, face indices, labels and face-to-chart assignments remain in a separate table.
 
