@@ -21,7 +21,7 @@ function pixels(renderer){const gl=renderer.getContext(),data=new Uint8Array(gl.
 function delta(a,b){assert(a.length===b.length,'Different framebuffer sizes');let channels=0,maxByte=0;for(let i=0;i<a.length;i++){const d=Math.abs(a[i]-b[i]);if(d)channels++;if(d>maxByte)maxByte=d;}return{channels,maxByte};}
 
 // All three draws are synchronous. No worker adoption or await can change the
-// scene between reference and isolated draw. Mixer/clock advancement occurs
+// scene between reference and isolated draw. QA mixer advancement occurs
 // before this witness; subsequent render(0) preserves that exact pose.
 function witness(world){
  const renderer=world.renderer,root=world.assetGroups.root;
@@ -61,19 +61,28 @@ async function runCase({biome,culture,dense=false}){
   await world.load(state,nav,payload,{farVegetation:farVegetationProfile({quality:'media',biome:nav.config.biome})});check();await prepareInitialFarWorld(world);check();
   const actors=[...world.objects.values()].map(o=>o.userData.actorReady).filter(Boolean);await Promise.all(actors);check();
   world.focusFarm();world.controls.enabled=false;world.controls.enableDamping=false;world.render(0);
-  row.actorReadiness=actors.length;row.mixers=world.mixers.size;row.initialStream=world.chunkStream.summary();row.livingPlants=state.plants.filter(p=>p.alive).length;
+  const rigs=[...world.mixers.values()],mixerTimes=rigs.map(r=>r.mixer.time),bones=[];
+  for(const rig of rigs)rig.model.traverse(o=>{if(o.isBone&&bones.length<8)bones.push(o);});
+  const bonePose=()=>bones.flatMap(b=>[...b.position.toArray(),...b.quaternion.toArray(),...b.scale.toArray()]),initialPose=bonePose();
+  row.actorReadiness=actors.length;row.mixers=rigs.length;row.initialStream=world.chunkStream.summary();row.livingPlants=state.plants.filter(p=>p.alive).length;
   const eye=world.camera.position.clone(),target=world.controls.target.clone(),duration=10000,distance=120;
   let start,last,sampled=-1;
   while(true){
    const now=await frame();check();if(start===undefined){start=now;last=now;}const elapsed=Math.min(duration,now-start),fraction=elapsed/duration;
    world.camera.position.copy(eye);world.camera.position.z+=distance*fraction;world.controls.target.copy(target);world.controls.target.z+=distance*fraction;
-   world.render(Math.min(.1,Math.max(0,(now-last)/1000)));last=now;
+   const dt=Math.min(.1,Math.max(0,(now-last)/1000));
+   // WorldScene normally advances actor clips from simulated time, which is
+   // paused here. Advance presentation mixers explicitly on this QA copy;
+   // never mutate elapsed, worker positions, tasks or any save data.
+   for(const rig of rigs)rig.mixer.update(dt);
+   world.render(dt);last=now;
    const index=Math.floor(elapsed/500);
    if(index!==sampled){sampled=index;const sample={elapsed,distance:distance*fraction,...witness(world),chunks:world.chunks.size,created:world.chunkStream.stats.created};row.samples.push(sample);
     if(index===0||index===10||elapsed===duration)row.captures.push({elapsed,png:canvas.toDataURL('image/png')});
    }
    if(elapsed===duration)break;
   }
+  const finalPose=bonePose();row.poseWitness={sampledBones:bones.length,changed:initialPose.some((value,i)=>value!==finalPose[i]),mixerTimeDeltas:rigs.map((r,i)=>r.mixer.time-mixerTimes[i])};
   row.finalStream=world.chunkStream.summary();row.logicalUnchanged=logical===serialize(state);assert(row.logicalUnchanged,'Paused logical state changed');row.distance=distance;
  }finally{const gl=world.renderer.getContext();close();row.cleanup={disposed:world.disposed,contextLost:gl.isContextLost()};rows.push(row);}
 }
