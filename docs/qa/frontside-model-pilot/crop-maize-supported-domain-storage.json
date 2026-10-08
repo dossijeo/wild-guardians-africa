@@ -1,0 +1,143 @@
+{
+  "status": "CPU_PARTIAL_DOMAIN_PROXY_VERIFIED_NOT_VISUAL_OR_GPU_ACCEPTANCE",
+  "payloadSha256": "6720223e09fd08a70dfb27793073250d3851779f2a018e48bde52b560c26deee",
+  "arrays": [
+    {
+      "name": "originalPosition.npy",
+      "shape": [
+        8983,
+        3
+      ],
+      "dtype": "<f4",
+      "bytes": 107796,
+      "sha256": "7eb4b98795caf6055866bbf89a1141f21a2f3c08ddb02ac7e20c5ca2b377275e"
+    },
+    {
+      "name": "originalNormal.npy",
+      "shape": [
+        8983,
+        3
+      ],
+      "dtype": "<f4",
+      "bytes": 107796,
+      "sha256": "ffc0862522bbd760ea6e1e27feed0f12db38e742afa68d4600e46cc874e99c23"
+    },
+    {
+      "name": "originalUv.npy",
+      "shape": [
+        8983,
+        2
+      ],
+      "dtype": "<f4",
+      "bytes": 71864,
+      "sha256": "d9de707698f30b03bbba4ec97a644c4f9d8012bdd1fc6920fb560b5c58ad166f"
+    },
+    {
+      "name": "originalIndices.npy",
+      "shape": [
+        4935,
+        3
+      ],
+      "dtype": "<u2",
+      "bytes": 29610,
+      "sha256": "45074d81661883b77a1fcd3f3f85a33b35ef8f923ffbf19b20b1b1fb603ab966"
+    },
+    {
+      "name": "originalLabels.npy",
+      "shape": [
+        4935
+      ],
+      "dtype": "<i4",
+      "bytes": 19740,
+      "sha256": "0d4a3fbd0f6f13afc76b918957bc8a67161ed22e6e7f5ed457228d47a1303e7b"
+    },
+    {
+      "name": "sourceFaceChart.npy",
+      "shape": [
+        4935
+      ],
+      "dtype": "<i4",
+      "bytes": 19740,
+      "sha256": "1c75dfb4d67b2d78d4c0cbad607917400af81b0e21c9914c81166eba25397f41"
+    },
+    {
+      "name": "sourceDomain.npy",
+      "shape": [
+        4935,
+        3,
+        2
+      ],
+      "dtype": "<f4",
+      "bytes": 118440,
+      "sha256": "c9056050dd102aa8e6f65d4423f79a47276930de65cb1e7ad8e963cff64eaac0"
+    },
+    {
+      "name": "sourceSupported.npy",
+      "shape": [
+        4935
+      ],
+      "dtype": "|u1",
+      "bytes": 4935,
+      "sha256": "ff6da3ca2a62f9046ed7491a99c3c19604166f7da712bf0f7fc0920e05039666"
+    },
+    {
+      "name": "fallbackOriginalFaces.npy",
+      "shape": [
+        3063
+      ],
+      "dtype": "<u4",
+      "bytes": 12252,
+      "sha256": "e52a82c185f4221077c8c48929c3733a28c0472bbd2f3bc39bbc2772749d8c83"
+    },
+    {
+      "name": "proxyPosition.npy",
+      "shape": [
+        1009,
+        3
+      ],
+      "dtype": "<f4",
+      "bytes": 12108,
+      "sha256": "00a47f6ddcaf1bbe42386d853b7ee47fea80e0983e7b23cfb97aa39e654a6f8c"
+    },
+    {
+      "name": "proxyDomain.npy",
+      "shape": [
+        1009,
+        2
+      ],
+      "dtype": "<f4",
+      "bytes": 8072,
+      "sha256": "2b588069851e43e7c53334c06ba61f6f444841be56aac76580cfea97e5395216"
+    },
+    {
+      "name": "proxyIndices.npy",
+      "shape": [
+        1182,
+        3
+      ],
+      "dtype": "<u4",
+      "bytes": 14184,
+      "sha256": "0af496a2cb704b472cf8da357254624678e552fec5f10f449092a7043dc77840"
+    },
+    {
+      "name": "proxyFaceChart.npy",
+      "shape": [
+        1182
+      ],
+      "dtype": "<i4",
+      "bytes": 4728,
+      "sha256": "5f43afff9f4f19d70e04c64391f17bc6cf16f619429b7fd3e6a59d762cf6e8c8"
+    }
+  ],
+  "totalDecodedArrayBytes": 531265,
+  "originalArraysIdenticalToVerifiedInput": true,
+  "fallbackPartitionExact": true,
+  "retainedPositionAndDomainSourceBitsExact": true,
+  "proxyParameterOrientationPositive": true,
+  "sourceSeamBoundaryIdentitiesExact": true,
+  "limitations": [
+    "The source-array identity chain references the archived global draft and its independent original-GLB verifier; no new runtime accessor decoding occurred.",
+    "Boundary/domain checks are rest-pose CPU checks, not growth/UV-material/normal-map/shadow/visual proof.",
+    "Decoded archive bytes are not GPU residency, web deployment size, draw cost or net benefit."
+  ]
+}
