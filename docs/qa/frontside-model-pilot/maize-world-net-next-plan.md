@@ -1,0 +1,14 @@
+The isolated1089-plant17.4759% saving is valid for its frozen519 recipe. It does not establish gain for the current WorldScene integration. This prospective plan is not an executed benchmark or asset approval.
+
+First inspect the6a590 viewer's actual growth VFX pair: focus and spell target the same mature maize; record both the real depthCaptureStats and maize draws into smokeDepth. Review gameplay views and retained images, with shadows still native Double. A VFX effect count without depth-target maize draws is insufficient. Keep failed/inconclusive executions and source hashes.
+
+For a new net GPU comparison, use two separate paired contrasts with otherwise identical paused logical state/camera/light/clock/quality:
+
+1. Original production-depth mode versus derived production-depth mode (materialArrays=false for both). This measures the actual current integration including candidate material-array color fallback during VFX depth.
+2. Original grouped-depth QA mode versus derived authored-Front grouped-depth QA mode (materialArrays=true for both). The shared global option may specialize unrelated compatible arrays, so it must remain constant inside this contrast.
+
+Original production-depth versus derived authored-depth can additionally describe the combined change, but cannot attribute all savings solely to maize. Keep all three meanings distinct; do not compare the new result numerically with519 as if they used the same rendering graph. Warm each arm's actual color/shadow/depth programs before timing; do not invoke a synthetic depth-only draw in lieu of the real WorldScene VFX path.
+
+Capture the archived mixed farm and any separately declared dense-maize QA scene as different workloads. Record actual visible/mature crop counts, total scene geometry/draws and effective depth witnesses. Eighteen mature maize in the existing archived view is not the1089-plant isolated workload; a dense fixture must apply identical placements/counts to both arms and retain its generation recipe. All source worker, terrain, village, far, growth bridges and other crop recipes stay equal within a pair. Whole-world timer queries must cover WorldScene.render including its native color/shadow/depth/VFX, with disjoint/pending/overflow and source/control conditions published prospectively. Coordinate exclusive GPU and absence of new heavy CPU work; do not claim an idle machine from a stale PID list.
+
+Run resident-buffer/texture/program observations separately from timing, including original, candidate and intentional coexistence, then verify cleanup/context-loss. Report physical VRAM as unknown unless independently measured. Retain timing order, all valid pairs and invalid reasons; no favorable reroll. Apply the existing net-benefit criteria, not image-pixel thresholds, and document uncertainty and workload dilution. Growth continuity and completed harvest/delivery remain separate functional/perceptual gates even if GPU benefit is sufficient.

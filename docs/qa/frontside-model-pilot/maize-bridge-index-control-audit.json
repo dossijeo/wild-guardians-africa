@@ -1,0 +1,23 @@
+{
+  "status": "SOURCE_BRIDGE_INDEX_CONTROL_CPU_PASS_NOT_VISUAL_OR_GPU_APPROVAL",
+  "sourceSha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+  "bridgeSha256": "88c4bdb959b1debb7456e6c1708840330b459a6ede6649e8f690583953428309",
+  "mesh": "puente_maiz_3_4",
+  "sourceCornerStreamSha256": "c9defeff756c8d6316e481763aa7be1fc26bbf6cf18a61c8e734697fb076c716",
+  "originalCorners": 17844,
+  "uniqueVertices": 11124,
+  "originalStaticBytes": 1570272,
+  "indexedStaticBytes": 1014600,
+  "indexBytes": 35688,
+  "byteReductionPercent": 35.386990279391085,
+  "allStaticCornerBitsEqual": true,
+  "liveInstanceAttributeShared": true,
+  "materialSide": 2,
+  "shadowSide": 2,
+  "limitations": [
+    "Actual original geometry/drivers and native createCropBatch; blank CPU materials without source textures.",
+    "Indexing only: original face/corner order and every shader driver preserved. No FrontSide or simplification.",
+    "Static typed-array bytes exclude instances, materials, programs, textures and coexistence; no resident GPU/VRAM claim.",
+    "GPU interpolation/cache behavior, perceptual review and net timing remain untested."
+  ]
+}
