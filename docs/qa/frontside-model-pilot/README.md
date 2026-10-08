@@ -1144,3 +1144,48 @@ failures remain. It stops on first invalid control or failing candidate; no
 post-failure threshold change or training from these withheld pixels is allowed.
 It is still color-isolation shadowDouble, so even12passes would not approve
 shadows, exhaustive views, culture/world interactions or GPU benefit.
+
+Native CULT_WITHHELD_V2 at HEAD9ac3b326 is REJECTED and archived as
+maize-stem-only-withheld-v2-screen.json/png. It stopped after two of twelve
+precommitted cases. Source repeats, indexedDouble and groupedDouble are exact
+in both cases. Case2 (manglares, growth1, night0.5, elevation72.5, azimuth109.375,
+clock4.8125) retains IoU1 and MAE0.00002479013; tile0.00787645 is within its gate,
+but two RGB regions have30pixels, exceeding the16pixel region gate. The guided
+pass does not rescue this failure. No threshold, selection or source asset was
+changed from this held-out observation. The current partial stem candidate is
+not eligible for a benchmark or category promotion.
+
+The separate reproducible frontside_crop_stem_reverse_budget.py estimate uses only the
+earlier runtime-visibility-selection.json, never V2 pixels. Private reversed
+normal vertices and replacement legal index widths are counted alongside the
+real22-float bridge lanes. Maize native states add4.79/8.37/8.86/8.21/8.43%triangles
+and6.55/10.25/10.17/9.30/9.94%decoded bytes; two states exceed the bytes gate.
+Across40states/32bridges there are3/2triangle and5/6buffer failures. This is a
+cost inventory, not complete coverage or an exported candidate. A further
+proposal may share original attributes with explicit reversed indices and a
+private normal-orientation material; map/UV/deformation equivalence would need
+fresh validation before any cost or acceptance claim.
+
+Shadow ownership was checked against the installed Three r180 source rather
+than inferred from construction defaults. crop-batch.js creates a shared custom
+depth material initiallyDoubleSide, but WebGLShadowMap.getDepthMaterial changes
+its side from the current group material.shadowSide before each shadow draw.
+Material-array groups are drawn separately. Thus changing only the initial
+customDepthMaterial.side is insufficient to infer the effective draw side, and
+splitting meshes is not required solely by this custom-depth ownership. Future
+shadow QA must record the effective side in onBeforeShadow per group; all saved
+color screens remain shadowDouble and do not approve shadowFront.
+
+worker_{original,selective,field}_index16 controls are independently generated
+by tools/frontside_worker_index_width.py --base original|selective|field and
+packed with tools/frontside_pack_candidates.mjs using their receipt files.
+They only replace legal Uint32 index storage by Uint16. Numeric corner order,
+all vertex/morph lanes, nodes/materials/images, skin inverse binds and all12clips
+(440056sampler bytes) are independently reread exact. Triangles and approximate
+vertex invocations do not change. Referenced decoded geometry saves131856/
+137520/135600bytes against each respective base; web files are5218252/5243220/
+5272884bytes. These are separate index/resource controls, not normal repairs,
+measured total GPU memory or demonstrated culling savings. All original zero
+normals and rejected Badge visual results remain. They are not served/activated
+by the browser fixture or production. Raw append-only archive sizes include
+unreferenced original views; packed web sizes use controlled liveness pruning.
