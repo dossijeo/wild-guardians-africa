@@ -1,0 +1,161 @@
+{
+  "iteration": 1,
+  "scope": "Transport/JSON metadata only;250ms preparation cost is an estimate. No world or GPU initialized.",
+  "metadataCount": 4,
+  "metadataReady": true,
+  "elapsedMs": 32.5,
+  "progress": {
+    "progress": 1,
+    "ready": true,
+    "estimated": false,
+    "error": null,
+    "elapsed": 32.5,
+    "unchangedFor": 0.20000004768371582,
+    "pending": [],
+    "stages": [
+      {
+        "id": "metadata",
+        "weight": 1,
+        "progress": 1,
+        "started": 4063.7000000476837,
+        "finished": 4063.8000000715256
+      }
+    ],
+    "downloads": {
+      "progress": 1,
+      "estimatedMs": 15.5,
+      "observedMs": 15.5,
+      "remainingMs": 0,
+      "pending": 0,
+      "networkPending": 0,
+      "cacheHits": 0,
+      "network": 4,
+      "unknown": 0,
+      "unknownTotals": 0,
+      "failures": 0,
+      "loadedBytes": 33633,
+      "totalBytes": 33633,
+      "estimated": false,
+      "byteScope": "Decoded response body; pending totals and time are estimates. Parallel intervals are counted once."
+    },
+    "workEstimateMs": 250
+  },
+  "downloads": {
+    "progress": 1,
+    "estimatedMs": 15.5,
+    "observedMs": 15.5,
+    "remainingMs": 0,
+    "pending": 0,
+    "networkPending": 0,
+    "cacheHits": 0,
+    "network": 4,
+    "unknown": 0,
+    "unknownTotals": 0,
+    "failures": 0,
+    "loadedBytes": 33633,
+    "totalBytes": 33633,
+    "estimated": false,
+    "byteScope": "Decoded response body; pending totals and time are estimates. Parallel intervals are counted once.",
+    "requests": [
+      {
+        "id": 1,
+        "url": "http://127.0.0.1:5293/__qa_assets/metadata-7d947d4f/content/skies.json",
+        "kind": "fetch",
+        "start": 4032.3000000715256,
+        "end": 4059.899999976158,
+        "loaded": 646,
+        "total": 646,
+        "totalEvidence": "completed-body",
+        "cache": "network",
+        "failed": false,
+        "timing": {
+          "startTime": 4033.2000000476837,
+          "responseEnd": 4046.2000000476837,
+          "transferSize": 946,
+          "encodedBodySize": 646,
+          "decodedBodySize": 646,
+          "responseStatus": 200
+        }
+      },
+      {
+        "id": 2,
+        "url": "http://127.0.0.1:5293/__qa_assets/metadata-7d947d4f/content/models.json",
+        "kind": "fetch",
+        "start": 4033.399999976158,
+        "end": 4058.899999976158,
+        "loaded": 9032,
+        "total": 9032,
+        "totalEvidence": "completed-body",
+        "cache": "network",
+        "failed": false,
+        "timing": {
+          "startTime": 4033.600000023842,
+          "responseEnd": 4046,
+          "transferSize": 9332,
+          "encodedBodySize": 9032,
+          "decodedBodySize": 9032,
+          "responseStatus": 200
+        }
+      },
+      {
+        "id": 3,
+        "url": "http://127.0.0.1:5293/__qa_assets/metadata-7d947d4f/content/ground-materials.json",
+        "kind": "fetch",
+        "start": 4033.7000000476837,
+        "end": 4060,
+        "loaded": 2473,
+        "total": 2473,
+        "totalEvidence": "completed-body",
+        "cache": "network",
+        "failed": false,
+        "timing": {
+          "startTime": 4033.8000000715256,
+          "responseEnd": 4047.5,
+          "transferSize": 2773,
+          "encodedBodySize": 2473,
+          "decodedBodySize": 2473,
+          "responseStatus": 200
+        }
+      },
+      {
+        "id": 4,
+        "url": "http://127.0.0.1:5293/__qa_assets/metadata-7d947d4f/content/biome-savanna.json",
+        "kind": "fetch",
+        "start": 4033.899999976158,
+        "end": 4060.600000023842,
+        "loaded": 21482,
+        "total": 21482,
+        "totalEvidence": "completed-body",
+        "cache": "network",
+        "failed": false,
+        "timing": {
+          "startTime": 4034,
+          "responseEnd": 4048.7000000476837,
+          "transferSize": 21782,
+          "encodedBodySize": 21482,
+          "decodedBodySize": 21482,
+          "responseStatus": 200
+        }
+      }
+    ]
+  },
+  "samples": [
+    {
+      "at": 3.100000023841858,
+      "progress": 0,
+      "pending": 4
+    },
+    {
+      "at": 21.5,
+      "progress": 0,
+      "pending": 4
+    },
+    {
+      "at": 31.899999976158142,
+      "progress": 0.0583804143126177,
+      "pending": 0
+    }
+  ],
+  "monotonic": true,
+  "disposed": true
+}
