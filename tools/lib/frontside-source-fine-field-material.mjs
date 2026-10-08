@@ -81,7 +81,7 @@ function replaceOnce(source,needle,replacement){
 export function createSourceFineFieldMaterial(original,fieldTextures,{lookup='direct'}={}){
  if(!['direct','grid'].includes(lookup))throw Error('Unsupported fine field lookup');
  if(!original.isMeshStandardMaterial||original.flatShading||original.side!==THREE.DoubleSide||original.alphaTest||original.transparent)throw Error('Fine field control requires native opaque smooth DoubleSide PBR');
- if(original.roughnessMap||original.metalnessMap||original.bumpMap)throw Error('Fine field control does not implement auxiliary material maps');
+ if(original.roughnessMap||original.metalnessMap||original.bumpMap||original.normalMapType===THREE.ObjectSpaceNormalMap)throw Error('Fine field control does not implement auxiliary or object-space material maps');
  const material=original.clone(),compile=original.onBeforeCompile,cache=original.customProgramCacheKey.bind(original);
  material.onBeforeCompile=(shader,renderer)=>{
   compile.call(original,shader,renderer);
