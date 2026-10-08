@@ -1,3 +1,4 @@
+import {captureNormalField,normalFieldMetrics} from '../../tools/lib/frontside-normal-field-diagnostic.mjs';
 import * as THREE from 'three';
 import {AfricanToon} from '../../src/rendering/african-toon.js';
 import {SceneMaterialRegistry} from '../../src/rendering/material-registry.js';
@@ -151,6 +152,17 @@ async function campaign(){
  // Break nested campaign after failure by retaining only the first failure;
  // the early screen is rejection evidence and does not need a passing sweep.
  report.failed=failed;
+ if(options.has('mapNormalField')){
+  if(!normalCloseup||maxSamples!==1)throw Error('Normal-field readback requires one original-target closeup');
+  report.normalFieldDiagnostic={meaning:'Later diagnostic normals, no PBR/map acceptance or inference from undefined normalize(0). 8-bit view-space fields; shadow disabled only for diagnostic draw.',fields:[]};
+  const rgbScope=new Uint8Array(pixels[0].length);for(let i=0;i<rgbScope.length;i+=4)if(pixels[0][i+3]&&pixels[1][i+3]&&[0,1,2].some(c=>Math.abs(linear[pixels[0][i+c]]-linear[pixels[1][i+c]])>.03))rgbScope[i+3]=255;
+  for(const kind of ['vertex','perturbed']){
+   const field=[];for(let side=0;side<2;side++){rigs.forEach((rig,i)=>rig.model.visible=i===side);field.push(captureNormalField(renderer,rigs[side],camera,size,kind));}
+   rigs.forEach((rig,i)=>rig.model.visible=i===0);const repeat=captureNormalField(renderer,rigs[0],camera,size,kind),control=normalFieldMetrics(field[0],repeat,pixels[0],size),difference=normalFieldMetrics(field[0],field[1],pixels[0],size);
+   report.normalFieldDiagnostic.fields.push({kind,sourceRepeat:{...control,mask:undefined},sourceVsCandidate:{...difference,mask:undefined,regions:regions(difference.mask,size)},withinNominalPbrRgbOutliers:{...normalFieldMetrics(field[0],field[1],rgbScope,size),mask:undefined}});
+  }
+ }
+
  if(failed&&options.has('mapMissing')){rigs.forEach((rig,i)=>rig.model.visible=i===0);report.missingTriangleProvenance=mapMissingToSource(renderer,rigs[0],camera,pixels,size);}
  if(failed&&options.has('mapRgb')){report.rgbTriangleProvenance=[];for(let side=0;side<2;side++){rigs.forEach((rig,i)=>rig.model.visible=i===side);report.rgbTriangleProvenance.push({side:side===0?'source':'candidate',faces:mapMissingToSource(renderer,rigs[side],camera,pixels,size,'rgb',side===1&&!sourceTwin?candidateFaceMaps:{})});}}
  if(options.has('mapNormalCoverage')){const diagnostic=await fetch('/docs/qa/frontside-model-pilot/worker-zero-normal-diagnostics.json').then(r=>r.json());if(diagnostic.sourceSha256!==library.youngMale.sha256)throw Error('Normal coverage source mismatch');const affected=new Set(diagnostic.meshes.find(m=>m.mesh===normalMesh).affectedFaces);report.normalRepairCoverage=[];for(let side=0;side<2;side++){rigs.forEach((rig,i)=>rig.model.visible=i===side);const faces=mapMissingToSource(renderer,rigs[side],camera,pixels,size,'visible',side===1&&!sourceTwin?candidateFaceMaps:{}).filter(f=>f.mesh===normalMesh&&affected.has(f.face));report.normalRepairCoverage.push({side:side===0?'source':'candidate',mesh:normalMesh,affectedVisiblePixels:faces.reduce((n,f)=>n+f.pixels,0),faces,meaning:'Later diagnostic ID draw with retained-face provenance, not normal/PBR/map acceptance'});}}

@@ -1061,3 +1061,17 @@ failure predates normal reconstruction, but does not excuse the derived cap's
 new4323pixel region/tile0.310800. Both negatives retain their original gates.
 Next work must inspect the actual post-vertex/interpolated normal path rather
 than treating local-space sampled chord error as a shader/map bound.
+
+
+Prospective mapNormalField is a separate later diagnostic after the saved PBR
+comparison. It retains original vertex hooks, geometry, maps and uniforms, and
+reads8-bit view-space vNormal and post-normal-map normal via a fragment output
+replacement. It disables shadows only for these readbacks, restores owned
+material clones/color/shadow settings, and records source-repeat deltas plus
+source/candidate differences over original alpha and within nominal PBR RGB
+outliers. One original-target closeup is required. This cannot approve maps,
+quality, shadows or GPU cost; output changes/dead-code optimization may affect
+undefined zero normalization, so it cannot prove the original PBR pole value
+or infer causality solely from these diagnostic fields. Existing negatives
+and gates remain intact. It is intended to locate whether the large cap
+change is already present in interpolated vNormal or after map perturbation.
