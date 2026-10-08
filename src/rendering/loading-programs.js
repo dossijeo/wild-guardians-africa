@@ -16,3 +16,19 @@ export function compileLoadingPrograms(renderer,scene,camera,targetScene,{signal
     signal?.addEventListener('abort',abort,{once:true});poll();
   });
 }
+
+// Compile bounded views of the original objects against the complete native
+// scene. No mesh is cloned, reparented or hidden: lights, fog, clipping, skinning
+// and instancing retain the actual target-scene/object recipe. Restore screen
+// state synchronously in each submission before yielding to the loading RAF.
+export async function compileLoadingProgramsBatched(renderer,scene,camera,targetScene,{batchSize=4,nextFrame=()=>new Promise(resolve=>requestAnimationFrame(resolve)),...options}={}) {
+ if(!Number.isInteger(batchSize)||batchSize<1)throw Error('Loading compile batch size must be positive');
+ const objects=[];scene.traverse(object=>{if(object.isMesh||object.isPoints||object.isLine||object.isSprite)objects.push(object);});
+ const target=targetScene??scene;
+ for(let start=0;start<objects.length;start+=batchSize){
+  const batch=objects.slice(start,start+batchSize);
+  const view={traverse:callback=>{for(const object of batch)callback(object);},traverseVisible:()=>{}};
+  await compileLoadingPrograms(renderer,view,camera,target,options);
+  await nextFrame();
+ }
+}

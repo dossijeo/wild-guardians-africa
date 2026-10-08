@@ -14,3 +14,18 @@ test('explicit screen compilation restores target and viewport while its program
  const pending=compileLoadingPrograms(f.renderer,{},{},undefined,{screen:true});assert.equal(target,previous);assert.deepEqual(viewport.toArray(),[1,2,3,4]);assert.deepEqual(scissor.toArray(),[4,3,2,1]);assert.equal(test,true);ready=true;await pending;
  f.renderer.compile=()=>{assert.equal(target,null);throw Error('compile fault');};assert.throws(()=>compileLoadingPrograms(f.renderer,{},{},undefined,{screen:true}),/compile fault/);assert.equal(target,previous);assert.deepEqual(viewport.toArray(),[1,2,3,4]);
 });
+
+import {compileLoadingProgramsBatched} from '../src/rendering/loading-programs.js';
+test('bounded compiler retains original native objects and target-scene lighting without mutation',async()=>{
+ const objects=Array.from({length:7},(_,i)=>({isMesh:true,visible:i!==2,parent:{id:i},material:{id:i}}));
+ const scene={traverse:fn=>objects.forEach(fn)},calls=[];let yields=0;
+ const renderer={compile(view,camera,target){assert.equal(target,scene);const batch=[];view.traverse(object=>batch.push(object));view.traverseVisible(()=>assert.fail('light duplicated'));calls.push(batch);return new Set(batch.map(o=>o.material));},getContext:()=>({isContextLost:()=>false}),properties:{get:()=>({currentProgram:{isReady:()=>true}})}};
+ const parents=objects.map(o=>o.parent);
+ await compileLoadingProgramsBatched(renderer,scene,{},undefined,{batchSize:3,nextFrame:async()=>{yields++;assert.deepEqual(objects.map(o=>o.parent),parents);assert.equal(objects[2].visible,false);}});
+ assert.deepEqual(calls.map(c=>c.length),[3,3,1]);assert.deepEqual(calls.flat(),objects);assert.equal(yields,3);
+});
+test('bounded compiler cancels before a later submission',async()=>{
+ let cancelled=false,calls=0;const scene={traverse:fn=>[1,2].forEach(()=>fn({isMesh:true}))};
+ const renderer={compile:()=>{calls++;return new Set();},getContext:()=>({isContextLost:()=>false}),properties:{get:()=>({})}};
+ await assert.rejects(compileLoadingProgramsBatched(renderer,scene,{},undefined,{batchSize:1,cancelled:()=>cancelled,nextFrame:async()=>{cancelled=true;}}),/cancelled/);assert.equal(calls,1);
+});
