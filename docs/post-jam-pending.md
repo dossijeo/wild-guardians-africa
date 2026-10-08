@@ -8,6 +8,28 @@ Gran Río/Musgum20,33% y Sabana/Musgum20,283% quedan aprobados en esa métrica;
 Gran Río/Saheliana25,40% sigue por encima del límite. Se conserva el alcance
 histórico de cada campaña, sin equivalencia automática a main actual.
 
+FrontSide: prevalece la política visual flexible solicitada por el usuario.
+Las diferencias de píxeles, color, silueta y pequeños agujeros son diagnósticos;
+las notas inferiores de rechazos por umbrales describen ensayos históricos y
+no establecen el criterio vigente. La aceptación exige apariencia convincente
+en juego, funcionalidad/compatibilidad y beneficio GPU neto. El candidato de
+maíz sigue en la rama de reparación; su benchmark propio está pendiente y no
+se han promovido assets por la sola inspección de capturas.
+
+[Compilación cancelable: AB/BA denso](qa/streaming-travel-dense/owned-compilation-abba/README.md):
+cuatro recorridos de180m conservan estado/cámara/15chunks nuevos y no registran
+errores. Ambos candidatos tienen peor p95 y más frames lentos que los controles;
+no se acepta la activación de rendimiento. La cancelación nativa controlada
+pasa, pero no equivale a estabilidad durante traveling. Las nuevas esperas de
+texturas/decodificación/fence están detrás de otra opción QA, con77 tests
+dirigidos y validación nativa/rendimiento aún pendiente.
+
+[Campañas interrumpidas: procesos revalidados](qa/intensive-process-interruption-2026-10-08.md):
+los cuatro handles antiguos ya no corresponden a campañas activas. Los estados
+parciales y campos running obsoletos se conservan; Gran Río/Etíope llegó al día58
+sin resultado final. No contar estos casos como cien noches terminadas. Revisar
+checkpoint, logs y fidelidad de fuentes antes de documentar la continuación.
+
 [Gran Río/Suajili: cien noches auditadas](qa/intensive-gran-rio-suajili-e461b550/README.md):
 campaña histórica e461b550,291hashes congelados iguales; exit0/victoria,
 1439plantas vivas máximas,23700siembras y22043entregas físicas cobradas.
