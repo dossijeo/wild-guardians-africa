@@ -469,7 +469,12 @@ function frame(now) {
   requestAnimationFrame(frame);const dt=frameDelta(now,lastFrame);lastFrame=now;
   if(screen==='loading'&&loadingDiorama?.prepared){
     progressQa?.frame(now);
-    try{loadingProgress?.refresh();if(loadingCinema?.armed)loadingCinema.step(dt);else{loadingDiorama.render(dt,loadingDiorama.loadingReady?1:loadingProgress?.value??0,{ready:loadingDiorama.loadingReady??false});if(loadingMature&&loadingDiorama.plants.mature){loadingMature.resolve();loadingMature=null;}}refreshLoadingOverlay();}catch(e){loadingProgress?.fail(e);cancelLoading(e);}
+    try{
+      if(progressQa)progressQa.invocation('presentation-progress-refresh',()=>loadingProgress?.refresh());else loadingProgress?.refresh();
+      if(loadingCinema?.armed){if(progressQa)progressQa.invocation('presentation-cinematic-step',()=>loadingCinema.step(dt));else loadingCinema.step(dt);}
+      else{if(progressQa)progressQa.invocation('presentation-diorama-render',()=>loadingDiorama.render(dt,loadingDiorama.loadingReady?1:loadingProgress?.value??0,{ready:loadingDiorama.loadingReady??false}));else loadingDiorama.render(dt,loadingDiorama.loadingReady?1:loadingProgress?.value??0,{ready:loadingDiorama.loadingReady??false});if(loadingMature&&loadingDiorama.plants.mature){loadingMature.resolve();loadingMature=null;}}
+      if(progressQa)progressQa.invocation('presentation-overlay-refresh',refreshLoadingOverlay);else refreshLoadingOverlay();
+    }catch(e){loadingProgress?.fail(e);cancelLoading(e);}
   }
   if(screen==='game'&&world&&state&&!state.pauses.includes('runtime-error')) {
     const eventIndex=state.events.at(-1)?.id;
