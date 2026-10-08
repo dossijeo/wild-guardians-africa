@@ -154,7 +154,7 @@ async function startGame(loaded=null,{slotId,preview}={}) {
     loadingProgress=new LoadingProgress(LOADING_STAGES,{downloads:loadingTransfers.downloads,onChange:snapshot=>overlay.render(snapshot,loadingDiorama?.plants.progress??0,{night:loadingDiorama?.night??0,accepting:loadingDiorama?.interactive??false,pointer:loadingDiorama?.pointerType??overlay.pointer})});
     prepared.canvas.style.cssText='width:100%;height:100%;touch-action:none';prepared.canvas.id='world';
     app.replaceChildren(prepared.canvas);
-    app.append(overlay.element);loadingDiorama.render(0,0);refreshLoadingOverlay();lastFrame=performance.now();
+    app.append(overlay.element);loadingDiorama.render(0,0);refreshLoadingOverlay();lastFrame=performance.now();progressQa?.begin(lastFrame);
     loadingDiagnostic=setInterval(refreshLoadingOverlay,1000);
     // Show the fully prepared diorama before parsing a Continue snapshot. Worker
     // validation is unchanged; cancelled/late results cannot adopt into this game.
@@ -464,6 +464,7 @@ function updateRaidLoading(){
 function frame(now) {
   requestAnimationFrame(frame);const dt=frameDelta(now,lastFrame);lastFrame=now;
   if(screen==='loading'&&loadingDiorama?.prepared){
+    progressQa?.frame(now);
     try{loadingProgress?.refresh();if(loadingCinema?.armed)loadingCinema.step(dt);else{loadingDiorama.render(dt,loadingDiorama.loadingReady?1:loadingProgress?.value??0,{ready:loadingDiorama.loadingReady??false});if(loadingMature&&loadingDiorama.plants.mature){loadingMature.resolve();loadingMature=null;}}refreshLoadingOverlay();}catch(e){loadingProgress?.fail(e);cancelLoading(e);}
   }
   if(screen==='game'&&world&&state&&!state.pauses.includes('runtime-error')) {
