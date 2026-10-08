@@ -11,17 +11,19 @@ import {prepareInitialFarWorld} from '../../src/app/far-world-loading.js';
 import {json} from '../../src/rendering/assets.js';
 import {serialize,deserialize} from '../../src/persistence/snapshots.js';
 import {GpuTimer} from './gpu-timer.js';
+import {BufferRequests} from './buffer-requests.js';
 import {prepareResidentTravelVariants} from '../../tools/experiments/prepare-resident-travel-variants.js';
 
 const params=new URLSearchParams(location.search),quality=params.get('quality')??'media',fixture=params.get('fixture');let biome=params.get('biome')??'sabana',culture=params.get('culture')??'mapungubwe';
 const duration=Number(params.get('seconds')??30),speed=Number(params.get('speed')??12),angle=Number(params.get('angle')??0)*Math.PI/180;
-const errors=[],frames=[],installs=[],longTasks=[],segments=[];let world,timer,dead=false,running=false,started=0,previous=0,last=performance.now(),raf,report=null,observer,finishedAt=0;
+const errors=[],frames=[],installs=[],longTasks=[],segments=[],resourceStages=[];let world,timer,resources,dead=false,running=false,started=0,previous=0,last=performance.now(),raf,report=null,observer,finishedAt=0;
+const resourceStage=name=>{if(resources)resourceStages.push({name,buffers:resources.snapshot(),renderer:{...world.renderer.info.memory,programs:world.renderer.info.programs.length}});};
 const output=value=>document.querySelector('#report').textContent=JSON.stringify(value,null,2);
 const summarize=values=>{
  const sorted=values.slice().sort((a,b)=>a-b),q=p=>sorted.length?sorted[Math.ceil(sorted.length*p)-1]:null;
  return {count:values.length,p50:q(.5),p95:q(.95),p99:q(.99),max:sorted.at(-1)??null,over33:values.filter(v=>v>1000/30).length,over50:values.filter(v=>v>50).length,over100:values.filter(v=>v>100).length};
 };
-const dispose=()=>{if(dead)return;dead=true;running=false;cancelAnimationFrame(raf);observer?.disconnect();timer?.dispose();world?.dispose();document.querySelector('#run').disabled=true;output({...report,disposed:true,errors});};
+const dispose=()=>{if(dead)return;dead=true;running=false;cancelAnimationFrame(raf);observer?.disconnect();timer?.dispose();try{world?.dispose();resourceStage('after-world-dispose');}finally{resources?.dispose();}document.querySelector('#run').disabled=true;output({...report,resourceStages,disposed:true,errors});};
 addEventListener('pagehide',dispose,{once:true});
 addEventListener('error',e=>errors.push(String(e.message)));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
 try{
@@ -41,9 +43,12 @@ try{
  const state=restored??Game.newGame({seed:712,biome,culture}),nav=new Navigation(state.seed,biome,pack.profile),site=restored?null:await findInitialLocationAsync(nav,payload);
  if(site){Object.assign(state.villages[0],site);state.suppressed.push(...site.suppress);}nav.setState(state);Game.pause(state,'qa');state.tutorial.step='done';
  const snapshot=serialize(state);world=new WorldScene(document.querySelector('canvas'),()=>{});world.onError=e=>errors.push(String(e));world.qualitySetting(quality);world.farIsolatedPreparation=params.has('isolatePreparation');
+ if(params.has('resourceProfile')){resources=new BufferRequests(world.renderer.getContext());resourceStage('before-world-load');}
  await world.load(state,nav,payload,{farVegetation:farVegetationProfile({quality,biome:nav.config.biome})});await prepareInitialFarWorld(world);
  if(site)world.focus(site.center);else world.focusFarm();world.render(0);
+ resourceStage('before-resident-preparation');
  const residentPreparation=params.has('residentPrewarm')?await prepareResidentTravelVariants(world):null;
+ resourceStage('after-resident-preparation');
  const farm={fixture:fixture??'new-village',historicalSource:fixture?'e461b550':null,plants:state.plants.length,livingPlants:state.plants.filter(p=>p.alive).length,workers:state.workers.length,structures:state.structures.length,result:state.result};
  const startEye=world.camera.position.clone(),startTarget=world.controls.target.clone();
  const initialStream=world.chunkStream.summary();
@@ -72,7 +77,7 @@ try{
  if(typeof PerformanceObserver!=='undefined'&&PerformanceObserver.supportedEntryTypes?.includes('longtask')){
   observer=new PerformanceObserver(list=>{if(running)for(const item of list.getEntries())if(item.startTime>=started)longTasks.push({at:item.startTime-started,duration:item.duration});});observer.observe({type:'longtask',buffered:false});
  }
- timer=new GpuTimer(world.renderer.getContext(),16,!params.has('noGpu'));
+ timer=new GpuTimer(world.renderer.getContext(),16,!params.has('noGpu')&&!resources);
  document.querySelector('#dispose').disabled=false;document.querySelector('#dispose').onclick=dispose;
  document.querySelector('#run').disabled=false;
  document.querySelector('#run').onclick=()=>{
@@ -89,12 +94,12 @@ try{
     const id=frames.length,timed=timer.begin(id),cpuStart=performance.now();try{world.render(dt);}finally{if(timed)timer.end();}const cpuMs=performance.now()-cpuStart;timer.poll();
     frames.push({at:timestamp-started,intervalMs:previous?timestamp-previous:null,cpuMs,chunks:world.chunks.size,created:world.chunkStream.stats.created,queued:world.chunkStream.queue.length,busy:!!world.chunkStream.busy,geometries:world.renderer.info.memory.geometries,textures:world.renderer.info.memory.textures,programs:world.renderer.info.programs.length,hidden:document.hidden});previous=timestamp;
     if(elapsed>=duration){
-     running=false;finishedAt=performance.now();report={done:true,isolatedPreparation:world.farIsolatedPreparation,residentPreparation,farm,device,initialStream,finalStream:world.chunkStream.summary(),biome,culture,quality,seed:state.seed,duration,speed,distance:duration*speed,initialEye:startEye.toArray(),initialTarget:startTarget.toArray(),finalEye:world.camera.position.toArray(),finalTarget:world.controls.target.toArray(),logicalUnchanged:snapshot===serialize(state),frames,installs,longTasks,segments,errors,frameSummary:summarize(frames.flatMap(f=>f.intervalMs===null?[]:[f.intervalMs])),cpuSummary:summarize(frames.map(f=>f.cpuMs)),gpu:timer.report(),scope:'Native paused world; linear camera movement with production chunks/far/LOD/shadows. Frame intervals include scheduling and GPU backpressure; CPU rendering and async GPU queries reported separately. No optimization claim or saved-game changes.'};output(report);
+     running=false;finishedAt=performance.now();resourceStage('after-travel');report={done:true,isolatedPreparation:world.farIsolatedPreparation,residentPreparation,resourceStages,farm,device,initialStream,finalStream:world.chunkStream.summary(),biome,culture,quality,seed:state.seed,duration,speed,distance:duration*speed,initialEye:startEye.toArray(),initialTarget:startTarget.toArray(),finalEye:world.camera.position.toArray(),finalTarget:world.controls.target.toArray(),logicalUnchanged:snapshot===serialize(state),frames,installs,longTasks,segments,errors,frameSummary:summarize(frames.flatMap(f=>f.intervalMs===null?[]:[f.intervalMs])),cpuSummary:summarize(frames.map(f=>f.cpuMs)),gpu:timer.report(),scope:resources?'Resource QA only: bufferData requests after WorldScene construction, not physical VRAM, textures or RAM. Binding queries perturb timing; do not compare frametimes.':'Native paused world; linear camera movement with production chunks/far/LOD/shadows. Frame intervals include scheduling and GPU backpressure; CPU rendering and async GPU queries reported separately. No optimization claim or saved-game changes.'};output(report);
     }
    }else {world.render(dt);if(report&&timer.pending.length&&performance.now()-finishedAt<5000){timer.poll();report.gpu=timer.report();output(report);}}
   }catch(error){errors.push(String(error));dispose();output({done:true,failed:true,errors});return;}
   raf=requestAnimationFrame(frame);
  };
- output({ready:true,residentPreparation,farm,biome,culture,quality,duration,speed,initialChunks:world.chunks.size});raf=requestAnimationFrame(frame);
-}catch(error){errors.push(String(error.stack??error));output({done:true,failed:true,errors});}
+ output({ready:true,residentPreparation,resourceStages,farm,biome,culture,quality,duration,speed,initialChunks:world.chunks.size});raf=requestAnimationFrame(frame);
+}catch(error){resources?.dispose();errors.push(String(error.stack??error));output({done:true,failed:true,resourceStages,errors});}
 </script></html>
