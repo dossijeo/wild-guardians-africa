@@ -21,3 +21,10 @@ The paired audit remains incomplete. This attempt supplies no memory, frametime,
 visual or optimization acceptance. Resource probes would perturb timing even if
 the run succeeded; they must not be used as a frametime comparison. Production
 isolated preparation remains disabled pending resources and visual regressions.
+
+Subsequent recovery: the next continuation confirmed browser inventory empty
+and tab846 absent from the session. Fresh sequential tabs847/848 then completed
+the paired audit without restarting the old tab. See
+[paired resource evidence](isolation-cheap-resources/README.md): identical
+observed peak/live buffer footprints and zero observed buffers after disposal.
+The failed attempt above remains preserved; it supplies no measurements.
