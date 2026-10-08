@@ -35,3 +35,18 @@ test('preload honors the same explicit diagnostic options as capture without ena
  s.pipeline.optimizedDepth=true;s.pipeline.stockAlphaDepth=true;s.renderer.compileAsync=()=>{assert.ok(s.alpha.material.isMeshDepthMaterial);return Promise.resolve();};
  await s.pipeline.prepareDepth(new PerspectiveCamera(),s.world);assert.equal(s.pipeline.depthWarmStats.stockAlphaSpecialized,1);assert.deepEqual(s.world.children.map(mesh=>mesh.material),s.originals);s.cleanup();
 });
+
+test('grouped world-depth QA flag applies equally to preload and capture without changing the default',async()=>{
+ const s=setup(),second=new MeshStandardMaterial(),sources=[s.originals[0],second];s.opaque.material=sources;
+ s.renderer.getDrawingBufferSize=out=>out.set(32,24);
+ for(const enabled of [false,true]){
+  s.pipeline.materialArrayDepth=enabled;
+  const inspect=()=>{assert.equal(s.renderer.shadowMap.enabled,false);assert.equal(s.renderer.getRenderTarget(),s.pipeline.smokeDepth);assert.ok(Array.isArray(s.opaque.material));if(enabled)assert.ok(s.opaque.material.every(m=>m.isMeshDepthMaterial));else assert.equal(s.opaque.material,sources);};
+  s.renderer.compileAsync=()=>{inspect();return Promise.resolve();};
+  await s.pipeline.prepareDepth(new PerspectiveCamera(),s.world);
+  assert.equal(s.opaque.material,sources);assert.equal(s.renderer.getRenderTarget(),s.prior);assert.equal(s.renderer.shadowMap.enabled,true);
+  s.renderer.render=inspect;s.pipeline.captureDepth(new PerspectiveCamera(),s.world);
+  assert.equal(s.opaque.material,sources);assert.equal(s.renderer.getRenderTarget(),s.prior);assert.equal(s.renderer.shadowMap.enabled,true);
+ }
+ s.opaque.material=s.originals[0];second.dispose();s.cleanup();
+});
