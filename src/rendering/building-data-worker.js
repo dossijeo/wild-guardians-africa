@@ -1,0 +1,2 @@
+import {createNativeDestruction} from './destruction-native.js';
+self.onmessage=event=>{try{const {building,input}=event.data,kernel=createNativeDestruction(building,input),data={};for(const key of ['positions','normals','uv','indices','bounds','triangles','vertices','repairNormals','ash','hull','noiseBytes','holes','hitSites'])data[key]=kernel[key];const buffers=new Set(Object.values(data).filter(ArrayBuffer.isView).map(value=>value.buffer));self.postMessage(data,[...buffers]);}catch(error){self.postMessage({error:error.message??String(error)});}};

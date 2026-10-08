@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {prepareBuildingDataAsync} from './prepare-building-data.js';
 import {toonDestruction} from './african-toon.js';
 import {createNativeDestruction,COLLAPSE_THRESHOLD,COLLAPSE_SECONDS,destructionVertex,destructionFragment,destructionDepthFragment,destructionOpeningFragment} from './destruction-native.js';
 import {BuildingEffects} from './building-effects.js';
@@ -22,7 +23,7 @@ function geometry(data,repairNormals=null){
   result.setAttribute('aRepairNormal',new THREE.BufferAttribute(repairNormals??new Float32Array(data.length/4),3));
   result.computeBoundingBox();result.computeBoundingSphere();return result;
 }
-export function prepareNativeBuilding(gltf,building){
+function buildingInput(gltf){
   const meshes=[];gltf.scene.updateMatrixWorld(true);gltf.scene.traverse(o=>{if(o.isMesh)meshes.push(o);});
   if(meshes.length!==1)throw new Error('DEST requiere la malla original de una sola primitiva');
   const mesh=meshes[0],identity=new THREE.Matrix4();
@@ -33,7 +34,16 @@ export function prepareNativeBuilding(gltf,building){
   const center=[(bounds.min[0]+bounds.max[0])/2,bounds.min[1],(bounds.min[2]+bounds.max[2])/2];
   for(let i=0;i<positions.length;i++)positions[i]-=center[i%3];
   for(let axis=0;axis<3;axis++){bounds.min[axis]-=center[axis];bounds.max[axis]-=center[axis];}
-  const kernel=createNativeDestruction(building,{positions,normals,uv,indices,bounds}),body=geometry(kernel.vertices,kernel.repairNormals),ash=geometry(kernel.ash);
+  return {mesh,original,input:{positions,normals,uv,indices:new indices.constructor(indices),bounds}};
+}
+export async function prepareNativeBuildingAsync(gltf,building,{signal}={}){
+  const source=buildingInput(gltf),prepared=await prepareBuildingDataAsync(building,source.input,{signal});
+  if(signal?.aborted)throw Error('Building preparation cancelled');
+  return prepareNativeBuilding(gltf,building,{source,prepared});
+}
+export function prepareNativeBuilding(gltf,building,{source=buildingInput(gltf),prepared=null}={}){
+  const {mesh,original,input}=source;
+  const kernel=createNativeDestruction(building,input,prepared),body=geometry(kernel.vertices,kernel.repairNormals),ash=geometry(kernel.ash);
   const noise=new THREE.Data3DTexture(kernel.noiseBytes,32,32,32);noise.format=THREE.RedFormat;noise.type=THREE.UnsignedByteType;noise.minFilter=noise.magFilter=THREE.LinearFilter;noise.wrapS=noise.wrapT=noise.wrapR=THREE.RepeatWrapping;noise.unpackAlignment=1;noise.needsUpdate=true;
   let disposed=false;
   return {building,kernel,body,ash,noise,material:mesh.material,scale:1,culling:nativeBuildingBounds(body,ash),

@@ -150,6 +150,12 @@ export class WorldScene {
     this.hands=new NativeHands(this.scene,(x,z)=>this.nav.field.surface(x,z),{motion:!matchMedia('(prefers-reduced-motion: reduce)').matches,onError:e=>this.onError?.(e)});
     await this.loadReady(this.hands.ready);
     await this.loadReady(this.loadedAnimalActors());
+    if(this.loadingProgress&&farVegetation){
+      // Compile the eventual fog variant, not a temporary fog-free world. The
+      // distant adapter uses this same linear-fog recipe at first presentation.
+      const {farAtmosphere}=await import('./far-atmosphere.js'),atmosphere=farAtmosphere(farVegetation===true?{}:farVegetation);
+      this.scene.fog=new THREE.Fog(atmosphere.fogDayColor,atmosphere.fogStart,atmosphere.fogEnd);
+    }
     await this.loadReady(this.warmAnimalGpu());await milestone('gpu');
     // Callers choose a configured horizon through the same loading/cancellation
     // boundary as every other asset; generic worlds may still omit it.

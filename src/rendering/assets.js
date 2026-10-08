@@ -1,15 +1,16 @@
 import {prepareLoadingImage} from './loading-image.js';
+import {prepareBiomeTangentsAsync} from './prepare-biome-tangents.js';
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
 import {assetUrl} from './asset-url.js';
 import {json,bytes} from './asset-fetch.js';
 export {json,bytes} from './asset-fetch.js';
-import {prepareNativeBuilding} from './buildings.js';
+import {prepareNativeBuilding,prepareNativeBuildingAsync} from './buildings.js';
 import {nativeAssetMaterial} from './asset-surface.js';
 import {computeTangents} from './surface-source.js';
 export class Assets {
-  constructor(){this.loader=new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);this.textures=new THREE.TextureLoader();this.cache=new Map();this.modelSources=new Map();this.ownedResources=new Set();this.disposedResources=new WeakSet();}
+  constructor(){this.preparation=new AbortController();this.loader=new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);this.textures=new THREE.TextureLoader();this.cache=new Map();this.modelSources=new Map();this.ownedResources=new Set();this.disposedResources=new WeakSet();}
   assertOpen(){if(this.modelsDisposed)throw new Error('Asset collection is disposed');}
   own(resource){
     if(this.modelsDisposed){this.release(resource);return resource;}
@@ -31,12 +32,12 @@ export class Assets {
     // Also owns packed biome/village/wall prototypes and standalone textures,
     // including resources whose meshes never entered the rendered scene.
     for(const resource of this.ownedResources)this.release(resource);
-    this.ownedResources.clear();this.modelSources.clear();this.cache.clear();
+    this.preparation.abort();this.ownedResources.clear();this.modelSources.clear();this.cache.clear();
   }
   async building(descriptor){
     this.assertOpen();const key='building:'+descriptor.url;
     if(!this.cache.has(key)){
-      const pending=this.model(descriptor.url).then(gltf=>{this.assertOpen();return prepareNativeBuilding(gltf,descriptor);});
+      const pending=this.model(descriptor.url).then(gltf=>{this.assertOpen();return this.asyncTextureImages?prepareNativeBuildingAsync(gltf,descriptor,{signal:this.preparation.signal}):prepareNativeBuilding(gltf,descriptor);});
       this.cache.set(key,pending);
       pending.catch(()=>{if(this.cache.get(key)===pending)this.cache.delete(key);});
     }
@@ -50,13 +51,16 @@ export class Assets {
   async biome(pack) {
     this.assertOpen();
     const [buffer,entries]=await Promise.all([bytes(pack.binary.url),Promise.all(pack.textures.map(async t=>[t.role,await this.texture(t.base64.url,t.role==='baseColor')]))]),textures=Object.fromEntries(entries);this.assertOpen();
+    const preparedTangents=this.asyncTextureImages?await prepareBiomeTangentsAsync(buffer,pack.assets,{signal:this.preparation.signal}):null;this.assertOpen();
+    let preparationFrame=performance.now();
     const types={'<f4':Float32Array,'<u2':Uint16Array,'<u4':Uint32Array};
     const attribute=desc=>new types[desc.type](buffer,desc.offset,desc.count);
-    return pack.assets.map((a,index)=>{const levels=a.lods.map(lod=>{
+    const result=[];for(const [index,a] of pack.assets.entries()){const levels=[];for(const [level,lod] of a.lods.entries()){
       const geometry=this.own(new THREE.BufferGeometry());geometry.setAttribute('position',new THREE.BufferAttribute(attribute(lod.position),3));geometry.setAttribute('normal',new THREE.BufferAttribute(attribute(lod.normal),3));geometry.setAttribute('uv',new THREE.BufferAttribute(attribute(lod.uv),2));geometry.setIndex(new THREE.BufferAttribute(attribute(lod.index),1));geometry.computeBoundingSphere();
-      geometry.setAttribute('tangent',new THREE.BufferAttribute(computeTangents(geometry.attributes.position.array,geometry.attributes.normal.array,geometry.attributes.uv.array,geometry.index.array),4));geometry.computeBoundingBox();
-      return geometry;
-    });const material=this.own(nativeAssetMaterial(pack,a,index,textures,levels[0].boundingBox));return levels.map(geometry=>new THREE.Mesh(geometry,material));});
+      geometry.setAttribute('tangent',new THREE.BufferAttribute(preparedTangents?.[index][level]??computeTangents(geometry.attributes.position.array,geometry.attributes.normal.array,geometry.attributes.uv.array,geometry.index.array),4));geometry.computeBoundingBox();
+      levels.push(geometry);
+      if(this.asyncTextureImages&&performance.now()-preparationFrame>=4){await new Promise(resolve=>requestAnimationFrame(resolve));this.assertOpen();preparationFrame=performance.now();}
+    }const material=this.own(nativeAssetMaterial(pack,a,index,textures,levels[0].boundingBox));result.push(levels.map(geometry=>new THREE.Mesh(geometry,material)));}return result;
   }
   async village(payload) {
     this.assertOpen();

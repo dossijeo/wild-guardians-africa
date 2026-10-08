@@ -117,3 +117,10 @@ test('Loaded collapse does not replay bursts; zero elapsed freezes particles and
   fx.frame(.92,.1);const before=JSON.stringify({smoke:fx.smoke,debris:fx.debris,sites:fx.hitSites,time:fx.time});fx.frame(.92,0);assert.equal(JSON.stringify({smoke:fx.smoke,debris:fx.debris,sites:fx.hitSites,time:fx.time}),before);
   fx.frame(.97,.1);assert.ok(fx.debris.length>0);fx.frame(0,0);assert.equal(fx.smoke.length,0);assert.equal(fx.debris.length,0);assert.ok(fx.hitSites.every(s=>s.emission===0&&s.radius===0));assert.equal(fx.debrisInstances().count,0);assert.equal(fx.destructionAt,-100);assert.throws(()=>fx.frame(.1,-1));
 });
+
+test('all native cultures rehydrate transferred loading data without changing geometry or damage/picking',()=>{
+ for(const {building,input} of originals){const source=createNativeDestruction(building,input),prepared=structuredClone(Object.fromEntries(['positions','normals','uv','indices','bounds','triangles','vertices','repairNormals','ash','hull','noiseBytes','holes','hitSites'].map(key=>[key,source[key]]))),restored=createNativeDestruction(building,{},prepared);
+  for(const key of Object.keys(prepared))assert.deepEqual(restored[key],source[key],building.culture+':'+key);
+  for(const damage of [0,.2,.79,.85,.98,1]){source.setDamage(damage);restored.setDamage(damage);assert.deepEqual(restored.holes,source.holes);for(const origin of [[0,2,20],[20,2,0],[0,20,0]]){const length=Math.hypot(...origin),direction=origin.map(v=>-v/length);assert.deepEqual(restored.raycast(origin,direction),source.raycast(origin,direction));}for(const point of [[0,0,0],[1,3,-1]]){assert.equal(restored.field(point),source.field(point));assert.deepEqual(restored.collapsedPoint(point,restored.triangles[0]),source.collapsedPoint(point,source.triangles[0]));}}
+ }
+});
