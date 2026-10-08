@@ -1,0 +1,9 @@
+# Borrowed growth attribute ownership
+
+The QA mature-maize adapter reuses the native `iGrowth` BufferAttribute so the original batch continues to drive the candidate. Three r180's `WebGLGeometries` disposal handler removes the buffer of every attribute still attached to the disposed geometry. Previously, disposing the candidate also passed the borrowed attribute to this removal path. Recreating buffers under the same attribute identity can conflict with retained binding-state caches and live source growth updates. This is a concrete ownership risk, not an attributed cause of earlier visual differences.
+
+The adapter now detaches an attribute from the candidate only if its reference exactly matches the original geometry's corresponding attribute, before disposing candidate geometry. It keeps all owned attributes and indices attached for normal cleanup, leaves the original attribute intact, and also uses the same cleanup in the material-construction failure path.
+
+A directed test invokes Three's real `WebGLGeometries` get/update/disposal handler with a CPU buffer registry. It checks that the original growth attribute and buffer token survive two release/reinstallation cycles and live updates, candidate-owned attributes/indices are removed, and the final original disposal releases its growth buffer. The six adapter/comparison tests passed in a terminal exit-0 command lasting .480 seconds (TAP .211 seconds).
+
+This CPU registry does not create GPU buffers or validate actual VAO/buffer state. Fresh native toggle, growth and save/rebuild QA must confirm functional lifetime after this change, with resource instrumentation in a separate campaign. Earlier 873–877 captures remain evidence of the older adapter and cannot be inherited as approval of the updated one. No production module imports this QA adapter.

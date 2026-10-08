@@ -1,0 +1,11 @@
+# Next bridge control: original indexed DoubleSide
+
+Before adding any reverse faces, exercise the original `puente_maiz_3_4` with the CPU-audited index control. Keep source region metadata, `a2b`/`b2a`, triangle order, all seven static attributes, material/shader recipe and DoubleSide shadows unchanged. The original nonindexed arm and indexed arm must use the same live `iBridge` attribute, instance matrices, growth values, clock, lighting and camera.
+
+Use the actual runtime crop batch with a named QA-copy maize plant in the source 3→4 transition. Record the original source/bridge SHA values and all effective material/depth/shadow recipes. Do not modify the mature leaf viewer or its imported helpers while its native captures are active. The control needs its own isolated QA fixture or flag, disabled by default.
+
+Functional checks must cover the full 3→4 transition, its two neighbouring state boundaries, repeated native sample/update, count changes, capacity reconstruction, restoration and disposal. The indexed geometry must be detached before disposal, and any borrowed GPU attributes must be accounted for explicitly: shared CPU references do not prove safe GPU resource lifetime. Preserve the original geometry for restoring the source arm.
+
+First render DoubleSide original versus indexed control across representative angles, growth fractions, wind clocks and day/night conditions. Inspect the images perceptually, retaining diagnostic metrics and any source variation. This control changes index submission even though expanded corner values match, so CPU bit equality is not visual approval. Record resource coexistence and cleanup separately; no timer claim follows from 35.387% less static CPU storage.
+
+Only after a convincing functional/render control should the pipeline produce a geometric FrontSide experiment. Any new faces must retain compatible UV/normals and regional drivers, with explicit labels for their actual triangles. Source structure must justify bilateral surfaces independently of cameras; region boundaries can be internal interfaces and must not be blindly capped. Measure additional indices, vertex execution, material groups, draw calls and shadow/depth work before interpreting net GPU benefit.

@@ -5,13 +5,19 @@ export function installWorldMaizeQaAdapter(world,payload,{worldDepth=false}={}){
  const descriptor=Object.getOwnPropertyDescriptor(world,'cropBatch');
  if(!descriptor?.configurable||!('value' in descriptor)||!world.cropBatch||!world.scene||payload.mesh!=='maiz_05_maduro')throw Error('Unsupported loaded WorldScene QA contract');
  let current=world.cropBatch,active=null,closed=false;const events=[];
+ function disposeOwnedGeometry(geometry,source){
+  // Three's WebGLGeometries disposal removes every attached attribute buffer.
+  // Borrowed native attributes must remain owned by the source geometry.
+  for(const [name,attribute] of Object.entries(geometry.attributes))if(attribute===source.getAttribute(name))geometry.deleteAttribute(name);
+  geometry.dispose();
+ }
  function release(record){
   if(!record||record.released)return;record.released=true;
   record.mesh.geometry=record.originalGeometry;record.mesh.material=record.originalMaterial;
   if(record.excluded===undefined)delete record.mesh.userData.materialRegistryExcluded;else record.mesh.userData.materialRegistryExcluded=record.excluded;
   if(record.hadWorldDepth)record.mesh.customWorldDepthMaterial=record.originalWorldDepth;else delete record.mesh.customWorldDepthMaterial;
   world.materialRegistry?.attach(record.mesh);record.batch.dispose=record.originalDispose;
-  record.geometry.dispose();record.materials.forEach(m=>m.dispose());record.worldDepth?.dispose();if(active===record)active=null;
+  disposeOwnedGeometry(record.geometry,record.originalGeometry);record.materials.forEach(m=>m.dispose());record.worldDepth?.dispose();if(active===record)active=null;
   events.push({event:'restored',capacity:record.batch.capacity});
  }
  function apply(batch){
@@ -23,7 +29,7 @@ export function installWorldMaizeQaAdapter(world,payload,{worldDepth=false}={}){
   const sourceDepth=mesh.customDepthMaterial;if(worldDepth&&(!sourceDepth?.isMeshDepthMaterial||!sourceDepth.userData.worldDepthCompatible))throw Error('Missing authored native growth depth contract');
   const result=sharedLeafReverseGeometry(originalGeometry,payload),materials=[];
   try{for(let part=0;part<3;part++){const m=originalMaterial.clone();m.onBeforeCompile=originalMaterial.onBeforeCompile;m.customProgramCacheKey=originalMaterial.customProgramCacheKey;m.side=THREE.FrontSide;m.defines={...m.defines,DOUBLE_SIDED:''};m.shadowSide=THREE.DoubleSide;if(part===2)preserveSharedLeafBackRecipe(m);materials.push(m);}}
-  catch(error){result.geometry.dispose();materials.forEach(m=>m.dispose());throw error;}
+  catch(error){disposeOwnedGeometry(result.geometry,originalGeometry);materials.forEach(m=>m.dispose());throw error;}
   let authoredWorldDepth=null;if(worldDepth){authoredWorldDepth=sourceDepth.clone();authoredWorldDepth.userData={...sourceDepth.userData};authoredWorldDepth.onBeforeCompile=sourceDepth.onBeforeCompile;authoredWorldDepth.customProgramCacheKey=sourceDepth.customProgramCacheKey;authoredWorldDepth.side=THREE.FrontSide;authoredWorldDepth.needsUpdate=true;}
   const record={mesh,batch,geometry:result.geometry,materials,worldDepth:authoredWorldDepth,hadWorldDepth:Object.hasOwn(mesh,'customWorldDepthMaterial'),originalWorldDepth:mesh.customWorldDepthMaterial,originalGeometry,originalMaterial,originalDispose:batch.dispose,excluded:mesh.userData.materialRegistryExcluded,released:false};
   // Source has already been wrapped when the native batch entered the registry.
