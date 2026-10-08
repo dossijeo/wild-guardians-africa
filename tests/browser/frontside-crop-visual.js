@@ -79,10 +79,24 @@ async function run(){
  document.querySelector('#arms').textContent=report.arms.join(' → ')+'. Diagnóstico; no aprobación ni benchmark.';
  report.colorGuidedTraining=training;
  report.campaignConditions={cpuCampaigns:options.get('cpuCampaigns')??'unspecified',gpuTiming:false};
- const withheldV1=options.has('withheldV1');report.viewProfile=withheldV1?'CULT_WITHHELD_V1':'GUIDED_EXISTING';
+ const withheldV1=options.has('withheldV1'),withheldV2=options.has('withheldV2');if(withheldV1&&withheldV2)throw Error('One withheld profile only');report.viewProfile=withheldV2?'CULT_WITHHELD_V2':withheldV1?'CULT_WITHHELD_V1':'GUIDED_EXISTING';
  const transitionWidth=Math.min(.34,2/(.25*cropSpec('maiz').growth_seconds)),bridgeGrowths=(withheldV1?[.375,.875]:[.25,.5,.75]).map(t=>.53+.25*(.81-transitionWidth*.5+transitionWidth*t));
  const camera=new THREE.PerspectiveCamera(35,1,.01,100),pixels=Array.from({length:4},()=>new Uint8Array(size*size*4)),growths=blenderLeafReduction?[1]:bridgeOnly?bridgeGrowths:[1,...bridgeGrowths,.065,.27,.53,.78];let stop=false;
- campaign:for(const growth of growths)for(const clock of withheldV1?[2.875,5.625]:[1.75,4.125])for(const biome of ['sabana','manglares'])for(const night of [0,.5,1])for(const elevation of withheldV1?[47.5,72.5]:[32.5,62.5])for(const azimuth of withheldV1?[43.125,133.125,223.125,313.125]:[26.25,116.25,206.25,296.25]){
+ const cases=[];
+ if(withheldV2){
+  if(!stemOnly)throw Error('V2 prospective partial candidate profile requires stemOnly');
+  const bg=t=>.53+.25*(.81-transitionWidth*.5+transitionWidth*t);
+  const rows=[
+   [1,2.5625,'sabana',0,42.5,19.375],[1,4.8125,'manglares',.5,72.5,109.375],
+   [.065,1.4375,'gran-rio',1,12.5,199.375],[.27,2.8125,'volcanes',0,42.5,289.375],
+   [.53,3.1875,'gran-canon',.5,72.5,64.375],[.78,5.4375,'desierto',1,12.5,154.375],
+   [bg(.1875),1.125,'gran-rio',0,27.5,244.375],[bg(.53125),3.4375,'manglares',.5,57.5,334.375],
+   [bg(.84375),5.875,'desierto',1,82.5,41.875],[.005,1.5625,'sabana',.5,7.5,86.875],
+   [.865,4.625,'volcanes',0,-12.5,176.875],[1,6.125,'gran-canon',1,67.5,266.875]];
+  for(const [growth,clock,biome,night,elevation,azimuth] of rows)cases.push({growth,clock,biome,night,elevation,azimuth});
+  report.prospectiveCases=cases;report.limitations.push('V2 stratified screen precommitted before native draws; representative states/transition/6biomes/lighting, not exhaustive category coverage or permission to retrain from heldout failure.');
+ }else for(const growth of growths)for(const clock of withheldV1?[2.875,5.625]:[1.75,4.125])for(const biome of ['sabana','manglares'])for(const night of [0,.5,1])for(const elevation of withheldV1?[47.5,72.5]:[32.5,62.5])for(const azimuth of withheldV1?[43.125,133.125,223.125,313.125]:[26.25,116.25,206.25,296.25])cases.push({growth,clock,biome,night,elevation,azimuth});
+ campaign:for(const {growth,clock,biome,night,elevation,azimuth} of cases){
   if(cancelled)throw Error('Cancelled');for(const rig of rigs)rig.batch.update([{id:'1',species:'maiz',x:0,z:0,growth:growth*cropSpec('maiz').growth_seconds}],clock,()=>0);sun.intensity=3-2.6*night;ambient.intensity=2-.9*night;toon.update(night,sun,biome);registry.update(clock);
   const height=rigs[0].batch.sample('maiz',growth*cropSpec('maiz').growth_seconds).height,center=new THREE.Vector3(0,height*.5,0),a=azimuth*Math.PI/180,e=elevation*Math.PI/180;camera.position.copy(center).add(new THREE.Vector3(Math.sin(a)*Math.cos(e),Math.sin(e),Math.cos(a)*Math.cos(e)).multiplyScalar(Math.max(.65,height*.7)*3));camera.lookAt(center);camera.updateMatrixWorld();
   const envelope=new Float64Array(size*size*3),controls=[];let alphaChanges=0;

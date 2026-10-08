@@ -1130,3 +1130,17 @@ and all existing visual gates. This is a partial training screen, not approval
 of stem topology, whole crop repair or net GPU benefit; bridges/states, shadows,
 withheld angles and resource/GPU gates remain required. It tests whether the
 previous soil-dominated RGB failure prevents even this narrower improvement.
+
+
+Native stemOnly guided screen at HEAD13bf3e94 is archived maize-stem-only-guided-*.
+Original repeats/indexedDouble/groupedDouble are bit-exact. Partial stemFront
+passes this one color screen: IoU1, MAE0.00000306128, tile0.00319709527 and RGB
+regions4+1pixels. Source attributes/triangle counts remain unchanged, soil and
+leaves stay Double; no shadowFront, category or GPU acceptance follows.
+The next prospective CULT_WITHHELD_V2 has12 stratified precommitted cases in
+the fixture, independent azimuths/elevations/clocks, five native states plus seed
+and3 transition samples, all6biomes andday/dawn/night. Original guided/V1
+failures remain. It stops on first invalid control or failing candidate; no
+post-failure threshold change or training from these withheld pixels is allowed.
+It is still color-isolation shadowDouble, so even12passes would not approve
+shadows, exhaustive views, culture/world interactions or GPU benefit.
