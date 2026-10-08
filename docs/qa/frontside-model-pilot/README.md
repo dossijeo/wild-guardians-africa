@@ -1029,3 +1029,25 @@ ancestry. The first planned native sample is the same original-target closeup
 WaterV6 case13 (fraction0.90625/e67.5/az144.375), real shading and shadowFront,
 unchanged quantitative/control gates and affected-face raster IDs. It is a
 training diagnostic and cannot approve the worker category or GPU benefit.
+
+
+The native Badge unit-field closeup at HEAD8349c5ff is REJECTED, archived as
+worker-badge-field-closeup-guided-*. AlphaIoU1/0missing/added and globalRGBMAE
+0.000893275076 pass, but tile0.31080017693 and RGB regions4323/157pixels fail.
+Affected raster coverage4434pixels on16 original faces in both arms does not
+validate normals/maps. Source visible affected faces are front-facing.
+The CPU normal-transform diagnostic samples12clips at5fractions: normalized
+M transpose M is nearly identity (column ratio1..1.000000007; maximum Gram
+pose change9.3648e-9). It does not support anisotropy as the sole explanation,
+and it is not native-shader causal proof. The next badgeBaseline closeup uses
+the frozen selective candidate with no Badge normals changed, same original
+camera/case13 and unchanged gates, to isolate pre-existing adaptation errors.
+
+Read-only maize-exact-component-orientation.json audits all5 original maize
+states using exact numeric Float32 positions and shared edges, no epsilon or
+quantized weld. Relevant whole components remain open/nonmanifold: stage1..5
+boundary counts37/25/80/88/115, nonmanifold24/22/69/78/145. Regional-label0
+subsets mix upward/downward faces, and are not independent closed volumes.
+Signed volume is withheld for these open components. This prevents a blanket
+'inverted soil' claim or global normal/winding flip based on the RGB ownership.
+No source attributes, regional labels, bridges or runtime shader were altered.

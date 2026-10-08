@@ -49,11 +49,11 @@ async function campaign(){
  const allClipNames=Object.keys(library.youngMale.actions);if(clipFilter&&!allClipNames.includes(clipFilter))throw Error('Unknown screen clip');
  const campaignClips=clipFilter?[clipFilter]:options.has('allClips')?allClipNames:['Idle','Water','Carry_Crate','Fall'];
  const sourceAssets=new Assets();
- const localNormal=options.has('localNormal'),badgeNormal=options.has('badgeNormal'),badgeField=options.has('badgeField');
+ const localNormal=options.has('localNormal'),badgeNormal=options.has('badgeNormal'),badgeField=options.has('badgeField'),badgeBaseline=options.has('badgeBaseline');
  const normalCloseup=options.has('normalCloseup');if(normalCloseup&&!options.has('mapNormalCoverage'))throw Error('Normal closeup requires affected-face coverage instrumentation');
- if(Number(localNormal)+Number(badgeNormal)+Number(badgeField)>1)throw Error('Separate normal pilots cannot be combined implicitly');
+ if(Number(localNormal)+Number(badgeNormal)+Number(badgeField)+Number(badgeBaseline)>1)throw Error('Separate normal pilots cannot be combined implicitly');
  if((badgeNormal||badgeField)&&originalShadow)throw Error('Badge cleanup requires mapped shadow geometry; originalShadow prefix diagnostic is incompatible');
- const normalMesh=(badgeNormal||badgeField)?'Can_badge_geometry_5':'Can_Nozzle_geometry_4',candidateFaceMaps={};
+ const normalMesh=(badgeNormal||badgeField||badgeBaseline)?'Can_badge_geometry_5':'Can_Nozzle_geometry_4',candidateFaceMaps={};
  if(badgeNormal||badgeField){const audit=await fetch(badgeField?'/docs/qa/frontside-model-pilot/worker-badge-field-normal-export-audit.json':'/docs/qa/frontside-model-pilot/Can_badge_geometry_5-normal-export-audit.json').then(r=>r.json());if(audit.sourceSha256!==library.youngMale.sha256)throw Error('Badge provenance source mismatch');candidateFaceMaps[normalMesh]=audit.accessories.find(a=>a.mesh===normalMesh).retainedBaseCandidateFaces;}
  const urls=[library.youngMale.url,sourceTwin?library.youngMale.url:badgeField?'/__frontside_candidate/youngMale-badge-field':badgeNormal?'/__frontside_candidate/youngMale-badge-normal':localNormal?'/__frontside_candidate/youngMale-local-normal':'/__frontside_candidate/youngMale'];
  const models=(await Promise.all(urls.map(url=>sourceAssets.model(url)))).map(gltf=>({...gltf}));
@@ -89,6 +89,7 @@ async function campaign(){
  report.localNormalDiagnosis=localNormal;report.candidate=localNormal?'Can_Nozzle_geometry_4-local-normal-NOT-APPROVED-web.glb':report.candidate;
  report.normalCloseup=normalCloseup;if(normalCloseup)report.limitations.push('Training camera frames the original repaired accessory at unchanged FOV42/resolution1024; all surrounding rig geometry/occlusion and real materials remain present. Closeup is not withheld/general-category acceptance.');
  report.badgeNormalDiagnosis=badgeNormal;if(badgeNormal)report.candidate='Can_badge_geometry_5-normals-cleanup-v2-NOT-APPROVED-web.glb';
+ report.badgeBaselineDiagnosis=badgeBaseline;if(badgeBaseline)report.limitations.push('Training baseline uses frozen selective candidate without Badge normal edits, at the same original-target camera; it isolates pre-existing adaptation differences before attributing the derived cap failure.');
  report.badgeFieldDiagnosis=badgeField;if(badgeField){report.candidate='Can_badge_geometry_5-unit-normal-field-derived-NOT-APPROVED-web.glb';report.limitations.push('Derived coplanar cap tessellation preserves P/UV by barycentric interpolation and unit directions of the authored radial normal field. CPU sampled error is not a raster gate. All visual/shadow/resource/GPU gates remain required.');}
  report.metricPolicyVersion=2;report.controlEnvelopePolicy='Prospective only: alpha identical in all 3 controls; twice max observed linear-channel deviation added to candidate error, never subtracted. Candidate gates unchanged; source envelope budget <=1/5 RGB MAE/p99/tile and <=3 pixels per >.006 region. Observed-control bound, not a guarantee about unseen variability.';
  report.contextAttributes=gl.getContextAttributes();report.defaultFramebufferSamples=gl.getParameter(gl.SAMPLES);
