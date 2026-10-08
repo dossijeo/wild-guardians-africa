@@ -157,7 +157,22 @@ export class BuildingDestructionPass {
     }finally{renderer.setRenderTarget(target);renderer.setClearColor(clearColor,clearAlpha);renderer.autoClear=autoClear;renderer.shadowMap.enabled=shadows;}
   }
   depthCaptureOptions(){return {optimized:this.optimizedDepth!==false,visibleOnly:this.visibleDepthOnly!==false,nonEmptyOnly:this.nonEmptyDepthOnly===true,stockAlpha:this.stockAlphaDepth===true};}
-  async prepareDepth(camera,world,{compile=(scene,camera)=>this.renderer.compileAsync(scene,camera)}={}){
+  async prepareDepth(camera,world,{compile=(scene,camera,target)=>this.renderer.compileAsync(scene,camera,target),batchSize=0,nextFrame=()=>new Promise(resolve=>requestAnimationFrame(resolve)),cancelled=()=>false}={}){
+    if(batchSize){
+      if(!Number.isInteger(batchSize)||batchSize<1)throw Error('Invalid depth preload batch size');
+      const options=this.depthCaptureOptions(),objects=[];world[options.visibleOnly?'traverseVisible':'traverse'](object=>{if(object.material)objects.push(object);});
+      const stats={specialized:0,fallback:0,excluded:0,emptySkipped:0,stockAlphaSpecialized:0};
+      for(let start=0;start<objects.length;start+=batchSize){
+        if(cancelled())throw Error('Loading depth preload cancelled');
+        const batch=objects.slice(start,start+batchSize),view={overrideMaterial:world.overrideMaterial,onBeforeRender:world.onBeforeRender,onAfterRender:world.onAfterRender,traverse:callback=>batch.forEach(callback),traverseVisible:callback=>batch.forEach(callback)};
+        // Each recursive submission restores all borrowed materials and renderer
+        // state synchronously before awaiting its programs or the next frame.
+        await this.prepareDepth(camera,view,{compile:(scene,camera)=>compile(scene,camera,world)});
+        for(const key in stats)stats[key]+=this.depthWarmStats[key]??0;
+        await nextFrame();
+      }
+      if(cancelled())throw Error('Loading depth preload cancelled');this.depthWarmStats=stats;return;
+    }
     const renderer=this.renderer,target=renderer.getRenderTarget(),shadows=renderer.shadowMap.enabled;
     let compiling;
     try{

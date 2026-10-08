@@ -317,7 +317,7 @@ export class WorldScene {
       // hidden LODs. Prepare their screen variant with the actual shadow state,
       // not only the linear, shadowless variant used by VFX depth capture.
       await compile(this.scene,this.camera,this.scene);if(this.disposed)return;
-      await this.destructionPass.prepareDepth(this.camera,this.scene,{compile:(scene,camera)=>compile(scene,camera,undefined,{screen:false})});if(this.disposed)return;
+      await this.destructionPass.prepareDepth(this.camera,this.scene,{compile:(scene,camera,target)=>compile(scene,camera,target,{screen:false}),...(this.loadingProgress?{batchSize:32,cancelled:()=>this.disposed||this.loading.signal.aborted}:{})});if(this.disposed)return;
       this.programBindings=this.loadingProgress?await initializeProgramBindingsAsync(this.renderer,{cancelled:()=>this.disposed}):initializeProgramBindings(this.renderer);
       // Actual draw uploads vertex buffers, textures and bone textures, and
       // prepares the shadow shader too. Invisible/culled meshes would not.
