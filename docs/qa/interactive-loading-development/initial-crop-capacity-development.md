@@ -1,0 +1,7 @@
+# Initial restored crop capacity candidate
+
+Measured baseline fbaa7cea actualContinue118: synchronous crop-batch reconstruction183.4ms inside restore-sync208.7ms. Initial loading created128slots cooperatively, then sync found more visible plants and rebuilt all native stage/morph renderables synchronously. The independent second199.5ms gap remains unexplained.
+
+Candidate counts alive plants within the exact strict140-unit X/Z circle around farmHomeFocus(state), the same destination used later by focusFarm/Resume/Home and the same visibility predicate used by sync. Minimum128; above128rounds to the existing power-of-two rule. Only createCropBatchAsync in the loading path changes its initial capacity. No camera movement earlier, no save mutation, no global per-frame resize behavior change, no distant/dead historical-plant inflation. Native crop geometry/morph/material/shader behavior remains the same constructor implementation. Capacity1257visible→2048matches the previous eventual batch.
+
+10directed helper/witness/QA tests PASS0skip247ms. Initial helper fixture mistakenly supplied hp without native operational status;2PASS1FAIL retained here, fixture corrected to intact/destroyed status, rules unchanged. Native paired restore/performance/resource/abort acceptance still pending. Existing async constructor owner/deadline must remain intact. No physical peakRAM/VRAM or total-load gain claim, no PR.
