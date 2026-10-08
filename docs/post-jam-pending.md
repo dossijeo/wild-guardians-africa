@@ -10,7 +10,9 @@ Solicitudes añadidas el 9 de octubre de 2026:
   Investigación y corrección asignadas al mismo subagente.
 - Incursiones: tras enfocar al animal, seguir su aproximación hasta la primera
   entrada en la finca y dejar allí la cámara. Mantener cancelación por control
-  manual y protección de terreno. Implementación y pruebas dirigidas en curso.
+  manual y protección de terreno. Implementado en main, con 13 pruebas
+  dirigidas aprobadas; comprobación visual nativa aún pendiente.
+  [Evidencia y alcance](qa/raid-camera-approach.md).
 
 Criterio vigente de actividad (aclaración explícita del usuario, 2026-10-08):
 tiempo diurno sin acciones **inferior al 25%** aceptado. Sustituye el límite
