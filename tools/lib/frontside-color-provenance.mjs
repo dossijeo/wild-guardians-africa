@@ -1,8 +1,9 @@
 // QA-only face mapping after a saved PBR comparison. No acceptance inference.
 import * as THREE from 'three';
 export function mapColorProvenance(renderer,group,scene,camera,original,candidate,size){
+ group.traverse(mesh=>{if(mesh.isMesh&&Array.isArray(mesh.material))throw Error('Color provenance requires a single-material source arm');});
  const saved=[],descriptors=[],linear=Float64Array.from({length:256},(_,i)=>{const v=i/255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4;});let next=1;
- group.traverse(mesh=>{if(!mesh.isMesh)return;const geometry=mesh.geometry.index?mesh.geometry.toNonIndexed():mesh.geometry.clone();
+ group.traverse(mesh=>{if(!mesh.isMesh||!mesh.visible||mesh.isInstancedMesh&&mesh.count===0)return;const geometry=mesh.geometry.index?mesh.geometry.toNonIndexed():mesh.geometry.clone();
   for(const [name,attribute] of Object.entries(mesh.geometry.attributes))if(attribute.isInstancedBufferAttribute)geometry.setAttribute(name,attribute);
   const count=geometry.getAttribute('position').count,ids=new Float32Array(count),start=next;for(let i=0;i<count;i++)ids[i]=start+Math.floor(i/3);next+=count/3;
   geometry.setAttribute('qaFaceId',new THREE.BufferAttribute(ids,1));const material=mesh.material.clone(),compile=mesh.material.onBeforeCompile;

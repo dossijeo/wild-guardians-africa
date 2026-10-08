@@ -971,3 +971,20 @@ isolation would be needed to attribute the full change solely to normals.
 CPU44164/49032 and suite40728 were active, with no timing claim. Root closed
 the context/tab. QA Run buttons now remain disabled with a loading message
 until module imports and handlers are initialized, preventing a lost early click.
+
+The preserveDoubleShader native screen at HEAD25de831f is independently
+REJECTED and archived as maize-double-shader-core-front-guided-*. Source3,
+indexedDouble and groupsDouble are bit-exact. CoreFront with source GLSL
+DOUBLE_SIDED retained yields the same recorded alphaIoU1, MAE0.00067416576,
+tile0.0548332363 and RGB regions297/288/195pixels as the prior guided screen.
+It has not resolved the failure; no complete causal attribution or performance
+credit follows. CPU44164/49032 active and suite40728 was still recorded active
+at capture; root subsequently confirmed suite complete and closed the GPU tab.
+
+The next prospective mapSourceRgb screen repeats this one native-state view
+and draws diagnostic IDs ONLY for original arm0, whose material is single.
+It joins nominal RGB outliers to original face labels and gl_FrontFacing.
+It never invokes the unsupported array-material candidate ID path. ID output
+is later diagnostic evidence, not PBR/map acceptance or permission to retrain
+from withheld failures. The helper rejects array materials before mutation
+and skips zero-instance/invisible meshes without changing original PBR draws.
