@@ -53,9 +53,12 @@ try{
   const watchedMaterials=new WeakSet(),watch=candidate=>candidate.impostors.traverse(mesh=>{if(mesh.material&&!watchedMaterials.has(mesh.material)){watchedMaterials.add(mesh.material);wrap(mesh.material,'clone','farMaterial.clone');}});
   for(const adapter of world.farVegetation.adapters){const layer=adapter.layer;watch(layer.current.prototype);wrap(layer,'create','far.create');wrap(layer,'attachData','far.attachData',args=>watch(args[0]));wrap(layer.transitions,'bind','far.bind');}
   wrap(world.biomeGround,'attach','ground.attach');
+  for(const name of ['syncChunks','sync','updateCamera'])wrap(world,name,'world.'+name);
+  wrap(world.farVegetation,'update','far.update');wrap(world.assetGroups,'update','assetGroups.update');
+  wrap(world.materialRegistry,'update','materials.update');wrap(world.destructionPass,'render','destruction.render');
  }
  const gl=world.renderer.getContext(),rendererInfo=gl.getExtension('WEBGL_debug_renderer_info');
- if(params.has('glTrace'))for(const name of ['getError','clientWaitSync','fenceSync','flush','getProgramParameter']){
+ if(params.has('glTrace'))for(const name of ['getError','clientWaitSync','fenceSync','flush','getProgramParameter','getShaderParameter','getProgramInfoLog','getShaderInfoLog','getActiveUniform','getUniformLocation','getActiveAttrib','getAttribLocation','compileShader','linkProgram','bufferData','bufferSubData','texImage2D','texSubImage2D','generateMipmap']){
   const original=gl[name];gl[name]=function(...args){const begin=performance.now();try{return original.apply(this,args);}finally{if(running){const cpuMs=performance.now()-begin;if(cpuMs>2)segments.push({name:'gl.'+name,at:begin-started,cpuMs});}}};
  }
  const device={userAgent:navigator.userAgent,viewport:[innerWidth,innerHeight],drawingBuffer:[gl.drawingBufferWidth,gl.drawingBufferHeight],dpr:devicePixelRatio,renderer:rendererInfo?gl.getParameter(rendererInfo.UNMASKED_RENDERER_WEBGL):null};

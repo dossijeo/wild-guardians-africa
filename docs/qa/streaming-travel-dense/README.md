@@ -21,3 +21,14 @@ El informe completo conserva frames, tareas largas, GPU y coordenadas. La captur
 corresponde al final del recorrido, no demuestra ausencia de popping durante él.
 Pendiente trazar compilación/primer dibujo y recursos nuevos, luego contrastar
 candidatos con recorrido y estado iguales, sin reducir calidad para aprobar.
+
+## Traza de diagnóstico
+
+Mismo recorrido/estado con wrappers de diagnóstico: 176 intervalos, p95 182,8ms,
+p99 299,4ms, máximo315,9ms y37 intervalos sobre100ms. No comparación causal
+con la primera ejecución: instrumentación y cachés diferentes. Cinco llamadas
+renderer.render toman102–293ms. Las otras subfases instrumentadas no explican
+esos picos; compileAsync máximo36,9ms. La lista GL inicial no captura una llamada
+que explique los principales picos. Se amplía el fixture para inspeccionar
+compilación/reflexión y uploads en la siguiente ejecución. Estado idéntico,
+cero errores, contexto liberado al terminar. Aún no es una solución aprobada.
