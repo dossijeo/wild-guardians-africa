@@ -23,3 +23,21 @@ test('cancellation during compilation prevents drawing and fencing',async()=>{
  const {world,restored}=fixture();world.renderer.compileAsync=async()=>{world.loading.abort();};
  await assert.rejects(prepareResidentTravelVariants(world,{draw:()=>assert.fail('draw after cancellation'),fence:()=>assert.fail('fence after cancellation')}),/cancelled/);restored();
 });
+
+test('program-only preparation preserves hidden geometry and native lighting without an upload draw',async()=>{
+ const {world,restored}=fixture();let compileCalls=0,fences=0;
+ world.renderer.compileAsync=async()=>{restored();compileCalls++;};
+ world.releaseNativeShadow.cache.invalidate=()=>assert.fail('program-only mode must not invalidate shadows');
+ const result=await prepareResidentTravelVariants(world,{mode:'programs',bindings:()=>{restored();return {initialized:2,unsupported:0};},draw:()=>assert.fail('hidden geometry upload'),fence:async()=>{restored();fences++;}});
+ assert.equal(compileCalls,1);assert.equal(fences,1);assert.equal(result.mode,'programs');assert.equal(result.bindings.initialized,2);restored();
+});
+
+test('program-only reflection failure remains an error and never reaches the fence',async()=>{
+ const {world,restored}=fixture();world.renderer.compileAsync=async()=>restored();
+ const failure=Error('Shader diagnostic failure');
+ await assert.rejects(prepareResidentTravelVariants(world,{mode:'programs',bindings:()=>{throw failure;},draw:()=>assert.fail('draw'),fence:()=>assert.fail('fence')}),error=>error===failure);restored();
+});
+
+test('invalid preparation mode rejects before touching the world',async()=>{
+ await assert.rejects(prepareResidentTravelVariants(null,{mode:'pretend-ready'}),/Invalid resident preparation mode/);
+});

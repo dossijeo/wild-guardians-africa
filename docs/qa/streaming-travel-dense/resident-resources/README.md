@@ -33,3 +33,18 @@ their ownership and context-loss accounting remain separate acceptance work.
 
 `node docs/qa/streaming-travel-dense/resident-resources/verify.mjs` verifies archived
 hash and reported stage arithmetic. It does not reproduce browser/GPU behavior.
+
+## Next candidate: programs without hidden-geometry uploads
+
+QA fixture parameter `residentPrograms` selects compilation plus lazy program
+bindings and a GPU fence, without the all-visible upload draw or shadow-cache
+invalidation. It is mutually exclusive with `residentPrewarm`. Three r180 compile
+traverses all materials even when meshes are hidden; native lighting visibility
+is retained. This is program preparation, not full geometry/texture readiness.
+Hidden depth/shadow variants and future chunk programs can still appear later.
+
+Fourteen directed tests pass (resident preparation, program bindings and buffer
+probe), and all 148 browser scripts parse. Real GPU resource and travel evidence
+for this new candidate is still missing: no optimization or acceptance claim.
+Use `resourceProfile` for storage accounting separately from uninstrumented ABBA
+travel measurements. Production uses neither resident experiment.

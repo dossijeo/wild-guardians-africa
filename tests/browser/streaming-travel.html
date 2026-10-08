@@ -27,6 +27,7 @@ const dispose=()=>{if(dead)return;dead=true;running=false;cancelAnimationFrame(r
 addEventListener('pagehide',dispose,{once:true});
 addEventListener('error',e=>errors.push(String(e.message)));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
 try{
+ if(params.has('residentPrewarm')&&params.has('residentPrograms'))throw Error('Choose one resident preparation experiment');
  let restored=null;
  if(fixture){
   if(fixture!=='gran-rio-suajili-100')throw Error('Unknown archived fixture');
@@ -47,7 +48,7 @@ try{
  await world.load(state,nav,payload,{farVegetation:farVegetationProfile({quality,biome:nav.config.biome})});await prepareInitialFarWorld(world);
  if(site)world.focus(site.center);else world.focusFarm();world.render(0);
  resourceStage('before-resident-preparation');
- const residentPreparation=params.has('residentPrewarm')?await prepareResidentTravelVariants(world):null;
+ const residentPreparation=params.has('residentPrewarm')||params.has('residentPrograms')?await prepareResidentTravelVariants(world,{mode:params.has('residentPrograms')?'programs':'full'}):null;
  resourceStage('after-resident-preparation');
  const farm={fixture:fixture??'new-village',historicalSource:fixture?'e461b550':null,plants:state.plants.length,livingPlants:state.plants.filter(p=>p.alive).length,workers:state.workers.length,structures:state.structures.length,result:state.result};
  const startEye=world.camera.position.clone(),startTarget=world.controls.target.clone();
