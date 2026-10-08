@@ -56,3 +56,8 @@ Unprobed first-use A1/B1/B2/A2 contexts are89/90/93/94. Both arms use the identi
 The targeted maize CPU render stall is smaller in both B arms, with reference drift22.6ms. These are two observations per arm, CPU wall times and RAF callback intervals; no timer-query GPU duration or presented-frame measurement was taken. The other crop's first atlas upload remains costly. B2 still has a116.4ms loading interval. Total initialization shows drift and cannot establish a causal loading improvement or close global fluency acceptance. No candidate has been promoted into production.
 
 Reverse reports: `maize-residency-candidate-ba-6ca1ef0e.json`, `maize-residency-control-ba-6ca1ef0e.json`, `maize-first-use-candidate-ba-6ca1ef0e.json`, `maize-first-use-control-ba-6ca1ef0e.json`. Existing negative/default evidence and initial AB reports remain intact. Focused crop visual QA, dense/cancel/repeated owner checks, broader profiles, final pipeline performance and physical-memory scope remain open.
+
+
+## Focus-fixture negative control (95)
+
+The first native focus attempt on fixture fd6e9500 failed because the QA camera filter incorrectly assumed transaction IDs were plant entity IDs. Game.plant correctly creates plant-N entities independently. Loading, paid commands and first-use windows completed; only the QA focus reported an error. The raw report maize-focus-negative-fd6e9500.json is retained, with explicit disposal/context loss and tab closure. The fixture now records entity IDs from the actual plants appended by the paid command and uses only those for visual focus, including dense saves. No production or gameplay change was required. Native rerun remains required.
