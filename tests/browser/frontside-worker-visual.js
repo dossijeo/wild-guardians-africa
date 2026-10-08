@@ -48,6 +48,7 @@ async function campaign(){
  const controlDiagnosis=options.has('controlDiagnosis');if(controlDiagnosis&&!sourceTwin)throw Error('Source-only diagnosis requires sourceTwin');
  if(options.has('sourceStateAudit')&&!controlDiagnosis)throw Error('Draw state audit is source-only and cannot participate in candidate acceptance');
  const sourceGpuInputs=options.has('sourceGpuInputs');if(sourceGpuInputs&&(!sourceTwin||!controlDiagnosis||!options.has('sourceStateAudit')||!noShadows||options.get('limit')!=='1'))throw Error('GPU input diagnostic requires source-only noShadows state audit limit1');
+ const sourceColorTexels=options.has('sourceColorTexels');if(sourceColorTexels&&!sourceGpuInputs)throw Error('Color texel probe requires complete source-only GPU input diagnostic; no candidate acceptance');
  const clipFilter=options.get('clip');
  const caseOffset=Number(options.get('caseOffset')??0);if(!Number.isInteger(caseOffset)||caseOffset<0)throw Error('Invalid caseOffset');
  const withheldVersion=options.has('withheldV6')?6:options.has('withheldV5')?5:options.has('withheldV4')?4:options.has('withheldV3')?3:options.has('withheldV2')?2:1;
@@ -131,7 +132,8 @@ async function campaign(){
  report.shadowSide=closedSubset?`Five selected rigid meshes shadow${frontShadow?'Front':'Double'}; nonselected accessories original DoubleSide; body original default shadowSide`:sourceTwin||sourceRepackControl||crateDegenerate?'All original shadowSide values/defaults retained':frontShadow?'Originally DoubleSide accessories shadowFront; original body default shadowSide retained':'Originally DoubleSide accessories shadowDouble color isolation; original body default shadowSide retained';
  if(closedViews)report.independentProfile=closedViews;
  if(closedSubset)report.selectedPartCoverage=[];
- const sourceDrawAudit=options.has('sourceStateAudit')?installSourceDrawAudit(renderer,rigs[0].model,'SOURCE_ONLY',sourceGpuInputs):null;
+ const sourceDrawAudit=options.has('sourceStateAudit')?installSourceDrawAudit(renderer,rigs[0].model,'SOURCE_ONLY',sourceGpuInputs,sourceColorTexels):null;
+ report.sourceColorTexels=sourceColorTexels;if(sourceColorTexels)report.colorTexelProbeMeaning='SourceMesh0 bound color2D read-only attachments/mips only, dimensions from source CPU metadata and actual texture identity match. Unsupported/partial/depth results are not equality. SameFramebuffer and30 source repeats retained; source-only instrument diagnostic, no candidate/performance/causal approval.';
  if(noShadows)report.shadowSide='No shadow draws or native shadow sampling; source-only exclusion is diagnostic, not shadow acceptance';
  let failed=false;
  report.caseOffset=caseOffset;let campaignIndex=0;
