@@ -1,0 +1,118 @@
+{
+  "status": "TARGET_SOURCE_RUNTIME_BITS_VERIFIED_NOT_VISUAL_GPU_APPROVAL",
+  "mesh": "maiz_05_maduro",
+  "source": "assets/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+  "runtime": "assets/web/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+  "sourceSha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+  "runtimeSha256": "617568fc66595c635739ff83bc0256535a72fdf7bfcb016dc68a7f7f1e1a8a52",
+  "runtimeBytes": 13626668,
+  "codec": "EXT_meshopt_compression (v0, lossless, no reorder)",
+  "accessors": [
+    {
+      "name": "POSITION",
+      "count": 8983,
+      "type": "VEC3",
+      "componentType": 5126,
+      "normalized": false,
+      "bytes": 107796,
+      "sourceSha256": "7eb4b98795caf6055866bbf89a1141f21a2f3c08ddb02ac7e20c5ca2b377275e",
+      "runtimeDecodedSha256": "7eb4b98795caf6055866bbf89a1141f21a2f3c08ddb02ac7e20c5ca2b377275e",
+      "sourceStorage": {
+        "bufferView": 19,
+        "byteStride": 12,
+        "accessorByteOffset": 0,
+        "decodedViewBytes": 107796,
+        "meshopt": false
+      },
+      "runtimeStorage": {
+        "bufferView": 19,
+        "byteStride": 12,
+        "accessorByteOffset": 0,
+        "decodedViewBytes": 107796,
+        "meshopt": true
+      },
+      "bitExact": true
+    },
+    {
+      "name": "NORMAL",
+      "count": 8983,
+      "type": "VEC3",
+      "componentType": 5126,
+      "normalized": false,
+      "bytes": 107796,
+      "sourceSha256": "ffc0862522bbd760ea6e1e27feed0f12db38e742afa68d4600e46cc874e99c23",
+      "runtimeDecodedSha256": "ffc0862522bbd760ea6e1e27feed0f12db38e742afa68d4600e46cc874e99c23",
+      "sourceStorage": {
+        "bufferView": 20,
+        "byteStride": 12,
+        "accessorByteOffset": 0,
+        "decodedViewBytes": 107796,
+        "meshopt": false
+      },
+      "runtimeStorage": {
+        "bufferView": 20,
+        "byteStride": 12,
+        "accessorByteOffset": 0,
+        "decodedViewBytes": 107796,
+        "meshopt": true
+      },
+      "bitExact": true
+    },
+    {
+      "name": "TEXCOORD_0",
+      "count": 8983,
+      "type": "VEC2",
+      "componentType": 5126,
+      "normalized": false,
+      "bytes": 71864,
+      "sourceSha256": "d9de707698f30b03bbba4ec97a644c4f9d8012bdd1fc6920fb560b5c58ad166f",
+      "runtimeDecodedSha256": "d9de707698f30b03bbba4ec97a644c4f9d8012bdd1fc6920fb560b5c58ad166f",
+      "sourceStorage": {
+        "bufferView": 21,
+        "byteStride": 8,
+        "accessorByteOffset": 0,
+        "decodedViewBytes": 71864,
+        "meshopt": false
+      },
+      "runtimeStorage": {
+        "bufferView": 21,
+        "byteStride": 8,
+        "accessorByteOffset": 0,
+        "decodedViewBytes": 71864,
+        "meshopt": true
+      },
+      "bitExact": true
+    },
+    {
+      "name": "indices",
+      "count": 14805,
+      "type": "SCALAR",
+      "componentType": 5123,
+      "normalized": false,
+      "bytes": 29610,
+      "sourceSha256": "45074d81661883b77a1fcd3f3f85a33b35ef8f923ffbf19b20b1b1fb603ab966",
+      "runtimeDecodedSha256": "45074d81661883b77a1fcd3f3f85a33b35ef8f923ffbf19b20b1b1fb603ab966",
+      "sourceStorage": {
+        "bufferView": 22,
+        "byteStride": 2,
+        "accessorByteOffset": 0,
+        "decodedViewBytes": 29610,
+        "meshopt": false
+      },
+      "runtimeStorage": {
+        "bufferView": 22,
+        "byteStride": 2,
+        "accessorByteOffset": 0,
+        "decodedViewBytes": 29610,
+        "meshopt": true
+      },
+      "bitExact": true
+    }
+  ],
+  "limitations": [
+    "URL basename is original source hash, not compressed runtime byte hash. Assets.model resolves original URL to web counterpart.",
+    "Only target PN/UV/index accessors decoded and compared; no statement about every state/bridge, GPU texels, skin/animations or runtime rendering follows.",
+    "Web atlas images use the established web compression recipes, not source image byte equality; all pilot arms borrow the same original runtime maps.",
+    "No source or runtime model written, no browser/driver/quality/cost measurement."
+  ]
+}
