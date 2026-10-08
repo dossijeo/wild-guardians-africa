@@ -4,7 +4,6 @@ import {createReadStream} from 'node:fs';
 import {stat} from 'node:fs/promises';
 import path from 'node:path';
 import {setTimeout as delay} from 'node:timers/promises';
-import {once} from 'node:events';
 import {fileURLToPath} from 'node:url';
 
 export function rewriteLoadingQaAssetUrl(code){
@@ -35,7 +34,7 @@ export async function startLoadingTransferServer({root=process.cwd(),port=5293,s
    res.setHeader('Content-Type',mime[path.extname(asset.file)]??'application/octet-stream');res.setHeader('Content-Length',metadata.size);res.setHeader('Cache-Control','public, max-age=31536000, immutable');res.setHeader('Timing-Allow-Origin','*');
    const input=createReadStream(asset.file,{highWaterMark:65536});let complete=false;
    res.once('close',()=>{input.destroy();if(!complete)group.cancelled++;});
-   try{for await(const chunk of input){if(asset.slow)await delay(chunk.byteLength/slowBytesPerSecond*1000);if(res.destroyed)break;group.bytes+=chunk.byteLength;if(!res.write(chunk))await once(res,'drain');}if(!res.destroyed){complete=true;group.completed++;res.end();}}
+   try{for await(const chunk of input){if(asset.slow)await delay(chunk.byteLength/slowBytesPerSecond*1000);if(res.destroyed)break;group.bytes+=chunk.byteLength;if(!res.write(chunk))await new Promise(resolve=>{const finish=()=>{for(const event of ['drain','close','error'])res.off(event,finish);resolve();};for(const event of ['drain','close','error'])res.once(event,finish);});}if(!res.destroyed){complete=true;group.completed++;res.end();}}
    catch(error){if(!res.destroyed)res.destroy(error);}
   });}
  }]});

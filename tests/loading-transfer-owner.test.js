@@ -25,6 +25,6 @@ test('completed DOM assets are observed without requests; explicit transfers are
 });
 test('ResourceTiming received before parse is retained even when the native resource buffer loses it',()=>{
  const owner=new LoadingTransferOwner(),token=beginAssetTransfer('/delayed.glb','gltf'),timing={name:token.url,initiatorType:'fetch',startTime:token.start,responseEnd:performance.now(),transferSize:0,encodedBodySize:80,decodedBodySize:80};
- owner.resource(timing);assert.equal(owner.downloads.snapshot().pending,1);assert.equal(owner.timings.size,1);
+ owner.resource(timing);assert.equal(owner.downloads.snapshot().pending,1);assert.equal(owner.timings.size,1);assert.equal(owner.downloads.snapshot().cacheHits,1);assert.equal(owner.downloads.snapshot().estimatedMs,0);assert.equal(owner.downloads.snapshot().networkPending,0);
  finishAssetTransfer(token);assert.equal(owner.downloads.snapshot().pending,0);assert.equal(owner.downloads.snapshot().cacheHits,1);assert.equal(owner.downloads.snapshot().estimatedMs,0);assert.equal(owner.timings.size,0);owner.dispose();
 });

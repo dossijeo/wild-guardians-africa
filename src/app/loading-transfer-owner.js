@@ -23,7 +23,7 @@ export class LoadingTransferOwner {
   const existing=[...this.downloads.requests.values()].find(request=>request.url===entry.name&&entry.startTime>=request.start-5&&entry.startTime<=(request.end??performance.now()));
   // An observer can receive completion before GLTF parse/onLoad resolves. Its
   // entry may no longer fit the browser's finite getEntriesByName buffer later.
-  if(existing){if(existing.end!==null)this.downloads.applyTiming(existing.id,entry);else this.timings.set(existing.id,entry);return;}
+  if(existing){if(existing.end!==null)this.downloads.applyTiming(existing.id,entry);else {this.timings.set(existing.id,entry);this.downloads.applyTiming(existing.id,entry);}return;}
   if(!['img','link','css'].includes(entry.initiatorType)||!/(?:\/assets\/|\/content\/)/.test(new URL(entry.name).pathname))return;
   const id=this.downloads.begin(entry.name,{kind:'dom-resource',start:entry.startTime});this.downloads.finish(id,{timing:entry});
  }
