@@ -1,5 +1,12 @@
 // QA only: attribute group churn without changing capacity, packing or drawing.
 // Instance-array bytes are CPU backing-store sizes, not physical GPU memory.
+export function assetGroupDrawSnapshot(groups){
+ return [['color',groups.colors],['shadow',groups.shadows]].flatMap(([pass,cache])=>[...cache].sort(([a],[b])=>a.localeCompare(b)).map(([key,g])=>{
+  const m=g.mesh,v=m.geometry.attributes.nativeVisibility;
+  return {pass,key,capacity:g.capacity,count:m.count,matrices:Array.from(m.instanceMatrix.array.subarray(0,m.count*16)),coverage:v?Array.from(v.array.subarray(0,m.count)):null,castShadow:m.castShadow,receiveShadow:m.receiveShadow,indexCount:m.geometry.index?.count??null,attributes:Object.fromEntries(Object.entries(m.geometry.attributes).filter(([name])=>name!=='nativeVisibility').map(([name,a])=>[name,{count:a.count,itemSize:a.itemSize,normalized:a.normalized,type:a.array.constructor.name}]))};
+ }));
+}
+
 export class AssetGroupAllocations {
  constructor(groups){
   this.groups=groups;this.frame=null;this.hooks=[];const thisProbe=this;

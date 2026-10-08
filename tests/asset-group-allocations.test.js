@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {AssetGroupAllocations} from './browser/asset-group-allocations.js';
+import {AssetGroupAllocations,assetGroupDrawSnapshot} from './browser/asset-group-allocations.js';
 
 test('group probe preserves receiver/results and attributes capacity replacement, reuse and retirement',()=>{
  const cache=new Map(),mesh=()=>({count:3,instanceMatrix:{array:new Float32Array(64)},geometry:{attributes:{nativeVisibility:{array:new Float32Array(4)}}}});
@@ -20,4 +20,12 @@ test('failed prepare reports failure without replacing errors or restoring over 
 test('partial installation failure restores inherited prepare ownership',()=>{
  const original=()=>{},groups=Object.create({prepare:original});Object.defineProperty(groups,'retire',{value:()=>{},writable:false});
  assert.throws(()=>new AssetGroupAllocations(groups),TypeError);assert.equal(Object.hasOwn(groups,'prepare'),false);assert.equal(groups.prepare,original);
+});
+
+test('draw snapshot retains exact submitted prefixes and ignores unused instance backing storage',()=>{
+ const matrix=new Float32Array(32),visibility=new Float32Array([.4,.7]);matrix.fill(9,16);
+ const geometry={index:{count:3},attributes:{position:{array:new Float32Array(9),count:3,itemSize:3,normalized:false},nativeVisibility:{array:visibility}}};
+ const mesh={count:1,instanceMatrix:{array:matrix},castShadow:false,receiveShadow:true,geometry};
+ const groups={colors:new Map([['x',{capacity:2,mesh}]]),shadows:new Map()};
+ const snapshot=assetGroupDrawSnapshot(groups);assert.equal(snapshot[0].matrices.length,16);assert.deepEqual(snapshot[0].coverage,[Math.fround(.4)]);matrix.fill(11,16);visibility[1]=0;assert.deepEqual(assetGroupDrawSnapshot(groups),snapshot);visibility[0]=0;assert.notDeepEqual(assetGroupDrawSnapshot(groups),snapshot);
 });
