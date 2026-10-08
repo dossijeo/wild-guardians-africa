@@ -1,0 +1,97 @@
+{
+  "status": "WORLD_MAIZE_QA_NOT_APPROVED",
+  "worldMaizeQa": true,
+  "visualAcceptancePolicyVersion": 3,
+  "viewProfile": "WORLD_MAIZE_REVERSIBLE_V1",
+  "qaFlag": "off",
+  "qaDepth": "off",
+  "candidateBinarySha256": "3eba51ae256663c20bdfcfc4f9e0133a304e8a6dfa25b072a07154b82f0ee65c",
+  "candidateBinaryBytes": 253326,
+  "sourceSha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+  "archiveSha256": "4d6d5dd729211e9ed5e429915ec81960da5e6b2197d1c8982a3dbb6a92893065",
+  "fixtureStateSha256": "3b685ffc0bb0aae1c8e9381b84ab8278340089d44aa25cbaea5feaf5f8715270",
+  "biome": "gran-rio",
+  "culture": "suajili",
+  "quality": "media",
+  "visualReview": {
+    "status": "HUMAN_REVIEW_PENDING",
+    "reviewer": null,
+    "decision": null
+  },
+  "actions": [
+    {
+      "event": "loaded",
+      "candidate": false,
+      "adapter": null
+    },
+    {
+      "event": "qa-lighting-time",
+      "time": 150
+    },
+    {
+      "event": "qa-maize-native-focus",
+      "plantId": "plant-355210",
+      "point": {
+        "x": 63,
+        "z": 7.5,
+        "distance": 16,
+        "theta": 0,
+        "phi": 1.16
+      },
+      "diagnosticCloseup": false
+    },
+    {
+      "event": "real-growth-spell-on-qa-copy",
+      "plantId": "plant-355210",
+      "spellId": "spell-376431",
+      "kind": "growth",
+      "x": 63,
+      "z": 7.5,
+      "presentationSeekSeconds": 1,
+      "elapsedSimulationAdvanced": false
+    },
+    {
+      "event": "final",
+      "candidate": false,
+      "adapter": null
+    }
+  ],
+  "captures": [],
+  "errors": [
+    "ReferenceError: Cannot access 'target' before initialization"
+  ],
+  "limitations": [
+    "Actual production WorldScene and archived farm; paused rendering, no automatic simulation advancement.",
+    "Memory SaveRepository exercises real serialization/recovery without user localStorage/IndexedDB writes.",
+    "Harvest button calls real postgame/resume/HarvestRequested APIs on a copy with peaceful time150. Live paused state is unchanged; completed worker harvest/delivery is unproven.",
+    "Night toggle changes fixture presentation time; no actual night campaign is simulated.",
+    "qaDepth=front explicitly enables the grouped world-depth QA option for both arms and authored Front growth depth only for the candidate. Source shadow depth remains Double; unrelated grouped specializations may also change.",
+    "VFX button creates a real growth spell on a resumed postgame copy, then freezes its presentation at one second and pauses it. No elapsed simulation or user save is advanced.",
+    "Derived mature maize only; original growth bridges and all other crops/workers remain source. Double shadow isolation; no timing or category approval."
+  ],
+  "initialCounts": {
+    "alive": 1257,
+    "maize": 152,
+    "matureMaize": 18
+  },
+  "contextAttributes": {
+    "alpha": true,
+    "antialias": true,
+    "depth": true,
+    "desynchronized": false,
+    "failIfMajorPerformanceCaveat": false,
+    "powerPreference": "default",
+    "premultipliedAlpha": true,
+    "preserveDrawingBuffer": false,
+    "stencil": false,
+    "xrCompatible": false
+  },
+  "cleanup": {
+    "closed": true,
+    "contextLost": true,
+    "errors": [
+      "ReferenceError: Cannot access 'target' before initialization"
+    ]
+  },
+  "capture": "maize-world-qa-last-frame.png"
+}

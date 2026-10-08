@@ -1,0 +1,13 @@
+import fs from 'node:fs';import crypto from 'node:crypto';import assert from 'node:assert/strict';import {execFileSync} from 'node:child_process';
+const folder='docs/qa/frontside-model-pilot/maize-world/native-vfx-negative-867/',manifest=JSON.parse(fs.readFileSync(folder+'manifest.json'));
+const sha=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
+for(const [name,hash] of Object.entries(manifest.files))assert.equal(sha(fs.readFileSync(folder+name)),hash);
+assert.equal(sha(execFileSync('git',['show',manifest.sourceHead+':tests/browser/frontside-maize-world.js'])),manifest.scriptSha256);
+assert.equal(sha(execFileSync('git',['show',manifest.sourceHead+':tools/lib/frontside-world-maize-target.mjs'])),manifest.targetHelperSha256);
+const report=JSON.parse(fs.readFileSync(folder+'report.json'));
+assert.equal(report.captures.length,0);assert.equal(report.visualReview.status,'HUMAN_REVIEW_PENDING');
+assert.ok(report.errors.some(e=>e.includes("Cannot access 'target' before initialization")));
+assert.equal(report.cleanup.closed,true);assert.equal(report.cleanup.contextLost,true);
+const focus=report.actions.find(a=>a.event==='qa-maize-native-focus'),vfx=report.actions.find(a=>a.event==='real-growth-spell-on-qa-copy');
+assert.ok(focus&&vfx);assert.equal(focus.plantId,vfx.plantId);
+console.log(JSON.stringify({status:'ARCHIVED_INSTRUMENT_NEGATIVE_VERIFIED_NOT_MODEL_APPROVAL',sourceHead:manifest.sourceHead,pairedCaptures:0,focusedSpellTarget:focus.plantId,cleanup:report.cleanup}));
