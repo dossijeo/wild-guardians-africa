@@ -25,7 +25,7 @@ const summarize=values=>{
  const sorted=values.slice().sort((a,b)=>a-b),q=p=>sorted.length?sorted[Math.ceil(sorted.length*p)-1]:null;
  return {count:values.length,p50:q(.5),p95:q(.95),p99:q(.99),max:sorted.at(-1)??null,over33:values.filter(v=>v>1000/30).length,over50:values.filter(v=>v>50).length,over100:values.filter(v=>v>100).length};
 };
-const dispose=()=>{if(dead)return;dead=true;running=false;cancelAnimationFrame(raf);observer?.disconnect();timer?.dispose();try{shadowPrimer?.dispose();world?.dispose();resourceStage('after-world-dispose');}finally{resources?.dispose();}document.querySelector('#run').disabled=true;output({...report,resourceStages,disposed:true,errors});};
+const dispose=()=>{if(dead)return;dead=true;running=false;cancelAnimationFrame(raf);observer?.disconnect();timer?.dispose();const context=world?.renderer.getContext();try{shadowPrimer?.dispose();world?.dispose();resourceStage('after-world-dispose');}finally{resources?.dispose();}document.querySelector('#run').disabled=true;output({...report,resourceStages,disposed:true,contextLost:context?.isContextLost()??null,errors});};
 addEventListener('pagehide',dispose,{once:true});
 addEventListener('error',e=>errors.push(String(e.message)));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
 try{
