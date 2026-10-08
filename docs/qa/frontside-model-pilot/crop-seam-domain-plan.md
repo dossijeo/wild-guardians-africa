@@ -1,0 +1,11 @@
+# Boundary-loop seam experiment: prepared
+
+`frontside_chart_seams.py` connects boundary loops using deterministic shortest edge paths of source geometry. It supports only verified genus-zero connected source charts. Boundary graph incidence, Euler characteristic and the cut topology are checked. Closed charts and handles remain unsupported. Paths cut adjacency only: duplicated corner fans keep identical positions and every original face/corner identity. No face is added or removed, no cap is generated, and authored UVs/normals are separate immutable fields.
+
+The base loop is chosen by largest source perimeter, with stable vertex-ID ties. At each step, a multi-source shortest path connects the reached cut graph to another boundary loop. This is a deterministic greedy construction, not proof of globally minimal seams. Each cut edge must have two incident source triangles. After splitting fans, the result must have Euler characteristic 1, regular boundary degree and no non-manifold edge. The independent domain solver must still verify positive Float32 areas.
+
+A lightweight synthetic annulus check passed: eight source triangles and eight vertices became eight unchanged triangles and ten coincident seam-fan vertices; two boundary loops became a regular disk boundary with Euler characteristic 1. This verifies the intended topology operation in that case, not the crop model or field shader.
+
+`frontside_blender_seam_domain_audit.py` is prepared and syntax checked, **not executed** at this revision. It preserves the previous domain/fold report and generates separate source-domain output. The larger charts add domain solves; duration is not assumed to match the previous 9.47-second audit. Coordinate the next CPU interval and retain a real terminal/handle result. No new coarse candidate, GLB or source-model modification exists yet.
+
+Next steps after the source-domain audit are separate QEM generation with hard seam/boundary and parameter-orientation constraints, resource accounting for the complete representation, and original-versus-derived DoubleSide comparison. If a chart remains unsupported, keep an explicit source fallback or investigate another geometric representation; never hide it from acceptance. All visual, growth/bridge, material/UV, shadow, byte/memory and net GPU gates remain.
