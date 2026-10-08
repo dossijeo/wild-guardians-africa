@@ -33,3 +33,11 @@ all fields there were identical. The branch author must distinguish original
 source provenance from runtime transport provenance and verify the mapping,
 then repeat this preflight before another measured render. No visual gate has
 been relaxed and no model accepted. Tab 827 closed without a GPU context.
+
+Corrected preflight 3c24cef9 (tab 830) passes in the browser: original and web
+runtime identities/hashes are explicitly recorded and HTTP export returns 200
+with artifactsWritten false. gpuContextCreated false/gpuDraws zero; tab closed.
+Status, screenshot and hashes are preserved. This validates the instrument's
+source identity contract, not visual fidelity or any repaired model. The author
+can release this fixture freeze and reevaluate direct candidates under the new
+perceptual visual acceptance policy recorded in frontside-model-repair-post-jam.
