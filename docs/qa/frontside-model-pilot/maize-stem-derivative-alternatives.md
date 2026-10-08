@@ -40,3 +40,25 @@ maize-stem-constrained-simplification-diagnostic.json. Old leaf decimation and
 held-out bridge-hole negatives remain intact; this proposal does not approve or
 reinterpret them. New topology requires rebuilt labels/region/bridge contracts
 and continuous growth coverage, never reuse of old face identities as if unchanged.
+
+## Next native training quality screen, DoubleSide only
+
+http://localhost:5284/tests/browser/frontside-crop-visual.html?blenderStemReduction&limit=1&cpuCampaigns=43808%2F49032%2F41320%2F41304-active
+
+Frozen archive8ee78b05... is the .75 proposal. Four arms are originalDouble,
+indexedOriginalDouble, new stemDouble and the same new stem in two Double groups.
+All retain original textures, roughness/normalScale, growth shader and AfricanToon/
+native shadows. NO FrontSide or reverse faces are drawn in this screen. Mature
+maize only, guided training az26.25/elev32.5/clock1.75/Sabana/day. Stop on invalid
+source control or first rejected geometry/local RGB gate. No threshold changes,
+no old withheld profiles reused. Archive POST/PNG before another run; the static
+four-arm image is retained in #view before releasing WebGL.
+
+Real-asset verifier frontside_derived_stem_verify.mjs checks4111unchanged soil/leaf
+faces P/N/UV bits and labels/face correspondence; rejects deliberately altered
+original UV and verifies source index unchanged. New forward geometry4729triangles;
+projected full stem bilateral5347triangles/318194bytes exactly matches receipt.
+The constructor can build all618reverse faces with shared attributes/three groups,
+but that path is NOT enabled by this initial Double quality URL. The new stem has
+derived face identities, never original source stem IDs. After any local training
+pass, independent all-angle/map/shadow/continuous-growth and GPU gates still remain.

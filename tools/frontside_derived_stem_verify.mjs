@@ -1,0 +1,20 @@
+// Real source-asset contract check for the disabled .75 stem training proposal.
+import {readFile} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {readGlb,writeGlb} from './glb-container.mjs';
+import {derivedStemGeometry} from './lib/frontside-derived-stem.mjs';
+const folder='docs/qa/frontside-model-pilot/',receipt=JSON.parse(await readFile(folder+'maize-blender-stem-reduction-diagnostic.json','utf8')),row=receipt.rows.find(r=>r.ratio===.75),sha=b=>createHash('sha256').update(b).digest('hex'),payloadBytes=await readFile(row.archive);
+if(sha(payloadBytes)!==row.archiveSha256)throw Error('Archive SHA mismatch');
+const payload=JSON.parse(payloadBytes),sourceReceipt=JSON.parse(await readFile(folder+'selective-candidate-receipts.json','utf8')).find(r=>r.category==='crops'),raw=await readFile('public'+sourceReceipt.source);
+if(sha(raw)!==receipt.sourceSha256)throw Error('Original SHA mismatch');
+const {json,bin}=readGlb(raw);
+function strip(o){if(!o||typeof o!=='object')return;for(const k of Object.keys(o))if(k.endsWith('Texture'))delete o[k];else strip(o[k]);}strip(json.materials);delete json.images;delete json.textures;
+const gltf=await new GLTFLoader().parseAsync(writeGlb(json,bin).buffer,''),mesh=gltf.scene.getObjectByName(payload.mesh),bridges=JSON.parse(await readFile('public/content/crop-bridges.json','utf8')),labels=bridges.models[mesh.userData.cropIndex*5+mesh.userData.stage-1].faceLabels;
+const sourceIndexBefore=sha(new Uint8Array(mesh.geometry.index.array.buffer)),forward=derivedStemGeometry(mesh.geometry,labels,payload),bilateral=derivedStemGeometry(mesh.geometry,labels,payload,true);
+if(forward.geometry.index.count/3!==row.proposedBilateralTriangles-row.derivedStemTriangles||bilateral.geometry.index.count/3!==row.proposedBilateralTriangles)throw Error('Triangle receipt mismatch');
+if(sha(new Uint8Array(mesh.geometry.index.array.buffer))!==sourceIndexBefore)throw Error('Original index changed');
+const size=g=>Object.values(g.attributes).reduce((sum,a)=>sum+a.array.byteLength,0)+g.index.array.byteLength;
+if(size(bilateral.geometry)!==row.proposedSharedStateBytes)throw Error('Buffer receipt mismatch');
+const corrupted=structuredClone(payload);corrupted.corners[0][0][6]+=.125;let rejected=false;try{derivedStemGeometry(mesh.geometry,labels,corrupted);}catch{rejected=true;}if(!rejected)throw Error('Changed original UV was not rejected');
+console.log(JSON.stringify({status:'OFFLINE_DERIVED_STEM_CONTRACT_ONLY_NOT_APPROVED',mesh:mesh.name,unchangedOriginalFaces:payload.originalUnchangedFaceIds.length,forwardTriangles:forward.geometry.index.count/3,bilateralTriangles:bilateral.geometry.index.count/3,sharedStateBytes:size(bilateral.geometry),groups:bilateral.geometry.groups,modifiedOriginalUvRejected:rejected,sourceIndexUnchanged:true,limitations:['No real textures rendered, silhouette/map/normal/shadow quality untested.', 'Native state only; continuous bridges/category/web/GPU costs remain pending.']}));

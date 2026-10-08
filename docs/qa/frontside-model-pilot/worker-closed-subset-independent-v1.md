@@ -112,3 +112,12 @@ node tools/frontside_source_draw_compare.mjs PATH_TO_REPORT; draw records are
 compared by ordinal against the reference and all differing fields reported.
 The quality/control gates remain unchanged and V1 remains invalid regardless
 of this diagnostic result.
+
+Native c340c8cf audit is now archived as worker-source-state-audit-v1.json/PNG,
+analysis/browser/console. One Mesh0 draw/program per frame; all30repeat snapshots
+match captured GL program/uniforms/attributes/render state/matrices/texture
+identities and bone/attribute fingerprints. Yet source RGB still alternates0/21
+changed bytes/max59, alpha unchanged. This does not inspect actual GPU texture
+texels, depth texture contents or compiled driver arithmetic; no causal exclusion
+beyond the captured fields is claimed. V1 remains invalid with zero compared
+samples. Root preserved an independent compressed copy/verifier in main4e1ac82d.
