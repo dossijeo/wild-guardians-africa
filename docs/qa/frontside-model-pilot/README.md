@@ -869,3 +869,50 @@ record HEADddb06093 plus frozen uncommitted derived-fixture additions, not a
 false claim that HEAD alone reproduces the capture. CPU44164/49032 active
 were recorded by root; contexts/tab726 were disposed/closed afterwards.
 Subsequent UI labels now use the actual selected arm names for each profile.
+
+Root's Blender half-leaf screen is also a guided REJECTION, archived as
+maize-blender-half-leaves-guided-* with HEAD90cc24d8 and pre-draw source hashes.
+IndexedDouble is bit-exact. ReducedDouble fails before any sidedness change:
+alphaIoU0.9525255, missing1.6579%, added3.2436%, linearRGBMAE0.03347,
+maxTileMAE0.38134. Geometric-reverse Front also fails (IoU0.9521826,
+RGBMAE0.03408). Thus this decimate0.5 derivative loses required appearance;
+the independent +25.10% state-byte failure remains. No benchmark or expansion
+to other crops is justified. Root disposed the context and closed the tab.
+
+A separate offline constrained simplification keeps original vertex lanes,
+locks each leaf's borders, and weights normals1 and UV100 with absolute
+appearance metric1e-4. This metric is an approximate quadric proxy, not a
+maximum silhouette, map or UV bound. The requested50% target produces NO
+collapse in any of seven leaves. Forward triangles remain4935, and reversing
+all leaves would yield7944 (+60.97%): resource gate FAIL. No asset/export,
+bridge mapping, visual acceptance or GPU benefit follows. Exact source lanes
+are verified unchanged; approximate ancestry in a changed triangle would be
+priority guidance only, never an original face or bridge correspondence.
+
+The prospective QA-only preserveDoubleShader option isolates another variable
+in sidePartition: core material remains FrontSide for GL culling while an
+explicit DOUBLE_SIDED define retains the source GLSL normal/TBN path. Three
+r180 normally changes both that define and culling when side changes. The
+previous partial-side color failure is not reinterpreted; this separate screen
+tests whether it persists with that shader path retained. Shadows remain
+DoubleSide, geometry unchanged, and all original quality gates apply. This
+diagnostic is neither geometric repair nor a claim of runtime GPU improvement.
+
+Root's Badge5 Water screen at HEAD90cc24d8 is archived as
+worker-badge-water-no-coverage*: fraction0.40625, azimuth54.375/elevation37.5,
+Sabana/day with CPU44164/49032 active. AlphaIoU1, RGBMAE0.000003055 and
+tileMAE0.001047 pass this general screen, but normalRepairCoverage records
+ZERO affected visible pixels and empty face lists for BOTH source and
+candidate. It establishes no visual validation of repaired Badge5 normals.
+Different poses/views must first demonstrate affected-face coverage; full
+12-clip/map/shadow and GPU gates remain pending. Root closed/disposed the tab.
+
+CPU centroid-ray guidance now inspects all16 existing Water V6 views using
+original rig/clip/index/position lanes and current tool visibility. Textures
+are omitted only from an in-memory GLTF clone; no renderer or export is used.
+The highest estimated Badge5 area is fraction0.90625/elevation67.5/
+azimuth234.375 (caseOffset14), with15 affected-face centroids unoccluded and
+about6.18 projected square pixels total. Many triangles are subpixel. This is
+training guidance only: raster samples, WebGL runtime and normal/map quality
+still require native affected-face ID coverage. The previously captured
+zero-coverage view remains unchanged and is never counted as repair approval.
