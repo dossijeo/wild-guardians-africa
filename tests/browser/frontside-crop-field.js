@@ -1,3 +1,4 @@
+import {attachHumanVisualReview} from '../../tools/lib/frontside-human-visual-review.mjs';
 import * as THREE from 'three';
 import {Assets} from '../../src/rendering/assets.js';
 import {createCropBatch} from '../../src/rendering/crop-batch.js';
@@ -59,14 +60,15 @@ async function run(){
  const pixels=[],envelope=new Float64Array(size*size*3);let invalid=false;
  for(let arm=0;arm<4;arm++){
   rigs.forEach((r,i)=>r.group.visible=i===arm);renderer.render(scene,camera);const frame=new Uint8Array(size*size*4);gl.readPixels(0,0,size,size,gl.RGBA,gl.UNSIGNED_BYTE,frame);pixels.push(frame);report.drawInfo.push({...renderer.info.render});
-  if(arm===0){let changedAlpha=0;for(let j=0;j<3;j++){renderer.render(scene,camera);const repeat=new Uint8Array(frame.length);gl.readPixels(0,0,size,size,gl.RGBA,gl.UNSIGNED_BYTE,repeat);const m=accumulateControlEnvelope(envelope,frame,repeat,linear);report.controls.push(m);changedAlpha+=m.alphaDifferences;}report.control=controlEnvelopeMetrics(envelope,frame,size);if(changedAlpha||!report.control.passes){invalid=true;report.invalidControl=true;break;}}
-  else{const comparison={arm,...metrics(pixels[0],frame,envelope)};report.comparisons.push(comparison);if(!comparison.passes)break;}
+  if(arm===0){let changedAlpha=0;for(let j=0;j<3;j++){renderer.render(scene,camera);const repeat=new Uint8Array(frame.length);gl.readPixels(0,0,size,size,gl.RGBA,gl.UNSIGNED_BYTE,repeat);const m=accumulateControlEnvelope(envelope,frame,repeat,linear);report.controls.push(m);changedAlpha+=m.alphaDifferences;}report.control=controlEnvelopeMetrics(envelope,frame,size);if(changedAlpha||!report.control.passes){invalid=true;report.sourceRepeatDiagnostic=true;}}
+  else{const comparison={arm,...metrics(pixels[0],frame,envelope)};report.comparisons.push(comparison);}
  }
- const canvas=document.createElement('canvas');canvas.width=size*pixels.length;canvas.height=size;const ctx=canvas.getContext('2d');pixels.forEach((frame,arm)=>{const image=ctx.createImageData(size,size);for(let y=0;y<size;y++)image.data.set(frame.subarray((size-1-y)*size*4,(size-y)*size*4),y*size*4);ctx.putImageData(image,arm*size,0);});report.capturePng=canvas.toDataURL('image/png');report.invalidControl=invalid;
+ const canvas=document.createElement('canvas');canvas.width=size*pixels.length;canvas.height=size;const ctx=canvas.getContext('2d');pixels.forEach((frame,arm)=>{const image=ctx.createImageData(size,size);for(let y=0;y<size;y++)image.data.set(frame.subarray((size-1-y)*size*4,(size-y)*size*4),y*size*4);ctx.putImageData(image,arm*size,0);});report.capturePng=canvas.toDataURL('image/png');report.sourceRepeatDiagnostic=invalid;
  const retained=document.createElement('img');retained.src=report.capturePng;await retained.decode();document.querySelector('#view').replaceChildren(retained);
  scope.assertOpen();report.cleanup=scope.cleanup();report.contextLost=gl.isContextLost();
+ attachHumanVisualReview(report);
  const details=document.createElement('details'),summary=document.createElement('summary'),payload=document.createElement('pre');summary.textContent='Informe medido antes de POST — NOT APPROVED';const {capturePng,...visibleReport}=report;payload.textContent=JSON.stringify(visibleReport,null,2);details.append(summary,payload);document.querySelector('#view').after(details);
- const response=await fetch('/__frontside_report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)});if(!response.ok)throw Error(await response.text());status.textContent=JSON.stringify({controls:report.control,comparisons:report.comparisons,cleanup:report.cleanup,contextLost:report.contextLost},null,2)+'\nExportado. GPU liberada. NOT APPROVED.';
+ const response=await fetch('/__frontside_report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)});if(!response.ok)throw Error(await response.text());status.textContent=JSON.stringify({controls:report.control,comparisons:report.comparisons,cleanup:report.cleanup,contextLost:report.contextLost},null,2)+'\nExportado. GPU liberada. REVISIÓN HUMANA PENDIENTE.';
  }finally{lastCleanup=scope.cleanup();if(activeScope===scope)activeScope=null;}
 }
 document.querySelector('#stop').onclick=()=>{const cleanup=activeScope?.cleanup();status.textContent+='\nCancelado; recursos liberados '+JSON.stringify(cleanup);};

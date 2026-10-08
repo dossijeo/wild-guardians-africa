@@ -1,6 +1,7 @@
 # FrontSide model pilot — acceptance criteria declared before candidates
 
 Status: investigation only. No source asset or default rendering path is changed.
+Current acceptance: [visual review policy 3](visual-review-policy-v3.md), explicitly authorized by the user on 8 October 2026. The visual thresholds below are retained as historical diagnostic thresholds, not current automatic rejection criteria. Human inspection in real conditions decides visual acceptability; functionality, contracts, resources and measured net GPU benefit remain required. Earlier negative records are not automatically approved.
 Base: main 71c0fb13. The pilot covers all five maize and banana states and the
 youngMale complete action library. These exercise narrow/large leaf surfaces,
 region bridges, a skinned body and all task accessories. They do not constitute
@@ -25,7 +26,7 @@ Source hashes are recorded in source-audit.json. Originals stay untouched.
 must generate its own candidate URL/manifest; the stock mass compressor must
 not run on the production tree as an experiment.
 
-## Quantitative visual gate (all conditions, every sample)
+## Historical quantitative visual thresholds (now diagnostic)
 
 Capture at 1024×1024 with identical camera/renderer state and lossless RGBA.
 Use 16 azimuths at elevations 5°, 25°, 55°, 85° and -15° (interior/accessory

@@ -1,3 +1,4 @@
+import {attachHumanVisualReview} from '../../tools/lib/frontside-human-visual-review.mjs';
 import {captureNormalField,normalFieldMetrics,normalFieldByteStatistics} from '../../tools/lib/frontside-normal-field-diagnostic.mjs';
 import * as THREE from 'three';
 import {AfricanToon} from '../../src/rendering/african-toon.js';
@@ -181,10 +182,10 @@ async function campaign(){
    if(controlDiagnosis){if(sourceDrawAudit)report.sourceDrawAudit=sourceDrawAudit.finish();report.sourceOnlyDiagnosis={biome,night,clip:clipName,fraction,azimuth,elevation,withheldVersion,controls:originalControls,controlMetrics,alphaDifferences:controlAlphaDifferences,nominalRgbFaceProvenance:sourcePrimitiveIsolation||sourceBodyIsolation?null:mapMissingToSource(renderer,rig,camera,[pixels[0],worstSourceRepeat],size,'rgb'),meaning:'30 repeated original draws only; no candidate drawn or compared, no acceptance interpretation'};
     if(sourcePrimitiveIsolation||sourceBodyIsolation){const record=report[sourcePrimitiveIsolation?'sourcePrimitiveIsolation':'sourceBodyIsolation'];record.visibleSourcePixels=pixels[0].reduce((sum,v,i)=>sum+(i%4===3&&v>0),0);record.coverageWitness=record.visibleSourcePixels>0;restorePrimitiveIsolation();restoreSourceIsolation=null;record.drawRangeRestored=true;record.meshVisibilityRestored=true;}
     report.capturePng=comparisonCapture([pixels[0],worstSourceRepeat??pixels[0]],size);report.captureMeaning='Original first draw, worst source repeat, and amplified source-only difference. No candidate comparison.';
-    const response=await fetch('/__frontside_report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)});if(!response.ok)throw Error(await response.text());await retainComparison(report.capturePng,report.captureMeaning);release();registry.dispose();sourceAssets.disposeModels();sky.dispose();renderer.dispose();renderer.forceContextLoss();status.textContent='Diagnóstico fuente guardado: '+worstSourceBytes+' bytes cambiados máximo; GPU liberada. Sin comparación candidato.';return;}
+    const response=await fetch('/__frontside_report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(attachHumanVisualReview(report))});if(!response.ok)throw Error(await response.text());await retainComparison(report.capturePng,report.captureMeaning);release();registry.dispose();sourceAssets.disposeModels();sky.dispose();renderer.dispose();renderer.forceContextLoss();status.textContent='Diagnóstico fuente guardado: '+worstSourceBytes+' bytes cambiados máximo; GPU liberada. Sin comparación candidato.';return;}
    if(controlAlphaDifferences||!controlMetrics.passes||originalControls.some(c=>c.shadowDifferentBytes>0)){report.failed=true;report.invalidControl={biome,night,clip:clipName,fraction,azimuth,elevation,frontShadow,withheldVersion,controls:originalControls,controlMetrics,alphaDifferences:controlAlphaDifferences,reason:'Original color uncertainty budget or exact packed shadow control exceeded; affected comparison not interpreted'};
     if(options.has('mapControl'))report.invalidControl.lastRepeatNominalRgbFaceProvenance=mapMissingToSource(renderer,rig,camera,[pixels[0],lastSourceRepeat],size,'rgb');
-    await fetch('/__frontside_report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)});throw Error('Original control exceeds uncertainty budget; no threshold interpretation');}
+    report.sourceRepeatDiagnostic=report.invalidControl;delete report.invalidControl;report.sourceRepeatDiagnostic.reason='Historical source repeat budget exceeded; diagnostic only, candidate attribution requires caution.';}
    }
    }
   if(shadowPixels.length===2){let different=0,max=0,maxDepth=0,changedTexels=0;const changed=[];
@@ -205,16 +206,15 @@ async function campaign(){
   let nominalAccumulated=0,nominalP99=0;for(let i=0;i<nominalHist.length;i++){nominalAccumulated+=nominalHist[i];if(nominalAccumulated>=channels*.99){nominalP99=i/255;break;}}
   sample.nominalRgbMetrics={linearRgbMae:nominalError/Math.max(channels,1),p99Approx:nominalP99,maxError:nominalMaxError,maxTileMae:Math.max(...Array.from(nominalTileError,(v,i)=>tileChannels[i]?v/tileChannels[i]:0)),rgbOutlierRegions:regions(nominalRgbMask,size)};
   sample.toolStates=rigs.map(rig=>['Prop_WateringCan','Prop_FruitCrate','Prop_Hoe','Prop_HarvestSack'].map(name=>{const node=rig.model.getObjectByName(name);return{name,visible:node?.visible??null,scale:node?.scale.toArray()??null};}));
-  sample.passes=sample.alphaDistanceGate.passes&&sample.alphaIoU>=.9995&&sample.missingFraction<=.00025&&sample.addedFraction<=.0005&&sample.linearRgbMae<=.002&&sample.p99Approx<=.015&&sample.maxTileMae<=.01&&!sample.rgbOutlierRegions.some(r=>r.pixels>16)&&!sample.missingRegions.some(r=>r.pixels>4||r.diameterUpperBound>2);report.samples.push(sample);status.textContent=`${report.samples.length} muestras. ${clipName}/${fraction}, ${azimuth}Â°/${elevation}Â°: IoU${sample.alphaIoU.toFixed(6)}, MAE${sample.linearRgbMae.toFixed(6)} ${sample.passes?'pasa screen':'FALLA'}`;
+  sample.passes=sample.alphaDistanceGate.passes&&sample.alphaIoU>=.9995&&sample.missingFraction<=.00025&&sample.addedFraction<=.0005&&sample.linearRgbMae<=.002&&sample.p99Approx<=.015&&sample.maxTileMae<=.01&&!sample.rgbOutlierRegions.some(r=>r.pixels>16)&&!sample.missingRegions.some(r=>r.pixels>4||r.diameterUpperBound>2);report.samples.push(sample);status.textContent=`${report.samples.length} muestras. ${clipName}/${fraction}, ${azimuth}Â°/${elevation}Â°: IoU${sample.alphaIoU.toFixed(6)}, MAE${sample.linearRgbMae.toFixed(6)} ${sample.passes?'diagnóstico dentro del umbral':'diagnóstico fuera del umbral'}`;
   if(closedSubset){const coverage=[];for(let side=0;side<2;side++){rigs.forEach((rig,i)=>rig.model.visible=i===side);const faces=mapMissingToSource(renderer,rigs[side],camera,pixels,size,'visible');coverage.push({side,parts:[...closedNames].map(mesh=>{const selected=faces.filter(f=>f.mesh===mesh);return{mesh,visiblePixels:selected.reduce((n,f)=>n+f.pixels,0),visibleFaces:selected.length};})});}report.selectedPartCoverage.push({sample:report.samples.length-1,coverage,meaning:'Later ID draw with original geometry, skin and visibility: coverage only, not PBR quality or GPU timing.'});}
   if(closedSubset&&frontShadow){sample.colorPasses=sample.passes;sample.passes=sample.passes&&shadowDifference?.quantitativeGate?.passes===true;}
-  status.textContent=`${report.samples.length} muestras. ${clipName}/${fraction}, ${azimuth}°/${elevation}°: IoU${sample.alphaIoU.toFixed(6)}, MAE${sample.linearRgbMae.toFixed(6)} ${sample.passes?'pasa screen':'FALLA'}`;
-  if(!sample.passes){failed=true;break campaignLoop;}
+  status.textContent=`${report.samples.length} muestras. ${clipName}/${fraction}, ${azimuth}°/${elevation}°: IoU${sample.alphaIoU.toFixed(6)}, MAE${sample.linearRgbMae.toFixed(6)} ${sample.passes?'diagnóstico dentro del umbral':'diagnóstico fuera del umbral'}`;
+  if(!sample.passes)failed=true;
   if(report.samples.length>=maxSamples)break campaignLoop;
   await new Promise(requestAnimationFrame);
  }
- // Break nested campaign after failure by retaining only the first failure;
- // the early screen is rejection evidence and does not need a passing sweep.
+ // Numeric diagnostics do not stop the campaign or decide human acceptance.
  report.failed=failed;
  if(options.has('mapNormalField')){
   if(!normalCloseup||maxSamples!==1)throw Error('Normal-field readback requires one original-target closeup');
@@ -235,9 +235,9 @@ async function campaign(){
  // Export source, candidate and regional difference in a single PNG. Pixel
  // rows from GL are reversed for a normal upright canvas image.
  report.capturePng=comparisonCapture(pixels,size);
- const response=await fetch('/__frontside_report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)});if(!response.ok)throw Error(await response.text());
+ const response=await fetch('/__frontside_report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(attachHumanVisualReview(report))});if(!response.ok)throw Error(await response.text());
  // Preserve the actual PBR comparison, including after later diagnostic ID
  // draws and context disposal. A disposed WebGL canvas is not QA evidence.
  await retainComparison(report.capturePng,'Original, candidate, and amplified RGB difference for the last compared pose');
- release();registry.dispose();sourceAssets.disposeModels();sky.dispose();renderer.dispose();renderer.forceContextLoss();status.textContent=`Screen guardado: ${report.samples.length} muestras, ${failed?'rechazo':'pendiente gates completos'}. GPU liberada. NO aprobado.`;
+ release();registry.dispose();sourceAssets.disposeModels();sky.dispose();renderer.dispose();renderer.forceContextLoss();status.textContent=`Screen guardado: ${report.samples.length} muestras, ${failed?'umbrales diagnósticos excedidos':'umbrales diagnósticos dentro de límites'}. GPU liberada. REVISIÓN HUMANA PENDIENTE.`;
 }
