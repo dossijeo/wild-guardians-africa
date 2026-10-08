@@ -1,0 +1,1 @@
+export const sharedLeafContinuousPlan=Object.freeze({profile:'SHARED_LEAF_CONTINUOUS_GAMEPLAY_SCALE_V1',durationSeconds:12,growthStart:.94,growthSeconds:270,windClockStart:6.1875,plants:49,grid:7,spacing:1.5,fov:42,viewport:[640,720],gameCamera:[40,35,50],closeupCamera:[8,9,12],target:[0,0,0],captureGrowth:[.95438,.9582,.96179,.96202,.983],biome:'gran-rio'});
