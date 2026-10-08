@@ -109,3 +109,19 @@ work is removed. No production activation. Logical state/camera/farm match the
 texture-only run, queries pending zero, errors empty, disposed/tab closed.
 `verify-crate.mjs` reproduces hashes, the exact cache-key comparison and recorded
 metrics; full buffer audit and uninstrumented ABBA remain required.
+### Scope of the remaining long intervals (crate trace 831)
+
+`node docs/qa/streaming-travel-dense/programs-trace/analyze-crate-budget.mjs`
+revalidates the archived raw hash and computes separate CPU/GPU/interval
+summaries without adding nested trace durations. CPU world render p50/p95/max
+was 29.5/37.4/43.8 ms; GPU query p50/p95/max was 58.22/83.36/110.11 ms.
+Fifteen chunk installations had median 3.8 ms and maximum 8.1 ms.
+
+Of the 33 RAF intervals over 100 ms, 13 preceded the first new chunk installation
+and 32 had no temporal overlap with a measured chunk-install span. This does
+not exclude deferred upload/render cost, asynchronous far preparation, worker
+contention or scheduling. It does rule out attributing every long interval to
+the measured synchronous installation call. GPU queries cover `world.render`,
+not all asynchronous work; CPU, GPU and RAF scopes overlap and their summaries
+must not be subtracted to infer idle time. Four CPU campaigns were live during
+this instrumented run. A fresh uninstrumented AB/BA remains necessary.
