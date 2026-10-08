@@ -1,0 +1,7845 @@
+{
+  "status": "READ_ONLY_CORRESPONDENCE_NOT_REPAIR_OR_APPROVAL",
+  "blender": "4.5.9 LTS",
+  "sourceSha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+  "node": "sorgo_05_maduro",
+  "boundaryEdges": 258,
+  "policy": "Exact numeric-position topology separately; counterpart line tolerance8float32ULP/floor1e-12m, no weld/export. Coverage does not establish physical closure or attribute/shader equivalence.",
+  "fullOverlapEdges": 0,
+  "fullOppositeOverlapEdges": 0,
+  "anyOverlapEdges": 0,
+  "stemEdges": [
+    {
+      "edge": 2495,
+      "owner": {
+        "face": 1580,
+        "driver": 1,
+        "vertices": [
+          554,
+          590
+        ]
+      },
+      "positions": [
+        [
+          -0.047079771757125854,
+          1.4089200496673584,
+          0.02776235342025757
+        ],
+        [
+          -0.0715501606464386,
+          1.42221999168396,
+          0.029047131538391113
+        ]
+      ],
+      "lengthMetres": 0.027880800649407452,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2496,
+      "owner": {
+        "face": 1580,
+        "driver": 1,
+        "vertices": [
+          590,
+          552
+        ]
+      },
+      "positions": [
+        [
+          -0.0715501606464386,
+          1.42221999168396,
+          0.029047131538391113
+        ],
+        [
+          -0.08629992604255676,
+          1.4677000045776367,
+          0.03425717353820801
+        ]
+      ],
+      "lengthMetres": 0.04809502770234554,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2574,
+      "owner": {
+        "face": 1626,
+        "driver": 1,
+        "vertices": [
+          649,
+          650
+        ]
+      },
+      "positions": [
+        [
+          -0.0834248960018158,
+          1.2515449523925781,
+          0.09413212537765503
+        ],
+        [
+          -0.04722997546195984,
+          1.2456899881362915,
+          0.07336229085922241
+        ]
+      ],
+      "lengthMetres": 0.04213951714545334,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2575,
+      "owner": {
+        "face": 1626,
+        "driver": 1,
+        "vertices": [
+          651,
+          649
+        ]
+      },
+      "positions": [
+        [
+          -0.0901949405670166,
+          1.291854977607727,
+          0.09194225072860718
+        ],
+        [
+          -0.0834248960018158,
+          1.2515449523925781,
+          0.09413212537765503
+        ]
+      ],
+      "lengthMetres": 0.040933203969873766,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2745,
+      "owner": {
+        "face": 1735,
+        "driver": 1,
+        "vertices": [
+          788,
+          789
+        ]
+      },
+      "positions": [
+        [
+          -0.08366003632545471,
+          1.3576850891113281,
+          0.05588233470916748
+        ],
+        [
+          -0.020464956760406494,
+          1.272665023803711,
+          0.026072263717651367
+        ]
+      ],
+      "lengthMetres": 0.1100484889431177,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2746,
+      "owner": {
+        "face": 1735,
+        "driver": 1,
+        "vertices": [
+          789,
+          787
+        ]
+      },
+      "positions": [
+        [
+          -0.020464956760406494,
+          1.272665023803711,
+          0.026072263717651367
+        ],
+        [
+          -0.05547478795051575,
+          1.2880899906158447,
+          0.036911964416503906
+        ]
+      ],
+      "lengthMetres": 0.039763261842510854,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2935,
+      "owner": {
+        "face": 1872,
+        "driver": 1,
+        "vertices": [
+          938,
+          939
+        ]
+      },
+      "positions": [
+        [
+          -0.030434876680374146,
+          1.2901599407196045,
+          0.06699711084365845
+        ],
+        [
+          -0.03308996558189392,
+          1.260759949684143,
+          0.040932297706604004
+        ]
+      ],
+      "lengthMetres": 0.039379987986663374,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 3229,
+      "owner": {
+        "face": 2066,
+        "driver": 1,
+        "vertices": [
+          1204,
+          1205
+        ]
+      },
+      "positions": [
+        [
+          -0.03308996558189392,
+          1.260759949684143,
+          0.040932297706604004
+        ],
+        [
+          -0.0336650013923645,
+          1.286810040473938,
+          0.04722237586975098
+        ]
+      ],
+      "lengthMetres": 0.02680490588751209,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 3248,
+      "owner": {
+        "face": 2077,
+        "driver": 1,
+        "vertices": [
+          1225,
+          1117
+        ]
+      },
+      "positions": [
+        [
+          -0.008974969387054443,
+          1.3180750608444214,
+          -0.08069783449172974
+        ],
+        [
+          -0.0330449640750885,
+          1.3348050117492676,
+          -0.08204281330108643
+        ]
+      ],
+      "lengthMetres": 0.029343906855737022,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 3857,
+      "owner": {
+        "face": 2496,
+        "driver": 1,
+        "vertices": [
+          8683,
+          8684
+        ]
+      },
+      "positions": [
+        [
+          -0.022024810314178467,
+          0.7046550512313843,
+          0.025387108325958252
+        ],
+        [
+          0.006275177001953125,
+          0.7138900756835938,
+          0.02069711685180664
+        ]
+      ],
+      "lengthMetres": 0.03013587527771063,
+      "diagnosticToleranceMetres": 4.76837158203125e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 3858,
+      "owner": {
+        "face": 2496,
+        "driver": 1,
+        "vertices": [
+          8685,
+          8683
+        ]
+      },
+      "positions": [
+        [
+          -0.0008949637413024902,
+          0.6920099854469299,
+          -0.016963183879852295
+        ],
+        [
+          -0.022024810314178467,
+          0.7046550512313843,
+          0.025387108325958252
+        ]
+      ],
+      "lengthMetres": 0.04898893094163205,
+      "diagnosticToleranceMetres": 4.76837158203125e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 5269,
+      "owner": {
+        "face": 3487,
+        "driver": 1,
+        "vertices": [
+          3237,
+          3238
+        ]
+      },
+      "positions": [
+        [
+          0.06923496723175049,
+          1.003844976425171,
+          -0.04727274179458618
+        ],
+        [
+          0.08841514587402344,
+          1.071549892425537,
+          -0.0034877657890319824
+        ]
+      ],
+      "lengthMetres": 0.08287918331627735,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    }
+  ],
+  "edges": [
+    {
+      "edge": 37,
+      "owner": {
+        "face": 19,
+        "driver": 3,
+        "vertices": [
+          12371,
+          12372
+        ]
+      },
+      "positions": [
+        [
+          -0.5209599733352661,
+          0.727804958820343,
+          -0.4327377676963806
+        ],
+        [
+          -0.5435448884963989,
+          0.7813849449157715,
+          -0.42776286602020264
+        ]
+      ],
+      "lengthMetres": 0.058357886780704395,
+      "diagnosticToleranceMetres": 4.76837158203125e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 39,
+      "owner": {
+        "face": 19,
+        "driver": 3,
+        "vertices": [
+          12373,
+          12371
+        ]
+      },
+      "positions": [
+        [
+          -0.4667849838733673,
+          0.8523399233818054,
+          -0.5006077885627747
+        ],
+        [
+          -0.5209599733352661,
+          0.727804958820343,
+          -0.4327377676963806
+        ]
+      ],
+      "lengthMetres": 0.15182301081827584,
+      "diagnosticToleranceMetres": 4.76837158203125e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 370,
+      "owner": {
+        "face": 213,
+        "driver": 0,
+        "vertices": [
+          12686,
+          12687
+        ]
+      },
+      "positions": [
+        [
+          -0.37457987666130066,
+          0.03187499940395355,
+          0.19749730825424194
+        ],
+        [
+          -0.3758399188518524,
+          0.018099993467330933,
+          0.19232690334320068
+        ]
+      ],
+      "lengthMetres": 0.014767246927578562,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 371,
+      "owner": {
+        "face": 213,
+        "driver": 0,
+        "vertices": [
+          12687,
+          12685
+        ]
+      },
+      "positions": [
+        [
+          -0.3758399188518524,
+          0.018099993467330933,
+          0.19232690334320068
+        ],
+        [
+          -0.39833977818489075,
+          0.039865002036094666,
+          0.19128233194351196
+        ]
+      ],
+      "lengthMetres": 0.03132172404919497,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 562,
+      "owner": {
+        "face": 344,
+        "driver": 0,
+        "vertices": [
+          12909,
+          12910
+        ]
+      },
+      "positions": [
+        [
+          -0.35277485847473145,
+          0.04146501421928406,
+          0.11574715375900269
+        ],
+        [
+          -0.3529949486255646,
+          0.04503495991230011,
+          0.18288731575012207
+        ]
+      ],
+      "lengthMetres": 0.06723536498093344,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 564,
+      "owner": {
+        "face": 344,
+        "driver": 0,
+        "vertices": [
+          12911,
+          12909
+        ]
+      },
+      "positions": [
+        [
+          -0.3063949942588806,
+          0.041169971227645874,
+          0.11522233486175537
+        ],
+        [
+          -0.35277485847473145,
+          0.04146501421928406,
+          0.11574715375900269
+        ]
+      ],
+      "lengthMetres": 0.046383771838031704,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 590,
+      "owner": {
+        "face": 362,
+        "driver": 0,
+        "vertices": [
+          12937,
+          12938
+        ]
+      },
+      "positions": [
+        [
+          -0.30640482902526855,
+          0.11331498622894287,
+          -0.18334269523620605
+        ],
+        [
+          -0.3558848798274994,
+          0.12017503380775452,
+          -0.1615428924560547
+        ]
+      ],
+      "lengthMetres": 0.054502908926298596,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 941,
+      "owner": {
+        "face": 584,
+        "driver": 6,
+        "vertices": [
+          6456,
+          6457
+        ]
+      },
+      "positions": [
+        [
+          -0.2681049704551697,
+          0.28365999460220337,
+          -0.06386786699295044
+        ],
+        [
+          -0.2557699382305145,
+          0.2888000011444092,
+          -0.019488036632537842
+        ]
+      ],
+      "lengthMetres": 0.04634805314202744,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 977,
+      "owner": {
+        "face": 610,
+        "driver": 0,
+        "vertices": [
+          6499,
+          6500
+        ]
+      },
+      "positions": [
+        [
+          -0.250529944896698,
+          0.13425998389720917,
+          -0.21524280309677124
+        ],
+        [
+          -0.24689987301826477,
+          0.11183500289916992,
+          -0.2260977029800415
+        ]
+      ],
+      "lengthMetres": 0.02517709367819951,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 1252,
+      "owner": {
+        "face": 790,
+        "driver": 0,
+        "vertices": [
+          6739,
+          6825
+        ]
+      },
+      "positions": [
+        [
+          -0.22782489657402039,
+          0.05335003137588501,
+          0.17444223165512085
+        ],
+        [
+          -0.24425983428955078,
+          0.05313001573085785,
+          0.19956231117248535
+        ]
+      ],
+      "lengthMetres": 0.03001955994940858,
+      "diagnosticToleranceMetres": 1.1920928955078125e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 1253,
+      "owner": {
+        "face": 790,
+        "driver": 0,
+        "vertices": [
+          6825,
+          6824
+        ]
+      },
+      "positions": [
+        [
+          -0.24425983428955078,
+          0.05313001573085785,
+          0.19956231117248535
+        ],
+        [
+          -0.21368488669395447,
+          0.05769997835159302,
+          0.23917734622955322
+        ]
+      ],
+      "lengthMetres": 0.05025000479006041,
+      "diagnosticToleranceMetres": 1.1920928955078125e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 1402,
+      "owner": {
+        "face": 885,
+        "driver": 0,
+        "vertices": [
+          6975,
+          6976
+        ]
+      },
+      "positions": [
+        [
+          -0.1791699230670929,
+          0.08032001554965973,
+          -0.23328274488449097
+        ],
+        [
+          -0.204944908618927,
+          0.07228001952171326,
+          -0.2713477611541748
+        ]
+      ],
+      "lengthMetres": 0.04666837130153512,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 1403,
+      "owner": {
+        "face": 885,
+        "driver": 0,
+        "vertices": [
+          6976,
+          6977
+        ]
+      },
+      "positions": [
+        [
+          -0.204944908618927,
+          0.07228001952171326,
+          -0.2713477611541748
+        ],
+        [
+          -0.19125014543533325,
+          0.08090995252132416,
+          -0.29967784881591797
+        ]
+      ],
+      "lengthMetres": 0.03262845612581969,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 1453,
+      "owner": {
+        "face": 917,
+        "driver": 0,
+        "vertices": [
+          7033,
+          7034
+        ]
+      },
+      "positions": [
+        [
+          -0.17366498708724976,
+          0.09247489273548126,
+          -0.3738078474998474
+        ],
+        [
+          -0.17965495586395264,
+          0.05831994116306305,
+          -0.3788277506828308
+        ]
+      ],
+      "lengthMetres": 0.035037692144698054,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 1548,
+      "owner": {
+        "face": 988,
+        "driver": 0,
+        "vertices": [
+          7148,
+          7149
+        ]
+      },
+      "positions": [
+        [
+          -0.14138489961624146,
+          0.044074952602386475,
+          -0.30581265687942505
+        ],
+        [
+          -0.1521448791027069,
+          0.05322501063346863,
+          -0.27413785457611084
+        ]
+      ],
+      "lengthMetres": 0.034681318046974045,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 1590,
+      "owner": {
+        "face": 1015,
+        "driver": 0,
+        "vertices": [
+          7200,
+          7201
+        ]
+      },
+      "positions": [
+        [
+          -0.15243485569953918,
+          0.08138999342918396,
+          0.21497726440429688
+        ],
+        [
+          -0.19831493496894836,
+          0.08899003267288208,
+          0.26943713426589966
+        ]
+      ],
+      "lengthMetres": 0.07161438190486415,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 1591,
+      "owner": {
+        "face": 1015,
+        "driver": 0,
+        "vertices": [
+          7202,
+          7200
+        ]
+      },
+      "positions": [
+        [
+          -0.14723509550094604,
+          0.10250493884086609,
+          0.21676719188690186
+        ],
+        [
+          -0.15243485569953918,
+          0.08138999342918396,
+          0.21497726440429688
+        ]
+      ],
+      "lengthMetres": 0.021819309481607665,
+      "diagnosticToleranceMetres": 1.1920928955078125e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 1592,
+      "owner": {
+        "face": 1016,
+        "driver": 6,
+        "vertices": [
+          7203,
+          7204
+        ]
+      },
+      "positions": [
+        [
+          -0.17733484506607056,
+          0.2996000051498413,
+          -0.1034727692604065
+        ],
+        [
+          -0.1405249536037445,
+          0.30347496271133423,
+          -0.13352781534194946
+        ]
+      ],
+      "lengthMetres": 0.04767902264660284,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 1594,
+      "owner": {
+        "face": 1016,
+        "driver": 6,
+        "vertices": [
+          7205,
+          7203
+        ]
+      },
+      "positions": [
+        [
+          -0.18271490931510925,
+          0.32311999797821045,
+          -0.0948476791381836
+        ],
+        [
+          -0.17733484506607056,
+          0.2996000051498413,
+          -0.1034727692604065
+        ]
+      ],
+      "lengthMetres": 0.02562278934048335,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 1716,
+      "owner": {
+        "face": 1095,
+        "driver": 0,
+        "vertices": [
+          7325,
+          7326
+        ]
+      },
+      "positions": [
+        [
+          -0.15521973371505737,
+          0.07683500647544861,
+          -0.031697750091552734
+        ],
+        [
+          -0.09531483054161072,
+          0.05590498447418213,
+          -0.06595790386199951
+        ]
+      ],
+      "lengthMetres": 0.07211394720557304,
+      "diagnosticToleranceMetres": 1.1920928955078125e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 1718,
+      "owner": {
+        "face": 1095,
+        "driver": 0,
+        "vertices": [
+          7327,
+          7325
+        ]
+      },
+      "positions": [
+        [
+          -0.14785990118980408,
+          0.09338498115539551,
+          -0.019757747650146484
+        ],
+        [
+          -0.15521973371505737,
+          0.07683500647544861,
+          -0.031697750091552734
+        ]
+      ],
+      "lengthMetres": 0.02169406497195597,
+      "diagnosticToleranceMetres": 1.1920928955078125e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 1758,
+      "owner": {
+        "face": 1121,
+        "driver": 7,
+        "vertices": [
+          223,
+          224
+        ]
+      },
+      "positions": [
+        [
+          -0.15992999076843262,
+          1.5332698822021484,
+          -0.20699769258499146
+        ],
+        [
+          -0.1106947660446167,
+          1.5130150318145752,
+          -0.21537810564041138
+        ]
+      ],
+      "lengthMetres": 0.053894319188640676,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 1760,
+      "owner": {
+        "face": 1121,
+        "driver": 7,
+        "vertices": [
+          225,
+          223
+        ]
+      },
+      "positions": [
+        [
+          -0.12863993644714355,
+          1.5350849628448486,
+          -0.21281301975250244
+        ],
+        [
+          -0.15992999076843262,
+          1.5332698822021484,
+          -0.20699769258499146
+        ]
+      ],
+      "lengthMetres": 0.03187757906795804,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 1814,
+      "owner": {
+        "face": 1160,
+        "driver": 7,
+        "vertices": [
+          237,
+          238
+        ]
+      },
+      "positions": [
+        [
+          -0.14328479766845703,
+          1.4702450037002563,
+          -0.2029329538345337
+        ],
+        [
+          -0.10540977120399475,
+          1.4732749462127686,
+          -0.17321288585662842
+        ]
+      ],
+      "lengthMetres": 0.04823878752543597,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 1816,
+      "owner": {
+        "face": 1160,
+        "driver": 7,
+        "vertices": [
+          239,
+          237
+        ]
+      },
+      "positions": [
+        [
+          -0.10613977909088135,
+          1.4915400743484497,
+          -0.19767314195632935
+        ],
+        [
+          -0.14328479766845703,
+          1.4702450037002563,
+          -0.2029329538345337
+        ]
+      ],
+      "lengthMetres": 0.043138127683455256,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 1835,
+      "owner": {
+        "face": 1170,
+        "driver": 6,
+        "vertices": [
+          7461,
+          7462
+        ]
+      },
+      "positions": [
+        [
+          -0.1139599084854126,
+          0.3147199749946594,
+          -0.11752277612686157
+        ],
+        [
+          -0.08871987462043762,
+          0.2886299788951874,
+          -0.08541762828826904
+        ]
+      ],
+      "lengthMetres": 0.04846119812503022,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 1836,
+      "owner": {
+        "face": 1170,
+        "driver": 6,
+        "vertices": [
+          7462,
+          7460
+        ]
+      },
+      "positions": [
+        [
+          -0.08871987462043762,
+          0.2886299788951874,
+          -0.08541762828826904
+        ],
+        [
+          -0.13591483235359192,
+          0.323915034532547,
+          -0.07320284843444824
+        ]
+      ],
+      "lengthMetres": 0.060179731086496976,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 1885,
+      "owner": {
+        "face": 1203,
+        "driver": 10,
+        "vertices": [
+          256,
+          257
+        ]
+      },
+      "positions": [
+        [
+          -0.13977989554405212,
+          1.4597200155258179,
+          0.13241231441497803
+        ],
+        [
+          -0.09609982371330261,
+          1.4321300983428955,
+          0.12115716934204102
+        ]
+      ],
+      "lengthMetres": 0.052875613432969364,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 1887,
+      "owner": {
+        "face": 1203,
+        "driver": 10,
+        "vertices": [
+          258,
+          256
+        ]
+      },
+      "positions": [
+        [
+          -0.11175483465194702,
+          1.4245200157165527,
+          0.11907726526260376
+        ],
+        [
+          -0.13977989554405212,
+          1.4597200155258179,
+          0.13241231441497803
+        ]
+      ],
+      "lengthMetres": 0.046928323648674074,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 1956,
+      "owner": {
+        "face": 1251,
+        "driver": 0,
+        "vertices": [
+          7591,
+          7517
+        ]
+      },
+      "positions": [
+        [
+          -0.10504007339477539,
+          0.041164979338645935,
+          -0.14417767524719238
+        ],
+        [
+          -0.09668499231338501,
+          0.05795001983642578,
+          -0.12190282344818115
+        ]
+      ],
+      "lengthMetres": 0.029115528280569302,
+      "diagnosticToleranceMetres": 1.1920928955078125e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 1992,
+      "owner": {
+        "face": 1276,
+        "driver": 7,
+        "vertices": [
+          292,
+          293
+        ]
+      },
+      "positions": [
+        [
+          -0.11302977800369263,
+          1.4281048774719238,
+          -0.09384781122207642
+        ],
+        [
+          -0.07544487714767456,
+          1.4536199569702148,
+          -0.1080930233001709
+        ]
+      ],
+      "lengthMetres": 0.04760850891711173,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 1994,
+      "owner": {
+        "face": 1276,
+        "driver": 7,
+        "vertices": [
+          294,
+          292
+        ]
+      },
+      "positions": [
+        [
+          -0.10151013731956482,
+          1.3881800174713135,
+          -0.12036770582199097
+        ],
+        [
+          -0.11302977800369263,
+          1.4281048774719238,
+          -0.09384781122207642
+        ]
+      ],
+      "lengthMetres": 0.04929504414391295,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2026,
+      "owner": {
+        "face": 1296,
+        "driver": 7,
+        "vertices": [
+          259,
+          307
+        ]
+      },
+      "positions": [
+        [
+          -0.1106947660446167,
+          1.5130150318145752,
+          -0.21537810564041138
+        ],
+        [
+          -0.09847477078437805,
+          1.5129199028015137,
+          -0.24111270904541016
+        ]
+      ],
+      "lengthMetres": 0.028488719629038366,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2027,
+      "owner": {
+        "face": 1296,
+        "driver": 7,
+        "vertices": [
+          307,
+          244
+        ]
+      },
+      "positions": [
+        [
+          -0.09847477078437805,
+          1.5129199028015137,
+          -0.24111270904541016
+        ],
+        [
+          -0.10613977909088135,
+          1.4915400743484497,
+          -0.19767314195632935
+        ]
+      ],
+      "lengthMetres": 0.049018827055611607,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2072,
+      "owner": {
+        "face": 1321,
+        "driver": 7,
+        "vertices": [
+          323,
+          324
+        ]
+      },
+      "positions": [
+        [
+          -0.12625500559806824,
+          1.5928449630737305,
+          -0.23535281419754028
+        ],
+        [
+          -0.093659907579422,
+          1.5676898956298828,
+          -0.24145811796188354
+        ]
+      ],
+      "lengthMetres": 0.04162322148758532,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2073,
+      "owner": {
+        "face": 1321,
+        "driver": 7,
+        "vertices": [
+          324,
+          325
+        ]
+      },
+      "positions": [
+        [
+          -0.093659907579422,
+          1.5676898956298828,
+          -0.24145811796188354
+        ],
+        [
+          -0.10469973087310791,
+          1.5379799604415894,
+          -0.21096795797348022
+        ]
+      ],
+      "lengthMetres": 0.043979629413705146,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2333,
+      "owner": {
+        "face": 1478,
+        "driver": 7,
+        "vertices": [
+          491,
+          492
+        ]
+      },
+      "positions": [
+        [
+          -0.07862493395805359,
+          1.470015048980713,
+          -0.15883773565292358
+        ],
+        [
+          -0.06272479891777039,
+          1.4506349563598633,
+          -0.173092782497406
+        ]
+      ],
+      "lengthMetres": 0.028837625506104685,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2335,
+      "owner": {
+        "face": 1478,
+        "driver": 7,
+        "vertices": [
+          493,
+          491
+        ]
+      },
+      "positions": [
+        [
+          -0.07182493805885315,
+          1.4713549613952637,
+          -0.17122268676757812
+        ],
+        [
+          -0.07862493395805359,
+          1.470015048980713,
+          -0.15883773565292358
+        ]
+      ],
+      "lengthMetres": 0.014192333269064423,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2454,
+      "owner": {
+        "face": 1552,
+        "driver": 0,
+        "vertices": [
+          7954,
+          7955
+        ]
+      },
+      "positions": [
+        [
+          -0.0794549286365509,
+          0.17650000751018524,
+          -0.19669771194458008
+        ],
+        [
+          -0.059324800968170166,
+          0.12751497328281403,
+          -0.2036428451538086
+        ]
+      ],
+      "lengthMetres": 0.05341339245447686,
+      "diagnosticToleranceMetres": 1.1920928955078125e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2495,
+      "owner": {
+        "face": 1580,
+        "driver": 1,
+        "vertices": [
+          554,
+          590
+        ]
+      },
+      "positions": [
+        [
+          -0.047079771757125854,
+          1.4089200496673584,
+          0.02776235342025757
+        ],
+        [
+          -0.0715501606464386,
+          1.42221999168396,
+          0.029047131538391113
+        ]
+      ],
+      "lengthMetres": 0.027880800649407452,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2496,
+      "owner": {
+        "face": 1580,
+        "driver": 1,
+        "vertices": [
+          590,
+          552
+        ]
+      },
+      "positions": [
+        [
+          -0.0715501606464386,
+          1.42221999168396,
+          0.029047131538391113
+        ],
+        [
+          -0.08629992604255676,
+          1.4677000045776367,
+          0.03425717353820801
+        ]
+      ],
+      "lengthMetres": 0.04809502770234554,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2519,
+      "owner": {
+        "face": 1593,
+        "driver": 0,
+        "vertices": [
+          7988,
+          7989
+        ]
+      },
+      "positions": [
+        [
+          -0.060704946517944336,
+          0.1307699829339981,
+          0.020492374897003174
+        ],
+        [
+          -0.08163496851921082,
+          0.16382500529289246,
+          0.0015273690223693848
+        ]
+      ],
+      "lengthMetres": 0.0434784058119131,
+      "diagnosticToleranceMetres": 1.1920928955078125e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2532,
+      "owner": {
+        "face": 1601,
+        "driver": 7,
+        "vertices": [
+          622,
+          409
+        ]
+      },
+      "positions": [
+        [
+          -0.058524906635284424,
+          1.484760046005249,
+          -0.19769281148910522
+        ],
+        [
+          -0.08354499936103821,
+          1.5133600234985352,
+          -0.19703269004821777
+        ]
+      ],
+      "lengthMetres": 0.038005256385643685,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2574,
+      "owner": {
+        "face": 1626,
+        "driver": 1,
+        "vertices": [
+          649,
+          650
+        ]
+      },
+      "positions": [
+        [
+          -0.0834248960018158,
+          1.2515449523925781,
+          0.09413212537765503
+        ],
+        [
+          -0.04722997546195984,
+          1.2456899881362915,
+          0.07336229085922241
+        ]
+      ],
+      "lengthMetres": 0.04213951714545334,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2575,
+      "owner": {
+        "face": 1626,
+        "driver": 1,
+        "vertices": [
+          651,
+          649
+        ]
+      },
+      "positions": [
+        [
+          -0.0901949405670166,
+          1.291854977607727,
+          0.09194225072860718
+        ],
+        [
+          -0.0834248960018158,
+          1.2515449523925781,
+          0.09413212537765503
+        ]
+      ],
+      "lengthMetres": 0.040933203969873766,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2576,
+      "owner": {
+        "face": 1627,
+        "driver": 0,
+        "vertices": [
+          8019,
+          8020
+        ]
+      },
+      "positions": [
+        [
+          -0.06858974695205688,
+          0.12115001678466797,
+          0.36027729511260986
+        ],
+        [
+          -0.047244876623153687,
+          0.10073497891426086,
+          0.3362622857093811
+        ]
+      ],
+      "lengthMetres": 0.03806701902231135,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2577,
+      "owner": {
+        "face": 1627,
+        "driver": 0,
+        "vertices": [
+          8021,
+          8019
+        ]
+      },
+      "positions": [
+        [
+          -0.06797000765800476,
+          0.08282996714115143,
+          0.37144213914871216
+        ],
+        [
+          -0.06858974695205688,
+          0.12115001678466797,
+          0.36027729511260986
+        ]
+      ],
+      "lengthMetres": 0.03991821669143868,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2585,
+      "owner": {
+        "face": 1633,
+        "driver": 10,
+        "vertices": [
+          659,
+          660
+        ]
+      },
+      "positions": [
+        [
+          -0.07388487458229065,
+          1.5315300226211548,
+          0.01469731330871582
+        ],
+        [
+          -0.03527507185935974,
+          1.4950250387191772,
+          0.005806982517242432
+        ]
+      ],
+      "lengthMetres": 0.05387363638709663,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2606,
+      "owner": {
+        "face": 1646,
+        "driver": 8,
+        "vertices": [
+          8033,
+          8034
+        ]
+      },
+      "positions": [
+        [
+          -0.0911201536655426,
+          0.6210199594497681,
+          -0.5500274896621704
+        ],
+        [
+          -0.09608492255210876,
+          0.6093549132347107,
+          -0.608762800693512
+        ]
+      ],
+      "lengthMetres": 0.0600879272004358,
+      "diagnosticToleranceMetres": 4.76837158203125e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2607,
+      "owner": {
+        "face": 1646,
+        "driver": 8,
+        "vertices": [
+          8034,
+          8032
+        ]
+      },
+      "positions": [
+        [
+          -0.09608492255210876,
+          0.6093549132347107,
+          -0.608762800693512
+        ],
+        [
+          -0.061869919300079346,
+          0.6009999513626099,
+          -0.6176680326461792
+        ]
+      ],
+      "lengthMetres": 0.036328707540338505,
+      "diagnosticToleranceMetres": 4.76837158203125e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2633,
+      "owner": {
+        "face": 1665,
+        "driver": 9,
+        "vertices": [
+          692,
+          693
+        ]
+      },
+      "positions": [
+        [
+          -0.07333993911743164,
+          1.7615749835968018,
+          0.026347339153289795
+        ],
+        [
+          -0.05482494831085205,
+          1.7156850099563599,
+          0.019827187061309814
+        ]
+      ],
+      "lengthMetres": 0.049911992031882776,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2709,
+      "owner": {
+        "face": 1710,
+        "driver": 10,
+        "vertices": [
+          753,
+          751
+        ]
+      },
+      "positions": [
+        [
+          -0.06051972508430481,
+          1.6730048656463623,
+          0.01460731029510498
+        ],
+        [
+          -0.046324729919433594,
+          1.7007149457931519,
+          0.004117190837860107
+        ]
+      ],
+      "lengthMetres": 0.032854056609488654,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2743,
+      "owner": {
+        "face": 1734,
+        "driver": 7,
+        "vertices": [
+          616,
+          786
+        ]
+      },
+      "positions": [
+        [
+          -0.06530493497848511,
+          1.4756048917770386,
+          -0.1595628261566162
+        ],
+        [
+          -0.04841998219490051,
+          1.4987950325012207,
+          -0.16227275133132935
+        ]
+      ],
+      "lengthMetres": 0.028813676470797606,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2744,
+      "owner": {
+        "face": 1734,
+        "driver": 7,
+        "vertices": [
+          786,
+          617
+        ]
+      },
+      "positions": [
+        [
+          -0.04841998219490051,
+          1.4987950325012207,
+          -0.16227275133132935
+        ],
+        [
+          -0.058524906635284424,
+          1.484760046005249,
+          -0.19769281148910522
+        ]
+      ],
+      "lengthMetres": 0.03941663361410304,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2745,
+      "owner": {
+        "face": 1735,
+        "driver": 1,
+        "vertices": [
+          788,
+          789
+        ]
+      },
+      "positions": [
+        [
+          -0.08366003632545471,
+          1.3576850891113281,
+          0.05588233470916748
+        ],
+        [
+          -0.020464956760406494,
+          1.272665023803711,
+          0.026072263717651367
+        ]
+      ],
+      "lengthMetres": 0.1100484889431177,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2746,
+      "owner": {
+        "face": 1735,
+        "driver": 1,
+        "vertices": [
+          789,
+          787
+        ]
+      },
+      "positions": [
+        [
+          -0.020464956760406494,
+          1.272665023803711,
+          0.026072263717651367
+        ],
+        [
+          -0.05547478795051575,
+          1.2880899906158447,
+          0.036911964416503906
+        ]
+      ],
+      "lengthMetres": 0.039763261842510854,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2757,
+      "owner": {
+        "face": 1744,
+        "driver": 10,
+        "vertices": [
+          792,
+          793
+        ]
+      },
+      "positions": [
+        [
+          -0.09232476353645325,
+          1.2992500066757202,
+          0.11732220649719238
+        ],
+        [
+          -0.04565998911857605,
+          1.2660599946975708,
+          0.10405212640762329
+        ]
+      ],
+      "lengthMetres": 0.058781571024978954,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2758,
+      "owner": {
+        "face": 1744,
+        "driver": 10,
+        "vertices": [
+          794,
+          792
+        ]
+      },
+      "positions": [
+        [
+          -0.0901949405670166,
+          1.291854977607727,
+          0.09194225072860718
+        ],
+        [
+          -0.09232476353645325,
+          1.2992500066757202,
+          0.11732220649719238
+        ]
+      ],
+      "lengthMetres": 0.026521024784365802,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2766,
+      "owner": {
+        "face": 1750,
+        "driver": 10,
+        "vertices": [
+          643,
+          796
+        ]
+      },
+      "positions": [
+        [
+          -0.05566492676734924,
+          1.5269650220870972,
+          0.06740182638168335
+        ],
+        [
+          -0.06226494908332825,
+          1.4920101165771484,
+          0.0366520881652832
+        ]
+      ],
+      "lengthMetres": 0.04702076258588332,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2843,
+      "owner": {
+        "face": 1809,
+        "driver": 11,
+        "vertices": [
+          872,
+          873
+        ]
+      },
+      "positions": [
+        [
+          -0.05682498216629028,
+          1.6413099765777588,
+          -0.13138264417648315
+        ],
+        [
+          -0.0350499153137207,
+          1.614224910736084,
+          -0.11071771383285522
+        ]
+      ],
+      "lengthMetres": 0.04043258183926335,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2850,
+      "owner": {
+        "face": 1813,
+        "driver": 0,
+        "vertices": [
+          8188,
+          8189
+        ]
+      },
+      "positions": [
+        [
+          -0.040764957666397095,
+          0.0788000226020813,
+          0.09518235921859741
+        ],
+        [
+          -0.02535998821258545,
+          0.06944499909877777,
+          0.11106222867965698
+        ]
+      ],
+      "lengthMetres": 0.024020820192502245,
+      "diagnosticToleranceMetres": 5.960464477539063e-08,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2851,
+      "owner": {
+        "face": 1813,
+        "driver": 0,
+        "vertices": [
+          8189,
+          8187
+        ]
+      },
+      "positions": [
+        [
+          -0.02535998821258545,
+          0.06944499909877777,
+          0.11106222867965698
+        ],
+        [
+          -0.03493502736091614,
+          0.05245998501777649,
+          0.09357213973999023
+        ]
+      ],
+      "lengthMetres": 0.026193038944370892,
+      "diagnosticToleranceMetres": 5.960464477539063e-08,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2935,
+      "owner": {
+        "face": 1872,
+        "driver": 1,
+        "vertices": [
+          938,
+          939
+        ]
+      },
+      "positions": [
+        [
+          -0.030434876680374146,
+          1.2901599407196045,
+          0.06699711084365845
+        ],
+        [
+          -0.03308996558189392,
+          1.260759949684143,
+          0.040932297706604004
+        ]
+      ],
+      "lengthMetres": 0.039379987986663374,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2984,
+      "owner": {
+        "face": 1909,
+        "driver": 7,
+        "vertices": [
+          972,
+          865
+        ]
+      },
+      "positions": [
+        [
+          -0.028060078620910645,
+          1.4578999280929565,
+          -0.13699769973754883
+        ],
+        [
+          -0.06530493497848511,
+          1.4756048917770386,
+          -0.1595628261566162
+        ]
+      ],
+      "lengthMetres": 0.04700882889904311,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 2987,
+      "owner": {
+        "face": 1911,
+        "driver": 10,
+        "vertices": [
+          974,
+          975
+        ]
+      },
+      "positions": [
+        [
+          -0.027394890785217285,
+          1.5234949588775635,
+          0.06157726049423218
+        ],
+        [
+          -0.03032490611076355,
+          1.5674049854278564,
+          0.10520219802856445
+        ]
+      ],
+      "lengthMetres": 0.06196620527618068,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 3050,
+      "owner": {
+        "face": 1955,
+        "driver": 7,
+        "vertices": [
+          1031,
+          1032
+        ]
+      },
+      "positions": [
+        [
+          -0.0362299382686615,
+          1.4564849138259888,
+          -0.1166728138923645
+        ],
+        [
+          -0.028060078620910645,
+          1.4578999280929565,
+          -0.13699769973754883
+        ]
+      ],
+      "lengthMetres": 0.0219510787128889,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 3065,
+      "owner": {
+        "face": 1964,
+        "driver": 0,
+        "vertices": [
+          8335,
+          8336
+        ]
+      },
+      "positions": [
+        [
+          -0.021570026874542236,
+          0.06011001765727997,
+          0.07138222455978394
+        ],
+        [
+          -0.040764957666397095,
+          0.0788000226020813,
+          0.09518235921859741
+        ]
+      ],
+      "lengthMetres": 0.03583584884886153,
+      "diagnosticToleranceMetres": 5.960464477539063e-08,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 3085,
+      "owner": {
+        "face": 1975,
+        "driver": 10,
+        "vertices": [
+          1060,
+          1061
+        ]
+      },
+      "positions": [
+        [
+          -0.06051972508430481,
+          1.6730048656463623,
+          0.01460731029510498
+        ],
+        [
+          -0.01793980598449707,
+          1.607854962348938,
+          -0.022923052310943604
+        ]
+      ],
+      "lengthMetres": 0.08640652479732883,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 3121,
+      "owner": {
+        "face": 1995,
+        "driver": 10,
+        "vertices": [
+          1095,
+          1096
+        ]
+      },
+      "positions": [
+        [
+          -0.02473503351211548,
+          1.5435999631881714,
+          0.03307223320007324
+        ],
+        [
+          -0.03542482852935791,
+          1.5693849325180054,
+          0.02521216869354248
+        ]
+      ],
+      "lengthMetres": 0.028998568497392505,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 3136,
+      "owner": {
+        "face": 2004,
+        "driver": 9,
+        "vertices": [
+          1115,
+          1113
+        ]
+      },
+      "positions": [
+        [
+          -0.016475021839141846,
+          1.7216449975967407,
+          -0.007247626781463623
+        ],
+        [
+          -0.05482494831085205,
+          1.7156850099563599,
+          0.019827187061309814
+        ]
+      ],
+      "lengthMetres": 0.04732107202589464,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 3155,
+      "owner": {
+        "face": 2015,
+        "driver": 9,
+        "vertices": [
+          1133,
+          1134
+        ]
+      },
+      "positions": [
+        [
+          -0.05482494831085205,
+          1.7156850099563599,
+          0.019827187061309814
+        ],
+        [
+          -0.03324002027511597,
+          1.7289600372314453,
+          0.013202130794525146
+        ]
+      ],
+      "lengthMetres": 0.026192114042211848,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 3229,
+      "owner": {
+        "face": 2066,
+        "driver": 1,
+        "vertices": [
+          1204,
+          1205
+        ]
+      },
+      "positions": [
+        [
+          -0.03308996558189392,
+          1.260759949684143,
+          0.040932297706604004
+        ],
+        [
+          -0.0336650013923645,
+          1.286810040473938,
+          0.04722237586975098
+        ]
+      ],
+      "lengthMetres": 0.02680490588751209,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 3248,
+      "owner": {
+        "face": 2077,
+        "driver": 1,
+        "vertices": [
+          1225,
+          1117
+        ]
+      },
+      "positions": [
+        [
+          -0.008974969387054443,
+          1.3180750608444214,
+          -0.08069783449172974
+        ],
+        [
+          -0.0330449640750885,
+          1.3348050117492676,
+          -0.08204281330108643
+        ]
+      ],
+      "lengthMetres": 0.029343906855737022,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 3257,
+      "owner": {
+        "face": 2086,
+        "driver": 10,
+        "vertices": [
+          657,
+          1243
+        ]
+      },
+      "positions": [
+        [
+          -0.04356980323791504,
+          1.608430027961731,
+          0.05348712205886841
+        ],
+        [
+          -0.013175010681152344,
+          1.5894100666046143,
+          0.055827200412750244
+        ]
+      ],
+      "lengthMetres": 0.035931578191016826,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 3382,
+      "owner": {
+        "face": 2163,
+        "driver": 11,
+        "vertices": [
+          1339,
+          1340
+        ]
+      },
+      "positions": [
+        [
+          -0.03589987754821777,
+          1.7346599102020264,
+          -0.09026288986206055
+        ],
+        [
+          -0.001100003719329834,
+          1.692525029182434,
+          -0.07647275924682617
+        ]
+      ],
+      "lengthMetres": 0.056360865140866516,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 3395,
+      "owner": {
+        "face": 2172,
+        "driver": 11,
+        "vertices": [
+          1352,
+          1353
+        ]
+      },
+      "positions": [
+        [
+          -0.028639882802963257,
+          1.7541649341583252,
+          -0.08256286382675171
+        ],
+        [
+          -0.032664984464645386,
+          1.7551499605178833,
+          -0.11358320713043213
+        ]
+      ],
+      "lengthMetres": 0.03129590099348621,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 3396,
+      "owner": {
+        "face": 2172,
+        "driver": 11,
+        "vertices": [
+          1353,
+          1351
+        ]
+      },
+      "positions": [
+        [
+          -0.032664984464645386,
+          1.7551499605178833,
+          -0.11358320713043213
+        ],
+        [
+          -0.03589987754821777,
+          1.7346599102020264,
+          -0.09026288986206055
+        ]
+      ],
+      "lengthMetres": 0.031211278293367017,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 3410,
+      "owner": {
+        "face": 2182,
+        "driver": 6,
+        "vertices": [
+          8483,
+          8484
+        ]
+      },
+      "positions": [
+        [
+          -0.030074864625930786,
+          0.1751050353050232,
+          -0.18619775772094727
+        ],
+        [
+          -0.038300007581710815,
+          0.21525494754314423,
+          -0.18391311168670654
+        ]
+      ],
+      "lengthMetres": 0.04104738769853218,
+      "diagnosticToleranceMetres": 1.1920928955078125e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 3411,
+      "owner": {
+        "face": 2182,
+        "driver": 6,
+        "vertices": [
+          8484,
+          8485
+        ]
+      },
+      "positions": [
+        [
+          -0.038300007581710815,
+          0.21525494754314423,
+          -0.18391311168670654
+        ],
+        [
+          -0.009279847145080566,
+          0.19380003213882446,
+          -0.19958287477493286
+        ]
+      ],
+      "lengthMetres": 0.039344943538089074,
+      "diagnosticToleranceMetres": 1.1920928955078125e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 3546,
+      "owner": {
+        "face": 2276,
+        "driver": 0,
+        "vertices": [
+          8432,
+          8545
+        ]
+      },
+      "positions": [
+        [
+          -0.0023549795150756836,
+          0.057300031185150146,
+          -0.08607268333435059
+        ],
+        [
+          -0.004049837589263916,
+          0.06281502544879913,
+          -0.09738266468048096
+        ]
+      ],
+      "lengthMetres": 0.012696589450302756,
+      "diagnosticToleranceMetres": 5.960464477539063e-08,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 3547,
+      "owner": {
+        "face": 2276,
+        "driver": 0,
+        "vertices": [
+          8545,
+          8437
+        ]
+      },
+      "positions": [
+        [
+          -0.004049837589263916,
+          0.06281502544879913,
+          -0.09738266468048096
+        ],
+        [
+          -0.015359818935394287,
+          0.07775500416755676,
+          -0.07870763540267944
+        ]
+      ],
+      "lengthMetres": 0.02645515754429543,
+      "diagnosticToleranceMetres": 5.960464477539063e-08,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 3571,
+      "owner": {
+        "face": 2292,
+        "driver": 9,
+        "vertices": [
+          1491,
+          1492
+        ]
+      },
+      "positions": [
+        [
+          -0.016475021839141846,
+          1.7216449975967407,
+          -0.007247626781463623
+        ],
+        [
+          -0.0062400102615356445,
+          1.7497749328613281,
+          -0.0012376904487609863
+        ]
+      ],
+      "lengthMetres": 0.030531427328357088,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 3593,
+      "owner": {
+        "face": 2304,
+        "driver": 0,
+        "vertices": [
+          7948,
+          8573
+        ]
+      },
+      "positions": [
+        [
+          -0.049304813146591187,
+          0.1524200290441513,
+          0.145321786403656
+        ],
+        [
+          0.020155012607574463,
+          0.16729995608329773,
+          0.14924228191375732
+        ]
+      ],
+      "lengthMetres": 0.07114386767342705,
+      "diagnosticToleranceMetres": 1.1920928955078125e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 3606,
+      "owner": {
+        "face": 2310,
+        "driver": 9,
+        "vertices": [
+          1516,
+          1517
+        ]
+      },
+      "positions": [
+        [
+          -0.04015475511550903,
+          1.8751349449157715,
+          -0.04655778408050537
+        ],
+        [
+          -0.022434890270233154,
+          1.8558549880981445,
+          -0.08434772491455078
+        ]
+      ],
+      "lengthMetres": 0.04597597169462606,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 3619,
+      "owner": {
+        "face": 2318,
+        "driver": 9,
+        "vertices": [
+          1535,
+          1533
+        ]
+      },
+      "positions": [
+        [
+          -0.0062400102615356445,
+          1.7497749328613281,
+          -0.0012376904487609863
+        ],
+        [
+          -0.041124969720840454,
+          1.7843400239944458,
+          -0.0031578540802001953
+        ]
+      ],
+      "lengthMetres": 0.04914664739216269,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 3712,
+      "owner": {
+        "face": 2384,
+        "driver": 0,
+        "vertices": [
+          8613,
+          8614
+        ]
+      },
+      "positions": [
+        [
+          -0.014770030975341797,
+          0.09747989475727081,
+          0.03886193037033081
+        ],
+        [
+          -0.024535059928894043,
+          0.07676489651203156,
+          0.016507208347320557
+        ]
+      ],
+      "lengthMetres": 0.03200313327613468,
+      "diagnosticToleranceMetres": 5.960464477539063e-08,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 3713,
+      "owner": {
+        "face": 2384,
+        "driver": 0,
+        "vertices": [
+          8614,
+          8612
+        ]
+      },
+      "positions": [
+        [
+          -0.024535059928894043,
+          0.07676489651203156,
+          0.016507208347320557
+        ],
+        [
+          -0.023505091667175293,
+          0.05464501678943634,
+          0.028182268142700195
+        ]
+      ],
+      "lengthMetres": 0.025033116761360677,
+      "diagnosticToleranceMetres": 5.960464477539063e-08,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 3715,
+      "owner": {
+        "face": 2387,
+        "driver": 9,
+        "vertices": [
+          1642,
+          1643
+        ]
+      },
+      "positions": [
+        [
+          -0.0231248140335083,
+          1.8257099390029907,
+          0.012177228927612305
+        ],
+        [
+          0.021454989910125732,
+          1.817845106124878,
+          0.04087686538696289
+        ]
+      ],
+      "lengthMetres": 0.053599287763480385,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 3738,
+      "owner": {
+        "face": 2403,
+        "driver": 11,
+        "vertices": [
+          1083,
+          1359
+        ]
+      },
+      "positions": [
+        [
+          -0.017150044441223145,
+          1.5572950839996338,
+          -0.09996265172958374
+        ],
+        [
+          -0.027379989624023438,
+          1.5903449058532715,
+          -0.12253791093826294
+        ]
+      ],
+      "lengthMetres": 0.04131083188873521,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 3775,
+      "owner": {
+        "face": 2431,
+        "driver": 8,
+        "vertices": [
+          8555,
+          8648
+        ]
+      },
+      "positions": [
+        [
+          0.02996504306793213,
+          0.6597799062728882,
+          -0.6173476576805115
+        ],
+        [
+          0.005015134811401367,
+          0.6148649454116821,
+          -0.6225928664207458
+        ]
+      ],
+      "lengthMetres": 0.05164652791719502,
+      "diagnosticToleranceMetres": 4.76837158203125e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 3812,
+      "owner": {
+        "face": 2465,
+        "driver": 11,
+        "vertices": [
+          1734,
+          1735
+        ]
+      },
+      "positions": [
+        [
+          -0.008019804954528809,
+          1.6260449886322021,
+          -0.08965283632278442
+        ],
+        [
+          0.008990168571472168,
+          1.590670108795166,
+          -0.07584273815155029
+        ]
+      ],
+      "lengthMetres": 0.04161057719305422,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 3815,
+      "owner": {
+        "face": 2466,
+        "driver": 9,
+        "vertices": [
+          1737,
+          1738
+        ]
+      },
+      "positions": [
+        [
+          0.003949999809265137,
+          1.8016698360443115,
+          -0.003872811794281006
+        ],
+        [
+          0.012840032577514648,
+          1.7863249778747559,
+          -0.04703789949417114
+        ]
+      ],
+      "lengthMetres": 0.04666607066170813,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 3844,
+      "owner": {
+        "face": 2488,
+        "driver": 9,
+        "vertices": [
+          1775,
+          1776
+        ]
+      },
+      "positions": [
+        [
+          -0.0023299455642700195,
+          1.8531949520111084,
+          -0.08545786142349243
+        ],
+        [
+          0.014310181140899658,
+          1.825165033340454,
+          -0.11169791221618652
+        ]
+      ],
+      "lengthMetres": 0.0418462713159818,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 3857,
+      "owner": {
+        "face": 2496,
+        "driver": 1,
+        "vertices": [
+          8683,
+          8684
+        ]
+      },
+      "positions": [
+        [
+          -0.022024810314178467,
+          0.7046550512313843,
+          0.025387108325958252
+        ],
+        [
+          0.006275177001953125,
+          0.7138900756835938,
+          0.02069711685180664
+        ]
+      ],
+      "lengthMetres": 0.03013587527771063,
+      "diagnosticToleranceMetres": 4.76837158203125e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 3858,
+      "owner": {
+        "face": 2496,
+        "driver": 1,
+        "vertices": [
+          8685,
+          8683
+        ]
+      },
+      "positions": [
+        [
+          -0.0008949637413024902,
+          0.6920099854469299,
+          -0.016963183879852295
+        ],
+        [
+          -0.022024810314178467,
+          0.7046550512313843,
+          0.025387108325958252
+        ]
+      ],
+      "lengthMetres": 0.04898893094163205,
+      "diagnosticToleranceMetres": 4.76837158203125e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 3891,
+      "owner": {
+        "face": 2517,
+        "driver": 9,
+        "vertices": [
+          1825,
+          1823
+        ]
+      },
+      "positions": [
+        [
+          -0.0035750865936279297,
+          1.7234251499176025,
+          -0.0640326738357544
+        ],
+        [
+          -0.005789995193481445,
+          1.745995044708252,
+          -0.07715821266174316
+        ]
+      ],
+      "lengthMetres": 0.026202781158480626,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 3913,
+      "owner": {
+        "face": 2532,
+        "driver": 9,
+        "vertices": [
+          1841,
+          1222
+        ]
+      },
+      "positions": [
+        [
+          0.012840032577514648,
+          1.7863249778747559,
+          -0.04703789949417114
+        ],
+        [
+          -0.016165077686309814,
+          1.837204933166504,
+          -0.04894763231277466
+        ]
+      ],
+      "lengthMetres": 0.0585978954515036,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 3918,
+      "owner": {
+        "face": 2535,
+        "driver": 9,
+        "vertices": [
+          1847,
+          1848
+        ]
+      },
+      "positions": [
+        [
+          -0.005789995193481445,
+          1.745995044708252,
+          -0.07715821266174316
+        ],
+        [
+          0.0015500187873840332,
+          1.7480599880218506,
+          -0.0430026650428772
+        ]
+      ],
+      "lengthMetres": 0.03499630308007257,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 3994,
+      "owner": {
+        "face": 2589,
+        "driver": 9,
+        "vertices": [
+          1926,
+          1927
+        ]
+      },
+      "positions": [
+        [
+          0.012840032577514648,
+          1.7863249778747559,
+          -0.04703789949417114
+        ],
+        [
+          0.018530189990997314,
+          1.7532649040222168,
+          -0.038352906703948975
+        ]
+      ],
+      "lengthMetres": 0.03465220735092874,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 4016,
+      "owner": {
+        "face": 2605,
+        "driver": 9,
+        "vertices": [
+          1945,
+          1946
+        ]
+      },
+      "positions": [
+        [
+          -0.00604480504989624,
+          1.9063199758529663,
+          0.024292171001434326
+        ],
+        [
+          0.013605058193206787,
+          1.9114198684692383,
+          -0.0008729100227355957
+        ]
+      ],
+      "lengthMetres": 0.03233275944182918,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 4110,
+      "owner": {
+        "face": 2667,
+        "driver": 9,
+        "vertices": [
+          2044,
+          2045
+        ]
+      },
+      "positions": [
+        [
+          0.021525025367736816,
+          1.7850399017333984,
+          0.08283227682113647
+        ],
+        [
+          0.014114975929260254,
+          1.7777150869369507,
+          0.10273724794387817
+        ]
+      ],
+      "lengthMetres": 0.022467078579114546,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 4111,
+      "owner": {
+        "face": 2667,
+        "driver": 9,
+        "vertices": [
+          2045,
+          2043
+        ]
+      },
+      "positions": [
+        [
+          0.014114975929260254,
+          1.7777150869369507,
+          0.10273724794387817
+        ],
+        [
+          -0.007869899272918701,
+          1.7744749784469604,
+          0.09553700685501099
+        ]
+      ],
+      "lengthMetres": 0.023359719870325955,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 4186,
+      "owner": {
+        "face": 2722,
+        "driver": 9,
+        "vertices": [
+          2114,
+          2000
+        ]
+      },
+      "positions": [
+        [
+          0.02070009708404541,
+          1.7417900562286377,
+          0.016237199306488037
+        ],
+        [
+          0.008614957332611084,
+          1.7459449768066406,
+          0.03697723150253296
+        ]
+      ],
+      "lengthMetres": 0.02436109405002555,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 4201,
+      "owner": {
+        "face": 2731,
+        "driver": 0,
+        "vertices": [
+          8856,
+          8857
+        ]
+      },
+      "positions": [
+        [
+          0.004165172576904297,
+          0.09078003466129303,
+          -0.204237699508667
+        ],
+        [
+          0.015980005264282227,
+          0.06897501647472382,
+          -0.22466778755187988
+        ]
+      ],
+      "lengthMetres": 0.0321315668307784,
+      "diagnosticToleranceMetres": 1.1920928955078125e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 4230,
+      "owner": {
+        "face": 2751,
+        "driver": 9,
+        "vertices": [
+          2149,
+          2150
+        ]
+      },
+      "positions": [
+        [
+          0.020335018634796143,
+          1.7777249813079834,
+          -0.06956279277801514
+        ],
+        [
+          0.05580991506576538,
+          1.7964198589324951,
+          -0.08197784423828125
+        ]
+      ],
+      "lengthMetres": 0.041977377585367556,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 4296,
+      "owner": {
+        "face": 2799,
+        "driver": 9,
+        "vertices": [
+          2231,
+          2232
+        ]
+      },
+      "positions": [
+        [
+          0.01972496509552002,
+          1.8343400955200195,
+          0.027642250061035156
+        ],
+        [
+          0.03933519124984741,
+          1.7867698669433594,
+          -0.004412829875946045
+        ]
+      ],
+      "lengthMetres": 0.06062190830405964,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 4339,
+      "owner": {
+        "face": 2825,
+        "driver": 11,
+        "vertices": [
+          2262,
+          2263
+        ]
+      },
+      "positions": [
+        [
+          0.024805068969726562,
+          1.7034350633621216,
+          -0.14527767896652222
+        ],
+        [
+          0.006985366344451904,
+          1.707724928855896,
+          -0.13762801885604858
+        ]
+      ],
+      "lengthMetres": 0.01986106863725284,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 4342,
+      "owner": {
+        "face": 2828,
+        "driver": 9,
+        "vertices": [
+          2118,
+          2265
+        ]
+      },
+      "positions": [
+        [
+          0.010085105895996094,
+          1.8306550979614258,
+          -0.06908267736434937
+        ],
+        [
+          0.031329989433288574,
+          1.814965009689331,
+          -0.04709780216217041
+        ]
+      ],
+      "lengthMetres": 0.034363624432743246,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 4359,
+      "owner": {
+        "face": 2836,
+        "driver": 9,
+        "vertices": [
+          2284,
+          2282
+        ]
+      },
+      "positions": [
+        [
+          0.03624528646469116,
+          1.855120062828064,
+          0.026117265224456787
+        ],
+        [
+          0.008575022220611572,
+          1.868690013885498,
+          0.018782317638397217
+        ]
+      ],
+      "lengthMetres": 0.03167946576457038,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 4362,
+      "owner": {
+        "face": 2839,
+        "driver": 9,
+        "vertices": [
+          2286,
+          2287
+        ]
+      },
+      "positions": [
+        [
+          0.01565992832183838,
+          1.8419251441955566,
+          -0.005472898483276367
+        ],
+        [
+          0.022194981575012207,
+          1.8756049871444702,
+          -0.004417896270751953
+        ]
+      ],
+      "lengthMetres": 0.03432421553005593,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 4363,
+      "owner": {
+        "face": 2839,
+        "driver": 9,
+        "vertices": [
+          2287,
+          2285
+        ]
+      },
+      "positions": [
+        [
+          0.022194981575012207,
+          1.8756049871444702,
+          -0.004417896270751953
+        ],
+        [
+          0.005860030651092529,
+          1.8578898906707764,
+          -0.013197660446166992
+        ]
+      ],
+      "lengthMetres": 0.025646432963183124,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 4377,
+      "owner": {
+        "face": 2851,
+        "driver": 11,
+        "vertices": [
+          2306,
+          2307
+        ]
+      },
+      "positions": [
+        [
+          0.020759999752044678,
+          1.4855098724365234,
+          -0.2003777027130127
+        ],
+        [
+          0.007399916648864746,
+          1.5222749710083008,
+          -0.21388262510299683
+        ]
+      ],
+      "lengthMetres": 0.04138293394958691,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 4388,
+      "owner": {
+        "face": 2861,
+        "driver": 9,
+        "vertices": [
+          2322,
+          2323
+        ]
+      },
+      "positions": [
+        [
+          0.01972496509552002,
+          1.8343400955200195,
+          0.027642250061035156
+        ],
+        [
+          0.01565992832183838,
+          1.8419251441955566,
+          -0.005472898483276367
+        ]
+      ],
+      "lengthMetres": 0.034215063210426326,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 4393,
+      "owner": {
+        "face": 2864,
+        "driver": 0,
+        "vertices": [
+          8954,
+          8952
+        ]
+      },
+      "positions": [
+        [
+          0.0027951598167419434,
+          0.10517001152038574,
+          0.1744621992111206
+        ],
+        [
+          -0.012809932231903076,
+          0.1545649766921997,
+          0.15810728073120117
+        ]
+      ],
+      "lengthMetres": 0.054321863376141734,
+      "diagnosticToleranceMetres": 1.1920928955078125e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 4401,
+      "owner": {
+        "face": 2868,
+        "driver": 10,
+        "vertices": [
+          2338,
+          2339
+        ]
+      },
+      "positions": [
+        [
+          0.01735508441925049,
+          1.5956199169158936,
+          0.04732191562652588
+        ],
+        [
+          0.019119977951049805,
+          1.6321148872375488,
+          0.045937299728393555
+        ]
+      ],
+      "lengthMetres": 0.03656384647630015,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 4402,
+      "owner": {
+        "face": 2868,
+        "driver": 10,
+        "vertices": [
+          2339,
+          2337
+        ]
+      },
+      "positions": [
+        [
+          0.019119977951049805,
+          1.6321148872375488,
+          0.045937299728393555
+        ],
+        [
+          0.0021851062774658203,
+          1.5968250036239624,
+          0.027962327003479004
+        ]
+      ],
+      "lengthMetres": 0.043072791975011966,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 4408,
+      "owner": {
+        "face": 2872,
+        "driver": 9,
+        "vertices": [
+          2340,
+          2341
+        ]
+      },
+      "positions": [
+        [
+          0.003605186939239502,
+          1.8967150449752808,
+          -0.04687786102294922
+        ],
+        [
+          0.035025179386138916,
+          1.8706250190734863,
+          -0.04092782735824585
+        ]
+      ],
+      "lengthMetres": 0.04127115551484625,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 4410,
+      "owner": {
+        "face": 2872,
+        "driver": 9,
+        "vertices": [
+          2342,
+          2340
+        ]
+      },
+      "positions": [
+        [
+          0.020464956760406494,
+          1.9087451696395874,
+          -0.06863772869110107
+        ],
+        [
+          0.003605186939239502,
+          1.8967150449752808,
+          -0.04687786102294922
+        ]
+      ],
+      "lengthMetres": 0.03004109816230047,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 4441,
+      "owner": {
+        "face": 2896,
+        "driver": 0,
+        "vertices": [
+          8983,
+          8981
+        ]
+      },
+      "positions": [
+        [
+          0.033794939517974854,
+          0.14589503407478333,
+          0.20012229681015015
+        ],
+        [
+          0.009990036487579346,
+          0.18382996320724487,
+          0.16323208808898926
+        ]
+      ],
+      "lengthMetres": 0.0580225797087843,
+      "diagnosticToleranceMetres": 1.1920928955078125e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 4518,
+      "owner": {
+        "face": 2954,
+        "driver": 9,
+        "vertices": [
+          2440,
+          2441
+        ]
+      },
+      "positions": [
+        [
+          0.035440027713775635,
+          1.9424400329589844,
+          -0.010537803173065186
+        ],
+        [
+          0.021400153636932373,
+          1.9252350330352783,
+          -0.051992833614349365
+        ]
+      ],
+      "lengthMetres": 0.04702817916266947,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 4519,
+      "owner": {
+        "face": 2954,
+        "driver": 9,
+        "vertices": [
+          2441,
+          2439
+        ]
+      },
+      "positions": [
+        [
+          0.021400153636932373,
+          1.9252350330352783,
+          -0.051992833614349365
+        ],
+        [
+          0.00666499137878418,
+          1.9472700357437134,
+          -0.02922266721725464
+        ]
+      ],
+      "lengthMetres": 0.034944911344659,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 4539,
+      "owner": {
+        "face": 2971,
+        "driver": 10,
+        "vertices": [
+          2461,
+          2462
+        ]
+      },
+      "positions": [
+        [
+          -0.0013998150825500488,
+          1.590595006942749,
+          -0.023592710494995117
+        ],
+        [
+          0.03495991230010986,
+          1.4699950218200684,
+          -0.028107762336730957
+        ]
+      ],
+      "lengthMetres": 0.1260427383075507,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 4633,
+      "owner": {
+        "face": 3034,
+        "driver": 0,
+        "vertices": [
+          9081,
+          8986
+        ]
+      },
+      "positions": [
+        [
+          0.02544999122619629,
+          0.1328200101852417,
+          0.2636072039604187
+        ],
+        [
+          0.0305899977684021,
+          0.14119498431682587,
+          0.2365320920944214
+        ]
+      ],
+      "lengthMetres": 0.02880315158997173,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 4634,
+      "owner": {
+        "face": 3034,
+        "driver": 0,
+        "vertices": [
+          8985,
+          9081
+        ]
+      },
+      "positions": [
+        [
+          0.013200044631958008,
+          0.14149002730846405,
+          0.21242231130599976
+        ],
+        [
+          0.02544999122619629,
+          0.1328200101852417,
+          0.2636072039604187
+        ]
+      ],
+      "lengthMetres": 0.05333970026652802,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 4656,
+      "owner": {
+        "face": 3053,
+        "driver": 11,
+        "vertices": [
+          2586,
+          2587
+        ]
+      },
+      "positions": [
+        [
+          0.0283050537109375,
+          1.6555999517440796,
+          -0.13194769620895386
+        ],
+        [
+          0.037975013256073,
+          1.6363348960876465,
+          -0.11413782835006714
+        ]
+      ],
+      "lengthMetres": 0.027961435589057806,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 4657,
+      "owner": {
+        "face": 3053,
+        "driver": 11,
+        "vertices": [
+          2587,
+          2585
+        ]
+      },
+      "positions": [
+        [
+          0.037975013256073,
+          1.6363348960876465,
+          -0.11413782835006714
+        ],
+        [
+          0.03510028123855591,
+          1.5974348783493042,
+          -0.0995481014251709
+        ]
+      ],
+      "lengthMetres": 0.0416453550346125,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 4733,
+      "owner": {
+        "face": 3113,
+        "driver": 9,
+        "vertices": [
+          2667,
+          2668
+        ]
+      },
+      "positions": [
+        [
+          0.013180077075958252,
+          1.7050299644470215,
+          0.08238226175308228
+        ],
+        [
+          0.04273504018783569,
+          1.6995949745178223,
+          0.037271976470947266
+        ]
+      ],
+      "lengthMetres": 0.054203070008169645,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 4772,
+      "owner": {
+        "face": 3140,
+        "driver": 11,
+        "vertices": [
+          2711,
+          2712
+        ]
+      },
+      "positions": [
+        [
+          0.05053997039794922,
+          1.7019150257110596,
+          -0.08746296167373657
+        ],
+        [
+          0.04202991724014282,
+          1.6873300075531006,
+          -0.09973287582397461
+        ]
+      ],
+      "lengthMetres": 0.020873297599346766,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 4773,
+      "owner": {
+        "face": 3140,
+        "driver": 11,
+        "vertices": [
+          2712,
+          2710
+        ]
+      },
+      "positions": [
+        [
+          0.04202991724014282,
+          1.6873300075531006,
+          -0.09973287582397461
+        ],
+        [
+          0.03019005060195923,
+          1.7014800310134888,
+          -0.10502785444259644
+        ]
+      ],
+      "lengthMetres": 0.01919485359441877,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 4792,
+      "owner": {
+        "face": 3151,
+        "driver": 9,
+        "vertices": [
+          2723,
+          2724
+        ]
+      },
+      "positions": [
+        [
+          0.032269954681396484,
+          1.8340998888015747,
+          -0.04726290702819824
+        ],
+        [
+          0.035025179386138916,
+          1.8706250190734863,
+          -0.04092782735824585
+        ]
+      ],
+      "lengthMetres": 0.037172700184118744,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 4886,
+      "owner": {
+        "face": 3229,
+        "driver": 11,
+        "vertices": [
+          2820,
+          2821
+        ]
+      },
+      "positions": [
+        [
+          0.03242999315261841,
+          1.7144149541854858,
+          -0.2347278594970703
+        ],
+        [
+          0.05032002925872803,
+          1.650860071182251,
+          -0.20920813083648682
+        ]
+      ],
+      "lengthMetres": 0.07078511917304783,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 4887,
+      "owner": {
+        "face": 3229,
+        "driver": 11,
+        "vertices": [
+          2822,
+          2820
+        ]
+      },
+      "positions": [
+        [
+          0.047914981842041016,
+          1.7007100582122803,
+          -0.2590176463127136
+        ],
+        [
+          0.03242999315261841,
+          1.7144149541854858,
+          -0.2347278594970703
+        ]
+      ],
+      "lengthMetres": 0.031899887020134285,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 4965,
+      "owner": {
+        "face": 3286,
+        "driver": 9,
+        "vertices": [
+          2896,
+          2897
+        ]
+      },
+      "positions": [
+        [
+          0.03933519124984741,
+          1.7867698669433594,
+          -0.004412829875946045
+        ],
+        [
+          0.06303012371063232,
+          1.8106199502944946,
+          -0.022852718830108643
+        ]
+      ],
+      "lengthMetres": 0.03834456682268174,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 4976,
+      "owner": {
+        "face": 3294,
+        "driver": 0,
+        "vertices": [
+          9228,
+          9229
+        ]
+      },
+      "positions": [
+        [
+          0.018135011196136475,
+          0.051989927887916565,
+          -0.37869274616241455
+        ],
+        [
+          0.0532299280166626,
+          0.06905995309352875,
+          -0.3782626986503601
+        ]
+      ],
+      "lengthMetres": 0.039028500970733,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 4977,
+      "owner": {
+        "face": 3294,
+        "driver": 0,
+        "vertices": [
+          9229,
+          9230
+        ]
+      },
+      "positions": [
+        [
+          0.0532299280166626,
+          0.06905995309352875,
+          -0.3782626986503601
+        ],
+        [
+          0.0911751389503479,
+          0.05288995802402496,
+          -0.35767287015914917
+        ]
+      ],
+      "lengthMetres": 0.04610042093785185,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 5006,
+      "owner": {
+        "face": 3315,
+        "driver": 9,
+        "vertices": [
+          2937,
+          2935
+        ]
+      },
+      "positions": [
+        [
+          0.06487011909484863,
+          1.8995699882507324,
+          -0.026327669620513916
+        ],
+        [
+          0.04086017608642578,
+          1.89705491065979,
+          -0.02787262201309204
+        ]
+      ],
+      "lengthMetres": 0.024190697725603262,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 5045,
+      "owner": {
+        "face": 3342,
+        "driver": 9,
+        "vertices": [
+          2982,
+          2980
+        ]
+      },
+      "positions": [
+        [
+          0.06658017635345459,
+          1.9237051010131836,
+          -0.0019928812980651855
+        ],
+        [
+          0.04548519849777222,
+          1.911754846572876,
+          -0.004887878894805908
+        ]
+      ],
+      "lengthMetres": 0.024416954826614972,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 5083,
+      "owner": {
+        "face": 3364,
+        "driver": 11,
+        "vertices": [
+          3021,
+          2845
+        ]
+      },
+      "positions": [
+        [
+          0.06143510341644287,
+          1.5658700466156006,
+          -0.1923978328704834
+        ],
+        [
+          0.031149983406066895,
+          1.5725698471069336,
+          -0.188768208026886
+        ]
+      ],
+      "lengthMetres": 0.031228992893972757,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 5139,
+      "owner": {
+        "face": 3397,
+        "driver": 9,
+        "vertices": [
+          3079,
+          3077
+        ]
+      },
+      "positions": [
+        [
+          0.06487011909484863,
+          1.8995699882507324,
+          -0.026327669620513916
+        ],
+        [
+          0.035025179386138916,
+          1.8706250190734863,
+          -0.04092782735824585
+        ]
+      ],
+      "lengthMetres": 0.04406468282939182,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 5140,
+      "owner": {
+        "face": 3398,
+        "driver": 9,
+        "vertices": [
+          3080,
+          3081
+        ]
+      },
+      "positions": [
+        [
+          0.04162490367889404,
+          1.9104499816894531,
+          -0.02956777811050415
+        ],
+        [
+          0.06902992725372314,
+          1.9575300216674805,
+          -0.012457668781280518
+        ]
+      ],
+      "lengthMetres": 0.057099223486204935,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 5200,
+      "owner": {
+        "face": 3438,
+        "driver": 11,
+        "vertices": [
+          3158,
+          3159
+        ]
+      },
+      "positions": [
+        [
+          0.06622016429901123,
+          1.638949990272522,
+          -0.08194774389266968
+        ],
+        [
+          0.05206018686294556,
+          1.627579927444458,
+          -0.10569781064987183
+        ]
+      ],
+      "lengthMetres": 0.029897306913425657,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 5259,
+      "owner": {
+        "face": 3478,
+        "driver": 9,
+        "vertices": [
+          3214,
+          3215
+        ]
+      },
+      "positions": [
+        [
+          0.06947517395019531,
+          1.8263100385665894,
+          0.0069519877433776855
+        ],
+        [
+          0.051904916763305664,
+          1.7703900337219238,
+          0.01013725996017456
+        ]
+      ],
+      "lengthMetres": 0.05870184697721156,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 5269,
+      "owner": {
+        "face": 3487,
+        "driver": 1,
+        "vertices": [
+          3237,
+          3238
+        ]
+      },
+      "positions": [
+        [
+          0.06923496723175049,
+          1.003844976425171,
+          -0.04727274179458618
+        ],
+        [
+          0.08841514587402344,
+          1.071549892425537,
+          -0.0034877657890319824
+        ]
+      ],
+      "lengthMetres": 0.08287918331627735,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 5470,
+      "owner": {
+        "face": 3636,
+        "driver": 9,
+        "vertices": [
+          3453,
+          3454
+        ]
+      },
+      "positions": [
+        [
+          0.06902992725372314,
+          1.9575300216674805,
+          -0.012457668781280518
+        ],
+        [
+          0.07376998662948608,
+          1.9322049617767334,
+          0.02616196870803833
+        ]
+      ],
+      "lengthMetres": 0.0464252433613663,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 5494,
+      "owner": {
+        "face": 3653,
+        "driver": 11,
+        "vertices": [
+          3476,
+          3474
+        ]
+      },
+      "positions": [
+        [
+          0.06988495588302612,
+          1.526539921760559,
+          -0.17789781093597412
+        ],
+        [
+          0.04695504903793335,
+          1.5497949123382568,
+          -0.16681283712387085
+        ]
+      ],
+      "lengthMetres": 0.034488430800899875,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 5507,
+      "owner": {
+        "face": 3661,
+        "driver": 11,
+        "vertices": [
+          3490,
+          3491
+        ]
+      },
+      "positions": [
+        [
+          0.057485103607177734,
+          1.6085599660873413,
+          -0.25794774293899536
+        ],
+        [
+          0.08385509252548218,
+          1.6067849397659302,
+          -0.22439271211624146
+        ]
+      ],
+      "lengthMetres": 0.04271378147049458,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 5508,
+      "owner": {
+        "face": 3661,
+        "driver": 11,
+        "vertices": [
+          3492,
+          3490
+        ]
+      },
+      "positions": [
+        [
+          0.06781548261642456,
+          1.5881550312042236,
+          -0.22417277097702026
+        ],
+        [
+          0.057485103607177734,
+          1.6085599660873413,
+          -0.25794774293899536
+        ]
+      ],
+      "lengthMetres": 0.04079003345293019,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 5520,
+      "owner": {
+        "face": 3669,
+        "driver": 11,
+        "vertices": [
+          3068,
+          3497
+        ]
+      },
+      "positions": [
+        [
+          0.06790041923522949,
+          1.543834924697876,
+          -0.14336764812469482
+        ],
+        [
+          0.08294999599456787,
+          1.5518798828125,
+          -0.12069284915924072
+        ]
+      ],
+      "lengthMetres": 0.02837882343975929,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 5521,
+      "owner": {
+        "face": 3669,
+        "driver": 11,
+        "vertices": [
+          3497,
+          3282
+        ]
+      },
+      "positions": [
+        [
+          0.08294999599456787,
+          1.5518798828125,
+          -0.12069284915924072
+        ],
+        [
+          0.09016990661621094,
+          1.5799798965454102,
+          -0.1689678430557251
+        ]
+      ],
+      "lengthMetres": 0.05632240155461996,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 5556,
+      "owner": {
+        "face": 3693,
+        "driver": 9,
+        "vertices": [
+          3523,
+          3524
+        ]
+      },
+      "positions": [
+        [
+          0.05951493978500366,
+          1.7159149646759033,
+          0.07790714502334595
+        ],
+        [
+          0.07452011108398438,
+          1.6640400886535645,
+          0.07538735866546631
+        ]
+      ],
+      "lengthMetres": 0.05406021875033562,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 5566,
+      "owner": {
+        "face": 3699,
+        "driver": 11,
+        "vertices": [
+          3528,
+          3526
+        ]
+      },
+      "positions": [
+        [
+          0.06568998098373413,
+          1.511449933052063,
+          -0.07174283266067505
+        ],
+        [
+          0.08912503719329834,
+          1.6253199577331543,
+          -0.11948764324188232
+        ]
+      ],
+      "lengthMetres": 0.12567876239784168,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 5701,
+      "owner": {
+        "face": 3803,
+        "driver": 0,
+        "vertices": [
+          9425,
+          9533
+        ]
+      },
+      "positions": [
+        [
+          0.07077008485794067,
+          0.043269917368888855,
+          0.3658321499824524
+        ],
+        [
+          0.09021997451782227,
+          0.06952501833438873,
+          0.29394716024398804
+        ]
+      ],
+      "lengthMetres": 0.07896252455557184,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 5729,
+      "owner": {
+        "face": 3821,
+        "driver": 11,
+        "vertices": [
+          3676,
+          3677
+        ]
+      },
+      "positions": [
+        [
+          0.06300508975982666,
+          1.6219300031661987,
+          -0.19684284925460815
+        ],
+        [
+          0.10375499725341797,
+          1.6363149881362915,
+          -0.20262271165847778
+        ]
+      ],
+      "lengthMetres": 0.04359919222570195,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 5746,
+      "owner": {
+        "face": 3832,
+        "driver": 0,
+        "vertices": [
+          9391,
+          9555
+        ]
+      },
+      "positions": [
+        [
+          0.07378995418548584,
+          0.08080996572971344,
+          -0.0365176796913147
+        ],
+        [
+          0.0919950008392334,
+          0.104994997382164,
+          -0.03962278366088867
+        ]
+      ],
+      "lengthMetres": 0.030429938388978457,
+      "diagnosticToleranceMetres": 5.960464477539063e-08,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 5747,
+      "owner": {
+        "face": 3832,
+        "driver": 0,
+        "vertices": [
+          9555,
+          9392
+        ]
+      },
+      "positions": [
+        [
+          0.0919950008392334,
+          0.104994997382164,
+          -0.03962278366088867
+        ],
+        [
+          0.0807449221611023,
+          0.058834999799728394,
+          -0.012462735176086426
+        ]
+      ],
+      "lengthMetres": 0.054726391081190526,
+      "diagnosticToleranceMetres": 5.960464477539063e-08,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 5754,
+      "owner": {
+        "face": 3838,
+        "driver": 9,
+        "vertices": [
+          3702,
+          3703
+        ]
+      },
+      "positions": [
+        [
+          0.09621500968933105,
+          1.764124870300293,
+          -0.04361778497695923
+        ],
+        [
+          0.08552998304367065,
+          1.726064920425415,
+          -0.07581770420074463
+        ]
+      ],
+      "lengthMetres": 0.050985923321197175,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 5853,
+      "owner": {
+        "face": 3914,
+        "driver": 11,
+        "vertices": [
+          3797,
+          3798
+        ]
+      },
+      "positions": [
+        [
+          0.08380502462387085,
+          1.6391949653625488,
+          -0.10254263877868652
+        ],
+        [
+          0.08912503719329834,
+          1.6253199577331543,
+          -0.11948764324188232
+        ]
+      ],
+      "lengthMetres": 0.022537780430032336,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 5919,
+      "owner": {
+        "face": 3966,
+        "driver": 10,
+        "vertices": [
+          3867,
+          3868
+        ]
+      },
+      "positions": [
+        [
+          0.10064005851745605,
+          1.6282099485397339,
+          0.07432222366333008
+        ],
+        [
+          0.07154017686843872,
+          1.6081299781799316,
+          0.029107332229614258
+        ]
+      ],
+      "lengthMetres": 0.05739681810867272,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 5920,
+      "owner": {
+        "face": 3966,
+        "driver": 10,
+        "vertices": [
+          3869,
+          3867
+        ]
+      },
+      "positions": [
+        [
+          0.09213000535964966,
+          1.6319849491119385,
+          0.05389213562011719
+        ],
+        [
+          0.10064005851745605,
+          1.6282099485397339,
+          0.07432222366333008
+        ]
+      ],
+      "lengthMetres": 0.022451283516143703,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 5938,
+      "owner": {
+        "face": 3980,
+        "driver": 11,
+        "vertices": [
+          3884,
+          3885
+        ]
+      },
+      "positions": [
+        [
+          0.07605999708175659,
+          1.6240800619125366,
+          -0.014677643775939941
+        ],
+        [
+          0.1046299934387207,
+          1.651630163192749,
+          -0.007252991199493408
+        ]
+      ],
+      "lengthMetres": 0.04037794247194671,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 5939,
+      "owner": {
+        "face": 3980,
+        "driver": 11,
+        "vertices": [
+          3885,
+          3886
+        ]
+      },
+      "positions": [
+        [
+          0.1046299934387207,
+          1.651630163192749,
+          -0.007252991199493408
+        ],
+        [
+          0.09899497032165527,
+          1.661199927330017,
+          0.0033921003341674805
+        ]
+      ],
+      "lengthMetres": 0.015383492611654304,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 6009,
+      "owner": {
+        "face": 4028,
+        "driver": 6,
+        "vertices": [
+          9336,
+          9691
+        ]
+      },
+      "positions": [
+        [
+          0.0738951563835144,
+          0.14435000717639923,
+          0.3296521306037903
+        ],
+        [
+          0.11375993490219116,
+          0.16632996499538422,
+          0.32196223735809326
+        ]
+      ],
+      "lengthMetres": 0.04616766801775597,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 6010,
+      "owner": {
+        "face": 4028,
+        "driver": 6,
+        "vertices": [
+          9691,
+          9337
+        ]
+      },
+      "positions": [
+        [
+          0.11375993490219116,
+          0.16632996499538422,
+          0.32196223735809326
+        ],
+        [
+          0.06211012601852417,
+          0.16533002257347107,
+          0.3339323401451111
+        ]
+      ],
+      "lengthMetres": 0.053028162360185926,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 6014,
+      "owner": {
+        "face": 4030,
+        "driver": 0,
+        "vertices": [
+          9697,
+          9695
+        ]
+      },
+      "positions": [
+        [
+          0.09021997451782227,
+          0.06952501833438873,
+          0.29394716024398804
+        ],
+        [
+          0.08679002523422241,
+          0.05396999418735504,
+          0.25354713201522827
+        ]
+      ],
+      "lengthMetres": 0.043426784467508694,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 6038,
+      "owner": {
+        "face": 4043,
+        "driver": 11,
+        "vertices": [
+          3677,
+          3719
+        ]
+      },
+      "positions": [
+        [
+          0.10375499725341797,
+          1.6363149881362915,
+          -0.20262271165847778
+        ],
+        [
+          0.10810494422912598,
+          1.568619966506958,
+          -0.1929977536201477
+        ]
+      ],
+      "lengthMetres": 0.06851407015589583,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 6099,
+      "owner": {
+        "face": 4086,
+        "driver": 9,
+        "vertices": [
+          4023,
+          4024
+        ]
+      },
+      "positions": [
+        [
+          0.1184701919555664,
+          1.7432150840759277,
+          -0.09303271770477295
+        ],
+        [
+          0.08552998304367065,
+          1.726064920425415,
+          -0.07581770420074463
+        ]
+      ],
+      "lengthMetres": 0.040933386939545825,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 6269,
+      "owner": {
+        "face": 4199,
+        "driver": 9,
+        "vertices": [
+          4203,
+          4201
+        ]
+      },
+      "positions": [
+        [
+          0.12758493423461914,
+          1.8253300189971924,
+          -0.04190772771835327
+        ],
+        [
+          0.103130042552948,
+          1.819540023803711,
+          -0.07706791162490845
+        ]
+      ],
+      "lengthMetres": 0.04321810157614039,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 6290,
+      "owner": {
+        "face": 4214,
+        "driver": 11,
+        "vertices": [
+          4167,
+          4219
+        ]
+      },
+      "positions": [
+        [
+          0.10502547025680542,
+          1.6957999467849731,
+          -0.07591277360916138
+        ],
+        [
+          0.11934012174606323,
+          1.6938549280166626,
+          -0.1023527979850769
+        ]
+      ],
+      "lengthMetres": 0.030129175798003477,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 6291,
+      "owner": {
+        "face": 4214,
+        "driver": 11,
+        "vertices": [
+          4219,
+          3997
+        ]
+      },
+      "positions": [
+        [
+          0.11934012174606323,
+          1.6938549280166626,
+          -0.1023527979850769
+        ],
+        [
+          0.10857999324798584,
+          1.66975998878479,
+          -0.08366793394088745
+        ]
+      ],
+      "lengthMetres": 0.03233373789453691,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 6463,
+      "owner": {
+        "face": 4345,
+        "driver": 11,
+        "vertices": [
+          4390,
+          4391
+        ]
+      },
+      "positions": [
+        [
+          0.12322992086410522,
+          1.6949249505996704,
+          -0.04536271095275879
+        ],
+        [
+          0.13227999210357666,
+          1.6307449340820312,
+          -0.04346281290054321
+        ]
+      ],
+      "lengthMetres": 0.06484279391152695,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 6522,
+      "owner": {
+        "face": 4385,
+        "driver": 9,
+        "vertices": [
+          4453,
+          4454
+        ]
+      },
+      "positions": [
+        [
+          0.1168099045753479,
+          1.740339994430542,
+          -0.026077628135681152
+        ],
+        [
+          0.12322992086410522,
+          1.6949249505996704,
+          -0.04536271095275879
+        ]
+      ],
+      "lengthMetres": 0.04975597687282845,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 6530,
+      "owner": {
+        "face": 4390,
+        "driver": 17,
+        "vertices": [
+          4460,
+          4461
+        ]
+      },
+      "positions": [
+        [
+          0.14822512865066528,
+          1.2206699848175049,
+          0.043652355670928955
+        ],
+        [
+          0.12276500463485718,
+          1.1807349920272827,
+          0.003592371940612793
+        ]
+      ],
+      "lengthMetres": 0.06203082991971509,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 6602,
+      "owner": {
+        "face": 4444,
+        "driver": 14,
+        "vertices": [
+          4528,
+          4529
+        ]
+      },
+      "positions": [
+        [
+          0.11315017938613892,
+          1.174489974975586,
+          -0.22989273071289062
+        ],
+        [
+          0.12822508811950684,
+          1.1493949890136719,
+          -0.17802774906158447
+        ]
+      ],
+      "lengthMetres": 0.05955659086480992,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 6603,
+      "owner": {
+        "face": 4444,
+        "driver": 14,
+        "vertices": [
+          4530,
+          4528
+        ]
+      },
+      "positions": [
+        [
+          0.14470994472503662,
+          1.152554988861084,
+          -0.2015477418899536
+        ],
+        [
+          0.11315017938613892,
+          1.174489974975586,
+          -0.22989273071289062
+        ]
+      ],
+      "lengthMetres": 0.04775563626905317,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 6608,
+      "owner": {
+        "face": 4448,
+        "driver": 9,
+        "vertices": [
+          6118,
+          4537
+        ]
+      },
+      "positions": [
+        [
+          0.12984514236450195,
+          1.757789969444275,
+          -0.02335280179977417
+        ],
+        [
+          0.13385504484176636,
+          1.7492849826812744,
+          -0.05429774522781372
+        ]
+      ],
+      "lengthMetres": 0.03234197955414221,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 6634,
+      "owner": {
+        "face": 4466,
+        "driver": 17,
+        "vertices": [
+          4568,
+          4569
+        ]
+      },
+      "positions": [
+        [
+          0.1105499267578125,
+          1.310230016708374,
+          0.09365230798721313
+        ],
+        [
+          0.1368001103401184,
+          1.3448750972747803,
+          0.10494709014892578
+        ]
+      ],
+      "lengthMetres": 0.04491019761299303,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 6636,
+      "owner": {
+        "face": 4466,
+        "driver": 17,
+        "vertices": [
+          4570,
+          4568
+        ]
+      },
+      "positions": [
+        [
+          0.1407301425933838,
+          1.29933500289917,
+          0.08809208869934082
+        ],
+        [
+          0.1105499267578125,
+          1.310230016708374,
+          0.09365230798721313
+        ]
+      ],
+      "lengthMetres": 0.03256474769307515,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 6679,
+      "owner": {
+        "face": 4499,
+        "driver": 17,
+        "vertices": [
+          4389,
+          6119
+        ]
+      },
+      "positions": [
+        [
+          0.12107491493225098,
+          1.125349998474121,
+          -0.004207789897918701
+        ],
+        [
+          0.12276500463485718,
+          1.1807349920272827,
+          0.003592371940612793
+        ]
+      ],
+      "lengthMetres": 0.055957094624309194,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 6736,
+      "owner": {
+        "face": 4540,
+        "driver": 17,
+        "vertices": [
+          4652,
+          4653
+        ]
+      },
+      "positions": [
+        [
+          0.14056503772735596,
+          1.2825900316238403,
+          0.1221272349357605
+        ],
+        [
+          0.12807011604309082,
+          1.2359700202941895,
+          0.06352722644805908
+        ]
+      ],
+      "lengthMetres": 0.07591778130998939,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 6737,
+      "owner": {
+        "face": 4540,
+        "driver": 17,
+        "vertices": [
+          4654,
+          4652
+        ]
+      },
+      "positions": [
+        [
+          0.1520150899887085,
+          1.2630300521850586,
+          0.08078217506408691
+        ],
+        [
+          0.14056503772735596,
+          1.2825900316238403,
+          0.1221272349357605
+        ]
+      ],
+      "lengthMetres": 0.047149872409430145,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 6756,
+      "owner": {
+        "face": 4552,
+        "driver": 15,
+        "vertices": [
+          4667,
+          4668
+        ]
+      },
+      "positions": [
+        [
+          0.13047993183135986,
+          1.626235008239746,
+          0.02209186553955078
+        ],
+        [
+          0.16404509544372559,
+          1.583940029144287,
+          0.01997232437133789
+        ]
+      ],
+      "lengthMetres": 0.05403682003758124,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 6758,
+      "owner": {
+        "face": 4552,
+        "driver": 15,
+        "vertices": [
+          4669,
+          4667
+        ]
+      },
+      "positions": [
+        [
+          0.17251014709472656,
+          1.5844899415969849,
+          0.03546714782714844
+        ],
+        [
+          0.13047993183135986,
+          1.626235008239746,
+          0.02209186553955078
+        ]
+      ],
+      "lengthMetres": 0.06072962835689383,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 6759,
+      "owner": {
+        "face": 4554,
+        "driver": 17,
+        "vertices": [
+          6116,
+          4673
+        ]
+      },
+      "positions": [
+        [
+          0.13018518686294556,
+          1.173949956893921,
+          0.024316906929016113
+        ],
+        [
+          0.14822512865066528,
+          1.2206699848175049,
+          0.043652355670928955
+        ]
+      ],
+      "lengthMetres": 0.053684821755650106,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 6876,
+      "owner": {
+        "face": 4629,
+        "driver": 0,
+        "vertices": [
+          9557,
+          10084
+        ]
+      },
+      "positions": [
+        [
+          0.11434495449066162,
+          0.07022999227046967,
+          -0.2723178267478943
+        ],
+        [
+          0.15471011400222778,
+          0.05423501133918762,
+          -0.24736285209655762
+        ]
+      ],
+      "lengthMetres": 0.05007929988762934,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 6952,
+      "owner": {
+        "face": 4682,
+        "driver": 11,
+        "vertices": [
+          4880,
+          6121
+        ]
+      },
+      "positions": [
+        [
+          0.16717493534088135,
+          1.65215003490448,
+          -0.10477274656295776
+        ],
+        [
+          0.1406651735305786,
+          1.655094861984253,
+          -0.08386284112930298
+        ]
+      ],
+      "lengthMetres": 0.03389194038430281,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 6999,
+      "owner": {
+        "face": 4713,
+        "driver": 11,
+        "vertices": [
+          4922,
+          4920
+        ]
+      },
+      "positions": [
+        [
+          0.16510993242263794,
+          1.7075750827789307,
+          -0.16936808824539185
+        ],
+        [
+          0.15158504247665405,
+          1.7427700757980347,
+          -0.1621180772781372
+        ]
+      ],
+      "lengthMetres": 0.03839495853222227,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 7118,
+      "owner": {
+        "face": 4792,
+        "driver": 11,
+        "vertices": [
+          5027,
+          5028
+        ]
+      },
+      "positions": [
+        [
+          0.16673505306243896,
+          1.7240999937057495,
+          -0.1110878586769104
+        ],
+        [
+          0.1625901460647583,
+          1.6992950439453125,
+          -0.13906270265579224
+        ]
+      ],
+      "lengthMetres": 0.037617252455223356,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 7130,
+      "owner": {
+        "face": 4798,
+        "driver": 13,
+        "vertices": [
+          5036,
+          5037
+        ]
+      },
+      "positions": [
+        [
+          0.16043990850448608,
+          1.403864860534668,
+          -0.09302288293838501
+        ],
+        [
+          0.19713044166564941,
+          1.3751649856567383,
+          -0.11703789234161377
+        ]
+      ],
+      "lengthMetres": 0.052408002426122015,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 7135,
+      "owner": {
+        "face": 4802,
+        "driver": 0,
+        "vertices": [
+          10217,
+          10009
+        ]
+      },
+      "positions": [
+        [
+          0.1639750599861145,
+          0.04784002900123596,
+          0.28675734996795654
+        ],
+        [
+          0.1750802993774414,
+          0.05396999418735504,
+          0.25867223739624023
+        ]
+      ],
+      "lengthMetres": 0.030816819486892025,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 7147,
+      "owner": {
+        "face": 4812,
+        "driver": 13,
+        "vertices": [
+          5050,
+          5051
+        ]
+      },
+      "positions": [
+        [
+          0.16043990850448608,
+          1.403864860534668,
+          -0.09302288293838501
+        ],
+        [
+          0.17500519752502441,
+          1.434630036354065,
+          -0.10300278663635254
+        ]
+      ],
+      "lengthMetres": 0.035471709364942206,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 7186,
+      "owner": {
+        "face": 4838,
+        "driver": 0,
+        "vertices": [
+          10252,
+          9841
+        ]
+      },
+      "positions": [
+        [
+          0.1866951584815979,
+          0.048860013484954834,
+          -0.2590876817703247
+        ],
+        [
+          0.14379501342773438,
+          0.05493000149726868,
+          -0.3003576397895813
+        ]
+      ],
+      "lengthMetres": 0.05983708411197329,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 7261,
+      "owner": {
+        "face": 4891,
+        "driver": 14,
+        "vertices": [
+          4596,
+          5150
+        ]
+      },
+      "positions": [
+        [
+          0.18565505743026733,
+          1.119404911994934,
+          -0.12238264083862305
+        ],
+        [
+          0.19267499446868896,
+          1.1519699096679688,
+          -0.15311270952224731
+        ]
+      ],
+      "lengthMetres": 0.04532213268115725,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 7288,
+      "owner": {
+        "face": 4909,
+        "driver": 0,
+        "vertices": [
+          10316,
+          10317
+        ]
+      },
+      "positions": [
+        [
+          0.17680495977401733,
+          0.148795023560524,
+          0.13256728649139404
+        ],
+        [
+          0.17827004194259644,
+          0.1826000213623047,
+          0.12293726205825806
+        ]
+      ],
+      "lengthMetres": 0.03518041660813417,
+      "diagnosticToleranceMetres": 1.1920928955078125e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 7289,
+      "owner": {
+        "face": 4909,
+        "driver": 0,
+        "vertices": [
+          10317,
+          10318
+        ]
+      },
+      "positions": [
+        [
+          0.17827004194259644,
+          0.1826000213623047,
+          0.12293726205825806
+        ],
+        [
+          0.1934400200843811,
+          0.14205999672412872,
+          0.10624229907989502
+        ]
+      ],
+      "lengthMetres": 0.046393357534619664,
+      "diagnosticToleranceMetres": 1.1920928955078125e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 7318,
+      "owner": {
+        "face": 4930,
+        "driver": 17,
+        "vertices": [
+          5213,
+          5214
+        ]
+      },
+      "positions": [
+        [
+          0.16786009073257446,
+          1.4025650024414062,
+          0.09751737117767334
+        ],
+        [
+          0.16456007957458496,
+          1.4430099725723267,
+          0.09261220693588257
+        ]
+      ],
+      "lengthMetres": 0.04087476383751767,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 7319,
+      "owner": {
+        "face": 4930,
+        "driver": 17,
+        "vertices": [
+          5214,
+          5215
+        ]
+      },
+      "positions": [
+        [
+          0.16456007957458496,
+          1.4430099725723267,
+          0.09261220693588257
+        ],
+        [
+          0.1916050910949707,
+          1.4204299449920654,
+          0.09690731763839722
+        ]
+      ],
+      "lengthMetres": 0.035492791797913155,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 7327,
+      "owner": {
+        "face": 4934,
+        "driver": 0,
+        "vertices": [
+          10331,
+          10332
+        ]
+      },
+      "positions": [
+        [
+          0.1866951584815979,
+          0.048860013484954834,
+          -0.2590876817703247
+        ],
+        [
+          0.20070016384124756,
+          0.04628501832485199,
+          -0.2248227596282959
+        ]
+      ],
+      "lengthMetres": 0.03710600577531439,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 7328,
+      "owner": {
+        "face": 4934,
+        "driver": 0,
+        "vertices": [
+          10332,
+          10330
+        ]
+      },
+      "positions": [
+        [
+          0.20070016384124756,
+          0.04628501832485199,
+          -0.2248227596282959
+        ],
+        [
+          0.15471011400222778,
+          0.05423501133918762,
+          -0.24736285209655762
+        ]
+      ],
+      "lengthMetres": 0.051829941555063486,
+      "diagnosticToleranceMetres": 1.1920928955078125e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 7450,
+      "owner": {
+        "face": 5017,
+        "driver": 14,
+        "vertices": [
+          5335,
+          5336
+        ]
+      },
+      "positions": [
+        [
+          0.1751399040222168,
+          1.1640549898147583,
+          -0.1885676383972168
+        ],
+        [
+          0.1855701208114624,
+          1.1651549339294434,
+          -0.20583271980285645
+        ]
+      ],
+      "lengthMetres": 0.02020104787553,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 7492,
+      "owner": {
+        "face": 5049,
+        "driver": 15,
+        "vertices": [
+          5376,
+          5377
+        ]
+      },
+      "positions": [
+        [
+          0.19229501485824585,
+          1.6031099557876587,
+          -0.04851311445236206
+        ],
+        [
+          0.18116533756256104,
+          1.5513700246810913,
+          -0.05260765552520752
+        ]
+      ],
+      "lengthMetres": 0.05308159242351005,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 7511,
+      "owner": {
+        "face": 5061,
+        "driver": 13,
+        "vertices": [
+          5399,
+          5400
+        ]
+      },
+      "positions": [
+        [
+          0.17797499895095825,
+          1.4687299728393555,
+          -0.2004927396774292
+        ],
+        [
+          0.189954936504364,
+          1.4734100103378296,
+          -0.20565778017044067
+        ]
+      ],
+      "lengthMetres": 0.013859989107682363,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 7553,
+      "owner": {
+        "face": 5087,
+        "driver": 13,
+        "vertices": [
+          5445,
+          5446
+        ]
+      },
+      "positions": [
+        [
+          0.18461018800735474,
+          1.538214921951294,
+          -0.1696726679801941
+        ],
+        [
+          0.18555492162704468,
+          1.521299958229065,
+          -0.2123880386352539
+        ]
+      ],
+      "lengthMetres": 0.04595227317049333,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 7554,
+      "owner": {
+        "face": 5087,
+        "driver": 13,
+        "vertices": [
+          5447,
+          5445
+        ]
+      },
+      "positions": [
+        [
+          0.20689994096755981,
+          1.534869909286499,
+          -0.1644626259803772
+        ],
+        [
+          0.18461018800735474,
+          1.538214921951294,
+          -0.1696726679801941
+        ]
+      ],
+      "lengthMetres": 0.023133671009903843,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 7577,
+      "owner": {
+        "face": 5103,
+        "driver": 15,
+        "vertices": [
+          5467,
+          5468
+        ]
+      },
+      "positions": [
+        [
+          0.20182013511657715,
+          1.577139973640442,
+          -0.11829286813735962
+        ],
+        [
+          0.20418018102645874,
+          1.5383648872375488,
+          -0.08392781019210815
+        ]
+      ],
+      "lengthMetres": 0.05186554106368758,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 7579,
+      "owner": {
+        "face": 5104,
+        "driver": 9,
+        "vertices": [
+          5470,
+          5471
+        ]
+      },
+      "positions": [
+        [
+          0.16668498516082764,
+          1.7463099956512451,
+          -0.0046828389167785645
+        ],
+        [
+          0.1854601502418518,
+          1.7642700672149658,
+          -0.011267662048339844
+        ]
+      ],
+      "lengthMetres": 0.02680356114525872,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 7585,
+      "owner": {
+        "face": 5107,
+        "driver": 15,
+        "vertices": [
+          5476,
+          5270
+        ]
+      },
+      "positions": [
+        [
+          0.21304994821548462,
+          1.5336098670959473,
+          -0.001582801342010498
+        ],
+        [
+          0.17154991626739502,
+          1.476064920425415,
+          -0.004187822341918945
+        ]
+      ],
+      "lengthMetres": 0.0709961947812474,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 7615,
+      "owner": {
+        "face": 5133,
+        "driver": 0,
+        "vertices": [
+          10439,
+          10306
+        ]
+      },
+      "positions": [
+        [
+          0.22256016731262207,
+          0.04381000995635986,
+          0.1578471064567566
+        ],
+        [
+          0.2100399136543274,
+          0.04419498145580292,
+          0.19962221384048462
+        ]
+      ],
+      "lengthMetres": 0.04361266503718195,
+      "diagnosticToleranceMetres": 1.1920928955078125e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 7626,
+      "owner": {
+        "face": 5139,
+        "driver": 15,
+        "vertices": [
+          5509,
+          5510
+        ]
+      },
+      "positions": [
+        [
+          0.19872993230819702,
+          1.6015300750732422,
+          0.049526989459991455
+        ],
+        [
+          0.21869510412216187,
+          1.5973000526428223,
+          0.08625715970993042
+        ]
+      ],
+      "lengthMetres": 0.04201912162233396,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 7627,
+      "owner": {
+        "face": 5139,
+        "driver": 15,
+        "vertices": [
+          5510,
+          5508
+        ]
+      },
+      "positions": [
+        [
+          0.21869510412216187,
+          1.5973000526428223,
+          0.08625715970993042
+        ],
+        [
+          0.18287509679794312,
+          1.5756499767303467,
+          0.06556719541549683
+        ]
+      ],
+      "lengthMetres": 0.04668911365862472,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 7637,
+      "owner": {
+        "face": 5148,
+        "driver": 15,
+        "vertices": [
+          5183,
+          5521
+        ]
+      },
+      "positions": [
+        [
+          0.1665899157524109,
+          1.4809750318527222,
+          0.018347203731536865
+        ],
+        [
+          0.21304994821548462,
+          1.5336098670959473,
+          -0.001582801342010498
+        ]
+      ],
+      "lengthMetres": 0.07298058371774604,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 7719,
+      "owner": {
+        "face": 5215,
+        "driver": 15,
+        "vertices": [
+          5618,
+          5619
+        ]
+      },
+      "positions": [
+        [
+          0.1914551854133606,
+          1.5856599807739258,
+          0.01827716827392578
+        ],
+        [
+          0.20432502031326294,
+          1.6115700006484985,
+          -0.007967650890350342
+        ]
+      ],
+      "lengthMetres": 0.03906087957556838,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 7720,
+      "owner": {
+        "face": 5215,
+        "driver": 15,
+        "vertices": [
+          5619,
+          5617
+        ]
+      },
+      "positions": [
+        [
+          0.20432502031326294,
+          1.6115700006484985,
+          -0.007967650890350342
+        ],
+        [
+          0.19526004791259766,
+          1.561384916305542,
+          0.0010523200035095215
+        ]
+      ],
+      "lengthMetres": 0.05178876606041666,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 7752,
+      "owner": {
+        "face": 5243,
+        "driver": 15,
+        "vertices": [
+          5668,
+          5666
+        ]
+      },
+      "positions": [
+        [
+          0.21542012691497803,
+          1.5191400051116943,
+          -0.10111808776855469
+        ],
+        [
+          0.1883101463317871,
+          1.5038000345230103,
+          -0.07660269737243652
+        ]
+      ],
+      "lengthMetres": 0.03963924962908309,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 7810,
+      "owner": {
+        "face": 5288,
+        "driver": 15,
+        "vertices": [
+          5717,
+          5718
+        ]
+      },
+      "positions": [
+        [
+          0.20432502031326294,
+          1.6115700006484985,
+          -0.007967650890350342
+        ],
+        [
+          0.19229501485824585,
+          1.6031099557876587,
+          -0.04851311445236206
+        ]
+      ],
+      "lengthMetres": 0.04313036060310166,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 7880,
+      "owner": {
+        "face": 5335,
+        "driver": 13,
+        "vertices": [
+          6122,
+          5773
+        ]
+      },
+      "positions": [
+        [
+          0.22707492113113403,
+          1.5211249589920044,
+          -0.23205280303955078
+        ],
+        [
+          0.2209949493408203,
+          1.5751149654388428,
+          -0.27819275856018066
+        ]
+      ],
+      "lengthMetres": 0.07127960682092996,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 7881,
+      "owner": {
+        "face": 5335,
+        "driver": 13,
+        "vertices": [
+          5773,
+          6123
+        ]
+      },
+      "positions": [
+        [
+          0.2209949493408203,
+          1.5751149654388428,
+          -0.27819275856018066
+        ],
+        [
+          0.20099490880966187,
+          1.5580298900604248,
+          -0.245702862739563
+        ]
+      ],
+      "lengthMetres": 0.04180304716607145,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 7892,
+      "owner": {
+        "face": 5342,
+        "driver": 15,
+        "vertices": [
+          5779,
+          5457
+        ]
+      },
+      "positions": [
+        [
+          0.22503018379211426,
+          1.5488849878311157,
+          -0.0686877965927124
+        ],
+        [
+          0.20418018102645874,
+          1.5383648872375488,
+          -0.08392781019210815
+        ]
+      ],
+      "lengthMetres": 0.02788643301565076,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 7915,
+      "owner": {
+        "face": 5358,
+        "driver": 0,
+        "vertices": [
+          10603,
+          10563
+        ]
+      },
+      "positions": [
+        [
+          0.18356502056121826,
+          0.07769003510475159,
+          -0.09133279323577881
+        ],
+        [
+          0.20365506410598755,
+          0.059460029006004333,
+          -0.11907786130905151
+        ]
+      ],
+      "lengthMetres": 0.038803759796978754,
+      "diagnosticToleranceMetres": 1.1920928955078125e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 7962,
+      "owner": {
+        "face": 5388,
+        "driver": 17,
+        "vertices": [
+          5807,
+          5808
+        ]
+      },
+      "positions": [
+        [
+          0.2066051959991455,
+          1.416504979133606,
+          0.12127697467803955
+        ],
+        [
+          0.23335516452789307,
+          1.4296000003814697,
+          0.10680228471755981
+        ]
+      ],
+      "lengthMetres": 0.033114302759125115,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 7963,
+      "owner": {
+        "face": 5388,
+        "driver": 17,
+        "vertices": [
+          5808,
+          5806
+        ]
+      },
+      "positions": [
+        [
+          0.23335516452789307,
+          1.4296000003814697,
+          0.10680228471755981
+        ],
+        [
+          0.20934998989105225,
+          1.4018950462341309,
+          0.10119229555130005
+        ]
+      ],
+      "lengthMetres": 0.03708483345111485,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 7982,
+      "owner": {
+        "face": 5404,
+        "driver": 15,
+        "vertices": [
+          5825,
+          5826
+        ]
+      },
+      "positions": [
+        [
+          0.23541510105133057,
+          1.5676449537277222,
+          -0.08770287036895752
+        ],
+        [
+          0.22503018379211426,
+          1.5488849878311157,
+          -0.0686877965927124
+        ]
+      ],
+      "lengthMetres": 0.02865930664964961,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 8039,
+      "owner": {
+        "face": 5446,
+        "driver": 0,
+        "vertices": [
+          10577,
+          10717
+        ]
+      },
+      "positions": [
+        [
+          0.23817509412765503,
+          0.040765032172203064,
+          0.3569173812866211
+        ],
+        [
+          0.25444507598876953,
+          0.04109501838684082,
+          0.3701573610305786
+        ]
+      ],
+      "lengthMetres": 0.020978995788246187,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 8040,
+      "owner": {
+        "face": 5446,
+        "driver": 0,
+        "vertices": [
+          10717,
+          10631
+        ]
+      },
+      "positions": [
+        [
+          0.25444507598876953,
+          0.04109501838684082,
+          0.3701573610305786
+        ],
+        [
+          0.21479517221450806,
+          0.046079978346824646,
+          0.39026230573654175
+        ]
+      ],
+      "lengthMetres": 0.04473447771842957,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 8058,
+      "owner": {
+        "face": 5459,
+        "driver": 15,
+        "vertices": [
+          5860,
+          5861
+        ]
+      },
+      "positions": [
+        [
+          0.21381497383117676,
+          1.5767099857330322,
+          -0.04920274019241333
+        ],
+        [
+          0.2333250641822815,
+          1.6119849681854248,
+          -0.016807913780212402
+        ]
+      ],
+      "lengthMetres": 0.05171453171789826,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 8059,
+      "owner": {
+        "face": 5459,
+        "driver": 15,
+        "vertices": [
+          5861,
+          5862
+        ]
+      },
+      "positions": [
+        [
+          0.2333250641822815,
+          1.6119849681854248,
+          -0.016807913780212402
+        ],
+        [
+          0.23761004209518433,
+          1.606065034866333,
+          -0.04648268222808838
+        ]
+      ],
+      "lengthMetres": 0.03056138950786783,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 8134,
+      "owner": {
+        "face": 5510,
+        "driver": 15,
+        "vertices": [
+          5901,
+          5902
+        ]
+      },
+      "positions": [
+        [
+          0.25512009859085083,
+          1.570180058479309,
+          -0.05578279495239258
+        ],
+        [
+          0.24626493453979492,
+          1.5867500305175781,
+          -0.09469777345657349
+        ]
+      ],
+      "lengthMetres": 0.04321288529710777,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 8149,
+      "owner": {
+        "face": 5520,
+        "driver": 0,
+        "vertices": [
+          10807,
+          10808
+        ]
+      },
+      "positions": [
+        [
+          0.2687200903892517,
+          0.0709400326013565,
+          0.23252218961715698
+        ],
+        [
+          0.2692800760269165,
+          0.09533502161502838,
+          0.20971715450286865
+        ]
+      ],
+      "lengthMetres": 0.03339908231457095,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 8150,
+      "owner": {
+        "face": 5520,
+        "driver": 0,
+        "vertices": [
+          10808,
+          10809
+        ]
+      },
+      "positions": [
+        [
+          0.2692800760269165,
+          0.09533502161502838,
+          0.20971715450286865
+        ],
+        [
+          0.2699601650238037,
+          0.1229199767112732,
+          0.20693212747573853
+        ]
+      ],
+      "lengthMetres": 0.02773352924254998,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 8201,
+      "owner": {
+        "face": 5557,
+        "driver": 15,
+        "vertices": [
+          5926,
+          5768
+        ]
+      },
+      "positions": [
+        [
+          0.2676302194595337,
+          1.6060799360275269,
+          -0.05802273750305176
+        ],
+        [
+          0.26192009449005127,
+          1.638814926147461,
+          -0.059472620487213135
+        ]
+      ],
+      "lengthMetres": 0.03326089695103019,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 8320,
+      "owner": {
+        "face": 5641,
+        "driver": 15,
+        "vertices": [
+          5955,
+          5956
+        ]
+      },
+      "positions": [
+        [
+          0.26192009449005127,
+          1.638814926147461,
+          -0.059472620487213135
+        ],
+        [
+          0.26085495948791504,
+          1.6471550464630127,
+          -0.0792926549911499
+        ]
+      ],
+      "lengthMetres": 0.021529651348498397,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 8325,
+      "owner": {
+        "face": 5644,
+        "driver": 15,
+        "vertices": [
+          5960,
+          5961
+        ]
+      },
+      "positions": [
+        [
+          0.26085495948791504,
+          1.6471550464630127,
+          -0.0792926549911499
+        ],
+        [
+          0.3009849786758423,
+          1.624885082244873,
+          -0.05363285541534424
+        ]
+      ],
+      "lengthMetres": 0.052581318551089475,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 8326,
+      "owner": {
+        "face": 5644,
+        "driver": 15,
+        "vertices": [
+          5961,
+          5959
+        ]
+      },
+      "positions": [
+        [
+          0.3009849786758423,
+          1.624885082244873,
+          -0.05363285541534424
+        ],
+        [
+          0.2676302194595337,
+          1.6060799360275269,
+          -0.05802273750305176
+        ]
+      ],
+      "lengthMetres": 0.03854146535068002,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 8343,
+      "owner": {
+        "face": 5653,
+        "driver": 6,
+        "vertices": [
+          11001,
+          11002
+        ]
+      },
+      "positions": [
+        [
+          0.30030012130737305,
+          0.20134501159191132,
+          0.1519569754600525
+        ],
+        [
+          0.2963101863861084,
+          0.16466498374938965,
+          0.16563713550567627
+        ]
+      ],
+      "lengthMetres": 0.03935086786943807,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 8344,
+      "owner": {
+        "face": 5653,
+        "driver": 6,
+        "vertices": [
+          11002,
+          11000
+        ]
+      },
+      "positions": [
+        [
+          0.2963101863861084,
+          0.16466498374938965,
+          0.16563713550567627
+        ],
+        [
+          0.24978995323181152,
+          0.1440349966287613,
+          0.16640722751617432
+        ]
+      ],
+      "lengthMetres": 0.05089520117881515,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 8386,
+      "owner": {
+        "face": 5680,
+        "driver": 6,
+        "vertices": [
+          11047,
+          11048
+        ]
+      },
+      "positions": [
+        [
+          0.27918994426727295,
+          0.240044966340065,
+          -0.2248278260231018
+        ],
+        [
+          0.28083503246307373,
+          0.21695002913475037,
+          -0.24409770965576172
+        ]
+      ],
+      "lengthMetres": 0.030123261027080777,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 8387,
+      "owner": {
+        "face": 5680,
+        "driver": 6,
+        "vertices": [
+          11049,
+          11047
+        ]
+      },
+      "positions": [
+        [
+          0.2964949607849121,
+          0.1664300262928009,
+          -0.21132290363311768
+        ],
+        [
+          0.27918994426727295,
+          0.240044966340065,
+          -0.2248278260231018
+        ]
+      ],
+      "lengthMetres": 0.07681800520449321,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 8549,
+      "owner": {
+        "face": 5797,
+        "driver": 6,
+        "vertices": [
+          11245,
+          11246
+        ]
+      },
+      "positions": [
+        [
+          0.31985998153686523,
+          0.2053699642419815,
+          -0.24751782417297363
+        ],
+        [
+          0.31394511461257935,
+          0.2286899834871292,
+          -0.28163790702819824
+        ]
+      ],
+      "lengthMetres": 0.04174911977962485,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 8550,
+      "owner": {
+        "face": 5797,
+        "driver": 6,
+        "vertices": [
+          11246,
+          11244
+        ]
+      },
+      "positions": [
+        [
+          0.31394511461257935,
+          0.2286899834871292,
+          -0.28163790702819824
+        ],
+        [
+          0.31491994857788086,
+          0.1905599981546402,
+          -0.2928978204727173
+        ]
+      ],
+      "lengthMetres": 0.03976973388764116,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 8624,
+      "owner": {
+        "face": 5849,
+        "driver": 0,
+        "vertices": [
+          11342,
+          11343
+        ]
+      },
+      "positions": [
+        [
+          0.3238651156425476,
+          0.048360005021095276,
+          0.03278225660324097
+        ],
+        [
+          0.2976250648498535,
+          0.0571499764919281,
+          0.0013071298599243164
+        ]
+      ],
+      "lengthMetres": 0.04191046966533622,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 8633,
+      "owner": {
+        "face": 5855,
+        "driver": 6,
+        "vertices": [
+          11147,
+          11354
+        ]
+      },
+      "positions": [
+        [
+          0.31985998153686523,
+          0.2053699642419815,
+          -0.24751782417297363
+        ],
+        [
+          0.3305250406265259,
+          0.22909998893737793,
+          -0.21825790405273438
+        ]
+      ],
+      "lengthMetres": 0.03915355006730372,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 8634,
+      "owner": {
+        "face": 5855,
+        "driver": 6,
+        "vertices": [
+          11354,
+          11308
+        ]
+      },
+      "positions": [
+        [
+          0.3305250406265259,
+          0.22909998893737793,
+          -0.21825790405273438
+        ],
+        [
+          0.33625006675720215,
+          0.19537001848220825,
+          -0.23706287145614624
+        ]
+      ],
+      "lengthMetres": 0.03903989792695325,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 8680,
+      "owner": {
+        "face": 5885,
+        "driver": 0,
+        "vertices": [
+          11405,
+          11406
+        ]
+      },
+      "positions": [
+        [
+          0.3676101565361023,
+          0.09061001241207123,
+          -0.16516268253326416
+        ],
+        [
+          0.3366550803184509,
+          0.09273499250411987,
+          -0.1850426197052002
+        ]
+      ],
+      "lengthMetres": 0.036850294245668276,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 8681,
+      "owner": {
+        "face": 5885,
+        "driver": 0,
+        "vertices": [
+          11406,
+          11403
+        ]
+      },
+      "positions": [
+        [
+          0.3366550803184509,
+          0.09273499250411987,
+          -0.1850426197052002
+        ],
+        [
+          0.33149003982543945,
+          0.07416002452373505,
+          -0.20823776721954346
+        ]
+      ],
+      "lengthMetres": 0.030161597221946224,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 8755,
+      "owner": {
+        "face": 5937,
+        "driver": 0,
+        "vertices": [
+          11496,
+          11342
+        ]
+      },
+      "positions": [
+        [
+          0.33647507429122925,
+          0.04619501531124115,
+          0.06028711795806885
+        ],
+        [
+          0.3238651156425476,
+          0.048360005021095276,
+          0.03278225660324097
+        ]
+      ],
+      "lengthMetres": 0.030335056217411883,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 8756,
+      "owner": {
+        "face": 5937,
+        "driver": 0,
+        "vertices": [
+          11493,
+          11496
+        ]
+      },
+      "positions": [
+        [
+          0.36752015352249146,
+          0.042684972286224365,
+          0.046382248401641846
+        ],
+        [
+          0.33647507429122925,
+          0.04619501531124115,
+          0.06028711795806885
+        ]
+      ],
+      "lengthMetres": 0.03419740843827303,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 8762,
+      "owner": {
+        "face": 5942,
+        "driver": 18,
+        "vertices": [
+          6012,
+          6013
+        ]
+      },
+      "positions": [
+        [
+          0.40745019912719727,
+          1.0613700151443481,
+          -0.04642277956008911
+        ],
+        [
+          0.3714650869369507,
+          1.0383249521255493,
+          -0.07145285606384277
+        ]
+      ],
+      "lengthMetres": 0.04952280241130144,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 8763,
+      "owner": {
+        "face": 5942,
+        "driver": 18,
+        "vertices": [
+          6013,
+          6011
+        ]
+      },
+      "positions": [
+        [
+          0.3714650869369507,
+          1.0383249521255493,
+          -0.07145285606384277
+        ],
+        [
+          0.35492032766342163,
+          1.032979965209961,
+          -0.06551265716552734
+        ]
+      ],
+      "lengthMetres": 0.018373456601804256,
+      "diagnosticToleranceMetres": 9.5367431640625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 8766,
+      "owner": {
+        "face": 5945,
+        "driver": 6,
+        "vertices": [
+          11506,
+          11507
+        ]
+      },
+      "positions": [
+        [
+          0.35457998514175415,
+          0.153144970536232,
+          -0.11458277702331543
+        ],
+        [
+          0.3744751214981079,
+          0.17304003238677979,
+          -0.188768208026886
+        ]
+      ],
+      "lengthMetres": 0.07934171733621953,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 8767,
+      "owner": {
+        "face": 5945,
+        "driver": 6,
+        "vertices": [
+          11507,
+          11505
+        ]
+      },
+      "positions": [
+        [
+          0.3744751214981079,
+          0.17304003238677979,
+          -0.188768208026886
+        ],
+        [
+          0.34011512994766235,
+          0.17318002879619598,
+          -0.13566285371780396
+        ]
+      ],
+      "lengthMetres": 0.06325193494775062,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 8792,
+      "owner": {
+        "face": 5964,
+        "driver": 0,
+        "vertices": [
+          11521,
+          11493
+        ]
+      },
+      "positions": [
+        [
+          0.36515504121780396,
+          0.0439000129699707,
+          -0.030437707901000977
+        ],
+        [
+          0.36752015352249146,
+          0.042684972286224365,
+          0.046382248401641846
+        ]
+      ],
+      "lengthMetres": 0.07686595973782476,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 8865,
+      "owner": {
+        "face": 6013,
+        "driver": 0,
+        "vertices": [
+          11635,
+          11636
+        ]
+      },
+      "positions": [
+        [
+          0.40856003761291504,
+          0.03187999129295349,
+          -0.10456770658493042
+        ],
+        [
+          0.3477400541305542,
+          0.04584997892379761,
+          -0.03212273120880127
+        ]
+      ],
+      "lengthMetres": 0.09561644943443853,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 9011,
+      "owner": {
+        "face": 6118,
+        "driver": 0,
+        "vertices": [
+          11835,
+          11836
+        ]
+      },
+      "positions": [
+        [
+          0.38960009813308716,
+          0.1376049965620041,
+          -0.043857693672180176
+        ],
+        [
+          0.4161199927330017,
+          0.14316998422145844,
+          -0.05850762128829956
+        ]
+      ],
+      "lengthMetres": 0.030804127587029526,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 9012,
+      "owner": {
+        "face": 6118,
+        "driver": 0,
+        "vertices": [
+          11836,
+          11834
+        ]
+      },
+      "positions": [
+        [
+          0.4161199927330017,
+          0.14316998422145844,
+          -0.05850762128829956
+        ],
+        [
+          0.4024401307106018,
+          0.12194499373435974,
+          -0.058172643184661865
+        ]
+      ],
+      "lengthMetres": 0.025253733515249698,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 9045,
+      "owner": {
+        "face": 6141,
+        "driver": 0,
+        "vertices": [
+          11876,
+          11877
+        ]
+      },
+      "positions": [
+        [
+          0.4353851079940796,
+          0.05846001207828522,
+          0.22936224937438965
+        ],
+        [
+          0.430620014667511,
+          0.09482502937316895,
+          0.23555219173431396
+        ]
+      ],
+      "lengthMetres": 0.03719456927680823,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 9046,
+      "owner": {
+        "face": 6141,
+        "driver": 0,
+        "vertices": [
+          11877,
+          11875
+        ]
+      },
+      "positions": [
+        [
+          0.430620014667511,
+          0.09482502937316895,
+          0.23555219173431396
+        ],
+        [
+          0.40661007165908813,
+          0.09404003620147705,
+          0.22236734628677368
+        ]
+      ],
+      "lengthMetres": 0.02740317001777057,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 9124,
+      "owner": {
+        "face": 6197,
+        "driver": 0,
+        "vertices": [
+          11950,
+          11978
+        ]
+      },
+      "positions": [
+        [
+          0.4466649889945984,
+          0.048009976744651794,
+          0.03179222345352173
+        ],
+        [
+          0.4644849896430969,
+          0.023934990167617798,
+          0.04336237907409668
+        ]
+      ],
+      "lengthMetres": 0.03210959206967876,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 9197,
+      "owner": {
+        "face": 6251,
+        "driver": 0,
+        "vertices": [
+          12080,
+          12081
+        ]
+      },
+      "positions": [
+        [
+          0.45196533203125,
+          0.09450003504753113,
+          -0.16380786895751953
+        ],
+        [
+          0.4738149046897888,
+          0.09765997529029846,
+          -0.16755789518356323
+        ]
+      ],
+      "lengthMetres": 0.022393118237410418,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    },
+    {
+      "edge": 9198,
+      "owner": {
+        "face": 6251,
+        "driver": 0,
+        "vertices": [
+          12081,
+          12082
+        ]
+      },
+      "positions": [
+        [
+          0.4738149046897888,
+          0.09765997529029846,
+          -0.16755789518356323
+        ],
+        [
+          0.47749996185302734,
+          0.07655002176761627,
+          -0.14622777700424194
+        ]
+      ],
+      "lengthMetres": 0.03023547131383849,
+      "diagnosticToleranceMetres": 2.384185791015625e-07,
+      "coverageFraction": 0.0,
+      "oppositeDirectionCoverageFraction": 0.0,
+      "counterparts": [],
+      "nearestParallelWitness": null
+    }
+  ]
+}

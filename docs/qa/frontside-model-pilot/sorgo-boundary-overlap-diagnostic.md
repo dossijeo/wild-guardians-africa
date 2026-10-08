@@ -1,0 +1,11 @@
+# Whole-source boundary overlap: no matching seam established
+
+Read-only Blender4.5.9 script frontside_blender_boundary_overlap_diagnostic.py reads SHA-verified original mature Sorgo and faceLabels. Numeric-position exact incidence is kept separate from a diagnostic line test; source attributes/geometry/assets are never welded, exported, capped or changed. All258 exact whole-model boundary edges are tested against every original edge with owners on a different source face.
+
+Prospectively defined matching bound is eight float32 ULPs at the largest absolute source endpoint coordinate, with floor1e-12 metres. Both counterpart endpoints must lie within that residual from the infinite source line and their projected intervals must overlap. Original directions and source face/driver/vertex IDs are preserved; interval union and opposite-direction coverage are reported. This bound is diagnostic, not authorization to merge topology or guarantee shader/UV/normal equivalence.
+
+Result: zero boundaries with any counterpart within the bound, hence zero fully covered/opposite-covered boundaries. All12 actual stem-region whole-model boundaries lack even a parallel witness with absolute direction cosine>=1−1e−6 and a positive overlapping interval. Stem edges are0.0268–0.11005m long; their bounds are4.76837e-7 or9.53674e-7m. The nearest parallel witness is recorded separately where present and never accepted. This does not prove an edge is a visible hole or disprove arbitrary curved proximity; it rejects the proposed collinear float seam/T-junction explanation at this declared tolerance.
+
+Earlier eighteen stem regional simple cycles are attachments to other drivers, not whole-model holes. Do not cap these interfaces to satisfy a closedness audit. This source correspondence result does not identify the cause of the native stem Front color failure, approve any model or solve the growth continuum. A future reconstruction requires explicit surface/material/UV ownership and conserved visual field, not automatic snapping or view masks.
+
+Reproduce: `.cache/frontside-model-pilot/tools/blender-4.5.9-windows-x64/blender.exe --background --factory-startup --python tools/frontside_blender_boundary_overlap_diagnostic.py`. Two completed offline invocations each~3.6s, no GPU scene or benchmark active in this agent.
