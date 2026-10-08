@@ -1,0 +1,35 @@
+TAP version 13
+# Subtest: paid planting on cleared native ground preserves static caches, retained route epoch and fresh-navigator routes
+ok 1 - paid planting on cleared native ground preserves static caches, retained route epoch and fresh-navigator routes
+  ---
+  duration_ms: 567.6594
+  ...
+# Subtest: real crop prop removal invalidates caches and keeps native rendering/navigation suppression consistent after reload
+ok 2 - real crop prop removal invalidates caches and keeps native rendering/navigation suppression consistent after reload
+  ---
+  duration_ms: 425.4558
+  ...
+# Subtest: a paid wall still invalidates a previously clear native segment after empty crop cache reuse
+ok 3 - a paid wall still invalidates a previously clear native segment after empty crop cache reuse
+  ---
+  duration_ms: 430.3714
+  ...
+# Subtest: crop synchronization of a different loaded state rebuilds rather than reusing the old world index
+ok 4 - crop synchronization of a different loaded state rebuilds rather than reusing the old world index
+  ---
+  duration_ms: 394.0686
+  ...
+# Subtest: native moving worker remains full-state equivalent across cold restore and another cleared-ground purchase
+ok 5 - native moving worker remains full-state equivalent across cold restore and another cleared-ground purchase
+  ---
+  duration_ms: 680.583
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2886.8094

@@ -22,3 +22,7 @@ const last=d.checkpoints.at(-1);assert(last.differences.some(x=>x.path==='.plant
 assert(Math.max(...last.workerDifferences.map(w=>w.distance??0))>1.6);
 assert.notDeepEqual(d.final.reference,d.final.candidate);
 console.log('PASS archived CPU/query result and real movement/watering divergence; no production acceptance');
+assert.equal(receipt.restoreTests.exitCode,0);assert.equal(receipt.restoreTests.passed,5);assert.equal(receipt.restoreTests.coldPairs,50);
+const tap=raw('restore-tests.tap.gz').toString();assert(tap.includes('# pass 5'));assert(tap.includes('# fail 0'));assert(tap.includes('# skipped 0'));
+const testSource=raw('restore.test.mjs.gz').toString();assert(testSource.includes('assert.equal(serialize(s),serialize(loaded))'));assert(testSource.includes('assert(movingTicks>0'));assert(testSource.includes('Worker must physically move before restore'));
+console.log('PASS five native candidate contracts, including 50 moving-worker cold-state pairs; broader acceptance remains open');

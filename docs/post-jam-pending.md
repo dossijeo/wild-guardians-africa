@@ -4,7 +4,9 @@
 en finca densa nativa, diez siembras pagadas reducen consultas de1539 a299
 y mediana de tick de4,7174 a4,0576ms. La comparación cambia las trayectorias
 y el momento de un riego; conserva dos incidencias de terreno en cada brazo.
-No se integra: falta aceptación de recorridos, tareas, restauración e incursiones.
+Cinco contratos nativos pasan, incluidos50 estados completos iguales tras
+restaurar con movimiento físico y otra siembra. No se integra: falta aceptación
+de recorridos/tareas en finca densa, terreno adverso e incursiones.
 Producción ya reutiliza cachés estáticas y conserva la invalidación de rutas.
 
 [Caché privada de replanteo de trabajadores, V6](qa/worker-replan-view-cache/README.md):
