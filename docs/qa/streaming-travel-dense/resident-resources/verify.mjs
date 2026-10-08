@@ -20,3 +20,24 @@ assert.equal(receipt.bufferDelta,209374896);
 assert.equal(stages.get('after-world-dispose').buffers.liveBytes,0);
 assert.equal(stages.get('after-world-dispose').buffers.liveBuffers,0);
 console.log('PASS: archived resource stages, hash, requested storage arithmetic and reported tracked-buffer cleanup. Not physical memory or performance acceptance.');
+
+const programsReceipt=JSON.parse(await readFile(new URL('programs-receipt.json',import.meta.url),'utf8'));
+const programsRaw=gunzipSync(await readFile(new URL('programs-closed.json.gz',import.meta.url)));
+assert.equal(createHash('sha256').update(programsRaw).digest('hex'),programsReceipt.sha256);
+const programs=JSON.parse(programsRaw),ps=new Map(programs.resourceStages.map(stage=>[stage.name,stage]));
+assert.equal(programs.done,true);assert.equal(programs.disposed,true);assert.equal(programs.logicalUnchanged,true);
+assert.deepEqual(programs.errors,[]);assert.equal(programs.residentPreparation.mode,'programs');
+assert.deepEqual(programs.farm,report.farm);assert.deepEqual(programs.device,report.device);
+assert.equal(programs.speed,0);assert.equal(programs.duration,5);
+for(const stage of ps.values()){
+ const b=stage.buffers;assert.equal(b.unattributed,0);
+ assert.equal(b.liveBytes,b.requestedBytes-b.replacedBytes-b.deletedBytes);
+ assert.ok(b.peakBytes>=b.liveBytes);
+}
+assert.equal(ps.get('before-resident-preparation').buffers.liveBytes,before.liveBytes);
+assert.equal(ps.get('after-resident-preparation').buffers.liveBytes-before.liveBytes,programsReceipt.bufferDelta);
+assert.equal(programsReceipt.bufferDelta,544994);
+assert.equal(ps.get('after-world-dispose').buffers.liveBytes,0);
+assert.equal(ps.get('after-world-dispose').buffers.liveBuffers,0);
+assert.equal(ps.get('after-resident-preparation').renderer.textures,99);
+console.log('PASS: program-only archived interval, identical reported farm/device and tracked-buffer cleanup. No paired performance or physical-memory proof.');

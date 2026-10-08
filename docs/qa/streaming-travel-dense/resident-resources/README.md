@@ -48,3 +48,28 @@ probe), and all 148 browser scripts parse. Real GPU resource and travel evidence
 for this new candidate is still missing: no optimization or acceptance claim.
 Use `resourceProfile` for storage accounting separately from uninstrumented ABBA
 travel measurements. Production uses neither resident experiment.
+
+## Program-only native resource follow-up
+
+Runtime `b3dd9621`, same archived farm/device/quality, single new context 820,
+stationary five-second interval. No concurrent loading-screen GPU context.
+
+| Stage | Live buffer bytes | Buffers | Geometries | Textures | Programs |
+|---|---:|---:|---:|---:|---:|
+| Before programs | 79,879,812 | 1,448 | 230 | 99 | 70 |
+| After programs | 80,424,806 | 1,476 | 234 | 99 | 81 |
+| After stationary interval | 80,424,806 | 1,476 | 234 | 99 | 81 |
+| After world disposal | 0 | 0 | 0 | 5 | 3 |
+
+Observed interval adds 544,994 bytes (0.52 MiB), substantially less than the
+full-draw interval. Pending native preparation can still contribute these
+allocations; no claim of zero overhead or isolated causal attribution. Textures
+remain 99 during preparation. Lazy bindings initialize 81 programs with zero
+unsupported; preparation elapsed 138.2 ms in this instrumented run, not a timing
+benchmark. State unchanged/errors empty, no unattributed buffers, cleanup to zero.
+
+This closes one resource observation, not the acceptance gate: run uninstrumented
+travel ABBA to check whether reduced shader stalls survive without hidden uploads.
+Depth/shadow variants may still stall; resource probes do not establish VRAM/RAM.
+The earlier statement of missing native evidence above describes the state when
+the candidate was introduced; this follow-up supplies storage evidence only.
