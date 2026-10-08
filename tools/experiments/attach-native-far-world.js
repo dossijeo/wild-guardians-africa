@@ -48,9 +48,9 @@ export async function attachNativeFarWorld(world,{cancelled:ownerCancelled=()=>f
   candidate.uniforms.uDensityEnabled.value=1;candidate.uniforms.uDensityRange.value.set(densityStart,densityEnd);candidate.uniforms.uDensityMinimum.value=densityMinimum;candidate.uniforms.uDistanceFadeRange.value.set(fadeStart,fadeEnd);
   candidate.uniforms.uFarOrigin.value.set(world.renderOrigin.x,world.renderOrigin.z);
   if(candidate.groundSeamReady)await candidate.groundSeamReady;
-  await prepareNativeFarGpu(world.renderer,candidate.impostors,world.scene,world.camera,[texture,prelitAtlas.day,prelitAtlas.night,...(candidate.farGroundTextures??[])],{cancelled:()=>cancelled()||isCancelled()});
+  await prepareNativeFarGpu(world.renderer,candidate.impostors,world.scene,world.camera,[texture,prelitAtlas.day,prelitAtlas.night,...(candidate.farGroundTextures??[])],{cooperative:!!world.loadingProgress&&!world.loadingProgress.ready,cancelled:()=>cancelled()||isCancelled()});
  }});
- const standby=new NativeTreeStandby({scene:world.scene,sources:world.prototypes[slot],start,end,transitionHeight,treeHeight:metadata.impostorHeight,keepDistance:maxTransitionEnd+48,resourceRevision:()=>nativeFarGpuRevision(world.renderer),onError:error=>errors.push(String(error)),prepare:(root,cancelled)=>prepareNativeFarGpu(world.renderer,root,world.scene,world.camera,textures,{cancelled:()=>cancelled()||isCancelled(),diagnoseErrors:world.farGpuDiagnostics===true})});
+ const standby=new NativeTreeStandby({scene:world.scene,sources:world.prototypes[slot],start,end,transitionHeight,treeHeight:metadata.impostorHeight,keepDistance:maxTransitionEnd+48,resourceRevision:()=>nativeFarGpuRevision(world.renderer),onError:error=>errors.push(String(error)),prepare:(root,cancelled)=>prepareNativeFarGpu(world.renderer,root,world.scene,world.camera,textures,{cooperative:!!world.loadingProgress&&!world.loadingProgress.ready,cancelled:()=>cancelled()||isCancelled(),diagnoseErrors:world.farGpuDiagnostics===true})});
  let physicalIds=nativeTreePresence(world);
  const standbyAvailable=(id,suppressed)=>standbyCoverageReady(id,{coverage,standby,nativeTree:nativeReferences.get(id)?.tree,logicalTree:layer.current?.treeById.get(id),suppressed,nativeMissing:!physicalIds.has(id)});
  // Starting a fade also requires its owned backup fence: native packing may
@@ -80,7 +80,7 @@ export async function attachNativeFarWorld(world,{cancelled:ownerCancelled=()=>f
    const snapshot=prepared.capture(),cancelled=()=>isCancelled()||snapshot.signature!==signature();
    standby.request(frozenEntries(snapshot),world.camera.position);
    try{
-    const result=await prepareNativeFarGpu(world.renderer,world.assetGroups.root,world.scene,world.camera,textures,{cancelled,diagnoseErrors:world.farGpuDiagnostics===true});
+    const result=await prepareNativeFarGpu(world.renderer,world.assetGroups.root,world.scene,world.camera,textures,{cooperative:!!world.loadingProgress&&!world.loadingProgress.ready,cancelled,diagnoseErrors:world.farGpuDiagnostics===true});
     stats.fencedPreparations++;stats.cachedTextures+=result.cachedTextures;stats.textureUploads+=result.textureUploads.length;if(prepared.complete(snapshot))stats.nativePreparations++;else stats.rejectedPacking++;
    }catch(error){if(!closed){if(error instanceof NativeFarGpuCancelled)stats.stalePreparations++;else errors.push(String(error));}}
   }).finally(()=>busy=false);

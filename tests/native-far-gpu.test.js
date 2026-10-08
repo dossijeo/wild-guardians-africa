@@ -168,3 +168,11 @@ test('a real draw fault is not reclassified when ownership changes during that f
  await assert.rejects(prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{cancelled:()=>cancelled}),error=>!(error instanceof NativeFarGpuCancelled)&&error.message==='Draw failed during invalidation');
  f.restored();releaseNativeFarGpuCache(f.renderer);
 });
+
+
+test('loading GPU queue serializes fences, skips stale jobs, and does not leave a rejected tail',async()=>{
+ const f=fixture();let releaseFirst,started,compiles=0,frames=0,stale=false;const entered=new Promise(resolve=>started=resolve);f.renderer.compileAsync=()=>{compiles++;if(compiles===1){started();return new Promise(resolve=>releaseFirst=resolve);}return Promise.resolve();};
+ const options={cooperative:true,nextFrame:async()=>{frames++;}},first=prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],options);await entered;
+ const second=prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{...options,cancelled:()=>stale}),rejected=assert.rejects(second,e=>e instanceof NativeFarGpuCancelled);stale=true;const third=prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],options);assert.equal(compiles,1);releaseFirst();await first;await rejected;await third;assert.equal(compiles,2);assert.equal(f.calls.filter(c=>c==='render').length,2);assert.equal(f.calls.filter(c=>c==='delete').length,2);assert.ok(frames>=3);f.restored();
+ await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],options);assert.equal(compiles,3);
+});
