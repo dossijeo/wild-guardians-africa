@@ -69,3 +69,16 @@ User amendment relayed by root: «Prefiero que la rama feature/interactive-loadi
 ## Initial architecture findings
 
 The production menu is a separate iframe running a native WebGL renderer. Its existing camera journeys enter sections; current start/continue production messages immediately remove the iframe. The application has one requestAnimationFrame loop, rendering only while `screen === 'game'`. `WorldScene` owns a Three renderer, NativeSky, Assets and asynchronous load guards. Terrain already uses NativeChunkStream workers; load serializes substantial model/material preparation. NativeSky decodes Radiance and constructs environment pixels synchronously. Crop batch builds all species' stage/bridge geometry synchronously, despite loading diorama needing only maize. These are investigation targets, not evidence of an optimized implementation.
+
+## User visual-polish extension (2026-10-08)
+
+This mandatory extension was relayed by root after the initial implementation pilots. It belongs to the same `feature/interactive-loading-screen` branch and must be complete before PR/merge, after the current responsiveness optimizations. All original acceptance requirements remain in force.
+
+- Keep a small maize/soil diorama and the exact shared original skybox. Soil opacity blends softly into inexpensive fog around/behind the patch, with no sharply cut platform or flat blue backdrop. Day fog is warm cream/sand; night fog is dimmer blue-grey, coherent with sky and lighting. No distant mountains, trees, buildings, decorative assets or expensive volumetrics in this scene.
+- Provide a minimal responsive bottom UI respecting safe areas and planting visibility/input: “Preparando tu mundo...” / “Preparing your world...”, actual percent and a thin soft-green smoothly updated bar sharing maize progress. Touch help: “Toca la tierra para plantar más maíz” / “Tap the soil to plant more maize”; mouse help: “Haz clic en la tierra para plantar más maíz” / “Click the soil to plant more maize”. Use existing fonts; no opaque panel.
+- Phase labels reflect real completed/active work, never arbitrary timers: preparing terrain, awakening nature, giving life to the world, everything ready. Provide Spanish and English.
+- New Game uses the starting day. Continue obtains saved time early where practical, so the first diorama and sky match the saved time and handoff does not jump exposure/color. Use a coherent fallback if early retrieval would require substantial world initialization; do not complicate loading solely for the clock.
+- Capture actual updated day/night and portrait/landscape scenes with differentiated names in `docs/qa/interactive-loading-development/`. Verify fog/edges, light/dark readability, visibility throughout growth, actual percent/bar, click/touch, and no performance/GPU-resource regression.
+- This polish must not change procedural generation, gameplay or save data.
+
+Autonomous root review/merge remains authorized only after the original and extended acceptance gates pass.
