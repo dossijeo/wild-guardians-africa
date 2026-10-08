@@ -50,3 +50,23 @@ no eliminar esa protección para ocultar el problema. Preparar y conservar
 las variantes exactas que aparecen durante traveling requiere todavía diseño,
 candidato, medición comparable y regresión visual. Sin cambios a producción,
 sin errores, estado lógico idéntico y contexto liberado al terminar.
+
+## Candidato QA: variantes residentes preparadas
+
+Piloto con residentPrewarm, misma finca/recorrido/calidad y diagnóstico ampliado.
+Espera modelos de actores pendientes y compila todas las variantes residentes
+con los objetos/materiales originales; visibilidad/layers/frustum temporales se
+restauran antes del await. Inicializa bindings, hace draw nativo de precarga con
+viewport cero y espera fence. Invalida sombras tras el draw temporal. No modifica
+partida/cámara ni desactiva shaderFailureGuard; no activa nada en producción.
+
+Preparación adicional1432,1ms,81bindings y82programas.181intervalos: p95 149,8ms,
+p99 199,5ms,máximo199,6ms y50sobre100ms. Ninguna consulta getProgramInfoLog sobre
+100ms; renderer.render máximo27,4ms durante recorrido. Quince chunks nuevos,
+estado idéntico, cero errores. La hipótesis específica de preparar variantes
+residentes obtiene evidencia favorable, pero NO supera estabilidad global:
+intervalos lentos persisten y su recuento no mejora. Piloto único/secuencia con
+cachés, no ABBA, sin RAM/VRAM medida ni otras culturas/biomas. Necesita comparación
+repetida, auditoría visual/recursos y diagnóstico restante antes de integración.
+Tres pruebas dirigidas verifican restauración antes de await/fence, fallo de
+shader propagado con flags restaurados y cancelación sin draw/fence posterior.

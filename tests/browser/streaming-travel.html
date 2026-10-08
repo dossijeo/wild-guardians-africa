@@ -11,6 +11,7 @@ import {prepareInitialFarWorld} from '../../src/app/far-world-loading.js';
 import {json} from '../../src/rendering/assets.js';
 import {serialize,deserialize} from '../../src/persistence/snapshots.js';
 import {GpuTimer} from './gpu-timer.js';
+import {prepareResidentTravelVariants} from '../../tools/experiments/prepare-resident-travel-variants.js';
 
 const params=new URLSearchParams(location.search),quality=params.get('quality')??'media',fixture=params.get('fixture');let biome=params.get('biome')??'sabana',culture=params.get('culture')??'mapungubwe';
 const duration=Number(params.get('seconds')??30),speed=Number(params.get('speed')??12),angle=Number(params.get('angle')??0)*Math.PI/180;
@@ -42,6 +43,7 @@ try{
  const snapshot=serialize(state);world=new WorldScene(document.querySelector('canvas'),()=>{});world.onError=e=>errors.push(String(e));world.qualitySetting(quality);
  await world.load(state,nav,payload,{farVegetation:farVegetationProfile({quality,biome:nav.config.biome})});await prepareInitialFarWorld(world);
  if(site)world.focus(site.center);else world.focusFarm();world.render(0);
+ const residentPreparation=params.has('residentPrewarm')?await prepareResidentTravelVariants(world):null;
  const farm={fixture:fixture??'new-village',historicalSource:fixture?'e461b550':null,plants:state.plants.length,livingPlants:state.plants.filter(p=>p.alive).length,workers:state.workers.length,structures:state.structures.length,result:state.result};
  const startEye=world.camera.position.clone(),startTarget=world.controls.target.clone();
  const initialStream=world.chunkStream.summary();
@@ -87,12 +89,12 @@ try{
     const id=frames.length,timed=timer.begin(id),cpuStart=performance.now();try{world.render(dt);}finally{if(timed)timer.end();}const cpuMs=performance.now()-cpuStart;timer.poll();
     frames.push({at:timestamp-started,intervalMs:previous?timestamp-previous:null,cpuMs,chunks:world.chunks.size,created:world.chunkStream.stats.created,queued:world.chunkStream.queue.length,busy:!!world.chunkStream.busy,geometries:world.renderer.info.memory.geometries,textures:world.renderer.info.memory.textures,programs:world.renderer.info.programs.length,hidden:document.hidden});previous=timestamp;
     if(elapsed>=duration){
-     running=false;finishedAt=performance.now();report={done:true,farm,device,initialStream,finalStream:world.chunkStream.summary(),biome,culture,quality,seed:state.seed,duration,speed,distance:duration*speed,initialEye:startEye.toArray(),initialTarget:startTarget.toArray(),finalEye:world.camera.position.toArray(),finalTarget:world.controls.target.toArray(),logicalUnchanged:snapshot===serialize(state),frames,installs,longTasks,segments,errors,frameSummary:summarize(frames.flatMap(f=>f.intervalMs===null?[]:[f.intervalMs])),cpuSummary:summarize(frames.map(f=>f.cpuMs)),gpu:timer.report(),scope:'Native paused world; linear camera movement with production chunks/far/LOD/shadows. Frame intervals include scheduling and GPU backpressure; CPU rendering and async GPU queries reported separately. No optimization claim or saved-game changes.'};output(report);
+     running=false;finishedAt=performance.now();report={done:true,residentPreparation,farm,device,initialStream,finalStream:world.chunkStream.summary(),biome,culture,quality,seed:state.seed,duration,speed,distance:duration*speed,initialEye:startEye.toArray(),initialTarget:startTarget.toArray(),finalEye:world.camera.position.toArray(),finalTarget:world.controls.target.toArray(),logicalUnchanged:snapshot===serialize(state),frames,installs,longTasks,segments,errors,frameSummary:summarize(frames.flatMap(f=>f.intervalMs===null?[]:[f.intervalMs])),cpuSummary:summarize(frames.map(f=>f.cpuMs)),gpu:timer.report(),scope:'Native paused world; linear camera movement with production chunks/far/LOD/shadows. Frame intervals include scheduling and GPU backpressure; CPU rendering and async GPU queries reported separately. No optimization claim or saved-game changes.'};output(report);
     }
    }else {world.render(dt);if(report&&timer.pending.length&&performance.now()-finishedAt<5000){timer.poll();report.gpu=timer.report();output(report);}}
   }catch(error){errors.push(String(error));dispose();output({done:true,failed:true,errors});return;}
   raf=requestAnimationFrame(frame);
  };
- output({ready:true,farm,biome,culture,quality,duration,speed,initialChunks:world.chunks.size});raf=requestAnimationFrame(frame);
+ output({ready:true,residentPreparation,farm,biome,culture,quality,duration,speed,initialChunks:world.chunks.size});raf=requestAnimationFrame(frame);
 }catch(error){errors.push(String(error.stack??error));output({done:true,failed:true,errors});}
 </script></html>
