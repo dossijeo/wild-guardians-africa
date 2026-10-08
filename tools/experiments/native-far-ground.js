@@ -1,4 +1,3 @@
-import {cloneRuntimeMaterial} from '../../src/rendering/clone-runtime-material.js';
 import {farGroundColorUvs} from './far-ground-color-map.js';
 import {attachNativeGroundSeam} from './native-far-ground-seam.js';
 import {cloneRuntimeMaterial} from '../../src/rendering/clone-runtime-material.js';
