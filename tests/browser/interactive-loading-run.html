@@ -70,4 +70,5 @@ run.onclick=async()=>{
  await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));observer?.disconnect();gpuSampler?.dispose();report.frameSummary={count:report.frames.length,max:Math.max(...report.frames),over50:report.frames.filter(t=>t>50).length,over100:report.frames.filter(t=>t>100).length};update();
 };
 addEventListener('error',event=>{report?.errors.push(event.message);});addEventListener('unhandledrejection',event=>{report?.errors.push(String(event.reason));});addEventListener('pagehide',()=>{gpuSampler?.dispose();cancelAnimationFrame(raf);observer?.disconnect();if(report)clearAudio();cinema?.cancel();diorama?.dispose();world?.dispose();});
+run.dataset.ready='true';
 </script></html>
