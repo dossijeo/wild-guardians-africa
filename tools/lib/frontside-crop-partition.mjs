@@ -1,11 +1,12 @@
 // QA-only two-group design. Leaves retain DoubleSide; no source is modified.
 import * as THREE from 'three';
-export function partitionCropGeometry(source,faceLabels){
+export function partitionCropGeometry(source,faceLabels,frontLabels=[0,1]){
  if(source.groups.length||Object.keys(source.morphAttributes).length||source.drawRange.start!==0||source.drawRange.count!==Infinity)throw Error('Unexpected source crop grouping/morph/range');
  const vertexCount=source.getAttribute('position').count,index=source.index?.array??Uint32Array.from({length:vertexCount},(_,i)=>i);
  if(index.length%3||faceLabels.length!==index.length/3||faceLabels.some(label=>!Number.isInteger(label)||label<0))throw Error('Invalid face labels');
+ if(!Array.isArray(frontLabels)||!frontLabels.length||frontLabels.some(l=>!Number.isInteger(l)||l<0)||new Set(frontLabels).size!==frontLabels.length)throw Error('Invalid Front regional subset');
  const front=[],double=[];
- faceLabels.forEach((label,face)=>(label<2?front:double).push(face));
+ faceLabels.forEach((label,face)=>(frontLabels.includes(label)?front:double).push(face));
  const faces=[...front,...double],IndexType=source.index?source.index.array.constructor:vertexCount<=65535?Uint16Array:Uint32Array;
  const indices=new IndexType(index.length);
  faces.forEach((face,output)=>indices.set(index.subarray(face*3,face*3+3),output*3));

@@ -1102,3 +1102,31 @@ from actual before-map angular differences. Within saved nominal PBR RGB
 outliers it also records channel byte distributions, without equating zero
 encoded bytes to NaN or claiming undefined original shader behavior. New unit
 normal data still fails saved PBR gates; this does not approve the candidate.
+
+
+The native derived direction screen at HEAD02239083 is archived worker-badge-
+direction-guided-*, retaining PBR rejection. All four source repeats are exact.
+Within4565 nominal PBR outlier pixels,4332 source pixels encodeRGB[0,0,0] in
+raw/direction/oriented/perturbed modes; the candidate has none. Oriented and
+perturbed differences agree in aggregate:4421 changed pixels/mean156.81402
+channel bytes in this scope. These observations are compatible with undefined
+original zero-normal interpolation but do not prove NaN in unmodified PBR or
+approve any replacement normal field. Restoring zero normals in a shader is
+not used as a repair. Both baseline and derived failures remain unchanged.
+
+A separate offline leaf_surface_proposals family retains all original corner
+P/N/UV bits and uses region-local simplification withLockBorder/Sparse/Permissive.
+Normal/UV metric weights0.1/1 are search parameters, not quality tolerances.
+Error0.001/0.002/0.005 retain4931/4925/4881 forward triangles; with all leaf
+reverses projected growth is60.81/60.57/58.78% and572280/571632/567072 state
+bytes versus317066. All remain resource failures. No runtime export, bridge
+remapping, GPU capture or category-wide infeasibility claim follows.
+
+The prospective stemOnly sidePartition isolates regional1 Front culling at
+unchanged geometry/maps/driver attributes; soil0 and thin leaves>=2 stay
+DoubleSide. Source, indexedDouble and groupedDouble controls precede candidate.
+It keeps source GLSL DOUBLE_SIDED when requested, normal/shadow conventions
+and all existing visual gates. This is a partial training screen, not approval
+of stem topology, whole crop repair or net GPU benefit; bridges/states, shadows,
+withheld angles and resource/GPU gates remain required. It tests whether the
+previous soil-dominated RGB failure prevents even this narrower improvement.
