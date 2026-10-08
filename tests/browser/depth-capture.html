@@ -24,6 +24,7 @@ import {withExcludedDepthObject} from './depth-draw-exclusion.js';
 import {createDepthGpuProbe} from './depth-gpu-state.js';
 import {InvariantDepthShaders} from './invariant-depth-shaders.js';
 import {AlphaSamplerExperiment} from './alpha-sampler.js';
+import {AlphaDiscardExperiment} from './alpha-discard.js';
 import {withDepthCaptureMaterials} from '../../src/rendering/depth-capture.js';
 import {renderOriginBounds,withRenderOrigin} from '../../src/rendering/render-origin.js';
 import {withDepthCaptureMaterials as beforeCompatibility} from './depth-capture-before-compatibility.js';
@@ -39,6 +40,8 @@ let site;for(let z=-8;z<=8&&!site;z+=1.5)for(let x=5;x<15&&!site;x+=1.5){const p
 Game.plant(state,'qa-plant','mijo',site.x,site.z,nav);Game.openInitialHiring(state);Game.hire(state,'qa-hire',{olderMale:1});Game.pause(state,'qa');state.tutorial.step='done';
 const world=new WorldScene(document.querySelector('#world'),()=>{});
 const invariantShaders=params.has('invariant')?new InvariantDepthShaders(world,params.get('invariant')):null;
+const alphaDiscard=params.has('alphaDiscard')?new AlphaDiscardExperiment(world,params.get('alphaDiscard')!=='off'):null;
+if(alphaDiscard){const toggle=document.createElement('button');toggle.disabled=true;toggle.textContent='Alternar descarte alpha QA';toggle.onclick=()=>{alphaDiscard.setEnabled(!alphaDiscard.report().enabled);result=null;comparisonSnapshot=null;status();};document.querySelector('#status').before(toggle);addEventListener('pagehide',()=>alphaDiscard.dispose(),{once:true});}
 world.onError=showError;world.destructionPass.auxiliaryDepth=params.get('auxiliary')==='1';world.qualitySetting('media');await world.load(state,nav,payload);
 const alphaSampler=params.has('alphaSampler')?new AlphaSamplerExperiment(world,params.get('alphaSampler')):null;
 addEventListener('pagehide',()=>alphaSampler?.dispose(),{once:true});
@@ -156,6 +159,7 @@ async function comparePreparation(kind,gpuProbe=null){
   if(gpuProbe)result.gpuProbe={scope:'Post-draw WebGL queries, driver synchronization possible; not GPU timing or alpha acceptance. Optional hashes cover complete enabled attribute/index buffers only, not textures or fragment ownership.',bufferReadback:await gpuProbe.finish(),frames:gpuFrames,programs:gpuProbe.programs};
   if(invariantShaders)result.invariance=invariantShaders.report();
   if(alphaSampler)result.alphaSampler=alphaSampler.report();
+  if(alphaDiscard)result.alphaDiscard=alphaDiscard.report();
  }catch(e){showError(e);}finally{singleAlpha.setEnabled(false);alphaExperiment.setEnabled(false);world.destructionPass.nonEmptyDepthOnly=previousEmpty;world.destructionPass.optimizedDepth=previous;benchRunning=false;document.querySelectorAll('button').forEach(b=>b.disabled=false);status();}
 }
 
