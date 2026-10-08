@@ -988,3 +988,44 @@ It never invokes the unsupported array-material candidate ID path. ID output
 is later diagnostic evidence, not PBR/map acceptance or permission to retrain
 from withheld failures. The helper rejects array materials before mutation
 and skips zero-instance/invisible meshes without changing original PBR draws.
+
+
+The native original-only mapSourceRgb capture at HEAD54bd242b is archived as
+maize-core-front-source-rgb-guided-*. All source/indexed/group Double controls
+remain exact and coreFront remains rejected. The later original ID attribution
+owns2586 nominal RGB outlier pixels across84 original back-facing faces:
+82 regional-label0 faces/2581pixels and2 label1 faces/5pixels. The read-only
+frontside_crop_core_rgb_geometry.py joins original corners/UV/normals/driver
+metadata using source hash and face IDs. Label0 corners lie at y0.00049986
+through0.16692996; major faces have downward authored mean normals and positive
+geometric-normal dot authored-normal. These facts motivate exact-position
+component/orientation inspection, but do not prove inward closed volume or
+approve flipping any face. No crop geometry, shader or bridge mapping changed.
+
+A new separate disabled Badge5 derived cap is prepared by
+frontside_worker_cap_normal_field.py. It replaces16 nondegenerate zero-normal
+pole fans with coplanar radial/angular tessellation, removes16 exact repeated-
+position zero-area fans and unused zero-normal vertices, and preserves affine
+positions/UV plus the directions of the authored radial smooth normal field.
+Ten radii0.002..1 and6 angular divisions are predetermined training construction.
+All generated normals are finite unit vectors; original outer corner bits and
+winding remain. The sampled normal chord error0.01669223 excludes the central
+area fraction4e-6 and is a CPU diagnostic, not an all-pixel or lighting bound.
+No shader restores undefined normals. Other meshes/attributes/materials/images,
+nodes/inversebinds and12clips/440056 sampler bytes independently reread exact.
+
+Badge cap187->1354vertices and320->2112triangles add1792triangles/46176 decoded
+bytes relative to the frozen selective candidate. Whole worker source41927->
+44663triangles (+6.52563%) and1854202->1942138 geometry bytes (+4.74253%) pass
+the prospective10% geometry budgets and narrowly fit the5% geometry-memory
+proxy; actual GPU allocation and net cost are pending. New cap Uint16 indices
+are lossless; indexing benefits must remain separate from culling benefits.
+Web5272892bytes versus original5612688 (-6.05407%), +29664 versus frozen.
+RawSHAa8b44d844015b644686a95d108b47db4cb373e7660f25c6fe5622736c30811ef,
+webSHAe6158a9888cb090c8fee4fa2dc23b73b9fc13c02617cdb0bd7f8920184237863.
+The badgeField option selects only this pilot, rejects combined normal pilots
+or originalShadow prefix shortcuts, and maps its new faces to original source
+ancestry. The first planned native sample is the same original-target closeup
+WaterV6 case13 (fraction0.90625/e67.5/az144.375), real shading and shadowFront,
+unchanged quantitative/control gates and affected-face raster IDs. It is a
+training diagnostic and cannot approve the worker category or GPU benefit.

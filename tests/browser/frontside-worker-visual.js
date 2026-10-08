@@ -32,7 +32,7 @@ function mapMissingToSource(renderer,rig,camera,pixels,size,mode='missing',faceM
 }
 document.querySelector('#stop').onclick=()=>{cancelled=true;renderer?.dispose();renderer?.forceContextLoss();status.textContent+='\nGPU liberada';};
 document.querySelector('#run').onclick=async()=>{document.querySelector('#run').disabled=true;try{await campaign();}catch(error){status.textContent=error.stack;renderer?.dispose();renderer?.forceContextLoss();}};
-document.querySelector('#run').disabled=false;status.textContent='Preparado: módulo QA cargado';
+document.querySelector('#run').disabled=false;status.textContent='Preparado: mÃ³dulo QA cargado';
 async function campaign(){
  const size=1024;renderer=new THREE.WebGLRenderer({antialias:false,alpha:true,preserveDrawingBuffer:true});renderer.setSize(size,size);renderer.setPixelRatio(1);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1;renderer.setClearColor(0,0);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
  const options=new URLSearchParams(location.search),noShadows=options.has('noShadows'),positiveControl=options.has('doubleControl'),sourceTwin=options.has('sourceTwin'),originalShadow=options.has('originalShadow'),frontShadow=options.has('frontShadow'),maxSamples=Number(options.get('limit')??Infinity);renderer.shadowMap.enabled=!noShadows;
@@ -49,13 +49,13 @@ async function campaign(){
  const allClipNames=Object.keys(library.youngMale.actions);if(clipFilter&&!allClipNames.includes(clipFilter))throw Error('Unknown screen clip');
  const campaignClips=clipFilter?[clipFilter]:options.has('allClips')?allClipNames:['Idle','Water','Carry_Crate','Fall'];
  const sourceAssets=new Assets();
- const localNormal=options.has('localNormal'),badgeNormal=options.has('badgeNormal');
+ const localNormal=options.has('localNormal'),badgeNormal=options.has('badgeNormal'),badgeField=options.has('badgeField');
  const normalCloseup=options.has('normalCloseup');if(normalCloseup&&!options.has('mapNormalCoverage'))throw Error('Normal closeup requires affected-face coverage instrumentation');
- if(localNormal&&badgeNormal)throw Error('Separate normal pilots cannot be combined implicitly');
- if(badgeNormal&&originalShadow)throw Error('Badge cleanup requires mapped shadow geometry; originalShadow prefix diagnostic is incompatible');
- const normalMesh=badgeNormal?'Can_badge_geometry_5':'Can_Nozzle_geometry_4',candidateFaceMaps={};
- if(badgeNormal){const audit=await fetch('/docs/qa/frontside-model-pilot/Can_badge_geometry_5-normal-export-audit.json').then(r=>r.json());if(audit.sourceSha256!==library.youngMale.sha256)throw Error('Badge provenance source mismatch');candidateFaceMaps[normalMesh]=audit.accessories.find(a=>a.mesh===normalMesh).retainedBaseCandidateFaces;}
- const urls=[library.youngMale.url,sourceTwin?library.youngMale.url:badgeNormal?'/__frontside_candidate/youngMale-badge-normal':localNormal?'/__frontside_candidate/youngMale-local-normal':'/__frontside_candidate/youngMale'];
+ if(Number(localNormal)+Number(badgeNormal)+Number(badgeField)>1)throw Error('Separate normal pilots cannot be combined implicitly');
+ if((badgeNormal||badgeField)&&originalShadow)throw Error('Badge cleanup requires mapped shadow geometry; originalShadow prefix diagnostic is incompatible');
+ const normalMesh=(badgeNormal||badgeField)?'Can_badge_geometry_5':'Can_Nozzle_geometry_4',candidateFaceMaps={};
+ if(badgeNormal||badgeField){const audit=await fetch(badgeField?'/docs/qa/frontside-model-pilot/worker-badge-field-normal-export-audit.json':'/docs/qa/frontside-model-pilot/Can_badge_geometry_5-normal-export-audit.json').then(r=>r.json());if(audit.sourceSha256!==library.youngMale.sha256)throw Error('Badge provenance source mismatch');candidateFaceMaps[normalMesh]=audit.accessories.find(a=>a.mesh===normalMesh).retainedBaseCandidateFaces;}
+ const urls=[library.youngMale.url,sourceTwin?library.youngMale.url:badgeField?'/__frontside_candidate/youngMale-badge-field':badgeNormal?'/__frontside_candidate/youngMale-badge-normal':localNormal?'/__frontside_candidate/youngMale-local-normal':'/__frontside_candidate/youngMale'];
  const models=(await Promise.all(urls.map(url=>sourceAssets.model(url)))).map(gltf=>({...gltf}));
  // Exercise the actual WorldScene.actor/updateActor path, including skeleton
  // cloning, action setup and tool visibility, without starting a second renderer.
@@ -84,11 +84,12 @@ async function campaign(){
  const camera=new THREE.PerspectiveCamera(42,1,.01,100),linear=new Float32Array(256);for(let i=0;i<256;i++){const v=i/255;linear[i]=v<=.04045?v/12.92:((v+.055)/1.055)**2.4;}
  const report={status:'VISUAL_SCREEN_NOT_APPROVED',resolution:size,shader:'AfricanToon+NativeSky endpoints+nativeShadow+Three r180 Standard maps+sampleFixedPose',source:'worker-actions.youngMale runtime web',candidate:'youngMale-selective-reverse-NOT-APPROVED-web.glb',candidateSide:positiveControl?'DoubleSide control':'FrontSide',maxSamples:Number.isFinite(maxSamples)?maxSamples:null,shadowSide:'DoubleSide color-isolation screen; FrontSide shadow pass remains required',shadowsEnabled:!noShadows,conditions:'CPU49032/39340 frozen, far58872 finished. No GPU timing.',samples:[],limitations:['Local isolated worker screen only; all cultures/biomes, diagnostic maps, exhaustive views, shadows and GPU benchmarks remain required.']};
  report.conditions={cpuCampaigns:options.get('cpuCampaigns')??'unspecified',gpuTiming:false};
- report.originalWorldPath='WorldScene.actor → Assets runtime GLB → SkeletonUtils clone → updateActor/applyWorkerPose → SceneMaterialRegistry/AfricanToon';
- report.candidateReceipt=sourceTwin?null:(await fetch(badgeNormal?'/docs/qa/frontside-model-pilot/packed-badge-normal-candidate-receipts.json':localNormal?'/docs/qa/frontside-model-pilot/packed-local-normal-candidate-receipts.json':'/docs/qa/frontside-model-pilot/packed-candidate-receipts.json').then(r=>r.json())).find(r=>r.category==='youngMale');
+ report.originalWorldPath='WorldScene.actor â†’ Assets runtime GLB â†’ SkeletonUtils clone â†’ updateActor/applyWorkerPose â†’ SceneMaterialRegistry/AfricanToon';
+ report.candidateReceipt=sourceTwin?null:(await fetch(badgeField?'/docs/qa/frontside-model-pilot/packed-badge-field-normal-candidate-receipts.json':badgeNormal?'/docs/qa/frontside-model-pilot/packed-badge-normal-candidate-receipts.json':localNormal?'/docs/qa/frontside-model-pilot/packed-local-normal-candidate-receipts.json':'/docs/qa/frontside-model-pilot/packed-candidate-receipts.json').then(r=>r.json())).find(r=>r.category==='youngMale');
  report.localNormalDiagnosis=localNormal;report.candidate=localNormal?'Can_Nozzle_geometry_4-local-normal-NOT-APPROVED-web.glb':report.candidate;
  report.normalCloseup=normalCloseup;if(normalCloseup)report.limitations.push('Training camera frames the original repaired accessory at unchanged FOV42/resolution1024; all surrounding rig geometry/occlusion and real materials remain present. Closeup is not withheld/general-category acceptance.');
  report.badgeNormalDiagnosis=badgeNormal;if(badgeNormal)report.candidate='Can_badge_geometry_5-normals-cleanup-v2-NOT-APPROVED-web.glb';
+ report.badgeFieldDiagnosis=badgeField;if(badgeField){report.candidate='Can_badge_geometry_5-unit-normal-field-derived-NOT-APPROVED-web.glb';report.limitations.push('Derived coplanar cap tessellation preserves P/UV by barycentric interpolation and unit directions of the authored radial normal field. CPU sampled error is not a raster gate. All visual/shadow/resource/GPU gates remain required.');}
  report.metricPolicyVersion=2;report.controlEnvelopePolicy='Prospective only: alpha identical in all 3 controls; twice max observed linear-channel deviation added to candidate error, never subtracted. Candidate gates unchanged; source envelope budget <=1/5 RGB MAE/p99/tile and <=3 pixels per >.006 region. Observed-control bound, not a guarantee about unseen variability.';
  report.contextAttributes=gl.getContextAttributes();report.defaultFramebufferSamples=gl.getParameter(gl.SAMPLES);
  report.sourceSha256=library.youngMale.sha256;
@@ -118,7 +119,7 @@ async function campaign(){
    }
    controlMetrics=controlEnvelopeMetrics(controlEnvelope,pixels[0],size);
    if(controlDiagnosis){report.sourceOnlyDiagnosis={biome,night,clip:clipName,fraction,azimuth,elevation,withheldVersion,controls:originalControls,controlMetrics,alphaDifferences:controlAlphaDifferences,nominalRgbFaceProvenance:mapMissingToSource(renderer,rig,camera,[pixels[0],worstSourceRepeat],size,'rgb'),meaning:'30 repeated original draws only; no candidate drawn or compared, no acceptance interpretation'};
-    await fetch('/__frontside_report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)});release();registry.dispose();renderer.dispose();renderer.forceContextLoss();status.textContent='Diagnóstico fuente guardado: '+worstSourceBytes+' bytes cambiados máximo; GPU liberada. Sin comparación candidato.';return;}
+    await fetch('/__frontside_report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)});release();registry.dispose();renderer.dispose();renderer.forceContextLoss();status.textContent='DiagnÃ³stico fuente guardado: '+worstSourceBytes+' bytes cambiados mÃ¡ximo; GPU liberada. Sin comparaciÃ³n candidato.';return;}
    if(controlAlphaDifferences||!controlMetrics.passes){report.failed=true;report.invalidControl={biome,night,clip:clipName,fraction,azimuth,elevation,frontShadow,withheldVersion,controls:originalControls,controlMetrics,alphaDifferences:controlAlphaDifferences,reason:'Original control exceeds prospective uncertainty budget; affected comparison not interpreted'};
     if(options.has('mapControl'))report.invalidControl.lastRepeatNominalRgbFaceProvenance=mapMissingToSource(renderer,rig,camera,[pixels[0],lastSourceRepeat],size,'rgb');
     await fetch('/__frontside_report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)});throw Error('Original control exceeds uncertainty budget; no threshold interpretation');}
@@ -141,7 +142,7 @@ async function campaign(){
   let nominalAccumulated=0,nominalP99=0;for(let i=0;i<nominalHist.length;i++){nominalAccumulated+=nominalHist[i];if(nominalAccumulated>=channels*.99){nominalP99=i/255;break;}}
   sample.nominalRgbMetrics={linearRgbMae:nominalError/Math.max(channels,1),p99Approx:nominalP99,maxError:nominalMaxError,maxTileMae:Math.max(...Array.from(nominalTileError,(v,i)=>tileChannels[i]?v/tileChannels[i]:0)),rgbOutlierRegions:regions(nominalRgbMask,size)};
   sample.toolStates=rigs.map(rig=>['Prop_WateringCan','Prop_FruitCrate','Prop_Hoe','Prop_HarvestSack'].map(name=>{const node=rig.model.getObjectByName(name);return{name,visible:node?.visible??null,scale:node?.scale.toArray()??null};}));
-  sample.passes=sample.alphaDistanceGate.passes&&sample.alphaIoU>=.9995&&sample.missingFraction<=.00025&&sample.addedFraction<=.0005&&sample.linearRgbMae<=.002&&sample.p99Approx<=.015&&sample.maxTileMae<=.01&&!sample.rgbOutlierRegions.some(r=>r.pixels>16)&&!sample.missingRegions.some(r=>r.pixels>4||r.diameterUpperBound>2);report.samples.push(sample);status.textContent=`${report.samples.length} muestras. ${clipName}/${fraction}, ${azimuth}°/${elevation}°: IoU${sample.alphaIoU.toFixed(6)}, MAE${sample.linearRgbMae.toFixed(6)} ${sample.passes?'pasa screen':'FALLA'}`;
+  sample.passes=sample.alphaDistanceGate.passes&&sample.alphaIoU>=.9995&&sample.missingFraction<=.00025&&sample.addedFraction<=.0005&&sample.linearRgbMae<=.002&&sample.p99Approx<=.015&&sample.maxTileMae<=.01&&!sample.rgbOutlierRegions.some(r=>r.pixels>16)&&!sample.missingRegions.some(r=>r.pixels>4||r.diameterUpperBound>2);report.samples.push(sample);status.textContent=`${report.samples.length} muestras. ${clipName}/${fraction}, ${azimuth}Â°/${elevation}Â°: IoU${sample.alphaIoU.toFixed(6)}, MAE${sample.linearRgbMae.toFixed(6)} ${sample.passes?'pasa screen':'FALLA'}`;
   if(!sample.passes){failed=true;break campaignLoop;}
   if(report.samples.length>=maxSamples)break campaignLoop;
   await new Promise(requestAnimationFrame);
