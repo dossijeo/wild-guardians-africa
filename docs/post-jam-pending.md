@@ -13,8 +13,17 @@ Las diferencias de píxeles, color, silueta y pequeños agujeros son diagnóstic
 las notas inferiores de rechazos por umbrales describen ensayos históricos y
 no establecen el criterio vigente. La aceptación exige apariencia convincente
 en juego, funcionalidad/compatibilidad y beneficio GPU neto. El candidato de
-maíz sigue en la rama de reparación; su benchmark propio está pendiente y no
-se han promovido assets por la sola inspección de capturas.
+maíz sigue en la rama de reparación. Su benchmark propio ya acredita ahorro
+GPU neto representativo; falta integración visual/funcional en WorldScene y
+ampliación a otros cultivos/trabajadores. No se han promovido assets por la
+sola inspección de capturas.
+
+[Maíz maduro reparado: beneficio neto](qa/frontside-source-control/shared-leaf-net-gpu/README.md):
+1089 plantas, seis pares AB/BA y3600 consultas válidas. Mediana81,980→67,653ms,
+ahorro17,476%, incluidos cielo/color/sombras y grupos adicionales. La auditoría
+separada de buffers termina con cero bytes pendientes; coexistir original y
+candidato aumenta el total, aunque la geometría candidata sea menor. No es
+mejora general de FPS ni aprobación de toda la categoría. Sin promover assets.
 
 [Compilación cancelable: AB/BA denso](qa/streaming-travel-dense/owned-compilation-abba/README.md):
 cuatro recorridos de180m conservan estado/cámara/15chunks nuevos y no registran
