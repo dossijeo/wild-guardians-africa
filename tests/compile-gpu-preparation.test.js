@@ -79,3 +79,24 @@ test('owner invalidation inside the final readiness query cannot produce accepta
  let closed=false;const f=fixture([{isReady:()=>{closed=true;return true;}}]);
  await assert.rejects(f.run({check:()=>{if(closed)throw Error('closed');}}),/closed/);
 });
+
+
+test('explicit all-variant selection snapshots once and waits every borrowed recipe',async()=>{
+ let allReady=false,selectedReady=true,lookups=0;
+ const first={isReady:()=>selectedReady},second={isReady:()=>allReady},f=fixture([first]);
+ const properties={currentProgram:first,programs:new Map([['instanced',first],['plain',second]])};f.renderer.properties.get=()=>{lookups++;return properties;};
+ let selectors=0,completed=false;const pending=f.run({check:()=>{},pollIntervalMs:5,selectPrograms:(p,material)=>{selectors++;assert.equal(material,f.materials[0]);return p.programs.values();}}).then(()=>{completed=true;});
+ properties.programs.clear();await Promise.resolve();assert.equal(completed,false);allReady=true;await pending;assert.equal(selectors,1);assert.equal(lookups,1);
+});
+
+test('default selector still ignores unrelated pending variants',async()=>{
+ const current={isReady:()=>true},f=fixture([current]);f.renderer.properties.get=()=>({currentProgram:current,programs:new Map([['other',{isReady:()=>assert.fail('unselected variant')} ]])});
+ await f.run({check:()=>{}});
+});
+
+test('invalid or empty explicit selection never claims material readiness',async()=>{
+ const f=fixture([{isReady:()=>true}]);
+ await assert.rejects(f.run({check:()=>{},selectPrograms:()=>[]}),/no selected readiness program/);
+ await assert.rejects(f.run({check:()=>{},selectPrograms:()=>null}),/no selected readiness program/);
+ await assert.rejects(f.run({check:()=>{},selectPrograms:42}),/Invalid GPU program selector/);assert.equal(f.counts().compilations,2);
+});
