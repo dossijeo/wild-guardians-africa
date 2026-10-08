@@ -1,0 +1,513 @@
+{
+  "status": "BORDER_AND_FIELD_CONSTRAINED_OFFLINE_PROPOSALS_NOT_APPROVED",
+  "sourceSha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+  "blenderVersion": "4.5.9 LTS",
+  "blenderBuildHash": "8bf95cbd38d1",
+  "rows": [
+    {
+      "convention": "HIGH_WEIGHT_BOUNDARY",
+      "archive": ".cache/frontside-model-pilot/candidates/archive/2ba6a9ee61715ef3fdf84f5f6b97ce6f56eeec3aebc9955af939f2347f32e6c7.json",
+      "archiveSha256": "2ba6a9ee61715ef3fdf84f5f6b97ce6f56eeec3aebc9955af939f2347f32e6c7",
+      "archiveBytes": 2232392,
+      "ratio": 0.8899966766367564,
+      "sourceLeafTriangles": 3009,
+      "maximumLeafTriangles": 2678,
+      "derivedLeafTriangles": 2673,
+      "proposedBilateralTriangles": 5423,
+      "triangleBudgetPass": true,
+      "sourceStateBytes": 317066,
+      "proposedSharedStateBytes": 309082,
+      "bufferBudgetPass": true,
+      "boundaryPass": false,
+      "leaves": [
+        {
+          "label": 2,
+          "sourceFaces": 446,
+          "derivedFaces": 396,
+          "sourceBoundaryEdges": 932,
+          "boundaryMeaning": "Conservative indexed cuts checked at exact P/UV; not all are physical silhouette boundaries.",
+          "exactBoundaryDomains": {
+            "POSITION": {
+              "singleOwnerEdges": 86,
+              "moreThanTwoOwnerEdges": 14,
+              "twoOwnerEdges": 602
+            },
+            "POSITION_UV": {
+              "singleOwnerEdges": 932,
+              "moreThanTwoOwnerEdges": 0,
+              "twoOwnerEdges": 203
+            },
+            "POSITION_NORMAL_UV": {
+              "singleOwnerEdges": 932,
+              "moreThanTwoOwnerEdges": 0,
+              "twoOwnerEdges": 203
+            }
+          },
+          "missingExactBoundaryEdges": 138,
+          "boundaryPass": false,
+          "restoredExactTriangleCorners": 960,
+          "restoredUniqueAnchorCorners": 140,
+          "ambiguousAnchorCorners": 0,
+          "newUnmappedCorners": 88,
+          "maxSampledDistance": 0.021332519128918648,
+          "meanSampledDistance": 0.0004061917926240255
+        },
+        {
+          "label": 3,
+          "sourceFaces": 588,
+          "derivedFaces": 523,
+          "sourceBoundaryEdges": 1134,
+          "boundaryMeaning": "Conservative indexed cuts checked at exact P/UV; not all are physical silhouette boundaries.",
+          "exactBoundaryDomains": {
+            "POSITION": {
+              "singleOwnerEdges": 136,
+              "moreThanTwoOwnerEdges": 6,
+              "twoOwnerEdges": 805
+            },
+            "POSITION_UV": {
+              "singleOwnerEdges": 1134,
+              "moreThanTwoOwnerEdges": 0,
+              "twoOwnerEdges": 315
+            },
+            "POSITION_NORMAL_UV": {
+              "singleOwnerEdges": 1134,
+              "moreThanTwoOwnerEdges": 0,
+              "twoOwnerEdges": 315
+            }
+          },
+          "missingExactBoundaryEdges": 180,
+          "boundaryPass": false,
+          "restoredExactTriangleCorners": 1239,
+          "restoredUniqueAnchorCorners": 209,
+          "ambiguousAnchorCorners": 0,
+          "newUnmappedCorners": 121,
+          "maxSampledDistance": 0.024654051288962364,
+          "meanSampledDistance": 0.00043606553612644344
+        },
+        {
+          "label": 4,
+          "sourceFaces": 573,
+          "derivedFaces": 508,
+          "sourceBoundaryEdges": 1131,
+          "boundaryMeaning": "Conservative indexed cuts checked at exact P/UV; not all are physical silhouette boundaries.",
+          "exactBoundaryDomains": {
+            "POSITION": {
+              "singleOwnerEdges": 208,
+              "moreThanTwoOwnerEdges": 25,
+              "twoOwnerEdges": 712
+            },
+            "POSITION_UV": {
+              "singleOwnerEdges": 1131,
+              "moreThanTwoOwnerEdges": 0,
+              "twoOwnerEdges": 294
+            },
+            "POSITION_NORMAL_UV": {
+              "singleOwnerEdges": 1131,
+              "moreThanTwoOwnerEdges": 0,
+              "twoOwnerEdges": 294
+            }
+          },
+          "missingExactBoundaryEdges": 179,
+          "boundaryPass": false,
+          "restoredExactTriangleCorners": 1200,
+          "restoredUniqueAnchorCorners": 208,
+          "ambiguousAnchorCorners": 0,
+          "newUnmappedCorners": 116,
+          "maxSampledDistance": 0.015413169749081135,
+          "meanSampledDistance": 0.0003462677055981755
+        },
+        {
+          "label": 5,
+          "sourceFaces": 351,
+          "derivedFaces": 312,
+          "sourceBoundaryEdges": 634,
+          "boundaryMeaning": "Conservative indexed cuts checked at exact P/UV; not all are physical silhouette boundaries.",
+          "exactBoundaryDomains": {
+            "POSITION": {
+              "singleOwnerEdges": 64,
+              "moreThanTwoOwnerEdges": 2,
+              "twoOwnerEdges": 491
+            },
+            "POSITION_UV": {
+              "singleOwnerEdges": 633,
+              "moreThanTwoOwnerEdges": 0,
+              "twoOwnerEdges": 210
+            },
+            "POSITION_NORMAL_UV": {
+              "singleOwnerEdges": 635,
+              "moreThanTwoOwnerEdges": 0,
+              "twoOwnerEdges": 209
+            }
+          },
+          "missingExactBoundaryEdges": 107,
+          "boundaryPass": false,
+          "restoredExactTriangleCorners": 747,
+          "restoredUniqueAnchorCorners": 118,
+          "ambiguousAnchorCorners": 1,
+          "newUnmappedCorners": 70,
+          "maxSampledDistance": 0.023249175399541855,
+          "meanSampledDistance": 0.0006384357689622499
+        },
+        {
+          "label": 6,
+          "sourceFaces": 622,
+          "derivedFaces": 553,
+          "sourceBoundaryEdges": 1180,
+          "boundaryMeaning": "Conservative indexed cuts checked at exact P/UV; not all are physical silhouette boundaries.",
+          "exactBoundaryDomains": {
+            "POSITION": {
+              "singleOwnerEdges": 146,
+              "moreThanTwoOwnerEdges": 5,
+              "twoOwnerEdges": 852
+            },
+            "POSITION_UV": {
+              "singleOwnerEdges": 1180,
+              "moreThanTwoOwnerEdges": 0,
+              "twoOwnerEdges": 343
+            },
+            "POSITION_NORMAL_UV": {
+              "singleOwnerEdges": 1180,
+              "moreThanTwoOwnerEdges": 0,
+              "twoOwnerEdges": 343
+            }
+          },
+          "missingExactBoundaryEdges": 189,
+          "boundaryPass": false,
+          "restoredExactTriangleCorners": 1314,
+          "restoredUniqueAnchorCorners": 212,
+          "ambiguousAnchorCorners": 0,
+          "newUnmappedCorners": 133,
+          "maxSampledDistance": 0.03476257622241974,
+          "meanSampledDistance": 0.0005079974760964946
+        },
+        {
+          "label": 7,
+          "sourceFaces": 209,
+          "derivedFaces": 186,
+          "sourceBoundaryEdges": 379,
+          "boundaryMeaning": "Conservative indexed cuts checked at exact P/UV; not all are physical silhouette boundaries.",
+          "exactBoundaryDomains": {
+            "POSITION": {
+              "singleOwnerEdges": 44,
+              "moreThanTwoOwnerEdges": 1,
+              "twoOwnerEdges": 290
+            },
+            "POSITION_UV": {
+              "singleOwnerEdges": 379,
+              "moreThanTwoOwnerEdges": 0,
+              "twoOwnerEdges": 124
+            },
+            "POSITION_NORMAL_UV": {
+              "singleOwnerEdges": 379,
+              "moreThanTwoOwnerEdges": 0,
+              "twoOwnerEdges": 124
+            }
+          },
+          "missingExactBoundaryEdges": 67,
+          "boundaryPass": false,
+          "restoredExactTriangleCorners": 417,
+          "restoredUniqueAnchorCorners": 88,
+          "ambiguousAnchorCorners": 0,
+          "newUnmappedCorners": 53,
+          "maxSampledDistance": 0.022807596251368523,
+          "meanSampledDistance": 0.0006551032298971757
+        },
+        {
+          "label": 8,
+          "sourceFaces": 220,
+          "derivedFaces": 195,
+          "sourceBoundaryEdges": 416,
+          "boundaryMeaning": "Conservative indexed cuts checked at exact P/UV; not all are physical silhouette boundaries.",
+          "exactBoundaryDomains": {
+            "POSITION": {
+              "singleOwnerEdges": 72,
+              "moreThanTwoOwnerEdges": 0,
+              "twoOwnerEdges": 294
+            },
+            "POSITION_UV": {
+              "singleOwnerEdges": 416,
+              "moreThanTwoOwnerEdges": 0,
+              "twoOwnerEdges": 122
+            },
+            "POSITION_NORMAL_UV": {
+              "singleOwnerEdges": 416,
+              "moreThanTwoOwnerEdges": 0,
+              "twoOwnerEdges": 122
+            }
+          },
+          "missingExactBoundaryEdges": 67,
+          "boundaryPass": false,
+          "restoredExactTriangleCorners": 456,
+          "restoredUniqueAnchorCorners": 76,
+          "ambiguousAnchorCorners": 0,
+          "newUnmappedCorners": 53,
+          "maxSampledDistance": 0.015652503818273544,
+          "meanSampledDistance": 0.0003720609466668224
+        }
+      ],
+      "limitations": [
+        "Every original soil/stem corner is bit-exact; future stem reverses include ALL original stem triangles.",
+        "Leaves remain DoubleSide; each original driver is processed independently, no saved view/visibility masks.",
+        "POINT field transport at new vertices is a derived field, not verified original chart correspondence.",
+        "Exact original triangles/unique P+UV anchors restore original Nbits; ambiguous/new corners retain normalized transported fields.",
+        "Boundary weighting is not a lock; missing exact source P+UV boundary edges REJECT this structural proposal.",
+        "No original GLB, runtime states or bridge mappings changed; new leaf topology requires new bridge correspondence."
+      ]
+    },
+    {
+      "convention": "HIGH_WEIGHT_INTERIOR",
+      "archive": ".cache/frontside-model-pilot/candidates/archive/f97fa41208ad1935b3fac017ffec9ceafb57582967b32bc9d1b9cd594b2f0561.json",
+      "archiveSha256": "f97fa41208ad1935b3fac017ffec9ceafb57582967b32bc9d1b9cd594b2f0561",
+      "archiveBytes": 2363995,
+      "ratio": 0.8899966766367564,
+      "sourceLeafTriangles": 3009,
+      "maximumLeafTriangles": 2678,
+      "derivedLeafTriangles": 2947,
+      "proposedBilateralTriangles": 5697,
+      "triangleBudgetPass": false,
+      "sourceStateBytes": 317066,
+      "proposedSharedStateBytes": 319782,
+      "bufferBudgetPass": true,
+      "boundaryPass": false,
+      "leaves": [
+        {
+          "label": 2,
+          "sourceFaces": 446,
+          "derivedFaces": 396,
+          "sourceBoundaryEdges": 932,
+          "boundaryMeaning": "Conservative indexed cuts checked at exact P/UV; not all are physical silhouette boundaries.",
+          "exactBoundaryDomains": {
+            "POSITION": {
+              "singleOwnerEdges": 86,
+              "moreThanTwoOwnerEdges": 14,
+              "twoOwnerEdges": 602
+            },
+            "POSITION_UV": {
+              "singleOwnerEdges": 932,
+              "moreThanTwoOwnerEdges": 0,
+              "twoOwnerEdges": 203
+            },
+            "POSITION_NORMAL_UV": {
+              "singleOwnerEdges": 932,
+              "moreThanTwoOwnerEdges": 0,
+              "twoOwnerEdges": 203
+            }
+          },
+          "missingExactBoundaryEdges": 138,
+          "boundaryPass": false,
+          "restoredExactTriangleCorners": 960,
+          "restoredUniqueAnchorCorners": 140,
+          "ambiguousAnchorCorners": 0,
+          "newUnmappedCorners": 88,
+          "maxSampledDistance": 0.021332519128918648,
+          "meanSampledDistance": 0.0004061917926240255
+        },
+        {
+          "label": 3,
+          "sourceFaces": 588,
+          "derivedFaces": 586,
+          "sourceBoundaryEdges": 1134,
+          "boundaryMeaning": "Conservative indexed cuts checked at exact P/UV; not all are physical silhouette boundaries.",
+          "exactBoundaryDomains": {
+            "POSITION": {
+              "singleOwnerEdges": 136,
+              "moreThanTwoOwnerEdges": 6,
+              "twoOwnerEdges": 805
+            },
+            "POSITION_UV": {
+              "singleOwnerEdges": 1134,
+              "moreThanTwoOwnerEdges": 0,
+              "twoOwnerEdges": 315
+            },
+            "POSITION_NORMAL_UV": {
+              "singleOwnerEdges": 1134,
+              "moreThanTwoOwnerEdges": 0,
+              "twoOwnerEdges": 315
+            }
+          },
+          "missingExactBoundaryEdges": 0,
+          "boundaryPass": true,
+          "restoredExactTriangleCorners": 1734,
+          "restoredUniqueAnchorCorners": 16,
+          "ambiguousAnchorCorners": 0,
+          "newUnmappedCorners": 8,
+          "maxSampledDistance": 0.008691438473761082,
+          "meanSampledDistance": 3.4270427336133746e-05
+        },
+        {
+          "label": 4,
+          "sourceFaces": 573,
+          "derivedFaces": 573,
+          "sourceBoundaryEdges": 1131,
+          "boundaryMeaning": "Conservative indexed cuts checked at exact P/UV; not all are physical silhouette boundaries.",
+          "exactBoundaryDomains": {
+            "POSITION": {
+              "singleOwnerEdges": 208,
+              "moreThanTwoOwnerEdges": 25,
+              "twoOwnerEdges": 712
+            },
+            "POSITION_UV": {
+              "singleOwnerEdges": 1131,
+              "moreThanTwoOwnerEdges": 0,
+              "twoOwnerEdges": 294
+            },
+            "POSITION_NORMAL_UV": {
+              "singleOwnerEdges": 1131,
+              "moreThanTwoOwnerEdges": 0,
+              "twoOwnerEdges": 294
+            }
+          },
+          "missingExactBoundaryEdges": 0,
+          "boundaryPass": true,
+          "restoredExactTriangleCorners": 1719,
+          "restoredUniqueAnchorCorners": 0,
+          "ambiguousAnchorCorners": 0,
+          "newUnmappedCorners": 0,
+          "maxSampledDistance": 2.4755667027420714e-07,
+          "meanSampledDistance": 5.564457413361386e-09
+        },
+        {
+          "label": 5,
+          "sourceFaces": 351,
+          "derivedFaces": 343,
+          "sourceBoundaryEdges": 634,
+          "boundaryMeaning": "Conservative indexed cuts checked at exact P/UV; not all are physical silhouette boundaries.",
+          "exactBoundaryDomains": {
+            "POSITION": {
+              "singleOwnerEdges": 64,
+              "moreThanTwoOwnerEdges": 2,
+              "twoOwnerEdges": 491
+            },
+            "POSITION_UV": {
+              "singleOwnerEdges": 633,
+              "moreThanTwoOwnerEdges": 0,
+              "twoOwnerEdges": 210
+            },
+            "POSITION_NORMAL_UV": {
+              "singleOwnerEdges": 635,
+              "moreThanTwoOwnerEdges": 0,
+              "twoOwnerEdges": 209
+            }
+          },
+          "missingExactBoundaryEdges": 0,
+          "boundaryPass": true,
+          "restoredExactTriangleCorners": 972,
+          "restoredUniqueAnchorCorners": 38,
+          "ambiguousAnchorCorners": 0,
+          "newUnmappedCorners": 19,
+          "maxSampledDistance": 0.009332725778222084,
+          "meanSampledDistance": 0.00011696129692216678
+        },
+        {
+          "label": 6,
+          "sourceFaces": 622,
+          "derivedFaces": 620,
+          "sourceBoundaryEdges": 1180,
+          "boundaryMeaning": "Conservative indexed cuts checked at exact P/UV; not all are physical silhouette boundaries.",
+          "exactBoundaryDomains": {
+            "POSITION": {
+              "singleOwnerEdges": 146,
+              "moreThanTwoOwnerEdges": 5,
+              "twoOwnerEdges": 852
+            },
+            "POSITION_UV": {
+              "singleOwnerEdges": 1180,
+              "moreThanTwoOwnerEdges": 0,
+              "twoOwnerEdges": 343
+            },
+            "POSITION_NORMAL_UV": {
+              "singleOwnerEdges": 1180,
+              "moreThanTwoOwnerEdges": 0,
+              "twoOwnerEdges": 343
+            }
+          },
+          "missingExactBoundaryEdges": 0,
+          "boundaryPass": true,
+          "restoredExactTriangleCorners": 1842,
+          "restoredUniqueAnchorCorners": 12,
+          "ambiguousAnchorCorners": 0,
+          "newUnmappedCorners": 6,
+          "maxSampledDistance": 0.006767808459699154,
+          "meanSampledDistance": 1.9271516007001202e-05
+        },
+        {
+          "label": 7,
+          "sourceFaces": 209,
+          "derivedFaces": 209,
+          "sourceBoundaryEdges": 379,
+          "boundaryMeaning": "Conservative indexed cuts checked at exact P/UV; not all are physical silhouette boundaries.",
+          "exactBoundaryDomains": {
+            "POSITION": {
+              "singleOwnerEdges": 44,
+              "moreThanTwoOwnerEdges": 1,
+              "twoOwnerEdges": 290
+            },
+            "POSITION_UV": {
+              "singleOwnerEdges": 379,
+              "moreThanTwoOwnerEdges": 0,
+              "twoOwnerEdges": 124
+            },
+            "POSITION_NORMAL_UV": {
+              "singleOwnerEdges": 379,
+              "moreThanTwoOwnerEdges": 0,
+              "twoOwnerEdges": 124
+            }
+          },
+          "missingExactBoundaryEdges": 0,
+          "boundaryPass": true,
+          "restoredExactTriangleCorners": 627,
+          "restoredUniqueAnchorCorners": 0,
+          "ambiguousAnchorCorners": 0,
+          "newUnmappedCorners": 0,
+          "maxSampledDistance": 1.4600097131278744e-07,
+          "meanSampledDistance": 1.0256847469179184e-08
+        },
+        {
+          "label": 8,
+          "sourceFaces": 220,
+          "derivedFaces": 220,
+          "sourceBoundaryEdges": 416,
+          "boundaryMeaning": "Conservative indexed cuts checked at exact P/UV; not all are physical silhouette boundaries.",
+          "exactBoundaryDomains": {
+            "POSITION": {
+              "singleOwnerEdges": 72,
+              "moreThanTwoOwnerEdges": 0,
+              "twoOwnerEdges": 294
+            },
+            "POSITION_UV": {
+              "singleOwnerEdges": 416,
+              "moreThanTwoOwnerEdges": 0,
+              "twoOwnerEdges": 122
+            },
+            "POSITION_NORMAL_UV": {
+              "singleOwnerEdges": 416,
+              "moreThanTwoOwnerEdges": 0,
+              "twoOwnerEdges": 122
+            }
+          },
+          "missingExactBoundaryEdges": 0,
+          "boundaryPass": true,
+          "restoredExactTriangleCorners": 660,
+          "restoredUniqueAnchorCorners": 0,
+          "ambiguousAnchorCorners": 0,
+          "newUnmappedCorners": 0,
+          "maxSampledDistance": 1.497548112183722e-07,
+          "meanSampledDistance": 7.855537400367688e-09
+        }
+      ],
+      "limitations": [
+        "Every original soil/stem corner is bit-exact; future stem reverses include ALL original stem triangles.",
+        "Leaves remain DoubleSide; each original driver is processed independently, no saved view/visibility masks.",
+        "POINT field transport at new vertices is a derived field, not verified original chart correspondence.",
+        "Exact original triangles/unique P+UV anchors restore original Nbits; ambiguous/new corners retain normalized transported fields.",
+        "Boundary weighting is not a lock; missing exact source P+UV boundary edges REJECT this structural proposal.",
+        "No original GLB, runtime states or bridge mappings changed; new leaf topology requires new bridge correspondence."
+      ]
+    }
+  ],
+  "limitations": [
+    "Single mature state only; sampled geometry distances do not bound image/silhouette, normal/TBN/UV/material quality, shadows or continuous growth.",
+    "No native quality, category or GPU resource/timing approval; structural/resource failure prevents native expansion.",
+    "Weight conventions are predeclared structural diagnostics, not alternative acceptance profiles or rerolls."
+  ]
+}
