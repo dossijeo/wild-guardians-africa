@@ -1,0 +1,11 @@
+WorldScene QA remains separate from production. Open `/tests/browser/frontside-maize-world.html?qaCandidate=off` on the isolated 5284 server. Loading creates the real WorldScene from the archived Gran Río/suajili farm. It uses the merged production rendering graph, current terrain, workers, village, VFX and depth paths. Toggle changes only mature maize rendering. Original growth bridges and all other species are retained.
+
+The compact candidate endpoint serves immutable SHA256 `3eba51ae256663c20bdfcfc4f9e0133a304e8a6dfa25b072a07154b82f0ee65c`, 253326 bytes. Original GLB and web assets are unchanged. Native mature source/web P/N/UV/index lanes are independently decoded and compared in `maize-mature-actual-web-lanes.json`; that check is not visual approval.
+
+The adapter borrows live growth, restores native scalar material disposal, and reinstalls after native capacity recreation. Materials inherit the existing toon recipe exactly once. Colour uses three FrontSide groups; shadows retain original DoubleSide isolation. Production depth capture currently falls back to the colour shader for material arrays, so a new full WorldScene GPU comparison including relevant VFX/depth is required. The isolated 17.48% GPU result is not inherited by this integration.
+
+Use Capture for two sequential original/candidate images at one paused logical state; inspect recorded camera poses and logical equality. Orbit for further gameplay angles. Day/night changes presentation only. Save/restore exercises the real SaveRepository with in-memory storage, not user persistence. Harvest requests run on a separate resumed postgame copy: they do not prove completed worker harvesting or delivery. Actual growth continuity, completed harvest lifecycle, resident resources and net WorldScene GPU remain pending.
+
+Policy3 treats image metrics as diagnostic. A named human visual decision is pending; no report generates automatic visual approval. Finish exports the retained comparison and cleanup result, releases GPU, and writes only the isolated QA report. No category approval or PR is claimed.
+
+Checks: six codec/adapter/report tests passed; actual web lane verification passed. `node tools/frontside_world_maize_preflight.mjs` validates immutable binary transport and report identity without a GPU context or visual artifact. Native WorldScene execution remains pending.

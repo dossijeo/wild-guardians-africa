@@ -1,0 +1,53 @@
+{
+  "status": "ACTUAL_WEB_MATURE_LANES_BYTE_EXACT_NOT_VISUAL_OR_GPU_APPROVAL",
+  "sourceSha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+  "runtimeSha256": "617568fc66595c635739ff83bc0256535a72fdf7bfcb016dc68a7f7f1e1a8a52",
+  "mesh": "maiz_05_maduro",
+  "decoder": "MeshoptDecoder from pinned Three runtime",
+  "rows": [
+    {
+      "name": "POSITION",
+      "count": 8983,
+      "componentType": 5126,
+      "type": "VEC3",
+      "bytes": 107796,
+      "sourceLaneSha256": "7eb4b98795caf6055866bbf89a1141f21a2f3c08ddb02ac7e20c5ca2b377275e",
+      "decodedWebLaneSha256": "7eb4b98795caf6055866bbf89a1141f21a2f3c08ddb02ac7e20c5ca2b377275e",
+      "byteExact": true
+    },
+    {
+      "name": "NORMAL",
+      "count": 8983,
+      "componentType": 5126,
+      "type": "VEC3",
+      "bytes": 107796,
+      "sourceLaneSha256": "ffc0862522bbd760ea6e1e27feed0f12db38e742afa68d4600e46cc874e99c23",
+      "decodedWebLaneSha256": "ffc0862522bbd760ea6e1e27feed0f12db38e742afa68d4600e46cc874e99c23",
+      "byteExact": true
+    },
+    {
+      "name": "TEXCOORD_0",
+      "count": 8983,
+      "componentType": 5126,
+      "type": "VEC2",
+      "bytes": 71864,
+      "sourceLaneSha256": "d9de707698f30b03bbba4ec97a644c4f9d8012bdd1fc6920fb560b5c58ad166f",
+      "decodedWebLaneSha256": "d9de707698f30b03bbba4ec97a644c4f9d8012bdd1fc6920fb560b5c58ad166f",
+      "byteExact": true
+    },
+    {
+      "name": "indices",
+      "count": 14805,
+      "componentType": 5123,
+      "type": "SCALAR",
+      "bytes": 29610,
+      "sourceLaneSha256": "45074d81661883b77a1fcd3f3f85a33b35ef8f923ffbf19b20b1b1fb603ab966",
+      "decodedWebLaneSha256": "45074d81661883b77a1fcd3f3f85a33b35ef8f923ffbf19b20b1b1fb603ab966",
+      "byteExact": true
+    }
+  ],
+  "limitations": [
+    "Read-only mature P/N/UV/index CPU decoding only. No texture, shader evaluation, rig, whole category or driver-resident equivalence is asserted.",
+    "Actual native timing/resource campaigns remain separate and unexecuted by this script."
+  ]
+}
