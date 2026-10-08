@@ -68,6 +68,42 @@
       "path": "after-observed-game.mjs.gz",
       "rawBytes": 46976,
       "sha256": "2c3d024dc6415429ad45dfc9d92d3da85aa0239ad9034b1a8295b6d3e7d6bbfd"
+    },
+    {
+      "path": "terrain-classification.json.gz",
+      "rawBytes": 32980,
+      "sha256": "7d479e25fabd35f4b94dc74cf864c98f922d4a85d7210a4a6f8c2c39c5ae5c55"
+    },
+    {
+      "path": "slope-exit-feasibility.json.gz",
+      "rawBytes": 39888,
+      "sha256": "fe1ac42beb81152ca717d2347ff58e4a7d20d705d015beea3d461bf21f867a06"
+    },
+    {
+      "path": "terrain-classification-probe.mjs.gz",
+      "rawBytes": 2066,
+      "sha256": "23c432545eeb5438b3e18ee8ae40209ed4bbb2fedc08de4c64aca4ae471b73a6"
+    },
+    {
+      "path": "slope-exit-probe.mjs.gz",
+      "rawBytes": 2766,
+      "sha256": "55604ff43091ba1d44b55a8ff02a9aa50ae24b5520b9c0d76b4747fcddf823f5"
     }
-  ]
+  ],
+  "terrainFollowup": {
+    "baseGitHead": "a172a24fae8dad35851b2ec9970d91a609126b16",
+    "exitCodes": [
+      0,
+      0
+    ],
+    "ticks": 0,
+    "productionChanged": false,
+    "benchmark": false,
+    "backgroundPidsConfirmedLive": [
+      20024,
+      49032,
+      41320,
+      41304
+    ]
+  }
 }

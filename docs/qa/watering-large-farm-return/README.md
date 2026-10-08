@@ -42,7 +42,21 @@ los fallos nulos tampoco acreditan inaccesibilidad global.
 Verificar archivo: `node docs/qa/watering-large-farm-return/verify.mjs`.
 Reproducir: `node tools/check_watering_route_diagnostics.mjs docs/qa/intensive-sabana-musgum-e461b550/state.json.gz .cache/watering-replay/report.json 100`.
 
-Siguiente trabajo: aislar qué rechazo de terreno afecta a esos orígenes y
+Seguimiento sobre main `a172a24f`: dos sondeos fríos adicionales, exit 0,
+sin ticks ni movimiento de entidades. Los 27 orígenes fallan exclusivamente
+por pendiente: ninguna de las cinco muestras ocupa agua/lava. La pendiente
+máxima es 0,50664, frente al límite 0,5. Todos tienen una salida de 0,1 m
+con violación de pendiente no creciente en muestras separadas como máximo
+0,025 m. Se mantienen las pruebas nativas de barrido de props, edificios y
+puertas; desde el extremo válido se encuentra una ruta nativa hasta el poblado.
+La vista QA omite exclusivamente el rechazo de pendiente en ese primer barrido,
+y verifica la pendiente por separado; nunca se pasa a Game. Son 31 candidatos
+examinados para 27 salidas. Informes y scripts exactos añadidos al recibo.
+No prueba continuidad matemática entre muestras, la causa histórica ni el
+comportamiento de una recuperación integrada. No se ha activado en producción,
+ni medido frametime; los cuatro procesos CPU fueron confirmados vivos otra vez.
+
+Siguiente trabajo: reproducir el mecanismo que permitió entrar en la pendiente y
 revisar recuperación física tras desplazamientos/knockback, preservando las
 restricciones y evitando teletransporte. Capturar también el atasco real de
 Gran Cañón cuando exista un checkpoint representativo. No sustituir esos
