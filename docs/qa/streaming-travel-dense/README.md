@@ -92,3 +92,24 @@ no demuestra mejora global de estabilidad: p95 no mejora y el recuento>100ms
 no baja consistentemente. No activar en producción todavía. Investigar ritmo
 GPU/tareas asíncronas restantes y validar recursos/visuales/cobertura antes de
 integrar una solución final. Informes completos comprimidos y hashes en receipt.
+
+## Candidato QA: aislar el dibujo de preparación
+
+Las preparaciones nativas llamaban renderer.render con la escena real completa.
+Viewport cero evita rasterizar el color, pero no evita procesar otros modelos
+ni reconstruir sombras. Opción aislada: conserva escena/luces/fog/shadowenabled,
+oculta temporalmente meshes ajenos al root y evita actualizar sombras durante
+ese único dibujo. Acepta solamente roots sin casters; rechaza casters para no
+acreditar preparación incompleta. Restaura flags antes de fence/await, incluso
+al fallar. El fence, generaciones, contexto, cancelación y shaderguard siguen
+intactos. Por defectofalse, solamente fixture isolatePreparation lo activa.
+
+Piloto aislado+residentPrewarm+trace:245intervalos/p95 116,4ms/p99 133,1ms/
+máximo149,7ms/18sobre100ms. Preparaciónresidente1059,4ms; mayor llamada render
+29,8ms. Quince chunks nuevos, estado idéntico, cero errores/frames ocultos. La
+captura final muestra vegetación/suelo sin defectos obvios; no equivale a
+comparación visual multivista/dither ni aceptación de sombras en movimiento.
+38 pruebas dirigidas pasan: scopes restaurados, caster rechazado, errores,
+fences/contextos/cancelación, adopción y cobertura. Comparación ABBA del aislamiento,
+regresión visual de transiciones/sombras y recursos siguen pendientes. No inferir
+mejora causal desde este único piloto ni activar en producción todavía.

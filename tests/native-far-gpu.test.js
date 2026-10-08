@@ -23,6 +23,13 @@ test('normal streaming proves completion with an async fence without synchronous
  const result=await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{nextFrame:async()=>{}});
  assert.equal(result.textures,0);assert.ok(f.calls.includes('fence'));assert.ok(f.calls.includes('delete'));f.restored();
 });
+
+test('isolated upload restores unrelated visibility and shadow scheduling before fencing',async()=>{
+ const f=fixture(),other=new Mesh();f.scene.add(other);f.renderer.shadowMap={enabled:true,autoUpdate:true,needsUpdate:true};
+ const originalDraw=f.renderer.render;f.renderer.render=()=>{assert.equal(other.visible,false);assert.equal(f.renderer.shadowMap.enabled,true);assert.equal(f.renderer.shadowMap.autoUpdate,false);originalDraw();};
+ const gl=f.renderer.getContext(),originalFence=gl.fenceSync;gl.fenceSync=(...args)=>{assert.equal(other.visible,true);assert.equal(f.renderer.shadowMap.autoUpdate,true);assert.equal(f.renderer.shadowMap.needsUpdate,true);return originalFence(...args);};
+ await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{isolateRoot:true,nextFrame:async()=>{}});assert.equal(other.visible,true);f.restored();
+});
 test('failed zero-pixel draw restores renderer and parent before rejecting',async()=>{
  const f=fixture({renderError:true});await assert.rejects(prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[]),/Draw failed/);
  assert.equal(f.root.parent,f.parent);assert.equal(f.current(),f.original);f.restored();assert.deepEqual(f.calls,['compile','render','restore']);

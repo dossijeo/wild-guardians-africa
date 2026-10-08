@@ -1,4 +1,5 @@
 import {Vector4} from 'three';
+import {withGpuRootIsolation} from './isolated-gpu-root.js';
 // Active renderer owners release the dispose/context listeners on world close.
 // Warm images need no repeated upload budget; every packing still draws/fences.
 const textureCaches=new WeakMap(),textureOwnerSignals=new WeakMap();
@@ -29,7 +30,8 @@ function rememberTexture(entry,texture){
 
 // Prepare the current root using the normal output/shader recipe. Callers bind
 // the completed fence to their exact packing and renderable generation.
-export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{cancelled=()=>false,nextFrame=()=>new Promise(resolve=>requestAnimationFrame(resolve)),timeout=30000,texturesPerFrame=1,decodeImages=false,diagnoseErrors=false}={}){
+export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{cancelled=()=>false,nextFrame=()=>new Promise(resolve=>requestAnimationFrame(resolve)),timeout=30000,texturesPerFrame=1,decodeImages=false,diagnoseErrors=false,isolateRoot=false}={}){
+ if(typeof isolateRoot!=='boolean')throw Error('Invalid isolated GPU preparation option');
  if(!Number.isInteger(texturesPerFrame)||texturesPerFrame<1)throw Error('Invalid texture preparation budget');
  const unique=[...new Set(textures)],textureUploads=[],gl=renderer.getContext(),begin=performance.now();let cache,cacheEpoch,sync,textureBatches=0,maxTextureBatchMs=0,maxTextureBatchCount=0;
  const check=()=>{if(cancelled()||cache?.released||unique.some(texture=>textureOwnerSignals.get(texture)?.aborted))throw new NativeFarGpuCancelled('owner-cancelled');if(gl.isContextLost()||cache?.contextLost||cache&&cache.epoch!==cacheEpoch)throw new NativeFarGpuCancelled('context-changed');if(performance.now()-begin>timeout)throw Error('Native GPU preparation timed out');};
@@ -54,7 +56,7 @@ export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{c
   const viewport=renderer.getViewport(new Vector4()),scissor=renderer.getScissor(new Vector4()),scissorTest=renderer.getScissorTest(),autoClear=renderer.autoClear,parent=root.parent,culled=[];
   // Scope this mutation to the synchronous upload draw. Other species may be
   // awaiting compilation concurrently; none may inherit another one's flags.
-  try{root.traverse(o=>{if(o.isMesh){culled.push([o,o.frustumCulled]);o.frustumCulled=false;}});scene.add(root);renderer.autoClear=false;renderer.setViewport(0,0,0,0);renderer.setScissor(0,0,0,0);renderer.setScissorTest(true);renderer.render(scene,camera);checkErrors('after upload draw');}
+  try{root.traverse(o=>{if(o.isMesh){culled.push([o,o.frustumCulled]);o.frustumCulled=false;}});scene.add(root);renderer.autoClear=false;renderer.setViewport(0,0,0,0);renderer.setScissor(0,0,0,0);renderer.setScissorTest(true);const draw=()=>renderer.render(scene,camera);if(isolateRoot)withGpuRootIsolation(renderer,root,scene,draw);else draw();checkErrors('after upload draw');}
   finally{for(const [mesh,value] of culled)mesh.frustumCulled=value;renderer.autoClear=autoClear;renderer.setViewport(viewport);renderer.setScissor(scissor);renderer.setScissorTest(scissorTest);root.removeFromParent();if(parent)parent.add(root);}
   sync=gl.fenceSync(gl.SYNC_GPU_COMMANDS_COMPLETE,0);if(!sync)throw Error('Native GPU fence unavailable');gl.flush();
   for(;;){check();const status=gl.clientWaitSync(sync,0,0);if(status===gl.ALREADY_SIGNALED||status===gl.CONDITION_SATISFIED)break;if(status===gl.WAIT_FAILED)throw Error('Native GPU fence failed');await nextFrame();}
