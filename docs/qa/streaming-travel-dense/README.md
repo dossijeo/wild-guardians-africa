@@ -70,3 +70,25 @@ cachés, no ABBA, sin RAM/VRAM medida ni otras culturas/biomas. Necesita compara
 repetida, auditoría visual/recursos y diagnóstico restante antes de integración.
 Tres pruebas dirigidas verifican restauración antes de await/fence, fallo de
 shader propagado con flags restaurados y cancelación sin draw/fence posterior.
+
+## Comparación A1/B1/B2/A2 sin trace
+
+Cuatro contextos secuenciales nuevos, mismo código5ef8dcbb, finca/cámara/ruta,
+calidad media ytimerGPU; ninguna otra escena QA activa ni cambios de fuente.
+Cuatro campañas CPU de fondo permanecen activas; cachés globales/temperatura
+no aisladas. B añade residentPrewarm; A usa preparación normal de producción.
+
+| Brazo | p95 ms | p99 ms | Máximo ms | Frames >100ms |
+|---|---:|---:|---:|---:|
+| A1 |166,3|266,1|332,6|34|
+| B1 |166,3|199,6|216,2|39|
+| B2 |166,3|216,2|216,2|48|
+| A2 |149,8|282,6|282,9|47|
+
+B añade1166,2/1122,3ms de preparación. Todas las ejecuciones conservan estado,
+finca y posiciones exactas de cámara/target, quince chunks nuevos y cero errores
+ocultación/fallos. El candidato reduce el extremo largo en esta secuencia, pero
+no demuestra mejora global de estabilidad: p95 no mejora y el recuento>100ms
+no baja consistentemente. No activar en producción todavía. Investigar ritmo
+GPU/tareas asíncronas restantes y validar recursos/visuales/cobertura antes de
+integrar una solución final. Informes completos comprimidos y hashes en receipt.

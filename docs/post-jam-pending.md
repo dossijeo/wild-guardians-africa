@@ -561,3 +561,15 @@ El usuario ha revisado los benchmarks y acepta el sobrecoste observado como prop
 [Órbita de carga: módulo y revisión del piloto 22, 2026-10-08]: `649e95ab` de `feature/interactive-loading-screen` publica LoadingOrbit y siete pruebas aprobadas; todavía sin importar en el diorama. La clase conserva fase al pulsar, espera y reanuda con velocidad suave, desacelera para la transición sin recentrar y respeta reduced-motion/limitación de delta. No acredita integración, raycast, encuadre ni QA visual. El root inspecciona `pilot-depth-batched-sabana.json` de esa rama (SHA256 bb6f47da54f0402990a9a37d359f62d834da743503cb606cd0452c01b5b8d5a3): recalcula exactamente 1581 intervalos, máximo99,8ms, nueve>50ms y cero>100ms; conserva un intervalo cero inicial pendiente de explicación instrumental. Inicialización24769,2ms/control28884,4ms, ready/done verdaderos, pending/errors vacíos, cámara/estado lógico registrados intactos y cero voces al handoff. No observa compile-submit>30ms entre206 segmentos; los20 segmentos>30ms registrados son18subidas de textura, far-update44,4ms y draw48,4ms. Es un piloto individual con cuatro campañas CPU históricas vivas, no ABBA, GPU timer ni prueba de regresión global/RAM real. No integrar aún: quedan baseline congelada, picos de uploads/paisaje, pulido y cobertura original. El viento GPU/fases por ID ya existe en crop-batch; reutilizarlo y comprobar brotes/morph/reduced-motion, evitando una segunda deformación.
 
 [Recursos fijos del lote de cultivos, 2026-10-08]: `crop-batch` construye una sola lista de los40 modelos y32 puentes al prepararse, reutilizándola en update/dispose; el origen por defecto también se comparte sin mutarlo. Se eliminan esas dos asignaciones temporales por actualización, sin cambiar API, uniforms, geometría ni datos de plantas. Veintitrés pruebas existentes pasan: corners nativos de40/32, morph/recarga de ocho especies, estabilidad y rangos de buffers, origen/recentrado y liberación de todos los meshes. No se afirma ahorro de tiempo CPU/GPU/FPS ni ausencia de todas las asignaciones del batch. La rama de carga mantiene su fuente congelada para ABBA y recibirá el cambio después, sin contaminar la comparación.
+
+
+[Progreso de descarga y preparación de carga interactiva, 2026-10-08]: requisito
+adicional del usuario enviado al subagente de feature/interactive-loading-screen.
+El progreso ponderado por tiempo debe incluir descarga de assets pendientes,
+descodificación/carga, preparación GPU y mundo. Assets ya en caché aportan cero
+trabajo de descarga; no simular una fase de red. Descargas faltantes aumentan el
+trabajo total estimado, manteniendo progreso monótono y100% solamente tras
+readiness real. Verificar caché fría/caliente/parcial y red lenta, sin descargar
+recursos dos veces para medir. Distinguir observación real de estimaciones cuando
+caché o longitud de transferencia no sean observables. Pendiente de implementación
+y evidencia en rama; no aprobado por mera comunicación del requisito.
