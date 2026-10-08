@@ -1,0 +1,59 @@
+{
+  "status": "CLOSED_RIGID_SUBSET_CANDIDATE_NOT_APPROVED",
+  "sourceSha256": "25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238",
+  "componentAuditSha256": "d586cdff9617cad7201125cc5c7d1e6ec4ba989ee5694e5f8c6efcf818b9abdb",
+  "candidate": {
+    "category": "youngMale",
+    "source": "/assets/25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238.glb",
+    "candidate": ".cache/frontside-model-pilot/candidates/archive/3ac771a241023c3ec68df0ffdaeeb4d9c83f6380b4205a5000b17f751c15f2c7.glb",
+    "archiveCandidate": ".cache/frontside-model-pilot/candidates/archive/3ac771a241023c3ec68df0ffdaeeb4d9c83f6380b4205a5000b17f751c15f2c7.glb",
+    "candidateSha256": "3ac771a241023c3ec68df0ffdaeeb4d9c83f6380b4205a5000b17f751c15f2c7"
+  },
+  "selected": [
+    {
+      "mesh": "Prop_FruitCrate_geometry_7",
+      "primitive": 0,
+      "triangles": 432,
+      "sourceMaterial": 5,
+      "candidateMaterial": 14
+    },
+    {
+      "mesh": "Prop_FruitCrate_geometry_8",
+      "primitive": 0,
+      "triangles": 5184,
+      "sourceMaterial": 6,
+      "candidateMaterial": 15
+    },
+    {
+      "mesh": "Prop_FruitCrate_geometry_9",
+      "primitive": 0,
+      "triangles": 1728,
+      "sourceMaterial": 7,
+      "candidateMaterial": 16
+    },
+    {
+      "mesh": "Prop_Hoe_geometry_23",
+      "primitive": 0,
+      "triangles": 432,
+      "sourceMaterial": 2,
+      "candidateMaterial": 17
+    },
+    {
+      "mesh": "Prop_Hoe_geometry_24",
+      "primitive": 0,
+      "triangles": 864,
+      "sourceMaterial": 3,
+      "candidateMaterial": 18
+    }
+  ],
+  "newMaterialCount": 5,
+  "verifiedClips": 12,
+  "geometryBytesAndIndexOrderUnchanged": true,
+  "limitations": [
+    "Partial material-sidedness adaptation; bodyMesh0 alreadyFrontSide and remaining accessories stay originalDoubleSide.",
+    "Only source material clones differ by doubleSided=false; original materials/UV/maps/geometry/rig/skin/12clips bytes retained.",
+    "Native opt-in must preserve sourceDOUBLE_SIDED normal/TBN recipe on selected parts. Closedness is a filter, not all-view/shadow/GPU approval.",
+    "No added triangles/groups/draw calls; shader/material GPU memory and actual draw cost remain to measure.",
+    "Source undefined normals in nonselected parts remain unchanged and unapproved; no category normal repair claimed."
+  ]
+}
