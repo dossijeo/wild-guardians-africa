@@ -1,0 +1,283 @@
+{
+  "runtimeGitHead": "c10f7731",
+  "productionChanged": false,
+  "exitCodes": [
+    0,
+    0
+  ],
+  "cases": [
+    {
+      "key": "sabana-musgum",
+      "biome": "sabana",
+      "culture": "musgum",
+      "completedNights": 5,
+      "money": 702,
+      "delivered": 330,
+      "destroyed": 0,
+      "cropEpoch": {
+        "retained": 502,
+        "rebuild": 3,
+        "retainedEpochViolations": 0,
+        "removedProps": 3
+      },
+      "violationCount": 0,
+      "sampledCallbacks": 1904
+    },
+    {
+      "key": "gran-rio-saheliana",
+      "biome": "gran-rio",
+      "culture": "saheliana",
+      "completedNights": 5,
+      "money": 604,
+      "delivered": 307,
+      "destroyed": 0,
+      "cropEpoch": {
+        "retained": 469,
+        "rebuild": 0,
+        "retainedEpochViolations": 0,
+        "removedProps": 0
+      },
+      "violationCount": 0,
+      "sampledCallbacks": 1893
+    },
+    {
+      "key": "manglares-suajili",
+      "biome": "manglares",
+      "culture": "suajili",
+      "completedNights": 5,
+      "money": 564,
+      "delivered": 309,
+      "destroyed": 8,
+      "cropEpoch": {
+        "retained": 476,
+        "rebuild": 12,
+        "retainedEpochViolations": 0,
+        "removedProps": 12
+      },
+      "violationCount": 0,
+      "sampledCallbacks": 1847
+    },
+    {
+      "key": "volcanes-etiope",
+      "biome": "volcanes",
+      "culture": "etiope",
+      "completedNights": 5,
+      "money": 604,
+      "delivered": 310,
+      "destroyed": 0,
+      "cropEpoch": {
+        "retained": 472,
+        "rebuild": 2,
+        "retainedEpochViolations": 0,
+        "removedProps": 2
+      },
+      "violationCount": 0,
+      "sampledCallbacks": 1903
+    },
+    {
+      "key": "gran-canon-mapungubwe",
+      "biome": "gran-canon",
+      "culture": "mapungubwe",
+      "completedNights": 5,
+      "money": 470,
+      "delivered": 213,
+      "destroyed": 0,
+      "cropEpoch": {
+        "retained": 319,
+        "rebuild": 1,
+        "retainedEpochViolations": 0,
+        "removedProps": 1
+      },
+      "violationCount": 0,
+      "sampledCallbacks": 1895
+    },
+    {
+      "key": "desierto-musgum",
+      "biome": "desierto",
+      "culture": "musgum",
+      "completedNights": 5,
+      "money": 442,
+      "delivered": 234,
+      "destroyed": 6,
+      "cropEpoch": {
+        "retained": 368,
+        "rebuild": 0,
+        "retainedEpochViolations": 0,
+        "removedProps": 0
+      },
+      "violationCount": 0,
+      "sampledCallbacks": 1884
+    }
+  ],
+  "pieces": [
+    {
+      "path": "prepare-no-crop-epoch-campaign.mjs.gz",
+      "source": ".cache/prepare-no-crop-epoch-campaign.mjs",
+      "bytes": 1256,
+      "sha256": "d0d303c7e9e1c3898b031d142276995c9aaf892d1087f0e6d18226ba3edf27bd"
+    },
+    {
+      "path": "no-crop-epoch-campaign-navigation.mjs.gz",
+      "source": ".cache/no-crop-epoch-campaign-navigation.mjs",
+      "bytes": 596,
+      "sha256": "95300dc8591144a86dcac4f45413a4e4f6a6104accc1e1dd5c0fd72a6bb300df"
+    },
+    {
+      "path": "opening-no-crop-epoch.mjs.gz",
+      "source": ".cache/opening-no-crop-epoch.mjs",
+      "bytes": 3491,
+      "sha256": "3c9a9632e87846fbd4d8fe46812c05c0bdc98bf7dc0651baad7d2197378206da"
+    },
+    {
+      "path": "intensive-no-crop-epoch.mjs.gz",
+      "source": ".cache/intensive-no-crop-epoch.mjs",
+      "bytes": 12794,
+      "sha256": "bdeb22b602a06dffec269dd15747f23fec945ebb87f8f2ab3cae69de690354f1"
+    },
+    {
+      "path": "check-no-crop-epoch-campaign.mjs.gz",
+      "source": ".cache/check-no-crop-epoch-campaign.mjs",
+      "bytes": 3689,
+      "sha256": "62d79a77909d9cf76691a00903f1d3f98d3b94c07169472200a989dc764ec57d"
+    },
+    {
+      "path": "check-no-crop-epoch-biomes.mjs.gz",
+      "source": ".cache/check-no-crop-epoch-biomes.mjs",
+      "bytes": 499,
+      "sha256": "1ba827586116082ade7e302c00294691a694b1cddcefb80ec0070e0e146e6c36"
+    },
+    {
+      "path": "tools__check_opening.mjs.gz",
+      "source": "tools/check_opening.mjs",
+      "bytes": 3478,
+      "sha256": "b69f5bd13d097062a02ce438dfec04f91a8e8d62735e12b5fc90bfc27a653a93"
+    },
+    {
+      "path": "tools__check_intensive_farm.mjs.gz",
+      "source": "tools/check_intensive_farm.mjs",
+      "bytes": 12772,
+      "sha256": "2064cd442109b79e8a2b3e24c9af3dbeed3c81cf3f87a616c5a6d2ac968718cf"
+    },
+    {
+      "path": "tools__intensive-heartbeat.mjs.gz",
+      "source": "tools/intensive-heartbeat.mjs",
+      "bytes": 1699,
+      "sha256": "61935ea6bc521719ff3eb0b5a4738d27f38fc2861b10a617f2f4b6bb616083f7"
+    },
+    {
+      "path": "public__content__villages.json.gz",
+      "source": "public/content/villages.json",
+      "bytes": 71831,
+      "sha256": "316ca88b0dc20e6c15a7d9e877480ba0c013bde8f8c21efa5438e064d004603f"
+    },
+    {
+      "path": "public__content__biome-savanna.json.gz",
+      "source": "public/content/biome-savanna.json",
+      "bytes": 21482,
+      "sha256": "adb68fd97b2c45ef681313d4bc3418c3aac76101857391b961521f5cddfc4411"
+    },
+    {
+      "path": "public__content__biome-grand_river.json.gz",
+      "source": "public/content/biome-grand_river.json",
+      "bytes": 23619,
+      "sha256": "880e1a5289d5b680fe46f12bdef54a9341d9820d3f6cec1a3f4c54c21e470ef4"
+    },
+    {
+      "path": "public__content__biome-mangrove.json.gz",
+      "source": "public/content/biome-mangrove.json",
+      "bytes": 20903,
+      "sha256": "9bd02d6eedd5b83eec901fdd2cf93cc9856a55232b896013d1856bc806ee16df"
+    },
+    {
+      "path": "public__content__biome-volcanoes.json.gz",
+      "source": "public/content/biome-volcanoes.json",
+      "bytes": 24378,
+      "sha256": "d7c8b89243aca0ae88b725f044bdc4b3a4b092b65b724cefe17c4df29a1cd2f0"
+    },
+    {
+      "path": "public__content__biome-canyons.json.gz",
+      "source": "public/content/biome-canyons.json",
+      "bytes": 23322,
+      "sha256": "a0da0d39766ef48e44ef82bc9b9ab6093bce0ae2bf6abd3035a626792823ff6d"
+    },
+    {
+      "path": "public__content__biome-desert.json.gz",
+      "source": "public/content/biome-desert.json",
+      "bytes": 22192,
+      "sha256": "8cae57f05d6d07b20ee3ffe65c9519648c458ce0f2d33b7b62b967bfb00b274b"
+    },
+    {
+      "path": "sabana-musgum-report.json.gz",
+      "source": ".cache/no-crop-epoch-sabana-musgum-report.json",
+      "bytes": 5755,
+      "sha256": "0fa73c97866d9857371e171a3f1dee6b154e09725ac55d3d14cb1f2ec03f200b"
+    },
+    {
+      "path": "sabana-musgum-state.json.gz",
+      "source": ".cache/no-crop-epoch-sabana-musgum-state.json",
+      "bytes": 298129,
+      "sha256": "5e8322e63bb408ecc3c253601f213dec3365453ad67d76f1bd27bf6d456cce7f"
+    },
+    {
+      "path": "gran-rio-saheliana-report.json.gz",
+      "source": ".cache/no-crop-epoch-gran-rio-saheliana-report.json",
+      "bytes": 5760,
+      "sha256": "8e062bf8dfc108461c8cf438428fbef221a7191aa5505d9096c7f94d96b581a9"
+    },
+    {
+      "path": "gran-rio-saheliana-state.json.gz",
+      "source": ".cache/no-crop-epoch-gran-rio-saheliana-state.json",
+      "bytes": 280393,
+      "sha256": "93d53e0b5087ee99d9a2da4b30f9f3e74d00249557c224cf032f5678bf0ae683"
+    },
+    {
+      "path": "manglares-suajili-report.json.gz",
+      "source": ".cache/no-crop-epoch-manglares-suajili-report.json",
+      "bytes": 5815,
+      "sha256": "5923af000212a2f28249d4e994cf958c37daaa07139336f1acbcec07433f7708"
+    },
+    {
+      "path": "manglares-suajili-state.json.gz",
+      "source": ".cache/no-crop-epoch-manglares-suajili-state.json",
+      "bytes": 278576,
+      "sha256": "3e62873c9e900d3063ce76952333dba3caa1889583f6e164d54aeaceee1337cd"
+    },
+    {
+      "path": "volcanes-etiope-report.json.gz",
+      "source": ".cache/no-crop-epoch-volcanes-etiope-report.json",
+      "bytes": 5756,
+      "sha256": "4ab6b848d4d27647f63d8a79153d026789ec4ffd8d0cca000bea4cc4cfa67109"
+    },
+    {
+      "path": "volcanes-etiope-state.json.gz",
+      "source": ".cache/no-crop-epoch-volcanes-etiope-state.json",
+      "bytes": 281086,
+      "sha256": "c929ecb74a49327356db2f27c12ee4167638508ab3524ce7e05ed148c6e6fe16"
+    },
+    {
+      "path": "gran-canon-mapungubwe-report.json.gz",
+      "source": ".cache/no-crop-epoch-gran-canon-mapungubwe-report.json",
+      "bytes": 5752,
+      "sha256": "8a0f218bc3a4c31b017ff6e73b80d6e08b1c0bab344a6ff94fc7c7825ae5630e"
+    },
+    {
+      "path": "gran-canon-mapungubwe-state.json.gz",
+      "source": ".cache/no-crop-epoch-gran-canon-mapungubwe-state.json",
+      "bytes": 204706,
+      "sha256": "9bd1369ef73d792ec8b6a163b9f5d3a47dc0247037e4f39b4d13e581cfae301c"
+    },
+    {
+      "path": "desierto-musgum-report.json.gz",
+      "source": ".cache/no-crop-epoch-desierto-musgum-report.json",
+      "bytes": 5790,
+      "sha256": "4b6d8e41b62d79f7ff5c62b19230373627f7e548ebc2c4417bbd6dcce78f15f4"
+    },
+    {
+      "path": "desierto-musgum-state.json.gz",
+      "source": ".cache/no-crop-epoch-desierto-musgum-state.json",
+      "bytes": 225813,
+      "sha256": "b27f93ed5a7487ed3a59b8313b1d8e526047c8d742e92d3995a5c446adbd0fb7"
+    }
+  ],
+  "scope": "Six seed712 native biome/culture openings with no-crop-epoch QA and unchanged production Game,5 nights each. Paid ordinary commands, physical deliveries and5 actual raid reloads each. Callback endpoint validity excludes already-invalid origins and is not continuous/internal-step proof. Not all30pairs,100nights,mixed crops beforeday10,full-state warm/cold equality at raid reload or performance acceptance."
+}

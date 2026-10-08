@@ -1,0 +1,11 @@
+# Gran Río / Saheliana: historical hundred-night campaign
+
+The ordinary responsible reinvestment strategy completes 100 nights with victory, seed 712, all eight crop species and up to 1482 living crops. Each day pays workers and physically delivers crops. Native financial and crate audits pass; the complete summary recalculates exactly from the saved report/state. This strategy adds no walls or midday hiring and is not a human usability test or a bad-management control.
+
+Ledger: 1500 initial + 1394098 harvest income − 727288 seeds − 215430 wages − 401 repairs − 800 centre = 451679 final coins. No synthetic income or balance correction is added to make this case pass.
+
+The strategy reports 7620 unoccupied seconds / 30000 daylight seconds (25.4%), with 5629 seconds attributed to budget and 1991 to shift end. The longest interval is 129 simulated seconds, P90 59 seconds. These are strategy observations, not measurement of every possible UI action or subjective player boredom. The result does not meet the broader goal of minimizing inactive play; retain it as evidence for further policy/balance investigation rather than weakening the test.
+
+The parent matrix uses frozen source revision e461b550. All 291 child loaded-source hashes match that parent and the frozen directory. The child's ambient Git HEAD 6742df2d is inherited from the enclosing repository at spawn; it does not identify the loaded source revision. Twenty-three inspected source files differ from the current root files, including a local navigation change under full-suite validation. This is not a replay of current main, acceptance of the new route invalidation behavior, all 30 biome/culture combinations or mobile/GPU performance.
+
+PID 35912 completed with exit 0 and recorded victory. The matrix parent advanced to Gran Río/Suajili rather than restarting this case. Original report, complete state, summary, status and process result are compressed and SHA-256 bound in `receipt.json`. Run `node docs/qa/intensive-gran-rio-saheliana-e461b550/verify.mjs` to recheck archive integrity and native audit/summary invariants. It does not rerun the campaign or independently prove the full historical source inventory from this partial result archive.

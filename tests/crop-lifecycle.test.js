@@ -30,11 +30,15 @@ test('lifecycle brackets watering and work changes, distinguishes pickup from se
  row.timeline.length=0;assert.ok(observer.report().crops[0].timeline.length>0,'reports must not expose mutable observer state');
 });
 
-test('optional higher staffing pays normal wages while the default twelve-plant strategy matches the explicit policy and revised-income state hash',()=>{
+test('optional higher staffing pays normal wages while the default twelve-plant strategy matches the explicit policy and geometry-only route baseline',()=>{
  const options={days:1,seed:712,profile:'olderMale',mixed:true,middayHiring:true};
  const baseline=simulateIntensiveFarm(options);
- // Historical price baseline: docs/qa/harvest-regression-revision; audio-only sequence diff: docs/qa/tutorial-audio-snapshot-regression.
- assert.equal(createHash('sha256').update(serialize(baseline.state)).digest('hex'),'f55025303b01f7305e4d3b459c39bede2f81e0084994ddcb143abd75293432b6');
+ // Historical price/audio references remain archived. Retaining routes on
+ // unrelated planting changes task timing: 27 deliveries instead of28 in this
+ // opening, not merely an epoch field. Both native economy audits pass; see
+ // docs/qa/crop-route-epoch-experiment/golden-baseline before changing this hash.
+ assert.equal(createHash('sha256').update(serialize(baseline.state)).digest('hex'),'5df191a540b7b584a9d45cf1c20e9f15b80b39e0779c0545bdf92417572de389');
+ assert.ok(auditIntensiveFarm(baseline));
  assert.equal(serialize(simulateIntensiveFarm({...options,plantsPerWorker:12}).state),serialize(baseline.state));
  const staffed=simulateIntensiveFarm({...options,plantsPerWorker:8});
  assert.ok(auditIntensiveFarm(staffed));assert.equal(staffed.completedNights,1);

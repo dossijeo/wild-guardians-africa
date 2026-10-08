@@ -1,0 +1,96 @@
+{
+  "runtimeGitHead": "c10f7731",
+  "productionChanged": false,
+  "terminalSessions": [
+    {
+      "id": 90446,
+      "exitCode": 1,
+      "reason": "QA attempted ordinary planting at night; Game correctly rejected it"
+    },
+    {
+      "id": 50406,
+      "exitCode": 1,
+      "reason": "QA request IDs lacked the existing intensive-plant- audit prefix"
+    },
+    {
+      "id": 34350,
+      "exitCode": 0,
+      "reason": "Corrected daytime schedule and ordinary audited IDs; both full workdays completed"
+    }
+  ],
+  "input": "../../intensive-sabana-musgum-e461b550/state.json.gz",
+  "pieces": [
+    {
+      "source": ".cache/check-no-crop-epoch-dense-workday.mjs",
+      "path": "runner.mjs.gz",
+      "bytes": 5934,
+      "sha256": "cd771e49cc7354d3436a4650d7cd243ab826a85e44d0a68a191c86208ec3d056"
+    },
+    {
+      "source": ".cache/no-crop-epoch-dense-report.json",
+      "path": "report.json.gz",
+      "bytes": 20765,
+      "sha256": "19c22ee71521fbe6f2de3f642db77068897bc01c3a83af13b63a7b9df228822c"
+    },
+    {
+      "source": ".cache/no-crop-epoch-dense-reference-state.json",
+      "path": "reference-state.json.gz",
+      "bytes": 14195021,
+      "sha256": "f0a9c356e7527dc88c675c6acf5764ef7d4ae111fecbe4debbfba599d60e4a41"
+    },
+    {
+      "source": ".cache/no-crop-epoch-dense-candidate-state.json",
+      "path": "candidate-state.json.gz",
+      "bytes": 14195595,
+      "sha256": "fc3c699261e705c0c4e3c12d4c636b104e49ce1d9939604791b877b1f311cb08"
+    },
+    {
+      "source": ".cache/no-crop-epoch-dense-night-plant-rejected.mjs",
+      "path": "night-plant-rejected.mjs.gz",
+      "bytes": 5904,
+      "sha256": "759f3d62dd74dd8ead3d9c4ad067c6824409284510b6530e97a7de6fc01ed534"
+    },
+    {
+      "source": ".cache/no-crop-epoch-dense-night-plant-rejected-report.json",
+      "path": "night-plant-rejected-report.json.gz",
+      "bytes": 7690,
+      "sha256": "99138dd43f932cb4a61b5052ce59f484ab549f0fb1ce2c97d465bed728f4b58d"
+    },
+    {
+      "source": ".cache/no-crop-epoch-dense-night-plant-rejected-state.json",
+      "path": "night-plant-rejected-state.json.gz",
+      "bytes": 14282262,
+      "sha256": "aab2e726d6853f579ed119fbae60fe22b7ab79c5fc5565f4854d20ef22e8563e"
+    },
+    {
+      "source": ".cache/no-crop-epoch-dense-custom-id-rejected.mjs",
+      "path": "custom-id-rejected.mjs.gz",
+      "bytes": 5926,
+      "sha256": "b0b7a972b21f419e50825f4d8476636cbe8cdb3fb509b989719a5e3acdf0b580"
+    },
+    {
+      "source": ".cache/no-crop-epoch-dense-custom-id-rejected-report.json",
+      "path": "custom-id-rejected-report.json.gz",
+      "bytes": 11914,
+      "sha256": "0b3155f8837b9499eaaee02bd8f961dc6751d5673b8eb1899323a142c0a6a363"
+    },
+    {
+      "source": ".cache/no-crop-epoch-dense-custom-id-rejected-state.json",
+      "path": "custom-id-rejected-state.json.gz",
+      "bytes": 14194861,
+      "sha256": "b8a74c08c088f7778cb477f5e83b63a0f8834b41da0703af854b8e3bef7dd5ba"
+    },
+    {
+      "source": "tools/check_intensive_farm.mjs",
+      "path": "audit.mjs.gz",
+      "bytes": 12772,
+      "sha256": "2064cd442109b79e8a2b3e24c9af3dbeed3c81cf3f87a616c5a6d2ac968718cf"
+    },
+    {
+      "source": "public/content/biome-savanna.json",
+      "path": "biome-savanna.json.gz",
+      "bytes": 21482,
+      "sha256": "adb68fd97b2c45ef681313d4bc3418c3aac76101857391b961521f5cddfc4411"
+    }
+  ]
+}

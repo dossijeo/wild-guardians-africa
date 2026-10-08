@@ -1,0 +1,166 @@
+{
+  "testedCommit": "1e9750fc67abe979094ec164b3e2f4d2baa017d9",
+  "tabClosed": 784,
+  "gpuDisposed": true,
+  "productionChanged": false,
+  "candidateCompared": false,
+  "benchmark": false,
+  "warningErrorLogs": [],
+  "liveCpuCampaignsBeforeDraw": [
+    35912,
+    49032,
+    41320,
+    41304
+  ],
+  "serverPid": 38492,
+  "noBlenderInProcessSnapshot": true,
+  "loadingAgentGpuInactiveConfirmed": true,
+  "scope": "One source-only Idle/Sabana/day view, original Mesh0 face9365 drawRange28095/3; seven source pixels, no candidate or timing. Partial direct source archive, full fixture at tested commit. Per-draw FNV fingerprints are not cryptographic equality or causal proof.",
+  "pieces": [
+    {
+      "path": "tests__browser__frontside-worker-visual.html.gz",
+      "source": "tests/browser/frontside-worker-visual.html",
+      "bytes": 792,
+      "sha256": "d7c1dabcaf768fb8f0c0c009b5363615061c49925fc20bbed0c218452dff1a6e",
+      "gzip": true
+    },
+    {
+      "path": "tests__browser__frontside-worker-visual.js.gz",
+      "source": "tests/browser/frontside-worker-visual.js",
+      "bytes": 45319,
+      "sha256": "3b82af38a6f6070c08a1ae06700b839c51bdc8fc5b9eca34018a7dc477734a87",
+      "gzip": true
+    },
+    {
+      "path": "tools__lib__frontside-source-draw-audit.mjs.gz",
+      "source": "tools/lib/frontside-source-draw-audit.mjs",
+      "bytes": 5500,
+      "sha256": "339c0d6d6898e3a8846bb1d11d5dce6fd79c9dbb40981efead1765f21b26ee99",
+      "gzip": true
+    },
+    {
+      "path": "tools__lib__frontside-source-texture-state.mjs.gz",
+      "source": "tools/lib/frontside-source-texture-state.mjs",
+      "bytes": 2707,
+      "sha256": "ceee843774314f200dcd93e3b9fe543bc2c9c6f5112658fd0ade99088de58042",
+      "gzip": true
+    },
+    {
+      "path": "tools__lib__frontside-source-gpu-input-audit.mjs.gz",
+      "source": "tools/lib/frontside-source-gpu-input-audit.mjs",
+      "bytes": 3786,
+      "sha256": "72342382da021f8a3c4c0b362c4b7c6cffd72e490619f53c1117a78ee10f40eb",
+      "gzip": true
+    },
+    {
+      "path": "tools__lib__frontside-source-color-texel-audit.mjs.gz",
+      "source": "tools/lib/frontside-source-color-texel-audit.mjs",
+      "bytes": 5886,
+      "sha256": "d02fa45e9d3f6c6a277511d27ab86d54b4e0d4cc3c621d0526121e0750b57d92",
+      "gzip": true
+    },
+    {
+      "path": "tools__lib__frontside-normal-field-diagnostic.mjs.gz",
+      "source": "tools/lib/frontside-normal-field-diagnostic.mjs",
+      "bytes": 3098,
+      "sha256": "f17e3e67e4b385a19cf141572a15a62b020a2bcd2db0415f5b9fdc43996ea5a7",
+      "gzip": true
+    },
+    {
+      "path": "tools__lib__frontside-visual-metrics.mjs.gz",
+      "source": "tools/lib/frontside-visual-metrics.mjs",
+      "bytes": 3581,
+      "sha256": "d41f76867ba73dd542423d0e7967c81da3f53070908f4f2a97ad78723858cda2",
+      "gzip": true
+    },
+    {
+      "path": "tools__lib__frontside-shadow-metrics.mjs.gz",
+      "source": "tools/lib/frontside-shadow-metrics.mjs",
+      "bytes": 1844,
+      "sha256": "91902bfef9ef9853aefa1348c589e4be5dffee65a0656fb408b10a1144e2382c",
+      "gzip": true
+    },
+    {
+      "path": "src__rendering__african-toon.js.gz",
+      "source": "src/rendering/african-toon.js",
+      "bytes": 19158,
+      "sha256": "f576f882d0e1af5ec69137e79aa0f8d0fc2f6639bfa7bd01307821cbd8cdc8f4",
+      "gzip": true
+    },
+    {
+      "path": "src__rendering__material-registry.js.gz",
+      "source": "src/rendering/material-registry.js",
+      "bytes": 3499,
+      "sha256": "559425eced77d9c70f1f468a3f44712fbb7e6dac4a81c02ac6ec6144e63d1981",
+      "gzip": true
+    },
+    {
+      "path": "src__rendering__sky.js.gz",
+      "source": "src/rendering/sky.js",
+      "bytes": 4156,
+      "sha256": "22194ccdb286388ff4ba99607350ff1582ad2e5f61632504a9707e73a64b93ba",
+      "gzip": true
+    },
+    {
+      "path": "src__rendering__native-shadow.js.gz",
+      "source": "src/rendering/native-shadow.js",
+      "bytes": 5364,
+      "sha256": "3fadd82d2e4dd37b25d07d99539302ae661ce92ae62636ad93665741d5729aa8",
+      "gzip": true
+    },
+    {
+      "path": "src__rendering__shadow-camera.js.gz",
+      "source": "src/rendering/shadow-camera.js",
+      "bytes": 1456,
+      "sha256": "16878af5582368a089b1a8184722a402728f20995dda4abd5b6ff178ee8ffdaf",
+      "gzip": true
+    },
+    {
+      "path": "src__rendering__fixed-pose.js.gz",
+      "source": "src/rendering/fixed-pose.js",
+      "bytes": 769,
+      "sha256": "5fbff66fd8ee54a68855a1b5903647d400295b4ef87648326f8e7d26719f13bb",
+      "gzip": true
+    },
+    {
+      "path": "src__rendering__worker-tool-visibility.js.gz",
+      "source": "src/rendering/worker-tool-visibility.js",
+      "bytes": 833,
+      "sha256": "a41b8479af4b8d34744147a4641b3cbce1fcfe1135169cf4cfa8cf421a654e8a",
+      "gzip": true
+    },
+    {
+      "path": "src__rendering__scene.js.gz",
+      "source": "src/rendering/scene.js",
+      "bytes": 49821,
+      "sha256": "ca45262cd63852927d1ce6c2e47e087a8af402f95f7ef57848bfefcb6e3003c0",
+      "gzip": true
+    },
+    {
+      "path": "src__rendering__assets.js.gz",
+      "source": "src/rendering/assets.js",
+      "bytes": 7751,
+      "sha256": "11ba49477f2c5a6eac2f669059019bef668a40710c8ff890eabfb26ae2ea9488",
+      "gzip": true
+    },
+    {
+      "path": "report.json.gz",
+      "source": "report.json",
+      "bytes": 933410,
+      "sha256": "f0abc48fcd94b0b3f93ec338ec29b74da79ba10403abd43b0e70475a906d1f3c",
+      "gzip": true
+    },
+    {
+      "path": "frame.png",
+      "bytes": 63927,
+      "sha256": "c5e15515406da56e86c0b0248c0aab995f958fb8a9a2091bf0d0c60892790fd4",
+      "gzip": false
+    },
+    {
+      "path": "browser.png",
+      "bytes": 40737,
+      "sha256": "74cea9fd0a3d5610f0fe9bf92b30e386d67fa28ba16ed41851552dbf5481c8b3",
+      "gzip": false
+    }
+  ]
+}

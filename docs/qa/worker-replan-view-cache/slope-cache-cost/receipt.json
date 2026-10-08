@@ -1,0 +1,47 @@
+{
+  "scope": "Experimental exact-coordinate finite slope cache. No production change, no global optimization acceptance.",
+  "runtimeCommit": "2fbe9a7e6250c1b54aea3d09ee8ddeb1ea3d15f6",
+  "session": 49540,
+  "exitCode": 0,
+  "productionChanged": false,
+  "dependencies": "Selected source and native compressed input are archived, not a complete dependency closure. Other runtime dependencies are pinned by runtimeCommit.",
+  "contention": "Four historical intensive CPU processes were confirmed live before dispatch. Loading author used native GPU for functional visual/audio QA, without timing. Blender audit session69501 reported terminal while this experiment was live; precise overlap not proven, so isolation is not claimed.",
+  "pieces": [
+    {
+      "source": ".cache/slope-cache-experiment.mjs",
+      "path": "piece-0.gz",
+      "bytes": 3359,
+      "sha256": "4207af12ffab77adbb24f61630cec9fc47d2e22bca7d0d9c2dbffb43e1039b0f"
+    },
+    {
+      "source": "src/world/navigation.js",
+      "path": "piece-1.gz",
+      "bytes": 30295,
+      "sha256": "d703108e6e846c13543ba6e8895d7142c18072f56845a0197176c2e62c570826"
+    },
+    {
+      "source": "src/world/terrain.js",
+      "path": "piece-2.gz",
+      "bytes": 39313,
+      "sha256": "f5e0937e2c235b5e4fd495a4ce5e7baa9fc518d1b194de20b3458fe65d7afc59"
+    },
+    {
+      "source": "src/simulation/game.js",
+      "path": "piece-3.gz",
+      "bytes": 45575,
+      "sha256": "efdd9388ebbe37f3cecae40d9e77aaa4b7bb06b318e36eacd11bce297896fc46"
+    },
+    {
+      "source": "docs/qa/intensive-sabana-musgum-e461b550/state.json.gz",
+      "path": "piece-4.gz",
+      "bytes": 1077748,
+      "sha256": "090bc508ca2d6dcd45bc310c322ebb92fd01bb04cffa44bde12fa5af73bf5d39"
+    },
+    {
+      "source": ".cache/slope-cache-report.json",
+      "path": "piece-5.gz",
+      "bytes": 41689,
+      "sha256": "5a089e63a4f2ac7e32e0c153ef5433f7c54f65fa8a747a223c34515d82b5824d"
+    }
+  ]
+}

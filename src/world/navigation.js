@@ -1,3 +1,4 @@
+import {ViewMap,ViewSet,trimViewRegions} from './worker-view-cache.js';
 import {fluidAt,footprintFluidSample,FLUID_PLACEMENT_REASON} from './fluid-placement.js';
 import {navigationBounds,outsideNavigationBounds} from './navigation-bounds.js';
 import {navigationPathKey} from './raid-navigation-warmth.js';
@@ -49,6 +50,7 @@ export class Navigation {
     return result;
   }
   setState(state) {
+    this.workerRouteCache=new Map();
     // New worlds persist their platform once. Legacy saves retain their original
     // relief and prop IDs; adding a visual material never migrates their terrain.
     if(state.terrainVersion==='4.1.10.3'&&this.field instanceof TerrainField){
@@ -82,12 +84,11 @@ export class Navigation {
   }
   syncCropPlacement(state,removedProps=[]) {
     // Crops are not navigation obstacles. Replanting already cleared ground
-    // can retain static-query caches and the obstacle index. Keep the existing
-    // route epoch change so worker replanning and saved route behaviour match
-    // the established simulation. Real prop removals still rebuild normally.
+    // can retain static-query caches, the obstacle index and active routes.
+    // Advancing the epoch here unnecessarily replans every moving actor even
+    // though its traversable geometry is unchanged. Real prop removals and
+    // replacing the state still rebuild and invalidate routes normally.
     if(this.state!==state||removedProps.length){this.setState(state);return;}
-    this.version=(this.version??0)+1;
-    state.navigationVersion=this.version;
   }
   forBuildingPlacement(building,suppress=[]) {
     // Route the proposed footprint without polluting live paths or caches.
@@ -111,8 +112,8 @@ export class Navigation {
       if(!allowFluid&&!this.field.canyon&&fluidAt(this.field,x+dx,z+dz))return false;
       if(this.field.canyon){
         const surface=(px,pz)=>this.workerSurface(px,pz);
-        if(Math.hypot(surface(x+dx+.8,z+dz)-surface(x+dx-.8,z+dz),surface(x+dx,z+dz+.8)-surface(x+dx,z+dz-.8))/1.6>.5)return false;
-      }else if(this.field.slope(x+dx,z+dz)>.5)return false;
+        const value=Math.hypot(surface(x+dx+.8,z+dz)-surface(x+dx-.8,z+dz),surface(x+dx,z+dz+.8)-surface(x+dx,z+dz-.8))/1.6;if(this.workerSweep)this.workerSweep.peak=Math.max(this.workerSweep.peak,value);if(value>.5)return false;
+      }else {const value=this.field.slope(x+dx,z+dz);if(this.workerSweep)this.workerSweep.peak=Math.max(this.workerSweep.peak,value);if(value>.5)return false;}
     }
     return true;
   }
@@ -368,7 +369,51 @@ export class Navigation {
     }
     return true;
   }
+  knownWorkerSegmentRisk(start,end,radius,ignore){
+    if(!Object.hasOwn(this,'workerRouteCache'))return null;
+    const key=JSON.stringify([start.x,start.z,end.x,end.z,radius,ignore,true,false]);
+    return this.workerRouteCache.get(key)??null;
+  }
+  workerSegmentRisk(start,end,radius,ignore){
+    const previous=this.workerSweep,sweep={peak:0};this.workerSweep=sweep;let valid;
+    try{valid=this.coarseSegmentClear(start,end,radius,ignore,true);}finally{this.workerSweep=previous;}
+    return {valid,peak:sweep.peak};
+  }
+  workerPath(start,end,radius,ignore){
+    const source=start.terrainAvoidance;
+    if(!source?.length){if(Object.hasOwn(this,'workerViews'))this.workerViews.delete(start);return this.path(start,end,radius,ignore,true);}
+    if(!Object.hasOwn(this,'workerViews'))this.workerViews=new Map();
+    const signature=JSON.stringify(source),cached=this.workerViews.get(start);let view;
+    if(cached&&cached.version===this.version&&cached.radius===radius&&cached.ignore===ignore&&cached.signature===signature){
+      view=cached.view;this.workerViews.delete(start);this.workerViews.set(start,cached);
+    }else{
+      const points=source.map(p=>({x:p.x,z:p.z}));
+      // Portal positions/links depend only on unchanged native gates and radius;
+      // every usable edge is still checked against this view's avoided points.
+      this.portalGraph(radius,ignore);
+      view=Object.assign(Object.create(this),{segmentCache:new ViewMap(4096),walkCache:new ViewMap(2048),failedPaths:new ViewSet(128),closedRegions:new ViewMap(2048),searchedRegions:[],searchNeighborCache:new ViewMap(512),portalGraphs:this.portalGraphs,preparedPaths:null,workerRouteCache:new ViewMap(2048)});
+      const test=view.testSegmentClear,walk=view.testWalkable;
+      view.testSegmentClear=function(a,b,...args){return !points.some(p=>edgeDistance(a,b,p.x,p.z)<.00001)&&test.call(this,a,b,...args);};
+      view.testWalkable=function(x,z,...args){return !points.some(p=>Math.hypot(x-p.x,z-p.z)<.00001)&&walk.call(this,x,z,...args);};
+      if(this.workerViews.size>=8&&!this.workerViews.has(start))this.workerViews.delete(this.workerViews.keys().next().value);
+      this.workerViews.set(start,{version:this.version,radius,ignore,signature,view});
+    }
+    const result=view.path(start,end,radius,ignore,true);trimViewRegions(view);return result;
+  }
   testSegmentClear(start,end,radius,ignore,worker,escapeProps=false) {
+    if(!worker)return this.coarseSegmentClear(start,end,radius,ignore,worker,escapeProps);
+    this.workerRefinementStats??={checks:0,cacheHits:0,fineSegments:0,finePoints:0,rejected:0};
+    if(!Object.hasOwn(this,'workerRouteCache'))this.workerRouteCache=new Map();
+    const key=JSON.stringify([start.x,start.z,end.x,end.z,radius,ignore,worker,escapeProps]);this.workerRefinementStats.checks++;
+    if(this.workerRouteCache.has(key)){this.workerRefinementStats.cacheHits++;return this.workerRouteCache.get(key).valid;}
+    const previous=this.workerSweep,sweep={peak:0};this.workerSweep=sweep;let valid;
+    try{valid=this.coarseSegmentClear(start,end,radius,ignore,worker,escapeProps);}finally{this.workerSweep=previous;}
+    if(valid&&sweep.peak>=.46){this.workerRefinementStats.fineSegments++;const steps=Math.max(1,Math.ceil(distance(start,end)/.01));
+      for(let i=1;i<steps;i++){this.workerRefinementStats.finePoints++;if(!this.terrainValid(start.x+(end.x-start.x)*i/steps,start.z+(end.z-start.z)*i/steps,radius,worker)){valid=false;this.workerRefinementStats.rejected++;break;}}
+    }
+    if(this.workerRouteCache.size>=10000)evictOldest(this.workerRouteCache);this.workerRouteCache.set(key,{valid,peak:sweep.peak});return valid;
+  }
+  coarseSegmentClear(start,end,radius,ignore,worker,escapeProps=false) {
     for(const obstacle of this.obstacles){
       if(obstacle.id===ignore||worker&&obstacle.kind==='shield')continue;
       if(outsideNavigationBounds(start,end,this.obstacleBounds?.get(obstacle),radius))continue;

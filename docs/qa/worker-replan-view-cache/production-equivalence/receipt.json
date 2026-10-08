@@ -1,0 +1,131 @@
+{
+  "productionCommit": "2fbe9a7e6250c1b54aea3d09ee8ddeb1ea3d15f6",
+  "nativeSession": 54305,
+  "nativeExitCode": 0,
+  "directedSession": 78374,
+  "directedExitCode": 0,
+  "directedPassed": 52,
+  "buildPackageSession": 3592,
+  "buildPackageExitCode": 0,
+  "ciRun": 37782785754,
+  "ciStatusAtArchive": "in_progress",
+  "productionChanged": true,
+  "input": "../../intensive-sabana-musgum-e461b550/state.json.gz",
+  "inputSha256": "090bc508ca2d6dcd45bc310c322ebb92fd01bb04cffa44bde12fa5af73bf5d39",
+  "pieces": [
+    {
+      "source": ".cache/archive-worker-guard-integration.mjs",
+      "path": "archive-worker-guard-integration.mjs.gz",
+      "bytes": 1841,
+      "sha256": "53b8503bce62dd795e17299f805bf00b01d4edec1863b13b08985a97a80b7cb1"
+    },
+    {
+      "source": ".cache/check-worker-guard-integration.mjs",
+      "path": "check-worker-guard-integration.mjs.gz",
+      "bytes": 4626,
+      "sha256": "112ece2b22f90ef88b9188b323c0a091c134ae786afce862dc4cc3562b4ce02a"
+    },
+    {
+      "source": ".cache/integrate-worker-guard.mjs",
+      "path": "integrate-worker-guard.mjs.gz",
+      "bytes": 2775,
+      "sha256": "c90b0db2edb3762c5cd6557a0d24820de6a2ae9c3f62cf2f542073f204517884"
+    },
+    {
+      "source": ".cache/worker-guard-integration-report.json",
+      "path": "worker-guard-integration-report.json.gz",
+      "bytes": 14211,
+      "sha256": "f08080a8809aee5a6c5dbff5c75b201b4d11dab3c5d20a7cead8a5159fea4296"
+    },
+    {
+      "source": ".cache/worker-guard-build.log",
+      "path": "worker-guard-build.log.gz",
+      "bytes": 1235,
+      "sha256": "30845bc8c7d9a15a142b4c424514ca8ccbd029be6adb542dfb6acfa4761fcdfe"
+    },
+    {
+      "source": ".cache/worker-guard-package.log",
+      "path": "worker-guard-package.log.gz",
+      "bytes": 411,
+      "sha256": "2347236c90231e3ab34e07f469878b4f905630da3b7343ac15000dc8cb04325c"
+    },
+    {
+      "source": "src/simulation/game.js",
+      "path": "src__simulation__game.js.gz",
+      "bytes": 45575,
+      "sha256": "efdd9388ebbe37f3cecae40d9e77aaa4b7bb06b318e36eacd11bce297896fc46"
+    },
+    {
+      "source": "src/world/navigation.js",
+      "path": "src__world__navigation.js.gz",
+      "bytes": 30295,
+      "sha256": "d703108e6e846c13543ba6e8895d7142c18072f56845a0197176c2e62c570826"
+    },
+    {
+      "source": "src/simulation/worker-route-clearance.js",
+      "path": "src__simulation__worker-route-clearance.js.gz",
+      "bytes": 3126,
+      "sha256": "7f17fe5e8ba36e3c88aa6a65c6f347b9d673c685c27eef537b5dca8ef75aceed"
+    },
+    {
+      "source": "src/world/worker-view-cache.js",
+      "path": "src__world__worker-view-cache.js.gz",
+      "bytes": 768,
+      "sha256": "e2ab2c508bd2be1590cf9db75163eb5f9ac70081d9576cb8c7a3ce8e2703467c"
+    },
+    {
+      "source": "src/persistence/snapshots.js",
+      "path": "src__persistence__snapshots.js.gz",
+      "bytes": 8946,
+      "sha256": "607fc6be9c89989bd7d492169cfdf4689e49400903d51b71431d65393eab2d78"
+    },
+    {
+      "source": ".cache/candidate-game-v6-current.mjs",
+      "path": "candidate-game-v6-current.mjs.gz",
+      "bytes": 47416,
+      "sha256": "62f8589c7c9a33faf388c35a7fc785973d5e62d056f58a83360ad1a11125c293"
+    },
+    {
+      "source": ".cache/worker-route-refinement/candidate-navigation-v6-current.mjs",
+      "path": "worker-route-refinement__candidate-navigation-v6-current.mjs.gz",
+      "bytes": 31015,
+      "sha256": "e702662b9e0ffefa7696c4eb12524fceeb438b008ee645c9a7e2fb8b8d9ce372"
+    },
+    {
+      "source": ".cache/worker-risk-clearance-v5.mjs",
+      "path": "worker-risk-clearance-v5.mjs.gz",
+      "bytes": 2848,
+      "sha256": "c3e735107fb42bef16db6ce842d6a19765f50f7b4a605593cc31495ecfb8f6f3"
+    },
+    {
+      "source": ".cache/bounded-worker-view-cache.mjs",
+      "path": "bounded-worker-view-cache.mjs.gz",
+      "bytes": 768,
+      "sha256": "e2ab2c508bd2be1590cf9db75163eb5f9ac70081d9576cb8c7a3ce8e2703467c"
+    },
+    {
+      "source": ".cache/no-crop-epoch-report.json",
+      "path": "no-crop-epoch-report.json.gz",
+      "bytes": 79535,
+      "sha256": "478b14589420d27e96ce8c90003c874de6d5b24a1bff47effa28aab5ff30cebc"
+    },
+    {
+      "source": ".cache/worker-route-refinement/boundary-v3.json",
+      "path": "worker-route-refinement__boundary-v3.json.gz",
+      "bytes": 2829,
+      "sha256": "541a018ba574e7cda351769f4c5c34824bf1bd161978048edec426ed235a0623"
+    },
+    {
+      "source": "tests/worker-route-clearance.test.js",
+      "path": "tests__worker-route-clearance.test.js.gz",
+      "bytes": 4781,
+      "sha256": "c785d289235ed4a34d3aa61474f1919f5e4f1ceeb107ea22c76a12d50cbcfe85"
+    },
+    {
+      "source": "public/content/biome-savanna.json",
+      "path": "public__content__biome-savanna.json.gz",
+      "bytes": 21482,
+      "sha256": "adb68fd97b2c45ef681313d4bc3418c3aac76101857391b961521f5cddfc4411"
+    }
+  ]
+}

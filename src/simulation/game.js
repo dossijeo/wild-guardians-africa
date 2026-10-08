@@ -1,3 +1,4 @@
+import {workerRiskClearance} from './worker-route-clearance.js';
 import {resolveFluidPlacement} from '../world/fluid-placement.js';
 import {ensurePurchaseBudget,HIRING_RESERVE} from './budget.js';
 import {ensureBoundaryGates} from '../world/boundary-gates.js';
@@ -365,7 +366,7 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
   const previous={x:w.x,z:w.z};
   if(worker)w.running=false;
   if(!w.path||w.destinationId!==destination.id||w.pathVersion!==nav.version) {
-    w.path=nav.path(w,destination,w.radius??.28,ignore,worker);w.destinationId=destination.id;
+    w.path=worker&&nav.workerPath?nav.workerPath(w,destination,w.radius??.28,ignore):nav.path(w,destination,w.radius??.28,ignore,worker);w.destinationId=destination.id;
     // The local search corridor is not a physical enclosure. Exhausted animals
     // can need a wider detour to reach the same exit they entered through.
     if(!w.path&&expandRoute)for(const margin of [32,64]){w.path=nav.path(w,destination,w.radius??.28,ignore,worker,margin);if(w.path)break;}
@@ -382,7 +383,7 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
   }
   if(worker&&waitForGate(w,s.structures))return false;
   const dynamicClear=prepareActorMotion(s,w,nav,worker);
-  const routeClearance=worker?null:animalRouteClearance(w,nav,{radius:w.radius??.28,ignore,escapeProps:expandRoute},dynamicClear);
+  const routeClearance=worker?workerRiskClearance(w,nav,{radius:w.radius??.28,ignore},dynamicClear):animalRouteClearance(w,nav,{radius:w.radius??.28,ignore,escapeProps:expandRoute},dynamicClear);
   const clear=routeClearance?.clear??dynamicClear;
   if(motion)moveWorker(w,dt,{...motion,gates:worker?s.structures:[],clear});else {
     const metres=worker?movePathWithGates(w,speed*dt,s.structures,clear):movePath(w,speed*dt,clear);w.motionPhase=(w.motionPhase??0)+metres/speed;

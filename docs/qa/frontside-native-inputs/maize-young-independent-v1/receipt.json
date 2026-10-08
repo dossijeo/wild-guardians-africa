@@ -1,0 +1,106 @@
+{
+  "rootCommit": "1e606eae",
+  "fixtureCommit": "1071a2a5d66f616c65f2a3ae7670011b080563d7",
+  "authorHeadAtRun": "fb5ad8ac",
+  "fixtureSha256": "4fe378e6ad86f52ef3694fff98df5c0ae4cbe83f402ae375bbfc535ba1926818",
+  "profileSha256": "a24f24e8613eef534cdef5761b09e1826baeeeb7c1560a7fb9c78d8fba9b172d",
+  "tab": 789,
+  "tabClosed": true,
+  "gpuDisposed": true,
+  "warningErrorLogs": [],
+  "cpuCampaigns": [
+    41320,
+    41304,
+    49032,
+    49608
+  ],
+  "productionAssetPromoted": false,
+  "benchmark": false,
+  "profileRejected": true,
+  "laterBlocksNotRun": true,
+  "url": "http://localhost:5284/tests/browser/frontside-crop-local-stem-independent.html?localStemFrontIndependent&limit=26&caseOffset=0&cpuCampaigns=41320,41304,49032,49608",
+  "sourceGlb": {
+    "runtime": "assets/web/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+    "bytes": 13626668,
+    "sha256": "617568fc66595c635739ff83bc0256535a72fdf7bfcb016dc68a7f7f1e1a8a52"
+  },
+  "pieces": [
+    {
+      "source": "docs/qa/frontside-model-pilot/crop-runtime-visual-selection.json",
+      "path": "report.json.gz",
+      "gzip": true,
+      "bytes": 923419,
+      "sha256": "d3d9d1addf3f8334ac4fda7b91b2c3aa8fd65ba1099f973edb19d40c4777e38c"
+    },
+    {
+      "source": "docs/qa/frontside-model-pilot/crop-runtime-visual-last-frame.png",
+      "path": "comparison.png",
+      "gzip": false,
+      "bytes": 393375,
+      "sha256": "36b6c770dcad632b8079e293de703059015c93b30d2ead70cf045e5e62f89895"
+    },
+    {
+      "source": "docs/qa/frontside-model-pilot/local-stem-independent-v1.json",
+      "path": "profile.json",
+      "gzip": false,
+      "bytes": 34514,
+      "sha256": "a24f24e8613eef534cdef5761b09e1826baeeeb7c1560a7fb9c78d8fba9b172d"
+    },
+    {
+      "source": "docs/qa/frontside-model-pilot/local-stem-independent-v1.md",
+      "path": "prospective-plan.md",
+      "gzip": false,
+      "bytes": 3624,
+      "sha256": "93cbf4d7f5589f17af57f755ddab91ea074c3c6ed6b422d39966f392ac8b2d2a"
+    },
+    {
+      "source": "docs/qa/frontside-model-pilot/local-stem-independent-fixture-receipt.json",
+      "path": "fixture-receipt.json",
+      "gzip": false,
+      "bytes": 568,
+      "sha256": "95daa796d0de722b3f7082f8f9201a28a462b41b3d2c5f5c5a062afd87b25339"
+    },
+    {
+      "source": "tests/browser/frontside-crop-local-stem-independent.js",
+      "path": "fixture.js.gz",
+      "gzip": true,
+      "bytes": 42868,
+      "sha256": "4fe378e6ad86f52ef3694fff98df5c0ae4cbe83f402ae375bbfc535ba1926818"
+    },
+    {
+      "source": "tests/browser/frontside-crop-local-stem-independent.html",
+      "path": "fixture.html.gz",
+      "gzip": true,
+      "bytes": 774,
+      "sha256": "835972630eaf1144d45641c6fa0f6cecae3c8cee463b0bac4ac0b529aa5e7027"
+    },
+    {
+      "source": "tools/frontside_build_local_stem_independent.mjs",
+      "path": "generator.mjs.gz",
+      "gzip": true,
+      "bytes": 7901,
+      "sha256": "227cf1e650b7dbfb69f8ba057542a6111e289521df25645884a9c1047b2cfd9a"
+    },
+    {
+      "source": "native browser789",
+      "path": "native-screen.png",
+      "gzip": false,
+      "bytes": 73545,
+      "sha256": "2f587e2fb51706fb0e1c960bb011b46a73a5db3f847229daa9f29d87b93e1b48"
+    },
+    {
+      "source": "native browser789",
+      "path": "console.json",
+      "gzip": false,
+      "bytes": 2,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "source": ".cache/archive-front-independent-v1.mjs",
+      "path": "archive.mjs.gz",
+      "gzip": true,
+      "bytes": 2981,
+      "sha256": "82677709c4c56613f314f0275581beba3ea631999a78a27e3e098099a1721eab"
+    }
+  ]
+}
