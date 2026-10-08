@@ -1306,7 +1306,7 @@ already usesFrontSide despite failing this closure filter; its actual baseline
 is preserved. All nonselected accessories remain sourceDoubleSide, including
 their remaining invalid normals. No complete category repair is claimed.
 Candidate raw3ac771a2.../web74a0b60e... retains every geometry/index/UV/rig/skin/
-12clip byte and original materials; two private material clones differ solely
+12clip byte and original materials; five private material clones differ solely
 bydoubleSided=false. No triangle, group or draw call is added. Web5219348bytes
 is972bytes ABOVE the source repack control, so no packing/culling savings are
 confused. In the opt-in fixture selectedFront parts retain originalGLSL
