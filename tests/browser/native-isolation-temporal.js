@@ -26,7 +26,7 @@ function delta(a,b){assert(a.length===b.length,'Different framebuffer sizes');le
 function witness(world){
  const renderer=world.renderer,root=world.assetGroups.root;
  world.render(0);const preliminary=pixels(renderer);world.render(0);
- const reference=pixels(renderer),visibility=new Map(),culling=new Map();
+ const reference=pixels(renderer),visibility=new Map(),culling=new Map(),referenceEye=world.camera.position.toArray(),referenceTarget=world.controls.target.toArray();
  world.scene.traverse(o=>{visibility.set(o,o.visible);if(o.isMesh)culling.set(o,o.frustumCulled);});
  const viewport=renderer.getViewport(new Vector4()),scissor=renderer.getScissor(new Vector4()),scissorTest=renderer.getScissorTest(),autoClear=renderer.autoClear;
  const shadow={enabled:renderer.shadowMap.enabled,autoUpdate:renderer.shadowMap.autoUpdate,needsUpdate:renderer.shadowMap.needsUpdate},shadowMap=world.sun.shadow.map,shadowTexture=shadowMap?.depthTexture;
@@ -38,7 +38,7 @@ function witness(world){
  assert(world.sun.shadow.map===shadowMap&&world.sun.shadow.map?.depthTexture===shadowTexture,'Borrowed shadow resource changed');
  world.render(0);const next=delta(reference,pixels(renderer));
  assert(upload.channels===0,'Zero-pixel upload changed framebuffer');
- return{baselineNextFrame:delta(preliminary,reference),framebufferAfterUpload:upload,nextWorldFrame:next,flagsRestored:true,shadowOn:world.toon.shadowUniforms.uNativeShadowOn.value};
+ return{baselineNextFrame:delta(preliminary,reference),framebufferAfterUpload:upload,nextWorldFrame:next,referenceEye,referenceTarget,nextEye:world.camera.position.toArray(),nextTarget:world.controls.target.toArray(),flagsRestored:true,shadowOn:world.toon.shadowUniforms.uNativeShadowOn.value};
 }
 async function archived(){
  const response=await fetch('/docs/qa/intensive-gran-rio-suajili-e461b550/state.json.gz');assert(response.ok,'Dense fixture unavailable');
@@ -83,7 +83,7 @@ async function runCase({biome,culture,dense=false}){
    if(elapsed===duration)break;
   }
   const finalPose=bonePose();row.poseWitness={sampledBones:bones.length,changed:initialPose.some((value,i)=>value!==finalPose[i]),mixerTimeDeltas:rigs.map((r,i)=>r.mixer.time-mixerTimes[i])};
-  row.finalStream=world.chunkStream.summary();row.logicalUnchanged=logical===serialize(state);assert(row.logicalUnchanged,'Paused logical state changed');row.distance=distance;
+  row.finalStream=world.chunkStream.summary();row.logicalUnchanged=logical===serialize(state);assert(row.logicalUnchanged,'Paused logical state changed');row.requestedDistance=distance;row.initialEye=eye.toArray();row.initialTarget=target.toArray();row.finalEye=world.camera.position.toArray();row.finalTarget=world.controls.target.toArray();
  }finally{const gl=world.renderer.getContext();close();row.cleanup={disposed:world.disposed,contextLost:gl.isContextLost()};rows.push(row);}
 }
 document.querySelector('#run').onclick=async()=>{
