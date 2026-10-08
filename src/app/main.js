@@ -33,7 +33,8 @@ import {isMature} from '../simulation/crops.js';
 import {cropSpec,permission,operational,attraction} from '../simulation/rules.js';
 import {BrowserSaveRepository} from '../persistence/browser-saves.js';
 import {Navigation,BIOME_IDS} from '../world/navigation.js';
-import {findInitialLocationAsync,villageLayout,findVillageEntry} from '../world/villages.js';
+import {villageLayout,findVillageEntry} from '../world/villages.js';
+import {prepareInitialLocation} from '../world/prepare-initial-location.js';
 import {WorldScene} from '../rendering/scene.js';
 import {farVegetationProfile} from '../rendering/far-vegetation-profile.js';
 import {prepareInitialFarWorld} from './far-world-loading.js';
@@ -145,7 +146,7 @@ async function startGame(loaded=null) {
     const [pack,villages]=await Promise.all([json('/content/biome-'+BIOME_IDS[next.biome]+'.json'),json('/content/villages.json')]);assertLoading();
     villageCatalog=villages;
     const payload=villages.find(v=>v.id===(next.culture==='saheliana'?'saheliano':next.culture));nav=new Navigation(next.seed,next.biome,pack.profile);
-    if(!loaded) {const start=await findInitialLocationAsync(nav,payload);assertLoading();Object.assign(next.villages[0],start);next.suppressed.push(...start.suppress);}
+    if(!loaded) {const start=await prepareInitialLocation(nav,payload,{signal:prepared.world.loading.signal});assertLoading();Object.assign(next.villages[0],start);next.suppressed.push(...start.suppress);}
     // Earlier saves predate native collision footprints. Preserve their units
     // and positions while restoring the geometric metadata from the catalog.
     for(const village of next.villages){
