@@ -4,6 +4,7 @@ import {LoadingAudio} from '../audio/loading-audio.js';
 import {LoadingOverlay} from '../ui/loading-overlay.js';
 import {LoadingCinematic} from '../rendering/loading-cinematic.js';
 import {LoadingProgress} from './loading-progress.js';
+import {installLoadingAudioQa} from './loading-audio-qa.js';
 import {LOADING_STAGES} from './loading-recipe.js';
 import {SpiritVoice,spiritVoice} from '../audio/spirit-voice.js';
 import {guardianCopy} from '../tutorial/guardian-copy.js';
@@ -79,6 +80,7 @@ const fontStyles=document.createElement('link');fontStyles.rel='stylesheet';font
 const settings=(()=>{try{return {...{sfx:.7,music:.4,quality:'media'},...JSON.parse(localStorage.getItem('wild-guardians:settings')??'{}')};}catch{return {sfx:.7,music:.4,quality:'media'};}})();
 settings.resolution=worldResolution(settings.resolution);
 const audio=new AudioSystem(settings);const uiAudio=new UiAudio((id,options)=>audio.sound(id,options));
+if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading'))installLoadingAudioQa(audio);
 const dialogVoice=new SpiritVoice({url:assetUrl,volume:()=>settings.sfx});
 let commandFeedback='',hudSize='',frameImages=null,guardian=null,eventCards=null,hudHand=null,tutorial=null,tutorialInert=null,tutorialFocus=null;
 const surfaces=new GameSurfaces(),toolSession=new ToolSession();
