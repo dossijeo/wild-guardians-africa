@@ -1,0 +1,232 @@
+{
+  "testedCommit": "02b32b4dab62a0cd943d36beeefa90eca5eb6ed8",
+  "tabClosed": 788,
+  "gpuDisposed": true,
+  "productionAssetPromoted": false,
+  "benchmark": false,
+  "warningErrorLogs": [],
+  "liveCpuBeforeDraw": [
+    41320,
+    41304,
+    49032,
+    49608
+  ],
+  "loadingGpuInactiveConfirmed": true,
+  "sourceGlb": {
+    "path": "assets/web/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+    "sha256": "617568fc66595c635739ff83bc0256535a72fdf7bfcb016dc68a7f7f1e1a8a52"
+  },
+  "scope": "One young-maize Front training view. 245 stem faces Front; other1009 and shadows Double. No geometry repair/category/withheld/resource/GPU acceptance.",
+  "pieces": [
+    {
+      "source": "tools/lib/frontside-derived-stem.mjs",
+      "path": "tools__lib__frontside-derived-stem.mjs.gz",
+      "bytes": 4505,
+      "sha256": "2f371cccff56fda94491a8f43d11620833449e51ea0ebd4c813e144fb7044ccf",
+      "gzip": true
+    },
+    {
+      "source": "tools/lib/frontside-crop-contract-audit.mjs",
+      "path": "tools__lib__frontside-crop-contract-audit.mjs.gz",
+      "bytes": 3272,
+      "sha256": "9f13c61d6bf0d64110b7c37885476a8e7fd967cef79d9d032b33f4050e1c4ba3",
+      "gzip": true
+    },
+    {
+      "source": "tools/lib/frontside-indexed-bridge.mjs",
+      "path": "tools__lib__frontside-indexed-bridge.mjs.gz",
+      "bytes": 9798,
+      "sha256": "3fa1271c661e8ecf941aad8c184b266e60ef1316d955e2ae2c618f5d7205e2e5",
+      "gzip": true
+    },
+    {
+      "source": "tools/lib/frontside-visual-metrics.mjs",
+      "path": "tools__lib__frontside-visual-metrics.mjs.gz",
+      "bytes": 3581,
+      "sha256": "d41f76867ba73dd542423d0e7967c81da3f53070908f4f2a97ad78723858cda2",
+      "gzip": true
+    },
+    {
+      "source": "tools/lib/frontside-color-provenance.mjs",
+      "path": "tools__lib__frontside-color-provenance.mjs.gz",
+      "bytes": 3281,
+      "sha256": "2083f0899a2be305a2901cf4e27b86e68a654554db93430f61ea9cd1a60e1425",
+      "gzip": true
+    },
+    {
+      "source": "tools/lib/frontside-crop-partition.mjs",
+      "path": "tools__lib__frontside-crop-partition.mjs.gz",
+      "bytes": 4087,
+      "sha256": "9ab06da4dffa38c28974b1c79af4d1d875b1c4dc65cede7a74c23b37cf40aed4",
+      "gzip": true
+    },
+    {
+      "source": "tools/lib/frontside-derived-crop.mjs",
+      "path": "tools__lib__frontside-derived-crop.mjs.gz",
+      "bytes": 2359,
+      "sha256": "e42a81012d3e6d0b07e75db91987f9ed39899d779179efb0a94aea539632a57d",
+      "gzip": true
+    },
+    {
+      "source": "tools/lib/frontside-source-draw-audit.mjs",
+      "path": "tools__lib__frontside-source-draw-audit.mjs.gz",
+      "bytes": 5500,
+      "sha256": "339c0d6d6898e3a8846bb1d11d5dce6fd79c9dbb40981efead1765f21b26ee99",
+      "gzip": true
+    },
+    {
+      "source": "src/rendering/crop-batch.js",
+      "path": "src__rendering__crop-batch.js.gz",
+      "bytes": 18527,
+      "sha256": "982cdd49e48416596d9c50935d4d910b46ad9752f8fcec5c568ec4d96d206311",
+      "gzip": true
+    },
+    {
+      "source": "src/rendering/african-toon.js",
+      "path": "src__rendering__african-toon.js.gz",
+      "bytes": 19158,
+      "sha256": "f576f882d0e1af5ec69137e79aa0f8d0fc2f6639bfa7bd01307821cbd8cdc8f4",
+      "gzip": true
+    },
+    {
+      "source": "src/rendering/native-shadow.js",
+      "path": "src__rendering__native-shadow.js.gz",
+      "bytes": 5364,
+      "sha256": "3fadd82d2e4dd37b25d07d99539302ae661ce92ae62636ad93665741d5729aa8",
+      "gzip": true
+    },
+    {
+      "source": "src/rendering/sky.js",
+      "path": "src__rendering__sky.js.gz",
+      "bytes": 4156,
+      "sha256": "22194ccdb286388ff4ba99607350ff1582ad2e5f61632504a9707e73a64b93ba",
+      "gzip": true
+    },
+    {
+      "source": "src/rendering/shadow-camera.js",
+      "path": "src__rendering__shadow-camera.js.gz",
+      "bytes": 1456,
+      "sha256": "16878af5582368a089b1a8184722a402728f20995dda4abd5b6ff178ee8ffdaf",
+      "gzip": true
+    },
+    {
+      "source": "src/rendering/assets.js",
+      "path": "src__rendering__assets.js.gz",
+      "bytes": 7751,
+      "sha256": "11ba49477f2c5a6eac2f669059019bef668a40710c8ff890eabfb26ae2ea9488",
+      "gzip": true
+    },
+    {
+      "source": "src/rendering/material-registry.js",
+      "path": "src__rendering__material-registry.js.gz",
+      "bytes": 3499,
+      "sha256": "559425eced77d9c70f1f468a3f44712fbb7e6dac4a81c02ac6ec6144e63d1981",
+      "gzip": true
+    },
+    {
+      "source": "src/simulation/rules.js",
+      "path": "src__simulation__rules.js.gz",
+      "bytes": 3551,
+      "sha256": "c8eef0a28deafe1914ba8720850f361afac44fd93402d743564f6c52797a4c13",
+      "gzip": true
+    },
+    {
+      "source": "src/rendering/african-toon-source.js",
+      "path": "src__rendering__african-toon-source.js.gz",
+      "bytes": 9573,
+      "sha256": "38f19f485e448fcf381732ae2e4267012a3fee19cfbec17925bd06f86221bff4",
+      "gzip": true
+    },
+    {
+      "source": "public/content/models.json",
+      "path": "public__content__models.json.gz",
+      "bytes": 9032,
+      "sha256": "64d4d0b8ee62723398020bf0ad803e0cbb6fc6442f5c746b52981b15f997f913",
+      "gzip": true
+    },
+    {
+      "source": "public/content/crop-bridges.json",
+      "path": "public__content__crop-bridges.json.gz",
+      "bytes": 278481,
+      "sha256": "88c4bdb959b1debb7456e6c1708840330b459a6ede6649e8f690583953428309",
+      "gzip": true
+    },
+    {
+      "source": "tools/frontside_pilot_server.mjs",
+      "path": "tools__frontside_pilot_server.mjs.gz",
+      "bytes": 4841,
+      "sha256": "6a11282e638422529ba3ed21fa146766f966fd3069e214d198bf25ab4ea5d208",
+      "gzip": true
+    },
+    {
+      "source": "tests/browser/frontside-crop-local-stem-front.html",
+      "path": "tests__browser__frontside-crop-local-stem-front.html.gz",
+      "bytes": 748,
+      "sha256": "2e7ca956e98648cc301062d6b761c088d5e34a7685acfaf819188f61cdacaa78",
+      "gzip": true
+    },
+    {
+      "source": "tests/browser/frontside-crop-local-stem-front.js",
+      "path": "tests__browser__frontside-crop-local-stem-front.js.gz",
+      "bytes": 41478,
+      "sha256": "f7d6936f253982dd6fe3547382423ef8ae814e9ee16846e435e3e3209c442fec",
+      "gzip": true
+    },
+    {
+      "source": "tools/frontside_build_local_stem_front_fixture.mjs",
+      "path": "tools__frontside_build_local_stem_front_fixture.mjs.gz",
+      "bytes": 6798,
+      "sha256": "5a5df41764c351b2236e7d1eef137814a1e183f9b49c6c1ac9aed19db496bf5e",
+      "gzip": true
+    },
+    {
+      "source": "docs/qa/frontside-model-pilot/crop-native-stem-local-filter.json",
+      "path": "docs__qa__frontside-model-pilot__crop-native-stem-local-filter.json.gz",
+      "bytes": 18443,
+      "sha256": "ce2a848a71839db138d1540a5af057d5062b2b6874686912dd12089173c9de4f",
+      "gzip": true
+    },
+    {
+      "source": "docs/qa/frontside-model-pilot/local-stem-partition-source-correspondence.json",
+      "path": "docs__qa__frontside-model-pilot__local-stem-partition-source-correspondence.json.gz",
+      "bytes": 2011,
+      "sha256": "88f61e87af0eee540d000f15fcabc7fe46117af7fd90a85c0e37b3da45270341",
+      "gzip": true
+    },
+    {
+      "source": "docs/qa/frontside-model-pilot/local-stem-front-fixture-receipt.json",
+      "path": "docs__qa__frontside-model-pilot__local-stem-front-fixture-receipt.json.gz",
+      "bytes": 488,
+      "sha256": "8a1b68e253db7eef309e2275b941583c701890d3b96d587eee3822be99830ba6",
+      "gzip": true
+    },
+    {
+      "source": ".cache/maize-young-front/report.json",
+      "path": "report.json.gz",
+      "bytes": 205645,
+      "sha256": "712dbba4589ebf00bf21bbd858fef1ac072af52bb7b86cd5ead833b15572e56d",
+      "gzip": true
+    },
+    {
+      "source": ".cache/maize-young-front/frame.png",
+      "path": "frame.png",
+      "bytes": 757403,
+      "sha256": "187bed799261a8da0b8822a9d9296e7cc8ea2bbf463853b634813e6b3fcb1c1a",
+      "gzip": false
+    },
+    {
+      "source": ".cache/maize-young-front/browser.png",
+      "path": "browser.png",
+      "bytes": 78062,
+      "sha256": "a3063c4d3442017dadbd4dab426a6db8fbb69036cbe239330bc3b2e976d4eccf",
+      "gzip": false
+    },
+    {
+      "source": "docs/qa/frontside-native-inputs/maize-young-grouped-double/web-asset-record.json",
+      "path": "web-asset-record.json",
+      "bytes": 2391,
+      "sha256": "5de13b9846706d3c644f5ad29fecbb301a928c6f6477f1f94d843a93b9b0c4f8",
+      "gzip": false
+    }
+  ]
+}
