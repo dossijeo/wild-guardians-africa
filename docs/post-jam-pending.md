@@ -1,5 +1,11 @@
 # Tareas pendientes posteriores a la Jam
 
+[Gran Río/Suajili: cien noches auditadas](qa/intensive-gran-rio-suajili-e461b550/README.md):
+campaña histórica e461b550,291hashes congelados iguales; exit0/victoria,
+1439plantas vivas máximas,23700siembras y22043entregas físicas cobradas.
+Auditoría monetaria/cajas/restauración y síntesis completa exactas. Inactividad
+estratégica19,93% pendiente de mejorar; no es replay de main actual ni GPU/móvil.
+
 [Traveling y streaming: dos bloqueos corregidos](qa/streaming-travel/README.md):
 consulta GL síncrona repetida y serialización de texturas al clonar material
 del borde del suelo lejano. Sabana A/C/C/A conserva35chunksnuevos/cámara/estado;
