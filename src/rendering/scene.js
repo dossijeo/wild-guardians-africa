@@ -329,7 +329,7 @@ export class WorldScene {
       this.programBindings=this.loadingProgress?await initializeProgramBindingsAsync(this.renderer,{cancelled:()=>this.disposed}):initializeProgramBindings(this.renderer);
       // Actual draw uploads vertex buffers, textures and bone textures, and
       // prepares the shadow shader too. Invisible/culled meshes would not.
-      if(this.loadingProgress)this.loadingTextureUploads=await initializeLoadingTextures(this.renderer,this.scene,{frameBudget:6,cancelled:()=>this.disposed});
+      if(this.loadingProgress)this.loadingTextureUploads=await initializeLoadingTextures(this.renderer,this.scene,{frameBudget:6,signal:this.loading.signal,cancelled:()=>this.disposed});
       if(this.loadingProgress)await renderScreenPreloadBatched(this.renderer,this.scene,this.camera,{warmShadows:true,frameBudget:6,cancelled:()=>this.disposed,onBatch:(done,total)=>this.loadingProgress.update('gpu',done*.8,total)});
       else renderScreenPreload(this.renderer,this.scene,this.camera);
       // The first sprite effect captures world depth with shadows disabled.
