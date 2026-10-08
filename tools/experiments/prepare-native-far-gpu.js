@@ -52,7 +52,7 @@ export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{c
     check();const texture=pending[i],image=texture.image,decodeStart=performance.now();
     if(decodeImages&&typeof image?.decode==='function'){
      const decoding=image.decode();
-     if(ownedWaits)await waitGpuPreparation(decoding,{check,nextFrame:()=>new Promise(()=>{})});else await decoding;
+     if(ownedWaits||cooperative)await waitGpuPreparation(decoding,{check,nextFrame:()=>new Promise(()=>{})});else await decoding;
     }check();const decodeMs=performance.now()-decodeStart,before=performance.now();renderer.initTexture(texture);check();checkErrors('after texture upload');rememberTexture(cache,texture);
     textureUploads.push({index:unique.indexOf(texture),width:image?.width??null,height:image?.height??null,imageType:image?.constructor?.name??null,mipmaps:!!texture.generateMipmaps,colorSpace:texture.colorSpace??null,decodeMs,cpuMs:performance.now()-before});
    }

@@ -400,3 +400,14 @@ test('queued loading job can stop waiting while an older owner remains pending',
  const first=prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],options);await entered;
  const second=prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{...options,cancelled:()=>cancelled});cancelled=true;try{await assert.rejects(second,error=>error instanceof NativeFarGpuCancelled);assert.equal(f.calls.includes('compile'),false);}finally{releaseFrame();await first;f.restored();releaseNativeFarGpuCache(f.renderer);}
 });
+
+
+test('cooperative image decoder can cancel with suspended RAF and observes late failure',async()=>{
+ const f=ownedFixture();let cancelled=false,rejectDecode;const texture=new Texture({decode:()=>new Promise((resolve,reject)=>rejectDecode=reject)});
+ const pending=prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[texture],{cooperative:true,decodeImages:true,cancelled:()=>cancelled,nextFrame:()=>new Promise(()=>{})});
+ await new Promise(resolve=>setImmediate(resolve));cancelled=true;await assert.rejects(pending,NativeFarGpuCancelled);rejectDecode(Error('late decode failure'));await new Promise(resolve=>setImmediate(resolve));assert.deepEqual(f.calls,[]);f.restored();releaseNativeFarGpuCache(f.renderer);
+});
+test('cooperative never-resolving decode respects deadline without a resumed RAF',async()=>{
+ const f=ownedFixture(),texture=new Texture({decode:()=>new Promise(()=>{})});
+ await assert.rejects(prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[texture],{cooperative:true,decodeImages:true,timeout:5,nextFrame:()=>new Promise(()=>{})}),/timed out/);assert.deepEqual(f.calls,[]);f.restored();releaseNativeFarGpuCache(f.renderer);
+});
