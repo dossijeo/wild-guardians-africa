@@ -1,0 +1,77 @@
+{
+  "status": "PLANAR_STEM_RECONSTRUCTION_OFFLINE_NOT_APPROVED",
+  "sourceSha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+  "blenderVersion": "4.5.9 LTS",
+  "blenderBuildHash": "8bf95cbd38d1",
+  "rows": [
+    {
+      "angleLimit": 1e-06,
+      "sourceStemTriangles": 824,
+      "derivedStemTriangles": 824,
+      "sourceTriangles": 4935,
+      "proposedBilateralTriangles": 5759,
+      "triangleGrowthPercent": 16.69706180344479,
+      "triangleBudgetPass": false,
+      "sourceStateBytes": 317066,
+      "proposedSharedStateBytes": 333978,
+      "bufferGrowthPercent": 5.3339052437032075,
+      "bufferBudgetPass": true,
+      "maxSampledSurfaceDistance": 1.6452808893063775e-07,
+      "archive": ".cache/frontside-model-pilot/candidates/archive/ed0474bb2b6c631ae330e80e41968e8de274988330925d4ab9ef40df7342701a.json",
+      "archiveSha256": "ed0474bb2b6c631ae330e80e41968e8de274988330925d4ab9ef40df7342701a",
+      "limitations": [
+        "Soil/leaf corner bits exact; new stem topology/normal/UV interpolation unapproved.",
+        "Exact-coordinate weld retains separate original normal/UV loop values before modifier; no epsilon.",
+        "All new stem faces require actual reverses, no visibility masks.",
+        "Planarity before deformation does not establish continuous nonlinear growth equality.",
+        "No GLB, runtime asset, bridge labels or material changed."
+      ]
+    },
+    {
+      "angleLimit": 0.0001,
+      "sourceStemTriangles": 824,
+      "derivedStemTriangles": 824,
+      "sourceTriangles": 4935,
+      "proposedBilateralTriangles": 5759,
+      "triangleGrowthPercent": 16.69706180344479,
+      "triangleBudgetPass": false,
+      "sourceStateBytes": 317066,
+      "proposedSharedStateBytes": 333978,
+      "bufferGrowthPercent": 5.3339052437032075,
+      "bufferBudgetPass": true,
+      "maxSampledSurfaceDistance": 1.6452808893063775e-07,
+      "archive": ".cache/frontside-model-pilot/candidates/archive/3238e7f4cfa0817d8c375abe50f5f52dddec82366fc1e169928fb1e9e755c064.json",
+      "archiveSha256": "3238e7f4cfa0817d8c375abe50f5f52dddec82366fc1e169928fb1e9e755c064",
+      "limitations": [
+        "Soil/leaf corner bits exact; new stem topology/normal/UV interpolation unapproved.",
+        "Exact-coordinate weld retains separate original normal/UV loop values before modifier; no epsilon.",
+        "All new stem faces require actual reverses, no visibility masks.",
+        "Planarity before deformation does not establish continuous nonlinear growth equality.",
+        "No GLB, runtime asset, bridge labels or material changed."
+      ]
+    },
+    {
+      "angleLimit": 0.001,
+      "sourceStemTriangles": 824,
+      "derivedStemTriangles": 824,
+      "sourceTriangles": 4935,
+      "proposedBilateralTriangles": 5759,
+      "triangleGrowthPercent": 16.69706180344479,
+      "triangleBudgetPass": false,
+      "sourceStateBytes": 317066,
+      "proposedSharedStateBytes": 333978,
+      "bufferGrowthPercent": 5.3339052437032075,
+      "bufferBudgetPass": true,
+      "maxSampledSurfaceDistance": 1.6452808893063775e-07,
+      "archive": ".cache/frontside-model-pilot/candidates/archive/f0835067ae93d212186d731d3599c8f70cc8853ce6c7154642651b6cf882e0f6.json",
+      "archiveSha256": "f0835067ae93d212186d731d3599c8f70cc8853ce6c7154642651b6cf882e0f6",
+      "limitations": [
+        "Soil/leaf corner bits exact; new stem topology/normal/UV interpolation unapproved.",
+        "Exact-coordinate weld retains separate original normal/UV loop values before modifier; no epsilon.",
+        "All new stem faces require actual reverses, no visibility masks.",
+        "Planarity before deformation does not establish continuous nonlinear growth equality.",
+        "No GLB, runtime asset, bridge labels or material changed."
+      ]
+    }
+  ]
+}
