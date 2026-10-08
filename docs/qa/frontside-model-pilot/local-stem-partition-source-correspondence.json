@@ -1,0 +1,59 @@
+{
+  "status": "SOURCE_PARTITION_CORRESPONDENCE_NOT_NATIVE_QUALITY_OR_GPU_APPROVAL",
+  "sourceSha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+  "target": "maiz_02_joven",
+  "triangles": 1254,
+  "selectedStemTriangles": 245,
+  "otherTriangles": 1009,
+  "newOrReverseTriangles": 0,
+  "attributes": [
+    {
+      "name": "position",
+      "sharedObject": true,
+      "vertices": 2132,
+      "itemSize": 3,
+      "bytes": 25584,
+      "sha256": "561baf5e78036e724621831202c867172e00ebe26d396e313011885f4a9d72e0"
+    },
+    {
+      "name": "normal",
+      "sharedObject": true,
+      "vertices": 2132,
+      "itemSize": 3,
+      "bytes": 25584,
+      "sha256": "0b34fd23ac65442208f7d7c91eb534157ada9204fc7ce065583c8334799b1446"
+    },
+    {
+      "name": "uv",
+      "sharedObject": true,
+      "vertices": 2132,
+      "itemSize": 2,
+      "bytes": 17056,
+      "sha256": "f2470097c1c187fb2027f8c11cf5bc7a8ebf62641a59c9cc9336b00e9c98d7ef"
+    }
+  ],
+  "groups": [
+    {
+      "start": 0,
+      "count": 735,
+      "materialIndex": 0
+    },
+    {
+      "start": 735,
+      "count": 3027,
+      "materialIndex": 1
+    }
+  ],
+  "originalAttributeBytes": 68224,
+  "originalIndexBytes": 7524,
+  "newIndexBytes": 7524,
+  "sourceRawStateBytes": 75748,
+  "retainedBothIndicesRawStateBytes": 83272,
+  "retainedBothIndicesGrowthPercent": 9.932935523050114,
+  "limitations": [
+    "Real source PN/UV/index parsed without browser decoder; native web decode/contracts and live iGrowth/material/shadow checks remain required.",
+    "Source face order map preserves each original triangle, its cyclic order and driver exactly; attributes are the same objects, not rebuilt or normalized.",
+    "Raw CPU coexistence includes both private index allocations. GPU uploads/old index residency, live buffers/material/program/textures/peak allocations are unmeasured.",
+    "No culling/material/shader change or model export by this source correspondence audit; native Double-only pilot remains pending."
+  ]
+}
