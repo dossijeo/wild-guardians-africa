@@ -5,6 +5,11 @@ option. Default remains false; no production caller enables it. This addresses
 the repaired-maize adapter's multiple color materials without assuming that its
 original DoubleSide shadow depth matches FrontSide color rasterization.
 
+`BuildingDestructionPass.materialArrayDepth = true` forwards the same QA option
+to both preparation and capture. Its unset/default value keeps the grouped
+fallback. Directed pass tests verify both paths restore target, shadows and
+the original material array. Combined depth/preload checks:19 PASS.
+
 The option permits a separate scalar `object.customWorldDepthMaterial`, checked
 against every source material with the existing compatibility rules. It never
 replaces or mutates the object's Three.js `customDepthMaterial` shadow owner.
