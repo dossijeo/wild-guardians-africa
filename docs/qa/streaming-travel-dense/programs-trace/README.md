@@ -79,3 +79,20 @@ The resource run is separately archived under resident-resources; it must not
 be used for frametime comparison. Raw traced data and endpoint image are stored
 as textures-closed.json.gz/textures-final.jpg with a receipt hash. No candidate
 has been activated in production.
+
+## Rigid crate depth-program hypothesis
+
+The QA fixture accepts `crateShadow` to compile the observed rigid crate's
+plain directional-depth variant without a draw. It borrows the actual geometry
+and existing native shadow target, uses RGBADepthPacking, native side/map rules,
+an empty fog/environment scene and matching visible-light types. The renderer
+target, viewport and scissor are restored synchronously before awaiting compile.
+The material remains owned until scene cleanup so its cached program is retained.
+
+This is restricted to `Prop_FruitCrate_geometry_7`: skinning, instancing, morphs,
+custom depth, alpha test/coverage, clipping and displacement are rejected rather
+than pretending to warm their native recipes. No production material changes or
+geometry uploads are requested. Four tests cover restoration, borrowed ownership,
+unsupported recipes, shader failure and cancellation. Native cache-key matching,
+buffer accounting, visual regression and ABBA remain open; compiling a plausible
+recipe alone does not establish actual shadow readiness or performance benefit.
