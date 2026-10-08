@@ -1,0 +1,9 @@
+# Original full body isolation: source variation persists
+
+Root native tab786 rendered the complete original Mesh0 after hiding24 accessories, preserving the original full-model camera/Idle0 pose, source attributes/skin/material/program recipe and drawRange0/Infinity. Body remains original FrontSide; no candidate was drawn and samples0. Coverage137604 pixels;59853 original indices/19951 triangles. Visibility and drawRange restored. GPU/context disposed and tab closed. Root frozen receipt verifies18 source files at58843a84; local fixture is unchanged from2cab94b3.
+
+Twelve synchronous same-framebuffer reads are exact. Thirty redraws retain the full-source negative: maximum21 changed RGB bytes/7 pixels, max byte59, alpha0, RGB MAE0.0000030024257595909438 and maxTile0.010757437286277613>0.01. Observed31 GPU input/state audits are unchanged; no color texels read in this run. Prior primitive-only probe remains separately stable. These results show the24 accessories are not necessary to reproduce this variation, but do not identify a body geometry/derivative/compiler/raster cause or validate any adaptation. No tolerance is enlarged and no model quality gate is approved.
+
+Actual CPU campaigns41320/41304/49032/49608 inventoried before draw. Possible short overlap with the announced9.28s offline Blender crop audit was communicated and retained by root; no timing claim or idle-machine assertion. Console[] according to root export. Source asset and production remain unchanged.
+
+Local report SHA256a594d1b60de89de455c285ccc121b1802d0484198d5b63c58b8c7ae8f656ef97; frame8f926b17b32bdf87dc398a6d59af24af6e807816f1ed5a2215cd9755082112e1; browserbe1f7cd706adbf0a1d9774ea0f7c5e5cd81560335e63f2171fdb9c1fb6dd011f. Root independently archived report/frame/browser/source receipts in docs/qa/frontside-native-inputs/worker-body-isolation with verifyPASS.
