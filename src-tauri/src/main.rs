@@ -23,6 +23,9 @@ fn main() {
                 && std::env::args().any(|arg| arg == "--smoke-report")
                 && webview.label() == "main"
             {
+                if std::env::args().any(|arg| arg == "--smoke-shared-ground") {
+                    let _ = webview.eval("window.__desktopSmokeSharedGroundClip=true;");
+                }
                 let _ = webview.eval(include_str!("../smoke.js"));
             }
         })

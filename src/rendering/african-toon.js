@@ -16,10 +16,10 @@ const diagnosticToon=diagnosticPigment(toonFunctions),diagnosticVolcanic=diagnos
 
 // Shared by the world renderer only. The original menu owns a separate renderer.
 export class AfricanToon {
-  constructor(){
+  constructor({sharedGroundClip=globalThis.__desktopSmokeSharedGroundClip===true}={}){
     this.uniforms={uEnvEndpoints:{value:1},uFineNoise:{value:1},uWorldOrigin:{value:new THREE.Vector2()},uBiome:{value:0},uWet:{value:0},uNight:{value:0},uNightLight:{value:1},uExposure:{value:1},uLightDir:{value:new THREE.Vector3(-30,55,25).normalize()},uKind:{value:0},uSurfaceType:{value:1},uGroundDetail:{value:1}};
     this.artUniforms={uArtSun:{value:new THREE.Vector3()},uArtShade:{value:new THREE.Vector3()},uArtFoliage:{value:new THREE.Vector3()},uArtParams:{value:new THREE.Vector4()},uArtShape:{value:new THREE.Vector4()},uArtHighlight:{value:0},uArtVolcanicGlow:{value:0}};
-    this.materials=new WeakSet();this.shadowUniforms=createNativeShadowUniforms();
+    this.sharedGroundClip=sharedGroundClip;this.materials=new WeakSet();this.shadowUniforms=createNativeShadowUniforms();
     this.contactUniforms={uContactMap:{value:null},uContactBounds:{value:new THREE.Vector4(0,0,1,1)},uContactOn:{value:0}};
     this.environmentUniforms={uEnvEndpoints:this.uniforms.uEnvEndpoints,uNativeEnvEnabled:{value:0},uEnvDay:{value:null},uEnvNight:{value:null},uEnvYaw:{value:0}};
   }
@@ -29,6 +29,7 @@ export class AfricanToon {
     if(!(material?.isMeshStandardMaterial||material?.isMeshBasicMaterial&&material.userData.toonGround)||material.transparent||material.userData.paintUniforms||this.materials.has(material))return;
     this.materials.add(material);
     const original=material.onBeforeCompile,cache=material.customProgramCacheKey.bind(material);
+    const sharedGroundClip=this.sharedGroundClip&&material.isMeshBasicMaterial&&material.userData.toonGround&&!!material.userData.biomeGround,emptyBounds=sharedGroundClip?new THREE.Vector4(0,0,0,0):null;
     material.onBeforeCompile=(shader,renderer)=>{
       original.call(material,shader,renderer);Object.assign(shader.uniforms,this.uniforms,this.environmentUniforms);if(material.userData.biomeGround)Object.assign(shader.uniforms,material.userData.biomeGround);if(material.userData.artBounds){Object.assign(shader.uniforms,this.artUniforms);const b=material.userData.artBounds;shader.uniforms.uArtLocalMin={value:b.min};shader.uniforms.uArtLocalSize={value:b.size};shader.uniforms.uArtCrown={value:b.crown};shader.uniforms.uArtVolcanicGlow=material.userData.nativeVolcanicGlow??this.artUniforms.uArtVolcanicGlow;}if(material.userData.toonGround)Object.assign(shader.uniforms,this.contactUniforms);shader.uniforms.uSurfaceType={value:material.userData.toonGround?0:material.userData.artSurface??material.userData.nativeSurface?.type??1};
       shader.vertexShader=(material.userData.artBounds?'uniform vec3 uArtLocalMin,uArtLocalSize;uniform float uArtCrown;varying vec3 vCanopyNormal;varying float vRelativeHeight;\n':'')+'varying vec3 vToonWorld;\n'+(material.isMeshBasicMaterial?'varying vec3 vToonLowNormal;\n':'')+shader.vertexShader;
@@ -53,8 +54,8 @@ export class AfricanToon {
       shader.fragmentShader='uniform sampler2D uEnvDay,uEnvNight;uniform float uEnvYaw,uNativeEnvEnabled;\n'+shader.fragmentShader;
       // The source returns HDR radiance, which africanToon4 grades itself.
       shader.fragmentShader=shader.fragmentShader.replace('void main() {',endpointFunctions+'\n'+(material.userData.toonGround?'uniform sampler2D uContactMap;uniform vec4 uContactBounds;uniform float uContactOn;\n'+diagnosticGroundNoise(groundLightingFunctions.replace('materialNoise(worldP*.32),fine=materialNoise(worldP*2.6)','materialNoise(worldPatternPosition(worldP)*.32),fine=materialNoise(worldPatternPosition(worldP)*2.6)').replace('sin(worldP.z*.024)','sin(worldPatternPosition(worldP).z*.024)')):'')+'\n'+(material.userData.biomeGround?groundMaterialFunctions:'')+'\n'+(material.userData.artBounds?'uniform vec3 uArtSun,uArtShade,uArtFoliage;uniform vec4 uArtParams,uArtShape;uniform float uArtHighlight,uArtVolcanicGlow;varying vec3 vCanopyNormal;varying float vRelativeHeight;\n'+artLightingFunctions:'')+'\n'+(material.userData.nativeSurface?diagnosticVolcanic:'')+'\nvoid main() {');
-      if(material.userData.horizonBounds){
-        shader.uniforms.uHorizonBounds={value:material.userData.horizonBounds};shader.fragmentShader='uniform vec4 uHorizonBounds;\n'+shader.fragmentShader;
+      if(material.userData.horizonBounds||sharedGroundClip){
+        shader.uniforms.uHorizonBounds={value:material.userData.horizonBounds??emptyBounds};shader.fragmentShader='uniform vec4 uHorizonBounds;\n'+shader.fragmentShader;
         shader.fragmentShader=shader.fragmentShader.replace('#include <clipping_planes_fragment>',`#include <clipping_planes_fragment>
           if(vToonWorld.x>=uHorizonBounds.x&&vToonWorld.z>=uHorizonBounds.y&&vToonWorld.x<uHorizonBounds.z&&vToonWorld.z<uHorizonBounds.w)discard;`);
       }
@@ -103,7 +104,7 @@ export class AfricanToon {
     };
     material.onBeforeCompile=((compile)=>(shader,renderer)=>{compile(shader,renderer);patchNativeShadow(shader,this.shadowUniforms,'vToonWorld');})(material.onBeforeCompile);
     recordNativeDepthHook(material,original,'toon',...(material.userData.horizonBounds?['horizon']:[]));
-    material.customProgramCacheKey=()=>cache()+'|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|'+(material.userData.biomeGround?'biome-ground-4.1.10.3':material.userData.toonGround?'ground':'object')+'|'+(material.userData.artBounds?'illustrated-4.1.6':'toon-4.1.4')+'|'+material.type+'|'+(material.userData.horizonBounds?'horizon-clip':'resident');
+    material.customProgramCacheKey=()=>cache()+'|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|'+(material.userData.biomeGround?'biome-ground-4.1.10.3':material.userData.toonGround?'ground':'object')+'|'+(material.userData.artBounds?'illustrated-4.1.6':'toon-4.1.4')+'|'+material.type+'|'+(sharedGroundClip?'shared-ground-clip-v1':material.userData.horizonBounds?'horizon-clip':'resident');
     // The source function already applies its filmic curve. Three still performs
     // output color conversion and fog, without applying a second tone curve.
     material.toneMapped=false;material.needsUpdate=true;

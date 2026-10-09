@@ -5,6 +5,11 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
+    inputs:
+      shared_ground:
+        description: Smoke-only shared Basic ground color candidate with same-EXE OFF control
+        type: boolean
+        default: false
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -18,6 +23,8 @@ jobs:
   windows:
     runs-on: windows-latest
     timeout-minutes: 60
+    env:
+      SMOKE_SHARED_GROUND: ${{ inputs.shared_ground }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -39,19 +46,35 @@ jobs:
           if ($binary.Length -lt 1MB -or $installer.Count -ne 1) { throw 'Missing Windows deliverables' }
           "Windows executable: $($binary.Length) bytes" >> $env:GITHUB_STEP_SUMMARY
           "NSIS installer: $($installer.Length) bytes" >> $env:GITHUB_STEP_SUMMARY
+      - name: Diagnostic same-EXE ground control OFF
+        if: inputs.shared_ground
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          $report = Join-Path $env:RUNNER_TEMP 'desktop-ground-control.json'
+          $binary = (Resolve-Path src-tauri/target/release/wild-guardians-africa.exe).Path
+          $process = Start-Process -FilePath $binary -ArgumentList '--smoke-report', $report -WindowStyle Hidden -PassThru
+          if (-not $process.WaitForExit(240000)) { Stop-Process -Id $process.Id; throw 'Diagnostic control process timed out' }
+          if (-not (Test-Path -LiteralPath $report)) { throw 'No diagnostic control report' }
+          $result = Get-Content -Raw -LiteralPath $report | ConvertFrom-Json
+          $result.PSObject.Properties.Remove('worldPng')
+          $result | ConvertTo-Json -Depth 30 | Set-Content -LiteralPath $report
+          if ($process.ExitCode -ne 0 -or -not $result.ok) { throw 'Diagnostic control smoke failed; preserved separately' }
       - name: Smoke test the packaged game in WebView2
         shell: pwsh
         run: |
           $report = Join-Path $env:RUNNER_TEMP 'desktop-smoke.json'
           $binary = (Resolve-Path src-tauri/target/release/wild-guardians-africa.exe).Path
-          $process = Start-Process -FilePath $binary -ArgumentList '--smoke-report', $report -WindowStyle Hidden -PassThru
+          $smokeArgs = @('--smoke-report', $report)
+          if ($env:SMOKE_SHARED_GROUND -eq 'true') { $smokeArgs += '--smoke-shared-ground' }
+          $process = Start-Process -FilePath $binary -ArgumentList $smokeArgs -WindowStyle Hidden -PassThru
           if (-not $process.WaitForExit(240000)) { Stop-Process -Id $process.Id; throw 'WebView2 smoke timed out' }
           if (-not (Test-Path -LiteralPath $report)) { throw 'No WebView2 smoke report' }
           $result = Get-Content -Raw -LiteralPath $report | ConvertFrom-Json
           if ($result.worldPng) {
             [IO.File]::WriteAllBytes((Join-Path $env:RUNNER_TEMP 'windows-canyon.png'), [Convert]::FromBase64String($result.worldPng.Split(',')[1]))
             $result.PSObject.Properties.Remove('worldPng')
-            $result | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $report
+            $result | ConvertTo-Json -Depth 30 | Set-Content -LiteralPath $report
           }
           Get-Content -LiteralPath $report >> $env:GITHUB_STEP_SUMMARY
           if ($process.ExitCode -ne 0 -or -not $result.ok) { throw 'WebView2 smoke failed' }
@@ -63,7 +86,9 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Native visibility fixture failed' }
           $report = Join-Path $env:RUNNER_TEMP 'desktop-visibility.json'
           $binary = (Resolve-Path src-tauri/target/release/wild-guardians-africa.exe).Path
-          $process = Start-Process -FilePath $binary -ArgumentList '--smoke-report', $report, '--smoke-fixture', $fixture -WindowStyle Hidden -PassThru
+          $smokeArgs = @('--smoke-report', $report, '--smoke-fixture', $fixture)
+          if ($env:SMOKE_SHARED_GROUND -eq 'true') { $smokeArgs += '--smoke-shared-ground' }
+          $process = Start-Process -FilePath $binary -ArgumentList $smokeArgs -WindowStyle Hidden -PassThru
           if (-not $process.WaitForExit(900000)) { Stop-Process -Id $process.Id; throw 'Native visibility timed out' }
           if (-not (Test-Path -LiteralPath $report)) { throw 'No native visibility report' }
           $result = Get-Content -Raw -LiteralPath $report | ConvertFrom-Json
@@ -107,4 +132,10 @@ jobs:
         with:
           name: windows-cargo-lock
           path: src-tauri/Cargo.lock
+          retention-days: 7
+      - uses: actions/upload-artifact@v7
+        if: always() && inputs.shared_ground
+        with:
+          path: ${{ runner.temp }}/desktop-ground-control.json
+          archive: false
           retention-days: 7
