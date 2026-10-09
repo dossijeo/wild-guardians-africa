@@ -2,6 +2,18 @@
 
 ## Estado vigente de las integraciones (9 de octubre)
 
+### Restricciones de balance confirmadas por el usuario
+
+- El centro de trabajo debe conservar el precio de **800 monedas**.
+- El jornal mínimo debe conservar el precio de **30 monedas**.
+- Ambos valores están mencionados en audios del tutorial y no son parámetros
+  disponibles para los siguientes ajustes económicos. Los demás parámetros
+  pueden estudiarse y validarse sin modificar estos dos valores.
+- La candidata H100 de centro a 600 conserva valor como evidencia histórica,
+  pero queda descartada para integración. Su 22,7867 % de inactividad no acredita
+  el cumplimiento con el centro a 800: hay que volver a medir la candidata
+  compatible, incluyendo la posibilidad de perder por mala gestión.
+
 Este documento conserva entradas cronológicas y candidatos descartados. Sus
 resultados históricos no equivalen a aceptación de main actual. El
 [registro de gates vigentes](qa/release-open-gates-2026-10-09.md) delimita el
