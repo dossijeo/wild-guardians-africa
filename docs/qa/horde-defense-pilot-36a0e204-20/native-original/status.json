@@ -1,0 +1,24 @@
+{
+  "protocol": "horde-defense-comparison-v1",
+  "status": "incomplete",
+  "milliseconds": 2081770.4260000002,
+  "results": [
+    {
+      "arm": "responsible",
+      "status": "incomplete",
+      "error": {
+        "name": "Error",
+        "message": "Actual spent strike budgets do not reconcile with native hit/miss events",
+        "stack": "Error: Actual spent strike budgets do not reconcile with native hit/miss events\n    at auditHordeComparison (file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/tools/horde-defense-comparison.mjs:29:34)\n    at runHordeComparison (file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/tools/horde-defense-comparison.mjs:43:46)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"
+      },
+      "result": null,
+      "completedNights": null,
+      "gates": null,
+      "payloadHashes": {
+        "report.json.gz": "8e1fb58539f77ec6da42eb5d625dec4fa779b46dd212c218faeed63b9d839828"
+      },
+      "sourceUnchanged": true
+    }
+  ],
+  "acceptance": "No100night or matrix30 acceptance inferred; inspect every activity/physical/defense/neglect gate"
+}
