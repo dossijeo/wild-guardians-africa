@@ -35,9 +35,11 @@ test('A delivery crossing dawn retains its carrier, position and unpaid value th
   assert.equal(crate.carrierId,worker.id);assert.equal(numberOf(s.ledger.balance),1070);assert.deepEqual(s.pauses,['hiring']);
   const loaded=deserialize(serialize(s));Game.hire(loaded,'hire-next',{});
   assert.equal(loaded.workers.length,1);assert.equal(numberOf(loaded.ledger.balance),1070);
-  Game.tick(loaded,2,nav);assert.equal(loaded.crates[0].delivered,true);assert.equal(numberOf(loaded.ledger.balance),1084);
+  // A pre-existing crate keeps its saved value (9 × 1.2, rounded to 11),
+  // rather than being repriced when crop balance changes.
+  Game.tick(loaded,2,nav);assert.equal(loaded.crates[0].delivered,true);assert.equal(numberOf(loaded.ledger.balance),1081);
   assert.equal(loaded.workers[0].status,'returning');assert.equal(loaded.workers[0].taskId,null);
-  Game.tick(loaded,20,nav);assert.equal(loaded.workers[0].status,'home');assert.equal(numberOf(loaded.ledger.balance),1084);
+  Game.tick(loaded,20,nav);assert.equal(loaded.workers[0].status,'home');assert.equal(numberOf(loaded.ledger.balance),1081);
   assert.equal(loaded.events.filter(e=>e.type==='CrateDelivered').length,1);
 });
 test('A busy person cannot be hired twice; only the new daily contract is charged',()=>{
