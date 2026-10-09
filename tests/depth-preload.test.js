@@ -68,3 +68,9 @@ test('a depth frame deadline does not require the suspended RAF to resolve',asyn
  const pending=s.pipeline.prepareDepth(new PerspectiveCamera(),s.world,{batchSize:1,compile:()=>{calls++;return Promise.resolve();},now:()=>clock,timeout:1,pollIntervalMs:2,nextFrame:()=>new Promise(()=>{})});
  await new Promise(resolve=>setImmediate(resolve));clock=2;await assert.rejects(pending,/timed out/);assert.equal(calls,1);assert.deepEqual(s.world.children.map(m=>m.material),s.originals);assert.equal(s.renderer.getRenderTarget(),s.prior);assert.equal(s.renderer.shadowMap.enabled,true);s.cleanup();
 });
+
+test('optional per-batch depth witnesses separate synchronous submission, program readiness and the unchanged frame barrier',async()=>{
+ const s=setup(),spans=[];let clock=0,frames=0;
+ await s.pipeline.prepareDepth(new PerspectiveCamera(),s.world,{batchSize:1,now:()=>clock,compile:()=>{clock+=2;return Promise.resolve();},onPrepare:span=>{spans.push(span);throw Error('observer');},nextFrame:async()=>{frames++;clock+=10;assert.deepEqual(s.world.children.map(m=>m.material),s.originals);assert.equal(s.renderer.getRenderTarget(),s.prior);assert.equal(s.renderer.shadowMap.enabled,true);}});
+ const submit=spans.filter(s=>s.label==='loading-depth-batch-submit'),programs=spans.filter(s=>s.label==='loading-depth-batch-program-wait'),waits=spans.filter(s=>s.label==='loading-depth-batch-frame-wait');assert.equal(frames,3);assert.deepEqual(submit.map(s=>s.batchIndex),[0,1,2]);assert.ok(submit.every(s=>s.duration===2&&s.objects===1&&!s.failed));assert.equal(programs.length,3);assert.ok(waits.every(s=>s.duration===10));s.cleanup();
+});

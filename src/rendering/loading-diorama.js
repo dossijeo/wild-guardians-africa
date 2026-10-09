@@ -1,3 +1,4 @@
+import {loadingSyncWitness,loadingAwaitWitness} from './loading-sync-witness.js';
 import {waitGpuFrame} from '../../tools/experiments/wait-gpu-frame.js';
 import {compileLoadingPrograms} from './loading-programs.js';
 import * as THREE from 'three';
@@ -45,16 +46,16 @@ export class LoadingDiorama {
     world.canvas.addEventListener('lostpointercapture',()=>{down=null;this.orbit.endInteraction();},{signal:this.abort.signal});
   }
   async prepare() {
-    const {world}=this;await world.loadReady(world.sky.load());if(this.disposed)throw Error('Loading diorama cancelled');
-    const [models,bridges,ground]=await world.loadReady(Promise.all([json('/content/models.json',{signal:world.loading.signal}),json('/content/crop-bridges.json',{signal:world.loading.signal}),json('/content/ground-materials.json',{signal:world.loading.signal})]));
+    const {world}=this,phase=(label,run)=>loadingAwaitWitness(world.onLoadingSpan,label,run),sync=(label,run)=>loadingSyncWitness(world.onLoadingSpan,label,run);await phase('diorama-prepare-sky',()=>world.loadReady(world.sky.load()));if(this.disposed)throw Error('Loading diorama cancelled');
+    const [models,bridges,ground]=await phase('diorama-prepare-catalogues',()=>world.loadReady(Promise.all([json('/content/models.json',{signal:world.loading.signal}),json('/content/crop-bridges.json',{signal:world.loading.signal}),json('/content/ground-materials.json',{signal:world.loading.signal})])));
     const descriptor=models.find(m=>m.source.includes('Cultivos'));if(!descriptor)throw Error('Missing native maize model');
-    const gltf=await world.loadReady(world.assets.model(descriptor.url));if(this.disposed)throw Error('Loading diorama cancelled');
+    const gltf=await phase('diorama-prepare-maize-model',()=>world.loadReady(world.assets.model(descriptor.url)));if(this.disposed)throw Error('Loading diorama cancelled');
     // Reuse the existing canyon earth bitmap through the world's cache. The
     // diorama borrows its pixel Source through a locally owned Texture object.
     // This does not decode/copy pixels or require separate shared GL storage.
-    this.ground.material.map=this.textureOwner.borrow(await world.loadReady(world.assets.texture(ground.canyons.base,false)));
+    this.ground.material.map=this.textureOwner.borrow(await phase('diorama-prepare-soil-texture',()=>world.loadReady(world.assets.texture(ground.canyons.base,false))));
     this.ground.material.color.set('#c9865e');this.ground.material.needsUpdate=true;
-    this.batch=await createCropBatchAsync(this.scene,world.renderer,gltf,bridges,this.plants.capacity,{species:['maiz'],shadows:false,signal:this.abort.signal,cancelled:()=>this.disposed||world.disposed});this.scene.traverse(object=>{for(const material of [object.material].flat().filter(Boolean))this.textureOwner.material(material);});this.toon.environment(world.sky.environmentTextures,world.sky.uniforms.uSkyYaw);this.toon.apply(this.scene);
+    this.batch=await phase('diorama-prepare-maize-batch',()=>createCropBatchAsync(this.scene,world.renderer,gltf,bridges,this.plants.capacity,{species:['maiz'],shadows:false,signal:this.abort.signal,cancelled:()=>this.disposed||world.disposed}));this.scene.traverse(object=>{for(const material of [object.material].flat().filter(Boolean))this.textureOwner.material(material);});this.toon.environment(world.sky.environmentTextures,world.sky.uniforms.uSkyYaw);this.toon.apply(this.scene);
     // A small cold presentation fill belongs only to the diorama maize. It
     // reuses the existing night-light uniform/GLSL; soil and real-world lighting
     // keep their original values, without another light, pass or shader define.
@@ -67,7 +68,7 @@ export class LoadingDiorama {
     // the first frame. Counts/visibility restored before accepting interaction.
     const saved=[];this.scene.traverse(mesh=>{if(mesh.isInstancedMesh){saved.push([mesh,mesh.count,mesh.visible]);mesh.count=1;mesh.visible=true;}});
     const shadow=world.renderer.shadowMap.enabled;
-    try{world.renderer.shadowMap.enabled=false;await compileLoadingPrograms(world.renderer,this.scene,this.camera,undefined,{signal:this.abort.signal,cancelled:()=>world.disposed,screen:true});if(this.disposed)throw Error('Loading diorama cancelled');renderScreenPreload(world.renderer,this.scene,this.camera);await compileLoadingPrograms(world.renderer,world.sky.scene,this.camera,undefined,{signal:this.abort.signal,cancelled:()=>world.disposed,screen:true});await compileLoadingPrograms(world.renderer,this.mist.scene,this.camera,undefined,{signal:this.abort.signal,cancelled:()=>world.disposed,screen:true});renderScreenPreload(world.renderer,this.mist.scene,this.camera);world.sky.render(world.renderer,this.camera,{day:1,time:0});world.sky.render(world.renderer,this.camera,{day:1,time:310});await waitForGpuPreload(world.renderer,{signal:this.abort.signal,cancelled:()=>this.disposed||world.disposed,getEpoch:()=>world.glResourceEpoch?.stats.epoch??0});}
+    try{world.renderer.shadowMap.enabled=false;await phase('diorama-compile-maize',()=>compileLoadingPrograms(world.renderer,this.scene,this.camera,undefined,{signal:this.abort.signal,cancelled:()=>world.disposed,screen:true}));if(this.disposed)throw Error('Loading diorama cancelled');sync('diorama-upload-maize-soil',()=>renderScreenPreload(world.renderer,this.scene,this.camera));await phase('diorama-compile-sky',()=>compileLoadingPrograms(world.renderer,world.sky.scene,this.camera,undefined,{signal:this.abort.signal,cancelled:()=>world.disposed,screen:true}));await phase('diorama-compile-mist',()=>compileLoadingPrograms(world.renderer,this.mist.scene,this.camera,undefined,{signal:this.abort.signal,cancelled:()=>world.disposed,screen:true}));sync('diorama-upload-mist',()=>renderScreenPreload(world.renderer,this.mist.scene,this.camera));sync('diorama-warm-day-night-sky',()=>{world.sky.render(world.renderer,this.camera,{day:1,time:0});world.sky.render(world.renderer,this.camera,{day:1,time:310});});await phase('diorama-final-fence',()=>waitForGpuPreload(world.renderer,{signal:this.abort.signal,cancelled:()=>this.disposed||world.disposed,getEpoch:()=>world.glResourceEpoch?.stats.epoch??0}));}
     finally{world.renderer.shadowMap.enabled=shadow;for(const [mesh,count,visible] of saved){mesh.count=count;mesh.visible=visible;}}
     this.prepared=true;return this;
   }

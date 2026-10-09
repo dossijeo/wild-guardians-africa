@@ -51,3 +51,5 @@ test('camera witnesses copy real pose without changing camera or controls and re
 
 
 test('cancellation after verified readiness preserves both facts instead of reporting successful completion',()=>{const {qa,read}=fixture(),readyProgress={snapshot:()=>({ready:true,progress:1,pending:[]})};qa.close(readyProgress,owner,{cancelled:true});const report=read();assert.equal(report.current.ready,true);assert.equal(report.cancelled,true);assert.equal(report.closed,true);});
+
+test('menu preparation receipt markers survive presentation begin and explicitly differ from click timestamps',()=>{const f=timedFixture();f.qa.lifecycle('app-menu-preparation-received');f.clock(1200);f.qa.lifecycle('app-preloading-ready');f.qa.begin(1300);f.qa.close(f.progress,null);const rows=f.read().loadingSpans;assert.deepEqual(rows.map(s=>s.label),['app-menu-preparation-received','app-preloading-ready']);assert.equal(rows[1].start-rows[0].start,200);assert.ok(rows.every(s=>s.duration===0&&/not the originating iframe click/.test(s.scope)));});

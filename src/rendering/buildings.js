@@ -1,3 +1,4 @@
+import {loadingSyncWitness,loadingAwaitWitness} from './loading-sync-witness.js';
 import {waitGpuFrame} from '../../tools/experiments/wait-gpu-frame.js';
 import * as THREE from 'three';
 import {prepareBuildingDataAsync} from './prepare-building-data.js';
@@ -158,7 +159,7 @@ export class BuildingDestructionPass {
     }finally{renderer.setRenderTarget(target);renderer.setClearColor(clearColor,clearAlpha);renderer.autoClear=autoClear;renderer.shadowMap.enabled=shadows;}
   }
   depthCaptureOptions(){return {optimized:this.optimizedDepth!==false,visibleOnly:this.visibleDepthOnly!==false,nonEmptyOnly:this.nonEmptyDepthOnly===true,stockAlpha:this.stockAlphaDepth===true,materialArrays:this.materialArrayDepth===true};}
-  async prepareDepth(camera,world,{compile=(scene,camera,target)=>this.renderer.compileAsync(scene,camera,target),batchSize=0,nextFrame,cancelled=()=>false,signal,now=()=>performance.now(),timeout=30000,pollIntervalMs=100}={}){
+  async prepareDepth(camera,world,{compile=(scene,camera,target)=>this.renderer.compileAsync(scene,camera,target),batchSize=0,nextFrame,cancelled=()=>false,signal,now=()=>performance.now(),timeout=30000,pollIntervalMs=100,onPrepare}={}){
     if(batchSize){
       if(!Number.isInteger(batchSize)||batchSize<1)throw Error('Invalid depth preload batch size');
       const options=this.depthCaptureOptions(),objects=[];world[options.visibleOnly?'traverseVisible':'traverse'](object=>{if(object.material)objects.push(object);});
@@ -169,9 +170,12 @@ export class BuildingDestructionPass {
         const batch=objects.slice(start,start+batchSize),view={overrideMaterial:world.overrideMaterial,onBeforeRender:world.onBeforeRender,onAfterRender:world.onAfterRender,traverse:callback=>batch.forEach(callback),traverseVisible:callback=>batch.forEach(callback)};
         // Each recursive submission restores all borrowed materials and renderer
         // state synchronously before awaiting its programs or the next frame.
-        await this.prepareDepth(camera,view,{compile:(scene,camera)=>compile(scene,camera,world)});
+        const witness=onPrepare?span=>{try{onPrepare({...span,batchIndex:start/batchSize,objects:batch.length});}catch{}}:undefined;
+        const submission=()=>this.prepareDepth(camera,view,{compile:(scene,camera)=>compile(scene,camera,world)});
+        const pending=loadingSyncWitness(witness,'loading-depth-batch-submit',submission,now);
+        await loadingAwaitWitness(witness,'loading-depth-batch-program-wait',()=>pending,now);
         for(const key in stats)stats[key]+=this.depthWarmStats[key]??0;
-        const waiting=now();await waitGpuFrame({signal,nextFrame,pollIntervalMs,check:()=>{check();if(now()-waiting>timeout)throw Error('Loading depth preload timed out');}});
+        const waiting=now();await loadingAwaitWitness(witness,'loading-depth-batch-frame-wait',()=>waitGpuFrame({signal,nextFrame,pollIntervalMs,check:()=>{check();if(now()-waiting>timeout)throw Error('Loading depth preload timed out');}}),now);
       }
       check();this.depthWarmStats=stats;return;
     }

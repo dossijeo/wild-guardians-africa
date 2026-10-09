@@ -76,12 +76,12 @@ let selector,thumbnails,state=null,nav=null,world=null,tool=null,selection=null,
 let preparedLoading=null,loadingDiorama=null,loadingProgress=null,loadingCinema=null,loadingMature=null,loadingDiagnostic=null,loadingGeneration=0,loadingAudio=null,loadingOverlay=null,loadingTransfers=null;
 function prepareLoadingScene(){
  clearLoadingFailure(document);
- if(preparedLoading)return preparedLoading;
+ if(preparedLoading)return preparedLoading;progressQa?.lifecycle('app-preloading-created');
  const canvas=document.createElement('canvas');canvas.className='loading-prepared-canvas';canvas.style.cssText='position:fixed;inset:0;width:100%;height:100%;opacity:0;pointer-events:none';document.body.append(canvas);
  let owner,diorama;const transfers=new LoadingTransferOwner();
- try{owner=new WorldScene(canvas,onPick);if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')&&new URLSearchParams(location.search).has('qa-loading-far-full-scene'))owner.farIsolatedPreparation=false;if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')&&new URLSearchParams(location.search).has('qa-loading-zero-vertices'))owner.farZeroVertexPreparation=true;owner.controls.enabled=false;owner.qualitySetting(settings.quality);applyWorldResolution(owner,settings.resolution);
+ try{owner=new WorldScene(canvas,onPick);if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')&&new URLSearchParams(location.search).has('qa-loading-far-full-scene'))owner.farIsolatedPreparation=false;if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')&&new URLSearchParams(location.search).has('qa-loading-zero-vertices'))owner.farZeroVertexPreparation=true;owner.controls.enabled=false;owner.qualitySetting(settings.quality);applyWorldResolution(owner,settings.resolution);if(progressQa)owner.onLoadingSpan=span=>{if(!owner.disposed)progressQa.loadingSpan(span);};
  diorama=new LoadingDiorama(owner);const preparation={world:owner,diorama,canvas,transfers};preparedLoading=preparation;
- preparation.pending=Promise.all([diorama.prepare(),prepareLoadingFrames(loadFrameImages,{signal:owner.loading.signal})]).then(([,images])=>{preparation.frameImages=images;});preparation.pending.catch(()=>{});return preparation;
+ preparation.pending=Promise.all([diorama.prepare(),prepareLoadingFrames(loadFrameImages,{signal:owner.loading.signal})]).then(([,images])=>{preparation.frameImages=images;if(!owner.disposed)progressQa?.lifecycle('app-preloading-ready');});preparation.pending.catch(()=>{});return preparation;
  }catch(failure){transfers.dispose();diorama?.dispose();owner?.dispose();canvas.remove();throw failure;}
 }
 function releasePreparedLoading(){const pending=preparedLoading;preparedLoading=null;if(pending){progressQa?.close(null,pending.transfers,{cancelled:true});pending.transfers.dispose();pending.diorama.dispose();pending.world.dispose();pending.canvas.remove();}}
@@ -122,7 +122,7 @@ window.addEventListener('message',event=>{
   if(event.origin!==location.origin||event.source!==document.querySelector('#native-menu')?.contentWindow||event.data?.type!=='wild-guardians:menu')return;
   safe(async()=>{
    const data=event.data,respond=detail=>event.source.postMessage({type:'wild-guardians:menu-data',...detail},location.origin);
-   if(data.action==='prepare-loading'){try{prepareLoadingScene();}catch(failure){error(failure.message,{loadingFailure:true});}return;}
+   if(data.action==='prepare-loading'){progressQa?.lifecycle('app-menu-preparation-received');try{prepareLoadingScene();}catch(failure){error(failure.message,{loadingFailure:true});}return;}
    if(data.action==='cancel-loading'){cancelLoading();return;}
    if(data.action==='request-saves')respond({slots:(await listedSaves()).map(slot=>({...slot,cultureName:selector.cultures.find(c=>c.id===slot.culture)?.name??slot.culture,biomeName:selector.biomes.find(b=>b.id===slot.biome)?.name??slot.biome,money:localMoney(slot.money)}))});
    if(data.action==='delete-slot'){await saves.delete(data.slotId);respond({slots:(await listedSaves()).map(slot=>({...slot,cultureName:selector.cultures.find(c=>c.id===slot.culture)?.name??slot.culture,biomeName:selector.biomes.find(b=>b.id===slot.biome)?.name??slot.biome,money:localMoney(slot.money)}))});return;}
@@ -147,7 +147,7 @@ async function loadScreen() {
   document.querySelectorAll('[data-delete-slot]').forEach(el=>el.onclick=()=>safe(async()=>{await saves.delete(el.dataset.deleteSlot);await loadScreen();}));
 }
 async function startGame(loaded=null,{slotId,preview}={}) {
-  if(starting)return;starting=true;screen='loading';clearWorld();screenWakeLock.setActive(true);
+  if(starting)return;progressQa?.lifecycle('app-start-game-received');starting=true;screen='loading';clearWorld();screenWakeLock.setActive(true);
   let prepared;const loadingToken=++loadingGeneration,assertLoading=()=>{if(loadingToken!==loadingGeneration||prepared?.world.disposed)throw new DOMException('Loading cancelled','AbortError');};
   // Retain the complete menu frame until the diorama has actually warmed.
   if(!document.querySelector('#native-menu'))app.innerHTML='<div class="loading" role="status">Preparing your land…</div>';
@@ -206,7 +206,7 @@ async function startGame(loaded=null,{slotId,preview}={}) {
     await loadingCinema.prepare({afterRender:()=>{assertLoading();loadingDiorama.render(0,loadingProgress.value);}});assertLoading();
     loadingProgress.update('visible-ready');loadingDiorama.loadingReady=true;loadingDiorama.stopPlanting();loadingDiorama.render(0,1,{ready:true});
     if(!loadingDiorama.plants.mature)await new Promise((resolve,reject)=>{loadingMature={resolve,reject};});assertLoading();loadingProgress.confirmReady();
-    loadingCinema.start();await loadingCinema.finished;assertLoading();progressQa?.cameraPose('cinematic-completed',world);loadingCinema=null;loadingDiorama.dispose();loadingDiorama=null;loadingAudio?.dispose();loadingAudio=null;world.loadingActorQueue?.dispose();progressQa?.close(loadingProgress,loadingTransfers);loadingTransfers.dispose();loadingTransfers=null;world.onLoadingSpan=null;world.onLoadingActorQueue=null;world.onLoadingGpuDraw=null;world.controls.enabled=true;clearInterval(loadingDiagnostic);loadingDiagnostic=null;
+    loadingCinema.start();await loadingCinema.finished;assertLoading();progressQa?.cameraPose('cinematic-completed',world);loadingCinema=null;loadingDiorama.dispose();loadingDiorama=null;loadingAudio?.dispose();loadingAudio=null;world.loadingActorQueue?.dispose();progressQa?.lifecycle('app-cinematic-restored-before-controls');progressQa?.close(loadingProgress,loadingTransfers);loadingTransfers.dispose();loadingTransfers=null;world.onLoadingSpan=null;world.onLoadingActorQueue=null;world.onLoadingGpuDraw=null;world.controls.enabled=true;clearInterval(loadingDiagnostic);loadingDiagnostic=null;
     world.render(0);loadingOverlay?.dispose();loadingOverlay=null;document.querySelector('#stage').classList.remove('world-loading');document.querySelector('#stage').setAttribute('aria-busy','false');tutorial=new TutorialController(state,tutorialProfile,{onError:e=>error('No se ha podido guardar la memoria del tutorial: '+e.message),isNarrating:id=>guardian?.voice?.active&&guardian?.key?.startsWith(id+':')});screen='game';screenWakeLock.setActive(true);bind('pause',pauseDialog);lastFrame=performance.now();updateUI(true);save();audio.gameplay(state.day).catch(()=>{});
   } catch(e){if(loadingToken===loadingGeneration){loadingProgress?.fail(e);state=null;clearWorld();releasePreparedLoading();menu();error(e.message,{loadingFailure:true});}}finally{if(loadingToken===loadingGeneration){starting=false;const stats=document.querySelector('#stats');if(stats)stats.textContent='';}}
 }
