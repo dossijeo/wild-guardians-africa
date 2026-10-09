@@ -5,7 +5,7 @@ update below supersedes the historical checkpoint text that follows. Earlier
 sources, failed candidates and measurements are retained, not silently changed
 into current-main acceptance.
 
-## Current-state update on main 1ed8be18
+## Current-state update through main 8e1909d8
 
 ### Later Windows evidence and its limits
 
@@ -33,8 +33,15 @@ World wait duration stops at the original stage-ready gate so the hidden test
 is excluded; `66b47414` exercises that timing boundary. Five directed tests pass.
 These fields do not establish GPU identity or make displayed progress a readiness
 gate. Original90s readiness and300000ms native hiding requirements are unchanged.
-There is not yet native evidence from an executable containing this observation
-change. Diagnostic loading options and worker candidates remain unpromoted until
+The observation is now present in an actual normal-config native CI report:
+[run37980008371, sourcefc66151f](https://github.com/dossijeo/wild-guardians-africa/actions/runs/37980008371)
+fails the unchanged readiness gate after90,136.2ms. Its [unaltered raw report](windows-loading-regression/normal-fc66151f/desktop-smoke.json) SHA256 is
+`e9bf200eeb9cfa846610b1081c1c414c113ea2f0fa5f0003b392f56a002ab0b3`.
+`checks.loadingAtFinish` records83% and `Preparing rendering resources`, with
+the stage busy, readiness false and the window visible/focused at1028×720.
+This narrows the presentation stage of the failure; it does not identify the
+blocking operation or the actual GL adapter. Diagnostic loading options and
+worker candidates remain unpromoted until
 their actual native/visual/performance gates pass. The independently audited
 [minimal water/lava coverage-depth extraction](painted-fluid-depth-production.md)
 is now enabled in production source; its new default-config Windows run remains
