@@ -784,3 +784,28 @@ red lenta, Continue ni aceptación de seis biomas. Conserva warnings ANGLE
 f_environment4. No se heredan métricas V3 ni se declara mejora de rendimiento.
 La regresión de inicialización, calibración de progreso y gates originales
 de loading siguen abiertos; no PR todavía.
+
+## Estado posterior a la integración de carga — 2026-10-09
+
+La nota anterior describe el ensayo histórico3101dbff. La pantalla de carga
+interactiva está integrada mediante PR18, main53a4a996. El código coincide con
+0f72ae16, cuyo Validate Game37924454133 terminó SUCCESS con3709 pruebas.
+El último commit de la PR añade únicamente evidencia y documentación.
+El usuario aprobó explícitamente el compromiso de tiempo de la candidata G;
+los resultados negativos y la variabilidad del ABBA permanecen archivados.
+[Evidencia final](qa/interactive-loading-development/production-g-final/README.md).
+
+Root verificó en el dist Nueva/Continuar hasta HUD y cancelación temprana con
+menú estable; en la aplicación Volcanes/Musgum, quinta planta durante carga,
+SFX028, progreso monotónico y pose Home exactamente restaurada. La compilación
+posterior al pull pasa en11,13s; paquete711 archivos/860 enlaces relativos/22GLB.
+El ZIP directo tiene388363265 bytes, index.html en raíz, CRCs correctos y cero
+ZIP interiores. SHA256:806a03d148d46799ec9ec11296228150736e2598947ca7c79dd334f77d588488.
+Las nuevas Actions de main37926380301 y37926380207 estaban en ejecución al
+registrar esta nota; no se les atribuye todavía resultado terminal.
+
+Continúa pendiente la aceptación de la matriz responsable completa, incluido
+el ritmo de Gran Cañón. El [diagnóstico de apertura actual](qa/canyon-opening-53a4a996/README.md)
+acredita diferencias en primeras entregas y recorridos durante un día, sin
+demostrar todavía causa física ni aceptación de cien noches. No se han cambiado
+precios, salarios, ganancias ni la política del test para aprobar ese resultado.
