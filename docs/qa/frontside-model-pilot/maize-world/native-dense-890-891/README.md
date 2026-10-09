@@ -1,0 +1,11 @@
+# Native dense World review and live bindings 890/891
+
+Frozen source 8f30e96b4b6bb79bdb1a85cd6cc289f4e4845035, viewer SHA256 a500a232b144b6c413fb3a3418439db925702d74752cb29b11d96ce64501c91d. Independent root captures; no GPU timings. The declared artificial state copy contains 1257 mature maize plants, with 1239 plants changed. Original saves/assets remain intact. Both contexts closed and lost their context with no report errors.
+
+890: original and candidate matrices/growth hashes agree. Root inspection of the retained comparison found convincing general maize coverage without evident disappearance or deformation in this broad view. This is limited assistant inspection, not user approval, multiview/continuous-growth acceptance or net World GPU benefit. Source redraws include a three-pixel variation. All image differences remain diagnostics under policy 3. Six texture serialization warnings were retained by the bounded console capture.
+
+891: 48 actual selected-mesh draws retained: 31 CPU/GPU iGrowth matches and 17 differences. Step counts (differences/matches) are 3/3, 6/12, 2/4 and 6/12. All observed growth-buffer tokens remain 1; capacity is 32768 bytes. Readback totals 1572864 bytes, below the 2 MiB limit. This does not approve changing growth or buffer ownership. The first original draw at each new fraction contains the previous fraction's GPU hash; the next matches. Material/pass and mismatch offsets were not captured, so attribution to depth, shadows or color is not established. No timing campaign may proceed on assumed interpretation.
+
+Static hypothesis: Three r180 projectObject updates geometry before incrementing info.render.frame; WebGLObjects caches geometry updates per frame. Native captureDepth disables shadowMap and runs before Sky/color. A prior shadow draw can mark geometry with the subsequent frame number. This can explain stale first depth uploads, but these records alone do not prove that chain. The next instrument must record actual material/render-target/frame roles and changed active offsets. No frame-counter hack, extra warm draw, renderer change or discarded negative is authorized by this hypothesis.
+
+Run `node docs/qa/frontside-model-pilot/maize-world/native-dense-890-891/verify.mjs` to verify immutable files and retained counts. No production assets or PR approval.
