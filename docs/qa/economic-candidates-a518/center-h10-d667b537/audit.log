@@ -1,0 +1,232 @@
+{
+  "candidateSource": "d667b537096b620e212d1f635b9ee71d0e3ecff8",
+  "auditorSha256": "dca72b3a53f19c833fd2e45384a2463087de7498f902d3c60f4f0e6137d8d7ad",
+  "controlSha256": {
+    "F100Archive": "ef6c6739ad651b1f313b44844f8ea7b2877571436047e722b720cf6ae9ada53e",
+    "G10Archive": "a40fbb8d8372b7dd5381e1d19846ef3b5b8270b4205833731749f127a303bc95"
+  },
+  "verifiedSourceHashes": 376,
+  "snapshotSha256": "515e7ec2a3e986d6af089c2db5c9aaded16b7b6012b245523763a47b2c0a84f8",
+  "checks": {
+    "completeRequested10": true,
+    "noDefeat": true,
+    "everyDayPaidStaffAndPhysicalDelivery": true,
+    "nativeLedgerWaterCrateAudit": true,
+    "completeSummaryReproduced": true,
+    "snapshotRoundtrip": true,
+    "raidsClosed": true,
+    "activityBelow25": false
+  },
+  "F10": {
+    "days": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "unoccupiedSeconds": 1079,
+    "daylightSeconds": 3000,
+    "delivered": 830,
+    "planted": 1910,
+    "lastMoney": 2810,
+    "lastTasks": 932
+  },
+  "G10": {
+    "days": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "unoccupiedSeconds": 837,
+    "daylightSeconds": 3000,
+    "delivered": 976,
+    "planted": 2154,
+    "lastMoney": 3787,
+    "lastTasks": 1016
+  },
+  "H10": {
+    "days": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "unoccupiedSeconds": 764,
+    "daylightSeconds": 3000,
+    "delivered": 1105,
+    "planted": 2230,
+    "lastMoney": 7837,
+    "lastTasks": 913
+  },
+  "bands": [
+    {
+      "name": "1Ã¢â‚¬â€œ3",
+      "F": {
+        "days": [
+          1,
+          2,
+          3
+        ],
+        "unoccupiedSeconds": 640,
+        "daylightSeconds": 900,
+        "delivered": 91,
+        "planted": 257,
+        "lastMoney": 1543,
+        "lastTasks": 156
+      },
+      "G": {
+        "days": [
+          1,
+          2,
+          3
+        ],
+        "unoccupiedSeconds": 595,
+        "daylightSeconds": 900,
+        "delivered": 118,
+        "planted": 302,
+        "lastMoney": 2149,
+        "lastTasks": 183
+      },
+      "H": {
+        "days": [
+          1,
+          2,
+          3
+        ],
+        "unoccupiedSeconds": 548,
+        "daylightSeconds": 900,
+        "delivered": 118,
+        "planted": 349,
+        "lastMoney": 1844,
+        "lastTasks": 220
+      }
+    },
+    {
+      "name": "4Ã¢â‚¬â€œ7",
+      "F": {
+        "days": [
+          4,
+          5,
+          6,
+          7
+        ],
+        "unoccupiedSeconds": 362,
+        "daylightSeconds": 1200,
+        "delivered": 333,
+        "planted": 831,
+        "lastMoney": 5716,
+        "lastTasks": 589
+      },
+      "G": {
+        "days": [
+          4,
+          5,
+          6,
+          7
+        ],
+        "unoccupiedSeconds": 183,
+        "daylightSeconds": 1200,
+        "delivered": 425,
+        "planted": 1012,
+        "lastMoney": 7643,
+        "lastTasks": 690
+      },
+      "H": {
+        "days": [
+          4,
+          5,
+          6,
+          7
+        ],
+        "unoccupiedSeconds": 156,
+        "daylightSeconds": 1200,
+        "delivered": 399,
+        "planted": 1041,
+        "lastMoney": 6122,
+        "lastTasks": 732
+      }
+    },
+    {
+      "name": "8Ã¢â‚¬â€œ10",
+      "F": {
+        "days": [
+          8,
+          9,
+          10
+        ],
+        "unoccupiedSeconds": 77,
+        "daylightSeconds": 900,
+        "delivered": 406,
+        "planted": 822,
+        "lastMoney": 2810,
+        "lastTasks": 932
+      },
+      "G": {
+        "days": [
+          8,
+          9,
+          10
+        ],
+        "unoccupiedSeconds": 59,
+        "daylightSeconds": 900,
+        "delivered": 433,
+        "planted": 840,
+        "lastMoney": 3787,
+        "lastTasks": 1016
+      },
+      "H": {
+        "days": [
+          8,
+          9,
+          10
+        ],
+        "unoccupiedSeconds": 60,
+        "daylightSeconds": 900,
+        "delivered": 588,
+        "planted": 840,
+        "lastMoney": 7837,
+        "lastTasks": 913
+      }
+    }
+  ],
+  "activity": {
+    "daylightSeconds": 3000,
+    "unoccupiedSeconds": 764,
+    "unoccupiedFraction": 0.25466666666666665,
+    "longestIdle": 157,
+    "p90LongestIdle": 89
+  },
+  "cashflow": {
+    "openingBalance": "1500",
+    "harvestIncome": "40557",
+    "seedCosts": "20570",
+    "wageCosts": "13050",
+    "repairCosts": "0",
+    "centreCosts": "600",
+    "wallCosts": "0",
+    "otherNet": "0",
+    "operatingCashFlow": "6937",
+    "netCashFlowAfterConstruction": "6337",
+    "endingBalance": "7837"
+  },
+  "scope": "One unchanged-policy H10 compared with preserved F/G controls. Terminal and source audit; no replay, 100-night acceptance, temporal route/FIFO proof or visual/GPU benchmark."
+}
