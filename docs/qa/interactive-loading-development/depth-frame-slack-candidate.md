@@ -8,6 +8,13 @@ Twenty directed depth/slack tests passed, including borrowed-state restoration, 
 
 ## Next matched test
 
-Four sequential A1/B1/B2/A2 runs of the same committed feature source, same existing interactive-loading-run fixture. A uses measurement; B adds frame-slack. Both use Sabana/Mapungubwe seed712, medium quality, time0, viewport1280x720, identical assets and native production progress. No phase-attribution, GPU query or resource probes; preserve all RAF intervals, errors, stage milestones, downloads, readiness and final camera/logical/disposal evidence. Browser retained cache is uncontrolled: report observed download/cache/unknown evidence per arm and do not call it cold or fully cached. Explicit CPU/GPU quiet is required before the first run; no source mutation during the four arms.
+Four sequential A1/B1/B2/A2 runs of the same committed feature source, same existing interactive-loading-run fixture. A uses `measurement&presentation&mute&locale=es-ES`; B adds `frame-slack`. Both use the same actual ornament loader and cancellable frame preparation as the application, in parallel with diorama preparation. This corrects the old fixture presentation branch, which did not pass decoded frame images to its overlay; old timings are preserved and not relabelled as ornate UI timing. Both use Sabana/Mapungubwe seed712, medium quality, time0, viewport1280x720, identical assets and native production progress. No phase-attribution, GPU query or resource probes; preserve all RAF intervals, errors, stage milestones, downloads, readiness and final camera/logical/disposal evidence. Browser retained cache is uncontrolled: report observed download/cache/unknown evidence per arm and do not call it cold or fully cached. Explicit CPU/GPU quiet is required before the first run; no source mutation during the four arms.
 
 Report verified readiness separately from total completion including the approximately four-second intended cinematic. Predeclared practical signal: both B readiness values lower than both A, with relative reduction exceeding5%, and neither B showing a worse count of >100ms intervals than both A. This is a local four-arm screening criterion, not statistical equivalence or production approval. A failing or variable result must be retained without blind rerun. Preserve first startup samples and every outlier. Current default still requires comparison against historical main and actual menu click-to-controls acceptance; a positive candidate pair alone does not close that gate.
+
+Exact URLs (source frozen after this viewer correction):
+
+- A: `http://127.0.0.1:5290/tests/browser/interactive-loading-run.html?biome=sabana&culture=mapungubwe&quality=media&time=0&measurement&presentation&mute&locale=es-ES`
+- B: the same URL with `&frame-slack`.
+
+The rendered fixture begins at Run and cannot stand in for real menu-click latency or preloading overlap. Production frame-slack remains absent.
