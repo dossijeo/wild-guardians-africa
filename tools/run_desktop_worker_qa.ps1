@@ -20,7 +20,12 @@ function Restore-WorkerQaProfileEnvironment($before) {
 function Test-WorkerQaProfileEnvironmentExact($before,$after) {
  return ($before.exists -eq $after.exists -and $before.kind -eq $after.kind -and $before.value -ceq $after.value)
 }
-# Dot-source exposes only CPU environment helpers; it never launches an app.
+function Get-WorkerQaLauncherExitCode([int]$ProductExitCode,[bool]$EnvironmentExact) {
+ if ($ProductExitCode -ne 0) { return $ProductExitCode }
+ if (-not $EnvironmentExact) { return 1 }
+ return 0
+}
+# Dot-source exposes only CPU environment/exit helpers; it never launches an app.
 if ($MyInvocation.InvocationName -eq '.') { return }
 foreach ($required in @($ExecutablePath,$FixturePath,$OutputDirectory,$ExpectedExecutableSha256,$ExpectedFixtureSha256)) {
  if ([string]::IsNullOrWhiteSpace($required)) { throw 'All explicit launcher paths and SHA-256 values are required' }
@@ -67,4 +72,6 @@ for ($taskObservation=0; $taskObservation -lt 7; $taskObservation++) {
 }
 @{observations=$taskObservations;scope='Live CIM descendant observations only; missing command line or absent child observation is not profile proof.'} | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $taskOut 'live-processes.json') -Encoding utf8
 $taskProc.WaitForExit()
-@{pid=$taskProc.Id;exitedAtUtc=[DateTime]::UtcNow.ToString('o');exitCode=$taskProc.ExitCode;parentProfileRestoredExact=$taskEnvironmentExact;reportExists=(Test-Path -LiteralPath $taskReport)} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $taskOut 'exit.json') -Encoding utf8
+$taskLauncherExitCode = Get-WorkerQaLauncherExitCode $taskProc.ExitCode $taskEnvironmentExact
+@{pid=$taskProc.Id;exitedAtUtc=[DateTime]::UtcNow.ToString('o');exitCode=$taskProc.ExitCode;productExitCode=$taskProc.ExitCode;launcherExitCode=$taskLauncherExitCode;parentProfileRestoredExact=$taskEnvironmentExact;reportExists=(Test-Path -LiteralPath $taskReport)} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $taskOut 'exit.json') -Encoding utf8
+exit $taskLauncherExitCode
