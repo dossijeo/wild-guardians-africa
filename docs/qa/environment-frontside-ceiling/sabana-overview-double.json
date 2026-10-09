@@ -1,0 +1,531 @@
+{
+  "scope": "Native medium-quality static environment; original biome props only. No geometry repair, asset promotion or visual acceptance. No crops/workers. Fixed seed 712 and daytime 120. Shadow cache disabled equally. Total GPU includes native sky and main render; shadow and main-color queried on different frames from total. Explicit depth capture is a separate synthetic VFX-demand pass, not included in baseline total. Timings are not additive.",
+  "biome": "sabana",
+  "blocks": [],
+  "errors": [],
+  "context": {
+    "seed": 712,
+    "time": 120,
+    "sourceLogicalSha256": "b26885e64d2a8dab331ce91cd70baf7fa5de9aefa0b342fbf26095e97093271f",
+    "camera": [
+      116,
+      30.777097376603674,
+      136
+    ],
+    "target": [
+      96,
+      10.777097376603688,
+      96
+    ],
+    "buffer": [
+      1280,
+      720
+    ],
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "assets": [
+      {
+        "slot": 0,
+        "name": "Acacia paraguas",
+        "lods": 3
+      },
+      {
+        "slot": 1,
+        "name": "Acacia irregular",
+        "lods": 3
+      },
+      {
+        "slot": 2,
+        "name": "Baobab",
+        "lods": 3
+      },
+      {
+        "slot": 3,
+        "name": "Árbol seco",
+        "lods": 3
+      },
+      {
+        "slot": 4,
+        "name": "Arbusto espinoso",
+        "lods": 3
+      },
+      {
+        "slot": 5,
+        "name": "Arbusto bajo seco",
+        "lods": 3
+      },
+      {
+        "slot": 6,
+        "name": "Matorral denso",
+        "lods": 3
+      },
+      {
+        "slot": 7,
+        "name": "Hierba amarilla alta",
+        "lods": 3
+      },
+      {
+        "slot": 8,
+        "name": "Hierba seca corta",
+        "lods": 3
+      },
+      {
+        "slot": 9,
+        "name": "Macollas de hierba",
+        "lods": 3
+      },
+      {
+        "slot": 10,
+        "name": "Roca redondeada",
+        "lods": 3
+      },
+      {
+        "slot": 11,
+        "name": "Roca rojiza erosionada",
+        "lods": 3
+      },
+      {
+        "slot": 12,
+        "name": "Grupo de piedras",
+        "lods": 3
+      },
+      {
+        "slot": 13,
+        "name": "Tronco caído",
+        "lods": 3
+      },
+      {
+        "slot": 14,
+        "name": "Ramas secas",
+        "lods": 3
+      },
+      {
+        "slot": 15,
+        "name": "Huesos",
+        "lods": 3
+      },
+      {
+        "slot": 16,
+        "name": "Árbol muerto / fragmentos",
+        "lods": 3
+      },
+      {
+        "slot": 17,
+        "name": "Termitero",
+        "lods": 3
+      },
+      {
+        "slot": 18,
+        "name": "Pequeño kopje",
+        "lods": 3
+      },
+      {
+        "slot": 19,
+        "name": "Charca estacional",
+        "lods": 3
+      }
+    ],
+    "color": [
+      {
+        "key": "0:2",
+        "instances": 10,
+        "triangles": 15190
+      },
+      {
+        "key": "11:2",
+        "instances": 12,
+        "triangles": 6576
+      },
+      {
+        "key": "1:2",
+        "instances": 2,
+        "triangles": 2064
+      },
+      {
+        "key": "17:2",
+        "instances": 3,
+        "triangles": 1599
+      },
+      {
+        "key": "18:2",
+        "instances": 1,
+        "triangles": 439
+      },
+      {
+        "key": "0:1",
+        "instances": 7,
+        "triangles": 36190
+      },
+      {
+        "key": "17:1",
+        "instances": 6,
+        "triangles": 6672
+      },
+      {
+        "key": "18:1",
+        "instances": 1,
+        "triangles": 1251
+      },
+      {
+        "key": "10:2",
+        "instances": 18,
+        "triangles": 5778
+      },
+      {
+        "key": "12:2",
+        "instances": 19,
+        "triangles": 9424
+      },
+      {
+        "key": "14:2",
+        "instances": 10,
+        "triangles": 4000
+      },
+      {
+        "key": "4:2",
+        "instances": 36,
+        "triangles": 75492
+      },
+      {
+        "key": "5:2",
+        "instances": 27,
+        "triangles": 29970
+      },
+      {
+        "key": "6:2",
+        "instances": 24,
+        "triangles": 62856
+      },
+      {
+        "key": "7:2",
+        "instances": 229,
+        "triangles": 357240
+      },
+      {
+        "key": "8:2",
+        "instances": 155,
+        "triangles": 85560
+      },
+      {
+        "key": "9:2",
+        "instances": 124,
+        "triangles": 60884
+      },
+      {
+        "key": "13:2",
+        "instances": 10,
+        "triangles": 6930
+      },
+      {
+        "key": "16:2",
+        "instances": 9,
+        "triangles": 6408
+      },
+      {
+        "key": "0:0",
+        "instances": 3,
+        "triangles": 29043
+      },
+      {
+        "key": "1:0",
+        "instances": 6,
+        "triangles": 34884
+      },
+      {
+        "key": "2:1",
+        "instances": 2,
+        "triangles": 7380
+      },
+      {
+        "key": "4:1",
+        "instances": 20,
+        "triangles": 141940
+      },
+      {
+        "key": "5:1",
+        "instances": 8,
+        "triangles": 21576
+      },
+      {
+        "key": "6:1",
+        "instances": 9,
+        "triangles": 70704
+      },
+      {
+        "key": "7:1",
+        "instances": 31,
+        "triangles": 117180
+      },
+      {
+        "key": "8:1",
+        "instances": 20,
+        "triangles": 34940
+      },
+      {
+        "key": "9:1",
+        "instances": 19,
+        "triangles": 42978
+      },
+      {
+        "key": "10:0",
+        "instances": 3,
+        "triangles": 2811
+      },
+      {
+        "key": "10:1",
+        "instances": 12,
+        "triangles": 8112
+      },
+      {
+        "key": "11:1",
+        "instances": 3,
+        "triangles": 3480
+      },
+      {
+        "key": "12:0",
+        "instances": 1,
+        "triangles": 1348
+      },
+      {
+        "key": "12:1",
+        "instances": 6,
+        "triangles": 6420
+      },
+      {
+        "key": "13:1",
+        "instances": 3,
+        "triangles": 5094
+      },
+      {
+        "key": "15:1",
+        "instances": 2,
+        "triangles": 1392
+      },
+      {
+        "key": "16:1",
+        "instances": 4,
+        "triangles": 6564
+      },
+      {
+        "key": "17:0",
+        "instances": 1,
+        "triangles": 1328
+      },
+      {
+        "key": "2:0",
+        "instances": 1,
+        "triangles": 6093
+      },
+      {
+        "key": "11:0",
+        "instances": 1,
+        "triangles": 1554
+      },
+      {
+        "key": "14:1",
+        "instances": 1,
+        "triangles": 1025
+      },
+      {
+        "key": "1:1",
+        "instances": 2,
+        "triangles": 6740
+      },
+      {
+        "key": "3:1",
+        "instances": 2,
+        "triangles": 3242
+      },
+      {
+        "key": "15:2",
+        "instances": 2,
+        "triangles": 556
+      },
+      {
+        "key": "3:0",
+        "instances": 1,
+        "triangles": 2917
+      },
+      {
+        "key": "2:2",
+        "instances": 1,
+        "triangles": 1247
+      }
+    ],
+    "shadow": [
+      {
+        "key": "18",
+        "instances": 5,
+        "triangles": 2195
+      },
+      {
+        "key": "0",
+        "instances": 47,
+        "triangles": 71393
+      },
+      {
+        "key": "10",
+        "instances": 60,
+        "triangles": 19260
+      },
+      {
+        "key": "11",
+        "instances": 31,
+        "triangles": 16988
+      },
+      {
+        "key": "12",
+        "instances": 51,
+        "triangles": 25296
+      },
+      {
+        "key": "1",
+        "instances": 23,
+        "triangles": 23736
+      },
+      {
+        "key": "17",
+        "instances": 22,
+        "triangles": 11726
+      },
+      {
+        "key": "14",
+        "instances": 26,
+        "triangles": 10400
+      },
+      {
+        "key": "4",
+        "instances": 113,
+        "triangles": 236961
+      },
+      {
+        "key": "5",
+        "instances": 64,
+        "triangles": 71040
+      },
+      {
+        "key": "6",
+        "instances": 59,
+        "triangles": 154521
+      },
+      {
+        "key": "13",
+        "instances": 22,
+        "triangles": 15246
+      },
+      {
+        "key": "16",
+        "instances": 25,
+        "triangles": 17800
+      },
+      {
+        "key": "2",
+        "instances": 7,
+        "triangles": 8729
+      },
+      {
+        "key": "15",
+        "instances": 6,
+        "triangles": 1668
+      },
+      {
+        "key": "3",
+        "instances": 13,
+        "triangles": 7800
+      }
+    ],
+    "originalSides": [
+      {
+        "side": 2,
+        "shadowSide": null
+      },
+      {
+        "side": 2,
+        "shadowSide": null
+      },
+      {
+        "side": 2,
+        "shadowSide": null
+      },
+      {
+        "side": 2,
+        "shadowSide": null
+      },
+      {
+        "side": 2,
+        "shadowSide": null
+      },
+      {
+        "side": 2,
+        "shadowSide": null
+      },
+      {
+        "side": 2,
+        "shadowSide": null
+      },
+      {
+        "side": 2,
+        "shadowSide": null
+      },
+      {
+        "side": 2,
+        "shadowSide": null
+      },
+      {
+        "side": 2,
+        "shadowSide": null
+      },
+      {
+        "side": 2,
+        "shadowSide": null
+      },
+      {
+        "side": 2,
+        "shadowSide": null
+      },
+      {
+        "side": 2,
+        "shadowSide": null
+      },
+      {
+        "side": 2,
+        "shadowSide": null
+      },
+      {
+        "side": 2,
+        "shadowSide": null
+      },
+      {
+        "side": 2,
+        "shadowSide": null
+      },
+      {
+        "side": 2,
+        "shadowSide": null
+      },
+      {
+        "side": 2,
+        "shadowSide": null
+      },
+      {
+        "side": 2,
+        "shadowSide": null
+      },
+      {
+        "side": 2,
+        "shadowSide": null
+      }
+    ]
+  },
+  "ready": true,
+  "visualArm": "DoubleSide",
+  "visualCamera": [
+    116,
+    30.777097376603674,
+    136
+  ],
+  "visualTarget": [
+    96,
+    10.777097376603688,
+    96
+  ]
+}

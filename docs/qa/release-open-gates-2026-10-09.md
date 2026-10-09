@@ -148,9 +148,28 @@ The image and teardown completed, but the report POST failed with
 "Unexpected report": the server's initial status whitelist omitted the young
 profile. The native console/status/PNG negative is retained by the repair
 branch. `db62ee83` unifies POST/preflight status validation without altering the
-viewer or geometry. CPU/HTTP checks pass; a new native resource run is still
-required. There is no reconstructed resource receipt, approved resource gate
-or young-model timing benefit from this failed export.
+viewer or geometry. The subsequent root native repeat exported its original
+resource receipt successfully: 1,257 instances, 68,996 additional observed
+buffer bytes during coexistence, actual Front color and world-depth witnesses,
+unchanged inputs, and released context. The branch archives the successful
+repeat separately from the failed export; this is resource evidence, not GPU
+timing or promotion of the old candidate.
+
+The user has replaced the crop repair experiment with the supplied
+`Bioma_Cultivos_Lab_V4_Culling.html` inside `1-biomas.zip`. The old young-crop
+timing/repair research is stopped. Integration now uses the supplied compatible
+40 crop states and 32 transitions, baked reproducibly from that lab, compressed
+without breaking attributes or transition correspondence, then checked for
+functional and visual compatibility. This work is on `codex/lab-v4-crops-frontside`
+from `1e353f8f`; no new crop assets are promoted yet. The experimental branch and
+its negative/positive evidence remain preserved.
+
+Root's isolated original-environment comparison on `5be52f44` has 3,360 valid
+GPU samples across Sabana and Mangroves. Total mean savings are 13.9% / 16.9%,
+with all four paired total/color differences positive. Shadow-only gains are
+inconsistent. Six before/after visual pairs preserve recognizable trees but
+do not constitute all-model/six-biome/night acceptance. Production side settings
+remain unchanged. See [the reports, captures and verifier](environment-frontside-ceiling/README.md).
 
 The standby-pruning traveling comparison is negative and stays disabled. Shared
 resident preparation also has a completed root native AB/BA comparison on
