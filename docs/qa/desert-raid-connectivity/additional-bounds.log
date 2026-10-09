@@ -1,0 +1,100 @@
+TAP version 13
+# Subtest: animal quarter-metre proof rejects a narrow forbidden band before landing
+ok 1 - animal quarter-metre proof rejects a narrow forbidden band before landing
+  ---
+  duration_ms: 2.4826
+  ...
+# Subtest: near-limit proof checks the full footprint rather than only its center
+ok 2 - near-limit proof checks the full footprint rather than only its center
+  ---
+  duration_ms: 0.2756
+  ...
+# Subtest: ordinary flat edges stay coarse and exact repeated proof is reused until epoch changes
+ok 3 - ordinary flat edges stay coarse and exact repeated proof is reused until epoch changes
+  ---
+  duration_ms: 0.3063
+  ...
+# Subtest: near-limit cache invalidates when the geometry epoch changes
+ok 4 - near-limit cache invalidates when the geometry epoch changes
+  ---
+  duration_ms: 0.5747
+  ...
+# Subtest: water, lava and newly introduced solids remain forbidden
+ok 5 - water, lava and newly introduced solids remain forbidden
+  ---
+  duration_ms: 0.4263
+  ...
+# Subtest: return search resumes bounded native slices rather than draining synchronously
+ok 6 - return search resumes bounded native slices rather than draining synchronously
+  ---
+  duration_ms: 3.6467
+  ...
+# Subtest: ordinary worker tasks never start a return search
+ok 7 - ordinary worker tasks never start a return search
+  ---
+  duration_ms: 0.2265
+  ...
+# Subtest: failed search memo follows exact origin, destination and navigation epoch
+ok 8 - failed search memo follows exact origin, destination and navigation epoch
+  ---
+  duration_ms: 0.3678
+  ...
+# Subtest: only eight pending searches retain native frontier memory per navigation
+ok 9 - only eight pending searches retain native frontier memory per navigation
+  ---
+  duration_ms: 0.6297
+  ...
+# Subtest: a never-ending iterator is abandoned and memoized at its explicit total bound
+ok 10 - a never-ending iterator is abandoned and memoized at its explicit total bound
+  ---
+  duration_ms: 13.2513
+  ...
+# Subtest: native worker avoidance view is used for the wider search
+ok 11 - native worker avoidance view is used for the wider search
+  ---
+  duration_ms: 0.528
+  ...
+# Subtest: wider native return does not cross water
+ok 12 - wider native return does not cross water
+  ---
+  duration_ms: 1.8465
+  ...
+# Subtest: wider native return does not cross lava
+ok 13 - wider native return does not cross lava
+  ---
+  duration_ms: 0.2871
+  ...
+# Subtest: wider native return does not cross solid
+ok 14 - wider native return does not cross solid
+  ---
+  duration_ms: 1.4739
+  ...
+# Subtest: wider native return does not cross steep
+ok 15 - wider native return does not cross steep
+  ---
+  duration_ms: 0.3247
+  ...
+# Subtest: a real closed wall ring cannot be escaped by enlarging the search corridor
+ok 16 - a real closed wall ring cannot be escaped by enlarging the search corridor
+  ---
+  duration_ms: 4.2964
+  ...
+# Subtest: a new navigation epoch abandons the pending return proof
+ok 17 - a new navigation epoch abandons the pending return proof
+  ---
+  duration_ms: 0.4232
+  ...
+# Subtest: dry canyon cliffs retain their worker-surface slope restriction
+ok 18 - dry canyon cliffs retain their worker-surface slope restriction
+  ---
+  duration_ms: 0.4271
+  ...
+1..18
+# tests 18
+# suites 0
+# pass 18
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 258.0659

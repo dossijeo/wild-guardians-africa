@@ -19,7 +19,7 @@ test('refinement catches a narrow steep strip missed by the ordinary coarse samp
  const start={x:0,z:0},end={x:1,z:0};
  assert.equal(nav.coarseSegmentClear(start,end,.28,null,true),true);
  assert.equal(nav.segmentClear(start,end,.28,null,true),false);
- assert.equal(nav.segmentClear(start,end,.28,null,false),true,'Animal path planning remains on its existing recipe');
+ assert.equal(nav.segmentClear(start,end,.28,null,false),false,'Animal routes also reject the forbidden near-limit band before choosing an approach');
  const w=worker(),s={structures:[],workers:[w]};let arrived=false;
  for(let tick=0;tick<150;tick++){
   arrived=walkTo(s,w,destination,.05,nav);
