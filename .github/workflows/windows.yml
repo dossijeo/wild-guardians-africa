@@ -58,13 +58,20 @@ jobs:
         run: |
           $report = Join-Path $env:RUNNER_TEMP 'desktop-ground-control.json'
           $binary = (Resolve-Path src-tauri/target/release/wild-guardians-africa.exe).Path
-          $process = Start-Process -FilePath $binary -ArgumentList '--smoke-report', $report -WindowStyle Hidden -PassThru
+          $controlArgs = @('--smoke-report', $report)
+          if ($env:SMOKE_PAUSE_MENU -eq 'true') { $controlArgs += '--smoke-pause-menu' }
+          $process = Start-Process -FilePath $binary -ArgumentList $controlArgs -WindowStyle Hidden -PassThru
           if (-not $process.WaitForExit(240000)) { Stop-Process -Id $process.Id; throw 'Diagnostic control process timed out' }
           if (-not (Test-Path -LiteralPath $report)) { throw 'No diagnostic control report' }
           $result = Get-Content -Raw -LiteralPath $report | ConvertFrom-Json
           $result.PSObject.Properties.Remove('worldPng')
           $result | ConvertTo-Json -Depth 30 | Set-Content -LiteralPath $report
-          if ($process.ExitCode -ne 0 -or -not $result.ok) { throw 'Diagnostic control smoke failed; preserved separately' }
+          $controlErrors = ($result.errors -join '; ') -replace '[\r\n]', ' '
+          "Diagnostic ground OFF raw ok=$($result.ok); errors=$controlErrors. Step conclusion may be normalized by continue-on-error and is not smoke approval." >> $env:GITHUB_STEP_SUMMARY
+          if ($process.ExitCode -ne 0 -or -not $result.ok) {
+            Write-Output "::warning::Diagnostic ground OFF raw failure preserved; normalized step success is not a smoke PASS."
+            throw 'Diagnostic control smoke failed; preserved separately'
+          }
       - name: Smoke test the packaged game in WebView2
         shell: pwsh
         run: |
