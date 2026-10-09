@@ -77,10 +77,10 @@ export function previewCenter(s,{x,z,yaw=0},nav) {
     const outbound=routes.path(entry,departure,.28,null,true),inbound=outbound&&routes.path(departure,entry,.28,null,true);
     if(!inbound)continue;
     const routeLength=inbound.reduce((length,p,i)=>length+dist(p,i?inbound[i-1]:departure),0);
-    candidates.push({...candidate,footprint,suppress:check.suppress??[],villageId:village.id,routeLength,valid:true,cost:800});
+    candidates.push({...candidate,footprint,suppress:check.suppress??[],villageId:village.id,routeLength,valid:true,cost:B.work_center.cost});
   }
   candidates.sort((a,b)=>a.routeLength-b.routeLength||a.villageId.localeCompare(b.villageId));
-  return candidates[0]??{valid:false,cost:800,reason:buildable?'El centro no tiene un camino válido al poblado':failure??'El centro no tiene un camino válido al poblado'};
+  return candidates[0]??{valid:false,cost:B.work_center.cost,reason:buildable?'El centro no tiene un camino válido al poblado':failure??'El centro no tiene un camino válido al poblado'};
 }
 export function placeStructure(s,id,{kind='center',material='zarzas',gate=false,x,z,yaw=0},nav) {
   if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
@@ -92,7 +92,7 @@ export function placeStructure(s,id,{kind='center',material='zarzas',gate=false,
   const check=draft??(nav.wallPlacement?.({...candidate,material,gate})??nav.placement(x,z,.8));
   if(!check.valid){if(kind==='wall')return false;throw new Error(check.reason);}
   if(kind!=='center'&&kind!=='wall')throw new Error('Construcción desconocida');
-  const cost=kind==='center'?800:wallSpec(material).cost;
+  const cost=kind==='center'?B.work_center.cost:wallSpec(material).cost;
   const maxHp=structureHealth(kind,material,gate),entity={id:`structure-${s.nextId}`,created:s.sequence,kind,material,gate,x,z,yaw,...(kind==='center'?{culture}:{}),maxHp,hp:maxHp,status:'intact',villageId:village?.id,cost,collapseRemaining:0};
   if(kind==='wall'&&!gate)for(const update of planNewWallGates(s,[entity],nav,[],()=>false))Object.assign(entity,update);
   const suppression=entity.autoGate?nav.wallPlacement(entity).suppress??[]:check.suppress??[];
