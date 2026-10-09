@@ -1,0 +1,59 @@
+{
+  "source": "83b1c1eaa0235f9a9b34966f88b496f42eeb161b",
+  "sourceHashesVerified": 376,
+  "onlyTripleHarvestHalfStructureBaselineAttractionExactRepair": true,
+  "otherSourcesExceptRulesGameAndGeneratedBalanceMatchBaseline": true,
+  "snapshotSha256": "5fa1a0bebd54299c4abf45f425bc361c46fba12fc5f8c0864145b7528206920f",
+  "nativeProcessExit": 0,
+  "gates": {
+    "completedRequested10NightsWithoutDefeat": true,
+    "everyDayPaidStaffPhysicalDelivery": true,
+    "ownSourceIntegerLedgerHydrationPaidCrates": true,
+    "inactivityStrictlyBelow25": false,
+    "poorManagement": "not-run-no-viable-signal",
+    "responsible100And30CaseMatrix": "not-run-failed-pilot"
+  },
+  "actualCompletedNights": 10,
+  "actualDay": 11,
+  "result": null,
+  "physicalDeliveries": 830,
+  "physicalPicked": 830,
+  "activityReported": {
+    "daylightSeconds": 3000,
+    "unoccupiedSeconds": 1079,
+    "unoccupiedFraction": 0.3596666666666667,
+    "longestIdle": 170,
+    "p90LongestIdle": 163
+  },
+  "cashflow": {
+    "openingBalance": "1500",
+    "harvestIncome": "30987",
+    "seedCosts": "18287",
+    "wageCosts": "10590",
+    "repairCosts": "0",
+    "centreCosts": "800",
+    "wallCosts": "0",
+    "otherNet": "0",
+    "operatingCashFlow": "2110",
+    "netCashFlowAfterConstruction": "1310",
+    "endingBalance": "2810"
+  },
+  "budgetAttribution": {
+    "maintenanceReserve": 539,
+    "belowCurrentTeamReserve": 324,
+    "belowGrowingTeamReserve": 17
+  },
+  "workingDayFailures": [],
+  "centreLostByEndOfDay": null,
+  "firstSixDaysIdleFraction": 0.5261111111111111,
+  "causeScope": "Own-source F observation: triple harvest, half structural damage, original seeds/wages/policy/growth and baseline attraction; exact half-HP repair support. Requested/completed nights, physical delivery and activity gates are computed from native records; no100/matrix acceptance or universal defensive conclusion.",
+  "files": {
+    "diagnostic.json": "47690e7490b394bbb0b26947d20669212ec7316b8345cd01018595834482aabb",
+    "plans-equivalence.log": "8780b81ffb2fdecae292d3f1411e365452f259ec7169b37fc492adf52284e56d",
+    "report.json": "fb636b20970697b4f1a39f50a7e38b8d16436d5f34503b099e31f819f9749d9c",
+    "run.log": "53c3740b86bb0af06b6c0b208c1b0ece39a219f546a5605921118aef41e07353",
+    "source-fixtures.log": "2142498814f5c661a62aa0a043753363c2ff0e5f9702e98185c58a79770787af",
+    "state.json": "5fa1a0bebd54299c4abf45f425bc361c46fba12fc5f8c0864145b7528206920f",
+    "summary.json": "c28debb4d7d9be5765dfafe9c6d9a59a2f423c272474a48d814a69a6af2ac423"
+  }
+}

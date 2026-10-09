@@ -153,3 +153,26 @@ would still collapse it. Fractional half-HP values serialize exactly and do not
 change integer monetary rounding. The static artifact records these checks and
 all unchanged policy/gameplay parameters. No F implementation/simulation or
 acceptance is claimed before reviewing this proposal.
+
+### F native pilot — survives ten, activity remains rejected
+
+Source83b1c1ea survives ten nights (day11/resultnull), with paid staff and
+physical deliveries every day; own-source376hashes, exact parameter whitelist,
+integer ledger/hydration and830 paid crates pass. Native exit0 is not release
+approval: inactivity1079/3000=35.9667% fails strict<25. No100/matrix/poor-management
+run follows. Income30987−seed18287−wages10590 gives operating+2110 (6.81% of
+income), ending2810 after centre800. Centre600 through day8,512.5 after days9–10.
+The native pilot has zero repair charges, so half-HP physical repair is proven
+by the isolated fixture, not exercised by this campaign. The repairCost×2
+support is exact for integer/half HP only; it is not a validation of arbitrary
+fractional HP denominators or a globally approved runtime change.
+
+Budget idle880 consists of539 maintenance,324 current-team and17 growing-team
+reserve seconds; another199 come from shift end. Day3 has256 budget seconds
+(252 current-team) with16 staff/46 deliveries; day6 has171 maintenance seconds
+with42 staff/18 deliveries. Days8–9 budget idle is zero. These are native policy
+labels and physical outcomes, not a reason to reduce the reserve or bypass FIFO.
+A subsequent read-only diagnostic will preserve F's fullstate exactly and
+inspect decision timing and available cash while keeping middayHiring:false.
+The availability of an optional hiring action must not be conflated with a
+change to this control's policy. No further parameter candidate is chosen yet.
