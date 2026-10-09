@@ -1,4 +1,5 @@
 import hashlib
+import gzip
 import json
 from pathlib import Path
 
@@ -23,4 +24,7 @@ assert steps['Smoke test the packaged game in WebView2'] == 'failure'
 assert steps['Check genuine native minimization and restoration'] == 'skipped'
 artifacts = json.loads((root / 'artifacts.json').read_bytes())['artifacts']
 assert any(a['id'] == 11648067433 and a['name'] == 'desktop-smoke.json' and a['size_in_bytes'] == 3132 for a in artifacts)
+log = gzip.decompress((root / 'full.log.gz').read_bytes())
+assert len(log) == 94052
+assert hashlib.sha256(log).hexdigest() == 'ba1d154c72b4330e3f86d0aed4997e1893daa19bf5d5d61f8be2849e5ad9cab0'
 print('PASS: original normal-main readiness failure preserved; no visibility/GPU acceptance')

@@ -9,3 +9,5 @@ The snapshot reports `readyGateReached:false`, `worldWaitMs:90131.40000000002`, 
 The separately reviewed candidate `f7383473` overlaps presentation resource scheduling only. Its diagnostic must retain the same90-second gate and be archived separately; success or failure cannot overwrite this baseline.
 
 Run `python docs/qa/windows-loading-regression/37997158813/verify.py` to check original report identity and the stated failure scope.
+
+The full log is stored as `full.log.gz` because raw `.log` files are ignored by the repository. Decompression preserves all94052 original bytes; its SHA256 is checked by the verifier.
