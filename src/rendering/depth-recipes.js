@@ -15,3 +15,11 @@ export function recordNativeDepthHook(material,previous,...features){
   if(known.compile!==previous)return;
   known.compile=material.onBeforeCompile;features.forEach(feature=>known.features.add(feature));recipes.set(material,known);
 }
+
+// Store the actual closure-owned uniforms, not a cloneable userData label.
+// A later replacement compile hook invalidates this authority as usual.
+export function recordNativeFluidDepthHook(material,previous,uniforms){
+  recordNativeDepthHook(material,previous,'painted-fluid-clip');
+  const known=recipes.get(material);
+  if(known?.compile===material.onBeforeCompile&&known.features.has('painted-fluid-clip'))known.fluidUniforms=uniforms;
+}

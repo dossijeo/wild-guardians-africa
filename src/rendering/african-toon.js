@@ -9,7 +9,7 @@ import {fluidLightingFunctions,environmentFunctions} from './fluid-lighting-sour
 import {groundLightingFunctions} from './ground-lighting-source.js';
 import {volcanicFunctions} from './volcanic-source.js';
 import {createNativeShadowUniforms,patchNativeShadow} from './native-shadow.js';
-import {recordNativeDepthHook} from './depth-recipes.js';
+import {recordNativeDepthHook,recordNativeFluidDepthHook} from './depth-recipes.js';
 
 const endpointFunctions=endpointEnvironment(environmentFunctions),endpointFluidFunctions=endpointEnvironment(fluidLightingFunctions);
 const diagnosticToon=diagnosticPigment(toonFunctions),diagnosticVolcanic=diagnosticPigment(volcanicFunctions);
@@ -129,6 +129,7 @@ export function toonDebris(vertex,fragment){
 
 export function paintedWaterMaterial(color,lava=false,seed=42,bounds=null,lighting=null,clipOutside=false){
   const material=new THREE.MeshStandardMaterial({color,roughness:.4,metalness:.1,side:THREE.DoubleSide});
+  const originalDepthHook=material.onBeforeCompile;
   const shadowUniforms=lighting?.shadowUniforms??createNativeShadowUniforms();if(!lighting?.shadowUniforms)material.addEventListener('dispose',()=>shadowUniforms.fallback.dispose());
   const uniforms={uTime:{value:0},uWaterScale:{value:WATER_DEFAULTS.scale},uAmplitude:{value:WATER_DEFAULTS.amplitude},uStrokeWidth:{value:WATER_DEFAULTS.strokeWidth},uHandmade:{value:WATER_DEFAULTS.handmade},uPigment:{value:0},uMotifs:{value:0},uSeedOffset:{value:new THREE.Vector2(...waterSeed(seed))}};
   waterPalette(color,lava).forEach((ink,i)=>uniforms['uInk'+i]={value:new THREE.Vector3(...ink)});
@@ -159,5 +160,5 @@ export function paintedWaterMaterial(color,lava=false,seed=42,bounds=null,lighti
   };
   material.onBeforeCompile=((compile)=>(shader,renderer)=>{compile(shader,renderer);patchNativeShadow(shader,shadowUniforms,'vPaintWorld');})(material.onBeforeCompile);
   material.toneMapped=false;material.customProgramCacheKey=()=>lava?'african-lava-relative-v4.1.4|hdr-endpoints':'african-water-relative-v4.1.4|hdr-endpoints';
-  material.userData.paintUniforms=uniforms;return material;
+  material.userData.paintUniforms=uniforms;recordNativeFluidDepthHook(material,originalDepthHook,uniforms);return material;
 }

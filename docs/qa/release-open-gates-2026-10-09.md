@@ -7,6 +7,47 @@ into current-main acceptance.
 
 ## Current-state update on main 1ed8be18
 
+### Later Windows evidence and its limits
+
+The exact packaged main executable from `2a910b83` now has local original-tester
+PASS evidence for both New Game and Continue/native minimization. Its source,
+artifact and executable hash are pinned in
+[the original reports and receipts](windows-local-main-2a910b83/README.md).
+The Continue report preserves all21 measured simulation fields over300,821.7ms
+of genuine hiding and resumes with the menu pause retained correctly. Root
+rechecked both gzip payloads against their original byte counts and hashes,
+including the full hidden-state comparison. This is an archive recheck, not a
+new runtime test.
+
+The same executable's CI loading test failed. Local acceptance covers one
+Gran Cañón/Mapungubwe configuration and environment; it neither establishes the
+CI failure's cause nor approves every Windows device, biome or save. The
+last fully green Windows workflow remains
+[37922095376, source57527dc9](https://github.com/dossijeo/wild-guardians-africa/actions/runs/37922095376).
+The28.038s and343.500s local process lifetimes include preflight and, for Continue,
+the required five-minute hidden test; they are not world-loading benchmarks.
+
+Main `0c77365c` adds smoke-only presentation observations at report completion:
+stage busy state, displayed progress/title, focus, visibility and canvas size.
+World wait duration stops at the original stage-ready gate so the hidden test
+is excluded; `66b47414` exercises that timing boundary. Five directed tests pass.
+These fields do not establish GPU identity or make displayed progress a readiness
+gate. Original90s readiness and300000ms native hiding requirements are unchanged.
+There is not yet native evidence from an executable containing this observation
+change. Diagnostic loading options and worker candidates remain unpromoted until
+their actual native/visual/performance gates pass. The independently audited
+[minimal water/lava coverage-depth extraction](painted-fluid-depth-production.md)
+is now enabled in production source; its new default-config Windows run remains
+pending, and no causal timeout-fix or runtime speed improvement is claimed.
+
+The worker branch now has a separate
+[exact-executable native accessory pilot](workers-frontside-local-3e8da8a7/README.md):
+youngMale crate/hoe,48 sampled day/night poses, actual culling witnesses and
+serialized-state/mixer/resource restoration pass locally. Root inspected the
+accessories from two angles; partial head framing limits character acceptance.
+No GPU timing ran, and this is neither all-profile validation nor production
+activation. Its original Windows CI loading failure is retained separately.
+
 The full objective remains the master plan plus the user's subsequent changes.
 The original 159-case registry has 157 historical verified labels and two partial
 cases (QA-014 and QA-156). Those labels retain their original sources and scopes;
