@@ -68,4 +68,4 @@ const groundBake=JSON.parse(await readFile('content/manifests/mangrove-ground-ba
 for(const url of groundBake.archiveOnly)assert(!await exists(resolve(root,url.slice(1))),'Original mangrove texture duplicated in package');
 for(const item of Object.values({...groundBake.maps,...Object.fromEntries(Object.entries(groundBake.mudMaps??{}).map(([k,v])=>['mud-'+k,v]))}))assert(await exists(resolve(root,item.url.slice(1))),'Baked mangrove texture missing');
 
-console.log(`PASS: ${files} files / ${bytes} bytes, ${links} relative links, 20 runtime GLBs, no original GLBs, demo village or superseded ground duplicates`);
+console.log(`PASS: ${files} files / ${bytes} bytes, ${links} relative links, ${manifest.records.length} runtime GLBs, no original GLBs, demo village or superseded ground duplicates`);
