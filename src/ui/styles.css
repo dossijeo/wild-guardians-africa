@@ -113,3 +113,5 @@ html[lang="en"] #stage.portrait .hiring-pause span:after{content:none}
 .loading-ornament .interactive-loading-help{position:absolute;left:18%;right:18%;top:75%;height:20%;width:auto;min-height:0;margin:0;padding:0;display:flex;align-items:center;justify-content:center;background:none;border-radius:0;box-shadow:none;font-size:clamp(12px,1.3vw,18px);line-height:1.1;white-space:normal;text-wrap:balance;}
 .loading-ornament .interactive-loading-help:empty{display:none;}
 @media(orientation:portrait){.loading-ornament .interactive-loading-info{width:calc(100vw - 20px - env(safe-area-inset-left) - env(safe-area-inset-right));}.loading-ornament .interactive-loading-heading,.loading-ornament .interactive-loading-heading #loading-progress{font-size:clamp(13px,3.2vw,21px);}.loading-ornament .interactive-loading-help{font-size:clamp(11px,2.7vw,16px);}}
+
+@media(orientation:portrait){.loading-ornament .interactive-loading-help{padding-inline:8px;box-sizing:border-box;}}
