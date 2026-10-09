@@ -106,3 +106,44 @@ test('loading-only bitmap textures retain far-owner disposal and native vertical
  const owner=await attachBiomeFarVegetation(f.world,{},f.services);assert.equal(requests.length,3);assert.ok(requests.every(r=>r.options.flipY===true&&!r.options.premultiplyAlpha));owner.dispose();assert.ok(f.textures.every(t=>t.releases===1));
  }finally{if(oldWorker===undefined)delete globalThis.Worker;else globalThis.Worker=oldWorker;if(oldBitmap===undefined)delete globalThis.createImageBitmap;else globalThis.createImageBitmap=oldBitmap;}
 });
+
+
+test('parallel loading starts day, night and backdrop before any image resolves, without parallel attachment',async()=>{
+ const f=fixture(),pending=[],attached=[];const original=f.services.loadTexture;
+ f.services.loadTexture=path=>new Promise(resolve=>pending.push({path,resolve:async()=>resolve(await original(path))}));
+ f.services.attachSpecies=async(_,options)=>{attached.push(options);return {dispose(){},update(){}};};
+ const task=attachBiomeFarVegetation(f.world,{parallelAssets:true},f.services);
+ await new Promise(resolve=>setImmediate(resolve));assert.equal(pending.length,3);assert.equal(attached.length,0);
+ assert.ok(pending.some(p=>p.path.endsWith('day.webp')));assert.ok(pending.some(p=>p.path.endsWith('night.webp')));assert.ok(pending.some(p=>p.path.endsWith('savanna-backdrop.webp')));
+ await Promise.all(pending.map(p=>p.resolve()));const owner=await task;
+ assert.equal(attached.length,1);assert.equal(attached[0].prelitAtlas.day,f.textures[0]);assert.equal(attached[0].prelitAtlas.night,f.textures[1]);
+ owner.dispose();assert.ok(f.textures.every(t=>t.releases===1));
+});
+
+test('parallel loading cancellation releases every late image and never attaches a partial region',async()=>{
+ const f=fixture(),pending=[];const original=f.services.loadTexture;
+ f.services.loadTexture=path=>new Promise(resolve=>pending.push(async()=>resolve(await original(path))));
+ const task=attachBiomeFarVegetation(f.world,{parallelAssets:true},f.services);const rejected=assert.rejects(task,/cancelled/);
+ await new Promise(resolve=>setImmediate(resolve));assert.equal(pending.length,3);f.world.farVegetation.dispose();
+ await Promise.all(pending.map(resolve=>resolve()));await rejected;assert.equal(f.controllers.length,0);
+ assert.equal(f.world.farVegetation,null);assert.equal(f.textures.length,3);assert.ok(f.textures.every(t=>t.releases===1));
+});
+
+test('parallel loading observes sibling failure and releases successful images before rejecting',async()=>{
+ const f=fixture(),original=f.services.loadTexture;f.services.loadTexture=path=>path.endsWith('night.webp')?Promise.reject(Error('night image failure')):original(path);
+ await assert.rejects(attachBiomeFarVegetation(f.world,{parallelAssets:true},f.services),/night image failure/);
+ assert.equal(f.controllers.length,0);assert.equal(f.world.farVegetation,null);assert.equal(f.textures.length,2);assert.ok(f.textures.every(t=>t.releases===1));
+ const bad=fixture();await assert.rejects(attachBiomeFarVegetation(bad.world,{parallelAssets:1},bad.services),/parallel far assets/);assert.equal(bad.textures.length,0);
+});
+
+
+test('parallel images preserve sequential species admission and all exact texture pairs',async()=>{
+ const f=fixture(),admitted=[],pending=[];
+ f.services.loadManifest=async()=>({biomes:{savanna:[metadata,{...metadata,slot:1,day:'./assets/second-day.webp',night:'./assets/second-night.webp'}]}});
+ f.services.attachSpecies=(_,options)=>new Promise(resolve=>{admitted.push(options);pending.push(()=>resolve({dispose(){},update(){}}));});
+ const task=attachBiomeFarVegetation(f.world,{parallelAssets:true},f.services);
+ await new Promise(resolve=>setImmediate(resolve));assert.equal(f.textures.length,5);assert.deepEqual(admitted.map(a=>a.slot),[0]);
+ pending[0]();await new Promise(resolve=>setImmediate(resolve));assert.deepEqual(admitted.map(a=>a.slot),[0,1]);pending[1]();
+ const owner=await task;assert.equal(owner.adapters.length,2);assert.notEqual(admitted[0].prelitAtlas.day,admitted[1].prelitAtlas.day);
+ owner.dispose();assert.ok(f.textures.every(t=>t.releases===1));
+});

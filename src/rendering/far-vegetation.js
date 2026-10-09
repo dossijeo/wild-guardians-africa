@@ -1,3 +1,4 @@
+import {loadingAwaitWitness} from './loading-sync-witness.js';
 import {validateTreeTransitionPolicy} from '../../tools/experiments/tree-transition-range.js';
 import {releaseNativeFarGpuCache,registerNativeFarTextureOwner} from '../../tools/experiments/prepare-native-far-gpu.js';
 import {createBiomeBackdrop} from './biome-backdrop.js';
@@ -14,8 +15,10 @@ const textureStorageEstimate=(texture,width,height)=>{const image=texture.image;
 
 // Baked resources are owned from the beginning of an asynchronous attachment.
 // A world closed during fetch/preparation must release late arrivals as well.
-export async function attachBiomeFarVegetation(world,{start=60,end=90,residentRange=null,visualRange=null,preserveTerrain=true,transitionMargin=8,includeFarGround=true,logicalStandbyPreload=false,...options}={},services={}){
+export async function attachBiomeFarVegetation(world,{start=60,end=90,residentRange=null,visualRange=null,preserveTerrain=true,transitionMargin=8,includeFarGround=true,logicalStandbyPreload=false,parallelAssets=false,...options}={},services={}){
  if(world.farVegetation)throw Error('Far vegetation already attached');
+ if(typeof parallelAssets!=='boolean')throw Error('Invalid parallel far assets option');
+ const phase=(label,run)=>loadingAwaitWitness(world.onLoadingSpan,'far-assets:'+label,run);
  const atmosphere=farAtmosphere(options);
  if(typeof logicalStandbyPreload!=='boolean')throw Error('Invalid logical standby option');
  if(typeof includeFarGround!=='boolean')throw Error('Invalid far ground option');
@@ -36,17 +39,31 @@ export async function attachBiomeFarVegetation(world,{start=60,end=90,residentRa
  owner={update(){},dispose:release};world.farVegetation=owner;
  const load=async (path,options)=>{if(cancelled())throw Error('Far vegetation attachment cancelled');const texture=await loadTexture(assetUrl(path.replace(/^\.\//,'')),options);registerNativeFarTextureOwner(texture,ownership.signal);if(cancelled()){texture.dispose();throw Error('Far vegetation attachment cancelled');}textures.add(texture);return texture;};
  try{
-  const manifest=await loadManifest('/content/far-vegetation.json',{signal:world.loading.signal}),species=manifest.biomes[world.nav.config.biome];
+  const manifest=await phase('manifest',()=>loadManifest('/content/far-vegetation.json',{signal:world.loading.signal})),species=manifest.biomes[world.nav.config.biome];
   if(cancelled())throw Error('Far vegetation attachment cancelled');if(!species?.length)throw Error('Missing biome impostors');
-  const results=await Promise.allSettled(species.map(async metadata=>({metadata,day:await load(metadata.day,{premultiplyAlpha:metadata.prelitAlphaEncoding!=='srgb-encoded-linear-premultiplied'}),night:await load(metadata.night,{premultiplyAlpha:metadata.prelitAlphaEncoding!=='srgb-encoded-linear-premultiplied'})})));
+  const backdropPath=mountain?.atlas??'assets/far-vegetation/'+world.nav.config.biome+'-backdrop.webp';
+  let backdropTexture,results;
+  if(parallelAssets){
+   // Start image work together, without admitting any geometry or GPU draw.
+   // Settle every owned request so a failed sibling cannot escape observation.
+   const resources=await Promise.allSettled([
+    ...species.map(async metadata=>{const images=await Promise.allSettled([
+     phase('day:'+metadata.slot,()=>load(metadata.day,{premultiplyAlpha:metadata.prelitAlphaEncoding!=='srgb-encoded-linear-premultiplied'})),
+     phase('night:'+metadata.slot,()=>load(metadata.night,{premultiplyAlpha:metadata.prelitAlphaEncoding!=='srgb-encoded-linear-premultiplied'}))]);
+     const failed=images.find(r=>r.status==='rejected');if(failed)throw failed.reason;
+     return {metadata,day:images[0].value,night:images[1].value};}),
+    phase('backdrop',()=>load(backdropPath))]);
+   results=resources.slice(0,-1);const background=resources.at(-1);
+   if(background.status==='rejected')throw background.reason;backdropTexture=background.value;
+  }else results=await Promise.allSettled(species.map(async metadata=>({metadata,day:await phase('day:'+metadata.slot,()=>load(metadata.day,{premultiplyAlpha:metadata.prelitAlphaEncoding!=='srgb-encoded-linear-premultiplied'})),night:await phase('night:'+metadata.slot,()=>load(metadata.night,{premultiplyAlpha:metadata.prelitAlphaEncoding!=='srgb-encoded-linear-premultiplied'}))})));
   const failed=results.find(r=>r.status==='rejected');if(failed)throw failed.reason;
   const transitionSlots=species.map(s=>s.slot);
   const groundTreeBases=Object.fromEntries(species.map(s=>[s.slot,s.localBase]));
   for(const result of results){if(cancelled())throw Error('Far vegetation attachment cancelled');const {metadata,day,night}=result.value;
-   const adapter=await attachSpecies(world,{groundStep:16,densityStart:Math.max(end+30,180),densityEnd:280,densityMinimum:.04,fadeStart:280,fadeEnd:330,...options,logicalStandbyPreload,cancelled,metadata,texture:day,prelitAtlas:{day,night,rotations:8,views:8,resolution:128,premultipliedLinear:metadata.prelitAlphaEncoding==='srgb-encoded-linear-premultiplied'},slot:metadata.slot,ownsWorld:false,bakedOnly:true,groundTreeBases,includeGround:includeFarGround&&metadata.slot===0&&!['canyons','desert'].includes(world.nav.config.biome),start,end});
+   const adapter=await phase('attach:'+metadata.slot,()=>attachSpecies(world,{groundStep:16,densityStart:Math.max(end+30,180),densityEnd:280,densityMinimum:.04,fadeStart:280,fadeEnd:330,...options,logicalStandbyPreload,cancelled,metadata,texture:day,prelitAtlas:{day,night,rotations:8,views:8,resolution:128,premultipliedLinear:metadata.prelitAlphaEncoding==='srgb-encoded-linear-premultiplied'},slot:metadata.slot,ownsWorld:false,bakedOnly:true,groundTreeBases,includeGround:includeFarGround&&metadata.slot===0&&!['canyons','desert'].includes(world.nav.config.biome),start,end}));
    if(cancelled()){adapter.dispose();throw Error('Far vegetation attachment cancelled');}adapters.push(adapter);
   }
-  const backdropTexture=await load(mountain?.atlas??'assets/far-vegetation/'+world.nav.config.biome+'-backdrop.webp');
+  if(!parallelAssets)backdropTexture=await phase('backdrop',()=>load(backdropPath));
   backdrop=makeBackdrop(world,backdropTexture,{...atmosphere,arcLayout:options.backdropArcLayout??mountain?.arcLayout,stableAltitude:options.backdropStableAltitude??mountain?.stableAltitude,mirrored:options.backdropMirrored,fogBaseMix:options.backdropFogBaseMix??mountain?.fogBaseMix,nightTint:options.backdropNightTint,radius:options.backdropRadius,height:options.backdropHeight,parallax:options.backdropParallax,fogMix:options.backdropFogMix});
   owner={enabled:true,adapters,configureQuality(quality){
    if(closed||!options.qualityDriven)return false;
