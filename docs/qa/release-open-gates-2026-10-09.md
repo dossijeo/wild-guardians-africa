@@ -41,6 +41,14 @@ Both exact-head checks now pass. Root independently repeated 14 directed tests
 and merged PR16 as `4ecffec5`, then pulled main. See [root review and exact scope](saheliana-final-raid/root-pr16-review.md).
 This saved-state recovery is not a new hundred-night campaign.
 
+Root dispatched a new original-policy Desert/Saheliana hundred-night campaign
+on immutable main `0544d652`, plus the existing separate poor-management
+diagnostics across six biomes. [Run identity](campaign-ci/current-pr16-dispatch-37895465546.json)
+records run 37895465546 and both job IDs. Both were observed in progress at
+checkout; only authoritative subsequent job state/artifacts may establish
+completion. The old failure is retained and the activity/survival gate remains
+open until terminal evidence is audited.
+
 The three distinct saved Desert stalls now have bounded native recovery fixes
 in merged PR15, with root 45/45 directed tests and both exact-head CI checks
 passing. See [root review and scope](desert-raid-connectivity-root-review-2026-10-09.md).
