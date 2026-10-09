@@ -36,6 +36,15 @@ function ordered(){
  assert.ok(Math.hypot(f.worker.x-f.target.x,f.worker.z-f.target.z)>10);
  assert.equal(numberOf(f.s.ledger.balance),630);return f;
 }
+function settledRepair(s,target,previousHp,paidCoins,previousStatus='intact'){
+ const event=s.events.find(e=>e.type==='RepairApplied'&&e.targetId===target.id);
+ assert.ok(event,'only physical completion provides a repair receipt');
+ assert.deepEqual(event.repair,{taskId:event.repair.taskId,paymentId:`repair:${event.repair.taskId}`,paidCoins,previousHp,previousStatus,restoredHp:target.maxHp,maxHp:target.maxHp});
+ assert.deepEqual(s.ledger.entries[event.repair.paymentId],rational(-paidCoins));
+ const worker=s.workers.find(w=>w.id===event.workerId);assert.ok(worker);
+ assert.equal(event.presentation.x,worker.x);assert.equal(event.presentation.z,worker.z);
+ return event;
+}
 
 test('fractional restored health is repaired physically and charged once in whole coins',()=>{
  const {s,nav,target}=fixture();target.hp=287.5;
@@ -46,12 +55,23 @@ test('fractional restored health is repaired physically and charged once in whol
  until(restored,nav,()=>restored.events.some(e=>e.type==='RepairApplied'));
  assert.equal(wall.hp,300);assert.equal(numberOf(restored.ledger.balance),628);
  assert.equal(Object.keys(restored.ledger.entries).filter(id=>id.startsWith('repair:')).length,1);
+ settledRepair(restored,wall,287.5,2);
 });
 
 test('repair ratios preserve decimal gate health rather than rounding to half HP',()=>{
  assert.deepEqual(Game.repairCost({cost:35,maxHp:180,hp:179.73,status:'damaged'}),rational(21,400));
  assert.deepEqual(Game.repairCost({cost:35,maxHp:300,hp:219,status:'damaged'}),rational(189,20));
  assert.deepEqual(Game.repairCost({cost:35,maxHp:180,hp:179.73,status:'ruined'}),rational(35));
+});
+
+test('center repair receipt records its actual rounded debit and physical arrival',()=>{
+ const {s,nav}=fixture(),center=s.structures.find(t=>t.kind==='center');
+ hitStructure(center,40,s.elapsed);nav.setState(s);assert.equal(center.hp,560);
+ Game.requestRepair(s,'center-repair',center.id);
+ assert.equal(numberOf(s.ledger.balance),630);assert.ok(!s.events.some(e=>e.type==='RepairApplied'));
+ until(s,nav,()=>s.events.some(e=>e.type==='RepairApplied'&&e.targetId===center.id));
+ assert.equal(center.hp,600);assert.equal(numberOf(s.ledger.balance),576);
+ settledRepair(s,center,560,54);
 });
 function spendToReserve(s,nav){
  for(let i=0;i<59;i++)Game.placeStructure(s,`other-wall-${i}`,{kind:'wall',material:'zarzas',x:-20+i*4,z:15},nav);
@@ -64,6 +84,7 @@ test('QA-076/078: physical repair journey has no reserved debit and recalculates
  until(s,nav,()=>s.events.some(e=>e.type==='RepairApplied'));
  assert.equal(target.hp,300);assert.equal(target.status,'intact');assert.equal(target.wallPresentation.to,1);assert.equal(target.wallPresentation.collapseFrom,undefined);assert.equal(numberOf(s.ledger.balance),614);
  assert.deepEqual(Object.values(s.ledger.entries).filter(v=>v.n==='-16'),[rational(-16)]);
+ settledRepair(s,target,168,16);
 });
 
 test('QA-077: genuine purchases preserve the hiring reserve and reject an unaffordable repair; rejection adds no task, command or partial payment',()=>{
@@ -89,6 +110,7 @@ test('QA-079: still-valid order persists through full ruin and reload; real arri
  until(s,nav,()=>target.status==='intact');
  assert.equal(target.hp,300);assert.equal(target.collapseRemaining,0);assert.equal(numberOf(s.ledger.balance),595);
  assert.equal(s.events.filter(e=>e.type==='RepairApplied'&&e.targetId===target.id).length,1);
+ settledRepair(s,target,0,35,'ruined');
 });
 
 test('QA-082: outside an attack, full destruction just before physical arrival becomes reconstruction without canceling the surviving order',()=>{
@@ -97,6 +119,7 @@ test('QA-082: outside an attack, full destruction just before physical arrival b
  until(s,nav,()=>target.status==='intact',1);
  assert.equal(numberOf(s.ledger.balance),595);assert.equal(target.hp,300);assert.equal(target.collapseRemaining,0);
  assert.ok(!s.events.some(e=>e.type==='StructureRuined'&&e.targetId===target.id));assert.ok(!s.tasks.some(t=>t.kind==='repair'));
+ settledRepair(s,target,0,35,'collapsing');
 });
 
 test('QA-081/082: active raid cancels walking repair before any arrival; it is not regenerated after real retreat or reload',()=>{
@@ -116,6 +139,8 @@ test('QA-083 settlement: replay, repeated ticks and reload after physical repair
  assert.equal(transact(s.ledger,repairId,rational(-10)),false);Game.tick(s,5,nav);
  const loaded=deserialize(serialize(s));nav.setState(loaded);Game.tick(loaded,5,nav);
  assert.equal(numberOf(loaded.ledger.balance),620);assert.equal(loaded.events.filter(e=>e.type==='RepairApplied').length,1);
+ const receipt=s.events.find(e=>e.type==='RepairApplied').repair;
+ assert.deepEqual(loaded.events.find(e=>e.type==='RepairApplied').repair,receipt);
  assert.equal(loaded.structures.find(t=>t.id===target.id).hp,300);assert.ok(!loaded.tasks.some(t=>t.kind==='repair'));
 });
 
