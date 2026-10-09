@@ -7,6 +7,47 @@ into current-main acceptance.
 
 ## Current-state update through main 8e1909d8
 
+### Superseding checkpoint — 10 October, main fd04cbcc
+
+The previous subsection heading and investigations below are historical. Normal
+main source4dc2efb1 has terminal [Validate Game success37997446294](https://github.com/dossijeo/wild-guardians-africa/actions/runs/37997446294):
+tests, build, web-package checks and itch packaging passed. Later main commits
+throughfd04cbcc only archive evidence; this success is not mislabeled as a fresh
+execution of those later heads.
+
+The original early-preparation observation37995161569 is now terminal failure,
+not running. Its [byte-preserved archive and verifier](windows-loading-regression/37995161569/review.md)
+distinguish32.88s before active World work from nested asset/sky intervals; those
+intervals are not additive CPU/GPU/network measurements. The original ordinary
+main Windows run37997158813/sourceea5370cd also failed the unchanged90s gate at
+displayed88%, with build/installers successful and native hiding skipped. Its
+[original report and compressed job log](windows-loading-regression/37997158813/README.md)
+are verified. Current Windows readiness remains open.
+
+Isolated sourcef7383473 now has one authorized resource-overlap diagnostic,
+[37998755565](https://github.com/dossijeo/wild-guardians-africa/actions/runs/37998755565),
+still live at this checkpoint. It overlaps presentation resource loads only;
+normal gameplay selection is OFF, all shader variants/fences and90s readiness
+remain. Root independently passed14 directed ownership/cancellation/scheduling
+tests. No Windows readiness or performance improvement is inferred yet.
+
+The horde branch has separately archived six native twelve-body physical
+incursions at seed712/Mapungubwe, empty farms with one ordinarily paid centre.
+Root independently audited72 exact physical exit endpoints, initial/final
+snapshot hashes and12 total hits with270 unused strikes. This is narrow
+navigation evidence, not the30-case farming matrix or proof of risk. Reservations
+allowed one attacker per sole centre. Root's [prior source review](horde-entry-root-review-ad0.md)
+remains explicitly bounded. The cooperative worker-disabled fallback is now
+authorized for implementation in the isolated branch, but not yet accepted.
+No paired campaign or production economic promotion has occurred; centre800,
+minimum wage30 and daylight inactivity strictly below25% remain fixed.
+
+The browser QA tool still fails initialization with os error3 on10October.
+This current availability check supplies no rendered/interactive acceptance.
+Pixel Wake Lock and the user's accepted camera traveling remain closed unless
+new regression evidence appears. The full master-plan and later feature scope
+remain uncompleted; the checkpoints below retain their original limits.
+
 ### Later bounded investigations and user balance constraints
 
 The full-frame worker accessory pilot is now retained with its original native
