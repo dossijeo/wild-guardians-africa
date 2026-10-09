@@ -1,0 +1,19 @@
+{
+  "results": [
+    {
+      "tool": "tools/audit_economy_f_pilot.py",
+      "output": "own-source-audit.json",
+      "twoScratchRunsByteExact": true,
+      "originalArtifactsUnchanged": true,
+      "scratchOutputSha256": "935e91fb50be3689478c8ed3523c12a9df6b7acb1b04a03199fcc19d73f088bc"
+    },
+    {
+      "tool": "tools/analyse_economy_f_opportunities.py",
+      "output": "opportunity-analysis.json",
+      "twoScratchRunsByteExact": true,
+      "originalArtifactsUnchanged": true,
+      "scratchOutputSha256": "4adbc93c9ec0799858925f6d501945a88507092e229c2474c8e25b401172b436"
+    }
+  ],
+  "scope": "Two independent scratch copies only. Original evidence is read and hash-checked; neither source simulation nor retained output is rewritten. No benchmark/performance claim."
+}
