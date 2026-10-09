@@ -1,0 +1,23 @@
+{
+  "status": "YOUNG_FORWARD_DOUBLE_GLB_CPU_ONLY",
+  "sourceSha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+  "payloadSha256": "283f62354defab3135e4b57a03e5015f7a7cef311e05adf1734a13d0fd88cce6",
+  "output": ".cache/frontside-model-pilot/candidates/archive/0e1b2306dd5f532669a06f5ff014eb6081a6470e5f334b64fa43bd30e99f1ae9.glb",
+  "outputSha256": "0e1b2306dd5f532669a06f5ff014eb6081a6470e5f334b64fa43bd30e99f1ae9",
+  "sourceBytes": 17895972,
+  "outputBytes": 17964720,
+  "appendedBufferBytes": 68042,
+  "targetNode": "maiz_02_joven",
+  "triangles": 1095,
+  "materialsUnchanged": true,
+  "nodesPivotsExtrasUnchanged": true,
+  "other39MeshesUnchanged": true,
+  "skinsAnimationsUnchanged": true,
+  "originalBinaryPrefixUnchanged": true,
+  "limitations": [
+    "Controlled glTF writer appends geometry without Blender roundtrip; source metadata/images/materials and other states are unchanged.",
+    "Forward DoubleSide derivative only; reverses/shader recipe belong to runtime candidate and are not represented by this standalone GLB.",
+    "Old unused target accessors/bufferviews retained to preserve existing references. This inspection GLB is not a web-compressed deployment asset or whole-category package.",
+    "Source bridge data still references original geometry; this GLB is not activated in native crop pipeline."
+  ]
+}
