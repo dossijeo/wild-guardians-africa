@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {showLoadingFailure,clearLoadingFailure} from '../src/ui/loading-failure.js';
+import {showLoadingFailure,clearLoadingFailure,loadingFailureDetail} from '../src/ui/loading-failure.js';
 function documentStub(){
  const doc={};doc.createElement=tag=>({tag,className:'',children:[],attributes:{},setAttribute(key,value){this.attributes[key]=value;},append(...children){this.children.push(...children);for(const child of children)child.parent=this;},remove(){if(this.parent)this.parent.children=this.parent.children.filter(child=>child!==this);this.parent=null;}});
  doc.body=doc.createElement('body');doc.querySelector=()=>doc.body.children.find(child=>child.className.includes('loading-failure'));return doc;
@@ -10,4 +10,8 @@ test('load failure remains explicit and dismissible in both locales without inte
 });
 test('replacement and next-attempt cleanup remove only the loading notice and are idempotent',()=>{
  const doc=documentStub(),ordinary=doc.createElement('div');ordinary.className='error-banner';doc.body.append(ordinary);showLoadingFailure('first',{document:doc});const current=showLoadingFailure('second',{document:doc});assert.equal(doc.body.children.length,2);assert.equal(current.children[1].textContent,'second');clearLoadingFailure(doc);clearLoadingFailure(doc);assert.deepEqual(doc.body.children,[ordinary]);
+});
+
+test('asset-loading failure detail is localized without changing the path or other exception diagnostics',()=>{
+ const raw='No se pudo cargar /content/biome-savanna.json';assert.equal(loadingFailureDetail(raw,'en-US'),'Could not load /content/biome-savanna.json');assert.equal(loadingFailureDetail(raw,'es-ES'),raw);assert.equal(loadingFailureDetail('Graphics context lost during loading.','en-US'),'Graphics context lost during loading.');const doc=documentStub(),notice=showLoadingFailure(raw,{document:doc,locale:'en-US'});assert.equal(notice.children[1].textContent,'Could not load /content/biome-savanna.json');assert.equal(raw,'No se pudo cargar /content/biome-savanna.json');
 });
