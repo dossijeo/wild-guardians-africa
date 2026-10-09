@@ -50,6 +50,15 @@ unexecuted plan and does not replace that comparison.
 
 ### Later Windows evidence and its limits
 
+Normal main source `40a4b271` now has terminal Validate Game success, but its
+[Windows run 37994484203](windows-loading-regression/37994484203/README.md)
+failed the unchanged packaged-game readiness gate after90,159.9ms at displayed
+84%. The executable and installer were generated; native hiding was skipped.
+The official smoke artifact is preserved byte-for-byte. This report lacks
+actual GPU identity and detailed early-phase attribution, so neither is inferred.
+The already-running isolated observation37995161569/source07798700 remains
+separate; there is no production loading change or duplicate diagnostic launch.
+
 The exact packaged main executable from `2a910b83` now has local original-tester
 PASS evidence for both New Game and Continue/native minimization. Its source,
 artifact and executable hash are pinned in
