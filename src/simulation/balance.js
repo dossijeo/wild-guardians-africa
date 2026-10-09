@@ -24,7 +24,7 @@ export const BALANCE = {
     {
       "id": "mijo",
       "name": "Mijo",
-      "plant_cost": 4,
+      "plant_cost": 3,
       "base_harvest_value": 14,
       "growth_seconds": 140,
       "total_waters": 2,
@@ -35,7 +35,7 @@ export const BALANCE = {
     {
       "id": "girasol",
       "name": "Girasol",
-      "plant_cost": 14,
+      "plant_cost": 9,
       "base_harvest_value": 45,
       "growth_seconds": 180,
       "total_waters": 3,
@@ -46,7 +46,7 @@ export const BALANCE = {
     {
       "id": "sorgo",
       "name": "Sorgo",
-      "plant_cost": 5,
+      "plant_cost": 3,
       "base_harvest_value": 17,
       "growth_seconds": 220,
       "total_waters": 2,
@@ -57,7 +57,7 @@ export const BALANCE = {
     {
       "id": "maiz",
       "name": "Maíz",
-      "plant_cost": 6,
+      "plant_cost": 4,
       "base_harvest_value": 22,
       "growth_seconds": 270,
       "total_waters": 3,
@@ -68,7 +68,7 @@ export const BALANCE = {
     {
       "id": "batata",
       "name": "Batata",
-      "plant_cost": 8,
+      "plant_cost": 5,
       "base_harvest_value": 29,
       "growth_seconds": 330,
       "total_waters": 2,
@@ -79,7 +79,7 @@ export const BALANCE = {
     {
       "id": "algodon",
       "name": "Algodón",
-      "plant_cost": 75,
+      "plant_cost": 50,
       "base_harvest_value": 223,
       "growth_seconds": 405,
       "total_waters": 4,
@@ -90,7 +90,7 @@ export const BALANCE = {
     {
       "id": "yuca",
       "name": "Yuca",
-      "plant_cost": 9,
+      "plant_cost": 6,
       "base_harvest_value": 40,
       "growth_seconds": 480,
       "total_waters": 2,
@@ -101,7 +101,7 @@ export const BALANCE = {
     {
       "id": "platano",
       "name": "Plátano",
-      "plant_cost": 113,
+      "plant_cost": 75,
       "base_harvest_value": 334,
       "growth_seconds": 570,
       "total_waters": 6,
