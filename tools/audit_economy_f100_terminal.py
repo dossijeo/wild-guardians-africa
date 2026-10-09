@@ -22,5 +22,10 @@ gates={'100RequestedNightsVictory':s['completedNights']==100 and s['day']==101 a
 summary=p/(key+'-summary.json')
 if summary.exists():
  actual=json.loads(summary.read_text());assert actual['activity']['unoccupiedSeconds']==idle;assert actual['activity']['acceptance']['policy']['maximumFraction']==.25;assert actual['activity']['acceptance']['policy']['comparison']=='strictly-less-than'
-out={'source':source,'sourceHashesVerified':len(hashes),'snapshotSha256':sha(raw),'nativeTerminalStatus':status['status'],'completedNights':s['completedNights'],'result':s['result'],'inactivity':idle/total,'idleSeconds':idle,'daylightSeconds':total,'physicalPaidCrates':paid,'picked':len(picked),'gates':gates,'responsibleCaseAccepted':all(v for k,v in gates.items() if isinstance(v,bool)),'scope':'One frozen F100 case, includes all first10 negatives. No projection, threshold change, policy override or matrix/current-main approval. Any nonterminal or physical/source audit failure raises, never becomes accepted.'}
+native_bytes=(p/'f100-native-terminal-audit.json').read_bytes();native=json.loads(native_bytes)
+assert native['source']==source and native['files'][key+'-state.json']==sha(raw)
+assert native['files'][key+'-report.json']==sha((p/(key+'-report.json')).read_bytes())
+assert native['files'][key+'-status.json']==sha((p/(key+'-status.json')).read_bytes())
+gates.update(native['gates'])
+out={'source':source,'sourceHashesVerified':len(hashes),'snapshotSha256':sha(raw),'nativeTerminalAuditSha256':sha(native_bytes),'nativeTerminalStatus':status['status'],'completedNights':s['completedNights'],'result':s['result'],'inactivity':idle/total,'idleSeconds':idle,'daylightSeconds':total,'physicalPaidCrates':paid,'picked':len(picked),'gates':gates,'responsibleCaseAccepted':all(v for k,v in gates.items() if isinstance(v,bool)),'scope':'One frozen F100 case, includes all first10 negatives and native summary/count/roundtrip audit. No projection, threshold change, policy override or matrix/current-main approval. Temporal FIFO/routes are evidenced by unchanged production protocol and separate tests, not claimed from final snapshot. Any nonterminal or physical/source audit failure raises, never becomes accepted.'}
 (p/'f100-independent-audit.json').write_text(json.dumps(out,indent=2)+'\n');print(json.dumps(out))

@@ -225,3 +225,24 @@ explicitly excludes its own output from input hashes. No existing evidence,
 failed verdict, source receipt or raw snapshot was regenerated for this fix.
 F100 separately uses an exact detached83b1c1ea checkout and original native
 runner; its source and policy are unaffected by this diagnostic tooling change.
+
+### Terminal F100 audit protocol (not yet a verdict)
+
+Only after the original producer is terminal, run
+`node tools/audit_economy_f100_native.mjs FROZEN_CHECKOUT OUTPUT_DIR`, then
+`python tools/audit_economy_f100_terminal.py OUTPUT_DIR` from this evidence branch.
+The native supplement imports the producer's exact frozen83b1 audit, summary and
+snapshot modules; it reconstructs the full summary, validates exact snapshot
+roundtrip, checks status/report/state coherence, CampaignWon/GameOver counts and
+closed RaidSpawned/RaidEnded counts. It hashes source inputs, raw payloads and
+both auditor files. It never calls the simulator. The independent Python audit
+retains unchanged first10 and the strict global25% gate and binds its verdict to
+the native supplement's payload hashes and gates. A producer failure or missing
+summary cannot become approval. This tooling has only been syntax checked while
+the original100 remains live; no partial snapshot is accepted.
+
+Final-state crate/hydration/ledger assertions demonstrate end-state consistency.
+They cannot independently prove every historical worker route or FIFO ordering;
+those claims require the unchanged native producer protocol, production source
+and dedicated physical/FIFO tests. Any accepted result still covers only this
+frozen case, excluding poor-management, matrix30 and current-main compatibility.
