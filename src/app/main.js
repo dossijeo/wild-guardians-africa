@@ -151,14 +151,16 @@ async function loadScreen() {
 }
 async function startGame(loaded=null,{slotId,preview}={}) {
   if(starting)return;progressQa?.lifecycle('app-start-game-received');starting=true;screen='loading';clearWorld();screenWakeLock.setActive(true);
-  let prepared;const loadingToken=++loadingGeneration,assertLoading=()=>{if(loadingToken!==loadingGeneration||prepared?.world.disposed)throw new DOMException('Loading cancelled','AbortError');};
+  let prepared,endSetupObservation=null;const loadingToken=++loadingGeneration,assertLoading=()=>{if(loadingToken!==loadingGeneration||prepared?.world.disposed)throw new DOMException('Loading cancelled','AbortError');};
   // Retain the complete menu frame until the diorama has actually warmed.
   if(!document.querySelector('#native-menu'))app.innerHTML='<div class="loading" role="status">Preparing your land…</div>';
   try {
     const audioUnlocked=audio.unlock().then(()=>true,()=>false);
     prepared=prepareLoadingScene();
     let next=loaded??(slotId!==undefined?(preview??{day:1,time:0,biome:selectedBiome,culture:selectedCulture}):Game.newGame({biome:selectedBiome,culture:selectedCulture}));
-    await prepared.pending;assertLoading();preparedLoading=null;loadingTransfers=prepared.transfers;world=prepared.world;world.onContextLost=()=>{if(screen==='loading')cancelLoading(new Error(moneyLocale().startsWith('es')?'Se ha perdido el contexto gráfico durante la carga.':'Graphics context lost during loading.'));};loadingDiorama=prepared.diorama;loadingDiorama.show(next);
+    const preparationWitness=prepared.world.loadingReadinessObservation?.witness;
+    if(preparationWitness)await loadingAwaitWitness(preparationWitness,'app-prepared-pending',()=>prepared.pending);else await prepared.pending;
+    assertLoading();endSetupObservation=prepared.world.loadingReadinessObservation?.beginBoundary('app-pre-world-setup');preparedLoading=null;loadingTransfers=prepared.transfers;world=prepared.world;world.onContextLost=()=>{if(screen==='loading')cancelLoading(new Error(moneyLocale().startsWith('es')?'Se ha perdido el contexto gráfico durante la carga.':'Graphics context lost during loading.'));};loadingDiorama=prepared.diorama;loadingDiorama.show(next);
     const audioOwner=new LoadingAudio(audio,next);loadingAudio=audioOwner;loadingDiorama.onPlant=()=>audioOwner.plant();audioUnlocked.then(unlocked=>{if(unlocked&&loadingAudio===audioOwner&&screen==='loading')audioOwner.start();}).catch(()=>{});
     const overlay=new LoadingOverlay({frameImages:prepared.frameImages,locale:moneyLocale(),pointer:matchMedia('(pointer:coarse)').matches?'touch':'mouse',onCancel:()=>cancelLoading()});loadingOverlay=overlay;
     loadingProgress=new LoadingProgress(LOADING_STAGES,{downloads:loadingTransfers.downloads,onChange:snapshot=>overlay.render(snapshot,loadingDiorama?.plants.progress??0,{night:loadingDiorama?.night??0,accepting:loadingDiorama?.interactive??false,pointer:loadingDiorama?.pointerType??overlay.pointer})});
@@ -202,6 +204,7 @@ async function startGame(loaded=null,{slotId,preview}={}) {
     if(progressQa){progressQa.preparationPolicy(world.farIsolatedPreparation,world.farZeroVertexPreparation);world.onLoadingSpan=span=>progressQa.loadingSpan(span);world.onLoadingActorQueue=stats=>progressQa.actorQueue(stats);world.onLoadingGpuDraw=run=>progressQa.gpuInvocation('preparation-far-upload-draw',run);}
     world.loadingReadinessObservation?.connect();world.loadingReadinessObservation?.presentation(loadingDiorama,null);
     const loadingPhase=(label,run)=>loadingAwaitWitness(world.loadingReadinessObservation?.witness,label,run);
+    endSetupObservation?.(false);endSetupObservation=null;
     await loadingPhase('app-world-load',()=>world.load(state,nav,payload,{farVegetation:settings.farVegetation===false?false:farVegetationProfile({quality:settings.quality,biome:nav.config.biome}),loadingProgress}));assertLoading();
     for(const village of state.villages.slice(1)){const data=villages.find(v=>v.id===(village.culture==='saheliana'?'saheliano':village.culture));await loadingPhase('app-extra-village',()=>world.ensureVillage(village.culture,data));assertLoading();world.objects.delete(village.id);}
     await loadingPhase('app-initial-far-ready',()=>world.loadReady(prepareInitialFarWorld(world,{afterRender:()=>{assertLoading();loadingDiorama.render(0,loadingProgress.value);}})));assertLoading();
@@ -214,7 +217,7 @@ async function startGame(loaded=null,{slotId,preview}={}) {
     if(!loadingDiorama.plants.mature)await loadingPhase('app-plants-mature',()=>new Promise((resolve,reject)=>{loadingMature={resolve,reject};}));assertLoading();loadingProgress.confirmReady();
     loadingCinema.start();await loadingPhase('app-cinematic-finished',()=>loadingCinema.finished);assertLoading();progressQa?.cameraPose('cinematic-completed',world);loadingCinema=null;loadingDiorama.dispose();loadingDiorama=null;loadingAudio?.dispose();loadingAudio=null;world.loadingActorQueue?.dispose();progressQa?.lifecycle('app-cinematic-restored-before-controls');progressQa?.close(loadingProgress,loadingTransfers);loadingTransfers.dispose();loadingTransfers=null;world.onLoadingSpan=null;world.onLoadingActorQueue=null;world.onLoadingGpuDraw=null;world.controls.enabled=true;clearInterval(loadingDiagnostic);loadingDiagnostic=null;
     world.render(0);loadingOverlay?.dispose();loadingOverlay=null;document.querySelector('#stage').classList.remove('world-loading');document.querySelector('#stage').setAttribute('aria-busy','false');tutorial=new TutorialController(state,tutorialProfile,{onError:e=>error('No se ha podido guardar la memoria del tutorial: '+e.message),isNarrating:id=>guardian?.voice?.active&&guardian?.key?.startsWith(id+':')});screen='game';screenWakeLock.setActive(true);bind('pause',pauseDialog);lastFrame=performance.now();updateUI(true);save();audio.gameplay(state.day).catch(()=>{});
-  } catch(e){if(loadingToken===loadingGeneration){loadingProgress?.fail(e);state=null;clearWorld();releasePreparedLoading();menu();error(e.message,{loadingFailure:true});}}finally{if(loadingToken===loadingGeneration){starting=false;const stats=document.querySelector('#stats');if(stats)stats.textContent='';}}
+  } catch(e){endSetupObservation?.(true);endSetupObservation=null;if(loadingToken===loadingGeneration){loadingProgress?.fail(e);state=null;clearWorld();releasePreparedLoading();menu();error(e.message,{loadingFailure:true});}}finally{if(loadingToken===loadingGeneration){starting=false;const stats=document.querySelector('#stats');if(stats)stats.textContent='';}}
 }
 function guidedHudAction(action,open){
   const guided=!!hudHand&&!hudHand.image.hidden&&hudHand.selector===`[data-menu="${action}"]`;

@@ -1,0 +1,44 @@
+{
+  "baseRuntime": "1cc3d0b730fa24c7ad23dd2ffe7534c2c7a9d276",
+  "checks": {
+    "testsPassed": 71,
+    "changedSyntaxPassed": 3,
+    "sfx": {
+      "total": 126,
+      "assigned": 100,
+      "unassigned": 26,
+      "exactOriginalFiles": 126,
+      "diffScope": "main fingerprint and main source caller line provenance only"
+    },
+    "unchangedSource": [
+      "src-tauri/smoke.js",
+      "src/rendering/scene.js",
+      "src/rendering/loading-diorama.js",
+      "src/rendering/loading-programs.js",
+      "src/rendering/loading-yield-budget.js",
+      "tools/experiments/compile-gpu-preparation.js",
+      ".github/workflows/windows.yml"
+    ]
+  },
+  "sources": {
+    "src/app/main.js": "656b2f3256e9eb815c80fcd480e986395044ddb2ca28cfc5b50fa1d5ff6353c2",
+    "src/rendering/loading-readiness-snapshot.js": "4b8654b75891164a50f111674b058f05f82cb77731159e6167aae990a2233bc7",
+    "tests/loading-readiness-snapshot.test.js": "4f17b6cb0fdfbef745fb986d46bbc547d4f8351dd40b8d3f71272e880086dc03",
+    "docs/qa/sfx-catalog-post-jam/inventory.json": "d3a9525eac43e1f3be21186f4931694b84f643d07cd85d4dafeaadb79b09bd83",
+    "docs/qa/sfx-catalog-post-jam/inventory.md": "95878c7577230bbd7a1737f0eb3dc61960eebc94745a44bac3e5b9e89719f29a"
+  },
+  "logs": {
+    "tests.log": {
+      "bytes": 16351,
+      "sha256": "68c654717536242e9601ceecbec23d69dfe60a30ad5712ffe2188c21030ad067"
+    },
+    "build.log": {
+      "bytes": 2320,
+      "sha256": "a3ad00a98871562f48814240ce4fcd900dfb42d36a83674c64dfe827e0eed96a"
+    },
+    "package.log": {
+      "bytes": 411,
+      "sha256": "a08210befcee1fc672dcbaaaf19910981a6f6630d387170503755afa7fce1da3"
+    }
+  }
+}

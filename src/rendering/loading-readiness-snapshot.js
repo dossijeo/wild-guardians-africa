@@ -64,23 +64,41 @@ export function existingLoadingContextIdentity(world){
 // Compose with the existing optional witness only. No timers, RAF or phase work.
 // Preserve prior callback this/arguments/result/exception exactly once.
 export function createLoadingReadinessSpanTracker(previous,{now=()=>performance.now()}={}){
- const active=new Map();let dropped=0,lastCompleted=null;
+ const active=new Map(),early=new Map();let dropped=0,earlyDropped=0,lastCompleted=null,closed=false;
+ const selected=label=>{switch(label){case 'app-prepared-pending':case 'app-pre-world-setup':case 'diorama-prepare-sky':case 'diorama-prepare-catalogues':case 'diorama-prepare-maize-model':case 'diorama-prepare-maize-bridges':case 'diorama-prepare-soil-texture':case 'diorama-prepare-mountain-atlas':case 'diorama-prepare-maize-batch':case 'diorama-compile-maize':case 'diorama-upload-maize-soil':case 'diorama-upload-maize-soil-batches':case 'diorama-compile-sky':case 'diorama-compile-mist':case 'diorama-upload-mist':case 'diorama-warm-day-night-sky':case 'diorama-final-fence':return true;default:return false;}};
+ const recordEarly=(row,begin)=>{
+  const label=text(row?.label);if(!selected(label))return;
+  let value=early.get(label);if(!value){if(early.size>=16){earlyDropped++;return;}value={label,firstStart:finite(row?.start),lastStart:null,lastEnd:null,lastDuration:null,begun:0,completed:0,failed:0};early.set(label,value);}
+  const start=finite(row?.start);if(start!==null&&(value.firstStart===null||start<value.firstStart))value.firstStart=start;
+  value.lastStart=start;if(begin)value.begun++;else{value.completed++;if(row?.failed)value.failed++;value.lastEnd=finite(row?.end);value.lastDuration=finite(row?.duration);}
+ };
  const copy=row=>({label:text(row?.label),start:finite(row?.start),end:finite(row?.end),duration:finite(row?.duration),failed:Boolean(row?.failed)});
  const key=row=>JSON.stringify([row?.label,row?.start]);
  function witness(...args){
-  try{const row=args[0];active.delete(key(row));lastCompleted=copy(row);}catch{}
+  if(closed)return;
+  try{const row=args[0];active.delete(key(row));lastCompleted=copy(row);recordEarly(row,false);}catch{}
   return typeof previous==='function'?Reflect.apply(previous,this,args):undefined;
  }
  witness.onBegin=function(...args){
-  try{const row=args[0],id=key(row);if(active.size<16||active.has(id))active.set(id,copy(row));else dropped++;}catch{}
+  if(closed)return;
+  try{const row=args[0],id=key(row);if(active.size<16||active.has(id))active.set(id,copy(row));else dropped++;recordEarly(row,true);}catch{}
   return typeof previous?.onBegin==='function'?Reflect.apply(previous.onBegin,this===witness?previous:this,args):undefined;
  };
+ witness.clear=()=>{closed=true;active.clear();early.clear();lastCompleted=null;previous=null;};
  witness.activeLabel=()=>{let label=null;for(const row of active.values())label=row.label;return label;};
  witness.snapshot=()=>{
-  let at=null;try{at=finite(now());}catch{}
-  return {at,active:[...active.values()].map(row=>({...row,elapsed:at!==null&&row.start!==null?Math.max(0,at-row.start):null})),lastCompleted:lastCompleted?{...lastCompleted}:null,dropped,scope:'Nested awaited wall spans; do not sum as exclusive CPU/GPU time. Associations are labels, not exhaustive readiness proof.'};
+  let at=null;if(!closed)try{at=finite(now());}catch{}
+  return {at,closed,active:[...active.values()].map(row=>({...row,elapsed:at!==null&&row.start!==null?Math.max(0,at-row.start):null})),lastCompleted:lastCompleted?{...lastCompleted}:null,dropped,early:{rows:[...early.values()].map(row=>({...row})),dropped:earlyDropped,scope:'First 16 selected early labels; counts and first/latest timestamps only, not a timeline or additive CPU/GPU durations.'},scope:'Nested awaited wall spans; do not sum as exclusive CPU/GPU time. Associations are labels, not exhaustive readiness proof.'};
  };
  return witness;
+}
+
+// Marks an existing application block without wrapping/reordering its calls.
+// Only the smoke bridge calls this; timestamps never measure constructor work.
+export function beginLoadingReadinessBoundary(witness,label,{now=()=>performance.now()}={}){
+ if(!witness)return null;
+ let start;try{start=now();witness.onBegin?.({label,start});}catch{}
+ let done=false;return failed=>{if(done)return;done=true;try{const end=now();witness({label,start,end,duration:Number.isFinite(start)?end-start:null,failed:Boolean(failed),scope:'Existing application block wall time; nested/overlapping phases are nonadditive.'});}catch{}};
 }
 
 // Called only at the end of a successful World constructor. Weak ownership is
@@ -114,9 +132,9 @@ export function installLoadingReadinessObservation(world,{scope=globalThis,WeakR
   try{if(owner?.onLoadingSpan===tracker)owner.onLoadingSpan=previous;}catch{}
   try{if(owner?.onLoadingCompileJob===createCompileJob)owner.onLoadingCompileJob=previousCompile;}catch{}
   try{owner?.loading?.signal.removeEventListener('abort',release);}catch{}
-  tracker=null;previous=null;previousCompile=null;for(const token of chainedCallbacks)token.callback=null;chainedCallbacks.clear();compilation.clear();dioramaRef=null;cinematicRef=null;
+  try{tracker?.clear();}catch{}tracker=null;previous=null;previousCompile=null;for(const token of chainedCallbacks)token.callback=null;chainedCallbacks.clear();compilation.clear();dioramaRef=null;cinematicRef=null;
  };
- const bridge={release,compilationSnapshot:()=>compilation.snapshot(),get witness(){return closed?null:tracker;},connect(){
+ const bridge={release,beginBoundary:label=>closed?null:beginLoadingReadinessBoundary(tracker,label),compilationSnapshot:()=>compilation.snapshot(),get witness(){return closed?null:tracker;},connect(){
   const owner=get();if(closed||!owner||owner.disposed||owner.loading?.signal.aborted)return;
   if(owner.onLoadingSpan===tracker&&tracker)return;
   previous=owner.onLoadingSpan;tracker=createLoadingReadinessSpanTracker(previous);owner.onLoadingSpan=tracker;

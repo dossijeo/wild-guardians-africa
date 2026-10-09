@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {LoadingProgress} from '../src/app/loading-progress.js';
 import {LoadingOrbit} from '../src/rendering/loading-orbit.js';
 import {LoadingPlants} from '../src/rendering/loading-plants.js';
-import {loadingReadinessSnapshot,existingLoadingContextIdentity,createLoadingReadinessSpanTracker,installLoadingReadinessObservation} from '../src/rendering/loading-readiness-snapshot.js';
+import {loadingReadinessSnapshot,existingLoadingContextIdentity,createLoadingReadinessSpanTracker,beginLoadingReadinessBoundary,installLoadingReadinessObservation} from '../src/rendering/loading-readiness-snapshot.js';
 
 test('snapshot distinguishes real milestones and presentation maturity without scheduling work',()=>{
  const progress=new LoadingProgress([{id:'gpu',weight:1},{id:'far-assets',weight:1},{id:'visible-ready',weight:1}],{now:()=>0});progress.update('gpu');
@@ -107,4 +107,44 @@ test('bridge registration follows every successful constructor step and original
  assert.ok(constructor.indexOf('installLoadingReadinessObservation(this)')>constructor.lastIndexOf("canvas.addEventListener('webglcontextrestored'"));
  const main=await readFile(new URL('../src/app/main.js',import.meta.url),'utf8');for(const label of ['app-world-load','app-extra-village','app-initial-far-ready','app-orbit-settle','app-cinematic-prepare','app-plants-mature','app-cinematic-finished'])assert.ok(main.includes(label));
  const smoke=await readFile(new URL('../src-tauri/smoke.js',import.meta.url),'utf8');assert.match(smoke,/90000/);assert.match(smoke,/await wait\(300000\)/);assert.equal(smoke.match(/__desktopSmokeLoadingReadiness\?\.\(\)/g)?.length,1);
+});
+
+
+test('early summaries retain bounded selected labels and independent nested intervals without resource references',()=>{
+ const tracker=createLoadingReadinessSpanTracker(null,{now:()=>40});
+ tracker.onBegin({label:'app-prepared-pending',start:5});tracker.onBegin({label:'diorama-prepare-maize-model',start:7});
+ const source={label:'diorama-prepare-maize-model',start:7,end:20,duration:13,failed:false,buffer:new Uint8Array(32)};tracker(source);
+ tracker({label:'app-prepared-pending',start:5,end:30,duration:25});tracker({label:'unselected',start:30,end:31,duration:1});
+ const result=tracker.snapshot();assert.equal(result.early.rows.length,2);assert.equal(result.early.rows[0].lastDuration,25);assert.equal(result.early.rows[1].lastDuration,13);
+ source.end=999;source.buffer.fill(2);assert.equal(result.early.rows[1].lastEnd,20);assert.equal(JSON.stringify(result.early).includes('buffer'),false);
+ tracker({label:'diorama-prepare-maize-model',start:35,end:39,duration:4,failed:true});const repeated=tracker.snapshot().early.rows[1];assert.equal(repeated.firstStart,7);assert.equal(repeated.lastStart,35);assert.equal(repeated.completed,2);assert.equal(repeated.failed,1);assert.equal(repeated.lastDuration,4);
+});
+
+test('early selected-label cap reports omitted events and does not retain arbitrary labels or chunk histories',()=>{
+ const labels=['app-prepared-pending','app-pre-world-setup','diorama-prepare-sky','diorama-prepare-catalogues','diorama-prepare-maize-model','diorama-prepare-maize-bridges','diorama-prepare-soil-texture','diorama-prepare-mountain-atlas','diorama-prepare-maize-batch','diorama-compile-maize','diorama-upload-maize-soil','diorama-upload-maize-soil-batches','diorama-compile-sky','diorama-compile-mist','diorama-upload-mist','diorama-warm-day-night-sky','diorama-final-fence'];
+ const tracker=createLoadingReadinessSpanTracker(null,{now:()=>1});for(const label of labels)tracker({label,start:0,end:1,duration:1});
+ for(let i=0;i<10000;i++)tracker({label:'not-selected-'+i,start:0,end:1,duration:1});const result=tracker.snapshot();assert.equal(result.early.rows.length,16);assert.equal(result.early.dropped,1);
+});
+
+test('application boundary observes success/error once and observer faults never alter original calls',async()=>{
+ let clock=0;const tracker=createLoadingReadinessSpanTracker(null,{now:()=>clock}),order=[];
+ const finish=beginLoadingReadinessBoundary(tracker,'app-pre-world-setup',{now:()=>clock});order.push('sync');await Promise.resolve().then(()=>order.push('await'));clock=12;finish(false);finish(true);
+ assert.deepEqual(order,['sync','await']);let row=tracker.snapshot().early.rows[0];assert.equal(row.completed,1);assert.equal(row.failed,0);assert.equal(row.lastDuration,12);
+ const failed=beginLoadingReadinessBoundary(tracker,'app-pre-world-setup',{now:()=>clock});const original=Error('original');try{await Promise.reject(original);}catch(error){failed(true);assert.equal(error,original);}row=tracker.snapshot().early.rows[0];assert.equal(row.completed,2);assert.equal(row.failed,1);
+ const poisonous=()=>{throw Error('observe');};Object.defineProperty(poisonous,'onBegin',{get(){throw Error('begin');}});assert.doesNotThrow(()=>beginLoadingReadinessBoundary(poisonous,'app-pre-world-setup',{now:()=>1})(true));
+ assert.equal(beginLoadingReadinessBoundary(null,'app-pre-world-setup',{now:()=>assert.fail('ordinary clock')}),null);
+});
+
+test('terminal release clears early rows and late boundaries cannot repopulate or invoke retained hooks',()=>{
+ let calls=0,clockReads=0;const previous=()=>calls++,tracker=createLoadingReadinessSpanTracker(previous,{now:()=>++clockReads});
+ const finish=beginLoadingReadinessBoundary(tracker,'app-pre-world-setup',{now:()=>0});tracker({label:'diorama-prepare-sky',start:0,end:1,duration:1});assert.equal(calls,1);tracker.clear();finish(true);tracker.onBegin({label:'diorama-prepare-sky',start:2});tracker({label:'diorama-prepare-sky',start:2,end:3,duration:1});
+ const result=tracker.snapshot();assert.equal(result.closed,true);assert.deepEqual(result.early.rows,[]);assert.deepEqual(result.active,[]);assert.equal(calls,1);assert.equal(clockReads,0);
+ const scope={__desktopSmokeStarted:true},world={loading:new AbortController()};const bridge=installLoadingReadinessObservation(world,{scope});const retained=bridge.witness,late=bridge.beginBoundary('app-pre-world-setup');world.loading.abort();late(true);assert.deepEqual(retained.snapshot().early.rows,[]);assert.equal(bridge.beginBoundary('app-pre-world-setup'),null);
+});
+
+
+test('selected early records preserve prior hook receiver arguments returns and original exceptions exactly once',()=>{
+ const receiver={},events=[];const original=Error('prior');function previous(...args){events.push({receiver:this,args});if(args[1]==='throw')throw original;return 9;}previous.onBegin=function(...args){events.push({receiver:this,args});return 8;};
+ const tracker=createLoadingReadinessSpanTracker(previous,{now:()=>0}),row={label:'app-pre-world-setup',start:0};assert.equal(tracker.onBegin.call(receiver,row,'begin'),8);assert.equal(tracker.call(receiver,{...row,end:1,duration:1},'end'),9);assert.throws(()=>tracker.call(receiver,{...row,end:2,duration:2},'throw'),error=>error===original);
+ assert.equal(events.length,3);assert.equal(events[0].receiver,receiver);assert.deepEqual(events.map(event=>event.args[1]),['begin','end','throw']);assert.equal(tracker.snapshot().early.rows[0].completed,2);
 });

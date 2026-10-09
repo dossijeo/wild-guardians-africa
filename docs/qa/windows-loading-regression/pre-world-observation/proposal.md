@@ -1,0 +1,13 @@
+# Early preparation observation — awaiting root review
+
+This branch retains runtime1cc3 and adds only smoke-owned observation. No new recipe, asset request, GL query, polling, renderer, loop, delay or readiness deadline. Original smoke worldStartedAt remains unchanged. Constructor cost is not measured or inferred.
+
+The span tracker retains the first16 selected early labels: diorama existing phases and two application blocks. Each row has label, firstStart, lastStart/lastEnd/lastDuration and begun/completed/failed counts. Overflow events are explicit in early.dropped; unselected labels have no retained history. Parent/child and repeated overlapping spans are never summed. The initial and latest timestamps can reveal preparation predating the smoke start; they do not imply exclusive CPU/GPU cost. Completed phase summaries remain available at finish after World spans overwrite lastCompleted.
+
+app-prepared-pending wraps only the existing awaited prepared.pending on the smoke path. Ordinary mode awaits that promise directly. app-pre-world-setup starts after the existing successful pending/assert boundary and completes immediately before app-world-load, marking failure in the original catch. It includes existing handoff/render/UI, Continue snapshot or New setup/nav/metadata work without wrapping or reordering those calls. There is no dispatch/constructor boundary change.
+
+Original hooks preserve this, arguments, return values and exceptions exactly once while active. Observational boundaries contain faulty diagnostic callbacks. Terminal release clears rows, callback references and pending boundary observation; late callbacks cannot repopulate the collector. No strong World/material/program/event/buffer references are retained by the summary. Normal mode has no bridge, no new observation clock reads/record arrays/call wrappers.
+
+71 directed CPU contracts pass, including bounded selected rows, nested independent intervals, repeated labels/failures, callback faults/identity/throws, success/error boundary completion once, terminal cancel/late callbacks, actual compilation call order and original smoke finish behavior. CPU doubles are not native timing or raster evidence. Changed-file syntax and SFX checks pass. SFX differences are only main source fingerprint and shifted main caller line provenance; all126 original audio files and100/26 classification stay unchanged. Build/package receipts accompany this proposal.
+
+Original negatives and immutable raw remain untouched. No Windows dispatch, local native/GPU, performance claim, PR or promotion is authorized by these checks; root must review this source before the next run.
