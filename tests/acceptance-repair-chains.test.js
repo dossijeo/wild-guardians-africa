@@ -7,6 +7,7 @@ import {numberOf,rational,transact} from '../src/simulation/money.js';
 import {hitStructure} from '../src/simulation/rules.js';
 import {spawnRaid} from '../src/simulation/raids.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
+import {createRepairSettlementEvidence} from '../tools/repair-settlement-evidence.mjs';
 
 // Real Navigation and native building/wall footprints on an explicitly flat,
 // prop-free terrain fixture. Workers move exclusively through Game.tick.
@@ -19,11 +20,11 @@ function fixture(){
  assert.equal(numberOf(s.ledger.balance),630);
  return {s,nav,target,worker:s.workers[0]};
 }
-function until(s,nav,condition,limit=180){
+function until(s,nav,condition,limit=180,onTick=null){
  let elapsed=0;
  while(!condition()&&elapsed<limit&&!s.result&&!s.pauses.length){
   const positions=s.workers.map(w=>({x:w.x,z:w.z})),approaches=s.workers.map(w=>{const t=s.tasks.find(t=>t.id===w.taskId),target=s.structures.find(e=>e.id===t?.targetId);return w.taskApproach?.destination??(t?.kind==='repair'&&target?repairRoute(w,target,nav)?.destination:null);}),repairs=s.events.filter(e=>e.type==='RepairApplied').length;
-  Game.tick(s,.05,nav);elapsed+=.05;
+  Game.tick(s,.05,nav);elapsed+=.05;onTick?.(s);
   for(const [i,w] of s.workers.entries())assert.ok(nav.segmentClear(positions[i],w,.28,null,true),'worker must follow collision-safe physical segments');
   if(s.events.filter(e=>e.type==='RepairApplied').length>repairs)assert.ok(s.workers.some((w,i)=>approaches[i]&&Math.hypot(w.x-approaches[i].x,w.z-approaches[i].z)<1e-7),'restoration must occur at the physical repair service point');
  }
@@ -66,12 +67,14 @@ test('repair ratios preserve decimal gate health rather than rounding to half HP
 
 test('center repair receipt records its actual rounded debit and physical arrival',()=>{
  const {s,nav}=fixture(),center=s.structures.find(t=>t.kind==='center');
+ const evidence=createRepairSettlementEvidence(s);
  hitStructure(center,40,s.elapsed);nav.setState(s);assert.equal(center.hp,560);
  Game.requestRepair(s,'center-repair',center.id);
  assert.equal(numberOf(s.ledger.balance),630);assert.ok(!s.events.some(e=>e.type==='RepairApplied'));
- until(s,nav,()=>s.events.some(e=>e.type==='RepairApplied'&&e.targetId===center.id));
+ until(s,nav,()=>s.events.some(e=>e.type==='RepairApplied'&&e.targetId===center.id),180,current=>evidence.observe(current));
  assert.equal(center.hp,600);assert.equal(numberOf(s.ledger.balance),576);
  settledRepair(s,center,560,54);
+ const report=evidence.report(s);assert.equal(report.status,'verified');assert.equal(report.paidCoins,'54');assert.equal(report.restoredHp,40);assert.equal(report.completedRepairs,1);
 });
 function spendToReserve(s,nav){
  for(let i=0;i<59;i++)Game.placeStructure(s,`other-wall-${i}`,{kind:'wall',material:'zarzas',x:-20+i*4,z:15},nav);
