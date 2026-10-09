@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "C:\Users\PC\.codex\worktrees\campaign-service-diagnostic\wild-guardians-africa\tools\analyse_economic_candidates.py", line 68, in <module>
+    assert all(day['staff'] > 0 and day['delivered'] > 0 for day in report['daily'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

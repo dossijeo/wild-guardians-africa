@@ -52,6 +52,7 @@ try{
   activity:result.activity,categories,daily:[...observations.values()],examples,
   snapshotSha256:sha(raw),completeBaselineParity:baseline===null?'not-applicable':true,
   scope:'At most10 unchanged-policy native nights. Real runtime parameters; no free money/crops, policy/seed/domain changes, FIFO bypass or activity-gate relaxation. Budget scalar observer only. Not100-night/matrix/release acceptance.'});
+ assert.ok(result.daily.every(day=>day.staff>0&&day.delivered>0),'Working day without paid staff or physical deliveries');
  console.log(JSON.stringify({source:provenance.gitHead,completedNights:result.completedNights,result:result.result,
   inactivity:result.activity.unoccupiedFraction,money:result.money,categories,snapshotSha256:sha(raw)}));
 }catch(error){

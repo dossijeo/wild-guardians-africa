@@ -1,0 +1,359 @@
+{
+  "status": "retained-pilot-records-verified-with-gate-failures",
+  "cases": [
+    {
+      "case": "baseline",
+      "source": "8541cbf0e4cd486d4dec18da3fb03bd0c3e1df1b",
+      "sourceHashesVerified": 376,
+      "snapshotSha256": "c6fd00eff33940158e69aa72f3719c674974248099e5c04024a2ca53b69d3f31",
+      "completedNights": 10,
+      "inactivity": 0.7753333333333333,
+      "categories": {
+        "maintenanceReserve": 1731,
+        "belowCurrentTeamReserve": 396
+      },
+      "physicalDeliveries": 419,
+      "living": 208,
+      "cashflow": {
+        "openingBalance": "1500",
+        "harvestIncome": "6094",
+        "seedCosts": "3210",
+        "wageCosts": "2700",
+        "repairCosts": "80",
+        "centreCosts": "800",
+        "wallCosts": "0",
+        "otherNet": "0",
+        "operatingCashFlow": "104",
+        "netCashFlowAfterConstruction": "-696",
+        "endingBalance": "804"
+      },
+      "physicalWorkingDayGate": {
+        "status": "passed",
+        "failures": []
+      },
+      "gates": {
+        "requestedNightsAndNoDefeat": "passed",
+        "everyDayPaidStaffAndPhysicalDelivery": "passed",
+        "integerLedgerHydrationMaturityPaidCrates": "passed",
+        "shortWindowInactivityBelow25Percent": "failed",
+        "responsible100NightActivityAndSurvival": "not-tested",
+        "responsible30CaseMatrix": "not-tested",
+        "poorManagementThisParameterSet": "not-tested-here"
+      },
+      "files": {
+        "diagnostic.json": "8cf1b273e114e984b9d99b68d08b0791c273edf923b07e1e92565c803ba10423",
+        "report.json": "8f9212139c256abc95d69504863fc959e9aa44317a61cc420ef43c84d2a1786b",
+        "state.json": "c6fd00eff33940158e69aa72f3719c674974248099e5c04024a2ca53b69d3f31",
+        "summary.json": "2a4c6cf055745d64bf2f4f5f2f95432156a1864ad3241e2d07ccafc7fa88910b"
+      },
+      "taskRuntimeSha256": "97909386cb23254856ca20157250b58cbf868152c5b36495600dd803bec70f92",
+      "gameRuntimeSha256": "4c9721c49122c328d39a6ddc3eb53a92902ef1b5e2c763f04a39ced67674752d"
+    },
+    {
+      "case": "harvest-quarter",
+      "source": "c33fff113d684b4d8ba69f52e86ff882b80a4ea4",
+      "sourceHashesVerified": 376,
+      "snapshotSha256": "7f7278cb20479e843e9bf6ed146cceef34ba464687cab928ace2739a13225322",
+      "completedNights": 10,
+      "inactivity": 0.7466666666666667,
+      "categories": {
+        "maintenanceReserve": 1388,
+        "belowCurrentTeamReserve": 621,
+        "belowGrowingTeamReserve": 8,
+        "belowMinimumHiringReserve": 27
+      },
+      "physicalDeliveries": 470,
+      "living": 237,
+      "cashflow": {
+        "openingBalance": "1500",
+        "harvestIncome": "8232",
+        "seedCosts": "3645",
+        "wageCosts": "3900",
+        "repairCosts": "220",
+        "centreCosts": "800",
+        "wallCosts": "0",
+        "otherNet": "0",
+        "operatingCashFlow": "467",
+        "netCashFlowAfterConstruction": "-333",
+        "endingBalance": "1167"
+      },
+      "physicalWorkingDayGate": {
+        "status": "passed",
+        "failures": []
+      },
+      "gates": {
+        "requestedNightsAndNoDefeat": "passed",
+        "everyDayPaidStaffAndPhysicalDelivery": "passed",
+        "integerLedgerHydrationMaturityPaidCrates": "passed",
+        "shortWindowInactivityBelow25Percent": "failed",
+        "responsible100NightActivityAndSurvival": "not-tested",
+        "responsible30CaseMatrix": "not-tested",
+        "poorManagementThisParameterSet": "not-tested-here"
+      },
+      "files": {
+        "diagnostic.json": "9bb4c94f16e15d97515efdd369bd454b44269f48b7ab4394e0f7197f847bbe91",
+        "report.json": "d14443edd7e04f907fca500a7761607e67b9446f7e5ad14196035fdd6fb1443d",
+        "state.json": "7f7278cb20479e843e9bf6ed146cceef34ba464687cab928ace2739a13225322",
+        "summary.json": "58dec77a35e24d008f6c6a1af23f4d4cbc33f1a0d69772bec8ef998f50209420"
+      },
+      "taskRuntimeSha256": "97909386cb23254856ca20157250b58cbf868152c5b36495600dd803bec70f92",
+      "gameRuntimeSha256": "4c9721c49122c328d39a6ddc3eb53a92902ef1b5e2c763f04a39ced67674752d"
+    },
+    {
+      "case": "seed-quarter",
+      "source": "8561f788989bcc05d54ca3d938156aed8cddc1c5",
+      "sourceHashesVerified": 376,
+      "snapshotSha256": "d33a4fb111323ed85b28d44713e81f6448dce97fa718a21ab028440169addbdb",
+      "completedNights": 10,
+      "inactivity": 0.762,
+      "categories": {
+        "maintenanceReserve": 1635,
+        "belowCurrentTeamReserve": 446,
+        "belowGrowingTeamReserve": 6
+      },
+      "physicalDeliveries": 436,
+      "living": 233,
+      "cashflow": {
+        "openingBalance": "1500",
+        "harvestIncome": "6226",
+        "seedCosts": "2879",
+        "wageCosts": "3180",
+        "repairCosts": "234",
+        "centreCosts": "800",
+        "wallCosts": "0",
+        "otherNet": "0",
+        "operatingCashFlow": "-67",
+        "netCashFlowAfterConstruction": "-867",
+        "endingBalance": "633"
+      },
+      "physicalWorkingDayGate": {
+        "status": "failed",
+        "failures": [
+          {
+            "day": 1,
+            "paidStaff": 6,
+            "delivered": 0
+          }
+        ]
+      },
+      "gates": {
+        "requestedNightsAndNoDefeat": "passed",
+        "everyDayPaidStaffAndPhysicalDelivery": "failed",
+        "integerLedgerHydrationMaturityPaidCrates": "passed",
+        "shortWindowInactivityBelow25Percent": "failed",
+        "responsible100NightActivityAndSurvival": "not-tested",
+        "responsible30CaseMatrix": "not-tested",
+        "poorManagementThisParameterSet": "not-tested-here"
+      },
+      "files": {
+        "diagnostic.json": "cc3a1f013ef5751d0f3dbe124f95e83714391aeb94297193a7b345642d67330a",
+        "report.json": "0624bd79b8792dd2882e36041133c6fef92585a9d45436621eeb5646eb650fbd",
+        "state.json": "d33a4fb111323ed85b28d44713e81f6448dce97fa718a21ab028440169addbdb",
+        "summary.json": "132debae92e027f598aab960bbd9d0b54294e07ea9acaac038a7b3a51fab26b6"
+      },
+      "taskRuntimeSha256": "97909386cb23254856ca20157250b58cbf868152c5b36495600dd803bec70f92",
+      "gameRuntimeSha256": "4c9721c49122c328d39a6ddc3eb53a92902ef1b5e2c763f04a39ced67674752d"
+    },
+    {
+      "case": "combined-quarter",
+      "source": "cb7f4ebb9a9e3d44cc834f6cfe82d2639f68f57d",
+      "sourceHashesVerified": 376,
+      "snapshotSha256": "3f4c31484b5e3e747401afa77a7cf4d1057b885dfc0ab994a9091f7ebb0ef35b",
+      "completedNights": 10,
+      "inactivity": 0.6906666666666667,
+      "categories": {
+        "maintenanceReserve": 1520,
+        "belowCurrentTeamReserve": 357
+      },
+      "physicalDeliveries": 518,
+      "living": 359,
+      "cashflow": {
+        "openingBalance": "1500",
+        "harvestIncome": "8932",
+        "seedCosts": "3592",
+        "wageCosts": "4800",
+        "repairCosts": "0",
+        "centreCosts": "800",
+        "wallCosts": "0",
+        "otherNet": "0",
+        "operatingCashFlow": "540",
+        "netCashFlowAfterConstruction": "-260",
+        "endingBalance": "1240"
+      },
+      "physicalWorkingDayGate": {
+        "status": "failed",
+        "failures": [
+          {
+            "day": 1,
+            "paidStaff": 6,
+            "delivered": 0
+          }
+        ]
+      },
+      "gates": {
+        "requestedNightsAndNoDefeat": "passed",
+        "everyDayPaidStaffAndPhysicalDelivery": "failed",
+        "integerLedgerHydrationMaturityPaidCrates": "passed",
+        "shortWindowInactivityBelow25Percent": "failed",
+        "responsible100NightActivityAndSurvival": "not-tested",
+        "responsible30CaseMatrix": "not-tested",
+        "poorManagementThisParameterSet": "passed-three-natural-losses"
+      },
+      "files": {
+        "diagnostic.json": "fa4469df7c91e749e067ce73e349b08de49858f8290e3f2d3dc126d9c5219aa4",
+        "report.json": "8eca3df68c715982a1437ed6a83344af0040546c76ad1fdc924ef4b49b815d6a",
+        "state.json": "3f4c31484b5e3e747401afa77a7cf4d1057b885dfc0ab994a9091f7ebb0ef35b",
+        "summary.json": "f1ab45eec836691c1f09dd8527894905eaab190cf8c07d918bc0104095ff89f6"
+      },
+      "taskRuntimeSha256": "97909386cb23254856ca20157250b58cbf868152c5b36495600dd803bec70f92",
+      "gameRuntimeSha256": "4c9721c49122c328d39a6ddc3eb53a92902ef1b5e2c763f04a39ced67674752d"
+    },
+    {
+      "case": "seed-half-harvest-quarter",
+      "source": "e36f91526671bf77d6ea138766b07a4a02a7820a",
+      "sourceHashesVerified": 376,
+      "snapshotSha256": "a310b78524b83418519f95e4d8cc4ad2d970d5ec9fd54fb6d7c4e566e381c7f2",
+      "completedNights": 10,
+      "inactivity": 0.639,
+      "categories": {
+        "maintenanceReserve": 1280,
+        "belowCurrentTeamReserve": 439
+      },
+      "physicalDeliveries": 660,
+      "living": 388,
+      "cashflow": {
+        "openingBalance": "1500",
+        "harvestIncome": "11018",
+        "seedCosts": "4502",
+        "wageCosts": "5940",
+        "repairCosts": "0",
+        "centreCosts": "800",
+        "wallCosts": "0",
+        "otherNet": "0",
+        "operatingCashFlow": "576",
+        "netCashFlowAfterConstruction": "-224",
+        "endingBalance": "1276"
+      },
+      "physicalWorkingDayGate": {
+        "status": "failed",
+        "failures": [
+          {
+            "day": 1,
+            "paidStaff": 6,
+            "delivered": 0
+          }
+        ]
+      },
+      "gates": {
+        "requestedNightsAndNoDefeat": "passed",
+        "everyDayPaidStaffAndPhysicalDelivery": "failed",
+        "integerLedgerHydrationMaturityPaidCrates": "passed",
+        "shortWindowInactivityBelow25Percent": "failed",
+        "responsible100NightActivityAndSurvival": "not-tested",
+        "responsible30CaseMatrix": "not-tested",
+        "poorManagementThisParameterSet": "not-tested-here"
+      },
+      "files": {
+        "diagnostic.json": "3771e76e1f4e8563a036bd02f71d1ce2be3dd96775c39c17a36948360fa803dd",
+        "report.json": "0884586159abc43eb217ec196ad8297b43316fe60a939118301c8003464779b0",
+        "state.json": "a310b78524b83418519f95e4d8cc4ad2d970d5ec9fd54fb6d7c4e566e381c7f2",
+        "summary.json": "025825a7706c39eb5d8ac27795a033d6f6bc73a351e665ade88627527b07f754"
+      },
+      "taskRuntimeSha256": "97909386cb23254856ca20157250b58cbf868152c5b36495600dd803bec70f92",
+      "gameRuntimeSha256": "4c9721c49122c328d39a6ddc3eb53a92902ef1b5e2c763f04a39ced67674752d"
+    }
+  ],
+  "combinedCandidatePoorManagement": {
+    "defeats": 3,
+    "cases": [
+      {
+        "biome": "sabana",
+        "status": "audited",
+        "result": "defeat",
+        "completedNights": 8,
+        "money": 30,
+        "maximumLiving": 448,
+        "delivered": 130,
+        "unoccupiedFraction": 0.9492592592592592,
+        "gameOver": [
+          {
+            "id": "event-9521",
+            "type": "GameOver"
+          }
+        ],
+        "snapshotSha256": "3be338fb38d57dbbf400a926d743ba8ff3483fc9c3a2e568abd3ba263b47a6f9"
+      },
+      {
+        "biome": "gran-rio",
+        "status": "audited",
+        "result": "defeat",
+        "completedNights": 8,
+        "money": 30,
+        "maximumLiving": 448,
+        "delivered": 130,
+        "unoccupiedFraction": 0.9496296296296296,
+        "gameOver": [
+          {
+            "id": "event-9520",
+            "type": "GameOver"
+          }
+        ],
+        "snapshotSha256": "69ace79a2a8befc4f1a41ffddaa8b805537509b71e252ba2f7ea4cb46333010d"
+      },
+      {
+        "biome": "manglares",
+        "status": "audited",
+        "result": null,
+        "completedNights": 10,
+        "money": 30,
+        "maximumLiving": 512,
+        "delivered": 141,
+        "unoccupiedFraction": 0.9503333333333334,
+        "gameOver": [],
+        "snapshotSha256": "e79b047c1e32842ba7306d90fd4bb97c9f54298054111bd75901319bdb6d03d5"
+      },
+      {
+        "biome": "volcanes",
+        "status": "audited",
+        "result": "defeat",
+        "completedNights": 8,
+        "money": 32,
+        "maximumLiving": 450,
+        "delivered": 131,
+        "unoccupiedFraction": 0.9488888888888889,
+        "gameOver": [
+          {
+            "id": "event-9523",
+            "type": "GameOver"
+          }
+        ],
+        "snapshotSha256": "3338911c57c2fdeebd39021cf91c50494b93d480643eb6a8b0f590a4ff8eaa40"
+      },
+      {
+        "biome": "gran-canon",
+        "status": "audited",
+        "result": null,
+        "completedNights": 10,
+        "money": 32,
+        "maximumLiving": 358,
+        "delivered": 98,
+        "unoccupiedFraction": 0.9626666666666667,
+        "gameOver": [],
+        "snapshotSha256": "1694f9e73599ef3ec4b37b6fd1b80d16b8f96cb1ac85a2de9b2711d1da78d0ac"
+      },
+      {
+        "biome": "desierto",
+        "status": "audited",
+        "result": null,
+        "completedNights": 10,
+        "money": 60,
+        "maximumLiving": 310,
+        "delivered": 69,
+        "unoccupiedFraction": 0.9726666666666667,
+        "gameOver": [],
+        "snapshotSha256": "650630bbbe86007d47ef57339ef76e88e162458f1dda3409a6b8f190a316785d"
+      }
+    ]
+  },
+  "scope": "Read-only own-source hashes/real seed debits/hydration/maturity/paid physical deliveries/integer-ledger verification of10-night pilots. Working-day gate is explicitly FAILED for B/C/D (day1 zero delivered), never approved by this record audit. Initial strict audit failure is preserved. Native runner separately audits FIFO/saves through unchanged game/tasks runtime. A short window exceeding25% does not prove100-night failure; none proves100-night/matrix acceptance. D poor-management coverage is pending. No replay, reseeding or policy/reserve changes."
+}
