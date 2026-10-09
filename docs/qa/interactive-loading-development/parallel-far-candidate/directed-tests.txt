@@ -1,0 +1,167 @@
+TAP version 13
+# (node:32188) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: HQ profile loads only its chosen biome atlas with stable four-arc settings and retains an explicit legacy switch
+ok 1 - HQ profile loads only its chosen biome atlas with stable four-arc settings and retains an explicit legacy switch
+  ---
+  duration_ms: 5.1714
+  ...
+# Subtest: integrated quality changes reuse owned adapters and atlas resources within the prepared extent
+ok 2 - integrated quality changes reuse owned adapters and atlas resources within the prepared extent
+  ---
+  duration_ms: 2.0994
+  ...
+# Subtest: attachment loads only selected biome resources and releases them once on world close
+ok 3 - attachment loads only selected biome resources and releases them once on world close
+  ---
+  duration_ms: 0.4034
+  ...
+# Subtest: atmosphere options reach the biome adapter and invalid distances allocate no resources
+ok 4 - atmosphere options reach the biome adapter and invalid distances allocate no resources
+  ---
+  duration_ms: 0.5561
+  ...
+# Subtest: late texture arriving after attachment cancellation is immediately released
+ok 5 - late texture arriving after attachment cancellation is immediately released
+  ---
+  duration_ms: 6.2582
+  ...
+# Subtest: late prepared species is disposed after world close without double-releasing earlier textures
+ok 6 - late prepared species is disposed after world close without double-releasing earlier textures
+  ---
+  duration_ms: 1.5624
+  ...
+# Subtest: configured visual radius is reversible on disable/dispose and validated before resource loading
+ok 7 - configured visual radius is reversible on disable/dispose and validated before resource loading
+  ---
+  duration_ms: 1.0038
+  ...
+# Subtest: visual-only radius retains loaded radius ownership and restores both preceding values
+ok 8 - visual-only radius retains loaded radius ownership and restores both preceding values
+  ---
+  duration_ms: 0.709
+  ...
+# Subtest: prop transition circle is owned and restored independently of exact terrain residency
+ok 9 - prop transition circle is owned and restored independently of exact terrain residency
+  ---
+  duration_ms: 0.9089
+  ...
+# Subtest: closing the biome owner releases native upload cache listeners before disposing its atlas textures
+ok 10 - closing the biome owner releases native upload cache listeners before disposing its atlas textures
+  ---
+  duration_ms: 3.7781
+  ...
+# Subtest: late GPU callback cannot resurrect closed owner or disturb replacement false
+ok 11 - late GPU callback cannot resurrect closed owner or disturb replacement false
+  ---
+  duration_ms: 0.708
+  ...
+# Subtest: late GPU callback cannot resurrect closed owner or disturb replacement true
+ok 12 - late GPU callback cannot resurrect closed owner or disturb replacement true
+  ---
+  duration_ms: 0.8787
+  ...
+# Subtest: faithful impostors remain exact until the atmospheric far landscape and distances stay configurable
+ok 13 - faithful impostors remain exact until the atmospheric far landscape and distances stay configurable
+  ---
+  duration_ms: 2.3882
+  ...
+# Subtest: far ground is independently configurable without changing exact terrain ownership
+ok 14 - far ground is independently configurable without changing exact terrain ownership
+  ---
+  duration_ms: 0.5697
+  ...
+# Subtest: logical native prewarm stays opt-in and invalid options allocate no atlas
+ok 15 - logical native prewarm stays opt-in and invalid options allocate no atlas
+  ---
+  duration_ms: 0.818
+  ...
+# Subtest: seed changes invalidate the whole far owner and release borrowed preparations once
+ok 16 - seed changes invalidate the whole far owner and release borrowed preparations once
+  ---
+  duration_ms: 0.4779
+  ...
+# Subtest: texture storage estimates use loaded atlas dimensions rather than a uniform species size
+ok 17 - texture storage estimates use loaded atlas dimensions rather than a uniform species size
+  ---
+  duration_ms: 0.4549
+  ...
+# Subtest: landscape composition forwards existing backdrop controls without altering atlas ownership
+ok 18 - landscape composition forwards existing backdrop controls without altering atlas ownership
+  ---
+  duration_ms: 0.4995
+  ...
+# Subtest: runtime metadata selects linear premultiplied atlases without changing unmarked species
+ok 19 - runtime metadata selects linear premultiplied atlases without changing unmarked species
+  ---
+  duration_ms: 1.192
+  ...
+# Subtest: authored large-tree policy preserves the native color transition envelope and rejects invalid policy before assets
+ok 20 - authored large-tree policy preserves the native color transition envelope and rejects invalid policy before assets
+  ---
+  duration_ms: 0.5326
+  ...
+# Subtest: loading-only bitmap textures retain far-owner disposal and native vertical orientation
+ok 21 - loading-only bitmap textures retain far-owner disposal and native vertical orientation
+  ---
+  duration_ms: 0.6151
+  ...
+# Subtest: parallel loading starts day, night and backdrop before any image resolves, without parallel attachment
+ok 22 - parallel loading starts day, night and backdrop before any image resolves, without parallel attachment
+  ---
+  duration_ms: 7.2167
+  ...
+# Subtest: parallel loading cancellation releases every late image and never attaches a partial region
+ok 23 - parallel loading cancellation releases every late image and never attaches a partial region
+  ---
+  duration_ms: 1.2627
+  ...
+# Subtest: parallel loading observes sibling failure and releases successful images before rejecting
+ok 24 - parallel loading observes sibling failure and releases successful images before rejecting
+  ---
+  duration_ms: 0.6799
+  ...
+# Subtest: parallel images preserve sequential species admission and all exact texture pairs
+ok 25 - parallel images preserve sequential species admission and all exact texture pairs
+  ---
+  duration_ms: 1.749
+  ...
+# Subtest: initial loading waits for every prepared region using render zero only
+ok 26 - initial loading waits for every prepared region using render zero only
+  ---
+  duration_ms: 2.1597
+  ...
+# Subtest: no horizon skips loading while disposal, owner replacement and resource errors reject
+ok 27 - no horizon skips loading while disposal, owner replacement and resource errors reject
+  ---
+  duration_ms: 0.8364
+  ...
+# Subtest: missing regions time out without treating an empty adapter list as ready
+ok 28 - missing regions time out without treating an empty adapter list as ready
+  ---
+  duration_ms: 0.5309
+  ...
+# Subtest: suspended far-loading frame cancels without rendering or adopting late regions
+ok 29 - suspended far-loading frame cancels without rendering or adopting late regions
+  ---
+  duration_ms: 1.7777
+  ...
+# Subtest: suspended far-loading frame reaches its real deadline without another RAF
+ok 30 - suspended far-loading frame reaches its real deadline without another RAF
+  ---
+  duration_ms: 114.7272
+  ...
+# Subtest: phase-yield callback given to rendering shares the cancellable far owner
+ok 31 - phase-yield callback given to rendering shares the cancellable far owner
+  ---
+  duration_ms: 0.9541
+  ...
+1..31
+# tests 31
+# suites 0
+# pass 31
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 326.6977

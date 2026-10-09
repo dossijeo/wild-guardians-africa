@@ -1,0 +1,16 @@
+- paragraph: El Espíritu prepara el mundo…
+- generic: "[plugin:vite:import-analysis] Failed to resolve import \"../../tests/browser/gpu-timer.js\" from \"src/app/loading-gpu-qa.js\". Does the file exist?"
+- generic: C:/Users/PC/.codex/worktrees/interactive-loading-screen/wild-guardians-africa/.cache/loading-main-v4-B-41f57d03/src/app/loading-gpu-qa.js:1:25
+- generic: "1 | import {GpuTimer} from '../../tests/browser/gpu-timer.js'; | ^ 2 | // Explicit application QA only. The envelope measures commands enqueued by the 3 | // synchronous presentation call, including subdraws; async uploads outside it"
+- generic: at TransformPluginContext._formatLog (file:///C:/Users/PC/source/repos/wild-guardians-africa/node_modules/vite/dist/node/chunks/dep-Dm0c1Wj2.js:42658:41) at TransformPluginContext.error (file:///C:/Users/PC/source/repos/wild-guardians-africa/node_modules/vite/dist/node/chunks/dep-Dm0c1Wj2.js:42655:16) at normalizeUrl (file:///C:/Users/PC/source/repos/wild-guardians-africa/node_modules/vite/dist/node/chunks/dep-Dm0c1Wj2.js:40634:23) at async file:///C:/Users/PC/source/repos/wild-guardians-africa/node_modules/vite/dist/node/chunks/dep-Dm0c1Wj2.js:40753:37 at async Promise.all (index 0) at async TransformPluginContext.transform (file:///C:/Users/PC/source/repos/wild-guardians-africa/node_modules/vite/dist/node/chunks/dep-Dm0c1Wj2.js:40680:7) at async EnvironmentPluginContainer.transform (file:///C:/Users/PC/source/repos/wild-guardians-africa/node_modules/vite/dist/node/chunks/dep-Dm0c1Wj2.js:42453:18) at async loadAndTransform (file:///C:/Users/PC/source/repos/wild-guardians-africa/node_modules/vite/dist/node/chunks/dep-Dm0c1Wj2.js:35845:27) at async viteTransformMiddleware (file:///C:/Users/PC/source/repos/wild-guardians-africa/node_modules/vite/dist/node/chunks/dep-Dm0c1Wj2.js:37369:24
+- text: Click outside, press Esc key, or fix the code to dismiss.
+- text: You can also disable this overlay by setting
+- code: server.hmr.overlay
+- text: to
+- code: "false"
+- text: in
+- code: vite.config.js
+- text: .
+- complementary:
+  - button "Import identical QA save"
+  - text: Not imported

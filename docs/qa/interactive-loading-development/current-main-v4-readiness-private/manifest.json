@@ -5,7 +5,7 @@
       "source": "d6c4adfc19f9cfc0db6f5d75fcbac4901f80ee6b",
       "root": "C:\\Users\\PC\\.codex\\worktrees\\interactive-loading-screen\\wild-guardians-africa\\.cache\\loading-main-v4-A-d6c4adfc",
       "url": "http://127.0.0.1:5410/",
-      "sourceInventorySha256": "a1b7c6199a9cb724b0d149ec8ad7daf4ccb6bdbb370aaff0273c09c4ccb49d15",
+      "sourceInventorySha256": "e082a526eb056701380a3547d1e05506d24d6333ba68f0c2543e5b2ce88585c4",
       "originalMainSha256": "d73cbabf639788c177551c153ab1cb8023e82cb60bbdbacbb029ec1d66c2bf50",
       "instrumentedMainSha256": "5017156de72d804ea86438b8a7afc3fe7cd6cc0e48461624100aa1a1f7ee443a",
       "hooks": [
@@ -21,7 +21,7 @@
       "source": "41f57d037d79d4a2f5925b04bb77a2f926279e25",
       "root": "C:\\Users\\PC\\.codex\\worktrees\\interactive-loading-screen\\wild-guardians-africa\\.cache\\loading-main-v4-B-41f57d03",
       "url": "http://127.0.0.1:5411/",
-      "sourceInventorySha256": "ddab6f9d97d2606991bad194206cd9247f45869ad0a25edb9d9085b8546179d4",
+      "sourceInventorySha256": "e4fd371d490ce540bee68265b9af00ce148463a982dcfd07af25c702d548ed10",
       "originalMainSha256": "a3a94504254e3393c6f96cb607ba66967bd4848946a7df38710ce8ddc15f3e43",
       "instrumentedMainSha256": "5ec38285aea6c13afc8a45b1167a5bbd8a27eabe82af2828c8626020166b100e",
       "hooks": [
@@ -41,5 +41,6 @@
   ],
   "flags": "Neither URL has qa-loading, frameSlack, GPU timers or batch flags. Feature defaults unchanged. Common observer uses the existing production RAF; no extra loop. Hooks are private only.",
   "timing": "Start is trusted native Continue button capture, includes repository load. Complete is screen=game after restoration/final world draw before HUD update/autosave. Readiness hooks follow genuine first world draw (main) / GPU readiness+growth confirmation (feature). Pre-click preparation intervals are explicit and not included in click wait.",
-  "observerCorrection": "Native menu Continue uses data-production-save inside same-origin iframe. Common capture listener is installed on its document load and records genuine trusted click; parent postMessage receipt is separate. Discovery observer disconnects at click. Initial import pilot before correction preserved."
+  "observerCorrection": "Native menu Continue uses data-production-save inside same-origin iframe. Common capture listener is installed on its document load and records genuine trusted click; parent postMessage receipt is separate. Discovery observer disconnects at click. Initial import pilot before correction preserved.",
+  "privateExportCorrection": "Initial B pilot failed before app import: omitted tests/browser/gpu-timer.js, statically imported even with GPU QA flags off. Added exact committed helper to BOTH roots and source inventories. Production source unchanged; negative pilot retained."
 }
