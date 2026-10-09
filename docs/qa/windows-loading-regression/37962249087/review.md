@@ -1,0 +1,7 @@
+# Existing GLB progress deliveries: native failure retained
+
+Source 5517aa40, run 37962249087. Original 90-second world readiness failed at 80%; minimization skipped. No shader warm readiness reached. All hypotheses remained OFF. Pending animal GLBs had 13.45 seconds awaited at final observation; no physical transfer cause is proven.
+
+Bridge body: one existing progress callback delivered all 26,536,168 bytes at 104983.8, after load started 78891.1 (26.093 seconds before first observed body delivery). Original progress callback CPU 0.1 ms. Last delivery→parse invocation 180.3 ms; parsing ~76.4 ms. Maize body: one 14,308,628-byte event, original callback CPU 0 ms, last delivery→parse 177.9 ms. Callback CPU/meshopt decode do not explain the dominant pre-delivery interval. JS callback delivery also depends on scheduling, so this does not measure physical disk/network serving in isolation. Raw spans overlap; do not sum as exclusive work.
+
+Next isolated hypothesis is overlapping native-menu render during definitive start/load while its iframe is retained for diorama readiness. Existing setRenderPaused API may preserve the last visible menu frame and active tween/icon animations. Proposed opt-in pause must restore on cancellation/error and never act during prepare-loading/selector interaction. First source/contracts/read-only render-count evidence, then review; no dispatch or production promotion from this report.

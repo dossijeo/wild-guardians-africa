@@ -1,0 +1,146 @@
+{
+  "ok": false,
+  "errors": [
+    "Error: Production world did not finish loading"
+  ],
+  "current": {
+    "canvas": {
+      "height": 720,
+      "width": 1028
+    },
+    "failure": null,
+    "focused": true,
+    "hidden": false,
+    "menu": false,
+    "overlay": true,
+    "phase": "Awakening nature...",
+    "progress": "80",
+    "stageBusy": "true",
+    "visibility": "visible"
+  },
+  "active": [
+    {
+      "elapsedMs": 13454.100000000091,
+      "label": "load-animal-models",
+      "scope": "Existing awaited phase start; smoke-only pending-phase attribution.",
+      "start": 140989.2999999998
+    },
+    {
+      "elapsedMs": 13453.399999999909,
+      "label": "asset-gltf-load:http://tauri.localhost/assets/web/7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb",
+      "scope": "Existing awaited phase start; smoke-only pending-phase attribution.",
+      "start": 140990
+    },
+    {
+      "elapsedMs": 13453.199999999952,
+      "label": "asset-gltf-load:http://tauri.localhost/assets/web/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb",
+      "scope": "Existing awaited phase start; smoke-only pending-phase attribution.",
+      "start": 140990.19999999995
+    },
+    {
+      "elapsedMs": 13453.100000000091,
+      "label": "asset-gltf-load:http://tauri.localhost/assets/web/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb",
+      "scope": "Existing awaited phase start; smoke-only pending-phase attribution.",
+      "start": 140990.2999999998
+    },
+    {
+      "elapsedMs": 13452.899999999909,
+      "label": "asset-gltf-load:http://tauri.localhost/assets/web/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb",
+      "scope": "Existing awaited phase start; smoke-only pending-phase attribution.",
+      "start": 140990.5
+    },
+    {
+      "bytes": 6401848,
+      "elapsedMs": 1435,
+      "label": "asset-gltf-parse:http://tauri.localhost/assets/web/:6401848",
+      "scope": "GLTF parse begins after FileLoader has collected the response body.",
+      "start": 153008.3999999999
+    }
+  ],
+  "progress": [
+    {
+      "association": "Exact synchronous parse callback delivery into this request callback",
+      "callbackCpuMs": 0,
+      "callbackFailures": 0,
+      "count": 1,
+      "duration": 12940,
+      "end": 91830,
+      "failed": false,
+      "firstAt": 88843.59999999986,
+      "label": "asset-gltf-progress:http://tauri.localhost/assets/web/8f6c9ef7472a2d7f8ffda7f08a78f8027f91d14a8f92b8eeca4084b0f379da36.glb",
+      "lastAt": 88843.59999999986,
+      "lastProgressToParseMs": 177.9000000001397,
+      "lengthComputable": false,
+      "loaded": 14308628,
+      "maxCallbackCpuMs": 0,
+      "parseBytes": 14308628,
+      "parseStart": 89021.5,
+      "scope": "Existing progress callback deliveries and original callback CPU; delivery scheduling/collection is not physical transport time. One bounded summary per completed GLB request.",
+      "start": 78890,
+      "total": 0
+    },
+    {
+      "association": "Exact synchronous parse callback delivery into this request callback",
+      "callbackCpuMs": 0.10000000009313226,
+      "callbackFailures": 0,
+      "count": 1,
+      "duration": 26349.40000000014,
+      "end": 105240.5,
+      "failed": false,
+      "firstAt": 104983.7999999998,
+      "label": "asset-gltf-progress:http://tauri.localhost/assets/web/2fdb3468b7646ebe16d0f3d3d25538ce5b20d6dee1d3830256d2f62599826dcc.glb",
+      "lastAt": 104983.7999999998,
+      "lastProgressToParseMs": 180.30000000004657,
+      "lengthComputable": false,
+      "loaded": 26536168,
+      "maxCallbackCpuMs": 0.10000000009313226,
+      "parseBytes": 26536168,
+      "parseStart": 105164.09999999986,
+      "scope": "Existing progress callback deliveries and original callback CPU; delivery scheduling/collection is not physical transport time. One bounded summary per completed GLB request.",
+      "start": 78891.09999999986,
+      "total": 0
+    },
+    {
+      "association": "Exact synchronous parse callback delivery into this request callback",
+      "callbackCpuMs": 0,
+      "callbackFailures": 0,
+      "count": 1,
+      "duration": 5637.899999999907,
+      "end": 136552.8999999999,
+      "failed": false,
+      "firstAt": 133360.7999999998,
+      "label": "asset-gltf-progress:http://tauri.localhost/assets/web/fedb713c0b32df33f11111a91e2c3e0616a0345ec9be9a8beeecaa0b93ef26cb.glb",
+      "lastAt": 133360.7999999998,
+      "lastProgressToParseMs": 77.4000000001397,
+      "lengthComputable": false,
+      "loaded": 6890088,
+      "maxCallbackCpuMs": 0,
+      "parseBytes": 6890088,
+      "parseStart": 133438.19999999995,
+      "scope": "Existing progress callback deliveries and original callback CPU; delivery scheduling/collection is not physical transport time. One bounded summary per completed GLB request.",
+      "start": 130915,
+      "total": 0
+    },
+    {
+      "association": "Exact synchronous parse callback delivery into this request callback",
+      "callbackCpuMs": 0.10000000009313226,
+      "callbackFailures": 0,
+      "count": 1,
+      "duration": 6738.90000000014,
+      "end": 147728.5,
+      "failed": false,
+      "firstAt": 145811.09999999986,
+      "label": "asset-gltf-progress:http://tauri.localhost/assets/web/cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869.glb",
+      "lastAt": 145811.09999999986,
+      "lastProgressToParseMs": 77.19999999995343,
+      "lengthComputable": false,
+      "loaded": 6927276,
+      "maxCallbackCpuMs": 0.10000000009313226,
+      "parseBytes": 6927276,
+      "parseStart": 145888.2999999998,
+      "scope": "Existing progress callback deliveries and original callback CPU; delivery scheduling/collection is not physical transport time. One bounded summary per completed GLB request.",
+      "start": 140989.59999999986,
+      "total": 0
+    }
+  ]
+}
