@@ -5,6 +5,12 @@ balance=json.loads((root/'content/balance/balance_confirmado.json').read_text(en
 revisions=json.loads((root/'content/balance/player_revisions.json').read_text(encoding='utf-8'))
 balance['initial_money']=revisions['initial_money']
 balance['workers'].update(revisions['workers'])
+# These amounts are spoken in existing tutorial audio. Later economic pilots
+# may vary other parameters, but must not invalidate those instructions.
+if balance['work_center']['cost'] != 800:
+    raise SystemExit('Tutorial audio requires a work centre price of 800 coins')
+if balance['workers']['older_wage'] != 30 or balance['workers']['young_wage'] < 30:
+    raise SystemExit('Tutorial audio requires an older-worker wage of 30 and no wage below 30 coins')
 for animal in balance['animals']:
     animal['structure_hit_damage']=revisions['structure_hit_damage'][animal['id']]
 harvest_values=revisions.get('crop_harvest_values',{})
