@@ -1,0 +1,45 @@
+[
+  {
+    "log": "tests.log",
+    "args": [
+      "node",
+      "--test",
+      "tests/wall-buffer-package.test.js",
+      "tests/assets-lifecycle.test.js",
+      "tests/loading-readiness-snapshot.test.js",
+      "tests/sfx-catalog-audit.test.js"
+    ],
+    "exitCode": 0,
+    "sha256": "70c75df366bb0154d6672cc963ef65772e683491aa039677b15d76c4e226563c"
+  },
+  {
+    "log": "sfx-check.log",
+    "args": [
+      "node",
+      "tools/audit_sfx_catalog.mjs",
+      "--check"
+    ],
+    "exitCode": 0,
+    "sha256": "1836f4f6fb59a6e443e7376d6fb8a9242414a4c9579e06e2c1b670a7cc703406"
+  },
+  {
+    "log": "build.log",
+    "args": [
+      "npm.cmd",
+      "run",
+      "build"
+    ],
+    "exitCode": 0,
+    "sha256": "07cff1fcc1af542a0fcb79c2428a3aeff3d0be92befc85bbfcdeba95313dcd2c"
+  },
+  {
+    "log": "package.log",
+    "args": [
+      "npm.cmd",
+      "run",
+      "test:web-package"
+    ],
+    "exitCode": 0,
+    "sha256": "4e844b0f1617637af34567148c9b87febefaea8d4819fa312309e478815c9b16"
+  }
+]
