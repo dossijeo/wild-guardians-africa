@@ -20,8 +20,8 @@ export function waitForGpuPreload(renderer,options={}){
 // Submit the same native screen/shadow recipes in small groups, so first-use
 // buffer/texture uploads and shadow variants are spread across real frames.
 // Color batches reuse shadows; one complete native shadow pass precedes readiness.
-export async function renderScreenPreloadBatched(renderer,scene,camera,{batchSize=4,frameBudget=0,now=()=>performance.now(),warmShadows=false,signal,cancelled=()=>false,nextFrame,onSubmit,onBatch=()=>{}}={}){
- const yieldWork=loadingYieldBudget({frameBudget,now,nextFrame,signal,cancelled,onYield:onSubmit});
+export async function renderScreenPreloadBatched(renderer,scene,camera,{batchSize=4,frameBudget=0,now=()=>performance.now(),warmShadows=false,signal,cancelled=()=>false,nextFrame,onSubmit,frameSlack,onBatch=()=>{}}={}){
+ const yieldWork=loadingYieldBudget({frameBudget,now,nextFrame,signal,cancelled,onYield:onSubmit,frameSlack});
  const meshes=[];scene.traverseVisible(object=>{if(object.isMesh||object.isLine||object.isPoints)meshes.push(object);});
  const visible=new Map(meshes.map(mesh=>[mesh,mesh.visible])),shadows=renderer.shadowMap;
  const lights=[];scene.traverseVisible(object=>{if(object.isLight&&object.shadow)lights.push([object.shadow,object.shadow.needsUpdate,object.shadow.autoUpdate]);});
@@ -35,7 +35,7 @@ export async function renderScreenPreloadBatched(renderer,scene,camera,{batchSiz
   for(let start=0;start<meshes.length;start+=batchSize){
    check();const batch=new Set(meshes.slice(start,start+batchSize));
    for(const mesh of batch)for(let parent=mesh.parent;parent;parent=parent.parent)if(visible.has(parent))batch.add(parent);
-   try{for(const mesh of meshes)mesh.visible=batch.has(mesh);if(warmShadows)invalidate();else suppressShadows();if(onSubmit)loadingSyncWitness(onSubmit,'loading-screen-upload-submit',()=>renderScreenPreload(renderer,scene,camera),now);else renderScreenPreload(renderer,scene,camera);}finally{restore();restoreShadows();}
+   const submitStart=frameSlack?now():0;try{for(const mesh of meshes)mesh.visible=batch.has(mesh);if(warmShadows)invalidate();else suppressShadows();if(onSubmit)loadingSyncWitness(onSubmit,'loading-screen-upload-submit',()=>renderScreenPreload(renderer,scene,camera),now);else renderScreenPreload(renderer,scene,camera);}finally{restore();restoreShadows();if(frameSlack)yieldWork.recordWork(now()-submitStart);}
    onBatch(Math.min(meshes.length,start+batchSize),meshes.length);await yieldWork();
   }
   check();invalidate();if(onSubmit)loadingSyncWitness(onSubmit,'loading-screen-upload-final-submit',()=>renderScreenPreload(renderer,scene,camera),now);else renderScreenPreload(renderer,scene,camera);
