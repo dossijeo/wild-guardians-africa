@@ -37,6 +37,14 @@ There is not yet native evidence from an executable containing this observation
 change. Separate fluid-depth and worker candidates remain unpromoted until their
 actual native/visual/performance gates pass.
 
+The worker branch now has a separate
+[exact-executable native accessory pilot](workers-frontside-local-3e8da8a7/README.md):
+youngMale crate/hoe,48 sampled day/night poses, actual culling witnesses and
+serialized-state/mixer/resource restoration pass locally. Root inspected the
+accessories from two angles; partial head framing limits character acceptance.
+No GPU timing ran, and this is neither all-profile validation nor production
+activation. Its original Windows CI loading failure is retained separately.
+
 The full objective remains the master plan plus the user's subsequent changes.
 The original 159-case registry has 157 historical verified labels and two partial
 cases (QA-014 and QA-156). Those labels retain their original sources and scopes;

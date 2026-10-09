@@ -1,0 +1,34 @@
+{
+  "runtimeSourceCommit": "afbb3078607126f046fe2d731a798758383cb7f2",
+  "baseMain": "3a1b398d",
+  "files": {
+    "src/rendering/worker-desktop-qa.js": "62b2984d21a815020102858672277ae09464b1203e49a4c18bd76dd5ea4145aa",
+    "src/rendering/scene.js": "37ae53bb487e5d907b31330e7f2ff9157a8f039d70d7d19148fcfcf222538759",
+    "src/app/main.js": "694346618d752052c2f5d1db904af9c716b37f7bfca4f4c7a96b0c1e63f21374",
+    "src-tauri/smoke.js": "f2776a7955cef35cc8b4335d89db090f079e47333c87f4a14c6f07135fdd5b21",
+    "src-tauri/src/main.rs": "bc1aa7061dc1fbcf9e4b0ce788b90c043a815bfb9143821ab6a6bdbf399dac2e",
+    ".github/workflows/windows.yml": "8a5b0f980f3c9c0aea3fd8d09586df0b97bd164bfc531945f0306d013983bbbc",
+    "tools/create_desktop_worker_fixture.mjs": "bdfc6319e16fd03792ea25dc852e9dec29cb187760af861afe9066a1aea99ba2",
+    "tools/create_desktop_visibility_fixture.mjs": "9fd33e00f6e19b5ebc72e8660c4048b139eb582d75b65c95c1afaf4405224b88",
+    "public/content/worker-actions.json": "505e351c454c114304d73e253ce3e45bc3650735f1673267214af3a29e7ab135"
+  },
+  "fixtureSha256": "effdd2957e68da33e1eb06451a6d57b7cfdd31651070975ccf15b2ef08faede4",
+  "sourceWorkerSha256": "25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238",
+  "candidateSha256": "3ac771a241023c3ec68df0ffdaeeb4d9c83f6380b4205a5000b17f751c15f2c7",
+  "checks": {
+    "directedTests": 25,
+    "failures": 0,
+    "buildSeconds": 9.42,
+    "browserSyntaxFiles": 170,
+    "browserSyntaxScripts": 164,
+    "webPackageFiles": 711,
+    "webPackageBytes": 445264056,
+    "webPackageLinks": 860,
+    "webRuntimeGLBs": 22
+  },
+  "nativeWorkerExecuted": false,
+  "gpuBenchmarkExecuted": false,
+  "workflowChanged": false,
+  "visibilityFixtureChanged": false,
+  "scope": "Build source freeze; native worker visual/coverage/ownership and net GPU acceptance pending. Original workflow smoke remains default OFF."
+}
