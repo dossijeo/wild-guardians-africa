@@ -1,0 +1,67 @@
+{
+  "source": "96c39897ce546aeb190117eaa14d56f2a390dba3",
+  "sourceHashesVerified": 376,
+  "onlyHarvestDoubledAndAttractionExplicitBaseline": true,
+  "otherSourcesExceptRulesMatchBaseline": true,
+  "snapshotSha256": "a143f26f5afde804ea67e29c1cc5d802fba8eb99fa26f9272e5801442d250fe5",
+  "nativeProcessExit": 1,
+  "gates": {
+    "completedRequested10NightsWithoutDefeat": false,
+    "everyDayPaidStaffPhysicalDelivery": false,
+    "ownSourceIntegerLedgerHydrationPaidCrates": true,
+    "inactivityStrictlyBelow25": false,
+    "poorManagement": "not-run-no-viable-signal",
+    "responsible100And30CaseMatrix": "not-run-failed-pilot"
+  },
+  "actualCompletedNights": 6,
+  "actualDay": 7,
+  "result": "defeat",
+  "physicalDeliveries": 279,
+  "physicalPicked": 279,
+  "activityReported": {
+    "daylightSeconds": 2100,
+    "unoccupiedSeconds": 1103,
+    "unoccupiedFraction": 0.5252380952380953,
+    "longestIdle": 300,
+    "p90LongestIdle": 300
+  },
+  "cashflow": {
+    "openingBalance": "1500",
+    "harvestIncome": "6710",
+    "seedCosts": "3440",
+    "wageCosts": "3390",
+    "repairCosts": "0",
+    "centreCosts": "800",
+    "wallCosts": "0",
+    "otherNet": "0",
+    "operatingCashFlow": "-120",
+    "netCashFlowAfterConstruction": "-920",
+    "endingBalance": "580"
+  },
+  "budgetAttribution": {
+    "maintenanceReserve": 716,
+    "belowCurrentTeamReserve": 268
+  },
+  "workingDayFailures": [
+    {
+      "day": 7,
+      "staff": 34,
+      "delivered": 0
+    }
+  ],
+  "centreLostByEndOfDay": 6,
+  "firstSixDaysIdleFraction": 0.6127777777777778,
+  "causeScope": "Own-source E2 observation, preserves baseline per-species attraction independently of doubled harvest. Requested/completed nights, physical delivery and activity gates are computed from native records; no100/matrix acceptance or universal defensive conclusion.",
+  "files": {
+    "default-equivalence.log": "cd389d49888dd5f5f3598b5f71d0800f0548f8984d2c2b67d2ffe587c3e35f38",
+    "diagnostic.json": "1d2dda8e6ebeeb59dc9880d0e262a5beaede4097e69bbdac13d49aa72c173191",
+    "equivalence-tests.log": "9fd343a8700cc74011d8d1ac04ec3f558f8fd55b903bc635c5987430ff1310c1",
+    "failure-state.json": "a143f26f5afde804ea67e29c1cc5d802fba8eb99fa26f9272e5801442d250fe5",
+    "failure.json": "091222d18a5603b40a3a5ab5d16dd7a801483b44680418c12dfbb959506b382c",
+    "plans-equivalence.log": "8780b81ffb2fdecae292d3f1411e365452f259ec7169b37fc492adf52284e56d",
+    "report.json": "fde074dcd712203ebd04a2aa8562ca1fb29f177e2b06e6e14ae5d8488fa05669",
+    "run.log": "0a3ddbc810ab74ba59479fc9a7a0ec0ecc420dd7a00bec2992ecad17581f6f97",
+    "state.json": "a143f26f5afde804ea67e29c1cc5d802fba8eb99fa26f9272e5801442d250fe5",
+    "summary.json": "62ac89c4d0ef6e487dee1b9f95d1f457f61cd2dd98ab76639fa7384436897cdb"
+  }
+}

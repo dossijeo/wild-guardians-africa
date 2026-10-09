@@ -106,3 +106,31 @@ its eligibility/position decisions, not a universal verdict that responsible
 players cannot defend. No policy correction or threat decoupling is applied to
 make E pass. Future defensive diagnostics must be labelled additional cases
 and preserve this exact negative control.
+
+### E2: independent baseline attraction — also rejected
+
+There was no existing real attraction coefficient. This isolated candidate adds
+canonical per-crop `base_attraction_value`, generated from optional revision
+`crop_attraction_values`. Without the revision the default equals the previous
+effective harvest value, preserving main behavior exactly. E2 uses harvest×2
+and explicit original attraction for all eight species. The harness receives no
+override and the save format is unchanged. Generator default-equivalence passes;
+576 native night plans match the frozen legacy planner across every species and
+mixtures, counts, introductory days1–5, later guaranteed groups, and magic/pause
+flags. Eight-species attraction is invariant under crop growth/water/magic flags.
+These are source/functional checks, not survival/activity acceptance.
+
+The native E2 pilot also exits1: six nights completed, defeat day7, and day7
+paid staff34/zero deliveries. Own-source376hashes and exact canonical parameter
+comparison pass; accounting/hydration/279 physical delivered crates pass. All
+survival/daily-delivery/activity gates fail, with the same cashflow, budget
+attribution, actors and RNG as E. Recursive fullstate comparison finds exactly
+one difference: final `nightPlan.attraction`8888→4444. Therefore the income/threat
+coupling exists, but it is not a demonstrated cause of this particular defeat:
+both attraction values already select the highest tier (≥2000); the first five
+introductory raids also remain unchanged. The candidate fails to change effective
+raid pressure here. Original negative E and E2 are both preserved; no 100-night,
+matrix, poor-management or promotion follows from this failed short control.
+Further balance choices require the demonstrated budget/service limits and
+actual effective threat tiers, not an assumption that halving attraction halves
+raid damage or that accounting PASS means a playable campaign.
