@@ -1,0 +1,3052 @@
+{
+  "status": "source-manifest-only; harness and private immutable servers pending",
+  "contrast": "V6 versus V9 isolated presentation endpoint cost; not loading-readiness benchmark",
+  "arms": {
+    "A": {
+      "commit": "711353805fa8823d9fc70b91d8c8203de3a5940c",
+      "sourceMap": [
+        {
+          "path": "src/app/autosave-events.js",
+          "gitBlob": "6b845f34b959585b4a1bfadc21904342e74a942c"
+        },
+        {
+          "path": "src/app/far-world-loading.js",
+          "gitBlob": "aac53c9b6a7c59931fb6f53442c175c71d04ae17"
+        },
+        {
+          "path": "src/app/frame-delta.js",
+          "gitBlob": "ea177bcfc5ef87fe13a0e8cb4e12257ebf071956"
+        },
+        {
+          "path": "src/app/loading-audio-qa.js",
+          "gitBlob": "8cbff6fa3f2ae1601807f74c8362efc74762f8f2"
+        },
+        {
+          "path": "src/app/loading-downloads.js",
+          "gitBlob": "55d0afc7c3148d1d3212639a8e198a98cd8d9126"
+        },
+        {
+          "path": "src/app/loading-gameplay-gpu-qa.js",
+          "gitBlob": "df11b7c7116923a9496ae642f6bcf0718833041e"
+        },
+        {
+          "path": "src/app/loading-gpu-qa.js",
+          "gitBlob": "188f076fba5a67463cd13f75b4de3e923828c704"
+        },
+        {
+          "path": "src/app/loading-progress-qa.js",
+          "gitBlob": "6011f6c174d07e5c661150102ac1cf63dccb3754"
+        },
+        {
+          "path": "src/app/loading-progress.js",
+          "gitBlob": "8ca66fdc8e9bdd7eeb976bce084503fbba1f7871"
+        },
+        {
+          "path": "src/app/loading-recipe.js",
+          "gitBlob": "141a05b2c113335df0f253b1cc307b25636756a0"
+        },
+        {
+          "path": "src/app/loading-transfer-owner.js",
+          "gitBlob": "f7acbf067a81ec8e8530afd15279d5a92b8422ca"
+        },
+        {
+          "path": "src/app/main.js",
+          "gitBlob": "65d001e564285cf6b31631736e2d8f8fe230226a"
+        },
+        {
+          "path": "src/app/notices.js",
+          "gitBlob": "e200082ee6d0fa8176f4de3f0c7833d226434064"
+        },
+        {
+          "path": "src/app/resume-loaded-world.js",
+          "gitBlob": "f3d0e60117cc9a60e319035376767c53aaf95de9"
+        },
+        {
+          "path": "src/app/save-game.js",
+          "gitBlob": "8603cf98f975362030cc441b85fba759b5373f60"
+        },
+        {
+          "path": "src/app/spell-placement.js",
+          "gitBlob": "3a683ad3a32b9a35e80be8ce4ab9cd0221fda9ab"
+        },
+        {
+          "path": "src/app/tool-label.js",
+          "gitBlob": "5bf120cfe670fac500a2cef2ea85378c7dc769bd"
+        },
+        {
+          "path": "src/app/world-resolution.js",
+          "gitBlob": "bcfff4c3b9ef9a439108b1aeac973a6f0bd97aa3"
+        },
+        {
+          "path": "src/audio/ambient-audio.js",
+          "gitBlob": "c71292c09e876a01f773c899de95ea382fa8fb1b"
+        },
+        {
+          "path": "src/audio/animal-audio.js",
+          "gitBlob": "31cce0780d02036b965ff44812bfdd95927d4006"
+        },
+        {
+          "path": "src/audio/audio.js",
+          "gitBlob": "4dbe91f11fcc1d45d0d571a492f39eda69782434"
+        },
+        {
+          "path": "src/audio/destruction-audio.js",
+          "gitBlob": "1fddf77e20c0c9c25d4074f34933b2e6ee482291"
+        },
+        {
+          "path": "src/audio/farm-actions-data.js",
+          "gitBlob": "6ae4a3ba15f3e9766d5307e9537880bb7a93cd14"
+        },
+        {
+          "path": "src/audio/farm-contact-audio.js",
+          "gitBlob": "aaed06e1f2b9bdec8ff2dd754e5396df05c8c1da"
+        },
+        {
+          "path": "src/audio/guardian-audio.js",
+          "gitBlob": "c3e1696d94947806fa90f4c36200cd7b1a98a7fe"
+        },
+        {
+          "path": "src/audio/loading-audio.js",
+          "gitBlob": "ccb265001ee367a10b12d07ce6f15d42d9650b33"
+        },
+        {
+          "path": "src/audio/movement-audio.js",
+          "gitBlob": "6b54887151f1ce3550604b9aaf12b4b3eb91c428"
+        },
+        {
+          "path": "src/audio/music-disk-cache.js",
+          "gitBlob": "46343d7ee55a64e3a78717d98efe9dd6fd6c896c"
+        },
+        {
+          "path": "src/audio/music-load-queue.js",
+          "gitBlob": "cd1dd0a9eb82f841a5c4287e93a3393cc77b0651"
+        },
+        {
+          "path": "src/audio/music-mixer.js",
+          "gitBlob": "607f07c4a391a263fc2f3c6f7feb3c0a4dec8de9"
+        },
+        {
+          "path": "src/audio/music-policy.js",
+          "gitBlob": "23a3b913d7c69f0e965dc64e379c4309106b66d9"
+        },
+        {
+          "path": "src/audio/music-range-reader.js",
+          "gitBlob": "be612ec019671d3e3de35929c0ca5a14788de620"
+        },
+        {
+          "path": "src/audio/music-stream.js",
+          "gitBlob": "686964e638c94a3ec48d8c7f3393fee58f180c1d"
+        },
+        {
+          "path": "src/audio/music-transport.js",
+          "gitBlob": "ae937126ba061be5b6d32b7c0f657c97b60a8cd8"
+        },
+        {
+          "path": "src/audio/music-window-pool.js",
+          "gitBlob": "a1cb9767a0a1f3394dd56abf046f8cb1828b022c"
+        },
+        {
+          "path": "src/audio/music-window-transport.js",
+          "gitBlob": "7f6682136e4df02f5d47c7598c73e823a9a58bff"
+        },
+        {
+          "path": "src/audio/opus-window-recipe.js",
+          "gitBlob": "fb67cab348b691eb202dac06db540324082830ec"
+        },
+        {
+          "path": "src/audio/power-ready-audio.js",
+          "gitBlob": "f51e5972e254c606560276fb19a64dbc7ab45399"
+        },
+        {
+          "path": "src/audio/raid-arrival-audio.js",
+          "gitBlob": "268def630a56b8de2cd9e31ac57bd0a95707109f"
+        },
+        {
+          "path": "src/audio/spirit-voice.js",
+          "gitBlob": "46df69277463c049466c68a711f7c771dc19f033"
+        },
+        {
+          "path": "src/audio/start-window-music.js",
+          "gitBlob": "8776011b057b604ee5e9654bbdeeef1a0717fd92"
+        },
+        {
+          "path": "src/audio/structure-audio.js",
+          "gitBlob": "1097c253e5b3820aedafa4a43c2ae1bf59058ae9"
+        },
+        {
+          "path": "src/audio/ui-audio.js",
+          "gitBlob": "dc2c5cd0761e032a584a7039ea9ea6e27540c667"
+        },
+        {
+          "path": "src/audio/unlock-audio.js",
+          "gitBlob": "1bd7220f10cf5aa6ccd36edbba1086eeef839602"
+        },
+        {
+          "path": "src/audio/work-audio.js",
+          "gitBlob": "71f798f72cefa7eae821e88af03bd7afabc65829"
+        },
+        {
+          "path": "src/audio/worker-audio.js",
+          "gitBlob": "c5d63bfb99c64fbba06355d0c7e84ad239f3cea7"
+        },
+        {
+          "path": "src/persistence/browser-saves.js",
+          "gitBlob": "ca85c2137952bd6bfb3aa381b18cace15b2fd272"
+        },
+        {
+          "path": "src/persistence/exit-connector-snapshot.js",
+          "gitBlob": "c619acebb4cc5fc4cb56ae1b1172f4fd725ff8a9"
+        },
+        {
+          "path": "src/persistence/snapshot-decode-worker.js",
+          "gitBlob": "baac66e17c67ee00bfccbba512e2eaf65e4d9c60"
+        },
+        {
+          "path": "src/persistence/snapshot-decoder.js",
+          "gitBlob": "a43aaeb45e8b3edd2595bc6747cde5fc15c4b212"
+        },
+        {
+          "path": "src/persistence/snapshot-stream.js",
+          "gitBlob": "1766a78af4feb96e4d96b7863d15ea716554237c"
+        },
+        {
+          "path": "src/persistence/snapshots.js",
+          "gitBlob": "cd451838643b90ee15e193d8d6ecb9e40906ea06"
+        },
+        {
+          "path": "src/rendering/african-toon-source.js",
+          "gitBlob": "581c1e00d5a7b41288973379d6d5464f263d4de9"
+        },
+        {
+          "path": "src/rendering/african-toon.js",
+          "gitBlob": "07ab2e8c7c3d4c11beba4612c7eed739b0563587"
+        },
+        {
+          "path": "src/rendering/agriculture-vfx.js",
+          "gitBlob": "90776c0c97b62c22c4809027ab4fbb979c400ea3"
+        },
+        {
+          "path": "src/rendering/animal-actions.js",
+          "gitBlob": "74bdff52bba5e18d77f2081a56d429fcfe5021f4"
+        },
+        {
+          "path": "src/rendering/animal-preload.js",
+          "gitBlob": "f1ce2cc29313056e07256c1c8e6ac2b1d980f23f"
+        },
+        {
+          "path": "src/rendering/asset-clip.js",
+          "gitBlob": "cfde6efe383a95731a389a237932fb872a415ac3"
+        },
+        {
+          "path": "src/rendering/asset-fetch.js",
+          "gitBlob": "e800b658e4f4a6e31d9f85db1113303297875472"
+        },
+        {
+          "path": "src/rendering/asset-groups.js",
+          "gitBlob": "57b1f5cb488071e711b0be4b33351669da6582e5"
+        },
+        {
+          "path": "src/rendering/asset-lod.js",
+          "gitBlob": "823306faef13d110ab2776dcd67f17e7e7f2f4f4"
+        },
+        {
+          "path": "src/rendering/asset-shadows.js",
+          "gitBlob": "e9b49370992457276a544ddacd97aa780703393a"
+        },
+        {
+          "path": "src/rendering/asset-surface.js",
+          "gitBlob": "3b95240de16f7bbae5b77f5eeb127ed109e3c6e9"
+        },
+        {
+          "path": "src/rendering/asset-transfer.js",
+          "gitBlob": "e9b5d2e2211b08345c697a76da9b986d44fe396d"
+        },
+        {
+          "path": "src/rendering/asset-url.js",
+          "gitBlob": "828a80496f150aea9967022b19e1ba697648e185"
+        },
+        {
+          "path": "src/rendering/assets.js",
+          "gitBlob": "70a119521a6b7dcbffdaedf444152aa62e2b58a9"
+        },
+        {
+          "path": "src/rendering/attack-vfx.js",
+          "gitBlob": "1cbc0a3e2cac1bf7b3ead70bc04cf44f6e1d6847"
+        },
+        {
+          "path": "src/rendering/biome-backdrop.js",
+          "gitBlob": "2c1efebffbcd02ce2ab766c56e9017013522074d"
+        },
+        {
+          "path": "src/rendering/biome-ground.js",
+          "gitBlob": "ad756d3180ef26f62240703dc1a5e648876cfa3b"
+        },
+        {
+          "path": "src/rendering/biome-material-source.js",
+          "gitBlob": "e0971a10e18b499d9ac9dc8f65076b662c887b88"
+        },
+        {
+          "path": "src/rendering/biome-tangents-worker.js",
+          "gitBlob": "403d754c22de0c56ebf0341ace1d5904bb6b0905"
+        },
+        {
+          "path": "src/rendering/biome-tangents.js",
+          "gitBlob": "1dcdd5eb022a9fe1f6585b87528fdefeb7f863c5"
+        },
+        {
+          "path": "src/rendering/building-bounds.js",
+          "gitBlob": "4d20eeea66cd7e43cb3c36ba2dd9642c7a2092fe"
+        },
+        {
+          "path": "src/rendering/building-data-worker.js",
+          "gitBlob": "cb75fe54f5789ee0b524ce5c31b2d7f66884d4a1"
+        },
+        {
+          "path": "src/rendering/building-depth.js",
+          "gitBlob": "58747d20db8ea7ec453597f2c8a5398b9362097c"
+        },
+        {
+          "path": "src/rendering/building-effects.js",
+          "gitBlob": "f3323149f5f4d7a2419140a60eba303da7264a10"
+        },
+        {
+          "path": "src/rendering/buildings.js",
+          "gitBlob": "22f1a85e11ad14b38731d1a4a55ea2d3727add24"
+        },
+        {
+          "path": "src/rendering/camera-building-registry.js",
+          "gitBlob": "42728494403f63650e4d0fc90a658d06c6eca9d8"
+        },
+        {
+          "path": "src/rendering/camera-exclusion-motion.js",
+          "gitBlob": "5c4169abb1dccd845a6de61bba4dcad2c6879e7b"
+        },
+        {
+          "path": "src/rendering/camera-model-volume.js",
+          "gitBlob": "409e821c63a6e77852b577214dbfb84c7dc3940a"
+        },
+        {
+          "path": "src/rendering/camera-terrain-exclusion.js",
+          "gitBlob": "9a496468c08d9e1200660d02c4b812e2fe34b504"
+        },
+        {
+          "path": "src/rendering/camera-volume-index.js",
+          "gitBlob": "db1e1acff83716e8108aca67095a23d9bec5d496"
+        },
+        {
+          "path": "src/rendering/camera-volume-sweep.js",
+          "gitBlob": "08999f245bbe0cb4ba9947d9e233cc2d5623774f"
+        },
+        {
+          "path": "src/rendering/chunk-data.js",
+          "gitBlob": "b3fc3aa07f596802b745974058d9753d7ddaed6e"
+        },
+        {
+          "path": "src/rendering/chunk-stream.js",
+          "gitBlob": "121be5be8a6fcf0e2ca76c89cd20252f2bc09c54"
+        },
+        {
+          "path": "src/rendering/chunk-worker.js",
+          "gitBlob": "c444dc570250f34ecd23228d4d84fe7e4e76792d"
+        },
+        {
+          "path": "src/rendering/clone-runtime-material.js",
+          "gitBlob": "cdfeec4d4cd7b25139875f5fa3587c6c64769a80"
+        },
+        {
+          "path": "src/rendering/contact-source.js",
+          "gitBlob": "ebbb5ed6f9e4702af010fa056dc3bb65bdb1bfe7"
+        },
+        {
+          "path": "src/rendering/contacts.js",
+          "gitBlob": "d40f19132180dde58004327ef5e37bf1604f7bbd"
+        },
+        {
+          "path": "src/rendering/crop-batch.js",
+          "gitBlob": "5de831c7a8fe139430412af0c3eb7b803717a73a"
+        },
+        {
+          "path": "src/rendering/depth-capture.js",
+          "gitBlob": "4ab40074d54168e98bbeb0f587e2e913ec19c24e"
+        },
+        {
+          "path": "src/rendering/depth-recipes.js",
+          "gitBlob": "b71468e42666dfc570bf7a0ae52b0da0eadf2220"
+        },
+        {
+          "path": "src/rendering/destruction-effects-native.js",
+          "gitBlob": "e9007971125a169e4018c830ec33d775303ab9ac"
+        },
+        {
+          "path": "src/rendering/destruction-native.js",
+          "gitBlob": "f40f7ff538b7799e39d17254f9e5273103702208"
+        },
+        {
+          "path": "src/rendering/environment-endpoints.js",
+          "gitBlob": "7fbb7f45495f5635b2f8e0c599ffd6079035c915"
+        },
+        {
+          "path": "src/rendering/far-atmosphere.js",
+          "gitBlob": "690fca967208fa6dfead44122bcf8bc6771dfa9f"
+        },
+        {
+          "path": "src/rendering/far-vegetation-profile.js",
+          "gitBlob": "ba6145564c05efdec82c85605c2663181a377538"
+        },
+        {
+          "path": "src/rendering/far-vegetation.js",
+          "gitBlob": "8f376d0586b0dfad9243a1837e80d66b2382848f"
+        },
+        {
+          "path": "src/rendering/farm-focus.js",
+          "gitBlob": "ce782cbb69ce709fe7aba48e1bb882b0359731bc"
+        },
+        {
+          "path": "src/rendering/fine-noise.js",
+          "gitBlob": "8bc76b708b3bf5a44ce5a10cf564631a42da1dfc"
+        },
+        {
+          "path": "src/rendering/fixed-pose.js",
+          "gitBlob": "7da3b128565448fd399cb72fc41c2a9cced4753a"
+        },
+        {
+          "path": "src/rendering/fluid-lighting-source.js",
+          "gitBlob": "8f55c864ecb0c81b8932e958400adad73897fc08"
+        },
+        {
+          "path": "src/rendering/fluid-preload.js",
+          "gitBlob": "4e20221c4404afa1cbe1a4d9e9e56a0214ca005e"
+        },
+        {
+          "path": "src/rendering/footsteps-data.js",
+          "gitBlob": "4d73aac762c18d9b2be5018ed3f6b5c7494015d6"
+        },
+        {
+          "path": "src/rendering/gate-articulation.js",
+          "gitBlob": "7290f0587fe40b7972636c6379e07826d572a5ac"
+        },
+        {
+          "path": "src/rendering/gl-resource-epoch.js",
+          "gitBlob": "a0a52e674da80f2300d572bfefeaae186e79d87c"
+        },
+        {
+          "path": "src/rendering/ground-lighting-source.js",
+          "gitBlob": "54aabbdc63248d477d6500d79e90aab0827b54bd"
+        },
+        {
+          "path": "src/rendering/ground-mask.js",
+          "gitBlob": "5a1f3d2b4fed9a821e9a46d62d097f18e0b0d299"
+        },
+        {
+          "path": "src/rendering/hand-terrain.js",
+          "gitBlob": "814859fcbe90fcc07cb99cc07c51af83113fc00c"
+        },
+        {
+          "path": "src/rendering/hand-visual-scale.js",
+          "gitBlob": "4a36ff02444a917aacb0d2af671db617d06a1e53"
+        },
+        {
+          "path": "src/rendering/hands-native.js",
+          "gitBlob": "f48adc654f877156a3b2be8a977d786770494805"
+        },
+        {
+          "path": "src/rendering/hands.js",
+          "gitBlob": "b52556d46001446a3e835ef7f6758127dfdae8dc"
+        },
+        {
+          "path": "src/rendering/horizon-data.js",
+          "gitBlob": "c38ccc8facc6682dcefce804c253bb3f4653259b"
+        },
+        {
+          "path": "src/rendering/horizon-generator.js",
+          "gitBlob": "d4f8414e3951479e2c7c6c6be2af6d9a20840d46"
+        },
+        {
+          "path": "src/rendering/horizon-source.js",
+          "gitBlob": "6c60f6142e649621cc4ab8401badd368745c4fc7"
+        },
+        {
+          "path": "src/rendering/horizon-worker.js",
+          "gitBlob": "e16d8c85e7d0bd4a00f63f7f9fde745e8d414c46"
+        },
+        {
+          "path": "src/rendering/horizon.js",
+          "gitBlob": "205904398c93c53af240794c71dddb1b3626d708"
+        },
+        {
+          "path": "src/rendering/initial-crop-capacity.js",
+          "gitBlob": "6847c6ff448ef7f903c5b5e140a458d677bc0849"
+        },
+        {
+          "path": "src/rendering/loading-cinematic.js",
+          "gitBlob": "d9b7cf2727fa363d59b26cea125a3918ef1f714e"
+        },
+        {
+          "path": "src/rendering/loading-diorama.js",
+          "gitBlob": "eaa77ec4ca6e5e02ddea4d28cf2d59960150dc3b"
+        },
+        {
+          "path": "src/rendering/loading-frame-slack.js",
+          "gitBlob": "f820371afb50340a1b1c22adc9fb57f715683c51"
+        },
+        {
+          "path": "src/rendering/loading-image-decoder.js",
+          "gitBlob": "a892a085bada9239b3bbe4c8d8487fcdf4026b1a"
+        },
+        {
+          "path": "src/rendering/loading-image-worker.js",
+          "gitBlob": "dd185351a14066c687514010ddbf67477d99d30a"
+        },
+        {
+          "path": "src/rendering/loading-image.js",
+          "gitBlob": "6c9d4bfeb1f0a5ecb67528d5f1bd94b263a06476"
+        },
+        {
+          "path": "src/rendering/loading-mist.js",
+          "gitBlob": "60768fb7cb83a126c05e357afec8d6770fb6f6ba"
+        },
+        {
+          "path": "src/rendering/loading-orbit.js",
+          "gitBlob": "15d71536a43dbdc1487df27c59587003b4696110"
+        },
+        {
+          "path": "src/rendering/loading-plants.js",
+          "gitBlob": "f5fffc88261f9679f5f84b2ecc31b0752e982868"
+        },
+        {
+          "path": "src/rendering/loading-programs.js",
+          "gitBlob": "fd5421dcffd9acc82ee41c73bcdcc29ce43de1f5"
+        },
+        {
+          "path": "src/rendering/loading-sync-queue.js",
+          "gitBlob": "983daea51193ed74a75704ef0d958e32642808e1"
+        },
+        {
+          "path": "src/rendering/loading-sync-witness.js",
+          "gitBlob": "774cc8f687957c70ecdc5c7ff9f60e544c329049"
+        },
+        {
+          "path": "src/rendering/loading-texture-owner.js",
+          "gitBlob": "c6a287e832524b00d6719fa10d97ee3e7bdecd4d"
+        },
+        {
+          "path": "src/rendering/loading-textures.js",
+          "gitBlob": "5ba6ea12108952809ad5706b6d3e937df86cf9e2"
+        },
+        {
+          "path": "src/rendering/loading-yield-budget.js",
+          "gitBlob": "96ff4fac274c9ca4b3bf14fe2084e5943383ab77"
+        },
+        {
+          "path": "src/rendering/locomotion-contact.js",
+          "gitBlob": "7bc6e1f18be99465994a8dd81e44ad7465f447b2"
+        },
+        {
+          "path": "src/rendering/locomotion-vfx.js",
+          "gitBlob": "9c0c57009766517313bcec7d1248cdca5285a74e"
+        },
+        {
+          "path": "src/rendering/lod-source.js",
+          "gitBlob": "0869ad022af221287f367cd6bbd6401873d2766d"
+        },
+        {
+          "path": "src/rendering/material-registry.js",
+          "gitBlob": "461bd604c7ef28e4e339f4afc67e9f08787226d2"
+        },
+        {
+          "path": "src/rendering/material-vfx.js",
+          "gitBlob": "828941eef05eb2776bd6a0bcb50234060a2d8f09"
+        },
+        {
+          "path": "src/rendering/mountain-arc-composition.js",
+          "gitBlob": "92e8160c4c222790c561c6edb2901fe4d6bd4424"
+        },
+        {
+          "path": "src/rendering/mountain-arcs.js",
+          "gitBlob": "8f52e0d1c90c3aab1993ed9c3b3d0428bdae33c4"
+        },
+        {
+          "path": "src/rendering/mountain-backdrop-profile.js",
+          "gitBlob": "82107c23901d0935aef73fcc04a7dd78235b08ad"
+        },
+        {
+          "path": "src/rendering/mud-patches.js",
+          "gitBlob": "7c8d3030c0b5017bae983a7c1535db0c90ec9e8d"
+        },
+        {
+          "path": "src/rendering/native-shadow-source.js",
+          "gitBlob": "6007b31cb7d20c8fbc37382c2273bb87417a6035"
+        },
+        {
+          "path": "src/rendering/native-shadow.js",
+          "gitBlob": "fc5e763d2f2ad0271a0d0957160abce2660241f1"
+        },
+        {
+          "path": "src/rendering/obstruction-source.js",
+          "gitBlob": "2173a2ec15b699d7b3971561bffecde247c191fb"
+        },
+        {
+          "path": "src/rendering/obstruction.js",
+          "gitBlob": "a992bb90eb0f689867e591495a2e4cff47257ef3"
+        },
+        {
+          "path": "src/rendering/prepare-biome-tangents.js",
+          "gitBlob": "13f2013edfcfcf1790150d2eb293f69ac0df5724"
+        },
+        {
+          "path": "src/rendering/prepare-building-data.js",
+          "gitBlob": "eb4301a2073efa823e2464eb3607acbc18acafa6"
+        },
+        {
+          "path": "src/rendering/prepare-sky-pixels.js",
+          "gitBlob": "d1ba06d767eda07563f82b7b980a1f1033d8c976"
+        },
+        {
+          "path": "src/rendering/program-bindings.js",
+          "gitBlob": "a02d7e85003ec73dece61927cd668314b9c8aa7a"
+        },
+        {
+          "path": "src/rendering/prop-transition-residency.js",
+          "gitBlob": "49bf8170f0049013c3800f979f3836864ff99e0a"
+        },
+        {
+          "path": "src/rendering/raid-camera.js",
+          "gitBlob": "b5c1cf9ced3a9e2f56b3979f14eaab77364552c7"
+        },
+        {
+          "path": "src/rendering/render-origin.js",
+          "gitBlob": "1ab913f8ec9b42e2eb38e05127db45087d128490"
+        },
+        {
+          "path": "src/rendering/render-quality.js",
+          "gitBlob": "4f9c9e114773f268fe450aa20c98e7e0f3d7e8f5"
+        },
+        {
+          "path": "src/rendering/resident-props.js",
+          "gitBlob": "1b1d19fa01fc95bbc986f28e4aafa02f6c00e6f3"
+        },
+        {
+          "path": "src/rendering/scene.js",
+          "gitBlob": "d2558d7a5716b40bff538d1c7b725d4030ed0c7b"
+        },
+        {
+          "path": "src/rendering/screen-preload.js",
+          "gitBlob": "6337563dd05ba849f790ba2e5a001136857cc2e4"
+        },
+        {
+          "path": "src/rendering/screen-target.js",
+          "gitBlob": "5441774510e17b1cba0f0b3a89f65ca03aaa67bc"
+        },
+        {
+          "path": "src/rendering/shader-failure.js",
+          "gitBlob": "33eb59477ba40e0ccff378eed4fd8c1236ce748a"
+        },
+        {
+          "path": "src/rendering/shadow-cache.js",
+          "gitBlob": "ebfd53bf9fce832b35193d042d9d824eebc42953"
+        },
+        {
+          "path": "src/rendering/shadow-camera.js",
+          "gitBlob": "7d15e8e991cf73480a0669055b3104bf54cb69e3"
+        },
+        {
+          "path": "src/rendering/shield-vfx.js",
+          "gitBlob": "2d89b832c3968056684bd54d65a6e1902c743bd8"
+        },
+        {
+          "path": "src/rendering/skin-envelope.js",
+          "gitBlob": "b62581f4ec037daac2bc6469d58e40848a07549a"
+        },
+        {
+          "path": "src/rendering/sky-pixels-worker.js",
+          "gitBlob": "cec4273d89b1e03fa5ee47329d2b720da6f494ae"
+        },
+        {
+          "path": "src/rendering/sky-pixels.js",
+          "gitBlob": "df412a0d2b5592abfea84a7807636309b23ce196"
+        },
+        {
+          "path": "src/rendering/sky-source.js",
+          "gitBlob": "3ee7404b95cd9a14ff90e0c50b4c79ddb38ba9f8"
+        },
+        {
+          "path": "src/rendering/sky.js",
+          "gitBlob": "ee3a49f8c10aa19c81b36793876005bcd1023754"
+        },
+        {
+          "path": "src/rendering/spell-preview.js",
+          "gitBlob": "c92b953dae1d9134f60688d48f90ab2fd7f76f3a"
+        },
+        {
+          "path": "src/rendering/standard-depth.js",
+          "gitBlob": "d3afadb2a07e07d5550c480db15380bf287d40fb"
+        },
+        {
+          "path": "src/rendering/step-ripples.js",
+          "gitBlob": "24217df05e58c6e1c9fafbdc31102ffeeb9d0d4a"
+        },
+        {
+          "path": "src/rendering/surface-alpha.js",
+          "gitBlob": "f2f9f27865b42f3bb71c57cdb715cef4d7e305dc"
+        },
+        {
+          "path": "src/rendering/surface-source.js",
+          "gitBlob": "72e6e2027ef4a2cb562368fbf54d27e90087d6b8"
+        },
+        {
+          "path": "src/rendering/terrain-camera.js",
+          "gitBlob": "695baf0c476bbf9a5efb9aab5ddef7e069cccf52"
+        },
+        {
+          "path": "src/rendering/terrain-geometry.js",
+          "gitBlob": "077017ebc1108ff4e5acb904a4b63909c73d5a03"
+        },
+        {
+          "path": "src/rendering/terrain-source.js",
+          "gitBlob": "24eb6748f32e1634fee70be639988801fef436fa"
+        },
+        {
+          "path": "src/rendering/terrain-surface.js",
+          "gitBlob": "4b0ceb688f11d892d601deb66f08eb2d7eed94ec"
+        },
+        {
+          "path": "src/rendering/tutorial-hand-target.js",
+          "gitBlob": "a0db04a2613723cdc89f8e7744f87e200184bcff"
+        },
+        {
+          "path": "src/rendering/tutorial-placement-focus.js",
+          "gitBlob": "6091ef94078f1be6a6c4e9039a79f724d1bd90db"
+        },
+        {
+          "path": "src/rendering/vfx-native.js",
+          "gitBlob": "9a4c49b42213e9e58ebd36f2eff41665f896f895"
+        },
+        {
+          "path": "src/rendering/vfx-preload.js",
+          "gitBlob": "e331e3c0223faf52409d457c816f275ff925c9ee"
+        },
+        {
+          "path": "src/rendering/vfx.js",
+          "gitBlob": "789a818bc05af3e0e1587f7e1c6d1ff66d8c96c8"
+        },
+        {
+          "path": "src/rendering/volcanic-source.js",
+          "gitBlob": "f8d7d8775177a7a52448405e299224ac63e78134"
+        },
+        {
+          "path": "src/rendering/wall-drawing.js",
+          "gitBlob": "4e9f1067a2f29e32b513fcf890ce99fd28606f1e"
+        },
+        {
+          "path": "src/rendering/wall-stroke-preview.js",
+          "gitBlob": "ef0fac6560649edfb9b948224bb9fae7c4158ab6"
+        },
+        {
+          "path": "src/rendering/walls-native.js",
+          "gitBlob": "6345cd6a26245589e42bc278585a803e3aac36b7"
+        },
+        {
+          "path": "src/rendering/walls.js",
+          "gitBlob": "7222a07879503252d483b991731b983f299e8c83"
+        },
+        {
+          "path": "src/rendering/water-data.js",
+          "gitBlob": "4e98e878db2dc60a8de219f66ed120f4c2eded70"
+        },
+        {
+          "path": "src/rendering/water-geometry.js",
+          "gitBlob": "cad496e873c964a0e183a18f143f67f4ef651194"
+        },
+        {
+          "path": "src/rendering/water-source.js",
+          "gitBlob": "e89fc64292935205a21227c88cfb3e51a26d00a1"
+        },
+        {
+          "path": "src/rendering/watering-emitter.js",
+          "gitBlob": "f86552e8080e31093c5fb2aab4279f674dd1c21e"
+        },
+        {
+          "path": "src/rendering/work-target-index.js",
+          "gitBlob": "f4768768fe20ead44b26f1675bdbf9eee52f2ad7"
+        },
+        {
+          "path": "src/rendering/work-vfx.js",
+          "gitBlob": "0ff5deb8530f0b4125a2c0a331956fb66b52832a"
+        },
+        {
+          "path": "src/rendering/worker-actions.js",
+          "gitBlob": "72985121f8355d106488ef14c30254c6fd480f3a"
+        },
+        {
+          "path": "src/rendering/worker-tool-visibility.js",
+          "gitBlob": "1bd52cadb91a8788fc326a4aecdfd9830a6a233d"
+        },
+        {
+          "path": "src/rendering/world-atmosphere.js",
+          "gitBlob": "587364b8c8ee3ab39544edaaa2e554f20ee92c38"
+        },
+        {
+          "path": "src/simulation/active-crops.js",
+          "gitBlob": "facb1ec565c5a4ef072bc222986e08ed32269eef"
+        },
+        {
+          "path": "src/simulation/actor-fluid-clearance.js",
+          "gitBlob": "a98d9d1119ecfc5cc7d0f1d4ca6014eedae6c28c"
+        },
+        {
+          "path": "src/simulation/actor-motion.js",
+          "gitBlob": "51235678a24a5fb3ab512a0c12d6a3d7343aa662"
+        },
+        {
+          "path": "src/simulation/animal-actions-data.js",
+          "gitBlob": "928b3ae9bc0c1496446da56cc01d9ef5df492c18"
+        },
+        {
+          "path": "src/simulation/animal-exit-connectors.js",
+          "gitBlob": "46ab98ffb235028b78ab10f547a147e2dda6c3d6"
+        },
+        {
+          "path": "src/simulation/animal-route-clearance.js",
+          "gitBlob": "76a21357c2a617013b95f543dfa5306b35d63c32"
+        },
+        {
+          "path": "src/simulation/animal-slope-recovery.js",
+          "gitBlob": "37fa32ca2a8a6237abcab31a743c4946cf992ffe"
+        },
+        {
+          "path": "src/simulation/balance.js",
+          "gitBlob": "f2d188b2c3e372d30ea6d163688db987e742c366"
+        },
+        {
+          "path": "src/simulation/budget.js",
+          "gitBlob": "772a60d0b748fc551d9ad2b4e60388e5d638dde7"
+        },
+        {
+          "path": "src/simulation/crop-components.js",
+          "gitBlob": "ab25ffa45b6053fd6234f25b3da7882ce5056379"
+        },
+        {
+          "path": "src/simulation/crops.js",
+          "gitBlob": "5483d627fedd8efea9cd476d0087df51263272da"
+        },
+        {
+          "path": "src/simulation/defensive-groups.js",
+          "gitBlob": "723ef968ad4fa72916f831807e2077eb343b2261"
+        },
+        {
+          "path": "src/simulation/encounters.js",
+          "gitBlob": "7c83a16dd491627561efdca16701f921e3883df9"
+        },
+        {
+          "path": "src/simulation/events.js",
+          "gitBlob": "2fecdc56bd5bae320267b972cbf8579895cb2404"
+        },
+        {
+          "path": "src/simulation/game.js",
+          "gitBlob": "de5048de44512d733604a10f0495b2987b370834"
+        },
+        {
+          "path": "src/simulation/gates.js",
+          "gitBlob": "9b946bd42933606b988e5f34858379e48d9ff0c9"
+        },
+        {
+          "path": "src/simulation/idle.js",
+          "gitBlob": "4fc15353ddc95a7570644dae825e3438029520a9"
+        },
+        {
+          "path": "src/simulation/locomotion-calibration.js",
+          "gitBlob": "ba81f6a95194669aa82c8b567ab771fb52889d00"
+        },
+        {
+          "path": "src/simulation/locomotion.js",
+          "gitBlob": "408a868c84a3a0a55e47ad33b3051aa4138b55de"
+        },
+        {
+          "path": "src/simulation/money.js",
+          "gitBlob": "d03a53340b04ad92e60379acd6f2e98ac82fc1f7"
+        },
+        {
+          "path": "src/simulation/raid-notice.js",
+          "gitBlob": "baff1fb2551a841257e6faa398bddcefb2bb42be"
+        },
+        {
+          "path": "src/simulation/raids.js",
+          "gitBlob": "c2ea594ab870ec0b70521f122eabe3030331a4b9"
+        },
+        {
+          "path": "src/simulation/rules.js",
+          "gitBlob": "d03e92cf25fc359eb631c577246f71cf7e0cdaa6"
+        },
+        {
+          "path": "src/simulation/structure-presentation.js",
+          "gitBlob": "9ace7956063d2b36c58604087e6326397365c118"
+        },
+        {
+          "path": "src/simulation/tasks.js",
+          "gitBlob": "850e93de7baf49d017fc719a1f6445d3fa804bdc"
+        },
+        {
+          "path": "src/simulation/work-urgency.js",
+          "gitBlob": "3eb53a168bc158ae35276c77b9af2ad93a8cdf63"
+        },
+        {
+          "path": "src/simulation/worker-entity-lookup.js",
+          "gitBlob": "193ea51c42d1eb0dc9627891e9420f0da76742ea"
+        },
+        {
+          "path": "src/simulation/worker-route-clearance.js",
+          "gitBlob": "975d3703d838274976cd4cf0eacf4c82e880f66b"
+        },
+        {
+          "path": "src/simulation/workforce.js",
+          "gitBlob": "c6dca8637aa9fe9dd5307e0581beadbcb07136f2"
+        },
+        {
+          "path": "src/tutorial/action-pause.js",
+          "gitBlob": "c63a1f4353f6391217ddfb3bb729a4eee685f2cf"
+        },
+        {
+          "path": "src/tutorial/controller.js",
+          "gitBlob": "08e98205dff1c3b2389c46d18bad0594987e7a3e"
+        },
+        {
+          "path": "src/tutorial/guardian-copy.js",
+          "gitBlob": "bd3d0d34f6428e9e962555b871846dc6b382787c"
+        },
+        {
+          "path": "src/tutorial/magic-reminders.js",
+          "gitBlob": "cffb0873fa534e2173126af4ae31a6204bc25c41"
+        },
+        {
+          "path": "src/tutorial/messages.js",
+          "gitBlob": "7a066cfb7a45094214f5b85652acf029408b9fd2"
+        },
+        {
+          "path": "src/tutorial/profile.js",
+          "gitBlob": "1ecc1bc645518448669c12be6282453f5f7ffa69"
+        },
+        {
+          "path": "src/ui/agricultural-notice.js",
+          "gitBlob": "6c812a06226f1c14ea7640624498969e605a4114"
+        },
+        {
+          "path": "src/ui/build-permissions.js",
+          "gitBlob": "491a252d1fd7fc081a3815089ff469e62cf385dd"
+        },
+        {
+          "path": "src/ui/command-feedback.js",
+          "gitBlob": "73d9195451bee82861f9cc560ed182f002bff986"
+        },
+        {
+          "path": "src/ui/event-cards.js",
+          "gitBlob": "6c84a7f082731c3a2c0dd48c10b9a6968ac12564"
+        },
+        {
+          "path": "src/ui/frame-image-loader.js",
+          "gitBlob": "690d77c3edb73ea74812b0e08088f34b8607a282"
+        },
+        {
+          "path": "src/ui/game-surfaces.js",
+          "gitBlob": "d314e0d0299acfbb302126b3871cd513439673e0"
+        },
+        {
+          "path": "src/ui/guardian-lifecycle.js",
+          "gitBlob": "d0a196be74ed845e5109503248c9d85e38b4ce8c"
+        },
+        {
+          "path": "src/ui/guardian-native.css",
+          "gitBlob": "e060aae22db6cfda4317afb4d95e2bad9b30c57a"
+        },
+        {
+          "path": "src/ui/guardian-native.js",
+          "gitBlob": "0f4668ca8e611f4713e967bdcf8280efd8e41b60"
+        },
+        {
+          "path": "src/ui/guardian.js",
+          "gitBlob": "9c880e095171ff88fb887f7ff6af6cc621c81c0a"
+        },
+        {
+          "path": "src/ui/hiring-confirmation.js",
+          "gitBlob": "1d1b5c6d265677c5176d5d58b853a413896e1b17"
+        },
+        {
+          "path": "src/ui/hud-shortcuts.js",
+          "gitBlob": "ff6d527f2275a01fcfa55c33f39242bad3784420"
+        },
+        {
+          "path": "src/ui/library-viewer.js",
+          "gitBlob": "97861ff02d2630af5d6aa510a79285ad99903343"
+        },
+        {
+          "path": "src/ui/loading-copy.js",
+          "gitBlob": "8bf62f9ad315a759b07533af074556ddaa167d53"
+        },
+        {
+          "path": "src/ui/loading-failure.js",
+          "gitBlob": "745f62db6bacbcc467550bf928fa6dba3bf69d07"
+        },
+        {
+          "path": "src/ui/loading-frame-preparation.js",
+          "gitBlob": "5638b5814c5cdef7ded927114b04e07bf28b24eb"
+        },
+        {
+          "path": "src/ui/loading-frame.js",
+          "gitBlob": "4a0c8d910bc39417edf855af73ecfb6e29118746"
+        },
+        {
+          "path": "src/ui/loading-overlay.js",
+          "gitBlob": "3890017dd8547eef66dc2e49741ced94bfa981b2"
+        },
+        {
+          "path": "src/ui/menu-integration.js",
+          "gitBlob": "f1bb2043ec34365599212a9674adace779514de0"
+        },
+        {
+          "path": "src/ui/native-hud.js",
+          "gitBlob": "39140aa30758bb28b38620ec1f9053c583e30336"
+        },
+        {
+          "path": "src/ui/screen-wake-lock.js",
+          "gitBlob": "0e09bff14cbc7acece89935e3d4d908ddc094667"
+        },
+        {
+          "path": "src/ui/spell-cards.js",
+          "gitBlob": "648830d16528d6f94d9fbd6f364afef37ed5adec"
+        },
+        {
+          "path": "src/ui/styles.css",
+          "gitBlob": "7464e319a49d7855c30b1c963bf6317c2433b9ee"
+        },
+        {
+          "path": "src/ui/tool-session.js",
+          "gitBlob": "19f8c45bc0a3786d9794945fe4973c6a05c8aad8"
+        },
+        {
+          "path": "src/ui/tutorial-hud-hand.js",
+          "gitBlob": "e2ba8e6d5747ba52ebc5e1e25f713e787692afe1"
+        },
+        {
+          "path": "src/ui/tutorial.css",
+          "gitBlob": "dc6483d46e42bbd7c6ebaa82ff56389fe8366eca"
+        },
+        {
+          "path": "src/world/active-region.js",
+          "gitBlob": "f67c8def61d2fc0636d5f9b78d41298d90be3931"
+        },
+        {
+          "path": "src/world/boundary-faces.js",
+          "gitBlob": "88b8f15d4d13ddaf49ed360dfe53526213a48fbb"
+        },
+        {
+          "path": "src/world/boundary-gates.js",
+          "gitBlob": "5cafc5bf2c7a084a27a6ccb9aeab5c367b8d192a"
+        },
+        {
+          "path": "src/world/building-route-shortcut.js",
+          "gitBlob": "152188df58796de1b18e6832e3c18b276494cabe"
+        },
+        {
+          "path": "src/world/center-geometries.js",
+          "gitBlob": "3b7bbaece791970a837425aec376dd1c130b4148"
+        },
+        {
+          "path": "src/world/centers.js",
+          "gitBlob": "170a8cfa03ccd305ee5ca024d5945c52181d4adf"
+        },
+        {
+          "path": "src/world/compute-hiring-routes.js",
+          "gitBlob": "3c9ae948289e0842de7aaa0ea181fbe11ea851a0"
+        },
+        {
+          "path": "src/world/compute-raid-entry.js",
+          "gitBlob": "18c3dc1b5818b05d6ed4e7f958a058b02972f51e"
+        },
+        {
+          "path": "src/world/farm-envelope.js",
+          "gitBlob": "c7bf287744d2754b0194ea1b1781f4a0aeb09442"
+        },
+        {
+          "path": "src/world/fifo-eviction.js",
+          "gitBlob": "33308f1446aae61e9759f030da4db42ff72858a6"
+        },
+        {
+          "path": "src/world/fluid-placement.js",
+          "gitBlob": "3e60d24748e7864349889c052382e23eea5c46c7"
+        },
+        {
+          "path": "src/world/footprints.js",
+          "gitBlob": "b5e6ba2957587ded4fb18d8c3aba0465cd1c7e03"
+        },
+        {
+          "path": "src/world/gate-frames-native.js",
+          "gitBlob": "c416e4145b93c61834d9bc1e0f21bd081c644a0d"
+        },
+        {
+          "path": "src/world/gate-passages.js",
+          "gitBlob": "dafc067519efc0df8fa391e9a033c50a834fc087"
+        },
+        {
+          "path": "src/world/hiring-route-preparer.js",
+          "gitBlob": "4f4dd3610a403bfe449f2c6043b68266d80b1ee0"
+        },
+        {
+          "path": "src/world/hiring-route-worker.js",
+          "gitBlob": "75ca8ca5a27965afd268e475e3f3b4f9f19d2c9e"
+        },
+        {
+          "path": "src/world/initial-location-worker.js",
+          "gitBlob": "ab1d062c928198a80772df1ad09238f72be24036"
+        },
+        {
+          "path": "src/world/navigation-bounds.js",
+          "gitBlob": "01b9f96d879947ad8b42647756a4631ddb3884f8"
+        },
+        {
+          "path": "src/world/navigation-query-scope.js",
+          "gitBlob": "a24781ec3a468f9b165198307719f42cd18ac74d"
+        },
+        {
+          "path": "src/world/navigation.js",
+          "gitBlob": "8f9f1f4797c9e98adb21f3db0dd45d0628dbc2c8"
+        },
+        {
+          "path": "src/world/prepare-initial-location.js",
+          "gitBlob": "e0c3bc93a56a75287a74a008e793ec45bdd47ffd"
+        },
+        {
+          "path": "src/world/raid-entry-data.js",
+          "gitBlob": "4638011e5399488779e26adbc2772b0ef4112e11"
+        },
+        {
+          "path": "src/world/raid-entry-preparer.js",
+          "gitBlob": "91f30ba7baece8fae01c239d786e6da9bb609219"
+        },
+        {
+          "path": "src/world/raid-entry-worker.js",
+          "gitBlob": "3e1f1efdb2f5fadeb94765c613d9e4955653bbd2"
+        },
+        {
+          "path": "src/world/raid-navigation-warmth.js",
+          "gitBlob": "c6f623053e29e96dc9bb608d477154e8bb791b68"
+        },
+        {
+          "path": "src/world/search-frontier.js",
+          "gitBlob": "4bb7df9aae81d5060aec8ff16efeee216d6a26f6"
+        },
+        {
+          "path": "src/world/settlement-terrain.js",
+          "gitBlob": "84bc259fd66d4fd82312a0d3882aeca5afb0b5f2"
+        },
+        {
+          "path": "src/world/terrain.js",
+          "gitBlob": "28f52a14f4e793f982dd5a149e63cba281523d7a"
+        },
+        {
+          "path": "src/world/villages.js",
+          "gitBlob": "05ec31464cc60793bff6cdda2262f0e4fa74ac98"
+        },
+        {
+          "path": "src/world/wall-collision-frame.js",
+          "gitBlob": "8ca5547b0db815ee694c7169b88fc208612755d6"
+        },
+        {
+          "path": "src/world/wall-layout-native.js",
+          "gitBlob": "5ab85d92b0e9064a3fd27801c0a86bb842d4ccba"
+        },
+        {
+          "path": "src/world/wall-layout.js",
+          "gitBlob": "165f55577584c9f39c8fae1fc9e71759481c3410"
+        },
+        {
+          "path": "src/world/wall-stroke-sampling.js",
+          "gitBlob": "f41bb677587eec015f50f4d5dfd0e7cff03e723f"
+        },
+        {
+          "path": "src/world/work-points.js",
+          "gitBlob": "5e0093821324192c8621d6cc762191a8d504e071"
+        },
+        {
+          "path": "src/world/worker-slope-recovery.js",
+          "gitBlob": "efef135be15d9971d664a87d13b2d84500981ed0"
+        },
+        {
+          "path": "src/world/worker-view-cache.js",
+          "gitBlob": "f406d2cfae8bcac252adfe02a27457d0b356fbee"
+        },
+        {
+          "path": "tests/browser/gpu-timer.js",
+          "gitBlob": "ca7b723c68e62553431459416871308e75f5a768"
+        },
+        {
+          "path": "tests/browser/interactive-loading-diorama.html",
+          "gitBlob": "63516b3a7415545439e41f29e3689581bc296fb1"
+        },
+        {
+          "path": "tools/experiments/append-history-index.mjs",
+          "gitBlob": "fc99d03c7aeb5aa93bfc248459dc141dc969e104"
+        },
+        {
+          "path": "tools/experiments/atlas-elevation-frame.js",
+          "gitBlob": "e611a1dcab0fdd7ec3d38c0566ccc0717057b30d"
+        },
+        {
+          "path": "tools/experiments/attach-native-far-world.js",
+          "gitBlob": "2e414a0a6c5501b66f0d617dd144e2de3cf2a598"
+        },
+        {
+          "path": "tools/experiments/capture-standby-upload.js",
+          "gitBlob": "1795109030ea4e0e2264bcc8ff608f5e19e5bbe9"
+        },
+        {
+          "path": "tools/experiments/compare-segment-queries.mjs",
+          "gitBlob": "3f6603d052e5b6d1bd9becc00d162ed39aa1c2d4"
+        },
+        {
+          "path": "tools/experiments/compare-solid-prop-queries.mjs",
+          "gitBlob": "fa5d6700052a3ba742d60b69696e2f5b7a769a5f"
+        },
+        {
+          "path": "tools/experiments/compare-terrain-samples.mjs",
+          "gitBlob": "3c41f70d9b4f48696151a423075bc245d9484934"
+        },
+        {
+          "path": "tools/experiments/compile-gpu-preparation.js",
+          "gitBlob": "daf198dd7e2a41faf0ad00a2c300d667bf2479fb"
+        },
+        {
+          "path": "tools/experiments/far-atlas-recipe.js",
+          "gitBlob": "e7506c7cca57bcc0814fcf0b72ae0847e3ac9c9b"
+        },
+        {
+          "path": "tools/experiments/far-backdrop-data.js",
+          "gitBlob": "f418be4416df0e3720c126d3252908a0fc325bfc"
+        },
+        {
+          "path": "tools/experiments/far-camera-path.js",
+          "gitBlob": "defec35747eac77f5fe6ecba873793b9847a6036"
+        },
+        {
+          "path": "tools/experiments/far-ground-color-map.js",
+          "gitBlob": "86c0635210cd90ca59883bfcecb46f03dae93eff"
+        },
+        {
+          "path": "tools/experiments/far-ground-contacts.js",
+          "gitBlob": "09afcafd50f6a1f552f7e5e018f6de8048365d28"
+        },
+        {
+          "path": "tools/experiments/far-ground-data.js",
+          "gitBlob": "71657b2f38f923c84969470ec7f5b0b3c6f35d0e"
+        },
+        {
+          "path": "tools/experiments/far-ground-native-palette.js",
+          "gitBlob": "b89d570d0d3baaa854ff7c038f4e398d9230d6be"
+        },
+        {
+          "path": "tools/experiments/far-ground-seam-stream.js",
+          "gitBlob": "caef5e247ff46c8279d40469116e629089024372"
+        },
+        {
+          "path": "tools/experiments/far-ground-seam-worker.js",
+          "gitBlob": "d721af252a97f00829eb991e67a411827b9473d5"
+        },
+        {
+          "path": "tools/experiments/far-ground-seam.js",
+          "gitBlob": "9b26610c47e79aaad72a7b8be11371e250c6f476"
+        },
+        {
+          "path": "tools/experiments/far-impostor-lighting.js",
+          "gitBlob": "c3f0107948284413639ce656e6cdc0db0a95a359"
+        },
+        {
+          "path": "tools/experiments/far-impostor-math.js",
+          "gitBlob": "836949bc304d293f7400b6a54b78edb62bfb9748"
+        },
+        {
+          "path": "tools/experiments/far-impostor-prototype.js",
+          "gitBlob": "72119f91f4b404049aa63bc4f89eb8e8fa72f26f"
+        },
+        {
+          "path": "tools/experiments/far-near-readiness-audit.js",
+          "gitBlob": "1d6622f49ff227758b29257e581ef91af09e3d8b"
+        },
+        {
+          "path": "tools/experiments/far-region-tracker.js",
+          "gitBlob": "716131e3c5500b3881f03c5afcfe5bdd026c52df"
+        },
+        {
+          "path": "tools/experiments/far-scene-data.js",
+          "gitBlob": "0340245ae6e8fde4ea5e9c8436e9ae01e9d65c6a"
+        },
+        {
+          "path": "tools/experiments/far-scene-loader.js",
+          "gitBlob": "c2f6d69836b8d69d3e721891faf826158d94b3cc"
+        },
+        {
+          "path": "tools/experiments/far-scene-stream.js",
+          "gitBlob": "cd902a3e312f27abe1134fc9fae3128b817a8f72"
+        },
+        {
+          "path": "tools/experiments/far-scene-worker.js",
+          "gitBlob": "221ff0f30dc9dc65b89945d84501a89a85dd9098"
+        },
+        {
+          "path": "tools/experiments/far-transition-inspection.js",
+          "gitBlob": "569c012ca2ed60e67665e2251a211e65940dcd8b"
+        },
+        {
+          "path": "tools/experiments/far-tree-sampling.js",
+          "gitBlob": "464db0eeba0084141821ead7c5fec3b70f805281"
+        },
+        {
+          "path": "tools/experiments/far-tree-transitions.js",
+          "gitBlob": "cf5a9bb7a88116a3ab557e3d0aa67c9b2c380a14"
+        },
+        {
+          "path": "tools/experiments/far-validation-errors.js",
+          "gitBlob": "9f4c5a6412e0248eba628c7d140156fba6fffcbe"
+        },
+        {
+          "path": "tools/experiments/height-pond-axis.mjs",
+          "gitBlob": "42e1f4d2a79a6abc020f6b1e5695f706b7bc939b"
+        },
+        {
+          "path": "tools/experiments/hq-backdrop-frame.js",
+          "gitBlob": "c0c7cb52fd897766f9681f2c93208ff585c069ba"
+        },
+        {
+          "path": "tools/experiments/impostor-hull.js",
+          "gitBlob": "f70577bac5d5a6ef146b2785b75cfca7afafb07f"
+        },
+        {
+          "path": "tools/experiments/instrument-worker-lookups.mjs",
+          "gitBlob": "8fd896ada4f047b66b7d227c5f325664da6a0572"
+        },
+        {
+          "path": "tools/experiments/isolated-gpu-root.js",
+          "gitBlob": "3c03d5d7723aed1dc00c9e58c499b42237ae1ec7"
+        },
+        {
+          "path": "tools/experiments/load-texture-bitmap.js",
+          "gitBlob": "26b5c4dc6d4073f2431dffcae844057748a277dd"
+        },
+        {
+          "path": "tools/experiments/loading-transfer-server.mjs",
+          "gitBlob": "17ad147509dc207c5047f9c47a60176c52e7e3c6"
+        },
+        {
+          "path": "tools/experiments/logical-native-standby.js",
+          "gitBlob": "54ee0910234a29bb7b96d327b384b46c9d726c28"
+        },
+        {
+          "path": "tools/experiments/mountain-source-color.js",
+          "gitBlob": "f4c676a56026871ca218a2142f321f00c2472d1a"
+        },
+        {
+          "path": "tools/experiments/native-far-coverage.js",
+          "gitBlob": "1b8647febe05b9cbbeb689ad99960012b92569c2"
+        },
+        {
+          "path": "tools/experiments/native-far-ground-seam.js",
+          "gitBlob": "7f5b6a0454608a193e85dd45d2db832d0efd697d"
+        },
+        {
+          "path": "tools/experiments/native-far-ground.js",
+          "gitBlob": "f33baa61307864d247840adba39c10996efb7f2d"
+        },
+        {
+          "path": "tools/experiments/native-far-layer.js",
+          "gitBlob": "a50466cfbee0ef8dab6d81ae41734b69d783e961"
+        },
+        {
+          "path": "tools/experiments/native-far-render-signature.js",
+          "gitBlob": "0afddd6b6121f53d9b2871cd7f5954bb090e4286"
+        },
+        {
+          "path": "tools/experiments/native-preparation-cadence.js",
+          "gitBlob": "9c81f78ec47103377cbb80ab0a3f67c363f5ac3a"
+        },
+        {
+          "path": "tools/experiments/native-prepared-tree-coverage.js",
+          "gitBlob": "f21069f5f4571953b27cb07175f8947a16d9701e"
+        },
+        {
+          "path": "tools/experiments/native-tree-coverage.js",
+          "gitBlob": "7c4cf0d4c0d42e47e0bcb832c594aa46f9dbbf80"
+        },
+        {
+          "path": "tools/experiments/native-tree-diagnostic-bounds.js",
+          "gitBlob": "e7cfbef8f1c18ec0a348b4933674513db07576b7"
+        },
+        {
+          "path": "tools/experiments/native-tree-presence.js",
+          "gitBlob": "742a6f5286e5f5a5a5d73b250161a03adc8d4c68"
+        },
+        {
+          "path": "tools/experiments/native-tree-standby.js",
+          "gitBlob": "970769f07f729beb3c5539eeaabad465449085f2"
+        },
+        {
+          "path": "tools/experiments/neighbor-edge-cache.mjs",
+          "gitBlob": "1ed28fc0f8f816d0fb2115ab1a9c53773a76aa27"
+        },
+        {
+          "path": "tools/experiments/obstacle-first-walkability.mjs",
+          "gitBlob": "3bdb205555a2f0f140e563abcea8acb448da25ba"
+        },
+        {
+          "path": "tools/experiments/prelit-linear-alpha.js",
+          "gitBlob": "85b348fbf5f2578542b2c122ac1a3ac0d345b694"
+        },
+        {
+          "path": "tools/experiments/prepare-crate-shadow.js",
+          "gitBlob": "7db63957f2e7650335029cc1b4ed09e675ecc5a7"
+        },
+        {
+          "path": "tools/experiments/prepare-crop-shadow-programs.js",
+          "gitBlob": "4902cba7fa3ed3486a031bc471b4b40a06154fcc"
+        },
+        {
+          "path": "tools/experiments/prepare-impostor-hulls.mjs",
+          "gitBlob": "bf6bdae6124cfd6f5d5abcd5fb39d372c8b11715"
+        },
+        {
+          "path": "tools/experiments/prepare-native-far-gpu.js",
+          "gitBlob": "a84ee1653752c04c69ff4b828c94c82390b9ec39"
+        },
+        {
+          "path": "tools/experiments/prepare-native-ground-palette.py",
+          "gitBlob": "b858b34be1c8aaeab6d5803f748c4ca6f94a2b43"
+        },
+        {
+          "path": "tools/experiments/prepare-resident-textures.js",
+          "gitBlob": "7ecd97cacd7ad7a66a3dc749cf2a0116090a33a7"
+        },
+        {
+          "path": "tools/experiments/prepare-resident-travel-variants.js",
+          "gitBlob": "9ed29b163a2ccfb259e85e390e0a38256b0f5371"
+        },
+        {
+          "path": "tools/experiments/prop-query-grid.mjs",
+          "gitBlob": "b6116f08441ced968f764092ea4c8f7dae28ce0a"
+        },
+        {
+          "path": "tools/experiments/retain-loading-maize-textures.js",
+          "gitBlob": "82bb7b55cec46aca9f7d3c2c8d033cf90e41b578"
+        },
+        {
+          "path": "tools/experiments/sample-far-sky-horizon.mjs",
+          "gitBlob": "dce828de6c2f82016f6ba1099f08d99abe0dc7e8"
+        },
+        {
+          "path": "tools/experiments/segment-key-allocation.mjs",
+          "gitBlob": "4871eb122bd856862625e8224838126b6c6af051"
+        },
+        {
+          "path": "tools/experiments/shared-native-preparation.js",
+          "gitBlob": "7af07d311937a4fc631fb7a6adb83b2d94fc4650"
+        },
+        {
+          "path": "tools/experiments/shared-native-world-preparation.js",
+          "gitBlob": "3a7fbdcb198fc793dcb270ef67ee7da6b161edd0"
+        },
+        {
+          "path": "tools/experiments/solid-prop-queries.mjs",
+          "gitBlob": "b56b3df8b02889ec17a2162ba5f3a0859e2d30d7"
+        },
+        {
+          "path": "tools/experiments/task-index-reuse.mjs",
+          "gitBlob": "66b124169de44a7d4dd8cef6b8816834a5d97930"
+        },
+        {
+          "path": "tools/experiments/terrain-sample-offsets.mjs",
+          "gitBlob": "72349c8597e5d9c0a3f329cf77453697b40d8c27"
+        },
+        {
+          "path": "tools/experiments/texture-bitmap-worker-pool.js",
+          "gitBlob": "fe0e06ac5dab3bde47f74553cc43801f2628079c"
+        },
+        {
+          "path": "tools/experiments/texture-image-bitmap-worker.js",
+          "gitBlob": "6aca3fcb85d6512a2f8335fe43e217e6b0f66d81"
+        },
+        {
+          "path": "tools/experiments/texture-image-bitmap.js",
+          "gitBlob": "1fb8f53ba1822208d4205172794f5ccdacfc5448"
+        },
+        {
+          "path": "tools/experiments/trace-gl-disposals.js",
+          "gitBlob": "961203ce8a4365ddc6f95c645ba5ef7593d18fb6"
+        },
+        {
+          "path": "tools/experiments/travel-span-analysis.mjs",
+          "gitBlob": "f501f868d4115851036f4c10ce9642d39451ac63"
+        },
+        {
+          "path": "tools/experiments/tree-transition-range.js",
+          "gitBlob": "529dbdb306d3c489cb9831b3f76f8d9af1fecd06"
+        },
+        {
+          "path": "tools/experiments/wait-gpu-frame.js",
+          "gitBlob": "a30b8e8940e6785d930aefc7c6aad91cabf8b367"
+        },
+        {
+          "path": "tools/experiments/wait-gpu-preparation.js",
+          "gitBlob": "6767f599900cb5da9de9ed7b999e732fbf1940ea"
+        },
+        {
+          "path": "tools/experiments/wait-loading-gpu-fence.js",
+          "gitBlob": "565d2f7f8aab04094ca876a36a682f43316def90"
+        },
+        {
+          "path": "tools/experiments/wetland-mask-cache.mjs",
+          "gitBlob": "39eb7ea26190432144cad69e0e69812ee87e52d0"
+        },
+        {
+          "path": "tools/experiments/zero-vertex-upload.js",
+          "gitBlob": "9498f97153edf7af2125dc237f50e57cb1772bdc"
+        }
+      ],
+      "sourceMapSha256": "4b5c9d0670c85932a14bbc05bd355bc0f0958e2447fe949b6221788a9a84b14b"
+    },
+    "B": {
+      "commit": "c7c26463e1d40d78036187fd2f760c1700722b8e",
+      "sourceMap": [
+        {
+          "path": "src/app/autosave-events.js",
+          "gitBlob": "6b845f34b959585b4a1bfadc21904342e74a942c"
+        },
+        {
+          "path": "src/app/far-world-loading.js",
+          "gitBlob": "aac53c9b6a7c59931fb6f53442c175c71d04ae17"
+        },
+        {
+          "path": "src/app/frame-delta.js",
+          "gitBlob": "ea177bcfc5ef87fe13a0e8cb4e12257ebf071956"
+        },
+        {
+          "path": "src/app/loading-audio-qa.js",
+          "gitBlob": "8cbff6fa3f2ae1601807f74c8362efc74762f8f2"
+        },
+        {
+          "path": "src/app/loading-downloads.js",
+          "gitBlob": "55d0afc7c3148d1d3212639a8e198a98cd8d9126"
+        },
+        {
+          "path": "src/app/loading-gameplay-gpu-qa.js",
+          "gitBlob": "df11b7c7116923a9496ae642f6bcf0718833041e"
+        },
+        {
+          "path": "src/app/loading-gpu-qa.js",
+          "gitBlob": "188f076fba5a67463cd13f75b4de3e923828c704"
+        },
+        {
+          "path": "src/app/loading-progress-qa.js",
+          "gitBlob": "6011f6c174d07e5c661150102ac1cf63dccb3754"
+        },
+        {
+          "path": "src/app/loading-progress.js",
+          "gitBlob": "8ca66fdc8e9bdd7eeb976bce084503fbba1f7871"
+        },
+        {
+          "path": "src/app/loading-recipe.js",
+          "gitBlob": "141a05b2c113335df0f253b1cc307b25636756a0"
+        },
+        {
+          "path": "src/app/loading-transfer-owner.js",
+          "gitBlob": "f7acbf067a81ec8e8530afd15279d5a92b8422ca"
+        },
+        {
+          "path": "src/app/main.js",
+          "gitBlob": "4b2c5768e7abb5bdf39f281b07a8b83396f0c5fa"
+        },
+        {
+          "path": "src/app/notices.js",
+          "gitBlob": "e200082ee6d0fa8176f4de3f0c7833d226434064"
+        },
+        {
+          "path": "src/app/resume-loaded-world.js",
+          "gitBlob": "f3d0e60117cc9a60e319035376767c53aaf95de9"
+        },
+        {
+          "path": "src/app/save-game.js",
+          "gitBlob": "8603cf98f975362030cc441b85fba759b5373f60"
+        },
+        {
+          "path": "src/app/spell-placement.js",
+          "gitBlob": "3a683ad3a32b9a35e80be8ce4ab9cd0221fda9ab"
+        },
+        {
+          "path": "src/app/tool-label.js",
+          "gitBlob": "5bf120cfe670fac500a2cef2ea85378c7dc769bd"
+        },
+        {
+          "path": "src/app/world-resolution.js",
+          "gitBlob": "bcfff4c3b9ef9a439108b1aeac973a6f0bd97aa3"
+        },
+        {
+          "path": "src/audio/ambient-audio.js",
+          "gitBlob": "c71292c09e876a01f773c899de95ea382fa8fb1b"
+        },
+        {
+          "path": "src/audio/animal-audio.js",
+          "gitBlob": "31cce0780d02036b965ff44812bfdd95927d4006"
+        },
+        {
+          "path": "src/audio/audio.js",
+          "gitBlob": "4dbe91f11fcc1d45d0d571a492f39eda69782434"
+        },
+        {
+          "path": "src/audio/destruction-audio.js",
+          "gitBlob": "1fddf77e20c0c9c25d4074f34933b2e6ee482291"
+        },
+        {
+          "path": "src/audio/farm-actions-data.js",
+          "gitBlob": "6ae4a3ba15f3e9766d5307e9537880bb7a93cd14"
+        },
+        {
+          "path": "src/audio/farm-contact-audio.js",
+          "gitBlob": "aaed06e1f2b9bdec8ff2dd754e5396df05c8c1da"
+        },
+        {
+          "path": "src/audio/guardian-audio.js",
+          "gitBlob": "c3e1696d94947806fa90f4c36200cd7b1a98a7fe"
+        },
+        {
+          "path": "src/audio/loading-audio.js",
+          "gitBlob": "ccb265001ee367a10b12d07ce6f15d42d9650b33"
+        },
+        {
+          "path": "src/audio/movement-audio.js",
+          "gitBlob": "6b54887151f1ce3550604b9aaf12b4b3eb91c428"
+        },
+        {
+          "path": "src/audio/music-disk-cache.js",
+          "gitBlob": "46343d7ee55a64e3a78717d98efe9dd6fd6c896c"
+        },
+        {
+          "path": "src/audio/music-load-queue.js",
+          "gitBlob": "cd1dd0a9eb82f841a5c4287e93a3393cc77b0651"
+        },
+        {
+          "path": "src/audio/music-mixer.js",
+          "gitBlob": "607f07c4a391a263fc2f3c6f7feb3c0a4dec8de9"
+        },
+        {
+          "path": "src/audio/music-policy.js",
+          "gitBlob": "23a3b913d7c69f0e965dc64e379c4309106b66d9"
+        },
+        {
+          "path": "src/audio/music-range-reader.js",
+          "gitBlob": "be612ec019671d3e3de35929c0ca5a14788de620"
+        },
+        {
+          "path": "src/audio/music-stream.js",
+          "gitBlob": "686964e638c94a3ec48d8c7f3393fee58f180c1d"
+        },
+        {
+          "path": "src/audio/music-transport.js",
+          "gitBlob": "ae937126ba061be5b6d32b7c0f657c97b60a8cd8"
+        },
+        {
+          "path": "src/audio/music-window-pool.js",
+          "gitBlob": "a1cb9767a0a1f3394dd56abf046f8cb1828b022c"
+        },
+        {
+          "path": "src/audio/music-window-transport.js",
+          "gitBlob": "7f6682136e4df02f5d47c7598c73e823a9a58bff"
+        },
+        {
+          "path": "src/audio/opus-window-recipe.js",
+          "gitBlob": "fb67cab348b691eb202dac06db540324082830ec"
+        },
+        {
+          "path": "src/audio/power-ready-audio.js",
+          "gitBlob": "f51e5972e254c606560276fb19a64dbc7ab45399"
+        },
+        {
+          "path": "src/audio/raid-arrival-audio.js",
+          "gitBlob": "268def630a56b8de2cd9e31ac57bd0a95707109f"
+        },
+        {
+          "path": "src/audio/spirit-voice.js",
+          "gitBlob": "46df69277463c049466c68a711f7c771dc19f033"
+        },
+        {
+          "path": "src/audio/start-window-music.js",
+          "gitBlob": "8776011b057b604ee5e9654bbdeeef1a0717fd92"
+        },
+        {
+          "path": "src/audio/structure-audio.js",
+          "gitBlob": "1097c253e5b3820aedafa4a43c2ae1bf59058ae9"
+        },
+        {
+          "path": "src/audio/ui-audio.js",
+          "gitBlob": "dc2c5cd0761e032a584a7039ea9ea6e27540c667"
+        },
+        {
+          "path": "src/audio/unlock-audio.js",
+          "gitBlob": "1bd7220f10cf5aa6ccd36edbba1086eeef839602"
+        },
+        {
+          "path": "src/audio/work-audio.js",
+          "gitBlob": "71f798f72cefa7eae821e88af03bd7afabc65829"
+        },
+        {
+          "path": "src/audio/worker-audio.js",
+          "gitBlob": "c5d63bfb99c64fbba06355d0c7e84ad239f3cea7"
+        },
+        {
+          "path": "src/persistence/browser-saves.js",
+          "gitBlob": "ca85c2137952bd6bfb3aa381b18cace15b2fd272"
+        },
+        {
+          "path": "src/persistence/exit-connector-snapshot.js",
+          "gitBlob": "c619acebb4cc5fc4cb56ae1b1172f4fd725ff8a9"
+        },
+        {
+          "path": "src/persistence/snapshot-decode-worker.js",
+          "gitBlob": "baac66e17c67ee00bfccbba512e2eaf65e4d9c60"
+        },
+        {
+          "path": "src/persistence/snapshot-decoder.js",
+          "gitBlob": "a43aaeb45e8b3edd2595bc6747cde5fc15c4b212"
+        },
+        {
+          "path": "src/persistence/snapshot-stream.js",
+          "gitBlob": "1766a78af4feb96e4d96b7863d15ea716554237c"
+        },
+        {
+          "path": "src/persistence/snapshots.js",
+          "gitBlob": "cd451838643b90ee15e193d8d6ecb9e40906ea06"
+        },
+        {
+          "path": "src/rendering/african-toon-source.js",
+          "gitBlob": "581c1e00d5a7b41288973379d6d5464f263d4de9"
+        },
+        {
+          "path": "src/rendering/african-toon.js",
+          "gitBlob": "07ab2e8c7c3d4c11beba4612c7eed739b0563587"
+        },
+        {
+          "path": "src/rendering/agriculture-vfx.js",
+          "gitBlob": "90776c0c97b62c22c4809027ab4fbb979c400ea3"
+        },
+        {
+          "path": "src/rendering/animal-actions.js",
+          "gitBlob": "74bdff52bba5e18d77f2081a56d429fcfe5021f4"
+        },
+        {
+          "path": "src/rendering/animal-preload.js",
+          "gitBlob": "f1ce2cc29313056e07256c1c8e6ac2b1d980f23f"
+        },
+        {
+          "path": "src/rendering/asset-clip.js",
+          "gitBlob": "cfde6efe383a95731a389a237932fb872a415ac3"
+        },
+        {
+          "path": "src/rendering/asset-fetch.js",
+          "gitBlob": "e800b658e4f4a6e31d9f85db1113303297875472"
+        },
+        {
+          "path": "src/rendering/asset-groups.js",
+          "gitBlob": "57b1f5cb488071e711b0be4b33351669da6582e5"
+        },
+        {
+          "path": "src/rendering/asset-lod.js",
+          "gitBlob": "823306faef13d110ab2776dcd67f17e7e7f2f4f4"
+        },
+        {
+          "path": "src/rendering/asset-shadows.js",
+          "gitBlob": "e9b49370992457276a544ddacd97aa780703393a"
+        },
+        {
+          "path": "src/rendering/asset-surface.js",
+          "gitBlob": "3b95240de16f7bbae5b77f5eeb127ed109e3c6e9"
+        },
+        {
+          "path": "src/rendering/asset-transfer.js",
+          "gitBlob": "e9b5d2e2211b08345c697a76da9b986d44fe396d"
+        },
+        {
+          "path": "src/rendering/asset-url.js",
+          "gitBlob": "828a80496f150aea9967022b19e1ba697648e185"
+        },
+        {
+          "path": "src/rendering/assets.js",
+          "gitBlob": "70a119521a6b7dcbffdaedf444152aa62e2b58a9"
+        },
+        {
+          "path": "src/rendering/attack-vfx.js",
+          "gitBlob": "1cbc0a3e2cac1bf7b3ead70bc04cf44f6e1d6847"
+        },
+        {
+          "path": "src/rendering/biome-backdrop.js",
+          "gitBlob": "2c1efebffbcd02ce2ab766c56e9017013522074d"
+        },
+        {
+          "path": "src/rendering/biome-ground.js",
+          "gitBlob": "ad756d3180ef26f62240703dc1a5e648876cfa3b"
+        },
+        {
+          "path": "src/rendering/biome-material-source.js",
+          "gitBlob": "e0971a10e18b499d9ac9dc8f65076b662c887b88"
+        },
+        {
+          "path": "src/rendering/biome-tangents-worker.js",
+          "gitBlob": "403d754c22de0c56ebf0341ace1d5904bb6b0905"
+        },
+        {
+          "path": "src/rendering/biome-tangents.js",
+          "gitBlob": "1dcdd5eb022a9fe1f6585b87528fdefeb7f863c5"
+        },
+        {
+          "path": "src/rendering/building-bounds.js",
+          "gitBlob": "4d20eeea66cd7e43cb3c36ba2dd9642c7a2092fe"
+        },
+        {
+          "path": "src/rendering/building-data-worker.js",
+          "gitBlob": "cb75fe54f5789ee0b524ce5c31b2d7f66884d4a1"
+        },
+        {
+          "path": "src/rendering/building-depth.js",
+          "gitBlob": "58747d20db8ea7ec453597f2c8a5398b9362097c"
+        },
+        {
+          "path": "src/rendering/building-effects.js",
+          "gitBlob": "f3323149f5f4d7a2419140a60eba303da7264a10"
+        },
+        {
+          "path": "src/rendering/buildings.js",
+          "gitBlob": "22f1a85e11ad14b38731d1a4a55ea2d3727add24"
+        },
+        {
+          "path": "src/rendering/camera-building-registry.js",
+          "gitBlob": "42728494403f63650e4d0fc90a658d06c6eca9d8"
+        },
+        {
+          "path": "src/rendering/camera-exclusion-motion.js",
+          "gitBlob": "5c4169abb1dccd845a6de61bba4dcad2c6879e7b"
+        },
+        {
+          "path": "src/rendering/camera-model-volume.js",
+          "gitBlob": "409e821c63a6e77852b577214dbfb84c7dc3940a"
+        },
+        {
+          "path": "src/rendering/camera-terrain-exclusion.js",
+          "gitBlob": "9a496468c08d9e1200660d02c4b812e2fe34b504"
+        },
+        {
+          "path": "src/rendering/camera-volume-index.js",
+          "gitBlob": "db1e1acff83716e8108aca67095a23d9bec5d496"
+        },
+        {
+          "path": "src/rendering/camera-volume-sweep.js",
+          "gitBlob": "08999f245bbe0cb4ba9947d9e233cc2d5623774f"
+        },
+        {
+          "path": "src/rendering/chunk-data.js",
+          "gitBlob": "b3fc3aa07f596802b745974058d9753d7ddaed6e"
+        },
+        {
+          "path": "src/rendering/chunk-stream.js",
+          "gitBlob": "121be5be8a6fcf0e2ca76c89cd20252f2bc09c54"
+        },
+        {
+          "path": "src/rendering/chunk-worker.js",
+          "gitBlob": "c444dc570250f34ecd23228d4d84fe7e4e76792d"
+        },
+        {
+          "path": "src/rendering/clone-runtime-material.js",
+          "gitBlob": "cdfeec4d4cd7b25139875f5fa3587c6c64769a80"
+        },
+        {
+          "path": "src/rendering/contact-source.js",
+          "gitBlob": "ebbb5ed6f9e4702af010fa056dc3bb65bdb1bfe7"
+        },
+        {
+          "path": "src/rendering/contacts.js",
+          "gitBlob": "d40f19132180dde58004327ef5e37bf1604f7bbd"
+        },
+        {
+          "path": "src/rendering/crop-batch.js",
+          "gitBlob": "5de831c7a8fe139430412af0c3eb7b803717a73a"
+        },
+        {
+          "path": "src/rendering/depth-capture.js",
+          "gitBlob": "4ab40074d54168e98bbeb0f587e2e913ec19c24e"
+        },
+        {
+          "path": "src/rendering/depth-recipes.js",
+          "gitBlob": "b71468e42666dfc570bf7a0ae52b0da0eadf2220"
+        },
+        {
+          "path": "src/rendering/destruction-effects-native.js",
+          "gitBlob": "e9007971125a169e4018c830ec33d775303ab9ac"
+        },
+        {
+          "path": "src/rendering/destruction-native.js",
+          "gitBlob": "f40f7ff538b7799e39d17254f9e5273103702208"
+        },
+        {
+          "path": "src/rendering/environment-endpoints.js",
+          "gitBlob": "7fbb7f45495f5635b2f8e0c599ffd6079035c915"
+        },
+        {
+          "path": "src/rendering/far-atmosphere.js",
+          "gitBlob": "690fca967208fa6dfead44122bcf8bc6771dfa9f"
+        },
+        {
+          "path": "src/rendering/far-vegetation-profile.js",
+          "gitBlob": "ba6145564c05efdec82c85605c2663181a377538"
+        },
+        {
+          "path": "src/rendering/far-vegetation.js",
+          "gitBlob": "8f376d0586b0dfad9243a1837e80d66b2382848f"
+        },
+        {
+          "path": "src/rendering/farm-focus.js",
+          "gitBlob": "ce782cbb69ce709fe7aba48e1bb882b0359731bc"
+        },
+        {
+          "path": "src/rendering/fine-noise.js",
+          "gitBlob": "8bc76b708b3bf5a44ce5a10cf564631a42da1dfc"
+        },
+        {
+          "path": "src/rendering/fixed-pose.js",
+          "gitBlob": "7da3b128565448fd399cb72fc41c2a9cced4753a"
+        },
+        {
+          "path": "src/rendering/fluid-lighting-source.js",
+          "gitBlob": "8f55c864ecb0c81b8932e958400adad73897fc08"
+        },
+        {
+          "path": "src/rendering/fluid-preload.js",
+          "gitBlob": "4e20221c4404afa1cbe1a4d9e9e56a0214ca005e"
+        },
+        {
+          "path": "src/rendering/footsteps-data.js",
+          "gitBlob": "4d73aac762c18d9b2be5018ed3f6b5c7494015d6"
+        },
+        {
+          "path": "src/rendering/gate-articulation.js",
+          "gitBlob": "7290f0587fe40b7972636c6379e07826d572a5ac"
+        },
+        {
+          "path": "src/rendering/gl-resource-epoch.js",
+          "gitBlob": "a0a52e674da80f2300d572bfefeaae186e79d87c"
+        },
+        {
+          "path": "src/rendering/ground-lighting-source.js",
+          "gitBlob": "54aabbdc63248d477d6500d79e90aab0827b54bd"
+        },
+        {
+          "path": "src/rendering/ground-mask.js",
+          "gitBlob": "5a1f3d2b4fed9a821e9a46d62d097f18e0b0d299"
+        },
+        {
+          "path": "src/rendering/hand-terrain.js",
+          "gitBlob": "814859fcbe90fcc07cb99cc07c51af83113fc00c"
+        },
+        {
+          "path": "src/rendering/hand-visual-scale.js",
+          "gitBlob": "4a36ff02444a917aacb0d2af671db617d06a1e53"
+        },
+        {
+          "path": "src/rendering/hands-native.js",
+          "gitBlob": "f48adc654f877156a3b2be8a977d786770494805"
+        },
+        {
+          "path": "src/rendering/hands.js",
+          "gitBlob": "b52556d46001446a3e835ef7f6758127dfdae8dc"
+        },
+        {
+          "path": "src/rendering/horizon-data.js",
+          "gitBlob": "c38ccc8facc6682dcefce804c253bb3f4653259b"
+        },
+        {
+          "path": "src/rendering/horizon-generator.js",
+          "gitBlob": "d4f8414e3951479e2c7c6c6be2af6d9a20840d46"
+        },
+        {
+          "path": "src/rendering/horizon-source.js",
+          "gitBlob": "6c60f6142e649621cc4ab8401badd368745c4fc7"
+        },
+        {
+          "path": "src/rendering/horizon-worker.js",
+          "gitBlob": "e16d8c85e7d0bd4a00f63f7f9fde745e8d414c46"
+        },
+        {
+          "path": "src/rendering/horizon.js",
+          "gitBlob": "205904398c93c53af240794c71dddb1b3626d708"
+        },
+        {
+          "path": "src/rendering/initial-crop-capacity.js",
+          "gitBlob": "6847c6ff448ef7f903c5b5e140a458d677bc0849"
+        },
+        {
+          "path": "src/rendering/loading-cinematic.js",
+          "gitBlob": "d9b7cf2727fa363d59b26cea125a3918ef1f714e"
+        },
+        {
+          "path": "src/rendering/loading-diorama.js",
+          "gitBlob": "872a9c76288425aed27411a54b9dd2787352d972"
+        },
+        {
+          "path": "src/rendering/loading-frame-slack.js",
+          "gitBlob": "f820371afb50340a1b1c22adc9fb57f715683c51"
+        },
+        {
+          "path": "src/rendering/loading-image-decoder.js",
+          "gitBlob": "a892a085bada9239b3bbe4c8d8487fcdf4026b1a"
+        },
+        {
+          "path": "src/rendering/loading-image-worker.js",
+          "gitBlob": "dd185351a14066c687514010ddbf67477d99d30a"
+        },
+        {
+          "path": "src/rendering/loading-image.js",
+          "gitBlob": "6c9d4bfeb1f0a5ecb67528d5f1bd94b263a06476"
+        },
+        {
+          "path": "src/rendering/loading-mist.js",
+          "gitBlob": "c4aeed3c9d6c7b137f4e3d1d054fc138186959ab"
+        },
+        {
+          "path": "src/rendering/loading-orbit.js",
+          "gitBlob": "15d71536a43dbdc1487df27c59587003b4696110"
+        },
+        {
+          "path": "src/rendering/loading-plants.js",
+          "gitBlob": "f5fffc88261f9679f5f84b2ecc31b0752e982868"
+        },
+        {
+          "path": "src/rendering/loading-programs.js",
+          "gitBlob": "fd5421dcffd9acc82ee41c73bcdcc29ce43de1f5"
+        },
+        {
+          "path": "src/rendering/loading-sparkles.js",
+          "gitBlob": "9b4963e722804f0e419c8781390e0d857113f1e0"
+        },
+        {
+          "path": "src/rendering/loading-sync-queue.js",
+          "gitBlob": "983daea51193ed74a75704ef0d958e32642808e1"
+        },
+        {
+          "path": "src/rendering/loading-sync-witness.js",
+          "gitBlob": "774cc8f687957c70ecdc5c7ff9f60e544c329049"
+        },
+        {
+          "path": "src/rendering/loading-texture-owner.js",
+          "gitBlob": "c6a287e832524b00d6719fa10d97ee3e7bdecd4d"
+        },
+        {
+          "path": "src/rendering/loading-textures.js",
+          "gitBlob": "5ba6ea12108952809ad5706b6d3e937df86cf9e2"
+        },
+        {
+          "path": "src/rendering/loading-yield-budget.js",
+          "gitBlob": "96ff4fac274c9ca4b3bf14fe2084e5943383ab77"
+        },
+        {
+          "path": "src/rendering/locomotion-contact.js",
+          "gitBlob": "7bc6e1f18be99465994a8dd81e44ad7465f447b2"
+        },
+        {
+          "path": "src/rendering/locomotion-vfx.js",
+          "gitBlob": "9c0c57009766517313bcec7d1248cdca5285a74e"
+        },
+        {
+          "path": "src/rendering/lod-source.js",
+          "gitBlob": "0869ad022af221287f367cd6bbd6401873d2766d"
+        },
+        {
+          "path": "src/rendering/material-registry.js",
+          "gitBlob": "461bd604c7ef28e4e339f4afc67e9f08787226d2"
+        },
+        {
+          "path": "src/rendering/material-vfx.js",
+          "gitBlob": "828941eef05eb2776bd6a0bcb50234060a2d8f09"
+        },
+        {
+          "path": "src/rendering/mountain-arc-composition.js",
+          "gitBlob": "92e8160c4c222790c561c6edb2901fe4d6bd4424"
+        },
+        {
+          "path": "src/rendering/mountain-arcs.js",
+          "gitBlob": "8f52e0d1c90c3aab1993ed9c3b3d0428bdae33c4"
+        },
+        {
+          "path": "src/rendering/mountain-backdrop-profile.js",
+          "gitBlob": "82107c23901d0935aef73fcc04a7dd78235b08ad"
+        },
+        {
+          "path": "src/rendering/mud-patches.js",
+          "gitBlob": "7c8d3030c0b5017bae983a7c1535db0c90ec9e8d"
+        },
+        {
+          "path": "src/rendering/native-shadow-source.js",
+          "gitBlob": "6007b31cb7d20c8fbc37382c2273bb87417a6035"
+        },
+        {
+          "path": "src/rendering/native-shadow.js",
+          "gitBlob": "fc5e763d2f2ad0271a0d0957160abce2660241f1"
+        },
+        {
+          "path": "src/rendering/obstruction-source.js",
+          "gitBlob": "2173a2ec15b699d7b3971561bffecde247c191fb"
+        },
+        {
+          "path": "src/rendering/obstruction.js",
+          "gitBlob": "a992bb90eb0f689867e591495a2e4cff47257ef3"
+        },
+        {
+          "path": "src/rendering/prepare-biome-tangents.js",
+          "gitBlob": "13f2013edfcfcf1790150d2eb293f69ac0df5724"
+        },
+        {
+          "path": "src/rendering/prepare-building-data.js",
+          "gitBlob": "eb4301a2073efa823e2464eb3607acbc18acafa6"
+        },
+        {
+          "path": "src/rendering/prepare-sky-pixels.js",
+          "gitBlob": "d1ba06d767eda07563f82b7b980a1f1033d8c976"
+        },
+        {
+          "path": "src/rendering/program-bindings.js",
+          "gitBlob": "a02d7e85003ec73dece61927cd668314b9c8aa7a"
+        },
+        {
+          "path": "src/rendering/prop-transition-residency.js",
+          "gitBlob": "49bf8170f0049013c3800f979f3836864ff99e0a"
+        },
+        {
+          "path": "src/rendering/raid-camera.js",
+          "gitBlob": "b5c1cf9ced3a9e2f56b3979f14eaab77364552c7"
+        },
+        {
+          "path": "src/rendering/render-origin.js",
+          "gitBlob": "1ab913f8ec9b42e2eb38e05127db45087d128490"
+        },
+        {
+          "path": "src/rendering/render-quality.js",
+          "gitBlob": "4f9c9e114773f268fe450aa20c98e7e0f3d7e8f5"
+        },
+        {
+          "path": "src/rendering/resident-props.js",
+          "gitBlob": "1b1d19fa01fc95bbc986f28e4aafa02f6c00e6f3"
+        },
+        {
+          "path": "src/rendering/scene.js",
+          "gitBlob": "d2558d7a5716b40bff538d1c7b725d4030ed0c7b"
+        },
+        {
+          "path": "src/rendering/screen-preload.js",
+          "gitBlob": "6337563dd05ba849f790ba2e5a001136857cc2e4"
+        },
+        {
+          "path": "src/rendering/screen-target.js",
+          "gitBlob": "5441774510e17b1cba0f0b3a89f65ca03aaa67bc"
+        },
+        {
+          "path": "src/rendering/shader-failure.js",
+          "gitBlob": "33eb59477ba40e0ccff378eed4fd8c1236ce748a"
+        },
+        {
+          "path": "src/rendering/shadow-cache.js",
+          "gitBlob": "ebfd53bf9fce832b35193d042d9d824eebc42953"
+        },
+        {
+          "path": "src/rendering/shadow-camera.js",
+          "gitBlob": "7d15e8e991cf73480a0669055b3104bf54cb69e3"
+        },
+        {
+          "path": "src/rendering/shield-vfx.js",
+          "gitBlob": "2d89b832c3968056684bd54d65a6e1902c743bd8"
+        },
+        {
+          "path": "src/rendering/skin-envelope.js",
+          "gitBlob": "b62581f4ec037daac2bc6469d58e40848a07549a"
+        },
+        {
+          "path": "src/rendering/sky-pixels-worker.js",
+          "gitBlob": "cec4273d89b1e03fa5ee47329d2b720da6f494ae"
+        },
+        {
+          "path": "src/rendering/sky-pixels.js",
+          "gitBlob": "df412a0d2b5592abfea84a7807636309b23ce196"
+        },
+        {
+          "path": "src/rendering/sky-source.js",
+          "gitBlob": "3ee7404b95cd9a14ff90e0c50b4c79ddb38ba9f8"
+        },
+        {
+          "path": "src/rendering/sky.js",
+          "gitBlob": "ee3a49f8c10aa19c81b36793876005bcd1023754"
+        },
+        {
+          "path": "src/rendering/spell-preview.js",
+          "gitBlob": "c92b953dae1d9134f60688d48f90ab2fd7f76f3a"
+        },
+        {
+          "path": "src/rendering/standard-depth.js",
+          "gitBlob": "d3afadb2a07e07d5550c480db15380bf287d40fb"
+        },
+        {
+          "path": "src/rendering/step-ripples.js",
+          "gitBlob": "24217df05e58c6e1c9fafbdc31102ffeeb9d0d4a"
+        },
+        {
+          "path": "src/rendering/surface-alpha.js",
+          "gitBlob": "f2f9f27865b42f3bb71c57cdb715cef4d7e305dc"
+        },
+        {
+          "path": "src/rendering/surface-source.js",
+          "gitBlob": "72e6e2027ef4a2cb562368fbf54d27e90087d6b8"
+        },
+        {
+          "path": "src/rendering/terrain-camera.js",
+          "gitBlob": "695baf0c476bbf9a5efb9aab5ddef7e069cccf52"
+        },
+        {
+          "path": "src/rendering/terrain-geometry.js",
+          "gitBlob": "077017ebc1108ff4e5acb904a4b63909c73d5a03"
+        },
+        {
+          "path": "src/rendering/terrain-source.js",
+          "gitBlob": "24eb6748f32e1634fee70be639988801fef436fa"
+        },
+        {
+          "path": "src/rendering/terrain-surface.js",
+          "gitBlob": "4b0ceb688f11d892d601deb66f08eb2d7eed94ec"
+        },
+        {
+          "path": "src/rendering/tutorial-hand-target.js",
+          "gitBlob": "a0db04a2613723cdc89f8e7744f87e200184bcff"
+        },
+        {
+          "path": "src/rendering/tutorial-placement-focus.js",
+          "gitBlob": "6091ef94078f1be6a6c4e9039a79f724d1bd90db"
+        },
+        {
+          "path": "src/rendering/vfx-native.js",
+          "gitBlob": "9a4c49b42213e9e58ebd36f2eff41665f896f895"
+        },
+        {
+          "path": "src/rendering/vfx-preload.js",
+          "gitBlob": "e331e3c0223faf52409d457c816f275ff925c9ee"
+        },
+        {
+          "path": "src/rendering/vfx.js",
+          "gitBlob": "789a818bc05af3e0e1587f7e1c6d1ff66d8c96c8"
+        },
+        {
+          "path": "src/rendering/volcanic-source.js",
+          "gitBlob": "f8d7d8775177a7a52448405e299224ac63e78134"
+        },
+        {
+          "path": "src/rendering/wall-drawing.js",
+          "gitBlob": "4e9f1067a2f29e32b513fcf890ce99fd28606f1e"
+        },
+        {
+          "path": "src/rendering/wall-stroke-preview.js",
+          "gitBlob": "ef0fac6560649edfb9b948224bb9fae7c4158ab6"
+        },
+        {
+          "path": "src/rendering/walls-native.js",
+          "gitBlob": "6345cd6a26245589e42bc278585a803e3aac36b7"
+        },
+        {
+          "path": "src/rendering/walls.js",
+          "gitBlob": "7222a07879503252d483b991731b983f299e8c83"
+        },
+        {
+          "path": "src/rendering/water-data.js",
+          "gitBlob": "4e98e878db2dc60a8de219f66ed120f4c2eded70"
+        },
+        {
+          "path": "src/rendering/water-geometry.js",
+          "gitBlob": "cad496e873c964a0e183a18f143f67f4ef651194"
+        },
+        {
+          "path": "src/rendering/water-source.js",
+          "gitBlob": "e89fc64292935205a21227c88cfb3e51a26d00a1"
+        },
+        {
+          "path": "src/rendering/watering-emitter.js",
+          "gitBlob": "f86552e8080e31093c5fb2aab4279f674dd1c21e"
+        },
+        {
+          "path": "src/rendering/work-target-index.js",
+          "gitBlob": "f4768768fe20ead44b26f1675bdbf9eee52f2ad7"
+        },
+        {
+          "path": "src/rendering/work-vfx.js",
+          "gitBlob": "0ff5deb8530f0b4125a2c0a331956fb66b52832a"
+        },
+        {
+          "path": "src/rendering/worker-actions.js",
+          "gitBlob": "72985121f8355d106488ef14c30254c6fd480f3a"
+        },
+        {
+          "path": "src/rendering/worker-tool-visibility.js",
+          "gitBlob": "1bd52cadb91a8788fc326a4aecdfd9830a6a233d"
+        },
+        {
+          "path": "src/rendering/world-atmosphere.js",
+          "gitBlob": "587364b8c8ee3ab39544edaaa2e554f20ee92c38"
+        },
+        {
+          "path": "src/simulation/active-crops.js",
+          "gitBlob": "facb1ec565c5a4ef072bc222986e08ed32269eef"
+        },
+        {
+          "path": "src/simulation/actor-fluid-clearance.js",
+          "gitBlob": "a98d9d1119ecfc5cc7d0f1d4ca6014eedae6c28c"
+        },
+        {
+          "path": "src/simulation/actor-motion.js",
+          "gitBlob": "51235678a24a5fb3ab512a0c12d6a3d7343aa662"
+        },
+        {
+          "path": "src/simulation/animal-actions-data.js",
+          "gitBlob": "928b3ae9bc0c1496446da56cc01d9ef5df492c18"
+        },
+        {
+          "path": "src/simulation/animal-exit-connectors.js",
+          "gitBlob": "46ab98ffb235028b78ab10f547a147e2dda6c3d6"
+        },
+        {
+          "path": "src/simulation/animal-route-clearance.js",
+          "gitBlob": "76a21357c2a617013b95f543dfa5306b35d63c32"
+        },
+        {
+          "path": "src/simulation/animal-slope-recovery.js",
+          "gitBlob": "37fa32ca2a8a6237abcab31a743c4946cf992ffe"
+        },
+        {
+          "path": "src/simulation/balance.js",
+          "gitBlob": "f2d188b2c3e372d30ea6d163688db987e742c366"
+        },
+        {
+          "path": "src/simulation/budget.js",
+          "gitBlob": "772a60d0b748fc551d9ad2b4e60388e5d638dde7"
+        },
+        {
+          "path": "src/simulation/crop-components.js",
+          "gitBlob": "ab25ffa45b6053fd6234f25b3da7882ce5056379"
+        },
+        {
+          "path": "src/simulation/crops.js",
+          "gitBlob": "5483d627fedd8efea9cd476d0087df51263272da"
+        },
+        {
+          "path": "src/simulation/defensive-groups.js",
+          "gitBlob": "723ef968ad4fa72916f831807e2077eb343b2261"
+        },
+        {
+          "path": "src/simulation/encounters.js",
+          "gitBlob": "7c83a16dd491627561efdca16701f921e3883df9"
+        },
+        {
+          "path": "src/simulation/events.js",
+          "gitBlob": "2fecdc56bd5bae320267b972cbf8579895cb2404"
+        },
+        {
+          "path": "src/simulation/game.js",
+          "gitBlob": "de5048de44512d733604a10f0495b2987b370834"
+        },
+        {
+          "path": "src/simulation/gates.js",
+          "gitBlob": "9b946bd42933606b988e5f34858379e48d9ff0c9"
+        },
+        {
+          "path": "src/simulation/idle.js",
+          "gitBlob": "4fc15353ddc95a7570644dae825e3438029520a9"
+        },
+        {
+          "path": "src/simulation/locomotion-calibration.js",
+          "gitBlob": "ba81f6a95194669aa82c8b567ab771fb52889d00"
+        },
+        {
+          "path": "src/simulation/locomotion.js",
+          "gitBlob": "408a868c84a3a0a55e47ad33b3051aa4138b55de"
+        },
+        {
+          "path": "src/simulation/money.js",
+          "gitBlob": "d03a53340b04ad92e60379acd6f2e98ac82fc1f7"
+        },
+        {
+          "path": "src/simulation/raid-notice.js",
+          "gitBlob": "baff1fb2551a841257e6faa398bddcefb2bb42be"
+        },
+        {
+          "path": "src/simulation/raids.js",
+          "gitBlob": "c2ea594ab870ec0b70521f122eabe3030331a4b9"
+        },
+        {
+          "path": "src/simulation/rules.js",
+          "gitBlob": "d03e92cf25fc359eb631c577246f71cf7e0cdaa6"
+        },
+        {
+          "path": "src/simulation/structure-presentation.js",
+          "gitBlob": "9ace7956063d2b36c58604087e6326397365c118"
+        },
+        {
+          "path": "src/simulation/tasks.js",
+          "gitBlob": "850e93de7baf49d017fc719a1f6445d3fa804bdc"
+        },
+        {
+          "path": "src/simulation/work-urgency.js",
+          "gitBlob": "3eb53a168bc158ae35276c77b9af2ad93a8cdf63"
+        },
+        {
+          "path": "src/simulation/worker-entity-lookup.js",
+          "gitBlob": "193ea51c42d1eb0dc9627891e9420f0da76742ea"
+        },
+        {
+          "path": "src/simulation/worker-route-clearance.js",
+          "gitBlob": "975d3703d838274976cd4cf0eacf4c82e880f66b"
+        },
+        {
+          "path": "src/simulation/workforce.js",
+          "gitBlob": "c6dca8637aa9fe9dd5307e0581beadbcb07136f2"
+        },
+        {
+          "path": "src/tutorial/action-pause.js",
+          "gitBlob": "c63a1f4353f6391217ddfb3bb729a4eee685f2cf"
+        },
+        {
+          "path": "src/tutorial/controller.js",
+          "gitBlob": "08e98205dff1c3b2389c46d18bad0594987e7a3e"
+        },
+        {
+          "path": "src/tutorial/guardian-copy.js",
+          "gitBlob": "bd3d0d34f6428e9e962555b871846dc6b382787c"
+        },
+        {
+          "path": "src/tutorial/magic-reminders.js",
+          "gitBlob": "cffb0873fa534e2173126af4ae31a6204bc25c41"
+        },
+        {
+          "path": "src/tutorial/messages.js",
+          "gitBlob": "7a066cfb7a45094214f5b85652acf029408b9fd2"
+        },
+        {
+          "path": "src/tutorial/profile.js",
+          "gitBlob": "1ecc1bc645518448669c12be6282453f5f7ffa69"
+        },
+        {
+          "path": "src/ui/agricultural-notice.js",
+          "gitBlob": "6c812a06226f1c14ea7640624498969e605a4114"
+        },
+        {
+          "path": "src/ui/build-permissions.js",
+          "gitBlob": "491a252d1fd7fc081a3815089ff469e62cf385dd"
+        },
+        {
+          "path": "src/ui/command-feedback.js",
+          "gitBlob": "73d9195451bee82861f9cc560ed182f002bff986"
+        },
+        {
+          "path": "src/ui/event-cards.js",
+          "gitBlob": "6c84a7f082731c3a2c0dd48c10b9a6968ac12564"
+        },
+        {
+          "path": "src/ui/frame-image-loader.js",
+          "gitBlob": "690d77c3edb73ea74812b0e08088f34b8607a282"
+        },
+        {
+          "path": "src/ui/game-surfaces.js",
+          "gitBlob": "d314e0d0299acfbb302126b3871cd513439673e0"
+        },
+        {
+          "path": "src/ui/guardian-lifecycle.js",
+          "gitBlob": "d0a196be74ed845e5109503248c9d85e38b4ce8c"
+        },
+        {
+          "path": "src/ui/guardian-native.css",
+          "gitBlob": "e060aae22db6cfda4317afb4d95e2bad9b30c57a"
+        },
+        {
+          "path": "src/ui/guardian-native.js",
+          "gitBlob": "0f4668ca8e611f4713e967bdcf8280efd8e41b60"
+        },
+        {
+          "path": "src/ui/guardian.js",
+          "gitBlob": "9c880e095171ff88fb887f7ff6af6cc621c81c0a"
+        },
+        {
+          "path": "src/ui/hiring-confirmation.js",
+          "gitBlob": "1d1b5c6d265677c5176d5d58b853a413896e1b17"
+        },
+        {
+          "path": "src/ui/hud-shortcuts.js",
+          "gitBlob": "ff6d527f2275a01fcfa55c33f39242bad3784420"
+        },
+        {
+          "path": "src/ui/library-viewer.js",
+          "gitBlob": "97861ff02d2630af5d6aa510a79285ad99903343"
+        },
+        {
+          "path": "src/ui/loading-copy.js",
+          "gitBlob": "8bf62f9ad315a759b07533af074556ddaa167d53"
+        },
+        {
+          "path": "src/ui/loading-failure.js",
+          "gitBlob": "745f62db6bacbcc467550bf928fa6dba3bf69d07"
+        },
+        {
+          "path": "src/ui/loading-frame-preparation.js",
+          "gitBlob": "5638b5814c5cdef7ded927114b04e07bf28b24eb"
+        },
+        {
+          "path": "src/ui/loading-frame.js",
+          "gitBlob": "4a0c8d910bc39417edf855af73ecfb6e29118746"
+        },
+        {
+          "path": "src/ui/loading-ornament-loader.js",
+          "gitBlob": "9b062fd3b1e327bae89815283ae87f98aec770f1"
+        },
+        {
+          "path": "src/ui/loading-overlay.js",
+          "gitBlob": "cf1896bf117ab400c6a3d4e7c2b819c6f4edcc09"
+        },
+        {
+          "path": "src/ui/menu-integration.js",
+          "gitBlob": "f1bb2043ec34365599212a9674adace779514de0"
+        },
+        {
+          "path": "src/ui/native-hud.js",
+          "gitBlob": "39140aa30758bb28b38620ec1f9053c583e30336"
+        },
+        {
+          "path": "src/ui/screen-wake-lock.js",
+          "gitBlob": "0e09bff14cbc7acece89935e3d4d908ddc094667"
+        },
+        {
+          "path": "src/ui/spell-cards.js",
+          "gitBlob": "648830d16528d6f94d9fbd6f364afef37ed5adec"
+        },
+        {
+          "path": "src/ui/styles.css",
+          "gitBlob": "edc1988797d40188f74786e3afb7cf80d825b19b"
+        },
+        {
+          "path": "src/ui/tool-session.js",
+          "gitBlob": "19f8c45bc0a3786d9794945fe4973c6a05c8aad8"
+        },
+        {
+          "path": "src/ui/tutorial-hud-hand.js",
+          "gitBlob": "e2ba8e6d5747ba52ebc5e1e25f713e787692afe1"
+        },
+        {
+          "path": "src/ui/tutorial.css",
+          "gitBlob": "dc6483d46e42bbd7c6ebaa82ff56389fe8366eca"
+        },
+        {
+          "path": "src/world/active-region.js",
+          "gitBlob": "f67c8def61d2fc0636d5f9b78d41298d90be3931"
+        },
+        {
+          "path": "src/world/boundary-faces.js",
+          "gitBlob": "88b8f15d4d13ddaf49ed360dfe53526213a48fbb"
+        },
+        {
+          "path": "src/world/boundary-gates.js",
+          "gitBlob": "5cafc5bf2c7a084a27a6ccb9aeab5c367b8d192a"
+        },
+        {
+          "path": "src/world/building-route-shortcut.js",
+          "gitBlob": "152188df58796de1b18e6832e3c18b276494cabe"
+        },
+        {
+          "path": "src/world/center-geometries.js",
+          "gitBlob": "3b7bbaece791970a837425aec376dd1c130b4148"
+        },
+        {
+          "path": "src/world/centers.js",
+          "gitBlob": "170a8cfa03ccd305ee5ca024d5945c52181d4adf"
+        },
+        {
+          "path": "src/world/compute-hiring-routes.js",
+          "gitBlob": "3c9ae948289e0842de7aaa0ea181fbe11ea851a0"
+        },
+        {
+          "path": "src/world/compute-raid-entry.js",
+          "gitBlob": "18c3dc1b5818b05d6ed4e7f958a058b02972f51e"
+        },
+        {
+          "path": "src/world/farm-envelope.js",
+          "gitBlob": "c7bf287744d2754b0194ea1b1781f4a0aeb09442"
+        },
+        {
+          "path": "src/world/fifo-eviction.js",
+          "gitBlob": "33308f1446aae61e9759f030da4db42ff72858a6"
+        },
+        {
+          "path": "src/world/fluid-placement.js",
+          "gitBlob": "3e60d24748e7864349889c052382e23eea5c46c7"
+        },
+        {
+          "path": "src/world/footprints.js",
+          "gitBlob": "b5e6ba2957587ded4fb18d8c3aba0465cd1c7e03"
+        },
+        {
+          "path": "src/world/gate-frames-native.js",
+          "gitBlob": "c416e4145b93c61834d9bc1e0f21bd081c644a0d"
+        },
+        {
+          "path": "src/world/gate-passages.js",
+          "gitBlob": "dafc067519efc0df8fa391e9a033c50a834fc087"
+        },
+        {
+          "path": "src/world/hiring-route-preparer.js",
+          "gitBlob": "4f4dd3610a403bfe449f2c6043b68266d80b1ee0"
+        },
+        {
+          "path": "src/world/hiring-route-worker.js",
+          "gitBlob": "75ca8ca5a27965afd268e475e3f3b4f9f19d2c9e"
+        },
+        {
+          "path": "src/world/initial-location-worker.js",
+          "gitBlob": "ab1d062c928198a80772df1ad09238f72be24036"
+        },
+        {
+          "path": "src/world/navigation-bounds.js",
+          "gitBlob": "01b9f96d879947ad8b42647756a4631ddb3884f8"
+        },
+        {
+          "path": "src/world/navigation-query-scope.js",
+          "gitBlob": "a24781ec3a468f9b165198307719f42cd18ac74d"
+        },
+        {
+          "path": "src/world/navigation.js",
+          "gitBlob": "8f9f1f4797c9e98adb21f3db0dd45d0628dbc2c8"
+        },
+        {
+          "path": "src/world/prepare-initial-location.js",
+          "gitBlob": "e0c3bc93a56a75287a74a008e793ec45bdd47ffd"
+        },
+        {
+          "path": "src/world/raid-entry-data.js",
+          "gitBlob": "4638011e5399488779e26adbc2772b0ef4112e11"
+        },
+        {
+          "path": "src/world/raid-entry-preparer.js",
+          "gitBlob": "91f30ba7baece8fae01c239d786e6da9bb609219"
+        },
+        {
+          "path": "src/world/raid-entry-worker.js",
+          "gitBlob": "3e1f1efdb2f5fadeb94765c613d9e4955653bbd2"
+        },
+        {
+          "path": "src/world/raid-navigation-warmth.js",
+          "gitBlob": "c6f623053e29e96dc9bb608d477154e8bb791b68"
+        },
+        {
+          "path": "src/world/search-frontier.js",
+          "gitBlob": "4bb7df9aae81d5060aec8ff16efeee216d6a26f6"
+        },
+        {
+          "path": "src/world/settlement-terrain.js",
+          "gitBlob": "84bc259fd66d4fd82312a0d3882aeca5afb0b5f2"
+        },
+        {
+          "path": "src/world/terrain.js",
+          "gitBlob": "28f52a14f4e793f982dd5a149e63cba281523d7a"
+        },
+        {
+          "path": "src/world/villages.js",
+          "gitBlob": "05ec31464cc60793bff6cdda2262f0e4fa74ac98"
+        },
+        {
+          "path": "src/world/wall-collision-frame.js",
+          "gitBlob": "8ca5547b0db815ee694c7169b88fc208612755d6"
+        },
+        {
+          "path": "src/world/wall-layout-native.js",
+          "gitBlob": "5ab85d92b0e9064a3fd27801c0a86bb842d4ccba"
+        },
+        {
+          "path": "src/world/wall-layout.js",
+          "gitBlob": "165f55577584c9f39c8fae1fc9e71759481c3410"
+        },
+        {
+          "path": "src/world/wall-stroke-sampling.js",
+          "gitBlob": "f41bb677587eec015f50f4d5dfd0e7cff03e723f"
+        },
+        {
+          "path": "src/world/work-points.js",
+          "gitBlob": "5e0093821324192c8621d6cc762191a8d504e071"
+        },
+        {
+          "path": "src/world/worker-slope-recovery.js",
+          "gitBlob": "efef135be15d9971d664a87d13b2d84500981ed0"
+        },
+        {
+          "path": "src/world/worker-view-cache.js",
+          "gitBlob": "f406d2cfae8bcac252adfe02a27457d0b356fbee"
+        },
+        {
+          "path": "tests/browser/gpu-timer.js",
+          "gitBlob": "ca7b723c68e62553431459416871308e75f5a768"
+        },
+        {
+          "path": "tests/browser/interactive-loading-diorama.html",
+          "gitBlob": "0ad818d83611170fae84049aa3976d3e7d125f04"
+        },
+        {
+          "path": "tools/experiments/append-history-index.mjs",
+          "gitBlob": "fc99d03c7aeb5aa93bfc248459dc141dc969e104"
+        },
+        {
+          "path": "tools/experiments/atlas-elevation-frame.js",
+          "gitBlob": "e611a1dcab0fdd7ec3d38c0566ccc0717057b30d"
+        },
+        {
+          "path": "tools/experiments/attach-native-far-world.js",
+          "gitBlob": "2e414a0a6c5501b66f0d617dd144e2de3cf2a598"
+        },
+        {
+          "path": "tools/experiments/capture-standby-upload.js",
+          "gitBlob": "1795109030ea4e0e2264bcc8ff608f5e19e5bbe9"
+        },
+        {
+          "path": "tools/experiments/compare-segment-queries.mjs",
+          "gitBlob": "3f6603d052e5b6d1bd9becc00d162ed39aa1c2d4"
+        },
+        {
+          "path": "tools/experiments/compare-solid-prop-queries.mjs",
+          "gitBlob": "fa5d6700052a3ba742d60b69696e2f5b7a769a5f"
+        },
+        {
+          "path": "tools/experiments/compare-terrain-samples.mjs",
+          "gitBlob": "3c41f70d9b4f48696151a423075bc245d9484934"
+        },
+        {
+          "path": "tools/experiments/compile-gpu-preparation.js",
+          "gitBlob": "daf198dd7e2a41faf0ad00a2c300d667bf2479fb"
+        },
+        {
+          "path": "tools/experiments/far-atlas-recipe.js",
+          "gitBlob": "e7506c7cca57bcc0814fcf0b72ae0847e3ac9c9b"
+        },
+        {
+          "path": "tools/experiments/far-backdrop-data.js",
+          "gitBlob": "f418be4416df0e3720c126d3252908a0fc325bfc"
+        },
+        {
+          "path": "tools/experiments/far-camera-path.js",
+          "gitBlob": "defec35747eac77f5fe6ecba873793b9847a6036"
+        },
+        {
+          "path": "tools/experiments/far-ground-color-map.js",
+          "gitBlob": "86c0635210cd90ca59883bfcecb46f03dae93eff"
+        },
+        {
+          "path": "tools/experiments/far-ground-contacts.js",
+          "gitBlob": "09afcafd50f6a1f552f7e5e018f6de8048365d28"
+        },
+        {
+          "path": "tools/experiments/far-ground-data.js",
+          "gitBlob": "71657b2f38f923c84969470ec7f5b0b3c6f35d0e"
+        },
+        {
+          "path": "tools/experiments/far-ground-native-palette.js",
+          "gitBlob": "b89d570d0d3baaa854ff7c038f4e398d9230d6be"
+        },
+        {
+          "path": "tools/experiments/far-ground-seam-stream.js",
+          "gitBlob": "caef5e247ff46c8279d40469116e629089024372"
+        },
+        {
+          "path": "tools/experiments/far-ground-seam-worker.js",
+          "gitBlob": "d721af252a97f00829eb991e67a411827b9473d5"
+        },
+        {
+          "path": "tools/experiments/far-ground-seam.js",
+          "gitBlob": "9b26610c47e79aaad72a7b8be11371e250c6f476"
+        },
+        {
+          "path": "tools/experiments/far-impostor-lighting.js",
+          "gitBlob": "c3f0107948284413639ce656e6cdc0db0a95a359"
+        },
+        {
+          "path": "tools/experiments/far-impostor-math.js",
+          "gitBlob": "836949bc304d293f7400b6a54b78edb62bfb9748"
+        },
+        {
+          "path": "tools/experiments/far-impostor-prototype.js",
+          "gitBlob": "72119f91f4b404049aa63bc4f89eb8e8fa72f26f"
+        },
+        {
+          "path": "tools/experiments/far-near-readiness-audit.js",
+          "gitBlob": "1d6622f49ff227758b29257e581ef91af09e3d8b"
+        },
+        {
+          "path": "tools/experiments/far-region-tracker.js",
+          "gitBlob": "716131e3c5500b3881f03c5afcfe5bdd026c52df"
+        },
+        {
+          "path": "tools/experiments/far-scene-data.js",
+          "gitBlob": "0340245ae6e8fde4ea5e9c8436e9ae01e9d65c6a"
+        },
+        {
+          "path": "tools/experiments/far-scene-loader.js",
+          "gitBlob": "c2f6d69836b8d69d3e721891faf826158d94b3cc"
+        },
+        {
+          "path": "tools/experiments/far-scene-stream.js",
+          "gitBlob": "cd902a3e312f27abe1134fc9fae3128b817a8f72"
+        },
+        {
+          "path": "tools/experiments/far-scene-worker.js",
+          "gitBlob": "221ff0f30dc9dc65b89945d84501a89a85dd9098"
+        },
+        {
+          "path": "tools/experiments/far-transition-inspection.js",
+          "gitBlob": "569c012ca2ed60e67665e2251a211e65940dcd8b"
+        },
+        {
+          "path": "tools/experiments/far-tree-sampling.js",
+          "gitBlob": "464db0eeba0084141821ead7c5fec3b70f805281"
+        },
+        {
+          "path": "tools/experiments/far-tree-transitions.js",
+          "gitBlob": "cf5a9bb7a88116a3ab557e3d0aa67c9b2c380a14"
+        },
+        {
+          "path": "tools/experiments/far-validation-errors.js",
+          "gitBlob": "9f4c5a6412e0248eba628c7d140156fba6fffcbe"
+        },
+        {
+          "path": "tools/experiments/height-pond-axis.mjs",
+          "gitBlob": "42e1f4d2a79a6abc020f6b1e5695f706b7bc939b"
+        },
+        {
+          "path": "tools/experiments/hq-backdrop-frame.js",
+          "gitBlob": "c0c7cb52fd897766f9681f2c93208ff585c069ba"
+        },
+        {
+          "path": "tools/experiments/impostor-hull.js",
+          "gitBlob": "f70577bac5d5a6ef146b2785b75cfca7afafb07f"
+        },
+        {
+          "path": "tools/experiments/instrument-worker-lookups.mjs",
+          "gitBlob": "8fd896ada4f047b66b7d227c5f325664da6a0572"
+        },
+        {
+          "path": "tools/experiments/isolated-gpu-root.js",
+          "gitBlob": "3c03d5d7723aed1dc00c9e58c499b42237ae1ec7"
+        },
+        {
+          "path": "tools/experiments/load-texture-bitmap.js",
+          "gitBlob": "26b5c4dc6d4073f2431dffcae844057748a277dd"
+        },
+        {
+          "path": "tools/experiments/loading-transfer-server.mjs",
+          "gitBlob": "17ad147509dc207c5047f9c47a60176c52e7e3c6"
+        },
+        {
+          "path": "tools/experiments/logical-native-standby.js",
+          "gitBlob": "54ee0910234a29bb7b96d327b384b46c9d726c28"
+        },
+        {
+          "path": "tools/experiments/mountain-source-color.js",
+          "gitBlob": "f4c676a56026871ca218a2142f321f00c2472d1a"
+        },
+        {
+          "path": "tools/experiments/native-far-coverage.js",
+          "gitBlob": "1b8647febe05b9cbbeb689ad99960012b92569c2"
+        },
+        {
+          "path": "tools/experiments/native-far-ground-seam.js",
+          "gitBlob": "7f5b6a0454608a193e85dd45d2db832d0efd697d"
+        },
+        {
+          "path": "tools/experiments/native-far-ground.js",
+          "gitBlob": "f33baa61307864d247840adba39c10996efb7f2d"
+        },
+        {
+          "path": "tools/experiments/native-far-layer.js",
+          "gitBlob": "a50466cfbee0ef8dab6d81ae41734b69d783e961"
+        },
+        {
+          "path": "tools/experiments/native-far-render-signature.js",
+          "gitBlob": "0afddd6b6121f53d9b2871cd7f5954bb090e4286"
+        },
+        {
+          "path": "tools/experiments/native-preparation-cadence.js",
+          "gitBlob": "9c81f78ec47103377cbb80ab0a3f67c363f5ac3a"
+        },
+        {
+          "path": "tools/experiments/native-prepared-tree-coverage.js",
+          "gitBlob": "f21069f5f4571953b27cb07175f8947a16d9701e"
+        },
+        {
+          "path": "tools/experiments/native-tree-coverage.js",
+          "gitBlob": "7c4cf0d4c0d42e47e0bcb832c594aa46f9dbbf80"
+        },
+        {
+          "path": "tools/experiments/native-tree-diagnostic-bounds.js",
+          "gitBlob": "e7cfbef8f1c18ec0a348b4933674513db07576b7"
+        },
+        {
+          "path": "tools/experiments/native-tree-presence.js",
+          "gitBlob": "742a6f5286e5f5a5a5d73b250161a03adc8d4c68"
+        },
+        {
+          "path": "tools/experiments/native-tree-standby.js",
+          "gitBlob": "970769f07f729beb3c5539eeaabad465449085f2"
+        },
+        {
+          "path": "tools/experiments/neighbor-edge-cache.mjs",
+          "gitBlob": "1ed28fc0f8f816d0fb2115ab1a9c53773a76aa27"
+        },
+        {
+          "path": "tools/experiments/obstacle-first-walkability.mjs",
+          "gitBlob": "3bdb205555a2f0f140e563abcea8acb448da25ba"
+        },
+        {
+          "path": "tools/experiments/prelit-linear-alpha.js",
+          "gitBlob": "85b348fbf5f2578542b2c122ac1a3ac0d345b694"
+        },
+        {
+          "path": "tools/experiments/prepare-crate-shadow.js",
+          "gitBlob": "7db63957f2e7650335029cc1b4ed09e675ecc5a7"
+        },
+        {
+          "path": "tools/experiments/prepare-crop-shadow-programs.js",
+          "gitBlob": "4902cba7fa3ed3486a031bc471b4b40a06154fcc"
+        },
+        {
+          "path": "tools/experiments/prepare-impostor-hulls.mjs",
+          "gitBlob": "bf6bdae6124cfd6f5d5abcd5fb39d372c8b11715"
+        },
+        {
+          "path": "tools/experiments/prepare-native-far-gpu.js",
+          "gitBlob": "a84ee1653752c04c69ff4b828c94c82390b9ec39"
+        },
+        {
+          "path": "tools/experiments/prepare-native-ground-palette.py",
+          "gitBlob": "b858b34be1c8aaeab6d5803f748c4ca6f94a2b43"
+        },
+        {
+          "path": "tools/experiments/prepare-resident-textures.js",
+          "gitBlob": "7ecd97cacd7ad7a66a3dc749cf2a0116090a33a7"
+        },
+        {
+          "path": "tools/experiments/prepare-resident-travel-variants.js",
+          "gitBlob": "9ed29b163a2ccfb259e85e390e0a38256b0f5371"
+        },
+        {
+          "path": "tools/experiments/prop-query-grid.mjs",
+          "gitBlob": "b6116f08441ced968f764092ea4c8f7dae28ce0a"
+        },
+        {
+          "path": "tools/experiments/retain-loading-maize-textures.js",
+          "gitBlob": "82bb7b55cec46aca9f7d3c2c8d033cf90e41b578"
+        },
+        {
+          "path": "tools/experiments/sample-far-sky-horizon.mjs",
+          "gitBlob": "dce828de6c2f82016f6ba1099f08d99abe0dc7e8"
+        },
+        {
+          "path": "tools/experiments/segment-key-allocation.mjs",
+          "gitBlob": "4871eb122bd856862625e8224838126b6c6af051"
+        },
+        {
+          "path": "tools/experiments/shared-native-preparation.js",
+          "gitBlob": "7af07d311937a4fc631fb7a6adb83b2d94fc4650"
+        },
+        {
+          "path": "tools/experiments/shared-native-world-preparation.js",
+          "gitBlob": "3a7fbdcb198fc793dcb270ef67ee7da6b161edd0"
+        },
+        {
+          "path": "tools/experiments/solid-prop-queries.mjs",
+          "gitBlob": "b56b3df8b02889ec17a2162ba5f3a0859e2d30d7"
+        },
+        {
+          "path": "tools/experiments/task-index-reuse.mjs",
+          "gitBlob": "66b124169de44a7d4dd8cef6b8816834a5d97930"
+        },
+        {
+          "path": "tools/experiments/terrain-sample-offsets.mjs",
+          "gitBlob": "72349c8597e5d9c0a3f329cf77453697b40d8c27"
+        },
+        {
+          "path": "tools/experiments/texture-bitmap-worker-pool.js",
+          "gitBlob": "fe0e06ac5dab3bde47f74553cc43801f2628079c"
+        },
+        {
+          "path": "tools/experiments/texture-image-bitmap-worker.js",
+          "gitBlob": "6aca3fcb85d6512a2f8335fe43e217e6b0f66d81"
+        },
+        {
+          "path": "tools/experiments/texture-image-bitmap.js",
+          "gitBlob": "1fb8f53ba1822208d4205172794f5ccdacfc5448"
+        },
+        {
+          "path": "tools/experiments/trace-gl-disposals.js",
+          "gitBlob": "961203ce8a4365ddc6f95c645ba5ef7593d18fb6"
+        },
+        {
+          "path": "tools/experiments/travel-span-analysis.mjs",
+          "gitBlob": "f501f868d4115851036f4c10ce9642d39451ac63"
+        },
+        {
+          "path": "tools/experiments/tree-transition-range.js",
+          "gitBlob": "529dbdb306d3c489cb9831b3f76f8d9af1fecd06"
+        },
+        {
+          "path": "tools/experiments/wait-gpu-frame.js",
+          "gitBlob": "a30b8e8940e6785d930aefc7c6aad91cabf8b367"
+        },
+        {
+          "path": "tools/experiments/wait-gpu-preparation.js",
+          "gitBlob": "6767f599900cb5da9de9ed7b999e732fbf1940ea"
+        },
+        {
+          "path": "tools/experiments/wait-loading-gpu-fence.js",
+          "gitBlob": "565d2f7f8aab04094ca876a36a682f43316def90"
+        },
+        {
+          "path": "tools/experiments/wetland-mask-cache.mjs",
+          "gitBlob": "39eb7ea26190432144cad69e0e69812ee87e52d0"
+        },
+        {
+          "path": "tools/experiments/zero-vertex-upload.js",
+          "gitBlob": "9498f97153edf7af2125dc237f50e57cb1772bdc"
+        }
+      ],
+      "sourceMapSha256": "e28e817e285f54bbc1c4c5f9fd21ddc6ce3736fe73940fe3968c45b68e93b647"
+    }
+  },
+  "viewport": [
+    1280,
+    720
+  ],
+  "growth": 0.78,
+  "dayNightStates": [
+    0,
+    310
+  ],
+  "quality": "media",
+  "seed": 712,
+  "order": "A1 B1 B2 A2 per state; all owners sequential and disposed",
+  "measurements": {
+    "warmupFrames": 120,
+    "drawQueryAttempts": 300,
+    "renderGpuScope": "synchronous LoadingDiorama.render only, including its synchronous subdraws; CSS overlay excluded",
+    "cpuScope": "diorama render and overlay update measured separately; no nested CPU sums",
+    "raf": "all intervals from measurement window retained, including long frames",
+    "resources": "separate runs; no binding probes during timing",
+    "limitations": [
+      "different endpoint camera/art by design; not shader-causal comparison",
+      "not main-menu click-to-controls readiness acceptance",
+      "not physical peak RAM/VRAM",
+      "cache evidence recorded; no forced cold/full-cache claim"
+    ]
+  }
+}
