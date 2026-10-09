@@ -1,0 +1,30 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import * as THREE from 'three';
+import {SceneMaterialRegistry} from '../src/rendering/material-registry.js';
+import {workerFrontsideNames} from '../tools/lib/worker-frontside-pilot.mjs';
+import {WorkerDesktopQa,prepareWorkerQaMaterials,workerQaEnabled,workerQaCases,WORKER_QA_SOURCE} from '../src/rendering/worker-desktop-qa.js';
+
+function fixture(){
+ const geometry=new THREE.BoxGeometry(),body=new THREE.Mesh(geometry,new THREE.MeshStandardMaterial({side:THREE.FrontSide})),model=new THREE.Group(),parent=new THREE.Group(),associations=new Map();body.name='Mesh0';model.add(body);parent.add(model);
+ const sources=workerFrontsideNames.map((name,i)=>{const material=new THREE.MeshStandardMaterial({side:THREE.DoubleSide}),mesh=new THREE.Mesh(geometry,material);mesh.name=name;model.add(mesh);associations.set(material,{materials:[5,6,7,2,3][i]});return material;});
+ let geometryDisposed=0;sources.forEach(m=>m.addEventListener('dispose',()=>assert.fail('Source material disposed')));geometry.addEventListener('dispose',()=>geometryDisposed++);
+ const toon={materials:new WeakSet(),calls:new Map(),material(m){if(this.materials.has(m))return;this.materials.add(m);this.calls.set(m,(this.calls.get(m)??0)+1);const original=m.onBeforeCompile;m.onBeforeCompile=function(...args){original.apply(this,args);};}};
+ const state={time:150,elapsed:10,day:1,workers:[]},renderer={autoClear:true,shadowMap:{enabled:true},getContext(){return {isContextLost:()=>false,getContextAttributes:()=>({antialias:true})};},getRenderTarget:()=>null,getActiveCubeFace:()=>0,getActiveMipmapLevel:()=>0,getViewport:v=>v.set(0,0,1366,768),getScissor:v=>v.set(0,0,1366,768),getScissorTest:()=>false,getClearColor:c=>c.set('#123456'),getClearAlpha:()=>1,getPixelRatio:()=>1,setRenderTarget(){},setViewport(){},setScissor(){},setScissorTest(){},setClearColor(){}};
+ const world={toon,state,renderer,canvas:{width:1366,height:768},camera:new THREE.PerspectiveCamera(),controls:{target:new THREE.Vector3(),enabled:true},loading:{signal:{aborted:false}},actorsReady:()=>true,sync(){},releaseNativeShadow:{cache:{invalidate(){}}}};
+ world.materialRegistry=new SceneMaterialRegistry(new THREE.Scene(),toon);
+ const rig={profile:'youngMale',model,mixer:new THREE.AnimationMixer(model),action:null,name:'Idle',clips:[]};return {world,rig,gltf:{parser:{associations}},descriptor:{sha256:WORKER_QA_SOURCE},sources,body,geometry,get geometryDisposed(){return geometryDisposed;}};
+}
+test('native QA is OFF unless all explicit existing-tester gates match',()=>{assert.equal(workerQaEnabled({}),false);assert.equal(workerQaEnabled({__desktopSmokeStarted:true,__desktopSmokeWorkerQa:true}),false);assert.equal(workerQaEnabled({__desktopSmokeStarted:true,__desktopSmokeWorkerQa:true,__TAURI_INTERNALS__:{invoke(){}}}),true);assert.equal(workerQaCases().length,48);assert.equal(new Set(workerQaCases().map(p=>p.clip)).size,12);});
+test('preadoption aliases receive exactly one registry decoration, originals and shared nonselected material stay unchanged',()=>{
+ const f=fixture(),nonselected=new THREE.Mesh(f.geometry,f.sources[0]);f.rig.model.add(nonselected);const originalBody=f.body.material,p=prepareWorkerQaMaterials(f.world,f.rig,f.gltf,f.descriptor);
+ f.world.materialRegistry.root.add(f.rig.model);assert.equal(f.world.toon.calls.get(f.sources[0]),1);p.setEnabled(true);for(const e of p.entries)f.world.materialRegistry.refresh(e.mesh);
+ for(const e of p.entries){assert.equal(f.world.toon.calls.get(e.candidate),1);assert.equal(e.mesh.geometry,f.geometry);assert.equal(e.source.side,2);assert.equal(e.candidate.side,0);assert.ok(Object.hasOwn(e.candidate.defines,'DOUBLE_SIDED'));}
+ p.setEnabled(false);for(const e of p.entries)f.world.materialRegistry.refresh(e.mesh);p.setEnabled(true);for(const e of p.entries)f.world.materialRegistry.refresh(e.mesh);assert.ok(p.entries.every(e=>f.world.toon.calls.get(e.candidate)===1));assert.equal(nonselected.material,f.sources[0]);assert.equal(nonselected.material.side,2);assert.equal(f.body.material,originalBody);assert.equal(f.body.material.side,0);
+ p.setEnabled(false);for(const e of p.entries)f.world.materialRegistry.refresh(e.mesh);p.release();assert.equal(f.geometryDisposed,0);f.world.materialRegistry.dispose();
+});
+test('decorated source or association mismatch fails before aliases exist',()=>{const f=fixture();f.world.toon.material(f.sources[0]);assert.throws(()=>prepareWorkerQaMaterials(f.world,f.rig,f.gltf,f.descriptor),/precede/);assert.ok(f.sources.every(m=>m.side===2));const g=fixture();g.gltf.parser.associations.set(g.sources[0],{materials:99});assert.throws(()=>prepareWorkerQaMaterials(g.world,g.rig,g.gltf,g.descriptor),/association/);assert.ok(g.sources.every(m=>m.side===2));});
+test('native-hide cancellation restores world/camera/borrowed identities, releases owned aliases, keeps renderer',async()=>{
+ const f=fixture(),owner=new WorkerDesktopQa(f.world);owner.adopt(f.rig,f.gltf,f.descriptor);const before=JSON.stringify(f.world.state),camera=f.world.camera.position.clone(),pending=owner.start({limit:1});f.world.state.time=450;f.world.controls.enabled=false;f.world.camera.position.set(10,20,30);const previous=globalThis.document;globalThis.document={hidden:true};try{assert.equal(owner.frame(),true);}finally{if(previous===undefined)delete globalThis.document;else globalThis.document=previous;}
+ const report=await pending;assert.match(report.errors[0],/cancelled/);assert.equal(JSON.stringify(f.world.state),before);assert.ok(f.world.camera.position.equals(camera));assert.equal(report.cleanup.stateExact,true);assert.equal(report.cleanup.borrowedGeometryAttributesExact,true);assert.equal(report.cleanup.borrowedDisposeEvents,0);assert.equal(report.cleanup.ownedMaterialsRemaining,0);assert.equal(report.cleanup.rendererRetained,true);assert.equal(f.geometryDisposed,0);assert.ok(owner.pilot.entries.every(e=>e.mesh.material===e.source));owner.dispose();assert.equal(globalThis.__desktopSmokeWorkerProbe,undefined);
+});

@@ -113,6 +113,8 @@
     const send = data => dispatchEvent(new MessageEvent('message', {origin: location.origin, source: menu.contentWindow, data: {type: 'wild-guardians:menu', ...data}}));
     send({action: 'settings-change', settings: {quality: 'muy_baja', sfx: 0, music: 0}});
     const fixture = await window.__TAURI_INTERNALS__.invoke('desktop_smoke_fixture');
+    // Explicit tester fixture only, absent in normal play and ordinary smoke.
+    window.__desktopSmokeWorkerQa=fixture?.workerRenderQa?.enabled===true;
     if (fixture) {localStorage.setItem('wild-guardians:slot:'+fixture.slotId,fixture.snapshot);send({action:'load-slot',slotId:fixture.slotId});}
     else send({action: 'start', biome: 'gran-canon', culture: 'mapungubwe'});
     const worldEnd = performance.now() + 90000;
@@ -124,6 +126,10 @@
     report.checks.world = {biome: 'gran-canon', culture: 'mapungubwe', width: world.width, height: world.height};
     await new Promise(resolve => requestAnimationFrame(resolve));
     report.worldPng = world.toDataURL('image/png');
+    if(window.__desktopSmokeWorkerQa===true){
+      try{if(typeof window.__desktopSmokeWorkerProbe!=='function')throw Error('Native worker probe unavailable');report.checks.workerRenderQa=await window.__desktopSmokeWorkerProbe(fixture.workerRenderQa);if(report.checks.workerRenderQa.errors.length||!report.checks.workerRenderQa.cleanup.stateExact||!report.checks.workerRenderQa.cleanup.borrowedGeometryAttributesExact)throw Error('Worker QA restoration or runtime error');}
+      finally{delete window.__desktopSmokeWorkerProbe;delete window.__desktopSmokeWorkerQa;}
+    }
     if (fixture) report.checks.visibility = await checkVisibility(fixture);
     report.checks.saveKeys = Object.keys(localStorage).filter(key => key.startsWith('wild-guardians:'));
     await finish();

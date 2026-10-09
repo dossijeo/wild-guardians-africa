@@ -479,6 +479,9 @@ function updateRaidLoading(){
 }
 function frame(now) {
   requestAnimationFrame(frame);if(preparedLoading?.world.loadingCpuBudget)preparedLoading.world.loadingPresentationEpoch=(preparedLoading.world.loadingPresentationEpoch??0)+1;if(screen==='loading'&&world?.loadingCpuBudget)world.loadingPresentationEpoch=(world.loadingPresentationEpoch??0)+1;const dt=frameDelta(now,lastFrame);lastFrame=now;
+  // Smoke-only ownership: exactly one existing RAF draw; no concurrent game
+  // advancement, tutorial/save/audio work or second renderer during this probe.
+  if(screen==='game'&&world?.workerDesktopQa?.active){world.workerDesktopQa.frame();return;}
   if(screen==='loading'&&loadingDiorama?.prepared){
     progressQa?.frame(now);
     try{
