@@ -1,0 +1,9 @@
+# Diorama presentation witness, 390c038f
+
+A single native diagnostic measures the existing heartbeat's diorama.render invocation only when phase-attribution is enabled. It adds no RAF, GPU query, budget change or fake asynchronous work. The strict measurement branch retains its original draw call. Root and the model, far and balance agents had released heavy local work before the run.
+
+Verified readiness took 10,082.3 ms and controls 14,165.3 ms. All 778 RAF intervals are retained: maximum100.6ms, four above50ms and one above100ms. Logical/camera checks passed, errors and captured warning/error console logs were empty, and disposal/context loss were verified before closing the tab. This is diagnostic evidence, not a paired improvement claim or acceptance of the earlier readiness regression.
+
+522 diorama presentation calls sum381.2ms CPU wall time: median0.7ms, p951.2ms, p991.7ms and maximum2.5ms. Corresponding RAF intervals have median16.6ms, p9516.8ms and p9933.4ms. During crop construction44 presentation calls sum31.3ms (p951.1ms/max1.3ms); during warm uploads38 calls sum29.1ms (p951.8ms/max2.2ms). These are CPU costs only and do not establish free GPU capacity or promise60FPS.
+
+The observed crop construction still contains188.6ms of iterator CPU and528.7ms of frame waits; its full phase is719.3ms. Warm upload CPU is273.2ms including the final draw, while its full phase is669.9ms. This justifies investigating a frame-aware cooperative scheduler rather than choosing an arbitrary larger constant. Any candidate remains opt-in QA, uses only the existing RAF's actual timestamps and measured presentation reserve, falls back to current budgets without observations, and preserves cancellation, bounded ownership, fences and readiness. Contracts and matched first-use/lifecycle/performance evidence are required before adoption.
