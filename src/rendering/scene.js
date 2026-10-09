@@ -1,3 +1,4 @@
+import {startInitialFarRegion} from './initial-far-region.js';
 import {LoadingSyncQueue} from './loading-sync-queue.js';
 import {initialCropCapacity} from './initial-crop-capacity.js';
 import {loadingSyncWitness,loadingAwaitWitness} from './loading-sync-witness.js';
@@ -168,6 +169,7 @@ export class WorldScene {
     this.materialVfx=new MaterialVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z));
     this.locomotionVfx=new LocomotionVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z),(x,z)=>this.nav.field.canyon?this.nav.field.waterInfo(x,z):null);await milestone('vfx');
     this.raidCamera=new RaidCameraDirector(this.camera,this.controls,nav.field);this.focusFarm();
+    const initialFarRegion=this.loadingCpuBudget&&loadingProgress&&farVegetation?startInitialFarRegion(this,farVegetation===true?{}:farVegetation):null;
     this.chunkStream=new NativeChunkStream(this.nav.config,this.pack.profile,{loaded:()=>this.chunks,onData:data=>this.installChunk(data),onError:error=>this.onError?.(error),onFallback:error=>console.warn('Generación local de chunks:',error.message??error)});
     this.syncChunks();await phase('load-chunks-horizon-ready',()=>this.loadReady(Promise.all([this.chunkStream.whenReady(),this.horizon.whenReady()])));if(this.disposed)throw new Error('Carga de mundo cancelada');this.syncChunks();await milestone('chunks');
     await this.loadReady(this.prepareSavedAnimalRigs(state));loadingSyncWitness(this.onLoadingSpan,'restore-sync',()=>this.sync(0));
@@ -184,7 +186,7 @@ export class WorldScene {
     await phase('load-warm-gpu',()=>this.loadReady(this.warmAnimalGpu()));await milestone('gpu');
     // Callers choose a configured horizon through the same loading/cancellation
     // boundary as every other asset; generic worlds may still omit it.
-    if(farVegetation){const {attachBiomeFarVegetation}=await import('./far-vegetation.js');await phase('load-far-assets',()=>this.loadReady(attachBiomeFarVegetation(this,{...(farVegetation===true?{}:farVegetation),parallelAssets:this.loadingCpuBudget===true})));}await milestone('far-assets');if(loadingProgress)this.assets.releaseLoadingImageDecoder();
+    if(farVegetation){const {attachBiomeFarVegetation}=await import('./far-vegetation.js');await phase('load-far-assets',()=>this.loadReady(attachBiomeFarVegetation(this,{...(farVegetation===true?{}:farVegetation),parallelAssets:this.loadingCpuBudget===true,initialRegion})));}await milestone('far-assets');if(loadingProgress)this.assets.releaseLoadingImageDecoder();
   }
   prepareSavedAnimalRigs(state){
     const group=state.raid?state.raid.animals.filter(a=>a.status!=='gone').map(a=>a.species):state.nightPlan&&!state.nightPlan.done?state.nightPlan.group??[]:[];

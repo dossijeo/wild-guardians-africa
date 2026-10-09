@@ -1,3 +1,4 @@
+import {FarSceneStream} from './far-scene-stream.js';
 import {loadingAwaitWitness} from '../../src/rendering/loading-sync-witness.js';
 import {treeTransitionRange,validateTreeTransitionPolicy} from './tree-transition-range.js';
 import {inspectFarTransition} from './far-transition-inspection.js';
@@ -11,7 +12,7 @@ import {NativeTreeCoverage} from './native-tree-coverage.js';
 import {NativePreparedTreeCoverage} from './native-prepared-tree-coverage.js';
 import {NativePreparationCadence} from './native-preparation-cadence.js';
 import {prepareSharedNativeWorld} from './shared-native-world-preparation.js';
-import {FarRegionTracker,farRegionRequest} from './far-region-tracker.js';
+import {FarRegionTracker,nativeFarRegionRequest} from './far-region-tracker.js';
 import {NativeFarGpuCancelled,prepareNativeFarGpu,releaseNativeFarGpuCache,nativeFarGpuRevision,nativeFarGpuContextLost} from './prepare-native-far-gpu.js';
 import {nativeChunkBounds} from '../../src/rendering/asset-groups.js';
 import {skyNight} from '../../src/rendering/sky.js';
@@ -20,7 +21,7 @@ import {attachNativeFarGround} from './native-far-ground.js';
 import {farAtmosphere} from '../../src/rendering/far-atmosphere.js';
 
 // Explicit QA opt-in. Atlas resources remain owned by the caller.
-export async function attachNativeFarWorld(world,{cancelled:ownerCancelled=()=>false,metadata,texture,prelitAtlas,slot=0,ownsWorld=true,includeGround=true,simplifiedFarGround=false,bakedOnly=false,logicalStandbyPreload=false,logicalPreloadMargin=null,logicalSizePreload=false,cullZeroImpostors=false,groundTreeBases=null,groundStep=8,groundColorStep=null,groundWash=.25,groundPalette=null,groundSeam=false,nativeWaterMask=false,start=100,end=140,transitionHeight=null,treeHalf=400,densityStart=180,densityEnd=280,densityMinimum=.08,importanceHeight=16,importanceMaxBoost=4,fadeStart=280,fadeEnd=330,fogStart=160,fogEnd=380,fogDayColor='#b5d9e8',fogNightColor='#263747'}){
+export async function attachNativeFarWorld(world,{cancelled:ownerCancelled=()=>false,initialRegion=null,metadata,texture,prelitAtlas,slot=0,ownsWorld=true,includeGround=true,simplifiedFarGround=false,bakedOnly=false,logicalStandbyPreload=false,logicalPreloadMargin=null,logicalSizePreload=false,cullZeroImpostors=false,groundTreeBases=null,groundStep=8,groundColorStep=null,groundWash=.25,groundPalette=null,groundSeam=false,nativeWaterMask=false,start=100,end=140,transitionHeight=null,treeHalf=400,densityStart=180,densityEnd=280,densityMinimum=.08,importanceHeight=16,importanceMaxBoost=4,fadeStart=280,fadeEnd=330,fogStart=160,fogEnd=380,fogDayColor='#b5d9e8',fogNightColor='#263747'}){
  transitionHeight=validateTreeTransitionPolicy(transitionHeight,start,end);const maxTransitionEnd=transitionHeight?.end??end;
  if(typeof logicalSizePreload!=='boolean'||logicalSizePreload&&(!logicalStandbyPreload||!transitionHeight))throw Error('Invalid logical size preload option');
  if(typeof logicalStandbyPreload!=='boolean')throw Error('Invalid logical standby option');
@@ -48,7 +49,7 @@ export async function attachNativeFarWorld(world,{cancelled:ownerCancelled=()=>f
  for(const source of world.prototypes[slot])for(const value of Object.values(source.material))if(value?.isTexture)textures.add(value);
  const fog=new Fog(fogDayColor,fogStart,fogEnd),fogDay=new Color(fogDayColor),fogNight=new Color(fogNightColor);
  const witness=world.onLoadingSpan?span=>world.onLoadingSpan({...span,label:span.label+':slot'+slot}):null;
- const layer=new NativeFarLayer({onPrepare:witness,scene:world.scene,source:world.prototypes[slot][0],texture,metadata,treesOnly:!includeGround,selectTrees:trees=>trees.filter(t=>t.slot===slot),attachData:(p,data,cancelled)=>{if(data.ground)attachNativeFarGround(p,data.ground,world,{simplified:simplifiedFarGround,seam:groundSeam,nativeWaterMask,cancelled:()=>cancelled()||isCancelled()});},options:{toon:bakedOnly?null:world.toon,prelitAtlas,start,end,transitionHeight,cullZeroImpostors,slot,importanceHeight,importanceMaxBoost,seed:world.state.seed},prepare:async(candidate,cancelled)=>{
+ const layer=new NativeFarLayer({stream:initialRegion?new FarSceneStream({load:(request,options)=>initialRegion.take(request,options)}):undefined,onPrepare:witness,scene:world.scene,source:world.prototypes[slot][0],texture,metadata,treesOnly:!includeGround,selectTrees:trees=>trees.filter(t=>t.slot===slot),attachData:(p,data,cancelled)=>{if(data.ground)attachNativeFarGround(p,data.ground,world,{simplified:simplifiedFarGround,seam:groundSeam,nativeWaterMask,cancelled:()=>cancelled()||isCancelled()});},options:{toon:bakedOnly?null:world.toon,prelitAtlas,start,end,transitionHeight,cullZeroImpostors,slot,importanceHeight,importanceMaxBoost,seed:world.state.seed},prepare:async(candidate,cancelled)=>{
   if(bakedOnly)candidate.uniforms.uNight=world.toon.uniforms.uNight;
   candidate.uniforms.uDensityEnabled.value=1;candidate.uniforms.uDensityRange.value.set(densityStart,densityEnd);candidate.uniforms.uDensityMinimum.value=densityMinimum;candidate.uniforms.uDistanceFadeRange.value.set(fadeStart,fadeEnd);
   candidate.uniforms.uFarOrigin.value.set(world.renderOrigin.x,world.renderOrigin.z);
@@ -73,7 +74,7 @@ export async function attachNativeFarWorld(world,{cancelled:ownerCancelled=()=>f
  function frozenEntries(snapshot){const rows=[],matrix=new Matrix4();for(const [,record] of snapshot.entries){record.group.updateMatrixWorld(true);for(const [i,index] of record.batch.orders[record.level].entries()){const tree=record.batch.instances[index];if(!record.ids.has(tree.id))continue;matrix.fromArray(record.mesh.instanceMatrix.array,i*16).premultiply(record.group.matrixWorld);rows.push({id:tree.id,key:standbyTreeKey(tree),x:tree.x,z:tree.z,sy:tree.sy,level:record.level,matrix:matrix.toArray()});}}return rows;}
  async function region(center){
   const key=center.x+':'+center.z;if(lastRequested===key)return;lastRequested=key;
-  try{const result=await layer.request(key,{...farRegionRequest(world.nav.config,world.pack.profile,center,{treeHalf,groundHalf:treeHalf+32,step:groundStep}),waterSurface:bakedOnly,colorMapStep:groundColorStep,groundWash,groundPalette,treeBase:metadata.localBase,treeBases:groundTreeBases,slots:includeGround&&groundTreeBases?Object.keys(groundTreeBases).map(Number):[slot]});if(result)stats.regions++;}
+  try{const result=await layer.request(key,nativeFarRegionRequest(world.nav.config,world.pack.profile,center,{treeHalf,groundStep,groundColorStep,groundWash,groundPalette,metadata,slot,groundTreeBases,includeGround,bakedOnly}));if(result)stats.regions++;}
   catch(error){if(!isCancelled()){if(error instanceof NativeFarGpuCancelled){if(lastRequested===key)lastRequested=null;stats.cancelledRegions++;}else errors.push(String(error));}}
  }
  function schedulePreparation(){
