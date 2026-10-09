@@ -1,0 +1,11 @@
+# Approved production G recipe
+
+The user explicitly approved the measured G wait/responsiveness tradeoff on 2026-10-09: readiness 8.89/11.35 s and control handoff 12.92/15.39 s, including the retained four-second cinematic. This supersedes the failed automatic readiness comparison as an acceptance decision, without rewriting its measurements or declaring statistical equivalence.
+
+Production now enables exactly the validated recipe: cumulative synchronous-submit CPU budget 16 ms, groups of eight where G already used them, parallel day/night/backdrop image preparation, and the owned initial far worker started at the actual Home pose. Descriptor identity, abort/deadline handling, all resources, attachment order, fences and verified readiness remain required. DEV `qa-loading-legacy-pacing` restores the older pacing for diagnosis; frame-slack, zero-vertex and diorama batch flags remain OFF. No crop quality, visual look or cinematic changes are included.
+
+Main 57527dc9 was merged, retaining daily tutorial deduplication and non-recording keyboard/guidance queries. SFX source hashes were regenerated. Directed contracts: 44/44 pass after promotion; integration contracts: 51/51 pass before promotion. Build, relative package and browser syntax pass. The preserved Node experimental JSON warning and Vite chunk-size warning are not browser runtime errors.
+
+Download weighting already uses actual pending transfer estimates, interval unions for concurrent transfers, evidence-based zero download work for cached assets, and explicit unknown cache status. The 16-second work estimate remains a conservative calibration from the earlier 30-case distribution, not a promise or a fabricated completion timer; the newer small controlled save timings do not justify replacing the distribution with one save. Progress stays estimated until actual downloads, load/decoding and GPU/world milestones complete. Both V4 GLBs remain part of readiness and shared Assets ownership.
+
+Final native production New/Continue, loading planting, cancellation, camera restoration and cleanup checks plus exact-head CI are still required before integration. Physical RAM/VRAM and mobile GPU equivalence are not established by the archived proxies.
