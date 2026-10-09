@@ -4,7 +4,8 @@ import {readFileSync} from 'node:fs';
 import {execFileSync} from 'node:child_process';
 import {BALANCE as B} from '../src/simulation/balance.js';
 import * as Game from '../src/simulation/game.js';
-import {dawnMinimum} from '../src/simulation/rules.js';
+import {spawnRaid} from '../src/simulation/raids.js';
+import {hitStructure,operational,dawnMinimum} from '../src/simulation/rules.js';
 import {numberOf,rational,transact} from '../src/simulation/money.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {Navigation} from '../src/world/navigation.js';
@@ -18,7 +19,7 @@ test('H parameter is only center cost versus G; the functional links are exact c
  const old=JSON.parse(execFileSync('git',['show',`${G}:content/balance/balance_confirmado.json`],{encoding:'utf8'}));
  const current=JSON.parse(readFileSync(new URL('../content/balance/balance_confirmado.json',import.meta.url),'utf8'));
  assert.equal(old.work_center.cost,800);assert.equal(current.work_center.cost,600);old.work_center.cost=600;assert.deepEqual(current,old);
- for(const [file,transform] of [['src/simulation/game.js',s=>s.replaceAll('cost:800','cost:B.work_center.cost').replace("kind==='center'?800:","kind==='center'?B.work_center.cost:")],['src/simulation/rules.js',s=>s.replace('(center?0:800)','(center?0:B.work_center.cost)')]]){
+ for(const [file,transform] of [['src/simulation/game.js',s=>s.replaceAll('cost:800','cost:B.work_center.cost').replace("kind==='center'?800:","kind==='center'?B.work_center.cost:")],['src/simulation/rules.js',s=>s.replace('(center?0:800)','(center?0:B.work_center.cost)')],['src/simulation/raids.js',s=>s.replace('rational(800)','rational(B.work_center.cost)')]]){
   const prior=execFileSync('git',['show',`${G}:${file}`],{encoding:'utf8'});
   assert.equal(readFileSync(new URL('../'+file,import.meta.url),'utf8'),transform(prior));
  }
@@ -57,4 +58,29 @@ test('Native worker physically repairs a half-HP centre after save restoration, 
  let elapsed=0;while(!s.events.some(e=>e.type==='RepairApplied')&&elapsed<180){Game.tick(s,.05,nav);elapsed+=.05;}
  assert.ok(s.events.some(e=>e.type==='RepairApplied'));assert.equal(s.structures[0].hp,600);assert.equal(numberOf(s.ledger.balance),cash-1);
  assert.deepEqual(s.ledger.entries['repair:'+task.id],rational(-1));assert.equal(s.events.filter(e=>e.type==='RepairApplied').length,1);
+});
+
+
+test('Physical last-centre raids use strict configured reconstruction threshold, including restored original800',()=>{
+ const original=B.work_center.cost;
+ try{
+  for(const cost of [600,800])for(const balance of [599,600,799,800]){
+   B.work_center.cost=cost;let {s,nav}=fixture();
+   nav.activeBounds=[-24,-24,24,24];Game.placeStructure(s,'center',{x:-12,z:0},nav);
+   const current=numberOf(s.ledger.balance);transact(s.ledger,'fixture-balance',rational(balance-current));
+   s.initialPreparation=false;s.day=3;s.completedNights=2;s.dayPlan={done:true};s.nightPlan={done:true};
+   hitStructure(s.structures[0],400,s.elapsed);Game.requestRepair(s,'pending-repair',s.structures[0].id);
+   assert.ok(s.tasks.some(t=>t.kind==='repair'));s.time=400;
+   spawnRaid(s,{group:['rhino']},nav);assert.ok(s.raid);
+   assert.ok(!s.tasks.some(t=>t.kind==='repair'),'an active attack invalidates pending manual repair');
+   s=deserialize(serialize(s));nav.setState(s);
+   for(let i=0;s.raid&&!s.result&&i<4000;i++)Game.tick(s,.05,nav);
+   assert.equal(s.raid,null);assert.ok(!s.structures.some(operational));assert.ok(s.events.some(e=>e.type==='StructureHit'));
+   assert.equal(numberOf(s.ledger.balance),balance);assert.equal(s.result,balance<cost?'defeat':null);
+   assert.equal(s.events.filter(e=>e.type==='RaidEnded').length,1);assert.equal(s.events.filter(e=>e.type==='GameOver').length,balance<cost?1:0);
+   assert.equal(s.completedNights,2);assert.ok(s.time<600);assert.equal(s.events.filter(e=>e.type==='Dawn').length,0);
+   if(balance<cost)assert.ok(s.events.findIndex(e=>e.type==='RaidEnded')<s.events.findIndex(e=>e.type==='GameOver'));
+   assert.ok(!s.tasks.some(t=>t.kind==='repair'));assert.equal(serialize(deserialize(serialize(s))),serialize(s));
+  }
+ }finally{B.work_center.cost=original;}
 });

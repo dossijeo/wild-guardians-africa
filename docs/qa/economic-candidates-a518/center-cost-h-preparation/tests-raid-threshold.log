@@ -1,0 +1,105 @@
+TAP version 13
+# Subtest: H parameter is only center cost versus G; the functional links are exact config substitutions
+ok 1 - H parameter is only center cost versus G; the functional links are exact config substitutions
+  ---
+  duration_ms: 292.0815
+  ...
+# Subtest: Preview, actual charge, entity repair basis and reconstruction requirement use H600
+ok 2 - Preview, actual charge, entity repair basis and reconstruction requirement use H600
+  ---
+  duration_ms: 46.973
+  ...
+# Subtest: Original800 remains functionally equivalent when the canonical cost is restored in an isolated test
+ok 3 - Original800 remains functionally equivalent when the canonical cost is restored in an isolated test
+  ---
+  duration_ms: 25.4061
+  ...
+# Subtest: The existing hiring reserve remains30; a purchase can leave exactly the policy maintenance100
+ok 4 - The existing hiring reserve remains30; a purchase can leave exactly the policy maintenance100
+  ---
+  duration_ms: 27.227
+  ...
+# Subtest: Native worker physically repairs a half-HP centre after save restoration, ceiling debit once on arrival
+ok 5 - Native worker physically repairs a half-HP centre after save restoration, ceiling debit once on arrival
+  ---
+  duration_ms: 38.687
+  ...
+# Subtest: Physical last-centre raids use strict configured reconstruction threshold, including restored original800
+ok 6 - Physical last-centre raids use strict configured reconstruction threshold, including restored original800
+  ---
+  duration_ms: 37.6734
+  ...
+# Subtest: H inherits quota G and changes only its declared centre cost relative to frozen F
+ok 7 - H inherits quota G and changes only its declared centre cost relative to frozen F
+  ---
+  duration_ms: 124.1316
+  ...
+# Subtest: The native four-trip quota exhausts exactly and subsequent urgent movement walks
+ok 8 - The native four-trip quota exhausts exactly and subsequent urgent movement walks
+  ---
+  duration_ms: 0.5476
+  ...
+# Subtest: Flight bypasses an exhausted quota without replenishing it; carrying never runs
+ok 9 - Flight bypasses an exhausted quota without replenishing it; carrying never runs
+  ---
+  duration_ms: 0.2802
+  ...
+# Subtest: A genuinely hired worker preserves consumed four-trip quota through pause and save restoration
+ok 10 - A genuinely hired worker preserves consumed four-trip quota through pause and save restoration
+  ---
+  duration_ms: 7.2422
+  ...
+# Subtest: Calibration preserves all four original route speeds and the median physical reference journey
+ok 11 - Calibration preserves all four original route speeds and the median physical reference journey
+  ---
+  duration_ms: 9.2262
+  ...
+# Subtest: Running consumes travelled metres and switches to walking inside the exhaustion step
+ok 12 - Running consumes travelled metres and switches to walking inside the exhaustion step
+  ---
+  duration_ms: 0.5065
+  ...
+# Subtest: Short arrivals consume only their actual distance; blocked paths consume nothing
+ok 13 - Short arrivals consume only their actual distance; blocked paths consume nothing
+  ---
+  duration_ms: 0.1668
+  ...
+# Subtest: Recovery forbids ordinary running but flight uses slowed Run without spending or replenishing the reserve
+ok 14 - Recovery forbids ordinary running but flight uses slowed Run without spending or replenishing the reserve
+  ---
+  duration_ms: 0.1714
+  ...
+# Subtest: Carrying and unhurried walking keep their native gaits and do not spend running metres
+ok 15 - Carrying and unhurried walking keep their native gaits and do not spend running metres
+  ---
+  duration_ms: 0.2231
+  ...
+# Subtest: Urgency uses tasks per available worker at the assigned center, with strict greater-than-two threshold
+ok 16 - Urgency uses tasks per available worker at the assigned center, with strict greater-than-two threshold
+  ---
+  duration_ms: 0.3499
+  ...
+# Subtest: Running gait follows physical motion phase rather than hidden or paused wall time
+ok 17 - Running gait follows physical motion phase rather than hidden or paused wall time
+  ---
+  duration_ms: 1.4855
+  ...
+# Subtest: Hiring replenishes each person once per day; saves and pauses preserve a partially consumed reserve
+ok 18 - Hiring replenishes each person once per day; saves and pauses preserve a partially consumed reserve
+  ---
+  duration_ms: 5.8433
+  ...
+# Subtest: A distant arrival cannot extend the worker shift or teleport the worker to start a task
+ok 19 - A distant arrival cannot extend the worker shift or teleport the worker to start a task
+  ---
+  duration_ms: 214.6877
+  ...
+1..19
+# tests 19
+# suites 0
+# pass 19
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 767.0235

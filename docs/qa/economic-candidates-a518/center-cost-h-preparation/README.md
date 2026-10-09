@@ -11,3 +11,14 @@ Remaining consumers are documented, not silently updated: raids.js checks no ope
 Reducing construction cost also lowers repair/rebuild charges proportionally: HP550 costs50 instead of ceil66.666=67; HP470 costs130 instead of ceil173.333=174. Maintenance floor100 stays in effect. Cheaper capital/repairs may weaken poor-management defeat risk; more workers/seeds may add backlog and attraction. Visual, early native, full100, bad-management and matrix acceptance are pending. Quota4 and centre600 remain experimental, with no PR or main promotion.
 
 source-preparation-receipt.json records443 source hashes and the four changed runtime files against G. Generated mixed line endings are preserved. New candidate source provenance is required for any later pilot; no F/G identical state claim is valid.
+
+
+## Reconstruction threshold follow-up
+
+Root semantic review confirmed the separate after-raid message means enough money for another centre. raids.js now uses B.work_center.cost for the same strict less-than comparison, without adding any reserve or moving RaidEnded/GameOver/dawn handling. Five runtime/config files now differ from G; the previous four-file receipt is retained as historical preparation. The new raid-threshold-preparation-receipt.json is authoritative for this follow-up.
+
+The unused legacy balance field after_raid_no_center_min_money remains800 exactly; no live consumer references it. UI literals remain documented pending release integration. These limits do not change the diagnostic cost parameter.
+
+19/19 directed tests pass. A physical Rhino incursion destroys the deliberately pre-damaged centre at both configured600 and restored original800; each tests balances599,600,799,800. Native spawned animal budgets/hit damage are untouched. Each fixture creates a manual repair order, confirms attack cancellation, restores the active raid snapshot, checks physical StructureHit/loss, closed raid and cleared repair queue, strict defeat boundary, unchanged money, RaidEnded before GameOver where applicable, no dawn yet, and terminal roundtrip. Original800 behaviour is covered using temporary isolated configuration restored in finally.
+
+Two fixture failures are retained: null initial dayPlan needed an explicit test setup object; an initial300HP centre survived the native half-damage hit budget, so the destruction-threshold fixture was corrected to start at200HP. No damage, hit budget or production collapse rule was changed to make a test pass. This is an explicit destructive boundary fixture, not a natural planner or campaign acceptance claim.

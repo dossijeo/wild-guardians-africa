@@ -1,0 +1,125 @@
+TAP version 13
+# Subtest: H parameter is only center cost versus G; the functional links are exact config substitutions
+ok 1 - H parameter is only center cost versus G; the functional links are exact config substitutions
+  ---
+  duration_ms: 295.9057
+  ...
+# Subtest: Preview, actual charge, entity repair basis and reconstruction requirement use H600
+ok 2 - Preview, actual charge, entity repair basis and reconstruction requirement use H600
+  ---
+  duration_ms: 57.7035
+  ...
+# Subtest: Original800 remains functionally equivalent when the canonical cost is restored in an isolated test
+ok 3 - Original800 remains functionally equivalent when the canonical cost is restored in an isolated test
+  ---
+  duration_ms: 31.5036
+  ...
+# Subtest: The existing hiring reserve remains30; a purchase can leave exactly the policy maintenance100
+ok 4 - The existing hiring reserve remains30; a purchase can leave exactly the policy maintenance100
+  ---
+  duration_ms: 30.9397
+  ...
+# Subtest: Native worker physically repairs a half-HP centre after save restoration, ceiling debit once on arrival
+ok 5 - Native worker physically repairs a half-HP centre after save restoration, ceiling debit once on arrival
+  ---
+  duration_ms: 40.8317
+  ...
+# Subtest: Physical last-centre raids use strict configured reconstruction threshold, including restored original800
+not ok 6 - Physical last-centre raids use strict configured reconstruction threshold, including restored original800
+  ---
+  duration_ms: 20.2997
+  location: 'file:///C:/Users/PC/.codex/worktrees/campaign-center-cost-h/wild-guardians-africa/tests/campaign-center-cost-h.test.js:64:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert.ok(!s.structures.some(operational))
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/campaign-center-cost-h/wild-guardians-africa/tests/campaign-center-cost-h.test.js:78:37)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+# Subtest: H inherits quota G and changes only its declared centre cost relative to frozen F
+ok 7 - H inherits quota G and changes only its declared centre cost relative to frozen F
+  ---
+  duration_ms: 116.1553
+  ...
+# Subtest: The native four-trip quota exhausts exactly and subsequent urgent movement walks
+ok 8 - The native four-trip quota exhausts exactly and subsequent urgent movement walks
+  ---
+  duration_ms: 0.7502
+  ...
+# Subtest: Flight bypasses an exhausted quota without replenishing it; carrying never runs
+ok 9 - Flight bypasses an exhausted quota without replenishing it; carrying never runs
+  ---
+  duration_ms: 0.295
+  ...
+# Subtest: A genuinely hired worker preserves consumed four-trip quota through pause and save restoration
+ok 10 - A genuinely hired worker preserves consumed four-trip quota through pause and save restoration
+  ---
+  duration_ms: 6.1368
+  ...
+# Subtest: Calibration preserves all four original route speeds and the median physical reference journey
+ok 11 - Calibration preserves all four original route speeds and the median physical reference journey
+  ---
+  duration_ms: 9.3057
+  ...
+# Subtest: Running consumes travelled metres and switches to walking inside the exhaustion step
+ok 12 - Running consumes travelled metres and switches to walking inside the exhaustion step
+  ---
+  duration_ms: 0.5687
+  ...
+# Subtest: Short arrivals consume only their actual distance; blocked paths consume nothing
+ok 13 - Short arrivals consume only their actual distance; blocked paths consume nothing
+  ---
+  duration_ms: 0.1645
+  ...
+# Subtest: Recovery forbids ordinary running but flight uses slowed Run without spending or replenishing the reserve
+ok 14 - Recovery forbids ordinary running but flight uses slowed Run without spending or replenishing the reserve
+  ---
+  duration_ms: 0.181
+  ...
+# Subtest: Carrying and unhurried walking keep their native gaits and do not spend running metres
+ok 15 - Carrying and unhurried walking keep their native gaits and do not spend running metres
+  ---
+  duration_ms: 0.238
+  ...
+# Subtest: Urgency uses tasks per available worker at the assigned center, with strict greater-than-two threshold
+ok 16 - Urgency uses tasks per available worker at the assigned center, with strict greater-than-two threshold
+  ---
+  duration_ms: 0.3423
+  ...
+# Subtest: Running gait follows physical motion phase rather than hidden or paused wall time
+ok 17 - Running gait follows physical motion phase rather than hidden or paused wall time
+  ---
+  duration_ms: 1.4195
+  ...
+# Subtest: Hiring replenishes each person once per day; saves and pauses preserve a partially consumed reserve
+ok 18 - Hiring replenishes each person once per day; saves and pauses preserve a partially consumed reserve
+  ---
+  duration_ms: 6.1235
+  ...
+# Subtest: A distant arrival cannot extend the worker shift or teleport the worker to start a task
+ok 19 - A distant arrival cannot extend the worker shift or teleport the worker to start a task
+  ---
+  duration_ms: 208.3421
+  ...
+1..19
+# tests 19
+# suites 0
+# pass 18
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 714.3339
