@@ -70,9 +70,6 @@ const profileSources={olderMale:'Ganadero_Mayor',olderFemale:'Amara_Mayor',young
 const animalSources={warthog:'Facoquero',hyena:'Hiena',buffalo:'Bufalo',lion:'Leon',rhino:'Rinoceronte'};
 export class WorldScene {
   constructor(canvas,onPick) {
-    // Noncasting far uploads retain the live lighting/shadow recipe while
-    // avoiding another draw of all resident geometry. QA may opt out explicitly.
-    this.farIsolatedPreparation=true;
     this.loading=new AbortController();this.renderOrigin=new RenderOrigin();this.toon=new AfricanToon();this.contacts=new NativeContacts();this.toon.contactUniforms=this.contacts.uniforms;this.chunkRevision=0;this.canvas=canvas;this.assets=new Assets();this.objects=new Map();this.chunks=new Map();this.movementSurfaceAt=(x,z)=>this.nav?.field.canyon&&this.nav.field.waterInfo(x,z).inside?'water':residentMudSurface(this.chunks,x,z);this.mixers=new Map();this.wateringEmitters=new Map();this.waterMouth=new THREE.Vector3();this.waterDirection=new THREE.Vector3();this.scene=new THREE.Scene();this.materialRegistry=new SceneMaterialRegistry(this.scene,this.toon);this.assetGroups=new NativeAssetGroups(this.scene);this.sky=new NativeSky();
     this.camera=new THREE.PerspectiveCamera(42,1,.1,500);this.camera.position.set(40,35,50);
     const guardedRenderer=createRendererWithGlEpoch(canvas,()=>new THREE.WebGLRenderer({canvas,antialias:true,alpha:false}));this.renderer=guardedRenderer.renderer;this.glResourceEpoch=guardedRenderer.guard;this.shaderFailure=installShaderFailureGuard(this.renderer);this.renderer.outputColorSpace=THREE.SRGBColorSpace;this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=THREE.PCFSoftShadowMap;

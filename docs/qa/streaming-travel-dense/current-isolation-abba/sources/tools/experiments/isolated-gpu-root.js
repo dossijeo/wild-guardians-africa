@@ -1,4 +1,4 @@
-// Retain the actual scene's lighting/fog/output recipe, while
+// QA candidate: retain the actual scene's lighting/fog/output recipe, while
 // uploading only a non-shadow-casting root. No flags survive an async boundary.
 export function withGpuRootIsolation(renderer,root,scene,draw){
  const renderable=object=>object.isMesh||object.isLine||object.isPoints||object.isSprite;

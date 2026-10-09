@@ -45,7 +45,7 @@ try{
  if(!payload)throw Error('Invalid culture');
  const state=restored??Game.newGame({seed:712,biome,culture}),nav=new Navigation(state.seed,biome,pack.profile),site=restored?null:await findInitialLocationAsync(nav,payload);
  if(site){Object.assign(state.villages[0],site);state.suppressed.push(...site.suppress);}nav.setState(state);Game.pause(state,'qa');state.tutorial.step='done';
- const snapshot=serialize(state);world=new WorldScene(document.querySelector('canvas'),()=>{});world.onError=e=>errors.push(String(e));world.qualitySetting(quality);if(!params.has('defaultPreparation'))world.farIsolatedPreparation=params.has('isolatePreparation');world.farOwnedCompilation=params.has('ownedCompilation');world.farOwnedWaits=params.has('ownedWaits');
+ const snapshot=serialize(state);world=new WorldScene(document.querySelector('canvas'),()=>{});world.onError=e=>errors.push(String(e));world.qualitySetting(quality);world.farIsolatedPreparation=params.has('isolatePreparation');world.farOwnedCompilation=params.has('ownedCompilation');world.farOwnedWaits=params.has('ownedWaits');
  world.farPreparationInterval=Number(params.get('preparationInterval')??0);
  world.farSharedPreparation=params.has('sharedPreparation');
  if(params.has('resourceProfile')){resources=new BufferRequests(world.renderer.getContext());resourceStage('before-world-load');}
