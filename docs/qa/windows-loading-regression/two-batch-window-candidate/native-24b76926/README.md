@@ -1,0 +1,11 @@
+# Original Windows run 38005088945
+
+Source `24b76926d108d39a3d8496ecd9fef063b60454bb`; only `compile_window=true`, `resource_overlap=false`. Build and installer passed; the original packaged smoke failed at 90.0655 s. Minimization was skipped. Official artifact 11650758352 is direct JSON, 28,768 bytes, SHA256 `58a1d824a7c639460adab9ed29beaf0cce2d2e2ee303af7a920701d17e995c81`. No retry occurred.
+
+The existing context identifies Microsoft Basic Render Driver/WARP, with no context loss. Identity does not establish a cause. Finish showed 86%, “Bringing your world to life...”, visible/focused, stage busy. The actual compiler tracker has **zero jobs and windowHighWater 0**: this run never exercised the proposed two-job window. Crops completed; walls did not. Scene.load awaits the wall catalogue/prototypes before GPU warmup. There are 230 transfer records, 56 pending fetches, zero failed; 12 pending rows are shown and 44 omitted. These unfinished requests do not prove physical network/disk cost or exclusive CPU time.
+
+All eight observed GLTF requests completed. The largest bridge request took 21.9223 s, with heuristic until-responseEnd 21.0282 s and after-responseEnd 0.8941 s. Maize took 11.3833 s, respectively 7.6906/3.6927 s. These browser timeline intervals are not exclusive parse/CPU/transport measurements. Early selected labels: 16, dropped 0, all completed. Prepared pending was 38.6243 s, pre-world setup 3.5649 s, active World.load 47.8791 s. Child spans overlap; no sums of resource/compile children are treated as total costs.
+
+Original f92/run38002516951 reached world compile batch 10 with pending ground program20 and zero pending transfers. This run stopped earlier, so it neither demonstrates benefit nor isolates a regression from the two-batch window. No per-job wait timings or high-water proof can be reported when no job started. No readiness, raster, minimization or production promotion acceptance is inferred.
+
+`receipt.json` hashes originals, full job log, dispatch inputs, process receipt and watcher chronology. Watcher48999/PID25620 completed exit0 as an observer; smoke itself failed. `summary.json` retains scalar timings and step conclusions. `verify.py` verifies bytes and this scope. No new native run or recipe is authorized by this archive.
