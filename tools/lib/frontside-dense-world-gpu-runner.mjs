@@ -1,0 +1,39 @@
+import {createGpuQueryRecorder} from './frontside-gpu-query-recorder.mjs';
+import {sharedLeafGpuPlan,pairedArmSchedule,analysePairedGpu} from './frontside-paired-gpu-analysis.mjs';
+import {installWorldMaizeQaAdapter} from './frontside-world-maize-adapter.mjs';
+import {worldCpuInputSignature} from './frontside-world-cpu-input-signature.mjs';
+
+// Actual WorldScene draw, with no readback/resource probe or actor replacement.
+// Caller creates and owns the context, locks state/camera, and exports all blocks.
+export async function runDenseWorldPairedGpu({world,payload,depthEnabled,scope,raf,status,logicalIdentity}){
+ const gl=world.renderer.getContext(),blocks=[];let adapter=null,frame=0;
+ const priorAutoReset=world.renderer.info.autoReset;world.renderer.info.autoReset=false;
+ scope.defer('dense World renderer counters restore',()=>{world.renderer.info.autoReset=priorAutoReset;});
+ scope.defer('dense World candidate adapter',()=>adapter?.dispose());
+ const selected=enabled=>{adapter?.dispose();adapter=null;if(enabled)adapter=installWorldMaizeQaAdapter(world,payload,{worldDepth:depthEnabled});world.destructionPass.materialArrayDepth=depthEnabled;world.releaseNativeShadow.cache.enabled=false;world.releaseNativeShadow.cache.invalidate();};
+ const draw=()=>{scope.assertOpen();world.renderer.info.reset();world.render(0);};
+ const lock=logicalIdentity();
+ let invalidCollection=null;
+ collection:for(const {pair,order,arms} of pairedArmSchedule(0,3))for(const arm of arms){
+  selected(arm===3);
+  status('Warmup '+pair+' '+order+' arm'+arm);
+  for(let i=0;i<sharedLeafGpuPlan.warmupFrames;i++){await raf();draw();}
+  if(logicalIdentity()!==lock){invalidCollection='Native logical state/camera changed before timing; no reroll';break collection;}
+  const inputsBefore=worldCpuInputSignature(world);
+  const recorder=createGpuQueryRecorder(gl);scope.defer('dense query '+pair+'-'+arm,()=>recorder.dispose());
+  if(!recorder.snapshot().supported)throw Error('EXT_disjoint_timer_query_webgl2 unavailable');
+  for(let i=0;i<sharedLeafGpuPlan.samplesPerBlock;i++){
+   await raf();scope.assertOpen();recorder.poll();const begun=recorder.begin(frame++);
+   try{draw();}finally{if(begun)recorder.end();}
+   status('Pair '+pair+' '+order+' arm'+arm+' '+(i+1)+'/'+sharedLeafGpuPlan.samplesPerBlock);
+  }
+  gl.flush();for(let i=0;i<240&&recorder.snapshot().pending;i++){await raf();scope.assertOpen();recorder.poll();}
+  const gpu=recorder.snapshot();recorder.dispose();
+  blocks.push({pair,order,arm,warmupFrames:sharedLeafGpuPlan.warmupFrames,gpu,logicalUnchanged:logicalIdentity()===lock,inputsBefore,inputsAfter:worldCpuInputSignature(world),submissions:{...world.renderer.info.render},rendererMemory:{...world.renderer.info.memory},programCount:world.renderer.info.programs.length,adapter:adapter?.snapshot()??null});
+  if(!blocks.at(-1).logicalUnchanged||gpu.pending||gpu.disjointEvents||gpu.discarded||gpu.overflowSkipped||gpu.foreignQuerySkipped||gpu.allocationFailures||gpu.contextLost||gpu.samples.length!==sharedLeafGpuPlan.samplesPerBlock){invalidCollection='Incomplete/invalid or changed logical workload; preserved without reroll';break collection;}
+ }
+ let analysis=null,analysisError=null;try{analysis=analysePairedGpu(blocks);}catch(error){analysisError=String(error);}
+ // Avoid a second adapter disposal through stale owned references after release.
+ adapter?.dispose();adapter=null;
+ return{blocks,invalidCollection,analysis,analysisError,plan:{...sharedLeafGpuPlan},scope:'Whole actual WorldScene.render(0): colour, native shadows, Sky and active VFX/depth. No resource/buffer readback probe.',limitations:['The synthetic dense crop copy is a declared QA workload, not a naturally achieved campaign.','Both arms retain the same workers, actor poses, state, matrices and camera.','GPU benefit of this graph must be measured; the earlier isolated crop result is not inherited.']};
+}

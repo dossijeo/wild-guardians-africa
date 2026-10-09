@@ -1,0 +1,45 @@
+{
+  "status": "DENSE_WORLD_HTTP_CPU_PREFLIGHT_PASS_NOT_NATIVE",
+  "gpuContextsCreated": 0,
+  "gpuDraws": 0,
+  "artifactsWritten": false,
+  "archiveHttpBytes": 14768103,
+  "archiveHttpContentType": "application/json",
+  "sourceStateSha256": "3b685ffc0bb0aae1c8e9381b84ab8278340089d44aa25cbaea5feaf5f8715270",
+  "workloadStateSha256": "82d05672c69a0464cc0cddb4e970af85c8aa52eb14f3df6a6976f4376ed9061f",
+  "scenario": {
+    "profile": "ARCHIVED_POSITIONS_DENSE_NATIVE_MAIZE_QA_V1",
+    "artificialWorkload": true,
+    "sourceAliveCount": 1257,
+    "matureMaizeCount": 1257,
+    "growthSeconds": 270,
+    "changedCount": 1239,
+    "sourceSpeciesDistribution": {
+      "platano": 250,
+      "algodon": 192,
+      "maiz": 152,
+      "girasol": 142,
+      "batata": 133,
+      "sorgo": 132,
+      "yuca": 133,
+      "mijo": 123
+    },
+    "placement": "Original IDs, positions, rotations and all fields other than alive-plant species/growth preserved",
+    "limitations": [
+      "Explicit artificial workload on a separate state copy; no user save, naturally achieved farm or profitability claim.",
+      "Existing tasks and actors are retained as source; paused rendering does not prove a completed harvest or campaign.",
+      "Both timing arms must consume exactly this same serialized state and native crop batch."
+    ]
+  },
+  "candidateBinarySha256": "3eba51ae256663c20bdfcfc4f9e0133a304e8a6dfa25b072a07154b82f0ee65c",
+  "candidateBinaryBytes": 253326,
+  "exportResult": {
+    "status": "EXPORT_PREFLIGHT_PASS_NOT_NATIVE",
+    "prefix": "maize-world-dense-review-depth-off-vfx-on",
+    "artifactsWritten": false
+  },
+  "limitations": [
+    "No native draw or buffer/actor binding observed.",
+    "The preflight synthetic state precedes fixture lighting, pause and VFX setup; its workload hash is not the final native timing state."
+  ]
+}
