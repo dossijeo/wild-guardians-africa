@@ -23,6 +23,10 @@ export function validateSnapshot(state) {
   }
   const ids=new Set();
   for(const animal of state.raid?.animals??[])if(animal.exit!==undefined&&(!animal.exit||!Number.isFinite(animal.exit.x)||!Number.isFinite(animal.exit.z)))throw new Error('Salida de animal inválida');
+  for(const animal of state.raid?.animals??[])if(animal.exitConnectorSearch!==undefined){
+    const search=animal.exitConnectorSearch;
+    if(!search||typeof search.key!=='string'||search.key.length>256||!Number.isSafeInteger(search.next)||search.next<0||search.next>192)throw new Error('Conector de salida inválido');
+  }
   for(const name of ['plants','structures','workers','crates','villages','spells','tasks']) {
     if(!Array.isArray(state[name]))throw new Error('Entidades inválidas');
     for(const e of state[name]) {
