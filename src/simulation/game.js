@@ -1,4 +1,5 @@
 import {animalExitConnector} from './animal-exit-connectors.js';
+import {workerReturnRoute} from './worker-return-route.js';
 import {workerRiskClearance} from './worker-route-clearance.js';
 import {resolveFluidPlacement} from '../world/fluid-placement.js';
 import {ensurePurchaseBudget,HIRING_RESERVE} from './budget.js';
@@ -383,7 +384,10 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
       if(!w.path)w.path=animalExitConnector(w,destination,nav);
       if(!w.path)w.path=animalSlopeRecoveryPath(nav,w,destination,w.radius??.28);
     }
-    if(!w.path&&worker&&!ignore&&['fleeing','returning','incapacitated'].includes(w.status))w.path=workerSlopeRecoveryPath(nav,w,destination,w.radius??.28);
+    if(!w.path&&worker&&!ignore&&['fleeing','returning','incapacitated'].includes(w.status)){
+      w.path=workerSlopeRecoveryPath(nav,w,destination,w.radius??.28);
+      if(!w.path)w.path=workerReturnRoute(nav,w,destination,w.radius??.28);
+    }
     w.pathVersion=nav.version;
     if(!w.path)return false;
   }
