@@ -112,7 +112,8 @@ export function affordableWallStroke(s,material,points){
 export function wallRefund(target){
   if(target.kind!=='wall'||target.hp<=0||target.status==='ruined'||target.status==='collapsing')return rational(0);
   // Native automatic gates can have fractional HP after proportional conversion.
-  const amount=multiply(rational(target.cost),Math.round(Math.min(target.hp,target.maxHp)*1e6),Math.round(target.maxHp*1e6));
+  const health=rationalNumber(Math.min(target.hp,target.maxHp)),maximum=rationalNumber(target.maxHp);
+  const amount=multiply(rational(target.cost),BigInt(health.n)*BigInt(maximum.d),BigInt(health.d)*BigInt(maximum.n));
   return rational((BigInt(amount.n)+BigInt(amount.d)-1n)/BigInt(amount.d));
 }
 function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
