@@ -26,6 +26,9 @@ fn main() {
                 if std::env::args().any(|arg| arg == "--smoke-shared-ground") {
                     let _ = webview.eval("window.__desktopSmokeSharedGroundClip=true;");
                 }
+                if std::env::args().any(|arg| arg == "--smoke-pause-menu") {
+                    let _ = webview.eval("window.__desktopSmokePauseLoadingMenu=true;");
+                }
                 let _ = webview.eval(include_str!("../smoke.js"));
             }
         })

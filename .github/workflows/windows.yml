@@ -10,6 +10,10 @@ on:
         description: Smoke-only shared Basic ground color candidate with same-EXE OFF control
         type: boolean
         default: false
+      pause_menu:
+        description: Smoke-only pause native menu rendering at definitive start/load
+        type: boolean
+        default: false
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -25,6 +29,7 @@ jobs:
     timeout-minutes: 60
     env:
       SMOKE_SHARED_GROUND: ${{ inputs.shared_ground }}
+      SMOKE_PAUSE_MENU: ${{ inputs.pause_menu }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -67,6 +72,7 @@ jobs:
           $binary = (Resolve-Path src-tauri/target/release/wild-guardians-africa.exe).Path
           $smokeArgs = @('--smoke-report', $report)
           if ($env:SMOKE_SHARED_GROUND -eq 'true') { $smokeArgs += '--smoke-shared-ground' }
+          if ($env:SMOKE_PAUSE_MENU -eq 'true') { $smokeArgs += '--smoke-pause-menu' }
           $process = Start-Process -FilePath $binary -ArgumentList $smokeArgs -WindowStyle Hidden -PassThru
           if (-not $process.WaitForExit(240000)) { Stop-Process -Id $process.Id; throw 'WebView2 smoke timed out' }
           if (-not (Test-Path -LiteralPath $report)) { throw 'No WebView2 smoke report' }
@@ -88,6 +94,7 @@ jobs:
           $binary = (Resolve-Path src-tauri/target/release/wild-guardians-africa.exe).Path
           $smokeArgs = @('--smoke-report', $report, '--smoke-fixture', $fixture)
           if ($env:SMOKE_SHARED_GROUND -eq 'true') { $smokeArgs += '--smoke-shared-ground' }
+          if ($env:SMOKE_PAUSE_MENU -eq 'true') { $smokeArgs += '--smoke-pause-menu' }
           $process = Start-Process -FilePath $binary -ArgumentList $smokeArgs -WindowStyle Hidden -PassThru
           if (-not $process.WaitForExit(900000)) { Stop-Process -Id $process.Id; throw 'Native visibility timed out' }
           if (-not (Test-Path -LiteralPath $report)) { throw 'No native visibility report' }
