@@ -1,0 +1,54 @@
+{
+  "source": "2a910b83c34517a91ae870e83ad555f436e5d64f",
+  "run": 37973100578,
+  "artifact": 11639100640,
+  "exeSha256": "4dfcc6aa63ee4cce80780a8018a873b562d2c95b25d2eb682790f3d14affe99f",
+  "exeBytes": 378868736,
+  "launch": {
+    "source": "2a910b83c34517a91ae870e83ad555f436e5d64f",
+    "run": 37973100578,
+    "artifact": 11639100640,
+    "exeSha256": "4dfcc6aa63ee4cce80780a8018a873b562d2c95b25d2eb682790f3d14affe99f",
+    "bytes": 378868736,
+    "pid": 40344,
+    "startedUtc": "2026-10-09T19:00:02.0893997Z",
+    "arguments": [
+      "--smoke-report",
+      "C:\\Users\\PC\\source\\repos\\wild-guardians-africa\\.cache\\local-windows-main-2a910b83\\desktop-smoke-local.json"
+    ],
+    "profile": "C:\\Users\\PC\\source\\repos\\wild-guardians-africa\\.cache\\local-windows-main-2a910b83\\webview-profile",
+    "scope": "Original packaged production smoke, no experimental flags; isolated local WebView2 profile; concurrent campaign CPU process remains active"
+  },
+  "exit": {
+    "pid": 40344,
+    "exitCode": 0,
+    "finishedUtc": "2026-10-09T19:00:30.1244880Z",
+    "elapsedSeconds": 28.0380932,
+    "reportExists": true
+  },
+  "localReport": {
+    "rawBytes": 1303234,
+    "rawSha256": "b4653a4b7d0d17cc99c563dd7c874e62ab401930ea31ba0d13f59bd08af8d447",
+    "gzipBytes": 985635,
+    "gzipSha256": "cadbd20e6184ced0d21091ebc65dbb0cabf25d083b152f8b36469861c67927fa",
+    "ok": true,
+    "errors": [],
+    "world": {
+      "biome": "gran-canon",
+      "culture": "mapungubwe",
+      "height": 576,
+      "width": 1024
+    }
+  },
+  "ciReport": {
+    "bytes": 2651,
+    "sha256": "2865e0521774bafe39d48b59591b8eb6eae8667d0be73bf9285b12801ccfb74a",
+    "ok": false
+  },
+  "systemAdapterInventory": {
+    "name": "Intel(R) UHD Graphics",
+    "driverVersion": "32.0.101.6881",
+    "scope": "OS adapter inventory, not a GL renderer query from this executable"
+  },
+  "scope": "One original New Game smoke on exact packaged main EXE, very-low Canyon/Mapungubwe; concurrent CPU campaign present. Process lifetime is not world-loading duration. No fixture/Continue, hidden interval, input/perceptual audio, all-biome or physical mobile acceptance."
+}
