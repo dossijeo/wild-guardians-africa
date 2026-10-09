@@ -18,7 +18,19 @@ provenance.observerSha256=hash(readFileSync(new URL(import.meta.url)));
 const policy={profile:'olderFemale',mixed:true,middayHiring:false,plantsPerWorker:12,defend:false,reserveLabourGrowth:true,reserveMaintenance:true,burstPlanting:false,cameraEntry:true};
 const samples=[],seenEvents=new Set(),taskFirstSeen=new Map(),workerPhaseFirstSeen=new Map();
 let previous=null;
+const cohort=new Set(),cohortTransitions=[],previousPlants=new Map();
 const onTick=s=>{
+ for(const p of s.plants)if(s.day===1&&cohort.size<8)cohort.add(p.id);
+ for(const p of s.plants)if(cohort.has(p.id)){
+  const crate=s.crates.find(c=>c.sourcePlantId===p.id);
+  const view={id:p.id,species:p.species,alive:p.alive,growth:p.growth,
+   mature:p.growth>=cropSpec(p.species).growth_seconds,harvestRequested:p.harvestRequested,
+   water:p.water.map(w=>({...w})),toleranceBonus:p.toleranceBonus,
+   crate:crate?{id:crate.id,delivered:crate.delivered,carrierId:crate.carrierId}:null};
+  const key=JSON.stringify({alive:view.alive,mature:view.mature,harvestRequested:view.harvestRequested,
+   water:view.water.map(w=>w.status),crate:view.crate});
+  if(previousPlants.get(p.id)!==key){previousPlants.set(p.id,key);cohortTransitions.push({day:s.day,time:s.time,elapsed:s.elapsed,...view});}
+ }
  const fresh=s.events.filter(e=>!seenEvents.has(e.id));for(const e of fresh)seenEvents.add(e.id);
  if(s.day>10||s.time>=300||s.raid){previous=null;return;}
  const tasks=new Map(s.tasks.map(t=>[t.id,t]));
@@ -38,7 +50,8 @@ const onTick=s=>{
  const row={day,time,elapsed,people,intervalFromPrevious:previous?.day===day?elapsed-previous.elapsed:0,
   living:living.length,firstWaterPending:living.filter(p=>p.water[0].status==='due').length,
   mature:living.filter(p=>p.growth>=cropSpec(p.species).growth_seconds).length,
-  tasks:s.tasks.map(t=>({id:t.id,kind:t.kind,workerId:t.workerId,blocked:t.blocked,observedAge:elapsed-taskFirstSeen.get(t.id)})),
+  cohortPlants:s.plants.filter(p=>cohort.has(p.id)).map(p=>({id:p.id,alive:p.alive,growth:p.growth,water:p.water.map(w=>({...w})),toleranceBonus:p.toleranceBonus})),
+  tasks:s.tasks.map(t=>({id:t.id,targetId:t.targetId,kind:t.kind,workerId:t.workerId,blocked:t.blocked,observedAge:elapsed-taskFirstSeen.get(t.id)})),
   newEvents:fresh.filter(e=>['CropPlaced','HarvestRequested','CrateDelivered'].includes(e.type)),
   deliveredTotal:s.crates.filter(c=>c.delivered).length};
  samples.push(row);previous=row;
@@ -63,6 +76,7 @@ for(let day=1;day<=10;day++){
   globalObservedSeconds:observed.reduce((n,s)=>n+s.intervalFromPrevious,0),phaseActorSeconds:phaseSeconds,
   longestObservedTasks:[...longestTasks.values()].sort((a,b)=>b.observedAge-a.observedAge).slice(0,8)});
 }
+write('first-cohort-transitions.json',{provenance,plantIds:[...cohort],transitions:cohortTransitions,scope:'First eight observed plants. Transition times are first-observed at native one-second/daytime and five-second/night cadence, not substep-perfect. Water wait/tolerance data and growth retained in trace; no invented event timestamps.'});
 write('service-summary.json',{provenance,policy,completeFinalStateParity:true,finalStateSha256:hash(raw),referenceStateSha256:hash(reference),
  gates:{requestedNightsAndNoDefeat:true,eachDayPaidStaffAndDelivery:result.daily.every(d=>d.staff>0&&d.delivered>0),physicalLedgerHydration:true,shortWindowIdleBelow25:result.activity.unoccupiedFraction<.25,responsible100NightAndMatrix30:'not-tested'},
  activity:result.activity,rows,scope:'Read-only observation of an already retained ten-night case, exact final-state parity. Task and phase ages are first-observed lower bounds; durations one-second left endpoint actor-seconds. No service/FIFO/policy/runtime changes. Events are timestamped at their first observation; the initial seed predates that callback but its retained event is included. No substep-perfect event timing is claimed.'});
