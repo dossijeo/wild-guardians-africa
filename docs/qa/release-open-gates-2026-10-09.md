@@ -7,17 +7,20 @@ its verified labels do not prove all subsequent user requirements on this base.
 
 ## Responsible campaign acceptance
 
-PR13 at `9d023ff7` archives fifteen original terminals from frozen `3324d17d`:
+PR13 at `6ac2b672` archives sixteen original terminals from frozen `3324d17d`:
 eight victories pass the strict daylight inactivity threshold below 25%; four
-Canyon victories fail that threshold; three Desert incursions remain unresolved.
-Two other Desert runs were confirmed live through GitHub run metadata. Neither
+Canyon victories and Desert/Mapungubwe fail that threshold; three Desert
+incursions remain unresolved. Desert/Saheliana was confirmed live through
+GitHub job 113646986727. Neither
 unfinished campaigns nor victories above the threshold count as complete release
 acceptance. These sources precede the marginal legacy retreat recovery in PR12.
 
-Root independently verified all 85 payload receipts of the earlier nine-case
-PR13 head `c05effcb`: 117,315,171 decompressed bytes. The later six additions
-require separate root review and their new-head CI. See
-[the exact earlier receipt](campaign-ci/root-pr13-archive-review.json).
+Root independently verified all 156 payload receipts of the sixteen-case
+PR13 head `6ac2b672`: 200,435,248 original bytes, including gzip integrity,
+JSON decoding and recorded source-count/activity fields. This does not rerun
+simulation or independently repeat the original source/domain audits.
+New-head CI remains pending. See [the expanded receipt](campaign-ci/root-pr13-expanded-archive-review.json)
+and [reproducible verifier](campaign-ci/verify-root-archive-receipts.py).
 
 Next proofs: reproduce the three distinct physical stalls using original saves;
 verify bounded fixes without weakening landing/body/fluid checks; measure actual
@@ -32,10 +35,15 @@ replace hundred-night survival, physical crate delivery and activity evidence.
 requirements and later visual/audio refinements remain binding. Root native QA
 confirmed real pending-download cancellation on `31a5fa3e`, and persistent,
 manually dismissible Spanish preparation-error feedback on `d69d7c68`. Those
-observations do not prove English error rendering, peak RAM/VRAM or audio cleanup.
+observations do not prove peak RAM/VRAM or complete audio cleanup. Root actual
+menu slow-load 908 reached verified readiness and gameplay; a native planting
+gesture triggered SFX 028 and loading voices were empty after handoff. The
+English failure 909 persisted with Dismiss, but retained a Spanish technical
+detail; its later source correction still requires native confirmation.
 
-A thirty-combination functional matrix is in progress on frozen `1bf0fb0d`.
-It is sequential and checks readiness, camera/logical restoration and teardown.
+A thirty-combination functional matrix completed on frozen `1bf0fb0d`:
+all thirty report readiness, camera/logical restoration and teardown, with no
+pending downloads or errors. This is fixture coverage, not actual-menu coverage.
 Concurrent light CPU work is declared: its timings cannot establish performance.
 Even a complete matrix will not replace actual New/Continue menu paths, mobile
 touch and orientation, reduced motion, cold/cache/slow progress behavior,
@@ -51,16 +59,22 @@ appearance and final controlled benchmarks remain necessary. Pixel differences
 are diagnostics, not automatic rejection. No experimental asset is promoted.
 
 The standby-pruning traveling comparison is negative and stays disabled. Shared
-resident preparation has CPU preflight coverage but still needs native functional
-and isolated AB/BA GPU/frame-time evidence. All draws, uploads, queries and cleanup
+resident preparation also has a completed root native AB/BA comparison on
+frozen `795f773e`: all four p95 frame intervals are 116.4 ms, with 1004 GPU
+queries, unchanged logical state, and released contexts. No demonstrated
+frame-stability benefit; it remains experimental. Full trace analysis and
+immutable reports are being archived in its branch. All draws, uploads, queries and cleanup
 must be attributed without summing union statistics counted in multiple adapters.
 The requested outcome is stable movement during new chunk/impostor preparation,
 not a higher average FPS at the expense of travel spikes.
 
 ## Other explicit pending requirements
 
-- The 126-SFX audit must distinguish actual caller reachability and correct
-  triggers from exports, reservations and intentionally unavailable actions.
+- The 126-SFX source/caller audit is integrated through PR14 (`6ce847a9`):
+  100 assigned, 26 reservations/alternatives/context exceptions, exact bytes
+  verified. Root freshness check and three audit tests pass on merged main.
+  Audible/trigger acceptance remains pending; later runtime changes require
+  regenerating and reviewing the inventory.
 - Camera close-up protection, final horizon/backdrop direction and the remaining
   post-Jam requests remain tracked in [the pending list](../post-jam-pending.md).
 - QA-014 still lacks the complete physical web/mobile hidden-tab acceptance
