@@ -25,3 +25,27 @@ test('optional yield witness separates elapsed budget from awaited frame and can
  clock=5;await work();assert.equal(rows.length,0);clock=9;await work();assert.equal(rows.length,1);
  assert.equal(rows[0].budgetElapsed,9);assert.equal(rows[0].duration,17);assert.equal(rows[0].frameBudget,6);assert.equal(rows[0].failed,false);
 });
+
+
+test('CPU budget accumulates synchronous work across microtasks and ignores readiness wall waiting',async()=>{
+ let clock=0,frame=0,yields=0;const work=loadingYieldBudget({cpuBudget:true,getFrame:()=>frame,frameBudget:16,now:()=>clock,nextFrame:async()=>{frame++;yields++;clock+=17;}});
+ work.recordWork(3);clock=100;await work();assert.equal(yields,0);
+ work.recordWork(12);await Promise.resolve();await work();assert.equal(yields,0);
+ work.recordWork(1);await work();assert.equal(yields,1);
+});
+test('an existing presentation RAF during readiness resets CPU work without requesting a redundant frame',async()=>{
+ let frame=0,yields=0;const work=loadingYieldBudget({cpuBudget:true,getFrame:()=>frame,frameBudget:16,nextFrame:async()=>{yields++;}});
+ work.recordWork(16);frame++;await work();assert.equal(yields,0);
+ work.recordWork(15);await work();assert.equal(yields,0);work.recordWork(1);await work();assert.equal(yields,1);
+});
+test('CPU-budget cancellation still wakes a suspended frame and prevents further submissions',async()=>{
+ const owner=new AbortController();const work=loadingYieldBudget({cpuBudget:true,frameBudget:16,signal:owner.signal,nextFrame:()=>new Promise(()=>{})});work.recordWork(16);const pending=work();owner.abort();await assert.rejects(pending,/cancelled/);
+});
+
+test('CPU work recorded after an awaited RAF belongs to its new epoch and is not lost',async()=>{
+ let frame=0,yields=0;const rows=[],work=loadingYieldBudget({cpuBudget:true,getFrame:()=>frame,frameBudget:16,onYield:r=>rows.push(r),nextFrame:async()=>{yields++;frame++;}});
+ work.recordWork(9);await Promise.resolve();frame++;work.recordWork(5);await work();assert.equal(yields,0);work.recordWork(11);await work();assert.equal(yields,1);assert.equal(rows[0].budgetCpu,16);assert.match(rows[0].scope,/Program\/driver readiness waits are excluded/);
+});
+test('a missing presentation epoch never resets accumulated CPU across async continuations',async()=>{
+ let yields=0;const work=loadingYieldBudget({cpuBudget:true,frameBudget:16,nextFrame:async()=>{yields++;}});work.recordWork(8);await work();await Promise.resolve();work.recordWork(8);await work();assert.equal(yields,1);
+});

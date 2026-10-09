@@ -55,3 +55,18 @@ test('optional program readiness witness reports waited wall time separately fro
  assert.equal(rows[0].label,'loading-compile-submit');assert.equal(rows[0].duration,3);
  assert.equal(rows[1].label,'loading-compile-readiness-wait');assert.equal(rows[1].duration,24);assert.match(rows[1].scope,/not CPU or GPU/);
 });
+
+
+test('CPU-budget compiler retains every native object while an actual readiness wait already delivers presentation',async()=>{
+ let frame=0,clock=0,yields=0,ready=false;const objects=Array.from({length:8},()=>({isMesh:true,material:{}})),scene={traverse:fn=>objects.forEach(fn)},calls=[];
+ const gl={isContextLost:()=>false},program={isReady:()=>ready};const renderer={compile(view){const batch=[];view.traverse(o=>batch.push(o));calls.push(batch);clock+=3;return new Set(batch.map(o=>o.material));},getContext:()=>gl,properties:{get:()=>({currentProgram:program})}};
+ const pending=compileLoadingProgramsBatched(renderer,scene,{},undefined,{batchSize:4,frameBudget:16,cpuBudget:true,getFrame:()=>frame,now:()=>clock,nextFrame:async()=>{yields++;frame++;}});
+ setTimeout(()=>{clock+=50;frame++;ready=true;},1);await pending;
+ assert.deepEqual(calls.flat(),objects);assert.equal(calls.length,2);assert.equal(yields,0);
+});
+
+test('a throwing optional CPU observer cannot remove the bounded compilation yield or readiness',async()=>{
+ let clock=0,frames=0;const objects=[{isMesh:true,material:{}}],scene={traverse:fn=>objects.forEach(fn)},renderer={compile:()=>{clock+=20;return new Set(objects.map(o=>o.material));},getContext:()=>({isContextLost:()=>false}),properties:{get:()=>({currentProgram:{isReady:()=>true}})}};
+ const gl={isContextLost:()=>false};renderer.getContext=()=>gl;
+ await compileLoadingProgramsBatched(renderer,scene,{},undefined,{cpuBudget:true,frameBudget:16,now:()=>clock,onCpu:()=>{throw Error('diagnostic');},nextFrame:async()=>{frames++;}});assert.equal(frames,1);
+});

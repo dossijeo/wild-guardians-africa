@@ -29,11 +29,11 @@ export async function compileLoadingProgramsBatched(renderer,scene,camera,target
  if(!Number.isInteger(batchSize)||batchSize<1)throw Error('Loading compile batch size must be positive');
  const objects=[];scene.traverse(object=>{if(object.isMesh||object.isPoints||object.isLine||object.isSprite)objects.push(object);});
  const target=targetScene??scene;
- const yieldWork=loadingYieldBudget({frameBudget,now,nextFrame,signal:options.signal,cancelled:options.cancelled,onYield:options.onSubmit,frameSlack:options.frameSlack});
+ const yieldWork=loadingYieldBudget({frameBudget,now,nextFrame,signal:options.signal,cancelled:options.cancelled,onYield:options.onSubmit,frameSlack:options.frameSlack,cpuBudget:options.cpuBudget,getFrame:options.getFrame});
  for(let start=0;start<objects.length;start+=batchSize){
   const batch=objects.slice(start,start+batchSize);
   const view={traverse:callback=>{for(const object of batch)callback(object);},traverseVisible:()=>{}};
-  await compileLoadingPrograms(renderer,view,camera,target,options.frameSlack?{...options,onCpu:yieldWork.recordWork}:options);
+  await compileLoadingPrograms(renderer,view,camera,target,options.frameSlack||options.cpuBudget?{...options,onCpu:duration=>{yieldWork.recordWork(duration);options.onCpu?.(duration);}}:options);
   await yieldWork();
  }
 }
