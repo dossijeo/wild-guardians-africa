@@ -1,0 +1,127 @@
+{
+  "runId": 37989406447,
+  "sourceHead": "490b6b2e41d9c80cf11dee4b5ee63fbea532e195",
+  "runtimeSourceCommit": "37f4de51283db9c9b0bb896434206fc26466d119",
+  "runConclusion": "failure",
+  "exe": {
+    "artifactId": 11644653300,
+    "path": "C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\windows-37989406447\\wild-guardians-africa.exe",
+    "bytes": 378878464,
+    "sha256": "4651e1f26d135144835530f6c87ca4ad52dacecdee8918ef3110447501468266",
+    "metadataMatched": true,
+    "mz": true,
+    "pe": true,
+    "peOffset": 248,
+    "machine": "0x8664"
+  },
+  "smoke": {
+    "artifactId": 11644333610,
+    "bytes": 3121,
+    "sha256": "a3ca5f2d1a8f05df8529c5bbd98f758b10962824fbe5e0ad286ab802af7030b1",
+    "ok": false,
+    "errors": [
+      "Error: Production world did not finish loading"
+    ],
+    "loadingAtFinish": {
+      "canvas": {
+        "height": 720,
+        "width": 1028
+      },
+      "displayedProgress": "82",
+      "focused": true,
+      "phaseLabel": "Awakening nature...",
+      "readyGateReached": false,
+      "scope": "Presentation snapshot only; displayed progress and canvas dimensions do not establish world readiness or GPU identity.",
+      "stageBusy": "true",
+      "visibility": "visible",
+      "worldWaitMs": 90053.09999999998
+    },
+    "workerQaPresent": false
+  },
+  "steps": [
+    {
+      "name": "Set up job",
+      "conclusion": "success"
+    },
+    {
+      "name": "Run actions/checkout@v4",
+      "conclusion": "success"
+    },
+    {
+      "name": "Run actions/setup-node@v4",
+      "conclusion": "success"
+    },
+    {
+      "name": "Run dtolnay/rust-toolchain@stable",
+      "conclusion": "success"
+    },
+    {
+      "name": "Run swatinem/rust-cache@v2",
+      "conclusion": "success"
+    },
+    {
+      "name": "Run npm ci",
+      "conclusion": "success"
+    },
+    {
+      "name": "Run npm run desktop:build",
+      "conclusion": "success"
+    },
+    {
+      "name": "Check Windows executable and installer",
+      "conclusion": "success"
+    },
+    {
+      "name": "Smoke test the packaged game in WebView2",
+      "conclusion": "failure"
+    },
+    {
+      "name": "Check genuine native minimization and restoration",
+      "conclusion": "skipped"
+    },
+    {
+      "name": "Run actions/upload-artifact@v7",
+      "conclusion": "success"
+    },
+    {
+      "name": "Run actions/upload-artifact@v7",
+      "conclusion": "success"
+    },
+    {
+      "name": "Run actions/upload-artifact@v7",
+      "conclusion": "success"
+    },
+    {
+      "name": "Run actions/upload-artifact@v7",
+      "conclusion": "success"
+    },
+    {
+      "name": "Run actions/upload-artifact@v7",
+      "conclusion": "success"
+    },
+    {
+      "name": "Run actions/upload-artifact@v4",
+      "conclusion": "skipped"
+    },
+    {
+      "name": "Post Run swatinem/rust-cache@v2",
+      "conclusion": "skipped"
+    },
+    {
+      "name": "Post Run actions/setup-node@v4",
+      "conclusion": "skipped"
+    },
+    {
+      "name": "Post Run actions/checkout@v4",
+      "conclusion": "success"
+    },
+    {
+      "name": "Complete job",
+      "conclusion": "success"
+    }
+  ],
+  "sourceFreezeSha256": "3b4a52a43b6d2c8f10276517b11774762b0783d364b1824cee557e1fa5386063",
+  "nativeExecutableLaunched": false,
+  "correctedSourceDispatchCount": 1,
+  "installerNotDownloaded": true
+}
