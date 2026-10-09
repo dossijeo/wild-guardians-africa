@@ -3,6 +3,7 @@ import {installLoadingGameplayGpuQa} from './loading-gameplay-gpu-qa.js';
 import {LibraryViewer} from '../ui/library-viewer.js';
 import {EventCards} from '../ui/event-cards.js';
 import {LoadingDiorama} from '../rendering/loading-diorama.js';
+import {loadingResourceOverlapEnabled} from '../rendering/loading-resource-overlap.js';
 import {LoadingAudio} from '../audio/loading-audio.js';
 import {prepareLoadingFrames} from '../ui/loading-frame-preparation.js';
 import {LoadingOverlay} from '../ui/loading-overlay.js';
@@ -83,7 +84,7 @@ function prepareLoadingScene(){
  const canvas=document.createElement('canvas');canvas.className='loading-prepared-canvas';canvas.style.cssText='position:fixed;inset:0;width:100%;height:100%;opacity:0;pointer-events:none';document.body.append(canvas);
  let owner,diorama;const transfers=new LoadingTransferOwner();
  try{owner=new WorldScene(canvas,onPick);if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')&&new URLSearchParams(location.search).has('qa-loading-far-full-scene'))owner.farIsolatedPreparation=false;if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')&&new URLSearchParams(location.search).has('qa-loading-zero-vertices'))owner.farZeroVertexPreparation=true;owner.loadingCpuBudget=!(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading-legacy-pacing'));owner.controls.enabled=false;owner.qualitySetting(settings.quality);applyWorldResolution(owner,settings.resolution);if(progressQa)owner.onLoadingSpan=span=>{if(!owner.disposed)progressQa.loadingSpan(span);};
- diorama=new LoadingDiorama(owner,{batchedUpload:import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')&&new URLSearchParams(location.search).has('qa-loading-diorama-batches')});owner.loadingReadinessObservation?.connect();owner.loadingReadinessObservation?.presentation(diorama,null);const preparation={world:owner,diorama,canvas,transfers};preparedLoading=preparation;
+ diorama=new LoadingDiorama(owner,{resourceOverlap:loadingResourceOverlapEnabled(),batchedUpload:import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')&&new URLSearchParams(location.search).has('qa-loading-diorama-batches')});owner.loadingReadinessObservation?.connect();owner.loadingReadinessObservation?.presentation(diorama,null);const preparation={world:owner,diorama,canvas,transfers};preparedLoading=preparation;
  preparation.pending=Promise.all([diorama.prepare(),prepareLoadingFrames(loadLoadingFrameImages,{signal:owner.loading.signal})]).then(([,images])=>{preparation.frameImages=images;if(!owner.disposed)progressQa?.lifecycle('app-preloading-ready');});preparation.pending.catch(()=>{});return preparation;
  }catch(failure){transfers.dispose();diorama?.dispose();owner?.dispose();canvas.remove();throw failure;}
 }

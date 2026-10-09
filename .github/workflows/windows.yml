@@ -5,6 +5,11 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
+    inputs:
+      resource_overlap:
+        description: 'Experimental presentation resource scheduling (smoke only)'
+        type: boolean
+        default: false
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -44,7 +49,9 @@ jobs:
         run: |
           $report = Join-Path $env:RUNNER_TEMP 'desktop-smoke.json'
           $binary = (Resolve-Path src-tauri/target/release/wild-guardians-africa.exe).Path
-          $process = Start-Process -FilePath $binary -ArgumentList '--smoke-report', $report -WindowStyle Hidden -PassThru
+          $smokeArgs = @('--smoke-report', $report)
+          if ('${{ inputs.resource_overlap }}' -eq 'true') { $smokeArgs += '--smoke-resource-overlap' }
+          $process = Start-Process -FilePath $binary -ArgumentList $smokeArgs -WindowStyle Hidden -PassThru
           if (-not $process.WaitForExit(240000)) { Stop-Process -Id $process.Id; throw 'WebView2 smoke timed out' }
           if (-not (Test-Path -LiteralPath $report)) { throw 'No WebView2 smoke report' }
           $result = Get-Content -Raw -LiteralPath $report | ConvertFrom-Json
@@ -63,7 +70,9 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Native visibility fixture failed' }
           $report = Join-Path $env:RUNNER_TEMP 'desktop-visibility.json'
           $binary = (Resolve-Path src-tauri/target/release/wild-guardians-africa.exe).Path
-          $process = Start-Process -FilePath $binary -ArgumentList '--smoke-report', $report, '--smoke-fixture', $fixture -WindowStyle Hidden -PassThru
+          $smokeArgs = @('--smoke-report', $report, '--smoke-fixture', $fixture)
+          if ('${{ inputs.resource_overlap }}' -eq 'true') { $smokeArgs += '--smoke-resource-overlap' }
+          $process = Start-Process -FilePath $binary -ArgumentList $smokeArgs -WindowStyle Hidden -PassThru
           if (-not $process.WaitForExit(900000)) { Stop-Process -Id $process.Id; throw 'Native visibility timed out' }
           if (-not (Test-Path -LiteralPath $report)) { throw 'No native visibility report' }
           $result = Get-Content -Raw -LiteralPath $report | ConvertFrom-Json

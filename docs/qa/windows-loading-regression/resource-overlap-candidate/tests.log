@@ -1,0 +1,128 @@
+TAP version 13
+# Subtest: failure report observes loading UI without converting it into readiness or masking failure
+ok 1 - failure report observes loading UI without converting it into readiness or masking failure
+  ---
+  duration_ms: 6.6494
+  ...
+# Subtest: early failure tolerates loading elements not yet created
+ok 2 - early failure tolerates loading elements not yet created
+  ---
+  duration_ms: 0.9627
+  ...
+# Subtest: an observation fault preserves the original failure and still publishes the report
+ok 3 - an observation fault preserves the original failure and still publishes the report
+  ---
+  duration_ms: 1.1803
+  ...
+# Subtest: world wait stops at the ready gate and excludes the later five-minute visibility test
+ok 4 - world wait stops at the ready gate and excludes the later five-minute visibility test
+  ---
+  duration_ms: 1.0672
+  ...
+# Subtest: original finish reads readiness exactly once without masking original gate failure
+ok 5 - original finish reads readiness exactly once without masking original gate failure
+  ---
+  duration_ms: 1.6972
+  ...
+# (node:31200) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: diorama disposes its private shadow fallback exactly once without touching native owners
+ok 6 - diorama disposes its private shadow fallback exactly once without touching native owners
+  ---
+  duration_ms: 3.102
+  ...
+# Subtest: loading-only mountain atlas arriving after either owner closes is disposed without adoption
+ok 7 - loading-only mountain atlas arriving after either owner closes is disposed without adoption
+  ---
+  duration_ms: 1.5026
+  ...
+# Subtest: presentation mountain foot feathers the actual native recipe without changing a separate world material
+ok 8 - presentation mountain foot feathers the actual native recipe without changing a separate world material
+  ---
+  duration_ms: 9.8937
+  ...
+# (node:53680) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: diorama upload splits all five stages/four bridges, restores renderer and visibility before each real frame, then submits the complete scene
+ok 9 - diorama upload splits all five stages/four bridges, restores renderer and visibility before each real frame, then submits the complete scene
+  ---
+  duration_ms: 11.4977
+  ...
+# Subtest: cancel while batched diorama RAF is suspended restores all borrowed state and never submits a later group or disposes shared crop sources
+ok 10 - cancel while batched diorama RAF is suspended restores all borrowed state and never submits a later group or disposes shared crop sources
+  ---
+  duration_ms: 3.3049
+  ...
+# (node:48436) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: sky and catalogues start together; all four resources start after catalogues and adoption waits for every resource and sky
+ok 11 - sky and catalogues start together; all four resources start after catalogues and adoption waits for every resource and sky
+  ---
+  duration_ms: 2.844
+  ...
+# Subtest: early sky failure and synchronous resource failure propagate while all late sibling rejections are observed
+ok 12 - early sky failure and synchronous resource failure propagate while all late sibling rejections are observed
+  ---
+  duration_ms: 1.1567
+  ...
+# Subtest: abort after catalogues prevents all resource starts; closed owner rejects before adoption
+ok 13 - abort after catalogues prevents all resource starts; closed owner rejects before adoption
+  ---
+  duration_ms: 0.4314
+  ...
+# Subtest: actual Assets URL cache and V4 bridge loader reuse the same model promises without making private rigs or disposing borrowed models
+ok 14 - actual Assets URL cache and V4 bridge loader reuse the same model promises without making private rigs or disposing borrowed models
+  ---
+  duration_ms: 5.7441
+  ...
+# Subtest: real World.loadReady cancellation rejects scheduling, and original backdrop late-arrival disposer releases its private texture exactly once
+ok 15 - real World.loadReady cancellation rejects scheduling, and original backdrop late-arrival disposer releases its private texture exactly once
+  ---
+  duration_ms: 1.8744
+  ...
+# Subtest: candidate is OFF by default and does not change setup, warming, shader variants or fences
+ok 16 - candidate is OFF by default and does not change setup, warming, shader variants or fences
+  ---
+  duration_ms: 2.3328
+  ...
+# Subtest: actual diorama prepare dispatches the four existing loaders before sky finishes, then reaches the same adoption boundary without early GPU work
+ok 17 - actual diorama prepare dispatches the four existing loaders before sky finishes, then reaches the same adoption boundary without early GPU work
+  ---
+  duration_ms: 38.1406
+  ...
+# Subtest: smoke selection requires both explicit booleans; normal gameplay does not read experimental selection
+ok 18 - smoke selection requires both explicit booleans; normal gameplay does not read experimental selection
+  ---
+  duration_ms: 2.5468
+  ...
+# Subtest: actual prepare sibling rejection closes presentation through dispose, observes late failures and releases pending atlas exactly once
+ok 19 - actual prepare sibling rejection closes presentation through dispose, observes late failures and releases pending atlas exactly once
+  ---
+  duration_ms: 5.0809
+  ...
+# (node:50944) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: complete catalogue audit reproduces from current source and exact original bytes
+ok 20 - complete catalogue audit reproduces from current source and exact original bytes
+  ---
+  duration_ms: 426.5715
+  ...
+# Subtest: assignments, context exceptions, reserves and alternatives stay distinct from audible acceptance
+ok 21 - assignments, context exceptions, reserves and alternatives stay distinct from audible acceptance
+  ---
+  duration_ms: 94.2665
+  ...
+# Subtest: latent wood variant and semantic alternatives do not become real bindings or duplicate files
+ok 22 - latent wood variant and semantic alternatives do not become real bindings or duplicate files
+  ---
+  duration_ms: 0.4389
+  ...
+1..22
+# tests 22
+# suites 0
+# pass 22
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 713.7578

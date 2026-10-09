@@ -1,0 +1,102 @@
+{
+  "baseline": "077987008d30075cdec9061b87a3387d0263dbd3",
+  "rootEvidenceCommit": "3fe318ce",
+  "files": [
+    {
+      "path": ".github/workflows/windows.yml",
+      "bytes": 5463,
+      "sha256": "678d02ece3e9a8f93d4abbb61706ca784ca3cd426d42e5a33a8a15e3b551617b"
+    },
+    {
+      "path": "src-tauri/src/main.rs",
+      "bytes": 3616,
+      "sha256": "b6a5586ef8c4b3c6c53af2487a9c16969c1c2fd86f548dbcdfd413460900e8c1"
+    },
+    {
+      "path": "src-tauri/smoke.js",
+      "bytes": 12275,
+      "sha256": "9f6e27ad126390e0d3cce356e90645640bf26f719eb0a38a2a68ef2c8d8b0436"
+    },
+    {
+      "path": "src/app/main.js",
+      "bytes": 65131,
+      "sha256": "b3f5b8dd4ada493ad41fec5d499e297673b9c09239787a6de206adc1085717ba"
+    },
+    {
+      "path": "src/rendering/loading-diorama.js",
+      "bytes": 16869,
+      "sha256": "4e3f28caee6678d89a72cabe3681fdd33c494eb09db11cf22a97f25caf6b226f"
+    },
+    {
+      "path": "src/rendering/loading-resource-overlap.js",
+      "bytes": 1072,
+      "sha256": "10e0c6b399fb68967a6972ab5262983b04045934bf6956ae7c1f8b7bb9c6913b"
+    },
+    {
+      "path": "tests/loading-resource-overlap.test.js",
+      "bytes": 11835,
+      "sha256": "3b884c597c005abf7deb2b0a7113807c6eee21bebf6f1ad00bff484c17192661"
+    },
+    {
+      "path": "docs/qa/sfx-catalog-post-jam/inventory.json",
+      "bytes": 246030,
+      "sha256": "4c172ac6fa6411900ab8e2e1965d154b1ee18b1266801db87f6564e911b56914"
+    },
+    {
+      "path": "docs/qa/sfx-catalog-post-jam/inventory.md",
+      "bytes": 36716,
+      "sha256": "507a9f61546904c27863d0d0bf6e4ac582757f20503ad7d864d8e221dca36102"
+    }
+  ],
+  "cpuChecks": "22/22 PASS",
+  "buildSeconds": 9.19,
+  "package": {
+    "files": 711,
+    "bytes": 445269468,
+    "relativeLinks": 860,
+    "runtimeGLBs": 22
+  },
+  "nativeDispatched": false,
+  "evidenceFiles": [
+    {
+      "path": "docs/qa/windows-loading-regression/resource-overlap-candidate/build.log",
+      "bytes": 2320,
+      "sha256": "f168dcb202ac970526e6ae3907663942737b8b08e383a4e8727fc8e6f16e987b"
+    },
+    {
+      "path": "docs/qa/windows-loading-regression/resource-overlap-candidate/package.log",
+      "bytes": 411,
+      "sha256": "9a99758c56497d994d0fbfa511deea533b8bef2277e0f68f75c3a3b8ca221a99"
+    },
+    {
+      "path": "docs/qa/windows-loading-regression/resource-overlap-candidate/proposal.md",
+      "bytes": 4597,
+      "sha256": "40dad66fcb9f264680526e9eefed6a71365086654362e6c1c32764a0a2c6f8bf"
+    },
+    {
+      "path": "docs/qa/windows-loading-regression/resource-overlap-candidate/sfx-review.json",
+      "bytes": 13313,
+      "sha256": "ab0b766b6e684a0c3a18bdef0265179306aa7db83302d01dece4930b00effec5"
+    },
+    {
+      "path": "docs/qa/windows-loading-regression/resource-overlap-candidate/syntax.json",
+      "bytes": 746,
+      "sha256": "9174f4fb336d0689ca88051d91a0c1226933aaca88539f9b312c5b5c32acecc1"
+    },
+    {
+      "path": "docs/qa/windows-loading-regression/resource-overlap-candidate/tests.log",
+      "bytes": 6758,
+      "sha256": "9bf1b052961f50b6d7572549b55e4b97f450c1801695c897409c788ce2c5980e"
+    },
+    {
+      "path": "docs/qa/windows-loading-regression/resource-overlap-candidate/unchanged-pipeline.json",
+      "bytes": 563,
+      "sha256": "03c9362b9cea62a25e8ddd79101d3ab1ffe14116b69943e1083f7dddac1e330f"
+    },
+    {
+      "path": "docs/qa/windows-loading-regression/resource-overlap-candidate/warm-tail-original.txt",
+      "bytes": 8226,
+      "sha256": "e6cf40b6b99f5d8a40bb5fad7d4ee10eb8e8f97e627b650fd3fcdf2fc496f729"
+    }
+  ]
+}

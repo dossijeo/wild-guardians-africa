@@ -1,0 +1,31 @@
+{
+  "jsChecks": [
+    {
+      "file": "src/app/main.js",
+      "exitCode": 0,
+      "error": ""
+    },
+    {
+      "file": "src/rendering/loading-diorama.js",
+      "exitCode": 0,
+      "error": ""
+    },
+    {
+      "file": "src/rendering/loading-resource-overlap.js",
+      "exitCode": 0,
+      "error": ""
+    },
+    {
+      "file": "src-tauri/smoke.js",
+      "exitCode": 0,
+      "error": ""
+    },
+    {
+      "file": "tests/loading-resource-overlap.test.js",
+      "exitCode": 0,
+      "error": ""
+    }
+  ],
+  "workflowScope": "Flag/default/gates checked by source contracts; YAML parser not installed locally. No workflow executed.",
+  "rustScope": "Source wiring reviewed by CPU assertions; Cargo compilation awaits native workflow."
+}

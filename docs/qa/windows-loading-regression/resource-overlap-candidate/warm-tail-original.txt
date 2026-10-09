@@ -1,0 +1,60 @@
+    const layout=mountains.arcLayout.slice(0,3).map((arc,index)=>({...arc,angle:Math.atan2(-4.8,-6.4)+(index-1)*.45,height:index===1?6.5:4.6,baseY:-1.4}));
+    const backdropOwner={scene:this.scene,camera:this.camera,nav:{config:{biome:'savanna'},field:{surface:()=>0}},toon:this.toon};
+    this.backdrop=createBiomeBackdrop(backdropOwner,mountainTexture,{radius:35,arcLayout:layout,stableAltitude:false,parallax:0,fogMix:.2,fogBaseMix:.8,fogDayColor:'#decba6',fogNightColor:'#26364a'});
+    // Feather only this presentation's atlas foot into the analytic haze.
+    featherLoadingBackdrop(this.backdrop);
+    this.batch=await phase('diorama-prepare-maize-batch',()=>createCropBatchAsync(this.scene,world.renderer,gltf,preparedBridges,this.plants.capacity,{species:['maiz'],shadows:false,signal:this.abort.signal,cancelled:()=>this.disposed||world.disposed}));this.scene.traverse(object=>{for(const material of [object.material].flat().filter(Boolean))this.textureOwner.material(material);});this.toon.environment(world.sky.environmentTextures,world.sky.uniforms.uSkyYaw);this.toon.apply(this.scene);
+    // A small cold presentation fill belongs only to the diorama maize. It
+    // reuses the existing night-light uniform/GLSL; soil and real-world lighting
+    // keep their original values, without another light, pass or shader define.
+    this.cropNightFill={value:2.05};const filled=new Set();
+    this.scene.traverse(mesh=>{if(!mesh.isInstancedMesh)return;for(const material of [mesh.material].flat()){
+      if(filled.has(material))continue;filled.add(material);const compile=material.onBeforeCompile;
+      material.onBeforeCompile=(shader,renderer)=>{compile.call(material,shader,renderer);shader.uniforms.uNightLight=this.cropNightFill;};
+    }});
+    const focused=new Set();this.scene.traverse(mesh=>{for(const material of [mesh.material].flat().filter(Boolean)){if(focused.has(material)||(!material.isMeshStandardMaterial&&!material.isMeshPhysicalMaterial))continue;focused.add(material);this.focusLight.apply(material);}});
+    // Warm all five stages and four morph bridges, including ones not present in
+    // the first frame. Counts/visibility restored before accepting interaction.
+    const saved=[];this.scene.traverse(mesh=>{if(mesh.isInstancedMesh){saved.push([mesh,mesh.count,mesh.visible]);mesh.count=1;mesh.visible=true;}});
+    const shadow=world.renderer.shadowMap.enabled;
+    try{world.renderer.shadowMap.enabled=false;await phase('diorama-compile-maize',()=>compileLoadingPrograms(world.renderer,this.scene,this.camera,undefined,{signal:this.abort.signal,cancelled:()=>world.disposed,screen:true}));if(this.disposed)throw Error('Loading diorama cancelled');if(this.batchedUpload)await phase('diorama-upload-maize-soil-batches',()=>this.uploadMaizeSoilBatched());else sync('diorama-upload-maize-soil',()=>renderScreenPreload(world.renderer,this.scene,this.camera));await phase('diorama-compile-sky',()=>compileLoadingPrograms(world.renderer,world.sky.scene,this.camera,undefined,{signal:this.abort.signal,cancelled:()=>world.disposed,screen:true}));await phase('diorama-compile-mist',()=>compileLoadingPrograms(world.renderer,this.mist.scene,this.camera,undefined,{signal:this.abort.signal,cancelled:()=>world.disposed,screen:true}));sync('diorama-upload-mist',()=>renderScreenPreload(world.renderer,this.mist.scene,this.camera));sync('diorama-warm-day-night-sky',()=>{world.sky.render(world.renderer,this.camera,{day:1,time:0});world.sky.render(world.renderer,this.camera,{day:1,time:310});});await phase('diorama-final-fence',()=>waitForGpuPreload(world.renderer,{signal:this.abort.signal,cancelled:()=>this.disposed||world.disposed,getEpoch:()=>world.glResourceEpoch?.stats.epoch??0}));}
+    finally{world.renderer.shadowMap.enabled=shadow;for(const [mesh,count,visible] of saved){mesh.count=count;mesh.visible=visible;}}
+    this.prepared=true;return this;
+  }
+  uploadMaizeSoilBatched({nextFrame,now}={}){
+    return renderScreenPreloadBatched(this.world.renderer,this.scene,this.camera,{batchSize:1,frameBudget:6,signal:this.abort.signal,cancelled:()=>this.disposed||this.world.disposed,nextFrame,now,onSubmit:this.world.onLoadingSpan});
+  }
+  loadBackdropTexture(url){
+    const {world}=this;return (typeof Worker!=='undefined'&&typeof createImageBitmap==='function'?world.assets.loadingTexture(url,{flipY:true,premultiplyAlpha:false}):world.assets.textures.loadAsync(url)).then(texture=>{if(this.disposed||world.disposed){texture.dispose();throw new DOMException('Loading diorama cancelled','AbortError');}this.backdropTexture=texture;return texture;});
+  }
+  plantAt(clientX,clientY) {
+    const rect=this.world.canvas.getBoundingClientRect();this.cursor.set((clientX-rect.left)/rect.width*2-1,1-(clientY-rect.top)/rect.height*2);this.camera.updateMatrixWorld();this.ray.setFromCamera(this.cursor,this.camera);
+    const hit=this.ray.intersectObject(this.ground)[0],plant=hit?this.plants.plant(hit.point.x,hit.point.z):null;if(plant)this.onPlant?.(plant);return plant;
+  }
+  show(state) {this.state=state;this.interactive=true;this.world.controls.enabled=false;}
+  render(dt,progress,{ready=false,skyOnly=false}={}) {
+    if(!this.prepared||this.disposed)return;
+    const {world}=this;world.resize();this.camera.aspect=world.camera.aspect;if(!world.cinematic){const portrait=this.camera.aspect<.8,distance=portrait?1.65:1,height=portrait?1.45:1,angle=this.orbit.step(dt),sin=Math.sin(angle),cos=Math.cos(angle);this.camera.position.set((4.8*cos+6.4*sin)*distance,3.1*height,(6.4*cos-4.8*sin)*distance);this.camera.lookAt(this.focus);}this.camera.updateProjectionMatrix();this.plants.update(dt,progress,{ready});this.batch.update(this.plants.plants,this.orbit.reducedMotion?0:this.plants.time,()=>0);
+    const night=skyNight(this.state);this.night=night;this.focusLight.update(world.renderer,this.camera,this.focus,night);this.toon.update(night,this.sun,this.state.biome);this.toon.uniforms.uNightLight.value=1.8;this.sun.intensity=3-2.6*night;this.ambient.intensity=2-.9*night;this.scene.fog.color.copy(this.mist.day).lerp(this.mist.night,night);this.backdrop?.update();this.sparkles.update(this.plants.time,night,this.orbit.reducedMotion);
+    const shadow=world.renderer.shadowMap.enabled,autoClear=world.renderer.autoClear;
+    try{world.renderer.shadowMap.enabled=false;world.renderer.autoClear=false;withScreenTarget(world.renderer,()=>{world.renderer.clear();world.sky.render(world.renderer,this.camera,this.state);if(!skyOnly){this.mist.render(world.renderer,this.camera,night);world.renderer.render(this.scene,this.camera);}});}
+    finally{world.renderer.shadowMap.enabled=shadow;world.renderer.autoClear=autoClear;}
+  }
+  async freezeForCinematic({nextFrame,timeout=30000}={}) {
+    this.stopPlanting();this.orbit.stop();
+    const signal=this.abort.signal,waiting=performance.now();
+    const check=()=>{if(this.disposed||this.world.disposed||signal.aborted)throw Error('Loading orbit cancelled');if(performance.now()-waiting>timeout)throw Error('Loading orbit timed out');};
+    while(!this.orbit.settled){check();await waitGpuFrame({check,signal,nextFrame});}
+    check();
+    this.camera.updateMatrixWorld();
+  }
+  stopPlanting(){this.interactive=false;this.plants.stopPlanting();}
+
+  dispose(){if(this.disposed)return;this.disposed=true;this.interactive=false;this.abort.abort();this.batch?.dispose();this.sparkles?.dispose();this.backdrop?.dispose();this.backdropTexture?.dispose();this.mist.dispose();this.ground.geometry.dispose();this.ground.material.dispose();this.textureOwner.dispose();this.toon.shadowUniforms.uNativeShadowFiltered.value=null;this.toon.shadowUniforms.fallback.dispose();this.scene.clear();}
+}
+
+
+export function featherLoadingBackdrop(backdrop){
+ let changed=0;backdrop.root.traverse(mesh=>{if(!mesh.material?.isShaderMaterial)return;const source=mesh.material.fragmentShader,next=source.replace(',1.);\n #include <colorspace_fragment>',',smoothstep(.02,.4,vBackdropHeight)*c.a);\n #include <colorspace_fragment>');if(next===source)throw Error('Missing loading backdrop alpha recipe');mesh.material.transparent=true;mesh.material.fragmentShader=next;changed++;});
+ if(!changed)throw Error('Missing loading backdrop material');return backdrop;
+}

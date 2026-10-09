@@ -3,6 +3,7 @@
   if (window.__desktopSmokeStarted) return;
   window.__desktopSmokeStarted = true;
   const report = {ok: false, origin: location.origin, userAgent: navigator.userAgent, secureContext: isSecureContext, checks: {}, errors: []};
+  report.checks.loadingRecipe={resourceOverlap:window.__desktopSmokeResourceOverlap===true};
   const consoleError = console.error;
   console.error = (...args) => {report.errors.push(args.map(String).join(' ')); consoleError.apply(console, args);};
   const fail = event => report.errors.push(event.message || String(event.reason));

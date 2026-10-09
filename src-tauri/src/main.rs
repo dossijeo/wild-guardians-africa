@@ -23,7 +23,9 @@ fn main() {
                 && std::env::args().any(|arg| arg == "--smoke-report")
                 && webview.label() == "main"
             {
-                let _ = webview.eval(include_str!("../smoke.js"));
+                // Explicit smoke-only selection; normal gameplay never evaluates it.
+                let overlap = std::env::args().any(|arg| arg == "--smoke-resource-overlap");
+                let _ = webview.eval(&format!("window.__desktopSmokeResourceOverlap={overlap};\n{}", include_str!("../smoke.js")));
             }
         })
         .run(tauri::generate_context!())
