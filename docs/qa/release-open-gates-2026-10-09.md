@@ -88,7 +88,9 @@ logical states unchanged, 25-to-40 generated chunks, no errors or pending
 queries, and released contexts. Its p95 frame intervals are 116.5 / 116.4 /
 116.4 / 116.4 ms; intervals above 100 ms are 25 / 22 / 23 / 18. This does not
 demonstrate a general frame-stability improvement and does not approve activation.
-Raw reports are preserved for immutable archival and trace attribution. The
+Raw reports are archived in main at `b91b06c7`, and root's verifier passes with
+`performanceAccepted:false`. See [the negative result and clock attribution](streaming-travel-dense/seam-isolation-abba-b6edd148/README.md).
+The
 separate instrumented functional runs end with zero observed live buffers;
 their timing is not used in the benchmark. All draws, uploads, queries and cleanup
 must be attributed without summing union statistics counted in multiple adapters.
