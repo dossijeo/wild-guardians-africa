@@ -62,6 +62,15 @@ restoration and simulation resumes normally. Its readiness interval17,656.3ms
 excludes the hiding interval; the complete original report and separate receipt
 are retained with the New Game evidence. CI remains a separate negative.
 
+The unmerged readiness-observation branch now supplies an actual original CI
+failure with more precise state: [run37988150847/source945ab0ba](windows-loading-regression/readiness-945ab0ba/README.md).
+At timeout, observed transfers and the native chunk queue have no pending work;
+the active awaited boundary is `warm-compile-world`. The existing World context
+identifies Microsoft Basic Render Driver without context loss. This directs
+investigation toward world shader preparation but does not identify a pending
+material or prove a driver defect. Nested wall spans are not additive GPU
+measurements; original timeout and readiness semantics remain unchanged.
+
 The worker branch now has a separate
 [exact-executable native accessory pilot](workers-frontside-local-3e8da8a7/README.md):
 youngMale crate/hoe,48 sampled day/night poses, actual culling witnesses and
