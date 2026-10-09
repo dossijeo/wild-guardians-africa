@@ -4,6 +4,7 @@ import {readFileSync} from 'node:fs';
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {installCropFrustum} from './browser/crop-frustum.js';
+import {loadCropBridges} from '../src/rendering/crop-library.js';
 import {createCropBatch} from '../src/rendering/crop-batch.js';
 import * as Game from '../src/simulation/game.js';
 import {advancePlant,waterPlant} from '../src/simulation/crops.js';
@@ -13,14 +14,15 @@ import {SaveRepository,serialize} from '../src/persistence/snapshots.js';
 
 const catalogue=JSON.parse(readFileSync('public/content/models.json'));
 const source=catalogue.find(m=>m.source.includes('Cultivos'));
-const data=JSON.parse(readFileSync('public/content/crop-bridges.json'));
+let data=JSON.parse(readFileSync('public/content/crop-bridges.json'));
 const ids=['maiz','algodon','girasol','platano','sorgo','mijo','yuca','batata'];
 const marks=[.065,.27,.53,.78,1];
 // Node cannot decode the embedded images. Preserve every native accessor,
 // index, classification and bridge datum; texture appearance needs WebGL QA.
-const buffer=readFileSync('public'+source.url),size=buffer.readUInt32LE(12);
+async function loadCpuModel(url){
+const buffer=readFileSync('public'+url),size=buffer.readUInt32LE(12);
 const doc=JSON.parse(buffer.subarray(20,20+size));
-for(const m of doc.materials){
+for(const m of doc.materials??[]){
  delete m.normalTexture;delete m.occlusionTexture;delete m.emissiveTexture;
  delete m.pbrMetallicRoughness?.baseColorTexture;delete m.pbrMetallicRoughness?.metallicRoughnessTexture;
 }
@@ -28,7 +30,10 @@ const json=Buffer.from(JSON.stringify(doc)),length=Math.ceil(json.length/4)*4;
 const output=Buffer.alloc(buffer.length-size+length,32);
 buffer.copy(output,0,0,20);output.writeUInt32LE(output.length,8);output.writeUInt32LE(length,12);
 json.copy(output,20);buffer.copy(output,20+length,20+size);
-const gltf=await new GLTFLoader().parseAsync(output.buffer.slice(output.byteOffset,output.byteOffset+output.length),'');
+return new GLTFLoader().parseAsync(output.buffer.slice(output.byteOffset,output.byteOffset+output.length),'');
+}
+const gltf=await loadCpuModel(source.url);
+data=await loadCropBridges(data,loadCpuModel);
 const originals=Array(40);gltf.scene.traverse(o=>{if(o.isMesh)originals[o.userData.cropIndex*5+o.userData.stage-1]=o;});
 const renderer={capabilities:{getMaxAnisotropy:()=>1}};
 const nav={placement:()=>({valid:true,suppress:[]}),setState:()=>{},terrainValid:()=>true,walkable:()=>true,path:(_start,end)=>[end]};
@@ -63,15 +68,12 @@ test('QA-036: all 40 native originals and 32 opaque bridges preserve every index
   for(const pair of data.pairs){
    const a=originals[pair.a],b=originals[pair.b],mesh=view.scene.getObjectByName(`puente_${a.userData.crop}_${a.userData.stage}_${b.userData.stage}`);
    assert.equal(mesh.material.transparent,false);assert.equal(mesh.material.opacity,1);assert.equal(mesh.material.alphaTest,0);assert.equal(mesh.material.alphaHash,false);assert.equal(mesh.material.depthWrite,true);
-   let cursor=0;
-   for(const [role,native] of [a,b].entries())for(const index of native.geometry.index.array){
-    for(const name of ['position','normal','uv']){
-     const original=native.geometry.getAttribute(name),bridge=mesh.geometry.getAttribute(name);
-     for(let k=0;k<original.itemSize;k++)assert.equal(bridge.array[cursor*original.itemSize+k],original.array[index*original.itemSize+k],`${mesh.name}/${name}/${cursor}/${k}`);
-    }
-    assert.equal(mesh.geometry.getAttribute('aPart').getX(cursor),role);cursor++;
-   }
-   assert.equal(mesh.geometry.getAttribute('position').count,cursor);
+   const baked=data.bakedTemplates.get(data.pairs.indexOf(pair));
+   assert.deepEqual(mesh.geometry.index.array,baked.geometry.index.array);
+   for(const [nativeName,runtimeName] of [['position','position'],['normal','normal'],['uv','uv'],['_aroot','aRoot'],['_apeerroot','aPeerRoot'],['_aspin','aSpin'],['_apart','aPart']])assert.deepEqual(mesh.geometry.getAttribute(runtimeName).array,baked.geometry.getAttribute(nativeName).array);
+   assert.equal(mesh.material.side,THREE.FrontSide);
+   assert.equal(mesh.material.shadowSide,THREE.FrontSide);
+   assert.equal(mesh.customDepthMaterial.side,THREE.FrontSide);
    for(const name of ['aRoot','aPeerRoot','aSpin','aPart'])assert.ok(mesh.geometry.getAttribute(name).array.every(Number.isFinite));
    const shader={uniforms:{},vertexShader:'#include <beginnormal_vertex>\n#include <begin_vertex>',fragmentShader:'void main() { gl_FragColor=vec4(1.); }'};
    mesh.material.onBeforeCompile(shader);assert.equal(shader.fragmentShader,'void main() { gl_FragColor=vec4(1.); }');
@@ -139,3 +141,4 @@ test('experimental bounds follow membership and origin, reuse paused bounds, and
   view.batch.update([],9,()=>3);assert.equal(mesh.count,0);assert.equal(mesh.visible,false);assert.equal(JSON.stringify(plants),before);candidate.setEnabled(false);assert.ok(candidate.items.every(i=>!i.mesh.frustumCulled));
  }finally{candidate.dispose();view.batch.dispose();}
 });
+

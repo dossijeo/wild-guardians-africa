@@ -39,3 +39,5 @@ conformance); verify_assets.py (507 resources, intact126SFX/four worker librarie
 48clips and source ZIP maps). This is functional/encoding verification, not a
 pixel comparison experiment, benchmark or human visual approval. Actual game
 visual QA, build/package and remaining regressions are pending.
+
+57 directed contracts pass, including all eight species across the four morphs at 20/50/80%, save/restore continuation, opaque baked bridge attributes/index identity, lifecycle physical delivery, depth contracts and compressed textured payload conservation. The geometry-only bridge is checked by the V4/decompression verifier. Build attempts stopped during public copy because C: was full; build/package and native WorldScene visual review remain pending. No GPU benchmark or pixel comparison is requested for this authored replacement.
