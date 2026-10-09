@@ -1,0 +1,131 @@
+{
+  "status": "NATIVE_YOUNG_WORLD_RESOURCE_ONLY_NOT_CATEGORY_APPROVAL",
+  "sourceHead": "db62ee83",
+  "viewerDiskSha256": "fa966490f63fd3e21ea3d3ae90f47fed8d0a5f2414541b4b74673a07d4085b8d",
+  "rawSha256": "a214f512702563c46a1e1eecf0bc1cd9ee5549d033a347505bce2c5f7fb23d3d",
+  "files": [
+    {
+      "name": "report.json.gz",
+      "bytes": 96563,
+      "sha256": "6e051931f70422c641be647f067a61d79fb134045b5dda78e77748b99bdeaf7c",
+      "uncompressedSha256": "a214f512702563c46a1e1eecf0bc1cd9ee5549d033a347505bce2c5f7fb23d3d"
+    },
+    {
+      "name": "comparison.png",
+      "bytes": 3353480,
+      "sha256": "f82330053f9fff40ff466886dcd15a045bc8e5436c92c573f2b10c2785ffa875"
+    },
+    {
+      "name": "console.json",
+      "bytes": 1352,
+      "sha256": "569feb3671af87834f29a0340fcff1b2c64b9a60d065b5d3ee74203b650ea68e"
+    },
+    {
+      "name": "status.txt",
+      "bytes": 364,
+      "sha256": "6ff4a6e24d1f1ce658f689ee3b2bad9bbee91cbfc5ec0ad937f4bb067b5eeae3"
+    },
+    {
+      "name": "world-growth-release-contract.json",
+      "bytes": 6606,
+      "sha256": "6f041c85d2680a82a024a94a1f0bb16fd31d11610c3e4be6431ff67651d283df"
+    },
+    {
+      "name": "world-http-preflight.json",
+      "bytes": 1922,
+      "sha256": "d064ce0fc1b4a33ee9739b934e01c192c683ebcffd69377030eaf8cef6b9a05f"
+    },
+    {
+      "name": "frozen-resource-gates.mjs",
+      "bytes": 2773,
+      "sha256": "5f95f9c3f174d6f6951c7d519c048bac96e94bbd61c6b3387f710f8447c6bf06"
+    },
+    {
+      "name": "frozen-report-schema.mjs",
+      "bytes": 3040,
+      "sha256": "70643301f0236361424102dad9bbc77322c80142a4aa5ffe8e4661cc5abff5ba"
+    },
+    {
+      "name": "sources/0-http.js.gz",
+      "bytes": 20748,
+      "sha256": "a91629f6c12a489574700bfc92c96b1a324ee9396aca0ac80c590addc988c59e",
+      "uncompressedSha256": "2a4ea472974d5577ee410142e094bed22a3b16fd2623435b106460384166be0a"
+    },
+    {
+      "name": "sources/0-disk.js.gz",
+      "bytes": 6247,
+      "sha256": "d84fcd203f6209fcfc979c16e3b63849c1d1648a59628697f76ae31f49b0c29f",
+      "uncompressedSha256": "fa966490f63fd3e21ea3d3ae90f47fed8d0a5f2414541b4b74673a07d4085b8d"
+    },
+    {
+      "name": "sources/1-http.js.gz",
+      "bytes": 52542,
+      "sha256": "2cf03a5212d458a709154cdda14fa0d4245c00a4c1822109c8b381492f19bc90",
+      "uncompressedSha256": "66005207349b62307de4924384a52bedf15511514af3638b838a545a7be042f8"
+    },
+    {
+      "name": "sources/1-disk.js.gz",
+      "bytes": 15394,
+      "sha256": "d69772f3dfc498f74f40697344b93e09c24f14bfed10bd7aeeeba7bce7ae4e20",
+      "uncompressedSha256": "775b38d0139eb3e87798d040e9b3748e3d23587b99eb8b67c0aec1e59b114ad5"
+    },
+    {
+      "name": "sources/2-http.js.gz",
+      "bytes": 7189,
+      "sha256": "b6e6ab2b41c79b52ce35ce416f6183847e7e98a3eb8e967b4365f2d603d9a10e",
+      "uncompressedSha256": "8b2fe6f4136303c07cd8dcc275151a93a562c62b68414376cc60255a35e2ec42"
+    },
+    {
+      "name": "sources/2-disk.js.gz",
+      "bytes": 2008,
+      "sha256": "9e862250293f94ea1e5986c2812eb1c298f120cf8134d70e1d0b433d72e3463b",
+      "uncompressedSha256": "983f654519b90bbd975b5f87fc9c6ad6b120192e28af4d73d2934e5b4179c2ae"
+    },
+    {
+      "name": "sources/3-http.js.gz",
+      "bytes": 6872,
+      "sha256": "08bb5400274636cf01da73e36382ff6887e560be2e63c1e682e24bb27efe3b82",
+      "uncompressedSha256": "de0c0ef888b0269cd4849ef540176b1158da4f4e6ec211f264908677c072f727"
+    },
+    {
+      "name": "sources/3-disk.js.gz",
+      "bytes": 1886,
+      "sha256": "b91c9342d970033f8655bb28225658731f8cec0bc9ed5cbe93e2e91d7438e640",
+      "uncompressedSha256": "f7f3c08113458ef8c95c093e1dce98df1318e827a8c22fea24a5fca07ed76859"
+    }
+  ],
+  "sources": [
+    {
+      "path": "/tests/browser/frontside-young-maize-world-dense-gpu.js",
+      "httpFile": "sources/0-http.js.gz",
+      "diskFile": "sources/0-disk.js.gz",
+      "servedSha256": "2a4ea472974d5577ee410142e094bed22a3b16fd2623435b106460384166be0a",
+      "diskSha256": "fa966490f63fd3e21ea3d3ae90f47fed8d0a5f2414541b4b74673a07d4085b8d"
+    },
+    {
+      "path": "/src/rendering/scene.js",
+      "httpFile": "sources/1-http.js.gz",
+      "diskFile": "sources/1-disk.js.gz",
+      "servedSha256": "66005207349b62307de4924384a52bedf15511514af3638b838a545a7be042f8",
+      "diskSha256": "775b38d0139eb3e87798d040e9b3748e3d23587b99eb8b67c0aec1e59b114ad5"
+    },
+    {
+      "path": "/tools/lib/frontside-world-young-maize-adapter.mjs",
+      "httpFile": "sources/2-http.js.gz",
+      "diskFile": "sources/2-disk.js.gz",
+      "servedSha256": "8b2fe6f4136303c07cd8dcc275151a93a562c62b68414376cc60255a35e2ec42",
+      "diskSha256": "983f654519b90bbd975b5f87fc9c6ad6b120192e28af4d73d2934e5b4179c2ae"
+    },
+    {
+      "path": "/tools/lib/frontside-dense-young-world-gpu-runner.mjs",
+      "httpFile": "sources/3-http.js.gz",
+      "diskFile": "sources/3-disk.js.gz",
+      "servedSha256": "de0c0ef888b0269cd4849ef540176b1158da4f4e6ec211f264908677c072f727",
+      "diskSha256": "f7f3c08113458ef8c95c093e1dce98df1318e827a8c22fea24a5fca07ed76859"
+    }
+  ],
+  "review": {
+    "reviewer": "root AI assistant",
+    "scope": "Single actual World1257-young still at gameplay distance, recognizable general coverage without obvious gross disappearance/deformation. Not user-human, motion/all-angle/shadowFront/netGPU approval."
+  }
+}
