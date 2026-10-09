@@ -17,13 +17,13 @@ import {mountainBackdropProfile} from './mountain-backdrop-profile.js';
 import {withScreenTarget} from './screen-target.js';
 import {AfricanToon} from './african-toon.js';
 import {skyNight} from './sky.js';
-import {renderScreenPreload,waitForGpuPreload} from './screen-preload.js';
+import {renderScreenPreload,renderScreenPreloadBatched,waitForGpuPreload} from './screen-preload.js';
 
 // Borrows the world renderer, sky and asset collection. Only local geometries,
 // cloned materials and the small instanced crop batch belong to this owner.
 export class LoadingDiorama {
-  constructor(world,{state={day:1,time:0,biome:'sabana'},focusVignette=true,reducedMotion=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches??false}={}) {
-    this.world=world;this.textureOwner=new LoadingTextureOwner();world.assets.asyncTextureImages=true;this.state=state;this.scene=new THREE.Scene();this.plants=new LoadingPlants();this.camera=new THREE.PerspectiveCamera(40,1,.1,80);this.camera.position.set(4.8,3.1,6.4);this.camera.lookAt(0,1.15,0);this.baseQuaternion=this.camera.quaternion.clone();
+  constructor(world,{state={day:1,time:0,biome:'sabana'},focusVignette=true,batchedUpload=false,reducedMotion=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches??false}={}) {
+    this.world=world;this.batchedUpload=batchedUpload;this.textureOwner=new LoadingTextureOwner();world.assets.asyncTextureImages=true;this.state=state;this.scene=new THREE.Scene();this.plants=new LoadingPlants();this.camera=new THREE.PerspectiveCamera(40,1,.1,80);this.camera.position.set(4.8,3.1,6.4);this.camera.lookAt(0,1.15,0);this.baseQuaternion=this.camera.quaternion.clone();
     this.sun=new THREE.DirectionalLight('#ffe2a8',3);this.sun.position.set(-30,55,25);this.ambient=new THREE.HemisphereLight('#ebf1d9','#765b3b',2);this.scene.add(this.sun,this.ambient);
     this.toon=new AfricanToon();this.toon.uniforms.uFineNoise.value=0;
     this.orbit=new LoadingOrbit({reducedMotion});this.focus=new THREE.Vector3(0,1.15,0);this.focusLight=new LoadingFocusLight({enabled:focusVignette});
@@ -87,9 +87,12 @@ export class LoadingDiorama {
     // the first frame. Counts/visibility restored before accepting interaction.
     const saved=[];this.scene.traverse(mesh=>{if(mesh.isInstancedMesh){saved.push([mesh,mesh.count,mesh.visible]);mesh.count=1;mesh.visible=true;}});
     const shadow=world.renderer.shadowMap.enabled;
-    try{world.renderer.shadowMap.enabled=false;await phase('diorama-compile-maize',()=>compileLoadingPrograms(world.renderer,this.scene,this.camera,undefined,{signal:this.abort.signal,cancelled:()=>world.disposed,screen:true}));if(this.disposed)throw Error('Loading diorama cancelled');sync('diorama-upload-maize-soil',()=>renderScreenPreload(world.renderer,this.scene,this.camera));await phase('diorama-compile-sky',()=>compileLoadingPrograms(world.renderer,world.sky.scene,this.camera,undefined,{signal:this.abort.signal,cancelled:()=>world.disposed,screen:true}));await phase('diorama-compile-mist',()=>compileLoadingPrograms(world.renderer,this.mist.scene,this.camera,undefined,{signal:this.abort.signal,cancelled:()=>world.disposed,screen:true}));sync('diorama-upload-mist',()=>renderScreenPreload(world.renderer,this.mist.scene,this.camera));sync('diorama-warm-day-night-sky',()=>{world.sky.render(world.renderer,this.camera,{day:1,time:0});world.sky.render(world.renderer,this.camera,{day:1,time:310});});await phase('diorama-final-fence',()=>waitForGpuPreload(world.renderer,{signal:this.abort.signal,cancelled:()=>this.disposed||world.disposed,getEpoch:()=>world.glResourceEpoch?.stats.epoch??0}));}
+    try{world.renderer.shadowMap.enabled=false;await phase('diorama-compile-maize',()=>compileLoadingPrograms(world.renderer,this.scene,this.camera,undefined,{signal:this.abort.signal,cancelled:()=>world.disposed,screen:true}));if(this.disposed)throw Error('Loading diorama cancelled');if(this.batchedUpload)await phase('diorama-upload-maize-soil-batches',()=>this.uploadMaizeSoilBatched());else sync('diorama-upload-maize-soil',()=>renderScreenPreload(world.renderer,this.scene,this.camera));await phase('diorama-compile-sky',()=>compileLoadingPrograms(world.renderer,world.sky.scene,this.camera,undefined,{signal:this.abort.signal,cancelled:()=>world.disposed,screen:true}));await phase('diorama-compile-mist',()=>compileLoadingPrograms(world.renderer,this.mist.scene,this.camera,undefined,{signal:this.abort.signal,cancelled:()=>world.disposed,screen:true}));sync('diorama-upload-mist',()=>renderScreenPreload(world.renderer,this.mist.scene,this.camera));sync('diorama-warm-day-night-sky',()=>{world.sky.render(world.renderer,this.camera,{day:1,time:0});world.sky.render(world.renderer,this.camera,{day:1,time:310});});await phase('diorama-final-fence',()=>waitForGpuPreload(world.renderer,{signal:this.abort.signal,cancelled:()=>this.disposed||world.disposed,getEpoch:()=>world.glResourceEpoch?.stats.epoch??0}));}
     finally{world.renderer.shadowMap.enabled=shadow;for(const [mesh,count,visible] of saved){mesh.count=count;mesh.visible=visible;}}
     this.prepared=true;return this;
+  }
+  uploadMaizeSoilBatched({nextFrame,now}={}){
+    return renderScreenPreloadBatched(this.world.renderer,this.scene,this.camera,{batchSize:1,frameBudget:6,signal:this.abort.signal,cancelled:()=>this.disposed||this.world.disposed,nextFrame,now,onSubmit:this.world.onLoadingSpan});
   }
   loadBackdropTexture(url){
     const {world}=this;return (typeof Worker!=='undefined'&&typeof createImageBitmap==='function'?world.assets.loadingTexture(url,{flipY:true,premultiplyAlpha:false}):world.assets.textures.loadAsync(url)).then(texture=>{if(this.disposed||world.disposed){texture.dispose();throw new DOMException('Loading diorama cancelled','AbortError');}this.backdropTexture=texture;return texture;});
