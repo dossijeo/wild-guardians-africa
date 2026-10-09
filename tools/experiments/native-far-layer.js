@@ -11,11 +11,15 @@ export class NativeFarLayer {
   if(typeof prepare!=='function')throw Error('Explicit GPU preparation is required');
   this.scene=scene;this.source=source;this.texture=texture;this.metadata=metadata;this.options=options;this.stream=stream;this.prepare=prepare;this.create=create;
   this.treesOnly=treesOnly;this.attachData=attachData;this.selectTrees=selectTrees;
-  this.transitions=new FarTreeTransitions();this.fade=new NativeFarCoverage(metadata.localBase,{...options,treeHeight:metadata.impostorHeight});this.current=null;this.epoch=0;this.closed=false;this.suppressed=new Set();this.revision=0;
+  this.transitions=new FarTreeTransitions();this.fade=new NativeFarCoverage(metadata.localBase,{...options,treeHeight:metadata.impostorHeight});this.current=null;this.epoch=0;this.closed=false;this.suppressed=new Set();this.revision=0;this.pendingPreparations=0;
  }
  async request(key,request){
   if(this.closed)return null;
   if(this.current?.key===key&&!this.stream.pending)return this.current;
+  // This includes ground seam preparation and the candidate GPU fence, which
+  // can still be pending after the procedural worker has returned its data.
+  this.pendingPreparations++;
+  try {
   const epoch=++this.epoch,result=await this.stream.request(key,{...request,treesOnly:this.treesOnly});
   if(this.closed||epoch!==this.epoch||!result)return null;
   const trees=this.selectTrees(result.data.trees).map(tree=>treeAtlasAnchor(tree,this.metadata.localBase));
@@ -28,6 +32,7 @@ export class NativeFarLayer {
   this.scene.add(candidate.impostors);this.current={key,prototype:candidate,trees,treeById:new Map(trees.map(tree=>[tree.id,tree]))};this.revision++;
   if(previous){this.scene.remove(previous.prototype.impostors);previous.prototype.dispose({disposeTexture:false});}
   return this.current;
+  } finally {this.pendingPreparations--;}
  }
  update(chunks,camera,coverage,gpuReady,dt,origin={x:0,z:0},suppressed=this.suppressed,nativeCoverage=null){
   if(this.closed||!this.current)return;
