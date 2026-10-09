@@ -1,0 +1,284 @@
+{
+  "runId": 37998755565,
+  "source": "f7383473745c7fdf0be4551ecf3547989e9d34b1",
+  "result": {
+    "conclusion": "failure",
+    "ok": false,
+    "errors": [
+      "Error: Production world did not finish loading"
+    ],
+    "loadingAtFinish": {
+      "canvas": {
+        "height": 720,
+        "width": 1028
+      },
+      "displayedProgress": "90",
+      "focused": true,
+      "phaseLabel": "Bringing your world to life...",
+      "readyGateReached": false,
+      "scope": "Presentation snapshot only; displayed progress and canvas dimensions do not establish world readiness or GPU identity.",
+      "stageBusy": "true",
+      "visibility": "visible",
+      "worldWaitMs": 90061.5
+    },
+    "loadingRecipe": {
+      "resourceOverlap": true
+    }
+  },
+  "context": {
+    "contextLost": false,
+    "renderer": "WebKit WebGL",
+    "scope": "Existing World renderer context at finish only; identity is not a measured cause.",
+    "unmaskedRenderer": "ANGLE (Microsoft, Microsoft Basic Render Driver (0x0000008C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "unmaskedVendor": "Google Inc. (Microsoft)",
+    "vendor": "WebKit",
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+  },
+  "early": {
+    "dropped": 0,
+    "rows": [
+      {
+        "begun": 1,
+        "completed": 1,
+        "failed": 0,
+        "firstStart": 60373.09999999998,
+        "label": "app-prepared-pending",
+        "lastDuration": 46742.5,
+        "lastEnd": 107115.59999999998,
+        "lastStart": 60373.09999999998
+      },
+      {
+        "begun": 1,
+        "completed": 1,
+        "failed": 0,
+        "firstStart": 60373.80000000005,
+        "label": "diorama-prepare-sky",
+        "lastDuration": 9440,
+        "lastEnd": 69813.80000000005,
+        "lastStart": 60373.80000000005
+      },
+      {
+        "begun": 1,
+        "completed": 1,
+        "failed": 0,
+        "firstStart": 60374.59999999998,
+        "label": "diorama-prepare-catalogues",
+        "lastDuration": 1136.2000000000698,
+        "lastEnd": 61510.80000000005,
+        "lastStart": 60374.59999999998
+      },
+      {
+        "begun": 1,
+        "completed": 1,
+        "failed": 0,
+        "firstStart": 61511.09999999998,
+        "label": "diorama-prepare-maize-model",
+        "lastDuration": 19208.600000000093,
+        "lastEnd": 80719.70000000007,
+        "lastStart": 61511.09999999998
+      },
+      {
+        "begun": 1,
+        "completed": 1,
+        "failed": 0,
+        "firstStart": 61511.90000000002,
+        "label": "diorama-prepare-maize-bridges",
+        "lastDuration": 40121.39999999991,
+        "lastEnd": 101633.29999999992,
+        "lastStart": 61511.90000000002
+      },
+      {
+        "begun": 1,
+        "completed": 1,
+        "failed": 0,
+        "firstStart": 61512.20000000007,
+        "label": "diorama-prepare-soil-texture",
+        "lastDuration": 6635.79999999993,
+        "lastEnd": 68148,
+        "lastStart": 61512.20000000007
+      },
+      {
+        "begun": 1,
+        "completed": 1,
+        "failed": 0,
+        "firstStart": 61512.5,
+        "label": "diorama-prepare-mountain-atlas",
+        "lastDuration": 6775.20000000007,
+        "lastEnd": 68287.70000000007,
+        "lastStart": 61512.5
+      },
+      {
+        "begun": 1,
+        "completed": 1,
+        "failed": 0,
+        "firstStart": 101637.20000000008,
+        "label": "diorama-prepare-maize-batch",
+        "lastDuration": 142.69999999995343,
+        "lastEnd": 101779.90000000002,
+        "lastStart": 101637.20000000008
+      },
+      {
+        "begun": 1,
+        "completed": 1,
+        "failed": 0,
+        "firstStart": 101780.70000000008,
+        "label": "diorama-compile-maize",
+        "lastDuration": 4197.5,
+        "lastEnd": 105978.20000000008,
+        "lastStart": 101780.70000000008
+      },
+      {
+        "begun": 0,
+        "completed": 1,
+        "failed": 0,
+        "firstStart": 105978.40000000002,
+        "label": "diorama-upload-maize-soil",
+        "lastDuration": 116,
+        "lastEnd": 106094.40000000002,
+        "lastStart": 105978.40000000002
+      },
+      {
+        "begun": 1,
+        "completed": 1,
+        "failed": 0,
+        "firstStart": 106094.40000000002,
+        "label": "diorama-compile-sky",
+        "lastDuration": 559.1999999999534,
+        "lastEnd": 106653.59999999998,
+        "lastStart": 106094.40000000002
+      },
+      {
+        "begun": 1,
+        "completed": 1,
+        "failed": 0,
+        "firstStart": 106653.70000000008,
+        "label": "diorama-compile-mist",
+        "lastDuration": 277.30000000004657,
+        "lastEnd": 106931.00000000012,
+        "lastStart": 106653.70000000008
+      },
+      {
+        "begun": 0,
+        "completed": 1,
+        "failed": 0,
+        "firstStart": 106931.09999999998,
+        "label": "diorama-upload-mist",
+        "lastDuration": 1.5,
+        "lastEnd": 106932.59999999998,
+        "lastStart": 106931.09999999998
+      },
+      {
+        "begun": 0,
+        "completed": 1,
+        "failed": 0,
+        "firstStart": 106932.59999999998,
+        "label": "diorama-warm-day-night-sky",
+        "lastDuration": 7.800000000046566,
+        "lastEnd": 106940.40000000002,
+        "lastStart": 106932.59999999998
+      },
+      {
+        "begun": 1,
+        "completed": 1,
+        "failed": 0,
+        "firstStart": 106940.40000000002,
+        "label": "diorama-final-fence",
+        "lastDuration": 175.10000000009313,
+        "lastEnd": 107115.50000000012,
+        "lastStart": 106940.40000000002
+      },
+      {
+        "begun": 1,
+        "completed": 1,
+        "failed": 0,
+        "firstStart": 107115.70000000008,
+        "label": "app-pre-world-setup",
+        "lastDuration": 2893.399999999907,
+        "lastEnd": 110009.09999999998,
+        "lastStart": 107115.70000000008
+      }
+    ],
+    "scope": "First 16 selected early labels; counts and first/latest timestamps only, not a timeline or additive CPU/GPU durations."
+  },
+  "activeSpans": [
+    {
+      "duration": null,
+      "elapsed": 40427.40000000014,
+      "end": null,
+      "failed": false,
+      "label": "app-world-load",
+      "start": 110009.09999999998
+    },
+    {
+      "duration": null,
+      "elapsed": 3607.3000000000466,
+      "end": null,
+      "failed": false,
+      "label": "initial-far-region-worker",
+      "start": 146829.20000000007
+    },
+    {
+      "duration": null,
+      "elapsed": 1289.8000000000466,
+      "end": null,
+      "failed": false,
+      "label": "load-hands-ready",
+      "start": 149146.70000000007
+    }
+  ],
+  "compilation": {
+    "active": [],
+    "at": 150436.40000000002,
+    "completed": 0,
+    "droppedIdentities": 0,
+    "droppedJobs": 0,
+    "faults": 0,
+    "lastFinished": null,
+    "rejected": 0,
+    "scope": "Job selection and pending results of existing isReady calls only. First observed selection is not program creation or exhaustive mesh consumers. Nested elapsed values are not additive CPU/GPU time.",
+    "started": 0
+  },
+  "chunks": {
+    "busy": true,
+    "closed": false,
+    "desired": 25,
+    "epoch": 0,
+    "failed": 0,
+    "queued": 9
+  },
+  "transfers": {
+    "cache": {
+      "application-cache": 3,
+      "browser-cache": 0,
+      "network": 232,
+      "unknown": 0,
+      "validated-cache": 0
+    },
+    "count": 235,
+    "disposed": false,
+    "failed": 0,
+    "loadedBytes": 125729695,
+    "omitted": 0,
+    "pending": 0,
+    "rows": [],
+    "scope": "Observed transfer records only; unknown is not a cache hit. End null can include post-transfer decoding/preparation."
+  },
+  "lastCompleted": {
+    "duration": 1,
+    "end": 149146.70000000007,
+    "failed": false,
+    "label": "hands-constructor",
+    "start": 149145.70000000007
+  },
+  "nativeVisibility": "Skipped because the original primary smoke failed; no restoration result.",
+  "acceptance": "FAIL; no promotion or retry authorized.",
+  "timingScope": "Awaited intervals and active parent/child spans are nested or overlapping. Do not sum them as exclusive CPU/GPU/physical transport time. A single changing random New seed and runner does not establish causal scheduling benefit or regression.",
+  "ciBuild": {
+    "seconds": 5.7,
+    "webPackageFiles": 711,
+    "webPackageBytes": 445276552,
+    "relativeLinks": 860,
+    "runtimeGLBs": 22
+  },
+  "artifactsMetadataOnly": "EXE/installer were built and uploaded; not downloaded or executed locally."
+}
