@@ -7,6 +7,43 @@ into current-main acceptance.
 
 ## Current-state update through main 8e1909d8
 
+### Superseding checkpoint — 10 October, main 5a3e9e74
+
+Main source8ab2381e has terminal Validate Game success38001296018: all3785
+tests, build and direct itch archive checks pass. Original complete logs and
+byte verification are [archived](validate-main-38001296018/README.md). Later
+main commits through5a3e9e74 only record evidence. This web success does not
+accept Windows, current campaign balance, or unperformed physical QA.
+
+The original normal Windows source9c753d32 and8ab2381e both fail the unchanged
+90-second gate; their [9c archive](windows-loading-regression/normal-9c753d32-38000980557/review.md)
+and [8ab archive](windows-loading-regression/normal-8ab-38001296015/review.md)
+retain official reports. The isolated f92c6872 diagnostic also fails at85%,
+with all25 chunks loaded, transfers idle and all six hand assets adopted.
+Its [original timing evidence](windows-loading-regression/gltf-delivery-design/native-f92c6872/root-review.md)
+does not establish an exclusive GPU, network or parsing cause.
+
+Strict two-batch source24b76926 has root verifier and86/86 directed-test PASS.
+Exactly one opt-in [Windows run38005088945](https://github.com/dossijeo/wild-guardians-africa/actions/runs/38005088945)
+is now live, with compile_window=true and resource_overlap=false. Original
+serial behavior, assets, budgets and readiness gates remain. No performance
+benefit, native success or promotion is inferred while it runs. See the
+[bounded root review](windows-loading-regression/two-batch-window-root-review.md).
+
+The single20-night horde comparison from frozen36a0e204 ended exit2/incomplete
+after the responsible arm reached day20. Its strike reconciliation failed;
+the runner then discarded the returned detailed state, retaining only the
+error and progress. The neglect arm was not run. This is not campaign acceptance
+or evidence of a particular mismatch quantity. Root found an audit omission:
+native worker encounters also consume strike budgets and emit WorkerHit or
+WorkerIncapacitated, which that equality excludes. Existing encounter tests
+pass11/11. The isolated agent is authorized to preserve results before audit,
+test failure-path persistence and correct event coverage without changing
+gameplay, relaxing equality or rerunning the pilot before frozen review.
+Original failures must remain preserved. Centre800, minimum wage30, actual paid
+defence/repair evidence, FIFO/delivery and global daylight inactivity<25%
+remain mandatory; the100-night/30-combination scope is still open.
+
 ### Superseding checkpoint — 10 October, main b539fb1b
 
 The isolated resource-overlap run37998755565/sourcef7383473 is terminal
