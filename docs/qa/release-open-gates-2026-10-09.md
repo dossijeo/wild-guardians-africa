@@ -47,7 +47,12 @@ diagnostics across six biomes. [Run identity](campaign-ci/current-pr16-dispatch-
 records run 37895465546 and both job IDs. Both were observed in progress at
 checkout; only authoritative subsequent job state/artifacts may establish
 completion. The old failure is retained and the activity/survival gate remains
-open until terminal evidence is audited.
+open until terminal evidence is audited. The separate poor-management job has
+now completed: root independently verified 324 source hashes plus the runner,
+six native snapshots/accounting/delivery audits and exact summaries. Five
+biomes naturally lose, while Canyon survives the ten-night diagnostic; neither
+outcome is altered. See [current poor-management evidence](campaign-ci/current-pr16-poor/README.md).
+The responsible hundred-night job remains separate and unfinished.
 
 The three distinct saved Desert stalls now have bounded native recovery fixes
 in merged PR15, with root 45/45 directed tests and both exact-head CI checks

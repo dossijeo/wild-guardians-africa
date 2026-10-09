@@ -1,0 +1,7 @@
+Initial root archive audit exited 1 before domain acceptance:
+AssertionError at verify.mjs line 30: '712' !== 712.
+The auditor incorrectly assumed the simulation report's seed remained numeric.
+The unchanged report/state use the engine's canonical string seed "712";
+the unchanged policy records numeric 712. Both forms are now checked exactly
+in their respective schemas. No runner, original artifact or simulation changed;
+the original six campaigns were not rerun to repair this audit assumption.
