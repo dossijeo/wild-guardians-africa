@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {Scene,Mesh,BoxGeometry,MeshStandardMaterial,PerspectiveCamera} from 'three';
+import {LoadingFrameSlack} from '../src/rendering/loading-frame-slack.js';
 import {BuildingDestructionPass} from '../src/rendering/buildings.js';
 function setup(){
  let target={name:'previous'},complete,reject;const waiting=new Promise((resolve,fail)=>{complete=resolve;reject=fail;});
@@ -74,3 +75,8 @@ test('optional per-batch depth witnesses separate synchronous submission, progra
  await s.pipeline.prepareDepth(new PerspectiveCamera(),s.world,{batchSize:1,now:()=>clock,compile:()=>{clock+=2;return Promise.resolve();},onPrepare:span=>{spans.push(span);throw Error('observer');},nextFrame:async()=>{frames++;clock+=10;assert.deepEqual(s.world.children.map(m=>m.material),s.originals);assert.equal(s.renderer.getRenderTarget(),s.prior);assert.equal(s.renderer.shadowMap.enabled,true);}});
  const submit=spans.filter(s=>s.label==='loading-depth-batch-submit'),programs=spans.filter(s=>s.label==='loading-depth-batch-program-wait'),waits=spans.filter(s=>s.label==='loading-depth-batch-frame-wait');assert.equal(frames,3);assert.deepEqual(submit.map(s=>s.batchIndex),[0,1,2]);assert.ok(submit.every(s=>s.duration===2&&s.objects===1&&!s.failed));assert.equal(programs.length,3);assert.ok(waits.every(s=>s.duration===10));s.cleanup();
 });
+
+function depthSlack(){const owner=new LoadingFrameSlack({targetMs:16});for(const timestamp of [0,16,32,48])owner.observeFrame({timestamp,start:timestamp+.2,end:timestamp+1.2});return owner;}
+test('opt-in depth slack coalesces cheap batches only inside a delivered presentation frame',async()=>{const s=setup();let clock=50,frames=0,calls=0;const owner=depthSlack();await s.pipeline.prepareDepth(new PerspectiveCamera(),s.world,{batchSize:1,frameSlack:owner,now:()=>clock,compile:()=>{clock+=1;calls++;return Promise.resolve();},nextFrame:async()=>{frames++;}});assert.equal(calls,3);assert.equal(frames,0);assert.equal(owner.stats.adaptiveDecisions,3);assert.deepEqual(s.world.children.map(m=>m.material),s.originals);assert.equal(s.renderer.getRenderTarget(),s.prior);assert.equal(s.renderer.shadowMap.enabled,true);s.cleanup();});
+test('opt-in depth slack keeps every original barrier when presentation evidence is missing',async()=>{const s=setup();let frames=0;const owner=new LoadingFrameSlack();await s.pipeline.prepareDepth(new PerspectiveCamera(),s.world,{batchSize:1,frameSlack:owner,compile:()=>Promise.resolve(),nextFrame:async()=>{frames++;}});assert.equal(frames,3);assert.equal(owner.stats.adaptiveDecisions,0);s.cleanup();});
+test('cancel after compilation is observed even when a trustworthy depth lane could skip the next barrier',async()=>{const s=setup(),signal=new AbortController();let calls=0,frames=0,clock=50;await assert.rejects(s.pipeline.prepareDepth(new PerspectiveCamera(),s.world,{batchSize:1,frameSlack:depthSlack(),signal:signal.signal,now:()=>clock,compile:()=>{calls++;clock++;signal.abort();return Promise.resolve();},nextFrame:async()=>{frames++;}}),/cancelled/);assert.equal(calls,1);assert.equal(frames,0);assert.deepEqual(s.world.children.map(m=>m.material),s.originals);assert.equal(s.renderer.getRenderTarget(),s.prior);assert.equal(s.renderer.shadowMap.enabled,true);s.cleanup();});

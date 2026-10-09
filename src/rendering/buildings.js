@@ -159,11 +159,12 @@ export class BuildingDestructionPass {
     }finally{renderer.setRenderTarget(target);renderer.setClearColor(clearColor,clearAlpha);renderer.autoClear=autoClear;renderer.shadowMap.enabled=shadows;}
   }
   depthCaptureOptions(){return {optimized:this.optimizedDepth!==false,visibleOnly:this.visibleDepthOnly!==false,nonEmptyOnly:this.nonEmptyDepthOnly===true,stockAlpha:this.stockAlphaDepth===true,materialArrays:this.materialArrayDepth===true};}
-  async prepareDepth(camera,world,{compile=(scene,camera,target)=>this.renderer.compileAsync(scene,camera,target),batchSize=0,nextFrame,cancelled=()=>false,signal,now=()=>performance.now(),timeout=30000,pollIntervalMs=100,onPrepare}={}){
+  async prepareDepth(camera,world,{compile=(scene,camera,target)=>this.renderer.compileAsync(scene,camera,target),batchSize=0,nextFrame,cancelled=()=>false,signal,now=()=>performance.now(),timeout=30000,pollIntervalMs=100,onPrepare,frameSlack}={}){
     if(batchSize){
       if(!Number.isInteger(batchSize)||batchSize<1)throw Error('Invalid depth preload batch size');
       const options=this.depthCaptureOptions(),objects=[];world[options.visibleOnly?'traverseVisible':'traverse'](object=>{if(object.material)objects.push(object);});
       const stats={specialized:0,fallback:0,excluded:0,emptySkipped:0,stockAlphaSpecialized:0};
+      const lane=frameSlack?.createLane();
       const check=()=>{if(signal?.aborted||cancelled())throw Error('Loading depth preload cancelled');};
       for(let start=0;start<objects.length;start+=batchSize){
         check();
@@ -172,9 +173,15 @@ export class BuildingDestructionPass {
         // state synchronously before awaiting its programs or the next frame.
         const witness=onPrepare?span=>{try{onPrepare({...span,batchIndex:start/batchSize,objects:batch.length});}catch{}}:undefined;
         const submission=()=>this.prepareDepth(camera,view,{compile:(scene,camera)=>compile(scene,camera,world)});
+        const submitStart=lane?now():0;
         const pending=loadingSyncWitness(witness,'loading-depth-batch-submit',submission,now);
+        lane?.recordWork(now()-submitStart);
         await loadingAwaitWitness(witness,'loading-depth-batch-program-wait',()=>pending,now);
         for(const key in stats)stats[key]+=this.depthWarmStats[key]??0;
+        check();
+        // Optional QA lane uses real presentation deadlines. With missing, late
+        // or uncertain observations, retain the original unconditional barrier.
+        if(lane&&!lane.shouldYield(now(),0,6,true))continue;
         const waiting=now();await loadingAwaitWitness(witness,'loading-depth-batch-frame-wait',()=>waitGpuFrame({signal,nextFrame,pollIntervalMs,check:()=>{check();if(now()-waiting>timeout)throw Error('Loading depth preload timed out');}}),now);
       }
       check();this.depthWarmStats=stats;return;

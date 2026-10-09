@@ -18,8 +18,8 @@ export class LoadingFrameSlack {
   const costs=new Float64Array(8);let count=0,index=0;
   return {
    recordWork:duration=>{if(this.closed||!Number.isFinite(duration)||duration<0)return;this.stats.workSteps++;this.stats.workCpuMs+=duration;costs[index]=duration;index=(index+1)%costs.length;count=Math.min(count+1,costs.length);},
-   shouldYield:(now,begin,fallback)=>{
-    const legacy=reason=>{this.stats.fallbackDecisions++;this.stats.fallbackReasons[reason]=(this.stats.fallbackReasons[reason]??0)+1;return now-begin>=fallback;};
+   shouldYield:(now,begin,fallback,mandatoryFallback=false)=>{
+    const legacy=reason=>{this.stats.fallbackDecisions++;this.stats.fallbackReasons[reason]=(this.stats.fallbackReasons[reason]??0)+1;return mandatoryFallback||now-begin>=fallback;};
     const f=this.frame;
     if(fallback===0||this.closed||!f||this.count<3||!count||!Number.isFinite(now)||now<f.end)return legacy('missing-or-invalid');
     // Fixed small histories only; sorting is opt-in and never a world resource.
