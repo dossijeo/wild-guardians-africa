@@ -21,7 +21,12 @@ export class SpiritVoice {
     const fallback=(reason='media-error')=>{if(current()){this.stop();this.failure=reason;this.state('fallback');}};
     try{audio=this.create(this.url(record.path));this.audio=audio;audio.preload='auto';audio.volume=this.volume();this.state('loading');
       audio.onended=()=>{if(!current())return;this.stop();this.state('ended');onEnded?.();};audio.onerror=()=>fallback('media-error');
-      audio.onwaiting=audio.onstalled=()=>{if(current()){waiting=true;clearTimeout(this.timer);this.timer=setTimeout(()=>fallback('stalled-timeout'),this.timeout);}};
+      const waitForRecovery=()=>{if(current()){waiting=true;clearTimeout(this.timer);this.timer=setTimeout(()=>fallback('stalled-timeout'),this.timeout);}};
+      audio.onwaiting=waitForRecovery;
+      // A stalled download does not imply stopped playback: buffered narration
+      // can keep speaking. Only arm recovery when playback actually lacks data
+      // or is already waiting. Preserve the original loading watchdog otherwise.
+      audio.onstalled=()=>{if(current()&&(waiting||audio.paused||!(audio.readyState>=3)))waitForRecovery();};
       audio.onplaying=()=>{if(current()){waiting=false;clearTimeout(this.timer);this.state('playing');}};
       this.timer=setTimeout(()=>fallback('load-timeout'),this.timeout);
       // A queued play resolution does not prove playback recovered after waiting.

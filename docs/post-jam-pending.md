@@ -870,3 +870,14 @@ visual de los cuatro labs en ambas orientaciones sigue abierta: CUA todavía
 falla al inicializar los assets del kernel. Windows y la matriz de campañas
 mantienen sus criterios independientes.
 [Log completo, SHA y alcance](qa/validate-f5e796c2/README.md).
+
+## Voz del espíritu y descarga estancada — 2026-10-09
+
+Separados stalled (descarga) y waiting (reproducción sin datos): una voz que
+todavía reproduce su búfer no debe cortarse por el temporizador de recuperación
+de red. La regresión nueva falla con el controlador anterior;22 pruebas dirigidas
+pasan con la corrección, conservando ended, interrupción manual y recuperaciones
+reales. Compilación y verificaciones de audio/sintaxis pasan. Falta comprobación
+audible en navegador físico; no se identifica este caso como causa demostrada
+del aviso original del usuario.
+[Reproductor, negativo y alcance](qa/spirit-buffered-stall/README.md).
