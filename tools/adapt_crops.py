@@ -1,6 +1,8 @@
 """Port the audited opaque crop growth/morph shaders, without the lab's cap/UI."""
 import pathlib
 root=pathlib.Path(__file__).resolve().parents[1]
+if (root/'content/manifests/crops-v4.json').exists():
+    raise SystemExit('CULT V4 uses tools/bake_crops_lab_v4.mjs; legacy V3 regeneration would discard authored repairs and baked bridges.')
 s=(root/'references/extracted/Bioma_Cultivos_Lab_V3_Morph_Local/script-4.js').read_text(encoding='utf-8')
 shader=s[s.index('const GROWTH_DECL='):s.index('function cycleDuration(')]
 shader=shader.replace('const i=meta.cropIndex*5+meta.stage-1,geo=o.geometry;','const i=meta.cropIndex*5+meta.stage-1,geo=o.geometry.clone();')

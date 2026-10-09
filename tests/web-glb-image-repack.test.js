@@ -32,10 +32,12 @@ async function fixture(){
  const json={asset:{version:'2.0'},buffers:[{byteLength:parts.reduce((n,b)=>n+b.length,0)},{byteLength:48,extensions:{EXT_meshopt_compression:{fallback:true}}}],bufferViews:[colorView,normalView,{buffer:1,byteOffset:0,byteLength:48,extensions:{EXT_meshopt_compression:{...compressed,byteStride:12,count:4,mode:'ATTRIBUTES',filter:'NONE'}}}],images:[{mimeType:'image/webp',bufferView:0},{mimeType:'image/webp',bufferView:1}],textures:[{extensions:{EXT_texture_webp:{source:0}}},{extensions:{EXT_texture_webp:{source:1}}}],materials:[{pbrMetallicRoughness:{baseColorTexture:{index:0}},normalTexture:{index:1}}],extensionsUsed:['EXT_meshopt_compression','EXT_texture_webp'],extensionsRequired:['EXT_meshopt_compression','EXT_texture_webp']};
  return {bytes:writeGlb(json,Buffer.concat(parts)),color,normal,rgba};
 }
-test('all twenty runtime GLBs retain exact compressed geometry, animation and skin storage',async t=>{
- const manifest=JSON.parse(await readFile(new URL('../content/manifests/web-assets.json',import.meta.url),'utf8'));assert.equal(manifest.records.length,20);
+test('all textured runtime GLBs retain exact compressed geometry, animation and skin storage',async t=>{
+ const manifest=JSON.parse(await readFile(new URL('../content/manifests/web-assets.json',import.meta.url),'utf8'));assert.ok(manifest.records.length>=20);
  for(const record of manifest.records){
-  const bytes=await readFile(new URL('../public/'+record.runtime,import.meta.url)),before=readGlb(bytes),index=before.json.images.findIndex((_,i)=>!gltfImageRoles(before.json,i).requiresExactPixels);
+  const bytes=await readFile(new URL('../public/'+record.runtime,import.meta.url)),before=readGlb(bytes);
+  if(!(before.json.images?.length)){assert.ok(before.json.bufferViews.some(v=>v.extensions?.EXT_meshopt_compression),'Geometry-only GLB retains compressed payloads');continue;}
+  const index=before.json.images.findIndex((_,i)=>!gltfImageRoles(before.json,i).requiresExactPixels);
   assert.ok(index>=0);const source=physical(before.bin,before.json.bufferViews[before.json.images[index].bufferView]),originalHash=hash(bytes);
   const replacement=withJunkChunk(source),output=await replaceWebGlbColorImages(bytes,new Map([[index,replacement]])),after=readGlb(output);
   assertPreserved(before,after,new Set([index]));assert.equal(hash(bytes),originalHash);

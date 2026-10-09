@@ -9,6 +9,7 @@
 import * as THREE from 'three';
 import {Assets,json} from '../../src/rendering/assets.js';
 import {createCropBatch} from '../../src/rendering/crop-batch.js';
+import {loadCropBridges} from '../../src/rendering/crop-library.js';
 import {AfricanToon} from '../../src/rendering/african-toon.js';
 import * as Game from '../../src/simulation/game.js';
 import {advancePlant,waterPlant} from '../../src/simulation/crops.js';
@@ -18,7 +19,7 @@ import {SaveRepository,serialize} from '../../src/persistence/snapshots.js';
 const ids=['maiz','algodon','girasol','platano','sorgo','mijo','yuca','batata'],marks=[.065,.27,.53,.78,1];
 const canvas=document.querySelector('#world'),status=document.querySelector('#status'),summary=document.querySelector('#summary');
 const errors=[];addEventListener('error',e=>errors.push(e.message));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
-const assets=new Assets(),models=await json('/content/models.json'),gltf=await assets.model(models.find(m=>m.source.includes('Cultivos')).url),bridges=await json('/content/crop-bridges.json');
+const assets=new Assets(),models=await json('/content/models.json'),gltf=await assets.model(models.find(m=>m.source.includes('Cultivos')).url),bridges=await loadCropBridges(await json('/content/crop-bridges.json'),url=>assets.model(url));
 const repo=new SaveRepository(localStorage),slotId='qa-native-crop-reload';
 const nav={placement:()=>({valid:true,suppress:[]}),setState:()=>{},terrainValid:()=>true,walkable:()=>true,path:(_start,end)=>[end]};
 let renderer,scene,camera,batch,toon,sun,state,rotation=0,report={};
