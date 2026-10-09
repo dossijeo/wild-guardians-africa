@@ -1,0 +1,234 @@
+TAP version 13
+# (node:11432) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: early request starts before consumption and adopts the exact descriptor/result once without a second worker
+ok 1 - early request starts before consumption and adopts the exact descriptor/result once without a second worker
+  ---
+  duration_ms: 11.9271
+  ...
+# Subtest: early and eventual request descriptors generate byte-identical data in all six biomes
+ok 2 - early and eventual request descriptors generate byte-identical data in all six biomes
+  ---
+  duration_ms: 275.7251
+  ...
+# Subtest: changed descriptor aborts speculative work and uses a real fresh request
+ok 3 - changed descriptor aborts speculative work and uses a real fresh request
+  ---
+  duration_ms: 3.5326
+  ...
+# Subtest: world cancellation aborts background worker and prevents late ignored-abort data adoption
+ok 4 - world cancellation aborts background worker and prevents late ignored-abort data adoption
+  ---
+  duration_ms: 8.2287
+  ...
+# Subtest: regional request cancellation aborts a matched background worker
+ok 5 - regional request cancellation aborts a matched background worker
+  ---
+  duration_ms: 4.4795
+  ...
+# Subtest: background failure is observed and retained for eventual readiness
+ok 6 - background failure is observed and retained for eventual readiness
+  ---
+  duration_ms: 3.8154
+  ...
+# Subtest: a consumer arriving before manifest does not launch a duplicate fallback worker
+ok 7 - a consumer arriving before manifest does not launch a duplicate fallback worker
+  ---
+  duration_ms: 3.656
+  ...
+# Subtest: an already cancelled world starts neither manifest fetch nor worker
+ok 8 - an already cancelled world starts neither manifest fetch nor worker
+  ---
+  duration_ms: 2.4239
+  ...
+# Subtest: speed or opaque zero counters never manufacture a cache hit
+ok 9 - speed or opaque zero counters never manufacture a cache hit
+  ---
+  duration_ms: 6.515
+  ...
+# Subtest: confirmed cache contributes zero download time and bytes
+ok 10 - confirmed cache contributes zero download time and bytes
+  ---
+  duration_ms: 1.6596
+  ...
+# Subtest: overlapping real missing transfers count wall time once
+ok 11 - overlapping real missing transfers count wall time once
+  ---
+  duration_ms: 0.4155
+  ...
+# Subtest: chunked totals remain estimated until body completion and cannot claim completion early
+ok 12 - chunked totals remain estimated until body completion and cannot claim completion early
+  ---
+  duration_ms: 0.3279
+  ...
+# Subtest: late updates cannot revive a closed loading owner
+ok 13 - late updates cannot revive a closed loading owner
+  ---
+  duration_ms: 1.4115
+  ...
+# Subtest: completed transport stops accruing network time while native parsing remains pending
+ok 14 - completed transport stops accruing network time while native parsing remains pending
+  ---
+  duration_ms: 0.311
+  ...
+# Subtest: cached response remains native-pending but contributes zero transfer weight before parsing finishes
+ok 15 - cached response remains native-pending but contributes zero transfer weight before parsing finishes
+  ---
+  duration_ms: 0.2615
+  ...
+# Subtest: weighted real milestones remain monotonic and cannot complete before readiness
+ok 16 - weighted real milestones remain monotonic and cannot complete before readiness
+  ---
+  duration_ms: 3.5456
+  ...
+# Subtest: failed load retains diagnostics and cannot signal readiness
+ok 17 - failed load retains diagnostics and cannot signal readiness
+  ---
+  duration_ms: 4.4471
+  ...
+# Subtest: loading plants are optional, bounded, non-overlapping and never reach 100% prematurely
+ok 18 - loading plants are optional, bounded, non-overlapping and never reach 100% prematurely
+  ---
+  duration_ms: 1.0843
+  ...
+# Subtest: new seedling catches moving progress continuously within one second
+ok 19 - new seedling catches moving progress continuously within one second
+  ---
+  duration_ms: 0.6381
+  ...
+# Subtest: cheap submissions share one CPU budget, then yield and reset after the frame
+ok 20 - cheap submissions share one CPU budget, then yield and reset after the frame
+  ---
+  duration_ms: 3.1686
+  ...
+# Subtest: ordinary zero budget preserves one yield per submission
+ok 21 - ordinary zero budget preserves one yield per submission
+  ---
+  duration_ms: 1.715
+  ...
+# Subtest: yield failure propagates and invalid budgets reject
+ok 22 - yield failure propagates and invalid budgets reject
+  ---
+  duration_ms: 2.5743
+  ...
+# Subtest: suspended frame cannot prevent owner cancellation
+ok 23 - suspended frame cannot prevent owner cancellation
+  ---
+  duration_ms: 14.2626
+  ...
+# Subtest: deadline remains bounded when no animation frame arrives
+ok 24 - deadline remains bounded when no animation frame arrives
+  ---
+  duration_ms: 1.3399
+  ...
+# Subtest: cancelled cheap work cannot continue inside its CPU budget
+ok 25 - cancelled cheap work cannot continue inside its CPU budget
+  ---
+  duration_ms: 0.3782
+  ...
+# Subtest: optional yield witness separates elapsed budget from awaited frame and cannot break readiness
+ok 26 - optional yield witness separates elapsed budget from awaited frame and cannot break readiness
+  ---
+  duration_ms: 0.5947
+  ...
+# Subtest: CPU budget accumulates synchronous work across microtasks and ignores readiness wall waiting
+ok 27 - CPU budget accumulates synchronous work across microtasks and ignores readiness wall waiting
+  ---
+  duration_ms: 1.4752
+  ...
+# Subtest: an existing presentation RAF during readiness resets CPU work without requesting a redundant frame
+ok 28 - an existing presentation RAF during readiness resets CPU work without requesting a redundant frame
+  ---
+  duration_ms: 0.8834
+  ...
+# Subtest: CPU-budget cancellation still wakes a suspended frame and prevents further submissions
+ok 29 - CPU-budget cancellation still wakes a suspended frame and prevents further submissions
+  ---
+  duration_ms: 0.9183
+  ...
+# Subtest: CPU work recorded after an awaited RAF belongs to its new epoch and is not lost
+ok 30 - CPU work recorded after an awaited RAF belongs to its new epoch and is not lost
+  ---
+  duration_ms: 0.5583
+  ...
+# Subtest: a missing presentation epoch never resets accumulated CPU across async continuations
+ok 31 - a missing presentation epoch never resets accumulated CPU across async continuations
+  ---
+  duration_ms: 0.3315
+  ...
+# Subtest: screen preload submits on the backbuffer and restores target, viewport, scissor and clearing after a draw error
+ok 32 - screen preload submits on the backbuffer and restores target, viewport, scissor and clearing after a draw error
+  ---
+  duration_ms: 4.0311
+  ...
+# Subtest: GPU readiness waits across frames without a blocking wait and deletes the fence
+ok 33 - GPU readiness waits across frames without a blocking wait and deletes the fence
+  ---
+  duration_ms: 3.5031
+  ...
+# Subtest: cancellation while waiting rejects readiness and releases its fence
+ok 34 - cancellation while waiting rejects readiness and releases its fence
+  ---
+  duration_ms: 0.6249
+  ...
+# Subtest: failed and expired waits release their fences
+ok 35 - failed and expired waits release their fences
+  ---
+  duration_ms: 0.8337
+  ...
+# Subtest: native preload batches actual meshes, restores visibility before every yield and draws full final shadows
+ok 36 - native preload batches actual meshes, restores visibility before every yield and draws full final shadows
+  ---
+  duration_ms: 8.2641
+  ...
+# Subtest: cancelled uploads restore all borrowed visibility and shadow update flags
+ok 37 - cancelled uploads restore all borrowed visibility and shadow update flags
+  ---
+  duration_ms: 2.165
+  ...
+# Subtest: partial color uploads retain shadow-enabled shader variants but reuse maps until the complete final shadow draw
+ok 38 - partial color uploads retain shadow-enabled shader variants but reuse maps until the complete final shadow draw
+  ---
+  duration_ms: 2.01
+  ...
+# Subtest: loading shadow priming submits bounded native casters then restores a complete shadow map
+ok 39 - loading shadow priming submits bounded native casters then restores a complete shadow map
+  ---
+  duration_ms: 7.5225
+  ...
+# Subtest: upload attribution observes native draw CPU and waits while preserving all borrowed state
+ok 40 - upload attribution observes native draw CPU and waits while preserving all borrowed state
+  ---
+  duration_ms: 3.4926
+  ...
+# (node:40612) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: complete catalogue audit reproduces from current source and exact original bytes
+ok 41 - complete catalogue audit reproduces from current source and exact original bytes
+  ---
+  duration_ms: 554.4959
+  ...
+# Subtest: assignments, context exceptions, reserves and alternatives stay distinct from audible acceptance
+ok 42 - assignments, context exceptions, reserves and alternatives stay distinct from audible acceptance
+  ---
+  duration_ms: 130.2334
+  ...
+# Subtest: latent wood variant and semantic alternatives do not become real bindings or duplicate files
+ok 43 - latent wood variant and semantic alternatives do not become real bindings or duplicate files
+  ---
+  duration_ms: 0.6152
+  ...
+# Subtest: WorldScene.load passes its real local early-region owner to later attachment
+ok 44 - WorldScene.load passes its real local early-region owner to later attachment
+  ---
+  duration_ms: 641.557
+  ...
+1..44
+# tests 44
+# suites 0
+# pass 44
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1109.6356
