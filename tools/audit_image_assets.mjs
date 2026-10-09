@@ -69,7 +69,32 @@ export function mountainProfileImageReferences(text){
  });
 }
 export function requireUnpinnedImageAlias(references){
- if(references?.some(r=>r.encodedContract))throw Error('Pinned atlas alias requires regenerated export contract');
+ if(references?.some(r=>r.encodedContract||r.requiresAtlasExport))throw Error('Pinned atlas alias requires regenerated export contract');
+}
+export function farAtlasImageReferences(manifest,consumerText){
+ const biomes=['savanna','grand_river','mangrove','volcanoes','canyons','desert'];
+ if(Object.keys(manifest.biomes??{}).sort().join()!==[...biomes].sort().join()||manifest.views!==8||manifest.orientations!==8)throw Error('Far atlas manifest requires review');
+ if(!consumerText.includes('load(metadata.day,')||!consumerText.includes('load(metadata.night,')||!consumerText.includes("'assets/far-vegetation/'+world.nav.config.biome+'-backdrop.webp'"))throw Error('Far atlas consumer requires review');
+ const refs=[];
+ for(const biome of biomes){
+  const entries=manifest.biomes[biome];if(!Array.isArray(entries)||!entries.length)throw Error('Far atlas species require review');
+  const slots=new Set();
+  for(const entry of entries){
+   if(!Number.isSafeInteger(entry.slot)||entry.slot<0||slots.has(entry.slot))throw Error('Far atlas slot requires review');slots.add(entry.slot);
+   for(const phase of ['day','night']){
+    const path=entry[phase]?.replace(/^\.\//,'');
+    if(path!==`assets/far-vegetation/${biome}-${entry.slot}-${phase}.webp`)throw Error('Far atlas path requires review');
+    refs.push({path,reference:{catalog:'content/far-vegetation.json',field:`biomes.${biome}[${entry.slot}].${phase}`,consumer:'src/rendering/far-vegetation.js',role:'color-atlas',requiresAtlasExport:true}});
+   }
+  }
+  refs.push({path:`assets/far-vegetation/${biome}-backdrop.webp`,reference:{catalog:'src/rendering/far-vegetation.js',field:'backdropPath.fallback.'+biome,role:'color-atlas',requiresAtlasExport:true}});
+ }
+ return refs;
+}
+export function loadingOrnamentImageReferences(text){
+ const match=text.match(/image\.src=assetUrl\((["'])(\/assets\/ui\/loading-ornament-v2\.webp)\1\)/);
+ if(!match)throw Error('Loading ornament consumer requires review');
+ return [{path:match[2].slice(1),reference:{catalog:'src/ui/loading-ornament-loader.js',field:'image.src',role:'color'}}];
 }
 export function nativeCatalogImageReferences({villages=[],walls={},vfx={},menuHtml=''}={}){
  const refs=[];
@@ -123,6 +148,10 @@ export function displayImageReferences({markup='',catalog='',handsText='',guardi
 export async function auditImageAssets(){
  const publicFiles=await walk(resolve(root,'public')),ground=JSON.parse(await readFile(resolve(root,'public/content/ground-materials.json'),'utf8'));
  const knownRoles=groundImageReferences(ground);
+ for(const {path,reference} of [
+  ...farAtlasImageReferences(JSON.parse(await readFile(resolve(root,'public/content/far-vegetation.json'),'utf8')),await readFile(resolve(root,'src/rendering/far-vegetation.js'),'utf8')),
+  ...loadingOrnamentImageReferences(await readFile(resolve(root,'src/ui/loading-ornament-loader.js'),'utf8')),
+ ]){const refs=knownRoles.get(path)??[];refs.push(reference);knownRoles.set(path,refs);}
  const mountainPath=resolve(root,'src/rendering/mountain-backdrop-profile.js');
  if(await exists(mountainPath))for(const {path,reference} of mountainProfileImageReferences(await readFile(mountainPath,'utf8'))){const refs=knownRoles.get(path)??[];refs.push(reference);knownRoles.set(path,refs);}
  const hudText=await readFile(resolve(root,'src/ui/native-hud.js'),'utf8');

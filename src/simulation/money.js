@@ -7,6 +7,16 @@ export function rational(n, d=1n) {
   return {n:String(n/g),d:String(d/g)};
 }
 export const numberOf = v => Number(v.n)/Number(v.d);
+// Convert the persisted Number's decimal representation without rounding HP to
+// an assumed precision. Handles fractional gate health and scientific notation.
+export function rationalNumber(value) {
+  if(!Number.isFinite(value)) throw new Error('Cantidad monetaria no finita');
+  const [mantissa,exponent='0']=String(value).split('e');
+  const [whole,fraction='']=mantissa.split('.');
+  const shift=Number(exponent)-fraction.length;
+  const numerator=BigInt(whole+fraction);
+  return shift>=0?rational(numerator*10n**BigInt(shift)):rational(numerator,10n**BigInt(-shift));
+}
 export function add(a,b) { return rational(BigInt(a.n)*BigInt(b.d)+BigInt(b.n)*BigInt(a.d),BigInt(a.d)*BigInt(b.d)); }
 export function negate(a) { return {...a,n:String(-BigInt(a.n))}; }
 export function multiply(a,n,d=1) { return rational(BigInt(a.n)*BigInt(n),BigInt(a.d)*BigInt(d)); }

@@ -13,7 +13,7 @@ import {animalSlopeRecoveryPath} from './animal-slope-recovery.js';
 import {withNavigationQueries} from '../world/navigation-query-scope.js';
 import {BALANCE as B} from './balance.js';
 import {wallVisualAt,recordWallPresentation} from './structure-presentation.js';
-import {rational,multiply,negate,transact,compare,numberOf} from './money.js';
+import {rational,rationalNumber,add,multiply,negate,transact,compare,numberOf} from './money.js';
 import {PROFILES,allocateWorkers,hiringCost,distributeProfiles,contractExpired} from './workforce.js';
 import {spellUnlocked,permission,operational,cropSpec,wallSpec,structureHealth,dawnMinimum,nextRandom,randomInt,villageCost,hitStructure} from './rules.js';
 import {createPlant,advancePlant,waterPlant,isMature,contiguousGroup} from './crops.js';
@@ -112,7 +112,8 @@ export function affordableWallStroke(s,material,points){
 export function wallRefund(target){
   if(target.kind!=='wall'||target.hp<=0||target.status==='ruined'||target.status==='collapsing')return rational(0);
   // Native automatic gates can have fractional HP after proportional conversion.
-  const amount=multiply(rational(target.cost),Math.round(Math.min(target.hp,target.maxHp)*1e6),Math.round(target.maxHp*1e6));
+  const health=rationalNumber(Math.min(target.hp,target.maxHp)),maximum=rationalNumber(target.maxHp);
+  const amount=multiply(rational(target.cost),BigInt(health.n)*BigInt(maximum.d),BigInt(health.d)*BigInt(maximum.n));
   return rational((BigInt(amount.n)+BigInt(amount.d)-1n)/BigInt(amount.d));
 }
 function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
@@ -316,7 +317,11 @@ export function recoverDisplacedWorkers(s) {
     }
   }
 }
-export function repairCost(target) {return target.status==='ruined'?rational(target.cost):multiply(rational(target.cost),target.maxHp-target.hp,target.maxHp);}
+export function repairCost(target) {
+  if(target.status==='ruined')return rational(target.cost);
+  const maximum=rationalNumber(target.maxHp),damage=add(maximum,negate(rationalNumber(target.hp)));
+  return multiply(rational(target.cost),BigInt(damage.n)*BigInt(maximum.d),BigInt(damage.d)*BigInt(maximum.n));
+}
 export function dropCarriedCrate(s,worker){
   const crate=s.crates.find(c=>c.id===worker.crateId&&!c.delivered);
   worker.crateId=null;

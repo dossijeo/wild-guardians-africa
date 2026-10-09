@@ -14,12 +14,14 @@ test('a reused sampled route cannot land an animal on an illegal slope',()=>{
  assert.equal(actor.x,.1,'Clearance never relocates the animal');
 });
 
-test('native Desert/Suajili night9 does not strand its lion on an unsampled slope',()=>{
+test('native Desert/Suajili night9 keeps every actual animal landing on legal terrain',()=>{
  let observed=0;
  const report=simulateIntensiveFarm({days:9,seed:712,biome:'desierto',culture:'suajili',mixed:true,onTick(s,nav){
   if(s.day!==9)return;
-  const actor=s.raid?.animals.find(a=>a.id==='animal-8183');
-  if(actor){observed++;assert.ok(nav.terrainValid(actor.x,actor.z,actor.radius,false),'Every real lion landing obeys the unchanged native slope/fluid limit');}
+  // Shorter paid-work routes change timing and therefore this encounter's
+  // IDs and composition. Check all actual animals; the archived lion-8183
+  // checkpoint remains covered by animal-slope-recovery.test.js.
+  for(const actor of s.raid?.animals??[]){observed++;assert.ok(nav.terrainValid(actor.x,actor.z,actor.radius,false),'Every real animal landing obeys the unchanged native slope/fluid limit');}
  }});
  assert.ok(observed>0);
  assert.equal(report.completedNights,9);assert.equal(report.state.day,10);

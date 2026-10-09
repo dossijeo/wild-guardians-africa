@@ -11,6 +11,7 @@ import {createRendererWithGlEpoch} from './gl-resource-epoch.js';
 import {FluidGpuPreload} from './fluid-preload.js';
 import {chunkInPropTransition} from './prop-transition-residency.js';
 import {CameraBuildingRegistry} from './camera-building-registry.js';
+import {CameraTreeRegistry} from './camera-tree-registry.js';
 import {CameraExclusionMotion} from './camera-exclusion-motion.js';
 import {constrainCameraToTerrain} from './camera-terrain-exclusion.js';
 import {installCameraPoseResolver} from './terrain-camera.js';
@@ -220,10 +221,12 @@ export class WorldScene {
     this.releaseCameraExclusion?.();this.releaseCameraExclusion=null;this.cameraExclusion=null;
     if(!enabled)return;
     const registry=new CameraBuildingRegistry(options),motion=new CameraExclusionMotion(registry.index,options);let last=performance.now();
-    this.cameraExclusion={registry,motion};
+    const trees=options.trees?new CameraTreeRegistry(registry.index,options.trees===true?{}:options.trees):null;
+    this.cameraExclusion={registry,motion,trees};
     const release=installCameraPoseResolver(this.camera,(pose,previous,context)=>{
       const now=performance.now(),seconds=Math.max(0,(now-last)/1000);last=now;
       registry.sync(this.objects,[...this.state.villages,...this.state.structures.filter(e=>e.kind==='center')]);
+      trees?.sync(this.chunks,this.chunkRevision);
       let eye=motion.resolve(pose.eye,previous?.eye,seconds,{reset:context==='focus'});
       // A focus/first pose must recover from the requested destination, rather
       // than an intermediate nearest-face exit that terrain would undo.
@@ -234,7 +237,7 @@ export class WorldScene {
       const ground=this.nav.field.surface(eye[0],eye[2]);motion.stats.terrainConflict=eye[1]<ground+2||eye[1]>ground+20;
       return {...pose,eye,altitude:eye[1]-ground};
     });
-    this.releaseCameraExclusion=()=>{release();registry.clear();};
+    this.releaseCameraExclusion=()=>{release();trees?.clear();registry.clear();};
   }
   updateCamera(){return updateTerrainCamera(this.camera,this.controls,this.nav?.field);}
   focus(point) {this.raidCamera?.cancel();if(this.nav)focusTerrainCamera(this.camera,this.controls,this.nav.field,point);}

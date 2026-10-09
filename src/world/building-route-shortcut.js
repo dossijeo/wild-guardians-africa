@@ -21,6 +21,12 @@ export function shortenBuildingRoute(nav,start,end,route,radius,ignore){
  for(const point of route){length+=distance(previous,point);previous=point;}
  // Ordinary routes and small grid quantization errors need no extra work.
  if(length<direct*1.5||length-direct<2)return route;
+ return findBuildingRoute(nav,start,end,radius,ignore,length)??route;
+}
+
+// A bounded one-corner probe can also precede a full grid search. Each accepted
+// edge is still validated by native navigation; no terrain-dependent cache.
+export function findBuildingRoute(nav,start,end,radius,ignore,maximumLength){
  const candidates=[];
  for(const obstacle of nav.obstacles){
   if(obstacle.id===ignore||!['center','house'].includes(obstacle.kind)||!obstacle.footprint?.length)continue;
@@ -28,7 +34,7 @@ export function shortenBuildingRoute(nav,start,end,route,radius,ignore){
   for(const corner of corners(obstacle))for(const clearance of [.05,.3,.55,1]){
    const reach=radius+clearance,point={x:corner.x+corner.nx*reach,z:corner.z+corner.nz*reach};
    const proposed=distance(start,point)+distance(point,end);
-   if(proposed<length-1)candidates.push({point,length:proposed});
+   if(proposed<maximumLength-1)candidates.push({point,length:proposed});
   }
  }
  candidates.sort((a,b)=>a.length-b.length);
@@ -37,5 +43,5 @@ export function shortenBuildingRoute(nav,start,end,route,radius,ignore){
  for(const {point} of candidates.slice(0,48)){
   if(nav.walkable(point.x,point.z,radius,ignore,true)&&nav.segmentClear(start,point,radius,ignore,true)&&nav.segmentClear(point,end,radius,ignore,true))return [point,{x:end.x,z:end.z}];
  }
- return route;
+ return null;
 }

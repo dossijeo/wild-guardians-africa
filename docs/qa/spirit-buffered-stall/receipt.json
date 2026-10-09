@@ -1,0 +1,43 @@
+{
+  "preFixHead": "8df0e2cb9098f6f962ddbf331de12d90e155939a",
+  "preFixModuleGitBytesSha256": "78cfb1cc809d4bce3e959b063fea657f99d21451e5efec7f9aec178f5718b459",
+  "sources": {
+    "src/audio/spirit-voice.js": "13bdaefe7a4635e9628bb9da67a2f189b4e5292a93cf631bfb5fc8b5d8b05506",
+    "tests/spirit-voice.test.js": "2e11022422674dcacdb1d59b5cc0de81c225cbd315a0c5b65270dea9d31810b2"
+  },
+  "regressionBefore": {
+    "exitCode": 1,
+    "failed": 1,
+    "skipped": 9
+  },
+  "directedAfter": {
+    "exitCode": 0,
+    "passed": 22,
+    "failed": 0
+  },
+  "buildExitCode": 0,
+  "packageExitCode": 0,
+  "scope": "Controller/media doubles and build/package; no physical audio/browser acceptance or full resulting-commit CI.",
+  "files": {
+    "spirit-buffered-stall-before.log.gz": {
+      "sha256": "6bb70aca5cfb1948df4f69596cc291b6b3daa4cf118a6a2622524d7c19046fc1",
+      "rawSha256": "d9f9154489ff9597d56ffdc5f725e376167bc4349cc45d2d3c1c9a96b2a03c43",
+      "rawBytes": 3647
+    },
+    "spirit-buffered-stall-tests.log.gz": {
+      "sha256": "0c73cbaab03d0cfb057c29b578ed98483607a086a11531bbfa94cf45522d6af9",
+      "rawSha256": "e044b7852ba98d1be7437037cec31dda886ecd78f5eb999ae3ba1092f8963b50",
+      "rawBytes": 5311
+    },
+    "spirit-buffered-stall-build.log.gz": {
+      "sha256": "b594229d5c3735926e3adadedbb610974b264abfb9e57c7797dfde6820b33ea0",
+      "rawSha256": "9ff7223cae181be0aa8f07105e3f3b62b68ea48d9412de0e178f4814fdbfdfbd",
+      "rawBytes": 2165
+    },
+    "spirit-buffered-stall-package.log.gz": {
+      "sha256": "31d72b92fd06dc13bdb493aba6b51d3a5fd330df2b61718d5666ad166329f6ef",
+      "rawSha256": "4cf31f80983ab5899b44e47cadf64fd1983bcada1af38079d205708558949e5b",
+      "rawBytes": 411
+    }
+  }
+}

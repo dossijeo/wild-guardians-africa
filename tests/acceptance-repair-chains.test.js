@@ -36,6 +36,23 @@ function ordered(){
  assert.ok(Math.hypot(f.worker.x-f.target.x,f.worker.z-f.target.z)>10);
  assert.equal(numberOf(f.s.ledger.balance),630);return f;
 }
+
+test('fractional restored health is repaired physically and charged once in whole coins',()=>{
+ const {s,nav,target}=fixture();target.hp=287.5;
+ const restored=deserialize(serialize(s));const wall=restored.structures.find(v=>v.id===target.id);nav.setState(restored);
+ assert.deepEqual(Game.repairCost(wall),rational(35,24));
+ Game.requestRepair(restored,'fractional-repair',wall.id);
+ assert.equal(numberOf(restored.ledger.balance),630);
+ until(restored,nav,()=>restored.events.some(e=>e.type==='RepairApplied'));
+ assert.equal(wall.hp,300);assert.equal(numberOf(restored.ledger.balance),628);
+ assert.equal(Object.keys(restored.ledger.entries).filter(id=>id.startsWith('repair:')).length,1);
+});
+
+test('repair ratios preserve decimal gate health rather than rounding to half HP',()=>{
+ assert.deepEqual(Game.repairCost({cost:35,maxHp:180,hp:179.73,status:'damaged'}),rational(21,400));
+ assert.deepEqual(Game.repairCost({cost:35,maxHp:300,hp:219,status:'damaged'}),rational(189,20));
+ assert.deepEqual(Game.repairCost({cost:35,maxHp:180,hp:179.73,status:'ruined'}),rational(35));
+});
 function spendToReserve(s,nav){
  for(let i=0;i<59;i++)Game.placeStructure(s,`other-wall-${i}`,{kind:'wall',material:'zarzas',x:-20+i*4,z:15},nav);
  Game.plant(s,'other-seed','mijo',-20,30,nav);assert.equal(numberOf(s.ledger.balance),35);

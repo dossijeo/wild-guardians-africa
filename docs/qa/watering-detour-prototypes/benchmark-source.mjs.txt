@@ -1,0 +1,25 @@
+import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
+import {execFileSync} from 'node:child_process';
+import {pathToFileURL} from 'node:url';
+import {createHash} from 'node:crypto';
+import {performance} from 'node:perf_hooks';
+import {simulateIntensiveFarm,auditIntensiveFarm} from '../tools/check_intensive_farm.mjs';
+import {serialize} from '../src/persistence/snapshots.js';
+const canyon=process.argv[2]==='canyon';
+const directory=new URL(canyon?'./watering-abba-canyon-cached/':'./watering-abba-cached/',import.meta.url);mkdirSync(directory,{recursive:true});
+const absolute=(source,url)=>source.replace(/from '([^']+)'/g,(match,specifier)=>specifier.startsWith('.')?`from '${new URL(specifier,url).href}'`:match);
+const old=execFileSync('git',['show','3d6dc1b0:src/world/work-points.js'],{encoding:'utf8'});
+const oldWork=new URL('old-work.mjs',directory),oldGame=new URL('old-game.mjs',directory),oldFarm=new URL('old-farm.mjs',directory);
+writeFileSync(oldWork,absolute(old,new URL('../src/world/work-points.js',import.meta.url)));
+const game=readFileSync(new URL('../src/simulation/game.js',import.meta.url),'utf8').replace("from '../world/work-points.js'",`from '${oldWork.href}'`);
+writeFileSync(oldGame,absolute(game,new URL('../src/simulation/game.js',import.meta.url)));
+const farm=readFileSync(new URL('../tools/check_intensive_farm.mjs',import.meta.url),'utf8').replace("from '../src/simulation/game.js'",`from '${oldGame.href}'`);
+writeFileSync(oldFarm,absolute(farm,new URL('../tools/check_intensive_farm.mjs',import.meta.url)));
+const baseline=await import(oldFarm.href),options={days:1,seed:712,profile:'olderMale',mixed:true,middayHiring:true,...(canyon?{biome:'gran-canon',culture:'saheliana',profile:'olderFemale',middayHiring:false}:{})},rows=[];
+for(const [index,arm] of ['A','B','B','A'].entries()){
+ const start=performance.now(),r=(arm==='A'?baseline.simulateIntensiveFarm:simulateIntensiveFarm)(options),elapsed=performance.now()-start;
+ auditIntensiveFarm(r);const snapshot=serialize(r.state),file=`${index}-${arm}-state.json`;writeFileSync(new URL(file,directory),snapshot);
+ rows.push({index,arm,elapsed,snapshot:file,sha256:createHash('sha256').update(snapshot).digest('hex'),daily:r.daily,counts:r.counts,money:r.money});
+ console.log(JSON.stringify({index,arm,elapsed,sha256:rows.at(-1).sha256,money:r.money,deliveries:r.counts.CrateDelivered}));
+}
+writeFileSync(new URL('report.json',directory),JSON.stringify({scope:'Domain first-day CPU wall time, one process ABBA; no rendered FPS or GPU claim.',baseline:'3d6dc1b0',options,rows},null,2));

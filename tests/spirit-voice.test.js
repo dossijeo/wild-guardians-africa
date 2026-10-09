@@ -77,5 +77,46 @@ test('playing after waiting cancels recovery and advances only on actual ended',
  voice.play(record,()=>ended++);media.onstalled();resolvePlay();await Promise.resolve();media.onplaying();
  await new Promise(resolve=>setTimeout(resolve,20));
  assert.equal(voice.status,'playing');assert.equal(ended,0);assert(!media.released);
- media.onended();assert.equal(ended,1);assert.equal(voice.status,'ended');voice.dispose();
+  media.onended();assert.equal(ended,1);assert.equal(voice.status,'ended');voice.dispose();
+});
+
+test('a stalled download cannot cut buffered narration or advance its tutorial caption',async()=>{
+ const state=Game.newGame({seed:712}),profile={read:()=>new Set(),record(){},basicCompleted:false};
+ const media=new FakeAudio();media.readyState=4;media.duration=60;
+ const voice=new SpiritVoice({create:()=>media,timeout:8});
+ const tutorial=new TutorialController(state,profile,{isNarrating:()=>voice.active});
+ const message=tutorial.presentation();let ended=0;
+ try{
+  voice.play(record,()=>{ended++;tutorial.dismiss({automatic:true,message});});
+  await Promise.resolve();media.onstalled();
+  await new Promise(resolve=>setTimeout(resolve,20));
+  assert.equal(voice.status,'playing');assert.equal(ended,0);assert.equal(media.paused,false);
+  assert.equal(media.released,undefined);assert.equal(tutorial.advance(1000),false);
+  assert.equal(tutorial.presentation(),message);
+  media.onended();assert.equal(ended,1);assert.equal(voice.status,'ended');
+  assert(media.paused&&media.released);assert.notEqual(tutorial.presentation()?.id,message.id);
+ }finally{voice.dispose();}
+});
+
+test('buffered download stalls do not disable real waiting recovery',async()=>{
+ const media=new FakeAudio();media.readyState=3;
+ const voice=new SpiritVoice({create:()=>media,timeout:8});let ended=0;
+ try{
+  voice.play(record,()=>ended++);await Promise.resolve();media.onstalled();
+  media.readyState=2;media.onwaiting();
+  await new Promise(resolve=>setTimeout(resolve,20));
+  assert.equal(voice.status,'fallback');assert.equal(voice.failure,'stalled-timeout');
+  assert.equal(ended,0);assert(media.paused&&media.released);
+ }finally{voice.dispose();}
+});
+
+test('ignoring a buffered download stall does not cancel a hung initial play watchdog',async()=>{
+ const media=new FakeAudio();media.readyState=4;media.playPromise=new Promise(()=>{});
+ const voice=new SpiritVoice({create:()=>media,timeout:8});let ended=0;
+ try{
+  voice.play(record,()=>ended++);media.onstalled();
+  await new Promise(resolve=>setTimeout(resolve,20));
+  assert.equal(voice.status,'fallback');assert.equal(voice.failure,'load-timeout');
+  assert.equal(ended,0);assert(media.paused&&media.released);
+ }finally{voice.dispose();}
 });

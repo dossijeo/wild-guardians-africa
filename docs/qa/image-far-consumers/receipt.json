@@ -1,0 +1,37 @@
+{
+  "runtimeBase": "1bad357b",
+  "fullValidateSource": "fccee67a",
+  "fullValidateRun": 37946138020,
+  "fullValidateTests": 3737,
+  "fullValidateConclusion": "success",
+  "scope": "Image audit and protection only; no API operations, conversions, visual acceptance or savings claim",
+  "files": {
+    "inventory.json.gz": {
+      "expandedSha256": "b84499b6f1044e51a1e334e547ea76ef7e50ccbf346c7ae7b89c263796d0dc99",
+      "expandedBytes": 326938,
+      "gzipSha256": "450a9b794f10cd82eecae590021dd0649153ad4026ab70544d3f79b5a28dcb49"
+    },
+    "preflight.json.gz": {
+      "expandedSha256": "a966a0f6681b7186745e8f02bc712ee7170ab63ac1ca6420149b94dd1e1c1012",
+      "expandedBytes": 64906,
+      "gzipSha256": "c567b0108d9affde92deb494f60375614ca2918473d4005f90ca7113b7a1199a"
+    },
+    "tests.log.gz": {
+      "expandedSha256": "c8f5fcd1e0b320c2a201b478df9e33aaa30d0a861f2ad76eee3ca3f0c2546ebe",
+      "expandedBytes": 22748,
+      "gzipSha256": "daaefbded11b72bbf6a539c226687507cc2a6c20c404065c82fc1923021d34d0"
+    },
+    "validate-fccee67a.log.gz": {
+      "expandedSha256": "39d20bd5d76869e48905b3bf101606978acd6785bfc5f1b3d6ac7429ffc7e0b6",
+      "expandedBytes": 2002019,
+      "gzipSha256": "601a7326cd8ae7274a3ca09046cfda02868d143c84470ec6e62adda6aa7c0c60"
+    }
+  },
+  "sources": {
+    "tools/audit_image_assets.mjs": "daae8e98e2afe92149b89de139b6cc7cbbc57036a149c167d143d5aa09f72c74",
+    "tests/image-far-consumers.test.js": "89c911b749794ed897493f3c2f2907b474c9fd1e3cccb6b77583e4a83c6baa33",
+    "src/rendering/far-vegetation.js": "7f983687f854f624f375afe52b421ad79ceb3fbcc1c6d7f5d443a32f1d93165f",
+    "public/content/far-vegetation.json": "fe553e32a655b864794815eb1474d65f930701b3e699ad3aa9626c2232618373",
+    "src/ui/loading-ornament-loader.js": "064dcb0d857be6d71ff31a86bd954df2d29b630387aab719d54bba4da201a25d"
+  }
+}

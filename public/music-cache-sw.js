@@ -12,7 +12,13 @@ async function remember(url,cache){
 }
 async function media(request,event){
   const url=new URL(request.url),offline=url.searchParams.has('music-cache-only');url.searchParams.delete('music-cache-only');
-  const key=url.href,cache=await caches.open(CACHE),stored=await cache.match(key);
+  const key=url.href;let cache,stored;
+  try{cache=await caches.open(CACHE);stored=await cache.match(key);}
+  catch{
+    // Disk caching is optional. Keep the original range request when storage
+    // is denied or revoked; explicitly offline playback must stay offline.
+    return offline?new Response('Audio cache is unavailable',{status:503}):fetch(request);
+  }
   if(!stored){
     if(offline)return new Response('Audio is not cached',{status:503});
     const response=await fetch(request);

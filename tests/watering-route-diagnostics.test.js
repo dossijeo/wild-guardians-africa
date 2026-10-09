@@ -5,7 +5,7 @@ import {diagnosticWateringSource} from '../tools/watering-route-diagnostics.mjs'
 import {wateringRoute,repairRoute} from '../src/world/work-points.js';
 
 const url=new URL('../src/world/work-points.js',import.meta.url),source=readFileSync(url,'utf8').replaceAll('\r\n','\n');
-const code=diagnosticWateringSource(source).replace("from './centers.js'",`from '${new URL('../src/world/centers.js',import.meta.url).href}'`);
+const code=diagnosticWateringSource(source).replace(/from '([^']+)'/g,(match,specifier)=>specifier.startsWith('.')?`from '${new URL(specifier,url).href}'`:match);
 const observed=await import(`data:text/javascript;base64,${Buffer.from(code).toString('base64')}`);
 const worker={x:0,z:3,radius:.28},plant={id:'qa',x:0,z:0,species:'mijo'};
 const reset=()=>{for(const key of Object.keys(observed.qaWatering))observed.qaWatering[key]=0;};
@@ -42,4 +42,14 @@ test('QA direct interaction guard distinguishes distance from height without sam
 test('QA instrumentation fails closed when the authored algorithm changes',()=>{
  assert.throws(()=>diagnosticWateringSource(source.replace('if(!canWaterFrom','if (!canWaterFrom')),/Diagnostic anchor changed/);
  assert.throws(()=>diagnosticWateringSource(source+'\n'+source),/Diagnostic anchor changed/);
+});
+
+test('QA preflight observer preserves direct-route calls and accounts for early success',()=>{
+ reset();
+ const create=()=>{const calls=[];return {calls,obstacles:[],walkable(...args){calls.push(['walk',...args]);return true;},segmentClear(...args){calls.push(['segment',...args]);return true;},path(){throw Error('Preflight must avoid A* for a clear approach');}};};
+ const a=create(),b=create();
+ assert.deepEqual(observed.wateringRoute(worker,plant,b),wateringRoute(worker,plant,a));
+ assert.deepEqual(b.calls,a.calls);
+ assert.equal(observed.qaWatering.preflightDirect,1);assert.equal(observed.qaWatering.reachable,1);
+ assert.equal(observed.qaWatering.pathQueries,0);assert.equal(observed.qaWatering.routes,1);
 });

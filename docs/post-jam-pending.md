@@ -1,5 +1,64 @@
 # Tareas pendientes posteriores a la Jam
 
+## Estado vigente de las integraciones (9 de octubre)
+
+Este documento conserva entradas cronológicas y candidatos descartados. Sus
+resultados históricos no equivalen a aceptación de main actual. El
+[registro de gates vigentes](qa/release-open-gates-2026-10-09.md) delimita el
+trabajo que aún falta y prevalece sobre las etapas antiguas de esta lista.
+
+- **Biblioteca:** PR8 cubrió una entrada distinta. La entrada real del menú
+  nativo quedó corregida por `7b8d5fb0`, con visor fuera del panel modal,
+  navegación/foco/salida y empaquetado comprobados. Falta aceptación renderizada
+  de los cuatro labs en portrait/landscape; no reutilizar capturas de la entrada
+  anterior. [Evidencia actual](qa/library-native-integration/README.md).
+- **Cultivos FrontSide:** la reparación experimental fue sustituida por los
+  modelos authored V4 del lab del usuario, integrados mediante PR17. No queda
+  pendiente promover el maíz del antiguo experimento. Los trabajadores siguen
+  siendo una categoría independiente, con candidato de accesorios aislado y
+  pendiente de QA visual y beneficio GPU neto.
+  [Revisión de integración](qa/crops-v4-root-integration-review.md).
+- **Carga interactiva:** PR18 está integrada y el compromiso de carga de la
+  candidata G fue aceptado por el usuario. El timeout de carga del ejecutable
+  Windows sigue abierto; los candidatos diagnósticos no están promovidos.
+  La caché procedural separada sólo tiene un ensayo CPU de viabilidad, no una
+  implementación de producción ni ahorro de carga completa demostrado.
+  [Ensayo de caché](qa/chunk-cache-feasibility-fe27498b/README.md).
+- **Voz y almacenamiento:** `1ed8be18` evita interrumpir una voz que sigue
+  reproduciéndose por un evento de descarga stalled. `b0bbb7f2` cierra resultados
+  tardíos de aperturas IndexedDB bloqueadas y protege una conexión nueva de
+  callbacks antiguos. Son correcciones independientes; no resuelven por sí
+  mismas el timeout Windows ni acreditan escucha física.
+  [Voz](qa/spirit-buffered-stall/README.md),
+  [almacenamiento](qa/browser-save-open-lifecycle/README.md).
+- **Traveling y pantalla encendida:** cerrados por aceptación explícita del
+  usuario y por prueba física Pixel/Chrome/itch respectivamente, salvo regresión
+  reproducible. Los ensayos negativos históricos no reabren esos puntos.
+- **Economía:** sigue abierta la matriz vigente de treinta combinaciones y cien
+  noches, manteniendo inactividad inferior al25%, contabilidad, entregas físicas
+  diarias y casos de mala gestión. Una mejora aislada de precios no se acepta si
+  elimina todas las entregas del primer día. La campaña histórica aprobada no
+  sustituye la validación de parámetros nuevos.
+
+## Biblioteca móvil y escucha de SFX — pendiente, prioridad baja
+
+Solicitud del usuario: revisar el layout de los labs en resoluciones móviles
+bajas, especialmente Cultivos y SFX. Actualmente textos y paneles demasiado
+grandes se solapan y dejan poco espacio de trabajo. Ajustar tamaños, distribución
+y controles para preservar un área útil amplia; comprobar portrait/landscape,
+legibilidad, interacción y ausencia de solapamientos en los cuatro labs.
+
+Al entrar en el lab de SFX, silenciar temporalmente la música de fondo del menú
+para escuchar los efectos con claridad. Al salir, restaurar el estado y volumen
+anteriores, respetando la preferencia de música del usuario y cubriendo cierre,
+Escape y cambio de lab. No silenciar los propios efectos del laboratorio.
+
+No implementar ahora ni desplazar las prioridades actuales de optimización,
+diagnóstico Windows y validación de campaña. El visor a pantalla completa no
+equivale a aceptación de este layout móvil.
+
+## Entradas cronológicas y evidencia histórica
+
 Solicitudes añadidas el 9 de octubre de 2026:
 
 - Biblioteca: abrir los labs a pantalla completa e integrar su navegación,
@@ -809,3 +868,75 @@ el ritmo de Gran Cañón. El [diagnóstico de apertura actual](qa/canyon-opening
 acredita diferencias en primeras entregas y recorridos durante un día, sin
 demostrar todavía causa física ni aceptación de cien noches. No se han cambiado
 precios, salarios, ganancias ni la política del test para aprobar ese resultado.
+
+## Seguimiento de rutas físicas y Windows — 2026-10-09
+
+La comprobación posterior resolvió las Actions citadas arriba: Validate Game
+37926380301 SUCCESS; Windows37926380207 FAILURE en smoke, tras compilar el
+ejecutable y el instalador. El reporte indica que el mundo no terminó de cargar
+en90s; no acredita todavía la causa. El subagente de carga publicó diagnóstico
+sin cambios runtime en77d1ac01, run37929307286 todavía en ejecución al registrar
+esta nota. Se mantiene separado de la aceptación web y no se amplía el timeout
+para ocultar el fallo.
+
+Los dos desvíos reales de riego en Canyon/Sahelian tienen ahora una candidata
+geométrica previa a A*, con aristas verificadas contra el navegador nativo.
+Sobre los mismos estados, las consultas pasan de18–31ms a3–6ms aproximadamente;
+46 pruebas dirigidas pasan. La apertura Canyon entrega21 cajas frente a17;
+la apertura Savanna entrega28 frente a27. Esto cambia realmente el golden de
+ciclo de cultivo: no se ha reemplazado el hash ni promovido la candidata.
+Quedan adaptación del observador QA, regresión completa e inspección en juego.
+[Mediciones, estados y límites del ensayo](qa/watering-geometric-preflight/README.md).
+No se declara mejora GPU, aceptación móvil ni solución completa del ritmo
+de campaña a partir de estos ensayos de dominio.
+
+## Biblioteca nativa y preparación geométrica de riego — 2026-10-09
+
+La captura nueva confirmó que la biblioteca del menú nativo todavía embebía
+los labs dentro del panel; la vista alternativa a pantalla completa no estaba
+conectada a esa entrada. La integración real abre ahora una pantalla fija con
+cabecera mínima, pausa el render oculto del menú y libera el iframe al volver.
+10 comprobaciones de controlador/fuentes/resolución pasan. Compilación,
+sintaxis y paquete relativos pasan. El navegador de QA falló antes de obtener
+una captura del visor corregido: la aceptación visual real en ambas orientaciones
+y los cuatro labs queda pendiente, no sustituida por la antigua captura aislada.
+[Evidencia y alcance](qa/library-native-integration/README.md).
+
+El riego incorpora la candidata geométrica previa a A*, con fallback completo.
+La primera suite completa dio3713/3715; se retienen sus dos fallos. Tras adaptar
+la obstrucción del doble de navegación a todos los métodos físicos y verificar
+todos los animales reales de la incursión en vez de un ID histórico, las
+comprobaciones dirigidas pasan. El león histórico conserva su prueba propia.
+El nuevo resultado completo de CI aún debe revisarse.
+[Regresión y archivos originales](qa/watering-geometric-preflight/production/README.md).
+
+## Seguimiento del gran cañón y presupuesto — 2026-10-09
+
+La prueba nativa actual de diez noches de gran cañón/saheliana sobrevive y
+reconcilia entregas físicas y contabilidad, pero registra 77,53% de inactividad:
+no supera el límite del 25%. El observador reproduce el estado final completo
+sin modificarlo y atribuye 1731 segundos a la reserva de mantenimiento y 396
+a reservar el siguiente jornal del equipo. Esto orienta el próximo experimento
+económico; todavía no acredita que reducir una reserva sea seguro ni sustituye
+la campaña de 100 noches o su matriz. La apertura Mapungubwe cobra seis segundos
+antes, pero entrega una caja menos; se conserva también ese resultado negativo.
+[Datos, diagnóstico reproducible y alcance](qa/canyon-budget-f5e796c2/README.md).
+
+Validate game37934148381 terminó SUCCESS sobre f5e796c2:3719/3719 pruebas,
+compilación y paquete web correctos. Esto cierra la comprobación completa de
+CI para la integración nativa de biblioteca y el cambio de rutas. La revisión
+visual de los cuatro labs en ambas orientaciones sigue abierta: CUA todavía
+falla al inicializar los assets del kernel. Windows y la matriz de campañas
+mantienen sus criterios independientes.
+[Log completo, SHA y alcance](qa/validate-f5e796c2/README.md).
+
+## Voz del espíritu y descarga estancada — 2026-10-09
+
+Separados stalled (descarga) y waiting (reproducción sin datos): una voz que
+todavía reproduce su búfer no debe cortarse por el temporizador de recuperación
+de red. La regresión nueva falla con el controlador anterior;22 pruebas dirigidas
+pasan con la corrección, conservando ended, interrupción manual y recuperaciones
+reales. Compilación y verificaciones de audio/sintaxis pasan. Falta comprobación
+audible en navegador físico; no se identifica este caso como causa demostrada
+del aviso original del usuario.
+[Reproductor, negativo y alcance](qa/spirit-buffered-stall/README.md).

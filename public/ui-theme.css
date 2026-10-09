@@ -17,3 +17,11 @@ body :is(.dialog,.context) :is(h1,h2,h3){font-family:var(--wg-title-font);font-w
 body .dialog-actions{gap:10px;flex-wrap:wrap}
 body .dialog-actions button{flex-shrink:0}
 @media(prefers-reduced-motion:reduce){body button{transition:none}body :is(.primary,.secondary,.confirm-button,.secondary-button,.back-button,.dialog-actions button,.context button):not(:disabled):active{transform:none}}
+
+/* Labs opened from the actual sanctuary menu own the entire viewport. */
+.production-lab-viewer{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;background:#15201b;color:var(--wg-paper);overflow:hidden}
+.production-lab-header{display:flex;align-items:center;gap:12px;flex:none;padding:6px max(10px,env(safe-area-inset-right)) 6px max(10px,env(safe-area-inset-left));padding-top:max(6px,env(safe-area-inset-top));border-bottom:1px solid var(--wg-border)}
+.production-lab-header h1{font:normal 20px/1.1 var(--wg-title-font);margin:0;flex:1;min-width:0}
+.production-lab-header button.secondary{width:auto;flex:none;margin:0;padding:8px 12px;font-size:13px;min-height:44px}
+.production-lab-frame{display:block;width:100%;flex:1;min-height:0;border:0;background:#15201b;padding-bottom:env(safe-area-inset-bottom)}
+@media(max-width:500px){.production-lab-header{gap:6px}.production-lab-header h1{font-size:16px}.production-lab-header button.secondary{font-size:11px;padding:8px}}
