@@ -42,3 +42,21 @@ La [cámara cercana del diagnóstico de cultivos](qa/crop-frustum-prototype/NEAR
 Base geométrica, índice espacial, volúmenes derivados de edificios y corrección suave preparados en un prototipo opcional de diagnóstico: [evidencias y límites](qa/camera-volume-foundation/README.md). La actualización de ancestros compartidos se mide en [PARENT-CACHE](qa/camera-volume-foundation/PARENT-CACHE.md), y la recuperación conjunta frente a terreno/edificios en [TERRAIN-RECOVERY](qa/camera-volume-foundation/TERRAIN-RECOVERY.md). La protección sigue desactivada en el gameplay normal. No están aprobados los márgenes visuales por modelo/cultura, la aceptación de controles y streaming, los árboles grandes, el fade secundario ni la validación móvil completa.
 
 El prototipo opcional incorpora ahora [volúmenes de árboles grandes residentes](qa/camera-tree-exclusion/README.md), con posición/escala nativa, actualización por revisiones y propiedad aislada. La extensión está desactivada por defecto y no acredita márgenes visuales, controles, coste GPU ni móvil; esas condiciones de aceptación siguen pendientes.
+
+### Límite vertical identificado antes de activar el prototipo
+
+La reconciliación actual de `camera-terrain-exclusion.js` conserva el rango de
+altura nativo de 2–20 metros sobre el terreno. Las pruebas de
+`camera-terrain-exclusion.test.js` cubren sobrevuelo de un tejado de 15 metros,
+pero para una casa de 30 metros verifican una salida lateral dentro de ese rango.
+Esto prueba recuperación geométrica, no libertad de sobrevuelo de todas las
+estructuras. Incluso una pose inicialmente por encima del tejado se limita antes
+de consultar el volumen.
+
+Antes de activar la protección, resolver este conflicto de forma contextual con
+la intención y controles de cámara: los edificios altos deben poder sobrevolarse
+con altura suficiente y permitir bajar por ambos lados. No basta con ampliar
+globalmente los márgenes ni aceptar la salida lateral como equivalente al
+requisito. Verificar aproximación, subida, cruce, descenso y recuperación sobre
+modelos/culturas reales, manteniendo seguridad de terreno y suavidad. El
+prototipo continúa desactivado y esta revisión no cambia la cámara de producción.
