@@ -148,3 +148,29 @@ test('selected early records preserve prior hook receiver arguments returns and 
  const tracker=createLoadingReadinessSpanTracker(previous,{now:()=>0}),row={label:'app-pre-world-setup',start:0};assert.equal(tracker.onBegin.call(receiver,row,'begin'),8);assert.equal(tracker.call(receiver,{...row,end:1,duration:1},'end'),9);assert.throws(()=>tracker.call(receiver,{...row,end:2,duration:2},'throw'),error=>error===original);
  assert.equal(events.length,3);assert.equal(events[0].receiver,receiver);assert.deepEqual(events.map(event=>event.args[1]),['begin','end','throw']);assert.equal(tracker.snapshot().early.rows[0].completed,2);
 });
+
+
+test('reconnect uses one tracker, preserves active early blocks, drops old hooks and abort terminates retained callbacks',()=>{
+ let firstCalls=0,nextCalls=0;const first=()=>++firstCalls,next=()=>++nextCalls,world={loading:new AbortController(),onLoadingSpan:first},scope={__desktopSmokeStarted:true};
+ const bridge=installLoadingReadinessObservation(world,{scope}),retained=bridge.witness;const finish=bridge.beginBoundary('app-pre-world-setup');
+ retained({label:'diorama-prepare-sky',start:1,end:2,duration:1});assert.equal(firstCalls,1);
+ world.onLoadingSpan=next;bridge.connect();assert.equal(bridge.witness,retained);assert.equal(retained.snapshot().early.rows.length,2);assert.equal(retained.snapshot().active.length,1);
+ finish(false);assert.equal(firstCalls,1);assert.equal(nextCalls,1);assert.equal(retained.snapshot().early.rows.find(row=>row.label==='app-pre-world-setup').completed,1);
+ const late=bridge.beginBoundary('app-pre-world-setup');world.loading.abort();assert.equal(world.onLoadingSpan,next);late(true);retained({label:'app-pre-world-setup',start:1,end:2,duration:1});retained.onBegin({label:'diorama-prepare-sky',start:1});retained.rebind(first);
+ assert.equal(firstCalls,1);assert.equal(nextCalls,1);assert.equal(retained.snapshot().closed,true);assert.deepEqual(retained.snapshot().early.rows,[]);assert.deepEqual(retained.snapshot().active,[]);
+});
+
+test('reconnect remains bounded through replacements and guards externally forwarded retained tracker without clobbering ownership',()=>{
+ const world={loading:new AbortController()},scope={__desktopSmokeStarted:true},bridge=installLoadingReadinessObservation(world,{scope}),retained=bridge.witness;let calls=0;
+ const forward=function(...args){calls++;return Reflect.apply(retained,this,args);};forward.onBegin=function(...args){calls++;return Reflect.apply(retained.onBegin,this,args);};
+ world.onLoadingSpan=forward;bridge.connect();retained.onBegin({label:'app-pre-world-setup',start:0});retained({label:'app-pre-world-setup',start:0,end:1,duration:1});assert.equal(calls,2);assert.equal(retained.snapshot().early.rows[0].completed,1);assert.equal(retained.snapshot().early.rows[0].begun,1);
+ for(let i=0;i<1000;i++){world.onLoadingSpan=()=>i;bridge.connect();assert.equal(bridge.witness,retained);}const replacement=()=>99;world.onLoadingSpan=replacement;bridge.release();assert.equal(world.onLoadingSpan,replacement);assert.equal(retained.snapshot().closed,true);
+});
+
+
+test('rebound hook can deliver an unrelated nested event with original receiver return and exception semantics',()=>{
+ const tracker=createLoadingReadinessSpanTracker(null,{now:()=>0}),receiver={},seen=[];const inner={label:'diorama-prepare-sky',start:1,end:2,duration:1},outer={label:'app-pre-world-setup',start:0,end:3,duration:3};const original=Error('hook');
+ function hook(row,tail){seen.push({receiver:this,row,tail});if(row===outer){assert.equal(tracker.call(this,inner,'nested'),7);return 9;}if(tail==='throw')throw original;return 7;}
+ tracker.rebind(hook);assert.equal(tracker.call(receiver,outer,'outer'),9);assert.equal(seen.length,2);assert.equal(seen[1].row,inner);assert.equal(seen[1].receiver,receiver);assert.equal(seen[1].tail,'nested');assert.equal(tracker.snapshot().early.rows.length,2);
+ assert.throws(()=>tracker.call(receiver,inner,'throw'),error=>error===original);assert.equal(tracker.call(receiver,inner,'after'),7);
+});

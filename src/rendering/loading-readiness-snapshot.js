@@ -64,7 +64,7 @@ export function existingLoadingContextIdentity(world){
 // Compose with the existing optional witness only. No timers, RAF or phase work.
 // Preserve prior callback this/arguments/result/exception exactly once.
 export function createLoadingReadinessSpanTracker(previous,{now=()=>performance.now()}={}){
- const active=new Map(),early=new Map();let dropped=0,earlyDropped=0,lastCompleted=null,closed=false;
+ const active=new Map(),early=new Map();let dropped=0,earlyDropped=0,lastCompleted=null,closed=false,forwardingRow=null,forwardingKind=null;
  const selected=label=>{switch(label){case 'app-prepared-pending':case 'app-pre-world-setup':case 'diorama-prepare-sky':case 'diorama-prepare-catalogues':case 'diorama-prepare-maize-model':case 'diorama-prepare-maize-bridges':case 'diorama-prepare-soil-texture':case 'diorama-prepare-mountain-atlas':case 'diorama-prepare-maize-batch':case 'diorama-compile-maize':case 'diorama-upload-maize-soil':case 'diorama-upload-maize-soil-batches':case 'diorama-compile-sky':case 'diorama-compile-mist':case 'diorama-upload-mist':case 'diorama-warm-day-night-sky':case 'diorama-final-fence':return true;default:return false;}};
  const recordEarly=(row,begin)=>{
   const label=text(row?.label);if(!selected(label))return;
@@ -75,15 +75,16 @@ export function createLoadingReadinessSpanTracker(previous,{now=()=>performance.
  const copy=row=>({label:text(row?.label),start:finite(row?.start),end:finite(row?.end),duration:finite(row?.duration),failed:Boolean(row?.failed)});
  const key=row=>JSON.stringify([row?.label,row?.start]);
  function witness(...args){
-  if(closed)return;
+  if(closed||(forwardingKind==='complete'&&forwardingRow===args[0]))return;
   try{const row=args[0];active.delete(key(row));lastCompleted=copy(row);recordEarly(row,false);}catch{}
-  return typeof previous==='function'?Reflect.apply(previous,this,args):undefined;
+  const outerRow=forwardingRow,outerKind=forwardingKind;try{forwardingRow=args[0];forwardingKind='complete';return typeof previous==='function'?Reflect.apply(previous,this,args):undefined;}finally{forwardingRow=outerRow;forwardingKind=outerKind;}
  }
  witness.onBegin=function(...args){
-  if(closed)return;
+  if(closed||(forwardingKind==='begin'&&forwardingRow===args[0]))return;
   try{const row=args[0],id=key(row);if(active.size<16||active.has(id))active.set(id,copy(row));else dropped++;recordEarly(row,true);}catch{}
-  return typeof previous?.onBegin==='function'?Reflect.apply(previous.onBegin,this===witness?previous:this,args):undefined;
+  const outerRow=forwardingRow,outerKind=forwardingKind;try{forwardingRow=args[0];forwardingKind='begin';return typeof previous?.onBegin==='function'?Reflect.apply(previous.onBegin,this===witness?previous:this,args):undefined;}finally{forwardingRow=outerRow;forwardingKind=outerKind;}
  };
+ witness.rebind=next=>{if(!closed)previous=next===witness?null:next;};
  witness.clear=()=>{closed=true;active.clear();early.clear();lastCompleted=null;previous=null;};
  witness.activeLabel=()=>{let label=null;for(const row of active.values())label=row.label;return label;};
  witness.snapshot=()=>{
@@ -137,7 +138,7 @@ export function installLoadingReadinessObservation(world,{scope=globalThis,WeakR
  const bridge={release,beginBoundary:label=>closed?null:beginLoadingReadinessBoundary(tracker,label),compilationSnapshot:()=>compilation.snapshot(),get witness(){return closed?null:tracker;},connect(){
   const owner=get();if(closed||!owner||owner.disposed||owner.loading?.signal.aborted)return;
   if(owner.onLoadingSpan===tracker&&tracker)return;
-  previous=owner.onLoadingSpan;tracker=createLoadingReadinessSpanTracker(previous);owner.onLoadingSpan=tracker;
+  previous=owner.onLoadingSpan;if(tracker)tracker.rebind(previous);else tracker=createLoadingReadinessSpanTracker(previous);owner.onLoadingSpan=tracker;
  },presentation(diorama,cinematic){
   if(closed)return;
   try{dioramaRef=diorama?new WeakRefCtor(diorama):null;cinematicRef=cinematic?new WeakRefCtor(cinematic):null;}catch{dioramaRef=null;cinematicRef=null;}
