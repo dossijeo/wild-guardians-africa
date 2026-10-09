@@ -6,7 +6,8 @@
   },
   "onlySourceDifferences": [
     "src/rendering/loading-diorama.js",
-    "src/rendering/loading-mist.js"
+    "src/rendering/loading-mist.js",
+    "src/rendering/loading-focus-light.js"
   ],
   "harnessSha256": "9b2061e9d6e5dfa97c8e9be0eb517a7a17ce2f17f6e89af97716d66e6223c209",
   "viewerSha256": "0bef5cc7d0d4afc0e710b070e01d8abc02f02e12295414de54d395ff32d25fb5",
@@ -87,5 +88,10 @@
   "practicalCriterion": "Flag >5% AND >0.5ms GPU median increase consistent across both orders within either day/night as material cost; no assertion of statistical equivalence with four arms",
   "resourceScope": "Separate probes after timing, no physical peak RAM/VRAM claim",
   "cacheScope": "No cold/fully-cached claim; immutable hardlinked assets, transfers/preparation excluded from steady presentation timing",
-  "exceptions": "A removes focus hook from existing crop/soil material shaders and restores pre-focus mist shader c7c26463; same V4 geometry, sky, haze parameters, shaft, sparkles, wood UI and pose as B. amount0 is not used as shader-cost reference."
+  "exceptions": "A removes focus hook from existing crop/soil material shaders and restores pre-focus mist shader c7c26463; same V4 geometry, sky, haze parameters, shaft, sparkles, wood UI and pose as B. amount0 is not used as shader-cost reference.",
+  "candidateFocusPatch": "45201f7d1afcde98ccb70ea73041b191d7fa214c",
+  "nightGain": 3,
+  "dayGain": 1.3,
+  "edgeGain": 0.6,
+  "cancelledPreMeasurementAttempt": "Root954A opened but Prepare not clicked; no measured arm on superseded1.50night candidate"
 }
