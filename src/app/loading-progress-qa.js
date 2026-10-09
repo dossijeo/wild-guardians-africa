@@ -8,6 +8,7 @@ export function installLoadingProgressQa(doc=document,{throttleReady=true,gpu=fa
  return {
   begin(now,renderer){previousFrame=now;if(gpu&&renderer){gpuOwner?.close();gpuOwner=gpuFactory(renderer);}},
   frame(now){if(previousFrame!==null)report.frames.push({at:now,interval:now-previousFrame});previousFrame=now;},
+  preparationPolicy(isolated){report.preparationPolicy={farIsolatedPreparation:isolated===true,scope:'World owner policy at loading start; GPU draw metadata/readbacks provide actual execution evidence.'};},
   actorQueue(stats){report.actorQueue=stats;},
   loadingSpan(span){(report.loadingSpans??=[]).push(span);},
   invocation(label,run){const start=now();let failed=false;try{return gpuOwner&&(label==='presentation-diorama-render'||label==='presentation-cinematic-step')?gpuOwner.measure(label,run):run();}catch(error){failed=true;throw error;}finally{const end=now();(report.loadingSpans??=[]).push({label,start,end,duration:end-start,failed,scope:'Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work.'});}},

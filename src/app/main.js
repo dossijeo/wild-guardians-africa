@@ -76,7 +76,7 @@ function prepareLoadingScene(){
  if(preparedLoading)return preparedLoading;
  const canvas=document.createElement('canvas');canvas.className='loading-prepared-canvas';canvas.style.cssText='position:fixed;inset:0;width:100%;height:100%;opacity:0;pointer-events:none';document.body.append(canvas);
  let owner,diorama;const transfers=new LoadingTransferOwner();
- try{owner=new WorldScene(canvas,onPick);owner.controls.enabled=false;owner.qualitySetting(settings.quality);applyWorldResolution(owner,settings.resolution);
+ try{owner=new WorldScene(canvas,onPick);if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')&&new URLSearchParams(location.search).has('qa-loading-far-full-scene'))owner.farIsolatedPreparation=false;owner.controls.enabled=false;owner.qualitySetting(settings.quality);applyWorldResolution(owner,settings.resolution);
  diorama=new LoadingDiorama(owner);const preparation={world:owner,diorama,canvas,transfers};preparedLoading=preparation;
  preparation.pending=diorama.prepare();preparation.pending.catch(()=>{});return preparation;
  }catch(failure){transfers.dispose();diorama?.dispose();owner?.dispose();canvas.remove();throw failure;}
@@ -193,7 +193,7 @@ async function startGame(loaded=null,{slotId,preview}={}) {
     document.querySelector('[data-menu="build"]').onclick=()=>safe(()=>guidedHudAction('build',buildPanel));
     world.onError=e=>{if(starting&&world===prepared.world){loadingProgress?.fail(e);cancelLoading(e);}else error(e.message);};world.onChunkProgress=progress=>{if(starting&&loadingProgress&&world===prepared.world)loadingProgress.update('chunks',progress.loaded,Math.max(1,progress.desired));};world.onWallStroke=points=>safe(()=>buildWallStroke(points));world.onWallGesture=phase=>uiAudio.wallGesture(phase);world.qualitySetting(settings.quality);applyWorldResolution(world,settings.resolution);world.onContextLost=()=>{if(screen==='loading'){cancelLoading(new Error(moneyLocale().startsWith('es')?'Se ha perdido el contexto gráfico durante la carga.':'Graphics context lost during loading.'));return;}Game.pause(state,'context-lost');error('Se ha perdido el contexto gráfico. La partida está pausada.');};world.onContextRestored=()=>Game.resume(state,'context-lost');
     world.destructionPass.onDestructionCue=(counts,entity)=>audio.destructionCue(counts,entity,{state,listener:world.controls.target});
-    if(progressQa){world.onLoadingSpan=span=>progressQa.loadingSpan(span);world.onLoadingActorQueue=stats=>progressQa.actorQueue(stats);world.onLoadingGpuDraw=run=>progressQa.gpuInvocation('preparation-far-upload-draw',run);}
+    if(progressQa){progressQa.preparationPolicy(world.farIsolatedPreparation);world.onLoadingSpan=span=>progressQa.loadingSpan(span);world.onLoadingActorQueue=stats=>progressQa.actorQueue(stats);world.onLoadingGpuDraw=run=>progressQa.gpuInvocation('preparation-far-upload-draw',run);}
     await world.load(state,nav,payload,{farVegetation:settings.farVegetation===false?false:farVegetationProfile({quality:settings.quality,biome:nav.config.biome}),loadingProgress});assertLoading();
     for(const village of state.villages.slice(1)){const data=villages.find(v=>v.id===(village.culture==='saheliana'?'saheliano':village.culture));await world.ensureVillage(village.culture,data);assertLoading();world.objects.delete(village.id);}
     await world.loadReady(prepareInitialFarWorld(world,{afterRender:()=>{assertLoading();loadingDiorama.render(0,loadingProgress.value);}}));assertLoading();
