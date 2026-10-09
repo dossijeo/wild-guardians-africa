@@ -11,7 +11,8 @@ export function computeRaidEntry(request){
   const specs=group.map(id=>({spec:animalSpec(id),radius:ANIMAL_ACTIONS.animals[id].presentation.footprint.radius}));
   // Only the isolated request copy advances. The real spawn still consumes
   // its original RNG draw, even when this prepared result is accepted.
-  const entry=chooseRaidEntry(state,specs,bounds,randomInt(state,0,3),nav);
+  const preferredSide=state.nightPlan?.entryPreferredSide??randomInt(state,0,3);
+  const entry=chooseRaidEntry(state,specs,bounds,preferredSide,nav);
   const path=nav.path.bind(nav);let points=0;nav.warmPaths=new Map();
   nav.path=(start,end,radius=.3,ignore=null,worker=true,margin=16)=>{
     const route=path(start,end,radius,ignore,worker,margin);

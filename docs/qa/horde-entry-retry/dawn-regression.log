@@ -1,0 +1,125 @@
+TAP version 13
+# Subtest: A route blocked after reservation releases its worker without deleting the task or starting an action
+ok 1 - A route blocked after reservation releases its worker without deleting the task or starting an action # SKIP test name does not match pattern
+  ---
+  duration_ms: 1.4485
+  ...
+# Subtest: Repair settles its rounded current price exactly once on arrival, without an extra animation delay
+ok 2 - Repair settles its rounded current price exactly once on arrival, without an extra animation delay # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.123
+  ...
+# Subtest: Funds spent after requesting repair cancel execution at arrival without partial payment
+ok 3 - Funds spent after requesting repair cancel execution at arrival without partial payment # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0616
+  ...
+# Subtest: Surviving repair order becomes full reconstruction and does not wait for collapse to finish
+ok 4 - Surviving repair order becomes full reconstruction and does not wait for collapse to finish # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0559
+  ...
+# Subtest: Starting an attack immediately cancels manual repair orders and releases the worker
+ok 5 - Starting an attack immediately cancels manual repair orders and releases the worker # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0567
+  ...
+# Subtest: Postgame founding uses complete native village, valid departure, exact linear costs and persistent state
+ok 6 - Postgame founding uses complete native village, valid departure, exact linear costs and persistent state # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0517
+  ...
+# Subtest: A village without a walkable departure is rejected before charging or founding
+ok 7 - A village without a walkable departure is rejected before charging or founding # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0568
+  ...
+# Subtest: 30 canonical combinations validate and each new game starts isolated at 1500
+ok 8 - 30 canonical combinations validate and each new game starts isolated at 1500 # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1767
+  ...
+# Subtest: First day center/plant/tutorial hiring sequence and payment idempotency
+ok 9 - First day center/plant/tutorial hiring sequence and payment idempotency # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0755
+  ...
+# Subtest: Invalid placement makes no economic or world modification
+ok 10 - Invalid placement makes no economic or world modification # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1507
+  ...
+# Subtest: Workers physically plant, water and harvest; only crate delivery pays
+ok 11 - Workers physically plant, water and harvest; only crate delivery pays # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.086
+  ...
+# Subtest: Stacked pauses freeze crops and spell clocks
+ok 12 - Stacked pauses freeze crops and spell clocks # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0661
+  ...
+# Subtest: Manual harvest orders survive queue reconstruction, manual repairs do not
+ok 13 - Manual harvest orders survive queue reconstruction, manual repairs do not # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.049
+  ...
+# Subtest: New midday center does not move plants or employees
+ok 14 - New midday center does not move plants or employees # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.114
+  ...
+# Subtest: Growth/multiply permissions, area nonoverlap, cooldown from activation and expiry
+ok 15 - Growth/multiply permissions, area nonoverlap, cooldown from activation and expiry # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0507
+  ...
+# Subtest: First nights introduce mandatory warthog and hyena even with zero attraction
+ok 16 - First nights introduce mandatory warthog and hyena even with zero attraction # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0673
+  ...
+# Subtest: Raid drops a carried crate, frees tasks and preserves its value
+ok 17 - Raid drops a carried crate, frees tasks and preserves its value # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1406
+  ...
+# Subtest: Combo attack counts one logical hit; active raid survives roundtrip
+ok 18 - Combo attack counts one logical hit; active raid survives roundtrip # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.2448
+  ...
+# Subtest: Attack crossing dawn prevents events, hiring and night completion until departure
+ok 19 - Attack crossing dawn prevents events, hiring and night completion until departure
+  ---
+  duration_ms: 10.0558
+  ...
+# Subtest: Final raid defeat takes precedence over hundredth night victory
+ok 20 - Final raid defeat takes precedence over hundredth night victory
+  ---
+  duration_ms: 1.9842
+  ...
+# Subtest: Hundredth completed night wins only after economic check; postgame suppresses attacks
+ok 21 - Hundredth completed night wins only after economic check; postgame suppresses attacks
+  ---
+  duration_ms: 1.5387
+  ...
+# Subtest: Event frost leaves mature plants intact; favorable growth keeps mandatory water debt
+ok 22 - Event frost leaves mature plants intact; favorable growth keeps mandatory water debt # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1168
+  ...
+# Subtest: Plague consumes half remaining tolerance without killing plants or changing coins
+ok 23 - Plague consumes half remaining tolerance without killing plants or changing coins # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1431
+  ...
+1..23
+# tests 23
+# suites 0
+# pass 3
+# fail 0
+# cancelled 0
+# skipped 20
+# todo 0
+# duration_ms 201.725

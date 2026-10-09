@@ -9,6 +9,8 @@ export class RaidEntryPreparer {
       this.stats.used++;return this.ready;
     };
     nav.preparedRaidEntry=this.take;
+    this.peek=(state,group,bounds)=>this.ready?.key===raidEntryKey(state,nav,group,bounds)?this.ready:undefined;
+    nav.preparedRaidEntryRevision=this.peek;
     try{this.worker=createWorker();this.worker.onmessage=({data})=>this.receive(data);this.worker.onerror=()=>this.disable();}
     catch{this.disable();}
   }
@@ -35,6 +37,7 @@ export class RaidEntryPreparer {
   dispose(){
     if(this.disposed)return;this.disposed=true;this.worker?.terminate();this.worker=null;
     if(this.nav.preparedRaidEntry===this.take)delete this.nav.preparedRaidEntry;
+    if(this.nav.preparedRaidEntryRevision===this.peek)delete this.nav.preparedRaidEntryRevision;
     this.pending=null;this.ready=null;this.state=null;
   }
 }

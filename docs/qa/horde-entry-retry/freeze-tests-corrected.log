@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: Failed entry consumes one side draw, allocates no actors, and retries no unchanged input
+ok 1 - Failed entry consumes one side draw, allocates no actors, and retries no unchanged input # SKIP test name does not match pattern
+  ---
+  duration_ms: 1.6446
+  ...
+# Subtest: At pending dawn all simulated clocks, collapses, workers, tasks and ledger freeze; UI and save remain usable
+ok 2 - At pending dawn all simulated clocks, collapses, workers, tasks and ledger freeze; UI and save remain usable
+  ---
+  duration_ms: 282.666
+  ...
+# Subtest: Changing native camera bounds enables entry at600, preserves side, and draws only successful strike budgets
+ok 3 - Changing native camera bounds enables entry at600, preserves side, and draws only successful strike budgets # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1354
+  ...
+# Subtest: Persisted side zero has stable prepared keys and isolated worker computation does not redraw
+ok 4 - Persisted side zero has stable prepared keys and isolated worker computation does not redraw # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0851
+  ...
+# Subtest: A fresh prepared failure is considered once, including worker recreation with the same token
+ok 5 - A fresh prepared failure is considered once, including worker recreation with the same token # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0721
+  ...
+# Subtest: Successful first attempt keeps original side-plus-strikes RNG order
+ok 6 - Successful first attempt keeps original side-plus-strikes RNG order # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0565
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 5
+# todo 0
+# duration_ms 465.8334

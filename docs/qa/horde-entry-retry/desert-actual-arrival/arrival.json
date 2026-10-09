@@ -1,0 +1,254 @@
+{
+  "biome": "desierto",
+  "culture": "mapungubwe",
+  "seed": "712",
+  "group": [
+    "warthog",
+    "warthog",
+    "warthog",
+    "warthog",
+    "hyena",
+    "hyena",
+    "hyena",
+    "buffalo",
+    "buffalo",
+    "lion",
+    "lion",
+    "rhino"
+  ],
+  "bounds": [
+    -24,
+    -120,
+    216,
+    120
+  ],
+  "eye": {
+    "x": 111,
+    "z": 20
+  },
+  "center": {
+    "id": "structure-2",
+    "created": 1,
+    "kind": "center",
+    "material": "zarzas",
+    "gate": false,
+    "x": 95,
+    "z": 0,
+    "yaw": 0,
+    "culture": "mapungubwe",
+    "maxHp": 600,
+    "hp": 600,
+    "status": "intact",
+    "villageId": "village-1",
+    "cost": 800,
+    "collapseRemaining": 0
+  },
+  "scope": "Entry-only native route diagnostic; no clock, commands, RNG mutation or campaign. Original direct-route test remains negative.",
+  "stateSHA256": "2b2ad22f2095d4082413384015c535f7441ec9ff7ee4f26c2e59475e8ab4899e",
+  "entry": {
+    "entries": [
+      {
+        "x": -19.2,
+        "z": -22
+      },
+      {
+        "x": -19.2,
+        "z": -18
+      },
+      {
+        "x": -19.2,
+        "z": -14
+      },
+      {
+        "x": -19.2,
+        "z": -10
+      },
+      {
+        "x": -19.2,
+        "z": -6
+      },
+      {
+        "x": -19.2,
+        "z": -2
+      },
+      {
+        "x": -19.2,
+        "z": 2
+      },
+      {
+        "x": -19.2,
+        "z": 6
+      },
+      {
+        "x": -19.2,
+        "z": 10
+      },
+      {
+        "x": -19.2,
+        "z": 14
+      },
+      {
+        "x": -19.2,
+        "z": 18
+      },
+      {
+        "x": -19.2,
+        "z": 22
+      }
+    ],
+    "exits": [
+      {
+        "x": -22.2,
+        "z": -22
+      },
+      {
+        "x": -22.2,
+        "z": -18
+      },
+      {
+        "x": -22.2,
+        "z": -14
+      },
+      {
+        "x": -22.2,
+        "z": -10
+      },
+      {
+        "x": -22.2,
+        "z": -6
+      },
+      {
+        "x": -22.2,
+        "z": -2
+      },
+      {
+        "x": -22.2,
+        "z": 2
+      },
+      {
+        "x": -22.2,
+        "z": 6
+      },
+      {
+        "x": -22.2,
+        "z": 10
+      },
+      {
+        "x": -22.2,
+        "z": 14
+      },
+      {
+        "x": -22.2,
+        "z": 18
+      },
+      {
+        "x": -22.2,
+        "z": 22
+      }
+    ]
+  },
+  "rows": [
+    {
+      "index": 0,
+      "species": "warthog",
+      "radius": 1.1,
+      "entry": {
+        "x": -19.2,
+        "z": -22
+      },
+      "exit": {
+        "x": -22.2,
+        "z": -22
+      },
+      "directPoint": {
+        "x": 89.3099107101266,
+        "z": -2.3271237027764373
+      },
+      "directRoute": false,
+      "nativeAttackRoute": false
+    },
+    {
+      "index": 1,
+      "species": "warthog",
+      "radius": 1.1,
+      "entry": {
+        "x": -19.2,
+        "z": -18
+      },
+      "exit": {
+        "x": -22.2,
+        "z": -18
+      },
+      "directPoint": {
+        "x": 89.30079721516306,
+        "z": -2.271240095813239
+      },
+      "directRoute": false,
+      "nativeAttackRoute": false
+    },
+    {
+      "index": 2,
+      "species": "warthog",
+      "radius": 1.1,
+      "entry": {
+        "x": -19.2,
+        "z": -14
+      },
+      "exit": {
+        "x": -22.2,
+        "z": -14
+      },
+      "directPoint": {
+        "x": 89.29360328698564,
+        "z": -2.214485676486926
+      },
+      "directRoute": false,
+      "nativeAttackRoute": false
+    },
+    {
+      "index": 3,
+      "species": "warthog",
+      "radius": 1.1,
+      "entry": {
+        "x": -19.2,
+        "z": -10
+      },
+      "exit": {
+        "x": -22.2,
+        "z": -10
+      },
+      "directPoint": {
+        "x": 89.26773633604557,
+        "z": -1.9464119106548297
+      },
+      "directRoute": false,
+      "nativeAttackRoute": false
+    },
+    {
+      "index": 4,
+      "species": "hyena",
+      "radius": 0.9,
+      "entry": {
+        "x": -19.2,
+        "z": -6
+      },
+      "exit": {
+        "x": -22.2,
+        "z": -6
+      },
+      "directPoint": {
+        "x": 89.46348232226929,
+        "z": -1.8582352616943978
+      },
+      "directRoute": false
+    }
+  ],
+  "routeQueries": 155,
+  "completeEntry": true,
+  "status": "incomplete",
+  "error": "Diagnostic CPU budget exhausted; untested routes remain unknown",
+  "allNativeAttackRoutes": false,
+  "finalStateSHA256": "2b2ad22f2095d4082413384015c535f7441ec9ff7ee4f26c2e59475e8ab4899e",
+  "stateUnchanged": true,
+  "milliseconds": 4516.9263
+}

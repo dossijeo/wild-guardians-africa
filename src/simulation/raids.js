@@ -14,8 +14,12 @@ import {updateWorkerEncounters} from './encounters.js';
 import {ANIMAL_ACTIONS} from './animal-actions-data.js';
 import {actorBlockers,actorSegmentClear} from './actor-motion.js';
 import {activeChunkRegion,validActiveBounds} from '../world/active-region.js';
+import {raidEntryRetryKey} from '../world/raid-entry-data.js';
 import {defensiveGroups,reservedGroup,reconcileDefensiveReservations} from './defensive-groups.js';
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
+// Prepared replies belong to a renderer/worker lifetime, never the saved game.
+// Object identity also distinguishes a fresh reply after worker recreation.
+const attemptedPreparedRevisions=new WeakMap();
 export function planNight(s) {
   const at=323+nextRandom(s)*225; // 20:00–05:00 at 2.4 internal minutes/s.
   const value=attraction(s.plants),tier=threatTier(value);
@@ -136,22 +140,32 @@ export function chooseRaidEntry(s,specs,bounds,preferredSide,nav){
   return entries?{entries,exits}:null;
 }
 export function spawnRaid(s,plan,nav,daytime=false) {
-  if(s.raid||s.postgame)return;
+  if(s.raid||s.postgame)return 'ineligible';
+  if(!daytime&&plan.entryPreferredSide!==undefined&&(!Number.isInteger(plan.entryPreferredSide)||plan.entryPreferredSide<0||plan.entryPreferredSide>3))throw Error('Invalid persisted raid entry side');
   let group=plan.group;
   if(daytime) {
     const value=attraction(s.plants);if(value<10000||nextRandom(s)>=.1)return;
     const budget=randomInt(s,7,10),legal=compositions(budget,threatTier(value).unlocked_species);group=legal[randomInt(s,0,legal.length-1)];
   }
-  if(!group?.length)return;
+  if(!group?.length)return 'ineligible';
   const focus=s.structures.find(operational)??s.villages[0];
   const specs=group.map(id=>({spec:animalSpec(id),radius:ANIMAL_ACTIONS.animals[id].presentation.footprint.radius}));
   const bounds=validActiveBounds(nav.activeBounds)?[...nav.activeBounds]:activeChunkRegion(focus).bounds;
+  const selected=!daytime&&Number.isInteger(plan.entryPreferredSide);
+  const inputKey=selected?raidEntryRetryKey(s,nav,group,bounds,plan.entryPreferredSide):null;
+  const preparedRevision=!daytime?nav.preparedRaidEntryRevision?.(s,group,bounds):undefined;
+  if(selected&&inputKey===plan.entryAttemptKey&&(!preparedRevision||preparedRevision===attemptedPreparedRevisions.get(plan)))return 'unavailable';
+  // Retrieve pre-selection preparation before consuming the original draw.
   const prepared=!daytime&&nav.preparedRaidEntry?.(s,group,bounds);
   if(prepared)warmRaidNavigation(nav,prepared.warmth);
-  const preferredSide=randomInt(s,0,3);
+  const preferredSide=selected?plan.entryPreferredSide:randomInt(s,0,3);
+  if(!daytime){plan.entryPreferredSide=preferredSide;plan.entryAttemptKey=raidEntryRetryKey(s,nav,group,bounds,preferredSide);if(preparedRevision)attemptedPreparedRevisions.set(plan,preparedRevision);}
   const entry=prepared?prepared.entry:chooseRaidEntry(s,specs,bounds,preferredSide,nav);
   const entries=entry?.entries,exits=entry?.exits;
-  if(!entries){notice(s,'La incursión no encuentra una entrada transitable para su grupo completo.');return;}
+  if(!entries||entries.length!==specs.length||exits?.length!==specs.length){
+    if(daytime||!plan.entryDiagnosticIssued){notice(s,'La incursión no encuentra una entrada transitable para su grupo completo.');if(!daytime){plan.entryDiagnosticIssued=true;emit(s,'NightEntryPending',{plannedNight:plan.plannedNight??s.day,groupCount:group.length});}}
+    return 'unavailable';
+  }
   const animals=specs.map(({spec,radius},i)=>({id:`animal-${s.nextId++}`,species:spec.id,...entries[i],spawn:{...entries[i]},exit:{...exits[i]},radius,
     hitsRemaining:plan.introductory&&!daytime?spec.hit_budget_min:randomInt(s,spec.hit_budget_min,spec.hit_budget_max),status:'entering',targetId:null,reservation:null,path:null,attackRemaining:0,attackId:null,hitApplied:false}));
   s.raid={id:`raid-${s.day}-${daytime?'day':'night'}`,animals,encounters:[],reservations:{},daytime};
@@ -167,6 +181,7 @@ export function spawnRaid(s,plan,nav,daytime=false) {
   }
   s.tasks=s.tasks.filter(t=>t.kind!=='repair');
   notice(s,RAID_NOTICE_TEXT,animals[0].id);emit(s,'RaidSpawned');
+  return 'spawned';
 }
 function release(s,a) {if(a.reservation&&s.raid.reservations[a.reservation]===a.id)delete s.raid.reservations[a.reservation];a.reservation=null;a.targetId=null;a.path=null;a.approach=null;a.approachShieldId=null;}
 export function reachableApproach(a,target,nav,shield=null){

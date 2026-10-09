@@ -592,8 +592,12 @@ function clockBoundaries(s){
 function prepareClockEvents(s,nav){
   if(s.time>=300 && !s.nightPlan){planNight(s);selectEvent(s);emit(s,'NightStarted');}
   if(s.dayPlan&&!s.dayPlan.done&&s.time>=s.dayPlan.at){s.dayPlan.done=true;if(!s.postgame)spawnRaid(s,s.dayPlan,nav,true);}
-  if(s.nightPlan&&!s.nightPlan.done&&s.time>=s.nightPlan.at){s.nightPlan.done=true;if(s.nightPlan.group?.length)spawnRaid(s,s.nightPlan,nav);}
+  if(s.nightPlan&&!s.nightPlan.done&&s.time>=s.nightPlan.at){
+    if(!s.nightPlan.group?.length)s.nightPlan.done=true;
+    else if(spawnRaid(s,s.nightPlan,nav)==='spawned')s.nightPlan.done=true;
+  }
 }
+export function nightEntryPending(s){return !!(!s.postgame&&s.nightPlan&&!s.nightPlan.done&&s.nightPlan.group?.length&&s.time>=s.nightPlan.at);}
 export function tick(s,seconds,nav) {
   return withNavigationQueries(nav,()=>tickScoped(s,seconds,nav));
 }
@@ -602,6 +606,9 @@ function tickScoped(s,seconds,nav) {
   let left=seconds;
   while(left>1e-9 && !s.pauses.length && !s.result) {
     prepareClockEvents(s,nav);
+    // No actors entered: waiting at dawn is not extra simulated night time.
+    // UI/camera and presentation preparation run outside this simulation loop.
+    if(s.time>=600&&!s.raid&&nightEntryPending(s))return;
     // Version-1 saves can contain an active area without exposure bookkeeping.
     // Mark once on restoration; static plants need no per-frame exposure scan.
     for(const area of s.spells)if(area.kind==='multiply'&&area.remaining>0&&!area.exposureApplied)markMultiplyTargets(s,area);
@@ -638,13 +645,14 @@ function tickScoped(s,seconds,nav) {
     // Arrival is an event at the end of this interval. Newly spawned animals
     // must not move for time that elapsed before they existed.
     prepareClockEvents(s,nav);
-    if(s.time>=600 && !s.raid && !s.result)closeNight(s);
+    if(s.time>=600 && !s.raid && !s.result && !nightEntryPending(s))closeNight(s);
   }
 }
 export function advanceReal(s,seconds,nav) {
   let left=seconds;
   while(left>1e-9 && !s.pauses.length&&!s.result) {
       prepareClockEvents(s,nav);
+    if(s.time>=600&&!s.raid&&nightEntryPending(s))return;
     const speed=s.time>=300&&!s.raid?5:1;
     const untilBoundary=Math.min(...clockBoundaries(s).filter(t=>t>s.time+1e-9).map(t=>(t-s.time)/speed));
     const real=Math.min(left,.02,untilBoundary);left-=real;
