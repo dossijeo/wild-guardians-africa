@@ -295,7 +295,7 @@ export function updateRaid(s,dt,nav) {
   }
   if(s.raid.animals.every(a=>a.status==='gone')) {
     s.raid=null;nav.setState(s);emit(s,'RaidEnded');
-    if(!s.structures.some(operational)&&compare(s.ledger.balance,rational(800))<0){s.result='defeat';notice(s,'Cayó el último centro; faltan monedas para que otro nazca.');emit(s,'GameOver');return;}
+    if(!s.structures.some(operational)&&compare(s.ledger.balance,rational(B.work_center.cost))<0){s.result='defeat';notice(s,'Cayó el último centro; faltan monedas para que otro nazca.');emit(s,'GameOver');return;}
     for(const w of s.workers) {
       if(w.incapacitated||contractExpired(w,s)||s.time>=PROFILES_END(w.profile))continue;
       const center=s.structures.find(c=>c.id===w.centerId&&operational(c));
