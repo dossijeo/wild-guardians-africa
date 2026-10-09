@@ -14,6 +14,10 @@ on:
         description: Smoke-only pause native menu rendering at definitive start/load
         type: boolean
         default: false
+      animal_prefetch:
+        description: Smoke-only animal prefetch with same-EXE fixture712 OFF control (requires shared_ground and pause_menu)
+        type: boolean
+        default: false
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -30,6 +34,7 @@ jobs:
     env:
       SMOKE_SHARED_GROUND: ${{ inputs.shared_ground }}
       SMOKE_PAUSE_MENU: ${{ inputs.pause_menu }}
+      SMOKE_ANIMAL_PREFETCH: ${{ inputs.animal_prefetch }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -40,6 +45,11 @@ jobs:
       - uses: swatinem/rust-cache@v2
         with:
           workspaces: src-tauri -> target
+      - name: Validate isolated animal prefetch comparison
+        if: inputs.animal_prefetch
+        shell: pwsh
+        run: |
+          if ($env:SMOKE_SHARED_GROUND -ne 'true' -or $env:SMOKE_PAUSE_MENU -ne 'true') { throw 'Animal prefetch comparison requires shared_ground=true and pause_menu=true in both arms' }
       - run: npm ci
       - id: desktop-build
         run: npm run desktop:build
@@ -52,7 +62,7 @@ jobs:
           "Windows executable: $($binary.Length) bytes" >> $env:GITHUB_STEP_SUMMARY
           "NSIS installer: $($installer.Length) bytes" >> $env:GITHUB_STEP_SUMMARY
       - name: Diagnostic same-EXE ground control OFF
-        if: inputs.shared_ground
+        if: inputs.shared_ground && !inputs.animal_prefetch
         continue-on-error: true
         shell: pwsh
         run: |
@@ -72,6 +82,30 @@ jobs:
             Write-Output "::warning::Diagnostic ground OFF raw failure preserved; normalized step success is not a smoke PASS."
             throw 'Diagnostic control smoke failed; preserved separately'
           }
+      - name: Diagnostic same-EXE fixture712 animal prefetch OFF
+        if: inputs.animal_prefetch
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          $fixture = Join-Path $env:RUNNER_TEMP 'desktop-visibility-fixture.json'
+          node tools/create_desktop_visibility_fixture.mjs $fixture
+          if ($LASTEXITCODE -ne 0) { throw 'Native visibility control fixture failed' }
+          "Fixture712 snapshot file SHA256: $((Get-FileHash -LiteralPath $fixture -Algorithm SHA256).Hash)" >> $env:GITHUB_STEP_SUMMARY
+          $report = Join-Path $env:RUNNER_TEMP 'desktop-animal-control.json'
+          $binary = (Resolve-Path src-tauri/target/release/wild-guardians-africa.exe).Path
+          $controlArgs = @('--smoke-report', $report, '--smoke-fixture', $fixture, '--smoke-shared-ground', '--smoke-pause-menu')
+          $process = Start-Process -FilePath $binary -ArgumentList $controlArgs -WindowStyle Hidden -PassThru
+          if (-not $process.WaitForExit(900000)) { Stop-Process -Id $process.Id; throw 'Diagnostic fixture712 control process timed out' }
+          if (-not (Test-Path -LiteralPath $report)) { throw 'No diagnostic animal control report' }
+          $result = Get-Content -Raw -LiteralPath $report | ConvertFrom-Json
+          $result.PSObject.Properties.Remove('worldPng')
+          $result | ConvertTo-Json -Depth 30 | Set-Content -LiteralPath $report
+          $controlErrors = ($result.errors -join '; ') -replace '[\r\n]', ' '
+          "Diagnostic fixture712 animal prefetch OFF raw ok=$($result.ok); errors=$controlErrors. Step conclusion may be normalized by continue-on-error and is not smoke approval." >> $env:GITHUB_STEP_SUMMARY
+          if ($process.ExitCode -ne 0 -or -not $result.ok -or -not $result.checks.visibility.passed) {
+            Write-Output "::warning::Diagnostic animal prefetch OFF raw failure preserved; normalized step success is not a smoke PASS."
+            throw 'Diagnostic fixture712 control smoke failed; preserved separately'
+          }
       - name: Smoke test the packaged game in WebView2
         shell: pwsh
         run: |
@@ -80,6 +114,7 @@ jobs:
           $smokeArgs = @('--smoke-report', $report)
           if ($env:SMOKE_SHARED_GROUND -eq 'true') { $smokeArgs += '--smoke-shared-ground' }
           if ($env:SMOKE_PAUSE_MENU -eq 'true') { $smokeArgs += '--smoke-pause-menu' }
+          if ($env:SMOKE_ANIMAL_PREFETCH -eq 'true') { $smokeArgs += '--smoke-animal-prefetch' }
           $process = Start-Process -FilePath $binary -ArgumentList $smokeArgs -WindowStyle Hidden -PassThru
           if (-not $process.WaitForExit(240000)) { Stop-Process -Id $process.Id; throw 'WebView2 smoke timed out' }
           if (-not (Test-Path -LiteralPath $report)) { throw 'No WebView2 smoke report' }
@@ -95,13 +130,17 @@ jobs:
         shell: pwsh
         run: |
           $fixture = Join-Path $env:RUNNER_TEMP 'desktop-visibility-fixture.json'
-          node tools/create_desktop_visibility_fixture.mjs $fixture
-          if ($LASTEXITCODE -ne 0) { throw 'Native visibility fixture failed' }
+          if ($env:SMOKE_ANIMAL_PREFETCH -ne 'true') {
+            node tools/create_desktop_visibility_fixture.mjs $fixture
+            if ($LASTEXITCODE -ne 0) { throw 'Native visibility fixture failed' }
+          }
+          if (-not (Test-Path -LiteralPath $fixture)) { throw 'Missing exact fixture712 control snapshot' }
           $report = Join-Path $env:RUNNER_TEMP 'desktop-visibility.json'
           $binary = (Resolve-Path src-tauri/target/release/wild-guardians-africa.exe).Path
           $smokeArgs = @('--smoke-report', $report, '--smoke-fixture', $fixture)
           if ($env:SMOKE_SHARED_GROUND -eq 'true') { $smokeArgs += '--smoke-shared-ground' }
           if ($env:SMOKE_PAUSE_MENU -eq 'true') { $smokeArgs += '--smoke-pause-menu' }
+          if ($env:SMOKE_ANIMAL_PREFETCH -eq 'true') { $smokeArgs += '--smoke-animal-prefetch' }
           $process = Start-Process -FilePath $binary -ArgumentList $smokeArgs -WindowStyle Hidden -PassThru
           if (-not $process.WaitForExit(900000)) { Stop-Process -Id $process.Id; throw 'Native visibility timed out' }
           if (-not (Test-Path -LiteralPath $report)) { throw 'No native visibility report' }
@@ -148,8 +187,20 @@ jobs:
           path: src-tauri/Cargo.lock
           retention-days: 7
       - uses: actions/upload-artifact@v7
-        if: always() && inputs.shared_ground
+        if: always() && inputs.shared_ground && !inputs.animal_prefetch
         with:
           path: ${{ runner.temp }}/desktop-ground-control.json
+          archive: false
+          retention-days: 7
+      - uses: actions/upload-artifact@v7
+        if: always() && inputs.animal_prefetch
+        with:
+          path: ${{ runner.temp }}/desktop-animal-control.json
+          archive: false
+          retention-days: 7
+      - uses: actions/upload-artifact@v7
+        if: always() && inputs.animal_prefetch
+        with:
+          path: ${{ runner.temp }}/desktop-visibility-fixture.json
           archive: false
           retention-days: 7

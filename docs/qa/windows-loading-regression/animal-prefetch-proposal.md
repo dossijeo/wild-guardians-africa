@@ -1,6 +1,6 @@
 # Opt-in animal model prefetch candidate
 
-Status: source/contracts only. No native run, dispatch, promotion or PR is authorized by this receipt. Shared-ground remains OFF by default.
+Status: initial source/contracts receipt for bf4c3b50. Subsequent CLI/workflow wiring is specified in animal-prefetch-paired-protocol.md; no native run, dispatch, promotion or PR is authorized by this receipt. Shared-ground remains OFF by default.
 
 ## Evidence and hypothesis
 
@@ -14,7 +14,7 @@ The candidate overlaps preparation of the original five animal GLBs with sky, bi
 
 The same Assets collection and exact logical URLs retain existing Promise-cache identity, transfer accounting and ownership. No alias cache, new reader/protocol, renderer, upload queue or decoded-buffer copy is introduced. Model prefetch does not create AnimalPreload, mixers or rigs. Assets.model allocates/decodes the original GLTF resources but does not call renderer.initTexture, compile or render. The normal warm stage creates rigs and all later geometry adoption, uploads, program readiness, CPU16 pacing, fences and far preparation remain in their original order.
 
-No village BIN/texture concurrency, wall fan-out, VFX constructor reordering or other optimization is included. Collective/parallel readiness and parallel diorama assets remain unchanged/OFF; shared-ground remains OFF unless explicitly enabled by an independent QA run. No smoke workflow or deadline changes are included.
+No village BIN/texture concurrency, wall fan-out, VFX constructor reordering or other optimization is included. Collective/parallel readiness and parallel diorama assets remain unchanged/OFF; shared-ground remains OFF unless explicitly enabled by an independent QA run. The bf4c3b50 source change contains no smoke workflow or deadline changes; subsequent opt-in workflow wiring is documented separately.
 
 ## Ownership and failures
 

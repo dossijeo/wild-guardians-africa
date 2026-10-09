@@ -29,6 +29,9 @@ fn main() {
                 if std::env::args().any(|arg| arg == "--smoke-pause-menu") {
                     let _ = webview.eval("window.__desktopSmokePauseLoadingMenu=true;");
                 }
+                if std::env::args().any(|arg| arg == "--smoke-animal-prefetch") {
+                    let _ = webview.eval("window.__desktopSmokeAnimalPrefetch=true;");
+                }
                 let _ = webview.eval(include_str!("../smoke.js"));
             }
         })
