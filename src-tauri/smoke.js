@@ -1,3 +1,13 @@
+// Smoke-only diagnostics. Observe existing RAF callbacks; never add a render loop.
+function observeDesktopWorldLoading(win,doc,now=()=>performance.now()) {
+ const nativeRaf=win.requestAnimationFrame,started=now(),frames={callbacks:0,distinctTimestamps:0,lastAt:null,maxIntervalMs:0,recent:[],callbackNames:{}},transitions=[];
+ let stopped=false,last='';
+ const snapshot=()=>({visibility:doc.visibilityState,hidden:doc.hidden,focused:doc.hasFocus(),stageBusy:doc.querySelector('#stage')?.getAttribute('aria-busy')??null,overlay:!!doc.querySelector('#world-loading'),progress:doc.querySelector('[role="progressbar"]')?.getAttribute('aria-valuenow')??null,phase:doc.querySelector('.interactive-loading-title')?.textContent??null,failure:doc.querySelector('.loading-failure')?.textContent??null,canvas:doc.querySelector('#world')?{width:doc.querySelector('#world').width,height:doc.querySelector('#world').height}:null,menu:!!doc.querySelector('#app iframe')});
+ const wrapped=function(callback){return nativeRaf.call(win,function(stamp){if(!stopped){frames.callbacks++;const name=callback.name||'(anonymous)';frames.callbackNames[name]=(frames.callbackNames[name]??0)+1;if(stamp!==frames.lastAt){if(frames.lastAt!==null)frames.maxIntervalMs=Math.max(frames.maxIntervalMs,stamp-frames.lastAt);frames.lastAt=stamp;frames.distinctTimestamps++;frames.recent.push(stamp);if(frames.recent.length>128)frames.recent.shift();}}return callback(stamp);});};
+ win.requestAnimationFrame=wrapped;
+ return {sample(){const state=snapshot(),key=JSON.stringify(state);if(key!==last){last=key;transitions.push({at:now(),...state});if(transitions.length>80)transitions.shift();}return {elapsedMs:now()-started,current:state,rafDelivery:frames,transitions,scope:'Smoke DOM/visibility snapshots and all existing RAF callbacks only; names may be minified and counts include preparation callbacks; no extra RAF, GPU query, simulated state or readiness override.'};},stop(){stopped=true;if(win.requestAnimationFrame===wrapped)win.requestAnimationFrame=nativeRaf;}};
+}
+
 // Runs only when the executable receives --smoke-report PATH. Normal play is untouched.
 (async () => {
   if (window.__desktopSmokeStarted) return;
@@ -8,11 +18,12 @@
   const fail = event => report.errors.push(event.message || String(event.reason));
   addEventListener('error', fail); addEventListener('unhandledrejection', fail);
   const timeout = setTimeout(() => finish(new Error('Desktop smoke timed out')), 720000);
-  let finished = false;
+  let finished = false, worldLoadingObserver = null;
   async function finish(error) {
     if (finished) return;
     finished = true;
     clearTimeout(timeout);
+    if(worldLoadingObserver){report.checks.productionLoading=worldLoadingObserver.sample();worldLoadingObserver.stop();}
     if (error) report.errors.push(String(error));
     report.ok = !error && report.errors.length === 0;
     await window.__TAURI_INTERNALS__.invoke('desktop_smoke_report', {report});
@@ -113,10 +124,13 @@
     const send = data => dispatchEvent(new MessageEvent('message', {origin: location.origin, source: menu.contentWindow, data: {type: 'wild-guardians:menu', ...data}}));
     send({action: 'settings-change', settings: {quality: 'muy_baja', sfx: 0, music: 0}});
     const fixture = await window.__TAURI_INTERNALS__.invoke('desktop_smoke_fixture');
+    worldLoadingObserver=observeDesktopWorldLoading(window,document);
+    report.checks.productionLoading=worldLoadingObserver.sample();
     if (fixture) {localStorage.setItem('wild-guardians:slot:'+fixture.slotId,fixture.snapshot);send({action:'load-slot',slotId:fixture.slotId});}
     else send({action: 'start', biome: 'gran-canon', culture: 'mapungubwe'});
     const worldEnd = performance.now() + 90000;
-    while (document.querySelector('#stage')?.getAttribute('aria-busy') !== 'false' && performance.now() < worldEnd) await new Promise(resolve => setTimeout(resolve, 100));
+    while (document.querySelector('#stage')?.getAttribute('aria-busy') !== 'false' && performance.now() < worldEnd) {report.checks.productionLoading=worldLoadingObserver.sample();await new Promise(resolve => setTimeout(resolve, 100));}
+    report.checks.productionLoading=worldLoadingObserver.sample();
     if (document.querySelector('#stage')?.getAttribute('aria-busy') !== 'false') throw Error('Production world did not finish loading');
     await new Promise(resolve => setTimeout(resolve, 1000));
     const world = document.querySelector('#world');
