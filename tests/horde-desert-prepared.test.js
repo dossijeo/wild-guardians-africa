@@ -10,8 +10,9 @@ import {actorSegmentClear} from '../src/simulation/actor-motion.js';
 import {randomInt,animalSpec} from '../src/simulation/rules.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 const group=[...Array(4).fill('warthog'),...Array(3).fill('hyena'),...Array(2).fill('buffalo'),...Array(2).fill('lion'),'rhino'];
-test('Desert native twelve-body preparation, attack approaches and reversible exits preserve first-draw RNG',()=>{
- const {s,nav}=createOpeningWorld({biome:'desierto',seed:712}),center=s.structures[0],eye={x:center.x+16,z:center.z+20};
+const biome=process.env.HORDE_PREFLIGHT_BIOME??'desierto';
+test(`${biome}: native twelve-body preparation, attack approaches and reversible exits preserve first-draw RNG`,()=>{
+ const {s,nav}=createOpeningWorld({biome,seed:712}),center=s.structures[0],eye={x:center.x+16,z:center.z+20};
  nav.setActiveBounds(activeChunkRegion(eye).bounds);nav.setRaidView(eye,center);s.nightPlan={at:400,group:[...group],plannedNight:41,done:false};
  const before=serialize(s),worker={requests:[],postMessage(request){this.requests.push(request);},terminate(){this.terminated=true;}},preparer=new RaidEntryPreparer(nav,{createWorker:()=>worker});
  preparer.update(s);const reply=computeRaidEntry(worker.requests[0]);assert.ok(reply.entry);assert.equal(reply.entry.entries.length,12);assert.equal(serialize(s),before);

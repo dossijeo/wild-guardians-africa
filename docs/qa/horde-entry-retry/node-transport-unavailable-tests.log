@@ -1,0 +1,20 @@
+TAP version 13
+# Subtest: QA Node transport computes a whole native group on a real worker and terminates
+ok 1 - QA Node transport computes a whole native group on a real worker and terminates
+  ---
+  duration_ms: 451.9229
+  ...
+# Subtest: Worker-disabled capped fallback is honestly pending, preserves actors and does not repeat work
+ok 2 - Worker-disabled capped fallback is honestly pending, preserves actors and does not repeat work
+  ---
+  duration_ms: 1622.0439
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1817.6483

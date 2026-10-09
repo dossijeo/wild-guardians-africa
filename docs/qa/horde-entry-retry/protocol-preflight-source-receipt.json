@@ -1,0 +1,32 @@
+{
+  "scope": "Six-biome static native entry, Node transport and observer compatibility; no campaign or complete physical raid",
+  "parentCommit": "7f45a71cba7afb0bb52ea8eefb4f7f4a13014ccd",
+  "oldReceiptRetained": "packing-source-receipt.json",
+  "sourceHashes": {
+    "src/simulation/raids.js": "56805e1098def9ae2f8a88b90a335567e3c53f1f5cbee219e3f3cf48ff00962b",
+    "src/world/compute-raid-entry.js": "7ee8cf097da21a7b102bfc8b42e0c7e042b9fa46d0b00a9edaaf7d4045cec068",
+    "src/world/raid-entry-budget.js": "623180a1b9071b94ecc3a2f0ef80c13c05709ac28be6d2fd0ba7c8608c8c6a46",
+    "src/world/raid-entry-packing.js": "578fd183d21f3bf115048615f80037532e60a864ad1e24a1468634c87f41feaf",
+    "tools/node-raid-entry-worker.mjs": "68b5e4f27d55c2dac715a712543be5a9fea2575f20bfdfae92d918457efd9791",
+    "tools/node-raid-entry-transport.mjs": "4be53fd745b88024e180285e8308c4bada5b2f548632065806fff01a03253787",
+    "tools/repair-settlement-evidence.mjs": "26a91352f6e115facf0443c5072402f505ce878abd659dc0a20834c845529742",
+    "tests/horde-desert-prepared.test.js": "c9556a4124913381c0abce9d7ecd06832d0c227a2bf7ddab2eb143c892b0e953",
+    "tests/horde-node-transport.test.js": "7d5caa0bfda5c56e9c3652b1f603bcfed2cb8a7684c6c5279818c2fd61238fd3",
+    "tests/horde-worker-unavailable.test.js": "02e05b59e30f9cc187fe7fcbf64b2c2013ffb0e371b8cb6e17c4e6eb4fa3abf8",
+    "docs/qa/horde-defense-comparison-protocol.md": "6383998b79447896fa5b4d119f6561229ffa67d35dbda2f86106757fc49e64cf"
+  },
+  "evidenceHashes": {
+    "desert-prepared-test.log": "598b8ea2da2135ea8c1e9f9a2ff2b5175ad46836db24bfceb07255221c145960",
+    "freeze-tests-corrected.log": "412a15bd397dbd547b384d2568a976b14f585ae5f4f3f18da9b4884b51cc1ace",
+    "geometry-budget-tests.log": "1a00150cd43c7fb18a79591d614b8a8fbaa4741ceb813c0a0d8528e0e9e7e0b8",
+    "gran-canon-packed-prepared-test.log": "608088d27a143d317c391b14bbcff00d3ca9e299380fabd56e897192a4aa6960",
+    "gran-rio-packed-prepared-test.log": "dbb241164ef3582f8d60dd0f149573bbffa5c4e8d95d0e70681e772f9d363c5c",
+    "manglares-packed-prepared-test.log": "1a0a24d9de99748d64b19a1446b66bcc7f64c68c6b56ca2ef25f13dbcfb32306",
+    "node-transport-lifecycle-tests.log": "6c574da2eb21a9386ed3d6f1004dcc1d224b6d81348dda81f43478a09a5d75a2",
+    "node-transport-unavailable-tests.log": "fa84aa55414bcbb0fa18eff35bd1b1ab37f9de0d655f94ec8415fc6d6fcacc33",
+    "observer-compatibility-tests.log": "c4d908a5769235f948d599fc6eafa4e4e015d83a5df225cc8cd5f8148ebf1dd7",
+    "retry-tests-first.log": "934fe5904c4f1ff35400aa9545dc7a626507c372ad609a0bbe9095d93dfcfeee",
+    "sabana-packed-prepared-test.log": "2273b197ced8970cd327893cb2fb6473fddd6205c515c1a130c01a24cd8b0e87",
+    "volcanes-packed-prepared-test.log": "2887d1ae7115fb0b5d7b60f3809d452813aa884ad09e1619866da385ada4b368"
+  }
+}
