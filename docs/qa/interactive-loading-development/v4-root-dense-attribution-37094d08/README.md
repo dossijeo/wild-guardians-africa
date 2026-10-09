@@ -1,0 +1,9 @@
+# Dense V4 fixture attribution
+
+Source37094d08, phase-attribution opt-in on the existing fixture. Root captured all raw report/cleanup/console without changing scheduling. Init19,313.6ms and total23,708ms are instrumented wall times, not an ABBA or a real menu/Worker measurement. All1,148RAF retained: max282.7ms,33above50ms,6above100ms. Readiness/state/camera and dispose/context loss pass; raw errors empty.
+
+Fixture-only synchronous deserialization215.1ms; canonical equality snapshots141.3ms before load,145.5ms after load,140.3ms before cinema and181.9ms after cinema. These witnesses identify substantial QA overhead and overlap several long tasks. They do not explain every long task and are not subtracted from wall readiness or frame records. Async decompression/hash waits include overlap and cannot be summed as exclusive CPU. Actual production Continue calls loadPrepared/decodeSnapshotAsync with Worker, so the fixture parser is not a gameplay regression claim.
+
+Production synchronous invocation witnesses above50ms remain: diorama-upload-maize-soil82.8ms, loading-screen-upload-submit91.9ms and loading-frame-draw85.6ms. No cause inferred from submission wall duration (which can include driver stalls); these require comparison with the real menu path before selecting a change. Nested awaited warm/load phases are not added to CPU totals. Frame-slack remains opt-in off after its negative acceptance criterion.
+
+verify.py recomputes every frame summary, verifies snapshot SHA/readiness/logical-camera/cleanup, hashes original files and exports all fixture sync spans, production sync spans above50ms and raw longTasks (including any startup negative timestamp). No frames or outliers removed. Root closed the diagnostic context before starting separate actual-menu QA. No physical RAM/VRAM, mobile or performance acceptance, no PR.
