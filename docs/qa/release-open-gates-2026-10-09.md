@@ -102,6 +102,14 @@ See [the retained images, original reports and limits](frontside-model-pilot/you
 This is limited AI screening, not full growth/WorldScene coverage, human-user
 approval or the young candidate's own net GPU benefit.
 
+Two subsequent sixteen-second native growth runs retain 1,752 chronological
+frame records and ten capture moments. The incoming/outgoing original bridge
+phases are preserved, and the young state has actual Front/BACK/CCW colour
+witnesses where active. Root reviewed both full atlases; their independent
+standalone receipt check passes. See [Front growth evidence](frontside-model-pilot/young-front-native-continuity/README.md).
+This remains limited AI still screening with Double shadows; the record is not
+a full-video inspection, a WorldScene/GPU benchmark or approval of other models.
+
 The standby-pruning traveling comparison is negative and stays disabled. Shared
 resident preparation also has a completed root native AB/BA comparison on
 frozen `795f773e`: all four p95 frame intervals are 116.4 ms, with 1004 GPU
