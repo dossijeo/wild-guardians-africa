@@ -6,6 +6,7 @@ import {Texture,Scene,Group,Vector4,Mesh} from 'three';
 import {NativeFarGpuCancelled,prepareNativeFarGpu,releaseNativeFarGpuCache,nativeFarGpuRevision,nativeFarGpuContextLost} from '../tools/experiments/prepare-native-far-gpu.js';
 import {waitGpuPreparation} from '../tools/experiments/wait-gpu-preparation.js';
 import {compileGpuPreparation} from '../tools/experiments/compile-gpu-preparation.js';
+import {SharedNativePreparation} from '../tools/experiments/shared-native-preparation.js';
 
 function fixture({renderError=false}={}){
  const scene=new Scene(),parent=new Group(),root=new Group();parent.add(root);const original={},calls=[];let current=original,waits=0,viewport=new Vector4(2,3,100,200),scissor=new Vector4(4,5,60,70),scissorTest=false;
@@ -15,6 +16,24 @@ function fixture({renderError=false}={}){
 }
 
 function ownedFixture(){const f=fixture();f.renderer.compile=()=>new Set();f.renderer.properties={get:()=>assert.fail('No selected material')};f.renderer.compileAsync=()=>assert.fail('Three async timer');return f;}
+
+test('shared resident requests use one real upload/fence and independently accept only unchanged packing',async()=>{
+ const f=fixture(),textures=[new Texture(),new Texture(),new Texture()],first={},second={},a={ids:new Set(['a'])},b={ids:new Set(['b'])};let finish;
+ const nativeA={revision:1,batches:new Map([[first,a]])},nativeB={revision:1,batches:new Map([[second,b]])},proofA=new NativePreparedTreeCoverage(nativeA),proofB=new NativePreparedTreeCoverage(nativeB),captureA=proofA.capture(),captureB=proofB.capture();
+ f.renderer.compileAsync=async()=>{f.calls.push('compile');await new Promise(resolve=>finish=resolve);};
+ const shared=new SharedNativePreparation((required,cancelled)=>prepareNativeFarGpu(f.renderer,f.root,f.scene,{},required,{cancelled,nextFrame:async()=>{}}));
+ const pa=shared.request(textures.slice(0,2)).then(result=>({result,accepted:proofA.complete(captureA)})),pb=shared.request(textures.slice(1)).then(result=>({result,accepted:proofB.complete(captureB)}));
+ await new Promise(resolve=>setImmediate(resolve));assert.equal(f.calls.filter(x=>x==='texture').length,3);assert.equal(f.calls.filter(x=>x==='compile').length,1);assert.equal(proofA.has('a'),false);assert.equal(proofB.has('b'),false);
+ nativeA.batches.set(first,{ids:new Set(['a','new'])});nativeA.revision++;finish();const [ra,rb]=await Promise.all([pa,pb]);
+ assert.equal(ra.accepted,0);assert.equal(rb.accepted,1);assert.equal(proofA.has('a'),false);assert.equal(proofA.has('new'),false);assert.equal(proofB.has('b'),true);assert.equal(ra.result,rb.result);assert.equal(f.calls.filter(x=>x==='render').length,1);assert.equal(f.calls.filter(x=>x==='fence').length,1);f.restored();releaseNativeFarGpuCache(f.renderer);textures.forEach(texture=>texture.dispose());
+});
+
+test('all shared resident cancellations prevent late upload/fence and release borrowed texture handlers',async()=>{
+ const f=fixture(),texture=new Texture();let finish,cancelled=false;f.renderer.compileAsync=async()=>{f.calls.push('compile');await new Promise(resolve=>finish=resolve);};
+ const shared=new SharedNativePreparation((required,allCancelled)=>prepareNativeFarGpu(f.renderer,f.root,f.scene,{},required,{cancelled:allCancelled,nextFrame:async()=>{}}));
+ const a=shared.request([texture],()=>cancelled),b=shared.request([texture],()=>cancelled),rejections=Promise.all([assert.rejects(a,NativeFarGpuCancelled),assert.rejects(b,NativeFarGpuCancelled)]);
+ await new Promise(resolve=>setImmediate(resolve));cancelled=true;finish();await rejections;assert.deepEqual(f.calls,['texture','compile']);f.restored();releaseNativeFarGpuCache(f.renderer);assert.equal(texture._listeners.dispose.length,0);texture.dispose();
+});
 
 test('owned texture frame wait cancels without uploading the remaining texture',async()=>{
  const f=ownedFixture(),textures=[new Texture(),new Texture()];let cancelled=false,finish;
