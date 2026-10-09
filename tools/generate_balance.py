@@ -8,11 +8,16 @@ balance['workers'].update(revisions['workers'])
 for animal in balance['animals']:
     animal['structure_hit_damage']=revisions['structure_hit_damage'][animal['id']]
 harvest_values=revisions.get('crop_harvest_values',{})
+plant_costs=revisions.get('crop_plant_costs',{})
 assert set(harvest_values)<=set(c['id'] for c in balance['crops'])
 assert all(type(v) is int and v>0 for v in harvest_values.values())
+assert set(plant_costs)<=set(c['id'] for c in balance['crops'])
+assert all(type(v) is int and v>0 for v in plant_costs.values())
 for crop in balance['crops']:
     if crop['id'] in harvest_values:
         crop['base_harvest_value']=harvest_values[crop['id']]
+    if crop['id'] in plant_costs:
+        crop['plant_cost']=plant_costs[crop['id']]
 boundaries=revisions['night_attraction_boundaries']
 assert len(boundaries)==len(balance['threat_tiers'])
 for i,tier in enumerate(balance['threat_tiers']):
