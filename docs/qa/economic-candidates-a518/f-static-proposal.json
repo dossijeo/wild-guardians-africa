@@ -1,0 +1,39 @@
+{
+  "scope": "Static frozen-service calculation, not a simulation, campaign acceptance, or money injection. Exact same279 delivered receipts, seed3440 and wages3390 from rejected E2. A native F run will change reinvestment, workload/RNG and possibly raid timing/composition, so this cannot predict its outcome.",
+  "source": "9833b6d9",
+  "currentIncome": "6710",
+  "proposedSamePhysicalReceiptsIncome": "10065",
+  "seedCosts": 3440,
+  "wages": 3390,
+  "staticOperatingCashflow": 3235,
+  "staticCashAfterCentreAndAlreadyRecordedWages": 3935,
+  "additionalStaticRepairCostForHalfDamage": 320,
+  "staticCashAfterSameLedgerAndIllustrativeRepair": 3615,
+  "currentDamage": {
+    "warthog": 20,
+    "hyena": 25,
+    "buffalo": 35,
+    "lion": 40,
+    "rhino": 60
+  },
+  "proposalDamage": {
+    "warthog": 10,
+    "hyena": 12.5,
+    "buffalo": 17.5,
+    "lion": 20,
+    "rhino": 30
+  },
+  "fatal8Hits": {
+    "oldHp": 120,
+    "oldStatus": "collapsing",
+    "proposedHp": 360,
+    "proposedStatus": "intact",
+    "collapseThreshold": 126,
+    "proposedHeadroomAboveCollapse": 234,
+    "oldHitsToCollapse": 8,
+    "proposedHitsToCollapse": 16
+  },
+  "implementation": "Existing canonical structure_hit_damage per species is copied by generator into animal.structure_hit_damage, used only on structure path in raids. Crops use independent attackHits>=2. No new coefficient or harness override is needed. Half values12.5/17.5 are exact binary halves; hp is numerical, not monetary. Integer ledger and repair ceil remain unchanged.",
+  "unchanged": "Original seed costs,1500 money,30/40 wages,growth/checkpoints,first5 introduction/guaranteed groups/hit budgets,Shield strategy,FIFO,reserve100,baseline explicit attraction. Only harvest×3 and structure damage×0.5 proposed.",
+  "gates": "No native gates evaluated; F remains unimplemented/unrun pending source/formula review."
+}

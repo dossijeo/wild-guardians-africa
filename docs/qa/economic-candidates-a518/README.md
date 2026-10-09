@@ -134,3 +134,22 @@ matrix, poor-management or promotion follows from this failed short control.
 Further balance choices require the demonstrated budget/service limits and
 actual effective threat tiers, not an assumption that halving attraction halves
 raid damage or that accounting PASS means a playable campaign.
+
+### F proposal — static arithmetic only, no campaign run
+
+Frozen E2 physical receipts repriced from harvest×2 to×3 would yield10065
+instead of6710. Keeping its seed3440 and wages3390 fixed gives operating margin
++3235 and3935 cash after initial1500/centre800/recorded wages. A hypothetical
+repair after eight half-damage rhino hits costs320, leaving3615 on that frozen
+ledger. This is not injected money, a native replay, or a prediction of F:
+reinvestment/service/RNG/attack composition can change in an actual run.
+
+`structure_hit_damage` is already a real canonical, generated per-animal
+parameter. It applies only to structures; crops separately break after two
+attackHits. Proposed10/12.5/17.5/20/30 preserve exact half damage without changing
+hit budgets. Native `hitStructure` on an isolated centre fixture demonstrates
+that eight hits of30 leave360HP/intact,234 above collapse126; sixteen such hits
+would still collapse it. Fractional half-HP values serialize exactly and do not
+change integer monetary rounding. The static artifact records these checks and
+all unchanged policy/gameplay parameters. No F implementation/simulation or
+acceptance is claimed before reviewing this proposal.
