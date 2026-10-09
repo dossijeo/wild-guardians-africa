@@ -12,7 +12,7 @@ export function loadingSyncWitness(witness,label,run,now=()=>performance.now()){
 // never sum these nested spans as CPU or GPU time. The ordinary path is exact.
 export function loadingAwaitWitness(witness,label,run,now=()=>performance.now()){
  if(!witness)return run();
- const start=now();
+ const start=now();try{witness.onBegin?.({label,start,scope:'Existing awaited phase start; smoke-only pending-phase attribution.'});}catch{}
  const record=failed=>{const end=now();try{witness({label,start,end,duration:end-start,failed,scope:'Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.'});}catch{}};
  try{return Promise.resolve(run()).then(value=>{record(false);return value;},error=>{record(true);throw error;});}catch(error){record(true);throw error;}
 }
