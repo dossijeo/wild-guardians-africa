@@ -122,3 +122,32 @@ test('failed native tails have a finite candidate budget and do not repeat each 
  const first=tails;for(let i=0;i<100;i++)animalSlopeRecoveryPath(nav,actor,exit,actor.radius);
  assert.equal(tails,first);
 });
+
+test('retry after an unused successful recovery is not memoized as a failure',()=>{
+ const s=load(),nav=navigator(s),actor=s.raid.animals.find(a=>a.status==='retreating');
+ const original={x:actor.x,z:actor.z},first=animalSlopeRecoveryPath(nav,actor,actor.exit,actor.radius);assert.ok(first);const good={...first[0]};
+ actor.path=first;actor.path[0]={x:actor.x+4,z:actor.z};
+ assert.equal(animalSlopeRecoveryClear(actor,nav,actor,actor.path[0],actor.radius),false);
+ actor.path=null;
+ const second=animalSlopeRecoveryPath(nav,actor,actor.exit,actor.radius);assert.ok(second,'No movement, destination or navigation epoch change is required');
+ assert.deepEqual(second[0],good);
+ assert.equal(actor.x,original.x);assert.equal(actor.z,original.z);
+ actor.path=second;
+ for(let t=0;s.raid&&t<60;t+=.1)tick(s,.1,nav);
+ assert.equal(s.raid,null);assert.equal(s.day,10);
+});
+test('disabled proof revalidates a bad waypoint edited back to good inside the same array',()=>{
+ const nav=world(),actor=animal(),first=animalSlopeRecoveryPath(nav,actor,exit,actor.radius);assert.ok(first);
+ const good={...first[0]};actor.path=[{x:4,z:0}];
+ assert.equal(animalSlopeRecoveryClear(actor,nav,actor,{x:.01,z:0},actor.radius),false);
+ Object.assign(actor.path[0],good);
+ const end={x:good.x*.1,z:good.z*.1};
+ assert.equal(animalSlopeRecoveryClear(actor,nav,actor,end,actor.radius),true);
+ assert.equal(actor.x,0);assert.equal(actor.z,0);
+});
+test('disabled proof revalidates replacement of the first waypoint in the same array',()=>{
+ const nav=world(),actor=animal(),first=animalSlopeRecoveryPath(nav,actor,exit,actor.radius);assert.ok(first);
+ actor.path=[{x:4,z:0}];assert.equal(animalSlopeRecoveryClear(actor,nav,actor,{x:.01,z:0},actor.radius),false);
+ actor.path[0]={...first[0]};
+ assert.equal(animalSlopeRecoveryClear(actor,nav,actor,{x:first[0].x*.1,z:first[0].z*.1},actor.radius),true);
+});

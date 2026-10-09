@@ -41,24 +41,24 @@ function proof(nav,start,point,radius){
 }
 
 // Repair an already marginal legacy retreat, never ordinary animal routing.
-// The finite attempt is memoized even when it fails; stationary invalid saves
+// Only failed finite attempts are memoized; stationary invalid saves
 // must not repeat 160 candidate/tail searches every rendered frame.
 export function animalSlopeRecoveryPath(nav,actor,end,radius){
  if(actor.status!=='retreating'||!nav.field||
    (nav.field.canyon?typeof nav.workerSurface!=='function':typeof nav.field.slope!=='function'))return null;
  const key=JSON.stringify([nav.version,actor.x,actor.z,end.x,end.z,radius]);
  const prior=attempts.get(actor);if(prior?.nav===nav&&prior.key===key)return null;
- attempts.set(actor,{nav,key});
+ const reject=()=>{attempts.set(actor,{nav,key});return null;};
  const initial=footprintSlope(nav,actor,radius);
- if(!(initial>.5&&initial<=MAX_SLOPE)||!actorFluidClear(nav,actor,radius))return null;
+ if(!(initial>.5&&initial<=MAX_SLOPE)||!actorFluidClear(nav,actor,radius))return reject();
  for(let step=1;step<=5;step++)for(let angle=0;angle<32;angle++){
   const length=step*.1,a=angle*Math.PI/16;
   const point={x:actor.x+Math.sin(a)*length,z:actor.z+Math.cos(a)*length};
   const validated=proof(nav,actor,point,radius);if(!validated)continue;
   const tail=nav.path(point,end,radius,null,false);if(!tail)continue;
-  const path=[point,...tail];verified.set(actor,{...validated,path});return path;
+  const path=[point,...tail];attempts.delete(actor);verified.set(actor,{...validated,path});return path;
  }
- return null;
+ return reject();
 }
 
 // An explicit exception for this one proven prefix. It ends at the first
@@ -68,12 +68,13 @@ export function animalSlopeRecoveryClear(actor,nav,start,end,radius){
  const point=actor.path?.[0];
  if(actor.status!=='retreating'||!point)return false;
  let cached=verified.get(actor);
- if(cached?.disabled&&cached.nav===nav&&cached.version===nav.version&&cached.radius===radius&&cached.path===actor.path)return false;
+ if(cached?.disabled&&cached.nav===nav&&cached.version===nav.version&&cached.radius===radius&&cached.path===actor.path&&
+   cached.first===point&&cached.px===point.x&&cached.pz===point.z)return false;
  if(!(cached?.nav===nav&&cached.version===nav.version&&cached.radius===radius&&
    !cached.disabled&&cached.path===actor.path&&cached.point.x===point.x&&cached.point.z===point.z&&
    distance(cached.last,start)<1e-8)){
   cached=proof(nav,start,point,radius);
-  if(!cached){verified.set(actor,{nav,version:nav.version,radius,path:actor.path,disabled:true});return false;}
+  if(!cached){verified.set(actor,{nav,version:nav.version,radius,path:actor.path,first:point,px:point.x,pz:point.z,disabled:true});return false;}
   cached.path=actor.path;verified.set(actor,cached);
  }
  // Substeps can neither leave the validated segment nor travel backward.
