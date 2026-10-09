@@ -13,3 +13,13 @@ test('production smoke retains original 90-second deadline and exact stage readi
 test('diagnostics count minified and anonymous production callbacks without calling them app frames',()=>{const f=fixture(),observer=observe(f.win,f.doc,f.now);function a(){}f.win.requestAnimationFrame(a);f.win.requestAnimationFrame(()=>{});f.pending.get(1)(1000);f.pending.get(2)(1000);const delivery=observer.sample().rafDelivery;assert.equal(delivery.callbacks,2);assert.equal(delivery.distinctTimestamps,1);assert.equal(delivery.callbackNames.a,1);assert.equal(delivery.callbackNames['(anonymous)'],1);observer.stop();});
 
 test('smoke phase diagnostics retain unresolved phases, completed waits and ownership cleanup',()=>{const f=fixture(),previous=()=>{};f.win.__desktopSmokeLoadingSpan=previous;const observer=observe(f.win,f.doc,f.now),hook=f.win.__desktopSmokeLoadingSpan;hook.onBegin({label:'warm-compile-world',start:0});f.set({clock:30000});assert.equal(observer.sample().spans.active[0].elapsedMs,30000);hook({label:'loading-compile-readiness-wait',start:1,end:30001,duration:30000,scope:'Awaited readiness; not CPU/GPU'});assert.equal(observer.sample().spans.totals['loading-compile-readiness-wait'].totalMs,30000);hook({label:'warm-compile-world',start:0,end:30002,duration:30002});assert.equal(observer.sample().spans.active.length,0);observer.stop();assert.equal(f.win.__desktopSmokeLoadingSpan,previous);});
+
+const modelLoad=runInNewContext(source.slice(0,source.indexOf('// Runs only'))+';observeDesktopModelLoad');
+test('native preflight attribution uses one fetch, one original body read and one decode',async()=>{
+ let clock=0,fetches=0,bodies=0,decodes=0;const input=new ArrayBuffer(12),output=new ArrayBuffer(24);
+ const result=await modelLoad('model.glb',async path=>{assert.equal(path,'model.glb');fetches++;clock=10;return {arrayBuffer:async()=>{bodies++;clock=30;return input;}};},async buffer=>{decodes++;assert.equal(buffer,input);clock=40;return output;},()=>clock);
+ assert.equal(result.decoded,output);assert.deepEqual([fetches,bodies,decodes],[1,1,1]);assert.equal(result.stages.fetchToHeadersMs,10);assert.equal(result.stages.bodyCollectionMs,20);assert.equal(result.stages.decodeMs,10);assert.equal(result.stages.bytes,12);assert.match(result.stages.scope,/dispatcher/);
+});
+test('native preflight preserves the exact original decode rejection without another request',async()=>{
+ const original=Error('decoder');let calls=0;await assert.rejects(modelLoad('model.glb',async()=>{calls++;return {arrayBuffer:async()=>new ArrayBuffer(1)};},()=>{throw original;},()=>0),error=>error===original);assert.equal(calls,1);
+});

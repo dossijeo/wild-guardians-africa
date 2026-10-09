@@ -89,3 +89,13 @@ test('parallel candidate retains original submission failure and drains already 
  const renderer={compile(){if(++submissions===2)throw original;return new Set([material]);},getContext:()=>gl,properties:{get:()=>({currentProgram:{isReady:()=>{queries++;return false;}}})}};
  await assert.rejects(compileLoadingProgramsBatched(renderer,scene,{},undefined,{parallelReadiness:true,batchSize:1,cpuBudget:true,frameBudget:16}),error=>error===original);const final=queries;await new Promise(resolve=>setTimeout(resolve,30));assert.equal(queries,final);
 });
+
+
+test('parallel candidate retains timeout for all unresolved groups',async()=>{
+ let clock=0;const gl={isContextLost:()=>false},objects=Array.from({length:4},()=>({isMesh:true,material:{}})),scene={traverse:fn=>objects.forEach(fn)},renderer={compile:view=>{const materials=new Set();view.traverse(o=>materials.add(o.material));return materials;},getContext:()=>gl,properties:{get:()=>({currentProgram:{isReady:()=>false}})}};
+ const pending=compileLoadingProgramsBatched(renderer,scene,{},undefined,{parallelReadiness:true,batchSize:2,cpuBudget:true,frameBudget:16,now:()=>clock,timeout:1});for(let i=0;i<20;i++)await Promise.resolve();clock=2;await assert.rejects(pending,/timed out/);
+});
+test('parallel pending groups latch context loss even after restoration and clean their polls',async()=>{
+ const canvas=new EventTarget(),gl={canvas,isContextLost:()=>false};let queries=0;const material={},scene={traverse:fn=>[1,2,3].forEach(()=>fn({isMesh:true,material}))},renderer={compile:()=>new Set([material]),getContext:()=>gl,properties:{get:()=>({currentProgram:{isReady:()=>{queries++;return false;}}})}};
+ const pending=compileLoadingProgramsBatched(renderer,scene,{},undefined,{parallelReadiness:true,batchSize:1,cpuBudget:true,frameBudget:16});for(let i=0;i<20;i++)await Promise.resolve();canvas.dispatchEvent(new Event('webglcontextlost'));await assert.rejects(pending,/cancelled/);const final=queries;await new Promise(resolve=>setTimeout(resolve,30));assert.equal(queries,final);
+});

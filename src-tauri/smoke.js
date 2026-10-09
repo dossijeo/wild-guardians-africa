@@ -1,13 +1,18 @@
+// Observe the existing package model check; never fetch/read/decode twice.
+async function observeDesktopModelLoad(path,load,decode,now=()=>performance.now()){
+ const start=now(),response=await load(path),headers=now(),buffer=await response.arrayBuffer(),body=now(),decoded=await decode(buffer),end=now();
+ return {decoded,stages:{path,start,headers,body,end,bytes:buffer.byteLength,fetchToHeadersMs:headers-start,bodyCollectionMs:body-headers,decodeMs:end-body,totalMs:end-start,scope:'Existing pre-world model check with no World renderer. Awaited wall times include dispatcher/processing delays; not physical disk, network or CPU measurements. One fetch/body/decode.'}};
+}
 // Smoke-only diagnostics. Observe existing RAF callbacks; never add a render loop.
 function observeDesktopWorldLoading(win,doc,now=()=>performance.now()) {
  const nativeRaf=win.requestAnimationFrame,started=now(),frames={callbacks:0,distinctTimestamps:0,lastAt:null,maxIntervalMs:0,recent:[],callbackNames:{}},transitions=[];
- let stopped=false,last='';const previousSpan=win.__desktopSmokeLoadingSpan,active=[],recentSpans=[],spanTotals={};
- const spans=span=>{if(stopped)return;const index=active.findIndex(x=>x.label===span.label&&x.start===span.start);if(index>=0)active.splice(index,1);recentSpans.push(span);if(recentSpans.length>128)recentSpans.shift();const totals=spanTotals[span.label]??={calls:0,totalMs:0,maxMs:0,failures:0,scope:span.scope};totals.calls++;totals.totalMs+=span.duration;totals.maxMs=Math.max(totals.maxMs,span.duration);totals.failures+=span.failed?1:0;};
+ let stopped=false,last='';const previousSpan=win.__desktopSmokeLoadingSpan,active=[],recentSpans=[],modelSpans=[],spanTotals={};
+ const spans=span=>{if(stopped)return;const index=active.findIndex(x=>x.label===span.label&&x.start===span.start);if(index>=0)active.splice(index,1);if(span.label.startsWith('asset-gltf-')){modelSpans.push(span);if(modelSpans.length>128)modelSpans.shift();}recentSpans.push(span);if(recentSpans.length>128)recentSpans.shift();const totals=spanTotals[span.label]??={calls:0,totalMs:0,maxMs:0,failures:0,scope:span.scope};totals.calls++;totals.totalMs+=span.duration;totals.maxMs=Math.max(totals.maxMs,span.duration);totals.failures+=span.failed?1:0;};
  spans.onBegin=span=>{if(!stopped)active.push(span);};win.__desktopSmokeLoadingSpan=spans;
  const snapshot=()=>({visibility:doc.visibilityState,hidden:doc.hidden,focused:doc.hasFocus(),stageBusy:doc.querySelector('#stage')?.getAttribute('aria-busy')??null,overlay:!!doc.querySelector('#world-loading'),progress:doc.querySelector('[role="progressbar"]')?.getAttribute('aria-valuenow')??null,phase:doc.querySelector('.interactive-loading-title')?.textContent??null,failure:doc.querySelector('.loading-failure')?.textContent??null,canvas:doc.querySelector('#world')?{width:doc.querySelector('#world').width,height:doc.querySelector('#world').height}:null,menu:!!doc.querySelector('#app iframe')});
  const wrapped=function(callback){return nativeRaf.call(win,function(stamp){if(!stopped){frames.callbacks++;const name=callback.name||'(anonymous)';frames.callbackNames[name]=(frames.callbackNames[name]??0)+1;if(stamp!==frames.lastAt){if(frames.lastAt!==null)frames.maxIntervalMs=Math.max(frames.maxIntervalMs,stamp-frames.lastAt);frames.lastAt=stamp;frames.distinctTimestamps++;frames.recent.push(stamp);if(frames.recent.length>128)frames.recent.shift();}}return callback(stamp);});};
  win.requestAnimationFrame=wrapped;
- return {sample(){const state=snapshot(),key=JSON.stringify(state);if(key!==last){last=key;transitions.push({at:now(),...state});if(transitions.length>80)transitions.shift();}return {elapsedMs:now()-started,current:state,rafDelivery:frames,transitions,spans:{active:active.map(x=>({...x,elapsedMs:now()-x.start})),recent:recentSpans,totals:spanTotals,scope:"Nested/awaited durations are diagnostic and overlap; do not sum as exclusive CPU/GPU work."},scope:'Smoke DOM/visibility snapshots and all existing RAF callbacks only; names may be minified and counts include preparation callbacks; no extra RAF, GPU query, simulated state or readiness override.'};},stop(){stopped=true;if(win.requestAnimationFrame===wrapped)win.requestAnimationFrame=nativeRaf;if(win.__desktopSmokeLoadingSpan===spans)win.__desktopSmokeLoadingSpan=previousSpan;}};
+ return {sample(){const state=snapshot(),key=JSON.stringify(state);if(key!==last){last=key;transitions.push({at:now(),...state});if(transitions.length>80)transitions.shift();}return {elapsedMs:now()-started,current:state,rafDelivery:frames,transitions,spans:{active:active.map(x=>({...x,elapsedMs:now()-x.start})),recent:recentSpans,models:modelSpans,totals:spanTotals,scope:"Nested/awaited durations are diagnostic and overlap; do not sum as exclusive CPU/GPU work."},scope:'Smoke DOM/visibility snapshots and all existing RAF callbacks only; names may be minified and counts include preparation callbacks; no extra RAF, GPU query, simulated state or readiness override.'};},stop(){stopped=true;if(win.requestAnimationFrame===wrapped)win.requestAnimationFrame=nativeRaf;if(win.__desktopSmokeLoadingSpan===spans)win.__desktopSmokeLoadingSpan=previousSpan;}};
 }
 
 // Runs only when the executable receives --smoke-report PATH. Normal play is untouched.
@@ -27,6 +32,7 @@ function observeDesktopWorldLoading(win,doc,now=()=>performance.now()) {
     clearTimeout(timeout);
     if(worldLoadingObserver){report.checks.productionLoading=worldLoadingObserver.sample();worldLoadingObserver.stop();}
     if (error) report.errors.push(String(error));
+    report.checks.modelResources=performance.getEntriesByType('resource').filter(entry=>/\.glb(?:$|\?)/.test(entry.name)).map(entry=>Object.fromEntries(['name','startTime','fetchStart','responseStart','responseEnd','duration','transferSize','encodedBodySize','decodedBodySize','initiatorType','nextHopProtocol','responseStatus'].map(key=>[key,entry[key]??null])));
     report.ok = !error && report.errors.length === 0;
     await window.__TAURI_INTERNALS__.invoke('desktop_smoke_report', {report});
   }
@@ -91,12 +97,12 @@ function observeDesktopWorldLoading(win,doc,now=()=>performance.now()) {
     const load = async path => { const response = await fetch(new URL(path, location.href)); if (!response.ok) throw Error(`${path}: ${response.status}`); return response; };
     const manifest = await (await load('content/web-assets.json')).json();
     const {decodeWebGlb} = await import(new URL('runtime/glb-legacy.js', location.href));
-    report.checks.models = [];
+    report.checks.models = [];report.checks.modelPreflightStages=[];
     // Decode every shipped culture, worker and beast using the production WASM decoder.
     const models = manifest.records.filter(record => record.source.endsWith('.glb') && record.runtime.endsWith('.glb'));
     if (!models.length) throw Error('No runtime models in package manifest');
     for (const model of models) {
-      const decoded = await decodeWebGlb(await (await load(model.runtime)).arrayBuffer());
+      const {decoded,stages}=await observeDesktopModelLoad(model.runtime,load,decodeWebGlb);report.checks.modelPreflightStages.push(stages);
       if (new DataView(decoded).getUint32(0, true) !== 0x46546c67) throw Error('Invalid decoded GLB');
       report.checks.models.push(model.runtime);
     }
@@ -126,7 +132,6 @@ function observeDesktopWorldLoading(win,doc,now=()=>performance.now()) {
     const send = data => dispatchEvent(new MessageEvent('message', {origin: location.origin, source: menu.contentWindow, data: {type: 'wild-guardians:menu', ...data}}));
     send({action: 'settings-change', settings: {quality: 'muy_baja', sfx: 0, music: 0}});
     const fixture = await window.__TAURI_INTERNALS__.invoke('desktop_smoke_fixture');
-    window.__desktopSmokeParallelLoadingPrograms=true;
     worldLoadingObserver=observeDesktopWorldLoading(window,document);
     report.checks.productionLoading=worldLoadingObserver.sample();
     if (fixture) {localStorage.setItem('wild-guardians:slot:'+fixture.slotId,fixture.snapshot);send({action:'load-slot',slotId:fixture.slotId});}

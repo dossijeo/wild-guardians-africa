@@ -1,0 +1,2145 @@
+{
+  "checks": {
+    "audio": {
+      "channels": 2,
+      "id": "amb_wind_soft",
+      "sampleRate": 44100,
+      "seconds": 12,
+      "url": "assets/audio/861578037e994d78d4730970c542ff330f4adb680372feae4f89a19525ba507c.opus"
+    },
+    "audioSeconds": 12,
+    "menu": "http://tauri.localhost/menu/index.html",
+    "models": [
+      "assets/web/0ab73565649737fc15d853aa9d52a9ecacff3fbf9f5664cc21ec4e54452ef894.glb",
+      "assets/web/25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238.glb",
+      "assets/web/3ba902fd9bfc99589348ba9202513e9daa63442a6c2b21bb23a15bf58bd546f7.glb",
+      "assets/web/4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141.glb",
+      "assets/web/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb",
+      "assets/web/6c43390aa864c32555795b2be638f8e1e8d4154fa85e6991580ebb0d7fcde309.glb",
+      "assets/web/6fb0b48a96d820d1738c6e36ed2d1cacaf54844df37298450b79d68b4703d80c.glb",
+      "assets/web/7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb",
+      "assets/web/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb",
+      "assets/web/9cb17849416e2d2578eb5806c4874fc496fdf9a1aa421d3a10fe3a346933674e.glb",
+      "assets/web/a748ca0cea0d4d0d4abd95071577a8457e63f22433e618be77934c079f4cf89c.glb",
+      "assets/web/b27ce08a5f860912783d5978cec8a012b28d7a55e2c7a69cc992f91f8bbd5a76.glb",
+      "assets/web/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb",
+      "assets/web/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+      "assets/web/cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869.glb",
+      "assets/web/db01314e4e0a03f4e1aaa31e8207cee85a42294edffb003633282bb574ef28cd.glb",
+      "assets/web/e870835e4fa3c1cc4fdbcd048a2ca64da97d2ea4f48ea3192da6aba692e05202.glb",
+      "assets/web/eddde4e46932cf9fd056315e34af03f07595cd1ce4de61b4d7d6ac7be5d873e9.glb",
+      "assets/web/f3ae53d5ce3b57419fd31e74e2572ada9cc61392c2e7ac20dac484ec194d5e9f.glb",
+      "assets/web/fedb713c0b32df33f11111a91e2c3e0616a0345ec9be9a8beeecaa0b93ef26cb.glb",
+      "assets/web/8f6c9ef7472a2d7f8ffda7f08a78f8027f91d14a8f92b8eeca4084b0f379da36.glb",
+      "assets/web/2fdb3468b7646ebe16d0f3d3d25538ce5b20d6dee1d3830256d2f62599826dcc.glb"
+    ],
+    "productionLoading": {
+      "current": {
+        "canvas": {
+          "height": 720,
+          "width": 1028
+        },
+        "failure": null,
+        "focused": true,
+        "hidden": false,
+        "menu": false,
+        "overlay": true,
+        "phase": "Preparing rendering resources",
+        "progress": "85",
+        "stageBusy": "true",
+        "visibility": "visible"
+      },
+      "elapsedMs": 90170.59999999998,
+      "rafDelivery": {
+        "callbackNames": {
+          "(anonymous)": 39,
+          "V3": 1029
+        },
+        "callbacks": 1068,
+        "distinctTimestamps": 1029,
+        "lastAt": 149898.7,
+        "maxIntervalMs": 328.09999999999127,
+        "recent": [
+          140539.3,
+          140633.1,
+          140695.5,
+          140773.7,
+          140851.8,
+          140914.3,
+          140992.4,
+          141086.2,
+          141164.3,
+          141242.4,
+          141320.6,
+          141398.6,
+          141476.8,
+          141539.3,
+          141633,
+          141726.8,
+          141805,
+          141867.4,
+          141961.1,
+          142023.6,
+          142101.8,
+          142179.9,
+          142258,
+          142320.6,
+          142398.7,
+          142461.2,
+          142539.3,
+          142601.8,
+          142679.9,
+          142758.1,
+          142836.1,
+          142898.6,
+          142976.8,
+          143055,
+          143133.1,
+          143211.2,
+          143273.6,
+          143351.8,
+          143414.3,
+          143492.5,
+          143570.5,
+          143648.6,
+          143726.8,
+          143789.3,
+          143867.4,
+          143929.9,
+          144023.7,
+          144086.2,
+          144179.9,
+          144242.4,
+          144320.5,
+          144383,
+          144476.8,
+          144539.3,
+          144617.4,
+          144695.6,
+          144773.7,
+          144836.2,
+          144914.3,
+          144976.8,
+          145055,
+          145133.1,
+          145195.5,
+          145273.7,
+          145351.7,
+          145429.9,
+          145492.4,
+          145570.6,
+          145633,
+          145711.2,
+          145789.3,
+          145867.4,
+          145929.9,
+          146008,
+          146070.6,
+          146148.6,
+          146226.8,
+          146289.3,
+          146367.4,
+          146429.9,
+          146508,
+          146570.6,
+          146648.7,
+          146726.8,
+          146789.3,
+          146867.4,
+          146929.9,
+          147008,
+          147070.5,
+          147148.7,
+          147211.1,
+          147289.3,
+          147351.8,
+          147429.9,
+          147508,
+          147570.5,
+          147648.7,
+          147711.2,
+          147789.3,
+          147851.8,
+          147929.9,
+          147992.4,
+          148070.5,
+          148133.1,
+          148211.2,
+          148289.3,
+          148414.3,
+          148476.8,
+          148554.9,
+          148617.4,
+          148695.6,
+          148773.6,
+          148836.2,
+          148914.3,
+          148976.8,
+          149055,
+          149117.4,
+          149195.5,
+          149258,
+          149336.1,
+          149398.7,
+          149476.8,
+          149539.3,
+          149617.4,
+          149695.5,
+          149758.1,
+          149836.1,
+          149898.7
+        ]
+      },
+      "scope": "Smoke DOM/visibility snapshots and all existing RAF callbacks only; names may be minified and counts include preparation callbacks; no extra RAF, GPU query, simulated state or readiness override.",
+      "spans": {
+        "active": [
+          {
+            "elapsedMs": 16880.599999999977,
+            "label": "load-warm-gpu",
+            "scope": "Existing awaited phase start; smoke-only pending-phase attribution.",
+            "start": 133107.5
+          },
+          {
+            "elapsedMs": 10988.699999999952,
+            "label": "warm-compile-world",
+            "scope": "Existing awaited phase start; smoke-only pending-phase attribution.",
+            "start": 138999.40000000002
+          }
+        ],
+        "recent": [
+          {
+            "duration": 1.199999999953434,
+            "end": 139019.5,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139018.30000000005
+          },
+          {
+            "duration": 2.300000000046566,
+            "end": 139021.90000000002,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139019.59999999998
+          },
+          {
+            "duration": 8.70000000006985,
+            "end": 139030.80000000005,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139022.09999999998
+          },
+          {
+            "duration": 4.599999999976717,
+            "end": 139036.5,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139031.90000000002
+          },
+          {
+            "budgetCpu": 16.800000000046566,
+            "budgetElapsed": 18.19999999995343,
+            "duration": 72,
+            "end": 139108.5,
+            "failed": false,
+            "frameBudget": 16,
+            "label": "loading-budget-frame-wait",
+            "scope": "Awaited cooperative frame wall time; budgetCpu is accumulated synchronous invocation wall time in the delivered presentation epoch. Program/driver readiness waits are excluded.",
+            "start": 139036.5
+          },
+          {
+            "duration": 0.7000000000698492,
+            "end": 139109.30000000005,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139108.59999999998
+          },
+          {
+            "duration": 5.5,
+            "end": 139114.90000000002,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139109.40000000002
+          },
+          {
+            "duration": 0.40000000002328306,
+            "end": 139115.40000000002,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139115
+          },
+          {
+            "duration": 0.5,
+            "end": 139116,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139115.5
+          },
+          {
+            "duration": 0.2000000000698492,
+            "end": 139116.30000000005,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139116.09999999998
+          },
+          {
+            "duration": 0.5999999999767169,
+            "end": 139117,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139116.40000000002
+          },
+          {
+            "duration": 0.5999999999767169,
+            "end": 139117.59999999998,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139117
+          },
+          {
+            "duration": 0.19999999995343387,
+            "end": 139117.90000000002,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139117.70000000007
+          },
+          {
+            "duration": 0.5,
+            "end": 139118.5,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139118
+          },
+          {
+            "duration": 3.800000000046566,
+            "end": 139122.30000000005,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139118.5
+          },
+          {
+            "duration": 51.800000000046566,
+            "end": 139174.30000000005,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139122.5
+          },
+          {
+            "budgetCpu": 64.80000000016298,
+            "budgetElapsed": 65.90000000002328,
+            "duration": 28.599999999976717,
+            "end": 139203,
+            "failed": false,
+            "frameBudget": 16,
+            "label": "loading-budget-frame-wait",
+            "scope": "Awaited cooperative frame wall time; budgetCpu is accumulated synchronous invocation wall time in the delivered presentation epoch. Program/driver readiness waits are excluded.",
+            "start": 139174.40000000002
+          },
+          {
+            "duration": 9.20000000006985,
+            "end": 139212.20000000007,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139203
+          },
+          {
+            "duration": 0.30000000004656613,
+            "end": 139212.80000000005,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139212.5
+          },
+          {
+            "duration": 0.30000000004656613,
+            "end": 139213.30000000005,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139213
+          },
+          {
+            "duration": 0.19999999995343387,
+            "end": 139213.59999999998,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139213.40000000002
+          },
+          {
+            "duration": 0.2999999999301508,
+            "end": 139214,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139213.70000000007
+          },
+          {
+            "duration": 0.5,
+            "end": 139214.59999999998,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139214.09999999998
+          },
+          {
+            "duration": 0.19999999995343387,
+            "end": 139214.90000000002,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139214.70000000007
+          },
+          {
+            "duration": 0.30000000004656613,
+            "end": 139215.30000000005,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139215
+          },
+          {
+            "duration": 0.5999999999767169,
+            "end": 139215.90000000002,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139215.30000000005
+          },
+          {
+            "duration": 0.30000000004656613,
+            "end": 139216.20000000007,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139215.90000000002
+          },
+          {
+            "duration": 0.2999999999301508,
+            "end": 139216.59999999998,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139216.30000000005
+          },
+          {
+            "duration": 0.39999999990686774,
+            "end": 139217.09999999998,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139216.70000000007
+          },
+          {
+            "duration": 0.2999999999301508,
+            "end": 139217.5,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139217.20000000007
+          },
+          {
+            "duration": 0.2000000000698492,
+            "end": 139217.80000000005,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139217.59999999998
+          },
+          {
+            "duration": 0.30000000004656613,
+            "end": 139218.20000000007,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139217.90000000002
+          },
+          {
+            "duration": 0.40000000002328306,
+            "end": 139218.70000000007,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139218.30000000005
+          },
+          {
+            "duration": 0.39999999990686774,
+            "end": 139219.09999999998,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139218.70000000007
+          },
+          {
+            "duration": 0.6000000000931323,
+            "end": 139219.70000000007,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139219.09999999998
+          },
+          {
+            "duration": 0.2999999999301508,
+            "end": 139220,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139219.70000000007
+          },
+          {
+            "duration": 0.40000000002328306,
+            "end": 139220.5,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139220.09999999998
+          },
+          {
+            "duration": 0.40000000002328306,
+            "end": 139220.90000000002,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139220.5
+          },
+          {
+            "duration": 0,
+            "end": 139220.90000000002,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139220.90000000002
+          },
+          {
+            "budgetCpu": 16.199999999953434,
+            "budgetElapsed": 17.900000000023283,
+            "duration": 70,
+            "end": 139290.90000000002,
+            "failed": false,
+            "frameBudget": 16,
+            "label": "loading-budget-frame-wait",
+            "scope": "Awaited cooperative frame wall time; budgetCpu is accumulated synchronous invocation wall time in the delivered presentation epoch. Program/driver readiness waits are excluded.",
+            "start": 139220.90000000002
+          },
+          {
+            "duration": 0.40000000002328306,
+            "end": 139291.40000000002,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139291
+          },
+          {
+            "duration": 0.5,
+            "end": 139291.90000000002,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139291.40000000002
+          },
+          {
+            "duration": 0.2000000000698492,
+            "end": 139292.20000000007,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139292
+          },
+          {
+            "duration": 0.5,
+            "end": 139292.70000000007,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139292.20000000007
+          },
+          {
+            "duration": 1.400000000023283,
+            "end": 139292.80000000005,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139291.40000000002
+          },
+          {
+            "duration": 0.40000000002328306,
+            "end": 139293.20000000007,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139292.80000000005
+          },
+          {
+            "duration": 0.2999999999301508,
+            "end": 139293.59999999998,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139293.30000000005
+          },
+          {
+            "duration": 0.2999999999301508,
+            "end": 139294,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139293.70000000007
+          },
+          {
+            "duration": 0.6000000000931323,
+            "end": 139294.70000000007,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139294.09999999998
+          },
+          {
+            "duration": 0.5,
+            "end": 139295.20000000007,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139294.70000000007
+          },
+          {
+            "duration": 2.900000000023283,
+            "end": 139298.20000000007,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139295.30000000005
+          },
+          {
+            "duration": 0.40000000002328306,
+            "end": 139298.70000000007,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139298.30000000005
+          },
+          {
+            "duration": 0.5999999999767169,
+            "end": 139299.40000000002,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139298.80000000005
+          },
+          {
+            "duration": 0.30000000004656613,
+            "end": 139299.80000000005,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139299.5
+          },
+          {
+            "duration": 0.30000000004656613,
+            "end": 139300.20000000007,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139299.90000000002
+          },
+          {
+            "duration": 0.2999999999301508,
+            "end": 139300.5,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139300.20000000007
+          },
+          {
+            "duration": 0.40000000002328306,
+            "end": 139300.90000000002,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139300.5
+          },
+          {
+            "duration": 0.30000000004656613,
+            "end": 139301.30000000005,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139301
+          },
+          {
+            "duration": 0.40000000002328306,
+            "end": 139301.70000000007,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139301.30000000005
+          },
+          {
+            "duration": 0.39999999990686774,
+            "end": 139302.09999999998,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139301.70000000007
+          },
+          {
+            "duration": 0.5999999999767169,
+            "end": 139302.80000000005,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139302.20000000007
+          },
+          {
+            "duration": 0.40000000002328306,
+            "end": 139303.20000000007,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139302.80000000005
+          },
+          {
+            "duration": 0.2999999999301508,
+            "end": 139303.5,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139303.20000000007
+          },
+          {
+            "duration": 0.40000000002328306,
+            "end": 139303.90000000002,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139303.5
+          },
+          {
+            "duration": 0.5,
+            "end": 139304.40000000002,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139303.90000000002
+          },
+          {
+            "duration": 0.30000000004656613,
+            "end": 139304.80000000005,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139304.5
+          },
+          {
+            "duration": 0.2999999999301508,
+            "end": 139305.09999999998,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139304.80000000005
+          },
+          {
+            "duration": 0.40000000002328306,
+            "end": 139305.70000000007,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139305.30000000005
+          },
+          {
+            "duration": 0.30000000004656613,
+            "end": 139306.20000000007,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139305.90000000002
+          },
+          {
+            "duration": 0.2999999999301508,
+            "end": 139306.5,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139306.20000000007
+          },
+          {
+            "duration": 3.400000000023283,
+            "end": 139310,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139306.59999999998
+          },
+          {
+            "budgetCpu": 17.20000000006985,
+            "budgetElapsed": 19.099999999976717,
+            "duration": 67.40000000002328,
+            "end": 139377.5,
+            "failed": false,
+            "frameBudget": 16,
+            "label": "loading-budget-frame-wait",
+            "scope": "Awaited cooperative frame wall time; budgetCpu is accumulated synchronous invocation wall time in the delivered presentation epoch. Program/driver readiness waits are excluded.",
+            "start": 139310.09999999998
+          },
+          {
+            "duration": 0.30000000004656613,
+            "end": 139377.90000000002,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139377.59999999998
+          },
+          {
+            "duration": 0.30000000004656613,
+            "end": 139378.30000000005,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139378
+          },
+          {
+            "duration": 0.30000000004656613,
+            "end": 139378.70000000007,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 139378.40000000002
+          },
+          {
+            "duration": 2247.1999999999534,
+            "end": 141254.5,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139007.30000000005
+          },
+          {
+            "duration": 2246.29999999993,
+            "end": 141254.59999999998,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139008.30000000005
+          },
+          {
+            "duration": 2316.0999999999767,
+            "end": 141327.09999999998,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139011
+          },
+          {
+            "duration": 2323,
+            "end": 141328.09999999998,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139005.09999999998
+          },
+          {
+            "duration": 2321.6999999999534,
+            "end": 141328.09999999998,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139006.40000000002
+          },
+          {
+            "duration": 2555.9000000000233,
+            "end": 141570,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139014.09999999998
+          },
+          {
+            "duration": 2554.5,
+            "end": 141570.09999999998,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139015.59999999998
+          },
+          {
+            "duration": 2552.9000000000233,
+            "end": 141570.20000000007,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139017.30000000005
+          },
+          {
+            "duration": 2550.70000000007,
+            "end": 141570.20000000007,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139019.5
+          },
+          {
+            "duration": 4432.5,
+            "end": 143651.20000000007,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139218.70000000007
+          },
+          {
+            "duration": 4431.300000000047,
+            "end": 143651.30000000005,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139220
+          },
+          {
+            "duration": 4542.099999999977,
+            "end": 143651.40000000002,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139109.30000000005
+          },
+          {
+            "duration": 4536,
+            "end": 143651.40000000002,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139115.40000000002
+          },
+          {
+            "duration": 4535.199999999953,
+            "end": 143651.5,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139116.30000000005
+          },
+          {
+            "duration": 4533.699999999953,
+            "end": 143651.59999999998,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139117.90000000002
+          },
+          {
+            "duration": 4359.5,
+            "end": 143651.70000000007,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139292.20000000007
+          },
+          {
+            "duration": 4358.20000000007,
+            "end": 143651.80000000005,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139293.59999999998
+          },
+          {
+            "duration": 4356.599999999977,
+            "end": 143651.80000000005,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139295.20000000007
+          },
+          {
+            "duration": 4352.199999999953,
+            "end": 143652,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139299.80000000005
+          },
+          {
+            "duration": 4642.099999999977,
+            "end": 143943.40000000002,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139301.30000000005
+          },
+          {
+            "duration": 4640.29999999993,
+            "end": 143943.5,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139303.20000000007
+          },
+          {
+            "duration": 4638.900000000023,
+            "end": 143943.70000000007,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139304.80000000005
+          },
+          {
+            "duration": 4637.5,
+            "end": 143943.70000000007,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139306.20000000007
+          },
+          {
+            "duration": 4565.800000000047,
+            "end": 143943.80000000005,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139378
+          },
+          {
+            "duration": 4913.099999999977,
+            "end": 143943.90000000002,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139030.80000000005
+          },
+          {
+            "duration": 4731.29999999993,
+            "end": 143944.09999999998,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139212.80000000005
+          },
+          {
+            "duration": 4730.399999999907,
+            "end": 143944.09999999998,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139213.70000000007
+          },
+          {
+            "duration": 4729.199999999953,
+            "end": 143944.09999999998,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139214.90000000002
+          },
+          {
+            "duration": 4728,
+            "end": 143944.20000000007,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139216.20000000007
+          },
+          {
+            "duration": 4726.800000000047,
+            "end": 143944.30000000005,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139217.5
+          },
+          {
+            "duration": 4718.599999999977,
+            "end": 144020.30000000005,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139301.70000000007
+          },
+          {
+            "duration": 4717.5,
+            "end": 144020.30000000005,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139302.80000000005
+          },
+          {
+            "duration": 4716.800000000047,
+            "end": 144020.30000000005,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139303.5
+          },
+          {
+            "duration": 4716.400000000023,
+            "end": 144020.30000000005,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139303.90000000002
+          },
+          {
+            "duration": 4715.300000000047,
+            "end": 144020.40000000002,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139305.09999999998
+          },
+          {
+            "duration": 4713.900000000023,
+            "end": 144020.5,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139306.59999999998
+          },
+          {
+            "duration": 4642.199999999953,
+            "end": 144020.5,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139378.30000000005
+          },
+          {
+            "duration": 4641.899999999907,
+            "end": 144020.59999999998,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139378.70000000007
+          },
+          {
+            "duration": 4806.70000000007,
+            "end": 144020.70000000007,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139214
+          },
+          {
+            "duration": 4805.400000000023,
+            "end": 144020.70000000007,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139215.30000000005
+          },
+          {
+            "duration": 4804.100000000093,
+            "end": 144020.70000000007,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139216.59999999998
+          },
+          {
+            "duration": 4802.900000000023,
+            "end": 144020.70000000007,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139217.80000000005
+          },
+          {
+            "duration": 4801.70000000007,
+            "end": 144020.80000000005,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139219.09999999998
+          },
+          {
+            "duration": 4800.300000000047,
+            "end": 144020.80000000005,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139220.5
+          },
+          {
+            "duration": 4903.900000000023,
+            "end": 144020.90000000002,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139117
+          },
+          {
+            "duration": 4902.5,
+            "end": 144021,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139118.5
+          },
+          {
+            "duration": 4727.699999999953,
+            "end": 144021,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139293.30000000005
+          },
+          {
+            "duration": 4727,
+            "end": 144021,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139294
+          },
+          {
+            "duration": 4722.899999999907,
+            "end": 144021.09999999998,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139298.20000000007
+          },
+          {
+            "duration": 4722.399999999907,
+            "end": 144021.09999999998,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139298.70000000007
+          },
+          {
+            "duration": 4720.899999999907,
+            "end": 144021.09999999998,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139300.20000000007
+          },
+          {
+            "duration": 4720.599999999977,
+            "end": 144021.09999999998,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139300.5
+          },
+          {
+            "duration": 6558.900000000023,
+            "end": 145733.20000000007,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 139174.30000000005
+          }
+        ],
+        "scope": "Nested/awaited durations are diagnostic and overlap; do not sum as exclusive CPU/GPU work.",
+        "totals": {
+          "asset-gltf-load:http://tauri.localhost/assets/web/2fdb3468b7646ebe16d0f3d3d25538ce5b20d6dee1d3830256d2f62599826dcc.glb": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 12248.099999999977,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 12248.099999999977
+          },
+          "asset-gltf-load:http://tauri.localhost/assets/web/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 6571.199999999953,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 6571.199999999953
+          },
+          "asset-gltf-load:http://tauri.localhost/assets/web/7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 6538.099999999977,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 6538.099999999977
+          },
+          "asset-gltf-load:http://tauri.localhost/assets/web/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 4108,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 4108
+          },
+          "asset-gltf-load:http://tauri.localhost/assets/web/8f6c9ef7472a2d7f8ffda7f08a78f8027f91d14a8f92b8eeca4084b0f379da36.glb": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 8359,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 8359
+          },
+          "asset-gltf-load:http://tauri.localhost/assets/web/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 9493.900000000023,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 9493.900000000023
+          },
+          "asset-gltf-load:http://tauri.localhost/assets/web/cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869.glb": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 8262.600000000093,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 8262.600000000093
+          },
+          "asset-gltf-load:http://tauri.localhost/assets/web/fedb713c0b32df33f11111a91e2c3e0616a0345ec9be9a8beeecaa0b93ef26cb.glb": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 3045.6999999999534,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 3045.6999999999534
+          },
+          "asset-gltf-parse-submit:http://tauri.localhost/assets/web/:14308628": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 5.300000000046566,
+            "scope": "Synchronous GLTF parse invocation; nested within awaited parse, do not sum.",
+            "totalMs": 5.300000000046566
+          },
+          "asset-gltf-parse-submit:http://tauri.localhost/assets/web/:26536168": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 8.899999999906868,
+            "scope": "Synchronous GLTF parse invocation; nested within awaited parse, do not sum.",
+            "totalMs": 8.899999999906868
+          },
+          "asset-gltf-parse-submit:http://tauri.localhost/assets/web/:5970792": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 4.599999999976717,
+            "scope": "Synchronous GLTF parse invocation; nested within awaited parse, do not sum.",
+            "totalMs": 4.599999999976717
+          },
+          "asset-gltf-parse-submit:http://tauri.localhost/assets/web/:6401848": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 6.200000000069849,
+            "scope": "Synchronous GLTF parse invocation; nested within awaited parse, do not sum.",
+            "totalMs": 6.200000000069849
+          },
+          "asset-gltf-parse-submit:http://tauri.localhost/assets/web/:6890088": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 2,
+            "scope": "Synchronous GLTF parse invocation; nested within awaited parse, do not sum.",
+            "totalMs": 2
+          },
+          "asset-gltf-parse-submit:http://tauri.localhost/assets/web/:6927276": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 6.600000000093132,
+            "scope": "Synchronous GLTF parse invocation; nested within awaited parse, do not sum.",
+            "totalMs": 6.600000000093132
+          },
+          "asset-gltf-parse-submit:http://tauri.localhost/assets/web/:6980244": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 4.899999999906868,
+            "scope": "Synchronous GLTF parse invocation; nested within awaited parse, do not sum.",
+            "totalMs": 4.899999999906868
+          },
+          "asset-gltf-parse-submit:http://tauri.localhost/assets/web/:7123932": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 3.299999999930151,
+            "scope": "Synchronous GLTF parse invocation; nested within awaited parse, do not sum.",
+            "totalMs": 3.299999999930151
+          },
+          "asset-gltf-parse:http://tauri.localhost/assets/web/:14308628": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 3058.20000000007,
+            "scope": "Awaited GLTF parse/decode/material preparation after response collection; excludes primary GLB transfer, includes nested image fetch/decode.",
+            "totalMs": 3058.20000000007
+          },
+          "asset-gltf-parse:http://tauri.localhost/assets/web/:26536168": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 62.89999999990687,
+            "scope": "Awaited GLTF parse/decode/material preparation after response collection; excludes primary GLB transfer, includes nested image fetch/decode.",
+            "totalMs": 62.89999999990687
+          },
+          "asset-gltf-parse:http://tauri.localhost/assets/web/:5970792": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 2004.8000000000463,
+            "scope": "Awaited GLTF parse/decode/material preparation after response collection; excludes primary GLB transfer, includes nested image fetch/decode.",
+            "totalMs": 2004.8000000000463
+          },
+          "asset-gltf-parse:http://tauri.localhost/assets/web/:6401848": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 1919.5999999999767,
+            "scope": "Awaited GLTF parse/decode/material preparation after response collection; excludes primary GLB transfer, includes nested image fetch/decode.",
+            "totalMs": 1919.5999999999767
+          },
+          "asset-gltf-parse:http://tauri.localhost/assets/web/:6890088": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 2244,
+            "scope": "Awaited GLTF parse/decode/material preparation after response collection; excludes primary GLB transfer, includes nested image fetch/decode.",
+            "totalMs": 2244
+          },
+          "asset-gltf-parse:http://tauri.localhost/assets/web/:6927276": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 1848,
+            "scope": "Awaited GLTF parse/decode/material preparation after response collection; excludes primary GLB transfer, includes nested image fetch/decode.",
+            "totalMs": 1848
+          },
+          "asset-gltf-parse:http://tauri.localhost/assets/web/:6980244": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 2209.6999999999534,
+            "scope": "Awaited GLTF parse/decode/material preparation after response collection; excludes primary GLB transfer, includes nested image fetch/decode.",
+            "totalMs": 2209.6999999999534
+          },
+          "asset-gltf-parse:http://tauri.localhost/assets/web/:7123932": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 2527.6999999999534,
+            "scope": "Awaited GLTF parse/decode/material preparation after response collection; excludes primary GLB transfer, includes nested image fetch/decode.",
+            "totalMs": 2527.6999999999534
+          },
+          "diorama-compile-maize": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 4617,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 4617
+          },
+          "diorama-compile-mist": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 334.20000000006985,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 334.20000000006985
+          },
+          "diorama-compile-sky": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 673.8000000000466,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 673.8000000000466
+          },
+          "diorama-final-fence": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 213.59999999997672,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 213.59999999997672
+          },
+          "diorama-prepare-catalogues": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 678.0999999999767,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 678.0999999999767
+          },
+          "diorama-prepare-maize-batch": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 174.59999999997672,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 174.59999999997672
+          },
+          "diorama-prepare-maize-bridges": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 12249.099999999977,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 12249.099999999977
+          },
+          "diorama-prepare-maize-model": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 8360.100000000093,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 8360.100000000093
+          },
+          "diorama-prepare-mountain-atlas": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 977.7999999999302,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 977.7999999999302
+          },
+          "diorama-prepare-sky": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 5358.899999999907,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 5358.899999999907
+          },
+          "diorama-prepare-soil-texture": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 1481.6999999999534,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 1481.6999999999534
+          },
+          "diorama-upload-maize-soil": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 100.09999999997672,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalMs": 100.09999999997672
+          },
+          "diorama-upload-mist": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 1.599999999976717,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalMs": 1.599999999976717
+          },
+          "diorama-warm-day-night-sky": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 8.400000000023283,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalMs": 8.400000000023283
+          },
+          "hands-constructor": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 1.199999999953434,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalMs": 1.199999999953434
+          },
+          "initial-far-region-worker": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 5967.699999999953,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 5967.699999999953
+          },
+          "load-active-animal-actors": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 0.30000000004656613,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 0.30000000004656613
+          },
+          "load-animal-models": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 9513.900000000023,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 9513.900000000023
+          },
+          "load-biome-ground": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 2041.4000000000233,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 2041.4000000000233
+          },
+          "load-biome-models": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 4611.400000000023,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 4611.400000000023
+          },
+          "load-chunks-horizon-ready": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 3569.5,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 3569.5
+          },
+          "load-crop-batch": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 1141,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 1141
+          },
+          "load-crop-bridges": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 0.2999999999301508,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 0.2999999999301508
+          },
+          "load-crop-model": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 0.19999999995343387,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 0.19999999995343387
+          },
+          "load-hands-ready": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 3112.0999999999767,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 3112.0999999999767
+          },
+          "load-milestone:animals": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 3.300000000046566,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 3.300000000046566
+          },
+          "load-milestone:biome": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 4.300000000046566,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 4.300000000046566
+          },
+          "load-milestone:buildings": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 1.900000000023283,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 1.900000000023283
+          },
+          "load-milestone:chunks": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 2.199999999953434,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 2.199999999953434
+          },
+          "load-milestone:crops": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 64.80000000004657,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 64.80000000004657
+          },
+          "load-milestone:sky": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 8.599999999976717,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 8.599999999976717
+          },
+          "load-milestone:vfx": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 1.1000000000931325,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 1.1000000000931325
+          },
+          "load-milestone:walls": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 0.9000000000232831,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 0.9000000000232831
+          },
+          "load-sky": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 1.599999999976717,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 1.599999999976717
+          },
+          "load-village-models": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 2715.29999999993,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 2715.29999999993
+          },
+          "load-worker-actors": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 0,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 0
+          },
+          "loading-budget-frame-wait": {
+            "calls": 5,
+            "failures": 0,
+            "maxMs": 72,
+            "scope": "Awaited cooperative frame wall time; budgetCpu is accumulated synchronous invocation wall time in the delivered presentation epoch. Program/driver readiness waits are excluded.",
+            "totalMs": 239
+          },
+          "loading-compile-readiness-wait": {
+            "calls": 59,
+            "failures": 0,
+            "maxMs": 6558.900000000023,
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "totalMs": 242532.09999999977
+          },
+          "loading-compile-submit": {
+            "calls": 81,
+            "failures": 0,
+            "maxMs": 51.800000000046566,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalMs": 144.40000000048894
+          },
+          "loading-crop-construction-step": {
+            "calls": 73,
+            "failures": 0,
+            "maxMs": 5.5,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalMs": 76.10000000020955
+          },
+          "loading-crop-frame-wait": {
+            "calls": 16,
+            "failures": 0,
+            "maxMs": 74.5,
+            "scope": "Existing cooperative frame wait; sliceCpu is summed iterator invocation wall time, excluding this wait.",
+            "totalMs": 1063.4999999997672
+          },
+          "restore-sync": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 2.1000000000931323,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalMs": 2.1000000000931323
+          },
+          "sync-crop-update": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 0.09999999997671694,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalMs": 0.09999999997671694
+          },
+          "warm-compile-destruction": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 0.09999999997671694,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 0.09999999997671694
+          },
+          "warm-compile-staging": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 5738.900000000023,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 5738.900000000023
+          }
+        }
+      },
+      "transitions": [
+        {
+          "at": 59817.80000000005,
+          "canvas": null,
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": true,
+          "overlay": false,
+          "phase": null,
+          "progress": null,
+          "stageBusy": null,
+          "visibility": "visible"
+        },
+        {
+          "at": 86889.09999999998,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Preparing your world...",
+          "progress": "21",
+          "stageBusy": null,
+          "visibility": "visible"
+        },
+        {
+          "at": 87123.5,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Preparing your world...",
+          "progress": "49",
+          "stageBusy": null,
+          "visibility": "visible"
+        },
+        {
+          "at": 91011.30000000005,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Preparing the terrain...",
+          "progress": "55",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 91415.90000000002,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Preparing the terrain...",
+          "progress": "56",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 92542.90000000002,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Preparing the terrain...",
+          "progress": "57",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 96330.80000000005,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Preparing the terrain...",
+          "progress": "58",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 97317.40000000002,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Preparing the terrain...",
+          "progress": "59",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 97968.20000000008,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Bringing your world to life...",
+          "progress": "60",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 98585,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Bringing your world to life...",
+          "progress": "61",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 99350.09999999998,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Bringing your world to life...",
+          "progress": "62",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 107894.80000000005,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Awakening nature...",
+          "progress": "66",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 112701.20000000008,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Awakening nature...",
+          "progress": "68",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 114042.40000000002,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Awakening nature...",
+          "progress": "69",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 114405.90000000002,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Awakening nature...",
+          "progress": "70",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 114729.5,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Awakening nature...",
+          "progress": "71",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 117646.90000000002,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Bringing your world to life...",
+          "progress": "75",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 119119.90000000002,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Bringing your world to life...",
+          "progress": "77",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 124036.09999999998,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Bringing your world to life...",
+          "progress": "78",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 124275.59999999998,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Bringing your world to life...",
+          "progress": "80",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 126640.20000000008,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Preparing the terrain...",
+          "progress": "81",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 128519.20000000008,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Preparing the terrain...",
+          "progress": "82",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 130136.09999999998,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Bringing your world to life...",
+          "progress": "84",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 133106.70000000007,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Bringing your world to life...",
+          "progress": "85",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 148417.40000000002,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Preparing rendering resources",
+          "progress": "85",
+          "stageBusy": "true",
+          "visibility": "visible"
+        }
+      ]
+    },
+    "storage": true,
+    "webgl2": true,
+    "worker": true
+  },
+  "errors": [
+    "Error: Production world did not finish loading"
+  ],
+  "ok": false,
+  "origin": "http://tauri.localhost",
+  "secureContext": true,
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0"
+}
