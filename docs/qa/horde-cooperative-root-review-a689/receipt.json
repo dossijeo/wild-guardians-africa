@@ -1,0 +1,43 @@
+{
+  "scope": "Independent root replay of unchanged historical fixtures; not positive clock acceptance",
+  "runs": [
+    {
+      "ref": "d4d12580b52ee90df5bf215bf2d105eb7d7670f3",
+      "command": [
+        "node",
+        "--test",
+        "tests/acceptance-clock.test.js",
+        "tests/acceptance-defensive-reservations.test.js",
+        "tests/horde-entry-retry.test.js"
+      ],
+      "exitCode": 1,
+      "logSha256": "40f39a1b98b98a8f3b85f8afbae43aed287a6fa90068264a449e59ee08aee7a9",
+      "testHashes": {
+        "tests/acceptance-clock.test.js": "9fe8a6f7b5da44da21c24a9685f3127776cf238a3aaa4264b1c89df146718e34",
+        "tests/acceptance-defensive-reservations.test.js": "44d109ffea77a45349d6029e24375c138d802562860fbe621fea04b96ed13c26",
+        "tests/horde-entry-retry.test.js": "6d0bce009456692d4bb68b16010e80ec2e2ea52efc04646ffe0a353b6590e862"
+      },
+      "pass": 15,
+      "fail": 6
+    },
+    {
+      "ref": "a6893053ccbb3fbf167e5a92c64209ee6eebfdd1",
+      "command": [
+        "node",
+        "--test",
+        "tests/acceptance-clock.test.js",
+        "tests/acceptance-defensive-reservations.test.js",
+        "tests/horde-entry-retry.test.js"
+      ],
+      "exitCode": 1,
+      "logSha256": "4cecc38827abdb73b84151234892e8f4c43b449a2271c217fa8534f00b8ea35b",
+      "testHashes": {
+        "tests/acceptance-clock.test.js": "9fe8a6f7b5da44da21c24a9685f3127776cf238a3aaa4264b1c89df146718e34",
+        "tests/acceptance-defensive-reservations.test.js": "44d109ffea77a45349d6029e24375c138d802562860fbe621fea04b96ed13c26",
+        "tests/horde-entry-retry.test.js": "6d0bce009456692d4bb68b16010e80ec2e2ea52efc04646ffe0a353b6590e862"
+      },
+      "pass": 15,
+      "fail": 6
+    }
+  ]
+}
