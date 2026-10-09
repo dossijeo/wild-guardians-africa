@@ -1,0 +1,27 @@
+[
+  {
+    "log": "tests.log",
+    "args": [
+      "node",
+      "--test",
+      "tests/loading-gltf-timing-snapshot.test.js",
+      "tests/loading-readiness-snapshot.test.js",
+      "tests/loading-hands-observation.test.js",
+      "tests/loading-compile-job-observation.test.js",
+      "tests/compile-gpu-preparation.test.js",
+      "tests/sfx-catalog-audit.test.js"
+    ],
+    "exitCode": 0,
+    "sha256": "c2f2d66fee7671dac51a8f4212c3a9ef71858dd361e69d2af7c242eefab5cdcf"
+  },
+  {
+    "log": "sfx-check.log",
+    "args": [
+      "node",
+      "tools/audit_sfx_catalog.mjs",
+      "--check"
+    ],
+    "exitCode": 0,
+    "sha256": "137853c74b88b2dd785ae606847bed8de22eecef5a390fa494c3aaaf9add9209"
+  }
+]

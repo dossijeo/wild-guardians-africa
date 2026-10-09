@@ -1,0 +1,92 @@
+{
+  "runtimeCommit": "64cb737e",
+  "headBeforeDocsFreeze": "64cb737e42ee0529fda7123212ca10180f0f8559",
+  "scope": "CPU preflight; no CI, native/GPU, new recipe or timeout change. Future dispatch requires root authorization. resource_overlap must remain false/unset.",
+  "tests": {
+    "pass": 59,
+    "fail": 0,
+    "exit": 0,
+    "durationMs": 775.8577
+  },
+  "build": {
+    "exit": 0,
+    "viteSeconds": 9.6
+  },
+  "package": {
+    "exit": 0,
+    "files": 711,
+    "bytes": 445272688,
+    "relativeLinks": 860,
+    "runtimeGLBs": 22
+  },
+  "syntax": {
+    "files": 5,
+    "exit": 0
+  },
+  "files": {
+    "src/app/main.js": {
+      "bytes": 65131,
+      "sha256": "b3f5b8dd4ada493ad41fec5d499e297673b9c09239787a6de206adc1085717ba"
+    },
+    "src/rendering/scene.js": {
+      "bytes": 62799,
+      "sha256": "76c94d66a1e05ecb2ddafc3909bbd50eda139a641cb28f5dfb315269e9461cfa"
+    },
+    "src/rendering/hands.js": {
+      "bytes": 6630,
+      "sha256": "dac058f165afe49e13927494f58df786e9bd6f0b114a072a82e66de8065b1211"
+    },
+    "src/rendering/loading-readiness-snapshot.js": {
+      "bytes": 22182,
+      "sha256": "e244053595e60c7a04557a6894761cd11a69d64a09afc635a62d9d3b37588e78"
+    },
+    "src/rendering/loading-sync-witness.js": {
+      "bytes": 1426,
+      "sha256": "9c083e044ced2154341d3324881e3ba7e3e0f833b1ec8e46279310425ff0cb7e"
+    },
+    "src/rendering/loading-resource-overlap.js": {
+      "bytes": 1072,
+      "sha256": "10e0c6b399fb68967a6972ab5262983b04045934bf6956ae7c1f8b7bb9c6913b"
+    },
+    "src/rendering/loading-diorama.js": {
+      "bytes": 16869,
+      "sha256": "4e3f28caee6678d89a72cabe3681fdd33c494eb09db11cf22a97f25caf6b226f"
+    },
+    "src/rendering/assets.js": {
+      "bytes": 11520,
+      "sha256": "a013c25c0a96d7af114b81f5a4088fd04f445a3016b51c4290cab25d01e3b65e"
+    },
+    "src/rendering/asset-transfer.js": {
+      "bytes": 3367,
+      "sha256": "7c0db4ccf829d8759cd78a749bff382fb10d9ce7d15be2766dda7ca03b119454"
+    },
+    "src/app/loading-transfer-owner.js": {
+      "bytes": 2890,
+      "sha256": "84155bf2184afbd8de8ca839e67775890c4af1ea87b2f5074d72ee2de4c71920"
+    },
+    "src/app/loading-downloads.js": {
+      "bytes": 4695,
+      "sha256": "f38b7a905c0f270c867047b2b33faf8fedf242a57a1d67c3d5cdfb4b8e6e797b"
+    },
+    "src-tauri/smoke.js": {
+      "bytes": 12275,
+      "sha256": "9f6e27ad126390e0d3cce356e90645640bf26f719eb0a38a2a68ef2c8d8b0436"
+    },
+    "src-tauri/src/main.rs": {
+      "bytes": 3616,
+      "sha256": "b6a5586ef8c4b3c6c53af2487a9c16969c1c2fd86f548dbcdfd413460900e8c1"
+    },
+    ".github/workflows/windows.yml": {
+      "bytes": 5463,
+      "sha256": "678d02ece3e9a8f93d4abbb61706ca784ca3cd426d42e5a33a8a15e3b551617b"
+    },
+    "docs/qa/sfx-catalog-post-jam/inventory.json": {
+      "bytes": 246030,
+      "sha256": "3a0e4aadad0b8b400ed5d1195fe9c1360fc02d5eba54fe8d14838fced4192032"
+    },
+    "docs/qa/sfx-catalog-post-jam/inventory.md": {
+      "bytes": 36716,
+      "sha256": "507a9f61546904c27863d0d0bf6e4ac582757f20503ad7d864d8e221dca36102"
+    }
+  }
+}

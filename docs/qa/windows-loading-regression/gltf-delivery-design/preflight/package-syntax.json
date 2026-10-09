@@ -1,0 +1,62 @@
+[
+  {
+    "args": [
+      "npm.cmd",
+      "run",
+      "test:web-package"
+    ],
+    "log": "package.log",
+    "exitCode": 0,
+    "sha256": "880c24835252dd905441002a786f7ab9a57535a3484517c18da61be88677038a"
+  },
+  {
+    "args": [
+      "node",
+      "--check",
+      "src/rendering/loading-readiness-snapshot.js"
+    ],
+    "log": "snapshot-syntax.log",
+    "exitCode": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "args": [
+      "node",
+      "--check",
+      "src/rendering/hands.js"
+    ],
+    "log": "hands-syntax.log",
+    "exitCode": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "args": [
+      "node",
+      "--check",
+      "src/rendering/scene.js"
+    ],
+    "log": "scene-syntax.log",
+    "exitCode": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "args": [
+      "node",
+      "--check",
+      "tests/loading-gltf-timing-snapshot.test.js"
+    ],
+    "log": "glTF-tests-syntax.log",
+    "exitCode": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "args": [
+      "node",
+      "--check",
+      "tests/loading-hands-observation.test.js"
+    ],
+    "log": "hands-tests-syntax.log",
+    "exitCode": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+]
