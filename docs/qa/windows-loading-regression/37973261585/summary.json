@@ -1,0 +1,362 @@
+{
+  "scope": "Failed original90s primary prevents matched-save candidate visibility. Control and New differ in seed/state and cannot establish causal performance change. No promotion.",
+  "arms": {
+    "desktop-animal-control.json": {
+      "ok": false,
+      "errors": [
+        "Error: Production world did not finish loading"
+      ],
+      "recipe": {
+        "animalPrefetch": false,
+        "collectiveReadiness": false,
+        "parallelDioramaAssets": false,
+        "parallelReadiness": false,
+        "pauseLoadingMenu": true,
+        "scope": "Normal production loading pipeline; explicit smoke-only shared ground/menu pause/animal prefetch options recorded above.",
+        "sharedGroundClip": true
+      },
+      "config": {
+        "biome": "gran-canon",
+        "culture": "mapungubwe",
+        "quality": "muy_baja",
+        "relief": 1,
+        "river": true,
+        "seed": "712"
+      },
+      "elapsedMs": 90161.09999999998,
+      "state": {
+        "canvas": {
+          "height": 720,
+          "width": 1028
+        },
+        "failure": null,
+        "focused": true,
+        "hidden": false,
+        "menu": false,
+        "menuRender": null,
+        "overlay": true,
+        "phase": "Preparing rendering resources",
+        "progress": "85",
+        "stageBusy": "true",
+        "visibility": "visible"
+      },
+      "firstRetainedObservationAt": 57409.69999999995,
+      "beforeWarmGpuMs": 63065.90000000002,
+      "active": [
+        {
+          "elapsedMs": 27094.099999999977,
+          "label": "load-warm-gpu",
+          "scope": "Existing awaited phase start; smoke-only pending-phase attribution.",
+          "start": 120475.59999999998
+        },
+        {
+          "elapsedMs": 16629,
+          "label": "warm-compile-world",
+          "scope": "Existing awaited phase start; smoke-only pending-phase attribution.",
+          "start": 130940.79999999992
+        }
+      ],
+      "completedAwaitedPhases": {
+        "load-active-animal-actors": 0.4,
+        "load-animal-models": 13542.5,
+        "load-biome-ground": 2630.4,
+        "load-biome-models": 7315.6,
+        "load-chunks-horizon-ready": 3944.2,
+        "load-crop-batch": 1183.4,
+        "load-crop-bridges": 0.1,
+        "load-crop-model": 0.1,
+        "load-hands-ready": 2331.9,
+        "load-sky": 1.5,
+        "load-vfx-catalogue": 241.9,
+        "load-vfx-constructors": 10.3,
+        "load-vfx-texture": 2201.9,
+        "load-village-models": 4905.4,
+        "load-wall-catalogue": 245.1,
+        "load-wall-prototypes": 5389.5,
+        "load-worker-actors": 4566.4,
+        "warm-compile-destruction": 96.3,
+        "warm-compile-staging": 10188
+      },
+      "animalLoads": [
+        {
+          "source": "Quata_Character_Lab_Facoquero_Bestiario_GroundFix_v2.html#model-data",
+          "url": "http://tauri.localhost/assets/web/cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869.glb",
+          "start": 86449.5,
+          "end": 93333.29999999992,
+          "duration": 6883.79999999993
+        },
+        {
+          "source": "Quata_Character_Lab_Hiena_Bestiario_GroundFix_v2.html#model-data",
+          "url": "http://tauri.localhost/assets/web/7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb",
+          "start": 86449.90000000002,
+          "end": 95475.79999999992,
+          "duration": 9025.899999999909
+        },
+        {
+          "source": "Quata_Character_Lab_Bufalo_Bestiario_Corregido_v3.html#model-data",
+          "url": "http://tauri.localhost/assets/web/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb",
+          "start": 86450.19999999995,
+          "end": 91294.90000000002,
+          "duration": 4844.70000000007
+        },
+        {
+          "source": "Quata_Character_Lab_Leon_Bestiario_Corregido_v2.html#model-data",
+          "url": "http://tauri.localhost/assets/web/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb",
+          "start": 86450.29999999993,
+          "end": 97508.90000000002,
+          "duration": 11058.600000000091
+        },
+        {
+          "source": "Quata_Character_Lab_Rinoceronte_Bestiario_Pies_Alineados_v3.html#model-data",
+          "url": "http://tauri.localhost/assets/web/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb",
+          "start": 86450.5,
+          "end": 99969,
+          "duration": 13518.5
+        }
+      ],
+      "pendingPrograms": [
+        {
+          "at": 137163.79999999993,
+          "cacheKey": "basic,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,2049,131075,srgb,(o,c)=>{r(o,c),Gg(o,this.shadowUniforms,\"vToonWorld\")}|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|biome-ground-4.1.10.3|toon-4.1.4|MeshBasicMaterial|shared-ground-clip-v1",
+          "cacheKeyLength": 426,
+          "cacheKeyTruncated": false,
+          "currentProgram": true,
+          "defines": {},
+          "materialName": "",
+          "materialType": "MeshBasicMaterial",
+          "materialUuid": "c504a81b-bcab-4dfd-bf96-708618b0f4a7",
+          "objects": [],
+          "programId": 21,
+          "programName": "",
+          "programType": "MeshBasicMaterial",
+          "side": 0,
+          "transparent": false
+        }
+      ],
+      "programIdentityDropped": 0,
+      "poll": {
+        "checkedProgramCount": 1,
+        "duration": 0,
+        "end": 147486.90000000002,
+        "failed": false,
+        "label": "loading-program-readiness-poll",
+        "pendingProgramCount": 1,
+        "pendingProgramIds": [
+          21
+        ],
+        "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+        "start": 147486.90000000002
+      },
+      "raf": {
+        "callbackNames": {
+          "$3": 1192,
+          "(anonymous)": 33
+        },
+        "callbacks": 1225,
+        "distinctTimestamps": 1192,
+        "lastAt": 147472.8,
+        "maxIntervalMs": 171.90000000000146
+      },
+      "graphics": {
+        "contextLost": false,
+        "parallelShaderCompileSupported": true,
+        "renderer": "WebKit WebGL",
+        "scope": "One final read of existing World context identity/capabilities; no render/query timer or readiness change.",
+        "unmaskedRenderer": "ANGLE (Microsoft, Microsoft Basic Render Driver (0x0000008C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "unmaskedVendor": "Google Inc. (Microsoft)",
+        "vendor": "WebKit"
+      },
+      "worldReadyAt": null,
+      "rasterAbsent": true,
+      "visibilityAbsent": true
+    },
+    "desktop-smoke.json": {
+      "ok": false,
+      "errors": [
+        "Error: Production world did not finish loading"
+      ],
+      "recipe": {
+        "animalPrefetch": true,
+        "collectiveReadiness": false,
+        "parallelDioramaAssets": false,
+        "parallelReadiness": false,
+        "pauseLoadingMenu": true,
+        "scope": "Normal production loading pipeline; explicit smoke-only shared ground/menu pause/animal prefetch options recorded above.",
+        "sharedGroundClip": true
+      },
+      "config": {
+        "biome": "gran-canon",
+        "culture": "mapungubwe",
+        "quality": "muy_baja",
+        "relief": 1,
+        "river": true,
+        "seed": "1791571308038"
+      },
+      "elapsedMs": 90084.8999999999,
+      "state": {
+        "canvas": {
+          "height": 720,
+          "width": 1028
+        },
+        "failure": null,
+        "focused": true,
+        "hidden": false,
+        "menu": false,
+        "menuRender": null,
+        "overlay": true,
+        "phase": "Preparing rendering resources",
+        "progress": "81",
+        "stageBusy": "true",
+        "visibility": "visible"
+      },
+      "firstRetainedObservationAt": 94252,
+      "beforeWarmGpuMs": 52843.20000000007,
+      "active": [
+        {
+          "elapsedMs": 37241.299999999814,
+          "label": "load-warm-gpu",
+          "scope": "Existing awaited phase start; smoke-only pending-phase attribution.",
+          "start": 147095.20000000007
+        },
+        {
+          "elapsedMs": 8801.5,
+          "label": "warm-prepare-depth",
+          "scope": "Existing awaited phase start; smoke-only pending-phase attribution.",
+          "start": 175534.99999999988
+        }
+      ],
+      "completedAwaitedPhases": {
+        "load-active-animal-actors": 0.5,
+        "load-animal-models": 91.7,
+        "load-biome-ground": 2396.7,
+        "load-biome-models": 13631.6,
+        "load-chunks-horizon-ready": 3112.8,
+        "load-crop-batch": 806.1,
+        "load-crop-bridges": 0.3,
+        "load-crop-model": 0,
+        "load-hands-ready": 3300.1,
+        "load-sky": 1.5,
+        "load-vfx-catalogue": 211,
+        "load-vfx-constructors": 16.5,
+        "load-vfx-texture": 2278.4,
+        "load-village-models": 3041.6,
+        "load-wall-catalogue": 276.2,
+        "load-wall-prototypes": 5131.8,
+        "load-worker-actors": 0.9,
+        "warm-compile-destruction": 0.3,
+        "warm-compile-staging": 3823.3,
+        "warm-compile-world": 24453.2
+      },
+      "animalLoads": [
+        {
+          "source": "Quata_Character_Lab_Facoquero_Bestiario_GroundFix_v2.html#model-data",
+          "url": "http://tauri.localhost/assets/web/cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869.glb",
+          "start": 102488.40000000002,
+          "end": 111891.59999999998,
+          "duration": 9403.199999999952
+        },
+        {
+          "source": "Quata_Character_Lab_Hiena_Bestiario_GroundFix_v2.html#model-data",
+          "url": "http://tauri.localhost/assets/web/7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb",
+          "start": 102488.70000000008,
+          "end": 115261.79999999992,
+          "duration": 12773.09999999986
+        },
+        {
+          "source": "Quata_Character_Lab_Bufalo_Bestiario_Corregido_v3.html#model-data",
+          "url": "http://tauri.localhost/assets/web/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb",
+          "start": 102488.90000000002,
+          "end": 109689.40000000002,
+          "duration": 7200.5
+        },
+        {
+          "source": "Quata_Character_Lab_Leon_Bestiario_Corregido_v2.html#model-data",
+          "url": "http://tauri.localhost/assets/web/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb",
+          "start": 102489.09999999998,
+          "end": 112986.70000000008,
+          "duration": 10497.600000000091
+        },
+        {
+          "source": "Quata_Character_Lab_Rinoceronte_Bestiario_Pies_Alineados_v3.html#model-data",
+          "url": "http://tauri.localhost/assets/web/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb",
+          "start": 102489.29999999992,
+          "end": 108601.49999999988,
+          "duration": 6112.199999999953
+        }
+      ],
+      "pendingPrograms": [
+        {
+          "at": 181808.4,
+          "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,3,133123,srgb,african-water-relative-v4.1.4|hdr-endpoints",
+          "cacheKeyLength": 282,
+          "cacheKeyTruncated": false,
+          "currentProgram": false,
+          "defines": {
+            "STANDARD": ""
+          },
+          "materialName": "",
+          "materialType": "MeshStandardMaterial",
+          "materialUuid": "f27bb0c7-2e9b-4418-9c65-5546feb4f8a6",
+          "objects": [],
+          "programId": 36,
+          "programName": "",
+          "programType": "MeshStandardMaterial",
+          "side": 2,
+          "transparent": false
+        }
+      ],
+      "programIdentityDropped": 0,
+      "poll": {
+        "checkedProgramCount": 1,
+        "duration": 0,
+        "end": 184263.9,
+        "failed": false,
+        "label": "loading-program-readiness-poll",
+        "pendingProgramCount": 1,
+        "pendingProgramIds": [
+          36
+        ],
+        "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+        "start": 184263.9
+      },
+      "raf": {
+        "callbackNames": {
+          "$3": 1356,
+          "(anonymous)": 30
+        },
+        "callbacks": 1386,
+        "distinctTimestamps": 1356,
+        "lastAt": 184260.1,
+        "maxIntervalMs": 171.89999999999418
+      },
+      "graphics": {
+        "contextLost": false,
+        "parallelShaderCompileSupported": true,
+        "renderer": "WebKit WebGL",
+        "scope": "One final read of existing World context identity/capabilities; no render/query timer or readiness change.",
+        "unmaskedRenderer": "ANGLE (Microsoft, Microsoft Basic Render Driver (0x0000008C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "unmaskedVendor": "Google Inc. (Microsoft)",
+        "vendor": "WebKit"
+      },
+      "worldReadyAt": null,
+      "rasterAbsent": true,
+      "visibilityAbsent": true
+    }
+  },
+  "absent": [
+    "candidate visibility",
+    "raster",
+    "world screenshot"
+  ],
+  "watcher": {
+    "session": 46891,
+    "exitCode": 1,
+    "terminal": true
+  },
+  "fixture": {
+    "slotId": "qa-desktop-visibility-712",
+    "fileSha256": "28d8bf348c61900a7f4f94a53026a86e638acbca5b058981a43de969788a6406",
+    "snapshotSha256": "e4a09b4b1d9bb3cd46992adefb2e17bcb83e1749c66c1258709d9a069ae601f1",
+    "scope": "Native paid center, cassava, young woman and first raid; tutorial skipped for directed QA. No money, clock, RNG, growth, damage or magic overrides."
+  }
+}

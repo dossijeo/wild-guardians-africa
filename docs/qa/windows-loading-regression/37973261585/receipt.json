@@ -1,0 +1,360 @@
+{
+  "run": {
+    "conclusion": "failure",
+    "headSha": "527bbb3315158c8523190c4d779a2f73f95135be",
+    "jobs": [
+      {
+        "completedAt": "2026-10-09T18:43:42Z",
+        "conclusion": "failure",
+        "databaseId": 113965008045,
+        "name": "windows",
+        "startedAt": "2026-10-09T18:26:18Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-10-09T18:26:22Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-09T18:26:20Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-09T18:27:41Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@v4",
+            "number": 2,
+            "startedAt": "2026-10-09T18:26:22Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-09T18:27:52Z",
+            "conclusion": "success",
+            "name": "Run actions/setup-node@v4",
+            "number": 3,
+            "startedAt": "2026-10-09T18:27:41Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-09T18:28:13Z",
+            "conclusion": "success",
+            "name": "Run dtolnay/rust-toolchain@stable",
+            "number": 4,
+            "startedAt": "2026-10-09T18:27:52Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-09T18:28:33Z",
+            "conclusion": "success",
+            "name": "Run swatinem/rust-cache@v2",
+            "number": 5,
+            "startedAt": "2026-10-09T18:28:13Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-09T18:28:34Z",
+            "conclusion": "success",
+            "name": "Validate isolated animal prefetch comparison",
+            "number": 6,
+            "startedAt": "2026-10-09T18:28:33Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-09T18:28:38Z",
+            "conclusion": "success",
+            "name": "Run npm ci",
+            "number": 7,
+            "startedAt": "2026-10-09T18:28:34Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-09T18:37:26Z",
+            "conclusion": "success",
+            "name": "Run npm run desktop:build",
+            "number": 8,
+            "startedAt": "2026-10-09T18:28:38Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-09T18:37:27Z",
+            "conclusion": "success",
+            "name": "Check Windows executable and installer",
+            "number": 9,
+            "startedAt": "2026-10-09T18:37:26Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-09T18:37:27Z",
+            "conclusion": "skipped",
+            "name": "Diagnostic same-EXE ground control OFF",
+            "number": 10,
+            "startedAt": "2026-10-09T18:37:27Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-09T18:40:12Z",
+            "conclusion": "success",
+            "name": "Diagnostic same-EXE fixture712 animal prefetch OFF",
+            "number": 11,
+            "startedAt": "2026-10-09T18:37:27Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-09T18:43:21Z",
+            "conclusion": "failure",
+            "name": "Smoke test the packaged game in WebView2",
+            "number": 12,
+            "startedAt": "2026-10-09T18:40:12Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-09T18:43:21Z",
+            "conclusion": "skipped",
+            "name": "Check genuine native minimization and restoration",
+            "number": 13,
+            "startedAt": "2026-10-09T18:43:21Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-09T18:43:22Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@v7",
+            "number": 14,
+            "startedAt": "2026-10-09T18:43:21Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-09T18:43:22Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@v7",
+            "number": 15,
+            "startedAt": "2026-10-09T18:43:22Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-09T18:43:24Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@v7",
+            "number": 16,
+            "startedAt": "2026-10-09T18:43:22Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-09T18:43:29Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@v7",
+            "number": 17,
+            "startedAt": "2026-10-09T18:43:24Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-09T18:43:34Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@v7",
+            "number": 18,
+            "startedAt": "2026-10-09T18:43:29Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-09T18:43:34Z",
+            "conclusion": "skipped",
+            "name": "Run actions/upload-artifact@v4",
+            "number": 19,
+            "startedAt": "2026-10-09T18:43:34Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-09T18:43:34Z",
+            "conclusion": "skipped",
+            "name": "Run actions/upload-artifact@v7",
+            "number": 20,
+            "startedAt": "2026-10-09T18:43:34Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-09T18:43:36Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@v7",
+            "number": 21,
+            "startedAt": "2026-10-09T18:43:34Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-09T18:43:38Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@v7",
+            "number": 22,
+            "startedAt": "2026-10-09T18:43:36Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-09T18:43:38Z",
+            "conclusion": "skipped",
+            "name": "Post Run swatinem/rust-cache@v2",
+            "number": 42,
+            "startedAt": "2026-10-09T18:43:38Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-09T18:43:38Z",
+            "conclusion": "skipped",
+            "name": "Post Run actions/setup-node@v4",
+            "number": 43,
+            "startedAt": "2026-10-09T18:43:38Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-09T18:43:40Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@v4",
+            "number": 44,
+            "startedAt": "2026-10-09T18:43:38Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-09T18:43:40Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 45,
+            "startedAt": "2026-10-09T18:43:40Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/dossijeo/wild-guardians-africa/actions/runs/37973261585/job/113965008045"
+      }
+    ],
+    "url": "https://github.com/dossijeo/wild-guardians-africa/actions/runs/37973261585"
+  },
+  "artifacts": [
+    {
+      "id": 11637789979,
+      "node_id": "MDg6QXJ0aWZhY3QxMTYzNzc4OTk3OQ==",
+      "name": "Wild Guardians Africa_0.1.0_x64-setup.exe",
+      "size_in_bytes": 376864189,
+      "url": "https://api.github.com/repos/dossijeo/wild-guardians-africa/actions/artifacts/11637789979",
+      "archive_download_url": "https://api.github.com/repos/dossijeo/wild-guardians-africa/actions/artifacts/11637789979/zip",
+      "expired": false,
+      "digest": "sha256:cabb955c39c3dcf78ef838b2007215213fb8bbd90f3a0d345ed138c0955f7a6c",
+      "created_at": "2026-10-09T18:43:29Z",
+      "updated_at": "2026-10-09T18:43:29Z",
+      "expires_at": "2026-10-16T18:43:24Z",
+      "workflow_run": {
+        "id": 37973261585,
+        "repository_id": 1400617352,
+        "head_repository_id": 1400617352,
+        "head_branch": "codex/windows-loading-smoke",
+        "head_sha": "527bbb3315158c8523190c4d779a2f73f95135be"
+      }
+    },
+    {
+      "id": 11637684524,
+      "node_id": "MDg6QXJ0aWZhY3QxMTYzNzY4NDUyNA==",
+      "name": "desktop-animal-control.json",
+      "size_in_bytes": 342466,
+      "url": "https://api.github.com/repos/dossijeo/wild-guardians-africa/actions/artifacts/11637684524",
+      "archive_download_url": "https://api.github.com/repos/dossijeo/wild-guardians-africa/actions/artifacts/11637684524/zip",
+      "expired": false,
+      "digest": "sha256:5532a8f79e0f5ba2b06c2ad9b81b1e58158eb63b55d10cbaa01b6026223ba9aa",
+      "created_at": "2026-10-09T18:43:36Z",
+      "updated_at": "2026-10-09T18:43:36Z",
+      "expires_at": "2026-10-16T18:43:35Z",
+      "workflow_run": {
+        "id": 37973261585,
+        "repository_id": 1400617352,
+        "head_repository_id": 1400617352,
+        "head_branch": "codex/windows-loading-smoke",
+        "head_sha": "527bbb3315158c8523190c4d779a2f73f95135be"
+      }
+    },
+    {
+      "id": 11637579620,
+      "node_id": "MDg6QXJ0aWZhY3QxMTYzNzU3OTYyMA==",
+      "name": "wild-guardians-africa.exe",
+      "size_in_bytes": 378882560,
+      "url": "https://api.github.com/repos/dossijeo/wild-guardians-africa/actions/artifacts/11637579620",
+      "archive_download_url": "https://api.github.com/repos/dossijeo/wild-guardians-africa/actions/artifacts/11637579620/zip",
+      "expired": false,
+      "digest": "sha256:5c2c19e2f277cc48f6881b386398e67c2d07524531796127ed72cf6d3ce2d270",
+      "created_at": "2026-10-09T18:43:34Z",
+      "updated_at": "2026-10-09T18:43:34Z",
+      "expires_at": "2026-10-16T18:43:29Z",
+      "workflow_run": {
+        "id": 37973261585,
+        "repository_id": 1400617352,
+        "head_repository_id": 1400617352,
+        "head_branch": "codex/windows-loading-smoke",
+        "head_sha": "527bbb3315158c8523190c4d779a2f73f95135be"
+      }
+    },
+    {
+      "id": 11637504798,
+      "node_id": "MDg6QXJ0aWZhY3QxMTYzNzUwNDc5OA==",
+      "name": "desktop-smoke.json",
+      "size_in_bytes": 845564,
+      "url": "https://api.github.com/repos/dossijeo/wild-guardians-africa/actions/artifacts/11637504798",
+      "archive_download_url": "https://api.github.com/repos/dossijeo/wild-guardians-africa/actions/artifacts/11637504798/zip",
+      "expired": false,
+      "digest": "sha256:1e972b807d3378185a51fd8a612697480d5be8d7c0d1351096dc2dc5627e61a4",
+      "created_at": "2026-10-09T18:43:24Z",
+      "updated_at": "2026-10-09T18:43:24Z",
+      "expires_at": "2026-10-16T18:43:22Z",
+      "workflow_run": {
+        "id": 37973261585,
+        "repository_id": 1400617352,
+        "head_repository_id": 1400617352,
+        "head_branch": "codex/windows-loading-smoke",
+        "head_sha": "527bbb3315158c8523190c4d779a2f73f95135be"
+      }
+    },
+    {
+      "id": 11637444569,
+      "node_id": "MDg6QXJ0aWZhY3QxMTYzNzQ0NDU2OQ==",
+      "name": "desktop-visibility-fixture.json",
+      "size_in_bytes": 23608,
+      "url": "https://api.github.com/repos/dossijeo/wild-guardians-africa/actions/artifacts/11637444569",
+      "archive_download_url": "https://api.github.com/repos/dossijeo/wild-guardians-africa/actions/artifacts/11637444569/zip",
+      "expired": false,
+      "digest": "sha256:28d8bf348c61900a7f4f94a53026a86e638acbca5b058981a43de969788a6406",
+      "created_at": "2026-10-09T18:43:37Z",
+      "updated_at": "2026-10-09T18:43:37Z",
+      "expires_at": "2026-10-16T18:43:36Z",
+      "workflow_run": {
+        "id": 37973261585,
+        "repository_id": 1400617352,
+        "head_repository_id": 1400617352,
+        "head_branch": "codex/windows-loading-smoke",
+        "head_sha": "527bbb3315158c8523190c4d779a2f73f95135be"
+      }
+    }
+  ],
+  "files": [
+    {
+      "path": "desktop-animal-control.json",
+      "artifactId": 11637684524,
+      "bytes": 342466,
+      "sha256": "5532a8f79e0f5ba2b06c2ad9b81b1e58158eb63b55d10cbaa01b6026223ba9aa"
+    },
+    {
+      "path": "desktop-smoke.json",
+      "artifactId": 11637504798,
+      "bytes": 845564,
+      "sha256": "1e972b807d3378185a51fd8a612697480d5be8d7c0d1351096dc2dc5627e61a4"
+    },
+    {
+      "path": "desktop-visibility-fixture.json",
+      "artifactId": 11637444569,
+      "bytes": 23608,
+      "sha256": "28d8bf348c61900a7f4f94a53026a86e638acbca5b058981a43de969788a6406"
+    },
+    {
+      "path": "full.log",
+      "bytes": 116796,
+      "sha256": "f73d6bfd044986717f9ab77b3b3286f9df68e6a6160ca5d36e44f7b25a40bec7"
+    }
+  ],
+  "absent": [
+    "desktop-visibility.json",
+    "windows-canyon.png"
+  ],
+  "scope": "Primary failure skipped candidate visibility; absent raster/visibility is not a native restore failure. No native outcomes inferred from continue-on-error."
+}
