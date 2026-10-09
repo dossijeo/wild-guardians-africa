@@ -1,0 +1,69 @@
+import * as Game from '../../src/simulation/game.js';
+import {Navigation,BIOME_IDS} from '../../src/world/navigation.js';
+import {WorldScene} from '../../src/rendering/scene.js';
+import {json} from '../../src/rendering/assets.js';
+import {farVegetationProfile} from '../../src/rendering/far-vegetation-profile.js';
+import {prepareInitialFarWorld} from '../../src/app/far-world-loading.js';
+import {serialize,deserialize} from '../../src/persistence/snapshots.js';
+
+import {denseNativeYoungMaizeScenario} from '../../tools/lib/frontside-dense-native-young-maize-scenario.mjs';
+import {runDenseYoungWorldPairedGpu} from '../../tools/lib/frontside-dense-young-world-gpu-runner.mjs';
+import {installWorldYoungMaizeQaAdapter} from '../../tools/lib/frontside-world-young-maize-adapter.mjs';
+import {worldYoungMaizeTarget} from '../../tools/lib/frontside-world-young-maize-target.mjs';
+import {createQaResourceScope} from '../../tools/lib/frontside-qa-resource-scope.mjs';
+
+import {installBufferStorageAudit} from '../../tools/lib/frontside-gpu-buffer-budget.mjs';
+const status=document.querySelector('#status'),runButton=document.querySelector('#run'),raf=()=>new Promise(requestAnimationFrame),hash=async value=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',typeof value==='string'?new TextEncoder().encode(value):value))].map(v=>v.toString(16).padStart(2,'0')).join('');
+let activeScope=null;const errors=[];
+async function run(){
+ const scope=createQaResourceScope();activeScope=scope;let world,report;
+ try{
+  const query=new URLSearchParams(location.search),campaign=query.get('campaign')??'review',depth=query.get('qaDepth')??'off',vfx=query.get('vfx')??'on';
+  if([...query.keys()].some(k=>!['campaign','qaDepth','vfx','cpuCampaigns'].includes(k))||!['review','timing','resources'].includes(campaign)||!['off','front'].includes(depth)||!['off','on'].includes(vfx))throw Error('Unexpected dense QA flags');
+  const response=await fetch('/docs/qa/intensive-gran-rio-suajili-e461b550/state.json.gz');if(!response.ok)throw Error('Archived farm unavailable');const bytes=new Uint8Array(await response.arrayBuffer()),text=bytes[0]===31&&bytes[1]===139?await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).text():new TextDecoder().decode(bytes);
+  const dense=denseNativeYoungMaizeScenario(deserialize(text)),state=dense.state;Game.pause(state,'frontside-dense-qa');state.time=150;state.tutorial.step='done';
+  const binaryResponse=await fetch('/__frontside_candidate/maize-young-leaf-reduction');if(!binaryResponse.ok)throw Error('Candidate payload unavailable');const binary=await binaryResponse.arrayBuffer(),binarySha256=await hash(binary);if(binarySha256!=='d4796b80770b472ace76372cbb12f75138a294eed8daa0ed8085606f8b2d8335')throw Error('Candidate payload changed');const payload=JSON.parse(new TextDecoder().decode(binary));
+  const pack=await json('/content/biome-'+BIOME_IDS[state.biome]+'.json'),village=(await json('/content/villages.json')).find(v=>v.id===state.culture),nav=new Navigation(state.seed,state.biome,pack.profile);nav.setState(state);
+  const target=worldYoungMaizeTarget(state);
+  if(vfx==='on'){
+   Game.continuePostgame(state);for(const reason of [...state.pauses])Game.resume(state,reason);Game.cast(state,'frontside-dense-vfx-'+state.sequence,'growth',target.x,target.z,nav);const spell=state.spells.find(s=>s.kind==='growth'&&s.x===target.x&&s.z===target.z);if(!spell)throw Error('Native growth effect absent');spell.remaining=Math.max(0,spell.remaining-1);Game.pause(state,'frontside-dense-qa');
+  }
+  scope.assertOpen();const canvas=document.querySelector('#world'),originalGetContext=canvas.getContext,contextDescriptor=Object.getOwnPropertyDescriptor(canvas,'getContext');let bufferAudit=null,bufferAuditFinal=null;
+  // Observe the native constructor's exact context options. Install underneath
+  // its resource-epoch guard, so guard cleanup restores our wrappers before
+  // the accounting hook is finished; never alter context creation attributes.
+  if(campaign==='resources')canvas.getContext=function(...args){const context=originalGetContext.apply(this,args);if(args[0]==='webgl2'&&context&&!bufferAudit){scope.defer('resource context loss fallback',()=>context.getExtension('WEBGL_lose_context')?.loseContext());bufferAudit=installBufferStorageAudit(context);scope.defer('native buffer audit hooks',()=>{bufferAuditFinal=bufferAudit.finish();});}return context;};
+  try{world=new WorldScene(canvas,()=>{});}finally{if(contextDescriptor)Object.defineProperty(canvas,'getContext',contextDescriptor);else delete canvas.getContext;}
+  const gl=world.renderer.getContext();scope.defer('actual WorldScene',()=>world.dispose());const resourceSnapshots=bufferAudit?[bufferAudit.snapshot('after-constructor-before-world-load')]:null;world.onError=e=>errors.push(String(e));world.pixelRatioLimit=1;world.qualitySetting('media');
+  bufferAudit?.setPhase('native-world-load');await world.load(state,nav,village,{farVegetation:farVegetationProfile({quality:'media',biome:nav.config.biome})});scope.assertOpen();await prepareInitialFarWorld(world);scope.assertOpen();await Promise.all([...world.objects.values()].map(o=>o.userData.actorReady).filter(Boolean));scope.assertOpen();
+  world.renderer.setPixelRatio(1);world.renderer.setSize(1280,720,false);world.camera.aspect=1280/720;world.camera.updateProjectionMatrix();world.focusFarm();world.controls.enableDamping=false;world.controls.update();world.releaseNativeShadow.cache.enabled=false;world.destructionPass.materialArrayDepth=depth==='front';world.render(0);
+  const cameraIdentity=()=>JSON.stringify({state:serialize(state),camera:world.camera.position.toArray(),target:world.controls.target.toArray(),projection:world.camera.projectionMatrix.elements});
+  report={status:'WORLD_DENSE_YOUNG_MAIZE_GPU_NOT_APPROVED',denseWorldYoungMaizeQa:true,visualAcceptancePolicyVersion:3,viewProfile:'DECLARED_DENSE_NATIVE_WORLD_YOUNG_MAIZE_V1',campaign,qaDepth:depth,vfx,sourceStateSha256:await hash(text),workloadStateSha256:await hash(serialize(state)),scenario:dense.receipt,candidateBinarySha256:binarySha256,candidateBinaryBytes:binary.byteLength,sourceSha256:payload.sourceSha256,candidateMesh:payload.mesh,resolution:[1280,720],cameraPosition:world.camera.position.toArray(),cameraTarget:world.controls.target.toArray(),quality:'media',contextAttributes:gl.getContextAttributes(),browser:navigator.userAgent,conditions:{cpuCampaigns:query.get('cpuCampaigns')??'unspecified',gpuTiming:campaign==='timing',bufferReadback:false},visualReview:{status:'HUMAN_REVIEW_PENDING',reviewer:null,decision:null},errors,limitations:['Actual native WorldScene graph with an explicitly altered archived crop workload; no user save or campaign profitability claim.','Both arms share identical logical state, native instance inputs, workers/actors, camera, dimensions, lights and wind.','qaDepth flag is identical for both arms; custom candidate world depth changes only under the explicit front QA option. Shadow policy remains source DoubleSide.','Changing growth uploads, transition continuity and completed harvest/delivery are separate gates.','Neither mature maize netWorld10.68% nor isolated17.476% GPU results are inherited; this young recipe must demonstrate its own benefit.']};
+  report.nativePreparation={farIsolatedPreparation:world.farIsolatedPreparation===true,farOwnedCompilation:world.farOwnedCompilation===true,meaning:'Constructor settings are held unchanged for both arms; no isolation option is compared or credited as a maize gain'};
+  if(campaign==='timing')report.timing=await runDenseYoungWorldPairedGpu({world,payload,depthEnabled:depth==='front',scope,raf,status:value=>status.textContent=value,logicalIdentity:cameraIdentity});
+  else{
+   report.arms=[];const retained=document.createElement('canvas');retained.width=2560;retained.height=720;const ctx=retained.getContext('2d');
+   const read=()=>{const data=new Uint8Array(1280*720*4);gl.readPixels(0,0,1280,720,gl.RGBA,gl.UNSIGNED_BYTE,data);return data;},diagnose=(a,b)=>{let changedBytes=0,changedRgbPixels=0,changedAlphaPixels=0,maxChannelDelta=0;for(let p=0;p<a.length;p+=4){let rgb=false;for(let c=0;c<4;c++){const delta=Math.abs(a[p+c]-b[p+c]);if(delta){changedBytes++;if(c===3)changedAlphaPixels++;else rgb=true;}maxChannelDelta=Math.max(maxChannelDelta,delta);}changedRgbPixels+=rgb;}return{changedBytes,changedRgbPixels,changedAlphaPixels,maxChannelDelta,meaning:'Policy3 diagnostic only, no automatic model rejection'};};
+   let originalPixels;
+   for(const [column,candidate] of [false,true].entries()){
+    bufferAudit?.setPhase(candidate?'candidate-coexistence':'original-resident');
+    const adapter=candidate?installWorldYoungMaizeQaAdapter(world,payload,{worldDepth:depth==='front'}):null;scope.defer('review candidate restore '+column,()=>adapter?.dispose());world.releaseNativeShadow.cache.invalidate();
+    for(let i=0;i<12;i++){await raf();scope.assertOpen();world.render(0);}const before=cameraIdentity();world.renderer.info.autoReset=false;world.renderer.info.reset();world.destructionPass.depthCaptureStats=null;const maizeMesh=world.scene.children.find(m=>m.isInstancedMesh&&m.name==='maiz_02_joven'),previous=maizeMesh.onBeforeRender,depthDraws=[];maizeMesh.onBeforeRender=function(renderer,scene,camera,geometry,material,group){if(renderer.getRenderTarget()===world.destructionPass.smokeDepth)depthDraws.push({materialType:material.type,side:material.side,group:group?{...group}:null});return previous.apply(this,arguments);};try{world.render(0);}finally{maizeMesh.onBeforeRender=previous;}ctx.drawImage(world.renderer.domElement,column*1280,0);const pixels=read();
+    const activeInputs={maizeInstances:maizeMesh.count,instanceMatrixSha256:await hash(new Uint8Array(maizeMesh.instanceMatrix.array.buffer,maizeMesh.instanceMatrix.array.byteOffset,maizeMesh.count*16*4)),growthSha256:await hash(new Uint8Array(maizeMesh.geometry.getAttribute('iGrowth').array.buffer,maizeMesh.geometry.getAttribute('iGrowth').array.byteOffset,maizeMesh.count*4*4))};
+    report.arms.push({candidate,warmupFrames:12,logicalUnchanged:before===cameraIdentity(),activeInputs,adapter:adapter?.snapshot()??null,submissions:{...world.renderer.info.render},worldDepthCalled:Boolean(world.destructionPass.depthCaptureStats),worldDepthStats:world.destructionPass.depthCaptureStats,maizeDepthDraws:depthDraws,activeVfx:world.agricultureVfx.effects.size});
+    if(!candidate){originalPixels=pixels;report.sourceControls=[];for(let i=0;i<3;i++){world.render(0);report.sourceControls.push(diagnose(originalPixels,read()));}}else report.comparison=diagnose(originalPixels,pixels);
+    if(bufferAudit)resourceSnapshots.push(bufferAudit.snapshot(candidate?'candidate-plus-original-resident':'original-resident'));
+    world.renderer.info.autoReset=true;bufferAudit?.setPhase(candidate?'candidate-release':'original-retained');adapter?.dispose();if(bufferAudit&&candidate)resourceSnapshots.push(bufferAudit.snapshot('original-after-candidate-release'));
+   }
+   report.capturePng=retained.toDataURL('image/png');
+  }
+  // Query polling can span presentations on an unpreserved native framebuffer.
+  // A fresh untimed source draw retains the final image after all queries close.
+  if(!report.capturePng){world.render(0);report.capturePng=world.renderer.domElement.toDataURL('image/png');report.finalCaptureArm='untimed original after candidate release';}
+  if(bufferAudit){report.conditions.bufferMetadataQueries=true;report.resourceSnapshots=resourceSnapshots;report.resourceScope='Observed BUFFER_SIZE from before native renderer constructor allocations; no physical VRAM claim';}
+  const img=new Image();img.src=report.capturePng;await img.decode();document.querySelector('#view').replaceChildren(img);report.cleanup=scope.cleanup();report.cleanup.contextLost=gl.isContextLost();if(bufferAudit)report.bufferAudit=bufferAuditFinal;
+  const exportResponse=await fetch('/__frontside_report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)});if(!exportResponse.ok)throw Error(await exportResponse.text());status.textContent='Lote World QA exportado; GPU liberada. Sin aprobación de categoría.';
+ }catch(error){errors.push(String(error));status.textContent=String(error)+'\nCleanup '+JSON.stringify(scope.cleanup());throw error;}
+ finally{scope.cleanup();if(activeScope===scope)activeScope=null;}
+}
+document.querySelector('#stop').onclick=()=>{status.textContent='Cancelado '+JSON.stringify(activeScope?.cleanup());};runButton.onclick=async()=>{runButton.disabled=true;try{await run();}catch(error){console.error(error);}};runButton.disabled=true;status.textContent='BORRADOR fuente-only: faltan contratos, schema/preflight y reserva. No ejecutar GPU.';
