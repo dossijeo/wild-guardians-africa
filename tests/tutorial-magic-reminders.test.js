@@ -14,13 +14,14 @@ function setup(){
  const c=new TutorialController(s,profile);return {s,c,profile};
 }
 function raid(s,id,status='walking'){s.time=400;s.raid={id,animals:[{id:'animal',species:'warthog',x:10,z:0,radius:1.1,hitsRemaining:2,status}],reservations:{},encounters:[],daytime:false};}
-test('shield appears on each arriving raid, once, without pausing, including a completed global tutorial',()=>{
+test('shield appears once per day without pausing, including a completed global tutorial',()=>{
  const {s,c}=setup();raid(s,'first','entering');c.update();assert.equal(c.presentation(),null);
  s.raid.animals[0].status='walking';s.raid.animals[0].x=40;c.update();assert.equal(c.presentation(),null);
  s.raid.animals[0].x=10;c.update();assert.equal(c.presentation().id,'reminder.shield');
  for(let i=0;i<20;i++)c.update();assert.equal(c.presentation().id,'reminder.shield');
  assert.deepEqual(s.pauses,[]);c.dismiss();c.update();assert.equal(c.presentation(),null);
- s.raid=null;c.update();raid(s,'second');c.update();assert.equal(c.presentation().id,'reminder.shield');
+ s.raid=null;c.update();raid(s,'second');c.update();assert.equal(c.presentation(),null);
+ s.day++;c.update();assert.equal(c.presentation().id,'reminder.shield');
  assert.equal(s.events.filter(e=>e.type==='TutorialMessageStarted'&&e.messageId==='reminder.shield').length,2);
 });
 test('shield waits for availability, removes obsolete advice when cast or animals leave, and preserves menu pauses',()=>{
@@ -30,7 +31,7 @@ test('shield waits for availability, removes obsolete advice when cast or animal
  Game.resume(s,'menu');c.update();assert.equal(c.presentation().id,'reminder.shield');
  s.cooldowns.shield=90;c.update();assert.equal(c.presentation(),null);
  s.cooldowns.shield=0;c.update();assert.equal(c.presentation(),null);
- raid(s,'second');c.update();assert.equal(c.presentation().id,'reminder.shield');s.raid=null;c.update();assert.equal(c.presentation(),null);
+ raid(s,'second');c.update();assert.equal(c.presentation(),null);s.day++;c.update();assert.equal(c.presentation().id,'reminder.shield');s.raid=null;c.update();assert.equal(c.presentation(),null);
 });
 test('saved acknowledged raids do not replay shield advice; an unfinished reminder remains readable after restoration',()=>{
  const {s,c,profile}=setup();raid(s,'first');c.update();
@@ -50,12 +51,13 @@ test('render-frequency updates reuse the peaceful plant check until simulated ti
  for(let frame=0;frame<120;frame++)c.update();assert.equal(scans,initial);
  s.elapsed+=2;c.update();assert.ok(scans>initial);
 });
-test('growth repeats only for watered growing crops and repeated notices receive their full reading time',()=>{
+test('growth cannot repeat today and receives its full reading time on the following day',()=>{
  const {s,c}=setup(),p=createPlant('plant','mijo',10,10,'center');s.plants.push(p);c.update();assert.equal(c.presentation(),null);
  p.water[0].status='manual';s.elapsed+=2;c.update();assert.equal(c.presentation().id,'reminder.growth');
  c.advance(60);c.update();assert.equal(c.presentation(),null);
  s.elapsed+=119;c.update();assert.equal(c.presentation(),null);
- s.elapsed+=1;c.update();assert.equal(c.presentation().id,'reminder.growth');assert.equal(c.advance(1),false);
+ s.elapsed+=1;c.update();assert.equal(c.presentation(),null);
+ s.day++;c.update();assert.equal(c.presentation().id,'reminder.growth');assert.equal(c.advance(1),false);
  c.dismiss();s.cooldowns.growth=90;s.elapsed+=120;c.update();assert.equal(c.presentation(),null);
 });
 test('multiply requires working labour and unmarked live crops, with a gap between peaceful reminders',()=>{
@@ -64,7 +66,8 @@ test('multiply requires working labour and unmarked live crops, with a gap betwe
  c.dismiss();p.multiplyHarvest=true;s.elapsed+=120;c.update();assert.equal(c.presentation(),null);
  p.water[0].status='manual';s.elapsed+=2;c.update();assert.equal(c.presentation().id,'reminder.growth');c.dismiss();
  p.multiplyHarvest=false;s.elapsed+=2;c.update();assert.equal(c.presentation(),null);
- s.elapsed+=73;c.update();assert.equal(c.presentation().id,'reminder.multiply');
+ s.elapsed+=73;c.update();assert.equal(c.presentation(),null);
+ s.day++;c.update();assert.equal(c.presentation().id,'reminder.multiply');
 });
 test('new reminders are bilingual and saved reminder times reject corrupt values',()=>{
  for(const id of ['reminder.shield','reminder.growth','reminder.multiply']){

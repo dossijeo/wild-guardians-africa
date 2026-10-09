@@ -545,6 +545,7 @@ function updateWorkers(s,dt,nav) {
 }
 function closeNight(s) {
   s.completedNights++;s.time=0;s.day++;
+  s.tutorial.shownToday={day:s.day,ids:[]};
   s.workers=s.workers.filter(w=>w.status!=='home');
   for(const w of s.workers){
     w.contractDay??=s.day-1;w.runRemaining=dailyRunMetres();w.running=false;

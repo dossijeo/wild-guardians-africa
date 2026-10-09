@@ -12,6 +12,10 @@ export function validateSnapshot(state) {
   const tutorial=state.tutorial,validIds=ids=>Array.isArray(ids)&&ids.every(id=>TUTORIAL_IDS.includes(id))&&new Set(ids).size===ids.length;
   if(!tutorial||!BASIC_STEPS.includes(tutorial.step)||!validIds(tutorial.seen)||tutorial.pending!==undefined&&!validIds(tutorial.pending)||tutorial.reading!==undefined&&tutorial.reading!==null&&!TUTORIAL_IDS.includes(tutorial.reading)||tutorial.basicSkipped!==undefined&&typeof tutorial.basicSkipped!=='boolean')throw new Error('Tutorial inválido');
   if(tutorial.guideAfterAuto!==undefined&&(!validIds(tutorial.guideAfterAuto)||tutorial.guideAfterAuto.some(id=>!['basic.center','basic.plant'].includes(id))))throw new Error('Guía tutorial inválida');
+  if(tutorial.shownToday!==undefined){
+    const shown=tutorial.shownToday;
+    if(!shown||!Number.isSafeInteger(shown.day)||shown.day<1||shown.day>state.day||!Array.isArray(shown.ids)||new Set(shown.ids).size!==shown.ids.length||shown.ids.some(id=>typeof id!=='string'||!id.length))throw new Error('Registro diario de tutorial inválido');
+  }
   if(tutorial.magicReminders!==undefined){
     const m=tutorial.magicReminders;
     if(!m||typeof m!=='object'||Array.isArray(m)||Object.entries(m).some(([key,value])=>key==='shieldRaid'?typeof value!=='string':!['growthAt','multiplyAt','lastAt'].includes(key)||!Number.isFinite(value)||value<0||value>state.elapsed))throw new Error('Recordatorios de magia inválidos');

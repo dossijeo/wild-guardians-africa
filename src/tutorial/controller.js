@@ -3,6 +3,7 @@ import {operational} from '../simulation/rules.js';
 import {isMature} from '../simulation/crops.js';
 import {BASIC_MESSAGES,BASIC_STEPS,TUTORIAL_MESSAGES,TUTORIAL_IDS,DEFENSES_FOLLOWUP} from './messages.js';
 import {REPEATABLE_MAGIC_IDS,shieldReminderKey,usefulPeacefulMagic,recordMagicReminder} from './magic-reminders.js';
+import {dailyTutorialMessages,tutorialMessageShownToday,recordTutorialMessageToday} from './daily-messages.js';
 const known=new Set(TUTORIAL_IDS),reason='tutorial-reading';
 const delivered=s=>s.crates.some(c=>c.delivered)||s.events.some(e=>e.type==='CrateDelivered');
 function readingActionCompleted(s,id){
@@ -43,6 +44,7 @@ export class TutorialController {
   }
   update(){
     const s=this.state,t=s.tutorial,globalSeen=this.profile.read();
+    dailyTutorialMessages(s);
     resume(s,reason);resume(s,'intro');
     // Real actions may complete while a spoken explanation is still audible.
     // Keep its reading identity until ended/manual dismissal, without undoing
@@ -57,7 +59,7 @@ export class TutorialController {
     // A completed action advances its explanation immediately, so the next
     // HUD/world hand never waits behind a now-obsolete reading.
     if(t.reading&&readingActionCompleted(s,t.reading)){
-      this.recordSeen(t.reading);t.reading=null;
+      this.recordSeen(t.reading);t.reading=null;this.lastPresentation=null;
     }
     const enqueue=(id,condition,localOnly=false)=>{
       if(condition&&!t.pending.includes(id)&&t.reading!==id&&!(localOnly?t.seen.includes(id):this.seen(id,globalSeen)))t.pending.push(id);
@@ -84,8 +86,8 @@ export class TutorialController {
     for(const kind of this.usefulMagic??[])if(!s.raid&&s.time<300&&s.cooldowns[kind]===0&&this.seen('magic.'+kind,globalSeen)&&(t.reading==='reminder.'+kind||s.elapsed-(memo[kind+'At']??0)>=120&&s.elapsed-(memo.lastAt??0)>=75))repeatable.push('reminder.'+kind);
     t.pending=t.pending.filter(id=>!REPEATABLE_MAGIC_IDS.has(id)||repeatable.includes(id));
     if(REPEATABLE_MAGIC_IDS.has(t.reading)&&!repeatable.includes(t.reading))t.reading=null;
-    for(const id of repeatable)if(!t.pending.includes(id)&&t.reading!==id)t.pending.push(id);
-    const urgentShield=repeatable.find(id=>id.endsWith('.shield'));
+    for(const id of repeatable)if(!tutorialMessageShownToday(s,id)&&!t.pending.includes(id)&&t.reading!==id)t.pending.push(id);
+    const urgentShield=repeatable.find(id=>id.endsWith('.shield')&&!tutorialMessageShownToday(s,id));
     if(urgentShield&&t.reading&&t.reading!==urgentShield&&!['basic.introduction','basic.center','basic.plant','basic.hiring'].includes(t.reading)){
       t.pending.unshift(t.reading);t.reading=null;
     }
@@ -96,9 +98,10 @@ export class TutorialController {
     const basicId=BASIC_MESSAGES[t.step];
     const basicAvailable=!t.basicSkipped&&(s.day===1||t.step==='done')&&(t.step!=='done'||delivered(s));
     if(s.result==='victory')t.reading=t.seen.includes('campaign.liberation')?null:'campaign.liberation';
-    else if(basicAvailable&&!t.seen.includes(basicId))t.reading=basicId;
+    else if(basicAvailable&&!t.seen.includes(basicId)&&!tutorialMessageShownToday(s,basicId))t.reading=basicId;
     else {
       t.pending=t.pending.filter(id=>REPEATABLE_MAGIC_IDS.has(id)|| (id==='campaign.liberation'?!t.seen.includes(id):!this.seen(id,globalSeen)));
+      t.pending=t.pending.filter(id=>!tutorialMessageShownToday(s,id));
       if(s.result==='victory')t.reading=t.pending.includes('campaign.liberation')?'campaign.liberation':null;
       else {
         const urgent=s.raid&&['mechanic.first-raid','magic.shield'].find(id=>t.pending.includes(id));
@@ -110,7 +113,7 @@ export class TutorialController {
   acknowledge(){
     const t=this.state.tutorial,id=t.reading;if(!id)return false;
     this.recordSeen(id);
-    t.reading=null;resume(this.state,reason);
+    t.reading=null;this.lastPresentation=null;resume(this.state,reason);
     if(id==='basic.introduction'){resume(this.state,'intro');t.step=actionStep(this.state);}
     this.update();return true;
   }
@@ -120,7 +123,7 @@ export class TutorialController {
     t.basicSkipped=true;t.step='done';t.reading=null;resume(this.state,'intro');resume(this.state,reason);this.update();return true;
   }
   advance(seconds,{visible=true}={}){
-    const message=this.presentation();
+    const message=this.presentation({record:false});
     if(!message||!visible||this.isNarrating(message.id)){this.presentationAge=0;return false;}
     const key=message.id+':'+(message.variant??'')+':'+!!message.reading;
     if(key!==this.presentationKey){this.presentationKey=key;this.presentationAge=0;}
@@ -129,7 +132,7 @@ export class TutorialController {
     if(this.presentationAge<duration)return false;
     return this.dismiss({automatic:true});
   }
-  dismiss({automatic=false,message=this.presentation()}={}){
+  dismiss({automatic=false,message=this.presentation({record:false})}={}){
     if(!message)return false;
     if(message.reading&&this.state.tutorial.reading===message.id)this.acknowledge();
     const t=this.state.tutorial;
@@ -137,13 +140,18 @@ export class TutorialController {
     t.guideAfterAuto=(t.guideAfterAuto??[]).filter(id=>id!==message.id);
     if(automatic&&['basic.center','basic.plant'].includes(message.id))t.guideAfterAuto.push(message.id);
     if(!automatic)resume(this.state,'tutorial-action');
+    this.lastPresentation=null;
     return true;
   }
-  presentation(){
+  presentation({record=true}={}){
     if(this.lastPresentation&&this.isNarrating(this.lastPresentation.id)&&!this.state.pauses.some(p=>['menu','hiring','hidden','context-lost'].includes(p)))return this.lastPresentation;
     const message=this.currentPresentation();
     if(message&&!message.reading&&this.state.tutorial.dismissed?.includes(message.id+':'+(message.variant??'')))return null;
-    this.lastPresentation=message;
+    if(message){
+      if(tutorialMessageShownToday(this.state,message.id)&&!message.reading&&this.lastPresentation?.id!==message.id)return null;
+      if(record)recordTutorialMessageToday(this.state,message.id);
+    }
+    if(record)this.lastPresentation=message;
     return message;
   }
   currentPresentation(){
