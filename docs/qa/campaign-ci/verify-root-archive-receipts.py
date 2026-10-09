@@ -50,5 +50,5 @@ for case in batch:
     })
 review["filesVerified"] = sum(c["filesVerified"] for c in review["cases"])
 review["bytesVerified"] = sum(c["bytesVerified"] for c in review["cases"])
-args.output.write_text(json.dumps(review, indent=2) + "\n", encoding="utf-8")
+args.output.write_bytes((json.dumps(review, indent=2) + "\n").encode("utf-8"))
 print(json.dumps({"cases": len(review["cases"]), "files": review["filesVerified"], "bytes": review["bytesVerified"]}))
