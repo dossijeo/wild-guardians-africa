@@ -36,7 +36,7 @@ export function installAssetShadows(renderer,chunks){
   proxies.userData.materialRegistryExcluded=true;
   // Native DVS/DFS project solid geometry without atlas alpha or visibility.
   // This shared source material is borrowed only during the shadow traversal.
-  const solid=new THREE.MeshBasicMaterial({side:THREE.DoubleSide});
+  const solid=new THREE.MeshBasicMaterial({side:THREE.FrontSide,shadowSide:THREE.FrontSide});
   const stats={draws:0,triangles:0};
   function render(lights,scene,camera){
     // Some diagnostic passes disable shadows. Avoid entering the color render

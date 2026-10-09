@@ -1,0 +1,471 @@
+{
+  "scope": "Native medium-quality static environment; original biome props only. No geometry repair, asset promotion or visual acceptance. No crops/workers. Fixed seed 712 and daytime 120. Shadow cache disabled equally. Total GPU includes native sky and main render; shadow and main-color queried on different frames from total. Explicit depth capture is a separate synthetic VFX-demand pass, not included in baseline total. Timings are not additive.",
+  "biome": "manglares",
+  "blocks": [],
+  "errors": [],
+  "context": {
+    "seed": 712,
+    "time": 120,
+    "sourceLogicalSha256": "1c1e292e42a9a2ac6d6699a5bfe675b0d79055c5caa312dd9353b8007c219828",
+    "camera": [
+      115.99999999999999,
+      23.32,
+      136
+    ],
+    "target": [
+      95.99999999999999,
+      3.5,
+      95.99999999999999
+    ],
+    "buffer": [
+      1280,
+      720
+    ],
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "assets": [
+      {
+        "slot": 0,
+        "name": "Mangle de copa ancha",
+        "lods": 3
+      },
+      {
+        "slot": 1,
+        "name": "Mangle de grandes raíces",
+        "lods": 3
+      },
+      {
+        "slot": 2,
+        "name": "Cocotero costero",
+        "lods": 3
+      },
+      {
+        "slot": 3,
+        "name": "Árbol costero de hojas largas",
+        "lods": 3
+      },
+      {
+        "slot": 4,
+        "name": "Mangles jóvenes",
+        "lods": 3
+      },
+      {
+        "slot": 5,
+        "name": "Arbustos de costa",
+        "lods": 3
+      },
+      {
+        "slot": 6,
+        "name": "Plantas tropicales de hoja larga",
+        "lods": 3
+      },
+      {
+        "slot": 7,
+        "name": "Hierbas y tapizantes costeros",
+        "lods": 3
+      },
+      {
+        "slot": 8,
+        "name": "Helecho costero",
+        "lods": 3
+      },
+      {
+        "slot": 9,
+        "name": "Raíces respiratorias",
+        "lods": 3
+      },
+      {
+        "slot": 10,
+        "name": "Rocas oscuras de costa",
+        "lods": 3
+      },
+      {
+        "slot": 11,
+        "name": "Rocas estratificadas",
+        "lods": 3
+      },
+      {
+        "slot": 12,
+        "name": "Roca porosa costera",
+        "lods": 3
+      },
+      {
+        "slot": 13,
+        "name": "Madera varada",
+        "lods": 3
+      },
+      {
+        "slot": 14,
+        "name": "Ramas y restos de deriva",
+        "lods": 3
+      },
+      {
+        "slot": 15,
+        "name": "Barca varada",
+        "lods": 3
+      },
+      {
+        "slot": 16,
+        "name": "Tocón costero",
+        "lods": 3
+      },
+      {
+        "slot": 17,
+        "name": "Ruina entre vegetación",
+        "lods": 3
+      },
+      {
+        "slot": 18,
+        "name": "Embarcadero de madera",
+        "lods": 3
+      },
+      {
+        "slot": 19,
+        "name": "Refugio sobre pilotes",
+        "lods": 3
+      }
+    ],
+    "color": [
+      {
+        "key": "0:2",
+        "instances": 10,
+        "triangles": 22550
+      },
+      {
+        "key": "1:2",
+        "instances": 10,
+        "triangles": 25400
+      },
+      {
+        "key": "3:2",
+        "instances": 3,
+        "triangles": 1380
+      },
+      {
+        "key": "12:2",
+        "instances": 7,
+        "triangles": 1176
+      },
+      {
+        "key": "0:1",
+        "instances": 6,
+        "triangles": 33846
+      },
+      {
+        "key": "2:2",
+        "instances": 1,
+        "triangles": 708
+      },
+      {
+        "key": "10:2",
+        "instances": 4,
+        "triangles": 740
+      },
+      {
+        "key": "11:2",
+        "instances": 3,
+        "triangles": 771
+      },
+      {
+        "key": "3:1",
+        "instances": 7,
+        "triangles": 8050
+      },
+      {
+        "key": "16:2",
+        "instances": 3,
+        "triangles": 435
+      },
+      {
+        "key": "17:2",
+        "instances": 1,
+        "triangles": 317
+      },
+      {
+        "key": "4:2",
+        "instances": 25,
+        "triangles": 34875
+      },
+      {
+        "key": "6:2",
+        "instances": 51,
+        "triangles": 74766
+      },
+      {
+        "key": "5:2",
+        "instances": 42,
+        "triangles": 44352
+      },
+      {
+        "key": "7:2",
+        "instances": 649,
+        "triangles": 410817
+      },
+      {
+        "key": "8:2",
+        "instances": 279,
+        "triangles": 87048
+      },
+      {
+        "key": "10:1",
+        "instances": 9,
+        "triangles": 4167
+      },
+      {
+        "key": "2:0",
+        "instances": 1,
+        "triangles": 3212
+      },
+      {
+        "key": "4:1",
+        "instances": 2,
+        "triangles": 6964
+      },
+      {
+        "key": "5:1",
+        "instances": 14,
+        "triangles": 36932
+      },
+      {
+        "key": "6:1",
+        "instances": 20,
+        "triangles": 73240
+      },
+      {
+        "key": "7:1",
+        "instances": 72,
+        "triangles": 113832
+      },
+      {
+        "key": "8:1",
+        "instances": 23,
+        "triangles": 17940
+      },
+      {
+        "key": "12:1",
+        "instances": 3,
+        "triangles": 1275
+      },
+      {
+        "key": "13:1",
+        "instances": 3,
+        "triangles": 1002
+      },
+      {
+        "key": "13:2",
+        "instances": 1,
+        "triangles": 135
+      },
+      {
+        "key": "14:1",
+        "instances": 1,
+        "triangles": 1606
+      },
+      {
+        "key": "17:1",
+        "instances": 2,
+        "triangles": 1582
+      },
+      {
+        "key": "1:1",
+        "instances": 4,
+        "triangles": 25384
+      },
+      {
+        "key": "11:0",
+        "instances": 1,
+        "triangles": 1169
+      },
+      {
+        "key": "0:0",
+        "instances": 1,
+        "triangles": 10249
+      },
+      {
+        "key": "2:1",
+        "instances": 1,
+        "triangles": 1767
+      },
+      {
+        "key": "14:2",
+        "instances": 5,
+        "triangles": 3210
+      }
+    ],
+    "shadow": [
+      {
+        "key": "16",
+        "instances": 4,
+        "triangles": 580
+      },
+      {
+        "key": "17",
+        "instances": 4,
+        "triangles": 1268
+      },
+      {
+        "key": "0",
+        "instances": 34,
+        "triangles": 76670
+      },
+      {
+        "key": "1",
+        "instances": 26,
+        "triangles": 66040
+      },
+      {
+        "key": "3",
+        "instances": 18,
+        "triangles": 8280
+      },
+      {
+        "key": "12",
+        "instances": 19,
+        "triangles": 3192
+      },
+      {
+        "key": "2",
+        "instances": 17,
+        "triangles": 12036
+      },
+      {
+        "key": "4",
+        "instances": 70,
+        "triangles": 97650
+      },
+      {
+        "key": "6",
+        "instances": 110,
+        "triangles": 161260
+      },
+      {
+        "key": "10",
+        "instances": 25,
+        "triangles": 4625
+      },
+      {
+        "key": "11",
+        "instances": 10,
+        "triangles": 2570
+      },
+      {
+        "key": "5",
+        "instances": 105,
+        "triangles": 110880
+      },
+      {
+        "key": "13",
+        "instances": 9,
+        "triangles": 1215
+      },
+      {
+        "key": "14",
+        "instances": 10,
+        "triangles": 6420
+      }
+    ],
+    "originalSides": [
+      {
+        "side": 2,
+        "shadowSide": null
+      },
+      {
+        "side": 2,
+        "shadowSide": null
+      },
+      {
+        "side": 2,
+        "shadowSide": null
+      },
+      {
+        "side": 2,
+        "shadowSide": null
+      },
+      {
+        "side": 2,
+        "shadowSide": null
+      },
+      {
+        "side": 2,
+        "shadowSide": null
+      },
+      {
+        "side": 2,
+        "shadowSide": null
+      },
+      {
+        "side": 2,
+        "shadowSide": null
+      },
+      {
+        "side": 2,
+        "shadowSide": null
+      },
+      {
+        "side": 2,
+        "shadowSide": null
+      },
+      {
+        "side": 2,
+        "shadowSide": null
+      },
+      {
+        "side": 2,
+        "shadowSide": null
+      },
+      {
+        "side": 2,
+        "shadowSide": null
+      },
+      {
+        "side": 2,
+        "shadowSide": null
+      },
+      {
+        "side": 2,
+        "shadowSide": null
+      },
+      {
+        "side": 2,
+        "shadowSide": null
+      },
+      {
+        "side": 2,
+        "shadowSide": null
+      },
+      {
+        "side": 2,
+        "shadowSide": null
+      },
+      {
+        "side": 2,
+        "shadowSide": null
+      },
+      {
+        "side": 2,
+        "shadowSide": null
+      }
+    ]
+  },
+  "ready": true,
+  "visualArm": "DoubleSide",
+  "visualCamera": [
+    94.14069332436226,
+    5.571265965819936,
+    113.88101751090727
+  ],
+  "visualTarget": [
+    85.61398176507018,
+    3.5,
+    100.762999727381
+  ],
+  "visualTree": {
+    "slot": 3,
+    "name": "Árbol costero de hojas largas",
+    "position": [
+      85.61398176507018,
+      3.315,
+      100.762999727381
+    ],
+    "height": 6.9042198860664605
+  }
+}
