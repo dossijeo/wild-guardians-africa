@@ -1,0 +1,2 @@
+import {youngLeafReviewCases} from './frontside-young-leaf-review-cases.mjs';
+export const youngLeafFrontReviewCases=Object.freeze([...youngLeafReviewCases,...Array.from({length:12},(_,i)=>({id:'young-front-angle-'+i,growth:.31,clock:2.8125+(i%3)*.875,biome:['sabana','gran-rio','manglares','volcanes','gran-canon','desierto'][i%6],night:[0,.5,1][i%3],azimuth:17.5+i*29.375,elevation:[12.5,32.5,55,82.5][i%4],expectedPhase:'original',expectedYoungActive:true}))]);
