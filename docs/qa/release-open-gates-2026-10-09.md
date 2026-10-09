@@ -82,7 +82,15 @@ frozen `795f773e`: all four p95 frame intervals are 116.4 ms, with 1004 GPU
 queries, unchanged logical state, and released contexts. No demonstrated
 frame-stability benefit; it remains experimental. The immutable reports and
 reproducible verifier are now in main at `cad08d84`; root verification passed.
-A separate seam-preparation isolation candidate remains unbenchmarked. All draws, uploads, queries and cleanup
+A separate seam-preparation isolation candidate (`4390237e` versus frozen
+`795f773e`) now has a root native ABBA: 1005 valid GPU queries, all four
+logical states unchanged, 25-to-40 generated chunks, no errors or pending
+queries, and released contexts. Its p95 frame intervals are 116.5 / 116.4 /
+116.4 / 116.4 ms; intervals above 100 ms are 25 / 22 / 23 / 18. This does not
+demonstrate a general frame-stability improvement and does not approve activation.
+Raw reports are preserved for immutable archival and trace attribution. The
+separate instrumented functional runs end with zero observed live buffers;
+their timing is not used in the benchmark. All draws, uploads, queries and cleanup
 must be attributed without summing union statistics counted in multiple adapters.
 The requested outcome is stable movement during new chunk/impostor preparation,
 not a higher average FPS at the expense of travel spikes.
