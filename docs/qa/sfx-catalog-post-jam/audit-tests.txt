@@ -1,0 +1,982 @@
+TAP version 13
+# Subtest: all connected ambience comes from original loop clips without introducing weather
+ok 1 - all connected ambience comes from original loop clips without introducing weather
+  ---
+  duration_ms: 22.8447
+  ...
+# Subtest: sabana: background follows actual day/night and never assumes water without evidence
+ok 2 - sabana: background follows actual day/night and never assumes water without evidence
+  ---
+  duration_ms: 5.9481
+  ...
+# Subtest: gran-rio: background follows actual day/night and never assumes water without evidence
+ok 3 - gran-rio: background follows actual day/night and never assumes water without evidence
+  ---
+  duration_ms: 0.3477
+  ...
+# Subtest: manglares: background follows actual day/night and never assumes water without evidence
+ok 4 - manglares: background follows actual day/night and never assumes water without evidence
+  ---
+  duration_ms: 0.3248
+  ...
+# Subtest: volcanes: background follows actual day/night and never assumes water without evidence
+ok 5 - volcanes: background follows actual day/night and never assumes water without evidence
+  ---
+  duration_ms: 1.1281
+  ...
+# Subtest: gran-canon: background follows actual day/night and never assumes water without evidence
+ok 6 - gran-canon: background follows actual day/night and never assumes water without evidence
+  ---
+  duration_ms: 0.365
+  ...
+# Subtest: desierto: background follows actual day/night and never assumes water without evidence
+ok 7 - desierto: background follows actual day/night and never assumes water without evidence
+  ---
+  duration_ms: 0.2969
+  ...
+# Subtest: water needs a matching biome, active hydrology and a nearby measured shoreline
+ok 8 - water needs a matching biome, active hydrology and a nearby measured shoreline
+  ---
+  duration_ms: 0.9625
+  ...
+# Subtest: many identical frames share pending loads and water sampling is cached by listener cell/revision
+ok 9 - many identical frames share pending loads and water sampling is cached by listener cell/revision
+  ---
+  duration_ms: 22.902
+  ...
+# Subtest: day/night crossfade releases old fauna, while a pause changes only ambient levels
+ok 10 - day/night crossfade releases old fauna, while a pause changes only ambient levels
+  ---
+  duration_ms: 1.5672
+  ...
+# Subtest: a loading loop invalidated by scene change cannot survive late completion
+ok 11 - a loading loop invalidated by scene change cannot survive late completion
+  ---
+  duration_ms: 1.1792
+  ...
+# Subtest: an evicted loop retries at most once per audio second and an unchanged scene never duplicates it
+ok 12 - an evicted loop retries at most once per audio second and an unchanged scene never duplicates it
+  ---
+  duration_ms: 4.1884
+  ...
+# Subtest: result and replacement state stop ambience without altering simulation or resurrecting old voices
+ok 13 - result and replacement state stop ambience without altering simulation or resurrecting old voices
+  ---
+  duration_ms: 5.0427
+  ...
+# Subtest: returning the camera restores the volume of an attack already in progress without replaying it
+ok 14 - returning the camera restores the volume of an attack already in progress without replaying it
+  ---
+  duration_ms: 16.8786
+  ...
+# Subtest: lion actual observed phase routing and one cue per phase
+ok 15 - lion actual observed phase routing and one cue per phase
+  ---
+  duration_ms: 6.9152
+  ...
+# Subtest: hyena actual observed phase routing and one cue per phase
+ok 16 - hyena actual observed phase routing and one cue per phase
+  ---
+  duration_ms: 2.1163
+  ...
+# Subtest: buffalo actual observed phase routing and one cue per phase
+ok 17 - buffalo actual observed phase routing and one cue per phase
+  ---
+  duration_ms: 1.8421
+  ...
+# Subtest: rhino actual observed phase routing and one cue per phase
+ok 18 - rhino actual observed phase routing and one cue per phase
+  ---
+  duration_ms: 8.3669
+  ...
+# Subtest: warthog actual observed phase routing and one cue per phase
+ok 19 - warthog actual observed phase routing and one cue per phase
+  ---
+  duration_ms: 1.4364
+  ...
+# Subtest: restored entering never replays its onset
+ok 20 - restored entering never replays its onset
+  ---
+  duration_ms: 0.8429
+  ...
+# Subtest: restored walking never replays its onset
+ok 21 - restored walking never replays its onset
+  ---
+  duration_ms: 2.1605
+  ...
+# Subtest: restored attacking never replays its onset
+ok 22 - restored attacking never replays its onset
+  ---
+  duration_ms: 0.8169
+  ...
+# Subtest: restored retreating never replays its onset
+ok 23 - restored retreating never replays its onset
+  ---
+  duration_ms: 0.9511
+  ...
+# Subtest: pause, result and a long observation gap stop activity without replay on resume
+ok 24 - pause, result and a long observation gap stop activity without replay on resume
+  ---
+  duration_ms: 1.1511
+  ...
+# Subtest: pending phase decode is invalidated by actor mutation before another audio frame
+ok 25 - pending phase decode is invalidated by actor mutation before another audio frame
+  ---
+  duration_ms: 1.043
+  ...
+# Subtest: expired decode, removal, state replacement and disposal cannot attach a late source
+ok 26 - expired decode, removal, state replacement and disposal cannot attach a late source
+  ---
+  duration_ms: 1.4532
+  ...
+# Subtest: state/economy/RNG are untouched and failed audio cannot fail the simulation frame
+ok 27 - state/economy/RNG are untouched and failed audio cannot fail the simulation frame
+  ---
+  duration_ms: 1.6072
+  ...
+# Subtest: lion native paid center raid produces actual approach/attack/retreat audio facts
+ok 28 - lion native paid center raid produces actual approach/attack/retreat audio facts
+  ---
+  duration_ms: 338.7733
+  ...
+# Subtest: hyena native paid center raid produces actual approach/attack/retreat audio facts
+ok 29 - hyena native paid center raid produces actual approach/attack/retreat audio facts
+  ---
+  duration_ms: 259.1884
+  ...
+# Subtest: buffalo native paid center raid produces actual approach/attack/retreat audio facts
+ok 30 - buffalo native paid center raid produces actual approach/attack/retreat audio facts
+  ---
+  duration_ms: 215.0418
+  ...
+# Subtest: rhino native paid center raid produces actual approach/attack/retreat audio facts
+ok 31 - rhino native paid center raid produces actual approach/attack/retreat audio facts
+  ---
+  duration_ms: 175.1648
+  ...
+# Subtest: warthog native paid center raid produces actual approach/attack/retreat audio facts
+ok 32 - warthog native paid center raid produces actual approach/attack/retreat audio facts
+  ---
+  duration_ms: 135.6141
+  ...
+# Subtest: a synchronous audio failure is contained and neutral requests remain rate limited
+ok 33 - a synchronous audio failure is contained and neutral requests remain rate limited
+  ---
+  duration_ms: 0.97
+  ...
+# (node:41936) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: QA-152: all 126 routes are explicit and every final MP3 is byte exact including approved 021/022
+ok 34 - QA-152: all 126 routes are explicit and every final MP3 is byte exact including approved 021/022
+  ---
+  duration_ms: 334.3592
+  ...
+# Subtest: concurrent decode completion is bounded at playback, not before awaiting the buffer
+ok 35 - concurrent decode completion is bounded at playback, not before awaiting the buffer
+  ---
+  duration_ms: 5.3421
+  ...
+# Subtest: repetitive families are bounded and a danger/result cue replaces only lower-priority SFX
+ok 36 - repetitive families are bounded and a danger/result cue replaces only lower-priority SFX
+  ---
+  duration_ms: 5.5203
+  ...
+# Subtest: music stems use one clock and playback cleanup without taking SFX family slots
+ok 37 - music stems use one clock and playback cleanup without taking SFX family slots
+  ---
+  duration_ms: 1.0248
+  ...
+# Subtest: QA-153: actual paid harvest delivery picks one mapped clip and audio does not mutate economy or RNG
+ok 38 - QA-153: actual paid harvest delivery picks one mapped clip and audio does not mutate economy or RNG
+  ---
+  duration_ms: 1389.4833
+  ...
+# Subtest: QA-153 warthog: one physical structure hit selects one contact clip without extra damage or RNG
+ok 39 - QA-153 warthog: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 8.8974
+  ...
+# Subtest: QA-153 hyena: one physical structure hit selects one contact clip without extra damage or RNG
+ok 40 - QA-153 hyena: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 11.7296
+  ...
+# Subtest: QA-153 buffalo: one physical structure hit selects one contact clip without extra damage or RNG
+ok 41 - QA-153 buffalo: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 7.542
+  ...
+# Subtest: QA-153 lion: one physical structure hit selects one contact clip without extra damage or RNG
+ok 42 - QA-153 lion: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 6.9212
+  ...
+# Subtest: QA-153 rhino: one physical structure hit selects one contact clip without extra damage or RNG
+ok 43 - QA-153 rhino: one physical structure hit selects one contact clip without extra damage or RNG
+  ---
+  duration_ms: 8.541
+  ...
+# (node:28868) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native fragments count actual emissions and only first floor contacts without replay on restore
+ok 44 - native fragments count actual emissions and only first floor contacts without replay on restore
+  ---
+  duration_ms: 8.2631
+  ...
+# Subtest: particle batches produce two distinct cues and empty frames stay silent
+ok 45 - particle batches produce two distinct cues and empty frames stay silent
+  ---
+  duration_ms: 1.6667
+  ...
+# Subtest: batch cues are spatial, rate limited per center and expire on decode delay or pause
+ok 46 - batch cues are spatial, rate limited per center and expire on decode delay or pause
+  ---
+  duration_ms: 17.491
+  ...
+# Subtest: contact bookkeeping stays bounded for long campaigns and suspended contexts stay silent
+ok 47 - contact bookkeeping stays bounded for long campaigns and suspended contexts stay silent
+  ---
+  duration_ms: 16.8721
+  ...
+# Subtest: the actual asynchronous audio route rejects delayed decode, pause and disposed scene
+ok 48 - the actual asynchronous audio route rejects delayed decode, pause and disposed scene
+  ---
+  duration_ms: 3.8441
+  ...
+# Subtest: olderMale initial native markers fire sow/seed/soil once and release at phase/pour boundaries
+ok 49 - olderMale initial native markers fire sow/seed/soil once and release at phase/pour boundaries
+  ---
+  duration_ms: 39.1827
+  ...
+# Subtest: olderFemale initial native markers fire sow/seed/soil once and release at phase/pour boundaries
+ok 50 - olderFemale initial native markers fire sow/seed/soil once and release at phase/pour boundaries
+  ---
+  duration_ms: 8.4486
+  ...
+# Subtest: youngMale initial native markers fire sow/seed/soil once and release at phase/pour boundaries
+ok 51 - youngMale initial native markers fire sow/seed/soil once and release at phase/pour boundaries
+  ---
+  duration_ms: 5.4206
+  ...
+# Subtest: youngFemale initial native markers fire sow/seed/soil once and release at phase/pour boundaries
+ok 52 - youngFemale initial native markers fire sow/seed/soil once and release at phase/pour boundaries
+  ---
+  duration_ms: 3.5717
+  ...
+# Subtest: mijo native harvest contact chooses one pick or root-pull take without another transaction
+ok 53 - mijo native harvest contact chooses one pick or root-pull take without another transaction
+  ---
+  duration_ms: 2.2618
+  ...
+# Subtest: girasol native harvest contact chooses one pick or root-pull take without another transaction
+ok 54 - girasol native harvest contact chooses one pick or root-pull take without another transaction
+  ---
+  duration_ms: 1.5377
+  ...
+# Subtest: sorgo native harvest contact chooses one pick or root-pull take without another transaction
+ok 55 - sorgo native harvest contact chooses one pick or root-pull take without another transaction
+  ---
+  duration_ms: 6.6981
+  ...
+# Subtest: maiz native harvest contact chooses one pick or root-pull take without another transaction
+ok 56 - maiz native harvest contact chooses one pick or root-pull take without another transaction
+  ---
+  duration_ms: 1.99
+  ...
+# Subtest: batata native harvest contact chooses one pick or root-pull take without another transaction
+ok 57 - batata native harvest contact chooses one pick or root-pull take without another transaction
+  ---
+  duration_ms: 2.0828
+  ...
+# Subtest: algodon native harvest contact chooses one pick or root-pull take without another transaction
+ok 58 - algodon native harvest contact chooses one pick or root-pull take without another transaction
+  ---
+  duration_ms: 2.3465
+  ...
+# Subtest: yuca native harvest contact chooses one pick or root-pull take without another transaction
+ok 59 - yuca native harvest contact chooses one pick or root-pull take without another transaction
+  ---
+  duration_ms: 5.3037
+  ...
+# Subtest: platano native harvest contact chooses one pick or root-pull take without another transaction
+ok 60 - platano native harvest contact chooses one pick or root-pull take without another transaction
+  ---
+  duration_ms: 2.7879
+  ...
+# Subtest: pending farm contact is suppressed on pause
+ok 61 - pending farm contact is suppressed on pause
+  ---
+  duration_ms: 2.8654
+  ...
+# Subtest: pending farm contact is suppressed on result
+ok 62 - pending farm contact is suppressed on result
+  ---
+  duration_ms: 2.3506
+  ...
+# Subtest: pending farm contact is suppressed on flee
+ok 63 - pending farm contact is suppressed on flee
+  ---
+  duration_ms: 1.2175
+  ...
+# Subtest: pending farm contact is suppressed on remove
+ok 64 - pending farm contact is suppressed on remove
+  ---
+  duration_ms: 3.9931
+  ...
+# Subtest: pending farm contact is suppressed on task
+ok 65 - pending farm contact is suppressed on task
+  ---
+  duration_ms: 1.1002
+  ...
+# Subtest: pending farm contact is suppressed on replace
+ok 66 - pending farm contact is suppressed on replace
+  ---
+  duration_ms: 1.1194
+  ...
+# Subtest: pending farm contact is suppressed on gap
+ok 67 - pending farm contact is suppressed on gap
+  ---
+  duration_ms: 0.9814
+  ...
+# Subtest: loading or skipping past physical harvest contact does not replay it
+ok 68 - loading or skipping past physical harvest contact does not replay it
+  ---
+  duration_ms: 1.3283
+  ...
+# Subtest: a crate pickup permits its natural one-shot tail while carrying, and flight stops it
+ok 69 - a crate pickup permits its natural one-shot tail while carrying, and flight stops it
+  ---
+  duration_ms: 1.0613
+  ...
+# Subtest: olderMale dropped-crate pickup uses one world cue without delivery or domain mutation
+ok 70 - olderMale dropped-crate pickup uses one world cue without delivery or domain mutation
+  ---
+  duration_ms: 1.1058
+  ...
+# Subtest: olderFemale dropped-crate pickup uses one world cue without delivery or domain mutation
+ok 71 - olderFemale dropped-crate pickup uses one world cue without delivery or domain mutation
+  ---
+  duration_ms: 0.8704
+  ...
+# Subtest: youngMale dropped-crate pickup uses one world cue without delivery or domain mutation
+ok 72 - youngMale dropped-crate pickup uses one world cue without delivery or domain mutation
+  ---
+  duration_ms: 0.715
+  ...
+# Subtest: youngFemale dropped-crate pickup uses one world cue without delivery or domain mutation
+ok 73 - youngFemale dropped-crate pickup uses one world cue without delivery or domain mutation
+  ---
+  duration_ms: 0.8389
+  ...
+# Subtest: a decoded crate pickup is rejected if another worker already carries the crate
+ok 74 - a decoded crate pickup is rejected if another worker already carries the crate
+  ---
+  duration_ms: 0.8104
+  ...
+# Subtest: water soil contact is invalid after its authored pour window even before another audio frame
+ok 75 - water soil contact is invalid after its authored pour window even before another audio frame
+  ---
+  duration_ms: 1.3166
+  ...
+# Subtest: invalid/fallen/gate-waiting workers never have a physical farm contact plan
+ok 76 - invalid/fallen/gate-waiting workers never have a physical farm contact plan
+  ---
+  duration_ms: 0.3228
+  ...
+# Subtest: olderMale actual paid first-day care/harvest produces physical cues without altering saved domain
+ok 77 - olderMale actual paid first-day care/harvest produces physical cues without altering saved domain
+  ---
+  duration_ms: 581.163
+  ...
+# Subtest: olderFemale actual paid first-day care/harvest produces physical cues without altering saved domain
+ok 78 - olderFemale actual paid first-day care/harvest produces physical cues without altering saved domain
+  ---
+  duration_ms: 389.9837
+  ...
+# Subtest: youngMale actual paid first-day care/harvest produces physical cues without altering saved domain
+ok 79 - youngMale actual paid first-day care/harvest produces physical cues without altering saved domain
+  ---
+  duration_ms: 245.711
+  ...
+# Subtest: youngFemale actual paid first-day care/harvest produces physical cues without altering saved domain
+ok 80 - youngFemale actual paid first-day care/harvest produces physical cues without altering saved domain
+  ---
+  duration_ms: 239.4184
+  ...
+# Subtest: a farm contact decoded after its quarter-second deadline stays silent
+ok 81 - a farm contact decoded after its quarter-second deadline stays silent
+  ---
+  duration_ms: 1.3585
+  ...
+# Subtest: inactive workers do not scan crop/crate populations for contact audio
+ok 82 - inactive workers do not scan crop/crate populations for contact audio
+  ---
+  duration_ms: 0.3716
+  ...
+# Subtest: original normal lifecycle emits entry/exit once and keeps the approved full exit tail
+ok 83 - original normal lifecycle emits entry/exit once and keeps the approved full exit tail
+  ---
+  duration_ms: 14.3535
+  ...
+# Subtest: original reduced lifecycle emits entry/exit once and keeps the approved full exit tail
+ok 84 - original reduced lifecycle emits entry/exit once and keeps the approved full exit tail
+  ---
+  duration_ms: 1.065
+  ...
+# Subtest: late portrait asset load still has one genuine entry when first rendered during reading
+ok 85 - late portrait asset load still has one genuine entry when first rendered during reading
+  ---
+  duration_ms: 0.6582
+  ...
+# Subtest: reopening during farewell or outro supersedes the old withdrawal
+ok 86 - reopening during farewell or outro supersedes the old withdrawal
+  ---
+  duration_ms: 1.0121
+  ...
+# Subtest: immediate hiding from intro cancels every owned source and pending request
+ok 87 - immediate hiding from intro cancels every owned source and pending request
+  ---
+  duration_ms: 0.9166
+  ...
+# Subtest: immediate hiding from reading cancels every owned source and pending request
+ok 88 - immediate hiding from reading cancels every owned source and pending request
+  ---
+  duration_ms: 0.7892
+  ...
+# Subtest: immediate hiding from outro cancels every owned source and pending request
+ok 89 - immediate hiding from outro cancels every owned source and pending request
+  ---
+  duration_ms: 1.5378
+  ...
+# Subtest: immediate hiding from closed cancels every owned source and pending request
+ok 90 - immediate hiding from closed cancels every owned source and pending request
+  ---
+  duration_ms: 0.7929
+  ...
+# Subtest: hidden invalidates a pending withdrawal decode
+ok 91 - hidden invalidates a pending withdrawal decode
+  ---
+  duration_ms: 0.8682
+  ...
+# Subtest: disposed invalidates a pending withdrawal decode
+ok 92 - disposed invalidates a pending withdrawal decode
+  ---
+  duration_ms: 0.7849
+  ...
+# Subtest: reentry invalidates a pending withdrawal decode
+ok 93 - reentry invalidates a pending withdrawal decode
+  ---
+  duration_ms: 0.9
+  ...
+# Subtest: expiry invalidates a pending withdrawal decode
+ok 94 - expiry invalidates a pending withdrawal decode
+  ---
+  duration_ms: 0.8462
+  ...
+# Subtest: suspend invalidates a pending withdrawal decode
+ok 95 - suspend invalidates a pending withdrawal decode
+  ---
+  duration_ms: 1.9374
+  ...
+# Subtest: a normal closed portrait still accepts its timely pending exit tail
+ok 96 - a normal closed portrait still accepts its timely pending exit tail
+  ---
+  duration_ms: 3.2811
+  ...
+# Subtest: suspension cancels voices and silently seeds the unchanged portrait on resume
+ok 97 - suspension cancels voices and silently seeds the unchanged portrait on resume
+  ---
+  duration_ms: 0.8814
+  ...
+# Subtest: presentation callback failures do not form a per-frame retry loop
+ok 98 - presentation callback failures do not form a per-frame retry loop
+  ---
+  duration_ms: 0.6646
+  ...
+# Subtest: portrait cues use the UI bus and avatar emitter without a fictitious world position
+ok 99 - portrait cues use the UI bus and avatar emitter without a fictitious world position
+  ---
+  duration_ms: 0.8359
+  ...
+# Subtest: youngMale Walk_Skip: original contact phases emit steps only after actual displacement
+ok 100 - youngMale Walk_Skip: original contact phases emit steps only after actual displacement
+  ---
+  duration_ms: 23.7217
+  ...
+# Subtest: youngMale Run: original contact phases emit steps only after actual displacement
+ok 101 - youngMale Run: original contact phases emit steps only after actual displacement
+  ---
+  duration_ms: 1.3207
+  ...
+# Subtest: youngMale Carry_Crate: original contact phases emit steps only after actual displacement
+ok 102 - youngMale Carry_Crate: original contact phases emit steps only after actual displacement
+  ---
+  duration_ms: 2.5676
+  ...
+# Subtest: youngFemale Walk_Skip: original contact phases emit steps only after actual displacement
+ok 103 - youngFemale Walk_Skip: original contact phases emit steps only after actual displacement
+  ---
+  duration_ms: 7.2986
+  ...
+# Subtest: youngFemale Run: original contact phases emit steps only after actual displacement
+ok 104 - youngFemale Run: original contact phases emit steps only after actual displacement
+  ---
+  duration_ms: 2.323
+  ...
+# Subtest: youngFemale Carry_Crate: original contact phases emit steps only after actual displacement
+ok 105 - youngFemale Carry_Crate: original contact phases emit steps only after actual displacement
+  ---
+  duration_ms: 6.1243
+  ...
+# Subtest: olderMale Walk_Skip: original contact phases emit steps only after actual displacement
+ok 106 - olderMale Walk_Skip: original contact phases emit steps only after actual displacement
+  ---
+  duration_ms: 2.2036
+  ...
+# Subtest: olderMale Run: original contact phases emit steps only after actual displacement
+ok 107 - olderMale Run: original contact phases emit steps only after actual displacement
+  ---
+  duration_ms: 1.4799
+  ...
+# Subtest: olderMale Carry_Crate: original contact phases emit steps only after actual displacement
+ok 108 - olderMale Carry_Crate: original contact phases emit steps only after actual displacement
+  ---
+  duration_ms: 3.6082
+  ...
+# Subtest: olderFemale Walk_Skip: original contact phases emit steps only after actual displacement
+ok 109 - olderFemale Walk_Skip: original contact phases emit steps only after actual displacement
+  ---
+  duration_ms: 17.5422
+  ...
+# Subtest: olderFemale Run: original contact phases emit steps only after actual displacement
+ok 110 - olderFemale Run: original contact phases emit steps only after actual displacement
+  ---
+  duration_ms: 1.3309
+  ...
+# Subtest: olderFemale Carry_Crate: original contact phases emit steps only after actual displacement
+ok 111 - olderFemale Carry_Crate: original contact phases emit steps only after actual displacement
+  ---
+  duration_ms: 1.8677
+  ...
+# Subtest: warthog: native animal toe contacts select original weight category
+ok 112 - warthog: native animal toe contacts select original weight category
+  ---
+  duration_ms: 4.3395
+  ...
+# Subtest: hyena: native animal toe contacts select original weight category
+ok 113 - hyena: native animal toe contacts select original weight category
+  ---
+  duration_ms: 2.838
+  ...
+# Subtest: buffalo: native animal toe contacts select original weight category
+ok 114 - buffalo: native animal toe contacts select original weight category
+  ---
+  duration_ms: 1.7694
+  ...
+# Subtest: lion: native animal toe contacts select original weight category
+ok 115 - lion: native animal toe contacts select original weight category
+  ---
+  duration_ms: 13.4599
+  ...
+# Subtest: rhino: native animal toe contacts select original weight category
+ok 116 - rhino: native animal toe contacts select original weight category
+  ---
+  duration_ms: 2.5132
+  ...
+# Subtest: pause, actor removal, reload and an unobserved gap cancel active or pending footstep sounds
+ok 117 - pause, actor removal, reload and an unobserved gap cancel active or pending footstep sounds
+  ---
+  duration_ms: 1.6768
+  ...
+# Subtest: surface override, running selection and distance attenuation do not invent clip variants
+ok 118 - surface override, running selection and distance attenuation do not invent clip variants
+  ---
+  duration_ms: 0.3616
+  ...
+# Subtest: paid native walking and cadence changes never mutate simulation or replay historical contacts
+ok 119 - paid native walking and cadence changes never mutate simulation or replay historical contacts
+  ---
+  duration_ms: 45.6084
+  ...
+# (node:26280) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real positive cooldown transitions group simultaneously ready spells into one UI cue
+ok 120 - real positive cooldown transitions group simultaneously ready spells into one UI cue
+  ---
+  duration_ms: 10.6691
+  ...
+# Subtest: load, replacement, rollback, locked spells and unchanged simulated time seed silently
+ok 121 - load, replacement, rollback, locked spells and unchanged simulated time seed silently
+  ---
+  duration_ms: 0.4534
+  ...
+# Subtest: pauses, result, disposal, elapsed loading and recasting reject obsolete requests
+ok 122 - pauses, result, disposal, elapsed loading and recasting reject obsolete requests
+  ---
+  duration_ms: 6.8752
+  ...
+# Subtest: native simulated Growth duration ending does not count as cooldown completion
+ok 123 - native simulated Growth duration ending does not count as cooldown completion
+  ---
+  duration_ms: 36.9742
+  ...
+# Subtest: AudioSystem stop/suspend and a suspended context release the observer
+ok 124 - AudioSystem stop/suspend and a suspended context release the observer
+  ---
+  duration_ms: 0.8713
+  ...
+# Subtest: cooldown preparation shares one cold download/decode without playing or mutating gameplay
+ok 125 - cooldown preparation shares one cold download/decode without playing or mutating gameplay
+  ---
+  duration_ms: 5.9926
+  ...
+# Subtest: preparation is lazy, cancels stale bank requests and throttles failed downloads
+ok 126 - preparation is lazy, cancels stale bank requests and throttles failed downloads
+  ---
+  duration_ms: 2.4968
+  ...
+# Subtest: leaving during the cold download prevents decoding and clears its cache entry
+ok 127 - leaving during the cold download prevents decoding and clears its cache entry
+  ---
+  duration_ms: 1.1693
+  ...
+# (node:40144) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: complete catalogue audit reproduces from current source and exact original bytes
+ok 128 - complete catalogue audit reproduces from current source and exact original bytes
+  ---
+  duration_ms: 714.5806
+  ...
+# Subtest: assignments, context exceptions, reserves and alternatives stay distinct from audible acceptance
+ok 129 - assignments, context exceptions, reserves and alternatives stay distinct from audible acceptance
+  ---
+  duration_ms: 135.3975
+  ...
+# Subtest: latent wood variant and semantic alternatives do not become real bindings or duplicate files
+ok 130 - latent wood variant and semantic alternatives do not become real bindings or duplicate files
+  ---
+  duration_ms: 0.5379
+  ...
+# (node:20584) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: paid zarzas wall: one actual raid hit chooses one original material clip
+ok 131 - paid zarzas wall: one actual raid hit chooses one original material clip
+  ---
+  duration_ms: 30.4494
+  ...
+# Subtest: paid zarzas gate: one actual raid hit chooses one original material clip
+ok 132 - paid zarzas gate: one actual raid hit chooses one original material clip
+  ---
+  duration_ms: 3.0278
+  ...
+# Subtest: paid empalizada wall: one actual raid hit chooses one original material clip
+ok 133 - paid empalizada wall: one actual raid hit chooses one original material clip
+  ---
+  duration_ms: 2.0836
+  ...
+# Subtest: paid empalizada gate: one actual raid hit chooses one original material clip
+ok 134 - paid empalizada gate: one actual raid hit chooses one original material clip
+  ---
+  duration_ms: 2.0612
+  ...
+# Subtest: paid piedra wall: one actual raid hit chooses one original material clip
+ok 135 - paid piedra wall: one actual raid hit chooses one original material clip
+  ---
+  duration_ms: 2.7411
+  ...
+# Subtest: paid piedra gate: one actual raid hit chooses one original material clip
+ok 136 - paid piedra gate: one actual raid hit chooses one original material clip
+  ---
+  duration_ms: 4.2873
+  ...
+# Subtest: paid adobe wall: one actual raid hit chooses one original material clip
+ok 137 - paid adobe wall: one actual raid hit chooses one original material clip
+  ---
+  duration_ms: 4.3046
+  ...
+# Subtest: paid adobe gate: one actual raid hit chooses one original material clip
+ok 138 - paid adobe gate: one actual raid hit chooses one original material clip
+  ---
+  duration_ms: 3.3186
+  ...
+# Subtest: paid reforzado wall: one actual raid hit chooses one original material clip
+ok 139 - paid reforzado wall: one actual raid hit chooses one original material clip
+  ---
+  duration_ms: 4.0089
+  ...
+# Subtest: paid reforzado gate: one actual raid hit chooses one original material clip
+ok 140 - paid reforzado gate: one actual raid hit chooses one original material clip
+  ---
+  duration_ms: 2.4254
+  ...
+# Subtest: centers, missing state/target and unknown wall material keep the original generic contact
+ok 141 - centers, missing state/target and unknown wall material keep the original generic contact
+  ---
+  duration_ms: 0.5682
+  ...
+# Subtest: all material variants and generic impacts share four family slots after concurrent decode
+ok 142 - all material variants and generic impacts share four family slots after concurrent decode
+  ---
+  duration_ms: 7.9027
+  ...
+# Subtest: material variants share the animal emitter limit and leave unrelated voices untouched
+ok 143 - material variants share the animal emitter limit and leave unrelated voices untouched
+  ---
+  duration_ms: 1.5106
+  ...
+# Subtest: scene exit during contact decoding suppresses the pending material source
+ok 144 - scene exit during contact decoding suppresses the pending material source
+  ---
+  duration_ms: 0.9868
+  ...
+# Subtest: three hundred panel renders do not duplicate transition sounds; selection and closure each play once
+ok 145 - three hundred panel renders do not duplicate transition sounds; selection and closure each play once
+  ---
+  duration_ms: 5.6786
+  ...
+# Subtest: replacing a panel with a mandatory dialog creates one open cue, with no invented close or purchase
+ok 146 - replacing a panel with a mandatory dialog creates one open cue, with no invented close or purchase
+  ---
+  duration_ms: 1.4379
+  ...
+# Subtest: repeated errors within one real second are bounded while a later error remains audible
+ok 147 - repeated errors within one real second are bounded while a later error remains audible
+  ---
+  duration_ms: 0.727
+  ...
+# Subtest: only actual user menu-pause transitions cue; closing another pause never falsely announces resume
+ok 148 - only actual user menu-pause transitions cue; closing another pause never falsely announces resume
+  ---
+  duration_ms: 0.3643
+  ...
+# Subtest: load/scene reset is silent, retains no previous surface, and permits an immediate new warning
+ok 149 - load/scene reset is silent, retains no previous surface, and permits an immediate new warning
+  ---
+  duration_ms: 0.3158
+  ...
+# Subtest: audio failure cannot throw into a successful interface or game action
+ok 150 - audio failure cannot throw into a successful interface or game action
+  ---
+  duration_ms: 32.0613
+  ...
+# Subtest: all transition cues retain original one-shot IDs from the supplied bank
+ok 151 - all transition cues retain original one-shot IDs from the supplied bank
+  ---
+  duration_ms: 38.4372
+  ...
+# Subtest: stale panel/close requests expire on the next transition before decoding can produce playback
+ok 152 - stale panel/close requests expire on the next transition before decoding can produce playback
+  ---
+  duration_ms: 1.539
+  ...
+# Subtest: delayed error/pause requests cannot replay after their interaction window or scene reset
+ok 153 - delayed error/pause requests cannot replay after their interaction window or scene reset
+  ---
+  duration_ms: 0.3728
+  ...
+# Subtest: each completed failed wall gesture can cue error 107 even within the general warning debounce
+ok 154 - each completed failed wall gesture can cue error 107 even within the general warning debounce
+  ---
+  duration_ms: 1.3947
+  ...
+# Subtest: magic selection uses original 092 instead of panel closure and expires superseded or reset requests
+ok 155 - magic selection uses original 092 instead of panel closure and expires superseded or reset requests
+  ---
+  duration_ms: 4.1766
+  ...
+# Subtest: opening another surface cancels pending magic selection before late decoding
+ok 156 - opening another surface cancels pending magic selection before late decoding
+  ---
+  duration_ms: 1.3993
+  ...
+# Subtest: guided HUD touch is exclusive to the two indicated actions, once per game
+ok 157 - guided HUD touch is exclusive to the two indicated actions, once per game
+  ---
+  duration_ms: 4.1085
+  ...
+# Subtest: guided touch expires on panel replacement, scene reset and late decode
+ok 158 - guided touch expires on panel replacement, scene reset and late decode
+  ---
+  duration_ms: 0.3854
+  ...
+# (node:27940) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: shared calendar predicate preserves the approved exact boundaries
+ok 159 - shared calendar predicate preserves the approved exact boundaries
+  ---
+  duration_ms: 4.8028
+  ...
+# Subtest: live milestones play once, tolerate a dropped frame and never mutate the simulation
+ok 160 - live milestones play once, tolerate a dropped frame and never mutate the simulation
+  ---
+  duration_ms: 10.1249
+  ...
+# Subtest: saved unlocks, replaced snapshots, backwards clocks and disposal seed silently
+ok 161 - saved unlocks, replaced snapshots, backwards clocks and disposal seed silently
+  ---
+  duration_ms: 0.3783
+  ...
+# Subtest: simultaneous new milestones coalesce and hiring defers only the live cue
+ok 162 - simultaneous new milestones coalesce and hiring defers only the live cue
+  ---
+  duration_ms: 1.7657
+  ...
+# Subtest: pending decode is cancelled on pause
+ok 163 - pending decode is cancelled on pause
+  ---
+  duration_ms: 0.8425
+  ...
+# Subtest: pending decode is cancelled on result
+ok 164 - pending decode is cancelled on result
+  ---
+  duration_ms: 0.6234
+  ...
+# Subtest: pending decode is cancelled on replacement
+ok 165 - pending decode is cancelled on replacement
+  ---
+  duration_ms: 0.7305
+  ...
+# Subtest: pending decode is cancelled on dispose
+ok 166 - pending decode is cancelled on dispose
+  ---
+  duration_ms: 0.8308
+  ...
+# Subtest: pending decode is cancelled on expiry
+ok 167 - pending decode is cancelled on expiry
+  ---
+  duration_ms: 0.8587
+  ...
+# Subtest: defeat discards deferred milestones and playback failures do not retry every frame
+ok 168 - defeat discards deferred milestones and playback failures do not retry every frame
+  ---
+  duration_ms: 0.788
+  ...
+# Subtest: actual paid calendar through day five produces three unlocks without changing money or RNG
+ok 169 - actual paid calendar through day five produces three unlocks without changing money or RNG
+  ---
+  duration_ms: 691.0288
+  ...
+# Subtest: postgame unlock dispatches once and loading its saved event is silent
+ok 170 - postgame unlock dispatches once and loading its saved event is silent
+  ---
+  duration_ms: 1.4906
+  ...
+# Subtest: task acknowledgment is tied to real ownership, never to hiring or repeated AI evaluation
+ok 171 - task acknowledgment is tied to real ownership, never to hiring or repeated AI evaluation
+  ---
+  duration_ms: 18.0249
+  ...
+# Subtest: brief effort waits for actual work and has worker and global cadence limits
+ok 172 - brief effort waits for actual work and has worker and global cadence limits
+  ---
+  duration_ms: 2.2308
+  ...
+# Subtest: danger occurs once on flight entry and a contained shout requires continued displacement
+ok 173 - danger occurs once on flight entry and a contained shout requires continued displacement
+  ---
+  duration_ms: 1.5049
+  ...
+# Subtest: stationary flight never emits a running shout
+ok 174 - stationary flight never emits a running shout
+  ---
+  duration_ms: 1.1182
+  ...
+# Subtest: gate flight never emits a running shout
+ok 175 - gate flight never emits a running shout
+  ---
+  duration_ms: 1.5242
+  ...
+# Subtest: no-raid flight never emits a running shout
+ok 176 - no-raid flight never emits a running shout
+  ---
+  duration_ms: 1.2458
+  ...
+# Subtest: pause interrupts worker voices without replaying onset
+ok 177 - pause interrupts worker voices without replaying onset
+  ---
+  duration_ms: 2.1042
+  ...
+# Subtest: result interrupts worker voices without replaying onset
+ok 178 - result interrupts worker voices without replaying onset
+  ---
+  duration_ms: 1.2541
+  ...
+# Subtest: gap interrupts worker voices without replaying onset
+ok 179 - gap interrupts worker voices without replaying onset
+  ---
+  duration_ms: 5.0547
+  ...
+# Subtest: remove interrupts worker voices without replaying onset
+ok 180 - remove interrupts worker voices without replaying onset
+  ---
+  duration_ms: 1.1
+  ...
+# Subtest: incapacitated interrupts worker voices without replaying onset
+ok 181 - incapacitated interrupts worker voices without replaying onset
+  ---
+  duration_ms: 0.8987
+  ...
+# Subtest: fall interrupts worker voices without replaying onset
+ok 182 - fall interrupts worker voices without replaying onset
+  ---
+  duration_ms: 0.89
+  ...
+# Subtest: restored walking does not replay acknowledgment, effort or flight
+ok 183 - restored walking does not replay acknowledgment, effort or flight
+  ---
+  duration_ms: 1.6365
+  ...
+# Subtest: restored acting does not replay acknowledgment, effort or flight
+ok 184 - restored acting does not replay acknowledgment, effort or flight
+  ---
+  duration_ms: 1.1426
+  ...
+# Subtest: restored fleeing does not replay acknowledgment, effort or flight
+ok 185 - restored fleeing does not replay acknowledgment, effort or flight
+  ---
+  duration_ms: 1.1012
+  ...
+# Subtest: crowd cadence and distance suppress unrelated off-camera choruses
+ok 186 - crowd cadence and distance suppress unrelated off-camera choruses
+  ---
+  duration_ms: 3.9691
+  ...
+# Subtest: pending decode is invalidated by task loss, state replacement, clock expiry and disposal
+ok 187 - pending decode is invalidated by task loss, state replacement, clock expiry and disposal
+  ---
+  duration_ms: 2.402
+  ...
+# Subtest: voice failure is contained and cannot create a per-frame retry storm
+ok 188 - voice failure is contained and cannot create a per-frame retry storm
+  ---
+  duration_ms: 1.5162
+  ...
+# Subtest: olderMale paid native assignment/work/raid reactions preserve domain state
+ok 189 - olderMale paid native assignment/work/raid reactions preserve domain state
+  ---
+  duration_ms: 177.3789
+  ...
+# Subtest: olderFemale paid native assignment/work/raid reactions preserve domain state
+ok 190 - olderFemale paid native assignment/work/raid reactions preserve domain state
+  ---
+  duration_ms: 159.1303
+  ...
+# Subtest: youngMale paid native assignment/work/raid reactions preserve domain state
+ok 191 - youngMale paid native assignment/work/raid reactions preserve domain state
+  ---
+  duration_ms: 121.9063
+  ...
+# Subtest: youngFemale paid native assignment/work/raid reactions preserve domain state
+ok 192 - youngFemale paid native assignment/work/raid reactions preserve domain state
+  ---
+  duration_ms: 105.1191
+  ...
+1..192
+# tests 192
+# suites 0
+# pass 192
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2165.5799
