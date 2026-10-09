@@ -3,9 +3,10 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
 const source=readFileSync(new URL('../public/music-cache-sw.js',import.meta.url),'utf8');
-function fixture(network=async()=>new Response('network')){
+function fixture(network=async()=>new Response('network'),{storageError,matchError}={}){
   const entries=new Map(),listeners={},fetches=[],cache={async match(key){return entries.get(key)?.clone();},async put(key,response){entries.set(key,new Response(await response.blob(),{status:response.status,headers:response.headers}));}};
-  runInNewContext(source,{self:{location:{origin:'https://game.example'},addEventListener(type,fn){listeners[type]=fn;}},caches:{open:async()=>cache},fetch:async request=>{fetches.push(request);return network(request);},URL,Response,Headers,Map,Number});
+  if(matchError)cache.match=async()=>{throw matchError;};
+  runInNewContext(source,{self:{location:{origin:'https://game.example'},addEventListener(type,fn){listeners[type]=fn;}},caches:{open:async()=>{if(storageError)throw storageError;return cache;}},fetch:async request=>{fetches.push(request);return network(request);},URL,Response,Headers,Map,Number});
   async function request(url,{range,destination='audio'}={}){
     const waits=[],event={request:{url,method:'GET',destination,headers:new Headers(range?{Range:range}:{})},waitUntil(promise){waits.push(promise);},respondWith(promise){this.response=promise;}};
     listeners.fetch(event);const response=await event.response;await Promise.all(waits);return response;
@@ -38,4 +39,22 @@ test('a first range spanning the full file is cached without downloading it twic
 });
 test('SFX fetches, non-audio assets and cross-origin media are not intercepted',async()=>{
   const f=fixture();assert.equal(await f.request('https://game.example/assets/sfx.mp3',{destination:''}),undefined);assert.equal(await f.request('https://game.example/assets/model.glb',{destination:'fetch'}),undefined);assert.equal(await f.request('https://other.example/music.mp3'),undefined);assert.equal(f.fetches.length,0);
+});
+for(const operation of ['storageError','matchError']){
+ test(`unavailable ${operation} preserves the original streaming range request`,async()=>{
+  const f=fixture(async request=>new Response(request.headers.get('Range'),{status:206}),{[operation]:Error('denied')});
+  const response=await f.request('https://game.example/music.opus',{range:'bytes=2-4'});
+  assert.equal(response.status,206);assert.equal(await response.text(),'bytes=2-4');assert.equal(f.fetches.length,1);
+  assert.equal(f.fetches[0].url,'https://game.example/music.opus');
+ });
+ test(`offline request never accesses the network after ${operation}`,async()=>{
+  const f=fixture(async()=>{throw Error('must remain offline');},{[operation]:Error('denied')});
+  const response=await f.request('https://game.example/music.opus?music-cache-only=1',{range:'bytes=2-4'});
+  assert.equal(response.status,503);assert.equal(f.fetches.length,0);
+ });
+}
+test('network failure after storage denial propagates without duplicate downloads',async()=>{
+ const f=fixture(async()=>{throw Error('network down');},{storageError:Error('denied')});
+ await assert.rejects(f.request('https://game.example/music.opus',{range:'bytes=2-4'}),/network down/);
+ assert.equal(f.fetches.length,1);
 });
