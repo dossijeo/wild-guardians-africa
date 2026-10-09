@@ -6,6 +6,44 @@ const finite=value=>Number.isFinite(value)?value:null;
 const text=value=>typeof value==='string'?value.slice(0,160):null;
 const section=(issues,label,read)=>{try{return read();}catch{issues.push(label);return null;}};
 
+// Finish-only copies of existing owned records; no new timing/readiness reads.
+function completedGltfSnapshot(downloads){
+ const rows=[];let count=0,completed=0,ordinal=0;
+ for(const request of downloads.requests.values()){
+  if(request.kind!=='gltf')continue;
+  count++;const order=ordinal++;if(request.end===null)continue;completed++;
+  const start=finite(request.start),end=finite(request.end),duration=start!==null&&end!==null&&end>=start?end-start:null;
+  const row={id:finite(request.id),url:text(request.url),start,end,duration,loaded:finite(request.loaded),total:finite(request.total),cache:['unknown','network','browser-cache','validated-cache','application-cache'].includes(request.cache)?request.cache:'unknown',failed:Boolean(request.failed),order};
+  rows.push(row);rows.sort((a,b)=>(b.duration??-1)-(a.duration??-1)||a.order-b.order);if(rows.length>8)rows.pop();
+ }
+ for(const row of rows){
+  const request=downloads.requests.get(row.id),timing=request?.timing;
+  // Missing/invalid/ambiguous evidence is never a zero-cost measurement.
+  row.timing=null;row.association='unknown';row.unknownReason='missing-timing';row.untilResponseEnd=null;row.afterResponseEnd=null;
+  if(timing){
+   const startTime=finite(timing.startTime),responseEnd=finite(timing.responseEnd);
+   if(row.start===null||row.end===null||startTime===null||responseEnd===null||responseEnd<=0||startTime<row.start||startTime>row.end||responseEnd<startTime||responseEnd>row.end){row.unknownReason='invalid-window';}
+   else {
+    let candidates=0;
+    for(const other of downloads.requests.values()){
+     if(other.url!==request.url)continue;
+     const otherStart=finite(other.start),otherEnd=other.end===null?Infinity:finite(other.end);
+     if(otherStart!==null&&otherEnd!==null&&startTime>=otherStart-5&&startTime<=otherEnd)candidates++;
+    }
+    if(candidates!==1){row.unknownReason='ambiguous-url-window';}
+    else if(row.failed){row.unknownReason='failed-request';}
+    else {
+     row.association='heuristic-url-window';row.unknownReason=null;
+     row.timing={startTime,responseEnd,transferSize:finite(timing.transferSize),encodedBodySize:finite(timing.encodedBodySize),decodedBodySize:finite(timing.decodedBodySize),responseStatus:finite(timing.responseStatus)};
+     row.untilResponseEnd=responseEnd-row.start;row.afterResponseEnd=row.end-responseEnd;
+    }
+   }
+  }
+  delete row.order;
+ }
+ return {count,completed,pending:count-completed,rows,omitted:Math.max(0,count-rows.length),omittedCompleted:Math.max(0,completed-rows.length),scope:'Largest completed GLTF request durations, stable insertion-order ties. Existing ResourceTiming association is heuristic URL plus time window, never exact identity. ResponseEnd is a browser timeline boundary; end follows GLTF completion before ownModel. Intervals are not exclusive CPU or physical transport; network/cache evidence does not identify Internet or disk cost.'};
+}
+
 export function loadingReadinessSnapshot({world,progress=world?.loadingProgress,diorama,cinematic,spans}={}){
  const issues=[];
  const result={scope:'One-time observational readiness snapshot. Queue counts are logical state, not GPU completion or physical memory.',issues};
@@ -26,7 +64,7 @@ export function loadingReadinessSnapshot({world,progress=world?.loadingProgress,
    const evidence=Object.hasOwn(cache,request.cache)?request.cache:'unknown';cache[evidence]++;
    if(request.end===null||request.failed){problemRows++;if(rows.length<12)rows.push({id:finite(request.id),url:text(request.url),kind:text(request.kind),start:finite(request.start),end:finite(request.end),loaded:finite(request.loaded),total:finite(request.total),totalEvidence:text(request.totalEvidence),cache:evidence,failed:Boolean(request.failed),responseEnd:finite(request.timing?.responseEnd)});}
   }
-  return {count,pending,failed,loadedBytes,cache,rows,omitted:Math.max(0,problemRows-rows.length),disposed:Boolean(downloads.disposed),scope:'Observed transfer records only; unknown is not a cache hit. End null can include post-transfer decoding/preparation.'};
+  return {count,pending,failed,loadedBytes,cache,rows,gltf:completedGltfSnapshot(downloads),omitted:Math.max(0,problemRows-rows.length),disposed:Boolean(downloads.disposed),scope:'Observed transfer records only; unknown is not a cache hit. End null can include post-transfer decoding/preparation.'};
  });
  result.actors=section(issues,'actors',()=>{
   const queue=world?.loadingActorQueue;if(!queue)return null;

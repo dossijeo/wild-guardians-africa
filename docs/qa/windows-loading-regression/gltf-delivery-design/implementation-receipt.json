@@ -1,0 +1,51 @@
+{
+  "baseline": "8b075be94f0228c7fd0295f79f952023ed0f1886",
+  "tests": {
+    "passed": 35,
+    "failed": 0,
+    "exitCode": 0,
+    "logSha256": "d4591a012627fe5c8f06030bad004d1ee39ef3539074af5520cfd4d30e4728fa"
+  },
+  "changed": {
+    "src/rendering/loading-readiness-snapshot.js": {
+      "sha256": "e244053595e60c7a04557a6894761cd11a69d64a09afc635a62d9d3b37588e78"
+    },
+    "tests/loading-gltf-timing-snapshot.test.js": {
+      "sha256": "7c0b958b7ad1b3a799a7af6f1fb8b381451f56fa15e572c8b1207f7ccb4a16d6"
+    }
+  },
+  "unchanged": {
+    "src/rendering/assets.js": {
+      "sha256": "a013c25c0a96d7af114b81f5a4088fd04f445a3016b51c4290cab25d01e3b65e",
+      "baselineByteExact": true
+    },
+    "src/rendering/asset-transfer.js": {
+      "sha256": "7c0db4ccf829d8759cd78a749bff382fb10d9ce7d15be2766dda7ca03b119454",
+      "baselineByteExact": true
+    },
+    "src/app/loading-transfer-owner.js": {
+      "sha256": "84155bf2184afbd8de8ca839e67775890c4af1ea87b2f5074d72ee2de4c71920",
+      "baselineByteExact": true
+    },
+    "src/app/loading-downloads.js": {
+      "sha256": "f38b7a905c0f270c867047b2b33faf8fedf242a57a1d67c3d5cdfb4b8e6e797b",
+      "baselineByteExact": true
+    },
+    "src/app/main.js": {
+      "sha256": "b3f5b8dd4ada493ad41fec5d499e297673b9c09239787a6de206adc1085717ba",
+      "baselineByteExact": true
+    },
+    "src/rendering/scene.js": {
+      "sha256": "76c94d66a1e05ecb2ddafc3909bbd50eda139a641cb28f5dfb315269e9461cfa",
+      "baselineByteExact": true
+    },
+    "src-tauri/smoke.js": {
+      "sha256": "9f6e27ad126390e0d3cce356e90645640bf26f719eb0a38a2a68ef2c8d8b0436",
+      "baselineByteExact": true
+    },
+    ".github/workflows/windows.yml": {
+      "sha256": "678d02ece3e9a8f93d4abbb61706ca784ca3cd426d42e5a33a8a15e3b551617b",
+      "baselineByteExact": true
+    }
+  }
+}

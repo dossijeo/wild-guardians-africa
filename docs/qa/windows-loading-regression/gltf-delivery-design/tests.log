@@ -1,0 +1,191 @@
+TAP version 13
+# (node:50616) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real owner retains responseEnd before GLTF completion and finish-only copies completed evidence
+ok 1 - real owner retains responseEnd before GLTF completion and finish-only copies completed evidence
+  ---
+  duration_ms: 6.6684
+  ...
+# Subtest: largest durations selected deterministically with independent pending/failed rows and full counts
+ok 2 - largest durations selected deterministically with independent pending/failed rows and full counts
+  ---
+  duration_ms: 2.9044
+  ...
+# Subtest: missing, invalid, redacted and failed timing remain unknown without zero intervals
+ok 3 - missing, invalid, redacted and failed timing remain unknown without zero intervals
+  ---
+  duration_ms: 0.6689
+  ...
+# Subtest: overlapping URL/cache records cannot uniquely associate a browser timing; separated repeats can
+ok 4 - overlapping URL/cache records cannot uniquely associate a browser timing; separated repeats can
+  ---
+  duration_ms: 1.3647
+  ...
+# Subtest: scalar bounded evidence has no API calls/resource retention and bridge cancellation clears callable
+ok 5 - scalar bounded evidence has no API calls/resource retention and bridge cancellation clears callable
+  ---
+  duration_ms: 2.3434
+  ...
+# (node:48268) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: six observed and ordinary image requests preserve exact URLs/order/calls, and adoption uses the original textures
+ok 6 - six observed and ordinary image requests preserve exact URLs/order/calls, and adoption uses the original textures
+  ---
+  duration_ms: 12.4452
+  ...
+# Subtest: snapshot distinguishes private hand adoption from observed global transfers without invoking readiness or loading
+ok 7 - snapshot distinguishes private hand adoption from observed global transfers without invoking readiness or loading
+  ---
+  duration_ms: 3.905
+  ...
+# Subtest: real dispose plus terminal observer clear prevents late adoption/retained rows and disposes each late image exactly once
+ok 8 - real dispose plus terminal observer clear prevents late adoption/retained rows and disposes each late image exactly once
+  ---
+  duration_ms: 1.2483
+  ...
+# Subtest: observer throws/getters throw do not mask the original load failure or change the existing error callback
+ok 9 - observer throws/getters throw do not mask the original load failure or change the existing error callback
+  ---
+  duration_ms: 1.3676
+  ...
+# Subtest: actual nine-chunk readiness resolves with queued outer work; finish observation never treats it as an active original wait
+ok 10 - actual nine-chunk readiness resolves with queued outer work; finish observation never treats it as an active original wait
+  ---
+  duration_ms: 1.4476
+  ...
+# Subtest: bounded scalar snapshots omit waiter objects and crop resources; destroyed owner and missing hands stay explicit
+ok 11 - bounded scalar snapshots omit waiter objects and crop resources; destroyed owner and missing hands stay explicit
+  ---
+  duration_ms: 5.4694
+  ...
+# Subtest: original World.loadReady abort wins while private image loads continue; terminal bridge and hands disposal prevent late adoption
+ok 12 - original World.loadReady abort wins while private image loads continue; terminal bridge and hands disposal prevent late adoption
+  ---
+  duration_ms: 3.0416
+  ...
+# Subtest: snapshot distinguishes real milestones and presentation maturity without scheduling work
+ok 13 - snapshot distinguishes real milestones and presentation maturity without scheduling work
+  ---
+  duration_ms: 7.6291
+  ...
+# Subtest: bounded copies never retain region prototypes, promises, jobs or source arrays
+ok 14 - bounded copies never retain region prototypes, promises, jobs or source arrays
+  ---
+  duration_ms: 1.1496
+  ...
+# Subtest: observer faults are contained per section and absent owners remain unknown
+ok 15 - observer faults are contained per section and absent owners remain unknown
+  ---
+  duration_ms: 0.3627
+  ...
+# Subtest: context identity borrows renderer only, skips dead owners and tolerates driver faults
+ok 16 - context identity borrows renderer only, skips dead owners and tolerates driver faults
+  ---
+  duration_ms: 0.428
+  ...
+# Subtest: span tracker preserves interleaved same-label awaits and prior callback contract
+ok 17 - span tracker preserves interleaved same-label awaits and prior callback contract
+  ---
+  duration_ms: 1.7693
+  ...
+# Subtest: tracker contains observation faults but retains original callback exceptions
+ok 18 - tracker contains observation faults but retains original callback exceptions
+  ---
+  duration_ms: 1.1758
+  ...
+# Subtest: tracker bounds active rows and reports omissions without extending waits
+ok 19 - tracker bounds active rows and reports omissions without extending waits
+  ---
+  duration_ms: 1.4331
+  ...
+# Subtest: transfer snapshot reads real LoadingDownloads records without snapshot/refresh/cache assumptions
+ok 20 - transfer snapshot reads real LoadingDownloads records without snapshot/refresh/cache assumptions
+  ---
+  duration_ms: 18.5211
+  ...
+# Subtest: bridge normal path and unavailable/failing WeakRef never publish or mutate
+ok 21 - bridge normal path and unavailable/failing WeakRef never publish or mutate
+  ---
+  duration_ms: 1.405
+  ...
+# (node:50704) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: bridge abort/dispose releases own callback and cannot erase replacement World
+ok 22 - bridge abort/dispose releases own callback and cannot erase replacement World
+  ---
+  duration_ms: 356.7077
+  ...
+# Subtest: failed real World constructor does not install a snapshot owner
+ok 23 - failed real World constructor does not install a snapshot owner
+  ---
+  duration_ms: 5.0528
+  ...
+# Subtest: dead WeakRef and callback replacement remain safe without a strong fallback
+ok 24 - dead WeakRef and callback replacement remain safe without a strong fallback
+  ---
+  duration_ms: 0.4293
+  ...
+# Subtest: bridge observes real actor/chunk/far properties while work remains pending
+ok 25 - bridge observes real actor/chunk/far properties while work remains pending
+  ---
+  duration_ms: 15.8239
+  ...
+# Subtest: bridge publication/connect/presentation faults do not leak ownership or change application exceptions
+ok 26 - bridge publication/connect/presentation faults do not leak ownership or change application exceptions
+  ---
+  duration_ms: 0.9358
+  ...
+# Subtest: bridge registration follows every successful constructor step and original gates stay intact
+ok 27 - bridge registration follows every successful constructor step and original gates stay intact
+  ---
+  duration_ms: 4.1892
+  ...
+# Subtest: early summaries retain bounded selected labels and independent nested intervals without resource references
+ok 28 - early summaries retain bounded selected labels and independent nested intervals without resource references
+  ---
+  duration_ms: 0.4176
+  ...
+# Subtest: early selected-label cap reports omitted events and does not retain arbitrary labels or chunk histories
+ok 29 - early selected-label cap reports omitted events and does not retain arbitrary labels or chunk histories
+  ---
+  duration_ms: 11.7125
+  ...
+# Subtest: application boundary observes success/error once and observer faults never alter original calls
+ok 30 - application boundary observes success/error once and observer faults never alter original calls
+  ---
+  duration_ms: 1.6788
+  ...
+# Subtest: terminal release clears early rows and late boundaries cannot repopulate or invoke retained hooks
+ok 31 - terminal release clears early rows and late boundaries cannot repopulate or invoke retained hooks
+  ---
+  duration_ms: 0.468
+  ...
+# Subtest: selected early records preserve prior hook receiver arguments returns and original exceptions exactly once
+ok 32 - selected early records preserve prior hook receiver arguments returns and original exceptions exactly once
+  ---
+  duration_ms: 0.3561
+  ...
+# Subtest: reconnect uses one tracker, preserves active early blocks, drops old hooks and abort terminates retained callbacks
+ok 33 - reconnect uses one tracker, preserves active early blocks, drops old hooks and abort terminates retained callbacks
+  ---
+  duration_ms: 0.5043
+  ...
+# Subtest: reconnect remains bounded through replacements and guards externally forwarded retained tracker without clobbering ownership
+ok 34 - reconnect remains bounded through replacements and guards externally forwarded retained tracker without clobbering ownership
+  ---
+  duration_ms: 1.0459
+  ...
+# Subtest: rebound hook can deliver an unrelated nested event with original receiver return and exception semantics
+ok 35 - rebound hook can deliver an unrelated nested event with original receiver return and exception semantics
+  ---
+  duration_ms: 0.2439
+  ...
+1..35
+# tests 35
+# suites 0
+# pass 35
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 644.7738

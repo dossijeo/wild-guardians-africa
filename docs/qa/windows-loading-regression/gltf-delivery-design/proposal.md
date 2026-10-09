@@ -1,0 +1,44 @@
+# GLTF delivery attribution: source review and bounded proposal
+
+Initial source review: design only at the inspected baseline. Runtime was frozen at `8b075be94f0228c7fd0295f79f952023ed0f1886`. Subsequent parent authorization allows only the bounded finish-only implementation described in implementation.md; no native run, build, dispatch, quality change or new readiness gate has been executed.
+
+## The unresolved question
+
+The resource-overlap run `37998755565` awaited the bridge model for 40.1214 s before presentation preparation completed. That awaited duration does not separate request dispatch/response delivery, JavaScript delivery, parsing, nested resource preparation or callback scheduling. The runtime payload is the assetUrl-mapped 26,536,168-byte GLB, not the 48,988,728-byte source asset.
+
+Historical `5517`/run `37962249087` already measured 26.093 s before a single full-size bridge progress event, about 180.3 ms from that event to parse entry, and about 76.4 ms from parse entry to completion. Reimplementing that collector alone would repeat a known boundary, not supply a new causal discriminator. Those observations concern an older source/run; they do not establish the current 40 s interval or a physical transport bottleneck. Menu pause and compression experiments are also historical negatives, not new proposals.
+
+## Existing source-backed boundaries
+
+- `Assets.model` calls the same owned GLTFLoader.loadAsync with an existing progress callback. The logical URL cache reuses its underlying load. Transfer end is emitted in its Promise reaction after GLTF completion and before synchronous ownModel traversal; it is neither body completion nor ownership traversal completion.
+- Three 0.180.0 Loader.loadAsync delegates to load with request-specific resolve/reject callbacks. GLTFLoader.load uses its native FileLoader arrayBuffer callback, then invokes the same instance parse. Parse entry therefore indicates that the primary body has been delivered to GLTFLoader, including its native cache path. It is a proxy at the start of that callback's parse work, not a header or physical-transfer clock.
+- FileLoader progress is emitted before enqueueing each chunk. EOF closes the stream without a final progress event. A single event with loaded equal to total does not prove the arrayBuffer has been assembled/delivered; cache delivery can have no progress events.
+- Parse elapsed includes asynchronous dependencies, plugins and scheduling. Its synchronous invocation duration is nested within parse elapsed. Neither is exclusive meshopt CPU or GPU compilation time.
+- LoadingTransferOwner already has a PerformanceObserver on original resource entries. It can apply ResourceTiming to the existing request while GLTF parsing is still pending. LoadingDownloads retains startTime/responseEnd/byte fields in request.timing. No new request or resource lookup is needed to read these scalars later.
+- The current readiness snapshot reports only pending/failed transfer rows. Completed GLBs are omitted when the smoke later fails in another phase. This is a concrete evidence gap in the current report, not a missing runtime readiness operation.
+
+## Recommended first change for review
+
+Extend the existing finish-only smoke readiness snapshot with at most eight completed `kind === gltf` records, selected by largest observed request duration, with stable insertion-order ties and explicit omitted counts. Copy only id, bounded URL, start/end, loaded/total, cache evidence, failed and existing timing startTime/responseEnd/transferSize/encodedBodySize/decodedBodySize/responseStatus. Keep absent values null; never invoke snapshot, refresh, getEntriesByName, a loader or a request. Retain the existing pending/failed rows independently so selecting completed models cannot hide outstanding transfers.
+
+Report two intervals only when both endpoints are finite and ordered: request start to browser responseEnd, and responseEnd to Assets transfer end. These are browser timeline and JavaScript preparation intervals; they are not physical I/O, header wait, decode CPU, or an additive contribution to whole-load time. ResourceTiming responseEnd precedes potential body collection/delivery and parse/callback scheduling. End precedes ownModel traversal. Missing timing, zero/redacted values, cross-clock inconsistencies and cache records remain unknown/invalid rather than zero-cost evidence.
+
+The existing owner associates entries by URL and a temporal window, with `.find` when multiple requests fit; timingFor uses `.findLast`. This is not an exact request identity guarantee. Report that limitation explicitly, and count same-URL overlapping records as ambiguous from scalar request intervals. Do not claim a unique association merely because the GLB byte size matches. This proposal does not alter the owner's matching algorithm or normal telemetry.
+
+This discriminator was not exposed by the old progress/parse report: if a completed bridge's responseEnd lies near its transfer end, most observed elapsed precedes browser response completion; if a substantial gap remains after responseEnd, delivery/parse/callback preparation remains a candidate. Either outcome still needs scope-specific interpretation, not an automatic loader optimization. If timing is absent or ambiguous, this change honestly supplies no answer. Do not spend another CI run solely to repeat a known last-progress/parse measurement.
+
+## Conditional parse-entry design, not requested for implementation yet
+
+If review requires splitting a demonstrably large post-responseEnd interval, reuse the historical exact callback-chain association mechanism on the existing Assets GLTFLoader instance, smoke-only, instead of copying GLTFLoader.load or patching global FileLoader/fetch. Instance load records request ID and instance parse records entry/completion/synchronous invocation. A transient synchronous parse-callback context associates a parse with request onLoad/onError only at unequivocal completion. Equal path, bytes, last progress, or most-recent request cannot identify a parse. Pending parse URL stays null until association is proven; manual parse/network failure may remain orphaned. There is no public URL argument in parse and no safe exact URL-at-entry promise under interleaving.
+
+Collector limits would be fixed (32 request summaries, eight active anonymous parse scalars, bounded strings), with explicit dropped/orphan counts and no retained events, buffers, parsers, GLTF results, materials or program objects. OFF must leave loader methods untouched, with no diagnostic clock/arrays/wrappers. Terminal clear must prevent late callbacks from repopulating or invoking released prior observers while still forwarding the original callbacks exactly once so Assets can perform late disposal. Identity-guarded method restoration and constructor/partial-install failure rollback are mandatory. Do not transplant the old helper without these lifecycle guarantees.
+
+## Proposed meaningful CPU contracts
+
+For the smaller finish-only extension: copy completed GLB timings from real LoadingDownloads/LoadingTransferOwner records; resource timing arriving before parse completion; missing/redacted/invalid endpoints; overlapping equal-URL ambiguity; completed/pending row caps independently; cache evidence remains unknown unless established; scalar-only terminal clear; zero additional calls to loader, ResourceTiming API, progress.snapshot/refresh or readiness methods. These are invariants, not simulated performance claims.
+
+For a conditional parse wrapper: actual Three cached tiny GLTF through loadAsync (zero progress), two equal-size/equal-path requests with out-of-order parse completions, network failure before parse, asynchronous parse error, synchronous parse/callback exception, missing callbacks/trailing arguments, this/arguments/return/exceptions preserved, original progress invoked once, observer/getter failures contained, bounded overflow, abort/dispose/replacement/partial-install rollback and retained late callback closure. Confirm original FileLoader requests/readers and existing readiness call order unchanged. CPU contracts do not establish native response timing availability or speed.
+
+## Decision boundaries
+
+No additional optimization is selected. The current 40 s bridge await does not justify meshopt replacement, duplicate maize-only assets, transport changes, more indiscriminate concurrency, polling/budget tuning, variants removal or timeout extension. Private hands waits and queued chunks are separately observed; they cannot be called the dominant critical path from a final counter. The parent must review any implementation and decide whether one native run adds information beyond existing evidence. All original failed runs, source scopes and normal90s/hidden300000 gates remain intact.
