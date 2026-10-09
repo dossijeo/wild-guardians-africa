@@ -1,0 +1,58 @@
+{
+  "status": "failure-evidence-verified",
+  "recordedHead": "3324d17dd2305ea8595aea311c518cc6db2404ad",
+  "frozenSourcesVerified": 320,
+  "currentSourceDifferences": [],
+  "biome": "desierto",
+  "culture": "suajili",
+  "day": 71,
+  "completedNights": 70,
+  "time": 600,
+  "elapsed": 44510.299999627554,
+  "result": null,
+  "money": "231020",
+  "failure": "native incursion did not finish before the runner's 2400 simulated-second daily limit",
+  "activeAnimals": [
+    {
+      "id": "animal-226523",
+      "species": "lion",
+      "status": "walking",
+      "x": 98,
+      "z": -17.030473825090553,
+      "hitsRemaining": 2,
+      "targetId": null,
+      "spawn": {
+        "x": 117.41287178662198,
+        "z": 30.7016298812062
+      },
+      "exit": {
+        "x": 118.85114840243459,
+        "z": 33.334377566877315
+      },
+      "pathPoints": null,
+      "firstWaypoints": null
+    }
+  ],
+  "workerStatuses": {
+    "fleeing": 24,
+    "home": 121
+  },
+  "heartbeat": {
+    "day": 71,
+    "time": 600,
+    "elapsed": 44115.2999996333,
+    "lagSimulatedSeconds": 394.999999994252,
+    "workerStatuses": {
+      "fleeing": 24,
+      "home": 121
+    }
+  },
+  "derivedCounts": {
+    "CrateDelivered": 13058,
+    "CropPicked": 13058
+  },
+  "snapshotSha256": "569c2531ecbd4fd8360fcadd779abe5878e2e4a214fb778ab773d059667ac720",
+  "completedReportAvailable": false,
+  "completedSummaryAvailable": false,
+  "scope": "Original full failure snapshot, frozen Git source hashes, native persistence/crop/crate and integer ledger invariants. Counts are derived from the snapshot because no final report exists. This is not a replay, victory/activity acceptance or a causal diagnosis of the physical blockage."
+}
