@@ -10,6 +10,7 @@ import {RaidEntryPreparer} from '../src/world/raid-entry-preparer.js';
 import {computeRaidEntry} from '../src/world/compute-raid-entry.js';
 import {raidEntryKey} from '../src/world/raid-entry-data.js';
 import {Navigation} from '../src/world/navigation.js';
+import {prepareNativeRaidEntry as prepare,close} from './helpers/native-raid-entry.js';
 const group=[...Array(4).fill('warthog'),...Array(3).fill('hyena'),...Array(2).fill('buffalo'),...Array(2).fill('lion'),'rhino'];
 function fixture(){
  const {s,nav}=createOpeningWorld({biome:'sabana',seed:712}),center=s.structures[0],eye={x:center.x+16,z:center.z+20};
@@ -41,12 +42,14 @@ test('At pending dawn all simulated clocks, collapses, workers, tasks and ledger
  Game.pause(restored,'menu');const paused=serialize(restored);Game.tick(restored,5,restoredNav);assert.equal(serialize(restored),paused);Game.resume(restored,'menu');assert.ok(permission(restored,'camera'));
 });
 
-test('Changing native camera bounds enables entry at600, preserves side, and draws only successful strike budgets',()=>{
+test('Changing native camera bounds enables entry at600, preserves side, and draws only successful strike budgets',async()=>{
  const {s,nav,eye}=fixture();Game.tick(s,.05,nav);const selected=s.nightPlan.entryPreferredSide,expected=structuredClone(s);
  for(const id of group){const spec=animalSpec(id);randomInt(expected,spec.hit_budget_min,spec.hit_budget_max);}
- nav.setActiveBounds(activeChunkRegion(eye).bounds);Game.tick(s,.001,nav);
+ const frozen=serialize(s);Game.tick(s,5,nav);Game.advanceReal(s,5,nav);assert.equal(serialize(s),frozen);
+ nav.setActiveBounds(activeChunkRegion(eye).bounds);const p=await prepare(s,nav);try{const elapsed=s.elapsed;Game.tick(s,.001,nav);close(s.elapsed-elapsed,.001);
  assert.ok(s.raid);assert.equal(s.raid.animals.length,12);assert.deepEqual(s.raid.animals.map(a=>a.species),group);assert.equal(s.nightPlan.entryPreferredSide,selected);assert.equal(s.rng,expected.rng);assert.equal(s.nightPlan.done,true);
  assert.equal(s.completedNights,99);assert.equal(s.result,null);assert.equal(s.time,600);assert.equal(s.events.filter(e=>e.type==='RaidSpawned').length,1);
+ }finally{p.dispose();}
 });
 
 test('Persisted side zero has stable prepared keys and isolated worker computation does not redraw',()=>{
@@ -67,8 +70,8 @@ test('A fresh prepared failure is considered once, including worker recreation w
  assert.equal(s.rng,rng);assert.equal(s.events.filter(e=>e.type==='NightEntryPending').length,1);assert.equal(s.events.filter(e=>e.type==='RaidSpawned').length,0);
 });
 
-test('Successful first attempt keeps original side-plus-strikes RNG order',()=>{
+test('Successful first attempt keeps original side-plus-strikes RNG order',async()=>{
  const {s,nav,eye}=fixture(),expected=structuredClone(s);const side=randomInt(expected,0,3);
  const strikes=group.map(id=>{const spec=animalSpec(id);return randomInt(expected,spec.hit_budget_min,spec.hit_budget_max);});
- nav.setActiveBounds(activeChunkRegion(eye).bounds);assert.equal(spawnRaid(s,s.nightPlan,nav),'spawned');assert.equal(s.nightPlan.entryPreferredSide,side);assert.deepEqual(s.raid.animals.map(a=>a.hitsRemaining),strikes);assert.equal(s.rng,expected.rng);
+ nav.setActiveBounds(activeChunkRegion(eye).bounds);const p=await prepare(s,nav);try{assert.equal(spawnRaid(s,s.nightPlan,nav),'spawned');assert.equal(s.nightPlan.entryPreferredSide,side);assert.deepEqual(s.raid.animals.map(a=>a.hitsRemaining),strikes);assert.equal(s.rng,expected.rng);assert.equal(p.stats.used,1);}finally{p.dispose();}
 });

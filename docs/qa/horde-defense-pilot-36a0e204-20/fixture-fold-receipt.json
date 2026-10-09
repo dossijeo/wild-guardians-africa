@@ -1,0 +1,25 @@
+{
+  "baselineCommit": "c916a497",
+  "unchangedProductionSources": 390,
+  "unaffectedRetryBodyIndicesByteEqual": [
+    0,
+    1,
+    3,
+    4
+  ],
+  "testHashes": {
+    "tests/acceptance-clock.test.js": "77c2845292b5c49b4ddf42fae1de0ea1571878582dc57849318ee9a423db17c4",
+    "tests/acceptance-defensive-reservations.test.js": "44d109ffea77a45349d6029e24375c138d802562860fbe621fea04b96ed13c26",
+    "tests/horde-entry-retry.test.js": "7b9f3071741f8782ddd40366bf78cd248e7219e59b115dcc73c667fdcdd7c8fe",
+    "tests/helpers/native-raid-entry.js": "e163f617a0ec33225ac4adde9d23ca5c8a1f61af2344804baf00c08978222b78",
+    "tests/horde-defense-evidence-retention.test.js": "bc640e44bc208424054923270555aed9c458217b6aa518738e3008ab6b35978c",
+    "tests/horde-strike-evidence.test.js": "4866bec2de69b104e6bbef8bdd049db461825d9b9d27ee4fc09f96d536414a79"
+  },
+  "pass": 33,
+  "fail": 0,
+  "exit": 0,
+  "milliseconds": 3039.2152,
+  "command": "node --test tests/acceptance-clock.test.js tests/acceptance-defensive-reservations.test.js tests/horde-entry-retry.test.js tests/horde-defense-evidence-retention.test.js tests/horde-strike-evidence.test.js",
+  "historicalNegative": "d4d12580/a6893053 15PASS/6FAIL immutable",
+  "campaignRun": false
+}
