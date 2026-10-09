@@ -8,7 +8,9 @@ edition = "2021"
 tauri-build = { version = "2", features = [] }
 
 [dependencies]
-tauri = { version = "2", features = [] }
+# Keep the normal native features except per-request embedded Brotli decoding.
+# Packaging candidate: assets/readiness remain identical; executable size may grow.
+tauri = { version = "2", default-features = false, features = ["wry", "common-controls-v6", "dynamic-acl", "x11", "dbus"] }
 serde_json = "1"
 
 [profile.release]
