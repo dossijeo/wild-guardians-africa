@@ -1,0 +1,855 @@
+{
+  "scope": "Fresh Sabana Mapungubwe seed712 medium time0; A heartbeat no scene drawing, B actual diorama/cinematic; cache retained not controlled cold; sampled heap/resources are not physical peak RAM/VRAM",
+  "background": "All front/balance/raid/far heavy local jobs explicitly quiet. Root docs-only PR13 pull used 1.8s disk/network during reserved window; machine not perfectly isolated.",
+  "criterion": "Both B readiness >110% of both A triggers regression investigation, not statistical equivalence from four arms.",
+  "accepted": false,
+  "rows": [
+    {
+      "arm": "A1",
+      "sha256": "7243dbb484bb919e9d49acfbf2b34fb5e949f6dcb11e0f914eb059f7f2590d30",
+      "totalMs": 7149.799999952316,
+      "initializationMs": 7149.799999952316,
+      "cinematicAndCompletionMs": 0,
+      "frameSummary": {
+        "count": 313,
+        "max": 1080.800000000001,
+        "over50": 6,
+        "over100": 5
+      },
+      "p95": 16.800000000000182,
+      "p99": 149.80000000000018,
+      "longTaskMs": [
+        156,
+        63,
+        115,
+        186,
+        231,
+        1098,
+        247
+      ],
+      "maxSampledHeapBytes": 281413642,
+      "stageTimeline": [
+        {
+          "stage": "configuration",
+          "at": 21.5,
+          "resources": null
+        },
+        {
+          "stage": "initial-site",
+          "at": 130.29999995231628,
+          "resources": null
+        },
+        {
+          "stage": "renderer",
+          "at": 176.29999995231628,
+          "resources": {
+            "geometries": 0,
+            "textures": 0,
+            "programs": 0,
+            "owned": 0
+          }
+        },
+        {
+          "stage": "load:begin",
+          "at": 176.89999997615814,
+          "resources": {
+            "geometries": 0,
+            "textures": 0,
+            "programs": 0,
+            "owned": 0
+          }
+        },
+        {
+          "stage": "load:end",
+          "at": 333.7000000476837,
+          "resources": {
+            "geometries": 0,
+            "textures": 0,
+            "programs": 0,
+            "owned": 0
+          }
+        },
+        {
+          "stage": "biome:begin",
+          "at": 346.2999999523163,
+          "resources": {
+            "geometries": 0,
+            "textures": 0,
+            "programs": 0,
+            "owned": 0
+          }
+        },
+        {
+          "stage": "biome:end",
+          "at": 513.5,
+          "resources": {
+            "geometries": 0,
+            "textures": 0,
+            "programs": 0,
+            "owned": 83
+          }
+        },
+        {
+          "stage": "village:begin",
+          "at": 578.7999999523163,
+          "resources": {
+            "geometries": 0,
+            "textures": 0,
+            "programs": 0,
+            "owned": 86
+          }
+        },
+        {
+          "stage": "village:end",
+          "at": 685.8999999761581,
+          "resources": {
+            "geometries": 0,
+            "textures": 0,
+            "programs": 0,
+            "owned": 98
+          }
+        },
+        {
+          "stage": "warmAnimalModels:begin",
+          "at": 1104.2000000476837,
+          "resources": {
+            "geometries": 0,
+            "textures": 0,
+            "programs": 0,
+            "owned": 103
+          }
+        },
+        {
+          "stage": "warmAnimalModels:end",
+          "at": 1716.8999999761581,
+          "resources": {
+            "geometries": 0,
+            "textures": 0,
+            "programs": 0,
+            "owned": 128
+          }
+        },
+        {
+          "stage": "walls:begin",
+          "at": 2241.5,
+          "resources": {
+            "geometries": 0,
+            "textures": 0,
+            "programs": 0,
+            "owned": 176
+          }
+        },
+        {
+          "stage": "walls:end",
+          "at": 2553.2000000476837,
+          "resources": {
+            "geometries": 0,
+            "textures": 0,
+            "programs": 0,
+            "owned": 198
+          }
+        },
+        {
+          "stage": "warmAnimalModels:begin",
+          "at": 3016.100000023842,
+          "resources": {
+            "geometries": 0,
+            "textures": 0,
+            "programs": 0,
+            "owned": 199
+          }
+        },
+        {
+          "stage": "warmAnimalModels:end",
+          "at": 3019.7999999523163,
+          "resources": {
+            "geometries": 0,
+            "textures": 0,
+            "programs": 0,
+            "owned": 199
+          }
+        },
+        {
+          "stage": "warmAnimalGpu:begin",
+          "at": 3034.7999999523163,
+          "resources": {
+            "geometries": 0,
+            "textures": 0,
+            "programs": 0,
+            "owned": 199
+          }
+        },
+        {
+          "stage": "warmAnimalGpu:end",
+          "at": 4467.399999976158,
+          "resources": {
+            "geometries": 103,
+            "textures": 43,
+            "programs": 40,
+            "owned": 199
+          }
+        },
+        {
+          "stage": "world-load",
+          "at": 6904.200000047684,
+          "resources": {
+            "geometries": 109,
+            "textures": 53,
+            "programs": 46,
+            "owned": 199
+          }
+        },
+        {
+          "stage": "far-ready",
+          "at": 7134.799999952316,
+          "resources": {
+            "geometries": 166,
+            "textures": 55,
+            "programs": 60,
+            "owned": 199
+          }
+        },
+        {
+          "stage": "visible-ready",
+          "at": 7149.600000023842,
+          "resources": {
+            "geometries": 161,
+            "textures": 55,
+            "programs": 60,
+            "owned": 199
+          }
+        }
+      ],
+      "download": null,
+      "camera": {
+        "eye": [
+          76.70247532024266,
+          27.37682490650652,
+          30.57367599590944
+        ],
+        "target": [
+          60,
+          12.20192278906814,
+          0
+        ]
+      },
+      "errors": []
+    },
+    {
+      "arm": "B1",
+      "sha256": "47a98ff7ab9af70229141d0bb97f0cbe9345c269b46858aea2f013b337651caa",
+      "totalMs": 16073.299999952316,
+      "initializationMs": 11966.799999952316,
+      "cinematicAndCompletionMs": 4106.5,
+      "frameSummary": {
+        "count": 891,
+        "max": 99.79999999999927,
+        "over50": 3,
+        "over100": 0
+      },
+      "p95": 33.20000000000073,
+      "p99": 33.5,
+      "longTaskMs": [
+        59,
+        72,
+        73,
+        64
+      ],
+      "maxSampledHeapBytes": 304306775,
+      "stageTimeline": [
+        {
+          "stage": "diorama-interactive",
+          "at": 840.8999999761581,
+          "resources": {
+            "geometries": 11,
+            "textures": 8,
+            "programs": 5,
+            "owned": 49,
+            "imageDecoder": {
+              "requests": 13,
+              "peakActive": 2,
+              "peakTransferBytes": 2751072,
+              "peakQueued": 1
+            }
+          }
+        },
+        {
+          "stage": "configuration",
+          "at": 863.8999999761581,
+          "resources": {
+            "geometries": 11,
+            "textures": 8,
+            "programs": 5,
+            "owned": 49,
+            "imageDecoder": {
+              "requests": 13,
+              "peakActive": 2,
+              "peakTransferBytes": 2751072,
+              "peakQueued": 1
+            }
+          }
+        },
+        {
+          "stage": "initial-site",
+          "at": 1056.8999999761581,
+          "resources": {
+            "geometries": 11,
+            "textures": 8,
+            "programs": 5,
+            "owned": 49,
+            "imageDecoder": {
+              "requests": 13,
+              "peakActive": 2,
+              "peakTransferBytes": 2751072,
+              "peakQueued": 1
+            }
+          }
+        },
+        {
+          "stage": "renderer",
+          "at": 1058.5999999046326,
+          "resources": {
+            "geometries": 11,
+            "textures": 8,
+            "programs": 5,
+            "owned": 49,
+            "imageDecoder": {
+              "requests": 13,
+              "peakActive": 2,
+              "peakTransferBytes": 2751072,
+              "peakQueued": 1
+            }
+          }
+        },
+        {
+          "stage": "world-load",
+          "at": 11218.5,
+          "resources": {
+            "geometries": 120,
+            "textures": 66,
+            "programs": 43,
+            "owned": 200,
+            "imageDecoder": {
+              "requests": 13,
+              "peakActive": 2,
+              "peakTransferBytes": 2751072,
+              "peakQueued": 1
+            }
+          }
+        },
+        {
+          "stage": "far-update",
+          "at": 11289.699999928474
+        },
+        {
+          "stage": "far-ready",
+          "at": 11367.899999976158,
+          "resources": {
+            "geometries": 177,
+            "textures": 67,
+            "programs": 45,
+            "owned": 200,
+            "imageDecoder": {
+              "requests": 13,
+              "peakActive": 2,
+              "peakTransferBytes": 2751072,
+              "peakQueued": 1
+            }
+          }
+        },
+        {
+          "stage": "reveal-prepared",
+          "at": 11966.199999928474,
+          "resources": {
+            "geometries": 186,
+            "textures": 67,
+            "programs": 45,
+            "owned": 200,
+            "imageDecoder": {
+              "requests": 13,
+              "peakActive": 2,
+              "peakTransferBytes": 2751072,
+              "peakQueued": 1
+            }
+          }
+        },
+        {
+          "stage": "visible-ready",
+          "at": 11966.599999904633,
+          "resources": {
+            "geometries": 186,
+            "textures": 67,
+            "programs": 45,
+            "owned": 200,
+            "imageDecoder": {
+              "requests": 13,
+              "peakActive": 2,
+              "peakTransferBytes": 2751072,
+              "peakQueued": 1
+            }
+          }
+        },
+        {
+          "stage": "controls-ready",
+          "at": 16020.399999976158,
+          "resources": {
+            "geometries": 176,
+            "textures": 63,
+            "programs": 41,
+            "owned": 200,
+            "imageDecoder": {
+              "requests": 13,
+              "peakActive": 2,
+              "peakTransferBytes": 2751072,
+              "peakQueued": 1
+            }
+          }
+        }
+      ],
+      "download": {
+        "network": 212,
+        "cacheHits": 1,
+        "unknown": 0,
+        "observedParallelUnionMs": 2588.4999997615814,
+        "loadedBytes": 98149536
+      },
+      "camera": {
+        "eye": [
+          76.70247532024266,
+          27.37682490650652,
+          30.57367599590944
+        ],
+        "target": [
+          60,
+          12.20192278906814,
+          0
+        ]
+      },
+      "errors": []
+    },
+    {
+      "arm": "B2",
+      "sha256": "cd383e5bf750fbe8062c3b493dd8432e7b894ee86668a6dcf5af4877a989bbbe",
+      "totalMs": 14290.700000047684,
+      "initializationMs": 10205.600000023842,
+      "cinematicAndCompletionMs": 4085.100000023842,
+      "frameSummary": {
+        "count": 783,
+        "max": 116.29999999999927,
+        "over50": 3,
+        "over100": 1
+      },
+      "p95": 33.20000000000073,
+      "p99": 49.70000000000073,
+      "longTaskMs": [
+        58,
+        63,
+        74,
+        54
+      ],
+      "maxSampledHeapBytes": 309111050,
+      "stageTimeline": [
+        {
+          "stage": "diorama-interactive",
+          "at": 692,
+          "resources": {
+            "geometries": 11,
+            "textures": 8,
+            "programs": 5,
+            "owned": 49,
+            "imageDecoder": {
+              "requests": 13,
+              "peakActive": 2,
+              "peakTransferBytes": 2751072,
+              "peakQueued": 1
+            }
+          }
+        },
+        {
+          "stage": "configuration",
+          "at": 708,
+          "resources": {
+            "geometries": 11,
+            "textures": 8,
+            "programs": 5,
+            "owned": 49,
+            "imageDecoder": {
+              "requests": 13,
+              "peakActive": 2,
+              "peakTransferBytes": 2751072,
+              "peakQueued": 1
+            }
+          }
+        },
+        {
+          "stage": "initial-site",
+          "at": 910.2000000476837,
+          "resources": {
+            "geometries": 11,
+            "textures": 8,
+            "programs": 5,
+            "owned": 49,
+            "imageDecoder": {
+              "requests": 13,
+              "peakActive": 2,
+              "peakTransferBytes": 2751072,
+              "peakQueued": 1
+            }
+          }
+        },
+        {
+          "stage": "renderer",
+          "at": 911.7000000476837,
+          "resources": {
+            "geometries": 11,
+            "textures": 8,
+            "programs": 5,
+            "owned": 49,
+            "imageDecoder": {
+              "requests": 13,
+              "peakActive": 2,
+              "peakTransferBytes": 2751072,
+              "peakQueued": 1
+            }
+          }
+        },
+        {
+          "stage": "world-load",
+          "at": 9440.400000095367,
+          "resources": {
+            "geometries": 120,
+            "textures": 65,
+            "programs": 43,
+            "owned": 200,
+            "imageDecoder": {
+              "requests": 13,
+              "peakActive": 2,
+              "peakTransferBytes": 2751072,
+              "peakQueued": 1
+            }
+          }
+        },
+        {
+          "stage": "far-update",
+          "at": 9509.400000095367
+        },
+        {
+          "stage": "far-ready",
+          "at": 9622.600000023842,
+          "resources": {
+            "geometries": 177,
+            "textures": 66,
+            "programs": 45,
+            "owned": 200,
+            "imageDecoder": {
+              "requests": 13,
+              "peakActive": 2,
+              "peakTransferBytes": 2751072,
+              "peakQueued": 1
+            }
+          }
+        },
+        {
+          "stage": "reveal-prepared",
+          "at": 10204.900000095367,
+          "resources": {
+            "geometries": 186,
+            "textures": 66,
+            "programs": 45,
+            "owned": 200,
+            "imageDecoder": {
+              "requests": 13,
+              "peakActive": 2,
+              "peakTransferBytes": 2751072,
+              "peakQueued": 1
+            }
+          }
+        },
+        {
+          "stage": "visible-ready",
+          "at": 10205.400000095367,
+          "resources": {
+            "geometries": 186,
+            "textures": 66,
+            "programs": 45,
+            "owned": 200,
+            "imageDecoder": {
+              "requests": 13,
+              "peakActive": 2,
+              "peakTransferBytes": 2751072,
+              "peakQueued": 1
+            }
+          }
+        },
+        {
+          "stage": "controls-ready",
+          "at": 14254.400000095367,
+          "resources": {
+            "geometries": 176,
+            "textures": 62,
+            "programs": 41,
+            "owned": 200,
+            "imageDecoder": {
+              "requests": 13,
+              "peakActive": 2,
+              "peakTransferBytes": 2751072,
+              "peakQueued": 1
+            }
+          }
+        }
+      ],
+      "download": {
+        "network": 212,
+        "cacheHits": 1,
+        "unknown": 0,
+        "observedParallelUnionMs": 657.6999999284744,
+        "loadedBytes": 98149536
+      },
+      "camera": {
+        "eye": [
+          76.70247532024266,
+          27.37682490650652,
+          30.57367599590944
+        ],
+        "target": [
+          60,
+          12.20192278906814,
+          0
+        ]
+      },
+      "errors": []
+    },
+    {
+      "arm": "A2",
+      "sha256": "d1ceda7dabe2aca3ddee90942d8163791d5d1e8799a3056666006361bc62ec45",
+      "totalMs": 7341.299999952316,
+      "initializationMs": 7341.299999952316,
+      "cinematicAndCompletionMs": 0,
+      "frameSummary": {
+        "count": 314,
+        "max": 1097.5,
+        "over50": 9,
+        "over100": 5
+      },
+      "p95": 16.899999999999636,
+      "p99": 133,
+      "longTaskMs": [
+        147,
+        93,
+        88,
+        213,
+        186,
+        51,
+        1102,
+        263
+      ],
+      "maxSampledHeapBytes": 281495053,
+      "stageTimeline": [
+        {
+          "stage": "configuration",
+          "at": 18.5,
+          "resources": null
+        },
+        {
+          "stage": "initial-site",
+          "at": 133.60000002384186,
+          "resources": null
+        },
+        {
+          "stage": "renderer",
+          "at": 164.39999997615814,
+          "resources": {
+            "geometries": 0,
+            "textures": 0,
+            "programs": 0,
+            "owned": 0
+          }
+        },
+        {
+          "stage": "load:begin",
+          "at": 164.89999997615814,
+          "resources": {
+            "geometries": 0,
+            "textures": 0,
+            "programs": 0,
+            "owned": 0
+          }
+        },
+        {
+          "stage": "load:end",
+          "at": 377.2999999523163,
+          "resources": {
+            "geometries": 0,
+            "textures": 0,
+            "programs": 0,
+            "owned": 0
+          }
+        },
+        {
+          "stage": "biome:begin",
+          "at": 397.10000002384186,
+          "resources": {
+            "geometries": 0,
+            "textures": 0,
+            "programs": 0,
+            "owned": 0
+          }
+        },
+        {
+          "stage": "biome:end",
+          "at": 558.2999999523163,
+          "resources": {
+            "geometries": 0,
+            "textures": 0,
+            "programs": 0,
+            "owned": 83
+          }
+        },
+        {
+          "stage": "village:begin",
+          "at": 604.5,
+          "resources": {
+            "geometries": 0,
+            "textures": 0,
+            "programs": 0,
+            "owned": 86
+          }
+        },
+        {
+          "stage": "village:end",
+          "at": 641.3999999761581,
+          "resources": {
+            "geometries": 0,
+            "textures": 0,
+            "programs": 0,
+            "owned": 98
+          }
+        },
+        {
+          "stage": "warmAnimalModels:begin",
+          "at": 1078.2999999523163,
+          "resources": {
+            "geometries": 0,
+            "textures": 0,
+            "programs": 0,
+            "owned": 103
+          }
+        },
+        {
+          "stage": "warmAnimalModels:end",
+          "at": 1609.8999999761581,
+          "resources": {
+            "geometries": 0,
+            "textures": 0,
+            "programs": 0,
+            "owned": 128
+          }
+        },
+        {
+          "stage": "walls:begin",
+          "at": 2067.7999999523163,
+          "resources": {
+            "geometries": 0,
+            "textures": 0,
+            "programs": 0,
+            "owned": 176
+          }
+        },
+        {
+          "stage": "walls:end",
+          "at": 3015.899999976158,
+          "resources": {
+            "geometries": 0,
+            "textures": 0,
+            "programs": 0,
+            "owned": 198
+          }
+        },
+        {
+          "stage": "warmAnimalModels:begin",
+          "at": 3445.100000023842,
+          "resources": {
+            "geometries": 0,
+            "textures": 0,
+            "programs": 0,
+            "owned": 199
+          }
+        },
+        {
+          "stage": "warmAnimalModels:end",
+          "at": 3447.7000000476837,
+          "resources": {
+            "geometries": 0,
+            "textures": 0,
+            "programs": 0,
+            "owned": 199
+          }
+        },
+        {
+          "stage": "warmAnimalGpu:begin",
+          "at": 3487,
+          "resources": {
+            "geometries": 0,
+            "textures": 0,
+            "programs": 0,
+            "owned": 199
+          }
+        },
+        {
+          "stage": "warmAnimalGpu:end",
+          "at": 4860.5,
+          "resources": {
+            "geometries": 103,
+            "textures": 43,
+            "programs": 40,
+            "owned": 199
+          }
+        },
+        {
+          "stage": "world-load",
+          "at": 7080.899999976158,
+          "resources": {
+            "geometries": 109,
+            "textures": 53,
+            "programs": 46,
+            "owned": 199
+          }
+        },
+        {
+          "stage": "far-ready",
+          "at": 7323.899999976158,
+          "resources": {
+            "geometries": 166,
+            "textures": 55,
+            "programs": 60,
+            "owned": 199
+          }
+        },
+        {
+          "stage": "visible-ready",
+          "at": 7341.100000023842,
+          "resources": {
+            "geometries": 161,
+            "textures": 55,
+            "programs": 60,
+            "owned": 199
+          }
+        }
+      ],
+      "download": null,
+      "camera": {
+        "eye": [
+          76.70247532024266,
+          27.37682490650652,
+          30.57367599590944
+        ],
+        "target": [
+          60,
+          12.20192278906814,
+          0
+        ]
+      },
+      "errors": []
+    }
+  ]
+}
