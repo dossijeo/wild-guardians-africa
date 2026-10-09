@@ -1,0 +1,45 @@
+{
+  "status": "passed",
+  "recordedHead": "0c3ca7a3ed8e530c0b40302fb686927e5e71a178",
+  "sourceFilesMatched": 316,
+  "sourceMismatches": [
+    "src/rendering/scene.js"
+  ],
+  "meaning": "Only the render-scene default far-resource isolation differs; native campaign domain/tool/content sources match.",
+  "result": "victory",
+  "completedNights": 100,
+  "day": 101,
+  "money": 478003,
+  "maximumLiving": 1424,
+  "speciesObserved": 8,
+  "delivered": 21763,
+  "raidsEnded": 106,
+  "unoccupiedFraction": 0.20153333333333334,
+  "activityAcceptance": {
+    "status": "accepted",
+    "measuredFraction": 0.20153333333333334,
+    "policy": {
+      "path": "docs/qa/intensive-acceptance-policy.json",
+      "sha256": "f463ede2279390e14e85fa94845f4b2c10e4970f0f173c32885e3638acc69bf4",
+      "updated": "2026-10-08",
+      "comparison": "strictly-less-than",
+      "maximumFraction": 0.25
+    },
+    "scope": "Activity metric only; does not prove survival, accounting, source fidelity, bad-management loss or complete release acceptance."
+  },
+  "cashflow": {
+    "openingBalance": "1500",
+    "harvestIncome": "1529799",
+    "seedCosts": "816159",
+    "wageCosts": "235590",
+    "repairCosts": "747",
+    "centreCosts": "800",
+    "wallCosts": "0",
+    "otherNet": "0",
+    "operatingCashFlow": "477303",
+    "netCashFlowAfterConstruction": "476503",
+    "endingBalance": "478003"
+  },
+  "snapshotSha256": "d569388fea34ac249b17310fa612cabf4d23506f1e43a3a0af17f45955fcc628",
+  "auditScope": "Downloaded complete original snapshot; native persistence roundtrip, physical picked/crate/delivered state, integer ledger, species seed debits, all daily staffing/deliveries, actual victory after 100 completed nights and no active raid. One biome/culture/seed/policy only; no rendering or physical mobile acceptance."
+}

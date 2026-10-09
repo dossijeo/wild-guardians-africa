@@ -711,3 +711,22 @@ finalizadas, cero victoria y contabilidad/snapshots reconciliados al descargar;
 100hashes de dominio/datos/herramientas coinciden aún con main. No se forzó
 perder Gran Cañón. Acredita posibilidad de derrota por mala gestión; no cierre
 de campaña responsable100noches, toda la matriz, móvil físico ni rendimiento.
+
+
+## Campaña responsable actual100noches —2026-10-09
+
+[Sabana/Mapungubwe, fuente0c3ca7a3](qa/campaign-ci/responsible-100-sabana-mapungubwe-37863639171/README.md)
+terminó en victoria/day101/100noches. Root verifica el snapshot completo,
+roundtrip, contabilidad entera, costes por especie,21.763entregas físicas y
+contratación/entregas en todos los días.106incursiones cerradas, sinraidactivo,
+unaCampaignWon y ceroGameOver.316fuentes siguen exactas conmain salvo
+scene.js por aislamientoGPU posterior; dominio y herramientas sin cambios.
+Pico1.424cultivos vivos/8especies/saldo478.003. Tiempo sinacciones20,1533%
+aprobado en el umbral<25%; elidle temprano deldía1 se conserva.
+
+Acredita una combinación/seed/política nativa, no toda la matriz30, renderer,
+trayectos gráficos, escucha o físico móvil. La campaña histórica9c2db027
+terminada sininforme en día82 sigue sinconsiderarse aprobada. [Cinco jobs
+remotos adicionales](qa/campaign-ci/mapungubwe-expansion-33937b92/README.md)
+expanden Mapungubwe a GranRío/GranCañón/Volcanes/Manglares/Desierto desde
+33937b92, sinCPU/GPU local; no contar dispatch como resultado.
