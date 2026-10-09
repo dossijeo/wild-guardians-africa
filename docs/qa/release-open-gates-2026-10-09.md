@@ -84,6 +84,13 @@ Original rig/material/UV/animation compatibility, convincing in-game multiview
 appearance and final controlled benchmarks remain necessary. Pixel differences
 are diagnostics, not automatic rejection. No experimental asset is promoted.
 
+Root's three native young-maize FrontSide stills confirm actual BACK culling for
+all three colour groups, recognizable maize in day/night/elevated views, and
+released contexts. The standalone archive check passes; shadows remain DoubleSide.
+See [the retained images, original reports and limits](frontside-model-pilot/young-front-native/README.md).
+This is limited AI screening, not full growth/WorldScene coverage, human-user
+approval or the young candidate's own net GPU benefit.
+
 The standby-pruning traveling comparison is negative and stays disabled. Shared
 resident preparation also has a completed root native AB/BA comparison on
 frozen `795f773e`: all four p95 frame intervals are 116.4 ms, with 1004 GPU
