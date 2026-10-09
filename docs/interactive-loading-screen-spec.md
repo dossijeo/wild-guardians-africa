@@ -135,3 +135,7 @@ The user approved the current reference-faithful appearance (V9). Preserve camer
 ### Human correction: perceptible crop focus (after0e52b0ea pair)
 
 The earlier central gain1.025 was rejected as visually insufficient. Preserve the already approved four-maize composition and ornament, but make the centre noticeably brighter and surroundings progressively darker in the same fragment recipes. The candidate gain is1.30 centrally,0.60 at day edges and0.67 at night edges, with a stronger existing haze falloff. No new point light, pass, render target or texture. Native comparison and inspection are required before calling this visually accepted; earlier focus screenshots remain negative evidence. Production readiness/performance gates remain open.
+
+### Human day approval and stronger night focus
+
+The human explicitly approved the daytime v2 appearance: preserve day centre1.30 and exterior0.60 exactly. Night is strengthened to centre1.50 and exterior0.60 with the same three scalar interpolations in the existing crop/soil fragment hook. The haze, sky, camera, ornament and all other approved appearance remain unchanged. New night landscape/portrait captures must be inspected before claiming night acceptance; GPU cost/readiness gates remain open.
