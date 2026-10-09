@@ -15,9 +15,12 @@ test('recorded paid-defense night 31 finishes past fallen workers and intact wal
  const bodies=s.raid.animals,exits=new Map(bodies.map(a=>[a.id,{...a.exit}])),ledger=structuredClone(s.ledger.balance);
  const fallen=s.workers.filter(w=>w.incapacitated).map(w=>({...w}));assert.equal(fallen.length,3);
  const walls=s.structures.filter(t=>t.kind==='wall').map(t=>({id:t.id,hp:t.hp,status:t.status}));
- let moved=false,reloaded=false,steps=0,finalAnimals=bodies;
+ let moved=false,reloaded=false,steps=0,finalAnimals=bodies,vacatedFrozenCrossings=0;
  for(;steps<4000&&s.raid;steps++){
   const before=new Map(s.raid.animals.map(a=>[a.id,{x:a.x,z:a.z,status:a.status}]));
+  // Raid motion precedes worker motion: compare against actual pre-tick bodies,
+  // not historical positions now vacated by native return-route recovery.
+  const fallenBefore=s.workers.filter(w=>w.incapacitated&&w.status!=='home').map(w=>({...w}));
   finalAnimals=s.raid.animals;Game.tick(s,.1,nav);
   const animals=s.raid?.animals??finalAnimals;
   for(const a of animals){
@@ -25,12 +28,15 @@ test('recorded paid-defense night 31 finishes past fallen workers and intact wal
    const distance=Math.hypot(a.x-start.x,a.z-start.z);moved||=distance>1e-8;
    assert.ok(distance<=.38+1e-8,'Keep the original speed bound');
    assert.ok(nav.segmentClear(start,a,a.radius,null,false),'Every swept segment respects native walls, props and terrain');
-   assert.ok(actorSegmentClear(start,a,a,fallen),'No segment traverses an incapacitated worker');
+   if(!actorSegmentClear(start,a,{...a,...start},fallen))vacatedFrozenCrossings++;
+   assert.ok(actorSegmentClear(start,a,{...a,...start},fallenBefore),'No segment traverses an incapacitated worker');
   }
+  for(const old of fallenBefore){const w=s.workers.find(w=>w.id===old.id);assert.ok(actorSegmentClear(old,w,old,animals.filter(a=>a.status!=='gone')),'Returning fallen workers do not cross the current animals');}
   for(let i=0;i<animals.length;i++)for(let j=i+1;j<animals.length;j++)if(animals[i].status!=='gone'&&animals[j].status!=='gone')
    assert.ok(Math.hypot(animals[i].x-animals[j].x,animals[i].z-animals[j].z)>=animals[i].radius+animals[j].radius-1e-8);
   if(steps===50&&s.raid){s=deserialize(serialize(s));nav.setState(s);reloaded=true;}
  }
+ assert.ok(vacatedFrozenCrossings>0,'The frozen-position counterexample is preserved: the worker physically vacates its old location');
  assert.ok(moved);assert.ok(reloaded);assert.equal(s.raid,null,'The recorded incursion must actually finish');
  assert.equal(s.completedNights,31);assert.equal(s.day,32);assert.ok(s.pauses.includes('hiring'));
  assert.deepEqual(s.ledger.balance,ledger);
@@ -127,21 +133,27 @@ test('Recorded paid-defense night 39 actually finishes past fallen workers, incl
  const nav=new Navigation(s.seed,s.biome,profile);nav.setState(s);
  const exits=new Map(s.raid.animals.map(a=>[a.id,{...a.exit}]));
  const fallen=s.workers.filter(w=>w.incapacitated).map(w=>({...w}));
- let reloaded=false,finalAnimals;
+ let reloaded=false,finalAnimals,vacatedFrozenCrossings=0;
  for(let i=0;i<6000&&s.raid;i++){
   const before=new Map(s.raid.animals.map(a=>[a.id,{x:a.x,z:a.z,status:a.status}]));
+  // Raid motion precedes worker motion: compare against actual pre-tick bodies,
+  // not historical positions now vacated by native return-route recovery.
+  const fallenBefore=s.workers.filter(w=>w.incapacitated&&w.status!=='home').map(w=>({...w}));
   finalAnimals=s.raid.animals;Game.tick(s,.1,nav);
   const animals=s.raid?.animals??finalAnimals;
   for(const a of animals){
    const start=before.get(a.id);if(start.status==='gone')continue;
    assert.ok(Math.hypot(a.x-start.x,a.z-start.z)<=.38+1e-8,'Keep native speed');
    assert.ok(nav.segmentClear(start,a,a.radius,null,false),'Respect terrain, props and walls throughout the full raid');
-   assert.ok(actorSegmentClear(start,a,a,fallen),'Do not traverse fallen workers');
+   if(!actorSegmentClear(start,a,{...a,...start},fallen))vacatedFrozenCrossings++;
+   assert.ok(actorSegmentClear(start,a,{...a,...start},fallenBefore),'Do not traverse fallen workers');
   }
+  for(const old of fallenBefore){const w=s.workers.find(w=>w.id===old.id);assert.ok(actorSegmentClear(old,w,old,animals.filter(a=>a.status!=='gone')),'Returning fallen workers do not cross the current animals');}
   for(let a=0;a<animals.length;a++)for(let b=a+1;b<animals.length;b++)if(animals[a].status!=='gone'&&animals[b].status!=='gone')
    assert.ok(Math.hypot(animals[a].x-animals[b].x,animals[a].z-animals[b].z)>=animals[a].radius+animals[b].radius-1e-8);
   if(i===50&&s.raid){s=deserialize(serialize(s));nav.setState(s);reloaded=true;}
  }
+ assert.ok(vacatedFrozenCrossings>0,'The frozen-position counterexample is preserved while live body sweeps remain strict');
  assert.ok(reloaded);assert.equal(s.raid,null);assert.equal(s.completedNights,39);assert.equal(s.day,40);assert.ok(s.pauses.includes('hiring'));
  assert.ok(finalAnimals.every(a=>a.status==='gone'));
  for(const a of finalAnimals)assert.deepEqual({x:a.x,z:a.z},exits.get(a.id));
