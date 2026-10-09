@@ -1,5 +1,11 @@
 # Proposed separate ordinary-command bad decisions (not executed)
 
+**Superseded, unexecuted proposal:** the user's later constraint fixes the centre
+at800 and minimum wage at30. The600-centre arithmetic below is retained only as
+historical context and is not an executable plan. The next requested comparison
+prioritizes progressive hordes and neglect of defences/repairs while preserving
+productive investment, rather than overhiring. No result is claimed here.
+
 Existing responsible H100 and original bad6 remain unchanged controls. No new producer has been created or run. Proposed scenarios have explicit different player decisions, not balance overrides or an edited original test. Same frozen H source, seed712/native world/domain, ordinary commands, wages, growth/water, physical delivery, FIFO and clock. No forced raid, GameOver, ledger balance, crop maturity, coordinates, RNG, clock or outcome assignment.
 
 ## First bounded scenario for review: hire too many, then stop productive investment

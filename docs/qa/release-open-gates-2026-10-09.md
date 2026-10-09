@@ -7,6 +7,47 @@ into current-main acceptance.
 
 ## Current-state update through main 8e1909d8
 
+### Later bounded investigations and user balance constraints
+
+The full-frame worker accessory pilot is now retained with its original native
+reports and six captures in [the visual archive](workers-frontside/native-full-frame-490b/README.md).
+The two day poses fit the actual terrain-protected camera and restore state,
+animation and resource ownership exactly. This is one youngMale and one angle,
+not all-worker/culture acceptance. Its separate original Windows CI failure at
+82% remains preserved.
+
+The unchanged prospective AB/BA GPU protocol then produced
+[a negative useful-benefit result](workers-frontside/native-timing-negative-490b/README.md):
+2,880 valid queries, 24 blocks, original9.3078ms versus candidate9.4743ms,
+paired saving -0.1665ms (-1.789%), with the 95% interval wholly negative.
+Root reran both archive verifiers. CPU recomputation's maximum floating-point
+difference is1.776e-15ms, retained separately; the acceptance threshold and
+negative conclusion are unchanged. Only five crate/hoe aliases were treated;
+worker bodies already use FrontSide. This candidate is not promoted, and this
+bounded endpoint does not justify expanding its repairs or repeating the test.
+
+The next original Windows observation
+[37990903561, source1cc3d0b7](windows-loading-regression/37990903561/review.md)
+fails the original90s gate at85%. Root verified the exact official raw bytes.
+The pending program maps to six V4 bridge Standard/object/resident associations,
+batch6/78. Its observed1.4265s wait at timeout does not explain the entire
+load. Transfers and chunk queues are idle; roughly29.9765s before the app-world
+span remain unattributed. Nested spans are not additive. No shader recipe,
+readiness requirement, driver flag or timeout change is promoted by this archive.
+
+The user now fixes the work-centre price at800 and minimum wage at30 because
+existing tutorial audio names both values. Historical H100 at600 remains
+evidence, but is no longer eligible for integration or current balance acceptance.
+Its22.7867% activity result must be remeasured on a compatible candidate.
+Root also reproduced the six original H poor-policy terminal audits from
+[the byte-preserved archive](economic-candidates-a518/h-bad6-terminal/README.md):
+all six survived ten nights, so the loss gate failed even though accounting,
+physical delivery and summaries passed. No defeat is inferred from low cash.
+The user's preferred next risk comparison is progressive hordes against the
+same productive policy with and without paid defences/repairs; it is not yet
+executed or accepted. The earlier overhiring proposal remains a historical,
+unexecuted plan and does not replace that comparison.
+
 ### Later Windows evidence and its limits
 
 The exact packaged main executable from `2a910b83` now has local original-tester

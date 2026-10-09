@@ -13,6 +13,11 @@
   pero queda descartada para integración. Su 22,7867 % de inactividad no acredita
   el cumplimiento con el centro a 800: hay que volver a medir la candidata
   compatible, incluyendo la posibilidad de perder por mala gestión.
+- Próxima comparación de riesgo solicitada: mantener la economía productiva y
+  estudiar hordas progresivas mediante número/daño de animales. Comparar la misma
+  inversión productiva con defensas/reparaciones pagadas y sin ellas; preservar
+  la protección de las primeras incursiones. La mala gestión prioritaria es
+  descuidar protección y mantenimiento, no provocar pérdidas artificiales.
 
 Este documento conserva entradas cronológicas y candidatos descartados. Sus
 resultados históricos no equivalen a aceptación de main actual. El
@@ -27,8 +32,9 @@ trabajo que aún falta y prevalece sobre las etapas antiguas de esta lista.
 - **Cultivos FrontSide:** la reparación experimental fue sustituida por los
   modelos authored V4 del lab del usuario, integrados mediante PR17. No queda
   pendiente promover el maíz del antiguo experimento. Los trabajadores siguen
-  siendo una categoría independiente, con candidato de accesorios aislado y
-  pendiente de QA visual y beneficio GPU neto.
+  siendo una categoría independiente. El piloto de cinco materiales de accesorios
+  pasó dos poses visuales completas, pero el benchmark neto fue negativo
+  (9,3078 → 9,4743 ms); no activar ni ampliar esa candidata por ese resultado.
   [Revisión de integración](qa/crops-v4-root-integration-review.md).
 - **Carga interactiva:** PR18 está integrada y el compromiso de carga de la
   candidata G fue aceptado por el usuario. El timeout de carga del ejecutable
