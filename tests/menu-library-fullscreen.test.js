@@ -57,7 +57,7 @@ test('actual native starter and gesture handlers retain the SFX guard despite la
  const env=environment({nativeAudio:true});env.open('sfx');
  for(const name of ['pointerdown','keydown','touchstart'])env.gestures.get(name)();
  await Promise.resolve();assert.equal(env.music.plays,0);assert.equal(env.context.musicGestureArmed,true);
- env.close();await Promise.resolve();await Promise.resolve();assert.equal(env.music.plays,1);assert.equal(env.context.musicGestureArmed,false);
+ env.close();await new Promise(resolve=>setImmediate(resolve));assert.equal(env.music.plays,1);assert.equal(env.context.musicGestureArmed,false);
 });
 
 test('actual sanctuary buttons use the full-screen controller, including regenerated menu',()=>{

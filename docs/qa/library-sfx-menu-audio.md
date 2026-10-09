@@ -35,3 +35,10 @@ integration block was refreshed. Unrelated published code remains intact.
 Browser initialization currently fails with os error3, so native/browser
 listening and mobile visual acceptance remain pending. Windows loading and
 horde preparation continue in their independent branches.
+
+The additional real-starter test initially failed (10/11) because two microtask
+flushes did not drain the cross-VM media promise chain. It now observes the next
+event-loop turn before checking successful-play state. The runtime did not
+change for this fixture correction. Commit20773112 was inadvertently pushed
+before that correction; this negative is retained rather than presented as a
+passing source. The corrected complete viewer suite is rerun separately.
