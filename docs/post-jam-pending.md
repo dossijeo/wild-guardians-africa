@@ -1,5 +1,20 @@
 # Tareas pendientes posteriores a la Jam
 
+Solicitudes añadidas el 9 de octubre de 2026:
+
+- Biblioteca: abrir los labs a pantalla completa e integrar su navegación,
+  salida, estilo y adaptación móvil con la interfaz del juego. Integrado en
+  main mediante PR 8, tras QA nativa, 3272 tests de CI y compilación Windows.
+- Espíritu: verificar que ningún avance/cierre automático ocurre antes del
+  final real del audio; conservar salto/cierre manual que detiene la voz.
+  Corrección integrada mediante PR 8; ended español, interrupción manual y
+  fallback verificados. [Evidencia y límites](qa/library-spirit-ended/README.md).
+- Incursiones: tras enfocar al animal, seguir su aproximación hasta la primera
+  entrada en la finca y dejar allí la cámara. Mantener cancelación por control
+  manual y protección de terreno. Implementado en main, con 13 pruebas
+  dirigidas aprobadas y comprobación nativa Gran Cañón/Mapungubwe.
+  [Evidencia y alcance](qa/raid-camera-approach.md).
+
 Criterio vigente de actividad (aclaración explícita del usuario, 2026-10-08):
 tiempo diurno sin acciones **inferior al 25%** aceptado. Sustituye el límite
 anterior del20%, sin alterar valores medidos ni aceptar campañas con otras
@@ -173,7 +188,7 @@ No están activados; generación de fuentes no equivale a aceptación integrada.
 
 [Coste del historial de cultivos aislado](qa/crop-history-comparison/README.md): cuatro calibraciones y ocho pasadas sobre Sabana histórica, estado final completo idéntico. Mediana de medianas CPU por tick 1,860 ms con historial / 1,213 ms excluyendo temporalmente registros muertos; no acredita FPS ni autoriza borrar historial. Próximo candidato: índice de plantas activas con invalidación de ciclo de vida y comparación de nacimientos, muertes, entrega y guardado antes de integrar.
 
-[Campaña intensiva Sabana/Mapungubwe terminada](qa/intensive-sabana-mapungubwe-e461b550/README.md): revisión congelada e461b550, ocho cultivos, 100 noches, entrega física diaria y hasta 1.407 plantas vivas. Archivo y resumen recalculados en main; no equivale a repetir con navegación actual ni completar la matriz. Inactividad de estrategia 18,16% del tiempo diurno, aún por reducir; otras combinaciones y Gran Cañón siguen pendientes.
+[Campaña intensiva Sabana/Mapungubwe terminada](qa/intensive-sabana-mapungubwe-e461b550/README.md): revisión congelada e461b550, ocho cultivos, 100 noches, entrega física diaria y hasta 1.407 plantas vivas. Archivo y resumen recalculados en main; no equivale a repetir con navegación actual ni completar la matriz. Inactividad de estrategia 18,16% del tiempo diurno: cumple el umbral inferior al 25% aprobado por el usuario para esta métrica; otras combinaciones y Gran Cañón siguen pendientes.
 
 [Índice de audio medido en finca renderizada](qa/audio-task-frame-native/README.md): 800 muestras, cuatro continuaciones pagadas con estado/rutas/cues/envíos idénticos. La mediana de audio queda en 0,2 ms en ambos brazos y no aparece mejora consistente de frametime. Observadores con voces null, sin reproducción/descodificación; no extrapolar el ahorro aislado a FPS. Pendiente coste GPU sostenido y poblaciones mayores.
 
@@ -184,6 +199,8 @@ No están activados; generación de fuentes no equivale a aceptación integrada.
 [Índices de audio agrícola diferidos](qa/farm-audio-idle-index/README.md): regadera/contactos omiten la FIFO sin trabajadores actuando, manteniendo limpieza de voces y transporte de cajas. 423 pruebas de audio y build correctos; cuatro lotes CPU por caso muestran ahorro aislado en reposo/caminata/transporte/huida y pequeñas diferencias desfavorables durante actividad. No acredita FPS, reproducción móvil ni cierre del barrido SFX.
 
 ## Barrido completo del catálogo SFX (pedido el 5 de octubre de 2026)
+
+Revalidación sobre `b7d70d4b` (9 de octubre): **99 asignados y 27 reservados/sin asignar en gameplay**. `node tools/audit_sfx_catalog.mjs --check` pasa tras actualizar únicamente hashes de `main.js` y `scene.js`; las 126 filas, rutas y bytes originales no cambiaron en esta revalidación. Los recuentos inferiores son históricos. Esto no acredita escucha ni completa los 27 contextos pendientes.
 
 Recuento contrastado el 7 de octubre sobre `3e6648da`: **96 asignados y 30 sin asignar en gameplay**. `node tools/audit_sfx_catalog.mjs --check` confirma que la matriz de los 126 IDs está vigente y que los 126 originales conservan sus bytes. `node tools/verify_sfx_runtime.mjs` verifica hashes, exportaciones, muestras Opus y paridad de decisiones entre los manifiestos originales/comprimidos. Los SFX 114 (reembolso positivo de muralla) y 115 (contratación con coste positivo) ya están incorporados. El párrafo histórico inferior describe la etapa de 94/32; no es el recuento actual. Siguen pendientes la escucha/contextos restantes y las reservas justificadas: la validación de archivos no demuestra reproducción de cada efecto.
 
@@ -622,3 +639,36 @@ diferencia/max7 como diagnóstico. Control separado con fotograma ordinario prev
 da cero diferencias antes y después; no atribuye la causa del ensayo inicial.
 No acredita continuidad en traveling ni entidades densas/rendimiento. Flags de
 preparación aislada y compilación/waits propios siguen fuera de producción.
+
+
+## Biblioteca a pantalla completa y lecturas que esperan la voz (9 de octubre de 2026)
+
+Encargo del usuario en rama `codex/library-spirit-ended`: reemplazar el iframe flotante por una pantalla Biblioteca integrada, con vuelta explícita, menú, ES/EN y safe areas. Conservar funciones de los cuatro labs. Corregir los caminos automáticos que retiraban lecturas al completar acciones o caducar contexto mientras su voz seguía audible; ended real debe terminar la presentación vigente, sin dar por hechas acciones pendientes ni impedir las reales. Integrado mediante [PR #8](https://github.com/dossijeo/wild-guardians-africa/pull/8), merge `f23b8c48`: 96 pruebas dirigidas PASS, QA CUA de cuatro cargas/vueltas, ES/EN, portrait/landscape, ended español, retención inglesa y cierre/fallback; build/paquete relativo y hashes de 54 voces PASS. Validate Game termina con 3272/3272 tests y Windows compila correctamente; [informes de CI](qa/library-spirit-ended/ci-pr8/README.md). [Evidencias y límites](qa/library-spirit-ended/README.md). Sin publicación itch ni afirmación de estabilidad global.
+
+### Traveling — evidencia temporal ampliada (2026-10-09)
+
+[Ensayo denso 879](qa/native-isolation-temporal/dense-879/README.md), fuente `6b22698e`: cámara 120 unidades, 10 chunks nuevos, 21 subidas aisladas sin cambio del framebuffer y restauración de flags/sombras. 952 huesos cambian bajo muestreo QA de clips originales tras la pose fija nativa; 34 actores preparados y estado lógico intacto. El ensayo anterior 878 queda conservado con su testigo de pose negativo. Esta prueba usa readbacks y renders adicionales: no es benchmark de frametime ni campaña real. Los renders normales posteriores muestran pequeñas diferencias también presentes en el control ordinario; no acredita equivalencia temporal universal. Preparación aislada sigue opt-in hasta completar otros biomas, movimiento real/ataques, móvil y mediciones pareadas.
+
+La campaña histórica congelada `9c2db027` ya no tiene proceso vivo: última jornada 82 y ningún informe terminal en su directorio. [Revalidación y último estado](qa/current-campaign-9c2db027/README.md). No contarla como cien noches aprobadas ni como espera activa. Una futura ejecución debe conservar políticas responsables y malas decisiones, entregas físicas, gastos reales y el umbral aprobado de tiempo sin acciones inferior al 25%; no interferir con los benchmarks GPU.
+
+### Confirmación de colocación guiada — SFX 096
+
+[Integración y evidencia](qa/guided-placement-audio/README.md): confirmación después de colocar correctamente el primer centro/brote con mano 3D visible, una vez por paso y partida. No se recalcula navegación desde input ni se cambia el error 107 de murallas. 27 pruebas dirigidas, compilación, paquete, sintaxis y paridad 126 originales/Opus pasan; WebAudio nativo silenciado verifica dos fuentes y cierre. Recuento actual 100 asignados/26 reservados. Pendientes recorrido real de este cue y escucha/contextos restantes; no afirmar aceptación global de audio.
+
+
+## Evaluación automática del criterio de actividad — 2026-10-09
+
+Los nuevos informes intensivos conservan `unoccupiedFraction` y añaden
+`activity.acceptance` con el límite vigente: estrictamente menos del25%.
+Incluyen hash y fecha de la política aplicada; datos ausentes/invalidos no
+se aprueban. Las matrices conservan el campo histórico de supervivencia
+`campaign100` y muestran un veredicto de actividad independiente, que no
+puede aprobar treinta casos incompletos ni fuentes inconsistentes. Un caso
+observado por encima del límite queda como `not-accepted`.
+
+Siete pruebas dirigidas PASS (516.9ms): límites, datos inválidos, procedencia,
+matrices parciales y análisis contable de un registro real de20noches. Este
+último es un análisis posterior de una captura histórica; no constituye
+una nueva campaña ni valida cien noches de main. No cambia balances,
+estrategia, daño, salarios o relojes. Las campañas completas y mala gestión
+continúan siendo requisitos separados.

@@ -1,0 +1,38 @@
+{
+  "source": "8be777f470ffbf3b594d757d6020ab639794c70f",
+  "tab": "864",
+  "rawSha256": "eb54e1801a1571c73796aa72bc9ecf0d20dbfd81919f34acbd46d222e9959a42",
+  "fixtureSha256": "5d03de145e8f82f569f40b6b2d1ad73667686ca3dbeb35f21ff5dd7bb65b8e54",
+  "roots": {
+    "standby": 108,
+    "native-merged": 101,
+    "other": 12
+  },
+  "frame": {
+    "count": 257,
+    "p50": 50,
+    "p95": 116.40000000000146,
+    "p99": 149.5,
+    "max": 149.70000000000437,
+    "over33": 181,
+    "over50": 120,
+    "over100": 18
+  },
+  "cpu": {
+    "count": 258,
+    "p50": 20,
+    "p95": 30.299999952316284,
+    "p99": 37,
+    "max": 42,
+    "over33": 4,
+    "over50": 0,
+    "over100": 0
+  },
+  "gpu": {
+    "count": 258,
+    "p50": 46.681979,
+    "p95": 68.271978,
+    "max": 79.994791
+  },
+  "scope": "Single diagnostic; not AB/BA or optimization acceptance. Root metadata measures invocation identity, not GPU shader compilation time. No other timed GPU or heavy CPU job; light source/documentation activity possible. Hardware power/thermal conditions not controlled."
+}

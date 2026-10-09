@@ -60,3 +60,12 @@ html[lang="en"] #stage.portrait .hiring-pause span:after{content:none}
 #stage.short .notice-card img{width:56px;height:56px}
 #stage.short .notice-card .life{left:46px}
 #stage.portrait .notices{left:calc(10px + env(safe-area-inset-left));width:min(254px,calc(100vw - var(--action-w) - 30px))}
+
+/* Library labs are complete game screens, with persistent native navigation. */
+.library-viewer{position:fixed;inset:0;height:100dvh;display:grid;grid-template-rows:auto minmax(0,1fr);background:#172c22;color:var(--paper);padding-bottom:env(safe-area-inset-bottom)}
+.library-viewer-header{display:flex;align-items:center;gap:12px;padding:calc(8px + env(safe-area-inset-top)) calc(12px + env(safe-area-inset-right)) 8px calc(12px + env(safe-area-inset-left));background:linear-gradient(110deg,#203629,#3d382d);border-bottom:1px solid #b38c4b80}
+.library-viewer-title{flex:1;min-width:0}.library-viewer-title small{color:#ebc57b;font-size:10px;letter-spacing:.08em}.library-viewer-title h1{font-size:25px;line-height:1.15}
+.library-viewer-header button,.library-viewer-header select{min-height:44px;padding:8px 12px;font-size:14px}.library-viewer-header select{border-radius:8px;color:#203629;background:#f7efd9}
+.library-viewer-frame{display:block;border:0;width:100%;height:100%;min-height:0;background:#172c22}
+@media(max-width:600px){.library-viewer-header{gap:6px;flex-wrap:wrap}.library-viewer-title{order:-1;flex-basis:calc(100% - 100px)}.library-viewer-header select{order:-1}.library-viewer-title h1{font-size:23px}.library-viewer-header button{flex:1}}
+@media(max-height:500px) and (min-width:601px){.library-viewer-title small{display:none}.library-viewer-title h1{font-size:21px}.library-viewer-header{padding-top:calc(4px + env(safe-area-inset-top));padding-bottom:4px}}

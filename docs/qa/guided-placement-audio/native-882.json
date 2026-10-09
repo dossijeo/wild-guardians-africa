@@ -1,0 +1,28 @@
+{
+  "ok": true,
+  "number": 96,
+  "codec": "opus",
+  "url": "http://127.0.0.1:5173/assets/audio/a17f9ee5dce5a703f2d1730388c6a0ba8ab035ffaf8e449ff709d99fadbebf62.opus",
+  "channels": 2,
+  "sampleRate": 48000,
+  "samples": 42240,
+  "requests": [
+    {
+      "id": "spirit_valid",
+      "bus": "ui",
+      "emitter": "ui:guided-placement"
+    },
+    {
+      "id": "spirit_valid",
+      "bus": "ui",
+      "emitter": "ui:guided-placement"
+    }
+  ],
+  "sourcesStarted": 2,
+  "wallIgnored": true,
+  "repeatIgnored": true,
+  "voicesAfterStop": 0,
+  "context": "closed",
+  "silenced": true,
+  "scope": "UI dispatcher with displayed-guide fixture and native decoder. Actual successful gameplay placement and audible mix need separate integration evidence."
+}

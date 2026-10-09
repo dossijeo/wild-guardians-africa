@@ -12,7 +12,10 @@ function recorded(){
  return report;
 }
 test('recorded farm cash reconciles operating and capital flows separately',()=>{
- const report=recorded(),cash=summarizeIntensiveFarm(report).cashflow;
+ const report=recorded(),summary=summarizeIntensiveFarm(report),cash=summary.cashflow;
+ assert.equal(summary.activity.acceptance.measuredFraction,summary.activity.unoccupiedFraction);
+ assert.equal(summary.activity.acceptance.status,summary.activity.unoccupiedFraction<.25?'accepted':'not-accepted');
+ assert.equal(summary.campaign100,'unverified');
  assert.equal(cash.wallCosts,'0');
  assert.equal(BigInt(cash.operatingCashFlow)-BigInt(cash.centreCosts)-BigInt(cash.wallCosts),BigInt(cash.netCashFlowAfterConstruction));
  assert.equal(1500n+BigInt(cash.netCashFlowAfterConstruction),BigInt(cash.endingBalance));

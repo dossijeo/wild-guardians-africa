@@ -51,7 +51,11 @@ export class NativeGuardian {
     this.root.classList.add('visible');
     this.root.dataset.gesture=gesture;this.resize();
     if(blocking)this.button.focus({preventScroll:true});
-    this.voice?.play(spiritVoice(rendered,language),onVoiceEnded);
+    this.voice?.play(spiritVoice(rendered,language),()=>{
+      if(this.disposed||this.key!==key)return;
+      onVoiceEnded?.();
+      if(closeAfter&&this.key===key)this.hide();
+    });
   }
   hide({immediate=false}={}){
     this.voice?.stop();
@@ -67,7 +71,7 @@ export class NativeGuardian {
     const stamp=performance.now(),elapsed=this.lastStamp===null?0:Math.max(0,(stamp-this.lastStamp)/1000);this.lastStamp=stamp;
     this.time+=elapsed;this.age+=elapsed;
     if(this.voice?.duration)this.duration=this.voice.duration;
-    if(this.closeAfter&&!this.voice?.active&&this.age>=this.duration+.9)this.hide();
+    if(this.closeAfter&&(!this.voice||this.voice.status==='fallback')&&this.age>=this.duration+.9)this.hide();
     this.lifecycle.advance(elapsed,this.duration);
     this.root.classList.toggle('leaving',this.lifecycle.phase==='outro');
     if(this.lifecycle.phase==='closed'){this.root.classList.remove('visible','leaving');this.root.classList.add('closed');this.root.dataset.lifecycle='closed';this.root.dataset.phase='closed';this.lastStamp=null;this.present('closed');return;}

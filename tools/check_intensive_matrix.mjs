@@ -7,6 +7,7 @@ import {simulateIntensiveFarm,auditIntensiveFarm} from './check_intensive_farm.m
 import {summarizeIntensiveFarm} from './summarize_intensive_farm.mjs';
 import {serialize} from '../src/persistence/snapshots.js';
 import {intensiveRunProvenance} from './intensive-run-provenance.mjs';
+import {intensiveActivityMatrixAcceptance} from './intensive-activity-acceptance.mjs';
 import {createIntensiveHeartbeat} from './intensive-heartbeat.mjs';
 
 export function runIntensiveMatrix({days=100,seed=712,profile='olderFemale',output,onCase=()=>{}}={}) {
@@ -31,11 +32,12 @@ export function runIntensiveMatrix({days=100,seed=712,profile='olderFemale',outp
       if(!result.daily.every(day=>day.staff>0&&day.delivered>0))throw Error('A workday lacked contracted workers or physical deliveries');
       const summary=summarizeIntensiveFarm({...result,provenance});
       writeFileSync(new URL(key+'-summary.json',output),JSON.stringify(summary,null,2)+'\n');
-      Object.assign(row,{status:'passed',result:result.result,completedNights:result.completedNights,money:result.money,maximumLiving:result.maximumLiving,speciesObserved:summary.speciesObserved,unoccupiedFraction:summary.activity.unoccupiedFraction});
+      Object.assign(row,{status:'passed',result:result.result,completedNights:result.completedNights,money:result.money,maximumLiving:result.maximumLiving,speciesObserved:summary.speciesObserved,unoccupiedFraction:summary.activity.unoccupiedFraction,activityAcceptance:summary.activity.acceptance});
     }catch(error){row.status='failed';row.error={name:error.name,message:error.message};}
     save();onCase(row);
   }
   matrix.campaign100=days===100&&matrix.cases.length===30&&matrix.cases.every(row=>row.status==='passed')?'verified':'unverified';
+  matrix.activityAcceptance=intensiveActivityMatrixAcceptance(matrix.cases);
   save();return matrix;
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href) {

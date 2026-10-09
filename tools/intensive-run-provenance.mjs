@@ -32,6 +32,6 @@ export function intensiveRunProvenance(args){
   scan('src/');
   scan('public/content/');
   scan('content/manifests/');
-  for(const path of ['package-lock.json','tools/check_intensive_farm.mjs','tools/farm-defense-policy.mjs','tools/check_intensive_matrix.mjs','tools/check_intensive_case.mjs','tools/check_intensive_matrix_parallel.mjs','tools/summarize_intensive_farm.mjs','tools/check_opening.mjs','tools/intensive-run-provenance.mjs','tools/intensive-heartbeat.mjs','tools/intensive-blocked-checkpoint.mjs'])sourceHashes[path]=hash(readFileSync(new URL(path,root)));
+  for(const path of ['package-lock.json','tools/check_intensive_farm.mjs','tools/farm-defense-policy.mjs','tools/check_intensive_matrix.mjs','tools/check_intensive_case.mjs','tools/check_intensive_matrix_parallel.mjs','tools/summarize_intensive_farm.mjs','tools/intensive-activity-acceptance.mjs','docs/qa/intensive-acceptance-policy.json','tools/check_opening.mjs','tools/intensive-run-provenance.mjs','tools/intensive-heartbeat.mjs','tools/intensive-blocked-checkpoint.mjs'])sourceHashes[path]=hash(readFileSync(new URL(path,root)));
   return {startedAt:new Date().toISOString(),node:process.version,arguments:args,...gitSourceContext(cwd),trackedChanges:git('diff','--name-only','HEAD').split('\n').filter(Boolean),sourceHashes};
 }

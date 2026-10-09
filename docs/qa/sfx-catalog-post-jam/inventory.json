@@ -3,9 +3,9 @@
   "sourceHashes": {
     "docs/plan/sfx_catalogo_extraido.json": "52f25357ec0eed49f3f6e459f109f16a43eb5bfeacebf2822d11cd1e67c26878",
     "docs/plan/sfx_mapeo_implementacion.json": "c525d20bb9da4f038215d38a0e181cbefebf78c5caecf22d5a190e381378ecd9",
-    "public/content/sfx-routing.json": "d138586a0b8a2776859f56ffa89fef58fdfddf7d6f39216936c8a7395d26b379",
+    "public/content/sfx-routing.json": "c39ba039cde2ff77ef55e8d7fa4748c51d5f139cf29887a538ea61552f9ecae6",
     "public/content/sfx.json": "f4ca1c4444065d9f05a0365e096305fdf3282ec6f58d9377a8610f55538b9bee",
-    "src/app/main.js": "2c71d338805e3fc03c408cd64e612361e5e17e3029aa8ffd40b10035161d499c",
+    "src/app/main.js": "d73cbabf639788c177551c153ab1cb8023e82cb60bbdbacbb029ec1d66c2bf50",
     "src/audio/ambient-audio.js": "e626380b26b39ca39acbf44bb48913dd60bf68a16ea7f991f2e6d7fbb6f4f9e8",
     "src/audio/animal-audio.js": "5e1d90a8110b0fa8e8999c1f48dbde540f60ece9aad51272d2f129fd22abe1b9",
     "src/audio/audio.js": "0cec796e5fe698b1cc192fe75a545a953cfea11ce33126f3ea6c93bc317eafbb",
@@ -16,16 +16,16 @@
     "src/audio/power-ready-audio.js": "89d14cc33e149b4f4574cbe5a554d94bd550425ca342a1bcb24d54ad283c3a77",
     "src/audio/raid-arrival-audio.js": "02e719b9ea457e7a516fce6a011f336d5da9d18dae2fee7eb44d81a67f9181d7",
     "src/audio/structure-audio.js": "0a0f3faf70eea7c4597146880f34a80049c067510ac3f2af5efaaf744274da21",
-    "src/audio/ui-audio.js": "681de79cc7227570b6a90d4cc428ae414cc89a16259c7c777acad0337f854f7e",
+    "src/audio/ui-audio.js": "5ce70f1ae025c9b94652ebe434ccc1d78e4c4c5bbf3922936a167488ab1e9472",
     "src/audio/unlock-audio.js": "0ca86929a579abce2a48afa457f69d4c9aee658c0142566a0645b992a64e6f4c",
     "src/audio/work-audio.js": "4ff3ec8a45bd446d1f0f9606cafb157f3666aedbc1d3d8bbf69ba6c2c9f23d37",
     "src/audio/worker-audio.js": "08f03288dfc052fe07e7b0349aee620d3ece46278abbede81c80200d3ebbdec4",
-    "src/rendering/scene.js": "cd376ab8b11bb44f6922ee031ce00bd1ca0844468675973ed3f0f214d38a4576",
+    "src/rendering/scene.js": "dd23d212668a78315cfbf625235e9ff5e839421f7eb509619ce7d05650984dc1",
     "src/simulation/raids.js": "73793919cc833959e734742c42783b034f4e09bc19629c44cbd1fab6534b9457"
   },
   "total": 126,
-  "assigned": 99,
-  "unassigned": 27,
+  "assigned": 100,
+  "unassigned": 26,
   "groups": {
     "Uso de gameplay previsto / assigned": [
       "amb_wind_soft",
@@ -133,7 +133,6 @@
       "beast_vocal_aggressive",
       "beast_retreat",
       "spirit_move",
-      "spirit_valid",
       "spirit_invalid",
       "ui_sell"
     ],
@@ -152,6 +151,7 @@
       "spirit_touch",
       "spirit_drag",
       "spirit_drop",
+      "spirit_valid",
       "spirit_power_charge",
       "ui_buy",
       "ui_objective_complete",
@@ -2063,10 +2063,16 @@
       "sha256": "6b0fd4066801d95014478ecfe2f67160361ff17bd0e1f4db214df7ee76919b19",
       "planClass": "Alternativa / contextual",
       "plannedAction": "Colocación/interacción válida; feedback distinto de pago.",
-      "runtimeStatus": "unassigned",
-      "codePoints": [],
-      "pendingContext": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
-      "evidence": "Original retained; no runtime assignment. Review the proposed context before binding."
+      "runtimeStatus": "assigned",
+      "codePoints": [
+        {
+          "file": "src/audio/ui-audio.js",
+          "line": 1,
+          "trigger": "ui-guided-placement-confirmed"
+        }
+      ],
+      "pendingContext": null,
+      "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
       "number": 97,

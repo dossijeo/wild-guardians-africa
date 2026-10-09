@@ -1,0 +1,82 @@
+{
+  "base": "f8bc34b592f3899c58190b5e23c2da34cb49536f",
+  "branch": "codex/library-spirit-ended",
+  "sourceFrozenForQa": true,
+  "records": [
+    {
+      "path": "docs/post-jam-pending.md",
+      "sha256": "340ed5918b5e726a4b65450128e8d16a964c64145f86185764ac7ccebb862cc8"
+    },
+    {
+      "path": "public/library.html",
+      "sha256": "5e0b26a35704c1b449abdaa06708cd52b50527878ca989e821d4c523c17c25fb"
+    },
+    {
+      "path": "public/library/integration.js",
+      "sha256": "4b4b1921931772b5819c2c0f62ae621a2531549b0cddca25b4869ac9b250fa8c"
+    },
+    {
+      "path": "src/app/main.js",
+      "sha256": "94c1209588265252363c1cb156f3c62d5ca610d2e04be6426b9869db2f4370bf"
+    },
+    {
+      "path": "src/audio/spirit-voice.js",
+      "sha256": "78cfb1cc809d4bce3e959b063fea657f99d21451e5efec7f9aec178f5718b459"
+    },
+    {
+      "path": "src/tutorial/controller.js",
+      "sha256": "81301b2700522e5b055ffa51a9ccbaa54c49cec49bb45be5ad159309abecf1d3"
+    },
+    {
+      "path": "src/ui/guardian.js",
+      "sha256": "2008fa5c53a72d3a981461e3d221025e23bb315e220da60e7002a87e04f7e8a8"
+    },
+    {
+      "path": "src/ui/library-viewer.js",
+      "sha256": "0913ec57ce4e540a99b21c1d31bef34c68078a58de0d62512df3ea55a89b4514"
+    },
+    {
+      "path": "src/ui/styles.css",
+      "sha256": "5217d6a8b319839959c0e6d02b6d14ff4e99ea15aec92f13251a607938e26818"
+    },
+    {
+      "path": "tests/browser/library-fullscreen.html",
+      "sha256": "24a3a4793a3299b0cd0d1d6b98a5ef75f90643add77ea40ddf3f90f1ed898063"
+    },
+    {
+      "path": "tests/browser/spirit-voices-event-cards.html",
+      "sha256": "67bd86cc69fd2b4d9f1763472f8a7dab8df2df0094e320cccffb6b41a9a8b7ad"
+    },
+    {
+      "path": "tests/spirit-ended-presentation.test.js",
+      "sha256": "0c76daf7d023f2d3327fe5156577e651dc5fbd90169ec311f36c1e74baa32bcf"
+    },
+    {
+      "path": "tests/spirit-voice.test.js",
+      "sha256": "98edee5f77cf2afe7a61de307066e473e6b10848b0ebd8bab9b58707b930afb1"
+    }
+  ],
+  "note": "Uncommitted requested work; commit/push/PR only after full QA. Fixture completion no longer resets actor identity (negative run 869).",
+  "qaSnapshots": [
+    {
+      "tabs": [
+        868,
+        869
+      ],
+      "fixtureSha256": "4131905a1cb7c17e6c773d21ee97d34027be837471a0cb7dbc0c8f3cfdce6db4",
+      "recordsDigest": "ed0f223e1bf06ea1ce527a50f63e3245f4d6eba9bef6f38afacf4be596f523c4",
+      "note": "Negative fixture forced actor.key=null after center action; runtime source hashes identical."
+    },
+    {
+      "tabs": [
+        870,
+        871
+      ],
+      "fixtureSha256": "67bd86cc69fd2b4d9f1763472f8a7dab8df2df0094e320cccffb6b41a9a8b7ad",
+      "recordsDigest": "e6c0423a5056237643be060e74e66eb56963e0d43267e435d86b971c599601eb",
+      "note": "Corrected fixture does not reset actor.key on real center action."
+    }
+  ],
+  "postQaBase": "3832e40d",
+  "postQaChanges": "Documentation-only main sync, task progress/evidence and extra closeAfter tests; runtime records remain exact QA bytes. docs/post-jam-pending.md entry records QA snapshot, not final progress text."
+}

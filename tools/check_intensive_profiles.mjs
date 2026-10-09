@@ -31,7 +31,7 @@ for(const row of matrix.cases){
   const summary=summarizeIntensiveFarm({...result,provenance});write(row.profile+'-summary.json',summary);
   if(result.completedNights!==days||result.result==='defeat')throw Error('Responsible hiring strategy did not finish the requested nights');
   if(!result.daily.every(day=>day.staff>0&&day.delivered>0))throw Error('Workday without contracted labour or physical deliveries');
-  Object.assign(row,{status:'passed',completedNights:result.completedNights,money:result.money,maximumLiving:result.maximumLiving,speciesObserved:summary.speciesObserved,unoccupiedFraction:summary.activity.unoccupiedFraction});
+  Object.assign(row,{status:'passed',completedNights:result.completedNights,money:result.money,maximumLiving:result.maximumLiving,speciesObserved:summary.speciesObserved,unoccupiedFraction:summary.activity.unoccupiedFraction,activityAcceptance:summary.activity.acceptance});
  }catch(error){
   row.status='failed';row.error={name:error.name,message:error.message};process.exitCode=1;
   if(lastState)try{writeFileSync(resolve(directory,row.profile+'-failure-state.json'),serialize(lastState));row.failureSnapshot='validated';}
