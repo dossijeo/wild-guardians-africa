@@ -1,0 +1,94 @@
+{
+  "scope": "Production routing integration. Initial full suite has two retained failures; targeted corrections subsequently pass. Full updated CI not yet observed. Native browser QA did not complete because browser tool failed; no screenshot or all-biome render claim.",
+  "logs": [
+    {
+      "source": "watering-production-directed.log",
+      "archive": "watering-production-directed.log.gz",
+      "bytes": 4610,
+      "sha256": "aee9983b1e05b18009e14b1f054ae8ca6f877c4d09763267970822cd7e7689de"
+    },
+    {
+      "source": "watering-production-final-directed.log",
+      "archive": "watering-production-final-directed.log.gz",
+      "bytes": 4233,
+      "sha256": "295f798409651842cee78d2361256f39697ff5c547980f1f9506c632b5f915ab"
+    },
+    {
+      "source": "watering-production-full-tests.log",
+      "archive": "watering-production-full-tests.log.gz",
+      "bytes": 903278,
+      "sha256": "1df1258163242f364f09c7093b666b84cf7c723b929563b7764450fa0a7f053a"
+    },
+    {
+      "source": "watering-production-failure-recheck.log",
+      "archive": "watering-production-failure-recheck.log.gz",
+      "bytes": 10317,
+      "sha256": "24872540d1ae664c9ef23905dc6130e77b79b45df08981c2dc067611a325811a"
+    },
+    {
+      "source": "watering-production-animal-final.log",
+      "archive": "watering-production-animal-final.log.gz",
+      "bytes": 108,
+      "sha256": "747bc5222a735abfbf4e1804092b96a5829c6f9d5fcb8fcad85167375551fa5c"
+    },
+    {
+      "source": "watering-production-animal-final-resolved.log",
+      "archive": "watering-production-animal-final-resolved.log.gz",
+      "bytes": 4383,
+      "sha256": "e4d5e243c0679d778de9f4b2ec0c49a7bc5558d3b04dd47550e46944146266df"
+    },
+    {
+      "source": "watering-production-build.log",
+      "archive": "watering-production-build.log.gz",
+      "bytes": 2166,
+      "sha256": "125edbaa4aae916fc4464a2503ef7dede316fd6beea6bcf366d4966052f01d76"
+    },
+    {
+      "source": "watering-production-browser-syntax.log",
+      "archive": "watering-production-browser-syntax.log.gz",
+      "bytes": 32271,
+      "sha256": "4fe7332a9ddf2b0321f01106e4cd9d97ad6a222bca69a5d7f36a7036bd519601"
+    },
+    {
+      "source": "watering-production-balance.log",
+      "archive": "watering-production-balance.log.gz",
+      "bytes": 164,
+      "sha256": "a5916f31c7bd8b4f017c9bb4db75eda5d9a632c9c18cbda2bf6b05d2ac48580f"
+    },
+    {
+      "source": "watering-production-web-package.log",
+      "archive": "watering-production-web-package.log.gz",
+      "bytes": 411,
+      "sha256": "d26678c176da9a38c9deabec5aa91c2a3d0ab7ea373d49927b9b95d148ea68f7"
+    },
+    {
+      "source": "watering-production-observer-native.log",
+      "archive": "watering-production-observer-native.log.gz",
+      "bytes": 1904,
+      "sha256": "6798dafa1de18c3fa96621733300ca497ee8847293eae26af013f84c1675c714"
+    },
+    {
+      "source": "watering-production-observer-native-500.log",
+      "archive": "watering-production-observer-native-500.log.gz",
+      "bytes": 1916,
+      "sha256": "736319fecec8712330975f402d7a1f8b03211739a1f445b83853b37adee0b5c4"
+    },
+    {
+      "source": "watering-production-observer-native-500/report.json",
+      "archive": "watering-production-observer-native-500--report.json.gz",
+      "bytes": 2204,
+      "sha256": "dedb5142fa6d1e8cb6b3bbf33c4b12f47fcdf965e2a07c67baee690d42551a46"
+    }
+  ],
+  "sourceHashes": {
+    "src/world/work-points.js": "cb741c085c97c046f6e0e477bb83b6f81c2e953c7c3ed14cf0d4a42920ba7939",
+    "src/world/building-route-shortcut.js": "9542fa1922d60c3f2a08f583f28842d0959ec95532a3333e4cf9f09eb2363ee2",
+    "tools/watering-route-diagnostics.mjs": "6cde4383cbd95c9f68a0161357b29c7a91a47c78856a8d765b032d913a4387b1",
+    "tests/watering-detour.test.js": "33a5a1340f464dea6e2857d41d4a0c883b3615be827eec814ed2148f0dc6efd1",
+    "tests/watering-approach.test.js": "6e785dd5781b65e5fed01e553f5e834de577e20a090e5da4e398e88847d0bf17",
+    "tests/game.test.js": "33f31d40cba26a16f3a5ff27cf691a4c092ce249bcb75c6db25413d4cab4c8c9",
+    "tests/crop-lifecycle.test.js": "a85e54c57d56b5f5afe0f97199d356a9d1280195ec1a915e12e64616637876b0",
+    "tests/animal-terrain-landings.test.js": "36d1e11a3d1c740212474d1d5731c69c04b33ca59398bf3ea5b07b86f03368b4",
+    "tests/watering-route-diagnostics.test.js": "70a7e1b0d7569247ba2031ab4e419ffc9cbae41c32ddaa516ecebfe5158e95d1"
+  }
+}

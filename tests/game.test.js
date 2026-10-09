@@ -15,7 +15,9 @@ test('A route blocked after reservation releases its worker without deleting the
   const s=setup(),worker=s.workers[0];worker.status='idle';worker.x=7.4;worker.z=0;
   const movingNav={...nav,version:1};tick(s,.01,movingNav);assert.equal(worker.status,'walking');
   const task=s.tasks.find(t=>t.id===worker.taskId),balance=numberOf(s.ledger.balance);
-  movingNav.version++;movingNav.path=()=>null;tick(s,.1,movingNav);
+  // The obstruction must reject every physical routing primitive, including
+  // the new pre-A* direct/corner probes, not only the grid-search test double.
+  movingNav.version++;movingNav.path=()=>null;movingNav.segmentClear=()=>false;movingNav.walkable=()=>false;tick(s,.1,movingNav);
   assert.equal(worker.status,'idle');assert.equal(worker.taskId,null);assert.equal(task.workerId,null);assert.equal(task.blocked,true);
   assert.equal(s.plants[0].growth,0);assert.equal(s.plants[0].water[0].status,'due');assert.equal(numberOf(s.ledger.balance),balance);
 });

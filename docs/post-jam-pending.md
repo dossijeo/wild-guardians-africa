@@ -830,3 +830,23 @@ Quedan adaptación del observador QA, regresión completa e inspección en juego
 [Mediciones, estados y límites del ensayo](qa/watering-geometric-preflight/README.md).
 No se declara mejora GPU, aceptación móvil ni solución completa del ritmo
 de campaña a partir de estos ensayos de dominio.
+
+## Biblioteca nativa y preparación geométrica de riego — 2026-10-09
+
+La captura nueva confirmó que la biblioteca del menú nativo todavía embebía
+los labs dentro del panel; la vista alternativa a pantalla completa no estaba
+conectada a esa entrada. La integración real abre ahora una pantalla fija con
+cabecera mínima, pausa el render oculto del menú y libera el iframe al volver.
+10 comprobaciones de controlador/fuentes/resolución pasan. Compilación,
+sintaxis y paquete relativos pasan. El navegador de QA falló antes de obtener
+una captura del visor corregido: la aceptación visual real en ambas orientaciones
+y los cuatro labs queda pendiente, no sustituida por la antigua captura aislada.
+[Evidencia y alcance](qa/library-native-integration/README.md).
+
+El riego incorpora la candidata geométrica previa a A*, con fallback completo.
+La primera suite completa dio3713/3715; se retienen sus dos fallos. Tras adaptar
+la obstrucción del doble de navegación a todos los métodos físicos y verificar
+todos los animales reales de la incursión en vez de un ID histórico, las
+comprobaciones dirigidas pasan. El león histórico conserva su prueba propia.
+El nuevo resultado completo de CI aún debe revisarse.
+[Regresión y archivos originales](qa/watering-geometric-preflight/production/README.md).

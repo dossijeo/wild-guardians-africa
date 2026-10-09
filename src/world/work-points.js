@@ -1,4 +1,5 @@
 import {centerGeometry} from './centers.js';
+import {findBuildingRoute} from './building-route-shortcut.js';
 // Service points outside the same footprints used by Navigation.
 export function repairRoute(worker,target,nav){
   const radius=.28,clearance=.1;
@@ -35,6 +36,19 @@ export function canWaterFrom(worker,plant,nav){
 export function wateringRoute(worker,plant,nav){
   const radius=worker.radius??.28,standOff=(plant.species==='platano'?.65:.45)+radius+.1;
   const angle=Math.atan2(worker.x-plant.x,worker.z-plant.z);
+  // Bounded geometric probe before an expensive A* fallback. Every edge
+  // uses the same native body, terrain, slope and fluid constraints.
+  if(nav.segmentClear&&nav.obstacles){
+    const offsets=[0,1,-1,2,-2,3,-3,4];
+    for(const index of [0,4,1,3,2]){
+      const yaw=angle+offsets[index]*Math.PI/4,destination={x:plant.x+Math.sin(yaw)*standOff,z:plant.z+Math.cos(yaw)*standOff,id:`water-point-${plant.id}-${index}`};
+      if(!canWaterFrom({...destination,radius},plant,nav)||nav.walkable?.(destination.x,destination.z,radius,null,true)===false)continue;
+      if(nav.segmentClear(worker,destination,radius,null,true))return {destination,path:[{x:destination.x,z:destination.z}]};
+      const direct=Math.hypot(destination.x-worker.x,destination.z-worker.z);
+      const path=findBuildingRoute(nav,worker,destination,radius,null,direct*1.5+1);
+      if(path)return {destination,path};
+    }
+  }
   for(const [index,offset] of [0,1,-1,2,-2,3,-3,4].entries()){
     const yaw=angle+offset*Math.PI/4,destination={x:plant.x+Math.sin(yaw)*standOff,z:plant.z+Math.cos(yaw)*standOff,id:`water-point-${plant.id}-${index}`};
     if(!canWaterFrom({...destination,radius},plant,nav))continue;

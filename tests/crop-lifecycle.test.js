@@ -6,6 +6,8 @@ import {createPlant,waterPlant} from '../src/simulation/crops.js';
 import {cropSpec} from '../src/simulation/rules.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {createHash} from 'node:crypto';
+import {readFileSync} from 'node:fs';
+import {gunzipSync} from 'node:zlib';
 import {auditIntensiveFarm} from '../tools/check_intensive_farm.mjs';
 
 test('lifecycle brackets watering and work changes, distinguishes pickup from settled delivery and retains terminal evidence across reloads',()=>{
@@ -33,17 +35,20 @@ test('lifecycle brackets watering and work changes, distinguishes pickup from se
 test('optional higher staffing pays normal wages while the default twelve-plant strategy matches the explicit policy and geometry-only route baseline',()=>{
  const options={days:1,seed:712,profile:'olderMale',mixed:true,middayHiring:true};
  const baseline=simulateIntensiveFarm(options);
- // Historical price/audio references remain archived. Retaining routes on
- // unrelated planting changes task timing: 27 deliveries instead of28 in this
- // opening, not merely an epoch field. Both native economy audits pass; see
- // docs/qa/crop-route-epoch-experiment/golden-baseline before changing this hash.
- // Daily tutorial history is new save metadata. Keep the complete new-state
- // golden and prove that removing only that field restores the old golden:
- // route timing, physical deliveries and economy must remain unchanged.
- assert.equal(createHash('sha256').update(serialize(baseline.state)).digest('hex'),'ce36573de3e88ae8f200f83c5e3c54d9b5f22ebba7aeb65cc631ec1e7516ae05');
+ // Pre-A* geometric watering approaches intentionally shorten physical routes.
+ // Preserve the previous full state and verify the concrete extra delivery,
+ // rather than calling this a metadata-only change or erasing its old golden.
+ const previous=gunzipSync(readFileSync(new URL('../docs/qa/watering-geometric-preflight/watering-abba-fast--0-A-state.json.gz',import.meta.url))).toString();
+ assert.equal(createHash('sha256').update(previous).digest('hex'),'ce36573de3e88ae8f200f83c5e3c54d9b5f22ebba7aeb65cc631ec1e7516ae05');
+ const oldState=deserialize(previous);
+ assert.equal(oldState.crates.filter(c=>c.delivered).length,27);
+ assert.equal(oldState.ledger.balance.n,'409');
+ assert.equal(baseline.counts.CrateDelivered,28);assert.equal(baseline.money,423);
+ assert.equal(baseline.state.crates.filter(c=>c.delivered).length,28);
+ assert.equal(createHash('sha256').update(serialize(baseline.state)).digest('hex'),'d2d067f5aea3cbfc860e720bd119d8a565056a85e2a8adb6bd8642ecfd7b773f');
  assert.deepEqual(baseline.state.tutorial.shownToday,{day:2,ids:[]});
  const historical=structuredClone(baseline.state);delete historical.tutorial.shownToday;
- assert.equal(createHash('sha256').update(serialize(historical)).digest('hex'),'5df191a540b7b584a9d45cf1c20e9f15b80b39e0779c0545bdf92417572de389');
+ assert.equal(createHash('sha256').update(serialize(historical)).digest('hex'),'bd6c05e62b22f091f0ca46d69182bc984ce1c78367ffdfe45122b0bba0fdc70d');
  assert.ok(auditIntensiveFarm(baseline));
  assert.equal(serialize(simulateIntensiveFarm({...options,plantsPerWorker:12}).state),serialize(baseline.state));
  const staffed=simulateIntensiveFarm({...options,plantsPerWorker:8});
