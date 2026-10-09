@@ -1,3 +1,5 @@
+import {HAND_ASSETS} from './hands-native.js';
+
 // Smoke-only observation. Ordinary play installs no bridge or witness.
 // All snapshots are bounded scalar copies; never call readiness methods to observe them.
 const finite=value=>Number.isFinite(value)?value:null;
@@ -33,7 +35,19 @@ export function loadingReadinessSnapshot({world,progress=world?.loadingProgress,
  });
  result.chunks=section(issues,'chunks',()=>{
   const stream=world?.chunkStream;if(!stream)return null;
-  return {queued:finite(stream.queue?.length),busy:Boolean(stream.busy),desired:finite(stream.desired?.size),failed:finite(stream.failed?.size),closed:Boolean(stream.dead),epoch:finite(stream.epoch)};
+  const job=stream.busy,stats=stream.stats??{},waiters=stream.waiters??[];
+  return {queued:finite(stream.queue?.length),busy:Boolean(job),desired:finite(stream.desired?.size),loaded:finite(world?.chunks?.size),failed:finite(stream.failed?.size),closed:Boolean(stream.dead),epoch:finite(stream.epoch),
+   busyJob:job?{id:finite(job.id),epoch:finite(job.epoch),cx:finite(job.cx),cz:finite(job.cz)}:null,
+   created:finite(stats.created),discarded:finite(stats.discarded),fallbacks:finite(stats.fallbacks),
+   waiterCount:waiters.length,waiterMinimums:waiters.slice(0,8).map(waiter=>finite(waiter.minimum)),omittedWaiters:Math.max(0,waiters.length-8),
+   scope:'Existing queue only. whenReady defaults to a nine-chunk subset; outer work may continue. A null waiter minimum denotes idle waiting, not zero required chunks.'};
+ });
+ result.hands=section(issues,'hands',()=>{
+  const hands=world?.hands;if(!hands)return null;
+  const loadedKinds=[],required=Object.keys(HAND_ASSETS);let count=0;
+  for(const kind of hands.textures?.keys()??[]){count++;if(loadedKinds.length<8)loadedKinds.push(text(kind));}
+  return {disposed:Boolean(hands.disposed),loaded:count,loadedKinds,omitted:Math.max(0,count-loadedKinds.length),required:required.length,unadoptedKinds:required.filter(kind=>!loadedKinds.includes(kind)),
+   scope:'Private image texture adoption only; unadopted does not prove a pending request, decode or GPU state. Per-kind await spans combine image delivery/decode and promise scheduling.'};
  });
  result.far=section(issues,'far',()=>{
   const owner=world?.farVegetation;if(!owner)return null;

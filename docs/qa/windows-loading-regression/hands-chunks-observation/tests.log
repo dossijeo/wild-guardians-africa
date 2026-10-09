@@ -1,0 +1,268 @@
+TAP version 13
+# (node:45832) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real worker returns identical native terrain, water and populations in all biomes and transfers terrain, water and ground-mask buffers
+ok 1 - real worker returns identical native terrain, water and populations in all biomes and transfers terrain, water and ground-mask buffers
+  ---
+  duration_ms: 1170.5207
+  ...
+# Subtest: queue dispatches one nearest scored request and ignores late IDs without completing the active job
+ok 2 - queue dispatches one nearest scored request and ignores late IDs without completing the active job
+  ---
+  duration_ms: 1.5768
+  ...
+# Subtest: travel and forced rebuild discard obsolete responses and regenerate the current epoch
+ok 3 - travel and forced rebuild discard obsolete responses and regenerate the current epoch
+  ---
+  duration_ms: 0.4535
+  ...
+# Subtest: worker failure preserves pending work in asynchronous local mode and dispose cancels it
+ok 4 - worker failure preserves pending work in asynchronous local mode and dispose cancels it
+  ---
+  duration_ms: 0.5506
+  ...
+# Subtest: generation and installation failures settle waiters and coordinate mismatches never enter the world
+ok 5 - generation and installation failures settle waiters and coordinate mismatches never enter the world
+  ---
+  duration_ms: 1.0111
+  ...
+# Subtest: scene installs transferred data without regenerating terrain or navigation population on the main thread
+ok 6 - scene installs transferred data without regenerating terrain or navigation population on the main thread
+  ---
+  duration_ms: 61.4615
+  ...
+# Subtest: initial readiness follows the native nine-chunk threshold while the outer queue continues
+ok 7 - initial readiness follows the native nine-chunk threshold while the outer queue continues
+  ---
+  duration_ms: 1.3714
+  ...
+# (node:3108) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Native hand source, reproducible module and all six original textures retain registered hashes
+ok 8 - Native hand source, reproducible module and all six original textures retain registered hashes
+  ---
+  duration_ms: 10.6872
+  ...
+# Subtest: Native tap pivot and motion exactly match V8 across camera orientations
+ok 9 - Native tap pivot and motion exactly match V8 across camera orientations
+  ---
+  duration_ms: 45.0297
+  ...
+# Subtest: Native press pivot and motion exactly match V8 across camera orientations
+ok 10 - Native press pivot and motion exactly match V8 across camera orientations
+  ---
+  duration_ms: 22.547
+  ...
+# Subtest: Native pinch pivot and motion exactly match V8 across camera orientations
+ok 11 - Native pinch pivot and motion exactly match V8 across camera orientations
+  ---
+  duration_ms: 24.6171
+  ...
+# Subtest: Native point pivot and motion exactly match V8 across camera orientations
+ok 12 - Native point pivot and motion exactly match V8 across camera orientations
+  ---
+  duration_ms: 21.0061
+  ...
+# Subtest: Native drag pivot and motion exactly match V8 across camera orientations
+ok 13 - Native drag pivot and motion exactly match V8 across camera orientations
+  ---
+  duration_ms: 25.38
+  ...
+# Subtest: Native open pivot and motion exactly match V8 across camera orientations
+ok 14 - Native open pivot and motion exactly match V8 across camera orientations
+  ---
+  duration_ms: 20.0561
+  ...
+# Subtest: Quad protection catches a building crossing the middle while every corner lies outside its footprint
+ok 15 - Quad protection catches a building crossing the middle while every corner lies outside its footprint
+  ---
+  duration_ms: 0.8129
+  ...
+# Subtest: Target rings, dashed contact lines and drag corridor reuse the original native effect geometry
+ok 16 - Target rings, dashed contact lines and drag corridor reuse the original native effect geometry
+  ---
+  duration_ms: 18.1613
+  ...
+# Subtest: Terrain protection includes interior ridges between low quad corners
+ok 17 - Terrain protection includes interior ridges between low quad corners
+  ---
+  duration_ms: 1.6948
+  ...
+# Subtest: Terrain adapter permits negative elevations and follows moving targets without lifting to world zero
+ok 18 - Terrain adapter permits negative elevations and follows moving targets without lifting to world zero
+  ---
+  duration_ms: 0.6562
+  ...
+# Subtest: Day-one hand targets actionable planting, never asks for automatic harvesting and preserves game state
+ok 19 - Day-one hand targets actionable planting, never asks for automatic harvesting and preserves game state
+  ---
+  duration_ms: 1.2705
+  ...
+# Subtest: Production renderer uses a depth-tested four-vertex quad, follows targets and removes all resources
+ok 20 - Production renderer uses a depth-tested four-vertex quad, follows targets and removes all resources
+  ---
+  duration_ms: 12.4519
+  ...
+# (node:30432) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: six observed and ordinary image requests preserve exact URLs/order/calls, and adoption uses the original textures
+ok 21 - six observed and ordinary image requests preserve exact URLs/order/calls, and adoption uses the original textures
+  ---
+  duration_ms: 9.3839
+  ...
+# Subtest: snapshot distinguishes private hand adoption from observed global transfers without invoking readiness or loading
+ok 22 - snapshot distinguishes private hand adoption from observed global transfers without invoking readiness or loading
+  ---
+  duration_ms: 1.8648
+  ...
+# Subtest: real dispose plus terminal observer clear prevents late adoption/retained rows and disposes each late image exactly once
+ok 23 - real dispose plus terminal observer clear prevents late adoption/retained rows and disposes each late image exactly once
+  ---
+  duration_ms: 0.8293
+  ...
+# Subtest: observer throws/getters throw do not mask the original load failure or change the existing error callback
+ok 24 - observer throws/getters throw do not mask the original load failure or change the existing error callback
+  ---
+  duration_ms: 2.3539
+  ...
+# Subtest: actual nine-chunk readiness resolves with queued outer work; finish observation never treats it as an active original wait
+ok 25 - actual nine-chunk readiness resolves with queued outer work; finish observation never treats it as an active original wait
+  ---
+  duration_ms: 2.5243
+  ...
+# Subtest: bounded scalar snapshots omit waiter objects and crop resources; destroyed owner and missing hands stay explicit
+ok 26 - bounded scalar snapshots omit waiter objects and crop resources; destroyed owner and missing hands stay explicit
+  ---
+  duration_ms: 1.9882
+  ...
+# Subtest: original World.loadReady abort wins while private image loads continue; terminal bridge and hands disposal prevent late adoption
+ok 27 - original World.loadReady abort wins while private image loads continue; terminal bridge and hands disposal prevent late adoption
+  ---
+  duration_ms: 6.0718
+  ...
+# Subtest: snapshot distinguishes real milestones and presentation maturity without scheduling work
+ok 28 - snapshot distinguishes real milestones and presentation maturity without scheduling work
+  ---
+  duration_ms: 5.0392
+  ...
+# Subtest: bounded copies never retain region prototypes, promises, jobs or source arrays
+ok 29 - bounded copies never retain region prototypes, promises, jobs or source arrays
+  ---
+  duration_ms: 1.043
+  ...
+# Subtest: observer faults are contained per section and absent owners remain unknown
+ok 30 - observer faults are contained per section and absent owners remain unknown
+  ---
+  duration_ms: 0.3686
+  ...
+# Subtest: context identity borrows renderer only, skips dead owners and tolerates driver faults
+ok 31 - context identity borrows renderer only, skips dead owners and tolerates driver faults
+  ---
+  duration_ms: 0.5193
+  ...
+# Subtest: span tracker preserves interleaved same-label awaits and prior callback contract
+ok 32 - span tracker preserves interleaved same-label awaits and prior callback contract
+  ---
+  duration_ms: 0.832
+  ...
+# Subtest: tracker contains observation faults but retains original callback exceptions
+ok 33 - tracker contains observation faults but retains original callback exceptions
+  ---
+  duration_ms: 0.4663
+  ...
+# Subtest: tracker bounds active rows and reports omissions without extending waits
+ok 34 - tracker bounds active rows and reports omissions without extending waits
+  ---
+  duration_ms: 0.4846
+  ...
+# Subtest: transfer snapshot reads real LoadingDownloads records without snapshot/refresh/cache assumptions
+ok 35 - transfer snapshot reads real LoadingDownloads records without snapshot/refresh/cache assumptions
+  ---
+  duration_ms: 11.363
+  ...
+# Subtest: bridge normal path and unavailable/failing WeakRef never publish or mutate
+ok 36 - bridge normal path and unavailable/failing WeakRef never publish or mutate
+  ---
+  duration_ms: 0.7961
+  ...
+# (node:46516) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: bridge abort/dispose releases own callback and cannot erase replacement World
+ok 37 - bridge abort/dispose releases own callback and cannot erase replacement World
+  ---
+  duration_ms: 301.5613
+  ...
+# Subtest: failed real World constructor does not install a snapshot owner
+ok 38 - failed real World constructor does not install a snapshot owner
+  ---
+  duration_ms: 6.0211
+  ...
+# Subtest: dead WeakRef and callback replacement remain safe without a strong fallback
+ok 39 - dead WeakRef and callback replacement remain safe without a strong fallback
+  ---
+  duration_ms: 0.6023
+  ...
+# Subtest: bridge observes real actor/chunk/far properties while work remains pending
+ok 40 - bridge observes real actor/chunk/far properties while work remains pending
+  ---
+  duration_ms: 17.3402
+  ...
+# Subtest: bridge publication/connect/presentation faults do not leak ownership or change application exceptions
+ok 41 - bridge publication/connect/presentation faults do not leak ownership or change application exceptions
+  ---
+  duration_ms: 0.5289
+  ...
+# Subtest: bridge registration follows every successful constructor step and original gates stay intact
+ok 42 - bridge registration follows every successful constructor step and original gates stay intact
+  ---
+  duration_ms: 3.8029
+  ...
+# Subtest: early summaries retain bounded selected labels and independent nested intervals without resource references
+ok 43 - early summaries retain bounded selected labels and independent nested intervals without resource references
+  ---
+  duration_ms: 0.4257
+  ...
+# Subtest: early selected-label cap reports omitted events and does not retain arbitrary labels or chunk histories
+ok 44 - early selected-label cap reports omitted events and does not retain arbitrary labels or chunk histories
+  ---
+  duration_ms: 12.9942
+  ...
+# Subtest: application boundary observes success/error once and observer faults never alter original calls
+ok 45 - application boundary observes success/error once and observer faults never alter original calls
+  ---
+  duration_ms: 1.757
+  ...
+# Subtest: terminal release clears early rows and late boundaries cannot repopulate or invoke retained hooks
+ok 46 - terminal release clears early rows and late boundaries cannot repopulate or invoke retained hooks
+  ---
+  duration_ms: 0.7487
+  ...
+# Subtest: selected early records preserve prior hook receiver arguments returns and original exceptions exactly once
+ok 47 - selected early records preserve prior hook receiver arguments returns and original exceptions exactly once
+  ---
+  duration_ms: 0.3479
+  ...
+# Subtest: reconnect uses one tracker, preserves active early blocks, drops old hooks and abort terminates retained callbacks
+ok 48 - reconnect uses one tracker, preserves active early blocks, drops old hooks and abort terminates retained callbacks
+  ---
+  duration_ms: 0.4711
+  ...
+# Subtest: reconnect remains bounded through replacements and guards externally forwarded retained tracker without clobbering ownership
+ok 49 - reconnect remains bounded through replacements and guards externally forwarded retained tracker without clobbering ownership
+  ---
+  duration_ms: 1.3336
+  ...
+# Subtest: rebound hook can deliver an unrelated nested event with original receiver return and exception semantics
+ok 50 - rebound hook can deliver an unrelated nested event with original receiver return and exception semantics
+  ---
+  duration_ms: 0.2932
+  ...
+1..50
+# tests 50
+# suites 0
+# pass 50
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1627.457

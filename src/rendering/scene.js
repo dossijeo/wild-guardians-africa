@@ -178,7 +178,7 @@ export class WorldScene {
     this.chunkStream=new NativeChunkStream(this.nav.config,this.pack.profile,{loaded:()=>this.chunks,onData:data=>this.installChunk(data),onError:error=>this.onError?.(error),onFallback:error=>console.warn('Generación local de chunks:',error.message??error)});
     this.syncChunks();await phase('load-chunks-horizon-ready',()=>this.loadReady(Promise.all([this.chunkStream.whenReady(),this.horizon.whenReady()])));if(this.disposed)throw new Error('Carga de mundo cancelada');this.syncChunks();await milestone('chunks');
     await this.loadReady(this.prepareSavedAnimalRigs(state));loadingSyncWitness(this.onLoadingSpan,'restore-sync',()=>this.sync(0));
-    this.hands=loadingSyncWitness(this.onLoadingSpan,'hands-constructor',()=>new NativeHands(this.scene,(x,z)=>this.nav.field.surface(x,z),{motion:!matchMedia('(prefers-reduced-motion: reduce)').matches,onError:e=>this.onError?.(e)}));
+    this.hands=loadingSyncWitness(this.onLoadingSpan,'hands-constructor',()=>new NativeHands(this.scene,(x,z)=>this.nav.field.surface(x,z),{motion:!matchMedia('(prefers-reduced-motion: reduce)').matches,onError:e=>this.onError?.(e),onLoadingSpan:this.loadingReadinessObservation?.witness}));
     await phase('load-hands-ready',()=>this.loadReady(this.hands.ready));
     await phase('load-active-animal-actors',()=>this.loadReady(this.loadedAnimalActors()));
     if(this.loadingProgress)await phase('load-worker-actors',()=>this.loadReady(this.loadedWorkerActors()));

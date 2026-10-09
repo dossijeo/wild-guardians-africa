@@ -1,0 +1,71 @@
+{
+  "baseline": "ebff2e916f7e996a502689838ba3c773e7ebf5e8",
+  "changed": [
+    {
+      "file": "src/rendering/hands.js",
+      "sha256": "dac058f165afe49e13927494f58df786e9bd6f0b114a072a82e66de8065b1211"
+    },
+    {
+      "file": "src/rendering/scene.js",
+      "sha256": "76c94d66a1e05ecb2ddafc3909bbd50eda139a641cb28f5dfb315269e9461cfa"
+    },
+    {
+      "file": "src/rendering/loading-readiness-snapshot.js",
+      "sha256": "1578faad1029bd078ec720d71dc790ba2476b3b2a9bcb57f90ccfb52fd52dc08"
+    },
+    {
+      "file": "tests/loading-hands-observation.test.js",
+      "sha256": "a29d29efe1e6ddfa8e38647e3007943b4b6e8f713b98274bb0e42ddc3090328e"
+    }
+  ],
+  "unchanged": [
+    {
+      "file": "src/app/main.js",
+      "sha256": "b3f5b8dd4ada493ad41fec5d499e297673b9c09239787a6de206adc1085717ba"
+    },
+    {
+      "file": "src/rendering/chunk-stream.js",
+      "sha256": "cd82962e009960ca28816b5202abe66ec8485d3023c4d2aff1305a97c1f476c8"
+    },
+    {
+      "file": "src/rendering/loading-diorama.js",
+      "sha256": "4e3f28caee6678d89a72cabe3681fdd33c494eb09db11cf22a97f25caf6b226f"
+    },
+    {
+      "file": "src/rendering/loading-programs.js",
+      "sha256": "7b4f05672b3b612e44b901fc396050a008d90e56aacd5f298af6a97cfa7066c5"
+    },
+    {
+      "file": "tools/experiments/compile-gpu-preparation.js",
+      "sha256": "6085d3f898f8d934bef62b2f79a160c9753179cad2db70b82f0c493d1fef1500"
+    },
+    {
+      "file": "src/rendering/loading-yield-budget.js",
+      "sha256": "576ae137b4ef2e156547ca74704c244a2c4891a283a86ee590ca04c972d72c17"
+    },
+    {
+      "file": "src-tauri/smoke.js",
+      "sha256": "9f6e27ad126390e0d3cce356e90645640bf26f719eb0a38a2a68ef2c8d8b0436"
+    },
+    {
+      "file": ".github/workflows/windows.yml",
+      "sha256": "678d02ece3e9a8f93d4abbb61706ca784ca3cd426d42e5a33a8a15e3b551617b"
+    }
+  ],
+  "tests": "50/50 PASS",
+  "normalLoadingGateMs": 90000,
+  "buildOrDispatch": false,
+  "scope": "CPU/source observational review only; SFX scene fingerprint refresh deferred to authorized build preflight.",
+  "evidenceFiles": [
+    {
+      "path": "proposal.md",
+      "bytes": 4719,
+      "sha256": "d9b2e04bb2275ffc7b5806e38378fdd16c8966d9ae0c219440f7ed63739f2d3f"
+    },
+    {
+      "path": "tests.log",
+      "bytes": 13205,
+      "sha256": "dc4c55fc13b6bebb8a7355f53e99b3fee916932013cf5616a3201aa21bc170ff"
+    }
+  ]
+}

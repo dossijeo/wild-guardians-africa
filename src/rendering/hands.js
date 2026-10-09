@@ -1,11 +1,12 @@
 import * as THREE from 'three';
+import {loadingAwaitWitness} from './loading-sync-witness.js';
 import {assetUrl} from './asset-url.js';
 import {HAND_ASSETS,HAND_INFO,HandHints3D,handEffects} from './hands-native.js';
 import {handVisualScale} from './hand-visual-scale.js';
 import {quadTerrainLift} from './hand-terrain.js';
 
 export class NativeHands {
-  constructor(scene,surface,{motion=true,onError=()=>{},textureLoader=new THREE.TextureLoader()}={}){
+  constructor(scene,surface,{motion=true,onError=()=>{},textureLoader=new THREE.TextureLoader(),onLoadingSpan=null}={}){
     this.surface=surface;this.elapsed=0;this.disposed=false;this.key=null;this.route=[];
     this.adapter={objects:new Map(),colliders:[],handMotion:motion,phase:'closed',surfaceAt:surface,
       handRoute:u=>this.routePoint(u),terrainClearance:corners=>quadTerrainLift(corners,surface),
@@ -23,7 +24,9 @@ export class NativeHands {
     }
     this.textures=new Map();const loader=textureLoader;
     this.ready=Promise.all(Object.entries(HAND_ASSETS).map(async([kind,url])=>{
-      const texture=await loader.loadAsync(assetUrl(url));texture.flipY=false;texture.colorSpace=THREE.SRGBColorSpace;
+      // Same image loader/request; the optional smoke witness measures only
+      // its combined delivery/decode await, never physical transport or GPU.
+      const path=assetUrl(url),texture=await (onLoadingSpan?loadingAwaitWitness(onLoadingSpan,'hands-texture:'+kind,()=>loader.loadAsync(path)):loader.loadAsync(path));texture.flipY=false;texture.colorSpace=THREE.SRGBColorSpace;
       if(this.disposed){texture.dispose();return;}this.textures.set(kind,texture);
     })).catch(error=>{if(!this.disposed)onError(error);});
   }
