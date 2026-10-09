@@ -1,0 +1,74 @@
+{
+  "sourceHead": "8ebe283c4f4c78939ca02bc5eb898598da61e09e",
+  "tab": 925,
+  "files": [
+    {
+      "name": "report.json",
+      "bytes": 234556,
+      "sha256": "14bb25a2e2cb76a9a196fe1fb56f03c860d8dc42421946e9f8f52655f9cf62f0"
+    },
+    {
+      "name": "atlas.png",
+      "bytes": 922465,
+      "sha256": "fa78e57e0f302e55eb103cd59747197879856088e77c1ea2c3f3ad7ed557d383"
+    },
+    {
+      "name": "console.json",
+      "bytes": 774,
+      "sha256": "585525d57c26dfb6f8e206174570565cb6e021d35ca488dd5d826f8aacaa46c8"
+    }
+  ],
+  "sourceFiles": [
+    {
+      "name": "tests/browser/frontside-crop-young-leaf-front-review.js",
+      "bytes": 14940,
+      "sha256": "993e0faee076589bd27ee5d7e793d09eb82bd67a979308799691b5135f5dbf19"
+    },
+    {
+      "name": "tools/lib/frontside-young-leaf-front-report.mjs",
+      "bytes": 2475,
+      "sha256": "db09fce1f1e6f17575d0e5d5dce21cf6dcf3b679d1e278e0146dfa4b45c0f15a"
+    },
+    {
+      "name": "tools/lib/frontside-young-leaf-front-review-cases.mjs",
+      "bytes": 466,
+      "sha256": "63d765b28b7a68ed680265d2c47a77faa66da0be4b249fd72e07dba6ae75d210"
+    },
+    {
+      "name": "tools/lib/frontside-shared-leaf-reverse.mjs",
+      "bytes": 4091,
+      "sha256": "291045f79ecad88df8cfe851e6d71f65b34a00be9ac800ba16f3b22ec8158d8c"
+    },
+    {
+      "name": "tools/lib/frontside-human-visual-review.mjs",
+      "bytes": 1287,
+      "sha256": "ca8e73771a6f9cb0c21ab71693942222b40f14aa8f599e674d50bc9e70714314"
+    },
+    {
+      "name": "src/rendering/crop-batch.js",
+      "bytes": 18736,
+      "sha256": "2b7910e16fa9b17aa060b12650056974ce12c35b6df2f0f4447d29542cb251d0"
+    },
+    {
+      "name": "src/rendering/african-toon.js",
+      "bytes": 19158,
+      "sha256": "f576f882d0e1af5ec69137e79aa0f8d0fc2f6639bfa7bd01307821cbd8cdc8f4"
+    }
+  ],
+  "receiptOrigin": "Independent root copy of exported native925 report",
+  "rollingPostAtArchive": {
+    "matches925": false,
+    "caseIndex": 11,
+    "caseId": "young-night",
+    "sha256": "ac788e3109336cabf0ac0a1293276ec373592d0e947bd9a991c6811b274184bc",
+    "meaning": "Rolling POST overwritten by another case before author archive; not copied or reconstructed as925"
+  },
+  "review": {
+    "policy": 3,
+    "reviewer": "Root AI and author AI, retained still only; not human-user review",
+    "scope": "One young FrontSide TRAINING view, shadows DoubleSide isolated",
+    "acceptedScreen": true,
+    "categoryApproval": false,
+    "gpuBenefit": false
+  }
+}

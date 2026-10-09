@@ -1,0 +1,21 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import assert from 'node:assert/strict';
+import {youngLeafFrontReportPrefix} from './lib/frontside-young-leaf-front-report.mjs';
+const out='docs/qa/frontside-model-pilot/young-front-native-925';
+const root='C:/Users/PC/source/repos/wild-guardians-africa/.cache/front-young-925';
+const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
+fs.mkdirSync(out,{recursive:true});
+const files=[];
+function retain(name,bytes){const target=path.join(out,name);if(fs.existsSync(target))assert.equal(sha(fs.readFileSync(target)),sha(bytes),'Refusing to overwrite '+name);else fs.writeFileSync(target,bytes);files.push({name,bytes:bytes.length,sha256:sha(bytes)});}
+const raw=fs.readFileSync(path.join(root,'report.json')),r=JSON.parse(raw);
+assert.equal(youngLeafFrontReportPrefix(r),'crop-young-leaf-front-human');assert.equal(r.viewCaseIndex,0);
+retain('report.json',raw);retain('atlas.png',fs.readFileSync(path.join(root,'atlas.png')));retain('console.json',fs.readFileSync(path.join(root,'console.json')));
+const server=fs.readFileSync('docs/qa/frontside-model-pilot/crop-young-leaf-front-human-selection.json');
+const rolling=JSON.parse(server),samePost=sha(server)===sha(raw);if(samePost)retain('server-report.json',server);
+const sources=['tests/browser/frontside-crop-young-leaf-front-review.js','tools/lib/frontside-young-leaf-front-report.mjs','tools/lib/frontside-young-leaf-front-review-cases.mjs','tools/lib/frontside-shared-leaf-reverse.mjs','tools/lib/frontside-human-visual-review.mjs','src/rendering/crop-batch.js','src/rendering/african-toon.js'];
+const sourceFiles=sources.map(name=>{const b=fs.readFileSync(name);return{name,bytes:b.length,sha256:sha(b)};});
+assert.equal(sourceFiles[0].sha256,'993e0faee076589bd27ee5d7e793d09eb82bd67a979308799691b5135f5dbf19');
+retain('manifest.json',Buffer.from(JSON.stringify({sourceHead:'8ebe283c4f4c78939ca02bc5eb898598da61e09e',tab:925,files,sourceFiles,receiptOrigin:'Independent root copy of exported native925 report',rollingPostAtArchive:{matches925:samePost,caseIndex:rolling.viewCaseIndex,caseId:rolling.viewCaseId,sha256:sha(server),meaning:samePost?'Matching rolling POST retained':'Rolling POST overwritten by another case before author archive; not copied or reconstructed as925'},review:{policy:3,reviewer:'Root AI and author AI, retained still only; not human-user review',scope:'One young FrontSide TRAINING view, shadows DoubleSide isolated',acceptedScreen:true,categoryApproval:false,gpuBenefit:false}},null,2)+'\n'));
+console.log('Preserved native925 raw/POST/PNG/console and frozen source hashes.');

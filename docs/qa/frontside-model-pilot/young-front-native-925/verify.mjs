@@ -1,0 +1,9 @@
+import fs from 'node:fs';import assert from 'node:assert/strict';import crypto from 'node:crypto';
+import {youngLeafFrontReportPrefix} from '../../../../tools/lib/frontside-young-leaf-front-report.mjs';
+const dir=new URL('./',import.meta.url),sha=b=>crypto.createHash('sha256').update(b).digest('hex');
+const m=JSON.parse(fs.readFileSync(new URL('manifest.json',dir)));for(const f of m.files){const b=fs.readFileSync(new URL(f.name,dir));assert.equal(b.length,f.bytes);assert.equal(sha(b),f.sha256);}
+const r=JSON.parse(fs.readFileSync(new URL('report.json',dir)));assert.equal(youngLeafFrontReportPrefix(r),'crop-young-leaf-front-human');assert.equal(r.viewCaseId,'young-training');assert.ok(r.controls.every(c=>c.differentBytes===0));assert.equal(r.comparisons[0].linearRgbMae,0);assert.equal(r.comparisons[0].alphaIoU,1);assert.equal(r.cleanup.errors.length,0);assert.equal(r.contextLost,true);
+const colour=r.colourDrawWitness.filter(d=>d.arm===3);assert.deepEqual(colour.map(d=>d.group),[0,1,2]);assert.deepEqual(colour.map(d=>d.indexCount),[2808,477,477]);assert.ok(colour.every(d=>d.cullEnabled&&d.cullFaceMode===1029&&d.frontFace===2305&&d.materialSide===0&&d.sourceDoubleShaderDefine));assert.ok(r.materialSides.every(m=>m.shadowSides.every(s=>s===2)));assert.equal(r.resources[1].vertices,1921);assert.equal(r.resources[1].triangles,1254);
+const image=fs.readFileSync(new URL('atlas.png',dir));assert.equal(image.subarray(0,8).toString('hex'),'89504e470d0a1a0a');assert.equal(image.readUInt32BE(16),4096);assert.equal(image.readUInt32BE(20),1024);
+const logs=JSON.parse(fs.readFileSync(new URL('console.json',dir)));assert.equal(logs.length,2);assert.ok(logs.every(l=>l.level==='warn'&&l.message.includes('f_environment4')));
+console.log('PASS native925 immutable hashes, exact controls, actual three Front/BACK/CCW colour draws, Double shadows, cleanup and full PNG; only limited AI visual screening.');
