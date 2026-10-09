@@ -21,16 +21,35 @@ export class BrowserSaveRepository {
     this.connection=null;this.pending=Promise.resolve();this.lastCommitted=null;
   }
   open() {
-    if(!this.connection)this.connection=new Promise((resolve,reject)=>{
+    if(this.connection)return this.connection;
+    let failed=false;
+    const connection=new Promise((resolve,reject)=>{
       const request=this.database.open(this.name,1);
+      const fail=error=>{
+        failed=true;
+        if(this.connection===connection)this.connection=null;
+        reject(error);
+      };
       request.onupgradeneeded=()=>request.result.createObjectStore('slots',{keyPath:'slotId'});
-      request.onerror=()=>{this.connection=null;reject(request.error);};
-      request.onblocked=()=>{this.connection=null;reject(Error('El almacenamiento de partidas está ocupado por otra ventana.'));};
+      request.onerror=()=>fail(request.error);
+      // A blocked IDB request remains alive after our caller receives an error.
+      // Close its eventual result instead of leaking an unowned connection.
+      request.onblocked=()=>fail(Error('El almacenamiento de partidas está ocupado por otra ventana.'));
       request.onsuccess=()=>{
-        const db=request.result;db.onversionchange=()=>{db.close();this.connection=null;this.lastCommitted=null;};resolve(db);
+        const db=request.result;
+        if(failed){db.close();return;}
+        db.onversionchange=()=>{
+          db.close();
+          if(this.connection===connection){this.connection=null;this.lastCommitted=null;}
+        };
+        resolve(db);
       };
     });
-    return this.connection;
+    this.connection=connection;
+    // Also recover from synchronous IDB.open errors. Only this request owns
+    // its cache entry; old callbacks must not clear a successful retry.
+    connection.catch(()=>{if(this.connection===connection)this.connection=null;});
+    return connection;
   }
   enqueue(action) {
     const result=this.pending.then(action);this.pending=result.catch(()=>{});return result;

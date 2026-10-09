@@ -130,7 +130,8 @@
       try{if(typeof window.__desktopSmokeWorkerProbe!=='function')throw Error('Native worker probe unavailable');report.checks.workerRenderQa=await window.__desktopSmokeWorkerProbe(fixture.workerRenderQa);const qa=report.checks.workerRenderQa,c=qa.cleanup;if(qa.errors.length||c.errors.length||!c.closed||!c.stateExact||!c.borrowedGeometryAttributesExact||!c.mixerActivityRestored||!qa.coverage.complete||c.borrowedDisposeEvents!==0||c.ownedMaterialsRemaining!==0||!c.rendererRetained)throw Error('Worker QA restoration or runtime error');}
       finally{delete window.__desktopSmokeWorkerProbe;delete window.__desktopSmokeWorkerQa;}
     }
-    if (fixture) report.checks.visibility = await checkVisibility(fixture);
+    if (fixture&&!fixture.workerRenderQa?.enabled) report.checks.visibility = await checkVisibility(fixture);
+    else if(fixture?.workerRenderQa?.enabled)report.checks.visibility={scope:'Not run in directed worker visual fixture; original independent visibility fixture/hidden interval unchanged.'};
     report.checks.saveKeys = Object.keys(localStorage).filter(key => key.startsWith('wild-guardians:'));
     await finish();
   } catch (error) { await finish(error); }

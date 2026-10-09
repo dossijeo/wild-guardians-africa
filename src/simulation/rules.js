@@ -42,7 +42,7 @@ export function compositions(budget,unlocked) {
 export function dawnMinimum(state) {
   const center=state.structures.some(operational);
   const resources=state.plants.some(p=>p.alive)||state.crates.some(c=>!c.delivered);
-  return (center?0:800)+HIRING_RESERVE+(resources?0:Math.min(...B.crops.map(c=>c.plant_cost)));
+  return (center?0:B.work_center.cost)+HIRING_RESERVE+(resources?0:Math.min(...B.crops.map(c=>c.plant_cost)));
 }
 export function structureHealth(kind,material,gate=false) { return kind==='center'?600:gate?wallSpec(material).gate_hp:wallSpec(material).hp; }
 export function collapseThreshold(s) { return s.kind==='center'?s.maxHp*.21:s.maxHp*.2; }

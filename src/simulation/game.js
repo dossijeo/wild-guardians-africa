@@ -13,7 +13,7 @@ import {animalSlopeRecoveryPath} from './animal-slope-recovery.js';
 import {withNavigationQueries} from '../world/navigation-query-scope.js';
 import {BALANCE as B} from './balance.js';
 import {wallVisualAt,recordWallPresentation} from './structure-presentation.js';
-import {rational,multiply,negate,transact,compare,numberOf} from './money.js';
+import {rational,rationalNumber,add,multiply,negate,transact,compare,numberOf} from './money.js';
 import {PROFILES,allocateWorkers,hiringCost,distributeProfiles,contractExpired} from './workforce.js';
 import {spellUnlocked,permission,operational,cropSpec,wallSpec,structureHealth,dawnMinimum,nextRandom,randomInt,villageCost,hitStructure} from './rules.js';
 import {createPlant,advancePlant,waterPlant,isMature,contiguousGroup} from './crops.js';
@@ -77,10 +77,10 @@ export function previewCenter(s,{x,z,yaw=0},nav) {
     const outbound=routes.path(entry,departure,.28,null,true),inbound=outbound&&routes.path(departure,entry,.28,null,true);
     if(!inbound)continue;
     const routeLength=inbound.reduce((length,p,i)=>length+dist(p,i?inbound[i-1]:departure),0);
-    candidates.push({...candidate,footprint,suppress:check.suppress??[],villageId:village.id,routeLength,valid:true,cost:800});
+    candidates.push({...candidate,footprint,suppress:check.suppress??[],villageId:village.id,routeLength,valid:true,cost:B.work_center.cost});
   }
   candidates.sort((a,b)=>a.routeLength-b.routeLength||a.villageId.localeCompare(b.villageId));
-  return candidates[0]??{valid:false,cost:800,reason:buildable?'El centro no tiene un camino válido al poblado':failure??'El centro no tiene un camino válido al poblado'};
+  return candidates[0]??{valid:false,cost:B.work_center.cost,reason:buildable?'El centro no tiene un camino válido al poblado':failure??'El centro no tiene un camino válido al poblado'};
 }
 export function placeStructure(s,id,{kind='center',material='zarzas',gate=false,x,z,yaw=0},nav) {
   if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
@@ -92,7 +92,7 @@ export function placeStructure(s,id,{kind='center',material='zarzas',gate=false,
   const check=draft??(nav.wallPlacement?.({...candidate,material,gate})??nav.placement(x,z,.8));
   if(!check.valid){if(kind==='wall')return false;throw new Error(check.reason);}
   if(kind!=='center'&&kind!=='wall')throw new Error('Construcción desconocida');
-  const cost=kind==='center'?800:wallSpec(material).cost;
+  const cost=kind==='center'?B.work_center.cost:wallSpec(material).cost;
   const maxHp=structureHealth(kind,material,gate),entity={id:`structure-${s.nextId}`,created:s.sequence,kind,material,gate,x,z,yaw,...(kind==='center'?{culture}:{}),maxHp,hp:maxHp,status:'intact',villageId:village?.id,cost,collapseRemaining:0};
   if(kind==='wall'&&!gate)for(const update of planNewWallGates(s,[entity],nav,[],()=>false))Object.assign(entity,update);
   const suppression=entity.autoGate?nav.wallPlacement(entity).suppress??[]:check.suppress??[];
@@ -112,7 +112,8 @@ export function affordableWallStroke(s,material,points){
 export function wallRefund(target){
   if(target.kind!=='wall'||target.hp<=0||target.status==='ruined'||target.status==='collapsing')return rational(0);
   // Native automatic gates can have fractional HP after proportional conversion.
-  const amount=multiply(rational(target.cost),Math.round(Math.min(target.hp,target.maxHp)*1e6),Math.round(target.maxHp*1e6));
+  const health=rationalNumber(Math.min(target.hp,target.maxHp)),maximum=rationalNumber(target.maxHp);
+  const amount=multiply(rational(target.cost),BigInt(health.n)*BigInt(maximum.d),BigInt(health.d)*BigInt(maximum.n));
   return rational((BigInt(amount.n)+BigInt(amount.d)-1n)/BigInt(amount.d));
 }
 function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
@@ -316,7 +317,11 @@ export function recoverDisplacedWorkers(s) {
     }
   }
 }
-export function repairCost(target) {return target.status==='ruined'?rational(target.cost):multiply(rational(target.cost),target.maxHp-target.hp,target.maxHp);}
+export function repairCost(target) {
+  if(target.status==='ruined')return rational(target.cost);
+  const maximum=rationalNumber(target.maxHp),damage=add(maximum,negate(rationalNumber(target.hp)));
+  return multiply(rational(target.cost),BigInt(damage.n)*BigInt(maximum.d),BigInt(damage.d)*BigInt(maximum.n));
+}
 export function dropCarriedCrate(s,worker){
   const crate=s.crates.find(c=>c.id===worker.crateId&&!c.delivered);
   worker.crateId=null;

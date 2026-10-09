@@ -38,3 +38,10 @@ All 48 existing cases remain addressable by unique `caseIndices` in [0,47]; inva
 
 
 Source fingerprint refresh updates only main/scene hashes and caller line offsets from the opt-in integration. Catalogue assignments remain 100, reserves/unassigned 26, all 126 original SFX files byte-exact. The combined worker/catalogue run passed 12/12 (1052ms); syntax and whitespace checks passed. No build, native draw or CI has been dispatched.
+
+
+## Updated base and authentic fixture
+
+Merged main 3a1b398d. Adoption remains before root.add/native registry decoration; the RAF delegation still returns before ordinary game advancement on the current loading architecture. The original default workflow Windows, 90-second genuineReady boundary and independent 300000ms visibility check are unchanged. The new tools/create_desktop_worker_fixture.mjs uses original center/plant/hiring commands on seed712 Gran Cañón and pays Game.hire for one youngMale; no worker/clock/money/task/visibility overrides. It saves immediately after hiring while the worker is not home. workerRenderQa is a tester-only sibling of snapshot, never persisted Game state. Only this directed fixture omits checkVisibility, explicitly reporting not run. This samples existing clips, not physical task reachability.
+
+The initial copied first-night visibility fixture was rejected during source inspection because it would leave the male worker home/hidden. It was never run in GPU. Two draft CPU assertions used assumed wages/balance and failed; corrected contracts now verify original hiringCost and exact ledger sum rather than those incorrect assumptions. All original source/candidate hashes and 48 cases remain unchanged.

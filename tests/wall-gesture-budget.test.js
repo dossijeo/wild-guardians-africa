@@ -44,6 +44,17 @@ test('blocked modules do not consume the release budget; current funds determine
  Game.buildWallChain(s,'release-budget','zarzas',[[0,0],[30,0]],obstacleNav,{maxPieces:Game.wallCapacity(s,'zarzas'),smooth:false,snap:false});
  const walls=s.structures.filter(p=>p.kind==='wall');assert.equal(walls.length,2);assert.ok(walls.every(p=>p.x>8));assert.equal(numberOf(s.ledger.balance),30);assert.ok(checks>2);assert.notEqual(serialize(s),before);
 });
+
+test('fractional gate refund retains positive residual health until whole-coin settlement',()=>{
+ const s=fixture(1000);Game.placeStructure(s,'gate',{kind:'wall',material:'empalizada',gate:true,x:10,z:0},nav);
+ const gate=s.structures.at(-1);gate.hp=1e-7;gate.status='damaged';
+ const restored=deserialize(serialize(s)),saved=restored.structures.find(p=>p.id===gate.id);
+ assert.equal(saved.hp,1e-7);assert.equal(numberOf(Game.wallRefund(saved)),1);
+ const before=numberOf(restored.ledger.balance);
+ Game.removeWall(restored,'fractional-remove',saved.id,nav);
+ assert.equal(numberOf(restored.ledger.balance),before+1);
+ assert.equal(Game.removeWall(restored,'fractional-remove',saved.id,nav),false);
+});
 test('an entirely blocked stroke makes no payment and changes no saved state',()=>{
  const s=fixture(1000),before=serialize(s),blocked={...nav,wallPlacement:()=>({valid:false,suppress:[]})};
  assert.equal(Game.buildWallChain(s,'blocked','zarzas',[[0,0],[20,0]],blocked,{maxPieces:Game.wallCapacity(s,'zarzas')}),false);

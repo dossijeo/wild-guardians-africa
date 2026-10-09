@@ -4,7 +4,8 @@ const sendProduction=(action,detail={})=>parent.postMessage({type:'wild-guardian
 let productionLabViewer=null;
 function closeProductionLab(){
  if(!productionLabViewer)return;
- const {root,frame,inert,trigger}=productionLabViewer;
+ const {root,frame,inert,trigger,childDocument,childKeydown}=productionLabViewer;
+ childDocument?.removeEventListener('keydown',childKeydown);frame.onload=null;
  frame.src='about:blank';root.remove();productionLabViewer=null;
  for(const [element,value] of inert)if(element.isConnected)element.inert=value;
  lastFrame=performance.now();trigger?.focus({preventScroll:true});
@@ -21,7 +22,24 @@ function openProductionLab(key,title,trigger){
  header.append(backButton,heading,homeButton);root.append(header,frame);
  const inert=Array.from(document.body.children,element=>[element,element.inert]);
  for(const [element] of inert)element.inert=true;
- productionLabViewer={root,frame,inert,trigger};document.body.append(root);backButton.focus({preventScroll:true});
+ productionLabViewer={root,frame,inert,trigger};
+ frame.onload=()=>{
+  if(productionLabViewer?.frame!==frame)return;
+  const viewer=productionLabViewer;
+  viewer.childDocument?.removeEventListener('keydown',viewer.childKeydown);
+  viewer.childDocument=frame.contentDocument;
+  viewer.childKeydown=event=>{
+   if(event.key!=='Escape')return;
+   // Wait for all lab handlers, even those installed later on this document.
+   queueMicrotask(()=>{
+    if(productionLabViewer?.frame!==frame||event.defaultPrevented)return;
+    event.preventDefault();closeProductionLab();
+   });
+  };
+  // Consumed Escape stays local; deferred callbacks retain the frame guard.
+  viewer.childDocument?.addEventListener('keydown',viewer.childKeydown);
+ };
+ document.body.append(root);backButton.focus({preventScroll:true});
 }
 document.addEventListener('keydown',event=>{
  if(!productionLabViewer)return;
@@ -48,18 +66,20 @@ renderPanel=function(id){
   $$('[data-production-lab]').forEach(button=>button.onclick=()=>openProductionLab(button.dataset.productionLab,button.textContent.replace(/\s*→\s*$/,''),button));
  }
  if(id==='options'){
-  panel.insertAdjacentHTML('beforeend','<div class="rule"></div><h2>Audio del juego</h2><label class="control">Sonidos<input id="production-sfx" type="range" min="0" max="1" step=".05"></label><label class="control">Música<input id="production-music" type="range" min="0" max="1" step=".05"></label><label class="field"><span>Calidad del juego</span><select id="production-quality"><option value="muy_baja">Muy baja</option><option value="baja">Baja</option><option value="media">Media</option><option value="alta">Alta</option></select></label>');sendProduction('request-settings');
-  for(const id of ['production-sfx','production-music','production-quality'])$('#'+id).oninput=()=>sendProduction('settings-change',{settings:{sfx:Number($('#production-sfx').value),music:Number($('#production-music').value),quality:$('#production-quality').value}});
+  panel.insertAdjacentHTML('afterbegin','<label class="field"><span>Idioma</span><select data-language-select id="menu-language"><option value="en">English</option><option value="es">Español</option></select></label>');$('#menu-language').value=window.WildGuardiansLanguage?.getLanguage()??'en';
+  panel.insertAdjacentHTML('beforeend','<div class="rule"></div><h2>Audio del juego</h2><label class="control">Sonidos<input id="production-sfx" type="range" min="0" max="1" step=".05"></label><label class="control">Música<input id="production-music" type="range" min="0" max="1" step=".05"></label><label class="field"><span>Calidad del juego</span><select id="production-quality"><option value="muy_baja">Muy baja</option><option value="baja">Baja</option><option value="media">Media</option><option value="alta">Alta</option></select></label><label class="field"><span>Resolución del mundo</span><select id="production-resolution"><option value="profile">Según calidad</option><option value="economy">Ahorro</option><option value="low">Ahorro alto</option><option value="minimum">Ahorro máximo</option></select></label><p>Reduce la nitidez del mundo 3D; el HUD conserva su resolución.</p>');sendProduction('request-settings');
+  for(const id of ['production-sfx','production-music','production-quality','production-resolution'])$('#'+id).oninput=()=>sendProduction('settings-change',{settings:{sfx:Number($('#production-sfx').value),music:Number($('#production-music').value),quality:$('#production-quality').value,resolution:$('#production-resolution').value}});
  }
 };
 window.addEventListener('message',event=>{
  if(event.origin!==location.origin)return;
  if(event.source===parent&&event.data?.type==='wild-guardians:menu-data'){
   if(event.data.slots&&$('#production-saves')){
-   $('#production-saves').innerHTML=event.data.slots.length?event.data.slots.map(slot=>`<div class="savecard"><strong>${esc(slot.cultureName)}</strong><span>Día ${slot.day} · ${esc(slot.biomeName)} · ${esc(slot.money)} monedas</span><button class="secondary" data-production-save="${esc(slot.slotId)}">Continuar →</button></div>`).join(''):'<p class="lede">Todavía no hay poblados guardados.</p>';
+   $('#production-saves').innerHTML=event.data.slots.length?event.data.slots.map(slot=>`<div class="savecard"><strong>${esc(slot.cultureName)}</strong><span>Día ${slot.day} · ${esc(slot.biomeName)} · ${esc(slot.money)} monedas</span><button class="secondary" data-production-save="${esc(slot.slotId)}">Continuar →</button><button class="secondary" data-production-delete="${esc(slot.slotId)}">Eliminar partida</button></div>`).join(''):'<p class="lede">Todavía no hay poblados guardados.</p>';
    $$('[data-production-save]').forEach(button=>button.onclick=()=>sendProduction('load-slot',{slotId:button.dataset.productionSave}));
+   $$('[data-production-delete]').forEach(button=>button.onclick=()=>sendProduction('delete-slot',{slotId:button.dataset.productionDelete}));
   }
-  if(event.data.settings&&$('#production-sfx')){const settings=event.data.settings;$('#production-sfx').value=settings.sfx;$('#production-music').value=settings.music;$('#production-quality').value=settings.quality;}
+  if(event.data.settings&&$('#production-sfx')){const settings=event.data.settings;$('#production-sfx').value=settings.sfx;$('#production-music').value=settings.music;$('#production-quality').value=settings.quality;$('#production-resolution').value=settings.resolution??'profile';}
  }
  const frame=$('#panel iframe.production-section');
  if(event.source===frame?.contentWindow&&event.data?.type==='wild-guardians:selector'){
