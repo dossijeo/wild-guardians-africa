@@ -25,7 +25,16 @@ locations so that the former false-positive scenario remains exercised.
 The head's Validate Game check passed in run `37884643790`. Windows build,
 executable/installer checks and packaged WebView2 smoke passed in run
 `37884643794`; native minimization/restoration was still running when inspected.
-Merge approval and root post-merge regressions remain pending that final check.
+The final Windows check subsequently passed. Root merged the exact reviewed
+head as `4207bb16e656f7dcd4a1b4a1a5d77c6fb93b5b6a` and pulled main.
+
+On that merged source, root ran the five directed files for animal clearance,
+saved Desert incursions, paid defence/retreat, returning-worker routing and
+worker clearance: **45/45 PASS**, exit 0, 41,954.2058 ms. The complete output is
+[archived here](desert-raid-connectivity/root-merged-4207bb16/tests.log).
+The current 126-SFX catalogue check also passed: 100 assigned, 26 unassigned
+reservations/alternatives/exceptions, original bytes exact and inventory fresh.
+These checks ran after the loading ABBA released its CPU/GPU reservation.
 
 Original failure records and agent replay evidence remain in the PR. Three
 bounded saved-incursion recoveries do not establish responsible hundred-night
