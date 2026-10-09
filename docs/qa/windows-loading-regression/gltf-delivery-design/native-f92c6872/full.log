@@ -1,0 +1,831 @@
+windows	Set up job	﻿2026-10-09T23:03:57.8242071Z Current runner version: '2.337.0'
+windows	Set up job	2026-10-09T23:03:57.8298937Z ##[group]Runner Image Provisioner
+windows	Set up job	2026-10-09T23:03:57.8299771Z Hosted Compute Agent
+windows	Set up job	2026-10-09T23:03:57.8300330Z Version: 20260901.588
+windows	Set up job	2026-10-09T23:03:57.8300911Z Commit: f88ec8081b781fac6c440065ac7ff9e710ce3d0b
+windows	Set up job	2026-10-09T23:03:57.8301603Z Build Date: 2026-09-01T19:56:44Z
+windows	Set up job	2026-10-09T23:03:57.8302224Z Worker ID: {cb8c6664-24ac-4b40-ba09-a53bd21cf9ac}
+windows	Set up job	2026-10-09T23:03:57.8302901Z Azure Region: northcentralus
+windows	Set up job	2026-10-09T23:03:57.8303443Z ##[endgroup]
+windows	Set up job	2026-10-09T23:03:57.8304703Z ##[group]Operating System
+windows	Set up job	2026-10-09T23:03:57.8305362Z Microsoft Windows Server 2025
+windows	Set up job	2026-10-09T23:03:57.8305917Z 10.0.26100
+windows	Set up job	2026-10-09T23:03:57.8306375Z Datacenter
+windows	Set up job	2026-10-09T23:03:57.8306871Z ##[endgroup]
+windows	Set up job	2026-10-09T23:03:57.8307343Z ##[group]Runner Image
+windows	Set up job	2026-10-09T23:03:57.8308212Z Image: windows-2025-vs2026
+windows	Set up job	2026-10-09T23:03:57.8308766Z Version: 20260925.250.1
+windows	Set up job	2026-10-09T23:03:57.8309828Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20260925.250/images/windows/Windows2025-VS2026-Readme.md
+windows	Set up job	2026-10-09T23:03:57.8311744Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20260925.250
+windows	Set up job	2026-10-09T23:03:57.8312706Z ##[endgroup]
+windows	Set up job	2026-10-09T23:03:57.8313978Z ##[group]GITHUB_TOKEN Permissions
+windows	Set up job	2026-10-09T23:03:57.8315789Z Contents: read
+windows	Set up job	2026-10-09T23:03:57.8316355Z Metadata: read
+windows	Set up job	2026-10-09T23:03:57.8316864Z ##[endgroup]
+windows	Set up job	2026-10-09T23:03:57.8318824Z Secret source: Actions
+windows	Set up job	2026-10-09T23:03:57.8319770Z Cache mode: write
+windows	Set up job	2026-10-09T23:03:57.8320448Z Prepare workflow directory
+windows	Set up job	2026-10-09T23:03:57.8771524Z Prepare all required actions
+windows	Set up job	2026-10-09T23:03:57.8845786Z Getting action download info
+windows	Set up job	2026-10-09T23:03:58.0851687Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+windows	Set up job	2026-10-09T23:03:58.2191219Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+windows	Set up job	2026-10-09T23:03:58.3892552Z Download action repository 'dtolnay/rust-toolchain@stable' (SHA:686976e191b89faba57d3206551f0f330d8cb249)
+windows	Set up job	2026-10-09T23:03:58.5275054Z Download action repository 'swatinem/rust-cache@v2' (SHA:6323deb102c322ba6fcbdcafc7e3dddab59af2b6)
+windows	Set up job	2026-10-09T23:03:58.8271821Z Download action repository 'actions/upload-artifact@v7' (SHA:cf430e030ddbb5b0abf93d22962f4752f3646cd9)
+windows	Set up job	2026-10-09T23:03:59.1485593Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+windows	Set up job	2026-10-09T23:03:59.6552286Z Complete job name: windows
+windows	Run actions/checkout@v4	﻿2026-10-09T23:03:59.8481154Z ##[group]Run actions/checkout@v4
+windows	Run actions/checkout@v4	2026-10-09T23:03:59.8482994Z with:
+windows	Run actions/checkout@v4	2026-10-09T23:03:59.8484215Z   repository: dossijeo/wild-guardians-africa
+windows	Run actions/checkout@v4	2026-10-09T23:03:59.8498855Z   token: ***
+windows	Run actions/checkout@v4	2026-10-09T23:03:59.8500026Z   ssh-strict: true
+windows	Run actions/checkout@v4	2026-10-09T23:03:59.8501156Z   ssh-user: git
+windows	Run actions/checkout@v4	2026-10-09T23:03:59.8502364Z   persist-credentials: true
+windows	Run actions/checkout@v4	2026-10-09T23:03:59.8503667Z   clean: true
+windows	Run actions/checkout@v4	2026-10-09T23:03:59.8504884Z   sparse-checkout-cone-mode: true
+windows	Run actions/checkout@v4	2026-10-09T23:03:59.8506337Z   fetch-depth: 1
+windows	Run actions/checkout@v4	2026-10-09T23:03:59.8507582Z   fetch-tags: false
+windows	Run actions/checkout@v4	2026-10-09T23:03:59.8508819Z   show-progress: true
+windows	Run actions/checkout@v4	2026-10-09T23:03:59.8510390Z   lfs: false
+windows	Run actions/checkout@v4	2026-10-09T23:03:59.8511506Z   submodules: false
+windows	Run actions/checkout@v4	2026-10-09T23:03:59.8512703Z   set-safe-directory: true
+windows	Run actions/checkout@v4	2026-10-09T23:03:59.8514144Z   allow-unsafe-pr-checkout: false
+windows	Run actions/checkout@v4	2026-10-09T23:03:59.8515936Z ##[endgroup]
+windows	Run actions/checkout@v4	2026-10-09T23:04:00.0062213Z Syncing repository: dossijeo/wild-guardians-africa
+windows	Run actions/checkout@v4	2026-10-09T23:04:00.0065295Z ##[group]Getting Git version info
+windows	Run actions/checkout@v4	2026-10-09T23:04:00.0066654Z Working directory is 'D:\a\wild-guardians-africa\wild-guardians-africa'
+windows	Run actions/checkout@v4	2026-10-09T23:04:00.1208880Z [command]"C:\Program Files\Git\bin\git.exe" version
+windows	Run actions/checkout@v4	2026-10-09T23:04:00.5831668Z git version 2.55.0.windows.5
+windows	Run actions/checkout@v4	2026-10-09T23:04:00.5888180Z ##[endgroup]
+windows	Run actions/checkout@v4	2026-10-09T23:04:00.5910068Z Temporarily overriding HOME='D:\a\_temp\2761afc6-ef28-430d-8a7f-3ff27119b9bd' before making global git config changes
+windows	Run actions/checkout@v4	2026-10-09T23:04:00.5920047Z Adding repository directory to the temporary git global config as a safe directory
+windows	Run actions/checkout@v4	2026-10-09T23:04:00.5925586Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\wild-guardians-africa\wild-guardians-africa
+windows	Run actions/checkout@v4	2026-10-09T23:04:00.6697209Z Deleting the contents of 'D:\a\wild-guardians-africa\wild-guardians-africa'
+windows	Run actions/checkout@v4	2026-10-09T23:04:00.6703262Z ##[group]Initializing the repository
+windows	Run actions/checkout@v4	2026-10-09T23:04:00.6712620Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\wild-guardians-africa\wild-guardians-africa
+windows	Run actions/checkout@v4	2026-10-09T23:04:00.7607910Z Initialized empty Git repository in D:/a/wild-guardians-africa/wild-guardians-africa/.git/
+windows	Run actions/checkout@v4	2026-10-09T23:04:00.7656931Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/dossijeo/wild-guardians-africa
+windows	Run actions/checkout@v4	2026-10-09T23:04:00.8358486Z ##[endgroup]
+windows	Run actions/checkout@v4	2026-10-09T23:04:00.8361765Z ##[group]Disabling automatic garbage collection
+windows	Run actions/checkout@v4	2026-10-09T23:04:00.8368315Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+windows	Run actions/checkout@v4	2026-10-09T23:04:00.8667778Z ##[endgroup]
+windows	Run actions/checkout@v4	2026-10-09T23:04:00.8669612Z ##[group]Setting up auth
+windows	Run actions/checkout@v4	2026-10-09T23:04:00.8681056Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+windows	Run actions/checkout@v4	2026-10-09T23:04:00.8979828Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+windows	Run actions/checkout@v4	2026-10-09T23:04:02.4585218Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+windows	Run actions/checkout@v4	2026-10-09T23:04:02.4897030Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+windows	Run actions/checkout@v4	2026-10-09T23:04:03.0551098Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+windows	Run actions/checkout@v4	2026-10-09T23:04:03.0876097Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+windows	Run actions/checkout@v4	2026-10-09T23:04:03.6738990Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+windows	Run actions/checkout@v4	2026-10-09T23:04:03.7064829Z ##[endgroup]
+windows	Run actions/checkout@v4	2026-10-09T23:04:03.7066131Z ##[group]Fetching the repository
+windows	Run actions/checkout@v4	2026-10-09T23:04:03.7078188Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +f92c6872c5974523a7843f456713307ddb746400:refs/remotes/origin/codex/windows-readiness-observation
+windows	Run actions/checkout@v4	2026-10-09T23:04:40.4382381Z From https://github.com/dossijeo/wild-guardians-africa
+windows	Run actions/checkout@v4	2026-10-09T23:04:40.4383337Z  * [new ref]         f92c6872c5974523a7843f456713307ddb746400 -> origin/codex/windows-readiness-observation
+windows	Run actions/checkout@v4	2026-10-09T23:04:40.4425208Z ##[endgroup]
+windows	Run actions/checkout@v4	2026-10-09T23:04:40.4426091Z ##[group]Determining the checkout info
+windows	Run actions/checkout@v4	2026-10-09T23:04:40.4428466Z ##[endgroup]
+windows	Run actions/checkout@v4	2026-10-09T23:04:40.4438073Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+windows	Run actions/checkout@v4	2026-10-09T23:04:40.4872957Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+windows	Run actions/checkout@v4	2026-10-09T23:04:40.5167013Z ##[group]Checking out the ref
+windows	Run actions/checkout@v4	2026-10-09T23:04:40.5176140Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B codex/windows-readiness-observation refs/remotes/origin/codex/windows-readiness-observation
+windows	Run actions/checkout@v4	2026-10-09T23:04:41.5868413Z Updating files:   8% (1185/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:41.6857140Z Updating files:   9% (1206/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:41.7707138Z Updating files:  10% (1340/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:41.8315068Z Updating files:  11% (1474/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:41.9235405Z Updating files:  12% (1608/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:41.9833157Z Updating files:  13% (1742/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:42.1041188Z Updating files:  14% (1876/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:42.1738468Z Updating files:  15% (2010/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:42.2669806Z Updating files:  16% (2144/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:42.3289498Z Updating files:  17% (2278/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:42.3849945Z Updating files:  18% (2412/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:42.4388383Z Updating files:  19% (2546/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:42.4925105Z Updating files:  20% (2680/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:42.5616091Z Updating files:  21% (2814/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:42.5784305Z Updating files:  22% (2948/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:42.6369417Z Updating files:  22% (2990/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:42.7082329Z Updating files:  23% (3082/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:42.8037936Z Updating files:  24% (3216/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:42.8934128Z Updating files:  25% (3350/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:42.9670794Z Updating files:  26% (3484/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:43.0480904Z Updating files:  27% (3618/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:43.1083903Z Updating files:  28% (3752/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:43.1672260Z Updating files:  29% (3886/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:43.2449180Z Updating files:  30% (4020/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:43.3148206Z Updating files:  31% (4154/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:43.4072917Z Updating files:  32% (4288/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:43.5069515Z Updating files:  33% (4422/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:43.5963993Z Updating files:  34% (4556/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:43.6386628Z Updating files:  34% (4671/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:43.6948963Z Updating files:  35% (4690/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:43.7525946Z Updating files:  36% (4824/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:43.8047099Z Updating files:  37% (4958/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:44.0046413Z Updating files:  38% (5092/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:44.0660320Z Updating files:  39% (5226/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:44.1489308Z Updating files:  40% (5360/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:44.2306526Z Updating files:  41% (5494/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:44.2797166Z Updating files:  42% (5628/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:44.3400965Z Updating files:  43% (5762/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:44.4684834Z Updating files:  44% (5896/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:44.5623864Z Updating files:  45% (6030/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:44.5965711Z Updating files:  46% (6164/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:44.6815012Z Updating files:  46% (6211/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:44.7962509Z Updating files:  47% (6298/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:44.8712198Z Updating files:  48% (6432/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:45.0247761Z Updating files:  49% (6566/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:45.1105139Z Updating files:  50% (6699/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:45.2275624Z Updating files:  51% (6833/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:45.3662213Z Updating files:  52% (6967/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:45.4274960Z Updating files:  53% (7101/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:45.4935486Z Updating files:  54% (7235/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:45.5496554Z Updating files:  55% (7369/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:45.6052844Z Updating files:  56% (7503/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:45.9346246Z Updating files:  56% (7563/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:45.9961824Z Updating files:  57% (7637/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:46.0605114Z Updating files:  58% (7771/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:46.1290730Z Updating files:  59% (7905/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:46.2014599Z Updating files:  60% (8039/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:46.2745611Z Updating files:  61% (8173/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:46.3207319Z Updating files:  62% (8307/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:46.4093525Z Updating files:  63% (8441/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:46.4630917Z Updating files:  64% (8575/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:46.5161656Z Updating files:  65% (8709/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:46.5734440Z Updating files:  66% (8843/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:46.6156466Z Updating files:  67% (8977/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:46.6196753Z Updating files:  67% (9094/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:46.6676344Z Updating files:  68% (9111/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:46.7726659Z Updating files:  69% (9245/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:46.9557498Z Updating files:  70% (9379/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:47.0166188Z Updating files:  71% (9513/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:47.0686506Z Updating files:  72% (9647/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:47.1355306Z Updating files:  73% (9781/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:47.1714850Z Updating files:  74% (9915/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:47.2402431Z Updating files:  75% (10049/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:47.2990354Z Updating files:  76% (10183/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:47.3605994Z Updating files:  77% (10317/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:47.4010046Z Updating files:  78% (10451/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:47.6584621Z Updating files:  79% (10585/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:47.6698778Z Updating files:  79% (10695/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:48.6274072Z Updating files:  80% (10719/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:48.7761140Z Updating files:  80% (10835/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:49.5921365Z Updating files:  81% (10853/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:49.7207888Z Updating files:  82% (10987/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:49.9528126Z Updating files:  82% (11001/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:50.6399451Z Updating files:  83% (11121/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:50.8230630Z Updating files:  83% (11221/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:51.6229703Z Updating files:  84% (11255/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:51.6514349Z Updating files:  85% (11389/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:52.6819361Z Updating files:  85% (11394/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:52.8154023Z Updating files:  85% (11452/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:52.9458815Z Updating files:  86% (11523/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:53.2090927Z Updating files:  87% (11657/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:53.2422766Z Updating files:  88% (11791/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:53.2980279Z Updating files:  89% (11925/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:53.4107322Z Updating files:  90% (12059/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:53.5132711Z Updating files:  91% (12193/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:53.5548365Z Updating files:  92% (12327/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:53.5882943Z Updating files:  93% (12461/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:53.6204474Z Updating files:  94% (12595/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:53.6493820Z Updating files:  95% (12729/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:53.7116818Z Updating files:  95% (12806/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:53.7422637Z Updating files:  96% (12863/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:53.7745448Z Updating files:  97% (12997/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:53.8100976Z Updating files:  98% (13131/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:53.9751470Z Updating files:  99% (13265/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:53.9752016Z Updating files: 100% (13398/13398)
+windows	Run actions/checkout@v4	2026-10-09T23:04:53.9752444Z Updating files: 100% (13398/13398), done.
+windows	Run actions/checkout@v4	2026-10-09T23:04:54.0038993Z Switched to a new branch 'codex/windows-readiness-observation'
+windows	Run actions/checkout@v4	2026-10-09T23:04:54.0057369Z branch 'codex/windows-readiness-observation' set up to track 'origin/codex/windows-readiness-observation'.
+windows	Run actions/checkout@v4	2026-10-09T23:04:54.2047854Z ##[endgroup]
+windows	Run actions/checkout@v4	2026-10-09T23:04:54.2381520Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+windows	Run actions/checkout@v4	2026-10-09T23:04:54.2656443Z f92c6872c5974523a7843f456713307ddb746400
+windows	Run actions/setup-node@v4	﻿2026-10-09T23:04:54.3133932Z ##[group]Run actions/setup-node@v4
+windows	Run actions/setup-node@v4	2026-10-09T23:04:54.3134294Z with:
+windows	Run actions/setup-node@v4	2026-10-09T23:04:54.3134495Z   node-version: 20
+windows	Run actions/setup-node@v4	2026-10-09T23:04:54.3162220Z   cache: npm
+windows	Run actions/setup-node@v4	2026-10-09T23:04:54.3162582Z   always-auth: false
+windows	Run actions/setup-node@v4	2026-10-09T23:04:54.3162910Z   check-latest: false
+windows	Run actions/setup-node@v4	2026-10-09T23:04:54.3169008Z   token: ***
+windows	Run actions/setup-node@v4	2026-10-09T23:04:54.3169360Z ##[endgroup]
+windows	Run actions/setup-node@v4	2026-10-09T23:04:54.5018498Z Attempting to download 20...
+windows	Run actions/setup-node@v4	2026-10-09T23:04:54.5198901Z (node:3752) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+windows	Run actions/setup-node@v4	2026-10-09T23:04:54.5200138Z (Use `node --trace-deprecation ...` to show where the warning was created)
+windows	Run actions/setup-node@v4	2026-10-09T23:04:55.1706945Z Acquiring 20.20.2 - x64 from https://github.com/actions/node-versions/releases/download/20.20.2-23521894959/node-20.20.2-win32-x64.7z
+windows	Run actions/setup-node@v4	2026-10-09T23:04:55.5034493Z Extracting ...
+windows	Run actions/setup-node@v4	2026-10-09T23:04:57.8255121Z Adding to the cache ...
+windows	Run actions/setup-node@v4	2026-10-09T23:05:01.6957273Z ##[group]Environment details
+windows	Run actions/setup-node@v4	2026-10-09T23:05:02.9807706Z node: v20.20.2
+windows	Run actions/setup-node@v4	2026-10-09T23:05:02.9808147Z npm: 10.8.2
+windows	Run actions/setup-node@v4	2026-10-09T23:05:02.9808322Z yarn: 1.22.22
+windows	Run actions/setup-node@v4	2026-10-09T23:05:02.9808770Z ##[endgroup]
+windows	Run actions/setup-node@v4	2026-10-09T23:05:03.0545816Z [command]C:\Windows\system32\cmd.exe /D /S /C "C:\hostedtoolcache\windows\node\20.20.2\x64\npm.cmd config get cache"
+windows	Run actions/setup-node@v4	2026-10-09T23:05:03.3994606Z C:\npm\cache
+windows	Run actions/setup-node@v4	2026-10-09T23:05:03.6548310Z Cache hit for: node-cache-Windows-x64-npm-9686ea2897d267ad1476e7733bd2da95f1b3c2c122fd77cf1168a248e8d32c60
+windows	Run actions/setup-node@v4	2026-10-09T23:05:03.6680215Z (node:3752) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+windows	Run actions/setup-node@v4	2026-10-09T23:05:04.2239532Z Received 36346144 of 36346144 (100.0%), 75.8 MBs/sec
+windows	Run actions/setup-node@v4	2026-10-09T23:05:04.2242636Z Cache Size: ~35 MB (36346144 B)
+windows	Run actions/setup-node@v4	2026-10-09T23:05:04.2315283Z [command]"C:\Program Files\Git\usr\bin\tar.exe" -xf D:/a/_temp/0561305e-3875-4b6f-a3fa-1ad01280162a/cache.tzst -P -C D:/a/wild-guardians-africa/wild-guardians-africa --force-local --use-compress-program "zstd -d"
+windows	Run actions/setup-node@v4	2026-10-09T23:05:04.5585243Z Cache restored successfully
+windows	Run actions/setup-node@v4	2026-10-09T23:05:04.5621145Z Cache restored from key: node-cache-Windows-x64-npm-9686ea2897d267ad1476e7733bd2da95f1b3c2c122fd77cf1168a248e8d32c60
+windows	Run dtolnay/rust-toolchain@stable	﻿2026-10-09T23:05:04.6095465Z ##[group]Run dtolnay/rust-toolchain@stable
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.6095870Z with:
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.6096051Z   toolchain: stable
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.6096252Z ##[endgroup]
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.6166809Z ##[start-action display=Parse toolchain version;id=__dtolnay_rust-toolchain.parse]
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.6350240Z ##[group]Run if [[ -z $toolchain ]]; then
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.6350634Z ^[[36;1mif [[ -z $toolchain ]]; then^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.6351156Z ^[[36;1m  # GitHub does not enforce `required: true` inputs itself. https://github.com/actions/runner/issues/1070^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.6351721Z ^[[36;1m  echo "'toolchain' is a required input" >&2^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.6352001Z ^[[36;1m  exit 1^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.6352317Z ^[[36;1melif [[ $toolchain =~ ^stable' '[0-9]+' '(year|month|week|day)s?' 'ago$ ]]; then^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.6352725Z ^[[36;1m  if [[ Windows == macOS ]]; then^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.6353236Z ^[[36;1m    echo "toolchain=1.$((($(date -v-$(sed 's/stable \([0-9]*\) \(.\).*/\1\2/' <<< $toolchain) +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.6353795Z ^[[36;1m  else^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.6354173Z ^[[36;1m    echo "toolchain=1.$((($(date --date "${toolchain#stable }" +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.6354607Z ^[[36;1m  fi^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.6354883Z ^[[36;1melif [[ $toolchain =~ ^stable' 'minus' '[0-9]+' 'releases?$ ]]; then^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.6355398Z ^[[36;1m  echo "toolchain=1.$((($(date +%s)/60/60/24-16569)/7/6-${toolchain//[^0-9]/}))" >> $GITHUB_OUTPUT^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.6355839Z ^[[36;1melif [[ $toolchain =~ ^1\.[0-9]+$ ]]; then^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.6356342Z ^[[36;1m  echo "toolchain=1.$((i=${toolchain#1.}, c=($(date +%s)/60/60/24-16569)/7/6, i+9*i*(10*i<=c)+90*i*(100*i<=c)))" >> $GITHUB_OUTPUT^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.6356820Z ^[[36;1melse^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.6356990Z ^[[36;1m  delimiter=EOF^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.6357273Z ^[[36;1m  while [[ $toolchain == *$delimiter* ]]; do delimiter+=_; done^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.6357767Z ^[[36;1m  printf 'toolchain<<%s\n%s\n%s\n' "$delimiter" "$toolchain" "$delimiter" >> $GITHUB_OUTPUT^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.6358167Z ^[[36;1mfi^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.6385416Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.6385818Z env:
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.6385987Z   toolchain: stable
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.6386245Z ##[endgroup]
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.8244595Z ##[end-action id=__dtolnay_rust-toolchain.parse;outcome=success;conclusion=success;duration_ms=207]
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.8249455Z ##[start-action display=Set $CARGO_HOME;id=__dtolnay_rust-toolchain.__run]
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.8387074Z ##[group]Run echo CARGO_HOME=${CARGO_HOME:-"$USERPROFILE\.cargo"} >> $GITHUB_ENV
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.8387605Z ^[[36;1mecho CARGO_HOME=${CARGO_HOME:-"$USERPROFILE\.cargo"} >> $GITHUB_ENV^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.8404237Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.8404640Z ##[endgroup]
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.8837708Z ##[end-action id=__dtolnay_rust-toolchain.__run;outcome=success;conclusion=success;duration_ms=58]
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.8841315Z ##[start-action display=Install rustup if needed;id=__dtolnay_rust-toolchain.__run_2]
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.8850145Z ##[end-action id=__dtolnay_rust-toolchain.__run_2;outcome=skipped;conclusion=skipped;duration_ms=0]
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.8852301Z ##[start-action display=Install rustup if needed on windows;id=__dtolnay_rust-toolchain.__run_3]
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.8986041Z ##[group]Run if ! command -v rustup &>/dev/null; then
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.8986416Z ^[[36;1mif ! command -v rustup &>/dev/null; then^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.8987203Z ^[[36;1m  curl --proto '=https' --tlsv1.2 --retry 10 --retry-connrefused --location --silent --show-error --fail https://win.rustup.rs/x86_64 --output 'D:\a\_temp\rustup-init.exe'^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.8988057Z ^[[36;1m  'D:\a\_temp\rustup-init.exe' --default-toolchain none --no-modify-path -y^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.8988492Z ^[[36;1m  echo "$CARGO_HOME\bin" >> $GITHUB_PATH^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.8991085Z ^[[36;1mfi^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.9006908Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.9007306Z env:
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.9007510Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.9007766Z ##[endgroup]
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.9563303Z ##[end-action id=__dtolnay_rust-toolchain.__run_3;outcome=success;conclusion=success;duration_ms=71]
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.9593453Z ##[start-action display=rustup toolchain install stable;id=__dtolnay_rust-toolchain.__run_4]
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.9729650Z ##[group]Run set -f  # split targets and components on commas and whitespace, without glob expansion
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.9730330Z ^[[36;1mset -f  # split targets and components on commas and whitespace, without glob expansion^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.9730761Z ^[[36;1mflags=()^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.9731030Z ^[[36;1mfor t in ${targets//,/ }; do flags+=(--target "$t"); done^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.9731439Z ^[[36;1mfor c in ${components//,/ }; do flags+=(--component "$c"); done^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.9731942Z ^[[36;1mif [[ $toolchain == nightly && -n $components ]]; then flags+=(--allow-downgrade); fi^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.9732355Z ^[[36;1mlog=$(mktemp)^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.9732571Z ^[[36;1mtrap 'rm -f "$log"' EXIT^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.9732813Z ^[[36;1mfor attempt in 1 2 3 4 5; do^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.9733367Z ^[[36;1m  if rustup toolchain install "$toolchain" "${flags[@]}" --profile minimal --no-self-update --force-non-host 2>&1 | tee "$log"; then^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.9733937Z ^[[36;1m    break^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.9734125Z ^[[36;1m  else^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.9734307Z ^[[36;1m    status=$?^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.9734501Z ^[[36;1m  fi^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.9734781Z ^[[36;1m  if [[ $attempt == 5 ]] || ! grep -Fq 'checksum failed for ' "$log" \^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.9735337Z ^[[36;1m      || ! grep -Fq 'this is likely due to an ongoing update of the official release server' "$log"; then^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.9735803Z ^[[36;1m    exit "$status"^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.9736013Z ^[[36;1m  fi^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.9736358Z ^[[36;1m  echo "Retrying rustup toolchain install in 30 seconds (retry $attempt of 4)" >&2^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.9736763Z ^[[36;1m  sleep 30^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.9736948Z ^[[36;1mdone^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.9753196Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.9753594Z env:
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.9753792Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.9754062Z   toolchain: stable
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.9754253Z   targets: 
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.9754424Z   components: 
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.9754621Z   RUSTUP_PERMIT_COPY_RENAME: 1
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:04.9754859Z ##[endgroup]
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:09.1066362Z info: syncing channel updates for stable-x86_64-pc-windows-msvc
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:09.7550040Z info: latest update on 2026-10-01 for version 1.99.0 (b940084d7 2026-09-28)
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:09.8016119Z info: removing previous version of component rustfmt
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:09.8175237Z info: removing previous version of component clippy
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:09.8491141Z info: removing previous version of component rust-std for target x86_64-pc-windows-gnu
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:09.9916619Z info: removing previous version of component rust-std for target i686-pc-windows-msvc
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:10.0862286Z info: removing previous version of component cargo
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:10.2128114Z info: removing previous version of component rust-std
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:10.3098943Z info: removing previous version of component rustc
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:10.4661729Z info: downloading 7 components
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:25.9659640Z 
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:25.9973648Z   stable-x86_64-pc-windows-msvc updated - rustc 1.99.0 (b940084d7 2026-09-28) (from rustc 1.98.1 (48a229cea 2026-09-01))
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:25.9974614Z 
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:26.0396893Z ##[end-action id=__dtolnay_rust-toolchain.__run_4;outcome=success;conclusion=success;duration_ms=21079]
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:26.0405015Z ##[start-action display=rustup default stable;id=__dtolnay_rust-toolchain.__run_5]
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:26.0537194Z ##[group]Run rustup default "$toolchain" --force-non-host
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:26.0537583Z ^[[36;1mrustup default "$toolchain" --force-non-host^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:26.0553346Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:26.0553736Z env:
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:26.0553927Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:26.0554176Z   toolchain: stable
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:26.0554362Z ##[endgroup]
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:26.1289368Z info: using existing install for stable-x86_64-pc-windows-msvc
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:26.1367591Z info: default toolchain set to stable-x86_64-pc-windows-msvc
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:26.1413256Z 
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:26.1631773Z   stable-x86_64-pc-windows-msvc unchanged - rustc 1.99.0 (b940084d7 2026-09-28)
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:26.1632250Z 
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:26.1718487Z ##[end-action id=__dtolnay_rust-toolchain.__run_5;outcome=success;conclusion=success;duration_ms=131]
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:26.1722093Z ##[start-action display=Create cachekey;id=__dtolnay_rust-toolchain.rustc-version]
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:26.1865879Z ##[group]Run DATE=$(rustc +"$toolchain" --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:26.1866865Z ^[[36;1mDATE=$(rustc +"$toolchain" --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:26.1870034Z ^[[36;1mHASH=$(rustc +"$toolchain" --version --verbose | sed -ne 's/^commit-hash: //p')^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:26.1870957Z ^[[36;1mecho "cachekey=$(echo $DATE$HASH | head -c12)" >> $GITHUB_OUTPUT^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:26.1889380Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:26.1890008Z env:
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:26.1890313Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:26.1890587Z   toolchain: stable
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:26.1890791Z ##[endgroup]
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.4606345Z ##[end-action id=__dtolnay_rust-toolchain.rustc-version;outcome=success;conclusion=success;duration_ms=1288]
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.4608979Z ##[start-action display=Disable incremental compilation;id=__dtolnay_rust-toolchain.__run_6]
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.4746453Z ##[group]Run if [ -z "${CARGO_INCREMENTAL+set}" ]; then
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.4746850Z ^[[36;1mif [ -z "${CARGO_INCREMENTAL+set}" ]; then^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.4747156Z ^[[36;1m  echo CARGO_INCREMENTAL=0 >> $GITHUB_ENV^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.4747410Z ^[[36;1mfi^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.4763883Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.4764274Z env:
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.4764462Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.4764714Z ##[endgroup]
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.5195937Z ##[end-action id=__dtolnay_rust-toolchain.__run_6;outcome=success;conclusion=success;duration_ms=58]
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.5198778Z ##[start-action display=Enable colors in Cargo output;id=__dtolnay_rust-toolchain.__run_7]
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.5327209Z ##[group]Run if [ -z "${CARGO_TERM_COLOR+set}" ]; then
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.5327630Z ^[[36;1mif [ -z "${CARGO_TERM_COLOR+set}" ]; then^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.5327968Z ^[[36;1m  echo CARGO_TERM_COLOR=always >> $GITHUB_ENV^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.5328251Z ^[[36;1mfi^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.5344824Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.5345231Z env:
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.5345430Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.5345700Z   CARGO_INCREMENTAL: 0
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.5345897Z ##[endgroup]
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.5777125Z ##[end-action id=__dtolnay_rust-toolchain.__run_7;outcome=success;conclusion=success;duration_ms=57]
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.5782345Z ##[start-action display=Enable Cargo sparse registry;id=__dtolnay_rust-toolchain.__run_8]
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.5954965Z ##[group]Run # implemented in 1.66, stabilized in 1.68, made default in 1.70
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.5955643Z ^[[36;1m# implemented in 1.66, stabilized in 1.68, made default in 1.70^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.5956277Z ^[[36;1mif [ -z "${CARGO_REGISTRIES_CRATES_IO_PROTOCOL+set}" -o -f "D:\a\_temp"/.implicit_cargo_registries_crates_io_protocol ]; then^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.5956945Z ^[[36;1m  if rustc +"$toolchain" --version --verbose | grep -q '^release: 1\.6[89]\.'; then^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.5957481Z ^[[36;1m    touch "D:\a\_temp"/.implicit_cargo_registries_crates_io_protocol || true^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.5957954Z ^[[36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse >> $GITHUB_ENV^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.5958452Z ^[[36;1m  elif rustc +"$toolchain" --version --verbose | grep -q '^release: 1\.6[67]\.'; then^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.5958979Z ^[[36;1m    touch "D:\a\_temp"/.implicit_cargo_registries_crates_io_protocol || true^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.5959433Z ^[[36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=git >> $GITHUB_ENV^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.5959759Z ^[[36;1m  fi^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.5959930Z ^[[36;1mfi^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.5980835Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.5981467Z env:
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.5981770Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.5982187Z   CARGO_INCREMENTAL: 0
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.5982508Z   CARGO_TERM_COLOR: always
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.5982838Z   toolchain: stable
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.5983133Z ##[endgroup]
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.8089345Z ##[end-action id=__dtolnay_rust-toolchain.__run_8;outcome=success;conclusion=success;duration_ms=230]
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.8093052Z ##[start-action display=Work around spurious network errors in curl 8.0;id=__dtolnay_rust-toolchain.__run_9]
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.8309736Z ##[group]Run # https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.8310908Z ^[[36;1m# https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.8311587Z ^[[36;1mif rustc +"$toolchain" --version --verbose | grep -q '^release: 1\.7[01]\.'; then^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.8312054Z ^[[36;1m  echo CARGO_HTTP_MULTIPLEXING=false >> $GITHUB_ENV^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.8312341Z ^[[36;1mfi^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.8328422Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.8328809Z env:
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.8329007Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.8329774Z   CARGO_INCREMENTAL: 0
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.8329993Z   CARGO_TERM_COLOR: always
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.8330205Z   toolchain: stable
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.8330393Z ##[endgroup]
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.9390705Z ##[end-action id=__dtolnay_rust-toolchain.__run_9;outcome=success;conclusion=success;duration_ms=129]
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.9395168Z ##[start-action display=rustc +stable --version --verbose;id=__dtolnay_rust-toolchain.__run_10]
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.9528395Z ##[group]Run rustc +"$toolchain" --version --verbose
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.9528763Z ^[[36;1mrustc +"$toolchain" --version --verbose^[[0m
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.9543798Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.9544193Z env:
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.9544388Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.9544649Z   CARGO_INCREMENTAL: 0
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.9544857Z   CARGO_TERM_COLOR: always
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.9545057Z   toolchain: stable
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:27.9545235Z ##[endgroup]
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:28.0362438Z rustc 1.99.0 (b940084d7 2026-09-28)
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:28.0363004Z binary: rustc
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:28.0363558Z commit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:28.0364142Z commit-date: 2026-09-28
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:28.0364559Z host: x86_64-pc-windows-msvc
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:28.0364904Z release: 1.99.0
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:28.0367647Z LLVM version: 23.1.1
+windows	Run dtolnay/rust-toolchain@stable	2026-10-09T23:05:28.0528787Z ##[end-action id=__dtolnay_rust-toolchain.__run_10;outcome=success;conclusion=success;duration_ms=113]
+windows	Run swatinem/rust-cache@v2	﻿2026-10-09T23:05:28.0740970Z ##[group]Run swatinem/rust-cache@v2
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:28.0741293Z with:
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:28.0741489Z   workspaces: src-tauri -> target
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:28.0741737Z   prefix-key: v0-rust
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:28.0741946Z   add-job-id-key: true
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:28.0742179Z   add-rust-environment-hash-key: true
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:28.0742435Z   cache-targets: true
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:28.0742633Z   cache-all-crates: false
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:28.0742859Z   cache-workspace-crates: false
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:28.0743083Z   save-if: true
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:28.0743273Z   cache-provider: github
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:28.0743482Z   cache-bin: true
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:28.0743663Z   lookup-only: false
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:28.0743846Z   cmd-format: {0}
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:28.0744012Z env:
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:28.0744196Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:28.0744449Z   CARGO_INCREMENTAL: 0
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:28.0744649Z   CARGO_TERM_COLOR: always
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:28.0744846Z ##[endgroup]
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:29.3752435Z ##[group]Cache Configuration
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:29.3753148Z Cache Provider:
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:29.3753470Z     github
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:29.3754886Z Workspaces:
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:29.3756003Z     D:\a\wild-guardians-africa\wild-guardians-africa\src-tauri
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:29.3756639Z Cache Paths:
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:29.3757044Z     C:\Users\runneradmin\.cargo\bin
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:29.3757911Z     C:\Users\runneradmin\.cargo\.crates.toml
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:29.3758500Z     C:\Users\runneradmin\.cargo\.crates2.json
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:29.3759746Z     C:\Users\runneradmin\.cargo\registry
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:29.3760617Z     C:\Users\runneradmin\.cargo\git
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:29.3761286Z     D:\a\wild-guardians-africa\wild-guardians-africa\src-tauri\target
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:29.3761903Z Restore Key:
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:29.3762297Z     v0-rust-windows-Windows_NT-x64-63f58d45
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:29.3762746Z Cache Key:
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:29.3763154Z     v0-rust-windows-Windows_NT-x64-63f58d45-69f6ec46
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:29.3763645Z .. Prefix:
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:29.3764022Z   - v0-rust-windows-Windows_NT-x64
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:29.3764486Z .. Environment considered:
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:29.3764861Z   - Rust Versions:
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:29.3765421Z     - 1.99.0 x86_64-pc-windows-msvc b940084d7eb6a299eb4bfeb8e34901bc051e7ac4
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:29.3766025Z   - CARGO_HOME
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:29.3766362Z   - CARGO_INCREMENTAL
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:29.3766706Z   - CARGO_TERM_COLOR
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:29.3767086Z .. Lockfiles considered:
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:29.3767736Z   - D:\a\wild-guardians-africa\wild-guardians-africa\src-tauri\Cargo.lock
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:29.3768681Z   - D:\a\wild-guardians-africa\wild-guardians-africa\src-tauri\Cargo.toml
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:29.3769613Z ##[endgroup]
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:29.3769796Z 
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:29.3769967Z ... Restoring cache ...
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:29.5637005Z Cache hit for: v0-rust-windows-Windows_NT-x64-63f58d45-69f6ec46
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:30.7448902Z Received 134217728 of 379802157 (35.3%), 119.0 MBs/sec
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:31.7578776Z Received 281018368 of 379802157 (74.0%), 128.3 MBs/sec
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:32.2789596Z Received 379802157 of 379802157 (100.0%), 138.8 MBs/sec
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:32.2793336Z Cache Size: ~362 MB (379802157 B)
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:32.2829728Z [command]"C:\Program Files\Git\usr\bin\tar.exe" -xf D:/a/_temp/55a4bfda-1dc2-47ca-bf14-b347c1d113a7/cache.tzst -P -C D:/a/wild-guardians-africa/wild-guardians-africa --force-local --use-compress-program "zstd -d"
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:45.5463590Z Cache restored successfully
+windows	Run swatinem/rust-cache@v2	2026-10-09T23:05:45.5676921Z Restored from cache key "v0-rust-windows-Windows_NT-x64-63f58d45-69f6ec46" full match: true.
+windows	Run npm ci	﻿2026-10-09T23:05:45.5976842Z ##[group]Run npm ci
+windows	Run npm ci	2026-10-09T23:05:45.5977270Z ^[[36;1mnpm ci^[[0m
+windows	Run npm ci	2026-10-09T23:05:45.7281522Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+windows	Run npm ci	2026-10-09T23:05:45.7282015Z env:
+windows	Run npm ci	2026-10-09T23:05:45.7282319Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+windows	Run npm ci	2026-10-09T23:05:45.7282685Z   CARGO_INCREMENTAL: 0
+windows	Run npm ci	2026-10-09T23:05:45.7282948Z   CARGO_TERM_COLOR: always
+windows	Run npm ci	2026-10-09T23:05:45.7283234Z   CACHE_ON_FAILURE: false
+windows	Run npm ci	2026-10-09T23:05:45.7283484Z ##[endgroup]
+windows	Run npm ci	2026-10-09T23:05:49.1574809Z 
+windows	Run npm ci	2026-10-09T23:05:49.1575420Z added 27 packages, and audited 28 packages in 3s
+windows	Run npm ci	2026-10-09T23:05:49.1576141Z 
+windows	Run npm ci	2026-10-09T23:05:49.1576435Z 8 packages are looking for funding
+windows	Run npm ci	2026-10-09T23:05:49.1576974Z   run `npm fund` for details
+windows	Run npm ci	2026-10-09T23:05:49.1587951Z 
+windows	Run npm ci	2026-10-09T23:05:49.1588287Z found 0 vulnerabilities
+windows	Run npm run desktop:build	﻿2026-10-09T23:05:49.3264506Z ##[group]Run npm run desktop:build
+windows	Run npm run desktop:build	2026-10-09T23:05:49.3265388Z ^[[36;1mnpm run desktop:build^[[0m
+windows	Run npm run desktop:build	2026-10-09T23:05:49.3358030Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+windows	Run npm run desktop:build	2026-10-09T23:05:49.3358398Z env:
+windows	Run npm run desktop:build	2026-10-09T23:05:49.3358595Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+windows	Run npm run desktop:build	2026-10-09T23:05:49.3358874Z   CARGO_INCREMENTAL: 0
+windows	Run npm run desktop:build	2026-10-09T23:05:49.3359094Z   CARGO_TERM_COLOR: always
+windows	Run npm run desktop:build	2026-10-09T23:05:49.3359315Z   CACHE_ON_FAILURE: false
+windows	Run npm run desktop:build	2026-10-09T23:05:49.3359527Z ##[endgroup]
+windows	Run npm run desktop:build	2026-10-09T23:05:49.9599391Z 
+windows	Run npm run desktop:build	2026-10-09T23:05:49.9600063Z > wild-guardians-africa@0.1.0 desktop:build
+windows	Run npm run desktop:build	2026-10-09T23:05:49.9600681Z > tauri build -- --locked
+windows	Run npm run desktop:build	2026-10-09T23:05:49.9600974Z 
+windows	Run npm run desktop:build	2026-10-09T23:05:50.1467615Z         Info Looking up installed tauri packages to check mismatched versions...
+windows	Run npm run desktop:build	2026-10-09T23:05:51.0399720Z      Running beforeBuildCommand `npm run build && npm run test:web-package`
+windows	Run npm run desktop:build	2026-10-09T23:05:51.3961421Z 
+windows	Run npm run desktop:build	2026-10-09T23:05:51.3962000Z > wild-guardians-africa@0.1.0 build
+windows	Run npm run desktop:build	2026-10-09T23:05:51.3962477Z > vite build
+windows	Run npm run desktop:build	2026-10-09T23:05:51.3962627Z 
+windows	Run npm run desktop:build	2026-10-09T23:05:51.9216759Z ^[[36mvite v6.4.3 ^[[32mbuilding for production...^[[36m^[[39m
+windows	Run npm run desktop:build	2026-10-09T23:05:52.0274722Z transforming...
+windows	Run npm run desktop:build	2026-10-09T23:05:56.9349164Z ^[[32m✓^[[39m 340 modules transformed.
+windows	Run npm run desktop:build	2026-10-09T23:05:57.9022471Z rendering chunks...
+windows	Run npm run desktop:build	2026-10-09T23:05:58.2457635Z ^[[33m[plugin vite:reporter] 
+windows	Run npm run desktop:build	2026-10-09T23:05:58.2461931Z (!) D:/a/wild-guardians-africa/wild-guardians-africa/src/rendering/far-atmosphere.js is dynamically imported by D:/a/wild-guardians-africa/wild-guardians-africa/src/rendering/scene.js but also statically imported by D:/a/wild-guardians-africa/wild-guardians-africa/src/rendering/biome-backdrop.js, D:/a/wild-guardians-africa/wild-guardians-africa/src/rendering/far-vegetation.js, D:/a/wild-guardians-africa/wild-guardians-africa/tools/experiments/attach-native-far-world.js, dynamic import will not move module into another chunk.
+windows	Run npm run desktop:build	2026-10-09T23:05:58.2464477Z ^[[39m
+windows	Run npm run desktop:build	2026-10-09T23:05:58.2863267Z computing gzip size...
+windows	Run npm run desktop:build	2026-10-09T23:05:58.3350538Z ^[[2mdist/^[[22m^[[32massets/loading-image-worker-DVeVgE-E.js     ^[[39m^[[1m^[[2m    0.54 kB^[[22m^[[1m^[[22m
+windows	Run npm run desktop:build	2026-10-09T23:05:58.3352233Z ^[[2mdist/^[[22m^[[32mindex.html                                  ^[[39m^[[1m^[[2m    0.56 kB^[[22m^[[1m^[[22m^[[2m │ gzip:   0.38 kB^[[22m
+windows	Run npm run desktop:build	2026-10-09T23:05:58.3353502Z ^[[2mdist/^[[22m^[[32massets/biome-tangents-worker-Do-lJEut.js    ^[[39m^[[1m^[[2m    1.47 kB^[[22m^[[1m^[[22m
+windows	Run npm run desktop:build	2026-10-09T23:05:58.3355935Z ^[[2mdist/^[[22m^[[32massets/sky-pixels-worker-CoOE8ZAM.js        ^[[39m^[[1m^[[2m    2.17 kB^[[22m^[[1m^[[22m
+windows	Run npm run desktop:build	2026-10-09T23:05:58.3358061Z ^[[2mdist/^[[22m^[[32massets/building-data-worker-B-EMGaCp.js     ^[[39m^[[1m^[[2m    9.45 kB^[[22m^[[1m^[[22m
+windows	Run npm run desktop:build	2026-10-09T23:05:58.3359563Z ^[[2mdist/^[[22m^[[32massets/snapshot-decode-worker-CZkGgDnc.js   ^[[39m^[[1m^[[2m   13.69 kB^[[22m^[[1m^[[22m
+windows	Run npm run desktop:build	2026-10-09T23:05:58.3361003Z ^[[2mdist/^[[22m^[[32massets/far-ground-seam-worker-9DJVojOS.js   ^[[39m^[[1m^[[2m   13.76 kB^[[22m^[[1m^[[22m
+windows	Run npm run desktop:build	2026-10-09T23:05:58.3362383Z ^[[2mdist/^[[22m^[[32massets/horizon-worker-DUXMqnYL.js           ^[[39m^[[1m^[[2m   16.07 kB^[[22m^[[1m^[[22m
+windows	Run npm run desktop:build	2026-10-09T23:05:58.3363754Z ^[[2mdist/^[[22m^[[32massets/chunk-worker-Bi0TFTQb.js             ^[[39m^[[1m^[[2m   33.41 kB^[[22m^[[1m^[[22m
+windows	Run npm run desktop:build	2026-10-09T23:05:58.3365080Z ^[[2mdist/^[[22m^[[32massets/far-scene-worker-Bm4t8IyU.js         ^[[39m^[[1m^[[2m   37.26 kB^[[22m^[[1m^[[22m
+windows	Run npm run desktop:build	2026-10-09T23:05:58.3366446Z ^[[2mdist/^[[22m^[[32massets/initial-location-worker-CuwZYrLr.js  ^[[39m^[[1m^[[2m   70.63 kB^[[22m^[[1m^[[22m
+windows	Run npm run desktop:build	2026-10-09T23:05:58.3367561Z ^[[2mdist/^[[22m^[[32massets/raid-entry-worker-_g9-rQR3.js        ^[[39m^[[1m^[[2m   90.38 kB^[[22m^[[1m^[[22m
+windows	Run npm run desktop:build	2026-10-09T23:05:58.3368377Z ^[[2mdist/^[[22m^[[32massets/hiring-route-worker-eB0wytzK.js      ^[[39m^[[1m^[[2m  168.66 kB^[[22m^[[1m^[[22m
+windows	Run npm run desktop:build	2026-10-09T23:05:58.3369262Z ^[[2mdist/^[[22m^[[35massets/index-ByHKPQm2.css                   ^[[39m^[[1m^[[2m   27.96 kB^[[22m^[[1m^[[22m^[[2m │ gzip:   6.61 kB^[[22m
+windows	Run npm run desktop:build	2026-10-09T23:05:58.3370096Z ^[[33m
+windows	Run npm run desktop:build	2026-10-09T23:05:58.3370663Z (!) Some chunks are larger than 500 kB after minification. Consider:
+windows	Run npm run desktop:build	2026-10-09T23:05:58.3374203Z - Using dynamic import() to code-split the application
+windows	Run npm run desktop:build	2026-10-09T23:05:58.3375007Z - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+windows	Run npm run desktop:build	2026-10-09T23:05:58.3375950Z - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.^[[39m
+windows	Run npm run desktop:build	2026-10-09T23:05:58.3377244Z ^[[2mdist/^[[22m^[[36massets/far-vegetation-_h74p-Ei.js           ^[[39m^[[1m^[[2m   77.10 kB^[[22m^[[1m^[[22m^[[2m │ gzip:  25.96 kB^[[22m
+windows	Run npm run desktop:build	2026-10-09T23:05:58.3378185Z ^[[2mdist/^[[22m^[[36massets/index-D98LD27U.js                    ^[[39m^[[1m^[[33m1,687.33 kB^[[39m^[[22m^[[2m │ gzip: 508.59 kB^[[22m
+windows	Run npm run desktop:build	2026-10-09T23:05:58.3378755Z ^[[32m✓ built in 6.38s^[[39m
+windows	Run npm run desktop:build	2026-10-09T23:05:59.2703580Z 
+windows	Run npm run desktop:build	2026-10-09T23:05:59.2704221Z > wild-guardians-africa@0.1.0 test:web-package
+windows	Run npm run desktop:build	2026-10-09T23:05:59.2704730Z > node tools/check_web_package.mjs
+windows	Run npm run desktop:build	2026-10-09T23:05:59.2704926Z 
+windows	Run npm run desktop:build	2026-10-09T23:06:01.0000966Z PASS: 711 files / 445279772 bytes, 860 relative links, 22 runtime GLBs, no original GLBs, demo village or superseded ground duplicates
+windows	Run npm run desktop:build	2026-10-09T23:06:01.2743400Z ^[[1m^[[92m    Updating^[[0m crates.io index
+windows	Run npm run desktop:build	2026-10-09T23:06:16.5383169Z ^[[1m^[[92m   Compiling^[[0m wild-guardians-africa v0.1.0 (D:\a\wild-guardians-africa\wild-guardians-africa\src-tauri)
+windows	Run npm run desktop:build	2026-10-09T23:11:35.7350279Z ^[[1m^[[92m    Finished^[[0m `release` profile [optimized] target(s) in 5m 34s
+windows	Run npm run desktop:build	2026-10-09T23:11:35.7929530Z        Built application at: D:\a\wild-guardians-africa\wild-guardians-africa\src-tauri\target\release\wild-guardians-africa.exe
+windows	Run npm run desktop:build	2026-10-09T23:11:36.4401630Z         Info Patching D:\a\wild-guardians-africa\wild-guardians-africa\src-tauri\target\release\wild-guardians-africa.exe with bundle type information: nsis
+windows	Run npm run desktop:build	2026-10-09T23:11:37.9676914Z         Info Verifying NSIS package
+windows	Run npm run desktop:build	2026-10-09T23:11:37.9677740Z  Downloading https://github.com/tauri-apps/binary-releases/releases/download/nsis-3.11/nsis-3.11.zip
+windows	Run npm run desktop:build	2026-10-09T23:11:38.2310570Z         Info validating hash
+windows	Run npm run desktop:build	2026-10-09T23:11:38.2324434Z         Info extracting NSIS
+windows	Run npm run desktop:build	2026-10-09T23:11:38.5147485Z  Downloading https://github.com/tauri-apps/nsis-tauri-utils/releases/download/nsis_tauri_utils-v0.5.3/nsis_tauri_utils.dll
+windows	Run npm run desktop:build	2026-10-09T23:11:38.6339304Z         Info validating hash
+windows	Run npm run desktop:build	2026-10-09T23:11:38.6347451Z         Info Target: x64
+windows	Run npm run desktop:build	2026-10-09T23:11:38.6468130Z      Running makensis to produce D:\a\wild-guardians-africa\wild-guardians-africa\src-tauri\target\release\bundle\nsis\Wild Guardians Africa_0.1.0_x64-setup.exe
+windows	Run npm run desktop:build	2026-10-09T23:14:13.7165348Z     Finished 1 bundle at:
+windows	Run npm run desktop:build	2026-10-09T23:14:13.7166649Z         D:\a\wild-guardians-africa\wild-guardians-africa\src-tauri\target\release\bundle\nsis\Wild Guardians Africa_0.1.0_x64-setup.exe (359.41 MiB)
+windows	Run npm run desktop:build	2026-10-09T23:14:13.7167303Z 
+windows	Check Windows executable and installer	﻿2026-10-09T23:14:13.8951279Z ##[group]Run $binary = Get-Item -LiteralPath src-tauri/target/release/wild-guardians-africa.exe
+windows	Check Windows executable and installer	2026-10-09T23:14:13.8952256Z ^[[36;1m$binary = Get-Item -LiteralPath src-tauri/target/release/wild-guardians-africa.exe^[[0m
+windows	Check Windows executable and installer	2026-10-09T23:14:13.8952960Z ^[[36;1m$installer = Get-ChildItem src-tauri/target/release/bundle/nsis/*-setup.exe^[[0m
+windows	Check Windows executable and installer	2026-10-09T23:14:13.8953647Z ^[[36;1mif ($binary.Length -lt 1MB -or $installer.Count -ne 1) { throw 'Missing Windows deliverables' }^[[0m
+windows	Check Windows executable and installer	2026-10-09T23:14:13.8954328Z ^[[36;1m"Windows executable: $($binary.Length) bytes" >> $env:GITHUB_STEP_SUMMARY^[[0m
+windows	Check Windows executable and installer	2026-10-09T23:14:13.8954898Z ^[[36;1m"NSIS installer: $($installer.Length) bytes" >> $env:GITHUB_STEP_SUMMARY^[[0m
+windows	Check Windows executable and installer	2026-10-09T23:14:13.9035603Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+windows	Check Windows executable and installer	2026-10-09T23:14:13.9036054Z env:
+windows	Check Windows executable and installer	2026-10-09T23:14:13.9036348Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+windows	Check Windows executable and installer	2026-10-09T23:14:13.9036685Z   CARGO_INCREMENTAL: 0
+windows	Check Windows executable and installer	2026-10-09T23:14:13.9036963Z   CARGO_TERM_COLOR: always
+windows	Check Windows executable and installer	2026-10-09T23:14:13.9037318Z   CACHE_ON_FAILURE: false
+windows	Check Windows executable and installer	2026-10-09T23:14:13.9037612Z ##[endgroup]
+windows	Smoke test the packaged game in WebView2	﻿2026-10-09T23:14:14.3983998Z ##[group]Run $report = Join-Path $env:RUNNER_TEMP 'desktop-smoke.json'
+windows	Smoke test the packaged game in WebView2	2026-10-09T23:14:14.3984727Z ^[[36;1m$report = Join-Path $env:RUNNER_TEMP 'desktop-smoke.json'^[[0m
+windows	Smoke test the packaged game in WebView2	2026-10-09T23:14:14.3985566Z ^[[36;1m$binary = (Resolve-Path src-tauri/target/release/wild-guardians-africa.exe).Path^[[0m
+windows	Smoke test the packaged game in WebView2	2026-10-09T23:14:14.3986147Z ^[[36;1m$smokeArgs = @('--smoke-report', $report)^[[0m
+windows	Smoke test the packaged game in WebView2	2026-10-09T23:14:14.3986631Z ^[[36;1mif ('false' -eq 'true') { $smokeArgs += '--smoke-resource-overlap' }^[[0m
+windows	Smoke test the packaged game in WebView2	2026-10-09T23:14:14.3987330Z ^[[36;1m$process = Start-Process -FilePath $binary -ArgumentList $smokeArgs -WindowStyle Hidden -PassThru^[[0m
+windows	Smoke test the packaged game in WebView2	2026-10-09T23:14:14.3988139Z ^[[36;1mif (-not $process.WaitForExit(240000)) { Stop-Process -Id $process.Id; throw 'WebView2 smoke timed out' }^[[0m
+windows	Smoke test the packaged game in WebView2	2026-10-09T23:14:14.3988869Z ^[[36;1mif (-not (Test-Path -LiteralPath $report)) { throw 'No WebView2 smoke report' }^[[0m
+windows	Smoke test the packaged game in WebView2	2026-10-09T23:14:14.3989453Z ^[[36;1m$result = Get-Content -Raw -LiteralPath $report | ConvertFrom-Json^[[0m
+windows	Smoke test the packaged game in WebView2	2026-10-09T23:14:14.3989980Z ^[[36;1mif ($result.worldPng) {^[[0m
+windows	Smoke test the packaged game in WebView2	2026-10-09T23:14:14.3990658Z ^[[36;1m  [IO.File]::WriteAllBytes((Join-Path $env:RUNNER_TEMP 'windows-canyon.png'), [Convert]::FromBase64String($result.worldPng.Split(',')[1]))^[[0m
+windows	Smoke test the packaged game in WebView2	2026-10-09T23:14:14.3991380Z ^[[36;1m  $result.PSObject.Properties.Remove('worldPng')^[[0m
+windows	Smoke test the packaged game in WebView2	2026-10-09T23:14:14.3991876Z ^[[36;1m  $result | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $report^[[0m
+windows	Smoke test the packaged game in WebView2	2026-10-09T23:14:14.3992325Z ^[[36;1m}^[[0m
+windows	Smoke test the packaged game in WebView2	2026-10-09T23:14:14.3992670Z ^[[36;1mGet-Content -LiteralPath $report >> $env:GITHUB_STEP_SUMMARY^[[0m
+windows	Smoke test the packaged game in WebView2	2026-10-09T23:14:14.3993270Z ^[[36;1mif ($process.ExitCode -ne 0 -or -not $result.ok) { throw 'WebView2 smoke failed' }^[[0m
+windows	Smoke test the packaged game in WebView2	2026-10-09T23:14:14.4066647Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+windows	Smoke test the packaged game in WebView2	2026-10-09T23:14:14.4067059Z env:
+windows	Smoke test the packaged game in WebView2	2026-10-09T23:14:14.4067344Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+windows	Smoke test the packaged game in WebView2	2026-10-09T23:14:14.4067663Z   CARGO_INCREMENTAL: 0
+windows	Smoke test the packaged game in WebView2	2026-10-09T23:14:14.4067932Z   CARGO_TERM_COLOR: always
+windows	Smoke test the packaged game in WebView2	2026-10-09T23:14:14.4068254Z   CACHE_ON_FAILURE: false
+windows	Smoke test the packaged game in WebView2	2026-10-09T23:14:14.4068520Z ##[endgroup]
+windows	Smoke test the packaged game in WebView2	2026-10-09T23:16:56.8752162Z ^[[31;1mException: ^[[0mD:\a\_temp\53abec70-be17-4c30-92b2-ffc96dec707e.ps1:16^[[0m
+windows	Smoke test the packaged game in WebView2	2026-10-09T23:16:56.8753103Z ^[[31;1m^[[0m^[[36;1mLine |^[[0m
+windows	Smoke test the packaged game in WebView2	2026-10-09T23:16:56.8754151Z ^[[31;1m^[[0m^[[36;1m^[[36;1m  16 | ^[[0m … ExitCode -ne 0 -or -not $result.ok) { ^[[36;1mthrow 'WebView2 smoke failed'^[[0m }^[[0m
+windows	Smoke test the packaged game in WebView2	2026-10-09T23:16:56.8755106Z ^[[31;1m^[[0m^[[36;1m^[[36;1m^[[0m^[[36;1m^[[0m^[[36;1m     | ^[[31;1m                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^[[0m
+windows	Smoke test the packaged game in WebView2	2026-10-09T23:16:56.8755872Z ^[[31;1m^[[0m^[[36;1m^[[36;1m^[[0m^[[36;1m^[[0m^[[36;1m^[[31;1m^[[31;1m^[[36;1m     | ^[[31;1mWebView2 smoke failed^[[0m
+windows	Smoke test the packaged game in WebView2	2026-10-09T23:16:56.8995897Z ##[error]Process completed with exit code 1.
+windows	Run actions/upload-artifact@v7	﻿2026-10-09T23:16:56.9353301Z ##[group]Run actions/upload-artifact@v7
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:56.9353656Z with:
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:56.9353880Z   path: D:\a\_temp/desktop-visibility.json
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:56.9354169Z   archive: false
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:56.9354671Z   retention-days: 7
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:56.9354877Z   name: artifact
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:56.9355080Z   if-no-files-found: warn
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:56.9355313Z   compression-level: 6
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:56.9355536Z   overwrite: false
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:56.9355738Z   include-hidden-files: false
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:56.9355955Z env:
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:56.9356146Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:56.9356410Z   CARGO_INCREMENTAL: 0
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:56.9356612Z   CARGO_TERM_COLOR: always
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:56.9356833Z   CACHE_ON_FAILURE: false
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:56.9357035Z ##[endgroup]
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.1090020Z ##[warning]No files were found with the provided path: D:\a\_temp/desktop-visibility.json. No artifacts will be uploaded.
+windows	Run actions/upload-artifact@v7	﻿2026-10-09T23:16:57.1380776Z ##[group]Run actions/upload-artifact@v7
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.1381143Z with:
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.1381347Z   path: D:\a\_temp/windows-canyon.png
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.1381615Z   archive: false
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.1381803Z   retention-days: 7
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.1381993Z   name: artifact
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.1382184Z   if-no-files-found: warn
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.1382403Z   compression-level: 6
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.1382604Z   overwrite: false
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.1382801Z   include-hidden-files: false
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.1383012Z env:
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.1383194Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.1383460Z   CARGO_INCREMENTAL: 0
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.1383657Z   CARGO_TERM_COLOR: always
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.1383870Z   CACHE_ON_FAILURE: false
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.1384067Z ##[endgroup]
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.3094344Z ##[warning]No files were found with the provided path: D:\a\_temp/windows-canyon.png. No artifacts will be uploaded.
+windows	Run actions/upload-artifact@v7	﻿2026-10-09T23:16:57.3398524Z ##[group]Run actions/upload-artifact@v7
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.3398912Z with:
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.3399112Z   path: D:\a\_temp/desktop-smoke.json
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.3399369Z   archive: false
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.3399562Z   retention-days: 7
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.3399751Z   name: artifact
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.3399936Z   if-no-files-found: warn
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.3400157Z   compression-level: 6
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.3400354Z   overwrite: false
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.3400554Z   include-hidden-files: false
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.3400767Z env:
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.3400953Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.3401593Z   CARGO_INCREMENTAL: 0
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.3401799Z   CARGO_TERM_COLOR: always
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.3402009Z   CACHE_ON_FAILURE: false
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.3402220Z ##[endgroup]
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.5282808Z With the provided path, there will be 1 file uploaded
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.5289052Z Artifact name is valid!
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.5290724Z Root directory input is valid!
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.7641646Z Uploading artifact: desktop-smoke.json
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.7686739Z Beginning upload of artifact content to blob storage
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.9260639Z Uploaded bytes 45546
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.9616966Z Finished uploading artifact content to blob storage!
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.9618216Z SHA256 digest of uploaded artifact is 817a90b6c59148ac44e6f48d9d8ddabf2deee0b9d1c8ba13911a21c75c27174f
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:57.9621426Z Finalizing artifact upload
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:58.2019098Z Artifact desktop-smoke.json successfully finalized. Artifact ID 11649184760
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:58.2019915Z Artifact artifact has been successfully uploaded! Final size is 45546 bytes. Artifact ID is 11649184760
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:58.2027606Z Artifact download URL: https://github.com/dossijeo/wild-guardians-africa/actions/runs/38002516951/artifacts/11649184760
+windows	Run actions/upload-artifact@v7	﻿2026-10-09T23:16:58.2322903Z ##[group]Run actions/upload-artifact@v7
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:58.2323822Z with:
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:58.2324096Z   path: src-tauri/target/release/bundle/nsis/*-setup.exe
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:58.2324425Z   archive: false
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:58.2324636Z   if-no-files-found: error
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:58.2324864Z   retention-days: 7
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:58.2325056Z   name: artifact
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:58.2325240Z   compression-level: 6
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:58.2325453Z   overwrite: false
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:58.2325651Z   include-hidden-files: false
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:58.2325878Z env:
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:58.2326061Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:58.2326323Z   CARGO_INCREMENTAL: 0
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:58.2326524Z   CARGO_TERM_COLOR: always
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:58.2326733Z   CACHE_ON_FAILURE: false
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:58.2326937Z ##[endgroup]
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:58.4130338Z With the provided path, there will be 1 file uploaded
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:58.4136985Z Artifact name is valid!
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:58.4138215Z Root directory input is valid!
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:58.6583875Z Uploading artifact: Wild Guardians Africa_0.1.0_x64-setup.exe
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:58.6628111Z Beginning upload of artifact content to blob storage
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:59.1357940Z Uploaded bytes 8388608
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:59.2508235Z Uploaded bytes 16777216
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:59.2582832Z Uploaded bytes 25165824
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:59.2727142Z Uploaded bytes 33554432
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:59.3013427Z Uploaded bytes 41943040
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:59.4586264Z Uploaded bytes 50331648
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:59.4659803Z Uploaded bytes 58720256
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:59.4874500Z Uploaded bytes 67108864
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:59.4962100Z Uploaded bytes 75497472
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:59.6340059Z Uploaded bytes 83886080
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:59.6408948Z Uploaded bytes 92274688
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:59.6595033Z Uploaded bytes 100663296
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:59.6744724Z Uploaded bytes 109051904
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:59.8175746Z Uploaded bytes 117440512
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:59.8243426Z Uploaded bytes 125829120
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:59.8349580Z Uploaded bytes 134217728
+windows	Run actions/upload-artifact@v7	2026-10-09T23:16:59.8481551Z Uploaded bytes 142606336
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:00.0059035Z Uploaded bytes 150994944
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:00.0167420Z Uploaded bytes 159383552
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:00.0208288Z Uploaded bytes 167772160
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:00.0220527Z Uploaded bytes 176160768
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:00.2042628Z Uploaded bytes 184549376
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:00.2122619Z Uploaded bytes 192937984
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:00.2399562Z Uploaded bytes 201326592
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:00.2718809Z Uploaded bytes 209715200
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:00.3591594Z Uploaded bytes 218103808
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:00.3849414Z Uploaded bytes 226492416
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:00.4131644Z Uploaded bytes 234881024
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:00.4519593Z Uploaded bytes 243269632
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:00.4908460Z Uploaded bytes 251658240
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:00.5029849Z Uploaded bytes 260046848
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:00.5952218Z Uploaded bytes 268435456
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:00.6206637Z Uploaded bytes 276824064
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:00.6252024Z Uploaded bytes 285212672
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:00.6468762Z Uploaded bytes 293601280
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:00.7626792Z Uploaded bytes 301989888
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:00.7697403Z Uploaded bytes 310378496
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:00.7857027Z Uploaded bytes 318767104
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:00.7995297Z Uploaded bytes 327155712
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:00.9372522Z Uploaded bytes 335544320
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:00.9498359Z Uploaded bytes 343932928
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:00.9676808Z Uploaded bytes 352321536
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:00.9910490Z Uploaded bytes 360710144
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:01.0959380Z Uploaded bytes 369098752
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:01.2971020Z Uploaded bytes 376869142
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:01.3352878Z Finished uploading artifact content to blob storage!
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:01.3356804Z SHA256 digest of uploaded artifact is 1d5aed7f6018915688ce126b8a589ece1f7e370a6ad828cd42f2f3be09713420
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:01.3359360Z Finalizing artifact upload
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:01.6296167Z Artifact Wild Guardians Africa_0.1.0_x64-setup.exe successfully finalized. Artifact ID 11649109793
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:01.6300631Z Artifact artifact has been successfully uploaded! Final size is 376869142 bytes. Artifact ID is 11649109793
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:01.6307862Z Artifact download URL: https://github.com/dossijeo/wild-guardians-africa/actions/runs/38002516951/artifacts/11649109793
+windows	Run actions/upload-artifact@v7	﻿2026-10-09T23:17:01.6664701Z ##[group]Run actions/upload-artifact@v7
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:01.6665080Z with:
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:01.6665366Z   path: src-tauri/target/release/wild-guardians-africa.exe
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:01.6665713Z   archive: false
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:01.6665916Z   if-no-files-found: error
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:01.6666148Z   retention-days: 7
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:01.6666352Z   name: artifact
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:01.6666545Z   compression-level: 6
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:01.6666760Z   overwrite: false
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:01.6666965Z   include-hidden-files: false
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:01.6667183Z env:
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:01.6667375Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:01.6667645Z   CARGO_INCREMENTAL: 0
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:01.6667860Z   CARGO_TERM_COLOR: always
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:01.6668100Z   CACHE_ON_FAILURE: false
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:01.6668315Z ##[endgroup]
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:01.8512567Z With the provided path, there will be 1 file uploaded
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:01.8519342Z Artifact name is valid!
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:01.8520841Z Root directory input is valid!
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:02.0816488Z Uploading artifact: wild-guardians-africa.exe
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:02.0860730Z Beginning upload of artifact content to blob storage
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:02.5849117Z Uploaded bytes 8388608
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:02.6221850Z Uploaded bytes 16777216
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:02.6556343Z Uploaded bytes 25165824
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:02.6728459Z Uploaded bytes 33554432
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:02.7805465Z Uploaded bytes 41943040
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:02.7878449Z Uploaded bytes 50331648
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:02.8269501Z Uploaded bytes 58720256
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:02.8435081Z Uploaded bytes 67108864
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:02.9446032Z Uploaded bytes 75497472
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:02.9557087Z Uploaded bytes 83886080
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:03.0238373Z Uploaded bytes 92274688
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:03.0608983Z Uploaded bytes 100663296
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:03.0678216Z Uploaded bytes 109051904
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:03.0903069Z Uploaded bytes 117440512
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:03.1598419Z Uploaded bytes 125829120
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:03.2064645Z Uploaded bytes 134217728
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:03.2223842Z Uploaded bytes 142606336
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:03.2339720Z Uploaded bytes 150994944
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:03.3028559Z Uploaded bytes 159383552
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:03.3390191Z Uploaded bytes 167772160
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:03.3652886Z Uploaded bytes 176160768
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:03.4250511Z Uploaded bytes 184549376
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:03.4711107Z Uploaded bytes 192937984
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:03.4932517Z Uploaded bytes 201326592
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:03.5353530Z Uploaded bytes 209715200
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:03.6161042Z Uploaded bytes 218103808
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:03.6383579Z Uploaded bytes 226492416
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:03.6450458Z Uploaded bytes 234881024
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:03.6729041Z Uploaded bytes 243269632
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:03.7306178Z Uploaded bytes 251658240
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:03.7675686Z Uploaded bytes 260046848
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:03.7815581Z Uploaded bytes 268435456
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:03.8211123Z Uploaded bytes 276824064
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:03.9134430Z Uploaded bytes 285212672
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:03.9712598Z Uploaded bytes 293601280
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:03.9972885Z Uploaded bytes 301989888
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:04.0099994Z Uploaded bytes 310378496
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:04.0932143Z Uploaded bytes 318767104
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:04.1056598Z Uploaded bytes 327155712
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:04.1459190Z Uploaded bytes 335544320
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:04.1884578Z Uploaded bytes 343932928
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:04.2135880Z Uploaded bytes 352321536
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:04.2419136Z Uploaded bytes 360710144
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:04.2766478Z Uploaded bytes 369098752
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:04.3106003Z Uploaded bytes 377487360
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:04.3681560Z Uploaded bytes 378877440
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:04.4046160Z Finished uploading artifact content to blob storage!
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:04.4050339Z SHA256 digest of uploaded artifact is 2e03cad03df566b35fa068083d2af07d8ad0e91453a62d38deccd585ae89afa5
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:04.4052556Z Finalizing artifact upload
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:04.6667906Z Artifact wild-guardians-africa.exe successfully finalized. Artifact ID 11649369691
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:04.6672152Z Artifact artifact has been successfully uploaded! Final size is 378877440 bytes. Artifact ID is 11649369691
+windows	Run actions/upload-artifact@v7	2026-10-09T23:17:04.6680813Z Artifact download URL: https://github.com/dossijeo/wild-guardians-africa/actions/runs/38002516951/artifacts/11649369691
+windows	Post Run actions/checkout@v4	﻿2026-10-09T23:17:04.7097339Z Post job cleanup.
+windows	Post Run actions/checkout@v4	2026-10-09T23:17:04.9380067Z [command]"C:\Program Files\Git\bin\git.exe" version
+windows	Post Run actions/checkout@v4	2026-10-09T23:17:04.9666663Z git version 2.55.0.windows.5
+windows	Post Run actions/checkout@v4	2026-10-09T23:17:04.9742580Z Temporarily overriding HOME='D:\a\_temp\ca25909d-5336-4092-98fb-2ff3274ab6c9' before making global git config changes
+windows	Post Run actions/checkout@v4	2026-10-09T23:17:04.9744065Z Adding repository directory to the temporary git global config as a safe directory
+windows	Post Run actions/checkout@v4	2026-10-09T23:17:04.9754689Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\wild-guardians-africa\wild-guardians-africa
+windows	Post Run actions/checkout@v4	2026-10-09T23:17:05.0097983Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+windows	Post Run actions/checkout@v4	2026-10-09T23:17:05.0458331Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+windows	Post Run actions/checkout@v4	2026-10-09T23:17:05.6538635Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+windows	Post Run actions/checkout@v4	2026-10-09T23:17:05.6809812Z http.https://github.com/.extraheader
+windows	Post Run actions/checkout@v4	2026-10-09T23:17:05.6858158Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+windows	Post Run actions/checkout@v4	2026-10-09T23:17:05.7254577Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+windows	Post Run actions/checkout@v4	2026-10-09T23:17:06.3832464Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+windows	Post Run actions/checkout@v4	2026-10-09T23:17:06.4217512Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+windows	Complete job	﻿2026-10-09T23:17:07.0836712Z Cleaning up orphan processes
+windows	Complete job	2026-10-09T23:17:07.1356566Z Terminate orphan process: pid (5580) (vctip)
+windows	Complete job	2026-10-09T23:17:07.2291596Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
