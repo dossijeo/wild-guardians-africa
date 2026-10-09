@@ -58,3 +58,17 @@ metadata/log extract and the historical live Windows snapshot are retained
 in `crops-v4/ci-bb629-terminal/`; root independently checked all three file
 hashes against the receipt before and after copying. The Windows snapshot
 is not terminal acceptance.
+
+Windows run37905454830 subsequently completed successfully on immutable
+`bb629a38`. Root inspected the verifier and reran it before and after copying
+the retained evidence to `crops-v4/ci-bb629-terminal/`. Original v7 JSON sizes
+and hashes match official artifact metadata: smoke2829 bytes and visibility
+110225 bytes, both ok:true/errors:[], with 22 distinct runtime GLBs. The
+21 simulation fields remain exactly equal through 300559.6ms of genuine
+native hiding; the menu pause persists on restoration and simulation resumes
+for approximately one second afterward. Earlier live snapshots remain
+historical, not the current result.
+
+This closes Windows CI acceptance for the V4 crop head. It does not validate
+the separate interactive-loading branch, every culture, audible sound, GPU
+performance, physical mobile devices or the whole master-plan objective.
