@@ -1,0 +1,38 @@
+{
+  "status": "completed",
+  "source": "38cf337390e68492ea286ec5ab4555ade8ab69b3",
+  "command": "node tools/diagnose_early_farm_service.mjs docs/qa/campaign-service-diagnostic/native-five-days-dependencies-ready 5",
+  "processExit": 0,
+  "wallSeconds": 7.1920331,
+  "gpuUsed": false,
+  "liveHandles": [],
+  "preflightImports": "passed",
+  "nodeVersion": "20.11.0",
+  "dependencies": {
+    "junctionTarget": "C:\\Users\\PC\\source\\repos\\wild-guardians-africa\\node_modules",
+    "threeInstalled": "0.180.0",
+    "threeLock": "0.180.0",
+    "threeRevision": 180,
+    "installedOrMutated": false
+  },
+  "filesSha256": {
+    "day-1-time-100-state.json.gz": "88cde00c50c819629dde01da90bf126e545a6aefb9ddbad4168df0ab0b4e9891",
+    "day-1-time-200-state.json.gz": "1be78789eacdcd9ea41e9ac2ae7c858e462a131121d487449fd24de61e86e109",
+    "day-2-time-100-state.json.gz": "85a55521283d71cac4aa347493bc1d565501fa2410826210055b95021083a4f4",
+    "day-2-time-200-state.json.gz": "041d9f08585698e4a546522de0c6e22013f518878a6d68a9c90a9c7e40a2aa9b",
+    "day-3-time-100-state.json.gz": "008499c01e3e5c3564727cc752f9dae9259a9cb63036083261837b4a597066f1",
+    "day-3-time-200-state.json.gz": "d53925904b7af5b597097b6b60bfb513a0c0617d10f650a0e11510ec64dc7ddb",
+    "day-4-time-100-state.json.gz": "741739491e9637ae85f608a21be7cc11533de40af4469e4acef264157e06172e",
+    "day-4-time-200-state.json.gz": "09f332d4e542de967d11455c421dec7217a4f9e47298dc143996a5f36edd04be",
+    "day-5-time-100-state.json.gz": "ff9705d2b89000d488634dd84116ebf897fc114b0dadfcce5d2bf8215ffab079",
+    "day-5-time-200-state.json.gz": "5274622128f82a7b74bcf7fe92aa1b4a83bc9865b75dab9b0907af6e166cb896",
+    "daylight-trace.jsonl.gz": "62c838d8aa5e9ae1dadffa181864812c8474a92dcfc4300c44468533f3bae6c5",
+    "diagnostic.json": "e3cb81270ad92b7b6f1386847a2cdb519c66ac8b815f9b183f620ae949c367cc",
+    "final-state.json.gz": "7e351b090f4d5cb145873676d712ed4c0c900772eff99e6172d17a5bb5dff8e1",
+    "native-summary.json": "715133b991cebf60b5d3ef996ef698aaaf38af72f835aa7d018ad8d9f8225f0c",
+    "report.json": "587aa519e25172fed21d0408a95e836834fcb5abf000d905061fbff5a86557e7"
+  },
+  "logSha256": "9816a7cb48987609082c36b5402cbb87794bf3e6a1e5ae9e3bd0baf229485c83",
+  "observedAt": "2026-10-09T05:50:05.695648+00:00",
+  "scope": "New distinct environment-ready attempt authorized after pre-simulation dependency failure. No retry or mutation of gameplay failure. Five-day diagnostic only, not100-night/activity approval."
+}
