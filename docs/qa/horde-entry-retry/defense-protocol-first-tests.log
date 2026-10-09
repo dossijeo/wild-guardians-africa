@@ -1,0 +1,35 @@
+TAP version 13
+# Subtest: Separate scenario preserves original productive, magic, hiring and finite plot policy source
+ok 1 - Separate scenario preserves original productive, magic, hiring and finite plot policy source
+  ---
+  duration_ms: 2.625
+  ...
+# Subtest: Both arms execute same legal initial seed and paid hiring without a simulation campaign
+ok 2 - Both arms execute same legal initial seed and paid hiring without a simulation campaign
+  ---
+  duration_ms: 838.2223
+  ...
+# Subtest: Centre-only loop ignores healthy wall, queues damaged centre without charging; neglect omits it
+ok 3 - Centre-only loop ignores healthy wall, queues damaged centre without charging; neglect omits it
+  ---
+  duration_ms: 206.2152
+  ...
+# Subtest: Wall policy ignores healthy owned walls and queues only actual sub80percent damage without request debit
+ok 4 - Wall policy ignores healthy owned walls and queues only actual sub80percent damage without request debit
+  ---
+  duration_ms: 305.6159
+  ...
+# Subtest: Outer driver waits on real worker without changing native clock or state and awaits disposal
+ok 5 - Outer driver waits on real worker without changing native clock or state and awaits disposal
+  ---
+  duration_ms: 526.7095
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2117.653

@@ -1,0 +1,64 @@
+{
+  "runtimeFreeze": "a6893053ccbb3fbf167e5a92c64209ee6eebfdd1",
+  "parentCommit": "0c9eaab25a8cf02677d844c76b8cd57312c8ce51",
+  "scope": "Preflight source/protocol receipt; no20night campaign run",
+  "files": {
+    "tools/horde-defense-farm.mjs": "ac4b2dc071c07bf12b238404aff9f342f679f3a6221eef5ffb50d40b95b663c3",
+    "tools/horde-defense-comparison.mjs": "3b31e362e6ca38605a3ca63118be2524412e38b2360f334d9964fb7ba42e6d7c",
+    "tools/horde-defense-actions.mjs": "ec5029059c09b244f0b21b02181e8d5c4672e87667d143ba3d3580323cf7111c",
+    "tools/horde-entry-driver.mjs": "c8d3ef9070a5e1d825c5a4947f5b2cd2afc7bd0fb07abd001c3a15e5501eef97",
+    "tests/horde-defense-comparison-policy.test.js": "88fb9830df85864c573e621afe29f02e973b0c2dfa4db87566467b9abf439bd3",
+    "tests/horde-defense-comparison-driver.test.js": "d81ee1ead1b0c2ec3386688fba7dd4a56170799703e736687a44cefc5654aec0",
+    "tools/check_intensive_farm.mjs": "4fdbd4c73cf02453b3c33fd86e895ca3511070824ed44d12a0ddf47b472deefc",
+    "tools/farm-defense-policy.mjs": "1b48e5d76fb3df35ab8dd205345a94dda46d48b0ff1a1b64a25ccafff730be22",
+    "tools/repair-settlement-evidence.mjs": "26a91352f6e115facf0443c5072402f505ce878abd659dc0a20834c845529742",
+    "tools/node-raid-entry-transport.mjs": "4be53fd745b88024e180285e8308c4bada5b2f548632065806fff01a03253787",
+    "tools/node-raid-entry-worker.mjs": "68b5e4f27d55c2dac715a712543be5a9fea2575f20bfdfae92d918457efd9791",
+    "docs/qa/horde-entry-retry/defense-protocol-driver-tests.log": "ed06bdac5159ac4f975ce002af9d307355832354433bd7e3465fc3c914b71a87",
+    "docs/qa/horde-entry-retry/defense-protocol-final-tests.log": "8c55904db69d794bdd0bc7b85bf7ff88e03883ad6426467ca650376b7d5aa431",
+    "docs/qa/horde-entry-retry/defense-protocol-first-tests.log": "6158859cd080ec9c7b805006e2ecaeb1e6aa29ba3134b47d8c1698c4a69cc742",
+    "docs/qa/horde-entry-retry/defense-protocol-source-final-tests.log": "05fc7068de206c3b03dfc2fe612915e0e5fcd3f134ad2b1c08c2df3b7725a16b"
+  },
+  "productivePolicyBlocks": [
+    {
+      "start": " const bounds=",
+      "end": " const daily=",
+      "sha256": "fae07f760df07901db3b55e54d1b703e539ba104d242521dbfaa0690f0e3b3e8",
+      "exactEqualAfterCRRemoval": true
+    },
+    {
+      "start": " const choosePlot=",
+      "end": " const act=",
+      "sha256": "2dfffea663f14c2601b2f8ddb1813812a6907a9cb7d118b882dd51c5f4a1ee23",
+      "exactEqualAfterCRRemoval": true
+    },
+    {
+      "start": " const hire=",
+      "end": " hire();collect();",
+      "sha256": "a4ecf1e932ea6039a656f6d27cfc52616a07151dfa71a24bc40219ea270fe70a",
+      "exactEqualAfterCRRemoval": true
+    }
+  ],
+  "fixedScenario": {
+    "protocol": "horde-defense-comparison-v1",
+    "days": 20,
+    "biome": "gran-canon",
+    "culture": "saheliana",
+    "seed": 712,
+    "mixed": true,
+    "profile": "olderFemale",
+    "plantsPerWorker": 12,
+    "middayHiring": false,
+    "reserveLabourGrowth": true,
+    "reserveMaintenance": true,
+    "burstPlanting": false,
+    "cameraEntry": true
+  },
+  "preflightFinalTests": {
+    "pass": 7,
+    "fail": 0,
+    "exit": 0,
+    "durationMilliseconds": 2193.3498
+  },
+  "sourceNormalization": "Only added files normalized to LF after preflight. Original producer and runtime bytes unchanged; receipt records final freeze files."
+}
