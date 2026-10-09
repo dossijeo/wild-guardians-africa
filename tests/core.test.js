@@ -81,8 +81,8 @@ test('FIFO chooses oldest task, proximity chooses its worker and reserves atomic
   reserveTasks(s);assert.equal(s.tasks.length,2);releaseTask(s,s.workers[1]);assert.equal(first.workerId,null);
 });
 test('Threat boundaries and attraction are live plant base values',()=>{
-  assert.equal(attraction(Array.from({length:20},()=>({species:'mijo',alive:true}))),220);
-  assert.equal(attraction(Array.from({length:10},()=>({species:'platano',alive:true}))),2670);
+  assert.equal(attraction(Array.from({length:20},()=>({species:'mijo',alive:true}))),280);
+  assert.equal(attraction(Array.from({length:10},()=>({species:'platano',alive:true}))),3340);
   assert.equal(threatTier(0).threat_max,2);assert.equal(threatTier(99).threat_max,2);assert.equal(threatTier(100).threat_max,4);assert.equal(threatTier(2000).night_attack_probability,1);
 });
 test('Every reachable threat budget has unique legal unordered compositions',()=>{

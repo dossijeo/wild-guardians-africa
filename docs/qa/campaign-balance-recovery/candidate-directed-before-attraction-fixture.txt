@@ -1,0 +1,630 @@
+TAP version 13
+# Subtest: QA-102: mapungubwe/1 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 1 - QA-102: mapungubwe/1 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 95.5249
+  ...
+# Subtest: QA-102: mapungubwe/1 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 2 - QA-102: mapungubwe/1 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 45.2236
+  ...
+# Subtest: QA-102: mapungubwe/1 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 3 - QA-102: mapungubwe/1 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 167.1506
+  ...
+# Subtest: QA-102: mapungubwe/4 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 4 - QA-102: mapungubwe/4 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 44.2559
+  ...
+# Subtest: QA-102: mapungubwe/4 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 5 - QA-102: mapungubwe/4 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 25.9714
+  ...
+# Subtest: QA-102: mapungubwe/4 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 6 - QA-102: mapungubwe/4 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 46.3027
+  ...
+# Subtest: QA-102: mapungubwe/712 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 7 - QA-102: mapungubwe/712 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 11.9757
+  ...
+# Subtest: QA-102: mapungubwe/712 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 8 - QA-102: mapungubwe/712 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 14.0545
+  ...
+# Subtest: QA-102: mapungubwe/712 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 9 - QA-102: mapungubwe/712 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 42.0694
+  ...
+# Subtest: QA-102: mapungubwe/123456789 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 10 - QA-102: mapungubwe/123456789 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 25.0442
+  ...
+# Subtest: QA-102: mapungubwe/123456789 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 11 - QA-102: mapungubwe/123456789 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 33.091
+  ...
+# Subtest: QA-102: mapungubwe/123456789 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 12 - QA-102: mapungubwe/123456789 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 51.5306
+  ...
+# Subtest: QA-102: saheliana/1 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 13 - QA-102: saheliana/1 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 21.4894
+  ...
+# Subtest: QA-102: saheliana/1 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 14 - QA-102: saheliana/1 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 13.6994
+  ...
+# Subtest: QA-102: saheliana/1 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 15 - QA-102: saheliana/1 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 38.6474
+  ...
+# Subtest: QA-102: saheliana/4 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 16 - QA-102: saheliana/4 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 19.8785
+  ...
+# Subtest: QA-102: saheliana/4 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 17 - QA-102: saheliana/4 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 18.3694
+  ...
+# Subtest: QA-102: saheliana/4 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 18 - QA-102: saheliana/4 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 42.5927
+  ...
+# Subtest: QA-102: saheliana/712 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 19 - QA-102: saheliana/712 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 11.4187
+  ...
+# Subtest: QA-102: saheliana/712 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 20 - QA-102: saheliana/712 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 12.8807
+  ...
+# Subtest: QA-102: saheliana/712 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 21 - QA-102: saheliana/712 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 45.3639
+  ...
+# Subtest: QA-102: saheliana/123456789 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 22 - QA-102: saheliana/123456789 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 32.2985
+  ...
+# Subtest: QA-102: saheliana/123456789 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 23 - QA-102: saheliana/123456789 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 22.444
+  ...
+# Subtest: QA-102: saheliana/123456789 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 24 - QA-102: saheliana/123456789 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 39.1159
+  ...
+# Subtest: QA-102: suajili/1 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 25 - QA-102: suajili/1 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 9.3183
+  ...
+# Subtest: QA-102: suajili/1 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 26 - QA-102: suajili/1 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 10.1572
+  ...
+# Subtest: QA-102: suajili/1 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 27 - QA-102: suajili/1 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 37.4064
+  ...
+# Subtest: QA-102: suajili/4 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 28 - QA-102: suajili/4 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 12.7871
+  ...
+# Subtest: QA-102: suajili/4 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 29 - QA-102: suajili/4 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 13.2252
+  ...
+# Subtest: QA-102: suajili/4 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 30 - QA-102: suajili/4 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 34.5111
+  ...
+# Subtest: QA-102: suajili/712 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 31 - QA-102: suajili/712 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 10.2427
+  ...
+# Subtest: QA-102: suajili/712 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 32 - QA-102: suajili/712 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 9.9512
+  ...
+# Subtest: QA-102: suajili/712 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 33 - QA-102: suajili/712 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 33.7216
+  ...
+# Subtest: QA-102: suajili/123456789 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 34 - QA-102: suajili/123456789 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 20.7663
+  ...
+# Subtest: QA-102: suajili/123456789 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 35 - QA-102: suajili/123456789 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 20.6362
+  ...
+# Subtest: QA-102: suajili/123456789 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 36 - QA-102: suajili/123456789 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 37.1041
+  ...
+# Subtest: QA-102: musgum/1 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 37 - QA-102: musgum/1 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 8.8254
+  ...
+# Subtest: QA-102: musgum/1 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 38 - QA-102: musgum/1 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 8.3219
+  ...
+# Subtest: QA-102: musgum/1 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 39 - QA-102: musgum/1 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 39.2011
+  ...
+# Subtest: QA-102: musgum/4 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 40 - QA-102: musgum/4 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 11.4037
+  ...
+# Subtest: QA-102: musgum/4 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 41 - QA-102: musgum/4 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 11.9452
+  ...
+# Subtest: QA-102: musgum/4 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 42 - QA-102: musgum/4 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 40.6496
+  ...
+# Subtest: QA-102: musgum/712 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 43 - QA-102: musgum/712 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 9.1957
+  ...
+# Subtest: QA-102: musgum/712 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 44 - QA-102: musgum/712 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 8.4162
+  ...
+# Subtest: QA-102: musgum/712 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 45 - QA-102: musgum/712 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 39.5996
+  ...
+# Subtest: QA-102: musgum/123456789 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 46 - QA-102: musgum/123456789 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 22.2643
+  ...
+# Subtest: QA-102: musgum/123456789 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 47 - QA-102: musgum/123456789 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 28.8245
+  ...
+# Subtest: QA-102: musgum/123456789 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 48 - QA-102: musgum/123456789 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 42.636
+  ...
+# Subtest: QA-102: etiope/1 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 49 - QA-102: etiope/1 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 11.0266
+  ...
+# Subtest: QA-102: etiope/1 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 50 - QA-102: etiope/1 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 9.6032
+  ...
+# Subtest: QA-102: etiope/1 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 51 - QA-102: etiope/1 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 39.4674
+  ...
+# Subtest: QA-102: etiope/4 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 52 - QA-102: etiope/4 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 11.2361
+  ...
+# Subtest: QA-102: etiope/4 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 53 - QA-102: etiope/4 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 11.6256
+  ...
+# Subtest: QA-102: etiope/4 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 54 - QA-102: etiope/4 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 33.3944
+  ...
+# Subtest: QA-102: etiope/712 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 55 - QA-102: etiope/712 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 11.6408
+  ...
+# Subtest: QA-102: etiope/712 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 56 - QA-102: etiope/712 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 9.3158
+  ...
+# Subtest: QA-102: etiope/712 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 57 - QA-102: etiope/712 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 40.2432
+  ...
+# Subtest: QA-102: etiope/123456789 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 58 - QA-102: etiope/123456789 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 28.5735
+  ...
+# Subtest: QA-102: etiope/123456789 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 59 - QA-102: etiope/123456789 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 28.9493
+  ...
+# Subtest: QA-102: etiope/123456789 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 60 - QA-102: etiope/123456789 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 34.8369
+  ...
+# Subtest: QA-103: mapungubwe/1 the same real day has independent daytime and nighttime raids
+ok 61 - QA-103: mapungubwe/1 the same real day has independent daytime and nighttime raids
+  ---
+  duration_ms: 133.4387
+  ...
+# Subtest: QA-103: mapungubwe/4 the same real day has independent daytime and nighttime raids
+ok 62 - QA-103: mapungubwe/4 the same real day has independent daytime and nighttime raids
+  ---
+  duration_ms: 130.7662
+  ...
+# Subtest: QA-103: saheliana/1 the same real day has independent daytime and nighttime raids
+ok 63 - QA-103: saheliana/1 the same real day has independent daytime and nighttime raids
+  ---
+  duration_ms: 60.6567
+  ...
+# Subtest: QA-103: saheliana/4 the same real day has independent daytime and nighttime raids
+ok 64 - QA-103: saheliana/4 the same real day has independent daytime and nighttime raids
+  ---
+  duration_ms: 77.1
+  ...
+# Subtest: QA-103: suajili/1 the same real day has independent daytime and nighttime raids
+ok 65 - QA-103: suajili/1 the same real day has independent daytime and nighttime raids
+  ---
+  duration_ms: 60.1609
+  ...
+# Subtest: QA-103: suajili/4 the same real day has independent daytime and nighttime raids
+ok 66 - QA-103: suajili/4 the same real day has independent daytime and nighttime raids
+  ---
+  duration_ms: 72.9145
+  ...
+# Subtest: QA-103: musgum/1 the same real day has independent daytime and nighttime raids
+ok 67 - QA-103: musgum/1 the same real day has independent daytime and nighttime raids
+  ---
+  duration_ms: 51.6912
+  ...
+# Subtest: QA-103: musgum/4 the same real day has independent daytime and nighttime raids
+ok 68 - QA-103: musgum/4 the same real day has independent daytime and nighttime raids
+  ---
+  duration_ms: 76.9053
+  ...
+# Subtest: QA-103: etiope/1 the same real day has independent daytime and nighttime raids
+ok 69 - QA-103: etiope/1 the same real day has independent daytime and nighttime raids
+  ---
+  duration_ms: 55.2225
+  ...
+# Subtest: QA-103: etiope/4 the same real day has independent daytime and nighttime raids
+ok 70 - QA-103: etiope/4 the same real day has independent daytime and nighttime raids
+  ---
+  duration_ms: 74.9404
+  ...
+# Subtest: mapungubwe: rotated authored hull has the closest safe delivery edge in every direction
+ok 71 - mapungubwe: rotated authored hull has the closest safe delivery edge in every direction
+  ---
+  duration_ms: 20.3991
+  ...
+# Subtest: saheliana: rotated authored hull has the closest safe delivery edge in every direction
+ok 72 - saheliana: rotated authored hull has the closest safe delivery edge in every direction
+  ---
+  duration_ms: 8.4232
+  ...
+# Subtest: suajili: rotated authored hull has the closest safe delivery edge in every direction
+ok 73 - suajili: rotated authored hull has the closest safe delivery edge in every direction
+  ---
+  duration_ms: 7.4515
+  ...
+# Subtest: musgum: rotated authored hull has the closest safe delivery edge in every direction
+ok 74 - musgum: rotated authored hull has the closest safe delivery edge in every direction
+  ---
+  duration_ms: 9.691
+  ...
+# Subtest: etiope: rotated authored hull has the closest safe delivery edge in every direction
+ok 75 - etiope: rotated authored hull has the closest safe delivery edge in every direction
+  ---
+  duration_ms: 8.6919
+  ...
+# Subtest: a western crop delivers on the near western edge, survives reload, and credits only after physical arrival
+ok 76 - a western crop delivers on the near western edge, survives reload, and credits only after physical arrival
+  ---
+  duration_ms: 97.1752
+  ...
+# Subtest: Original balance preserves unrelated values with explicit player revisions and post-jam harvest margins
+ok 77 - Original balance preserves unrelated values with explicit player revisions and post-jam harvest margins
+  ---
+  duration_ms: 3.8023
+  ...
+# Subtest: Ledger rounds an exact repair fraction upward only at settlement
+ok 78 - Ledger rounds an exact repair fraction upward only at settlement
+  ---
+  duration_ms: 0.7531
+  ...
+# Subtest: Money formatter never changes accounting
+ok 79 - Money formatter never changes accounting
+  ---
+  duration_ms: 18.4237
+  ...
+# Subtest: Global allocation: 60/30/10, seven workers -> 4/2/1
+ok 80 - Global allocation: 60/30/10, seven workers -> 4/2/1
+  ---
+  duration_ms: 1.9272
+  ...
+# Subtest: Stable equal residues and empty centers retain base assignment
+ok 81 - Stable equal residues and empty centers retain base assignment
+  ---
+  duration_ms: 0.4112
+  ...
+# Subtest: Scarce workforce covers highest plant weights before adding a second worker
+ok 82 - Scarce workforce covers highest plant weights before adding a second worker
+  ---
+  duration_ms: 0.4403
+  ...
+# Subtest: Zero weights divide without fictitious plants; no centers divide nowhere
+ok 83 - Zero weights divide without fictitious plants; no centers divide nowhere
+  ---
+  duration_ms: 0.2364
+  ...
+# Subtest: Allocation conserves every worker over 3000 seeded scenarios
+ok 84 - Allocation conserves every worker over 3000 seeded scenarios
+  ---
+  duration_ms: 90.5337
+  ...
+# Subtest: Hiring rejects negatives and unknown profiles; balanced profiles preserve totals
+ok 85 - Hiring rejects negatives and unknown profiles; balanced profiles preserve totals
+  ---
+  duration_ms: 1.6153
+  ...
+# Subtest: mijo: first combined task gates growth; mandatory watering gates maturity
+ok 86 - mijo: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 1.0058
+  ...
+# Subtest: mijo: magic satisfies only crossed checkpoints, no initial water debt
+ok 87 - mijo: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.3279
+  ...
+# Subtest: girasol: first combined task gates growth; mandatory watering gates maturity
+ok 88 - girasol: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.3629
+  ...
+# Subtest: girasol: magic satisfies only crossed checkpoints, no initial water debt
+ok 89 - girasol: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.1727
+  ...
+# Subtest: sorgo: first combined task gates growth; mandatory watering gates maturity
+ok 90 - sorgo: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.2516
+  ...
+# Subtest: sorgo: magic satisfies only crossed checkpoints, no initial water debt
+ok 91 - sorgo: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.1162
+  ...
+# Subtest: maiz: first combined task gates growth; mandatory watering gates maturity
+ok 92 - maiz: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.176
+  ...
+# Subtest: maiz: magic satisfies only crossed checkpoints, no initial water debt
+ok 93 - maiz: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.2288
+  ...
+# Subtest: batata: first combined task gates growth; mandatory watering gates maturity
+ok 94 - batata: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.3573
+  ...
+# Subtest: batata: magic satisfies only crossed checkpoints, no initial water debt
+ok 95 - batata: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.4047
+  ...
+# Subtest: algodon: first combined task gates growth; mandatory watering gates maturity
+ok 96 - algodon: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.455
+  ...
+# Subtest: algodon: magic satisfies only crossed checkpoints, no initial water debt
+ok 97 - algodon: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.1618
+  ...
+# Subtest: yuca: first combined task gates growth; mandatory watering gates maturity
+ok 98 - yuca: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.1091
+  ...
+# Subtest: yuca: magic satisfies only crossed checkpoints, no initial water debt
+ok 99 - yuca: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.1251
+  ...
+# Subtest: platano: first combined task gates growth; mandatory watering gates maturity
+ok 100 - platano: first combined task gates growth; mandatory watering gates maturity
+  ---
+  duration_ms: 0.3759
+  ...
+# Subtest: platano: magic satisfies only crossed checkpoints, no initial water debt
+ok 101 - platano: magic satisfies only crossed checkpoints, no initial water debt
+  ---
+  duration_ms: 0.1058
+  ...
+# Subtest: Growth magic does not clear earlier water debt
+ok 102 - Growth magic does not clear earlier water debt
+  ---
+  duration_ms: 0.2346
+  ...
+# Subtest: Contiguous harvest selection does not include distant same-species plants
+ok 103 - Contiguous harvest selection does not include distant same-species plants
+  ---
+  duration_ms: 0.4729
+  ...
+# Subtest: FIFO chooses oldest task, proximity chooses its worker and reserves atomically
+ok 104 - FIFO chooses oldest task, proximity chooses its worker and reserves atomically
+  ---
+  duration_ms: 1.625
+  ...
+# Subtest: Threat boundaries and attraction are live plant base values
+not ok 105 - Threat boundaries and attraction are live plant base values
+  ---
+  duration_ms: 2.4479
+  location: 'file:///C:/Users/PC/.codex/worktrees/campaign-balance-recovery/wild-guardians-africa/tests/core.test.js:83:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    280 !== 220
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 220
+  actual: 280
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/campaign-balance-recovery/wild-guardians-africa/tests/core.test.js:84:10)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+# Subtest: Every reachable threat budget has unique legal unordered compositions
+ok 106 - Every reachable threat budget has unique legal unordered compositions
+  ---
+  duration_ms: 2.2409
+  ...
+# Subtest: Building collapse thresholds remain distinct and irreversible
+ok 107 - Building collapse thresholds remain distinct and irreversible
+  ---
+  duration_ms: 0.449
+  ...
+# Subtest: Permission matrix handles stacked pauses, night, raid and center recovery
+ok 108 - Permission matrix handles stacked pauses, night, raid and center recovery
+  ---
+  duration_ms: 0.4254
+  ...
+# Subtest: Economic dawn thresholds and linear unlimited village costs
+ok 109 - Economic dawn thresholds and linear unlimited village costs
+  ---
+  duration_ms: 0.3857
+  ...
+# Subtest: Snapshots reject malformed data, roundtrip random state and isolate slots
+ok 110 - Snapshots reject malformed data, roundtrip random state and isolate slots
+  ---
+  duration_ms: 3.4444
+  ...
+# Subtest: reconciles the historical 100-night plantation, physical deliveries and recorded idle time without rewriting it
+ok 111 - reconciles the historical 100-night plantation, physical deliveries and recorded idle time without rewriting it
+  ---
+  duration_ms: 547.3416
+  ...
+# Subtest: computes an integer-price candidate from exact crate values but does not declare it a campaign victory
+ok 112 - computes an integer-price candidate from exact crate values but does not declare it a campaign victory
+  ---
+  duration_ms: 257.4751
+  ...
+# Subtest: reconciles independent historical olderMale campaign using its source balance
+ok 113 - reconciles independent historical olderMale campaign using its source balance
+  ---
+  duration_ms: 68.9233
+  ...
+# Subtest: reconciles independent historical olderFemale campaign using its source balance
+ok 114 - reconciles independent historical olderFemale campaign using its source balance
+  ---
+  duration_ms: 67.0767
+  ...
+# Subtest: reconciles independent historical youngMale campaign using its source balance
+ok 115 - reconciles independent historical youngMale campaign using its source balance
+  ---
+  duration_ms: 59.2283
+  ...
+# Subtest: reconciles independent historical youngFemale campaign using its source balance
+ok 116 - reconciles independent historical youngFemale campaign using its source balance
+  ---
+  duration_ms: 74.8336
+  ...
+# Subtest: rejects a mismatched historical balance rather than silently analysing current prices
+ok 117 - rejects a mismatched historical balance rather than silently analysing current prices
+  ---
+  duration_ms: 343.4949
+  ...
+# Subtest: rejects a fabricated delivery credit even when the total ledger is reconciled
+ok 118 - rejects a fabricated delivery credit even when the total ledger is reconciled
+  ---
+  duration_ms: 220.4986
+  ...
+# Subtest: reprices the raw rational value and rounds once, instead of multiplying a rounded historical credit
+ok 119 - reprices the raw rational value and rounds once, instead of multiplying a rounded historical credit
+  ---
+  duration_ms: 0.6676
+  ...
+# Subtest: rejects a physically unwatered harvest and invalid analytical targets
+ok 120 - rejects a physically unwatered harvest and invalid analytical targets
+  ---
+  duration_ms: 237.3148
+  ...
+1..120
+# tests 120
+# suites 0
+# pass 119
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2813.5873

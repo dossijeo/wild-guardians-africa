@@ -52,9 +52,9 @@ for(const profile of profiles)test(`QA-147: ${profile} reload preserves one nati
  assert.equal(serialize(loaded),serialize(s));assert.equal(crate.carrierId,s.workers[0].id);assert.equal(s.workers[0].crateId,crate.id);
  assert.equal(pose(loaded).name,'Carry_Crate');assert.deepEqual(pose(loaded),pose(s));
  assert.equal(s.plants[0].alive,false);assert.equal(crate.sourcePlantId,s.plants[0].id);assert.equal(crate.delivered,false);
- const male=profile.endsWith('Male');assert.deepEqual(crate.value,male?rational(858,25):rational(143,5));
+ const male=profile.endsWith('Male');assert.deepEqual(crate.value,male?rational(1092,25):rational(182,5));
  paired(s,nav,loaded,restoredNav,40);assert.equal(s.crates.length,1);assert.equal(crate.delivered,true);assert.equal(s.spells.length,0);
- assert.equal(numberOf(s.ledger.balance),cash+(male?35:29));assert.equal(s.events.filter(e=>e.type==='CropPicked').length,1);
+ assert.equal(numberOf(s.ledger.balance),cash+(male?44:37));assert.equal(s.events.filter(e=>e.type==='CropPicked').length,1);
  assert.equal(s.events.filter(e=>e.type==='CrateDelivered').length,1);assert.equal(Object.keys(s.ledger.entries).filter(id=>id.startsWith('deliver:')).length,1);
  const settled=saved(loaded),settledNav=navigation(settled),value=numberOf(settled.ledger.balance);Game.tick(settled,5,settledNav);
  assert.equal(settled.crates.length,1);assert.equal(numberOf(settled.ledger.balance),value);assert.equal(settled.crates[0].delivered,true);

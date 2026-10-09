@@ -78,7 +78,7 @@ test('A worker from the selected village reaches, cares for a crop and returns a
   }
   assert.equal(s.plants[0].water[0].status,'manual');assert.ok(s.events.some(e=>e.type==='WaterSatisfied'));
   Game.tick(s,40,nav);assert.equal(w.status,'home');assert.equal(w.x,30);assert.equal(w.z,0);
-  assert.equal(numberOf(s.ledger.balance),9179);assert.equal(s.crates.length,1);assert.equal(s.crates[0].delivered,true);
+  assert.equal(numberOf(s.ledger.balance),9182);assert.equal(s.crates.length,1);assert.equal(s.crates[0].delivered,true);
 });
 test('The unreachable-center command explains its failure in English and Spanish',()=>{
   const source='El centro no tiene un camino válido al poblado';

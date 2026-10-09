@@ -84,13 +84,13 @@ test('QA-056/057/064/065: unattended automatic FIFO harvest survives dawn, then 
   assert.deepEqual(s.tasks.map(t=>[t.kind,t.targetId]),[['harvest',a.id],['harvest',b.id]]);
   const w=hire(s,'olderMale'),paid=numberOf(s.ledger.balance);assert.equal(paid,cash-30);
   until(s,()=>s.crates.length===1);const crate=s.crates[0];assert.equal(w.status,'carrying');assert.equal(crate.delivered,false);
-  assert.equal(a.alive,false);assert.equal(a.harvestRequested,false);assert.equal(b.alive,true);assert.deepEqual(crate.value,rational(66,5));
+  assert.equal(a.alive,false);assert.equal(a.harvestRequested,false);assert.equal(b.alive,true);assert.deepEqual(crate.value,rational(84,5));
   assert.equal(crate.sourcePlantId,a.id);assert.equal(numberOf(s.ledger.balance),paid);
   let loaded=deserialize(serialize(s));Game.rebuildTasks(loaded);until(loaded,()=>loaded.crates[0].delivered,40);
-  assert.equal(numberOf(loaded.ledger.balance),paid+14);assert.equal(loaded.events.filter(e=>e.type==='CrateDelivered').length,1);
+  assert.equal(numberOf(loaded.ledger.balance),paid+17);assert.equal(loaded.events.filter(e=>e.type==='CrateDelivered').length,1);
   const settled=serialize(loaded);assert.equal(transact(loaded.ledger,`deliver:${crate.id}`,crate.value),false);assert.equal(serialize(loaded),settled);
   loaded=deserialize(serialize(loaded));Game.rebuildTasks(loaded);until(loaded,()=>loaded.crates.length===2&&loaded.crates.every(c=>c.delivered),100);
-  assert.equal(numberOf(loaded.ledger.balance),paid+28);assert.equal(loaded.crates.length,2);assert.ok(loaded.crates.every(c=>c.delivered));
+  assert.equal(numberOf(loaded.ledger.balance),paid+34);assert.equal(loaded.crates.length,2);assert.ok(loaded.crates.every(c=>c.delivered));
   assert.ok(!loaded.tasks.some(t=>t.kind==='crate'||t.kind==='harvest'));assert.equal(loaded.plants.find(p=>p.id===b.id).harvestRequested,false);
   const final=numberOf(loaded.ledger.balance);Game.rebuildTasks(loaded);Game.tick(loaded,1,nav);assert.equal(numberOf(loaded.ledger.balance),final);
 });

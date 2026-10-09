@@ -112,5 +112,5 @@ for(const material of ['zarzas','empalizada','reforzado'])test(`${material}: a r
     delivered=s.crates.some(c=>c.delivered);
   }
   assert.ok(carryWait&&saved&&delivered,'must actually wait with a harvested crate and deliver it');
-  assert.equal(BigInt(s.ledger.balance.n),initialMoney+14n);assert.equal(s.events.filter(e=>e.type==='CrateDelivered').length,1);
+  assert.equal(BigInt(s.ledger.balance.n),initialMoney+17n);assert.equal(s.events.filter(e=>e.type==='CrateDelivered').length,1);
 });

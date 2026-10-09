@@ -27,7 +27,7 @@ test('QA-087: all ten attraction boundaries select the exact confirmed tier',()=
 });
 
 test('QA-087: actual living plant base values drive night planning independently of cash, crates, maturity and yield bonuses',()=>{
- const s=fixture();s.plants.push({id:'dead',species:'platano',alive:false,growth:999});assert.equal(attraction(s.plants),1221);
+ const s=fixture();s.plants.push({id:'dead',species:'platano',alive:false,growth:999});assert.equal(attraction(s.plants),1554);
  const empty=Game.newGame({seed:712});empty.day=6;empty.ledger.balance=rational(999999999);empty.crates=[{value:rational(999999999),delivered:false}];planNight(empty);assert.equal(empty.nightPlan.attraction,0);assert.ok(empty.nightPlan.group.length>0);
  const reference=structuredClone(s);planNight(reference);
  for(const balance of [0,100,999999999]){

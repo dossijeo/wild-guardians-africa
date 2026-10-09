@@ -1,0 +1,31 @@
+{
+  "candidateHead": "2bdac97e3439f6f9cf4b99b4f2ec1007f8bc2d5b",
+  "branch": "codex/campaign-balance-recovery",
+  "baseMain": "bcf4613e",
+  "responsiblePilot": {
+    "runId": 37881877946,
+    "jobId": 113663159566,
+    "biome": "gran-canon",
+    "culture": "mapungubwe",
+    "days": 100,
+    "seed": 712,
+    "policy": "unchanged tools/check_intensive_case.mjs mixed responsible reinvestment",
+    "lastObservedStatus": "in_progress"
+  },
+  "badManagement": {
+    "runId": 37881877946,
+    "jobId": 113663159739,
+    "artifactId": 11595190715,
+    "artifactName": "intensive-bad-management-37881877946",
+    "artifactBytes": 157162,
+    "status": "success",
+    "independentVerification": "candidate-bad-management-verification.json"
+  },
+  "initialValidate": {
+    "runId": 37881944130,
+    "jobId": 113663361125,
+    "lastObservedStatus": "in_progress",
+    "knownIssueAtFrozenHead": "Old exact-price fixtures beyond the initial three updated test files remain; full local negative is retained and repairs require a new validation run."
+  },
+  "scope": "Dispatch receipt, not completed responsible campaign, release acceptance, or whole-matrix validation. Later documentation/test fixes do not change these jobs' frozen candidate runtime."
+}

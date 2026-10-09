@@ -34,7 +34,7 @@ function carrying({late=false,bonus=false}={}){
 }
 test('QA-066/067/069/071: natural raid drops cargo, never targets it, and a different profile recovers its exact original value',()=>{
   const {s,worker,crate,cash}=carrying({late:true,bonus:true}),point={x:worker.x,z:worker.z};
-  assert.deepEqual(crate.value,rational(726,25));assert.equal(crate.profile,'olderMale');
+  assert.deepEqual(crate.value,rational(924,25));assert.equal(crate.profile,'olderMale');
   spawnRaid(s,{group:['warthog']},nav);assert.ok(s.raid);
   assert.equal(worker.crateId,null);assert.equal(crate.carrierId,null);assert.equal(crate.x,point.x);assert.equal(crate.z,point.z);
   assert.equal(worker.status,'fleeing');assert.equal(numberOf(s.ledger.balance),cash);
@@ -45,17 +45,17 @@ test('QA-066/067/069/071: natural raid drops cargo, never targets it, and a diff
   assert.equal(s.raid,null);
   assert.ok(s.time>=250);assert.ok(s.events.some(e=>e.type==='StructureHit'));assert.equal(s.structures[0].status,'intact');
   assert.equal(s.tasks.filter(t=>t.kind==='crate'&&t.targetId===crate.id).length,1);
-  let loaded=deserialize(serialize(s));assert.deepEqual(loaded.crates[0].value,rational(726,25));
+  let loaded=deserialize(serialize(s));assert.deepEqual(loaded.crates[0].value,rational(924,25));
   // Entry now starts at the actual active border; the raid can end after dusk.
   // Advance to the next dawn rather than assuming an end before time 300.
   loaded.eventPlan=null;tickUntil(loaded,()=>loaded.day===22,600);assert.equal(loaded.day,22);
   Game.hire(loaded,'next-hire',{olderFemale:1});loaded.dayPlan.done=true;
   assert.equal(loaded.plants.filter(p=>p.alive).length,0);assert.equal(loaded.workers.length,1);assert.equal(loaded.workers[0].centerId,loaded.structures[0].id);
   const paid=numberOf(loaded.ledger.balance);tickUntil(loaded,()=>loaded.workers[0].status==='carrying',60);
-  assert.equal(loaded.crates[0].profile,'olderMale');assert.deepEqual(loaded.crates[0].value,rational(726,25));assert.equal(numberOf(loaded.ledger.balance),paid);
+  assert.equal(loaded.crates[0].profile,'olderMale');assert.deepEqual(loaded.crates[0].value,rational(924,25));assert.equal(numberOf(loaded.ledger.balance),paid);
   assert.equal(loaded.spells.length,0);loaded=deserialize(serialize(loaded));tickUntil(loaded,()=>loaded.crates[0].delivered,30);
-  assert.equal(numberOf(loaded.ledger.balance),paid+30);assert.equal(loaded.events.filter(e=>e.type==='CrateDelivered').length,1);
-  Game.rebuildTasks(loaded);Game.tick(loaded,5,nav);assert.equal(numberOf(loaded.ledger.balance),paid+30);
+  assert.equal(numberOf(loaded.ledger.balance),paid+37);assert.equal(loaded.events.filter(e=>e.type==='CrateDelivered').length,1);
+  Game.rebuildTasks(loaded);Game.tick(loaded,5,nav);assert.equal(numberOf(loaded.ledger.balance),paid+37);
   assert.equal(loaded.plants.length,1);assert.equal(loaded.plants[0].alive,false);
 });
 test('QA-068: a loose box without an operational center survives reload and generates transport when a replacement is built',()=>{
@@ -67,7 +67,7 @@ test('QA-068: a loose box without an operational center survives reload and gene
   Game.placeStructure(loaded,'replacement',{x:24,z:0},nav);const center=loaded.structures.at(-1);
   assert.equal(numberOf(loaded.ledger.balance),cash-800);assert.ok(loaded.workers.some(w=>w.centerId===center.id));
   assert.equal(loaded.tasks.filter(t=>t.kind==='crate'&&t.targetId===crate.id&&t.centerId===center.id).length,1);
-  tickUntil(loaded,()=>loaded.crates[0].delivered,120);assert.equal(numberOf(loaded.ledger.balance),cash-800+14);
+  tickUntil(loaded,()=>loaded.crates[0].delivered,120);assert.equal(numberOf(loaded.ledger.balance),cash-800+17);
 });
 test('New centers preserve an existing crate reservation, plant assignment and manual repair instead of rebuilding all queues',()=>{
   const {s,worker,crate}=carrying();spawnRaid(s,{group:['warthog']},nav);s.raid.animals.forEach(a=>{a.hitsRemaining=0;});tickUntil(s,()=>s.raid===null,10);

@@ -97,8 +97,8 @@ test('Workers physically plant, water and harvest; only crate delivery pays',()=
   assert.equal(s.crates.length,1);assert.equal(s.crates[0].delivered,false);
   assert.equal(s.crates[0].sourcePlantId,s.plants[0].id);assert.equal(s.crates[0].species,s.plants[0].species);
   for(let i=0;i<300&&!s.crates[0].delivered;i++)tick(s,.1,nav);
-  assert.equal(numberOf(s.ledger.balance),679);assert.ok(s.crates[0].delivered);
-  const loaded=deserialize(serialize(s));tick(loaded,10,nav);assert.equal(numberOf(loaded.ledger.balance),679);
+  assert.equal(numberOf(s.ledger.balance),682);assert.ok(s.crates[0].delivered);
+  const loaded=deserialize(serialize(s));tick(loaded,10,nav);assert.equal(numberOf(loaded.ledger.balance),682);
 });
 test('Stacked pauses freeze crops and spell clocks',()=>{
   const s=setup();pause(s,'menu');pause(s,'hidden');tick(s,500,nav);assert.equal(s.time,0);resume(s,'menu');tick(s,500,nav);assert.equal(s.time,0);resume(s,'hidden');tick(s,1,nav);assert.ok(Math.abs(s.time-1)<1e-9);

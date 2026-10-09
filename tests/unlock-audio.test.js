@@ -45,7 +45,7 @@ test('actual paid calendar through day five produces three unlocks without chang
   const f=fixture(),s=Game.newGame({slotId:'unlock-calendar',seed:712});Game.resume(s,'intro');Game.placeStructure(s,'center',{x:12,z:8},nav);Game.plant(s,'seed','mijo',17,8,nav);Game.openInitialHiring(s);Game.hire(s,'hire-1',{olderMale:1});f.audio.update(s);
   let loops=0;
   while(s.day<5){assert.ok(++loops<2000);Game.tick(s,2,nav);assert.equal(s.result,null);const before=serialize(s);f.audio.update(s);assert.equal(serialize(s),before);if(s.pauses.includes('hiring')){Game.hire(s,'hire-'+s.day,{olderMale:1});f.audio.update(s);}await flush();}
-  assert.equal(f.calls.length,3);assert.equal(numberOf(s.ledger.balance),559);assert.equal(spellUnlocked(s,'multiply'),true);
+  assert.equal(f.calls.length,3);assert.equal(numberOf(s.ledger.balance),562);assert.equal(spellUnlocked(s,'multiply'),true);
 });
 test('postgame unlock dispatches once and loading its saved event is silent',()=>{
   const audio=new AudioSystem({sfx:1,music:0}),calls=[];audio.sound=async(id,options)=>calls.push({id,options});const history=[{id:'postgame',type:'PostgameStarted'}];audio.remember(history);audio.process(history);assert.equal(calls.length,0);history.push({id:'next',type:'PostgameStarted'});audio.process(history);audio.process(history);assert.equal(calls.length,1);assert.equal(calls[0].id,'ui_unlock');assert.equal(calls[0].options.emitter,'ui:unlock');
