@@ -34,8 +34,11 @@ is excluded; `66b47414` exercises that timing boundary. Five directed tests pass
 These fields do not establish GPU identity or make displayed progress a readiness
 gate. Original90s readiness and300000ms native hiding requirements are unchanged.
 There is not yet native evidence from an executable containing this observation
-change. Separate fluid-depth and worker candidates remain unpromoted until their
-actual native/visual/performance gates pass.
+change. Diagnostic loading options and worker candidates remain unpromoted until
+their actual native/visual/performance gates pass. The independently audited
+[minimal water/lava coverage-depth extraction](painted-fluid-depth-production.md)
+is now enabled in production source; its new default-config Windows run remains
+pending, and no causal timeout-fix or runtime speed improvement is claimed.
 
 The worker branch now has a separate
 [exact-executable native accessory pilot](workers-frontside-local-3e8da8a7/README.md):
