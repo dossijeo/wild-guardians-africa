@@ -1,7 +1,7 @@
 # Remaining integrated release gates — 9 October 2026
 
 This is an incomplete-work register, not a release approval. Current runtime
-includes PR15 at `4207bb16`; older rendering comparisons retain their frozen
+includes PR16 at `4ecffec5`; older rendering comparisons retain their frozen
 `795f773e83640d3f7541d8e3d826764c3d779750` base. Later root commits add QA
 evidence. The original 159-case registry retains historical sources and scopes;
 its verified labels do not prove all subsequent user requirements on this base.
@@ -37,8 +37,9 @@ simulated seconds. PR16 (`ee1954c2`) proposes actual footprint-corner connectors
 for the physically open subcell passage missed by the existing lattices. The
 original snapshot then exits physically in 18.1 simulated seconds; 103 tests
 pass. Root reviewed the bounded fallback and its original-state/dt/reload tests.
-At this review, Validate passes and Windows CI remains pending; PR16 is not yet
-merged. This saved-state recovery is not a new hundred-night campaign.
+Both exact-head checks now pass. Root independently repeated 14 directed tests
+and merged PR16 as `4ecffec5`, then pulled main. See [root review and exact scope](saheliana-final-raid/root-pr16-review.md).
+This saved-state recovery is not a new hundred-night campaign.
 
 The three distinct saved Desert stalls now have bounded native recovery fixes
 in merged PR15, with root 45/45 directed tests and both exact-head CI checks
