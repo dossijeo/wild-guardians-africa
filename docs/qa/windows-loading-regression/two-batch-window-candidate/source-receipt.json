@@ -1,0 +1,132 @@
+{
+  "baseline": "dde1a85ad3d02ed1a0a0548189238b0c021cff37",
+  "scope": "CPU freeze only; no native/CI dispatch or performance acceptance",
+  "changedSourceSha256": {
+    ".github/workflows/windows.yml": "596fb896a43e0057bc949039714739be7d409eafce0a2479dfea481450417593",
+    "src-tauri/smoke.js": "ba8a6671e4b6df458380592145a9a584ab98fe194c881f1907e798f2a008c0a8",
+    "src-tauri/src/main.rs": "225def50bc3c9bed93d6d62691b0472a376b3296582e23c5a18e45a054359ce2",
+    "src/rendering/loading-programs.js": "a1354397f1ba0543fd4dffcd5143e82c4b211f750a9df367ac902dd70730c8c2",
+    "src/rendering/loading-readiness-snapshot.js": "6efdcc4e5f659250f6d1f06abfc9e6a868e9d0afba3973ab7951b3eb0c132207",
+    "src/rendering/scene.js": "d7db0de386fd40adebb516f66f10e33b423ea70973916e5b6c79ca731e724e3c",
+    "docs/qa/sfx-catalog-post-jam/inventory.json": "409703658aa5f1b14c1b7b1342fc0b4475afad95aa44c6319cce47e6280ab67a",
+    "tests/loading-compile-window.test.js": "4674fcc4219f518662f0bf06666d9719b65127f108c8057497c7862857a957ce"
+  },
+  "unchangedSourceSha256": {
+    "src/rendering/loading-yield-budget.js": "576ae137b4ef2e156547ca74704c244a2c4891a283a86ee590ca04c972d72c17",
+    "src/rendering/loading-sync-witness.js": "9c083e044ced2154341d3324881e3ba7e3e0f833b1ec8e46279310425ff0cb7e",
+    "src/rendering/screen-target.js": "4773a43804b5c8d8d1253abaca1de7e7862f5c558470ac66bc46091390c5b3ca",
+    "tools/experiments/compile-gpu-preparation.js": "6085d3f898f8d934bef62b2f79a160c9753179cad2db70b82f0c493d1fef1500",
+    "tools/experiments/wait-gpu-preparation.js": "c5d4ac917bd8cbbdf5f41bd515870efb802a8a6684366888e17bc9cd69580edb"
+  },
+  "originalSerialLoopSha256": "8afd50650674505eb10fc9684d18bccf0882c0c8e2bea862804d443c5c20fccf",
+  "originalCompileFunctionSha256": "e9452f196d53730db8db61f20cd782e67efe497474bb83222f33a47acf55c3a3",
+  "checks": [
+    {
+      "log": "tests.log",
+      "args": [
+        "node",
+        "--test",
+        "tests/loading-compile-window.test.js",
+        "tests/loading-programs.test.js",
+        "tests/compile-gpu-preparation.test.js",
+        "tests/loading-compile-job-observation.test.js",
+        "tests/loading-readiness-snapshot.test.js",
+        "tests/loading-gltf-timing-snapshot.test.js",
+        "tests/loading-hands-observation.test.js",
+        "tests/sfx-catalog-audit.test.js"
+      ],
+      "exitCode": 0,
+      "sha256": "ca9ae6eeb045b7360acdff49f00d56e99fd6a406c5e785ac0cc556f9cfb16401"
+    },
+    {
+      "log": "sfx-check.log",
+      "args": [
+        "node",
+        "tools/audit_sfx_catalog.mjs",
+        "--check"
+      ],
+      "exitCode": 0,
+      "sha256": "aef579faefc58004af4d288e038d8fe234c64583c6c2762386dfbb4a42872648"
+    },
+    {
+      "log": "build.log",
+      "args": [
+        "npm.cmd",
+        "run",
+        "build"
+      ],
+      "exitCode": 0,
+      "sha256": "fb3745522f542126ef43091e672aa88e653a1d8785bf0d8124e0015888c2a485"
+    },
+    {
+      "log": "package.log",
+      "args": [
+        "npm.cmd",
+        "run",
+        "test:web-package"
+      ],
+      "exitCode": 0,
+      "sha256": "9c7e63bca69730bb8a10818402054ddd60c6b8b3e806285998c6e1e22d1c3f1a"
+    },
+    {
+      "args": [
+        "node",
+        "--check",
+        "src/rendering/loading-programs.js"
+      ],
+      "exitCode": 0
+    },
+    {
+      "args": [
+        "node",
+        "--check",
+        "src/rendering/scene.js"
+      ],
+      "exitCode": 0
+    },
+    {
+      "args": [
+        "node",
+        "--check",
+        "src/rendering/loading-readiness-snapshot.js"
+      ],
+      "exitCode": 0
+    },
+    {
+      "args": [
+        "node",
+        "--check",
+        "src-tauri/smoke.js"
+      ],
+      "exitCode": 0
+    },
+    {
+      "args": [
+        "node",
+        "--check",
+        "tests/loading-compile-window.test.js"
+      ],
+      "exitCode": 0
+    }
+  ],
+  "finalWrapper": {
+    "session": 20373,
+    "exitCode": 0
+  },
+  "previousWrapper": {
+    "session": 13116,
+    "exitCode": 1,
+    "scope": "stdout cp1252 printer failed after commands passed; preserved in initial-wrapper-receipt.json"
+  },
+  "tests": 86,
+  "buildSeconds": 9.51,
+  "package": {
+    "files": 711,
+    "bytes": 445275241,
+    "relativeLinks": 860,
+    "runtimeGlbs": 22
+  },
+  "nativeEvidence": false,
+  "productionDefaultWindow": 1,
+  "experimentalWindow": 2
+}

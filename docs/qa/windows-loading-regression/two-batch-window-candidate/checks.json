@@ -1,0 +1,89 @@
+[
+  {
+    "log": "tests.log",
+    "args": [
+      "node",
+      "--test",
+      "tests/loading-compile-window.test.js",
+      "tests/loading-programs.test.js",
+      "tests/compile-gpu-preparation.test.js",
+      "tests/loading-compile-job-observation.test.js",
+      "tests/loading-readiness-snapshot.test.js",
+      "tests/loading-gltf-timing-snapshot.test.js",
+      "tests/loading-hands-observation.test.js",
+      "tests/sfx-catalog-audit.test.js"
+    ],
+    "exitCode": 0,
+    "sha256": "ca9ae6eeb045b7360acdff49f00d56e99fd6a406c5e785ac0cc556f9cfb16401"
+  },
+  {
+    "log": "sfx-check.log",
+    "args": [
+      "node",
+      "tools/audit_sfx_catalog.mjs",
+      "--check"
+    ],
+    "exitCode": 0,
+    "sha256": "aef579faefc58004af4d288e038d8fe234c64583c6c2762386dfbb4a42872648"
+  },
+  {
+    "log": "build.log",
+    "args": [
+      "npm.cmd",
+      "run",
+      "build"
+    ],
+    "exitCode": 0,
+    "sha256": "fb3745522f542126ef43091e672aa88e653a1d8785bf0d8124e0015888c2a485"
+  },
+  {
+    "log": "package.log",
+    "args": [
+      "npm.cmd",
+      "run",
+      "test:web-package"
+    ],
+    "exitCode": 0,
+    "sha256": "9c7e63bca69730bb8a10818402054ddd60c6b8b3e806285998c6e1e22d1c3f1a"
+  },
+  {
+    "args": [
+      "node",
+      "--check",
+      "src/rendering/loading-programs.js"
+    ],
+    "exitCode": 0
+  },
+  {
+    "args": [
+      "node",
+      "--check",
+      "src/rendering/scene.js"
+    ],
+    "exitCode": 0
+  },
+  {
+    "args": [
+      "node",
+      "--check",
+      "src/rendering/loading-readiness-snapshot.js"
+    ],
+    "exitCode": 0
+  },
+  {
+    "args": [
+      "node",
+      "--check",
+      "src-tauri/smoke.js"
+    ],
+    "exitCode": 0
+  },
+  {
+    "args": [
+      "node",
+      "--check",
+      "tests/loading-compile-window.test.js"
+    ],
+    "exitCode": 0
+  }
+]

@@ -6,6 +6,10 @@ on:
   pull_request:
   workflow_dispatch:
     inputs:
+      compile_window:
+        description: 'Experimental strict two-batch compilation window (smoke only)'
+        type: boolean
+        default: false
       resource_overlap:
         description: 'Experimental presentation resource scheduling (smoke only)'
         type: boolean
@@ -50,6 +54,7 @@ jobs:
           $report = Join-Path $env:RUNNER_TEMP 'desktop-smoke.json'
           $binary = (Resolve-Path src-tauri/target/release/wild-guardians-africa.exe).Path
           $smokeArgs = @('--smoke-report', $report)
+          if ('${{ inputs.compile_window }}' -eq 'true') { $smokeArgs += '--smoke-compile-window' }
           if ('${{ inputs.resource_overlap }}' -eq 'true') { $smokeArgs += '--smoke-resource-overlap' }
           $process = Start-Process -FilePath $binary -ArgumentList $smokeArgs -WindowStyle Hidden -PassThru
           if (-not $process.WaitForExit(240000)) { Stop-Process -Id $process.Id; throw 'WebView2 smoke timed out' }
@@ -71,6 +76,7 @@ jobs:
           $report = Join-Path $env:RUNNER_TEMP 'desktop-visibility.json'
           $binary = (Resolve-Path src-tauri/target/release/wild-guardians-africa.exe).Path
           $smokeArgs = @('--smoke-report', $report, '--smoke-fixture', $fixture)
+          if ('${{ inputs.compile_window }}' -eq 'true') { $smokeArgs += '--smoke-compile-window' }
           if ('${{ inputs.resource_overlap }}' -eq 'true') { $smokeArgs += '--smoke-resource-overlap' }
           $process = Start-Process -FilePath $binary -ArgumentList $smokeArgs -WindowStyle Hidden -PassThru
           if (-not $process.WaitForExit(900000)) { Stop-Process -Id $process.Id; throw 'Native visibility timed out' }

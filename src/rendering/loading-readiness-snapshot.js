@@ -204,10 +204,10 @@ export function installLoadingReadinessObservation(world,{scope=globalThis,WeakR
 // Scalar summaries from the EXISTING compile selection/poll. No program/material
 // references, readiness calls, GL queries, timers or full per-poll history.
 export function createLoadingCompileJobTracker(activeLabel=()=>null,{now=()=>performance.now()}={}){
- const active=new Map(),seen=new Map();let closed=false,nextId=0,completed=0,rejected=0,droppedJobs=0,droppedIdentities=0,faults=0,lastFinished=null;
+ const active=new Map(),seen=new Map();let closed=false,nextId=0,completed=0,rejected=0,droppedJobs=0,droppedIdentities=0,faults=0,lastFinished=null,windowHighWater=0;
  const clone=value=>value===undefined?null:JSON.parse(JSON.stringify(value));
  const limited=(value,n)=>typeof value==='string'?value.slice(0,n):null;
- const contextCopy=value=>({start:finite(value?.start),screen:Boolean(value?.screen),batch:value?.batch?{ordinal:finite(value.batch.ordinal),batches:finite(value.batch.batches),start:finite(value.batch.start),end:finite(value.batch.end),objects:finite(value.batch.objects),categories:Object.fromEntries(['mesh','points','line','sprite','instanced','batched','skinned'].map(key=>[key,finite(value.batch.categories?.[key])])),names:(value.batch.names??[]).slice(0,8).map(row=>({type:limited(row.type,80),name:limited(row.name,160),uuid:limited(row.uuid,80)})),namesOmitted:Math.max(0,value.batch.namesOmitted??0)+Math.max(0,(value.batch.names?.length??0)-8)}:null});
+ const contextCopy=value=>({start:finite(value?.start),screen:Boolean(value?.screen),batch:value?.batch?{ordinal:finite(value.batch.ordinal),batches:finite(value.batch.batches),start:finite(value.batch.start),end:finite(value.batch.end),objects:finite(value.batch.objects),window:value.batch.window?{limit:finite(value.batch.window.limit),inFlight:finite(value.batch.window.inFlight)}:null,categories:Object.fromEntries(['mesh','points','line','sprite','instanced','batched','skinned'].map(key=>[key,finite(value.batch.categories?.[key])])),names:(value.batch.names??[]).slice(0,8).map(row=>({type:limited(row.type,80),name:limited(row.name,160),uuid:limited(row.uuid,80)})),namesOmitted:Math.max(0,value.batch.namesOmitted??0)+Math.max(0,(value.batch.names?.length??0)-8)}:null});
  const associationCopy=row=>({programId:finite(row.programId),programName:limited(row.programName,160),cacheKey:limited(row.cacheKey,2048),cacheKeyTruncated:Boolean(row.cacheKeyTruncated)||(typeof row.cacheKey==='string'&&row.cacheKey.length>2048),materialId:finite(row.materialId),materialUuid:limited(row.materialUuid,160),materialType:limited(row.materialType,80),materialName:limited(row.materialName,160),current:Boolean(row.current),side:finite(row.side)});
  const pendingCopy=(row,event)=>{row.pendingCount=finite(event.pendingCount);row.pendingIds=(event.pendingIds??[]).slice(0,32).map(finite);row.pendingIdsOmitted=Math.max(0,event.pendingIdsOmitted??0)+Math.max(0,(event.pendingIds?.length??0)-32);};
  const create=context=>{
@@ -215,6 +215,7 @@ export function createLoadingCompileJobTracker(activeLabel=()=>null,{now=()=>per
   const id=++nextId;if(active.size>=8){droppedJobs++;return ()=>{};}
   let phase=null;try{phase=text(activeLabel());}catch{faults++;}
   let copied;try{copied=contextCopy(context);}catch{faults++;copied=null;}
+  if(copied?.batch?.window?.limit===2&&copied.batch.window.inFlight>=1&&copied.batch.window.inFlight<=2)windowHighWater=Math.max(windowHighWater,copied.batch.window.inFlight);
   const row={id,phase,context:copied,selectedCount:null,associationCount:null,associationOmitted:null,associations:[],polls:0,pendingCount:null,pendingIds:[],pendingIdsOmitted:null,lastPollAt:null,selectedAt:null};active.set(id,row);
   return event=>{try{
    if(!active.has(id))return;
@@ -231,8 +232,8 @@ export function createLoadingCompileJobTracker(activeLabel=()=>null,{now=()=>per
    }
   }catch{faults++;}};
  };
- return {create,clear(){closed=true;active.clear();seen.clear();lastFinished=null;},snapshot(){
+ return {create,clear(){closed=true;active.clear();seen.clear();lastFinished=null;windowHighWater=0;},snapshot(){
   let at=null;try{at=finite(now());}catch{faults++;}
-  return {at,started:nextId,completed,rejected,droppedJobs,droppedIdentities,faults,active:[...active.values()].map(row=>({...clone(row),elapsed:at!==null&&Number.isFinite(row.context?.start)?Math.max(0,at-row.context.start):null,readinessElapsed:at!==null&&row.selectedAt!==null?Math.max(0,at-row.selectedAt):null})),lastFinished:clone(lastFinished),scope:'Job selection and pending results of existing isReady calls only. First observed selection is not program creation or exhaustive mesh consumers. Nested elapsed values are not additive CPU/GPU time.'};
+  return {at,started:nextId,completed,rejected,windowHighWater,droppedJobs,droppedIdentities,faults,active:[...active.values()].map(row=>({...clone(row),elapsed:at!==null&&Number.isFinite(row.context?.start)?Math.max(0,at-row.context.start):null,readinessElapsed:at!==null&&row.selectedAt!==null?Math.max(0,at-row.selectedAt):null})),lastFinished:clone(lastFinished),scope:'Job selection and pending results of existing isReady calls only. First observed selection is not program creation or exhaustive mesh consumers. Nested elapsed values are not additive CPU/GPU time.'};
  }};
 }
