@@ -1,0 +1,393 @@
+{
+  "biome": "sabana",
+  "culture": "mapungubwe",
+  "terrainVersion": "4.1.10.3",
+  "balance": 491,
+  "elapsed": 0,
+  "workers": 0,
+  "plots": [
+    {
+      "x": 64.5,
+      "z": -18
+    },
+    {
+      "x": 66,
+      "z": -18
+    },
+    {
+      "x": 67.5,
+      "z": -18
+    },
+    {
+      "x": 69,
+      "z": -18
+    },
+    {
+      "x": 64.5,
+      "z": -16.5
+    },
+    {
+      "x": 66,
+      "z": -16.5
+    },
+    {
+      "x": 67.5,
+      "z": -16.5
+    },
+    {
+      "x": 69,
+      "z": -16.5
+    }
+  ],
+  "ledger": [
+    {
+      "species": "maiz",
+      "expected": 8,
+      "charged": 8
+    },
+    {
+      "species": "algodon",
+      "expected": 100,
+      "charged": 100
+    },
+    {
+      "species": "girasol",
+      "expected": 18,
+      "charged": 18
+    },
+    {
+      "species": "platano",
+      "expected": 150,
+      "charged": 150
+    },
+    {
+      "species": "sorgo",
+      "expected": 6,
+      "charged": 6
+    },
+    {
+      "species": "mijo",
+      "expected": 5,
+      "charged": 5
+    },
+    {
+      "species": "yuca",
+      "expected": 12,
+      "charged": 12
+    },
+    {
+      "species": "batata",
+      "expected": 10,
+      "charged": 10
+    }
+  ],
+  "samples": [
+    {
+      "id": "plant-3",
+      "species": "maiz",
+      "alive": true,
+      "growth": 62.38350000000001,
+      "water": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 90,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 180,
+          "status": "future",
+          "wait": 0
+        }
+      ],
+      "render": {
+        "height": 1.13555820392,
+        "stage": 1,
+        "phase": "morph",
+        "from": 0,
+        "to": 1,
+        "t": 0.5,
+        "seconds": 2,
+        "items": [],
+        "bridge": {
+          "index": 0,
+          "t": 0.5,
+          "e": 0.9054180000000001
+        }
+      }
+    },
+    {
+      "id": "plant-5",
+      "species": "algodon",
+      "alive": true,
+      "growth": 93.57525000000001,
+      "water": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 101.25,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 202.5,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 303.75,
+          "status": "future",
+          "wait": 0
+        }
+      ],
+      "render": {
+        "height": 0.7764414836,
+        "stage": 1,
+        "phase": "morph",
+        "from": 0,
+        "to": 1,
+        "t": 0.5,
+        "seconds": 2,
+        "items": [],
+        "bridge": {
+          "index": 4,
+          "t": 0.5,
+          "e": 0.9054180000000001
+        }
+      }
+    },
+    {
+      "id": "plant-7",
+      "species": "girasol",
+      "alive": true,
+      "growth": 41.589000000000006,
+      "water": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 60,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 120,
+          "status": "future",
+          "wait": 0
+        }
+      ],
+      "render": {
+        "height": 0.87838054882,
+        "stage": 1,
+        "phase": "morph",
+        "from": 0,
+        "to": 1,
+        "t": 0.5,
+        "seconds": 2,
+        "items": [],
+        "bridge": {
+          "index": 8,
+          "t": 0.5,
+          "e": 0.9054180000000001
+        }
+      }
+    },
+    {
+      "id": "plant-9",
+      "species": "platano",
+      "alive": true,
+      "growth": 131.69850000000002,
+      "water": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 95,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 190,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 285,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 380,
+          "status": "future",
+          "wait": 0
+        },
+        {
+          "at": 475,
+          "status": "future",
+          "wait": 0
+        }
+      ],
+      "render": {
+        "height": 0.8973418629900001,
+        "stage": 1,
+        "phase": "morph",
+        "from": 0,
+        "to": 1,
+        "t": 0.5,
+        "seconds": 1.9999999999999998,
+        "items": [],
+        "bridge": {
+          "index": 12,
+          "t": 0.5,
+          "e": 0.9054180000000001
+        }
+      }
+    },
+    {
+      "id": "plant-11",
+      "species": "sorgo",
+      "alive": true,
+      "growth": 50.83100000000001,
+      "water": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 110,
+          "status": "future",
+          "wait": 0
+        }
+      ],
+      "render": {
+        "height": 1.11500730121,
+        "stage": 1,
+        "phase": "morph",
+        "from": 0,
+        "to": 1,
+        "t": 0.5,
+        "seconds": 2,
+        "items": [],
+        "bridge": {
+          "index": 16,
+          "t": 0.5,
+          "e": 0.9054180000000001
+        }
+      }
+    },
+    {
+      "id": "plant-13",
+      "species": "mijo",
+      "alive": true,
+      "growth": 32.347,
+      "water": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 70,
+          "status": "future",
+          "wait": 0
+        }
+      ],
+      "render": {
+        "height": 0.97809191939,
+        "stage": 0,
+        "phase": "morph",
+        "from": 0,
+        "to": 1,
+        "t": 0.4999999999999984,
+        "seconds": 2,
+        "items": [],
+        "bridge": {
+          "index": 20,
+          "t": 0.4999999999999984,
+          "e": 0.905418
+        }
+      }
+    },
+    {
+      "id": "plant-15",
+      "species": "yuca",
+      "alive": true,
+      "growth": 110.90400000000001,
+      "water": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 240,
+          "status": "future",
+          "wait": 0
+        }
+      ],
+      "render": {
+        "height": 0.98080423975,
+        "stage": 1,
+        "phase": "morph",
+        "from": 0,
+        "to": 1,
+        "t": 0.5,
+        "seconds": 2,
+        "items": [],
+        "bridge": {
+          "index": 24,
+          "t": 0.5,
+          "e": 0.9054180000000001
+        }
+      }
+    },
+    {
+      "id": "plant-17",
+      "species": "batata",
+      "alive": true,
+      "growth": 76.24650000000001,
+      "water": [
+        {
+          "at": 0,
+          "status": "due",
+          "wait": 0
+        },
+        {
+          "at": 165,
+          "status": "future",
+          "wait": 0
+        }
+      ],
+      "render": {
+        "height": 0.45502501483,
+        "stage": 1,
+        "phase": "morph",
+        "from": 0,
+        "to": 1,
+        "t": 0.5,
+        "seconds": 2,
+        "items": [],
+        "bridge": {
+          "index": 28,
+          "t": 0.5,
+          "e": 0.9054180000000001
+        }
+      }
+    }
+  ],
+  "meshes": [],
+  "restores": [],
+  "errors": []
+}
