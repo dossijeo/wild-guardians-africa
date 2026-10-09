@@ -60,3 +60,22 @@ globalmente los márgenes ni aceptar la salida lateral como equivalente al
 requisito. Verificar aproximación, subida, cruce, descenso y recuperación sobre
 modelos/culturas reales, manteniendo seguridad de terreno y suavidad. El
 prototipo continúa desactivado y esta revisión no cambia la cámara de producción.
+
+La revisión de fuentes del 9 de octubre identifica una limitación anterior al
+resolver: `terrain-camera.js` reduce primero la distancia orbital a
+`20 / max(.19, cos(phi))` y después limita la altura de la pose a terreno +20.
+`constrainCameraToTerrain` vuelve a aplicar ese techo. Por tanto, modificar sólo
+la recuperación de colisiones no permite al usuario solicitar un sobrevuelo alto.
+En una consulta directa a `nativeCameraPose`, sobre terreno plano, una distancia
+solicitada de65 metros con inclinaciones .065, .5 y1.16 produce en los tres casos
+una altura final de20 metros. Es evidencia geométrica, no una prueba de controles
+interactivos ni una aprobación visual.
+
+La futura corrección debe negociar el rango vertical contextual antes de ambas
+limitaciones y conservar la intención orbital sin incorporar la corrección de
+colisión como entrada del jugador. Al cruzar el límite horizontal de un edificio
+alto, no debe restablecer bruscamente el techo habitual y empujar la cámara hacia
+su tejado. Verificar subida, cruce, salida y descenso por ambos lados con edificios
+solapados y terreno variable, además de los gestos y recorridos ya enumerados.
+El alcance de esta revisión es documentar la dependencia; no se ha alterado el
+rango de cámara ni activado el prototipo.
