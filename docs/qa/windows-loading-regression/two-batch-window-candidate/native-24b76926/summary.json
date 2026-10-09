@@ -1,0 +1,610 @@
+{
+  "runId": 38005088945,
+  "source": "24b76926d108d39a3d8496ecd9fef063b60454bb",
+  "inputs": {
+    "compileWindow": true,
+    "resourceOverlap": false
+  },
+  "ok": false,
+  "errors": [
+    "Error: Production world did not finish loading"
+  ],
+  "finish": {
+    "canvas": {
+      "height": 720,
+      "width": 1028
+    },
+    "displayedProgress": "86",
+    "focused": true,
+    "phaseLabel": "Bringing your world to life...",
+    "readyGateReached": false,
+    "scope": "Presentation snapshot only; displayed progress and canvas dimensions do not establish world readiness or GPU identity.",
+    "stageBusy": "true",
+    "visibility": "visible",
+    "worldWaitMs": 90065.5
+  },
+  "context": {
+    "contextLost": false,
+    "renderer": "WebKit WebGL",
+    "scope": "Existing World renderer context at finish only; identity is not a measured cause.",
+    "unmaskedRenderer": "ANGLE (Microsoft, Microsoft Basic Render Driver (0x0000008C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "unmaskedVendor": "Google Inc. (Microsoft)",
+    "vendor": "WebKit",
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+  },
+  "compilation": {
+    "active": [],
+    "at": 147729.09999999998,
+    "completed": 0,
+    "droppedIdentities": 0,
+    "droppedJobs": 0,
+    "faults": 0,
+    "lastFinished": null,
+    "rejected": 0,
+    "scope": "Job selection and pending results of existing isReady calls only. First observed selection is not program creation or exhaustive mesh consumers. Nested elapsed values are not additive CPU/GPU time.",
+    "started": 0,
+    "windowHighWater": 0
+  },
+  "transfers": {
+    "cache": {
+      "application-cache": 3,
+      "browser-cache": 0,
+      "network": 171,
+      "unknown": 56,
+      "validated-cache": 0
+    },
+    "count": 230,
+    "disposed": false,
+    "failed": 0,
+    "loadedBytes": 122581916,
+    "omitted": 44,
+    "pending": 56,
+    "scope": "Observed transfer records only; unknown is not a cache hit. End null can include post-transfer decoding/preparation."
+  },
+  "gltf": {
+    "completed": 8,
+    "count": 8,
+    "omitted": 0,
+    "omittedCompleted": 0,
+    "pending": 0,
+    "rows": [
+      {
+        "afterResponseEnd": 894.0999999999767,
+        "association": "heuristic-url-window",
+        "cache": "network",
+        "duration": 21922.300000000047,
+        "end": 87065.40000000002,
+        "failed": false,
+        "id": 20,
+        "loaded": 26536168,
+        "start": 65143.09999999998,
+        "timing": {
+          "decodedBodySize": 26536168,
+          "encodedBodySize": 26536168,
+          "responseEnd": 86171.30000000005,
+          "responseStatus": 200,
+          "startTime": 65143.30000000005,
+          "transferSize": 26536468
+        },
+        "total": 26536168,
+        "unknownReason": null,
+        "untilResponseEnd": 21028.20000000007,
+        "url": "http://tauri.localhost/assets/web/2fdb3468b7646ebe16d0f3d3d25538ce5b20d6dee1d3830256d2f62599826dcc.glb"
+      },
+      {
+        "afterResponseEnd": 2558.7000000001863,
+        "association": "heuristic-url-window",
+        "cache": "network",
+        "duration": 14472,
+        "end": 141459.50000000012,
+        "failed": false,
+        "id": 64,
+        "loaded": 7123932,
+        "start": 126987.50000000012,
+        "timing": {
+          "decodedBodySize": 7123932,
+          "encodedBodySize": 7123932,
+          "responseEnd": 138900.79999999993,
+          "responseStatus": 200,
+          "startTime": 126987.70000000008,
+          "transferSize": 7124232
+        },
+        "total": 7123932,
+        "unknownReason": null,
+        "untilResponseEnd": 11913.299999999814,
+        "url": "http://tauri.localhost/assets/web/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb"
+      },
+      {
+        "afterResponseEnd": 1588,
+        "association": "heuristic-url-window",
+        "cache": "network",
+        "duration": 12420.300000000048,
+        "end": 139407.50000000012,
+        "failed": false,
+        "id": 63,
+        "loaded": 6980244,
+        "start": 126987.20000000008,
+        "timing": {
+          "decodedBodySize": 6980244,
+          "encodedBodySize": 6980244,
+          "responseEnd": 137819.50000000012,
+          "responseStatus": 200,
+          "startTime": 126987.40000000002,
+          "transferSize": 6980544
+        },
+        "total": 6980244,
+        "unknownReason": null,
+        "untilResponseEnd": 10832.300000000048,
+        "url": "http://tauri.localhost/assets/web/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb"
+      },
+      {
+        "afterResponseEnd": 3692.6999999999534,
+        "association": "heuristic-url-window",
+        "cache": "network",
+        "duration": 11383.300000000048,
+        "end": 76525.40000000002,
+        "failed": false,
+        "id": 19,
+        "loaded": 14308628,
+        "start": 65142.09999999998,
+        "timing": {
+          "decodedBodySize": 14308628,
+          "encodedBodySize": 14308628,
+          "responseEnd": 72832.70000000007,
+          "responseStatus": 200,
+          "startTime": 65142.80000000005,
+          "transferSize": 14308928
+        },
+        "total": 14308628,
+        "unknownReason": null,
+        "untilResponseEnd": 7690.600000000093,
+        "url": "http://tauri.localhost/assets/web/8f6c9ef7472a2d7f8ffda7f08a78f8027f91d14a8f92b8eeca4084b0f379da36.glb"
+      },
+      {
+        "afterResponseEnd": 2287.5999999998603,
+        "association": "heuristic-url-window",
+        "cache": "network",
+        "duration": 10819.5,
+        "end": 137806.29999999993,
+        "failed": false,
+        "id": 61,
+        "loaded": 6401848,
+        "start": 126986.79999999992,
+        "timing": {
+          "decodedBodySize": 6401848,
+          "encodedBodySize": 6401848,
+          "responseEnd": 135518.70000000007,
+          "responseStatus": 200,
+          "startTime": 126987.00000000012,
+          "transferSize": 6402148
+        },
+        "total": 6401848,
+        "unknownReason": null,
+        "untilResponseEnd": 8531.90000000014,
+        "url": "http://tauri.localhost/assets/web/7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb"
+      },
+      {
+        "afterResponseEnd": 2584.6999999999534,
+        "association": "heuristic-url-window",
+        "cache": "network",
+        "duration": 8442.699999999953,
+        "end": 135429.09999999998,
+        "failed": false,
+        "id": 60,
+        "loaded": 6927276,
+        "start": 126986.40000000002,
+        "timing": {
+          "decodedBodySize": 6927276,
+          "encodedBodySize": 6927276,
+          "responseEnd": 132844.40000000002,
+          "responseStatus": 200,
+          "startTime": 126986.70000000008,
+          "transferSize": 6927576
+        },
+        "total": 6927276,
+        "unknownReason": null,
+        "untilResponseEnd": 5858,
+        "url": "http://tauri.localhost/assets/web/cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869.glb"
+      },
+      {
+        "afterResponseEnd": 3888.6999999999534,
+        "association": "heuristic-url-window",
+        "cache": "network",
+        "duration": 6816.899999999907,
+        "end": 122743.90000000002,
+        "failed": false,
+        "id": 55,
+        "loaded": 6890088,
+        "start": 115927.00000000012,
+        "timing": {
+          "decodedBodySize": 6890088,
+          "encodedBodySize": 6890088,
+          "responseEnd": 118855.20000000008,
+          "responseStatus": 200,
+          "startTime": 115927.20000000008,
+          "transferSize": 6890388
+        },
+        "total": 6890088,
+        "unknownReason": null,
+        "untilResponseEnd": 2928.1999999999534,
+        "url": "http://tauri.localhost/assets/web/fedb713c0b32df33f11111a91e2c3e0616a0345ec9be9a8beeecaa0b93ef26cb.glb"
+      },
+      {
+        "afterResponseEnd": 2000.1999999999537,
+        "association": "heuristic-url-window",
+        "cache": "network",
+        "duration": 5851.09999999986,
+        "end": 132838.09999999998,
+        "failed": false,
+        "id": 62,
+        "loaded": 5970792,
+        "start": 126987.00000000012,
+        "timing": {
+          "decodedBodySize": 5970792,
+          "encodedBodySize": 5970792,
+          "responseEnd": 130837.90000000002,
+          "responseStatus": 200,
+          "startTime": 126987.20000000008,
+          "transferSize": 5971092
+        },
+        "total": 5970792,
+        "unknownReason": null,
+        "untilResponseEnd": 3850.899999999907,
+        "url": "http://tauri.localhost/assets/web/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb"
+      }
+    ],
+    "scope": "Largest completed GLTF request durations, stable insertion-order ties. Existing ResourceTiming association is heuristic URL plus time window, never exact identity. ResponseEnd is a browser timeline boundary; end follows GLTF completion before ownModel. Intervals are not exclusive CPU or physical transport; network/cache evidence does not identify Internet or disk cost."
+  },
+  "spans": {
+    "active": [
+      {
+        "duration": null,
+        "elapsed": 47879.09999999986,
+        "end": null,
+        "failed": false,
+        "label": "app-world-load",
+        "start": 99850.20000000008
+      }
+    ],
+    "at": 147729.29999999993,
+    "closed": false,
+    "dropped": 0,
+    "early": {
+      "dropped": 0,
+      "rows": [
+        {
+          "begun": 1,
+          "completed": 1,
+          "failed": 0,
+          "firstStart": 57659.5,
+          "label": "diorama-prepare-sky",
+          "lastDuration": 6961.300000000047,
+          "lastEnd": 64620.80000000005,
+          "lastStart": 57659.5
+        },
+        {
+          "begun": 1,
+          "completed": 1,
+          "failed": 0,
+          "firstStart": 57660.80000000005,
+          "label": "app-prepared-pending",
+          "lastDuration": 38624.29999999993,
+          "lastEnd": 96285.09999999998,
+          "lastStart": 57660.80000000005
+        },
+        {
+          "begun": 1,
+          "completed": 1,
+          "failed": 0,
+          "firstStart": 64621.70000000007,
+          "label": "diorama-prepare-catalogues",
+          "lastDuration": 520.1999999999534,
+          "lastEnd": 65141.90000000002,
+          "lastStart": 64621.70000000007
+        },
+        {
+          "begun": 1,
+          "completed": 1,
+          "failed": 0,
+          "firstStart": 65141.90000000002,
+          "label": "diorama-prepare-maize-model",
+          "lastDuration": 11384.599999999977,
+          "lastEnd": 76526.5,
+          "lastStart": 65141.90000000002
+        },
+        {
+          "begun": 1,
+          "completed": 1,
+          "failed": 0,
+          "firstStart": 65143,
+          "label": "diorama-prepare-maize-bridges",
+          "lastDuration": 21922.800000000047,
+          "lastEnd": 87065.80000000005,
+          "lastStart": 65143
+        },
+        {
+          "begun": 1,
+          "completed": 1,
+          "failed": 0,
+          "firstStart": 87065.80000000005,
+          "label": "diorama-prepare-soil-texture",
+          "lastDuration": 1505.2999999999302,
+          "lastEnd": 88571.09999999998,
+          "lastStart": 87065.80000000005
+        },
+        {
+          "begun": 1,
+          "completed": 1,
+          "failed": 0,
+          "firstStart": 88571.90000000002,
+          "label": "diorama-prepare-mountain-atlas",
+          "lastDuration": 1163.8000000000466,
+          "lastEnd": 89735.70000000007,
+          "lastStart": 88571.90000000002
+        },
+        {
+          "begun": 1,
+          "completed": 1,
+          "failed": 0,
+          "firstStart": 89739.5,
+          "label": "diorama-prepare-maize-batch",
+          "lastDuration": 358.0999999999767,
+          "lastEnd": 90097.59999999998,
+          "lastStart": 89739.5
+        },
+        {
+          "begun": 1,
+          "completed": 1,
+          "failed": 0,
+          "firstStart": 90098.59999999998,
+          "label": "diorama-compile-maize",
+          "lastDuration": 4791,
+          "lastEnd": 94889.59999999998,
+          "lastStart": 90098.59999999998
+        },
+        {
+          "begun": 0,
+          "completed": 1,
+          "failed": 0,
+          "firstStart": 94889.90000000002,
+          "label": "diorama-upload-maize-soil",
+          "lastDuration": 130.59999999997672,
+          "lastEnd": 95020.5,
+          "lastStart": 94889.90000000002
+        },
+        {
+          "begun": 1,
+          "completed": 1,
+          "failed": 0,
+          "firstStart": 95020.5,
+          "label": "diorama-compile-sky",
+          "lastDuration": 696,
+          "lastEnd": 95716.5,
+          "lastStart": 95020.5
+        },
+        {
+          "begun": 1,
+          "completed": 1,
+          "failed": 0,
+          "firstStart": 95716.5,
+          "label": "diorama-compile-mist",
+          "lastDuration": 342,
+          "lastEnd": 96058.5,
+          "lastStart": 95716.5
+        },
+        {
+          "begun": 0,
+          "completed": 1,
+          "failed": 0,
+          "firstStart": 96058.59999999998,
+          "label": "diorama-upload-mist",
+          "lastDuration": 3.5,
+          "lastEnd": 96062.09999999998,
+          "lastStart": 96058.59999999998
+        },
+        {
+          "begun": 0,
+          "completed": 1,
+          "failed": 0,
+          "firstStart": 96062.09999999998,
+          "label": "diorama-warm-day-night-sky",
+          "lastDuration": 7.700000000069849,
+          "lastEnd": 96069.80000000005,
+          "lastStart": 96062.09999999998
+        },
+        {
+          "begun": 1,
+          "completed": 1,
+          "failed": 0,
+          "firstStart": 96069.80000000005,
+          "label": "diorama-final-fence",
+          "lastDuration": 214.9999999998836,
+          "lastEnd": 96284.79999999992,
+          "lastStart": 96069.80000000005
+        },
+        {
+          "begun": 1,
+          "completed": 1,
+          "failed": 0,
+          "firstStart": 96285.20000000008,
+          "label": "app-pre-world-setup",
+          "lastDuration": 3564.899999999907,
+          "lastEnd": 99850.09999999998,
+          "lastStart": 96285.20000000008
+        }
+      ],
+      "scope": "First 16 selected early labels; counts and first/latest timestamps only, not a timeline or additive CPU/GPU durations."
+    },
+    "lastCompleted": {
+      "duration": 70.19999999995343,
+      "end": 142928.40000000002,
+      "failed": false,
+      "label": "load-milestone:crops",
+      "start": 142858.20000000007
+    },
+    "scope": "Nested awaited wall spans; do not sum as exclusive CPU/GPU time. Associations are labels, not exhaustive readiness proof."
+  },
+  "steps": [
+    {
+      "name": "Set up job",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-09T23:34:34Z",
+      "completed_at": "2026-10-09T23:34:36Z"
+    },
+    {
+      "name": "Run actions/checkout@v4",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-09T23:34:36Z",
+      "completed_at": "2026-10-09T23:35:33Z"
+    },
+    {
+      "name": "Run actions/setup-node@v4",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-09T23:35:33Z",
+      "completed_at": "2026-10-09T23:35:44Z"
+    },
+    {
+      "name": "Run dtolnay/rust-toolchain@stable",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-09T23:35:44Z",
+      "completed_at": "2026-10-09T23:36:05Z"
+    },
+    {
+      "name": "Run swatinem/rust-cache@v2",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-09T23:36:05Z",
+      "completed_at": "2026-10-09T23:36:23Z"
+    },
+    {
+      "name": "Run npm ci",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-09T23:36:23Z",
+      "completed_at": "2026-10-09T23:36:27Z"
+    },
+    {
+      "name": "Run npm run desktop:build",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-09T23:36:27Z",
+      "completed_at": "2026-10-09T23:45:22Z"
+    },
+    {
+      "name": "Check Windows executable and installer",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-09T23:45:22Z",
+      "completed_at": "2026-10-09T23:45:22Z"
+    },
+    {
+      "name": "Smoke test the packaged game in WebView2",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-10-09T23:45:22Z",
+      "completed_at": "2026-10-09T23:47:58Z"
+    },
+    {
+      "name": "Check genuine native minimization and restoration",
+      "status": "completed",
+      "conclusion": "skipped",
+      "started_at": "2026-10-09T23:47:58Z",
+      "completed_at": "2026-10-09T23:47:58Z"
+    },
+    {
+      "name": "Run actions/upload-artifact@v7",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-09T23:47:58Z",
+      "completed_at": "2026-10-09T23:47:58Z"
+    },
+    {
+      "name": "Run actions/upload-artifact@v7",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-09T23:47:58Z",
+      "completed_at": "2026-10-09T23:47:58Z"
+    },
+    {
+      "name": "Run actions/upload-artifact@v7",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-09T23:47:58Z",
+      "completed_at": "2026-10-09T23:47:59Z"
+    },
+    {
+      "name": "Run actions/upload-artifact@v7",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-09T23:47:59Z",
+      "completed_at": "2026-10-09T23:48:02Z"
+    },
+    {
+      "name": "Run actions/upload-artifact@v7",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-09T23:48:02Z",
+      "completed_at": "2026-10-09T23:48:05Z"
+    },
+    {
+      "name": "Run actions/upload-artifact@v4",
+      "status": "completed",
+      "conclusion": "skipped",
+      "started_at": "2026-10-09T23:48:05Z",
+      "completed_at": "2026-10-09T23:48:05Z"
+    },
+    {
+      "name": "Post Run swatinem/rust-cache@v2",
+      "status": "completed",
+      "conclusion": "skipped",
+      "started_at": "2026-10-09T23:48:05Z",
+      "completed_at": "2026-10-09T23:48:05Z"
+    },
+    {
+      "name": "Post Run actions/setup-node@v4",
+      "status": "completed",
+      "conclusion": "skipped",
+      "started_at": "2026-10-09T23:48:05Z",
+      "completed_at": "2026-10-09T23:48:05Z"
+    },
+    {
+      "name": "Post Run actions/checkout@v4",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-09T23:48:05Z",
+      "completed_at": "2026-10-09T23:48:09Z"
+    },
+    {
+      "name": "Complete job",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-09T23:48:09Z",
+      "completed_at": "2026-10-09T23:48:09Z"
+    }
+  ],
+  "interpretation": {
+    "windowExercised": false,
+    "pendingCompileJobs": 0,
+    "reason": "No world compilation job recorded: stage walls unfinished, last completed crops; 56 fetch transfers pending. Scene.load awaits walls before warm GPU. Displayed phase alone is not actual program readiness.",
+    "notClaimed": [
+      "shader stall",
+      "two-batch improvement or regression",
+      "physical disk/transport/CPU cause",
+      "minimization/restoration coverage",
+      "causal comparison with f92"
+    ],
+    "comparisonScope": "f92 reached warm-world batch10 with pending program20 and zero transfers; this run has no compile jobs and 56 transfers. Different boundary prevents performance attribution to the window.",
+    "earlyWallMs": {
+      "preparedPending": 38624.3,
+      "preWorldSetup": 3564.9,
+      "appWorldActive": 47879.1
+    },
+    "nestedIntervalsNonAdditive": true,
+    "resourceTimingHeuristic": true,
+    "baselineRun": 38002516951
+  }
+}

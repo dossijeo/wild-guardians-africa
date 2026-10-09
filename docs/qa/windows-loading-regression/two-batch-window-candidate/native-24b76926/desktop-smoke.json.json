@@ -1,0 +1,756 @@
+{
+  "checks": {
+    "audio": {
+      "channels": 2,
+      "id": "amb_wind_soft",
+      "sampleRate": 44100,
+      "seconds": 12,
+      "url": "assets/audio/861578037e994d78d4730970c542ff330f4adb680372feae4f89a19525ba507c.opus"
+    },
+    "audioSeconds": 12,
+    "loadingAtFinish": {
+      "canvas": {
+        "height": 720,
+        "width": 1028
+      },
+      "displayedProgress": "86",
+      "focused": true,
+      "phaseLabel": "Bringing your world to life...",
+      "readyGateReached": false,
+      "scope": "Presentation snapshot only; displayed progress and canvas dimensions do not establish world readiness or GPU identity.",
+      "stageBusy": "true",
+      "visibility": "visible",
+      "worldWaitMs": 90065.5
+    },
+    "loadingReadinessAtFinish": {
+      "context": {
+        "contextLost": false,
+        "renderer": "WebKit WebGL",
+        "scope": "Existing World renderer context at finish only; identity is not a measured cause.",
+        "unmaskedRenderer": "ANGLE (Microsoft, Microsoft Basic Render Driver (0x0000008C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "unmaskedVendor": "Google Inc. (Microsoft)",
+        "vendor": "WebKit",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+      },
+      "readiness": {
+        "actors": null,
+        "chunks": null,
+        "compilation": {
+          "active": [],
+          "at": 147729.09999999998,
+          "completed": 0,
+          "droppedIdentities": 0,
+          "droppedJobs": 0,
+          "faults": 0,
+          "lastFinished": null,
+          "rejected": 0,
+          "scope": "Job selection and pending results of existing isReady calls only. First observed selection is not program creation or exhaustive mesh consumers. Nested elapsed values are not additive CPU/GPU time.",
+          "started": 0,
+          "windowHighWater": 0
+        },
+        "far": null,
+        "hands": null,
+        "issues": [],
+        "owner": {
+          "aborted": false,
+          "disposed": false,
+          "present": true
+        },
+        "presentation": {
+          "cinematicArmed": false,
+          "cinematicDone": false,
+          "cinematicPresent": false,
+          "cinematicTime": null,
+          "dioramaPresent": true,
+          "disposed": false,
+          "interactive": true,
+          "orbitSettled": true,
+          "orbitSpeed": 0,
+          "orbitStopping": false,
+          "plantsCount": 4,
+          "plantsMature": false,
+          "plantsProgress": 0.8612305668586793,
+          "plantsReady": false,
+          "prepared": true
+        },
+        "progress": {
+          "failed": false,
+          "omitted": 0,
+          "ready": false,
+          "stages": [
+            {
+              "finished": 99840.50000000012,
+              "id": "configuration",
+              "progress": 1,
+              "started": 99840.50000000012
+            },
+            {
+              "finished": 99852.79999999992,
+              "id": "sky",
+              "progress": 1,
+              "started": 99852.79999999992
+            },
+            {
+              "finished": 112314.29999999992,
+              "id": "biome",
+              "progress": 1,
+              "started": 112314.29999999992
+            },
+            {
+              "finished": 126738.50000000012,
+              "id": "buildings",
+              "progress": 1,
+              "started": 126738.50000000012
+            },
+            {
+              "finished": 141479.00000000012,
+              "id": "animals",
+              "progress": 1,
+              "started": 141479.00000000012
+            },
+            {
+              "finished": 142858.29999999993,
+              "id": "crops",
+              "progress": 1,
+              "started": 142858.29999999993
+            },
+            {
+              "finished": null,
+              "id": "walls",
+              "progress": 0,
+              "started": null
+            },
+            {
+              "finished": null,
+              "id": "vfx",
+              "progress": 0,
+              "started": null
+            },
+            {
+              "finished": null,
+              "id": "chunks",
+              "progress": 0,
+              "started": null
+            },
+            {
+              "finished": null,
+              "id": "gpu",
+              "progress": 0,
+              "started": null
+            },
+            {
+              "finished": null,
+              "id": "far-assets",
+              "progress": 0,
+              "started": null
+            },
+            {
+              "finished": null,
+              "id": "visible-ready",
+              "progress": 0,
+              "started": null
+            }
+          ],
+          "value": 0.8612305668586793
+        },
+        "scope": "One-time observational readiness snapshot. Queue counts are logical state, not GPU completion or physical memory.",
+        "spans": {
+          "active": [
+            {
+              "duration": null,
+              "elapsed": 47879.09999999986,
+              "end": null,
+              "failed": false,
+              "label": "app-world-load",
+              "start": 99850.20000000008
+            }
+          ],
+          "at": 147729.29999999993,
+          "closed": false,
+          "dropped": 0,
+          "early": {
+            "dropped": 0,
+            "rows": [
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 57659.5,
+                "label": "diorama-prepare-sky",
+                "lastDuration": 6961.300000000047,
+                "lastEnd": 64620.80000000005,
+                "lastStart": 57659.5
+              },
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 57660.80000000005,
+                "label": "app-prepared-pending",
+                "lastDuration": 38624.29999999993,
+                "lastEnd": 96285.09999999998,
+                "lastStart": 57660.80000000005
+              },
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 64621.70000000007,
+                "label": "diorama-prepare-catalogues",
+                "lastDuration": 520.1999999999534,
+                "lastEnd": 65141.90000000002,
+                "lastStart": 64621.70000000007
+              },
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 65141.90000000002,
+                "label": "diorama-prepare-maize-model",
+                "lastDuration": 11384.599999999977,
+                "lastEnd": 76526.5,
+                "lastStart": 65141.90000000002
+              },
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 65143,
+                "label": "diorama-prepare-maize-bridges",
+                "lastDuration": 21922.800000000047,
+                "lastEnd": 87065.80000000005,
+                "lastStart": 65143
+              },
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 87065.80000000005,
+                "label": "diorama-prepare-soil-texture",
+                "lastDuration": 1505.2999999999302,
+                "lastEnd": 88571.09999999998,
+                "lastStart": 87065.80000000005
+              },
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 88571.90000000002,
+                "label": "diorama-prepare-mountain-atlas",
+                "lastDuration": 1163.8000000000466,
+                "lastEnd": 89735.70000000007,
+                "lastStart": 88571.90000000002
+              },
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 89739.5,
+                "label": "diorama-prepare-maize-batch",
+                "lastDuration": 358.0999999999767,
+                "lastEnd": 90097.59999999998,
+                "lastStart": 89739.5
+              },
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 90098.59999999998,
+                "label": "diorama-compile-maize",
+                "lastDuration": 4791,
+                "lastEnd": 94889.59999999998,
+                "lastStart": 90098.59999999998
+              },
+              {
+                "begun": 0,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 94889.90000000002,
+                "label": "diorama-upload-maize-soil",
+                "lastDuration": 130.59999999997672,
+                "lastEnd": 95020.5,
+                "lastStart": 94889.90000000002
+              },
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 95020.5,
+                "label": "diorama-compile-sky",
+                "lastDuration": 696,
+                "lastEnd": 95716.5,
+                "lastStart": 95020.5
+              },
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 95716.5,
+                "label": "diorama-compile-mist",
+                "lastDuration": 342,
+                "lastEnd": 96058.5,
+                "lastStart": 95716.5
+              },
+              {
+                "begun": 0,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 96058.59999999998,
+                "label": "diorama-upload-mist",
+                "lastDuration": 3.5,
+                "lastEnd": 96062.09999999998,
+                "lastStart": 96058.59999999998
+              },
+              {
+                "begun": 0,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 96062.09999999998,
+                "label": "diorama-warm-day-night-sky",
+                "lastDuration": 7.700000000069849,
+                "lastEnd": 96069.80000000005,
+                "lastStart": 96062.09999999998
+              },
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 96069.80000000005,
+                "label": "diorama-final-fence",
+                "lastDuration": 214.9999999998836,
+                "lastEnd": 96284.79999999992,
+                "lastStart": 96069.80000000005
+              },
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 96285.20000000008,
+                "label": "app-pre-world-setup",
+                "lastDuration": 3564.899999999907,
+                "lastEnd": 99850.09999999998,
+                "lastStart": 96285.20000000008
+              }
+            ],
+            "scope": "First 16 selected early labels; counts and first/latest timestamps only, not a timeline or additive CPU/GPU durations."
+          },
+          "lastCompleted": {
+            "duration": 70.19999999995343,
+            "end": 142928.40000000002,
+            "failed": false,
+            "label": "load-milestone:crops",
+            "start": 142858.20000000007
+          },
+          "scope": "Nested awaited wall spans; do not sum as exclusive CPU/GPU time. Associations are labels, not exhaustive readiness proof."
+        },
+        "transfers": {
+          "cache": {
+            "application-cache": 3,
+            "browser-cache": 0,
+            "network": 171,
+            "unknown": 56,
+            "validated-cache": 0
+          },
+          "count": 230,
+          "disposed": false,
+          "failed": 0,
+          "gltf": {
+            "completed": 8,
+            "count": 8,
+            "omitted": 0,
+            "omittedCompleted": 0,
+            "pending": 0,
+            "rows": [
+              {
+                "afterResponseEnd": 894.0999999999767,
+                "association": "heuristic-url-window",
+                "cache": "network",
+                "duration": 21922.300000000047,
+                "end": 87065.40000000002,
+                "failed": false,
+                "id": 20,
+                "loaded": 26536168,
+                "start": 65143.09999999998,
+                "timing": {
+                  "decodedBodySize": 26536168,
+                  "encodedBodySize": 26536168,
+                  "responseEnd": 86171.30000000005,
+                  "responseStatus": 200,
+                  "startTime": 65143.30000000005,
+                  "transferSize": 26536468
+                },
+                "total": 26536168,
+                "unknownReason": null,
+                "untilResponseEnd": 21028.20000000007,
+                "url": "http://tauri.localhost/assets/web/2fdb3468b7646ebe16d0f3d3d25538ce5b20d6dee1d3830256d2f62599826dcc.glb"
+              },
+              {
+                "afterResponseEnd": 2558.7000000001863,
+                "association": "heuristic-url-window",
+                "cache": "network",
+                "duration": 14472,
+                "end": 141459.50000000012,
+                "failed": false,
+                "id": 64,
+                "loaded": 7123932,
+                "start": 126987.50000000012,
+                "timing": {
+                  "decodedBodySize": 7123932,
+                  "encodedBodySize": 7123932,
+                  "responseEnd": 138900.79999999993,
+                  "responseStatus": 200,
+                  "startTime": 126987.70000000008,
+                  "transferSize": 7124232
+                },
+                "total": 7123932,
+                "unknownReason": null,
+                "untilResponseEnd": 11913.299999999814,
+                "url": "http://tauri.localhost/assets/web/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb"
+              },
+              {
+                "afterResponseEnd": 1588,
+                "association": "heuristic-url-window",
+                "cache": "network",
+                "duration": 12420.300000000048,
+                "end": 139407.50000000012,
+                "failed": false,
+                "id": 63,
+                "loaded": 6980244,
+                "start": 126987.20000000008,
+                "timing": {
+                  "decodedBodySize": 6980244,
+                  "encodedBodySize": 6980244,
+                  "responseEnd": 137819.50000000012,
+                  "responseStatus": 200,
+                  "startTime": 126987.40000000002,
+                  "transferSize": 6980544
+                },
+                "total": 6980244,
+                "unknownReason": null,
+                "untilResponseEnd": 10832.300000000048,
+                "url": "http://tauri.localhost/assets/web/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb"
+              },
+              {
+                "afterResponseEnd": 3692.6999999999534,
+                "association": "heuristic-url-window",
+                "cache": "network",
+                "duration": 11383.300000000048,
+                "end": 76525.40000000002,
+                "failed": false,
+                "id": 19,
+                "loaded": 14308628,
+                "start": 65142.09999999998,
+                "timing": {
+                  "decodedBodySize": 14308628,
+                  "encodedBodySize": 14308628,
+                  "responseEnd": 72832.70000000007,
+                  "responseStatus": 200,
+                  "startTime": 65142.80000000005,
+                  "transferSize": 14308928
+                },
+                "total": 14308628,
+                "unknownReason": null,
+                "untilResponseEnd": 7690.600000000093,
+                "url": "http://tauri.localhost/assets/web/8f6c9ef7472a2d7f8ffda7f08a78f8027f91d14a8f92b8eeca4084b0f379da36.glb"
+              },
+              {
+                "afterResponseEnd": 2287.5999999998603,
+                "association": "heuristic-url-window",
+                "cache": "network",
+                "duration": 10819.5,
+                "end": 137806.29999999993,
+                "failed": false,
+                "id": 61,
+                "loaded": 6401848,
+                "start": 126986.79999999992,
+                "timing": {
+                  "decodedBodySize": 6401848,
+                  "encodedBodySize": 6401848,
+                  "responseEnd": 135518.70000000007,
+                  "responseStatus": 200,
+                  "startTime": 126987.00000000012,
+                  "transferSize": 6402148
+                },
+                "total": 6401848,
+                "unknownReason": null,
+                "untilResponseEnd": 8531.90000000014,
+                "url": "http://tauri.localhost/assets/web/7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb"
+              },
+              {
+                "afterResponseEnd": 2584.6999999999534,
+                "association": "heuristic-url-window",
+                "cache": "network",
+                "duration": 8442.699999999953,
+                "end": 135429.09999999998,
+                "failed": false,
+                "id": 60,
+                "loaded": 6927276,
+                "start": 126986.40000000002,
+                "timing": {
+                  "decodedBodySize": 6927276,
+                  "encodedBodySize": 6927276,
+                  "responseEnd": 132844.40000000002,
+                  "responseStatus": 200,
+                  "startTime": 126986.70000000008,
+                  "transferSize": 6927576
+                },
+                "total": 6927276,
+                "unknownReason": null,
+                "untilResponseEnd": 5858,
+                "url": "http://tauri.localhost/assets/web/cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869.glb"
+              },
+              {
+                "afterResponseEnd": 3888.6999999999534,
+                "association": "heuristic-url-window",
+                "cache": "network",
+                "duration": 6816.899999999907,
+                "end": 122743.90000000002,
+                "failed": false,
+                "id": 55,
+                "loaded": 6890088,
+                "start": 115927.00000000012,
+                "timing": {
+                  "decodedBodySize": 6890088,
+                  "encodedBodySize": 6890088,
+                  "responseEnd": 118855.20000000008,
+                  "responseStatus": 200,
+                  "startTime": 115927.20000000008,
+                  "transferSize": 6890388
+                },
+                "total": 6890088,
+                "unknownReason": null,
+                "untilResponseEnd": 2928.1999999999534,
+                "url": "http://tauri.localhost/assets/web/fedb713c0b32df33f11111a91e2c3e0616a0345ec9be9a8beeecaa0b93ef26cb.glb"
+              },
+              {
+                "afterResponseEnd": 2000.1999999999537,
+                "association": "heuristic-url-window",
+                "cache": "network",
+                "duration": 5851.09999999986,
+                "end": 132838.09999999998,
+                "failed": false,
+                "id": 62,
+                "loaded": 5970792,
+                "start": 126987.00000000012,
+                "timing": {
+                  "decodedBodySize": 5970792,
+                  "encodedBodySize": 5970792,
+                  "responseEnd": 130837.90000000002,
+                  "responseStatus": 200,
+                  "startTime": 126987.20000000008,
+                  "transferSize": 5971092
+                },
+                "total": 5970792,
+                "unknownReason": null,
+                "untilResponseEnd": 3850.899999999907,
+                "url": "http://tauri.localhost/assets/web/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb"
+              }
+            ],
+            "scope": "Largest completed GLTF request durations, stable insertion-order ties. Existing ResourceTiming association is heuristic URL plus time window, never exact identity. ResponseEnd is a browser timeline boundary; end follows GLTF completion before ownModel. Intervals are not exclusive CPU or physical transport; network/cache evidence does not identify Internet or disk cost."
+          },
+          "loadedBytes": 122581916,
+          "omitted": 44,
+          "pending": 56,
+          "rows": [
+            {
+              "cache": "unknown",
+              "end": null,
+              "failed": false,
+              "id": 173,
+              "kind": "fetch",
+              "loaded": 0,
+              "responseEnd": null,
+              "start": 145404.00000000012,
+              "total": null,
+              "totalEvidence": "unknown",
+              "url": "http://tauri.localhost/assets/c37063064d407df21efbbeefb5d58442137821dba251bdd5476088b1c8c593d7.bin"
+            },
+            {
+              "cache": "unknown",
+              "end": null,
+              "failed": false,
+              "id": 176,
+              "kind": "fetch",
+              "loaded": 0,
+              "responseEnd": null,
+              "start": 145405.29999999993,
+              "total": null,
+              "totalEvidence": "unknown",
+              "url": "http://tauri.localhost/assets/42c28d2aa935f0ad9da8cbb3746e30cafccb1aecc59bf9d8947a1ecd7b7d5073.bin"
+            },
+            {
+              "cache": "unknown",
+              "end": null,
+              "failed": false,
+              "id": 177,
+              "kind": "fetch",
+              "loaded": 0,
+              "responseEnd": null,
+              "start": 145550.79999999993,
+              "total": null,
+              "totalEvidence": "unknown",
+              "url": "http://tauri.localhost/assets/b1e1a4baae449c0b430fb3ab4485188ff7d483fba7eea77c727b7aa0cca11e97.bin"
+            },
+            {
+              "cache": "unknown",
+              "end": null,
+              "failed": false,
+              "id": 178,
+              "kind": "fetch",
+              "loaded": 0,
+              "responseEnd": null,
+              "start": 145551.20000000007,
+              "total": null,
+              "totalEvidence": "unknown",
+              "url": "http://tauri.localhost/assets/6f62d90cba7c20bb3446525891887235c7508dfbe1e2b595bc64f3c980109aed.bin"
+            },
+            {
+              "cache": "unknown",
+              "end": null,
+              "failed": false,
+              "id": 179,
+              "kind": "fetch",
+              "loaded": 0,
+              "responseEnd": null,
+              "start": 145551.20000000007,
+              "total": null,
+              "totalEvidence": "unknown",
+              "url": "http://tauri.localhost/assets/7213c0cd128d76971fb3bf1a249faa8e4eed078d7a3ec6d448dd1aee4a9b0644.bin"
+            },
+            {
+              "cache": "unknown",
+              "end": null,
+              "failed": false,
+              "id": 180,
+              "kind": "fetch",
+              "loaded": 0,
+              "responseEnd": null,
+              "start": 145551.40000000002,
+              "total": null,
+              "totalEvidence": "unknown",
+              "url": "http://tauri.localhost/assets/27fb817b664c7c45d5135e3e9662d922a2180161b450225d65639914a76d7705.bin"
+            },
+            {
+              "cache": "unknown",
+              "end": null,
+              "failed": false,
+              "id": 181,
+              "kind": "fetch",
+              "loaded": 0,
+              "responseEnd": null,
+              "start": 145769.20000000007,
+              "total": null,
+              "totalEvidence": "unknown",
+              "url": "http://tauri.localhost/assets/0192e64b56b63efcc797342a1f006ca153e2a2fb103c0a6cece29d546545894d.bin"
+            },
+            {
+              "cache": "unknown",
+              "end": null,
+              "failed": false,
+              "id": 182,
+              "kind": "fetch",
+              "loaded": 0,
+              "responseEnd": null,
+              "start": 145769.40000000002,
+              "total": null,
+              "totalEvidence": "unknown",
+              "url": "http://tauri.localhost/assets/0cbd4dcd4cf53b8996b8ed713c0027fe4758cffb0d08cb1ca0bfd191e64694dc.bin"
+            },
+            {
+              "cache": "unknown",
+              "end": null,
+              "failed": false,
+              "id": 183,
+              "kind": "fetch",
+              "loaded": 0,
+              "responseEnd": null,
+              "start": 145840.59999999998,
+              "total": null,
+              "totalEvidence": "unknown",
+              "url": "http://tauri.localhost/assets/d7d669c1f3583371fcce2dfdb471a5029a1eba79eba39e0efc1c9fb463309b8c.bin"
+            },
+            {
+              "cache": "unknown",
+              "end": null,
+              "failed": false,
+              "id": 184,
+              "kind": "fetch",
+              "loaded": 0,
+              "responseEnd": null,
+              "start": 145841.00000000012,
+              "total": null,
+              "totalEvidence": "unknown",
+              "url": "http://tauri.localhost/assets/a372f1beb4f479b17ee977e5590a2c44f6a1a52ffc8d76e89d83ca29f92ba7ac.bin"
+            },
+            {
+              "cache": "unknown",
+              "end": null,
+              "failed": false,
+              "id": 185,
+              "kind": "fetch",
+              "loaded": 0,
+              "responseEnd": null,
+              "start": 146204.09999999998,
+              "total": null,
+              "totalEvidence": "unknown",
+              "url": "http://tauri.localhost/assets/b9bd951ecad775ca639c809b410dd827cd6dd5c3a639a1da9a7e1b0327e17cfe.bin"
+            },
+            {
+              "cache": "unknown",
+              "end": null,
+              "failed": false,
+              "id": 186,
+              "kind": "fetch",
+              "loaded": 0,
+              "responseEnd": null,
+              "start": 146204.29999999993,
+              "total": null,
+              "totalEvidence": "unknown",
+              "url": "http://tauri.localhost/assets/a0410a0a2b2313652005735854d63d426005a41e4e8e854ee1da6e2a15927903.bin"
+            }
+          ],
+          "scope": "Observed transfer records only; unknown is not a cache hit. End null can include post-transfer decoding/preparation."
+        }
+      }
+    },
+    "loadingRecipe": {
+      "compileWindow": true,
+      "resourceOverlap": false
+    },
+    "menu": "http://tauri.localhost/menu/index.html",
+    "models": [
+      "assets/web/0ab73565649737fc15d853aa9d52a9ecacff3fbf9f5664cc21ec4e54452ef894.glb",
+      "assets/web/25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238.glb",
+      "assets/web/3ba902fd9bfc99589348ba9202513e9daa63442a6c2b21bb23a15bf58bd546f7.glb",
+      "assets/web/4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141.glb",
+      "assets/web/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb",
+      "assets/web/6c43390aa864c32555795b2be638f8e1e8d4154fa85e6991580ebb0d7fcde309.glb",
+      "assets/web/6fb0b48a96d820d1738c6e36ed2d1cacaf54844df37298450b79d68b4703d80c.glb",
+      "assets/web/7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb",
+      "assets/web/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb",
+      "assets/web/9cb17849416e2d2578eb5806c4874fc496fdf9a1aa421d3a10fe3a346933674e.glb",
+      "assets/web/a748ca0cea0d4d0d4abd95071577a8457e63f22433e618be77934c079f4cf89c.glb",
+      "assets/web/b27ce08a5f860912783d5978cec8a012b28d7a55e2c7a69cc992f91f8bbd5a76.glb",
+      "assets/web/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb",
+      "assets/web/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+      "assets/web/cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869.glb",
+      "assets/web/db01314e4e0a03f4e1aaa31e8207cee85a42294edffb003633282bb574ef28cd.glb",
+      "assets/web/e870835e4fa3c1cc4fdbcd048a2ca64da97d2ea4f48ea3192da6aba692e05202.glb",
+      "assets/web/eddde4e46932cf9fd056315e34af03f07595cd1ce4de61b4d7d6ac7be5d873e9.glb",
+      "assets/web/f3ae53d5ce3b57419fd31e74e2572ada9cc61392c2e7ac20dac484ec194d5e9f.glb",
+      "assets/web/fedb713c0b32df33f11111a91e2c3e0616a0345ec9be9a8beeecaa0b93ef26cb.glb",
+      "assets/web/8f6c9ef7472a2d7f8ffda7f08a78f8027f91d14a8f92b8eeca4084b0f379da36.glb",
+      "assets/web/2fdb3468b7646ebe16d0f3d3d25538ce5b20d6dee1d3830256d2f62599826dcc.glb"
+    ],
+    "storage": true,
+    "webgl2": true,
+    "worker": true
+  },
+  "errors": [
+    "Error: Production world did not finish loading"
+  ],
+  "ok": false,
+  "origin": "http://tauri.localhost",
+  "secureContext": true,
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0"
+}
