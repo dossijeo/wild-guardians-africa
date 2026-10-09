@@ -1,0 +1,1526 @@
+{
+  "source": "2346fbd791df2da2c7faef7db11fdb6f9672c8a6",
+  "finalStateParity": true,
+  "bands": [
+    {
+      "days": [
+        1,
+        3
+      ],
+      "inactivitySeconds": 640,
+      "daylightSeconds": 900,
+      "categories": {
+        "maintenance": 328,
+        "currentTeam": 252
+      },
+      "physicalDeliveries": 91,
+      "paidWages": 870,
+      "idleWithSeedAndMinimum100Cash": 580,
+      "idleWithFullProtectedPlantCash": 0,
+      "idleWithOneAdditionalWorkerRawCash": 580,
+      "idleWithAdditionalWorkerAndExpandedTomorrowReservesCash": 0,
+      "fraction": 0.7111111111111111
+    },
+    {
+      "days": [
+        4,
+        7
+      ],
+      "inactivitySeconds": 362,
+      "daylightSeconds": 1200,
+      "categories": {
+        "maintenance": 211,
+        "currentTeam": 72
+      },
+      "physicalDeliveries": 333,
+      "paidWages": 4080,
+      "idleWithSeedAndMinimum100Cash": 258,
+      "idleWithFullProtectedPlantCash": 0,
+      "idleWithOneAdditionalWorkerRawCash": 283,
+      "idleWithAdditionalWorkerAndExpandedTomorrowReservesCash": 9,
+      "fraction": 0.3016666666666667
+    },
+    {
+      "days": [
+        8,
+        10
+      ],
+      "inactivitySeconds": 77,
+      "daylightSeconds": 900,
+      "categories": {
+        "growingTeam": 17
+      },
+      "physicalDeliveries": 406,
+      "paidWages": 5640,
+      "idleWithSeedAndMinimum100Cash": 17,
+      "idleWithFullProtectedPlantCash": 0,
+      "idleWithOneAdditionalWorkerRawCash": 17,
+      "idleWithAdditionalWorkerAndExpandedTomorrowReservesCash": 17,
+      "fraction": 0.08555555555555555
+    }
+  ],
+  "service": [
+    {
+      "day": 1,
+      "observedPeacefulElapsedSeconds": 298.00000000000944,
+      "unsampledAttackGapSeconds": 0,
+      "phaseActorSecondsApprox": {
+        "arriving:none": 10.000000000000002,
+        "walking:initial": 504.9999999999908,
+        "acting:initial": 348.9999999999889,
+        "walking:water": 480.00000000000506,
+        "acting:water": 148.0000000000069,
+        "walking:harvest": 205.00000000005278,
+        "acting:harvest": 72.0000000000087,
+        "carrying:crate": 19.000000000003467
+      },
+      "firstObservedDeliveryTime": 216.99999999999196,
+      "maximumInitialQueue": 54,
+      "maximumWaterQueue": 24,
+      "maximumHarvestQueue": 31,
+      "checkpoints": [
+        {
+          "day": 1,
+          "time": 9.99999999999998,
+          "balance": 465,
+          "living": 11,
+          "firstWaterPending": 11,
+          "initialTasks": 11,
+          "waterTasks": 0,
+          "harvestTasks": 0,
+          "phases": {
+            "walking:initial": 6
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 0
+        },
+        {
+          "day": 1,
+          "time": 60.00000000000058,
+          "balance": 280,
+          "living": 48,
+          "firstWaterPending": 34,
+          "initialTasks": 34,
+          "waterTasks": 0,
+          "harvestTasks": 0,
+          "phases": {
+            "acting:initial": 3,
+            "walking:initial": 3
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 0
+        },
+        {
+          "day": 1,
+          "time": 99.9999999999986,
+          "balance": 280,
+          "living": 48,
+          "firstWaterPending": 18,
+          "initialTasks": 18,
+          "waterTasks": 0,
+          "harvestTasks": 0,
+          "phases": {
+            "acting:initial": 4,
+            "walking:initial": 2
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 0
+        },
+        {
+          "day": 1,
+          "time": 149.99999999999577,
+          "balance": 280,
+          "living": 48,
+          "firstWaterPending": 1,
+          "initialTasks": 1,
+          "waterTasks": 23,
+          "harvestTasks": 0,
+          "phases": {
+            "walking:water": 3,
+            "acting:water": 2,
+            "acting:initial": 1
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 0
+        },
+        {
+          "day": 1,
+          "time": 199.99999999999292,
+          "balance": 280,
+          "living": 48,
+          "firstWaterPending": 0,
+          "initialTasks": 0,
+          "waterTasks": 17,
+          "harvestTasks": 14,
+          "phases": {
+            "walking:water": 6
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 0
+        },
+        {
+          "day": 1,
+          "time": 250,
+          "balance": 358,
+          "living": 66,
+          "firstWaterPending": 24,
+          "initialTasks": 24,
+          "waterTasks": 10,
+          "harvestTasks": 29,
+          "phases": {
+            "walking:water": 2,
+            "walking:harvest": 2,
+            "acting:harvest": 1,
+            "acting:water": 1
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 6
+        },
+        {
+          "day": 1,
+          "time": 299.00000000000944,
+          "balance": 637,
+          "living": 83,
+          "firstWaterPending": 54,
+          "initialTasks": 54,
+          "waterTasks": 3,
+          "harvestTasks": 26,
+          "phases": {
+            "walking:harvest": 1,
+            "walking:initial": 2,
+            "acting:harvest": 2,
+            "walking:water": 1
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 19
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "observedPeacefulElapsedSeconds": 299.00000000000944,
+      "unsampledAttackGapSeconds": 0,
+      "phaseActorSecondsApprox": {
+        "walking:harvest": 279.000000000002,
+        "acting:harvest": 86.0000000000008,
+        "carrying:crate": 68.00000000000054,
+        "walking:water": 19.999999999999858,
+        "acting:water": 9.999999999999858,
+        "walking:initial": 1058.000000000049,
+        "acting:initial": 565.0000000000148
+      },
+      "firstObservedDeliveryTime": 26.0000000000001,
+      "maximumInitialQueue": 163,
+      "maximumWaterQueue": 54,
+      "maximumHarvestQueue": 24,
+      "checkpoints": [
+        {
+          "day": 2,
+          "time": 9.99999999999998,
+          "balance": 443,
+          "living": 91,
+          "firstWaterPending": 64,
+          "initialTasks": 64,
+          "waterTasks": 3,
+          "harvestTasks": 24,
+          "phases": {
+            "walking:harvest": 7
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 21
+        },
+        {
+          "day": 2,
+          "time": 60.00000000000058,
+          "balance": 830,
+          "living": 119,
+          "firstWaterPending": 112,
+          "initialTasks": 112,
+          "waterTasks": 3,
+          "harvestTasks": 4,
+          "phases": {
+            "walking:harvest": 1,
+            "carrying:crate": 1,
+            "walking:water": 2,
+            "acting:water": 1,
+            "acting:harvest": 2
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 40
+        },
+        {
+          "day": 2,
+          "time": 99.9999999999986,
+          "balance": 795,
+          "living": 155,
+          "firstWaterPending": 141,
+          "initialTasks": 141,
+          "waterTasks": 0,
+          "harvestTasks": 3,
+          "phases": {
+            "walking:initial": 5,
+            "acting:initial": 2
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 45
+        },
+        {
+          "day": 2,
+          "time": 149.99999999999577,
+          "balance": 610,
+          "living": 192,
+          "firstWaterPending": 159,
+          "initialTasks": 159,
+          "waterTasks": 5,
+          "harvestTasks": 3,
+          "phases": {
+            "walking:initial": 6,
+            "acting:initial": 1
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 45
+        },
+        {
+          "day": 2,
+          "time": 199.99999999999292,
+          "balance": 610,
+          "living": 192,
+          "firstWaterPending": 144,
+          "initialTasks": 144,
+          "waterTasks": 21,
+          "harvestTasks": 3,
+          "phases": {
+            "acting:initial": 3,
+            "walking:initial": 4
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 45
+        },
+        {
+          "day": 2,
+          "time": 250,
+          "balance": 610,
+          "living": 192,
+          "firstWaterPending": 127,
+          "initialTasks": 127,
+          "waterTasks": 39,
+          "harvestTasks": 3,
+          "phases": {
+            "walking:initial": 5,
+            "acting:initial": 2
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 45
+        },
+        {
+          "day": 2,
+          "time": 299.00000000000944,
+          "balance": 610,
+          "living": 192,
+          "firstWaterPending": 113,
+          "initialTasks": 113,
+          "waterTasks": 54,
+          "harvestTasks": 3,
+          "phases": {
+            "walking:initial": 4,
+            "acting:initial": 3
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 45
+        }
+      ]
+    },
+    {
+      "day": 3,
+      "observedPeacefulElapsedSeconds": 299.00000000000944,
+      "unsampledAttackGapSeconds": 0,
+      "phaseActorSecondsApprox": {
+        "walking:harvest": 661.0000000001901,
+        "walking:water": 823.0000000000405,
+        "acting:water": 225.0000000000142,
+        "acting:harvest": 157.00000000003325,
+        "carrying:crate": 117.00000000002056,
+        "walking:initial": 1996.9999999998936,
+        "acting:initial": 787.9999999999579
+      },
+      "firstObservedDeliveryTime": 26.0000000000001,
+      "maximumInitialQueue": 109,
+      "maximumWaterQueue": 100,
+      "maximumHarvestQueue": 65,
+      "checkpoints": [
+        {
+          "day": 3,
+          "time": 9.99999999999998,
+          "balance": 130,
+          "living": 191,
+          "firstWaterPending": 109,
+          "initialTasks": 109,
+          "waterTasks": 57,
+          "harvestTasks": 3,
+          "phases": {
+            "walking:harvest": 3,
+            "walking:water": 13
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 45
+        },
+        {
+          "day": 3,
+          "time": 60.00000000000042,
+          "balance": 229,
+          "living": 188,
+          "firstWaterPending": 106,
+          "initialTasks": 106,
+          "waterTasks": 18,
+          "harvestTasks": 54,
+          "phases": {
+            "acting:initial": 5,
+            "walking:initial": 11
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 48
+        },
+        {
+          "day": 3,
+          "time": 99.99999999999842,
+          "balance": 229,
+          "living": 188,
+          "firstWaterPending": 78,
+          "initialTasks": 78,
+          "waterTasks": 22,
+          "harvestTasks": 57,
+          "phases": {
+            "acting:initial": 6,
+            "walking:initial": 10
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 48
+        },
+        {
+          "day": 3,
+          "time": 149.99999999999542,
+          "balance": 229,
+          "living": 188,
+          "firstWaterPending": 43,
+          "initialTasks": 43,
+          "waterTasks": 43,
+          "harvestTasks": 57,
+          "phases": {
+            "walking:initial": 12,
+            "acting:initial": 4
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 48
+        },
+        {
+          "day": 3,
+          "time": 199.99999999999258,
+          "balance": 229,
+          "living": 188,
+          "firstWaterPending": 16,
+          "initialTasks": 16,
+          "waterTasks": 68,
+          "harvestTasks": 58,
+          "phases": {
+            "acting:initial": 3,
+            "walking:initial": 13
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 48
+        },
+        {
+          "day": 3,
+          "time": 250,
+          "balance": 427,
+          "living": 182,
+          "firstWaterPending": 0,
+          "initialTasks": 0,
+          "waterTasks": 88,
+          "harvestTasks": 63,
+          "phases": {
+            "acting:harvest": 2,
+            "walking:water": 3,
+            "walking:harvest": 11
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 54
+        },
+        {
+          "day": 3,
+          "time": 299.00000000000944,
+          "balance": 1312,
+          "living": 168,
+          "firstWaterPending": 21,
+          "initialTasks": 21,
+          "waterTasks": 100,
+          "harvestTasks": 37,
+          "phases": {
+            "walking:harvest": 5,
+            "walking:water": 4,
+            "acting:harvest": 2,
+            "carrying:crate": 5
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 84
+        }
+      ]
+    },
+    {
+      "day": 4,
+      "observedPeacefulElapsedSeconds": 299.00000000000944,
+      "unsampledAttackGapSeconds": 0,
+      "phaseActorSecondsApprox": {
+        "walking:harvest": 608.0000000000045,
+        "acting:harvest": 135.00000000000105,
+        "carrying:crate": 153.99999999999983,
+        "walking:water": 1881.999999999941,
+        "acting:water": 362.9999999999892,
+        "walking:initial": 706.0000000001144,
+        "acting:initial": 324.00000000008436
+      },
+      "firstObservedDeliveryTime": 26.0000000000001,
+      "maximumInitialQueue": 252,
+      "maximumWaterQueue": 106,
+      "maximumHarvestQueue": 109,
+      "checkpoints": [
+        {
+          "day": 4,
+          "time": 9.99999999999998,
+          "balance": 1073,
+          "living": 176,
+          "firstWaterPending": 31,
+          "initialTasks": 31,
+          "waterTasks": 102,
+          "harvestTasks": 35,
+          "phases": {
+            "walking:harvest": 14
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 91
+        },
+        {
+          "day": 4,
+          "time": 60.00000000000042,
+          "balance": 1714,
+          "living": 198,
+          "firstWaterPending": 81,
+          "initialTasks": 81,
+          "waterTasks": 93,
+          "harvestTasks": 24,
+          "phases": {
+            "walking:water": 10,
+            "acting:water": 3,
+            "carrying:crate": 1
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 118
+        },
+        {
+          "day": 4,
+          "time": 99.99999999999842,
+          "balance": 1547,
+          "living": 238,
+          "firstWaterPending": 121,
+          "initialTasks": 121,
+          "waterTasks": 64,
+          "harvestTasks": 53,
+          "phases": {
+            "walking:harvest": 2,
+            "walking:water": 11,
+            "acting:water": 1
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 119
+        },
+        {
+          "day": 4,
+          "time": 149.99999999999542,
+          "balance": 1462,
+          "living": 282,
+          "firstWaterPending": 171,
+          "initialTasks": 171,
+          "waterTasks": 41,
+          "harvestTasks": 70,
+          "phases": {
+            "walking:water": 10,
+            "acting:harvest": 1,
+            "acting:water": 2,
+            "carrying:crate": 1
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 124
+        },
+        {
+          "day": 4,
+          "time": 199.99999999999258,
+          "balance": 1278,
+          "living": 331,
+          "firstWaterPending": 221,
+          "initialTasks": 221,
+          "waterTasks": 15,
+          "harvestTasks": 95,
+          "phases": {
+            "walking:water": 9,
+            "walking:initial": 5
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 126
+        },
+        {
+          "day": 4,
+          "time": 250,
+          "balance": 1063,
+          "living": 374,
+          "firstWaterPending": 250,
+          "initialTasks": 250,
+          "waterTasks": 6,
+          "harvestTasks": 104,
+          "phases": {
+            "walking:initial": 8,
+            "acting:initial": 5,
+            "walking:water": 1
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 126
+        },
+        {
+          "day": 4,
+          "time": 299.00000000000944,
+          "balance": 1063,
+          "living": 373,
+          "firstWaterPending": 221,
+          "initialTasks": 221,
+          "waterTasks": 4,
+          "harvestTasks": 109,
+          "phases": {
+            "walking:initial": 9,
+            "walking:harvest": 1,
+            "acting:initial": 2,
+            "carrying:crate": 1,
+            "acting:harvest": 1
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 126
+        }
+      ]
+    },
+    {
+      "day": 5,
+      "observedPeacefulElapsedSeconds": 299.00000000000944,
+      "unsampledAttackGapSeconds": 0,
+      "phaseActorSecondsApprox": {
+        "walking:harvest": 1714.9999999999795,
+        "acting:harvest": 392.99999999999693,
+        "carrying:crate": 984.9999999999748,
+        "walking:water": 81.00000000000477,
+        "acting:water": 13.999999999999204,
+        "walking:initial": 4635.00000000025,
+        "acting:initial": 1415.0000000000894
+      },
+      "firstObservedDeliveryTime": 26.0000000000001,
+      "maximumInitialQueue": 287,
+      "maximumWaterQueue": 147,
+      "maximumHarvestQueue": 108,
+      "checkpoints": [
+        {
+          "day": 5,
+          "time": 9.99999999999998,
+          "balance": 199,
+          "living": 370,
+          "firstWaterPending": 216,
+          "initialTasks": 216,
+          "waterTasks": 7,
+          "harvestTasks": 108,
+          "phases": {
+            "walking:harvest": 31
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 128
+        },
+        {
+          "day": 5,
+          "time": 60.00000000000042,
+          "balance": 1952,
+          "living": 320,
+          "firstWaterPending": 235,
+          "initialTasks": 235,
+          "waterTasks": 37,
+          "harvestTasks": 42,
+          "phases": {
+            "carrying:crate": 17,
+            "walking:harvest": 8,
+            "acting:harvest": 6
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 180
+        },
+        {
+          "day": 5,
+          "time": 99.99999999999842,
+          "balance": 3105,
+          "living": 327,
+          "firstWaterPending": 274,
+          "initialTasks": 274,
+          "waterTasks": 39,
+          "harvestTasks": 13,
+          "phases": {
+            "acting:harvest": 2,
+            "walking:initial": 8,
+            "acting:water": 1,
+            "acting:initial": 6,
+            "carrying:crate": 9,
+            "walking:water": 1,
+            "walking:harvest": 4
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 221
+        },
+        {
+          "day": 5,
+          "time": 149.99999999999542,
+          "balance": 3350,
+          "living": 371,
+          "firstWaterPending": 282,
+          "initialTasks": 282,
+          "waterTasks": 37,
+          "harvestTasks": 9,
+          "phases": {
+            "walking:initial": 23,
+            "acting:initial": 8
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 236
+        },
+        {
+          "day": 5,
+          "time": 199.99999999999258,
+          "balance": 3100,
+          "living": 421,
+          "firstWaterPending": 285,
+          "initialTasks": 285,
+          "waterTasks": 63,
+          "harvestTasks": 9,
+          "phases": {
+            "walking:initial": 21,
+            "acting:initial": 10
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 236
+        },
+        {
+          "day": 5,
+          "time": 250,
+          "balance": 2850,
+          "living": 471,
+          "firstWaterPending": 282,
+          "initialTasks": 282,
+          "waterTasks": 99,
+          "harvestTasks": 9,
+          "phases": {
+            "walking:initial": 25,
+            "acting:initial": 6
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 236
+        },
+        {
+          "day": 5,
+          "time": 299.00000000000944,
+          "balance": 2700,
+          "living": 501,
+          "firstWaterPending": 262,
+          "initialTasks": 262,
+          "waterTasks": 147,
+          "harvestTasks": 18,
+          "phases": {
+            "acting:initial": 6,
+            "walking:initial": 17,
+            "walking:water": 8
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 236
+        }
+      ]
+    },
+    {
+      "day": 6,
+      "observedPeacefulElapsedSeconds": 299.00000000000944,
+      "unsampledAttackGapSeconds": 0,
+      "phaseActorSecondsApprox": {
+        "walking:harvest": 359.00000000001677,
+        "walking:water": 2803.000000000082,
+        "acting:water": 537.0000000000048,
+        "acting:harvest": 64.00000000000063,
+        "carrying:crate": 188.99999999999895,
+        "walking:initial": 6730.000000000214,
+        "acting:initial": 1834.0000000000846
+      },
+      "firstObservedDeliveryTime": 26.0000000000001,
+      "maximumInitialQueue": 329,
+      "maximumWaterQueue": 225,
+      "maximumHarvestQueue": 173,
+      "checkpoints": [
+        {
+          "day": 6,
+          "time": 9.99999999999998,
+          "balance": 1390,
+          "living": 509,
+          "firstWaterPending": 262,
+          "initialTasks": 262,
+          "waterTasks": 156,
+          "harvestTasks": 18,
+          "phases": {
+            "walking:harvest": 8,
+            "walking:water": 34
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 236
+        },
+        {
+          "day": 6,
+          "time": 60.00000000000042,
+          "balance": 1583,
+          "living": 526,
+          "firstWaterPending": 296,
+          "initialTasks": 296,
+          "waterTasks": 101,
+          "harvestTasks": 111,
+          "phases": {
+            "walking:water": 26,
+            "acting:water": 7,
+            "walking:harvest": 1,
+            "carrying:crate": 8
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 245
+        },
+        {
+          "day": 6,
+          "time": 99.99999999999842,
+          "balance": 1647,
+          "living": 565,
+          "firstWaterPending": 328,
+          "initialTasks": 328,
+          "waterTasks": 79,
+          "harvestTasks": 150,
+          "phases": {
+            "walking:initial": 29,
+            "acting:initial": 7,
+            "carrying:crate": 1,
+            "walking:water": 2,
+            "acting:water": 3
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 253
+        },
+        {
+          "day": 6,
+          "time": 149.99999999999542,
+          "balance": 1570,
+          "living": 587,
+          "firstWaterPending": 277,
+          "initialTasks": 277,
+          "waterTasks": 76,
+          "harvestTasks": 155,
+          "phases": {
+            "acting:initial": 11,
+            "walking:initial": 31
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 254
+        },
+        {
+          "day": 6,
+          "time": 199.99999999999258,
+          "balance": 1570,
+          "living": 587,
+          "firstWaterPending": 214,
+          "initialTasks": 214,
+          "waterTasks": 123,
+          "harvestTasks": 155,
+          "phases": {
+            "walking:initial": 38,
+            "acting:initial": 4
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 254
+        },
+        {
+          "day": 6,
+          "time": 250,
+          "balance": 1570,
+          "living": 587,
+          "firstWaterPending": 155,
+          "initialTasks": 155,
+          "waterTasks": 181,
+          "harvestTasks": 155,
+          "phases": {
+            "walking:initial": 32,
+            "acting:initial": 10
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 254
+        },
+        {
+          "day": 6,
+          "time": 299.00000000000944,
+          "balance": 1570,
+          "living": 587,
+          "firstWaterPending": 107,
+          "initialTasks": 107,
+          "waterTasks": 225,
+          "harvestTasks": 173,
+          "phases": {
+            "walking:harvest": 12,
+            "walking:initial": 12,
+            "walking:water": 16,
+            "acting:initial": 1,
+            "acting:water": 1
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 254
+        }
+      ]
+    },
+    {
+      "day": 7,
+      "observedPeacefulElapsedSeconds": 299.00000000000944,
+      "unsampledAttackGapSeconds": 0,
+      "phaseActorSecondsApprox": {
+        "walking:harvest": 3154.999999999952,
+        "acting:harvest": 626.9999999999936,
+        "carrying:crate": 1939.999999999939,
+        "walking:water": 5735.9999999998945,
+        "acting:water": 767.9999999999981,
+        "walking:initial": 2000.0000000005966,
+        "acting:initial": 376.0000000000899
+      },
+      "firstObservedDeliveryTime": 26.0000000000001,
+      "maximumInitialQueue": 327,
+      "maximumWaterQueue": 300,
+      "maximumHarvestQueue": 232,
+      "checkpoints": [
+        {
+          "day": 7,
+          "time": 9.99999999999998,
+          "balance": 100,
+          "living": 582,
+          "firstWaterPending": 104,
+          "initialTasks": 104,
+          "waterTasks": 240,
+          "harvestTasks": 171,
+          "phases": {
+            "walking:harvest": 49
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 254
+        },
+        {
+          "day": 7,
+          "time": 60.00000000000042,
+          "balance": 3318,
+          "living": 505,
+          "firstWaterPending": 127,
+          "initialTasks": 127,
+          "waterTasks": 288,
+          "harvestTasks": 77,
+          "phases": {
+            "carrying:crate": 32,
+            "acting:harvest": 6,
+            "walking:harvest": 11
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 322
+        },
+        {
+          "day": 7,
+          "time": 99.99999999999842,
+          "balance": 5131,
+          "living": 502,
+          "firstWaterPending": 167,
+          "initialTasks": 167,
+          "waterTasks": 296,
+          "harvestTasks": 39,
+          "phases": {
+            "acting:water": 1,
+            "walking:water": 15,
+            "carrying:crate": 18,
+            "walking:harvest": 10,
+            "acting:harvest": 5
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 379
+        },
+        {
+          "day": 7,
+          "time": 149.99999999999545,
+          "balance": 6003,
+          "living": 534,
+          "firstWaterPending": 217,
+          "initialTasks": 217,
+          "waterTasks": 248,
+          "harvestTasks": 69,
+          "phases": {
+            "walking:water": 44,
+            "acting:water": 3,
+            "carrying:crate": 2
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 413
+        },
+        {
+          "day": 7,
+          "time": 199.9999999999926,
+          "balance": 5885,
+          "living": 579,
+          "firstWaterPending": 267,
+          "initialTasks": 267,
+          "waterTasks": 171,
+          "harvestTasks": 139,
+          "phases": {
+            "walking:water": 39,
+            "carrying:crate": 3,
+            "acting:water": 3,
+            "acting:harvest": 2,
+            "walking:harvest": 2
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 417
+        },
+        {
+          "day": 7,
+          "time": 250,
+          "balance": 5866,
+          "living": 625,
+          "firstWaterPending": 317,
+          "initialTasks": 317,
+          "waterTasks": 99,
+          "harvestTasks": 209,
+          "phases": {
+            "walking:water": 17,
+            "acting:initial": 2,
+            "walking:initial": 24,
+            "acting:water": 6
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 424
+        },
+        {
+          "day": 7,
+          "time": 299.00000000000944,
+          "balance": 5716,
+          "living": 655,
+          "firstWaterPending": 300,
+          "initialTasks": 300,
+          "waterTasks": 76,
+          "harvestTasks": 232,
+          "phases": {
+            "walking:initial": 38,
+            "acting:initial": 11
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 424
+        }
+      ]
+    },
+    {
+      "day": 8,
+      "observedPeacefulElapsedSeconds": 299.00000000000944,
+      "unsampledAttackGapSeconds": 0,
+      "phaseActorSecondsApprox": {
+        "walking:harvest": 4271.999999999873,
+        "acting:harvest": 834.9999999999745,
+        "carrying:crate": 3586.9999999998754,
+        "walking:water": 2238.9999999998695,
+        "acting:water": 257.99999999998494,
+        "walking:initial": 4203.000000000684,
+        "acting:initial": 996.0000000002556
+      },
+      "firstObservedDeliveryTime": 29.000000000000142,
+      "maximumInitialQueue": 493,
+      "maximumWaterQueue": 135,
+      "maximumHarvestQueue": 232,
+      "checkpoints": [
+        {
+          "day": 8,
+          "time": 9.99999999999998,
+          "balance": 4016,
+          "living": 659,
+          "firstWaterPending": 291,
+          "initialTasks": 291,
+          "waterTasks": 76,
+          "harvestTasks": 232,
+          "phases": {
+            "walking:harvest": 55
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 424
+        },
+        {
+          "day": 8,
+          "time": 60.00000000000042,
+          "balance": 5449,
+          "living": 628,
+          "firstWaterPending": 341,
+          "initialTasks": 341,
+          "waterTasks": 113,
+          "harvestTasks": 151,
+          "phases": {
+            "carrying:crate": 37,
+            "acting:harvest": 9,
+            "walking:harvest": 9
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 468
+        },
+        {
+          "day": 8,
+          "time": 99.99999999999842,
+          "balance": 9176,
+          "living": 588,
+          "firstWaterPending": 381,
+          "initialTasks": 381,
+          "waterTasks": 135,
+          "harvestTasks": 72,
+          "phases": {
+            "walking:harvest": 33,
+            "carrying:crate": 19,
+            "acting:harvest": 3
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 566
+        },
+        {
+          "day": 8,
+          "time": 149.99999999999542,
+          "balance": 11005,
+          "living": 587,
+          "firstWaterPending": 431,
+          "initialTasks": 431,
+          "waterTasks": 127,
+          "harvestTasks": 29,
+          "phases": {
+            "walking:water": 21,
+            "carrying:crate": 16,
+            "walking:harvest": 16,
+            "acting:harvest": 2
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 620
+        },
+        {
+          "day": 8,
+          "time": 199.99999999999258,
+          "balance": 11745,
+          "living": 617,
+          "firstWaterPending": 479,
+          "initialTasks": 479,
+          "waterTasks": 85,
+          "harvestTasks": 51,
+          "phases": {
+            "walking:water": 22,
+            "walking:initial": 22,
+            "acting:initial": 1,
+            "carrying:crate": 6,
+            "acting:water": 4
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 650
+        },
+        {
+          "day": 8,
+          "time": 250,
+          "balance": 11759,
+          "living": 667,
+          "firstWaterPending": 491,
+          "initialTasks": 491,
+          "waterTasks": 59,
+          "harvestTasks": 77,
+          "phases": {
+            "walking:initial": 39,
+            "acting:initial": 16
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 656
+        },
+        {
+          "day": 8,
+          "time": 299.00000000000944,
+          "balance": 11609,
+          "living": 697,
+          "firstWaterPending": 429,
+          "initialTasks": 429,
+          "waterTasks": 79,
+          "harvestTasks": 77,
+          "phases": {
+            "acting:initial": 13,
+            "walking:initial": 42
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 656
+        }
+      ]
+    },
+    {
+      "day": 9,
+      "observedPeacefulElapsedSeconds": 299.00000000000944,
+      "unsampledAttackGapSeconds": 0,
+      "phaseActorSecondsApprox": {
+        "walking:harvest": 1806.0000000000068,
+        "walking:water": 1680.9999999999172,
+        "acting:harvest": 278.0000000000024,
+        "acting:water": 275.9999999999867,
+        "carrying:crate": 1823.9999999999864,
+        "walking:initial": 9011.000000000473,
+        "acting:initial": 2408.000000000174
+      },
+      "firstObservedDeliveryTime": 38.00000000000011,
+      "maximumInitialQueue": 512,
+      "maximumWaterQueue": 298,
+      "maximumHarvestQueue": 97,
+      "checkpoints": [
+        {
+          "day": 9,
+          "time": 9.99999999999998,
+          "balance": 9819,
+          "living": 703,
+          "firstWaterPending": 418,
+          "initialTasks": 418,
+          "waterTasks": 89,
+          "harvestTasks": 77,
+          "phases": {
+            "walking:harvest": 57,
+            "walking:water": 1
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 656
+        },
+        {
+          "day": 9,
+          "time": 60.00000000000042,
+          "balance": 10955,
+          "living": 681,
+          "firstWaterPending": 468,
+          "initialTasks": 468,
+          "waterTasks": 164,
+          "harvestTasks": 11,
+          "phases": {
+            "carrying:crate": 36,
+            "walking:water": 14,
+            "acting:harvest": 3,
+            "acting:water": 4,
+            "walking:harvest": 1
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 692
+        },
+        {
+          "day": 9,
+          "time": 99.99999999999842,
+          "balance": 12306,
+          "living": 716,
+          "firstWaterPending": 507,
+          "initialTasks": 507,
+          "waterTasks": 146,
+          "harvestTasks": 62,
+          "phases": {
+            "acting:water": 5,
+            "walking:water": 22,
+            "acting:initial": 3,
+            "walking:initial": 28
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 733
+        },
+        {
+          "day": 9,
+          "time": 149.99999999999542,
+          "balance": 12056,
+          "living": 766,
+          "firstWaterPending": 488,
+          "initialTasks": 488,
+          "waterTasks": 119,
+          "harvestTasks": 89,
+          "phases": {
+            "walking:initial": 46,
+            "acting:initial": 12
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 733
+        },
+        {
+          "day": 9,
+          "time": 199.99999999999258,
+          "balance": 11806,
+          "living": 816,
+          "firstWaterPending": 461,
+          "initialTasks": 461,
+          "waterTasks": 158,
+          "harvestTasks": 89,
+          "phases": {
+            "acting:initial": 9,
+            "walking:initial": 49
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 733
+        },
+        {
+          "day": 9,
+          "time": 250,
+          "balance": 11556,
+          "living": 866,
+          "firstWaterPending": 424,
+          "initialTasks": 424,
+          "waterTasks": 227,
+          "harvestTasks": 90,
+          "phases": {
+            "acting:initial": 12,
+            "walking:initial": 46
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 733
+        },
+        {
+          "day": 9,
+          "time": 299.00000000000944,
+          "balance": 11406,
+          "living": 896,
+          "firstWaterPending": 365,
+          "initialTasks": 365,
+          "waterTasks": 298,
+          "harvestTasks": 97,
+          "phases": {
+            "walking:initial": 40,
+            "acting:initial": 18
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 733
+        }
+      ]
+    },
+    {
+      "day": 10,
+      "observedPeacefulElapsedSeconds": 299.00000000000944,
+      "unsampledAttackGapSeconds": 0,
+      "phaseActorSecondsApprox": {
+        "walking:harvest": 2342.999999999999,
+        "walking:water": 6322.99999999968,
+        "acting:harvest": 351.0000000000005,
+        "acting:water": 1012.9999999999504,
+        "carrying:crate": 1854.999999999995,
+        "walking:initial": 8802.000000000955,
+        "acting:initial": 1663.0000000001344
+      },
+      "firstObservedDeliveryTime": 26.0000000000001,
+      "maximumInitialQueue": 503,
+      "maximumWaterQueue": 389,
+      "maximumHarvestQueue": 307,
+      "checkpoints": [
+        {
+          "day": 10,
+          "time": 9.99999999999998,
+          "balance": 8823,
+          "living": 904,
+          "firstWaterPending": 354,
+          "initialTasks": 354,
+          "waterTasks": 322,
+          "harvestTasks": 97,
+          "phases": {
+            "walking:harvest": 66,
+            "walking:water": 7,
+            "acting:harvest": 2
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 733
+        },
+        {
+          "day": 10,
+          "time": 60.00000000000042,
+          "balance": 8766,
+          "living": 871,
+          "firstWaterPending": 404,
+          "initialTasks": 404,
+          "waterTasks": 387,
+          "harvestTasks": 44,
+          "phases": {
+            "carrying:crate": 34,
+            "walking:water": 27,
+            "walking:harvest": 5,
+            "acting:harvest": 1,
+            "acting:water": 8
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 782
+        },
+        {
+          "day": 10,
+          "time": 99.99999999999842,
+          "balance": 8838,
+          "living": 903,
+          "firstWaterPending": 444,
+          "initialTasks": 444,
+          "waterTasks": 296,
+          "harvestTasks": 163,
+          "phases": {
+            "walking:water": 62,
+            "acting:water": 5,
+            "carrying:crate": 2,
+            "walking:harvest": 5,
+            "acting:harvest": 1
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 822
+        },
+        {
+          "day": 10,
+          "time": 149.99999999999542,
+          "balance": 7136,
+          "living": 947,
+          "firstWaterPending": 494,
+          "initialTasks": 494,
+          "waterTasks": 199,
+          "harvestTasks": 254,
+          "phases": {
+            "walking:water": 46,
+            "walking:initial": 21,
+            "acting:water": 7,
+            "acting:initial": 1
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 830
+        },
+        {
+          "day": 10,
+          "time": 199.99999999999258,
+          "balance": 5127,
+          "living": 997,
+          "firstWaterPending": 488,
+          "initialTasks": 488,
+          "waterTasks": 146,
+          "harvestTasks": 307,
+          "phases": {
+            "walking:initial": 60,
+            "acting:initial": 15
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 830
+        },
+        {
+          "day": 10,
+          "time": 250,
+          "balance": 3249,
+          "living": 1047,
+          "firstWaterPending": 449,
+          "initialTasks": 449,
+          "waterTasks": 167,
+          "harvestTasks": 307,
+          "phases": {
+            "acting:initial": 6,
+            "walking:initial": 69
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 830
+        },
+        {
+          "day": 10,
+          "time": 299.00000000000944,
+          "balance": 2810,
+          "living": 1059,
+          "firstWaterPending": 383,
+          "initialTasks": 383,
+          "waterTasks": 254,
+          "harvestTasks": 307,
+          "phases": {
+            "walking:initial": 65,
+            "acting:initial": 10
+          },
+          "plantPermission": true,
+          "additionalHiringNativeAvailable": true,
+          "deliveredTotal": 830
+        }
+      ]
+    }
+  ],
+  "gates": {
+    "completed10": true,
+    "paidStaffPhysicalDeliveryEveryDay": true,
+    "activityBelow25": false
+  },
+  "opportunityInterpretation": "Native additional-hiring availability is recorded independently after a tick; raw affordability does not mean preserving control reserves, desired staff or route/plant legality. Full-protected cash is pre-tick arithmetic on the exact controller decision. Policy middayHiring:false stays unchanged and no action was performed for this diagnostic.",
+  "durationInterpretation": "Decision seconds match native budget accounting. Actor phase totals are approximate left-endpoint employee-seconds outside observed attacks, not elapsed global time. No interpolation through missing attack intervals.",
+  "files": {
+    "decisions.jsonl.gz": "46350c40fc947723127e4d2995ba90555220c4004776aacd829a4cbd82c3534c",
+    "diagnostic.json": "fe90e843d75fa8ee5f4a36435fba4f3aff4b62ea45538dd60500c115e72ee9ae",
+    "run.log": "635624ce7eced7fc8f3f16b44d2f3621c78ed02532dd2895676d8066bb7f3070",
+    "service-states.jsonl.gz": "5eedf3361aec368b3dd283925ad7584d9feb87a01e906bf78299c8fa6562ff22"
+  }
+}

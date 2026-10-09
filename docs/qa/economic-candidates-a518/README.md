@@ -176,3 +176,41 @@ A subsequent read-only diagnostic will preserve F's fullstate exactly and
 inspect decision timing and available cash while keeping middayHiring:false.
 The availability of an optional hiring action must not be conflated with a
 change to this control's policy. No further parameter candidate is chosen yet.
+
+### F unchanged-policy opportunity diagnostic
+
+Read-only source2346fbd7 produces exactly the same complete final F state
+SHA5fa1a0bebd54299c4abf45f425bc361c46fba12fc5f8c0864145b7528206920f.
+Decisions3000 and separate peaceful service samples2999 are retained. Inactivity
+is concentrated early: days1–3 71.1111%(640/900), days4–7 30.1667%(362/1200),
+days8–10 8.5556%(77/900). Budget categories in those bands are respectively
+328 maintenance+252 current-team;211 maintenance+72 current-team;17 growing-team.
+The overall35.9667% gate still fails; later good windows do not replace it.
+
+During880 budget-idle seconds, no decision had enough cash to buy the next seed
+while preserving every control reserve. Native cash alone would fund one extra
+worker during all880 seconds, but only26 seconds also preserve that proportional
+fee, tomorrow's expanded team and maintenance reserve. Availability is sampled
+separately after each tick; these are arithmetic opportunities, not proof of a
+legal plot, available route, arrival before shift end or benefit from hiring.
+In particular, much of the late hiring affordability is near the end of day10.
+MiddayHiring:false remains unchanged; no employee or plant is added by observers.
+Seed+minimum100 cash alone is insufficient to call the original full-reserve
+strategy affordable and is never substituted for its existing rule.
+
+Concrete budget rows: day1t47 cash280 versus seed5+team180+maintenance100=285;
+day3t1 cash130 versus seed5+team480+maintenance100=585 after paying480 in wages;
+day6t10 cash1390 versus seed5+growth-team1290+maintenance100=1395 with436 pending
+tasks. Day1 first delivery remains t217. Days2–7 first observed delivery is t26,
+yet later service is uneven: day3 delivers46 with16 staff, day6 delivers18 with
+42 staff. Initial queues peak at163/109/329 on days2/3/6. Workers' sampled phases
+remain dominated by walking/initial/water work; no idle actor phase is seen at
+this cadence. Phase totals are approximate actor-seconds outside sampled attack
+gaps, not global elapsed durations or substep-perfect task utilization.
+
+This separates the early reserve/cash/service constraint from late improvement
+without changing policy or claiming a new price will fix it. No additional
+parameter,100-night/matrix run or promotion is chosen. The half-HP repair bridge
+in frozen F evidence remains unchanged; main's separately reviewed general
+rational repair implementation will be considered only if a candidate is later
+promoted, with fresh compatibility coverage.
