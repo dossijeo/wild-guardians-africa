@@ -11,3 +11,11 @@ CI's actual context reported ANGLE Microsoft Basic Render Driver `0x8C`, Direct3
 `desktop-smoke.json.gz` preserves the complete local report byte-for-byte, including its embedded world screenshot. Raw and compressed hashes are recorded. No executable or WebView profile is committed.
 
 This proves one local packaged loading case. It does not establish exact current-main binary acceptance, all biomes/cultures, continued or dense saves, normal-quality behavior, physical input/audio, minimization/restoration, or absence of performance regressions. It does not approve the shader candidate or replace the CI failure. The next CI paired experiment remains independent.
+
+## Subsequent continued-game and visibility case
+
+The same unmodified executable subsequently passed the original native visibility smoke with the paid seed-712 Canyon/Mapungubwe fixture generated from main `22b657f4`. Shared ground remained OFF and menu pause was ON. A separate `visibility-profile` WebView2 folder was used; seven child processes were observed using that folder. The product exited with code 0. Its report has `ok:true`, no errors, and genuine minimization/restoration passed.
+
+The hidden interval was 300,938.1 ms. All 21 recorded simulation fields were identical before and after it. Restoration retained the menu pause; subsequent unpaused simulation advanced 2.0286 seconds. The context again reports Intel UHD Direct3D11 with no context loss. `desktop-visibility.json.gz` preserves the full original report byte-for-byte; hashes, fixture identity, process result and scope are in `visibility-receipt.json`.
+
+The report's `productionLoading.elapsedMs` includes the five-minute visibility exercise and is not a world-loading duration. `worldReadyAt` is a page-clock timestamp, also not a duration. This proves one local continued-game and visibility case, not shared-ground-ON acceptance, exact-current-main binary acceptance, all biomes/cultures, dense farms, physical gameplay/audio, or a controlled timing advantage over CI. The native CI fixture still failed before minimization and remains an independent unresolved result.
