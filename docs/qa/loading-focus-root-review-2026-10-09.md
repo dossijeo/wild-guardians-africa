@@ -1,5 +1,36 @@
 # Root review of the loading focus presentation
 
+## Follow-up: stronger focus and user acceptance scope
+
+The earlier visual judgment below is superseded: the user correctly found
+the first focus imperceptible. Root acknowledged that its assessment was too
+lenient. Feature runtime `ae7bc98e` strengthens the central multiplier to 1.30
+and the edge multipliers to 0.60 by day / 0.67 by night, using the existing
+material output rather than another rendering pass.
+
+Root inspected the four actual `focus-v2-*` JPEGs in the feature's
+`docs/qa/interactive-loading-development/`: day/night at landscape and
+portrait, controlled 78% growth. The central maize/soil is brighter in
+landscape; portrait preserves all four plants and legible UI with a broader
+focus. The user subsequently approved the **day appearance only** and asked
+for a stronger nighttime focus. That refinement has been assigned to the
+loading agent; nighttime acceptance and production readiness remain open.
+
+Native tab 948 cancellation reported zero renderer geometries, textures and
+programs; the tab was closed and its viewport reset. Console retained two
+ANGLE warnings about `f_environment4`, not an empty console. This fixture
+does not prove peak memory, GPU performance, actual menu loading or the
+cinematic handoff. Incremental GPU cost remains to be measured.
+
+The same-source `0e52b0ea` A/B/B/A readiness experiment was negative against
+its predefined criterion: B2 improved on A2 by only about 0.039%, and both B
+arms had more frames over 100 ms. All raw arms are retained in the feature;
+frame-slack remains opt-in and is not enabled in production. The original
+initialization regression remains unresolved. Disk space has since been
+restored externally; the old disk blocker below is historical.
+
+## Earlier review (retained as historical evidence)
+
 Reviewed feature runtime `eac5184b`, archived by the loading agent at
 `089565ae` on `feature/interactive-loading-screen`. This does not merge or
 approve the feature for production.
