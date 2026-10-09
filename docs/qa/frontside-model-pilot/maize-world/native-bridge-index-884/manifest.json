@@ -1,0 +1,46 @@
+{
+  "sourceHead": "ae075376c0184484080970aeba5dd13e74b0321d",
+  "fixtureJavaScriptSha256": "517f5cd0465e50b2bc3e42480507c9b18ffc7bb4eea987e121017c63b5a1d9a9",
+  "caseIndex": 0,
+  "nativeContext": 884,
+  "url": "http://127.0.0.1:5284/tests/browser/frontside-bridge-index-control.html?caseIndex=0",
+  "files": [
+    {
+      "path": "report.json",
+      "bytes": 6423,
+      "sha256": "54f4b35f0b4b4d9362dcf6ebcec81b488ec2673b10a2e8211ef8a5fe74aa0291"
+    },
+    {
+      "path": "comparison.png",
+      "bytes": 482795,
+      "sha256": "c7ceb49cfd8d0334c42177cacd9706de0b6e1012d666f8c953e85c4bcad19c83"
+    },
+    {
+      "path": "browser.png",
+      "bytes": 67023,
+      "sha256": "cfe0d444a0774b64e74e966385f6d8dae305ee2bcaecc81efb747099a91dda43"
+    },
+    {
+      "path": "browser-full.png",
+      "bytes": 76638,
+      "sha256": "9472c556263deace7c30904694a6d26118f50286894cbad1ae46028aae174694"
+    },
+    {
+      "path": "console.json",
+      "bytes": 2,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    }
+  ],
+  "rootAssistantReview": {
+    "scope": "Single retained TRAINING view only",
+    "observation": "Both original and indexed DoubleSide arms preserve recognizable maize leaves, ears, stem and general form without an evident difference",
+    "humanUserReview": false
+  },
+  "limitations": [
+    "No FrontSide candidate or native World render tested in this fixture.",
+    "No net GPU measurement or resident-buffer accounting.",
+    "No other views, full transition continuity, harvest/delivery or category acceptance.",
+    "Background CPU campaign field unspecified; no timing claim.",
+    "Runtime snapshot.closed=false was taken before cleanup; cleanup.closed/contextLost=true reports terminal cleanup."
+  ]
+}

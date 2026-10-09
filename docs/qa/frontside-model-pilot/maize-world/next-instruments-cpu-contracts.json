@@ -1,0 +1,45 @@
+{
+  "status": "CPU_MOCK_AND_QA_COPY_CONTRACTS_PASS_NOT_NATIVE_APPROVAL",
+  "sourceHead": "ae075376c0184484080970aeba5dd13e74b0321d",
+  "webglContextsCreated": 0,
+  "nativeDraws": 0,
+  "tests": [
+    {
+      "command": "node --test tools/frontside_live_growth_buffer_probe.test.mjs",
+      "passed": 2,
+      "failed": 0,
+      "exitCode": 0,
+      "elapsedSeconds": 0.4101309
+    },
+    {
+      "command": "node --test tools/frontside_dense_native_maize_scenario.test.mjs",
+      "passed": 2,
+      "failed": 0,
+      "exitCode": 0,
+      "elapsedSeconds": 0.445554
+    }
+  ],
+  "files": [
+    {
+      "path": "tools/lib/frontside-live-growth-buffer-probe.mjs",
+      "sha256": "9022557415bbc8b24c1a2a22849a8869b0f20f0ca6bb366a4a950d49d8dc5cdf"
+    },
+    {
+      "path": "tools/frontside_live_growth_buffer_probe.test.mjs",
+      "sha256": "e594bdf36146dbfad206aa5f21bf4e5450a73cf8615d6c022c31daec7a5c3f54"
+    },
+    {
+      "path": "tools/lib/frontside-dense-native-maize-scenario.mjs",
+      "sha256": "3e4fa9411912a54ee0ce78603416cc88aed193c8e5f9714ead548eb42b9be1a3"
+    },
+    {
+      "path": "tools/frontside_dense_native_maize_scenario.test.mjs",
+      "sha256": "24f90d0d22301b7802a87411d8186e0389ae3bcc24364a80ac3a68fced8b0105"
+    }
+  ],
+  "limitations": [
+    "Fake GL tests verify instrumentation and cleanup contracts, not actual VBO uploads.",
+    "Dense-copy tests verify a declared synthetic workload, not native rendering, completed harvest, campaign profitability or GPU benefit.",
+    "Modules remain outside the frozen bridge fixture and production imports."
+  ]
+}

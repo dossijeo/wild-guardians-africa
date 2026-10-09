@@ -1,0 +1,210 @@
+{
+  "status": "VISUAL_SCREEN_NOT_APPROVED",
+  "cropVisual": true,
+  "originalBridgeIndexHuman": true,
+  "viewProfile": "ORIGINAL_BRIDGE_INDEX_DOUBLE_REVIEW_V1",
+  "source": "assets/web/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+  "sourceOriginal": "assets/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+  "runtimeSource": "assets/web/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+  "sourceSha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+  "runtimeSha256": "617568fc66595c635739ff83bc0256535a72fdf7bfcb016dc68a7f7f1e1a8a52",
+  "bridgeSha256": "88c4bdb959b1debb7456e6c1708840330b459a6ede6649e8f690583953428309",
+  "viewCaseIndex": 0,
+  "prospectiveCase": {
+    "id": "maize03-04-mid-day-training",
+    "growth": 0.7325,
+    "clock": 1.75,
+    "biome": "sabana",
+    "night": 0,
+    "azimuth": 26.25,
+    "elevation": 32.5
+  },
+  "arms": [
+    "native original nonindexed DoubleSide",
+    "same original indexed DoubleSide"
+  ],
+  "phase": {
+    "phase": "morph",
+    "stage": 3
+  },
+  "runtime": {
+    "status": "SOURCE_ONLY_BRIDGE_INDEX_RUNTIME_PREPARATION_NOT_APPROVED",
+    "control": {
+      "status": "ORIGINAL_BRIDGE_INDEXED_DOUBLE_QA_NOT_APPROVED",
+      "closed": false,
+      "mesh": "puente_maiz_3_4",
+      "sourceCorners": 17844,
+      "indexedVertices": 11124,
+      "indexCount": 17844,
+      "sourceStaticBytes": 1570272,
+      "indexedStaticBytes": 1014600,
+      "liveBridgeShared": true,
+      "instanceMatrixShared": true,
+      "materialUnchanged": true,
+      "shadowUnchanged": true
+    },
+    "arms": [
+      {
+        "arm": 0,
+        "mesh": "puente_maiz_3_4",
+        "visible": true,
+        "count": 1,
+        "materialSide": 2,
+        "shadowSide": 2
+      },
+      {
+        "arm": 1,
+        "mesh": "puente_maiz_3_4",
+        "visible": true,
+        "count": 1,
+        "materialSide": 2,
+        "shadowSide": 2
+      }
+    ]
+  },
+  "contextAttributes": {
+    "alpha": true,
+    "antialias": false,
+    "depth": true,
+    "desynchronized": false,
+    "failIfMajorPerformanceCaveat": false,
+    "powerPreference": "default",
+    "premultipliedAlpha": true,
+    "preserveDrawingBuffer": true,
+    "stencil": false,
+    "xrCompatible": false
+  },
+  "controls": [
+    {
+      "changedBytes": 0,
+      "changedRgbPixels": 0,
+      "changedAlphaPixels": 0,
+      "maxChannelDelta": 0,
+      "meanRgbChannelByteDelta": 0,
+      "meaning": "Diagnostic readback differences only; no automatic visual acceptance or rejection."
+    },
+    {
+      "changedBytes": 0,
+      "changedRgbPixels": 0,
+      "changedAlphaPixels": 0,
+      "maxChannelDelta": 0,
+      "meanRgbChannelByteDelta": 0,
+      "meaning": "Diagnostic readback differences only; no automatic visual acceptance or rejection."
+    },
+    {
+      "changedBytes": 0,
+      "changedRgbPixels": 0,
+      "changedAlphaPixels": 0,
+      "maxChannelDelta": 0,
+      "meanRgbChannelByteDelta": 0,
+      "meaning": "Diagnostic readback differences only; no automatic visual acceptance or rejection."
+    }
+  ],
+  "drawInfo": [
+    {
+      "arm": 0,
+      "frame": 1,
+      "calls": 1,
+      "triangles": 5948,
+      "points": 0,
+      "lines": 0
+    },
+    {
+      "arm": 1,
+      "frame": 5,
+      "calls": 1,
+      "triangles": 5948,
+      "points": 0,
+      "lines": 0
+    }
+  ],
+  "errors": [],
+  "campaignConditions": {
+    "cpuCampaigns": "unspecified",
+    "gpuTiming": false
+  },
+  "limitations": [
+    "Original maize03→04 bridge only, with original regional-driver metadata and live instance binding.",
+    "No new/reversed faces, changed UV/normal/material/rig or FrontSide.",
+    "Native crop/toon/texture/sky/shadow recipes in an isolated two-arm fixture; no whole-World approval.",
+    "Static CPU storage is not resident GPU memory, invocation count or net benefit.",
+    "Numeric diagnostics do not decide perceptual acceptance; human review remains pending."
+  ],
+  "visualAcceptancePolicyVersion": 3,
+  "visualReview": {
+    "status": "HUMAN_REVIEW_PENDING",
+    "reviewer": null,
+    "decision": null,
+    "basis": "Explicit user instruction, 8 October 2026: pixel/color/silhouette/small-hole thresholds are diagnostic; inspect perceptible defects in real conditions.",
+    "numericPassMeaning": "Every passes/colorPasses/quantitativeGate field is a historical-threshold diagnostic, never model acceptance.",
+    "required": [
+      "Recognizable shape, leaves and continuous growth; no perceptible deformation, disappearance or defects.",
+      "Real game distances, day/night, relevant biomes, transitions/actions and effective shadows.",
+      "Functional contracts and stability, resources and measured net GPU benefit before integration."
+    ],
+    "captureScope": "Only retained captures and actually inspected live views may support review; uncaptured metrics do not prove human inspection."
+  },
+  "comparison": {
+    "changedBytes": 0,
+    "changedRgbPixels": 0,
+    "changedAlphaPixels": 0,
+    "maxChannelDelta": 0,
+    "meanRgbChannelByteDelta": 0,
+    "meaning": "Diagnostic readback differences only; no automatic visual acceptance or rejection."
+  },
+  "effectiveShadowDraws": [
+    {
+      "arm": 0,
+      "mesh": "puente_maiz_3_4",
+      "instances": 1,
+      "depthSide": 2,
+      "materialType": "MeshDepthMaterial"
+    },
+    {
+      "arm": 0,
+      "mesh": "puente_maiz_3_4",
+      "instances": 1,
+      "depthSide": 2,
+      "materialType": "MeshDepthMaterial"
+    },
+    {
+      "arm": 0,
+      "mesh": "puente_maiz_3_4",
+      "instances": 1,
+      "depthSide": 2,
+      "materialType": "MeshDepthMaterial"
+    },
+    {
+      "arm": 0,
+      "mesh": "puente_maiz_3_4",
+      "instances": 1,
+      "depthSide": 2,
+      "materialType": "MeshDepthMaterial"
+    },
+    {
+      "arm": 1,
+      "mesh": "puente_maiz_3_4",
+      "instances": 1,
+      "depthSide": 2,
+      "materialType": "MeshDepthMaterial"
+    }
+  ],
+  "cleanup": {
+    "closed": true,
+    "disposed": [
+      "restore source indexed bridge control",
+      "native original bridge batch 1",
+      "native original bridge batch 0",
+      "native shadow hook",
+      "directional shadow targets",
+      "NativeSky",
+      "material registry",
+      "source Assets",
+      "renderer resources",
+      "renderer context"
+    ],
+    "errors": [],
+    "contextLost": true
+  },
+  "capture": "crop-bridge-index-double-last-frame.png"
+}
