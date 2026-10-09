@@ -31,25 +31,39 @@ export function auditHordeComparison(report,requestedDays){
  const incomePaid=report.state.crates.filter(c=>c.delivered).length;
  return {actualHiringPayments:hiringPayments,allRaidsPhysicallyEnded,spentStrikes,strikeEvidenceMatches,ledgerHydrationMaturityCrateReceipts:true,repairSettlements:true,completedRequestedNights:completed,everyWorkdayPaidStaffAndPhysicalDelivery:eachDayStaffAndDelivery,strictGlobalActivityBelow25:activityPass,physicalPaidDeliveries:incomePaid,responsible100Accepted:requestedDays===100&&completed&&eachDayStaffAndDelivery&&activityPass&&allRaidsPhysicallyEnded&&report.result==='victory',nativeNeglectDefeat:report.policy.arm==='neglect'&&report.result==='defeat'&&(report.counts.GameOver??0)>0,scope:'20-night pilot is not100-night acceptance; paid crate audit does not independently prove temporal route/FIFO traversal'};
 }
+// Evidence boundary; controlled tests supply failure functions. The production
+// CLI always uses the ordinary simulation and strict native auditors below.
+export async function retainHordeCase(caseOutput,arm,provenance,{simulate=simulateHordeDefenseFarm,audit=auditHordeComparison,summarize=summarizeIntensiveFarm,readSources=()=>hordeComparisonProvenance([]).sourceHashes}={}){
+ mkdirSync(caseOutput,{recursive:false});let result,status='incomplete',error=null;
+ const persistRaw=()=>{
+  const {state,nav,...nativeReport}=result;
+  if(state)writeFileSync(`${caseOutput}/native-state.json.gz`,gzipSync(serialize(state)));
+  writeFileSync(`${caseOutput}/native-report.json.gz`,gzipSync(JSON.stringify({...nativeReport,provenance})));
+ };
+ try{
+  result=await simulate({...DECLARED_HORDE_PILOT,arm,onDay:row=>{writeFileSync(`${caseOutput}/progress.json`,JSON.stringify(row,null,2)+'\n');console.log(JSON.stringify({arm,...row}));}});
+  persistRaw();result.provenance=provenance;result.gates=audit(result,DECLARED_HORDE_PILOT.days);result.summary=summarize(result);status='native-terminal-audited';
+ }catch(failure){
+  error={name:failure.name,message:failure.message,stack:failure.stack};
+  if(!result){result=failure.partialReport??{scope:'Failure before native state available'};persistRaw();}
+ }
+ const sourcesNow=readSources();const changed=Object.keys(provenance.sourceHashes).filter(path=>provenance.sourceHashes[path]!==sourcesNow[path]);
+ if(changed.length){status='incomplete';error={message:'Source changed during case',files:changed,...(error?{precedingError:error}:{})};}
+ const {state,nav,...report}=result;report.status=status;report.error=error;report.provenance=provenance;
+ if(state)writeFileSync(`${caseOutput}/state.json.gz`,gzipSync(serialize(state)));
+ writeFileSync(`${caseOutput}/report.json.gz`,gzipSync(JSON.stringify(report)));
+ const payloadHashes={};for(const file of ['report.json.gz','native-report.json.gz',...(state?['state.json.gz','native-state.json.gz']:[])])payloadHashes[file]=hash(readFileSync(`${caseOutput}/${file}`));
+ const receipt={arm,status,error,result:state?.result??null,completedNights:state?.completedNights??null,gates:report.gates??null,payloadHashes,sourceUnchanged:!changed.length};
+ writeFileSync(`${caseOutput}/status.json`,JSON.stringify(receipt,null,2)+'\n');return receipt;
+}
 export async function runHordeComparison(output){
  if(!output)throw Error('Specify a NEW evidence directory');mkdirSync(output,{recursive:false});
  const provenance=hordeComparisonProvenance(process.argv.slice(2)),started=performance.now(),results=[];
  writeFileSync(`${output}/provenance.json`,JSON.stringify(provenance,null,2)+'\n');
  writeFileSync(`${output}/status.json`,JSON.stringify({status:'running',pid:process.pid,startedAt:new Date().toISOString(),scenario:DECLARED_HORDE_PILOT},null,2)+'\n');
  for(const arm of ['responsible','neglect']){
-  const caseOutput=`${output}/${arm}`;mkdirSync(caseOutput,{recursive:false});let result,status='incomplete',error=null;
-  try{
-   result=await simulateHordeDefenseFarm({...DECLARED_HORDE_PILOT,arm,onDay:row=>{writeFileSync(`${caseOutput}/progress.json`,JSON.stringify(row,null,2)+'\n');console.log(JSON.stringify({arm,...row}));}});
-   result.provenance=provenance;result.gates=auditHordeComparison(result,DECLARED_HORDE_PILOT.days);result.summary=summarizeIntensiveFarm(result);status='native-terminal-audited';
-  }catch(failure){error={name:failure.name,message:failure.message,stack:failure.stack};result=failure.partialReport??{scope:'Failure before native state available'};}
-  const {state,nav,...report}=result;report.status=status;report.error=error;report.provenance=provenance;
-  if(state)writeFileSync(`${caseOutput}/state.json.gz`,gzipSync(serialize(state)));
-  writeFileSync(`${caseOutput}/report.json.gz`,gzipSync(JSON.stringify(report)));
-  const sourcesNow=hordeComparisonProvenance([]).sourceHashes;const changed=Object.keys(provenance.sourceHashes).filter(path=>provenance.sourceHashes[path]!==sourcesNow[path]);
-  if(changed.length){status='incomplete';error={message:'Source changed during case',files:changed};}
-  const payloadHashes={};for(const file of ['report.json.gz',...(state?['state.json.gz']:[])])payloadHashes[file]=hash(readFileSync(`${caseOutput}/${file}`));
-  const receipt={arm,status,error,result:state?.result??null,completedNights:state?.completedNights??null,gates:report.gates??null,payloadHashes,sourceUnchanged:!changed.length};writeFileSync(`${caseOutput}/status.json`,JSON.stringify(receipt,null,2)+'\n');results.push(receipt);
-  if(status==='incomplete')break; // Preserve failure, never replace/retry it.
+  const receipt=await retainHordeCase(`${output}/${arm}`,arm,provenance);results.push(receipt);
+  if(receipt.status==='incomplete')break; // Preserve failure, never replace/retry it.
  }
  const terminal={protocol:DECLARED_HORDE_PILOT.protocol,status:results.length===2&&results.every(r=>r.status==='native-terminal-audited')?'paired-pilot-terminal':'incomplete',milliseconds:performance.now()-started,results,acceptance:'No100night or matrix30 acceptance inferred; inspect every activity/physical/defense/neglect gate'};
  writeFileSync(`${output}/status.json`,JSON.stringify(terminal,null,2)+'\n');console.log(JSON.stringify(terminal));return terminal;
