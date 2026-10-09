@@ -12,9 +12,9 @@ function add(s,nav,id,species){const i=s.plants.length;Game.plant(s,id,species,8
 function fixture(culture,seed,value){
  const s=Game.newGame({culture,seed,slotId:`day-${culture}-${seed}-${value}`});Game.resume(s,'intro');s.ledger.balance=rational(20000);const nav=navigation(s);Game.placeStructure(s,'center',{x:-12,z:0},nav);
  s.day=3;s.completedNights=2;s.initialPreparation=false;s.tutorial.step='done';
- // Exact boundary fixtures at revised prices: 37*267 + 11*11 = 10000;
- // 37*267 + 4*13 + 4*17 = 9999. Keep the contract boundary unchanged.
- const crops=value===10000?[...Array(37).fill('platano'),...Array(11).fill('mijo')]:[...Array(37).fill('platano'),...Array(4).fill('sorgo'),...Array(4).fill('maiz')];
+ // Exact unchanged boundaries: 29*334 + 20*14 + 2*17 = 10000;
+ // 29*334 + 9*14 + 11*17 = 9999. Keep the contract boundary unchanged.
+ const crops=value===10000?[...Array(29).fill('platano'),...Array(20).fill('mijo'),...Array(2).fill('sorgo')]:[...Array(29).fill('platano'),...Array(9).fill('mijo'),...Array(11).fill('sorgo')];
  crops.forEach((species,i)=>add(s,nav,'crop-'+i,species));assert.equal(attraction(s.plants),value);planDay(s);return {s,nav};
 }
 function saved(s){const map=new Map(),repo=new SaveRepository({getItem:k=>map.get(k)??null,setItem:(k,v)=>map.set(k,v),removeItem:k=>map.delete(k)});repo.save(s);return repo.load(s.slotId);}
@@ -23,11 +23,11 @@ function finishRaid(s,nav){for(let i=0;s.raid&&i<4000&&!s.result;i++)Game.tick(s
 for(const culture of Game.CULTURES)for(const seed of [1,4,712,123456789])for(const when of ['exact','before','after'])test(`QA-102: ${culture}/${seed} crossing 10000 ${when} the real candidate is evaluated once and survives reload`,()=>{
  const {s,nav}=fixture(culture,seed,when==='exact'?10000:9999),at=s.dayPlan.at;
  assert.ok(at>=115/2.4&&at<535/2.4);Game.tick(s,at-.05,nav);assert.equal(s.dayPlan.done,false);assert.equal(s.raid,null);
- if(when==='before'){add(s,nav,'cross-before','mijo');assert.equal(attraction(s.plants),10010);}
+ if(when==='before'){add(s,nav,'cross-before','mijo');assert.equal(attraction(s.plants),10013);}
  const probe={rng:s.rng},oldRng=s.rng,accepted=when!=='after'&&nextRandom(probe)<.1,loaded=saved(s),fresh=navigation(loaded);
  assert.equal(serialize(loaded),serialize(s));Game.tick(s,.06,nav);Game.tick(loaded,.06,fresh);assert.equal(serialize(loaded),serialize(s));assert.equal(s.dayPlan.done,true);
  assert.equal(!!s.raid,accepted);assert.equal(s.events.filter(e=>e.type==='RaidSpawned').length,Number(accepted));
- if(when==='after'){assert.equal(s.rng,oldRng);add(s,nav,'cross-after','mijo');assert.equal(attraction(s.plants),10010);}
+ if(when==='after'){assert.equal(s.rng,oldRng);add(s,nav,'cross-after','mijo');assert.equal(attraction(s.plants),10013);}
  else if(!accepted)assert.equal(s.rng,probe.rng);
  if(accepted){assert.equal(s.raid.daytime,true);const spent=s.raid.animals.reduce((n,a)=>n+cost[a.species],0);assert.ok(spent>=6&&spent<=10);}
  const count=s.events.filter(e=>e.type==='RaidSpawned').length,rng=s.rng;

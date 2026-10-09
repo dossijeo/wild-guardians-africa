@@ -26,6 +26,6 @@ test('a western crop delivers on the near western edge, survives reload, and cre
  const w=s.workers[0],point={...w.deliveryApproach};assert.ok(point.x<s.structures[0].x);assert.equal(numberOf(s.ledger.balance),before);assert.equal(s.crates[0].delivered,false);
  const loaded=deserialize(serialize(s));Game.tick(loaded,.05,nav);assert.deepEqual(loaded.workers[0].deliveryApproach,point);
  for(let i=0;i<1000&&!loaded.crates[0].delivered;i++)Game.tick(loaded,.05,nav);
- assert.equal(loaded.crates[0].delivered,true);assert.ok(Math.hypot(loaded.workers[0].x-point.x,loaded.workers[0].z-point.z)<1e-8);assert.equal(numberOf(loaded.ledger.balance),before+11);
- Game.tick(loaded,.1,nav);assert.equal(numberOf(loaded.ledger.balance),before+11);
+ assert.equal(loaded.crates[0].delivered,true);assert.ok(Math.hypot(loaded.workers[0].x-point.x,loaded.workers[0].z-point.z)<1e-8);assert.equal(numberOf(loaded.ledger.balance),before+14);
+ Game.tick(loaded,.1,nav);assert.equal(numberOf(loaded.ledger.balance),before+14);
 });

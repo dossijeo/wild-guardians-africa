@@ -12,7 +12,7 @@ import {newGame} from '../src/simulation/game.js';
 
 test('Original balance preserves unrelated values with explicit player revisions and post-jam harvest margins',()=>{
  const original=JSON.parse(fs.readFileSync(new URL('../content/balance/balance_confirmado.json',import.meta.url),'utf8'));
- const harvest={mijo:11,girasol:36,sorgo:13,maiz:17,batata:23,algodon:178,yuca:32,platano:267};
+ const harvest={mijo:14,girasol:45,sorgo:17,maiz:22,batata:29,algodon:223,yuca:40,platano:334};
  original.crops.forEach(c=>{c.base_harvest_value=harvest[c.id];});
  original.initial_money=1500;
  original.animals.forEach((a,i)=>{a.structure_hit_damage=[20,25,35,40,60][i];});
