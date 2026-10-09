@@ -1,0 +1,4013 @@
+{
+  "checks": {
+    "audio": {
+      "channels": 2,
+      "id": "amb_wind_soft",
+      "sampleRate": 44100,
+      "seconds": 12,
+      "url": "assets/audio/861578037e994d78d4730970c542ff330f4adb680372feae4f89a19525ba507c.opus"
+    },
+    "audioSeconds": 12,
+    "loadingRecipe": {
+      "collectiveReadiness": false,
+      "parallelDioramaAssets": false,
+      "scope": "Normal production loading pipeline; only optional shared Basic ground color recipe varies.",
+      "sharedGroundClip": false
+    },
+    "menu": "http://tauri.localhost/menu/index.html",
+    "modelPreflightStages": [
+      {
+        "body": 518.8999999999069,
+        "bodyCollectionMs": 27,
+        "bytes": 7047972,
+        "decodeMs": 29.20000000006985,
+        "end": 548.0999999999767,
+        "fetchToHeadersMs": 174.59999999997672,
+        "headers": 491.89999999990687,
+        "path": "assets/web/0ab73565649737fc15d853aa9d52a9ecacff3fbf9f5664cc21ec4e54452ef894.glb",
+        "scope": "Existing pre-world model check with no World renderer. Awaited wall times include dispatcher/processing delays; not physical disk, network or CPU measurements. One fetch/body/decode.",
+        "start": 317.29999999993015,
+        "totalMs": 230.80000000004657
+      },
+      {
+        "body": 704.0999999999767,
+        "bodyCollectionMs": 10.099999999976715,
+        "bytes": 5612688,
+        "decodeMs": 23.900000000023283,
+        "end": 728,
+        "fetchToHeadersMs": 145.80000000004657,
+        "headers": 694,
+        "path": "assets/web/25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238.glb",
+        "scope": "Existing pre-world model check with no World renderer. Awaited wall times include dispatcher/processing delays; not physical disk, network or CPU measurements. One fetch/body/decode.",
+        "start": 548.1999999999534,
+        "totalMs": 179.80000000004657
+      },
+      {
+        "body": 879.5,
+        "bodyCollectionMs": 11.100000000093132,
+        "bytes": 6976280,
+        "decodeMs": 3.3999999999068677,
+        "end": 882.8999999999069,
+        "fetchToHeadersMs": 140.39999999990687,
+        "headers": 868.3999999999069,
+        "path": "assets/web/3ba902fd9bfc99589348ba9202513e9daa63442a6c2b21bb23a15bf58bd546f7.glb",
+        "scope": "Existing pre-world model check with no World renderer. Awaited wall times include dispatcher/processing delays; not physical disk, network or CPU measurements. One fetch/body/decode.",
+        "start": 728,
+        "totalMs": 154.89999999990687
+      },
+      {
+        "body": 1126.5,
+        "bodyCollectionMs": 12.100000000093132,
+        "bytes": 7294972,
+        "decodeMs": 16.79999999993015,
+        "end": 1143.2999999999302,
+        "fetchToHeadersMs": 231.39999999990687,
+        "headers": 1114.3999999999069,
+        "path": "assets/web/4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141.glb",
+        "scope": "Existing pre-world model check with no World renderer. Awaited wall times include dispatcher/processing delays; not physical disk, network or CPU measurements. One fetch/body/decode.",
+        "start": 883,
+        "totalMs": 260.29999999993015
+      },
+      {
+        "body": 1291.7999999999302,
+        "bodyCollectionMs": 11.5,
+        "bytes": 6980244,
+        "decodeMs": 8.599999999976717,
+        "end": 1300.3999999999069,
+        "fetchToHeadersMs": 136.90000000002328,
+        "headers": 1280.2999999999302,
+        "path": "assets/web/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb",
+        "scope": "Existing pre-world model check with no World renderer. Awaited wall times include dispatcher/processing delays; not physical disk, network or CPU measurements. One fetch/body/decode.",
+        "start": 1143.3999999999069,
+        "totalMs": 157
+      },
+      {
+        "body": 1461.5999999999767,
+        "bodyCollectionMs": 11,
+        "bytes": 6910584,
+        "decodeMs": 3.400000000023283,
+        "end": 1465,
+        "fetchToHeadersMs": 150.20000000006985,
+        "headers": 1450.5999999999767,
+        "path": "assets/web/6c43390aa864c32555795b2be638f8e1e8d4154fa85e6991580ebb0d7fcde309.glb",
+        "scope": "Existing pre-world model check with no World renderer. Awaited wall times include dispatcher/processing delays; not physical disk, network or CPU measurements. One fetch/body/decode.",
+        "start": 1300.3999999999069,
+        "totalMs": 164.60000000009313
+      },
+      {
+        "body": 1951.0999999999767,
+        "bodyCollectionMs": 20.900000000023283,
+        "bytes": 12862816,
+        "decodeMs": 10.699999999953434,
+        "end": 1961.7999999999304,
+        "fetchToHeadersMs": 465.19999999995343,
+        "headers": 1930.1999999999537,
+        "path": "assets/web/6fb0b48a96d820d1738c6e36ed2d1cacaf54844df37298450b79d68b4703d80c.glb",
+        "scope": "Existing pre-world model check with no World renderer. Awaited wall times include dispatcher/processing delays; not physical disk, network or CPU measurements. One fetch/body/decode.",
+        "start": 1465,
+        "totalMs": 496.79999999993015
+      },
+      {
+        "body": 2091.899999999907,
+        "bodyCollectionMs": 8.099999999976717,
+        "bytes": 6401848,
+        "decodeMs": 7.300000000046566,
+        "end": 2099.1999999999534,
+        "fetchToHeadersMs": 122,
+        "headers": 2083.79999999993,
+        "path": "assets/web/7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb",
+        "scope": "Existing pre-world model check with no World renderer. Awaited wall times include dispatcher/processing delays; not physical disk, network or CPU measurements. One fetch/body/decode.",
+        "start": 1961.7999999999304,
+        "totalMs": 137.40000000002328
+      },
+      {
+        "body": 2648.1999999999534,
+        "bodyCollectionMs": 12.199999999953434,
+        "bytes": 5970792,
+        "decodeMs": 10.800000000046566,
+        "end": 2659,
+        "fetchToHeadersMs": 536.8000000000466,
+        "headers": 2636,
+        "path": "assets/web/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb",
+        "scope": "Existing pre-world model check with no World renderer. Awaited wall times include dispatcher/processing delays; not physical disk, network or CPU measurements. One fetch/body/decode.",
+        "start": 2099.1999999999534,
+        "totalMs": 559.8000000000466
+      },
+      {
+        "body": 4295.29999999993,
+        "bodyCollectionMs": 335,
+        "bytes": 6522992,
+        "decodeMs": 6.5,
+        "end": 4301.79999999993,
+        "fetchToHeadersMs": 1301.2999999999302,
+        "headers": 3960.29999999993,
+        "path": "assets/web/9cb17849416e2d2578eb5806c4874fc496fdf9a1aa421d3a10fe3a346933674e.glb",
+        "scope": "Existing pre-world model check with no World renderer. Awaited wall times include dispatcher/processing delays; not physical disk, network or CPU measurements. One fetch/body/decode.",
+        "start": 2659,
+        "totalMs": 1642.7999999999302
+      },
+      {
+        "body": 6113.399999999907,
+        "bodyCollectionMs": 332.19999999995343,
+        "bytes": 4679128,
+        "decodeMs": 8.300000000046566,
+        "end": 6121.699999999953,
+        "fetchToHeadersMs": 1479.4000000000233,
+        "headers": 5781.199999999953,
+        "path": "assets/web/a748ca0cea0d4d0d4abd95071577a8457e63f22433e618be77934c079f4cf89c.glb",
+        "scope": "Existing pre-world model check with no World renderer. Awaited wall times include dispatcher/processing delays; not physical disk, network or CPU measurements. One fetch/body/decode.",
+        "start": 4301.79999999993,
+        "totalMs": 1819.9000000000233
+      },
+      {
+        "body": 9569.79999999993,
+        "bodyCollectionMs": 337.0999999999767,
+        "bytes": 6541988,
+        "decodeMs": 9.400000000023285,
+        "end": 9579.199999999952,
+        "fetchToHeadersMs": 3111,
+        "headers": 9232.699999999952,
+        "path": "assets/web/b27ce08a5f860912783d5978cec8a012b28d7a55e2c7a69cc992f91f8bbd5a76.glb",
+        "scope": "Existing pre-world model check with no World renderer. Awaited wall times include dispatcher/processing delays; not physical disk, network or CPU measurements. One fetch/body/decode.",
+        "start": 6121.699999999953,
+        "totalMs": 3457.5
+      },
+      {
+        "body": 12380.29999999993,
+        "bodyCollectionMs": 334.9000000000233,
+        "bytes": 7123932,
+        "decodeMs": 9.400000000023285,
+        "end": 12389.699999999952,
+        "fetchToHeadersMs": 2466.1999999999534,
+        "headers": 12045.399999999909,
+        "path": "assets/web/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb",
+        "scope": "Existing pre-world model check with no World renderer. Awaited wall times include dispatcher/processing delays; not physical disk, network or CPU measurements. One fetch/body/decode.",
+        "start": 9579.199999999952,
+        "totalMs": 2810.5
+      },
+      {
+        "body": 19629.099999999977,
+        "bodyCollectionMs": 352.5,
+        "bytes": 13626668,
+        "decodeMs": 20.5,
+        "end": 19649.599999999977,
+        "fetchToHeadersMs": 6886.900000000023,
+        "headers": 19276.599999999977,
+        "path": "assets/web/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+        "scope": "Existing pre-world model check with no World renderer. Awaited wall times include dispatcher/processing delays; not physical disk, network or CPU measurements. One fetch/body/decode.",
+        "start": 12389.699999999952,
+        "totalMs": 7259.900000000023
+      },
+      {
+        "body": 21777.29999999993,
+        "bodyCollectionMs": 329.19999999995343,
+        "bytes": 6927276,
+        "decodeMs": 20.900000000023283,
+        "end": 21798.199999999953,
+        "fetchToHeadersMs": 1798.5,
+        "headers": 21448.099999999977,
+        "path": "assets/web/cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869.glb",
+        "scope": "Existing pre-world model check with no World renderer. Awaited wall times include dispatcher/processing delays; not physical disk, network or CPU measurements. One fetch/body/decode.",
+        "start": 19649.599999999977,
+        "totalMs": 2148.5999999999767
+      },
+      {
+        "body": 23754.899999999907,
+        "bodyCollectionMs": 331,
+        "bytes": 6257516,
+        "decodeMs": 8.900000000023283,
+        "end": 23763.79999999993,
+        "fetchToHeadersMs": 1625.6999999999534,
+        "headers": 23423.899999999907,
+        "path": "assets/web/db01314e4e0a03f4e1aaa31e8207cee85a42294edffb003633282bb574ef28cd.glb",
+        "scope": "Existing pre-world model check with no World renderer. Awaited wall times include dispatcher/processing delays; not physical disk, network or CPU measurements. One fetch/body/decode.",
+        "start": 21798.199999999953,
+        "totalMs": 1965.5999999999767
+      },
+      {
+        "body": 26035.399999999907,
+        "bodyCollectionMs": 327,
+        "bytes": 7327748,
+        "decodeMs": 22.30000000004657,
+        "end": 26057.699999999953,
+        "fetchToHeadersMs": 1944.5999999999767,
+        "headers": 25708.399999999907,
+        "path": "assets/web/e870835e4fa3c1cc4fdbcd048a2ca64da97d2ea4f48ea3192da6aba692e05202.glb",
+        "scope": "Existing pre-world model check with no World renderer. Awaited wall times include dispatcher/processing delays; not physical disk, network or CPU measurements. One fetch/body/decode.",
+        "start": 23763.79999999993,
+        "totalMs": 2293.9000000000233
+      },
+      {
+        "body": 27696,
+        "bodyCollectionMs": 339.20000000006985,
+        "bytes": 6174684,
+        "decodeMs": 2.5,
+        "end": 27698.5,
+        "fetchToHeadersMs": 1299,
+        "headers": 27356.79999999993,
+        "path": "assets/web/eddde4e46932cf9fd056315e34af03f07595cd1ce4de61b4d7d6ac7be5d873e9.glb",
+        "scope": "Existing pre-world model check with no World renderer. Awaited wall times include dispatcher/processing delays; not physical disk, network or CPU measurements. One fetch/body/decode.",
+        "start": 26057.79999999993,
+        "totalMs": 1640.7000000000698
+      },
+      {
+        "body": 30500.599999999977,
+        "bodyCollectionMs": 328.0999999999767,
+        "bytes": 7372144,
+        "decodeMs": 3.099999999976717,
+        "end": 30503.699999999953,
+        "fetchToHeadersMs": 2474,
+        "headers": 30172.5,
+        "path": "assets/web/f3ae53d5ce3b57419fd31e74e2572ada9cc61392c2e7ac20dac484ec194d5e9f.glb",
+        "scope": "Existing pre-world model check with no World renderer. Awaited wall times include dispatcher/processing delays; not physical disk, network or CPU measurements. One fetch/body/decode.",
+        "start": 27698.5,
+        "totalMs": 2805.1999999999534
+      },
+      {
+        "body": 32140.79999999993,
+        "bodyCollectionMs": 332,
+        "bytes": 6890088,
+        "decodeMs": 2.200000000069849,
+        "end": 32143,
+        "fetchToHeadersMs": 1305.0999999999767,
+        "headers": 31808.79999999993,
+        "path": "assets/web/fedb713c0b32df33f11111a91e2c3e0616a0345ec9be9a8beeecaa0b93ef26cb.glb",
+        "scope": "Existing pre-world model check with no World renderer. Awaited wall times include dispatcher/processing delays; not physical disk, network or CPU measurements. One fetch/body/decode.",
+        "start": 30503.699999999953,
+        "totalMs": 1639.3000000000466
+      },
+      {
+        "body": 35925,
+        "bodyCollectionMs": 350,
+        "bytes": 14308628,
+        "decodeMs": 20,
+        "end": 35945,
+        "fetchToHeadersMs": 3432,
+        "headers": 35575,
+        "path": "assets/web/8f6c9ef7472a2d7f8ffda7f08a78f8027f91d14a8f92b8eeca4084b0f379da36.glb",
+        "scope": "Existing pre-world model check with no World renderer. Awaited wall times include dispatcher/processing delays; not physical disk, network or CPU measurements. One fetch/body/decode.",
+        "start": 32143,
+        "totalMs": 3802
+      },
+      {
+        "body": 45629.19999999995,
+        "bodyCollectionMs": 355.9000000000233,
+        "bytes": 26536168,
+        "decodeMs": 72.30000000004657,
+        "end": 45701.5,
+        "fetchToHeadersMs": 9328.29999999993,
+        "headers": 45273.29999999993,
+        "path": "assets/web/2fdb3468b7646ebe16d0f3d3d25538ce5b20d6dee1d3830256d2f62599826dcc.glb",
+        "scope": "Existing pre-world model check with no World renderer. Awaited wall times include dispatcher/processing delays; not physical disk, network or CPU measurements. One fetch/body/decode.",
+        "start": 35945,
+        "totalMs": 9756.5
+      }
+    ],
+    "modelResources": [
+      {
+        "decodedBodySize": 7047972,
+        "duration": 137.30000000004657,
+        "encodedBodySize": 7047972,
+        "fetchStart": 317.29999999993015,
+        "initiatorType": "fetch",
+        "name": "http://tauri.localhost/assets/web/0ab73565649737fc15d853aa9d52a9ecacff3fbf9f5664cc21ec4e54452ef894.glb",
+        "nextHopProtocol": "",
+        "responseEnd": 454.5999999999767,
+        "responseStart": 454.5999999999767,
+        "responseStatus": 200,
+        "startTime": 317.29999999993015,
+        "transferSize": 7048272
+      },
+      {
+        "decodedBodySize": 5612688,
+        "duration": 136.80000000004657,
+        "encodedBodySize": 5612688,
+        "fetchStart": 548.2999999999302,
+        "initiatorType": "fetch",
+        "name": "http://tauri.localhost/assets/web/25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238.glb",
+        "nextHopProtocol": "",
+        "responseEnd": 685.0999999999767,
+        "responseStart": 685.0999999999767,
+        "responseStatus": 200,
+        "startTime": 548.2999999999302,
+        "transferSize": 5612988
+      },
+      {
+        "decodedBodySize": 6976280,
+        "duration": 130.5,
+        "encodedBodySize": 6976280,
+        "fetchStart": 728.1999999999534,
+        "initiatorType": "fetch",
+        "name": "http://tauri.localhost/assets/web/3ba902fd9bfc99589348ba9202513e9daa63442a6c2b21bb23a15bf58bd546f7.glb",
+        "nextHopProtocol": "",
+        "responseEnd": 858.6999999999534,
+        "responseStart": 858.5999999999767,
+        "responseStatus": 200,
+        "startTime": 728.1999999999534,
+        "transferSize": 6976580
+      },
+      {
+        "decodedBodySize": 7294972,
+        "duration": 221,
+        "encodedBodySize": 7294972,
+        "fetchStart": 883.0999999999767,
+        "initiatorType": "fetch",
+        "name": "http://tauri.localhost/assets/web/4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141.glb",
+        "nextHopProtocol": "",
+        "responseEnd": 1104.0999999999767,
+        "responseStart": 1104.0999999999767,
+        "responseStatus": 200,
+        "startTime": 883.0999999999767,
+        "transferSize": 7295272
+      },
+      {
+        "decodedBodySize": 6980244,
+        "duration": 127.79999999993017,
+        "encodedBodySize": 6980244,
+        "fetchStart": 1143.5999999999767,
+        "initiatorType": "fetch",
+        "name": "http://tauri.localhost/assets/web/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb",
+        "nextHopProtocol": "",
+        "responseEnd": 1271.3999999999069,
+        "responseStart": 1271.3999999999069,
+        "responseStatus": 200,
+        "startTime": 1143.5999999999767,
+        "transferSize": 6980544
+      },
+      {
+        "decodedBodySize": 6910584,
+        "duration": 127.5,
+        "encodedBodySize": 6910584,
+        "fetchStart": 1300.5999999999767,
+        "initiatorType": "fetch",
+        "name": "http://tauri.localhost/assets/web/6c43390aa864c32555795b2be638f8e1e8d4154fa85e6991580ebb0d7fcde309.glb",
+        "nextHopProtocol": "",
+        "responseEnd": 1428.0999999999767,
+        "responseStart": 1428.0999999999767,
+        "responseStatus": 200,
+        "startTime": 1300.5999999999767,
+        "transferSize": 6910884
+      },
+      {
+        "decodedBodySize": 12862816,
+        "duration": 177.59999999997672,
+        "encodedBodySize": 12862816,
+        "fetchStart": 1465.1999999999534,
+        "initiatorType": "fetch",
+        "name": "http://tauri.localhost/assets/web/6fb0b48a96d820d1738c6e36ed2d1cacaf54844df37298450b79d68b4703d80c.glb",
+        "nextHopProtocol": "",
+        "responseEnd": 1642.7999999999302,
+        "responseStart": 1642.7999999999302,
+        "responseStatus": 200,
+        "startTime": 1465.1999999999534,
+        "transferSize": 12863116
+      },
+      {
+        "decodedBodySize": 6401848,
+        "duration": 113.39999999990688,
+        "encodedBodySize": 6401848,
+        "fetchStart": 1962,
+        "initiatorType": "fetch",
+        "name": "http://tauri.localhost/assets/web/7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb",
+        "nextHopProtocol": "",
+        "responseEnd": 2075.399999999907,
+        "responseStart": 2075.399999999907,
+        "responseStatus": 200,
+        "startTime": 1962,
+        "transferSize": 6402148
+      },
+      {
+        "decodedBodySize": 5970792,
+        "duration": 145.20000000006985,
+        "encodedBodySize": 5970792,
+        "fetchStart": 2099.29999999993,
+        "initiatorType": "fetch",
+        "name": "http://tauri.localhost/assets/web/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb",
+        "nextHopProtocol": "",
+        "responseEnd": 2244.5,
+        "responseStart": 2244.5,
+        "responseStatus": 200,
+        "startTime": 2099.29999999993,
+        "transferSize": 5971092
+      },
+      {
+        "decodedBodySize": 6522992,
+        "duration": 962.4000000000232,
+        "encodedBodySize": 6522992,
+        "fetchStart": 2659.1999999999534,
+        "initiatorType": "fetch",
+        "name": "http://tauri.localhost/assets/web/9cb17849416e2d2578eb5806c4874fc496fdf9a1aa421d3a10fe3a346933674e.glb",
+        "nextHopProtocol": "",
+        "responseEnd": 3621.5999999999767,
+        "responseStart": 3621.5999999999767,
+        "responseStatus": 200,
+        "startTime": 2659.1999999999534,
+        "transferSize": 6523292
+      },
+      {
+        "decodedBodySize": 4679128,
+        "duration": 1270.3000000000466,
+        "encodedBodySize": 4679128,
+        "fetchStart": 4301.899999999907,
+        "initiatorType": "fetch",
+        "name": "http://tauri.localhost/assets/web/a748ca0cea0d4d0d4abd95071577a8457e63f22433e618be77934c079f4cf89c.glb",
+        "nextHopProtocol": "",
+        "responseEnd": 5572.199999999953,
+        "responseStart": 5572.199999999953,
+        "responseStatus": 200,
+        "startTime": 4301.899999999907,
+        "transferSize": 4679428
+      },
+      {
+        "decodedBodySize": 6541988,
+        "duration": 2846.5,
+        "encodedBodySize": 6541988,
+        "fetchStart": 6122.099999999977,
+        "initiatorType": "fetch",
+        "name": "http://tauri.localhost/assets/web/b27ce08a5f860912783d5978cec8a012b28d7a55e2c7a69cc992f91f8bbd5a76.glb",
+        "nextHopProtocol": "",
+        "responseEnd": 8968.599999999977,
+        "responseStart": 8968.599999999977,
+        "responseStatus": 200,
+        "startTime": 6122.099999999977,
+        "transferSize": 6542288
+      },
+      {
+        "decodedBodySize": 7123932,
+        "duration": 2280.100000000093,
+        "encodedBodySize": 7123932,
+        "fetchStart": 9579.399999999909,
+        "initiatorType": "fetch",
+        "name": "http://tauri.localhost/assets/web/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb",
+        "nextHopProtocol": "",
+        "responseEnd": 11859.5,
+        "responseStart": 11859.5,
+        "responseStatus": 200,
+        "startTime": 9579.399999999909,
+        "transferSize": 7124232
+      },
+      {
+        "decodedBodySize": 13626668,
+        "duration": 6668.900000000023,
+        "encodedBodySize": 13626668,
+        "fetchStart": 12389.899999999909,
+        "initiatorType": "fetch",
+        "name": "http://tauri.localhost/assets/web/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+        "nextHopProtocol": "",
+        "responseEnd": 19058.79999999993,
+        "responseStart": 19058.79999999993,
+        "responseStatus": 200,
+        "startTime": 12389.899999999909,
+        "transferSize": 13626968
+      },
+      {
+        "decodedBodySize": 6927276,
+        "duration": 1636.4000000000233,
+        "encodedBodySize": 6927276,
+        "fetchStart": 19649.79999999993,
+        "initiatorType": "fetch",
+        "name": "http://tauri.localhost/assets/web/cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869.glb",
+        "nextHopProtocol": "",
+        "responseEnd": 21286.199999999953,
+        "responseStart": 21286.199999999953,
+        "responseStatus": 200,
+        "startTime": 19649.79999999993,
+        "transferSize": 6927576
+      },
+      {
+        "decodedBodySize": 6257516,
+        "duration": 1598.3000000000466,
+        "encodedBodySize": 6257516,
+        "fetchStart": 21799.199999999953,
+        "initiatorType": "fetch",
+        "name": "http://tauri.localhost/assets/web/db01314e4e0a03f4e1aaa31e8207cee85a42294edffb003633282bb574ef28cd.glb",
+        "nextHopProtocol": "",
+        "responseEnd": 23397.5,
+        "responseStart": 23397.5,
+        "responseStatus": 200,
+        "startTime": 21799.199999999953,
+        "transferSize": 6257816
+      },
+      {
+        "decodedBodySize": 7327748,
+        "duration": 1625.6999999999534,
+        "encodedBodySize": 7327748,
+        "fetchStart": 23764.099999999977,
+        "initiatorType": "fetch",
+        "name": "http://tauri.localhost/assets/web/e870835e4fa3c1cc4fdbcd048a2ca64da97d2ea4f48ea3192da6aba692e05202.glb",
+        "nextHopProtocol": "",
+        "responseEnd": 25389.79999999993,
+        "responseStart": 25389.79999999993,
+        "responseStatus": 200,
+        "startTime": 23764.099999999977,
+        "transferSize": 7328048
+      },
+      {
+        "decodedBodySize": 6174684,
+        "duration": 1096.1000000000931,
+        "encodedBodySize": 6174684,
+        "fetchStart": 26057.899999999907,
+        "initiatorType": "fetch",
+        "name": "http://tauri.localhost/assets/web/eddde4e46932cf9fd056315e34af03f07595cd1ce4de61b4d7d6ac7be5d873e9.glb",
+        "nextHopProtocol": "",
+        "responseEnd": 27154,
+        "responseStart": 27154,
+        "responseStatus": 200,
+        "startTime": 26057.899999999907,
+        "transferSize": 6174984
+      },
+      {
+        "decodedBodySize": 7372144,
+        "duration": 2284.9000000000233,
+        "encodedBodySize": 7372144,
+        "fetchStart": 27698.599999999977,
+        "initiatorType": "fetch",
+        "name": "http://tauri.localhost/assets/web/f3ae53d5ce3b57419fd31e74e2572ada9cc61392c2e7ac20dac484ec194d5e9f.glb",
+        "nextHopProtocol": "",
+        "responseEnd": 29983.5,
+        "responseStart": 29983.5,
+        "responseStatus": 200,
+        "startTime": 27698.599999999977,
+        "transferSize": 7372444
+      },
+      {
+        "decodedBodySize": 6890088,
+        "duration": 1119.7000000000698,
+        "encodedBodySize": 6890088,
+        "fetchStart": 30503.899999999907,
+        "initiatorType": "fetch",
+        "name": "http://tauri.localhost/assets/web/fedb713c0b32df33f11111a91e2c3e0616a0345ec9be9a8beeecaa0b93ef26cb.glb",
+        "nextHopProtocol": "",
+        "responseEnd": 31623.599999999977,
+        "responseStart": 31623.599999999977,
+        "responseStatus": 200,
+        "startTime": 30503.899999999907,
+        "transferSize": 6890388
+      },
+      {
+        "decodedBodySize": 14308628,
+        "duration": 3082.4000000000233,
+        "encodedBodySize": 14308628,
+        "fetchStart": 32143.199999999953,
+        "initiatorType": "fetch",
+        "name": "http://tauri.localhost/assets/web/8f6c9ef7472a2d7f8ffda7f08a78f8027f91d14a8f92b8eeca4084b0f379da36.glb",
+        "nextHopProtocol": "",
+        "responseEnd": 35225.59999999998,
+        "responseStart": 35225.59999999998,
+        "responseStatus": 200,
+        "startTime": 32143.199999999953,
+        "transferSize": 14308928
+      },
+      {
+        "decodedBodySize": 26536168,
+        "duration": 8837.20000000007,
+        "encodedBodySize": 26536168,
+        "fetchStart": 35945.29999999993,
+        "initiatorType": "fetch",
+        "name": "http://tauri.localhost/assets/web/2fdb3468b7646ebe16d0f3d3d25538ce5b20d6dee1d3830256d2f62599826dcc.glb",
+        "nextHopProtocol": "",
+        "responseEnd": 44782.5,
+        "responseStart": 44782.5,
+        "responseStatus": 200,
+        "startTime": 35945.29999999993,
+        "transferSize": 26536468
+      },
+      {
+        "decodedBodySize": 14308628,
+        "duration": 4666.800000000047,
+        "encodedBodySize": 14308628,
+        "fetchStart": 55100.39999999991,
+        "initiatorType": "fetch",
+        "name": "http://tauri.localhost/assets/web/8f6c9ef7472a2d7f8ffda7f08a78f8027f91d14a8f92b8eeca4084b0f379da36.glb",
+        "nextHopProtocol": "",
+        "responseEnd": 59767.19999999995,
+        "responseStart": 59767.19999999995,
+        "responseStatus": 200,
+        "startTime": 55100.39999999991,
+        "transferSize": 14308928
+      },
+      {
+        "decodedBodySize": 26536168,
+        "duration": 12331.199999999952,
+        "encodedBodySize": 26536168,
+        "fetchStart": 55100.69999999995,
+        "initiatorType": "fetch",
+        "name": "http://tauri.localhost/assets/web/2fdb3468b7646ebe16d0f3d3d25538ce5b20d6dee1d3830256d2f62599826dcc.glb",
+        "nextHopProtocol": "",
+        "responseEnd": 67431.8999999999,
+        "responseStart": 67431.8999999999,
+        "responseStatus": 200,
+        "startTime": 55100.69999999995,
+        "transferSize": 26536468
+      },
+      {
+        "decodedBodySize": 6890088,
+        "duration": 593.0999999999767,
+        "encodedBodySize": 6890088,
+        "fetchStart": 93121.79999999992,
+        "initiatorType": "fetch",
+        "name": "http://tauri.localhost/assets/web/fedb713c0b32df33f11111a91e2c3e0616a0345ec9be9a8beeecaa0b93ef26cb.glb",
+        "nextHopProtocol": "",
+        "responseEnd": 93714.8999999999,
+        "responseStart": 93714.8999999999,
+        "responseStatus": 200,
+        "startTime": 93121.79999999992,
+        "transferSize": 6890388
+      },
+      {
+        "decodedBodySize": 6927276,
+        "duration": 7209.20000000007,
+        "encodedBodySize": 6927276,
+        "fetchStart": 101176.8999999999,
+        "initiatorType": "fetch",
+        "name": "http://tauri.localhost/assets/web/cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869.glb",
+        "nextHopProtocol": "",
+        "responseEnd": 108386.09999999998,
+        "responseStart": 108386.09999999998,
+        "responseStatus": 200,
+        "startTime": 101176.8999999999,
+        "transferSize": 6927576
+      },
+      {
+        "decodedBodySize": 6401848,
+        "duration": 4712.699999999953,
+        "encodedBodySize": 6401848,
+        "fetchStart": 101177.09999999998,
+        "initiatorType": "fetch",
+        "name": "http://tauri.localhost/assets/web/7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb",
+        "nextHopProtocol": "",
+        "responseEnd": 105889.79999999992,
+        "responseStart": 105889.79999999992,
+        "responseStatus": 200,
+        "startTime": 101177.09999999998,
+        "transferSize": 6402148
+      },
+      {
+        "decodedBodySize": 5970792,
+        "duration": 8980.79999999993,
+        "encodedBodySize": 5970792,
+        "fetchStart": 101177.5,
+        "initiatorType": "fetch",
+        "name": "http://tauri.localhost/assets/web/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb",
+        "nextHopProtocol": "",
+        "responseEnd": 110158.29999999992,
+        "responseStart": 110158.29999999992,
+        "responseStatus": 200,
+        "startTime": 101177.5,
+        "transferSize": 5971092
+      },
+      {
+        "decodedBodySize": 6980244,
+        "duration": 1735.5,
+        "encodedBodySize": 6980244,
+        "fetchStart": 101177.79999999992,
+        "initiatorType": "fetch",
+        "name": "http://tauri.localhost/assets/web/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb",
+        "nextHopProtocol": "",
+        "responseEnd": 102913.29999999992,
+        "responseStart": 102913.29999999992,
+        "responseStatus": 200,
+        "startTime": 101177.79999999992,
+        "transferSize": 6980544
+      },
+      {
+        "decodedBodySize": 7123932,
+        "duration": 7998.5,
+        "encodedBodySize": 7123932,
+        "fetchStart": 101178,
+        "initiatorType": "fetch",
+        "name": "http://tauri.localhost/assets/web/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb",
+        "nextHopProtocol": "",
+        "responseEnd": 109176.5,
+        "responseStart": 109176.5,
+        "responseStatus": 200,
+        "startTime": 101178,
+        "transferSize": 7124232
+      }
+    ],
+    "models": [
+      "assets/web/0ab73565649737fc15d853aa9d52a9ecacff3fbf9f5664cc21ec4e54452ef894.glb",
+      "assets/web/25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238.glb",
+      "assets/web/3ba902fd9bfc99589348ba9202513e9daa63442a6c2b21bb23a15bf58bd546f7.glb",
+      "assets/web/4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141.glb",
+      "assets/web/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb",
+      "assets/web/6c43390aa864c32555795b2be638f8e1e8d4154fa85e6991580ebb0d7fcde309.glb",
+      "assets/web/6fb0b48a96d820d1738c6e36ed2d1cacaf54844df37298450b79d68b4703d80c.glb",
+      "assets/web/7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb",
+      "assets/web/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb",
+      "assets/web/9cb17849416e2d2578eb5806c4874fc496fdf9a1aa421d3a10fe3a346933674e.glb",
+      "assets/web/a748ca0cea0d4d0d4abd95071577a8457e63f22433e618be77934c079f4cf89c.glb",
+      "assets/web/b27ce08a5f860912783d5978cec8a012b28d7a55e2c7a69cc992f91f8bbd5a76.glb",
+      "assets/web/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb",
+      "assets/web/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+      "assets/web/cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869.glb",
+      "assets/web/db01314e4e0a03f4e1aaa31e8207cee85a42294edffb003633282bb574ef28cd.glb",
+      "assets/web/e870835e4fa3c1cc4fdbcd048a2ca64da97d2ea4f48ea3192da6aba692e05202.glb",
+      "assets/web/eddde4e46932cf9fd056315e34af03f07595cd1ce4de61b4d7d6ac7be5d873e9.glb",
+      "assets/web/f3ae53d5ce3b57419fd31e74e2572ada9cc61392c2e7ac20dac484ec194d5e9f.glb",
+      "assets/web/fedb713c0b32df33f11111a91e2c3e0616a0345ec9be9a8beeecaa0b93ef26cb.glb",
+      "assets/web/8f6c9ef7472a2d7f8ffda7f08a78f8027f91d14a8f92b8eeca4084b0f379da36.glb",
+      "assets/web/2fdb3468b7646ebe16d0f3d3d25538ce5b20d6dee1d3830256d2f62599826dcc.glb"
+    ],
+    "productionLoading": {
+      "current": {
+        "canvas": {
+          "height": 720,
+          "width": 1028
+        },
+        "failure": null,
+        "focused": true,
+        "hidden": false,
+        "menu": false,
+        "overlay": true,
+        "phase": "Bringing your world to life...",
+        "progress": "86",
+        "stageBusy": "true",
+        "visibility": "visible"
+      },
+      "elapsedMs": 90052.19999999995,
+      "rafDelivery": {
+        "callbackNames": {
+          "(anonymous)": 30,
+          "j3": 1008
+        },
+        "callbacks": 1038,
+        "distinctTimestamps": 1008,
+        "lastAt": 139097,
+        "maxIntervalMs": 328.1000000000058,
+        "recent": [
+          129987.6,
+          130065.8,
+          130143.9,
+          130206.4,
+          130284.5,
+          130347,
+          130425.2,
+          130503.3,
+          130565.8,
+          130643.8,
+          130722,
+          130800.1,
+          130862.6,
+          130940.8,
+          131018.9,
+          131081.3,
+          131159.5,
+          131237.6,
+          131300.1,
+          131378.2,
+          131440.7,
+          131518.9,
+          131581.4,
+          131659.5,
+          131722.1,
+          131800.2,
+          131878.2,
+          131940.8,
+          132018.9,
+          132081.3,
+          132159.5,
+          132222,
+          132300.1,
+          132378.2,
+          132440.7,
+          132518.9,
+          132581.4,
+          132659.5,
+          132722,
+          132800.2,
+          132878.3,
+          132940.7,
+          133018.9,
+          133081.4,
+          133159.5,
+          133222,
+          133300.1,
+          133378.2,
+          133456.4,
+          133550.2,
+          133628.3,
+          133706.4,
+          133784.5,
+          133847,
+          133925.2,
+          134003.2,
+          134065.7,
+          134143.8,
+          134206.4,
+          134284.5,
+          134347,
+          134425.1,
+          134487.7,
+          134565.7,
+          134628.3,
+          134706.3,
+          134768.8,
+          134847,
+          134909.5,
+          134987.7,
+          135050.2,
+          135128.2,
+          135190.8,
+          135268.9,
+          135331.4,
+          135409.5,
+          135472,
+          135550.1,
+          135612.6,
+          135690.8,
+          135753.3,
+          135831.4,
+          135893.8,
+          135972,
+          136034.5,
+          136112.7,
+          136175.1,
+          136253.3,
+          136331.4,
+          136393.9,
+          136472,
+          136534.5,
+          136612.7,
+          136675.1,
+          136753.2,
+          136815.7,
+          136893.9,
+          136956.4,
+          137034.5,
+          137097,
+          137175.1,
+          137268.9,
+          137331.4,
+          137409.6,
+          137472,
+          137550.2,
+          137612.6,
+          137690.7,
+          137753.3,
+          137831.3,
+          137893.9,
+          137972,
+          138034.5,
+          138112.6,
+          138190.7,
+          138253.3,
+          138331.3,
+          138393.9,
+          138472,
+          138534.5,
+          138612.6,
+          138675.1,
+          138753.2,
+          138815.7,
+          138893.9,
+          138956.4,
+          139034.5,
+          139097
+        ]
+      },
+      "scope": "Smoke DOM/visibility snapshots and all existing RAF callbacks only; names may be minified and counts include preparation callbacks; no extra RAF, GPU query, simulated state or readiness override.",
+      "spans": {
+        "active": [
+          {
+            "elapsedMs": 10575.199999999952,
+            "label": "load-warm-gpu",
+            "scope": "Existing awaited phase start; smoke-only pending-phase attribution.",
+            "start": 128603.59999999998
+          },
+          {
+            "elapsedMs": 10562.5,
+            "label": "warm-compile-staging",
+            "scope": "Existing awaited phase start; smoke-only pending-phase attribution.",
+            "start": 128616.29999999992
+          }
+        ],
+        "configIdentities": [
+          {
+            "config": {
+              "biome": "gran-canon",
+              "culture": "mapungubwe",
+              "quality": "muy_baja",
+              "relief": 1,
+              "river": true,
+              "seed": "1791563862820"
+            },
+            "duration": 0,
+            "end": 83310.59999999998,
+            "label": "loading-config-identity",
+            "scope": "Read-only configuration identity; original New/Continue choices and seed preserved.",
+            "start": 83310.59999999998
+          }
+        ],
+        "models": [
+          {
+            "duration": 5.899999999906868,
+            "end": 60393.39999999991,
+            "label": "asset-gltf-parse-submit:http://tauri.localhost/assets/web/:14308628",
+            "scope": "Synchronous GLTF parse invocation; nested within awaited parse, do not sum.",
+            "start": 60387.5
+          },
+          {
+            "bytes": 14308628,
+            "duration": 3043.5999999999767,
+            "end": 63431.09999999998,
+            "failed": false,
+            "label": "asset-gltf-parse:http://tauri.localhost/assets/web/:14308628",
+            "scope": "Awaited GLTF parse/decode/material preparation after response collection; excludes primary GLB transfer, includes nested image fetch/decode.",
+            "start": 60387.5
+          },
+          {
+            "duration": 8331.900000000023,
+            "end": 63431.09999999998,
+            "failed": false,
+            "label": "asset-gltf-load:http://tauri.localhost/assets/web/8f6c9ef7472a2d7f8ffda7f08a78f8027f91d14a8f92b8eeca4084b0f379da36.glb",
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "start": 55099.19999999995
+          },
+          {
+            "duration": 7.099999999976717,
+            "end": 68319.3999999999,
+            "label": "asset-gltf-parse-submit:http://tauri.localhost/assets/web/:26536168",
+            "scope": "Synchronous GLTF parse invocation; nested within awaited parse, do not sum.",
+            "start": 68312.29999999993
+          },
+          {
+            "bytes": 26536168,
+            "duration": 80.5,
+            "end": 68392.79999999993,
+            "failed": false,
+            "label": "asset-gltf-parse:http://tauri.localhost/assets/web/:26536168",
+            "scope": "Awaited GLTF parse/decode/material preparation after response collection; excludes primary GLB transfer, includes nested image fetch/decode.",
+            "start": 68312.29999999993
+          },
+          {
+            "duration": 13292.29999999993,
+            "end": 68392.8999999999,
+            "failed": false,
+            "label": "asset-gltf-load:http://tauri.localhost/assets/web/2fdb3468b7646ebe16d0f3d3d25538ce5b20d6dee1d3830256d2f62599826dcc.glb",
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "start": 55100.59999999998
+          },
+          {
+            "duration": 1.800000000046566,
+            "end": 94000,
+            "label": "asset-gltf-parse-submit:http://tauri.localhost/assets/web/:6890088",
+            "scope": "Synchronous GLTF parse invocation; nested within awaited parse, do not sum.",
+            "start": 93998.19999999995
+          },
+          {
+            "bytes": 6890088,
+            "duration": 3143.5999999999767,
+            "end": 97141.79999999992,
+            "failed": false,
+            "label": "asset-gltf-parse:http://tauri.localhost/assets/web/:6890088",
+            "scope": "Awaited GLTF parse/decode/material preparation after response collection; excludes primary GLB transfer, includes nested image fetch/decode.",
+            "start": 93998.19999999995
+          },
+          {
+            "duration": 4021.0999999999767,
+            "end": 97141.8999999999,
+            "failed": false,
+            "label": "asset-gltf-load:http://tauri.localhost/assets/web/fedb713c0b32df33f11111a91e2c3e0616a0345ec9be9a8beeecaa0b93ef26cb.glb",
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "start": 93120.79999999992
+          },
+          {
+            "duration": 4.400000000023283,
+            "end": 103217.5,
+            "label": "asset-gltf-parse-submit:http://tauri.localhost/assets/web/:6980244",
+            "scope": "Synchronous GLTF parse invocation; nested within awaited parse, do not sum.",
+            "start": 103213.09999999998
+          },
+          {
+            "bytes": 6980244,
+            "duration": 2497.6999999999534,
+            "end": 105710.79999999992,
+            "failed": false,
+            "label": "asset-gltf-parse:http://tauri.localhost/assets/web/:6980244",
+            "scope": "Awaited GLTF parse/decode/material preparation after response collection; excludes primary GLB transfer, includes nested image fetch/decode.",
+            "start": 103213.09999999998
+          },
+          {
+            "duration": 4533.199999999953,
+            "end": 105710.79999999992,
+            "failed": false,
+            "label": "asset-gltf-load:http://tauri.localhost/assets/web/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb",
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "start": 101177.59999999998
+          },
+          {
+            "duration": 4.099999999976717,
+            "end": 106251.3999999999,
+            "label": "asset-gltf-parse-submit:http://tauri.localhost/assets/web/:6401848",
+            "scope": "Synchronous GLTF parse invocation; nested within awaited parse, do not sum.",
+            "start": 106247.29999999992
+          },
+          {
+            "bytes": 6401848,
+            "duration": 2358.5,
+            "end": 108605.79999999992,
+            "failed": false,
+            "label": "asset-gltf-parse:http://tauri.localhost/assets/web/:6401848",
+            "scope": "Awaited GLTF parse/decode/material preparation after response collection; excludes primary GLB transfer, includes nested image fetch/decode.",
+            "start": 106247.29999999992
+          },
+          {
+            "duration": 7428.79999999993,
+            "end": 108605.79999999992,
+            "failed": false,
+            "label": "asset-gltf-load:http://tauri.localhost/assets/web/7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb",
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "start": 101177
+          },
+          {
+            "duration": 7,
+            "end": 108862.8999999999,
+            "label": "asset-gltf-parse-submit:http://tauri.localhost/assets/web/:6927276",
+            "scope": "Synchronous GLTF parse invocation; nested within awaited parse, do not sum.",
+            "start": 108855.8999999999
+          },
+          {
+            "duration": 4.599999999976717,
+            "end": 109932.3999999999,
+            "label": "asset-gltf-parse-submit:http://tauri.localhost/assets/web/:7123932",
+            "scope": "Synchronous GLTF parse invocation; nested within awaited parse, do not sum.",
+            "start": 109927.79999999992
+          },
+          {
+            "bytes": 6927276,
+            "duration": 1279.8000000000466,
+            "end": 110135.69999999995,
+            "failed": false,
+            "label": "asset-gltf-parse:http://tauri.localhost/assets/web/:6927276",
+            "scope": "Awaited GLTF parse/decode/material preparation after response collection; excludes primary GLB transfer, includes nested image fetch/decode.",
+            "start": 108855.8999999999
+          },
+          {
+            "duration": 8959,
+            "end": 110135.69999999995,
+            "failed": false,
+            "label": "asset-gltf-load:http://tauri.localhost/assets/web/cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869.glb",
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "start": 101176.69999999995
+          },
+          {
+            "duration": 3.199999999953434,
+            "end": 110430.8999999999,
+            "label": "asset-gltf-parse-submit:http://tauri.localhost/assets/web/:5970792",
+            "scope": "Synchronous GLTF parse invocation; nested within awaited parse, do not sum.",
+            "start": 110427.69999999995
+          },
+          {
+            "bytes": 7123932,
+            "duration": 2803.5999999999767,
+            "end": 112731.3999999999,
+            "failed": false,
+            "label": "asset-gltf-parse:http://tauri.localhost/assets/web/:7123932",
+            "scope": "Awaited GLTF parse/decode/material preparation after response collection; excludes primary GLB transfer, includes nested image fetch/decode.",
+            "start": 109927.79999999992
+          },
+          {
+            "duration": 11553.399999999909,
+            "end": 112731.3999999999,
+            "failed": false,
+            "label": "asset-gltf-load:http://tauri.localhost/assets/web/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb",
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "start": 101178
+          },
+          {
+            "bytes": 5970792,
+            "duration": 2855.9000000000233,
+            "end": 113283.59999999998,
+            "failed": false,
+            "label": "asset-gltf-parse:http://tauri.localhost/assets/web/:5970792",
+            "scope": "Awaited GLTF parse/decode/material preparation after response collection; excludes primary GLB transfer, includes nested image fetch/decode.",
+            "start": 110427.69999999995
+          },
+          {
+            "duration": 12106.400000000023,
+            "end": 113283.69999999995,
+            "failed": false,
+            "label": "asset-gltf-load:http://tauri.localhost/assets/web/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb",
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "start": 101177.29999999992
+          }
+        ],
+        "programIdentities": [
+          {
+            "at": 128624.69999999995,
+            "cacheKey": "physical,STANDARD,,PHYSICAL,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,uv,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,65665,131107,srgb,(o,c)=>{r(o,c),Og(o,this.shadowUniforms,\"vToonWorld\")}|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|toon-4.1.4|MeshPhysicalMaterial|resident",
+            "cacheKeyLength": 412,
+            "cacheKeyTruncated": false,
+            "currentProgram": true,
+            "defines": {
+              "PHYSICAL": "",
+              "STANDARD": ""
+            },
+            "materialName": "BakedMaterial.001",
+            "materialType": "MeshPhysicalMaterial",
+            "materialUuid": "aea4ad9f-7665-4814-83de-0b2dc9d0c803",
+            "objects": [],
+            "programId": 7,
+            "programName": "BakedMaterial.001",
+            "programType": "MeshPhysicalMaterial",
+            "side": 0,
+            "transparent": false
+          },
+          {
+            "at": 128624.69999999995,
+            "cacheKey": "physical,STANDARD,,PHYSICAL,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,uv,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,65665,131107,srgb,(o,c)=>{r(o,c),Og(o,this.shadowUniforms,\"vToonWorld\")}|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|toon-4.1.4|MeshPhysicalMaterial|resident",
+            "cacheKeyLength": 412,
+            "cacheKeyTruncated": false,
+            "currentProgram": true,
+            "defines": {
+              "PHYSICAL": "",
+              "STANDARD": ""
+            },
+            "materialName": "BakedMaterial",
+            "materialType": "MeshPhysicalMaterial",
+            "materialUuid": "30b7757f-cd13-4233-9dd9-2da957745f4d",
+            "objects": [],
+            "programId": 7,
+            "programName": "BakedMaterial.001",
+            "programType": "MeshPhysicalMaterial",
+            "side": 0,
+            "transparent": false
+          },
+          {
+            "at": 128624.69999999995,
+            "cacheKey": "physical,STANDARD,,PHYSICAL,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,uv,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,129,131107,srgb,(o,c)=>{r(o,c),Og(o,this.shadowUniforms,\"vToonWorld\")}|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|toon-4.1.4|MeshPhysicalMaterial|resident",
+            "cacheKeyLength": 410,
+            "cacheKeyTruncated": false,
+            "currentProgram": true,
+            "defines": {
+              "PHYSICAL": "",
+              "STANDARD": ""
+            },
+            "materialName": "BakedMaterial",
+            "materialType": "MeshPhysicalMaterial",
+            "materialUuid": "e88ece01-2ca1-4fad-9ec9-735f6426905a",
+            "objects": [],
+            "programId": 8,
+            "programName": "BakedMaterial",
+            "programType": "MeshPhysicalMaterial",
+            "side": 0,
+            "transparent": false
+          },
+          {
+            "at": 128624.69999999995,
+            "cacheKey": "physical,STANDARD,,PHYSICAL,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,uv,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,129,131107,srgb,(o,c)=>{r(o,c),Og(o,this.shadowUniforms,\"vToonWorld\")}|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|toon-4.1.4|MeshPhysicalMaterial|resident",
+            "cacheKeyLength": 410,
+            "cacheKeyTruncated": false,
+            "currentProgram": true,
+            "defines": {
+              "PHYSICAL": "",
+              "STANDARD": ""
+            },
+            "materialName": "BakedMaterial",
+            "materialType": "MeshPhysicalMaterial",
+            "materialUuid": "e1841166-3c0e-4735-af30-e13f41fc8cec",
+            "objects": [],
+            "programId": 8,
+            "programName": "BakedMaterial",
+            "programType": "MeshPhysicalMaterial",
+            "side": 0,
+            "transparent": false
+          },
+          {
+            "at": 128624.69999999995,
+            "cacheKey": "physical,STANDARD,,PHYSICAL,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,uv,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,65665,131107,srgb,(o,c)=>{r(o,c),Og(o,this.shadowUniforms,\"vToonWorld\")}|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|toon-4.1.4|MeshPhysicalMaterial|resident",
+            "cacheKeyLength": 412,
+            "cacheKeyTruncated": false,
+            "currentProgram": true,
+            "defines": {
+              "PHYSICAL": "",
+              "STANDARD": ""
+            },
+            "materialName": "BakedMaterial",
+            "materialType": "MeshPhysicalMaterial",
+            "materialUuid": "8ea34745-190f-4b66-b83d-c069991f1f6e",
+            "objects": [],
+            "programId": 7,
+            "programName": "BakedMaterial.001",
+            "programType": "MeshPhysicalMaterial",
+            "side": 0,
+            "transparent": false
+          },
+          {
+            "at": 128624.69999999995,
+            "cacheKey": "8,9,onBeforeCompile(){}",
+            "cacheKeyLength": 23,
+            "cacheKeyTruncated": false,
+            "currentProgram": true,
+            "defines": {},
+            "materialName": "",
+            "materialType": "RawShaderMaterial",
+            "materialUuid": "63c5b9da-2671-4679-9e13-36f1afc8040a",
+            "objects": [],
+            "programId": 9,
+            "programName": "",
+            "programType": "RawShaderMaterial",
+            "side": 2,
+            "transparent": false
+          },
+          {
+            "at": 133464.8999999999,
+            "cacheKey": "8,9,onBeforeCompile(){}",
+            "cacheKeyLength": 23,
+            "cacheKeyTruncated": false,
+            "currentProgram": true,
+            "defines": {},
+            "materialName": "",
+            "materialType": "RawShaderMaterial",
+            "materialUuid": "63c5b9da-2671-4679-9e13-36f1afc8040a",
+            "objects": [],
+            "programId": 9,
+            "programName": "",
+            "programType": "RawShaderMaterial",
+            "side": 2,
+            "transparent": false
+          },
+          {
+            "at": 133464.8999999999,
+            "cacheKey": "10,11,onBeforeCompile(){}",
+            "cacheKeyLength": 25,
+            "cacheKeyTruncated": false,
+            "currentProgram": true,
+            "defines": {},
+            "materialName": "",
+            "materialType": "RawShaderMaterial",
+            "materialUuid": "451c752f-139b-441c-a5dd-130f32649d86",
+            "objects": [],
+            "programId": 10,
+            "programName": "",
+            "programType": "RawShaderMaterial",
+            "side": 2,
+            "transparent": true
+          },
+          {
+            "at": 133464.8999999999,
+            "cacheKey": "12,13,onBeforeCompile(){}",
+            "cacheKeyLength": 25,
+            "cacheKeyTruncated": false,
+            "currentProgram": true,
+            "defines": {},
+            "materialName": "",
+            "materialType": "RawShaderMaterial",
+            "materialUuid": "5ea7d1e2-ec0b-4bd4-88b6-5ba1ab9782d5",
+            "objects": [],
+            "programId": 11,
+            "programName": "",
+            "programType": "RawShaderMaterial",
+            "side": 2,
+            "transparent": true
+          },
+          {
+            "at": 133464.8999999999,
+            "cacheKey": "14,15,onBeforeCompile(){}",
+            "cacheKeyLength": 25,
+            "cacheKeyTruncated": false,
+            "currentProgram": true,
+            "defines": {},
+            "materialName": "",
+            "materialType": "RawShaderMaterial",
+            "materialUuid": "15392489-fb74-4237-b701-183920423084",
+            "objects": [],
+            "programId": 12,
+            "programName": "",
+            "programType": "RawShaderMaterial",
+            "side": 2,
+            "transparent": false
+          },
+          {
+            "at": 133464.8999999999,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,133123,srgb,african-water-relative-v4.1.4|hdr-endpoints",
+            "cacheKeyLength": 275,
+            "cacheKeyTruncated": false,
+            "currentProgram": true,
+            "defines": {
+              "STANDARD": ""
+            },
+            "materialName": "",
+            "materialType": "MeshStandardMaterial",
+            "materialUuid": "7a002c02-27dd-4611-b7aa-36ccb3de4c4e",
+            "objects": [],
+            "programId": 13,
+            "programName": "",
+            "programType": "MeshStandardMaterial",
+            "side": 2,
+            "transparent": false
+          },
+          {
+            "at": 137189.5,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,133123,srgb,african-water-relative-v4.1.4|hdr-endpoints",
+            "cacheKeyLength": 275,
+            "cacheKeyTruncated": false,
+            "currentProgram": false,
+            "defines": {
+              "STANDARD": ""
+            },
+            "materialName": "",
+            "materialType": "MeshStandardMaterial",
+            "materialUuid": "7a002c02-27dd-4611-b7aa-36ccb3de4c4e",
+            "objects": [],
+            "programId": 13,
+            "programName": "",
+            "programType": "MeshStandardMaterial",
+            "side": 2,
+            "transparent": false
+          },
+          {
+            "at": 137189.5,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,3,133123,srgb,african-water-relative-v4.1.4|hdr-endpoints",
+            "cacheKeyLength": 275,
+            "cacheKeyTruncated": false,
+            "currentProgram": true,
+            "defines": {
+              "STANDARD": ""
+            },
+            "materialName": "",
+            "materialType": "MeshStandardMaterial",
+            "materialUuid": "7a002c02-27dd-4611-b7aa-36ccb3de4c4e",
+            "objects": [],
+            "programId": 14,
+            "programName": "",
+            "programType": "MeshStandardMaterial",
+            "side": 2,
+            "transparent": false
+          }
+        ],
+        "programIdentityDropped": 0,
+        "recent": [
+          {
+            "duration": 1.2999999999301508,
+            "end": 114162.79999999992,
+            "failed": false,
+            "label": "loading-crop-construction-step",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 114161.5
+          },
+          {
+            "duration": 2.800000000046566,
+            "end": 114165.59999999998,
+            "failed": false,
+            "label": "loading-crop-construction-step",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 114162.79999999992
+          },
+          {
+            "budgetElapsed": 6.5,
+            "budgetMs": 4,
+            "duration": 70.79999999993015,
+            "end": 114236.3999999999,
+            "failed": false,
+            "label": "loading-crop-frame-wait",
+            "scope": "Existing cooperative frame wait; sliceCpu is summed iterator invocation wall time, excluding this wait.",
+            "sliceCpu": 6.5,
+            "sliceSteps": 4,
+            "start": 114165.59999999998
+          },
+          {
+            "duration": 1.6000000000931325,
+            "end": 114238,
+            "failed": false,
+            "label": "loading-crop-construction-step",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 114236.3999999999
+          },
+          {
+            "duration": 1.8999999999068675,
+            "end": 114239.8999999999,
+            "failed": false,
+            "label": "loading-crop-construction-step",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 114238
+          },
+          {
+            "duration": 1,
+            "end": 114240.8999999999,
+            "failed": false,
+            "label": "loading-crop-construction-step",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 114239.8999999999
+          },
+          {
+            "budgetElapsed": 4.5,
+            "budgetMs": 4,
+            "duration": 68.70000000006985,
+            "end": 114309.59999999998,
+            "failed": false,
+            "label": "loading-crop-frame-wait",
+            "scope": "Existing cooperative frame wait; sliceCpu is summed iterator invocation wall time, excluding this wait.",
+            "sliceCpu": 4.5,
+            "sliceSteps": 3,
+            "start": 114240.8999999999
+          },
+          {
+            "duration": 4.299999999930151,
+            "end": 114313.8999999999,
+            "failed": false,
+            "label": "loading-crop-construction-step",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 114309.59999999998
+          },
+          {
+            "budgetElapsed": 4.299999999930151,
+            "budgetMs": 4,
+            "duration": 66.30000000004657,
+            "end": 114380.19999999995,
+            "failed": false,
+            "label": "loading-crop-frame-wait",
+            "scope": "Existing cooperative frame wait; sliceCpu is summed iterator invocation wall time, excluding this wait.",
+            "sliceCpu": 4.299999999930151,
+            "sliceSteps": 1,
+            "start": 114313.8999999999
+          },
+          {
+            "duration": 1.400000000023283,
+            "end": 114381.69999999995,
+            "failed": false,
+            "label": "loading-crop-construction-step",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 114380.29999999992
+          },
+          {
+            "duration": 1.300000000046566,
+            "end": 114383,
+            "failed": false,
+            "label": "loading-crop-construction-step",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 114381.69999999995
+          },
+          {
+            "duration": 1.099999999976717,
+            "end": 114384.09999999998,
+            "failed": false,
+            "label": "loading-crop-construction-step",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 114383
+          },
+          {
+            "duration": 1,
+            "end": 114385.09999999998,
+            "failed": false,
+            "label": "loading-crop-construction-step",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 114384.09999999998
+          },
+          {
+            "budgetElapsed": 4.800000000046566,
+            "budgetMs": 4,
+            "duration": 69.09999999997672,
+            "end": 114454.19999999995,
+            "failed": false,
+            "label": "loading-crop-frame-wait",
+            "scope": "Existing cooperative frame wait; sliceCpu is summed iterator invocation wall time, excluding this wait.",
+            "sliceCpu": 4.800000000046566,
+            "sliceSteps": 4,
+            "start": 114385.09999999998
+          },
+          {
+            "duration": 1.5,
+            "end": 114455.69999999995,
+            "failed": false,
+            "label": "loading-crop-construction-step",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 114454.19999999995
+          },
+          {
+            "duration": 1.599999999976717,
+            "end": 114457.29999999992,
+            "failed": false,
+            "label": "loading-crop-construction-step",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 114455.69999999995
+          },
+          {
+            "duration": 1.2000000000698492,
+            "end": 114458.5,
+            "failed": false,
+            "label": "loading-crop-construction-step",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 114457.29999999992
+          },
+          {
+            "budgetElapsed": 4.300000000046566,
+            "budgetMs": 4,
+            "duration": 69.89999999990687,
+            "end": 114528.3999999999,
+            "failed": false,
+            "label": "loading-crop-frame-wait",
+            "scope": "Existing cooperative frame wait; sliceCpu is summed iterator invocation wall time, excluding this wait.",
+            "sliceCpu": 4.300000000046566,
+            "sliceSteps": 3,
+            "start": 114458.5
+          },
+          {
+            "duration": 1.2999999999301508,
+            "end": 114529.79999999992,
+            "failed": false,
+            "label": "loading-crop-construction-step",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 114528.5
+          },
+          {
+            "duration": 1.2000000000698492,
+            "end": 114531,
+            "failed": false,
+            "label": "loading-crop-construction-step",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 114529.79999999992
+          },
+          {
+            "duration": 1.599999999976717,
+            "end": 114532.59999999998,
+            "failed": false,
+            "label": "loading-crop-construction-step",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 114531
+          },
+          {
+            "budgetElapsed": 4.099999999976717,
+            "budgetMs": 4,
+            "duration": 69.09999999997672,
+            "end": 114601.69999999995,
+            "failed": false,
+            "label": "loading-crop-frame-wait",
+            "scope": "Existing cooperative frame wait; sliceCpu is summed iterator invocation wall time, excluding this wait.",
+            "sliceCpu": 4.099999999976717,
+            "sliceSteps": 3,
+            "start": 114532.59999999998
+          },
+          {
+            "duration": 2.900000000023283,
+            "end": 114604.59999999998,
+            "failed": false,
+            "label": "loading-crop-construction-step",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 114601.69999999995
+          },
+          {
+            "duration": 968.4000000000232,
+            "end": 114604.59999999998,
+            "failed": false,
+            "label": "load-crop-batch",
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "start": 113636.19999999995
+          },
+          {
+            "duration": 67.19999999995343,
+            "end": 114671.8999999999,
+            "failed": false,
+            "label": "load-milestone:crops",
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "start": 114604.69999999995
+          },
+          {
+            "duration": 238.39999999990687,
+            "end": 114910.3999999999,
+            "failed": false,
+            "label": "load-wall-catalogue",
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "start": 114672
+          },
+          {
+            "duration": 4930.70000000007,
+            "end": 119841.09999999998,
+            "failed": false,
+            "label": "load-wall-prototypes",
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "start": 114910.3999999999
+          },
+          {
+            "duration": 7.599999999976717,
+            "end": 119848.69999999995,
+            "failed": false,
+            "label": "load-milestone:walls",
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "start": 119841.09999999998
+          },
+          {
+            "duration": 293.69999999995343,
+            "end": 120142.3999999999,
+            "failed": false,
+            "label": "load-vfx-catalogue",
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "start": 119848.69999999995
+          },
+          {
+            "duration": 1804.5,
+            "end": 121946.8999999999,
+            "failed": false,
+            "label": "load-vfx-texture",
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "start": 120142.3999999999
+          },
+          {
+            "duration": 15.800000000046566,
+            "end": 121962.69999999995,
+            "failed": false,
+            "label": "load-vfx-constructors",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 121946.8999999999
+          },
+          {
+            "duration": 1.7000000000698492,
+            "end": 121964.5,
+            "failed": false,
+            "label": "load-milestone:vfx",
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "start": 121962.79999999992
+          },
+          {
+            "duration": 4191,
+            "end": 126164.3999999999,
+            "failed": false,
+            "label": "load-chunks-horizon-ready",
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "start": 121973.3999999999
+          },
+          {
+            "duration": 1.099999999976717,
+            "end": 126178.59999999998,
+            "failed": false,
+            "label": "load-milestone:chunks",
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "start": 126177.5
+          },
+          {
+            "duration": 0,
+            "end": 126184.5,
+            "failed": false,
+            "label": "sync-crop-update",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 126184.5
+          },
+          {
+            "duration": 2.900000000023283,
+            "end": 126184.69999999995,
+            "failed": false,
+            "label": "restore-sync",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 126181.79999999992
+          },
+          {
+            "duration": 1.300000000046566,
+            "end": 126186,
+            "failed": false,
+            "label": "hands-constructor",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 126184.69999999995
+          },
+          {
+            "duration": 5239.5,
+            "end": 127459.3999999999,
+            "failed": false,
+            "label": "initial-far-region-worker",
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "start": 122219.8999999999
+          },
+          {
+            "duration": 2416.5999999999767,
+            "end": 128602.59999999998,
+            "failed": false,
+            "label": "load-hands-ready",
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "start": 126186
+          },
+          {
+            "duration": 0.19999999995343387,
+            "end": 128602.8999999999,
+            "failed": false,
+            "label": "load-active-animal-actors",
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "start": 128602.69999999995
+          },
+          {
+            "duration": 0.2000000000698492,
+            "end": 128603.09999999998,
+            "failed": false,
+            "label": "load-worker-actors",
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "start": 128602.8999999999
+          },
+          {
+            "duration": 7.399999999906868,
+            "end": 128624.3999999999,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 128617
+          },
+          {
+            "duration": 0.09999999997671694,
+            "end": 128624.79999999992,
+            "identities": [
+              {
+                "cacheKey": "physical,STANDARD,,PHYSICAL,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,uv,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,65665,131107,srgb,(o,c)=>{r(o,c),Og(o,this.shadowUniforms,\"vToonWorld\")}|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|toon-4.1.4|MeshPhysicalMaterial|resident",
+                "cacheKeyLength": 412,
+                "cacheKeyTruncated": false,
+                "currentProgram": true,
+                "defines": {
+                  "PHYSICAL": "",
+                  "STANDARD": ""
+                },
+                "materialName": "BakedMaterial.001",
+                "materialType": "MeshPhysicalMaterial",
+                "materialUuid": "aea4ad9f-7665-4814-83de-0b2dc9d0c803",
+                "objects": [],
+                "programId": 7,
+                "programName": "BakedMaterial.001",
+                "programType": "MeshPhysicalMaterial",
+                "side": 0,
+                "transparent": false
+              },
+              {
+                "cacheKey": "physical,STANDARD,,PHYSICAL,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,uv,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,65665,131107,srgb,(o,c)=>{r(o,c),Og(o,this.shadowUniforms,\"vToonWorld\")}|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|toon-4.1.4|MeshPhysicalMaterial|resident",
+                "cacheKeyLength": 412,
+                "cacheKeyTruncated": false,
+                "currentProgram": true,
+                "defines": {
+                  "PHYSICAL": "",
+                  "STANDARD": ""
+                },
+                "materialName": "BakedMaterial",
+                "materialType": "MeshPhysicalMaterial",
+                "materialUuid": "30b7757f-cd13-4233-9dd9-2da957745f4d",
+                "objects": [],
+                "programId": 7,
+                "programName": "BakedMaterial.001",
+                "programType": "MeshPhysicalMaterial",
+                "side": 0,
+                "transparent": false
+              },
+              {
+                "cacheKey": "physical,STANDARD,,PHYSICAL,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,uv,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,129,131107,srgb,(o,c)=>{r(o,c),Og(o,this.shadowUniforms,\"vToonWorld\")}|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|toon-4.1.4|MeshPhysicalMaterial|resident",
+                "cacheKeyLength": 410,
+                "cacheKeyTruncated": false,
+                "currentProgram": true,
+                "defines": {
+                  "PHYSICAL": "",
+                  "STANDARD": ""
+                },
+                "materialName": "BakedMaterial",
+                "materialType": "MeshPhysicalMaterial",
+                "materialUuid": "e88ece01-2ca1-4fad-9ec9-735f6426905a",
+                "objects": [],
+                "programId": 8,
+                "programName": "BakedMaterial",
+                "programType": "MeshPhysicalMaterial",
+                "side": 0,
+                "transparent": false
+              },
+              {
+                "cacheKey": "physical,STANDARD,,PHYSICAL,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,uv,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,129,131107,srgb,(o,c)=>{r(o,c),Og(o,this.shadowUniforms,\"vToonWorld\")}|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|toon-4.1.4|MeshPhysicalMaterial|resident",
+                "cacheKeyLength": 410,
+                "cacheKeyTruncated": false,
+                "currentProgram": true,
+                "defines": {
+                  "PHYSICAL": "",
+                  "STANDARD": ""
+                },
+                "materialName": "BakedMaterial",
+                "materialType": "MeshPhysicalMaterial",
+                "materialUuid": "e1841166-3c0e-4735-af30-e13f41fc8cec",
+                "objects": [],
+                "programId": 8,
+                "programName": "BakedMaterial",
+                "programType": "MeshPhysicalMaterial",
+                "side": 0,
+                "transparent": false
+              },
+              {
+                "cacheKey": "physical,STANDARD,,PHYSICAL,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,uv,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,65665,131107,srgb,(o,c)=>{r(o,c),Og(o,this.shadowUniforms,\"vToonWorld\")}|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|toon-4.1.4|MeshPhysicalMaterial|resident",
+                "cacheKeyLength": 412,
+                "cacheKeyTruncated": false,
+                "currentProgram": true,
+                "defines": {
+                  "PHYSICAL": "",
+                  "STANDARD": ""
+                },
+                "materialName": "BakedMaterial",
+                "materialType": "MeshPhysicalMaterial",
+                "materialUuid": "8ea34745-190f-4b66-b83d-c069991f1f6e",
+                "objects": [],
+                "programId": 7,
+                "programName": "BakedMaterial.001",
+                "programType": "MeshPhysicalMaterial",
+                "side": 0,
+                "transparent": false
+              },
+              {
+                "cacheKey": "8,9,onBeforeCompile(){}",
+                "cacheKeyLength": 23,
+                "cacheKeyTruncated": false,
+                "currentProgram": true,
+                "defines": {},
+                "materialName": "",
+                "materialType": "RawShaderMaterial",
+                "materialUuid": "63c5b9da-2671-4679-9e13-36f1afc8040a",
+                "objects": [],
+                "programId": 9,
+                "programName": "",
+                "programType": "RawShaderMaterial",
+                "side": 2,
+                "transparent": false
+              }
+            ],
+            "label": "loading-program-identity",
+            "scope": "CPU metadata copy from already-created Three program/material properties; no additional compile/isReady/WebGL query. Cache key records existing recipe, not independent compile/link status.",
+            "start": 128624.69999999995
+          },
+          {
+            "checkedProgramCount": 3,
+            "duration": 0,
+            "end": 128625,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 3,
+            "pendingProgramIds": [
+              7,
+              8,
+              9
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 128625
+          },
+          {
+            "checkedProgramCount": 3,
+            "duration": 0,
+            "end": 128754.29999999992,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 3,
+            "pendingProgramIds": [
+              7,
+              8,
+              9
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 128754.29999999992
+          },
+          {
+            "checkedProgramCount": 3,
+            "duration": 0,
+            "end": 128900.69999999995,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 3,
+            "pendingProgramIds": [
+              7,
+              8,
+              9
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 128900.69999999995
+          },
+          {
+            "checkedProgramCount": 3,
+            "duration": 0.09999999997671694,
+            "end": 129052.09999999998,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 3,
+            "pendingProgramIds": [
+              7,
+              8,
+              9
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 129052
+          },
+          {
+            "checkedProgramCount": 3,
+            "duration": 0,
+            "end": 129196,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 3,
+            "pendingProgramIds": [
+              7,
+              8,
+              9
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 129196
+          },
+          {
+            "checkedProgramCount": 3,
+            "duration": 0,
+            "end": 129343.3999999999,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 3,
+            "pendingProgramIds": [
+              7,
+              8,
+              9
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 129343.3999999999
+          },
+          {
+            "checkedProgramCount": 3,
+            "duration": 0.09999999997671694,
+            "end": 129486.69999999995,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 3,
+            "pendingProgramIds": [
+              7,
+              8,
+              9
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 129486.59999999998
+          },
+          {
+            "checkedProgramCount": 3,
+            "duration": 0.09999999997671694,
+            "end": 129560.09999999998,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 3,
+            "pendingProgramIds": [
+              7,
+              8,
+              9
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 129560
+          },
+          {
+            "checkedProgramCount": 3,
+            "duration": 0,
+            "end": 129701.69999999995,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 3,
+            "pendingProgramIds": [
+              7,
+              8,
+              9
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 129701.69999999995
+          },
+          {
+            "checkedProgramCount": 3,
+            "duration": 0.10000000009313226,
+            "end": 129852,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 3,
+            "pendingProgramIds": [
+              7,
+              8,
+              9
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 129851.8999999999
+          },
+          {
+            "checkedProgramCount": 3,
+            "duration": 0,
+            "end": 130000.09999999998,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 3,
+            "pendingProgramIds": [
+              7,
+              8,
+              9
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 130000.09999999998
+          },
+          {
+            "checkedProgramCount": 3,
+            "duration": 0,
+            "end": 130145.79999999992,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 3,
+            "pendingProgramIds": [
+              7,
+              8,
+              9
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 130145.79999999992
+          },
+          {
+            "checkedProgramCount": 3,
+            "duration": 0.09999999997671694,
+            "end": 130288.8999999999,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 3,
+            "pendingProgramIds": [
+              7,
+              8,
+              9
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 130288.79999999992
+          },
+          {
+            "checkedProgramCount": 3,
+            "duration": 0.10000000009313226,
+            "end": 130359,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 3,
+            "pendingProgramIds": [
+              7,
+              8,
+              9
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 130358.8999999999
+          },
+          {
+            "checkedProgramCount": 3,
+            "duration": 0,
+            "end": 130505.19999999995,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 3,
+            "pendingProgramIds": [
+              7,
+              8,
+              9
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 130505.19999999995
+          },
+          {
+            "checkedProgramCount": 3,
+            "duration": 0,
+            "end": 130578.79999999992,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 3,
+            "pendingProgramIds": [
+              7,
+              8,
+              9
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 130578.79999999992
+          },
+          {
+            "checkedProgramCount": 3,
+            "duration": 0,
+            "end": 130652.19999999995,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 3,
+            "pendingProgramIds": [
+              7,
+              8,
+              9
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 130652.19999999995
+          },
+          {
+            "checkedProgramCount": 3,
+            "duration": 0.10000000009313226,
+            "end": 130803,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 3,
+            "pendingProgramIds": [
+              7,
+              8,
+              9
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 130802.8999999999
+          },
+          {
+            "checkedProgramCount": 3,
+            "duration": 0,
+            "end": 130954.29999999992,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 3,
+            "pendingProgramIds": [
+              7,
+              8,
+              9
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 130954.29999999992
+          },
+          {
+            "checkedProgramCount": 3,
+            "duration": 0.10000000009313226,
+            "end": 131095.5,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 2,
+            "pendingProgramIds": [
+              7,
+              8
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 131095.3999999999
+          },
+          {
+            "checkedProgramCount": 2,
+            "duration": 0,
+            "end": 131238.3999999999,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 2,
+            "pendingProgramIds": [
+              7,
+              8
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 131238.3999999999
+          },
+          {
+            "checkedProgramCount": 2,
+            "duration": 0.10000000009313226,
+            "end": 131380,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 2,
+            "pendingProgramIds": [
+              7,
+              8
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 131379.8999999999
+          },
+          {
+            "checkedProgramCount": 2,
+            "duration": 0,
+            "end": 131521.09999999998,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 2,
+            "pendingProgramIds": [
+              7,
+              8
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 131521.09999999998
+          },
+          {
+            "checkedProgramCount": 2,
+            "duration": 0,
+            "end": 131662.09999999998,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 2,
+            "pendingProgramIds": [
+              7,
+              8
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 131662.09999999998
+          },
+          {
+            "checkedProgramCount": 2,
+            "duration": 0,
+            "end": 131806,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 2,
+            "pendingProgramIds": [
+              7,
+              8
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 131806
+          },
+          {
+            "checkedProgramCount": 2,
+            "duration": 0,
+            "end": 131883.5,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              8
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 131883.5
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0.09999999997671694,
+            "end": 132022.69999999995,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              8
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 132022.59999999998
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0,
+            "end": 132164.69999999995,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              8
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 132164.69999999995
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0,
+            "end": 132308.79999999993,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              8
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 132308.79999999993
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0,
+            "end": 132452.29999999993,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              8
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 132452.29999999993
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0,
+            "end": 132594.59999999998,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              8
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 132594.59999999998
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0.09999999997671694,
+            "end": 132735.09999999998,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              8
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 132735
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0.09999999997671694,
+            "end": 132879.8999999999,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              8
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 132879.79999999993
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0,
+            "end": 133026.3999999999,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              8
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 133026.3999999999
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0.09999999997671694,
+            "end": 133167.79999999993,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              8
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 133167.69999999995
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0,
+            "end": 133310.19999999995,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              8
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 133310.19999999995
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0,
+            "end": 133458.8999999999,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 0,
+            "pendingProgramIds": [],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 133458.8999999999
+          },
+          {
+            "duration": 4834.100000000093,
+            "end": 133459,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 128624.8999999999
+          },
+          {
+            "duration": 5.400000000023283,
+            "end": 133464.79999999993,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 133459.3999999999
+          },
+          {
+            "duration": 0,
+            "end": 133464.8999999999,
+            "identities": [
+              {
+                "cacheKey": "8,9,onBeforeCompile(){}",
+                "cacheKeyLength": 23,
+                "cacheKeyTruncated": false,
+                "currentProgram": true,
+                "defines": {},
+                "materialName": "",
+                "materialType": "RawShaderMaterial",
+                "materialUuid": "63c5b9da-2671-4679-9e13-36f1afc8040a",
+                "objects": [],
+                "programId": 9,
+                "programName": "",
+                "programType": "RawShaderMaterial",
+                "side": 2,
+                "transparent": false
+              },
+              {
+                "cacheKey": "10,11,onBeforeCompile(){}",
+                "cacheKeyLength": 25,
+                "cacheKeyTruncated": false,
+                "currentProgram": true,
+                "defines": {},
+                "materialName": "",
+                "materialType": "RawShaderMaterial",
+                "materialUuid": "451c752f-139b-441c-a5dd-130f32649d86",
+                "objects": [],
+                "programId": 10,
+                "programName": "",
+                "programType": "RawShaderMaterial",
+                "side": 2,
+                "transparent": true
+              },
+              {
+                "cacheKey": "12,13,onBeforeCompile(){}",
+                "cacheKeyLength": 25,
+                "cacheKeyTruncated": false,
+                "currentProgram": true,
+                "defines": {},
+                "materialName": "",
+                "materialType": "RawShaderMaterial",
+                "materialUuid": "5ea7d1e2-ec0b-4bd4-88b6-5ba1ab9782d5",
+                "objects": [],
+                "programId": 11,
+                "programName": "",
+                "programType": "RawShaderMaterial",
+                "side": 2,
+                "transparent": true
+              },
+              {
+                "cacheKey": "14,15,onBeforeCompile(){}",
+                "cacheKeyLength": 25,
+                "cacheKeyTruncated": false,
+                "currentProgram": true,
+                "defines": {},
+                "materialName": "",
+                "materialType": "RawShaderMaterial",
+                "materialUuid": "15392489-fb74-4237-b701-183920423084",
+                "objects": [],
+                "programId": 12,
+                "programName": "",
+                "programType": "RawShaderMaterial",
+                "side": 2,
+                "transparent": false
+              },
+              {
+                "cacheKey": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,133123,srgb,african-water-relative-v4.1.4|hdr-endpoints",
+                "cacheKeyLength": 275,
+                "cacheKeyTruncated": false,
+                "currentProgram": true,
+                "defines": {
+                  "STANDARD": ""
+                },
+                "materialName": "",
+                "materialType": "MeshStandardMaterial",
+                "materialUuid": "7a002c02-27dd-4611-b7aa-36ccb3de4c4e",
+                "objects": [],
+                "programId": 13,
+                "programName": "",
+                "programType": "MeshStandardMaterial",
+                "side": 2,
+                "transparent": false
+              }
+            ],
+            "label": "loading-program-identity",
+            "scope": "CPU metadata copy from already-created Three program/material properties; no additional compile/isReady/WebGL query. Cache key records existing recipe, not independent compile/link status.",
+            "start": 133464.8999999999
+          },
+          {
+            "checkedProgramCount": 5,
+            "duration": 0.40000000002328306,
+            "end": 133465.29999999993,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 4,
+            "pendingProgramIds": [
+              10,
+              11,
+              12,
+              13
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 133464.8999999999
+          },
+          {
+            "checkedProgramCount": 4,
+            "duration": 0,
+            "end": 133640.69999999995,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 3,
+            "pendingProgramIds": [
+              11,
+              12,
+              13
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 133640.69999999995
+          },
+          {
+            "checkedProgramCount": 3,
+            "duration": 0,
+            "end": 133789.8999999999,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              13
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 133789.8999999999
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0.09999999997671694,
+            "end": 133933.09999999998,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              13
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 133933
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0.09999999997671694,
+            "end": 134074.8999999999,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              13
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 134074.79999999993
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0,
+            "end": 134217.19999999995,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              13
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 134217.19999999995
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0,
+            "end": 134355.69999999995,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              13
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 134355.69999999995
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0.09999999997671694,
+            "end": 134496.69999999995,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              13
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 134496.59999999998
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0,
+            "end": 134638.19999999995,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              13
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 134638.19999999995
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0.09999999997671694,
+            "end": 134779.79999999993,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              13
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 134779.69999999995
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0,
+            "end": 134921.19999999995,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              13
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 134921.19999999995
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0,
+            "end": 135062.8999999999,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              13
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 135062.8999999999
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0,
+            "end": 135204.19999999995,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              13
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 135204.19999999995
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0,
+            "end": 135346.5,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              13
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 135346.5
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0,
+            "end": 135487,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              13
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 135487
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0,
+            "end": 135625.5,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              13
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 135625.5
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0.2000000000698492,
+            "end": 135766.5,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              13
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 135766.29999999993
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0,
+            "end": 135907.59999999998,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              13
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 135907.59999999998
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0,
+            "end": 136049,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              13
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 136049
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0,
+            "end": 136189.8999999999,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              13
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 136189.8999999999
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0,
+            "end": 136332.3999999999,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              13
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 136332.3999999999
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0,
+            "end": 136472.8999999999,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              13
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 136472.8999999999
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0,
+            "end": 136616.09999999998,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              13
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 136616.09999999998
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0,
+            "end": 136757.3999999999,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              13
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 136757.3999999999
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0.09999999997671694,
+            "end": 136900.29999999993,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              13
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 136900.19999999995
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0.09999999997671694,
+            "end": 137041.59999999998,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              13
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 137041.5
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0.09999999997671694,
+            "end": 137184.79999999993,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 0,
+            "pendingProgramIds": [],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 137184.69999999995
+          },
+          {
+            "duration": 3720,
+            "end": 137184.8999999999,
+            "failed": false,
+            "label": "loading-compile-readiness-wait",
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "start": 133464.8999999999
+          },
+          {
+            "duration": 4.600000000093132,
+            "end": 137189.5,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "start": 137184.8999999999
+          },
+          {
+            "duration": 0.09999999997671694,
+            "end": 137189.59999999998,
+            "identities": [
+              {
+                "cacheKey": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,133123,srgb,african-water-relative-v4.1.4|hdr-endpoints",
+                "cacheKeyLength": 275,
+                "cacheKeyTruncated": false,
+                "currentProgram": false,
+                "defines": {
+                  "STANDARD": ""
+                },
+                "materialName": "",
+                "materialType": "MeshStandardMaterial",
+                "materialUuid": "7a002c02-27dd-4611-b7aa-36ccb3de4c4e",
+                "objects": [],
+                "programId": 13,
+                "programName": "",
+                "programType": "MeshStandardMaterial",
+                "side": 2,
+                "transparent": false
+              },
+              {
+                "cacheKey": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,3,133123,srgb,african-water-relative-v4.1.4|hdr-endpoints",
+                "cacheKeyLength": 275,
+                "cacheKeyTruncated": false,
+                "currentProgram": true,
+                "defines": {
+                  "STANDARD": ""
+                },
+                "materialName": "",
+                "materialType": "MeshStandardMaterial",
+                "materialUuid": "7a002c02-27dd-4611-b7aa-36ccb3de4c4e",
+                "objects": [],
+                "programId": 14,
+                "programName": "",
+                "programType": "MeshStandardMaterial",
+                "side": 2,
+                "transparent": false
+              }
+            ],
+            "label": "loading-program-identity",
+            "scope": "CPU metadata copy from already-created Three program/material properties; no additional compile/isReady/WebGL query. Cache key records existing recipe, not independent compile/link status.",
+            "start": 137189.5
+          },
+          {
+            "checkedProgramCount": 2,
+            "duration": 0,
+            "end": 137189.59999999998,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              14
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 137189.59999999998
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0,
+            "end": 137345.19999999995,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              14
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 137345.19999999995
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0,
+            "end": 137485.8999999999,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              14
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 137485.8999999999
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0,
+            "end": 137627.5,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              14
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 137627.5
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0.09999999997671694,
+            "end": 137768.79999999993,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              14
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 137768.69999999995
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0.09999999997671694,
+            "end": 137909.09999999998,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              14
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 137909
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0,
+            "end": 138050.69999999995,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              14
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 138050.69999999995
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0,
+            "end": 138192.79999999993,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              14
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 138192.79999999993
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0.10000000009313226,
+            "end": 138335,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              14
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 138334.8999999999
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0,
+            "end": 138475.59999999998,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              14
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 138475.59999999998
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0,
+            "end": 138615.29999999993,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              14
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 138615.29999999993
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0,
+            "end": 138756.09999999998,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              14
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 138756.09999999998
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0,
+            "end": 138897.29999999993,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              14
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 138897.29999999993
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0.09999999997671694,
+            "end": 139036.3999999999,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              14
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 139036.29999999993
+          },
+          {
+            "checkedProgramCount": 1,
+            "duration": 0,
+            "end": 139177.59999999998,
+            "failed": false,
+            "label": "loading-program-readiness-poll",
+            "pendingProgramCount": 1,
+            "pendingProgramIds": [
+              14
+            ],
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "start": 139177.59999999998
+          }
+        ],
+        "scope": "Nested/awaited durations are diagnostic and overlap; do not sum as exclusive CPU/GPU work.",
+        "totals": {
+          "asset-gltf-load:http://tauri.localhost/assets/web/2fdb3468b7646ebe16d0f3d3d25538ce5b20d6dee1d3830256d2f62599826dcc.glb": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 13292.29999999993,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 13292.29999999993
+          },
+          "asset-gltf-load:http://tauri.localhost/assets/web/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 4533.199999999953,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 4533.199999999953
+          },
+          "asset-gltf-load:http://tauri.localhost/assets/web/7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 7428.79999999993,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 7428.79999999993
+          },
+          "asset-gltf-load:http://tauri.localhost/assets/web/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 12106.400000000023,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 12106.400000000023
+          },
+          "asset-gltf-load:http://tauri.localhost/assets/web/8f6c9ef7472a2d7f8ffda7f08a78f8027f91d14a8f92b8eeca4084b0f379da36.glb": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 8331.900000000023,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 8331.900000000023
+          },
+          "asset-gltf-load:http://tauri.localhost/assets/web/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 11553.399999999909,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 11553.399999999909
+          },
+          "asset-gltf-load:http://tauri.localhost/assets/web/cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869.glb": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 8959,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 8959
+          },
+          "asset-gltf-load:http://tauri.localhost/assets/web/fedb713c0b32df33f11111a91e2c3e0616a0345ec9be9a8beeecaa0b93ef26cb.glb": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 4021.0999999999767,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 4021.0999999999767
+          },
+          "asset-gltf-parse-submit:http://tauri.localhost/assets/web/:14308628": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 5.899999999906868,
+            "scope": "Synchronous GLTF parse invocation; nested within awaited parse, do not sum.",
+            "totalMs": 5.899999999906868
+          },
+          "asset-gltf-parse-submit:http://tauri.localhost/assets/web/:26536168": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 7.099999999976717,
+            "scope": "Synchronous GLTF parse invocation; nested within awaited parse, do not sum.",
+            "totalMs": 7.099999999976717
+          },
+          "asset-gltf-parse-submit:http://tauri.localhost/assets/web/:5970792": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 3.199999999953434,
+            "scope": "Synchronous GLTF parse invocation; nested within awaited parse, do not sum.",
+            "totalMs": 3.199999999953434
+          },
+          "asset-gltf-parse-submit:http://tauri.localhost/assets/web/:6401848": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 4.099999999976717,
+            "scope": "Synchronous GLTF parse invocation; nested within awaited parse, do not sum.",
+            "totalMs": 4.099999999976717
+          },
+          "asset-gltf-parse-submit:http://tauri.localhost/assets/web/:6890088": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 1.800000000046566,
+            "scope": "Synchronous GLTF parse invocation; nested within awaited parse, do not sum.",
+            "totalMs": 1.800000000046566
+          },
+          "asset-gltf-parse-submit:http://tauri.localhost/assets/web/:6927276": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 7,
+            "scope": "Synchronous GLTF parse invocation; nested within awaited parse, do not sum.",
+            "totalMs": 7
+          },
+          "asset-gltf-parse-submit:http://tauri.localhost/assets/web/:6980244": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 4.400000000023283,
+            "scope": "Synchronous GLTF parse invocation; nested within awaited parse, do not sum.",
+            "totalMs": 4.400000000023283
+          },
+          "asset-gltf-parse-submit:http://tauri.localhost/assets/web/:7123932": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 4.599999999976717,
+            "scope": "Synchronous GLTF parse invocation; nested within awaited parse, do not sum.",
+            "totalMs": 4.599999999976717
+          },
+          "asset-gltf-parse:http://tauri.localhost/assets/web/:14308628": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 3043.5999999999767,
+            "scope": "Awaited GLTF parse/decode/material preparation after response collection; excludes primary GLB transfer, includes nested image fetch/decode.",
+            "totalMs": 3043.5999999999767
+          },
+          "asset-gltf-parse:http://tauri.localhost/assets/web/:26536168": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 80.5,
+            "scope": "Awaited GLTF parse/decode/material preparation after response collection; excludes primary GLB transfer, includes nested image fetch/decode.",
+            "totalMs": 80.5
+          },
+          "asset-gltf-parse:http://tauri.localhost/assets/web/:5970792": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 2855.9000000000233,
+            "scope": "Awaited GLTF parse/decode/material preparation after response collection; excludes primary GLB transfer, includes nested image fetch/decode.",
+            "totalMs": 2855.9000000000233
+          },
+          "asset-gltf-parse:http://tauri.localhost/assets/web/:6401848": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 2358.5,
+            "scope": "Awaited GLTF parse/decode/material preparation after response collection; excludes primary GLB transfer, includes nested image fetch/decode.",
+            "totalMs": 2358.5
+          },
+          "asset-gltf-parse:http://tauri.localhost/assets/web/:6890088": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 3143.5999999999767,
+            "scope": "Awaited GLTF parse/decode/material preparation after response collection; excludes primary GLB transfer, includes nested image fetch/decode.",
+            "totalMs": 3143.5999999999767
+          },
+          "asset-gltf-parse:http://tauri.localhost/assets/web/:6927276": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 1279.8000000000466,
+            "scope": "Awaited GLTF parse/decode/material preparation after response collection; excludes primary GLB transfer, includes nested image fetch/decode.",
+            "totalMs": 1279.8000000000466
+          },
+          "asset-gltf-parse:http://tauri.localhost/assets/web/:6980244": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 2497.6999999999534,
+            "scope": "Awaited GLTF parse/decode/material preparation after response collection; excludes primary GLB transfer, includes nested image fetch/decode.",
+            "totalMs": 2497.6999999999534
+          },
+          "asset-gltf-parse:http://tauri.localhost/assets/web/:7123932": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 2803.5999999999767,
+            "scope": "Awaited GLTF parse/decode/material preparation after response collection; excludes primary GLB transfer, includes nested image fetch/decode.",
+            "totalMs": 2803.5999999999767
+          },
+          "diorama-compile-maize": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 5031.5,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 5031.5
+          },
+          "diorama-compile-mist": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 341.89999999990687,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 341.89999999990687
+          },
+          "diorama-compile-sky": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 1003.8999999999068,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 1003.8999999999068
+          },
+          "diorama-final-fence": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 217.19999999995343,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 217.19999999995343
+          },
+          "diorama-prepare-catalogues": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 659.1999999999534,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 659.1999999999534
+          },
+          "diorama-prepare-maize-batch": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 176.40000000002328,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 176.40000000002328
+          },
+          "diorama-prepare-maize-bridges": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 13292.899999999909,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 13292.899999999909
+          },
+          "diorama-prepare-maize-model": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 8333.099999999977,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 8333.099999999977
+          },
+          "diorama-prepare-mountain-atlas": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 1171.0999999999767,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 1171.0999999999767
+          },
+          "diorama-prepare-sky": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 5284.29999999993,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 5284.29999999993
+          },
+          "diorama-prepare-soil-texture": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 1511.7000000000698,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 1511.7000000000698
+          },
+          "diorama-upload-maize-soil": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 151,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalMs": 151
+          },
+          "diorama-upload-mist": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 2.5,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalMs": 2.5
+          },
+          "diorama-warm-day-night-sky": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 8.800000000046566,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalMs": 8.800000000046566
+          },
+          "hands-constructor": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 1.300000000046566,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalMs": 1.300000000046566
+          },
+          "initial-far-region-worker": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 5239.5,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 5239.5
+          },
+          "load-active-animal-actors": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 0.19999999995343387,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 0.19999999995343387
+          },
+          "load-animal-models": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 12129.29999999993,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 12129.29999999993
+          },
+          "load-biome-ground": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 1973.6999999999537,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 1973.6999999999537
+          },
+          "load-biome-models": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 4215.5,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 4215.5
+          },
+          "load-chunks-horizon-ready": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 4191,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 4191
+          },
+          "load-crop-batch": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 968.4000000000232,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 968.4000000000232
+          },
+          "load-crop-bridges": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 0.19999999995343387,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 0.19999999995343387
+          },
+          "load-crop-model": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 0.09999999997671694,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 0.09999999997671694
+          },
+          "load-hands-ready": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 2416.5999999999767,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 2416.5999999999767
+          },
+          "load-milestone:animals": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 1.6000000000931325,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 1.6000000000931325
+          },
+          "load-milestone:biome": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 1.5,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 1.5
+          },
+          "load-milestone:buildings": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 2,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 2
+          },
+          "load-milestone:chunks": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 1.099999999976717,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 1.099999999976717
+          },
+          "load-milestone:crops": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 67.19999999995343,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 67.19999999995343
+          },
+          "load-milestone:sky": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 8.70000000006985,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 8.70000000006985
+          },
+          "load-milestone:vfx": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 1.7000000000698492,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 1.7000000000698492
+          },
+          "load-milestone:walls": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 7.599999999976717,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 7.599999999976717
+          },
+          "load-sky": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 1.199999999953434,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 1.199999999953434
+          },
+          "load-vfx-catalogue": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 293.69999999995343,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 293.69999999995343
+          },
+          "load-vfx-constructors": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 15.800000000046566,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalMs": 15.800000000046566
+          },
+          "load-vfx-texture": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 1804.5,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 1804.5
+          },
+          "load-village-models": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 3030.9000000000233,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 3030.9000000000233
+          },
+          "load-wall-catalogue": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 238.39999999990687,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 238.39999999990687
+          },
+          "load-wall-prototypes": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 4930.70000000007,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 4930.70000000007
+          },
+          "load-worker-actors": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 0.2000000000698492,
+            "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+            "totalMs": 0.2000000000698492
+          },
+          "loading-compile-readiness-wait": {
+            "calls": 2,
+            "failures": 0,
+            "maxMs": 4834.100000000093,
+            "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+            "totalMs": 8554.100000000093
+          },
+          "loading-compile-submit": {
+            "calls": 3,
+            "failures": 0,
+            "maxMs": 7.399999999906868,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalMs": 17.400000000023283
+          },
+          "loading-config-identity": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 0,
+            "scope": "Read-only configuration identity; original New/Continue choices and seed preserved.",
+            "totalMs": 0
+          },
+          "loading-crop-construction-step": {
+            "calls": 73,
+            "failures": 0,
+            "maxMs": 4.299999999930151,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalMs": 64.8000000002794
+          },
+          "loading-crop-frame-wait": {
+            "calls": 14,
+            "failures": 0,
+            "maxMs": 70.79999999993015,
+            "scope": "Existing cooperative frame wait; sliceCpu is summed iterator invocation wall time, excluding this wait.",
+            "totalMs": 901.9999999998836
+          },
+          "loading-program-identity": {
+            "calls": 3,
+            "failures": 0,
+            "maxMs": 0.09999999997671694,
+            "scope": "CPU metadata copy from already-created Three program/material properties; no additional compile/isReady/WebGL query. Cache key records existing recipe, not independent compile/link status.",
+            "totalMs": 0.19999999995343387
+          },
+          "loading-program-readiness-poll": {
+            "calls": 79,
+            "failures": 0,
+            "maxMs": 0.40000000002328306,
+            "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+            "totalMs": 3.00000000023283
+          },
+          "restore-sync": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 2.900000000023283,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalMs": 2.900000000023283
+          },
+          "sync-crop-update": {
+            "calls": 1,
+            "failures": 0,
+            "maxMs": 0,
+            "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+            "totalMs": 0
+          }
+        }
+      },
+      "transitions": [
+        {
+          "at": 49126.89999999991,
+          "canvas": null,
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": true,
+          "overlay": false,
+          "phase": null,
+          "progress": null,
+          "stageBusy": null,
+          "visibility": "visible"
+        },
+        {
+          "at": 78183.09999999998,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Preparing your world...",
+          "progress": "22",
+          "stageBusy": null,
+          "visibility": "visible"
+        },
+        {
+          "at": 78423.3999999999,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Preparing your world...",
+          "progress": "51",
+          "stageBusy": null,
+          "visibility": "visible"
+        },
+        {
+          "at": 83523.3999999999,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Preparing the terrain...",
+          "progress": "57",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 85230.09999999998,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Preparing the terrain...",
+          "progress": "58",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 85407.5,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Preparing the terrain...",
+          "progress": "59",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 89381.5,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Preparing the terrain...",
+          "progress": "60",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 90018.29999999993,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Bringing your world to life...",
+          "progress": "61",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 90227.79999999992,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Bringing your world to life...",
+          "progress": "62",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 91203.19999999995,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Bringing your world to life...",
+          "progress": "63",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 97219.09999999998,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Bringing your world to life...",
+          "progress": "64",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 101173.59999999998,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Awakening nature...",
+          "progress": "67",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 108951,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Awakening nature...",
+          "progress": "70",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 110022.5,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Awakening nature...",
+          "progress": "72",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 110532.79999999992,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Awakening nature...",
+          "progress": "73",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 113375.79999999992,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Bringing your world to life...",
+          "progress": "77",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 114908.29999999992,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Bringing your world to life...",
+          "progress": "79",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 119669,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Bringing your world to life...",
+          "progress": "80",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 120069.09999999998,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Bringing your world to life...",
+          "progress": "82",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 122038.79999999992,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Preparing the terrain...",
+          "progress": "82",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 123074.69999999995,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Preparing the terrain...",
+          "progress": "83",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 126324,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Bringing your world to life...",
+          "progress": "85",
+          "stageBusy": "true",
+          "visibility": "visible"
+        },
+        {
+          "at": 128754.19999999995,
+          "canvas": {
+            "height": 720,
+            "width": 1028
+          },
+          "failure": null,
+          "focused": true,
+          "hidden": false,
+          "menu": false,
+          "overlay": true,
+          "phase": "Bringing your world to life...",
+          "progress": "86",
+          "stageBusy": "true",
+          "visibility": "visible"
+        }
+      ]
+    },
+    "storage": true,
+    "webgl2": true,
+    "worker": true,
+    "worldGraphicsIdentity": {
+      "contextLost": false,
+      "parallelShaderCompileSupported": true,
+      "renderer": "WebKit WebGL",
+      "scope": "One final read of existing World context identity/capabilities; no render/query timer or readiness change.",
+      "unmaskedRenderer": "ANGLE (Microsoft, Microsoft Basic Render Driver (0x0000008C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "unmaskedVendor": "Google Inc. (Microsoft)",
+      "vendor": "WebKit"
+    }
+  },
+  "errors": [
+    "Error: Production world did not finish loading"
+  ],
+  "ok": false,
+  "origin": "http://tauri.localhost",
+  "secureContext": true,
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0"
+}

@@ -1,0 +1,9 @@
+# Native shared ground candidate: rejected for promotion
+
+Run 37959077576, exact source 45fc5c39. Both raw smokes failed the original 90-second world readiness gate. The diagnostic control step conclusion is normalized to success by `continue-on-error`; it is **not a smoke PASS**. Its raw `ok:false` and error are authoritative. Candidate smoke fails the job; minimization is skipped. Both raster probes were not reached, because neither world became ready.
+
+Control OFF: 90,052.2 ms, 86%, active warm GPU/staging compile (10,562.5 ms staging awaited at final observation). Seed 1791563862820. Candidate ON: 83%, still awaiting animal asset work; it has not reached staging/world program readiness. Seed 1791563996657. Visible/focused WebView2 and software ANGLE identity are retained in both reports. These phases differ and cannot establish a shared shader improvement, compile failure, physical transfer bottleneck or GPU causality. Awaited/nested spans overlap.
+
+The same EXE runs control first, candidate second; cache/order and random seed differ. Both use normal loading (collective and shared-asset hypotheses OFF). No readiness or 90-second deadline changed. EXE 378,876,416 B; installer 376,777,344 B. Artifact metadata/raw hashes are in receipt.json. No promotion or PR. The branch is then synchronized with current main to retain unrelated production fixes; this source snapshot remains preserved.
+
+The proposed private target is 4×4 (16 pixels), correcting the protocol's earlier wording 'four-pixel'; a center pixel per draw would be read. CPU ownership/uniform tests do not substitute for the skipped native raster test.

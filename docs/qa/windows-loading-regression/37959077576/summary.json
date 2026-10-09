@@ -1,0 +1,1109 @@
+{
+  "desktop-ground-control.json": {
+    "ok": false,
+    "errors": [
+      "Error: Production world did not finish loading"
+    ],
+    "recipe": {
+      "collectiveReadiness": false,
+      "parallelDioramaAssets": false,
+      "scope": "Normal production loading pipeline; only optional shared Basic ground color recipe varies.",
+      "sharedGroundClip": false
+    },
+    "elapsedMs": 90052.19999999995,
+    "current": {
+      "canvas": {
+        "height": 720,
+        "width": 1028
+      },
+      "failure": null,
+      "focused": true,
+      "hidden": false,
+      "menu": false,
+      "overlay": true,
+      "phase": "Bringing your world to life...",
+      "progress": "86",
+      "stageBusy": "true",
+      "visibility": "visible"
+    },
+    "active": [
+      {
+        "elapsedMs": 10575.199999999952,
+        "label": "load-warm-gpu",
+        "scope": "Existing awaited phase start; smoke-only pending-phase attribution.",
+        "start": 128603.59999999998
+      },
+      {
+        "elapsedMs": 10562.5,
+        "label": "warm-compile-staging",
+        "scope": "Existing awaited phase start; smoke-only pending-phase attribution.",
+        "start": 128616.29999999992
+      }
+    ],
+    "configIdentities": [
+      {
+        "config": {
+          "biome": "gran-canon",
+          "culture": "mapungubwe",
+          "quality": "muy_baja",
+          "relief": 1,
+          "river": true,
+          "seed": "1791563862820"
+        },
+        "duration": 0,
+        "end": 83310.59999999998,
+        "label": "loading-config-identity",
+        "scope": "Read-only configuration identity; original New/Continue choices and seed preserved.",
+        "start": 83310.59999999998
+      }
+    ],
+    "raf": {
+      "callbackNames": {
+        "(anonymous)": 30,
+        "j3": 1008
+      },
+      "callbacks": 1038,
+      "distinctTimestamps": 1008,
+      "lastAt": 139097,
+      "maxIntervalMs": 328.1000000000058,
+      "recent": [
+        129987.6,
+        130065.8,
+        130143.9,
+        130206.4,
+        130284.5,
+        130347,
+        130425.2,
+        130503.3,
+        130565.8,
+        130643.8,
+        130722,
+        130800.1,
+        130862.6,
+        130940.8,
+        131018.9,
+        131081.3,
+        131159.5,
+        131237.6,
+        131300.1,
+        131378.2,
+        131440.7,
+        131518.9,
+        131581.4,
+        131659.5,
+        131722.1,
+        131800.2,
+        131878.2,
+        131940.8,
+        132018.9,
+        132081.3,
+        132159.5,
+        132222,
+        132300.1,
+        132378.2,
+        132440.7,
+        132518.9,
+        132581.4,
+        132659.5,
+        132722,
+        132800.2,
+        132878.3,
+        132940.7,
+        133018.9,
+        133081.4,
+        133159.5,
+        133222,
+        133300.1,
+        133378.2,
+        133456.4,
+        133550.2,
+        133628.3,
+        133706.4,
+        133784.5,
+        133847,
+        133925.2,
+        134003.2,
+        134065.7,
+        134143.8,
+        134206.4,
+        134284.5,
+        134347,
+        134425.1,
+        134487.7,
+        134565.7,
+        134628.3,
+        134706.3,
+        134768.8,
+        134847,
+        134909.5,
+        134987.7,
+        135050.2,
+        135128.2,
+        135190.8,
+        135268.9,
+        135331.4,
+        135409.5,
+        135472,
+        135550.1,
+        135612.6,
+        135690.8,
+        135753.3,
+        135831.4,
+        135893.8,
+        135972,
+        136034.5,
+        136112.7,
+        136175.1,
+        136253.3,
+        136331.4,
+        136393.9,
+        136472,
+        136534.5,
+        136612.7,
+        136675.1,
+        136753.2,
+        136815.7,
+        136893.9,
+        136956.4,
+        137034.5,
+        137097,
+        137175.1,
+        137268.9,
+        137331.4,
+        137409.6,
+        137472,
+        137550.2,
+        137612.6,
+        137690.7,
+        137753.3,
+        137831.3,
+        137893.9,
+        137972,
+        138034.5,
+        138112.6,
+        138190.7,
+        138253.3,
+        138331.3,
+        138393.9,
+        138472,
+        138534.5,
+        138612.6,
+        138675.1,
+        138753.2,
+        138815.7,
+        138893.9,
+        138956.4,
+        139034.5,
+        139097
+      ]
+    },
+    "worldReadyAt": null,
+    "groundClipBinding": null,
+    "totals": {
+      "asset-gltf-load:http://tauri.localhost/assets/web/2fdb3468b7646ebe16d0f3d3d25538ce5b20d6dee1d3830256d2f62599826dcc.glb": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 13292.29999999993,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 13292.29999999993
+      },
+      "asset-gltf-load:http://tauri.localhost/assets/web/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 4533.199999999953,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 4533.199999999953
+      },
+      "asset-gltf-load:http://tauri.localhost/assets/web/7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 7428.79999999993,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 7428.79999999993
+      },
+      "asset-gltf-load:http://tauri.localhost/assets/web/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 12106.400000000023,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 12106.400000000023
+      },
+      "asset-gltf-load:http://tauri.localhost/assets/web/8f6c9ef7472a2d7f8ffda7f08a78f8027f91d14a8f92b8eeca4084b0f379da36.glb": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 8331.900000000023,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 8331.900000000023
+      },
+      "asset-gltf-load:http://tauri.localhost/assets/web/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 11553.399999999909,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 11553.399999999909
+      },
+      "asset-gltf-load:http://tauri.localhost/assets/web/cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869.glb": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 8959,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 8959
+      },
+      "asset-gltf-load:http://tauri.localhost/assets/web/fedb713c0b32df33f11111a91e2c3e0616a0345ec9be9a8beeecaa0b93ef26cb.glb": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 4021.0999999999767,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 4021.0999999999767
+      },
+      "asset-gltf-parse-submit:http://tauri.localhost/assets/web/:14308628": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 5.899999999906868,
+        "scope": "Synchronous GLTF parse invocation; nested within awaited parse, do not sum.",
+        "totalMs": 5.899999999906868
+      },
+      "asset-gltf-parse-submit:http://tauri.localhost/assets/web/:26536168": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 7.099999999976717,
+        "scope": "Synchronous GLTF parse invocation; nested within awaited parse, do not sum.",
+        "totalMs": 7.099999999976717
+      },
+      "asset-gltf-parse-submit:http://tauri.localhost/assets/web/:5970792": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 3.199999999953434,
+        "scope": "Synchronous GLTF parse invocation; nested within awaited parse, do not sum.",
+        "totalMs": 3.199999999953434
+      },
+      "asset-gltf-parse-submit:http://tauri.localhost/assets/web/:6401848": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 4.099999999976717,
+        "scope": "Synchronous GLTF parse invocation; nested within awaited parse, do not sum.",
+        "totalMs": 4.099999999976717
+      },
+      "asset-gltf-parse-submit:http://tauri.localhost/assets/web/:6890088": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 1.800000000046566,
+        "scope": "Synchronous GLTF parse invocation; nested within awaited parse, do not sum.",
+        "totalMs": 1.800000000046566
+      },
+      "asset-gltf-parse-submit:http://tauri.localhost/assets/web/:6927276": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 7,
+        "scope": "Synchronous GLTF parse invocation; nested within awaited parse, do not sum.",
+        "totalMs": 7
+      },
+      "asset-gltf-parse-submit:http://tauri.localhost/assets/web/:6980244": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 4.400000000023283,
+        "scope": "Synchronous GLTF parse invocation; nested within awaited parse, do not sum.",
+        "totalMs": 4.400000000023283
+      },
+      "asset-gltf-parse-submit:http://tauri.localhost/assets/web/:7123932": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 4.599999999976717,
+        "scope": "Synchronous GLTF parse invocation; nested within awaited parse, do not sum.",
+        "totalMs": 4.599999999976717
+      },
+      "asset-gltf-parse:http://tauri.localhost/assets/web/:14308628": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 3043.5999999999767,
+        "scope": "Awaited GLTF parse/decode/material preparation after response collection; excludes primary GLB transfer, includes nested image fetch/decode.",
+        "totalMs": 3043.5999999999767
+      },
+      "asset-gltf-parse:http://tauri.localhost/assets/web/:26536168": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 80.5,
+        "scope": "Awaited GLTF parse/decode/material preparation after response collection; excludes primary GLB transfer, includes nested image fetch/decode.",
+        "totalMs": 80.5
+      },
+      "asset-gltf-parse:http://tauri.localhost/assets/web/:5970792": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 2855.9000000000233,
+        "scope": "Awaited GLTF parse/decode/material preparation after response collection; excludes primary GLB transfer, includes nested image fetch/decode.",
+        "totalMs": 2855.9000000000233
+      },
+      "asset-gltf-parse:http://tauri.localhost/assets/web/:6401848": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 2358.5,
+        "scope": "Awaited GLTF parse/decode/material preparation after response collection; excludes primary GLB transfer, includes nested image fetch/decode.",
+        "totalMs": 2358.5
+      },
+      "asset-gltf-parse:http://tauri.localhost/assets/web/:6890088": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 3143.5999999999767,
+        "scope": "Awaited GLTF parse/decode/material preparation after response collection; excludes primary GLB transfer, includes nested image fetch/decode.",
+        "totalMs": 3143.5999999999767
+      },
+      "asset-gltf-parse:http://tauri.localhost/assets/web/:6927276": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 1279.8000000000466,
+        "scope": "Awaited GLTF parse/decode/material preparation after response collection; excludes primary GLB transfer, includes nested image fetch/decode.",
+        "totalMs": 1279.8000000000466
+      },
+      "asset-gltf-parse:http://tauri.localhost/assets/web/:6980244": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 2497.6999999999534,
+        "scope": "Awaited GLTF parse/decode/material preparation after response collection; excludes primary GLB transfer, includes nested image fetch/decode.",
+        "totalMs": 2497.6999999999534
+      },
+      "asset-gltf-parse:http://tauri.localhost/assets/web/:7123932": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 2803.5999999999767,
+        "scope": "Awaited GLTF parse/decode/material preparation after response collection; excludes primary GLB transfer, includes nested image fetch/decode.",
+        "totalMs": 2803.5999999999767
+      },
+      "diorama-compile-maize": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 5031.5,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 5031.5
+      },
+      "diorama-compile-mist": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 341.89999999990687,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 341.89999999990687
+      },
+      "diorama-compile-sky": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 1003.8999999999068,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 1003.8999999999068
+      },
+      "diorama-final-fence": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 217.19999999995343,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 217.19999999995343
+      },
+      "diorama-prepare-catalogues": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 659.1999999999534,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 659.1999999999534
+      },
+      "diorama-prepare-maize-batch": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 176.40000000002328,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 176.40000000002328
+      },
+      "diorama-prepare-maize-bridges": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 13292.899999999909,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 13292.899999999909
+      },
+      "diorama-prepare-maize-model": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 8333.099999999977,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 8333.099999999977
+      },
+      "diorama-prepare-mountain-atlas": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 1171.0999999999767,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 1171.0999999999767
+      },
+      "diorama-prepare-sky": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 5284.29999999993,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 5284.29999999993
+      },
+      "diorama-prepare-soil-texture": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 1511.7000000000698,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 1511.7000000000698
+      },
+      "diorama-upload-maize-soil": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 151,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+        "totalMs": 151
+      },
+      "diorama-upload-mist": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 2.5,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+        "totalMs": 2.5
+      },
+      "diorama-warm-day-night-sky": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 8.800000000046566,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+        "totalMs": 8.800000000046566
+      },
+      "hands-constructor": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 1.300000000046566,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+        "totalMs": 1.300000000046566
+      },
+      "initial-far-region-worker": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 5239.5,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 5239.5
+      },
+      "load-active-animal-actors": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 0.19999999995343387,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 0.19999999995343387
+      },
+      "load-animal-models": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 12129.29999999993,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 12129.29999999993
+      },
+      "load-biome-ground": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 1973.6999999999537,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 1973.6999999999537
+      },
+      "load-biome-models": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 4215.5,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 4215.5
+      },
+      "load-chunks-horizon-ready": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 4191,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 4191
+      },
+      "load-crop-batch": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 968.4000000000232,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 968.4000000000232
+      },
+      "load-crop-bridges": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 0.19999999995343387,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 0.19999999995343387
+      },
+      "load-crop-model": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 0.09999999997671694,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 0.09999999997671694
+      },
+      "load-hands-ready": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 2416.5999999999767,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 2416.5999999999767
+      },
+      "load-milestone:animals": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 1.6000000000931325,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 1.6000000000931325
+      },
+      "load-milestone:biome": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 1.5,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 1.5
+      },
+      "load-milestone:buildings": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 2,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 2
+      },
+      "load-milestone:chunks": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 1.099999999976717,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 1.099999999976717
+      },
+      "load-milestone:crops": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 67.19999999995343,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 67.19999999995343
+      },
+      "load-milestone:sky": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 8.70000000006985,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 8.70000000006985
+      },
+      "load-milestone:vfx": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 1.7000000000698492,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 1.7000000000698492
+      },
+      "load-milestone:walls": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 7.599999999976717,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 7.599999999976717
+      },
+      "load-sky": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 1.199999999953434,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 1.199999999953434
+      },
+      "load-vfx-catalogue": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 293.69999999995343,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 293.69999999995343
+      },
+      "load-vfx-constructors": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 15.800000000046566,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+        "totalMs": 15.800000000046566
+      },
+      "load-vfx-texture": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 1804.5,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 1804.5
+      },
+      "load-village-models": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 3030.9000000000233,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 3030.9000000000233
+      },
+      "load-wall-catalogue": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 238.39999999990687,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 238.39999999990687
+      },
+      "load-wall-prototypes": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 4930.70000000007,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 4930.70000000007
+      },
+      "load-worker-actors": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 0.2000000000698492,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 0.2000000000698492
+      },
+      "loading-compile-readiness-wait": {
+        "calls": 2,
+        "failures": 0,
+        "maxMs": 4834.100000000093,
+        "scope": "Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.",
+        "totalMs": 8554.100000000093
+      },
+      "loading-compile-submit": {
+        "calls": 3,
+        "failures": 0,
+        "maxMs": 7.399999999906868,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+        "totalMs": 17.400000000023283
+      },
+      "loading-config-identity": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 0,
+        "scope": "Read-only configuration identity; original New/Continue choices and seed preserved.",
+        "totalMs": 0
+      },
+      "loading-crop-construction-step": {
+        "calls": 73,
+        "failures": 0,
+        "maxMs": 4.299999999930151,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+        "totalMs": 64.8000000002794
+      },
+      "loading-crop-frame-wait": {
+        "calls": 14,
+        "failures": 0,
+        "maxMs": 70.79999999993015,
+        "scope": "Existing cooperative frame wait; sliceCpu is summed iterator invocation wall time, excluding this wait.",
+        "totalMs": 901.9999999998836
+      },
+      "loading-program-identity": {
+        "calls": 3,
+        "failures": 0,
+        "maxMs": 0.09999999997671694,
+        "scope": "CPU metadata copy from already-created Three program/material properties; no additional compile/isReady/WebGL query. Cache key records existing recipe, not independent compile/link status.",
+        "totalMs": 0.19999999995343387
+      },
+      "loading-program-readiness-poll": {
+        "calls": 79,
+        "failures": 0,
+        "maxMs": 0.40000000002328306,
+        "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+        "totalMs": 3.00000000023283
+      },
+      "restore-sync": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 2.900000000023283,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+        "totalMs": 2.900000000023283
+      },
+      "sync-crop-update": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 0,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+        "totalMs": 0
+      }
+    }
+  },
+  "desktop-smoke.json": {
+    "ok": false,
+    "errors": [
+      "Error: Production world did not finish loading"
+    ],
+    "recipe": {
+      "collectiveReadiness": false,
+      "parallelDioramaAssets": false,
+      "scope": "Normal production loading pipeline; only optional shared Basic ground color recipe varies.",
+      "sharedGroundClip": true
+    },
+    "elapsedMs": 90123.70000000008,
+    "current": {
+      "canvas": {
+        "height": 720,
+        "width": 1028
+      },
+      "failure": null,
+      "focused": true,
+      "hidden": false,
+      "menu": false,
+      "overlay": true,
+      "phase": "Bringing your world to life...",
+      "progress": "83",
+      "stageBusy": "true",
+      "visibility": "visible"
+    },
+    "active": [
+      {
+        "elapsedMs": 640.9000000000233,
+        "label": "asset-gltf-load:http://tauri.localhost/assets/web/fedb713c0b32df33f11111a91e2c3e0616a0345ec9be9a8beeecaa0b93ef26cb.glb",
+        "scope": "Existing awaited phase start; smoke-only pending-phase attribution.",
+        "start": 130474.30000000005
+      }
+    ],
+    "configIdentities": [
+      {
+        "config": {
+          "biome": "gran-canon",
+          "culture": "mapungubwe",
+          "quality": "muy_baja",
+          "relief": 1,
+          "river": true,
+          "seed": "1791563996657"
+        },
+        "duration": 0,
+        "end": 109342.40000000002,
+        "label": "loading-config-identity",
+        "scope": "Read-only configuration identity; original New/Continue choices and seed preserved.",
+        "start": 109342.40000000002
+      }
+    ],
+    "raf": {
+      "callbackNames": {
+        "(anonymous)": 10,
+        "j3": 759
+      },
+      "callbacks": 769,
+      "distinctTimestamps": 759,
+      "lastAt": 131036.8,
+      "maxIntervalMs": 312.5,
+      "recent": [
+        121989.9,
+        122068,
+        122146.1,
+        122208.6,
+        122302.4,
+        122364.9,
+        122427.4,
+        122505.6,
+        122583.6,
+        122646.1,
+        122724.3,
+        122786.8,
+        122864.9,
+        122943.1,
+        123021.1,
+        123083.6,
+        123161.8,
+        123224.3,
+        123302.4,
+        123364.9,
+        123443,
+        123505.5,
+        123583.7,
+        123646.1,
+        123724.3,
+        123786.8,
+        123864.9,
+        123927.4,
+        124005.5,
+        124068,
+        124146.2,
+        124208.7,
+        124286.8,
+        124364.9,
+        124427.4,
+        124505.6,
+        124568.1,
+        124646.1,
+        124708.7,
+        124786.8,
+        124849.3,
+        124927.4,
+        124989.9,
+        125068,
+        125130.5,
+        125208.7,
+        125271.2,
+        125349.3,
+        125411.8,
+        125489.9,
+        125568,
+        125630.5,
+        125693,
+        125771.2,
+        125833.7,
+        125911.8,
+        125989.9,
+        126052.4,
+        126130.5,
+        126208.6,
+        126271.2,
+        126349.3,
+        126411.7,
+        126489.9,
+        126568.1,
+        126630.6,
+        126708.7,
+        126771.1,
+        126849.2,
+        126911.7,
+        126989.9,
+        127052.4,
+        127130.5,
+        127193.1,
+        127271.2,
+        127333.6,
+        127411.8,
+        127474.2,
+        127552.4,
+        127614.9,
+        127693,
+        127771.1,
+        127833.7,
+        127911.8,
+        127974.3,
+        128052.4,
+        128114.9,
+        128193,
+        128255.5,
+        128333.6,
+        128396.1,
+        128474.3,
+        128536.8,
+        128614.9,
+        128677.4,
+        128771.2,
+        128833.6,
+        128911.8,
+        128974.3,
+        129036.8,
+        129114.9,
+        129193.1,
+        129255.5,
+        129333.6,
+        129396.2,
+        129474.3,
+        129536.7,
+        129614.9,
+        129693.1,
+        129755.5,
+        129833.6,
+        129896.1,
+        129974.3,
+        130036.8,
+        130114.9,
+        130177.4,
+        130255.5,
+        130318,
+        130396.1,
+        130458.7,
+        130536.8,
+        130614.9,
+        130677.4,
+        130755.5,
+        130818,
+        130896.2,
+        130958.7,
+        131036.8
+      ]
+    },
+    "worldReadyAt": null,
+    "groundClipBinding": null,
+    "totals": {
+      "asset-gltf-load:http://tauri.localhost/assets/web/2fdb3468b7646ebe16d0f3d3d25538ce5b20d6dee1d3830256d2f62599826dcc.glb": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 32135.099999999977,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 32135.099999999977
+      },
+      "asset-gltf-load:http://tauri.localhost/assets/web/8f6c9ef7472a2d7f8ffda7f08a78f8027f91d14a8f92b8eeca4084b0f379da36.glb": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 17462.800000000047,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 17462.800000000047
+      },
+      "asset-gltf-parse-submit:http://tauri.localhost/assets/web/:14308628": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 5.599999999976717,
+        "scope": "Synchronous GLTF parse invocation; nested within awaited parse, do not sum.",
+        "totalMs": 5.599999999976717
+      },
+      "asset-gltf-parse-submit:http://tauri.localhost/assets/web/:26536168": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 7.5,
+        "scope": "Synchronous GLTF parse invocation; nested within awaited parse, do not sum.",
+        "totalMs": 7.5
+      },
+      "asset-gltf-parse:http://tauri.localhost/assets/web/:14308628": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 2906.5,
+        "scope": "Awaited GLTF parse/decode/material preparation after response collection; excludes primary GLB transfer, includes nested image fetch/decode.",
+        "totalMs": 2906.5
+      },
+      "asset-gltf-parse:http://tauri.localhost/assets/web/:26536168": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 84.20000000006985,
+        "scope": "Awaited GLTF parse/decode/material preparation after response collection; excludes primary GLB transfer, includes nested image fetch/decode.",
+        "totalMs": 84.20000000006985
+      },
+      "diorama-compile-maize": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 4770.800000000047,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 4770.800000000047
+      },
+      "diorama-compile-mist": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 342.20000000006985,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 342.20000000006985
+      },
+      "diorama-compile-sky": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 1007.3000000000466,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 1007.3000000000466
+      },
+      "diorama-final-fence": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 213.69999999995343,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 213.69999999995343
+      },
+      "diorama-prepare-catalogues": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 678.5,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 678.5
+      },
+      "diorama-prepare-maize-batch": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 185.29999999993015,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 185.29999999993015
+      },
+      "diorama-prepare-maize-bridges": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 32136,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 32136
+      },
+      "diorama-prepare-maize-model": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 17464,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 17464
+      },
+      "diorama-prepare-mountain-atlas": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 1010,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 1010
+      },
+      "diorama-prepare-sky": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 20217,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 20217
+      },
+      "diorama-prepare-soil-texture": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 1348.5,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 1348.5
+      },
+      "diorama-upload-maize-soil": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 124.59999999997672,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+        "totalMs": 124.59999999997672
+      },
+      "diorama-upload-mist": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 2.599999999976717,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+        "totalMs": 2.599999999976717
+      },
+      "diorama-warm-day-night-sky": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 8.70000000006985,
+        "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+        "totalMs": 8.70000000006985
+      },
+      "load-biome-ground": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 3326.9000000000233,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 3326.9000000000233
+      },
+      "load-biome-models": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 12532.5,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 12532.5
+      },
+      "load-milestone:biome": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 1.699999999953434,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 1.699999999953434
+      },
+      "load-milestone:sky": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 12.199999999953434,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 12.199999999953434
+      },
+      "load-sky": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 1.7000000000698492,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 1.7000000000698492
+      },
+      "load-village-models": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 3691.8000000000466,
+        "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.",
+        "totalMs": 3691.8000000000466
+      },
+      "loading-config-identity": {
+        "calls": 1,
+        "failures": 0,
+        "maxMs": 0,
+        "scope": "Read-only configuration identity; original New/Continue choices and seed preserved.",
+        "totalMs": 0
+      }
+    }
+  }
+}
