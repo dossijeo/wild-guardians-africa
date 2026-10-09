@@ -24,3 +24,25 @@ terminalfailure: executable/installers built successfully, native smoke
 failed and minimization was skipped. Original artifacts and logs must be
 preserved. Main run38001296015 was still live at this review; no restart or
 timeout change was authorized.
+
+## Frozen preflight and one native dispatch
+
+Root subsequently checked f92c6872c5974523a7843f456713307ddb746400:
+no src/tools/workflow/content/public change from64cb737e; the extra SFX
+inventory change only refreshes the experimental scene fingerprint. Preflight
+receipts cover59 CPU tests, build9.60s,711 packaged files/445272688bytes,
+860 relative links/22GLBs, five syntax checks and126/100/26 SFX freshness.
+Root ran both preflight and original-negative verifiers successfully.
+
+The official artifact11649438416 was fetched independently: direct JSON3119B,
+SHA256370b92e9603f36a2da17034f92d465379579b09a225cd5a510cf4344f5f51121,
+byte-identical to the archived normal report. Its73% Preparing animals state
+at90011.9ms supplies no model-specific cause. The original report, complete
+job log and metadata are archived alongside their verifier in
+normal-9c753d32-38000980557. Build success is distinct from smoke acceptance.
+
+After review, root authorized exactly one native workflow_dispatch at f92c:
+run38002516951, observed in_progress, resource_overlap=false, original90-second
+readiness and complete model/variant requirements retained. This is a
+diagnostic run, not acceptance or promotion. No retry or second run was
+authorized. Its terminal result remains pending.
