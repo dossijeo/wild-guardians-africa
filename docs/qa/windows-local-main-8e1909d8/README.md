@@ -26,3 +26,23 @@ payload hashes, launch/exit and executable identity. The same workflow's
 at88%/90seconds remains negative. Local success does not approve CI or all
 Windows machines, biomes/cultures or dense saves. Continue/native hiding is a
 separate original test and is not accepted by this New Game report.
+
+## Original Continue and genuine native hiding
+
+The same executable also passes the unchanged original Continue/visibility
+tester with the existing saved fixture, SHA256
+`28d8bf348c61900a7f4f94a53026a86e638acbca5b058981a43de969788a6406`.
+PID53344 exits0; the raw1,283,390-byte report is `ok:true`, without errors,
+and retained byte-for-byte in `desktop-visibility.json.gz`. Root checks all21
+fields of `hiddenStart` against `hiddenEnd`: they are identical over300,241.7ms
+of actual native minimization. Restoration retains exactly the menu pause,
+then simulation resumes by2.0786seconds. No hidden-tab override or synthetic
+visibility event is used. The report's documented exclusions remain unchanged.
+
+The original stage-ready interval is17,656.3ms. Its342.2851285-second process
+lifetime includes five minutes of hiding and is not a loading benchmark.
+Root inspected the unedited `world-continue.png`: the saved Canyon world,
+river, buildings and animal are rendered. This single capture does not establish
+all species/angles or manual gameplay acceptance. `receipt-continue.json` pins
+the raw hash, fixture, launch/exit and all archived payloads. The CI failure
+remains open despite both local passes.

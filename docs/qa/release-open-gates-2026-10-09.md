@@ -56,6 +56,11 @@ tester locally: [raw report, receipt and actual world capture](windows-local-mai
 Its original start-message-to-stage-ready interval is18,419.5ms, with no
 experimental flags or errors. This is separate from the retained CI negative;
 neither a controlled speed improvement nor all-device acceptance is inferred.
+The same executable's original local Continue/minimize/restore test also passes:
+all21 measured fields remain identical over300,241.7ms, the menu pause survives
+restoration and simulation resumes normally. Its readiness interval17,656.3ms
+excludes the hiding interval; the complete original report and separate receipt
+are retained with the New Game evidence. CI remains a separate negative.
 
 The worker branch now has a separate
 [exact-executable native accessory pilot](workers-frontside-local-3e8da8a7/README.md):
