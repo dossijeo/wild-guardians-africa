@@ -71,3 +71,38 @@ precedes the first callback but its retained placement event is included, which
 explains why observed early placements include one more than the daily counter
 whose baseline is captured after the initial seed. No new parameter candidate,
 policy correction or promotion is justified by these diagnostics alone.
+
+### E: doubled harvest income, original seed prices — rejected
+
+E changes only harvest values to exactly twice the originals. All other 376
+runtime/source hashes match the original baseline, except generated balance.
+Initial money, seed prices, wages, growth/checkpoints, damage, FIFO, terrain,
+policy and reserves are unchanged. The native process fails with exit 1: six
+nights completed, defeat on day 7, and paid staff without any delivery on day 7.
+Do not label this a completed ten-night case. Both original and failed-state
+snapshots are retained byteexact. Own-source integer ledger, maturity/hydration
+and 279 paid physical crates pass; survival, daily deliveries and activity fail.
+Reported activity is 52.5238% over seven observed rows; the first six complete
+jornadas alone have 61.2778% inaction. Neither meets the strict <25% gate.
+Income6710 minus seed3440 and wages3390 gives operating cashflow -120; after
+centre800, cash is580. No poor-management or 100-night/matrix run is launched
+because this candidate lacks a viable responsible signal.
+
+A read-only native attack replay preserves exactly E's final fullstate. It
+identifies an important coupling: `attraction()` sums crop harvest values, so
+doubling income also doubles threat contribution per plant, before accounting
+for additional reinvestment. Noche6 attraction8976 yields three warthogs and a
+rhino. Rhino4763 spends eight hits of60 on the centre:600→120, below its126
+collapse threshold; the centre becomes ruined at t439. Cash remains1600 at
+that event; no repair was requested/applied because all damage occurred during
+an active attack. The complete first-zero-centre snapshot and attack trace are
+retained in `harvest-double-attack/`, with derived reproducible analysis.
+
+`defend:false` disables the optional wall/capital-reserve strategy. It does not
+disable Shield: the unchanged control cast Shield near a crop at(-27,63), while
+the centre(-20.109,59.054) lies outside that spell's radius. Cooldown prevents a
+second cast before collapse. This is evidence about the unchanged control and
+its eligibility/position decisions, not a universal verdict that responsible
+players cannot defend. No policy correction or threat decoupling is applied to
+make E pass. Future defensive diagnostics must be labelled additional cases
+and preserve this exact negative control.

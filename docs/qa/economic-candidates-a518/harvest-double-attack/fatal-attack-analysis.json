@@ -1,0 +1,177 @@
+{
+  "source": "910583432310bd696df4d3b178b88725ee2d07c7",
+  "immutableFinalParity": true,
+  "fatalNightPlan": {
+    "at": 398.11284140637144,
+    "attraction": 8976,
+    "group": [
+      "warthog",
+      "warthog",
+      "warthog",
+      "rhino"
+    ],
+    "done": true
+  },
+  "centreHpTimeline": [
+    {
+      "time": 400.0,
+      "centreHp": 600,
+      "rhino": [
+        {
+          "id": "animal-4763",
+          "species": "rhino",
+          "hitsRemaining": 8,
+          "targetId": "structure-2",
+          "status": "entering"
+        }
+      ]
+    },
+    {
+      "time": 417.0,
+      "centreHp": 540,
+      "rhino": [
+        {
+          "id": "animal-4763",
+          "species": "rhino",
+          "hitsRemaining": 7,
+          "targetId": "structure-2",
+          "status": "attacking"
+        }
+      ]
+    },
+    {
+      "time": 421.0,
+      "centreHp": 480,
+      "rhino": [
+        {
+          "id": "animal-4763",
+          "species": "rhino",
+          "hitsRemaining": 6,
+          "targetId": "structure-2",
+          "status": "attacking"
+        }
+      ]
+    },
+    {
+      "time": 423.0,
+      "centreHp": 420,
+      "rhino": [
+        {
+          "id": "animal-4763",
+          "species": "rhino",
+          "hitsRemaining": 5,
+          "targetId": "structure-2",
+          "status": "attacking"
+        }
+      ]
+    },
+    {
+      "time": 425.0,
+      "centreHp": 360,
+      "rhino": [
+        {
+          "id": "animal-4763",
+          "species": "rhino",
+          "hitsRemaining": 4,
+          "targetId": "structure-2",
+          "status": "attacking"
+        }
+      ]
+    },
+    {
+      "time": 429.0,
+      "centreHp": 300,
+      "rhino": [
+        {
+          "id": "animal-4763",
+          "species": "rhino",
+          "hitsRemaining": 3,
+          "targetId": "structure-2",
+          "status": "walking"
+        }
+      ]
+    },
+    {
+      "time": 433.0,
+      "centreHp": 240,
+      "rhino": [
+        {
+          "id": "animal-4763",
+          "species": "rhino",
+          "hitsRemaining": 2,
+          "targetId": "structure-2",
+          "status": "attacking"
+        }
+      ]
+    },
+    {
+      "time": 435.0,
+      "centreHp": 180,
+      "rhino": [
+        {
+          "id": "animal-4763",
+          "species": "rhino",
+          "hitsRemaining": 1,
+          "targetId": "structure-2",
+          "status": "attacking"
+        }
+      ]
+    },
+    {
+      "time": 436.0,
+      "centreHp": 120,
+      "rhino": [
+        {
+          "id": "animal-4763",
+          "species": "rhino",
+          "hitsRemaining": 0,
+          "targetId": null,
+          "status": "retreating"
+        }
+      ]
+    },
+    {
+      "time": 439.0,
+      "centreHp": 0,
+      "rhino": [
+        {
+          "id": "animal-4763",
+          "species": "rhino",
+          "hitsRemaining": 0,
+          "targetId": null,
+          "status": "retreating"
+        }
+      ]
+    }
+  ],
+  "shield": {
+    "id": "spell-4764",
+    "kind": "shield",
+    "x": -27,
+    "z": 63,
+    "radius": 1.95,
+    "remaining": 18.999999999999986
+  },
+  "shieldToCentreDistance": 7.940634030208069,
+  "centreInsideObservedShield": false,
+  "centreCollapseThreshold": 126.0,
+  "observedRhinoHitsSpent": 8,
+  "observedRhinoStructureDamage": 60,
+  "collapseBelowThresholdAfterHits": 8,
+  "repairEvents": [],
+  "fatalCash": {
+    "n": "1600",
+    "d": "1"
+  },
+  "fatalTasks": 361,
+  "fatalRepairTasks": [],
+  "attractionCoupling": "Frozen rules.attraction sums living species base_harvest_value. Doubling harvest income also doubles per-plant attraction; more planting compounds this. No independent threat edit was made.",
+  "policyMeaning": "defend:false disables optional wall/capital-reserve policy only. Shield logic remains active; it casts on a threat target within8m, prioritising centres only among currently eligible threats. It does not continuously keep shield for a later centre threat. This control is not proof no defensive strategy can survive.",
+  "acceptance": "failed6completed-nights/day7defeat/daily-delivery-failure/activity-failure; no100 or matrix or poor-management launch",
+  "files": {
+    "attack-trace.jsonl.gz": "c2ad0fb2f948962a626a4e312c67736721d5d41a989756805ce7897e12a73ede",
+    "diagnostic.json": "c4b4801b74209beffdb2b08d37fb2857a0ce118b26a2438bfd923cf1ba98133a",
+    "first-zero-centre-state.json.gz": "6a2d5640f59e6137f29cb7b9875f8ff56728d8dffbd36d231bd145c2e1efe8be",
+    "run.log": "cadd902ad78c768243a15971f91ab872396b0bee14e8fd4758a41b742f5bf790"
+  }
+}
