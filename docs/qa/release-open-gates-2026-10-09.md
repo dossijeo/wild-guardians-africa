@@ -1,10 +1,40 @@
 # Remaining integrated release gates — 9 October 2026
 
-This is an incomplete-work register, not a release approval. Current runtime
-includes PR16 at `4ecffec5`; older rendering comparisons retain their frozen
-`795f773e83640d3f7541d8e3d826764c3d779750` base. Later root commits add QA
-evidence. The original 159-case registry retains historical sources and scopes;
-its verified labels do not prove all subsequent user requirements on this base.
+This is an incomplete-work register, not a release approval. The current-state
+update below supersedes the historical checkpoint text that follows. Earlier
+sources, failed candidates and measurements are retained, not silently changed
+into current-main acceptance.
+
+## Current-state update on main 1ed8be18
+
+The full objective remains the master plan plus the user's subsequent changes.
+The original 159-case registry has 157 historical verified labels and two partial
+cases (QA-014 and QA-156). Those labels retain their original sources and scopes;
+they do not establish final acceptance of all later features on this main.
+
+| Requirement | Authoritative current evidence | Remaining acceptance |
+| --- | --- | --- |
+| Authored V4 crops with FrontSide | PR17 merged at `81d87953`; 40 states/32 bridges, source/attribute/morph contracts, native fixture and exact-head Validate/Windows evidence in [root review](crops-v4-root-integration-review.md) | Workers remain a separate repair category. Do not reuse the abandoned crop-repair experiment as evidence for authored V4 or claim all device/culture visual coverage. |
+| Interactive loading and visual/audio refinements | PR18 merged at `53a4a996`; user accepted G's load/responsiveness compromise; actual New/Continue, cancellation, shared V4 ownership, progress and camera evidence in [production G](interactive-loading-development/production-g-final/README.md) | Current Windows loading smoke fails at its unchanged deadline; diagnostic and opt-in compiler candidate remain separate. Physical peak RAM/VRAM and complete current mobile coverage are unproven. |
+| Native menu library fullscreen | Actual native entry corrected by `7b8d5fb0`, included in `f5e796c2`; [controller, build and package evidence](library-native-integration/README.md) | Earlier fullscreen evidence covered a different entry. All four actual labs in portrait/landscape still need rendered acceptance; CUA initialization currently fails. |
+| Full web validation of library/routing integration | [Run37934148381](validate-f5e796c2/README.md) passes 3719/3719 tests, assets/audio/plan/balance/syntax/build/package on exact `f5e796c2` | Later changes have independent CI. This is not Windows, physical visual/audio or campaign-matrix acceptance. |
+| Spirit narration lifetime | `1ed8be18` separates buffered download stalls from actual playback waiting; [22 directed tests, pre-fix failure, build/package](spirit-buffered-stall/README.md) | Real audible regression acceptance remains open. Media doubles do not identify the original physical event sequence. |
+| Responsible campaign economy | Historical Desert/Sahelian run37895465546 wins100 nights with21.7233% inactivity; [retained summary](campaign-balance-recovery/desert-saheliana-37895465546/desierto-saheliana-summary.json). Current Canyon/Sahelian survives10 but records77.5333%; [physical-domain and budget attribution](canyon-budget-f5e796c2/README.md) | Current30-combination100-night survival/accounting/activity and bad-management coverage remain open. The economic agent tests isolated real-parameter candidates with unchanged strategy/gates; none is promoted. |
+| Stable camera traveling | [Explicit user acceptance](streaming-travel-dense/user-acceptance-2026-10-09.md) closes this point absent a reproducible regression | Older negative candidates remain disabled; do not keep this accepted point open solely because historical traces contain spikes. Loading preparation is a separate requirement. |
+| Post-Jam camera close-up protection | [Specification and optional geometry prototype](../camera-close-protection-post-jam.md) | Normal gameplay activation, model margins, trees, secondary fade, controls/streaming visual acceptance and physical mobile remain open. |
+| QA-014 hidden web/mobile tab and QA-156 full gameplay A/B audio | Original registry still marks these partial; Windows hiding and individual spirit clips have narrower scopes | Complete physical web/mobile hidden-tab and perceptual/full-campaign audio proofs remain necessary. |
+
+The physical Pixel/Chrome/itch Wake Lock acceptance remains accepted and is not
+a priority absent regression. SFX126 inventory has100 assignments and26
+reservations/alternatives/context exceptions; this is a source/caller audit, not
+complete audible trigger coverage. Continue remaining post-Jam work from the
+[pending list](../post-jam-pending.md), retaining scope and current user overrides.
+
+## Historical checkpoint details (superseded where noted above)
+
+The following notes originally described PR16 at `4ecffec5`, older rendering
+base `795f773e83640d3f7541d8e3d826764c3d779750` and work before PR17/18 merged.
+Statements that features were unmerged or checks were live are historical.
 
 ## Responsible campaign acceptance
 
