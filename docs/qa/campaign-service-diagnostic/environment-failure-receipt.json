@@ -1,0 +1,14 @@
+{
+  "status": "failed-before-simulation",
+  "source": "38cf3373",
+  "command": "node tools/diagnose_early_farm_service.mjs docs/qa/campaign-service-diagnostic/native-five-days 5",
+  "syntaxCheckExit": 0,
+  "processExit": 1,
+  "wallSeconds": 0.5940158,
+  "error": "ERR_MODULE_NOT_FOUND: three",
+  "snapshotCount": 0,
+  "simulationStarted": false,
+  "gpuUsed": false,
+  "logSha256": "dc4dae9f737881d6de256d03fa12d22e998855055df74e7d2efb4b17535ad8ed",
+  "observedAt": "2026-10-09T05:48:57.2768717Z"
+}
