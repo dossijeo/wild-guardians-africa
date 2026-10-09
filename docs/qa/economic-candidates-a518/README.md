@@ -246,3 +246,41 @@ They cannot independently prove every historical worker route or FIFO ordering;
 those claims require the unchanged native producer protocol, production source
 and dedicated physical/FIFO tests. Any accepted result still covers only this
 frozen case, excluding poor-management, matrix30 and current-main compatibility.
+
+### Frozen F100 terminal: survival verified, activity rejected
+
+The single authorized original native run finished without restart: session45765,
+PID20428, frozen83b1c1eaa0235f9a9b34966f88b496f42eeb161b, producer exit0.
+Both terminal auditors exit0 verify376 source hashes, clean source, full summary
+reconstruction, exact snapshot roundtrip and unchanged first10. Native status
+passed means survival/accounting/daily deliveries, not the activity gate.
+The actual result is100-night victory/day101,108 raids spawned/ended, one
+CampaignWon and zero GameOver. All100 days have paid staff and physical delivery.
+18330 crates were delivered/paid;18650 picked,320 still unpaid in transit.
+Snapshot SHA256:aa1c07343d598b5a5ea0da25465c571fe258df1069d1fc88e36fa632af44d31e.
+
+Whole-campaign idle is7930/30000 seconds=26.433333%, strictly25% gate FAIL.
+It includes all1079/3000 negative initial10 seconds unchanged. Components:
+budget1674,space4257,shift-end1999. Day bands:
+
+| Days | Budget | Space | Shift-end | Idle / daylight | Fraction | Delivered |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| 1–10 | 880 | 0 | 199 | 1079/3000 | 35.9667% | 830 |
+| 11–30 | 794 | 0 | 400 | 1194/6000 | 19.9000% | 3396 |
+| 31–60 | 0 | 1607 | 600 | 2207/9000 | 24.5222% | 5910 |
+| 61–100 | 0 | 2650 | 800 | 3450/12000 | 28.7500% | 8194 |
+
+Cashflow:1500+4138239 delivered income−781667 seeds−546660 wages−800 centre
+=2810612 ending balance; repair charges0. Plots/maxLiving both2695, last centre
+HP512.5. The measured bottleneck changes from initial cash reserves to late plot
+availability/service. More income alone does not address that late constraint.
+The domain/plot search and policy are preserved; no geography or strategy was
+expanded to manufacture approval. Whether late space is harness-domain or real
+world capacity still needs faithful attribution before choosing new parameters.
+
+`f100-terminal/` retains byte-exact original status/report/state/summary under
+deterministic gzip, both audit payloads, logs, root's independent partial/source
+receipts, and SHA256 manifest in archive-receipt.json. No partial record replaces
+the terminal result. No poor6, matrix30, candidate promotion or PR follows this
+failed responsible activity gate. Main's general fractional repair compatibility
+and physical/FIFO temporal coverage remain separate from this frozen snapshot.

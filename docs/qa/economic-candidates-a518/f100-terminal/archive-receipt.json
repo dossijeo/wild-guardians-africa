@@ -1,0 +1,168 @@
+{
+  "source": "83b1c1eaa0235f9a9b34966f88b496f42eeb161b",
+  "session": 45765,
+  "pid": 20428,
+  "producerExit": 0,
+  "nativeAuditExit": 0,
+  "independentAuditExit": 0,
+  "nativeStatus": "passed",
+  "result": "victory",
+  "completedNights": 100,
+  "responsibleCaseAccepted": false,
+  "inactivity": 0.2643333333333333,
+  "idleSeconds": 7930,
+  "daylightSeconds": 30000,
+  "gates": {
+    "100RequestedNightsVictory": true,
+    "everyDayPaidStaffPhysicalDelivery": true,
+    "ownSourceLedgerHydrationPhysicalCrates": true,
+    "allOriginalFirst10IncludedUnchanged": true,
+    "wholeCampaignIdleStrictlyBelow25": false,
+    "poor6Management": "pending-only-if-responsible-100-gates-pass",
+    "matrix30": "not-run",
+    "currentMainCompatibility": "not-established-frozen-F-bridge",
+    "nativePassed": true,
+    "summaryFullyReproduced": true,
+    "campaignVictory": true,
+    "nativeWinCounts": true,
+    "allSpawnedRaidsEnded": true,
+    "everyDayPhysicalDelivery": true,
+    "globalActivityBelow25": false
+  },
+  "bands": [
+    {
+      "days": [
+        1,
+        10
+      ],
+      "idle": {
+        "budget": 880,
+        "space": 0,
+        "shift-end": 199
+      },
+      "totalIdle": 1079,
+      "daylight": 3000,
+      "fraction": 0.3596666666666667,
+      "deliveries": 830
+    },
+    {
+      "days": [
+        11,
+        30
+      ],
+      "idle": {
+        "budget": 794,
+        "space": 0,
+        "shift-end": 400
+      },
+      "totalIdle": 1194,
+      "daylight": 6000,
+      "fraction": 0.199,
+      "deliveries": 3396
+    },
+    {
+      "days": [
+        31,
+        60
+      ],
+      "idle": {
+        "budget": 0,
+        "space": 1607,
+        "shift-end": 600
+      },
+      "totalIdle": 2207,
+      "daylight": 9000,
+      "fraction": 0.24522222222222223,
+      "deliveries": 5910
+    },
+    {
+      "days": [
+        61,
+        100
+      ],
+      "idle": {
+        "budget": 0,
+        "space": 2650,
+        "shift-end": 800
+      },
+      "totalIdle": 3450,
+      "daylight": 12000,
+      "fraction": 0.2875,
+      "deliveries": 8194
+    }
+  ],
+  "cashflow": {
+    "openingBalance": "1500",
+    "harvestIncome": "4138239",
+    "seedCosts": "781667",
+    "wageCosts": "546660",
+    "repairCosts": "0",
+    "centreCosts": "800",
+    "wallCosts": "0",
+    "otherNet": "0",
+    "operatingCashFlow": "2809912",
+    "netCashFlowAfterConstruction": "2809112",
+    "endingBalance": "2810612"
+  },
+  "files": {
+    "f100-independent-audit.json": {
+      "originalSha256": "6e88c4260ce60003691bd6cd91772ab433e925eff624d51e09d91e211be6d3f2",
+      "originalBytes": 1603,
+      "gzipSha256": "fceb9ee362073f6b66aadcc6da725eb9342839083951c31f99e0abb4327b1eea",
+      "gzipBytes": 865
+    },
+    "f100-native-terminal-audit.json": {
+      "originalSha256": "0f9ef5158dabe3a622264033c8f1a6035922a14da8ed8ba07602f4f622f2b61d",
+      "originalBytes": 3262,
+      "gzipSha256": "0c8146f332ef8606e3f8eb74dd5d5d2ab7725b356ccaf5814d544f028ca4b1c2",
+      "gzipBytes": 1563
+    },
+    "gran-canon-saheliana-report.json": {
+      "originalSha256": "4fafa10968c20c8c615a48644b7e8e535334d0eaf96b89b8c7435ec384369d04",
+      "originalBytes": 104909,
+      "gzipSha256": "ef6c6739ad651b1f313b44844f8ea7b2877571436047e722b720cf6ae9ada53e",
+      "gzipBytes": 24276
+    },
+    "gran-canon-saheliana-state.json": {
+      "originalSha256": "aa1c07343d598b5a5ea0da25465c571fe258df1069d1fc88e36fa632af44d31e",
+      "originalBytes": 13330775,
+      "gzipSha256": "0e46f6664af02a015b36c3526ba7649fc594520e037103aa2009a379ac136bd3",
+      "gzipBytes": 1020389
+    },
+    "gran-canon-saheliana-status.json": {
+      "originalSha256": "4f1f02fe409a4fad2a8f4fab815603344907d51825a1abc48c04b52575f6feaa",
+      "originalBytes": 43351,
+      "gzipSha256": "c11df8384429ad2764bab8f32e72a2aa4bdb233134c949d079c667ade0b4a68b",
+      "gzipBytes": 19345
+    },
+    "gran-canon-saheliana-summary.json": {
+      "originalSha256": "6bd25e70f0f8529868bd2214ffec0413e99c1d098efb031bc72a3f71d9ba9607",
+      "originalBytes": 83644,
+      "gzipSha256": "dc6f2bc085d3a51be9e524e7ebc70e22629f80e6f851639a903a53a56e750fc2",
+      "gzipBytes": 23249
+    },
+    "producer.log": {
+      "originalSha256": "1227b44392f2263ce41bcbf5a70b9945485a927fbb7ddcb07094ce8a5ad3a658",
+      "originalBytes": 86
+    },
+    "native-audit.log": {
+      "originalSha256": "b34acd2a07c96a8929937bc830c5166c6e7dd272010e4158aa07b5e0417e7db8",
+      "originalBytes": 2715
+    },
+    "independent-audit.log": {
+      "originalSha256": "789646a4bd876965cf3952ea11abf8a3565c3b5fcffe12cdae7daec26bd944e2",
+      "originalBytes": 1475
+    },
+    "campaign-live-source-review.json": {
+      "originalSha256": "6169591c2ff3f9d6b80bd88c9d96ca5cdb549760318e0f144af376c1ab9df7e1",
+      "originalBytes": 348,
+      "scope": "Independent root partial/source review, not terminal acceptance"
+    },
+    "economy-f-root-readonly-review.json": {
+      "originalSha256": "631c8f598f59717685ce8c0cca307158cbc077faa5316d6e5415b3d494ec04e1",
+      "originalBytes": 850,
+      "scope": "Independent root partial/source review, not terminal acceptance"
+    }
+  },
+  "scope": "Single frozen original native campaign. Survival/source/ledger/physical/end-state and summary checks pass, strict25% activity fails. No poor6/matrix30/new-main approval; preserve first10 unchanged. No GPU/performance claim."
+}
