@@ -25,89 +25,97 @@ export const BALANCE = {
       "id": "mijo",
       "name": "Mijo",
       "plant_cost": 5,
-      "base_harvest_value": 11,
+      "base_harvest_value": 33,
       "growth_seconds": 140,
       "total_waters": 2,
       "water_tolerance_fraction": 1,
       "nominal_water_interval_seconds": 70.0,
-      "derived_tolerance_seconds": 70.0
+      "derived_tolerance_seconds": 70.0,
+      "base_attraction_value": 11
     },
     {
       "id": "girasol",
       "name": "Girasol",
       "plant_cost": 18,
-      "base_harvest_value": 36,
+      "base_harvest_value": 108,
       "growth_seconds": 180,
       "total_waters": 3,
       "water_tolerance_fraction": 0.6,
       "nominal_water_interval_seconds": 60.0,
-      "derived_tolerance_seconds": 36.0
+      "derived_tolerance_seconds": 36.0,
+      "base_attraction_value": 36
     },
     {
       "id": "sorgo",
       "name": "Sorgo",
       "plant_cost": 6,
-      "base_harvest_value": 13,
+      "base_harvest_value": 39,
       "growth_seconds": 220,
       "total_waters": 2,
       "water_tolerance_fraction": 1,
       "nominal_water_interval_seconds": 110.0,
-      "derived_tolerance_seconds": 110.0
+      "derived_tolerance_seconds": 110.0,
+      "base_attraction_value": 13
     },
     {
       "id": "maiz",
       "name": "Maíz",
       "plant_cost": 8,
-      "base_harvest_value": 17,
+      "base_harvest_value": 51,
       "growth_seconds": 270,
       "total_waters": 3,
       "water_tolerance_fraction": 0.4,
       "nominal_water_interval_seconds": 90.0,
-      "derived_tolerance_seconds": 36.0
+      "derived_tolerance_seconds": 36.0,
+      "base_attraction_value": 17
     },
     {
       "id": "batata",
       "name": "Batata",
       "plant_cost": 10,
-      "base_harvest_value": 23,
+      "base_harvest_value": 69,
       "growth_seconds": 330,
       "total_waters": 2,
       "water_tolerance_fraction": 0.8,
       "nominal_water_interval_seconds": 165.0,
-      "derived_tolerance_seconds": 132.0
+      "derived_tolerance_seconds": 132.0,
+      "base_attraction_value": 23
     },
     {
       "id": "algodon",
       "name": "Algodón",
       "plant_cost": 100,
-      "base_harvest_value": 178,
+      "base_harvest_value": 534,
       "growth_seconds": 405,
       "total_waters": 4,
       "water_tolerance_fraction": 0.75,
       "nominal_water_interval_seconds": 101.25,
-      "derived_tolerance_seconds": 75.9375
+      "derived_tolerance_seconds": 75.9375,
+      "base_attraction_value": 178
     },
     {
       "id": "yuca",
       "name": "Yuca",
       "plant_cost": 12,
-      "base_harvest_value": 32,
+      "base_harvest_value": 96,
       "growth_seconds": 480,
       "total_waters": 2,
       "water_tolerance_fraction": 1.2,
       "nominal_water_interval_seconds": 240.0,
-      "derived_tolerance_seconds": 288.0
+      "derived_tolerance_seconds": 288.0,
+      "base_attraction_value": 32
     },
     {
       "id": "platano",
       "name": "Plátano",
       "plant_cost": 150,
-      "base_harvest_value": 267,
+      "base_harvest_value": 801,
       "growth_seconds": 570,
       "total_waters": 6,
       "water_tolerance_fraction": 0.25,
       "nominal_water_interval_seconds": 95.0,
-      "derived_tolerance_seconds": 23.75
+      "derived_tolerance_seconds": 23.75,
+      "base_attraction_value": 267
     }
   ],
   "workers": {
@@ -119,7 +127,7 @@ export const BALANCE = {
     "female_shift_end": "19:05",
     "idle_radius_max_m": 8,
     "run_start_pending_tasks_per_worker_over": 2,
-    "daily_run_distance_long_trips": 3,
+    "daily_run_distance_long_trips": 4,
     "long_trip_distance_m": null
   },
   "walls": [
@@ -168,7 +176,7 @@ export const BALANCE = {
       "id": "warthog",
       "name": "Facóquero",
       "threat_cost": 1,
-      "structure_hit_damage": 20,
+      "structure_hit_damage": 10,
       "hit_budget_min": 2,
       "hit_budget_max": 4,
       "max_per_raid": 3
@@ -177,7 +185,7 @@ export const BALANCE = {
       "id": "hyena",
       "name": "Hiena",
       "threat_cost": 3,
-      "structure_hit_damage": 25,
+      "structure_hit_damage": 12.5,
       "hit_budget_min": 3,
       "hit_budget_max": 5,
       "max_per_raid": 2
@@ -186,7 +194,7 @@ export const BALANCE = {
       "id": "buffalo",
       "name": "Búfalo",
       "threat_cost": 5,
-      "structure_hit_damage": 35,
+      "structure_hit_damage": 17.5,
       "hit_budget_min": 4,
       "hit_budget_max": 6,
       "max_per_raid": 2
@@ -195,7 +203,7 @@ export const BALANCE = {
       "id": "lion",
       "name": "León",
       "threat_cost": 7,
-      "structure_hit_damage": 40,
+      "structure_hit_damage": 20,
       "hit_budget_min": 4,
       "hit_budget_max": 7,
       "max_per_raid": 2
@@ -204,7 +212,7 @@ export const BALANCE = {
       "id": "rhino",
       "name": "Rinoceronte",
       "threat_cost": 10,
-      "structure_hit_damage": 60,
+      "structure_hit_damage": 30,
       "hit_budget_min": 5,
       "hit_budget_max": 8,
       "max_per_raid": 1
@@ -305,6 +313,64 @@ export const BALANCE = {
     "worker_collision_knockback_m": [
       1.5,
       2
+    ],
+    "night_horde_stages": [
+      {
+        "first": 6,
+        "last": 10,
+        "max_animals": 5,
+        "min_animals": 1,
+        "budget_scale": 1,
+        "species_caps": [
+          3,
+          2,
+          2,
+          2,
+          1
+        ]
+      },
+      {
+        "first": 11,
+        "last": 20,
+        "max_animals": 7,
+        "min_animals": 3,
+        "budget_scale": 1.5,
+        "species_caps": [
+          5,
+          3,
+          2,
+          2,
+          1
+        ]
+      },
+      {
+        "first": 21,
+        "last": 40,
+        "max_animals": 9,
+        "min_animals": 4,
+        "budget_scale": 2,
+        "species_caps": [
+          6,
+          4,
+          3,
+          2,
+          2
+        ]
+      },
+      {
+        "first": 41,
+        "last": 100,
+        "max_animals": 12,
+        "min_animals": 6,
+        "budget_scale": 3,
+        "species_caps": [
+          8,
+          5,
+          4,
+          3,
+          2
+        ]
+      }
     ]
   },
   "spells": [

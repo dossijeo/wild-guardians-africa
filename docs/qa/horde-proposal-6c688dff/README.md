@@ -2,6 +2,8 @@
 
 Base: main runtime `6c688dff`; tutorial-price generator guard `70426087` cherry-picked as `befc652f`. No production or canonical balance files were changed. The new model is imported only by diagnostic tools/tests. No campaign, world-generation benchmark or GPU run was executed.
 
+**Subsequent review:** the initial proposal below is historical as of `ba3caedb`. Root selected HALF structure damage matching H, rather than full main damage, for the isolated runtime candidate and its compatible control. Updated model and runtime preflight are documented in `../horde-runtime-preflight/README.md`. No historical H600 acceptance is transferred to the centre800 candidate.
+
 ## Fixed economics and preserved history
 
 The next compatible candidate must keep centre cost **800**, older wage **30**, young wage **40**, initial money **1500**, seed prices and reserves unchanged. Proposed sales are three times current main values; attraction uses an explicit canonical base value rather than the increased sale price. Running quota four remains experimental. The generator guard forbids the discarded 600-centre candidate.

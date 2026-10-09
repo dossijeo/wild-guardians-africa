@@ -1,0 +1,340 @@
+TAP version 13
+# Subtest: A route blocked after reservation releases its worker without deleting the task or starting an action
+ok 1 - A route blocked after reservation releases its worker without deleting the task or starting an action # SKIP test name does not match pattern
+  ---
+  duration_ms: 2.1
+  ...
+# Subtest: Repair settles its rounded current price exactly once on arrival, without an extra animation delay
+ok 2 - Repair settles its rounded current price exactly once on arrival, without an extra animation delay # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1032
+  ...
+# Subtest: Funds spent after requesting repair cancel execution at arrival without partial payment
+ok 3 - Funds spent after requesting repair cancel execution at arrival without partial payment # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0655
+  ...
+# Subtest: Surviving repair order becomes full reconstruction and does not wait for collapse to finish
+ok 4 - Surviving repair order becomes full reconstruction and does not wait for collapse to finish # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0629
+  ...
+# Subtest: Starting an attack immediately cancels manual repair orders and releases the worker
+ok 5 - Starting an attack immediately cancels manual repair orders and releases the worker # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0858
+  ...
+# Subtest: Postgame founding uses complete native village, valid departure, exact linear costs and persistent state
+ok 6 - Postgame founding uses complete native village, valid departure, exact linear costs and persistent state # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0574
+  ...
+# Subtest: A village without a walkable departure is rejected before charging or founding
+ok 7 - A village without a walkable departure is rejected before charging or founding # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0592
+  ...
+# Subtest: 30 canonical combinations validate and each new game starts isolated at 1500
+ok 8 - 30 canonical combinations validate and each new game starts isolated at 1500 # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0704
+  ...
+# Subtest: First day center/plant/tutorial hiring sequence and payment idempotency
+ok 9 - First day center/plant/tutorial hiring sequence and payment idempotency # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.089
+  ...
+# Subtest: Invalid placement makes no economic or world modification
+ok 10 - Invalid placement makes no economic or world modification # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1633
+  ...
+# Subtest: Workers physically plant, water and harvest; only crate delivery pays
+ok 11 - Workers physically plant, water and harvest; only crate delivery pays # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0779
+  ...
+# Subtest: Stacked pauses freeze crops and spell clocks
+ok 12 - Stacked pauses freeze crops and spell clocks # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0585
+  ...
+# Subtest: Manual harvest orders survive queue reconstruction, manual repairs do not
+ok 13 - Manual harvest orders survive queue reconstruction, manual repairs do not # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0515
+  ...
+# Subtest: New midday center does not move plants or employees
+ok 14 - New midday center does not move plants or employees # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1161
+  ...
+# Subtest: Growth/multiply permissions, area nonoverlap, cooldown from activation and expiry
+ok 15 - Growth/multiply permissions, area nonoverlap, cooldown from activation and expiry # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0604
+  ...
+# Subtest: First nights introduce mandatory warthog and hyena even with zero attraction
+ok 16 - First nights introduce mandatory warthog and hyena even with zero attraction # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0532
+  ...
+# Subtest: Raid drops a carried crate, frees tasks and preserves its value
+ok 17 - Raid drops a carried crate, frees tasks and preserves its value # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0991
+  ...
+# Subtest: Combo attack counts one logical hit; active raid survives roundtrip
+ok 18 - Combo attack counts one logical hit; active raid survives roundtrip # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.2551
+  ...
+# Subtest: Attack crossing dawn prevents events, hiring and night completion until departure
+ok 19 - Attack crossing dawn prevents events, hiring and night completion until departure
+  ---
+  duration_ms: 10.0816
+  ...
+# Subtest: Final raid defeat takes precedence over hundredth night victory
+ok 20 - Final raid defeat takes precedence over hundredth night victory
+  ---
+  duration_ms: 1.7316
+  ...
+# Subtest: Hundredth completed night wins only after economic check; postgame suppresses attacks
+ok 21 - Hundredth completed night wins only after economic check; postgame suppresses attacks
+  ---
+  duration_ms: 1.3493
+  ...
+# Subtest: Event frost leaves mature plants intact; favorable growth keeps mandatory water debt
+ok 22 - Event frost leaves mature plants intact; favorable growth keeps mandatory water debt # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1503
+  ...
+# Subtest: Plague consumes half remaining tolerance without killing plants or changing coins
+ok 23 - Plague consumes half remaining tolerance without killing plants or changing coins # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1368
+  ...
+# Subtest: all 100 campaign nights have animals even with no crops, for 30 seeds
+ok 24 - all 100 campaign nights have animals even with no crops, for 30 seeds # SKIP test name does not match pattern
+  ---
+  duration_ms: 1.4799
+  ...
+# Subtest: five introductory nights spawn their planned new species with a progressive real strike budget, including saved plans
+ok 25 - five introductory nights spawn their planned new species with a progressive real strike budget, including saved plans # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0864
+  ...
+# Subtest: warthog: first physical crop hit survives reload; second hit destroys exactly once
+ok 26 - warthog: first physical crop hit survives reload; second hit destroys exactly once
+  ---
+  duration_ms: 39.856
+  ...
+# Subtest: hyena: first physical crop hit survives reload; second hit destroys exactly once
+ok 27 - hyena: first physical crop hit survives reload; second hit destroys exactly once
+  ---
+  duration_ms: 13.3131
+  ...
+# Subtest: buffalo: first physical crop hit survives reload; second hit destroys exactly once
+ok 28 - buffalo: first physical crop hit survives reload; second hit destroys exactly once
+  ---
+  duration_ms: 8.0895
+  ...
+# Subtest: lion: first physical crop hit survives reload; second hit destroys exactly once
+ok 29 - lion: first physical crop hit survives reload; second hit destroys exactly once
+  ---
+  duration_ms: 8.5668
+  ...
+# Subtest: rhino: first physical crop hit survives reload; second hit destroys exactly once
+ok 30 - rhino: first physical crop hit survives reload; second hit destroys exactly once
+  ---
+  duration_ms: 13.5044
+  ...
+# Subtest: saved damage cannot be fractional, exceed two strikes or leave a living crop with two strikes
+ok 31 - saved damage cannot be fractional, exceed two strikes or leave a living crop with two strikes # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1075
+  ...
+# Subtest: introductory warthog threatens crops and buildings but cannot destroy all 1 starting plants
+ok 32 - introductory warthog threatens crops and buildings but cannot destroy all 1 starting plants # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1592
+  ...
+# Subtest: introductory warthog threatens crops and buildings but cannot destroy all 2 starting plants
+ok 33 - introductory warthog threatens crops and buildings but cannot destroy all 2 starting plants # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1778
+  ...
+# Subtest: introductory warthog threatens crops and buildings but cannot destroy all 5 starting plants
+ok 34 - introductory warthog threatens crops and buildings but cannot destroy all 5 starting plants # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.081
+  ...
+# Subtest: introductory warthog threatens crops and buildings but cannot destroy all 10 starting plants
+ok 35 - introductory warthog threatens crops and buildings but cannot destroy all 10 starting plants # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0938
+  ...
+# Subtest: introductory warthog threatens crops and buildings but cannot destroy all 20 starting plants
+ok 36 - introductory warthog threatens crops and buildings but cannot destroy all 20 starting plants # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0703
+  ...
+# Subtest: introductory warthog threatens crops and buildings but cannot destroy all 50 starting plants
+ok 37 - introductory warthog threatens crops and buildings but cannot destroy all 50 starting plants # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1578
+  ...
+# Subtest: introductory hyena threatens crops and buildings but cannot destroy all 1 starting plants
+ok 38 - introductory hyena threatens crops and buildings but cannot destroy all 1 starting plants # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0624
+  ...
+# Subtest: introductory hyena threatens crops and buildings but cannot destroy all 2 starting plants
+ok 39 - introductory hyena threatens crops and buildings but cannot destroy all 2 starting plants # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0579
+  ...
+# Subtest: introductory hyena threatens crops and buildings but cannot destroy all 5 starting plants
+ok 40 - introductory hyena threatens crops and buildings but cannot destroy all 5 starting plants # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.147
+  ...
+# Subtest: introductory hyena threatens crops and buildings but cannot destroy all 10 starting plants
+ok 41 - introductory hyena threatens crops and buildings but cannot destroy all 10 starting plants # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.4144
+  ...
+# Subtest: introductory hyena threatens crops and buildings but cannot destroy all 20 starting plants
+ok 42 - introductory hyena threatens crops and buildings but cannot destroy all 20 starting plants # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1251
+  ...
+# Subtest: introductory hyena threatens crops and buildings but cannot destroy all 50 starting plants
+ok 43 - introductory hyena threatens crops and buildings but cannot destroy all 50 starting plants # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1397
+  ...
+# Subtest: introductory buffalo threatens crops and buildings but cannot destroy all 1 starting plants
+ok 44 - introductory buffalo threatens crops and buildings but cannot destroy all 1 starting plants # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1035
+  ...
+# Subtest: introductory buffalo threatens crops and buildings but cannot destroy all 2 starting plants
+ok 45 - introductory buffalo threatens crops and buildings but cannot destroy all 2 starting plants # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1447
+  ...
+# Subtest: introductory buffalo threatens crops and buildings but cannot destroy all 5 starting plants
+ok 46 - introductory buffalo threatens crops and buildings but cannot destroy all 5 starting plants # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0533
+  ...
+# Subtest: introductory buffalo threatens crops and buildings but cannot destroy all 10 starting plants
+ok 47 - introductory buffalo threatens crops and buildings but cannot destroy all 10 starting plants # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0448
+  ...
+# Subtest: introductory buffalo threatens crops and buildings but cannot destroy all 20 starting plants
+ok 48 - introductory buffalo threatens crops and buildings but cannot destroy all 20 starting plants # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0572
+  ...
+# Subtest: introductory buffalo threatens crops and buildings but cannot destroy all 50 starting plants
+ok 49 - introductory buffalo threatens crops and buildings but cannot destroy all 50 starting plants # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1816
+  ...
+# Subtest: introductory lion threatens crops and buildings but cannot destroy all 1 starting plants
+ok 50 - introductory lion threatens crops and buildings but cannot destroy all 1 starting plants # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0969
+  ...
+# Subtest: introductory lion threatens crops and buildings but cannot destroy all 2 starting plants
+ok 51 - introductory lion threatens crops and buildings but cannot destroy all 2 starting plants # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1476
+  ...
+# Subtest: introductory lion threatens crops and buildings but cannot destroy all 5 starting plants
+ok 52 - introductory lion threatens crops and buildings but cannot destroy all 5 starting plants # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.067
+  ...
+# Subtest: introductory lion threatens crops and buildings but cannot destroy all 10 starting plants
+ok 53 - introductory lion threatens crops and buildings but cannot destroy all 10 starting plants # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0505
+  ...
+# Subtest: introductory lion threatens crops and buildings but cannot destroy all 20 starting plants
+ok 54 - introductory lion threatens crops and buildings but cannot destroy all 20 starting plants # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0446
+  ...
+# Subtest: introductory lion threatens crops and buildings but cannot destroy all 50 starting plants
+ok 55 - introductory lion threatens crops and buildings but cannot destroy all 50 starting plants # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.312
+  ...
+# Subtest: introductory rhino threatens crops and buildings but cannot destroy all 1 starting plants
+ok 56 - introductory rhino threatens crops and buildings but cannot destroy all 1 starting plants # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1198
+  ...
+# Subtest: introductory rhino threatens crops and buildings but cannot destroy all 2 starting plants
+ok 57 - introductory rhino threatens crops and buildings but cannot destroy all 2 starting plants # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0846
+  ...
+# Subtest: introductory rhino threatens crops and buildings but cannot destroy all 5 starting plants
+ok 58 - introductory rhino threatens crops and buildings but cannot destroy all 5 starting plants # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1456
+  ...
+# Subtest: introductory rhino threatens crops and buildings but cannot destroy all 10 starting plants
+ok 59 - introductory rhino threatens crops and buildings but cannot destroy all 10 starting plants # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0762
+  ...
+# Subtest: introductory rhino threatens crops and buildings but cannot destroy all 20 starting plants
+ok 60 - introductory rhino threatens crops and buildings but cannot destroy all 20 starting plants # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0693
+  ...
+# Subtest: introductory rhino threatens crops and buildings but cannot destroy all 50 starting plants
+ok 61 - introductory rhino threatens crops and buildings but cannot destroy all 50 starting plants # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0723
+  ...
+# Subtest: introductory warthog: damaged crops respect the destruction quota after a mid-attack save
+ok 62 - introductory warthog: damaged crops respect the destruction quota after a mid-attack save # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0818
+  ...
+# Subtest: introductory hyena: damaged crops respect the destruction quota after a mid-attack save
+ok 63 - introductory hyena: damaged crops respect the destruction quota after a mid-attack save # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0683
+  ...
+# Subtest: introductory buffalo: damaged crops respect the destruction quota after a mid-attack save
+ok 64 - introductory buffalo: damaged crops respect the destruction quota after a mid-attack save # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0877
+  ...
+# Subtest: introductory lion: damaged crops respect the destruction quota after a mid-attack save
+ok 65 - introductory lion: damaged crops respect the destruction quota after a mid-attack save # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0662
+  ...
+# Subtest: introductory rhino: damaged crops respect the destruction quota after a mid-attack save
+ok 66 - introductory rhino: damaged crops respect the destruction quota after a mid-attack save # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.3319
+  ...
+1..66
+# tests 66
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 58
+# todo 0
+# duration_ms 290.9277

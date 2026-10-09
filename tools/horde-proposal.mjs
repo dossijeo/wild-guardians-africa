@@ -9,7 +9,9 @@ export const HORDE_STAGES=Object.freeze([
 export function economicProposal(){
  const proposal=structuredClone(B);proposal.work_center.cost=800;
  proposal.workers.older_wage=30;proposal.workers.young_wage=40;proposal.workers.daily_run_distance_long_trips=4;
- for(const crop of proposal.crops){crop.base_attraction_value=crop.base_harvest_value;crop.base_harvest_value*=3;}
+ for(const crop of proposal.crops){crop.base_attraction_value=crop.base_attraction_value??crop.base_harvest_value;crop.base_harvest_value=crop.base_attraction_value*3;}
+ const halfDamage={warthog:10,hyena:12.5,buffalo:17.5,lion:20,rhino:30};
+ for(const animal of proposal.animals)animal.structure_hit_damage=halfDamage[animal.id];
  return proposal;
 }
 export function proposalAttraction(plants,balance){

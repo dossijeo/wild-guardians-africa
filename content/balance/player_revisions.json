@@ -1,8 +1,101 @@
 {
   "initial_money": 1500,
-  "workers": {"older_wage": 30, "young_wage": 40},
-  "structure_hit_damage": {"warthog": 20, "hyena": 25, "buffalo": 35, "lion": 40, "rhino": 60},
-  "night_attraction_boundaries": [0, 100, 300, 800, 2000],
-  "crop_harvest_values": {"mijo": 11, "girasol": 36, "sorgo": 13, "maiz": 17, "batata": 23, "algodon": 178, "yuca": 32, "platano": 267},
-  "night_attack_probability": 1
+  "workers": {
+    "older_wage": 30,
+    "young_wage": 40,
+    "daily_run_distance_long_trips": 4
+  },
+  "structure_hit_damage": {
+    "warthog": 10,
+    "hyena": 12.5,
+    "buffalo": 17.5,
+    "lion": 20,
+    "rhino": 30
+  },
+  "night_attraction_boundaries": [
+    0,
+    100,
+    300,
+    800,
+    2000
+  ],
+  "crop_harvest_values": {
+    "mijo": 33,
+    "girasol": 108,
+    "sorgo": 39,
+    "maiz": 51,
+    "batata": 69,
+    "algodon": 534,
+    "yuca": 96,
+    "platano": 801
+  },
+  "night_attack_probability": 1,
+  "crop_attraction_values": {
+    "mijo": 11,
+    "girasol": 36,
+    "sorgo": 13,
+    "maiz": 17,
+    "batata": 23,
+    "algodon": 178,
+    "yuca": 32,
+    "platano": 267
+  },
+  "night_horde_stages": [
+    {
+      "first": 6,
+      "last": 10,
+      "max_animals": 5,
+      "min_animals": 1,
+      "budget_scale": 1,
+      "species_caps": [
+        3,
+        2,
+        2,
+        2,
+        1
+      ]
+    },
+    {
+      "first": 11,
+      "last": 20,
+      "max_animals": 7,
+      "min_animals": 3,
+      "budget_scale": 1.5,
+      "species_caps": [
+        5,
+        3,
+        2,
+        2,
+        1
+      ]
+    },
+    {
+      "first": 21,
+      "last": 40,
+      "max_animals": 9,
+      "min_animals": 4,
+      "budget_scale": 2,
+      "species_caps": [
+        6,
+        4,
+        3,
+        2,
+        2
+      ]
+    },
+    {
+      "first": 41,
+      "last": 100,
+      "max_animals": 12,
+      "min_animals": 6,
+      "budget_scale": 3,
+      "species_caps": [
+        8,
+        5,
+        4,
+        3,
+        2
+      ]
+    }
+  ]
 }

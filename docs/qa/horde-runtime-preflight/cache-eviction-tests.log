@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: Candidate economics honour immutable audio prices and original attraction
+ok 1 - Candidate economics honour immutable audio prices and original attraction # SKIP test name does not match pattern
+  ---
+  duration_ms: 1.1866
+  ...
+# Subtest: Default compositions preserve original order and remain immutable and cached
+ok 2 - Default compositions preserve original order and remain immutable and cached # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0963
+  ...
+# Subtest: Runtime stages equal reviewed recipe and accept budget-limited minima without empty groups
+ok 3 - Runtime stages equal reviewed recipe and accept budget-limited minima without empty groups # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0771
+  ...
+# Subtest: Composition cache evicts old entries while preserving exact immutable results
+ok 4 - Composition cache evicts old entries while preserving exact immutable results
+  ---
+  duration_ms: 12.2618
+  ...
+# Subtest: Selected night group and planning night survive saves with no RNG reroll; legacy plans are untouched
+ok 5 - Selected night group and planning night survive saves with no RNG reroll; legacy plans are untouched # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0857
+  ...
+# Subtest: Day planning does not consult horde stages and original daytime constraints stay unchanged
+ok 6 - Day planning does not consult horde stages and original daytime constraints stay unchanged # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0541
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 5
+# todo 0
+# duration_ms 170.0489

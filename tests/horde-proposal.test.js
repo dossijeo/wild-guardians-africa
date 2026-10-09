@@ -9,7 +9,7 @@ import {HORDE_STAGES,stageFor,economicProposal,proposalAttraction,enumeratePropo
 test('Economic arithmetic honours tutorial800/minwage30, triples sales and preserves base attraction including magic',()=>{
  const original=JSON.stringify(B),copy=economicProposal();assert.equal(copy.work_center.cost,800);assert.equal(copy.workers.older_wage,30);assert.equal(copy.workers.young_wage,40);assert.equal(copy.workers.daily_run_distance_long_trips,4);
  const plants=B.crops.flatMap(c=>[{species:c.id,alive:true},{species:c.id,alive:true,multiplyHarvest:true},{species:c.id,alive:false}]);
- for(let i=0;i<B.crops.length;i++){assert.equal(copy.crops[i].base_harvest_value,B.crops[i].base_harvest_value*3);assert.equal(copy.crops[i].base_attraction_value,B.crops[i].base_harvest_value);}
+ for(let i=0;i<B.crops.length;i++){const base=B.crops[i].base_attraction_value??B.crops[i].base_harvest_value;assert.equal(copy.crops[i].base_harvest_value,base*3);assert.equal(copy.crops[i].base_attraction_value,base);}
  assert.equal(proposalAttraction(plants,copy),attraction(plants));assert.equal(JSON.stringify(B),original);
 });
 test('Bounded composition model reproduces every native original tier/budget exactly at cap5',()=>{
@@ -34,6 +34,7 @@ test('All proposed tier-budget compositions have legal unlocked species, cost, c
  }
  assert.ok(cases>50);assert.ok(maximumVisited<5000,'Diagnostic combinatorial guard, not a nightly performance acceptance claim');
 });
-test('No new damage or hit budget is smuggled into the arithmetic proposal, and actual wall costs remain paid design values',()=>{
- assert.deepEqual(economicProposal().animals,B.animals);assert.equal(wallSpec('zarzas').cost,10);assert.equal(wallSpec('adobe').cost,35);assert.equal(wallSpec('piedra').cost,80);
+test('Reviewed half damage and unchanged hit budget remain explicit, and walls retain paid design values',()=>{
+ const expected=[10,12.5,17.5,20,30];for(const [i,a] of economicProposal().animals.entries()){assert.equal(a.structure_hit_damage,expected[i]);assert.deepEqual({...a,structure_hit_damage:0},{...B.animals[i],structure_hit_damage:0});}
+ assert.equal(wallSpec('zarzas').cost,10);assert.equal(wallSpec('adobe').cost,35);assert.equal(wallSpec('piedra').cost,80);
 });

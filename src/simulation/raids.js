@@ -23,10 +23,13 @@ export function planNight(s) {
   const introductory=!s.postgame&&s.day<=5;
   if(introductory)group=[B.animals[s.day-1].id];
   else if(!s.postgame){
-    const budget=randomInt(s,tier.threat_min,tier.threat_max),legal=compositions(budget,tier.unlocked_species);
-    group=legal[randomInt(s,0,legal.length-1)];
+    const stage=B.raids.night_horde_stages?.find(stage=>s.day>=stage.first&&s.day<=stage.last);
+    const budget=Math.ceil(randomInt(s,tier.threat_min,tier.threat_max)*(stage?.budget_scale??1));
+    const legal=compositions(budget,tier.unlocked_species,stage?{maxAnimals:stage.max_animals,minAnimals:stage.min_animals,speciesCaps:stage.species_caps}:{});
+    if(!legal.length)throw Error('No legal composition for the planned night');
+    group=[...legal[randomInt(s,0,legal.length-1)]];
   }
-  s.nightPlan={at,attraction:value,group,done:false,...(introductory?{introductory:true}:{})};
+  s.nightPlan={at,attraction:value,group,done:false,plannedNight:s.day,...(introductory?{introductory:true}:{})};
 }
 export function planDay(s) {s.dayPlan={at:(115+nextRandom(s)*420)/2.4,done:false};}
 export function cameraRaidEntry(s,specs,bounds,nav,view=nav.raidView,maxSearches=2){

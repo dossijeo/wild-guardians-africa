@@ -19,6 +19,25 @@ assert all(type(v) is int and v>0 for v in harvest_values.values())
 for crop in balance['crops']:
     if crop['id'] in harvest_values:
         crop['base_harvest_value']=harvest_values[crop['id']]
+attraction_values=revisions.get('crop_attraction_values',{})
+assert set(attraction_values)<=set(c['id'] for c in balance['crops'])
+assert all(type(v) is int and v>0 for v in attraction_values.values())
+for crop in balance['crops']:
+    if crop['id'] in attraction_values:
+        crop['base_attraction_value']=attraction_values[crop['id']]
+stages=revisions.get('night_horde_stages')
+if stages is not None:
+    expected_first=6
+    for stage in stages:
+        assert stage['first']==expected_first and type(stage['last']) is int and stage['last']>=stage['first']
+        assert type(stage['max_animals']) is int and 1<=stage['max_animals']<=12
+        assert type(stage['min_animals']) is int and 1<=stage['min_animals']<=stage['max_animals']
+        assert 1<=stage['budget_scale']<=3
+        assert len(stage['species_caps'])==len(balance['animals'])
+        assert all(type(v) is int and 0<=v<=stage['max_animals'] for v in stage['species_caps'])
+        expected_first=stage['last']+1
+    assert expected_first==101
+    balance['raids']['night_horde_stages']=stages
 boundaries=revisions['night_attraction_boundaries']
 assert len(boundaries)==len(balance['threat_tiers'])
 for i,tier in enumerate(balance['threat_tiers']):

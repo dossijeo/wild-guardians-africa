@@ -22,22 +22,30 @@ export function permission(state,action) {
   if(action==='village')return state.postgame;
   return true;
 }
-export function attraction(plants) { return plants.filter(p=>p.alive).reduce((sum,p)=>sum+cropSpec(p.species).base_harvest_value,0); }
+export function attraction(plants) { return plants.filter(p=>p.alive).reduce((sum,p)=>{const c=cropSpec(p.species);return sum+(c.base_attraction_value??c.base_harvest_value);},0); }
 export function threatTier(value) { return B.threat_tiers.find(t=>value>=t.attraction_min&&(t.attraction_max_exclusive===null||value<t.attraction_max_exclusive))??null; }
-export function compositions(budget,unlocked) {
-  const species=B.animals.filter(a=>unlocked.includes(a.id));
+const compositionCache=new Map(),COMPOSITION_CACHE_LIMIT=128;
+export function compositions(budget,unlocked,{maxAnimals=B.raids.max_animals,minAnimals=1,speciesCaps=null,spendFraction=B.raids.min_budget_spend_fraction}={}) {
+  if(!Number.isSafeInteger(budget)||budget<1||!Number.isSafeInteger(maxAnimals)||maxAnimals<1||maxAnimals>12||!Number.isSafeInteger(minAnimals)||minAnimals<1||minAnimals>maxAnimals||!Number.isFinite(spendFraction)||spendFraction<0||spendFraction>1)throw Error('Invalid raid composition constraints');
+  if(speciesCaps!==null&&(!Array.isArray(speciesCaps)||speciesCaps.length!==B.animals.length||speciesCaps.some(v=>!Number.isSafeInteger(v)||v<0||v>maxAnimals)))throw Error('Invalid species caps');
+  const species=B.animals.map((a,i)=>({...a,max_per_raid:speciesCaps?.[i]??a.max_per_raid})).filter(a=>unlocked.includes(a.id));
+  const minimum=Math.min(minAnimals,budget);
+  const key=JSON.stringify([budget,maxAnimals,minimum,spendFraction,species.map(a=>[a.id,a.threat_cost,a.max_per_raid])]);
+  if(compositionCache.has(key))return compositionCache.get(key);
   const result=[];
   function visit(i,cost,count,group) {
     if(i===species.length) {
-      if(count && count<=5 && cost>=Math.ceil(.75*budget)&&cost<=budget)result.push([...group]);
+      if(count>=minimum && count<=maxAnimals && cost>=Math.ceil(spendFraction*budget)&&cost<=budget)result.push(Object.freeze([...group]));
       return;
     }
     const a=species[i];
-    for(let n=0;n<=a.max_per_raid && count+n<=5 && cost+n*a.threat_cost<=budget;n++) {
+    for(let n=0;n<=a.max_per_raid && count+n<=maxAnimals && cost+n*a.threat_cost<=budget;n++) {
       visit(i+1,cost+n*a.threat_cost,count+n,[...group,...Array(n).fill(a.id)]);
     }
   }
-  visit(0,0,0,[]);return result;
+  visit(0,0,0,[]);Object.freeze(result);
+  if(compositionCache.size>=COMPOSITION_CACHE_LIMIT)compositionCache.delete(compositionCache.keys().next().value);
+  compositionCache.set(key,result);return result;
 }
 export function dawnMinimum(state) {
   const center=state.structures.some(operational);
@@ -62,4 +70,3 @@ export function nextRandom(state) {
   return state.rng/4294967296;
 }
 export const randomInt=(state,a,b)=>a+Math.floor(nextRandom(state)*(b-a+1));
-

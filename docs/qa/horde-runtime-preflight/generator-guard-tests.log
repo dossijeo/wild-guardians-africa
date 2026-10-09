@@ -1,0 +1,30 @@
+TAP version 13
+# Subtest: balance generation rejects 600-coin centre without writing
+ok 1 - balance generation rejects 600-coin centre without writing
+  ---
+  duration_ms: 160.621
+  ...
+# Subtest: balance generation rejects changed older-worker wage without writing
+ok 2 - balance generation rejects changed older-worker wage without writing
+  ---
+  duration_ms: 135.6397
+  ...
+# Subtest: balance generation rejects wage below the minimum without writing
+ok 3 - balance generation rejects wage below the minimum without writing
+  ---
+  duration_ms: 131.4034
+  ...
+# Subtest: audio-backed prices allow independent harvest, threat and movement revisions
+ok 4 - audio-backed prices allow independent harvest, threat and movement revisions
+  ---
+  duration_ms: 154.6377
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 688.1699

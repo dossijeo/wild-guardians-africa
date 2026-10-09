@@ -4,13 +4,14 @@ import * as Game from '../src/simulation/game.js';
 import {planNight,spawnRaid} from '../src/simulation/raids.js';
 import {Navigation} from '../src/world/navigation.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
+import {BALANCE as B} from '../src/simulation/balance.js';
 const species=['warthog','hyena','buffalo','lion','rhino'];
 function navigation(s){const n=new Navigation(712,'sabana',{});n.field={blocked:()=>false,slope:()=>0,surface:()=>0};n.propsAt=()=>[];n.activeBounds=[-48,-48,48,48];n.setState(s);return n;}
 function until(s,nav,check){for(let i=0;!check()&&i<6000&&!s.pauses.length;i++)Game.tick(s,.05,nav);assert.ok(check());}
 test('all 100 campaign nights have animals even with no crops, for 30 seeds',()=>{
  for(let seed=1;seed<=30;seed++){
   const s=Game.newGame({seed});
-  for(let day=1;day<=100;day++){s.day=day;planNight(s);assert.ok(s.nightPlan.group.length>=1&&s.nightPlan.group.length<=5);if(day<=5)assert.deepEqual(s.nightPlan.group,[species[day-1]]);}
+  for(let day=1;day<=100;day++){s.day=day;planNight(s);const cap=B.raids.night_horde_stages?.find(stage=>day>=stage.first&&day<=stage.last)?.max_animals??B.raids.max_animals;assert.ok(s.nightPlan.group.length>=1&&s.nightPlan.group.length<=cap);if(day<=5)assert.deepEqual(s.nightPlan.group,[species[day-1]]);}
   s.postgame=true;planNight(s);assert.deepEqual(s.nightPlan.group,[]);
  }
 });
