@@ -138,7 +138,7 @@ function observeDesktopWorldLoading(win,doc,now=()=>performance.now()) {
     const fixture = await window.__TAURI_INTERNALS__.invoke('desktop_smoke_fixture');
     window.__desktopSmokeLoadingPollWitness=true;
     window.__desktopSmokeParallelDioramaAssets=false;window.__desktopSmokeCollectiveLoadingPrograms=false;window.__desktopSmokeParallelLoadingPrograms=false;
-    report.checks.loadingRecipe={sharedGroundClip:window.__desktopSmokeSharedGroundClip===true,collectiveReadiness:false,parallelReadiness:false,parallelDioramaAssets:false,animalPrefetch:window.__desktopSmokeAnimalPrefetch===true,pauseLoadingMenu:window.__desktopSmokePauseLoadingMenu===true,scope:'Normal production loading pipeline; explicit smoke-only shared ground/menu pause/animal prefetch options recorded above.'};
+    report.checks.loadingRecipe={fluidDepth:window.__desktopSmokeFluidDepth===true,sharedGroundClip:window.__desktopSmokeSharedGroundClip===true,collectiveReadiness:false,parallelReadiness:false,parallelDioramaAssets:false,animalPrefetch:window.__desktopSmokeAnimalPrefetch===true,pauseLoadingMenu:window.__desktopSmokePauseLoadingMenu===true,scope:'Normal production loading pipeline; explicit smoke-only shared ground/menu pause/animal prefetch options recorded above.'};
     worldLoadingObserver=observeDesktopWorldLoading(window,document);
     report.checks.productionLoading=worldLoadingObserver.sample();
     if (fixture) {localStorage.setItem('wild-guardians:slot:'+fixture.slotId,fixture.snapshot);send({action:'load-slot',slotId:fixture.slotId});}
@@ -148,6 +148,7 @@ function observeDesktopWorldLoading(win,doc,now=()=>performance.now()) {
     report.checks.productionLoading=worldLoadingObserver.sample();
     if (document.querySelector('#stage')?.getAttribute('aria-busy') !== 'false') throw Error('Production world did not finish loading');
     report.checks.worldReadyAt=performance.now();
+    if(window.__desktopSmokeFluidDepth===true){const probe=window.__desktopSmokeFluidDepthProbe;try{report.checks.fluidDepthBinding=probe();}finally{if(window.__desktopSmokeFluidDepthProbe===probe)delete window.__desktopSmokeFluidDepthProbe;}}
     if(window.__desktopSmokeSharedGroundClip===true){try{report.checks.groundClipBinding=window.__desktopSmokeGroundClipProbe();}finally{delete window.__desktopSmokeGroundClipProbe;}}
     await new Promise(resolve => setTimeout(resolve, 1000));
     const world = document.querySelector('#world');

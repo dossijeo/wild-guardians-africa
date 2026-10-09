@@ -24,7 +24,7 @@ test('paired control uses identical fixture file and fixed ground/menu options b
  const args=control.split('\n').find(line=>line.includes('$controlArgs ='));assert.match(args,/--smoke-fixture/);assert.match(args,/--smoke-shared-ground/);assert.match(args,/--smoke-pause-menu/);assert.doesNotMatch(args,/--smoke-animal-prefetch/);
  assert.match(control,/not \$result\.ok/);assert.match(control,/not \$result\.checks\.visibility\.passed/);assert.match(control,/normalized step success is not a smoke PASS/);
  const visibility=workflow.split('      - name: Check genuine native minimization and restoration')[1].split('      - uses:')[0];
- assert.match(visibility,/if \(\$env:SMOKE_ANIMAL_PREFETCH -ne 'true'\)/);assert.match(visibility,/desktop-visibility-fixture\.json/);assert.match(visibility,/Missing exact fixture712 control snapshot/);assert.match(visibility,/--smoke-animal-prefetch/);assert.match(visibility,/not \$result\.checks\.visibility\.passed/);
+ assert.match(visibility,/if \(\$env:SMOKE_ANIMAL_PREFETCH -ne 'true' -and \$env:SMOKE_FLUID_DEPTH -ne 'true'\)/);assert.match(visibility,/desktop-visibility-fixture\.json/);assert.match(visibility,/Missing exact fixture712 control snapshot/);assert.match(visibility,/--smoke-animal-prefetch/);assert.match(visibility,/not \$result\.checks\.visibility\.passed/);
 });
 
 test('workflow defaults OFF and retains both candidate gates and original world deadline',()=>{

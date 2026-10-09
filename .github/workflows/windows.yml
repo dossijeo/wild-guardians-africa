@@ -14,6 +14,10 @@ on:
         description: Smoke-only pause native menu rendering at definitive start/load
         type: boolean
         default: false
+      fluid_depth:
+        description: Smoke-only authored water/lava depth recipe with same-EXE fixture712 OFF control
+        type: boolean
+        default: false
       animal_prefetch:
         description: Smoke-only animal prefetch with same-EXE fixture712 OFF control (requires shared_ground and pause_menu)
         type: boolean
@@ -35,6 +39,7 @@ jobs:
       SMOKE_SHARED_GROUND: ${{ inputs.shared_ground }}
       SMOKE_PAUSE_MENU: ${{ inputs.pause_menu }}
       SMOKE_ANIMAL_PREFETCH: ${{ inputs.animal_prefetch }}
+      SMOKE_FLUID_DEPTH: ${{ inputs.fluid_depth }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -50,6 +55,11 @@ jobs:
         shell: pwsh
         run: |
           if ($env:SMOKE_SHARED_GROUND -ne 'true' -or $env:SMOKE_PAUSE_MENU -ne 'true') { throw 'Animal prefetch comparison requires shared_ground=true and pause_menu=true in both arms' }
+      - name: Validate isolated fluid depth comparison
+        if: inputs.fluid_depth
+        shell: pwsh
+        run: |
+          if ($env:SMOKE_SHARED_GROUND -eq 'true' -or $env:SMOKE_ANIMAL_PREFETCH -eq 'true' -or $env:SMOKE_PAUSE_MENU -ne 'true') { throw 'Fluid depth comparison requires shared_ground=false, animal_prefetch=false and pause_menu=true' }
       - run: npm ci
       - id: desktop-build
         run: npm run desktop:build
@@ -106,6 +116,30 @@ jobs:
             Write-Output "::warning::Diagnostic animal prefetch OFF raw failure preserved; normalized step success is not a smoke PASS."
             throw 'Diagnostic fixture712 control smoke failed; preserved separately'
           }
+      - name: Diagnostic same-EXE fixture712 fluid depth OFF
+        if: inputs.fluid_depth
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          $fixture = Join-Path $env:RUNNER_TEMP 'desktop-visibility-fixture.json'
+          node tools/create_desktop_visibility_fixture.mjs $fixture
+          if ($LASTEXITCODE -ne 0) { throw 'Native visibility control fixture failed' }
+          "Fixture712 snapshot file SHA256: $((Get-FileHash -LiteralPath $fixture -Algorithm SHA256).Hash)" >> $env:GITHUB_STEP_SUMMARY
+          $report = Join-Path $env:RUNNER_TEMP 'desktop-fluid-control.json'
+          $binary = (Resolve-Path src-tauri/target/release/wild-guardians-africa.exe).Path
+          $controlArgs = @('--smoke-report', $report, '--smoke-fixture', $fixture, '--smoke-pause-menu')
+          $process = Start-Process -FilePath $binary -ArgumentList $controlArgs -WindowStyle Hidden -PassThru
+          if (-not $process.WaitForExit(900000)) { Stop-Process -Id $process.Id; throw 'Diagnostic fixture712 control process timed out' }
+          if (-not (Test-Path -LiteralPath $report)) { throw 'No diagnostic fluid depth control report' }
+          $result = Get-Content -Raw -LiteralPath $report | ConvertFrom-Json
+          $result.PSObject.Properties.Remove('worldPng')
+          $result | ConvertTo-Json -Depth 30 | Set-Content -LiteralPath $report
+          $controlErrors = ($result.errors -join '; ') -replace '[\r\n]', ' '
+          "Diagnostic fixture712 fluid depth OFF raw ok=$($result.ok); errors=$controlErrors. Step conclusion may be normalized by continue-on-error and is not smoke approval." >> $env:GITHUB_STEP_SUMMARY
+          if ($process.ExitCode -ne 0 -or -not $result.ok -or -not $result.checks.visibility.passed) {
+            Write-Output "::warning::Diagnostic fluid depth OFF raw failure preserved; normalized step success is not a smoke PASS."
+            throw 'Diagnostic fixture712 control smoke failed; preserved separately'
+          }
       - name: Smoke test the packaged game in WebView2
         shell: pwsh
         run: |
@@ -115,6 +149,7 @@ jobs:
           if ($env:SMOKE_SHARED_GROUND -eq 'true') { $smokeArgs += '--smoke-shared-ground' }
           if ($env:SMOKE_PAUSE_MENU -eq 'true') { $smokeArgs += '--smoke-pause-menu' }
           if ($env:SMOKE_ANIMAL_PREFETCH -eq 'true') { $smokeArgs += '--smoke-animal-prefetch' }
+          if ($env:SMOKE_FLUID_DEPTH -eq 'true') { $smokeArgs += '--smoke-fluid-depth' }
           $process = Start-Process -FilePath $binary -ArgumentList $smokeArgs -WindowStyle Hidden -PassThru
           if (-not $process.WaitForExit(240000)) { Stop-Process -Id $process.Id; throw 'WebView2 smoke timed out' }
           if (-not (Test-Path -LiteralPath $report)) { throw 'No WebView2 smoke report' }
@@ -126,11 +161,12 @@ jobs:
           }
           Get-Content -LiteralPath $report >> $env:GITHUB_STEP_SUMMARY
           if ($process.ExitCode -ne 0 -or -not $result.ok) { throw 'WebView2 smoke failed' }
+          if ($env:SMOKE_FLUID_DEPTH -eq 'true' -and -not $result.checks.fluidDepthBinding.passed) { throw 'Fluid depth native probe missing or failed' }
       - name: Check genuine native minimization and restoration
         shell: pwsh
         run: |
           $fixture = Join-Path $env:RUNNER_TEMP 'desktop-visibility-fixture.json'
-          if ($env:SMOKE_ANIMAL_PREFETCH -ne 'true') {
+          if ($env:SMOKE_ANIMAL_PREFETCH -ne 'true' -and $env:SMOKE_FLUID_DEPTH -ne 'true') {
             node tools/create_desktop_visibility_fixture.mjs $fixture
             if ($LASTEXITCODE -ne 0) { throw 'Native visibility fixture failed' }
           }
@@ -141,6 +177,7 @@ jobs:
           if ($env:SMOKE_SHARED_GROUND -eq 'true') { $smokeArgs += '--smoke-shared-ground' }
           if ($env:SMOKE_PAUSE_MENU -eq 'true') { $smokeArgs += '--smoke-pause-menu' }
           if ($env:SMOKE_ANIMAL_PREFETCH -eq 'true') { $smokeArgs += '--smoke-animal-prefetch' }
+          if ($env:SMOKE_FLUID_DEPTH -eq 'true') { $smokeArgs += '--smoke-fluid-depth' }
           $process = Start-Process -FilePath $binary -ArgumentList $smokeArgs -WindowStyle Hidden -PassThru
           if (-not $process.WaitForExit(900000)) { Stop-Process -Id $process.Id; throw 'Native visibility timed out' }
           if (-not (Test-Path -LiteralPath $report)) { throw 'No native visibility report' }
@@ -148,6 +185,7 @@ jobs:
           $result.PSObject.Properties.Remove('worldPng')
           $result | ConvertTo-Json -Depth 30 | Set-Content -LiteralPath $report
           if ($process.ExitCode -ne 0 -or -not $result.ok -or -not $result.checks.visibility.passed) { throw 'Native visibility failed' }
+          if ($env:SMOKE_FLUID_DEPTH -eq 'true' -and -not $result.checks.fluidDepthBinding.passed) { throw 'Fluid depth visibility probe missing or failed' }
           "Native visibility hidden interval: $($result.checks.visibility.hiddenMs) ms" >> $env:GITHUB_STEP_SUMMARY
       - uses: actions/upload-artifact@v7
         if: always()
@@ -200,6 +238,18 @@ jobs:
           retention-days: 7
       - uses: actions/upload-artifact@v7
         if: always() && inputs.animal_prefetch
+        with:
+          path: ${{ runner.temp }}/desktop-visibility-fixture.json
+          archive: false
+          retention-days: 7
+      - uses: actions/upload-artifact@v7
+        if: always() && inputs.fluid_depth
+        with:
+          path: ${{ runner.temp }}/desktop-fluid-control.json
+          archive: false
+          retention-days: 7
+      - uses: actions/upload-artifact@v7
+        if: always() && inputs.fluid_depth
         with:
           path: ${{ runner.temp }}/desktop-visibility-fixture.json
           archive: false

@@ -9,6 +9,8 @@ const properties=['side','depthFunc','depthTest','depthWrite','opacity','alphaTe
 export function standardDepthMaterial(source){
   if(!(source.isMeshStandardMaterial||source.isMeshBasicMaterial)||source.transparent||source.alphaHash||source.polygonOffset||source.clippingPlanes?.length)return null;
   const recipe=nativeDepthRecipe(source);if(!recipe)return null;
+  const fluid=recipe.features.has('painted-fluid-clip')?recipe.fluidUniforms:null;
+  if(recipe.features.has('painted-fluid-clip')&&(!fluid?.uFluidClip||!fluid?.uFluidBounds))return null;
   const surface=recipe.features.has('surface')?source.userData.nativeSurface:null;
   const bias=surfaceMapBias(surface);
   const signature=[...recipe.features].sort().join('|')+(recipe.features.has('surface')?'|surface-map-bias='+bias:'');let entry=cache.get(source);
@@ -42,6 +44,24 @@ export function standardDepthMaterial(source){
         shader.fragmentShader='varying float vNativeVisibility;\n'+coverageThreshold+'\n'+shader.fragmentShader;
         shader.fragmentShader=shader.fragmentShader.replace('#include <clipping_planes_fragment>',`#include <clipping_planes_fragment>
           if(vNativeVisibility<.999){if(vNativeVisibility<.002||coverageThreshold(gl_FragCoord.xy)>=vNativeVisibility)discard;}`);
+      }
+      if(recipe.features.has('painted-fluid-clip')){
+        shader.uniforms.uFluidClip=fluid.uFluidClip;shader.uniforms.uFluidBounds=fluid.uFluidBounds;
+        // Exact authored water/lava coverage after stock morph/skinning and
+        // displacement; preserve batching, instancing and scene-space bounds.
+        shader.vertexShader='varying vec3 vPaintWorld;\n'+shader.vertexShader;
+        shader.vertexShader=shader.vertexShader.replace('#include <project_vertex>',`#include <project_vertex>
+      vec4 paintPosition=vec4(transformed,1.0);
+      #ifdef USE_BATCHING
+        paintPosition=batchingMatrix*paintPosition;
+      #endif
+      #ifdef USE_INSTANCING
+        paintPosition=instanceMatrix*paintPosition;
+      #endif
+      vPaintWorld=(modelMatrix*paintPosition).xyz;`);
+        shader.fragmentShader='varying vec3 vPaintWorld;uniform float uFluidClip;uniform vec4 uFluidBounds;\n'+shader.fragmentShader;
+        shader.fragmentShader=shader.fragmentShader.replace('#include <clipping_planes_fragment>',`#include <clipping_planes_fragment>
+      if(uFluidClip>.5){bool inside=vPaintWorld.x>=uFluidBounds.x&&vPaintWorld.z>=uFluidBounds.y&&vPaintWorld.x<uFluidBounds.z&&vPaintWorld.z<uFluidBounds.w;if((uFluidClip<1.5&&!inside)||(uFluidClip>1.5&&inside))discard;}`);
       }
       if(recipe.features.has('horizon')){
         shader.uniforms.uHorizonBounds={value:source.userData.horizonBounds};
