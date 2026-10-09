@@ -131,3 +131,7 @@ The latest human instruction, relayed by root, supersedes the previous exclusion
 ## Final approved appearance and soft focus (latest human steering)
 
 The user approved the current reference-faithful appearance (V9). Preserve camera/composition, maize, mountains, soil, haze/shaft/sparkles and wood/vines/sunflower/parchment UI. Add only a very lightweight soft central crop-light falloff/vignette, stronger attention to the centre and gradually dimmer edges, preferably within existing shaders with no added target/pass. Respect day/night, growth, UI, reduced motion and sky handoff. Visual approval does not approve initialization/performance/resource gates. Root relayed this instruction after the frozen V6/V9 visual timing campaign; that campaign excludes this adjustment.
+
+### Human correction: perceptible crop focus (after0e52b0ea pair)
+
+The earlier central gain1.025 was rejected as visually insufficient. Preserve the already approved four-maize composition and ornament, but make the centre noticeably brighter and surroundings progressively darker in the same fragment recipes. The candidate gain is1.30 centrally,0.60 at day edges and0.67 at night edges, with a stronger existing haze falloff. No new point light, pass, render target or texture. Native comparison and inspection are required before calling this visually accepted; earlier focus screenshots remain negative evidence. Production readiness/performance gates remain open.

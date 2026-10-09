@@ -11,7 +11,7 @@ float loadingFocusEdge(){
  return smoothstep(.028,.42,dot(offset,offset));
 }
 float loadingFocusGain(){
- return mix(1.,mix(1.025,mix(.74,.82,uLoadingFocusNight),loadingFocusEdge()),uLoadingFocusAmount);
+ return mix(1.,mix(1.30,mix(.60,.67,uLoadingFocusNight),loadingFocusEdge()),uLoadingFocusAmount);
 }
 `;
 export class LoadingFocusLight {
@@ -36,6 +36,6 @@ export class LoadingFocusLight {
    if(!shader.fragmentShader.includes(token))throw Error('Missing loading focus material output');
    shader.fragmentShader=LOADING_FOCUS_GLSL+shader.fragmentShader.replace(token,'outgoingLight*=loadingFocusGain();\n'+token);
   };
-  material.customProgramCacheKey=()=>cacheKey+'|loading-focus-light-v1';
+  material.customProgramCacheKey=()=>cacheKey+'|loading-focus-light-v2';
  }
 }
