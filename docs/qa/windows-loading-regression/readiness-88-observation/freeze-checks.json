@@ -1,0 +1,658 @@
+{
+  "runtimeSource": "383c2e45",
+  "base": "0747b6e7",
+  "files": {
+    "src/rendering/loading-readiness-snapshot.js": "3c3a42c77b698a462432c7cec6ddd6becdd9d1b74c16e12270c76e6e7709f481",
+    "src/rendering/loading-sync-witness.js": "9c083e044ced2154341d3324881e3ba7e3e0f833b1ec8e46279310425ff0cb7e",
+    "src/rendering/scene.js": "3b5c3318cc1b45504ac36a30db6dcdfeac5a0ade74c5b9fe877491c1282522d6",
+    "src/app/main.js": "41578329fb898df28a1cd1c59bdcec5abf70cf8dec7f4aa2693d08955a083450",
+    "src-tauri/smoke.js": "1b03ff26379cd9ab94dbe53070ba46287ed1c505bd4361c8669e2ce41ed3eedb",
+    "tests/loading-readiness-snapshot.test.js": "f78b176ff73874c2c7b2cde4c98fbcc7a5cfac4f44b6d9d1f62d0808c15b880c",
+    "tests/loading-sync-witness.test.js": "8e93b3a98c7732b647876fd39cf36d0d78e3ef0a23f96f21f8231e91a210d7c6",
+    "tests/desktop-smoke-failure-observation.test.js": "4fe2f1c00ee1beb617f298297a3568ea93ae70fc9b5134f8aef61167969bf89f",
+    "docs/qa/windows-loading-regression/readiness-88-observation/wiring.md": "2b7728ee8874b3c7a3c35db22cd1acdb4adfff22718ff37ab950b55d70238df8",
+    "docs/qa/sfx-catalog-post-jam/inventory.json": "69d1a9ac26a6e9c07447b62659c2a30a81199a9adb818c131db4fe169fc71ab1",
+    "docs/qa/sfx-catalog-post-jam/inventory.md": "41baf228c3b3eda66c5de2e45bf42de3ba5f31dbe356249234bc044ca252f43c"
+  },
+  "sfxAuditAllowedChanges": [
+    {
+      "path": "/sourceHashes/src/app/main.js",
+      "before": "419979d9dc4e5a57aac6d7610b036a4de0c31d67ec14d49f86bfc883525f1416",
+      "after": "41578329fb898df28a1cd1c59bdcec5abf70cf8dec7f4aa2693d08955a083450"
+    },
+    {
+      "path": "/sourceHashes/src/rendering/scene.js",
+      "before": "689e707a33d3dbefdd5f008ff1f0d472b71738a5e4c3ee349c3aaf5fe832d418",
+      "after": "3b5c3318cc1b45504ac36a30db6dcdfeac5a0ade74c5b9fe877491c1282522d6"
+    },
+    {
+      "path": "/rows/0/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/2/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/3/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/4/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/5/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/6/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/9/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/10/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/11/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/12/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/13/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/14/contextEvidence/sources/1/line",
+      "before": 88,
+      "after": 89
+    },
+    {
+      "path": "/rows/15/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/18/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/19/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/20/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/21/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/22/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/23/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/24/runtimeChains/0/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/25/runtimeChains/0/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/28/runtimeChains/0/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/28/runtimeChains/1/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/30/runtimeChains/0/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/31/runtimeChains/0/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/32/runtimeChains/0/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/32/runtimeChains/1/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/33/runtimeChains/0/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/33/runtimeChains/1/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/33/runtimeChains/2/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/34/runtimeChains/0/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/35/runtimeChains/0/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/36/runtimeChains/0/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/37/runtimeChains/0/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/38/runtimeChains/0/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/39/runtimeChains/0/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/40/runtimeChains/0/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/41/runtimeChains/0/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/42/runtimeChains/0/callers/1/line",
+      "before": 200,
+      "after": 201
+    },
+    {
+      "path": "/rows/43/runtimeChains/0/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/44/runtimeChains/0/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/45/runtimeChains/0/callers/1/line",
+      "before": 200,
+      "after": 201
+    },
+    {
+      "path": "/rows/46/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/47/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/50/runtimeChains/0/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/51/runtimeChains/0/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/51/runtimeChains/1/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/57/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/58/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/59/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/61/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/62/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/63/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/64/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/66/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/67/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/68/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/69/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/71/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/72/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/73/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/74/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/76/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/77/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/78/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/79/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/81/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/82/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/83/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/84/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/85/runtimeChains/0/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/86/runtimeChains/0/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/87/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/88/runtimeChains/0/callers/0/line",
+      "before": 393,
+      "after": 397
+    },
+    {
+      "path": "/rows/89/runtimeChains/0/callers/0/line",
+      "before": 393,
+      "after": 397
+    },
+    {
+      "path": "/rows/91/runtimeChains/0/callers/0/line",
+      "before": 263,
+      "after": 267
+    },
+    {
+      "path": "/rows/91/runtimeChains/0/callers/1/line",
+      "before": 97,
+      "after": 98
+    },
+    {
+      "path": "/rows/92/runtimeChains/0/callers/0/line",
+      "before": 218,
+      "after": 222
+    },
+    {
+      "path": "/rows/92/runtimeChains/0/callers/1/line",
+      "before": 97,
+      "after": 98
+    },
+    {
+      "path": "/rows/93/runtimeChains/0/callers/0/line",
+      "before": 199,
+      "after": 200
+    },
+    {
+      "path": "/rows/93/runtimeChains/0/callers/1/line",
+      "before": 97,
+      "after": 98
+    },
+    {
+      "path": "/rows/94/runtimeChains/0/callers/0/line",
+      "before": 199,
+      "after": 200
+    },
+    {
+      "path": "/rows/94/runtimeChains/0/callers/1/line",
+      "before": 97,
+      "after": 98
+    },
+    {
+      "path": "/rows/95/runtimeChains/0/callers/0/line",
+      "before": 238,
+      "after": 242
+    },
+    {
+      "path": "/rows/95/runtimeChains/0/callers/1/line",
+      "before": 97,
+      "after": 98
+    },
+    {
+      "path": "/rows/97/runtimeChains/0/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/98/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/99/runtimeChains/0/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/100/runtimeChains/0/callers/2/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/101/runtimeChains/0/callers/0/line",
+      "before": 288,
+      "after": 292
+    },
+    {
+      "path": "/rows/101/runtimeChains/0/callers/1/line",
+      "before": 97,
+      "after": 98
+    },
+    {
+      "path": "/rows/102/runtimeChains/0/callers/0/line",
+      "before": 244,
+      "after": 248
+    },
+    {
+      "path": "/rows/102/runtimeChains/0/callers/1/line",
+      "before": 97,
+      "after": 98
+    },
+    {
+      "path": "/rows/103/runtimeChains/0/callers/0/line",
+      "before": 288,
+      "after": 292
+    },
+    {
+      "path": "/rows/103/runtimeChains/0/callers/1/line",
+      "before": 97,
+      "after": 98
+    },
+    {
+      "path": "/rows/104/runtimeChains/0/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/106/runtimeChains/0/callers/0/line",
+      "before": 110,
+      "after": 111
+    },
+    {
+      "path": "/rows/106/runtimeChains/0/callers/1/line",
+      "before": 97,
+      "after": 98
+    },
+    {
+      "path": "/rows/107/runtimeChains/0/callers/2/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/108/runtimeChains/0/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/110/runtimeChains/0/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/110/runtimeChains/1/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/111/runtimeChains/0/callers/0/line",
+      "before": 288,
+      "after": 292
+    },
+    {
+      "path": "/rows/111/runtimeChains/0/callers/1/line",
+      "before": 97,
+      "after": 98
+    },
+    {
+      "path": "/rows/112/runtimeChains/0/callers/0/line",
+      "before": 288,
+      "after": 292
+    },
+    {
+      "path": "/rows/112/runtimeChains/0/callers/1/line",
+      "before": 97,
+      "after": 98
+    },
+    {
+      "path": "/rows/113/runtimeChains/0/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/114/runtimeChains/0/callers/2/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/115/runtimeChains/0/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/116/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/118/runtimeChains/0/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/119/runtimeChains/0/callers/0/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/120/runtimeChains/0/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/121/runtimeChains/0/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/122/runtimeChains/0/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/123/runtimeChains/0/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/124/runtimeChains/0/callers/1/line",
+      "before": 493,
+      "after": 497
+    },
+    {
+      "path": "/rows/125/runtimeChains/0/callers/2/line",
+      "before": 493,
+      "after": 497
+    }
+  ],
+  "sfx": {
+    "total": 126,
+    "assigned": 100,
+    "unassigned": 26,
+    "exactOriginalFiles": 126,
+    "nonProvenanceDifferences": 0
+  },
+  "tests": {
+    "reviewedReadinessAndOriginalSmoke": 28,
+    "sfxAudit": 3,
+    "scope": "Separate successful directed commands; no full suite/native claims"
+  },
+  "build": {
+    "exit": 0,
+    "viteSeconds": 9.87
+  },
+  "package": {
+    "exit": 0,
+    "files": 711,
+    "bytes": 445259293,
+    "relativeLinks": 860,
+    "runtimeGlbs": 22
+  },
+  "logs": {
+    "local-build.log": {
+      "bytes": 2320,
+      "sha256": "4d39774b72e54629c4ea22455c6708f3c14c455a9e486f46406f92b080214076"
+    },
+    "local-package.log": {
+      "bytes": 410,
+      "sha256": "ab2e46125a8495dae83f9aa9e0e4d4f5d8071798517d3d44b3b807db60bddb52"
+    }
+  },
+  "flags": "Original workflow/CLI: no experimental flags or driver options; unchanged native90s/hidden300000ms",
+  "normalPath": "No bridge/witness installed without original smoke marker; no context identity or snapshot/RAF created",
+  "warnings": [
+    "Vite existing large chunk warning",
+    "Node existing experimental JSON modules warning"
+  ]
+}
