@@ -1,0 +1,25 @@
+{
+  "run": 37949884630,
+  "head": "7f471b51112a7b382b2b47881c007fa6e4d8d891",
+  "artifactId": 11626172380,
+  "rawBytes": 119818,
+  "sha256": "01fee20c8df55e3ff38f6d2aa8e47fe39090f5a212cc964cf0d80ef067be96b1",
+  "conclusion": "failure",
+  "primary": "Production world did not finish loading",
+  "minimization": "skipped",
+  "buildAndInstaller": "passed",
+  "timeoutUnchangedSeconds": 90,
+  "identity": {
+    "contextLost": false,
+    "parallelShaderCompileSupported": true,
+    "renderer": "WebKit WebGL",
+    "scope": "One final read of existing World context identity/capabilities; no render/query timer or readiness change.",
+    "unmaskedRenderer": "ANGLE (Microsoft, Microsoft Basic Render Driver (0x0000008C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "unmaskedVendor": "Google Inc. (Microsoft)",
+    "vendor": "WebKit"
+  },
+  "pollSamples": {
+    "calls": 0
+  },
+  "scope": "No warm-GPU/readiness poll reached in this run; observed identity does not establish cause."
+}
