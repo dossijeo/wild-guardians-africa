@@ -1,5 +1,5 @@
 import {loadingSyncWitness} from './loading-sync-witness.js';
-import {compileGpuPreparation} from '../../tools/experiments/compile-gpu-preparation.js';
+import {compileGpuPreparation,snapshotGpuPrograms,waitGpuPrograms} from '../../tools/experiments/compile-gpu-preparation.js';
 import {loadingYieldBudget} from './loading-yield-budget.js';
 import {withScreenTarget} from './screen-target.js';
 // Use the shared bounded compiler, selecting every borrowed recipe needed by
@@ -25,10 +25,11 @@ export function compileLoadingPrograms(renderer,scene,camera,targetScene,{signal
 // scene. No mesh is cloned, reparented or hidden: lights, fog, clipping, skinning
 // and instancing retain the actual target-scene/object recipe. Restore screen
 // state synchronously in each submission before yielding to the loading RAF.
-export async function compileLoadingProgramsBatched(renderer,scene,camera,targetScene,{batchSize=4,frameBudget=0,now=()=>performance.now(),nextFrame,parallelReadiness=false,...options}={}) {
+export async function compileLoadingProgramsBatched(renderer,scene,camera,targetScene,{batchSize=4,frameBudget=0,now=()=>performance.now(),nextFrame,parallelReadiness=false,collectiveReadiness=false,...options}={}) {
  if(!Number.isInteger(batchSize)||batchSize<1)throw Error('Loading compile batch size must be positive');
  const objects=[];scene.traverse(object=>{if(object.isMesh||object.isPoints||object.isLine||object.isSprite)objects.push(object);});
  const target=targetScene??scene;
+ if(collectiveReadiness){if(parallelReadiness)throw Error('Conflicting compilation readiness modes');return compileLoadingProgramUnion(renderer,objects,camera,target,{batchSize,frameBudget,now,nextFrame,...options});}
  const owner=parallelReadiness?new AbortController():null,pending=[];let failure;
  const abort=()=>owner?.abort();if(owner){options.signal?.addEventListener('abort',abort,{once:true});if(options.signal?.aborted)abort();}
  const yieldWork=loadingYieldBudget({frameBudget,now,nextFrame,signal:owner?.signal??options.signal,cancelled:options.cancelled,onYield:options.onSubmit,frameSlack:options.frameSlack,cpuBudget:options.cpuBudget,getFrame:options.getFrame});
@@ -44,4 +45,27 @@ export async function compileLoadingProgramsBatched(renderer,scene,camera,target
  }
  if(owner){await Promise.all(pending);if(failure)throw failure;}
  }catch(error){throw failure??error;}finally{if(owner){abort();await Promise.all(pending);options.signal?.removeEventListener('abort',abort);}}
+}
+
+// QA-only: submit the same bounded views, snapshot each group synchronously,
+// then wait for their deduplicated union with one owned readiness poll.
+async function compileLoadingProgramUnion(renderer,objects,camera,target,{batchSize,frameBudget,now,nextFrame,signal,cancelled=()=>false,getEpoch=()=>0,timeout=30000,screen=false,onSubmit,onCpu,...options}) {
+ const begin=now(),gl=renderer.getContext(),epoch=getEpoch(),owner=new AbortController(),programs=new Set();let lost=false;
+ const check=()=>{if(signal?.aborted||owner.signal.aborted||cancelled()||lost||renderer.getContext()!==gl||getEpoch()!==epoch||gl.isContextLost())throw Error('Loading compilation cancelled');if(now()-begin>timeout)throw Error('Loading compilation timed out');};
+ const lose=()=>{lost=true;owner.abort();},abort=()=>owner.abort();
+ const witness=span=>{try{onSubmit?.(span);}catch{}};
+ const yieldWork=loadingYieldBudget({frameBudget,now,nextFrame,signal:owner.signal,cancelled:()=>{check();return false;},onYield:onSubmit,frameSlack:options.frameSlack,cpuBudget:options.cpuBudget,getFrame:options.getFrame});
+ check();gl.canvas?.addEventListener('webglcontextlost',lose);signal?.addEventListener('abort',abort,{once:true});
+ try{
+  for(let start=0;start<objects.length;start+=batchSize){
+   check();const batch=objects.slice(start,start+batchSize),view={traverse:callback=>{for(const object of batch)callback(object);},traverseVisible:()=>{}};
+   const submitted=loadingSyncWitness(span=>{if(options.frameSlack||options.cpuBudget)yieldWork.recordWork(span.duration);try{onCpu?.(span.duration);}catch{}witness(span);},'loading-compile-submit',()=>screen?withScreenTarget(renderer,()=>renderer.compile(view,camera,target)):renderer.compile(view,camera,target),now);
+   check();for(const program of snapshotGpuPrograms(renderer,submitted,{check,selectPrograms:properties=>properties.programs?.size?properties.programs.values():[properties.currentProgram]}))programs.add(program);
+   await yieldWork();check();
+  }
+  const start=onSubmit?now():null;let failed=false;
+  try{await waitGpuPrograms(programs,{check,signal:owner.signal});check();}
+  catch(error){failed=true;throw error;}
+  finally{if(onSubmit){const end=now();witness({label:'loading-compile-collective-readiness-wait',start,end,duration:end-start,failed,programCount:programs.size,scope:'Single awaited readiness barrier for deduplicated submitted native programs; not CPU/GPU duration.'});}}
+ }finally{owner.abort();programs.clear();gl.canvas?.removeEventListener('webglcontextlost',lose);signal?.removeEventListener('abort',abort);}
 }

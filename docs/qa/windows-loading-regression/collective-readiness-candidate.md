@@ -1,0 +1,9 @@
+# Single owned program-union candidate
+
+After failed parallel-per-group and uncompressed-package candidates, Windows smoke remains blocked in existing world compilation. This candidate retains each native bounded object view, target-scene lighting/background/clipping/skinning/instancing recipe, synchronous screen-state restoration, CPU16ms budget and original shader readiness. It snapshots every selected material program after each group before any await/restoration can overwrite variants, deduplicates native identities, then polls one complete union rather than one poller per group. Ready programs are removed from the pending set; any unresolved variant keeps the final barrier incomplete.
+
+Only packaged smoke sets the opt-in flag. Normal play remains sequential. The default shared compiler still uses its original currentProgram selection; loading explicitly selects all variants. Owner abort, loss/restoration latch, context identity/epoch, original driver failures and whole-union30s deadline are checked before submissions, polling and final acceptance. No driver work is cancelled or reported as adopted after invalidation.
+
+66 directed contracts pass, including overwritten variants plus a shared background program, no partial readiness, abort with suspended RAF, no late queries, query/submission errors, timeout, exact native objects/target and screen/viewport/scissor restoration before readiness. Full native acceptance requires the two unchanged smokes; resource and90s readiness gates remain. Timings are awaited wall spans, not exclusive GPU/CPU, and program-count metadata covers each batched compilation invocation rather than the whole renderer.
+
+Cargo features/lock and compressed package are restored to baseline. No-compression failed primary smoke and is preserved independently.

@@ -99,3 +99,44 @@ test('parallel pending groups latch context loss even after restoration and clea
  const canvas=new EventTarget(),gl={canvas,isContextLost:()=>false};let queries=0;const material={},scene={traverse:fn=>[1,2,3].forEach(()=>fn({isMesh:true,material}))},renderer={compile:()=>new Set([material]),getContext:()=>gl,properties:{get:()=>({currentProgram:{isReady:()=>{queries++;return false;}}})}};
  const pending=compileLoadingProgramsBatched(renderer,scene,{},undefined,{parallelReadiness:true,batchSize:1,cpuBudget:true,frameBudget:16});for(let i=0;i<20;i++)await Promise.resolve();canvas.dispatchEvent(new Event('webglcontextlost'));await assert.rejects(pending,/cancelled/);const final=queries;await new Promise(resolve=>setTimeout(resolve,30));assert.equal(queries,final);
 });
+
+
+test('collective compiler snapshots overwritten group variants and deduplicates shared native programs in one barrier',async()=>{
+ let submitted=0,clock=0,frames=0,firstReady=false,completed=false;const counts=[0,0,0],programs=[{isReady:()=>{counts[0]++;return firstReady;}},{isReady:()=>{counts[1]++;return true;}},{isReady:()=>{counts[2]++;return true;}}];
+ const material={},objects=Array.from({length:4},()=>({isMesh:true,material,parent:{}})),parents=objects.map(o=>o.parent),scene={traverse:fn=>objects.forEach(fn)},gl={isContextLost:()=>false};let variants;
+ const renderer={compile(view,camera,target){assert.equal(target,scene);const batch=[];view.traverse(o=>batch.push(o));assert.equal(batch.length,2);variants=new Map([['group',programs[submitted++]],['background',programs[2]]]);clock+=9;return new Set([material]);},getContext:()=>gl,properties:{get:()=>({programs:variants})}};
+ const pending=compileLoadingProgramsBatched(renderer,scene,{},undefined,{collectiveReadiness:true,batchSize:2,cpuBudget:true,frameBudget:16,now:()=>clock,nextFrame:async()=>{frames++;assert.deepEqual(counts,[0,0,0]);assert.deepEqual(objects.map(o=>o.parent),parents);}}).then(()=>{completed=true;});
+ await new Promise(resolve=>setImmediate(resolve));assert.equal(submitted,2);assert.equal(frames,1);assert.deepEqual(counts,[1,1,1]);assert.equal(completed,false);variants.clear();firstReady=true;await pending;assert.deepEqual(counts,[2,1,1]);assert.equal(completed,true);
+});
+
+test('collective compiler aborts suspended submissions without querying or adopting a partial union',async()=>{
+ const owner=new AbortController(),material={},gl={isContextLost:()=>false},objects=[{isMesh:true,material},{isMesh:true,material}],scene={traverse:fn=>objects.forEach(fn)};let submissions=0,queries=0,clock=0;
+ const renderer={compile:()=>{submissions++;clock+=20;return new Set([material]);},getContext:()=>gl,properties:{get:()=>({currentProgram:{isReady:()=>{queries++;return false;}}})}};
+ const pending=compileLoadingProgramsBatched(renderer,scene,{},undefined,{collectiveReadiness:true,batchSize:1,cpuBudget:true,frameBudget:16,signal:owner.signal,now:()=>clock,nextFrame:()=>new Promise(()=>{})});
+ await Promise.resolve();owner.abort();await assert.rejects(pending,/cancelled/);assert.equal(submissions,1);assert.equal(queries,0);
+});
+
+test('collective readiness retains context-loss latch and no late queries after cancellation',async()=>{
+ const canvas=new EventTarget(),gl={canvas,isContextLost:()=>false},material={},scene={traverse:fn=>fn({isMesh:true,material})};let queries=0;
+ const renderer={compile:()=>new Set([material]),getContext:()=>gl,properties:{get:()=>({currentProgram:{isReady:()=>{queries++;return false;}}})}};
+ const pending=compileLoadingProgramsBatched(renderer,scene,{},undefined,{collectiveReadiness:true,cpuBudget:true,frameBudget:16});await new Promise(resolve=>setImmediate(resolve));assert.equal(queries,1);canvas.dispatchEvent(new Event('webglcontextlost'));await assert.rejects(pending,/cancelled/);await new Promise(resolve=>setTimeout(resolve,30));assert.equal(queries,1);
+});
+
+test('collective compiler retains original native failure and cleans owner before any readiness observation',async()=>{
+ const original=Error('driver submit'),material={},gl={isContextLost:()=>false},scene={traverse:fn=>[1,2].forEach(()=>fn({isMesh:true,material}))};let submissions=0,queries=0;
+ const renderer={compile:()=>{if(++submissions===2)throw original;return new Set([material]);},getContext:()=>gl,properties:{get:()=>({currentProgram:{isReady:()=>{queries++;return false;}}})}};
+ await assert.rejects(compileLoadingProgramsBatched(renderer,scene,{},undefined,{collectiveReadiness:true,batchSize:1,cpuBudget:true,frameBudget:16}),error=>error===original);assert.equal(queries,0);
+});
+
+test('collective compiler bounds the whole submitted union deadline and propagates query faults exactly',async()=>{
+ let clock=0;const gl={isContextLost:()=>false},material={},scene={traverse:fn=>fn({isMesh:true,material})},renderer={compile:()=>new Set([material]),getContext:()=>gl,properties:{get:()=>({currentProgram:{isReady:()=>false}})}};
+ const pending=compileLoadingProgramsBatched(renderer,scene,{},undefined,{collectiveReadiness:true,cpuBudget:true,frameBudget:16,now:()=>clock,timeout:1});await new Promise(resolve=>setImmediate(resolve));clock=2;await assert.rejects(pending,/timed out/);
+ const original=Error('query fault');renderer.properties.get=()=>({currentProgram:{isReady:()=>{throw original;}}});await assert.rejects(compileLoadingProgramsBatched(renderer,scene,{},undefined,{collectiveReadiness:true,cpuBudget:true,frameBudget:16}),error=>error===original);
+});
+
+
+test('collective screen submission restores renderer target and viewport before final asynchronous readiness',async()=>{
+ const material={},scene={traverse:fn=>fn({isMesh:true,material})},gl={isContextLost:()=>false};let ready=false,target={depth:true};const previous=target,viewport=new Vector4(1,2,3,4),scissor=new Vector4(4,3,2,1);let scissorTest=true;
+ const renderer={getContext:()=>gl,properties:{get:()=>({currentProgram:{isReady:()=>ready}})},getRenderTarget:()=>target,setRenderTarget:value=>{target=value;viewport.set(0,0,900,600);},getViewport:v=>v.copy(viewport),getScissor:v=>v.copy(scissor),getScissorTest:()=>scissorTest,setViewport:v=>viewport.copy(v),setScissor:v=>scissor.copy(v),setScissorTest:v=>{scissorTest=v;},compile:(view,camera,native)=>{assert.equal(target,null);assert.equal(native,scene);return new Set([material]);}};
+ const pending=compileLoadingProgramsBatched(renderer,scene,{},undefined,{collectiveReadiness:true,screen:true,cpuBudget:true,frameBudget:16});await new Promise(resolve=>setImmediate(resolve));assert.equal(target,previous);assert.deepEqual(viewport.toArray(),[1,2,3,4]);assert.deepEqual(scissor.toArray(),[4,3,2,1]);assert.equal(scissorTest,true);ready=true;await pending;
+});
