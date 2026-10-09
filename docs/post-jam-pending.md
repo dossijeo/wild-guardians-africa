@@ -862,3 +862,11 @@ económico; todavía no acredita que reducir una reserva sea seguro ni sustituye
 la campaña de 100 noches o su matriz. La apertura Mapungubwe cobra seis segundos
 antes, pero entrega una caja menos; se conserva también ese resultado negativo.
 [Datos, diagnóstico reproducible y alcance](qa/canyon-budget-f5e796c2/README.md).
+
+Validate game37934148381 terminó SUCCESS sobre f5e796c2:3719/3719 pruebas,
+compilación y paquete web correctos. Esto cierra la comprobación completa de
+CI para la integración nativa de biblioteca y el cambio de rutas. La revisión
+visual de los cuatro labs en ambas orientaciones sigue abierta: CUA todavía
+falla al inicializar los assets del kernel. Windows y la matriz de campañas
+mantienen sus criterios independientes.
+[Log completo, SHA y alcance](qa/validate-f5e796c2/README.md).
