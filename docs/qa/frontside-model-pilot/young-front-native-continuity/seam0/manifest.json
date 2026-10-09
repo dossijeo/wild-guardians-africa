@@ -1,0 +1,181 @@
+{
+  "tab": 928,
+  "seam": 0,
+  "sourceHead": "637f0ad7",
+  "files": [
+    {
+      "file": "root-report.json",
+      "bytes": 714826,
+      "sha256": "c63c04bb3a7022c927211e5b1a1e2d4bf65ccc3540480c34d9135554a41cf281"
+    },
+    {
+      "file": "server-report.json",
+      "bytes": 714909,
+      "sha256": "848860b8d708f36a1d7044d4585d8460f9cdb0de577177f9a9d66108b39f88d6"
+    },
+    {
+      "file": "atlas.png",
+      "bytes": 3475111,
+      "sha256": "688bdd32bb64e5bc73653ae3f84a1174566d1ffd1f58fb54b13f992e2bc20d97"
+    },
+    {
+      "file": "console.json",
+      "bytes": 2,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "file": "source-0-frontside-crop-young-leaf-front-continuous.js",
+      "bytes": 13268,
+      "sha256": "7ffb62000696e39d21610726cf20a7edc4b1bd4b91e9a4e1cbc57b6c2be6e8ab"
+    },
+    {
+      "file": "source-1-frontside-young-leaf-front-runtime-rigs.mjs",
+      "bytes": 2637,
+      "sha256": "95d57599add712cc7e2b2d577f4bc00010967248da2f2636fd737ecfa8422fc6"
+    },
+    {
+      "file": "source-2-frontside-young-leaf-continuous-plan.mjs",
+      "bytes": 634,
+      "sha256": "c0f12a8d849cabbb35074930402bf3dbf26c9435eec6abff8d637824ebf9d432"
+    },
+    {
+      "file": "source-3-frontside-young-leaf-front-continuous-report.mjs",
+      "bytes": 2787,
+      "sha256": "af99cd4f4c7e09b1943770b6bded7e0e10713a988ddee6b416284958af68f60a"
+    },
+    {
+      "file": "source-4-frontside-shared-leaf-reverse.mjs",
+      "bytes": 4091,
+      "sha256": "291045f79ecad88df8cfe851e6d71f65b34a00be9ac800ba16f3b22ec8158d8c"
+    },
+    {
+      "file": "source-5-crop-batch.js",
+      "bytes": 18736,
+      "sha256": "2b7910e16fa9b17aa060b12650056974ce12c35b6df2f0f4447d29542cb251d0"
+    }
+  ],
+  "sourceFiles": [
+    {
+      "source": "tests/browser/frontside-crop-young-leaf-front-continuous.js",
+      "file": "source-0-frontside-crop-young-leaf-front-continuous.js",
+      "sha256": "7ffb62000696e39d21610726cf20a7edc4b1bd4b91e9a4e1cbc57b6c2be6e8ab"
+    },
+    {
+      "source": "tools/lib/frontside-young-leaf-front-runtime-rigs.mjs",
+      "file": "source-1-frontside-young-leaf-front-runtime-rigs.mjs",
+      "sha256": "95d57599add712cc7e2b2d577f4bc00010967248da2f2636fd737ecfa8422fc6"
+    },
+    {
+      "source": "tools/lib/frontside-young-leaf-continuous-plan.mjs",
+      "file": "source-2-frontside-young-leaf-continuous-plan.mjs",
+      "sha256": "c0f12a8d849cabbb35074930402bf3dbf26c9435eec6abff8d637824ebf9d432"
+    },
+    {
+      "source": "tools/lib/frontside-young-leaf-front-continuous-report.mjs",
+      "file": "source-3-frontside-young-leaf-front-continuous-report.mjs",
+      "sha256": "af99cd4f4c7e09b1943770b6bded7e0e10713a988ddee6b416284958af68f60a"
+    },
+    {
+      "source": "tools/lib/frontside-shared-leaf-reverse.mjs",
+      "file": "source-4-frontside-shared-leaf-reverse.mjs",
+      "sha256": "291045f79ecad88df8cfe851e6d71f65b34a00be9ac800ba16f3b22ec8158d8c"
+    },
+    {
+      "source": "src/rendering/crop-batch.js",
+      "file": "source-5-crop-batch.js",
+      "sha256": "2b7910e16fa9b17aa060b12650056974ce12c35b6df2f0f4447d29542cb251d0"
+    }
+  ],
+  "frames": 964,
+  "captures": 5,
+  "legacyProfile": "YOUNG_LEAF_DOUBLE_CONTINUITY_V1",
+  "geometryIdentity": {
+    "frontFlag": true,
+    "resources": [
+      {
+        "arm": 2,
+        "vertices": 1921,
+        "triangles": 1095,
+        "attributeBytes": 61472,
+        "indexBytes": 6570,
+        "groups": [],
+        "liveGrowthShared": true
+      },
+      {
+        "arm": 3,
+        "vertices": 1921,
+        "triangles": 1254,
+        "attributeBytes": 61472,
+        "indexBytes": 7524,
+        "groups": [
+          {
+            "start": 0,
+            "count": 2808,
+            "materialIndex": 0
+          },
+          {
+            "start": 2808,
+            "count": 477,
+            "materialIndex": 1
+          },
+          {
+            "start": 3285,
+            "count": 477,
+            "materialIndex": 2
+          }
+        ],
+        "liveGrowthShared": true
+      }
+    ],
+    "materialSides": [
+      {
+        "arm": 0,
+        "sides": [
+          2
+        ],
+        "shadowSides": [
+          2
+        ]
+      },
+      {
+        "arm": 1,
+        "sides": [
+          2
+        ],
+        "shadowSides": [
+          2
+        ]
+      },
+      {
+        "arm": 2,
+        "sides": [
+          2
+        ],
+        "shadowSides": [
+          2
+        ]
+      },
+      {
+        "arm": 3,
+        "sides": [
+          0,
+          0,
+          0
+        ],
+        "shadowSides": [
+          2,
+          2,
+          2
+        ]
+      }
+    ]
+  },
+  "consoleLevels": [],
+  "scope": "Front young growth seam with original bridges and Double shadows, limited retained still AI screening; no human-user/full World/shadowFront/GPU approval",
+  "notes": [
+    "Raw viewProfile remains legacy YOUNG_LEAF_DOUBLE_CONTINUITY_V1. Front flag/materials/resources and actual per-capture colourDraws are authoritative for this Front candidate.",
+    "Root helper initially looked for the static colourDrawWitness key; actual continuity field is captures[].colourDraws. Raw reports were preserved and are not rewritten.",
+    "Recorded clock is native batch CPU input, no GPU uniform or texel readback in this fixture.",
+    "Last atlas row is the fifth seam sample, not the16-second final frame."
+  ]
+}
