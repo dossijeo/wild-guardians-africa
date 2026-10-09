@@ -133,7 +133,13 @@ export class WorldScene {
     const cropModel=this.models.find(m=>m.source.includes('Cultivos'));
     const gltf=await this.loadReady(this.assets.model(cropModel.url));this.cropGltf=gltf;this.cropModels=Array(40);
     gltf.scene.traverse(o=>{if(o.isMesh){const i=o.userData.cropIndex*5+o.userData.stage-1;const mesh=new THREE.Mesh(o.geometry,o.material.clone());mesh.material.metalness=0;mesh.material.roughness=.91;mesh.material.metalnessMap=null;mesh.material.roughnessMap=null;mesh.castShadow=mesh.receiveShadow=true;this.cropModels[i]=mesh;}});
-    this.cropBridgeData=await this.loadReady(json('/content/crop-bridges.json',{signal:this.loading.signal}));this.cropBatch=createCropBatch(this.scene,this.renderer,gltf,this.cropBridgeData);
+    this.cropBridgeData=await this.loadReady(json('/content/crop-bridges.json',{signal:this.loading.signal}));
+    if(this.cropBridgeData.recipeVersion===4){
+      const baked=await this.loadReady(this.assets.model(this.cropBridgeData.bakedAsset));this.cropBridgeData={...this.cropBridgeData,bakedTemplates:new Map()};
+      baked.scene.traverse(mesh=>{if(mesh.isMesh){const index=mesh.userData.bridgeIndex;if(!Number.isInteger(index)||index<0||index>=32||this.cropBridgeData.bakedTemplates.has(index))throw Error('Puente V4 ambiguo');this.cropBridgeData.bakedTemplates.set(index,mesh);}});
+      if(this.cropBridgeData.bakedTemplates.size!==32)throw Error('Biblioteca V4 incompleta');
+    }
+    this.cropBatch=createCropBatch(this.scene,this.renderer,gltf,this.cropBridgeData);
     this.wallPrototypes=await this.loadReady(this.assets.walls(await this.loadReady(json('/content/walls.json',{signal:this.loading.signal}))));
     const vfxCatalogue=await this.loadReady(json('/content/vfx.json',{signal:this.loading.signal}));this.vfxLibrary=new VfxLibrary(vfxCatalogue,await this.loadReady(this.assets.texture(vfxCatalogue.atlas)));
     this.workVfx=new WorkVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z),(id,time,effect)=>this.wateringSource(id,time,effect));
