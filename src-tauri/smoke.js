@@ -133,8 +133,8 @@
     const send = data => dispatchEvent(new MessageEvent('message', {origin: location.origin, source: menu.contentWindow, data: {type: 'wild-guardians:menu', ...data}}));
     send({action: 'settings-change', settings: {quality: 'muy_baja', sfx: 0, music: 0}});
     const fixture = await window.__TAURI_INTERNALS__.invoke('desktop_smoke_fixture');
-    // Explicit tester fixture only, absent in normal play and ordinary smoke.
-    window.__desktopSmokeWorkerQa=fixture?.workerRenderQa?.enabled===true;
+    // Explicit tester fixture only, absent in normal play and ordinary smoke.
+    window.__desktopSmokeWorkerQa=fixture?.workerRenderQa?.enabled===true;
     if (fixture) {localStorage.setItem('wild-guardians:slot:'+fixture.slotId,fixture.snapshot);send({action:'load-slot',slotId:fixture.slotId});}
     else send({action: 'start', biome: 'gran-canon', culture: 'mapungubwe'});
     worldStartedAt = performance.now();
@@ -148,12 +148,12 @@
     report.checks.world = {biome: 'gran-canon', culture: 'mapungubwe', width: world.width, height: world.height};
     await new Promise(resolve => requestAnimationFrame(resolve));
     report.worldPng = world.toDataURL('image/png');
-    if(window.__desktopSmokeWorkerQa===true){
-      try{if(typeof window.__desktopSmokeWorkerProbe!=='function')throw Error('Native worker probe unavailable');report.checks.workerRenderQa=await window.__desktopSmokeWorkerProbe(fixture.workerRenderQa);const qa=report.checks.workerRenderQa,c=qa.cleanup;if(qa.errors.length||c.errors.length||!c.closed||!c.stateExact||!c.borrowedGeometryAttributesExact||!c.mixerActivityRestored||!qa.coverage.complete||c.borrowedDisposeEvents!==0||c.ownedMaterialsRemaining!==0||!c.rendererRetained||qa.gpuTiming&&c.ownedQueriesRemaining!==0)throw Error('Worker QA restoration or runtime error');}
-      finally{delete window.__desktopSmokeWorkerProbe;delete window.__desktopSmokeWorkerQa;}
-    }
-    if (fixture&&!fixture.workerRenderQa?.enabled) report.checks.visibility = await checkVisibility(fixture);
-    else if(fixture?.workerRenderQa?.enabled)report.checks.visibility={scope:'Not run in directed worker visual fixture; original independent visibility fixture/hidden interval unchanged.'};
+    if(window.__desktopSmokeWorkerQa===true){
+      try{if(typeof window.__desktopSmokeWorkerProbe!=='function')throw Error('Native worker probe unavailable');report.checks.workerRenderQa=await window.__desktopSmokeWorkerProbe(fixture.workerRenderQa);const qa=report.checks.workerRenderQa,c=qa.cleanup;if(qa.errors.length||c.errors.length||!c.closed||!c.stateExact||!c.borrowedGeometryAttributesExact||!c.mixerActivityRestored||!qa.coverage.complete||c.borrowedDisposeEvents!==0||c.ownedMaterialsRemaining!==0||!c.rendererRetained||qa.gpuTiming&&c.ownedQueriesRemaining!==0)throw Error('Worker QA restoration or runtime error');}
+      finally{delete window.__desktopSmokeWorkerProbe;delete window.__desktopSmokeWorkerQa;}
+    }
+    if (fixture&&!fixture.workerRenderQa?.enabled) report.checks.visibility = await checkVisibility(fixture);
+    else if(fixture?.workerRenderQa?.enabled)report.checks.visibility={scope:'Not run in directed worker visual fixture; original independent visibility fixture/hidden interval unchanged.'};
     report.checks.saveKeys = Object.keys(localStorage).filter(key => key.startsWith('wild-guardians:'));
     await finish();
   } catch (error) { await finish(error); }
