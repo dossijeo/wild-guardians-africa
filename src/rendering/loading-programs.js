@@ -33,7 +33,7 @@ export async function compileLoadingProgramsBatched(renderer,scene,camera,target
  for(let start=0;start<objects.length;start+=batchSize){
   const batch=objects.slice(start,start+batchSize);
   const view={traverse:callback=>{for(const object of batch)callback(object);},traverseVisible:()=>{}};
-  await compileLoadingPrograms(renderer,view,camera,target,options.frameSlack||options.cpuBudget?{...options,onCpu:duration=>{yieldWork.recordWork(duration);options.onCpu?.(duration);}}:options);
+  await compileLoadingPrograms(renderer,view,camera,target,options.frameSlack||options.cpuBudget?{...options,now,onCpu:duration=>{yieldWork.recordWork(duration);options.onCpu?.(duration);}}:{...options,now});
   await yieldWork();
  }
 }
