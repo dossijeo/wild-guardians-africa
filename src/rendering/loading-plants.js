@@ -3,7 +3,7 @@ const ease=t=>t*t*(3-2*t);
 export class LoadingPlants {
   constructor({capacity=18,radius=4.3,spacing=1.5,catchupSeconds=1}={}) {
     this.capacity=capacity;this.radius=radius;this.spacing=spacing;this.catchupSeconds=catchupSeconds;this.time=0;this.progress=0;this.ready=false;this.accepting=true;this.plants=[];
-    for(const [x,z] of [[-1.55,-.2],[.35,-1.55],[1.55,.25],[-.35,1.5]])this.plant(x,z,{initial:true});
+    for(const [x,z] of [[-.96,1.22],[-1.18,-.74],[1,.5],[.81,-1.42]])this.plant(x,z,{initial:true});
   }
   plant(x,z,{initial=false}={}) {
     if(!this.accepting||!Number.isFinite(x)||!Number.isFinite(z)||this.plants.length>=this.capacity||Math.hypot(x,z)>this.radius||this.plants.some(p=>Math.hypot(p.x-x,p.z-z)<this.spacing))return null;

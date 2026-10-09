@@ -8,7 +8,7 @@ export class LoadingMist {
   this.uniforms={...sky.uniforms,uFogColor:{value:this.day.clone().convertLinearToSRGB()},uEyeHeight:{value:7.5}};
   this.material=new THREE.RawShaderMaterial({glslVersion:THREE.GLSL3,uniforms:this.uniforms,depthWrite:false,depthTest:false,transparent:true,toneMapped:false,
    vertexShader:'precision highp float;out vec2 vScreen;void main(){vec2 p=gl_VertexID==0?vec2(-1.,-1.):gl_VertexID==1?vec2(3.,-1.):vec2(-1.,3.);vScreen=p;gl_Position=vec4(p,0.,1.);}',
-   fragmentShader:'precision highp float;in vec2 vScreen;uniform vec3 uForward,uRight,uUp,uFogColor;uniform vec2 uViewScale;uniform float uEyeHeight;out vec4 color;void main(){vec3 ray=normalize(uForward+uRight*vScreen.x*uViewScale.x+uUp*vScreen.y*uViewScale.y);float groundDistance=uEyeHeight/max(.015,-ray.y);float distant=smoothstep(7.,24.,groundDistance);float belowHorizon=1.-smoothstep(-.10,.15,ray.y);float opacity=belowHorizon*mix(.86,.96,distant);color=vec4(uFogColor,opacity);}'});
+   fragmentShader:'precision highp float;in vec2 vScreen;uniform vec3 uForward,uRight,uUp,uFogColor;uniform vec2 uViewScale;uniform float uEyeHeight;out vec4 color;void main(){vec3 ray=normalize(uForward+uRight*vScreen.x*uViewScale.x+uUp*vScreen.y*uViewScale.y);float groundDistance=uEyeHeight/max(.015,-ray.y);float distant=smoothstep(7.,24.,groundDistance);float belowHorizon=1.-smoothstep(-.28,.025,ray.y);float opacity=belowHorizon*mix(.86,.96,distant);color=vec4(uFogColor,opacity);}'});
   // NativeSky owns this immutable three-vertex fullscreen geometry.
   const triangle=new THREE.Mesh(sky.geometry,this.material);triangle.frustumCulled=false;this.scene.add(triangle);
  }

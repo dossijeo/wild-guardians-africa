@@ -14,7 +14,7 @@ test('loading plants are optional, bounded, non-overlapping and never reach 100%
  p.update(1,1);assert.equal(p.progress,.99);assert.equal(p.mature,false);p.update(1,1,{ready:true});assert.equal(p.mature,true);
 });
 test('new seedling catches moving progress continuously within one second',()=>{
- const p=new LoadingPlants(),duration=cropSpec('maiz').growth_seconds;p.update(1,.65);const plant=p.plant(0,0);assert.ok(plant);assert.equal(plant.growth,0);
+ const p=new LoadingPlants(),duration=cropSpec('maiz').growth_seconds;p.update(1,.65);const plant=p.plant(0,3);assert.ok(plant);assert.equal(plant.growth,0);
  let prior=0;for(let i=0;i<10;i++){p.update(.1,.65+i*.01);assert.ok(plant.growth>=prior);assert.ok(plant.growth<=p.progress*duration);prior=plant.growth;}
  assert.ok(Math.abs(plant.growth-p.progress*duration)<1e-8);p.stopPlanting();assert.equal(p.plant(3,0),null);
 });

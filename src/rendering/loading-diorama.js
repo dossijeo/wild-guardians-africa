@@ -55,6 +55,14 @@ export class LoadingDiorama {
     this.ground.material.map=this.textureOwner.borrow(await world.loadReady(world.assets.texture(ground.canyons.base,false)));
     this.ground.material.color.set('#c9865e');this.ground.material.needsUpdate=true;
     this.batch=await createCropBatchAsync(this.scene,world.renderer,gltf,bridges,this.plants.capacity,{species:['maiz'],shadows:false,signal:this.abort.signal,cancelled:()=>this.disposed||world.disposed});this.scene.traverse(object=>{for(const material of [object.material].flat().filter(Boolean))this.textureOwner.material(material);});this.toon.environment(world.sky.environmentTextures,world.sky.uniforms.uSkyYaw);this.toon.apply(this.scene);
+    // A small cold presentation fill belongs only to the diorama maize. It
+    // reuses the existing night-light uniform/GLSL; soil and real-world lighting
+    // keep their original values, without another light, pass or shader define.
+    this.cropNightFill={value:2.05};const filled=new Set();
+    this.scene.traverse(mesh=>{if(!mesh.isInstancedMesh)return;for(const material of [mesh.material].flat()){
+      if(filled.has(material))continue;filled.add(material);const compile=material.onBeforeCompile;
+      material.onBeforeCompile=(shader,renderer)=>{compile.call(material,shader,renderer);shader.uniforms.uNightLight=this.cropNightFill;};
+    }});
     // Warm all five stages and four morph bridges, including ones not present in
     // the first frame. Counts/visibility restored before accepting interaction.
     const saved=[];this.scene.traverse(mesh=>{if(mesh.isInstancedMesh){saved.push([mesh,mesh.count,mesh.visible]);mesh.count=1;mesh.visible=true;}});
