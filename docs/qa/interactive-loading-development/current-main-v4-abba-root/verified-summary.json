@@ -1,0 +1,58 @@
+{
+  "verified": "Actual iframe click, exact controlled snapshot SHA, events chronology and exact camera at readiness/completion across four arms. Original RAF/outliers retained.",
+  "arms": [
+    {
+      "arm": "A1",
+      "readyMs": 7863.299999952316,
+      "totalMs": 7864.5,
+      "postReadyMs": 1.2000000476837158,
+      "frameSummary": {
+        "count": 323,
+        "max": 1197.199999999997,
+        "over50": 8,
+        "over100": 4
+      },
+      "sha256": "f1a54bda669f759c349e39dc87e9ec373f1eeda0d7ae17a1bf07912339f6293a"
+    },
+    {
+      "arm": "B1",
+      "readyMs": 12608.600000023842,
+      "totalMs": 16632.399999976158,
+      "postReadyMs": 4023.7999999523163,
+      "frameSummary": {
+        "count": 903,
+        "max": 99.69999999999709,
+        "over50": 7,
+        "over100": 0
+      },
+      "sha256": "6c2495a448356a82d35bad1465ae87236427a0a7e35878dc06a803fd6aa5069a"
+    },
+    {
+      "arm": "B2",
+      "readyMs": 13350.700000047684,
+      "totalMs": 17383.5,
+      "postReadyMs": 4032.7999999523163,
+      "frameSummary": {
+        "count": 964,
+        "max": 99.70000000000437,
+        "over50": 4,
+        "over100": 0
+      },
+      "sha256": "d7ace30ac55f57fefc31568053a9f1022f61d785c34d2d4c73469bb5eb7fbf85"
+    },
+    {
+      "arm": "A2",
+      "readyMs": 7786,
+      "totalMs": 7787.200000047684,
+      "postReadyMs": 1.2000000476837158,
+      "frameSummary": {
+        "count": 333,
+        "max": 1131,
+        "over50": 6,
+        "over100": 4
+      },
+      "sha256": "b5e5bf522d5391e1dccc9fd8bec19f4196e571c3d6fa2ea5e61c4a461ec326ca"
+    }
+  ],
+  "scope": "A main d6c4adfc versus B41f57d03; feature readiness regression remains open. No RAM/VRAM or statistical equivalence claim."
+}
