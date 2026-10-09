@@ -60,7 +60,7 @@ import '../ui/tutorial.css';
 
 const app=document.querySelector('#app'),saves=new BrowserSaveRepository(localStorage);
 const guidanceQa=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-guidance');
-const progressQa=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')?installLoadingProgressQa(document,{throttleReady:!new URLSearchParams(location.search).has('qa-loading-unthrottled')}):null;
+const progressQa=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')?installLoadingProgressQa(document,{throttleReady:!new URLSearchParams(location.search).has('qa-loading-unthrottled'),gpu:new URLSearchParams(location.search).has('qa-loading-gpu')}):null;
 // Hints come only from already-validated slot listings. The decoded save remains
 // authoritative; hints allow the first loading sky to use its known clock.
 const savePreviews=new Map();
@@ -156,7 +156,7 @@ async function startGame(loaded=null,{slotId,preview}={}) {
     loadingProgress=new LoadingProgress(LOADING_STAGES,{downloads:loadingTransfers.downloads,onChange:snapshot=>overlay.render(snapshot,loadingDiorama?.plants.progress??0,{night:loadingDiorama?.night??0,accepting:loadingDiorama?.interactive??false,pointer:loadingDiorama?.pointerType??overlay.pointer})});
     prepared.canvas.style.cssText='width:100%;height:100%;touch-action:none';prepared.canvas.id='world';
     app.replaceChildren(prepared.canvas);
-    app.append(overlay.element);loadingDiorama.render(0,0);refreshLoadingOverlay();lastFrame=performance.now();progressQa?.begin(lastFrame);
+    app.append(overlay.element);loadingDiorama.render(0,0);refreshLoadingOverlay();lastFrame=performance.now();progressQa?.begin(lastFrame,world.renderer);
     loadingDiagnostic=setInterval(refreshLoadingOverlay,1000);
     // Show the fully prepared diorama before parsing a Continue snapshot. Worker
     // validation is unchanged; cancelled/late results cannot adopt into this game.
