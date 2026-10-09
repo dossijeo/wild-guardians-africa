@@ -3,6 +3,7 @@ import {LibraryViewer} from '../ui/library-viewer.js';
 import {EventCards} from '../ui/event-cards.js';
 import {LoadingDiorama} from '../rendering/loading-diorama.js';
 import {LoadingAudio} from '../audio/loading-audio.js';
+import {prepareLoadingFrames} from '../ui/loading-frame-preparation.js';
 import {LoadingOverlay} from '../ui/loading-overlay.js';
 import {LoadingCinematic} from '../rendering/loading-cinematic.js';
 import {LoadingProgress} from './loading-progress.js';
@@ -78,7 +79,7 @@ function prepareLoadingScene(){
  let owner,diorama;const transfers=new LoadingTransferOwner();
  try{owner=new WorldScene(canvas,onPick);if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')&&new URLSearchParams(location.search).has('qa-loading-far-full-scene'))owner.farIsolatedPreparation=false;if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')&&new URLSearchParams(location.search).has('qa-loading-zero-vertices'))owner.farZeroVertexPreparation=true;owner.controls.enabled=false;owner.qualitySetting(settings.quality);applyWorldResolution(owner,settings.resolution);
  diorama=new LoadingDiorama(owner);const preparation={world:owner,diorama,canvas,transfers};preparedLoading=preparation;
- preparation.pending=Promise.all([diorama.prepare(),loadFrameImages().catch(()=>null)]).then(([,images])=>{preparation.frameImages=images;});preparation.pending.catch(()=>{});return preparation;
+ preparation.pending=Promise.all([diorama.prepare(),prepareLoadingFrames(loadFrameImages,{signal:owner.loading.signal})]).then(([,images])=>{preparation.frameImages=images;});preparation.pending.catch(()=>{});return preparation;
  }catch(failure){transfers.dispose();diorama?.dispose();owner?.dispose();canvas.remove();throw failure;}
 }
 function releasePreparedLoading(){const pending=preparedLoading;preparedLoading=null;if(pending){progressQa?.close(null,pending.transfers,{cancelled:true});pending.transfers.dispose();pending.diorama.dispose();pending.world.dispose();pending.canvas.remove();}}
