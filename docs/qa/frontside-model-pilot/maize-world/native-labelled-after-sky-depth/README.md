@@ -1,0 +1,7 @@
+# Native depth growth after render order change, 893
+
+One root native capture on frozen author2822cd03aed528285342b20cd754a809b0ce4aab, cherry-pick of root bfa29ef9. Scene SHA775b38d0139eb3e87798d040e9b3748e3d23587b99eb8b67c0aec1e59b114ad5. Probe778af46ffc9a644c19fd52d1a97ffb0eb3e351901f7df5086959b91232a0ac07 and viewer a500a232b144b6c413fb3a3418439db925702d74752cb29b11d96ce64501c91d unchanged from892. URL is the same bindings/front-depth/VFX-on campaign. Root changed only required Sky rendering to precede world depth, and updated toon/material uniforms before depth. No extra draw, forced upload or frame counter hack.
+
+All48 recorded iGrowth draws match CPU:24 color and24 VFX depth. Baseline892 retains17 depth differences and31 matches. Both retain the four original/candidate steps and twelve fractions on the same pinned target. This demonstrates the corrected native growth upload for these draws. Context cleanup closed/lost with no report errors. It does not validate all growth stages, bridges, workers, onBeforeShadow output, full visual continuity, physical VRAM or net World GPU benefit. Pixel differences remain policy3 diagnostics. Console texture serialization warnings are preserved.
+
+The adjacent verifier compares retained baseline892 labels/counts and role results without replacing baseline files. The comparison PNG is the native final color still, not a depth image or shadow proof. No production asset adaptation or category PR is approved by this result.
