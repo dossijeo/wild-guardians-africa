@@ -100,3 +100,13 @@ test('invalid or empty explicit selection never claims material readiness',async
  await assert.rejects(f.run({check:()=>{},selectPrograms:()=>null}),/no selected readiness program/);
  await assert.rejects(f.run({check:()=>{},selectPrograms:42}),/Invalid GPU program selector/);assert.equal(f.counts().compilations,2);
 });
+
+
+import {waitGpuPrograms} from '../tools/experiments/compile-gpu-preparation.js';
+test('readiness poll witness measures synchronous query cost and pending native IDs separately from awaited time',async()=>{
+ let clock=0,ready=false;const rows=[],program={id:71,isReady:()=>{clock+=3;return ready;}};
+ const pending=waitGpuPrograms(new Set([program]),{check:()=>{},pollIntervalMs:5,now:()=>clock,onPoll:row=>rows.push(row)});assert.equal(rows.length,1);assert.equal(rows[0].duration,3);assert.equal(rows[0].checkedProgramCount,1);assert.equal(rows[0].pendingProgramCount,1);assert.deepEqual(rows[0].pendingProgramIds,[71]);assert.match(rows[0].scope,/not GPU/);clock=100;ready=true;await pending;assert.equal(rows.at(-1).duration,3);assert.equal(rows.at(-1).pendingProgramCount,0);assert.equal(rows.at(-1).start,100);
+});
+test('poll witness off never calls the diagnostic clock and throwing diagnostics preserve driver errors',async()=>{
+ await waitGpuPrograms(new Set([{isReady:()=>true}]),{check:()=>{},now:()=>assert.fail('diagnostic clock off')});const original=Error('driver query');await assert.rejects(waitGpuPrograms(new Set([{isReady:()=>{throw original;}}]),{check:()=>{},onPoll:()=>{throw Error('diagnostic');}}),error=>error===original);
+});

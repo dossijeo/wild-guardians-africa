@@ -18,7 +18,7 @@ export function compileLoadingPrograms(renderer,scene,camera,targetScene,{signal
  // the shared core without submitting or querying the native renderer twice.
  const submitted={compile:()=>materials,properties:renderer.properties};
  const waitStart=onSubmit?now():null;let waitFailed=false;
- return compileGpuPreparation(submitted,scene,camera,targetScene,{check,signal:owner.signal,selectPrograms:properties=>properties.programs?.size?properties.programs.values():[properties.currentProgram]}).then(()=>scene,error=>{waitFailed=true;throw error;}).finally(()=>{cleanup();if(onSubmit){const end=now();try{onSubmit({label:'loading-compile-readiness-wait',start:waitStart,end,duration:end-waitStart,failed:waitFailed,scope:'Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.'});}catch{}}});
+ return compileGpuPreparation(submitted,scene,camera,targetScene,{check,signal:owner.signal,now,onPoll:globalThis.__desktopSmokeLoadingPollWitness===true?onSubmit:undefined,selectPrograms:properties=>properties.programs?.size?properties.programs.values():[properties.currentProgram]}).then(()=>scene,error=>{waitFailed=true;throw error;}).finally(()=>{cleanup();if(onSubmit){const end=now();try{onSubmit({label:'loading-compile-readiness-wait',start:waitStart,end,duration:end-waitStart,failed:waitFailed,scope:'Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.'});}catch{}}});
 }
 
 // Compile bounded views of the original objects against the complete native
@@ -64,7 +64,7 @@ async function compileLoadingProgramUnion(renderer,objects,camera,target,{batchS
    await yieldWork();check();
   }
   const start=onSubmit?now():null;let failed=false;
-  try{await waitGpuPrograms(programs,{check,signal:owner.signal});check();}
+  try{if(onSubmit?.onBegin)try{onSubmit.onBegin({label:'loading-compile-collective-readiness-wait',start,scope:'Single pending readiness barrier; diagnostic only.'});}catch{}await waitGpuPrograms(programs,{check,signal:owner.signal,onPoll:globalThis.__desktopSmokeLoadingPollWitness===true?onSubmit:undefined,now});check();}
   catch(error){failed=true;throw error;}
   finally{if(onSubmit){const end=now();witness({label:'loading-compile-collective-readiness-wait',start,end,duration:end-start,failed,programCount:programs.size,scope:'Single awaited readiness barrier for deduplicated submitted native programs; not CPU/GPU duration.'});}}
  }finally{owner.abort();programs.clear();gl.canvas?.removeEventListener('webglcontextlost',lose);signal?.removeEventListener('abort',abort);}

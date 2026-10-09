@@ -3,7 +3,7 @@ import {waitGpuPreparation} from './wait-gpu-preparation.js';
 // Candidate for Three r180's normal target/output recipe. Own the readiness
 // polling rather than leaving compileAsync's internal timer alive on abort.
 // compile() still submits synchronously; this does not interrupt driver work.
-export async function compileGpuPreparation(renderer,root,camera,scene,{check,signal,pollIntervalMs=10,selectPrograms}={}) {
+export async function compileGpuPreparation(renderer,root,camera,scene,{check,signal,pollIntervalMs=10,selectPrograms,onPoll,now=()=>performance.now()}={}) {
  if(typeof check!=='function')throw Error('GPU compilation requires a lifetime check');
  if(selectPrograms!==undefined&&typeof selectPrograms!=='function')throw Error('Invalid GPU program selector');
  if(!Number.isFinite(pollIntervalMs)||pollIntervalMs<=0)throw Error('Invalid GPU compilation polling interval');
@@ -15,7 +15,7 @@ export async function compileGpuPreparation(renderer,root,camera,scene,{check,si
  // variants previously compiled for the same material. A caller may explicitly
  // select all borrowed variants; selection is snapshotted before any await.
  const programs=snapshotGpuPrograms(renderer,materials,{check:guard,selectPrograms});
- await waitGpuPrograms(programs,{check:guard,signal,pollIntervalMs});
+ await waitGpuPrograms(programs,{check:guard,signal,pollIntervalMs,onPoll,now});
 }
 
 // Borrowed recipes must be copied synchronously, before the caller restores
@@ -37,18 +37,23 @@ export function snapshotGpuPrograms(renderer,materials,{check,selectPrograms}={}
 
 // One owned poll of an already snapshotted union. The caller still owns driver
 // submissions; cancellation only stops observation, not submitted driver work.
-export async function waitGpuPrograms(selected,{check,signal,pollIntervalMs=10}={}) {
+export async function waitGpuPrograms(selected,{check,signal,pollIntervalMs=10,onPoll,now=()=>performance.now()}={}) {
  if(typeof check!=='function')throw Error('GPU compilation requires a lifetime check');
  if(!Number.isFinite(pollIntervalMs)||pollIntervalMs<=0)throw Error('Invalid GPU compilation polling interval');
  const guard=()=>{check();if(signal?.aborted)throw signal.reason??new DOMException('GPU compilation cancelled','AbortError');};
  const programs=new Set(selected);guard();
  let resolveReady,timer;
  const ready=new Promise(resolve=>{resolveReady=resolve;});
- const poll=()=>{
+ const scan=()=>{
   guard();
   for(const program of programs){guard();if(program.isReady())programs.delete(program);}
   guard();if(programs.size===0)resolveReady();
  };
+ const poll=onPoll?()=>{
+  const start=now(),before=programs.size;let failed=false;
+  try{scan();}catch(error){failed=true;throw error;}
+  finally{const end=now();try{onPoll({label:'loading-program-readiness-poll',start,end,duration:end-start,failed,checkedProgramCount:before,pendingProgramCount:programs.size,pendingProgramIds:[...programs].map(program=>Number.isInteger(program.id)?program.id:null),scope:'Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.'});}catch{}}
+ }:scan;
  try{
   poll();
   await waitGpuPreparation(ready,{

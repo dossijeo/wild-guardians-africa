@@ -32,6 +32,7 @@ function observeDesktopWorldLoading(win,doc,now=()=>performance.now()) {
     clearTimeout(timeout);
     if(worldLoadingObserver){report.checks.productionLoading=worldLoadingObserver.sample();worldLoadingObserver.stop();}
     if (error) report.errors.push(String(error));
+    try{const gl=document.querySelector('#world')?.getContext('webgl2');if(gl){const debug=gl.getExtension('WEBGL_debug_renderer_info');report.checks.worldGraphicsIdentity={vendor:gl.getParameter(gl.VENDOR),renderer:gl.getParameter(gl.RENDERER),unmaskedVendor:debug?gl.getParameter(debug.UNMASKED_VENDOR_WEBGL):null,unmaskedRenderer:debug?gl.getParameter(debug.UNMASKED_RENDERER_WEBGL):null,parallelShaderCompileSupported:gl.getSupportedExtensions()?.includes('KHR_parallel_shader_compile')??false,contextLost:gl.isContextLost(),scope:'One final read of existing World context identity/capabilities; no render/query timer or readiness change.'};}}catch(error){report.checks.worldGraphicsIdentity={unavailable:String(error)};}
     report.checks.modelResources=performance.getEntriesByType('resource').filter(entry=>/\.glb(?:$|\?)/.test(entry.name)).map(entry=>Object.fromEntries(['name','startTime','fetchStart','responseStart','responseEnd','duration','transferSize','encodedBodySize','decodedBodySize','initiatorType','nextHopProtocol','responseStatus'].map(key=>[key,entry[key]??null])));
     report.ok = !error && report.errors.length === 0;
     await window.__TAURI_INTERNALS__.invoke('desktop_smoke_report', {report});
@@ -132,6 +133,7 @@ function observeDesktopWorldLoading(win,doc,now=()=>performance.now()) {
     const send = data => dispatchEvent(new MessageEvent('message', {origin: location.origin, source: menu.contentWindow, data: {type: 'wild-guardians:menu', ...data}}));
     send({action: 'settings-change', settings: {quality: 'muy_baja', sfx: 0, music: 0}});
     const fixture = await window.__TAURI_INTERNALS__.invoke('desktop_smoke_fixture');
+    window.__desktopSmokeLoadingPollWitness=true;
     window.__desktopSmokeParallelDioramaAssets=true;
     window.__desktopSmokeCollectiveLoadingPrograms=true;
     worldLoadingObserver=observeDesktopWorldLoading(window,document);
