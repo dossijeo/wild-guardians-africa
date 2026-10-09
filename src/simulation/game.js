@@ -425,11 +425,16 @@ function completeTask(s,w,t,target,nav) {
   else if(t.kind==='repair') {
     try {
       ensurePurchaseBudget(s,repairCost(target));
-      if(transact(s.ledger,`repair:${t.id}`,negate(repairCost(target)))){
+      const paymentId=`repair:${t.id}`,previousHp=target.hp,previousStatus=target.status;
+      if(transact(s.ledger,paymentId,negate(repairCost(target)))){
         const visual=target.kind==='wall'?wallVisualAt(target,s.elapsed):null;
         delete target.wallPresentation;target.hp=target.maxHp;target.status='intact';target.collapseRemaining=0;
         if(visual!==null)recordWallPresentation(target,visual,s.elapsed);nav.setState(s);
-        emit(s,'RepairApplied',{workerId:w.id,targetId:target.id,presentation:{elapsed:s.elapsed,x:w.x,z:w.z,yaw:w.heading??0}});
+        // Read the settled ledger debit: proportional repair prices may be
+        // fractional before transact rounds the actual payment to whole coins.
+        emit(s,'RepairApplied',{workerId:w.id,targetId:target.id,
+          repair:{taskId:t.id,paymentId,paidCoins:-numberOf(s.ledger.entries[paymentId]),previousHp,previousStatus,restoredHp:target.hp,maxHp:target.maxHp},
+          presentation:{elapsed:s.elapsed,x:w.x,z:w.z,yaw:w.heading??0}});
         if(target.kind==='center'){recoverDisplacedWorkers(s);enqueueLooseCrates(s);}
       }
     }
