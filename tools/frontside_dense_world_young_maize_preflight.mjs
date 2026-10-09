@@ -1,3 +1,4 @@
+import {nativeReportStatus} from './lib/frontside-native-report-status.mjs';
 // CPU/HTTP only. Placeholder draw fields never become native artifacts.
 import crypto from 'node:crypto';import fs from 'node:fs';import zlib from 'node:zlib';
 import {deserialize,serialize} from '../src/persistence/snapshots.js';
@@ -9,6 +10,7 @@ const report={status:'WORLD_DENSE_YOUNG_MAIZE_GPU_NOT_APPROVED',denseWorldYoungM
 // The bounded preflight transports summary identity only; full changed-plant
 // provenance belongs to the separate native report (20 MB limit).
 delete report.scenario.changed;
+assert.equal(nativeReportStatus(report),false);assert.throws(()=>nativeReportStatus({...report,denseWorldYoungMaizeQa:false}),/identity missing/);assert.throws(()=>nativeReportStatus({...report,status:'APPROVED'}),/Unexpected report status/);
 for(const campaign of ['review','resources','timing']){const test=structuredClone(report);test.campaign=campaign;test.qaDepth=campaign==='timing'?'front':'off';test.conditions.gpuTiming=campaign==='timing';delete test.arms;if(campaign==='timing')test.timing={blocks:[]};else test.arms=[];assert.match(denseWorldYoungMaizeReportPrefix(test,{preflight:true}),/^maize-young-world-dense-/);const wrong=structuredClone(test);wrong.candidateMesh='maiz_05_maduro';assert.throws(()=>denseWorldYoungMaizeReportPrefix(wrong,{preflight:true}),/candidateMesh/);}
 assert.throws(()=>denseWorldYoungMaizeReportPrefix(report),/preflightOnly/);
 const response=await fetch(base+'/__frontside_export_preflight',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({status:'DENSE_WORLD_YOUNG_MAIZE_EXPORT_PREFLIGHT_ONLY',gpuDraws:0,report})}),result=await response.json();if(!response.ok||result.artifactsWritten!==false)throw Error('Dense export preflight failed '+JSON.stringify(result));
