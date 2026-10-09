@@ -1,5 +1,47 @@
 # Tareas pendientes posteriores a la Jam
 
+## Estado vigente de las integraciones (9 de octubre)
+
+Este documento conserva entradas cronológicas y candidatos descartados. Sus
+resultados históricos no equivalen a aceptación de main actual. El
+[registro de gates vigentes](qa/release-open-gates-2026-10-09.md) delimita el
+trabajo que aún falta y prevalece sobre las etapas antiguas de esta lista.
+
+- **Biblioteca:** PR8 cubrió una entrada distinta. La entrada real del menú
+  nativo quedó corregida por `7b8d5fb0`, con visor fuera del panel modal,
+  navegación/foco/salida y empaquetado comprobados. Falta aceptación renderizada
+  de los cuatro labs en portrait/landscape; no reutilizar capturas de la entrada
+  anterior. [Evidencia actual](qa/library-native-integration/README.md).
+- **Cultivos FrontSide:** la reparación experimental fue sustituida por los
+  modelos authored V4 del lab del usuario, integrados mediante PR17. No queda
+  pendiente promover el maíz del antiguo experimento. Los trabajadores siguen
+  siendo una categoría independiente, con candidato de accesorios aislado y
+  pendiente de QA visual y beneficio GPU neto.
+  [Revisión de integración](qa/crops-v4-root-integration-review.md).
+- **Carga interactiva:** PR18 está integrada y el compromiso de carga de la
+  candidata G fue aceptado por el usuario. El timeout de carga del ejecutable
+  Windows sigue abierto; los candidatos diagnósticos no están promovidos.
+  La caché procedural separada sólo tiene un ensayo CPU de viabilidad, no una
+  implementación de producción ni ahorro de carga completa demostrado.
+  [Ensayo de caché](qa/chunk-cache-feasibility-fe27498b/README.md).
+- **Voz y almacenamiento:** `1ed8be18` evita interrumpir una voz que sigue
+  reproduciéndose por un evento de descarga stalled. `b0bbb7f2` cierra resultados
+  tardíos de aperturas IndexedDB bloqueadas y protege una conexión nueva de
+  callbacks antiguos. Son correcciones independientes; no resuelven por sí
+  mismas el timeout Windows ni acreditan escucha física.
+  [Voz](qa/spirit-buffered-stall/README.md),
+  [almacenamiento](qa/browser-save-open-lifecycle/README.md).
+- **Traveling y pantalla encendida:** cerrados por aceptación explícita del
+  usuario y por prueba física Pixel/Chrome/itch respectivamente, salvo regresión
+  reproducible. Los ensayos negativos históricos no reabren esos puntos.
+- **Economía:** sigue abierta la matriz vigente de treinta combinaciones y cien
+  noches, manteniendo inactividad inferior al25%, contabilidad, entregas físicas
+  diarias y casos de mala gestión. Una mejora aislada de precios no se acepta si
+  elimina todas las entregas del primer día. La campaña histórica aprobada no
+  sustituye la validación de parámetros nuevos.
+
+## Entradas cronológicas y evidencia histórica
+
 Solicitudes añadidas el 9 de octubre de 2026:
 
 - Biblioteca: abrir los labs a pantalla completa e integrar su navegación,
