@@ -1,0 +1,64 @@
+{
+  "source": "12730e5f9cc6b3f99c4c3659f0c0bf299cec7941",
+  "sourceHashesVerified": 376,
+  "onlyHarvestDoubled": true,
+  "allOtherSourcesMatchBaseline": true,
+  "snapshotSha256": "55998eba34ddcf863485f70721d45455b39377d815e8fbfbb2383e77942cd12d",
+  "nativeProcessExit": 1,
+  "gates": {
+    "completedRequested10NightsWithoutDefeat": false,
+    "everyDayPaidStaffPhysicalDelivery": false,
+    "ownSourceIntegerLedgerHydrationPaidCrates": true,
+    "inactivityStrictlyBelow25": false,
+    "poorManagement": "not-run-no-viable-signal",
+    "responsible100And30CaseMatrix": "not-run-failed-pilot"
+  },
+  "actualCompletedNights": 6,
+  "actualDay": 7,
+  "result": "defeat",
+  "physicalDeliveries": 279,
+  "physicalPicked": 279,
+  "activityReported": {
+    "daylightSeconds": 2100,
+    "unoccupiedSeconds": 1103,
+    "unoccupiedFraction": 0.5252380952380953,
+    "longestIdle": 300,
+    "p90LongestIdle": 300
+  },
+  "cashflow": {
+    "openingBalance": "1500",
+    "harvestIncome": "6710",
+    "seedCosts": "3440",
+    "wageCosts": "3390",
+    "repairCosts": "0",
+    "centreCosts": "800",
+    "wallCosts": "0",
+    "otherNet": "0",
+    "operatingCashFlow": "-120",
+    "netCashFlowAfterConstruction": "-920",
+    "endingBalance": "580"
+  },
+  "budgetAttribution": {
+    "maintenanceReserve": 716,
+    "belowCurrentTeamReserve": 268
+  },
+  "workingDayFailures": [
+    {
+      "day": 7,
+      "staff": 34,
+      "delivered": 0
+    }
+  ],
+  "centreLostByEndOfDay": 6,
+  "firstSixDaysIdleFraction": 0.6127777777777778,
+  "causeScope": "Original opening retains21 physical deliveries on day1. More income supports faster later purchasing, but the operational centre is lost by day6 close and no tasks/deliveries occur day7; final snapshot verifies ruined hp0. Observer did not retain precise individual hits, so exact attack cause/target sequence is not reconstructed. Seven observed rows include defeat day7 and are not ten completed nights. Final ledger cash margin alone does not establish survivability or sustainable service.",
+  "files": {
+    "diagnostic.json": "4bc0b3d635c60cdc9301deb30b152cbad3290df77b3b1118d5c4c8f5e697f670",
+    "failure-state.json": "55998eba34ddcf863485f70721d45455b39377d815e8fbfbb2383e77942cd12d",
+    "failure.json": "259d73dbbe00c0d27e40a60107b8666199015fe4c28203bde0f61ad4aca1b21e",
+    "report.json": "91f6091ad5b4c888e85fcdef8976f028135e5864d246945f438cce2df878dd68",
+    "run.log": "0a3ddbc810ab74ba59479fc9a7a0ec0ecc420dd7a00bec2992ecad17581f6f97",
+    "state.json": "55998eba34ddcf863485f70721d45455b39377d815e8fbfbb2383e77942cd12d",
+    "summary.json": "3ac6929a0e5c5f57e821de36e7eee760377d6681f7341c2b008146ee9eb5428b"
+  }
+}
