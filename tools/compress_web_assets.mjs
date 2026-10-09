@@ -8,9 +8,13 @@ import {applyApprovedEmbeddedColors} from './approved-embedded-colors.mjs';
 const root=new URL('../',import.meta.url),hash=bytes=>createHash('sha256').update(bytes).digest('hex');
 await Promise.all([MeshoptEncoder.ready,MeshoptDecoder.ready]);
 await mkdir(new URL('public/assets/web/',root),{recursive:true});
-const records=[];
+const selected=new Set(process.argv.slice(2));
+if([...selected].some(file=>!/^([a-f0-9]{64})\.glb$/.test(file)))throw Error('Pass only source GLB filenames for incremental compression');
+const records=selected.size?JSON.parse(await readFile(new URL('content/manifests/web-assets.json',root),'utf8')).records.filter(r=>!selected.has(r.source.split('/').at(-1))):[];
 const approved=JSON.parse(await readFile(new URL('content/manifests/embedded-color-recipes.json',root),'utf8')),used=new Set();
-for(const file of (await readdir(new URL('public/assets/',root))).filter(f=>f.endsWith('.glb')).sort()){
+const files=(await readdir(new URL('public/assets/',root))).filter(f=>f.endsWith('.glb')&&(!selected.size||selected.has(f))).sort();
+if(selected.size&&files.length!==selected.size)throw Error('Selected source GLB missing');
+for(const file of files){
   const original=await readFile(new URL('public/assets/'+file,root)),{json,bin}=readGlb(original),views=json.bufferViews,images=[],chunks=[];let length=0;
   const append=bytes=>{const offset=length;chunks.push({offset,bytes});length+=Math.ceil(bytes.length/4)*4;return offset;};
   for(const [i,image] of (json.images??[]).entries()){
@@ -39,11 +43,12 @@ for(const file of (await readdir(new URL('public/assets/',root))).filter(f=>f.en
     v.buffer=1;v.extensions={...v.extensions,EXT_meshopt_compression:{buffer:0,byteOffset:append(encoded),byteLength:encoded.length,byteStride:stride,count,mode,filter:'NONE'}};compressedViews++;
   }
   for(const texture of json.textures??[]){texture.extensions={...texture.extensions,EXT_texture_webp:{source:texture.source}};delete texture.source;}
-  json.extensionsUsed=[...new Set([...(json.extensionsUsed??[]),'EXT_meshopt_compression','EXT_texture_webp'])];json.extensionsRequired=[...new Set([...(json.extensionsRequired??[]),'EXT_meshopt_compression','EXT_texture_webp'])];
+  const codecs=['EXT_meshopt_compression',...((json.images??[]).length?['EXT_texture_webp']:[])];
+  json.extensionsUsed=[...new Set([...(json.extensionsUsed??[]),...codecs])];json.extensionsRequired=[...new Set([...(json.extensionsRequired??[]),...codecs])];
   json.buffers=[{byteLength:length},{byteLength:bin.length,extensions:{EXT_meshopt_compression:{fallback:true}}}];
   const packed=new Uint8Array(length);for(const chunk of chunks)packed.set(chunk.bytes,chunk.offset);
   const baseline=writeGlb(json,packed),runtime='assets/web/'+file;
-  const result=await applyApprovedEmbeddedColors(original,baseline,'assets/'+file,approved,path=>readFile(new URL(path,root))),output=result.bytes;
+  const result=(json.images??[]).length?await applyApprovedEmbeddedColors(original,baseline,'assets/'+file,approved,path=>readFile(new URL(path,root))):{bytes:baseline,applied:[]},output=result.bytes;
   for(const recipe of result.applied){
     used.add(recipe);const image=images.find(image=>image.index===recipe.index);
     image.afterBytes=recipe.outputBytes;delete image.quality;delete image.alphaQuality;
@@ -53,7 +58,7 @@ for(const file of (await readdir(new URL('public/assets/',root))).filter(f=>f.en
   records.push({source:'assets/'+file,runtime,sourceSha256:hash(original),runtimeSha256:hash(output),beforeBytes:original.length,afterBytes:output.length,compressedViews,images,geometryTolerance:0,animationTolerance:0});
   console.log(file.slice(0,12),original.length,'->',output.length);
 }
-if(used.size!==approved.images.length)throw Error('Approved image recipe was not used');
+if(!selected.size&&used.size!==approved.images.length)throw Error('Approved image recipe was not used');
 const manifest={version:1,codec:'EXT_meshopt_compression (v0, lossless, no reorder)',textures:'EXT_texture_webp (default color quality 90, ORM 95, normals lossless, alpha 100, max 2048; reviewed color overrides in embedded-color-recipes.json)',records};
 await writeFile(new URL('content/manifests/web-assets.json',root),JSON.stringify(manifest,null,2)+'\n');
 console.log('TOTAL',records.reduce((n,r)=>n+r.beforeBytes,0),'->',records.reduce((n,r)=>n+r.afterBytes,0));

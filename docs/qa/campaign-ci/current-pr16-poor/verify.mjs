@@ -1,0 +1,44 @@
+import assert from 'node:assert/strict';
+import {readFileSync,readdirSync,writeFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {gunzipSync} from 'node:zlib';
+import {fileURLToPath} from 'node:url';
+import {resolve} from 'node:path';
+import {execFileSync} from 'node:child_process';
+import {deserialize} from '../../../../src/persistence/snapshots.js';
+import {auditIntensiveFarm} from '../../../../tools/check_intensive_farm.mjs';
+import {summarizeIntensiveFarm} from '../../../../tools/summarize_intensive_farm.mjs';
+const root=fileURLToPath(new URL('../../../../',import.meta.url));
+const directory=resolve(process.argv[2]??fileURLToPath(new URL('./original',import.meta.url)));
+const json=name=>JSON.parse(readFileSync(resolve(directory,name),'utf8'));
+const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
+const matrix=json('matrix.json'),source='0544d6526af981ee2b65730e56ed7cda4f3e4be8';
+assert.equal(matrix.provenance.gitHead,source);assert.equal(matrix.provenance.sourceRootIsGitRoot,true);
+assert.deepEqual(matrix.provenance.trackedChanges,[]);assert.equal(matrix.sourcesUnchanged,true);
+assert.equal(matrix.status,'passed');assert.equal(matrix.defeats,5);
+assert.deepEqual(matrix.policy,{days:10,seed:712,culture:'mapungubwe',reserveLabourGrowth:false,reserveMaintenance:false,burstPlanting:true,cameraEntry:true});
+for(const [path,expected] of Object.entries(matrix.provenance.sourceHashes))assert.equal(hash(readFileSync(resolve(root,path))),expected,path+' current input differs');
+// This runner is not among the original provenance's enumerated .mjs files.
+const runner='tools/check_bad_management.mjs',gitRunner=execFileSync('git',['show',source+':'+runner],{cwd:root});
+assert.equal(hash(readFileSync(resolve(root,runner))),hash(gitRunner));
+assert.deepEqual(matrix.cases.map(row=>row.biome).sort(),['sabana','gran-rio','manglares','volcanes','gran-canon','desierto'].sort());
+const cases=[];
+for(const row of matrix.cases){
+ const report=json(row.biome+'-report.json'),original=gunzipSync(readFileSync(resolve(directory,row.biome+'-state.json.gz')));
+ assert.equal(hash(original),row.snapshotSha256);const state=deserialize(original.toString('utf8'));
+ assert.equal(row.status,'audited');assert.equal(report.biome,row.biome);assert.equal(state.biome,row.biome);
+ assert.equal(report.culture,'mapungubwe');assert.equal(state.culture,'mapungubwe');assert.equal(report.seed,'712');assert.equal(state.seed,'712');
+ assert.equal(state.result,row.result);assert.equal(report.result,row.result);assert.equal(state.raid,null);
+ assert.equal(report.completedNights,row.completedNights);assert.equal(state.completedNights,row.completedNights);
+ assert.equal(state.ledger.balance.n,String(row.money));assert.equal(report.money,row.money);
+ assert.equal(report.counts.RaidSpawned??0,report.counts.RaidEnded??0);
+ assert.equal(report.counts.CampaignWon??0,0);assert.equal(report.counts.GameOver??0,row.result==='defeat'?1:0);
+ assert.deepEqual(state.events.filter(e=>e.type==='GameOver'),row.gameOver);
+ auditIntensiveFarm({...report,state});
+ assert.deepEqual(summarizeIntensiveFarm({...report,state}),json(row.biome+'-summary.json'));
+ cases.push({biome:row.biome,result:row.result,completedNights:row.completedNights,physicalDeliveries:report.counts.CrateDelivered??0,money:row.money,snapshotSha256:row.snapshotSha256});
+}
+const payloads=readdirSync(directory).sort().map(name=>{const bytes=readFileSync(resolve(directory,name));return{name,bytes:bytes.length,sha256:hash(bytes)};});
+const receipt={status:'ROOT_CURRENT_POOR_MANAGEMENT_DOMAIN_AND_SOURCE_AUDIT_PASS',runId:'37895465546',jobId:'113705710332',source,sourceHashesVerified:Object.keys(matrix.provenance.sourceHashes).length,additionalRunnerSha256:hash(gitRunner),defeats:5,tenNightSurvivals:1,cases,payloads,scope:'Original six ten-night poor-management runs; native accounting, crate water/maturity/delivery, save roundtrip, no unfinished raid, natural GameOver and exact summaries audited. Not a responsible hundred-night victory, all-biome loss guarantee or GPU/mobile acceptance.'};
+const output=process.argv[3];if(output)writeFileSync(resolve(output),JSON.stringify(receipt,null,2)+'\n');
+console.log(JSON.stringify({status:receipt.status,sources:receipt.sourceHashesVerified,payloads:payloads.length,defeats:receipt.defeats,tenNightSurvivals:receipt.tenNightSurvivals}));

@@ -551,6 +551,34 @@
         "references/extracted/Bioma_Lab_V4_1_10_3_Manglar_Barro_Humedo/script-28.js"
       ],
       "markup": "references/extracted/Bioma_Lab_V4_1_10_3_Manglar_Barro_Humedo/markup.html"
+    },
+    {
+      "file": "Bioma_Cultivos_Lab_V4_Culling.html",
+      "sha256": "aadcb12238f5201afc1334ad80157ed7d0b0b60a8f7cad4f22a38c09157ec8ce",
+      "bytes": 21401311,
+      "archive": "references/crops-v4/1-biomas.zip",
+      "archiveSha256": "a17f0e9f434949bc0a8004e1c7d607e2da51b55c4333dd47805c7e00ce3110be",
+      "payloads": [
+        {
+          "id": "repairData",
+          "path": "references/crops-v4/repairData.json"
+        },
+        {
+          "id": "bridgeData",
+          "path": "references/crops-v4/bridgeData-original.json"
+        },
+        {
+          "id": "bakedStates",
+          "url": "/assets/8f6c9ef7472a2d7f8ffda7f08a78f8027f91d14a8f92b8eeca4084b0f379da36.glb"
+        },
+        {
+          "id": "bakedBridges",
+          "url": "/assets/e5e46ad32664a7aa21d22d5d93a19550c564735e6f2f896208ef9563c862fb3d.glb"
+        }
+      ],
+      "code": [
+        "references/crops-v4/recipe-functions.js"
+      ]
     }
   ],
   "resources": [
@@ -5134,6 +5162,22 @@
       "origins": [
         "Bioma_Lab_V4_1_10_3_Manglar_Barro_Humedo.html#script-28:VILLAGE_GEOM_DATA:i"
       ]
+    },
+    {
+      "url": "/assets/8f6c9ef7472a2d7f8ffda7f08a78f8027f91d14a8f92b8eeca4084b0f379da36.glb",
+      "sha256": "8f6c9ef7472a2d7f8ffda7f08a78f8027f91d14a8f92b8eeca4084b0f379da36",
+      "bytes": 18839704,
+      "source": "Bioma_Cultivos_Lab_V4_Culling.html",
+      "encoding": "glb",
+      "derived": true
+    },
+    {
+      "url": "/assets/2fdb3468b7646ebe16d0f3d3d25538ce5b20d6dee1d3830256d2f62599826dcc.glb",
+      "sha256": "2fdb3468b7646ebe16d0f3d3d25538ce5b20d6dee1d3830256d2f62599826dcc",
+      "bytes": 48988728,
+      "source": "Bioma_Cultivos_Lab_V4_Culling.html",
+      "encoding": "glb",
+      "derived": true
     }
   ],
   "models": [
@@ -5310,14 +5354,14 @@
             "Weapon_Combo_2"
           ],
           "method": "Bone coordinate frames calibrated from 20 paired native Running samples. Target non-root offsets preserved. Uniform calibrated hip translation scale plus offset.",
-          "calibrationMaxAngularErrorDegrees": 4.594703627151031e-05,
+          "calibrationMaxAngularErrorDegrees": 0.00004594703627151031,
           "hipTranslationScale": 0.9450193288186202,
           "hipTranslationOffset": [
             -0.02122471998153538,
             0.32154751611465915,
             0.06885118603628344
           ],
-          "hipCalibrationMaxError": 1.2708420271678733e-07,
+          "hipCalibrationMaxError": 1.2708420271678733e-7,
           "preserved": [
             "mesh",
             "skin weights",
@@ -5546,7 +5590,7 @@
             0.018878459930419922,
             0.17361696064472198
           ],
-          "maxCalibrationErrorDegrees": 4.315175430305765e-05,
+          "maxCalibrationErrorDegrees": 0.00004315175430305765,
           "nativeRunningUnchanged": true
         }
       }
@@ -5598,14 +5642,14 @@
             "Weapon_Combo_2"
           ],
           "method": "Bone coordinate frames calibrated from shared native Running samples. Target non-root offsets preserved. Uniform calibrated hip translation scale plus offset.",
-          "calibrationMaxAngularErrorDegrees": 6.560479907325776e-05,
+          "calibrationMaxAngularErrorDegrees": 0.00006560479907325776,
           "hipTranslationScale": 1.1918714694874435,
           "hipTranslationOffset": [
             -0.02209374597743787,
             0.6356294465972712,
             -0.23360160293564705
           ],
-          "hipCalibrationMaxError": 2.0989912052904458e-07,
+          "hipCalibrationMaxError": 2.0989912052904458e-7,
           "preserved": [
             "mesh",
             "skin weights",

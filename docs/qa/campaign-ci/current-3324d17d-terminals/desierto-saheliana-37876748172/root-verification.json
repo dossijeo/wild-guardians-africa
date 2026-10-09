@@ -1,0 +1,58 @@
+{
+  "status": "failure-evidence-verified",
+  "recordedHead": "3324d17dd2305ea8595aea311c518cc6db2404ad",
+  "frozenSourcesVerified": 320,
+  "currentSourceDifferences": [],
+  "biome": "desierto",
+  "culture": "saheliana",
+  "day": 100,
+  "completedNights": 99,
+  "time": 600,
+  "elapsed": 62089.499999369735,
+  "result": null,
+  "money": "343700",
+  "failure": "native incursion did not finish before the runner's 2400 simulated-second daily limit",
+  "activeAnimals": [
+    {
+      "id": "animal-509118",
+      "species": "warthog",
+      "status": "retreating",
+      "x": 81.20676942839681,
+      "z": -13.3126214403755,
+      "hitsRemaining": 0,
+      "targetId": null,
+      "spawn": {
+        "x": 80.90773503778313,
+        "z": 11.389575379612694
+      },
+      "exit": {
+        "x": 81.22902044431812,
+        "z": 14.372321712700312
+      },
+      "pathPoints": null,
+      "firstWaypoints": null
+    }
+  ],
+  "workerStatuses": {
+    "fleeing": 109,
+    "home": 163
+  },
+  "heartbeat": {
+    "day": 100,
+    "time": 600,
+    "elapsed": 61734.4999993749,
+    "lagSimulatedSeconds": 354.99999999483407,
+    "workerStatuses": {
+      "fleeing": 109,
+      "home": 163
+    }
+  },
+  "derivedCounts": {
+    "CrateDelivered": 19963,
+    "CropPicked": 20336
+  },
+  "snapshotSha256": "da68eb2a2c4904c0681537946500368964f451b5a3ca307c0fc7d5b96ac59d73",
+  "completedReportAvailable": false,
+  "completedSummaryAvailable": false,
+  "scope": "Original full failure snapshot, frozen Git source hashes, native persistence/crop/crate and integer ledger invariants. Counts are derived from the snapshot because no final report exists. This is not a replay, victory/activity acceptance or a causal diagnosis of the physical blockage."
+}

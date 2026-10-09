@@ -1,0 +1,836 @@
+{
+  "scope": "Native medium-quality static environment; original biome props only. No geometry repair, asset promotion or visual acceptance. No crops/workers. Fixed seed 712 and daytime 120. Shadow cache disabled equally. Total GPU includes native sky and main render; shadow and main-color queried on different frames from total. Explicit depth capture is a separate synthetic VFX-demand pass, not included in baseline total. Timings are not additive.",
+  "biome": "gran-canon",
+  "blocks": [],
+  "errors": [],
+  "context": {
+    "seed": 712,
+    "time": 120,
+    "sourceLogicalSha256": "38fda5f98595b1b74d09540fc0e147c90aac47172841cf304d9930c0ecdfda2f",
+    "camera": [
+      116.00000000000001,
+      53.904107950265605,
+      136
+    ],
+    "target": [
+      96.00000000000001,
+      38.290170927160965,
+      96.00000000000001
+    ],
+    "buffer": [
+      1280,
+      720
+    ],
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "assets": [
+      {
+        "slot": 0,
+        "name": "Acacia de cañón",
+        "group": 0,
+        "lods": 3
+      },
+      {
+        "slot": 1,
+        "name": "Acacia irregular de ribera",
+        "group": 0,
+        "lods": 3
+      },
+      {
+        "slot": 2,
+        "name": "Mesa de arenisca",
+        "group": 3,
+        "lods": 3
+      },
+      {
+        "slot": 3,
+        "name": "Aguja estratificada",
+        "group": 3,
+        "lods": 3
+      },
+      {
+        "slot": 4,
+        "name": "Arco natural de arenisca",
+        "group": 3,
+        "lods": 3
+      },
+      {
+        "slot": 5,
+        "name": "Arbusto espinoso",
+        "group": 1,
+        "lods": 3
+      },
+      {
+        "slot": 6,
+        "name": "Matorral de ribera",
+        "group": 1,
+        "lods": 3
+      },
+      {
+        "slot": 7,
+        "name": "Hierba dorada",
+        "group": 2,
+        "lods": 3
+      },
+      {
+        "slot": 8,
+        "name": "Áloe en flor",
+        "group": 2,
+        "lods": 3
+      },
+      {
+        "slot": 9,
+        "name": "Suculentas de roca",
+        "group": 2,
+        "lods": 3
+      },
+      {
+        "slot": 10,
+        "name": "Bloque redondeado",
+        "group": 3,
+        "lods": 3
+      },
+      {
+        "slot": 11,
+        "name": "Roca estratificada",
+        "group": 3,
+        "lods": 3
+      },
+      {
+        "slot": 12,
+        "name": "Grupo de piedras",
+        "group": 3,
+        "lods": 3
+      },
+      {
+        "slot": 13,
+        "name": "Losa de arenisca",
+        "group": 3,
+        "lods": 3
+      },
+      {
+        "slot": 14,
+        "name": "Derrubios angulosos",
+        "group": 3,
+        "lods": 3
+      },
+      {
+        "slot": 15,
+        "name": "Cráneo y huesos",
+        "group": 4,
+        "lods": 3
+      },
+      {
+        "slot": 16,
+        "name": "Tocón seco",
+        "group": 4,
+        "lods": 3
+      },
+      {
+        "slot": 17,
+        "name": "Termitero rojizo",
+        "group": 5,
+        "lods": 3
+      },
+      {
+        "slot": 18,
+        "name": "Afloramiento de arenisca",
+        "group": 3,
+        "lods": 3
+      },
+      {
+        "slot": 19,
+        "name": "Poza entre rocas",
+        "group": 5,
+        "lods": 3
+      }
+    ],
+    "color": [
+      {
+        "key": "0:2",
+        "instances": 1,
+        "triangles": 1620
+      },
+      {
+        "key": "2:2",
+        "instances": 1,
+        "triangles": 1836
+      },
+      {
+        "key": "13:2",
+        "instances": 6,
+        "triangles": 3396
+      },
+      {
+        "key": "17:2",
+        "instances": 1,
+        "triangles": 571
+      },
+      {
+        "key": "3:2",
+        "instances": 1,
+        "triangles": 870
+      },
+      {
+        "key": "10:2",
+        "instances": 5,
+        "triangles": 2125
+      },
+      {
+        "key": "11:2",
+        "instances": 2,
+        "triangles": 1320
+      },
+      {
+        "key": "14:2",
+        "instances": 2,
+        "triangles": 1128
+      },
+      {
+        "key": "18:1",
+        "instances": 1,
+        "triangles": 918
+      },
+      {
+        "key": "4:2",
+        "instances": 1,
+        "triangles": 1267
+      },
+      {
+        "key": "12:2",
+        "instances": 5,
+        "triangles": 2570
+      },
+      {
+        "key": "5:1",
+        "instances": 1,
+        "triangles": 1443
+      },
+      {
+        "key": "6:1",
+        "instances": 3,
+        "triangles": 15741
+      },
+      {
+        "key": "7:2",
+        "instances": 13,
+        "triangles": 23257
+      },
+      {
+        "key": "10:1",
+        "instances": 4,
+        "triangles": 2192
+      },
+      {
+        "key": "12:1",
+        "instances": 1,
+        "triangles": 634
+      },
+      {
+        "key": "13:1",
+        "instances": 2,
+        "triangles": 1464
+      },
+      {
+        "key": "15:1",
+        "instances": 1,
+        "triangles": 428
+      },
+      {
+        "key": "2:1",
+        "instances": 1,
+        "triangles": 2127
+      },
+      {
+        "key": "3:1",
+        "instances": 1,
+        "triangles": 1030
+      },
+      {
+        "key": "11:1",
+        "instances": 2,
+        "triangles": 1564
+      },
+      {
+        "key": "7:1",
+        "instances": 3,
+        "triangles": 6924
+      },
+      {
+        "key": "8:1",
+        "instances": 2,
+        "triangles": 2604
+      },
+      {
+        "key": "9:1",
+        "instances": 1,
+        "triangles": 1197
+      },
+      {
+        "key": "14:0",
+        "instances": 1,
+        "triangles": 714
+      },
+      {
+        "key": "14:1",
+        "instances": 2,
+        "triangles": 1378
+      },
+      {
+        "key": "5:2",
+        "instances": 17,
+        "triangles": 17289
+      },
+      {
+        "key": "6:2",
+        "instances": 20,
+        "triangles": 53320
+      },
+      {
+        "key": "8:2",
+        "instances": 19,
+        "triangles": 18810
+      },
+      {
+        "key": "9:2",
+        "instances": 19,
+        "triangles": 19000
+      }
+    ],
+    "shadow": [
+      {
+        "key": "0",
+        "instances": 3,
+        "triangles": 4860
+      },
+      {
+        "key": "2",
+        "instances": 6,
+        "triangles": 11016
+      },
+      {
+        "key": "17",
+        "instances": 1,
+        "triangles": 571
+      },
+      {
+        "key": "3",
+        "instances": 2,
+        "triangles": 1740
+      },
+      {
+        "key": "18",
+        "instances": 2,
+        "triangles": 1344
+      },
+      {
+        "key": "4",
+        "instances": 1,
+        "triangles": 1267
+      },
+      {
+        "key": "15",
+        "instances": 1,
+        "triangles": 285
+      },
+      {
+        "key": "1",
+        "instances": 5,
+        "triangles": 7075
+      },
+      {
+        "key": "10",
+        "instances": 16,
+        "triangles": 6800
+      },
+      {
+        "key": "6",
+        "instances": 41,
+        "triangles": 109306
+      },
+      {
+        "key": "5",
+        "instances": 39,
+        "triangles": 39663
+      },
+      {
+        "key": "12",
+        "instances": 9,
+        "triangles": 4626
+      },
+      {
+        "key": "13",
+        "instances": 17,
+        "triangles": 9622
+      },
+      {
+        "key": "14",
+        "instances": 9,
+        "triangles": 5076
+      },
+      {
+        "key": "11",
+        "instances": 10,
+        "triangles": 6600
+      }
+    ],
+    "originalSides": [
+      {
+        "side": 0,
+        "shadowSide": 0
+      },
+      {
+        "side": 0,
+        "shadowSide": 0
+      },
+      {
+        "side": 0,
+        "shadowSide": 0
+      },
+      {
+        "side": 0,
+        "shadowSide": 0
+      },
+      {
+        "side": 0,
+        "shadowSide": 0
+      },
+      {
+        "side": 0,
+        "shadowSide": 0
+      },
+      {
+        "side": 0,
+        "shadowSide": 0
+      },
+      {
+        "side": 0,
+        "shadowSide": 0
+      },
+      {
+        "side": 0,
+        "shadowSide": 0
+      },
+      {
+        "side": 0,
+        "shadowSide": 0
+      },
+      {
+        "side": 0,
+        "shadowSide": 0
+      },
+      {
+        "side": 0,
+        "shadowSide": 0
+      },
+      {
+        "side": 0,
+        "shadowSide": 0
+      },
+      {
+        "side": 0,
+        "shadowSide": 0
+      },
+      {
+        "side": 0,
+        "shadowSide": 0
+      },
+      {
+        "side": 0,
+        "shadowSide": 0
+      },
+      {
+        "side": 0,
+        "shadowSide": 0
+      },
+      {
+        "side": 0,
+        "shadowSide": 0
+      },
+      {
+        "side": 0,
+        "shadowSide": 0
+      },
+      {
+        "side": 0,
+        "shadowSide": 0
+      }
+    ]
+  },
+  "ready": true,
+  "productionFrontSide": true,
+  "visualArm": "FrontSide",
+  "visualCamera": [
+    116.00000000000001,
+    53.904107950265605,
+    136
+  ],
+  "visualTarget": [
+    96.00000000000001,
+    38.290170927160965,
+    96.00000000000001
+  ],
+  "visualWitness": [
+    {
+      "pass": "shadow",
+      "object": "843bb3cd-7273-45fb-910a-5168f08c8ea4",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "shadow",
+      "object": "56a860a4-1442-4077-8d55-cb974d20abc4",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "shadow",
+      "object": "e8f8a0b5-6cc2-4c6e-b63b-58657ebccd03",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "shadow",
+      "object": "3df650a8-0a55-4c22-b0a7-c1972f47bdc2",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "shadow",
+      "object": "b54bd522-9239-4e93-a831-d69bf5501f52",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "shadow",
+      "object": "d9b0bf4d-7daa-4ae1-a1a2-32e970e16c48",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "shadow",
+      "object": "3c6b9393-bc5c-4579-8b91-37499a5939f3",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "shadow",
+      "object": "3a6d819d-0c8f-4b0d-8da3-060f7ba97188",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "shadow",
+      "object": "50461894-cd76-4a27-827a-14fc0beb756d",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "shadow",
+      "object": "cc3cb094-881c-4831-8c84-260418f46996",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "shadow",
+      "object": "e87acaa4-bbf6-414a-9795-b43c6961a44c",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "shadow",
+      "object": "dbf0af34-7050-427f-a239-67e02f72aca9",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "shadow",
+      "object": "530db633-1e70-4aa2-9f8b-66180b60bb86",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "shadow",
+      "object": "c61db382-25e4-4f96-8dff-9eefa96f1266",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "shadow",
+      "object": "a38d83df-a80b-405e-b503-10716c99fadf",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "c7ab478f-e19d-4b37-bc39-c4b3cae1fa92",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "d6fb0688-122a-4416-baff-85e2097a43b7",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "5b6de30d-c255-4398-aeb4-63fca080e3c1",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "8a577c43-c41b-4831-877a-b8b10e384b22",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "23f52b25-460f-4884-8cb4-69f1bf4ffd0a",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "db4549ee-943f-42ca-9889-13e2fda834d1",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "ccf58aa0-f88e-4f94-be3e-ed144a864436",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "a5b9f660-2339-4680-8561-c24e9e170960",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "cb6fd0b2-1354-4c77-a4ed-74ae22890451",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "dacb01e6-403e-47af-8da6-dfba09d7d868",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "3b468b50-3674-4c01-8014-7e92373de874",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "86bbfa43-eac4-497d-9ecc-cd761ebc928d",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "3b558062-2cee-4f86-8e22-09c2ef447e24",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "b947c57f-172e-4bfc-af0d-daa56e6b794d",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "e86a5628-a7f4-4105-a626-c471ff78c037",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "f892bd60-96ab-4df3-87ee-751709f45170",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "41886101-ea97-401a-8e44-333ab8bd3bca",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "ec17a540-0edc-49b4-be7d-7956761e33ab",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "69bc966e-de92-40dc-889d-b2805668cf35",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "cee20f9b-312c-471e-8ef3-585a563fb463",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "9abbf967-7825-4556-a043-7fb4dc53e61a",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "27823c04-cdf7-4970-a2cc-af58143a7dcf",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "14776964-8a4a-4f93-b64b-61bb3c3af261",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "18bcd55e-7948-4faa-9e97-d53981554ace",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "fab8d2d7-05eb-4af9-b25a-0d946a41a31f",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "c64219e0-e711-4b9b-837e-ad9f15cf784f",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "305d4612-5542-49c0-9c3b-af97ffdb77ab",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "4e8c7223-4c01-47f3-9bd8-2a07f483bf5c",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "0a42dc38-74d9-4821-a0d9-521e41f50043",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "d6f370ab-4dfd-4dc6-af93-b1ae043ac65f",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    }
+  ],
+  "disposed": true,
+  "contextLost": true
+}

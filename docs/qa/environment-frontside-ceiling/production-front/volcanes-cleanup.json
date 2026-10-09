@@ -1,0 +1,1085 @@
+{
+  "scope": "Native medium-quality static environment; original biome props only. No geometry repair, asset promotion or visual acceptance. No crops/workers. Fixed seed 712 and daytime 120. Shadow cache disabled equally. Total GPU includes native sky and main render; shadow and main-color queried on different frames from total. Explicit depth capture is a separate synthetic VFX-demand pass, not included in baseline total. Timings are not additive.",
+  "biome": "volcanes",
+  "blocks": [],
+  "errors": [],
+  "context": {
+    "seed": 712,
+    "time": 120,
+    "sourceLogicalSha256": "e2365d3fbfecdfd36d63eec1957675ef46dc5f98aeb81aaa59b041f094d42b38",
+    "camera": [
+      116,
+      30.777097376603674,
+      136
+    ],
+    "target": [
+      96,
+      10.777097376603688,
+      96
+    ],
+    "buffer": [
+      1280,
+      720
+    ],
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "assets": [
+      {
+        "slot": 0,
+        "name": "Acacia de ladera volcánica",
+        "lods": 3
+      },
+      {
+        "slot": 1,
+        "name": "Acacia irregular volcánica",
+        "lods": 3
+      },
+      {
+        "slot": 2,
+        "name": "Baobab volcánico",
+        "lods": 3
+      },
+      {
+        "slot": 3,
+        "name": "Árbol carbonizado",
+        "lods": 3
+      },
+      {
+        "slot": 4,
+        "name": "Arbusto de hojas rígidas",
+        "lods": 3
+      },
+      {
+        "slot": 5,
+        "name": "Matorral espinoso de ceniza",
+        "lods": 3
+      },
+      {
+        "slot": 6,
+        "name": "Arbusto de suelo volcánico",
+        "lods": 3
+      },
+      {
+        "slot": 7,
+        "name": "Hierba volcánica alta",
+        "lods": 3
+      },
+      {
+        "slot": 8,
+        "name": "Vegetación baja entre escorias",
+        "lods": 3
+      },
+      {
+        "slot": 9,
+        "name": "Macollas suculentas",
+        "lods": 3
+      },
+      {
+        "slot": 10,
+        "name": "Roca de basalto oscura",
+        "lods": 3
+      },
+      {
+        "slot": 11,
+        "name": "Roca rojiza estratificada",
+        "lods": 3
+      },
+      {
+        "slot": 12,
+        "name": "Rocas volcánicas angulosas",
+        "lods": 3
+      },
+      {
+        "slot": 13,
+        "name": "Tronco carbonizado",
+        "lods": 3
+      },
+      {
+        "slot": 14,
+        "name": "Ramas quemadas",
+        "lods": 3
+      },
+      {
+        "slot": 15,
+        "name": "Restos calcinados",
+        "lods": 3
+      },
+      {
+        "slot": 16,
+        "name": "Tocón carbonizado",
+        "lods": 3
+      },
+      {
+        "slot": 17,
+        "name": "Pequeño cono volcánico",
+        "lods": 3
+      },
+      {
+        "slot": 18,
+        "name": "Afloramiento volcánico",
+        "lods": 3
+      },
+      {
+        "slot": 19,
+        "name": "Poza de lava",
+        "lods": 3
+      }
+    ],
+    "color": [
+      {
+        "key": "1:2",
+        "instances": 3,
+        "triangles": 2286
+      },
+      {
+        "key": "11:2",
+        "instances": 23,
+        "triangles": 4853
+      },
+      {
+        "key": "2:2",
+        "instances": 1,
+        "triangles": 1207
+      },
+      {
+        "key": "17:2",
+        "instances": 3,
+        "triangles": 963
+      },
+      {
+        "key": "18:2",
+        "instances": 1,
+        "triangles": 346
+      },
+      {
+        "key": "0:2",
+        "instances": 3,
+        "triangles": 2874
+      },
+      {
+        "key": "14:2",
+        "instances": 8,
+        "triangles": 1696
+      },
+      {
+        "key": "0:1",
+        "instances": 5,
+        "triangles": 11970
+      },
+      {
+        "key": "13:2",
+        "instances": 8,
+        "triangles": 2432
+      },
+      {
+        "key": "17:1",
+        "instances": 6,
+        "triangles": 4818
+      },
+      {
+        "key": "18:1",
+        "instances": 1,
+        "triangles": 863
+      },
+      {
+        "key": "10:2",
+        "instances": 38,
+        "triangles": 9728
+      },
+      {
+        "key": "12:2",
+        "instances": 34,
+        "triangles": 8908
+      },
+      {
+        "key": "4:2",
+        "instances": 18,
+        "triangles": 19512
+      },
+      {
+        "key": "5:2",
+        "instances": 19,
+        "triangles": 15219
+      },
+      {
+        "key": "6:2",
+        "instances": 32,
+        "triangles": 61536
+      },
+      {
+        "key": "7:2",
+        "instances": 154,
+        "triangles": 83314
+      },
+      {
+        "key": "8:2",
+        "instances": 102,
+        "triangles": 16626
+      },
+      {
+        "key": "9:2",
+        "instances": 107,
+        "triangles": 66768
+      },
+      {
+        "key": "16:2",
+        "instances": 9,
+        "triangles": 2277
+      },
+      {
+        "key": "1:0",
+        "instances": 1,
+        "triangles": 3458
+      },
+      {
+        "key": "2:0",
+        "instances": 3,
+        "triangles": 16461
+      },
+      {
+        "key": "3:1",
+        "instances": 4,
+        "triangles": 4964
+      },
+      {
+        "key": "4:1",
+        "instances": 11,
+        "triangles": 29810
+      },
+      {
+        "key": "5:1",
+        "instances": 11,
+        "triangles": 22022
+      },
+      {
+        "key": "6:1",
+        "instances": 9,
+        "triangles": 43254
+      },
+      {
+        "key": "7:1",
+        "instances": 23,
+        "triangles": 31027
+      },
+      {
+        "key": "8:1",
+        "instances": 15,
+        "triangles": 6045
+      },
+      {
+        "key": "9:1",
+        "instances": 14,
+        "triangles": 21826
+      },
+      {
+        "key": "10:0",
+        "instances": 3,
+        "triangles": 3486
+      },
+      {
+        "key": "10:1",
+        "instances": 24,
+        "triangles": 15336
+      },
+      {
+        "key": "11:0",
+        "instances": 3,
+        "triangles": 2883
+      },
+      {
+        "key": "11:1",
+        "instances": 8,
+        "triangles": 4224
+      },
+      {
+        "key": "12:0",
+        "instances": 3,
+        "triangles": 3591
+      },
+      {
+        "key": "12:1",
+        "instances": 8,
+        "triangles": 5264
+      },
+      {
+        "key": "13:1",
+        "instances": 3,
+        "triangles": 2283
+      },
+      {
+        "key": "14:1",
+        "instances": 2,
+        "triangles": 1056
+      },
+      {
+        "key": "15:1",
+        "instances": 1,
+        "triangles": 449
+      },
+      {
+        "key": "16:1",
+        "instances": 4,
+        "triangles": 2528
+      },
+      {
+        "key": "17:0",
+        "instances": 1,
+        "triangles": 1460
+      },
+      {
+        "key": "0:0",
+        "instances": 1,
+        "triangles": 4353
+      },
+      {
+        "key": "3:0",
+        "instances": 2,
+        "triangles": 4514
+      },
+      {
+        "key": "2:1",
+        "instances": 1,
+        "triangles": 3019
+      },
+      {
+        "key": "15:2",
+        "instances": 2,
+        "triangles": 358
+      },
+      {
+        "key": "1:1",
+        "instances": 1,
+        "triangles": 1902
+      },
+      {
+        "key": "3:2",
+        "instances": 1,
+        "triangles": 497
+      }
+    ],
+    "shadow": [
+      {
+        "key": "18",
+        "instances": 6,
+        "triangles": 2076
+      },
+      {
+        "key": "1",
+        "instances": 19,
+        "triangles": 14478
+      },
+      {
+        "key": "10",
+        "instances": 108,
+        "triangles": 27648
+      },
+      {
+        "key": "11",
+        "instances": 66,
+        "triangles": 13926
+      },
+      {
+        "key": "12",
+        "instances": 83,
+        "triangles": 21746
+      },
+      {
+        "key": "2",
+        "instances": 11,
+        "triangles": 13277
+      },
+      {
+        "key": "17",
+        "instances": 20,
+        "triangles": 6420
+      },
+      {
+        "key": "0",
+        "instances": 21,
+        "triangles": 20118
+      },
+      {
+        "key": "14",
+        "instances": 20,
+        "triangles": 4240
+      },
+      {
+        "key": "4",
+        "instances": 57,
+        "triangles": 61788
+      },
+      {
+        "key": "5",
+        "instances": 71,
+        "triangles": 56871
+      },
+      {
+        "key": "6",
+        "instances": 70,
+        "triangles": 134610
+      },
+      {
+        "key": "13",
+        "instances": 21,
+        "triangles": 6384
+      },
+      {
+        "key": "16",
+        "instances": 18,
+        "triangles": 4554
+      },
+      {
+        "key": "3",
+        "instances": 19,
+        "triangles": 9443
+      },
+      {
+        "key": "15",
+        "instances": 9,
+        "triangles": 1611
+      }
+    ],
+    "originalSides": [
+      {
+        "side": 0,
+        "shadowSide": 0
+      },
+      {
+        "side": 0,
+        "shadowSide": 0
+      },
+      {
+        "side": 0,
+        "shadowSide": 0
+      },
+      {
+        "side": 0,
+        "shadowSide": 0
+      },
+      {
+        "side": 0,
+        "shadowSide": 0
+      },
+      {
+        "side": 0,
+        "shadowSide": 0
+      },
+      {
+        "side": 0,
+        "shadowSide": 0
+      },
+      {
+        "side": 0,
+        "shadowSide": 0
+      },
+      {
+        "side": 0,
+        "shadowSide": 0
+      },
+      {
+        "side": 0,
+        "shadowSide": 0
+      },
+      {
+        "side": 0,
+        "shadowSide": 0
+      },
+      {
+        "side": 0,
+        "shadowSide": 0
+      },
+      {
+        "side": 0,
+        "shadowSide": 0
+      },
+      {
+        "side": 0,
+        "shadowSide": 0
+      },
+      {
+        "side": 0,
+        "shadowSide": 0
+      },
+      {
+        "side": 0,
+        "shadowSide": 0
+      },
+      {
+        "side": 0,
+        "shadowSide": 0
+      },
+      {
+        "side": 0,
+        "shadowSide": 0
+      },
+      {
+        "side": 0,
+        "shadowSide": 0
+      },
+      {
+        "side": 0,
+        "shadowSide": 0
+      }
+    ]
+  },
+  "ready": true,
+  "productionFrontSide": true,
+  "visualArm": "FrontSide",
+  "visualCamera": [
+    116,
+    30.777097376603674,
+    136
+  ],
+  "visualTarget": [
+    96,
+    10.777097376603688,
+    96
+  ],
+  "visualWitness": [
+    {
+      "pass": "shadow",
+      "object": "8d85f44f-fe07-4708-8889-54e18b460fd8",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "shadow",
+      "object": "a57b77d3-a7ef-4341-9463-591c33053eaf",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "shadow",
+      "object": "620e50e7-fef9-4f8e-86cc-52d5930ad945",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "shadow",
+      "object": "27be1c8a-cac6-4ede-ae63-7380e6567d3d",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "shadow",
+      "object": "b5767b84-ca0b-4fbc-8f8e-0a5500fbb3fe",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "shadow",
+      "object": "a9c68262-7e45-49e2-a449-98b2cdaf8990",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "shadow",
+      "object": "d8261ca7-08f6-4007-bb9a-f9031cda0300",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "shadow",
+      "object": "4a8b60a8-442b-4dde-89be-9d4f25d4f2ad",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "shadow",
+      "object": "82f60261-7ecf-45a6-9872-ed864d902121",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "shadow",
+      "object": "585de96d-cf5b-4c6a-9c08-a4b86b316fb6",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "shadow",
+      "object": "fa86442a-9f35-4431-a93b-958ec3bdbb8c",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "shadow",
+      "object": "231d6613-29f0-44a8-866a-7723d06a9890",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "shadow",
+      "object": "6f7c9b4a-9c3d-4241-acb3-4c3f9d5611b0",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "shadow",
+      "object": "2eba42fa-269f-4df6-aa9c-92d407754e8a",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "shadow",
+      "object": "8dd18e3b-8446-4e25-b0ac-84b3675434cb",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "shadow",
+      "object": "649ae62f-be83-40b0-b597-faacd13b7fdc",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "shadow",
+      "object": "d0879457-4477-46ad-824b-9d60d8c28b8d",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "shadow",
+      "object": "1056e7a1-41b3-48bc-b423-1b1381d46777",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "shadow",
+      "object": "59c5b372-4d05-4a74-b72f-74acfa9e3ae9",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "c4a658b9-f4c6-45c0-a74c-e8a6486dd460",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "043f345f-409f-4e2e-997a-9b50b84baec2",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "6fbfead4-9e42-460a-be3b-9c6df039fb31",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "d4dc3c60-7c43-4471-92d3-3acb81338612",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "65adcda0-778f-4b46-9f03-e162503a20d8",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "5f0c3129-9f44-45b6-a712-c47d8fb76377",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "8c14c3e4-4f4a-4b48-8f73-d12c605b7b0c",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "8939abfb-2d6f-4463-bdcb-95a13b65b9a5",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "f5b632d8-9322-4397-8581-42724d3dd524",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "ea0dd254-3631-4374-871c-142a9e17d658",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "4a392304-7ec5-4717-8caf-c5be69764e67",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "e1104f6a-8ed3-45a8-82da-30afd3bceabc",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "91c8886f-c390-4a67-a951-e75c7fa28c57",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "061d0705-50ab-4465-a2b1-c4e53c692aab",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "d3775ad0-55e1-4c01-bd74-cf465a2f4010",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "ab2a2254-f744-448b-a850-22cd5d3da3cf",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "24730353-360a-4665-ba64-d88187344200",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "7b5ed7b8-4833-4300-ad92-77099ac25ca5",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "3c2658e8-6a12-4a17-b23c-c1415d971ae1",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "98ee7190-0eec-4806-8437-c82b671f8e2d",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "a2f62a81-490d-4c14-aaee-c1290bc2b03b",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "927c55f9-24e0-4d53-aba4-7e60c4ba083a",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "567bf9b2-c711-4709-93d1-a982cae5369d",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "e874b465-54f1-477c-a39b-a9aad6b8fe6f",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "d5e3c774-a6ea-4532-b77d-4aea9612a7e2",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "531e1bf3-a4ce-41a2-9fa8-f1d8516e8501",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "6cbe3ced-4cfe-4377-897a-2741f0cf0524",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "910452c5-ec58-4e66-9036-dae2284e22f3",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "ed71f961-db80-43f9-865a-1eac5f2d1d61",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "78b9f9d8-c89e-4936-ad1c-951cd2335b8a",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "b240c524-130d-4699-afe4-022c15876210",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "628369b4-e03f-4c37-b5ab-41316e7c4ee9",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "4975469e-7f7e-4a28-b008-720f886187a6",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "e0cbc1ba-64e0-4cf4-8ffc-fe2815d7ec67",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "9201ed09-825b-4db6-a7d4-d685ce9c6711",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "835360e5-d4ad-45d1-a72a-4ba728edf9c8",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "511b766b-f124-4260-b988-4c8bfeeff8b3",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "a1127d9c-1883-49d9-bb45-6d4d152f72e1",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "c1ad44f5-d4cf-409e-a31a-2b8829d9c00f",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "d614d2ab-f6ac-475e-a699-4f0976dd1d23",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "b081426d-72e5-4795-9253-a4e0b788e252",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "57ff52c5-3152-4e80-9681-ea0eb1216197",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "24f18377-8106-47d1-bf99-51a22572fa11",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "7beb04f0-1cd7-48e8-a572-9a3ab5f377e0",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "92e72766-2226-417e-beff-cd49770eff9d",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "d74375a8-7150-46c7-ae49-12436f1f55d4",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "0690211a-cd1d-470e-82fb-a0f3e07abb05",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "9c9d7ea2-a4b8-4f3c-9051-fd6a6fb7d2e5",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    },
+    {
+      "pass": "color",
+      "object": "c8a1f8c7-27e2-4b0c-84d8-54698d946467",
+      "side": 0,
+      "cull": true,
+      "cullMode": 1029,
+      "frontFace": 2305
+    }
+  ],
+  "disposed": true,
+  "contextLost": true
+}

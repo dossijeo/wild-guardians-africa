@@ -13,6 +13,7 @@ import {gateFrameFootprints,gateSwingPolygon,gatePortalPoints} from './gate-pass
 import {validActiveBounds} from './active-region.js';
 import {wallCollisionFrame,wallCollisionPolygon} from './wall-collision-frame.js';
 import {shortenBuildingRoute} from './building-route-shortcut.js';
+import {animalSegmentClearance} from './animal-segment-clearance.js';
 export const BIOME_IDS={sabana:'savanna','gran-rio':'grand_river',manglares:'mangrove',volcanes:'volcanoes','gran-canon':'canyons',desierto:'desert'};
 export const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 export class Navigation {
@@ -381,8 +382,12 @@ export class Navigation {
     return {valid,peak:sweep.peak};
   }
   workerPath(start,end,radius,ignore){
+    const view=this.workerNavigationView(start,radius,ignore),result=view.path(start,end,radius,ignore,true);
+    if(view!==this)trimViewRegions(view);return result;
+  }
+  workerNavigationView(start,radius,ignore){
     const source=start.terrainAvoidance;
-    if(!source?.length){if(Object.hasOwn(this,'workerViews'))this.workerViews.delete(start);return this.path(start,end,radius,ignore,true);}
+    if(!source?.length){if(Object.hasOwn(this,'workerViews'))this.workerViews.delete(start);return this;}
     if(!Object.hasOwn(this,'workerViews'))this.workerViews=new Map();
     const signature=JSON.stringify(source),cached=this.workerViews.get(start);let view;
     if(cached&&cached.version===this.version&&cached.radius===radius&&cached.ignore===ignore&&cached.signature===signature){
@@ -399,10 +404,10 @@ export class Navigation {
       if(this.workerViews.size>=8&&!this.workerViews.has(start))this.workerViews.delete(this.workerViews.keys().next().value);
       this.workerViews.set(start,{version:this.version,radius,ignore,signature,view});
     }
-    const result=view.path(start,end,radius,ignore,true);trimViewRegions(view);return result;
+    trimViewRegions(view);return view;
   }
   testSegmentClear(start,end,radius,ignore,worker,escapeProps=false) {
-    if(!worker)return this.coarseSegmentClear(start,end,radius,ignore,worker,escapeProps);
+    if(!worker)return animalSegmentClearance(this,start,end,radius,ignore,escapeProps);
     this.workerRefinementStats??={checks:0,cacheHits:0,fineSegments:0,finePoints:0,rejected:0};
     if(!Object.hasOwn(this,'workerRouteCache'))this.workerRouteCache=new Map();
     const key=JSON.stringify([start.x,start.z,end.x,end.z,radius,ignore,worker,escapeProps]);this.workerRefinementStats.checks++;

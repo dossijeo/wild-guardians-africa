@@ -1,0 +1,83 @@
+[
+  {
+    "culture": "musgum",
+    "sourceOriginal": "3324d17dd2305ea8595aea311c518cc6db2404ad",
+    "raidEnded": true,
+    "nextDay": 70,
+    "status": "gone",
+    "hits": 0,
+    "distance": 59.76989577679078,
+    "simulatedSeconds": 75.79999999999997,
+    "cpuTickMs": {
+      "first": 351.5859,
+      "p50": 6.199200000000246,
+      "p95": 12.05989999999997,
+      "max": 378.97149999999965
+    },
+    "counters": {
+      "staticChunks": 7,
+      "workerRefinement": {
+        "checks": 8215,
+        "cacheHits": 441,
+        "fineSegments": 116,
+        "finePoints": 21973,
+        "rejected": 1
+      }
+    },
+    "note": "CPU-only cold native replay including lazy terrain/collision preparation and all workers; not an isolated helper or GPU/frame-time benchmark"
+  },
+  {
+    "culture": "etiope",
+    "sourceOriginal": "3324d17dd2305ea8595aea311c518cc6db2404ad",
+    "raidEnded": true,
+    "nextDay": 74,
+    "status": "gone",
+    "hits": 0,
+    "distance": 65.05881766905082,
+    "simulatedSeconds": 137.69999999999646,
+    "cpuTickMs": {
+      "first": 264.8240000000005,
+      "p50": 4.223099999999249,
+      "p95": 9.830800000000636,
+      "max": 332.41899999999987
+    },
+    "counters": {
+      "staticChunks": 8,
+      "workerRefinement": {
+        "checks": 10350,
+        "cacheHits": 491,
+        "fineSegments": 183,
+        "finePoints": 30879,
+        "rejected": 6
+      }
+    },
+    "note": "CPU-only cold native replay including lazy terrain/collision preparation and all workers; not an isolated helper or GPU/frame-time benchmark"
+  },
+  {
+    "culture": "suajili",
+    "sourceOriginal": "3324d17dd2305ea8595aea311c518cc6db2404ad",
+    "raidEnded": true,
+    "nextDay": 72,
+    "status": "gone",
+    "hits": 0,
+    "distance": 54.510445287443375,
+    "simulatedSeconds": 23.20000000000006,
+    "cpuTickMs": {
+      "first": 310.21910000000025,
+      "p50": 1.1880000000001019,
+      "p95": 4.8835999999992055,
+      "max": 428.96199999999953
+    },
+    "counters": {
+      "staticChunks": 9,
+      "workerRefinement": {
+        "checks": 8430,
+        "cacheHits": 282,
+        "fineSegments": 320,
+        "finePoints": 57163,
+        "rejected": 0
+      }
+    },
+    "note": "CPU-only cold native replay including lazy terrain/collision preparation and all workers; not an isolated helper or GPU/frame-time benchmark"
+  }
+]

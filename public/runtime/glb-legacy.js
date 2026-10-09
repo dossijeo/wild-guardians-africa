@@ -12,6 +12,7 @@ export async function decodeWebGlb(buffer) {
     bv.buffer=0;bv.byteOffset=length;chunks.push({offset:length,data});length+=Math.ceil(data.length/4)*4;
   }
   doc.extensionsUsed=doc.extensionsUsed.filter(x=>x!=='EXT_meshopt_compression');doc.extensionsRequired=doc.extensionsRequired.filter(x=>x!=='EXT_meshopt_compression');doc.buffers=[{byteLength:length}];
+  if(!doc.extensionsUsed.length)delete doc.extensionsUsed;if(!doc.extensionsRequired.length)delete doc.extensionsRequired;
   const text=new TextEncoder().encode(JSON.stringify(doc)),jsonSize=Math.ceil(text.length/4)*4,result=new Uint8Array(28+jsonSize+length),out=new DataView(result.buffer);
   out.setUint32(0,0x46546c67,true);out.setUint32(4,2,true);out.setUint32(8,result.length,true);out.setUint32(12,jsonSize,true);out.setUint32(16,0x4e4f534a,true);result.fill(32,20,20+jsonSize);result.set(text,20);out.setUint32(20+jsonSize,length,true);out.setUint32(24+jsonSize,0x004e4942,true);
   for(const chunk of chunks)result.set(chunk.data,28+jsonSize+chunk.offset);return result.buffer;

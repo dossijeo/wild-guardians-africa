@@ -1,11 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync} from 'node:fs';
+import {readFileSync,readdirSync} from 'node:fs';
 import {publicText} from '../tools/web-package.mjs';
 import {assetUrl} from '../src/rendering/asset-url.js';
 const manifest=JSON.parse(readFileSync(new URL('../content/manifests/web-assets.json',import.meta.url)));
-test('all twenty original GLBs resolve to one distinct runtime variant',()=>{
- assert.equal(manifest.records.length,20);assert.equal(new Set(manifest.records.map(r=>r.runtime)).size,20);
+test('all original GLBs resolve to one distinct runtime variant',()=>{
+ const originals=readdirSync(new URL('../public/assets/',import.meta.url)).filter(name=>name.endsWith('.glb')).map(name=>'assets/'+name).sort();
+ assert.deepEqual(manifest.records.map(r=>r.source).sort(),originals);
+ assert.equal(new Set(manifest.records.map(r=>r.source)).size,originals.length);
+ assert.equal(new Set(manifest.records.map(r=>r.runtime)).size,originals.length);
  for(const item of manifest.records){assert.equal(assetUrl('/'+item.source),'/'+item.runtime);assert(item.afterBytes<item.beforeBytes);}
 });
 test('native pages, injected scripts, JSON and stylesheets use their actual resolution context',()=>{

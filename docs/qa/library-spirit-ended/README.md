@@ -23,3 +23,9 @@ Spanish centro: un clip, acción real conservada, ended 55315 y siguiente clip 5
 - `python tools/package_itch.py` PASS: ZIP local 353065641 bytes y CRC verificado. Sin publicación.
 
 Los logs de pruebas/build/package están junto a esta nota. No se midió rendimiento ni memoria física, no hubo prueba de dispositivo móvil físico/Tauri ni recorrido completo de campaña. No acredita estabilidad global.
+
+[Final natural inglés comprobado posteriormente](english-natural-914/README.md):
+la lectura del centro permanece al completar su acción y avanza tras ended real
+a la lectura de plantar. Incluye cierre natural de una lectura independiente,
+fuentes idénticas a main, informes originales y capturas. Es QA funcional de la
+fixture, sin extenderlo a escucha de todas las voces ni recorrido de campaña.

@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import {json} from './assets.js';
 import {assetUrl} from './asset-url.js';
 import {createCropBatchAsync} from './crop-batch.js';
+import {loadCropBridges} from './crop-library.js';
 import {LoadingPlants} from './loading-plants.js';
 import {LoadingTextureOwner} from './loading-texture-owner.js';
 import {LoadingOrbit} from './loading-orbit.js';
@@ -56,7 +57,7 @@ export class LoadingDiorama {
     const {world}=this,phase=(label,run)=>loadingAwaitWitness(world.onLoadingSpan,label,run),sync=(label,run)=>loadingSyncWitness(world.onLoadingSpan,label,run);await phase('diorama-prepare-sky',()=>world.loadReady(world.sky.load()));if(this.disposed)throw Error('Loading diorama cancelled');
     const [models,bridges,ground]=await phase('diorama-prepare-catalogues',()=>world.loadReady(Promise.all([json('/content/models.json',{signal:world.loading.signal}),json('/content/crop-bridges.json',{signal:world.loading.signal}),json('/content/ground-materials.json',{signal:world.loading.signal})])));
     const descriptor=models.find(m=>m.source.includes('Cultivos'));if(!descriptor)throw Error('Missing native maize model');
-    const gltf=await phase('diorama-prepare-maize-model',()=>world.loadReady(world.assets.model(descriptor.url)));if(this.disposed)throw Error('Loading diorama cancelled');
+    const [gltf,preparedBridges]=await Promise.all([phase('diorama-prepare-maize-model',()=>world.loadReady(world.assets.model(descriptor.url))),phase('diorama-prepare-maize-bridges',()=>world.loadReady(loadCropBridges(bridges,url=>world.assets.model(url))))]);if(this.disposed)throw Error('Loading diorama cancelled');
     // Reuse the existing canyon earth bitmap through the world's cache. The
     // diorama borrows its pixel Source through a locally owned Texture object.
     // This does not decode/copy pixels or require separate shared GL storage.
@@ -72,7 +73,7 @@ export class LoadingDiorama {
     this.backdrop=createBiomeBackdrop(backdropOwner,mountainTexture,{radius:35,arcLayout:layout,stableAltitude:false,parallax:0,fogMix:.2,fogBaseMix:.8,fogDayColor:'#decba6',fogNightColor:'#26364a'});
     // Feather only this presentation's atlas foot into the analytic haze.
     featherLoadingBackdrop(this.backdrop);
-    this.batch=await phase('diorama-prepare-maize-batch',()=>createCropBatchAsync(this.scene,world.renderer,gltf,bridges,this.plants.capacity,{species:['maiz'],shadows:false,signal:this.abort.signal,cancelled:()=>this.disposed||world.disposed}));this.scene.traverse(object=>{for(const material of [object.material].flat().filter(Boolean))this.textureOwner.material(material);});this.toon.environment(world.sky.environmentTextures,world.sky.uniforms.uSkyYaw);this.toon.apply(this.scene);
+    this.batch=await phase('diorama-prepare-maize-batch',()=>createCropBatchAsync(this.scene,world.renderer,gltf,preparedBridges,this.plants.capacity,{species:['maiz'],shadows:false,signal:this.abort.signal,cancelled:()=>this.disposed||world.disposed}));this.scene.traverse(object=>{for(const material of [object.material].flat().filter(Boolean))this.textureOwner.material(material);});this.toon.environment(world.sky.environmentTextures,world.sky.uniforms.uSkyYaw);this.toon.apply(this.scene);
     // A small cold presentation fill belongs only to the diorama maize. It
     // reuses the existing night-light uniform/GLSL; soil and real-world lighting
     // keep their original values, without another light, pass or shader define.

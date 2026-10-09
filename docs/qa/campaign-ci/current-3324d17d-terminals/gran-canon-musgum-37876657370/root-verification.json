@@ -1,0 +1,42 @@
+{
+  "status": "verified",
+  "recordedHead": "3324d17dd2305ea8595aea311c518cc6db2404ad",
+  "frozenSourcesVerified": 320,
+  "currentSourceDifferences": [],
+  "result": "victory",
+  "completedNights": 100,
+  "day": 101,
+  "money": 54210,
+  "maximumLiving": 2612,
+  "speciesObserved": 8,
+  "delivered": 12636,
+  "raidsEnded": 108,
+  "unoccupiedFraction": 0.4557,
+  "activityAcceptance": {
+    "status": "not-accepted",
+    "measuredFraction": 0.4557,
+    "policy": {
+      "path": "docs/qa/intensive-acceptance-policy.json",
+      "sha256": "f463ede2279390e14e85fa94845f4b2c10e4970f0f173c32885e3638acc69bf4",
+      "updated": "2026-10-08",
+      "comparison": "strictly-less-than",
+      "maximumFraction": 0.25
+    },
+    "scope": "Activity metric only; does not prove survival, accounting, source fidelity, bad-management loss or complete release acceptance."
+  },
+  "cashflow": {
+    "openingBalance": "1500",
+    "harvestIncome": "837202",
+    "seedCosts": "498285",
+    "wageCosts": "285120",
+    "repairCosts": "287",
+    "centreCosts": "800",
+    "wallCosts": "0",
+    "otherNet": "0",
+    "operatingCashFlow": "53510",
+    "netCashFlowAfterConstruction": "52710",
+    "endingBalance": "54210"
+  },
+  "snapshotSha256": "7602836e6c8f1680d6cbe902ce37bbe65c85a2682293374ffe544d84712e3f74",
+  "scope": "Complete archived native snapshot, frozen Git source hashes, persistence invariants, physical crop/crate delivery, exact integer ledger and full summary. This is not a replay on current main, rendering QA or physical mobile acceptance. Activity rejection remains visible independently of campaign verification."
+}

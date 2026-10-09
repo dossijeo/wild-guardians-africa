@@ -1,0 +1,501 @@
+{
+  "status": "DOUBLE_VISUAL_SCREENING_LIMITED_NOT_FRONT_OR_CATEGORY_APPROVAL",
+  "sourceHead": "85e42ade",
+  "rows": [
+    {
+      "seam": 0,
+      "rootTab": 923,
+      "files": [
+        {
+          "file": "seam0/root-report.json",
+          "bytes": 710869,
+          "sha256": "d944027b47f95e636e2abcda802768f417245b1935710c1c3bdedea9b9a16a2b"
+        },
+        {
+          "file": "seam0/server-report.json",
+          "bytes": 710953,
+          "sha256": "4a3a9db91a40296d1618893e592c3070c5621440ecdd13272ec542872bf7a54e"
+        },
+        {
+          "file": "seam0/atlas.png",
+          "bytes": 3463103,
+          "sha256": "cb780daa9aef25f64c1cd976457010e1d7a3a220ca53d139dd02ee3fa4f9b62c"
+        },
+        {
+          "file": "seam0/console.json",
+          "bytes": 388,
+          "sha256": "8652088492cd3bdf0cdfb527acd735f9c0813deb2bcfd4b69a605c3520584883"
+        }
+      ],
+      "frameCount": 963,
+      "camera": {
+        "fov": 42,
+        "position": [
+          2,
+          2.5,
+          3
+        ],
+        "target": [
+          0,
+          0.6,
+          0
+        ],
+        "declaredViewport": [
+          640,
+          720
+        ],
+        "aspectFromFrozenSource": 0.8888888888888888,
+        "atlasDimensions": [
+          1280,
+          5040
+        ]
+      },
+      "source": {
+        "source": "assets/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+        "runtime": "assets/web/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+        "sourceSha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+        "runtimeSha256": "617568fc66595c635739ff83bc0256535a72fdf7bfcb016dc68a7f7f1e1a8a52"
+      },
+      "materialSides": [
+        {
+          "arm": 0,
+          "sides": [
+            2
+          ],
+          "shadowSides": [
+            2
+          ]
+        },
+        {
+          "arm": 1,
+          "sides": [
+            2
+          ],
+          "shadowSides": [
+            2
+          ]
+        },
+        {
+          "arm": 2,
+          "sides": [
+            2
+          ],
+          "shadowSides": [
+            2
+          ]
+        },
+        {
+          "arm": 3,
+          "sides": [
+            2
+          ],
+          "shadowSides": [
+            2
+          ]
+        }
+      ],
+      "preparationDiagnostics": [
+        {
+          "row": 0,
+          "left": 0,
+          "right": 0,
+          "diagnostic": {
+            "changedChannels": 190,
+            "changedPixels": 158,
+            "maxChannelDelta": 23
+          }
+        },
+        {
+          "row": 1,
+          "left": 0,
+          "right": 2,
+          "diagnostic": null
+        }
+      ],
+      "lastRecordedFrame": {
+        "elapsed": 16,
+        "growth": 0.2763092592592593,
+        "clock": 22.1875,
+        "state": [
+          {
+            "arm": 0,
+            "phase": "original",
+            "stage": 1,
+            "youngActive": true,
+            "count": 9
+          },
+          {
+            "arm": 1,
+            "phase": "original",
+            "stage": 1,
+            "youngActive": true,
+            "count": 9
+          },
+          {
+            "arm": 2,
+            "phase": "original",
+            "stage": 1,
+            "youngActive": true,
+            "count": 9
+          },
+          {
+            "arm": 3,
+            "phase": "original",
+            "stage": 1,
+            "youngActive": true,
+            "count": 9
+          }
+        ]
+      },
+      "captures": [
+        {
+          "row": 2,
+          "elapsed": 2.7535,
+          "requestedGrowth": 0.22723629629629633,
+          "actualGrowth": 0.22724814814814817,
+          "phase": "original",
+          "stage": 0,
+          "youngActive": false,
+          "submissionFrame": 700,
+          "shadowOn": 1
+        },
+        {
+          "row": 3,
+          "elapsed": 2.8199000000953673,
+          "requestedGrowth": 0.22745629629629632,
+          "actualGrowth": 0.22749407407442732,
+          "phase": "morph",
+          "stage": 0,
+          "youngActive": false,
+          "submissionFrame": 716,
+          "shadowOn": 1
+        },
+        {
+          "row": 4,
+          "elapsed": 3.784200000047684,
+          "requestedGrowth": 0.23105000000000003,
+          "actualGrowth": 0.2310655555557322,
+          "phase": "morph",
+          "stage": 1,
+          "youngActive": false,
+          "submissionFrame": 948,
+          "shadowOn": 1
+        },
+        {
+          "row": 5,
+          "elapsed": 4.7655,
+          "requestedGrowth": 0.23464370370370374,
+          "actualGrowth": 0.23470000000000002,
+          "phase": "morph",
+          "stage": 1,
+          "youngActive": false,
+          "submissionFrame": 1184,
+          "shadowOn": 1
+        },
+        {
+          "row": 6,
+          "elapsed": 4.815900000095367,
+          "requestedGrowth": 0.23486370370370374,
+          "actualGrowth": 0.2348866666670199,
+          "phase": "original",
+          "stage": 1,
+          "youngActive": true,
+          "submissionFrame": 1196,
+          "shadowOn": 1
+        }
+      ],
+      "cleanup": {
+        "closed": true,
+        "disposed": [
+          "derived geometry 3",
+          "derived geometry 2",
+          "indexed control 1",
+          "crop batch 3",
+          "crop batch 2",
+          "crop batch 1",
+          "crop batch 0",
+          "receiver material",
+          "receiver geometry",
+          "native shadow hook",
+          "directional shadow targets",
+          "NativeSky",
+          "material registry",
+          "source Assets",
+          "renderer resources",
+          "renderer context"
+        ],
+        "errors": []
+      },
+      "contextLost": true
+    },
+    {
+      "seam": 1,
+      "rootTab": 924,
+      "files": [
+        {
+          "file": "seam1/root-report.json",
+          "bytes": 643844,
+          "sha256": "739c3c76b708c756171813629fd9a0ff814bbca683bc9bd383f9c2b16901a061"
+        },
+        {
+          "file": "seam1/server-report.json",
+          "bytes": 643928,
+          "sha256": "83ded3c0d28aec7b6165bda042674884b84a838ebec0db408eca9fe1f3cc771c"
+        },
+        {
+          "file": "seam1/atlas.png",
+          "bytes": 4553392,
+          "sha256": "8dd66423b8518dc2a1661c8c9dec679f634c15fe8b6407de8155eee4271dfb88"
+        },
+        {
+          "file": "seam1/console.json",
+          "bytes": 2,
+          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        }
+      ],
+      "frameCount": 868,
+      "camera": {
+        "fov": 42,
+        "position": [
+          2,
+          2.5,
+          3
+        ],
+        "target": [
+          0,
+          0.6,
+          0
+        ],
+        "declaredViewport": [
+          640,
+          720
+        ],
+        "aspectFromFrozenSource": 0.8888888888888888,
+        "atlasDimensions": [
+          1280,
+          5040
+        ]
+      },
+      "source": {
+        "source": "assets/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+        "runtime": "assets/web/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+        "sourceSha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+        "runtimeSha256": "617568fc66595c635739ff83bc0256535a72fdf7bfcb016dc68a7f7f1e1a8a52"
+      },
+      "materialSides": [
+        {
+          "arm": 0,
+          "sides": [
+            2
+          ],
+          "shadowSides": [
+            2
+          ]
+        },
+        {
+          "arm": 1,
+          "sides": [
+            2
+          ],
+          "shadowSides": [
+            2
+          ]
+        },
+        {
+          "arm": 2,
+          "sides": [
+            2
+          ],
+          "shadowSides": [
+            2
+          ]
+        },
+        {
+          "arm": 3,
+          "sides": [
+            2
+          ],
+          "shadowSides": [
+            2
+          ]
+        }
+      ],
+      "preparationDiagnostics": [
+        {
+          "row": 0,
+          "left": 0,
+          "right": 0,
+          "diagnostic": {
+            "changedChannels": 72,
+            "changedPixels": 48,
+            "maxChannelDelta": 33
+          }
+        },
+        {
+          "row": 1,
+          "left": 0,
+          "right": 2,
+          "diagnostic": null
+        }
+      ],
+      "lastRecordedFrame": {
+        "elapsed": 16,
+        "growth": 0.5258592592592592,
+        "clock": 22.1875,
+        "state": [
+          {
+            "arm": 0,
+            "phase": "original",
+            "stage": 2,
+            "youngActive": false,
+            "count": 0
+          },
+          {
+            "arm": 1,
+            "phase": "original",
+            "stage": 2,
+            "youngActive": false,
+            "count": 0
+          },
+          {
+            "arm": 2,
+            "phase": "original",
+            "stage": 2,
+            "youngActive": false,
+            "count": 0
+          },
+          {
+            "arm": 3,
+            "phase": "original",
+            "stage": 2,
+            "youngActive": false,
+            "count": 0
+          }
+        ]
+      },
+      "captures": [
+        {
+          "row": 2,
+          "elapsed": 2.7622000000476836,
+          "requestedGrowth": 0.4767862962962963,
+          "actualGrowth": 0.476830370370547,
+          "phase": "original",
+          "stage": 1,
+          "youngActive": true,
+          "submissionFrame": 704,
+          "shadowOn": 1
+        },
+        {
+          "row": 3,
+          "elapsed": 2.812100000023842,
+          "requestedGrowth": 0.4770062962962963,
+          "actualGrowth": 0.4770151851852735,
+          "phase": "morph",
+          "stage": 1,
+          "youngActive": false,
+          "submissionFrame": 716,
+          "shadowOn": 1
+        },
+        {
+          "row": 4,
+          "elapsed": 3.7935,
+          "requestedGrowth": 0.4806,
+          "actualGrowth": 0.48065,
+          "phase": "morph",
+          "stage": 2,
+          "youngActive": false,
+          "submissionFrame": 952,
+          "shadowOn": 1
+        },
+        {
+          "row": 5,
+          "elapsed": 4.765899999976158,
+          "requestedGrowth": 0.48419370370370374,
+          "actualGrowth": 0.4842514814813932,
+          "phase": "morph",
+          "stage": 2,
+          "youngActive": false,
+          "submissionFrame": 1156,
+          "shadowOn": 1
+        },
+        {
+          "row": 6,
+          "elapsed": 4.8273999999761585,
+          "requestedGrowth": 0.48441370370370374,
+          "actualGrowth": 0.48447925925917096,
+          "phase": "original",
+          "stage": 2,
+          "youngActive": false,
+          "submissionFrame": 1168,
+          "shadowOn": 1
+        }
+      ],
+      "cleanup": {
+        "closed": true,
+        "disposed": [
+          "derived geometry 3",
+          "derived geometry 2",
+          "indexed control 1",
+          "crop batch 3",
+          "crop batch 2",
+          "crop batch 1",
+          "crop batch 0",
+          "receiver material",
+          "receiver geometry",
+          "native shadow hook",
+          "directional shadow targets",
+          "NativeSky",
+          "material registry",
+          "source Assets",
+          "renderer resources",
+          "renderer context"
+        ],
+        "errors": []
+      },
+      "contextLost": true
+    }
+  ],
+  "snapshots": [
+    {
+      "source": "tests/browser/frontside-crop-young-leaf-continuous.js",
+      "file": "sources/0-frontside-crop-young-leaf-continuous.js",
+      "bytes": 12295,
+      "sha256": "4783b5ec44299b494c91260cb52c80849531ba8c22886dde3455435fb7a89c35"
+    },
+    {
+      "source": "tools/lib/frontside-young-leaf-runtime-rigs.mjs",
+      "file": "sources/1-frontside-young-leaf-runtime-rigs.mjs",
+      "bytes": 2027,
+      "sha256": "09ad2c230b685426eb1f41965040d3ff46c5e513bd12727750810bcdf82b0dab"
+    },
+    {
+      "source": "tools/lib/frontside-young-leaf-continuous-plan.mjs",
+      "file": "sources/2-frontside-young-leaf-continuous-plan.mjs",
+      "bytes": 634,
+      "sha256": "c0f12a8d849cabbb35074930402bf3dbf26c9435eec6abff8d637824ebf9d432"
+    },
+    {
+      "source": "tools/lib/frontside-young-leaf-continuous-report.mjs",
+      "file": "sources/3-frontside-young-leaf-continuous-report.mjs",
+      "bytes": 2375,
+      "sha256": "1433984a0f1534fd1b76af0fd0c7b31522d52febb6a3ede922933530b58bb0f1"
+    },
+    {
+      "source": "tools/lib/frontside-shared-leaf-reverse.mjs",
+      "file": "sources/4-frontside-shared-leaf-reverse.mjs",
+      "bytes": 4091,
+      "sha256": "291045f79ecad88df8cfe851e6d71f65b34a00be9ac800ba16f3b22ec8158d8c"
+    },
+    {
+      "source": "src/rendering/crop-batch.js",
+      "file": "sources/5-crop-batch.js",
+      "bytes": 18736,
+      "sha256": "2b7910e16fa9b17aa060b12650056974ce12c35b6df2f0f4447d29542cb251d0"
+    }
+  ],
+  "notes": [
+    "Root report and authoritative server report differ only by added capture filename; both retained.",
+    "Recorded clock equals6.1875+elapsed; shader CPU inputs advance through real native batch. No GPU uniform/texel readback was instrumented.",
+    "Atlas last image is the fifth requested seam sample near4.8s, not the16s final playback frame. Full chronology is retained separately."
+  ]
+}
