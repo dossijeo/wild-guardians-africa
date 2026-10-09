@@ -1,0 +1,188 @@
+{
+  "A1": {
+    "policy": {
+      "farIsolatedPreparation": false,
+      "scope": "World owner policy at loading start; GPU draw metadata/readbacks provide actual execution evidence."
+    },
+    "gpu": null,
+    "frames": {
+      "n": 921,
+      "min": -68.09999999999854,
+      "p95": 33.5,
+      "p99": 83.09999999999854,
+      "max": 133,
+      "over100": [
+        116.30000000000291,
+        116.5,
+        133,
+        132.90000000000146,
+        116.40000000000146
+      ]
+    },
+    "cinematic": {
+      "start": 47325.10000002384,
+      "end": 51331.199999928474,
+      "n": 118,
+      "p95": 83.19999999999709,
+      "max": 133,
+      "over100": [
+        133,
+        132.90000000000146,
+        116.40000000000146
+      ]
+    },
+    "elapsed": 18469.899999976158,
+    "ready": true,
+    "pending": [],
+    "actorQueue": {
+      "submitted": 36,
+      "completed": 36,
+      "failed": 0,
+      "yields": 19,
+      "cpuMs": 185.89999973773956,
+      "maxTaskMs": 8.900000095367432,
+      "pending": 0,
+      "closed": true,
+      "scope": "Accumulated synchronous task CPU wall time; yields and queue waits are not GPU work."
+    },
+    "closed": true,
+    "cancelled": false
+  },
+  "B1": {
+    "policy": {
+      "farIsolatedPreparation": true,
+      "scope": "World owner policy at loading start; GPU draw metadata/readbacks provide actual execution evidence."
+    },
+    "gpu": null,
+    "frames": {
+      "n": 917,
+      "min": -70.79999992847297,
+      "p95": 33.400000000001455,
+      "p99": 66.59999999999854,
+      "max": 116.40000000000146,
+      "over100": [
+        116.29999999999927,
+        116.40000000000146
+      ]
+    },
+    "cinematic": {
+      "start": 41878.5,
+      "end": 45865,
+      "n": 127,
+      "p95": 66.59999999999854,
+      "max": 116.40000000000146,
+      "over100": [
+        116.40000000000146
+      ]
+    },
+    "elapsed": 18033.700000047684,
+    "ready": true,
+    "pending": [],
+    "actorQueue": {
+      "submitted": 36,
+      "completed": 36,
+      "failed": 0,
+      "yields": 21,
+      "cpuMs": 210.00000023841858,
+      "maxTaskMs": 10.199999928474426,
+      "pending": 0,
+      "closed": true,
+      "scope": "Accumulated synchronous task CPU wall time; yields and queue waits are not GPU work."
+    },
+    "closed": true,
+    "cancelled": false
+  },
+  "B2": {
+    "policy": {
+      "farIsolatedPreparation": true,
+      "scope": "World owner policy at loading start; GPU draw metadata/readbacks provide actual execution evidence."
+    },
+    "gpu": null,
+    "frames": {
+      "n": 926,
+      "min": -58.90000004768444,
+      "p95": 33.5,
+      "p99": 66.60000000000582,
+      "max": 116.40000000000146,
+      "over100": [
+        116.40000000000146
+      ]
+    },
+    "cinematic": {
+      "start": 46546,
+      "end": 50621,
+      "n": 123,
+      "p95": 66.60000000000582,
+      "max": 116.40000000000146,
+      "over100": [
+        116.40000000000146
+      ]
+    },
+    "elapsed": 18336.600000023842,
+    "ready": true,
+    "pending": [],
+    "actorQueue": {
+      "submitted": 36,
+      "completed": 36,
+      "failed": 0,
+      "yields": 20,
+      "cpuMs": 190.89999997615814,
+      "maxTaskMs": 8.799999952316284,
+      "pending": 0,
+      "closed": true,
+      "scope": "Accumulated synchronous task CPU wall time; yields and queue waits are not GPU work."
+    },
+    "closed": true,
+    "cancelled": false
+  },
+  "A2": {
+    "policy": {
+      "farIsolatedPreparation": false,
+      "scope": "World owner policy at loading start; GPU draw metadata/readbacks provide actual execution evidence."
+    },
+    "gpu": null,
+    "frames": {
+      "n": 910,
+      "min": -92.19999997616105,
+      "p95": 49.099999999998545,
+      "p99": 83.10000000000582,
+      "max": 133.1999999999971,
+      "over100": [
+        116.40000000000146,
+        133,
+        100.09999999999854,
+        133.1999999999971,
+        133
+      ]
+    },
+    "cinematic": {
+      "start": 49937.799999952316,
+      "end": 54075.5,
+      "n": 116,
+      "p95": 83.19999999999709,
+      "max": 133.1999999999971,
+      "over100": [
+        133,
+        100.09999999999854,
+        133.1999999999971,
+        133
+      ]
+    },
+    "elapsed": 18458.100000023842,
+    "ready": true,
+    "pending": [],
+    "actorQueue": {
+      "submitted": 36,
+      "completed": 36,
+      "failed": 0,
+      "yields": 19,
+      "cpuMs": 175.299999833107,
+      "maxTaskMs": 9.100000023841858,
+      "pending": 0,
+      "closed": true,
+      "scope": "Accumulated synchronous task CPU wall time; yields and queue waits are not GPU work."
+    },
+    "closed": true,
+    "cancelled": false
+  }
+}
