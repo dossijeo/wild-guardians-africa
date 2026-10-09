@@ -3,6 +3,7 @@ import {withGpuRootIsolation} from './isolated-gpu-root.js';
 import {compileGpuPreparation} from './compile-gpu-preparation.js';
 import {waitGpuPreparation} from './wait-gpu-preparation.js';
 import {waitGpuFrame} from './wait-gpu-frame.js';
+import {beginNativePreparationTrace,nativePreparationTraceStage,withNativePreparationDrawTrace,endNativePreparationTrace} from './native-preparation-trace.js';
 // Active renderer owners release the dispose/context listeners on world close.
 // Warm images need no repeated upload budget; every packing still draws/fences.
 const textureCaches=new WeakMap(),textureOwnerSignals=new WeakMap();
@@ -42,8 +43,9 @@ export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{c
  const check=()=>{if(cancelled()||cache?.released||unique.some(texture=>textureOwnerSignals.get(texture)?.aborted))throw new NativeFarGpuCancelled('owner-cancelled');if(gl.isContextLost()||cache?.contextLost||cache&&cache.epoch!==cacheEpoch||ownedWaits&&renderer.getContext()!==gl)throw new NativeFarGpuCancelled('context-changed');if(performance.now()-begin>timeout)throw Error('Native GPU preparation timed out');};
  const frame=()=>ownedWaits?waitGpuFrame({check,nextFrame}):(nextFrame?nextFrame():new Promise(resolve=>requestAnimationFrame(resolve)));
  const checkErrors=stage=>{if(!diagnoseErrors)return;const code=gl.getError();if(code!==gl.NO_ERROR)throw Error('Native GPU preparation error 0x'+code.toString(16)+' ('+stage+')');};
- check();checkErrors('before preparation');cache=textureCache(renderer);cacheEpoch=cache.epoch;check();const pending=unique.filter(t=>{const record=cache.textures.get(t);return !record||record.version!==(t.version??0)||record.sourceVersion!==(t.source?.version??0);});
+ check();checkErrors('before preparation');cache=textureCache(renderer);cacheEpoch=cache.epoch;check();const trace=beginNativePreparationTrace(renderer,root,cacheEpoch),pending=unique.filter(t=>{const record=cache.textures.get(t);return !record||record.version!==(t.version??0)||record.sourceVersion!==(t.source?.version??0);});
  try{
+  if(trace)nativePreparationTraceStage(trace,'resource-versions',{textures:unique.map(texture=>({uuid:texture.uuid??null,version:texture.version??0,sourceVersion:texture.source?.version??0})),scope:'Identity/version witness, not GPU allocation proof.'});
   for(let first=0;first<pending.length;first+=texturesPerFrame){
    check();const start=performance.now(),end=Math.min(pending.length,first+texturesPerFrame);
    for(let i=first;i<end;i++){
@@ -60,8 +62,10 @@ export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{c
   check();
   // Explicit QA gate: preserve the original recipe until native cancellation,
   // visual and traveling checks validate the owned readiness poll.
+  nativePreparationTraceStage(trace,'compile-begin');
   if(ownedCompilation)await compileGpuPreparation(renderer,root,camera,scene,{check});
   else await renderer.compileAsync(root,camera,scene);
+  nativePreparationTraceStage(trace,'compile-settled');
   check();checkErrors('after compilation');
   // Keep the normal target/output recipe: another render target creates shader
   // variants. A zero viewport/scissor uploads vertex buffers without touching
@@ -69,9 +73,10 @@ export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{c
   const viewport=renderer.getViewport(new Vector4()),scissor=renderer.getScissor(new Vector4()),scissorTest=renderer.getScissorTest(),autoClear=renderer.autoClear,parent=root.parent,culled=[];
   // Scope this mutation to the synchronous upload draw. Other species may be
   // awaiting compilation concurrently; none may inherit another one's flags.
-  try{root.traverse(o=>{if(o.isMesh){culled.push([o,o.frustumCulled]);o.frustumCulled=false;}});scene.add(root);renderer.autoClear=false;renderer.setViewport(0,0,0,0);renderer.setScissor(0,0,0,0);renderer.setScissorTest(true);const draw=()=>renderer.render(scene,camera);if(isolateRoot)withGpuRootIsolation(renderer,root,scene,draw);else draw();checkErrors('after upload draw');}
+  try{root.traverse(o=>{if(o.isMesh){culled.push([o,o.frustumCulled]);o.frustumCulled=false;}});scene.add(root);renderer.autoClear=false;renderer.setViewport(0,0,0,0);renderer.setScissor(0,0,0,0);renderer.setScissorTest(true);const draw=()=>withNativePreparationDrawTrace(trace,()=>renderer.render(scene,camera));if(isolateRoot)withGpuRootIsolation(renderer,root,scene,draw);else draw();checkErrors('after upload draw');}
   finally{for(const [mesh,value] of culled)mesh.frustumCulled=value;renderer.autoClear=autoClear;renderer.setViewport(viewport);renderer.setScissor(scissor);renderer.setScissorTest(scissorTest);root.removeFromParent();if(parent)parent.add(root);}
   sync=gl.fenceSync(gl.SYNC_GPU_COMMANDS_COMPLETE,0);if(!sync)throw Error('Native GPU fence unavailable');gl.flush();
+  nativePreparationTraceStage(trace,'fence-created');
   for(;;){check();const status=gl.clientWaitSync(sync,0,0);if(status===gl.WAIT_FAILED)throw Error('Native GPU fence failed');if(ownedWaits)check();if(status===gl.ALREADY_SIGNALED||status===gl.CONDITION_SATISFIED)break;await frame();}
   // getError can synchronously wait for commands submitted after this fence,
   // including the next gameplay frame. Keep that expensive round trip in
@@ -79,6 +84,8 @@ export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{c
   // a live context, current resource epoch and an uncancelled owner.
   checkErrors('after fence');
   if(ownedWaits)check();
+  nativePreparationTraceStage(trace,'ready');
   return {elapsedMs:performance.now()-begin,textures:unique.length,cachedTextures:unique.length-pending.length,textureBatches,maxTextureBatchCount,maxTextureBatchMs,textureUploads};
- }finally{if(sync&&(!ownedWaits||renderer.getContext()===gl&&!gl.isContextLost()&&!cache.contextLost&&cache.epoch===cacheEpoch))gl.deleteSync(sync);}
+ }catch(error){nativePreparationTraceStage(trace,error instanceof NativeFarGpuCancelled?'cancelled':'failed',{error:String(error),reason:error.reason??null});throw error;}
+ finally{endNativePreparationTrace(trace);if(sync&&(!ownedWaits||renderer.getContext()===gl&&!gl.isContextLost()&&!cache.contextLost&&cache.epoch===cacheEpoch))gl.deleteSync(sync);}
 }

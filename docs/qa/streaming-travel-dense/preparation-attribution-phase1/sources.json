@@ -1,0 +1,54 @@
+{
+  "schema": 1,
+  "base": "795f773e83640d3f7541d8e3d826764c3d779750",
+  "branch": "codex/native-preparation-attribution",
+  "nativeExecuted": false,
+  "passGpuImplemented": false,
+  "performanceAccepted": false,
+  "tests": {
+    "command": "node --test tests/native-preparation-trace.test.js tests/native-far-gpu.test.js tests/isolated-gpu-root.test.js tests/streaming-travel-clocks.test.js",
+    "passed": 62,
+    "failed": 0,
+    "skipped": 0,
+    "cancelled": 0
+  },
+  "sources": {
+    "tools/experiments/native-preparation-trace.js": {
+      "sha256": "f0739cbd6d9eb59c13853b2dd6bae0670988dac64add8f8e332f6acf8bb7b6ca",
+      "bytes": 4849
+    },
+    "tools/experiments/prepare-native-far-gpu.js": {
+      "sha256": "b3dfd1559a1acb53e587c933142f2ba9ebbc72bf9d352065c973ae10dcc9ba0f",
+      "bytes": 9473,
+      "baselineSha256": "0840f388b71c52c64e7580918950dbc76ee846197970b1f32e59e3ced56a10d5"
+    },
+    "tests/browser/streaming-travel.html": {
+      "sha256": "d0b2b703b217ec68da7c1fa32914e7e209ea7c41b8bc987232f0581f1ec66c3e",
+      "bytes": 18595,
+      "baselineSha256": "046ffd081bf613a529cdb25c6ad80c6294fec3046cd7aabdf7c16cd5fede86cc"
+    },
+    "tests/native-preparation-trace.test.js": {
+      "sha256": "2003dc1b93c840ca9d9e41e562801f2bc5a4cf2c9821fed446f2ae9212dbbddd",
+      "bytes": 6412
+    },
+    "tests/native-far-gpu.test.js": {
+      "sha256": "9848f5127acb2a7117112f4fd167f0ea871f7d3bf5c183c2f0d05275c517d239",
+      "bytes": 38297
+    },
+    "tests/isolated-gpu-root.test.js": {
+      "sha256": "9359e0d0c1bdd95fa99a718d49009ccb43fce695ab781b637af3dd3df84c711a",
+      "bytes": 3343
+    },
+    "tests/streaming-travel-clocks.test.js": {
+      "sha256": "14bc2eac042968b9da55437b56e35606c34eb2f1cde66ad38795da2ff68c5dc8",
+      "bytes": 2903
+    }
+  },
+  "artifacts": {
+    "directed.tap.gz": {
+      "sha256": "3ed2acfdcec892fefbd740874e905ba69c96ca9e62ca1cc5ac773f6c477a457b",
+      "bytes": 3005,
+      "decodedSha256": "cf411cccc0598a39cc79e78d703cc163c73da26134185c58638dd0e357219f34"
+    }
+  }
+}

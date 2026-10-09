@@ -6,6 +6,7 @@ import {Texture,Scene,Group,Vector4,Mesh} from 'three';
 import {NativeFarGpuCancelled,prepareNativeFarGpu,releaseNativeFarGpuCache,nativeFarGpuRevision,nativeFarGpuContextLost} from '../tools/experiments/prepare-native-far-gpu.js';
 import {waitGpuPreparation} from '../tools/experiments/wait-gpu-preparation.js';
 import {compileGpuPreparation} from '../tools/experiments/compile-gpu-preparation.js';
+import {observeNativePreparation,nativePreparationDrawScope} from '../tools/experiments/native-preparation-trace.js';
 
 function fixture({renderError=false}={}){
  const scene=new Scene(),parent=new Group(),root=new Group();parent.add(root);const original={},calls=[];let current=original,waits=0,viewport=new Vector4(2,3,100,200),scissor=new Vector4(4,5,60,70),scissorTest=false;
@@ -15,6 +16,23 @@ function fixture({renderError=false}={}){
 }
 
 function ownedFixture(){const f=fixture();f.renderer.compile=()=>new Set();f.renderer.properties={get:()=>assert.fail('No selected material')};f.renderer.compileAsync=()=>assert.fail('Three async timer');return f;}
+
+test('QA preparation observer binds exact request only to upload draw and restores output/parent',async()=>{
+ const f=fixture(),events=[],observer=observeNativePreparation(f.renderer,e=>events.push(e)),draw=f.renderer.render;
+ f.renderer.render=(...args)=>{const scope=nativePreparationDrawScope(f.renderer);assert.equal(scope.root.uuid,f.root.uuid);assert.equal(scope.status,'pending');draw(...args);};
+ await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{nextFrame:async()=>{assert.equal(nativePreparationDrawScope(f.renderer),null);}});
+ assert.deepEqual(events.map(e=>e.phase),['request','resource-versions','compile-begin','compile-settled','draw-begin','draw-end','fence-created','ready']);assert.equal(new Set(events.map(e=>e.request.id)).size,1);assert.equal(events.at(-1).request.status,'ready');assert.equal(nativePreparationDrawScope(f.renderer),null);assert.equal(f.root.parent,f.parent);f.restored();observer.dispose();releaseNativeFarGpuCache(f.renderer);
+});
+test('QA observer reports cancellation during compile without upload or readiness',async()=>{
+ const f=fixture(),events=[],observer=observeNativePreparation(f.renderer,e=>events.push(e));let finish,cancelled=false;
+ f.renderer.compileAsync=()=>new Promise(resolve=>finish=resolve);const pending=prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{cancelled:()=>cancelled});await new Promise(resolve=>setImmediate(resolve));assert.equal(nativePreparationDrawScope(f.renderer),null);cancelled=true;finish();await assert.rejects(pending,NativeFarGpuCancelled);
+ assert.equal(events.at(-1).phase,'cancelled');assert.equal(events.some(e=>e.phase==='draw-begin'||e.phase==='ready'),false);assert.equal(nativePreparationDrawScope(f.renderer),null);f.restored();observer.dispose();releaseNativeFarGpuCache(f.renderer);
+});
+test('QA observer keeps epoch identity and rejects loss/restore during fence',async()=>{
+ const f=fixture(),events=[],observer=observeNativePreparation(f.renderer,e=>events.push(e));f.renderer.domElement=new EventTarget();
+ await assert.rejects(prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{nextFrame:async()=>{f.renderer.domElement.dispatchEvent(new Event('webglcontextlost'));f.renderer.domElement.dispatchEvent(new Event('webglcontextrestored'));}}),NativeFarGpuCancelled);
+ assert.equal(events.at(-1).phase,'cancelled');assert.equal(events.at(-1).reason,'context-changed');assert.equal(events.at(-1).request.epoch,0);assert.equal(events.some(e=>e.phase==='ready'),false);assert.equal(nativePreparationDrawScope(f.renderer),null);f.restored();observer.dispose();releaseNativeFarGpuCache(f.renderer);
+});
 
 test('owned texture frame wait cancels without uploading the remaining texture',async()=>{
  const f=ownedFixture(),textures=[new Texture(),new Texture()];let cancelled=false,finish;
