@@ -1,0 +1,66 @@
+{
+  "node": "v20.11.0",
+  "platform": "win32",
+  "coldRecovery": {
+    "milliseconds": 62.46469999999999,
+    "candidates": 4,
+    "sweeps": 2,
+    "slopeSamples": 3564,
+    "tailCalls": 1,
+    "phases": {
+      "walkMilliseconds": 44.226800000000026,
+      "sweepMilliseconds": 14.587200000000024,
+      "tailMilliseconds": 28.602400000000017,
+      "chunkMilliseconds": 54.123399999999975,
+      "generatedChunks": 4
+    },
+    "firstWaypoint": {
+      "x": 103.91766562965933,
+      "z": 17.93754304536908
+    },
+    "waypoints": 2
+  },
+  "productionOrder": {
+    "precedingNativeRouteMilliseconds": 49.770099999999985,
+    "afterNativeQueriesMilliseconds": 0.9350999999999772,
+    "firstWaypoint": {
+      "x": 103.91766562965933,
+      "z": 17.93754304536908
+    }
+  },
+  "replay": [
+    {
+      "dt": 0.1,
+      "simulated": 5.699999999999996,
+      "day": 10,
+      "result": null,
+      "pauses": [
+        "hiring"
+      ],
+      "maxStep": 0.3800000000000009,
+      "frameMilliseconds": {
+        "samples": 57,
+        "p50": 0.08940000000001191,
+        "p95": 0.6086999999999989,
+        "max": 41.54430000000002
+      }
+    },
+    {
+      "dt": 1,
+      "simulated": 6,
+      "day": 10,
+      "result": null,
+      "pauses": [
+        "hiring"
+      ],
+      "maxStep": 3.7999999999999905,
+      "frameMilliseconds": {
+        "samples": 6,
+        "p50": 0.8011999999999944,
+        "p95": 42.68489999999997,
+        "max": 42.68489999999997
+      }
+    }
+  ],
+  "scope": "CPU diagnostic of exact legacy snapshot; no GPU or 100-night acceptance"
+}
