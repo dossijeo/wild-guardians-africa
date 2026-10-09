@@ -85,3 +85,19 @@ html[lang="en"] #stage.portrait .hiring-pause span:after{content:none}
 .library-viewer-frame{display:block;border:0;width:100%;height:100%;min-height:0;background:#172c22}
 @media(max-width:600px){.library-viewer-header{gap:6px;flex-wrap:wrap}.library-viewer-title{order:-1;flex-basis:calc(100% - 100px)}.library-viewer-header select{order:-1}.library-viewer-title h1{font-size:23px}.library-viewer-header button{flex:1}}
 @media(max-height:500px) and (min-width:601px){.library-viewer-title small{display:none}.library-viewer-title h1{font-size:21px}.library-viewer-header{padding-top:calc(4px + env(safe-area-inset-top));padding-bottom:4px}}
+
+/* Loading presentation borrows the existing HUD frame artwork. No per-frame painting. */
+.interactive-loading-info{width:min(490px,calc(100vw - 28px - env(safe-area-inset-left) - env(safe-area-inset-right)));bottom:calc(12px + env(safe-area-inset-bottom));text-shadow:none}
+.interactive-loading-wood{position:relative;isolation:isolate;min-height:82px;padding:21px 38px 20px;border-radius:24px;background:linear-gradient(#805b37,#513722);box-shadow:0 3px 12px #17201940;color:#fff0ce;text-shadow:0 2px 2px #382214}
+.loading-frame{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:-1}
+.interactive-loading-heading{font-size:clamp(13px,2.2vw,18px);line-height:1.35;font-weight:700;gap:8px}
+.interactive-loading-heading #loading-progress{font-size:clamp(14px,2.2vw,19px);font-weight:700}
+.interactive-loading-track{height:4px;margin:9px 0 0;background:#281d13aa;box-shadow:0 1px 1px #fff2c144}
+.interactive-loading-track>span{background:#9ec27c}
+.interactive-loading-help{width:calc(100% - 58px);margin:-2px auto 0;padding:9px 15px 10px;min-height:34px;background:#eed8aa;background-size:100% 100%;border-radius:0 0 7px 7px;color:#573e27;text-align:center;opacity:1;font-size:13px;text-shadow:none;box-shadow:0 3px 7px #17201930}
+.interactive-loading-help:empty{display:none}
+.interactive-loading-cancel{isolation:isolate;min-height:52px;min-width:132px;padding:14px 28px;color:#fff0ce;font-size:16px;background:linear-gradient(#805b37,#513722);border:0;border-radius:17px;text-shadow:0 2px 2px #382214;box-shadow:0 2px 8px #17201940}
+.interactive-loading-cancel:hover{background:linear-gradient(#92704a,#65482d)}
+.interactive-loading-indicator[data-night="true"] .interactive-loading-info{color:#fff0ce;text-shadow:none}
+.interactive-loading-indicator[data-night="true"] .interactive-loading-track{background:#281d13aa}
+@media(max-height:480px){.interactive-loading-info{width:min(440px,calc(100vw - 24px));bottom:calc(6px + env(safe-area-inset-bottom))}.interactive-loading-wood{min-height:67px;padding:16px 32px}.interactive-loading-help{padding:6px 12px;font-size:12px}.interactive-loading-cancel{min-height:46px;padding:12px 24px}}

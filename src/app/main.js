@@ -78,7 +78,7 @@ function prepareLoadingScene(){
  let owner,diorama;const transfers=new LoadingTransferOwner();
  try{owner=new WorldScene(canvas,onPick);if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')&&new URLSearchParams(location.search).has('qa-loading-far-full-scene'))owner.farIsolatedPreparation=false;if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')&&new URLSearchParams(location.search).has('qa-loading-zero-vertices'))owner.farZeroVertexPreparation=true;owner.controls.enabled=false;owner.qualitySetting(settings.quality);applyWorldResolution(owner,settings.resolution);
  diorama=new LoadingDiorama(owner);const preparation={world:owner,diorama,canvas,transfers};preparedLoading=preparation;
- preparation.pending=diorama.prepare();preparation.pending.catch(()=>{});return preparation;
+ preparation.pending=Promise.all([diorama.prepare(),loadFrameImages().catch(()=>null)]).then(([,images])=>{preparation.frameImages=images;});preparation.pending.catch(()=>{});return preparation;
  }catch(failure){transfers.dispose();diorama?.dispose();owner?.dispose();canvas.remove();throw failure;}
 }
 function releasePreparedLoading(){const pending=preparedLoading;preparedLoading=null;if(pending){progressQa?.close(null,pending.transfers,{cancelled:true});pending.transfers.dispose();pending.diorama.dispose();pending.world.dispose();pending.canvas.remove();}}
@@ -154,11 +154,11 @@ async function startGame(loaded=null,{slotId,preview}={}) {
     let next=loaded??(slotId!==undefined?(preview??{day:1,time:0,biome:selectedBiome,culture:selectedCulture}):Game.newGame({biome:selectedBiome,culture:selectedCulture}));
     await prepared.pending;assertLoading();preparedLoading=null;loadingTransfers=prepared.transfers;world=prepared.world;world.onContextLost=()=>{if(screen==='loading')cancelLoading(new Error(moneyLocale().startsWith('es')?'Se ha perdido el contexto gráfico durante la carga.':'Graphics context lost during loading.'));};loadingDiorama=prepared.diorama;loadingDiorama.show(next);
     const audioOwner=new LoadingAudio(audio,next);loadingAudio=audioOwner;loadingDiorama.onPlant=()=>audioOwner.plant();audioUnlocked.then(unlocked=>{if(unlocked&&loadingAudio===audioOwner&&screen==='loading')audioOwner.start();}).catch(()=>{});
-    const overlay=new LoadingOverlay({locale:moneyLocale(),pointer:matchMedia('(pointer:coarse)').matches?'touch':'mouse',onCancel:()=>cancelLoading()});loadingOverlay=overlay;
+    const overlay=new LoadingOverlay({frameImages:prepared.frameImages,locale:moneyLocale(),pointer:matchMedia('(pointer:coarse)').matches?'touch':'mouse',onCancel:()=>cancelLoading()});loadingOverlay=overlay;
     loadingProgress=new LoadingProgress(LOADING_STAGES,{downloads:loadingTransfers.downloads,onChange:snapshot=>overlay.render(snapshot,loadingDiorama?.plants.progress??0,{night:loadingDiorama?.night??0,accepting:loadingDiorama?.interactive??false,pointer:loadingDiorama?.pointerType??overlay.pointer})});
     prepared.canvas.style.cssText='width:100%;height:100%;touch-action:none';prepared.canvas.id='world';
     app.replaceChildren(prepared.canvas);
-    app.append(overlay.element);loadingDiorama.render(0,0);refreshLoadingOverlay();lastFrame=performance.now();progressQa?.begin(lastFrame,world.renderer);gameplayGpuQa?.reset();
+    app.append(overlay.element);overlay.paintFrames();loadingDiorama.render(0,0);refreshLoadingOverlay();lastFrame=performance.now();progressQa?.begin(lastFrame,world.renderer);gameplayGpuQa?.reset();
     loadingDiagnostic=setInterval(refreshLoadingOverlay,1000);
     // Show the fully prepared diorama before parsing a Continue snapshot. Worker
     // validation is unchanged; cancelled/late results cannot adopt into this game.
