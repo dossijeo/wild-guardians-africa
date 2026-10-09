@@ -4,6 +4,7 @@ import {mkdirSync,readFileSync,writeFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {BIOMES,CULTURES} from '../src/simulation/game.js';
 import {intensiveRunProvenance} from './intensive-run-provenance.mjs';
+import {intensiveActivityMatrixAcceptance} from './intensive-activity-acceptance.mjs';
 
 const days=Number(process.argv[2]??100),workers=Number(process.argv[3]??2);
 if(!Number.isSafeInteger(days)||days<1||days>100||!Number.isSafeInteger(workers)||workers<1||workers>4)throw Error('Usage: node tools/check_intensive_matrix_parallel.mjs [DAYS=100] [WORKERS=2, maximum 4]');
@@ -33,4 +34,5 @@ async function worker() {
 }
 await Promise.all(Array.from({length:workers},worker));
 matrix.campaign100=days===100&&matrix.sourceConsistent&&matrix.cases.length===30&&matrix.cases.every(row=>row.status==='passed')?'verified':'unverified';
+matrix.activityAcceptance=intensiveActivityMatrixAcceptance(matrix.cases,{sourceConsistent:matrix.sourceConsistent});
 save();if(matrix.cases.some(row=>row.status!=='passed')||!matrix.sourceConsistent)process.exitCode=1;

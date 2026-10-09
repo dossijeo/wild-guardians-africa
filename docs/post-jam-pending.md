@@ -654,3 +654,21 @@ La campaña histórica congelada `9c2db027` ya no tiene proceso vivo: última jo
 ### Confirmación de colocación guiada — SFX 096
 
 [Integración y evidencia](qa/guided-placement-audio/README.md): confirmación después de colocar correctamente el primer centro/brote con mano 3D visible, una vez por paso y partida. No se recalcula navegación desde input ni se cambia el error 107 de murallas. 27 pruebas dirigidas, compilación, paquete, sintaxis y paridad 126 originales/Opus pasan; WebAudio nativo silenciado verifica dos fuentes y cierre. Recuento actual 100 asignados/26 reservados. Pendientes recorrido real de este cue y escucha/contextos restantes; no afirmar aceptación global de audio.
+
+
+## Evaluación automática del criterio de actividad — 2026-10-09
+
+Los nuevos informes intensivos conservan `unoccupiedFraction` y añaden
+`activity.acceptance` con el límite vigente: estrictamente menos del25%.
+Incluyen hash y fecha de la política aplicada; datos ausentes/invalidos no
+se aprueban. Las matrices conservan el campo histórico de supervivencia
+`campaign100` y muestran un veredicto de actividad independiente, que no
+puede aprobar treinta casos incompletos ni fuentes inconsistentes. Un caso
+observado por encima del límite queda como `not-accepted`.
+
+Siete pruebas dirigidas PASS (516.9ms): límites, datos inválidos, procedencia,
+matrices parciales y análisis contable de un registro real de20noches. Este
+último es un análisis posterior de una captura histórica; no constituye
+una nueva campaña ni valida cien noches de main. No cambia balances,
+estrategia, daño, salarios o relojes. Las campañas completas y mala gestión
+continúan siendo requisitos separados.
