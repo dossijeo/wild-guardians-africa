@@ -7,6 +7,38 @@ into current-main acceptance.
 
 ## Current-state update through main 8e1909d8
 
+### Superseding checkpoint — 10 October, main b539fb1b
+
+The isolated resource-overlap run37998755565/sourcef7383473 is terminal
+failure, not live. Root downloaded official artifact11648825862 independently:
+all15,342 bytes match the archived raw, SHA256
+df467799cba2bdc313ceb973cd2a613265145c2b421c4c72e95b352371d0d03b.
+The [archive verifier and original report](windows-loading-regression/resource-overlap-candidate/native-f7383473/review.md)
+pass preservation checks, not readiness. The unchanged90s gate ended at90%
+with World compilation not yet started and nine chunks queued. This run does
+not establish a causal shader, driver or download bottleneck; overlap remains
+experimental and disabled in normal gameplay. No rerun has been authorized.
+Further source/CPU attribution is assigned in the isolated branch before any
+new native measurement.
+
+Main20773112 pauses the actual sanctuary music while its SFX lab is open,
+guards gesture/visibility restart and restores the music preference on exit.
+Its first actual-native-starter test failed because two microtask flushes did
+not settle the cross-VM promise chain. That commit was inadvertently pushed
+before the failure was repaired. Main9a1bb1d3 corrects the test settlement;
+root's current viewer/generation/i18n run passes24/24. The build and web package
+passed on the runtime change, but this is not physical listening or mobile
+layout acceptance. See [the exact scope and retained failure](library-sfx-menu-audio.md).
+
+The horde cooperative fallback is still being validated in its isolated
+branch. Agent-reported directed six-biome results have not yet been frozen
+and independently reviewed by root. No responsible/neglect campaign is
+accepted. The user's latest preference confirms keeping candidate economics,
+testing more animals first and damage separately if needed, with paid defence
+and repairs distinguishing responsible management from neglect. Centre800,
+minimum wage30 and aggregate daylight inactivity strictly below25% remain
+mandatory; all physical FIFO, delivery and reservation rules still apply.
+
 ### Superseding checkpoint — 10 October, main fd04cbcc
 
 The previous subsection heading and investigations below are historical. Normal
