@@ -1,3 +1,4 @@
+import {loadingProgramIdentityWitness} from './loading-program-identity.js';
 import {loadingSyncWitness} from './loading-sync-witness.js';
 import {compileGpuPreparation,snapshotGpuPrograms,waitGpuPrograms} from '../../tools/experiments/compile-gpu-preparation.js';
 import {loadingYieldBudget} from './loading-yield-budget.js';
@@ -16,6 +17,7 @@ export function compileLoadingPrograms(renderer,scene,camera,targetScene,{signal
  catch(error){cleanup();throw error;}
  // Submission has already restored screen state. Snapshot all variants through
  // the shared core without submitting or querying the native renderer twice.
+ loadingProgramIdentityWitness(renderer,onSubmit,now)?.(materials);
  const submitted={compile:()=>materials,properties:renderer.properties};
  const waitStart=onSubmit?now():null;let waitFailed=false;
  return compileGpuPreparation(submitted,scene,camera,targetScene,{check,signal:owner.signal,now,onPoll:globalThis.__desktopSmokeLoadingPollWitness===true?onSubmit:undefined,selectPrograms:properties=>properties.programs?.size?properties.programs.values():[properties.currentProgram]}).then(()=>scene,error=>{waitFailed=true;throw error;}).finally(()=>{cleanup();if(onSubmit){const end=now();try{onSubmit({label:'loading-compile-readiness-wait',start:waitStart,end,duration:end-waitStart,failed:waitFailed,scope:'Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.'});}catch{}}});
@@ -54,13 +56,14 @@ async function compileLoadingProgramUnion(renderer,objects,camera,target,{batchS
  const check=()=>{if(signal?.aborted||owner.signal.aborted||cancelled()||lost||renderer.getContext()!==gl||getEpoch()!==epoch||gl.isContextLost())throw Error('Loading compilation cancelled');if(now()-begin>timeout)throw Error('Loading compilation timed out');};
  const lose=()=>{lost=true;owner.abort();},abort=()=>owner.abort();
  const witness=span=>{try{onSubmit?.(span);}catch{}};
+ const identify=loadingProgramIdentityWitness(renderer,onSubmit,now);
  const yieldWork=loadingYieldBudget({frameBudget,now,nextFrame,signal:owner.signal,cancelled:()=>{check();return false;},onYield:onSubmit,frameSlack:options.frameSlack,cpuBudget:options.cpuBudget,getFrame:options.getFrame});
  check();gl.canvas?.addEventListener('webglcontextlost',lose);signal?.addEventListener('abort',abort,{once:true});
  try{
   for(let start=0;start<objects.length;start+=batchSize){
    check();const batch=objects.slice(start,start+batchSize),view={traverse:callback=>{for(const object of batch)callback(object);},traverseVisible:()=>{}};
    const submitted=loadingSyncWitness(span=>{if(options.frameSlack||options.cpuBudget)yieldWork.recordWork(span.duration);try{onCpu?.(span.duration);}catch{}witness(span);},'loading-compile-submit',()=>screen?withScreenTarget(renderer,()=>renderer.compile(view,camera,target)):renderer.compile(view,camera,target),now);
-   check();for(const program of snapshotGpuPrograms(renderer,submitted,{check,selectPrograms:properties=>properties.programs?.size?properties.programs.values():[properties.currentProgram]}))programs.add(program);
+   identify?.(submitted,batch);check();for(const program of snapshotGpuPrograms(renderer,submitted,{check,selectPrograms:properties=>properties.programs?.size?properties.programs.values():[properties.currentProgram]}))programs.add(program);
    await yieldWork();check();
   }
   const start=onSubmit?now():null;let failed=false;
