@@ -1,0 +1,153 @@
+{
+  "status": "verified",
+  "source": "0544d6526af981ee2b65730e56ed7cda4f3e4be8",
+  "runId": "37895465546",
+  "sourceHashesVerified": 324,
+  "snapshotSha256": "e5c14f60d639a9c6c2133cdacb05868e7d7811ca73244fce9757a0470d468d7d",
+  "files": {
+    "desierto-saheliana-report.json": "b48206b0085f61277a1c5d0315f5a9c0db5da482cdf8dcc16d59ab53c581aeff",
+    "desierto-saheliana-state.json": "e5c14f60d639a9c6c2133cdacb05868e7d7811ca73244fce9757a0470d468d7d",
+    "desierto-saheliana-status.json": "32edcc494a8382956eb52a8122735493ba77d4697522c9e46c9972487def301a",
+    "desierto-saheliana-summary.json": "eb22afc021cf95e4b97112b3e653371b8ac991e7907e65102489048867b1049b",
+    "job.json": "d5119ae1e614e3483ad288cbd3d975281e198cb11837f5c0b3a5f13f0ae37e8f",
+    "process.txt": "e7cacebb96f50c86ecccb8745002d557d95f2a3e13f4d572714eadc2850715be"
+  },
+  "poorFiles": {
+    "desierto-report.json": "ac24f96f105c7fb6928ad7bfc6e744b5f1358d98e0525fe7625e8837d29a7782",
+    "desierto-state.json.gz": "8733690473ec802955b5901b4704ca828429a132e5e14507a4bdd202920d609c",
+    "desierto-summary.json": "833bb22e403a5ba654f45bcbf6ee6f2a7bfce35d14418a39d0888d565eeb3367",
+    "gran-canon-report.json": "d73ecce830b827c42c6c960b6b7c84fec562f855e61ccbf3dd7d814e2ac0521a",
+    "gran-canon-state.json.gz": "95ed778f38cda8d7f2cdb963edede233e0a510d1cd6601f1720fcc28bb808a07",
+    "gran-canon-summary.json": "0a78f28157c65ccd6d10ef26de1b819e9002e7fe2a9e28c1bb6d7b0a9fc4125f",
+    "gran-rio-report.json": "90dbb580e7dc45a06d8e9e767ea534711eb903f2f13926f730f3363379ebb8b0",
+    "gran-rio-state.json.gz": "da337e06f95517dc0a515804af5413859455b99f7727d98338bb9473327f1a2f",
+    "gran-rio-summary.json": "71de89c8ab15fbd9f6773769f2fb61cdfdd82aa8c682255306d85b407ba2e0bc",
+    "manglares-report.json": "327477f0863f01850c2928a3c71657d0d820f9b7b80107ef221fef33b442f35c",
+    "manglares-state.json.gz": "1289a0d69df3595e14fb766398c7031d3e521b74a38eaf7343bc64be3d9d7422",
+    "manglares-summary.json": "26e4f87fd7905ff822b6ae41df9d0cc98de22a4e6eaa5fba258a2ff2c0a1fc41",
+    "matrix.json": "7219ec0225256f996a5b53d8034c6047917ec817bd77d66113b371a440cdf029",
+    "process.txt": "fd7321c10f5484beffe963570af7e4810099fceb66b6fb06db55fa2361cb0eee",
+    "sabana-report.json": "0debfac808a4c25514c08a12b69dea2d82760936614a858f8c2dc1778afd88fe",
+    "sabana-state.json.gz": "287270d96d16ede84f7b1ff8c320239056cd2327fc0f381af065f8191b2b1ef4",
+    "sabana-summary.json": "47e0f2a8d0e8ef52f2a0c77ff5132ceebc06b8e7d5ff930f811e3761ab079b96",
+    "volcanes-report.json": "bb4b0b1cda85f92abd65c8b316f06e9e663ce614bba3d9b441264995dc4c4143",
+    "volcanes-state.json.gz": "7a68c984333a41b44dfa8f327c9f380a9b75ca84bdf10d92b41cbd1f44d8d282",
+    "volcanes-summary.json": "afb9ca48af63403a949ca179ab266f6a2f2520f4375dd81cae6e3a69462cff5d"
+  },
+  "responsible": {
+    "biome": "desierto",
+    "culture": "saheliana",
+    "seed": "712",
+    "result": "victory",
+    "completedNights": 100,
+    "raid": null,
+    "physicalDelivered": 19962,
+    "physicalPicked": 20261,
+    "pendingCrates": 299,
+    "policy": {
+      "profile": "olderFemale",
+      "mixed": true,
+      "middayHiring": false,
+      "plantsPerWorker": 12,
+      "defend": false,
+      "reserveLabourGrowth": true,
+      "reserveMaintenance": true,
+      "burstPlanting": false,
+      "cameraEntry": true
+    },
+    "cashflow": {
+      "openingBalance": "1500",
+      "harvestIncome": "1442930",
+      "seedCosts": "797730",
+      "wageCosts": "320340",
+      "repairCosts": "100",
+      "centreCosts": "800",
+      "wallCosts": "0",
+      "otherNet": "0",
+      "operatingCashFlow": "324760",
+      "netCashFlowAfterConstruction": "323960",
+      "endingBalance": "325460"
+    },
+    "activity": {
+      "daylightSeconds": 30000,
+      "unoccupiedSeconds": 6517,
+      "unoccupiedFraction": 0.21723333333333333,
+      "acceptance": {
+        "status": "accepted",
+        "measuredFraction": 0.21723333333333333,
+        "policy": {
+          "path": "docs/qa/intensive-acceptance-policy.json",
+          "sha256": "f463ede2279390e14e85fa94845f4b2c10e4970f0f173c32885e3638acc69bf4",
+          "updated": "2026-10-08",
+          "comparison": "strictly-less-than",
+          "maximumFraction": 0.25
+        },
+        "scope": "Activity metric only; does not prove survival, accounting, source fidelity, bad-management loss or complete release acceptance."
+      },
+      "idleSecondsByReason": {
+        "budget": 4599,
+        "space": 0,
+        "shift-end": 1918,
+        "incursion": 7315,
+        "night": 23890
+      },
+      "longestIdle": 135,
+      "p90LongestIdle": 59
+    }
+  },
+  "poorManagement": {
+    "defeats": 5,
+    "cases": [
+      {
+        "biome": "sabana",
+        "result": "defeat",
+        "completedNights": 7,
+        "money": "24",
+        "delivered": 114,
+        "snapshotSha256": "818b36568803172856e59f49bac79862f7152f35a48895638243d8184bf50bdf"
+      },
+      {
+        "biome": "gran-rio",
+        "result": "defeat",
+        "completedNights": 7,
+        "money": "26",
+        "delivered": 112,
+        "snapshotSha256": "02df21797ec740635a4701c3c6572ce7ee49a94966a793afbc3bb26923482700"
+      },
+      {
+        "biome": "manglares",
+        "result": "defeat",
+        "completedNights": 7,
+        "money": "14",
+        "delivered": 113,
+        "snapshotSha256": "1edfd6c8d83fd38292dba5db17ee8c82b596ad684717174a55e35a25ec989be9"
+      },
+      {
+        "biome": "volcanes",
+        "result": "defeat",
+        "completedNights": 7,
+        "money": "24",
+        "delivered": 114,
+        "snapshotSha256": "3c49df1bd76af4e2b6e934eeeaee7f80f90f57ce74a9d2c6d86d387e6874d182"
+      },
+      {
+        "biome": "gran-canon",
+        "result": null,
+        "completedNights": 10,
+        "money": "34",
+        "delivered": 120,
+        "snapshotSha256": "55f0f2c71644e441756a90412f1e334b0fde408352c20d60c1c82f4d533f4d90"
+      },
+      {
+        "biome": "desierto",
+        "result": "defeat",
+        "completedNights": 5,
+        "money": "22",
+        "delivered": 41,
+        "snapshotSha256": "ad0b0d93d42a36b09f20f0f05ec8d32c789b0923abe7375674b97a03908147ad"
+      }
+    ]
+  },
+  "acceptance": "this-case-survival-physical-accounting-activity-and-poor-loss-verified",
+  "scope": "One responsible biome/culture/seed on immutable recorded source plus six poor-management cases. No replay, GPU, human activity, whole 30-case responsible matrix or current-main equivalence. Earlier rejected Canyon candidate remains separate."
+}

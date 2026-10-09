@@ -1,0 +1,10 @@
+file:///C:/Users/PC/.codex/worktrees/campaign-balance-recovery/wild-guardians-africa/tools/audit_completed_campaign_artifact.mjs:52
+ assert.equal(r.provenance.gitHead,source);assert.equal(s.result,row.result);
+                           ^
+
+TypeError: Cannot read properties of undefined (reading 'gitHead')
+    at file:///C:/Users/PC/.codex/worktrees/campaign-balance-recovery/wild-guardians-africa/tools/audit_completed_campaign_artifact.mjs:52:28
+    at Array.map (<anonymous>)
+    at file:///C:/Users/PC/.codex/worktrees/campaign-balance-recovery/wild-guardians-africa/tools/audit_completed_campaign_artifact.mjs:48:25
+
+Node.js v20.11.0
