@@ -204,7 +204,7 @@ export function spawnRaid(s,plan,nav,daytime=false) {
     if(w.status!=='home')w.status='fleeing';
   }
   s.tasks=s.tasks.filter(t=>t.kind!=='repair');
-  notice(s,RAID_NOTICE_TEXT,animals[0].id);emit(s,'RaidSpawned');
+  notice(s,RAID_NOTICE_TEXT,animals[0].id);emit(s,'RaidSpawned',{raidId:s.raid.id,animals:animals.map(a=>({id:a.id,species:a.species,hitsAllocated:a.hitsRemaining}))});
   return 'spawned';
 }
 function release(s,a) {if(a.reservation&&s.raid.reservations[a.reservation]===a.id)delete s.raid.reservations[a.reservation];a.reservation=null;a.targetId=null;a.path=null;a.approach=null;a.approachShieldId=null;}
@@ -305,10 +305,10 @@ export function updateRaid(s,dt,nav) {
           }
           // A presentation snapshot is a fact about this completed hit, never
           // another damage command. It survives target movement, raid end/save.
-          emit(s,'AnimalLogicalHit',{attackId:a.attackId,targetId:target.id,species:a.species,presentation:{elapsed:s.elapsed,
+          emit(s,'AnimalLogicalHit',{raidId:s.raid.id,animalId:a.id,attackId:a.attackId,targetId:target.id,species:a.species,presentation:{elapsed:s.elapsed,
             animal:{x:a.x,z:a.z,heading:a.heading},target:{x:target.x,z:target.z,kind:target.kind,...(target.kind==='center'?{culture:centerCulture(target,s),yaw:target.yaw}:{}),...(target.kind==='wall'?{material:target.material,gate:target.gate,yaw:target.yaw,baseScaleX:target.baseScaleX}:{})},
             shield:shield?{id:shield.id,x:shield.x,z:shield.z,radius:shield.radius}:null}});
-        }else emit(s,'AnimalLogicalMiss',{attackId:a.attackId,targetId:a.targetId,species:a.species,...(expiredBorder?{reason:'shield-expired'}:{})});
+        }else emit(s,'AnimalLogicalMiss',{raidId:s.raid.id,animalId:a.id,attackId:a.attackId,targetId:a.targetId,species:a.species,...(expiredBorder?{reason:'shield-expired'}:{})});
       }
       a.status='walking';a.path=null;if(!target||target.alive===false||target.status&&target.status!=='intact')release(s,a);
       // Finish the committed animation before spending another hit or retreating.

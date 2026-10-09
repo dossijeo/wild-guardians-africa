@@ -8,11 +8,12 @@ import {auditIntensiveFarm} from './check_intensive_farm.mjs';
 import {summarizeIntensiveFarm} from './summarize_intensive_farm.mjs';
 import {intensiveRunProvenance} from './intensive-run-provenance.mjs';
 import {serialize} from '../src/persistence/snapshots.js';
+import {auditHordeStrikeEvidence} from './horde-strike-evidence.mjs';
 export const DECLARED_HORDE_PILOT=Object.freeze({protocol:'horde-defense-comparison-v1',days:20,biome:'gran-canon',culture:'saheliana',seed:712,profile:'olderFemale',mixed:true,middayHiring:false,plantsPerWorker:12,reserveLabourGrowth:true,reserveMaintenance:true,burstPlanting:false,cameraEntry:true});
 const hash=raw=>createHash('sha256').update(raw).digest('hex');
 export function hordeComparisonProvenance(args=[]){
  const provenance=intensiveRunProvenance(args);
- for(const path of ['tools/horde-defense-comparison.mjs','tools/horde-defense-farm.mjs','tools/horde-defense-actions.mjs','tools/horde-entry-driver.mjs','tools/node-raid-entry-transport.mjs','tools/node-raid-entry-worker.mjs','tools/repair-settlement-evidence.mjs','content/balance/player_revisions.json'])provenance.sourceHashes[path]=hash(readFileSync(new URL('../'+path,import.meta.url)));
+ for(const path of ['tools/horde-defense-comparison.mjs','tools/horde-defense-farm.mjs','tools/horde-defense-actions.mjs','tools/horde-entry-driver.mjs','tools/node-raid-entry-transport.mjs','tools/node-raid-entry-worker.mjs','tools/repair-settlement-evidence.mjs','tools/horde-strike-evidence.mjs','content/balance/player_revisions.json'])provenance.sourceHashes[path]=hash(readFileSync(new URL('../'+path,import.meta.url)));
  return {...provenance,scenario:DECLARED_HORDE_PILOT};
 }
 export function auditHordeComparison(report,requestedDays){
@@ -24,12 +25,10 @@ export function auditHordeComparison(report,requestedDays){
  const eachDayStaffAndDelivery=report.daily.length===requestedDays&&report.daily.every(r=>r.staff>0&&r.wages>0&&r.delivered>0&&hiringPayments.some(c=>c.day===r.day&&c.paid===r.wages));
  const terminalRaids=report.raids.filter(r=>r.terminalActors);
  const allRaidsPhysicallyEnded=terminalRaids.length===(report.counts.RaidSpawned??0)&&terminalRaids.length===(report.counts.RaidEnded??0)&&terminalRaids.every(r=>r.terminalActors.every(a=>a.status==='gone'&&a.exitDistance<1e-8));
- const spentStrikes=report.raids.reduce((sum,r)=>sum+r.initialHitBudgets.reduce((a,b)=>a+b,0)-(r.terminalActors??r.lastAnimals??[]).reduce((a,b)=>a+b.hitsRemaining,0),0);
- const strikeEvidenceMatches=spentStrikes===(report.counts.AnimalLogicalHit??0)+(report.counts.AnimalLogicalMiss??0);
- if(!strikeEvidenceMatches)throw Error('Actual spent strike budgets do not reconcile with native hit/miss events');
+ const strikeEvidence=auditHordeStrikeEvidence(report),{spentStrikes,strikeEvidenceMatches}=strikeEvidence;
  const activityPass=observed.unoccupiedFraction!==null&&observed.unoccupiedFraction<.25;
  const incomePaid=report.state.crates.filter(c=>c.delivered).length;
- return {actualHiringPayments:hiringPayments,allRaidsPhysicallyEnded,spentStrikes,strikeEvidenceMatches,ledgerHydrationMaturityCrateReceipts:true,repairSettlements:true,completedRequestedNights:completed,everyWorkdayPaidStaffAndPhysicalDelivery:eachDayStaffAndDelivery,strictGlobalActivityBelow25:activityPass,physicalPaidDeliveries:incomePaid,responsible100Accepted:requestedDays===100&&completed&&eachDayStaffAndDelivery&&activityPass&&allRaidsPhysicallyEnded&&report.result==='victory',nativeNeglectDefeat:report.policy.arm==='neglect'&&report.result==='defeat'&&(report.counts.GameOver??0)>0,scope:'20-night pilot is not100-night acceptance; paid crate audit does not independently prove temporal route/FIFO traversal'};
+ return {actualHiringPayments:hiringPayments,allRaidsPhysicallyEnded,spentStrikes,strikeEvidenceMatches,strikeEvidence,ledgerHydrationMaturityCrateReceipts:true,repairSettlements:true,completedRequestedNights:completed,everyWorkdayPaidStaffAndPhysicalDelivery:eachDayStaffAndDelivery,strictGlobalActivityBelow25:activityPass,physicalPaidDeliveries:incomePaid,responsible100Accepted:requestedDays===100&&completed&&eachDayStaffAndDelivery&&activityPass&&allRaidsPhysicallyEnded&&report.result==='victory',nativeNeglectDefeat:report.policy.arm==='neglect'&&report.result==='defeat'&&(report.counts.GameOver??0)>0,scope:'20-night pilot is not100-night acceptance; paid crate audit does not independently prove temporal route/FIFO traversal'};
 }
 // Evidence boundary; controlled tests supply failure functions. The production
 // CLI always uses the ordinary simulation and strict native auditors below.

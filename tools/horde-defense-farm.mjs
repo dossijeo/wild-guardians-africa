@@ -40,13 +40,13 @@ export async function simulateHordeDefenseFarm({days=100,profile='olderFemale',m
  const daily=[],counts={},seen=new Set(),savedRaids=new Set(),additionalHiring={count:0,cost:0};let maximumLiving=0,reloads=0;
  const collect=()=>{
   settlement.observe(s);
-  if(s.raid){raidActors=s.raid.animals;let row=raids.get(s.raid.id);if(!row){row={id:s.raid.id,day:s.day,spawnElapsed:s.elapsed,species:raidActors.map(a=>a.species),initialHitBudgets:raidActors.map(a=>a.hitsRemaining),maxOwners:0,terminalActors:null};raids.set(s.raid.id,row);}
+  if(s.raid){raidActors=s.raid.animals;let row=raids.get(s.raid.id);if(!row){const allocation=s.events.find(e=>e.type==='RaidSpawned'&&e.raidId===s.raid.id);if(!allocation)throw Error('Missing native allocation at first observed raid');row={id:s.raid.id,day:s.day,spawnElapsed:s.elapsed,species:allocation.animals.map(a=>a.species),allocatedActors:structuredClone(allocation.animals),initialHitBudgets:allocation.animals.map(a=>a.hitsAllocated),maxOwners:0,terminalActors:null};raids.set(s.raid.id,row);}
    row.maxOwners=Math.max(row.maxOwners,Object.keys(s.raid.reservations??{}).length);
    for(const owner of Object.values(s.raid.reservations??{}))if(raidActors.filter(a=>a.id===owner&&a.reservation).length!==1)throw Error('Reservation owner identity mismatch');
    for(const reservation of new Set(raidActors.map(a=>a.reservation).filter(Boolean)))if(raidActors.filter(a=>a.reservation===reservation).length!==1)throw Error('Exclusive reservation broken');
    row.lastAnimals=raidActors.map(a=>({id:a.id,species:a.species,x:a.x,z:a.z,status:a.status,reservation:a.reservation,targetId:a.targetId,hitsRemaining:a.hitsRemaining,exit:a.exit}));
   }else if(raidActors){const row=[...raids.values()].at(-1);row.terminalActors=raidActors.map(a=>({id:a.id,species:a.species,status:a.status,hitsRemaining:a.hitsRemaining,x:a.x,z:a.z,exit:a.exit,exitDistance:Math.hypot(a.x-a.exit.x,a.z-a.exit.z)}));row.endElapsed=s.elapsed;raidActors=null;}
-  for(const e of s.events)if(!seen.has(e.id)){seen.add(e.id);counts[e.type]=(counts[e.type]??0)+1;if(['RaidSpawned','RaidEnded','AnimalLogicalHit','AnimalLogicalMiss','AnimalRetreating','CropHit','CropDestroyed','StructureHit','RepairApplied'].includes(e.type))raidFacts.push(structuredClone(e));if(e.type==='HiringConfirmed'&&e.additional){additionalHiring.count+=e.count;additionalHiring.cost+=e.cost;}}
+  for(const e of s.events)if(!seen.has(e.id)){seen.add(e.id);counts[e.type]=(counts[e.type]??0)+1;if(['RaidSpawned','RaidEnded','AnimalLogicalHit','AnimalLogicalMiss','WorkerHit','WorkerIncapacitated','AnimalRetreating','CropHit','CropDestroyed','StructureHit','RepairApplied'].includes(e.type))raidFacts.push(structuredClone(e));if(e.type==='HiringConfirmed'&&e.additional){additionalHiring.count+=e.count;additionalHiring.cost+=e.cost;}}
  };
  const choosePlot=()=>{
   const occupied=new Set(s.plants.filter(p=>p.alive).map(p=>`${p.x},${p.z}`));

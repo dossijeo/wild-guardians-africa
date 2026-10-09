@@ -58,10 +58,10 @@ export function updateWorkerEncounters(state,nav){
       if(worker.hits>=2){
         worker.incapacitated=true;worker.status='incapacitated';worker.fallRemaining=0;
         const person=state.people.find(p=>p.id===worker.personId);if(person)person.recoveryUntil=state.day+1;
-        emit(state,'WorkerIncapacitated',{targetId:worker.id,animalId:animal.id,collision,pushed,presentation});
+        emit(state,'WorkerIncapacitated',{raidId:raid.id,targetId:worker.id,animalId:animal.id,collision,pushed,presentation});
       }else{
         worker.fallRemaining=L.sources.find(s=>s.profile===worker.profile).fallSeconds;
-        emit(state,'WorkerHit',{targetId:worker.id,animalId:animal.id,collision,pushed,presentation});
+        emit(state,'WorkerHit',{raidId:raid.id,targetId:worker.id,animalId:animal.id,collision,pushed,presentation});
       }
       if(distance(animal,worker)>=range)active.delete(pair);
     }
