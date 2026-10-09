@@ -33,6 +33,8 @@ export class LoadingDiorama {
       shader.fragmentShader='varying vec2 vLoadingSoil;\n'+shader.fragmentShader;
       shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>',`#ifdef USE_MAP
         vec3 soilColor=texture2D(map,fract(vMapUv*3.)).rgb;
+        float soilLuma=dot(soilColor,vec3(.2126,.7152,.0722));
+        soilColor=mix(vec3(soilLuma),soilColor,.52);
         diffuseColor.rgb*=pow(soilColor,vec3(2.2));
       #endif`);
       shader.fragmentShader=shader.fragmentShader.replace('#include <opaque_fragment>',`float soilRadius=length(vLoadingSoil);
@@ -41,7 +43,7 @@ export class LoadingDiorama {
         if(diffuseColor.a<.01)discard;
         #include <opaque_fragment>`);
     };
-    material.customProgramCacheKey=()=> 'loading-soil-existing-earth-soft-edge-v2';
+    material.customProgramCacheKey=()=> 'loading-soil-existing-earth-soft-edge-v3';
     this.ground=new THREE.Mesh(geometry,material);this.ground.rotation.x=-Math.PI/2;this.ground.position.y=.09;this.scene.add(this.ground);
     this.sparkles=new LoadingSparkles(this.scene);this.mist=new LoadingMist(world.sky);this.scene.fog=new THREE.Fog(this.mist.day,18,28);
     let down=null;world.canvas.addEventListener('pointerdown',e=>{if(this.interactive&&e.button===0){this.pointerType=e.pointerType==='touch'?'touch':'mouse';down={x:e.clientX,y:e.clientY,id:e.pointerId};this.orbit.beginInteraction();world.canvas.setPointerCapture?.(e.pointerId);e.preventDefault();}},{signal:this.abort.signal});
@@ -58,7 +60,7 @@ export class LoadingDiorama {
     // diorama borrows its pixel Source through a locally owned Texture object.
     // This does not decode/copy pixels or require separate shared GL storage.
     this.ground.material.map=this.textureOwner.borrow(await phase('diorama-prepare-soil-texture',()=>world.loadReady(world.assets.texture(ground.canyons.base,false))));
-    this.ground.material.color.set('#b48a62');this.ground.material.needsUpdate=true;
+    this.ground.material.color.set('#a59b8d');this.ground.material.needsUpdate=true;
     const mountains=mountainBackdropProfile('savanna',712),atlasUrl=assetUrl(mountains.atlas);
     // The far-world loader has a separate flipped atlas owner. Keep this
     // loading-only Source local, including cleanup of arrivals after abort.
@@ -67,6 +69,8 @@ export class LoadingDiorama {
     const layout=mountains.arcLayout.slice(0,3).map((arc,index)=>({...arc,angle:Math.atan2(-4.8,-6.4)+(index-1)*.45,height:index===1?6.5:4.6,baseY:-1.4}));
     const backdropOwner={scene:this.scene,camera:this.camera,nav:{config:{biome:'savanna'},field:{surface:()=>0}},toon:this.toon};
     this.backdrop=createBiomeBackdrop(backdropOwner,mountainTexture,{radius:35,arcLayout:layout,stableAltitude:false,parallax:0,fogMix:.2,fogBaseMix:.8,fogDayColor:'#decba6',fogNightColor:'#26364a'});
+    // Feather only this presentation's atlas foot into the analytic haze.
+    featherLoadingBackdrop(this.backdrop);
     this.batch=await phase('diorama-prepare-maize-batch',()=>createCropBatchAsync(this.scene,world.renderer,gltf,bridges,this.plants.capacity,{species:['maiz'],shadows:false,signal:this.abort.signal,cancelled:()=>this.disposed||world.disposed}));this.scene.traverse(object=>{for(const material of [object.material].flat().filter(Boolean))this.textureOwner.material(material);});this.toon.environment(world.sky.environmentTextures,world.sky.uniforms.uSkyYaw);this.toon.apply(this.scene);
     // A small cold presentation fill belongs only to the diorama maize. It
     // reuses the existing night-light uniform/GLSL; soil and real-world lighting
@@ -94,7 +98,7 @@ export class LoadingDiorama {
   show(state) {this.state=state;this.interactive=true;this.world.controls.enabled=false;}
   render(dt,progress,{ready=false,skyOnly=false}={}) {
     if(!this.prepared||this.disposed)return;
-    const {world}=this;world.resize();this.camera.aspect=world.camera.aspect;if(!world.cinematic){const distance=this.camera.aspect<.8?1.2:1,angle=this.orbit.step(dt),sin=Math.sin(angle),cos=Math.cos(angle);this.camera.position.set((4.8*cos+6.4*sin)*distance,3.1*distance,(6.4*cos-4.8*sin)*distance);this.camera.lookAt(this.focus);}this.camera.updateProjectionMatrix();this.plants.update(dt,progress,{ready});this.batch.update(this.plants.plants,this.orbit.reducedMotion?0:this.plants.time,()=>0);
+    const {world}=this;world.resize();this.camera.aspect=world.camera.aspect;if(!world.cinematic){const portrait=this.camera.aspect<.8,distance=portrait?1.65:1,height=portrait?1.45:1,angle=this.orbit.step(dt),sin=Math.sin(angle),cos=Math.cos(angle);this.camera.position.set((4.8*cos+6.4*sin)*distance,3.1*height,(6.4*cos-4.8*sin)*distance);this.camera.lookAt(this.focus);}this.camera.updateProjectionMatrix();this.plants.update(dt,progress,{ready});this.batch.update(this.plants.plants,this.orbit.reducedMotion?0:this.plants.time,()=>0);
     const night=skyNight(this.state);this.night=night;this.toon.update(night,this.sun,this.state.biome);this.toon.uniforms.uNightLight.value=1.8;this.sun.intensity=3-2.6*night;this.ambient.intensity=2-.9*night;this.scene.fog.color.copy(this.mist.day).lerp(this.mist.night,night);this.backdrop?.update();this.sparkles.update(this.plants.time,night,this.orbit.reducedMotion);
     const shadow=world.renderer.shadowMap.enabled,autoClear=world.renderer.autoClear;
     try{world.renderer.shadowMap.enabled=false;world.renderer.autoClear=false;withScreenTarget(world.renderer,()=>{world.renderer.clear();world.sky.render(world.renderer,this.camera,this.state);if(!skyOnly){this.mist.render(world.renderer,this.camera,night);world.renderer.render(this.scene,this.camera);}});}
@@ -111,4 +115,10 @@ export class LoadingDiorama {
   stopPlanting(){this.interactive=false;this.plants.stopPlanting();}
 
   dispose(){if(this.disposed)return;this.disposed=true;this.interactive=false;this.abort.abort();this.batch?.dispose();this.sparkles?.dispose();this.backdrop?.dispose();this.backdropTexture?.dispose();this.mist.dispose();this.ground.geometry.dispose();this.ground.material.dispose();this.textureOwner.dispose();this.toon.shadowUniforms.uNativeShadowFiltered.value=null;this.toon.shadowUniforms.fallback.dispose();this.scene.clear();}
+}
+
+
+export function featherLoadingBackdrop(backdrop){
+ let changed=0;backdrop.root.traverse(mesh=>{if(!mesh.material?.isShaderMaterial)return;const source=mesh.material.fragmentShader,next=source.replace(',1.);\n #include <colorspace_fragment>',',smoothstep(.02,.4,vBackdropHeight)*c.a);\n #include <colorspace_fragment>');if(next===source)throw Error('Missing loading backdrop alpha recipe');mesh.material.transparent=true;mesh.material.fragmentShader=next;changed++;});
+ if(!changed)throw Error('Missing loading backdrop material');return backdrop;
 }
