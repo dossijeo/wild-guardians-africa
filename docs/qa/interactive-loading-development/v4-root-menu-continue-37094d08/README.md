@@ -1,0 +1,9 @@
+# Actual menu Continue V4
+
+Source37094d08 at5290/?qa-loading, root tab966. Existing small day1 Savanna/Mapungubwe1500 slot; real saves.loadPrepared→Worker diagnostic decode1.2ms. Actual loading closed/noncancelled, progress1/ready/estimatedfalse/pendingzero, transfer failureszero. Before-cinematic and completed camera values match exactly. Root captured actual ready screenshot and closed966. No dense/mobile/physical memory or paired performance proof. No manual save/delete action; production autosave semantics are unchanged and not audited here.
+
+Progress elapsed20,009.4ms includes the approximately4.04s cinematic and begins with LoadingProgress construction after diorama preparation; it is not the entire iframe-click/preload-to-controls latency. Lifecycle receipt markers are exported for that distinction. All1,093loadingRAF retained: maximum132.8ms,6above50ms,1above100ms. The first stale RAF delta is negative and retained; these are existing callback intervals, not GPU timings/presented frames.
+
+Confirmed synchronous production invocations: diorama-upload-maize-soil116.3ms, screen-upload-submit55.4ms, frame-draw51.8ms. The diorama submission precedes visible loading/RAF collection and is relevant to total menu wait. Unlike the dense fixture, real menu restores via Worker and does not take QA equality snapshots. These data justify targeting the diorama submission, but do not isolate texture/geometry/driver work within it.
+
+verify.py checks readiness, Worker receipt and exact camera restoration, computes full RAF statistics (including negative startup), exports lifecycle/sync spans and hashes untouched originals. No renderer-memory/disposal counters in this raw app report, so root tab closure is not a measured0/0/0resource claim. Performance/readiness and full integration gates remain open; no PR.

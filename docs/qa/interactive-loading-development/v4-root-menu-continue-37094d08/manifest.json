@@ -1,0 +1,97 @@
+{
+  "source": "37094d08",
+  "scope": "Actual menu Continue V4 small day1 Savanna/Mapungubwe1500 slot, not dense/browser-mobile/controlpaired/physicalmemory proof",
+  "frames": {
+    "count": 1093,
+    "min": -59.900000047680805,
+    "max": 132.79999999999563,
+    "p95": 33.200000000004366,
+    "over50": 6,
+    "over100": 1
+  },
+  "elapsedProgressMs": 20009.399999976158,
+  "snapshotDecode": [
+    {
+      "mode": "worker",
+      "decodeMs": 1.1999999284744263,
+      "at": 44148.800000071526
+    }
+  ],
+  "syncAbove50": [
+    {
+      "label": "diorama-upload-maize-soil",
+      "start": 27621.600000023842,
+      "end": 27737.900000095367,
+      "duration": 116.30000007152557,
+      "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+    },
+    {
+      "label": "loading-screen-upload-submit",
+      "start": 54679,
+      "end": 54734.40000009537,
+      "duration": 55.40000009536743,
+      "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+    },
+    {
+      "label": "loading-frame-draw",
+      "start": 59172.700000047684,
+      "end": 59224.5,
+      "duration": 51.799999952316284,
+      "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+    }
+  ],
+  "lifecycleMarkers": {
+    "app-menu-preparation-received": {
+      "label": "app-menu-preparation-received",
+      "start": 26039,
+      "end": 26039,
+      "duration": 0,
+      "scope": "Parent application lifecycle receipt marker, not the originating iframe click timestamp or exclusive CPU."
+    },
+    "app-preloading-created": {
+      "label": "app-preloading-created",
+      "start": 26039.200000047684,
+      "end": 26039.200000047684,
+      "duration": 0,
+      "scope": "Parent application lifecycle receipt marker, not the originating iframe click timestamp or exclusive CPU."
+    },
+    "app-preloading-ready": {
+      "label": "app-preloading-ready",
+      "start": 27820.100000023842,
+      "end": 27820.100000023842,
+      "duration": 0,
+      "scope": "Parent application lifecycle receipt marker, not the originating iframe click timestamp or exclusive CPU."
+    },
+    "app-start-game-received": {
+      "label": "app-start-game-received",
+      "start": 43915.200000047684,
+      "end": 43915.200000047684,
+      "duration": 0,
+      "scope": "Parent application lifecycle receipt marker, not the originating iframe click timestamp or exclusive CPU."
+    },
+    "app-cinematic-restored-before-controls": {
+      "label": "app-cinematic-restored-before-controls",
+      "start": 63957.800000071526,
+      "end": 63957.800000071526,
+      "duration": 0,
+      "scope": "Parent application lifecycle receipt marker, not the originating iframe click timestamp or exclusive CPU."
+    }
+  },
+  "files": [
+    {
+      "name": "console.json",
+      "bytes": 325,
+      "sha256": "50259a237ca54b22d3a526d8b6a0b4be8ca7e447406dabb4b14be8a2d8b593c8"
+    },
+    {
+      "name": "ready.jpg",
+      "bytes": 162574,
+      "sha256": "4a094859536231e953902388879186f8fa160754c0ca479e10344f5c14261c90"
+    },
+    {
+      "name": "report.json",
+      "bytes": 1851174,
+      "sha256": "9fcdcad0dc6e173c743d791113d51c75d7c5d8d7594c4840886aacb0f04b8ede"
+    }
+  ]
+}
