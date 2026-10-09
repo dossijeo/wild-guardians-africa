@@ -1,0 +1,85 @@
+{
+  "sourceHead": "92a5fe8eb9fc2dd2bb6675e049c45dc873d3e3c9",
+  "runId": 37985379519,
+  "nativePid": 49132,
+  "rawBytes": 1179103,
+  "rawSha256": "949e7d553df09552bbba5079018dbb3aa0c958e3c30ad6482b1f8c3bd14ab2bb",
+  "worldPng": {
+    "file": "world-before-worker.png",
+    "bytes": 878842,
+    "sha256": "73e77bc0ce7db5d913028d1d505a217d51d2825866a8066f96426f4e35cfdce8",
+    "width": 1024,
+    "height": 576,
+    "scope": "Original tester world image before worker samples, not a source/repeat/candidate comparison"
+  },
+  "cases": [
+    34,
+    18
+  ],
+  "sampleCount": 0,
+  "coverageComplete": false,
+  "errors": [
+    "Error: Native camera cannot retain full posed rig framing\n    at jA.prepareFrame (http://tauri.localhost/assets/index-B_65fkgm.js:4988:349682)\n    at jA.frame (http://tauri.localhost/assets/index-B_65fkgm.js:4988:346389)\n    at Q3 (http://tauri.localhost/assets/index-B_65fkgm.js:5103:76644)"
+  ],
+  "cleanup": {
+    "borrowedDisposeEvents": 0,
+    "borrowedGeometryAttributesExact": true,
+    "closed": true,
+    "errors": [],
+    "mixerActivityRestored": true,
+    "mixerAfter": {
+      "actions": [
+        {
+          "clip": "Walk_Skip",
+          "scheduled": true,
+          "values": {
+            "_effectiveTimeScale": 0,
+            "_effectiveWeight": 1,
+            "_loopCount": -1,
+            "_startTime": null,
+            "clampWhenFinished": true,
+            "enabled": true,
+            "loop": 2201,
+            "paused": true,
+            "repetitions": null,
+            "time": 1.7273999998569505,
+            "timeScale": 1,
+            "weight": 1
+          }
+        },
+        {
+          "clip": "Carry_Crate",
+          "scheduled": false,
+          "values": {
+            "_effectiveTimeScale": 0,
+            "_effectiveWeight": 1,
+            "_loopCount": -1,
+            "_startTime": null,
+            "clampWhenFinished": true,
+            "enabled": true,
+            "loop": 2200,
+            "paused": false,
+            "repetitions": 1,
+            "time": 0,
+            "timeScale": 1,
+            "weight": 1
+          }
+        }
+      ],
+      "name": "Walk_Skip",
+      "time": 0,
+      "timeScale": 1
+    },
+    "ownedMaterialsRemaining": 0,
+    "rendererRetained": true,
+    "stateExact": true,
+    "stateScope": "Exact serialized Game state; not an assertion of all scene/chunk/material/shadow caches. Original renderFrameUpdates(0) ran."
+  },
+  "gpuTiming": false,
+  "sourceRepeatCandidatePngs": [],
+  "launcherEnvironmentExactRestoration": false,
+  "launcherEnvironmentObservation": "Original equality false preserved; same launcher process terminated before null/empty/existence observations. New shell cannot prove its previous state.",
+  "webviewProfileObservation": "Dedicated profile directory created; no live CIM descendant/profile association captured. Post-exit CIM returned no PID49132/direct children or WebView2 command line matching this profile.",
+  "acceptance": "NEGATIVE_FRAMING_NO_SAMPLES",
+  "rerun": false
+}

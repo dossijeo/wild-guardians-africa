@@ -1,0 +1,12 @@
+import {readFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {gunzipSync} from 'node:zlib';
+import assert from 'node:assert/strict';
+const dir=new URL('./',import.meta.url),manifest=JSON.parse(readFileSync(new URL('manifest.json',dir))),hash=b=>createHash('sha256').update(b).digest('hex');
+for(const [file,sha] of Object.entries(manifest.files))assert.equal(hash(readFileSync(new URL(file,dir))),sha,file);
+const raw=gunzipSync(readFileSync(new URL('raw.json.gz',dir)));assert.equal(hash(raw),manifest.rawSha256);const report=JSON.parse(raw),worker=report.checks.workerRenderQa;
+assert.equal(report.ok,false);assert.equal(worker.samples.length,0);assert.deepEqual(worker.caseIndices,[34,18]);assert.equal(worker.coverage.complete,false);assert.equal(worker.gpuTiming,false);assert.match(worker.errors[0],/Native camera cannot retain full posed rig framing/);
+for(const flag of ['closed','stateExact','mixerActivityRestored','borrowedGeometryAttributesExact'])assert.equal(worker.cleanup[flag],true);assert.equal(worker.cleanup.borrowedDisposeEvents,0);assert.equal(worker.cleanup.ownedMaterialsRemaining,0);assert.deepEqual(worker.cleanup.errors,[]);
+const exit=JSON.parse(readFileSync(new URL('exit.json',dir),'utf8').replace(/^\uFEFF/,''));assert.equal(exit.exitCode,1);assert.equal(exit.parentProfileRestored,false);
+const png=readFileSync(new URL('world-before-worker.png',dir));assert.equal(png.subarray(0,8).toString('hex'),'89504e470d0a1a0a');assert.equal(png.readUInt32BE(16),1024);assert.equal(png.readUInt32BE(20),576);
+console.log('PASS preserved framing negative: samples0, visual/timing unapproved, cleanup exact, original env false retained');
