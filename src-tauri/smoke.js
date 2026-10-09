@@ -127,7 +127,7 @@
     await new Promise(resolve => requestAnimationFrame(resolve));
     report.worldPng = world.toDataURL('image/png');
     if(window.__desktopSmokeWorkerQa===true){
-      try{if(typeof window.__desktopSmokeWorkerProbe!=='function')throw Error('Native worker probe unavailable');report.checks.workerRenderQa=await window.__desktopSmokeWorkerProbe(fixture.workerRenderQa);if(report.checks.workerRenderQa.errors.length||!report.checks.workerRenderQa.cleanup.stateExact||!report.checks.workerRenderQa.cleanup.borrowedGeometryAttributesExact)throw Error('Worker QA restoration or runtime error');}
+      try{if(typeof window.__desktopSmokeWorkerProbe!=='function')throw Error('Native worker probe unavailable');report.checks.workerRenderQa=await window.__desktopSmokeWorkerProbe(fixture.workerRenderQa);const qa=report.checks.workerRenderQa,c=qa.cleanup;if(qa.errors.length||c.errors.length||!c.closed||!c.stateExact||!c.borrowedGeometryAttributesExact||c.borrowedDisposeEvents!==0||c.ownedMaterialsRemaining!==0||!c.rendererRetained)throw Error('Worker QA restoration or runtime error');}
       finally{delete window.__desktopSmokeWorkerProbe;delete window.__desktopSmokeWorkerQa;}
     }
     if (fixture) report.checks.visibility = await checkVisibility(fixture);
