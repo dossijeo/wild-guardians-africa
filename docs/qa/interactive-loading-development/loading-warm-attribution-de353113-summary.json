@@ -1,0 +1,157 @@
+{
+  "source": "de353113",
+  "scope": "Existing measurement fixture plus opt-in phase attribution, no GPU queries; nested phase/CPU/wait sums overlap and are not exclusive CPU/GPU",
+  "ready": 12018.100000023842,
+  "total": 16145.300000071526,
+  "frames": {
+    "count": 893,
+    "max": 83.10000000000036,
+    "over50": 4,
+    "over100": 0
+  },
+  "groups": {
+    "sync-crop-update": {
+      "count": 142,
+      "elapsedSumMs": 6.300000309944153,
+      "maxMs": 0.20000004768371582,
+      "budgetElapsedSumMs": 0
+    },
+    "restore-sync": {
+      "count": 1,
+      "elapsedSumMs": 2.600000023841858,
+      "maxMs": 2.600000023841858,
+      "budgetElapsedSumMs": 0
+    },
+    "hands-constructor": {
+      "count": 1,
+      "elapsedSumMs": 2.299999952316284,
+      "maxMs": 2.299999952316284,
+      "budgetElapsedSumMs": 0
+    },
+    "loading-compile-submit": {
+      "count": 195,
+      "elapsedSumMs": 102.39999902248383,
+      "maxMs": 5.699999928474426,
+      "budgetElapsedSumMs": 0
+    },
+    "loading-compile-readiness-wait": {
+      "count": 195,
+      "elapsedSumMs": 286.0000001192093,
+      "maxMs": 31.200000047683716,
+      "budgetElapsedSumMs": 0
+    },
+    "loading-budget-frame-wait": {
+      "count": 13,
+      "elapsedSumMs": 137.10000026226044,
+      "maxMs": 16.799999952316284,
+      "budgetElapsedSumMs": 275.099999666214
+    },
+    "warm-compile-staging": {
+      "count": 1,
+      "elapsedSumMs": 131.39999997615814,
+      "maxMs": 131.39999997615814,
+      "budgetElapsedSumMs": 0
+    },
+    "warm-compile-destruction": {
+      "count": 1,
+      "elapsedSumMs": 0.10000002384185791,
+      "maxMs": 0.10000002384185791,
+      "budgetElapsedSumMs": 0
+    },
+    "warm-compile-world": {
+      "count": 1,
+      "elapsedSumMs": 286.59999990463257,
+      "maxMs": 286.59999990463257,
+      "budgetElapsedSumMs": 0
+    },
+    "warm-prepare-depth": {
+      "count": 1,
+      "elapsedSumMs": 545,
+      "maxMs": 545,
+      "budgetElapsedSumMs": 0
+    },
+    "warm-program-bindings": {
+      "count": 1,
+      "elapsedSumMs": 119.60000002384186,
+      "maxMs": 119.60000002384186,
+      "budgetElapsedSumMs": 0
+    },
+    "warm-upload-textures": {
+      "count": 1,
+      "elapsedSumMs": 508.5,
+      "maxMs": 508.5,
+      "budgetElapsedSumMs": 0
+    },
+    "warm-draw-batches": {
+      "count": 1,
+      "elapsedSumMs": 760.1000000238419,
+      "maxMs": 760.1000000238419,
+      "budgetElapsedSumMs": 0
+    },
+    "warm-depth-capture": {
+      "count": 1,
+      "elapsedSumMs": 9.700000047683716,
+      "maxMs": 9.700000047683716,
+      "budgetElapsedSumMs": 0
+    },
+    "loading-frame-stage:0": {
+      "count": 3,
+      "elapsedSumMs": 4.899999976158142,
+      "maxMs": 4.5,
+      "budgetElapsedSumMs": 0
+    },
+    "loading-frame-stage:1": {
+      "count": 3,
+      "elapsedSumMs": 16.5,
+      "maxMs": 7.399999976158142,
+      "budgetElapsedSumMs": 0
+    },
+    "loading-frame-stage:2": {
+      "count": 3,
+      "elapsedSumMs": 3.9000000953674316,
+      "maxMs": 2.100000023841858,
+      "budgetElapsedSumMs": 0
+    },
+    "loading-frame-stage:3": {
+      "count": 3,
+      "elapsedSumMs": 29.100000023841858,
+      "maxMs": 22.700000047683716,
+      "budgetElapsedSumMs": 0
+    },
+    "loading-frame-stage:4": {
+      "count": 3,
+      "elapsedSumMs": 18.100000023841858,
+      "maxMs": 9.5,
+      "budgetElapsedSumMs": 0
+    },
+    "loading-frame-stage:5": {
+      "count": 3,
+      "elapsedSumMs": 2.700000047683716,
+      "maxMs": 2,
+      "budgetElapsedSumMs": 0
+    },
+    "loading-frame-stage:6": {
+      "count": 3,
+      "elapsedSumMs": 0.10000002384185791,
+      "maxMs": 0.10000002384185791,
+      "budgetElapsedSumMs": 0
+    },
+    "loading-frame-stage:7": {
+      "count": 3,
+      "elapsedSumMs": 0.10000002384185791,
+      "maxMs": 0.10000002384185791,
+      "budgetElapsedSumMs": 0
+    },
+    "loading-frame-draw": {
+      "count": 3,
+      "elapsedSumMs": 44.39999997615814,
+      "maxMs": 37.5,
+      "budgetElapsedSumMs": 0
+    }
+  },
+  "unattributedBeforeRestoreMs": 5095.099999999999,
+  "unattributedAfterDepthCaptureToWorldLoadMs": 2742.9000000000015,
+  "conclusion": "195 compile submissions CPU102.4ms, readinesswait286ms,13budget waits137.1ms do not explain whole readiness regression. Separate crop/native model/chunk phases and final fence/far attachment before any scheduling change.",
+  "done": true,
+  "errors": []
+}

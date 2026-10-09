@@ -142,21 +142,22 @@ export class WorldScene {
   }
   async load(state,nav,villagePayload,{farVegetation=false,loadingProgress=null}={}) {
     this.loadingProgress=loadingProgress;
-    const milestone=id=>this.loadingMilestone(id);
-    await this.loadReady(this.sky.load());this.toon.environment(this.sky.environmentTextures,this.sky.uniforms.uSkyYaw);this.destructionPass.environmentUniforms=this.toon.environmentUniforms;await milestone('sky');this.state=state;this.simElapsed=state.elapsed;this.nav=nav;this.destructionPass.surface=(x,z)=>nav.field.surface(x,z);this.pack=await this.loadReady(json('/content/biome-'+BIOME_IDS[state.biome]+'.json',{signal:this.loading.signal}));this.prototypes=await this.loadReady(this.assets.biome(this.pack));this.biomeGround=new BiomeGround();await this.loadReady(this.biomeGround.load(this.assets,BIOME_IDS[state.biome],this.pack.profile,this.nav.field));if(this.biomeGround.tile.mudPatches){this.mudPatches=new MudPatches();await this.loadReady(this.mudPatches.load(this.assets,this.biomeGround.tile.mudPatches));}this.contactPrototypes=contactPrototypes(this.pack,this.prototypes);this.waterPrototypes=this.pack.assets.map(nativeAssetWater);this.fluidLighting={textures:this.sky.environmentTextures,yaw:this.sky.uniforms.uSkyYaw,uniforms:this.toon.uniforms,shadowUniforms:this.toon.shadowUniforms};this.fluidMaterial=paintedWaterMaterial(this.pack.profile.colors.water,this.state.biome==='volcanes',this.nav.field.seed,null,this.fluidLighting);await milestone('biome');
-    this.villagePrototypes=await this.loadReady(this.assets.village(villagePayload));this.villageTemplates=new Map([[state.culture,this.villagePrototypes]]);
+    const phase=(label,run)=>loadingAwaitWitness(this.onLoadingSpan,label,run);
+    const milestone=id=>phase('load-milestone:'+id,()=>this.loadingMilestone(id));
+    await phase('load-sky',()=>this.loadReady(this.sky.load()));this.toon.environment(this.sky.environmentTextures,this.sky.uniforms.uSkyYaw);this.destructionPass.environmentUniforms=this.toon.environmentUniforms;await milestone('sky');this.state=state;this.simElapsed=state.elapsed;this.nav=nav;this.destructionPass.surface=(x,z)=>nav.field.surface(x,z);this.pack=await this.loadReady(json('/content/biome-'+BIOME_IDS[state.biome]+'.json',{signal:this.loading.signal}));this.prototypes=await phase('load-biome-models',()=>this.loadReady(this.assets.biome(this.pack)));this.biomeGround=new BiomeGround();await phase('load-biome-ground',()=>this.loadReady(this.biomeGround.load(this.assets,BIOME_IDS[state.biome],this.pack.profile,this.nav.field)));if(this.biomeGround.tile.mudPatches){this.mudPatches=new MudPatches();await this.loadReady(this.mudPatches.load(this.assets,this.biomeGround.tile.mudPatches));}this.contactPrototypes=contactPrototypes(this.pack,this.prototypes);this.waterPrototypes=this.pack.assets.map(nativeAssetWater);this.fluidLighting={textures:this.sky.environmentTextures,yaw:this.sky.uniforms.uSkyYaw,uniforms:this.toon.uniforms,shadowUniforms:this.toon.shadowUniforms};this.fluidMaterial=paintedWaterMaterial(this.pack.profile.colors.water,this.state.biome==='volcanes',this.nav.field.seed,null,this.fluidLighting);await milestone('biome');
+    this.villagePrototypes=await phase('load-village-models',()=>this.loadReady(this.assets.village(villagePayload)));this.villageTemplates=new Map([[state.culture,this.villagePrototypes]]);
     this.buildingCatalogue=(await this.loadReady(json('/content/destruction.json',{signal:this.loading.signal}))).buildings;
     await this.loadReady(Promise.all([...new Set([...state.villages.map(v=>v.culture),...state.structures.filter(s=>s.kind==='center').map(s=>centerCulture(s,state))])].map(culture=>this.ensureBuilding(culture))));await milestone('buildings');
     [this.models,this.workerLibraries,this.wateringPaths]=await this.loadReady(Promise.all([json('/content/models.json',{signal:this.loading.signal}),json('/content/worker-actions.json',{signal:this.loading.signal}),json('/content/watering-emitters.json',{signal:this.loading.signal})]));
     this.warmedAnimals=new Set();
     this.animalPreload=new AnimalPreload(this.assets,id=>this.models.find(m=>m.source.includes(animalSources[id])),{skinEnvelope:this.animalSkinEnvelope===true});
     this.raidEntryPreparer=new RaidEntryPreparer(this.nav);
-    await this.loadReady(this.warmAnimalModels(Object.keys(animalSources)));await milestone('animals');
+    await phase('load-animal-models',()=>this.loadReady(this.warmAnimalModels(Object.keys(animalSources))));await milestone('animals');
     for(const [profile,library] of Object.entries(this.workerLibraries)){const path=this.wateringPaths.profiles[profile];if(path?.sourceSha256!==library.sha256)throw Error('Recorrido de regadera desactualizado: '+profile);this.wateringEmitters.set(profile,createWateringEmitter(path));}
     const cropModel=this.models.find(m=>m.source.includes('Cultivos'));
-    const gltf=await this.loadReady(this.assets.model(cropModel.url));this.cropGltf=gltf;this.cropModels=Array(40);
+    const gltf=await phase('load-crop-model',()=>this.loadReady(this.assets.model(cropModel.url)));this.cropGltf=gltf;this.cropModels=Array(40);
     gltf.scene.traverse(o=>{if(o.isMesh){const i=o.userData.cropIndex*5+o.userData.stage-1;const mesh=new THREE.Mesh(o.geometry,o.material.clone());mesh.material.metalness=0;mesh.material.roughness=.91;mesh.material.metalnessMap=null;mesh.material.roughnessMap=null;mesh.castShadow=mesh.receiveShadow=true;this.cropModels[i]=mesh;}});
-    this.cropBridgeData=await this.loadReady(json('/content/crop-bridges.json',{signal:this.loading.signal}));this.cropBatch=loadingProgress?await createCropBatchAsync(this.scene,this.renderer,gltf,this.cropBridgeData,initialCropCapacity(state),{signal:this.loading.signal,cancelled:()=>this.disposed}):createCropBatch(this.scene,this.renderer,gltf,this.cropBridgeData);await milestone('crops');
+    this.cropBridgeData=await this.loadReady(json('/content/crop-bridges.json',{signal:this.loading.signal}));this.cropBatch=loadingProgress?await phase('load-crop-batch',()=>createCropBatchAsync(this.scene,this.renderer,gltf,this.cropBridgeData,initialCropCapacity(state),{signal:this.loading.signal,cancelled:()=>this.disposed})):createCropBatch(this.scene,this.renderer,gltf,this.cropBridgeData);await milestone('crops');
     this.wallPrototypes=await this.loadReady(this.assets.walls(await this.loadReady(json('/content/walls.json',{signal:this.loading.signal}))));await milestone('walls');
     const vfxCatalogue=await this.loadReady(json('/content/vfx.json',{signal:this.loading.signal}));this.vfxLibrary=new VfxLibrary(vfxCatalogue,await this.loadReady(this.assets.texture(vfxCatalogue.atlas)));
     this.workVfx=new WorkVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z),(id,time,effect)=>this.wateringSource(id,time,effect));
@@ -167,22 +168,22 @@ export class WorldScene {
     this.locomotionVfx=new LocomotionVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z),(x,z)=>this.nav.field.canyon?this.nav.field.waterInfo(x,z):null);await milestone('vfx');
     this.raidCamera=new RaidCameraDirector(this.camera,this.controls,nav.field);this.focusFarm();
     this.chunkStream=new NativeChunkStream(this.nav.config,this.pack.profile,{loaded:()=>this.chunks,onData:data=>this.installChunk(data),onError:error=>this.onError?.(error),onFallback:error=>console.warn('Generación local de chunks:',error.message??error)});
-    this.syncChunks();await this.loadReady(Promise.all([this.chunkStream.whenReady(),this.horizon.whenReady()]));if(this.disposed)throw new Error('Carga de mundo cancelada');this.syncChunks();await milestone('chunks');
+    this.syncChunks();await phase('load-chunks-horizon-ready',()=>this.loadReady(Promise.all([this.chunkStream.whenReady(),this.horizon.whenReady()])));if(this.disposed)throw new Error('Carga de mundo cancelada');this.syncChunks();await milestone('chunks');
     await this.loadReady(this.prepareSavedAnimalRigs(state));loadingSyncWitness(this.onLoadingSpan,'restore-sync',()=>this.sync(0));
     this.hands=loadingSyncWitness(this.onLoadingSpan,'hands-constructor',()=>new NativeHands(this.scene,(x,z)=>this.nav.field.surface(x,z),{motion:!matchMedia('(prefers-reduced-motion: reduce)').matches,onError:e=>this.onError?.(e)}));
-    await this.loadReady(this.hands.ready);
-    await this.loadReady(this.loadedAnimalActors());
-    if(this.loadingProgress)await this.loadReady(this.loadedWorkerActors());
+    await phase('load-hands-ready',()=>this.loadReady(this.hands.ready));
+    await phase('load-active-animal-actors',()=>this.loadReady(this.loadedAnimalActors()));
+    if(this.loadingProgress)await phase('load-worker-actors',()=>this.loadReady(this.loadedWorkerActors()));
     if(this.loadingProgress&&farVegetation){
       // Compile the eventual fog variant, not a temporary fog-free world. The
       // distant adapter uses this same linear-fog recipe at first presentation.
       const {farAtmosphere}=await import('./far-atmosphere.js'),atmosphere=farAtmosphere(farVegetation===true?{}:farVegetation);
       this.scene.fog=new THREE.Fog(atmosphere.fogDayColor,atmosphere.fogStart,atmosphere.fogEnd);
     }
-    await this.loadReady(this.warmAnimalGpu());await milestone('gpu');
+    await phase('load-warm-gpu',()=>this.loadReady(this.warmAnimalGpu()));await milestone('gpu');
     // Callers choose a configured horizon through the same loading/cancellation
     // boundary as every other asset; generic worlds may still omit it.
-    if(farVegetation){const {attachBiomeFarVegetation}=await import('./far-vegetation.js');await this.loadReady(attachBiomeFarVegetation(this,farVegetation===true?{}:farVegetation));}await milestone('far-assets');if(loadingProgress)this.assets.releaseLoadingImageDecoder();
+    if(farVegetation){const {attachBiomeFarVegetation}=await import('./far-vegetation.js');await phase('load-far-assets',()=>this.loadReady(attachBiomeFarVegetation(this,farVegetation===true?{}:farVegetation)));}await milestone('far-assets');if(loadingProgress)this.assets.releaseLoadingImageDecoder();
   }
   prepareSavedAnimalRigs(state){
     const group=state.raid?state.raid.animals.filter(a=>a.status!=='gone').map(a=>a.species):state.nightPlan&&!state.nightPlan.done?state.nightPlan.group??[]:[];
@@ -366,7 +367,7 @@ export class WorldScene {
       // including the staged animal skinning variants. Cached depth materials
       // retain their programs until their source material is disposed.
       loadingSyncWitness(this.onLoadingSpan,'warm-depth-capture',()=>this.destructionPass.captureDepth(this.camera,this.scene));
-      await waitForGpuPreload(this.renderer,{signal:this.loading.signal,cancelled:()=>this.disposed,getEpoch:()=>this.glResourceEpoch?.stats.epoch??0});if(this.disposed)return;
+      await phase('warm-final-fence',()=>waitForGpuPreload(this.renderer,{signal:this.loading.signal,cancelled:()=>this.disposed,getEpoch:()=>this.glResourceEpoch?.stats.epoch??0}));if(this.disposed)return;
       prepared=true;this.animalGpuReady=true;
     }finally{
       fluidPrimer?.dispose();
