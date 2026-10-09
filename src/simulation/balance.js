@@ -30,7 +30,8 @@ export const BALANCE = {
       "total_waters": 2,
       "water_tolerance_fraction": 1,
       "nominal_water_interval_seconds": 70.0,
-      "derived_tolerance_seconds": 70.0
+      "derived_tolerance_seconds": 70.0,
+      "base_attraction_value": 11
     },
     {
       "id": "girasol",
@@ -41,7 +42,8 @@ export const BALANCE = {
       "total_waters": 3,
       "water_tolerance_fraction": 0.6,
       "nominal_water_interval_seconds": 60.0,
-      "derived_tolerance_seconds": 36.0
+      "derived_tolerance_seconds": 36.0,
+      "base_attraction_value": 36
     },
     {
       "id": "sorgo",
@@ -52,7 +54,8 @@ export const BALANCE = {
       "total_waters": 2,
       "water_tolerance_fraction": 1,
       "nominal_water_interval_seconds": 110.0,
-      "derived_tolerance_seconds": 110.0
+      "derived_tolerance_seconds": 110.0,
+      "base_attraction_value": 13
     },
     {
       "id": "maiz",
@@ -63,7 +66,8 @@ export const BALANCE = {
       "total_waters": 3,
       "water_tolerance_fraction": 0.4,
       "nominal_water_interval_seconds": 90.0,
-      "derived_tolerance_seconds": 36.0
+      "derived_tolerance_seconds": 36.0,
+      "base_attraction_value": 17
     },
     {
       "id": "batata",
@@ -74,7 +78,8 @@ export const BALANCE = {
       "total_waters": 2,
       "water_tolerance_fraction": 0.8,
       "nominal_water_interval_seconds": 165.0,
-      "derived_tolerance_seconds": 132.0
+      "derived_tolerance_seconds": 132.0,
+      "base_attraction_value": 23
     },
     {
       "id": "algodon",
@@ -85,7 +90,8 @@ export const BALANCE = {
       "total_waters": 4,
       "water_tolerance_fraction": 0.75,
       "nominal_water_interval_seconds": 101.25,
-      "derived_tolerance_seconds": 75.9375
+      "derived_tolerance_seconds": 75.9375,
+      "base_attraction_value": 178
     },
     {
       "id": "yuca",
@@ -96,7 +102,8 @@ export const BALANCE = {
       "total_waters": 2,
       "water_tolerance_fraction": 1.2,
       "nominal_water_interval_seconds": 240.0,
-      "derived_tolerance_seconds": 288.0
+      "derived_tolerance_seconds": 288.0,
+      "base_attraction_value": 32
     },
     {
       "id": "platano",
@@ -107,7 +114,8 @@ export const BALANCE = {
       "total_waters": 6,
       "water_tolerance_fraction": 0.25,
       "nominal_water_interval_seconds": 95.0,
-      "derived_tolerance_seconds": 23.75
+      "derived_tolerance_seconds": 23.75,
+      "base_attraction_value": 267
     }
   ],
   "workers": {

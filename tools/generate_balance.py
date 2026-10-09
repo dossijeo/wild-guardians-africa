@@ -9,6 +9,9 @@ for animal in balance['animals']:
     animal['structure_hit_damage']=revisions['structure_hit_damage'][animal['id']]
 harvest_values=revisions.get('crop_harvest_values',{})
 plant_costs=revisions.get('crop_plant_costs',{})
+attraction_values=revisions.get('crop_attraction_values',{})
+assert set(attraction_values)<=set(c['id'] for c in balance['crops'])
+assert all(type(v) is int and v>0 for v in attraction_values.values())
 assert set(harvest_values)<=set(c['id'] for c in balance['crops'])
 assert all(type(v) is int and v>0 for v in harvest_values.values())
 assert set(plant_costs)<=set(c['id'] for c in balance['crops'])
@@ -16,6 +19,7 @@ assert all(type(v) is int and v>0 for v in plant_costs.values())
 for crop in balance['crops']:
     if crop['id'] in harvest_values:
         crop['base_harvest_value']=harvest_values[crop['id']]
+    crop['base_attraction_value']=attraction_values.get(crop['id'],crop['base_harvest_value'])
     if crop['id'] in plant_costs:
         crop['plant_cost']=plant_costs[crop['id']]
 boundaries=revisions['night_attraction_boundaries']

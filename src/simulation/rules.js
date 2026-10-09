@@ -22,7 +22,7 @@ export function permission(state,action) {
   if(action==='village')return state.postgame;
   return true;
 }
-export function attraction(plants) { return plants.filter(p=>p.alive).reduce((sum,p)=>sum+cropSpec(p.species).base_harvest_value,0); }
+export function attraction(plants) { return plants.filter(p=>p.alive).reduce((sum,p)=>sum+cropSpec(p.species).base_attraction_value,0); }
 export function threatTier(value) { return B.threat_tiers.find(t=>value>=t.attraction_min&&(t.attraction_max_exclusive===null||value<t.attraction_max_exclusive))??null; }
 export function compositions(budget,unlocked) {
   const species=B.animals.filter(a=>unlocked.includes(a.id));
