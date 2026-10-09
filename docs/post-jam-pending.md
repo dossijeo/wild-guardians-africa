@@ -809,3 +809,24 @@ el ritmo de Gran Cañón. El [diagnóstico de apertura actual](qa/canyon-opening
 acredita diferencias en primeras entregas y recorridos durante un día, sin
 demostrar todavía causa física ni aceptación de cien noches. No se han cambiado
 precios, salarios, ganancias ni la política del test para aprobar ese resultado.
+
+## Seguimiento de rutas físicas y Windows — 2026-10-09
+
+La comprobación posterior resolvió las Actions citadas arriba: Validate Game
+37926380301 SUCCESS; Windows37926380207 FAILURE en smoke, tras compilar el
+ejecutable y el instalador. El reporte indica que el mundo no terminó de cargar
+en90s; no acredita todavía la causa. El subagente de carga publicó diagnóstico
+sin cambios runtime en77d1ac01, run37929307286 todavía en ejecución al registrar
+esta nota. Se mantiene separado de la aceptación web y no se amplía el timeout
+para ocultar el fallo.
+
+Los dos desvíos reales de riego en Canyon/Sahelian tienen ahora una candidata
+geométrica previa a A*, con aristas verificadas contra el navegador nativo.
+Sobre los mismos estados, las consultas pasan de18–31ms a3–6ms aproximadamente;
+46 pruebas dirigidas pasan. La apertura Canyon entrega21 cajas frente a17;
+la apertura Savanna entrega28 frente a27. Esto cambia realmente el golden de
+ciclo de cultivo: no se ha reemplazado el hash ni promovido la candidata.
+Quedan adaptación del observador QA, regresión completa e inspección en juego.
+[Mediciones, estados y límites del ensayo](qa/watering-geometric-preflight/README.md).
+No se declara mejora GPU, aceptación móvil ni solución completa del ritmo
+de campaña a partir de estos ensayos de dominio.
