@@ -9,11 +9,31 @@
   addEventListener('error', fail); addEventListener('unhandledrejection', fail);
   const timeout = setTimeout(() => finish(new Error('Desktop smoke timed out')), 720000);
   let finished = false;
+  let worldStartedAt = null;
+  let worldReadyAt = null;
   async function finish(error) {
     if (finished) return;
     finished = true;
     clearTimeout(timeout);
     if (error) report.errors.push(String(error));
+    // Read presentation state only. This is diagnostic context, not proof of
+    // readiness or a GPU measurement; do not acquire another WebGL context.
+    try {
+      const stage = document.querySelector('#stage'), world = document.querySelector('#world');
+      const progress = document.querySelector('.interactive-loading-track');
+      report.checks.loadingAtFinish = {
+        worldWaitMs: worldStartedAt === null ? null : (worldReadyAt ?? performance.now()) - worldStartedAt,
+        readyGateReached: worldReadyAt !== null,
+        stageBusy: stage?.getAttribute('aria-busy') ?? null,
+        displayedProgress: progress?.getAttribute('aria-valuenow') ?? null,
+        phaseLabel: document.querySelector('.interactive-loading-title')?.textContent ?? null,
+        visibility: document.visibilityState, focused: document.hasFocus(),
+        canvas: world ? {width: world.width, height: world.height} : null,
+        scope: 'Presentation snapshot only; displayed progress and canvas dimensions do not establish world readiness or GPU identity.'
+      };
+    } catch (observationError) {
+      report.checks.loadingObservationError = String(observationError);
+    }
     report.ok = !error && report.errors.length === 0;
     await window.__TAURI_INTERNALS__.invoke('desktop_smoke_report', {report});
   }
@@ -115,9 +135,11 @@
     const fixture = await window.__TAURI_INTERNALS__.invoke('desktop_smoke_fixture');
     if (fixture) {localStorage.setItem('wild-guardians:slot:'+fixture.slotId,fixture.snapshot);send({action:'load-slot',slotId:fixture.slotId});}
     else send({action: 'start', biome: 'gran-canon', culture: 'mapungubwe'});
-    const worldEnd = performance.now() + 90000;
+    worldStartedAt = performance.now();
+    const worldEnd = worldStartedAt + 90000;
     while (document.querySelector('#stage')?.getAttribute('aria-busy') !== 'false' && performance.now() < worldEnd) await new Promise(resolve => setTimeout(resolve, 100));
     if (document.querySelector('#stage')?.getAttribute('aria-busy') !== 'false') throw Error('Production world did not finish loading');
+    worldReadyAt = performance.now();
     await new Promise(resolve => setTimeout(resolve, 1000));
     const world = document.querySelector('#world');
     if (!world || world.width === 0 || world.height === 0) throw Error('Production world canvas missing');
