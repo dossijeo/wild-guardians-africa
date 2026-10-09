@@ -12,6 +12,7 @@ import {evictOldest} from './fifo-eviction.js';
 import {gateFrameFootprints,gateSwingPolygon,gatePortalPoints} from './gate-passages.js';
 import {validActiveBounds} from './active-region.js';
 import {wallCollisionFrame,wallCollisionPolygon} from './wall-collision-frame.js';
+import {shortenBuildingRoute} from './building-route-shortcut.js';
 export const BIOME_IDS={sabana:'savanna','gran-rio':'grand_river',manglares:'mangrove',volcanes:'volcanoes','gran-canon':'canyons',desierto:'desert'};
 export const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 export class Navigation {
@@ -196,7 +197,7 @@ export class Navigation {
     if(prepared)return prepared.map(p=>({...p}));
     const reused=navigationQueryResult(this,key);if(reused)return reused;
     const found=this.findPath(start,end,radius,ignore,worker,margin);
-    const result=found&&worker?this.smoothPath(start,found,radius,ignore,worker):found;
+    const result=found&&worker?shortenBuildingRoute(this,start,end,this.smoothPath(start,found,radius,ignore,worker),radius,ignore):found;
     // Capacity pressure is not a geometry change. Retain other proven failures
     // instead of forcing up to 50,000 searches again after one new query.
     if(!result){if(this.failedPaths.size>=50000)evictOldest(this.failedPaths);this.failedPaths.add(key);}

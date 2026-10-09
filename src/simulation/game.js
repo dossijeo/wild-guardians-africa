@@ -1,3 +1,4 @@
+import {animalExitConnector} from './animal-exit-connectors.js';
 import {workerRiskClearance} from './worker-route-clearance.js';
 import {resolveFluidPlacement} from '../world/fluid-placement.js';
 import {ensurePurchaseBudget,HIRING_RESERVE} from './budget.js';
@@ -376,7 +377,10 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
       for(const margin of [16,32,64]){w.path=nav.path(w,routeVia,w.radius??.28,ignore,worker,margin);if(w.path)break;}
       if(w.path)w.path.push({x:destination.x,z:destination.z});
     }
-    if(!w.path&&expandRoute&&!worker)w.path=nav.propOverlapExitPath?.(w,destination,w.radius??.28,ignore,worker)??null;
+    if(!w.path&&expandRoute&&!worker){
+      w.path=nav.propOverlapExitPath?.(w,destination,w.radius??.28,ignore,worker)??null;
+      if(!w.path)w.path=animalExitConnector(w,destination,nav);
+    }
     if(!w.path&&worker&&!ignore&&['fleeing','returning','incapacitated'].includes(w.status))w.path=workerSlopeRecoveryPath(nav,w,destination,w.radius??.28);
     w.pathVersion=nav.version;
     if(!w.path)return false;

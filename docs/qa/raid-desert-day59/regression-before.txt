@@ -1,0 +1,934 @@
+TAP version 13
+# Subtest: recorded Desert day-59 opposing traffic finishes physically at dt=0.1
+not ok 1 - recorded Desert day-59 opposing traffic finishes physically at dt=0.1
+  ---
+  duration_ms: 999.7269
+  location: 'file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/raid-desert-deadlock.test.js:9:24'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected ... Lines skipped
+    
+    + {
+    +   animals: [
+    +     {
+    +       approach: {
+    +         id: 'approach-plant-64635-direct-0',
+    +         x: 88.50739375502505,
+    +         z: -2.800016078785852
+    +       },
+    +       approachShieldId: null,
+    +       attackId: null,
+    +       attackRemaining: 0,
+    +       destinationId: 'approach-plant-64635-direct-0',
+    +       exit: {
+    +         x: 98.18409628118397,
+    +         z: 9.95174832676712
+    +       },
+    +       heading: -2.24465424286852,
+    +       hitApplied: false,
+    +       hitsRemaining: 4,
+    +       id: 'animal-83365',
+    +       motionPhase: 7.288266934778941,
+    +       path: [
+    +         {
+    +           x: 88.50739375502505,
+    +           z: -2.800016078785852
+    +         }
+    +       ],
+    +       pathVersion: 1028,
+    +       radius: 1.1,
+    +       reservation: 'crop:plant-62399',
+    +       spawn: {
+    +         x: 97.86281087464897,
+    +         z: 6.969001993679502
+    +       },
+    +       species: 'warthog',
+    +       status: 'walking',
+    +       targetId: 'plant-64635',
+    +       x: 88.53085278770848,
+    +       z: 2.5937220466963993
+    +     },
+    +     {
+    +       approach: null,
+    +       approachShieldId: null,
+    +       attackId: null,
+    +       attackRemaining: 0,
+    +       destinationId: 'exit-animal-83366',
+    +       exit: {
+    +         x: 94.00825141486129,
+    +         z: 10.40154789591612
+    +       },
+    ...
+    - null
+    ...
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  actual:
+    id: 'raid-59-night'
+    animals:
+      0:
+        id: 'animal-83365'
+        species: 'warthog'
+        x: 88.53085278770848
+        z: 2.5937220466963993
+        spawn:
+          x: 97.86281087464897
+          z: 6.969001993679502
+        exit:
+          x: 98.18409628118397
+          z: 9.95174832676712
+        radius: 1.1
+        hitsRemaining: 4
+        status: 'walking'
+        targetId: 'plant-64635'
+        reservation: 'crop:plant-62399'
+        path:
+          0:
+            x: 88.50739375502505
+            z: -2.800016078785852
+        attackRemaining: 0
+        hitApplied: false
+        approach:
+          id: 'approach-plant-64635-direct-0'
+          x: 88.50739375502505
+          z: -2.800016078785852
+        destinationId: 'approach-plant-64635-direct-0'
+        pathVersion: 1028
+        motionPhase: 7.288266934778941
+        heading: -2.24465424286852
+      1:
+        id: 'animal-83366'
+        species: 'warthog'
+        x: 88.96139627459564
+        z: 0.37270704078269307
+        spawn:
+          x: 93.6869660083263
+          z: 7.418801562828502
+        exit:
+          x: 94.00825141486129
+          z: 10.40154789591612
+        radius: 1.1
+        hitsRemaining: 0
+        status: 'retreating'
+        path:
+          0:
+            x: 89
+            z: 1
+          1:
+            x: 89
+            z: 2
+          2:
+            x: 89
+            z: 3
+          3:
+            x: 90
+            z: 4
+          4:
+            x: 91
+            z: 5
+          5:
+            x: 92
+            z: 6
+          6:
+            x: 93
+            z: 7
+          7:
+            x: 93
+            z: 8
+          8:
+            x: 93
+            z: 9
+          9:
+            x: 94.00825141486129
+            z: 10.40154789591612
+        attackRemaining: 0
+        hitApplied: false
+        destinationId: 'exit-animal-83366'
+        pathVersion: 1028
+        motionPhase: 7.088266934778941
+        heading: -0.059941335690894264
+      2:
+        id: 'animal-83367'
+        species: 'warthog'
+        x: 89.83240654853863
+        z: 10.851347465065123
+        spawn:
+          x: 89.51112114200363
+          z: 7.8686011319775035
+        exit:
+          x: 89.83240654853863
+          z: 10.851347465065123
+        radius: 1.1
+        hitsRemaining: 0
+        status: 'gone'
+        path:
+        attackRemaining: 0
+        attackId: 'attack-109930'
+        hitApplied: true
+        destinationId: 'exit-animal-83367'
+        pathVersion: 985
+        motionPhase: 11.995629308819401
+        heading: 0.9526322713628973
+        animation: 'Weapon_Combo_2'
+        attackDuration: 4.541666824370623
+      3:
+        id: 'animal-83368'
+        species: 'rhino'
+        x: 98.66066963421088
+        z: 14.376155387513755
+        spawn:
+          x: 98.33938422767588
+          z: 11.393409054426137
+        exit:
+          x: 98.66066963421088
+          z: 14.376155387513755
+        radius: 1.55
+        hitsRemaining: 0
+        status: 'gone'
+        path:
+        attackRemaining: 0
+        attackId: 'attack-109958'
+        hitApplied: true
+        destinationId: 'exit-animal-83368'
+        pathVersion: 987
+        motionPhase: 78.22981347667015
+        heading: 0.7776257637736114
+        animation: 'Right_Hand_Sword_Slash'
+        attackDuration: 1.541666705161333
+    encounters:
+    reservations:
+      crop:plant-62399: 'animal-83365'
+    daytime: false
+    encounterContacts:
+    encounterHits:
+    encounterPositions:
+      animal-83365:
+        x: 88.53085278770848
+        z: 2.5937220466963993
+      animal-83366:
+        x: 88.96139627459564
+        z: 0.37270704078269307
+      animal-83367:
+        x: 89.83240654853863
+        z: 10.851347465065123
+      animal-83368:
+        x: 98.66066963421088
+        z: 14.376155387513755
+      worker-77586:
+        x: 86.26016359822067
+        z: 22.166756389498303
+      worker-77618:
+        x: 87.78213038988886
+        z: 23.72220141610818
+      worker-81184:
+        x: 88
+        z: 0
+      worker-81185:
+        x: 88
+        z: 0
+      worker-81186:
+        x: 88
+        z: 0
+      worker-81187:
+        x: 88
+        z: 0
+      worker-81188:
+        x: 88
+        z: 0
+      worker-81189:
+        x: 88
+        z: 0
+      worker-81190:
+        x: 88
+        z: 0
+      worker-81191:
+        x: 88.93808918182799
+        z: -1.0102498881224895
+      worker-81192:
+        x: 88
+        z: 0
+      worker-81193:
+        x: 88
+        z: 0
+      worker-81194:
+        x: 88.94919919177956
+        z: -1.0222145142241759
+      worker-81195:
+        x: 88
+        z: 0
+      worker-81196:
+        x: 88
+        z: 0
+      worker-81197:
+        x: 88
+        z: 0
+      worker-81198:
+        x: 88
+        z: 0
+      worker-81199:
+        x: 88
+        z: 0
+      worker-81200:
+        x: 88
+        z: 0
+      worker-81201:
+        x: 88
+        z: 0
+      worker-81202:
+        x: 88
+        z: 0
+      worker-81203:
+        x: 88
+        z: 0
+      worker-81204:
+        x: 88
+        z: 0
+      worker-81205:
+        x: 88
+        z: 0
+      worker-81206:
+        x: 88
+        z: 0
+      worker-81207:
+        x: 88
+        z: 0
+      worker-81208:
+        x: 88
+        z: 0
+      worker-81209:
+        x: 88.99698910269727
+        z: -1.0736805721355596
+      worker-81210:
+        x: 88
+        z: 0
+      worker-81211:
+        x: 88
+        z: 0
+      worker-81212:
+        x: 88
+        z: 0
+      worker-81213:
+        x: 88
+        z: 0
+      worker-81214:
+        x: 87.00670326866793
+        z: 23.587378764700798
+      worker-81215:
+        x: 88
+        z: 0
+      worker-81216:
+        x: 88
+        z: 0
+      worker-81217:
+        x: 88
+        z: 0
+      worker-81218:
+        x: 88
+        z: 0
+      worker-81219:
+        x: 88.99237403822296
+        z: -1.0687105027016897
+      worker-81220:
+        x: 88
+        z: 0
+      worker-81221:
+        x: 88.21984870570355
+        z: -0.8698866869750206
+      worker-81222:
+        x: 88.94284341492472
+        z: -1.0153698314574309
+      worker-81223:
+        x: 88
+        z: 0
+      worker-81224:
+        x: 88
+        z: 0
+      worker-81225:
+        x: 88
+        z: 0
+      worker-81226:
+        x: 88.95204601769778
+        z: -1.0252803267514934
+      worker-81227:
+        x: 88
+        z: 0
+      worker-81228:
+        x: 88
+        z: 0
+      worker-81229:
+        x: 88.14296771533053
+        z: -0.7971905864983709
+      worker-81230:
+        x: 88
+        z: 0
+      worker-81231:
+        x: 88
+        z: 0
+      worker-81232:
+        x: 88.97940070389501
+        z: -1.0547392195792809
+      worker-81233:
+        x: 88.98503068409799
+        z: -1.0608022751824895
+      worker-81234:
+        x: 88.95116172845815
+        z: -1.0243280152626482
+      worker-81235:
+        x: 88
+        z: 0
+      worker-81236:
+        x: 88
+        z: 0
+      worker-81237:
+        x: 88
+        z: 0
+      worker-81238:
+        x: 88
+        z: 0
+      worker-81239:
+        x: 88
+        z: 0
+      worker-81240:
+        x: 88
+        z: 0
+      worker-81241:
+        x: 88
+        z: 0
+      worker-81242:
+        x: 88
+        z: 0
+      worker-81243:
+        x: 88
+        z: 0
+      worker-81244:
+        x: 88
+        z: 0
+      worker-81245:
+        x: 88
+        z: 0
+      worker-81246:
+        x: 88
+        z: 0
+      worker-81247:
+        x: 88
+        z: 0
+      worker-81248:
+        x: 88
+        z: 0
+      worker-81249:
+        x: 88
+        z: 0
+      worker-81250:
+        x: 88.9896131861914
+        z: -1.0657372774369382
+      worker-81251:
+        x: 88
+        z: 0
+      worker-81252:
+        x: 88
+        z: 0
+      worker-81253:
+        x: 88
+        z: 0
+      worker-81255:
+        x: 88
+        z: 0
+      worker-81257:
+        x: 88
+        z: 0
+      worker-81259:
+        x: 88
+        z: 0
+      worker-81261:
+        x: 88.93786393903845
+        z: -1.0100073189645118
+      worker-81263:
+        x: 88.9828430946433
+        z: -1.0584464096158939
+      worker-81265:
+        x: 88
+        z: 0
+      worker-81267:
+        x: 88
+        z: 0
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/raid-desert-deadlock.test.js:30:41)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.start (node:internal/test_runner/test:542:17)
+    startSubtest (node:internal/test_runner/harness:216:17)
+  ...
+# Subtest: recorded Desert day-59 opposing traffic finishes physically at dt=1
+not ok 2 - recorded Desert day-59 opposing traffic finishes physically at dt=1
+  ---
+  duration_ms: 776.9736
+  location: 'file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/raid-desert-deadlock.test.js:9:24'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected ... Lines skipped
+    
+    + {
+    +   animals: [
+    +     {
+    +       approach: {
+    +         id: 'approach-plant-64635-direct-0',
+    +         x: 88.50739375502505,
+    +         z: -2.800016078785852
+    +       },
+    +       approachShieldId: null,
+    +       attackId: null,
+    +       attackRemaining: 0,
+    +       destinationId: 'approach-plant-64635-direct-0',
+    +       exit: {
+    +         x: 98.18409628118397,
+    +         z: 9.95174832676712
+    +       },
+    +       heading: -2.24465424286852,
+    +       hitApplied: false,
+    +       hitsRemaining: 4,
+    +       id: 'animal-83365',
+    +       motionPhase: 7.288266934778941,
+    +       path: [
+    +         {
+    +           x: 88.50739375502505,
+    +           z: -2.800016078785852
+    +         }
+    +       ],
+    +       pathVersion: 1028,
+    +       radius: 1.1,
+    +       reservation: 'crop:plant-62399',
+    +       spawn: {
+    +         x: 97.86281087464897,
+    +         z: 6.969001993679502
+    +       },
+    +       species: 'warthog',
+    +       status: 'walking',
+    +       targetId: 'plant-64635',
+    +       x: 88.53085278770848,
+    +       z: 2.5937220466963993
+    +     },
+    +     {
+    +       approach: null,
+    +       approachShieldId: null,
+    +       attackId: null,
+    +       attackRemaining: 0,
+    +       destinationId: 'exit-animal-83366',
+    +       exit: {
+    +         x: 94.00825141486129,
+    +         z: 10.40154789591612
+    +       },
+    ...
+    - null
+    ...
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  actual:
+    id: 'raid-59-night'
+    animals:
+      0:
+        id: 'animal-83365'
+        species: 'warthog'
+        x: 88.53085278770848
+        z: 2.5937220466963993
+        spawn:
+          x: 97.86281087464897
+          z: 6.969001993679502
+        exit:
+          x: 98.18409628118397
+          z: 9.95174832676712
+        radius: 1.1
+        hitsRemaining: 4
+        status: 'walking'
+        targetId: 'plant-64635'
+        reservation: 'crop:plant-62399'
+        path:
+          0:
+            x: 88.50739375502505
+            z: -2.800016078785852
+        attackRemaining: 0
+        hitApplied: false
+        approach:
+          id: 'approach-plant-64635-direct-0'
+          x: 88.50739375502505
+          z: -2.800016078785852
+        destinationId: 'approach-plant-64635-direct-0'
+        pathVersion: 1028
+        motionPhase: 7.288266934778941
+        heading: -2.24465424286852
+      1:
+        id: 'animal-83366'
+        species: 'warthog'
+        x: 88.96139627459564
+        z: 0.37270704078269307
+        spawn:
+          x: 93.6869660083263
+          z: 7.418801562828502
+        exit:
+          x: 94.00825141486129
+          z: 10.40154789591612
+        radius: 1.1
+        hitsRemaining: 0
+        status: 'retreating'
+        path:
+          0:
+            x: 89
+            z: 1
+          1:
+            x: 89
+            z: 2
+          2:
+            x: 89
+            z: 3
+          3:
+            x: 90
+            z: 4
+          4:
+            x: 91
+            z: 5
+          5:
+            x: 92
+            z: 6
+          6:
+            x: 93
+            z: 7
+          7:
+            x: 93
+            z: 8
+          8:
+            x: 93
+            z: 9
+          9:
+            x: 94.00825141486129
+            z: 10.40154789591612
+        attackRemaining: 0
+        hitApplied: false
+        destinationId: 'exit-animal-83366'
+        pathVersion: 1028
+        motionPhase: 7.088266934778941
+        heading: -0.059941335690894264
+      2:
+        id: 'animal-83367'
+        species: 'warthog'
+        x: 89.83240654853863
+        z: 10.851347465065123
+        spawn:
+          x: 89.51112114200363
+          z: 7.8686011319775035
+        exit:
+          x: 89.83240654853863
+          z: 10.851347465065123
+        radius: 1.1
+        hitsRemaining: 0
+        status: 'gone'
+        path:
+        attackRemaining: 0
+        attackId: 'attack-109930'
+        hitApplied: true
+        destinationId: 'exit-animal-83367'
+        pathVersion: 985
+        motionPhase: 11.995629308819401
+        heading: 0.9526322713628973
+        animation: 'Weapon_Combo_2'
+        attackDuration: 4.541666824370623
+      3:
+        id: 'animal-83368'
+        species: 'rhino'
+        x: 98.66066963421088
+        z: 14.376155387513755
+        spawn:
+          x: 98.33938422767588
+          z: 11.393409054426137
+        exit:
+          x: 98.66066963421088
+          z: 14.376155387513755
+        radius: 1.55
+        hitsRemaining: 0
+        status: 'gone'
+        path:
+        attackRemaining: 0
+        attackId: 'attack-109958'
+        hitApplied: true
+        destinationId: 'exit-animal-83368'
+        pathVersion: 987
+        motionPhase: 78.22981347667015
+        heading: 0.7776257637736114
+        animation: 'Right_Hand_Sword_Slash'
+        attackDuration: 1.541666705161333
+    encounters:
+    reservations:
+      crop:plant-62399: 'animal-83365'
+    daytime: false
+    encounterContacts:
+    encounterHits:
+    encounterPositions:
+      animal-83365:
+        x: 88.53085278770848
+        z: 2.5937220466963993
+      animal-83366:
+        x: 88.96139627459564
+        z: 0.37270704078269307
+      animal-83367:
+        x: 89.83240654853863
+        z: 10.851347465065123
+      animal-83368:
+        x: 98.66066963421088
+        z: 14.376155387513755
+      worker-77586:
+        x: 86.26016359822067
+        z: 22.166756389498303
+      worker-77618:
+        x: 87.78213038988886
+        z: 23.72220141610818
+      worker-81184:
+        x: 88
+        z: 0
+      worker-81185:
+        x: 88
+        z: 0
+      worker-81186:
+        x: 88
+        z: 0
+      worker-81187:
+        x: 88
+        z: 0
+      worker-81188:
+        x: 88
+        z: 0
+      worker-81189:
+        x: 88
+        z: 0
+      worker-81190:
+        x: 88
+        z: 0
+      worker-81191:
+        x: 88.93808918182799
+        z: -1.0102498881224895
+      worker-81192:
+        x: 88
+        z: 0
+      worker-81193:
+        x: 88
+        z: 0
+      worker-81194:
+        x: 88.94919919177956
+        z: -1.0222145142241759
+      worker-81195:
+        x: 88
+        z: 0
+      worker-81196:
+        x: 88
+        z: 0
+      worker-81197:
+        x: 88
+        z: 0
+      worker-81198:
+        x: 88
+        z: 0
+      worker-81199:
+        x: 88
+        z: 0
+      worker-81200:
+        x: 88
+        z: 0
+      worker-81201:
+        x: 88
+        z: 0
+      worker-81202:
+        x: 88
+        z: 0
+      worker-81203:
+        x: 88
+        z: 0
+      worker-81204:
+        x: 88
+        z: 0
+      worker-81205:
+        x: 88
+        z: 0
+      worker-81206:
+        x: 88
+        z: 0
+      worker-81207:
+        x: 88
+        z: 0
+      worker-81208:
+        x: 88
+        z: 0
+      worker-81209:
+        x: 88.99698910269727
+        z: -1.0736805721355596
+      worker-81210:
+        x: 88
+        z: 0
+      worker-81211:
+        x: 88
+        z: 0
+      worker-81212:
+        x: 88
+        z: 0
+      worker-81213:
+        x: 88
+        z: 0
+      worker-81214:
+        x: 87.00670326866793
+        z: 23.587378764700798
+      worker-81215:
+        x: 88
+        z: 0
+      worker-81216:
+        x: 88
+        z: 0
+      worker-81217:
+        x: 88
+        z: 0
+      worker-81218:
+        x: 88
+        z: 0
+      worker-81219:
+        x: 88.99237403822296
+        z: -1.0687105027016897
+      worker-81220:
+        x: 88
+        z: 0
+      worker-81221:
+        x: 88.21984870570355
+        z: -0.8698866869750206
+      worker-81222:
+        x: 88.94284341492472
+        z: -1.0153698314574309
+      worker-81223:
+        x: 88
+        z: 0
+      worker-81224:
+        x: 88
+        z: 0
+      worker-81225:
+        x: 88
+        z: 0
+      worker-81226:
+        x: 88.95204601769778
+        z: -1.0252803267514934
+      worker-81227:
+        x: 88
+        z: 0
+      worker-81228:
+        x: 88
+        z: 0
+      worker-81229:
+        x: 88.14296771533053
+        z: -0.7971905864983709
+      worker-81230:
+        x: 88
+        z: 0
+      worker-81231:
+        x: 88
+        z: 0
+      worker-81232:
+        x: 88.97940070389501
+        z: -1.0547392195792809
+      worker-81233:
+        x: 88.98503068409799
+        z: -1.0608022751824895
+      worker-81234:
+        x: 88.95116172845815
+        z: -1.0243280152626482
+      worker-81235:
+        x: 88
+        z: 0
+      worker-81236:
+        x: 88
+        z: 0
+      worker-81237:
+        x: 88
+        z: 0
+      worker-81238:
+        x: 88
+        z: 0
+      worker-81239:
+        x: 88
+        z: 0
+      worker-81240:
+        x: 88
+        z: 0
+      worker-81241:
+        x: 88
+        z: 0
+      worker-81242:
+        x: 88
+        z: 0
+      worker-81243:
+        x: 88
+        z: 0
+      worker-81244:
+        x: 88
+        z: 0
+      worker-81245:
+        x: 88
+        z: 0
+      worker-81246:
+        x: 88
+        z: 0
+      worker-81247:
+        x: 88
+        z: 0
+      worker-81248:
+        x: 88
+        z: 0
+      worker-81249:
+        x: 88
+        z: 0
+      worker-81250:
+        x: 88.9896131861914
+        z: -1.0657372774369382
+      worker-81251:
+        x: 88
+        z: 0
+      worker-81252:
+        x: 88
+        z: 0
+      worker-81253:
+        x: 88
+        z: 0
+      worker-81255:
+        x: 88
+        z: 0
+      worker-81257:
+        x: 88
+        z: 0
+      worker-81259:
+        x: 88
+        z: 0
+      worker-81261:
+        x: 88.93786393903845
+        z: -1.0100073189645118
+      worker-81263:
+        x: 88.9828430946433
+        z: -1.0584464096158939
+      worker-81265:
+        x: 88
+        z: 0
+      worker-81267:
+        x: 88
+        z: 0
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/raid-desert-deadlock.test.js:30:41)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async startSubtest (node:internal/test_runner/harness:216:3)
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 0
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1948.5354

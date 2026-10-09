@@ -730,3 +730,24 @@ terminada sininforme en día82 sigue sinconsiderarse aprobada. [Cinco jobs
 remotos adicionales](qa/campaign-ci/mapungubwe-expansion-33937b92/README.md)
 expanden Mapungubwe a GranRío/GranCañón/Volcanes/Manglares/Desierto desde
 33937b92, sinCPU/GPU local; no contar dispatch como resultado.
+
+## Ampliación de campañas y actividad pendiente — 2026-10-09
+
+[Siete campañas descargadas y auditadas](qa/campaign-ci/expansion-audit-2026-10-09.json)
+terminan las 100 noches con entregas físicas, contabilidad reconciliada y todos
+los hashes de fuente contrastados con su commit inmutable. Cinco cumplen el
+umbral de actividad: Manglares/Mapungubwe 18,1233 %, Sabana/Saheliana 21,9733 %,
+Gran Río/Saheliana 21,89 %, Volcanes/Saheliana 24,91 % y Manglares/Saheliana
+19,5867 %. Gran Cañón/Mapungubwe 42,3767 % y Gran Cañón/Saheliana 48,3833 %
+no cumplen: revisar recorridos, capacidad de trabajo y economía sin maquillar
+el test ni sustituir la semilla. La victoria no basta para aprobar la actividad.
+
+El auditor `tools/audit_intensive_artifact.mjs` reproduce el resumen completo
+desde el snapshot y contrasta las fuentes mediante `git archive`, sin tocar
+checkouts. Distingue las fuentes actuales de la campaña congelada; no acredita
+una nueva campaña con main, renderizado, móvil físico ni toda la matriz de 30.
+
+El reintento Desierto/Saheliana 37870712064 conserva un nuevo bloqueo de retirada
+en la noche 28. La corrección de la noche 25 no lo resuelve: se investiga en
+`codex/raid-fractional-exit`, con snapshot exacto, movimiento físico normal y
+pruebas de persistencia y coste acotado. No se considera aprobada esa campaña.

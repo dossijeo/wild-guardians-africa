@@ -9,3 +9,5 @@ Results:23418 planted crops,21763 physically delivered crates,1424 maximum livin
 This proves one responsible native simulation for one biome/culture/seed/strategy. It is not the thirty-case matrix, graphical worker-path QA, perceptual audio, physical mobile acceptance or a loading benchmark. The independent poor-management six-biome diagnostic is archived separately. Five further Mapungubwe biome jobs were dispatched from33937b92 and remain separate runs.
 
 Files above10KB are gzip-compressed without content changes; `receipt.json` stores uncompressed byte lengths and SHA256s. The retained auditor was executed from `.cache/audit-responsible-37863639171.mjs` in the repository root; it reads the extracted artifact at `.cache/campaign-qa-37863639171/responsible/`. Its relative imports are valid there, not from this archival directory. It performs no simulation rerun.
+
+Source comparison was performed on root c8b893be before the later bfa29ef9 world-depth upload-order correction. Both later renderer changes are outside the native simulation input path; no newer rendered campaign is inferred.

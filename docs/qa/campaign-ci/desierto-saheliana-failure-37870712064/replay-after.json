@@ -1,0 +1,47 @@
+{
+  "node": "v20.11.0",
+  "platform": "win32",
+  "fallbackMilliseconds": {
+    "samples": 68,
+    "p50": 0.6539999999999964,
+    "p95": 2.299299999999988,
+    "max": 23.6819
+  },
+  "maxSerializedSearchBytes": 26381,
+  "maxNodes": 499,
+  "maxOpen": 67,
+  "pathPoints": 41,
+  "replays": [
+    {
+      "dt": 0.1,
+      "simulated": 16.29999999999996,
+      "day": 29,
+      "pauses": [
+        "hiring"
+      ],
+      "maxStep": 0.3800000000000056,
+      "frameMilliseconds": {
+        "samples": 163,
+        "p50": 0.1290000000000191,
+        "p95": 1.4956999999999994,
+        "max": 39.38010000000003
+      }
+    },
+    {
+      "dt": 1,
+      "simulated": 17,
+      "day": 29,
+      "pauses": [
+        "hiring"
+      ],
+      "maxStep": 3.8000000000000123,
+      "frameMilliseconds": {
+        "samples": 17,
+        "p50": 0.9155999999999835,
+        "p95": 38.63459999999998,
+        "max": 38.63459999999998
+      }
+    }
+  ],
+  "scope": "CPU cold diagnostics; no GPU claim, full campaign or performance acceptance"
+}

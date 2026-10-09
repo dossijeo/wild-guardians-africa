@@ -8,6 +8,9 @@ export function animalRouteClearance(actor,nav,{radius,ignore,escapeProps=false}
  let blocked=false;
  const clear=(start,end)=>{
   if(dynamicClear&&!dynamicClear(start,end))return false;
+  // A sampled prefix does not prove that the actual footprint landing is on
+  // a legal slope. Keep the native limit even when reusing that prefix.
+  if(nav.terrainValid&&!nav.terrainValid(end.x,end.z,radius,false)){blocked=true;verified.delete(actor);return false;}
   if(!actorFluidClear(nav,end,radius)){blocked=true;verified.delete(actor);return false;}
   const point=actor.path[0];if(!point)return true;
   const cached=verified.get(actor);
