@@ -627,8 +627,9 @@ trabajo de descarga; no simular una fase de red. Descargas faltantes aumentan el
 trabajo total estimado, manteniendo progreso monótono y100% solamente tras
 readiness real. Verificar caché fría/caliente/parcial y red lenta, sin descargar
 recursos dos veces para medir. Distinguir observación real de estimaciones cuando
-caché o longitud de transferencia no sean observables. Pendiente de implementación
-y evidencia en rama; no aprobado por mera comunicación del requisito.
+caché o longitud de transferencia no sean observables. El requisito tiene ahora
+implementación y un primer ensayo V4 en la rama (actualización al final);
+calibración y cobertura fría/caliente/parcial/lenta siguen pendientes.
 # Regresión estática de aislamiento GPU, 2026-10-08
 
 [Seis biomas y control Manglares](qa/native-isolation-static/README.md): runtime
@@ -755,4 +756,31 @@ pruebas de persistencia y coste acotado. No se considera aprobada esa campaña.
 
 ## Barrido completo de SFX y contexto runtime (9 de octubre de 2026)
 
-126 entradas auditadas reproduciblemente: 100 asignaciones compatibles en revisión de fuente, 12 reservas de alcance, 10 alternativas sin asignar y cuatro excepciones de contexto; cero duplicados de bytes. [Inventario y revisión](qa/sfx-catalog-post-jam/binding-review.md). Se separan declaraciones, llamadas actuales y menciones latentes. Sin nuevos disparadores inventados ni cambio de audio original. La aceptación perceptual/runtime de cada clip continúa pendiente; este barrido de código no acredita escucha de los 126 SFX. Pendiente revisión de PR de auditoría.
+126 entradas auditadas reproduciblemente: 100 asignaciones compatibles en revisión de fuente, 12 reservas de alcance, 10 alternativas sin asignar y cuatro excepciones de contexto; cero duplicados de bytes. [Inventario y revisión](qa/sfx-catalog-post-jam/binding-review.md). Se separan declaraciones, llamadas actuales y menciones latentes. Sin nuevos disparadores inventados ni cambio de audio original. La aceptación perceptual/runtime de cada clip continúa pendiente; este barrido de código no acredita escucha de los 126 SFX. Auditoría integrada mediante PR14, merge6ce847a9; no queda pendiente su merge.
+
+## Actualización de aceptación y carga V4 — 2026-10-09
+
+El usuario acepta la fluidez de cámara de la última versión probada: cierre
+del pendiente de traveling y suspensión de nuevas investigaciones, con
+[alcance y reapertura por regresión](qa/streaming-travel-dense/user-acceptance-2026-10-09.md).
+Las notas históricas sobre microsaltos no constituyen un bloqueo actual.
+
+Cultivos V4 del lab del usuario integrados en main mediante PR17/81d87953:
+[revisión root y gates](qa/crops-v4-root-integration-review.md). FrontSide
+en color/sombras/depth, ocho especies/cinco estados/32 puentes horneados.
+Validate3383/3383 y build/paquete pasan; Windows continúa por separado.
+
+En feature/interactive-loading-screen, fuente3101dbff, root ejecutó el primer
+New V4 nativo Sabana/Mapungubwe/media/seed712. Inicialización13911,4ms y
+control18011,5ms;1012 intervalos RAF, máximo116,5ms, cuatro>50ms y uno>100ms.
+Estado/cámara preservados, errors vacíos, descargas pending0 y cleanup con
+context lost. Cada GLB V4 tiene un cuerpo de red y una reutilización de caché
+de aplicación con cero bytes; ambos forman parte del informe de descarga.
+Originales report/cleanup/console/ready.jpg en la rama, directorio
+`docs/qa/interactive-loading-development/v4-root-new-3101dbff/`.
+
+Es una fixture instrumentada silenciada, no menú real, ABBA, caché controlada,
+red lenta, Continue ni aceptación de seis biomas. Conserva warnings ANGLE
+f_environment4. No se heredan métricas V3 ni se declara mejora de rendimiento.
+La regresión de inicialización, calibración de progreso y gates originales
+de loading siguen abiertos; no PR todavía.
