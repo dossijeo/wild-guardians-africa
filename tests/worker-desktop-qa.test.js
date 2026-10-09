@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import {SceneMaterialRegistry} from '../src/rendering/material-registry.js';
 import {workerFrontsideNames} from '../tools/lib/worker-frontside-pilot.mjs';
-import {WorkerDesktopQa,prepareWorkerQaMaterials,workerQaEnabled,workerQaCases,WORKER_QA_SOURCE} from '../src/rendering/worker-desktop-qa.js';
+import {WorkerDesktopQa,prepareWorkerQaMaterials,workerQaEnabled,workerQaCases,selectWorkerQaCases,snapshotWorkerQaMixer,restoreWorkerQaMixer,observeSelectedDraws,WORKER_QA_SOURCE} from '../src/rendering/worker-desktop-qa.js';
 
 function fixture(){
  const geometry=new THREE.BoxGeometry(),body=new THREE.Mesh(geometry,new THREE.MeshStandardMaterial({side:THREE.FrontSide})),model=new THREE.Group(),parent=new THREE.Group(),associations=new Map();body.name='Mesh0';model.add(body);parent.add(model);
@@ -27,4 +27,29 @@ test('decorated source or association mismatch fails before aliases exist',()=>{
 test('native-hide cancellation restores world/camera/borrowed identities, releases owned aliases, keeps renderer',async()=>{
  const f=fixture(),owner=new WorkerDesktopQa(f.world);owner.adopt(f.rig,f.gltf,f.descriptor);const before=JSON.stringify(f.world.state),camera=f.world.camera.position.clone(),pending=owner.start({limit:1});f.world.state.time=450;f.world.controls.enabled=false;f.world.camera.position.set(10,20,30);const previous=globalThis.document;globalThis.document={hidden:true};try{assert.equal(owner.frame(),true);}finally{if(previous===undefined)delete globalThis.document;else globalThis.document=previous;}
  const report=await pending;assert.match(report.errors[0],/cancelled/);assert.equal(JSON.stringify(f.world.state),before);assert.ok(f.world.camera.position.equals(camera));assert.equal(report.cleanup.stateExact,true);assert.equal(report.cleanup.borrowedGeometryAttributesExact,true);assert.equal(report.cleanup.borrowedDisposeEvents,0);assert.equal(report.cleanup.ownedMaterialsRemaining,0);assert.equal(report.cleanup.rendererRetained,true);assert.equal(f.geometryDisposed,0);assert.ok(owner.pilot.entries.every(e=>e.mesh.material===e.source));owner.dispose();assert.equal(globalThis.__desktopSmokeWorkerProbe,undefined);
+});
+
+test('bounded explicit selection defaults to naturally active crate and hoe clips without removing the 48 cases',()=>{
+ assert.deepEqual(selectWorkerQaCases().map(p=>[p.caseIndex,p.clip,p.fraction,p.night]),[[34,'Carry_Crate',.625,false],[18,'Dig',.625,false]]);
+ assert.equal(selectWorkerQaCases({limit:1})[0].clip,'Carry_Crate');assert.equal(selectWorkerQaCases({caseIndices:Array.from({length:48},(_,i)=>i)}).length,48);
+ for(const caseIndices of [[48],[-1],[1,1],[],[1.5]])assert.throws(()=>selectWorkerQaCases({caseIndices}),/indices/);
+ assert.throws(()=>selectWorkerQaCases({caseIndices:[18],limit:2}),/limit/);
+});
+test('mixer snapshot rejects concurrent/faded activity before mutation and restores only owned touched actions',()=>{
+ const root=new THREE.Object3D(),mixer=new THREE.AnimationMixer(root),clips=['Idle','Dig','Carry_Crate'].map(name=>new THREE.AnimationClip(name,2,[new THREE.NumberKeyframeTrack('.position[x]',[0,2],[0,2])])),actions=clips.map(c=>mixer.clipAction(c));
+ const rig={model:root,mixer,action:actions[0],name:'Idle'};actions[0].play();actions[0].paused=true;actions[0].time=.3;mixer.update(0);mixer.time=7;mixer.timeScale=.5;
+ actions[1].play();assert.throws(()=>snapshotWorkerQaMixer(rig),/concurrent/);assert.equal(actions[1].isScheduled(),true);actions[1].stop();
+ actions[0].fadeOut(1);assert.throws(()=>snapshotWorkerQaMixer(rig),/fade/);actions[0].stopFading();const snapshot=snapshotWorkerQaMixer(rig);
+ const before=snapshot.actions.map(r=>({...r.values}));actions[0].stop();rig.action=actions[2].reset().play();rig.name='Carry_Crate';rig.action.time=1.25;rig.action.paused=true;mixer.update(0);
+ mixer.stopAllAction=()=>assert.fail('Global mixer cancellation forbidden');assert.equal(restoreWorkerQaMixer(rig,snapshot,new Set([actions[2]])),true);
+ assert.equal(rig.action,actions[0]);assert.equal(rig.name,'Idle');assert.equal(mixer.time,7);assert.equal(mixer.timeScale,.5);assert.deepEqual(snapshot.actions.map(r=>Object.fromEntries(Object.keys(r.values).map(k=>[k,r.action[k]]))),before);
+ assert.equal(actions[0].isScheduled(),true);assert.equal(actions[1].isScheduled(),false);assert.equal(actions[2].isScheduled(),false);
+});
+test('selected draw witnesses preserve native callbacks on success and cancellation, without drawing hidden tools',()=>{
+ const f=fixture(),mesh=f.rig.model.children[1],entry={mesh,geometry:f.geometry};let colorCalls=0,shadowCalls=0;const color=()=>colorCalls++,shadow=()=>shadowCalls++;mesh.onAfterRender=color;mesh.onAfterShadow=shadow;
+ const renderer={getRenderTarget:()=>null,getContext:()=>({CULL_FACE:1,CULL_FACE_MODE:2,FRONT_FACE:3,isEnabled:()=>true,getParameter:p=>p===2?1029:2305})},camera=f.world.camera,depth=new THREE.MeshDepthMaterial({side:THREE.DoubleSide});
+ const draws=observeSelectedDraws([entry],()=>{mesh.onAfterRender(renderer,null,camera,f.geometry,mesh.material,null);mesh.onAfterShadow(renderer,mesh,camera,camera,f.geometry,depth,null);});
+ assert.equal(colorCalls,1);assert.equal(shadowCalls,1);assert.deepEqual(draws.map(d=>d.role),['screen','shadow']);assert.equal(draws[0].cullMode,1029);assert.equal(draws[1].depthSide,2);assert.equal(mesh.onAfterRender,color);assert.equal(mesh.onAfterShadow,shadow);
+ mesh.visible=false;assert.deepEqual(observeSelectedDraws([entry],()=>{}),[]);assert.equal(mesh.visible,false);
+ assert.throws(()=>observeSelectedDraws([entry],()=>{throw Error('cancel');}),/cancel/);assert.equal(mesh.onAfterRender,color);assert.equal(mesh.onAfterShadow,shadow);
 });
