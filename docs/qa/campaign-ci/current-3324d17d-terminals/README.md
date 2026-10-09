@@ -1,6 +1,6 @@
 # Native campaign terminals at 3324d17d
 
-All fifteen campaigns used immutable source `3324d17dd2305ea8595aea311c518cc6db2404ad`, original seed 712 and the existing responsible reinvestment strategy. This batch contains twelve 100-night victories and three incomplete incursions. No campaign was restarted, cancelled, rerolled or locally rerun.
+All sixteen campaigns used immutable source `3324d17dd2305ea8595aea311c518cc6db2404ad`, original seed 712 and the existing responsible reinvestment strategy. This batch contains thirteen 100-night victories and three incomplete incursions. No campaign was restarted, cancelled, rerolled or locally rerun.
 
 | Case | Run | Outcome | Unoccupied daylight |
 |---|---|---|---:|
@@ -16,11 +16,12 @@ All fifteen campaigns used immutable source `3324d17dd2305ea8595aea311c518cc6db2
 | Mangroves / Ethiopian | 37876714803 | 100-night victory | 19.0933% accepted |
 | Grand Canyon / Mapungubwe | 37876728540 | 100-night victory | 43.0700% not-accepted |
 | Grand Canyon / Saheliana | 37876735136 | 100-night victory | 41.7067% not-accepted |
+| Desert / Mapungubwe | 37876742125 | 100-night victory | 37.6533% not-accepted |
 | Desert / Musgum | 37876676998 | Unfinished incursion on day 69; 68 nights completed | Not evaluated over 100 nights |
 | Desert / Ethiopian | 37876722341 | Unfinished incursion on day 73; 72 nights completed | Not evaluated over 100 nights |
 | Desert / Swahili | 37876754661 | Unfinished incursion on day 71; 70 nights completed | Not evaluated over 100 nights |
 
-The activity threshold is strictly below 25%. CI success alone does not establish that threshold; the twelve complete snapshots independently reproduce their entire archived summaries. Eight pass activity, but all four Grand Canyon campaigns fail activity despite surviving 100 nights.
+The activity threshold is strictly below 25%. CI success alone does not establish that threshold; the thirteen complete snapshots independently reproduce their entire archived summaries. Eight pass activity; all four Grand Canyon campaigns and Desert/Mapungubwe fail activity despite surviving 100 nights.
 
 ## Failure observations
 
@@ -50,4 +51,4 @@ Across the four cultures, days 1-20 have 69.75-74.58% unoccupied daylight and da
 
 Recorded operating margins are 5.30-10.07%; wages consume 33.56-34.86% of harvested income. Static break-even ratios hold spending fixed and cannot predict reinvestment, inventory, delivery timing or a changed campaign. No balance, hiring policy, seed or acceptance threshold was adjusted.
 
-The committed failure auditor was also rerun as its actual CLI on the original Musgum artifact: exit 0, all 320 source hashes checked. `failed-auditor-cli-reproduction.txt` preserves that output. Desert/Mapungubwe and Desert/Saheliana remained in progress at the last authoritative check; they are not accepted or replaced here.
+The committed failure auditor was also rerun as its actual CLI on the original Musgum artifact: exit 0, all 320 source hashes checked. `failed-auditor-cli-reproduction.txt` preserves that output. Desert/Mapungubwe subsequently completed and is preserved with its activity rejection. Desert/Saheliana remained in progress at the last authoritative check; it is not accepted or replaced here.
