@@ -1,0 +1,175 @@
+TAP version 13
+# Subtest: QA-011: accelerated night splits at raid arrival before moving the animal at normal speed
+ok 1 - QA-011: accelerated night splits at raid arrival before moving the animal at normal speed
+  ---
+  duration_ms: 567.0936
+  ...
+# Subtest: QA-011: one real frame straddling raid arrival matches two frames split at its boundary
+ok 2 - QA-011: one real frame straddling raid arrival matches two frames split at its boundary
+  ---
+  duration_ms: 729.7703
+  ...
+# Subtest: QA-009/010/015: 300 real daytime seconds and 60 calm-night seconds reach one blocked dawn
+ok 3 - QA-009/010/015: 300 real daytime seconds and 60 calm-night seconds reach one blocked dawn
+  ---
+  duration_ms: 405.43
+  ...
+# Subtest: QA-009/010: fractional daylight-to-night frame uses each side of the boundary at its own speed
+ok 4 - QA-009/010: fractional daylight-to-night frame uses each side of the boundary at its own speed
+  ---
+  duration_ms: 225.4466
+  ...
+# Subtest: QA-010: a full calm night preserves growth and remaining water tolerance
+ok 5 - QA-010: a full calm night preserves growth and remaining water tolerance
+  ---
+  duration_ms: 257.0378
+  ...
+# Subtest: QA-012/013: only the last animal leaving restores accelerated night and emits one end
+ok 6 - QA-012/013: only the last animal leaving restores accelerated night and emits one end
+  ---
+  duration_ms: 369.8633
+  ...
+# Subtest: QA-007/014: blocked real-time advances preserve every field until all pause causes clear
+ok 7 - QA-007/014: blocked real-time advances preserve every field until all pause causes clear
+  ---
+  duration_ms: 227.4919
+  ...
+# Subtest: QA-096: mapungubwe one defensive set has one owner and a free companion retreats with hits
+ok 8 - QA-096: mapungubwe one defensive set has one owner and a free companion retreats with hits
+  ---
+  duration_ms: 340.1462
+  ...
+# Subtest: QA-096: saheliana one defensive set has one owner and a free companion retreats with hits
+ok 9 - QA-096: saheliana one defensive set has one owner and a free companion retreats with hits
+  ---
+  duration_ms: 238.4122
+  ...
+# Subtest: QA-096: suajili one defensive set has one owner and a free companion retreats with hits
+ok 10 - QA-096: suajili one defensive set has one owner and a free companion retreats with hits
+  ---
+  duration_ms: 185.0814
+  ...
+# Subtest: QA-096: musgum one defensive set has one owner and a free companion retreats with hits
+ok 11 - QA-096: musgum one defensive set has one owner and a free companion retreats with hits
+  ---
+  duration_ms: 194.1165
+  ...
+# Subtest: QA-096: etiope one defensive set has one owner and a free companion retreats with hits
+ok 12 - QA-096: etiope one defensive set has one owner and a free companion retreats with hits
+  ---
+  duration_ms: 151.8564
+  ...
+# Subtest: QA-096: aggregate defensive value outranks the 800-coin centre even though every piece costs less
+ok 13 - QA-096: aggregate defensive value outranks the 800-coin centre even though every piece costs less
+  ---
+  duration_ms: 18.1471
+  ...
+# Subtest: QA-096: topology loss rekeys surviving reservations and a legacy competing claim cannot delete the owner
+ok 14 - QA-096: topology loss rekeys surviving reservations and a legacy competing claim cannot delete the owner
+  ---
+  duration_ms: 9.0258
+  ...
+# Subtest: QA-096: actual paid contiguous crop groups remain exclusive through destruction and reload
+ok 15 - QA-096: actual paid contiguous crop groups remain exclusive through destruction and reload
+  ---
+  duration_ms: 480.4117
+  ...
+# Subtest: Post-simulation audit throw retains real paid state and pre-audit report
+ok 16 - Post-simulation audit throw retains real paid state and pre-audit report
+  ---
+  duration_ms: 487.4728
+  ...
+# Subtest: Simulation error retains original partial state and error without running auditor
+ok 17 - Simulation error retains original partial state and error without running auditor
+  ---
+  duration_ms: 328.046
+  ...
+# Subtest: Pre-state exception remains incomplete without inventing a native state
+ok 18 - Pre-state exception remains incomplete without inventing a native state
+  ---
+  duration_ms: 10.2133
+  ...
+# Subtest: Source change preserves audit error and marks both report and receipt incomplete
+ok 19 - Source change preserves audit error and marks both report and receipt incomplete
+  ---
+  duration_ms: 327.8705
+  ...
+# Subtest: False gates remain false after successful auditing and raw report precedes annotations
+ok 20 - False gates remain false after successful auditing and raw report precedes annotations
+  ---
+  duration_ms: 327.5688
+  ...
+# Subtest: Summary failure after auditing preserves real state, gates and original error
+ok 21 - Summary failure after auditing preserves real state, gates and original error
+  ---
+  duration_ms: 264.2655
+  ...
+# Subtest: Source change after successful audit marks final report incomplete
+ok 22 - Source change after successful audit marks final report incomplete
+  ---
+  duration_ms: 282.5358
+  ...
+# Subtest: Failed entry consumes one side draw, allocates no actors, and retries no unchanged input
+ok 23 - Failed entry consumes one side draw, allocates no actors, and retries no unchanged input
+  ---
+  duration_ms: 470.2063
+  ...
+# Subtest: At pending dawn all simulated clocks, collapses, workers, tasks and ledger freeze; UI and save remain usable
+ok 24 - At pending dawn all simulated clocks, collapses, workers, tasks and ledger freeze; UI and save remain usable
+  ---
+  duration_ms: 347.9108
+  ...
+# Subtest: Changing native camera bounds enables entry at600, preserves side, and draws only successful strike budgets
+ok 25 - Changing native camera bounds enables entry at600, preserves side, and draws only successful strike budgets
+  ---
+  duration_ms: 378.472
+  ...
+# Subtest: Persisted side zero has stable prepared keys and isolated worker computation does not redraw
+ok 26 - Persisted side zero has stable prepared keys and isolated worker computation does not redraw
+  ---
+  duration_ms: 320.4554
+  ...
+# Subtest: A fresh prepared failure is considered once, including worker recreation with the same token
+ok 27 - A fresh prepared failure is considered once, including worker recreation with the same token
+  ---
+  duration_ms: 257.1137
+  ...
+# Subtest: Successful first attempt keeps original side-plus-strikes RNG order
+ok 28 - Successful first attempt keeps original side-plus-strikes RNG order
+  ---
+  duration_ms: 316.9095
+  ...
+# Subtest: Actual Game.tick spawn boundary records allocation before an immediate worker encounter
+ok 29 - Actual Game.tick spawn boundary records allocation before an immediate worker encounter
+  ---
+  duration_ms: 588.3026
+  ...
+# Subtest: Native allocation before same-elapsed encounters, reload, crop hit and miss reconciles all four consumers
+ok 30 - Native allocation before same-elapsed encounters, reload, crop hit and miss reconciles all four consumers
+  ---
+  duration_ms: 366.1546
+  ...
+# Subtest: Omitted consumer is rejected even when aggregate counts are also edited
+ok 31 - Omitted consumer is rejected even when aggregate counts are also edited
+  ---
+  duration_ms: 1.5491
+  ...
+# Subtest: Duplicated event ID and duplicated committed attack are rejected
+ok 32 - Duplicated event ID and duplicated committed attack are rejected
+  ---
+  duration_ms: 0.5476
+  ...
+# Subtest: Unknown allocation, zero budget, missing actor, malformed remaining and changed raid ID reject coverage
+ok 33 - Unknown allocation, zero budget, missing actor, malformed remaining and changed raid ID reject coverage
+  ---
+  duration_ms: 1.1117
+  ...
+1..33
+# tests 33
+# suites 0
+# pass 33
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3003.6282

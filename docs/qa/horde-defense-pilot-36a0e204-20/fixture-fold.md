@@ -42,3 +42,12 @@ production, productive policy, budget, economic parameter or campaign changed.
 This is regression coverage, not CPU/GPU frame acceptance or economic balance
 acceptance. No campaign, retry, CI, PR or promotion was executed. Next pilot
 requires a separate root review and authorization.
+
+Root review identified one missing original overshoot assertion in the first
+fold: its calm-night advance requested exactly 60 rather than the original 600
+real seconds. The corrected fixture again requests 600, asserts that only the
+60-second calm night is simulated before mandatory hiring (elapsed600/time0,
+day2, one Dawn), then requests another600 and checks the entire state is frozen.
+The first fold receipt remains unchanged as historical evidence. The corrected
+33-test suite passed 33/33, exit0, 3003.6282ms; its captured TAP output and new
+receipt are separate. Production's 390 source hashes remain identical.

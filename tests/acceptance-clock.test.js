@@ -22,7 +22,9 @@ test('QA-011: one real frame straddling raid arrival matches two frames split at
 test('QA-009/010/015: 300 real daytime seconds and 60 calm-night seconds reach one blocked dawn',()=>{
  const {s,nav}=fixture();s.nightPlan=null;assert.equal(Game.clockLabel(s),'07:05');Game.advanceReal(s,300,nav);close(s.time,300);close(s.elapsed,300);assert.equal(Game.clockLabel(s),'19:05');assert.equal(s.events.filter(e=>e.type==='NightStarted').length,1);
  // Explicit calm-clock fixture, not a claim that guaranteed production raids are absent.
- s.nightPlan={at:Infinity,done:true,group:[]};Game.advanceReal(s,60,nav);assert.equal(s.day,2);assert.equal(s.completedNights,1);close(s.time,0);close(s.elapsed,600);assert.equal(Game.clockLabel(s),'07:05');assert.deepEqual(s.pauses,['hiring']);assert.equal(s.events.filter(e=>e.type==='Dawn').length,1);
+ // Oversized real-time request must stop after the 60-second calm night at
+ // mandatory hiring, without consuming the remaining request as free time.
+ s.nightPlan={at:Infinity,done:true,group:[]};Game.advanceReal(s,600,nav);assert.equal(s.day,2);assert.equal(s.completedNights,1);close(s.time,0);close(s.elapsed,600);assert.equal(Game.clockLabel(s),'07:05');assert.deepEqual(s.pauses,['hiring']);assert.equal(s.events.filter(e=>e.type==='Dawn').length,1);
  const frozen=serialize(s);Game.advanceReal(s,600,nav);assert.equal(serialize(s),frozen);
 });
 test('QA-009/010: fractional daylight-to-night frame uses each side of the boundary at its own speed',()=>{
