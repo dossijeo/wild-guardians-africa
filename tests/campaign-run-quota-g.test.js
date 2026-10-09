@@ -11,15 +11,15 @@ const baseline='83b1c1eaa0235f9a9b34966f88b496f42eeb161b';
 const near=(a,b)=>assert.ok(Math.abs(a-b)<1e-10,`${a} != ${b}`);
 const actor=()=>({x:0,z:0,path:[{x:1000,z:0}],runRemaining:dailyRunMetres(),profile:'olderFemale',status:'walking'});
 
-test('G changes only the canonical daily running quota relative to frozen F',()=>{
+test('H inherits quota G and changes only its declared centre cost relative to frozen F',()=>{
   const old=JSON.parse(execFileSync('git',['show',`${baseline}:content/balance/balance_confirmado.json`],{encoding:'utf8'}));
   const current=JSON.parse(readFileSync(new URL('../content/balance/balance_confirmado.json',import.meta.url),'utf8'));
   assert.equal(old.workers.daily_run_distance_long_trips,3);
   assert.equal(current.workers.daily_run_distance_long_trips,4);
-  old.workers.daily_run_distance_long_trips=4;assert.deepEqual(current,old);
+  old.workers.daily_run_distance_long_trips=4;old.work_center.cost=600;assert.deepEqual(current,old);
   const prior=execFileSync('git',['show',`${baseline}:src/simulation/balance.js`],{encoding:'utf8'});
   const expected=JSON.parse(prior.slice(prior.indexOf('= ')+2).trim().replace(/;$/,''));
-  expected.workers.daily_run_distance_long_trips=4;assert.deepEqual(B,expected);
+  expected.workers.daily_run_distance_long_trips=4;expected.work_center.cost=600;assert.deepEqual(B,expected);
   near(dailyRunMetres(),4*L.longTripMetres);
 });
 

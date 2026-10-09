@@ -14,7 +14,7 @@ export const BALANCE = {
   },
   "initial_money": 1500,
   "work_center": {
-    "cost": 800,
+    "cost": 600,
     "max_hp": 600,
     "collapse_damage_fraction": 0.79,
     "collapse_seconds": 3.2,
