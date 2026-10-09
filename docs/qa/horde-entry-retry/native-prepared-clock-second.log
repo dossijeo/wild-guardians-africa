@@ -1,0 +1,45 @@
+TAP version 13
+# Subtest: Native prepared QA-011 arrival preserves exact accelerated boundary and normal movement
+ok 1 - Native prepared QA-011 arrival preserves exact accelerated boundary and normal movement
+  ---
+  duration_ms: 308.2363
+  ...
+# Subtest: Native prepared QA-011 one frame equals two frames split exactly at arrival
+ok 2 - Native prepared QA-011 one frame equals two frames split exactly at arrival
+  ---
+  duration_ms: 441.4976
+  ...
+# Subtest: Native QA-009/010/015 explicit calm night reaches one blocked dawn without free time
+ok 3 - Native QA-009/010/015 explicit calm night reaches one blocked dawn without free time
+  ---
+  duration_ms: 254.7114
+  ...
+# Subtest: Native QA-009/010 fractional daylight/night uses each boundary speed
+ok 4 - Native QA-009/010 fractional daylight/night uses each boundary speed
+  ---
+  duration_ms: 162.3669
+  ...
+# Subtest: Native prepared QA-012/013 actual last physical exit alone restores night acceleration
+ok 5 - Native prepared QA-012/013 actual last physical exit alone restores night acceleration
+  ---
+  duration_ms: 285.3121
+  ...
+# Subtest: Native prepared first spawn retains side-plus-strikes original RNG order
+ok 6 - Native prepared first spawn retains side-plus-strikes original RNG order
+  ---
+  duration_ms: 235.355
+  ...
+# Subtest: Native prepared retry at600 retains selected side, freezes until ready and allocates only successful strikes
+ok 7 - Native prepared retry at600 retains selected side, freezes until ready and allocates only successful strikes
+  ---
+  duration_ms: 228.9376
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2104.4746

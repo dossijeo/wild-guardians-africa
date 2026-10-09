@@ -1,0 +1,37 @@
+{
+  "runtimeFrozenCommit": "a6893053ccbb3fbf167e5a92c64209ee6eebfdd1",
+  "scope": "Additional native/prepared clock and one paid multi-target fixture only. Original tests and runtime untouched. No campaign acceptance.",
+  "files": {
+    "tests/raid-entry-native-prepared-clock.test.js": "78cdf81029fcb7789871b6e0642faa906f63dfde7fb16c48dbc6f73cc930694c",
+    "tests/raid-entry-native-paid-farm.test.js": "b2b0985245c957f77851b395d63376da63d5c11f8a629433f41ceb7419ffa571",
+    "tests/raid-entry-native-calm-pauses.test.js": "4d19bde2da4db23f3f9a0610c0339d95822e16255171eff5116e0d3e79e7a808",
+    "docs/qa/horde-entry-retry/native-calm-pauses.log": "ae91f23c73aa0dc175302b6a1ab225bc08afcce5b4fb96656a9c44ae06d0419b",
+    "docs/qa/horde-entry-retry/native-paid-farm-first.log": "496a6645664c058c8c35008f97f576a5e6ccaeaddee6f8e5993fb7a0d44159f4",
+    "docs/qa/horde-entry-retry/native-paid-farm-second.log": "0cf9162aac8e2463597550c28619d133a5fb2bf67a299a8674d9a8661d373308",
+    "docs/qa/horde-entry-retry/native-prepared-clock-first.log": "0ebc3b22fa694528ad2b8e666ba747393ad716ad32e2c8c206e6ed98acf9c313",
+    "docs/qa/horde-entry-retry/native-prepared-clock-second.log": "46d1c12dc932a9ea900f80647cad058f2798ae6210f49e3178c159b7b85f5111",
+    "docs/qa/horde-entry-retry/native-paid-farm-second.json": "a2c60dbfccd6fe29dcc12515ba3e13c64c0db2548d7ff8610962482c676e55c2"
+  },
+  "tests": {
+    "native-prepared-clock-second": {
+      "pass": 7,
+      "fail": 0,
+      "exit": 0
+    },
+    "native-calm-pauses": {
+      "pass": 2,
+      "fail": 0,
+      "exit": 0
+    },
+    "native-paid-farm-second": {
+      "pass": 1,
+      "fail": 0,
+      "exit": 0
+    }
+  },
+  "retainedFirstAttemptLogs": [
+    "native-prepared-clock-first.log",
+    "native-paid-farm-first.log"
+  ],
+  "firstAttemptSourceScope": "Development logs from earlier additional fixture revisions; current test hashes describe final successful revisions, not first-attempt byteexact source."
+}

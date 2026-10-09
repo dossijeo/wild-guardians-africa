@@ -1,0 +1,32 @@
+TAP version 13
+# Subtest: Paid native multiple crop groups preserve complete entry, reversible escapes and exclusive claims
+not ok 1 - Paid native multiple crop groups preserve complete entry, reversible escapes and exclusive claims
+  ---
+  duration_ms: 505.8709
+  location: 'file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/tests/raid-entry-native-paid-farm.test.js:16:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 2.220446049250313e-16
+    - 0
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 2.220446049250313e-16
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/tests/raid-entry-native-paid-farm.test.js:43:153)
+    async Test.run (node:internal/test_runner/test:632:9)
+    async startSubtest (node:internal/test_runner/harness:216:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 702.3703
