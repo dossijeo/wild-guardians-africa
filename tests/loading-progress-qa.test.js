@@ -48,3 +48,6 @@ test('camera witnesses copy real pose without changing camera or controls and re
  const report=read();assert.deepEqual(report.cameraPoses.map(row=>row.phase),['before-cinematic','cancel-current','cancel-restored']);assert.deepEqual(report.cameraPoses[0].eye,[4,7,11]);assert.deepEqual(report.cameraPoses[1].eye,[12,7,11]);assert.deepEqual(report.cameraPoses[2].eye,report.cameraPoses[0].eye);assert.match(report.cameraPoses[0].basis,/focusFarm\/Home/);assert.equal(JSON.stringify({eye,quaternion,target,enabled:world.controls.enabled}),before);
  qa.begin(100);qa.close(progress,owner);assert.equal(read().cameraPoses,undefined);
 });
+
+
+test('cancellation after verified readiness preserves both facts instead of reporting successful completion',()=>{const {qa,read}=fixture(),readyProgress={snapshot:()=>({ready:true,progress:1,pending:[]})};qa.close(readyProgress,owner,{cancelled:true});const report=read();assert.equal(report.current.ready,true);assert.equal(report.cancelled,true);assert.equal(report.closed,true);});
