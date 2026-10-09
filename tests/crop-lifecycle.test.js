@@ -33,11 +33,11 @@ test('lifecycle brackets watering and work changes, distinguishes pickup from se
 test('optional higher staffing pays normal wages while the default twelve-plant strategy matches the explicit policy and geometry-only route baseline',()=>{
  const options={days:1,seed:712,profile:'olderMale',mixed:true,middayHiring:true};
  const baseline=simulateIntensiveFarm(options);
- // Historical price/audio references remain archived. Retaining routes on
- // unrelated planting changes task timing: 27 deliveries instead of28 in this
- // opening, not merely an epoch field. Both native economy audits pass; see
- // docs/qa/crop-route-epoch-experiment/golden-baseline before changing this hash.
- assert.equal(createHash('sha256').update(serialize(baseline.state)).digest('hex'),'5df191a540b7b584a9d45cf1c20e9f15b80b39e0779c0545bdf92417572de389');
+ // Original 5df191a5 snapshot remains archived. The +25% harvest candidate
+ // delivers the same 27 physical crates, credits 459 instead of378 coins and
+ // reinvests in104 instead of97 plants. Both full states pass ledger/crate
+ // audits; see docs/qa/campaign-balance-recovery/opening-golden/comparison.json.
+ assert.equal(createHash('sha256').update(serialize(baseline.state)).digest('hex'),'7277caab4bccdb44d772e98b1fe6ab153784004899f08017ea5d1a088db1810e');
  assert.ok(auditIntensiveFarm(baseline));
  assert.equal(serialize(simulateIntensiveFarm({...options,plantsPerWorker:12}).state),serialize(baseline.state));
  const staffed=simulateIntensiveFarm({...options,plantsPerWorker:8});
