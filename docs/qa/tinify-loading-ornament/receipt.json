@@ -1,0 +1,26 @@
+{
+  "runtimeBase": "f91987c77e1379fe04537e1b6744735a14f3fab7",
+  "runtimeAssetReplaced": false,
+  "browserOrNativeQa": false,
+  "sha256": {
+    "tools/compare_color_composites.mjs": "4c1fef1c529085847bb4d45c4ecaca9e5e253a438e6c475b9150f7e11ea76e8e",
+    "tools/optimize_image_pilot.mjs": "43f1a1c65239e16d50ddcd7d2a315c87790e2991967cd3097461535f63eed332",
+    "tools/tinify-image-cache.mjs": "e8e649ca5d1a0053f4f0867ef75eaf5ada6ecaa9eed14057186c50536a3f0263",
+    "public/assets/ui/loading-ornament-v2.webp": "9e1f6c4bbcf5cce2a6cb7c6f7a05a25e0b4b05d880b747ecab9893efcb3a8e06"
+  },
+  "evidence": {
+    "cache-reuse.json": "d016dbebb29acaed220ffba77c8b6255edba9ceaf47db9a2ad5096267a7cd38e",
+    "candidate.webp": "698528ca5ad69aceab9f90f129d46a36e648f08c6defa568404fa179379062cc",
+    "comparison.json": "a261b0f93cce951088e3b040717496c06104f445e7a4ec9a564fcd6969fd4310",
+    "day-comparison.png": "94c978d8b9f42c069979855605520fc54989706a2ab5b8c416d50912e2349af3",
+    "night-comparison.png": "450f4d178cbeb2049f0b6b3ee1c4232f65bf4c9ee48fb033f971f3a1bc1de04f",
+    "provider-report.json": "54c3354ed359fcffa8aa61e1a6425ce338d473b3f608b716be9a348d8388242f",
+    "README.md": "c0e1b0da04b3406563a083953dbbd845a37883d29504976add7ddbc94bbc7617"
+  },
+  "reproductionByteIdentical": true,
+  "directedTests": {
+    "passed": 14,
+    "failed": 0,
+    "scope": "Tinify cache and color policies; no browser/GPU claim"
+  }
+}
