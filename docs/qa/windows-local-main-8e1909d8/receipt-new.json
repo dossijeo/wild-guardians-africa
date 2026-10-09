@@ -1,0 +1,42 @@
+{
+  "source": "8e1909d8ecd6d2455b7a52a97196e10455b9d834",
+  "run": 37983985482,
+  "artifact": 11642418681,
+  "executable": {
+    "run": 37983985482,
+    "source": "8e1909d8ecd6d2455b7a52a97196e10455b9d834",
+    "artifact": 11642418681,
+    "bytes": 378869760,
+    "sha256": "241636f6a2f0c36830e79a381e8074fda2158dc8833d0c24a9b99622007e7539"
+  },
+  "originalReportBytes": 1293549,
+  "originalReportSha256": "5e6535a6f3c31bf72732edaf2a57c807321daf0b15124ab856fda31841b1903b",
+  "payloads": {
+    "desktop-smoke.json.gz": {
+      "bytes": 978209,
+      "sha256": "5abc05364eb52a9e55eae7c86a272aa78dfbfc5fb797e2568f0ae73db22d9c35"
+    },
+    "download-receipt.json": {
+      "bytes": 215,
+      "sha256": "4055e048ba5300bb4d9099bd1bf5581781fc9303ccd941c9dbf8f9dbfbd1d211"
+    },
+    "exit-new.json": {
+      "bytes": 148,
+      "sha256": "96550f945969f82eed3ac78b1607e67d02b82946c47684c7ea1109e201bed830"
+    },
+    "launch-new.json": {
+      "bytes": 677,
+      "sha256": "2e4986eda4c6f083f0c70fda3a61e8f6daf6e3ce4815fc6549fddcaa31b83497"
+    },
+    "native-children-new.json": {
+      "bytes": 629,
+      "sha256": "3fac8bbc24c4e5fc45988c206f062e20999c1d479511318563e224bc3a127806"
+    },
+    "world-new.png": {
+      "bytes": 967719,
+      "sha256": "5ca57a7a3463f63ac26fdf17004a13e2dde15a99d0e3b035e1740156b05503ad"
+    }
+  },
+  "worldWaitMs": 18419.5,
+  "scope": "One local original packaged New Game smoke in Canyon/Mapungubwe/very-low. Original readiness passed. No actual GL adapter identity, performance A/B or all-device acceptance. CI remains negative."
+}

@@ -51,6 +51,12 @@ The [raw report](windows-loading-regression/normal-8e1909d8/desktop-smoke.json)
 is retained separately from diagnostic successes. No causal timeout-fix or
 runtime speed improvement is claimed; current Windows readiness remains open.
 
+The same unmodified `8e1909d8` executable now passes its original New Game
+tester locally: [raw report, receipt and actual world capture](windows-local-main-8e1909d8/README.md).
+Its original start-message-to-stage-ready interval is18,419.5ms, with no
+experimental flags or errors. This is separate from the retained CI negative;
+neither a controlled speed improvement nor all-device acceptance is inferred.
+
 The worker branch now has a separate
 [exact-executable native accessory pilot](workers-frontside-local-3e8da8a7/README.md):
 youngMale crate/hoe,48 sampled day/night poses, actual culling witnesses and
