@@ -32,9 +32,13 @@ byte/receipt check passes for all seventeen archives: 163 original payloads,
 214,785,301 bytes. See [the seventeen-case receipt](campaign-ci/root-seventeen-archive-review.json)
 and [the final failure](campaign-ci/current-3324d17d-terminals/desierto-saheliana-37876748172/README.md).
 This archive check is not a new domain/source audit or a current-main recovery
-replay. The distinct fourth retreat snapshot requires bounded validation against
-the already integrated PR15 before deciding whether additional runtime work is
-needed.
+replay. A subsequent native replay against PR15 remained stationary for 300
+simulated seconds. PR16 (`ee1954c2`) proposes actual footprint-corner connectors
+for the physically open subcell passage missed by the existing lattices. The
+original snapshot then exits physically in 18.1 simulated seconds; 103 tests
+pass. Root reviewed the bounded fallback and its original-state/dt/reload tests.
+At this review, Validate passes and Windows CI remains pending; PR16 is not yet
+merged. This saved-state recovery is not a new hundred-night campaign.
 
 The three distinct saved Desert stalls now have bounded native recovery fixes
 in merged PR15, with root 45/45 directed tests and both exact-head CI checks
@@ -87,6 +91,21 @@ this is not a GPU/FPS comparison. Cache/transfer drift and sampled heap limits
 remain explicit. Investigate the extra world-load preparation before approval.
 Raw evidence remains on the loading feature branch pending its final PR.
 
+The latest reference-directed visual work is on that feature branch:
+`d9c3a1fd` adds the generated wooden/vine/sunflower/parchment ornament, a closer
+four-maize composition, mountain backdrop, one instanced sparkle draw and an
+analytic light shaft in the existing mist pass. `6045fb98` fixes the visible
+rectangular mountain base, soil saturation and portrait plant cropping. Root
+inspected its native day/night landscape and stable portrait screenshots:
+the composition is substantially closer to the supplied first mockup. The
+transient night-portrait resize image is retained separately as a negative;
+the narrow parchment hint still needed refinement. `c7c26463` addresses that
+CSS fit; its functional capture is pending at this review. This is AI visual
+screening, not user acceptance or proof of neutral GPU/peak memory cost. The
+new backdrop may coexist temporarily with the world's atlas. Its before/after
+render/resource measurements and the original loading-readiness gate remain
+open. No loading assets or runtime have been promoted to main.
+
 ## Rendering and streaming
 
 The native repaired mature-maize comparison has net GPU benefit, but is not
@@ -109,6 +128,15 @@ witnesses where active. Root reviewed both full atlases; their independent
 standalone receipt check passes. See [Front growth evidence](frontside-model-pilot/young-front-native-continuity/README.md).
 This remains limited AI still screening with Double shadows; the record is not
 a full-video inspection, a WorldScene/GPU benchmark or approval of other models.
+
+Root also ran the young WorldScene resource fixture on frozen `4bb26a95`.
+The image and teardown completed, but the report POST failed with
+"Unexpected report": the server's initial status whitelist omitted the young
+profile. The native console/status/PNG negative is retained by the repair
+branch. `db62ee83` unifies POST/preflight status validation without altering the
+viewer or geometry. CPU/HTTP checks pass; a new native resource run is still
+required. There is no reconstructed resource receipt, approved resource gate
+or young-model timing benefit from this failed export.
 
 The standby-pruning traveling comparison is negative and stays disabled. Shared
 resident preparation also has a completed root native AB/BA comparison on
