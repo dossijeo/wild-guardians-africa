@@ -6,6 +6,17 @@ import {Texture,Scene,Group,Vector4,Mesh} from 'three';
 import {NativeFarGpuCancelled,prepareNativeFarGpu,releaseNativeFarGpuCache,nativeFarGpuRevision,nativeFarGpuContextLost} from '../tools/experiments/prepare-native-far-gpu.js';
 import {waitGpuPreparation} from '../tools/experiments/wait-gpu-preparation.js';
 import {compileGpuPreparation} from '../tools/experiments/compile-gpu-preparation.js';
+import {BufferGeometry} from 'three';
+
+test('zero-vertex preparation is explicit, isolated, and restores positive geometry before fence waits',async()=>{
+ const f=fixture(),geometry=new BufferGeometry();geometry.setDrawRange(4,12);geometry.addGroup(6,6,1);let directCalls=0;
+ const direct=f.renderer.renderBufferDirect=function(_camera,_scene,g,_material,_object,group){directCalls++;assert.deepEqual(g.drawRange,{start:0,count:0});assert.deepEqual(group,{start:0,count:0,materialIndex:1});};
+ const render=f.renderer.render;f.renderer.render=(...args)=>{render(...args);f.renderer.renderBufferDirect({},f.scene,geometry,{}, {},geometry.groups[0]);};
+ const result=await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{isolateRoot:true,zeroVertices:true,nextFrame:async()=>{assert.equal(f.renderer.renderBufferDirect,direct);assert.deepEqual(geometry.drawRange,{start:4,count:12});assert.deepEqual(geometry.groups[0],{start:6,count:6,materialIndex:1});}});
+ assert.equal(result.zeroVertexDraws,1);assert.equal(directCalls,1);assert.ok(f.calls.includes('fence'));f.restored();releaseNativeFarGpuCache(f.renderer);
+ const invalid=fixture();await assert.rejects(prepareNativeFarGpu(invalid.renderer,invalid.root,invalid.scene,{},[],{zeroVertices:true}),/requires isolation/);assert.deepEqual(invalid.calls,[]);
+});
+test('zero-vertex draw failure restores renderer ownership and submits no success fence',async()=>{const f=fixture({renderError:true}),direct=f.renderer.renderBufferDirect=()=>{};await assert.rejects(prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{isolateRoot:true,zeroVertices:true}),/Draw failed/);assert.equal(f.renderer.renderBufferDirect,direct);assert.equal(f.calls.includes('fence'),false);assert.equal(f.root.parent,f.parent);f.restored();releaseNativeFarGpuCache(f.renderer);});
 
 function fixture({renderError=false}={}){
  const scene=new Scene(),parent=new Group(),root=new Group();parent.add(root);const original={},calls=[];let current=original,waits=0,viewport=new Vector4(2,3,100,200),scissor=new Vector4(4,5,60,70),scissorTest=false;
