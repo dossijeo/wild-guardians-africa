@@ -37,3 +37,18 @@ Do not substitute the old isolated LibraryViewer screenshot for that evidence.
 The source/hash receipt describes the combined library+routing working tree
 build; it does not claim the original published itch build already contains
 this fix. No deployment to itch was performed.
+
+## Follow-up: Escape with focus inside a lab
+
+The menu document's key listener cannot receive keyboard events from an iframe.
+After interaction inside the lab, Escape therefore did not close the viewer.
+The controller now binds a bubbling listener to each loaded child document.
+The lab keeps priority when its own dialog consumes Escape. Closing/reloading
+removes the previous listener, clears onload and restores catalogue focus;
+queued events from a released frame cannot close a replacement viewer.
+
+Six controller cases now pass, including focused-frame Escape, consumed Escape,
+reload cleanup and stale callbacks. Twelve directed controller/font/SFX checks
+pass, the126-SFX audit remains fresh, browser syntax verification passes and
+the production build completes. These remain DOM-double/static/build proofs;
+actual four-lab portrait/landscape visual acceptance is still pending.

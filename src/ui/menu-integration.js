@@ -4,7 +4,8 @@ const sendProduction=(action,detail={})=>parent.postMessage({type:'wild-guardian
 let productionLabViewer=null;
 function closeProductionLab(){
  if(!productionLabViewer)return;
- const {root,frame,inert,trigger}=productionLabViewer;
+ const {root,frame,inert,trigger,childDocument,childKeydown}=productionLabViewer;
+ childDocument?.removeEventListener('keydown',childKeydown);frame.onload=null;
  frame.src='about:blank';root.remove();productionLabViewer=null;
  for(const [element,value] of inert)if(element.isConnected)element.inert=value;
  lastFrame=performance.now();trigger?.focus({preventScroll:true});
@@ -21,7 +22,24 @@ function openProductionLab(key,title,trigger){
  header.append(backButton,heading,homeButton);root.append(header,frame);
  const inert=Array.from(document.body.children,element=>[element,element.inert]);
  for(const [element] of inert)element.inert=true;
- productionLabViewer={root,frame,inert,trigger};document.body.append(root);backButton.focus({preventScroll:true});
+ productionLabViewer={root,frame,inert,trigger};
+ frame.onload=()=>{
+  if(productionLabViewer?.frame!==frame)return;
+  const viewer=productionLabViewer;
+  viewer.childDocument?.removeEventListener('keydown',viewer.childKeydown);
+  viewer.childDocument=frame.contentDocument;
+  viewer.childKeydown=event=>{
+   if(event.key!=='Escape')return;
+   // Wait for all lab handlers, even those installed later on this document.
+   queueMicrotask(()=>{
+    if(productionLabViewer?.frame!==frame||event.defaultPrevented)return;
+    event.preventDefault();closeProductionLab();
+   });
+  };
+  // Consumed Escape stays local; deferred callbacks retain the frame guard.
+  viewer.childDocument?.addEventListener('keydown',viewer.childKeydown);
+ };
+ document.body.append(root);backButton.focus({preventScroll:true});
 }
 document.addEventListener('keydown',event=>{
  if(!productionLabViewer)return;
