@@ -55,3 +55,18 @@ test('an observation fault preserves the original failure and still publishes th
   assert.deepEqual(Array.from(report.errors), ['Error: Original preflight failure']);
   assert.match(report.checks.loadingObservationError, /DOM observation unavailable/);
 });
+
+test('world wait stops at the ready gate and excludes the later five-minute visibility test', async () => {
+  const finishSource = source.slice(source.indexOf('  async function finish(error)'), source.indexOf('  async function checkVisibility(fixture)'));
+  const context = {
+    report: {checks: {}, errors: []}, finished: false, timeout: 1,
+    worldStartedAt: 10000, worldReadyAt: 28000,
+    performance: {now: () => 343000}, clearTimeout() {},
+    document: {querySelector: () => null, visibilityState: 'visible', hasFocus: () => true},
+    window: {__TAURI_INTERNALS__: {invoke: async () => {}}}
+  };
+  const report = await runInNewContext(`${finishSource}\n(async () => {await finish(); return report;})()`, context);
+  assert.equal(report.checks.loadingAtFinish.worldWaitMs, 18000);
+  assert.equal(report.checks.loadingAtFinish.readyGateReached, true);
+  assert.equal(report.ok, true);
+});
