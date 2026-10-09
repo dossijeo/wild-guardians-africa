@@ -1,0 +1,79 @@
+{
+  "source": "fe1097da",
+  "rawSha256": "b8642d39ec2c063359698eca83fb942d83c5a348d4539b6092b8d48b1db8d0e5",
+  "initializationMs": 11533.199999928474,
+  "totalMs": 15582,
+  "frameSummary": {
+    "count": 849,
+    "max": 132.79999999999927,
+    "over50": 4,
+    "over100": 1
+  },
+  "depth": {
+    "loading-depth-batch-submit": {
+      "count": 24,
+      "sumMs": 54.49999988079071,
+      "maxMs": 8.600000023841858
+    },
+    "loading-depth-batch-program-wait": {
+      "count": 24,
+      "sumMs": 79.29999995231628,
+      "maxMs": 23.600000023841858
+    },
+    "loading-depth-batch-frame-wait": {
+      "count": 24,
+      "sumMs": 326.0,
+      "maxMs": 16.799999952316284
+    }
+  },
+  "diorama": [
+    {
+      "label": "diorama-prepare-sky",
+      "durationMs": 169.5
+    },
+    {
+      "label": "diorama-prepare-catalogues",
+      "durationMs": 29.299999952316284
+    },
+    {
+      "label": "diorama-prepare-maize-model",
+      "durationMs": 242.39999997615814
+    },
+    {
+      "label": "diorama-prepare-soil-texture",
+      "durationMs": 49.700000047683716
+    },
+    {
+      "label": "diorama-prepare-maize-batch",
+      "durationMs": 194.10000002384186
+    },
+    {
+      "label": "diorama-compile-maize",
+      "durationMs": 32.10000002384186
+    },
+    {
+      "label": "diorama-upload-maize-soil",
+      "durationMs": 70.39999997615814
+    },
+    {
+      "label": "diorama-compile-sky",
+      "durationMs": 11.699999928474426
+    },
+    {
+      "label": "diorama-compile-mist",
+      "durationMs": 12.100000023841858
+    },
+    {
+      "label": "diorama-upload-mist",
+      "durationMs": 2
+    },
+    {
+      "label": "diorama-warm-day-night-sky",
+      "durationMs": 6.599999904632568
+    },
+    {
+      "label": "diorama-final-fence",
+      "durationMs": 30
+    }
+  ]
+}
