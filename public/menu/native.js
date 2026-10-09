@@ -414,17 +414,27 @@ function renderPanel(id){const backHTML='<button class="back" data-back><svg vie
 const nativeRenderPanel=renderPanel;
 const sendProduction=(action,detail={})=>parent.postMessage({type:'wild-guardians:menu',action,...detail},location.origin);
 let productionLabViewer=null;
-function closeProductionLab(){
- if(!productionLabViewer)return;
- const {root,frame,inert,trigger,childDocument,childKeydown}=productionLabViewer;
+const nativeStartMenuMusic=startMenuMusic;
+startMenuMusic=async function(...args){
+ if(productionLabViewer?.key==='sfx')return false;
+ const started=await nativeStartMenuMusic(...args);
+ // A play promise started before entering the lab may settle afterwards.
+ if(productionLabViewer?.key==='sfx'){menuMusic.pause();return false;}
+ return started;
+};
+function closeProductionLab({resumeMusic=true}={}){
+ if(!productionLabViewer)return false;
+ const {root,frame,inert,trigger,childDocument,childKeydown,key}=productionLabViewer;
  childDocument?.removeEventListener('keydown',childKeydown);frame.onload=null;
  frame.src='about:blank';root.remove();productionLabViewer=null;
  for(const [element,value] of inert)if(element.isConnected)element.inert=value;
  lastFrame=performance.now();trigger?.focus({preventScroll:true});
+ if(resumeMusic&&key==='sfx'&&audioOn&&!document.hidden)startMenuMusic(true);
+ return key==='sfx';
 }
 function openProductionLab(key,title,trigger){
  if(!['crops','walls','destruction','sfx'].includes(key))return;
- closeProductionLab();
+ const wasSfx=closeProductionLab({resumeMusic:false});
  const root=document.createElement('main');root.className='production-lab-viewer';
  const header=document.createElement('header');header.className='production-lab-header';
  const backButton=document.createElement('button');backButton.type='button';backButton.className='secondary';backButton.textContent='← Biblioteca';backButton.onclick=closeProductionLab;
@@ -434,7 +444,9 @@ function openProductionLab(key,title,trigger){
  header.append(backButton,heading,homeButton);root.append(header,frame);
  const inert=Array.from(document.body.children,element=>[element,element.inert]);
  for(const [element] of inert)element.inert=true;
- productionLabViewer={root,frame,inert,trigger};
+ productionLabViewer={root,frame,inert,trigger,key};
+ if(key==='sfx')menuMusic.pause();
+ else if(wasSfx&&audioOn&&!document.hidden)startMenuMusic(true);
  frame.onload=()=>{
   if(productionLabViewer?.frame!==frame)return;
   const viewer=productionLabViewer;

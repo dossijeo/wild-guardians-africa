@@ -71,6 +71,12 @@ para escuchar los efectos con claridad. Al salir, restaurar el estado y volumen
 anteriores, respetando la preferencia de música del usuario y cubriendo cierre,
 Escape y cambio de lab. No silenciar los propios efectos del laboratorio.
 
+La pausa temporal de música del visor SFX ya está implementada por separado:
+ver [comprobaciones dirigidas](qa/library-sfx-menu-audio.md). Conserva preferencia,
+volumen y posición; cubre cambio de lab y resolución tardía de play. La escucha
+real sigue pendiente. El layout móvil permanece pendiente y no desplaza las
+optimizaciones de carga ni la validación de campaña en curso.
+
 No implementar ahora ni desplazar las prioridades actuales de optimización,
 diagnóstico Windows y validación de campaña. El visor a pantalla completa no
 equivale a aceptación de este layout móvil.

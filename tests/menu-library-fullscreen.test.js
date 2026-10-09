@@ -3,11 +3,11 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createContext,runInContext} from 'node:vm';
 
-const read=path=>readFileSync(new URL('../'+path,import.meta.url),'utf8');
+const read=path=>readFileSync(new URL('../'+path,import.meta.url),'utf8').replace(/\r\n/g,'\n');
 const native=read('public/menu/native.js'),integration=read('src/ui/menu-integration.js');
 const extract=source=>source.slice(source.indexOf('let productionLabViewer=null;'),source.indexOf('const sectionFrame='));
 
-function environment(){
+function environment({audioOn=true,play=async()=>true,nativeAudio=false}={}){
  const document={activeElement:null,listeners:[],addEventListener(...args){this.listeners.push(args);}};
  class Element{
   constructor(tag){this.tagName=tag;this.children=[];this.inert=false;this.isConnected=true;}
@@ -18,10 +18,47 @@ function environment(){
  }
  document.createElement=tag=>new Element(tag);document.body=new Element('body');
  const panel=new Element('section'),alreadyInert=new Element('div'),trigger=new Element('button');alreadyInert.inert=true;panel.append(trigger);document.body.append(panel,alreadyInert);
- const context=createContext({document,performance:{now:()=>100},lastFrame:0,back:()=>{},Array,queueMicrotask});
- runInContext(extract(native),context);
- return {context,document,panel,trigger,alreadyInert,open:(key='crops')=>runInContext(`openProductionLab('${key}','Cultivos',document.body.children[0].children[0])`,context),close:()=>runInContext('closeProductionLab()',context)};
+ const music={currentTime:17,volume:.72,pauses:0,plays:0,pause(){this.pauses++;},play(){this.plays++;return play();}},gestures=new Map();
+ const context=createContext({document,performance:{now:()=>100},lastFrame:0,back:()=>{},Array,queueMicrotask,audioOn,menuMusic:music,musicGestureArmed:true,syncAudioUI(){},toast(){},window:{addEventListener:(name,handler)=>gestures.set(name,handler)},startMenuMusic:async()=>{if(!context.audioOn)return false;return music.play();}});
+ const starter=nativeAudio?native.slice(native.indexOf('async function startMenuMusic('),native.indexOf('function front(y)')):'';
+ runInContext(extract(native)+starter,context);
+ return {context,document,panel,trigger,alreadyInert,music,gestures,open:(key='crops')=>runInContext(`openProductionLab('${key}','Cultivos',document.body.children[0].children[0])`,context),close:()=>runInContext('closeProductionLab()',context)};
 }
+
+test('SFX viewer pauses menu music, blocks gesture/visibility starts and resumes without changing preference or position',async()=>{
+ const env=environment();env.open('sfx');assert.equal(env.music.pauses,1);
+ assert.equal(await runInContext('startMenuMusic(true)',env.context),false);assert.equal(env.music.plays,0);
+ env.close();await Promise.resolve();assert.equal(env.music.plays,1);assert.equal(env.context.audioOn,true);
+ assert.equal(env.music.currentTime,17);assert.equal(env.music.volume,.72);
+});
+
+test('closing SFX respects muted music and hidden documents; unrelated labs do not change music',async()=>{
+ for(const options of [{audioOn:false},{}]){
+  const env=environment(options);if(options.audioOn!==false)env.document.hidden=true;
+  env.open('sfx');env.close();await Promise.resolve();assert.equal(env.music.plays,0);assert.equal(env.context.audioOn,options.audioOn??true);
+ }
+ const env=environment();env.open('crops');env.open('walls');env.close();assert.equal(env.music.pauses,0);assert.equal(env.music.plays,0);
+});
+
+test('replacing SFX with SFX does not restart music; replacing it with another lab restores once',async()=>{
+ const env=environment();env.open('sfx');env.open('sfx');assert.equal(env.music.plays,0);
+ env.open('crops');await Promise.resolve();assert.equal(env.music.plays,1);env.close();assert.equal(env.music.plays,1);
+});
+
+test('late play resolution cannot reactivate menu music inside SFX; rejected autoplay remains handled',async()=>{
+ let resolve;const env=environment({play:()=>new Promise(done=>resolve=done)});
+ const pending=runInContext('startMenuMusic(true)',env.context);env.open('sfx');resolve(true);
+ assert.equal(await pending,false);assert.equal(env.music.plays,1);assert.equal(env.music.pauses,2);
+ // The native starter handles browser autoplay rejection and returns false.
+ const blocked=environment({nativeAudio:true,play:async()=>{throw Error('Autoplay blocked');}});blocked.open('sfx');blocked.close();await Promise.resolve();assert.equal(blocked.music.plays,1);assert.equal(blocked.context.audioOn,true);
+});
+
+test('actual native starter and gesture handlers retain the SFX guard despite later function declarations',async()=>{
+ const env=environment({nativeAudio:true});env.open('sfx');
+ for(const name of ['pointerdown','keydown','touchstart'])env.gestures.get(name)();
+ await Promise.resolve();assert.equal(env.music.plays,0);assert.equal(env.context.musicGestureArmed,true);
+ env.close();await Promise.resolve();await Promise.resolve();assert.equal(env.music.plays,1);assert.equal(env.context.musicGestureArmed,false);
+});
 
 test('actual sanctuary buttons use the full-screen controller, including regenerated menu',()=>{
  assert.equal(extract(native),extract(integration));
