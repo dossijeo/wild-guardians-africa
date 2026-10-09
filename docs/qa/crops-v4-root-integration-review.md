@@ -34,3 +34,19 @@ Earlier V3 loading timings do not validate this V4 integration.
 At review, PR17 Validate and Windows checks were still running. Merge remains
 pending their terminal results; passing directed checks does not substitute
 for the complete regression run.
+
+## Integration update
+
+Validate run37905454848 on `bb629a38` subsequently completed successfully:
+3383 tests / 3383 passes / zero failures, build and packaging passed, 704
+files / 443925570 bytes / 860 relative links / 22 runtime GLBs. Root inspected
+the terminal run and its log rather than inferring success from an earlier
+directed check.
+
+The user then explicitly instructed root not to wait for Windows before
+merging. PR17 was merged with the expected-head guard into
+`81d87953bf054e2478f6227cf07f06b06634949f`; root pulled main with fast-forward.
+Windows run37905454830 remains a separate live acceptance check, not a claimed
+success. On the merged main, root reran the V4 verifier and 17 crop morph,
+catalogue and package contracts, all passing. The loading agent is merging
+this base into its feature and will validate shared V4 assets before promotion.
