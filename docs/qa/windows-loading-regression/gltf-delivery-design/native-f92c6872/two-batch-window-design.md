@@ -4,7 +4,7 @@ Parent requested evaluation after the originalf92 failure. No implementation, fl
 
 ## Measured boundary and limit of prediction
 
-At the90s gate job14/world batch10 of77 is active, pending resident Basic ground program20 for5.3734s. Only10 batches submitted,61plus cached batches still unsubmitted. The warm-world parent11.422s includes earlier jobs; the warmGPU21.5125s also includes staging and other nested work. These cannot be added. Program20 firstObservedSelection job14 is selection metadata, not creation time. There is no demonstrated budget or poll CPU bottleneck: the current core immediately polls and completes already-ready programs without a forced timer/RAF.
+At the90s gate job14/world batch10 of77 is active, pending resident Basic ground program20 for5.3734s. Only10 of77 world batches submitted;67 remain unsubmitted, including groups that may reuse cached programs. The warm-world parent11.422s includes earlier jobs; the warmGPU21.5125s also includes staging and other nested work. These cannot be added. Program20 firstObservedSelection job14 is selection metadata, not creation time. There is no demonstrated budget or poll CPU bottleneck: the current core immediately polls and completes already-ready programs without a forced timer/RAF.
 
 Serial await prevents batch11 from being submitted while batch10 waits. A queue of exactly two can submit one next group during that wait, potentially overlapping preparation of a genuinely different recipe. It cannot make20 complete, and can offer no benefit if next batch selects the same20, a single driver serializes all work, or submission harms rendering. It also does not address the29.4s preworld or all other World resource waits. No numerical speed prediction or guaranteed90s pass follows.
 
