@@ -1,0 +1,2593 @@
+{
+  "run": 37979419199,
+  "source": "5042f9b7d62ec747a9c98c0e481bd35d96c6166e",
+  "fixtureFileSha256": "28d8bf348c61900a7f4f94a53026a86e638acbca5b058981a43de969788a6406",
+  "snapshotSha256": "e4a09b4b1d9bb3cd46992adefb2e17bcb83e1749c66c1258709d9a069ae601f1",
+  "cases": {
+    "desktop-fluid-control.json": {
+      "ok": true,
+      "errors": [],
+      "loadingRecipe": {
+        "animalPrefetch": false,
+        "collectiveReadiness": false,
+        "fluidDepth": false,
+        "parallelDioramaAssets": false,
+        "parallelReadiness": false,
+        "pauseLoadingMenu": true,
+        "scope": "Normal production loading pipeline; explicit smoke-only shared ground/menu pause/animal prefetch options recorded above.",
+        "sharedGroundClip": false
+      },
+      "config": {
+        "biome": "gran-canon",
+        "culture": "mapungubwe",
+        "quality": "muy_baja",
+        "relief": 1,
+        "river": true,
+        "seed": "712"
+      },
+      "worldReadyAtPageOriginMs": 91312.8999999999,
+      "firstObservedBoundaryToWorldReadyMs": 63509.79999999993,
+      "productionLoadingFinalElapsedMs": 386172.29999999993,
+      "phasesAwaitedMsNestedNotAdditive": {
+        "load-active-animal-actors": 0.19999999995343387,
+        "load-animal-models": 2794.20000000007,
+        "load-biome-ground": 1294.1999999999534,
+        "load-biome-models": 2315.3000000000466,
+        "load-chunks-horizon-ready": 1739.8999999999069,
+        "load-crop-batch": 558.6999999999534,
+        "load-crop-bridges": 0.30000000004656613,
+        "load-crop-model": 0.2000000000698492,
+        "load-far-assets": 3972.5999999999767,
+        "load-hands-ready": 768.9000000000233,
+        "load-milestone:animals": 1.900000000023283,
+        "load-milestone:biome": 1.599999999976717,
+        "load-milestone:buildings": 1.300000000046566,
+        "load-milestone:chunks": 1.699999999953434,
+        "load-milestone:crops": 56.90000000002328,
+        "load-milestone:far-assets": 51.90000000002328,
+        "load-milestone:gpu": 59.40000000002328,
+        "load-milestone:sky": 6.5,
+        "load-milestone:vfx": 1.3999999999068675,
+        "load-milestone:walls": 1.5,
+        "load-sky": 0.9000000000232831,
+        "load-vfx-catalogue": 174.90000000002328,
+        "load-vfx-constructors": 9.5,
+        "load-vfx-texture": 1256.7000000000698,
+        "load-village-models": 1179.6999999999534,
+        "load-wall-catalogue": 180.90000000002328,
+        "load-wall-prototypes": 2435.5,
+        "load-warm-gpu": 29799.599999999977,
+        "load-worker-actors": 1879.9000000000233,
+        "warm-compile-destruction": 136.09999999997672,
+        "warm-compile-staging": 3629.1999999999534,
+        "warm-compile-world": 18571.400000000023,
+        "warm-depth-capture": 4.199999999953434,
+        "warm-draw-batches": 341.80000000004657,
+        "warm-final-fence": 193.10000000009313,
+        "warm-prepare-depth": 2978.6999999999534,
+        "warm-program-bindings": 1821.3000000000463,
+        "warm-upload-textures": 1985
+      },
+      "rafFinal": {
+        "callbacks": 1167,
+        "maxIntervalMs": 310281.3
+      },
+      "graphics": {
+        "contextLost": false,
+        "parallelShaderCompileSupported": true,
+        "renderer": "WebKit WebGL",
+        "scope": "One final read of existing World context identity/capabilities; no render/query timer or readiness change.",
+        "unmaskedRenderer": "ANGLE (Microsoft, Microsoft Basic Render Driver (0x0000008C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "unmaskedVendor": "Google Inc. (Microsoft)",
+        "vendor": "WebKit"
+      },
+      "visibility": {
+        "passed": true,
+        "hiddenStartExactlyEqualsEnd": true,
+        "hiddenMs": 300901.79999999993,
+        "visibleMs": 4354.699999999953,
+        "resumedSimulatedSeconds": 1.2999999999988177,
+        "visibleMenuPauses": [
+          "menu"
+        ]
+      }
+    },
+    "desktop-smoke.json": {
+      "ok": true,
+      "errors": [],
+      "loadingRecipe": {
+        "animalPrefetch": false,
+        "collectiveReadiness": false,
+        "fluidDepth": true,
+        "parallelDioramaAssets": false,
+        "parallelReadiness": false,
+        "pauseLoadingMenu": true,
+        "scope": "Normal production loading pipeline; explicit smoke-only shared ground/menu pause/animal prefetch options recorded above.",
+        "sharedGroundClip": false
+      },
+      "config": {
+        "biome": "gran-canon",
+        "culture": "mapungubwe",
+        "quality": "muy_baja",
+        "relief": 1,
+        "river": true,
+        "seed": "1791574477591"
+      },
+      "worldReadyAtPageOriginMs": 61878.80000000005,
+      "firstObservedBoundaryToWorldReadyMs": 40458.700000000186,
+      "productionLoadingFinalElapsedMs": 43097.59999999986,
+      "phasesAwaitedMsNestedNotAdditive": {
+        "load-active-animal-actors": 0.19999999995343387,
+        "load-animal-models": 2513.600000000093,
+        "load-biome-ground": 1186.3999999999069,
+        "load-biome-models": 1948.5,
+        "load-chunks-horizon-ready": 1690.0999999998603,
+        "load-crop-batch": 532.1999999999534,
+        "load-crop-bridges": 0.30000000004656613,
+        "load-crop-model": 0.10000000009313226,
+        "load-far-assets": 2262.6999999999534,
+        "load-hands-ready": 307.19999999995343,
+        "load-milestone:animals": 1.3999999999068675,
+        "load-milestone:biome": 1.9000000001396984,
+        "load-milestone:buildings": 1.3999999999068675,
+        "load-milestone:chunks": 1.5,
+        "load-milestone:crops": 49.800000000046566,
+        "load-milestone:far-assets": 50.300000000046566,
+        "load-milestone:gpu": 54.200000000186265,
+        "load-milestone:sky": 5.800000000046566,
+        "load-milestone:vfx": 1.2999999998137357,
+        "load-milestone:walls": 1.5999999998603016,
+        "load-sky": 1,
+        "load-vfx-catalogue": 197.19999999995343,
+        "load-vfx-constructors": 6.800000000046566,
+        "load-vfx-texture": 911.8000000000466,
+        "load-village-models": 1365,
+        "load-wall-catalogue": 239.9000000001397,
+        "load-wall-prototypes": 3626.899999999907,
+        "load-warm-gpu": 12868.09999999986,
+        "load-worker-actors": 0.0999999998603016,
+        "warm-compile-destruction": 0.10000000009313226,
+        "warm-compile-staging": 2884.9000000001397,
+        "warm-compile-world": 7294.700000000186,
+        "warm-depth-capture": 4,
+        "warm-draw-batches": 361.5,
+        "warm-final-fence": 82.30000000004657,
+        "warm-prepare-depth": 1005.7999999998136,
+        "warm-program-bindings": 103.30000000004657,
+        "warm-upload-textures": 1023.6999999999534
+      },
+      "rafFinal": {
+        "callbacks": 894,
+        "maxIntervalMs": 1328.199999999997
+      },
+      "graphics": {
+        "contextLost": false,
+        "parallelShaderCompileSupported": true,
+        "renderer": "WebKit WebGL",
+        "scope": "One final read of existing World context identity/capabilities; no render/query timer or readiness change.",
+        "unmaskedRenderer": "ANGLE (Microsoft, Microsoft Basic Render Driver (0x0000008C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "unmaskedVendor": "Google Inc. (Microsoft)",
+        "vendor": "WebKit"
+      },
+      "probe": {
+        "passed": true,
+        "cases": 28,
+        "mismatches": 0,
+        "maxDelta": 0,
+        "steps": [
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 135,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 43
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints",
+              "id": 41
+            },
+            "form": "plain",
+            "lava": false,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "disabled",
+            "occupied": 121,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 220,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 43
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints",
+              "id": 41
+            },
+            "form": "plain",
+            "lava": false,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "inside",
+            "occupied": 36,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 171,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 43
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints",
+              "id": 41
+            },
+            "form": "plain",
+            "lava": false,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "outside",
+            "occupied": 85,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              0.1,
+              -0.9,
+              1.1,
+              0.1
+            ],
+            "clear": 226,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 43
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints",
+              "id": 41
+            },
+            "form": "plain",
+            "lava": false,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "moved",
+            "occupied": 30,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 220,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,3,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 45
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,3,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints",
+              "id": 44
+            },
+            "form": "instanced",
+            "lava": false,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "inside",
+            "occupied": 36,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 171,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,3,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 45
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,3,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints",
+              "id": 44
+            },
+            "form": "instanced",
+            "lava": false,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "outside",
+            "occupied": 85,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 220,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,524289,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 47
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,524289,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints",
+              "id": 46
+            },
+            "form": "batched",
+            "lava": false,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "inside",
+            "occupied": 36,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 171,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,524289,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 47
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,524289,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints",
+              "id": 46
+            },
+            "form": "batched",
+            "lava": false,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "outside",
+            "occupied": 85,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 220,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,1,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141376,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 49
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,1,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133186,srgb,african-water-relative-v4.1.4|hdr-endpoints",
+              "id": 48
+            },
+            "form": "morph",
+            "lava": false,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "inside",
+            "occupied": 36,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 171,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,1,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141376,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 49
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,1,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133186,srgb,african-water-relative-v4.1.4|hdr-endpoints",
+              "id": 48
+            },
+            "form": "morph",
+            "lava": false,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "outside",
+            "occupied": 85,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 220,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141344,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 51
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133154,srgb,african-water-relative-v4.1.4|hdr-endpoints",
+              "id": 50
+            },
+            "form": "skinned",
+            "lava": false,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "inside",
+            "occupied": 36,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 171,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141344,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 51
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133154,srgb,african-water-relative-v4.1.4|hdr-endpoints",
+              "id": 50
+            },
+            "form": "skinned",
+            "lava": false,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "outside",
+            "occupied": 85,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 220,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 53
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints",
+              "id": 52
+            },
+            "form": "displaced",
+            "lava": false,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "inside",
+            "occupied": 36,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 171,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 53
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints",
+              "id": 52
+            },
+            "form": "displaced",
+            "lava": false,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "outside",
+            "occupied": 85,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 135,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 43
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133122,srgb,african-lava-relative-v4.1.4|hdr-endpoints",
+              "id": 54
+            },
+            "form": "plain",
+            "lava": true,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "disabled",
+            "occupied": 121,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 220,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 43
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133122,srgb,african-lava-relative-v4.1.4|hdr-endpoints",
+              "id": 54
+            },
+            "form": "plain",
+            "lava": true,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "inside",
+            "occupied": 36,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 171,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 43
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133122,srgb,african-lava-relative-v4.1.4|hdr-endpoints",
+              "id": 54
+            },
+            "form": "plain",
+            "lava": true,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "outside",
+            "occupied": 85,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              0.1,
+              -0.9,
+              1.1,
+              0.1
+            ],
+            "clear": 226,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 43
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133122,srgb,african-lava-relative-v4.1.4|hdr-endpoints",
+              "id": 54
+            },
+            "form": "plain",
+            "lava": true,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "moved",
+            "occupied": 30,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 220,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,3,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 45
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,3,133122,srgb,african-lava-relative-v4.1.4|hdr-endpoints",
+              "id": 55
+            },
+            "form": "instanced",
+            "lava": true,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "inside",
+            "occupied": 36,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 171,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,3,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 45
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,3,133122,srgb,african-lava-relative-v4.1.4|hdr-endpoints",
+              "id": 55
+            },
+            "form": "instanced",
+            "lava": true,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "outside",
+            "occupied": 85,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 220,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,524289,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 47
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,524289,133122,srgb,african-lava-relative-v4.1.4|hdr-endpoints",
+              "id": 56
+            },
+            "form": "batched",
+            "lava": true,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "inside",
+            "occupied": 36,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 171,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,524289,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 47
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,524289,133122,srgb,african-lava-relative-v4.1.4|hdr-endpoints",
+              "id": 56
+            },
+            "form": "batched",
+            "lava": true,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "outside",
+            "occupied": 85,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 220,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,1,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141376,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 49
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,1,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133186,srgb,african-lava-relative-v4.1.4|hdr-endpoints",
+              "id": 57
+            },
+            "form": "morph",
+            "lava": true,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "inside",
+            "occupied": 36,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 171,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,1,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141376,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 49
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,1,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133186,srgb,african-lava-relative-v4.1.4|hdr-endpoints",
+              "id": 57
+            },
+            "form": "morph",
+            "lava": true,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "outside",
+            "occupied": 85,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 220,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141344,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 51
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133154,srgb,african-lava-relative-v4.1.4|hdr-endpoints",
+              "id": 58
+            },
+            "form": "skinned",
+            "lava": true,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "inside",
+            "occupied": 36,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 171,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141344,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 51
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133154,srgb,african-lava-relative-v4.1.4|hdr-endpoints",
+              "id": 58
+            },
+            "form": "skinned",
+            "lava": true,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "outside",
+            "occupied": 85,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 220,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 53
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133122,srgb,african-lava-relative-v4.1.4|hdr-endpoints",
+              "id": 59
+            },
+            "form": "displaced",
+            "lava": true,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "inside",
+            "occupied": 36,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 171,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 53
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133122,srgb,african-lava-relative-v4.1.4|hdr-endpoints",
+              "id": 59
+            },
+            "form": "displaced",
+            "lava": true,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "outside",
+            "occupied": 85,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          }
+        ],
+        "scope": "Private 16x16 offscreen depth attachment, packed by an explicit QA RGBA pass using the prepared World renderer. Full authored colorWrite=false fallback versus specialized depth; offscreen program identities are not screen identity proof. No World materials/state altered.",
+        "packingProgram": {
+          "cacheKey": "22,23,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,0,srgb,onBeforeCompile(){}",
+          "id": 42
+        }
+      }
+    },
+    "desktop-visibility.json": {
+      "ok": true,
+      "errors": [],
+      "loadingRecipe": {
+        "animalPrefetch": false,
+        "collectiveReadiness": false,
+        "fluidDepth": true,
+        "parallelDioramaAssets": false,
+        "parallelReadiness": false,
+        "pauseLoadingMenu": true,
+        "scope": "Normal production loading pipeline; explicit smoke-only shared ground/menu pause/animal prefetch options recorded above.",
+        "sharedGroundClip": false
+      },
+      "config": {
+        "biome": "gran-canon",
+        "culture": "mapungubwe",
+        "quality": "muy_baja",
+        "relief": 1,
+        "river": true,
+        "seed": "712"
+      },
+      "worldReadyAtPageOriginMs": 61396.40000000014,
+      "firstObservedBoundaryToWorldReadyMs": 39476.60000000009,
+      "productionLoadingFinalElapsedMs": 362781.1999999999,
+      "phasesAwaitedMsNestedNotAdditive": {
+        "load-active-animal-actors": 0.30000000004656613,
+        "load-animal-models": 2315.899999999907,
+        "load-biome-ground": 1122.4000000001397,
+        "load-biome-models": 2169.3000000000466,
+        "load-chunks-horizon-ready": 1684.5999999998603,
+        "load-crop-batch": 504.30000000004657,
+        "load-crop-bridges": 0.10000000009313226,
+        "load-crop-model": 0.10000000009313226,
+        "load-far-assets": 2075,
+        "load-hands-ready": 1819.1000000000931,
+        "load-milestone:animals": 1.2000000001862643,
+        "load-milestone:biome": 2.4000000001396984,
+        "load-milestone:buildings": 1.300000000046566,
+        "load-milestone:chunks": 1.300000000046566,
+        "load-milestone:crops": 51.299999999813735,
+        "load-milestone:far-assets": 50.199999999953434,
+        "load-milestone:gpu": 55,
+        "load-milestone:sky": 5.2000000001862645,
+        "load-milestone:vfx": 1.5,
+        "load-milestone:walls": 1.1000000000931325,
+        "load-sky": 0.7999999998137355,
+        "load-vfx-catalogue": 157.79999999981374,
+        "load-vfx-constructors": 6.199999999953434,
+        "load-vfx-texture": 864.5,
+        "load-village-models": 1270.1999999999534,
+        "load-wall-catalogue": 159.30000000004657,
+        "load-wall-prototypes": 2829.8000000000466,
+        "load-warm-gpu": 10812.09999999986,
+        "load-worker-actors": 830.6999999999534,
+        "warm-compile-destruction": 125.60000000009312,
+        "warm-compile-staging": 2067.5999999998603,
+        "warm-compile-world": 3254.8000000000466,
+        "warm-depth-capture": 6.800000000046566,
+        "warm-draw-batches": 434.19999999995343,
+        "warm-final-fence": 130.5,
+        "warm-prepare-depth": 1211.6999999999534,
+        "warm-program-bindings": 1574.6000000000931,
+        "warm-upload-textures": 1883.3999999999069
+      },
+      "rafFinal": {
+        "callbacks": 861,
+        "maxIntervalMs": 310281.3
+      },
+      "graphics": {
+        "contextLost": false,
+        "parallelShaderCompileSupported": true,
+        "renderer": "WebKit WebGL",
+        "scope": "One final read of existing World context identity/capabilities; no render/query timer or readiness change.",
+        "unmaskedRenderer": "ANGLE (Microsoft, Microsoft Basic Render Driver (0x0000008C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "unmaskedVendor": "Google Inc. (Microsoft)",
+        "vendor": "WebKit"
+      },
+      "visibility": {
+        "passed": true,
+        "hiddenStartExactlyEqualsEnd": true,
+        "hiddenMs": 300485.8999999999,
+        "visibleMs": 4338.899999999907,
+        "resumedSimulatedSeconds": 1.2999999999988177,
+        "visibleMenuPauses": [
+          "menu"
+        ]
+      },
+      "probe": {
+        "passed": true,
+        "cases": 28,
+        "mismatches": 0,
+        "maxDelta": 0,
+        "steps": [
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 135,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 63
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints",
+              "id": 61
+            },
+            "form": "plain",
+            "lava": false,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "disabled",
+            "occupied": 121,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 220,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 63
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints",
+              "id": 61
+            },
+            "form": "plain",
+            "lava": false,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "inside",
+            "occupied": 36,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 171,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 63
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints",
+              "id": 61
+            },
+            "form": "plain",
+            "lava": false,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "outside",
+            "occupied": 85,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              0.1,
+              -0.9,
+              1.1,
+              0.1
+            ],
+            "clear": 226,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 63
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints",
+              "id": 61
+            },
+            "form": "plain",
+            "lava": false,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "moved",
+            "occupied": 30,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 220,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,3,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 65
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,3,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints",
+              "id": 64
+            },
+            "form": "instanced",
+            "lava": false,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "inside",
+            "occupied": 36,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 171,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,3,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 65
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,3,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints",
+              "id": 64
+            },
+            "form": "instanced",
+            "lava": false,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "outside",
+            "occupied": 85,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 220,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,524289,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 67
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,524289,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints",
+              "id": 66
+            },
+            "form": "batched",
+            "lava": false,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "inside",
+            "occupied": 36,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 171,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,524289,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 67
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,524289,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints",
+              "id": 66
+            },
+            "form": "batched",
+            "lava": false,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "outside",
+            "occupied": 85,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 220,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,1,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141376,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 69
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,1,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133186,srgb,african-water-relative-v4.1.4|hdr-endpoints",
+              "id": 68
+            },
+            "form": "morph",
+            "lava": false,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "inside",
+            "occupied": 36,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 171,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,1,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141376,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 69
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,1,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133186,srgb,african-water-relative-v4.1.4|hdr-endpoints",
+              "id": 68
+            },
+            "form": "morph",
+            "lava": false,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "outside",
+            "occupied": 85,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 220,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141344,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 71
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133154,srgb,african-water-relative-v4.1.4|hdr-endpoints",
+              "id": 70
+            },
+            "form": "skinned",
+            "lava": false,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "inside",
+            "occupied": 36,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 171,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141344,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 71
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133154,srgb,african-water-relative-v4.1.4|hdr-endpoints",
+              "id": 70
+            },
+            "form": "skinned",
+            "lava": false,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "outside",
+            "occupied": 85,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 220,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 73
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints",
+              "id": 72
+            },
+            "form": "displaced",
+            "lava": false,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "inside",
+            "occupied": 36,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 171,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 73
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133122,srgb,african-water-relative-v4.1.4|hdr-endpoints",
+              "id": 72
+            },
+            "form": "displaced",
+            "lava": false,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "outside",
+            "occupied": 85,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 135,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 63
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133122,srgb,african-lava-relative-v4.1.4|hdr-endpoints",
+              "id": 74
+            },
+            "form": "plain",
+            "lava": true,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "disabled",
+            "occupied": 121,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 220,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 63
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133122,srgb,african-lava-relative-v4.1.4|hdr-endpoints",
+              "id": 74
+            },
+            "form": "plain",
+            "lava": true,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "inside",
+            "occupied": 36,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 171,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 63
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133122,srgb,african-lava-relative-v4.1.4|hdr-endpoints",
+              "id": 74
+            },
+            "form": "plain",
+            "lava": true,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "outside",
+            "occupied": 85,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              0.1,
+              -0.9,
+              1.1,
+              0.1
+            ],
+            "clear": 226,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 63
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133122,srgb,african-lava-relative-v4.1.4|hdr-endpoints",
+              "id": 74
+            },
+            "form": "plain",
+            "lava": true,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "moved",
+            "occupied": 30,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 220,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,3,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 65
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,3,133122,srgb,african-lava-relative-v4.1.4|hdr-endpoints",
+              "id": 75
+            },
+            "form": "instanced",
+            "lava": true,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "inside",
+            "occupied": 36,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 171,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,3,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 65
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,3,133122,srgb,african-lava-relative-v4.1.4|hdr-endpoints",
+              "id": 75
+            },
+            "form": "instanced",
+            "lava": true,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "outside",
+            "occupied": 85,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 220,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,524289,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 67
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,524289,133122,srgb,african-lava-relative-v4.1.4|hdr-endpoints",
+              "id": 76
+            },
+            "form": "batched",
+            "lava": true,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "inside",
+            "occupied": 36,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 171,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,524289,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 67
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,524289,133122,srgb,african-lava-relative-v4.1.4|hdr-endpoints",
+              "id": 76
+            },
+            "form": "batched",
+            "lava": true,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "outside",
+            "occupied": 85,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 220,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,1,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141376,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 69
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,1,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133186,srgb,african-lava-relative-v4.1.4|hdr-endpoints",
+              "id": 77
+            },
+            "form": "morph",
+            "lava": true,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "inside",
+            "occupied": 36,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 171,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,1,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141376,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 69
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,1,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133186,srgb,african-lava-relative-v4.1.4|hdr-endpoints",
+              "id": 77
+            },
+            "form": "morph",
+            "lava": true,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "outside",
+            "occupied": 85,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 220,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141344,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 71
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133154,srgb,african-lava-relative-v4.1.4|hdr-endpoints",
+              "id": 78
+            },
+            "form": "skinned",
+            "lava": true,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "inside",
+            "occupied": 36,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 171,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141344,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 71
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133154,srgb,african-lava-relative-v4.1.4|hdr-endpoints",
+              "id": 78
+            },
+            "form": "skinned",
+            "lava": true,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "outside",
+            "occupied": 85,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 220,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 73
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133122,srgb,african-lava-relative-v4.1.4|hdr-endpoints",
+              "id": 79
+            },
+            "form": "displaced",
+            "lava": true,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "inside",
+            "occupied": 36,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          },
+          {
+            "bounds": [
+              -0.6,
+              -0.6,
+              0.6,
+              0.6
+            ],
+            "clear": 171,
+            "depth": {
+              "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3200,1,141312,srgb,world-standard-depth-v1|painted-fluid-clip",
+              "id": 73
+            },
+            "fallback": {
+              "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,false,false,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,133122,srgb,african-lava-relative-v4.1.4|hdr-endpoints",
+              "id": 79
+            },
+            "form": "displaced",
+            "lava": true,
+            "maxDelta": 0,
+            "mismatches": 0,
+            "mode": "outside",
+            "occupied": 85,
+            "pixels": 256,
+            "stats": [
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 1,
+                "specialized": 0,
+                "stockAlphaSpecialized": 0
+              },
+              {
+                "emptySkipped": 0,
+                "excluded": 0,
+                "fallback": 0,
+                "specialized": 1,
+                "stockAlphaSpecialized": 0
+              }
+            ],
+            "tolerance": 1.1920928955078125e-07
+          }
+        ],
+        "scope": "Private 16x16 offscreen depth attachment, packed by an explicit QA RGBA pass using the prepared World renderer. Full authored colorWrite=false fallback versus specialized depth; offscreen program identities are not screen identity proof. No World materials/state altered.",
+        "packingProgram": {
+          "cacheKey": "28,29,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,0,srgb,onBeforeCompile(){}",
+          "id": 62
+        }
+      }
+    }
+  },
+  "limitations": [
+    "Control also passed; no proof that fluid depth alone fixes previous timeouts.",
+    "Control fixture712 first, candidate random New next, candidate fixture712 last; cache/order/hardware variability prohibit causal speed claims.",
+    "worldReadyAt is page-origin time, not a loading duration; firstObservedBoundaryToWorldReady is explicitly observer boundary, not exact start command timing.",
+    "Final elapsed/RAF in fixture reports include real hidden300000ms; do not use them as load/frame metrics.",
+    "Raster proof is private16x16 offscreen actual depth via RGBA pass, not screen/GPU timing or six-biome equivalence.",
+    "Native report does not expose resource-disposal or renderer-state cleanup counters; exact ownership/restoration is source and CPU-contract evidence.",
+    "Pause-menu ON in every arm is not independently accepted."
+  ]
+}
