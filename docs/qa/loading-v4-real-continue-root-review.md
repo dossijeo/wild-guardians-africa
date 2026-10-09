@@ -20,6 +20,16 @@ The 1,093 loading RAF intervals contain six above 50 ms and one above 100 ms; ma
 
 Root retained the DOM report, console log and a real HUD screenshot, then closed the temporary tab. No resource-leak or repeated-load acceptance follows from closing one tab.
 
+The feature reviewer clarified that `progress.elapsed` starts after the prepared diorama promise. It is not click-to-control time and excludes the diorama preload witnessed above. Preserve the raw timestamps when making the fair baseline comparison.
+
+## Actual New and cancellation
+
+Root subsequently tested the same runtime (documentation HEAD `3133870e`) through New Game, choosing Volcanes/Musgum in the embedded selector. The journey finished before the attempted Skip click, so that stale locator failed without changing application state; root inspected the current selector and continued normally. The real world, village, HUD and tutorial were visibly present in the final screenshot. A normal new-game autosave was created; no existing save was deleted.
+
+The diagnostic closed without cancellation, with verified progress 1, no pending stages, no error and no download failures. Progress lifetime was 19,503 ms, including approximately 4,018.6 ms after visible readiness. All camera values before and after the cinematic matched. The 1,071 RAF intervals include two above 100 ms and a maximum of 166.2 ms. This is one desktop New Game, not a comparative benchmark. Raw evidence: `v4-root-menu-new-volcanes-3133870e/` in the feature QA directory.
+
+Root then continued that newly created Musgum/Volcanes slot and clicked Cancel during GPU preparation. Cancellation closed the diagnostic at 64.29% with `ready=false`, `cancelled=true`, `error=null`, and unfinished GPU/far/visible milestones. The actual native menu returned and remained stable after another five seconds. Raw initial and after-wait reports, console and menu screenshot are retained in `v4-root-menu-cancel-3133870e/`. Both temporary tabs were closed; browser inventory was empty afterward. This verifies cancellation during GPU preparation, not every failure/cinematic phase or leak-free repeated loading.
+
 ## Integration priority and remaining evidence
 
 The user now prioritizes integrating the loading feature for publication this morning. Visual polish and the paired isolated focus-cost experiment are complete within their documented scopes. Prioritize confirmed upload stalls, a fair current-V4 initialization comparison, progress calibration and current-source functional/lifecycle coverage. Keep the rejected frame-slack experiment disabled. Do not treat historical V3 coverage, this small Continue, or the isolated focus experiment as full production acceptance. Windows is not a merge prerequisite, as explicitly authorized by the user.
