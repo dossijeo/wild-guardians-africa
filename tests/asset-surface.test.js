@@ -27,6 +27,7 @@ test('native atlas loading preserves shared color/normal/MR maps, per-asset mate
   for(const id of biomes){const p=pack(id),assets=new Assets(),calls=[];assets.texture=async (url,color)=>{calls.push({url,color});const texture=new THREE.Texture();texture.colorSpace=color?THREE.SRGBColorSpace:THREE.NoColorSpace;return texture;};
     const levels=await assets.biome(p);assert.equal(calls.length,3);assert.deepEqual(calls.map(c=>c.color),[true,false,false]);assert.equal(levels.length,20);
     for(const group of levels){const material=group[0].material;assert.equal(material.map,levels[0][0].material.map);assert.equal(material.normalMap,levels[0][0].material.normalMap);assert.equal(material.metalnessMap,material.roughnessMap);assert.equal(material.normalMap.colorSpace,THREE.NoColorSpace);assert.equal(material.normalScale.x,p.material.normalScale);assert.equal(material.alphaTest,.35);assert.equal(material.aoMap,null);
+      assert.equal(material.side,THREE.FrontSide);assert.equal(material.shadowSide,THREE.FrontSide);
       for(const mesh of group){assert.equal(mesh.material,material);assert.equal(mesh.geometry.attributes.tangent.count,mesh.geometry.attributes.position.count);}
     }
     levels.flat().forEach(mesh=>mesh.geometry.dispose());new Set(levels.map(group=>group[0].material)).forEach(m=>m.dispose());
