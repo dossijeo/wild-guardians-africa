@@ -46,4 +46,26 @@ Initial CPU validation: 68/68 tests passed across
 `loading-progress-qa.test.js`. Build passed with 321 modules and the existing
 large-chunk warning. These checks ran while root's full CPU suite was active;
 their durations are functional diagnostics, not isolated performance evidence.
-No native GPU comparison or resource/readback acceptance is recorded yet.
+Native four-arm A/B/B/A evidence is now retained in
+`zero-vertex-AB-dd0f51d0-summary.json` and
+`zero-vertex-BA-dd0f51d0-summary.json`, with raw loading, ordinary gameplay
+and actual Save-and-return audio cleanup reports. All four used runtime
+dd0f51d0 and independent temporary archive copies at 1280x720. The main
+Desert fixes were not merged into this frozen comparison.
+
+Far preparation GPU p95 was A1 8.999, B1 0.500, B2 0.529, A2 5.653 ms;
+all B preparation draws reported zero triangles. The first positive native
+world draw retained 2,676,866 triangles in all arms, without an extreme new
+GPU stall in those observations. This does not establish general pipeline
+warmth. Cinematic and complete RAF results were mixed, including higher B
+outliers; the four-arm table retains those negative results. No global
+fluency, total-loading or production acceptance follows from this targeted
+envelope change.
+
+Resource/readback and expanded native cancellation/context-loss/repeated
+lifecycle acceptance remain pending. The requested-resource fixture restores
+both QA preparation flags at verified readiness so later ordinary gameplay
+has the same policy in both arms. The temporal readback fixture has an
+explicit zero-vertices option, preserving the default recipe and recording
+zero triangles and direct-method restoration; it has not yet been exercised
+natively for this option. No physical peak RAM/VRAM neutrality is claimed.
