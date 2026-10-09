@@ -1,0 +1,49 @@
+{
+  "status": "CPU_CONTRACT_ONLY_NOT_NATIVE_APPROVAL",
+  "mesh": "maiz_02_joven",
+  "sourceSha256": "be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef",
+  "blenderPayloadSha256": "d4796b80770b472ace76372cbb12f75138a294eed8daa0ed8085606f8b2d8335",
+  "binary": ".cache/frontside-model-pilot/candidates/archive/283f62354defab3135e4b57a03e5015f7a7cef311e05adf1734a13d0fd88cce6.wgleaf",
+  "binarySha256": "283f62354defab3135e4b57a03e5015f7a7cef311e05adf1734a13d0fd88cce6",
+  "binaryBytes": 73603,
+  "counts": {
+    "vertices": 1921,
+    "faces": 1095,
+    "coreIds": 936,
+    "metadataBytes": 694,
+    "totalBytes": 73603
+  },
+  "nativeSharedRecipe": {
+    "uniqueVertices": 1921,
+    "triangles": 1254,
+    "attributeBytes": 61472,
+    "indexBytes": 7524,
+    "geometryBytes": 68996,
+    "sourceGeometryBytes": 75748,
+    "geometryByteChangePercent": -8.913766700110893,
+    "drawGroups": [
+      {
+        "start": 0,
+        "count": 2808,
+        "materialIndex": 0
+      },
+      {
+        "start": 2808,
+        "count": 477,
+        "materialIndex": 1
+      },
+      {
+        "start": 3285,
+        "count": 477,
+        "materialIndex": 2
+      }
+    ]
+  },
+  "limitations": [
+    "CPU Float32 decoder equivalence only; visual/UV interpolation and live growth quality not approved.",
+    "936 original core triangles are preserved; their sidedness still requires independent validation.",
+    "Native shared reverses reuse PN/UV vertices and draw-level normal recipe; original Blender nine-lane projection is a different cost model, retained unchanged.",
+    "Source bridges remain untouched. New topology cannot reuse source face IDs silently; no state or bridge runtime activation.",
+    "Binary and geometry are separate costs, not category package, resident coexistence or GPU savings."
+  ]
+}
