@@ -1,0 +1,81 @@
+{
+  "scope": "Explicit native twelve-body scheduled navigation fixture; no campaign, natural intro distribution or balance acceptance",
+  "biome": "desierto",
+  "seed": "712",
+  "culture": "mapungubwe",
+  "group": [
+    "warthog",
+    "warthog",
+    "warthog",
+    "warthog",
+    "hyena",
+    "hyena",
+    "hyena",
+    "buffalo",
+    "buffalo",
+    "lion",
+    "lion",
+    "rhino"
+  ],
+  "sourceCommit": null,
+  "status": "passed",
+  "initialSnapshotSHA256": "19560f521a75e669905a5f532ca11aaf23e6913290337c402f525e1730584880",
+  "checks": {
+    "preparationStateUnchanged": true,
+    "raidCleared": true,
+    "nativeClock": true,
+    "sampledNativeTerrainMovement": true,
+    "ledger": true,
+    "roundtrip": true
+  },
+  "budgetSeconds": 7,
+  "actorIds": [
+    "animal-3",
+    "animal-4",
+    "animal-5",
+    "animal-6",
+    "animal-7",
+    "animal-8",
+    "animal-9",
+    "animal-10",
+    "animal-11",
+    "animal-12",
+    "animal-13",
+    "animal-14"
+  ],
+  "spawnStateSHA256": "c38762369943bfa93d05c8498284a79bdba3cb651a90a800ffa2c11cb54091bb",
+  "intervals": 54,
+  "simulatedSeconds": 413.4999999999931,
+  "actualHits": 2,
+  "retirementEvents": 1,
+  "structureHits": [
+    {
+      "animalId": "animal-3",
+      "targetId": "structure-2",
+      "kind": "center",
+      "x": 95,
+      "z": 0,
+      "previousHp": 600,
+      "hp": 590,
+      "maxHp": 600,
+      "criticalThreshold": 252,
+      "firstHitThisRaid": true
+    },
+    {
+      "animalId": "animal-3",
+      "targetId": "structure-2",
+      "kind": "center",
+      "x": 95,
+      "z": 0,
+      "previousHp": 590,
+      "hp": 580,
+      "maxHp": 600,
+      "criticalThreshold": 252,
+      "firstHitThisRaid": false
+    }
+  ],
+  "result": null,
+  "finalSnapshotSHA256": "e9ec4350c9cff41c6106359767b9c9fb8b1a6e12dc36b7b96f723f775b51be63",
+  "milliseconds": 2004.8482000000001,
+  "transportFailure": null
+}
