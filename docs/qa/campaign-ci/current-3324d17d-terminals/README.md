@@ -1,6 +1,6 @@
 # Native campaign terminals at 3324d17d
 
-All sixteen campaigns used immutable source `3324d17dd2305ea8595aea311c518cc6db2404ad`, original seed 712 and the existing responsible reinvestment strategy. This batch contains thirteen 100-night victories and three incomplete incursions. No campaign was restarted, cancelled, rerolled or locally rerun.
+All seventeen campaigns used immutable source `3324d17dd2305ea8595aea311c518cc6db2404ad`, original seed 712 and the existing responsible reinvestment strategy. This batch contains thirteen 100-night victories and four incomplete incursions. No campaign was restarted, cancelled, rerolled or locally rerun.
 
 | Case | Run | Outcome | Unoccupied daylight |
 |---|---|---|---:|
@@ -20,6 +20,7 @@ All sixteen campaigns used immutable source `3324d17dd2305ea8595aea311c518cc6db2
 | Desert / Musgum | 37876676998 | Unfinished incursion on day 69; 68 nights completed | Not evaluated over 100 nights |
 | Desert / Ethiopian | 37876722341 | Unfinished incursion on day 73; 72 nights completed | Not evaluated over 100 nights |
 | Desert / Swahili | 37876754661 | Unfinished incursion on day 71; 70 nights completed | Not evaluated over 100 nights |
+| Desert / Saheliana | 37876748172 | Unfinished incursion on day 100; 99 nights completed | Not evaluated over 100 nights |
 
 The activity threshold is strictly below 25%. CI success alone does not establish that threshold; the thirteen complete snapshots independently reproduce their entire archived summaries. Eight pass activity; all four Grand Canyon campaigns and Desert/Mapungubwe fail activity despite surviving 100 nights.
 
@@ -51,4 +52,8 @@ Across the four cultures, days 1-20 have 69.75-74.58% unoccupied daylight and da
 
 Recorded operating margins are 5.30-10.07%; wages consume 33.56-34.86% of harvested income. Static break-even ratios hold spending fixed and cannot predict reinvestment, inventory, delivery timing or a changed campaign. No balance, hiring policy, seed or acceptance threshold was adjusted.
 
-The committed failure auditor was also rerun as its actual CLI on the original Musgum artifact: exit 0, all 320 source hashes checked. `failed-auditor-cli-reproduction.txt` preserves that output. Desert/Mapungubwe subsequently completed and is preserved with its activity rejection. Desert/Saheliana remained in progress at the last authoritative check; it is not accepted or replaced here.
+The committed failure auditor was also rerun as its actual CLI on the original Musgum artifact: exit 0, all 320 source hashes checked. `failed-auditor-cli-reproduction.txt` preserves that output. Desert/Mapungubwe subsequently completed and is preserved with its activity rejection. Desert/Saheliana subsequently failed on its original day100 incursion:99 nights completed, no final report/summary or victory/activity verdict. Its original full terminal state and responsible-job log are preserved separately, without replacement.
+
+## Final original terminal: Desert / Saheliana
+
+Job113646986727 ended with failure on2026-10-09T05:35:37Z. The unfinished day100 incursion retains one retreating zero-hit warthog with null path, cash343700 and resultnull. The failed-artifact CLI checks all320 frozen source hashes and complete intrinsic persistence/ledger invariants. No physical cause is inferred from this archive. All17 original runs are now terminal:13 victories (8 accepted activity,5 rejected) and4 incomplete incursions. No campaigns were restarted.
