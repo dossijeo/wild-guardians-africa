@@ -24,3 +24,10 @@ Reproduce CPU diagnostics: `node tools/qa_fractional_exit.mjs`. Recorded `replay
 - Native replay dt=1: raid ends after17 simulated seconds, day29 mandatory hiring; max displacement3.8 m, maximum tick38.635 ms.
 
 Cold maxima include lazy collision preparation / original routing and are intentionally retained. The eight-pop budget bounds work units, not a hard wall-clock deadline. This correctness fix is **not** proof of stable camera-travel frametimes, a GPU improvement, or full 100-night campaign acceptance. No renderer or GPU experiment ran. Build/full-suite/current-source campaign checks belong to integration QA after review.
+
+
+## PR review follow-up — persistence hardening
+
+Optional frontier validation is extracted into `src/persistence/exit-connector-snapshot.js`. Queued i/j must be numeric safe integers, never strings that concatenate during expansion. Costs require the canonical origin with zero cost. Queued coordinates must exist in the cost map; stale greater costs remain valid, while smaller queued costs are rejected. Parent coordinates must be neighboring cells with strictly increasing cost, proving acyclicity in linear time. Heap structure, unique insertion orders and insertion/pop counts are checked at the persistence boundary only.
+
+After the isolated loading-resource window ended, **58/58 directed tests passed** with the hardened validator (`regression-hardened.txt.gz`), including string coordinate corruption, missing/nonzero origin, unknown queued nodes, queued costs below the known cost, broken/cyclic parents, and stale greater-cost compatibility. Native saved-frontier continuation remains exact. `npm run build` passed with exit0; full output and the exit-code receipt are archived. The original55-test evidence is retained separately. No GPU or full100-night campaign rerun was performed.

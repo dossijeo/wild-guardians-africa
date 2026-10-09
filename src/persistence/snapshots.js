@@ -1,4 +1,5 @@
 import {BASIC_STEPS,TUTORIAL_IDS} from '../tutorial/messages.js';
+import {validExitFrontier} from './exit-connector-snapshot.js';
 export const SAVE_VERSION=1;
 function wholeMoney(value){
   return value&&typeof value.n==='string'&&typeof value.d==='string'&&/^-?\d+$/.test(value.n)&&/^[1-9]\d*$/.test(value.d)&&BigInt(value.n)%BigInt(value.d)===0n;
@@ -26,10 +27,7 @@ export function validateSnapshot(state) {
   for(const animal of state.raid?.animals??[])if(animal.exitConnectorSearch!==undefined){
     const search=animal.exitConnectorSearch;
     if(!search||typeof search.key!=='string'||search.key.length>256||!Number.isSafeInteger(search.next)||search.next<0||search.next>192)throw new Error('Conector de salida inválido');
-    if(search.fine!==undefined){
-      const f=search.fine,coordinate=k=>typeof k==='string'&&/^-?\d+,-?\d+$/.test(k)&&k.split(',').every(v=>Math.abs(Number(v))<=128);
-      if(!f||!Array.isArray(f.items)||f.items.length>4096||!Number.isSafeInteger(f.sequence)||f.sequence<0||f.sequence>32769||!Number.isSafeInteger(f.visited)||f.visited<0||f.visited>4096||!f.costs||!f.previous||!Number.isSafeInteger(f.nodeCount)||f.nodeCount!==Object.keys(f.costs).length||Object.keys(f.costs).length>4096||Object.keys(f.previous).length>4096||Object.entries(f.costs).some(([k,v])=>!coordinate(k)||!Number.isFinite(v)||v<0)||Object.entries(f.previous).some(([k,v])=>!coordinate(k)||!coordinate(v)||!Object.hasOwn(f.costs,k)||!Object.hasOwn(f.costs,v))||f.items.some(e=>!e||!Number.isSafeInteger(e.order)||e.order<0||e.order>=f.sequence||!e.value||!coordinate(`${e.value.i},${e.value.j}`)||!Number.isFinite(e.value.g)||e.value.g<0||!Number.isFinite(e.value.f)||e.value.f<0))throw new Error('Conector fraccional inválido');
-    }
+    if(search.fine!==undefined&&!validExitFrontier(search.fine))throw new Error('Conector fraccional inválido');
   }
   for(const name of ['plants','structures','workers','crates','villages','spells','tasks']) {
     if(!Array.isArray(state[name]))throw new Error('Entidades inválidas');

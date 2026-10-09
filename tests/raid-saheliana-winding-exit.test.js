@@ -48,3 +48,37 @@ test('snapshot rejects malformed winding frontiers',()=>{
   actor.exitConnectorSearch.fine={...valid,...change};assert.throws(()=>serialize(s),/Conector fraccional/);
  }
 });
+
+test('saved native frontier rejects coordinates that would concatenate during expansion',()=>{
+ const s=load(),nav=navigator(s);tick(s,.1,nav);
+ const actor=s.raid.animals.find(a=>a.status==='retreating'),valid=structuredClone(actor.exitConnectorSearch.fine);
+ for(const field of ['i','j']){
+  actor.exitConnectorSearch.fine=structuredClone(valid);
+  const value=actor.exitConnectorSearch.fine.items[0].value;value[field]=String(value[field]);
+  assert.throws(()=>serialize(s),/Conector fraccional/);
+ }
+});
+
+test('saved native frontier rejects missing origins, impossible queued costs and broken ancestry',()=>{
+ const s=load(),nav=navigator(s);tick(s,.1,nav);
+ const actor=s.raid.animals.find(a=>a.status==='retreating'),valid=structuredClone(actor.exitConnectorSearch.fine);
+ const corruptions=[
+  f=>{delete f.costs['0,0'];f.nodeCount--;},
+  f=>{f.costs['0,0']=1;},
+  f=>{f.items[0].value.i=128;f.items[0].value.j=128;},
+  f=>{const entry=f.items.find(e=>f.costs[`${e.value.i},${e.value.j}`]>0);entry.value.g=f.costs[`${entry.value.i},${entry.value.j}`]-.1;},
+  f=>{const child=Object.keys(f.previous)[0];delete f.previous[child];},
+  f=>{const child=Object.keys(f.previous)[0];f.previous[child]='128,128';},
+  f=>{const pair=Object.entries(f.previous).find(([,parent])=>parent!=='0,0');assert.ok(pair);f.previous[pair[1]]=pair[0];},
+ ];
+ for(const corrupt of corruptions){actor.exitConnectorSearch.fine=structuredClone(valid);corrupt(actor.exitConnectorSearch.fine);assert.throws(()=>serialize(s),/Conector fraccional/);}
+});
+
+test('a stale more expensive native heap entry remains a compatible saved state',()=>{
+ const s=load(),nav=navigator(s);tick(s,.1,nav);
+ const fine=s.raid.animals.find(a=>a.status==='retreating').exitConnectorSearch.fine;
+ // A worse entry can remain after a cheaper cost was inserted; increasing a
+ // leaf score preserves the heap while exercising this valid stale condition.
+ const entry=fine.items.at(-1);entry.value.g+=1;entry.value.f+=1;
+ assert.equal(serialize(deserialize(serialize(s))),serialize(s));
+});
