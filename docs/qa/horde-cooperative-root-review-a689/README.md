@@ -54,3 +54,31 @@ simulation. The raw physical reports' sourceCommit names the pre-execution
 parent d4; the separate post-execution source receipt identifies the changed
 runtime bytes matched to the eventual a689 freeze. Do not label d4 as the
 executed cooperative runtime or imply a pre-execution frozen commit.
+
+## Additional real-navigation contracts, frozen0c9eaab2
+
+Root independently reviewed and ran the three additional native-prepared clock,
+calm/pause and paid-farm test files on clean0c9eaab25a8cf02677d844c76b8cd57312c8ce51.
+All10 tests passed, exit0,2450.8099ms. Actual prepared arrival retains accelerated
+boundary splitting and normal animal speed; a complete physical last exit
+restores acceleration once. Persisted side/strike RNG and pending600 freeze
+retain their assertions with real Navigation. The calm-night cases explicitly
+isolate the clock, not the guaranteed-raid distribution.
+
+The paid Sabana fixture's initial/final hashes matched the agent's frozen result
+d43e35cf0e8ab9f04b9884e219ce9592daa4be1749688fe66e40f6aa22fb064c /
+81cc6e65571f6dff92f4e5ab1ebf5f6f61710020236f49b4afabb1f8a6b7d14a.
+Six ordinarily paid crops in three groups retained670coins,12 physical exits,
+four simultaneous exclusive owners,10 logical hits,6 CropHit events and three
+destroyed crops. Root's observed maximum preparation pump was22.5715ms with320
+checks; this is CPU test observation, not a frame guarantee or GPU measurement.
+These fixtures change setup to isolate boundaries; they are not campaigns.
+
+Only implementation of a separately named paired runner is now authorized in
+the isolated branch. Its first proposed pilot is20 nights, GranCañón/Saheliana,
+seed712, using the reviewed responsible/neglect protocol. Execution requires
+frozen producer source, legal-command/transport tests and root review first.
+No pilot has run. No100-night acceptance, thirty-case matrix, economic promotion
+or main runtime integration follows from these10 directed contracts. The six
+original failures remain preserved and require explicit fixture reconciliation
+before an eventual production PR can pass its full regression suite.
