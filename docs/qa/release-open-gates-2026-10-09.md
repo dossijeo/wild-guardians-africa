@@ -19,7 +19,9 @@ Root independently verified all 156 payload receipts of the sixteen-case
 PR13 head `6ac2b672`: 200,435,248 original bytes, including gzip integrity,
 JSON decoding and recorded source-count/activity fields. This does not rerun
 simulation or independently repeat the original source/domain audits.
-New-head CI remains pending. See [the expanded receipt](campaign-ci/root-pr13-expanded-archive-review.json)
+Both exact-head CI checks passed, and PR13 is merged as `dbe4d1ed`.
+This integrates the archives, not approval of their rejected/unfinished cases.
+See [the expanded receipt](campaign-ci/root-pr13-expanded-archive-review.json)
 and [reproducible verifier](campaign-ci/verify-root-archive-receipts.py).
 
 Next proofs: reproduce the three distinct physical stalls using original saves;
