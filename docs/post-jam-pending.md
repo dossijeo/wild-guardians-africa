@@ -40,6 +40,23 @@ trabajo que aún falta y prevalece sobre las etapas antiguas de esta lista.
   elimina todas las entregas del primer día. La campaña histórica aprobada no
   sustituye la validación de parámetros nuevos.
 
+## Biblioteca móvil y escucha de SFX — pendiente, prioridad baja
+
+Solicitud del usuario: revisar el layout de los labs en resoluciones móviles
+bajas, especialmente Cultivos y SFX. Actualmente textos y paneles demasiado
+grandes se solapan y dejan poco espacio de trabajo. Ajustar tamaños, distribución
+y controles para preservar un área útil amplia; comprobar portrait/landscape,
+legibilidad, interacción y ausencia de solapamientos en los cuatro labs.
+
+Al entrar en el lab de SFX, silenciar temporalmente la música de fondo del menú
+para escuchar los efectos con claridad. Al salir, restaurar el estado y volumen
+anteriores, respetando la preferencia de música del usuario y cubriendo cierre,
+Escape y cambio de lab. No silenciar los propios efectos del laboratorio.
+
+No implementar ahora ni desplazar las prioridades actuales de optimización,
+diagnóstico Windows y validación de campaña. El visor a pantalla completa no
+equivale a aceptación de este layout móvil.
+
 ## Entradas cronológicas y evidencia histórica
 
 Solicitudes añadidas el 9 de octubre de 2026:
