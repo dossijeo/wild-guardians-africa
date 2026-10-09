@@ -436,3 +436,14 @@ test('cooperative isolated preparation restores world flags before a cancellable
 test('optional GPU upload envelope wraps only synchronous draw, not compile or awaited fence',async()=>{const f=fixture();let active=false,calls=0;const compile=f.renderer.compileAsync;f.renderer.compileAsync=async(...args)=>{assert.equal(active,false);await compile(...args);};const render=f.renderer.render;f.renderer.render=(...args)=>{assert.equal(active,true);return render(...args);};const wait=f.renderer.getContext().clientWaitSync;f.renderer.getContext().clientWaitSync=(...args)=>{assert.equal(active,false);return wait(...args);};await prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{nextFrame:async()=>{},measureDraw:run=>{calls++;active=true;try{return run();}finally{active=false;}}});assert.equal(calls,1);f.restored();releaseNativeFarGpuCache(f.renderer);});
 
 test('optional upload envelope preserves native failure and restores borrowed state without a fence',async()=>{const f=fixture({renderError:true});let exited=false;await assert.rejects(prepareNativeFarGpu(f.renderer,f.root,f.scene,{},[],{nextFrame:async()=>{},measureDraw:run=>{try{return run();}finally{exited=true;}}}),/Draw failed/);assert.equal(exited,true);assert.equal(f.calls.includes('fence'),false);assert.equal(f.root.parent,f.parent);f.restored();releaseNativeFarGpuCache(f.renderer);});
+
+
+test('GPU phase attribution keeps native uploads, queue, draw, fence and restoration unchanged',async()=>{
+ const a=fixture(),b=fixture(),spans=[],textures=[new Texture(),new Texture()];
+ await prepareNativeFarGpu(a.renderer,a.root,a.scene,{},textures,{cooperative:true,nextFrame:async()=>{}});
+ const result=await prepareNativeFarGpu(b.renderer,b.root,b.scene,{},textures,{cooperative:true,nextFrame:async()=>{},onPrepare:span=>{spans.push(span);throw Error('diagnostic callback');}});
+ assert.deepEqual(a.calls,b.calls);assert.equal(result.textureUploads.length,2);
+ assert.deepEqual(spans.map(s=>s.label),['far-gpu:texture-uploads','far-gpu:queue-admission','far-gpu:compile','far-gpu:draw','far-gpu:fence']);
+ assert.ok(spans.every(s=>s.end>=s.start&&s.duration>=0));assert.match(spans.find(s=>s.label==='far-gpu:draw').scope,/Synchronous/);
+ a.restored();b.restored();assert.equal(b.root.parent,b.parent);releaseNativeFarGpuCache(a.renderer);releaseNativeFarGpuCache(b.renderer);
+});

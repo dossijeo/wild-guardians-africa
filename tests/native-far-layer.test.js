@@ -73,3 +73,12 @@ test('prepared standby coverage keeps the visual handoff while an unprepared nat
  native.revision++;native.has=()=>true;f.layer.update(chunks,camera,joint,true,.016,{x:0,z:0},new Set(),native);assert.equal(f.layer.current.prototype.treeState('tree').ready,1);assert.ok(Math.abs(geometry.attributes.nativeVisibility.getX(0)-.4)<1e-6);
  f.layer.dispose();geometry.dispose();
 });
+
+
+test('regional attribution separates worker, construction, ground and GPU without altering ownership',async()=>{
+ const spans=[],f=fixture();f.layer.onPrepare=span=>{spans.push(span);throw Error('diagnostic callback');};
+ const region=await f.layer.request('observed',{});assert.equal(f.layer.current,region);
+ assert.deepEqual(spans.map(s=>s.label),['far-region-worker','far-region-create','far-region-attach-ground','far-region-gpu-ready']);
+ assert.ok(spans.every(s=>s.end>=s.start&&s.duration>=0));assert.match(spans[0].scope,/Awaited/);assert.match(spans[1].scope,/Synchronous/);
+ f.layer.dispose();assert.equal(f.scene.children.length,0);
+});
