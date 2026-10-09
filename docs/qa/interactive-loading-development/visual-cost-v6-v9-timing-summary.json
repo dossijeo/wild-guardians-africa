@@ -1,0 +1,448 @@
+{
+  "scope": "Eight isolated-presentation arms with2400validGPU queries; not initialization,menu,cinematic or physical memory comparison. All raw warmup/measurement/drain rows retained. No binding probes during timer runs.",
+  "percentile": "nearest rank; measured120..419 distinct from all540 rows(first intervalnull)",
+  "results": [
+    {
+      "phase": "day",
+      "arm": "A1",
+      "gpuDrawMs": {
+        "count": 300,
+        "median": 2.783541,
+        "p95": 6.432604,
+        "p99": 7.909843,
+        "max": 8.62625,
+        "over50": 0,
+        "over100": 0
+      },
+      "cpuDrawMeasuredMs": {
+        "count": 300,
+        "median": 0.5,
+        "p95": 0.7999999523162842,
+        "p99": 0.9000000953674316,
+        "max": 1.2999999523162842,
+        "over50": 0,
+        "over100": 0
+      },
+      "cpuOverlayMeasuredMs": {
+        "count": 300,
+        "median": 0,
+        "p95": 0.10000002384185791,
+        "p99": 0.20000004768371582,
+        "max": 0.6000000238418579,
+        "over50": 0,
+        "over100": 0
+      },
+      "rafMeasuredMs": {
+        "count": 300,
+        "median": 16.600000000000364,
+        "p95": 16.799999999999272,
+        "p99": 16.80000000000109,
+        "max": 16.900000000001455,
+        "over50": 0,
+        "over100": 0
+      },
+      "rafAllRecordedMs": {
+        "count": 539,
+        "median": 16.600000000000364,
+        "p95": 16.799999999999272,
+        "p99": 16.899999999997817,
+        "max": 16.900000000001455,
+        "over50": 0,
+        "over100": 0
+      },
+      "firstRafInterval": null,
+      "errors": [],
+      "cleanupZeroRenderer": true
+    },
+    {
+      "phase": "day",
+      "arm": "B1",
+      "gpuDrawMs": {
+        "count": 300,
+        "median": 4.066562,
+        "p95": 7.086978,
+        "p99": 8.680624,
+        "max": 10.43802,
+        "over50": 0,
+        "over100": 0
+      },
+      "cpuDrawMeasuredMs": {
+        "count": 300,
+        "median": 0.5,
+        "p95": 0.8000000715255737,
+        "p99": 1,
+        "max": 1.4000000953674316,
+        "over50": 0,
+        "over100": 0
+      },
+      "cpuOverlayMeasuredMs": {
+        "count": 300,
+        "median": 0,
+        "p95": 0.10000002384185791,
+        "p99": 0.10000002384185791,
+        "max": 0.20000004768371582,
+        "over50": 0,
+        "over100": 0
+      },
+      "rafMeasuredMs": {
+        "count": 300,
+        "median": 16.600000000002183,
+        "p95": 16.799999999999272,
+        "p99": 16.80000000000291,
+        "max": 16.900000000001455,
+        "over50": 0,
+        "over100": 0
+      },
+      "rafAllRecordedMs": {
+        "count": 539,
+        "median": 16.600000000002183,
+        "p95": 16.799999999999272,
+        "p99": 16.900000000001455,
+        "max": 17,
+        "over50": 0,
+        "over100": 0
+      },
+      "firstRafInterval": null,
+      "errors": [],
+      "cleanupZeroRenderer": true
+    },
+    {
+      "phase": "day",
+      "arm": "B2",
+      "gpuDrawMs": {
+        "count": 300,
+        "median": 4.288802,
+        "p95": 5.12776,
+        "p99": 9.600833,
+        "max": 10.586354,
+        "over50": 0,
+        "over100": 0
+      },
+      "cpuDrawMeasuredMs": {
+        "count": 300,
+        "median": 0.6000000238418579,
+        "p95": 0.8999999761581421,
+        "p99": 1,
+        "max": 1.1999999284744263,
+        "over50": 0,
+        "over100": 0
+      },
+      "cpuOverlayMeasuredMs": {
+        "count": 300,
+        "median": 0,
+        "p95": 0.10000002384185791,
+        "p99": 0.20000004768371582,
+        "max": 0.20000004768371582,
+        "over50": 0,
+        "over100": 0
+      },
+      "rafMeasuredMs": {
+        "count": 300,
+        "median": 16.600000000000364,
+        "p95": 16.700000000000728,
+        "p99": 16.80000000000109,
+        "max": 16.900000000001455,
+        "over50": 0,
+        "over100": 0
+      },
+      "rafAllRecordedMs": {
+        "count": 539,
+        "median": 16.600000000000364,
+        "p95": 16.799999999999272,
+        "p99": 16.80000000000109,
+        "max": 17.100000000000364,
+        "over50": 0,
+        "over100": 0
+      },
+      "firstRafInterval": null,
+      "errors": [],
+      "cleanupZeroRenderer": true
+    },
+    {
+      "phase": "day",
+      "arm": "A2",
+      "gpuDrawMs": {
+        "count": 300,
+        "median": 3.510729,
+        "p95": 7.09802,
+        "p99": 8.336718,
+        "max": 10.417708,
+        "over50": 0,
+        "over100": 0
+      },
+      "cpuDrawMeasuredMs": {
+        "count": 300,
+        "median": 0.5,
+        "p95": 0.7000000476837158,
+        "p99": 0.8999999761581421,
+        "max": 1.100000023841858,
+        "over50": 0,
+        "over100": 0
+      },
+      "cpuOverlayMeasuredMs": {
+        "count": 300,
+        "median": 0,
+        "p95": 0.10000002384185791,
+        "p99": 0.10000002384185791,
+        "max": 0.20000004768371582,
+        "over50": 0,
+        "over100": 0
+      },
+      "rafMeasuredMs": {
+        "count": 300,
+        "median": 16.600000000002183,
+        "p95": 16.799999999999272,
+        "p99": 16.80000000000291,
+        "max": 17.099999999998545,
+        "over50": 0,
+        "over100": 0
+      },
+      "rafAllRecordedMs": {
+        "count": 539,
+        "median": 16.600000000002183,
+        "p95": 16.799999999999272,
+        "p99": 16.80000000000291,
+        "max": 17.399999999997817,
+        "over50": 0,
+        "over100": 0
+      },
+      "firstRafInterval": null,
+      "errors": [],
+      "cleanupZeroRenderer": true
+    },
+    {
+      "phase": "night",
+      "arm": "A1",
+      "gpuDrawMs": {
+        "count": 300,
+        "median": 4.556302,
+        "p95": 8.633177,
+        "p99": 11.85776,
+        "max": 13.165051,
+        "over50": 0,
+        "over100": 0
+      },
+      "cpuDrawMeasuredMs": {
+        "count": 300,
+        "median": 0.5,
+        "p95": 0.8000000715255737,
+        "p99": 1.100000023841858,
+        "max": 1.399999976158142,
+        "over50": 0,
+        "over100": 0
+      },
+      "cpuOverlayMeasuredMs": {
+        "count": 300,
+        "median": 0,
+        "p95": 0.10000002384185791,
+        "p99": 0.19999992847442627,
+        "max": 0.20000004768371582,
+        "over50": 0,
+        "over100": 0
+      },
+      "rafMeasuredMs": {
+        "count": 300,
+        "median": 16.600000000000364,
+        "p95": 16.80000000000109,
+        "p99": 16.899999999999636,
+        "max": 17,
+        "over50": 0,
+        "over100": 0
+      },
+      "rafAllRecordedMs": {
+        "count": 539,
+        "median": 16.600000000000364,
+        "p95": 16.80000000000109,
+        "p99": 16.900000000001455,
+        "max": 17.19999999999891,
+        "over50": 0,
+        "over100": 0
+      },
+      "firstRafInterval": null,
+      "errors": [],
+      "cleanupZeroRenderer": true
+    },
+    {
+      "phase": "night",
+      "arm": "B1",
+      "gpuDrawMs": {
+        "count": 300,
+        "median": 5.00927,
+        "p95": 8.740156,
+        "p99": 9.62151,
+        "max": 10.710989,
+        "over50": 0,
+        "over100": 0
+      },
+      "cpuDrawMeasuredMs": {
+        "count": 300,
+        "median": 0.5,
+        "p95": 0.8000000715255737,
+        "p99": 1.100000023841858,
+        "max": 1.5,
+        "over50": 0,
+        "over100": 0
+      },
+      "cpuOverlayMeasuredMs": {
+        "count": 300,
+        "median": 0,
+        "p95": 0.10000002384185791,
+        "p99": 0.10000002384185791,
+        "max": 0.20000004768371582,
+        "over50": 0,
+        "over100": 0
+      },
+      "rafMeasuredMs": {
+        "count": 300,
+        "median": 16.600000000000364,
+        "p95": 16.799999999999272,
+        "p99": 16.80000000000109,
+        "max": 16.899999999999636,
+        "over50": 0,
+        "over100": 0
+      },
+      "rafAllRecordedMs": {
+        "count": 539,
+        "median": 16.600000000000364,
+        "p95": 16.80000000000109,
+        "p99": 16.900000000001455,
+        "max": 17.19999999999891,
+        "over50": 0,
+        "over100": 0
+      },
+      "firstRafInterval": null,
+      "errors": [],
+      "cleanupZeroRenderer": true
+    },
+    {
+      "phase": "night",
+      "arm": "B2",
+      "gpuDrawMs": {
+        "count": 300,
+        "median": 4.94927,
+        "p95": 8.178541,
+        "p99": 9.119531,
+        "max": 9.897395,
+        "over50": 0,
+        "over100": 0
+      },
+      "cpuDrawMeasuredMs": {
+        "count": 300,
+        "median": 0.5,
+        "p95": 0.8000000715255737,
+        "p99": 1,
+        "max": 1.1999999284744263,
+        "over50": 0,
+        "over100": 0
+      },
+      "cpuOverlayMeasuredMs": {
+        "count": 300,
+        "median": 0,
+        "p95": 0.10000002384185791,
+        "p99": 0.19999992847442627,
+        "max": 0.20000004768371582,
+        "over50": 0,
+        "over100": 0
+      },
+      "rafMeasuredMs": {
+        "count": 300,
+        "median": 16.600000000000364,
+        "p95": 16.799999999999272,
+        "p99": 16.899999999999636,
+        "max": 17.600000000000364,
+        "over50": 0,
+        "over100": 0
+      },
+      "rafAllRecordedMs": {
+        "count": 539,
+        "median": 16.600000000000364,
+        "p95": 16.80000000000109,
+        "p99": 16.899999999999636,
+        "max": 17.600000000000364,
+        "over50": 0,
+        "over100": 0
+      },
+      "firstRafInterval": null,
+      "errors": [],
+      "cleanupZeroRenderer": true
+    },
+    {
+      "phase": "night",
+      "arm": "A2",
+      "gpuDrawMs": {
+        "count": 300,
+        "median": 4.373802,
+        "p95": 7.969427,
+        "p99": 9.321666,
+        "max": 10.288333,
+        "over50": 0,
+        "over100": 0
+      },
+      "cpuDrawMeasuredMs": {
+        "count": 300,
+        "median": 0.5,
+        "p95": 0.7000000476837158,
+        "p99": 0.8000000715255737,
+        "max": 0.8999999761581421,
+        "over50": 0,
+        "over100": 0
+      },
+      "cpuOverlayMeasuredMs": {
+        "count": 300,
+        "median": 0,
+        "p95": 0.10000002384185791,
+        "p99": 0.19999992847442627,
+        "max": 0.20000004768371582,
+        "over50": 0,
+        "over100": 0
+      },
+      "rafMeasuredMs": {
+        "count": 300,
+        "median": 16.600000000000364,
+        "p95": 16.799999999999272,
+        "p99": 16.899999999999636,
+        "max": 16.899999999999636,
+        "over50": 0,
+        "over100": 0
+      },
+      "rafAllRecordedMs": {
+        "count": 539,
+        "median": 16.600000000000364,
+        "p95": 16.799999999999272,
+        "p99": 16.899999999999636,
+        "max": 17,
+        "over50": 0,
+        "over100": 0
+      },
+      "firstRafInterval": null,
+      "errors": [],
+      "cleanupZeroRenderer": true
+    }
+  ],
+  "files": {
+    "visual-timing-day-A1-cleanup.json": "bc51d355165374efaccf6f1be956b763143415ad83f0bab558dcf2fd9c0f0c59",
+    "visual-timing-day-A1-console.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "visual-timing-day-A1.json": "bacf0eb570039fb13f925922cfa6dbac9144b122af3ce49229fefcbe1498003a",
+    "visual-timing-day-A2-cleanup.json": "76c46e2344db1fa89c4c239747c0b20e3d6cddba105125b85d0bbe44a95c2f38",
+    "visual-timing-day-A2-console.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "visual-timing-day-A2.json": "6430e55ec3309fb636f0635fd90ac80353a6fa5daa500d3a27842681790ba5a1",
+    "visual-timing-day-B1-cleanup.json": "cefcf8b5b5a80493011c02d93864512d95b695d49a385bc1e0c8987eea258f3f",
+    "visual-timing-day-B1-console.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "visual-timing-day-B1.json": "ae38ea5d8640125ab3e567c1cf9b9b776bafac6f7510ec4bab4a632c4b858870",
+    "visual-timing-day-B2-cleanup.json": "a4514af25926d99862a28692f3f3b7a2636e66e717f0e9dc7995de06b97b1cad",
+    "visual-timing-day-B2-console.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "visual-timing-day-B2.json": "b88d296160c63586cffda6245b4a73f109582e1af4ccf55bffc635c42aca50ea",
+    "visual-timing-night-A1-cleanup.json": "9a1d5df563baa574db692b4d2bf8de890de1cb424a1c03f70163714a001fcaea",
+    "visual-timing-night-A1-console.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "visual-timing-night-A1.json": "a5e6f1672e18a65423c771b0e09f12b301b1b3886b7fbe90adaedd1d797f53c5",
+    "visual-timing-night-A2-cleanup.json": "55ce61748dc835b8903a032355f0f7e4fed4f351c5a2c4068d2d1c9ac02a3494",
+    "visual-timing-night-A2-console.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "visual-timing-night-A2.json": "3f9e7062673e63a27a7b6aff02042a639f162c289bb2d128cafddfa447ae1948",
+    "visual-timing-night-B1-cleanup.json": "38aeda33d7578fa9911eff018bbbca7151ee730002d2eaa8a9e4398a132b0675",
+    "visual-timing-night-B1-console.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "visual-timing-night-B1.json": "1630c193016af00aaf98506acfb7a6bad56d8b726e68b377c757a850297dc17b",
+    "visual-timing-night-B2-cleanup.json": "2d08fbfd5472a13d4a3ee1b30352ca9fe43ed764eaf545cebef087afe03baf4a",
+    "visual-timing-night-B2-console.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "visual-timing-night-B2.json": "fa2588677173726c2f878eb6df8a98ace6953346635f0010460054707338ac7c"
+  }
+}
