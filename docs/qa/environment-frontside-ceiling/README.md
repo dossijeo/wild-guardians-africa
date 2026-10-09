@@ -24,9 +24,12 @@ Sabana console is empty; Mangroves retains an existing ANGLE shader warning abou
 `f_environment4`. It is a warning, not a silent omitted observation.
 
 Root subsequently took six paired visual views: overview, nearby tree, and
-opposite side in each biome. The original PNGs and accompanying DOM reports are
+opposite side in each biome. The original JPEG captures and accompanying DOM reports are
 retained under `<biome>-<view>-double/front`. Lighting, camera, target and logical
 input match within each pair. Original material and context cleanup is recorded.
+The screenshot provider returns JPEG at 1253 × 705 while the GL drawing buffer
+is 1280 × 720; original bytes are preserved with their correct `.jpg` extension.
+The labelled comparison PNGs only resize and place those originals side by side.
 These are fresh visual sessions, distinct from timed sessions. Their added QA
 controls do not alter production files or the earlier frozen benchmark source.
 
@@ -45,9 +48,9 @@ has been made in this experiment.
 
 ## Captures
 
-- Sabana: [original overview](sabana-overview-double.png), [FrontSide overview](sabana-overview-front.png);
-  [original near view](sabana-near-double.png), [FrontSide near view](sabana-near-front.png);
-  [original opposite view](sabana-opposite-double.png), [FrontSide opposite view](sabana-opposite-front.png).
-- Mangroves: [original overview](manglares-overview-double.png), [FrontSide overview](manglares-overview-front.png);
-  [original near view](manglares-near-double.png), [FrontSide near view](manglares-near-front.png);
-  [original opposite view](manglares-opposite-double.png), [FrontSide opposite view](manglares-opposite-front.png).
+- Sabana: [original overview](sabana-overview-double.jpg), [FrontSide overview](sabana-overview-front.jpg);
+  [original near view](sabana-near-double.jpg), [FrontSide near view](sabana-near-front.jpg);
+  [original opposite view](sabana-opposite-double.jpg), [FrontSide opposite view](sabana-opposite-front.jpg).
+- Mangroves: [original overview](manglares-overview-double.jpg), [FrontSide overview](manglares-overview-front.jpg);
+  [original near view](manglares-near-double.jpg), [FrontSide near view](manglares-near-front.jpg);
+  [original opposite view](manglares-opposite-double.jpg), [FrontSide opposite view](manglares-opposite-front.jpg).
