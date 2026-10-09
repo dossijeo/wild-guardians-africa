@@ -101,3 +101,5 @@ html[lang="en"] #stage.portrait .hiring-pause span:after{content:none}
 .interactive-loading-indicator[data-night="true"] .interactive-loading-info{color:#fff0ce;text-shadow:none}
 .interactive-loading-indicator[data-night="true"] .interactive-loading-track{background:#281d13aa}
 @media(max-height:480px){.interactive-loading-info{width:min(440px,calc(100vw - 24px));bottom:calc(6px + env(safe-area-inset-bottom))}.interactive-loading-wood{min-height:67px;padding:16px 32px}.interactive-loading-help{padding:6px 12px;font-size:12px}.interactive-loading-cancel{min-height:46px;padding:12px 24px}}
+
+.loading-failure{display:grid;grid-template-columns:1fr auto;gap:8px 16px;align-items:center;max-width:min(620px,calc(100vw - 32px));bottom:max(16px,env(safe-area-inset-bottom));}.loading-failure strong,.loading-failure span{grid-column:1;overflow-wrap:anywhere;}.loading-failure button{grid-column:2;grid-row:1/3;}.loading-failure span{font-size:13px;}
