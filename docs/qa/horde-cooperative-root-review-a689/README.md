@@ -82,3 +82,26 @@ No pilot has run. No100-night acceptance, thirty-case matrix, economic promotion
 or main runtime integration follows from these10 directed contracts. The six
 original failures remain preserved and require explicit fixture reconciliation
 before an eventual production PR can pass its full regression suite.
+
+## Paired runner review and first pilot authorization (2026-10-10)
+
+The preceding no-pilot checkpoint is superseded for execution authorization,
+not for balance acceptance. Root reviewed frozen runner
+36a0e204b1cfa5a8f928f9ea2a92e6529a3418fe and independently ran its policy and
+driver tests: 7/7 passed, exit0, 2086.098ms. Provenance recursively hashes all
+src JavaScript/JSON, plus the explicitly listed new runner/transport/repair
+observer and balance revision inputs. Both arms retain the same ordinary
+productive policy and wage/maintenance reserves. Responsible spending uses
+legal defense and repair commands; neglect omits those commands. The new
+centre repair helper intentionally avoids treating intact300HP walls as
+damaged600HP centres. Existing original campaign producers remain unchanged.
+
+One predeclared20-night GranCañón/Saheliana seed712 paired pilot was authorized
+and launched from this frozen branch, with a new output directory, original
+failures retained and no automatic retry. Root observed Node PID46240 alive
+and native responsible day4 progress with430 living crops,32 delivered,
+two destroyed,16 paid staff and centreHP600. This is intermediate evidence,
+not a comparison result or acceptance of hordes, damage, inactivity or100-night
+survival. The neglected arm and terminal audits remain required. Centre800
+and minimum wage30 remain fixed; count increases are evaluated before any
+further damage increase.
