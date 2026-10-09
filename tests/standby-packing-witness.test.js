@@ -1,0 +1,9 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {standbyPackingWitness} from './browser/standby-packing-witness.js';
+function fixture(){const rows=Array.from({length:12},(_,i)=>({id:'id-'+i,key:'key-'+i})),matrix=Float32Array.from({length:192},(_,i)=>i*.25),draw={mesh:{count:12,instanceMatrix:{array:matrix,version:2},geometry:{attributes:{nativeVisibility:{getX:()=>.5,version:3}}},visible:true,castShadow:false},level:0,drawRows:rows.slice().reverse(),preparedRows:rows,preparedMatrices:matrix.slice(),isPrepared:()=>true};for(let row=0;row<12;row++)matrix.set(draw.preparedMatrices.subarray((11-row)*16,(12-row)*16),row*16);return {draw,adapter:{stats:{standby:{trees:12,errors:[]}},standbyDraws:()=>[draw]}};}
+test('witness checks every submitted permutation while sampling bounded descriptive rows without mutation',()=>{
+ const f=fixture(),before=Array.from(f.draw.mesh.instanceMatrix.array),r=standbyPackingWitness([f.adapter],{sampleLimit:2}),level=r.adapters[0].levels[0];assert.equal(r.submittedRows,12);assert.equal(r.invalidRows,0);assert.equal(level.samples.length,2);assert.equal(level.samples[0].preparedIndex,11);assert.equal(level.actualFloat32Checksum,level.preparedFloat32Checksum);assert.deepEqual(Array.from(f.draw.mesh.instanceMatrix.array),before);assert.equal(f.draw.mesh.instanceMatrix.version,2);
+});
+test('witness detects mismatches beyond sampled rows, stale identity and invalid count',()=>{
+ const f=fixture();f.draw.mesh.instanceMatrix.array[191]+=1;assert.equal(standbyPackingWitness([f.adapter],{sampleLimit:0}).invalidRows,1);f.draw.isPrepared=()=>false;assert.equal(standbyPackingWitness([f.adapter]).invalidRows,12);f.draw.mesh.count=13;assert.equal(standbyPackingWitness([f.adapter]).adapters[0].levels[0].validCount,false);assert.throws(()=>standbyPackingWitness([],{sampleLimit:100}),/limit/);assert.equal(standbyPackingWitness([]).submittedRows,0);
+});
