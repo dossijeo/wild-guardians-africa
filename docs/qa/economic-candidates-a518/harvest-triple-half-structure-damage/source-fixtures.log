@@ -1,0 +1,70 @@
+TAP version 13
+# Subtest: QA-076/078: physical repair journey has no reserved debit and recalculates increased damage on arrival
+ok 1 - QA-076/078: physical repair journey has no reserved debit and recalculates increased damage on arrival
+  ---
+  duration_ms: 82.8425
+  ...
+# Subtest: QA-077: genuine purchases preserve the hiring reserve and reject an unaffordable repair; rejection adds no task, command or partial payment
+ok 2 - QA-077: genuine purchases preserve the hiring reserve and reject an unaffordable repair; rejection adds no task, command or partial payment
+  ---
+  duration_ms: 226.8356
+  ...
+# Subtest: QA-080: funds spent on other defenses while walking cancel repair only at physical arrival
+ok 3 - QA-080: funds spent on other defenses while walking cancel repair only at physical arrival
+  ---
+  duration_ms: 463.368
+  ...
+# Subtest: QA-079: still-valid order persists through full ruin and reload; real arrival reconstructs for original full cost
+ok 4 - QA-079: still-valid order persists through full ruin and reload; real arrival reconstructs for original full cost
+  ---
+  duration_ms: 40.1988
+  ...
+# Subtest: QA-082: outside an attack, full destruction just before physical arrival becomes reconstruction without canceling the surviving order
+ok 5 - QA-082: outside an attack, full destruction just before physical arrival becomes reconstruction without canceling the surviving order
+  ---
+  duration_ms: 44.3981
+  ...
+# Subtest: QA-081/082: active raid cancels walking repair before any arrival; it is not regenerated after real retreat or reload
+ok 6 - QA-081/082: active raid cancels walking repair before any arrival; it is not regenerated after real retreat or reload
+  ---
+  duration_ms: 85.2593
+  ...
+# Subtest: QA-083 settlement: replay, repeated ticks and reload after physical repair never debit or restore twice
+ok 7 - QA-083 settlement: replay, repeated ticks and reload after physical repair never debit or restore twice
+  ---
+  duration_ms: 39.4924
+  ...
+# Subtest: QA-083: stale completion identity cannot restore later damage or emit a second repair burst
+ok 8 - QA-083: stale completion identity cannot restore later damage or emit a second repair burst
+  ---
+  duration_ms: 36.2605
+  ...
+# Subtest: attraction is explicit and independent of income, growth and magic state
+ok 9 - attraction is explicit and independent of income, growth and magic state
+  ---
+  duration_ms: 1.5251
+  ...
+# Subtest: E2/F preserve baseline attraction for every species independently of receipts
+ok 10 - E2/F preserve baseline attraction for every species independently of receipts
+  ---
+  duration_ms: 0.3287
+  ...
+# Subtest: F isolated centre survives eight native half-damage rhino hits
+ok 11 - F isolated centre survives eight native half-damage rhino hits
+  ---
+  duration_ms: 1.8015
+  ...
+# Subtest: F half-HP persists and physical repair charges integer ceiling on arrival
+ok 12 - F half-HP persists and physical repair charges integer ceiling on arrival
+  ---
+  duration_ms: 64.596
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1185.0133

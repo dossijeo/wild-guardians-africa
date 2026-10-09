@@ -13,8 +13,8 @@ test('attraction is explicit and independent of income, growth and magic state',
   }
  }
 });
-test('E2 preserves baseline attraction for every species despite doubled receipts',()=>{
- for(const c of BALANCE.crops){assert.equal(c.base_attraction_value,baseline[c.id]);assert.equal(c.base_harvest_value,2*baseline[c.id]);}
+test('E2/F preserve baseline attraction for every species independently of receipts',()=>{
+ for(const c of BALANCE.crops){assert.equal(c.base_attraction_value,baseline[c.id]);assert.ok([2,3].includes(c.base_harvest_value/baseline[c.id]),'Isolated E2/F harvest candidate');}
  const plants=BALANCE.crops.flatMap(c=>Array.from({length:3},()=>({species:c.id,alive:true,multiplyHarvest:true})));
  assert.equal(attraction(plants),3*Object.values(baseline).reduce((a,b)=>a+b,0));
 });

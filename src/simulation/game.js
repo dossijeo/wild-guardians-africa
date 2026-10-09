@@ -316,7 +316,7 @@ export function recoverDisplacedWorkers(s) {
     }
   }
 }
-export function repairCost(target) {return target.status==='ruined'?rational(target.cost):multiply(rational(target.cost),target.maxHp-target.hp,target.maxHp);}
+export function repairCost(target) {return target.status==='ruined'?rational(target.cost):multiply(rational(target.cost),(target.maxHp-target.hp)*2,target.maxHp*2);}
 export function dropCarriedCrate(s,worker){
   const crate=s.crates.find(c=>c.id===worker.crateId&&!c.delivered);
   worker.crateId=null;
