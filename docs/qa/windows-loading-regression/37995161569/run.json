@@ -1,0 +1,182 @@
+{
+  "conclusion": "failure",
+  "createdAt": "2026-10-09T21:43:35Z",
+  "databaseId": 37995161569,
+  "headBranch": "codex/windows-readiness-observation",
+  "headSha": "077987008d30075cdec9061b87a3387d0263dbd3",
+  "jobs": [
+    {
+      "completedAt": "2026-10-09T22:01:20Z",
+      "conclusion": "failure",
+      "databaseId": 114039217362,
+      "name": "windows",
+      "startedAt": "2026-10-09T21:43:39Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-09T21:43:43Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-09T21:43:40Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T21:48:14Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@v4",
+          "number": 2,
+          "startedAt": "2026-10-09T21:43:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T21:48:26Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-node@v4",
+          "number": 3,
+          "startedAt": "2026-10-09T21:48:14Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T21:48:48Z",
+          "conclusion": "success",
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "number": 4,
+          "startedAt": "2026-10-09T21:48:26Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T21:49:08Z",
+          "conclusion": "success",
+          "name": "Run swatinem/rust-cache@v2",
+          "number": 5,
+          "startedAt": "2026-10-09T21:48:48Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T21:49:11Z",
+          "conclusion": "success",
+          "name": "Run npm ci",
+          "number": 6,
+          "startedAt": "2026-10-09T21:49:08Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T21:58:38Z",
+          "conclusion": "success",
+          "name": "Run npm run desktop:build",
+          "number": 7,
+          "startedAt": "2026-10-09T21:49:11Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T21:58:38Z",
+          "conclusion": "success",
+          "name": "Check Windows executable and installer",
+          "number": 8,
+          "startedAt": "2026-10-09T21:58:38Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T22:01:02Z",
+          "conclusion": "failure",
+          "name": "Smoke test the packaged game in WebView2",
+          "number": 9,
+          "startedAt": "2026-10-09T21:58:38Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T22:01:02Z",
+          "conclusion": "skipped",
+          "name": "Check genuine native minimization and restoration",
+          "number": 10,
+          "startedAt": "2026-10-09T22:01:02Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T22:01:03Z",
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@v7",
+          "number": 11,
+          "startedAt": "2026-10-09T22:01:02Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T22:01:03Z",
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@v7",
+          "number": 12,
+          "startedAt": "2026-10-09T22:01:03Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T22:01:04Z",
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@v7",
+          "number": 13,
+          "startedAt": "2026-10-09T22:01:03Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T22:01:10Z",
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@v7",
+          "number": 14,
+          "startedAt": "2026-10-09T22:01:04Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T22:01:15Z",
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@v7",
+          "number": 15,
+          "startedAt": "2026-10-09T22:01:10Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T22:01:15Z",
+          "conclusion": "skipped",
+          "name": "Run actions/upload-artifact@v4",
+          "number": 16,
+          "startedAt": "2026-10-09T22:01:15Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T22:01:15Z",
+          "conclusion": "skipped",
+          "name": "Post Run swatinem/rust-cache@v2",
+          "number": 30,
+          "startedAt": "2026-10-09T22:01:15Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T22:01:15Z",
+          "conclusion": "skipped",
+          "name": "Post Run actions/setup-node@v4",
+          "number": 31,
+          "startedAt": "2026-10-09T22:01:15Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T22:01:18Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v4",
+          "number": 32,
+          "startedAt": "2026-10-09T22:01:15Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T22:01:18Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 33,
+          "startedAt": "2026-10-09T22:01:18Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/dossijeo/wild-guardians-africa/actions/runs/37995161569/job/114039217362"
+    }
+  ],
+  "status": "completed",
+  "url": "https://github.com/dossijeo/wild-guardians-africa/actions/runs/37995161569"
+}
