@@ -1,0 +1,58 @@
+{
+  "run": 37863687015,
+  "headSha": "4c63faf92a4fa943b11cbd57152356dbc7f5a2b0",
+  "reports": {
+    "smoke": {
+      "sha256": "fd5e9432e0298fa88ffc2223a0347b5b224d7517d2ca682e452dd4210359dd1b",
+      "ok": true,
+      "checkNames": [
+        "audio",
+        "audioSeconds",
+        "menu",
+        "models",
+        "saveKeys",
+        "storage",
+        "webgl2",
+        "worker",
+        "world"
+      ]
+    },
+    "visibility": {
+      "sha256": "8e10c67e448d670ee663a3ba88d7cad8e2ce5059221cbba37ddf9e832a578e86",
+      "ok": true,
+      "checkNames": [
+        "audio",
+        "audioSeconds",
+        "menu",
+        "models",
+        "saveBackend",
+        "saveKeys",
+        "storage",
+        "visibility",
+        "webgl2",
+        "worker",
+        "world"
+      ]
+    }
+  },
+  "visibility": {
+    "hiddenMs": 300605.5,
+    "passed": true,
+    "resumedSimulatedSeconds": 0.8999999999991815,
+    "scope": "Real native minimization and restoration. Hidden is the sole blocker during the measured interval; menu is retained at its end to test stacked pauses on restoration. Save buttons intentionally add notices, so comparison covers simulation fields and excludes savedAt, notices, tutorial presentation and their nextId counter. No document.hidden override or synthetic visibilitychange.",
+    "transitions": [
+      {
+        "at": 52595.40000000002,
+        "state": "hidden"
+      },
+      {
+        "at": 362616.6000000001,
+        "state": "visible"
+      }
+    ],
+    "visibleMenuPauses": [
+      "menu"
+    ],
+    "visibleMs": 3901.6999999999534
+  }
+}
