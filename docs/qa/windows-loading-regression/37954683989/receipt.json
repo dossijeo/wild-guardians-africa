@@ -1,0 +1,96 @@
+{
+  "run": 37954683989,
+  "head": "be68204d7bd7e9b96567121e5d188d93f672b9b4",
+  "artifactId": 11627344957,
+  "rawBytes": 396677,
+  "sha256": "99a13458afe059791aced037c628c6026df62a123cce05397f7eb6f11d6355a4",
+  "conclusion": "failure",
+  "buildInstaller": "passed",
+  "nativeMinimization": "skipped",
+  "programIdentityDropped": 0,
+  "cacheKeysTruncated": 0,
+  "firstWorldCompileAt": 133116.59999999986,
+  "program20MaterialAssociations": 21,
+  "program23MaterialAssociations": 1,
+  "program20First": {
+    "at": 133129.8999999999,
+    "cacheKey": "basic,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,2049,131075,srgb,(a,r)=>{s(a,r),Og(a,this.shadowUniforms,\"vToonWorld\")}|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|biome-ground-4.1.10.3|toon-4.1.4|MeshBasicMaterial|resident",
+    "cacheKeyLength": 413,
+    "cacheKeyTruncated": false,
+    "currentProgram": true,
+    "defines": {},
+    "materialName": "",
+    "materialType": "MeshBasicMaterial",
+    "materialUuid": "bbb7a177-93c2-47e5-85d1-2bd440318003",
+    "objects": [
+      {
+        "attributes": [
+          "position",
+          "normal",
+          "color"
+        ],
+        "castShadow": false,
+        "geometryType": "BufferGeometry",
+        "name": "",
+        "receiveShadow": true,
+        "type": "Mesh",
+        "uuid": "5e06d1d9-729c-4042-a398-d6b5f1a123b5"
+      }
+    ],
+    "programId": 20,
+    "programName": "",
+    "programType": "MeshBasicMaterial",
+    "side": 0,
+    "transparent": false
+  },
+  "program23First": {
+    "at": 133147,
+    "cacheKey": "basic,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,2049,131075,srgb,(a,r)=>{s(a,r),Og(a,this.shadowUniforms,\"vToonWorld\")}|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|biome-ground-4.1.10.3|toon-4.1.4|MeshBasicMaterial|horizon-clip",
+    "cacheKeyLength": 417,
+    "cacheKeyTruncated": false,
+    "currentProgram": true,
+    "defines": {},
+    "materialName": "",
+    "materialType": "MeshBasicMaterial",
+    "materialUuid": "c1848d16-86c8-41c7-bd07-e1d11db34c49",
+    "objects": [
+      {
+        "attributes": [
+          "position",
+          "normal",
+          "color"
+        ],
+        "castShadow": false,
+        "geometryType": "BufferGeometry",
+        "name": "",
+        "receiveShadow": false,
+        "type": "Mesh",
+        "uuid": "92f53451-df7b-49fc-ad52-94e947708efd"
+      }
+    ],
+    "programId": 23,
+    "programName": "",
+    "programType": "MeshBasicMaterial",
+    "side": 0,
+    "transparent": false
+  },
+  "baselineGroundSourceBlobEquality": {
+    "src/rendering/african-toon.js": {
+      "57527dc9": "07ab2e8c7c3d4c11beba4612c7eed739b0563587",
+      "be68204d": "07ab2e8c7c3d4c11beba4612c7eed739b0563587"
+    },
+    "src/rendering/biome-ground.js": {
+      "57527dc9": "ad756d3180ef26f62240703dc1a5e648876cfa3b",
+      "be68204d": "ad756d3180ef26f62240703dc1a5e648876cfa3b"
+    },
+    "src/rendering/horizon.js": {
+      "57527dc9": "205904398c93c53af240794c71dddb1b3626d708",
+      "be68204d": "205904398c93c53af240794c71dddb1b3626d708"
+    },
+    "src/rendering/render-quality.js": {
+      "57527dc9": "4f9c9e114773f268fe450aa20c98e7e0f3d7e8f5",
+      "be68204d": "4f9c9e114773f268fe450aa20c98e7e0f3d7e8f5"
+    }
+  },
+  "scope": "Associations are first observed batch per program/material, not exhaustive consumers; currentProgram is snapshot-time only. Completion pending is not separately measured compile/link status."
+}
