@@ -11,7 +11,7 @@ export function rewriteLoadingQaAssetUrl(code){
  if(!code.includes(needle))throw Error('QA asset alias source changed; refusing an unverified rewrite');
  return code.replace(needle,`const address=new URL(variants.get(path)??path,base),qa=new URLSearchParams(location.search),scope=qa.get('qa-transfer-scope')??'cache-v1',mode=qa.get('qa-transfer-mode')??'cache';
   if(!address.pathname.startsWith('/assets/')&&!address.pathname.startsWith('/content/'))return address.href;
-  const group=mode==='slow'?'slow-'+scope:mode==='partial'&&/\\.(glb|hdr)$/.test(address.pathname)?'partial-'+scope:scope;
+  const group=mode==='slow'?'slow-'+scope:mode==='fail'?'fail-'+scope:mode==='partial'&&/\\.(glb|hdr)$/.test(address.pathname)?'partial-'+scope:scope;
   address.pathname='/__qa_assets/'+group+address.pathname;return address.href;`);
 }
 export function loadingQaAssetPath(root,url){
@@ -20,6 +20,7 @@ export function loadingQaAssetPath(root,url){
  const file=path.resolve(root,match[2],match[3]);if(!file.startsWith(path.resolve(root)+path.sep))return null;
  return {file,group:match[1],slow:match[1].startsWith('slow-')};
 }
+export function loadingQaAssetFailure(asset){return !!asset&&asset.group.startsWith('fail-')&&asset.file.endsWith(path.join('content','biome-savanna.json'));}
 const mime={'.json':'application/json','.webp':'image/webp','.png':'image/png','.jpg':'image/jpeg','.glb':'model/gltf-binary','.css':'text/css','.woff2':'font/woff2','.opus':'audio/ogg'};
 
 export async function startLoadingTransferServer({root=process.cwd(),port=5293,slowBytesPerSecond=1250000}={}){
@@ -32,6 +33,7 @@ export async function startLoadingTransferServer({root=process.cwd(),port=5293,s
    const asset=loadingQaAssetPath(publicRoot,req.url);if(!asset)return next();
    let metadata;try{metadata=await stat(asset.file);if(!metadata.isFile())return next();}catch{return next();}
    const group=groups.get(asset.group)??{requests:0,bytes:0,completed:0,cancelled:0};groups.set(asset.group,group);group.requests++;
+   if(loadingQaAssetFailure(asset)){const body=JSON.stringify({error:'Deliberate scoped QA biome failure'});group.failures=(group.failures??0)+1;group.bytes+=Buffer.byteLength(body);group.completed++;res.statusCode=503;res.setHeader('Content-Type','application/json');res.setHeader('Content-Length',Buffer.byteLength(body));res.setHeader('Cache-Control','no-store');res.end(body);return;}
    res.setHeader('Content-Type',mime[path.extname(asset.file)]??'application/octet-stream');res.setHeader('Content-Length',metadata.size);res.setHeader('Cache-Control','public, max-age=31536000, immutable');res.setHeader('Timing-Allow-Origin','*');
    const input=createReadStream(asset.file,{highWaterMark:65536});let complete=false;
    res.once('close',()=>{input.destroy();if(!complete)group.cancelled++;});
