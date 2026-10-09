@@ -3,11 +3,15 @@ import {waitGpuFrame} from '../../tools/experiments/wait-gpu-frame.js';
 import {compileLoadingPrograms} from './loading-programs.js';
 import * as THREE from 'three';
 import {json} from './assets.js';
+import {assetUrl} from './asset-url.js';
 import {createCropBatchAsync} from './crop-batch.js';
 import {LoadingPlants} from './loading-plants.js';
 import {LoadingTextureOwner} from './loading-texture-owner.js';
 import {LoadingOrbit} from './loading-orbit.js';
 import {LoadingMist} from './loading-mist.js';
+import {LoadingSparkles} from './loading-sparkles.js';
+import {createBiomeBackdrop} from './biome-backdrop.js';
+import {mountainBackdropProfile} from './mountain-backdrop-profile.js';
 import {withScreenTarget} from './screen-target.js';
 import {AfricanToon} from './african-toon.js';
 import {skyNight} from './sky.js';
@@ -17,7 +21,7 @@ import {renderScreenPreload,waitForGpuPreload} from './screen-preload.js';
 // cloned materials and the small instanced crop batch belong to this owner.
 export class LoadingDiorama {
   constructor(world,{state={day:1,time:0,biome:'sabana'},reducedMotion=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches??false}={}) {
-    this.world=world;this.textureOwner=new LoadingTextureOwner();world.assets.asyncTextureImages=true;this.state=state;this.scene=new THREE.Scene();this.plants=new LoadingPlants();this.camera=new THREE.PerspectiveCamera(42,1,.1,80);this.camera.position.set(6,3.3,8);this.camera.lookAt(0,1.15,0);this.baseQuaternion=this.camera.quaternion.clone();
+    this.world=world;this.textureOwner=new LoadingTextureOwner();world.assets.asyncTextureImages=true;this.state=state;this.scene=new THREE.Scene();this.plants=new LoadingPlants();this.camera=new THREE.PerspectiveCamera(40,1,.1,80);this.camera.position.set(4.8,3.1,6.4);this.camera.lookAt(0,1.15,0);this.baseQuaternion=this.camera.quaternion.clone();
     this.sun=new THREE.DirectionalLight('#ffe2a8',3);this.sun.position.set(-30,55,25);this.ambient=new THREE.HemisphereLight('#ebf1d9','#765b3b',2);this.scene.add(this.sun,this.ambient);
     this.toon=new AfricanToon();this.toon.uniforms.uFineNoise.value=0;
     this.orbit=new LoadingOrbit({reducedMotion});this.focus=new THREE.Vector3(0,1.15,0);
@@ -39,7 +43,7 @@ export class LoadingDiorama {
     };
     material.customProgramCacheKey=()=> 'loading-soil-existing-earth-soft-edge-v2';
     this.ground=new THREE.Mesh(geometry,material);this.ground.rotation.x=-Math.PI/2;this.ground.position.y=.09;this.scene.add(this.ground);
-    this.mist=new LoadingMist(world.sky);this.scene.fog=new THREE.Fog(this.mist.day,18,28);
+    this.sparkles=new LoadingSparkles(this.scene);this.mist=new LoadingMist(world.sky);this.scene.fog=new THREE.Fog(this.mist.day,18,28);
     let down=null;world.canvas.addEventListener('pointerdown',e=>{if(this.interactive&&e.button===0){this.pointerType=e.pointerType==='touch'?'touch':'mouse';down={x:e.clientX,y:e.clientY,id:e.pointerId};this.orbit.beginInteraction();world.canvas.setPointerCapture?.(e.pointerId);e.preventDefault();}},{signal:this.abort.signal});
     world.canvas.addEventListener('pointerup',e=>{if(!down||e.pointerId!==down.id)return;const start=down;down=null;this.orbit.endInteraction();if(this.interactive&&Math.hypot(e.clientX-start.x,e.clientY-start.y)<12)this.plantAt(e.clientX,e.clientY);},{signal:this.abort.signal});
     world.canvas.addEventListener('pointercancel',()=>{down=null;this.orbit.endInteraction();},{signal:this.abort.signal});
@@ -54,7 +58,15 @@ export class LoadingDiorama {
     // diorama borrows its pixel Source through a locally owned Texture object.
     // This does not decode/copy pixels or require separate shared GL storage.
     this.ground.material.map=this.textureOwner.borrow(await phase('diorama-prepare-soil-texture',()=>world.loadReady(world.assets.texture(ground.canyons.base,false))));
-    this.ground.material.color.set('#c9865e');this.ground.material.needsUpdate=true;
+    this.ground.material.color.set('#b48a62');this.ground.material.needsUpdate=true;
+    const mountains=mountainBackdropProfile('savanna',712),atlasUrl=assetUrl(mountains.atlas);
+    // The far-world loader has a separate flipped atlas owner. Keep this
+    // loading-only Source local, including cleanup of arrivals after abort.
+    const atlasPending=this.loadBackdropTexture(atlasUrl);
+    const mountainTexture=await phase('diorama-prepare-mountain-atlas',()=>world.loadReady(atlasPending));
+    const layout=mountains.arcLayout.slice(0,3).map((arc,index)=>({...arc,angle:Math.atan2(-4.8,-6.4)+(index-1)*.45,height:index===1?6.5:4.6,baseY:-1.4}));
+    const backdropOwner={scene:this.scene,camera:this.camera,nav:{config:{biome:'savanna'},field:{surface:()=>0}},toon:this.toon};
+    this.backdrop=createBiomeBackdrop(backdropOwner,mountainTexture,{radius:35,arcLayout:layout,stableAltitude:false,parallax:0,fogMix:.2,fogBaseMix:.8,fogDayColor:'#decba6',fogNightColor:'#26364a'});
     this.batch=await phase('diorama-prepare-maize-batch',()=>createCropBatchAsync(this.scene,world.renderer,gltf,bridges,this.plants.capacity,{species:['maiz'],shadows:false,signal:this.abort.signal,cancelled:()=>this.disposed||world.disposed}));this.scene.traverse(object=>{for(const material of [object.material].flat().filter(Boolean))this.textureOwner.material(material);});this.toon.environment(world.sky.environmentTextures,world.sky.uniforms.uSkyYaw);this.toon.apply(this.scene);
     // A small cold presentation fill belongs only to the diorama maize. It
     // reuses the existing night-light uniform/GLSL; soil and real-world lighting
@@ -72,6 +84,9 @@ export class LoadingDiorama {
     finally{world.renderer.shadowMap.enabled=shadow;for(const [mesh,count,visible] of saved){mesh.count=count;mesh.visible=visible;}}
     this.prepared=true;return this;
   }
+  loadBackdropTexture(url){
+    const {world}=this;return (typeof Worker!=='undefined'&&typeof createImageBitmap==='function'?world.assets.loadingTexture(url,{flipY:true,premultiplyAlpha:false}):world.assets.textures.loadAsync(url)).then(texture=>{if(this.disposed||world.disposed){texture.dispose();throw new DOMException('Loading diorama cancelled','AbortError');}this.backdropTexture=texture;return texture;});
+  }
   plantAt(clientX,clientY) {
     const rect=this.world.canvas.getBoundingClientRect();this.cursor.set((clientX-rect.left)/rect.width*2-1,1-(clientY-rect.top)/rect.height*2);this.camera.updateMatrixWorld();this.ray.setFromCamera(this.cursor,this.camera);
     const hit=this.ray.intersectObject(this.ground)[0],plant=hit?this.plants.plant(hit.point.x,hit.point.z):null;if(plant)this.onPlant?.(plant);return plant;
@@ -79,8 +94,8 @@ export class LoadingDiorama {
   show(state) {this.state=state;this.interactive=true;this.world.controls.enabled=false;}
   render(dt,progress,{ready=false,skyOnly=false}={}) {
     if(!this.prepared||this.disposed)return;
-    const {world}=this;world.resize();this.camera.aspect=world.camera.aspect;if(!world.cinematic){const distance=this.camera.aspect<.8?1.2:1,angle=this.orbit.step(dt),sin=Math.sin(angle),cos=Math.cos(angle);this.camera.position.set((6*cos+8*sin)*distance,3.3*distance,(8*cos-6*sin)*distance);this.camera.lookAt(this.focus);}this.camera.updateProjectionMatrix();this.plants.update(dt,progress,{ready});this.batch.update(this.plants.plants,this.orbit.reducedMotion?0:this.plants.time,()=>0);
-    const night=skyNight(this.state);this.night=night;this.toon.update(night,this.sun,this.state.biome);this.toon.uniforms.uNightLight.value=1.8;this.sun.intensity=3-2.6*night;this.ambient.intensity=2-.9*night;this.scene.fog.color.copy(this.mist.day).lerp(this.mist.night,night);
+    const {world}=this;world.resize();this.camera.aspect=world.camera.aspect;if(!world.cinematic){const distance=this.camera.aspect<.8?1.2:1,angle=this.orbit.step(dt),sin=Math.sin(angle),cos=Math.cos(angle);this.camera.position.set((4.8*cos+6.4*sin)*distance,3.1*distance,(6.4*cos-4.8*sin)*distance);this.camera.lookAt(this.focus);}this.camera.updateProjectionMatrix();this.plants.update(dt,progress,{ready});this.batch.update(this.plants.plants,this.orbit.reducedMotion?0:this.plants.time,()=>0);
+    const night=skyNight(this.state);this.night=night;this.toon.update(night,this.sun,this.state.biome);this.toon.uniforms.uNightLight.value=1.8;this.sun.intensity=3-2.6*night;this.ambient.intensity=2-.9*night;this.scene.fog.color.copy(this.mist.day).lerp(this.mist.night,night);this.backdrop?.update();this.sparkles.update(this.plants.time,night,this.orbit.reducedMotion);
     const shadow=world.renderer.shadowMap.enabled,autoClear=world.renderer.autoClear;
     try{world.renderer.shadowMap.enabled=false;world.renderer.autoClear=false;withScreenTarget(world.renderer,()=>{world.renderer.clear();world.sky.render(world.renderer,this.camera,this.state);if(!skyOnly){this.mist.render(world.renderer,this.camera,night);world.renderer.render(this.scene,this.camera);}});}
     finally{world.renderer.shadowMap.enabled=shadow;world.renderer.autoClear=autoClear;}
@@ -95,5 +110,5 @@ export class LoadingDiorama {
   }
   stopPlanting(){this.interactive=false;this.plants.stopPlanting();}
 
-  dispose(){if(this.disposed)return;this.disposed=true;this.interactive=false;this.abort.abort();this.batch?.dispose();this.mist.dispose();this.ground.geometry.dispose();this.ground.material.dispose();this.textureOwner.dispose();this.toon.shadowUniforms.uNativeShadowFiltered.value=null;this.toon.shadowUniforms.fallback.dispose();this.scene.clear();}
+  dispose(){if(this.disposed)return;this.disposed=true;this.interactive=false;this.abort.abort();this.batch?.dispose();this.sparkles?.dispose();this.backdrop?.dispose();this.backdropTexture?.dispose();this.mist.dispose();this.ground.geometry.dispose();this.ground.material.dispose();this.textureOwner.dispose();this.toon.shadowUniforms.uNativeShadowFiltered.value=null;this.toon.shadowUniforms.fallback.dispose();this.scene.clear();}
 }

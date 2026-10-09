@@ -13,3 +13,13 @@ test('diorama disposes its private shadow fallback exactly once without touching
  owner.dispose();owner.dispose();assert.equal(fallbackDisposes,1);assert.equal(nativeDisposes,0);assert.equal(mapDisposes,0);assert.equal(toon.shadowUniforms.uNativeShadowFiltered.value,null);assert.equal(aborts,1);assert.equal(locals,6);assert.equal(owner.disposed,true);assert.equal(owner.interactive,false);
  nativeToon.shadowUniforms.fallback.dispose();nativeMap.dispose();
 });
+
+
+test('loading-only mountain atlas arriving after either owner closes is disposed without adoption',async()=>{
+ for(const close of ['diorama','world']){
+  let complete,disposes=0;const atlas=new THREE.Texture();atlas.addEventListener('dispose',()=>disposes++);
+  const world={assets:{textures:{loadAsync:()=>new Promise(resolve=>complete=resolve)}}},owner=Object.assign(Object.create(LoadingDiorama.prototype),{world});
+  const pending=owner.loadBackdropTexture('/atlas.webp');if(close==='diorama')owner.disposed=true;else world.disposed=true;complete(atlas);
+  await assert.rejects(pending,/cancelled/);assert.equal(disposes,1);assert.equal(owner.backdropTexture,undefined);
+ }
+});
