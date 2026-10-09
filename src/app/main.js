@@ -1,3 +1,4 @@
+import {installLoadingGameplayGpuQa} from './loading-gameplay-gpu-qa.js';
 import {LibraryViewer} from '../ui/library-viewer.js';
 import {EventCards} from '../ui/event-cards.js';
 import {LoadingDiorama} from '../rendering/loading-diorama.js';
@@ -60,6 +61,7 @@ import '../ui/tutorial.css';
 
 const app=document.querySelector('#app'),saves=new BrowserSaveRepository(localStorage);
 const guidanceQa=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-guidance');
+const gameplayGpuQa=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading-gpu-gameplay')?installLoadingGameplayGpuQa(document):null;
 const progressQa=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')?installLoadingProgressQa(document,{throttleReady:!new URLSearchParams(location.search).has('qa-loading-unthrottled'),gpu:new URLSearchParams(location.search).has('qa-loading-gpu')}):null;
 // Hints come only from already-validated slot listings. The decoded save remains
 // authoritative; hints allow the first loading sky to use its known clock.
@@ -104,7 +106,7 @@ function error(message,{silent=false}={}){if(String(message)===RESERVE_MESSAGE){
 function safe(action){if(leaving)return;commandFeedback='';try{const result=action();if(result?.catch)result.catch(e=>error(e.message));}catch(e){error(e.message);}updateUI(true);}
 function save({confirm=false}={}){return saveGame(state,saves,{confirm,onError:error});}
 function bind(id,fn){document.getElementById(id)?.addEventListener('click',()=>safe(fn));}
-function clearWorld(){clearLoadingPresentation();libraryViewer?.dispose();libraryViewer=null;dialogVoice.stop();raidLoading?.remove();raidLoading=null;noticeLifetime.reset();eventCards=null;surfaces.reset();uiAudio.reset();toolSession.clear();budgetWarningUntil=0;lastBudgetBalance=Infinity;reserveWarningShown=false;pendingVillage=null;commandFeedback='';setTutorialInteraction(false);tutorial=null;hudHand?.dispose();hudHand=null;guardian?.dispose();guardian=null;world?.dispose();world=null;nav=null;audio.stop();tool=null;selection=null;document.querySelector('#native-hud-style')?.remove();}
+function clearWorld(){gameplayGpuQa?.close();clearLoadingPresentation();libraryViewer?.dispose();libraryViewer=null;dialogVoice.stop();raidLoading?.remove();raidLoading=null;noticeLifetime.reset();eventCards=null;surfaces.reset();uiAudio.reset();toolSession.clear();budgetWarningUntil=0;lastBudgetBalance=Infinity;reserveWarningShown=false;pendingVillage=null;commandFeedback='';setTutorialInteraction(false);tutorial=null;hudHand?.dispose();hudHand=null;guardian?.dispose();guardian=null;world?.dispose();world=null;nav=null;audio.stop();tool=null;selection=null;document.querySelector('#native-hud-style')?.remove();}
 let leaving=false;
 async function menu() {
   if(leaving)return;leaving=true;
@@ -156,7 +158,7 @@ async function startGame(loaded=null,{slotId,preview}={}) {
     loadingProgress=new LoadingProgress(LOADING_STAGES,{downloads:loadingTransfers.downloads,onChange:snapshot=>overlay.render(snapshot,loadingDiorama?.plants.progress??0,{night:loadingDiorama?.night??0,accepting:loadingDiorama?.interactive??false,pointer:loadingDiorama?.pointerType??overlay.pointer})});
     prepared.canvas.style.cssText='width:100%;height:100%;touch-action:none';prepared.canvas.id='world';
     app.replaceChildren(prepared.canvas);
-    app.append(overlay.element);loadingDiorama.render(0,0);refreshLoadingOverlay();lastFrame=performance.now();progressQa?.begin(lastFrame,world.renderer);
+    app.append(overlay.element);loadingDiorama.render(0,0);refreshLoadingOverlay();lastFrame=performance.now();progressQa?.begin(lastFrame,world.renderer);gameplayGpuQa?.reset();
     loadingDiagnostic=setInterval(refreshLoadingOverlay,1000);
     // Show the fully prepared diorama before parsing a Continue snapshot. Worker
     // validation is unchanged; cancelled/late results cannot adopt into this game.
@@ -478,7 +480,7 @@ function frame(now) {
   }
   if(screen==='game'&&world&&state&&!state.pauses.includes('runtime-error')) {
     const eventIndex=state.events.at(-1)?.id;
-    try {tutorial?.update();if(tutorial?.advance(dt,{visible:!guardian?.voice?.active&&!surfaces.active&&!document.hidden&&!state.pauses.includes('menu')&&now>=budgetWarningUntil}))save();refreshTutorialGuidance();if(world.actorsReady())Game.advanceReal(state,dt,nav);tutorial?.update();world.render(dt);updateRaidLoading();audio.process(state.events,{state,listener:world.controls.target});audio.updateMusic(state);audio.updateUnlocks(state);audio.updateAmbient(state,{listener:world.controls.target,waterRevision:nav.version,waterAt:(x,z)=>({...nav.field.waterInfo(x,z),active:!!(nav.field.wetland||nav.field.riverActive)})});audio.updateFarmActors(state,{listener:world.controls.target});audio.updateAnimals(state,{listener:world.controls.target});audio.updateMovement(state,{listener:world.controls.target,surfaceAt:world.movementSurfaceAt});updateUI();guardian?.update();}
+    try {tutorial?.update();if(tutorial?.advance(dt,{visible:!guardian?.voice?.active&&!surfaces.active&&!document.hidden&&!state.pauses.includes('menu')&&now>=budgetWarningUntil}))save();refreshTutorialGuidance();if(world.actorsReady())Game.advanceReal(state,dt,nav);tutorial?.update();if(gameplayGpuQa)gameplayGpuQa.frame(now,world.renderer,()=>world.render(dt));else world.render(dt);updateRaidLoading();audio.process(state.events,{state,listener:world.controls.target});audio.updateMusic(state);audio.updateUnlocks(state);audio.updateAmbient(state,{listener:world.controls.target,waterRevision:nav.version,waterAt:(x,z)=>({...nav.field.waterInfo(x,z),active:!!(nav.field.wetland||nav.field.riverActive)})});audio.updateFarmActors(state,{listener:world.controls.target});audio.updateAnimals(state,{listener:world.controls.target});audio.updateMovement(state,{listener:world.controls.target,surfaceAt:world.movementSurfaceAt});updateUI();guardian?.update();}
     catch(e){Game.pause(state,'runtime-error');guardian?.hide({immediate:true});dialogVoice.stop();error(e.message);console.error(e);}
     if(autosaveEventAfter(state.events,eventIndex))save();
   }
