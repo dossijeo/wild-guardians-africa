@@ -1,0 +1,577 @@
+TAP version 13
+# Subtest: animal quarter-metre proof rejects a narrow forbidden band before landing
+ok 1 - animal quarter-metre proof rejects a narrow forbidden band before landing
+  ---
+  duration_ms: 2.3579
+  ...
+# Subtest: near-limit proof checks the full footprint rather than only its center
+ok 2 - near-limit proof checks the full footprint rather than only its center
+  ---
+  duration_ms: 0.2189
+  ...
+# Subtest: ordinary flat edges always retain the live coarse sweep without extra terrain refinement
+ok 3 - ordinary flat edges always retain the live coarse sweep without extra terrain refinement
+  ---
+  duration_ms: 0.4821
+  ...
+# Subtest: near-limit cache invalidates when the geometry epoch changes
+ok 4 - near-limit cache invalidates when the geometry epoch changes
+  ---
+  duration_ms: 0.492
+  ...
+# Subtest: water, lava and newly introduced solids remain forbidden
+ok 5 - water, lava and newly introduced solids remain forbidden
+  ---
+  duration_ms: 0.3294
+  ...
+# Subtest: a terrain-only proof never bypasses fresh solids or changed prop queries
+ok 6 - a terrain-only proof never bypasses fresh solids or changed prop queries
+  ---
+  duration_ms: 0.3796
+  ...
+# Subtest: near-limit terrain proofs reuse fine samples while coarse solids are checked on every query
+ok 7 - near-limit terrain proofs reuse fine samples while coarse solids are checked on every query
+  ---
+  duration_ms: 0.8524
+  ...
+# Subtest: legacy Desert/Suajili lion exits its marginal footprint physically at dt=0.1
+ok 8 - legacy Desert/Suajili lion exits its marginal footprint physically at dt=0.1
+  ---
+  duration_ms: 107.374
+  ...
+# Subtest: legacy Desert/Suajili lion exits its marginal footprint physically at dt=1
+ok 9 - legacy Desert/Suajili lion exits its marginal footprint physically at dt=1
+  ---
+  duration_ms: 69.8663
+  ...
+# Subtest: save/load during the tiny marginal exit preserves native continuation at dt=0.1
+ok 10 - save/load during the tiny marginal exit preserves native continuation at dt=0.1
+  ---
+  duration_ms: 710.8281
+  ...
+# Subtest: save/load during the tiny marginal exit preserves native continuation at dt=1
+ok 11 - save/load during the tiny marginal exit preserves native continuation at dt=1
+  ---
+  duration_ms: 131.8558
+  ...
+# Subtest: only retreating animals can use the recovery
+ok 12 - only retreating animals can use the recovery
+  ---
+  duration_ms: 0.6171
+  ...
+# Subtest: steeper footprints, fluid, uphill escapes and solid structures remain forbidden
+ok 13 - steeper footprints, fluid, uphill escapes and solid structures remain forbidden
+  ---
+  duration_ms: 4.5104
+  ...
+# Subtest: the special clearance rejects off-prefix, backward and dynamic-body movement
+ok 14 - the special clearance rejects off-prefix, backward and dynamic-body movement
+  ---
+  duration_ms: 1.0985
+  ...
+# Subtest: a failed legacy recovery is memoized until geometry or origin changes
+ok 15 - a failed legacy recovery is memoized until geometry or origin changes
+  ---
+  duration_ms: 1.9919
+  ...
+# Subtest: an ordinary legal retreat does not rescan a recovery proof each frame
+ok 16 - an ordinary legal retreat does not rescan a recovery proof each frame
+  ---
+  duration_ms: 0.3578
+  ...
+# Subtest: a new wall invalidates a memoized marginal segment
+ok 17 - a new wall invalidates a memoized marginal segment
+  ---
+  duration_ms: 1.4896
+  ...
+# Subtest: a new shield invalidates a memoized marginal segment
+ok 18 - a new shield invalidates a memoized marginal segment
+  ---
+  duration_ms: 0.6433
+  ...
+# Subtest: changing the first waypoint inside the same array cannot reuse the old proof
+ok 19 - changing the first waypoint inside the same array cannot reuse the old proof
+  ---
+  duration_ms: 0.6005
+  ...
+# Subtest: an unsampled real intermediate landing may not increase the slope excess
+ok 20 - an unsampled real intermediate landing may not increase the slope excess
+  ---
+  duration_ms: 0.6393
+  ...
+# Subtest: real fluid landing checks remain active inside a memoized recovery
+ok 21 - real fluid landing checks remain active inside a memoized recovery
+  ---
+  duration_ms: 0.8004
+  ...
+# Subtest: the normal strict landing limit resumes after consuming the first recovery waypoint
+ok 22 - the normal strict landing limit resumes after consuming the first recovery waypoint
+  ---
+  duration_ms: 0.849
+  ...
+# Subtest: failed native tails have a finite candidate budget and do not repeat each frame
+ok 23 - failed native tails have a finite candidate budget and do not repeat each frame
+  ---
+  duration_ms: 2.2888
+  ...
+# Subtest: retry after an unused successful recovery is not memoized as a failure
+ok 24 - retry after an unused successful recovery is not memoized as a failure
+  ---
+  duration_ms: 41.91
+  ...
+# Subtest: disabled proof revalidates a bad waypoint edited back to good inside the same array
+ok 25 - disabled proof revalidates a bad waypoint edited back to good inside the same array
+  ---
+  duration_ms: 0.6434
+  ...
+# Subtest: disabled proof revalidates replacement of the first waypoint in the same array
+ok 26 - disabled proof revalidates replacement of the first waypoint in the same array
+  ---
+  duration_ms: 0.4771
+  ...
+# Subtest: musgum: exact native campaign snapshot dt=0.1 resolves raid physically
+ok 27 - musgum: exact native campaign snapshot dt=0.1 resolves raid physically
+  ---
+  duration_ms: 5465.2036
+  ...
+# Subtest: musgum: exact native campaign snapshot dt=0.1 with partial save/reload resolves raid physically
+ok 28 - musgum: exact native campaign snapshot dt=0.1 with partial save/reload resolves raid physically
+  ---
+  duration_ms: 3870.2138
+  ...
+# Subtest: musgum: exact native campaign snapshot dt=1 resolves raid physically
+ok 29 - musgum: exact native campaign snapshot dt=1 resolves raid physically
+  ---
+  duration_ms: 3162.877
+  ...
+# Subtest: musgum: exact native campaign snapshot dt=1 with partial save/reload resolves raid physically
+ok 30 - musgum: exact native campaign snapshot dt=1 with partial save/reload resolves raid physically
+  ---
+  duration_ms: 3982.985
+  ...
+# Subtest: etiope: exact native campaign snapshot dt=0.1 resolves raid physically
+ok 31 - etiope: exact native campaign snapshot dt=0.1 resolves raid physically
+  ---
+  duration_ms: 5334.439
+  ...
+# Subtest: etiope: exact native campaign snapshot dt=0.1 with partial save/reload resolves raid physically
+ok 32 - etiope: exact native campaign snapshot dt=0.1 with partial save/reload resolves raid physically
+  ---
+  duration_ms: 5344.2583
+  ...
+# Subtest: etiope: exact native campaign snapshot dt=1 resolves raid physically
+ok 33 - etiope: exact native campaign snapshot dt=1 resolves raid physically
+  ---
+  duration_ms: 6939.1972
+  ...
+# Subtest: etiope: exact native campaign snapshot dt=1 with partial save/reload resolves raid physically
+ok 34 - etiope: exact native campaign snapshot dt=1 with partial save/reload resolves raid physically
+  ---
+  duration_ms: 7873.9974
+  ...
+# Subtest: suajili: exact native campaign snapshot dt=0.1 resolves raid physically
+ok 35 - suajili: exact native campaign snapshot dt=0.1 resolves raid physically
+  ---
+  duration_ms: 1409.0594
+  ...
+# Subtest: suajili: exact native campaign snapshot dt=0.1 with partial save/reload resolves raid physically
+ok 36 - suajili: exact native campaign snapshot dt=0.1 with partial save/reload resolves raid physically
+  ---
+  duration_ms: 1873.0443
+  ...
+# Subtest: suajili: exact native campaign snapshot dt=1 resolves raid physically
+ok 37 - suajili: exact native campaign snapshot dt=1 resolves raid physically
+  ---
+  duration_ms: 1332.2692
+  ...
+# Subtest: suajili: exact native campaign snapshot dt=1 with partial save/reload resolves raid physically
+ok 38 - suajili: exact native campaign snapshot dt=1 with partial save/reload resolves raid physically
+  ---
+  duration_ms: 1796.3314
+  ...
+# Subtest: recorded paid-defense night 31 finishes past fallen workers and intact walls, including reload
+ok 39 - recorded paid-defense night 31 finishes past fallen workers and intact walls, including reload
+  ---
+  duration_ms: 5032.536
+  ...
+# Subtest: an impossible dynamic detour is cached until bodies move or terrain changes
+ok 40 - an impossible dynamic detour is cached until bodies move or terrain changes
+  ---
+  duration_ms: 0.6979
+  ...
+# Subtest: a sliced search does not cache a failure from bodies that moved within a quarter metre
+ok 41 - a sliced search does not cache a failure from bodies that moved within a quarter metre
+  ---
+  duration_ms: 0.2717
+  ...
+# Subtest: native incremental A* preserves the synchronous route and expands at most eight cells per slice
+ok 42 - native incremental A* preserves the synchronous route and expands at most eight cells per slice
+  ---
+  duration_ms: 5.4025
+  ...
+# Subtest: Recorded night 39 retreat approaches distant occupied bends instead of repeatedly yielding away
+ok 43 - Recorded night 39 retreat approaches distant occupied bends instead of repeatedly yielding away
+  ---
+  duration_ms: 282.474
+  ...
+# Subtest: Motion outside the native search corridor cannot restart an incremental detour
+ok 44 - Motion outside the native search corridor cannot restart an incremental detour
+  ---
+  duration_ms: 0.9381
+  ...
+# Subtest: Recorded paid-defense night 39 actually finishes past fallen workers, including reload
+ok 45 - Recorded paid-defense night 39 actually finishes past fallen workers, including reload
+  ---
+  duration_ms: 15674.3005
+  ...
+# Subtest: warthog: native body radius controls entry, approach, shield exclusion and survives reload
+ok 46 - warthog: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 6.4609
+  ...
+# Subtest: hyena: native body radius controls entry, approach, shield exclusion and survives reload
+ok 47 - hyena: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 0.5839
+  ...
+# Subtest: buffalo: native body radius controls entry, approach, shield exclusion and survives reload
+ok 48 - buffalo: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 0.3324
+  ...
+# Subtest: lion: native body radius controls entry, approach, shield exclusion and survives reload
+ok 49 - lion: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 0.3511
+  ...
+# Subtest: rhino: native body radius controls entry, approach, shield exclusion and survives reload
+ok 50 - rhino: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 0.5065
+  ...
+# Subtest: warthog: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 51 - warthog: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 1.0059
+  ...
+# Subtest: hyena: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 52 - hyena: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.1886
+  ...
+# Subtest: buffalo: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 53 - buffalo: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.2674
+  ...
+# Subtest: lion: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 54 - lion: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.1385
+  ...
+# Subtest: rhino: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 55 - rhino: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.219
+  ...
+# Subtest: Approach selection tries another side when the direct contact point is blocked, without ignoring the building
+ok 56 - Approach selection tries another side when the direct contact point is blocked, without ignoring the building
+  ---
+  duration_ms: 0.4125
+  ...
+# Subtest: The selected contact point persists while walking and across an active-raid save/load
+ok 57 - The selected contact point persists while walking and across an active-raid save/load
+  ---
+  duration_ms: 3.3153
+  ...
+# Subtest: A full legal five-animal composition changes entry side together when a large animal cannot enter
+ok 58 - A full legal five-animal composition changes entry side together when a large animal cannot enter
+  ---
+  duration_ms: 1.5147
+  ...
+# Subtest: An impossible full-group entry does not silently drop the animals that could not fit
+ok 59 - An impossible full-group entry does not silently drop the animals that could not fit
+  ---
+  duration_ms: 2.3387
+  ...
+# Subtest: Local entry/exit validation leaves the actual crop target priority unchanged
+ok 60 - Local entry/exit validation leaves the actual crop target priority unchanged
+  ---
+  duration_ms: 1.2381
+  ...
+# Subtest: A reachable crop permits entry when every structure approach is blocked
+ok 61 - A reachable crop permits entry when every structure approach is blocked
+  ---
+  duration_ms: 0.4625
+  ...
+# Subtest: exact paid-defense night 54 buffalo walks out of its tree overlap and reaches its saved exit after reload
+ok 62 - exact paid-defense night 54 buffalo walks out of its tree overlap and reaches its saved exit after reload
+  ---
+  duration_ms: 2664.0482
+  ...
+# Subtest: prop escape rejects inward travel, new props, buildings and unsafe terrain; normal collision remains strict
+ok 63 - prop escape rejects inward travel, new props, buildings and unsafe terrain; normal collision remains strict
+  ---
+  duration_ms: 0.4561
+  ...
+# Subtest: recorded Saheliana night25 physically leaves the fractional passage at dt=0.1
+ok 64 - recorded Saheliana night25 physically leaves the fractional passage at dt=0.1
+  ---
+  duration_ms: 174.2088
+  ...
+# Subtest: recorded Saheliana night25 physically leaves the fractional passage at dt=1
+ok 65 - recorded Saheliana night25 physically leaves the fractional passage at dt=1
+  ---
+  duration_ms: 140.1385
+  ...
+# Subtest: pending fractional search saves and resumes with exactly the same native state
+ok 66 - pending fractional search saves and resumes with exactly the same native state
+  ---
+  duration_ms: 2488.2139
+  ...
+# Subtest: impossible connector searches are bounded, exhausted once and reset on geometry changes
+ok 67 - impossible connector searches are bounded, exhausted once and reset on geometry changes
+  ---
+  duration_ms: 0.8662
+  ...
+# Subtest: snapshot rejects corrupt connector cursors while older snapshots remain valid
+ok 68 - snapshot rejects corrupt connector cursors while older snapshots remain valid
+  ---
+  duration_ms: 43.0706
+  ...
+# Subtest: recorded Saheliana night28 leaves the winding fractional passage at dt=0.1
+ok 69 - recorded Saheliana night28 leaves the winding fractional passage at dt=0.1
+  ---
+  duration_ms: 264.4834
+  ...
+# Subtest: recorded Saheliana night28 leaves the winding fractional passage at dt=1
+ok 70 - recorded Saheliana night28 leaves the winding fractional passage at dt=1
+  ---
+  duration_ms: 193.0312
+  ...
+# Subtest: native winding search frontier resumes identically after save/load
+ok 71 - native winding search frontier resumes identically after save/load
+  ---
+  duration_ms: 5787.5877
+  ...
+# Subtest: fractional frontier collision work and memory remain bounded without a route
+ok 72 - fractional frontier collision work and memory remain bounded without a route
+  ---
+  duration_ms: 0.799
+  ...
+# Subtest: snapshot rejects malformed winding frontiers
+ok 73 - snapshot rejects malformed winding frontiers
+  ---
+  duration_ms: 59.1845
+  ...
+# Subtest: saved native frontier rejects coordinates that would concatenate during expansion
+ok 74 - saved native frontier rejects coordinates that would concatenate during expansion
+  ---
+  duration_ms: 63.6503
+  ...
+# Subtest: saved native frontier rejects missing origins, impossible queued costs and broken ancestry
+ok 75 - saved native frontier rejects missing origins, impossible queued costs and broken ancestry
+  ---
+  duration_ms: 78.2599
+  ...
+# Subtest: a stale more expensive native heap entry remains a compatible saved state
+ok 76 - a stale more expensive native heap entry remains a compatible saved state
+  ---
+  duration_ms: 138.0137
+  ...
+# Subtest: sabana-musgum: recorded opposing traffic yields around solid terrain and finishes the real raid
+ok 77 - sabana-musgum: recorded opposing traffic yields around solid terrain and finishes the real raid
+  ---
+  duration_ms: 579.5507
+  ...
+# Subtest: gran-rio-mapungubwe: recorded opposing traffic yields around solid terrain and finishes the real raid
+ok 78 - gran-rio-mapungubwe: recorded opposing traffic yields around solid terrain and finishes the real raid
+  ---
+  duration_ms: 445.9464
+  ...
+# Subtest: manglares-mapungubwe: recorded opposing traffic yields around solid terrain and finishes the real raid
+ok 79 - manglares-mapungubwe: recorded opposing traffic yields around solid terrain and finishes the real raid
+  ---
+  duration_ms: 766.8778
+  ...
+# Subtest: Seed-712 exhausted warthog reaches its original exit around the Ethiopian village, including reload
+ok 80 - Seed-712 exhausted warthog reaches its original exit around the Ethiopian village, including reload
+  ---
+  duration_ms: 549.1067
+  ...
+# (node:46540) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: complete catalogue audit reproduces from current source and exact original bytes
+ok 81 - complete catalogue audit reproduces from current source and exact original bytes
+  ---
+  duration_ms: 281.4638
+  ...
+# Subtest: assignments, context exceptions, reserves and alternatives stay distinct from audible acceptance
+ok 82 - assignments, context exceptions, reserves and alternatives stay distinct from audible acceptance
+  ---
+  duration_ms: 65.6416
+  ...
+# Subtest: latent wood variant and semantic alternatives do not become real bindings or duplicate files
+ok 83 - latent wood variant and semantic alternatives do not become real bindings or duplicate files
+  ---
+  duration_ms: 0.3375
+  ...
+# Subtest: return search resumes bounded native slices rather than draining synchronously
+ok 84 - return search resumes bounded native slices rather than draining synchronously
+  ---
+  duration_ms: 2.0706
+  ...
+# Subtest: ordinary worker tasks never start a return search
+ok 85 - ordinary worker tasks never start a return search
+  ---
+  duration_ms: 0.2723
+  ...
+# Subtest: failed search memo follows exact origin, destination and navigation epoch
+ok 86 - failed search memo follows exact origin, destination and navigation epoch
+  ---
+  duration_ms: 0.374
+  ...
+# Subtest: only eight pending searches retain native frontier memory per navigation
+ok 87 - only eight pending searches retain native frontier memory per navigation
+  ---
+  duration_ms: 0.5328
+  ...
+# Subtest: a never-ending iterator is abandoned and memoized at its explicit total bound
+ok 88 - a never-ending iterator is abandoned and memoized at its explicit total bound
+  ---
+  duration_ms: 8.4053
+  ...
+# Subtest: native worker avoidance view is used for the wider search
+ok 89 - native worker avoidance view is used for the wider search
+  ---
+  duration_ms: 0.3008
+  ...
+# Subtest: wider native return does not cross water
+ok 90 - wider native return does not cross water
+  ---
+  duration_ms: 1.4949
+  ...
+# Subtest: wider native return does not cross lava
+ok 91 - wider native return does not cross lava
+  ---
+  duration_ms: 0.1639
+  ...
+# Subtest: wider native return does not cross solid
+ok 92 - wider native return does not cross solid
+  ---
+  duration_ms: 1.2796
+  ...
+# Subtest: wider native return does not cross steep
+ok 93 - wider native return does not cross steep
+  ---
+  duration_ms: 0.4565
+  ...
+# Subtest: a real closed wall ring cannot be escaped by enlarging the search corridor
+ok 94 - a real closed wall ring cannot be escaped by enlarging the search corridor
+  ---
+  duration_ms: 2.728
+  ...
+# Subtest: a new navigation epoch abandons the pending return proof
+ok 95 - a new navigation epoch abandons the pending return proof
+  ---
+  duration_ms: 0.1944
+  ...
+# Subtest: dry canyon cliffs retain their worker-surface slope restriction
+ok 96 - dry canyon cliffs retain their worker-surface slope restriction
+  ---
+  duration_ms: 0.1706
+  ...
+# Subtest: refinement catches a narrow steep strip missed by the ordinary coarse samples
+ok 97 - refinement catches a narrow steep strip missed by the ordinary coarse samples
+  ---
+  duration_ms: 9.2728
+  ...
+# Subtest: a risky restored connector is rejected and replanned without teleporting the worker
+ok 98 - a risky restored connector is rejected and replanned without teleporting the worker
+  ---
+  duration_ms: 10.8655
+  ...
+# Subtest: dynamic blockers retain priority and never create a terrain avoidance point
+ok 99 - dynamic blockers retain priority and never create a terrain avoidance point
+  ---
+  duration_ms: 0.2239
+  ...
+# Subtest: shared terrain-risk metadata retains its peak and actual geometry changes invalidate it
+ok 100 - shared terrain-risk metadata retains its peak and actual geometry changes invalidate it
+  ---
+  duration_ms: 0.8124
+  ...
+# Subtest: private avoided-point views are isolated per worker, bounded and replaced on geometry changes
+ok 101 - private avoided-point views are isolated per worker, bounded and replaced on geometry changes
+  ---
+  duration_ms: 5.9811
+  ...
+# Subtest: optional learned terrain points round-trip and malformed or oversized save data is rejected
+ok 102 - optional learned terrain points round-trip and malformed or oversized save data is rejected
+  ---
+  duration_ms: 1.842
+  ...
+# Subtest: returning worker leaves a marginal slope physically and reaches home without changing ordinary terrain rules
+ok 103 - returning worker leaves a marginal slope physically and reaches home without changing ordinary terrain rules
+  ---
+  duration_ms: 7.491
+  ...
+# Subtest: idle workers cannot use slope recovery to reach tasks
+ok 104 - idle workers cannot use slope recovery to reach tasks
+  ---
+  duration_ms: 0.38
+  ...
+# Subtest: walking workers cannot use slope recovery to reach tasks
+ok 105 - walking workers cannot use slope recovery to reach tasks
+  ---
+  duration_ms: 0.1476
+  ...
+# Subtest: acting workers cannot use slope recovery to reach tasks
+ok 106 - acting workers cannot use slope recovery to reach tasks
+  ---
+  duration_ms: 0.1471
+  ...
+# Subtest: carrying workers cannot use slope recovery to reach tasks
+ok 107 - carrying workers cannot use slope recovery to reach tasks
+  ---
+  duration_ms: 0.1977
+  ...
+# Subtest: steep slope, fluid, a flat invalid plateau and intervening structures cannot be escaped
+ok 108 - steep slope, fluid, a flat invalid plateau and intervening structures cannot be escaped
+  ---
+  duration_ms: 0.7476
+  ...
+# Subtest: a new water strip and blocked native return tail both prevent recovery
+ok 109 - a new water strip and blocked native return tail both prevent recovery
+  ---
+  duration_ms: 2.2038
+  ...
+# Subtest: failed recovery is bounded and memoized until the route epoch changes
+ok 110 - failed recovery is bounded and memoized until the route epoch changes
+  ---
+  duration_ms: 0.9348
+  ...
+# Subtest: no new destination route is sought when the start is already valid
+ok 111 - no new destination route is sought when the start is already valid
+  ---
+  duration_ms: 0.2561
+  ...
+# Subtest: a valid endpoint cannot justify first moving into a worse slope
+ok 112 - a valid endpoint cannot justify first moving into a worse slope
+  ---
+  duration_ms: 2.8371
+  ...
+# Subtest: saving a partial physical exit preserves the route and the following movement
+ok 113 - saving a partial physical exit preserves the route and the following movement
+  ---
+  duration_ms: 7.7502
+  ...
+1..113
+# tests 113
+# suites 0
+# pass 113
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 87272.3895
