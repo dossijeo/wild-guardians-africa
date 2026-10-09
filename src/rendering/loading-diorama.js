@@ -10,6 +10,7 @@ import {LoadingTextureOwner} from './loading-texture-owner.js';
 import {LoadingOrbit} from './loading-orbit.js';
 import {LoadingMist} from './loading-mist.js';
 import {LoadingSparkles} from './loading-sparkles.js';
+import {LoadingFocusLight} from './loading-focus-light.js';
 import {createBiomeBackdrop} from './biome-backdrop.js';
 import {mountainBackdropProfile} from './mountain-backdrop-profile.js';
 import {withScreenTarget} from './screen-target.js';
@@ -20,11 +21,11 @@ import {renderScreenPreload,waitForGpuPreload} from './screen-preload.js';
 // Borrows the world renderer, sky and asset collection. Only local geometries,
 // cloned materials and the small instanced crop batch belong to this owner.
 export class LoadingDiorama {
-  constructor(world,{state={day:1,time:0,biome:'sabana'},reducedMotion=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches??false}={}) {
+  constructor(world,{state={day:1,time:0,biome:'sabana'},focusVignette=true,reducedMotion=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches??false}={}) {
     this.world=world;this.textureOwner=new LoadingTextureOwner();world.assets.asyncTextureImages=true;this.state=state;this.scene=new THREE.Scene();this.plants=new LoadingPlants();this.camera=new THREE.PerspectiveCamera(40,1,.1,80);this.camera.position.set(4.8,3.1,6.4);this.camera.lookAt(0,1.15,0);this.baseQuaternion=this.camera.quaternion.clone();
     this.sun=new THREE.DirectionalLight('#ffe2a8',3);this.sun.position.set(-30,55,25);this.ambient=new THREE.HemisphereLight('#ebf1d9','#765b3b',2);this.scene.add(this.sun,this.ambient);
     this.toon=new AfricanToon();this.toon.uniforms.uFineNoise.value=0;
-    this.orbit=new LoadingOrbit({reducedMotion});this.focus=new THREE.Vector3(0,1.15,0);
+    this.orbit=new LoadingOrbit({reducedMotion});this.focus=new THREE.Vector3(0,1.15,0);this.focusLight=new LoadingFocusLight({enabled:focusVignette});
     this.ray=new THREE.Raycaster();this.cursor=new THREE.Vector2();this.abort=new AbortController();
     const geometry=new THREE.PlaneGeometry(15,15,32,32),material=new THREE.MeshStandardMaterial({color:'#915432',roughness:1,metalness:0,transparent:true,depthWrite:true});
     material.onBeforeCompile=shader=>{
@@ -45,7 +46,7 @@ export class LoadingDiorama {
     };
     material.customProgramCacheKey=()=> 'loading-soil-existing-earth-soft-edge-v3';
     this.ground=new THREE.Mesh(geometry,material);this.ground.rotation.x=-Math.PI/2;this.ground.position.y=.09;this.scene.add(this.ground);
-    this.sparkles=new LoadingSparkles(this.scene);this.mist=new LoadingMist(world.sky);this.scene.fog=new THREE.Fog(this.mist.day,18,28);
+    this.sparkles=new LoadingSparkles(this.scene);this.mist=new LoadingMist(world.sky,this.focusLight.uniforms);this.scene.fog=new THREE.Fog(this.mist.day,18,28);
     let down=null;world.canvas.addEventListener('pointerdown',e=>{if(this.interactive&&e.button===0){this.pointerType=e.pointerType==='touch'?'touch':'mouse';down={x:e.clientX,y:e.clientY,id:e.pointerId};this.orbit.beginInteraction();world.canvas.setPointerCapture?.(e.pointerId);e.preventDefault();}},{signal:this.abort.signal});
     world.canvas.addEventListener('pointerup',e=>{if(!down||e.pointerId!==down.id)return;const start=down;down=null;this.orbit.endInteraction();if(this.interactive&&Math.hypot(e.clientX-start.x,e.clientY-start.y)<12)this.plantAt(e.clientX,e.clientY);},{signal:this.abort.signal});
     world.canvas.addEventListener('pointercancel',()=>{down=null;this.orbit.endInteraction();},{signal:this.abort.signal});
@@ -80,6 +81,7 @@ export class LoadingDiorama {
       if(filled.has(material))continue;filled.add(material);const compile=material.onBeforeCompile;
       material.onBeforeCompile=(shader,renderer)=>{compile.call(material,shader,renderer);shader.uniforms.uNightLight=this.cropNightFill;};
     }});
+    const focused=new Set();this.scene.traverse(mesh=>{for(const material of [mesh.material].flat().filter(Boolean)){if(focused.has(material)||(!material.isMeshStandardMaterial&&!material.isMeshPhysicalMaterial))continue;focused.add(material);this.focusLight.apply(material);}});
     // Warm all five stages and four morph bridges, including ones not present in
     // the first frame. Counts/visibility restored before accepting interaction.
     const saved=[];this.scene.traverse(mesh=>{if(mesh.isInstancedMesh){saved.push([mesh,mesh.count,mesh.visible]);mesh.count=1;mesh.visible=true;}});
@@ -99,7 +101,7 @@ export class LoadingDiorama {
   render(dt,progress,{ready=false,skyOnly=false}={}) {
     if(!this.prepared||this.disposed)return;
     const {world}=this;world.resize();this.camera.aspect=world.camera.aspect;if(!world.cinematic){const portrait=this.camera.aspect<.8,distance=portrait?1.65:1,height=portrait?1.45:1,angle=this.orbit.step(dt),sin=Math.sin(angle),cos=Math.cos(angle);this.camera.position.set((4.8*cos+6.4*sin)*distance,3.1*height,(6.4*cos-4.8*sin)*distance);this.camera.lookAt(this.focus);}this.camera.updateProjectionMatrix();this.plants.update(dt,progress,{ready});this.batch.update(this.plants.plants,this.orbit.reducedMotion?0:this.plants.time,()=>0);
-    const night=skyNight(this.state);this.night=night;this.toon.update(night,this.sun,this.state.biome);this.toon.uniforms.uNightLight.value=1.8;this.sun.intensity=3-2.6*night;this.ambient.intensity=2-.9*night;this.scene.fog.color.copy(this.mist.day).lerp(this.mist.night,night);this.backdrop?.update();this.sparkles.update(this.plants.time,night,this.orbit.reducedMotion);
+    const night=skyNight(this.state);this.night=night;this.focusLight.update(world.renderer,this.camera,this.focus,night);this.toon.update(night,this.sun,this.state.biome);this.toon.uniforms.uNightLight.value=1.8;this.sun.intensity=3-2.6*night;this.ambient.intensity=2-.9*night;this.scene.fog.color.copy(this.mist.day).lerp(this.mist.night,night);this.backdrop?.update();this.sparkles.update(this.plants.time,night,this.orbit.reducedMotion);
     const shadow=world.renderer.shadowMap.enabled,autoClear=world.renderer.autoClear;
     try{world.renderer.shadowMap.enabled=false;world.renderer.autoClear=false;withScreenTarget(world.renderer,()=>{world.renderer.clear();world.sky.render(world.renderer,this.camera,this.state);if(!skyOnly){this.mist.render(world.renderer,this.camera,night);world.renderer.render(this.scene,this.camera);}});}
     finally{world.renderer.shadowMap.enabled=shadow;world.renderer.autoClear=autoClear;}
