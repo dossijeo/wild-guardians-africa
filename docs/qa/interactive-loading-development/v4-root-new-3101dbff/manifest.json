@@ -1,0 +1,68 @@
+{
+  "source": "3101dbffe55cc93fa695c4be75069db9e3778dab",
+  "nativeRootTab": 951,
+  "scope": "Instrumented fixture Run, New Savanna/Mapungubwe media; not menu click or paired performance; no physical RAM/VRAM measurement",
+  "initializationMs": 13911.399999976158,
+  "totalMs": 18011.5,
+  "frames": {
+    "count": 1012,
+    "max": 116.5,
+    "over50": 4,
+    "over100": 1
+  },
+  "models": {
+    "8f6c9ef7472a2d7f8ffda7f08a78f8027f91d14a8f92b8eeca4084b0f379da36.glb": {
+      "records": 2,
+      "networkBodies": 1,
+      "decodedBodyBytes": 14308628,
+      "reuseEvidence": "application-cache"
+    },
+    "2fdb3468b7646ebe16d0f3d3d25538ce5b20d6dee1d3830256d2f62599826dcc.glb": {
+      "records": 2,
+      "networkBodies": 1,
+      "decodedBodyBytes": 26536168,
+      "reuseEvidence": "application-cache"
+    }
+  },
+  "downloads": {
+    "progress": 1,
+    "estimatedMs": 1199.8000000715256,
+    "observedMs": 1199.8000000715256,
+    "remainingMs": 0,
+    "pending": 0,
+    "networkPending": 0,
+    "cacheHits": 2,
+    "network": 226,
+    "unknown": 0,
+    "unknownTotals": 0,
+    "failures": 0,
+    "loadedBytes": 128188985,
+    "totalBytes": 128188985,
+    "estimated": false,
+    "byteScope": "Decoded response body; pending totals and time are estimates. Parallel intervals are counted once."
+  },
+  "preparationExclusiveWaitProxyMs": 12711.599999904633,
+  "proxyLimit": "Wall readiness minus union of observed transfer intervals; overlaps removed once, not CPU work or a new calibrated recipe",
+  "files": [
+    {
+      "path": "cleanup.json",
+      "bytes": 175672,
+      "sha256": "773478fde7bb488fac16e785ea42afd149ed305d45da41079e22f1d674f0e58a"
+    },
+    {
+      "path": "console.json",
+      "bytes": 1546,
+      "sha256": "79bd4c94074e6405b439cfb1dd04971fd9275fcf78323d724c3231dbb65eb241"
+    },
+    {
+      "path": "ready.jpg",
+      "bytes": 119719,
+      "sha256": "2a1580aea9326252c280a273c2a7c1f6de1e99763ec5df9a8e3bcc9f535b4322"
+    },
+    {
+      "path": "report.json",
+      "bytes": 175600,
+      "sha256": "a690392385d8c3dfe3222e08696593ffce4efe6895036099d1899f229f6c4b16"
+    }
+  ]
+}
