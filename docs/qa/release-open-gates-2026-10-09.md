@@ -170,9 +170,11 @@ with all four paired total/color differences positive. Shadow-only gains are
 inconsistent. The user accepted the six before/after visual pairs and explicitly
 authorized activation for every biome. `5e51cf45` enables native prop color and
 shadow FrontSide, including their private solid shadow input. 37 directed tests
-and native Front/BACK/CCW smoke checks in all six biomes pass. Full local build is
-pending sufficient disk space; CI 37900756746 / 37900756543 was pending at the
-last observation. These are not new six-biome performance or exhaustive night
+and native Front/BACK/CCW smoke checks in all six biomes pass. After disk space
+became available, root's `e20bf93a` build, web-package verification and itch ZIP
+CRC check passed. CI remains separate: runs 37901173427 / 37901173610 on
+`1994b7a8` were still executing at the last observation, and the newer `e20bf93a`
+runs were pending. These are not new six-biome performance or exhaustive night
 measurements. See [the activation and evidence](environment-frontside-ceiling/production-front/README.md).
 
 The standby-pruning traveling comparison is negative and stays disabled. Shared

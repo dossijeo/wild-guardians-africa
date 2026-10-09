@@ -23,7 +23,12 @@ The incomplete copy cannot be treated as a passed build. Automatic approval
 review rejected deleting root's regenerable `dist` / `.cache/web-assets-qa`,
 including an exact verified absolute `dist` path, with only a policy-block reason.
 Nothing was deleted and no alternative deletion mechanism was attempted.
-Full local build remains pending sufficient disk space; CI is separate evidence.
+After external disk space became available, root completed the local build on
+`e20bf93a`: terminal exit 0, 12.19 seconds, with the existing large-bundle warning.
+The web package check passed: 702 files, 403,054,709 bytes, 859 relative links
+and 20 runtime GLBs. `python tools/package_itch.py` then completed with exit 0:
+353,076,406-byte ZIP, CRCs verified. This closes the local build/package gate;
+CI and the separate crop/loading feature acceptance remain independent.
 
 Original unrepaired AB/BA reports and six visual pairs remain unchanged in the
 parent directory; their `productionActivation:false` receipt records the scope
