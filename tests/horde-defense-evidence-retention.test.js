@@ -50,3 +50,15 @@ test('False gates remain false after successful auditing and raw report precedes
  assert.equal(receipt.status,'native-terminal-audited');assert.equal(receipt.gates.responsible100Accepted,false);assert.equal(receipt.gates.strictGlobalActivityBelow25,false);
  assert.equal(read(dir,'native-report.json.gz').gates,undefined);assert.equal(read(dir,'report.json.gz').gates.strictGlobalActivityBelow25,false);verifyHashes(dir,receipt);
 });
+test('Summary failure after auditing preserves real state, gates and original error',async()=>{
+ const dir=join(root,'summary-throw'),result=native(),before=serialize(result.state);
+ const receipt=await retainHordeCase(dir,'responsible',provenance,{simulate:async()=>result,readSources,audit:()=>({strictGlobalActivityBelow25:false}),summarize:()=>{throw Error('controlled summary failure');}});
+ assert.equal(receipt.status,'incomplete');assert.equal(receipt.error.message,'controlled summary failure');assert.equal(receipt.gates.strictGlobalActivityBelow25,false);
+ assert.equal(gunzipSync(readFileSync(join(dir,'state.json.gz'))).toString(),before);assert.equal(read(dir,'native-report.json.gz').gates,undefined);verifyHashes(dir,receipt);
+});
+test('Source change after successful audit marks final report incomplete',async()=>{
+ const dir=join(root,'changed-after-success');
+ const receipt=await retainHordeCase(dir,'responsible',provenance,{simulate:async()=>native(),readSources:()=>({fixture:'changed'}),audit:()=>({responsible100Accepted:false}),summarize:()=>({})});
+ assert.equal(receipt.status,'incomplete');assert.equal(read(dir,'report.json.gz').status,'incomplete');assert.equal(receipt.sourceUnchanged,false);
+ assert.deepEqual(read(dir,'report.json.gz').error,receipt.error);assert.equal(receipt.gates.responsible100Accepted,false);verifyHashes(dir,receipt);
+});

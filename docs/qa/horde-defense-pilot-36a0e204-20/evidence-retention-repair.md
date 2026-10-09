@@ -31,3 +31,10 @@ reservations, navigation, quotas and clock have not changed in this repair.
 Worker encounter strike consumption is a separate source-grounded diagnostic
 and must be reviewed/tested in a separate change. It does not establish the
 numeric discrepancy of the lost original report.
+
+Additional requested coverage: a summary exception after successful audit keeps
+the real state and gates, and a source change after successful audit marks the
+annotated report incomplete. The extended seven-test suite passed 7/7, exit 0,
+1604.6492 ms. `retainHordeCase` remains byte-identical to commit cb160fc0; only
+the test additions and this note differ. No additional simulation was run beyond
+the bounded native opening fixtures.
