@@ -54,6 +54,16 @@ touch and orientation, reduced motion, cold/cache/slow progress behavior,
 before/after total load and frame-time measurements, resource peak/lifecycle
 checks or final day/night visual acceptance. No premature PR or merge.
 
+The sequential main/feature loading ABBA on frozen `6ce847a9` / `e46a8da0`
+found an unresolved readiness regression: reference 7.150 / 7.341 seconds,
+feature 11.967 / 10.206 seconds, excluding its intentional 4.09–4.11-second
+cinematic. Root inspected all four raw terminal and cleanup reports: no errors,
+released contexts, and both feature logical/camera checks pass. Feature frame
+delivery is smoother, but the reference heartbeat does not render a diorama;
+this is not a GPU/FPS comparison. Cache/transfer drift and sampled heap limits
+remain explicit. Investigate the extra world-load preparation before approval.
+Raw evidence remains on the loading feature branch pending its final PR.
+
 ## Rendering and streaming
 
 The native repaired mature-maize comparison has net GPU benefit, but is not
