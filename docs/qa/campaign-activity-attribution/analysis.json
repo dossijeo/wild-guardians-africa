@@ -1,0 +1,521 @@
+{
+  "scope": "Attribution of frozen, fully audited 100-night native reports; not current-main replays or an optimization claim.",
+  "results": [
+    {
+      "case": "gran-canon-mapungubwe",
+      "recordedHead": "33937b929341c189d574c59540277a2c2e88297c",
+      "reportSha256": "c62d08a8b9ab77c1c39ec99bd934657febbca60161dcc91b2cbe9d7e3270504a",
+      "summarySha256": "d0cc58f402146b701d007e3da522f9f63124d60ce51bf24972bda4388afa3934",
+      "frozenActivityAcceptance": {
+        "status": "not-accepted",
+        "measuredFraction": 0.4237666666666667,
+        "policy": {
+          "path": "docs/qa/intensive-acceptance-policy.json",
+          "sha256": "f463ede2279390e14e85fa94845f4b2c10e4970f0f173c32885e3638acc69bf4",
+          "updated": "2026-10-08",
+          "comparison": "strictly-less-than",
+          "maximumFraction": 0.25
+        },
+        "scope": "Activity metric only; does not prove survival, accounting, source fidelity, bad-management loss or complete release acceptance."
+      },
+      "idleSecondsByReason": {
+        "budget": 8743,
+        "space": 1976,
+        "shift-end": 1994
+      },
+      "bands": [
+        {
+          "firstDay": 1,
+          "lastDay": 20,
+          "idleSecondsByReason": {
+            "budget": 3844,
+            "space": 0,
+            "shift-end": 395
+          },
+          "unoccupiedFraction": 0.7065,
+          "delivered": 1400,
+          "planted": 1691,
+          "firstStaff": 6,
+          "lastStaff": 27,
+          "openingCashAfterHiring": 515,
+          "closingCash": 1352,
+          "longestRecordedIdle": 146
+        },
+        {
+          "firstDay": 21,
+          "lastDay": 40,
+          "idleSecondsByReason": {
+            "budget": 3453,
+            "space": 0,
+            "shift-end": 399
+          },
+          "unoccupiedFraction": 0.642,
+          "delivered": 1809,
+          "planted": 1998,
+          "firstStaff": 21,
+          "lastStaff": 28,
+          "openingCashAfterHiring": 722,
+          "closingCash": 1078,
+          "longestRecordedIdle": 89
+        },
+        {
+          "firstDay": 41,
+          "lastDay": 60,
+          "idleSecondsByReason": {
+            "budget": 1082,
+            "space": 0,
+            "shift-end": 400
+          },
+          "unoccupiedFraction": 0.247,
+          "delivered": 2521,
+          "planted": 4327,
+          "firstStaff": 29,
+          "lastStaff": 158,
+          "openingCashAfterHiring": 208,
+          "closingCash": 6159,
+          "longestRecordedIdle": 59
+        },
+        {
+          "firstDay": 61,
+          "lastDay": 80,
+          "idleSecondsByReason": {
+            "budget": 364,
+            "space": 386,
+            "shift-end": 400
+          },
+          "unoccupiedFraction": 0.19166666666666668,
+          "delivered": 4049,
+          "planted": 4815,
+          "firstStaff": 168,
+          "lastStaff": 220,
+          "openingCashAfterHiring": 1119,
+          "closingCash": 20113,
+          "longestRecordedIdle": 81
+        },
+        {
+          "firstDay": 81,
+          "lastDay": 100,
+          "idleSecondsByReason": {
+            "budget": 0,
+            "space": 1590,
+            "shift-end": 400
+          },
+          "unoccupiedFraction": 0.33166666666666667,
+          "delivered": 3908,
+          "planted": 3968,
+          "firstStaff": 220,
+          "lastStaff": 220,
+          "openingCashAfterHiring": 13513,
+          "closingCash": 66359,
+          "longestRecordedIdle": 59
+        }
+      ],
+      "cashflow": {
+        "openingBalance": "1500",
+        "harvestIncome": "948384",
+        "seedCosts": "557151",
+        "wageCosts": "325440",
+        "repairCosts": "134",
+        "centreCosts": "800",
+        "wallCosts": "0",
+        "otherNet": "0",
+        "operatingCashFlow": "65659",
+        "netCashFlowAfterConstruction": "64859",
+        "endingBalance": "66359"
+      },
+      "ratios": {
+        "wagesToHarvestIncome": 0.3431521409049499,
+        "operatingCashMargin": 0.069232504976887,
+        "harvestMultiplierForBreakEvenAtRecordedSpending": 0.930767495023113
+      },
+      "limitation": "The static break-even ratio holds recorded spending fixed. It cannot predict liquidity, reinvestment, inventory, delivery timing, damage, expansion or a changed-policy campaign. No balance adjustment is approved by this calculation."
+    },
+    {
+      "case": "gran-canon-saheliana",
+      "recordedHead": "2826bc529e853e4a51ad94f4663b56f26cba3b0e",
+      "reportSha256": "00e0c323a84b892f19abaae3f5b77302aa7954c3ec54aadc6abcefb13cfd4f8f",
+      "summarySha256": "0b7e0a9364200caba579a2d742a7e74ea97f82111a034d529f4775931ad22829",
+      "frozenActivityAcceptance": {
+        "status": "not-accepted",
+        "measuredFraction": 0.48383333333333334,
+        "policy": {
+          "path": "docs/qa/intensive-acceptance-policy.json",
+          "sha256": "f463ede2279390e14e85fa94845f4b2c10e4970f0f173c32885e3638acc69bf4",
+          "updated": "2026-10-08",
+          "comparison": "strictly-less-than",
+          "maximumFraction": 0.25
+        },
+        "scope": "Activity metric only; does not prove survival, accounting, source fidelity, bad-management loss or complete release acceptance."
+      },
+      "idleSecondsByReason": {
+        "budget": 12309,
+        "space": 254,
+        "shift-end": 1952
+      },
+      "bands": [
+        {
+          "firstDay": 1,
+          "lastDay": 20,
+          "idleSecondsByReason": {
+            "budget": 4191,
+            "space": 0,
+            "shift-end": 396
+          },
+          "unoccupiedFraction": 0.7645,
+          "delivered": 1075,
+          "planted": 1331,
+          "firstStaff": 6,
+          "lastStaff": 23,
+          "openingCashAfterHiring": 515,
+          "closingCash": 1071,
+          "longestRecordedIdle": 222
+        },
+        {
+          "firstDay": 21,
+          "lastDay": 40,
+          "idleSecondsByReason": {
+            "budget": 3577,
+            "space": 0,
+            "shift-end": 399
+          },
+          "unoccupiedFraction": 0.6626666666666666,
+          "delivered": 1755,
+          "planted": 1943,
+          "firstStaff": 18,
+          "lastStaff": 27,
+          "openingCashAfterHiring": 531,
+          "closingCash": 912,
+          "longestRecordedIdle": 89
+        },
+        {
+          "firstDay": 41,
+          "lastDay": 60,
+          "idleSecondsByReason": {
+            "budget": 3200,
+            "space": 0,
+            "shift-end": 399
+          },
+          "unoccupiedFraction": 0.5998333333333333,
+          "delivered": 1595,
+          "planted": 2058,
+          "firstStaff": 26,
+          "lastStaff": 56,
+          "openingCashAfterHiring": 132,
+          "closingCash": 1927,
+          "longestRecordedIdle": 74
+        },
+        {
+          "firstDay": 61,
+          "lastDay": 80,
+          "idleSecondsByReason": {
+            "budget": 885,
+            "space": 0,
+            "shift-end": 378
+          },
+          "unoccupiedFraction": 0.2105,
+          "delivered": 2890,
+          "planted": 4417,
+          "firstStaff": 57,
+          "lastStaff": 161,
+          "openingCashAfterHiring": 217,
+          "closingCash": 7309,
+          "longestRecordedIdle": 59
+        },
+        {
+          "firstDay": 81,
+          "lastDay": 100,
+          "idleSecondsByReason": {
+            "budget": 456,
+            "space": 254,
+            "shift-end": 380
+          },
+          "unoccupiedFraction": 0.18166666666666667,
+          "delivered": 3985,
+          "planted": 4776,
+          "firstStaff": 173,
+          "lastStaff": 225,
+          "openingCashAfterHiring": 2119,
+          "closingCash": 28318,
+          "longestRecordedIdle": 81
+        }
+      ],
+      "cashflow": {
+        "openingBalance": "1500",
+        "harvestIncome": "702800",
+        "seedCosts": "449230",
+        "wageCosts": "225390",
+        "repairCosts": "562",
+        "centreCosts": "800",
+        "wallCosts": "0",
+        "otherNet": "0",
+        "operatingCashFlow": "27618",
+        "netCashFlowAfterConstruction": "26818",
+        "endingBalance": "28318"
+      },
+      "ratios": {
+        "wagesToHarvestIncome": 0.3207029026750142,
+        "operatingCashMargin": 0.03929709732498577,
+        "harvestMultiplierForBreakEvenAtRecordedSpending": 0.9607029026750142
+      },
+      "limitation": "The static break-even ratio holds recorded spending fixed. It cannot predict liquidity, reinvestment, inventory, delivery timing, damage, expansion or a changed-policy campaign. No balance adjustment is approved by this calculation."
+    },
+    {
+      "case": "gran-canon-suajili",
+      "recordedHead": "c950a2a3393fe9de98c0d3001c5764bc9051dc22",
+      "reportSha256": "5e7813f2f228b8f6b578074517d77cc2ef43e1894ebc6fb462e1c84517e7e659",
+      "summarySha256": "ca227e9d85fdf2d782f2bbe0a0e3c7e606675f1b3bdff7fd59deef94640f204d",
+      "frozenActivityAcceptance": {
+        "status": "not-accepted",
+        "measuredFraction": 0.3888,
+        "policy": {
+          "path": "docs/qa/intensive-acceptance-policy.json",
+          "sha256": "f463ede2279390e14e85fa94845f4b2c10e4970f0f173c32885e3638acc69bf4",
+          "updated": "2026-10-08",
+          "comparison": "strictly-less-than",
+          "maximumFraction": 0.25
+        },
+        "scope": "Activity metric only; does not prove survival, accounting, source fidelity, bad-management loss or complete release acceptance."
+      },
+      "idleSecondsByReason": {
+        "budget": 7586,
+        "space": 2117,
+        "shift-end": 1961
+      },
+      "bands": [
+        {
+          "firstDay": 1,
+          "lastDay": 20,
+          "idleSecondsByReason": {
+            "budget": 3715,
+            "space": 0,
+            "shift-end": 398
+          },
+          "unoccupiedFraction": 0.6855,
+          "delivered": 1482,
+          "planted": 1817,
+          "firstStaff": 6,
+          "lastStaff": 24,
+          "openingCashAfterHiring": 515,
+          "closingCash": 958,
+          "longestRecordedIdle": 140
+        },
+        {
+          "firstDay": 21,
+          "lastDay": 40,
+          "idleSecondsByReason": {
+            "budget": 3081,
+            "space": 0,
+            "shift-end": 383
+          },
+          "unoccupiedFraction": 0.5773333333333334,
+          "delivered": 1793,
+          "planted": 2255,
+          "firstStaff": 25,
+          "lastStaff": 44,
+          "openingCashAfterHiring": 208,
+          "closingCash": 1758,
+          "longestRecordedIdle": 59
+        },
+        {
+          "firstDay": 41,
+          "lastDay": 60,
+          "idleSecondsByReason": {
+            "budget": 774,
+            "space": 0,
+            "shift-end": 400
+          },
+          "unoccupiedFraction": 0.19566666666666666,
+          "delivered": 3235,
+          "planted": 4707,
+          "firstStaff": 54,
+          "lastStaff": 171,
+          "openingCashAfterHiring": 138,
+          "closingCash": 10701,
+          "longestRecordedIdle": 59
+        },
+        {
+          "firstDay": 61,
+          "lastDay": 80,
+          "idleSecondsByReason": {
+            "budget": 16,
+            "space": 814,
+            "shift-end": 400
+          },
+          "unoccupiedFraction": 0.205,
+          "delivered": 4069,
+          "planted": 4734,
+          "firstStaff": 170,
+          "lastStaff": 218,
+          "openingCashAfterHiring": 5601,
+          "closingCash": 41131,
+          "longestRecordedIdle": 32
+        },
+        {
+          "firstDay": 81,
+          "lastDay": 100,
+          "idleSecondsByReason": {
+            "budget": 0,
+            "space": 1303,
+            "shift-end": 380
+          },
+          "unoccupiedFraction": 0.2805,
+          "delivered": 4037,
+          "planted": 4163,
+          "firstStaff": 218,
+          "lastStaff": 218,
+          "openingCashAfterHiring": 34591,
+          "closingCash": 79159,
+          "longestRecordedIdle": 59
+        }
+      ],
+      "cashflow": {
+        "openingBalance": "1500",
+        "harvestIncome": "1032966",
+        "seedCosts": "607506",
+        "wageCosts": "346560",
+        "repairCosts": "441",
+        "centreCosts": "800",
+        "wallCosts": "0",
+        "otherNet": "0",
+        "operatingCashFlow": "78459",
+        "netCashFlowAfterConstruction": "77659",
+        "endingBalance": "79159"
+      },
+      "ratios": {
+        "wagesToHarvestIncome": 0.33549990996799506,
+        "operatingCashMargin": 0.07595506531676745,
+        "harvestMultiplierForBreakEvenAtRecordedSpending": 0.9240449346832326
+      },
+      "limitation": "The static break-even ratio holds recorded spending fixed. It cannot predict liquidity, reinvestment, inventory, delivery timing, damage, expansion or a changed-policy campaign. No balance adjustment is approved by this calculation."
+    },
+    {
+      "case": "desierto-mapungubwe",
+      "recordedHead": "ef1aa4d13d88078acf3ab7bbadae1901ddca76ae",
+      "reportSha256": "b22c49d699048afaeab5d532a0d457acff9004df19afa64928160d272e7dde05",
+      "summarySha256": "a4158dfbc89bc967ba162891fcd6374ed46de704d5bfbdb9deb3e79057a2a3cd",
+      "frozenActivityAcceptance": {
+        "status": "not-accepted",
+        "measuredFraction": 0.3717666666666667,
+        "policy": {
+          "path": "docs/qa/intensive-acceptance-policy.json",
+          "sha256": "f463ede2279390e14e85fa94845f4b2c10e4970f0f173c32885e3638acc69bf4",
+          "updated": "2026-10-08",
+          "comparison": "strictly-less-than",
+          "maximumFraction": 0.25
+        },
+        "scope": "Activity metric only; does not prove survival, accounting, source fidelity, bad-management loss or complete release acceptance."
+      },
+      "idleSecondsByReason": {
+        "budget": 9160,
+        "space": 0,
+        "shift-end": 1993
+      },
+      "bands": [
+        {
+          "firstDay": 1,
+          "lastDay": 20,
+          "idleSecondsByReason": {
+            "budget": 4139,
+            "space": 0,
+            "shift-end": 397
+          },
+          "unoccupiedFraction": 0.756,
+          "delivered": 1073,
+          "planted": 1385,
+          "firstStaff": 6,
+          "lastStaff": 25,
+          "openingCashAfterHiring": 515,
+          "closingCash": 856,
+          "longestRecordedIdle": 193
+        },
+        {
+          "firstDay": 21,
+          "lastDay": 40,
+          "idleSecondsByReason": {
+            "budget": 3685,
+            "space": 0,
+            "shift-end": 398
+          },
+          "unoccupiedFraction": 0.6805,
+          "delivered": 1622,
+          "planted": 1829,
+          "firstStaff": 21,
+          "lastStaff": 33,
+          "openingCashAfterHiring": 226,
+          "closingCash": 1136,
+          "longestRecordedIdle": 89
+        },
+        {
+          "firstDay": 41,
+          "lastDay": 60,
+          "idleSecondsByReason": {
+            "budget": 1212,
+            "space": 0,
+            "shift-end": 398
+          },
+          "unoccupiedFraction": 0.2683333333333333,
+          "delivered": 2753,
+          "planted": 4261,
+          "firstStaff": 31,
+          "lastStaff": 127,
+          "openingCashAfterHiring": 206,
+          "closingCash": 6664,
+          "longestRecordedIdle": 59
+        },
+        {
+          "firstDay": 61,
+          "lastDay": 80,
+          "idleSecondsByReason": {
+            "budget": 103,
+            "space": 0,
+            "shift-end": 400
+          },
+          "unoccupiedFraction": 0.08383333333333333,
+          "delivered": 3856,
+          "planted": 5477,
+          "firstStaff": 127,
+          "lastStaff": 194,
+          "openingCashAfterHiring": 2854,
+          "closingCash": 17744,
+          "longestRecordedIdle": 31
+        },
+        {
+          "firstDay": 81,
+          "lastDay": 100,
+          "idleSecondsByReason": {
+            "budget": 21,
+            "space": 0,
+            "shift-end": 400
+          },
+          "unoccupiedFraction": 0.07016666666666667,
+          "delivered": 4222,
+          "planted": 5491,
+          "firstStaff": 189,
+          "lastStaff": 220,
+          "openingCashAfterHiring": 12074,
+          "closingCash": 33953,
+          "longestRecordedIdle": 21
+        }
+      ],
+      "cashflow": {
+        "openingBalance": "1500",
+        "harvestIncome": "956097",
+        "seedCosts": "629894",
+        "wageCosts": "292950",
+        "repairCosts": "0",
+        "centreCosts": "800",
+        "wallCosts": "0",
+        "otherNet": "0",
+        "operatingCashFlow": "33253",
+        "netCashFlowAfterConstruction": "32453",
+        "endingBalance": "33953"
+      },
+      "ratios": {
+        "wagesToHarvestIncome": 0.3064019654909491,
+        "operatingCashMargin": 0.03477994387598748,
+        "harvestMultiplierForBreakEvenAtRecordedSpending": 0.9652200561240125
+      },
+      "limitation": "The static break-even ratio holds recorded spending fixed. It cannot predict liquidity, reinvestment, inventory, delivery timing, damage, expansion or a changed-policy campaign. No balance adjustment is approved by this calculation."
+    }
+  ]
+}
