@@ -41,3 +41,16 @@ historical warmth. Exact historical entry geometry and archived physical
 initial/spawn/final states are separate, narrower comparisons. The six empty
 farm physical fixtures cannot prove advanced-farm risk,100-night survivability,
 the thirty-combination matrix or aggregate inactivity below25%.
+
+Root also independently ran `python
+docs/qa/horde-cooperative-root-review-a689/verify-physical.py` from the repository
+root, with both frozen commits available in Git. All30 recorded source/log
+hashes and every archived payload hash matched a689. Decompressed initial and
+final snapshots matched the historical worker fixtures byte-for-byte in all
+six biomes; spawn-state hashes matched separately. Each of72 actors reached
+its exact stored exit, with one spawn/end per biome,12 total StructureHit events
+and270 unused strikes. This reads immutable evidence; it does not rerun physical
+simulation. The raw physical reports' sourceCommit names the pre-execution
+parent d4; the separate post-execution source receipt identifies the changed
+runtime bytes matched to the eventual a689 freeze. Do not label d4 as the
+executed cooperative runtime or imply a pre-execution frozen commit.
