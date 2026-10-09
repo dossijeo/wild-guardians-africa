@@ -1,0 +1,473 @@
+{
+  "player": {
+    "loading": [
+      {
+        "stamp": 965.1999999284744,
+        "cover": false,
+        "hudVisibility": null
+      },
+      {
+        "stamp": 184263.29999995232,
+        "cover": true,
+        "busy": "true",
+        "hudVisibility": "hidden"
+      },
+      {
+        "stamp": 203738.59999990463,
+        "cover": false,
+        "busy": "false",
+        "hudVisibility": "visible"
+      }
+    ],
+    "qaInputs": [
+      {
+        "kind": "guide",
+        "screen": {
+          "x": 640,
+          "y": 364
+        },
+        "guide": {
+          "visible": true,
+          "phase": "reading",
+          "target": "center-site",
+          "kind": "point",
+          "position": [
+            83,
+            11.866722941766687,
+            0
+          ],
+          "screen": {
+            "x": 640,
+            "y": 364
+          }
+        },
+        "scope": "Authored QA synthetic DOM pointer pair through actual canvas listeners; controls disabled synchronously to avoid unsupported synthetic pointer capture. Not physical input."
+      },
+      {
+        "kind": "guide",
+        "screen": {
+          "x": 640,
+          "y": 364
+        },
+        "guide": {
+          "visible": true,
+          "phase": "reading",
+          "target": "plant-site",
+          "kind": "tap",
+          "position": [
+            82.5,
+            11.866722941766687,
+            6
+          ],
+          "screen": {
+            "x": 640,
+            "y": 364
+          }
+        },
+        "scope": "Authored QA synthetic DOM pointer pair through actual canvas listeners; controls disabled synchronously to avoid unsupported synthetic pointer capture. Not physical input."
+      },
+      {
+        "kind": "plot",
+        "screen": {
+          "x": 851,
+          "y": 320
+        },
+        "guide": null,
+        "scope": "Authored QA synthetic DOM pointer pair through actual canvas listeners; controls disabled synchronously to avoid unsupported synthetic pointer capture. Not physical input."
+      }
+    ],
+    "worldGuide": null,
+    "viewport": {
+      "width": 1280,
+      "height": 720
+    },
+    "day": 1,
+    "time": 17.760099999999774,
+    "elapsed": 17.760099999999774,
+    "balance": {
+      "n": "660",
+      "d": "1"
+    },
+    "pauses": [],
+    "tutorial": {
+      "step": "observe",
+      "seen": [
+        "basic.introduction",
+        "basic.center",
+        "basic.plant",
+        "basic.hiring"
+      ],
+      "pending": [],
+      "guideAfterAuto": [],
+      "reading": "basic.work",
+      "basicSkipped": false,
+      "dismissed": [
+        "basic.introduction:"
+      ]
+    },
+    "structures": [
+      {
+        "id": "structure-2",
+        "x": 82.99685836225773,
+        "z": -0.005750729312669733,
+        "screen": {
+          "x": 713,
+          "y": 319
+        }
+      }
+    ],
+    "proposedCenter": {
+      "kind": "center",
+      "x": 83,
+      "z": 0,
+      "culture": "mapungubwe",
+      "screen": {
+        "x": 713,
+        "y": 319
+      }
+    },
+    "plantSpots": [
+      {
+        "x": 88.5,
+        "z": -3,
+        "screen": {
+          "x": 851,
+          "y": 320
+        }
+      },
+      {
+        "x": 90,
+        "z": -3,
+        "screen": {
+          "x": 882,
+          "y": 333
+        }
+      },
+      {
+        "x": 93,
+        "z": -3,
+        "screen": {
+          "x": 946,
+          "y": 375
+        }
+      },
+      {
+        "x": 88.5,
+        "z": -1.5,
+        "screen": {
+          "x": 840,
+          "y": 330
+        }
+      },
+      {
+        "x": 90,
+        "z": -1.5,
+        "screen": {
+          "x": 873,
+          "y": 344
+        }
+      },
+      {
+        "x": 93,
+        "z": -1.5,
+        "screen": {
+          "x": 939,
+          "y": 388
+        }
+      },
+      {
+        "x": 88.5,
+        "z": 0,
+        "screen": {
+          "x": 830,
+          "y": 342
+        }
+      },
+      {
+        "x": 90,
+        "z": 0,
+        "screen": {
+          "x": 863,
+          "y": 356
+        }
+      },
+      {
+        "x": 93,
+        "z": 0,
+        "screen": {
+          "x": 931,
+          "y": 402
+        }
+      },
+      {
+        "x": 88.5,
+        "z": 1.5,
+        "screen": {
+          "x": 818,
+          "y": 354
+        }
+      },
+      {
+        "x": 90,
+        "z": 1.5,
+        "screen": {
+          "x": 853,
+          "y": 369
+        }
+      },
+      {
+        "x": 93,
+        "z": 1.5,
+        "screen": {
+          "x": 922,
+          "y": 416
+        }
+      },
+      {
+        "x": 88.5,
+        "z": 3,
+        "screen": {
+          "x": 806,
+          "y": 367
+        }
+      },
+      {
+        "x": 90,
+        "z": 3,
+        "screen": {
+          "x": 841,
+          "y": 382
+        }
+      },
+      {
+        "x": 93,
+        "z": 3,
+        "screen": {
+          "x": 913,
+          "y": 432
+        }
+      }
+    ],
+    "plants": [
+      {
+        "id": "plant-3",
+        "growth": 0,
+        "alive": true,
+        "water": [
+          {
+            "at": 0,
+            "status": "due",
+            "wait": 0
+          },
+          {
+            "at": 70,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "screen": {
+          "x": 640,
+          "y": 364
+        }
+      },
+      {
+        "id": "plant-8",
+        "growth": 0,
+        "alive": true,
+        "water": [
+          {
+            "at": 0,
+            "status": "due",
+            "wait": 0
+          },
+          {
+            "at": 70,
+            "status": "future",
+            "wait": 0
+          }
+        ],
+        "screen": {
+          "x": 851,
+          "y": 320
+        }
+      }
+    ],
+    "workers": [
+      {
+        "id": "worker-6",
+        "status": "walking",
+        "running": false,
+        "x": 61.059572569237254,
+        "z": 0.39733971346399466,
+        "path": [
+          {
+            "x": 76,
+            "z": 6
+          },
+          {
+            "x": 81.69802500013097,
+            "z": 5.786140000034925
+          }
+        ],
+        "screen": {
+          "x": 349,
+          "y": 253
+        }
+      }
+    ],
+    "delivered": 0
+  },
+  "report": {
+    "cycles": [
+      {
+        "cycle": 1,
+        "biome": "sabana",
+        "culture": "mapungubwe",
+        "initialMoney": {
+          "n": "1500",
+          "d": "1"
+        },
+        "loads": 1,
+        "disposals": 0,
+        "renders": 2670,
+        "rendersAfterDispose": 0,
+        "disposed": false,
+        "contextLost": false,
+        "canvasConnected": true,
+        "canvasListenersLive": 28,
+        "ownListenersAborted": false,
+        "workerTerminated": false,
+        "streamDead": false,
+        "streamTimer": null,
+        "streamQueue": 0,
+        "geometryCount": 976,
+        "geometryDisposed": 0,
+        "materialCount": 139,
+        "materialDisposed": 0
+      }
+    ],
+    "uiSoundRequests": [
+      {
+        "id": "ui_panel_open",
+        "requestedAt": 210814.89999997616,
+        "bus": "ui",
+        "emitter": "ui:surface",
+        "accepted": true,
+        "rate": 1,
+        "voiceBus": "ui"
+      },
+      {
+        "id": "spirit_touch",
+        "requestedAt": 210816.69999992847,
+        "bus": "ui",
+        "emitter": "ui:guided-hud",
+        "accepted": true,
+        "rate": 1,
+        "voiceBus": "ui"
+      },
+      {
+        "id": "ui_panel_close",
+        "requestedAt": 216327.89999997616,
+        "bus": "ui",
+        "emitter": "ui:surface",
+        "accepted": true,
+        "rate": 1,
+        "voiceBus": "ui"
+      },
+      {
+        "id": "spirit_valid",
+        "requestedAt": 221094.5,
+        "bus": "ui",
+        "emitter": "ui:guided-placement",
+        "accepted": true,
+        "rate": 1,
+        "voiceBus": "ui"
+      },
+      {
+        "id": "ui_panel_open",
+        "requestedAt": 226033.69999992847,
+        "bus": "ui",
+        "emitter": "ui:surface",
+        "accepted": true,
+        "rate": 1,
+        "voiceBus": "ui"
+      },
+      {
+        "id": "spirit_touch",
+        "requestedAt": 226041.5,
+        "bus": "ui",
+        "emitter": "ui:guided-hud",
+        "accepted": true,
+        "rate": 1,
+        "voiceBus": "ui"
+      },
+      {
+        "id": "ui_panel_close",
+        "requestedAt": 230808.19999992847,
+        "bus": "ui",
+        "emitter": "ui:surface",
+        "accepted": true,
+        "rate": 1,
+        "voiceBus": "ui"
+      },
+      {
+        "id": "spirit_valid",
+        "requestedAt": 240764.09999990463,
+        "bus": "ui",
+        "emitter": "ui:guided-placement",
+        "accepted": true,
+        "rate": 1,
+        "voiceBus": "ui"
+      },
+      {
+        "id": "ui_panel_open",
+        "requestedAt": 250947.19999992847,
+        "bus": "ui",
+        "emitter": "ui:surface",
+        "accepted": true,
+        "rate": 1,
+        "voiceBus": "ui"
+      },
+      {
+        "id": "ui_panel_close",
+        "requestedAt": 265539.89999997616,
+        "bus": "ui",
+        "emitter": "ui:surface",
+        "accepted": true,
+        "rate": 1,
+        "voiceBus": "ui"
+      },
+      {
+        "id": "ui_panel_open",
+        "requestedAt": 265857.6999999285,
+        "bus": "ui",
+        "emitter": "ui:surface",
+        "accepted": true,
+        "rate": 1,
+        "voiceBus": "ui"
+      },
+      {
+        "id": "ui_panel_close",
+        "requestedAt": 273081.1999999285,
+        "bus": "ui",
+        "emitter": "ui:surface",
+        "accepted": true,
+        "rate": 1,
+        "voiceBus": "ui"
+      }
+    ],
+    "audio": [
+      {
+        "voices": 22,
+        "active": 22,
+        "transport": true,
+        "context": "running"
+      }
+    ],
+    "worldCanvases": 1,
+    "menuFrames": 0,
+    "isolatedSlots": 0,
+    "errors": [],
+    "limits": "Retains old references; context loss is queried on real WebGL, not inferred from DOM removal. Resource disposal events are counts, not GPU memory bytes. One global app RAF and QA sampling timer remain intentionally active."
+  }
+}
