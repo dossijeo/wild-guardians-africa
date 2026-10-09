@@ -39,7 +39,9 @@ observations do not prove peak RAM/VRAM or complete audio cleanup. Root actual
 menu slow-load 908 reached verified readiness and gameplay; a native planting
 gesture triggered SFX 028 and loading voices were empty after handoff. The
 English failure 909 persisted with Dismiss, but retained a Spanish technical
-detail; its later source correction still requires native confirmation.
+detail. The later correction was confirmed natively on `e46a8da0`: English
+technical detail, persistent notice, dismissal and cleanup, with no console
+errors. This functional check is not a performance or memory measurement.
 
 A thirty-combination functional matrix completed on frozen `1bf0fb0d`:
 all thirty report readiness, camera/logical restoration and teardown, with no
@@ -62,8 +64,9 @@ The standby-pruning traveling comparison is negative and stays disabled. Shared
 resident preparation also has a completed root native AB/BA comparison on
 frozen `795f773e`: all four p95 frame intervals are 116.4 ms, with 1004 GPU
 queries, unchanged logical state, and released contexts. No demonstrated
-frame-stability benefit; it remains experimental. Full trace analysis and
-immutable reports are being archived in its branch. All draws, uploads, queries and cleanup
+frame-stability benefit; it remains experimental. The immutable reports and
+reproducible verifier are now in main at `cad08d84`; root verification passed.
+A separate seam-preparation isolation candidate remains unbenchmarked. All draws, uploads, queries and cleanup
 must be attributed without summing union statistics counted in multiple adapters.
 The requested outcome is stable movement during new chunk/impostor preparation,
 not a higher average FPS at the expense of travel spikes.
@@ -80,6 +83,10 @@ not a higher average FPS at the expense of travel spikes.
 - QA-014 still lacks the complete physical web/mobile hidden-tab acceptance
   described in its registry; native Windows evidence has a different scope.
 - QA-156 still lacks its documented perceptual/full-campaign audio acceptance.
+  Root native English Spirit QA independently confirms natural audio completion
+  and retention of the current presentation while a real centre action advances
+  tutorial logic. See [the evidence](library-spirit-ended/english-natural-914/README.md).
+  This fixture does not cover all voices or full gameplay audio.
 - Published itch.io Wake Lock has physical Pixel acceptance from the user;
   additional work is not a priority unless a regression appears.
 
