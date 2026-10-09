@@ -1,3 +1,4 @@
+import {youngLeafContinuousReportPrefix} from './lib/frontside-young-leaf-continuous-report.mjs';
 import {youngLeafReportPrefix} from './lib/frontside-young-leaf-report.mjs';
 // Isolated local QA server. Only the fixed pilot report artifact may be written.
 import {createServer} from 'vite';
@@ -29,7 +30,7 @@ const server=await createServer({server:{host:'127.0.0.1',port:5284,strictPort:t
     try{let body='';for await(const chunk of req){body+=chunk;if(body.length>20_000_000)throw Error('Report limit');}
       report=JSON.parse(body);const sourceFine=report.status==='SOURCE_FINE_FIELD_TRAINING_NOT_APPROVED';if(!sourceFine&&!['SELECTION_ONLY_NOT_APPROVED','VISUAL_SCREEN_NOT_APPROVED','GPU_CANDIDATE_EXPERIMENT_NOT_APPROVED','WORLD_MAIZE_QA_NOT_APPROVED','WORLD_DENSE_MAIZE_GPU_NOT_APPROVED'].includes(report.status))throw Error('Unexpected report');
       if(report.status==='GPU_CANDIDATE_EXPERIMENT_NOT_APPROVED'&&report.sharedLeafGpuNet!==true)throw Error('GPU report identity missing');
-      const prefix=report.youngLeafDoubleHuman?youngLeafReportPrefix(report):report.status==='WORLD_DENSE_MAIZE_GPU_NOT_APPROVED'?denseWorldMaizeReportPrefix(report):report.originalBridgeIndexHuman===true?bridgeIndexReportPrefix(report):report.status==='WORLD_MAIZE_QA_NOT_APPROVED'?worldMaizeReportPrefix(report):report.sharedLeafGpuNet?sharedLeafGpuReportPrefix(report):sourceFine?sourceFineReportPrefix(report):report.sharedLeafContinuousHuman?sharedLeafContinuousReportPrefix(report):report.sharedLeafReverseHuman?sharedLeafReportPrefix(report):report.status==='SELECTION_ONLY_NOT_APPROVED'?(report.cropOnly?'runtime-visibility-crop-pairs':report.workerOnly?'runtime-visibility-worker1024':'runtime-visibility'):report.cropVisual?'crop-runtime-visual':'worker-runtime-visual';
+      const prefix=report.youngLeafContinuousHuman?youngLeafContinuousReportPrefix(report):report.youngLeafDoubleHuman?youngLeafReportPrefix(report):report.status==='WORLD_DENSE_MAIZE_GPU_NOT_APPROVED'?denseWorldMaizeReportPrefix(report):report.originalBridgeIndexHuman===true?bridgeIndexReportPrefix(report):report.status==='WORLD_MAIZE_QA_NOT_APPROVED'?worldMaizeReportPrefix(report):report.sharedLeafGpuNet?sharedLeafGpuReportPrefix(report):sourceFine?sourceFineReportPrefix(report):report.sharedLeafContinuousHuman?sharedLeafContinuousReportPrefix(report):report.sharedLeafReverseHuman?sharedLeafReportPrefix(report):report.status==='SELECTION_ONLY_NOT_APPROVED'?(report.cropOnly?'runtime-visibility-crop-pairs':report.workerOnly?'runtime-visibility-worker1024':'runtime-visibility'):report.cropVisual?'crop-runtime-visual':'worker-runtime-visual';
       await mkdir('docs/qa/frontside-model-pilot',{recursive:true});
       if(report.capturePng){if(!/^data:image\/png;base64,/.test(report.capturePng))throw Error('Invalid capture');
         await writeFile('docs/qa/frontside-model-pilot/'+prefix+'-last-frame.png',Buffer.from(report.capturePng.split(',')[1],'base64'));
@@ -59,5 +60,6 @@ const server=await createServer({server:{host:'127.0.0.1',port:5284,strictPort:t
     try{const file=await import('node:fs/promises').then(fs=>fs.readFile(paths[req.url]));res.setHeader('Content-Type',paths[req.url].endsWith('.json')?'application/json':'model/gltf-binary');res.end(file);}catch(error){res.statusCode=500;res.end(String(error));}
   });}
 }]});await server.listen();server.printUrls();
+
 
 
