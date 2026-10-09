@@ -1,0 +1,7 @@
+# Loading pipeline attribution, 1722bbab
+
+A single optional DEV-witness run on the existing loading fixture reached verified readiness in 11,144.3 ms and controls in 15,245.2 ms. Its complete RAF data retains a 99.8 ms maximum and four intervals above 50 ms. Errors were empty, final logical state/camera checks passed, and the owner was disposed with context loss before closing the tab. The raw report, screenshot and cleanup report are retained with SHA-256 in the summary. The callback stopped collecting at completion; the earlier de353 cleanup with post-ready growth remains archived as a negative diagnostic.
+
+The loading cost is distributed: crop cooperative construction took 890.6 ms, world GPU warm-up 2,486.4 ms, and far attachment 2,927.1 ms. Within the GPU warm-up, bounded draw uploads took 849.6 ms, depth preparation 478.3 ms and texture initialization 535.0 ms. These nested elapsed spans are not exclusive CPU/GPU work and must not be summed. Download interval union was 674.2 ms and overlaps initialization; it is not added as a sequential cost.
+
+The frozen current-main ABBA already includes approximately 2.2–2.4 seconds between warm-up and load completion. Therefore the whole 2.9-second far phase cannot be attributed to the feature as additional work. This diagnostic does not repair or close the ABBA readiness regression. Next: instrument existing crop construction CPU/yields and screen-upload CPU/frame waits without changing budgets, fences, quality or readiness.

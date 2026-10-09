@@ -21,3 +21,13 @@ test('crop preparation deadline releases a partial batch with no arriving frame'
 test('completed cooperative preparation retains all maize stages and bridges',async()=>{
  const f=fixture();let frames=0;const batch=await createCropBatchAsync(f.scene,f.renderer,f.gltf,f.data,18,{species:['maiz'],budgetMs:0,nextFrame:async()=>{frames++;}});assert.ok(frames>1);assert.equal(f.scene.children.length,9);batch.dispose();assert.equal(f.scene.children.length,0);assert.equal(f.disposals(),0);f.close();
 });
+
+test('crop attribution separates construction CPU from frame waits without changing geometry or swallowing cancellation',async()=>{
+ const f=fixture(),spans=[];let clock=0;
+ const batch=await createCropBatchAsync(f.scene,f.renderer,f.gltf,f.data,18,{species:['maiz'],budgetMs:0,now:()=>clock++,onWork:span=>{spans.push(span);throw Error('observer failed');},nextFrame:async()=>{clock+=20;}});
+ const steps=spans.filter(s=>s.label==='loading-crop-construction-step'),waits=spans.filter(s=>s.label==='loading-crop-frame-wait');
+ assert.ok(steps.length>1);assert.equal(waits.length,steps.length-1);assert.ok(waits.every(s=>s.sliceSteps===1&&s.sliceCpu===1&&s.duration>=20&&!s.failed));assert.equal(f.scene.children.length,9);batch.dispose();assert.equal(f.disposals(),0);f.close();
+ const aborted=fixture(),owner=new AbortController(),failed=[];
+ const pending=createCropBatchAsync(aborted.scene,aborted.renderer,aborted.gltf,aborted.data,18,{species:['maiz'],budgetMs:0,signal:owner.signal,onWork:span=>failed.push(span),nextFrame:()=>new Promise(()=>{})});
+ owner.abort();await assert.rejects(pending,/cancelled/);assert.equal(failed.at(-1).label,'loading-crop-frame-wait');assert.equal(failed.at(-1).failed,true);assert.equal(aborted.scene.children.length,0);assert.equal(aborted.disposals(),0);aborted.close();
+});

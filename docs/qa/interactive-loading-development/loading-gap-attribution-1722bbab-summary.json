@@ -1,0 +1,363 @@
+{
+  "source": "1722bbab",
+  "scope": "One instrumented native NewGame Sabana/Mapungubwe/media run; no GPU queries; not paired causal performance evidence. Nested wall spans overlap and download union overlaps phases.",
+  "initializationMs": 11144.299999952316,
+  "totalMs": 15245.200000047684,
+  "frameSummary": {
+    "count": 830,
+    "max": 99.80000000000109,
+    "over50": 4,
+    "over100": 0
+  },
+  "errors": [],
+  "cameraPreserved": true,
+  "logicalUnchanged": true,
+  "downloadSummary": {
+    "progress": 1,
+    "estimatedMs": 674.200000166893,
+    "observedMs": 674.200000166893,
+    "remainingMs": 0,
+    "pending": 0,
+    "networkPending": 0,
+    "cacheHits": 1,
+    "network": 212,
+    "unknown": 0,
+    "unknownTotals": 0,
+    "failures": 0,
+    "loadedBytes": 98149536,
+    "totalBytes": 98149536,
+    "estimated": false,
+    "byteScope": "Decoded response body; pending totals and time are estimates. Parallel intervals are counted once."
+  },
+  "phases": [
+    {
+      "stage": "load-sky",
+      "at": 924.2999999523163,
+      "label": "load-sky",
+      "start": 14763.700000047684,
+      "end": 14763.899999976158,
+      "duration": 0.19999992847442627,
+      "failed": false,
+      "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+    },
+    {
+      "stage": "load-milestone:sky",
+      "at": 928.2999999523163,
+      "label": "load-milestone:sky",
+      "start": 14763.899999976158,
+      "end": 14767.899999976158,
+      "duration": 4,
+      "failed": false,
+      "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+    },
+    {
+      "stage": "load-biome-models",
+      "at": 1409.3999999761581,
+      "label": "load-biome-models",
+      "start": 14784.800000071526,
+      "end": 15249,
+      "duration": 464.1999999284744,
+      "failed": false,
+      "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+    },
+    {
+      "stage": "load-biome-ground",
+      "at": 1565.6000000238419,
+      "label": "load-biome-ground",
+      "start": 15249.300000071526,
+      "end": 15405.200000047684,
+      "duration": 155.89999997615814,
+      "failed": false,
+      "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+    },
+    {
+      "stage": "load-milestone:biome",
+      "at": 1575.7999999523163,
+      "label": "load-milestone:biome",
+      "start": 15406.800000071526,
+      "end": 15415.399999976158,
+      "duration": 8.599999904632568,
+      "failed": false,
+      "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+    },
+    {
+      "stage": "load-village-models",
+      "at": 1669.5,
+      "label": "load-village-models",
+      "start": 15415.399999976158,
+      "end": 15509.100000023842,
+      "duration": 93.70000004768372,
+      "failed": false,
+      "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+    },
+    {
+      "stage": "load-milestone:buildings",
+      "at": 2129.7000000476837,
+      "label": "load-milestone:buildings",
+      "start": 15967.300000071526,
+      "end": 15969.300000071526,
+      "duration": 2,
+      "failed": false,
+      "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+    },
+    {
+      "stage": "load-animal-models",
+      "at": 2758.2999999523163,
+      "label": "load-animal-models",
+      "start": 15998.5,
+      "end": 16597.899999976158,
+      "duration": 599.3999999761581,
+      "failed": false,
+      "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+    },
+    {
+      "stage": "load-milestone:animals",
+      "at": 2759,
+      "label": "load-milestone:animals",
+      "start": 16597.899999976158,
+      "end": 16598.600000023842,
+      "duration": 0.7000000476837158,
+      "failed": false,
+      "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+    },
+    {
+      "stage": "load-crop-model",
+      "at": 2759.5,
+      "label": "load-crop-model",
+      "start": 16598.899999976158,
+      "end": 16599.100000023842,
+      "duration": 0.20000004768371582,
+      "failed": false,
+      "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+    },
+    {
+      "stage": "load-crop-batch",
+      "at": 3673.7000000476837,
+      "label": "load-crop-batch",
+      "start": 16622.700000047684,
+      "end": 17513.300000071526,
+      "duration": 890.6000000238419,
+      "failed": false,
+      "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+    },
+    {
+      "stage": "load-milestone:crops",
+      "at": 3686.899999976158,
+      "label": "load-milestone:crops",
+      "start": 17513.5,
+      "end": 17526.5,
+      "duration": 13,
+      "failed": false,
+      "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+    },
+    {
+      "stage": "load-milestone:walls",
+      "at": 4036.2000000476837,
+      "label": "load-milestone:walls",
+      "start": 17869.800000071526,
+      "end": 17875.800000071526,
+      "duration": 6,
+      "failed": false,
+      "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+    },
+    {
+      "stage": "load-milestone:vfx",
+      "at": 4190.5,
+      "label": "load-milestone:vfx",
+      "start": 18029,
+      "end": 18030.100000023842,
+      "duration": 1.100000023841858,
+      "failed": false,
+      "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+    },
+    {
+      "stage": "load-chunks-horizon-ready",
+      "at": 4724.399999976158,
+      "label": "load-chunks-horizon-ready",
+      "start": 18034.200000047684,
+      "end": 18564,
+      "duration": 529.7999999523163,
+      "failed": false,
+      "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+    },
+    {
+      "stage": "load-milestone:chunks",
+      "at": 4735.100000023842,
+      "label": "load-milestone:chunks",
+      "start": 18565.399999976158,
+      "end": 18574.700000047684,
+      "duration": 9.300000071525574,
+      "failed": false,
+      "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+    },
+    {
+      "stage": "load-hands-ready",
+      "at": 4756.799999952316,
+      "label": "load-hands-ready",
+      "start": 18581.399999976158,
+      "end": 18596.399999976158,
+      "duration": 15,
+      "failed": false,
+      "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+    },
+    {
+      "stage": "load-active-animal-actors",
+      "at": 4757.100000023842,
+      "label": "load-active-animal-actors",
+      "start": 18596.5,
+      "end": 18596.700000047684,
+      "duration": 0.20000004768371582,
+      "failed": false,
+      "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+    },
+    {
+      "stage": "load-worker-actors",
+      "at": 4757.100000023842,
+      "label": "load-worker-actors",
+      "start": 18596.700000047684,
+      "end": 18596.700000047684,
+      "duration": 0,
+      "failed": false,
+      "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+    },
+    {
+      "stage": "warm-compile-staging",
+      "at": 4900.799999952316,
+      "label": "warm-compile-staging",
+      "start": 18613,
+      "end": 18740.399999976158,
+      "duration": 127.39999997615814,
+      "failed": false,
+      "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+    },
+    {
+      "stage": "warm-compile-destruction",
+      "at": 4901,
+      "label": "warm-compile-destruction",
+      "start": 18740.399999976158,
+      "end": 18740.600000023842,
+      "duration": 0.20000004768371582,
+      "failed": false,
+      "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+    },
+    {
+      "stage": "warm-compile-world",
+      "at": 5204,
+      "label": "warm-compile-world",
+      "start": 18740.600000023842,
+      "end": 19043.600000023842,
+      "duration": 303,
+      "failed": false,
+      "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+    },
+    {
+      "stage": "warm-prepare-depth",
+      "at": 5682.299999952316,
+      "label": "warm-prepare-depth",
+      "start": 19043.600000023842,
+      "end": 19521.899999976158,
+      "duration": 478.2999999523163,
+      "failed": false,
+      "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+    },
+    {
+      "stage": "warm-program-bindings",
+      "at": 5819.100000023842,
+      "label": "warm-program-bindings",
+      "start": 19521.899999976158,
+      "end": 19658.700000047684,
+      "duration": 136.80000007152557,
+      "failed": false,
+      "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+    },
+    {
+      "stage": "warm-upload-textures",
+      "at": 6354.100000023842,
+      "label": "warm-upload-textures",
+      "start": 19658.700000047684,
+      "end": 20193.700000047684,
+      "duration": 535,
+      "failed": false,
+      "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+    },
+    {
+      "stage": "warm-draw-batches",
+      "at": 7203.799999952316,
+      "label": "warm-draw-batches",
+      "start": 20193.800000071526,
+      "end": 21043.399999976158,
+      "duration": 849.5999999046326,
+      "failed": false,
+      "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+    },
+    {
+      "stage": "warm-depth-capture",
+      "at": 7211.799999952316,
+      "label": "warm-depth-capture",
+      "start": 21043.5,
+      "end": 21051.399999976158,
+      "duration": 7.899999976158142,
+      "failed": false,
+      "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+    },
+    {
+      "stage": "warm-final-fence",
+      "at": 7247.5,
+      "label": "warm-final-fence",
+      "start": 21051.399999976158,
+      "end": 21087.100000023842,
+      "duration": 35.700000047683716,
+      "failed": false,
+      "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+    },
+    {
+      "stage": "load-warm-gpu",
+      "at": 7249.200000047684,
+      "label": "load-warm-gpu",
+      "start": 18602.399999976158,
+      "end": 21088.800000071526,
+      "duration": 2486.4000000953674,
+      "failed": false,
+      "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+    },
+    {
+      "stage": "load-milestone:gpu",
+      "at": 7262.899999976158,
+      "label": "load-milestone:gpu",
+      "start": 21088.800000071526,
+      "end": 21102.5,
+      "duration": 13.699999928474426,
+      "failed": false,
+      "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+    },
+    {
+      "stage": "load-far-assets",
+      "at": 10383.399999976158,
+      "label": "load-far-assets",
+      "start": 21295.899999976158,
+      "end": 24223,
+      "duration": 2927.100000023842,
+      "failed": false,
+      "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+    },
+    {
+      "stage": "load-milestone:far-assets",
+      "at": 10389.100000023842,
+      "label": "load-milestone:far-assets",
+      "start": 24223,
+      "end": 24228.700000047684,
+      "duration": 5.700000047683716,
+      "failed": false,
+      "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+    }
+  ],
+  "cleanup": {
+    "disposed": true,
+    "contextLost": true
+  },
+  "files": {
+    "loading-gap-attribution-1722bbab.json": "3253e96aa2afbea5ef8191c6de2fd4d63c6c34915b7bd9f5391372f29c207310",
+    "loading-gap-attribution-1722bbab-cleanup.json": "6a6c2f8ac816c63ffc94d0d398c00b533b532c220971224e3d7b927a5557bac1",
+    "loading-gap-attribution-1722bbab.png": "410e216f3f7f386cb023e006f51456f04c816abafd77f3aaac262c370b221f55"
+  }
+}

@@ -1,3 +1,4 @@
+import {loadingSyncWitness} from './loading-sync-witness.js';
 import {waitGpuFrame} from '../../tools/experiments/wait-gpu-frame.js';
 // Generated adaptation of CULT V3. Exact regional opaque bridge, original UVs.
 import * as THREE from 'three';
@@ -297,9 +298,20 @@ function writeInstance(modelIndex,plant,part){
 
 // Real cooperative construction: the iterator yields between model creation and
 // bounded batches of bridge faces. The synchronous API uses identical recipes.
-export async function createCropBatchAsync(scene,renderer,gltf,bridgeData,capacity=128,{nextFrame,signal,cancelled=()=>false,budgetMs=4,now=()=>performance.now(),timeout=30000,pollIntervalMs=100,...options}={}){
+export async function createCropBatchAsync(scene,renderer,gltf,bridgeData,capacity=128,{nextFrame,signal,cancelled=()=>false,budgetMs=4,now=()=>performance.now(),timeout=30000,pollIntervalMs=100,onWork,...options}={}){
  const batch=createCropBatch(scene,renderer,gltf,bridgeData,capacity,{...options,deferPreparation:true});
  const check=()=>{if(signal?.aborted||cancelled())throw Error('Crop preparation cancelled');};
- try{let slice=now();for(;;){check();const step=batch.preparation.next();if(step.done)return batch;if(now()-slice>=budgetMs){const waiting=now();await waitGpuFrame({signal,nextFrame,pollIntervalMs,check:()=>{check();if(now()-waiting>timeout)throw Error('Crop preparation timed out');}});slice=now();}}}
+ let sliceCpu=0,sliceSteps=0;
+ const witness=onWork?span=>{sliceCpu+=span.duration;sliceSteps++;try{onWork(span);}catch{}}:undefined;
+ try{let slice=now();for(;;){
+  check();const step=witness?loadingSyncWitness(witness,'loading-crop-construction-step',()=>batch.preparation.next(),now):batch.preparation.next();
+  if(step.done)return batch;
+  if(now()-slice>=budgetMs){
+   const waiting=now(),budgetElapsed=waiting-slice;let failed=false;
+   try{await waitGpuFrame({signal,nextFrame,pollIntervalMs,check:()=>{check();if(now()-waiting>timeout)throw Error('Crop preparation timed out');}});}catch(error){failed=true;throw error;}
+   finally{if(onWork){const end=now();try{onWork({label:'loading-crop-frame-wait',start:waiting,end,duration:end-waiting,budgetElapsed,budgetMs,sliceCpu,sliceSteps,failed,scope:'Existing cooperative frame wait; sliceCpu is summed iterator invocation wall time, excluding this wait.'});}catch{}}}
+   slice=now();sliceCpu=0;sliceSteps=0;
+  }
+ }}
  catch(error){batch.dispose();throw error;}
 }

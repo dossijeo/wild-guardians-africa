@@ -157,7 +157,7 @@ export class WorldScene {
     const cropModel=this.models.find(m=>m.source.includes('Cultivos'));
     const gltf=await phase('load-crop-model',()=>this.loadReady(this.assets.model(cropModel.url)));this.cropGltf=gltf;this.cropModels=Array(40);
     gltf.scene.traverse(o=>{if(o.isMesh){const i=o.userData.cropIndex*5+o.userData.stage-1;const mesh=new THREE.Mesh(o.geometry,o.material.clone());mesh.material.metalness=0;mesh.material.roughness=.91;mesh.material.metalnessMap=null;mesh.material.roughnessMap=null;mesh.castShadow=mesh.receiveShadow=true;this.cropModels[i]=mesh;}});
-    this.cropBridgeData=await this.loadReady(json('/content/crop-bridges.json',{signal:this.loading.signal}));this.cropBatch=loadingProgress?await phase('load-crop-batch',()=>createCropBatchAsync(this.scene,this.renderer,gltf,this.cropBridgeData,initialCropCapacity(state),{signal:this.loading.signal,cancelled:()=>this.disposed})):createCropBatch(this.scene,this.renderer,gltf,this.cropBridgeData);await milestone('crops');
+    this.cropBridgeData=await this.loadReady(json('/content/crop-bridges.json',{signal:this.loading.signal}));this.cropBatch=loadingProgress?await phase('load-crop-batch',()=>createCropBatchAsync(this.scene,this.renderer,gltf,this.cropBridgeData,initialCropCapacity(state),{signal:this.loading.signal,cancelled:()=>this.disposed,onWork:this.onLoadingSpan})):createCropBatch(this.scene,this.renderer,gltf,this.cropBridgeData);await milestone('crops');
     this.wallPrototypes=await this.loadReady(this.assets.walls(await this.loadReady(json('/content/walls.json',{signal:this.loading.signal}))));await milestone('walls');
     const vfxCatalogue=await this.loadReady(json('/content/vfx.json',{signal:this.loading.signal}));this.vfxLibrary=new VfxLibrary(vfxCatalogue,await this.loadReady(this.assets.texture(vfxCatalogue.atlas)));
     this.workVfx=new WorkVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z),(id,time,effect)=>this.wateringSource(id,time,effect));
@@ -360,7 +360,7 @@ export class WorldScene {
       // Actual draw uploads vertex buffers, textures and bone textures, and
       // prepares the shadow shader too. Invisible/culled meshes would not.
       if(this.loadingProgress)this.loadingTextureUploads=await phase('warm-upload-textures',()=>initializeLoadingTextures(this.renderer,this.scene,{frameBudget:6,signal:this.loading.signal,cancelled:()=>this.disposed}));
-      if(this.loadingProgress)await phase('warm-draw-batches',()=>renderScreenPreloadBatched(this.renderer,this.scene,this.camera,{warmShadows:true,frameBudget:6,cancelled:()=>this.disposed,onBatch:(done,total)=>this.loadingProgress.update('gpu',done*.8,total)}));
+      if(this.loadingProgress)await phase('warm-draw-batches',()=>renderScreenPreloadBatched(this.renderer,this.scene,this.camera,{warmShadows:true,frameBudget:6,onSubmit:this.onLoadingSpan,cancelled:()=>this.disposed,onBatch:(done,total)=>this.loadingProgress.update('gpu',done*.8,total)}));
       else renderScreenPreload(this.renderer,this.scene,this.camera);
       // The first sprite effect captures world depth with shadows disabled.
       // Warm that actual pass while the loading screen still covers the world,
