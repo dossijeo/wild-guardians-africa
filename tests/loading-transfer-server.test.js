@@ -7,3 +7,6 @@ test('QA asset routing rejects traversal and preserves unchanged original asset 
 test('QA rewrite requires the precise native alias and never changes production files',()=>{
  const source='return new URL(variants.get(path)??path,base).href;',result=rewriteLoadingQaAssetUrl(source);assert.match(result,/qa-transfer-scope/);assert.match(result,/partial-/);assert.match(result,/glb\|hdr/);assert.throws(()=>rewriteLoadingQaAssetUrl('unknown implementation'),/refusing/);
 });
+
+
+test('menu and selector documents retain their native URLs rather than falling through to a recursive app index',()=>{const rewrite=new Function('variants','path','base','location',rewriteLoadingQaAssetUrl('return new URL(variants.get(path)??path,base).href;')),base='http://localhost:5293/',location={search:'?qa-transfer-scope=menu-test'};for(const document of ['menu/index.html','selector/index.html','library/index.html'])assert.equal(rewrite(new Map(),document,base,location),base+document);assert.equal(rewrite(new Map(),'assets/maize.glb',base,location),base+'__qa_assets/menu-test/assets/maize.glb');assert.equal(rewrite(new Map(),'content/models.json',base,location),base+'__qa_assets/menu-test/content/models.json');});

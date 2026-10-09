@@ -10,6 +10,7 @@ export function rewriteLoadingQaAssetUrl(code){
  const needle='return new URL(variants.get(path)??path,base).href;';
  if(!code.includes(needle))throw Error('QA asset alias source changed; refusing an unverified rewrite');
  return code.replace(needle,`const address=new URL(variants.get(path)??path,base),qa=new URLSearchParams(location.search),scope=qa.get('qa-transfer-scope')??'cache-v1',mode=qa.get('qa-transfer-mode')??'cache';
+  if(!address.pathname.startsWith('/assets/')&&!address.pathname.startsWith('/content/'))return address.href;
   const group=mode==='slow'?'slow-'+scope:mode==='partial'&&/\\.(glb|hdr)$/.test(address.pathname)?'partial-'+scope:scope;
   address.pathname='/__qa_assets/'+group+address.pathname;return address.href;`);
 }
