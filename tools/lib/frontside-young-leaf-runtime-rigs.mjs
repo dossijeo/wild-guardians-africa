@@ -1,4 +1,4 @@
-// Future isolated benchmark preparation. Not imported by frozen visual353.
+// Isolated young forward DoubleSide controls; no reverse faces or production imports.
 import * as THREE from 'three';
 import {createCropBatch} from '../../src/rendering/crop-batch.js';
 import {sharedLeafReverseGeometry} from './frontside-shared-leaf-reverse.mjs';
@@ -14,4 +14,5 @@ export function createYoungLeafDoubleRuntimeRigs({scene,renderer,gltf,bridges,pa
  }
  return {rigs,resources,select(arm){scope.assertOpen();if(!Number.isInteger(arm)||arm<0||arm>=rigs.length)throw Error('Invalid runtime arm');rigs.forEach((rig,i)=>rig.group.visible=i===arm);}};
 }
+
 
