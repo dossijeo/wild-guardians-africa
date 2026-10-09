@@ -699,3 +699,15 @@ histórica. Esta activación se apoya también en la auditoría de buffers parea
 los126uploads nativos de seis biomas y la muestra densa con huesos cambiantes.
 No constituye aceptación móvil física ni60FPS; el coste GPU sostenido y los
 microsaltos residuales siguen pendientes.
+
+
+## Mala gestión remota actual —2026-10-09
+
+[Diagnóstico congelado0c3ca7a3](qa/campaign-ci/bad-management-37863639171/README.md)
+terminó con éxito en Actions37863639171/job113605064636. Seis biomas auditados:
+cinco derrotas reales (Savanna/Gran Río/Manglares/Volcanes noche7,Desierto5)
+y Gran Cañón supervivencia de10noches. Entregas físicas positivas, incursiones
+finalizadas, cero victoria y contabilidad/snapshots reconciliados al descargar;
+100hashes de dominio/datos/herramientas coinciden aún con main. No se forzó
+perder Gran Cañón. Acredita posibilidad de derrota por mala gestión; no cierre
+de campaña responsable100noches, toda la matriz, móvil físico ni rendimiento.
