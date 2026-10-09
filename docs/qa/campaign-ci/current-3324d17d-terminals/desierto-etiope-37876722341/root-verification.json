@@ -1,0 +1,72 @@
+{
+  "status": "failure-evidence-verified",
+  "recordedHead": "3324d17dd2305ea8595aea311c518cc6db2404ad",
+  "frozenSourcesVerified": 320,
+  "currentSourceDifferences": [],
+  "biome": "desierto",
+  "culture": "etiope",
+  "day": 73,
+  "completedNights": 72,
+  "time": 600,
+  "elapsed": 45900.3999996072,
+  "result": null,
+  "money": "203330",
+  "failure": "native incursion did not finish before the runner's 2400 simulated-second daily limit",
+  "activeAnimals": [
+    {
+      "id": "animal-301214",
+      "species": "hyena",
+      "status": "retreating",
+      "x": 23,
+      "z": -7.435507704925364,
+      "hitsRemaining": 0,
+      "targetId": null,
+      "spawn": {
+        "x": 84.16733697707717,
+        "z": 10.837311676885017
+      },
+      "exit": {
+        "x": 84.48862238361217,
+        "z": 13.820058009972637
+      },
+      "pathPoints": 91,
+      "firstWaypoints": [
+        {
+          "x": 23,
+          "z": -7
+        },
+        {
+          "x": 23,
+          "z": -6
+        },
+        {
+          "x": 23,
+          "z": -5
+        }
+      ]
+    }
+  ],
+  "workerStatuses": {
+    "fleeing": 50,
+    "home": 171
+  },
+  "heartbeat": {
+    "day": 73,
+    "time": 198.99999999999264,
+    "elapsed": 43698.39999963931,
+    "lagSimulatedSeconds": 2201.999999967891,
+    "workerStatuses": {
+      "fleeing": 50,
+      "walking": 154,
+      "acting": 17
+    }
+  },
+  "derivedCounts": {
+    "CrateDelivered": 12947,
+    "CropPicked": 13133
+  },
+  "snapshotSha256": "fe9b98462fdb6bf4024c7114449659ea687b2fd8faf9975bc46951415a700b3c",
+  "completedReportAvailable": false,
+  "completedSummaryAvailable": false,
+  "scope": "Original full failure snapshot, frozen Git source hashes, native persistence/crop/crate and integer ledger invariants. Counts are derived from the snapshot because no final report exists. This is not a replay, victory/activity acceptance or a causal diagnosis of the physical blockage."
+}

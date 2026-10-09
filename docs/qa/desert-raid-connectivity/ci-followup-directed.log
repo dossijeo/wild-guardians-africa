@@ -1,0 +1,170 @@
+TAP version 13
+# Subtest: animal quarter-metre proof rejects a narrow forbidden band before landing
+ok 1 - animal quarter-metre proof rejects a narrow forbidden band before landing
+  ---
+  duration_ms: 2.5429
+  ...
+# Subtest: near-limit proof checks the full footprint rather than only its center
+ok 2 - near-limit proof checks the full footprint rather than only its center
+  ---
+  duration_ms: 0.2524
+  ...
+# Subtest: ordinary flat edges always retain the live coarse sweep without extra terrain refinement
+ok 3 - ordinary flat edges always retain the live coarse sweep without extra terrain refinement
+  ---
+  duration_ms: 0.2957
+  ...
+# Subtest: near-limit cache invalidates when the geometry epoch changes
+ok 4 - near-limit cache invalidates when the geometry epoch changes
+  ---
+  duration_ms: 0.5404
+  ...
+# Subtest: water, lava and newly introduced solids remain forbidden
+ok 5 - water, lava and newly introduced solids remain forbidden
+  ---
+  duration_ms: 0.358
+  ...
+# Subtest: a terrain-only proof never bypasses fresh solids or changed prop queries
+ok 6 - a terrain-only proof never bypasses fresh solids or changed prop queries
+  ---
+  duration_ms: 0.4362
+  ...
+# Subtest: near-limit terrain proofs reuse fine samples while coarse solids are checked on every query
+ok 7 - near-limit terrain proofs reuse fine samples while coarse solids are checked on every query
+  ---
+  duration_ms: 0.9626
+  ...
+# Subtest: recorded paid-defense night 31 finishes past fallen workers and intact walls, including reload
+ok 8 - recorded paid-defense night 31 finishes past fallen workers and intact walls, including reload
+  ---
+  duration_ms: 4852.2518
+  ...
+# Subtest: an impossible dynamic detour is cached until bodies move or terrain changes
+ok 9 - an impossible dynamic detour is cached until bodies move or terrain changes
+  ---
+  duration_ms: 0.8096
+  ...
+# Subtest: a sliced search does not cache a failure from bodies that moved within a quarter metre
+ok 10 - a sliced search does not cache a failure from bodies that moved within a quarter metre
+  ---
+  duration_ms: 0.3317
+  ...
+# Subtest: native incremental A* preserves the synchronous route and expands at most eight cells per slice
+ok 11 - native incremental A* preserves the synchronous route and expands at most eight cells per slice
+  ---
+  duration_ms: 3.4504
+  ...
+# Subtest: Recorded night 39 retreat approaches distant occupied bends instead of repeatedly yielding away
+ok 12 - Recorded night 39 retreat approaches distant occupied bends instead of repeatedly yielding away
+  ---
+  duration_ms: 317.8485
+  ...
+# Subtest: Motion outside the native search corridor cannot restart an incremental detour
+ok 13 - Motion outside the native search corridor cannot restart an incremental detour
+  ---
+  duration_ms: 1.246
+  ...
+# Subtest: Recorded paid-defense night 39 actually finishes past fallen workers, including reload
+ok 14 - Recorded paid-defense night 39 actually finishes past fallen workers, including reload
+  ---
+  duration_ms: 17084.6791
+  ...
+# Subtest: warthog: native body radius controls entry, approach, shield exclusion and survives reload
+ok 15 - warthog: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 10.9895
+  ...
+# Subtest: hyena: native body radius controls entry, approach, shield exclusion and survives reload
+ok 16 - hyena: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 0.8313
+  ...
+# Subtest: buffalo: native body radius controls entry, approach, shield exclusion and survives reload
+ok 17 - buffalo: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 0.515
+  ...
+# Subtest: lion: native body radius controls entry, approach, shield exclusion and survives reload
+ok 18 - lion: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 0.4925
+  ...
+# Subtest: rhino: native body radius controls entry, approach, shield exclusion and survives reload
+ok 19 - rhino: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 0.6371
+  ...
+# Subtest: warthog: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 20 - warthog: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 1.3863
+  ...
+# Subtest: hyena: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 21 - hyena: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.3512
+  ...
+# Subtest: buffalo: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 22 - buffalo: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.3494
+  ...
+# Subtest: lion: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 23 - lion: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.1648
+  ...
+# Subtest: rhino: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 24 - rhino: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.2542
+  ...
+# Subtest: Approach selection tries another side when the direct contact point is blocked, without ignoring the building
+ok 25 - Approach selection tries another side when the direct contact point is blocked, without ignoring the building
+  ---
+  duration_ms: 0.5724
+  ...
+# Subtest: The selected contact point persists while walking and across an active-raid save/load
+ok 26 - The selected contact point persists while walking and across an active-raid save/load
+  ---
+  duration_ms: 4.7822
+  ...
+# Subtest: A full legal five-animal composition changes entry side together when a large animal cannot enter
+ok 27 - A full legal five-animal composition changes entry side together when a large animal cannot enter
+  ---
+  duration_ms: 2.8851
+  ...
+# Subtest: An impossible full-group entry does not silently drop the animals that could not fit
+ok 28 - An impossible full-group entry does not silently drop the animals that could not fit
+  ---
+  duration_ms: 2.3036
+  ...
+# Subtest: Local entry/exit validation leaves the actual crop target priority unchanged
+ok 29 - Local entry/exit validation leaves the actual crop target priority unchanged
+  ---
+  duration_ms: 1.5661
+  ...
+# Subtest: A reachable crop permits entry when every structure approach is blocked
+ok 30 - A reachable crop permits entry when every structure approach is blocked
+  ---
+  duration_ms: 0.6667
+  ...
+# Subtest: exact paid-defense night 54 buffalo walks out of its tree overlap and reaches its saved exit after reload
+ok 31 - exact paid-defense night 54 buffalo walks out of its tree overlap and reaches its saved exit after reload
+  ---
+  duration_ms: 3683.8891
+  ...
+# Subtest: prop escape rejects inward travel, new props, buildings and unsafe terrain; normal collision remains strict
+ok 32 - prop escape rejects inward travel, new props, buildings and unsafe terrain; normal collision remains strict
+  ---
+  duration_ms: 0.4942
+  ...
+1..32
+# tests 32
+# suites 0
+# pass 32
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 26780.7564

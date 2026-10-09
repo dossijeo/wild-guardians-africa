@@ -1,0 +1,128 @@
+(node:23480) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+--import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./.cache/desert-cost-loader.mjs", pathToFileURL("./"));'
+(Use `node --trace-warnings ...` to show where the warning was created)
+[
+  {
+    "helpers": {
+      "animalSegmentClearance": {
+        "calls": 7735,
+        "p95": 0.038800000000264845,
+        "max": 11.895399999999995,
+        "lazyChunkMax": 11.259000000000015
+      },
+      "workerReturnRoute": {
+        "calls": 33621,
+        "p95": 0.1653999999998632,
+        "max": 24.933299999999917,
+        "lazyChunkMax": 0
+      }
+    },
+    "culture": "musgum",
+    "sourceOriginal": "3324d17dd2305ea8595aea311c518cc6db2404ad",
+    "raidEnded": true,
+    "nextDay": 70,
+    "status": "gone",
+    "hits": 0,
+    "distance": 59.76989577679078,
+    "simulatedSeconds": 75.79999999999997,
+    "cpuTickMs": {
+      "first": 568.9716,
+      "p50": 7.359599999999773,
+      "p95": 14.453799999999774,
+      "max": 568.9716
+    },
+    "counters": {
+      "staticChunks": 7,
+      "workerRefinement": {
+        "checks": 8215,
+        "cacheHits": 441,
+        "fineSegments": 116,
+        "finePoints": 21973,
+        "rejected": 1
+      }
+    },
+    "note": "CPU-only cold native replay including lazy terrain/collision preparation and all workers; not an isolated helper or GPU/frame-time benchmark"
+  },
+  {
+    "helpers": {
+      "animalSegmentClearance": {
+        "calls": 19237,
+        "p95": 0.07439999999951397,
+        "max": 23.85239999999976,
+        "lazyChunkMax": 23.85239999999976
+      },
+      "workerReturnRoute": {
+        "calls": 44133,
+        "p95": 0.20570000000043365,
+        "max": 28.568699999999808,
+        "lazyChunkMax": 0
+      }
+    },
+    "culture": "etiope",
+    "sourceOriginal": "3324d17dd2305ea8595aea311c518cc6db2404ad",
+    "raidEnded": true,
+    "nextDay": 74,
+    "status": "gone",
+    "hits": 0,
+    "distance": 65.05881766905082,
+    "simulatedSeconds": 137.69999999999646,
+    "cpuTickMs": {
+      "first": 409.27109999999993,
+      "p50": 5.723700000000463,
+      "p95": 12.656699999999546,
+      "max": 450.4260000000031
+    },
+    "counters": {
+      "staticChunks": 8,
+      "workerRefinement": {
+        "checks": 10350,
+        "cacheHits": 491,
+        "fineSegments": 183,
+        "finePoints": 30879,
+        "rejected": 6
+      }
+    },
+    "note": "CPU-only cold native replay including lazy terrain/collision preparation and all workers; not an isolated helper or GPU/frame-time benchmark"
+  },
+  {
+    "helpers": {
+      "animalSegmentClearance": {
+        "calls": 31,
+        "p95": 7.781700000003184,
+        "max": 42.56680000000051,
+        "lazyChunkMax": 42.56680000000051
+      },
+      "workerReturnRoute": {
+        "calls": 4382,
+        "p95": 0.2232000000003609,
+        "max": 23.20720000000074,
+        "lazyChunkMax": 0
+      }
+    },
+    "culture": "suajili",
+    "sourceOriginal": "3324d17dd2305ea8595aea311c518cc6db2404ad",
+    "raidEnded": true,
+    "nextDay": 72,
+    "status": "gone",
+    "hits": 0,
+    "distance": 54.510445287443375,
+    "simulatedSeconds": 23.20000000000006,
+    "cpuTickMs": {
+      "first": 446.9429000000018,
+      "p50": 1.4269999999996799,
+      "p95": 7.757300000001123,
+      "max": 450.84579999999914
+    },
+    "counters": {
+      "staticChunks": 9,
+      "workerRefinement": {
+        "checks": 8430,
+        "cacheHits": 282,
+        "fineSegments": 320,
+        "finePoints": 57163,
+        "rejected": 0
+      }
+    },
+    "note": "CPU-only cold native replay including lazy terrain/collision preparation and all workers; not an isolated helper or GPU/frame-time benchmark"
+  }
+]

@@ -699,3 +699,60 @@ histórica. Esta activación se apoya también en la auditoría de buffers parea
 los126uploads nativos de seis biomas y la muestra densa con huesos cambiantes.
 No constituye aceptación móvil física ni60FPS; el coste GPU sostenido y los
 microsaltos residuales siguen pendientes.
+
+
+## Mala gestión remota actual —2026-10-09
+
+[Diagnóstico congelado0c3ca7a3](qa/campaign-ci/bad-management-37863639171/README.md)
+terminó con éxito en Actions37863639171/job113605064636. Seis biomas auditados:
+cinco derrotas reales (Savanna/Gran Río/Manglares/Volcanes noche7,Desierto5)
+y Gran Cañón supervivencia de10noches. Entregas físicas positivas, incursiones
+finalizadas, cero victoria y contabilidad/snapshots reconciliados al descargar;
+100hashes de dominio/datos/herramientas coinciden aún con main. No se forzó
+perder Gran Cañón. Acredita posibilidad de derrota por mala gestión; no cierre
+de campaña responsable100noches, toda la matriz, móvil físico ni rendimiento.
+
+
+## Campaña responsable actual100noches —2026-10-09
+
+[Sabana/Mapungubwe, fuente0c3ca7a3](qa/campaign-ci/responsible-100-sabana-mapungubwe-37863639171/README.md)
+terminó en victoria/day101/100noches. Root verifica el snapshot completo,
+roundtrip, contabilidad entera, costes por especie,21.763entregas físicas y
+contratación/entregas en todos los días.106incursiones cerradas, sinraidactivo,
+unaCampaignWon y ceroGameOver.316fuentes siguen exactas conmain salvo
+scene.js por aislamientoGPU posterior; dominio y herramientas sin cambios.
+Pico1.424cultivos vivos/8especies/saldo478.003. Tiempo sinacciones20,1533%
+aprobado en el umbral<25%; elidle temprano deldía1 se conserva.
+
+Acredita una combinación/seed/política nativa, no toda la matriz30, renderer,
+trayectos gráficos, escucha o físico móvil. La campaña histórica9c2db027
+terminada sininforme en día82 sigue sinconsiderarse aprobada. [Cinco jobs
+remotos adicionales](qa/campaign-ci/mapungubwe-expansion-33937b92/README.md)
+expanden Mapungubwe a GranRío/GranCañón/Volcanes/Manglares/Desierto desde
+33937b92, sinCPU/GPU local; no contar dispatch como resultado.
+
+## Ampliación de campañas y actividad pendiente — 2026-10-09
+
+[Siete campañas descargadas y auditadas](qa/campaign-ci/expansion-audit-2026-10-09.json)
+terminan las 100 noches con entregas físicas, contabilidad reconciliada y todos
+los hashes de fuente contrastados con su commit inmutable. Cinco cumplen el
+umbral de actividad: Manglares/Mapungubwe 18,1233 %, Sabana/Saheliana 21,9733 %,
+Gran Río/Saheliana 21,89 %, Volcanes/Saheliana 24,91 % y Manglares/Saheliana
+19,5867 %. Gran Cañón/Mapungubwe 42,3767 % y Gran Cañón/Saheliana 48,3833 %
+no cumplen: revisar recorridos, capacidad de trabajo y economía sin maquillar
+el test ni sustituir la semilla. La victoria no basta para aprobar la actividad.
+
+El auditor `tools/audit_intensive_artifact.mjs` reproduce el resumen completo
+desde el snapshot y contrasta las fuentes mediante `git archive`, sin tocar
+checkouts. Distingue las fuentes actuales de la campaña congelada; no acredita
+una nueva campaña con main, renderizado, móvil físico ni toda la matriz de 30.
+
+El reintento Desierto/Saheliana 37870712064 conserva un nuevo bloqueo de retirada
+en la noche 28. La corrección de la noche 25 no lo resuelve: se investiga en
+`codex/raid-fractional-exit`, con snapshot exacto, movimiento físico normal y
+pruebas de persistencia y coste acotado. No se considera aprobada esa campaña.
+
+
+## Barrido completo de SFX y contexto runtime (9 de octubre de 2026)
+
+126 entradas auditadas reproduciblemente: 100 asignaciones compatibles en revisión de fuente, 12 reservas de alcance, 10 alternativas sin asignar y cuatro excepciones de contexto; cero duplicados de bytes. [Inventario y revisión](qa/sfx-catalog-post-jam/binding-review.md). Se separan declaraciones, llamadas actuales y menciones latentes. Sin nuevos disparadores inventados ni cambio de audio original. La aceptación perceptual/runtime de cada clip continúa pendiente; este barrido de código no acredita escucha de los 126 SFX. Pendiente revisión de PR de auditoría.

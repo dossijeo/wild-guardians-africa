@@ -3,6 +3,9 @@
   "sourceHashes": {
     "docs/plan/sfx_catalogo_extraido.json": "52f25357ec0eed49f3f6e459f109f16a43eb5bfeacebf2822d11cd1e67c26878",
     "docs/plan/sfx_mapeo_implementacion.json": "c525d20bb9da4f038215d38a0e181cbefebf78c5caecf22d5a190e381378ecd9",
+    "docs/qa/audio-buses/context-reservations.md": "d3d79f3df2dea4378a77887b427a6025edaf5170c01b7bd1cba2ebb506d7450f",
+    "docs/qa/audio-buses/farm-markers.md": "60259180e57b084063a738acf1f5fe570bf24f25459b7b8d5f3c9c644b0592ea",
+    "docs/qa/repair-contact-reservation/README.md": "1cadac96b139d6ab6b9b9a0dc363b2a4ae66b116a148ada51954a857f7224780",
     "public/content/sfx-routing.json": "c39ba039cde2ff77ef55e8d7fa4748c51d5f139cf29887a538ea61552f9ecae6",
     "public/content/sfx.json": "f4ca1c4444065d9f05a0365e096305fdf3282ec6f58d9377a8610f55538b9bee",
     "src/app/main.js": "d73cbabf639788c177551c153ab1cb8023e82cb60bbdbacbb029ec1d66c2bf50",
@@ -20,9 +23,23 @@
     "src/audio/unlock-audio.js": "0ca86929a579abce2a48afa457f69d4c9aee658c0142566a0645b992a64e6f4c",
     "src/audio/work-audio.js": "4ff3ec8a45bd446d1f0f9606cafb157f3666aedbc1d3d8bbf69ba6c2c9f23d37",
     "src/audio/worker-audio.js": "08f03288dfc052fe07e7b0349aee620d3ece46278abbede81c80200d3ebbdec4",
+    "src/rendering/building-effects.js": "3749b6cea1becba3cc9b6bd23c02315a89dcdd4927f81e51e2104689c622dd9e",
+    "src/rendering/crop-batch.js": "2b7910e16fa9b17aa060b12650056974ce12c35b6df2f0f4447d29542cb251d0",
     "src/rendering/scene.js": "775b38d0139eb3e87798d040e9b3748e3d23587b99eb8b67c0aec1e59b114ad5",
-    "src/simulation/raids.js": "73793919cc833959e734742c42783b034f4e09bc19629c44cbd1fab6534b9457"
+    "src/simulation/encounters.js": "5c55e938e8bf4d0aa24f57f4bfd0fe32bc5e5bab452c8fb1a6a5c2eac1d3f53c",
+    "src/simulation/game.js": "5cb9951df9f14d78a1a5faa6e3012b5244b10c990e52abc567a2188b3e82c7c0",
+    "src/simulation/raids.js": "73793919cc833959e734742c42783b034f4e09bc19629c44cbd1fab6534b9457",
+    "src/tutorial/controller.js": "81301b2700522e5b055ffa51a9ccbaa54c49cec49bb45be5ad159309abecf1d3",
+    "src/world/navigation.js": "1fa393e45c46a3d12a80bbe864e8315cc64a6bbbce4712b53d03eb9e152acdc6",
+    "tools/audit_sfx_catalog.mjs": "b18d10538c7d67d25f1b0f00e2ebba5e264d7148569fec56ce8ee9fd8424cc05"
   },
+  "classificationCounts": {
+    "assigned-compatible-source": 100,
+    "context-exception": 4,
+    "scope-reserve": 12,
+    "unbound-alternative": 10
+  },
+  "byteDuplicateGroups": [],
   "total": 126,
   "assigned": 100,
   "unassigned": 26,
@@ -180,10 +197,50 @@
         {
           "file": "src/audio/ambient-audio.js",
           "line": 1,
+          "selector": "export const AMBIENT_SOUND_IDS",
           "trigger": "AmbientAudio.update: local day/night/hydrology layer"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/ambient-audio.js",
+            "line": 1,
+            "selector": "export const AMBIENT_SOUND_IDS",
+            "trigger": "AmbientAudio.update: local day/night/hydrology layer"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateAmbient("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 190,
+              "selector": "this.ambient.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/ambient-audio.js",
+          "line": 1
+        },
+        {
+          "file": "src/audio/ambient-audio.js",
+          "line": 5
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -199,6 +256,27 @@
       "runtimeStatus": "unassigned",
       "codePoints": [],
       "pendingContext": "Explicit scope exception: runtime crop wind is fixed at 1 and VFX wind defaults to 0.3; TerrainField.desertWind is static dune orientation. No logical strong-wind state or authored strength transition exists. Retain original in Library rather than invent weather. See docs/qa/audio-buses/context-reservations.md.",
+      "classification": "context-exception",
+      "runtimeUnused": true,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": {
+        "documents": [
+          "docs/qa/audio-buses/context-reservations.md"
+        ],
+        "sources": [
+          {
+            "file": "src/rendering/crop-batch.js",
+            "line": 20,
+            "selector": "wind:{value:1}"
+          }
+        ],
+        "limitation": "No authoritative strong-wind transition; static shader breeze is not weather."
+      },
+      "actionAssessment": "No gameplay route; retained in Library. Context or alternative choice required, not an automatic missing assignment.",
       "evidence": "Original retained; no runtime assignment. Review the proposed context before binding."
     },
     {
@@ -216,10 +294,50 @@
         {
           "file": "src/audio/ambient-audio.js",
           "line": 1,
+          "selector": "export const AMBIENT_SOUND_IDS",
           "trigger": "AmbientAudio.update: local day/night/hydrology layer"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/ambient-audio.js",
+            "line": 1,
+            "selector": "export const AMBIENT_SOUND_IDS",
+            "trigger": "AmbientAudio.update: local day/night/hydrology layer"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateAmbient("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 190,
+              "selector": "this.ambient.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/ambient-audio.js",
+          "line": 1
+        },
+        {
+          "file": "src/audio/ambient-audio.js",
+          "line": 5
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -237,10 +355,50 @@
         {
           "file": "src/audio/ambient-audio.js",
           "line": 1,
+          "selector": "export const AMBIENT_SOUND_IDS",
           "trigger": "AmbientAudio.update: local day/night/hydrology layer"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/ambient-audio.js",
+            "line": 1,
+            "selector": "export const AMBIENT_SOUND_IDS",
+            "trigger": "AmbientAudio.update: local day/night/hydrology layer"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateAmbient("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 190,
+              "selector": "this.ambient.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/ambient-audio.js",
+          "line": 1
+        },
+        {
+          "file": "src/audio/ambient-audio.js",
+          "line": 5
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -258,10 +416,50 @@
         {
           "file": "src/audio/ambient-audio.js",
           "line": 1,
+          "selector": "export const AMBIENT_SOUND_IDS",
           "trigger": "AmbientAudio.update: local day/night/hydrology layer"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/ambient-audio.js",
+            "line": 1,
+            "selector": "export const AMBIENT_SOUND_IDS",
+            "trigger": "AmbientAudio.update: local day/night/hydrology layer"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateAmbient("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 190,
+              "selector": "this.ambient.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/ambient-audio.js",
+          "line": 1
+        },
+        {
+          "file": "src/audio/ambient-audio.js",
+          "line": 6
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -279,10 +477,50 @@
         {
           "file": "src/audio/ambient-audio.js",
           "line": 1,
+          "selector": "export const AMBIENT_SOUND_IDS",
           "trigger": "AmbientAudio.update: local day/night/hydrology layer"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/ambient-audio.js",
+            "line": 1,
+            "selector": "export const AMBIENT_SOUND_IDS",
+            "trigger": "AmbientAudio.update: local day/night/hydrology layer"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateAmbient("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 190,
+              "selector": "this.ambient.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/ambient-audio.js",
+          "line": 1
+        },
+        {
+          "file": "src/audio/ambient-audio.js",
+          "line": 7
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -300,10 +538,50 @@
         {
           "file": "src/audio/ambient-audio.js",
           "line": 1,
+          "selector": "export const AMBIENT_SOUND_IDS",
           "trigger": "AmbientAudio.update: local day/night/hydrology layer"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/ambient-audio.js",
+            "line": 1,
+            "selector": "export const AMBIENT_SOUND_IDS",
+            "trigger": "AmbientAudio.update: local day/night/hydrology layer"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateAmbient("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 190,
+              "selector": "this.ambient.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/ambient-audio.js",
+          "line": 1
+        },
+        {
+          "file": "src/audio/ambient-audio.js",
+          "line": 7
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -319,6 +597,15 @@
       "runtimeStatus": "unassigned",
       "codePoints": [],
       "pendingContext": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "classification": "scope-reserve",
+      "runtimeUnused": true,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "No gameplay route; retained in Library. Context or alternative choice required, not an automatic missing assignment.",
       "evidence": "Original retained; no runtime assignment. Review the proposed context before binding."
     },
     {
@@ -334,6 +621,15 @@
       "runtimeStatus": "unassigned",
       "codePoints": [],
       "pendingContext": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "classification": "scope-reserve",
+      "runtimeUnused": true,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "No gameplay route; retained in Library. Context or alternative choice required, not an automatic missing assignment.",
       "evidence": "Original retained; no runtime assignment. Review the proposed context before binding."
     },
     {
@@ -351,10 +647,54 @@
         {
           "file": "src/audio/movement-audio.js",
           "line": 6,
+          "selector": "export const MOVEMENT_SOUND_IDS",
           "trigger": "MovementAudio.update: observed moving native foot contact"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/movement-audio.js",
+            "line": 6,
+            "selector": "export const MOVEMENT_SOUND_IDS",
+            "trigger": "MovementAudio.update: observed moving native foot contact"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateMovement("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 300,
+              "selector": "this.movement.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/movement-audio.js",
+          "line": 6
+        },
+        {
+          "file": "src/audio/movement-audio.js",
+          "line": 7
+        },
+        {
+          "file": "src/audio/movement-audio.js",
+          "line": 12
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -372,10 +712,54 @@
         {
           "file": "src/audio/movement-audio.js",
           "line": 6,
+          "selector": "export const MOVEMENT_SOUND_IDS",
           "trigger": "MovementAudio.update: observed moving native foot contact"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/movement-audio.js",
+            "line": 6,
+            "selector": "export const MOVEMENT_SOUND_IDS",
+            "trigger": "MovementAudio.update: observed moving native foot contact"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateMovement("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 300,
+              "selector": "this.movement.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/movement-audio.js",
+          "line": 6
+        },
+        {
+          "file": "src/audio/movement-audio.js",
+          "line": 7
+        },
+        {
+          "file": "src/audio/movement-audio.js",
+          "line": 12
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -393,10 +777,54 @@
         {
           "file": "src/audio/movement-audio.js",
           "line": 6,
+          "selector": "export const MOVEMENT_SOUND_IDS",
           "trigger": "MovementAudio.update: observed moving native foot contact"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/movement-audio.js",
+            "line": 6,
+            "selector": "export const MOVEMENT_SOUND_IDS",
+            "trigger": "MovementAudio.update: observed moving native foot contact"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateMovement("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 300,
+              "selector": "this.movement.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/movement-audio.js",
+          "line": 6
+        },
+        {
+          "file": "src/audio/movement-audio.js",
+          "line": 7
+        },
+        {
+          "file": "src/audio/movement-audio.js",
+          "line": 9
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -414,10 +842,54 @@
         {
           "file": "src/audio/movement-audio.js",
           "line": 6,
+          "selector": "export const MOVEMENT_SOUND_IDS",
           "trigger": "MovementAudio.update: observed moving native foot contact"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/movement-audio.js",
+            "line": 6,
+            "selector": "export const MOVEMENT_SOUND_IDS",
+            "trigger": "MovementAudio.update: observed moving native foot contact"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateMovement("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 300,
+              "selector": "this.movement.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/movement-audio.js",
+          "line": 6
+        },
+        {
+          "file": "src/audio/movement-audio.js",
+          "line": 7
+        },
+        {
+          "file": "src/audio/movement-audio.js",
+          "line": 12
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -435,10 +907,54 @@
         {
           "file": "src/audio/movement-audio.js",
           "line": 6,
+          "selector": "export const MOVEMENT_SOUND_IDS",
           "trigger": "MovementAudio.update: observed moving native foot contact"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/movement-audio.js",
+            "line": 6,
+            "selector": "export const MOVEMENT_SOUND_IDS",
+            "trigger": "MovementAudio.update: observed moving native foot contact"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateMovement("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 300,
+              "selector": "this.movement.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/movement-audio.js",
+          "line": 6
+        },
+        {
+          "file": "src/audio/movement-audio.js",
+          "line": 7
+        },
+        {
+          "file": "src/audio/movement-audio.js",
+          "line": 12
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -454,6 +970,37 @@
       "runtimeStatus": "unassigned",
       "codePoints": [],
       "pendingContext": "Explicit scope exception: the authored mangrove wooden dock is special_02 (slot 18), blocked by Navigation.testWalkable as a large special prop. Building footprints are blocked and center service points are outside their hulls. No traversable wooden floor/bridge is exposed by current navigation. Retain original in Library rather than pretend a wooden foot contact. See docs/qa/audio-buses/context-reservations.md.",
+      "classification": "context-exception",
+      "runtimeUnused": true,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [],
+      "sourceMentions": [
+        {
+          "file": "src/audio/movement-audio.js",
+          "line": 7
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": {
+        "documents": [
+          "docs/qa/audio-buses/context-reservations.md"
+        ],
+        "sources": [
+          {
+            "file": "src/world/navigation.js",
+            "line": 144,
+            "selector": "p.slot>=18"
+          },
+          {
+            "file": "src/rendering/scene.js",
+            "line": 76,
+            "selector": "this.movementSurfaceAt="
+          }
+        ],
+        "limitation": "movementSound accepts wood as an API variant, but the app surface resolver does not produce wood."
+      },
+      "actionAssessment": "No gameplay route; retained in Library. Context or alternative choice required, not an automatic missing assignment.",
       "evidence": "Original retained; no runtime assignment. Review the proposed context before binding."
     },
     {
@@ -471,10 +1018,50 @@
         {
           "file": "src/audio/movement-audio.js",
           "line": 6,
+          "selector": "export const MOVEMENT_SOUND_IDS",
           "trigger": "MovementAudio.update: observed moving native foot contact"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/movement-audio.js",
+            "line": 6,
+            "selector": "export const MOVEMENT_SOUND_IDS",
+            "trigger": "MovementAudio.update: observed moving native foot contact"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateMovement("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 300,
+              "selector": "this.movement.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/movement-audio.js",
+          "line": 6
+        },
+        {
+          "file": "src/audio/movement-audio.js",
+          "line": 11
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -490,6 +1077,17 @@
       "runtimeStatus": "unassigned",
       "codePoints": [],
       "pendingContext": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "classification": "unbound-alternative",
+      "runtimeUnused": true,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [
+        "npc_fall"
+      ],
+      "contextEvidence": null,
+      "actionAssessment": "No gameplay route; retained in Library. Context or alternative choice required, not an automatic missing assignment.",
       "evidence": "Original retained; no runtime assignment. Review the proposed context before binding."
     },
     {
@@ -505,6 +1103,27 @@
       "runtimeStatus": "unassigned",
       "codePoints": [],
       "pendingContext": "Original initial care uses the native Plant hands gesture, followed by Water; the hoe prop is hidden in both actions. Retained until a visible native hoe-contact action exists, without inserting an extra Dig phase into gameplay.",
+      "classification": "context-exception",
+      "runtimeUnused": true,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": {
+        "documents": [
+          "docs/qa/audio-buses/farm-markers.md"
+        ],
+        "sources": [
+          {
+            "file": "src/audio/farm-contact-audio.js",
+            "line": 10,
+            "selector": "if(phase==='initial')"
+          }
+        ],
+        "limitation": "Native initial care is Plant/Water, with hoe hidden; no new Dig phase is authorized."
+      },
+      "actionAssessment": "No gameplay route; retained in Library. Context or alternative choice required, not an automatic missing assignment.",
       "evidence": "Original retained; no runtime assignment. Review the proposed context before binding."
     },
     {
@@ -522,10 +1141,50 @@
         {
           "file": "src/audio/farm-contact-audio.js",
           "line": 4,
+          "selector": "export const FARM_CONTACT_IDS",
           "trigger": "FarmContactAudio.update: native initial/water/harvest/crate contact"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/farm-contact-audio.js",
+            "line": 4,
+            "selector": "export const FARM_CONTACT_IDS",
+            "trigger": "FarmContactAudio.update: native initial/water/harvest/crate contact"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateFarmActors("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 281,
+              "selector": "this.farm.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/farm-contact-audio.js",
+          "line": 4
+        },
+        {
+          "file": "src/audio/farm-contact-audio.js",
+          "line": 13
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -543,10 +1202,50 @@
         {
           "file": "src/audio/farm-contact-audio.js",
           "line": 4,
+          "selector": "export const FARM_CONTACT_IDS",
           "trigger": "FarmContactAudio.update: native initial/water/harvest/crate contact"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/farm-contact-audio.js",
+            "line": 4,
+            "selector": "export const FARM_CONTACT_IDS",
+            "trigger": "FarmContactAudio.update: native initial/water/harvest/crate contact"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateFarmActors("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 281,
+              "selector": "this.farm.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/farm-contact-audio.js",
+          "line": 4
+        },
+        {
+          "file": "src/audio/farm-contact-audio.js",
+          "line": 13
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -564,10 +1263,50 @@
         {
           "file": "src/audio/work-audio.js",
           "line": 4,
+          "selector": "export const WORK_SOUND_IDS",
           "trigger": "WorkAudio.update: visible native watering window"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/work-audio.js",
+            "line": 4,
+            "selector": "export const WORK_SOUND_IDS",
+            "trigger": "WorkAudio.update: visible native watering window"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateFarmActors("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 277,
+              "selector": "this.work.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/work-audio.js",
+          "line": 4
+        },
+        {
+          "file": "src/audio/work-audio.js",
+          "line": 27
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -585,10 +1324,50 @@
         {
           "file": "src/audio/farm-contact-audio.js",
           "line": 4,
+          "selector": "export const FARM_CONTACT_IDS",
           "trigger": "FarmContactAudio.update: native initial/water/harvest/crate contact"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/farm-contact-audio.js",
+            "line": 4,
+            "selector": "export const FARM_CONTACT_IDS",
+            "trigger": "FarmContactAudio.update: native initial/water/harvest/crate contact"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateFarmActors("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 281,
+              "selector": "this.farm.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/farm-contact-audio.js",
+          "line": 4
+        },
+        {
+          "file": "src/audio/farm-contact-audio.js",
+          "line": 14
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -606,10 +1385,50 @@
         {
           "file": "src/audio/farm-contact-audio.js",
           "line": 4,
+          "selector": "export const FARM_CONTACT_IDS",
           "trigger": "FarmContactAudio.update: native initial/water/harvest/crate contact"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/farm-contact-audio.js",
+            "line": 4,
+            "selector": "export const FARM_CONTACT_IDS",
+            "trigger": "FarmContactAudio.update: native initial/water/harvest/crate contact"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateFarmActors("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 281,
+              "selector": "this.farm.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/farm-contact-audio.js",
+          "line": 4
+        },
+        {
+          "file": "src/audio/farm-contact-audio.js",
+          "line": 15
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -627,10 +1446,50 @@
         {
           "file": "src/audio/farm-contact-audio.js",
           "line": 4,
+          "selector": "export const FARM_CONTACT_IDS",
           "trigger": "FarmContactAudio.update: native initial/water/harvest/crate contact"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/farm-contact-audio.js",
+            "line": 4,
+            "selector": "export const FARM_CONTACT_IDS",
+            "trigger": "FarmContactAudio.update: native initial/water/harvest/crate contact"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateFarmActors("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 281,
+              "selector": "this.farm.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/farm-contact-audio.js",
+          "line": 4
+        },
+        {
+          "file": "src/audio/farm-contact-audio.js",
+          "line": 15
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -648,10 +1507,51 @@
         {
           "file": "src/audio/audio.js",
           "line": 21,
+          "selector": "export const eventSound=",
           "trigger": "CropPicked"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/audio.js",
+            "line": 21,
+            "selector": "export const eventSound=",
+            "trigger": "CropPicked"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/game.js",
+              "line": 417,
+              "selector": "emit(s,'CropPicked'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 207,
+              "selector": "const id=event.type==="
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/audio.js",
+          "line": 21
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -669,10 +1569,51 @@
         {
           "file": "src/audio/audio.js",
           "line": 21,
+          "selector": "export const eventSound=",
           "trigger": "CrateDropped"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/audio.js",
+            "line": 21,
+            "selector": "export const eventSound=",
+            "trigger": "CrateDropped"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/game.js",
+              "line": 324,
+              "selector": "emit(s,'CrateDropped'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 207,
+              "selector": "const id=event.type==="
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/audio.js",
+          "line": 21
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -688,6 +1629,15 @@
       "runtimeStatus": "unassigned",
       "codePoints": [],
       "pendingContext": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "classification": "scope-reserve",
+      "runtimeUnused": true,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "No gameplay route; retained in Library. Context or alternative choice required, not an automatic missing assignment.",
       "evidence": "Original retained; no runtime assignment. Review the proposed context before binding."
     },
     {
@@ -703,6 +1653,18 @@
       "runtimeStatus": "unassigned",
       "codePoints": [],
       "pendingContext": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "classification": "unbound-alternative",
+      "runtimeUnused": true,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [
+        "farm_sow",
+        "farm_harvest_pick"
+      ],
+      "contextEvidence": null,
+      "actionAssessment": "No gameplay route; retained in Library. Context or alternative choice required, not an automatic missing assignment.",
       "evidence": "Original retained; no runtime assignment. Review the proposed context before binding."
     },
     {
@@ -720,15 +1682,82 @@
         {
           "file": "src/audio/audio.js",
           "line": 21,
+          "selector": "export const eventSound=",
           "trigger": "PlacementCommitted"
         },
         {
           "file": "src/audio/audio.js",
           "line": 21,
+          "selector": "export const eventSound=",
           "trigger": "WallChainBuilt"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/audio.js",
+            "line": 21,
+            "selector": "export const eventSound=",
+            "trigger": "PlacementCommitted"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/game.js",
+              "line": 102,
+              "selector": "emit(s,'PlacementCommitted'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 207,
+              "selector": "const id=event.type==="
+            }
+          ]
+        },
+        {
+          "assignment": {
+            "file": "src/audio/audio.js",
+            "line": 21,
+            "selector": "export const eventSound=",
+            "trigger": "WallChainBuilt"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/game.js",
+              "line": 190,
+              "selector": "emit(s,'WallChainBuilt'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 207,
+              "selector": "const id=event.type==="
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/audio.js",
+          "line": 21
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -744,6 +1773,27 @@
       "runtimeStatus": "unassigned",
       "codePoints": [],
       "pendingContext": "Current FIFO repairs execute and charge immediately on worker arrival; Game.tick completes both walking and legacy acting repair tasks before a Dig presentation frame. workerPose contains a Dig mapping but no live repair contact reaches it. Four paid profile probes confirm zero acting frames. Retain 030 rather than adding an inaudible tool or changing repair duration; see docs/qa/repair-contact-reservation/README.md.",
+      "classification": "context-exception",
+      "runtimeUnused": true,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": {
+        "documents": [
+          "docs/qa/repair-contact-reservation/README.md"
+        ],
+        "sources": [
+          {
+            "file": "src/simulation/game.js",
+            "line": 534,
+            "selector": "if(t.kind==='repair'){completeTask"
+          }
+        ],
+        "limitation": "Repair executes at arrival before an acting/Dig contact; source animation mapping alone is insufficient."
+      },
+      "actionAssessment": "No gameplay route; retained in Library. Context or alternative choice required, not an automatic missing assignment.",
       "evidence": "Original retained; no runtime assignment. Review the proposed context before binding."
     },
     {
@@ -761,10 +1811,51 @@
         {
           "file": "src/audio/structure-audio.js",
           "line": 1,
+          "selector": "export const WALL_BUILD_SOUNDS",
           "trigger": "WallChainBuilt: empalizada"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/structure-audio.js",
+            "line": 1,
+            "selector": "export const WALL_BUILD_SOUNDS",
+            "trigger": "WallChainBuilt: empalizada"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/game.js",
+              "line": 190,
+              "selector": "emit(s,'WallChainBuilt'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 207,
+              "selector": "const id=event.type==="
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/structure-audio.js",
+          "line": 1
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -782,10 +1873,51 @@
         {
           "file": "src/audio/structure-audio.js",
           "line": 1,
+          "selector": "export const WALL_BUILD_SOUNDS",
           "trigger": "WallChainBuilt: piedra"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/structure-audio.js",
+            "line": 1,
+            "selector": "export const WALL_BUILD_SOUNDS",
+            "trigger": "WallChainBuilt: piedra"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/game.js",
+              "line": 190,
+              "selector": "emit(s,'WallChainBuilt'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 207,
+              "selector": "const id=event.type==="
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/structure-audio.js",
+          "line": 1
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -803,15 +1935,82 @@
         {
           "file": "src/audio/structure-audio.js",
           "line": 1,
+          "selector": "export const WALL_BUILD_SOUNDS",
           "trigger": "WallChainBuilt: adobe"
         },
         {
           "file": "src/audio/structure-audio.js",
           "line": 1,
+          "selector": "export const WALL_BUILD_SOUNDS",
           "trigger": "WallChainBuilt: reforzado"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/structure-audio.js",
+            "line": 1,
+            "selector": "export const WALL_BUILD_SOUNDS",
+            "trigger": "WallChainBuilt: adobe"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/game.js",
+              "line": 190,
+              "selector": "emit(s,'WallChainBuilt'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 207,
+              "selector": "const id=event.type==="
+            }
+          ]
+        },
+        {
+          "assignment": {
+            "file": "src/audio/structure-audio.js",
+            "line": 1,
+            "selector": "export const WALL_BUILD_SOUNDS",
+            "trigger": "WallChainBuilt: reforzado"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/game.js",
+              "line": 190,
+              "selector": "emit(s,'WallChainBuilt'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 207,
+              "selector": "const id=event.type==="
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/structure-audio.js",
+          "line": 1
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -829,20 +2028,113 @@
         {
           "file": "src/audio/audio.js",
           "line": 22,
+          "selector": "export const eventExtraSound=",
           "trigger": "PlacementCommitted (extra contact/completion)"
         },
         {
           "file": "src/audio/audio.js",
           "line": 22,
+          "selector": "export const eventExtraSound=",
           "trigger": "WallChainBuilt (extra contact/completion)"
         },
         {
           "file": "src/audio/audio.js",
           "line": 22,
+          "selector": "export const eventExtraSound=",
           "trigger": "VillageFounded (extra contact/completion)"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/audio.js",
+            "line": 22,
+            "selector": "export const eventExtraSound=",
+            "trigger": "PlacementCommitted (extra contact/completion)"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/game.js",
+              "line": 102,
+              "selector": "emit(s,'PlacementCommitted'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 223,
+              "selector": "const extra=eventExtraSound[event.type]"
+            }
+          ]
+        },
+        {
+          "assignment": {
+            "file": "src/audio/audio.js",
+            "line": 22,
+            "selector": "export const eventExtraSound=",
+            "trigger": "WallChainBuilt (extra contact/completion)"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/game.js",
+              "line": 190,
+              "selector": "emit(s,'WallChainBuilt'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 223,
+              "selector": "const extra=eventExtraSound[event.type]"
+            }
+          ]
+        },
+        {
+          "assignment": {
+            "file": "src/audio/audio.js",
+            "line": 22,
+            "selector": "export const eventExtraSound=",
+            "trigger": "VillageFounded (extra contact/completion)"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/game.js",
+              "line": 580,
+              "selector": "emit(s,'VillageFounded'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 223,
+              "selector": "const extra=eventExtraSound[event.type]"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/audio.js",
+          "line": 22
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -860,10 +2152,51 @@
         {
           "file": "src/audio/audio.js",
           "line": 21,
+          "selector": "export const eventSound=",
           "trigger": "RepairApplied"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/audio.js",
+            "line": 21,
+            "selector": "export const eventSound=",
+            "trigger": "RepairApplied"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/game.js",
+              "line": 427,
+              "selector": "emit(s,'RepairApplied'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 207,
+              "selector": "const id=event.type==="
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/audio.js",
+          "line": 21
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -881,10 +2214,51 @@
         {
           "file": "src/audio/audio.js",
           "line": 21,
+          "selector": "export const eventSound=",
           "trigger": "WallRemoved"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/audio.js",
+            "line": 21,
+            "selector": "export const eventSound=",
+            "trigger": "WallRemoved"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/game.js",
+              "line": 201,
+              "selector": "emit(s,'WallRemoved'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 207,
+              "selector": "const id=event.type==="
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/audio.js",
+          "line": 21
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -902,10 +2276,51 @@
         {
           "file": "src/audio/structure-audio.js",
           "line": 5,
+          "selector": "export const WALL_HIT_SOUNDS",
           "trigger": "StructureHit: zarzas"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/structure-audio.js",
+            "line": 5,
+            "selector": "export const WALL_HIT_SOUNDS",
+            "trigger": "StructureHit: zarzas"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/raids.js",
+              "line": 251,
+              "selector": "emit(s,'StructureHit'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 207,
+              "selector": "const id=event.type==="
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/structure-audio.js",
+          "line": 5
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -923,10 +2338,51 @@
         {
           "file": "src/audio/structure-audio.js",
           "line": 5,
+          "selector": "export const WALL_HIT_SOUNDS",
           "trigger": "StructureHit: empalizada"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/structure-audio.js",
+            "line": 5,
+            "selector": "export const WALL_HIT_SOUNDS",
+            "trigger": "StructureHit: empalizada"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/raids.js",
+              "line": 251,
+              "selector": "emit(s,'StructureHit'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 207,
+              "selector": "const id=event.type==="
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/structure-audio.js",
+          "line": 5
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -944,10 +2400,51 @@
         {
           "file": "src/audio/structure-audio.js",
           "line": 5,
+          "selector": "export const WALL_HIT_SOUNDS",
           "trigger": "StructureHit: piedra"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/structure-audio.js",
+            "line": 5,
+            "selector": "export const WALL_HIT_SOUNDS",
+            "trigger": "StructureHit: piedra"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/raids.js",
+              "line": 251,
+              "selector": "emit(s,'StructureHit'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 207,
+              "selector": "const id=event.type==="
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/structure-audio.js",
+          "line": 5
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -965,10 +2462,51 @@
         {
           "file": "src/audio/structure-audio.js",
           "line": 5,
+          "selector": "export const WALL_HIT_SOUNDS",
           "trigger": "StructureHit: adobe"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/structure-audio.js",
+            "line": 5,
+            "selector": "export const WALL_HIT_SOUNDS",
+            "trigger": "StructureHit: adobe"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/raids.js",
+              "line": 251,
+              "selector": "emit(s,'StructureHit'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 207,
+              "selector": "const id=event.type==="
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/structure-audio.js",
+          "line": 5
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -986,10 +2524,51 @@
         {
           "file": "src/audio/structure-audio.js",
           "line": 5,
+          "selector": "export const WALL_HIT_SOUNDS",
           "trigger": "StructureHit: reforzado"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/structure-audio.js",
+            "line": 5,
+            "selector": "export const WALL_HIT_SOUNDS",
+            "trigger": "StructureHit: reforzado"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/raids.js",
+              "line": 251,
+              "selector": "emit(s,'StructureHit'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 207,
+              "selector": "const id=event.type==="
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/structure-audio.js",
+          "line": 5
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -1007,10 +2586,51 @@
         {
           "file": "src/audio/structure-audio.js",
           "line": 15,
+          "selector": "export const STRUCTURE_DETAIL_SOUNDS",
           "trigger": "StructureHit:first-masonry-damage (world detail)"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/structure-audio.js",
+            "line": 15,
+            "selector": "export const STRUCTURE_DETAIL_SOUNDS",
+            "trigger": "StructureHit:first-masonry-damage (world detail)"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/raids.js",
+              "line": 251,
+              "selector": "emit(s,'StructureHit'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 217,
+              "selector": "const detail=event.type==="
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/structure-audio.js",
+          "line": 15
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -1028,10 +2648,51 @@
         {
           "file": "src/audio/destruction-audio.js",
           "line": 1,
+          "selector": "export const DESTRUCTION_SOUND_ROUTES",
           "trigger": "Native building fragments: debrisEmitted (observed particle batch)"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/destruction-audio.js",
+            "line": 1,
+            "selector": "export const DESTRUCTION_SOUND_ROUTES",
+            "trigger": "Native building fragments: debrisEmitted (observed particle batch)"
+          },
+          "callers": [
+            {
+              "file": "src/rendering/building-effects.js",
+              "line": 59,
+              "selector": "pipeline.onDestructionCue?.("
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 141,
+              "selector": "world.destructionPass.onDestructionCue="
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 170,
+              "selector": "destructionSounds(counts)"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/destruction-audio.js",
+          "line": 1
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -1049,10 +2710,51 @@
         {
           "file": "src/audio/structure-audio.js",
           "line": 15,
+          "selector": "export const STRUCTURE_DETAIL_SOUNDS",
           "trigger": "StructureHit:wall-critical (world detail)"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/structure-audio.js",
+            "line": 15,
+            "selector": "export const STRUCTURE_DETAIL_SOUNDS",
+            "trigger": "StructureHit:wall-critical (world detail)"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/raids.js",
+              "line": 251,
+              "selector": "emit(s,'StructureHit'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 217,
+              "selector": "const detail=event.type==="
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/structure-audio.js",
+          "line": 15
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -1070,10 +2772,51 @@
         {
           "file": "src/audio/audio.js",
           "line": 21,
+          "selector": "export const eventSound=",
           "trigger": "StructureRuined"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/audio.js",
+            "line": 21,
+            "selector": "export const eventSound=",
+            "trigger": "StructureRuined"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/game.js",
+              "line": 615,
+              "selector": "emit(s,'StructureRuined'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 207,
+              "selector": "const id=event.type==="
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/audio.js",
+          "line": 21
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -1091,10 +2834,51 @@
         {
           "file": "src/audio/destruction-audio.js",
           "line": 1,
+          "selector": "export const DESTRUCTION_SOUND_ROUTES",
           "trigger": "Native building fragments: groundContacts (observed particle batch)"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/destruction-audio.js",
+            "line": 1,
+            "selector": "export const DESTRUCTION_SOUND_ROUTES",
+            "trigger": "Native building fragments: groundContacts (observed particle batch)"
+          },
+          "callers": [
+            {
+              "file": "src/rendering/building-effects.js",
+              "line": 59,
+              "selector": "pipeline.onDestructionCue?.("
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 141,
+              "selector": "world.destructionPass.onDestructionCue="
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 170,
+              "selector": "destructionSounds(counts)"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/destruction-audio.js",
+          "line": 1
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -1112,10 +2896,50 @@
         {
           "file": "src/audio/movement-audio.js",
           "line": 6,
+          "selector": "export const MOVEMENT_SOUND_IDS",
           "trigger": "MovementAudio.update: observed moving native foot contact"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/movement-audio.js",
+            "line": 6,
+            "selector": "export const MOVEMENT_SOUND_IDS",
+            "trigger": "MovementAudio.update: observed moving native foot contact"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateMovement("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 300,
+              "selector": "this.movement.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/movement-audio.js",
+          "line": 6
+        },
+        {
+          "file": "src/audio/movement-audio.js",
+          "line": 10
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -1133,10 +2957,50 @@
         {
           "file": "src/audio/movement-audio.js",
           "line": 6,
+          "selector": "export const MOVEMENT_SOUND_IDS",
           "trigger": "MovementAudio.update: observed moving native foot contact"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/movement-audio.js",
+            "line": 6,
+            "selector": "export const MOVEMENT_SOUND_IDS",
+            "trigger": "MovementAudio.update: observed moving native foot contact"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateMovement("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 300,
+              "selector": "this.movement.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/movement-audio.js",
+          "line": 6
+        },
+        {
+          "file": "src/audio/movement-audio.js",
+          "line": 10
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -1152,6 +3016,19 @@
       "runtimeStatus": "unassigned",
       "codePoints": [],
       "pendingContext": "Species-specific originals are selected for all five supported animals. Generic alternatives remain in the Library and are not layered on the same native phase.",
+      "classification": "unbound-alternative",
+      "runtimeUnused": true,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [
+        "buffalo_charge",
+        "rhino_charge",
+        "warthog_charge"
+      ],
+      "contextEvidence": null,
+      "actionAssessment": "No gameplay route; retained in Library. Context or alternative choice required, not an automatic missing assignment.",
       "evidence": "Original retained; no runtime assignment. Review the proposed context before binding."
     },
     {
@@ -1167,6 +3044,18 @@
       "runtimeStatus": "unassigned",
       "codePoints": [],
       "pendingContext": "Species-specific originals are selected for all five supported animals. Generic alternatives remain in the Library and are not layered on the same native phase.",
+      "classification": "unbound-alternative",
+      "runtimeUnused": true,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [
+        "lion_attack",
+        "hyena_attack"
+      ],
+      "contextEvidence": null,
+      "actionAssessment": "No gameplay route; retained in Library. Context or alternative choice required, not an automatic missing assignment.",
       "evidence": "Original retained; no runtime assignment. Review the proposed context before binding."
     },
     {
@@ -1184,10 +3073,55 @@
         {
           "file": "src/audio/audio.js",
           "line": 21,
+          "selector": "export const eventSound=",
           "trigger": "StructureHit"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/audio.js",
+            "line": 21,
+            "selector": "export const eventSound=",
+            "trigger": "StructureHit"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/raids.js",
+              "line": 251,
+              "selector": "emit(s,'StructureHit'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 207,
+              "selector": "const id=event.type==="
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/audio.js",
+          "line": 21
+        },
+        {
+          "file": "src/audio/structure-audio.js",
+          "line": 28
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -1205,15 +3139,94 @@
         {
           "file": "src/audio/audio.js",
           "line": 22,
+          "selector": "export const eventExtraSound=",
           "trigger": "WorkerHit (extra contact/completion)"
         },
         {
           "file": "src/audio/audio.js",
           "line": 22,
+          "selector": "export const eventExtraSound=",
           "trigger": "WorkerIncapacitated (extra contact/completion)"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/audio.js",
+            "line": 22,
+            "selector": "export const eventExtraSound=",
+            "trigger": "WorkerHit (extra contact/completion)"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/encounters.js",
+              "line": 64,
+              "selector": "emit(state,'WorkerHit'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 223,
+              "selector": "const extra=eventExtraSound[event.type]"
+            }
+          ]
+        },
+        {
+          "assignment": {
+            "file": "src/audio/audio.js",
+            "line": 22,
+            "selector": "export const eventExtraSound=",
+            "trigger": "WorkerIncapacitated (extra contact/completion)"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/encounters.js",
+              "line": 61,
+              "selector": "emit(state,'WorkerIncapacitated'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 223,
+              "selector": "const extra=eventExtraSound[event.type]"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/audio.js",
+          "line": 22
+        },
+        {
+          "file": "src/audio/audio.js",
+          "line": 27
+        },
+        {
+          "file": "src/audio/audio.js",
+          "line": 31
+        },
+        {
+          "file": "src/audio/audio.js",
+          "line": 223
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -1229,6 +3242,15 @@
       "runtimeStatus": "unassigned",
       "codePoints": [],
       "pendingContext": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "classification": "scope-reserve",
+      "runtimeUnused": true,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "No gameplay route; retained in Library. Context or alternative choice required, not an automatic missing assignment.",
       "evidence": "Original retained; no runtime assignment. Review the proposed context before binding."
     },
     {
@@ -1244,6 +3266,21 @@
       "runtimeStatus": "unassigned",
       "codePoints": [],
       "pendingContext": "Species-specific originals are selected for all five supported animals. Generic alternatives remain in the Library and are not layered on the same native phase.",
+      "classification": "unbound-alternative",
+      "runtimeUnused": true,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [
+        "lion_neutral",
+        "hyena_neutral",
+        "buffalo_neutral",
+        "rhino_neutral",
+        "warthog_neutral"
+      ],
+      "contextEvidence": null,
+      "actionAssessment": "No gameplay route; retained in Library. Context or alternative choice required, not an automatic missing assignment.",
       "evidence": "Original retained; no runtime assignment. Review the proposed context before binding."
     },
     {
@@ -1259,6 +3296,21 @@
       "runtimeStatus": "unassigned",
       "codePoints": [],
       "pendingContext": "Species-specific originals are selected for all five supported animals. Generic alternatives remain in the Library and are not layered on the same native phase.",
+      "classification": "unbound-alternative",
+      "runtimeUnused": true,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [
+        "lion_aggressive",
+        "hyena_aggressive",
+        "buffalo_aggressive",
+        "rhino_aggressive",
+        "warthog_aggressive"
+      ],
+      "contextEvidence": null,
+      "actionAssessment": "No gameplay route; retained in Library. Context or alternative choice required, not an automatic missing assignment.",
       "evidence": "Original retained; no runtime assignment. Review the proposed context before binding."
     },
     {
@@ -1274,6 +3326,21 @@
       "runtimeStatus": "unassigned",
       "codePoints": [],
       "pendingContext": "Species-specific originals are selected for all five supported animals. Generic alternatives remain in the Library and are not layered on the same native phase.",
+      "classification": "unbound-alternative",
+      "runtimeUnused": true,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [
+        "lion_retreat",
+        "hyena_retreat",
+        "buffalo_retreat",
+        "rhino_retreat",
+        "warthog_retreat"
+      ],
+      "contextEvidence": null,
+      "actionAssessment": "No gameplay route; retained in Library. Context or alternative choice required, not an automatic missing assignment.",
       "evidence": "Original retained; no runtime assignment. Review the proposed context before binding."
     },
     {
@@ -1289,6 +3356,15 @@
       "runtimeStatus": "unassigned",
       "codePoints": [],
       "pendingContext": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "classification": "scope-reserve",
+      "runtimeUnused": true,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "No gameplay route; retained in Library. Context or alternative choice required, not an automatic missing assignment.",
       "evidence": "Original retained; no runtime assignment. Review the proposed context before binding."
     },
     {
@@ -1306,10 +3382,41 @@
         {
           "file": "src/audio/animal-audio.js",
           "line": 1,
+          "selector": "export const ANIMAL_SOUND_ROUTES",
           "trigger": "lion: neutral"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/animal-audio.js",
+            "line": 1,
+            "selector": "export const ANIMAL_SOUND_ROUTES",
+            "trigger": "lion: neutral"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateAnimals("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 287,
+              "selector": "this.animals.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -1327,10 +3434,41 @@
         {
           "file": "src/audio/animal-audio.js",
           "line": 1,
+          "selector": "export const ANIMAL_SOUND_ROUTES",
           "trigger": "lion: aggressive"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/animal-audio.js",
+            "line": 1,
+            "selector": "export const ANIMAL_SOUND_ROUTES",
+            "trigger": "lion: aggressive"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateAnimals("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 287,
+              "selector": "this.animals.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -1348,10 +3486,41 @@
         {
           "file": "src/audio/animal-audio.js",
           "line": 1,
+          "selector": "export const ANIMAL_SOUND_ROUTES",
           "trigger": "lion: attack"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/animal-audio.js",
+            "line": 1,
+            "selector": "export const ANIMAL_SOUND_ROUTES",
+            "trigger": "lion: attack"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateAnimals("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 287,
+              "selector": "this.animals.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -1367,6 +3536,15 @@
       "runtimeStatus": "unassigned",
       "codePoints": [],
       "pendingContext": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "classification": "scope-reserve",
+      "runtimeUnused": true,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "No gameplay route; retained in Library. Context or alternative choice required, not an automatic missing assignment.",
       "evidence": "Original retained; no runtime assignment. Review the proposed context before binding."
     },
     {
@@ -1384,10 +3562,41 @@
         {
           "file": "src/audio/animal-audio.js",
           "line": 1,
+          "selector": "export const ANIMAL_SOUND_ROUTES",
           "trigger": "lion: retreat"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/animal-audio.js",
+            "line": 1,
+            "selector": "export const ANIMAL_SOUND_ROUTES",
+            "trigger": "lion: retreat"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateAnimals("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 287,
+              "selector": "this.animals.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -1405,10 +3614,41 @@
         {
           "file": "src/audio/animal-audio.js",
           "line": 1,
+          "selector": "export const ANIMAL_SOUND_ROUTES",
           "trigger": "hyena: neutral"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/animal-audio.js",
+            "line": 1,
+            "selector": "export const ANIMAL_SOUND_ROUTES",
+            "trigger": "hyena: neutral"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateAnimals("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 287,
+              "selector": "this.animals.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -1426,10 +3666,41 @@
         {
           "file": "src/audio/animal-audio.js",
           "line": 1,
+          "selector": "export const ANIMAL_SOUND_ROUTES",
           "trigger": "hyena: aggressive"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/animal-audio.js",
+            "line": 1,
+            "selector": "export const ANIMAL_SOUND_ROUTES",
+            "trigger": "hyena: aggressive"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateAnimals("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 287,
+              "selector": "this.animals.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -1447,10 +3718,41 @@
         {
           "file": "src/audio/animal-audio.js",
           "line": 1,
+          "selector": "export const ANIMAL_SOUND_ROUTES",
           "trigger": "hyena: attack"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/animal-audio.js",
+            "line": 1,
+            "selector": "export const ANIMAL_SOUND_ROUTES",
+            "trigger": "hyena: attack"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateAnimals("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 287,
+              "selector": "this.animals.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -1466,6 +3768,15 @@
       "runtimeStatus": "unassigned",
       "codePoints": [],
       "pendingContext": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "classification": "scope-reserve",
+      "runtimeUnused": true,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "No gameplay route; retained in Library. Context or alternative choice required, not an automatic missing assignment.",
       "evidence": "Original retained; no runtime assignment. Review the proposed context before binding."
     },
     {
@@ -1483,10 +3794,41 @@
         {
           "file": "src/audio/animal-audio.js",
           "line": 1,
+          "selector": "export const ANIMAL_SOUND_ROUTES",
           "trigger": "hyena: retreat"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/animal-audio.js",
+            "line": 1,
+            "selector": "export const ANIMAL_SOUND_ROUTES",
+            "trigger": "hyena: retreat"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateAnimals("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 287,
+              "selector": "this.animals.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -1504,10 +3846,41 @@
         {
           "file": "src/audio/animal-audio.js",
           "line": 1,
+          "selector": "export const ANIMAL_SOUND_ROUTES",
           "trigger": "buffalo: neutral"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/animal-audio.js",
+            "line": 1,
+            "selector": "export const ANIMAL_SOUND_ROUTES",
+            "trigger": "buffalo: neutral"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateAnimals("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 287,
+              "selector": "this.animals.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -1525,10 +3898,41 @@
         {
           "file": "src/audio/animal-audio.js",
           "line": 1,
+          "selector": "export const ANIMAL_SOUND_ROUTES",
           "trigger": "buffalo: aggressive"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/animal-audio.js",
+            "line": 1,
+            "selector": "export const ANIMAL_SOUND_ROUTES",
+            "trigger": "buffalo: aggressive"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateAnimals("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 287,
+              "selector": "this.animals.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -1546,10 +3950,41 @@
         {
           "file": "src/audio/animal-audio.js",
           "line": 1,
+          "selector": "export const ANIMAL_SOUND_ROUTES",
           "trigger": "buffalo: attack"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/animal-audio.js",
+            "line": 1,
+            "selector": "export const ANIMAL_SOUND_ROUTES",
+            "trigger": "buffalo: attack"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateAnimals("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 287,
+              "selector": "this.animals.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -1565,6 +4000,15 @@
       "runtimeStatus": "unassigned",
       "codePoints": [],
       "pendingContext": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "classification": "scope-reserve",
+      "runtimeUnused": true,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "No gameplay route; retained in Library. Context or alternative choice required, not an automatic missing assignment.",
       "evidence": "Original retained; no runtime assignment. Review the proposed context before binding."
     },
     {
@@ -1582,10 +4026,41 @@
         {
           "file": "src/audio/animal-audio.js",
           "line": 1,
+          "selector": "export const ANIMAL_SOUND_ROUTES",
           "trigger": "buffalo: retreat"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/animal-audio.js",
+            "line": 1,
+            "selector": "export const ANIMAL_SOUND_ROUTES",
+            "trigger": "buffalo: retreat"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateAnimals("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 287,
+              "selector": "this.animals.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -1603,10 +4078,41 @@
         {
           "file": "src/audio/animal-audio.js",
           "line": 1,
+          "selector": "export const ANIMAL_SOUND_ROUTES",
           "trigger": "rhino: neutral"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/animal-audio.js",
+            "line": 1,
+            "selector": "export const ANIMAL_SOUND_ROUTES",
+            "trigger": "rhino: neutral"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateAnimals("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 287,
+              "selector": "this.animals.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -1624,10 +4130,41 @@
         {
           "file": "src/audio/animal-audio.js",
           "line": 1,
+          "selector": "export const ANIMAL_SOUND_ROUTES",
           "trigger": "rhino: aggressive"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/animal-audio.js",
+            "line": 1,
+            "selector": "export const ANIMAL_SOUND_ROUTES",
+            "trigger": "rhino: aggressive"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateAnimals("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 287,
+              "selector": "this.animals.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -1645,10 +4182,41 @@
         {
           "file": "src/audio/animal-audio.js",
           "line": 1,
+          "selector": "export const ANIMAL_SOUND_ROUTES",
           "trigger": "rhino: attack"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/animal-audio.js",
+            "line": 1,
+            "selector": "export const ANIMAL_SOUND_ROUTES",
+            "trigger": "rhino: attack"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateAnimals("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 287,
+              "selector": "this.animals.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -1664,6 +4232,15 @@
       "runtimeStatus": "unassigned",
       "codePoints": [],
       "pendingContext": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "classification": "scope-reserve",
+      "runtimeUnused": true,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "No gameplay route; retained in Library. Context or alternative choice required, not an automatic missing assignment.",
       "evidence": "Original retained; no runtime assignment. Review the proposed context before binding."
     },
     {
@@ -1681,10 +4258,41 @@
         {
           "file": "src/audio/animal-audio.js",
           "line": 1,
+          "selector": "export const ANIMAL_SOUND_ROUTES",
           "trigger": "rhino: retreat"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/animal-audio.js",
+            "line": 1,
+            "selector": "export const ANIMAL_SOUND_ROUTES",
+            "trigger": "rhino: retreat"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateAnimals("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 287,
+              "selector": "this.animals.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -1702,10 +4310,41 @@
         {
           "file": "src/audio/animal-audio.js",
           "line": 1,
+          "selector": "export const ANIMAL_SOUND_ROUTES",
           "trigger": "warthog: neutral"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/animal-audio.js",
+            "line": 1,
+            "selector": "export const ANIMAL_SOUND_ROUTES",
+            "trigger": "warthog: neutral"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateAnimals("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 287,
+              "selector": "this.animals.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -1723,10 +4362,41 @@
         {
           "file": "src/audio/animal-audio.js",
           "line": 1,
+          "selector": "export const ANIMAL_SOUND_ROUTES",
           "trigger": "warthog: aggressive"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/animal-audio.js",
+            "line": 1,
+            "selector": "export const ANIMAL_SOUND_ROUTES",
+            "trigger": "warthog: aggressive"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateAnimals("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 287,
+              "selector": "this.animals.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -1744,10 +4414,41 @@
         {
           "file": "src/audio/animal-audio.js",
           "line": 1,
+          "selector": "export const ANIMAL_SOUND_ROUTES",
           "trigger": "warthog: attack"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/animal-audio.js",
+            "line": 1,
+            "selector": "export const ANIMAL_SOUND_ROUTES",
+            "trigger": "warthog: attack"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateAnimals("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 287,
+              "selector": "this.animals.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -1763,6 +4464,15 @@
       "runtimeStatus": "unassigned",
       "codePoints": [],
       "pendingContext": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "classification": "scope-reserve",
+      "runtimeUnused": true,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "No gameplay route; retained in Library. Context or alternative choice required, not an automatic missing assignment.",
       "evidence": "Original retained; no runtime assignment. Review the proposed context before binding."
     },
     {
@@ -1780,10 +4490,41 @@
         {
           "file": "src/audio/animal-audio.js",
           "line": 1,
+          "selector": "export const ANIMAL_SOUND_ROUTES",
           "trigger": "warthog: retreat"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/animal-audio.js",
+            "line": 1,
+            "selector": "export const ANIMAL_SOUND_ROUTES",
+            "trigger": "warthog: retreat"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateAnimals("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 287,
+              "selector": "this.animals.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -1801,10 +4542,54 @@
         {
           "file": "src/audio/worker-audio.js",
           "line": 1,
+          "selector": "export const WORKER_SOUND_IDS",
           "trigger": "WorkerAudio.update: observed assignment/work/flight reaction"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/worker-audio.js",
+            "line": 1,
+            "selector": "export const WORKER_SOUND_IDS",
+            "trigger": "WorkerAudio.update: observed assignment/work/flight reaction"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateFarmActors("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 263,
+              "selector": "this.workers.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/worker-audio.js",
+          "line": 1
+        },
+        {
+          "file": "src/audio/worker-audio.js",
+          "line": 16
+        },
+        {
+          "file": "src/audio/worker-audio.js",
+          "line": 47
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -1822,10 +4607,54 @@
         {
           "file": "src/audio/worker-audio.js",
           "line": 1,
+          "selector": "export const WORKER_SOUND_IDS",
           "trigger": "WorkerAudio.update: observed assignment/work/flight reaction"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/worker-audio.js",
+            "line": 1,
+            "selector": "export const WORKER_SOUND_IDS",
+            "trigger": "WorkerAudio.update: observed assignment/work/flight reaction"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateFarmActors("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 263,
+              "selector": "this.workers.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/worker-audio.js",
+          "line": 1
+        },
+        {
+          "file": "src/audio/worker-audio.js",
+          "line": 11
+        },
+        {
+          "file": "src/audio/worker-audio.js",
+          "line": 39
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -1843,10 +4672,58 @@
         {
           "file": "src/audio/worker-audio.js",
           "line": 1,
+          "selector": "export const WORKER_SOUND_IDS",
           "trigger": "WorkerAudio.update: observed assignment/work/flight reaction"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/worker-audio.js",
+            "line": 1,
+            "selector": "export const WORKER_SOUND_IDS",
+            "trigger": "WorkerAudio.update: observed assignment/work/flight reaction"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateFarmActors("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 263,
+              "selector": "this.workers.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/worker-audio.js",
+          "line": 1
+        },
+        {
+          "file": "src/audio/worker-audio.js",
+          "line": 11
+        },
+        {
+          "file": "src/audio/worker-audio.js",
+          "line": 16
+        },
+        {
+          "file": "src/audio/worker-audio.js",
+          "line": 42
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -1864,10 +4741,51 @@
         {
           "file": "src/audio/audio.js",
           "line": 21,
+          "selector": "export const eventSound=",
           "trigger": "WorkerHit"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/audio.js",
+            "line": 21,
+            "selector": "export const eventSound=",
+            "trigger": "WorkerHit"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/encounters.js",
+              "line": 64,
+              "selector": "emit(state,'WorkerHit'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 207,
+              "selector": "const id=event.type==="
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/audio.js",
+          "line": 21
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -1885,10 +4803,55 @@
         {
           "file": "src/audio/audio.js",
           "line": 21,
+          "selector": "export const eventSound=",
           "trigger": "WorkerIncapacitated"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/audio.js",
+            "line": 21,
+            "selector": "export const eventSound=",
+            "trigger": "WorkerIncapacitated"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/encounters.js",
+              "line": 61,
+              "selector": "emit(state,'WorkerIncapacitated'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 207,
+              "selector": "const id=event.type==="
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/audio.js",
+          "line": 21
+        },
+        {
+          "file": "src/audio/audio.js",
+          "line": 27
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -1906,10 +4869,50 @@
         {
           "file": "src/audio/worker-audio.js",
           "line": 1,
+          "selector": "export const WORKER_SOUND_IDS",
           "trigger": "WorkerAudio.update: observed assignment/work/flight reaction"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/worker-audio.js",
+            "line": 1,
+            "selector": "export const WORKER_SOUND_IDS",
+            "trigger": "WorkerAudio.update: observed assignment/work/flight reaction"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateFarmActors("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 263,
+              "selector": "this.workers.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/worker-audio.js",
+          "line": 1
+        },
+        {
+          "file": "src/audio/worker-audio.js",
+          "line": 43
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -1927,10 +4930,50 @@
         {
           "file": "src/audio/guardian-audio.js",
           "line": 1,
+          "selector": "export const GUARDIAN_SOUND_IDS",
           "trigger": "GuardianAudio.observe: actual rendered portrait lifecycle"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/guardian-audio.js",
+            "line": 1,
+            "selector": "export const GUARDIAN_SOUND_IDS",
+            "trigger": "GuardianAudio.observe: actual rendered portrait lifecycle"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 326,
+              "selector": "audio.guardianPhase("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 259,
+              "selector": "this.guardianAudio.observe(phase);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/guardian-audio.js",
+          "line": 1
+        },
+        {
+          "file": "src/audio/guardian-audio.js",
+          "line": 21
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -1948,10 +4991,54 @@
         {
           "file": "src/audio/guardian-audio.js",
           "line": 1,
+          "selector": "export const GUARDIAN_SOUND_IDS",
           "trigger": "GuardianAudio.observe: actual rendered portrait lifecycle"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/guardian-audio.js",
+            "line": 1,
+            "selector": "export const GUARDIAN_SOUND_IDS",
+            "trigger": "GuardianAudio.observe: actual rendered portrait lifecycle"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 326,
+              "selector": "audio.guardianPhase("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 259,
+              "selector": "this.guardianAudio.observe(phase);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/guardian-audio.js",
+          "line": 1
+        },
+        {
+          "file": "src/audio/guardian-audio.js",
+          "line": 10
+        },
+        {
+          "file": "src/audio/guardian-audio.js",
+          "line": 20
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -1967,6 +5054,18 @@
       "runtimeStatus": "unassigned",
       "codePoints": [],
       "pendingContext": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "classification": "unbound-alternative",
+      "runtimeUnused": true,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [
+        "spirit_appear",
+        "spirit_disappear"
+      ],
+      "contextEvidence": null,
+      "actionAssessment": "No gameplay route; retained in Library. Context or alternative choice required, not an automatic missing assignment.",
       "evidence": "Original retained; no runtime assignment. Review the proposed context before binding."
     },
     {
@@ -1984,10 +5083,50 @@
         {
           "file": "src/audio/ui-audio.js",
           "line": 1,
+          "selector": "export const UI_SOUND_ROUTES",
           "trigger": "ui-magic-selection"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/ui-audio.js",
+            "line": 1,
+            "selector": "export const UI_SOUND_ROUTES",
+            "trigger": "ui-magic-selection"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 196,
+              "selector": "uiAudio.selectSpell("
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 60,
+              "selector": "new UiAudio((id,options)=>audio.sound(id,options))"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/ui-audio.js",
+          "line": 2
+        },
+        {
+          "file": "src/audio/ui-audio.js",
+          "line": 13
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -2005,10 +5144,50 @@
         {
           "file": "src/audio/ui-audio.js",
           "line": 1,
+          "selector": "export const UI_SOUND_ROUTES",
           "trigger": "ui-guided-hud-action"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/ui-audio.js",
+            "line": 1,
+            "selector": "export const UI_SOUND_ROUTES",
+            "trigger": "ui-guided-hud-action"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 151,
+              "selector": "uiAudio.guidedTouch("
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 60,
+              "selector": "new UiAudio((id,options)=>audio.sound(id,options))"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/ui-audio.js",
+          "line": 2
+        },
+        {
+          "file": "src/audio/ui-audio.js",
+          "line": 17
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -2026,10 +5205,50 @@
         {
           "file": "src/audio/ui-audio.js",
           "line": 1,
+          "selector": "export const UI_SOUND_ROUTES",
           "trigger": "ui-wall-stroke-first-motion"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/ui-audio.js",
+            "line": 1,
+            "selector": "export const UI_SOUND_ROUTES",
+            "trigger": "ui-wall-stroke-first-motion"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 140,
+              "selector": "uiAudio.wallGesture("
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 60,
+              "selector": "new UiAudio((id,options)=>audio.sound(id,options))"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/ui-audio.js",
+          "line": 2
+        },
+        {
+          "file": "src/audio/ui-audio.js",
+          "line": 36
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -2047,10 +5266,50 @@
         {
           "file": "src/audio/ui-audio.js",
           "line": 1,
+          "selector": "export const UI_SOUND_ROUTES",
           "trigger": "ui-wall-stroke-release"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/ui-audio.js",
+            "line": 1,
+            "selector": "export const UI_SOUND_ROUTES",
+            "trigger": "ui-wall-stroke-release"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 140,
+              "selector": "uiAudio.wallGesture("
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 60,
+              "selector": "new UiAudio((id,options)=>audio.sound(id,options))"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/ui-audio.js",
+          "line": 2
+        },
+        {
+          "file": "src/audio/ui-audio.js",
+          "line": 30
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -2068,10 +5327,50 @@
         {
           "file": "src/audio/ui-audio.js",
           "line": 1,
+          "selector": "export const UI_SOUND_ROUTES",
           "trigger": "ui-guided-placement-confirmed"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/ui-audio.js",
+            "line": 1,
+            "selector": "export const UI_SOUND_ROUTES",
+            "trigger": "ui-guided-placement-confirmed"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 171,
+              "selector": "uiAudio.guidedPlacement("
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 60,
+              "selector": "new UiAudio((id,options)=>audio.sound(id,options))"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/ui-audio.js",
+          "line": 2
+        },
+        {
+          "file": "src/audio/ui-audio.js",
+          "line": 21
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -2087,6 +5386,17 @@
       "runtimeStatus": "unassigned",
       "codePoints": [],
       "pendingContext": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "classification": "unbound-alternative",
+      "runtimeUnused": true,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [
+        "ui_error"
+      ],
+      "contextEvidence": null,
+      "actionAssessment": "No gameplay route; retained in Library. Context or alternative choice required, not an automatic missing assignment.",
       "evidence": "Original retained; no runtime assignment. Review the proposed context before binding."
     },
     {
@@ -2104,10 +5414,55 @@
         {
           "file": "src/audio/audio.js",
           "line": 21,
+          "selector": "export const eventSound=",
           "trigger": "SpellActivated"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/audio.js",
+            "line": 21,
+            "selector": "export const eventSound=",
+            "trigger": "SpellActivated"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/game.js",
+              "line": 365,
+              "selector": "emit(s,'SpellActivated'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 207,
+              "selector": "const id=event.type==="
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/audio.js",
+          "line": 21
+        },
+        {
+          "file": "src/audio/audio.js",
+          "line": 27
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -2125,10 +5480,54 @@
         {
           "file": "src/audio/power-ready-audio.js",
           "line": 2,
+          "selector": "export const POWER_READY_SOUND_IDS",
           "trigger": "PowerReadyAudio.update: observed positive cooldown reaching zero"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/power-ready-audio.js",
+            "line": 2,
+            "selector": "export const POWER_READY_SOUND_IDS",
+            "trigger": "PowerReadyAudio.update: observed positive cooldown reaching zero"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateUnlocks("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 255,
+              "selector": "this.powerReady.update(state);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/audio.js",
+          "line": 244
+        },
+        {
+          "file": "src/audio/power-ready-audio.js",
+          "line": 2
+        },
+        {
+          "file": "src/audio/power-ready-audio.js",
+          "line": 18
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -2146,10 +5545,55 @@
         {
           "file": "src/audio/audio.js",
           "line": 21,
+          "selector": "export const eventSound=",
           "trigger": "TutorialMessageStarted"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/audio.js",
+            "line": 21,
+            "selector": "export const eventSound=",
+            "trigger": "TutorialMessageStarted"
+          },
+          "callers": [
+            {
+              "file": "src/tutorial/controller.js",
+              "line": 108,
+              "selector": "emit(s,'TutorialMessageStarted'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 207,
+              "selector": "const id=event.type==="
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/audio.js",
+          "line": 21
+        },
+        {
+          "file": "src/audio/audio.js",
+          "line": 27
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -2167,10 +5611,56 @@
         {
           "file": "src/audio/audio.js",
           "line": 21,
+          "selector": "export const eventSound=",
           "trigger": "HarvestRequested"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/audio.js",
+            "line": 21,
+            "selector": "export const eventSound=",
+            "trigger": "HarvestRequested"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/game.js",
+              "line": 229,
+              "selector": "emit(s,'HarvestRequested'"
+            },
+            {
+              "file": "src/simulation/game.js",
+              "line": 272,
+              "selector": "emit(s,'HarvestRequested'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 207,
+              "selector": "const id=event.type==="
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/audio.js",
+          "line": 21
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -2188,10 +5678,50 @@
         {
           "file": "src/audio/ui-audio.js",
           "line": 1,
+          "selector": "export const UI_SOUND_ROUTES",
           "trigger": "ui-surface-transition"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/ui-audio.js",
+            "line": 1,
+            "selector": "export const UI_SOUND_ROUTES",
+            "trigger": "ui-surface-transition"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 221,
+              "selector": "uiAudio.surface("
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 60,
+              "selector": "new UiAudio((id,options)=>audio.sound(id,options))"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/ui-audio.js",
+          "line": 2
+        },
+        {
+          "file": "src/audio/ui-audio.js",
+          "line": 10
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -2209,10 +5739,50 @@
         {
           "file": "src/audio/ui-audio.js",
           "line": 1,
+          "selector": "export const UI_SOUND_ROUTES",
           "trigger": "ui-surface-transition"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/ui-audio.js",
+            "line": 1,
+            "selector": "export const UI_SOUND_ROUTES",
+            "trigger": "ui-surface-transition"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 177,
+              "selector": "uiAudio.close("
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 60,
+              "selector": "new UiAudio((id,options)=>audio.sound(id,options))"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/ui-audio.js",
+          "line": 2
+        },
+        {
+          "file": "src/audio/ui-audio.js",
+          "line": 12
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -2230,10 +5800,50 @@
         {
           "file": "src/audio/ui-audio.js",
           "line": 1,
+          "selector": "export const UI_SOUND_ROUTES",
           "trigger": "ui-surface-transition"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/ui-audio.js",
+            "line": 1,
+            "selector": "export const UI_SOUND_ROUTES",
+            "trigger": "ui-surface-transition"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 221,
+              "selector": "uiAudio.surface("
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 60,
+              "selector": "new UiAudio((id,options)=>audio.sound(id,options))"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/ui-audio.js",
+          "line": 2
+        },
+        {
+          "file": "src/audio/ui-audio.js",
+          "line": 10
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -2251,10 +5861,51 @@
         {
           "file": "src/audio/audio.js",
           "line": 21,
+          "selector": "export const eventSound=",
           "trigger": "CropPlaced"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/audio.js",
+            "line": 21,
+            "selector": "export const eventSound=",
+            "trigger": "CropPlaced"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/game.js",
+              "line": 216,
+              "selector": "emit(s,'CropPlaced'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 207,
+              "selector": "const id=event.type==="
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/audio.js",
+          "line": 21
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -2270,6 +5921,17 @@
       "runtimeStatus": "unassigned",
       "codePoints": [],
       "pendingContext": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "classification": "unbound-alternative",
+      "runtimeUnused": true,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [
+        "eco_crop_sold"
+      ],
+      "contextEvidence": null,
+      "actionAssessment": "No gameplay route; retained in Library. Context or alternative choice required, not an automatic missing assignment.",
       "evidence": "Original retained; no runtime assignment. Review the proposed context before binding."
     },
     {
@@ -2287,10 +5949,50 @@
         {
           "file": "src/audio/ui-audio.js",
           "line": 1,
+          "selector": "export const UI_SOUND_ROUTES",
           "trigger": "ui-command-error"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/ui-audio.js",
+            "line": 1,
+            "selector": "export const UI_SOUND_ROUTES",
+            "trigger": "ui-command-error"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 72,
+              "selector": "uiAudio.error("
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 60,
+              "selector": "new UiAudio((id,options)=>audio.sound(id,options))"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/ui-audio.js",
+          "line": 2
+        },
+        {
+          "file": "src/audio/ui-audio.js",
+          "line": 41
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -2308,10 +6010,56 @@
         {
           "file": "src/audio/audio.js",
           "line": 21,
+          "selector": "export const eventSound=",
           "trigger": "HiringConfirmed"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/audio.js",
+            "line": 21,
+            "selector": "export const eventSound=",
+            "trigger": "HiringConfirmed"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/game.js",
+              "line": 249,
+              "selector": "emit(s,'HiringConfirmed'"
+            },
+            {
+              "file": "src/simulation/game.js",
+              "line": 267,
+              "selector": "emit(s,'HiringConfirmed'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 207,
+              "selector": "const id=event.type==="
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/audio.js",
+          "line": 21
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -2329,10 +6077,55 @@
         {
           "file": "src/audio/audio.js",
           "line": 23,
+          "selector": "export const eventAlertSound=",
           "trigger": "TutorialCompleted (grouped gameplay warning)"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/audio.js",
+            "line": 23,
+            "selector": "export const eventAlertSound=",
+            "trigger": "TutorialCompleted (grouped gameplay warning)"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/game.js",
+              "line": 503,
+              "selector": "emit(s,'TutorialCompleted'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 211,
+              "selector": "const alert=event.type==="
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/audio.js",
+          "line": 23
+        },
+        {
+          "file": "src/audio/audio.js",
+          "line": 213
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -2348,6 +6141,15 @@
       "runtimeStatus": "unassigned",
       "codePoints": [],
       "pendingContext": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "classification": "scope-reserve",
+      "runtimeUnused": true,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "No gameplay route; retained in Library. Context or alternative choice required, not an automatic missing assignment.",
       "evidence": "Original retained; no runtime assignment. Review the proposed context before binding."
     },
     {
@@ -2365,15 +6167,89 @@
         {
           "file": "src/audio/audio.js",
           "line": 21,
+          "selector": "export const eventSound=",
           "trigger": "PostgameStarted"
         },
         {
           "file": "src/audio/unlock-audio.js",
           "line": 3,
+          "selector": "export const UNLOCK_SOUND_IDS",
           "trigger": "UnlockAudio.update: newly reached permanent magic milestone"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/audio.js",
+            "line": 21,
+            "selector": "export const eventSound=",
+            "trigger": "PostgameStarted"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/game.js",
+              "line": 560,
+              "selector": "emit(s,'PostgameStarted'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 207,
+              "selector": "const id=event.type==="
+            }
+          ]
+        },
+        {
+          "assignment": {
+            "file": "src/audio/unlock-audio.js",
+            "line": 3,
+            "selector": "export const UNLOCK_SOUND_IDS",
+            "trigger": "UnlockAudio.update: newly reached permanent magic milestone"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateUnlocks("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 254,
+              "selector": "this.unlocks.update(state);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/audio.js",
+          "line": 21
+        },
+        {
+          "file": "src/audio/audio.js",
+          "line": 30
+        },
+        {
+          "file": "src/audio/unlock-audio.js",
+          "line": 3
+        },
+        {
+          "file": "src/audio/unlock-audio.js",
+          "line": 21
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -2391,10 +6267,50 @@
         {
           "file": "src/audio/ui-audio.js",
           "line": 1,
+          "selector": "export const UI_SOUND_ROUTES",
           "trigger": "ui-user-pause-transition"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/ui-audio.js",
+            "line": 1,
+            "selector": "export const UI_SOUND_ROUTES",
+            "trigger": "ui-user-pause-transition"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 221,
+              "selector": "uiAudio.pause("
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 60,
+              "selector": "new UiAudio((id,options)=>audio.sound(id,options))"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/ui-audio.js",
+          "line": 2
+        },
+        {
+          "file": "src/audio/ui-audio.js",
+          "line": 42
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -2412,10 +6328,50 @@
         {
           "file": "src/audio/ui-audio.js",
           "line": 1,
+          "selector": "export const UI_SOUND_ROUTES",
           "trigger": "ui-user-pause-transition"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/ui-audio.js",
+            "line": 1,
+            "selector": "export const UI_SOUND_ROUTES",
+            "trigger": "ui-user-pause-transition"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 221,
+              "selector": "uiAudio.pause("
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 60,
+              "selector": "new UiAudio((id,options)=>audio.sound(id,options))"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/ui-audio.js",
+          "line": 2
+        },
+        {
+          "file": "src/audio/ui-audio.js",
+          "line": 42
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -2433,10 +6389,51 @@
         {
           "file": "src/audio/audio.js",
           "line": 24,
+          "selector": "export const eventRefundSound=",
           "trigger": "WallRemoved (positive committed refund only)"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/audio.js",
+            "line": 24,
+            "selector": "export const eventRefundSound=",
+            "trigger": "WallRemoved (positive committed refund only)"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/game.js",
+              "line": 201,
+              "selector": "emit(s,'WallRemoved'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 224,
+              "selector": "const refund=eventRefundSound[event.type]"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/audio.js",
+          "line": 24
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -2454,10 +6451,56 @@
         {
           "file": "src/audio/audio.js",
           "line": 25,
+          "selector": "export const eventSpendSound=",
           "trigger": "HiringConfirmed (positive committed payroll only)"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/audio.js",
+            "line": 25,
+            "selector": "export const eventSpendSound=",
+            "trigger": "HiringConfirmed (positive committed payroll only)"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/game.js",
+              "line": 249,
+              "selector": "emit(s,'HiringConfirmed'"
+            },
+            {
+              "file": "src/simulation/game.js",
+              "line": 267,
+              "selector": "emit(s,'HiringConfirmed'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 228,
+              "selector": "const spend=eventSpendSound[event.type]"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/audio.js",
+          "line": 25
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -2475,10 +6518,51 @@
         {
           "file": "src/audio/audio.js",
           "line": 21,
+          "selector": "export const eventSound=",
           "trigger": "CrateDelivered"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/audio.js",
+            "line": 21,
+            "selector": "export const eventSound=",
+            "trigger": "CrateDelivered"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/game.js",
+              "line": 502,
+              "selector": "emit(s,'CrateDelivered'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 207,
+              "selector": "const id=event.type==="
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/audio.js",
+          "line": 21
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -2496,10 +6580,50 @@
         {
           "file": "src/audio/farm-contact-audio.js",
           "line": 4,
+          "selector": "export const FARM_CONTACT_IDS",
           "trigger": "FarmContactAudio.update: native initial/water/harvest/crate contact"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/farm-contact-audio.js",
+            "line": 4,
+            "selector": "export const FARM_CONTACT_IDS",
+            "trigger": "FarmContactAudio.update: native initial/water/harvest/crate contact"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateFarmActors("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 281,
+              "selector": "this.farm.update(state,options);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/farm-contact-audio.js",
+          "line": 4
+        },
+        {
+          "file": "src/audio/farm-contact-audio.js",
+          "line": 16
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -2515,6 +6639,15 @@
       "runtimeStatus": "unassigned",
       "codePoints": [],
       "pendingContext": "Preserved in the original bank and Library. Dedicated gameplay emitter is not connected yet; do not layer this on a generic action automatically.",
+      "classification": "scope-reserve",
+      "runtimeUnused": true,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [],
+      "sourceMentions": [],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "No gameplay route; retained in Library. Context or alternative choice required, not an automatic missing assignment.",
       "evidence": "Original retained; no runtime assignment. Review the proposed context before binding."
     },
     {
@@ -2532,10 +6665,55 @@
         {
           "file": "src/audio/audio.js",
           "line": 21,
+          "selector": "export const eventSound=",
           "trigger": "RaidSpawned"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/audio.js",
+            "line": 21,
+            "selector": "export const eventSound=",
+            "trigger": "RaidSpawned"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/raids.js",
+              "line": 166,
+              "selector": "emit(s,'RaidSpawned'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 207,
+              "selector": "const id=event.type==="
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/audio.js",
+          "line": 21
+        },
+        {
+          "file": "src/audio/audio.js",
+          "line": 27
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -2553,10 +6731,58 @@
         {
           "file": "src/audio/raid-arrival-audio.js",
           "line": 2,
+          "selector": "export const RAID_ARRIVAL_SOUND_IDS",
           "trigger": "RaidArrivalAudio.update: first observed physical farm entry per raid"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/raid-arrival-audio.js",
+            "line": 2,
+            "selector": "export const RAID_ARRIVAL_SOUND_IDS",
+            "trigger": "RaidArrivalAudio.update: first observed physical farm entry per raid"
+          },
+          "callers": [
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.updateAnimals("
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 285,
+              "selector": "this.raidArrival.update(state);"
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/audio.js",
+          "line": 27
+        },
+        {
+          "file": "src/audio/audio.js",
+          "line": 294
+        },
+        {
+          "file": "src/audio/raid-arrival-audio.js",
+          "line": 2
+        },
+        {
+          "file": "src/audio/raid-arrival-audio.js",
+          "line": 20
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -2574,10 +6800,55 @@
         {
           "file": "src/audio/structure-audio.js",
           "line": 7,
+          "selector": "export const STRUCTURE_ALERT_SOUNDS",
           "trigger": "StructureHit:first-center-hit"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/structure-audio.js",
+            "line": 7,
+            "selector": "export const STRUCTURE_ALERT_SOUNDS",
+            "trigger": "StructureHit:first-center-hit"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/raids.js",
+              "line": 251,
+              "selector": "emit(s,'StructureHit'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 211,
+              "selector": "const alert=event.type==="
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/audio.js",
+          "line": 27
+        },
+        {
+          "file": "src/audio/structure-audio.js",
+          "line": 7
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -2595,10 +6866,55 @@
         {
           "file": "src/audio/structure-audio.js",
           "line": 7,
+          "selector": "export const STRUCTURE_ALERT_SOUNDS",
           "trigger": "StructureHit:wall-critical"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/structure-audio.js",
+            "line": 7,
+            "selector": "export const STRUCTURE_ALERT_SOUNDS",
+            "trigger": "StructureHit:wall-critical"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/raids.js",
+              "line": 251,
+              "selector": "emit(s,'StructureHit'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 211,
+              "selector": "const alert=event.type==="
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/audio.js",
+          "line": 27
+        },
+        {
+          "file": "src/audio/structure-audio.js",
+          "line": 7
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -2616,10 +6932,59 @@
         {
           "file": "src/audio/audio.js",
           "line": 23,
+          "selector": "export const eventAlertSound=",
           "trigger": "WorkerIncapacitated (grouped gameplay warning)"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/audio.js",
+            "line": 23,
+            "selector": "export const eventAlertSound=",
+            "trigger": "WorkerIncapacitated (grouped gameplay warning)"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/encounters.js",
+              "line": 61,
+              "selector": "emit(state,'WorkerIncapacitated'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 211,
+              "selector": "const alert=event.type==="
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/audio.js",
+          "line": 23
+        },
+        {
+          "file": "src/audio/audio.js",
+          "line": 27
+        },
+        {
+          "file": "src/audio/audio.js",
+          "line": 213
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -2637,10 +7002,55 @@
         {
           "file": "src/audio/audio.js",
           "line": 21,
+          "selector": "export const eventSound=",
           "trigger": "RaidEnded"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/audio.js",
+            "line": 21,
+            "selector": "export const eventSound=",
+            "trigger": "RaidEnded"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/raids.js",
+              "line": 297,
+              "selector": "emit(s,'RaidEnded'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 207,
+              "selector": "const id=event.type==="
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/audio.js",
+          "line": 21
+        },
+        {
+          "file": "src/audio/audio.js",
+          "line": 27
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -2658,10 +7068,55 @@
         {
           "file": "src/audio/audio.js",
           "line": 21,
+          "selector": "export const eventSound=",
           "trigger": "CampaignWon"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/audio.js",
+            "line": 21,
+            "selector": "export const eventSound=",
+            "trigger": "CampaignWon"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/game.js",
+              "line": 556,
+              "selector": "emit(s,'CampaignWon'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 207,
+              "selector": "const id=event.type==="
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/audio.js",
+          "line": 21
+        },
+        {
+          "file": "src/audio/audio.js",
+          "line": 27
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     },
     {
@@ -2679,10 +7134,60 @@
         {
           "file": "src/audio/audio.js",
           "line": 21,
+          "selector": "export const eventSound=",
           "trigger": "GameOver"
         }
       ],
       "pendingContext": null,
+      "classification": "assigned-compatible-source",
+      "runtimeUnused": false,
+      "audiblePlaybackVerified": false,
+      "runtimeChains": [
+        {
+          "assignment": {
+            "file": "src/audio/audio.js",
+            "line": 21,
+            "selector": "export const eventSound=",
+            "trigger": "GameOver"
+          },
+          "callers": [
+            {
+              "file": "src/simulation/game.js",
+              "line": 555,
+              "selector": "emit(s,'GameOver'"
+            },
+            {
+              "file": "src/simulation/raids.js",
+              "line": 298,
+              "selector": "emit(s,'GameOver'"
+            },
+            {
+              "file": "src/app/main.js",
+              "line": 416,
+              "selector": "audio.process(state.events,"
+            },
+            {
+              "file": "src/audio/audio.js",
+              "line": 207,
+              "selector": "const id=event.type==="
+            }
+          ]
+        }
+      ],
+      "sourceMentions": [
+        {
+          "file": "src/audio/audio.js",
+          "line": 21
+        },
+        {
+          "file": "src/audio/audio.js",
+          "line": 27
+        }
+      ],
+      "byteDuplicates": [],
+      "semanticAlternatives": [],
+      "contextEvidence": null,
+      "actionAssessment": "Compatible proposal and guarded source route reviewed; caller evidence is static, not playback proof.",
       "evidence": "Code assignment and exact original bytes; this row does not prove audible playback."
     }
   ]

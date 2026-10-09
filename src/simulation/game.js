@@ -1,3 +1,5 @@
+import {animalExitConnector} from './animal-exit-connectors.js';
+import {workerReturnRoute} from './worker-return-route.js';
 import {workerRiskClearance} from './worker-route-clearance.js';
 import {resolveFluidPlacement} from '../world/fluid-placement.js';
 import {ensurePurchaseBudget,HIRING_RESERVE} from './budget.js';
@@ -7,6 +9,7 @@ import {footprintDistance} from '../world/footprints.js';
 import {centerCulture,centerFootprint,centerServicePoint,centerDeliveryPoint} from '../world/centers.js';
 import {prepareActorMotion} from './actor-motion.js';
 import {animalRouteClearance} from './animal-route-clearance.js';
+import {animalSlopeRecoveryPath} from './animal-slope-recovery.js';
 import {withNavigationQueries} from '../world/navigation-query-scope.js';
 import {BALANCE as B} from './balance.js';
 import {wallVisualAt,recordWallPresentation} from './structure-presentation.js';
@@ -376,8 +379,15 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
       for(const margin of [16,32,64]){w.path=nav.path(w,routeVia,w.radius??.28,ignore,worker,margin);if(w.path)break;}
       if(w.path)w.path.push({x:destination.x,z:destination.z});
     }
-    if(!w.path&&expandRoute&&!worker)w.path=nav.propOverlapExitPath?.(w,destination,w.radius??.28,ignore,worker)??null;
-    if(!w.path&&worker&&!ignore&&['fleeing','returning','incapacitated'].includes(w.status))w.path=workerSlopeRecoveryPath(nav,w,destination,w.radius??.28);
+    if(!w.path&&expandRoute&&!worker){
+      w.path=nav.propOverlapExitPath?.(w,destination,w.radius??.28,ignore,worker)??null;
+      if(!w.path)w.path=animalExitConnector(w,destination,nav);
+      if(!w.path)w.path=animalSlopeRecoveryPath(nav,w,destination,w.radius??.28);
+    }
+    if(!w.path&&worker&&!ignore&&['fleeing','returning','incapacitated'].includes(w.status)){
+      w.path=workerSlopeRecoveryPath(nav,w,destination,w.radius??.28);
+      if(!w.path)w.path=workerReturnRoute(nav,w,destination,w.radius??.28);
+    }
     w.pathVersion=nav.version;
     if(!w.path)return false;
   }

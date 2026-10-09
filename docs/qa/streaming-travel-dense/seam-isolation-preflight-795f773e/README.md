@@ -1,0 +1,31 @@
+# Seam preparation isolation: source-level candidate
+
+This isolated branch starts at `795f773e83640d3f7541d8e3d826764c3d779750`. It does not carry the negative standby-pruning candidate or activate shared resident preparation. No native timing or performance acceptance yet; no runtime PR proposed.
+
+The complete negative shared ABBA is preserved separately in commit `efe7b1bb`. Its largest synchronous draw events in every arm identify `far-ground-native-water-mask-v1:seam-v2` around 98 m. Such CPU wall times can include GPU backpressure and uploads, not just compilation.
+
+The main far-ground mesh is already attached to candidate.impostors. Initial seam preparation completes before attaching its mesh there, and the region then prepares that whole candidate. Later seam replacements use a separate preparation call before adoption. With native water-mask ground this call uses world.scene, but did not honor the existing `farIsolatedPreparation` option. The candidate forwards **only that existing option** to `prepareNativeFarGpu`: no new flag, shader recipe, geometry, texture, readiness shortcut or timer. False retains the old behavior; true hides unrelated renderables only during the synchronous zero-viewport upload draw, while preserving live scene lighting/fog, shadow enablement and output recipe. The exact seam still uploads, draws and fences; the old seam remains until replacement adoption.
+
+The four integration tests use real attachNativeFarGround → seam owner → prepareNativeFarGpu with a deterministic renderer/GL double. They cover true/false policy, initial/replacement draw contents, live scene identity, viewport/scissor/autoclear/shadow/visibility restoration, retained old mesh during delayed compile, closure during compile and draw failure with no adoption. Existing owner tests cover config changes, late worker completion, context loss/restoration and borrowed resources. Baseline fails the isolated draw test; candidate passes 23 directed tests. The double proves control flow and state restoration, not a browser's GL behavior, pixel equivalence or GPU performance.
+
+```powershell
+node --test tests/native-far-seam-isolation.test.js tests/native-far-ground-seam.test.js tests/native-far-ground.test.js tests/isolated-gpu-root.test.js
+```
+
+Raw before/after TAP outputs are gzip-preserved and hashed in preflight.json. No build, heavy replay or GPU workload was run.
+
+Next native comparison should use the existing streaming-travel fixture unchanged, same farm/quality/viewport/path and `isolatePreparation` in both control and candidate. Only the module source differs between frozen servers. Keep sharedPreparation absent in both arms. Verify actual seam preparation root and submitted draws, unchanged camera/logical/chunk outputs and disposal first; then ABBA and the 90–120 m position bin. Do not attribute an improvement solely to fewer renderer calls. Preparation must retain all seam geometry and exact material recipe, readiness/fence/cancellation, previous seam continuity and framebuffer state. A new GPU reservation is required before execution.
+
+## Corrected dependency preflight and native functional runs
+
+The first control opening failed before measurement: the frozen source copy omitted `content/manifests`, causing Vite to fail resolving the asset manifest. The archived farm snapshot was also absent. The original DOM text/JPEG are preserved; the original 740-source comparison did not establish browser dependency completeness. The control copy was repaired exclusively with `git archive 795f773e content` and the exact baseline `docs/qa/intensive-gran-rio-suajili-e461b550/state.json.gz`. Every restored byte was compared against that commit and the candidate's identical files; no generated current-main manifests were substituted.
+
+The first recursive HTTP tool had its own demonstrated defect: it tested absolute URL keys but stored relative URL keys, so cyclic imports were not deduplicated. Root authorized stopping PID41996/session73349 for that defect, not for elapsed time. Its source and process receipt are preserved. The corrected tool uses consistent keys, records partial progress and understands Vite's inserted `/* @vite-ignore */` inside worker URLs. The successful terminal traversal served **240 modules/data URLs per server**, including five Vite worker URLs, JSON imports and the literal snapshot fetch, with zero errors. Full response hashes, graph, log and tool source are archived. This covers recursive literal imports/exports/import(), worker newURL and absolute literal fetch; computed runtime asset URLs still require the native load, rather than being claimed statically exhaustive.
+
+Root then completed functional candidate917 and control918, both 180 m/25→40 chunks, unchanged logical state, empty errors/console, followed by disposal/context loss. Candidate's final forest/ground screenshot was inspected by root: no obvious holes in that one view; this is not all-angle visual acceptance. Both buffer probes finish with zero observed live bytes/buffers and zero unattributed calls. Requested/deleted bytes are 114,666,814 for candidate and 125,684,926 for control. These are observed bufferData requests after installation, not VRAM or overall RAM, exclude textures/programs/earlier allocations, and are **not** a proven allocation reduction: functional frame counts and scheduling differ. Renderer bookkeeping after close retains five textures/four programs in each report; context loss is separately true. The candidate run overlapped the HTTP graph, and resource probes add overhead; neither run is admissible performance evidence.
+
+All original native final/disposed/console JSON and available screenshots are gzip-preserved in `repaired-preflight.json`, with raw/gzip hashes. Control functional did not supply a JPEG; none is synthesized. CPU/GPU timing is still pending. Control server5398 uses `.cache/seam-control-795f773e` with a separate Vite dependency cache; candidate5192 uses the worktree. Both share unchanged public assets/node_modules through junctions. The canonical runtime sources remain baseline795 versus candidate439, with the same fixture; the dependency repair changes no runtime source, shader, public asset or fixture.
+
+```powershell
+python docs/qa/streaming-travel-dense/seam-isolation-preflight-795f773e/verify-repaired.py
+```

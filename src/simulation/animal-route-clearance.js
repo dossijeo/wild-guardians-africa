@@ -1,4 +1,5 @@
 import {actorFluidClear} from './actor-fluid-clearance.js';
+import {animalSlopeRecoveryClear} from './animal-slope-recovery.js';
 const verified=new WeakMap();
 
 // A native route can be restored or have its connectors replaced by a local
@@ -9,6 +10,10 @@ export function animalRouteClearance(actor,nav,{radius,ignore,escapeProps=false}
  const clear=(start,end)=>{
   if(dynamicClear&&!dynamicClear(start,end))return false;
   if(!actorFluidClear(nav,end,radius)){blocked=true;verified.delete(actor);return false;}
+  if(escapeProps&&animalSlopeRecoveryClear(actor,nav,start,end,radius))return true;
+  // A sampled prefix does not prove that the actual footprint landing is on
+  // a legal slope. Keep the native limit even when reusing that prefix.
+  if(nav.terrainValid&&!nav.terrainValid(end.x,end.z,radius,false)){blocked=true;verified.delete(actor);return false;}
   const point=actor.path[0];if(!point)return true;
   const cached=verified.get(actor);
   let boundary=point;

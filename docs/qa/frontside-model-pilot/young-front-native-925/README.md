@@ -29,7 +29,7 @@ MAE0.0160879; shared reverse Front IoU0.9561612, MAE0.0170005 and tile0.4052031.
 Their `passes:false` values are diagnostic policy2, never automatic rejection
 under the user's visual policy3. No earlier negative was silently reclassified.
 
-Run `node docs/qa/frontside-model-pilot/young-front-native-925/verify.mjs` to verify
+Run `node docs/qa/frontside-model-pilot/young-front-native/verify-all.mjs` to verify
 the retained bytes, control metrics, actual culling witness and cleanup. This
 verifier does not automate perceptual approval. Next gates are predefined angles,
 Front growth seams/wind, effective Front shadows, resident resources and the

@@ -1,0 +1,235 @@
+TAP version 13
+# Subtest: animal quarter-metre proof rejects a narrow forbidden band before landing
+ok 1 - animal quarter-metre proof rejects a narrow forbidden band before landing
+  ---
+  duration_ms: 3.36
+  ...
+# Subtest: near-limit proof checks the full footprint rather than only its center
+ok 2 - near-limit proof checks the full footprint rather than only its center
+  ---
+  duration_ms: 0.359
+  ...
+# Subtest: ordinary flat edges always retain the live coarse sweep without extra terrain refinement
+ok 3 - ordinary flat edges always retain the live coarse sweep without extra terrain refinement
+  ---
+  duration_ms: 0.4421
+  ...
+# Subtest: near-limit cache invalidates when the geometry epoch changes
+ok 4 - near-limit cache invalidates when the geometry epoch changes
+  ---
+  duration_ms: 0.705
+  ...
+# Subtest: water, lava and newly introduced solids remain forbidden
+ok 5 - water, lava and newly introduced solids remain forbidden
+  ---
+  duration_ms: 0.4313
+  ...
+# Subtest: a terrain-only proof never bypasses fresh solids or changed prop queries
+ok 6 - a terrain-only proof never bypasses fresh solids or changed prop queries
+  ---
+  duration_ms: 0.6461
+  ...
+# Subtest: near-limit terrain proofs reuse fine samples while coarse solids are checked on every query
+ok 7 - near-limit terrain proofs reuse fine samples while coarse solids are checked on every query
+  ---
+  duration_ms: 0.8609
+  ...
+# Subtest: musgum: exact native campaign snapshot dt=0.1 resolves raid physically
+ok 8 - musgum: exact native campaign snapshot dt=0.1 resolves raid physically
+  ---
+  duration_ms: 4591.8805
+  ...
+# Subtest: musgum: exact native campaign snapshot dt=0.1 with partial save/reload resolves raid physically
+ok 9 - musgum: exact native campaign snapshot dt=0.1 with partial save/reload resolves raid physically
+  ---
+  duration_ms: 4021.8896
+  ...
+# Subtest: musgum: exact native campaign snapshot dt=1 resolves raid physically
+ok 10 - musgum: exact native campaign snapshot dt=1 resolves raid physically
+  ---
+  duration_ms: 3308.6801
+  ...
+# Subtest: musgum: exact native campaign snapshot dt=1 with partial save/reload resolves raid physically
+ok 11 - musgum: exact native campaign snapshot dt=1 with partial save/reload resolves raid physically
+  ---
+  duration_ms: 3828.5378
+  ...
+# Subtest: etiope: exact native campaign snapshot dt=0.1 resolves raid physically
+ok 12 - etiope: exact native campaign snapshot dt=0.1 resolves raid physically
+  ---
+  duration_ms: 5032.5661
+  ...
+# Subtest: etiope: exact native campaign snapshot dt=0.1 with partial save/reload resolves raid physically
+ok 13 - etiope: exact native campaign snapshot dt=0.1 with partial save/reload resolves raid physically
+  ---
+  duration_ms: 5528.2904
+  ...
+# Subtest: etiope: exact native campaign snapshot dt=1 resolves raid physically
+ok 14 - etiope: exact native campaign snapshot dt=1 resolves raid physically
+  ---
+  duration_ms: 4908.5314
+  ...
+# Subtest: etiope: exact native campaign snapshot dt=1 with partial save/reload resolves raid physically
+ok 15 - etiope: exact native campaign snapshot dt=1 with partial save/reload resolves raid physically
+  ---
+  duration_ms: 5356.7067
+  ...
+# Subtest: suajili: exact native campaign snapshot dt=0.1 resolves raid physically
+ok 16 - suajili: exact native campaign snapshot dt=0.1 resolves raid physically
+  ---
+  duration_ms: 1039.1251
+  ...
+# Subtest: suajili: exact native campaign snapshot dt=0.1 with partial save/reload resolves raid physically
+ok 17 - suajili: exact native campaign snapshot dt=0.1 with partial save/reload resolves raid physically
+  ---
+  duration_ms: 1508.5233
+  ...
+# Subtest: suajili: exact native campaign snapshot dt=1 resolves raid physically
+ok 18 - suajili: exact native campaign snapshot dt=1 resolves raid physically
+  ---
+  duration_ms: 1083.7699
+  ...
+# Subtest: suajili: exact native campaign snapshot dt=1 with partial save/reload resolves raid physically
+ok 19 - suajili: exact native campaign snapshot dt=1 with partial save/reload resolves raid physically
+  ---
+  duration_ms: 1387.814
+  ...
+# Subtest: recorded paid-defense night 31 finishes past fallen workers and intact walls, including reload
+ok 20 - recorded paid-defense night 31 finishes past fallen workers and intact walls, including reload
+  ---
+  duration_ms: 4707.1306
+  ...
+# Subtest: an impossible dynamic detour is cached until bodies move or terrain changes
+ok 21 - an impossible dynamic detour is cached until bodies move or terrain changes
+  ---
+  duration_ms: 0.8915
+  ...
+# Subtest: a sliced search does not cache a failure from bodies that moved within a quarter metre
+ok 22 - a sliced search does not cache a failure from bodies that moved within a quarter metre
+  ---
+  duration_ms: 0.3394
+  ...
+# Subtest: native incremental A* preserves the synchronous route and expands at most eight cells per slice
+ok 23 - native incremental A* preserves the synchronous route and expands at most eight cells per slice
+  ---
+  duration_ms: 3.5147
+  ...
+# Subtest: Recorded night 39 retreat approaches distant occupied bends instead of repeatedly yielding away
+ok 24 - Recorded night 39 retreat approaches distant occupied bends instead of repeatedly yielding away
+  ---
+  duration_ms: 270.669
+  ...
+# Subtest: Motion outside the native search corridor cannot restart an incremental detour
+ok 25 - Motion outside the native search corridor cannot restart an incremental detour
+  ---
+  duration_ms: 0.8806
+  ...
+# Subtest: Recorded paid-defense night 39 actually finishes past fallen workers, including reload
+ok 26 - Recorded paid-defense night 39 actually finishes past fallen workers, including reload
+  ---
+  duration_ms: 12616.1807
+  ...
+# Subtest: return search resumes bounded native slices rather than draining synchronously
+ok 27 - return search resumes bounded native slices rather than draining synchronously
+  ---
+  duration_ms: 3.2952
+  ...
+# Subtest: ordinary worker tasks never start a return search
+ok 28 - ordinary worker tasks never start a return search
+  ---
+  duration_ms: 0.3108
+  ...
+# Subtest: failed search memo follows exact origin, destination and navigation epoch
+ok 29 - failed search memo follows exact origin, destination and navigation epoch
+  ---
+  duration_ms: 0.5333
+  ...
+# Subtest: only eight pending searches retain native frontier memory per navigation
+ok 30 - only eight pending searches retain native frontier memory per navigation
+  ---
+  duration_ms: 0.8787
+  ...
+# Subtest: a never-ending iterator is abandoned and memoized at its explicit total bound
+ok 31 - a never-ending iterator is abandoned and memoized at its explicit total bound
+  ---
+  duration_ms: 13.733
+  ...
+# Subtest: native worker avoidance view is used for the wider search
+ok 32 - native worker avoidance view is used for the wider search
+  ---
+  duration_ms: 0.2735
+  ...
+# Subtest: wider native return does not cross water
+ok 33 - wider native return does not cross water
+  ---
+  duration_ms: 1.6941
+  ...
+# Subtest: wider native return does not cross lava
+ok 34 - wider native return does not cross lava
+  ---
+  duration_ms: 0.3947
+  ...
+# Subtest: wider native return does not cross solid
+ok 35 - wider native return does not cross solid
+  ---
+  duration_ms: 1.7415
+  ...
+# Subtest: wider native return does not cross steep
+ok 36 - wider native return does not cross steep
+  ---
+  duration_ms: 0.4638
+  ...
+# Subtest: a real closed wall ring cannot be escaped by enlarging the search corridor
+ok 37 - a real closed wall ring cannot be escaped by enlarging the search corridor
+  ---
+  duration_ms: 3.6198
+  ...
+# Subtest: a new navigation epoch abandons the pending return proof
+ok 38 - a new navigation epoch abandons the pending return proof
+  ---
+  duration_ms: 0.3056
+  ...
+# Subtest: dry canyon cliffs retain their worker-surface slope restriction
+ok 39 - dry canyon cliffs retain their worker-surface slope restriction
+  ---
+  duration_ms: 0.244
+  ...
+# Subtest: refinement catches a narrow steep strip missed by the ordinary coarse samples
+ok 40 - refinement catches a narrow steep strip missed by the ordinary coarse samples
+  ---
+  duration_ms: 14.382
+  ...
+# Subtest: a risky restored connector is rejected and replanned without teleporting the worker
+ok 41 - a risky restored connector is rejected and replanned without teleporting the worker
+  ---
+  duration_ms: 13.5085
+  ...
+# Subtest: dynamic blockers retain priority and never create a terrain avoidance point
+ok 42 - dynamic blockers retain priority and never create a terrain avoidance point
+  ---
+  duration_ms: 0.252
+  ...
+# Subtest: shared terrain-risk metadata retains its peak and actual geometry changes invalidate it
+ok 43 - shared terrain-risk metadata retains its peak and actual geometry changes invalidate it
+  ---
+  duration_ms: 0.5477
+  ...
+# Subtest: private avoided-point views are isolated per worker, bounded and replaced on geometry changes
+ok 44 - private avoided-point views are isolated per worker, bounded and replaced on geometry changes
+  ---
+  duration_ms: 8.5162
+  ...
+# Subtest: optional learned terrain points round-trip and malformed or oversized save data is rejected
+ok 45 - optional learned terrain points round-trip and malformed or oversized save data is rejected
+  ---
+  duration_ms: 2.5142
+  ...
+1..45
+# tests 45
+# suites 0
+# pass 45
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 41954.2058

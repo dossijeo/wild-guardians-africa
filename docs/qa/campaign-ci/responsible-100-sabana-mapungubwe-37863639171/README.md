@@ -1,0 +1,13 @@
+# Responsible100-night native campaign — Sabana/Mapungubwe
+
+[Actions37863639171](https://github.com/dossijeo/wild-guardians-africa/actions/runs/37863639171), job113605064531, completed successfully from frozen0c3ca7a3ed8e530c0b40302fb686927e5e71a178. The complete original state, daily report, summary, status, process output and immutable job identity are retained here. The policy uses seed712, all eight crop species, ordinary commands and continuous reinvestment, wage-growth and maintenance reserves; there are no money, growth, animal or time overrides.100 normal hiring decisions and106 ended incursions are recorded.
+
+Root independently deserialized and roundtripped the downloaded state, reconciled integer balances, species seed debits and harvested/crate/delivery ownership, recalculated the original cashflow/activity summary, and checked staffing and physical delivery on every day. Actual final state is victory/day101/100 completed nights with no active raid, one CampaignWon and no GameOver.316 recorded input files still match main; only scene.js differs due to the later default far-upload isolation. Domain/content/campaign tools remain identical. `root-verification.json` records this distinction.
+
+Results:23418 planted crops,21763 physically delivered crates,1424 maximum living crops, eight species,478003 final coins. Total harvest income1529799 reconciles with816159 seeds,235590 wages,747 repairs and800 centre construction. Unoccupied daylight time6046/30000s =20.153333%, accepted under the strictly-below25% user policy. Daily day1 idle169s and longest128s are retained, despite the aggregate acceptance; this does not imply zero early idle. Raw daily information is not replaced by the aggregate.
+
+This proves one responsible native simulation for one biome/culture/seed/strategy. It is not the thirty-case matrix, graphical worker-path QA, perceptual audio, physical mobile acceptance or a loading benchmark. The independent poor-management six-biome diagnostic is archived separately. Five further Mapungubwe biome jobs were dispatched from33937b92 and remain separate runs.
+
+Files above10KB are gzip-compressed without content changes; `receipt.json` stores uncompressed byte lengths and SHA256s. The retained auditor was executed from `.cache/audit-responsible-37863639171.mjs` in the repository root; it reads the extracted artifact at `.cache/campaign-qa-37863639171/responsible/`. Its relative imports are valid there, not from this archival directory. It performs no simulation rerun.
+
+Source comparison was performed on root c8b893be before the later bfa29ef9 world-depth upload-order correction. Both later renderer changes are outside the native simulation input path; no newer rendered campaign is inferred.

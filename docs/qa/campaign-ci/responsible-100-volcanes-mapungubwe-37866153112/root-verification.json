@@ -1,0 +1,46 @@
+{
+  "status": "passed",
+  "recordedHead": "33937b929341c189d574c59540277a2c2e88297c",
+  "sourceFilesMatched": 315,
+  "sourceMismatches": [
+    "src/rendering/scene.js",
+    "src/simulation/actor-motion.js"
+  ],
+  "meaning": "Frozen campaign predates the render-scene depth/isolation changes and Desert opposing-traffic fix. This audits its archived native state, without replaying it on current main.",
+  "result": "victory",
+  "completedNights": 100,
+  "day": 101,
+  "money": 495063,
+  "maximumLiving": 1425,
+  "speciesObserved": 8,
+  "delivered": 21561,
+  "raidsEnded": 114,
+  "unoccupiedFraction": 0.1872,
+  "activityAcceptance": {
+    "status": "accepted",
+    "measuredFraction": 0.1872,
+    "policy": {
+      "path": "docs/qa/intensive-acceptance-policy.json",
+      "sha256": "f463ede2279390e14e85fa94845f4b2c10e4970f0f173c32885e3638acc69bf4",
+      "updated": "2026-10-08",
+      "comparison": "strictly-less-than",
+      "maximumFraction": 0.25
+    },
+    "scope": "Activity metric only; does not prove survival, accounting, source fidelity, bad-management loss or complete release acceptance."
+  },
+  "cashflow": {
+    "openingBalance": "1500",
+    "harvestIncome": "1562559",
+    "seedCosts": "824772",
+    "wageCosts": "243210",
+    "repairCosts": "214",
+    "centreCosts": "800",
+    "wallCosts": "0",
+    "otherNet": "0",
+    "operatingCashFlow": "494363",
+    "netCashFlowAfterConstruction": "493563",
+    "endingBalance": "495063"
+  },
+  "snapshotSha256": "f0569d3a2bba3e38e4f5a2ab274a13ef61b9e8628a68f31bbb9eaea584f79cab",
+  "auditScope": "Downloaded complete original snapshot; native persistence roundtrip, physical picked/crate/delivered state, integer ledger, species seed debits, all daily staffing/deliveries, actual victory after 100 completed nights and no active raid. One biome/culture/seed/policy only; no rendering or physical mobile acceptance."
+}

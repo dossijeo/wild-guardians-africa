@@ -1,0 +1,387 @@
+{
+  "candidate": "9eb0cd0916731a928261d5474f0e21468a6e7918",
+  "candidateRuntime": "3569b34b2031acc4b24497ecf14c0751bb84a1ab",
+  "baseline": "b00cc93781f06cb70ab2366076c54dcf1e532dd8",
+  "files": {
+    "travel-functional-896": {
+      "rawSha256": "751daf19ce18fb27642aa6a053bbb80472cf6e3d5197cd2ed4f139c82ae1990b",
+      "gzipSha256": "76ebedcfc583809532fa447365b926d41631cca3ec0319f36ffcb1e3f9998c8d",
+      "bytes": 526748
+    },
+    "travel-functional-896-disposed": {
+      "rawSha256": "13b253f589953a7ec3fc1cf320edea0c26a048ef21eee01f98236f07dd284d80",
+      "gzipSha256": "203bd2277a0625d4c03f4d636df8f06c74ad5b5c8e4b0076a952e59642ae3eb8",
+      "bytes": 527538
+    },
+    "travel-abba-A1-897": {
+      "rawSha256": "02c26754427dcb7a48d6ac9662b7e786e0db4ff4667b669072479b43da181cf7",
+      "gzipSha256": "54b633df7e3cd09066a684322918c1369bca13e9329c89ef43ee7affb8b4ca55",
+      "bytes": 528641
+    },
+    "travel-abba-A1-897-disposed": {
+      "rawSha256": "b616a87c49741c23347adae30d317304ab0d7041eabd69e35abeb5f787514f9f",
+      "gzipSha256": "7814a3d98f954b7f0e5fa51530f0dbf42cc0505080b1e5bad060a3b7a0bde062",
+      "bytes": 528684
+    },
+    "travel-abba-B1-898": {
+      "rawSha256": "3cea75ecfb58bda12d3e66a28b40d08b5d79a300b1d17332b47da59c7736657d",
+      "gzipSha256": "8621908e55011acc36a2bdef7349faa6a8ec90156b3d048151fce0640270a00d",
+      "bytes": 525495
+    },
+    "travel-abba-B1-898-disposed": {
+      "rawSha256": "81bdcd116996858e7a319f8535fbcabe3a9f485fb5c544209301f3a395e5199c",
+      "gzipSha256": "0aef25488f8eeee91a3c6deed48ee6d628c42ff52df24669f9c5a91f331c5df5",
+      "bytes": 525538
+    },
+    "travel-abba-B2-899": {
+      "rawSha256": "e23af4d310bc56aef8a241c640d30028d56b17915ec4ccb8c1f1d69587f61724",
+      "gzipSha256": "2fb80862edfb501b88cd084c93414341d3ea58e84b967ba9bde6622353f6a9f6",
+      "bytes": 526731
+    },
+    "travel-abba-B2-899-disposed": {
+      "rawSha256": "65554fd1c2710f6d8d70c3e54b40395f38cacbc4e5006fc4e88dda2c1155fd41",
+      "gzipSha256": "98267543ff02e0a5e071e1c9eea5681c13ef3ae06c46b5b5435a639993d180af",
+      "bytes": 526774
+    },
+    "travel-abba-A2-900": {
+      "rawSha256": "5f2682343a2ce6cd0ca694a1033bdf43c0bcd37f61cf30b12e43deaeb9d0b399",
+      "gzipSha256": "d59cda17a01ab23006f6ee68ff91d39189d96a576e355cf676ded717b6951903",
+      "bytes": 529932
+    },
+    "travel-abba-A2-900-disposed": {
+      "rawSha256": "bf64d64e48356e9a3e4106ab46cd5fc4f737a3e49743bf01a48bfac962b77313",
+      "gzipSha256": "ccc8e4aef7ec65f3bc7d2f01a70cc4d7cef3ed51b21abc74c9aed9feed1461ae",
+      "bytes": 529975
+    }
+  },
+  "matchedSourceHashes": {
+    "tests/browser/streaming-travel.html": {
+      "candidate": "cb417c55403a5dd5b2188fe26a0f4a175001121c669bdffadbff50a6875581ef",
+      "baseline": "cb417c55403a5dd5b2188fe26a0f4a175001121c669bdffadbff50a6875581ef"
+    },
+    "tests/browser/standby-packing-witness.js": {
+      "candidate": "c89219d8b1718f6632f4dd1fae8ac940b37221eeaf2fd062f7d63008a8ccc9c2",
+      "baseline": "c89219d8b1718f6632f4dd1fae8ac940b37221eeaf2fd062f7d63008a8ccc9c2"
+    },
+    "tools/experiments/prepare-native-far-gpu.js": {
+      "candidate": "0840f388b71c52c64e7580918950dbc76ee846197970b1f32e59e3ced56a10d5",
+      "baseline": "0840f388b71c52c64e7580918950dbc76ee846197970b1f32e59e3ced56a10d5"
+    },
+    "tools/experiments/attach-native-far-world.js": {
+      "candidate": "af0d61a62c7e7d84daf5d4dd4bc6c63b921396904cd1401f654e34abdc7aae44",
+      "baseline": "af0d61a62c7e7d84daf5d4dd4bc6c63b921396904cd1401f654e34abdc7aae44"
+    }
+  },
+  "fixtureSha256": "cb417c55403a5dd5b2188fe26a0f4a175001121c669bdffadbff50a6875581ef",
+  "witnessSha256": "c89219d8b1718f6632f4dd1fae8ac940b37221eeaf2fd062f7d63008a8ccc9c2",
+  "rows": [
+    {
+      "name": "travel-abba-A1-897",
+      "frame": {
+        "count": 254,
+        "p50": 50,
+        "p95": 116.39999999999782,
+        "p99": 133.20000000000073,
+        "max": 149.70000000000073,
+        "over33": 185,
+        "over50": 116,
+        "over100": 19
+      },
+      "cpu": {
+        "count": 255,
+        "p50": 19.300000071525574,
+        "p95": 30,
+        "p99": 35.700000047683716,
+        "max": 42.5,
+        "over33": 4,
+        "over50": 0,
+        "over100": 0
+      },
+      "gpu": {
+        "count": 255,
+        "p50": 47.40302,
+        "p95": 68.26927,
+        "max": 87.409842
+      },
+      "roots": {
+        "standby": 111,
+        "native-merged": 104,
+        "other": 12
+      },
+      "standbyEstimatedBytes": 8171592,
+      "camera": [
+        [
+          99.70247532024266,
+          27.89038256621945,
+          30.57367599590944
+        ],
+        [
+          99.70247532024266,
+          21.94468641994898,
+          210.57367599590944
+        ]
+      ],
+      "device": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+        "viewport": [
+          1280,
+          720
+        ],
+        "drawingBuffer": [
+          1600,
+          900
+        ],
+        "dpr": 1.25,
+        "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+      },
+      "finalStream": {
+        "created": 40,
+        "discarded": 0,
+        "failed": 0,
+        "fallbacks": 0,
+        "worker": true,
+        "queued": 0,
+        "busy": false,
+        "epoch": 0
+      },
+      "witness": {
+        "submittedRows": 1,
+        "invalidRows": 0
+      }
+    },
+    {
+      "name": "travel-abba-B1-898",
+      "frame": {
+        "count": 251,
+        "p50": 50,
+        "p95": 116.39999999999782,
+        "p99": 133.10000000000036,
+        "max": 166.40000000000146,
+        "over33": 187,
+        "over50": 125,
+        "over100": 20
+      },
+      "cpu": {
+        "count": 252,
+        "p50": 21.09999990463257,
+        "p95": 33.5,
+        "p99": 40.5,
+        "max": 44.10000002384186,
+        "over33": 14,
+        "over50": 0,
+        "over100": 0
+      },
+      "gpu": {
+        "count": 252,
+        "p50": 47.503437,
+        "p95": 69.226458,
+        "max": 95.522915
+      },
+      "roots": {
+        "standby": 108,
+        "native-merged": 106,
+        "other": 12
+      },
+      "standbyEstimatedBytes": 8197704,
+      "camera": [
+        [
+          99.70247532024266,
+          27.89038256621945,
+          30.57367599590944
+        ],
+        [
+          99.70247532024266,
+          21.94468641994898,
+          210.57367599590944
+        ]
+      ],
+      "device": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+        "viewport": [
+          1280,
+          720
+        ],
+        "drawingBuffer": [
+          1600,
+          900
+        ],
+        "dpr": 1.25,
+        "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+      },
+      "finalStream": {
+        "created": 40,
+        "discarded": 0,
+        "failed": 0,
+        "fallbacks": 0,
+        "worker": true,
+        "queued": 0,
+        "busy": false,
+        "epoch": 0
+      },
+      "witness": {
+        "submittedRows": 1,
+        "invalidRows": 0
+      }
+    },
+    {
+      "name": "travel-abba-B2-899",
+      "frame": {
+        "count": 253,
+        "p50": 50,
+        "p95": 116.40000000000146,
+        "p99": 133.20000000000073,
+        "max": 149.60000000000218,
+        "over33": 172,
+        "over50": 126,
+        "over100": 20
+      },
+      "cpu": {
+        "count": 254,
+        "p50": 20.09999990463257,
+        "p95": 29.100000023841858,
+        "p99": 36.5,
+        "max": 42.199999928474426,
+        "over33": 6,
+        "over50": 0,
+        "over100": 0
+      },
+      "gpu": {
+        "count": 254,
+        "p50": 48.601457,
+        "p95": 70.205937,
+        "max": 79.358593
+      },
+      "roots": {
+        "standby": 108,
+        "native-merged": 104,
+        "other": 12
+      },
+      "standbyEstimatedBytes": 8197704,
+      "camera": [
+        [
+          99.70247532024266,
+          27.89038256621945,
+          30.57367599590944
+        ],
+        [
+          99.70247532024266,
+          21.94468641994898,
+          210.57367599590944
+        ]
+      ],
+      "device": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+        "viewport": [
+          1280,
+          720
+        ],
+        "drawingBuffer": [
+          1600,
+          900
+        ],
+        "dpr": 1.25,
+        "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+      },
+      "finalStream": {
+        "created": 40,
+        "discarded": 0,
+        "failed": 0,
+        "fallbacks": 0,
+        "worker": true,
+        "queued": 0,
+        "busy": false,
+        "epoch": 0
+      },
+      "witness": {
+        "submittedRows": 1,
+        "invalidRows": 0
+      }
+    },
+    {
+      "name": "travel-abba-A2-900",
+      "frame": {
+        "count": 254,
+        "p50": 50,
+        "p95": 116.5,
+        "p99": 133.10000000000582,
+        "max": 149.70000000000437,
+        "over33": 193,
+        "over50": 121,
+        "over100": 20
+      },
+      "cpu": {
+        "count": 255,
+        "p50": 20.600000023841858,
+        "p95": 32.800000071525574,
+        "p99": 37.199999928474426,
+        "max": 44.5,
+        "over33": 10,
+        "over50": 0,
+        "over100": 0
+      },
+      "gpu": {
+        "count": 255,
+        "p50": 47.200833,
+        "p95": 69.049739,
+        "max": 79.165155
+      },
+      "roots": {
+        "standby": 111,
+        "native-merged": 103,
+        "other": 12
+      },
+      "standbyEstimatedBytes": 8197704,
+      "camera": [
+        [
+          99.70247532024266,
+          27.89038256621945,
+          30.57367599590944
+        ],
+        [
+          99.70247532024266,
+          21.94468641994898,
+          210.57367599590944
+        ]
+      ],
+      "device": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+        "viewport": [
+          1280,
+          720
+        ],
+        "drawingBuffer": [
+          1600,
+          900
+        ],
+        "dpr": 1.25,
+        "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+      },
+      "finalStream": {
+        "created": 40,
+        "discarded": 0,
+        "failed": 0,
+        "fallbacks": 0,
+        "worker": true,
+        "queued": 0,
+        "busy": false,
+        "epoch": 0
+      },
+      "witness": {
+        "submittedRows": 1,
+        "invalidRows": 0
+      }
+    }
+  ],
+  "functionalClose": {
+    "requests": 2804,
+    "requestedBytes": 123879470,
+    "replacedBytes": 0,
+    "deletedBytes": 123879470,
+    "liveBytes": 0,
+    "peakBytes": 90036848,
+    "unattributed": 0,
+    "liveBuffers": 0,
+    "scope": "Observed bufferData requests minus replacement/deleteBuffer calls, after probe installation. WebGL errors are not polled. Excludes textures, programs, driver caches, JavaScript heap, earlier allocations and implicit context-loss release. Binding queries add QA overhead; do not use this run for frametime comparisons."
+  },
+  "decision": "Negative frametime result; experimental branch only, no production promotion or successful optimization PR."
+}
