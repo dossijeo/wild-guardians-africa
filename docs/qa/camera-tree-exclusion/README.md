@@ -30,3 +30,5 @@ npm run test:web-package
 ```
 
 The receipt hashes raw uncompressed logs, source and the six biome packs/binaries. It records the runtime base before this optional QA extension; exact post-edit source hashes identify the tested candidate.
+
+A subsequent [native-data CPU registry experiment](cpu-registry/README.md) measures exact indexed/direct query parity and streaming updates across six biomes. It is not a rendered GPU/control benchmark or activation approval.
