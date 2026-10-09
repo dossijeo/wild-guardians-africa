@@ -167,9 +167,13 @@ its negative/positive evidence remain preserved.
 Root's isolated original-environment comparison on `5be52f44` has 3,360 valid
 GPU samples across Sabana and Mangroves. Total mean savings are 13.9% / 16.9%,
 with all four paired total/color differences positive. Shadow-only gains are
-inconsistent. Six before/after visual pairs preserve recognizable trees but
-do not constitute all-model/six-biome/night acceptance. Production side settings
-remain unchanged. See [the reports, captures and verifier](environment-frontside-ceiling/README.md).
+inconsistent. The user accepted the six before/after visual pairs and explicitly
+authorized activation for every biome. `5e51cf45` enables native prop color and
+shadow FrontSide, including their private solid shadow input. 37 directed tests
+and native Front/BACK/CCW smoke checks in all six biomes pass. Full local build is
+pending sufficient disk space; CI 37900756746 / 37900756543 was pending at the
+last observation. These are not new six-biome performance or exhaustive night
+measurements. See [the activation and evidence](environment-frontside-ceiling/production-front/README.md).
 
 The standby-pruning traveling comparison is negative and stays disabled. Shared
 resident preparation also has a completed root native AB/BA comparison on

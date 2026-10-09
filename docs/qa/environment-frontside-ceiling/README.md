@@ -3,7 +3,9 @@
 Root ran the native production WorldScene on Intel UHD Graphics / ANGLE D3D11,
 medium quality, 1280 × 720, seed 712, daytime, with identical fixed inputs.
 Only original biome props and their temporary solid shadow material changed side.
-No models were repaired and production remains unchanged.
+No models were repaired and production was unchanged during this experiment.
+The user's subsequent visual approval and authorized all-biome activation are
+recorded separately in [production activation](production-front/README.md).
 
 | Biome | Total DoubleSide | Total FrontSide | Saving | Main color saving | Shadow saving |
 |---|---:|---:|---:|---:|---:|
@@ -44,7 +46,7 @@ approval nor exhaustive all-species, all-LOD, night, six-biome or moving-camera 
 The measured gain justifies selective activation investigation without assuming
 that every asset needs repair. These observations support the reviewed views;
 they do not approve an unconditional global switch. No production activation
-has been made in this experiment.
+was made in this experiment. The later user-approved activation is separate.
 
 ## Captures
 
