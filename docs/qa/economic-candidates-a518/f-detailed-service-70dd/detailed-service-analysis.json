@@ -1,0 +1,1596 @@
+{
+  "producerSource": "83b1c1eaa0235f9a9b34966f88b496f42eeb161b",
+  "observerFiles": {
+    "service-observation.mjs": "3eb5bd8f2cf7ee46550e28916bd3a35604c3aac24323b44c74cf6ec51e10e677",
+    "trace_frozen_f_service.mjs": "6b922eaa0eb774588d1ef706821b1a68ad2918c4ee92e70cd8b9a2043f2b6b98"
+  },
+  "terminalReceiptSha256": "2e58d0ffcfdda08bdd15b0bcfd8ec7450c222f3d68cef704a50c06a98abe5eb4",
+  "stateParity": true,
+  "first10PrefixExact": true,
+  "gates": {
+    "noDefeatAnd10Nights": true,
+    "physicalLedgerHydration": true,
+    "everyDayPaidStaffDelivery": true,
+    "idleBelow25": false
+  },
+  "activity": {
+    "daylightSeconds": 3000,
+    "unoccupiedSeconds": 1079,
+    "unoccupiedFraction": 0.3596666666666667,
+    "longestIdle": 170,
+    "p90LongestIdle": 163
+  },
+  "measuredWallMs": 134520,
+  "taskKinds": {
+    "initial": {
+      "tasksObserved": 7651,
+      "evidencedCompletionOrPickup": 1520,
+      "removedUnknownCensored": 6131,
+      "stillPresentAtStop": 0,
+      "observedDaylightUnreservedTaskSeconds": {
+        "count": 7651,
+        "median": 1.000000000003638,
+        "p90": 252.9999999997699,
+        "max": 299.000000001075,
+        "sum": 665832.0000010793
+      },
+      "observedDaylightReservedTaskSeconds": {
+        "count": 7651,
+        "median": 0,
+        "p90": 30.00000000010823,
+        "max": 81.00000000029377,
+        "sum": 50658.00000007743
+      },
+      "firstObservedToFirstReservationUpperEndpointSeconds": {
+        "count": 1738,
+        "median": 198.0000000007176,
+        "p90": 273.00000000098953,
+        "max": 298.0000000010814,
+        "sum": 329811.0000005385
+      },
+      "firstObservedToEvidencedRemovalUpperEndpointSeconds": {
+        "count": 1520,
+        "median": 219.99999999980014,
+        "p90": 288.99999999973716,
+        "max": 309.0000000011105,
+        "sum": 316576.0000004835
+      },
+      "longestObservedDaylightUnreserved": [
+        {
+          "id": "task-16995",
+          "targetId": "plant-14534",
+          "createdOrder": 21287,
+          "firstObservedDay": 10,
+          "daylight": {
+            "unreserved": 299.000000001075,
+            "reserved": 0,
+            "blocked": 0
+          },
+          "removal": {
+            "interval": [
+              5916.000000003271,
+              5917.000000003275
+            ],
+            "evidence": null,
+            "outcome": "unknown-censored-removal"
+          }
+        },
+        {
+          "id": "task-16996",
+          "targetId": "plant-14537",
+          "createdOrder": 21288,
+          "firstObservedDay": 10,
+          "daylight": {
+            "unreserved": 299.000000001075,
+            "reserved": 0,
+            "blocked": 0
+          },
+          "removal": {
+            "interval": [
+              5916.000000003271,
+              5917.000000003275
+            ],
+            "evidence": null,
+            "outcome": "unknown-censored-removal"
+          }
+        },
+        {
+          "id": "task-16997",
+          "targetId": "plant-14542",
+          "createdOrder": 21289,
+          "firstObservedDay": 10,
+          "daylight": {
+            "unreserved": 299.000000001075,
+            "reserved": 0,
+            "blocked": 0
+          },
+          "removal": {
+            "interval": [
+              5916.000000003271,
+              5917.000000003275
+            ],
+            "evidence": null,
+            "outcome": "unknown-censored-removal"
+          }
+        },
+        {
+          "id": "task-16998",
+          "targetId": "plant-14545",
+          "createdOrder": 21290,
+          "firstObservedDay": 10,
+          "daylight": {
+            "unreserved": 299.000000001075,
+            "reserved": 0,
+            "blocked": 0
+          },
+          "removal": {
+            "interval": [
+              5916.000000003271,
+              5917.000000003275
+            ],
+            "evidence": null,
+            "outcome": "unknown-censored-removal"
+          }
+        },
+        {
+          "id": "task-16999",
+          "targetId": "plant-14548",
+          "createdOrder": 21291,
+          "firstObservedDay": 10,
+          "daylight": {
+            "unreserved": 299.000000001075,
+            "reserved": 0,
+            "blocked": 0
+          },
+          "removal": {
+            "interval": [
+              5916.000000003271,
+              5917.000000003275
+            ],
+            "evidence": null,
+            "outcome": "unknown-censored-removal"
+          }
+        }
+      ]
+    },
+    "water": {
+      "tasksObserved": 4532,
+      "evidencedCompletionOrPickup": 1061,
+      "removedUnknownCensored": 3471,
+      "stillPresentAtStop": 0,
+      "observedDaylightUnreservedTaskSeconds": {
+        "count": 4532,
+        "median": 1.000000000003638,
+        "p90": 231.00000000082855,
+        "max": 299.000000001075,
+        "sum": 282212.00000037433
+      },
+      "observedDaylightReservedTaskSeconds": {
+        "count": 4532,
+        "median": 0.0,
+        "p90": 25.999999999976353,
+        "max": 67.00000000024284,
+        "sum": 25710.000000030414
+      },
+      "firstObservedToFirstReservationUpperEndpointSeconds": {
+        "count": 1090,
+        "median": 81.00000000029377,
+        "p90": 198.999999999819,
+        "max": 287.99999999973807,
+        "sum": 109948.00000008995
+      },
+      "firstObservedToEvidencedRemovalUpperEndpointSeconds": {
+        "count": 1061,
+        "median": 108.99999999990087,
+        "p90": 216.99999999980264,
+        "max": 294.9999999997317,
+        "sum": 127766.00000012771
+      },
+      "longestObservedDaylightUnreserved": [
+        {
+          "id": "task-17046",
+          "targetId": "plant-11142",
+          "createdOrder": 21340,
+          "firstObservedDay": 10,
+          "daylight": {
+            "unreserved": 299.000000001075,
+            "reserved": 0,
+            "blocked": 0
+          },
+          "removal": {
+            "interval": [
+              5916.000000003271,
+              5917.000000003275
+            ],
+            "evidence": null,
+            "outcome": "unknown-censored-removal"
+          }
+        },
+        {
+          "id": "task-17047",
+          "targetId": "plant-11325",
+          "createdOrder": 21341,
+          "firstObservedDay": 10,
+          "daylight": {
+            "unreserved": 299.000000001075,
+            "reserved": 0,
+            "blocked": 0
+          },
+          "removal": {
+            "interval": [
+              5916.000000003271,
+              5917.000000003275
+            ],
+            "evidence": null,
+            "outcome": "unknown-censored-removal"
+          }
+        },
+        {
+          "id": "task-17048",
+          "targetId": "plant-11309",
+          "createdOrder": 21342,
+          "firstObservedDay": 10,
+          "daylight": {
+            "unreserved": 299.000000001075,
+            "reserved": 0,
+            "blocked": 0
+          },
+          "removal": {
+            "interval": [
+              5916.000000003271,
+              5917.000000003275
+            ],
+            "evidence": null,
+            "outcome": "unknown-censored-removal"
+          }
+        },
+        {
+          "id": "task-13692",
+          "targetId": "plant-6322",
+          "createdOrder": 17336,
+          "firstObservedDay": 9,
+          "daylight": {
+            "unreserved": 299.0000000010741,
+            "reserved": 0,
+            "blocked": 0
+          },
+          "removal": {
+            "interval": [
+              5237.000000000882,
+              5238.000000000886
+            ],
+            "evidence": null,
+            "outcome": "unknown-censored-removal"
+          }
+        },
+        {
+          "id": "task-8172",
+          "targetId": "plant-4369",
+          "createdOrder": 10323,
+          "firstObservedDay": 7,
+          "daylight": {
+            "unreserved": 298.9999999997185,
+            "reserved": 0,
+            "blocked": 0
+          },
+          "removal": {
+            "interval": [
+              4115.999999996969,
+              4116.999999996972
+            ],
+            "evidence": null,
+            "outcome": "unknown-censored-removal"
+          }
+        }
+      ]
+    },
+    "harvest": {
+      "tasksObserved": 3738,
+      "evidencedCompletionOrPickup": 830,
+      "removedUnknownCensored": 2908,
+      "stillPresentAtStop": 0,
+      "observedDaylightUnreservedTaskSeconds": {
+        "count": 3738,
+        "median": 1.000000000003638,
+        "p90": 216.00000000077398,
+        "max": 298.9999999997185,
+        "sum": 220971.00000026412
+      },
+      "observedDaylightReservedTaskSeconds": {
+        "count": 3738,
+        "median": 0.0,
+        "p90": 22.99999999997908,
+        "max": 53.0000000001919,
+        "sum": 18425.000000028533
+      },
+      "firstObservedToFirstReservationUpperEndpointSeconds": {
+        "count": 849,
+        "median": 40.00000000014461,
+        "p90": 130.00000000047112,
+        "max": 270.999999999754,
+        "sum": 45368.000000034146
+      },
+      "firstObservedToEvidencedRemovalUpperEndpointSeconds": {
+        "count": 830,
+        "median": 53.500000000071395,
+        "p90": 140.0000000005075,
+        "max": 282.9999999997335,
+        "sum": 58915.00000006721
+      },
+      "longestObservedDaylightUnreserved": [
+        {
+          "id": "task-8171",
+          "targetId": "plant-2655",
+          "createdOrder": 10322,
+          "firstObservedDay": 7,
+          "daylight": {
+            "unreserved": 298.9999999997185,
+            "reserved": 0,
+            "blocked": 0
+          },
+          "removal": {
+            "interval": [
+              4115.999999996969,
+              4116.999999996972
+            ],
+            "evidence": null,
+            "outcome": "unknown-censored-removal"
+          }
+        },
+        {
+          "id": "task-17104",
+          "targetId": "plant-6322",
+          "createdOrder": 21401,
+          "firstObservedDay": 10,
+          "daylight": {
+            "unreserved": 286.00000000102773,
+            "reserved": 0,
+            "blocked": 0
+          },
+          "removal": {
+            "interval": [
+              5916.000000003271,
+              5917.000000003275
+            ],
+            "evidence": null,
+            "outcome": "unknown-censored-removal"
+          }
+        },
+        {
+          "id": "task-13728",
+          "targetId": "plant-4557",
+          "createdOrder": 17375,
+          "firstObservedDay": 9,
+          "daylight": {
+            "unreserved": 286.0000000010268,
+            "reserved": 0,
+            "blocked": 0
+          },
+          "removal": {
+            "interval": [
+              5237.000000000882,
+              5238.000000000886
+            ],
+            "evidence": null,
+            "outcome": "unknown-censored-removal"
+          }
+        },
+        {
+          "id": "task-17108",
+          "targetId": "plant-6202",
+          "createdOrder": 21408,
+          "firstObservedDay": 10,
+          "daylight": {
+            "unreserved": 285.0000000010241,
+            "reserved": 0,
+            "blocked": 0
+          },
+          "removal": {
+            "interval": [
+              5916.000000003271,
+              5917.000000003275
+            ],
+            "evidence": null,
+            "outcome": "unknown-censored-removal"
+          }
+        },
+        {
+          "id": "task-8198",
+          "targetId": "plant-4306",
+          "createdOrder": 10351,
+          "firstObservedDay": 7,
+          "daylight": {
+            "unreserved": 280.9999999997349,
+            "reserved": 0,
+            "blocked": 0
+          },
+          "removal": {
+            "interval": [
+              4115.999999996969,
+              4116.999999996972
+            ],
+            "evidence": null,
+            "outcome": "unknown-censored-removal"
+          }
+        }
+      ]
+    },
+    "crate": {
+      "tasksObserved": 0,
+      "evidencedCompletionOrPickup": 0,
+      "removedUnknownCensored": 0,
+      "stillPresentAtStop": 0,
+      "observedDaylightUnreservedTaskSeconds": {
+        "count": 0,
+        "median": null,
+        "p90": null,
+        "max": null,
+        "sum": 0
+      },
+      "observedDaylightReservedTaskSeconds": {
+        "count": 0,
+        "median": null,
+        "p90": null,
+        "max": null,
+        "sum": 0
+      },
+      "firstObservedToFirstReservationUpperEndpointSeconds": {
+        "count": 0,
+        "median": null,
+        "p90": null,
+        "max": null,
+        "sum": 0
+      },
+      "firstObservedToEvidencedRemovalUpperEndpointSeconds": {
+        "count": 0,
+        "median": null,
+        "p90": null,
+        "max": null,
+        "sum": 0
+      },
+      "longestObservedDaylightUnreserved": []
+    },
+    "repair": {
+      "tasksObserved": 1,
+      "evidencedCompletionOrPickup": 0,
+      "removedUnknownCensored": 1,
+      "stillPresentAtStop": 0,
+      "observedDaylightUnreservedTaskSeconds": {
+        "count": 1,
+        "median": 299.000000001075,
+        "p90": 299.000000001075,
+        "max": 299.000000001075,
+        "sum": 299.000000001075
+      },
+      "observedDaylightReservedTaskSeconds": {
+        "count": 1,
+        "median": 0,
+        "p90": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "firstObservedToFirstReservationUpperEndpointSeconds": {
+        "count": 0,
+        "median": null,
+        "p90": null,
+        "max": null,
+        "sum": 0
+      },
+      "firstObservedToEvidencedRemovalUpperEndpointSeconds": {
+        "count": 0,
+        "median": null,
+        "p90": null,
+        "max": null,
+        "sum": 0
+      },
+      "longestObservedDaylightUnreserved": [
+        {
+          "id": "task-17041",
+          "targetId": "structure-2",
+          "createdOrder": 21334,
+          "firstObservedDay": 10,
+          "daylight": {
+            "unreserved": 299.000000001075,
+            "reserved": 0,
+            "blocked": 0
+          },
+          "removal": {
+            "interval": [
+              5880.0000000031405,
+              5885.000000003159
+            ],
+            "evidence": null,
+            "outcome": "unknown-censored-removal"
+          }
+        }
+      ]
+    }
+  },
+  "days": [
+    {
+      "day": 1,
+      "contiguousDaylightSeconds": 298.99999999999005,
+      "phaseActorSeconds": {
+        "arriving:none": 10.000000000000002,
+        "walking:initial": 506.99999999997044,
+        "acting:initial": 348.99999999998886,
+        "walking:water": 480.9999999999758,
+        "acting:water": 147.999999999997,
+        "walking:harvest": 206.00000000001347,
+        "acting:harvest": 73.9999999999898,
+        "carrying:crate": 19.000000000003467
+      },
+      "movement": {
+        "arriving:none": {
+          "observedActorSeconds": 10.000000000000002,
+          "displacementMetres": 10.800000000000022,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 0,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "walking:initial": {
+          "observedActorSeconds": 506.99999999997044,
+          "displacementMetres": 845.6095220619662,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 1.9999999999999574,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "acting:initial": {
+          "observedActorSeconds": 348.99999999998886,
+          "displacementMetres": 39.84271712833631,
+          "zeroDisplacementSeconds": 304.99999999999034,
+          "pathNullSeconds": 0,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "walking:water": {
+          "observedActorSeconds": 480.9999999999758,
+          "displacementMetres": 491.1719756822454,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 4.999999999999716,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "acting:water": {
+          "observedActorSeconds": 147.999999999997,
+          "displacementMetres": 17.043704381045007,
+          "zeroDisplacementSeconds": 106.9999999999979,
+          "pathNullSeconds": 0,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "walking:harvest": {
+          "observedActorSeconds": 206.00000000001347,
+          "displacementMetres": 209.23050838380615,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 2.0000000000001705,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "acting:harvest": {
+          "observedActorSeconds": 73.9999999999898,
+          "displacementMetres": 8.649981990196508,
+          "zeroDisplacementSeconds": 56.9999999999973,
+          "pathNullSeconds": 0,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "carrying:crate": {
+          "observedActorSeconds": 19.000000000003467,
+          "displacementMetres": 16.88993825618634,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 3.000000000000398,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        }
+      },
+      "taskQueueActorSeconds": {
+        "initial:reserved": 855.9999999999761,
+        "initial:unreserved": 4846.999999999528,
+        "water:unreserved": 1840.999999999991,
+        "water:reserved": 628.9999999999758,
+        "harvest:unreserved": 2434.999999999915,
+        "harvest:reserved": 280.0000000000033
+      },
+      "peaks": {
+        "initial:reserved": 6,
+        "initial:unreserved": 54,
+        "water:unreserved": 19,
+        "water:reserved": 6,
+        "harvest:unreserved": 26,
+        "harvest:reserved": 5
+      },
+      "firstObservedDelivery": {
+        "time": 216.99999999999196,
+        "interval": [
+          215.999999999992,
+          216.99999999999196
+        ]
+      }
+    },
+    {
+      "day": 2,
+      "contiguousDaylightSeconds": 300.00000000005855,
+      "phaseActorSeconds": {
+        "walking:harvest": 279.00000000006344,
+        "acting:harvest": 86.00000000001955,
+        "carrying:crate": 68.00000000001546,
+        "walking:water": 20.000000000004547,
+        "acting:water": 10.000000000002274,
+        "walking:initial": 1062.0000000002024,
+        "acting:initial": 568.0000000001002
+      },
+      "movement": {
+        "walking:harvest": {
+          "observedActorSeconds": 279.00000000006344,
+          "displacementMetres": 634.90968545266,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 4.0000000000009095,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "acting:harvest": {
+          "observedActorSeconds": 86.00000000001955,
+          "displacementMetres": 10.478354230640404,
+          "zeroDisplacementSeconds": 64.00000000001455,
+          "pathNullSeconds": 0,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "carrying:crate": {
+          "observedActorSeconds": 68.00000000001546,
+          "displacementMetres": 79.5710789867454,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 2.0000000000004547,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "walking:water": {
+          "observedActorSeconds": 20.000000000004547,
+          "displacementMetres": 31.154450790222715,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 0,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "acting:water": {
+          "observedActorSeconds": 10.000000000002274,
+          "displacementMetres": 1.1880000000000095,
+          "zeroDisplacementSeconds": 7.000000000001592,
+          "pathNullSeconds": 0,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "walking:initial": {
+          "observedActorSeconds": 1062.0000000002024,
+          "displacementMetres": 1122.953964937349,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 12.000000000002728,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "acting:initial": {
+          "observedActorSeconds": 568.0000000001002,
+          "displacementMetres": 35.96123715551174,
+          "zeroDisplacementSeconds": 502.0000000000948,
+          "pathNullSeconds": 0,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        }
+      },
+      "taskQueueActorSeconds": {
+        "harvest:unreserved": 1416.0000000002929,
+        "water:unreserved": 4699.9999999999745,
+        "initial:unreserved": 36484.999999999694,
+        "harvest:reserved": 365.000000000083,
+        "water:reserved": 30.00000000000682,
+        "initial:reserved": 1630.0000000003024
+      },
+      "peaks": {
+        "harvest:unreserved": 24,
+        "water:unreserved": 54,
+        "initial:unreserved": 156,
+        "harvest:reserved": 7,
+        "water:reserved": 3,
+        "initial:reserved": 7
+      },
+      "firstObservedDelivery": {
+        "time": 26.0000000000001,
+        "interval": [
+          624.9999999999958,
+          625.999999999996
+        ]
+      }
+    },
+    {
+      "day": 3,
+      "contiguousDaylightSeconds": 299.99999999971783,
+      "phaseActorSeconds": {
+        "walking:harvest": 665.9999999993465,
+        "walking:water": 826.9999999992096,
+        "acting:water": 224.99999999979536,
+        "acting:harvest": 158.9999999998363,
+        "carrying:crate": 121.9999999998413,
+        "walking:initial": 1996.9999999981865,
+        "acting:initial": 787.9999999992842
+      },
+      "movement": {
+        "walking:harvest": {
+          "observedActorSeconds": 665.9999999993465,
+          "displacementMetres": 778.2424741780724,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 1.999999999998181,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "walking:water": {
+          "observedActorSeconds": 826.9999999992096,
+          "displacementMetres": 1508.9504463541589,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 4.9999999999954525,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "acting:water": {
+          "observedActorSeconds": 224.99999999979536,
+          "displacementMetres": 57.89250537919014,
+          "zeroDisplacementSeconds": 164.99999999984993,
+          "pathNullSeconds": 0,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "acting:harvest": {
+          "observedActorSeconds": 158.9999999998363,
+          "displacementMetres": 19.46911156602059,
+          "zeroDisplacementSeconds": 118.99999999987267,
+          "pathNullSeconds": 0,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "carrying:crate": {
+          "observedActorSeconds": 121.9999999998413,
+          "displacementMetres": 125.35793635147765,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 3.999999999996362,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "walking:initial": {
+          "observedActorSeconds": 1996.9999999981865,
+          "displacementMetres": 2215.7386564775766,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 10.999999999989996,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "acting:initial": {
+          "observedActorSeconds": 787.9999999992842,
+          "displacementMetres": 52.37890119504064,
+          "zeroDisplacementSeconds": 686.9999999993759,
+          "pathNullSeconds": 0,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        }
+      },
+      "taskQueueActorSeconds": {
+        "harvest:unreserved": 13880.999999992222,
+        "water:unreserved": 15330.999999991502,
+        "initial:unreserved": 13032.99999999232,
+        "harvest:reserved": 824.9999999991828,
+        "water:reserved": 1051.999999999005,
+        "initial:reserved": 2784.999999997467
+      },
+      "peaks": {
+        "harvest:unreserved": 58,
+        "water:unreserved": 100,
+        "initial:unreserved": 109,
+        "harvest:reserved": 13,
+        "water:reserved": 16,
+        "initial:reserved": 16
+      },
+      "firstObservedDelivery": {
+        "time": 26.0000000000001,
+        "interval": [
+          1224.9999999998258,
+          1225.999999999825
+        ]
+      }
+    },
+    {
+      "day": 4,
+      "contiguousDaylightSeconds": 299.99999999971806,
+      "phaseActorSeconds": {
+        "walking:harvest": 608.9999999994366,
+        "acting:harvest": 135.99999999986676,
+        "carrying:crate": 154.9999999998497,
+        "walking:water": 1881.9999999982906,
+        "acting:water": 362.99999999967076,
+        "walking:initial": 714.9999999992656,
+        "acting:initial": 325.99999999968554
+      },
+      "movement": {
+        "walking:harvest": {
+          "observedActorSeconds": 608.9999999994366,
+          "displacementMetres": 1186.827343155946,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 4.9999999999954525,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "acting:harvest": {
+          "observedActorSeconds": 135.99999999986676,
+          "displacementMetres": 18.132916850111222,
+          "zeroDisplacementSeconds": 102.99999999989677,
+          "pathNullSeconds": 0,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "carrying:crate": {
+          "observedActorSeconds": 154.9999999998497,
+          "displacementMetres": 174.1162970907333,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 2.9999999999972715,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "walking:water": {
+          "observedActorSeconds": 1881.9999999982906,
+          "displacementMetres": 2191.000893527216,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 12.999999999988177,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "acting:water": {
+          "observedActorSeconds": 362.99999999967076,
+          "displacementMetres": 61.20129321759791,
+          "zeroDisplacementSeconds": 270.999999999754,
+          "pathNullSeconds": 0,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "walking:initial": {
+          "observedActorSeconds": 714.9999999992656,
+          "displacementMetres": 743.4421862324477,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 6.9999999999936335,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "acting:initial": {
+          "observedActorSeconds": 325.99999999968554,
+          "displacementMetres": 20.95200000000006,
+          "zeroDisplacementSeconds": 284.99999999973215,
+          "pathNullSeconds": 0,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        }
+      },
+      "taskQueueActorSeconds": {
+        "harvest:unreserved": 19820.99999999138,
+        "water:unreserved": 11904.999999992506,
+        "initial:unreserved": 46749.99999999102,
+        "harvest:reserved": 744.9999999993033,
+        "water:reserved": 2244.999999997961,
+        "initial:reserved": 1040.9999999989511
+      },
+      "peaks": {
+        "harvest:unreserved": 108,
+        "water:unreserved": 106,
+        "initial:unreserved": 239,
+        "harvest:reserved": 14,
+        "water:reserved": 14,
+        "initial:reserved": 14
+      },
+      "firstObservedDelivery": {
+        "time": 26.0000000000001,
+        "interval": [
+          1824.9999999992028,
+          1825.999999999202
+        ]
+      }
+    },
+    {
+      "day": 5,
+      "contiguousDaylightSeconds": 299.9999999997176,
+      "phaseActorSeconds": {
+        "walking:harvest": 1714.9999999984402,
+        "acting:harvest": 392.99999999964257,
+        "carrying:crate": 984.9999999991041,
+        "walking:water": 88.99999999984266,
+        "acting:water": 13.999999999987267,
+        "walking:initial": 4651.9999999956,
+        "acting:initial": 1420.9999999986503
+      },
+      "movement": {
+        "walking:harvest": {
+          "observedActorSeconds": 1714.9999999984402,
+          "displacementMetres": 3478.1425678084033,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 6.9999999999936335,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "acting:harvest": {
+          "observedActorSeconds": 392.99999999964257,
+          "displacementMetres": 54.35290845174831,
+          "zeroDisplacementSeconds": 295.9999999997308,
+          "pathNullSeconds": 0,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "carrying:crate": {
+          "observedActorSeconds": 984.9999999991041,
+          "displacementMetres": 1062.3226641603758,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 10.999999999989996,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "walking:water": {
+          "observedActorSeconds": 88.99999999984266,
+          "displacementMetres": 100.77742878757245,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 1.999999999998181,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "acting:water": {
+          "observedActorSeconds": 13.999999999987267,
+          "displacementMetres": 2.07599999999999,
+          "zeroDisplacementSeconds": 10.999999999989996,
+          "pathNullSeconds": 0,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "walking:initial": {
+          "observedActorSeconds": 4651.9999999956,
+          "displacementMetres": 4918.721419773636,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 17.99999999998363,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "acting:initial": {
+          "observedActorSeconds": 1420.9999999986503,
+          "displacementMetres": 94.97491997969591,
+          "zeroDisplacementSeconds": 1245.9999999988095,
+          "pathNullSeconds": 0,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        }
+      },
+      "taskQueueActorSeconds": {
+        "harvest:unreserved": 6093.9999999942775,
+        "water:unreserved": 16853.999999991032,
+        "initial:unreserved": 73146.99999998907,
+        "harvest:reserved": 2107.999999998083,
+        "water:reserved": 102.99999999982992,
+        "initial:reserved": 6072.9999999942465
+      },
+      "peaks": {
+        "harvest:unreserved": 108,
+        "water:unreserved": 147,
+        "initial:unreserved": 260,
+        "harvest:reserved": 31,
+        "water:reserved": 8,
+        "initial:reserved": 31
+      },
+      "firstObservedDelivery": {
+        "time": 26.0000000000001,
+        "interval": [
+          2424.99999999858,
+          2425.999999998579
+        ]
+      }
+    },
+    {
+      "day": 6,
+      "contiguousDaylightSeconds": 299.99999999971806,
+      "phaseActorSeconds": {
+        "walking:harvest": 370.999999999548,
+        "walking:water": 2818.9999999972833,
+        "acting:water": 537.9999999995011,
+        "acting:harvest": 63.99999999994179,
+        "carrying:crate": 188.9999999998281,
+        "walking:initial": 6741.9999999937645,
+        "acting:initial": 1834.9999999983256
+      },
+      "movement": {
+        "walking:harvest": {
+          "observedActorSeconds": 370.999999999548,
+          "displacementMetres": 729.3041533899068,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 0,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "walking:water": {
+          "observedActorSeconds": 2818.9999999972833,
+          "displacementMetres": 4898.096133885416,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 23.999999999978172,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "acting:water": {
+          "observedActorSeconds": 537.9999999995011,
+          "displacementMetres": 131.12204338688514,
+          "zeroDisplacementSeconds": 404.9999999996221,
+          "pathNullSeconds": 0,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "acting:harvest": {
+          "observedActorSeconds": 63.99999999994179,
+          "displacementMetres": 9.434397825571054,
+          "zeroDisplacementSeconds": 46.999999999957254,
+          "pathNullSeconds": 0,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "carrying:crate": {
+          "observedActorSeconds": 188.9999999998281,
+          "displacementMetres": 205.27170903585946,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 0.9999999999990905,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "walking:initial": {
+          "observedActorSeconds": 6741.9999999937645,
+          "displacementMetres": 7172.485176955413,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 20.9999999999809,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "acting:initial": {
+          "observedActorSeconds": 1834.9999999983256,
+          "displacementMetres": 124.78588915456487,
+          "zeroDisplacementSeconds": 1601.999999998537,
+          "pathNullSeconds": 0,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        }
+      },
+      "taskQueueActorSeconds": {
+        "harvest:unreserved": 39124.99999999138,
+        "water:unreserved": 35160.999999991036,
+        "initial:unreserved": 64009.999999991865,
+        "harvest:reserved": 434.9999999994898,
+        "water:reserved": 3356.9999999967845,
+        "initial:reserved": 8576.999999992426
+      },
+      "peaks": {
+        "harvest:unreserved": 173,
+        "water:unreserved": 225,
+        "initial:unreserved": 299,
+        "harvest:reserved": 12,
+        "water:reserved": 39,
+        "initial:reserved": 42
+      },
+      "firstObservedDelivery": {
+        "time": 26.0000000000001,
+        "interval": [
+          3024.999999997957,
+          3025.999999997956
+        ]
+      }
+    },
+    {
+      "day": 7,
+      "contiguousDaylightSeconds": 299.9999999997176,
+      "phaseActorSeconds": {
+        "walking:harvest": 3154.9999999971305,
+        "acting:harvest": 626.9999999994297,
+        "carrying:crate": 1939.9999999982356,
+        "walking:water": 5735.999999994783,
+        "acting:water": 767.9999999993015,
+        "walking:initial": 2037.9999999977836,
+        "acting:initial": 386.999999999543
+      },
+      "movement": {
+        "walking:harvest": {
+          "observedActorSeconds": 3154.9999999971305,
+          "displacementMetres": 5996.268332038556,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 15.999999999985448,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "acting:harvest": {
+          "observedActorSeconds": 626.9999999994297,
+          "displacementMetres": 94.51408813921687,
+          "zeroDisplacementSeconds": 468.99999999957345,
+          "pathNullSeconds": 0,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "carrying:crate": {
+          "observedActorSeconds": 1939.9999999982356,
+          "displacementMetres": 2094.1850697861455,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 11.999999999989086,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "walking:water": {
+          "observedActorSeconds": 5735.999999994783,
+          "displacementMetres": 6105.729871606888,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 28.999999999973625,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "acting:water": {
+          "observedActorSeconds": 767.9999999993015,
+          "displacementMetres": 115.41599999999903,
+          "zeroDisplacementSeconds": 567.9999999994834,
+          "pathNullSeconds": 0,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "walking:initial": {
+          "observedActorSeconds": 2037.9999999977836,
+          "displacementMetres": 2161.2149036422115,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 4.999999999985903,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "acting:initial": {
+          "observedActorSeconds": 386.999999999543,
+          "displacementMetres": 22.572000000000266,
+          "zeroDisplacementSeconds": 342.99999999959255,
+          "pathNullSeconds": 0,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        }
+      },
+      "taskQueueActorSeconds": {
+        "harvest:unreserved": 34347.99999999086,
+        "water:unreserved": 56282.999999992,
+        "initial:unreserved": 62140.99999999072,
+        "harvest:reserved": 3781.9999999965603,
+        "water:reserved": 6503.999999994085,
+        "initial:reserved": 2424.9999999973265
+      },
+      "peaks": {
+        "harvest:unreserved": 232,
+        "water:unreserved": 299,
+        "initial:unreserved": 300,
+        "harvest:reserved": 49,
+        "water:reserved": 49,
+        "initial:reserved": 49
+      },
+      "firstObservedDelivery": {
+        "time": 26.0000000000001,
+        "interval": [
+          3624.9999999973343,
+          3625.9999999973334
+        ]
+      }
+    },
+    {
+      "day": 8,
+      "contiguousDaylightSeconds": 300.00000000107775,
+      "phaseActorSeconds": {
+        "walking:harvest": 4272.000000015484,
+        "acting:harvest": 835.0000000030304,
+        "carrying:crate": 3587.000000013002,
+        "walking:water": 2239.0000000081036,
+        "acting:water": 258.00000000093405,
+        "walking:initial": 4245.000000014988,
+        "acting:initial": 1009.0000000035343
+      },
+      "movement": {
+        "walking:harvest": {
+          "observedActorSeconds": 4272.000000015484,
+          "displacementMetres": 7513.863730919905,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 22.000000000080036,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "acting:harvest": {
+          "observedActorSeconds": 835.0000000030304,
+          "displacementMetres": 116.20212112936284,
+          "zeroDisplacementSeconds": 624.0000000022637,
+          "pathNullSeconds": 0,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "carrying:crate": {
+          "observedActorSeconds": 3587.000000013002,
+          "displacementMetres": 3866.120194056143,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 21.000000000075488,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "walking:water": {
+          "observedActorSeconds": 2239.0000000081036,
+          "displacementMetres": 2384.5641799348077,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 8.000000000029104,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "acting:water": {
+          "observedActorSeconds": 258.00000000093405,
+          "displacementMetres": 36.719999999999445,
+          "zeroDisplacementSeconds": 189.00000000068758,
+          "pathNullSeconds": 0,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "walking:initial": {
+          "observedActorSeconds": 4245.000000014988,
+          "displacementMetres": 4495.8122423602845,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 22.000000000080036,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "acting:initial": {
+          "observedActorSeconds": 1009.0000000035343,
+          "displacementMetres": 63.39600000000001,
+          "zeroDisplacementSeconds": 892.0000000031087,
+          "pathNullSeconds": 0,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        }
+      },
+      "taskQueueActorSeconds": {
+        "harvest:unreserved": 22849.000000082124,
+        "water:unreserved": 26619.000000095904,
+        "initial:unreserved": 118445.00000011921,
+        "harvest:reserved": 5107.000000018515,
+        "water:reserved": 2497.0000000090376,
+        "initial:reserved": 5254.000000018522
+      },
+      "peaks": {
+        "harvest:unreserved": 232,
+        "water:unreserved": 135,
+        "initial:unreserved": 466,
+        "harvest:reserved": 55,
+        "water:reserved": 44,
+        "initial:reserved": 55
+      },
+      "firstObservedDelivery": {
+        "time": 29.000000000000142,
+        "interval": [
+          4227.999999997308,
+          4228.9999999973115
+        ]
+      }
+    },
+    {
+      "day": 9,
+      "contiguousDaylightSeconds": 300.00000000107775,
+      "phaseActorSeconds": {
+        "walking:harvest": 1806.0000000065447,
+        "walking:water": 1681.0000000061118,
+        "acting:harvest": 278.0000000010077,
+        "acting:water": 276.00000000100226,
+        "carrying:crate": 1824.000000006612,
+        "walking:initial": 9051.00000003237,
+        "acting:initial": 2426.000000008612
+      },
+      "movement": {
+        "walking:harvest": {
+          "observedActorSeconds": 1806.0000000065447,
+          "displacementMetres": 4243.082586393332,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 4.000000000014552,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "walking:water": {
+          "observedActorSeconds": 1681.0000000061118,
+          "displacementMetres": 2495.981855689146,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 9.000000000032742,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "acting:harvest": {
+          "observedActorSeconds": 278.0000000010077,
+          "displacementMetres": 36.072000000000216,
+          "zeroDisplacementSeconds": 209.0000000007567,
+          "pathNullSeconds": 0,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "acting:water": {
+          "observedActorSeconds": 276.00000000100226,
+          "displacementMetres": 57.17829112666256,
+          "zeroDisplacementSeconds": 202.00000000073396,
+          "pathNullSeconds": 0,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "carrying:crate": {
+          "observedActorSeconds": 1824.000000006612,
+          "displacementMetres": 1988.4360354101937,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 8.000000000029104,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "walking:initial": {
+          "observedActorSeconds": 9051.00000003237,
+          "displacementMetres": 9757.734864342345,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 39.00000000014188,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "acting:initial": {
+          "observedActorSeconds": 2426.000000008612,
+          "displacementMetres": 166.5750465203753,
+          "zeroDisplacementSeconds": 2136.0000000075697,
+          "pathNullSeconds": 0,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        }
+      },
+      "taskQueueActorSeconds": {
+        "harvest:unreserved": 19999.000000071603,
+        "water:unreserved": 47027.00000011694,
+        "initial:unreserved": 125532.00000011921,
+        "harvest:reserved": 2084.0000000075524,
+        "water:reserved": 1957.000000007114,
+        "initial:reserved": 11477.000000040967
+      },
+      "peaks": {
+        "harvest:unreserved": 97,
+        "water:unreserved": 298,
+        "initial:unreserved": 491,
+        "harvest:reserved": 58,
+        "water:reserved": 50,
+        "initial:reserved": 58
+      },
+      "firstObservedDelivery": {
+        "time": 38.00000000000011,
+        "interval": [
+          4836.99999999944,
+          4837.999999999443
+        ]
+      }
+    },
+    {
+      "day": 10,
+      "contiguousDaylightSeconds": 300.00000000107866,
+      "phaseActorSeconds": {
+        "walking:harvest": 2343.000000008489,
+        "walking:water": 6323.000000022937,
+        "acting:harvest": 351.0000000012715,
+        "acting:water": 1013.0000000036798,
+        "carrying:crate": 1855.000000006724,
+        "walking:initial": 8867.000000031494,
+        "acting:initial": 1673.0000000059727
+      },
+      "movement": {
+        "walking:harvest": {
+          "observedActorSeconds": 2343.000000008489,
+          "displacementMetres": 5126.715315742872,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 3.000000000010914,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "walking:water": {
+          "observedActorSeconds": 6323.000000022937,
+          "displacementMetres": 8164.847609966797,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 31.000000000112777,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "acting:harvest": {
+          "observedActorSeconds": 351.0000000012715,
+          "displacementMetres": 50.358974039093695,
+          "zeroDisplacementSeconds": 260.0000000009413,
+          "pathNullSeconds": 0,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "acting:water": {
+          "observedActorSeconds": 1013.0000000036798,
+          "displacementMetres": 200.3610376218111,
+          "zeroDisplacementSeconds": 748.0000000027176,
+          "pathNullSeconds": 0,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "carrying:crate": {
+          "observedActorSeconds": 1855.000000006724,
+          "displacementMetres": 2018.5442661382135,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 6.000000000021828,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "walking:initial": {
+          "observedActorSeconds": 8867.000000031494,
+          "displacementMetres": 9433.018152402648,
+          "zeroDisplacementSeconds": 0,
+          "pathNullSeconds": 35.000000000116415,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        },
+        "acting:initial": {
+          "observedActorSeconds": 1673.0000000059727,
+          "displacementMetres": 107.78399999999985,
+          "zeroDisplacementSeconds": 1471.0000000052587,
+          "pathNullSeconds": 0,
+          "gateWaitingSeconds": 0,
+          "fallSeconds": 0
+        }
+      },
+      "taskQueueActorSeconds": {
+        "harvest:unreserved": 61003.00000011695,
+        "water:unreserved": 66491.00000011921,
+        "initial:unreserved": 121442.00000011921,
+        "harvest:reserved": 2694.0000000097607,
+        "water:reserved": 7336.000000026616,
+        "repair:unreserved": 299.000000001075,
+        "initial:reserved": 10540.000000037457
+      },
+      "peaks": {
+        "harvest:unreserved": 307,
+        "water:unreserved": 365,
+        "initial:unreserved": 480,
+        "harvest:reserved": 68,
+        "water:reserved": 75,
+        "repair:unreserved": 1,
+        "initial:reserved": 75
+      },
+      "firstObservedDelivery": {
+        "time": 26.0000000000001,
+        "interval": [
+          5425.000000001498,
+          5426.000000001502
+        ]
+      }
+    }
+  ],
+  "gaps": [],
+  "observedTaskIDs": 16854,
+  "earlyTaskIDs": 15922,
+  "terminalDay11FirstObservedTaskIDs": 932,
+  "terminalDay11Callbacks": 1,
+  "walkingMotionSummary": {
+    "walking:initial": {
+      "observedActorSeconds": 39876.00000006362,
+      "displacementMetres": 42866.73108918588,
+      "zeroDisplacementSeconds": 0,
+      "pathNullSeconds": 172.00000000027507,
+      "gateWaitingSeconds": 0,
+      "fallSeconds": 0
+    },
+    "walking:water": {
+      "observedActorSeconds": 22097.000000026543,
+      "displacementMetres": 28372.27484622447,
+      "zeroDisplacementSeconds": 0,
+      "pathNullSeconds": 126.00000000010795,
+      "gateWaitingSeconds": 0,
+      "fallSeconds": 0
+    },
+    "walking:harvest": {
+      "observedActorSeconds": 15422.000000024496,
+      "displacementMetres": 29896.58669746346,
+      "zeroDisplacementSeconds": 0,
+      "pathNullSeconds": 65.0000000000793,
+      "gateWaitingSeconds": 0,
+      "fallSeconds": 0
+    }
+  },
+  "staminaSnapshots": [
+    {
+      "day": 1,
+      "oneSecondSnapshotWorkerCounts": {
+        "walking": 1194,
+        "walkingQuotaExhausted": 876,
+        "walkingRunningFlagTrue": 260
+      },
+      "scope": "Unweighted worker-sample counts before300, no interpolation or unique-person interpretation; runRemaining/running are actual copied fields."
+    },
+    {
+      "day": 2,
+      "oneSecondSnapshotWorkerCounts": {
+        "walking": 1361,
+        "walkingQuotaExhausted": 1054,
+        "walkingRunningFlagTrue": 300
+      },
+      "scope": "Unweighted worker-sample counts before300, no interpolation or unique-person interpretation; runRemaining/running are actual copied fields."
+    },
+    {
+      "day": 3,
+      "oneSecondSnapshotWorkerCounts": {
+        "walking": 3490,
+        "walkingQuotaExhausted": 2785,
+        "walkingRunningFlagTrue": 696
+      },
+      "scope": "Unweighted worker-sample counts before300, no interpolation or unique-person interpretation; runRemaining/running are actual copied fields."
+    },
+    {
+      "day": 4,
+      "oneSecondSnapshotWorkerCounts": {
+        "walking": 3206,
+        "walkingQuotaExhausted": 2593,
+        "walkingRunningFlagTrue": 607
+      },
+      "scope": "Unweighted worker-sample counts before300, no interpolation or unique-person interpretation; runRemaining/running are actual copied fields."
+    },
+    {
+      "day": 5,
+      "oneSecondSnapshotWorkerCounts": {
+        "walking": 6456,
+        "walkingQuotaExhausted": 5098,
+        "walkingRunningFlagTrue": 1349
+      },
+      "scope": "Unweighted worker-sample counts before300, no interpolation or unique-person interpretation; runRemaining/running are actual copied fields."
+    },
+    {
+      "day": 6,
+      "oneSecondSnapshotWorkerCounts": {
+        "walking": 9932,
+        "walkingQuotaExhausted": 8094,
+        "walkingRunningFlagTrue": 1817
+      },
+      "scope": "Unweighted worker-sample counts before300, no interpolation or unique-person interpretation; runRemaining/running are actual copied fields."
+    },
+    {
+      "day": 7,
+      "oneSecondSnapshotWorkerCounts": {
+        "walking": 10929,
+        "walkingQuotaExhausted": 8792,
+        "walkingRunningFlagTrue": 2122
+      },
+      "scope": "Unweighted worker-sample counts before300, no interpolation or unique-person interpretation; runRemaining/running are actual copied fields."
+    },
+    {
+      "day": 8,
+      "oneSecondSnapshotWorkerCounts": {
+        "walking": 10756,
+        "walkingQuotaExhausted": 8348,
+        "walkingRunningFlagTrue": 2390
+      },
+      "scope": "Unweighted worker-sample counts before300, no interpolation or unique-person interpretation; runRemaining/running are actual copied fields."
+    },
+    {
+      "day": 9,
+      "oneSecondSnapshotWorkerCounts": {
+        "walking": 12538,
+        "walkingQuotaExhausted": 10003,
+        "walkingRunningFlagTrue": 2519
+      },
+      "scope": "Unweighted worker-sample counts before300, no interpolation or unique-person interpretation; runRemaining/running are actual copied fields."
+    },
+    {
+      "day": 10,
+      "oneSecondSnapshotWorkerCounts": {
+        "walking": 17533,
+        "walkingQuotaExhausted": 14253,
+        "walkingRunningFlagTrue": 3259
+      },
+      "scope": "Unweighted worker-sample counts before300, no interpolation or unique-person interpretation; runRemaining/running are actual copied fields."
+    }
+  ],
+  "possibleEventBufferSaturationFrames": 0,
+  "unknowns": [
+    "Private actor-motion pendingDetours/blockedDetours WeakMaps cannot be inspected through frozen hooks; stationary walking is not labelled route search/collision/yield without evidence.",
+    "Events/tasks have no native creation timestamps; appearance/reservation/removal are first-observed intervals at callback cadence, with null lower bound when already present at first callback.",
+    "Straight-line displacement is a lower bound on actual path length traversed within a tick.",
+    "Tasks created and completed entirely between callbacks can be missed; disappearance without event/carrier evidence is censored, never assumed completion.",
+    "Individual delivered-crate event times are not retained in these frames; crate pickup and carry phase do not prove a particular paid-delivery latency.",
+    "Aggregate movement uses straight endpoint displacement per callback, so zero displacement does not identify private search/collision/yield cause.",
+    "Creation-order FIFO is preserved in production; observational task ages are sampled lower bounds and censored after raid/task replacement, not native creation timestamps."
+  ],
+  "scope": "One native exact F10 detailed read-only control, not late100 proof. No strategy/seed/parameter/domain alteration or balance promotion. Durations are observed queue/actor-seconds and first-observed intervals; not global/substep-perfect time. Failed early idle gate preserved."
+}
