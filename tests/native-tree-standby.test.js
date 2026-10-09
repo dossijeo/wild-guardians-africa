@@ -8,6 +8,35 @@ function fixture(prepare=async()=>{}){const geometry=new THREE.BoxGeometry(2,4,2
 function tree(id='a',x=0){return {id,x,y:0,z:0,yaw:0,sx:1,sy:1,sz:1};}
 function descriptor(t=tree(),level=0){const matrix=new THREE.Matrix4().makeTranslation(t.x,t.y,t.z).toArray();return {id:t.id,key:standbyTreeKey(t),x:t.x,z:t.z,level,matrix};}
 async function settled(owner){for(let i=0;i<30&&owner.busy;i++)await new Promise(resolve=>setImmediate(resolve));assert.equal(owner.busy,false);}
+
+test('traveling removal-only requests retain a bounded fenced bank without drawing far rows',async()=>{
+ let uploads=0;const f=fixture(async()=>uploads++),a=tree('a'),b=tree('b',80),camera={x:-40,z:0};
+ f.owner.request([descriptor(a),descriptor(b)],{x:0,z:0});await settled(f.owner);const bank=f.owner.active,revision=f.owner.revision,matrices=bank.preparedMatrices.map(a=>Array.from(a)),bytes=f.owner.stats.estimatedOwnedGpuBytes;
+ f.owner.request([descriptor(a)],camera);await settled(f.owner);
+ assert.equal(uploads,1);assert.equal(f.owner.active,bank);assert.equal(f.owner.revision,revision);assert.equal(bank.entries.size,2);assert.equal(f.owner.stats.estimatedOwnedGpuBytes,bytes);assert.ok(bank.meshes.every(mesh=>!mesh.castShadow));
+ f.owner.update(camera,new Map([[a.id,a],[b.id,b]]),()=>({ready:1,enabled:true}),()=>false,new Set());
+ assert.equal(f.owner.stats.submittedInstances,1);assert.equal(f.owner.drawDiagnosis(a.id).matrixExact,true);assert.equal(f.owner.drawDiagnosis(b.id),null);assert.deepEqual(bank.preparedMatrices.map(a=>Array.from(a)),matrices);
+ const versions=bank.meshes.map(mesh=>[mesh.count,mesh.instanceMatrix.version,mesh.geometry.attributes.nativeVisibility.version]);f.owner.update(camera,new Map([[a.id,a],[b.id,b]]),()=>({ready:1,enabled:true}),()=>false,new Set());assert.deepEqual(bank.meshes.map(mesh=>[mesh.count,mesh.instanceMatrix.version,mesh.geometry.attributes.nativeVisibility.version]),versions);
+ const c=tree('c',-20);f.owner.request([descriptor(a),descriptor(c)],camera);await settled(f.owner);
+ assert.equal(uploads,2);assert.notEqual(f.owner.active,bank);assert.deepEqual([...f.owner.active.entries.keys()].sort(),['a','c']);assert.equal(f.owner.has(b.id,b),false);f.close();
+});
+
+test('repeated out-and-back pruning never accumulates entries or owned banks',async()=>{
+ const f=fixture(),a=tree('a'),b=tree('b',80);f.owner.maxTrees=2;
+ f.owner.request([descriptor(a),descriptor(b)],{x:0,z:0});await settled(f.owner);const bank=f.owner.active,bytes=f.owner.stats.estimatedOwnedGpuBytes;
+ for(let visit=0;visit<60;visit++){f.owner.request([descriptor(a)],{x:-40,z:0});await settled(f.owner);f.owner.request([descriptor(a),descriptor(b)],{x:0,z:0});await settled(f.owner);assert.equal(f.owner.active,bank);assert.equal(bank.entries.size,2);assert.equal(f.owner.banks.filter(Boolean).length,1);assert.equal(f.owner.stats.estimatedOwnedGpuBytes,bytes);}
+ f.close();assert.equal(f.owner.active,null);assert.equal(f.owner.banks.filter(Boolean).length,0);assert.equal(f.scene.children.length,0);
+});
+
+test('removal-only reuse rejects changed resources, context generation, LOD and transform',async()=>{
+ for(const change of ['material','epoch','level','transform']){
+  let uploads=0,epoch=0;const f=fixture(async()=>uploads++),a=tree('a'),b=tree('b',80);f.owner.resourceRevision=()=>epoch;
+  f.owner.request([descriptor(a),descriptor(b)],{x:0,z:0});await settled(f.owner);const bank=f.owner.active;
+  if(change==='material')f.sources[0].material.needsUpdate=true;if(change==='epoch')epoch++;
+  const next=change==='transform'?tree('a',2):a;f.owner.request([descriptor(next,change==='level'?1:0)],{x:-40,z:0});await settled(f.owner);
+  assert.equal(uploads,2,change);assert.notEqual(f.owner.active,bank,change);assert.equal(f.owner.has(next.id,next),true);assert.equal(f.owner.has(next.id,next,new Set([next.id])),false);f.close();
+ }
+});
 test('retained proof requires current physical selection and matching native and procedural identities',async()=>{
  const f=fixture(),t=tree();f.owner.request([descriptor(t)],{x:0,z:0});await settled(f.owner);
  let selected=true;const args={coverage:{has:(id,s)=>selected&&id===t.id&&!s?.has(id)},standby:f.owner,nativeTree:t,logicalTree:{...t}};

@@ -48,7 +48,10 @@ export class NativeTreeStandby {
    for(const [id,d] of this.active?.entries??[])if(Math.hypot(d.x-camera.x,d.z-camera.z)<=this.keepDistance&&d.resource===this.sourceKey(d.level))wanted.set(id,d);
    for(const d of entries){if(Math.hypot(d.x-camera.x,d.z-camera.z)>this.keepDistance)continue;const old=wanted.get(d.id);if(!old||old.key!==d.key||old.level!==d.level)wanted.set(d.id,{...d,transitionRange:treeTransitionRange(d,this.treeHeight,this.start,this.end,this.transitionHeight),matrix:new Float64Array(d.matrix),resource:this.sourceKey(d.level)});}
    if(wanted.size>this.maxTrees)throw Error('Standby tree budget exceeded');
-   if(this.active&&wanted.size===this.active.entries.size&&[...wanted].every(([id,d])=>this.active.entries.get(id)===d))continue;
+   // Removing only out-of-range entries changes no prepared identity or row.
+   // Keep the bounded bank until additions/LOD/resources require a new upload;
+   // update() still draws only its exact positive-fade, unsuppressed subset.
+   if(this.active&&wanted.size>0&&wanted.size<=this.active.entries.size&&[...wanted].every(([id,d])=>this.active.entries.get(id)===d)&&[...this.active.entries.values()].every(d=>d.resource===this.sourceKey(d.level)))continue;
    if(!wanted.size){if(this.active){this.active.root.removeFromParent();this.active=null;this.revision++;this.stats.trees=0;}continue;}
    const index=this.active===this.banks[0]?1:0;let bank=this.banks[index];const capacity=2**Math.ceil(Math.log2(Math.max(8,wanted.size))),layout=this.sources.map(source=>source.geometry.uuid+':'+source.material.uuid).join('|');
    if(bank&&(bank.capacity<capacity||bank.layout!==layout)){this.release(bank);bank=null;}
