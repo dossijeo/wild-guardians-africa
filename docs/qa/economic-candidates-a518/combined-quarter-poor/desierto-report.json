@@ -1,0 +1,348 @@
+{
+  "biome": "desierto",
+  "culture": "mapungubwe",
+  "seed": "712",
+  "policy": {
+    "profile": "olderFemale",
+    "mixed": false,
+    "middayHiring": false,
+    "plantsPerWorker": 12,
+    "defend": false,
+    "reserveLabourGrowth": false,
+    "reserveMaintenance": false,
+    "burstPlanting": true,
+    "cameraEntry": true
+  },
+  "defense": null,
+  "additionalHiring": {
+    "count": 0,
+    "cost": 0
+  },
+  "result": null,
+  "completedNights": 10,
+  "money": 60,
+  "maximumLiving": 310,
+  "plots": 310,
+  "reloads": 10,
+  "counts": {
+    "PlacementCommitted": 1,
+    "CropPlaced": 397,
+    "HiringConfirmed": 10,
+    "WaterSatisfied": 156,
+    "NightStarted": 10,
+    "RaidSpawned": 10,
+    "CropHit": 44,
+    "AnimalLogicalHit": 56,
+    "CropDestroyed": 20,
+    "AnimalRetreating": 17,
+    "RaidEnded": 10,
+    "Dawn": 10,
+    "CropMatured": 75,
+    "HarvestRequested": 75,
+    "CropPicked": 69,
+    "CrateDelivered": 69,
+    "TutorialCompleted": 1,
+    "AgriculturalEventApplied": 1,
+    "SpellActivated": 25,
+    "StructureHit": 5
+  },
+  "activity": {
+    "daylightSeconds": 3000,
+    "unoccupiedSeconds": 2918,
+    "unoccupiedFraction": 0.9726666666666667,
+    "longestIdle": 299,
+    "p90LongestIdle": 299
+  },
+  "daily": [
+    {
+      "day": 1,
+      "before": 516,
+      "money": 180,
+      "staff": 6,
+      "wages": 180,
+      "nextLabourReserve": 180,
+      "maintenanceReserve": 0,
+      "pendingTasks": 68,
+      "planted": 84,
+      "delivered": 0,
+      "destroyed": 1,
+      "living": 84,
+      "centerHp": [
+        600
+      ],
+      "actions": 84,
+      "longestIdle": 299,
+      "idle": {
+        "budget": 279,
+        "space": 0,
+        "shift-end": 20,
+        "incursion": 7,
+        "night": 295
+      },
+      "result": null,
+      "additionalStaff": 0,
+      "additionalWages": 0
+    },
+    {
+      "day": 2,
+      "before": 120,
+      "money": 60,
+      "staff": 2,
+      "wages": 60,
+      "nextLabourReserve": 60,
+      "maintenanceReserve": 0,
+      "pendingTasks": 98,
+      "planted": 15,
+      "delivered": 0,
+      "destroyed": 1,
+      "living": 98,
+      "centerHp": [
+        600
+      ],
+      "actions": 15,
+      "longestIdle": 299,
+      "idle": {
+        "budget": 279,
+        "space": 0,
+        "shift-end": 20,
+        "incursion": 7,
+        "night": 295
+      },
+      "result": null,
+      "additionalStaff": 0,
+      "additionalWages": 0
+    },
+    {
+      "day": 3,
+      "before": 30,
+      "money": 44,
+      "staff": 1,
+      "wages": 30,
+      "nextLabourReserve": 30,
+      "maintenanceReserve": 0,
+      "pendingTasks": 140,
+      "planted": 63,
+      "delivered": 19,
+      "destroyed": 2,
+      "living": 140,
+      "centerHp": [
+        600
+      ],
+      "actions": 63,
+      "longestIdle": 78,
+      "idle": {
+        "budget": 262,
+        "space": 0,
+        "shift-end": 20,
+        "incursion": 12,
+        "night": 290
+      },
+      "result": null,
+      "additionalStaff": 0,
+      "additionalWages": 0
+    },
+    {
+      "day": 4,
+      "before": 14,
+      "money": 46,
+      "staff": 1,
+      "wages": 30,
+      "nextLabourReserve": 30,
+      "maintenanceReserve": 0,
+      "pendingTasks": 160,
+      "planted": 34,
+      "delivered": 12,
+      "destroyed": 2,
+      "living": 160,
+      "centerHp": [
+        600
+      ],
+      "actions": 34,
+      "longestIdle": 91,
+      "idle": {
+        "budget": 270,
+        "space": 0,
+        "shift-end": 20,
+        "incursion": 11,
+        "night": 290
+      },
+      "result": null,
+      "additionalStaff": 0,
+      "additionalWages": 0
+    },
+    {
+      "day": 5,
+      "before": 16,
+      "money": 60,
+      "staff": 1,
+      "wages": 30,
+      "nextLabourReserve": 30,
+      "maintenanceReserve": 0,
+      "pendingTasks": 182,
+      "planted": 31,
+      "delivered": 7,
+      "destroyed": 2,
+      "living": 182,
+      "centerHp": [
+        600
+      ],
+      "actions": 34,
+      "longestIdle": 53,
+      "idle": {
+        "budget": 271,
+        "space": 0,
+        "shift-end": 20,
+        "incursion": 15,
+        "night": 285
+      },
+      "result": null,
+      "additionalStaff": 0,
+      "additionalWages": 0
+    },
+    {
+      "day": 6,
+      "before": 30,
+      "money": 30,
+      "staff": 1,
+      "wages": 30,
+      "nextLabourReserve": 30,
+      "maintenanceReserve": 0,
+      "pendingTasks": 220,
+      "planted": 49,
+      "delivered": 8,
+      "destroyed": 3,
+      "living": 220,
+      "centerHp": [
+        500
+      ],
+      "actions": 53,
+      "longestIdle": 59,
+      "idle": {
+        "budget": 269,
+        "space": 0,
+        "shift-end": 20,
+        "incursion": 57,
+        "night": 245
+      },
+      "result": null,
+      "additionalStaff": 0,
+      "additionalWages": 0
+    },
+    {
+      "day": 7,
+      "before": 0,
+      "money": 32,
+      "staff": 1,
+      "wages": 30,
+      "nextLabourReserve": 30,
+      "maintenanceReserve": 0,
+      "pendingTasks": 239,
+      "planted": 27,
+      "delivered": 5,
+      "destroyed": 2,
+      "living": 240,
+      "centerHp": [
+        500
+      ],
+      "actions": 33,
+      "longestIdle": 83,
+      "idle": {
+        "budget": 271,
+        "space": 0,
+        "shift-end": 20,
+        "incursion": 82,
+        "night": 220
+      },
+      "result": null,
+      "additionalStaff": 0,
+      "additionalWages": 0
+    },
+    {
+      "day": 8,
+      "before": 2,
+      "money": 58,
+      "staff": 1,
+      "wages": 30,
+      "nextLabourReserve": 30,
+      "maintenanceReserve": 0,
+      "pendingTasks": 264,
+      "planted": 35,
+      "delivered": 7,
+      "destroyed": 4,
+      "living": 264,
+      "centerHp": [
+        500
+      ],
+      "actions": 39,
+      "longestIdle": 91,
+      "idle": {
+        "budget": 272,
+        "space": 0,
+        "shift-end": 20,
+        "incursion": 86,
+        "night": 215
+      },
+      "result": null,
+      "additionalStaff": 0,
+      "additionalWages": 0
+    },
+    {
+      "day": 9,
+      "before": 28,
+      "money": 32,
+      "staff": 1,
+      "wages": 30,
+      "nextLabourReserve": 30,
+      "maintenanceReserve": 0,
+      "pendingTasks": 273,
+      "planted": 13,
+      "delivered": 2,
+      "destroyed": 2,
+      "living": 273,
+      "centerHp": [
+        475
+      ],
+      "actions": 17,
+      "longestIdle": 119,
+      "idle": {
+        "budget": 275,
+        "space": 0,
+        "shift-end": 20,
+        "incursion": 17,
+        "night": 285
+      },
+      "result": null,
+      "additionalStaff": 0,
+      "additionalWages": 0
+    },
+    {
+      "day": 10,
+      "before": 2,
+      "money": 60,
+      "staff": 1,
+      "wages": 30,
+      "nextLabourReserve": 30,
+      "maintenanceReserve": 0,
+      "pendingTasks": 308,
+      "planted": 45,
+      "delivered": 9,
+      "destroyed": 1,
+      "living": 308,
+      "centerHp": [
+        475
+      ],
+      "actions": 49,
+      "longestIdle": 67,
+      "idle": {
+        "budget": 270,
+        "space": 0,
+        "shift-end": 20,
+        "incursion": 19,
+        "night": 280
+      },
+      "result": null,
+      "additionalStaff": 0,
+      "additionalWages": 0
+    }
+  ]
+}

@@ -1,0 +1,289 @@
+{
+  "biome": "manglares",
+  "culture": "mapungubwe",
+  "seed": "712",
+  "result": null,
+  "provenance": null,
+  "policy": {
+    "profile": "olderFemale",
+    "mixed": false,
+    "middayHiring": false,
+    "plantsPerWorker": 12,
+    "defend": false,
+    "reserveLabourGrowth": false,
+    "reserveMaintenance": false,
+    "burstPlanting": true,
+    "cameraEntry": true
+  },
+  "additionalHiring": {
+    "count": 0,
+    "cost": 0
+  },
+  "defense": null,
+  "campaign100": "unverified",
+  "completedNights": 10,
+  "daysObserved": 10,
+  "money": 30,
+  "maximumLiving": 512,
+  "speciesObserved": 1,
+  "bySpecies": {
+    "mijo": {
+      "planted": 666,
+      "living": 509,
+      "picked": 141,
+      "destroyed": 16,
+      "lostBeforeFirstWater": 15,
+      "lostWithPendingWater": 15,
+      "delivered": 141,
+      "inTransit": 0,
+      "income": "2534",
+      "seedCosts": "2664",
+      "livingSeedCosts": "2036",
+      "pickedSeedCosts": "564",
+      "destroyedSeedCosts": "64",
+      "harvestMinusSeedCosts": "-130"
+    }
+  },
+  "cashflow": {
+    "openingBalance": "1500",
+    "harvestIncome": "2534",
+    "seedCosts": "2664",
+    "wageCosts": "540",
+    "repairCosts": "0",
+    "centreCosts": "800",
+    "wallCosts": "0",
+    "otherNet": "0",
+    "operatingCashFlow": "-670",
+    "netCashFlowAfterConstruction": "-1470",
+    "endingBalance": "30"
+  },
+  "activity": {
+    "daylightSeconds": 3000,
+    "unoccupiedSeconds": 2851,
+    "unoccupiedFraction": 0.9503333333333334,
+    "acceptance": {
+      "status": "not-accepted",
+      "measuredFraction": 0.9503333333333334,
+      "policy": {
+        "path": "docs/qa/intensive-acceptance-policy.json",
+        "sha256": "f463ede2279390e14e85fa94845f4b2c10e4970f0f173c32885e3638acc69bf4",
+        "updated": "2026-10-08",
+        "comparison": "strictly-less-than",
+        "maximumFraction": 0.25
+      },
+      "scope": "Activity metric only; does not prove survival, accounting, source fidelity, bad-management loss or complete release acceptance."
+    },
+    "idleSecondsByReason": {
+      "budget": 2654,
+      "space": 0,
+      "shift-end": 197,
+      "incursion": 106,
+      "night": 2915
+    },
+    "longestIdle": 241,
+    "p90LongestIdle": 173
+  },
+  "daily": [
+    {
+      "day": 1,
+      "money": 278,
+      "staff": 6,
+      "planted": 126,
+      "delivered": 19,
+      "destroyed": 1,
+      "living": 107,
+      "centerHp": [
+        600
+      ],
+      "longestIdle": 241,
+      "idle": {
+        "budget": 269,
+        "space": 0,
+        "shift-end": 20,
+        "incursion": 7,
+        "night": 295
+      }
+    },
+    {
+      "day": 2,
+      "money": 122,
+      "staff": 4,
+      "planted": 156,
+      "delivered": 42,
+      "destroyed": 1,
+      "living": 220,
+      "centerHp": [
+        600
+      ],
+      "longestIdle": 173,
+      "idle": {
+        "budget": 243,
+        "space": 0,
+        "shift-end": 20,
+        "incursion": 7,
+        "night": 295
+      }
+    },
+    {
+      "day": 3,
+      "money": 46,
+      "staff": 1,
+      "planted": 71,
+      "delivered": 17,
+      "destroyed": 2,
+      "living": 272,
+      "centerHp": [
+        600
+      ],
+      "longestIdle": 31,
+      "idle": {
+        "budget": 263,
+        "space": 0,
+        "shift-end": 20,
+        "incursion": 12,
+        "night": 290
+      }
+    },
+    {
+      "day": 4,
+      "money": 30,
+      "staff": 1,
+      "planted": 21,
+      "delivered": 7,
+      "destroyed": 2,
+      "living": 284,
+      "centerHp": [
+        600
+      ],
+      "longestIdle": 149,
+      "idle": {
+        "budget": 274,
+        "space": 0,
+        "shift-end": 20,
+        "incursion": 9,
+        "night": 295
+      }
+    },
+    {
+      "day": 5,
+      "money": 32,
+      "staff": 1,
+      "planted": 69,
+      "delivered": 17,
+      "destroyed": 2,
+      "living": 334,
+      "centerHp": [
+        600
+      ],
+      "longestIdle": 59,
+      "idle": {
+        "budget": 261,
+        "space": 0,
+        "shift-end": 20,
+        "incursion": 23,
+        "night": 280
+      }
+    },
+    {
+      "day": 6,
+      "money": 32,
+      "staff": 1,
+      "planted": 17,
+      "delivered": 4,
+      "destroyed": 1,
+      "living": 346,
+      "centerHp": [
+        600
+      ],
+      "longestIdle": 70,
+      "idle": {
+        "budget": 272,
+        "space": 0,
+        "shift-end": 19,
+        "incursion": 6,
+        "night": 295
+      }
+    },
+    {
+      "day": 7,
+      "money": 30,
+      "staff": 1,
+      "planted": 49,
+      "delivered": 9,
+      "destroyed": 1,
+      "living": 385,
+      "centerHp": [
+        600
+      ],
+      "longestIdle": 59,
+      "idle": {
+        "budget": 268,
+        "space": 0,
+        "shift-end": 20,
+        "incursion": 7,
+        "night": 295
+      }
+    },
+    {
+      "day": 8,
+      "money": 32,
+      "staff": 1,
+      "planted": 13,
+      "delivered": 3,
+      "destroyed": 1,
+      "living": 394,
+      "centerHp": [
+        580
+      ],
+      "longestIdle": 88,
+      "idle": {
+        "budget": 273,
+        "space": 0,
+        "shift-end": 19,
+        "incursion": 5,
+        "night": 295
+      }
+    },
+    {
+      "day": 9,
+      "money": 30,
+      "staff": 1,
+      "planted": 63,
+      "delivered": 10,
+      "destroyed": 2,
+      "living": 445,
+      "centerHp": [
+        580
+      ],
+      "longestIdle": 71,
+      "idle": {
+        "budget": 267,
+        "space": 0,
+        "shift-end": 19,
+        "incursion": 13,
+        "night": 290
+      }
+    },
+    {
+      "day": 10,
+      "money": 30,
+      "staff": 1,
+      "planted": 80,
+      "delivered": 13,
+      "destroyed": 3,
+      "living": 509,
+      "centerHp": [
+        580
+      ],
+      "longestIdle": 59,
+      "idle": {
+        "budget": 264,
+        "space": 0,
+        "shift-end": 20,
+        "incursion": 17,
+        "night": 285
+      }
+    }
+  ],
+  "scope": "Recorded domain strategy and simulated time; not physical player activity, GPU frametime or complete biome/culture acceptance. Dead unpicked plants are losses in this strategy, which never removes crops manually."
+}
