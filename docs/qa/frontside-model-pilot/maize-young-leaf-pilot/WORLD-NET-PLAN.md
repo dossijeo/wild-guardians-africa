@@ -3,8 +3,13 @@
 Native925–927 static screens and928/929 seam captures support limited AI visual
 screening of the young shared-reverse Front candidate. They do not demonstrate
 its net World cost. The following new files are a draft, not an operational native
-campaign yet; endpoint schema, preflight, actual native batch/ownership contracts
-and current-main reconciliation must be completed before a reserved Run.
+campaign yet. Current main has been merged; CPU actual-GLTF/native-batch contracts
+pass31 growth samples, two release/reinstall modes and recreation64→128 with65
+plants. Source materials/index/borrowed attribute identities are restored and
+borrowed attributes are detached before candidate geometry disposal. The HTTP
+preflight verifies the537019-byte JSON payload, source archive decode and specific
+young export route without creating a context or native artifacts. These receipts
+enable the UI for a reserved resources/review Run; they do not prove GPU ownership.
 
 The isolated workload copies the same archived dense Gran Río state used by the
 mature campaign. All alive crop IDs, positions, rotations and unrelated state
@@ -31,6 +36,13 @@ constructor, coexistence and release; final buffers must return to zero. The
 candidate's68996 geometry bytes are only a CPU estimate, not resident VRAM.
 Original library buffers stay resident; additional material programs and group
 draws are included. No RGBA/buffer/resource reads belong inside timer queries.
+The prospective incremental buffer limit is75748B, one original young geometry
+allocation, with unchanged original buffer IDs/sizes after candidate release and
+zero tracked buffers at final cleanup. This bounds coexistence overhead and rejects
+accidental duplicated instance storage; it does not count physical VRAM or programs.
+Actual three Front colour draws/BACK/CCW/source DOUBLE_SIDED and Front World depth
+must be witnessed in resources. CPU rig/live-input fingerprints must match both
+arms. Historical numeric image diagnostics remain separate from visual review.
 
 Then reserve an exclusive AB/BA timing window. Use the existing prospective
 six-pair schedule,120 warmups and300 valid samples per block, fixed1280×720
@@ -42,6 +54,10 @@ allocation/overflow/context-loss flags and close all queries/context. The curren
 paired analysis thresholds remain prospective. Report original versus candidate
 time, confidence interval, each pair, submissions and resources; do not credit
 another optimization or assert a universal FPS benefit.
+The timing UI requires a successfully exported resources/front/VFX-on report and
+identical served viewer/Scene/adapter/runner source hashes before creating its
+context. Resource metadata/cull queries and image readbacks run only in the
+separate review/resources campaigns; no such hooks run inside timer queries.
 
 If the young cohort gives insufficient benefit once three groups and shadows are
 included, preserve the result and reconsider the geometry or scope. This plan
