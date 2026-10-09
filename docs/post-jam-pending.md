@@ -653,7 +653,7 @@ La campaña histórica congelada `9c2db027` ya no tiene proceso vivo: última jo
 
 ### Confirmación de colocación guiada — SFX 096
 
-[Integración y evidencia](qa/guided-placement-audio/README.md): confirmación después de colocar correctamente el primer centro/brote con mano 3D visible, una vez por paso y partida. No se recalcula navegación desde input ni se cambia el error 107 de murallas. 27 pruebas dirigidas, compilación, paquete, sintaxis y paridad 126 originales/Opus pasan; WebAudio nativo silenciado verifica dos fuentes y cierre. Recuento actual 100 asignados/26 reservados. Pendientes recorrido real de este cue y escucha/contextos restantes; no afirmar aceptación global de audio.
+[Integración y evidencia](qa/guided-placement-audio/README.md): confirmación después de colocar correctamente el primer centro/brote con mano 3D visible, una vez por paso y partida. No se recalcula navegación desde input ni se cambia el error 107 de murallas. 27 pruebas dirigidas, compilación, paquete, sintaxis y paridad 126 originales/Opus pasan; WebAudio nativo silenciado verifica dos fuentes y cierre. Recuento actual 100 asignados/26 reservados. Recorrido real técnico adicional883: centro y brote guiados producen dos confirmaciones aceptadas; segunda siembra ordinaria no añade otra. Entrada DOM sintética declarada, limpieza real verificada; escucha, móvil físico y contextos restantes siguen pendientes. No afirmar aceptación global de audio.
 
 
 ## Evaluación automática del criterio de actividad — 2026-10-09
@@ -672,3 +672,30 @@ matrices parciales y análisis contable de un registro real de20noches. Este
 una nueva campaña ni valida cien noches de main. No cambia balances,
 estrategia, daño, salarios o relojes. Las campañas completas y mala gestión
 continúan siendo requisitos separados.
+
+
+## Preparación lejana aislada activada — 2026-10-09
+
+La ruta de `WorldScene` usa por defecto el aislamiento síncrono de las subidas
+GPU de raíces sin sombras. Mantiene luces/niebla/receta de material y mapas
+de sombra prestados, restaurando visibilidad/culling/programación antes de
+cualquier espera. No altera distancia/calidad, modelos o reglas de juego.
+
+[AB/BA en main actual](qa/streaming-travel-dense/current-isolation-abba/README.md)
+confirma p95149.8/166.2ms de controles frente116.4/116.4ms aislados;
+35/41frames>100ms frente22/16. Mismos180m/15s,1257cultivos/34actores listos,
+15chunks, cámara/estado exactos y consultas sin disjoint/errores; sin campañas
+CPU locales durante esta comparación. Los cuatro procesos históricos antes
+activos ahora se verificaron ausentes. Caches del driver y temperatura no
+están controladas.
+
+[Regresión de la configuración por defecto](qa/streaming-travel-dense/default-isolation-889/README.md):
+p95116.4ms,20frames>100ms,estado exacto y cierre limpio.55contratos/build6.91s/
+sintaxis/paquete pasan. El control de preparación completa sigue disponible
+para QA. Los otros candidatos de compilación y waits permanecen desactivados.
+
+Las notas anteriores de«isolation sólo opt-in» describen la fase experimental
+histórica. Esta activación se apoya también en la auditoría de buffers pareada,
+los126uploads nativos de seis biomas y la muestra densa con huesos cambiantes.
+No constituye aceptación móvil física ni60FPS; el coste GPU sostenido y los
+microsaltos residuales siguen pendientes.
