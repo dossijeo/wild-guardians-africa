@@ -76,16 +76,28 @@ export function prepareActorMotion(state,actor,nav,worker){
   if(length<1e-9)return clear;
   let look=Math.min(length,horizon),goal={x:actor.x+(next.x-actor.x)*look/length,z:actor.z+(next.z-actor.z)*look/length};
   const staticClear=(a,b)=>nav.segmentClear?.(a,b,radius(actor),null,worker)??nav.workerMotionClear?.(a,b,radius(actor))??true;
+  const yieldPoint=(body,other,isWorker)=>{
+    const bodies=body===actor?blockers:actorBlockers(state,body,isWorker);
+    const angle=Math.atan2(body.x-other.x,body.z-other.z),r=radius(body)+radius(other)+.5;
+    for(const offset of [0,Math.PI/8,-Math.PI/8,Math.PI/4,-Math.PI/4]){
+      const point={x:body.x+Math.sin(angle+offset)*r,z:body.z+Math.cos(angle+offset)*r};
+      if(!actorSegmentClear(body,point,body,bodies))continue;
+      const terrain=nav.segmentClear?.(body,point,radius(body),null,isWorker)??nav.workerMotionClear?.(body,point,radius(body))??true;
+      if(terrain)return point;
+    }
+    return null;
+  };
   const yieldToOpposing=()=>{
     const opposing=blockers.find(other=>distance(actor,other)<=horizon&&edgeDistance(actor,goal,other.x,other.z)<radius(actor)+radius(other)+.1&&
-      other.path?.length&&String(actor.id)>String(other.id)&&
+      other.path?.length&&
       (next.x-actor.x)*(other.path[0].x-other.x)+(next.z-actor.z)*(other.path[0].z-other.z)<0);
     if(!opposing)return;
-    const angle=Math.atan2(actor.x-opposing.x,actor.z-opposing.z),r=radius(actor)+radius(opposing)+.5;
-    for(const offset of [0,Math.PI/8,-Math.PI/8,Math.PI/4,-Math.PI/4]){
-      const point={x:actor.x+Math.sin(angle+offset)*r,z:actor.z+Math.cos(angle+offset)*r};
-      if(clear(actor,point)&&staticClear(actor,point)){actor.path=[point,...actor.path];return;}
-    }
+    // Identity breaks ties, but the elected body may be boxed in by terrain
+    // or fleeing workers. Let the other body yield only when the elected one
+    // has no physically clear yield; never relax clearance or move either body.
+    if(String(actor.id)<String(opposing.id)&&yieldPoint(opposing,actor,state.workers.includes(opposing)))return;
+    const point=yieldPoint(actor,opposing,worker);
+    if(point)actor.path=[point,...actor.path];
   };
   // Old saves may retain a long connector created by a remote yield. Repair
   // its next local section through native terrain search before advancing;

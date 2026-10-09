@@ -1,0 +1,191 @@
+{
+  "mode": "native reload with normal Game.tick(dt=1); no strategy commands or overrides",
+  "before": {
+    "day": 59,
+    "time": 600,
+    "elapsed": 37253.59999973398,
+    "raid": "raid-59-night",
+    "version": 1027,
+    "animals": [
+      {
+        "id": "animal-83365",
+        "status": "walking",
+        "x": 88.53085278770848,
+        "z": 2.5937220466963993,
+        "path": [
+          {
+            "x": 87.307215917383,
+            "z": -1.584564160840523
+          }
+        ],
+        "version": 1027,
+        "hits": 4
+      },
+      {
+        "id": "animal-83366",
+        "status": "retreating",
+        "x": 88.96139627459564,
+        "z": 0.37270704078269307,
+        "path": [
+          {
+            "x": 89,
+            "z": 3
+          },
+          {
+            "x": 90,
+            "z": 4
+          },
+          {
+            "x": 91,
+            "z": 5
+          },
+          {
+            "x": 92,
+            "z": 6
+          },
+          {
+            "x": 93,
+            "z": 7
+          },
+          {
+            "x": 93,
+            "z": 8
+          },
+          {
+            "x": 93,
+            "z": 9
+          },
+          {
+            "x": 94.00825141486129,
+            "z": 10.40154789591612
+          }
+        ],
+        "version": 1027,
+        "hits": 0
+      },
+      {
+        "id": "animal-83367",
+        "status": "gone",
+        "x": 89.83240654853863,
+        "z": 10.851347465065123,
+        "path": [],
+        "version": 985,
+        "hits": 0
+      },
+      {
+        "id": "animal-83368",
+        "status": "gone",
+        "x": 98.66066963421088,
+        "z": 14.376155387513755,
+        "path": [],
+        "version": 987,
+        "hits": 0
+      }
+    ],
+    "fleeing": 17
+  },
+  "frames": [
+    {
+      "step": 10,
+      "day": 59,
+      "time": 600,
+      "elapsed": 37263.59999973384,
+      "raid": "raid-59-night",
+      "version": 1027,
+      "animals": [
+        {
+          "id": "animal-83365",
+          "status": "attacking",
+          "x": 87.307215917383,
+          "z": -1.584564160840523,
+          "path": [],
+          "version": 1027,
+          "hits": 3
+        },
+        {
+          "id": "animal-83366",
+          "status": "gone",
+          "x": 94.00825141486129,
+          "z": 10.40154789591612,
+          "path": [],
+          "version": 1027,
+          "hits": 0
+        },
+        {
+          "id": "animal-83367",
+          "status": "gone",
+          "x": 89.83240654853863,
+          "z": 10.851347465065123,
+          "path": [],
+          "version": 985,
+          "hits": 0
+        },
+        {
+          "id": "animal-83368",
+          "status": "gone",
+          "x": 98.66066963421088,
+          "z": 14.376155387513755,
+          "path": [],
+          "version": 987,
+          "hits": 0
+        }
+      ],
+      "fleeing": 3
+    },
+    {
+      "step": 20,
+      "day": 59,
+      "time": 600,
+      "elapsed": 37273.59999973369,
+      "raid": "raid-59-night",
+      "version": 1028,
+      "animals": [
+        {
+          "id": "animal-83365",
+          "status": "attacking",
+          "x": 87.85627525700035,
+          "z": -2.9265901820409166,
+          "path": [],
+          "version": 1028,
+          "hits": 1
+        },
+        {
+          "id": "animal-83366",
+          "status": "gone",
+          "x": 94.00825141486129,
+          "z": 10.40154789591612,
+          "path": [],
+          "version": 1027,
+          "hits": 0
+        },
+        {
+          "id": "animal-83367",
+          "status": "gone",
+          "x": 89.83240654853863,
+          "z": 10.851347465065123,
+          "path": [],
+          "version": 985,
+          "hits": 0
+        },
+        {
+          "id": "animal-83368",
+          "status": "gone",
+          "x": 98.66066963421088,
+          "z": 14.376155387513755,
+          "path": [],
+          "version": 987,
+          "hits": 0
+        }
+      ],
+      "fleeing": 3
+    }
+  ],
+  "after": {
+    "day": 60,
+    "time": 0,
+    "elapsed": 37279.599999733604,
+    "version": 1029,
+    "fleeing": 3
+  },
+  "result": null
+}
