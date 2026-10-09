@@ -44,6 +44,7 @@ export function loadingReadinessSnapshot({world,progress=world?.loadingProgress,
   })};
  });
  result.presentation=section(issues,'presentation',()=>({dioramaPresent:Boolean(diorama),disposed:Boolean(diorama?.disposed),prepared:Boolean(diorama?.prepared),interactive:Boolean(diorama?.interactive),orbitSettled:diorama?.orbit?Boolean(diorama.orbit.settled):null,orbitStopping:diorama?.orbit?Boolean(diorama.orbit.stopping):null,orbitSpeed:finite(diorama?.orbit?.speed),plantsCount:finite(diorama?.plants?.plants?.length),plantsReady:diorama?.plants?Boolean(diorama.plants.ready):null,plantsProgress:finite(diorama?.plants?.progress),plantsMature:diorama?.plants?Boolean(diorama.plants.mature):null,cinematicPresent:Boolean(cinematic),cinematicArmed:Boolean(cinematic?.armed),cinematicDone:Boolean(cinematic?.done),cinematicTime:finite(cinematic?.time)}));
+ result.compilation=section(issues,'compilation',()=>world?.loadingReadinessObservation?.compilationSnapshot()??null);
  result.spans=section(issues,'spans',()=>spans?.snapshot()??null);
  return result;
 }
@@ -74,6 +75,7 @@ export function createLoadingReadinessSpanTracker(previous,{now=()=>performance.
   try{const row=args[0],id=key(row);if(active.size<16||active.has(id))active.set(id,copy(row));else dropped++;}catch{}
   return typeof previous?.onBegin==='function'?Reflect.apply(previous.onBegin,this===witness?previous:this,args):undefined;
  };
+ witness.activeLabel=()=>{let label=null;for(const row of active.values())label=row.label;return label;};
  witness.snapshot=()=>{
   let at=null;try{at=finite(now());}catch{}
   return {at,active:[...active.values()].map(row=>({...row,elapsed:at!==null&&row.start!==null?Math.max(0,at-row.start):null})),lastCompleted:lastCompleted?{...lastCompleted}:null,dropped,scope:'Nested awaited wall spans; do not sum as exclusive CPU/GPU time. Associations are labels, not exhaustive readiness proof.'};
@@ -86,7 +88,19 @@ export function createLoadingReadinessSpanTracker(previous,{now=()=>performance.
 export function installLoadingReadinessObservation(world,{scope=globalThis,WeakRefCtor=globalThis.WeakRef,enabled=scope.__desktopSmokeStarted===true}={}){
  if(!enabled||world.disposed||world.loading?.signal.aborted)return null;
  let ref;try{if(typeof WeakRefCtor!=='function')return null;ref=new WeakRefCtor(world);}catch{return null;}
- let closed=false,tracker=null,previous=null,dioramaRef=null,cinematicRef=null;
+ let closed=false,tracker=null,previous=null,previousCompile=null,dioramaRef=null,cinematicRef=null;
+ const compilation=createLoadingCompileJobTracker(()=>tracker?.activeLabel()??null),chainedCallbacks=new Set();
+ function createCompileJob(...args){
+  if(closed)return null;
+  const token={callback:null};try{if(typeof previousCompile==='function')token.callback=Reflect.apply(previousCompile,this,args);}catch{}
+  const record=compilation.create(...args);if(typeof token.callback==='function')chainedCallbacks.add(token);
+  return function(...events){
+   if(closed)return;
+   try{Reflect.apply(record,this,events);}catch{}
+   try{if(typeof token.callback==='function')return Reflect.apply(token.callback,this,events);}catch{}
+   finally{try{if(events[0]?.event==='finished'){token.callback=null;chainedCallbacks.delete(token);}}catch{}}
+  };
+ }
  const get=()=>{try{return ref.deref();}catch{return null;}};
  const callable=()=>{
   const owner=get();if(closed||!owner||owner.disposed||owner.loading?.signal.aborted)return null;
@@ -98,10 +112,11 @@ export function installLoadingReadinessObservation(world,{scope=globalThis,WeakR
   const owner=get();
   try{if(scope.__desktopSmokeLoadingReadiness===callable)delete scope.__desktopSmokeLoadingReadiness;}catch{}
   try{if(owner?.onLoadingSpan===tracker)owner.onLoadingSpan=previous;}catch{}
+  try{if(owner?.onLoadingCompileJob===createCompileJob)owner.onLoadingCompileJob=previousCompile;}catch{}
   try{owner?.loading?.signal.removeEventListener('abort',release);}catch{}
-  tracker=null;previous=null;dioramaRef=null;cinematicRef=null;
+  tracker=null;previous=null;previousCompile=null;for(const token of chainedCallbacks)token.callback=null;chainedCallbacks.clear();compilation.clear();dioramaRef=null;cinematicRef=null;
  };
- const bridge={release,get witness(){return closed?null:tracker;},connect(){
+ const bridge={release,compilationSnapshot:()=>compilation.snapshot(),get witness(){return closed?null:tracker;},connect(){
   const owner=get();if(closed||!owner||owner.disposed||owner.loading?.signal.aborted)return;
   if(owner.onLoadingSpan===tracker&&tracker)return;
   previous=owner.onLoadingSpan;tracker=createLoadingReadinessSpanTracker(previous);owner.onLoadingSpan=tracker;
@@ -109,7 +124,44 @@ export function installLoadingReadinessObservation(world,{scope=globalThis,WeakR
   if(closed)return;
   try{dioramaRef=diorama?new WeakRefCtor(diorama):null;cinematicRef=cinematic?new WeakRefCtor(cinematic):null;}catch{dioramaRef=null;cinematicRef=null;}
  }};
- try{world.loading?.signal.addEventListener('abort',release,{once:true});scope.__desktopSmokeLoadingReadiness=callable;bridge.connect();}
+ try{previousCompile=world.onLoadingCompileJob;world.onLoadingCompileJob=createCompileJob;world.loading?.signal.addEventListener('abort',release,{once:true});scope.__desktopSmokeLoadingReadiness=callable;bridge.connect();}
  catch{release();return null;}
  return bridge;
+}
+
+
+// Scalar summaries from the EXISTING compile selection/poll. No program/material
+// references, readiness calls, GL queries, timers or full per-poll history.
+export function createLoadingCompileJobTracker(activeLabel=()=>null,{now=()=>performance.now()}={}){
+ const active=new Map(),seen=new Map();let closed=false,nextId=0,completed=0,rejected=0,droppedJobs=0,droppedIdentities=0,faults=0,lastFinished=null;
+ const clone=value=>value===undefined?null:JSON.parse(JSON.stringify(value));
+ const limited=(value,n)=>typeof value==='string'?value.slice(0,n):null;
+ const contextCopy=value=>({start:finite(value?.start),screen:Boolean(value?.screen),batch:value?.batch?{ordinal:finite(value.batch.ordinal),batches:finite(value.batch.batches),start:finite(value.batch.start),end:finite(value.batch.end),objects:finite(value.batch.objects),categories:Object.fromEntries(['mesh','points','line','sprite','instanced','batched','skinned'].map(key=>[key,finite(value.batch.categories?.[key])])),names:(value.batch.names??[]).slice(0,8).map(row=>({type:limited(row.type,80),name:limited(row.name,160),uuid:limited(row.uuid,80)})),namesOmitted:Math.max(0,value.batch.namesOmitted??0)+Math.max(0,(value.batch.names?.length??0)-8)}:null});
+ const associationCopy=row=>({programId:finite(row.programId),programName:limited(row.programName,160),cacheKey:limited(row.cacheKey,2048),cacheKeyTruncated:Boolean(row.cacheKeyTruncated)||(typeof row.cacheKey==='string'&&row.cacheKey.length>2048),materialId:finite(row.materialId),materialUuid:limited(row.materialUuid,160),materialType:limited(row.materialType,80),materialName:limited(row.materialName,160),current:Boolean(row.current),side:finite(row.side)});
+ const pendingCopy=(row,event)=>{row.pendingCount=finite(event.pendingCount);row.pendingIds=(event.pendingIds??[]).slice(0,32).map(finite);row.pendingIdsOmitted=Math.max(0,event.pendingIdsOmitted??0)+Math.max(0,(event.pendingIds?.length??0)-32);};
+ const create=context=>{
+  if(closed)return ()=>{};
+  const id=++nextId;if(active.size>=8){droppedJobs++;return ()=>{};}
+  let phase=null;try{phase=text(activeLabel());}catch{faults++;}
+  let copied;try{copied=contextCopy(context);}catch{faults++;copied=null;}
+  const row={id,phase,context:copied,selectedCount:null,associationCount:null,associationOmitted:null,associations:[],polls:0,pendingCount:null,pendingIds:[],pendingIdsOmitted:null,lastPollAt:null,selectedAt:null};active.set(id,row);
+  return event=>{try{
+   if(!active.has(id))return;
+   if(event.event==='selected'){
+    row.selectedAt=finite(event.at);row.selectedCount=finite(event.selectedCount);row.associationCount=finite(event.associationCount);row.associationOmitted=Math.max(0,event.associationOmitted??0)+Math.max(0,(event.associations?.length??0)-32);
+    row.associations=(event.associations??[]).slice(0,32).map(associationCopy);
+    for(const association of row.associations){const key=association.programId;if(key===null)continue;if(!seen.has(key)){if(seen.size<128)seen.set(key,{job:id,phase});else droppedIdentities++;}association.firstObservedSelection=clone(seen.get(key));}
+   }else if(event.event==='poll'){
+    row.polls=finite(event.polls);pendingCopy(row,event);row.lastPollAt=finite(event.at);
+   }else if(event.event==='finished'){
+    row.outcome=text(event.outcome);row.end=finite(event.at);pendingCopy(row,event);row.polls=finite(event.polls);
+    if(event.outcome==='resolved')completed++;else rejected++;
+    lastFinished=row;active.delete(id);
+   }
+  }catch{faults++;}};
+ };
+ return {create,clear(){closed=true;active.clear();seen.clear();lastFinished=null;},snapshot(){
+  let at=null;try{at=finite(now());}catch{faults++;}
+  return {at,started:nextId,completed,rejected,droppedJobs,droppedIdentities,faults,active:[...active.values()].map(row=>({...clone(row),elapsed:at!==null&&Number.isFinite(row.context?.start)?Math.max(0,at-row.context.start):null,readinessElapsed:at!==null&&row.selectedAt!==null?Math.max(0,at-row.selectedAt):null})),lastFinished:clone(lastFinished),scope:'Job selection and pending results of existing isReady calls only. First observed selection is not program creation or exhaustive mesh consumers. Nested elapsed values are not additive CPU/GPU time.'};
+ }};
 }

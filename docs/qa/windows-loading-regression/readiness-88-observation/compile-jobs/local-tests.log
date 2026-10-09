@@ -1,0 +1,284 @@
+TAP version 13
+# Subtest: normal target recipe compiles once and accepts already-ready selected programs
+ok 1 - normal target recipe compiles once and accepts already-ready selected programs
+  ---
+  duration_ms: 4.3632
+  ...
+# Subtest: cancelled owner prevents even synchronous submission
+ok 2 - cancelled owner prevents even synchronous submission
+  ---
+  duration_ms: 0.9015
+  ...
+# Subtest: selected program is snapshotted once while borrowed material is restored
+ok 3 - selected program is snapshotted once while borrowed material is restored
+  ---
+  duration_ms: 8.535
+  ...
+# Subtest: deduplicates shared programs and stops querying already completed variants
+ok 4 - deduplicates shared programs and stops querying already completed variants
+  ---
+  duration_ms: 33.1431
+  ...
+# Subtest: an abort removes owned polling without querying disposed programs later
+ok 5 - an abort removes owned polling without querying disposed programs later
+  ---
+  duration_ms: 30.3808
+  ...
+# Subtest: context generation change rejects before querying a stale selected program
+ok 6 - context generation change rejects before querying a stale selected program
+  ---
+  duration_ms: 30.6694
+  ...
+# Subtest: never-ready driver has a bounded caller deadline with no remaining poll
+ok 7 - never-ready driver has a bounded caller deadline with no remaining poll
+  ---
+  duration_ms: 46.7687
+  ...
+# Subtest: readiness fault propagates intact and stops polling
+ok 8 - readiness fault propagates intact and stops polling
+  ---
+  duration_ms: 30.5145
+  ...
+# Subtest: missing readiness program fails rather than claiming completion
+ok 9 - missing readiness program fails rather than claiming completion
+  ---
+  duration_ms: 1.1583
+  ...
+# Subtest: owner invalidation inside the final readiness query cannot produce acceptance
+ok 10 - owner invalidation inside the final readiness query cannot produce acceptance
+  ---
+  duration_ms: 0.6246
+  ...
+# Subtest: explicit all-variant selection snapshots once and waits every borrowed recipe
+ok 11 - explicit all-variant selection snapshots once and waits every borrowed recipe
+  ---
+  duration_ms: 12.9381
+  ...
+# Subtest: default selector still ignores unrelated pending variants
+ok 12 - default selector still ignores unrelated pending variants
+  ---
+  duration_ms: 0.906
+  ...
+# Subtest: invalid or empty explicit selection never claims material readiness
+ok 13 - invalid or empty explicit selection never claims material readiness
+  ---
+  duration_ms: 1.1746
+  ...
+# Subtest: observed and OFF pipeline retain exact original readiness call order/count/selection
+ok 14 - observed and OFF pipeline retain exact original readiness call order/count/selection
+  ---
+  duration_ms: 18.9782
+  ...
+# Subtest: observer and identity getter failures never alter real readiness or original failure
+ok 15 - observer and identity getter failures never alter real readiness or original failure
+  ---
+  duration_ms: 32.286
+  ...
+# Subtest: batch observer identifies actual groups without changing objects/target or readiness
+ok 16 - batch observer identifies actual groups without changing objects/target or readiness
+  ---
+  duration_ms: 3.1211
+  ...
+# Subtest: collector bounds summaries independently and labels first observation rather than creation
+ok 17 - collector bounds summaries independently and labels first observation rather than creation
+  ---
+  duration_ms: 50.2748
+  ...
+# Subtest: cancel/replacement clears owned job summaries without deleting the next owner
+ok 18 - cancel/replacement clears owned job summaries without deleting the next owner
+  ---
+  duration_ms: 1.9636
+  ...
+# Subtest: source proves OFF diagnostic allocations/clock/query path and existing poll cadence
+ok 19 - source proves OFF diagnostic allocations/clock/query path and existing poll cadence
+  ---
+  duration_ms: 6.9932
+  ...
+# Subtest: bridge chains previous factory/progress hooks, contains faults and restores by identity
+ok 20 - bridge chains previous factory/progress hooks, contains faults and restores by identity
+  ---
+  duration_ms: 1.5826
+  ...
+# Subtest: clear is terminal for old collector: late events and future jobs cannot repopulate
+ok 21 - clear is terminal for old collector: late events and future jobs cannot repopulate
+  ---
+  duration_ms: 0.4443
+  ...
+# Subtest: loading compilation snapshots programs before borrowed materials are restored
+ok 22 - loading compilation snapshots programs before borrowed materials are restored
+  ---
+  duration_ms: 19.4414
+  ...
+# Subtest: loading compilation cancellation releases a pending poll immediately
+ok 23 - loading compilation cancellation releases a pending poll immediately
+  ---
+  duration_ms: 1.5909
+  ...
+# Subtest: loading compilation reports timeout without an indefinite poll
+ok 24 - loading compilation reports timeout without an indefinite poll
+  ---
+  duration_ms: 0.5546
+  ...
+# Subtest: loading compilation rejects a destroyed owner before submitting programs
+ok 25 - loading compilation rejects a destroyed owner before submitting programs
+  ---
+  duration_ms: 0.53
+  ...
+# Subtest: explicit screen compilation restores target and viewport while its program is still pending
+ok 26 - explicit screen compilation restores target and viewport while its program is still pending
+  ---
+  duration_ms: 26.1474
+  ...
+# Subtest: bounded compiler retains original native objects and target-scene lighting without mutation
+ok 27 - bounded compiler retains original native objects and target-scene lighting without mutation
+  ---
+  duration_ms: 2.3665
+  ...
+# Subtest: bounded compiler cancels before a later submission
+ok 28 - bounded compiler cancels before a later submission
+  ---
+  duration_ms: 0.7024
+  ...
+# Subtest: compilation readiness includes every native variant of a shared material
+ok 29 - compilation readiness includes every native variant of a shared material
+  ---
+  duration_ms: 11.5283
+  ...
+# Subtest: loading compilation latches loss and restoration before another program query
+ok 30 - loading compilation latches loss and restoration before another program query
+  ---
+  duration_ms: 30.3485
+  ...
+# Subtest: loading compilation rejects generation changes even without a loss event
+ok 31 - loading compilation rejects generation changes even without a loss event
+  ---
+  duration_ms: 1.721
+  ...
+# Subtest: submission CPU witness is synchronous and does not include pending program readiness
+ok 32 - submission CPU witness is synchronous and does not include pending program readiness
+  ---
+  duration_ms: 1.4803
+  ...
+# Subtest: optional compile diagnostic failure cannot change native readiness or original submission error
+ok 33 - optional compile diagnostic failure cannot change native readiness or original submission error
+  ---
+  duration_ms: 0.9711
+  ...
+# Subtest: optional program readiness witness reports waited wall time separately from submission CPU
+ok 34 - optional program readiness witness reports waited wall time separately from submission CPU
+  ---
+  duration_ms: 26.5502
+  ...
+# Subtest: CPU-budget compiler retains every native object while an actual readiness wait already delivers presentation
+ok 35 - CPU-budget compiler retains every native object while an actual readiness wait already delivers presentation
+  ---
+  duration_ms: 16.6547
+  ...
+# Subtest: a throwing optional CPU observer cannot remove the bounded compilation yield or readiness
+ok 36 - a throwing optional CPU observer cannot remove the bounded compilation yield or readiness
+  ---
+  duration_ms: 1.0205
+  ...
+# Subtest: snapshot distinguishes real milestones and presentation maturity without scheduling work
+ok 37 - snapshot distinguishes real milestones and presentation maturity without scheduling work
+  ---
+  duration_ms: 7.6234
+  ...
+# Subtest: bounded copies never retain region prototypes, promises, jobs or source arrays
+ok 38 - bounded copies never retain region prototypes, promises, jobs or source arrays
+  ---
+  duration_ms: 0.8589
+  ...
+# Subtest: observer faults are contained per section and absent owners remain unknown
+ok 39 - observer faults are contained per section and absent owners remain unknown
+  ---
+  duration_ms: 0.3165
+  ...
+# Subtest: context identity borrows renderer only, skips dead owners and tolerates driver faults
+ok 40 - context identity borrows renderer only, skips dead owners and tolerates driver faults
+  ---
+  duration_ms: 0.3175
+  ...
+# Subtest: span tracker preserves interleaved same-label awaits and prior callback contract
+ok 41 - span tracker preserves interleaved same-label awaits and prior callback contract
+  ---
+  duration_ms: 0.5494
+  ...
+# Subtest: tracker contains observation faults but retains original callback exceptions
+ok 42 - tracker contains observation faults but retains original callback exceptions
+  ---
+  duration_ms: 0.4858
+  ...
+# Subtest: tracker bounds active rows and reports omissions without extending waits
+ok 43 - tracker bounds active rows and reports omissions without extending waits
+  ---
+  duration_ms: 0.2785
+  ...
+# Subtest: transfer snapshot reads real LoadingDownloads records without snapshot/refresh/cache assumptions
+ok 44 - transfer snapshot reads real LoadingDownloads records without snapshot/refresh/cache assumptions
+  ---
+  duration_ms: 12.2854
+  ...
+# Subtest: bridge normal path and unavailable/failing WeakRef never publish or mutate
+ok 45 - bridge normal path and unavailable/failing WeakRef never publish or mutate
+  ---
+  duration_ms: 0.6204
+  ...
+# (node:38464) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: bridge abort/dispose releases own callback and cannot erase replacement World
+ok 46 - bridge abort/dispose releases own callback and cannot erase replacement World
+  ---
+  duration_ms: 356.4494
+  ...
+# Subtest: failed real World constructor does not install a snapshot owner
+ok 47 - failed real World constructor does not install a snapshot owner
+  ---
+  duration_ms: 7.8269
+  ...
+# Subtest: dead WeakRef and callback replacement remain safe without a strong fallback
+ok 48 - dead WeakRef and callback replacement remain safe without a strong fallback
+  ---
+  duration_ms: 0.5402
+  ...
+# Subtest: bridge observes real actor/chunk/far properties while work remains pending
+ok 49 - bridge observes real actor/chunk/far properties while work remains pending
+  ---
+  duration_ms: 21.1108
+  ...
+# Subtest: bridge publication/connect/presentation faults do not leak ownership or change application exceptions
+ok 50 - bridge publication/connect/presentation faults do not leak ownership or change application exceptions
+  ---
+  duration_ms: 0.5819
+  ...
+# Subtest: bridge registration follows every successful constructor step and original gates stay intact
+ok 51 - bridge registration follows every successful constructor step and original gates stay intact
+  ---
+  duration_ms: 3.3552
+  ...
+# (node:46220) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: complete catalogue audit reproduces from current source and exact original bytes
+ok 52 - complete catalogue audit reproduces from current source and exact original bytes
+  ---
+  duration_ms: 450.7354
+  ...
+# Subtest: assignments, context exceptions, reserves and alternatives stay distinct from audible acceptance
+ok 53 - assignments, context exceptions, reserves and alternatives stay distinct from audible acceptance
+  ---
+  duration_ms: 101.128
+  ...
+# Subtest: latent wood variant and semantic alternatives do not become real bindings or duplicate files
+ok 54 - latent wood variant and semantic alternatives do not become real bindings or duplicate files
+  ---
+  duration_ms: 0.3673
+  ...
+1..54
+# tests 54
+# suites 0
+# pass 54
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 740.4019

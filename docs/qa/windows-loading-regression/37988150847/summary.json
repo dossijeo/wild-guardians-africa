@@ -1,0 +1,241 @@
+{
+  "run": 37988150847,
+  "source": "945ab0baa3095943c9aa08a5f28c9b70b5872499",
+  "outcome": "failure",
+  "raw": {
+    "artifact": 11644271964,
+    "bytes": 8683,
+    "sha256": "cff8c536e6c75537c13173fe000c6b129de8801b79d5b3d277fbd9e3c2d26d51"
+  },
+  "smoke": {
+    "ok": false,
+    "errors": [
+      "Error: Production world did not finish loading"
+    ],
+    "finish": {
+      "canvas": {
+        "height": 720,
+        "width": 1028
+      },
+      "displayedProgress": "83",
+      "focused": true,
+      "phaseLabel": "Preparing rendering resources",
+      "readyGateReached": false,
+      "scope": "Presentation snapshot only; displayed progress and canvas dimensions do not establish world readiness or GPU identity.",
+      "stageBusy": "true",
+      "visibility": "visible",
+      "worldWaitMs": 90040.6000000001
+    }
+  },
+  "observed": {
+    "context": {
+      "contextLost": false,
+      "renderer": "WebKit WebGL",
+      "scope": "Existing World renderer context at finish only; identity is not a measured cause.",
+      "unmaskedRenderer": "ANGLE (Microsoft, Microsoft Basic Render Driver (0x0000008C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "unmaskedVendor": "Google Inc. (Microsoft)",
+      "vendor": "WebKit",
+      "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+    },
+    "readiness": {
+      "actors": null,
+      "chunks": {
+        "busy": false,
+        "closed": false,
+        "desired": 25,
+        "epoch": 0,
+        "failed": 0,
+        "queued": 0
+      },
+      "far": null,
+      "issues": [],
+      "owner": {
+        "aborted": false,
+        "disposed": false,
+        "present": true
+      },
+      "presentation": {
+        "cinematicArmed": false,
+        "cinematicDone": false,
+        "cinematicPresent": false,
+        "cinematicTime": null,
+        "dioramaPresent": true,
+        "disposed": false,
+        "interactive": true,
+        "orbitSettled": true,
+        "orbitSpeed": 0,
+        "orbitStopping": false,
+        "plantsCount": 4,
+        "plantsMature": false,
+        "plantsProgress": 0.8328013721191736,
+        "plantsReady": false,
+        "prepared": true
+      },
+      "progress": {
+        "failed": false,
+        "omitted": 0,
+        "ready": false,
+        "stages": [
+          {
+            "finished": 72625.90000000014,
+            "id": "configuration",
+            "progress": 1,
+            "started": 72625.90000000014
+          },
+          {
+            "finished": 72634.80000000005,
+            "id": "sky",
+            "progress": 1,
+            "started": 72634.80000000005
+          },
+          {
+            "finished": 78193.40000000014,
+            "id": "biome",
+            "progress": 1,
+            "started": 78193.40000000014
+          },
+          {
+            "finished": 86600.1000000001,
+            "id": "buildings",
+            "progress": 1,
+            "started": 86600.1000000001
+          },
+          {
+            "finished": 95865.19999999995,
+            "id": "animals",
+            "progress": 1,
+            "started": 95865.19999999995
+          },
+          {
+            "finished": 96758.69999999995,
+            "id": "crops",
+            "progress": 1,
+            "started": 96758.69999999995
+          },
+          {
+            "finished": 100276.40000000014,
+            "id": "walls",
+            "progress": 1,
+            "started": 100276.40000000014
+          },
+          {
+            "finished": 102219.6000000001,
+            "id": "vfx",
+            "progress": 1,
+            "started": 102219.6000000001
+          },
+          {
+            "finished": 105579.1000000001,
+            "id": "chunks",
+            "progress": 1,
+            "started": 102798.1000000001
+          },
+          {
+            "finished": null,
+            "id": "gpu",
+            "progress": 0,
+            "started": null
+          },
+          {
+            "finished": null,
+            "id": "far-assets",
+            "progress": 0,
+            "started": null
+          },
+          {
+            "finished": null,
+            "id": "visible-ready",
+            "progress": 0,
+            "started": null
+          }
+        ],
+        "value": 0.8328013721191736
+      },
+      "scope": "One-time observational readiness snapshot. Queue counts are logical state, not GPU completion or physical memory.",
+      "spans": {
+        "active": [
+          {
+            "duration": null,
+            "elapsed": 62761.30000000005,
+            "end": null,
+            "failed": false,
+            "label": "app-world-load",
+            "start": 72632.80000000005
+          },
+          {
+            "duration": null,
+            "elapsed": 29514.300000000047,
+            "end": null,
+            "failed": false,
+            "label": "load-warm-gpu",
+            "start": 105879.80000000005
+          },
+          {
+            "duration": null,
+            "elapsed": 22185.5,
+            "end": null,
+            "failed": false,
+            "label": "warm-compile-world",
+            "start": 113208.6000000001
+          }
+        ],
+        "at": 135394.1000000001,
+        "dropped": 0,
+        "lastCompleted": {
+          "duration": 2.8999999999068677,
+          "end": 131234.80000000005,
+          "failed": false,
+          "label": "loading-compile-submit",
+          "start": 131231.90000000014
+        },
+        "scope": "Nested awaited wall spans; do not sum as exclusive CPU/GPU time. Associations are labels, not exhaustive readiness proof."
+      },
+      "transfers": {
+        "cache": {
+          "application-cache": 3,
+          "browser-cache": 0,
+          "network": 239,
+          "unknown": 0,
+          "validated-cache": 0
+        },
+        "count": 242,
+        "disposed": false,
+        "failed": 0,
+        "loadedBytes": 125863653,
+        "omitted": 0,
+        "pending": 0,
+        "rows": [],
+        "scope": "Observed transfer records only; unknown is not a cache hit. End null can include post-transfer decoding/preparation."
+      }
+    }
+  },
+  "preAppWorldLoadApproxMs": 27279.300000000047,
+  "artifacts": [
+    {
+      "id": 11644626553,
+      "name": "wild-guardians-africa.exe",
+      "bytes": 378872320,
+      "digest": "sha256:e4d2884bc70a0c47cd0afedd628987099bac2afecb677791c3c8d1b77a7341d4"
+    },
+    {
+      "id": 11644426738,
+      "name": "Wild Guardians Africa_0.1.0_x64-setup.exe",
+      "bytes": 376869839,
+      "digest": "sha256:843af2258d34904d144b7db1b2ecdd7f8490191f566610cda766362173fea515"
+    },
+    {
+      "id": 11644271964,
+      "name": "desktop-smoke.json",
+      "bytes": 8683,
+      "digest": "sha256:cff8c536e6c75537c13173fe000c6b129de8801b79d5b3d277fbd9e3c2d26d51"
+    }
+  ],
+  "limits": [
+    "Elapsed spans are nested/concurrent, not additive CPU/GPU durations.",
+    "Original smoke-start to app-world-load gap uses two finish clock reads and is approximate.",
+    "Microsoft Basic Render Driver is observed context identity, not demonstrated cause.",
+    "Actor queue and far owner absent are null, not claims of empty/ready resources.",
+    "No minimization/raster evidence; primary readiness failure skipped visibility.",
+    "No EXE/installer downloaded; artifact sizes/digests are official metadata only."
+  ]
+}

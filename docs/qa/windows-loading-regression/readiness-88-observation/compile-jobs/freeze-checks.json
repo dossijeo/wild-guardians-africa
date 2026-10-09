@@ -1,0 +1,50 @@
+{
+  "priorSource": "945ab0ba",
+  "sourceFiles": {
+    "src/rendering/loading-readiness-snapshot.js": "6b2f1ab26a7d09680d4e736be3800bf2101eadd1770cd3d438777f7c5bef5d73",
+    "src/rendering/loading-programs.js": "7b4f05672b3b612e44b901fc396050a008d90e56aacd5f298af6a97cfa7066c5",
+    "src/rendering/scene.js": "8600efb5fa13854576032027626e4fc1c029f7522df063f4fd7d0d8ea8ae5767",
+    "tools/experiments/compile-gpu-preparation.js": "6085d3f898f8d934bef62b2f79a160c9753179cad2db70b82f0c493d1fef1500",
+    "tests/loading-compile-job-observation.test.js": "adf54d4845db5ae7ebcf1d86cc8a20aef6e72121922ac88bb2af2fdc07605690",
+    "docs/qa/sfx-catalog-post-jam/inventory.json": "8cd443772ecd85731aae20927cc3d3045613e73bca87f8fcc2d4a8ab64707378",
+    "docs/qa/sfx-catalog-post-jam/inventory.md": "41baf228c3b3eda66c5de2e45bf42de3ba5f31dbe356249234bc044ca252f43c"
+  },
+  "sfxProvenanceChanges": [
+    {
+      "path": "/sourceHashes/src/rendering/scene.js",
+      "before": "3b5c3318cc1b45504ac36a30db6dcdfeac5a0ade74c5b9fe877491c1282522d6",
+      "after": "8600efb5fa13854576032027626e4fc1c029f7522df063f4fd7d0d8ea8ae5767"
+    }
+  ],
+  "sfxByteAndRouteChanges": 0,
+  "testsPassed": 54,
+  "build": {
+    "exit": 0,
+    "viteSeconds": 9.19
+  },
+  "package": {
+    "exit": 0,
+    "files": 711,
+    "bytes": 445265502,
+    "relativeLinks": 860,
+    "runtimeGlbs": 22
+  },
+  "logs": {
+    "local-build.log": {
+      "bytes": 2320,
+      "sha256": "66589bcefaf9971e30f299ce925f12dc2225869e67107da6ab5639e7a84faccc"
+    },
+    "local-package.log": {
+      "bytes": 411,
+      "sha256": "ba3d612498e22100ef6c0b73b7e44a281fa4007ecdc314bea973bb2412d86a33"
+    },
+    "local-tests.log": {
+      "bytes": 11927,
+      "sha256": "8196ad1cd1b3a0baf61f2aca538f8d98a15688232e18213f0667e0dfc3802baf"
+    }
+  },
+  "flags": "Original CLI/workflow, none experimental",
+  "deadlineMs": 90000,
+  "hiddenMs": 300000,
+  "localGpu": false
+}
