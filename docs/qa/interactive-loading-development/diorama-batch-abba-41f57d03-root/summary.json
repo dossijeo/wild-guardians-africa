@@ -1,0 +1,75 @@
+{
+  "arms": {
+    "A1": {
+      "preloadMs": 1682.8999999761581,
+      "humanMenuGapAfterPreloadMs": 36242.10000002384,
+      "startReceiptToControlsMs": 15416.299999952316,
+      "startReceiptToReadySampleMs": 11445.199999928474,
+      "readySampleToControlsMs": 3971.100000023842,
+      "maizeParentAwaitOrSubmitMs": 144.70000004768372,
+      "maizeSubmitCount": 1,
+      "maxMaizeSynchronousSubmitMs": 144.70000004768372,
+      "otherScreenSubmitMaxMs": 67.80000007152557,
+      "frames": 843,
+      "maxRafMs": 133.09999999999854,
+      "over100": 1,
+      "negativeStartupIntervals": [
+        -93.29999995231628
+      ]
+    },
+    "B1": {
+      "preloadMs": 1783.7999999523163,
+      "humanMenuGapAfterPreloadMs": 19176.300000071526,
+      "startReceiptToControlsMs": 16704.799999952316,
+      "startReceiptToReadySampleMs": 12684.699999928474,
+      "readySampleToControlsMs": 4020.100000023842,
+      "maizeParentAwaitOrSubmitMs": 177.19999992847443,
+      "maizeSubmitCount": 12,
+      "maxMaizeSynchronousSubmitMs": 57.699999928474426,
+      "otherScreenSubmitMaxMs": 72.89999997615814,
+      "frames": 883,
+      "maxRafMs": 116.29999999999563,
+      "over100": 1,
+      "negativeStartupIntervals": [
+        -72.60000004768517
+      ]
+    },
+    "B2": {
+      "preloadMs": 1824.0,
+      "humanMenuGapAfterPreloadMs": 21341.199999928474,
+      "startReceiptToControlsMs": 16188.5,
+      "startReceiptToReadySampleMs": 12171.5,
+      "readySampleToControlsMs": 4017.0,
+      "maizeParentAwaitOrSubmitMs": 178.30000007152557,
+      "maizeSubmitCount": 12,
+      "maxMaizeSynchronousSubmitMs": 49.39999997615814,
+      "otherScreenSubmitMaxMs": 66,
+      "frames": 866,
+      "maxRafMs": 133.10000000000582,
+      "over100": 3,
+      "negativeStartupIntervals": [
+        -86.89999990463548
+      ]
+    },
+    "A2": {
+      "preloadMs": 1952.7000000476837,
+      "humanMenuGapAfterPreloadMs": 15139.799999952316,
+      "startReceiptToControlsMs": 16267.100000023842,
+      "startReceiptToReadySampleMs": 12287.300000071526,
+      "readySampleToControlsMs": 3979.7999999523163,
+      "maizeParentAwaitOrSubmitMs": 137.80000007152557,
+      "maizeSubmitCount": 1,
+      "maxMaizeSynchronousSubmitMs": 137.80000007152557,
+      "otherScreenSubmitMaxMs": 91.69999992847443,
+      "frames": 867,
+      "maxRafMs": 116.40000000000146,
+      "over100": 2,
+      "negativeStartupIntervals": [
+        -93.2000000238404
+      ]
+    }
+  },
+  "criterionOriginal": "B1 exceeds 5% and 500ms readiness/start-to-controls regression; original criterion fails. B2 nearly equal does not erase B1. No automatic default promotion.",
+  "humanSteering": "User subsequently accepts a practical 50\u201360ms compromise and prioritizes not extending waiting. This does not rewrite the original criterion or establish no waiting increase.",
+  "interpretation": "Both orders reduce contained maize/soil submit stalls, but RAF tails and full readiness are mixed. Preserve all raw. Parent batched wall includes submits and waits; never sum nested phases. root-summary preloadToControls includes 15\u201338 seconds human menu interaction, not mandatory player loading wait. The common private V4 baseline addresses main regression separately."
+}

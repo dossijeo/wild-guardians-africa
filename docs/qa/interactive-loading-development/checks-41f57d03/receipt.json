@@ -36,6 +36,12 @@
       "sha256": "1dc75ab711845e0c8ea8f701be5fecaefc2d449d721391311a1a7150f4f3b867",
       "bytes": 98650,
       "result": "Interrupted by Ctrl-C; no final suite pass. Started fd9cf921; source changed during execution."
+    },
+    {
+      "file": "loading-ci-37913182993-failed.log",
+      "sha256": "38e0cc2b9bf80bf5eefd60ed67bc3f2481edfbee9b504806bd9720bad9da55ee",
+      "bytes": 1811847,
+      "result": "Frozen CI terminal failure: 3679/3681 pass, 2 stale SFX audit/anchor failures. Not erased by later fix."
     }
   ],
   "ci": {
@@ -44,5 +50,19 @@
     "source": "41f57d037d79d4a2f5925b04bb77a2f926279e25",
     "stateAtReceipt": "in_progress; not a pass"
   },
-  "limits": "Local checks coexisted with full CPU suite, no performance claim. Full-suite partial log is not evidence of a frozen 41f57d03 pass."
+  "limits": "Local checks coexisted with full CPU suite, no performance claim. Full-suite partial log is not evidence of a frozen 41f57d03 pass.",
+  "ciTerminal": {
+    "run": 37913182993,
+    "source": "41f57d037d79d4a2f5925b04bb77a2f926279e25",
+    "result": "failure",
+    "pass": 3679,
+    "fail": 2,
+    "total": 3681
+  },
+  "nextCi": {
+    "run": 37914538279,
+    "source": "f2adc0b2",
+    "stateAtReceipt": "in progress, not claimed as pass",
+    "fix": "SFX audit metadata only; runtime unchanged"
+  }
 }
