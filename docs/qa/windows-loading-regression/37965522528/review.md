@@ -1,0 +1,9 @@
+# Native menu pause: no promotion
+
+Run 37965522528, exact source 6a798f72. Primary world readiness fails at 90,140.2 ms, 82%, preparing rendering resources; native minimization is skipped. Raw SHA256 460d787c291cee9c564f2fb795eedf3e53cc08933ff3d8947ba7e62d678a98a0 (345188 B). Pause-menu ON; shared ground, collective and parallel asset/readiness experiments OFF.
+
+Only one retained scalar menu sample exists (renderCount 302, home). The menu iframe disappears about 2.139 seconds after observation begins and remains absent through failure. This is **not evidence of a stable render count under pause**, nor of sustained menu contention during the later delay. Pause did not solve the readiness gate; no production promotion.
+
+World warm GPU is active for 35,266.8 ms and world compile for 26,562.9 ms at the final observation. These are nested, not additive exclusive costs. Staging previously completed in 8,533.6 ms. Across 26 compile submissions, synchronous submit CPU totals 61.7 ms/max 13.3 ms; 265 native-readiness polls total 8.8 ms/max .9 ms. The final pending program ID is 23, current Basic biome-ground/horizon-clip, with complete 417-character cache key. First metadata observation ID20=124594.8, ID23=139971; final poll=146296.8. Pending means native completion was not yet reported; it does not distinguish compiler versus linker or establish the shader as the sole delay.
+
+The existing opt-in shared Basic color recipe could avoid the later separate horizon recipe if Three's full parameters also agree. Both materials share vertex/fragment source and custom cache key in CPU tests, use independent bounds, and retain separate depth recipes. Native program reuse/readiness and raster correctness remain unproved. Prior shared-ground run 37959077576 failed before reaching its GPU warmup, so it did not exercise this hypothesis. No timeout/quality/resource reduction is permitted.

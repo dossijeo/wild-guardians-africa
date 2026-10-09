@@ -1,0 +1,1250 @@
+{
+  "ok": false,
+  "errors": [
+    "Error: Production world did not finish loading"
+  ],
+  "current": {
+    "canvas": {
+      "height": 720,
+      "width": 1028
+    },
+    "failure": null,
+    "focused": true,
+    "hidden": false,
+    "menu": false,
+    "menuRender": null,
+    "overlay": true,
+    "phase": "Preparing rendering resources",
+    "progress": "82",
+    "stageBusy": "true",
+    "visibility": "visible"
+  },
+  "elapsedMs": 90140.19999999995,
+  "recipe": {
+    "collectiveReadiness": false,
+    "parallelDioramaAssets": false,
+    "pauseLoadingMenu": true,
+    "scope": "Normal production loading pipeline; explicit smoke-only shared ground/menu pause options recorded above.",
+    "sharedGroundClip": false
+  },
+  "active": [
+    {
+      "elapsedMs": 35266.80000000005,
+      "label": "load-warm-gpu",
+      "scope": "Existing awaited phase start; smoke-only pending-phase attribution.",
+      "start": 111030.7999999998
+    },
+    {
+      "elapsedMs": 26562.899999999907,
+      "label": "warm-compile-world",
+      "scope": "Existing awaited phase start; smoke-only pending-phase attribution.",
+      "start": 119734.69999999995
+    }
+  ],
+  "menuSnapshots": [
+    {
+      "at": 56158.799999999814,
+      "canvas": null,
+      "failure": null,
+      "focused": true,
+      "hidden": false,
+      "menu": true,
+      "menuRender": {
+        "at": 56158.39999999991,
+        "renderCount": 302,
+        "section": null,
+        "state": "home"
+      },
+      "overlay": false,
+      "phase": null,
+      "progress": null,
+      "stageBusy": null,
+      "visibility": "visible"
+    }
+  ],
+  "pending": [
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 134660,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        20
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 134660
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 134809.69999999995,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        20
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 134809.69999999995
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 134959.09999999986,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        20
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 134959.09999999986
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0.10000000009313226,
+      "end": 135111,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        20
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 135110.8999999999
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 135261.8999999999,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        20
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 135261.8999999999
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 135412.2999999998,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        20
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 135412.2999999998
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 135562.09999999986,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        20
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 135562.09999999986
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 135710.2999999998,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        20
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 135710.2999999998
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 135863.69999999995,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 0,
+      "pendingProgramIds": [],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 135863.69999999995
+    },
+    {
+      "checkedProgramCount": 4,
+      "duration": 0,
+      "end": 135869.3999999999,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        21
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 135869.3999999999
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 136036.19999999995,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        21
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 136036.19999999995
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 136185.5,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        21
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 136185.5
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 136261.3999999999,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        21
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 136261.3999999999
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 136409.2999999998,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        21
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 136409.2999999998
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0.10000000009313226,
+      "end": 136561.19999999995,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        21
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 136561.09999999986
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 136710.59999999986,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        21
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 136710.59999999986
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 136859,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        21
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 136859
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 137008.8999999999,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        21
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 137008.8999999999
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 137158.5,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        21
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 137158.5
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 137308.59999999986,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        21
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 137308.59999999986
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 137459.69999999995,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        21
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 137459.69999999995
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 137610.3999999999,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        21
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 137610.3999999999
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 137763.09999999986,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        21
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 137763.09999999986
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 137913.3999999999,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 0,
+      "pendingProgramIds": [],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 137913.3999999999
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 137915.5,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 0,
+      "pendingProgramIds": [],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 137915.5
+    },
+    {
+      "checkedProgramCount": 2,
+      "duration": 0,
+      "end": 137919,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        22
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 137919
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 138086.19999999995,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        22
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 138086.19999999995
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 138237,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        22
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 138237
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 138386.2999999998,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        22
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 138386.2999999998
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 138534.8999999999,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        22
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 138534.8999999999
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0.10000000009313226,
+      "end": 138686.3999999999,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        22
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 138686.2999999998
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0.10000000009313226,
+      "end": 138837.19999999995,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        22
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 138837.09999999986
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 138988,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        22
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 138988
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0.0999999998603016,
+      "end": 139138.7999999998,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        22
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 139138.69999999995
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0.10000000009313226,
+      "end": 139287.5,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        22
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 139287.3999999999
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 139437.19999999995,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        22
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 139437.19999999995
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 139585.59999999986,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        22
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 139585.59999999986
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 139660.2999999998,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        22
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 139660.2999999998
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 139809.8999999999,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        22
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 139809.8999999999
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 139962.7999999998,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 0,
+      "pendingProgramIds": [],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 139962.7999999998
+    },
+    {
+      "checkedProgramCount": 3,
+      "duration": 0.10000000009313226,
+      "end": 139964.8999999999,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 0,
+      "pendingProgramIds": [],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 139964.7999999998
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 139965.19999999995,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 0,
+      "pendingProgramIds": [],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 139965.19999999995
+    },
+    {
+      "checkedProgramCount": 3,
+      "duration": 0,
+      "end": 139965.59999999986,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 0,
+      "pendingProgramIds": [],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 139965.59999999986
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 139965.7999999998,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 0,
+      "pendingProgramIds": [],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 139965.7999999998
+    },
+    {
+      "checkedProgramCount": 2,
+      "duration": 0,
+      "end": 139965.8999999999,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 0,
+      "pendingProgramIds": [],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 139965.8999999999
+    },
+    {
+      "checkedProgramCount": 3,
+      "duration": 0,
+      "end": 139966.09999999986,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 0,
+      "pendingProgramIds": [],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 139966.09999999986
+    },
+    {
+      "checkedProgramCount": 4,
+      "duration": 0,
+      "end": 139966.3999999999,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 0,
+      "pendingProgramIds": [],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 139966.3999999999
+    },
+    {
+      "checkedProgramCount": 2,
+      "duration": 0,
+      "end": 139967.19999999995,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 0,
+      "pendingProgramIds": [],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 139967.19999999995
+    },
+    {
+      "checkedProgramCount": 4,
+      "duration": 0.19999999995343387,
+      "end": 139971.19999999995,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 2,
+      "pendingProgramIds": [
+        23,
+        24
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 139971
+    },
+    {
+      "checkedProgramCount": 2,
+      "duration": 0,
+      "end": 140142.59999999986,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 2,
+      "pendingProgramIds": [
+        23,
+        24
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 140142.59999999986
+    },
+    {
+      "checkedProgramCount": 2,
+      "duration": 0.0999999998603016,
+      "end": 140299.09999999986,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 2,
+      "pendingProgramIds": [
+        23,
+        24
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 140299
+    },
+    {
+      "checkedProgramCount": 2,
+      "duration": 0,
+      "end": 140449.19999999995,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 2,
+      "pendingProgramIds": [
+        23,
+        24
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 140449.19999999995
+    },
+    {
+      "checkedProgramCount": 2,
+      "duration": 0,
+      "end": 140598.7999999998,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 2,
+      "pendingProgramIds": [
+        23,
+        24
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 140598.7999999998
+    },
+    {
+      "checkedProgramCount": 2,
+      "duration": 0,
+      "end": 140749.09999999986,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 2,
+      "pendingProgramIds": [
+        23,
+        24
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 140749.09999999986
+    },
+    {
+      "checkedProgramCount": 2,
+      "duration": 0,
+      "end": 140898.19999999995,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 2,
+      "pendingProgramIds": [
+        23,
+        24
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 140898.19999999995
+    },
+    {
+      "checkedProgramCount": 2,
+      "duration": 0,
+      "end": 141048.3999999999,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 2,
+      "pendingProgramIds": [
+        23,
+        24
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 141048.3999999999
+    },
+    {
+      "checkedProgramCount": 2,
+      "duration": 0,
+      "end": 141197.59999999986,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 2,
+      "pendingProgramIds": [
+        23,
+        24
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 141197.59999999986
+    },
+    {
+      "checkedProgramCount": 2,
+      "duration": 0,
+      "end": 141352.09999999986,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 2,
+      "pendingProgramIds": [
+        23,
+        24
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 141352.09999999986
+    },
+    {
+      "checkedProgramCount": 2,
+      "duration": 0.0999999998603016,
+      "end": 141501.2999999998,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 2,
+      "pendingProgramIds": [
+        23,
+        24
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 141501.19999999995
+    },
+    {
+      "checkedProgramCount": 2,
+      "duration": 0,
+      "end": 141653.5,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        23
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 141653.5
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 141803.69999999995,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        23
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 141803.69999999995
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 141954.59999999986,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        23
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 141954.59999999986
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0.30000000004656613,
+      "end": 142105.5,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        23
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 142105.19999999995
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 142254.5,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        23
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 142254.5
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 142329.19999999995,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        23
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 142329.19999999995
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 142477.19999999995,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        23
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 142477.19999999995
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 142627,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        23
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 142627
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0.10000000009313226,
+      "end": 142777.19999999995,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        23
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 142777.09999999986
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 142927.69999999995,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        23
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 142927.69999999995
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 143077.09999999986,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        23
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 143077.09999999986
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0.0999999998603016,
+      "end": 143226.2999999998,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        23
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 143226.19999999995
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 143377.3999999999,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        23
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 143377.3999999999
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 143526,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        23
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 143526
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 143677.19999999995,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        23
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 143677.19999999995
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0.10000000009313226,
+      "end": 143828.5,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        23
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 143828.3999999999
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 143979.7999999998,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        23
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 143979.7999999998
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 144128.7999999998,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        23
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 144128.7999999998
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 144279.7999999998,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        23
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 144279.7999999998
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 144428.8999999999,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        23
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 144428.8999999999
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 144577.59999999986,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        23
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 144577.59999999986
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 144727.2999999998,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        23
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 144727.2999999998
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 144877.7999999998,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        23
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 144877.7999999998
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0.10000000009313226,
+      "end": 145027.19999999995,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        23
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 145027.09999999986
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 145176.59999999986,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        23
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 145176.59999999986
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0.10000000009313226,
+      "end": 145326.3999999999,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        23
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 145326.2999999998
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 145474.7999999998,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        23
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 145474.7999999998
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0.0999999998603016,
+      "end": 145626.09999999986,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        23
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 145626
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 145775.8999999999,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        23
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 145775.8999999999
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0.10000000009313226,
+      "end": 145851.19999999995,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        23
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 145851.09999999986
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 145999.69999999995,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        23
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 145999.69999999995
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0,
+      "end": 146147.3999999999,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        23
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 146147.3999999999
+    },
+    {
+      "checkedProgramCount": 1,
+      "duration": 0.10000000009313226,
+      "end": 146296.8999999999,
+      "failed": false,
+      "label": "loading-program-readiness-poll",
+      "pendingProgramCount": 1,
+      "pendingProgramIds": [
+        23
+      ],
+      "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+      "start": 146296.7999999998
+    }
+  ]
+}
