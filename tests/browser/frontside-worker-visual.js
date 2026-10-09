@@ -1,4 +1,5 @@
 import {attachHumanVisualReview} from '../../tools/lib/frontside-human-visual-review.mjs';
+import {createWorkerReviewAtlas} from '../../tools/lib/frontside-worker-review-atlas.mjs';
 import {captureNormalField,normalFieldMetrics,normalFieldByteStatistics} from '../../tools/lib/frontside-normal-field-diagnostic.mjs';
 import * as THREE from 'three';
 import {AfricanToon} from '../../src/rendering/african-toon.js';
@@ -143,7 +144,7 @@ async function campaign(){
  report.sourceColorTexels=sourceColorTexels;if(sourceColorTexels)report.colorTexelProbeMeaning='SourceMesh0 bound color2D read-only attachments/mips only, dimensions from source CPU metadata and actual texture identity match. Unsupported/partial/depth results are not equality. SameFramebuffer and30 source repeats retained; source-only instrument diagnostic, no candidate/performance/causal approval.';
  if(noShadows)report.shadowSide='No shadow draws or native shadow sampling; source-only exclusion is diagnostic, not shadow acceptance';
  let failed=false;
- report.caseOffset=caseOffset;let campaignIndex=0;
+ report.caseOffset=caseOffset;let campaignIndex=0;const reviewAtlas=closedSubset?createWorkerReviewAtlas(document,{size,maximum:60}):null;
  function* legacyCases(){for(const biome of ['sabana','manglares'])for(const night of [0,.5,1])for(const clipName of campaignClips)for(const fraction of fractions)for(const elevation of elevations)for(const azimuth of azimuths)yield{biome,night,clipName,fraction,elevation,azimuth};}
  campaignLoop: for(const {biome,night,clipName,fraction,elevation,azimuth} of closedViews?.cases??legacyCases()){
   if(campaignIndex++<caseOffset)continue;
@@ -207,6 +208,7 @@ async function campaign(){
   sample.nominalRgbMetrics={linearRgbMae:nominalError/Math.max(channels,1),p99Approx:nominalP99,maxError:nominalMaxError,maxTileMae:Math.max(...Array.from(nominalTileError,(v,i)=>tileChannels[i]?v/tileChannels[i]:0)),rgbOutlierRegions:regions(nominalRgbMask,size)};
   sample.toolStates=rigs.map(rig=>['Prop_WateringCan','Prop_FruitCrate','Prop_Hoe','Prop_HarvestSack'].map(name=>{const node=rig.model.getObjectByName(name);return{name,visible:node?.visible??null,scale:node?.scale.toArray()??null};}));
   sample.passes=sample.alphaDistanceGate.passes&&sample.alphaIoU>=.9995&&sample.missingFraction<=.00025&&sample.addedFraction<=.0005&&sample.linearRgbMae<=.002&&sample.p99Approx<=.015&&sample.maxTileMae<=.01&&!sample.rgbOutlierRegions.some(r=>r.pixels>16)&&!sample.missingRegions.some(r=>r.pixels>4||r.diameterUpperBound>2);report.samples.push(sample);status.textContent=`${report.samples.length} muestras. ${clipName}/${fraction}, ${azimuth}Â°/${elevation}Â°: IoU${sample.alphaIoU.toFixed(6)}, MAE${sample.linearRgbMae.toFixed(6)} ${sample.passes?'diagnóstico dentro del umbral':'diagnóstico fuera del umbral'}`;
+  reviewAtlas?.add(pixels,{sample:report.samples.length-1,clip:clipName,fraction,biome,night,elevation,azimuth});
   if(closedSubset){const coverage=[];for(let side=0;side<2;side++){rigs.forEach((rig,i)=>rig.model.visible=i===side);const faces=mapMissingToSource(renderer,rigs[side],camera,pixels,size,'visible');coverage.push({side,parts:[...closedNames].map(mesh=>{const selected=faces.filter(f=>f.mesh===mesh);return{mesh,visiblePixels:selected.reduce((n,f)=>n+f.pixels,0),visibleFaces:selected.length};})});}report.selectedPartCoverage.push({sample:report.samples.length-1,coverage,meaning:'Later ID draw with original geometry, skin and visibility: coverage only, not PBR quality or GPU timing.'});}
   if(closedSubset&&frontShadow){sample.colorPasses=sample.passes;sample.passes=sample.passes&&shadowDifference?.quantitativeGate?.passes===true;}
   status.textContent=`${report.samples.length} muestras. ${clipName}/${fraction}, ${azimuth}°/${elevation}°: IoU${sample.alphaIoU.toFixed(6)}, MAE${sample.linearRgbMae.toFixed(6)} ${sample.passes?'diagnóstico dentro del umbral':'diagnóstico fuera del umbral'}`;
@@ -235,9 +237,11 @@ async function campaign(){
  // Export source, candidate and regional difference in a single PNG. Pixel
  // rows from GL are reversed for a normal upright canvas image.
  report.capturePng=comparisonCapture(pixels,size);
+ if(reviewAtlas)report.reviewAtlas=reviewAtlas.snapshot();
  const response=await fetch('/__frontside_report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(attachHumanVisualReview(report))});if(!response.ok)throw Error(await response.text());
  // Preserve the actual PBR comparison, including after later diagnostic ID
  // draws and context disposal. A disposed WebGL canvas is not QA evidence.
  await retainComparison(report.capturePng,'Original, candidate, and amplified RGB difference for the last compared pose');
+ if(report.reviewAtlas){const image=document.createElement('img');image.src=report.reviewAtlas.atlasPng;image.alt='Retained source/candidate native PBR poses; diagnostic review atlas';image.style.maxWidth='90vw';await image.decode();document.querySelector('#view').append(image);}
  release();registry.dispose();sourceAssets.disposeModels();sky.dispose();renderer.dispose();renderer.forceContextLoss();status.textContent=`Screen guardado: ${report.samples.length} muestras, ${failed?'umbrales diagnósticos excedidos':'umbrales diagnósticos dentro de límites'}. GPU liberada. REVISIÓN HUMANA PENDIENTE.`;
 }
