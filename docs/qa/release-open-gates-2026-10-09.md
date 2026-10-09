@@ -35,6 +35,14 @@ original policy/seed and negative records; complete the required biome/culture
 coverage and bad-management loss tests. Static margins or short campaigns cannot
 replace hundred-night survival, physical crate delivery and activity evidence.
 
+The original income pilot `2bdac97e` has now completed 100 nights in Canyon /
+Mapungubwe, with 15,200 physical deliveries, but still fails activity at 36.0967%.
+Root repeated the source/snapshot/accounting audit: 321 hashes match and the
+complete physical summary agrees. See [the review](campaign-balance-recovery/root-pilot-review/README.md).
+The economic candidate remains unpromoted. Intrajornada task/route evidence is
+needed before another balance adjustment; its final cleaned-up snapshot cannot
+establish worker utilization.
+
 ## Interactive loading
 
 `feature/interactive-loading-screen` remains unmerged. Its original acceptance
