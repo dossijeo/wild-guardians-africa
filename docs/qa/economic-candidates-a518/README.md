@@ -31,3 +31,43 @@ The initial strict independent audit found an additional gate the small observat
 Total day1 paid plants are73/80/59/59/71 for baseline/A/B/C/D. Therefore “more final planted crops” is not an established cause. A larger batch before the first affordable-delivery feedback may alter FIFO service, but intrajornada phases/queues must establish this rather than guessing. Missing delivery on day1 is the authoritative negative; the full recorded state is untouched.
 
 Each row survives the requested ten nights and passes physical monetary accounting. Every ten-night activity window is above25%; that does not mathematically prove a later100-night average must fail, and none demonstrates100-night or matrix acceptance. B/C/D are nevertheless blocked by the daily-delivery invariant. C's separate ordinary poor-management matrix has three real losses (Sabana, Great River, Volcano at night8); Mangrove/Canyon/Desert survive ten nights, and those survivals remain intact. D poor-management coverage is pending. No candidate is promoted, no PR is opened and no new100-night job is launched from these pilots.
+
+### Paired service and first-cohort observation
+
+The read-only observer reran the retained original-price and D cases without
+changing policy, seed, FIFO, actor movement or runtime service. Both complete
+final states match their original archived states byte for byte. The structured
+comparison is `service-pair-comparison.json`; original callback traces and all
+first-eight-plant transitions are preserved in `baseline-cohort/` and
+`seed-half-cohort/`. These are ten-night diagnostics, not 100-night or matrix
+acceptance. Every gate remains explicit: original prices pass daily paid staff
+and physical delivery but fail activity; D fails both daily delivery and activity.
+
+Both cases hire six workers on day 1. The first eight plants are placed and
+receive their initial water at identical observed times (38–47 s); their first
+checkpoints also occur at identical times (108–117 s). The later service diverges:
+original-price checkpoint watering is observed at 151–181 s, maturity at
+178–187 s, and all eight are delivered during day 1 (217–259 s). D checkpoint
+watering moves to 233–268 s, with maturity held until that water; their physical
+collection and delivery occur on day 2 (29–38 s). This is a real delayed-water
+and queued-harvest case, not unpaid logical harvest or missing initial watering.
+
+The final day-1 totals are 73 vs 71 paid placements, so a larger daily total is
+not the explanation. Before the first original-price delivery, 48 placed events
+are observed; D reaches 72 before any income. At t100 initial work remains for
+18 vs 42 plants; at t200 the original has 14 mature plants while D has zero,
+11 initial and 42 water tasks. D has 27 mature/queued-harvest plants at t299,
+but workers have spent all sampled actor time on initial/water/arrival phases,
+with no harvest or carrying phase. Original-price sampled actor time includes
+277 harvest and 19 carrying seconds. FIFO was not modified: the larger early
+purchase batch precedes the same checkpoint timings and delays later water and
+harvest service. This observation supports service saturation by the purchase
+sequence; it does not establish a new viable price or prove a late-campaign cause.
+
+Task ages are first-observed lower bounds. Durations are one-second left-endpoint
+actor-seconds, not global elapsed seconds. Transition times are observed at native
+callback cadence; no substep-perfect timestamps are asserted. The initial seed
+precedes the first callback but its retained placement event is included, which
+explains why observed early placements include one more than the daily counter
+whose baseline is captured after the initial seed. No new parameter candidate,
+policy correction or promotion is justified by these diagnostics alone.

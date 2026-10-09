@@ -1,0 +1,1066 @@
+{
+  "scope": "Ten-day observational pairing, no 100-night/matrix acceptance. First-observed transition times at native callback cadence; queue ages are lower bounds. Actor-seconds are not global elapsed seconds.",
+  "cases": [
+    {
+      "case": "baseline-cohort",
+      "source": "476e25d602d5a975e7da5297771a6f887bf8ce2c",
+      "gates": {
+        "requestedNightsAndNoDefeat": true,
+        "eachDayPaidStaffAndDelivery": true,
+        "physicalLedgerHydration": true,
+        "shortWindowIdleBelow25": false,
+        "responsible100NightAndMatrix30": "not-tested"
+      },
+      "stateSha256": "c6fd00eff33940158e69aa72f3719c674974248099e5c04024a2ca53b69d3f31",
+      "firstDay": {
+        "day": 1,
+        "staff": 6,
+        "delivered": 21,
+        "planted": 73,
+        "firstDeliveryTime": 216.99999999999196,
+        "paidPlantsBeforeFirstDelivery": 48,
+        "firstWaterPendingAtDaylightEnd": 26,
+        "globalObservedSeconds": 297.9999999999995,
+        "phaseActorSeconds": {
+          "arriving:none": 10.000000000000002,
+          "walking:initial": 504.9999999999893,
+          "acting:initial": 348.99999999998886,
+          "walking:water": 479.9999999999852,
+          "acting:water": 147.999999999997,
+          "walking:harvest": 205.0000000000229,
+          "acting:harvest": 72.00000000000867,
+          "carrying:crate": 19.000000000003467
+        },
+        "longestObservedTasks": [
+          {
+            "id": "task-107",
+            "targetId": "plant-106",
+            "kind": "initial",
+            "workerId": "worker-12",
+            "blocked": false,
+            "observedAge": 104.9999999999954,
+            "time": 149.99999999999577
+          },
+          {
+            "id": "task-109",
+            "targetId": "plant-108",
+            "kind": "initial",
+            "workerId": "worker-6",
+            "blocked": false,
+            "observedAge": 102.99999999999544,
+            "time": 148.99999999999582
+          },
+          {
+            "id": "task-91",
+            "targetId": "plant-90",
+            "kind": "initial",
+            "workerId": "worker-10",
+            "blocked": false,
+            "observedAge": 100.99999999999619,
+            "time": 137.99999999999645
+          },
+          {
+            "id": "task-101",
+            "targetId": "plant-100",
+            "kind": "initial",
+            "workerId": "worker-16",
+            "blocked": false,
+            "observedAge": 99.9999999999959,
+            "time": 141.99999999999622
+          },
+          {
+            "id": "task-165",
+            "targetId": "plant-40",
+            "kind": "harvest",
+            "workerId": "worker-16",
+            "blocked": false,
+            "observedAge": 95.00000000000509,
+            "time": 293.0000000000081
+          },
+          {
+            "id": "task-111",
+            "targetId": "plant-110",
+            "kind": "initial",
+            "workerId": "worker-14",
+            "blocked": false,
+            "observedAge": 94.99999999999582,
+            "time": 141.99999999999622
+          },
+          {
+            "id": "task-166",
+            "targetId": "plant-38",
+            "kind": "harvest",
+            "workerId": "worker-6",
+            "blocked": false,
+            "observedAge": 90.00000000000423,
+            "time": 289.00000000000716
+          },
+          {
+            "id": "task-89",
+            "targetId": "plant-88",
+            "kind": "initial",
+            "workerId": "worker-6",
+            "blocked": false,
+            "observedAge": 88.99999999999693,
+            "time": 124.99999999999717
+          }
+        ]
+      },
+      "cohort": [
+        {
+          "plantId": "plant-3",
+          "placementFirstObserved": {
+            "day": 1,
+            "time": 1.0,
+            "elapsed": 1.0
+          },
+          "firstWater": {
+            "day": 1,
+            "time": 47.0,
+            "elapsed": 47.0
+          },
+          "checkpointDue": {
+            "day": 1,
+            "time": 117.0,
+            "elapsed": 117.0
+          },
+          "checkpointWater": {
+            "day": 1,
+            "time": 167.0,
+            "elapsed": 167.0
+          },
+          "mature": {
+            "day": 1,
+            "time": 187.0,
+            "elapsed": 187.0
+          },
+          "harvestRequested": {
+            "day": 1,
+            "time": 187.0,
+            "elapsed": 187.0
+          },
+          "picked": {
+            "day": 1,
+            "time": 246.0,
+            "elapsed": 246.0
+          },
+          "delivered": {
+            "day": 1,
+            "time": 247.0,
+            "elapsed": 247.0
+          }
+        },
+        {
+          "plantId": "plant-18",
+          "placementFirstObserved": {
+            "day": 1,
+            "time": 1.0,
+            "elapsed": 1.0
+          },
+          "firstWater": {
+            "day": 1,
+            "time": 47.0,
+            "elapsed": 47.0
+          },
+          "checkpointDue": {
+            "day": 1,
+            "time": 117.0,
+            "elapsed": 117.0
+          },
+          "checkpointWater": {
+            "day": 1,
+            "time": 162.0,
+            "elapsed": 162.0
+          },
+          "mature": {
+            "day": 1,
+            "time": 187.0,
+            "elapsed": 187.0
+          },
+          "harvestRequested": {
+            "day": 1,
+            "time": 187.0,
+            "elapsed": 187.0
+          },
+          "picked": {
+            "day": 1,
+            "time": 254.0,
+            "elapsed": 254.0
+          },
+          "delivered": {
+            "day": 1,
+            "time": 254.0,
+            "elapsed": 254.0
+          }
+        },
+        {
+          "plantId": "plant-20",
+          "placementFirstObserved": {
+            "day": 1,
+            "time": 2.0,
+            "elapsed": 2.0
+          },
+          "firstWater": {
+            "day": 1,
+            "time": 39.0,
+            "elapsed": 39.0
+          },
+          "checkpointDue": {
+            "day": 1,
+            "time": 109.0,
+            "elapsed": 109.0
+          },
+          "checkpointWater": {
+            "day": 1,
+            "time": 154.0,
+            "elapsed": 154.0
+          },
+          "mature": {
+            "day": 1,
+            "time": 179.0,
+            "elapsed": 179.0
+          },
+          "harvestRequested": {
+            "day": 1,
+            "time": 179.0,
+            "elapsed": 179.0
+          },
+          "picked": {
+            "day": 1,
+            "time": 222.0,
+            "elapsed": 222.0
+          },
+          "delivered": {
+            "day": 1,
+            "time": 222.0,
+            "elapsed": 222.0
+          }
+        },
+        {
+          "plantId": "plant-22",
+          "placementFirstObserved": {
+            "day": 1,
+            "time": 3.0,
+            "elapsed": 3.0
+          },
+          "firstWater": {
+            "day": 1,
+            "time": 47.0,
+            "elapsed": 47.0
+          },
+          "checkpointDue": {
+            "day": 1,
+            "time": 117.0,
+            "elapsed": 117.0
+          },
+          "checkpointWater": {
+            "day": 1,
+            "time": 181.0,
+            "elapsed": 181.0
+          },
+          "mature": {
+            "day": 1,
+            "time": 187.0,
+            "elapsed": 187.0
+          },
+          "harvestRequested": {
+            "day": 1,
+            "time": 187.0,
+            "elapsed": 187.0
+          },
+          "picked": {
+            "day": 1,
+            "time": 245.0,
+            "elapsed": 245.0
+          },
+          "delivered": {
+            "day": 1,
+            "time": 245.0,
+            "elapsed": 245.0
+          }
+        },
+        {
+          "plantId": "plant-24",
+          "placementFirstObserved": {
+            "day": 1,
+            "time": 4.0,
+            "elapsed": 4.0
+          },
+          "firstWater": {
+            "day": 1,
+            "time": 38.0,
+            "elapsed": 38.0
+          },
+          "checkpointDue": {
+            "day": 1,
+            "time": 108.0,
+            "elapsed": 108.0
+          },
+          "checkpointWater": {
+            "day": 1,
+            "time": 151.0,
+            "elapsed": 151.0
+          },
+          "mature": {
+            "day": 1,
+            "time": 178.0,
+            "elapsed": 178.0
+          },
+          "harvestRequested": {
+            "day": 1,
+            "time": 178.0,
+            "elapsed": 178.0
+          },
+          "picked": {
+            "day": 1,
+            "time": 216.0,
+            "elapsed": 216.0
+          },
+          "delivered": {
+            "day": 1,
+            "time": 217.0,
+            "elapsed": 217.0
+          }
+        },
+        {
+          "plantId": "plant-26",
+          "placementFirstObserved": {
+            "day": 1,
+            "time": 5.0,
+            "elapsed": 5.0
+          },
+          "firstWater": {
+            "day": 1,
+            "time": 46.0,
+            "elapsed": 46.0
+          },
+          "checkpointDue": {
+            "day": 1,
+            "time": 116.0,
+            "elapsed": 116.0
+          },
+          "checkpointWater": {
+            "day": 1,
+            "time": 155.0,
+            "elapsed": 155.0
+          },
+          "mature": {
+            "day": 1,
+            "time": 186.0,
+            "elapsed": 186.0
+          },
+          "harvestRequested": {
+            "day": 1,
+            "time": 186.0,
+            "elapsed": 186.0
+          },
+          "picked": {
+            "day": 1,
+            "time": 258.0,
+            "elapsed": 258.0
+          },
+          "delivered": {
+            "day": 1,
+            "time": 259.0,
+            "elapsed": 259.0
+          }
+        },
+        {
+          "plantId": "plant-28",
+          "placementFirstObserved": {
+            "day": 1,
+            "time": 6.0,
+            "elapsed": 6.0
+          },
+          "firstWater": {
+            "day": 1,
+            "time": 45.0,
+            "elapsed": 45.0
+          },
+          "checkpointDue": {
+            "day": 1,
+            "time": 115.0,
+            "elapsed": 115.0
+          },
+          "checkpointWater": {
+            "day": 1,
+            "time": 153.0,
+            "elapsed": 153.0
+          },
+          "mature": {
+            "day": 1,
+            "time": 185.0,
+            "elapsed": 185.0
+          },
+          "harvestRequested": {
+            "day": 1,
+            "time": 185.0,
+            "elapsed": 185.0
+          },
+          "picked": {
+            "day": 1,
+            "time": 238.0,
+            "elapsed": 238.0
+          },
+          "delivered": {
+            "day": 1,
+            "time": 239.0,
+            "elapsed": 239.0
+          }
+        },
+        {
+          "plantId": "plant-30",
+          "placementFirstObserved": {
+            "day": 1,
+            "time": 7.0,
+            "elapsed": 7.0
+          },
+          "firstWater": {
+            "day": 1,
+            "time": 47.0,
+            "elapsed": 47.0
+          },
+          "checkpointDue": {
+            "day": 1,
+            "time": 117.0,
+            "elapsed": 117.0
+          },
+          "checkpointWater": {
+            "day": 1,
+            "time": 157.0,
+            "elapsed": 157.0
+          },
+          "mature": {
+            "day": 1,
+            "time": 187.0,
+            "elapsed": 187.0
+          },
+          "harvestRequested": {
+            "day": 1,
+            "time": 187.0,
+            "elapsed": 187.0
+          },
+          "picked": {
+            "day": 1,
+            "time": 246.0,
+            "elapsed": 246.0
+          },
+          "delivered": {
+            "day": 1,
+            "time": 246.0,
+            "elapsed": 246.0
+          }
+        }
+      ],
+      "day1Snapshots": [
+        {
+          "time": 60.00000000000058,
+          "living": 48,
+          "firstWaterPending": 34,
+          "mature": 0,
+          "deliveredTotal": 0,
+          "queue": {
+            "initial": 34,
+            "water": 0,
+            "harvest": 0
+          }
+        },
+        {
+          "time": 99.9999999999986,
+          "living": 48,
+          "firstWaterPending": 18,
+          "mature": 0,
+          "deliveredTotal": 0,
+          "queue": {
+            "initial": 18,
+            "water": 0,
+            "harvest": 0
+          }
+        },
+        {
+          "time": 149.99999999999577,
+          "living": 48,
+          "firstWaterPending": 1,
+          "mature": 0,
+          "deliveredTotal": 0,
+          "queue": {
+            "initial": 1,
+            "water": 23,
+            "harvest": 0
+          }
+        },
+        {
+          "time": 199.99999999999292,
+          "living": 48,
+          "firstWaterPending": 0,
+          "mature": 14,
+          "deliveredTotal": 0,
+          "queue": {
+            "initial": 0,
+            "water": 17,
+            "harvest": 14
+          }
+        },
+        {
+          "time": 250,
+          "living": 53,
+          "firstWaterPending": 11,
+          "mature": 29,
+          "deliveredTotal": 6,
+          "queue": {
+            "initial": 11,
+            "water": 10,
+            "harvest": 29
+          }
+        },
+        {
+          "time": 299.00000000000944,
+          "living": 55,
+          "firstWaterPending": 26,
+          "mature": 26,
+          "deliveredTotal": 19,
+          "queue": {
+            "initial": 26,
+            "water": 3,
+            "harvest": 26
+          }
+        }
+      ],
+      "artifactHashes": {
+        "first-cohort-transitions.json": "723296923de2063083f871fd04ed2bf67e7475e41e86b046777182ca165a120a",
+        "run.log": "df5484a9f62959d566b1fd5ce5cc431cb796d6c72775b975acfead4a3d1ad498",
+        "service-summary.json": "2362c82e0878f4198779555b88c984892af140eac419bc778e59a8bb41de8453",
+        "service-trace.jsonl.gz": "a06efa12eca4390e9a1692c316d8712cbd02d3996dc662b2e28e5463dfcc05d1"
+      }
+    },
+    {
+      "case": "seed-half-cohort",
+      "source": "5fbe66cfea1363cb94578aae2812882afc34a56b",
+      "gates": {
+        "requestedNightsAndNoDefeat": true,
+        "eachDayPaidStaffAndDelivery": false,
+        "physicalLedgerHydration": true,
+        "shortWindowIdleBelow25": false,
+        "responsible100NightAndMatrix30": "not-tested"
+      },
+      "stateSha256": "a310b78524b83418519f95e4d8cc4ad2d970d5ec9fd54fb6d7c4e566e381c7f2",
+      "firstDay": {
+        "day": 1,
+        "staff": 6,
+        "delivered": 0,
+        "planted": 71,
+        "firstDeliveryTime": null,
+        "paidPlantsBeforeFirstDelivery": 72,
+        "firstWaterPendingAtDaylightEnd": 0,
+        "globalObservedSeconds": 297.9999999999995,
+        "phaseActorSeconds": {
+          "arriving:none": 10.000000000000002,
+          "walking:initial": 793.9999999999854,
+          "acting:initial": 522.9999999999795,
+          "walking:water": 366.0000000000365,
+          "acting:water": 95.00000000001049
+        },
+        "longestObservedTasks": [
+          {
+            "id": "task-157",
+            "targetId": "plant-156",
+            "kind": "initial",
+            "workerId": "worker-14",
+            "blocked": false,
+            "observedAge": 162.99999999999073,
+            "time": 232.99999999999105
+          },
+          {
+            "id": "task-159",
+            "targetId": "plant-158",
+            "kind": "initial",
+            "workerId": "worker-8",
+            "blocked": false,
+            "observedAge": 162.99999999999073,
+            "time": 233.999999999991
+          },
+          {
+            "id": "task-172",
+            "targetId": "plant-40",
+            "kind": "water",
+            "workerId": "worker-10",
+            "blocked": false,
+            "observedAge": 153.99999999999864,
+            "time": 282.00000000000557
+          },
+          {
+            "id": "task-145",
+            "targetId": "plant-144",
+            "kind": "initial",
+            "workerId": "worker-6",
+            "blocked": false,
+            "observedAge": 152.9999999999913,
+            "time": 216.99999999999196
+          },
+          {
+            "id": "task-168",
+            "targetId": "plant-34",
+            "kind": "water",
+            "workerId": "worker-12",
+            "blocked": false,
+            "observedAge": 151.99999999999704,
+            "time": 276.0000000000042
+          },
+          {
+            "id": "task-141",
+            "targetId": "plant-140",
+            "kind": "initial",
+            "workerId": "worker-10",
+            "blocked": false,
+            "observedAge": 151.99999999999153,
+            "time": 213.99999999999213
+          },
+          {
+            "id": "task-165",
+            "targetId": "plant-30",
+            "kind": "water",
+            "workerId": "worker-14",
+            "blocked": false,
+            "observedAge": 149.9999999999946,
+            "time": 267.00000000000216
+          },
+          {
+            "id": "task-182",
+            "targetId": "plant-54",
+            "kind": "water",
+            "workerId": "worker-8",
+            "blocked": false,
+            "observedAge": 148.0000000000032,
+            "time": 297.000000000009
+          }
+        ]
+      },
+      "cohort": [
+        {
+          "plantId": "plant-3",
+          "placementFirstObserved": {
+            "day": 1,
+            "time": 1.0,
+            "elapsed": 1.0
+          },
+          "firstWater": {
+            "day": 1,
+            "time": 47.0,
+            "elapsed": 47.0
+          },
+          "checkpointDue": {
+            "day": 1,
+            "time": 117.0,
+            "elapsed": 117.0
+          },
+          "checkpointWater": {
+            "day": 1,
+            "time": 251.0,
+            "elapsed": 251.0
+          },
+          "mature": {
+            "day": 1,
+            "time": 251.0,
+            "elapsed": 251.0
+          },
+          "harvestRequested": {
+            "day": 1,
+            "time": 251.0,
+            "elapsed": 251.0
+          },
+          "picked": {
+            "day": 2,
+            "time": 38.0,
+            "elapsed": 638.0
+          },
+          "delivered": {
+            "day": 2,
+            "time": 38.0,
+            "elapsed": 638.0
+          }
+        },
+        {
+          "plantId": "plant-18",
+          "placementFirstObserved": {
+            "day": 1,
+            "time": 1.0,
+            "elapsed": 1.0
+          },
+          "firstWater": {
+            "day": 1,
+            "time": 47.0,
+            "elapsed": 47.0
+          },
+          "checkpointDue": {
+            "day": 1,
+            "time": 117.0,
+            "elapsed": 117.0
+          },
+          "checkpointWater": {
+            "day": 1,
+            "time": 243.0,
+            "elapsed": 243.0
+          },
+          "mature": {
+            "day": 1,
+            "time": 243.0,
+            "elapsed": 243.0
+          },
+          "harvestRequested": {
+            "day": 1,
+            "time": 243.0,
+            "elapsed": 243.0
+          },
+          "picked": {
+            "day": 2,
+            "time": 37.0,
+            "elapsed": 637.0
+          },
+          "delivered": {
+            "day": 2,
+            "time": 38.0,
+            "elapsed": 638.0
+          }
+        },
+        {
+          "plantId": "plant-20",
+          "placementFirstObserved": {
+            "day": 1,
+            "time": 2.0,
+            "elapsed": 2.0
+          },
+          "firstWater": {
+            "day": 1,
+            "time": 39.0,
+            "elapsed": 39.0
+          },
+          "checkpointDue": {
+            "day": 1,
+            "time": 109.0,
+            "elapsed": 109.0
+          },
+          "checkpointWater": {
+            "day": 1,
+            "time": 233.0,
+            "elapsed": 233.0
+          },
+          "mature": {
+            "day": 1,
+            "time": 233.0,
+            "elapsed": 233.0
+          },
+          "harvestRequested": {
+            "day": 1,
+            "time": 233.0,
+            "elapsed": 233.0
+          },
+          "picked": {
+            "day": 2,
+            "time": 33.0,
+            "elapsed": 633.0
+          },
+          "delivered": {
+            "day": 2,
+            "time": 33.0,
+            "elapsed": 633.0
+          }
+        },
+        {
+          "plantId": "plant-22",
+          "placementFirstObserved": {
+            "day": 1,
+            "time": 3.0,
+            "elapsed": 3.0
+          },
+          "firstWater": {
+            "day": 1,
+            "time": 47.0,
+            "elapsed": 47.0
+          },
+          "checkpointDue": {
+            "day": 1,
+            "time": 117.0,
+            "elapsed": 117.0
+          },
+          "checkpointWater": {
+            "day": 1,
+            "time": 239.0,
+            "elapsed": 239.0
+          },
+          "mature": {
+            "day": 1,
+            "time": 239.0,
+            "elapsed": 239.0
+          },
+          "harvestRequested": {
+            "day": 1,
+            "time": 239.0,
+            "elapsed": 239.0
+          },
+          "picked": {
+            "day": 2,
+            "time": 37.0,
+            "elapsed": 637.0
+          },
+          "delivered": {
+            "day": 2,
+            "time": 37.0,
+            "elapsed": 637.0
+          }
+        },
+        {
+          "plantId": "plant-24",
+          "placementFirstObserved": {
+            "day": 1,
+            "time": 4.0,
+            "elapsed": 4.0
+          },
+          "firstWater": {
+            "day": 1,
+            "time": 38.0,
+            "elapsed": 38.0
+          },
+          "checkpointDue": {
+            "day": 1,
+            "time": 108.0,
+            "elapsed": 108.0
+          },
+          "checkpointWater": {
+            "day": 1,
+            "time": 242.0,
+            "elapsed": 242.0
+          },
+          "mature": {
+            "day": 1,
+            "time": 242.0,
+            "elapsed": 242.0
+          },
+          "harvestRequested": {
+            "day": 1,
+            "time": 242.0,
+            "elapsed": 242.0
+          },
+          "picked": {
+            "day": 2,
+            "time": 29.0,
+            "elapsed": 629.0
+          },
+          "delivered": {
+            "day": 2,
+            "time": 29.0,
+            "elapsed": 629.0
+          }
+        },
+        {
+          "plantId": "plant-26",
+          "placementFirstObserved": {
+            "day": 1,
+            "time": 5.0,
+            "elapsed": 5.0
+          },
+          "firstWater": {
+            "day": 1,
+            "time": 46.0,
+            "elapsed": 46.0
+          },
+          "checkpointDue": {
+            "day": 1,
+            "time": 116.0,
+            "elapsed": 116.0
+          },
+          "checkpointWater": {
+            "day": 1,
+            "time": 244.0,
+            "elapsed": 244.0
+          },
+          "mature": {
+            "day": 1,
+            "time": 244.0,
+            "elapsed": 244.0
+          },
+          "harvestRequested": {
+            "day": 1,
+            "time": 244.0,
+            "elapsed": 244.0
+          },
+          "picked": {
+            "day": 2,
+            "time": 36.0,
+            "elapsed": 636.0
+          },
+          "delivered": {
+            "day": 2,
+            "time": 37.0,
+            "elapsed": 637.0
+          }
+        },
+        {
+          "plantId": "plant-28",
+          "placementFirstObserved": {
+            "day": 1,
+            "time": 6.0,
+            "elapsed": 6.0
+          },
+          "firstWater": {
+            "day": 1,
+            "time": 45.0,
+            "elapsed": 45.0
+          },
+          "checkpointDue": {
+            "day": 1,
+            "time": 115.0,
+            "elapsed": 115.0
+          },
+          "checkpointWater": {
+            "day": 1,
+            "time": 241.0,
+            "elapsed": 241.0
+          },
+          "mature": {
+            "day": 1,
+            "time": 241.0,
+            "elapsed": 241.0
+          },
+          "harvestRequested": {
+            "day": 1,
+            "time": 241.0,
+            "elapsed": 241.0
+          },
+          "picked": {
+            "day": 2,
+            "time": 28.0,
+            "elapsed": 628.0
+          },
+          "delivered": {
+            "day": 2,
+            "time": 29.0,
+            "elapsed": 629.0
+          }
+        },
+        {
+          "plantId": "plant-30",
+          "placementFirstObserved": {
+            "day": 1,
+            "time": 7.0,
+            "elapsed": 7.0
+          },
+          "firstWater": {
+            "day": 1,
+            "time": 47.0,
+            "elapsed": 47.0
+          },
+          "checkpointDue": {
+            "day": 1,
+            "time": 117.0,
+            "elapsed": 117.0
+          },
+          "checkpointWater": {
+            "day": 1,
+            "time": 268.0,
+            "elapsed": 268.0
+          },
+          "mature": {
+            "day": 1,
+            "time": 268.0,
+            "elapsed": 268.0
+          },
+          "harvestRequested": {
+            "day": 1,
+            "time": 268.0,
+            "elapsed": 268.0
+          },
+          "picked": {
+            "day": 2,
+            "time": 33.0,
+            "elapsed": 633.0
+          },
+          "delivered": {
+            "day": 2,
+            "time": 34.0,
+            "elapsed": 634.0
+          }
+        }
+      ],
+      "day1Snapshots": [
+        {
+          "time": 60.00000000000058,
+          "living": 61,
+          "firstWaterPending": 47,
+          "mature": 0,
+          "deliveredTotal": 0,
+          "queue": {
+            "initial": 47,
+            "water": 0,
+            "harvest": 0
+          }
+        },
+        {
+          "time": 99.9999999999986,
+          "living": 72,
+          "firstWaterPending": 42,
+          "mature": 0,
+          "deliveredTotal": 0,
+          "queue": {
+            "initial": 42,
+            "water": 0,
+            "harvest": 0
+          }
+        },
+        {
+          "time": 149.99999999999577,
+          "living": 72,
+          "firstWaterPending": 23,
+          "mature": 0,
+          "deliveredTotal": 0,
+          "queue": {
+            "initial": 23,
+            "water": 23,
+            "harvest": 0
+          }
+        },
+        {
+          "time": 199.99999999999292,
+          "living": 72,
+          "firstWaterPending": 11,
+          "mature": 0,
+          "deliveredTotal": 0,
+          "queue": {
+            "initial": 11,
+            "water": 42,
+            "harvest": 0
+          }
+        },
+        {
+          "time": 250,
+          "living": 72,
+          "firstWaterPending": 0,
+          "mature": 8,
+          "deliveredTotal": 0,
+          "queue": {
+            "initial": 0,
+            "water": 46,
+            "harvest": 8
+          }
+        },
+        {
+          "time": 299.00000000000944,
+          "living": 72,
+          "firstWaterPending": 0,
+          "mature": 27,
+          "deliveredTotal": 0,
+          "queue": {
+            "initial": 0,
+            "water": 43,
+            "harvest": 27
+          }
+        }
+      ],
+      "artifactHashes": {
+        "first-cohort-transitions.json": "511f0913eae8ac0d1364f0e5155f148475a0ff9b5ce88c5d563882e703509a63",
+        "run.log": "ac86b007bee07ee5b29c031859621c04a2959a734d466c2b712da42cf24a3b10",
+        "service-summary.json": "77d7c672ce5eb7124a60e784389e0fb9e79acf6b4bbe4aec75569d27a787d00a",
+        "service-trace.jsonl.gz": "87e40fae61281614c50a2d33650163a866eccebe76bff6fd8031c641d2dd007e"
+      }
+    }
+  ]
+}
