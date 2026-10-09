@@ -1,0 +1,53 @@
+{
+  "run": 37951990884,
+  "head": "411346e7f1389e3e0b8366052e4310c644ddbc61",
+  "artifactId": 11626189950,
+  "rawBytes": 149855,
+  "sha256": "a966049d18e1a7e4fecad0fd802f89698c7729d38131eb190aaf914d2a798a15",
+  "conclusion": "failure",
+  "primary": "Production world did not finish loading",
+  "minimization": "skipped",
+  "buildAndInstaller": "passed",
+  "timeoutUnchangedSeconds": 90,
+  "poll": {
+    "calls": 132,
+    "failures": 0,
+    "maxMs": 1,
+    "scope": "Synchronous lifetime checks and native isReady queries for one poll; nested in awaited readiness, not GPU duration.",
+    "totalMs": 8.099999999976717
+  },
+  "active": [
+    {
+      "elapsedMs": 15947.199999999952,
+      "label": "load-warm-gpu",
+      "scope": "Existing awaited phase start; smoke-only pending-phase attribution.",
+      "start": 148319.69999999995
+    },
+    {
+      "elapsedMs": 11722.199999999952,
+      "label": "warm-compile-world",
+      "scope": "Existing awaited phase start; smoke-only pending-phase attribution.",
+      "start": 152544.69999999995
+    },
+    {
+      "elapsedMs": 11356.5,
+      "label": "loading-compile-collective-readiness-wait",
+      "scope": "Single pending readiness barrier; diagnostic only.",
+      "start": 152910.3999999999
+    }
+  ],
+  "lastPendingIds": [
+    20,
+    23
+  ],
+  "worldGraphicsIdentity": {
+    "contextLost": false,
+    "parallelShaderCompileSupported": true,
+    "renderer": "WebKit WebGL",
+    "scope": "One final read of existing World context identity/capabilities; no render/query timer or readiness change.",
+    "unmaskedRenderer": "ANGLE (Microsoft, Microsoft Basic Render Driver (0x0000008C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "unmaskedVendor": "Google Inc. (Microsoft)",
+    "vendor": "WebKit"
+  },
+  "scope": "Poll cost is synchronous CPU wall sampling; active awaited intervals nest and overlap. No readiness override or candidate promotion."
+}
