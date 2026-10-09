@@ -49,3 +49,24 @@ Start with an unchanged 100-night native Canyon/Mapungubwe pilot plus ordinary p
 Remote Validate `37885808571` completed successfully on immutable `ecdd29fbaae7bec48bfce01fdca867dcbf58f543`: 3,336 tests passed, zero failures, suite duration 396,742.53 ms. Asset/web/balance/i18n/browser verification, build and itch package checks also passed. The full remote log and job/source receipt are retained as `validate-ecdd29fb-passed.txt` and `validate-ecdd29fb-receipt.json`. These remote correctness timings are not isolated performance comparisons.
 
 This closes the candidate's existing regression-suite gate, not economic acceptance. Original responsible run `37881877946` remains running on frozen `2bdac97e`; it has not been restarted or replaced. Its outcome, physical reconciliation and inactivity metric remain pending, as does the complete 30-case responsible matrix. Main subsequently incorporated PR15's Desert physical-route fix (`4207bb16`), outside this candidate's tested source. Future responsible coverage must explicitly include that fix/current main while preserving the original candidate result and provenance as separate evidence. No PR, production promotion or claim of 100-night acceptance is justified yet.
+
+## Original pilot terminal: survival verified, activity rejected
+
+Run `37881877946` subsequently completed naturally: responsible job `113663159566` and poor-management job `113663159739` succeeded. Artifact `11596802552` (966,598 bytes as downloaded ZIP) is preserved in full under `responsible-37881877946/`, with its original job identity and terminal receipt. `tools/audit_balance_pilot.mjs` independently verifies all **321 recorded source hashes** against Git blobs at immutable `2bdac97e`, deserializes the original complete state, and recomputes the native physical/accounting summary without any simulation replay. Its output and raw audit log are retained. Original state SHA-256 is `5d847ccf13e8dae8c665bb2c6b0c77e5b20743351300a09beccc55d39fd3000b`; all six downloaded files have individual hashes in the verification record.
+
+This is a real victory after 100 nights (day 101, no active raid), with 15,200 physically delivered crates and 476 undelivered crates carrying no credited income. Every observed workday has paid staff and physical deliveries. Integer cashflow reconciles exactly: initial 1,500 + delivered harvest 1,550,671 − paid seeds 666,322 − paid wages 443,820 − center 800 = ending 441,229. No repairs, walls or other net money occurred. Native maturity/hydration/source-plant checks and paid-delivery ceiling values pass.
+
+**The candidate is rejected for activity**: 10,829 / 30,000 = **36.0967%** inactivity, exceeding the unchanged strictly-less-than-25% gate. CI's exit 0 establishes native completion; its summary/status already explicitly say `not-accepted` for activity. The workflow does not silently turn that separate failed gate into approval.
+
+| Days | Inactivity | Budget-idle seconds | Space-idle seconds | Shift-end seconds | Mean paid staff | Ending coins |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| 1–10 | 67.3667% | 1,822 | 0 | 199 | 15.70 | 999 |
+| 11–30 | 55.1000% | 2,909 | 0 | 397 | 33.85 | 2,652 |
+| 31–60 | 15.2667% | 79 | 695 | 600 | 173.10 | 191,167 |
+| 61–100 | 34.4000% | 0 | 3,328 | 800 | 219.18 | 441,229 |
+
+Harvest-margin improvement reduces early working-capital pressure but does not solve physical turnover of the unchanged finite search area. Late cash is abundant, while plots/living capacity reached 2,632. The observed 220-worker maximum comes from the policy's `ceil(living / 12)`, not a hardcoded runtime worker limit. One center remains intact at 600 HP; the unchanged policy never adds another center or expands its original native-placement/bidirectional-route search rectangle.
+
+At final dawn, 2,608 plants are alive, of which 2,198 (84.2791%) await first water. Pending tasks are 2,198 initial, 254 watering, 82 harvest and 476 crate pickups. 1,335 first-water plants are at least five days old; maximum age is twelve days and none is twenty days old. This supports a service/backlog concern, not a claim that these plants are permanently inaccessible. The final dawn contains zero workers after daily cleanup; it cannot measure their daytime utilization. Compared with the original frozen Canyon Mapungubwe record, the backlog share is higher (69.00% → 84.28%) despite more income. Further parameter candidates must address early capital and actual service/turnover together, rather than assuming another revenue-only increase will resolve late space.
+
+No policy, seed, geographic domain or original negative result has been changed to pass this test. No PR or promotion follows this rejected pilot. Future candidate coverage must use current main including PR15, preserve this original pre-PR15 evidence separately, and validate the complete responsible matrix and ordinary poor-management losses.
