@@ -1,6 +1,9 @@
 name: Windows candidate lock resolution
 on:
   workflow_dispatch:
+  push:
+    branches: [codex/windows-loading-smoke]
+    paths: [.github/workflows/windows-candidate-lock.yml]
 jobs:
   lock:
     runs-on: windows-latest
