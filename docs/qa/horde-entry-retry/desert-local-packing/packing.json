@@ -1,0 +1,1501 @@
+{
+  "scope": "Read-only observation of original local packing; no alternate geometry, clock or RNG",
+  "group": [
+    "warthog",
+    "warthog",
+    "warthog",
+    "warthog",
+    "hyena",
+    "hyena",
+    "hyena",
+    "buffalo",
+    "buffalo",
+    "lion",
+    "lion",
+    "rhino"
+  ],
+  "radii": [
+    1.1,
+    1.1,
+    1.1,
+    1.1,
+    0.9,
+    0.9,
+    0.9,
+    0.97,
+    0.97,
+    0.85,
+    0.85,
+    1.55
+  ],
+  "center": {
+    "id": "structure-2",
+    "created": 1,
+    "kind": "center",
+    "material": "zarzas",
+    "gate": false,
+    "x": 95,
+    "z": 0,
+    "yaw": 0,
+    "culture": "mapungubwe",
+    "maxHp": 600,
+    "hp": 600,
+    "status": "intact",
+    "villageId": "village-1",
+    "cost": 800,
+    "collapseRemaining": 0
+  },
+  "eye": {
+    "x": 111,
+    "z": 20
+  },
+  "bounds": [
+    -24,
+    -120,
+    216,
+    120
+  ],
+  "stateSHA256": "2b2ad22f2095d4082413384015c535f7441ec9ff7ee4f26c2e59475e8ab4899e",
+  "attempts": [
+    {
+      "phase": "camera",
+      "anchor": {
+        "x": 111,
+        "z": 20
+      },
+      "maxSearches": 2,
+      "counts": {
+        "target-route": 2,
+        "unreachable": 27,
+        "search-budget": 8,
+        "target-terrain": 17,
+        "near-arrival": 38,
+        "incomplete": 1
+      },
+      "placed": 0,
+      "failedActor": {
+        "i": 0,
+        "radius": 1.1
+      }
+    },
+    {
+      "phase": "camera",
+      "anchor": {
+        "x": 97.9478939799505,
+        "z": 3.684867474938142
+      },
+      "maxSearches": 2,
+      "counts": {
+        "point-terrain": 16,
+        "accepted": 2,
+        "overlap": 4,
+        "exit-terrain": 5,
+        "target-terrain": 10,
+        "unreachable": 11,
+        "near-arrival": 35,
+        "target-route": 1,
+        "incomplete": 1
+      },
+      "placed": 2,
+      "failedActor": {
+        "i": 2,
+        "radius": 1.1
+      }
+    },
+    {
+      "phase": "near-farm",
+      "anchor": {
+        "x": 99.99756038043539,
+        "z": 6.246950475544242
+      },
+      "maxSearches": 0,
+      "counts": {
+        "point-terrain": 6,
+        "target-terrain": 15,
+        "unreachable": 19,
+        "search-budget": 4,
+        "near-arrival": 40,
+        "incomplete": 1
+      },
+      "placed": 0,
+      "failedActor": {
+        "i": 0,
+        "radius": 1.1
+      }
+    },
+    {
+      "phase": "near-farm",
+      "anchor": {
+        "x": 97.9478939799505,
+        "z": 3.6848674749381423
+      },
+      "maxSearches": 0,
+      "counts": {
+        "point-terrain": 16,
+        "accepted": 2,
+        "overlap": 4,
+        "exit-terrain": 5,
+        "target-terrain": 10,
+        "unreachable": 11,
+        "near-arrival": 35,
+        "search-budget": 1,
+        "incomplete": 1
+      },
+      "placed": 2,
+      "failedActor": {
+        "i": 2,
+        "radius": 1.1
+      }
+    },
+    {
+      "phase": "near-farm",
+      "anchor": {
+        "x": 97.22653929817758,
+        "z": 7.683913244803776
+      },
+      "maxSearches": 0,
+      "counts": {
+        "exit-terrain": 5,
+        "accepted": 1,
+        "overlap": 1,
+        "point-terrain": 12,
+        "near-arrival": 23,
+        "target-terrain": 22,
+        "unreachable": 25,
+        "search-budget": 3,
+        "incomplete": 1
+      },
+      "placed": 1,
+      "failedActor": {
+        "i": 1,
+        "radius": 1.1
+      }
+    },
+    {
+      "phase": "near-farm",
+      "anchor": {
+        "x": 96.17186838952858,
+        "z": 4.044184195103025
+      },
+      "maxSearches": 0,
+      "counts": {
+        "accepted": 4,
+        "overlap": 14,
+        "exit-terrain": 6,
+        "point-terrain": 11,
+        "near-arrival": 26,
+        "target-terrain": 16,
+        "unreachable": 21,
+        "search-budget": 5,
+        "incomplete": 1
+      },
+      "placed": 4,
+      "failedActor": {
+        "i": 4,
+        "radius": 0.9
+      }
+    },
+    {
+      "phase": "near-farm",
+      "anchor": {
+        "x": 102.00774819776959,
+        "z": 3.8589461251301738
+      },
+      "maxSearches": 0,
+      "counts": {
+        "target-terrain": 12,
+        "unreachable": 12,
+        "point-terrain": 2,
+        "near-arrival": 51,
+        "incomplete": 1
+      },
+      "placed": 0,
+      "failedActor": {
+        "i": 0,
+        "radius": 1.1
+      }
+    },
+    {
+      "phase": "near-farm",
+      "anchor": {
+        "x": 100.48151387320806,
+        "z": 3.018496972764521
+      },
+      "maxSearches": 0,
+      "counts": {
+        "point-terrain": 3,
+        "target-terrain": 11,
+        "unreachable": 11,
+        "near-arrival": 51,
+        "incomplete": 1
+      },
+      "placed": 0,
+      "failedActor": {
+        "i": 0,
+        "radius": 1.1
+      }
+    },
+    {
+      "phase": "near-farm",
+      "anchor": {
+        "x": 94.11654779140123,
+        "z": 7.951069877388951
+      },
+      "maxSearches": 0,
+      "counts": {
+        "accepted": 3,
+        "overlap": 6,
+        "exit-terrain": 3,
+        "near-arrival": 20,
+        "point-terrain": 11,
+        "target-terrain": 23,
+        "unreachable": 30,
+        "search-budget": 7,
+        "incomplete": 1
+      },
+      "placed": 3,
+      "failedActor": {
+        "i": 3,
+        "radius": 1.1
+      }
+    },
+    {
+      "phase": "near-farm",
+      "anchor": {
+        "x": 94.54321854553453,
+        "z": 4.111033090189316
+      },
+      "maxSearches": 0,
+      "counts": {
+        "accepted": 6,
+        "overlap": 33,
+        "point-terrain": 12,
+        "near-arrival": 30,
+        "exit-terrain": 2,
+        "search-budget": 12,
+        "unreachable": 15,
+        "target-terrain": 3,
+        "incomplete": 1
+      },
+      "placed": 6,
+      "failedActor": {
+        "i": 6,
+        "radius": 0.9
+      }
+    },
+    {
+      "phase": "near-farm",
+      "anchor": {
+        "x": 102.95106987738895,
+        "z": 0.883452208598771
+      },
+      "maxSearches": 0,
+      "counts": {
+        "target-terrain": 6,
+        "unreachable": 6,
+        "near-arrival": 59,
+        "incomplete": 1
+      },
+      "placed": 0,
+      "failedActor": {
+        "i": 0,
+        "radius": 1.1
+      }
+    },
+    {
+      "phase": "near-farm",
+      "anchor": {
+        "x": 101.14177633618614,
+        "z": 0.6824195929095698
+      },
+      "maxSearches": 0,
+      "counts": {
+        "point-terrain": 3,
+        "target-terrain": 5,
+        "unreachable": 5,
+        "near-arrival": 57,
+        "incomplete": 1
+      },
+      "placed": 0,
+      "failedActor": {
+        "i": 0,
+        "radius": 1.1
+      }
+    },
+    {
+      "phase": "near-farm",
+      "anchor": {
+        "x": 91.14105387486983,
+        "z": 7.0077481977695815
+      },
+      "maxSearches": 0,
+      "counts": {
+        "accepted": 2,
+        "overlap": 3,
+        "near-arrival": 19,
+        "exit-terrain": 3,
+        "point-terrain": 9,
+        "search-budget": 27,
+        "unreachable": 30,
+        "exit-segment": 2,
+        "target-terrain": 3,
+        "incomplete": 1
+      },
+      "placed": 2,
+      "failedActor": {
+        "i": 2,
+        "radius": 1.1
+      }
+    },
+    {
+      "phase": "near-farm",
+      "anchor": {
+        "x": 92.86601192198805,
+        "z": 3.875268174998305
+      },
+      "maxSearches": 0,
+      "counts": {
+        "accepted": 5,
+        "overlap": 24,
+        "point-terrain": 12,
+        "near-arrival": 27,
+        "exit-terrain": 4,
+        "search-budget": 16,
+        "unreachable": 16,
+        "incomplete": 1
+      },
+      "placed": 5,
+      "failedActor": {
+        "i": 5,
+        "radius": 0.9
+      }
+    },
+    {
+      "phase": "near-farm",
+      "anchor": {
+        "x": 102.68391324480378,
+        "z": -2.2265392981775807
+      },
+      "maxSearches": 0,
+      "counts": {
+        "point-terrain": 1,
+        "target-terrain": 1,
+        "unreachable": 1,
+        "near-arrival": 63,
+        "incomplete": 1
+      },
+      "placed": 0,
+      "failedActor": {
+        "i": 0,
+        "radius": 1.1
+      }
+    },
+    {
+      "phase": "near-farm",
+      "anchor": {
+        "x": 101.07293175411911,
+        "z": -1.7597311128988442
+      },
+      "maxSearches": 0,
+      "counts": {
+        "point-terrain": 3,
+        "target-terrain": 2,
+        "unreachable": 2,
+        "near-arrival": 60,
+        "incomplete": 1
+      },
+      "placed": 0,
+      "failedActor": {
+        "i": 0,
+        "radius": 1.1
+      }
+    },
+    {
+      "phase": "near-farm",
+      "anchor": {
+        "x": 88.75304952445576,
+        "z": 4.997560380435395
+      },
+      "maxSearches": 0,
+      "counts": {
+        "accepted": 1,
+        "overlap": 1,
+        "point-terrain": 7,
+        "near-arrival": 36,
+        "search-budget": 21,
+        "unreachable": 21,
+        "incomplete": 1
+      },
+      "placed": 1,
+      "failedActor": {
+        "i": 1,
+        "radius": 1.1
+      }
+    },
+    {
+      "phase": "near-farm",
+      "anchor": {
+        "x": 90.79034715080192,
+        "z": 3.3677222793584622
+      },
+      "maxSearches": 0,
+      "counts": {
+        "accepted": 2,
+        "overlap": 5,
+        "point-terrain": 12,
+        "near-arrival": 25,
+        "exit-terrain": 2,
+        "search-budget": 25,
+        "unreachable": 25,
+        "incomplete": 1
+      },
+      "placed": 2,
+      "failedActor": {
+        "i": 2,
+        "radius": 1.1
+      }
+    },
+    {
+      "phase": "near-farm",
+      "anchor": {
+        "x": 101.24695047554424,
+        "z": -4.997560380435395
+      },
+      "maxSearches": 0,
+      "counts": {
+        "point-terrain": 2,
+        "near-arrival": 63,
+        "incomplete": 1
+      },
+      "placed": 0,
+      "failedActor": {
+        "i": 0,
+        "radius": 1.1
+      }
+    },
+    {
+      "phase": "near-farm",
+      "anchor": {
+        "x": 99.2150886629222,
+        "z": -3.3720709303377667
+      },
+      "maxSearches": 0,
+      "counts": {
+        "exit-terrain": 2,
+        "point-terrain": 6,
+        "accepted": 1,
+        "overlap": 1,
+        "target-terrain": 1,
+        "unreachable": 1,
+        "near-arrival": 59,
+        "incomplete": 1
+      },
+      "placed": 1,
+      "failedActor": {
+        "i": 1,
+        "radius": 1.1
+      }
+    },
+    {
+      "phase": "near-farm",
+      "anchor": {
+        "x": 87.31608675519622,
+        "z": 2.2265392981775816
+      },
+      "maxSearches": 0,
+      "counts": {
+        "point-terrain": 2,
+        "near-arrival": 63,
+        "incomplete": 1
+      },
+      "placed": 0,
+      "failedActor": {
+        "i": 0,
+        "radius": 1.1
+      }
+    },
+    {
+      "phase": "near-farm",
+      "anchor": {
+        "x": 88.93017703764905,
+        "z": 1.7588302897347696
+      },
+      "maxSearches": 0,
+      "counts": {
+        "point-terrain": 10,
+        "accepted": 1,
+        "overlap": 1,
+        "near-arrival": 56,
+        "search-budget": 2,
+        "unreachable": 2,
+        "incomplete": 1
+      },
+      "placed": 1,
+      "failedActor": {
+        "i": 1,
+        "radius": 1.1
+      }
+    },
+    {
+      "phase": "near-farm",
+      "anchor": {
+        "x": 98.85894612513017,
+        "z": -7.0077481977695815
+      },
+      "maxSearches": 0,
+      "counts": {
+        "accepted": 1,
+        "overlap": 1,
+        "point-terrain": 1,
+        "near-arrival": 63,
+        "incomplete": 1
+      },
+      "placed": 1,
+      "failedActor": {
+        "i": 1,
+        "radius": 1.1
+      }
+    },
+    {
+      "phase": "near-farm",
+      "anchor": {
+        "x": 97.1337465899332,
+        "z": -3.8748296387778454
+      },
+      "maxSearches": 0,
+      "counts": {
+        "accepted": 3,
+        "overlap": 10,
+        "point-terrain": 10,
+        "near-arrival": 54,
+        "target-terrain": 1,
+        "unreachable": 1,
+        "incomplete": 1
+      },
+      "placed": 3,
+      "failedActor": {
+        "i": 3,
+        "radius": 1.1
+      }
+    },
+    {
+      "phase": "near-farm",
+      "anchor": {
+        "x": 87.04893012261105,
+        "z": -0.8834522085987702
+      },
+      "maxSearches": 0,
+      "counts": {
+        "point-terrain": 2,
+        "near-arrival": 63,
+        "incomplete": 1
+      },
+      "placed": 0,
+      "failedActor": {
+        "i": 0,
+        "radius": 1.1
+      }
+    },
+    {
+      "phase": "near-farm",
+      "anchor": {
+        "x": 88.85854525648287,
+        "z": -0.6823838603907915
+      },
+      "maxSearches": 0,
+      "counts": {
+        "exit-terrain": 1,
+        "point-terrain": 4,
+        "near-arrival": 60,
+        "incomplete": 1
+      },
+      "placed": 0,
+      "failedActor": {
+        "i": 0,
+        "radius": 1.1
+      }
+    },
+    {
+      "phase": "near-farm",
+      "anchor": {
+        "x": 95.88345220859877,
+        "z": -7.951069877388951
+      },
+      "maxSearches": 0,
+      "counts": {
+        "accepted": 2,
+        "overlap": 3,
+        "near-arrival": 63,
+        "incomplete": 1
+      },
+      "placed": 2,
+      "failedActor": {
+        "i": 2,
+        "radius": 1.1
+      }
+    },
+    {
+      "phase": "near-farm",
+      "anchor": {
+        "x": 95.45675479734417,
+        "z": -4.1107931760975545
+      },
+      "maxSearches": 0,
+      "counts": {
+        "accepted": 5,
+        "overlap": 24,
+        "point-terrain": 4,
+        "near-arrival": 55,
+        "incomplete": 1
+      },
+      "placed": 5,
+      "failedActor": {
+        "i": 5,
+        "radius": 0.9
+      }
+    },
+    {
+      "phase": "near-farm",
+      "anchor": {
+        "x": 87.99225180223041,
+        "z": -3.858946125130173
+      },
+      "maxSearches": 0,
+      "counts": {
+        "point-terrain": 1,
+        "exit-terrain": 1,
+        "near-arrival": 63,
+        "incomplete": 1
+      },
+      "placed": 0,
+      "failedActor": {
+        "i": 0,
+        "radius": 1.1
+      }
+    },
+    {
+      "phase": "near-farm",
+      "anchor": {
+        "x": 89.50461292596269,
+        "z": -3.026136507330027
+      },
+      "maxSearches": 0,
+      "counts": {
+        "point-terrain": 3,
+        "exit-terrain": 2,
+        "near-arrival": 60,
+        "incomplete": 1
+      },
+      "placed": 0,
+      "failedActor": {
+        "i": 0,
+        "radius": 1.1
+      }
+    },
+    {
+      "phase": "near-farm",
+      "anchor": {
+        "x": 92.77346070182242,
+        "z": -7.683913244803776
+      },
+      "maxSearches": 0,
+      "counts": {
+        "accepted": 2,
+        "overlap": 3,
+        "near-arrival": 63,
+        "incomplete": 1
+      },
+      "placed": 2,
+      "failedActor": {
+        "i": 2,
+        "radius": 1.1
+      }
+    },
+    {
+      "phase": "near-farm",
+      "anchor": {
+        "x": 93.82814863690257,
+        "z": -4.044125435924597
+      },
+      "maxSearches": 0,
+      "counts": {
+        "accepted": 6,
+        "overlap": 33,
+        "near-arrival": 55,
+        "incomplete": 1
+      },
+      "placed": 6,
+      "failedActor": {
+        "i": 6,
+        "radius": 0.9
+      }
+    },
+    {
+      "phase": "near-farm",
+      "anchor": {
+        "x": 90.00243961956461,
+        "z": -6.246950475544242
+      },
+      "maxSearches": 0,
+      "counts": {
+        "accepted": 2,
+        "overlap": 3,
+        "near-arrival": 63,
+        "incomplete": 1
+      },
+      "placed": 2,
+      "failedActor": {
+        "i": 2,
+        "radius": 1.1
+      }
+    },
+    {
+      "phase": "near-farm",
+      "anchor": {
+        "x": 92.05196855716086,
+        "z": -3.685039303548921
+      },
+      "maxSearches": 0,
+      "counts": {
+        "accepted": 3,
+        "overlap": 11,
+        "point-terrain": 3,
+        "near-arrival": 57,
+        "incomplete": 1
+      },
+      "placed": 3,
+      "failedActor": {
+        "i": 3,
+        "radius": 1.1
+      }
+    }
+  ],
+  "samples": [
+    {
+      "phase": "camera",
+      "reason": "target-route",
+      "i": 0,
+      "radius": 1.1,
+      "point": {
+        "x": 114.57637914724909,
+        "z": 21.108833709409105
+      },
+      "approach": {
+        "x": 100.13595475734287,
+        "z": 3.2682129266460826
+      }
+    },
+    {
+      "phase": "camera",
+      "reason": "target-route",
+      "i": 0,
+      "radius": 1.1,
+      "point": {
+        "x": 111.29673014758835,
+        "z": 23.732552909137688
+      },
+      "approach": {
+        "x": 99.91162137556472,
+        "z": 3.420263491562264
+      }
+    },
+    {
+      "phase": "camera",
+      "reason": "incomplete",
+      "i": 0,
+      "radius": 1.1,
+      "placed": 0
+    },
+    {
+      "phase": "camera",
+      "reason": "accepted",
+      "i": 0,
+      "radius": 1.1,
+      "point": {
+        "x": 98.24462412753886,
+        "z": 7.417420384075827
+      }
+    },
+    {
+      "phase": "camera",
+      "reason": "accepted",
+      "i": 1,
+      "radius": 1.1,
+      "point": {
+        "x": 94.96497512787813,
+        "z": 10.041139583804409
+      }
+    },
+    {
+      "phase": "camera",
+      "reason": "target-route",
+      "i": 2,
+      "radius": 1.1,
+      "point": {
+        "x": 107.77122360274383,
+        "z": 12.602389278777547
+      },
+      "approach": {
+        "x": 100.14161086229088,
+        "z": 3.263613436556561
+      }
+    },
+    {
+      "phase": "camera",
+      "reason": "incomplete",
+      "i": 2,
+      "radius": 1.1,
+      "placed": 2
+    },
+    {
+      "phase": "near-farm",
+      "reason": "incomplete",
+      "i": 0,
+      "radius": 1.1,
+      "placed": 0
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 0,
+      "radius": 1.1,
+      "point": {
+        "x": 98.24462412753886,
+        "z": 7.417420384075827
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 1,
+      "radius": 1.1,
+      "point": {
+        "x": 94.96497512787813,
+        "z": 10.041139583804409
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "incomplete",
+      "i": 2,
+      "radius": 1.1,
+      "placed": 2
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 0,
+      "radius": 1.1,
+      "point": {
+        "x": 96.0722960494604,
+        "z": 11.245896192936854
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "incomplete",
+      "i": 1,
+      "radius": 1.1,
+      "placed": 1
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 0,
+      "radius": 1.1,
+      "point": {
+        "x": 99.05167959433338,
+        "z": 6.437234011692872
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 1,
+      "radius": 1.1,
+      "point": {
+        "x": 95.0176251408114,
+        "z": 7.606167143236104
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 2,
+      "radius": 1.1,
+      "point": {
+        "x": 90.98357068728941,
+        "z": 8.775100274779335
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 3,
+      "radius": 1.1,
+      "point": {
+        "x": 96.1308947899002,
+        "z": 11.44812376563799
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "incomplete",
+      "i": 4,
+      "radius": 0.9,
+      "placed": 4
+    },
+    {
+      "phase": "near-farm",
+      "reason": "incomplete",
+      "i": 0,
+      "radius": 1.1,
+      "placed": 0
+    },
+    {
+      "phase": "near-farm",
+      "reason": "incomplete",
+      "i": 0,
+      "radius": 1.1,
+      "placed": 0
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 0,
+      "radius": 1.1,
+      "point": {
+        "x": 95.8613659033838,
+        "z": 11.264015659634346
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 1,
+      "radius": 1.1,
+      "point": {
+        "x": 91.6870542177546,
+        "z": 10.800203250119992
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 2,
+      "radius": 1.1,
+      "point": {
+        "x": 100.035677589013,
+        "z": 11.7278280691487
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "incomplete",
+      "i": 3,
+      "radius": 1.1,
+      "placed": 3
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 0,
+      "radius": 1.1,
+      "point": {
+        "x": 96.2880366575171,
+        "z": 7.423978872434712
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 1,
+      "radius": 1.1,
+      "point": {
+        "x": 92.1137249718879,
+        "z": 6.960166462920358
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 2,
+      "radius": 1.1,
+      "point": {
+        "x": 87.9394132862587,
+        "z": 6.496354053406005
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 3,
+      "radius": 1.1,
+      "point": {
+        "x": 95.84631055321772,
+        "z": 11.399513811129188
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 4,
+      "radius": 0.9,
+      "point": {
+        "x": 91.6940851728035,
+        "z": 10.73692465468011
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 5,
+      "radius": 0.9,
+      "point": {
+        "x": 100.26357159621159,
+        "z": 9.67678200436158
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "incomplete",
+      "i": 6,
+      "radius": 0.9,
+      "placed": 6
+    },
+    {
+      "phase": "near-farm",
+      "reason": "incomplete",
+      "i": 0,
+      "radius": 1.1,
+      "placed": 0
+    },
+    {
+      "phase": "near-farm",
+      "reason": "incomplete",
+      "i": 0,
+      "radius": 1.1,
+      "placed": 0
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 0,
+      "radius": 1.1,
+      "point": {
+        "x": 91.4852461532964,
+        "z": 10.736223982251964
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 1,
+      "radius": 1.1,
+      "point": {
+        "x": 87.80617834946736,
+        "z": 8.710277266558624
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "incomplete",
+      "i": 2,
+      "radius": 1.1,
+      "placed": 2
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 0,
+      "radius": 1.1,
+      "point": {
+        "x": 93.21020420041462,
+        "z": 7.603743959480689
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 1,
+      "radius": 1.1,
+      "point": {
+        "x": 89.53113639658558,
+        "z": 5.577797243787347
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 2,
+      "radius": 1.1,
+      "point": {
+        "x": 96.88927200424365,
+        "z": 9.62969067517403
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 3,
+      "radius": 1.1,
+      "point": {
+        "x": 91.28073113784954,
+        "z": 11.107618058365478
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 4,
+      "radius": 0.9,
+      "point": {
+        "x": 87.69813698714876,
+        "z": 8.906477637727898
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "incomplete",
+      "i": 5,
+      "radius": 0.9,
+      "placed": 5
+    },
+    {
+      "phase": "near-farm",
+      "reason": "incomplete",
+      "i": 0,
+      "radius": 1.1,
+      "placed": 0
+    },
+    {
+      "phase": "near-farm",
+      "reason": "incomplete",
+      "i": 0,
+      "radius": 1.1,
+      "placed": 0
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 0,
+      "radius": 1.1,
+      "point": {
+        "x": 87.64421581504666,
+        "z": 8.573939527684475
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "incomplete",
+      "i": 1,
+      "radius": 1.1,
+      "placed": 1
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 0,
+      "radius": 1.1,
+      "point": {
+        "x": 89.68151344139282,
+        "z": 6.944101426607542
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 1,
+      "radius": 1.1,
+      "point": {
+        "x": 92.3052326411214,
+        "z": 10.223750426268268
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "incomplete",
+      "i": 2,
+      "radius": 1.1,
+      "placed": 2
+    },
+    {
+      "phase": "near-farm",
+      "reason": "incomplete",
+      "i": 0,
+      "radius": 1.1,
+      "placed": 0
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 0,
+      "radius": 1.1,
+      "point": {
+        "x": 97.70020317260271,
+        "z": -10.228099077247574
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "incomplete",
+      "i": 1,
+      "radius": 1.1,
+      "placed": 1
+    },
+    {
+      "phase": "near-farm",
+      "reason": "incomplete",
+      "i": 0,
+      "radius": 1.1,
+      "placed": 0
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 0,
+      "radius": 1.1,
+      "point": {
+        "x": 87.70606035260244,
+        "z": 8.672695948061556
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "incomplete",
+      "i": 1,
+      "radius": 1.1,
+      "placed": 1
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 0,
+      "radius": 1.1,
+      "point": {
+        "x": 98.5147538467036,
+        "z": -10.736223982251964
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "incomplete",
+      "i": 1,
+      "radius": 1.1,
+      "placed": 1
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 0,
+      "radius": 1.1,
+      "point": {
+        "x": 96.78955431150662,
+        "z": -7.603305423260229
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 1,
+      "radius": 1.1,
+      "point": {
+        "x": 93.11048650767759,
+        "z": -9.629252138953571
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 2,
+      "radius": 1.1,
+      "point": {
+        "x": 98.7190273740717,
+        "z": -11.10717952214502
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "incomplete",
+      "i": 3,
+      "radius": 1.1,
+      "placed": 3
+    },
+    {
+      "phase": "near-farm",
+      "reason": "incomplete",
+      "i": 0,
+      "radius": 1.1,
+      "placed": 0
+    },
+    {
+      "phase": "near-farm",
+      "reason": "incomplete",
+      "i": 0,
+      "radius": 1.1,
+      "placed": 0
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 0,
+      "radius": 1.1,
+      "point": {
+        "x": 94.1386340966162,
+        "z": -11.264015659634346
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 1,
+      "radius": 1.1,
+      "point": {
+        "x": 98.3129457822454,
+        "z": -10.800203250119992
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "incomplete",
+      "i": 2,
+      "radius": 1.1,
+      "placed": 2
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 0,
+      "radius": 1.1,
+      "point": {
+        "x": 93.71193668536161,
+        "z": -7.42373895834295
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 1,
+      "radius": 1.1,
+      "point": {
+        "x": 97.8862483709908,
+        "z": -6.959926548828596
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 2,
+      "radius": 1.1,
+      "point": {
+        "x": 89.5376249997324,
+        "z": -7.887551367857304
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 3,
+      "radius": 1.1,
+      "point": {
+        "x": 94.15366278966098,
+        "z": -11.399273897037425
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 4,
+      "radius": 0.9,
+      "point": {
+        "x": 98.3058881700752,
+        "z": -10.736684740588348
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "incomplete",
+      "i": 5,
+      "radius": 0.9,
+      "placed": 5
+    },
+    {
+      "phase": "near-farm",
+      "reason": "incomplete",
+      "i": 0,
+      "radius": 1.1,
+      "placed": 0
+    },
+    {
+      "phase": "near-farm",
+      "reason": "incomplete",
+      "i": 0,
+      "radius": 1.1,
+      "placed": 0
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 0,
+      "radius": 1.1,
+      "point": {
+        "x": 89.89364949701762,
+        "z": -10.076963061393624
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 1,
+      "radius": 1.1,
+      "point": {
+        "x": 93.9277039505396,
+        "z": -11.245896192936854
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "incomplete",
+      "i": 2,
+      "radius": 1.1,
+      "placed": 2
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 0,
+      "radius": 1.1,
+      "point": {
+        "x": 90.94833743209777,
+        "z": -6.437175252514444
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 1,
+      "radius": 1.1,
+      "point": {
+        "x": 94.98239188561975,
+        "z": -7.606108384057676
+      }
+    },
+    {
+      "phase": "near-farm",
+      "reason": "accepted",
+      "i": 2,
+      "radius": 1.1,
+      "point": {
+        "x": 86.91428297857578,
+        "z": -5.2682421209712125
+      }
+    }
+  ],
+  "camera": null,
+  "nearFarm": null,
+  "status": "completed",
+  "routeQueries": 3,
+  "milliseconds": 1933.8108000000002,
+  "finalStateSHA256": "2b2ad22f2095d4082413384015c535f7441ec9ff7ee4f26c2e59475e8ab4899e",
+  "stateUnchanged": true
+}

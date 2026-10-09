@@ -1,0 +1,30 @@
+TAP version 13
+# Subtest: Native cached and prepared routes consume no search or geometry budget
+ok 1 - Native cached and prepared routes consume no search or geometry budget
+  ---
+  duration_ms: 51.4186
+  ...
+# Subtest: Native interrupted A* never poisons failedPaths and later route remains valid
+ok 2 - Native interrupted A* never poisons failedPaths and later route remains valid
+  ---
+  duration_ms: 33.0556
+  ...
+# Subtest: Geometry allowance aborts native search with honest counters and no failure memo
+ok 3 - Geometry allowance aborts native search with honest counters and no failure memo
+  ---
+  duration_ms: 21.3559
+  ...
+# Subtest: Yield allowance closes interrupted generator and restores methods on unrelated errors
+ok 4 - Yield allowance closes interrupted generator and restores methods on unrelated errors
+  ---
+  duration_ms: 1.6779
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 279.465

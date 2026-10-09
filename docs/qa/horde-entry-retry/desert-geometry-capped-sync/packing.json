@@ -1,0 +1,109 @@
+{
+  "scope": "Native connected-packing diagnostic; no clock, commands or RNG mutation",
+  "group": [
+    "warthog",
+    "warthog",
+    "warthog",
+    "warthog",
+    "hyena",
+    "hyena",
+    "hyena",
+    "buffalo",
+    "buffalo",
+    "lion",
+    "lion",
+    "rhino"
+  ],
+  "radii": [
+    1.1,
+    1.1,
+    1.1,
+    1.1,
+    0.9,
+    0.9,
+    0.9,
+    0.97,
+    0.97,
+    0.85,
+    0.85,
+    1.55
+  ],
+  "center": {
+    "id": "structure-2",
+    "created": 1,
+    "kind": "center",
+    "material": "zarzas",
+    "gate": false,
+    "x": 95,
+    "z": 0,
+    "yaw": 0,
+    "culture": "mapungubwe",
+    "maxHp": 600,
+    "hp": 600,
+    "status": "intact",
+    "villageId": "village-1",
+    "cost": 800,
+    "collapseRemaining": 0
+  },
+  "eye": {
+    "x": 111,
+    "z": 20
+  },
+  "bounds": [
+    -24,
+    -120,
+    216,
+    120
+  ],
+  "stateSHA256": "2b2ad22f2095d4082413384015c535f7441ec9ff7ee4f26c2e59475e8ab4899e",
+  "observations": [
+    {
+      "kind": "anchor",
+      "anchor": {
+        "x": 98.91617130365987,
+        "z": 4.895214129574837
+      },
+      "direction": 0.6747409422235527
+    },
+    {
+      "kind": "anchor-route",
+      "radius": 1.55,
+      "found": true
+    },
+    {
+      "kind": "anchor-route",
+      "radius": 1.1,
+      "found": true
+    },
+    {
+      "kind": "anchor-route",
+      "radius": 0.97,
+      "found": true
+    },
+    {
+      "kind": "anchor-route",
+      "radius": 0.9,
+      "found": true
+    },
+    {
+      "kind": "anchor-route",
+      "radius": 0.85,
+      "found": true
+    }
+  ],
+  "entry": null,
+  "status": "failed",
+  "queryBudget": {
+    "limit": 4,
+    "searches": 0,
+    "geometryChecks": 256,
+    "searchYields": 0,
+    "approachChecks": 6,
+    "maxGeometryChecks": 256,
+    "maxSearchYields": 32,
+    "exhausted": "geometry"
+  },
+  "milliseconds": 1856.9446,
+  "finalStateSHA256": "2b2ad22f2095d4082413384015c535f7441ec9ff7ee4f26c2e59475e8ab4899e",
+  "stateUnchanged": true
+}

@@ -1,0 +1,495 @@
+{
+  "biome": "desierto",
+  "culture": "mapungubwe",
+  "seed": "712",
+  "group": [
+    "warthog",
+    "warthog",
+    "warthog",
+    "warthog",
+    "hyena",
+    "hyena",
+    "hyena",
+    "buffalo",
+    "buffalo",
+    "lion",
+    "lion",
+    "rhino"
+  ],
+  "bounds": [
+    -24,
+    -120,
+    216,
+    120
+  ],
+  "eye": {
+    "x": 111,
+    "z": 20
+  },
+  "center": {
+    "id": "structure-2",
+    "created": 1,
+    "kind": "center",
+    "material": "zarzas",
+    "gate": false,
+    "x": 95,
+    "z": 0,
+    "yaw": 0,
+    "culture": "mapungubwe",
+    "maxHp": 600,
+    "hp": 600,
+    "status": "intact",
+    "villageId": "village-1",
+    "cost": 800,
+    "collapseRemaining": 0
+  },
+  "entryMilliseconds": 329.8555000000001,
+  "entryBudget": {
+    "limit": 32,
+    "searches": 25,
+    "geometryChecks": 37051,
+    "searchYields": 1315,
+    "approachChecks": 40,
+    "maxGeometryChecks": 100000,
+    "maxSearchYields": 50000,
+    "exhausted": null
+  },
+  "workerBudget": true,
+  "scope": "Entry-only native route diagnostic; no clock, commands, RNG mutation or campaign. Original direct-route test remains negative.",
+  "stateSHA256": "2b2ad22f2095d4082413384015c535f7441ec9ff7ee4f26c2e59475e8ab4899e",
+  "entry": {
+    "entries": [
+      {
+        "x": 94.58117350519,
+        "z": 9.315928406554495
+      },
+      {
+        "x": 88.99255639205815,
+        "z": 7.132500193214323
+      },
+      {
+        "x": 96.76460171853016,
+        "z": 3.7273112934226456
+      },
+      {
+        "x": 88.68711622044526,
+        "z": 3.7923345833133553
+      },
+      {
+        "x": 96.82962500842088,
+        "z": 11.804796791507542
+      },
+      {
+        "x": 85.65239078215718,
+        "z": 7.437940364827199
+      },
+      {
+        "x": 100.10476732843112,
+        "z": 3.421871121809769
+      },
+      {
+        "x": 90.69515084195399,
+        "z": 11.018522856450332
+      },
+      {
+        "x": 97.92133911509096,
+        "z": 9.010488234941617
+      },
+      {
+        "x": 86.43866471721438,
+        "z": 1.303466198360308
+      },
+      {
+        "x": 89.47339015550247,
+        "z": -2.3421395831535357
+      },
+      {
+        "x": 92.87857905529415,
+        "z": 5.429905743318484
+      }
+    ],
+    "exits": [
+      {
+        "x": 94.44643528763982,
+        "z": 12.312901147960629
+      },
+      {
+        "x": 87.05993690929475,
+        "z": 9.42705503780691
+      },
+      {
+        "x": 98.04828630570161,
+        "z": 6.438796842094896
+      },
+      {
+        "x": 89.41316266486015,
+        "z": 0.8815174196027096
+      },
+      {
+        "x": 97.289108811687,
+        "z": 14.769400413332237
+      },
+      {
+        "x": 83.30487420630601,
+        "z": 9.305871285954629
+      },
+      {
+        "x": 98.4343547034382,
+        "z": 5.91380243351647
+      },
+      {
+        "x": 89.6034367352839,
+        "z": 13.812831413016255
+      },
+      {
+        "x": 98.84657196490593,
+        "z": 11.864247890838248
+      },
+      {
+        "x": 85.98711719200112,
+        "z": -1.6623565934588154
+      },
+      {
+        "x": 86.71119887007941,
+        "z": -3.5127374230340336
+      },
+      {
+        "x": 91.78686494862407,
+        "z": 8.224214299884407
+      }
+    ]
+  },
+  "rows": [
+    {
+      "index": 0,
+      "species": "warthog",
+      "radius": 1.1,
+      "entry": {
+        "x": 94.58117350519,
+        "z": 9.315928406554495
+      },
+      "exit": {
+        "x": 94.44643528763982,
+        "z": 12.312901147960629
+      },
+      "directPoint": {
+        "x": 94.580780992683,
+        "z": 3.7232784894856437
+      },
+      "directRoute": true,
+      "nativeAttackRoute": true,
+      "attackPoint": {
+        "id": "approach-structure-2-direct-14",
+        "x": 89.26475424089207,
+        "z": 0.8751393964612433
+      },
+      "routePoints": 8,
+      "routeSegmentsReversible": true,
+      "escapeReversible": true
+    },
+    {
+      "index": 1,
+      "species": "warthog",
+      "radius": 1.1,
+      "entry": {
+        "x": 88.99255639205815,
+        "z": 7.132500193214323
+      },
+      "exit": {
+        "x": 87.05993690929475,
+        "z": 9.42705503780691
+      },
+      "directPoint": {
+        "x": 90.3154703384747,
+        "z": 3.5021223273204436
+      },
+      "directRoute": true,
+      "nativeAttackRoute": true,
+      "attackPoint": {
+        "id": "approach-structure-2-direct-6",
+        "x": 89.31423789828331,
+        "z": 1.6458197852387635
+      },
+      "routePoints": 1,
+      "routeSegmentsReversible": true,
+      "escapeReversible": true
+    },
+    {
+      "index": 2,
+      "species": "warthog",
+      "radius": 1.1,
+      "entry": {
+        "x": 96.76460171853016,
+        "z": 3.7273112934226456
+      },
+      "exit": {
+        "x": 98.04828630570161,
+        "z": 6.438796842094896
+      },
+      "directPoint": {
+        "x": 96.76460142473638,
+        "z": 3.7231252210269834
+      },
+      "directRoute": true,
+      "nativeAttackRoute": true,
+      "attackPoint": {
+        "id": "approach-structure-2-direct-0",
+        "x": 96.68979721008336,
+        "z": 3.569304143024453
+      },
+      "routePoints": 1,
+      "routeSegmentsReversible": true,
+      "escapeReversible": true
+    },
+    {
+      "index": 3,
+      "species": "warthog",
+      "radius": 1.1,
+      "entry": {
+        "x": 88.68711622044526,
+        "z": 3.7923345833133553
+      },
+      "exit": {
+        "x": 89.41316266486015,
+        "z": 0.8815174196027096
+      },
+      "directPoint": {
+        "x": 89.62857099133315,
+        "z": 3.016421125095839
+      },
+      "directRoute": true,
+      "nativeAttackRoute": true,
+      "attackPoint": {
+        "id": "approach-structure-2-direct-0",
+        "x": 90.19162412622333,
+        "z": 2.8885325237175468
+      },
+      "routePoints": 1,
+      "routeSegmentsReversible": true,
+      "escapeReversible": true
+    },
+    {
+      "index": 4,
+      "species": "hyena",
+      "radius": 0.9,
+      "entry": {
+        "x": 96.82962500842088,
+        "z": 11.804796791507542
+      },
+      "exit": {
+        "x": 97.289108811687,
+        "z": 14.769400413332237
+      },
+      "directPoint": {
+        "x": 96.82904377027906,
+        "z": 3.523120697736276
+      },
+      "directRoute": true,
+      "nativeAttackRoute": true,
+      "attackPoint": {
+        "id": "approach-structure-2-direct-10",
+        "x": 91.65638892440657,
+        "z": 3.070321117923725
+      },
+      "routePoints": 1,
+      "routeSegmentsReversible": true,
+      "escapeReversible": true
+    },
+    {
+      "index": 5,
+      "species": "hyena",
+      "radius": 0.9,
+      "entry": {
+        "x": 85.65239078215718,
+        "z": 7.437940364827199
+      },
+      "exit": {
+        "x": 83.30487420630601,
+        "z": 9.305871285954629
+      },
+      "directPoint": {
+        "x": 89.89476250002633,
+        "z": 3.009754872724111
+      },
+      "directRoute": true,
+      "nativeAttackRoute": true,
+      "attackPoint": {
+        "id": "approach-structure-2-direct-0",
+        "x": 91.24298617707619,
+        "z": 2.9894750746958967
+      },
+      "routePoints": 1,
+      "routeSegmentsReversible": true,
+      "escapeReversible": true
+    },
+    {
+      "index": 6,
+      "species": "hyena",
+      "radius": 0.9,
+      "entry": {
+        "x": 100.10476732843112,
+        "z": 3.421871121809769
+      },
+      "exit": {
+        "x": 98.4343547034382,
+        "z": 5.91380243351647
+      },
+      "directPoint": {
+        "x": 99.93069220316556,
+        "z": 3.172510135995586
+      },
+      "directRoute": true,
+      "nativeAttackRoute": true,
+      "attackPoint": {
+        "id": "approach-structure-2-direct-13",
+        "x": 98.12048716056502,
+        "z": -3.1112341282082956
+      },
+      "routePoints": 26,
+      "routeSegmentsReversible": true,
+      "escapeReversible": true
+    },
+    {
+      "index": 7,
+      "species": "buffalo",
+      "radius": 0.97,
+      "entry": {
+        "x": 90.69515084195399,
+        "z": 11.018522856450332
+      },
+      "exit": {
+        "x": 89.6034367352839,
+        "z": 13.812831413016255
+      },
+      "directPoint": {
+        "x": 91.25987896786364,
+        "z": 3.515933179633188
+      },
+      "directRoute": true,
+      "nativeAttackRoute": true,
+      "attackPoint": {
+        "id": "approach-structure-2-direct-10",
+        "x": 89.41310910116349,
+        "z": 1.2293602996131217
+      },
+      "routePoints": 1,
+      "routeSegmentsReversible": true,
+      "escapeReversible": true
+    },
+    {
+      "index": 8,
+      "species": "buffalo",
+      "radius": 0.97,
+      "entry": {
+        "x": 97.92133911509096,
+        "z": 9.010488234941617
+      },
+      "exit": {
+        "x": 98.84657196490593,
+        "z": 11.864247890838248
+      },
+      "directPoint": {
+        "x": 97.84741798055201,
+        "z": 3.5888470827246035
+      },
+      "directRoute": true,
+      "nativeAttackRoute": true,
+      "attackPoint": {
+        "id": "approach-structure-2-direct-12",
+        "x": 91.39217520091886,
+        "z": 3.0773999939527448
+      },
+      "routePoints": 1,
+      "routeSegmentsReversible": true,
+      "escapeReversible": true
+    },
+    {
+      "index": 9,
+      "species": "lion",
+      "radius": 0.85,
+      "entry": {
+        "x": 86.43866471721438,
+        "z": 1.303466198360308
+      },
+      "exit": {
+        "x": 85.98711719200112,
+        "z": -1.6623565934588154
+      },
+      "directPoint": {
+        "x": 89.50173776860497,
+        "z": 1.2780904410027765
+      },
+      "directRoute": true,
+      "nativeAttackRoute": true,
+      "attackPoint": {
+        "id": "approach-structure-2-direct-0",
+        "x": 89.5118145209761,
+        "z": 0.8355780992041613
+      },
+      "routePoints": 1,
+      "routeSegmentsReversible": true,
+      "escapeReversible": true
+    },
+    {
+      "index": 10,
+      "species": "lion",
+      "radius": 0.85,
+      "entry": {
+        "x": 89.47339015550247,
+        "z": -2.3421395831535357
+      },
+      "exit": {
+        "x": 86.71119887007941,
+        "z": -3.5127374230340336
+      },
+      "directPoint": {
+        "x": 89.56385264871564,
+        "z": -2.3228754959564704
+      },
+      "directRoute": true,
+      "nativeAttackRoute": true,
+      "attackPoint": {
+        "id": "approach-structure-2-direct-0",
+        "x": 89.61755038509669,
+        "z": -2.281045460436462
+      },
+      "routePoints": 1,
+      "routeSegmentsReversible": true,
+      "escapeReversible": true
+    },
+    {
+      "index": 11,
+      "species": "rhino",
+      "radius": 1.55,
+      "entry": {
+        "x": 92.87857905529415,
+        "z": 5.429905743318484
+      },
+      "exit": {
+        "x": 91.78686494862407,
+        "z": 8.224214299884407
+      },
+      "directPoint": {
+        "x": 92.8784908690093,
+        "z": 4.1733979635046285
+      },
+      "directRoute": true,
+      "nativeAttackRoute": true,
+      "attackPoint": {
+        "id": "approach-structure-2-direct-0",
+        "x": 93.4244361086292,
+        "z": 4.032751465035521
+      },
+      "routePoints": 1,
+      "routeSegmentsReversible": true,
+      "escapeReversible": true
+    }
+  ],
+  "routeQueries": 36,
+  "completeEntry": true,
+  "allNativeAttackRoutes": true,
+  "status": "passed",
+  "finalStateSHA256": "2b2ad22f2095d4082413384015c535f7441ec9ff7ee4f26c2e59475e8ab4899e",
+  "stateUnchanged": true,
+  "milliseconds": 2102.6601
+}

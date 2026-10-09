@@ -15,6 +15,8 @@ import {ANIMAL_ACTIONS} from './animal-actions-data.js';
 import {actorBlockers,actorSegmentClear} from './actor-motion.js';
 import {activeChunkRegion,validActiveBounds} from '../world/active-region.js';
 import {raidEntryRetryKey} from '../world/raid-entry-data.js';
+import {withRaidEntryBudget} from '../world/raid-entry-budget.js';
+import {connectedRaidPacking} from '../world/raid-entry-packing.js';
 import {defensiveGroups,reservedGroup,reconcileDefensiveReservations} from './defensive-groups.js';
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 // Prepared replies belong to a renderer/worker lifetime, never the saved game.
@@ -36,7 +38,7 @@ export function planNight(s) {
   s.nightPlan={at,attraction:value,group,done:false,plannedNight:s.day,...(introductory?{introductory:true}:{})};
 }
 export function planDay(s) {s.dayPlan={at:(115+nextRandom(s)*420)/2.4,done:false};}
-export function cameraRaidEntry(s,specs,bounds,nav,view=nav.raidView,maxSearches=2){
+export function cameraRaidEntry(s,specs,bounds,nav,view=nav.raidView,maxSearches=2,diagnostic=null){
   if(!view)return null;
   const dx=view.eye.x-view.target.x,dz=view.eye.z-view.target.z,length=Math.hypot(dx,dz);if(length<1e-6)return null;
   const bx=dx/length,bz=dz/length,spacing=Math.max(...specs.map(v=>v.radius))*2+1.1;
@@ -47,6 +49,7 @@ export function cameraRaidEntry(s,specs,bounds,nav,view=nav.raidView,maxSearches
   const focus=centers[0],anchors=[view.eye];
   if(focus)anchors.push(centerBoundaryPoint(focus,Math.atan2(bx,bz),2,s));
   for(const anchor of anchors){
+    diagnostic?.('anchor',{anchor,maxSearches});
     const points=[],exits=[];let searches=0;
     for(let i=0;i<specs.length;i++){
       const {radius}=specs[i];let chosen=null;
@@ -62,30 +65,32 @@ export function cameraRaidEntry(s,specs,bounds,nav,view=nav.raidView,maxSearches
         // area, especially once canyon water becomes traversable. Keep the
         // original camera/farm distance contract before spending path searches.
         const camera=nav.raidView?.eye??view.eye;
-        if(dist(point,camera)>=20&&(!focus||dist(point,focus)>=12))continue;
-        if([point,exit].some(p=>p.x-radius<minX||p.x+radius>maxX||p.z-radius<minZ||p.z+radius>maxZ))continue;
-        if(!nav.walkable(point.x,point.z,radius,null,false)||!nav.walkable(exit.x,exit.z,radius,null,false))continue;
-        if(points.some((p,j)=>dist(p,point)<=specs[j].radius+radius+1))continue;
-        if(nav.segmentClear?!nav.segmentClear(point,exit,radius,null,false):!nav.path(point,exit,radius,null,false))continue;
+        if(dist(point,camera)>=20&&(!focus||dist(point,focus)>=12)){diagnostic?.('near-arrival',{i,radius,point});continue;}
+        if([point,exit].some(p=>p.x-radius<minX||p.x+radius>maxX||p.z-radius<minZ||p.z+radius>maxZ)){diagnostic?.('bounds',{i,radius,point});continue;}
+        if(!nav.walkable(point.x,point.z,radius,null,false)){diagnostic?.('point-terrain',{i,radius,point});continue;}
+        if(!nav.walkable(exit.x,exit.z,radius,null,false)){diagnostic?.('exit-terrain',{i,radius,point});continue;}
+        if(points.some((p,j)=>dist(p,point)<=specs[j].radius+radius+1)){diagnostic?.('overlap',{i,radius,point});continue;}
+        if(nav.segmentClear?!nav.segmentClear(point,exit,radius,null,false):!nav.path(point,exit,radius,null,false)){diagnostic?.('exit-segment',{i,radius,point});continue;}
         const targets=[...centers,...walls].sort((a,b)=>dist(a,point)-dist(b,point)).slice(0,2);
         let reachable=!targets.length;
         for(const target of targets){
           const angle=Math.atan2(point.x-target.x,point.z-target.z);
           const approach=target.kind==='center'?centerDeliveryPoint(target,point,s,radius+.5):{x:target.x+Math.sin(angle)*(radius+1.2),z:target.z+Math.cos(angle)*(radius+1.2)};
-          if(!nav.walkable(approach.x,approach.z,radius,null,false))continue;
+          if(!nav.walkable(approach.x,approach.z,radius,null,false)){diagnostic?.('target-terrain',{i,radius,point,approach});continue;}
           if(nav.segmentClear?.(point,approach,radius,null,false)){reachable=true;break;}
-          if(searches>=maxSearches)continue;searches++;
+          if(searches>=maxSearches){diagnostic?.('search-budget',{i,radius,point});continue;}searches++;
           if((nav.approachPath??nav.path).call(nav,point,approach,radius,null,false)){reachable=true;break;}
+          diagnostic?.('target-route',{i,radius,point,approach});
         }
-        if(!reachable)continue;chosen={point,exit};break;
+        if(!reachable){diagnostic?.('unreachable',{i,radius,point});continue;}chosen={point,exit};break;
       }
-      if(!chosen)break;points.push(chosen.point);exits.push(chosen.exit);
+      if(!chosen){diagnostic?.('incomplete',{i,radius,placed:points.length});break;}points.push(chosen.point);exits.push(chosen.exit);diagnostic?.('accepted',{i,radius,point:chosen.point});
     }
     if(points.length===specs.length)return {entries:points,exits};
   }
   return null;
 }
-function nearFarmRaidEntry(s,specs,bounds,nav){
+export function nearFarmRaidEntry(s,specs,bounds,nav,diagnostic=null){
   const focus=s.structures.find(operational),view=nav.raidView;
   if(!focus||!view)return null;
   const angle=Math.atan2(view.eye.x-view.target.x,view.eye.z-view.target.z);
@@ -95,17 +100,22 @@ function nearFarmRaidEntry(s,specs,bounds,nav){
   const offsets=[0];for(let i=1;i<8;i++)offsets.push(-i*Math.PI/8,i*Math.PI/8);offsets.push(Math.PI);
   for(const offset of offsets){
     const heading=angle+offset,eye={x:focus.x+Math.sin(heading)*8,z:focus.z+Math.cos(heading)*8};
-    const entry=cameraRaidEntry(s,specs,bounds,nav,{eye,target:focus},0);
+    diagnostic?.('heading',{heading});
+    const entry=cameraRaidEntry(s,specs,bounds,nav,{eye,target:focus},0,diagnostic);
     if(entry)return entry;
   }
   return null;
 }
-export function chooseRaidEntry(s,specs,bounds,preferredSide,nav){
+export function chooseRaidEntry(s,specs,bounds,preferredSide,nav,{maxPathSearches=4,maxGeometryChecks=256,maxSearchYields=32}={}){
+  return withRaidEntryBudget(nav,maxPathSearches,()=>chooseConnectedRaidEntry(s,specs,bounds,preferredSide,nav),{maxGeometryChecks,maxSearchYields});
+}
+function chooseConnectedRaidEntry(s,specs,bounds,preferredSide,nav){
   const focus=s.structures.find(operational)??s.villages[0];
   const inset=Math.max(...specs.map(({radius})=>radius))+.25;
   const [minX,minZ,maxX,maxZ]=bounds;
   const clamp=(value,min,max)=>Math.max(min,Math.min(max,value));
-  const nearby=cameraRaidEntry(s,specs,bounds,nav)??nearFarmRaidEntry(s,specs,bounds,nav);
+  const pack=()=>connectedRaidPacking(s,specs,bounds,nav,(point,target,radius)=>reachableApproach({id:'entry-anchor',...point,radius,status:'entering',hitsRemaining:1},target,nav,spellAt(s,'shield',target)));
+  const nearby=(specs.length>5?pack():null)??cameraRaidEntry(s,specs,bounds,nav)??nearFarmRaidEntry(s,specs,bounds,nav)??(specs.length<=5?pack():null);
   let entries=nearby?.entries??null,exits=nearby?.exits??null;
   for(let sideTry=0;sideTry<4&&!entries;sideTry++){
     const side=(preferredSide+sideTry)%4;
@@ -134,7 +144,15 @@ export function chooseRaidEntry(s,specs,bounds,preferredSide,nav){
         }
         if(!spawn)break;points.push(spawn);
       }
-      if(points.length===specs.length){entries=points;exits=retreats;}
+      if(points.length===specs.length){
+        // Boundary footprints alone do not prove connection to an attack target.
+        const preview={...s,raid:{reservations:{},animals:specs.map(({radius},i)=>({id:`entry-preview-${i}`,...points[i],radius,status:'entering',hitsRemaining:1}))}};
+        const oldState=nav.state;let connected=true;
+        const hasTargets=s.plants.some(p=>p.alive)||s.structures.some(t=>t.status==='intact'&&t.hp>0);
+        try{nav.state=preview;if(hasTargets)for(const animal of preview.raid.animals)if(!targetFor(preview,animal,nav)){connected=false;break;}}
+        finally{nav.state=oldState;}
+        if(connected){entries=points;exits=retreats;}
+      }
     }
   }
   return entries?{entries,exits}:null;
