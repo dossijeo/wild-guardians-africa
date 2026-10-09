@@ -12,18 +12,30 @@ import {RaidEntryPreparer} from '../src/world/raid-entry-preparer.js';
 import {activeChunkRegion} from '../src/world/active-region.js';
 import * as Game from '../src/simulation/game.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
-const output=process.argv[2],biome=process.argv[3]??'desierto';if(!output)throw Error('Specify new evidence directory');mkdirSync(output,{recursive:false});
+const output=process.argv[2],biome=process.argv[3]??'desierto',cooperative=process.argv[4]==='cooperative';if(!output)throw Error('Specify new evidence directory');mkdirSync(output,{recursive:false});
 const begun=performance.now(),group=[...Array(4).fill('warthog'),...Array(3).fill('hyena'),...Array(2).fill('buffalo'),...Array(2).fill('lion'),'rhino'];
 const {s,nav}=createOpeningWorld({biome,seed:712}),center=s.structures[0],eye={x:center.x+16,z:center.z+20};
 nav.setActiveBounds(activeChunkRegion(eye).bounds);nav.setRaidView(eye,center);s.nightPlan={at:400,group:[...group],done:false};
 const original=serialize(s),hash=raw=>createHash('sha256').update(raw).digest('hex'),frames=[],events=[],seen=new Set();let worker,preparer,timeout;
-const report={scope:'Explicit native twelve-body scheduled navigation fixture; no campaign, natural intro distribution or balance acceptance',biome,seed:s.seed,culture:s.culture,group,sourceCommit:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),observerSourceSHA256:hash(readFileSync(new URL(import.meta.url))),status:'running',initialSnapshotSHA256:hash(original),checks:{},budgetSeconds:7};
+const report={scope:'Explicit native twelve-body scheduled navigation fixture; no campaign, natural intro distribution or balance acceptance',biome,seed:s.seed,culture:s.culture,group,preparationMode:cooperative?'cooperative-no-worker':'node-worker',sourceCommit:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),observerSourceSHA256:hash(readFileSync(new URL(import.meta.url))),status:'running',initialSnapshotSHA256:hash(original),checks:{},budgetSeconds:7};
 const collect=()=>{for(const event of s.events)if(!seen.has(event.id)){seen.add(event.id);events.push(structuredClone(event));}};
 const frame=()=>({elapsed:s.elapsed,day:s.day,time:s.time,result:s.result,centerHp:center.hp,animals:s.raid?.animals.map(a=>({id:a.id,species:a.species,x:a.x,z:a.z,radius:a.radius,status:a.status,hitsRemaining:a.hitsRemaining,reservation:a.reservation,targetId:a.targetId,pathPoints:a.path?.length??null,exit:a.exit}))??[],reservations:structuredClone(s.raid?.reservations??{})});
 try{
- preparer=new RaidEntryPreparer(nav,{createWorker:()=>worker=createNodeRaidEntryWorker()});const receive=worker.onmessage;
- const reply=new Promise((resolve,reject)=>{worker.onmessage=event=>{receive(event);if(event.data.error)reject(Error(event.data.error));else resolve(event.data);};const error=worker.onerror;worker.onerror=e=>{error(e);reject(e);};});
- preparer.update(s);const prepared=await Promise.race([reply,new Promise((_,reject)=>timeout=setTimeout(()=>reject(Error('Worker observation deadline; no restart')),7000))]);clearTimeout(timeout);
+ let prepared;
+ if(cooperative){
+  preparer=new RaidEntryPreparer(nav,{createWorker:()=>{throw Error('Explicit QA transport unavailable');}});
+  while(!preparer.ready){
+   if(performance.now()-begun>6000)throw Error('Cooperative observation deadline; continuation not restarted');
+   preparer.update(s);
+   if(preparer.cooperativeError)throw Error(preparer.cooperativeError);
+   await new Promise(resolve=>setImmediate(resolve));
+  }
+  prepared=preparer.ready;report.preparationMetrics=preparer.cooperativeMetrics;report.preparationStats={...preparer.stats};
+ }else{
+  preparer=new RaidEntryPreparer(nav,{createWorker:()=>worker=createNodeRaidEntryWorker()});const receive=worker.onmessage;
+  const reply=new Promise((resolve,reject)=>{worker.onmessage=event=>{receive(event);if(event.data.error)reject(Error(event.data.error));else resolve(event.data);};const error=worker.onerror;worker.onerror=e=>{error(e);reject(e);};});
+  preparer.update(s);prepared=await Promise.race([reply,new Promise((_,reject)=>timeout=setTimeout(()=>reject(Error('Worker observation deadline; no restart')),7000))]);clearTimeout(timeout);
+ }
  assert.ok(prepared.entry);assert.equal(serialize(s),original);report.checks.preparationStateUnchanged=true;
  // Native clock alone reaches the scheduled spawn; no position/HP/money,
  // task/claim or outcome writes after fixture setup.

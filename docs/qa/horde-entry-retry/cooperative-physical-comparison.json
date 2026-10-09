@@ -1,0 +1,299 @@
+{
+  "scope": "Read-only matching against historical worker empty-farm fixtures; not campaign balance or GPU acceptance",
+  "rows": [
+    {
+      "biome": "desierto",
+      "status": "passed",
+      "comparison": {
+        "initialSnapshotSHA256": true,
+        "spawnStateSHA256": true,
+        "finalSnapshotSHA256": true
+      },
+      "initial": "19560f521a75e669905a5f532ca11aaf23e6913290337c402f525e1730584880",
+      "spawn": "c38762369943bfa93d05c8498284a79bdba3cb651a90a800ffa2c11cb54091bb",
+      "final": "e9ec4350c9cff41c6106359767b9c9fb8b1a6e12dc36b7b96f723f775b51be63",
+      "actors": 12,
+      "actualHits": 2,
+      "unusedHits": 45,
+      "preparationMetrics": {
+        "constructionMilliseconds": 1.778899999999794,
+        "slices": 311,
+        "totalMilliseconds": 418.03130000000056,
+        "maxSliceMilliseconds": 15.168699999999717,
+        "maxSliceGeometryChecks": 374,
+        "yieldBoundaries": 3984
+      },
+      "payloads": {
+        "docs/qa/horde-entry-retry/desert-cooperative-physical/events.json.gz": {
+          "bytes": 440,
+          "sha256": "040bbdb49daaf28a3748d0b3f8e6f486b1cfc1eadd51b6aa10af3ec70ddfddaa",
+          "uncompressedSHA256": "63b5f790e599c409fce3e8abaa59184b4dc19105bc8ff488bce02af31a9a6a0d"
+        },
+        "docs/qa/horde-entry-retry/desert-cooperative-physical/final-state.json.gz": {
+          "bytes": 7004,
+          "sha256": "aff4191bf747c2675a2007772168c7532dec4455ae698014e72cf780099c17aa",
+          "uncompressedSHA256": "e9ec4350c9cff41c6106359767b9c9fb8b1a6e12dc36b7b96f723f775b51be63"
+        },
+        "docs/qa/horde-entry-retry/desert-cooperative-physical/frames.json.gz": {
+          "bytes": 4154,
+          "sha256": "297b152530eb17d4acd5918f087a0835ed94462b2818ff3ea1ccd8958836d460",
+          "uncompressedSHA256": "e7e5a2c21adc720253552043eb9a3eff33fc230cedfb2d033c08c75ea335ade2"
+        },
+        "docs/qa/horde-entry-retry/desert-cooperative-physical/initial-state.json.gz": {
+          "bytes": 6397,
+          "sha256": "a773e8b64b9a9f11a91e1708ede8d19882307ce470c3fdab6f387d7f6fdebbbc",
+          "uncompressedSHA256": "19560f521a75e669905a5f532ca11aaf23e6913290337c402f525e1730584880"
+        },
+        "docs/qa/horde-entry-retry/desert-cooperative-physical/physical.json": {
+          "bytes": 6309,
+          "sha256": "82a3003a39c3612797d1a8a3d9587752f373d2d1b0e94c8ced29e965ea4a2947"
+        }
+      }
+    },
+    {
+      "biome": "sabana",
+      "status": "passed",
+      "comparison": {
+        "initialSnapshotSHA256": true,
+        "spawnStateSHA256": true,
+        "finalSnapshotSHA256": true
+      },
+      "initial": "142d17c93da60c1067f7670c324d962b14f87574c1319b4c2280186eddeb4fb4",
+      "spawn": "2d80c6ddd996e051cd289474708d5ddda51489522608fbe2d5fc60f7e1a0afb3",
+      "final": "4c01cc9803a7fa60c85e43ea7209f23543dd6001ced6b324ffca6729e3d01890",
+      "actors": 12,
+      "actualHits": 2,
+      "unusedHits": 45,
+      "preparationMetrics": {
+        "constructionMilliseconds": 1.0699000000000751,
+        "slices": 40,
+        "totalMilliseconds": 44.57249999999976,
+        "maxSliceMilliseconds": 14.192600000000084,
+        "maxSliceGeometryChecks": 146,
+        "yieldBoundaries": 613
+      },
+      "payloads": {
+        "docs/qa/horde-entry-retry/sabana-cooperative-physical/events.json.gz": {
+          "bytes": 446,
+          "sha256": "ed1f8174c3cfa65233825d1a31c2c75ba9453c41b460538abd4b6c6fce9ff273",
+          "uncompressedSHA256": "45e4691f68496c2ba3a2280ffeec66a85aec736ea56b1489c47b054ce21a2a5e"
+        },
+        "docs/qa/horde-entry-retry/sabana-cooperative-physical/final-state.json.gz": {
+          "bytes": 7034,
+          "sha256": "43a763209345f0b889ae1e8fd240445d93a81a2bb794b752c03e84eb66df224b",
+          "uncompressedSHA256": "4c01cc9803a7fa60c85e43ea7209f23543dd6001ced6b324ffca6729e3d01890"
+        },
+        "docs/qa/horde-entry-retry/sabana-cooperative-physical/frames.json.gz": {
+          "bytes": 5121,
+          "sha256": "38f00905596aade0bfbe35595566838bb2df57c27e1220a9bc6ea47257781f2b",
+          "uncompressedSHA256": "7f763f21521fcf4ace212cc96de4ba889e646a2a388453177b031dfcb799aeff"
+        },
+        "docs/qa/horde-entry-retry/sabana-cooperative-physical/initial-state.json.gz": {
+          "bytes": 6427,
+          "sha256": "0bfb78533b9c65073f034cc60d1a0b6baaf7c3e73a3c54824b386c26de6ea6b8",
+          "uncompressedSHA256": "142d17c93da60c1067f7670c324d962b14f87574c1319b4c2280186eddeb4fb4"
+        },
+        "docs/qa/horde-entry-retry/sabana-cooperative-physical/physical.json": {
+          "bytes": 6310,
+          "sha256": "893ec6d3a6b31487b85a555a2422f2583bba7dce23fc9b37cdab2cff6368ec49"
+        }
+      }
+    },
+    {
+      "biome": "gran-rio",
+      "status": "passed",
+      "comparison": {
+        "initialSnapshotSHA256": true,
+        "spawnStateSHA256": true,
+        "finalSnapshotSHA256": true
+      },
+      "initial": "dcf3211d0789afe4f3b3de8b9657680b84fe0a82f3d417b671ed1199256a9ded",
+      "spawn": "811272d9476cd4171d203df0997bb0cfa9af58f6387aa0441f56a57ed45ded07",
+      "final": "76449dd8fb28ab9385206f175e47c1bb974f93abf26eaff8e5d0a77d337920e7",
+      "actors": 12,
+      "actualHits": 2,
+      "unusedHits": 45,
+      "preparationMetrics": {
+        "constructionMilliseconds": 1.197400000000016,
+        "slices": 40,
+        "totalMilliseconds": 60.502100000000155,
+        "maxSliceMilliseconds": 21.879699999999957,
+        "maxSliceGeometryChecks": 146,
+        "yieldBoundaries": 613
+      },
+      "payloads": {
+        "docs/qa/horde-entry-retry/gran-rio-cooperative-physical/events.json.gz": {
+          "bytes": 446,
+          "sha256": "ed1f8174c3cfa65233825d1a31c2c75ba9453c41b460538abd4b6c6fce9ff273",
+          "uncompressedSHA256": "45e4691f68496c2ba3a2280ffeec66a85aec736ea56b1489c47b054ce21a2a5e"
+        },
+        "docs/qa/horde-entry-retry/gran-rio-cooperative-physical/final-state.json.gz": {
+          "bytes": 7037,
+          "sha256": "e61a56fe695a4d95af092ca1d254f84cb94e5b32685654725ee0c3516002e52b",
+          "uncompressedSHA256": "76449dd8fb28ab9385206f175e47c1bb974f93abf26eaff8e5d0a77d337920e7"
+        },
+        "docs/qa/horde-entry-retry/gran-rio-cooperative-physical/frames.json.gz": {
+          "bytes": 5121,
+          "sha256": "38f00905596aade0bfbe35595566838bb2df57c27e1220a9bc6ea47257781f2b",
+          "uncompressedSHA256": "7f763f21521fcf4ace212cc96de4ba889e646a2a388453177b031dfcb799aeff"
+        },
+        "docs/qa/horde-entry-retry/gran-rio-cooperative-physical/initial-state.json.gz": {
+          "bytes": 6430,
+          "sha256": "36788d32806bb68b55d632d5e5ad6224bf393ea8a646ebf3cdc21962effe36df",
+          "uncompressedSHA256": "dcf3211d0789afe4f3b3de8b9657680b84fe0a82f3d417b671ed1199256a9ded"
+        },
+        "docs/qa/horde-entry-retry/gran-rio-cooperative-physical/physical.json": {
+          "bytes": 6312,
+          "sha256": "59aa2752b37ef35e4b22744d5e913903897a93498686f0fc1d0c282c42900ac5"
+        }
+      }
+    },
+    {
+      "biome": "manglares",
+      "status": "passed",
+      "comparison": {
+        "initialSnapshotSHA256": true,
+        "spawnStateSHA256": true,
+        "finalSnapshotSHA256": true
+      },
+      "initial": "8ff73d54aef9307bd56f16ea83ae4f8f6ec89ef83e5954135dfcda643806e566",
+      "spawn": "2925067038059e0dd47f5d694319556ca8f59e80babe797aed96c6966fd525e3",
+      "final": "91068aa34c858a6cce67df68e2d0a3a163ee50de9af5e6fbfa46a0cc7314e557",
+      "actors": 12,
+      "actualHits": 2,
+      "unusedHits": 45,
+      "preparationMetrics": {
+        "constructionMilliseconds": 1.1818999999999846,
+        "slices": 40,
+        "totalMilliseconds": 66.44830000000002,
+        "maxSliceMilliseconds": 22.527800000000013,
+        "maxSliceGeometryChecks": 146,
+        "yieldBoundaries": 613
+      },
+      "payloads": {
+        "docs/qa/horde-entry-retry/manglares-cooperative-physical/events.json.gz": {
+          "bytes": 446,
+          "sha256": "ed1f8174c3cfa65233825d1a31c2c75ba9453c41b460538abd4b6c6fce9ff273",
+          "uncompressedSHA256": "45e4691f68496c2ba3a2280ffeec66a85aec736ea56b1489c47b054ce21a2a5e"
+        },
+        "docs/qa/horde-entry-retry/manglares-cooperative-physical/final-state.json.gz": {
+          "bytes": 7026,
+          "sha256": "5c34e85d55e1c09e817f9e8f3a4c608d0989959f3bab744e3a6cec64d961304c",
+          "uncompressedSHA256": "91068aa34c858a6cce67df68e2d0a3a163ee50de9af5e6fbfa46a0cc7314e557"
+        },
+        "docs/qa/horde-entry-retry/manglares-cooperative-physical/frames.json.gz": {
+          "bytes": 5121,
+          "sha256": "38f00905596aade0bfbe35595566838bb2df57c27e1220a9bc6ea47257781f2b",
+          "uncompressedSHA256": "7f763f21521fcf4ace212cc96de4ba889e646a2a388453177b031dfcb799aeff"
+        },
+        "docs/qa/horde-entry-retry/manglares-cooperative-physical/initial-state.json.gz": {
+          "bytes": 6419,
+          "sha256": "9e5a56403051806ac9394b55391a2bbf5ae60b98a0951a56e843e963ea7efc0f",
+          "uncompressedSHA256": "8ff73d54aef9307bd56f16ea83ae4f8f6ec89ef83e5954135dfcda643806e566"
+        },
+        "docs/qa/horde-entry-retry/manglares-cooperative-physical/physical.json": {
+          "bytes": 6304,
+          "sha256": "401147caa45b43c0b3d2138379a8ab836d76876cca4aab2a35ca3c7a4e28a456"
+        }
+      }
+    },
+    {
+      "biome": "volcanes",
+      "status": "passed",
+      "comparison": {
+        "initialSnapshotSHA256": true,
+        "spawnStateSHA256": true,
+        "finalSnapshotSHA256": true
+      },
+      "initial": "543df65d068ff6fd8766d30b4c673f26220d877f106f8ecb82c6372fce4c56e4",
+      "spawn": "467f5a546899350f02effa47048fc2e30da1c5ce42b80f8c54451ea6d38f6be0",
+      "final": "3f83bc9d5804239370ac92893120f02b746c86b0f435c8878e48f7da02d67558",
+      "actors": 12,
+      "actualHits": 2,
+      "unusedHits": 45,
+      "preparationMetrics": {
+        "constructionMilliseconds": 1.5470000000000255,
+        "slices": 40,
+        "totalMilliseconds": 47.6410999999996,
+        "maxSliceMilliseconds": 15.776500000000055,
+        "maxSliceGeometryChecks": 146,
+        "yieldBoundaries": 615
+      },
+      "payloads": {
+        "docs/qa/horde-entry-retry/volcanes-cooperative-physical/events.json.gz": {
+          "bytes": 446,
+          "sha256": "ed1f8174c3cfa65233825d1a31c2c75ba9453c41b460538abd4b6c6fce9ff273",
+          "uncompressedSHA256": "45e4691f68496c2ba3a2280ffeec66a85aec736ea56b1489c47b054ce21a2a5e"
+        },
+        "docs/qa/horde-entry-retry/volcanes-cooperative-physical/final-state.json.gz": {
+          "bytes": 7034,
+          "sha256": "dddc07e691790b64b6358f5fae20fd027748c416623e0617238962da2efc3e52",
+          "uncompressedSHA256": "3f83bc9d5804239370ac92893120f02b746c86b0f435c8878e48f7da02d67558"
+        },
+        "docs/qa/horde-entry-retry/volcanes-cooperative-physical/frames.json.gz": {
+          "bytes": 5115,
+          "sha256": "1c29c4414bf7bddc42fc6179ff10bf48cc22f0213439b0eda594f202892b5ce6",
+          "uncompressedSHA256": "62945ddfb37a7354bad58bd6f671ebdb87488a5661f241826a62df87c26295fa"
+        },
+        "docs/qa/horde-entry-retry/volcanes-cooperative-physical/initial-state.json.gz": {
+          "bytes": 6427,
+          "sha256": "2d9a5dc721d6e2a2e48a57458f559a3fb51471f4e6328b1e7da31207dd444f37",
+          "uncompressedSHA256": "543df65d068ff6fd8766d30b4c673f26220d877f106f8ecb82c6372fce4c56e4"
+        },
+        "docs/qa/horde-entry-retry/volcanes-cooperative-physical/physical.json": {
+          "bytes": 6311,
+          "sha256": "ce7a9f4fe8193e82c5cd9fe41869eac426b556a9869912a33560e0e998ba50dc"
+        }
+      }
+    },
+    {
+      "biome": "gran-canon",
+      "status": "passed",
+      "comparison": {
+        "initialSnapshotSHA256": true,
+        "spawnStateSHA256": true,
+        "finalSnapshotSHA256": true
+      },
+      "initial": "97c2aeb8dfaf6dc9132fee2176bd112a9f5888e8ad81577b2e78f565f96b37d3",
+      "spawn": "84efbfb0a61fa0076639710881768b386e6dc269e4dc8c2978063e76cfc1dd27",
+      "final": "e2b207af378d5707d7a75a7d963a058424fd6230533f61393d85e1e2930a9514",
+      "actors": 12,
+      "actualHits": 2,
+      "unusedHits": 45,
+      "preparationMetrics": {
+        "constructionMilliseconds": 2.2379999999999427,
+        "slices": 144,
+        "totalMilliseconds": 186.89469999999972,
+        "maxSliceMilliseconds": 12.802900000000022,
+        "maxSliceGeometryChecks": 349,
+        "yieldBoundaries": 2178
+      },
+      "payloads": {
+        "docs/qa/horde-entry-retry/gran-canon-cooperative-physical/events.json.gz": {
+          "bytes": 465,
+          "sha256": "f1ebd02aa4efd6df4b8d5a7ace31da53cb8bf185ff982d3a497ba2335308281a",
+          "uncompressedSHA256": "5b95722f0fda18551dd22ba84f8cd749b604d14bc1b1a527a133d59ef9ef3462"
+        },
+        "docs/qa/horde-entry-retry/gran-canon-cooperative-physical/final-state.json.gz": {
+          "bytes": 7537,
+          "sha256": "e19ddd2eb0374c01ba96ed7d086c080c16a09591feb2617776eb7e7206f3859f",
+          "uncompressedSHA256": "e2b207af378d5707d7a75a7d963a058424fd6230533f61393d85e1e2930a9514"
+        },
+        "docs/qa/horde-entry-retry/gran-canon-cooperative-physical/frames.json.gz": {
+          "bytes": 5434,
+          "sha256": "5c824baac124446aea94b12d1ac51c021419fde8bf9a1d740bdcb1a328d325bd",
+          "uncompressedSHA256": "ffb514bc48b0f484434f9ee05025d6ac8705926025f28a1a98fb41a0d0d7356a"
+        },
+        "docs/qa/horde-entry-retry/gran-canon-cooperative-physical/initial-state.json.gz": {
+          "bytes": 6928,
+          "sha256": "943c593fa56fb8cb2117b76a4683ee076f460a7aa279e4606cc3c6ba3876c4f6",
+          "uncompressedSHA256": "97c2aeb8dfaf6dc9132fee2176bd112a9f5888e8ad81577b2e78f565f96b37d3"
+        },
+        "docs/qa/horde-entry-retry/gran-canon-cooperative-physical/physical.json": {
+          "bytes": 6421,
+          "sha256": "98e2fd846d20f11876c8cc6e04d75d9d085db9dffefdce40bd32ebd31e900adf"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+TAP version 13
+# {"scope":"CPU cooperative request only, not frame/GPU acceptance","biome":"sabana","constructionMilliseconds":0.4552999999999656,"slices":155,"totalMilliseconds":29.935800000000313,"maxSliceMilliseconds":8.326900000000023,"maxSliceGeometryChecks":134,"yieldBoundaries":613,"entryWork":{"limit":32,"searches":1,"geometryChecks":747,"searchYields":1,"approachChecks":0,"maxGeometryChecks":100000,"maxSearchYields":50000,"exhausted":null},"warmWork":{"limit":64,"searches":0,"geometryChecks":2,"searchYields":0,"approachChecks":0,"maxGeometryChecks":1000000,"maxSearchYields":100000,"exhausted":null}}
+# Subtest: sabana: cooperative slices converge to identical worker result without restarting or mutating main nav
+ok 1 - sabana: cooperative slices converge to identical worker result without restarting or mutating main nav
+  ---
+  duration_ms: 354.7469
+  ...
+# Subtest: Worker-disabled preparation eventually supplies a whole group and resumes native pending600
+ok 2 - Worker-disabled preparation eventually supplies a whole group and resumes native pending600
+  ---
+  duration_ms: 305.9602
+  ...
+# Subtest: Camera/side invalidation closes old continuation and disposal leaves no active work
+ok 3 - Camera/side invalidation closes old continuation and disposal leaves no active work
+  ---
+  duration_ms: 189.9215
+  ...
+1..3
+# tests 3
+# suites 0
+# pass 3
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1021.2843

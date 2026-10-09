@@ -1,0 +1,219 @@
+TAP version 13
+# Subtest: QA-011: accelerated night splits at raid arrival before moving the animal at normal speed
+not ok 1 - QA-011: accelerated night splits at raid arrival before moving the animal at normal speed
+  ---
+  duration_ms: 11.069
+  location: 'file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/tests/acceptance-clock.test.js:17:1'
+  failureType: 'testCodeFailure'
+  error: 'nav[method] is not a function'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    navigationCall (file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/src/world/navigation-steps.js:11:51)
+    navigationCall.next (<anonymous>)
+    connectedRaidPackingSteps (file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/src/world/raid-entry-packing.js:32:50)
+    connectedRaidPackingSteps.next (<anonymous>)
+    chooseRaidEntrySteps (file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/src/simulation/raids.js:125:184)
+    chooseRaidEntrySteps.next (<anonymous>)
+    consumeSteps (file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/src/world/navigation-steps.js:2:32)
+    withRaidEntryBudget.maxGeometryChecks.maxGeometryChecks (file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/src/simulation/raids.js:117:54)
+    withRaidEntryBudget (file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/src/world/raid-entry-budget.js:22:13)
+    chooseRaidEntry (file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/src/simulation/raids.js:117:10)
+  ...
+# Subtest: QA-011: one real frame straddling raid arrival matches two frames split at its boundary
+not ok 2 - QA-011: one real frame straddling raid arrival matches two frames split at its boundary
+  ---
+  duration_ms: 1.7239
+  location: 'file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/tests/acceptance-clock.test.js:25:1'
+  failureType: 'testCodeFailure'
+  error: 'nav[method] is not a function'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    navigationCall (file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/src/world/navigation-steps.js:11:51)
+    navigationCall.next (<anonymous>)
+    connectedRaidPackingSteps (file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/src/world/raid-entry-packing.js:32:50)
+    connectedRaidPackingSteps.next (<anonymous>)
+    chooseRaidEntrySteps (file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/src/simulation/raids.js:125:184)
+    chooseRaidEntrySteps.next (<anonymous>)
+    consumeSteps (file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/src/world/navigation-steps.js:2:32)
+    withRaidEntryBudget.maxGeometryChecks.maxGeometryChecks (file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/src/simulation/raids.js:117:54)
+    withRaidEntryBudget (file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/src/world/raid-entry-budget.js:22:13)
+    chooseRaidEntry (file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/src/simulation/raids.js:117:10)
+  ...
+# Subtest: QA-009/010/015: 300 real daytime seconds and 60 calm-night seconds reach one blocked dawn
+not ok 3 - QA-009/010/015: 300 real daytime seconds and 60 calm-night seconds reach one blocked dawn
+  ---
+  duration_ms: 116.8702
+  location: 'file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/tests/acceptance-clock.test.js:34:1'
+  failureType: 'testCodeFailure'
+  error: 'nav[method] is not a function'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    navigationCall (file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/src/world/navigation-steps.js:11:51)
+    navigationCall.next (<anonymous>)
+    connectedRaidPackingSteps (file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/src/world/raid-entry-packing.js:32:50)
+    connectedRaidPackingSteps.next (<anonymous>)
+    chooseRaidEntrySteps (file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/src/simulation/raids.js:125:184)
+    chooseRaidEntrySteps.next (<anonymous>)
+    consumeSteps (file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/src/world/navigation-steps.js:2:32)
+    withRaidEntryBudget.maxGeometryChecks.maxGeometryChecks (file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/src/simulation/raids.js:117:54)
+    withRaidEntryBudget (file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/src/world/raid-entry-budget.js:22:13)
+    chooseRaidEntry (file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/src/simulation/raids.js:117:10)
+  ...
+# Subtest: QA-009/010: fractional daylight-to-night frame uses each side of the boundary at its own speed
+ok 4 - QA-009/010: fractional daylight-to-night frame uses each side of the boundary at its own speed
+  ---
+  duration_ms: 1.024
+  ...
+# Subtest: QA-010: a full calm night preserves growth and remaining water tolerance
+ok 5 - QA-010: a full calm night preserves growth and remaining water tolerance
+  ---
+  duration_ms: 31.411
+  ...
+# Subtest: QA-012/013: only the last animal leaving restores accelerated night and emits one end
+not ok 6 - QA-012/013: only the last animal leaving restores accelerated night and emits one end
+  ---
+  duration_ms: 1.1436
+  location: 'file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/tests/acceptance-clock.test.js:57:1'
+  failureType: 'testCodeFailure'
+  error: 'nav[method] is not a function'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    navigationCall (file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/src/world/navigation-steps.js:11:51)
+    navigationCall.next (<anonymous>)
+    connectedRaidPackingSteps (file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/src/world/raid-entry-packing.js:32:50)
+    connectedRaidPackingSteps.next (<anonymous>)
+    chooseRaidEntrySteps (file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/src/simulation/raids.js:125:184)
+    chooseRaidEntrySteps.next (<anonymous>)
+    consumeSteps (file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/src/world/navigation-steps.js:2:32)
+    withRaidEntryBudget.maxGeometryChecks.maxGeometryChecks (file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/src/simulation/raids.js:117:54)
+    withRaidEntryBudget (file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/src/world/raid-entry-budget.js:22:13)
+    chooseRaidEntry (file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/src/simulation/raids.js:117:10)
+  ...
+# Subtest: QA-007/014: blocked real-time advances preserve every field until all pause causes clear
+ok 7 - QA-007/014: blocked real-time advances preserve every field until all pause causes clear
+  ---
+  duration_ms: 0.7694
+  ...
+# Subtest: QA-096: mapungubwe one defensive set has one owner and a free companion retreats with hits
+ok 8 - QA-096: mapungubwe one defensive set has one owner and a free companion retreats with hits
+  ---
+  duration_ms: 310.5098
+  ...
+# Subtest: QA-096: saheliana one defensive set has one owner and a free companion retreats with hits
+ok 9 - QA-096: saheliana one defensive set has one owner and a free companion retreats with hits
+  ---
+  duration_ms: 203.4331
+  ...
+# Subtest: QA-096: suajili one defensive set has one owner and a free companion retreats with hits
+ok 10 - QA-096: suajili one defensive set has one owner and a free companion retreats with hits
+  ---
+  duration_ms: 217.1795
+  ...
+# Subtest: QA-096: musgum one defensive set has one owner and a free companion retreats with hits
+ok 11 - QA-096: musgum one defensive set has one owner and a free companion retreats with hits
+  ---
+  duration_ms: 189.4876
+  ...
+# Subtest: QA-096: etiope one defensive set has one owner and a free companion retreats with hits
+ok 12 - QA-096: etiope one defensive set has one owner and a free companion retreats with hits
+  ---
+  duration_ms: 282.4892
+  ...
+# Subtest: QA-096: aggregate defensive value outranks the 800-coin centre even though every piece costs less
+ok 13 - QA-096: aggregate defensive value outranks the 800-coin centre even though every piece costs less
+  ---
+  duration_ms: 65.4495
+  ...
+# Subtest: QA-096: topology loss rekeys surviving reservations and a legacy competing claim cannot delete the owner
+ok 14 - QA-096: topology loss rekeys surviving reservations and a legacy competing claim cannot delete the owner
+  ---
+  duration_ms: 19.9028
+  ...
+# Subtest: QA-096: actual paid contiguous crop groups remain exclusive through destruction and reload
+ok 15 - QA-096: actual paid contiguous crop groups remain exclusive through destruction and reload
+  ---
+  duration_ms: 482.6563
+  ...
+# Subtest: Failed entry consumes one side draw, allocates no actors, and retries no unchanged input
+ok 16 - Failed entry consumes one side draw, allocates no actors, and retries no unchanged input
+  ---
+  duration_ms: 448.8798
+  ...
+# Subtest: At pending dawn all simulated clocks, collapses, workers, tasks and ledger freeze; UI and save remain usable
+ok 17 - At pending dawn all simulated clocks, collapses, workers, tasks and ledger freeze; UI and save remain usable
+  ---
+  duration_ms: 340.5588
+  ...
+# Subtest: Changing native camera bounds enables entry at600, preserves side, and draws only successful strike budgets
+not ok 18 - Changing native camera bounds enables entry at600, preserves side, and draws only successful strike budgets
+  ---
+  duration_ms: 466.3571
+  location: 'file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/tests/horde-entry-retry.test.js:44:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert.ok(s.raid)
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/tests/horde-entry-retry.test.js:48:9)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+# Subtest: Persisted side zero has stable prepared keys and isolated worker computation does not redraw
+ok 19 - Persisted side zero has stable prepared keys and isolated worker computation does not redraw
+  ---
+  duration_ms: 414.1787
+  ...
+# Subtest: A fresh prepared failure is considered once, including worker recreation with the same token
+ok 20 - A fresh prepared failure is considered once, including worker recreation with the same token
+  ---
+  duration_ms: 250.4788
+  ...
+# Subtest: Successful first attempt keeps original side-plus-strikes RNG order
+not ok 21 - Successful first attempt keeps original side-plus-strikes RNG order
+  ---
+  duration_ms: 272.0647
+  location: 'file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/tests/horde-entry-retry.test.js:70:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'unavailable'
+    - 'spawned'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'spawned'
+  actual: 'unavailable'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/campaign-horde-proposal/wild-guardians-africa/tests/horde-entry-retry.test.js:73:60)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+1..21
+# tests 21
+# suites 0
+# pass 15
+# fail 6
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2434.3664

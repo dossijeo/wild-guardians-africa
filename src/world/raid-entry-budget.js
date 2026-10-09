@@ -2,9 +2,10 @@ export class RaidEntryBudgetExceeded extends Error{}
 
 // Bounds work units, never frame time. Throwing through path() prevents an
 // interrupted search from being recorded as a proven failed route.
-export function withRaidEntryBudget(nav,limit,calculate,{maxGeometryChecks=256,maxSearchYields=32}={}){
+export function withRaidEntryBudget(nav,limit,calculate,{maxGeometryChecks=256,maxSearchYields=32,workState=null}={}){
  for(const [name,value,max] of [['searches',limit,64],['geometry',maxGeometryChecks,1000000],['yields',maxSearchYields,100000]])if(!Number.isSafeInteger(value)||value<0||value>max)throw Error(`Invalid raid entry ${name} budget`);
- const descriptors=new Map(),stats={limit,searches:0,geometryChecks:0,searchYields:0,approachChecks:0,maxGeometryChecks,maxSearchYields,exhausted:null};
+ const descriptors=new Map(),stats=workState??{limit,searches:0,geometryChecks:0,searchYields:0,approachChecks:0,maxGeometryChecks,maxSearchYields,exhausted:null};
+ if(stats.limit!==limit||stats.maxGeometryChecks!==maxGeometryChecks||stats.maxSearchYields!==maxSearchYields)throw Error('Raid entry continuation budget mismatch');
  const exhaust=kind=>{stats.exhausted=kind;throw new RaidEntryBudgetExceeded(`Raid entry ${kind} budget exhausted`);};
  const replace=(name,make)=>{const original=nav[name];if(typeof original!=='function')return;descriptors.set(name,Object.getOwnPropertyDescriptor(nav,name));nav[name]=make(original);};
  for(const name of ['walkable','segmentClear'])replace(name,original=>function(...args){if(stats.geometryChecks>=maxGeometryChecks)exhaust('geometry');stats.geometryChecks++;return original.apply(this,args);});

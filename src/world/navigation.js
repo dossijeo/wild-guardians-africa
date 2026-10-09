@@ -1,4 +1,5 @@
 import {ViewMap,ViewSet,trimViewRegions} from './worker-view-cache.js';
+import {consumeSteps} from './navigation-steps.js';
 import {fluidAt,footprintFluidSample,FLUID_PLACEMENT_REASON} from './fluid-placement.js';
 import {navigationBounds,outsideNavigationBounds} from './navigation-bounds.js';
 import {navigationPathKey} from './raid-navigation-warmth.js';
@@ -192,12 +193,18 @@ export class Navigation {
     return {valid:true,suppress:props.filter(p=>footprintDistance(polygon,p.x,p.z)<(p.radius??.5)).map(p=>p.id)};
   }
   path(start,end,radius=.3,ignore=null,worker=true,margin=16) {
+    return consumeSteps(this.pathSteps(start,end,radius,ignore,worker,margin,true));
+  }
+  *pathSteps(start,end,radius=.3,ignore=null,worker=true,margin=16,synchronous=false) {
     const key=navigationPathKey(start,end,radius,ignore,worker,margin);
     if(this.failedPaths.has(key))return null;
     const prepared=this.preparedPaths&&this.preparedPaths.version===this.version&&this.preparedPaths.entries.get(key);
     if(prepared)return prepared.map(p=>({...p}));
     const reused=navigationQueryResult(this,key);if(reused)return reused;
-    const found=this.findPath(start,end,radius,ignore,worker,margin);
+    // Preserve overridden findPath behavior for existing synchronous clients.
+    // The cooperative native client resumes the exact same search iterator.
+    if(!synchronous)yield {kind:'route-start'};
+    const found=synchronous?this.findPath(start,end,radius,ignore,worker,margin):yield* this.findPathSteps(start,end,radius,ignore,worker,margin);
     const result=found&&worker?shortenBuildingRoute(this,start,end,this.smoothPath(start,found,radius,ignore,worker),radius,ignore):found;
     // Capacity pressure is not a geometry change. Retain other proven failures
     // instead of forcing up to 50,000 searches again after one new query.
@@ -234,10 +241,13 @@ export class Navigation {
     return route;
   }
   approachPath(start,end,radius){
+    return consumeSteps(this.approachPathSteps(start,end,radius,true));
+  }
+  *approachPathSteps(start,end,radius,synchronous=false){
     // Animal routes have symmetric terrain/solid collision rules. Search from
     // the service point: an enclosed island then proves failure after exploring
     // its finite component, rather than repeatedly exploring the outer land.
-    const reverse=this.path(end,start,radius,null,false);
+    const reverse=synchronous?this.path(end,start,radius,null,false):yield* this.pathSteps(end,start,radius,null,false);
     if(!reverse)return null;
     return [...reverse.slice(0,-1).reverse(),{x:end.x,z:end.z}];
   }

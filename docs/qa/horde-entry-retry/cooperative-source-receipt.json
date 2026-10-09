@@ -1,0 +1,43 @@
+{
+  "parentCommit": "d4d12580b52ee90df5bf215bf2d105eb7d7670f3",
+  "scope": "Post-execution source and immutable evidence receipt, not pre-execution frozen commit",
+  "sourceAndLogs": {
+    "src/simulation/raids.js": "fc1da05793981866b6782fb0b0f663d72cf37ed3c4530c8be1a3f56886f7684a",
+    "src/world/navigation.js": "4cc7b60690a67d022bad8861d0b9a0563643aaad03be1694e255076e69d5889a",
+    "src/world/navigation-steps.js": "fc27931cf1a8e85cbcfe49672d6b6154370c6e9bdcf6c616d928b0648d01faed",
+    "src/world/raid-entry-computation.js": "5da9beabb5eb510dc3c7ea0b3923a8d6305913e8cbf18b89dfbd84f4cd433896",
+    "src/world/compute-raid-entry.js": "34adf3bff23e59f4521ff7a97e1acb65c01202c78b172631f22aaf562eb0cc88",
+    "src/world/raid-entry-budget.js": "3e851c19c3e883bb48dfe1b4386587399abede3b52e618de606e709e89286d66",
+    "src/world/raid-entry-packing.js": "b971e8af291ea512d78047635e6ba7cea6b892347787164cc86bb9c549b12f33",
+    "src/world/raid-entry-preparer.js": "b829eef19ca85367c95799b43656a233c86f1864405c1982bafe482e60e7cc67",
+    "tests/raid-entry-cooperative.test.js": "b600e3aae9dc00e9cdadf7f926537b5a7349ab6f13f0066a61e4bebf3e67f971",
+    "tests/raid-entry-cooperative-cleanup.test.js": "31645df291dfed6fca1fd213667288b3eb766ecb0256c714102d9c4993437830",
+    "tools/diagnose_horde_physical_raid.mjs": "1e8a142ed779f9a240860c5d90e39a0b98673f785cb99640e439347d20f36390",
+    "tests/acceptance-clock.test.js": "9fe8a6f7b5da44da21c24a9685f3127776cf238a3aaa4264b1c89df146718e34",
+    "tests/acceptance-defensive-reservations.test.js": "44d109ffea77a45349d6029e24375c138d802562860fbe621fea04b96ed13c26",
+    "tests/horde-entry-retry.test.js": "6d0bce009456692d4bb68b16010e80ec2e2ea52efc04646ffe0a353b6590e862",
+    "docs/qa/horde-entry-retry/cooperative-cleanup-cache-tests.log": "91c1c5d4317eba24b974721cdfa0662ad84c9d26cbbb5d2bb9ed94f189aa9265",
+    "docs/qa/horde-entry-retry/cooperative-clock-reservations.log": "f2536777ab69a678fdd324a221ae828e38ad9230861782ddbe570fc3518f83a8",
+    "docs/qa/horde-entry-retry/cooperative-core-first-tests.log": "23a5d3934a242a90651a719617c6185152715bc2961ae54b5c468b99bfceb77b",
+    "docs/qa/horde-entry-retry/cooperative-desert-first.log": "f574bd6a99a19b4a7160220a6b2250bece231c00ae89d6def1b43e1b249a3fa5",
+    "docs/qa/horde-entry-retry/cooperative-gran-canon.log": "d098fdff032ff721fce7f776966aad70c89ba5e659c4c965a8e8a82b39070357",
+    "docs/qa/horde-entry-retry/cooperative-gran-rio.log": "cb8c9c21536e1a392c1b532939aa43c99b626a94d7c9f66e37c0200fe9c6cc27",
+    "docs/qa/horde-entry-retry/cooperative-manglares.log": "61841ebc8b2c2a82fdb09e4bb70ee4ab6bc35b118c0aa70117330890a6b69aaa",
+    "docs/qa/horde-entry-retry/cooperative-physical-desert.log": "e2ddd8af61ed47ce806e979e7d210d2df33bc7b6834bf7b455e29cd37b4c4ce6",
+    "docs/qa/horde-entry-retry/cooperative-physical-gran-canon.log": "5cfdd1c75c054ef41b41161471443df9d0ac74a1ed5127158f285c26f690ab23",
+    "docs/qa/horde-entry-retry/cooperative-physical-gran-rio.log": "b989b453ff11d7b3582799e76a4074ef9c7b87d5b5b65983501f68152999bb3d",
+    "docs/qa/horde-entry-retry/cooperative-physical-manglares.log": "a6bae56a4088858246745d092672fdde003a9749d4b4144f523f5920ca0318fd",
+    "docs/qa/horde-entry-retry/cooperative-physical-sabana.log": "cc6fcb6c084cbfcaf1aed0a799b4225adb3d4964151739f32eeb94740d817bd0",
+    "docs/qa/horde-entry-retry/cooperative-physical-volcanes.log": "381a1142b59416a5308161e569a1710f16fbad7cf6270722d4715d722c41f757",
+    "docs/qa/horde-entry-retry/cooperative-sabana.log": "8b7f8b9899e0babcc92da0f602aeb1c773719827a0680108b8946953742fa901",
+    "docs/qa/horde-entry-retry/cooperative-volcanes.log": "74a7efa9f5813fde130f0e752f7268d525e89d49bfeda6b9a77e2691d48dfe4c",
+    "docs/qa/horde-entry-retry/cooperative-physical-comparison.json": "6183577698309592dc4c0beeaace396cb51bb3266f89c33f1047d29bb78283b0"
+  },
+  "negativeCommand": "node --test tests/acceptance-clock.test.js tests/acceptance-defensive-reservations.test.js tests/horde-entry-retry.test.js",
+  "negativeExit": 1,
+  "negativeCounts": {
+    "pass": 15,
+    "fail": 6
+  },
+  "executedPhysicalObserverSHA256": "1e8a142ed779f9a240860c5d90e39a0b98673f785cb99640e439347d20f36390"
+}

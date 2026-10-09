@@ -1,0 +1,274 @@
+{
+  "scope": "Explicit native twelve-body scheduled navigation fixture; no campaign, natural intro distribution or balance acceptance",
+  "biome": "gran-rio",
+  "seed": "712",
+  "culture": "mapungubwe",
+  "group": [
+    "warthog",
+    "warthog",
+    "warthog",
+    "warthog",
+    "hyena",
+    "hyena",
+    "hyena",
+    "buffalo",
+    "buffalo",
+    "lion",
+    "lion",
+    "rhino"
+  ],
+  "preparationMode": "cooperative-no-worker",
+  "sourceCommit": "d4d12580b52ee90df5bf215bf2d105eb7d7670f3",
+  "observerSourceSHA256": "1e8a142ed779f9a240860c5d90e39a0b98673f785cb99640e439347d20f36390",
+  "status": "passed",
+  "initialSnapshotSHA256": "dcf3211d0789afe4f3b3de8b9657680b84fe0a82f3d417b671ed1199256a9ded",
+  "checks": {
+    "preparationStateUnchanged": true,
+    "raidCleared": true,
+    "nativeClock": true,
+    "sampledNativeTerrainMovement": true,
+    "allTwelvePhysicalExits": true,
+    "ledger": true,
+    "roundtrip": true
+  },
+  "budgetSeconds": 7,
+  "preparationMetrics": {
+    "constructionMilliseconds": 1.197400000000016,
+    "slices": 40,
+    "totalMilliseconds": 60.502100000000155,
+    "maxSliceMilliseconds": 21.879699999999957,
+    "maxSliceGeometryChecks": 146,
+    "yieldBoundaries": 613
+  },
+  "preparationStats": {
+    "requests": 1,
+    "accepted": 1,
+    "obsolete": 0,
+    "used": 0,
+    "failed": 1,
+    "cooperativeRequests": 1,
+    "cooperativeSlices": 40,
+    "cooperativeCompleted": 1,
+    "cooperativeAborts": 0,
+    "cooperativeErrors": 0
+  },
+  "actorIds": [
+    "animal-3",
+    "animal-4",
+    "animal-5",
+    "animal-6",
+    "animal-7",
+    "animal-8",
+    "animal-9",
+    "animal-10",
+    "animal-11",
+    "animal-12",
+    "animal-13",
+    "animal-14"
+  ],
+  "spawnStateSHA256": "811272d9476cd4171d203df0997bb0cfa9af58f6387aa0441f56a57ed45ded07",
+  "terminalActors": [
+    {
+      "id": "animal-3",
+      "species": "warthog",
+      "status": "gone",
+      "x": 93.6372507267192,
+      "z": 7.015413799920726,
+      "exit": {
+        "x": 93.6372507267192,
+        "z": 7.015413799920726
+      },
+      "initialHits": 2,
+      "unusedHits": 0,
+      "exitDistance": 0
+    },
+    {
+      "id": "animal-4",
+      "species": "warthog",
+      "status": "gone",
+      "x": 87.50929988917942,
+      "z": 11.917774469952558,
+      "exit": {
+        "x": 87.50929988917942,
+        "z": 11.917774469952558
+      },
+      "initialHits": 2,
+      "unusedHits": 2,
+      "exitDistance": 0
+    },
+    {
+      "id": "animal-5",
+      "species": "warthog",
+      "status": "gone",
+      "x": 82.49628280291228,
+      "z": 7.41980343453845,
+      "exit": {
+        "x": 82.49628280291228,
+        "z": 7.41980343453845
+      },
+      "initialHits": 2,
+      "unusedHits": 2,
+      "exitDistance": 0
+    },
+    {
+      "id": "animal-6",
+      "species": "warthog",
+      "status": "gone",
+      "x": 93.31860288695647,
+      "z": 2.8942968805208937,
+      "exit": {
+        "x": 93.31860288695647,
+        "z": 2.8942968805208937
+      },
+      "initialHits": 4,
+      "unusedHits": 4,
+      "exitDistance": 0
+    },
+    {
+      "id": "animal-7",
+      "species": "hyena",
+      "status": "gone",
+      "x": 91.55275351779132,
+      "z": -0.3979588946181165,
+      "exit": {
+        "x": 91.55275351779132,
+        "z": -0.3979588946181165
+      },
+      "initialHits": 5,
+      "unusedHits": 5,
+      "exitDistance": 0
+    },
+    {
+      "id": "animal-8",
+      "species": "hyena",
+      "status": "gone",
+      "x": 79.19637030847484,
+      "z": 9.06722567206929,
+      "exit": {
+        "x": 79.19637030847484,
+        "z": 9.06722567206929
+      },
+      "initialHits": 3,
+      "unusedHits": 3,
+      "exitDistance": 0
+    },
+    {
+      "id": "animal-9",
+      "species": "hyena",
+      "status": "gone",
+      "x": 97.18981758593017,
+      "z": 5.795225493016605,
+      "exit": {
+        "x": 97.18981758593017,
+        "z": 5.795225493016605
+      },
+      "initialHits": 4,
+      "unusedHits": 4,
+      "exitDistance": 0
+    },
+    {
+      "id": "animal-10",
+      "species": "buffalo",
+      "status": "gone",
+      "x": 92.5384267316497,
+      "z": 11.92303341456211,
+      "exit": {
+        "x": 92.5384267316497,
+        "z": 11.92303341456211
+      },
+      "initialHits": 4,
+      "unusedHits": 4,
+      "exitDistance": 0
+    },
+    {
+      "id": "animal-11",
+      "species": "buffalo",
+      "status": "gone",
+      "x": 83.21934541698033,
+      "z": 12.814248222340813,
+      "exit": {
+        "x": 83.21934541698033,
+        "z": 12.814248222340813
+      },
+      "initialHits": 4,
+      "unusedHits": 4,
+      "exitDistance": 0
+    },
+    {
+      "id": "animal-12",
+      "species": "lion",
+      "status": "gone",
+      "x": 85.53904052310469,
+      "z": 15.115847143276987,
+      "exit": {
+        "x": 85.53904052310469,
+        "z": 15.115847143276987
+      },
+      "initialHits": 5,
+      "unusedHits": 5,
+      "exitDistance": 0
+    },
+    {
+      "id": "animal-13",
+      "species": "lion",
+      "status": "gone",
+      "x": 77.42745840215909,
+      "z": 5.03162783061138,
+      "exit": {
+        "x": 77.42745840215909,
+        "z": 5.03162783061138
+      },
+      "initialHits": 6,
+      "unusedHits": 6,
+      "exitDistance": 0
+    },
+    {
+      "id": "animal-14",
+      "species": "rhino",
+      "status": "gone",
+      "x": 88.79025644632314,
+      "z": 7.2378205579039285,
+      "exit": {
+        "x": 88.79025644632314,
+        "z": 7.2378205579039285
+      },
+      "initialHits": 6,
+      "unusedHits": 6,
+      "exitDistance": 0
+    }
+  ],
+  "intervals": 71,
+  "simulatedSeconds": 417.7499999999941,
+  "actualHits": 2,
+  "retirementEvents": 1,
+  "structureHits": [
+    {
+      "animalId": "animal-3",
+      "targetId": "structure-2",
+      "kind": "center",
+      "x": 83,
+      "z": 0,
+      "previousHp": 600,
+      "hp": 590,
+      "maxHp": 600,
+      "criticalThreshold": 252,
+      "firstHitThisRaid": true
+    },
+    {
+      "animalId": "animal-3",
+      "targetId": "structure-2",
+      "kind": "center",
+      "x": 83,
+      "z": 0,
+      "previousHp": 590,
+      "hp": 580,
+      "maxHp": 600,
+      "criticalThreshold": 252,
+      "firstHitThisRaid": false
+    }
+  ],
+  "result": null,
+  "finalSnapshotSHA256": "76449dd8fb28ab9385206f175e47c1bb974f93abf26eaff8e5d0a77d337920e7",
+  "milliseconds": 535.0304000000001,
+  "transportFailure": null
+}

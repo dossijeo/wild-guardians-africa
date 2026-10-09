@@ -1,0 +1,65 @@
+TAP version 13
+# Subtest: successful exact queries are shared only inside the synchronous scope, with independent waypoints
+ok 1 - successful exact queries are shared only inside the synchronous scope, with independent waypoints
+  ---
+  duration_ms: 3.4326
+  ...
+# Subtest: clear crops retain same-scope routes, geometry invalidates and previews/dynamic clones stay separate
+ok 2 - clear crops retain same-scope routes, geometry invalidates and previews/dynamic clones stay separate
+  ---
+  duration_ms: 0.5357
+  ...
+# Subtest: failed query rules still prevail and throwing work always releases scope
+ok 3 - failed query rules still prevail and throwing work always releases scope
+  ---
+  duration_ms: 0.6376
+  ...
+# Subtest: temporary memory is bounded by route count and waypoint count
+ok 4 - temporary memory is bounded by route count and waypoint count
+  ---
+  duration_ms: 9.3197
+  ...
+# Subtest: Native cached and prepared routes consume no search or geometry budget
+ok 5 - Native cached and prepared routes consume no search or geometry budget
+  ---
+  duration_ms: 48.3788
+  ...
+# Subtest: Native interrupted A* never poisons failedPaths and later route remains valid
+ok 6 - Native interrupted A* never poisons failedPaths and later route remains valid
+  ---
+  duration_ms: 31.2401
+  ...
+# Subtest: Geometry allowance aborts native search with honest counters and no failure memo
+ok 7 - Geometry allowance aborts native search with honest counters and no failure memo
+  ---
+  duration_ms: 21.4251
+  ...
+# Subtest: Yield allowance closes interrupted generator and restores methods on unrelated errors
+ok 8 - Yield allowance closes interrupted generator and restores methods on unrelated errors
+  ---
+  duration_ms: 1.3475
+  ...
+# Subtest: Cancelling a suspended native path never memoizes failure and leaves its navigator usable
+ok 9 - Cancelling a suspended native path never memoizes failure and leaves its navigator usable
+  ---
+  duration_ms: 50.4861
+  ...
+# Subtest: Bounds, navigation epoch, group and done lifecycle close their actual native continuations
+ok 10 - Bounds, navigation epoch, group and done lifecycle close their actual native continuations
+  ---
+  duration_ms: 245.575
+  ...
+# Subtest: A cooperative error is actionable once per key and leaves no hidden active iterator
+ok 11 - A cooperative error is actionable once per key and leaves no hidden active iterator
+  ---
+  duration_ms: 188.8076
+  ...
+1..11
+# tests 11
+# suites 0
+# pass 11
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 677.788
