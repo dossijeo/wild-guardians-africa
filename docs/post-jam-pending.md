@@ -850,3 +850,15 @@ todos los animales reales de la incursión en vez de un ID histórico, las
 comprobaciones dirigidas pasan. El león histórico conserva su prueba propia.
 El nuevo resultado completo de CI aún debe revisarse.
 [Regresión y archivos originales](qa/watering-geometric-preflight/production/README.md).
+
+## Seguimiento del gran cañón y presupuesto — 2026-10-09
+
+La prueba nativa actual de diez noches de gran cañón/saheliana sobrevive y
+reconcilia entregas físicas y contabilidad, pero registra 77,53% de inactividad:
+no supera el límite del 25%. El observador reproduce el estado final completo
+sin modificarlo y atribuye 1731 segundos a la reserva de mantenimiento y 396
+a reservar el siguiente jornal del equipo. Esto orienta el próximo experimento
+económico; todavía no acredita que reducir una reserva sea seguro ni sustituye
+la campaña de 100 noches o su matriz. La apertura Mapungubwe cobra seis segundos
+antes, pero entrega una caja menos; se conserva también ese resultado negativo.
+[Datos, diagnóstico reproducible y alcance](qa/canyon-budget-f5e796c2/README.md).

@@ -17,7 +17,7 @@ import {intensiveRunProvenance} from './intensive-run-provenance.mjs';
 import {createFarmDefensePolicy} from './farm-defense-policy.mjs';
 
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
-export function simulateIntensiveFarm({days=100,profile='olderFemale',mixed=false,middayHiring=false,plantsPerWorker=12,defend=false,reserveLabourGrowth=true,reserveMaintenance=true,burstPlanting=false,cameraEntry=true,onDay,onTick,...world}={}){
+export function simulateIntensiveFarm({days=100,profile='olderFemale',mixed=false,middayHiring=false,plantsPerWorker=12,defend=false,reserveLabourGrowth=true,reserveMaintenance=true,burstPlanting=false,cameraEntry=true,onDay,onTick,onDecision,...world}={}){
  if(!Number.isSafeInteger(plantsPerWorker)||plantsPerWorker<1)throw new Error('Plants per worker must be a positive integer');
  const opening=createOpeningWorld(world),nav=opening.nav;let s=opening.s,sequence=0;
  const worker=PROFILES.find(p=>p.id===profile);if(!worker)throw new Error('Unknown worker profile');
@@ -114,6 +114,14 @@ export function simulateIntensiveFarm({days=100,profile='olderFemale',mixed=fals
    if(s.pauses.length)throw new Error('Unexpected pause: '+s.pauses);
    const decision=act();actions+=decision.actions;
    const dt=s.time<300||s.raid?1:5;
+   // Optional evidence only: immutable scalar observations, not navigation or
+   // game commands. Values describe the state after this strategy's decision.
+   if(onDecision)onDecision(Object.freeze({day:s.day,time:s.time,seconds:dt,
+    actions:decision.actions,reason:decision.reason,balance:numberOf(s.ledger.balance),
+    seedCost:cropSpec(nextSpecies()).plant_cost,nextWages,
+    labourReserve:labourReserve(1),maintenanceReserve:maintenanceReserve(),
+    defenseReserve:defense?.reserve(s)??0,living:s.plants.filter(p=>p.alive).length,
+    pendingTasks:s.tasks.length}));
    if(!decision.actions){idle[decision.reason]=(idle[decision.reason]??0)+dt;if(s.time<300&&!s.raid){idleRun+=dt;longestIdle=Math.max(longestIdle,idleRun);}}else idleRun=0;
    Game.tick(s,dt,nav);collect();onTick?.(s,nav);
    if(s.raid&&!savedRaids.has(s.raid.id)){savedRaids.add(s.raid.id);s=deserialize(serialize(s));nav.setState(s);reloads++;}
