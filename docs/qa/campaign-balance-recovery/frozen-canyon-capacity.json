@@ -1,0 +1,777 @@
+{
+  "scope": "Frozen 100-night capacity diagnostics. A final snapshot cannot prove daytime worker utilization, reachability, or the cause of delayed watering. No candidate acceptance or current-source replay.",
+  "cases": [
+    {
+      "case": "gran-canon-mapungubwe-37876728540",
+      "source": "3324d17dd2305ea8595aea311c518cc6db2404ad",
+      "files": {
+        "report": {
+          "file": "gran-canon-mapungubwe-report.json.gz",
+          "sha256": "2a50208b012a4abc6552582ae9d12758d0edc72f99cc5087db9a93b22d4d12ee"
+        },
+        "snapshot": {
+          "file": "gran-canon-mapungubwe-state.json.gz",
+          "sha256": "e8189610124c67ad725ee77d181c544e6de40c4da542c8eae6ed9ba87f25f795"
+        }
+      },
+      "policy": {
+        "profile": "olderFemale",
+        "mixed": true,
+        "middayHiring": false,
+        "plantsPerWorker": 12,
+        "defend": false,
+        "reserveLabourGrowth": true,
+        "reserveMaintenance": true,
+        "burstPlanting": false,
+        "cameraEntry": true
+      },
+      "activity": {
+        "daylightSeconds": 30000,
+        "unoccupiedSeconds": 12921,
+        "unoccupiedFraction": 0.4307,
+        "longestIdle": 146,
+        "p90LongestIdle": 89
+      },
+      "plots": 2632,
+      "maximumLiving": 2632,
+      "final": {
+        "day": 101,
+        "time": 0,
+        "living": 2629,
+        "firstWaterPending": 1814,
+        "firstWaterPendingAgeDays": {
+          "maximum": 12,
+          "atLeast5": 945,
+          "atLeast20": 0,
+          "atLeast50": 0
+        },
+        "firstWaterPendingFraction": 0.6899961962723469,
+        "taskKinds": {
+          "harvest": 137,
+          "water": 477,
+          "initial": 1814,
+          "crate": 332
+        },
+        "bySpecies": {
+          "algodon": {
+            "living": 345,
+            "firstWaterPending": 229,
+            "zeroGrowth": 231,
+            "harvestRequested": 28,
+            "laterWaterPending": 68
+          },
+          "batata": {
+            "living": 316,
+            "firstWaterPending": 229,
+            "zeroGrowth": 232,
+            "harvestRequested": 16,
+            "laterWaterPending": 33
+          },
+          "girasol": {
+            "living": 325,
+            "firstWaterPending": 225,
+            "zeroGrowth": 225,
+            "harvestRequested": 13,
+            "laterWaterPending": 71
+          },
+          "maiz": {
+            "living": 323,
+            "firstWaterPending": 227,
+            "zeroGrowth": 230,
+            "harvestRequested": 9,
+            "laterWaterPending": 63
+          },
+          "mijo": {
+            "living": 307,
+            "firstWaterPending": 230,
+            "zeroGrowth": 231,
+            "harvestRequested": 19,
+            "laterWaterPending": 42
+          },
+          "platano": {
+            "living": 391,
+            "firstWaterPending": 223,
+            "zeroGrowth": 224,
+            "harvestRequested": 26,
+            "laterWaterPending": 122
+          },
+          "sorgo": {
+            "living": 307,
+            "firstWaterPending": 226,
+            "zeroGrowth": 226,
+            "harvestRequested": 12,
+            "laterWaterPending": 41
+          },
+          "yuca": {
+            "living": 315,
+            "firstWaterPending": 225,
+            "zeroGrowth": 228,
+            "harvestRequested": 14,
+            "laterWaterPending": 37
+          }
+        }
+      },
+      "bands": [
+        {
+          "firstDay": 1,
+          "lastDay": 20,
+          "meanStaff": 16.75,
+          "meanLiving": 207.5,
+          "meanDelivered": 70,
+          "meanPlanted": 84.55,
+          "deliveredPerWorkerDay": 4.17910447761194,
+          "idle": {
+            "budget": 3844,
+            "space": 0,
+            "shiftEnd": 395
+          },
+          "openingCashAfterHiring": 515,
+          "closingCash": 1352
+        },
+        {
+          "firstDay": 21,
+          "lastDay": 40,
+          "meanStaff": 27.15,
+          "meanLiving": 325.6,
+          "meanDelivered": 90.45,
+          "meanPlanted": 99.9,
+          "deliveredPerWorkerDay": 3.3314917127071824,
+          "idle": {
+            "budget": 3453,
+            "space": 0,
+            "shiftEnd": 399
+          },
+          "openingCashAfterHiring": 722,
+          "closingCash": 1078
+        },
+        {
+          "firstDay": 41,
+          "lastDay": 60,
+          "meanStaff": 82.25,
+          "meanLiving": 1065.1,
+          "meanDelivered": 126.05,
+          "meanPlanted": 216.35,
+          "deliveredPerWorkerDay": 1.5325227963525836,
+          "idle": {
+            "budget": 1082,
+            "space": 0,
+            "shiftEnd": 400
+          },
+          "openingCashAfterHiring": 208,
+          "closingCash": 6159
+        },
+        {
+          "firstDay": 61,
+          "lastDay": 80,
+          "meanStaff": 196.5,
+          "meanLiving": 2383.65,
+          "meanDelivered": 185.7,
+          "meanPlanted": 228.6,
+          "deliveredPerWorkerDay": 0.9450381679389313,
+          "idle": {
+            "budget": 360,
+            "space": 615,
+            "shiftEnd": 400
+          },
+          "openingCashAfterHiring": 1119,
+          "closingCash": 15507
+        },
+        {
+          "firstDay": 81,
+          "lastDay": 100,
+          "meanStaff": 218.65,
+          "meanLiving": 2618.35,
+          "meanDelivered": 186.95,
+          "meanPlanted": 195.6,
+          "deliveredPerWorkerDay": 0.8550194374571233,
+          "idle": {
+            "budget": 0,
+            "space": 1574,
+            "shiftEnd": 399
+          },
+          "openingCashAfterHiring": 8907,
+          "closingCash": 98191
+        }
+      ]
+    },
+    {
+      "case": "gran-canon-musgum-37876657370",
+      "source": "3324d17dd2305ea8595aea311c518cc6db2404ad",
+      "files": {
+        "report": {
+          "file": "gran-canon-musgum-report.json.gz",
+          "sha256": "8559539df8279710fc107b6e01193175eb79b6e96ed723fabd5e96af20276bad"
+        },
+        "snapshot": {
+          "file": "gran-canon-musgum-state.json.gz",
+          "sha256": "7602836e6c8f1680d6cbe902ce37bbe65c85a2682293374ffe544d84712e3f74"
+        }
+      },
+      "policy": {
+        "profile": "olderFemale",
+        "mixed": true,
+        "middayHiring": false,
+        "plantsPerWorker": 12,
+        "defend": false,
+        "reserveLabourGrowth": true,
+        "reserveMaintenance": true,
+        "burstPlanting": false,
+        "cameraEntry": true
+      },
+      "activity": {
+        "daylightSeconds": 30000,
+        "unoccupiedSeconds": 13671,
+        "unoccupiedFraction": 0.4557,
+        "longestIdle": 215,
+        "p90LongestIdle": 63
+      },
+      "plots": 2612,
+      "maximumLiving": 2612,
+      "final": {
+        "day": 101,
+        "time": 0,
+        "living": 2608,
+        "firstWaterPending": 1804,
+        "firstWaterPendingAgeDays": {
+          "maximum": 12,
+          "atLeast5": 1078,
+          "atLeast20": 0,
+          "atLeast50": 0
+        },
+        "firstWaterPendingFraction": 0.691717791411043,
+        "taskKinds": {
+          "harvest": 234,
+          "water": 438,
+          "initial": 1804,
+          "crate": 183
+        },
+        "bySpecies": {
+          "algodon": {
+            "living": 338,
+            "firstWaterPending": 226,
+            "zeroGrowth": 230,
+            "harvestRequested": 5,
+            "laterWaterPending": 92
+          },
+          "batata": {
+            "living": 311,
+            "firstWaterPending": 232,
+            "zeroGrowth": 233,
+            "harvestRequested": 38,
+            "laterWaterPending": 28
+          },
+          "girasol": {
+            "living": 331,
+            "firstWaterPending": 225,
+            "zeroGrowth": 227,
+            "harvestRequested": 32,
+            "laterWaterPending": 62
+          },
+          "maiz": {
+            "living": 335,
+            "firstWaterPending": 226,
+            "zeroGrowth": 228,
+            "harvestRequested": 38,
+            "laterWaterPending": 50
+          },
+          "mijo": {
+            "living": 297,
+            "firstWaterPending": 225,
+            "zeroGrowth": 227,
+            "harvestRequested": 31,
+            "laterWaterPending": 24
+          },
+          "platano": {
+            "living": 384,
+            "firstWaterPending": 215,
+            "zeroGrowth": 220,
+            "harvestRequested": 14,
+            "laterWaterPending": 131
+          },
+          "sorgo": {
+            "living": 307,
+            "firstWaterPending": 225,
+            "zeroGrowth": 228,
+            "harvestRequested": 40,
+            "laterWaterPending": 25
+          },
+          "yuca": {
+            "living": 305,
+            "firstWaterPending": 230,
+            "zeroGrowth": 232,
+            "harvestRequested": 36,
+            "laterWaterPending": 26
+          }
+        }
+      },
+      "bands": [
+        {
+          "firstDay": 1,
+          "lastDay": 20,
+          "meanStaff": 15.7,
+          "meanLiving": 192.9,
+          "meanDelivered": 68.85,
+          "meanPlanted": 85.4,
+          "deliveredPerWorkerDay": 4.385350318471337,
+          "idle": {
+            "budget": 3827,
+            "space": 0,
+            "shiftEnd": 396
+          },
+          "openingCashAfterHiring": 515,
+          "closingCash": 867
+        },
+        {
+          "firstDay": 21,
+          "lastDay": 40,
+          "meanStaff": 25.6,
+          "meanLiving": 307.85,
+          "meanDelivered": 89.9,
+          "meanPlanted": 98.1,
+          "deliveredPerWorkerDay": 3.51171875,
+          "idle": {
+            "budget": 3557,
+            "space": 0,
+            "shiftEnd": 400
+          },
+          "openingCashAfterHiring": 177,
+          "closingCash": 1385
+        },
+        {
+          "firstDay": 41,
+          "lastDay": 60,
+          "meanStaff": 53.6,
+          "meanLiving": 683.2,
+          "meanDelivered": 114.6,
+          "meanPlanted": 164.45,
+          "deliveredPerWorkerDay": 2.138059701492537,
+          "idle": {
+            "budget": 2170,
+            "space": 0,
+            "shiftEnd": 399
+          },
+          "openingCashAfterHiring": 485,
+          "closingCash": 13791
+        },
+        {
+          "firstDay": 61,
+          "lastDay": 80,
+          "meanStaff": 162.75,
+          "meanLiving": 2015.45,
+          "meanDelivered": 180.7,
+          "meanPlanted": 252.9,
+          "deliveredPerWorkerDay": 1.1102918586789554,
+          "idle": {
+            "budget": 414,
+            "space": 0,
+            "shiftEnd": 399
+          },
+          "openingCashAfterHiring": 10641,
+          "closingCash": 13154
+        },
+        {
+          "firstDay": 81,
+          "lastDay": 100,
+          "meanStaff": 217.55,
+          "meanLiving": 2604.55,
+          "meanDelivered": 177.75,
+          "meanPlanted": 188.3,
+          "deliveredPerWorkerDay": 0.8170535509078373,
+          "idle": {
+            "budget": 30,
+            "space": 1679,
+            "shiftEnd": 400
+          },
+          "openingCashAfterHiring": 6674,
+          "closingCash": 54210
+        }
+      ]
+    },
+    {
+      "case": "gran-canon-etiope-37876700277",
+      "source": "3324d17dd2305ea8595aea311c518cc6db2404ad",
+      "files": {
+        "report": {
+          "file": "gran-canon-etiope-report.json.gz",
+          "sha256": "9cf57ad3896a2840de021e3453f479ccbada4422d9cb5d53949e2fecf4ed8ea0"
+        },
+        "snapshot": {
+          "file": "gran-canon-etiope-state.json.gz",
+          "sha256": "67e41cb264969784032b4901515a69f638764246d9cc2520775cff3dfbe2fadf"
+        }
+      },
+      "policy": {
+        "profile": "olderFemale",
+        "mixed": true,
+        "middayHiring": false,
+        "plantsPerWorker": 12,
+        "defend": false,
+        "reserveLabourGrowth": true,
+        "reserveMaintenance": true,
+        "burstPlanting": false,
+        "cameraEntry": true
+      },
+      "activity": {
+        "daylightSeconds": 30000,
+        "unoccupiedSeconds": 12852,
+        "unoccupiedFraction": 0.4284,
+        "longestIdle": 167,
+        "p90LongestIdle": 70
+      },
+      "plots": 2619,
+      "maximumLiving": 2619,
+      "final": {
+        "day": 101,
+        "time": 0,
+        "living": 2613,
+        "firstWaterPending": 1852,
+        "firstWaterPendingAgeDays": {
+          "maximum": 12,
+          "atLeast5": 1066,
+          "atLeast20": 0,
+          "atLeast50": 0
+        },
+        "firstWaterPendingFraction": 0.7087638729429774,
+        "taskKinds": {
+          "harvest": 241,
+          "water": 382,
+          "initial": 1852,
+          "crate": 336
+        },
+        "bySpecies": {
+          "algodon": {
+            "living": 343,
+            "firstWaterPending": 234,
+            "zeroGrowth": 237,
+            "harvestRequested": 15,
+            "laterWaterPending": 78
+          },
+          "batata": {
+            "living": 319,
+            "firstWaterPending": 229,
+            "zeroGrowth": 231,
+            "harvestRequested": 35,
+            "laterWaterPending": 32
+          },
+          "girasol": {
+            "living": 333,
+            "firstWaterPending": 233,
+            "zeroGrowth": 237,
+            "harvestRequested": 34,
+            "laterWaterPending": 49
+          },
+          "maiz": {
+            "living": 328,
+            "firstWaterPending": 239,
+            "zeroGrowth": 240,
+            "harvestRequested": 26,
+            "laterWaterPending": 51
+          },
+          "mijo": {
+            "living": 292,
+            "firstWaterPending": 230,
+            "zeroGrowth": 234,
+            "harvestRequested": 24,
+            "laterWaterPending": 22
+          },
+          "platano": {
+            "living": 367,
+            "firstWaterPending": 221,
+            "zeroGrowth": 221,
+            "harvestRequested": 31,
+            "laterWaterPending": 99
+          },
+          "sorgo": {
+            "living": 309,
+            "firstWaterPending": 234,
+            "zeroGrowth": 235,
+            "harvestRequested": 33,
+            "laterWaterPending": 26
+          },
+          "yuca": {
+            "living": 322,
+            "firstWaterPending": 232,
+            "zeroGrowth": 233,
+            "harvestRequested": 43,
+            "laterWaterPending": 25
+          }
+        }
+      },
+      "bands": [
+        {
+          "firstDay": 1,
+          "lastDay": 20,
+          "meanStaff": 16.35,
+          "meanLiving": 203.15,
+          "meanDelivered": 69.3,
+          "meanPlanted": 87.05,
+          "deliveredPerWorkerDay": 4.238532110091743,
+          "idle": {
+            "budget": 3787,
+            "space": 0,
+            "shiftEnd": 398
+          },
+          "openingCashAfterHiring": 515,
+          "closingCash": 880
+        },
+        {
+          "firstDay": 21,
+          "lastDay": 40,
+          "meanStaff": 28,
+          "meanLiving": 339.65,
+          "meanDelivered": 91.6,
+          "meanPlanted": 103.85,
+          "deliveredPerWorkerDay": 3.2714285714285714,
+          "idle": {
+            "budget": 3440,
+            "space": 0,
+            "shiftEnd": 400
+          },
+          "openingCashAfterHiring": 100,
+          "closingCash": 1501
+        },
+        {
+          "firstDay": 41,
+          "lastDay": 60,
+          "meanStaff": 87.35,
+          "meanLiving": 1106.7,
+          "meanDelivered": 134.45,
+          "meanPlanted": 204.9,
+          "deliveredPerWorkerDay": 1.53921007441328,
+          "idle": {
+            "budget": 1184,
+            "space": 0,
+            "shiftEnd": 392
+          },
+          "openingCashAfterHiring": 301,
+          "closingCash": 9486
+        },
+        {
+          "firstDay": 61,
+          "lastDay": 80,
+          "meanStaff": 183.3,
+          "meanLiving": 2232.25,
+          "meanDelivered": 178.85,
+          "meanPlanted": 229.3,
+          "deliveredPerWorkerDay": 0.9757228587015822,
+          "idle": {
+            "budget": 549,
+            "space": 373,
+            "shiftEnd": 400
+          },
+          "openingCashAfterHiring": 5016,
+          "closingCash": 6662
+        },
+        {
+          "firstDay": 81,
+          "lastDay": 100,
+          "meanStaff": 215.5,
+          "meanLiving": 2584.15,
+          "meanDelivered": 184.1,
+          "meanPlanted": 196.75,
+          "deliveredPerWorkerDay": 0.854292343387471,
+          "idle": {
+            "budget": 0,
+            "space": 1529,
+            "shiftEnd": 400
+          },
+          "openingCashAfterHiring": 272,
+          "closingCash": 49068
+        }
+      ]
+    },
+    {
+      "case": "gran-canon-saheliana-37876735136",
+      "source": "3324d17dd2305ea8595aea311c518cc6db2404ad",
+      "files": {
+        "report": {
+          "file": "gran-canon-saheliana-report.json.gz",
+          "sha256": "b49e5c48a844b38529df1cf2de3bf2cdb41ab2770b8ad479bb3471eeb0afaf14"
+        },
+        "snapshot": {
+          "file": "gran-canon-saheliana-state.json.gz",
+          "sha256": "506f58f60780619d42f402f7939b166bdfe37ad9a52aeb14f31d2493167fe85d"
+        }
+      },
+      "policy": {
+        "profile": "olderFemale",
+        "mixed": true,
+        "middayHiring": false,
+        "plantsPerWorker": 12,
+        "defend": false,
+        "reserveLabourGrowth": true,
+        "reserveMaintenance": true,
+        "burstPlanting": false,
+        "cameraEntry": true
+      },
+      "activity": {
+        "daylightSeconds": 30000,
+        "unoccupiedSeconds": 12512,
+        "unoccupiedFraction": 0.41706666666666664,
+        "longestIdle": 187,
+        "p90LongestIdle": 89
+      },
+      "plots": 2695,
+      "maximumLiving": 2695,
+      "final": {
+        "day": 101,
+        "time": 0,
+        "living": 2687,
+        "firstWaterPending": 2075,
+        "firstWaterPendingAgeDays": {
+          "maximum": 11,
+          "atLeast5": 1220,
+          "atLeast20": 0,
+          "atLeast50": 0
+        },
+        "firstWaterPendingFraction": 0.7722366951991068,
+        "taskKinds": {
+          "harvest": 183,
+          "water": 287,
+          "initial": 2075,
+          "crate": 272
+        },
+        "bySpecies": {
+          "algodon": {
+            "living": 379,
+            "firstWaterPending": 259,
+            "zeroGrowth": 260,
+            "harvestRequested": 40,
+            "laterWaterPending": 58
+          },
+          "batata": {
+            "living": 314,
+            "firstWaterPending": 264,
+            "zeroGrowth": 265,
+            "harvestRequested": 21,
+            "laterWaterPending": 13
+          },
+          "girasol": {
+            "living": 331,
+            "firstWaterPending": 262,
+            "zeroGrowth": 264,
+            "harvestRequested": 20,
+            "laterWaterPending": 32
+          },
+          "maiz": {
+            "living": 341,
+            "firstWaterPending": 264,
+            "zeroGrowth": 266,
+            "harvestRequested": 25,
+            "laterWaterPending": 38
+          },
+          "mijo": {
+            "living": 308,
+            "firstWaterPending": 260,
+            "zeroGrowth": 262,
+            "harvestRequested": 18,
+            "laterWaterPending": 16
+          },
+          "platano": {
+            "living": 390,
+            "firstWaterPending": 245,
+            "zeroGrowth": 246,
+            "harvestRequested": 15,
+            "laterWaterPending": 104
+          },
+          "sorgo": {
+            "living": 309,
+            "firstWaterPending": 259,
+            "zeroGrowth": 262,
+            "harvestRequested": 19,
+            "laterWaterPending": 14
+          },
+          "yuca": {
+            "living": 315,
+            "firstWaterPending": 262,
+            "zeroGrowth": 264,
+            "harvestRequested": 25,
+            "laterWaterPending": 12
+          }
+        }
+      },
+      "bands": [
+        {
+          "firstDay": 1,
+          "lastDay": 20,
+          "meanStaff": 13.9,
+          "meanLiving": 177.4,
+          "meanDelivered": 56.35,
+          "meanPlanted": 72.5,
+          "deliveredPerWorkerDay": 4.053956834532374,
+          "idle": {
+            "budget": 4079,
+            "space": 0,
+            "shiftEnd": 396
+          },
+          "openingCashAfterHiring": 515,
+          "closingCash": 888
+        },
+        {
+          "firstDay": 21,
+          "lastDay": 40,
+          "meanStaff": 27.6,
+          "meanLiving": 336.1,
+          "meanDelivered": 85.25,
+          "meanPlanted": 100.2,
+          "deliveredPerWorkerDay": 3.088768115942029,
+          "idle": {
+            "budget": 3467,
+            "space": 0,
+            "shiftEnd": 400
+          },
+          "openingCashAfterHiring": 198,
+          "closingCash": 1395
+        },
+        {
+          "firstDay": 41,
+          "lastDay": 60,
+          "meanStaff": 93.7,
+          "meanLiving": 1191.75,
+          "meanDelivered": 145,
+          "meanPlanted": 223.2,
+          "deliveredPerWorkerDay": 1.5474919957310567,
+          "idle": {
+            "budget": 1062,
+            "space": 0,
+            "shiftEnd": 400
+          },
+          "openingCashAfterHiring": 165,
+          "closingCash": 9282
+        },
+        {
+          "firstDay": 61,
+          "lastDay": 80,
+          "meanStaff": 195.35,
+          "meanLiving": 2376.1,
+          "meanDelivered": 192.25,
+          "meanPlanted": 239.8,
+          "deliveredPerWorkerDay": 0.9841310468390069,
+          "idle": {
+            "budget": 251,
+            "space": 423,
+            "shiftEnd": 398
+          },
+          "openingCashAfterHiring": 4392,
+          "closingCash": 18366
+        },
+        {
+          "firstDay": 81,
+          "lastDay": 100,
+          "meanStaff": 224.15,
+          "meanLiving": 2683,
+          "meanDelivered": 204.9,
+          "meanPlanted": 214.2,
+          "deliveredPerWorkerDay": 0.9141200089225965,
+          "idle": {
+            "budget": 0,
+            "space": 1237,
+            "shiftEnd": 399
+          },
+          "openingCashAfterHiring": 11646,
+          "closingCash": 55424
+        }
+      ]
+    }
+  ]
+}
