@@ -1,0 +1,55 @@
+TAP version 13
+# Subtest: pure observer reads deeply frozen state without retaining mutable references or RNG changes
+ok 1 - pure observer reads deeply frozen state without retaining mutable references or RNG changes
+  ---
+  duration_ms: 2.6837
+  ...
+# Subtest: reservation and observed zero movement remain separate from unknown collision/search
+ok 2 - reservation and observed zero movement remain separate from unknown collision/search
+  ---
+  duration_ms: 1.1816
+  ...
+# Subtest: task disappearance is censored until matching physical completion evidence
+ok 3 - task disappearance is censored until matching physical completion evidence
+  ---
+  duration_ms: 0.3755
+  ...
+# Subtest: gaps are retained and not interpolated into worker or queue durations
+ok 4 - gaps are retained and not interpolated into worker or queue durations
+  ---
+  duration_ms: 0.3242
+  ...
+# Subtest: observer never accesses RNG, navigation or commands and decision data stays independent
+ok 5 - observer never accesses RNG, navigation or commands and decision data stays independent
+  ---
+  duration_ms: 0.2845
+  ...
+# Subtest: a mismatched worker completion event cannot complete an observed reservation
+ok 6 - a mismatched worker completion event cannot complete an observed reservation
+  ---
+  duration_ms: 0.234
+  ...
+# Subtest: loose crate pickup is evidenced separately from physical paid delivery
+ok 7 - loose crate pickup is evidenced separately from physical paid delivery
+  ---
+  duration_ms: 0.6751
+  ...
+# Subtest: attack, day boundary and interval crossing daylight end are excluded
+ok 8 - attack, day boundary and interval crossing daylight end are excluded
+  ---
+  duration_ms: 0.4205
+  ...
+# Subtest: creation order is retained as order and never converted to a timestamp
+ok 9 - creation order is retained as order and never converted to a timestamp
+  ---
+  duration_ms: 0.1961
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 125.4298

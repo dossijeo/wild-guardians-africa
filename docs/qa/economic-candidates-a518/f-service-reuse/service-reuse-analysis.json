@@ -1,0 +1,576 @@
+{
+  "observerSource": "2346fbd791df2da2c7faef7db11fdb6f9672c8a6",
+  "producerSource": "83b1c1eaa0235f9a9b34966f88b496f42eeb161b",
+  "commonSourceHashesVerified": 376,
+  "changedSourceHashes": 0,
+  "priorFullStateParityReceiptVerified": true,
+  "stateSha256": "5fa1a0bebd54299c4abf45f425bc361c46fba12fc5f8c0864145b7528206920f",
+  "first10NativeDailyPrefixExact": true,
+  "rawGzipJSONRows": {
+    "states": 2999,
+    "decisions": 3000
+  },
+  "originalInputsUnchanged": true,
+  "inputHashes": {
+    "decisions.jsonl.gz": "46350c40fc947723127e4d2995ba90555220c4004776aacd829a4cbd82c3534c",
+    "diagnostic.json": "fe90e843d75fa8ee5f4a36435fba4f3aff4b62ea45538dd60500c115e72ee9ae",
+    "opportunity-analysis.json": "4adbc93c9ec0799858925f6d501945a88507092e229c2474c8e25b401172b436",
+    "run.log": "635624ce7eced7fc8f3f16b44d2f3621c78ed02532dd2895676d8066bb7f3070",
+    "service-states.jsonl.gz": "5eedf3361aec368b3dd283925ad7584d9feb87a01e906bf78299c8fa6562ff22"
+  },
+  "rows": [
+    {
+      "day": 1,
+      "staff": 6,
+      "physicalDeliveries": 21,
+      "firstObservedDeliveryTime": 216.99999999999196,
+      "samples": 299,
+      "globalContiguousObservedSeconds": 298.00000000000944,
+      "excludedGaps": [],
+      "phaseActorSeconds": {
+        "arriving:none": 10.000000000000002,
+        "walking:initial": 504.9999999999908,
+        "acting:initial": 348.9999999999889,
+        "walking:water": 480.00000000000506,
+        "acting:water": 148.0000000000069,
+        "walking:harvest": 205.00000000005278,
+        "acting:harvest": 72.0000000000087,
+        "carrying:crate": 19.000000000003467
+      },
+      "actorSecondsByStatus": {
+        "walking": 1190.0000000000487,
+        "acting": 569.0000000000045,
+        "carrying": 19.000000000003467,
+        "idle": 0,
+        "arriving": 10.000000000000002,
+        "waiting": 0,
+        "fleeing": 0,
+        "returning": 0,
+        "incapacitated": 0
+      },
+      "peak": {
+        "living": 89,
+        "firstWaterPending": 54,
+        "initialTasks": 54,
+        "waterTasks": 24,
+        "harvestTasks": 31
+      },
+      "endOfDaylight": {
+        "living": 83,
+        "firstWaterPending": 54,
+        "initialTasks": 54,
+        "waterTasks": 3,
+        "harvestTasks": 26
+      },
+      "endPhases": {
+        "walking:harvest": 1,
+        "walking:initial": 2,
+        "acting:harvest": 2,
+        "walking:water": 1
+      },
+      "missingMeasurements": {
+        "taskReservation": null,
+        "blockedTasks": null,
+        "individualQueueWait": null,
+        "individualServiceLatency": null,
+        "physicalPathMetres": null
+      }
+    },
+    {
+      "day": 2,
+      "staff": 7,
+      "physicalDeliveries": 24,
+      "firstObservedDeliveryTime": 26.0000000000001,
+      "samples": 300,
+      "globalContiguousObservedSeconds": 299.00000000000944,
+      "excludedGaps": [],
+      "phaseActorSeconds": {
+        "walking:harvest": 279.000000000002,
+        "acting:harvest": 86.0000000000008,
+        "carrying:crate": 68.00000000000054,
+        "walking:water": 19.999999999999858,
+        "acting:water": 9.999999999999858,
+        "walking:initial": 1058.000000000049,
+        "acting:initial": 565.0000000000148
+      },
+      "actorSecondsByStatus": {
+        "walking": 1357.000000000051,
+        "acting": 661.0000000000155,
+        "carrying": 68.00000000000054,
+        "idle": 0,
+        "arriving": 0,
+        "waiting": 0,
+        "fleeing": 0,
+        "returning": 0,
+        "incapacitated": 0
+      },
+      "peak": {
+        "living": 192,
+        "firstWaterPending": 163,
+        "initialTasks": 163,
+        "waterTasks": 54,
+        "harvestTasks": 24
+      },
+      "endOfDaylight": {
+        "living": 192,
+        "firstWaterPending": 113,
+        "initialTasks": 113,
+        "waterTasks": 54,
+        "harvestTasks": 3
+      },
+      "endPhases": {
+        "walking:initial": 4,
+        "acting:initial": 3
+      },
+      "missingMeasurements": {
+        "taskReservation": null,
+        "blockedTasks": null,
+        "individualQueueWait": null,
+        "individualServiceLatency": null,
+        "physicalPathMetres": null
+      }
+    },
+    {
+      "day": 3,
+      "staff": 16,
+      "physicalDeliveries": 46,
+      "firstObservedDeliveryTime": 26.0000000000001,
+      "samples": 300,
+      "globalContiguousObservedSeconds": 299.00000000000944,
+      "excludedGaps": [],
+      "phaseActorSeconds": {
+        "walking:harvest": 661.0000000001901,
+        "walking:water": 823.0000000000405,
+        "acting:water": 225.0000000000142,
+        "acting:harvest": 157.00000000003325,
+        "carrying:crate": 117.00000000002056,
+        "walking:initial": 1996.9999999998936,
+        "acting:initial": 787.9999999999579
+      },
+      "actorSecondsByStatus": {
+        "walking": 3481.000000000124,
+        "acting": 1170.0000000000055,
+        "carrying": 117.00000000002056,
+        "idle": 0,
+        "arriving": 0,
+        "waiting": 0,
+        "fleeing": 0,
+        "returning": 0,
+        "incapacitated": 0
+      },
+      "peak": {
+        "living": 191,
+        "firstWaterPending": 109,
+        "initialTasks": 109,
+        "waterTasks": 100,
+        "harvestTasks": 65
+      },
+      "endOfDaylight": {
+        "living": 168,
+        "firstWaterPending": 21,
+        "initialTasks": 21,
+        "waterTasks": 100,
+        "harvestTasks": 37
+      },
+      "endPhases": {
+        "walking:harvest": 5,
+        "walking:water": 4,
+        "acting:harvest": 2,
+        "carrying:crate": 5
+      },
+      "missingMeasurements": {
+        "taskReservation": null,
+        "blockedTasks": null,
+        "individualQueueWait": null,
+        "individualServiceLatency": null,
+        "physicalPathMetres": null
+      }
+    },
+    {
+      "day": 4,
+      "staff": 14,
+      "physicalDeliveries": 37,
+      "firstObservedDeliveryTime": 26.0000000000001,
+      "samples": 300,
+      "globalContiguousObservedSeconds": 299.00000000000944,
+      "excludedGaps": [],
+      "phaseActorSeconds": {
+        "walking:harvest": 608.0000000000045,
+        "acting:harvest": 135.00000000000105,
+        "carrying:crate": 153.99999999999983,
+        "walking:water": 1881.999999999941,
+        "acting:water": 362.9999999999892,
+        "walking:initial": 706.0000000001144,
+        "acting:initial": 324.00000000008436
+      },
+      "actorSecondsByStatus": {
+        "walking": 3196.00000000006,
+        "acting": 822.0000000000746,
+        "carrying": 153.99999999999983,
+        "idle": 0,
+        "arriving": 0,
+        "waiting": 0,
+        "fleeing": 0,
+        "returning": 0,
+        "incapacitated": 0
+      },
+      "peak": {
+        "living": 374,
+        "firstWaterPending": 252,
+        "initialTasks": 252,
+        "waterTasks": 106,
+        "harvestTasks": 109
+      },
+      "endOfDaylight": {
+        "living": 373,
+        "firstWaterPending": 221,
+        "initialTasks": 221,
+        "waterTasks": 4,
+        "harvestTasks": 109
+      },
+      "endPhases": {
+        "walking:initial": 9,
+        "walking:harvest": 1,
+        "acting:initial": 2,
+        "carrying:crate": 1,
+        "acting:harvest": 1
+      },
+      "missingMeasurements": {
+        "taskReservation": null,
+        "blockedTasks": null,
+        "individualQueueWait": null,
+        "individualServiceLatency": null,
+        "physicalPathMetres": null
+      }
+    },
+    {
+      "day": 5,
+      "staff": 31,
+      "physicalDeliveries": 108,
+      "firstObservedDeliveryTime": 26.0000000000001,
+      "samples": 300,
+      "globalContiguousObservedSeconds": 299.00000000000944,
+      "excludedGaps": [],
+      "phaseActorSeconds": {
+        "walking:harvest": 1714.9999999999795,
+        "acting:harvest": 392.99999999999693,
+        "carrying:crate": 984.9999999999748,
+        "walking:water": 81.00000000000477,
+        "acting:water": 13.999999999999204,
+        "walking:initial": 4635.00000000025,
+        "acting:initial": 1415.0000000000894
+      },
+      "actorSecondsByStatus": {
+        "walking": 6431.000000000235,
+        "acting": 1822.0000000000855,
+        "carrying": 984.9999999999748,
+        "idle": 0,
+        "arriving": 0,
+        "waiting": 0,
+        "fleeing": 0,
+        "returning": 0,
+        "incapacitated": 0
+      },
+      "peak": {
+        "living": 501,
+        "firstWaterPending": 287,
+        "initialTasks": 287,
+        "waterTasks": 147,
+        "harvestTasks": 108
+      },
+      "endOfDaylight": {
+        "living": 501,
+        "firstWaterPending": 262,
+        "initialTasks": 262,
+        "waterTasks": 147,
+        "harvestTasks": 18
+      },
+      "endPhases": {
+        "acting:initial": 6,
+        "walking:initial": 17,
+        "walking:water": 8
+      },
+      "missingMeasurements": {
+        "taskReservation": null,
+        "blockedTasks": null,
+        "individualQueueWait": null,
+        "individualServiceLatency": null,
+        "physicalPathMetres": null
+      }
+    },
+    {
+      "day": 6,
+      "staff": 42,
+      "physicalDeliveries": 18,
+      "firstObservedDeliveryTime": 26.0000000000001,
+      "samples": 300,
+      "globalContiguousObservedSeconds": 299.00000000000944,
+      "excludedGaps": [],
+      "phaseActorSeconds": {
+        "walking:harvest": 359.00000000001677,
+        "walking:water": 2803.000000000082,
+        "acting:water": 537.0000000000048,
+        "acting:harvest": 64.00000000000063,
+        "carrying:crate": 188.99999999999895,
+        "walking:initial": 6730.000000000214,
+        "acting:initial": 1834.0000000000846
+      },
+      "actorSecondsByStatus": {
+        "walking": 9892.000000000313,
+        "acting": 2435.00000000009,
+        "carrying": 188.99999999999895,
+        "idle": 0,
+        "arriving": 0,
+        "waiting": 0,
+        "fleeing": 0,
+        "returning": 0,
+        "incapacitated": 0
+      },
+      "peak": {
+        "living": 587,
+        "firstWaterPending": 329,
+        "initialTasks": 329,
+        "waterTasks": 225,
+        "harvestTasks": 173
+      },
+      "endOfDaylight": {
+        "living": 587,
+        "firstWaterPending": 107,
+        "initialTasks": 107,
+        "waterTasks": 225,
+        "harvestTasks": 173
+      },
+      "endPhases": {
+        "walking:harvest": 12,
+        "walking:initial": 12,
+        "walking:water": 16,
+        "acting:initial": 1,
+        "acting:water": 1
+      },
+      "missingMeasurements": {
+        "taskReservation": null,
+        "blockedTasks": null,
+        "individualQueueWait": null,
+        "individualServiceLatency": null,
+        "physicalPathMetres": null
+      }
+    },
+    {
+      "day": 7,
+      "staff": 49,
+      "physicalDeliveries": 170,
+      "firstObservedDeliveryTime": 26.0000000000001,
+      "samples": 300,
+      "globalContiguousObservedSeconds": 299.00000000000944,
+      "excludedGaps": [],
+      "phaseActorSeconds": {
+        "walking:harvest": 3154.999999999952,
+        "acting:harvest": 626.9999999999936,
+        "carrying:crate": 1939.999999999939,
+        "walking:water": 5735.9999999998945,
+        "acting:water": 767.9999999999981,
+        "walking:initial": 2000.0000000005966,
+        "acting:initial": 376.0000000000899
+      },
+      "actorSecondsByStatus": {
+        "walking": 10891.000000000444,
+        "acting": 1771.0000000000816,
+        "carrying": 1939.999999999939,
+        "idle": 0,
+        "arriving": 0,
+        "waiting": 0,
+        "fleeing": 0,
+        "returning": 0,
+        "incapacitated": 0
+      },
+      "peak": {
+        "living": 655,
+        "firstWaterPending": 327,
+        "initialTasks": 327,
+        "waterTasks": 300,
+        "harvestTasks": 232
+      },
+      "endOfDaylight": {
+        "living": 655,
+        "firstWaterPending": 300,
+        "initialTasks": 300,
+        "waterTasks": 76,
+        "harvestTasks": 232
+      },
+      "endPhases": {
+        "walking:initial": 38,
+        "acting:initial": 11
+      },
+      "missingMeasurements": {
+        "taskReservation": null,
+        "blockedTasks": null,
+        "individualQueueWait": null,
+        "individualServiceLatency": null,
+        "physicalPathMetres": null
+      }
+    },
+    {
+      "day": 8,
+      "staff": 55,
+      "physicalDeliveries": 232,
+      "firstObservedDeliveryTime": 29.000000000000142,
+      "samples": 300,
+      "globalContiguousObservedSeconds": 299.00000000000944,
+      "excludedGaps": [],
+      "phaseActorSeconds": {
+        "walking:harvest": 4271.999999999873,
+        "acting:harvest": 834.9999999999745,
+        "carrying:crate": 3586.9999999998754,
+        "walking:water": 2238.9999999998695,
+        "acting:water": 257.99999999998494,
+        "walking:initial": 4203.000000000684,
+        "acting:initial": 996.0000000002556
+      },
+      "actorSecondsByStatus": {
+        "walking": 10714.000000000426,
+        "acting": 2089.000000000215,
+        "carrying": 3586.9999999998754,
+        "idle": 0,
+        "arriving": 0,
+        "waiting": 0,
+        "fleeing": 0,
+        "returning": 0,
+        "incapacitated": 0
+      },
+      "peak": {
+        "living": 697,
+        "firstWaterPending": 493,
+        "initialTasks": 493,
+        "waterTasks": 135,
+        "harvestTasks": 232
+      },
+      "endOfDaylight": {
+        "living": 697,
+        "firstWaterPending": 429,
+        "initialTasks": 429,
+        "waterTasks": 79,
+        "harvestTasks": 77
+      },
+      "endPhases": {
+        "acting:initial": 13,
+        "walking:initial": 42
+      },
+      "missingMeasurements": {
+        "taskReservation": null,
+        "blockedTasks": null,
+        "individualQueueWait": null,
+        "individualServiceLatency": null,
+        "physicalPathMetres": null
+      }
+    },
+    {
+      "day": 9,
+      "staff": 58,
+      "physicalDeliveries": 77,
+      "firstObservedDeliveryTime": 38.00000000000011,
+      "samples": 300,
+      "globalContiguousObservedSeconds": 299.00000000000944,
+      "excludedGaps": [],
+      "phaseActorSeconds": {
+        "walking:harvest": 1806.0000000000068,
+        "walking:water": 1680.9999999999172,
+        "acting:harvest": 278.0000000000024,
+        "acting:water": 275.9999999999867,
+        "carrying:crate": 1823.9999999999864,
+        "walking:initial": 9011.000000000473,
+        "acting:initial": 2408.000000000174
+      },
+      "actorSecondsByStatus": {
+        "walking": 12498.000000000397,
+        "acting": 2962.0000000001633,
+        "carrying": 1823.9999999999864,
+        "idle": 0,
+        "arriving": 0,
+        "waiting": 0,
+        "fleeing": 0,
+        "returning": 0,
+        "incapacitated": 0
+      },
+      "peak": {
+        "living": 896,
+        "firstWaterPending": 512,
+        "initialTasks": 512,
+        "waterTasks": 298,
+        "harvestTasks": 97
+      },
+      "endOfDaylight": {
+        "living": 896,
+        "firstWaterPending": 365,
+        "initialTasks": 365,
+        "waterTasks": 298,
+        "harvestTasks": 97
+      },
+      "endPhases": {
+        "walking:initial": 40,
+        "acting:initial": 18
+      },
+      "missingMeasurements": {
+        "taskReservation": null,
+        "blockedTasks": null,
+        "individualQueueWait": null,
+        "individualServiceLatency": null,
+        "physicalPathMetres": null
+      }
+    },
+    {
+      "day": 10,
+      "staff": 75,
+      "physicalDeliveries": 97,
+      "firstObservedDeliveryTime": 26.0000000000001,
+      "samples": 300,
+      "globalContiguousObservedSeconds": 299.00000000000944,
+      "excludedGaps": [],
+      "phaseActorSeconds": {
+        "walking:harvest": 2342.999999999999,
+        "walking:water": 6322.99999999968,
+        "acting:harvest": 351.0000000000005,
+        "acting:water": 1012.9999999999504,
+        "carrying:crate": 1854.999999999995,
+        "walking:initial": 8802.000000000955,
+        "acting:initial": 1663.0000000001344
+      },
+      "actorSecondsByStatus": {
+        "walking": 17468.000000000633,
+        "acting": 3027.0000000000855,
+        "carrying": 1854.999999999995,
+        "idle": 0,
+        "arriving": 0,
+        "waiting": 0,
+        "fleeing": 0,
+        "returning": 0,
+        "incapacitated": 0
+      },
+      "peak": {
+        "living": 1059,
+        "firstWaterPending": 503,
+        "initialTasks": 503,
+        "waterTasks": 389,
+        "harvestTasks": 307
+      },
+      "endOfDaylight": {
+        "living": 1059,
+        "firstWaterPending": 383,
+        "initialTasks": 383,
+        "waterTasks": 254,
+        "harvestTasks": 307
+      },
+      "endPhases": {
+        "walking:initial": 65,
+        "acting:initial": 10
+      },
+      "missingMeasurements": {
+        "taskReservation": null,
+        "blockedTasks": null,
+        "individualQueueWait": null,
+        "individualServiceLatency": null,
+        "physicalPathMetres": null
+      }
+    }
+  ],
+  "scope": "Reused original F10 compressed observations only. Left-endpoint phase counts give approximate actor-seconds for contiguous <=1s daylight observations; no interpolation through excluded gaps, no global/actor-time equivalence. No IDs/reservations/blocked/individual waiting/route lengths exist in this trace; none reconstructed. No new simulation, commands, parameter or policy changes. Early10 only, original100 remains rejected."
+}
