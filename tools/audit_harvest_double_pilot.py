@@ -31,5 +31,5 @@ out={'source':src,'sourceHashesVerified':len(hs),'onlyHarvestDoubled':True,'allO
 'centreLostByEndOfDay':next(x['day'] for x in r['daily'] if not x['centerHp']),
 'firstSixDaysIdleFraction':sum(x['idle']['budget']+x['idle']['space']+x['idle']['shift-end'] for x in r['daily'][:6])/1800,
 'causeScope':'Original opening retains21 physical deliveries on day1. More income supports faster later purchasing, but the operational centre is lost by day6 close and no tasks/deliveries occur day7; final snapshot verifies ruined hp0. Observer did not retain precise individual hits, so exact attack cause/target sequence is not reconstructed. Seven observed rows include defeat day7 and are not ten completed nights. Final ledger cash margin alone does not establish survivability or sustainable service.',
-'files':{f.name:sha(f.read_bytes()) for f in sorted(p.iterdir()) if f.is_file()}}
+'files':{f.name:sha(f.read_bytes()) for f in sorted(p.iterdir()) if f.is_file() and f.name != 'own-source-audit.json'}}
 (p/'own-source-audit.json').write_text(json.dumps(out,indent=2)+'\n');print(json.dumps(out))

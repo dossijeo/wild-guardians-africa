@@ -14,5 +14,5 @@ result={'source':json.loads((p/'diagnostic.json').read_text())['provenance']['gi
 'attractionCoupling':'Frozen rules.attraction sums living species base_harvest_value. Doubling harvest income also doubles per-plant attraction; more planting compounds this. No independent threat edit was made.',
 'policyMeaning':'defend:false disables optional wall/capital-reserve policy only. Shield logic remains active; it casts on a threat target within8m, prioritising centres only among currently eligible threats. It does not continuously keep shield for a later centre threat. This control is not proof no defensive strategy can survive.',
 'acceptance':'failed6completed-nights/day7defeat/daily-delivery-failure/activity-failure; no100 or matrix or poor-management launch',
-'files':{f.name:hashlib.sha256(f.read_bytes()).hexdigest() for f in sorted(p.iterdir()) if f.is_file()}}
+'files':{f.name:hashlib.sha256(f.read_bytes()).hexdigest() for f in sorted(p.iterdir()) if f.is_file() and f.name != 'fatal-attack-analysis.json'}}
 (p/'fatal-attack-analysis.json').write_text(json.dumps(result,indent=2)+'\n');print('shieldRadius',spell['radius'],'distance',distance,'repairEvents',len(result['repairEvents']))

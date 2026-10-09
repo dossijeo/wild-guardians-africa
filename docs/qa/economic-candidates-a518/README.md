@@ -214,3 +214,14 @@ parameter,100-night/matrix run or promotion is chosen. The half-HP repair bridge
 in frozen F evidence remains unchanged; main's separately reviewed general
 rational repair implementation will be considered only if a candidate is later
 promoted, with fresh compatibility coverage.
+
+### Future audit manifest correction
+
+The first-run evidence above is preserved unchanged. The read-only generators
+previously enumerated every file in their output folder, which would include
+an existing own-source-audit/opportunity-analysis/fatal-analysis file on a
+second run and therefore change their own manifest hash. Future tooling now
+explicitly excludes its own output from input hashes. No existing evidence,
+failed verdict, source receipt or raw snapshot was regenerated for this fix.
+F100 separately uses an exact detached83b1c1ea checkout and original native
+runner; its source and policy are unaffected by this diagnostic tooling change.

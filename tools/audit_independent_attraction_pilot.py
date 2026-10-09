@@ -35,5 +35,5 @@ out={'source':src,'sourceHashesVerified':len(hs),'onlyHarvestDoubledAndAttractio
 'centreLostByEndOfDay':next((x['day'] for x in r['daily'] if not x['centerHp']),None),
 'firstSixDaysIdleFraction':sum(x['idle']['budget']+x['idle']['space']+x['idle']['shift-end'] for x in r['daily'][:6])/1800,
 'causeScope':'Own-source E2 observation, preserves baseline per-species attraction independently of doubled harvest. Requested/completed nights, physical delivery and activity gates are computed from native records; no100/matrix acceptance or universal defensive conclusion.',
-'files':{f.name:sha(f.read_bytes()) for f in sorted(p.iterdir()) if f.is_file()}}
+'files':{f.name:sha(f.read_bytes()) for f in sorted(p.iterdir()) if f.is_file() and f.name != 'own-source-audit.json'}}
 (p/'own-source-audit.json').write_text(json.dumps(out,indent=2)+'\n');print(json.dumps(out))
