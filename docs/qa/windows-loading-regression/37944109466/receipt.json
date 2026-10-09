@@ -1,0 +1,26 @@
+{
+  "run": 37944109466,
+  "head": "a5957eb0",
+  "result": "failure",
+  "artifact": 11624670061,
+  "sha256": "c8c6b3312767ef8183db5f4be8274db8c35c4dfe09cd3ff305183e283803733b",
+  "errors": [
+    "Error: Production world did not finish loading"
+  ],
+  "activeAtDeadline": [
+    {
+      "elapsedMs": 7176.900000000023,
+      "label": "load-warm-gpu",
+      "scope": "Existing awaited phase start; smoke-only pending-phase attribution.",
+      "start": 130969.80000000005
+    },
+    {
+      "elapsedMs": 3528.70000000007,
+      "label": "warm-compile-world",
+      "scope": "Existing awaited phase start; smoke-only pending-phase attribution.",
+      "start": 134618
+    }
+  ],
+  "stagingWallMs": 3486.20000000007,
+  "scope": "Unchanged90s gate; visible/focused; minimize skipped. Collective candidate not promoted. Asset timing and runner drift prevent causal comparison."
+}

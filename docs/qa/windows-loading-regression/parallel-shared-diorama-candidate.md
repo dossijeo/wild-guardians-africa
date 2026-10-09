@@ -1,0 +1,9 @@
+# Parallel shared diorama resource candidate
+
+The previous single-union candidate failed the original90s primary smoke. Its existing world GPU phase started82.82s after world start; staging completed3.486s, and the final world barrier remained pending3.529s at deadline. These results do not approve the candidate and cannot be treated as causal phase improvements across changing runners/assets. Original raw37944109466 is retained.
+
+The new smoke-only candidate overlaps sky loading with the existing three catalogue requests, followed by the exact cached maize and bridges model URLs. Those independent resources previously began only after awaited sky loading (~6.7s in this run). Final adoption still awaits sky plus all shared models; catalogue/model failures and owner invalidation reject normally. Shared Assets owns late resources and its existing disposal path releases them on world cancellation; the diorama never disposes shared prototypes. Default normal-play preparation remains sky-first. No extra resource request, body read, decoder, scene mutation, render loop or deadline change.
+
+The smoke also retains the unpromoted single program-union candidate, so the next run tests a combined preparation recipe, not isolated attribution of either change. Original90s and native-minimization gates are unchanged. Cargo compression and lock match production baseline.
+
+69 contracts pass. New coverage uses actual Assets and WorldScene.loadReady, proving early model requests while sky remains pending, no early adoption, final sky readiness, exact shared cache reuse, owner abort and late resource disposal once, original model/sky errors with late rejection observation, and default sky-first presentation cancellation before fetching models. Shader union, cancellation, lifetime/deadline and renderer-state tests remain. No promotion before both original native smokes pass.

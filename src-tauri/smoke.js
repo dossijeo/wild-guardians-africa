@@ -132,6 +132,7 @@ function observeDesktopWorldLoading(win,doc,now=()=>performance.now()) {
     const send = data => dispatchEvent(new MessageEvent('message', {origin: location.origin, source: menu.contentWindow, data: {type: 'wild-guardians:menu', ...data}}));
     send({action: 'settings-change', settings: {quality: 'muy_baja', sfx: 0, music: 0}});
     const fixture = await window.__TAURI_INTERNALS__.invoke('desktop_smoke_fixture');
+    window.__desktopSmokeParallelDioramaAssets=true;
     window.__desktopSmokeCollectiveLoadingPrograms=true;
     worldLoadingObserver=observeDesktopWorldLoading(window,document);
     report.checks.productionLoading=worldLoadingObserver.sample();

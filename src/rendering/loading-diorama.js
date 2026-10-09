@@ -2,10 +2,9 @@ import {loadingSyncWitness,loadingAwaitWitness} from './loading-sync-witness.js'
 import {waitGpuFrame} from '../../tools/experiments/wait-gpu-frame.js';
 import {compileLoadingPrograms} from './loading-programs.js';
 import * as THREE from 'three';
-import {json} from './assets.js';
 import {assetUrl} from './asset-url.js';
 import {createCropBatchAsync} from './crop-batch.js';
-import {loadCropBridges} from './crop-library.js';
+import {loadDioramaSharedAssets} from './loading-diorama-assets.js';
 import {LoadingPlants} from './loading-plants.js';
 import {LoadingTextureOwner} from './loading-texture-owner.js';
 import {LoadingOrbit} from './loading-orbit.js';
@@ -54,10 +53,8 @@ export class LoadingDiorama {
     world.canvas.addEventListener('lostpointercapture',()=>{down=null;this.orbit.endInteraction();},{signal:this.abort.signal});
   }
   async prepare() {
-    const {world}=this,phase=(label,run)=>loadingAwaitWitness(world.onLoadingSpan,label,run),sync=(label,run)=>loadingSyncWitness(world.onLoadingSpan,label,run);await phase('diorama-prepare-sky',()=>world.loadReady(world.sky.load()));if(this.disposed)throw Error('Loading diorama cancelled');
-    const [models,bridges,ground]=await phase('diorama-prepare-catalogues',()=>world.loadReady(Promise.all([json('/content/models.json',{signal:world.loading.signal}),json('/content/crop-bridges.json',{signal:world.loading.signal}),json('/content/ground-materials.json',{signal:world.loading.signal})])));
-    const descriptor=models.find(m=>m.source.includes('Cultivos'));if(!descriptor)throw Error('Missing native maize model');
-    const [gltf,preparedBridges]=await Promise.all([phase('diorama-prepare-maize-model',()=>world.loadReady(world.assets.model(descriptor.url))),phase('diorama-prepare-maize-bridges',()=>world.loadReady(loadCropBridges(bridges,url=>world.assets.model(url))))]);if(this.disposed)throw Error('Loading diorama cancelled');
+    const {world}=this,phase=(label,run)=>loadingAwaitWitness(world.onLoadingSpan,label,run),sync=(label,run)=>loadingSyncWitness(world.onLoadingSpan,label,run);
+    const {gltf,preparedBridges,ground}=await loadDioramaSharedAssets(world,{phase,parallel:globalThis.__desktopSmokeParallelDioramaAssets===true,cancelled:()=>this.disposed});if(this.disposed)throw Error('Loading diorama cancelled');
     // Reuse the existing canyon earth bitmap through the world's cache. The
     // diorama borrows its pixel Source through a locally owned Texture object.
     // This does not decode/copy pixels or require separate shared GL storage.
