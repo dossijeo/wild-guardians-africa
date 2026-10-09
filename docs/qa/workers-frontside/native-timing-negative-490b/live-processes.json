@@ -1,0 +1,471 @@
+{
+  "scope": "Live CIM descendant observations only; missing command line or absent child observation is not profile proof.",
+  "observations": [
+    {
+      "rootPid": 33044,
+      "atUtc": "2026-10-09T21:16:09.4974213Z",
+      "children": [
+        {
+          "isWebView2": false,
+          "pid": 33044,
+          "commandLine": "\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\windows-37989406447\\wild-guardians-africa.exe\" --smoke-report \"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\raw.json\" --smoke-fixture \"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-fixture.json\"",
+          "name": "wild-guardians-africa.exe",
+          "parentPid": 53792,
+          "mentionsExclusiveProfile": false
+        },
+        {
+          "isWebView2": true,
+          "pid": 18820,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --embedded-browser-webview=1 --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --noerrdialogs --embedded-browser-webview-dpi-awareness=2 --autoplay-policy=no-user-gesture-required --disable-features=msWebOOUI,msPdfOOUI,msSmartScreenProtection --lang=es-ES --mojo-named-platform-channel-pipe=33044.52116.9552065225119803756 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610",
+          "name": "msedgewebview2.exe",
+          "parentPid": 33044,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 16200,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=crashpad-handler --user-data-dir=C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView /prefetch:4 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610 --monitor-self-annotation=ptype=crashpad-handler --database=C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\\Crashpad --annotation=IsOfficialBuild=1 --annotation=channel= --annotation=chromium-version=154.0.8037.98 \"--annotation=exe=C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --annotation=plat=Win64 \"--annotation=prod=Edge WebView2\" --annotation=ver=154.0.4258.62 --initial-client-data=0x178,0x17c,0x180,0x130,0x188,0x7ffe80bb83e0,0x7ffe80bb83f0,0x7ffe80bb8400",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 36040,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=gpu-process --gpu-recent-crash-count=0 --noerrdialogs --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=2 --gpu-preferences=WAAAAAAAAADgAAAEAAAAAAAAAAAAAGAAQAAAAAAAAAADAAAAAAAAADgAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAKAAAAAAAAAAoAAAAAAAAAAgAAAAAAAAAEAAAAAIAAAABAAAAAAAAAAgAAAAAAAAACAAAAAAAAAA= --startup-read-main-dll --metrics-shmem-handle=1816,i,14583356394449080984,3849373752000793641,262144 --field-trial-handle=1968,i,5384415619083162740,10173003369206151544,262144 --disable-features=msPdfOOUI,msSmartScreenProtection,msWebOOUI --variations-seed-version --pseudonymization-salt-handle=1980,i,10556033571351868428,9289126789958071859,4 --trace-process-track-uuid=3190708988185955192 --mojo-platform-channel-handle=1960 /prefetch:2 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 54020,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=utility --utility-sub-type=network.mojom.NetworkService --lang=es --service-sandbox-type=none --noerrdialogs --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=2 --startup-read-main-dll --metrics-shmem-handle=2200,i,15413781139198032198,11138531658489578776,524288 --field-trial-handle=1968,i,5384415619083162740,10173003369206151544,262144 --disable-features=msPdfOOUI,msSmartScreenProtection,msWebOOUI --variations-seed-version --pseudonymization-salt-handle=1980,i,10556033571351868428,9289126789958071859,4 --trace-process-track-uuid=3190708989122997041 --mojo-platform-channel-handle=2196 /prefetch:11 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        }
+      ]
+    },
+    {
+      "rootPid": 33044,
+      "atUtc": "2026-10-09T21:16:10.4398842Z",
+      "children": [
+        {
+          "isWebView2": false,
+          "pid": 33044,
+          "commandLine": "\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\windows-37989406447\\wild-guardians-africa.exe\" --smoke-report \"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\raw.json\" --smoke-fixture \"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-fixture.json\"",
+          "name": "wild-guardians-africa.exe",
+          "parentPid": 53792,
+          "mentionsExclusiveProfile": false
+        },
+        {
+          "isWebView2": true,
+          "pid": 18820,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --embedded-browser-webview=1 --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --noerrdialogs --embedded-browser-webview-dpi-awareness=2 --autoplay-policy=no-user-gesture-required --disable-features=msWebOOUI,msPdfOOUI,msSmartScreenProtection --lang=es-ES --mojo-named-platform-channel-pipe=33044.52116.9552065225119803756 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610",
+          "name": "msedgewebview2.exe",
+          "parentPid": 33044,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 16200,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=crashpad-handler --user-data-dir=C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView /prefetch:4 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610 --monitor-self-annotation=ptype=crashpad-handler --database=C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\\Crashpad --annotation=IsOfficialBuild=1 --annotation=channel= --annotation=chromium-version=154.0.8037.98 \"--annotation=exe=C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --annotation=plat=Win64 \"--annotation=prod=Edge WebView2\" --annotation=ver=154.0.4258.62 --initial-client-data=0x178,0x17c,0x180,0x130,0x188,0x7ffe80bb83e0,0x7ffe80bb83f0,0x7ffe80bb8400",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 36040,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=gpu-process --gpu-recent-crash-count=0 --noerrdialogs --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=2 --gpu-preferences=WAAAAAAAAADgAAAEAAAAAAAAAAAAAGAAQAAAAAAAAAADAAAAAAAAADgAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAKAAAAAAAAAAoAAAAAAAAAAgAAAAAAAAAEAAAAAIAAAABAAAAAAAAAAgAAAAAAAAACAAAAAAAAAA= --startup-read-main-dll --metrics-shmem-handle=1816,i,14583356394449080984,3849373752000793641,262144 --field-trial-handle=1968,i,5384415619083162740,10173003369206151544,262144 --disable-features=msPdfOOUI,msSmartScreenProtection,msWebOOUI --variations-seed-version --pseudonymization-salt-handle=1980,i,10556033571351868428,9289126789958071859,4 --trace-process-track-uuid=3190708988185955192 --mojo-platform-channel-handle=1960 /prefetch:2 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 54020,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=utility --utility-sub-type=network.mojom.NetworkService --lang=es --service-sandbox-type=none --noerrdialogs --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=2 --startup-read-main-dll --metrics-shmem-handle=2200,i,15413781139198032198,11138531658489578776,524288 --field-trial-handle=1968,i,5384415619083162740,10173003369206151544,262144 --disable-features=msPdfOOUI,msSmartScreenProtection,msWebOOUI --variations-seed-version --pseudonymization-salt-handle=1980,i,10556033571351868428,9289126789958071859,4 --trace-process-track-uuid=3190708989122997041 --mojo-platform-channel-handle=2196 /prefetch:11 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 54216,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=utility --utility-sub-type=storage.mojom.StorageService --lang=es --service-sandbox-type=service --noerrdialogs --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=2 --startup-read-main-dll --metrics-shmem-handle=2584,i,14092356112075506197,13267433366409816552,524288 --field-trial-handle=1968,i,5384415619083162740,10173003369206151544,262144 --disable-features=msPdfOOUI,msSmartScreenProtection,msWebOOUI --variations-seed-version --pseudonymization-salt-handle=1980,i,10556033571351868428,9289126789958071859,4 --trace-process-track-uuid=3190708990060038890 --mojo-platform-channel-handle=2604 /prefetch:13 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 50424,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=renderer --noerrdialogs --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=2 --autoplay-policy=no-user-gesture-required --video-capture-use-gpu-memory-buffer --lang=es --js-flags --device-scale-factor=1 --num-raster-threads=4 --enable-main-frame-before-activation --renderer-client-id=5 --js-flags=--ms-user-locale=es_ES --ssd-no-pressure-read-main-dll --launch-time-ticks=792894288026 --metrics-shmem-handle=4156,i,778872203484270372,6897865556403994203,1048576 --field-trial-handle=1968,i,5384415619083162740,10173003369206151544,262144 --disable-features=msPdfOOUI,msSmartScreenProtection,msWebOOUI --variations-seed-version --pseudonymization-salt-handle=1980,i,10556033571351868428,9289126789958071859,4 --trace-process-track-uuid=3190708990997080739 --mojo-platform-channel-handle=4112 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610 /prefetch:1",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 8488,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=utility --utility-sub-type=audio.mojom.AudioService --lang=es --service-sandbox-type=audio --video-capture-use-gpu-memory-buffer --noerrdialogs --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=2 --skip-read-main-dll --metrics-shmem-handle=4736,i,6295137301820994686,13028485755936796209,524288 --field-trial-handle=1968,i,5384415619083162740,10173003369206151544,262144 --disable-features=msPdfOOUI,msSmartScreenProtection,msWebOOUI --variations-seed-version --pseudonymization-salt-handle=1980,i,10556033571351868428,9289126789958071859,4 --trace-process-track-uuid=3190708991934122588 --mojo-platform-channel-handle=4720 /prefetch:12 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        }
+      ]
+    },
+    {
+      "rootPid": 33044,
+      "atUtc": "2026-10-09T21:16:11.3591856Z",
+      "children": [
+        {
+          "isWebView2": false,
+          "pid": 33044,
+          "commandLine": "\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\windows-37989406447\\wild-guardians-africa.exe\" --smoke-report \"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\raw.json\" --smoke-fixture \"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-fixture.json\"",
+          "name": "wild-guardians-africa.exe",
+          "parentPid": 53792,
+          "mentionsExclusiveProfile": false
+        },
+        {
+          "isWebView2": true,
+          "pid": 18820,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --embedded-browser-webview=1 --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --noerrdialogs --embedded-browser-webview-dpi-awareness=2 --autoplay-policy=no-user-gesture-required --disable-features=msWebOOUI,msPdfOOUI,msSmartScreenProtection --lang=es-ES --mojo-named-platform-channel-pipe=33044.52116.9552065225119803756 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610",
+          "name": "msedgewebview2.exe",
+          "parentPid": 33044,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 16200,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=crashpad-handler --user-data-dir=C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView /prefetch:4 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610 --monitor-self-annotation=ptype=crashpad-handler --database=C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\\Crashpad --annotation=IsOfficialBuild=1 --annotation=channel= --annotation=chromium-version=154.0.8037.98 \"--annotation=exe=C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --annotation=plat=Win64 \"--annotation=prod=Edge WebView2\" --annotation=ver=154.0.4258.62 --initial-client-data=0x178,0x17c,0x180,0x130,0x188,0x7ffe80bb83e0,0x7ffe80bb83f0,0x7ffe80bb8400",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 36040,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=gpu-process --gpu-recent-crash-count=0 --noerrdialogs --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=2 --gpu-preferences=WAAAAAAAAADgAAAEAAAAAAAAAAAAAGAAQAAAAAAAAAADAAAAAAAAADgAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAKAAAAAAAAAAoAAAAAAAAAAgAAAAAAAAAEAAAAAIAAAABAAAAAAAAAAgAAAAAAAAACAAAAAAAAAA= --startup-read-main-dll --metrics-shmem-handle=1816,i,14583356394449080984,3849373752000793641,262144 --field-trial-handle=1968,i,5384415619083162740,10173003369206151544,262144 --disable-features=msPdfOOUI,msSmartScreenProtection,msWebOOUI --variations-seed-version --pseudonymization-salt-handle=1980,i,10556033571351868428,9289126789958071859,4 --trace-process-track-uuid=3190708988185955192 --mojo-platform-channel-handle=1960 /prefetch:2 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 54020,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=utility --utility-sub-type=network.mojom.NetworkService --lang=es --service-sandbox-type=none --noerrdialogs --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=2 --startup-read-main-dll --metrics-shmem-handle=2200,i,15413781139198032198,11138531658489578776,524288 --field-trial-handle=1968,i,5384415619083162740,10173003369206151544,262144 --disable-features=msPdfOOUI,msSmartScreenProtection,msWebOOUI --variations-seed-version --pseudonymization-salt-handle=1980,i,10556033571351868428,9289126789958071859,4 --trace-process-track-uuid=3190708989122997041 --mojo-platform-channel-handle=2196 /prefetch:11 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 54216,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=utility --utility-sub-type=storage.mojom.StorageService --lang=es --service-sandbox-type=service --noerrdialogs --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=2 --startup-read-main-dll --metrics-shmem-handle=2584,i,14092356112075506197,13267433366409816552,524288 --field-trial-handle=1968,i,5384415619083162740,10173003369206151544,262144 --disable-features=msPdfOOUI,msSmartScreenProtection,msWebOOUI --variations-seed-version --pseudonymization-salt-handle=1980,i,10556033571351868428,9289126789958071859,4 --trace-process-track-uuid=3190708990060038890 --mojo-platform-channel-handle=2604 /prefetch:13 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 50424,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=renderer --noerrdialogs --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=2 --autoplay-policy=no-user-gesture-required --video-capture-use-gpu-memory-buffer --lang=es --js-flags --device-scale-factor=1 --num-raster-threads=4 --enable-main-frame-before-activation --renderer-client-id=5 --js-flags=--ms-user-locale=es_ES --ssd-no-pressure-read-main-dll --launch-time-ticks=792894288026 --metrics-shmem-handle=4156,i,778872203484270372,6897865556403994203,1048576 --field-trial-handle=1968,i,5384415619083162740,10173003369206151544,262144 --disable-features=msPdfOOUI,msSmartScreenProtection,msWebOOUI --variations-seed-version --pseudonymization-salt-handle=1980,i,10556033571351868428,9289126789958071859,4 --trace-process-track-uuid=3190708990997080739 --mojo-platform-channel-handle=4112 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610 /prefetch:1",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 8488,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=utility --utility-sub-type=audio.mojom.AudioService --lang=es --service-sandbox-type=audio --video-capture-use-gpu-memory-buffer --noerrdialogs --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=2 --skip-read-main-dll --metrics-shmem-handle=4736,i,6295137301820994686,13028485755936796209,524288 --field-trial-handle=1968,i,5384415619083162740,10173003369206151544,262144 --disable-features=msPdfOOUI,msSmartScreenProtection,msWebOOUI --variations-seed-version --pseudonymization-salt-handle=1980,i,10556033571351868428,9289126789958071859,4 --trace-process-track-uuid=3190708991934122588 --mojo-platform-channel-handle=4720 /prefetch:12 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        }
+      ]
+    },
+    {
+      "rootPid": 33044,
+      "atUtc": "2026-10-09T21:16:12.1666286Z",
+      "children": [
+        {
+          "isWebView2": false,
+          "pid": 33044,
+          "commandLine": "\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\windows-37989406447\\wild-guardians-africa.exe\" --smoke-report \"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\raw.json\" --smoke-fixture \"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-fixture.json\"",
+          "name": "wild-guardians-africa.exe",
+          "parentPid": 53792,
+          "mentionsExclusiveProfile": false
+        },
+        {
+          "isWebView2": true,
+          "pid": 18820,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --embedded-browser-webview=1 --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --noerrdialogs --embedded-browser-webview-dpi-awareness=2 --autoplay-policy=no-user-gesture-required --disable-features=msWebOOUI,msPdfOOUI,msSmartScreenProtection --lang=es-ES --mojo-named-platform-channel-pipe=33044.52116.9552065225119803756 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610",
+          "name": "msedgewebview2.exe",
+          "parentPid": 33044,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 16200,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=crashpad-handler --user-data-dir=C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView /prefetch:4 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610 --monitor-self-annotation=ptype=crashpad-handler --database=C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\\Crashpad --annotation=IsOfficialBuild=1 --annotation=channel= --annotation=chromium-version=154.0.8037.98 \"--annotation=exe=C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --annotation=plat=Win64 \"--annotation=prod=Edge WebView2\" --annotation=ver=154.0.4258.62 --initial-client-data=0x178,0x17c,0x180,0x130,0x188,0x7ffe80bb83e0,0x7ffe80bb83f0,0x7ffe80bb8400",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 36040,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=gpu-process --gpu-recent-crash-count=0 --noerrdialogs --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=2 --gpu-preferences=WAAAAAAAAADgAAAEAAAAAAAAAAAAAGAAQAAAAAAAAAADAAAAAAAAADgAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAKAAAAAAAAAAoAAAAAAAAAAgAAAAAAAAAEAAAAAIAAAABAAAAAAAAAAgAAAAAAAAACAAAAAAAAAA= --startup-read-main-dll --metrics-shmem-handle=1816,i,14583356394449080984,3849373752000793641,262144 --field-trial-handle=1968,i,5384415619083162740,10173003369206151544,262144 --disable-features=msPdfOOUI,msSmartScreenProtection,msWebOOUI --variations-seed-version --pseudonymization-salt-handle=1980,i,10556033571351868428,9289126789958071859,4 --trace-process-track-uuid=3190708988185955192 --mojo-platform-channel-handle=1960 /prefetch:2 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 54020,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=utility --utility-sub-type=network.mojom.NetworkService --lang=es --service-sandbox-type=none --noerrdialogs --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=2 --startup-read-main-dll --metrics-shmem-handle=2200,i,15413781139198032198,11138531658489578776,524288 --field-trial-handle=1968,i,5384415619083162740,10173003369206151544,262144 --disable-features=msPdfOOUI,msSmartScreenProtection,msWebOOUI --variations-seed-version --pseudonymization-salt-handle=1980,i,10556033571351868428,9289126789958071859,4 --trace-process-track-uuid=3190708989122997041 --mojo-platform-channel-handle=2196 /prefetch:11 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 54216,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=utility --utility-sub-type=storage.mojom.StorageService --lang=es --service-sandbox-type=service --noerrdialogs --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=2 --startup-read-main-dll --metrics-shmem-handle=2584,i,14092356112075506197,13267433366409816552,524288 --field-trial-handle=1968,i,5384415619083162740,10173003369206151544,262144 --disable-features=msPdfOOUI,msSmartScreenProtection,msWebOOUI --variations-seed-version --pseudonymization-salt-handle=1980,i,10556033571351868428,9289126789958071859,4 --trace-process-track-uuid=3190708990060038890 --mojo-platform-channel-handle=2604 /prefetch:13 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 50424,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=renderer --noerrdialogs --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=2 --autoplay-policy=no-user-gesture-required --video-capture-use-gpu-memory-buffer --lang=es --js-flags --device-scale-factor=1 --num-raster-threads=4 --enable-main-frame-before-activation --renderer-client-id=5 --js-flags=--ms-user-locale=es_ES --ssd-no-pressure-read-main-dll --launch-time-ticks=792894288026 --metrics-shmem-handle=4156,i,778872203484270372,6897865556403994203,1048576 --field-trial-handle=1968,i,5384415619083162740,10173003369206151544,262144 --disable-features=msPdfOOUI,msSmartScreenProtection,msWebOOUI --variations-seed-version --pseudonymization-salt-handle=1980,i,10556033571351868428,9289126789958071859,4 --trace-process-track-uuid=3190708990997080739 --mojo-platform-channel-handle=4112 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610 /prefetch:1",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 8488,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=utility --utility-sub-type=audio.mojom.AudioService --lang=es --service-sandbox-type=audio --video-capture-use-gpu-memory-buffer --noerrdialogs --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=2 --skip-read-main-dll --metrics-shmem-handle=4736,i,6295137301820994686,13028485755936796209,524288 --field-trial-handle=1968,i,5384415619083162740,10173003369206151544,262144 --disable-features=msPdfOOUI,msSmartScreenProtection,msWebOOUI --variations-seed-version --pseudonymization-salt-handle=1980,i,10556033571351868428,9289126789958071859,4 --trace-process-track-uuid=3190708991934122588 --mojo-platform-channel-handle=4720 /prefetch:12 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        }
+      ]
+    },
+    {
+      "rootPid": 33044,
+      "atUtc": "2026-10-09T21:16:13.0924142Z",
+      "children": [
+        {
+          "isWebView2": false,
+          "pid": 33044,
+          "commandLine": "\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\windows-37989406447\\wild-guardians-africa.exe\" --smoke-report \"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\raw.json\" --smoke-fixture \"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-fixture.json\"",
+          "name": "wild-guardians-africa.exe",
+          "parentPid": 53792,
+          "mentionsExclusiveProfile": false
+        },
+        {
+          "isWebView2": true,
+          "pid": 18820,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --embedded-browser-webview=1 --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --noerrdialogs --embedded-browser-webview-dpi-awareness=2 --autoplay-policy=no-user-gesture-required --disable-features=msWebOOUI,msPdfOOUI,msSmartScreenProtection --lang=es-ES --mojo-named-platform-channel-pipe=33044.52116.9552065225119803756 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610",
+          "name": "msedgewebview2.exe",
+          "parentPid": 33044,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 16200,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=crashpad-handler --user-data-dir=C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView /prefetch:4 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610 --monitor-self-annotation=ptype=crashpad-handler --database=C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\\Crashpad --annotation=IsOfficialBuild=1 --annotation=channel= --annotation=chromium-version=154.0.8037.98 \"--annotation=exe=C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --annotation=plat=Win64 \"--annotation=prod=Edge WebView2\" --annotation=ver=154.0.4258.62 --initial-client-data=0x178,0x17c,0x180,0x130,0x188,0x7ffe80bb83e0,0x7ffe80bb83f0,0x7ffe80bb8400",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 36040,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=gpu-process --gpu-recent-crash-count=0 --noerrdialogs --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=2 --gpu-preferences=WAAAAAAAAADgAAAEAAAAAAAAAAAAAGAAQAAAAAAAAAADAAAAAAAAADgAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAKAAAAAAAAAAoAAAAAAAAAAgAAAAAAAAAEAAAAAIAAAABAAAAAAAAAAgAAAAAAAAACAAAAAAAAAA= --startup-read-main-dll --metrics-shmem-handle=1816,i,14583356394449080984,3849373752000793641,262144 --field-trial-handle=1968,i,5384415619083162740,10173003369206151544,262144 --disable-features=msPdfOOUI,msSmartScreenProtection,msWebOOUI --variations-seed-version --pseudonymization-salt-handle=1980,i,10556033571351868428,9289126789958071859,4 --trace-process-track-uuid=3190708988185955192 --mojo-platform-channel-handle=1960 /prefetch:2 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 54020,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=utility --utility-sub-type=network.mojom.NetworkService --lang=es --service-sandbox-type=none --noerrdialogs --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=2 --startup-read-main-dll --metrics-shmem-handle=2200,i,15413781139198032198,11138531658489578776,524288 --field-trial-handle=1968,i,5384415619083162740,10173003369206151544,262144 --disable-features=msPdfOOUI,msSmartScreenProtection,msWebOOUI --variations-seed-version --pseudonymization-salt-handle=1980,i,10556033571351868428,9289126789958071859,4 --trace-process-track-uuid=3190708989122997041 --mojo-platform-channel-handle=2196 /prefetch:11 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 54216,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=utility --utility-sub-type=storage.mojom.StorageService --lang=es --service-sandbox-type=service --noerrdialogs --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=2 --startup-read-main-dll --metrics-shmem-handle=2584,i,14092356112075506197,13267433366409816552,524288 --field-trial-handle=1968,i,5384415619083162740,10173003369206151544,262144 --disable-features=msPdfOOUI,msSmartScreenProtection,msWebOOUI --variations-seed-version --pseudonymization-salt-handle=1980,i,10556033571351868428,9289126789958071859,4 --trace-process-track-uuid=3190708990060038890 --mojo-platform-channel-handle=2604 /prefetch:13 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 50424,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=renderer --noerrdialogs --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=2 --autoplay-policy=no-user-gesture-required --video-capture-use-gpu-memory-buffer --lang=es --js-flags --device-scale-factor=1 --num-raster-threads=4 --enable-main-frame-before-activation --renderer-client-id=5 --js-flags=--ms-user-locale=es_ES --ssd-no-pressure-read-main-dll --launch-time-ticks=792894288026 --metrics-shmem-handle=4156,i,778872203484270372,6897865556403994203,1048576 --field-trial-handle=1968,i,5384415619083162740,10173003369206151544,262144 --disable-features=msPdfOOUI,msSmartScreenProtection,msWebOOUI --variations-seed-version --pseudonymization-salt-handle=1980,i,10556033571351868428,9289126789958071859,4 --trace-process-track-uuid=3190708990997080739 --mojo-platform-channel-handle=4112 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610 /prefetch:1",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 8488,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=utility --utility-sub-type=audio.mojom.AudioService --lang=es --service-sandbox-type=audio --video-capture-use-gpu-memory-buffer --noerrdialogs --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=2 --skip-read-main-dll --metrics-shmem-handle=4736,i,6295137301820994686,13028485755936796209,524288 --field-trial-handle=1968,i,5384415619083162740,10173003369206151544,262144 --disable-features=msPdfOOUI,msSmartScreenProtection,msWebOOUI --variations-seed-version --pseudonymization-salt-handle=1980,i,10556033571351868428,9289126789958071859,4 --trace-process-track-uuid=3190708991934122588 --mojo-platform-channel-handle=4720 /prefetch:12 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        }
+      ]
+    },
+    {
+      "rootPid": 33044,
+      "atUtc": "2026-10-09T21:16:13.9538693Z",
+      "children": [
+        {
+          "isWebView2": false,
+          "pid": 33044,
+          "commandLine": "\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\windows-37989406447\\wild-guardians-africa.exe\" --smoke-report \"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\raw.json\" --smoke-fixture \"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-fixture.json\"",
+          "name": "wild-guardians-africa.exe",
+          "parentPid": 53792,
+          "mentionsExclusiveProfile": false
+        },
+        {
+          "isWebView2": true,
+          "pid": 18820,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --embedded-browser-webview=1 --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --noerrdialogs --embedded-browser-webview-dpi-awareness=2 --autoplay-policy=no-user-gesture-required --disable-features=msWebOOUI,msPdfOOUI,msSmartScreenProtection --lang=es-ES --mojo-named-platform-channel-pipe=33044.52116.9552065225119803756 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610",
+          "name": "msedgewebview2.exe",
+          "parentPid": 33044,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 16200,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=crashpad-handler --user-data-dir=C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView /prefetch:4 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610 --monitor-self-annotation=ptype=crashpad-handler --database=C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\\Crashpad --annotation=IsOfficialBuild=1 --annotation=channel= --annotation=chromium-version=154.0.8037.98 \"--annotation=exe=C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --annotation=plat=Win64 \"--annotation=prod=Edge WebView2\" --annotation=ver=154.0.4258.62 --initial-client-data=0x178,0x17c,0x180,0x130,0x188,0x7ffe80bb83e0,0x7ffe80bb83f0,0x7ffe80bb8400",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 36040,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=gpu-process --gpu-recent-crash-count=0 --noerrdialogs --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=2 --gpu-preferences=WAAAAAAAAADgAAAEAAAAAAAAAAAAAGAAQAAAAAAAAAADAAAAAAAAADgAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAKAAAAAAAAAAoAAAAAAAAAAgAAAAAAAAAEAAAAAIAAAABAAAAAAAAAAgAAAAAAAAACAAAAAAAAAA= --startup-read-main-dll --metrics-shmem-handle=1816,i,14583356394449080984,3849373752000793641,262144 --field-trial-handle=1968,i,5384415619083162740,10173003369206151544,262144 --disable-features=msPdfOOUI,msSmartScreenProtection,msWebOOUI --variations-seed-version --pseudonymization-salt-handle=1980,i,10556033571351868428,9289126789958071859,4 --trace-process-track-uuid=3190708988185955192 --mojo-platform-channel-handle=1960 /prefetch:2 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 54020,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=utility --utility-sub-type=network.mojom.NetworkService --lang=es --service-sandbox-type=none --noerrdialogs --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=2 --startup-read-main-dll --metrics-shmem-handle=2200,i,15413781139198032198,11138531658489578776,524288 --field-trial-handle=1968,i,5384415619083162740,10173003369206151544,262144 --disable-features=msPdfOOUI,msSmartScreenProtection,msWebOOUI --variations-seed-version --pseudonymization-salt-handle=1980,i,10556033571351868428,9289126789958071859,4 --trace-process-track-uuid=3190708989122997041 --mojo-platform-channel-handle=2196 /prefetch:11 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 54216,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=utility --utility-sub-type=storage.mojom.StorageService --lang=es --service-sandbox-type=service --noerrdialogs --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=2 --startup-read-main-dll --metrics-shmem-handle=2584,i,14092356112075506197,13267433366409816552,524288 --field-trial-handle=1968,i,5384415619083162740,10173003369206151544,262144 --disable-features=msPdfOOUI,msSmartScreenProtection,msWebOOUI --variations-seed-version --pseudonymization-salt-handle=1980,i,10556033571351868428,9289126789958071859,4 --trace-process-track-uuid=3190708990060038890 --mojo-platform-channel-handle=2604 /prefetch:13 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 50424,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=renderer --noerrdialogs --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=2 --autoplay-policy=no-user-gesture-required --video-capture-use-gpu-memory-buffer --lang=es --js-flags --device-scale-factor=1 --num-raster-threads=4 --enable-main-frame-before-activation --renderer-client-id=5 --js-flags=--ms-user-locale=es_ES --ssd-no-pressure-read-main-dll --launch-time-ticks=792894288026 --metrics-shmem-handle=4156,i,778872203484270372,6897865556403994203,1048576 --field-trial-handle=1968,i,5384415619083162740,10173003369206151544,262144 --disable-features=msPdfOOUI,msSmartScreenProtection,msWebOOUI --variations-seed-version --pseudonymization-salt-handle=1980,i,10556033571351868428,9289126789958071859,4 --trace-process-track-uuid=3190708990997080739 --mojo-platform-channel-handle=4112 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610 /prefetch:1",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 8488,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=utility --utility-sub-type=audio.mojom.AudioService --lang=es --service-sandbox-type=audio --video-capture-use-gpu-memory-buffer --noerrdialogs --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=2 --skip-read-main-dll --metrics-shmem-handle=4736,i,6295137301820994686,13028485755936796209,524288 --field-trial-handle=1968,i,5384415619083162740,10173003369206151544,262144 --disable-features=msPdfOOUI,msSmartScreenProtection,msWebOOUI --variations-seed-version --pseudonymization-salt-handle=1980,i,10556033571351868428,9289126789958071859,4 --trace-process-track-uuid=3190708991934122588 --mojo-platform-channel-handle=4720 /prefetch:12 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        }
+      ]
+    },
+    {
+      "rootPid": 33044,
+      "atUtc": "2026-10-09T21:16:14.7514551Z",
+      "children": [
+        {
+          "isWebView2": false,
+          "pid": 33044,
+          "commandLine": "\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\windows-37989406447\\wild-guardians-africa.exe\" --smoke-report \"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\raw.json\" --smoke-fixture \"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-fixture.json\"",
+          "name": "wild-guardians-africa.exe",
+          "parentPid": 53792,
+          "mentionsExclusiveProfile": false
+        },
+        {
+          "isWebView2": true,
+          "pid": 18820,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --embedded-browser-webview=1 --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --noerrdialogs --embedded-browser-webview-dpi-awareness=2 --autoplay-policy=no-user-gesture-required --disable-features=msWebOOUI,msPdfOOUI,msSmartScreenProtection --lang=es-ES --mojo-named-platform-channel-pipe=33044.52116.9552065225119803756 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610",
+          "name": "msedgewebview2.exe",
+          "parentPid": 33044,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 16200,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=crashpad-handler --user-data-dir=C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView /prefetch:4 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610 --monitor-self-annotation=ptype=crashpad-handler --database=C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\\Crashpad --annotation=IsOfficialBuild=1 --annotation=channel= --annotation=chromium-version=154.0.8037.98 \"--annotation=exe=C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --annotation=plat=Win64 \"--annotation=prod=Edge WebView2\" --annotation=ver=154.0.4258.62 --initial-client-data=0x178,0x17c,0x180,0x130,0x188,0x7ffe80bb83e0,0x7ffe80bb83f0,0x7ffe80bb8400",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 36040,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=gpu-process --gpu-recent-crash-count=0 --noerrdialogs --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=2 --gpu-preferences=WAAAAAAAAADgAAAEAAAAAAAAAAAAAGAAQAAAAAAAAAADAAAAAAAAADgAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAKAAAAAAAAAAoAAAAAAAAAAgAAAAAAAAAEAAAAAIAAAABAAAAAAAAAAgAAAAAAAAACAAAAAAAAAA= --startup-read-main-dll --metrics-shmem-handle=1816,i,14583356394449080984,3849373752000793641,262144 --field-trial-handle=1968,i,5384415619083162740,10173003369206151544,262144 --disable-features=msPdfOOUI,msSmartScreenProtection,msWebOOUI --variations-seed-version --pseudonymization-salt-handle=1980,i,10556033571351868428,9289126789958071859,4 --trace-process-track-uuid=3190708988185955192 --mojo-platform-channel-handle=1960 /prefetch:2 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 54020,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=utility --utility-sub-type=network.mojom.NetworkService --lang=es --service-sandbox-type=none --noerrdialogs --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=2 --startup-read-main-dll --metrics-shmem-handle=2200,i,15413781139198032198,11138531658489578776,524288 --field-trial-handle=1968,i,5384415619083162740,10173003369206151544,262144 --disable-features=msPdfOOUI,msSmartScreenProtection,msWebOOUI --variations-seed-version --pseudonymization-salt-handle=1980,i,10556033571351868428,9289126789958071859,4 --trace-process-track-uuid=3190708989122997041 --mojo-platform-channel-handle=2196 /prefetch:11 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 54216,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=utility --utility-sub-type=storage.mojom.StorageService --lang=es --service-sandbox-type=service --noerrdialogs --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=2 --startup-read-main-dll --metrics-shmem-handle=2584,i,14092356112075506197,13267433366409816552,524288 --field-trial-handle=1968,i,5384415619083162740,10173003369206151544,262144 --disable-features=msPdfOOUI,msSmartScreenProtection,msWebOOUI --variations-seed-version --pseudonymization-salt-handle=1980,i,10556033571351868428,9289126789958071859,4 --trace-process-track-uuid=3190708990060038890 --mojo-platform-channel-handle=2604 /prefetch:13 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 50424,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=renderer --noerrdialogs --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=2 --autoplay-policy=no-user-gesture-required --video-capture-use-gpu-memory-buffer --lang=es --js-flags --device-scale-factor=1 --num-raster-threads=4 --enable-main-frame-before-activation --renderer-client-id=5 --js-flags=--ms-user-locale=es_ES --ssd-no-pressure-read-main-dll --launch-time-ticks=792894288026 --metrics-shmem-handle=4156,i,778872203484270372,6897865556403994203,1048576 --field-trial-handle=1968,i,5384415619083162740,10173003369206151544,262144 --disable-features=msPdfOOUI,msSmartScreenProtection,msWebOOUI --variations-seed-version --pseudonymization-salt-handle=1980,i,10556033571351868428,9289126789958071859,4 --trace-process-track-uuid=3190708990997080739 --mojo-platform-channel-handle=4112 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610 /prefetch:1",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        },
+        {
+          "isWebView2": true,
+          "pid": 8488,
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe\" --type=utility --utility-sub-type=audio.mojom.AudioService --lang=es --service-sandbox-type=audio --video-capture-use-gpu-memory-buffer --noerrdialogs --user-data-dir=\"C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile\\EBWebView\" --webview-exe-name=wild-guardians-africa.exe --webview-exe-version=0.1.0 --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=2 --skip-read-main-dll --metrics-shmem-handle=4736,i,6295137301820994686,13028485755936796209,524288 --field-trial-handle=1968,i,5384415619083162740,10173003369206151544,262144 --disable-features=msPdfOOUI,msSmartScreenProtection,msWebOOUI --variations-seed-version --pseudonymization-salt-handle=1980,i,10556033571351868428,9289126789958071859,4 --trace-process-track-uuid=3190708991934122588 --mojo-platform-channel-handle=4720 /prefetch:12 /pfhostedapp:606b7de4ca286ad8d470c7826f38ceeb840e3610",
+          "name": "msedgewebview2.exe",
+          "parentPid": 18820,
+          "mentionsExclusiveProfile": true
+        }
+      ]
+    }
+  ]
+}

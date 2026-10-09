@@ -1,0 +1,495 @@
+{
+  "sourceHead": "490b6b2e41d9c80cf11dee4b5ee63fbea532e195",
+  "exeSha256": "4651e1f26d135144835530f6c87ca4ad52dacecdee8918ef3110447501468266",
+  "fixtureSha256": "a573d509cb91d2bb4cc015e3a5f4580ac88ba1cd1ba010bd5c3ef42dba5e525d",
+  "innerSnapshotUtf8Sha256": "0ff53036b38f44a00fa5155f048488be8183d0893ef3c26972a4fa78a2554b04",
+  "rawSha256": "ba441c89f802f896c6765fbcff7c491a30c694ebe41cd2b0a5fb83087de7782f",
+  "rawBytes": 4017844,
+  "images": [
+    {
+      "file": "preflight-case-34-original.png",
+      "bytes": 257435,
+      "sha256": "22f36461b8b5b0156c9715e62b39efb38643a5fa0f297b6aefa44c35b51de4be",
+      "width": 1024,
+      "height": 576,
+      "scope": "Visual coverage/readback preflight, outside timer queries"
+    },
+    {
+      "file": "preflight-case-34-original-repeat.png",
+      "bytes": 257435,
+      "sha256": "22f36461b8b5b0156c9715e62b39efb38643a5fa0f297b6aefa44c35b51de4be",
+      "width": 1024,
+      "height": 576,
+      "scope": "Visual coverage/readback preflight, outside timer queries"
+    },
+    {
+      "file": "preflight-case-34-candidate.png",
+      "bytes": 257435,
+      "sha256": "22f36461b8b5b0156c9715e62b39efb38643a5fa0f297b6aefa44c35b51de4be",
+      "width": 1024,
+      "height": 576,
+      "scope": "Visual coverage/readback preflight, outside timer queries"
+    },
+    {
+      "file": "preflight-case-18-original.png",
+      "bytes": 249016,
+      "sha256": "e9535cfd3e1799cf5f91c21dd86ae63ec9025ef64ffa07c64f42e682b36c6e52",
+      "width": 1024,
+      "height": 576,
+      "scope": "Visual coverage/readback preflight, outside timer queries"
+    },
+    {
+      "file": "preflight-case-18-original-repeat.png",
+      "bytes": 249016,
+      "sha256": "e9535cfd3e1799cf5f91c21dd86ae63ec9025ef64ffa07c64f42e682b36c6e52",
+      "width": 1024,
+      "height": 576,
+      "scope": "Visual coverage/readback preflight, outside timer queries"
+    },
+    {
+      "file": "preflight-case-18-candidate.png",
+      "bytes": 249016,
+      "sha256": "e9535cfd3e1799cf5f91c21dd86ae63ec9025ef64ffa07c64f42e682b36c6e52",
+      "width": 1024,
+      "height": 576,
+      "scope": "Visual coverage/readback preflight, outside timer queries"
+    }
+  ],
+  "cpuInputs": [
+    {
+      "caseIndex": 34,
+      "utf8Sha256": "2b2b12fa703d8d9adefd0ecf7b747426f1baea57e2d7df96342652ee83105b50",
+      "bytes": 96215,
+      "scope": "Exact serialized Game, rig matrices/visibility, resident mesh identity/counts, camera/projection and stage size; borrowed arrays immutable by source contract. No GPU readbacks."
+    },
+    {
+      "caseIndex": 18,
+      "utf8Sha256": "06ba72ef9a1c87e4cb4354d2eed34b138b9745dc907d1bb3b127462b837e928a",
+      "bytes": 95100,
+      "scope": "Exact serialized Game, rig matrices/visibility, resident mesh identity/counts, camera/projection and stage size; borrowed arrays immutable by source contract. No GPU readbacks."
+    }
+  ],
+  "queryStats": {
+    "allocated": 2880,
+    "deleted": 2880,
+    "disjoint": 0,
+    "foreign": 0,
+    "overflow": 0,
+    "unresolved": 0
+  },
+  "validQueries": 2880,
+  "invalidQueries": 0,
+  "blockCount": 24,
+  "analysis": {
+    "combined": {
+      "candidateMs": 9.474330053472224,
+      "ci95": [
+        -0.3268725152777779,
+        -0.003561240277777896
+      ],
+      "originalMs": 9.307812616666666,
+      "pairs": [
+        {
+          "candidateMs": 9.401858058333334,
+          "originalMs": 9.307928995833333,
+          "pair": 0,
+          "savedMs": -0.0939290625
+        },
+        {
+          "candidateMs": 9.29380075,
+          "originalMs": 9.440196795833334,
+          "pair": 1,
+          "savedMs": 0.14639604583333377
+        },
+        {
+          "candidateMs": 9.553171849999998,
+          "originalMs": 9.267250429166667,
+          "pair": 2,
+          "savedMs": -0.28592142083333005
+        },
+        {
+          "candidateMs": 9.6391451625,
+          "originalMs": 9.240121495833336,
+          "pair": 3,
+          "savedMs": -0.3990236666666638
+        },
+        {
+          "candidateMs": 9.59645200833334,
+          "originalMs": 9.204783370833336,
+          "pair": 4,
+          "savedMs": -0.3916686375000049
+        },
+        {
+          "candidateMs": 9.361552491666664,
+          "originalMs": 9.3865946125,
+          "pair": 5,
+          "savedMs": 0.02504212083333623
+        }
+      ],
+      "savedMs": -0.16651743680555478,
+      "savedPercent": -1.789007188513732,
+      "useful": false
+    },
+    "poses": [
+      {
+        "blocks": [
+          {
+            "arm": "A",
+            "block": 0,
+            "meanMs": 9.640048141666671,
+            "p95Ms": 12.073125
+          },
+          {
+            "arm": "B",
+            "block": 1,
+            "meanMs": 9.44931855833333,
+            "p95Ms": 12.47552
+          },
+          {
+            "arm": "B",
+            "block": 2,
+            "meanMs": 9.44829683333333,
+            "p95Ms": 12.1475
+          },
+          {
+            "arm": "A",
+            "block": 3,
+            "meanMs": 9.721358091666673,
+            "p95Ms": 12.328385
+          },
+          {
+            "arm": "A",
+            "block": 4,
+            "meanMs": 9.378335075,
+            "p95Ms": 12.004427
+          },
+          {
+            "arm": "B",
+            "block": 5,
+            "meanMs": 9.577752166666668,
+            "p95Ms": 12.174895
+          },
+          {
+            "arm": "B",
+            "block": 6,
+            "meanMs": 9.836350233333336,
+            "p95Ms": 12.343593
+          },
+          {
+            "arm": "A",
+            "block": 7,
+            "meanMs": 9.379035575,
+            "p95Ms": 12.210572
+          },
+          {
+            "arm": "A",
+            "block": 8,
+            "meanMs": 9.645989083333337,
+            "p95Ms": 12.05302
+          },
+          {
+            "arm": "B",
+            "block": 9,
+            "meanMs": 9.57150863333334,
+            "p95Ms": 12.193385
+          },
+          {
+            "arm": "B",
+            "block": 10,
+            "meanMs": 9.654002574999996,
+            "p95Ms": 12.53427
+          },
+          {
+            "arm": "A",
+            "block": 11,
+            "meanMs": 9.687817258333336,
+            "p95Ms": 12.600572
+          }
+        ],
+        "candidateMs": 9.589538166666664,
+        "caseIndex": 34,
+        "ci95": [
+          -0.2176918388888887,
+          0.1658685083333419
+        ],
+        "originalMs": 9.575430537500004,
+        "pairs": [
+          {
+            "candidateMs": 9.44931855833333,
+            "originalMs": 9.640048141666671,
+            "pair": 0,
+            "savedMs": 0.19072958333334356
+          },
+          {
+            "candidateMs": 9.44829683333333,
+            "originalMs": 9.721358091666673,
+            "pair": 1,
+            "savedMs": 0.2730612583333425
+          },
+          {
+            "candidateMs": 9.577752166666668,
+            "originalMs": 9.378335075,
+            "pair": 2,
+            "savedMs": -0.19941709166666577
+          },
+          {
+            "candidateMs": 9.836350233333336,
+            "originalMs": 9.379035575,
+            "pair": 3,
+            "savedMs": -0.45731465833333473
+          },
+          {
+            "candidateMs": 9.57150863333334,
+            "originalMs": 9.645989083333337,
+            "pair": 4,
+            "savedMs": 0.07448044999999404
+          },
+          {
+            "candidateMs": 9.654002574999996,
+            "originalMs": 9.687817258333336,
+            "pair": 5,
+            "savedMs": 0.0338146833333397
+          }
+        ],
+        "savedMs": -0.014107629166663452,
+        "savedPercent": -0.14733153889440395,
+        "useful": false
+      },
+      {
+        "blocks": [
+          {
+            "arm": "A",
+            "block": 0,
+            "meanMs": 8.975809849999994,
+            "p95Ms": 12.026614
+          },
+          {
+            "arm": "B",
+            "block": 1,
+            "meanMs": 9.354397558333336,
+            "p95Ms": 12.651145
+          },
+          {
+            "arm": "B",
+            "block": 2,
+            "meanMs": 9.13930466666667,
+            "p95Ms": 11.576927
+          },
+          {
+            "arm": "A",
+            "block": 3,
+            "meanMs": 9.159035499999996,
+            "p95Ms": 11.830885
+          },
+          {
+            "arm": "A",
+            "block": 4,
+            "meanMs": 9.156165783333336,
+            "p95Ms": 11.835572
+          },
+          {
+            "arm": "B",
+            "block": 5,
+            "meanMs": 9.52859153333333,
+            "p95Ms": 12.469218
+          },
+          {
+            "arm": "B",
+            "block": 6,
+            "meanMs": 9.441940091666664,
+            "p95Ms": 11.933958
+          },
+          {
+            "arm": "A",
+            "block": 7,
+            "meanMs": 9.101207416666671,
+            "p95Ms": 11.80526
+          },
+          {
+            "arm": "A",
+            "block": 8,
+            "meanMs": 8.763577658333334,
+            "p95Ms": 11.2925
+          },
+          {
+            "arm": "B",
+            "block": 9,
+            "meanMs": 9.621395383333338,
+            "p95Ms": 12.529583
+          },
+          {
+            "arm": "B",
+            "block": 10,
+            "meanMs": 9.06910240833333,
+            "p95Ms": 11.449427
+          },
+          {
+            "arm": "A",
+            "block": 11,
+            "meanMs": 9.085371966666663,
+            "p95Ms": 11.80276
+          }
+        ],
+        "candidateMs": 9.359121940277776,
+        "caseIndex": 18,
+        "ci95": [
+          -0.5513661791666694,
+          -0.10730972083333808
+        ],
+        "originalMs": 9.040194695833332,
+        "pairs": [
+          {
+            "candidateMs": 9.354397558333336,
+            "originalMs": 8.975809849999994,
+            "pair": 0,
+            "savedMs": -0.37858770833334354
+          },
+          {
+            "candidateMs": 9.13930466666667,
+            "originalMs": 9.159035499999996,
+            "pair": 1,
+            "savedMs": 0.019730833333325037
+          },
+          {
+            "candidateMs": 9.52859153333333,
+            "originalMs": 9.156165783333336,
+            "pair": 2,
+            "savedMs": -0.37242574999999434
+          },
+          {
+            "candidateMs": 9.441940091666664,
+            "originalMs": 9.101207416666671,
+            "pair": 3,
+            "savedMs": -0.3407326749999928
+          },
+          {
+            "candidateMs": 9.621395383333338,
+            "originalMs": 8.763577658333334,
+            "pair": 4,
+            "savedMs": -0.8578177250000039
+          },
+          {
+            "candidateMs": 9.06910240833333,
+            "originalMs": 9.085371966666663,
+            "pair": 5,
+            "savedMs": 0.016269558333332768
+          }
+        ],
+        "savedMs": -0.31892724444444615,
+        "savedPercent": -3.5278802633691195,
+        "useful": false
+      }
+    ],
+    "scope": "One authentic worker, equal-weight two fixed close poses; not dense farm or task-duty-cycle proof. Six combined block pairs resampled, not independent frame samples."
+  },
+  "status": "insufficient-fixed-pose-pilot",
+  "cleanup": {
+    "borrowedDisposeEvents": 0,
+    "borrowedGeometryAttributesExact": true,
+    "closed": true,
+    "errors": [],
+    "mixerActivityRestored": true,
+    "mixerAfter": {
+      "actions": [
+        {
+          "clip": "Walk_Skip",
+          "scheduled": true,
+          "values": {
+            "_effectiveTimeScale": 0,
+            "_effectiveWeight": 1,
+            "_loopCount": -1,
+            "_startTime": null,
+            "clampWhenFinished": true,
+            "enabled": true,
+            "loop": 2201,
+            "paused": true,
+            "repetitions": null,
+            "time": 1.852500000071526,
+            "timeScale": 1,
+            "weight": 1
+          }
+        },
+        {
+          "clip": "Dig",
+          "scheduled": false,
+          "values": {
+            "_effectiveTimeScale": 0,
+            "_effectiveWeight": 1,
+            "_loopCount": -1,
+            "_startTime": null,
+            "clampWhenFinished": true,
+            "enabled": true,
+            "loop": 2200,
+            "paused": false,
+            "repetitions": 1,
+            "time": 0,
+            "timeScale": 1,
+            "weight": 1
+          }
+        },
+        {
+          "clip": "Carry_Crate",
+          "scheduled": false,
+          "values": {
+            "_effectiveTimeScale": 0,
+            "_effectiveWeight": 1,
+            "_loopCount": -1,
+            "_startTime": null,
+            "clampWhenFinished": true,
+            "enabled": true,
+            "loop": 2200,
+            "paused": false,
+            "repetitions": 1,
+            "time": 0,
+            "timeScale": 1,
+            "weight": 1
+          }
+        }
+      ],
+      "name": "Walk_Skip",
+      "time": 0,
+      "timeScale": 1
+    },
+    "ownedMaterialsRemaining": 0,
+    "ownedQueriesRemaining": 0,
+    "rendererRetained": true,
+    "stateExact": true,
+    "stateScope": "Exact serialized Game state; not an assertion of all scene/chunk/material/shadow caches. Original renderFrameUpdates(0) ran."
+  },
+  "nativeOk": true,
+  "nativeErrors": [],
+  "environment": {
+    "process": 53792,
+    "before": {
+      "value": null,
+      "exists": false,
+      "kind": "absent"
+    },
+    "after": {
+      "value": null,
+      "exists": false,
+      "kind": "absent"
+    },
+    "child": {
+      "value": "C:\\Users\\PC\\.codex\\worktrees\\workers-frontside\\wild-guardians-africa\\.cache\\workers-frontside\\native-490b-timing-34-18\\profile",
+      "exists": true,
+      "kind": "path"
+    },
+    "exact": true
+  },
+  "exit": {
+    "exitedAtUtc": "2026-10-09T21:17:39.2274135Z",
+    "pid": 33044,
+    "reportExists": true,
+    "exitCode": 0,
+    "launcherExitCode": 0,
+    "parentProfileRestoredExact": true,
+    "productExitCode": 0
+  },
+  "liveCimObservations": 7,
+  "observedWebviews": 7,
+  "observedProfileMatch": true,
+  "scope": "One authentic worker and two fixed accessory poses, total original WorldScene GPU draw only. Technical completion is not useful-benefit acceptance; no dense-farm/category claim.",
+  "rerun": false,
+  "promotion": false
+}

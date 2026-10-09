@@ -1,0 +1,137 @@
+{
+  "strictDeepEquality": false,
+  "numericDifferences": [
+    {
+      "path": ".poses.0.blocks.0.meanMs",
+      "expected": 9.640048141666671,
+      "recomputed": 9.640048141666673,
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": ".poses.0.blocks.5.meanMs",
+      "expected": 9.577752166666668,
+      "recomputed": 9.577752166666667,
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": ".poses.0.blocks.7.meanMs",
+      "expected": 9.379035575,
+      "recomputed": 9.379035575000001,
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": ".poses.0.blocks.8.meanMs",
+      "expected": 9.645989083333337,
+      "recomputed": 9.645989083333335,
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": ".poses.0.blocks.9.meanMs",
+      "expected": 9.57150863333334,
+      "recomputed": 9.571508633333341,
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": ".poses.0.candidateMs",
+      "expected": 9.589538166666664,
+      "recomputed": 9.589538166666665,
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": ".poses.0.ci95.0",
+      "expected": -0.2176918388888887,
+      "recomputed": -0.21769183888888874,
+      "delta": 2.7755575615628914e-17
+    },
+    {
+      "path": ".poses.0.pairs.0.originalMs",
+      "expected": 9.640048141666671,
+      "recomputed": 9.640048141666673,
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": ".poses.0.pairs.2.candidateMs",
+      "expected": 9.577752166666668,
+      "recomputed": 9.577752166666667,
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": ".poses.0.pairs.3.originalMs",
+      "expected": 9.379035575,
+      "recomputed": 9.379035575000001,
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": ".poses.0.pairs.4.originalMs",
+      "expected": 9.645989083333337,
+      "recomputed": 9.645989083333335,
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": ".poses.0.pairs.4.candidateMs",
+      "expected": 9.57150863333334,
+      "recomputed": 9.571508633333341,
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": ".poses.1.blocks.1.meanMs",
+      "expected": 9.354397558333336,
+      "recomputed": 9.354397558333337,
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": ".poses.1.blocks.3.meanMs",
+      "expected": 9.159035499999996,
+      "recomputed": 9.159035499999995,
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": ".poses.1.candidateMs",
+      "expected": 9.359121940277776,
+      "recomputed": 9.359121940277777,
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": ".poses.1.pairs.0.candidateMs",
+      "expected": 9.354397558333336,
+      "recomputed": 9.354397558333337,
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": ".poses.1.pairs.1.originalMs",
+      "expected": 9.159035499999996,
+      "recomputed": 9.159035499999995,
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": ".combined.pairs.1.candidateMs",
+      "expected": 9.29380075,
+      "recomputed": 9.293800749999999,
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": ".combined.pairs.2.originalMs",
+      "expected": 9.267250429166667,
+      "recomputed": 9.267250429166669,
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": ".combined.pairs.4.originalMs",
+      "expected": 9.204783370833336,
+      "recomputed": 9.204783370833335,
+      "delta": 1.7763568394002505e-15
+    },
+    {
+      "path": ".combined.pairs.5.savedMs",
+      "expected": 0.02504212083333623,
+      "recomputed": 0.025042120833336234,
+      "delta": 3.469446951953614e-18
+    }
+  ],
+  "maxAbsoluteDelta": 1.7763568394002505e-15,
+  "auditNumericBound": 1e-12,
+  "nonNumericFieldsExact": true,
+  "originalRawUnchanged": true,
+  "benefitCriterionUnchanged": true,
+  "useful": false
+}
