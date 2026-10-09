@@ -413,6 +413,36 @@ function renderPanel(id){const backHTML='<button class="back" data-back><svg vie
 // Inserted inside the original menu closure by prepare_menu.py.
 const nativeRenderPanel=renderPanel;
 const sendProduction=(action,detail={})=>parent.postMessage({type:'wild-guardians:menu',action,...detail},location.origin);
+let productionLabViewer=null;
+function closeProductionLab(){
+ if(!productionLabViewer)return;
+ const {root,frame,inert,trigger}=productionLabViewer;
+ frame.src='about:blank';root.remove();productionLabViewer=null;
+ for(const [element,value] of inert)if(element.isConnected)element.inert=value;
+ lastFrame=performance.now();trigger?.focus({preventScroll:true});
+}
+function openProductionLab(key,title,trigger){
+ if(!['crops','walls','destruction','sfx'].includes(key))return;
+ closeProductionLab();
+ const root=document.createElement('main');root.className='production-lab-viewer';
+ const header=document.createElement('header');header.className='production-lab-header';
+ const backButton=document.createElement('button');backButton.type='button';backButton.className='secondary';backButton.textContent='← Biblioteca';backButton.onclick=closeProductionLab;
+ const heading=document.createElement('h1');heading.textContent=title;
+ const homeButton=document.createElement('button');homeButton.type='button';homeButton.className='secondary';homeButton.textContent='Volver al santuario';homeButton.onclick=()=>{closeProductionLab();back();};
+ const frame=document.createElement('iframe');frame.className='production-lab-frame';frame.title='Laboratorio '+title;frame.src='../library.html?lab='+key;
+ header.append(backButton,heading,homeButton);root.append(header,frame);
+ const inert=Array.from(document.body.children,element=>[element,element.inert]);
+ for(const [element] of inert)element.inert=true;
+ productionLabViewer={root,frame,inert,trigger};document.body.append(root);backButton.focus({preventScroll:true});
+}
+document.addEventListener('keydown',event=>{
+ if(!productionLabViewer)return;
+ if(event.key==='Escape'){event.preventDefault();event.stopImmediatePropagation();closeProductionLab();return;}
+ if(event.key==='Tab'){
+  const buttons=productionLabViewer.root.querySelectorAll('button');
+  if(event.shiftKey&&document.activeElement===buttons[0]){event.preventDefault();buttons[buttons.length-1].focus();}
+ }
+},true);
 const sectionFrame=(src,title)=>`<iframe class="production-section" title="${title}" src="${src}" style="width:100%;height:70dvh;min-height:340px;border:0;border-radius:9px"></iframe>`;
 renderPanel=function(id){
  nativeRenderPanel(id);
@@ -427,7 +457,7 @@ renderPanel=function(id){
  if(id==='library'){
   replace('<div class="sectionmark">El mundo que te rodea</div><h1>Pequeños descubrimientos.</h1><div id="production-library">'+[['crops','Cultivos'],['walls','Bastión'],['destruction','Destrucción'],['sfx','Sonidos']].map(([key,title])=>`<button class="secondary" data-production-lab="${key}">${title} →</button>`).join('')+'</div>');
   panel.insertAdjacentHTML('beforeend','<p class="fineprint">Ga Maamli · Banga · SIL OFL 1.1<br><a style="color:inherit;text-underline-offset:3px" href="../licenses/ga.txt" target="_blank" rel="noopener">Ga Maamli</a> · <a style="color:inherit;text-underline-offset:3px" href="../licenses/banga.txt" target="_blank" rel="noopener">Banga</a> · <a style="color:inherit;text-underline-offset:3px" href="../licenses/bangaAuthors.txt" target="_blank" rel="noopener">David Sargent</a></p>');
-  $$('[data-production-lab]').forEach(button=>button.onclick=()=>{$('#production-library').innerHTML=sectionFrame('/library.html?lab='+button.dataset.productionLab,button.textContent);});
+  $$('[data-production-lab]').forEach(button=>button.onclick=()=>openProductionLab(button.dataset.productionLab,button.textContent.replace(/\s*→\s*$/,''),button));
  }
  if(id==='options'){
   panel.insertAdjacentHTML('afterbegin','<label class="field"><span>Idioma</span><select data-language-select id="menu-language"><option value="en">English</option><option value="es">Español</option></select></label>');$('#menu-language').value=window.WildGuardiansLanguage?.getLanguage()??'en';
@@ -536,7 +566,7 @@ function draw(t){
 }
 
 function tick(now){
- requestAnimationFrame(tick);if(!ready||paused||document.hidden||manualPreview)return;if(renderPaused&&!tween&&!iconTween)return;
+ requestAnimationFrame(tick);if(productionLabViewer||!ready||paused||document.hidden||manualPreview)return;if(renderPaused&&!tween&&!iconTween)return;
  const interval=opts.quality==='low'?31:15;if(now-lastFrame<interval)return;const delta=now-lastFrame;lastFrame=now;frameDT=clamp(delta*.001,.001,.10);frameMS=lerp(frameMS,delta,.06);time=now*.001;
  advanceIcons(now);
  if(tween){const tw=tween;travel=clamp(travelClock(tw,now).value,0,1);if(now>=tw.start+tw.duration){travel=tw.to;tween=null;finishTween();}}
