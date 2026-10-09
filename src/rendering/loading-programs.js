@@ -25,15 +25,23 @@ export function compileLoadingPrograms(renderer,scene,camera,targetScene,{signal
 // scene. No mesh is cloned, reparented or hidden: lights, fog, clipping, skinning
 // and instancing retain the actual target-scene/object recipe. Restore screen
 // state synchronously in each submission before yielding to the loading RAF.
-export async function compileLoadingProgramsBatched(renderer,scene,camera,targetScene,{batchSize=4,frameBudget=0,now=()=>performance.now(),nextFrame,...options}={}) {
+export async function compileLoadingProgramsBatched(renderer,scene,camera,targetScene,{batchSize=4,frameBudget=0,now=()=>performance.now(),nextFrame,parallelReadiness=false,...options}={}) {
  if(!Number.isInteger(batchSize)||batchSize<1)throw Error('Loading compile batch size must be positive');
  const objects=[];scene.traverse(object=>{if(object.isMesh||object.isPoints||object.isLine||object.isSprite)objects.push(object);});
  const target=targetScene??scene;
- const yieldWork=loadingYieldBudget({frameBudget,now,nextFrame,signal:options.signal,cancelled:options.cancelled,onYield:options.onSubmit,frameSlack:options.frameSlack,cpuBudget:options.cpuBudget,getFrame:options.getFrame});
- for(let start=0;start<objects.length;start+=batchSize){
+ const owner=parallelReadiness?new AbortController():null,pending=[];let failure;
+ const abort=()=>owner?.abort();if(owner){options.signal?.addEventListener('abort',abort,{once:true});if(options.signal?.aborted)abort();}
+ const yieldWork=loadingYieldBudget({frameBudget,now,nextFrame,signal:owner?.signal??options.signal,cancelled:options.cancelled,onYield:options.onSubmit,frameSlack:options.frameSlack,cpuBudget:options.cpuBudget,getFrame:options.getFrame});
+ try{for(let start=0;start<objects.length;start+=batchSize){
+  if(failure)throw failure;
   const batch=objects.slice(start,start+batchSize);
   const view={traverse:callback=>{for(const object of batch)callback(object);},traverseVisible:()=>{}};
-  await compileLoadingPrograms(renderer,view,camera,target,options.frameSlack||options.cpuBudget?{...options,now,onCpu:duration=>{yieldWork.recordWork(duration);options.onCpu?.(duration);}}:{...options,now});
+  const compileOptions={...options,now,signal:owner?.signal??options.signal};
+  if(options.frameSlack||options.cpuBudget)compileOptions.onCpu=duration=>{yieldWork.recordWork(duration);options.onCpu?.(duration);};
+  const ready=compileLoadingPrograms(renderer,view,camera,target,compileOptions);
+  if(parallelReadiness)pending.push(ready.catch(error=>{failure??=error;abort();}));else await ready;
   await yieldWork();
  }
+ if(owner){await Promise.all(pending);if(failure)throw failure;}
+ }catch(error){throw failure??error;}finally{if(owner){abort();await Promise.all(pending);options.signal?.removeEventListener('abort',abort);}}
 }

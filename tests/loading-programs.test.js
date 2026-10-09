@@ -70,3 +70,22 @@ test('a throwing optional CPU observer cannot remove the bounded compilation yie
  const gl={isContextLost:()=>false};renderer.getContext=()=>gl;
  await compileLoadingProgramsBatched(renderer,scene,{},undefined,{cpuBudget:true,frameBudget:16,now:()=>clock,onCpu:()=>{throw Error('diagnostic');},nextFrame:async()=>{frames++;}});assert.equal(frames,1);
 });
+
+
+test('parallel-readiness candidate submits all bounded groups while retaining final readiness of every snapshot',async()=>{
+ let submitted=0,ready=false,queries=0,clock=0,frames=0;const objects=Array.from({length:6},(_,i)=>({isMesh:true,material:{i},parent:{i}})),scene={traverse:fn=>objects.forEach(fn)},gl={isContextLost:()=>false};
+ const programs=objects.map(()=>({isReady:()=>{queries++;return ready;}}));
+ const renderer={compile(view,camera,target){assert.equal(target,scene);const list=[];view.traverse(o=>list.push(o));submitted+=list.length;clock+=9;return new Set(list.map(o=>o.material));},getContext:()=>gl,properties:{get:material=>({currentProgram:programs[material.i]})}};
+ let completed=false;const pending=compileLoadingProgramsBatched(renderer,scene,{},undefined,{batchSize:2,parallelReadiness:true,cpuBudget:true,frameBudget:16,now:()=>clock,nextFrame:async()=>{frames++;}}).then(()=>{completed=true;});
+ for(let i=0;i<20;i++)await Promise.resolve();assert.equal(submitted,6);assert.equal(completed,false);assert.equal(frames,1);assert.ok(queries>=6);ready=true;await pending;assert.equal(completed,true);
+});
+test('parallel compilation abort owns all pending polls and prevents later program queries',async()=>{
+ const abort=new AbortController(),canvas=new EventTarget(),gl={canvas,isContextLost:()=>false};let submitted=0,queries=0;const objects=Array.from({length:4},()=>({isMesh:true,material:{}})),scene={traverse:fn=>objects.forEach(fn)};
+ const renderer={compile(view){const list=[];view.traverse(o=>list.push(o));submitted+=list.length;return new Set(list.map(o=>o.material));},getContext:()=>gl,properties:{get:()=>({currentProgram:{isReady:()=>{queries++;return false;}}})}};
+ const pending=compileLoadingProgramsBatched(renderer,scene,{},undefined,{parallelReadiness:true,batchSize:2,cpuBudget:true,frameBudget:16,signal:abort.signal});for(let i=0;i<20;i++)await Promise.resolve();assert.equal(submitted,4);abort.abort();await assert.rejects(pending,/cancelled/);const final=queries;await new Promise(resolve=>setTimeout(resolve,30));assert.equal(queries,final);
+});
+test('parallel candidate retains original submission failure and drains already pending timers',async()=>{
+ let submissions=0,queries=0;const gl={isContextLost:()=>false},material={},scene={traverse:fn=>[1,2].forEach(()=>fn({isMesh:true,material}))};const original=Error('driver submission');
+ const renderer={compile(){if(++submissions===2)throw original;return new Set([material]);},getContext:()=>gl,properties:{get:()=>({currentProgram:{isReady:()=>{queries++;return false;}}})}};
+ await assert.rejects(compileLoadingProgramsBatched(renderer,scene,{},undefined,{parallelReadiness:true,batchSize:1,cpuBudget:true,frameBudget:16}),error=>error===original);const final=queries;await new Promise(resolve=>setTimeout(resolve,30));assert.equal(queries,final);
+});

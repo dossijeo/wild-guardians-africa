@@ -337,7 +337,7 @@ export class WorldScene {
   }
   async warmAnimalGpu(){
     const phase=(label,run)=>loadingAwaitWitness(this.onLoadingSpan,label,run);
-    const pacing=this.loadingCpuBudget?{cpuBudget:true,getFrame:()=>this.loadingPresentationEpoch??0,frameBudget:16,batchSize:8}:{};
+    const pacing=this.loadingCpuBudget?{parallelReadiness:globalThis.__desktopSmokeParallelLoadingPrograms===true,cpuBudget:true,getFrame:()=>this.loadingPresentationEpoch??0,frameBudget:16,batchSize:8}:{};
     const compile=(scene,camera,target,{screen=true}={})=>this.loadingProgress?(screen?compileLoadingProgramsBatched:compileLoadingPrograms)(this.renderer,scene,camera,target,{signal:this.loading.signal,cancelled:()=>this.disposed,screen,frameBudget:6,onSubmit:this.onLoadingSpan,frameSlack:this.loadingFrameSlack,...pacing}):this.renderer.compileAsync(scene,camera,target);
     const rigs=await this.animalPreload.spares();if(this.disposed)return;
     const staging=new THREE.Group();
