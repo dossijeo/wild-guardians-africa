@@ -14,3 +14,10 @@ test('awaited phase attribution retains results and original failures without cl
 });
 
 test('scene frame attribution preserves stage/draw order and synchronous error without extra yields',async()=>{const {WorldScene}=await import('../src/rendering/scene.js');const rows=[],order=[],world={onLoadingSpan:s=>rows.push(s),*renderFrameUpdates(dt){order.push(['first',dt]);yield;order.push(['second',dt]);yield;order.push(['last',dt]);},drawRenderFrame(){order.push(['draw']);return 42;}};assert.equal(WorldScene.prototype.render.call(world,.5),42);assert.deepEqual(order,[['first',.5],['second',.5],['last',.5],['draw']]);assert.deepEqual(rows.map(s=>s.label),['world-frame-stage:0','world-frame-stage:1','world-frame-stage:2','world-frame-draw']);let frames=0;world.disposed=false;world.loading=new AbortController();assert.equal(await WorldScene.prototype.renderLoadingFrame.call(world,{nextFrame:async()=>frames++}),42);assert.equal(frames,2);const error=Error('draw');world.drawRenderFrame=()=>{throw error;};assert.throws(()=>WorldScene.prototype.render.call(world,0),e=>e===error);assert.equal(rows.at(-1).failed,true);});
+
+
+test('new optional onBegin is observational and cannot replace ordinary awaited work',async()=>{
+ const original=Error('original'),order=[];const witness=row=>order.push('end');witness.onBegin=()=>{order.push('begin');throw Error('observer');};
+ assert.equal(await loadingAwaitWitness(witness,'phase',()=>{order.push('work');return 5;}),5);assert.deepEqual(order,['begin','work','end']);
+ await assert.rejects(loadingAwaitWitness(witness,'failure',()=>Promise.reject(original)),error=>error===original);
+});

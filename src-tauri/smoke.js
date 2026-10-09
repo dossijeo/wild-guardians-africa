@@ -34,6 +34,8 @@
     } catch (observationError) {
       report.checks.loadingObservationError = String(observationError);
     }
+    // One finish-only read from the successful World owner; no new loop/context.
+    try{report.checks.loadingReadinessAtFinish=window.__desktopSmokeLoadingReadiness?.()??null;}catch(observationError){report.checks.loadingReadinessObservationError=String(observationError);}
     report.ok = !error && report.errors.length === 0;
     await window.__TAURI_INTERNALS__.invoke('desktop_smoke_report', {report});
   }

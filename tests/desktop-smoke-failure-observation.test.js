@@ -5,10 +5,10 @@ import {runInNewContext} from 'node:vm';
 
 const source = await readFile(new URL('../src-tauri/smoke.js', import.meta.url), 'utf8');
 
-async function failedPreflight({query, focused = true} = {}) {
+async function failedPreflight({query, focused = true, readiness} = {}) {
   let report;
   const context = {
-    window: {__TAURI_INTERNALS__: {invoke: async (command, args) => {
+    window: {__desktopSmokeLoadingReadiness:readiness,__TAURI_INTERNALS__: {invoke: async (command, args) => {
       assert.equal(command, 'desktop_smoke_report'); report = args.report;
     }}},
     location: {origin: 'http://tauri.localhost', href: 'http://tauri.localhost/'},
@@ -69,4 +69,10 @@ test('world wait stops at the ready gate and excludes the later five-minute visi
   assert.equal(report.checks.loadingAtFinish.worldWaitMs, 18000);
   assert.equal(report.checks.loadingAtFinish.readyGateReached, true);
   assert.equal(report.ok, true);
+});
+
+
+test('original finish reads readiness exactly once without masking original gate failure',async()=>{
+ let reads=0;const snapshot={readiness:{actors:{queued:1}},context:{renderer:'existing'}};const report=await failedPreflight({readiness(){reads++;return snapshot;}});assert.equal(reads,1);assert.equal(report.checks.loadingReadinessAtFinish,snapshot);assert.equal(report.ok,false);assert.deepEqual(Array.from(report.errors),['Error: Original preflight failure']);
+ const failure=await failedPreflight({readiness(){throw Error('snapshot');}});assert.match(failure.checks.loadingReadinessObservationError,/snapshot/);assert.equal(failure.ok,false);assert.deepEqual(Array.from(failure.errors),['Error: Original preflight failure']);
 });
