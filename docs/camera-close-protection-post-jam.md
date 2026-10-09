@@ -40,3 +40,5 @@ La [cámara cercana del diagnóstico de cultivos](qa/crop-frustum-prototype/NEAR
 ## Estado de implementación
 
 Base geométrica, índice espacial, volúmenes derivados de edificios y corrección suave preparados en un prototipo opcional de diagnóstico: [evidencias y límites](qa/camera-volume-foundation/README.md). La actualización de ancestros compartidos se mide en [PARENT-CACHE](qa/camera-volume-foundation/PARENT-CACHE.md), y la recuperación conjunta frente a terreno/edificios en [TERRAIN-RECOVERY](qa/camera-volume-foundation/TERRAIN-RECOVERY.md). La protección sigue desactivada en el gameplay normal. No están aprobados los márgenes visuales por modelo/cultura, la aceptación de controles y streaming, los árboles grandes, el fade secundario ni la validación móvil completa.
+
+El prototipo opcional incorpora ahora [volúmenes de árboles grandes residentes](qa/camera-tree-exclusion/README.md), con posición/escala nativa, actualización por revisiones y propiedad aislada. La extensión está desactivada por defecto y no acredita márgenes visuales, controles, coste GPU ni móvil; esas condiciones de aceptación siguen pendientes.
