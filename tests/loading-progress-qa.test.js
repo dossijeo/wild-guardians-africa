@@ -39,3 +39,12 @@ test('unthrottled ready diagnostic mode preserves prior cadence for paired overh
 test('failure publishes immediately and empty duplicate close preserves previous evidence',()=>{const f=timedFixture();f.qa.update(f.progress);f.clock(1010);f.progress.failure=true;f.qa.update(f.progress);assert.equal(f.getWrites(),2);f.qa.close(f.progress,null,{cancelled:true});const before=f.read();f.qa.close(null,null);assert.deepEqual(f.read(),before);assert.equal(before.cancelled,true);});
 
 test('outer presentation witness preserves synchronous result/error and records nested scope',()=>{const f=timedFixture(),result={};assert.equal(f.qa.invocation('outer',()=>{f.clock(1005);return result;}),result);const error=Error('presentation');assert.throws(()=>f.qa.invocation('failed',()=>{throw error;}),e=>e===error);f.qa.close(f.progress,null);const rows=f.read().loadingSpans;assert.equal(rows[0].duration,5);assert.equal(rows[0].failed,false);assert.equal(rows[1].failed,true);assert.match(rows[0].scope,/includes nested/);});
+
+
+test('camera witnesses copy real pose without changing camera or controls and retain cancellation restore',()=>{
+ const {qa,read}=fixture(),eye=[4,7,11],quaternion=[0,.1,0,.99],target=[2,.18,3],world={camera:{position:{toArray:()=>eye.slice()},quaternion:{toArray:()=>quaternion.slice()}},controls:{target:{toArray:()=>target.slice()},enabled:false},cinematic:false};
+ const before=JSON.stringify({eye,quaternion,target,enabled:world.controls.enabled});
+ qa.cameraPose('before-cinematic',world);eye[0]=12;world.cinematic=true;qa.cameraPose('cancel-current',world);eye[0]=4;world.cinematic=false;qa.cameraPose('cancel-restored',world);qa.close(progress,owner,{cancelled:true});
+ const report=read();assert.deepEqual(report.cameraPoses.map(row=>row.phase),['before-cinematic','cancel-current','cancel-restored']);assert.deepEqual(report.cameraPoses[0].eye,[4,7,11]);assert.deepEqual(report.cameraPoses[1].eye,[12,7,11]);assert.deepEqual(report.cameraPoses[2].eye,report.cameraPoses[0].eye);assert.match(report.cameraPoses[0].basis,/focusFarm\/Home/);assert.equal(JSON.stringify({eye,quaternion,target,enabled:world.controls.enabled}),before);
+ qa.begin(100);qa.close(progress,owner);assert.equal(read().cameraPoses,undefined);
+});
