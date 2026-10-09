@@ -1,0 +1,58 @@
+{
+  "node": "v20.11.0",
+  "platform": "win32",
+  "coldRecovery": {
+    "milliseconds": 67.01320000000001,
+    "candidates": 4,
+    "sweeps": 2,
+    "slopeSamples": 3564,
+    "tailCalls": 1,
+    "phases": {
+      "walkMilliseconds": 45.98419999999999,
+      "sweepMilliseconds": 17.19380000000001,
+      "tailMilliseconds": 26.301800000000014,
+      "chunkMilliseconds": 59.698499999999996,
+      "generatedChunks": 4
+    },
+    "firstWaypoint": {
+      "x": 103.91766562965933,
+      "z": 17.93754304536908
+    },
+    "waypoints": 2
+  },
+  "replay": [
+    {
+      "dt": 0.1,
+      "simulated": 5.699999999999996,
+      "day": 10,
+      "result": null,
+      "pauses": [
+        "hiring"
+      ],
+      "maxStep": 0.3800000000000009,
+      "frameMilliseconds": {
+        "samples": 57,
+        "p50": 0.12160000000000082,
+        "p95": 2.4621999999999957,
+        "max": 74.81669999999997
+      }
+    },
+    {
+      "dt": 1,
+      "simulated": 6,
+      "day": 10,
+      "result": null,
+      "pauses": [
+        "hiring"
+      ],
+      "maxStep": 3.7999999999999905,
+      "frameMilliseconds": {
+        "samples": 6,
+        "p50": 2.0375000000000227,
+        "p95": 43.560299999999984,
+        "max": 43.560299999999984
+      }
+    }
+  ],
+  "scope": "CPU diagnostic of exact legacy snapshot; no GPU or 100-night acceptance"
+}
