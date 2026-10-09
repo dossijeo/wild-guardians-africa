@@ -1,0 +1,15 @@
+# Original Windows readiness observation: 37990903561
+
+Source `1cc3d0b730fa24c7ad23dd2ffe7534c2c7a9d276`; original 90 s gate unchanged. Build and installer passed. Primary smoke failed with `Production world did not finish loading`; native minimization/restoration was skipped. No visibility or raster evidence exists for this run.
+
+At finish: 90.1671 s, 85%, Preparing rendering resources, visible/focused, 1028×720. The borrowed World context reports ANGLE Microsoft Basic Render Driver, context not lost. This identity is an environment observation, not a measured cause.
+
+The active `warm-compile-world` job is batch 6/78: objects 40–47 of 617, eight instanced meshes. Programs 18 and 19 were selected; only 19 remains pending. Six associations identify `MeshStandardMaterial` atlas_0 with the `bioma-local-bridge-pbr-v3|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|toon-4.1.4|MeshStandardMaterial|resident` recipe. Batch names include four maize bridges and two cotton bridges. The other two objects are sweet-potato growth stages, associated with ready program 18 (`bioma-growth-pbr-v3-opaque`). There are no omitted associations/names/pending IDs, truncated keys, collector drops or faults in this snapshot.
+
+The source mapping is `src/rendering/crop-batch.js` authored V4 `prepareBridges`: baked-template geometry is cloned, private opaque FrontSide material is cloned, and `patchBridge` installs bridgePosition/bridgeNormal and the bridge PBR cache key. `src/rendering/african-toon.js` appends the observed Standard/object/resident recipe. The separate bridge depth material/cache key is not this screen program. Numeric program IDs are run-local: ID19 here does not identify the Basic horizon ground ID23 observed in earlier runs.
+
+Job 10 has ten existing polls and 1.4265 s of observed readiness wait at finish. Its synchronous compile submission span is 2.6 ms; that is submission CPU wall time, not GPU compilation duration. `warm-compile-world` has been active 4.7082 s, nested in `load-warm-gpu` 16.2895 s and `app-world-load` 60.1906 s. Never sum these. Approximately 29.9765 s precedes the app-world-load span relative to the separately sampled smoke wait; the observation does not attribute that gap. Neither the current job nor its pending status accounts for the full 90 s timeout.
+
+Transfers: 242 records, pending0/failed0, network239/application-cache3, 125,863,653 observed loaded bytes. Chunks: desired25, queued0, busyfalse, failed0. Actors and far observations are null, not proof those systems are ready. The GPU/far/visible readiness milestones remain unfinished. The collector retains only active jobs, the last finished job and bounded first-selection identities; it cannot reconstruct all earlier job costs or exhaustive mesh consumers.
+
+No recipe, polling interval, readiness barrier, budget, quality, timeout or execution flags changed for this observation. No retry, local GPU run, production promotion or PR follows this evidence. The next decision requires root review.

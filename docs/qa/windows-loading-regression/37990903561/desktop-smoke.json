@@ -1,0 +1,673 @@
+{
+  "checks": {
+    "audio": {
+      "channels": 2,
+      "id": "amb_wind_soft",
+      "sampleRate": 44100,
+      "seconds": 12,
+      "url": "assets/audio/861578037e994d78d4730970c542ff330f4adb680372feae4f89a19525ba507c.opus"
+    },
+    "audioSeconds": 12,
+    "loadingAtFinish": {
+      "canvas": {
+        "height": 720,
+        "width": 1028
+      },
+      "displayedProgress": "85",
+      "focused": true,
+      "phaseLabel": "Preparing rendering resources",
+      "readyGateReached": false,
+      "scope": "Presentation snapshot only; displayed progress and canvas dimensions do not establish world readiness or GPU identity.",
+      "stageBusy": "true",
+      "visibility": "visible",
+      "worldWaitMs": 90167.09999999998
+    },
+    "loadingReadinessAtFinish": {
+      "context": {
+        "contextLost": false,
+        "renderer": "WebKit WebGL",
+        "scope": "Existing World renderer context at finish only; identity is not a measured cause.",
+        "unmaskedRenderer": "ANGLE (Microsoft, Microsoft Basic Render Driver (0x0000008C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "unmaskedVendor": "Google Inc. (Microsoft)",
+        "vendor": "WebKit",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+      },
+      "readiness": {
+        "actors": null,
+        "chunks": {
+          "busy": false,
+          "closed": false,
+          "desired": 25,
+          "epoch": 0,
+          "failed": 0,
+          "queued": 0
+        },
+        "compilation": {
+          "active": [
+            {
+              "associationCount": 8,
+              "associationOmitted": 0,
+              "associations": [
+                {
+                  "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,131,131075,srgb,bioma-growth-pbr-v3-opaque|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|toon-4.1.4|MeshStandardMaterial|resident",
+                  "cacheKeyTruncated": false,
+                  "current": true,
+                  "firstObservedSelection": {
+                    "job": 5,
+                    "phase": "warm-compile-world"
+                  },
+                  "materialId": 190,
+                  "materialName": "atlas_1",
+                  "materialType": "MeshStandardMaterial",
+                  "materialUuid": "c9cfe188-2585-4da2-b01d-c4fa3e960fcb",
+                  "programId": 18,
+                  "programName": "atlas_0",
+                  "side": 0
+                },
+                {
+                  "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,131,131075,srgb,bioma-growth-pbr-v3-opaque|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|toon-4.1.4|MeshStandardMaterial|resident",
+                  "cacheKeyTruncated": false,
+                  "current": true,
+                  "firstObservedSelection": {
+                    "job": 5,
+                    "phase": "warm-compile-world"
+                  },
+                  "materialId": 192,
+                  "materialName": "atlas_1",
+                  "materialType": "MeshStandardMaterial",
+                  "materialUuid": "1ec43618-28a6-446f-a470-48669c91ae0b",
+                  "programId": 18,
+                  "programName": "atlas_0",
+                  "side": 0
+                },
+                {
+                  "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,131,131075,srgb,bioma-local-bridge-pbr-v3|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|toon-4.1.4|MeshStandardMaterial|resident",
+                  "cacheKeyTruncated": false,
+                  "current": true,
+                  "firstObservedSelection": {
+                    "job": 10,
+                    "phase": "warm-compile-world"
+                  },
+                  "materialId": 194,
+                  "materialName": "atlas_0",
+                  "materialType": "MeshStandardMaterial",
+                  "materialUuid": "27160c99-34c0-4b7e-b37c-c0d150d2ab73",
+                  "programId": 19,
+                  "programName": "atlas_0",
+                  "side": 0
+                },
+                {
+                  "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,131,131075,srgb,bioma-local-bridge-pbr-v3|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|toon-4.1.4|MeshStandardMaterial|resident",
+                  "cacheKeyTruncated": false,
+                  "current": true,
+                  "firstObservedSelection": {
+                    "job": 10,
+                    "phase": "warm-compile-world"
+                  },
+                  "materialId": 196,
+                  "materialName": "atlas_0",
+                  "materialType": "MeshStandardMaterial",
+                  "materialUuid": "b2409cb8-0b65-4b0c-a51d-94fcfd854364",
+                  "programId": 19,
+                  "programName": "atlas_0",
+                  "side": 0
+                },
+                {
+                  "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,131,131075,srgb,bioma-local-bridge-pbr-v3|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|toon-4.1.4|MeshStandardMaterial|resident",
+                  "cacheKeyTruncated": false,
+                  "current": true,
+                  "firstObservedSelection": {
+                    "job": 10,
+                    "phase": "warm-compile-world"
+                  },
+                  "materialId": 198,
+                  "materialName": "atlas_0",
+                  "materialType": "MeshStandardMaterial",
+                  "materialUuid": "6bfb44c0-66b3-44e2-97aa-9ce596e782be",
+                  "programId": 19,
+                  "programName": "atlas_0",
+                  "side": 0
+                },
+                {
+                  "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,131,131075,srgb,bioma-local-bridge-pbr-v3|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|toon-4.1.4|MeshStandardMaterial|resident",
+                  "cacheKeyTruncated": false,
+                  "current": true,
+                  "firstObservedSelection": {
+                    "job": 10,
+                    "phase": "warm-compile-world"
+                  },
+                  "materialId": 200,
+                  "materialName": "atlas_0",
+                  "materialType": "MeshStandardMaterial",
+                  "materialUuid": "4dcf3174-e3cd-4510-8b64-f23433367a15",
+                  "programId": 19,
+                  "programName": "atlas_0",
+                  "side": 0
+                },
+                {
+                  "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,131,131075,srgb,bioma-local-bridge-pbr-v3|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|toon-4.1.4|MeshStandardMaterial|resident",
+                  "cacheKeyTruncated": false,
+                  "current": true,
+                  "firstObservedSelection": {
+                    "job": 10,
+                    "phase": "warm-compile-world"
+                  },
+                  "materialId": 202,
+                  "materialName": "atlas_0",
+                  "materialType": "MeshStandardMaterial",
+                  "materialUuid": "0117c1db-6418-4f28-8676-f9caf49310ec",
+                  "programId": 19,
+                  "programName": "atlas_0",
+                  "side": 0
+                },
+                {
+                  "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,131,131075,srgb,bioma-local-bridge-pbr-v3|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|toon-4.1.4|MeshStandardMaterial|resident",
+                  "cacheKeyTruncated": false,
+                  "current": true,
+                  "firstObservedSelection": {
+                    "job": 10,
+                    "phase": "warm-compile-world"
+                  },
+                  "materialId": 204,
+                  "materialName": "atlas_0",
+                  "materialType": "MeshStandardMaterial",
+                  "materialUuid": "9c51b8ff-d626-4372-99b2-15c0730032e3",
+                  "programId": 19,
+                  "programName": "atlas_0",
+                  "side": 0
+                }
+              ],
+              "context": {
+                "batch": {
+                  "batches": 78,
+                  "categories": {
+                    "batched": 0,
+                    "instanced": 8,
+                    "line": 0,
+                    "mesh": 8,
+                    "points": 0,
+                    "skinned": 0,
+                    "sprite": 0
+                  },
+                  "end": 48,
+                  "names": [
+                    {
+                      "name": "batata_04_desarrollo",
+                      "type": "Mesh",
+                      "uuid": "6954c8c7-89c7-40dd-a180-d4e0c37bd037"
+                    },
+                    {
+                      "name": "batata_05_maduro",
+                      "type": "Mesh",
+                      "uuid": "1d48ee4b-223a-4012-9104-bcd3a5e67ad0"
+                    },
+                    {
+                      "name": "puente_maiz_1_2",
+                      "type": "Mesh",
+                      "uuid": "d95c4d1e-135c-45c3-8a89-a3afe836e601"
+                    },
+                    {
+                      "name": "puente_maiz_2_3",
+                      "type": "Mesh",
+                      "uuid": "2bfbc1fe-f3c8-4599-8a09-edd3d5fcedb8"
+                    },
+                    {
+                      "name": "puente_maiz_3_4",
+                      "type": "Mesh",
+                      "uuid": "a422ad4d-fc6b-429a-953b-fda883619511"
+                    },
+                    {
+                      "name": "puente_maiz_4_5",
+                      "type": "Mesh",
+                      "uuid": "fc5ed14b-db11-4e2c-a93a-345ec9151943"
+                    },
+                    {
+                      "name": "puente_algodon_1_2",
+                      "type": "Mesh",
+                      "uuid": "cb947008-7857-4252-8671-4560e1d0df50"
+                    },
+                    {
+                      "name": "puente_algodon_2_3",
+                      "type": "Mesh",
+                      "uuid": "c8a9f84f-f372-44b2-a674-3b7edbe69655"
+                    }
+                  ],
+                  "namesOmitted": 0,
+                  "objects": 617,
+                  "ordinal": 6,
+                  "start": 40
+                },
+                "screen": true,
+                "start": 129162.09999999998
+              },
+              "elapsed": 1429.2000000000698,
+              "id": 10,
+              "lastPollAt": 130518.30000000005,
+              "pendingCount": 1,
+              "pendingIds": [
+                19
+              ],
+              "pendingIdsOmitted": 0,
+              "phase": "warm-compile-world",
+              "polls": 10,
+              "readinessElapsed": 1426.5,
+              "selectedAt": 129164.80000000005,
+              "selectedCount": 2
+            }
+          ],
+          "at": 130591.30000000005,
+          "completed": 9,
+          "droppedIdentities": 0,
+          "droppedJobs": 0,
+          "faults": 0,
+          "lastFinished": {
+            "associationCount": 8,
+            "associationOmitted": 0,
+            "associations": [
+              {
+                "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,131,131075,srgb,bioma-growth-pbr-v3-opaque|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|toon-4.1.4|MeshStandardMaterial|resident",
+                "cacheKeyTruncated": false,
+                "current": true,
+                "firstObservedSelection": {
+                  "job": 5,
+                  "phase": "warm-compile-world"
+                },
+                "materialId": 174,
+                "materialName": "atlas_1",
+                "materialType": "MeshStandardMaterial",
+                "materialUuid": "9b333b45-863a-4278-a66f-ee74cceb8fbf",
+                "programId": 18,
+                "programName": "atlas_0",
+                "side": 0
+              },
+              {
+                "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,131,131075,srgb,bioma-growth-pbr-v3-opaque|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|toon-4.1.4|MeshStandardMaterial|resident",
+                "cacheKeyTruncated": false,
+                "current": true,
+                "firstObservedSelection": {
+                  "job": 5,
+                  "phase": "warm-compile-world"
+                },
+                "materialId": 176,
+                "materialName": "atlas_1",
+                "materialType": "MeshStandardMaterial",
+                "materialUuid": "8235c4cb-9c42-480b-bd40-d378c7df693f",
+                "programId": 18,
+                "programName": "atlas_0",
+                "side": 0
+              },
+              {
+                "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,131,131075,srgb,bioma-growth-pbr-v3-opaque|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|toon-4.1.4|MeshStandardMaterial|resident",
+                "cacheKeyTruncated": false,
+                "current": true,
+                "firstObservedSelection": {
+                  "job": 5,
+                  "phase": "warm-compile-world"
+                },
+                "materialId": 178,
+                "materialName": "atlas_1",
+                "materialType": "MeshStandardMaterial",
+                "materialUuid": "cf62313d-a465-4f0b-ba2b-3256a703f7ef",
+                "programId": 18,
+                "programName": "atlas_0",
+                "side": 0
+              },
+              {
+                "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,131,131075,srgb,bioma-growth-pbr-v3-opaque|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|toon-4.1.4|MeshStandardMaterial|resident",
+                "cacheKeyTruncated": false,
+                "current": true,
+                "firstObservedSelection": {
+                  "job": 5,
+                  "phase": "warm-compile-world"
+                },
+                "materialId": 180,
+                "materialName": "atlas_1",
+                "materialType": "MeshStandardMaterial",
+                "materialUuid": "842350ab-e9e3-483b-a0db-c84433fbd0f9",
+                "programId": 18,
+                "programName": "atlas_0",
+                "side": 0
+              },
+              {
+                "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,131,131075,srgb,bioma-growth-pbr-v3-opaque|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|toon-4.1.4|MeshStandardMaterial|resident",
+                "cacheKeyTruncated": false,
+                "current": true,
+                "firstObservedSelection": {
+                  "job": 5,
+                  "phase": "warm-compile-world"
+                },
+                "materialId": 182,
+                "materialName": "atlas_1",
+                "materialType": "MeshStandardMaterial",
+                "materialUuid": "3cf3d3c3-3ee0-4b0f-ba11-616db1bc5c3e",
+                "programId": 18,
+                "programName": "atlas_0",
+                "side": 0
+              },
+              {
+                "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,131,131075,srgb,bioma-growth-pbr-v3-opaque|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|toon-4.1.4|MeshStandardMaterial|resident",
+                "cacheKeyTruncated": false,
+                "current": true,
+                "firstObservedSelection": {
+                  "job": 5,
+                  "phase": "warm-compile-world"
+                },
+                "materialId": 184,
+                "materialName": "atlas_1",
+                "materialType": "MeshStandardMaterial",
+                "materialUuid": "01bb1fb5-a3b1-4f13-a0af-29dfda75d87c",
+                "programId": 18,
+                "programName": "atlas_0",
+                "side": 0
+              },
+              {
+                "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,131,131075,srgb,bioma-growth-pbr-v3-opaque|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|toon-4.1.4|MeshStandardMaterial|resident",
+                "cacheKeyTruncated": false,
+                "current": true,
+                "firstObservedSelection": {
+                  "job": 5,
+                  "phase": "warm-compile-world"
+                },
+                "materialId": 186,
+                "materialName": "atlas_1",
+                "materialType": "MeshStandardMaterial",
+                "materialUuid": "fc6b5302-a4ea-4a0f-b8b9-620d47b4b98f",
+                "programId": 18,
+                "programName": "atlas_0",
+                "side": 0
+              },
+              {
+                "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,131,131075,srgb,bioma-growth-pbr-v3-opaque|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|toon-4.1.4|MeshStandardMaterial|resident",
+                "cacheKeyTruncated": false,
+                "current": true,
+                "firstObservedSelection": {
+                  "job": 5,
+                  "phase": "warm-compile-world"
+                },
+                "materialId": 188,
+                "materialName": "atlas_1",
+                "materialType": "MeshStandardMaterial",
+                "materialUuid": "f5f5ae7b-378b-4e65-85f2-38e1d5dae59f",
+                "programId": 18,
+                "programName": "atlas_0",
+                "side": 0
+              }
+            ],
+            "context": {
+              "batch": {
+                "batches": 78,
+                "categories": {
+                  "batched": 0,
+                  "instanced": 8,
+                  "line": 0,
+                  "mesh": 8,
+                  "points": 0,
+                  "skinned": 0,
+                  "sprite": 0
+                },
+                "end": 40,
+                "names": [
+                  {
+                    "name": "yuca_01_brote",
+                    "type": "Mesh",
+                    "uuid": "050ad956-18de-408e-8b4b-563c24feaaba"
+                  },
+                  {
+                    "name": "yuca_02_joven",
+                    "type": "Mesh",
+                    "uuid": "fa4d77a7-f6a4-4844-a236-2d97ed6e2dca"
+                  },
+                  {
+                    "name": "yuca_03_adulto",
+                    "type": "Mesh",
+                    "uuid": "610a523c-6ab6-4bfe-85bd-2793e877153e"
+                  },
+                  {
+                    "name": "yuca_04_desarrollo",
+                    "type": "Mesh",
+                    "uuid": "09fa4f05-6859-419d-b627-2c8d49e65015"
+                  },
+                  {
+                    "name": "yuca_05_maduro",
+                    "type": "Mesh",
+                    "uuid": "9f8e298e-7d08-44f8-9153-ba39ebfc2e81"
+                  },
+                  {
+                    "name": "batata_01_brote",
+                    "type": "Mesh",
+                    "uuid": "ef0325ee-4373-49a7-aba1-a7b1b822db43"
+                  },
+                  {
+                    "name": "batata_02_joven",
+                    "type": "Mesh",
+                    "uuid": "7bf49b86-fb73-46e2-8009-1c1a0b0aa835"
+                  },
+                  {
+                    "name": "batata_03_adulto",
+                    "type": "Mesh",
+                    "uuid": "ed6b60fb-dae2-4bf9-9ca8-7014bd2e0e85"
+                  }
+                ],
+                "namesOmitted": 0,
+                "objects": 617,
+                "ordinal": 5,
+                "start": 32
+              },
+              "screen": true,
+              "start": 129160.69999999995
+            },
+            "end": 129162,
+            "id": 9,
+            "lastPollAt": 129162,
+            "outcome": "resolved",
+            "pendingCount": 0,
+            "pendingIds": [],
+            "pendingIdsOmitted": 0,
+            "phase": "warm-compile-world",
+            "polls": 1,
+            "selectedAt": 129161.90000000002,
+            "selectedCount": 1
+          },
+          "rejected": 0,
+          "scope": "Job selection and pending results of existing isReady calls only. First observed selection is not program creation or exhaustive mesh consumers. Nested elapsed values are not additive CPU/GPU time.",
+          "started": 10
+        },
+        "far": null,
+        "issues": [],
+        "owner": {
+          "aborted": false,
+          "disposed": false,
+          "present": true
+        },
+        "presentation": {
+          "cinematicArmed": false,
+          "cinematicDone": false,
+          "cinematicPresent": false,
+          "cinematicTime": null,
+          "dioramaPresent": true,
+          "disposed": false,
+          "interactive": true,
+          "orbitSettled": true,
+          "orbitSpeed": 0,
+          "orbitStopping": false,
+          "plantsCount": 4,
+          "plantsMature": false,
+          "plantsProgress": 0.8550065109168685,
+          "plantsReady": false,
+          "prepared": true
+        },
+        "progress": {
+          "failed": false,
+          "omitted": 0,
+          "ready": false,
+          "stages": [
+            {
+              "finished": 70386.80000000005,
+              "id": "configuration",
+              "progress": 1,
+              "started": 70386.80000000005
+            },
+            {
+              "finished": 70403.69999999995,
+              "id": "sky",
+              "progress": 1,
+              "started": 70403.69999999995
+            },
+            {
+              "finished": 76985.30000000005,
+              "id": "biome",
+              "progress": 1,
+              "started": 76985.30000000005
+            },
+            {
+              "finished": 88187.69999999995,
+              "id": "buildings",
+              "progress": 1,
+              "started": 88187.69999999995
+            },
+            {
+              "finished": 98232.30000000005,
+              "id": "animals",
+              "progress": 1,
+              "started": 98232.30000000005
+            },
+            {
+              "finished": 99430.19999999995,
+              "id": "crops",
+              "progress": 1,
+              "started": 99430.19999999995
+            },
+            {
+              "finished": 104972.5,
+              "id": "walls",
+              "progress": 1,
+              "started": 104972.5
+            },
+            {
+              "finished": 107434.5,
+              "id": "vfx",
+              "progress": 1,
+              "started": 107434.5
+            },
+            {
+              "finished": 112243.80000000005,
+              "id": "chunks",
+              "progress": 1,
+              "started": 108821.69999999995
+            },
+            {
+              "finished": null,
+              "id": "gpu",
+              "progress": 0,
+              "started": null
+            },
+            {
+              "finished": null,
+              "id": "far-assets",
+              "progress": 0,
+              "started": null
+            },
+            {
+              "finished": null,
+              "id": "visible-ready",
+              "progress": 0,
+              "started": null
+            }
+          ],
+          "value": 0.8550065109168685
+        },
+        "scope": "One-time observational readiness snapshot. Queue counts are logical state, not GPU completion or physical memory.",
+        "spans": {
+          "active": [
+            {
+              "duration": null,
+              "elapsed": 60190.59999999998,
+              "end": null,
+              "failed": false,
+              "label": "app-world-load",
+              "start": 70400.90000000002
+            },
+            {
+              "duration": null,
+              "elapsed": 16289.5,
+              "end": null,
+              "failed": false,
+              "label": "load-warm-gpu",
+              "start": 114302
+            },
+            {
+              "duration": null,
+              "elapsed": 4708.199999999953,
+              "end": null,
+              "failed": false,
+              "label": "warm-compile-world",
+              "start": 125883.30000000005
+            }
+          ],
+          "at": 130591.5,
+          "dropped": 0,
+          "lastCompleted": {
+            "duration": 2.599999999976717,
+            "end": 129164.69999999995,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "start": 129162.09999999998
+          },
+          "scope": "Nested awaited wall spans; do not sum as exclusive CPU/GPU time. Associations are labels, not exhaustive readiness proof."
+        },
+        "transfers": {
+          "cache": {
+            "application-cache": 3,
+            "browser-cache": 0,
+            "network": 239,
+            "unknown": 0,
+            "validated-cache": 0
+          },
+          "count": 242,
+          "disposed": false,
+          "failed": 0,
+          "loadedBytes": 125863653,
+          "omitted": 0,
+          "pending": 0,
+          "rows": [],
+          "scope": "Observed transfer records only; unknown is not a cache hit. End null can include post-transfer decoding/preparation."
+        }
+      }
+    },
+    "menu": "http://tauri.localhost/menu/index.html",
+    "models": [
+      "assets/web/0ab73565649737fc15d853aa9d52a9ecacff3fbf9f5664cc21ec4e54452ef894.glb",
+      "assets/web/25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238.glb",
+      "assets/web/3ba902fd9bfc99589348ba9202513e9daa63442a6c2b21bb23a15bf58bd546f7.glb",
+      "assets/web/4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141.glb",
+      "assets/web/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb",
+      "assets/web/6c43390aa864c32555795b2be638f8e1e8d4154fa85e6991580ebb0d7fcde309.glb",
+      "assets/web/6fb0b48a96d820d1738c6e36ed2d1cacaf54844df37298450b79d68b4703d80c.glb",
+      "assets/web/7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb",
+      "assets/web/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb",
+      "assets/web/9cb17849416e2d2578eb5806c4874fc496fdf9a1aa421d3a10fe3a346933674e.glb",
+      "assets/web/a748ca0cea0d4d0d4abd95071577a8457e63f22433e618be77934c079f4cf89c.glb",
+      "assets/web/b27ce08a5f860912783d5978cec8a012b28d7a55e2c7a69cc992f91f8bbd5a76.glb",
+      "assets/web/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb",
+      "assets/web/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+      "assets/web/cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869.glb",
+      "assets/web/db01314e4e0a03f4e1aaa31e8207cee85a42294edffb003633282bb574ef28cd.glb",
+      "assets/web/e870835e4fa3c1cc4fdbcd048a2ca64da97d2ea4f48ea3192da6aba692e05202.glb",
+      "assets/web/eddde4e46932cf9fd056315e34af03f07595cd1ce4de61b4d7d6ac7be5d873e9.glb",
+      "assets/web/f3ae53d5ce3b57419fd31e74e2572ada9cc61392c2e7ac20dac484ec194d5e9f.glb",
+      "assets/web/fedb713c0b32df33f11111a91e2c3e0616a0345ec9be9a8beeecaa0b93ef26cb.glb",
+      "assets/web/8f6c9ef7472a2d7f8ffda7f08a78f8027f91d14a8f92b8eeca4084b0f379da36.glb",
+      "assets/web/2fdb3468b7646ebe16d0f3d3d25538ce5b20d6dee1d3830256d2f62599826dcc.glb"
+    ],
+    "storage": true,
+    "webgl2": true,
+    "worker": true
+  },
+  "errors": [
+    "Error: Production world did not finish loading"
+  ],
+  "ok": false,
+  "origin": "http://tauri.localhost",
+  "secureContext": true,
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0"
+}
