@@ -751,3 +751,8 @@ El reintento Desierto/Saheliana 37870712064 conserva un nuevo bloqueo de retirad
 en la noche 28. La corrección de la noche 25 no lo resuelve: se investiga en
 `codex/raid-fractional-exit`, con snapshot exacto, movimiento físico normal y
 pruebas de persistencia y coste acotado. No se considera aprobada esa campaña.
+
+
+## Barrido completo de SFX y contexto runtime (9 de octubre de 2026)
+
+126 entradas auditadas reproduciblemente: 100 asignaciones compatibles en revisión de fuente, 12 reservas de alcance, 10 alternativas sin asignar y cuatro excepciones de contexto; cero duplicados de bytes. [Inventario y revisión](qa/sfx-catalog-post-jam/binding-review.md). Se separan declaraciones, llamadas actuales y menciones latentes. Sin nuevos disparadores inventados ni cambio de audio original. La aceptación perceptual/runtime de cada clip continúa pendiente; este barrido de código no acredita escucha de los 126 SFX. Pendiente revisión de PR de auditoría.
