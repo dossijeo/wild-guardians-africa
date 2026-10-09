@@ -17,7 +17,7 @@ test('focus preserves the existing toon/alpha shader pipeline and original verte
  assert.ok(shader.fragmentShader.indexOf('outgoingLight*=loadingFocusGain();')>shader.fragmentShader.indexOf('outgoingLight=toLinear4'));
  assert.strictEqual(shader.uniforms.uLoadingFocusSize,focus.uniforms.uLoadingFocusSize);
  assert.strictEqual(shader.uniforms.uNightLight,reference.uniforms.uNightLight);
- assert.equal(material.customProgramCacheKey(),before+'|loading-focus-light-v3');
+ assert.equal(material.customProgramCacheKey(),before+'|loading-focus-light-v4');
  material.dispose();scene.children[0].geometry.dispose();toon.shadowUniforms.fallback.dispose();
 });
 
