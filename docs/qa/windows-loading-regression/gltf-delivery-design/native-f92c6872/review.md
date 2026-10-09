@@ -1,0 +1,21 @@
+# Original observed Windows run38002516951
+
+Exactly one original workflow dispatch, sourcef92c6872c5974523a7843f456713307ddb746400, resource_overlap=false. No quality/driver/readiness/timeout changes or old hypotheses enabled. Watcher51118/PID54096 finished exit1, no retry. Build/installer passed; primary packaged smoke failed; native minimization/restoration skipped. Artifact11649184760 direct JSON45546B SHA256817a90b6c59148ac44e6f48d9d8ddabf2deee0b9d1c8ba13911a21c75c27174f. Original report, full job logs, run/jobs/steps, artifacts, dispatch and watcher receipts preserved. No executable/installer downloaded or local GPU run.
+
+## Actual final state
+
+Raw okfalse/errors Production world did not finish loading. Gate90.1193s, displayed85 Preparing rendering resources, stageBusytrue, readyGatefalse, visible/focused1028x720. Existing context ANGLE MicrosoftBasicRenderDriver0x8C D3D11, no context loss: environment identity, not causal proof.
+
+All six private hand images adopted; unadoptedKinds empty. Chunks25loaded/25desired, queue0/busyfalse/failed0/waiters0. Transfers242/pending0/failed0. These earlier late-phase hypotheses do not describe an outstanding wait at this snapshot. Completed hands timings were not selected early summaries; this report cannot reconstruct each completed private hand wait. No claim that adopted textures are already GPU-ready.
+
+Active app-world-load60.6883s contains load-warm-gpu21.5125s and warm-compile-world11.422s. Active job14, world batch ordinal10/77 (objects613, range72..80), readiness elapsed5.3734s, pending program20. Its copied associations identify Basic biome-ground-4.1.10.3/toon4.1.4 resident recipe; first selection job14, material bindings are current. There are four copied Basic material associations for that program in this job. Associated objects are first-batch consumers only, not exhaustive meshes, and pending program is not proof of compile/link driver fault. Selection can include variants from previous batches; current bridge names do not make this a bridge shader. No droppedJobs/droppedIdentities/faults or association omission in active job. LastCompleted loading-compile-submit2ms is nested synchronous submission, not GPU compilation duration.
+
+Early16 summaries/dropped0 all complete: prepared-pending28.0542s, pre-world-setup1.3797s. Sky6.8603s, catalogues.6431s, maize7.7379s/bridges11.2116s overlap, soil1.4433s then atlas1.1347s, maize-batch.3349s, compilemaize4.7989s, skycompile.9736s, mistcompile.3289s, finalfence.2094s. Children/parents and simultaneous model waits must not be summed. The difference between original gate elapsed and current active world span is about29.431s, consistent with bounded early preparation/setup boundaries; not a 90s shader wait.
+
+## New timing discriminator
+
+Eight observed GLTF requests, all completed; no selected/collection omissions. Each timing passed the scalar window checks and has exactly one eligible matching URL window, but association remains heuristic, not guaranteed request identity. cache=network reports browser evidence only, not Internet, disk or protocol CPU cost.
+
+Bridge runtime26,536,168B: duration11.2108s = browser responseEnd interval10.3186s + post-responseEnd.8922s. Maize runtime14,308,628B: duration7.7363s =4.1715s +3.5648s. Five animal GLBs have post-responseEnd intervals2.0288–2.5362s; village GLB3.2714s afterresponseEnd. These boundaries demonstrate that awaited GLTF time is not uniformly body response time. They do not separate arrayBuffer delivery, parsing/decode/nested resources, callback/microtask scheduling or exclusive CPU. Existing Assets transfer end precedes ownModel traversal. Model waits overlap and cannot be added to whole-load duration. Historical76ms bridge parse cannot be inherited as the current .8922s remainder or the maize3.5648s remainder.
+
+Current evidence does not justify another compiler union, shared-ground promotion, polling changes, prefetch, meshopt replacement or timeout increase. If a further source question is selected, the distinct post-responseEnd intervals warrant tracing the existing completion path before choosing a real resource/preparation reduction. No parse wrapper or further CI is authorized by this report.
