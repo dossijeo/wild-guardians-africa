@@ -1,0 +1,33 @@
+- iframe [id="native-menu"]:
+  - generic "3D diorama. Select the glowing symbols or their named buttons."
+  - banner:
+    - 'img "Wild Guardians: Africa"'
+    - generic: A small farm. A world to protect.
+  - generic: ✦THE SANCTUARY
+  - generic: Where your story begins
+  - navigation "Tools":
+    - button "Mute music" [pressed]:
+    - button "Navigation help":
+  - navigation "Main menu":
+    - button "Continue":
+      - generic: Continue ›
+    - button "New game":
+      - generic: New game ›
+    - button "Options":
+      - generic: Options ›
+    - button "Library":
+      - generic: Library ›
+    - button "Exit":
+      - generic: Exit ›
+  - contentinfo:
+    - generic: SAVANNA · DUSK
+    - paragraph: Every story starts with a seed.
+    - text: Touch the glowing symbols
+    - generic: THE SPIRIT'S JOURNEY · V2.8
+  - status
+  - generic: "Menu ready. Five interactive symbols: Continue, New game, Options, Library and Exit."
+  - text: ✦
+- alert:
+  - strong: Your world could not be prepared.
+  - generic: No se pudo cargar /content/biome-savanna.json
+  - button "Dismiss"
