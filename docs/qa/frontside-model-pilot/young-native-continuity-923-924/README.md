@@ -1,0 +1,13 @@
+# Young DoubleSide native continuity 923/924
+
+Root Browser2 completed two16-second runs on frozen85e42ade, viewer SHA4783b5ec44299b494c91260cb52c80849531ba8c22886dde3455435fb7a89c35. The authoritative server reports, independent root reports, full1280×5040 atlases and console are retained with hashes. Root copies omit the server-added capture filename; their remaining JSON fields match exactly. No missing report was reconstructed.
+
+Root inspected both complete atlases and approves this limited DoubleSide visual screening: recognizable maize, growing leaves/stem/general shape, with small leaf angle/size/edge/contour differences but no obvious major disappearance, deformation or large holes. This is root AI inspection of retained captures, not human-user review, full-angular continuous video, FrontSide approval, WorldScene approval or net GPU acceptance.
+
+Seam0 contains963 chronological rows, seam1 contains868. Both finish elapsed16/clock22.1875. All recorded clock inputs equal6.1875+elapsed and growth equals growthStart+elapsed/270; the real native batch advances its wind uniforms. No synchronous GPU uniform or texel readback was instrumented. Aspect640/720 is derived from frozen source; camera FOV42/position[2,2.5,3]/target[0,.6,0] are reported. No independent GPU camera-matrix identity probe is claimed.
+
+Each atlas contains two preparation rows and five seam samples near2.75–4.83s. The last atlas image is not the16s final frame. Captures progress original→morph→morph→morph→original: source sprout→young and young→adult, with original bridges unchanged. Source/derivative sampled phases and young activity match; all colour/shadow materials remain DoubleSide and captured native shadow draws use side2/on1. Submission frame ordinals increase; these are counts, not timer queries.
+
+Original-original preparation has source/display variability:158pixels/max23 in seam0 and48pixels/max33 in seam1. These remain diagnostics, not automatically rejected or represented as exact. Seam0 console retains one ANGLE f_environment4 potentially-uninitialized warning; seam1 retained console is empty. No causal interpretation or historic console-empty assertion. Both cleanup.closed/contextLost true/errors empty, and root closed the tabs/inventory.
+
+Run node docs/qa/frontside-model-pilot/young-native-continuity-923-924/verify.mjs. Resource estimates and CPU matrix/UV/bridge contracts are documented separately; these captures do not measure VRAM, growth upload equality or savings. Next Front/reverse recipe needs its own native evaluation including effective depth/shadows; no mature benchmark benefit is inherited. Other maize states, species and worker profiles remain pending; no production promotion or category PR.
