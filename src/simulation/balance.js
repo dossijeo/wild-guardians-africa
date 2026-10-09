@@ -127,7 +127,7 @@ export const BALANCE = {
     "female_shift_end": "19:05",
     "idle_radius_max_m": 8,
     "run_start_pending_tasks_per_worker_over": 2,
-    "daily_run_distance_long_trips": 3,
+    "daily_run_distance_long_trips": 4,
     "long_trip_distance_m": null
   },
   "walls": [

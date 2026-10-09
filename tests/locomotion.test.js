@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
+import {BALANCE as B} from '../src/simulation/balance.js';
 import {LOCOMOTION as L} from '../src/simulation/locomotion-calibration.js';
 import {dailyRunMetres,urgentWork,moveWorker} from '../src/simulation/locomotion.js';
 import {workerPose} from '../src/rendering/worker-actions.js';
@@ -10,7 +11,7 @@ import * as Game from '../src/simulation/game.js';
 const actor=(metres=100)=>({x:0,z:0,path:[{x:1000,z:0}],runRemaining:metres,profile:'olderMale',status:'walking'});
 test('Calibration preserves all four original route speeds and the median physical reference journey',()=>{
   const sorted=L.samples.map(s=>s.distanceMetres).sort((a,b)=>a-b);
-  assert.equal(L.longTripMetres,sorted[2]);assert.equal(dailyRunMetres(),3*sorted[2]);
+  assert.equal(L.longTripMetres,sorted[2]);assert.equal(dailyRunMetres(),B.workers.daily_run_distance_long_trips*sorted[2]);
   for(const source of L.sources){
     const bytes=readFileSync(new URL('../'+source.file,import.meta.url));
     assert.equal(createHash('sha256').update(bytes).digest('hex'),source.sha256);

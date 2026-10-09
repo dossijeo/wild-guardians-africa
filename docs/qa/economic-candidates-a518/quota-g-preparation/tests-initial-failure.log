@@ -1,0 +1,95 @@
+TAP version 13
+# Subtest: G changes only the canonical daily running quota relative to frozen F
+ok 1 - G changes only the canonical daily running quota relative to frozen F
+  ---
+  duration_ms: 764.2755
+  ...
+# Subtest: The native four-trip quota exhausts exactly and subsequent urgent movement walks
+ok 2 - The native four-trip quota exhausts exactly and subsequent urgent movement walks
+  ---
+  duration_ms: 1.3409
+  ...
+# Subtest: Flight bypasses an exhausted quota without replenishing it; carrying never runs
+ok 3 - Flight bypasses an exhausted quota without replenishing it; carrying never runs
+  ---
+  duration_ms: 0.3402
+  ...
+# Subtest: A genuinely hired worker preserves consumed four-trip quota through pause and save restoration
+not ok 4 - A genuinely hired worker preserves consumed four-trip quota through pause and save restoration
+  ---
+  duration_ms: 8.2025
+  location: 'file:///C:/Users/PC/.codex/worktrees/campaign-run-quota-g/wild-guardians-africa/tests/campaign-run-quota-g.test.js:39:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + undefined
+    - true
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/campaign-run-quota-g/wild-guardians-africa/tests/campaign-run-quota-g.test.js:43:36)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+# Subtest: Calibration preserves all four original route speeds and the median physical reference journey
+ok 5 - Calibration preserves all four original route speeds and the median physical reference journey
+  ---
+  duration_ms: 455.8028
+  ...
+# Subtest: Running consumes travelled metres and switches to walking inside the exhaustion step
+ok 6 - Running consumes travelled metres and switches to walking inside the exhaustion step
+  ---
+  duration_ms: 4.71
+  ...
+# Subtest: Short arrivals consume only their actual distance; blocked paths consume nothing
+ok 7 - Short arrivals consume only their actual distance; blocked paths consume nothing
+  ---
+  duration_ms: 0.2559
+  ...
+# Subtest: Recovery forbids ordinary running but flight uses slowed Run without spending or replenishing the reserve
+ok 8 - Recovery forbids ordinary running but flight uses slowed Run without spending or replenishing the reserve
+  ---
+  duration_ms: 0.4349
+  ...
+# Subtest: Carrying and unhurried walking keep their native gaits and do not spend running metres
+ok 9 - Carrying and unhurried walking keep their native gaits and do not spend running metres
+  ---
+  duration_ms: 0.702
+  ...
+# Subtest: Urgency uses tasks per available worker at the assigned center, with strict greater-than-two threshold
+ok 10 - Urgency uses tasks per available worker at the assigned center, with strict greater-than-two threshold
+  ---
+  duration_ms: 1.0655
+  ...
+# Subtest: Running gait follows physical motion phase rather than hidden or paused wall time
+ok 11 - Running gait follows physical motion phase rather than hidden or paused wall time
+  ---
+  duration_ms: 3.4489
+  ...
+# Subtest: Hiring replenishes each person once per day; saves and pauses preserve a partially consumed reserve
+ok 12 - Hiring replenishes each person once per day; saves and pauses preserve a partially consumed reserve
+  ---
+  duration_ms: 10.2036
+  ...
+# Subtest: A distant arrival cannot extend the worker shift or teleport the worker to start a task
+ok 13 - A distant arrival cannot extend the worker shift or teleport the worker to start a task
+  ---
+  duration_ms: 453.1419
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 12
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2156.1247
