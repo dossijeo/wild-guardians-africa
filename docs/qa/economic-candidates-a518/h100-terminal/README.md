@@ -1,0 +1,15 @@
+# H100 frozen native terminal — one responsible case accepted
+
+Source d667b537096b620e212d1f635b9ee71d0e3ecff8, untouched detached checkout. Original mixed olderFemale/dawn-only12-plants-per-worker strategy, seed712 Gran Canyon/Saheliana, reserves, FIFO, routes, finite domain, native clock and commands unchanged. H contains experimental G quota4, centre600 with configured cost wiring, F harvest×3 and half structural damage; no current-main or release compatibility is implied.
+
+Terminal passed/victory100, day101, no active raid, native CampaignWon1/GameOver0,117 spawned raids all ended;100 paid hiring days and physical deliveries every day. Whole-campaign inaction6836/30000 = **22.7866667%**, strictly below25. Both original terminal-only audits passed:376 frozen source hashes, native full summary reproduction, snapshot serialization roundtrip, exact integer ledger, mature/hydrated physical crops and crate payment. The full original H10 policy and all ten daily rows match exactly, including its **25.466667% early negative**. F10026.4333 and G/H10 negatives are retained, never replaced or reclassified.
+
+Bands:1-10 764/3000=25.4667%;11-30 988/6000=16.4667%;31-60 1860/9000=20.6667%;61-100 3224/12000=26.8667%. Only the aggregate requested campaign gate is accepted in this single case. The last40-night band remains above25 and requires honest reporting.
+
+18320 physical paid crates out of19294 picked;974 undelivered/dropped crates are not credited. Cash2866091 =1500 +4210501 delivered income -796310 seeds -549000 wages -600 centre. No repair expense or wall purchase occurred in this policy;109 repair orders were requested, so absence of repair charges must not be interpreted as successful repair completion. Actor routes/FIFO temporal behaviour is grounded in native unchanged source/protocol tests, not proven anew from a terminal snapshot.
+
+The producer session53916 was unavailable to root at first. The owning agent subsequently recovered its actual write_stdin terminal result exit0 and the original exit-code.txt0; process-observation.json records that direct evidence. Process absence alone was never treated as proof of exit0. Terminal status and audited payloads remain the acceptance basis.
+
+Original JSON bytes preserved in deterministic gzip; original log/exit code retained. archive-receipt.json hashes raw/compressed payloads. Auditor sources copied byte-exact according to their recorded hashes; frozen-provenance.json contains all376 recorded sources. Reproduction requires decompressing originals into a separate directory and running the copied terminal-only auditors against the preserved detached d667 source, retaining original H10 control archive. Never audit running partial output or replay to replace originals.
+
+This accepts one responsible100 case only. Bad-management six-biome evidence is pending, as are matrix30, current-main compatibility (including general rational repair), visual testing, UI price labels, PR and integration. No promotion or publication has occurred.

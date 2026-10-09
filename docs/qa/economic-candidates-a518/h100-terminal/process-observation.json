@@ -1,0 +1,15 @@
+{
+  "observedAtUTC": "2026-10-09T21:08:54.115952+00:00",
+  "pid": 24572,
+  "execSession": 53916,
+  "producerSource": "d667b537096b620e212d1f635b9ee71d0e3ecff8",
+  "authoritativeTerminal": "status passed/victory100 and process absent; both terminal audits passed",
+  "originalSessionRecoveredByOwner": {
+    "tool": "write_stdin",
+    "session_id": 53916,
+    "exit_code": 0,
+    "output": "{\"biome\":\"gran-canon\",\"culture\":\"saheliana\",\"status\":\"passed\",\"completedNights\":100}\n"
+  },
+  "originalExitCodeFile": "exit-code.txt",
+  "scope": "Direct owner tool observation recovered after root could not access the session; never infer exit code from process absence alone"
+}

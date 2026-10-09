@@ -302,6 +302,18 @@ not a higher average FPS at the expense of travel spikes.
 
 ## Other explicit pending requirements
 
+- Frozen economic candidate H (`d667b537`) now has one accepted responsible
+  Gran Cañón/Saheliana 100-night case: victory, physical deliveries every day,
+  18,320 paid crates and 6,836/30,000 seconds of daylight inactivity (22.79%).
+  Both terminal auditors pass and all 376 source hashes match. Root independently
+  checked the nine original archived payloads byte-for-byte. The unchanged first
+  ten days remain a 25.47% negative, and the final forty-day band remains 26.87%;
+  the accepted criterion applies to the full campaign aggregate. See
+  [originals, audits and limits](economic-candidates-a518/h100-terminal/README.md).
+  Six poor-management cases, the thirty-case matrix and compatibility with
+  current main remain pending. No experimental economic parameters are promoted
+  by this evidence-only integration.
+
 - The 126-SFX source/caller audit is integrated through PR14 (`6ce847a9`):
   100 assigned, 26 reservations/alternatives/context exceptions, exact bytes
   verified. Root freshness check and three audit tests pass on merged main.
