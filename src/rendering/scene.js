@@ -1,3 +1,4 @@
+import {startAnimalModelPrefetch} from './animal-model-prefetch.js';
 import {probeSharedGroundClip} from './shared-ground-clip-probe.js';
 import {startInitialFarRegion} from './initial-far-region.js';
 import {LoadingSyncQueue} from './loading-sync-queue.js';
@@ -148,6 +149,7 @@ export class WorldScene {
   }
   async load(state,nav,villagePayload,{farVegetation=false,loadingProgress=null}={}) {
     this.loadingProgress=loadingProgress;
+    const animalPrefetch=globalThis.__desktopSmokeAnimalPrefetch===true?startAnimalModelPrefetch(this,animalSources):null;
     if(globalThis.__desktopSmokeLoadingPollWitness===true&&this.onLoadingSpan){const at=performance.now();try{this.onLoadingSpan({label:'loading-config-identity',start:at,end:at,duration:0,config:{biome:state.biome,culture:state.culture,seed:nav.config.seed,relief:nav.config.relief,river:nav.config.river,quality:this.quality},scope:'Read-only configuration identity; original New/Continue choices and seed preserved.'});}catch{}}
     const phase=(label,run)=>loadingAwaitWitness(this.onLoadingSpan,label,run);
     const milestone=id=>phase('load-milestone:'+id,()=>this.loadingMilestone(id));
@@ -155,11 +157,11 @@ export class WorldScene {
     this.villagePrototypes=await phase('load-village-models',()=>this.loadReady(this.assets.village(villagePayload)));this.villageTemplates=new Map([[state.culture,this.villagePrototypes]]);
     this.buildingCatalogue=(await this.loadReady(json('/content/destruction.json',{signal:this.loading.signal}))).buildings;
     await this.loadReady(Promise.all([...new Set([...state.villages.map(v=>v.culture),...state.structures.filter(s=>s.kind==='center').map(s=>centerCulture(s,state))])].map(culture=>this.ensureBuilding(culture))));await milestone('buildings');
-    [this.models,this.workerLibraries,this.wateringPaths]=await this.loadReady(Promise.all([json('/content/models.json',{signal:this.loading.signal}),json('/content/worker-actions.json',{signal:this.loading.signal}),json('/content/watering-emitters.json',{signal:this.loading.signal})]));
+    [this.models,this.workerLibraries,this.wateringPaths]=await this.loadReady(Promise.all([animalPrefetch?.catalogue??json('/content/models.json',{signal:this.loading.signal}),json('/content/worker-actions.json',{signal:this.loading.signal}),json('/content/watering-emitters.json',{signal:this.loading.signal})]));
     this.warmedAnimals=new Set();
     this.animalPreload=new AnimalPreload(this.assets,id=>this.models.find(m=>m.source.includes(animalSources[id])),{skinEnvelope:this.animalSkinEnvelope===true});
     this.raidEntryPreparer=new RaidEntryPreparer(this.nav);
-    await phase('load-animal-models',()=>this.loadReady(this.warmAnimalModels(Object.keys(animalSources))));await milestone('animals');
+    await phase('load-animal-models',async()=>{if(animalPrefetch)await this.loadReady(animalPrefetch.ready);return this.loadReady(this.warmAnimalModels(Object.keys(animalSources)));});await milestone('animals');
     for(const [profile,library] of Object.entries(this.workerLibraries)){const path=this.wateringPaths.profiles[profile];if(path?.sourceSha256!==library.sha256)throw Error('Recorrido de regadera desactualizado: '+profile);this.wateringEmitters.set(profile,createWateringEmitter(path));}
     const cropModel=this.models.find(m=>m.source.includes('Cultivos'));
     const gltf=await phase('load-crop-model',()=>this.loadReady(this.assets.model(cropModel.url)));this.cropGltf=gltf;this.cropModels=Array(40);
