@@ -1,0 +1,62 @@
+{
+  "source": "2a910b83c34517a91ae870e83ad555f436e5d64f",
+  "exeSha256": "4dfcc6aa63ee4cce80780a8018a873b562d2c95b25d2eb682790f3d14affe99f",
+  "launch": {
+    "source": "2a910b83c34517a91ae870e83ad555f436e5d64f",
+    "exeSha256": "4dfcc6aa63ee4cce80780a8018a873b562d2c95b25d2eb682790f3d14affe99f",
+    "fixtureSha256": "28d8bf348c61900a7f4f94a53026a86e638acbca5b058981a43de969788a6406",
+    "fixtureGeneratorSource": "3a1b398d6e8ee35100c28c6094a8833c67de5e13",
+    "pid": 27068,
+    "startedUtc": "2026-10-09T19:04:06.8348740Z",
+    "arguments": [
+      "--smoke-report",
+      "C:\\Users\\PC\\source\\repos\\wild-guardians-africa\\.cache\\local-windows-main-2a910b83\\desktop-visibility-local.json",
+      "--smoke-fixture",
+      "C:\\Users\\PC\\source\\repos\\wild-guardians-africa\\.cache\\local-windows-main-2a910b83\\desktop-visibility-fixture.json"
+    ],
+    "profile": "C:\\Users\\PC\\source\\repos\\wild-guardians-africa\\.cache\\local-windows-main-2a910b83\\visibility-profile",
+    "scope": "Original product continued-save/native visibility smoke; no experimental flags; isolated profile; concurrent campaign CPU active"
+  },
+  "exit": {
+    "pid": 27068,
+    "exitCode": 0,
+    "finishedUtc": "2026-10-09T19:09:50.3322111Z",
+    "elapsedSeconds": 343.5002295,
+    "reportExists": true
+  },
+  "fixture": {
+    "bytes": 23608,
+    "sha256": "28d8bf348c61900a7f4f94a53026a86e638acbca5b058981a43de969788a6406",
+    "recipe": "Unmodified tools/create_desktop_visibility_fixture.mjs, real paid centre/cassava/youngFemale/first raid/shield; no rules or timers overridden"
+  },
+  "report": {
+    "rawBytes": 1277972,
+    "rawSha256": "48b6f461efb75e8bf981392dfbfd07363f9a736b158a6511c04ae26dfb0cdfe1",
+    "gzipBytes": 906823,
+    "gzipSha256": "7bbf121fc41b8ab2192b9ee2772bd7b272573976379a3eb1e60c4ca597ded3d8",
+    "ok": true,
+    "errors": []
+  },
+  "visibility": {
+    "passed": true,
+    "hiddenMs": 300821.7000000477,
+    "simulatedFieldsExact": 21,
+    "resumedSimulatedSeconds": 2.045500000000174,
+    "visibleMs": 2059.7000000476837,
+    "visibleMenuPauses": [
+      "menu"
+    ],
+    "transitions": [
+      {
+        "at": 29808.799999952316,
+        "state": "hidden"
+      },
+      {
+        "at": 339831.10000002384,
+        "state": "visible"
+      }
+    ]
+  },
+  "scope": "Real native minimization and restoration. Hidden is the sole blocker during the measured interval; menu is retained at its end to test stacked pauses on restoration. Save buttons intentionally add notices, so comparison covers simulation fields and excludes savedAt, notices, tutorial presentation and their nextId counter. No document.hidden override or synthetic visibilitychange.",
+  "limits": "One native fixture/environment and exact packaged main EXE; total process lifetime includes mandatory 300000ms hidden interval and is not loading duration. No all-biome, physical mobile, visual animation or perceptual audio approval."
+}
