@@ -28,8 +28,12 @@ maize coverage, without obvious gross disappearance/deformation in that still.
 This is limited AI still screening, not user-human, full-motion/all-angle,
 Front-shadow, complete category or net GPU acceptance. Raw image diagnostics
 and source repeat variability remain intact under visual policy3. Retained
-console contains ANGLE environment and Texture serialization warnings; its
-stored entries contain no errors. Cleanup errors[] does not mean console empty.
+console contains six Texture serialization warnings and no errors in those six
+entries. Root also reported ANGLE environment warnings, but they are not present
+in this retained console subset; no historical console-completeness claim is
+made. Cleanup errors[] does not mean console empty. The first archive verifier
+incorrectly expected ANGLE in this subset and failed after resource assertions;
+this correction checks the actual six retained entries, leaving raw evidence intact.
 
 The manifest preserves exact root-authoritative raw SHA a214f512… and PNG,
 console/status, CPU/preflight receipts, schema/resource helper snapshots and

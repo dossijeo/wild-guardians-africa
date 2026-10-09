@@ -8,5 +8,5 @@ assert.deepEqual(youngWorldResourceGates(report),report.resourceGate);assert.equ
 for(const s of manifest.sources){assert.equal(sha(zlib.gunzipSync(read(s.httpFile))),report.sourceRecipe[s.path]);assert.equal(sha(zlib.gunzipSync(read(s.diskFile))),s.diskSha256);}
 const viewer=manifest.sources.find(s=>s.path.endsWith('frontside-young-maize-world-dense-gpu.js'));assert.equal(viewer.diskSha256,manifest.viewerDiskSha256);
 const png=read('comparison.png');assert.equal(png.subarray(1,4).toString(),'PNG');assert.equal(png.readUInt32BE(16),2560);assert.equal(png.readUInt32BE(20),720);assert.equal(png.subarray(-8,-4).toString(),'IEND');
-const consoleEntries=JSON.parse(read('console.json'));assert.equal(consoleEntries.filter(e=>e.level==='error').length,0);assert.ok(consoleEntries.some(e=>e.message.includes('f_environment4')));assert.ok(consoleEntries.some(e=>e.message.includes('Unable to serialize Texture')));
+const consoleEntries=JSON.parse(read('console.json'));assert.equal(consoleEntries.length,6);assert.equal(consoleEntries.filter(e=>e.level==='error').length,0);assert.ok(consoleEntries.every(e=>e.level==='warn'&&e.message.includes('Unable to serialize Texture')));
 console.log('PASS native193:16 resource gates/1257 instances/+68996 BUFFER_SIZE bytes/source IDs restored/final0; no net GPU or category approval.');
