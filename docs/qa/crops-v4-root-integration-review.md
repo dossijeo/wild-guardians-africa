@@ -50,3 +50,11 @@ Windows run37905454830 remains a separate live acceptance check, not a claimed
 success. On the merged main, root reran the V4 verifier and 17 crop morph,
 catalogue and package contracts, all passing. The loading agent is merging
 this base into its feature and will validate shared V4 assets before promotion.
+
+Root's post-merge local build passed in 8.71s (existing large-bundle warning);
+the freshly built package passed with the same 704 files, 443925570 bytes,
+860 relative links and 22 runtime GLBs. The immutable bb629 terminal Validate
+metadata/log extract and the historical live Windows snapshot are retained
+in `crops-v4/ci-bb629-terminal/`; root independently checked all three file
+hashes against the receipt before and after copying. The Windows snapshot
+is not terminal acceptance.

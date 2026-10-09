@@ -1,0 +1,11 @@
+validate	Run npm test	2026-10-09T08:40:59.8894845Z # tests 3383
+validate	Run npm test	2026-10-09T08:40:59.8895034Z # pass 3383
+validate	Run npm test	2026-10-09T08:40:59.8895117Z # fail 0
+validate	Run npm run build	2026-10-09T08:41:10.0396922Z ^[[32m✓ built in 9.84s^[[39m
+validate	Run npm run test:web-package	2026-10-09T08:41:12.1995801Z PASS: 704 files / 443925570 bytes, 860 relative links, 22 runtime GLBs, no original GLBs, demo village or superseded ground duplicates
+validate	Run python tools/package_itch.py	2026-10-09T08:41:28.5525448Z /home/runner/work/wild-guardians-africa/wild-guardians-africa/test-results/wild-guardians-itch.zip: 387171104 bytes; verified CRCs
+validate	Run actions/upload-artifact@v7	2026-10-09T08:41:43.5387799Z   name: wild-guardians-itch
+validate	Run actions/upload-artifact@v7	2026-10-09T08:41:43.5388123Z   path: test-results/wild-guardians-itch.zip
+validate	Run actions/upload-artifact@v7	2026-10-09T08:41:43.9909739Z Uploading artifact: wild-guardians-itch.zip
+validate	Run actions/upload-artifact@v7	2026-10-09T08:41:47.9721413Z Artifact wild-guardians-itch.zip successfully finalized. Artifact ID 11604488193
+validate	Run actions/upload-artifact@v7	2026-10-09T08:41:47.9722748Z Artifact wild-guardians-itch has been successfully uploaded! Final size is 387171104 bytes. Artifact ID is 11604488193
