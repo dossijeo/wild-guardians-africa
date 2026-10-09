@@ -46,7 +46,7 @@ def main():
     report['total'] = len(report['records'])
     output = Path(args.output)
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
+    output.write_bytes((json.dumps(report, indent=2) + '\n').encode('utf-8'))
     print(json.dumps({'total': report['total'], 'fullDecode': True, 'output': str(output)}))
 
 if __name__ == '__main__':
