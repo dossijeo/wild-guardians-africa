@@ -1,0 +1,45 @@
+{
+  "scopeHead": "bb629a3830e6f85e616aceb0c942129f625ae09e",
+  "run": 37905454830,
+  "conclusion": "success",
+  "smokeOk": true,
+  "smokeErrors": [],
+  "visibilityOk": true,
+  "visibilityErrors": [],
+  "modelCount": 22,
+  "runtimeInventoryExact": true,
+  "hiddenMs": 300559.6000000001,
+  "simulationFieldCount": 21,
+  "fieldsEqual": {
+    "commandIds": true,
+    "completedNights": true,
+    "cooldowns": true,
+    "crates": true,
+    "day": true,
+    "dayPlan": true,
+    "elapsed": true,
+    "ledger": true,
+    "nightPlan": true,
+    "plants": true,
+    "postgame": true,
+    "raid": true,
+    "result": true,
+    "rng": true,
+    "spells": true,
+    "structures": true,
+    "suppressed": true,
+    "tasks": true,
+    "time": true,
+    "villages": true,
+    "workers": true
+  },
+  "visibleMenuPauses": [
+    "menu"
+  ],
+  "resumedSimulatedSeconds": 0.9999999999990904,
+  "scope": "Real native minimization and restoration. Hidden is the sole blocker during the measured interval; menu is retained at its end to test stacked pauses on restoration. Save buttons intentionally add notices, so comparison covers simulation fields and excludes savedAt, notices, tutorial presentation and their nextId counter. No document.hidden override or synthetic visibilitychange.",
+  "limits": [
+    "Native smoke plus minimization/restoration, not an eight-species visual or GPU-performance benchmark.",
+    "Exact original v7 JSON bytes/digests retained; no installer or executable download."
+  ]
+}

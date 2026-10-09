@@ -1,0 +1,15 @@
+# Verified campaign evidence
+
+## Separate current-main Desert/Sahelian terminal: case activity passes
+
+Run `37895465546` on immutable `0544d6526af981ee2b65730e56ed7cda4f3e4be8` completed naturally. Responsible job `113705710035` finished 2026-10-09 09:36:20 UTC with success; poor-management job `113705710332` also succeeded. Artifact receipts, full responsible log and original downloads are retained under this QA directory. Responsible artifact `11607088546` is 1,170,520 bytes; poor-management artifact `11600525374` is 150,527 bytes. No job was restarted and no saved outcome/balance/policy was edited.
+
+`tools/audit_completed_campaign_artifact.mjs` independently verifies all **324 source hashes** against the immutable Git blobs, confirms the matching poor-management matrix source receipt, audits native save/physical maturity/water/paid delivery and integer ledger, and recomputes the exact saved summaries. It also checks that the original crop costs/growth thresholds equal those used by the retained-data audit rather than silently attributing contemporary values. No gameplay replay occurs. The first auditor attempt incorrectly expected a per-case provenance object in poor reports; those reports use the matrix-level receipt. Its schema-error log is preserved, and the corrected auditor validates the full matching matrix source hashes instead. No recorded game data or acceptance assertions were weakened.
+
+Desert/Sahelian genuinely reaches victory after 100 nights, day 101, no unfinished raid, **19,962 paid physical deliveries**, 20,261 picked crates and 299 unpaid pending crates. Cashflow reconciles: 1,500 + harvest 1,442,930 − seeds 797,730 − wages 320,340 − repairs 100 − center 800 = **325,460**. Every native day has contracted staff and physical deliveries.
+
+The unchanged recorded responsible policy is older female/mixed crops/dawn-only hiring/12 living plants per desired worker/no walls/native labor and maintenance reserves/original finite search and camera-entry behavior, seed 712. Inactivity is **6,517 / 30,000 = 21.7233%**, which satisfies the original strictly-less-than-25% policy for **this single biome/culture case**. Breakdown is 4,599 budget seconds, zero space seconds and 1,918 shift-end seconds. The summary's `accepted` status is therefore supported by actual native records, rather than inferred from exit 0.
+
+The same frozen source's poor-management matrix retains five natural losses: Sabana, Great River, Mangrove and Volcano at night 7, Desert at night 5. Canyon survives the ten-night diagnostic with 34 coins; this survival is preserved and is not relabeled a defeat.
+
+This is one responsible case plus six poor-management cases, **not the complete 30-case responsible matrix**, not physical player/mobile/rendering acceptance, and not equivalence to later main. It does not alter or approve the distinct original +25% Canyon candidate, which remains rejected at 36.0967%. Source/run/individual file/snapshot hashes and the exact audited outcomes are in `run-37895465546-verification.json`.

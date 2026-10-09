@@ -1,0 +1,280 @@
+responsible	Set up job	﻿2026-10-09T06:48:27.3171646Z Current runner version: '2.337.0'
+responsible	Set up job	2026-10-09T06:48:27.3208069Z ##[group]Runner Image Provisioner
+responsible	Set up job	2026-10-09T06:48:27.3209914Z Hosted Compute Agent
+responsible	Set up job	2026-10-09T06:48:27.3210901Z Version: 20261002.596
+responsible	Set up job	2026-10-09T06:48:27.3212113Z Commit: c3d12f3313a95f25162a1503be624f3b0617f8c0
+responsible	Set up job	2026-10-09T06:48:27.3213409Z Build Date: 2026-10-02T22:28:27Z
+responsible	Set up job	2026-10-09T06:48:27.3214758Z Worker ID: {61c17eb6-3c4b-4115-a4e5-c07bee1c1847}
+responsible	Set up job	2026-10-09T06:48:27.3216009Z Region: eastus2
+responsible	Set up job	2026-10-09T06:48:27.3216943Z Cloud: Azure
+responsible	Set up job	2026-10-09T06:48:27.3217966Z ##[endgroup]
+responsible	Set up job	2026-10-09T06:48:27.3220922Z ##[group]Operating System
+responsible	Set up job	2026-10-09T06:48:27.3222596Z Ubuntu
+responsible	Set up job	2026-10-09T06:48:27.3223671Z 24.04.5
+responsible	Set up job	2026-10-09T06:48:27.3224644Z LTS
+responsible	Set up job	2026-10-09T06:48:27.3225607Z ##[endgroup]
+responsible	Set up job	2026-10-09T06:48:27.3226578Z ##[group]Runner Image
+responsible	Set up job	2026-10-09T06:48:27.3227769Z Image: ubuntu-24.04
+responsible	Set up job	2026-10-09T06:48:27.3229058Z Version: 20261004.327.1
+responsible	Set up job	2026-10-09T06:48:27.3231170Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261004.327/images/ubuntu/Ubuntu2404-Readme.md
+responsible	Set up job	2026-10-09T06:48:27.3234535Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261004.327
+responsible	Set up job	2026-10-09T06:48:27.3236305Z ##[endgroup]
+responsible	Set up job	2026-10-09T06:48:27.3238057Z ##[group]GITHUB_TOKEN Permissions
+responsible	Set up job	2026-10-09T06:48:27.3241294Z Contents: read
+responsible	Set up job	2026-10-09T06:48:27.3242262Z Metadata: read
+responsible	Set up job	2026-10-09T06:48:27.3243301Z ##[endgroup]
+responsible	Set up job	2026-10-09T06:48:27.3246166Z Secret source: Actions
+responsible	Set up job	2026-10-09T06:48:27.3247903Z Cache mode: write
+responsible	Set up job	2026-10-09T06:48:27.3249711Z Prepare workflow directory
+responsible	Set up job	2026-10-09T06:48:27.3740557Z Prepare all required actions
+responsible	Set up job	2026-10-09T06:48:27.3813745Z Getting action download info
+responsible	Set up job	2026-10-09T06:48:27.5414198Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+responsible	Set up job	2026-10-09T06:48:27.6544310Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+responsible	Set up job	2026-10-09T06:48:27.7371165Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+responsible	Set up job	2026-10-09T06:48:27.9549736Z Complete job name: responsible
+responsible	Run actions/checkout@v4	﻿2026-10-09T06:48:28.0319993Z ##[group]Run actions/checkout@v4
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.0320880Z with:
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.0321374Z   repository: dossijeo/wild-guardians-africa
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.0325478Z   token: ***
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.0325919Z   ssh-strict: true
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.0326363Z   ssh-user: git
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.0326810Z   persist-credentials: true
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.0327300Z   clean: true
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.0327744Z   sparse-checkout-cone-mode: true
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.0328268Z   fetch-depth: 1
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.0328882Z   fetch-tags: false
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.0329402Z   show-progress: true
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.0329912Z   lfs: false
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.0330381Z   submodules: false
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.0330891Z   set-safe-directory: true
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.0331450Z   allow-unsafe-pr-checkout: false
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.0332238Z ##[endgroup]
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.1354488Z Syncing repository: dossijeo/wild-guardians-africa
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.1357592Z ##[group]Getting Git version info
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.1359447Z Working directory is '/home/runner/work/wild-guardians-africa/wild-guardians-africa'
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.1361708Z [command]/usr/bin/git version
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.1491008Z git version 2.55.0
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.1499595Z ##[endgroup]
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.1511161Z Temporarily overriding HOME='/home/runner/work/_temp/d2b85de3-6175-4986-9495-248ddf0d8504' before making global git config changes
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.1513552Z Adding repository directory to the temporary git global config as a safe directory
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.1517073Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/wild-guardians-africa/wild-guardians-africa
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.1586277Z Deleting the contents of '/home/runner/work/wild-guardians-africa/wild-guardians-africa'
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.1588889Z ##[group]Initializing the repository
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.1590370Z [command]/usr/bin/git init /home/runner/work/wild-guardians-africa/wild-guardians-africa
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.1728421Z hint: Using 'master' as the name for the initial branch. This default branch name
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.1730383Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.1731339Z hint: to use in all of your new repositories, which will suppress this warning,
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.1732088Z hint: call:
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.1732772Z hint:
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.1733298Z hint: 	git config --global init.defaultBranch <name>
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.1733906Z hint:
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.1734481Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.1735402Z hint: 'development'. The just-created branch can be renamed via this command:
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.1736121Z hint:
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.1736530Z hint: 	git branch -m <name>
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.1736999Z hint:
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.1737611Z hint: Disable this message with "git config set advice.defaultBranchName false"
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.1744015Z Initialized empty Git repository in /home/runner/work/wild-guardians-africa/wild-guardians-africa/.git/
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.1754661Z [command]/usr/bin/git remote add origin https://github.com/dossijeo/wild-guardians-africa
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.1817026Z ##[endgroup]
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.1818356Z ##[group]Disabling automatic garbage collection
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.1822069Z [command]/usr/bin/git config --local gc.auto 0
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.1857616Z ##[endgroup]
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.1859283Z ##[group]Setting up auth
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.1871067Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.1906451Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.2309626Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.2346727Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.2572185Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.2608432Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.2845125Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.2885815Z ##[endgroup]
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.2886991Z ##[group]Fetching the repository
+responsible	Run actions/checkout@v4	2026-10-09T06:48:28.2896441Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +0544d6526af981ee2b65730e56ed7cda4f3e4be8:refs/remotes/origin/main
+responsible	Run actions/checkout@v4	2026-10-09T06:49:08.7809434Z From https://github.com/dossijeo/wild-guardians-africa
+responsible	Run actions/checkout@v4	2026-10-09T06:49:08.7810281Z  * [new ref]         0544d6526af981ee2b65730e56ed7cda4f3e4be8 -> origin/main
+responsible	Run actions/checkout@v4	2026-10-09T06:49:08.7817622Z ##[endgroup]
+responsible	Run actions/checkout@v4	2026-10-09T06:49:08.7818524Z ##[group]Determining the checkout info
+responsible	Run actions/checkout@v4	2026-10-09T06:49:08.7819859Z ##[endgroup]
+responsible	Run actions/checkout@v4	2026-10-09T06:49:08.7824968Z [command]/usr/bin/git sparse-checkout disable
+responsible	Run actions/checkout@v4	2026-10-09T06:49:08.7873788Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+responsible	Run actions/checkout@v4	2026-10-09T06:49:08.7909005Z ##[group]Checking out the ref
+responsible	Run actions/checkout@v4	2026-10-09T06:49:08.7913942Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+responsible	Run actions/checkout@v4	2026-10-09T06:49:09.8169748Z Updating files:  33% (3988/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:09.8497228Z Updating files:  34% (4022/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:09.8816255Z Updating files:  35% (4140/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:09.9140920Z Updating files:  36% (4259/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:09.9547898Z Updating files:  37% (4377/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:09.9771270Z Updating files:  38% (4495/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:09.9922315Z Updating files:  39% (4613/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.0092088Z Updating files:  40% (4732/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.0950438Z Updating files:  41% (4850/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.1146084Z Updating files:  42% (4968/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.1275643Z Updating files:  43% (5087/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.1770695Z Updating files:  44% (5205/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.1914521Z Updating files:  45% (5323/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.2066412Z Updating files:  46% (5441/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.2229185Z Updating files:  47% (5560/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.2834025Z Updating files:  48% (5678/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.3046675Z Updating files:  49% (5796/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.3351477Z Updating files:  50% (5914/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.3559584Z Updating files:  51% (6033/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.3710512Z Updating files:  52% (6151/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.3873911Z Updating files:  53% (6269/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.4805690Z Updating files:  54% (6388/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.4979278Z Updating files:  55% (6506/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.5172687Z Updating files:  56% (6624/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.5404718Z Updating files:  57% (6742/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.5627372Z Updating files:  58% (6861/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.5838156Z Updating files:  59% (6979/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.6107617Z Updating files:  60% (7097/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.6197860Z Updating files:  61% (7216/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.6506817Z Updating files:  62% (7334/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.6658078Z Updating files:  63% (7452/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.6799326Z Updating files:  64% (7570/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.6980367Z Updating files:  65% (7689/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.7084704Z Updating files:  66% (7807/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.7181315Z Updating files:  67% (7925/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.7319715Z Updating files:  68% (8044/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.7560067Z Updating files:  69% (8162/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.8083897Z Updating files:  70% (8280/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.8254832Z Updating files:  70% (8331/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.8452949Z Updating files:  71% (8398/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.8583505Z Updating files:  72% (8517/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.8790632Z Updating files:  73% (8635/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.8949635Z Updating files:  74% (8753/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.9169127Z Updating files:  75% (8871/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.9266998Z Updating files:  76% (8990/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:10.9394466Z Updating files:  77% (9108/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:11.1338093Z Updating files:  78% (9226/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:11.4583539Z Updating files:  79% (9345/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:11.7569415Z Updating files:  80% (9463/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:11.8150261Z Updating files:  81% (9581/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:11.8896390Z Updating files:  81% (9607/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:12.1043439Z Updating files:  82% (9699/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:12.4664905Z Updating files:  83% (9818/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:12.8007562Z Updating files:  84% (9936/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:12.8130701Z Updating files:  85% (10054/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:12.8697616Z Updating files:  85% (10055/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:12.9390957Z Updating files:  86% (10173/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:12.9634910Z Updating files:  87% (10291/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:12.9702693Z Updating files:  88% (10409/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:13.0042278Z Updating files:  89% (10527/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:13.0540121Z Updating files:  90% (10646/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:13.0935237Z Updating files:  91% (10764/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:13.1031746Z Updating files:  92% (10882/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:13.1114047Z Updating files:  93% (11001/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:13.1182930Z Updating files:  94% (11119/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:13.1247172Z Updating files:  95% (11237/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:13.1314004Z Updating files:  96% (11355/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:13.1378186Z Updating files:  97% (11474/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:13.1436862Z Updating files:  98% (11592/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:13.1861658Z Updating files:  99% (11710/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:13.1862550Z Updating files: 100% (11828/11828)
+responsible	Run actions/checkout@v4	2026-10-09T06:49:13.1862997Z Updating files: 100% (11828/11828), done.
+responsible	Run actions/checkout@v4	2026-10-09T06:49:13.2053355Z Switched to a new branch 'main'
+responsible	Run actions/checkout@v4	2026-10-09T06:49:13.2056356Z branch 'main' set up to track 'origin/main'.
+responsible	Run actions/checkout@v4	2026-10-09T06:49:13.2311455Z ##[endgroup]
+responsible	Run actions/checkout@v4	2026-10-09T06:49:13.2358361Z [command]/usr/bin/git log -1 --format=%H
+responsible	Run actions/checkout@v4	2026-10-09T06:49:13.2389507Z 0544d6526af981ee2b65730e56ed7cda4f3e4be8
+responsible	Run actions/setup-node@v4	﻿2026-10-09T06:49:13.2736973Z ##[group]Run actions/setup-node@v4
+responsible	Run actions/setup-node@v4	2026-10-09T06:49:13.2737270Z with:
+responsible	Run actions/setup-node@v4	2026-10-09T06:49:13.2737483Z   node-version: 20
+responsible	Run actions/setup-node@v4	2026-10-09T06:49:13.2737697Z   cache: npm
+responsible	Run actions/setup-node@v4	2026-10-09T06:49:13.2737891Z   always-auth: false
+responsible	Run actions/setup-node@v4	2026-10-09T06:49:13.2738107Z   check-latest: false
+responsible	Run actions/setup-node@v4	2026-10-09T06:49:13.2741223Z   token: ***
+responsible	Run actions/setup-node@v4	2026-10-09T06:49:13.2741444Z ##[endgroup]
+responsible	Run actions/setup-node@v4	2026-10-09T06:49:13.4186962Z Attempting to download 20...
+responsible	Run actions/setup-node@v4	2026-10-09T06:49:13.4299994Z (node:2313) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+responsible	Run actions/setup-node@v4	2026-10-09T06:49:13.4301274Z (Use `node --trace-deprecation ...` to show where the warning was created)
+responsible	Run actions/setup-node@v4	2026-10-09T06:49:13.9394156Z Acquiring 20.20.2 - x64 from https://github.com/actions/node-versions/releases/download/20.20.2-23521894959/node-20.20.2-linux-x64.tar.gz
+responsible	Run actions/setup-node@v4	2026-10-09T06:49:14.3750971Z Extracting ...
+responsible	Run actions/setup-node@v4	2026-10-09T06:49:14.3865977Z [command]/usr/bin/tar xz --strip 1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/ed68fd65-a539-4f73-9111-4ab6b08a8dfb -f /home/runner/work/_temp/7cb26450-38f6-410a-8004-0ec106bcc207
+responsible	Run actions/setup-node@v4	2026-10-09T06:49:15.4052244Z Adding to the cache ...
+responsible	Run actions/setup-node@v4	2026-10-09T06:49:17.3814279Z ##[group]Environment details
+responsible	Run actions/setup-node@v4	2026-10-09T06:49:17.6125241Z node: v20.20.2
+responsible	Run actions/setup-node@v4	2026-10-09T06:49:17.6125673Z npm: 10.8.2
+responsible	Run actions/setup-node@v4	2026-10-09T06:49:17.6125989Z yarn: 1.22.22
+responsible	Run actions/setup-node@v4	2026-10-09T06:49:17.6126636Z ##[endgroup]
+responsible	Run actions/setup-node@v4	2026-10-09T06:49:17.6150525Z [command]/opt/hostedtoolcache/node/20.20.2/x64/bin/npm config get cache
+responsible	Run actions/setup-node@v4	2026-10-09T06:49:17.7173258Z /home/runner/.npm
+responsible	Run actions/setup-node@v4	2026-10-09T06:49:17.7945228Z Cache hit for: node-cache-Linux-x64-npm-d9754e0610ba63bd5bfd287a37dc043a8a005fcaea2b3199c21580242c07c72d
+responsible	Run actions/setup-node@v4	2026-10-09T06:49:17.8057145Z (node:2313) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+responsible	Run actions/setup-node@v4	2026-10-09T06:49:18.1747345Z Received 54091569 of 54091569 (100.0%), 157.8 MBs/sec
+responsible	Run actions/setup-node@v4	2026-10-09T06:49:18.1748535Z Cache Size: ~52 MB (54091569 B)
+responsible	Run actions/setup-node@v4	2026-10-09T06:49:18.1783413Z [command]/usr/bin/tar -xf /home/runner/work/_temp/65cbab6e-3bc5-46ac-8e44-044ad4bd83aa/cache.tzst -P -C /home/runner/work/wild-guardians-africa/wild-guardians-africa --use-compress-program unzstd
+responsible	Run actions/setup-node@v4	2026-10-09T06:49:18.2639349Z Cache restored successfully
+responsible	Run actions/setup-node@v4	2026-10-09T06:49:18.2672338Z Cache restored from key: node-cache-Linux-x64-npm-d9754e0610ba63bd5bfd287a37dc043a8a005fcaea2b3199c21580242c07c72d
+responsible	Run npm ci	﻿2026-10-09T06:49:18.5118189Z ##[group]Run npm ci
+responsible	Run npm ci	2026-10-09T06:49:18.5118852Z ^[[36;1mnpm ci^[[0m
+responsible	Run npm ci	2026-10-09T06:49:19.9244152Z shell: /usr/bin/bash -e {0}
+responsible	Run npm ci	2026-10-09T06:49:19.9244485Z ##[endgroup]
+responsible	Run npm ci	2026-10-09T06:49:21.5211074Z 
+responsible	Run npm ci	2026-10-09T06:49:21.5217673Z added 31 packages, and audited 32 packages in 2s
+responsible	Run npm ci	2026-10-09T06:49:21.5218028Z 
+responsible	Run npm ci	2026-10-09T06:49:21.5218236Z 11 packages are looking for funding
+responsible	Run npm ci	2026-10-09T06:49:21.5218559Z   run `npm fund` for details
+responsible	Run npm ci	2026-10-09T06:49:21.5221067Z 
+responsible	Run npm ci	2026-10-09T06:49:21.5221307Z found 0 vulnerabilities
+responsible	Record immutable job identity	﻿2026-10-09T06:49:21.5426026Z ##[group]Run mkdir -p test-results/campaign-qa
+responsible	Record immutable job identity	2026-10-09T06:49:21.5426440Z ^[[36;1mmkdir -p test-results/campaign-qa^[[0m
+responsible	Record immutable job identity	2026-10-09T06:49:21.5428029Z ^[[36;1mnode --input-type=module -e 'import {writeFileSync} from "node:fs"; writeFileSync("test-results/campaign-qa/job.json",JSON.stringify({runId:process.env.GITHUB_RUN_ID,runAttempt:process.env.GITHUB_RUN_ATTEMPT,sha:process.env.GITHUB_SHA,biome:process.env.QA_BIOME,culture:process.env.QA_CULTURE,days:100,scope:"One native domain campaign; no rendering, mobile or whole-matrix acceptance."},null,2)+"\n");'^[[0m
+responsible	Record immutable job identity	2026-10-09T06:49:21.5492102Z shell: /usr/bin/bash -e {0}
+responsible	Record immutable job identity	2026-10-09T06:49:21.5492371Z env:
+responsible	Record immutable job identity	2026-10-09T06:49:21.5492573Z   QA_BIOME: desierto
+responsible	Record immutable job identity	2026-10-09T06:49:21.5492982Z   QA_CULTURE: saheliana
+responsible	Record immutable job identity	2026-10-09T06:49:21.5493206Z ##[endgroup]
+responsible	Responsible reinvestment for 100 nights	﻿2026-10-09T06:49:21.5888009Z ##[group]Run set -o pipefail
+responsible	Responsible reinvestment for 100 nights	2026-10-09T06:49:21.5888339Z ^[[36;1mset -o pipefail^[[0m
+responsible	Responsible reinvestment for 100 nights	2026-10-09T06:49:21.5889331Z ^[[36;1mnode tools/check_intensive_case.mjs "$QA_BIOME" "$QA_CULTURE" 100 "$GITHUB_WORKSPACE/test-results/campaign-qa" 2>&1 | tee test-results/campaign-qa/process.txt^[[0m
+responsible	Responsible reinvestment for 100 nights	2026-10-09T06:49:21.5952035Z shell: /usr/bin/bash -e {0}
+responsible	Responsible reinvestment for 100 nights	2026-10-09T06:49:21.5952294Z env:
+responsible	Responsible reinvestment for 100 nights	2026-10-09T06:49:21.5952494Z   QA_BIOME: desierto
+responsible	Responsible reinvestment for 100 nights	2026-10-09T06:49:21.5952718Z   QA_CULTURE: saheliana
+responsible	Responsible reinvestment for 100 nights	2026-10-09T06:49:21.5952937Z ##[endgroup]
+responsible	Responsible reinvestment for 100 nights	2026-10-09T09:36:17.3666321Z {"biome":"desierto","culture":"saheliana","status":"passed","completedNights":100}
+responsible	Retain complete or partial evidence	﻿2026-10-09T09:36:17.6906221Z ##[group]Run actions/upload-artifact@v4
+responsible	Retain complete or partial evidence	2026-10-09T09:36:17.6906558Z with:
+responsible	Retain complete or partial evidence	2026-10-09T09:36:17.6906818Z   name: intensive-100-desierto-saheliana-37895465546
+responsible	Retain complete or partial evidence	2026-10-09T09:36:17.6907161Z   path: test-results/campaign-qa/
+responsible	Retain complete or partial evidence	2026-10-09T09:36:17.6907451Z   if-no-files-found: warn
+responsible	Retain complete or partial evidence	2026-10-09T09:36:17.6907681Z   retention-days: 30
+responsible	Retain complete or partial evidence	2026-10-09T09:36:17.6907899Z   compression-level: 6
+responsible	Retain complete or partial evidence	2026-10-09T09:36:17.6908113Z   overwrite: false
+responsible	Retain complete or partial evidence	2026-10-09T09:36:17.6908332Z   include-hidden-files: false
+responsible	Retain complete or partial evidence	2026-10-09T09:36:17.6908573Z ##[endgroup]
+responsible	Retain complete or partial evidence	2026-10-09T09:36:17.8575165Z (node:3628) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+responsible	Retain complete or partial evidence	2026-10-09T09:36:17.8576074Z (Use `node --trace-deprecation ...` to show where the warning was created)
+responsible	Retain complete or partial evidence	2026-10-09T09:36:17.8649771Z With the provided path, there will be 6 files uploaded
+responsible	Retain complete or partial evidence	2026-10-09T09:36:17.8651350Z Artifact name is valid!
+responsible	Retain complete or partial evidence	2026-10-09T09:36:17.8652302Z Root directory input is valid!
+responsible	Retain complete or partial evidence	2026-10-09T09:36:18.1017204Z Beginning upload of artifact content to blob storage
+responsible	Retain complete or partial evidence	2026-10-09T09:36:18.2524909Z (node:3628) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+responsible	Retain complete or partial evidence	2026-10-09T09:36:18.3643535Z Uploaded bytes 1170520
+responsible	Retain complete or partial evidence	2026-10-09T09:36:18.3837442Z Finished uploading artifact content to blob storage!
+responsible	Retain complete or partial evidence	2026-10-09T09:36:18.3839572Z SHA256 digest of uploaded artifact zip is fb1398f5cd00615d72025838cf3b7f70cfa6b3d47176afc1cfdf72c5e04d30f5
+responsible	Retain complete or partial evidence	2026-10-09T09:36:18.3841047Z Finalizing artifact upload
+responsible	Retain complete or partial evidence	2026-10-09T09:36:18.5806985Z Artifact intensive-100-desierto-saheliana-37895465546.zip successfully finalized. Artifact ID 11607088546
+responsible	Retain complete or partial evidence	2026-10-09T09:36:18.5808247Z Artifact intensive-100-desierto-saheliana-37895465546 has been successfully uploaded! Final size is 1170520 bytes. Artifact ID is 11607088546
+responsible	Retain complete or partial evidence	2026-10-09T09:36:18.5814582Z Artifact download URL: https://github.com/dossijeo/wild-guardians-africa/actions/runs/37895465546/artifacts/11607088546
+responsible	Post Run actions/setup-node@v4	﻿2026-10-09T09:36:18.5990623Z Post job cleanup.
+responsible	Post Run actions/setup-node@v4	2026-10-09T09:36:18.7209857Z (node:3640) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+responsible	Post Run actions/setup-node@v4	2026-10-09T09:36:18.7211729Z (Use `node --trace-deprecation ...` to show where the warning was created)
+responsible	Post Run actions/setup-node@v4	2026-10-09T09:36:18.7213850Z Cache hit occurred on the primary key node-cache-Linux-x64-npm-d9754e0610ba63bd5bfd287a37dc043a8a005fcaea2b3199c21580242c07c72d, not saving cache.
+responsible	Post Run actions/checkout@v4	﻿2026-10-09T09:36:18.7360629Z Post job cleanup.
+responsible	Post Run actions/checkout@v4	2026-10-09T09:36:18.8240138Z [command]/usr/bin/git version
+responsible	Post Run actions/checkout@v4	2026-10-09T09:36:18.8284539Z git version 2.55.0
+responsible	Post Run actions/checkout@v4	2026-10-09T09:36:18.8328280Z Temporarily overriding HOME='/home/runner/work/_temp/93d5b3b6-5238-4330-840a-8ea55dd92c01' before making global git config changes
+responsible	Post Run actions/checkout@v4	2026-10-09T09:36:18.8330258Z Adding repository directory to the temporary git global config as a safe directory
+responsible	Post Run actions/checkout@v4	2026-10-09T09:36:18.8335147Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/wild-guardians-africa/wild-guardians-africa
+responsible	Post Run actions/checkout@v4	2026-10-09T09:36:18.8374622Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+responsible	Post Run actions/checkout@v4	2026-10-09T09:36:18.8411029Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+responsible	Post Run actions/checkout@v4	2026-10-09T09:36:18.8698533Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+responsible	Post Run actions/checkout@v4	2026-10-09T09:36:18.8722278Z http.https://github.com/.extraheader
+responsible	Post Run actions/checkout@v4	2026-10-09T09:36:18.8734469Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+responsible	Post Run actions/checkout@v4	2026-10-09T09:36:18.8770570Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+responsible	Post Run actions/checkout@v4	2026-10-09T09:36:18.9057043Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+responsible	Post Run actions/checkout@v4	2026-10-09T09:36:18.9111951Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+responsible	Complete job	﻿2026-10-09T09:36:18.9552316Z Cleaning up orphan processes
+responsible	Complete job	2026-10-09T09:36:18.9805352Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

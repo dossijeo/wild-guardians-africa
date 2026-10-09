@@ -23,7 +23,7 @@ test('Basic readings advance only manually and do not create, plant or pay anyth
   for(let i=0;i<100;i++)controller.update();
   assert.equal(controller.presentation().id,'basic.introduction');assert.equal(state.time,0);assert.equal(state.structures.length,0);assert.equal(numberOf(state.ledger.balance),1500);
   controller.acknowledge();assert.equal(controller.presentation().id,'basic.center');assert.equal(controller.presentation().blocking,false);
-  controller.acknowledge();assert.equal(controller.presentation().blocking,false);assert.ok(!state.pauses.includes('tutorial-reading'));assert.ok(!state.pauses.includes('intro'));
+  controller.acknowledge();assert.equal(controller.presentation(),null);assert.ok(!state.pauses.includes('tutorial-reading'));assert.ok(!state.pauses.includes('intro'));
   assert.equal(state.tutorial.step,'center');assert.equal(numberOf(state.ledger.balance),1500);assert.equal(profile.basicCompleted,false);
 });
 test('An already placed native center is recognized without charging a second one',()=>{
@@ -75,7 +75,7 @@ test('Loading preserves an unfinished reading and queue without replaying its so
   const {state,profile,controller}=setup();controller.acknowledge();
   const loaded=deserialize(serialize(state)),before=loaded.events.filter(e=>e.type==='TutorialMessageStarted').length,c=new TutorialController(loaded,profile);
   assert.equal(loaded.tutorial.reading,'basic.center');assert.equal(c.presentation().blocking,false);assert.ok(!loaded.pauses.includes('tutorial-reading'));
-  assert.equal(loaded.events.filter(e=>e.type==='TutorialMessageStarted').length,before);c.acknowledge();assert.equal(c.presentation().blocking,false);
+  assert.equal(loaded.events.filter(e=>e.type==='TutorialMessageStarted').length,before);c.acknowledge();assert.equal(c.presentation(),null);
 });
 test('Global profile writes merge seen IDs and malformed or unknown data cannot silence messages',()=>{
   const storage=new Storage(),a=new TutorialProfile(storage),b=new TutorialProfile(storage);a.record('magic.growth');b.record('magic.multiply');assert.ok(a.has('magic.multiply'));assert.ok(b.has('magic.growth'));

@@ -14,6 +14,7 @@ import {installLoadingAudioQa} from './loading-audio-qa.js';
 import {LOADING_STAGES} from './loading-recipe.js';
 import {SpiritVoice,spiritVoice} from '../audio/spirit-voice.js';
 import {guardianCopy} from '../tutorial/guardian-copy.js';
+import {tutorialMessageShownToday,recordTutorialMessageToday} from '../tutorial/daily-messages.js';
 import {HiringRoutePreparer} from '../world/hiring-route-preparer.js';
 import {warmRaidNavigation} from '../world/raid-navigation-warmth.js';
 import {NoticeLifetime,tutorialCoversNotice} from './notices.js';
@@ -379,9 +380,9 @@ function setTutorialInteraction(blocking){
     if(tutorialFocus?.isConnected&&!tutorialFocus.closest('#narrator'))tutorialFocus.focus({preventScroll:true});tutorialFocus=null;
   }
 }
-const budgetWarningVisible=()=>performance.now()<budgetWarningUntil||guardian?.key?.startsWith('budget.reserve:')&&guardian.voice?.active;
+const budgetWarningVisible=()=>performance.now()<budgetWarningUntil&&(!tutorialMessageShownToday(state,'budget.reserve')||guardian?.key?.startsWith('budget.reserve:'))||guardian?.key?.startsWith('budget.reserve:')&&guardian.voice?.active;
 function refreshTutorialGuidance(){
-  const warning=budgetWarningVisible(),message=tutorial?.presentation();
+  const warning=budgetWarningVisible(),message=tutorial?.presentation({record:false});
   const guideAllowed=!surfaces.active&&!warning&&!state.pauses.some(p=>['menu','hiring','hidden','context-lost'].includes(p));
   hudHand??=new TutorialHudHand(document.querySelector('#stage'));hudHand.show(guideAllowed?tutorialHudHandTarget(state,message,tool?.kind):null);
   const guidedStep=message?.id==='basic.'+state.tutorial.step||state.tutorial.guideAfterAuto?.includes('basic.'+state.tutorial.step);
@@ -393,6 +394,7 @@ function narrator() {
   tutorial?.update();const warning=budgetWarningVisible();const message=surfaces.active?null:warning?{id:'budget.reserve',gesture:'warning',text:RESERVE_MESSAGE,blocking:false}:tutorial?.presentation();setTutorialInteraction(false);
   refreshTutorialGuidance();
   if(!message){guardian.hide({immediate:state.pauses.some(p=>['menu','hiring','hidden','context-lost'].includes(p))});return null;}
+  recordTutorialMessageToday(state,message.id);
   const advance=message.reading?()=>safe(()=>{tutorial.dismiss({automatic:true,message});save();}):null;
   guardian.show({key:message.id+':'+(message.reading?'reading':'action')+':'+(message.variant??''),text:message.text,gesture:message.gesture,blocking:message.blocking,result:message.result,advance,onVoiceEnded:()=>safe(()=>{if(warning)budgetWarningUntil=0;else tutorial.dismiss({automatic:true,message});save();}),dismiss:()=>safe(()=>{if(warning)budgetWarningUntil=0;else tutorial.dismiss({message});save();}),
     skip:message.canSkip?()=>safe(()=>{tutorial.skipBasic();save();}):null});
@@ -462,8 +464,8 @@ function libraryScreen() {
   bind('back',menu);document.querySelectorAll('[data-demo]').forEach(el=>el.onclick=()=>{libraryViewer=new LibraryViewer(app,el.dataset.demo,{onBack:libraryScreen,onMenu:menu});});
 }
 document.addEventListener('visibilitychange',()=>{if(state){if(document.hidden){Game.pause(state,'hidden');guardian?.hide({immediate:true});dialogVoice.stop();audio.suspend();}else {Game.resume(state,'hidden');lastFrame=performance.now();audio.resume();narrateResultDialog();}}});
-document.addEventListener('keydown',e=>hudShortcut(e,document,{enabled:screen==='game'&&!!state&&!starting&&!tutorial?.presentation()?.blocking&&!document.querySelector('#modal')?.children.length}));
-document.addEventListener('keydown',e=>{if(leaving)return;if(e.key==='Escape'&&state&&screen==='game'&&!starting){if(tutorial?.presentation()?.blocking){tutorial.dismiss({automatic:true});save();}else if(surfaces.active){closeSurface();}else if(tool){tool=null;commandFeedback='';hideHudPanel();}else if(state.pauses.includes('menu')){Game.resume(state,'menu');document.querySelector('#modal').innerHTML='';}else pauseDialog();updateUI(true);}});
+document.addEventListener('keydown',e=>hudShortcut(e,document,{enabled:screen==='game'&&!!state&&!starting&&!tutorial?.presentation({record:false})?.blocking&&!document.querySelector('#modal')?.children.length}));
+document.addEventListener('keydown',e=>{if(leaving)return;if(e.key==='Escape'&&state&&screen==='game'&&!starting){if(tutorial?.presentation({record:false})?.blocking){tutorial.dismiss({automatic:true});save();}else if(surfaces.active){closeSurface();}else if(tool){tool=null;commandFeedback='';hideHudPanel();}else if(state.pauses.includes('menu')){Game.resume(state,'menu');document.querySelector('#modal').innerHTML='';}else pauseDialog();updateUI(true);}});
 document.addEventListener('pointerdown',()=>{audio.unlock().then(()=>screen==='loading'?loadingAudio?.start():screen==='menu'?audio.menu():state?audio.gameplay(state.day):null).catch(()=>{});});
 window.addEventListener('pagehide',()=>{guardian?.voice?.dispose();dialogVoice.dispose();});
 window.addEventListener('wild-guardians:language-change',()=>{if(state){dialogVoice.stop();if(guardian){guardian.voice?.stop();guardian.key=null;}updateUI(true);narrateResultDialog();}const draft=document.querySelector('#hireConfirm');if(draft){document.querySelector('#crewCount0').dispatchEvent(new Event('input'));for(const [i,profile] of NPC_TYPES.entries()){const pace=document.querySelector(`[data-crew-card="${i}"] .hire-stats b`);if(pace)pace.textContent='×'+profile.speed.toLocaleString(moneyLocale(),{minimumFractionDigits:2,maximumFractionDigits:2});}}});

@@ -37,7 +37,13 @@ test('optional higher staffing pays normal wages while the default twelve-plant 
  // unrelated planting changes task timing: 27 deliveries instead of28 in this
  // opening, not merely an epoch field. Both native economy audits pass; see
  // docs/qa/crop-route-epoch-experiment/golden-baseline before changing this hash.
- assert.equal(createHash('sha256').update(serialize(baseline.state)).digest('hex'),'5df191a540b7b584a9d45cf1c20e9f15b80b39e0779c0545bdf92417572de389');
+ // Daily tutorial history is new save metadata. Keep the complete new-state
+ // golden and prove that removing only that field restores the old golden:
+ // route timing, physical deliveries and economy must remain unchanged.
+ assert.equal(createHash('sha256').update(serialize(baseline.state)).digest('hex'),'ce36573de3e88ae8f200f83c5e3c54d9b5f22ebba7aeb65cc631ec1e7516ae05');
+ assert.deepEqual(baseline.state.tutorial.shownToday,{day:2,ids:[]});
+ const historical=structuredClone(baseline.state);delete historical.tutorial.shownToday;
+ assert.equal(createHash('sha256').update(serialize(historical)).digest('hex'),'5df191a540b7b584a9d45cf1c20e9f15b80b39e0779c0545bdf92417572de389');
  assert.ok(auditIntensiveFarm(baseline));
  assert.equal(serialize(simulateIntensiveFarm({...options,plantsPerWorker:12}).state),serialize(baseline.state));
  const staffed=simulateIntensiveFarm({...options,plantsPerWorker:8});
