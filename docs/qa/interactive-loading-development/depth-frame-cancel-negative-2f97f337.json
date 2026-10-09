@@ -1,0 +1,31 @@
+{
+  "source": "2f97f337",
+  "fileSha256": "23af5cccb2beab7870826a05c532174110e36f9a6dac11ccab61c8800c9967de",
+  "scope": "CPU contract against real BuildingDestructionPass, suspended supplied frame. No GPU/context, source unchanged.",
+  "findings": [
+    {
+      "mode": "signal",
+      "settledBeforeFrameDelivery": false,
+      "frameRequests": 1,
+      "borrowedMaterialRestored": true,
+      "targetRestored": true,
+      "shadowRestored": true
+    },
+    {
+      "mode": "predicate",
+      "settledBeforeFrameDelivery": false,
+      "frameRequests": 1,
+      "borrowedMaterialRestored": true,
+      "targetRestored": true,
+      "shadowRestored": true
+    },
+    {
+      "mode": "deadline",
+      "settledBeforeFrameDelivery": false,
+      "frameRequests": 1,
+      "borrowedMaterialRestored": true,
+      "targetRestored": true,
+      "shadowRestored": true
+    }
+  ]
+}

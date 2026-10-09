@@ -53,3 +53,18 @@ test('grouped world-depth QA flag applies equally to preload and capture without
  }
  s.opaque.material=s.originals[0];second.dispose();s.cleanup();
 });
+
+test('a suspended depth frame reacts to owner signal or cancellation predicate before any late frame',async()=>{
+ for(const mode of ['signal','predicate']){
+  const s=setup(),owner=new AbortController();let stopped=false,calls=0,rejectLate;
+  const pending=s.pipeline.prepareDepth(new PerspectiveCamera(),s.world,{batchSize:1,compile:()=>{calls++;return Promise.resolve();},signal:owner.signal,cancelled:()=>stopped,pollIntervalMs:2,nextFrame:()=>new Promise((resolve,reject)=>rejectLate=reject)});
+  await new Promise(resolve=>setImmediate(resolve));assert.equal(calls,1);if(mode==='signal')owner.abort();else stopped=true;
+  await assert.rejects(pending,/cancelled/);assert.equal(calls,1);assert.deepEqual(s.world.children.map(m=>m.material),s.originals);assert.equal(s.renderer.getRenderTarget(),s.prior);assert.equal(s.renderer.shadowMap.enabled,true);
+  rejectLate(Error('late frame failure'));await new Promise(resolve=>setImmediate(resolve));s.cleanup();
+ }
+});
+test('a depth frame deadline does not require the suspended RAF to resolve',async()=>{
+ const s=setup();let clock=0,calls=0;
+ const pending=s.pipeline.prepareDepth(new PerspectiveCamera(),s.world,{batchSize:1,compile:()=>{calls++;return Promise.resolve();},now:()=>clock,timeout:1,pollIntervalMs:2,nextFrame:()=>new Promise(()=>{})});
+ await new Promise(resolve=>setImmediate(resolve));clock=2;await assert.rejects(pending,/timed out/);assert.equal(calls,1);assert.deepEqual(s.world.children.map(m=>m.material),s.originals);assert.equal(s.renderer.getRenderTarget(),s.prior);assert.equal(s.renderer.shadowMap.enabled,true);s.cleanup();
+});
