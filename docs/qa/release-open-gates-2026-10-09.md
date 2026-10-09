@@ -1,7 +1,8 @@
 # Remaining integrated release gates — 9 October 2026
 
-This is an incomplete-work register, not a release approval. Runtime base is
-`795f773e83640d3f7541d8e3d826764c3d779750`; later root commits currently add QA
+This is an incomplete-work register, not a release approval. Current runtime
+includes PR15 at `4207bb16`; older rendering comparisons retain their frozen
+`795f773e83640d3f7541d8e3d826764c3d779750` base. Later root commits add QA
 evidence. The original 159-case registry retains historical sources and scopes;
 its verified labels do not prove all subsequent user requirements on this base.
 
@@ -24,8 +25,11 @@ This integrates the archives, not approval of their rejected/unfinished cases.
 See [the expanded receipt](campaign-ci/root-pr13-expanded-archive-review.json)
 and [reproducible verifier](campaign-ci/verify-root-archive-receipts.py).
 
-Next proofs: reproduce the three distinct physical stalls using original saves;
-verify bounded fixes without weakening landing/body/fluid checks; measure actual
+The three distinct saved Desert stalls now have bounded native recovery fixes
+in merged PR15, with root 45/45 directed tests and both exact-head CI checks
+passing. See [root review and scope](desert-raid-connectivity-root-review-2026-10-09.md).
+This does not convert the original unfinished campaigns into victories.
+Next proofs: measure actual
 responsible reinvestment under justified game balance changes, retaining the
 original policy/seed and negative records; complete the required biome/culture
 coverage and bad-management loss tests. Static margins or short campaigns cannot
