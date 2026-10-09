@@ -1,0 +1,15 @@
+name: Windows candidate lock resolution
+on:
+  workflow_dispatch:
+jobs:
+  lock:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Resolve current feature graph preserving locked versions
+        run: cargo metadata --manifest-path src-tauri/Cargo.toml --format-version 1 --no-deps > "$env:RUNNER_TEMP/candidate-metadata.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: candidate-cargo-lock
+          path: src-tauri/Cargo.lock
