@@ -1,0 +1,130 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA · Traveling y estabilidad de frames</title>
+<style>body{margin:0;font:13px system-ui}canvas{display:block;width:100vw;height:100vh}header{position:fixed;z-index:2;top:8px;left:8px;background:#fff9e8e8;padding:12px;max-width:360px;max-height:85vh;overflow:auto}pre{white-space:pre-wrap;font-size:11px}button{padding:8px}</style>
+<header><b>Traveling nativo continuo</b><p>Sin cambios persistidos ni cambios de gameplay. Chunks, impostores, sombras y modelos con ajustes de producción. FPS medio no es el criterio.</p><button id="run" disabled>Iniciar recorrido</button><button id="dispose" disabled>Cerrar escena</button><pre id="report">Cargando…</pre></header><canvas></canvas>
+<script type="module">
+import * as Game from '../../src/simulation/game.js';
+import {Navigation,BIOME_IDS} from '../../src/world/navigation.js';
+import {findInitialLocationAsync} from '../../src/world/villages.js';
+import {WorldScene} from '../../src/rendering/scene.js';
+import {farVegetationProfile} from '../../src/rendering/far-vegetation-profile.js';
+import {prepareInitialFarWorld} from '../../src/app/far-world-loading.js';
+import {json} from '../../src/rendering/assets.js';
+import {serialize,deserialize} from '../../src/persistence/snapshots.js';
+import {GpuTimer} from './gpu-timer.js';
+import {BufferRequests} from './buffer-requests.js';
+import {prepareResidentTravelVariants} from '../../tools/experiments/prepare-resident-travel-variants.js';
+import {prepareResidentTextures} from '../../tools/experiments/prepare-resident-textures.js';
+import {prepareCrateShadow} from '../../tools/experiments/prepare-crate-shadow.js';
+
+const params=new URLSearchParams(location.search),quality=params.get('quality')??'media',fixture=params.get('fixture');let biome=params.get('biome')??'sabana',culture=params.get('culture')??'mapungubwe';
+const duration=Number(params.get('seconds')??30),speed=Number(params.get('speed')??12),angle=Number(params.get('angle')??0)*Math.PI/180;
+const errors=[],frames=[],installs=[],longTasks=[],segments=[],resourceStages=[];let world,timer,resources,shadowPrimer,dead=false,running=false,started=0,previous=0,last=performance.now(),raf,report=null,observer,finishedAt=0;
+const resourceStage=name=>{if(resources)resourceStages.push({name,buffers:resources.snapshot(),renderer:{...world.renderer.info.memory,programs:world.renderer.info.programs.length}});};
+const output=value=>document.querySelector('#report').textContent=JSON.stringify({...value,preparationInterval:world?.farPreparationInterval??0,sharedPreparation:world?.farSharedPreparation===true},null,2);
+const summarize=values=>{
+ const sorted=values.slice().sort((a,b)=>a-b),q=p=>sorted.length?sorted[Math.ceil(sorted.length*p)-1]:null;
+ return {count:values.length,p50:q(.5),p95:q(.95),p99:q(.99),max:sorted.at(-1)??null,over33:values.filter(v=>v>1000/30).length,over50:values.filter(v=>v>50).length,over100:values.filter(v=>v>100).length};
+};
+const dispose=()=>{if(dead)return;dead=true;running=false;cancelAnimationFrame(raf);observer?.disconnect();timer?.dispose();const context=world?.renderer.getContext();try{shadowPrimer?.dispose();world?.dispose();resourceStage('after-world-dispose');}finally{resources?.dispose();}document.querySelector('#run').disabled=true;output({...report,resourceStages,disposed:true,contextLost:context?.isContextLost()??null,errors});};
+addEventListener('pagehide',dispose,{once:true});
+addEventListener('error',e=>errors.push(String(e.message)));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
+try{
+ if(params.has('residentPrewarm')&&params.has('residentPrograms'))throw Error('Choose one resident preparation experiment');
+ let restored=null;
+ if(fixture){
+  if(fixture!=='gran-rio-suajili-100')throw Error('Unknown archived fixture');
+  const response=await fetch('/docs/qa/intensive-gran-rio-suajili-e461b550/state.json.gz');if(!response.ok)throw Error('Archived fixture unavailable');
+  const bytes=await response.arrayBuffer(),signature=new Uint8Array(bytes,0,2);
+  const text=signature[0]===31&&signature[1]===139?await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).text():new TextDecoder().decode(bytes);
+  restored=deserialize(text);
+  if(params.has('biome')&&biome!==restored.biome||params.has('culture')&&culture!==restored.culture)throw Error('Configuration differs from archived farm');
+  biome=restored.biome;culture=restored.culture;
+ }
+ if(!BIOME_IDS[biome]||!Number.isFinite(duration)||duration<5||duration>120||!Number.isFinite(speed)||speed<0||speed>40||!Number.isFinite(angle))throw Error('Invalid travel configuration');
+ const pack=await json('/content/biome-'+BIOME_IDS[biome]+'.json'),payload=(await json('/content/villages.json')).find(v=>v.id===(culture==='saheliana'?'saheliano':culture));
+ if(!payload)throw Error('Invalid culture');
+ const state=restored??Game.newGame({seed:712,biome,culture}),nav=new Navigation(state.seed,biome,pack.profile),site=restored?null:await findInitialLocationAsync(nav,payload);
+ if(site){Object.assign(state.villages[0],site);state.suppressed.push(...site.suppress);}nav.setState(state);Game.pause(state,'qa');state.tutorial.step='done';
+ const snapshot=serialize(state);world=new WorldScene(document.querySelector('canvas'),()=>{});world.onError=e=>errors.push(String(e));world.qualitySetting(quality);world.farIsolatedPreparation=params.has('isolatePreparation');world.farOwnedCompilation=params.has('ownedCompilation');world.farOwnedWaits=params.has('ownedWaits');
+ world.farPreparationInterval=Number(params.get('preparationInterval')??0);
+ world.farSharedPreparation=params.has('sharedPreparation');
+ if(params.has('resourceProfile')){resources=new BufferRequests(world.renderer.getContext());resourceStage('before-world-load');}
+ await world.load(state,nav,payload,{farVegetation:farVegetationProfile({quality,biome:nav.config.biome})});await prepareInitialFarWorld(world);
+ // Matched readiness for resident-program ABBA: both arms await the same model
+ // requests, so deferred actor decoding is not mistaken for shader benefit.
+ let actorReadiness=null;
+ if(params.has('awaitActors')){const actors=[...world.objects.values()].map(root=>root.userData.actorReady).filter(Boolean);await Promise.all(actors);if(dead)throw Error('QA scene closed while awaiting actors');actorReadiness={awaited:actors.length};}
+ if(site)world.focus(site.center);else world.focusFarm();world.render(0);
+ resourceStage('before-resident-preparation');
+ const residentPreparation=params.has('residentPrewarm')||params.has('residentPrograms')?await prepareResidentTravelVariants(world,{mode:params.has('residentPrograms')?'programs':'full'}):null;
+ resourceStage('after-resident-preparation');
+ const residentTexturePreparation=params.has('residentTextures')?await prepareResidentTextures(world):null;
+ resourceStage('after-resident-textures');
+ if(params.has('crateShadow'))shadowPrimer=await prepareCrateShadow(world);
+ const residentShadowPreparation=shadowPrimer?.report??null;
+ resourceStage('after-crate-shadow');
+ const farm={fixture:fixture??'new-village',historicalSource:fixture?'e461b550':null,plants:state.plants.length,livingPlants:state.plants.filter(p=>p.alive).length,workers:state.workers.length,structures:state.structures.length,result:state.result};
+ const startEye=world.camera.position.clone(),startTarget=world.controls.target.clone();
+ const initialStream=world.chunkStream.summary();
+ const programEvents=[],seenPrograms=new Set();
+ const capturePrograms=stage=>{if(!params.has('trace'))return;for(const program of world.renderer.info.programs){if(seenPrograms.has(program))continue;seenPrograms.add(program);programEvents.push({stage,at:running?performance.now()-started:null,id:program.id,name:program.name,cacheKey:program.cacheKey});}};
+ capturePrograms('ready');
+ if(params.has('trace'))for(const name of ['compileAsync','render','initTexture']){
+  const original=world.renderer[name];world.renderer[name]=function(...args){const begin=performance.now();try{return original.apply(this,args);}finally{if(running){const root=args[0];segments.push({name,at:begin-started,cpuMs:performance.now()-begin,...(name==='compileAsync'?{preparationRoot:{kind:root===world.assetGroups.root?'native-merged':root?.name==='native-tree-standby'?'standby':'other',uuid:root?.uuid,name:root?.name,type:root?.type,children:root?.children?.length}}:{})});}}};
+ }
+ if(params.has('trace')){
+  const wrap=(owner,name,label,after)=>{const original=owner[name];owner[name]=function(...args){const begin=performance.now();try{const result=original.apply(this,args);after?.(args,result);return result;}finally{if(running)segments.push({name:label,at:begin-started,cpuMs:performance.now()-begin});}};};
+  const watchedMaterials=new WeakSet(),watch=candidate=>candidate.impostors.traverse(mesh=>{if(mesh.material&&!watchedMaterials.has(mesh.material)){watchedMaterials.add(mesh.material);wrap(mesh.material,'clone','farMaterial.clone');}});
+  for(const adapter of world.farVegetation.adapters){const layer=adapter.layer;watch(layer.current.prototype);wrap(layer,'create','far.create');wrap(layer,'attachData','far.attachData',args=>watch(args[0]));wrap(layer.transitions,'bind','far.bind');}
+  wrap(world.biomeGround,'attach','ground.attach');
+  for(const name of ['syncChunks','sync','updateCamera'])wrap(world,name,'world.'+name);
+  wrap(world.farVegetation,'update','far.update');wrap(world.assetGroups,'update','assetGroups.update');
+  wrap(world.materialRegistry,'update','materials.update');wrap(world.destructionPass,'render','destruction.render');
+ }
+ if(params.has('trace')){
+  const original=world.renderer.renderBufferDirect;
+  world.renderer.renderBufferDirect=function(...args){const begin=performance.now();try{return original.apply(this,args);}finally{const cpuMs=performance.now()-begin;if(running&&cpuMs>2){const material=args[3],object=args[4];segments.push({name:'renderBufferDirect',at:begin-started,cpuMs,materialType:material?.type,materialName:material?.name,objectName:object?.name,mergedPass:object?.userData.nativeMergedPass,ground:!!object?.userData.ground,farGround:!!object?.userData.farGround,cacheKey:material?.customProgramCacheKey?.()});}}};
+ }
+ const gl=world.renderer.getContext(),rendererInfo=gl.getExtension('WEBGL_debug_renderer_info');
+ if(params.has('glTrace'))for(const name of ['getError','clientWaitSync','fenceSync','flush','getProgramParameter','getShaderParameter','getProgramInfoLog','getShaderInfoLog','getActiveUniform','getUniformLocation','getActiveAttrib','getAttribLocation','compileShader','linkProgram','bufferData','bufferSubData','texImage2D','texSubImage2D','generateMipmap']){
+  const original=gl[name];gl[name]=function(...args){const begin=performance.now();try{return original.apply(this,args);}finally{if(running){const cpuMs=performance.now()-begin;if(cpuMs>2)segments.push({name:'gl.'+name,at:begin-started,cpuMs});}}};
+ }
+ const device={userAgent:navigator.userAgent,viewport:[innerWidth,innerHeight],drawingBuffer:[gl.drawingBufferWidth,gl.drawingBufferHeight],dpr:devicePixelRatio,renderer:rendererInfo?gl.getParameter(rendererInfo.UNMASKED_RENDERER_WEBGL):null};
+ // Attribution only: no GL state queries and no production scheduling change.
+ // Nested slot timings belong to terrainMs; never sum them a second time.
+ let activeChunkPhase=null;
+ const terrain=world.terrain,propSlot=world.buildPropSlot;
+ if(params.has('chunkPhases')){
+  world.terrain=function(...args){const begin=performance.now();try{return terrain.apply(this,args);}finally{if(activeChunkPhase)activeChunkPhase.terrainMs+=performance.now()-begin;}};
+  world.buildPropSlot=function(group,slot,instances){const begin=performance.now();try{return propSlot.call(this,group,slot,instances);}finally{if(activeChunkPhase)activeChunkPhase.slots.push({slot,instances:instances.length,cpuMs:performance.now()-begin});}};
+ }
+ const install=world.installChunk;world.installChunk=function(data){const begin=performance.now(),previousPhase=activeChunkPhase,phase=params.has('chunkPhases')&&running?{terrainMs:0,slots:[]}:null;activeChunkPhase=phase;try{return install.call(this,data);}finally{activeChunkPhase=previousPhase;if(running){const record={at:begin-started,cx:data.cx,cz:data.cz,cpuMs:performance.now()-begin};if(phase){const propsMs=phase.slots.reduce((sum,slot)=>sum+slot.cpuMs,0);record.phases={...phase,propsMs,terrainOtherMs:Math.max(0,phase.terrainMs-propsMs),adoptionOtherMs:Math.max(0,record.cpuMs-phase.terrainMs)};}installs.push(record);}}};
+ if(typeof PerformanceObserver!=='undefined'&&PerformanceObserver.supportedEntryTypes?.includes('longtask')){
+  observer=new PerformanceObserver(list=>{if(running)for(const item of list.getEntries())if(item.startTime>=started)longTasks.push({at:item.startTime-started,duration:item.duration});});observer.observe({type:'longtask',buffered:false});
+ }
+ timer=new GpuTimer(world.renderer.getContext(),16,!params.has('noGpu')&&!resources);
+ document.querySelector('#dispose').disabled=false;document.querySelector('#dispose').onclick=dispose;
+ document.querySelector('#run').disabled=false;
+ document.querySelector('#run').onclick=()=>{
+  if(running||report)return;capturePrograms('before-travel');world.controls.enabled=false;running=true;started=performance.now();previous=0;frames.length=0;installs.length=0;longTasks.length=0;document.querySelector('#run').disabled=true;
+  output({running:true,duration,speed,biome,quality,culture});
+ };
+ const frame=timestamp=>{
+  if(dead)return;const dt=Math.max(0,(timestamp-last)/1000);last=timestamp;
+  try{
+   if(running){
+    const elapsed=Math.min(duration,(timestamp-started)/1000),distance=speed*Math.max(0,elapsed),dx=Math.sin(angle)*distance,dz=Math.cos(angle)*distance;
+    world.controls.target.copy(startTarget);world.controls.target.x+=dx;world.controls.target.z+=dz;
+    world.camera.position.copy(startEye);world.camera.position.x+=dx;world.camera.position.z+=dz;
+    const id=frames.length,timed=timer.begin(id),cpuStart=performance.now();try{world.render(dt);}finally{if(timed)timer.end();}const cpuMs=performance.now()-cpuStart;timer.poll();capturePrograms('travel');
+    frames.push({at:timestamp-started,intervalMs:previous?timestamp-previous:null,cpuMs,chunks:world.chunks.size,created:world.chunkStream.stats.created,queued:world.chunkStream.queue.length,busy:!!world.chunkStream.busy,geometries:world.renderer.info.memory.geometries,textures:world.renderer.info.memory.textures,programs:world.renderer.info.programs.length,hidden:document.hidden});previous=timestamp;
+    if(elapsed>=duration){
+     running=false;finishedAt=performance.now();resourceStage('after-travel');report={done:true,chunkPhases:params.has('chunkPhases'),isolatedPreparation:world.farIsolatedPreparation,ownedCompilation:world.farOwnedCompilation,ownedWaits:world.farOwnedWaits,residentPreparation,residentTexturePreparation,residentShadowPreparation,actorReadiness,resourceStages,farm,device,initialStream,finalStream:world.chunkStream.summary(),biome,culture,quality,seed:state.seed,duration,speed,distance:duration*speed,initialEye:startEye.toArray(),initialTarget:startTarget.toArray(),finalEye:world.camera.position.toArray(),finalTarget:world.controls.target.toArray(),logicalUnchanged:snapshot===serialize(state),frames,installs,longTasks,segments,programEvents,errors,frameSummary:summarize(frames.flatMap(f=>f.intervalMs===null?[]:[f.intervalMs])),cpuSummary:summarize(frames.map(f=>f.cpuMs)),gpu:timer.report(),scope:resources?'Resource QA only: bufferData requests after WorldScene construction, not physical VRAM, textures or RAM. Binding queries perturb timing; do not compare frametimes.':'Native paused world; linear camera movement with production chunks/far/LOD/shadows. Frame intervals include scheduling and GPU backpressure; CPU rendering and async GPU queries reported separately. No optimization claim or saved-game changes.'};output(report);
+    }
+   }else {world.render(dt);if(report&&timer.pending.length&&performance.now()-finishedAt<5000){timer.poll();report.gpu=timer.report();output(report);}}
+  }catch(error){errors.push(String(error));dispose();output({done:true,failed:true,errors});return;}
+  raf=requestAnimationFrame(frame);
+ };
+ output({ready:true,residentPreparation,residentTexturePreparation,residentShadowPreparation,actorReadiness,resourceStages,farm,biome,culture,quality,duration,speed,initialChunks:world.chunks.size});raf=requestAnimationFrame(frame);
+}catch(error){errors.push(String(error.stack??error));try{dispose();}catch(cleanupError){errors.push('QA cleanup: '+String(cleanupError));}output({done:true,failed:true,disposed:dead,resourceStages,errors});}
+</script></html>

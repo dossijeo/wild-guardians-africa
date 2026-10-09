@@ -1,0 +1,170 @@
+{
+  "cycles": [
+    {
+      "cycle": 1,
+      "biome": "sabana",
+      "culture": "mapungubwe",
+      "initialMoney": {
+        "n": "1500",
+        "d": "1"
+      },
+      "loads": 1,
+      "disposals": 1,
+      "renders": 3025,
+      "rendersAfterDispose": 0,
+      "disposed": true,
+      "contextLost": true,
+      "canvasConnected": false,
+      "canvasListenersLive": 0,
+      "ownListenersAborted": true,
+      "workerTerminated": true,
+      "streamDead": true,
+      "streamTimer": null,
+      "streamQueue": 0,
+      "geometryCount": 976,
+      "geometryDisposed": 976,
+      "materialCount": 139,
+      "materialDisposed": 1196
+    }
+  ],
+  "uiSoundRequests": [
+    {
+      "id": "ui_panel_open",
+      "requestedAt": 210814.89999997616,
+      "bus": "ui",
+      "emitter": "ui:surface",
+      "accepted": true,
+      "rate": 1,
+      "voiceBus": "ui"
+    },
+    {
+      "id": "spirit_touch",
+      "requestedAt": 210816.69999992847,
+      "bus": "ui",
+      "emitter": "ui:guided-hud",
+      "accepted": true,
+      "rate": 1,
+      "voiceBus": "ui"
+    },
+    {
+      "id": "ui_panel_close",
+      "requestedAt": 216327.89999997616,
+      "bus": "ui",
+      "emitter": "ui:surface",
+      "accepted": true,
+      "rate": 1,
+      "voiceBus": "ui"
+    },
+    {
+      "id": "spirit_valid",
+      "requestedAt": 221094.5,
+      "bus": "ui",
+      "emitter": "ui:guided-placement",
+      "accepted": true,
+      "rate": 1,
+      "voiceBus": "ui"
+    },
+    {
+      "id": "ui_panel_open",
+      "requestedAt": 226033.69999992847,
+      "bus": "ui",
+      "emitter": "ui:surface",
+      "accepted": true,
+      "rate": 1,
+      "voiceBus": "ui"
+    },
+    {
+      "id": "spirit_touch",
+      "requestedAt": 226041.5,
+      "bus": "ui",
+      "emitter": "ui:guided-hud",
+      "accepted": true,
+      "rate": 1,
+      "voiceBus": "ui"
+    },
+    {
+      "id": "ui_panel_close",
+      "requestedAt": 230808.19999992847,
+      "bus": "ui",
+      "emitter": "ui:surface",
+      "accepted": true,
+      "rate": 1,
+      "voiceBus": "ui"
+    },
+    {
+      "id": "spirit_valid",
+      "requestedAt": 240764.09999990463,
+      "bus": "ui",
+      "emitter": "ui:guided-placement",
+      "accepted": true,
+      "rate": 1,
+      "voiceBus": "ui"
+    },
+    {
+      "id": "ui_panel_open",
+      "requestedAt": 250947.19999992847,
+      "bus": "ui",
+      "emitter": "ui:surface",
+      "accepted": true,
+      "rate": 1,
+      "voiceBus": "ui"
+    },
+    {
+      "id": "ui_panel_close",
+      "requestedAt": 265539.89999997616,
+      "bus": "ui",
+      "emitter": "ui:surface",
+      "accepted": true,
+      "rate": 1,
+      "voiceBus": "ui"
+    },
+    {
+      "id": "ui_panel_open",
+      "requestedAt": 265857.6999999285,
+      "bus": "ui",
+      "emitter": "ui:surface",
+      "accepted": true,
+      "rate": 1,
+      "voiceBus": "ui"
+    },
+    {
+      "id": "ui_panel_close",
+      "requestedAt": 273081.1999999285,
+      "bus": "ui",
+      "emitter": "ui:surface",
+      "accepted": true,
+      "rate": 1,
+      "voiceBus": "ui"
+    },
+    {
+      "id": "ui_panel_open",
+      "requestedAt": 280833,
+      "bus": "ui",
+      "emitter": "ui:surface",
+      "accepted": true,
+      "rate": 1,
+      "voiceBus": "ui"
+    },
+    {
+      "id": "ui_pause",
+      "requestedAt": 280833.1999999285,
+      "bus": "ui",
+      "emitter": "ui:pause",
+      "accepted": false,
+      "voiceBus": null
+    }
+  ],
+  "audio": [
+    {
+      "voices": 0,
+      "active": 0,
+      "transport": false,
+      "context": "running"
+    }
+  ],
+  "worldCanvases": 0,
+  "menuFrames": 1,
+  "isolatedSlots": 0,
+  "errors": [],
+  "limits": "Retains old references; context loss is queried on real WebGL, not inferred from DOM removal. Resource disposal events are counts, not GPU memory bytes. One global app RAF and QA sampling timer remain intentionally active."
+}

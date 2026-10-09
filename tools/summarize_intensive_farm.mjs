@@ -5,6 +5,7 @@ import {deserialize} from '../src/persistence/snapshots.js';
 import {auditIntensiveFarm} from './check_intensive_farm.mjs';
 import {cropSpec} from '../src/simulation/rules.js';
 import assert from 'node:assert/strict';
+import {intensiveActivityAcceptance} from './intensive-activity-acceptance.mjs';
 
 export function summarizeIntensiveFarm(report){
   auditIntensiveFarm(report,{victory:report.result==='victory'});
@@ -25,6 +26,7 @@ export function summarizeIntensiveFarm(report){
   const days=report.daily.length,daylight=days*300;
   const idle=Object.fromEntries(['budget','space','shift-end','incursion','night'].map(reason=>[reason,report.daily.reduce((total,row)=>total+(row.idle[reason]??0),0)]));
   const unoccupied=idle.budget+idle.space+idle['shift-end'];
+  const unoccupiedFraction=daylight?unoccupied/daylight:null;
   const cash={harvestIncome:0n,seedCosts:0n,wageCosts:0n,repairCosts:0n,centreCosts:0n,wallCosts:0n,otherNet:0n};
   for(const [id,entry] of Object.entries(state.ledger.entries)){
     const amount=BigInt(entry.n);
@@ -55,7 +57,7 @@ export function summarizeIntensiveFarm(report){
     completedNights:report.completedNights,daysObserved:days,money:report.money,
     maximumLiving:report.maximumLiving,speciesObserved:Object.keys(bySpecies).length,bySpecies,
     cashflow:{openingBalance:'1500',...Object.fromEntries(Object.entries(cash).map(([key,value])=>[key,String(value)])),operatingCashFlow:String(operatingCashFlow),netCashFlowAfterConstruction:String(netCashFlowAfterConstruction),endingBalance:state.ledger.balance.n},
-    activity:{daylightSeconds:daylight,unoccupiedSeconds:unoccupied,unoccupiedFraction:daylight?unoccupied/daylight:null,idleSecondsByReason:idle,longestIdle:report.activity.longestIdle,p90LongestIdle:report.activity.p90LongestIdle},
+    activity:{daylightSeconds:daylight,unoccupiedSeconds:unoccupied,unoccupiedFraction,acceptance:intensiveActivityAcceptance(unoccupiedFraction),idleSecondsByReason:idle,longestIdle:report.activity.longestIdle,p90LongestIdle:report.activity.p90LongestIdle},
     daily:report.daily.map(({day,money,staff,planted,delivered,destroyed,living,centerHp,longestIdle,idle})=>({day,money,staff,planted,delivered,destroyed,living,centerHp,longestIdle,idle})),
     scope:'Recorded domain strategy and simulated time; not physical player activity, GPU frametime or complete biome/culture acceptance. Dead unpicked plants are losses in this strategy, which never removes crops manually.'
   };

@@ -1,0 +1,90 @@
+name: Intensive campaign QA
+
+on:
+  workflow_dispatch:
+    inputs:
+      biome:
+        description: Native biome for a responsible 100-night run
+        type: choice
+        default: sabana
+        options: [sabana, gran-rio, gran-canon, volcanes, manglares, desierto]
+      culture:
+        description: Culture for the same unmodified reinvestment policy
+        type: choice
+        default: mapungubwe
+        options: [mapungubwe, saheliana, suajili, musgum, etiope]
+      bad_management:
+        description: Also audit poor management across six biomes (10-night diagnostics)
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+# Each manual dispatch owns a frozen checkout and its own report directory.
+# A subsequent push must not cancel or replace the accepted evidence source.
+concurrency:
+  group: intensive-campaign-${{ github.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  responsible:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - name: Record immutable job identity
+        env:
+          QA_BIOME: ${{ inputs.biome }}
+          QA_CULTURE: ${{ inputs.culture }}
+        run: |
+          mkdir -p test-results/campaign-qa
+          node --input-type=module -e 'import {writeFileSync} from "node:fs"; writeFileSync("test-results/campaign-qa/job.json",JSON.stringify({runId:process.env.GITHUB_RUN_ID,runAttempt:process.env.GITHUB_RUN_ATTEMPT,sha:process.env.GITHUB_SHA,biome:process.env.QA_BIOME,culture:process.env.QA_CULTURE,days:100,scope:"One native domain campaign; no rendering, mobile or whole-matrix acceptance."},null,2)+"\n");'
+      - name: Responsible reinvestment for 100 nights
+        # Leave time for the always-upload step after a failed or timed-out run.
+        timeout-minutes: 330
+        env:
+          QA_BIOME: ${{ inputs.biome }}
+          QA_CULTURE: ${{ inputs.culture }}
+        run: |
+          set -o pipefail
+          node tools/check_intensive_case.mjs "$QA_BIOME" "$QA_CULTURE" 100 "$GITHUB_WORKSPACE/test-results/campaign-qa" 2>&1 | tee test-results/campaign-qa/process.txt
+      - name: Retain complete or partial evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: intensive-100-${{ inputs.biome }}-${{ inputs.culture }}-${{ github.run_id }}
+          path: test-results/campaign-qa/
+          if-no-files-found: warn
+          retention-days: 30
+
+  poor-management:
+    if: inputs.bad_management
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - name: Audit ordinary poor-management decisions
+        timeout-minutes: 90
+        run: |
+          mkdir -p test-results/campaign-bad-management
+          set -o pipefail
+          node tools/check_bad_management.mjs "$GITHUB_WORKSPACE/test-results/campaign-bad-management" 2>&1 | tee test-results/campaign-bad-management/process.txt
+      - name: Retain defeats, survivals and failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: intensive-bad-management-${{ github.run_id }}
+          path: test-results/campaign-bad-management/
+          if-no-files-found: warn
+          retention-days: 30

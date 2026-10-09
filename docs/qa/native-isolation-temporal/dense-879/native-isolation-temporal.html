@@ -1,0 +1,7 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA · Aislamiento durante traveling</title>
+<style>body{margin:0;background:#18271f;color:#eee;font:13px system-ui}button{padding:10px}canvas{width:960px;height:540px}pre{white-space:pre-wrap}img{max-width:98vw}</style>
+<h1>Traveling: imagen, poses y sombras durante preparación aislada</h1>
+<p>QA visual con readback. No usar sus tiempos como benchmark. Seis biomas y una finca densa archivada; sin partidas de usuario.</p>
+<button id="run">Ejecutar regresión temporal</button><button id="cancel" disabled>Cancelar y liberar GPU</button>
+<p id="status">Preparado; GPU inactiva.</p><canvas></canvas><div id="captures"></div><pre id="report"></pre>
+<script type="module" src="./native-isolation-temporal.js"></script></html>

@@ -1,0 +1,349 @@
+{
+  "head": "4c63faf92a4fa943b11cbd57152356dbc7f5a2b0",
+  "order": [
+    "A1",
+    "B1",
+    "B2",
+    "A2"
+  ],
+  "oldCpuCampaignPidsObservedAbsent": [
+    48904,
+    41304,
+    41320,
+    49032
+  ],
+  "scope": "Current main native paused dense saved farm; remote GitHub campaigns do not run on local hardware. No local heavy build/tests during measurements; agent GPU/Blender held. Driver/browser caches and thermal state uncontrolled.",
+  "sources": {
+    "tests/browser/streaming-travel.html": "b182c47bc8228c1192c11a560aa546bee9aefa95b56305a017801093d8d839bd",
+    "src/rendering/scene.js": "dd23d212668a78315cfbf625235e9ff5e839421f7eb509619ce7d05650984dc1",
+    "tools/experiments/prepare-native-far-gpu.js": "0840f388b71c52c64e7580918950dbc76ee846197970b1f32e59e3ced56a10d5",
+    "tools/experiments/isolated-gpu-root.js": "7ce41d346dcece4fa9909091f432227d0b81e7be62271f5508a512b5fb8d7505",
+    "tools/experiments/attach-native-far-world.js": "af0d61a62c7e7d84daf5d4dd4bc6c63b921396904cd1401f654e34abdc7aae44",
+    "tools/experiments/prepare-resident-travel-variants.js": "8477c4c622d093a241261d6ace9bda7e96609992e5a004b544bde14e3f5e4ddb",
+    "tools/experiments/prepare-resident-textures.js": "8cb3f3893cc5a9ad446186bb9995032855a987dbee5877293ef70b04ff60d85c",
+    "tools/experiments/prepare-crate-shadow.js": "60e82eb66a420828e12a0f0b11489b2141baf9a48a405f24bdd6d02712f01eb9",
+    "tests/browser/gpu-timer.js": "a59cf9c7419810d687ffd91a9c88d9efc4693a4a5489a7351b994ce1d1100a4b"
+  },
+  "runs": [
+    {
+      "name": "A1",
+      "tab": 885,
+      "frame": {
+        "count": 196,
+        "p50": 66.5,
+        "p95": 149.79999999999927,
+        "p99": 216.09999999999854,
+        "max": 232.8000000000029,
+        "over33": 176,
+        "over50": 130,
+        "over100": 35
+      },
+      "cpu": {
+        "count": 197,
+        "p50": 18.899999976158142,
+        "p95": 27.600000023841858,
+        "p99": 32.5,
+        "max": 32.60000002384186,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "gpuP95": 72.552446,
+      "gpuSamples": 197,
+      "device": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+        "viewport": [
+          1280,
+          720
+        ],
+        "drawingBuffer": [
+          1600,
+          900
+        ],
+        "dpr": 1.25,
+        "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+      },
+      "initialEye": [
+        99.70247532024266,
+        27.89038256621945,
+        30.57367599590944
+      ],
+      "initialTarget": [
+        83,
+        12.715480448781069,
+        0
+      ],
+      "finalEye": [
+        99.70247532024266,
+        21.94468641994898,
+        210.57367599590944
+      ],
+      "finalTarget": [
+        83,
+        6.7697843025105975,
+        180
+      ],
+      "initialStream": {
+        "created": 25,
+        "discarded": 0,
+        "failed": 0,
+        "fallbacks": 0,
+        "worker": true,
+        "queued": 0,
+        "busy": false,
+        "epoch": 0
+      },
+      "finalStream": {
+        "created": 40,
+        "discarded": 0,
+        "failed": 0,
+        "fallbacks": 0,
+        "worker": true,
+        "queued": 0,
+        "busy": false,
+        "epoch": 0
+      },
+      "rawSha256": "12e4cadb31b2be6b3aac54fcb58718265207b59bbe7e7cb74a66f267bea67c48"
+    },
+    {
+      "name": "B1",
+      "tab": 886,
+      "frame": {
+        "count": 257,
+        "p50": 49.900000000001455,
+        "p95": 116.40000000000146,
+        "p99": 133.09999999999854,
+        "max": 149.70000000000073,
+        "over33": 183,
+        "over50": 117,
+        "over100": 22
+      },
+      "cpu": {
+        "count": 258,
+        "p50": 18.800000071525574,
+        "p95": 30.700000047683716,
+        "p99": 38.60000002384186,
+        "max": 44.60000002384186,
+        "over33": 6,
+        "over50": 0,
+        "over100": 0
+      },
+      "gpuP95": 69.564791,
+      "gpuSamples": 258,
+      "device": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+        "viewport": [
+          1280,
+          720
+        ],
+        "drawingBuffer": [
+          1600,
+          900
+        ],
+        "dpr": 1.25,
+        "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+      },
+      "initialEye": [
+        99.70247532024266,
+        27.89038256621945,
+        30.57367599590944
+      ],
+      "initialTarget": [
+        83,
+        12.715480448781069,
+        0
+      ],
+      "finalEye": [
+        99.70247532024266,
+        21.94468641994898,
+        210.57367599590944
+      ],
+      "finalTarget": [
+        83,
+        6.7697843025105975,
+        180
+      ],
+      "initialStream": {
+        "created": 25,
+        "discarded": 0,
+        "failed": 0,
+        "fallbacks": 0,
+        "worker": true,
+        "queued": 0,
+        "busy": false,
+        "epoch": 0
+      },
+      "finalStream": {
+        "created": 40,
+        "discarded": 0,
+        "failed": 0,
+        "fallbacks": 0,
+        "worker": true,
+        "queued": 0,
+        "busy": false,
+        "epoch": 0
+      },
+      "rawSha256": "ec97644fc9dc9c7926ca7f49129015a1ce1256420a9464b62a61048b7690bafe"
+    },
+    {
+      "name": "B2",
+      "tab": 887,
+      "frame": {
+        "count": 257,
+        "p50": 50,
+        "p95": 116.39999999999782,
+        "p99": 133.09999999999854,
+        "max": 149.70000000000073,
+        "over33": 195,
+        "over50": 118,
+        "over100": 16
+      },
+      "cpu": {
+        "count": 258,
+        "p50": 19.600000023841858,
+        "p95": 28.800000071525574,
+        "p99": 34.5,
+        "max": 44.700000047683716,
+        "over33": 6,
+        "over50": 0,
+        "over100": 0
+      },
+      "gpuP95": 68.038072,
+      "gpuSamples": 258,
+      "device": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+        "viewport": [
+          1280,
+          720
+        ],
+        "drawingBuffer": [
+          1600,
+          900
+        ],
+        "dpr": 1.25,
+        "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+      },
+      "initialEye": [
+        99.70247532024266,
+        27.89038256621945,
+        30.57367599590944
+      ],
+      "initialTarget": [
+        83,
+        12.715480448781069,
+        0
+      ],
+      "finalEye": [
+        99.70247532024266,
+        21.94468641994898,
+        210.57367599590944
+      ],
+      "finalTarget": [
+        83,
+        6.7697843025105975,
+        180
+      ],
+      "initialStream": {
+        "created": 25,
+        "discarded": 0,
+        "failed": 0,
+        "fallbacks": 0,
+        "worker": true,
+        "queued": 0,
+        "busy": false,
+        "epoch": 0
+      },
+      "finalStream": {
+        "created": 40,
+        "discarded": 0,
+        "failed": 0,
+        "fallbacks": 0,
+        "worker": true,
+        "queued": 0,
+        "busy": false,
+        "epoch": 0
+      },
+      "rawSha256": "1a15ae8af5f0384dd8a639a18ac0223e1b0c14656d69681d48c5b69362c954a5"
+    },
+    {
+      "name": "A2",
+      "tab": 888,
+      "frame": {
+        "count": 193,
+        "p50": 66.5,
+        "p95": 166.20000000000437,
+        "p99": 182.90000000000146,
+        "max": 199.59999999999854,
+        "over33": 165,
+        "over50": 129,
+        "over100": 41
+      },
+      "cpu": {
+        "count": 194,
+        "p50": 20.399999976158142,
+        "p95": 30.699999928474426,
+        "p99": 34.10000002384186,
+        "max": 36.299999952316284,
+        "over33": 5,
+        "over50": 0,
+        "over100": 0
+      },
+      "gpuP95": 70.550155,
+      "gpuSamples": 194,
+      "device": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+        "viewport": [
+          1280,
+          720
+        ],
+        "drawingBuffer": [
+          1600,
+          900
+        ],
+        "dpr": 1.25,
+        "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+      },
+      "initialEye": [
+        99.70247532024266,
+        27.89038256621945,
+        30.57367599590944
+      ],
+      "initialTarget": [
+        83,
+        12.715480448781069,
+        0
+      ],
+      "finalEye": [
+        99.70247532024266,
+        21.94468641994898,
+        210.57367599590944
+      ],
+      "finalTarget": [
+        83,
+        6.7697843025105975,
+        180
+      ],
+      "initialStream": {
+        "created": 25,
+        "discarded": 0,
+        "failed": 0,
+        "fallbacks": 0,
+        "worker": true,
+        "queued": 0,
+        "busy": false,
+        "epoch": 0
+      },
+      "finalStream": {
+        "created": 40,
+        "discarded": 0,
+        "failed": 0,
+        "fallbacks": 0,
+        "worker": true,
+        "queued": 0,
+        "busy": false,
+        "epoch": 0
+      },
+      "rawSha256": "d236958a4b232b6029add26fc615f6283f0e4f9344837eb9ff872ce7ba27a831"
+    }
+  ]
+}

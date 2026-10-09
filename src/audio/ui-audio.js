@@ -1,5 +1,5 @@
-export const UI_SOUND_ROUTES=Object.freeze({ui_panel_open:'ui-surface-transition',ui_panel_close:'ui-surface-transition',ui_tab:'ui-surface-transition',ui_error:'ui-command-error',ui_pause:'ui-user-pause-transition',ui_resume:'ui-user-pause-transition',spirit_select:'ui-magic-selection',spirit_touch:'ui-guided-hud-action',spirit_drag:'ui-wall-stroke-first-motion',spirit_drop:'ui-wall-stroke-release'});
-export const UI_SOUND_IDS=Object.freeze(['ui_panel_open','ui_panel_close','ui_tab','ui_error','ui_pause','ui_resume','spirit_select','spirit_touch','spirit_drag','spirit_drop']);
+export const UI_SOUND_ROUTES=Object.freeze({ui_panel_open:'ui-surface-transition',ui_panel_close:'ui-surface-transition',ui_tab:'ui-surface-transition',ui_error:'ui-command-error',ui_pause:'ui-user-pause-transition',ui_resume:'ui-user-pause-transition',spirit_select:'ui-magic-selection',spirit_touch:'ui-guided-hud-action',spirit_drag:'ui-wall-stroke-first-motion',spirit_drop:'ui-wall-stroke-release',spirit_valid:'ui-guided-placement-confirmed'});
+export const UI_SOUND_IDS=Object.freeze(['ui_panel_open','ui_panel_close','ui_tab','ui_error','ui_pause','ui_resume','spirit_select','spirit_touch','spirit_drag','spirit_drop','spirit_valid']);
 
 // Feed actual interface transitions, never polling/renders or logical payments.
 export class UiAudio {
@@ -15,6 +15,10 @@ export class UiAudio {
     if(!guided||!['build','grow'].includes(action)||this.guidedActions.has(action))return false;
     this.guidedActions.add(action);const revision=this.surfaceRevision;
     this.cue('spirit_touch','ui:guided-hud',()=>revision===this.surfaceRevision);return true;
+  }
+  guidedPlacement(kind){
+    if(!['center','plant'].includes(kind)||this.guidedPlacements.has(kind))return false;
+    this.guidedPlacements.add(kind);this.cue('spirit_valid','ui:guided-placement');return true;
   }
   stopWallDrag(){try{this.wallVoice?.stop?.();}catch{}this.wallVoice=null;}
   wallGesture(phase){
@@ -36,5 +40,11 @@ export class UiAudio {
   }
   error({force=false}={}){const now=this.clock();if(!force&&now-this.lastErrorAt<1)return;this.lastErrorAt=now;this.cue('ui_error','ui:error');}
   pause(before,after){const id=!before.includes('menu')&&after.includes('menu')?'ui_pause':before.includes('menu')&&!after.length?'ui_resume':null;if(id){const revision=++this.pauseRevision;this.cue(id,'ui:pause',()=>revision===this.pauseRevision);}}
-  reset(){this.stopWallDrag();this.generation++;this.wallRevision=0;this.wallActive=false;this.wallDragged=false;this.surfaceRevision=0;this.pauseRevision=0;this.spellRevision=0;this.guidedActions=new Set();this.identity=null;this.kind=null;this.lastErrorAt=-Infinity;}
+  reset(){this.stopWallDrag();this.generation++;this.wallRevision=0;this.wallActive=false;this.wallDragged=false;this.surfaceRevision=0;this.pauseRevision=0;this.spellRevision=0;this.guidedActions=new Set();this.guidedPlacements=new Set();this.identity=null;this.kind=null;this.lastErrorAt=-Infinity;}
+}
+
+// Read the currently displayed guide; no procedural/pathfinding query on input.
+export function guidedPlacementKind(tool,hands){
+  const kind=tool?.kind;if(!['center','plant'].includes(kind)||!hands?.mesh?.visible||hands.adapter?.phase!=='reading')return null;
+  return hands.hints?.custom?.target===(kind==='center'?'center-site':'plant-site')?kind:null;
 }

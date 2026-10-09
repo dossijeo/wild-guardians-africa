@@ -28,7 +28,7 @@ try {
   if(!result.daily.every(day=>day.staff>0&&day.delivered>0))throw Error('Workday without contracted labour or physical deliveries');
   const summary=summarizeIntensiveFarm({...result,provenance});
   writeFileSync(new URL(key+'-summary.json',output),JSON.stringify(summary,null,2)+'\n');
-  Object.assign(row,{status:'passed',result:result.result,completedNights:result.completedNights,money:result.money,maximumLiving:result.maximumLiving,speciesObserved:summary.speciesObserved,unoccupiedFraction:summary.activity.unoccupiedFraction});
+  Object.assign(row,{status:'passed',result:result.result,completedNights:result.completedNights,money:result.money,maximumLiving:result.maximumLiving,speciesObserved:summary.speciesObserved,unoccupiedFraction:summary.activity.unoccupiedFraction,activityAcceptance:summary.activity.acceptance});
 }catch(error){
   row.status='failed';row.error={name:error.name,message:error.message};process.exitCode=1;
   if(lastState)try{writeFileSync(new URL(key+'-failure-state.json',output),serialize(lastState));row.failureSnapshot='validated';}

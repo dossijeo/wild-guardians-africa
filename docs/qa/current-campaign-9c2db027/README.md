@@ -1,6 +1,6 @@
-# Current-source 100-night campaign — running, not accepted
+# Current-source 100-night campaign â€” running, not accepted
 
-A new Gran Cañón/Mapungubwe seed712 campaign uses committed revision
+A new Gran CaÃ±Ã³n/Mapungubwe seed712 campaign uses committed revision
 `9c2db027c75c88a2df67610f1f6a318beadcf0cc`, frozen with `git archive` into
 `.cache/qa-current-9c2db027`. The archive includes src, tools, public/content,
 content/manifests and package manifests. Later main commits cannot replace
@@ -41,3 +41,7 @@ process/session handles before declaring completion, failure or stoppage.
 Historical processes40968/41304 remained alive and were not restarted, deleted
 or relabeled as current-source evidence. No comparative speedup is inferred
 from the new run's early progress versus those different frozen sources.
+
+## Revalidation on 2026-10-09
+
+The historical process 49032 is absent from the current process inventory. Its retained status file still says `running`, but that label is stale and is not evidence of liveness. The last daily record is day82 with no game result; no terminal report is present in the original output directory. Last status is retained losslessly in `last-status-observed.json.gz`, with file hash and process observation in `terminal-observation.json`. The cause of process termination and exit code are unknown. Nothing was restarted or relabeled as a successful campaign. Earlier observations above remain historical point-in-time evidence. Full responsible/bad-management campaign acceptance remains open and needs a new coordinated run when GPU measurements are not active.
