@@ -1,0 +1,434 @@
+{
+  "scope": "Read-only arithmetic from existing G10/F10. No runtime changes or simulations. Not an acceptance prediction.",
+  "inputs": {
+    "diagnostic.json.gz": "2e372fe566c7a7eb9a06bf48e4fe6e8bf0f6ca9d2b2567856544de45cd7b6f75",
+    "report.json.gz": "a40fbb8d8372b7dd5381e1d19846ef3b5b8270b4205833731749f127a303bc95",
+    "terminal-audit.json.gz": "fd506ab1be4def49633cd69509d9a28274db8d153c49ee32673099ed03fa8815"
+  },
+  "observed": {
+    "budgetSeconds": 639,
+    "early1to3Budget": 535,
+    "maintenanceSeconds": 316,
+    "currentTeamSeconds": 323,
+    "early1to2Maintenance": 311,
+    "daily": [
+      {
+        "day": 1,
+        "before": 515,
+        "money": 600,
+        "staff": 6,
+        "wages": 180,
+        "nextLabourReserve": 240,
+        "maintenanceReserve": 100,
+        "pendingTasks": 93,
+        "planted": 115,
+        "delivered": 20,
+        "destroyed": 0,
+        "living": 96,
+        "centerHp": [
+          600
+        ],
+        "actions": 116,
+        "longestIdle": 165,
+        "idle": {
+          "budget": 165,
+          "space": 0,
+          "shift-end": 20,
+          "incursion": 16,
+          "night": 285
+        },
+        "result": null,
+        "additionalStaff": 0,
+        "additionalWages": 0
+      },
+      {
+        "day": 2,
+        "before": 360,
+        "money": 614,
+        "staff": 8,
+        "wages": 240,
+        "nextLabourReserve": 510,
+        "maintenanceReserve": 100,
+        "pendingTasks": 172,
+        "planted": 134,
+        "delivered": 28,
+        "destroyed": 1,
+        "living": 201,
+        "centerHp": [
+          600
+        ],
+        "actions": 134,
+        "longestIdle": 140,
+        "idle": {
+          "budget": 146,
+          "space": 0,
+          "shift-end": 20,
+          "incursion": 11,
+          "night": 290
+        },
+        "result": null,
+        "additionalStaff": 0,
+        "additionalWages": 0
+      },
+      {
+        "day": 3,
+        "before": 104,
+        "money": 2149,
+        "staff": 17,
+        "wages": 510,
+        "nextLabourReserve": 510,
+        "maintenanceReserve": 100,
+        "pendingTasks": 183,
+        "planted": 53,
+        "delivered": 70,
+        "destroyed": 0,
+        "living": 184,
+        "centerHp": [
+          600
+        ],
+        "actions": 58,
+        "longestIdle": 89,
+        "idle": {
+          "budget": 224,
+          "space": 0,
+          "shift-end": 20,
+          "incursion": 14,
+          "night": 285
+        },
+        "result": null,
+        "additionalStaff": 0,
+        "additionalWages": 0
+      },
+      {
+        "day": 4,
+        "before": 1669,
+        "money": 1325,
+        "staff": 16,
+        "wages": 480,
+        "nextLabourReserve": 1080,
+        "maintenanceReserve": 100,
+        "pendingTasks": 379,
+        "planted": 280,
+        "delivered": 32,
+        "destroyed": 2,
+        "living": 430,
+        "centerHp": [
+          600
+        ],
+        "actions": 284,
+        "longestIdle": 20,
+        "idle": {
+          "budget": 0,
+          "space": 0,
+          "shift-end": 20,
+          "incursion": 14,
+          "night": 290
+        },
+        "result": null,
+        "additionalStaff": 0,
+        "additionalWages": 0
+      },
+      {
+        "day": 5,
+        "before": 245,
+        "money": 2477,
+        "staff": 36,
+        "wages": 1080,
+        "nextLabourReserve": 1440,
+        "maintenanceReserve": 100,
+        "pendingTasks": 494,
+        "planted": 240,
+        "delivered": 100,
+        "destroyed": 2,
+        "living": 568,
+        "centerHp": [
+          600
+        ],
+        "actions": 247,
+        "longestIdle": 39,
+        "idle": {
+          "budget": 39,
+          "space": 0,
+          "shift-end": 20,
+          "incursion": 18,
+          "night": 285
+        },
+        "result": null,
+        "additionalStaff": 0,
+        "additionalWages": 0
+      },
+      {
+        "day": 6,
+        "before": 1037,
+        "money": 2686,
+        "staff": 48,
+        "wages": 1440,
+        "nextLabourReserve": 1890,
+        "maintenanceReserve": 100,
+        "pendingTasks": 730,
+        "planted": 251,
+        "delivered": 67,
+        "destroyed": 3,
+        "living": 749,
+        "centerHp": [
+          550
+        ],
+        "actions": 259,
+        "longestIdle": 28,
+        "idle": {
+          "budget": 28,
+          "space": 0,
+          "shift-end": 20,
+          "incursion": 32,
+          "night": 270
+        },
+        "result": null,
+        "additionalStaff": 0,
+        "additionalWages": 0
+      },
+      {
+        "day": 7,
+        "before": 796,
+        "money": 7643,
+        "staff": 63,
+        "wages": 1890,
+        "nextLabourReserve": 1920,
+        "maintenanceReserve": 173.33333333333334,
+        "pendingTasks": 690,
+        "planted": 241,
+        "delivered": 226,
+        "destroyed": 4,
+        "living": 760,
+        "centerHp": [
+          470
+        ],
+        "actions": 250,
+        "longestIdle": 37,
+        "idle": {
+          "budget": 37,
+          "space": 0,
+          "shift-end": 19,
+          "incursion": 47,
+          "night": 255
+        },
+        "result": null,
+        "additionalStaff": 0,
+        "additionalWages": 0
+      },
+      {
+        "day": 8,
+        "before": 5723,
+        "money": 13761,
+        "staff": 64,
+        "wages": 1920,
+        "nextLabourReserve": 1980,
+        "maintenanceReserve": 173.33333333333334,
+        "pendingTasks": 677,
+        "planted": 280,
+        "delivered": 256,
+        "destroyed": 3,
+        "living": 781,
+        "centerHp": [
+          470
+        ],
+        "actions": 288,
+        "longestIdle": 20,
+        "idle": {
+          "budget": 0,
+          "space": 0,
+          "shift-end": 20,
+          "incursion": 19,
+          "night": 280
+        },
+        "result": null,
+        "additionalStaff": 0,
+        "additionalWages": 0
+      },
+      {
+        "day": 9,
+        "before": 11781,
+        "money": 11272,
+        "staff": 66,
+        "wages": 1980,
+        "nextLabourReserve": 2610,
+        "maintenanceReserve": 173.33333333333334,
+        "pendingTasks": 880,
+        "planted": 280,
+        "delivered": 23,
+        "destroyed": 4,
+        "living": 1034,
+        "centerHp": [
+          470
+        ],
+        "actions": 288,
+        "longestIdle": 20,
+        "idle": {
+          "budget": 0,
+          "space": 0,
+          "shift-end": 20,
+          "incursion": 21,
+          "night": 280
+        },
+        "result": null,
+        "additionalStaff": 0,
+        "additionalWages": 0
+      },
+      {
+        "day": 10,
+        "before": 8662,
+        "money": 3787,
+        "staff": 87,
+        "wages": 2610,
+        "nextLabourReserve": 2910,
+        "maintenanceReserve": 173.33333333333334,
+        "pendingTasks": 1016,
+        "planted": 280,
+        "delivered": 154,
+        "destroyed": 6,
+        "living": 1154,
+        "centerHp": [
+          470
+        ],
+        "actions": 289,
+        "longestIdle": 19,
+        "idle": {
+          "budget": 0,
+          "space": 0,
+          "shift-end": 19,
+          "incursion": 53,
+          "night": 250
+        },
+        "result": null,
+        "additionalStaff": 0,
+        "additionalWages": 0
+      }
+    ],
+    "F10": {
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "unoccupiedSeconds": 1079,
+      "daylightSeconds": 3000,
+      "delivered": 830,
+      "planted": 1910,
+      "lastMoney": 2810,
+      "lastTasks": 932
+    },
+    "G10": {
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "unoccupiedSeconds": 837,
+      "daylightSeconds": 3000,
+      "delivered": 976,
+      "planted": 2154,
+      "lastMoney": 3787,
+      "lastTasks": 1016
+    }
+  },
+  "proposedSingleParameter": {
+    "name": "work_center.cost",
+    "from": 800,
+    "to": 600,
+    "base": "G quota4",
+    "noChanges": [
+      "initial_money",
+      "wages",
+      "crop prices",
+      "harvest values",
+      "base attraction",
+      "HP",
+      "damage",
+      "growth",
+      "task durations",
+      "speed",
+      "animation",
+      "urgency",
+      "FIFO",
+      "routes",
+      "policy",
+      "placement domain",
+      "seed712",
+      "maintenance floor100",
+      "activity threshold"
+    ]
+  },
+  "openingArithmetic": [
+    {
+      "centerCost": 800,
+      "initialMoney": 1500,
+      "firstSeedCost": 5,
+      "cashBeforeHire": 695,
+      "staff": 6,
+      "paidWages": 180,
+      "postHireCash": 515,
+      "nextTeamReserve": 180,
+      "maintenanceFloor": 100,
+      "additionalSeedsBeforeNextIncome": 47,
+      "livingBeforeBudgetBlock": 48,
+      "livingPerWorker": 8.0
+    },
+    {
+      "centerCost": 600,
+      "initialMoney": 1500,
+      "firstSeedCost": 5,
+      "cashBeforeHire": 895,
+      "staff": 8,
+      "paidWages": 240,
+      "postHireCash": 655,
+      "nextTeamReserve": 240,
+      "maintenanceFloor": 100,
+      "additionalSeedsBeforeNextIncome": 63,
+      "livingBeforeBudgetBlock": 64,
+      "livingPerWorker": 8.0
+    }
+  ],
+  "repairArithmetic": [
+    {
+      "hp": 600,
+      "oldCost": 0,
+      "proposedCost": 0,
+      "oldReserve": 100,
+      "proposedReserve": 100
+    },
+    {
+      "hp": 550,
+      "oldCost": 67,
+      "proposedCost": 50,
+      "oldReserve": 100,
+      "proposedReserve": 100
+    },
+    {
+      "hp": 470,
+      "oldCost": 174,
+      "proposedCost": 130,
+      "oldReserve": 174,
+      "proposedReserve": 130
+    }
+  ],
+  "risks": [
+    "More absolute queue and earlier plant attraction despite unchanged per-plant attraction",
+    "Cheaper extra centres and repairs may reduce bad-management risk",
+    "Dawn-only staffing and seed purchases are endogenous, so exact delivery timing/activity cannot be inferred from this arithmetic",
+    "Late F100 finite placement and congestion remain untested by G10",
+    "Must preserve rejected F/G controls and test poor-management and full100/matrix before promotion"
+  ]
+}
