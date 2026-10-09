@@ -11,8 +11,10 @@ its verified labels do not prove all subsequent user requirements on this base.
 PR13 at `6ac2b672` archives sixteen original terminals from frozen `3324d17d`:
 eight victories pass the strict daylight inactivity threshold below 25%; four
 Canyon victories and Desert/Mapungubwe fail that threshold; three Desert
-incursions remain unresolved. Desert/Saheliana was confirmed live through
-GitHub job 113646986727. Neither
+incursions remain unresolved in that sixteen-case archive. The seventeenth
+original, Desert/Saheliana job 113646986727, has now ended in failure at day 100,
+99 completed nights, with an unfinished retreat. Its full original failure is
+retained; no final report, victory or activity approval exists. Neither
 unfinished campaigns nor victories above the threshold count as complete release
 acceptance. These sources precede the marginal legacy retreat recovery in PR12.
 
@@ -24,6 +26,15 @@ Both exact-head CI checks passed, and PR13 is merged as `dbe4d1ed`.
 This integrates the archives, not approval of their rejected/unfinished cases.
 See [the expanded receipt](campaign-ci/root-pr13-expanded-archive-review.json)
 and [reproducible verifier](campaign-ci/verify-root-archive-receipts.py).
+
+The final original was subsequently integrated from `747247fe`. Root's expanded
+byte/receipt check passes for all seventeen archives: 163 original payloads,
+214,785,301 bytes. See [the seventeen-case receipt](campaign-ci/root-seventeen-archive-review.json)
+and [the final failure](campaign-ci/current-3324d17d-terminals/desierto-saheliana-37876748172/README.md).
+This archive check is not a new domain/source audit or a current-main recovery
+replay. The distinct fourth retreat snapshot requires bounded validation against
+the already integrated PR15 before deciding whether additional runtime work is
+needed.
 
 The three distinct saved Desert stalls now have bounded native recovery fixes
 in merged PR15, with root 45/45 directed tests and both exact-head CI checks
