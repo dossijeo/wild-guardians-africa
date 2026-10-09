@@ -1,0 +1,91 @@
+{
+  "source": "3101dbffe55cc93fa695c4be75069db9e3778dab",
+  "ports": {
+    "A": 5407,
+    "B": 5408
+  },
+  "onlySourceDifferences": [
+    "src/rendering/loading-diorama.js",
+    "src/rendering/loading-mist.js"
+  ],
+  "harnessSha256": "9b2061e9d6e5dfa97c8e9be0eb517a7a17ce2f17f6e89af97716d66e6223c209",
+  "viewerSha256": "0bef5cc7d0d4afc0e710b070e01d8abc02f02e12295414de54d395ff32d25fb5",
+  "preflight": [
+    {
+      "port": 5407,
+      "path": "/tests/browser/interactive-loading-diorama.html",
+      "bytes": 1373,
+      "sha256": "a799972a419564d1297e63a6c53c2e8cef78cf656118fbf4fd17d74e45369b30"
+    },
+    {
+      "port": 5407,
+      "path": "/tests/browser/loading-visual-cost.js",
+      "bytes": 15063,
+      "sha256": "43c8a76efdbe8d8ac855c34f82304e39b96f76f51e71d4ee2b25e30ceba2ce53"
+    },
+    {
+      "port": 5407,
+      "path": "/src/rendering/crop-batch.js",
+      "bytes": 112745,
+      "sha256": "8e482993442b03969eb9f9f42e2ae1eec9f1535bf83c6ca4c58aba0ab8622356"
+    },
+    {
+      "port": 5407,
+      "path": "/content/crop-bridges.json",
+      "bytes": 297473,
+      "sha256": "1cb26e0d61bdb0aa780d6976e54c57537b8cf9fe77518b49691b9c4cd292185f"
+    },
+    {
+      "port": 5408,
+      "path": "/tests/browser/interactive-loading-diorama.html",
+      "bytes": 1373,
+      "sha256": "a799972a419564d1297e63a6c53c2e8cef78cf656118fbf4fd17d74e45369b30"
+    },
+    {
+      "port": 5408,
+      "path": "/tests/browser/loading-visual-cost.js",
+      "bytes": 15063,
+      "sha256": "43c8a76efdbe8d8ac855c34f82304e39b96f76f51e71d4ee2b25e30ceba2ce53"
+    },
+    {
+      "port": 5408,
+      "path": "/src/rendering/crop-batch.js",
+      "bytes": 112745,
+      "sha256": "771f8b4bae74e6247d10ee81c1bb7140ba8ed77831b4e5ce3970586d3a5804c7"
+    },
+    {
+      "port": 5408,
+      "path": "/content/crop-bridges.json",
+      "bytes": 297473,
+      "sha256": "1cb26e0d61bdb0aa780d6976e54c57537b8cf9fe77518b49691b9c4cd292185f"
+    }
+  ],
+  "sequence": [
+    "dayA1",
+    "dayB1",
+    "dayB2",
+    "dayA2",
+    "nightA1",
+    "nightB1",
+    "nightB2",
+    "nightA2"
+  ],
+  "viewport": [
+    1280,
+    720
+  ],
+  "quality": "media",
+  "growth": 78,
+  "reducedMotion": true,
+  "fixedClockDt": 0.016666666666666666,
+  "frames": {
+    "warmup": 120,
+    "queried": 300,
+    "drain": 120
+  },
+  "timingQueryScope": "Only synchronous diorama.render draws, CSS excluded; draw CPU/overlay CPU disjoint; all RAF retained",
+  "practicalCriterion": "Flag >5% AND >0.5ms GPU median increase consistent across both orders within either day/night as material cost; no assertion of statistical equivalence with four arms",
+  "resourceScope": "Separate probes after timing, no physical peak RAM/VRAM claim",
+  "cacheScope": "No cold/fully-cached claim; immutable hardlinked assets, transfers/preparation excluded from steady presentation timing",
+  "exceptions": "A removes focus hook from existing crop/soil material shaders and restores pre-focus mist shader c7c26463; same V4 geometry, sky, haze parameters, shaft, sparkles, wood UI and pose as B. amount0 is not used as shader-cost reference."
+}

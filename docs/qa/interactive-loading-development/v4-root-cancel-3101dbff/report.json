@@ -1,0 +1,315 @@
+{
+  "biome": "sabana",
+  "culture": "mapungubwe",
+  "quality": "media",
+  "scope": "Native interactive pipeline: actual weighted milestones, diorama then real cinematic. Preparation starts at Run rather than a menu animation; menu integration has separate real-app QA. Frame intervals and long tasks are CPU scheduling proxies, not GPU timer measurements. Heap/resource counters are coarse proxies.",
+  "stages": [],
+  "frames": [
+    34.72199997615826,
+    15.977999999999156,
+    16.80000000000109,
+    16.399999999999636,
+    16.700000000000728,
+    16.899999999999636,
+    16.19999999999891
+  ],
+  "longTasks": [
+    {
+      "start": -199.80000007152557,
+      "duration": 239
+    }
+  ],
+  "errors": [],
+  "audio": [],
+  "cancelled": true,
+  "downloads": {
+    "progress": 1,
+    "estimatedMs": 55.199999928474426,
+    "observedMs": 55.199999928474426,
+    "remainingMs": 0,
+    "pending": 0,
+    "networkPending": 0,
+    "cacheHits": 0,
+    "network": 13,
+    "unknown": 0,
+    "unknownTotals": 0,
+    "failures": 0,
+    "loadedBytes": 10615738,
+    "totalBytes": 10615738,
+    "estimated": false,
+    "byteScope": "Decoded response body; pending totals and time are estimates. Parallel intervals are counted once.",
+    "requests": [
+      {
+        "id": 1,
+        "url": "http://127.0.0.1:5290/content/skies.json",
+        "kind": "fetch",
+        "start": 10058.299999952316,
+        "end": 10088.299999952316,
+        "loaded": 644,
+        "total": 644,
+        "totalEvidence": "completed-body",
+        "cache": "network",
+        "failed": false,
+        "timing": {
+          "startTime": 10060,
+          "responseEnd": 10073.799999952316,
+          "transferSize": 944,
+          "encodedBodySize": 644,
+          "decodedBodySize": 644,
+          "responseStatus": 200
+        }
+      },
+      {
+        "id": 2,
+        "url": "http://127.0.0.1:5290/assets/40a61c20a9d5ed438c3bc5ce179b709c530c3a11ebabe526b2cd2161cef231eb.webp",
+        "kind": "dom-resource",
+        "start": 10061.399999976158,
+        "end": 10081.299999952316,
+        "loaded": 32142,
+        "total": 32142,
+        "totalEvidence": "completed-body",
+        "cache": "network",
+        "failed": false,
+        "timing": {
+          "startTime": 10061.399999976158,
+          "responseEnd": 10076,
+          "transferSize": 300,
+          "encodedBodySize": 32142,
+          "decodedBodySize": 32142,
+          "responseStatus": 200
+        }
+      },
+      {
+        "id": 3,
+        "url": "http://127.0.0.1:5290/assets/e27abb53a2e14b1d791b43c182a7e86261e16cf4a284becb8904cf335c34a624.hdr",
+        "kind": "fetch",
+        "start": 10088.699999928474,
+        "end": 10122.799999952316,
+        "loaded": 3966045,
+        "total": 3966045,
+        "totalEvidence": "completed-body",
+        "cache": "network",
+        "failed": false,
+        "timing": {
+          "startTime": 10089,
+          "responseEnd": 10108.899999976158,
+          "transferSize": 300,
+          "encodedBodySize": 3966045,
+          "decodedBodySize": 3966045,
+          "responseStatus": 200
+        }
+      },
+      {
+        "id": 4,
+        "url": "http://127.0.0.1:5290/assets/f790f324227adec53f9b59be7b7fb68f90fc40d996665f6296fb7607230670cd.hdr",
+        "kind": "fetch",
+        "start": 10089.100000023842,
+        "end": 10123.699999928474,
+        "loaded": 5339485,
+        "total": 5339485,
+        "totalEvidence": "completed-body",
+        "cache": "network",
+        "failed": false,
+        "timing": {
+          "startTime": 10089.199999928474,
+          "responseEnd": 10116.5,
+          "transferSize": 300,
+          "encodedBodySize": 5339485,
+          "decodedBodySize": 5339485,
+          "responseStatus": 200
+        }
+      },
+      {
+        "id": 5,
+        "url": "http://127.0.0.1:5290/assets/bffafe36394af2197e45157a7d8446253b2ab04c63dfa9af0a58859056aecf0c.webp",
+        "kind": "dom-resource",
+        "start": 10061.399999976158,
+        "end": 10091.199999928474,
+        "loaded": 31568,
+        "total": 31568,
+        "totalEvidence": "completed-body",
+        "cache": "network",
+        "failed": false,
+        "timing": {
+          "startTime": 10061.399999976158,
+          "responseEnd": 10078.399999976158,
+          "transferSize": 300,
+          "encodedBodySize": 31568,
+          "decodedBodySize": 31568,
+          "responseStatus": 200
+        }
+      },
+      {
+        "id": 6,
+        "url": "http://127.0.0.1:5290/assets/15e4f1dcdd47087b55f9abc31d68377e6254ebbc96572cd421accac338f01c96.webp",
+        "kind": "dom-resource",
+        "start": 10061.5,
+        "end": 10091.299999952316,
+        "loaded": 31708,
+        "total": 31708,
+        "totalEvidence": "completed-body",
+        "cache": "network",
+        "failed": false,
+        "timing": {
+          "startTime": 10061.5,
+          "responseEnd": 10079,
+          "transferSize": 300,
+          "encodedBodySize": 31708,
+          "decodedBodySize": 31708,
+          "responseStatus": 200
+        }
+      },
+      {
+        "id": 7,
+        "url": "http://127.0.0.1:5290/assets/9c8cb3d5ead5f50805fb816624afaad9a1e3ae7b0e3dc89546ad6fd3876d2079.webp",
+        "kind": "dom-resource",
+        "start": 10061.600000023842,
+        "end": 10091.299999952316,
+        "loaded": 31614,
+        "total": 31614,
+        "totalEvidence": "completed-body",
+        "cache": "network",
+        "failed": false,
+        "timing": {
+          "startTime": 10061.600000023842,
+          "responseEnd": 10079.799999952316,
+          "transferSize": 300,
+          "encodedBodySize": 31614,
+          "decodedBodySize": 31614,
+          "responseStatus": 200
+        }
+      },
+      {
+        "id": 8,
+        "url": "http://127.0.0.1:5290/assets/3df178d306f9767aac989fa9bc299893b3b42b62c73643ebac646e9c771380be.webp",
+        "kind": "dom-resource",
+        "start": 10061.600000023842,
+        "end": 10091.299999952316,
+        "loaded": 5820,
+        "total": 5820,
+        "totalEvidence": "completed-body",
+        "cache": "network",
+        "failed": false,
+        "timing": {
+          "startTime": 10061.600000023842,
+          "responseEnd": 10081.600000023842,
+          "transferSize": 300,
+          "encodedBodySize": 5820,
+          "decodedBodySize": 5820,
+          "responseStatus": 200
+        }
+      },
+      {
+        "id": 9,
+        "url": "http://127.0.0.1:5290/assets/79cf0c4ee63beb11d5c3a5c4670f66d137adc0a4b7318549c06415a03fb33414.webp",
+        "kind": "dom-resource",
+        "start": 10061.600000023842,
+        "end": 10091.299999952316,
+        "loaded": 6106,
+        "total": 6106,
+        "totalEvidence": "completed-body",
+        "cache": "network",
+        "failed": false,
+        "timing": {
+          "startTime": 10061.600000023842,
+          "responseEnd": 10082.299999952316,
+          "transferSize": 300,
+          "encodedBodySize": 6106,
+          "decodedBodySize": 6106,
+          "responseStatus": 200
+        }
+      },
+      {
+        "id": 10,
+        "url": "http://127.0.0.1:5290/assets/8f90d7879e2a5de70620ad056cde360b8fd32efc85c37accd0f276c6af5fa14f.webp",
+        "kind": "dom-resource",
+        "start": 10061.699999928474,
+        "end": 10091.299999952316,
+        "loaded": 4696,
+        "total": 4696,
+        "totalEvidence": "completed-body",
+        "cache": "network",
+        "failed": false,
+        "timing": {
+          "startTime": 10061.699999928474,
+          "responseEnd": 10082.699999928474,
+          "transferSize": 300,
+          "encodedBodySize": 4696,
+          "decodedBodySize": 4696,
+          "responseStatus": 200
+        }
+      },
+      {
+        "id": 11,
+        "url": "http://127.0.0.1:5290/assets/94a85d221080ddcc330ae43c893025ada6e08dee0465118986926815c594d161.webp",
+        "kind": "dom-resource",
+        "start": 10061.699999928474,
+        "end": 10091.399999976158,
+        "loaded": 4556,
+        "total": 4556,
+        "totalEvidence": "completed-body",
+        "cache": "network",
+        "failed": false,
+        "timing": {
+          "startTime": 10061.699999928474,
+          "responseEnd": 10083.799999952316,
+          "transferSize": 300,
+          "encodedBodySize": 4556,
+          "decodedBodySize": 4556,
+          "responseStatus": 200
+        }
+      },
+      {
+        "id": 12,
+        "url": "http://127.0.0.1:5290/assets/4ffab9c826102746dc0cf37b7ad9bc2ddfdb0c833e051ac43243696a5e750fa3.webp",
+        "kind": "dom-resource",
+        "start": 10061.699999928474,
+        "end": 10091.399999976158,
+        "loaded": 43986,
+        "total": 43986,
+        "totalEvidence": "completed-body",
+        "cache": "network",
+        "failed": false,
+        "timing": {
+          "startTime": 10061.699999928474,
+          "responseEnd": 10084.399999976158,
+          "transferSize": 300,
+          "encodedBodySize": 43986,
+          "decodedBodySize": 43986,
+          "responseStatus": 200
+        }
+      },
+      {
+        "id": 13,
+        "url": "http://127.0.0.1:5290/assets/ui/loading-ornament-v2.webp",
+        "kind": "dom-resource",
+        "start": 10061.699999928474,
+        "end": 10091.399999976158,
+        "loaded": 1117368,
+        "total": 1117368,
+        "totalEvidence": "completed-body",
+        "cache": "network",
+        "failed": false,
+        "timing": {
+          "startTime": 10061.699999928474,
+          "responseEnd": 10087.699999928474,
+          "transferSize": 300,
+          "encodedBodySize": 1117368,
+          "decodedBodySize": 1117368,
+          "responseStatus": 200
+        }
+      }
+    ]
+  },
+  "audioVoicesAfterStop": 0,
+  "disposed": true,
+  "contextLost": true,
+  "cancellationDiagnostic": "Error: Carga de mundo cancelada",
+  "done": true,
+  "frameSummary": {
+    "count": 7,
+    "max": 34.72199997615826,
+    "over50": 0,
+    "over100": 0
+  }
+}
