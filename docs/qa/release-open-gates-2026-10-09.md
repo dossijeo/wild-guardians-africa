@@ -44,8 +44,12 @@ blocking operation or the actual GL adapter. Diagnostic loading options and
 worker candidates remain unpromoted until
 their actual native/visual/performance gates pass. The independently audited
 [minimal water/lava coverage-depth extraction](painted-fluid-depth-production.md)
-is now enabled in production source; its new default-config Windows run remains
-pending, and no causal timeout-fix or runtime speed improvement is claimed.
+is now enabled in production source. Its exact-source web validation passes,
+but the [normal Windows run37983985482](https://github.com/dossijeo/wild-guardians-africa/actions/runs/37983985482)
+fails readiness after90,034.9ms at88%, `Bringing your world to life...`.
+The [raw report](windows-loading-regression/normal-8e1909d8/desktop-smoke.json)
+is retained separately from diagnostic successes. No causal timeout-fix or
+runtime speed improvement is claimed; current Windows readiness remains open.
 
 The worker branch now has a separate
 [exact-executable native accessory pilot](workers-frontside-local-3e8da8a7/README.md):

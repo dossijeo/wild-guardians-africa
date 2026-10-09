@@ -36,6 +36,12 @@ temporarily false under the existing capture transaction and is restored.
 Build passes in10.45s. Web package passes with711 files,445251479 bytes,
 860 relative links and22 runtime GLBs; changed-file syntax and diff checks pass.
 These are build/check measurements, not runtime speed, GPU or memory benchmarks.
-Original-config Windows CI and integrated visual/performance acceptance remain
-to be checked after the production commit. The earlier CI failure at83% in
-rendering-resource preparation remains a negative, not approval of this change.
+Exact-source [Validate game37983985477](https://github.com/dossijeo/wild-guardians-africa/actions/runs/37983985477)
+passes on `8e1909d8`. Its [ordinary Windows run37983985482](https://github.com/dossijeo/wild-guardians-africa/actions/runs/37983985482)
+compiles but fails the unchanged readiness gate. The [unaltered report](windows-loading-regression/normal-8e1909d8/desktop-smoke.json)
+is3132 bytes, SHA256 `5742c02ccbee48fc0ea263b584834716d57e565e7d1ffcde8f4b8dff6468d540`.
+It observes88%, `Bringing your world to life...`, visible/focused1028×720,
+stage busy and readiness false after90,034.9ms. The older83% report is retained
+separately. Different final presentation phases do not establish a causal speed
+improvement or identify the pending work. Integrated native visual/performance
+acceptance remains open; the depth extraction has not fixed Windows readiness.
