@@ -195,12 +195,12 @@ void main(){
 }`;
 
 export const COLLAPSE_THRESHOLD=.79, COLLAPSE_SECONDS=3.2;
-export function createNativeDestruction(building,input){
- let {positions:sourcePositions,normals:sourceNormals,uv:sourceUV,indices:sourceIndices,bounds}=input;
- ({positions:sourcePositions,normals:sourceNormals,uv:sourceUV,indices:sourceIndices,bounds}=applyBuildingGeometryPatches(building,sourcePositions,sourceNormals,sourceUV,sourceIndices,bounds));
+export function createNativeDestruction(building,input,prepared=null){
+ let {positions:sourcePositions,normals:sourceNormals,uv:sourceUV,indices:sourceIndices,bounds}=prepared??input;
+ if(!prepared)({positions:sourcePositions,normals:sourceNormals,uv:sourceUV,indices:sourceIndices,bounds}=applyBuildingGeometryPatches(building,sourcePositions,sourceNormals,sourceUV,sourceIndices,bounds));
  let damage=0,openingDirty=true,activeBuilding=building,seed=building.seed,rand=rng(57021),sourceTriGroups=[],hitSites=[];
- const holes=new Float32Array(32),noiseBytes=new Uint8Array(32*32*32);
- for(let i=0;i<noiseBytes.length;i++)noiseBytes[i]=rand()*255;
+ const holes=new Float32Array(32),noiseBytes=prepared?.noiseBytes??new Uint8Array(32*32*32);
+ if(!prepared)for(let i=0;i<noiseBytes.length;i++)noiseBytes[i]=rand()*255;
  const createMesh=data=>new Float32Array(data);
 function vertex(out,p,n,uv=[0,0],anchor=p,seed=.5){out.push(...p,...n,...uv,...anchor,seed)}
 function convexHull(points){points.sort((a,b)=>a[0]-b[0]||a[1]-b[1]);const cross=(o,a,b)=>(a[0]-o[0])*(b[1]-o[1])-(a[1]-o[1])*(b[0]-o[0]);let lower=[],upper=[];for(const p of points){while(lower.length>1&&cross(lower.at(-2),lower.at(-1),p)<=0)lower.pop();lower.push(p)}for(let i=points.length-1;i>=0;i--){const p=points[i];while(upper.length>1&&cross(upper.at(-2),upper.at(-1),p)<=0)upper.pop();upper.push(p)}lower.pop();upper.pop();return lower.concat(upper)}
@@ -224,14 +224,17 @@ function makeRepairNormals(){
  }
  return out;
 }
+ const modelData=[];
+ if(prepared){hull=prepared.hull;sourceTriGroups=prepared.triangles;}else{
  const points=[];for(let i=0;i<sourcePositions.length;i+=3)points.push([sourcePositions[i],sourcePositions[i+2]]);hull=convexHull(points);
- const modelData=[],groups=new Map();sourceTriGroups=[];const modelRand=rng(building.seed||57021);
+ const groups=new Map();sourceTriGroups=[];const modelRand=rng(building.seed||57021);
  for(let i=0;i<sourceIndices.length;i+=3){const c=[0,0,0];for(let j=0;j<3;j++){const k=sourceIndices[i+j]*3;for(let a=0;a<3;a++)c[a]+=sourcePositions[k+a]/3;}
   const key=c.map(x=>Math.floor(x/1.10)).join(',');if(!groups.has(key))groups.set(key,{sum:[0,0,0],count:0,seed:modelRand()});
   const g=groups.get(key);g.count++;for(let a=0;a<3;a++)g.sum[a]+=c[a];sourceTriGroups.push(g);
  }
  for(const g of groups.values())g.anchor=g.sum.map(x=>x/g.count);
  for(let i=0;i<sourceIndices.length;i++){const k=sourceIndices[i],g=sourceTriGroups[Math.floor(i/3)];vertex(modelData,Array.from(sourcePositions.subarray(k*3,k*3+3)),Array.from(sourceNormals.subarray(k*3,k*3+3)),Array.from(sourceUV.subarray(k*2,k*2+2)),g.anchor,g.seed);}
+}
 function sampleNoise(p){const c=p.map(x=>fract(x)*32-.5),base=c.map(Math.floor),f=c.map(fract);let total=0;for(let z=0;z<2;z++)for(let y=0;y<2;y++)for(let x=0;x<2;x++){const id=((base[0]+x)&31)+(((base[1]+y)&31)<<5)+(((base[2]+z)&31)<<10);total+=noiseBytes[id]/255*(x?f[0]:1-f[0])*(y?f[1]:1-f[1])*(z?f[2]:1-f[2])}return total}
 function field(p){let f=100;for(let i=0;i<8;i++)if(holes[i*4+3]>.005)f=Math.min(f,V.len(V.sub(p,Array.from(holes.subarray(i*4,i*4+3))))-holes[i*4+3]);return f+(sampleNoise(p.map(v=>v*.141))-.5)*.40+(sampleNoise(p.map(v=>v*.427+.21))-.5)*.12}
 // CPU picking mirrors the vertex collapse so touches keep following falling pieces.
@@ -267,7 +270,7 @@ function raycast(origin,dir,respectDamage=true){
 function surfaceFrom(origin,target){return raycast(origin,V.norm(V.sub(target,origin)),false)||{p:target,n:V.norm(V.sub(origin,target))}}
 function resetSites(){rand=rng(seed);const siteScale=activeBuilding.fitSites?[(bounds.max[0]-bounds.min[0])/8.82395076751709,(bounds.max[1]-bounds.min[1])/8,(bounds.max[2]-bounds.min[2])/7.824930191040039]:[1,1,1];const specs=[[[1.2,2.6,11],[1.2,2.6,0]],[[10,3.4,1.6],[0,3.4,1.6]],[[-2.0,11,2.0],[-2,3,1.2]],[[-10,2.4,1],[-1,2.4,0]],[[.5,3.0,-11],[.5,3.0,0]],[[3,11,-1.9],[2,3,-1.5]],[[-2.4,2.0,-11],[-2.4,2,0]],[[-1.3,11,-2],[-1.2,2,-1.8]]];hitSites=specs.map((s,i)=>{let origin=s[0].map((v,j)=>(v+(j===1?0:(rand()-.5)*.6))*siteScale[j]),target=s[1].map((v,j)=>v*siteScale[j]);const hit=surfaceFrom(origin,target);return{p:hit.p,n:hit.n,birth:[.045,.17,.29,.40,.50,.58,.66,.72][i],maxRadius:[2.65,2.50,2.55,2.45,2.50,2.45,2.4,2.5][i],manual:false,emission:0,lastRadius:0}});updateHoles()}
 function updateHoles(){openingDirty=true;let active=0;for(let i=0;i<8;i++){const s=hitSites[i];let t=clamp((damage-s.birth)/(.91-s.birth));let radius=s.maxRadius*Math.pow(t,.70);if(s.manual)radius=Math.max(radius,s.minRadius*smooth(s.birth,s.birth+.075,damage));if(damage<=.0001)radius=0;holes.set([...s.p,radius],i*4);if(radius>.06)active++;s.radius=radius}}
-resetSites();
+if(prepared){hitSites=prepared.hitSites;updateHoles();}else resetSites();
 function stages(){
  if(damage<.005)return['Intacto','01 / EDIFICIO INTACTO','#a3bba0'];
  if(damage<.20)return['Primeros impactos','02 / PRIMEROS IMPACTOS','#cbca9a'];
@@ -277,10 +280,10 @@ function stages(){
  return['Cenizas','06 / DESTRUCCIÓN TOTAL','#a3ada1'];
 }
 
- const repairNormals=makeRepairNormals(),ash=makeAsh();
+ const repairNormals=prepared?.repairNormals??makeRepairNormals(),ash=prepared?.ash??makeAsh();
  return {
   positions:sourcePositions,normals:sourceNormals,uv:sourceUV,indices:sourceIndices,bounds,
-  triangles:sourceTriGroups,vertices:new Float32Array(modelData),repairNormals,ash,hull,noiseBytes,holes,hitSites,
+  triangles:sourceTriGroups,vertices:prepared?.vertices??new Float32Array(modelData),repairNormals,ash,hull,noiseBytes,holes,hitSites,
   setDamage(value){if(!Number.isFinite(value))throw new Error('Daño visual no finito');damage=clamp(value);updateHoles();return damage;},
   get damage(){return damage;},stages,field,sampleNoise,collapsedPoint,raycast,radiusAt
  };

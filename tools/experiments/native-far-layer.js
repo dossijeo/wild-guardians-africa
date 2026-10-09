@@ -1,3 +1,4 @@
+import {loadingAwaitWitness,loadingSyncWitness} from '../../src/rendering/loading-sync-witness.js';
 import {FarSceneStream} from './far-scene-stream.js';
 import {FarTreeTransitions} from './far-tree-transitions.js';
 import {NativeFarCoverage} from './native-far-coverage.js';
@@ -7,20 +8,24 @@ import {createFarImpostorPrototype} from './far-impostor-prototype.js';
 // Regional billboard ownership; native geometry and atlas textures are borrowed.
 // Call after native CPU packing and supply coverage with verified GPU completion.
 export class NativeFarLayer {
- constructor({scene,source,texture,metadata,options={},stream=new FarSceneStream(),prepare,create=createFarImpostorPrototype,treesOnly=true,attachData=()=>{},selectTrees=trees=>trees}){
+ constructor({scene,source,texture,metadata,options={},stream=new FarSceneStream(),prepare,create=createFarImpostorPrototype,treesOnly=true,onPrepare=null,attachData=()=>{},selectTrees=trees=>trees}){
   if(typeof prepare!=='function')throw Error('Explicit GPU preparation is required');
   this.scene=scene;this.source=source;this.texture=texture;this.metadata=metadata;this.options=options;this.stream=stream;this.prepare=prepare;this.create=create;
-  this.treesOnly=treesOnly;this.attachData=attachData;this.selectTrees=selectTrees;
-  this.transitions=new FarTreeTransitions();this.fade=new NativeFarCoverage(metadata.localBase,{...options,treeHeight:metadata.impostorHeight});this.current=null;this.epoch=0;this.closed=false;this.suppressed=new Set();this.revision=0;
+  this.onPrepare=onPrepare;this.treesOnly=treesOnly;this.attachData=attachData;this.selectTrees=selectTrees;
+  this.transitions=new FarTreeTransitions();this.fade=new NativeFarCoverage(metadata.localBase,{...options,treeHeight:metadata.impostorHeight});this.current=null;this.epoch=0;this.closed=false;this.suppressed=new Set();this.revision=0;this.pendingPreparations=0;
  }
  async request(key,request){
   if(this.closed)return null;
   if(this.current?.key===key&&!this.stream.pending)return this.current;
-  const epoch=++this.epoch,result=await this.stream.request(key,{...request,treesOnly:this.treesOnly});
+  // This includes ground seam preparation and the candidate GPU fence, which
+  // can still be pending after the procedural worker has returned its data.
+  this.pendingPreparations++;
+  try {
+  const epoch=++this.epoch,result=await loadingAwaitWitness(this.onPrepare,'far-region-worker',()=>this.stream.request(key,{...request,treesOnly:this.treesOnly}));
   if(this.closed||epoch!==this.epoch||!result)return null;
   const trees=this.selectTrees(result.data.trees).map(tree=>treeAtlasAnchor(tree,this.metadata.localBase));
-  const candidate=this.create(this.source,this.texture,this.metadata,trees,{...this.options,nativeModels:false});
-  try{this.attachData(candidate,result.data,()=>this.closed||epoch!==this.epoch);await this.prepare(candidate,()=>this.closed||epoch!==this.epoch);}
+  const candidate=loadingSyncWitness(this.onPrepare,'far-region-create',()=>this.create(this.source,this.texture,this.metadata,trees,{...this.options,nativeModels:false}));
+  try{loadingSyncWitness(this.onPrepare,'far-region-attach-ground',()=>this.attachData(candidate,result.data,()=>this.closed||epoch!==this.epoch));await loadingAwaitWitness(this.onPrepare,'far-region-gpu-ready',()=>this.prepare(candidate,()=>this.closed||epoch!==this.epoch));}
   catch(error){candidate.dispose({disposeTexture:false});if(this.closed||epoch!==this.epoch)return null;throw error;}
   if(this.closed||epoch!==this.epoch){candidate.dispose({disposeTexture:false});return null;}
   const previous=this.current;
@@ -28,6 +33,7 @@ export class NativeFarLayer {
   this.scene.add(candidate.impostors);this.current={key,prototype:candidate,trees,treeById:new Map(trees.map(tree=>[tree.id,tree]))};this.revision++;
   if(previous){this.scene.remove(previous.prototype.impostors);previous.prototype.dispose({disposeTexture:false});}
   return this.current;
+  } finally {this.pendingPreparations--;}
  }
  update(chunks,camera,coverage,gpuReady,dt,origin={x:0,z:0},suppressed=this.suppressed,nativeCoverage=null){
   if(this.closed||!this.current)return;

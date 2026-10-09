@@ -1,0 +1,396 @@
+{
+  "report": {
+    "biome": "sabana",
+    "culture": "mapungubwe",
+    "quality": "media",
+    "scope": "Native interactive pipeline: actual weighted milestones, diorama then real cinematic. Preparation starts at Run rather than a menu animation; menu integration has separate real-app QA. Frame intervals and long tasks are CPU scheduling proxies, not GPU timer measurements. Heap/resource counters are coarse proxies.",
+    "stages": [
+      {
+        "stage": "diorama-interactive",
+        "at": 1195.0999999046326,
+        "memory": {
+          "usedJSHeapSize": 75695823,
+          "totalJSHeapSize": 92977003
+        },
+        "resources": {
+          "geometries": 11,
+          "textures": 8,
+          "programs": 5,
+          "owned": 49
+        }
+      },
+      {
+        "stage": "configuration",
+        "at": 1234.2999999523163,
+        "memory": {
+          "usedJSHeapSize": 75695823,
+          "totalJSHeapSize": 92977003
+        },
+        "resources": {
+          "geometries": 11,
+          "textures": 8,
+          "programs": 5,
+          "owned": 49
+        }
+      },
+      {
+        "stage": "initial-site",
+        "at": 1646.1999999284744,
+        "memory": {
+          "usedJSHeapSize": 79858867,
+          "totalJSHeapSize": 93337915
+        },
+        "resources": {
+          "geometries": 11,
+          "textures": 8,
+          "programs": 5,
+          "owned": 49
+        }
+      },
+      {
+        "stage": "renderer",
+        "at": 1650,
+        "memory": {
+          "usedJSHeapSize": 79858867,
+          "totalJSHeapSize": 93337915
+        },
+        "resources": {
+          "geometries": 11,
+          "textures": 8,
+          "programs": 5,
+          "owned": 49
+        }
+      },
+      {
+        "stage": "load:begin",
+        "at": 1651.2999999523163,
+        "memory": {
+          "usedJSHeapSize": 79858867,
+          "totalJSHeapSize": 93337915
+        },
+        "resources": {
+          "geometries": 11,
+          "textures": 8,
+          "programs": 5,
+          "owned": 49
+        }
+      },
+      {
+        "stage": "load:end",
+        "at": 1652.0999999046326,
+        "memory": {
+          "usedJSHeapSize": 79858867,
+          "totalJSHeapSize": 93337915
+        },
+        "resources": {
+          "geometries": 11,
+          "textures": 8,
+          "programs": 5,
+          "owned": 49
+        }
+      },
+      {
+        "stage": "biome:begin",
+        "at": 1793.1999999284744,
+        "memory": {
+          "usedJSHeapSize": 78172609,
+          "totalJSHeapSize": 94436533
+        },
+        "resources": {
+          "geometries": 11,
+          "textures": 8,
+          "programs": 5,
+          "owned": 49
+        }
+      }
+    ],
+    "frames": [
+      46.99599990463253,
+      16.204000000000065,
+      16.600000000000023,
+      16.59999999999991,
+      16.700000000000045,
+      16.700000000000045,
+      16.59999999999991,
+      16.600000000000136,
+      16.59999999999991,
+      16.59999999999991,
+      16.700000000000045,
+      16.600000000000136,
+      16.59999999999991,
+      16.59999999999991,
+      16.700000000000045,
+      16.600000000000136,
+      16.59999999999991,
+      16.59999999999991,
+      16.700000000000045,
+      16.600000000000136,
+      16.59999999999991,
+      16.59999999999991,
+      16.700000000000045,
+      16.600000000000136,
+      33.299999999999955,
+      16.59999999999991,
+      16.600000000000136,
+      16.59999999999991,
+      16.700000000000045,
+      16.59999999999991,
+      16.600000000000136,
+      16.699999999999818,
+      16.600000000000136,
+      16.59999999999991,
+      16.700000000000045,
+      16.59999999999991,
+      16.600000000000136,
+      16.59999999999991,
+      16.799999999999955,
+      16.5,
+      16.700000000000045,
+      16.5,
+      16.700000000000045,
+      16.59999999999991,
+      16.700000000000045,
+      16.600000000000136,
+      16.799999999999955,
+      16.399999999999864,
+      16.700000000000045,
+      16.90000000000009,
+      16.299999999999955,
+      16.59999999999991,
+      16.700000000000045,
+      16.600000000000136,
+      16.59999999999991,
+      16.700000000000045,
+      16.5,
+      16.700000000000045,
+      16.59999999999991,
+      16.59999999999991,
+      16.700000000000045,
+      83.20000000000005,
+      16.5,
+      16.800000000000182,
+      16.5,
+      16.799999999999727,
+      16.5,
+      16.59999999999991,
+      16.700000000000273,
+      16.59999999999991,
+      16.59999999999991,
+      17.09999999999991,
+      16.200000000000273,
+      16.699999999999818,
+      16.5,
+      16.700000000000273,
+      16.59999999999991,
+      16.799999999999727,
+      16.5,
+      16.600000000000364,
+      16.5,
+      16.899999999999636,
+      16.40000000000009,
+      16.700000000000273,
+      16.59999999999991,
+      16.699999999999818,
+      16.59999999999991,
+      16.600000000000364,
+      16.699999999999818,
+      16.5,
+      16.699999999999818,
+      16.600000000000364,
+      16.59999999999991,
+      16.59999999999991,
+      16.699999999999818,
+      16.700000000000273,
+      16.699999999999818,
+      16.5,
+      16.700000000000273,
+      16.5,
+      16.59999999999991,
+      16.59999999999991,
+      16.699999999999818,
+      16.700000000000273,
+      16.699999999999818,
+      16.5,
+      16.59999999999991,
+      16.800000000000182,
+      16.5,
+      16.59999999999991,
+      16.700000000000273,
+      16.5,
+      16.699999999999818,
+      16.699999999999818,
+      16.5,
+      16.700000000000273,
+      16.59999999999991,
+      16.59999999999991,
+      16.700000000000273,
+      16.799999999999727,
+      16.40000000000009,
+      16.699999999999818,
+      16.5,
+      16.700000000000273,
+      16.699999999999818,
+      16.90000000000009,
+      16.300000000000182,
+      16.699999999999818,
+      16.5,
+      16.59999999999991
+    ],
+    "longTasks": [
+      {
+        "start": -48.800000071525574,
+        "duration": 100
+      },
+      {
+        "start": 422.09999990463257,
+        "duration": 53
+      },
+      {
+        "start": 1052.5,
+        "duration": 89
+      }
+    ],
+    "errors": [],
+    "audio": [
+      {
+        "id": "amb_birds",
+        "method": "ambientSound",
+        "requested": 2606.5,
+        "emitter": "loading:ambience",
+        "started": true,
+        "bus": "ambient",
+        "masterGain": 0.699999988079071
+      },
+      {
+        "id": "farm_crop_interact",
+        "method": "sound",
+        "requested": 3082.4000000953674,
+        "emitter": "loading:plant",
+        "started": true,
+        "bus": "world",
+        "masterGain": 0.699999988079071
+      }
+    ],
+    "progress": {
+      "progress": 0.12,
+      "ready": false,
+      "estimated": true,
+      "error": null,
+      "elapsed": 457.5,
+      "unchangedFor": 0,
+      "pending": [
+        "biome",
+        "buildings",
+        "animals",
+        "crops",
+        "walls",
+        "vfx",
+        "chunks",
+        "gpu",
+        "far-assets",
+        "visible-ready"
+      ],
+      "stages": [
+        {
+          "id": "configuration",
+          "weight": 8,
+          "progress": 1,
+          "started": 2607.600000023842,
+          "finished": 2607.600000023842
+        },
+        {
+          "id": "sky",
+          "weight": 4,
+          "progress": 1,
+          "started": 2611.8000000715256,
+          "finished": 2611.9000000953674
+        },
+        {
+          "id": "biome",
+          "weight": 4,
+          "progress": 0,
+          "started": null,
+          "finished": null
+        },
+        {
+          "id": "buildings",
+          "weight": 8,
+          "progress": 0,
+          "started": null,
+          "finished": null
+        },
+        {
+          "id": "animals",
+          "weight": 10,
+          "progress": 0,
+          "started": null,
+          "finished": null
+        },
+        {
+          "id": "crops",
+          "weight": 6,
+          "progress": 0,
+          "started": null,
+          "finished": null
+        },
+        {
+          "id": "walls",
+          "weight": 4,
+          "progress": 0,
+          "started": null,
+          "finished": null
+        },
+        {
+          "id": "vfx",
+          "weight": 2,
+          "progress": 0,
+          "started": null,
+          "finished": null
+        },
+        {
+          "id": "chunks",
+          "weight": 8,
+          "progress": 0,
+          "started": null,
+          "finished": null
+        },
+        {
+          "id": "gpu",
+          "weight": 15,
+          "progress": 0,
+          "started": null,
+          "finished": null
+        },
+        {
+          "id": "far-assets",
+          "weight": 25,
+          "progress": 0,
+          "started": null,
+          "finished": null
+        },
+        {
+          "id": "visible-ready",
+          "weight": 6,
+          "progress": 0,
+          "started": null,
+          "finished": null
+        }
+      ]
+    },
+    "parallelShaderCompile": true,
+    "playerPlants": 1,
+    "cancelled": true,
+    "audioVoicesAfterStop": 0,
+    "disposed": true,
+    "contextLost": true,
+    "cancellationDiagnostic": "Error: Biome preparation cancelled",
+    "done": true,
+    "frameSummary": {
+      "count": 130,
+      "max": 83.20000000000005,
+      "over50": 1,
+      "over100": 0
+    }
+  },
+  "logs": []
+}

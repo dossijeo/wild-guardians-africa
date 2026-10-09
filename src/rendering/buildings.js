@@ -1,4 +1,8 @@
+import {loadingYieldBudget} from './loading-yield-budget.js';
+import {loadingSyncWitness,loadingAwaitWitness} from './loading-sync-witness.js';
+import {waitGpuFrame} from '../../tools/experiments/wait-gpu-frame.js';
 import * as THREE from 'three';
+import {prepareBuildingDataAsync} from './prepare-building-data.js';
 import {toonDestruction} from './african-toon.js';
 import {createNativeDestruction,COLLAPSE_THRESHOLD,COLLAPSE_SECONDS,destructionVertex,destructionFragment,destructionDepthFragment,destructionOpeningFragment} from './destruction-native.js';
 import {BuildingEffects} from './building-effects.js';
@@ -22,7 +26,7 @@ function geometry(data,repairNormals=null){
   result.setAttribute('aRepairNormal',new THREE.BufferAttribute(repairNormals??new Float32Array(data.length/4),3));
   result.computeBoundingBox();result.computeBoundingSphere();return result;
 }
-export function prepareNativeBuilding(gltf,building){
+function buildingInput(gltf){
   const meshes=[];gltf.scene.updateMatrixWorld(true);gltf.scene.traverse(o=>{if(o.isMesh)meshes.push(o);});
   if(meshes.length!==1)throw new Error('DEST requiere la malla original de una sola primitiva');
   const mesh=meshes[0],identity=new THREE.Matrix4();
@@ -33,7 +37,16 @@ export function prepareNativeBuilding(gltf,building){
   const center=[(bounds.min[0]+bounds.max[0])/2,bounds.min[1],(bounds.min[2]+bounds.max[2])/2];
   for(let i=0;i<positions.length;i++)positions[i]-=center[i%3];
   for(let axis=0;axis<3;axis++){bounds.min[axis]-=center[axis];bounds.max[axis]-=center[axis];}
-  const kernel=createNativeDestruction(building,{positions,normals,uv,indices,bounds}),body=geometry(kernel.vertices,kernel.repairNormals),ash=geometry(kernel.ash);
+  return {mesh,original,input:{positions,normals,uv,indices:new indices.constructor(indices),bounds}};
+}
+export async function prepareNativeBuildingAsync(gltf,building,{signal}={}){
+  const source=buildingInput(gltf),prepared=await prepareBuildingDataAsync(building,source.input,{signal});
+  if(signal?.aborted)throw Error('Building preparation cancelled');
+  return prepareNativeBuilding(gltf,building,{source,prepared});
+}
+export function prepareNativeBuilding(gltf,building,{source=buildingInput(gltf),prepared=null}={}){
+  const {mesh,original,input}=source;
+  const kernel=createNativeDestruction(building,input,prepared),body=geometry(kernel.vertices,kernel.repairNormals),ash=geometry(kernel.ash);
   const noise=new THREE.Data3DTexture(kernel.noiseBytes,32,32,32);noise.format=THREE.RedFormat;noise.type=THREE.UnsignedByteType;noise.minFilter=noise.magFilter=THREE.LinearFilter;noise.wrapS=noise.wrapT=noise.wrapR=THREE.RepeatWrapping;noise.unpackAlignment=1;noise.needsUpdate=true;
   let disposed=false;
   return {building,kernel,body,ash,noise,material:mesh.material,scale:1,culling:nativeBuildingBounds(body,ash),
@@ -147,16 +160,45 @@ export class BuildingDestructionPass {
     }finally{renderer.setRenderTarget(target);renderer.setClearColor(clearColor,clearAlpha);renderer.autoClear=autoClear;renderer.shadowMap.enabled=shadows;}
   }
   depthCaptureOptions(){return {optimized:this.optimizedDepth!==false,visibleOnly:this.visibleDepthOnly!==false,nonEmptyOnly:this.nonEmptyDepthOnly===true,stockAlpha:this.stockAlphaDepth===true,materialArrays:this.materialArrayDepth===true};}
-  async prepareDepth(camera,world){
+  async prepareDepth(camera,world,{compile=(scene,camera,target)=>this.renderer.compileAsync(scene,camera,target),batchSize=0,nextFrame,cancelled=()=>false,signal,now=()=>performance.now(),timeout=30000,pollIntervalMs=100,onPrepare,frameSlack,cpuBudget=false,getFrame,frameBudget=16}={}){
+    if(batchSize){
+      if(!Number.isInteger(batchSize)||batchSize<1)throw Error('Invalid depth preload batch size');
+      const options=this.depthCaptureOptions(),objects=[];world[options.visibleOnly?'traverseVisible':'traverse'](object=>{if(object.material)objects.push(object);});
+      const stats={specialized:0,fallback:0,excluded:0,emptySkipped:0,stockAlphaSpecialized:0};
+      const lane=frameSlack?.createLane(),yieldWork=cpuBudget?loadingYieldBudget({frameBudget,cpuBudget,getFrame,now,nextFrame,signal,cancelled,timeout,pollIntervalMs,onYield:onPrepare}):null;
+      const check=()=>{if(signal?.aborted||cancelled())throw Error('Loading depth preload cancelled');};
+      for(let start=0;start<objects.length;start+=batchSize){
+        check();
+        const batch=objects.slice(start,start+batchSize),view={overrideMaterial:world.overrideMaterial,onBeforeRender:world.onBeforeRender,onAfterRender:world.onAfterRender,traverse:callback=>batch.forEach(callback),traverseVisible:callback=>batch.forEach(callback)};
+        // Each recursive submission restores all borrowed materials and renderer
+        // state synchronously before awaiting its programs or the next frame.
+        const witness=onPrepare?span=>{try{onPrepare({...span,batchIndex:start/batchSize,objects:batch.length});}catch{}}:undefined;
+        const submission=()=>this.prepareDepth(camera,view,{compile:(scene,camera)=>compile(scene,camera,world)});
+        const submitStart=lane||cpuBudget?now():0;
+        const pending=loadingSyncWitness(witness,'loading-depth-batch-submit',submission,now);
+        lane?.recordWork(now()-submitStart);yieldWork?.recordWork(now()-submitStart);
+        await loadingAwaitWitness(witness,'loading-depth-batch-program-wait',()=>pending,now);
+        for(const key in stats)stats[key]+=this.depthWarmStats[key]??0;
+        check();
+        if(yieldWork){await yieldWork();continue;}
+        // Optional QA lane uses real presentation deadlines. With missing, late
+        // or uncertain observations, retain the original unconditional barrier.
+        if(lane&&!lane.shouldYield(now(),0,6,true))continue;
+        const waiting=now();await loadingAwaitWitness(witness,'loading-depth-batch-frame-wait',()=>waitGpuFrame({signal,nextFrame,pollIntervalMs,check:()=>{check();if(now()-waiting>timeout)throw Error('Loading depth preload timed out');}}),now);
+      }
+      check();this.depthWarmStats=stats;return;
+    }
     const renderer=this.renderer,target=renderer.getRenderTarget(),shadows=renderer.shadowMap.enabled;
+    let compiling;
     try{
       renderer.shadowMap.enabled=false;renderer.setRenderTarget(this.smokeDepth);
-      let compiling;
       // Three starts compilation synchronously. Restore borrowed scene materials
       // immediately, then wait for those programs without holding scene mutations.
-      this.depthWarmStats=withDepthCaptureMaterials(world,()=>{compiling=renderer.compileAsync(world,camera);},this.depthCaptureOptions());
-      await compiling;
+      this.depthWarmStats=withDepthCaptureMaterials(world,()=>{compiling=compile(world,camera);},this.depthCaptureOptions());
     }finally{renderer.setRenderTarget(target);renderer.shadowMap.enabled=shadows;}
+    // Waiting must not leave the shared renderer in the linear depth target.
+    // The loading diorama can render real frames while these programs finish.
+    await compiling;
   }
   captureDepth(camera,world){
     camera.updateWorldMatrix(true,false);

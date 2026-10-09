@@ -1,3 +1,5 @@
+import {loadingSyncWitness} from './loading-sync-witness.js';
+import {waitGpuFrame} from '../../tools/experiments/wait-gpu-frame.js';
 // CULT V4 authored FrontSide states/bridges; legacy V3 data remains readable.
 import * as THREE from 'three';
 import {cropSpec} from '../simulation/rules.js';
@@ -5,8 +7,10 @@ const ids=['maiz','algodon','girasol','platano','sorgo','mijo','yuca','batata'];
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),mix=(a,b,t)=>a+(b-a)*t,smooth=t=>{t=clamp(t,0,1);return t*t*(3-2*t);};
 const MARKS=[.065,.27,.53,.78,1];
 const ZERO_ORIGIN={x:0,z:0};
-export function createCropBatch(scene,renderer,gltf,bridgeData,MAX_PLANTS=128) {
+export function createCropBatch(scene,renderer,gltf,bridgeData,MAX_PLANTS=128,{species=ids,shadows=true,deferPreparation=false}={}) {
  const authoredSide=bridgeData.recipeVersion===4?THREE.FrontSide:THREE.DoubleSide;
+ const selected=new Set(species.map(id=>ids.indexOf(id)));
+ if(!selected.size||selected.has(-1))throw Error('Invalid crop batch species');
  const state={morphSeconds:2},renderOrigin={x:0,z:0};
  let models=[],bridges=[],counts=new Uint32Array(40),bridgeCounts=new Uint32Array(32);
  const dirty=new Map();
@@ -48,18 +52,20 @@ function patchGrowth(material,meta,depth=false){
  };
  material.customProgramCacheKey=()=>depth?'bioma-growth-depth-v3-opaque':'bioma-growth-pbr-v3-opaque';
 }
-function prepareModels(gltf){
- gltf.scene.traverse(o=>{
-  if(!o.isMesh)return;const meta=o.userData;if(!Number.isInteger(meta.cropIndex)||!meta.stage)throw new Error('Falta la clasificación de un modelo');
+function* prepareModels(gltf){
+ const meshes=[];gltf.scene.traverse(o=>{if(o.isMesh)meshes.push(o);});
+ for(const o of meshes){
+  const meta=o.userData;if(!Number.isInteger(meta.cropIndex)||!meta.stage)throw new Error('Falta la clasificación de un modelo');
+  if(!selected.has(meta.cropIndex))continue;
   const i=meta.cropIndex*5+meta.stage-1,geo=o.geometry.clone();
   geo.setAttribute('iGrowth',new THREE.InstancedBufferAttribute(new Float32Array(MAX_PLANTS*4),4).setUsage(THREE.DynamicDrawUsage));
   const material=o.material.clone();material.metalness=0;material.roughness=.91;material.metalnessMap=null;material.roughnessMap=null;if(material.normalScale)material.normalScale.set(.48,.48);material.side=authoredSide;material.shadowSide=authoredSide;
   if(material.map)material.map.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
-  patchGrowth(material,meta);const mesh=new THREE.InstancedMesh(geo,material,MAX_PLANTS);mesh.name=o.name;mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);mesh.count=0;mesh.castShadow=true;mesh.receiveShadow=true;mesh.frustumCulled=false;
+  patchGrowth(material,meta);const mesh=new THREE.InstancedMesh(geo,material,MAX_PLANTS);mesh.name=o.name;mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);mesh.count=0;mesh.castShadow=shadows;mesh.receiveShadow=shadows;mesh.frustumCulled=false;
   const depth=new THREE.MeshDepthMaterial({depthPacking:THREE.RGBADepthPacking,side:authoredSide});patchGrowth(depth,meta,true);mesh.customDepthMaterial=depth;
-  models[i]={mesh,meta,geo,material,growthAttr:geo.getAttribute('iGrowth')};scene.add(mesh);
- });
- if(models.filter(Boolean).length!==40)throw new Error('Se esperaban 40 geometrías y no se han podido leer todas');
+  models[i]={mesh,meta,geo,material,growthAttr:geo.getAttribute('iGrowth')};scene.add(mesh);yield;
+ }
+ if(models.filter(Boolean).length!==selected.size*5)throw new Error('Missing requested crop stages');
 }
 /* Short-lived, opaque dual-topology bridge. Original A and B are NEVER modified.
  * Every triangle gets one regional driver. At the A endpoint, all B leaf faces
@@ -147,10 +153,11 @@ function patchBridge(material,a,b,depth=false){
  };
  material.customProgramCacheKey=()=>depth?'bioma-local-bridge-depth-v3':'bioma-local-bridge-pbr-v3';
 }
-function prepareBridges(data){
+function* prepareBridges(data){
  if(!data||data.models?.length!==40||data.pairs?.length!==32)throw new Error('Datos de transición incompletos');
  const v1=new THREE.Vector3(),v2=new THREE.Vector3(),q=new THREE.Quaternion();
  for(const pair of data.pairs){
+  if(!selected.has(Math.floor(pair.a/5)))continue;
   const A=models[pair.a],B=models[pair.b];
   if(!A||!B)throw new Error('Correspondencia de transición no válida');
   if(data.recipeVersion===4){
@@ -160,9 +167,9 @@ function prepareBridges(data){
    for(const [name,loaded]of [['aRoot','_aroot'],['aPeerRoot','_apeerroot'],['aSpin','_aspin'],['aPart','_apart']]){const source=geo.getAttribute(loaded);if(!source)throw new Error('Atributo V4 ausente: '+loaded);geo.setAttribute(name,source);geo.deleteAttribute(loaded);}
    const attr=new THREE.InstancedBufferAttribute(new Float32Array(MAX_PLANTS*4),4).setUsage(THREE.DynamicDrawUsage);geo.setAttribute('iBridge',attr);geo.computeBoundingSphere();
    const material=A.material.clone();material.transparent=false;material.opacity=1;material.depthWrite=true;material.alphaTest=0;material.side=authoredSide;material.shadowSide=authoredSide;patchBridge(material,A.meta,B.meta);
-   const mesh=new THREE.InstancedMesh(geo,material,MAX_PLANTS);mesh.name=template.name;mesh.count=0;mesh.visible=false;mesh.castShadow=true;mesh.receiveShadow=true;mesh.frustumCulled=false;mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+   const mesh=new THREE.InstancedMesh(geo,material,MAX_PLANTS);mesh.name=template.name;mesh.count=0;mesh.visible=false;mesh.castShadow=shadows;mesh.receiveShadow=shadows;mesh.frustumCulled=false;mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
    const depth=new THREE.MeshDepthMaterial({depthPacking:THREE.RGBADepthPacking,side:authoredSide});patchBridge(depth,A.meta,B.meta,true);mesh.customDepthMaterial=depth;
-   bridges[index]={mesh,geo,attr,a:pair.a,b:pair.b};scene.add(mesh);continue;
+   bridges[index]={mesh,geo,attr,a:pair.a,b:pair.b};scene.add(mesh);yield;continue;
   }
   const total=A.geo.index.count+B.geo.index.count;
   const pos=new Float32Array(total*3),norm=new Float32Array(total*3),uv=new Float32Array(total*2);
@@ -192,6 +199,7 @@ function prepareBridges(data){
     return{root:r.root,peer,spin,kind:k<2?k:2,phase};
    });
    for(let face=0;face<rd.faces;face++){
+    if(face%512===0)yield;
     const d=drivers[rd.faceLabels[face]];if(!d)throw new Error('Región de transición desconocida');
     for(let j=0;j<3;j++,cursor++){
      const vi=ix[face*3+j];pos.set([pg.getX(vi),pg.getY(vi),pg.getZ(vi)],cursor*3);
@@ -206,9 +214,9 @@ function prepareBridges(data){
   geo.computeBoundingSphere();
   const material=A.material.clone();material.transparent=false;material.opacity=1;material.depthWrite=true;material.alphaTest=0;patchBridge(material,A.meta,B.meta);
   const mesh=new THREE.InstancedMesh(geo,material,MAX_PLANTS);mesh.name=`puente_${A.meta.crop}_${A.meta.stage}_${B.meta.stage}`;
-  mesh.count=0;mesh.visible=false;mesh.castShadow=true;mesh.receiveShadow=true;mesh.frustumCulled=false;mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
-  const depth=new THREE.MeshDepthMaterial({depthPacking:THREE.RGBADepthPacking,side:THREE.DoubleSide});patchBridge(depth,A.meta,B.meta,true);mesh.customDepthMaterial=depth;
-  const index=A.meta.cropIndex*4+A.meta.stage-1;bridges[index]={mesh,geo,attr,a:pair.a,b:pair.b};scene.add(mesh);
+  mesh.count=0;mesh.visible=false;mesh.castShadow=shadows;mesh.receiveShadow=shadows;mesh.frustumCulled=false;mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+  const depth=new THREE.MeshDepthMaterial({depthPacking:THREE.RGBADepthPacking,side:authoredSide});patchBridge(depth,A.meta,B.meta,true);mesh.customDepthMaterial=depth;
+  const index=A.meta.cropIndex*4+A.meta.stage-1;bridges[index]={mesh,geo,attr,a:pair.a,b:pair.b};scene.add(mesh);yield;
  }
 }
 function transitionWindow(crop,stage){
@@ -265,12 +273,13 @@ function writeInstance(modelIndex,plant,part){
  writeValues(item.growthAttr,slot*4,instanceValues);
 }
 
- prepareModels(gltf);prepareBridges(bridgeData);
- // Model ownership is fixed for this batch. Reuse the same list while animating
- // growth/wind instead of constructing a combined array every rendered frame.
- const renderables=[...models,...bridges];
+ let renderables=[];
+ function* preparation(){try{yield* prepareModels(gltf);yield* prepareBridges(bridgeData);}finally{renderables=[...models,...bridges].filter(Boolean);}}
+ const prepare=preparation();
+ if(!deferPreparation)for(const _ of prepare){}
  return {
   capacity:MAX_PLANTS,
+  preparation:prepare,
   update(plants,clock,ground,origin=ZERO_ORIGIN,groundKey=null) {
    if(groundKey!==terrainIdentity){entitySamples=new WeakMap();terrainIdentity=groundKey;}
    renderOrigin.x=origin.x;renderOrigin.z=origin.z;for(const model of renderables)model.mesh.position.set(origin.x,0,origin.z);
@@ -290,11 +299,31 @@ function writeInstance(modelIndex,plant,part){
     for(const part of sample.items)writeInstance(part.index,p,part);
     if(sample.bridge)writeBridge(sample.bridge.index,p,sample.bridge);
    }
-   for(let i=0;i<models.length;i++){const m=models[i];m.mesh.count=Math.min(MAX_PLANTS,counts[i]);m.mesh.visible=m.mesh.count>0;}
-   for(let i=0;i<bridges.length;i++){const b=bridges[i];b.mesh.count=Math.min(MAX_PLANTS,bridgeCounts[i]);b.mesh.visible=b.mesh.count>0;}
+   for(let i=0;i<models.length;i++){const m=models[i];if(!m)continue;m.mesh.count=Math.min(MAX_PLANTS,counts[i]);m.mesh.visible=m.mesh.count>0;}
+   for(let i=0;i<bridges.length;i++){const b=bridges[i];if(!b)continue;b.mesh.count=Math.min(MAX_PLANTS,bridgeCounts[i]);b.mesh.visible=b.mesh.count>0;}
    for(const [attribute,[first,last]] of dirty){attribute.addUpdateRange(first,last-first+1);attribute.needsUpdate=true;}
   },
-  dispose(){entitySamples=new WeakMap();terrainIdentity=null;for(const model of renderables){scene.remove(model.mesh);model.mesh.dispose();model.geo.dispose();model.mesh.material.dispose();model.mesh.customDepthMaterial?.dispose();}},
+  dispose(){prepare.return();entitySamples=new WeakMap();terrainIdentity=null;for(const model of renderables){scene.remove(model.mesh);model.mesh.dispose();model.geo.dispose();model.mesh.material.dispose();model.mesh.customDepthMaterial?.dispose();}},
   sample:(id,growth)=>stageSample(ids.indexOf(id),growth/cropSpec(id).growth_seconds)
  };
+}
+
+// Real cooperative construction: the iterator yields between model creation and
+// bounded batches of bridge faces. The synchronous API uses identical recipes.
+export async function createCropBatchAsync(scene,renderer,gltf,bridgeData,capacity=128,{nextFrame,signal,cancelled=()=>false,budgetMs=4,now=()=>performance.now(),timeout=30000,pollIntervalMs=100,onWork,frameSlack,...options}={}){
+ const batch=createCropBatch(scene,renderer,gltf,bridgeData,capacity,{...options,deferPreparation:true});
+ const check=()=>{if(signal?.aborted||cancelled())throw Error('Crop preparation cancelled');};
+ let sliceCpu=0,sliceSteps=0;const lane=frameSlack?.createLane();
+ const witness=onWork?span=>{sliceCpu+=span.duration;sliceSteps++;try{onWork(span);}catch{}}:undefined;
+ try{let slice=now();for(;;){
+  check();const stepStart=lane?now():0;const step=witness?loadingSyncWitness(witness,'loading-crop-construction-step',()=>batch.preparation.next(),now):batch.preparation.next();
+  if(lane)lane.recordWork(now()-stepStart);if(step.done)return batch;
+  const current=now();if(lane?lane.shouldYield(current,slice,budgetMs):current-slice>=budgetMs){
+   const waiting=now(),budgetElapsed=waiting-slice;let failed=false;
+   try{await waitGpuFrame({signal,nextFrame,pollIntervalMs,check:()=>{check();if(now()-waiting>timeout)throw Error('Crop preparation timed out');}});}catch(error){failed=true;throw error;}
+   finally{if(onWork){const end=now();try{onWork({label:'loading-crop-frame-wait',start:waiting,end,duration:end-waiting,budgetElapsed,budgetMs,sliceCpu,sliceSteps,failed,scope:'Existing cooperative frame wait; sliceCpu is summed iterator invocation wall time, excluding this wait.'});}catch{}}}
+   slice=now();sliceCpu=0;sliceSteps=0;
+  }
+ }}
+ catch(error){batch.dispose();throw error;}
 }

@@ -1,0 +1,11 @@
+# V4 integration into interactive loading
+
+Base merged: `81d87953bf054e2478f6227cf07f06b06634949f` (PR17). Both authored steady states and baked bridge GLBs are loaded through the same World Assets cache and exact logical URLs. The diorama selects maize only, creates private geometry/material/instance storage, and borrows cached sources. It never disposes the shared model cache. World load awaits the baked bridge library before the crop milestone/readiness. Existing transfer observation covers both GLBs without a second fetch to measure progress.
+
+V4 runtime uses the authored FrontSide recipe and cloned baked bridge attributes; it does not reconstruct bridge topology. Cooperative construction and its owner/deadline/frame cancellation remain. The native V4 test covers nine maize objects, synchronous/cooperative attribute and growth parity, cancellation after adoption of the first baked bridge, and unchanged shared template attributes/resources.
+
+Validation: 44 directed crop/subset/lifetime/upload/sample/disposal/focus/frame-slack tests passed; production build passed (335 modules); browser syntax passed (164 scripts, zero failures); package passed (711 files, 860 relative links, 22 runtime GLBs). These are CPU contracts/build checks, not native graphics or performance acceptance.
+
+Previous V3 loading/cost/cache measurements are historical. The planned incremental-focus V3 comparison was cancelled before opening GPU, to avoid comparing different crop libraries. V4 adds the separate baked bridge asset; actual download/preparation timing, New/Continue/cancel, composition through growth, and lifecycle/resource coexistence require fresh native evidence. Frame-slack and zero-vertex experiments remain opt-in/off. The original readiness regression is unresolved. Day focus parameters remain approved ae7bc98e values; stronger night has root visual review but no subsequent human approval.
+
+Next protocol: freeze this integrated source; functional existing menu/run fixture New and dense Continue first, including both model requests and owner cleanup. Then compare focus-free versus focus on the same V4 recipe/assets/pose/aspect/time in separate immutable source copies; actual menu click-to-controls and transfer conditions must be distinguished from fixture start-to-readiness. No inherited V3 timing claims.

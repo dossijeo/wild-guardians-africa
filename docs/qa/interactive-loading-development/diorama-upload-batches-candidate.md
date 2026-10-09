@@ -1,0 +1,11 @@
+# Diorama upload candidate
+
+Opt-in only. The actual menu enables it with `?qa-loading&qa-loading-diorama-batches`; the existing pipeline fixture with `&diorama-batches`. Without those flags the original synchronous preload call is unchanged. No frame-slack, quality, texture, geometry, state, camera or light recipe changes.
+
+Confirmed real-menu preparation witness116.3ms in `diorama-upload-maize-soil` submits all five maize stages/four bridges plus soil/background together. Candidate reuses `renderScreenPreloadBatched` with one mesh per group,6ms elapsed-work fallback budget, owned AbortSignal, immediate target/viewport/scissor/visibility restoration, complete final draw and unchanged later GPU fence. It may leave a single native texture/driver query expensive; that must be retained rather than claiming submission cost split automatically.
+
+14 directed tests pass (coexisting with root full CPU suite, no timing interpretation): nine stage/bridge groups and complete final draw, original counts/matrices/hidden objects unchanged, renderer/shadow flags restored before every frame; suspended-RAF cancellation with no later submission/no shared template disposal. Source syntax passes. No native acceptance or production promotion.
+
+Experiment after root full suite terminal: same source/head and native menu owned small Continue slot, same settings/media/1280×720, A without flag, B with flag. Existing QA spans record diorama batch submit CPU/waits; retain every loading RAF and parent start/preload-ready receipts. Measure total start-receipt→controls and preload duration separately from LoadingProgress.elapsed, since progress starts after preload. Compare blocking max/frequency AND readiness; no transferring work to first-visible draw accepted. No cold/full-cache claim without transfer evidence; no sum of overlapping network/stages. First native functional witness and early cancel; then paired evidence if candidate actually changes observed blocking. Do not run GPU timing with live CPU suite.
+
+Original initialization/readiness regression remains open. Actual New/Continue/cancel V4 witnesses and same-V4 focus cost are archived separately; no additional visual polish or experiment is requested. No PR before original gates.

@@ -1,0 +1,254 @@
+{
+  "source": "37094d08",
+  "scope": "Dense V4 phase-attribution fixture; synchronous deserialize and repeated equality snapshots are QA overhead, not real Worker/menu; no causal performance comparison",
+  "frames": {
+    "count": 1148,
+    "max": 282.6999999999989,
+    "over50": 33,
+    "over100": 6
+  },
+  "initializationMs": 19313.600000023842,
+  "totalMs": 23708,
+  "archivedSave": {
+    "sha256": "b485768f1cc172c5b174138f2c678e2bfa2d0b544d5316a3e9cb3dddf33f9103",
+    "plants": 23894,
+    "workers": 36,
+    "day": 101
+  },
+  "cancellationDiagnostic": null,
+  "files": [
+    {
+      "path": "cleanup.json",
+      "bytes": 1561016,
+      "sha256": "9caaee2d2589cbf17cd39abe94a8928a322d9f82955ad89db89da13b695fc3af"
+    },
+    {
+      "path": "console.json",
+      "bytes": 325,
+      "sha256": "60122e88e49d81719d6a1a54d779802149faff0d80e775494f033bd8c641bc96"
+    },
+    {
+      "path": "report.json",
+      "bytes": 1560547,
+      "sha256": "45a4d4082d9dc8fcdfae1fac217dc423bdd5cf08931259143daec34c68a73ec9"
+    }
+  ],
+  "fixtureSyncSpans": [
+    {
+      "stage": "fixture-report-serialize-and-dom",
+      "start": 8797.399999976158,
+      "end": 8797.600000023842,
+      "duration": 0.20000004768371582,
+      "at": 2658.100000023842,
+      "scope": "QA fixture overhead; synchronous CPU or async wall wait as labelled, not production Continue Worker work"
+    },
+    {
+      "stage": "fixture-save-deserialize-sync",
+      "start": 8869.200000047684,
+      "end": 9084.299999952316,
+      "duration": 215.09999990463257,
+      "at": 2944.7999999523163,
+      "scope": "QA fixture overhead; synchronous CPU or async wall wait as labelled, not production Continue Worker work"
+    },
+    {
+      "stage": "fixture-save-hash-encode-sync",
+      "start": 9084.299999952316,
+      "end": 9127,
+      "duration": 42.700000047683716,
+      "at": 2987.5,
+      "scope": "QA fixture overhead; synchronous CPU or async wall wait as labelled, not production Continue Worker work"
+    },
+    {
+      "stage": "fixture-save-resume-sync",
+      "start": 9148,
+      "end": 9148.200000047684,
+      "duration": 0.20000004768371582,
+      "at": 3008.7000000476837,
+      "scope": "QA fixture overhead; synchronous CPU or async wall wait as labelled, not production Continue Worker work"
+    },
+    {
+      "stage": "fixture-report-serialize-and-dom",
+      "start": 9172.799999952316,
+      "end": 9173.299999952316,
+      "duration": 0.5,
+      "at": 3033.7999999523163,
+      "scope": "QA fixture overhead; synchronous CPU or async wall wait as labelled, not production Continue Worker work"
+    },
+    {
+      "stage": "fixture-report-serialize-and-dom",
+      "start": 9175.299999952316,
+      "end": 9175.700000047684,
+      "duration": 0.40000009536743164,
+      "at": 3036.2000000476837,
+      "scope": "QA fixture overhead; synchronous CPU or async wall wait as labelled, not production Continue Worker work"
+    },
+    {
+      "stage": "fixture-restored-snapshot-serialize-sync",
+      "start": 9209.299999952316,
+      "end": 9350.600000023842,
+      "duration": 141.30000007152557,
+      "at": 3211.100000023842,
+      "scope": "QA fixture overhead; synchronous CPU or async wall wait as labelled, not production Continue Worker work"
+    },
+    {
+      "stage": "fixture-report-serialize-and-dom",
+      "start": 9350.700000047684,
+      "end": 9350.899999976158,
+      "duration": 0.19999992847442627,
+      "at": 3211.399999976158,
+      "scope": "QA fixture overhead; synchronous CPU or async wall wait as labelled, not production Continue Worker work"
+    },
+    {
+      "stage": "fixture-restored-after-load-serialize-sync",
+      "start": 24312.799999952316,
+      "end": 24458.299999952316,
+      "duration": 145.5,
+      "at": 18318.799999952316,
+      "scope": "QA fixture overhead; synchronous CPU or async wall wait as labelled, not production Continue Worker work"
+    },
+    {
+      "stage": "fixture-restored-equality-sync",
+      "start": 24458.399999976158,
+      "end": 24461.299999952316,
+      "duration": 2.899999976158142,
+      "at": 18321.799999952316,
+      "scope": "QA fixture overhead; synchronous CPU or async wall wait as labelled, not production Continue Worker work"
+    },
+    {
+      "stage": "fixture-report-serialize-and-dom",
+      "start": 24461.600000023842,
+      "end": 24467.100000023842,
+      "duration": 5.5,
+      "at": 18327.600000023842,
+      "scope": "QA fixture overhead; synchronous CPU or async wall wait as labelled, not production Continue Worker work"
+    },
+    {
+      "stage": "fixture-report-serialize-and-dom",
+      "start": 24666.799999952316,
+      "end": 24673.100000023842,
+      "duration": 6.300000071525574,
+      "at": 18533.600000023842,
+      "scope": "QA fixture overhead; synchronous CPU or async wall wait as labelled, not production Continue Worker work"
+    },
+    {
+      "stage": "fixture-before-cinematic-serialize-sync",
+      "start": 24673.100000023842,
+      "end": 24813.399999976158,
+      "duration": 140.29999995231628,
+      "at": 18673.899999976158,
+      "scope": "QA fixture overhead; synchronous CPU or async wall wait as labelled, not production Continue Worker work"
+    },
+    {
+      "stage": "fixture-report-serialize-and-dom",
+      "start": 25440.899999976158,
+      "end": 25447.600000023842,
+      "duration": 6.700000047683716,
+      "at": 19308.100000023842,
+      "scope": "QA fixture overhead; synchronous CPU or async wall wait as labelled, not production Continue Worker work"
+    },
+    {
+      "stage": "fixture-report-serialize-and-dom",
+      "start": 25447.799999952316,
+      "end": 25452.899999976158,
+      "duration": 5.100000023841858,
+      "at": 19313.399999976158,
+      "scope": "QA fixture overhead; synchronous CPU or async wall wait as labelled, not production Continue Worker work"
+    },
+    {
+      "stage": "fixture-report-serialize-and-dom",
+      "start": 29633.399999976158,
+      "end": 29639.799999952316,
+      "duration": 6.399999976158142,
+      "at": 23500.299999952316,
+      "scope": "QA fixture overhead; synchronous CPU or async wall wait as labelled, not production Continue Worker work"
+    },
+    {
+      "stage": "fixture-after-cinematic-serialize-sync",
+      "start": 29639.899999976158,
+      "end": 29821.799999952316,
+      "duration": 181.89999997615814,
+      "at": 23682.299999952316,
+      "scope": "QA fixture overhead; synchronous CPU or async wall wait as labelled, not production Continue Worker work"
+    },
+    {
+      "stage": "fixture-cinematic-equality-sync",
+      "start": 29821.799999952316,
+      "end": 29825.5,
+      "duration": 3.700000047683716,
+      "at": 23686,
+      "scope": "QA fixture overhead; synchronous CPU or async wall wait as labelled, not production Continue Worker work"
+    }
+  ],
+  "productionSyncAbove50": [
+    {
+      "stage": "diorama-upload-maize-soil",
+      "start": 8651.799999952316,
+      "end": 8734.600000023842,
+      "duration": 82.80000007152557,
+      "at": 2595.100000023842,
+      "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+    },
+    {
+      "stage": "loading-screen-upload-submit",
+      "start": 17828,
+      "end": 17919.899999976158,
+      "duration": 91.89999997615814,
+      "at": 11780.399999976158,
+      "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+    },
+    {
+      "stage": "loading-frame-draw",
+      "start": 24580.5,
+      "end": 24666.100000023842,
+      "duration": 85.60000002384186,
+      "at": 18526.600000023842,
+      "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+    }
+  ],
+  "longTasks": [
+    {
+      "start": -227.70000004768372,
+      "duration": 271
+    },
+    {
+      "start": 2086.2999999523163,
+      "duration": 92
+    },
+    {
+      "start": 2511.7999999523163,
+      "duration": 83
+    },
+    {
+      "start": 2726.399999976158,
+      "duration": 283
+    },
+    {
+      "start": 3032.100000023842,
+      "duration": 180
+    },
+    {
+      "start": 5535.5,
+      "duration": 56
+    },
+    {
+      "start": 11687.100000023842,
+      "duration": 94
+    },
+    {
+      "start": 14215,
+      "duration": 51
+    },
+    {
+      "start": 18171.200000047684,
+      "duration": 161
+    },
+    {
+      "start": 18439.200000047684,
+      "duration": 236
+    },
+    {
+      "start": 23451.899999976158,
+      "duration": 259
+    }
+  ]
+}

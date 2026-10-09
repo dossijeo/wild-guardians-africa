@@ -1,4 +1,8 @@
 import {SaveRepository,serialize,deserialize} from './snapshots.js';
+import {decodeSnapshotAsync} from './snapshot-decoder.js';
+import {waitGpuPreparation} from '../../tools/experiments/wait-gpu-preparation.js';
+
+const interrupted=error=>['AbortError','TimeoutError','SnapshotWorkerError'].includes(error?.name);
 
 function snapshot(text,slotId) {
   const state=deserialize(text);
@@ -76,12 +80,48 @@ export class BrowserSaveRepository {
     const record=await this.records(slotId);
     try{return recover(record,slotId);}catch{return this.legacy.load(slotId);}
   }
+  // Loading-screen path. Ordinary save/list/load contracts stay synchronous at
+  // their validation points; this explicitly moves loading validation off-thread.
+  async loadPrepared(slotId,{signal,decode=decodeSnapshotAsync,timeout=30000,onDiagnostic=()=>{}}={}) {
+    if(!Number.isFinite(timeout)||timeout<=0)throw new RangeError('Invalid snapshot loading timeout');
+    const owner=new AbortController(),abort=()=>owner.abort(signal?.reason?.name==='TimeoutError'?signal.reason:new DOMException('Snapshot loading cancelled','AbortError'));
+    signal?.addEventListener('abort',abort,{once:true});if(signal?.aborted)abort();
+    const started=performance.now(),check=()=>{
+      if(owner.signal.aborted)throw owner.signal.reason??new DOMException('Snapshot loading cancelled','AbortError');
+      if(performance.now()-started>timeout){const error=new DOMException('Snapshot loading timed out','TimeoutError');owner.abort(error);throw error;}
+    };
+    const held=new Promise(()=>{}),awaitOwned=async pending=>{
+      let value;const read=Promise.resolve(pending).then(result=>{value=result;});
+      await waitGpuPreparation(read,{check,signal:owner.signal,nextFrame:()=>held,pollIntervalMs:Math.min(100,timeout)});
+      return value;
+    };
+    const readCopies=async record=>{
+      let failure=Error('Guardado incompatible');
+      for(const text of [record?.primary,record?.backup]){
+        check();if(typeof text!=='string')continue;
+        try{
+          const state=await awaitOwned(decode(text,{signal:owner.signal,timeout:Math.max(1,timeout-(performance.now()-started)),onDiagnostic}));check();
+          if(state.slotId!==slotId)throw Error('La partida guardada pertenece a otra ranura.');
+          return state;
+        }catch(error){if(interrupted(error))throw error;failure=error;}
+      }
+      throw failure;
+    };
+    const legacy=()=>{const key=this.legacy.key(slotId);return readCopies({primary:this.legacy.storage.getItem(key),backup:this.legacy.storage.getItem(key+':backup')});};
+    try{
+      check();if(!this.database)return await legacy();
+      // Reuse the bounded ownership waiter. Storage waits have no RAF dependency;
+      // a held wake source is raced with transaction completion and owner signal.
+      const record=await awaitOwned(this.records(slotId));check();
+      try{return await readCopies(record);}catch(error){if(interrupted(error))throw error;return await legacy();}
+    }finally{signal?.removeEventListener('abort',abort);owner.abort();}
+  }
   async list() {
     if(!this.database)return this.legacy.list();
     const result=new Map(this.legacy.list().map(row=>[row.slotId,row]));
     for(const record of await this.records())try{
       const state=recover(record,record.slotId);
-      result.set(state.slotId,{slotId:state.slotId,day:state.day,biome:state.biome,culture:state.culture,money:state.ledger.balance,updated:state.savedAt});
+      result.set(state.slotId,{slotId:state.slotId,day:state.day,time:state.time,biome:state.biome,culture:state.culture,money:state.ledger.balance,updated:state.savedAt});
     }catch{/* Surface only valid recoverable slots. */}
     return [...result.values()].sort((a,b)=>(b.updated??0)-(a.updated??0));
   }

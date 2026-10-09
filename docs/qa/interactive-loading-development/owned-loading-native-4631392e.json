@@ -1,0 +1,62 @@
+{
+  "done": true,
+  "rows": [
+    {
+      "case": "native-screen-ready-and-fence",
+      "passed": true,
+      "scope": "Real selected program readiness and real GL fence, without synthetic hold."
+    },
+    {
+      "case": "owner-cancel",
+      "passed": true,
+      "queries": 1,
+      "lateQueries": 0,
+      "rendererRestored": true,
+      "error": "Loading compilation cancelled",
+      "scope": "Native cached program readiness deliberately held false; no physical driver stall claim."
+    },
+    {
+      "case": "deadline",
+      "passed": true,
+      "queries": 3,
+      "lateQueries": 0,
+      "rendererRestored": true,
+      "error": "Loading compilation timed out",
+      "scope": "Native cached program readiness deliberately held false; no physical driver stall claim."
+    },
+    {
+      "case": "render-after-cancellation",
+      "passed": true,
+      "render": {
+        "frame": 3,
+        "calls": 1,
+        "triangles": 12,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "case": "native-context-loss",
+      "passed": true,
+      "queries": 1,
+      "error": "Loading compilation cancelled",
+      "contextLost": true,
+      "scope": "Actual WEBGL_lose_context loss. Restoration-between-polls is covered separately by unit event/epoch cases."
+    }
+  ],
+  "errors": [],
+  "disposed": true,
+  "contextLost": true,
+  "limitations": [
+    "Isolated lifecycle recipe only; full-world loading/cancel/resource/performance coverage remains required.",
+    "Synthetic readiness holds do not measure physical driver pending time."
+  ],
+  "console": [
+    {
+      "level": "warn",
+      "message": "THREE.WebGLRenderer: WEBGL_lose_context extension not supported.",
+      "timestamp": "2026-10-08T20:43:55.229Z",
+      "url": "http://127.0.0.1:5290/node_modules/.vite/deps/chunk-TKFENS4F.js?v=1469e00d"
+    }
+  ]
+}

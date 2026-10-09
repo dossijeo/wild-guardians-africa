@@ -1,0 +1,116 @@
+{
+  "scope": "Native Continue ABBA in private Vite origins; actual production RAF observer, no detailed loading QA, CPU-budget opt-in only on G. Retained/uncontrolled browser cache; results inconclusive for net readiness due resource latency variation.",
+  "sources": {
+    "A": "d6c4adfc19f9cfc0db6f5d75fcbac4901f80ee6b",
+    "G": "276ea5b5"
+  },
+  "arms": [
+    {
+      "arm": "A1",
+      "readyMs": 12402.399999976158,
+      "controlsMs": 12403.299999952316,
+      "cinematicMs": 0.8999999761581421,
+      "frames": {
+        "count": 600,
+        "max": 1297,
+        "over50": 6,
+        "over100": 3
+      },
+      "done": true,
+      "errors": [],
+      "snapshot": {
+        "sha256": "7bd6dbc14d0962b37931d21869c658a827a55a0c43f72c335c9af1481c4c0fdb",
+        "slotId": "loading-v4-controlled-712",
+        "seed": "712",
+        "day": 1,
+        "biome": "sabana",
+        "culture": "mapungubwe",
+        "plants": 0
+      },
+      "cameraPreserved": true
+    },
+    {
+      "arm": "G1",
+      "readyMs": 8891.100000023842,
+      "controlsMs": 12923,
+      "cinematicMs": 4031.899999976158,
+      "frames": {
+        "count": 686,
+        "max": 116.5,
+        "over50": 4,
+        "over100": 1
+      },
+      "done": true,
+      "errors": [],
+      "snapshot": {
+        "sha256": "7bd6dbc14d0962b37931d21869c658a827a55a0c43f72c335c9af1481c4c0fdb",
+        "slotId": "loading-v4-controlled-712",
+        "seed": "712",
+        "day": 1,
+        "biome": "sabana",
+        "culture": "mapungubwe",
+        "plants": 0
+      },
+      "cameraPreserved": true
+    },
+    {
+      "arm": "G2",
+      "readyMs": 11349.700000047684,
+      "controlsMs": 15391.900000095367,
+      "cinematicMs": 4042.2000000476837,
+      "frames": {
+        "count": 819,
+        "max": 99.80000000000291,
+        "over50": 6,
+        "over100": 0
+      },
+      "done": true,
+      "errors": [],
+      "snapshot": {
+        "sha256": "7bd6dbc14d0962b37931d21869c658a827a55a0c43f72c335c9af1481c4c0fdb",
+        "slotId": "loading-v4-controlled-712",
+        "seed": "712",
+        "day": 1,
+        "biome": "sabana",
+        "culture": "mapungubwe",
+        "plants": 0
+      },
+      "cameraPreserved": true
+    },
+    {
+      "arm": "A2",
+      "readyMs": 7706.699999928474,
+      "controlsMs": 7708.099999904633,
+      "cinematicMs": 1.399999976158142,
+      "frames": {
+        "count": 329,
+        "max": 1064.300000000003,
+        "over50": 8,
+        "over100": 4
+      },
+      "done": true,
+      "errors": [],
+      "snapshot": {
+        "sha256": "7bd6dbc14d0962b37931d21869c658a827a55a0c43f72c335c9af1481c4c0fdb",
+        "slotId": "loading-v4-controlled-712",
+        "seed": "712",
+        "day": 1,
+        "biome": "sabana",
+        "culture": "mapungubwe",
+        "plants": 0
+      },
+      "cameraPreserved": true
+    }
+  ],
+  "pairs": [
+    {
+      "order": "AG",
+      "readyDeltaMs": -3511.2999999523163
+    },
+    {
+      "order": "GA",
+      "readyDeltaMs": 3643.0000001192093
+    }
+  ],
+  "decision": "No promotion from this comparison. Inspect resource queues and prefer production static build comparison before concluding net regression."
+}

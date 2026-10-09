@@ -1,0 +1,186 @@
+{
+  "iteration": 2,
+  "scope": "Transport/JSON metadata only;250ms preparation cost is an estimate. No world or GPU initialized.",
+  "metadataCount": 4,
+  "metadataReady": true,
+  "elapsedMs": 100.10000002384186,
+  "progress": {
+    "progress": 1,
+    "ready": true,
+    "estimated": false,
+    "error": null,
+    "elapsed": 100.10000002384186,
+    "unchangedFor": 0,
+    "pending": [],
+    "stages": [
+      {
+        "id": "metadata",
+        "weight": 1,
+        "progress": 1,
+        "started": 10364.600000023842,
+        "finished": 10364.600000023842
+      }
+    ],
+    "downloads": {
+      "progress": 1,
+      "estimatedMs": 0,
+      "observedMs": 0,
+      "remainingMs": 0,
+      "pending": 0,
+      "networkPending": 0,
+      "cacheHits": 4,
+      "network": 0,
+      "unknown": 0,
+      "unknownTotals": 0,
+      "failures": 0,
+      "loadedBytes": 0,
+      "totalBytes": 0,
+      "estimated": false,
+      "byteScope": "Decoded response body; pending totals and time are estimates. Parallel intervals are counted once."
+    },
+    "workEstimateMs": 250
+  },
+  "downloads": {
+    "progress": 1,
+    "estimatedMs": 0,
+    "observedMs": 0,
+    "remainingMs": 0,
+    "pending": 0,
+    "networkPending": 0,
+    "cacheHits": 4,
+    "network": 0,
+    "unknown": 0,
+    "unknownTotals": 0,
+    "failures": 0,
+    "loadedBytes": 0,
+    "totalBytes": 0,
+    "estimated": false,
+    "byteScope": "Decoded response body; pending totals and time are estimates. Parallel intervals are counted once.",
+    "requests": [
+      {
+        "id": 1,
+        "url": "http://127.0.0.1:5293/__qa_assets/metadata-7d947d4f/content/skies.json",
+        "kind": "fetch",
+        "start": 10264.600000023842,
+        "end": 10300.300000071526,
+        "loaded": 646,
+        "total": 646,
+        "totalEvidence": "completed-body",
+        "cache": "browser-cache",
+        "failed": false,
+        "timing": {
+          "startTime": 10264.899999976158,
+          "responseEnd": 10291.700000047684,
+          "transferSize": 0,
+          "encodedBodySize": 646,
+          "decodedBodySize": 646,
+          "responseStatus": 200
+        }
+      },
+      {
+        "id": 2,
+        "url": "http://127.0.0.1:5293/__qa_assets/metadata-7d947d4f/content/models.json",
+        "kind": "fetch",
+        "start": 10265.100000023842,
+        "end": 10300.600000023842,
+        "loaded": 9032,
+        "total": 9032,
+        "totalEvidence": "completed-body",
+        "cache": "browser-cache",
+        "failed": false,
+        "timing": {
+          "startTime": 10265.300000071526,
+          "responseEnd": 10292.100000023842,
+          "transferSize": 0,
+          "encodedBodySize": 9032,
+          "decodedBodySize": 9032,
+          "responseStatus": 200
+        }
+      },
+      {
+        "id": 3,
+        "url": "http://127.0.0.1:5293/__qa_assets/metadata-7d947d4f/content/ground-materials.json",
+        "kind": "fetch",
+        "start": 10265.399999976158,
+        "end": 10301,
+        "loaded": 2473,
+        "total": 2473,
+        "totalEvidence": "completed-body",
+        "cache": "browser-cache",
+        "failed": false,
+        "timing": {
+          "startTime": 10265.600000023842,
+          "responseEnd": 10296.899999976158,
+          "transferSize": 0,
+          "encodedBodySize": 2473,
+          "decodedBodySize": 2473,
+          "responseStatus": 200
+        }
+      },
+      {
+        "id": 4,
+        "url": "http://127.0.0.1:5293/__qa_assets/metadata-7d947d4f/content/biome-savanna.json",
+        "kind": "fetch",
+        "start": 10265.800000071526,
+        "end": 10363.100000023842,
+        "loaded": 21482,
+        "total": 21482,
+        "totalEvidence": "completed-body",
+        "cache": "browser-cache",
+        "failed": false,
+        "timing": {
+          "startTime": 10265.899999976158,
+          "responseEnd": 10356.899999976158,
+          "transferSize": 0,
+          "encodedBodySize": 21482,
+          "decodedBodySize": 21482,
+          "responseStatus": 200
+        }
+      }
+    ]
+  },
+  "samples": [
+    {
+      "at": 1.8000000715255737,
+      "progress": 0,
+      "pending": 4
+    },
+    {
+      "at": 4,
+      "progress": 0,
+      "pending": 4
+    },
+    {
+      "at": 16.700000047683716,
+      "progress": 0,
+      "pending": 4
+    },
+    {
+      "at": 33.39999997615814,
+      "progress": 0,
+      "pending": 4
+    },
+    {
+      "at": 50.300000071525574,
+      "progress": 0,
+      "pending": 1
+    },
+    {
+      "at": 66.70000004768372,
+      "progress": 0,
+      "pending": 1
+    },
+    {
+      "at": 84,
+      "progress": 0,
+      "pending": 1
+    },
+    {
+      "at": 100.10000002384186,
+      "progress": 0,
+      "pending": 0
+    }
+  ],
+  "monotonic": true,
+  "disposed": true
+}

@@ -1,0 +1,11 @@
+# Initial restored crop capacity candidate
+
+Measured baseline fbaa7cea actualContinue118: synchronous crop-batch reconstruction183.4ms inside restore-sync208.7ms. Initial loading created128slots cooperatively, then sync found more visible plants and rebuilt all native stage/morph renderables synchronously. The independent second199.5ms gap remains unexplained.
+
+Candidate counts alive plants within the exact strict140-unit X/Z circle around farmHomeFocus(state), the same destination used later by focusFarm/Resume/Home and the same visibility predicate used by sync. Minimum128; above128rounds to the existing power-of-two rule. Only createCropBatchAsync in the loading path changes its initial capacity. No camera movement earlier, no save mutation, no global per-frame resize behavior change, no distant/dead historical-plant inflation. Native crop geometry/morph/material/shader behavior remains the same constructor implementation. Capacity1257visible→2048matches the previous eventual batch.
+
+10directed helper/witness/QA tests PASS0skip247ms. Initial helper fixture mistakenly supplied hp without native operational status;2PASS1FAIL retained here, fixture corrected to intact/destroyed status, rules unchanged. Native paired restore/performance/resource/abort acceptance still pending. Existing async constructor owner/deadline must remain intact. No physical peakRAM/VRAM or total-load gain claim, no PR.
+
+Additional4helper tests PASS572ms: actual WorldScene.prototype.sync with1257visible plants and an already-prepared2048batch must retain the same object; dispose throws if called. Offline native archive validation of b485768f1cc172c5b174138f2c678e2bfa2d0b544d5316a3e9cb3dddf33f9103 reports23,894historical/1122alive/1122visible, focus structure-2 at(83,0); helper2048 exactly equals the original eventual capacity. The1257test fixture is representative and is not the alive count of this particular archive; prior traveling farms are separate evidence. Offline validation wall0.81s is not a loading/CPU benchmark. Browser first-sync witness is still pending.
+
+Native actualContinue120 on9e3154ad retained the prepared batch: no sync-crop-resize witness, restore-sync22.7ms. Full trace and remaining166ms/6>100ms are documented in actual-continue-initial-capacity-9e3154ad.md; no overall fluency acceptance or paired causal claim.

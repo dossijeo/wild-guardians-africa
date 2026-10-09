@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import {bytes,json} from './assets.js';
-import {SKY_VERTEX,SKY_FRAGMENT,decodeRadiance} from './sky-source.js';
-import {buildEnvironmentPixels} from './fluid-lighting-source.js';
+import {SKY_VERTEX,SKY_FRAGMENT} from './sky-source.js';
+import {prepareSkyPixelsAsync} from './prepare-sky-pixels.js';
 
 // Exact analytic solution of the lab's exponential fade (rate 2.4), driven
 // by the game clock. Pauses and reloads cannot advance this presentation.
@@ -17,13 +17,14 @@ export class NativeSky {
     this.geometry=new THREE.BufferGeometry();this.geometry.setAttribute('position',new THREE.Float32BufferAttribute([0,0,0,0,0,0,0,0,0],3));
     this.uniforms={uForward:{value:new THREE.Vector3()},uRight:{value:new THREE.Vector3()},uUp:{value:new THREE.Vector3()},uViewScale:{value:new THREE.Vector2()},uSkyYaw:{value:0}};
   }
-  async load(){
+  async load(){this.assertOpen();return this.ready??=this.loadResources();}
+  async loadResources(){
     this.assertOpen();const options={signal:this.loading.signal};
     const catalogue=await json('/content/skies.json',options);this.assertOpen();
-    const images=await Promise.all(catalogue.panoramas.map(async p=>{const buffer=await bytes(p.url,options);this.assertOpen();return decodeRadiance(buffer);}));
+    const images=await Promise.all(catalogue.panoramas.map(async p=>{const buffer=await bytes(p.url,options);this.assertOpen();return prepareSkyPixelsAsync(buffer,catalogue.panoramas.indexOf(p),options);}));
     this.assertOpen();
-    images.forEach((image,i)=>{
-      const environment=buildEnvironmentPixels(image,i),env=new THREE.DataTexture(environment.pixels,environment.width,environment.height,THREE.RGBAFormat,THREE.UnsignedByteType);
+    images.forEach(({image,environment},i)=>{
+      const env=new THREE.DataTexture(environment.pixels,environment.width,environment.height,THREE.RGBAFormat,THREE.UnsignedByteType);
       env.internalFormat='RGBA8';env.minFilter=THREE.LinearMipmapLinearFilter;env.magFilter=THREE.LinearFilter;env.wrapS=THREE.RepeatWrapping;env.wrapT=THREE.ClampToEdgeWrapping;env.flipY=false;env.generateMipmaps=true;env.needsUpdate=true;this.environmentTextures.push(env);
       const texture=new THREE.DataTexture(image.pixels,image.width,image.height,THREE.RGBAFormat,THREE.UnsignedByteType);
       texture.minFilter=texture.magFilter=THREE.NearestFilter;texture.wrapS=THREE.RepeatWrapping;texture.wrapT=THREE.ClampToEdgeWrapping;texture.flipY=false;texture.unpackAlignment=1;texture.needsUpdate=true;this.textures.push(texture);

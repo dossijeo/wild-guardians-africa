@@ -1,0 +1,524 @@
+{
+  "baseSource": "3101dbffe55cc93fa695c4be75069db9e3778dab",
+  "candidateFocusPatch": "45201f7d1afcde98ccb70ea73041b191d7fa214c",
+  "rows": {
+    "dayA1": {
+      "gpuMs": {
+        "count": 300,
+        "median": 3.0120825,
+        "p95": 5.86625,
+        "max": 10.435625
+      },
+      "measuredDrawCpuMs": {
+        "count": 300,
+        "median": 0.6000000238418579,
+        "p95": 1.100000023841858,
+        "max": 1.6999999284744263
+      },
+      "measuredOverlayCpuMs": {
+        "count": 300,
+        "median": 0.0,
+        "p95": 0.10000002384185791,
+        "max": 0.20000004768371582
+      },
+      "allDrawCpuMs": {
+        "count": 540,
+        "median": 0.6000000238418579,
+        "p95": 1.2000000476837158,
+        "max": 3.700000047683716
+      },
+      "allRafMs": {
+        "count": 539,
+        "median": 16.600000000002183,
+        "p95": 16.799999999999272,
+        "max": 33.30000000000291
+      },
+      "allRafOver50": 0,
+      "allRafOver100": 0,
+      "readyResources": {
+        "geometries": 13,
+        "textures": 9,
+        "programs": 7
+      },
+      "cleanup": {
+        "geometries": 0,
+        "textures": 0,
+        "programs": 0
+      }
+    },
+    "dayB1": {
+      "gpuMs": {
+        "count": 300,
+        "median": 4.477317,
+        "p95": 4.936875,
+        "max": 7.905
+      },
+      "measuredDrawCpuMs": {
+        "count": 300,
+        "median": 0.6000000238418579,
+        "p95": 1,
+        "max": 1.399999976158142
+      },
+      "measuredOverlayCpuMs": {
+        "count": 300,
+        "median": 0.09999990463256836,
+        "p95": 0.10000002384185791,
+        "max": 0.20000004768371582
+      },
+      "allDrawCpuMs": {
+        "count": 540,
+        "median": 0.6000000238418579,
+        "p95": 1.100000023841858,
+        "max": 4.700000047683716
+      },
+      "allRafMs": {
+        "count": 539,
+        "median": 16.600000000000364,
+        "p95": 16.799999999999272,
+        "max": 17.19999999999891
+      },
+      "allRafOver50": 0,
+      "allRafOver100": 0,
+      "readyResources": {
+        "geometries": 13,
+        "textures": 9,
+        "programs": 7
+      },
+      "cleanup": {
+        "geometries": 0,
+        "textures": 0,
+        "programs": 0
+      }
+    },
+    "dayB2": {
+      "gpuMs": {
+        "count": 300,
+        "median": 4.5552340000000004,
+        "p95": 5.045364,
+        "max": 10.413177
+      },
+      "measuredDrawCpuMs": {
+        "count": 300,
+        "median": 0.6000000238418579,
+        "p95": 0.9000000953674316,
+        "max": 1.2999999523162842
+      },
+      "measuredOverlayCpuMs": {
+        "count": 300,
+        "median": 0.0,
+        "p95": 0.10000002384185791,
+        "max": 0.20000004768371582
+      },
+      "allDrawCpuMs": {
+        "count": 540,
+        "median": 0.6000000238418579,
+        "p95": 1.100000023841858,
+        "max": 3.5999999046325684
+      },
+      "allRafMs": {
+        "count": 539,
+        "median": 16.600000000000364,
+        "p95": 16.799999999999272,
+        "max": 17.100000000000364
+      },
+      "allRafOver50": 0,
+      "allRafOver100": 0,
+      "readyResources": {
+        "geometries": 13,
+        "textures": 9,
+        "programs": 7
+      },
+      "cleanup": {
+        "geometries": 0,
+        "textures": 0,
+        "programs": 0
+      }
+    },
+    "dayA2": {
+      "gpuMs": {
+        "count": 300,
+        "median": 4.3035415,
+        "p95": 8.072499,
+        "max": 12.16052
+      },
+      "measuredDrawCpuMs": {
+        "count": 300,
+        "median": 0.5,
+        "p95": 0.8999999761581421,
+        "max": 1.5
+      },
+      "measuredOverlayCpuMs": {
+        "count": 300,
+        "median": 0.0,
+        "p95": 0.10000002384185791,
+        "max": 0.20000004768371582
+      },
+      "allDrawCpuMs": {
+        "count": 540,
+        "median": 0.6000000238418579,
+        "p95": 1.1999999284744263,
+        "max": 3.100000023841858
+      },
+      "allRafMs": {
+        "count": 539,
+        "median": 16.600000000000364,
+        "p95": 16.799999999999272,
+        "max": 16.900000000001455
+      },
+      "allRafOver50": 0,
+      "allRafOver100": 0,
+      "readyResources": {
+        "geometries": 13,
+        "textures": 9,
+        "programs": 7
+      },
+      "cleanup": {
+        "geometries": 0,
+        "textures": 0,
+        "programs": 0
+      }
+    },
+    "nightA1": {
+      "gpuMs": {
+        "count": 300,
+        "median": 5.4305465,
+        "p95": 10.305677,
+        "max": 11.760104
+      },
+      "measuredDrawCpuMs": {
+        "count": 300,
+        "median": 0.6000000238418579,
+        "p95": 0.9000000953674316,
+        "max": 1.3000000715255737
+      },
+      "measuredOverlayCpuMs": {
+        "count": 300,
+        "median": 0.0,
+        "p95": 0.10000002384185791,
+        "max": 0.30000007152557373
+      },
+      "allDrawCpuMs": {
+        "count": 540,
+        "median": 0.6999999284744263,
+        "p95": 1.100000023841858,
+        "max": 4.100000023841858
+      },
+      "allRafMs": {
+        "count": 539,
+        "median": 16.600000000000364,
+        "p95": 16.799999999999272,
+        "max": 17.299999999999272
+      },
+      "allRafOver50": 0,
+      "allRafOver100": 0,
+      "readyResources": {
+        "geometries": 13,
+        "textures": 9,
+        "programs": 7
+      },
+      "cleanup": {
+        "geometries": 0,
+        "textures": 0,
+        "programs": 0
+      }
+    },
+    "nightB1": {
+      "gpuMs": {
+        "count": 300,
+        "median": 5.7438795,
+        "p95": 8.784426,
+        "max": 11.229479
+      },
+      "measuredDrawCpuMs": {
+        "count": 300,
+        "median": 0.6000000238418579,
+        "p95": 0.9000000953674316,
+        "max": 1.2999999523162842
+      },
+      "measuredOverlayCpuMs": {
+        "count": 300,
+        "median": 0.0,
+        "p95": 0.10000002384185791,
+        "max": 0.20000004768371582
+      },
+      "allDrawCpuMs": {
+        "count": 540,
+        "median": 0.6000000238418579,
+        "p95": 1.1999999284744263,
+        "max": 3.600000023841858
+      },
+      "allRafMs": {
+        "count": 539,
+        "median": 16.600000000000364,
+        "p95": 16.80000000000109,
+        "max": 17
+      },
+      "allRafOver50": 0,
+      "allRafOver100": 0,
+      "readyResources": {
+        "geometries": 13,
+        "textures": 9,
+        "programs": 7
+      },
+      "cleanup": {
+        "geometries": 0,
+        "textures": 0,
+        "programs": 0
+      }
+    },
+    "nightB2": {
+      "gpuMs": {
+        "count": 300,
+        "median": 5.7007545,
+        "p95": 10.643906,
+        "max": 11.716093
+      },
+      "measuredDrawCpuMs": {
+        "count": 300,
+        "median": 0.6999999284744263,
+        "p95": 1,
+        "max": 2
+      },
+      "measuredOverlayCpuMs": {
+        "count": 300,
+        "median": 0.09999990463256836,
+        "p95": 0.10000002384185791,
+        "max": 0.20000004768371582
+      },
+      "allDrawCpuMs": {
+        "count": 540,
+        "median": 0.7000000476837158,
+        "p95": 1.2999999523162842,
+        "max": 3.200000047683716
+      },
+      "allRafMs": {
+        "count": 539,
+        "median": 16.600000000000364,
+        "p95": 16.799999999999272,
+        "max": 33.20000000000073
+      },
+      "allRafOver50": 0,
+      "allRafOver100": 0,
+      "readyResources": {
+        "geometries": 13,
+        "textures": 9,
+        "programs": 7
+      },
+      "cleanup": {
+        "geometries": 0,
+        "textures": 0,
+        "programs": 0
+      }
+    },
+    "nightA2": {
+      "gpuMs": {
+        "count": 300,
+        "median": 5.3920829999999995,
+        "p95": 10.791041,
+        "max": 12.513958
+      },
+      "measuredDrawCpuMs": {
+        "count": 300,
+        "median": 0.6000000238418579,
+        "p95": 0.9000000953674316,
+        "max": 1.7999999523162842
+      },
+      "measuredOverlayCpuMs": {
+        "count": 300,
+        "median": 0.0,
+        "p95": 0.10000002384185791,
+        "max": 0.19999992847442627
+      },
+      "allDrawCpuMs": {
+        "count": 540,
+        "median": 0.6999999284744263,
+        "p95": 1.2000000476837158,
+        "max": 3.5
+      },
+      "allRafMs": {
+        "count": 539,
+        "median": 16.600000000000364,
+        "p95": 16.799999999999272,
+        "max": 17.5
+      },
+      "allRafOver50": 0,
+      "allRafOver100": 0,
+      "readyResources": {
+        "geometries": 13,
+        "textures": 9,
+        "programs": 7
+      },
+      "cleanup": {
+        "geometries": 0,
+        "textures": 0,
+        "programs": 0
+      }
+    }
+  },
+  "comparisons": {
+    "day": {
+      "pairs": [
+        {
+          "reference": "A1",
+          "candidate": "B1",
+          "deltaMs": 1.4652345000000002,
+          "deltaPercent": 48.64523133081515,
+          "materialCriterion": true
+        },
+        {
+          "reference": "A2",
+          "candidate": "B2",
+          "deltaMs": 0.25169250000000076,
+          "deltaPercent": 5.848497104071165,
+          "materialCriterion": false
+        }
+      ],
+      "criterionActivated": false,
+      "referenceDriftMs": 1.2914589999999997
+    },
+    "night": {
+      "pairs": [
+        {
+          "reference": "A1",
+          "candidate": "B1",
+          "deltaMs": 0.3133330000000001,
+          "deltaPercent": 5.769824455052546,
+          "materialCriterion": false
+        },
+        {
+          "reference": "A2",
+          "candidate": "B2",
+          "deltaMs": 0.3086715000000009,
+          "deltaPercent": 5.724531688403181,
+          "materialCriterion": false
+        }
+      ],
+      "criterionActivated": false,
+      "referenceDriftMs": -0.03846350000000065
+    }
+  },
+  "scope": "GPU synchronous diorama draws only; same V4 assets/presentation, no CSS/readiness/world/cold-cache/mobile scope. p95 nearest-rank, medians exact; all recorded RAF and CPU rows retained; null first interval is undefined, not an omitted outlier.",
+  "limits": "Practical >5% AND >0.5ms criterion in both orders; not statistical equivalence, cost neutrality or physical RAM/VRAM approval. Reference daytime drift retained.",
+  "files": [
+    {
+      "name": "dayA1-cleanup.json",
+      "bytes": 152003,
+      "sha256": "dc4f315129deb208857a027112214721e2a4666865b0a4e09d647c74a0f58413"
+    },
+    {
+      "name": "dayA1-console.json",
+      "bytes": 774,
+      "sha256": "1907e90fc5e1f58a0861ce418025c0e3a7a6f1d0058b19c78ddb20f14d2aaf6a"
+    },
+    {
+      "name": "dayA1-report.json",
+      "bytes": 151805,
+      "sha256": "e9ddb4f66e21100cfbeb4427779e69ded3ba80436d2d8519146ee6f680bc9c0b"
+    },
+    {
+      "name": "dayA2-cleanup.json",
+      "bytes": 152561,
+      "sha256": "bbca4594f181790a8a393d0e7d67f9e4f796bec74cd61a1b46857a44f1dc81d8"
+    },
+    {
+      "name": "dayA2-console.json",
+      "bytes": 2,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "name": "dayA2-report.json",
+      "bytes": 152363,
+      "sha256": "5224ec7a13e02106d2cb0fa80f789bbe1a1ba00081071577f6118ed98c8b7ad3"
+    },
+    {
+      "name": "dayB1-cleanup.json",
+      "bytes": 152917,
+      "sha256": "0a10b66917a1c1ea77eba267db0ba954bdbb1249331013156b796321345d8d75"
+    },
+    {
+      "name": "dayB1-console.json",
+      "bytes": 2,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "name": "dayB1-report.json",
+      "bytes": 152719,
+      "sha256": "a48e86689def7c2c9ebb22cd4ab0e29494cce38a0b9aa62846bf7ce00f861c6b"
+    },
+    {
+      "name": "dayB2-cleanup.json",
+      "bytes": 153275,
+      "sha256": "a90e559e8b063426ae0a46281bf4071f6efdee5aa8f09cb81129cd1603aa4b15"
+    },
+    {
+      "name": "dayB2-console.json",
+      "bytes": 2,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "name": "dayB2-report.json",
+      "bytes": 153077,
+      "sha256": "b95a339eb207dfdc65529e3f682ffe6f4205b6ac1f36679da5ffdec88b3c9a6e"
+    },
+    {
+      "name": "nightA1-cleanup.json",
+      "bytes": 153245,
+      "sha256": "4c599804cc4930a6abdf02fa946034c3ef5e54461334d91d1291e889710c9045"
+    },
+    {
+      "name": "nightA1-console.json",
+      "bytes": 2,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "name": "nightA1-report.json",
+      "bytes": 153047,
+      "sha256": "661a9f2c0d74b7014fb3b3ff0bda104bbcc76dac995f3f074846e9f2592ea29c"
+    },
+    {
+      "name": "nightA2-cleanup.json",
+      "bytes": 153595,
+      "sha256": "0bba4f83b8d8acd2678d7170fd7418cff1b8c907f409e692adc2d4c709fee7e9"
+    },
+    {
+      "name": "nightA2-console.json",
+      "bytes": 2,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "name": "nightA2-report.json",
+      "bytes": 153397,
+      "sha256": "4ef9218d6520bb074c6b41bbf6dba4ce4d4c408309a039087b38d50165f7ab9b"
+    },
+    {
+      "name": "nightB1-cleanup.json",
+      "bytes": 152488,
+      "sha256": "6cb01ecc2c251a50db5578d5e2a677cd56257a41350f9b54a729fe99b778be2e"
+    },
+    {
+      "name": "nightB1-console.json",
+      "bytes": 2,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "name": "nightB1-report.json",
+      "bytes": 152290,
+      "sha256": "f8e143d25291786ca16088c650d7fc12634b6a2425854717f5daee22768e7b7d"
+    },
+    {
+      "name": "nightB2-cleanup.json",
+      "bytes": 153582,
+      "sha256": "b2fc0ab2b590d9f3ebe70e9e05618a17b166ef9e1fa734a1175ebb877d5a742d"
+    },
+    {
+      "name": "nightB2-console.json",
+      "bytes": 2,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "name": "nightB2-report.json",
+      "bytes": 153384,
+      "sha256": "525e308b8669ac2d641725fef3ec878c8f6657be050db25c59caa40a831b9f80"
+    }
+  ]
+}

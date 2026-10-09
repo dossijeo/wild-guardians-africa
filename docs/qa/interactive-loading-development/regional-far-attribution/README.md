@@ -1,0 +1,5 @@
+# Regional far attribution c60565a7
+
+One exploratory actual Continue, same imported seed712 snapshot/native iframe observer, http://127.0.0.1:5414/?qa-loading&qa-loading-cpu-budget . CPU16 and concurrent far image candidate remain opt-in; no batch/frameSlack. No new optimization in this commit.90 tests pass, including phase witness throwing while exact GPU calls/restoration/adoption remain unchanged.
+
+Nested spans: far-region-worker, create, attach-ground, ground-seam, gpu-ready tagged slot0–3; GPU texture-uploads, queue-admission (prior owner + explicit RAF), compile, synchronous draw submission, fence. Awaited wall includes overlapping presentation/network/CPU, must not be summed or called exclusive CPU/GPU. Ordinary hooks absent: no added clocks, GPU queries or RAF. Default recipes remain unchanged. First region requests all four species with ground; other species request trees-only regions. Sharing or early worker generation is only a hypothesis until these spans confirm the dominant wait and descriptor equivalence.

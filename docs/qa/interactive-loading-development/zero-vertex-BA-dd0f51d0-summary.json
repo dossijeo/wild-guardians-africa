@@ -1,0 +1,536 @@
+{
+  "source": "dd0f51d0",
+  "viewport": [
+    1280,
+    720
+  ],
+  "scope": "Native B/A reverse pair following retained A/B, same dense archive and source; exploratory GPU attribution, not causal ABBA/global fluency acceptance. No resource-binding probes. Preparation draws are synchronous; shader/decode/fence waits are outside queries. Last-render metadata is the final subpass, not full query totals. First four final queries remain unresolved on owner disposal.",
+  "A": {
+    "policy": {
+      "farIsolatedPreparation": true,
+      "farZeroVertexPreparation": false,
+      "scope": "World owner policy at loading start; GPU draw metadata/readbacks provide actual execution evidence."
+    },
+    "closed": true,
+    "cancelled": false,
+    "last": {
+      "at": 47445.09999990463,
+      "progress": 1,
+      "ready": true,
+      "pending": [],
+      "downloads": {
+        "progress": 1,
+        "estimatedMs": 842,
+        "observedMs": 842,
+        "remainingMs": 0,
+        "pending": 0,
+        "networkPending": 0,
+        "cacheHits": 1,
+        "network": 231,
+        "unknown": 0,
+        "unknownTotals": 0,
+        "failures": 0,
+        "loadedBytes": 106750632,
+        "totalBytes": 106750632,
+        "estimated": false,
+        "byteScope": "Decoded response body; pending totals and time are estimates. Parallel intervals are counted once."
+      }
+    },
+    "byLabel": {
+      "presentation-diorama-render": {
+        "n": 770,
+        "median": 4.639166,
+        "p95": 9.911354,
+        "max": 11.054218
+      },
+      "preparation-far-upload-draw": {
+        "n": 30,
+        "median": 0.564218,
+        "p95": 5.653385,
+        "max": 41.915208
+      },
+      "presentation-cinematic-step": {
+        "n": 120,
+        "median": 20.613697,
+        "p95": 56.485312,
+        "max": 71.933592
+      }
+    },
+    "RAF": {
+      "n": 894,
+      "median": 16.60000000000582,
+      "p95": 33.400000000001455,
+      "max": 133,
+      "over100": 3,
+      "first": -83.99999995231701
+    },
+    "farMaximum": {
+      "frame": 666,
+      "ms": 41.915208,
+      "label": "preparation-far-upload-draw",
+      "at": 41640.89999997616,
+      "timed": true,
+      "lastRender": {
+        "calls": 140,
+        "triangles": 2876324,
+        "points": 0,
+        "lines": 0,
+        "frame": 2365
+      }
+    },
+    "farTriangleRange": [
+      254,
+      2876324
+    ],
+    "firstCinematic": [
+      {
+        "frame": 787,
+        "ms": 5.207447,
+        "label": "presentation-cinematic-step",
+        "at": 43601.09999990463,
+        "timed": true,
+        "lastRender": {
+          "calls": 2,
+          "triangles": 21788,
+          "points": 0,
+          "lines": 0,
+          "frame": 2780
+        }
+      },
+      {
+        "frame": 788,
+        "ms": 5.292812,
+        "label": "presentation-cinematic-step",
+        "at": 43702.09999990463,
+        "timed": true,
+        "lastRender": {
+          "calls": 2,
+          "triangles": 21788,
+          "points": 0,
+          "lines": 0,
+          "frame": 2783
+        }
+      },
+      {
+        "frame": 789,
+        "ms": 4.682239,
+        "label": "presentation-cinematic-step",
+        "at": 43711.299999952316,
+        "timed": true,
+        "lastRender": {
+          "calls": 2,
+          "triangles": 21788,
+          "points": 0,
+          "lines": 0,
+          "frame": 2786
+        }
+      },
+      {
+        "frame": 791,
+        "ms": 8.809895,
+        "label": "presentation-cinematic-step",
+        "at": 43727.699999928474,
+        "timed": true,
+        "lastRender": {
+          "calls": 2,
+          "triangles": 21788,
+          "points": 0,
+          "lines": 0,
+          "frame": 2790
+        }
+      }
+    ],
+    "firstNativeWorld": [
+      {
+        "frame": 848,
+        "ms": 54.691197,
+        "label": "presentation-cinematic-step",
+        "at": 44670.699999928474,
+        "timed": true,
+        "lastRender": {
+          "calls": 47,
+          "triangles": 2676866,
+          "points": 0,
+          "lines": 0,
+          "frame": 2913
+        }
+      },
+      {
+        "frame": 850,
+        "ms": 27.077343,
+        "label": "presentation-cinematic-step",
+        "at": 44706.299999952316,
+        "timed": true,
+        "lastRender": {
+          "calls": 47,
+          "triangles": 2676866,
+          "points": 0,
+          "lines": 0,
+          "frame": 2917
+        }
+      },
+      {
+        "frame": 851,
+        "ms": 26.648437,
+        "label": "presentation-cinematic-step",
+        "at": 44722.699999928474,
+        "timed": true,
+        "lastRender": {
+          "calls": 47,
+          "triangles": 2676866,
+          "points": 0,
+          "lines": 0,
+          "frame": 2920
+        }
+      },
+      {
+        "frame": 852,
+        "ms": 22.271509,
+        "label": "presentation-cinematic-step",
+        "at": 44741.39999997616,
+        "timed": true,
+        "lastRender": {
+          "calls": 47,
+          "triangles": 2676866,
+          "points": 0,
+          "lines": 0,
+          "frame": 2923
+        }
+      },
+      {
+        "frame": 853,
+        "ms": 29.049165,
+        "label": "presentation-cinematic-step",
+        "at": 44765.5,
+        "timed": true,
+        "lastRender": {
+          "calls": 47,
+          "triangles": 2676866,
+          "points": 0,
+          "lines": 0,
+          "frame": 2926
+        }
+      }
+    ],
+    "actorQueue": {
+      "submitted": 36,
+      "completed": 36,
+      "failed": 0,
+      "yields": 21,
+      "cpuMs": 211.69999992847443,
+      "maxTaskMs": 9.700000047683716,
+      "pending": 0,
+      "closed": true,
+      "scope": "Accumulated synchronous task CPU wall time; yields and queue waits are not GPU work."
+    },
+    "gameplayGpu": {
+      "n": 116,
+      "median": 52.60552,
+      "p95": 63.535207,
+      "max": 74.872864
+    },
+    "firstGameplay": [
+      {
+        "frame": 0,
+        "ms": 56.43104
+      },
+      {
+        "frame": 1,
+        "ms": 57.712447
+      },
+      {
+        "frame": 2,
+        "ms": 73.012708
+      },
+      {
+        "frame": 3,
+        "ms": 73.994427
+      }
+    ],
+    "gameplayRAF": {
+      "n": 119,
+      "median": 66.39999999999418,
+      "p95": 116.5,
+      "max": 282.59999999999854,
+      "over100": 8
+    },
+    "gpuDiagnostics": {
+      "disjointEvents": 0,
+      "discarded": 0,
+      "foreignQuerySkipped": 0,
+      "unresolvedAtDispose": 4,
+      "nestedSkipped": 0
+    },
+    "gameplayDiagnostics": {
+      "disjointEvents": 0,
+      "discarded": 0,
+      "foreignQuerySkipped": 0,
+      "unresolvedAtDispose": 4,
+      "nestedSkipped": 0
+    }
+  },
+  "B": {
+    "policy": {
+      "farIsolatedPreparation": true,
+      "farZeroVertexPreparation": true,
+      "scope": "World owner policy at loading start; GPU draw metadata/readbacks provide actual execution evidence."
+    },
+    "closed": true,
+    "cancelled": false,
+    "last": {
+      "at": 47402.60000002384,
+      "progress": 1,
+      "ready": true,
+      "pending": [],
+      "downloads": {
+        "progress": 1,
+        "estimatedMs": 798.4000000953674,
+        "observedMs": 798.4000000953674,
+        "remainingMs": 0,
+        "pending": 0,
+        "networkPending": 0,
+        "cacheHits": 1,
+        "network": 231,
+        "unknown": 0,
+        "unknownTotals": 0,
+        "failures": 0,
+        "loadedBytes": 106750632,
+        "totalBytes": 106750632,
+        "estimated": false,
+        "byteScope": "Decoded response body; pending totals and time are estimates. Parallel intervals are counted once."
+      }
+    },
+    "byLabel": {
+      "presentation-diorama-render": {
+        "n": 767,
+        "median": 4.651822,
+        "p95": 9.582447,
+        "max": 11.960781
+      },
+      "preparation-far-upload-draw": {
+        "n": 34,
+        "median": 0.000208,
+        "p95": 0.528697,
+        "max": 4.006406
+      },
+      "presentation-cinematic-step": {
+        "n": 123,
+        "median": 20.947655,
+        "p95": 57.049843,
+        "max": 70.254374
+      }
+    },
+    "RAF": {
+      "n": 894,
+      "median": 16.60000000000582,
+      "p95": 49.5,
+      "max": 133,
+      "over100": 5,
+      "first": -67.69999992847443
+    },
+    "farMaximum": {
+      "frame": 672,
+      "ms": 4.006406,
+      "label": "preparation-far-upload-draw",
+      "at": 41565.10000002384,
+      "timed": true,
+      "lastRender": {
+        "calls": 1,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0,
+        "frame": 2383
+      }
+    },
+    "farTriangleRange": [
+      0,
+      0
+    ],
+    "firstCinematic": [
+      {
+        "frame": 781,
+        "ms": 10.587707,
+        "label": "presentation-cinematic-step",
+        "at": 43550.699999928474,
+        "timed": true,
+        "lastRender": {
+          "calls": 2,
+          "triangles": 21788,
+          "points": 0,
+          "lines": 0,
+          "frame": 2768
+        }
+      },
+      {
+        "frame": 782,
+        "ms": 8.928593,
+        "label": "presentation-cinematic-step",
+        "at": 43567.10000002384,
+        "timed": true,
+        "lastRender": {
+          "calls": 2,
+          "triangles": 21788,
+          "points": 0,
+          "lines": 0,
+          "frame": 2771
+        }
+      },
+      {
+        "frame": 783,
+        "ms": 4.620781,
+        "label": "presentation-cinematic-step",
+        "at": 43583.89999997616,
+        "timed": true,
+        "lastRender": {
+          "calls": 2,
+          "triangles": 21788,
+          "points": 0,
+          "lines": 0,
+          "frame": 2774
+        }
+      },
+      {
+        "frame": 785,
+        "ms": 4.737239,
+        "label": "presentation-cinematic-step",
+        "at": 43600.60000002384,
+        "timed": true,
+        "lastRender": {
+          "calls": 2,
+          "triangles": 21788,
+          "points": 0,
+          "lines": 0,
+          "frame": 2778
+        }
+      }
+    ],
+    "firstNativeWorld": [
+      {
+        "frame": 846,
+        "ms": 53.498749,
+        "label": "presentation-cinematic-step",
+        "at": 44565.799999952316,
+        "timed": true,
+        "lastRender": {
+          "calls": 47,
+          "triangles": 2676866,
+          "points": 0,
+          "lines": 0,
+          "frame": 2907
+        }
+      },
+      {
+        "frame": 848,
+        "ms": 22.353437,
+        "label": "presentation-cinematic-step",
+        "at": 44603.699999928474,
+        "timed": true,
+        "lastRender": {
+          "calls": 47,
+          "triangles": 2676866,
+          "points": 0,
+          "lines": 0,
+          "frame": 2911
+        }
+      },
+      {
+        "frame": 849,
+        "ms": 20.947655,
+        "label": "presentation-cinematic-step",
+        "at": 44617,
+        "timed": true,
+        "lastRender": {
+          "calls": 47,
+          "triangles": 2676866,
+          "points": 0,
+          "lines": 0,
+          "frame": 2914
+        }
+      },
+      {
+        "frame": 850,
+        "ms": 22.716302,
+        "label": "presentation-cinematic-step",
+        "at": 44633.89999997616,
+        "timed": true,
+        "lastRender": {
+          "calls": 47,
+          "triangles": 2676866,
+          "points": 0,
+          "lines": 0,
+          "frame": 2917
+        }
+      },
+      {
+        "frame": 851,
+        "ms": 22.864478,
+        "label": "presentation-cinematic-step",
+        "at": 44654.39999997616,
+        "timed": true,
+        "lastRender": {
+          "calls": 47,
+          "triangles": 2676866,
+          "points": 0,
+          "lines": 0,
+          "frame": 2920
+        }
+      }
+    ],
+    "actorQueue": {
+      "submitted": 36,
+      "completed": 36,
+      "failed": 0,
+      "yields": 20,
+      "cpuMs": 196.79999947547913,
+      "maxTaskMs": 9.399999976158142,
+      "pending": 0,
+      "closed": true,
+      "scope": "Accumulated synchronous task CPU wall time; yields and queue waits are not GPU work."
+    },
+    "gameplayGpu": {
+      "n": 116,
+      "median": 52.535208,
+      "p95": 64.63328,
+      "max": 77.423437
+    },
+    "firstGameplay": [
+      {
+        "frame": 0,
+        "ms": 66.601197
+      },
+      {
+        "frame": 1,
+        "ms": 73.472395
+      },
+      {
+        "frame": 2,
+        "ms": 77.423437
+      },
+      {
+        "frame": 3,
+        "ms": 70.153489
+      }
+    ],
+    "gameplayRAF": {
+      "n": 119,
+      "median": 66.40000000000146,
+      "p95": 99.80000000000291,
+      "max": 315.90000000000146,
+      "over100": 5
+    },
+    "gpuDiagnostics": {
+      "disjointEvents": 0,
+      "discarded": 0,
+      "foreignQuerySkipped": 0,
+      "unresolvedAtDispose": 4,
+      "nestedSkipped": 0
+    },
+    "gameplayDiagnostics": {
+      "disjointEvents": 0,
+      "discarded": 0,
+      "foreignQuerySkipped": 0,
+      "unresolvedAtDispose": 4,
+      "nestedSkipped": 0
+    }
+  }
+}

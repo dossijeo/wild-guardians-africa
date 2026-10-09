@@ -1,0 +1,11 @@
+# Native missing-assets slow completion — 5078ed1e
+
+Private QA5293 server, original asset bodies and Content-Length,1.25MB/s per response with actual parallel loading. Fresh slow-complete-5078ed1e scope. Source runtime7d947d4f; fixture snapshot refinemente7531564; freeze5078ed1e. Run used Enter; planting used native pointer coordinates. Not an actual menu/autoplay-context acceptance test.
+
+Completed real Sabana/Mapungubwe initialization74,157ms and controls78,240ms. Transfer union57,824.5ms,98,532,608decoded body bytes,211network/5verifiedcache/0unknown,pending,failed. The independent server counters exactly agree:211requests/98,532,608bytes/completed211/cancelled0. No extra asset request/body read was introduced solely for measurement. Cache requests contribute zero weight; parallel transfers are combined as a union rather than summed.
+
+All readiness milestones completed before100%; camera and logical state comparisons true, errors[]. The first plant attempt[633,481] was rejected by overlap/placement rules. The later actual pointer click[637,562] added exactly one maize; a fifth plant is visible in the saved screenshot. Final reportplayerPlants1 and exactly one028farm_crop_interact(source started/worldbus); initial plants emitted no028. One004amb_birds source started/ambientbus,0loadingvoices atskyhandoff andafterstop. This is trigger/ownership evidence, not physical loudspeaker/listening or mobiletouch QA.
+
+Renderer/context disposed and lost, tab67closed. Frameinterval4580samples/max282.7ms/6>50/1>100. The sole long task>100 starts-257.3ms relative to the loading timestamp and lasts307ms, spanning early startup; it occurs before the first diorama-interactive milestone. Remaining recorded long tasks max89ms. Keep the raw startup frame rather than silently removing it; these single functional scheduling proxies do not establish GPU timing, performance neutrality or peak RAM/VRAM.
+
+The fixture's progress clock starts after diorama.prepare while owner begins before it. Earlier maize download is included in network weighting despite not being visible in progress.elapsed. The actual app prepares during menu transition and needs its own cold/slow fallback acceptance.14s preparation estimate remains explicitly an estimate,100% remains readiness-only.

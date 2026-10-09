@@ -1,0 +1,11 @@
+# Isolated visual resources V6/V9
+
+Four native sequential owners completed at1280×720, 78% explicit QA growth: V6/V9 day(time0) and night(time310), each540 existing RAF callbacks. No GPU timer was created. Buffer binding probes invalidate these frame/CPU durations as performance evidence. Other agents performed small archival/Git operations; no isolation claim.
+
+Both day/night results agree: V6 requests6,227,918B in71 buffers,11 geometries/8 textures/5 programs; V9 requests6,231,394B in81 buffers,13 geometries/9 textures/7 programs. Increment3,476B in requested buffers. The additional observed texture is2048×512 SRGB8_ALPHA8 with12 levels:5,592,412B nominal uncompressed RGBA storage, not physical VRAM. The2172×724 CSS ornament lies outside this WebGL inventory;6,290,112B is only its nominal decoded RGBA capacity, not measured browser allocation. Runtime WebP is1,117,368B. World/loading atlas coexistence and true peak RAM/VRAM remain unmeasured.
+
+Native Cancel disposed all four isolated owners. Explicit observed buffers/bytes and texture objects reached zero; renderer geometry/texture/program counts also zero; captured warning/error logs empty. Each tab closed before next creation; viewport reset and browser inventory empty after195. This is not full-world cancellation, shared-resource survival or repeated application lifecycle acceptance. No audio exists in this isolated visual viewer.
+
+V6 first browser preflight191 failed before preparation on missing content/manifests/web-assets.json. Negative DOM preserved; tab closed without renderer creation. Exact per-commit content archives corrected the private snapshots; their source hashes are in the served receipt. The earlier missing web-package config preflight is also preserved in the receipt. No runtime source was changed to conceal either preflight failure.
+
+Verification receipt checks actual viewport/time/growth,540 frames,no GPU timer,four equal-growth plants and zero post-dispose counters, and records SHA256 for raw JSON/screenshots. V9 day/night screenshots were visually inspected as nonblank. Timing is a separate future campaign requiring fresh quiet confirmation. The failed main-feature initialization regression remains open.

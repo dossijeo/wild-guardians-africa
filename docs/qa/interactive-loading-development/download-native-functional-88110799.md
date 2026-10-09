@@ -1,0 +1,7 @@
+# First native transfer-owner probe — not cache/performance acceptance
+
+Sabana/Mapungubwe, native fixture5290, source88110799, measurement flag enabled. The scene reached verified readiness, exact final camera and unchanged logical state, with no reported errors. Explicit disposal and context loss were confirmed before closing tab60. Initialization27,590.1ms; controls31,690ms;1,802 observed scheduling intervals, maximum83.1ms,0over100ms. This single functional observation is not a paired benchmark or proof of neutral loading cost.
+
+Final transfer classification:1application-cache,8network,204unknown,0pending/failed. Unknown transfers were retained as unknown, not called cache hits. The observed union was13,835.4ms. This exposes inadequate cache evidence linkage in the first implementation. ResourceTiming entries can arrive in PerformanceObserver before a GLTF/response parse completes, while the finite native entry buffer is already full of imported modules. The initial owner discarded that early evidence; completion later had no buffered entry. A subsequent source fix retains observed pending timings until end, with a regression test. It also aborts original packed biome/village/wall binary requests with the asset owner's existing signal when closed.53directed tests pass after those changes, but native revalidation is still pending.
+
+The full negative classification and functional result remain in the JSON beside this note. Cold/warm/partial/throttle, actual application, repeat/cancel, total-time/frametime overhead and memory gates remain open.

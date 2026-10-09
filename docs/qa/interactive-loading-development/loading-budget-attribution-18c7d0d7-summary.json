@@ -1,0 +1,99 @@
+{
+  "source": "18c7d0d7",
+  "scope": "One opt-in CPU/wait diagnostic on existing Sabana/Mapungubwe/media fixture; no paired causal comparison or GPU timing.",
+  "initializationMs": 10009.399999976158,
+  "totalMs": 14103.100000023842,
+  "frameSummary": {
+    "count": 776,
+    "max": 116.30000000000109,
+    "over50": 4,
+    "over100": 1
+  },
+  "errors": [],
+  "cameraPreserved": true,
+  "logicalUnchanged": true,
+  "downloads": {
+    "progress": 1,
+    "estimatedMs": 717,
+    "observedMs": 717,
+    "remainingMs": 0,
+    "pending": 0,
+    "networkPending": 0,
+    "cacheHits": 1,
+    "network": 212,
+    "unknown": 0,
+    "unknownTotals": 0,
+    "failures": 0,
+    "loadedBytes": 98149536,
+    "totalBytes": 98149536,
+    "estimated": false,
+    "byteScope": "Decoded response body; pending totals and time are estimates. Parallel intervals are counted once."
+  },
+  "counts": {
+    "loading-crop-construction-step": {
+      "count": 432,
+      "elapsedSumMs": 209.59999990463257,
+      "maxMs": 1.9000000953674316
+    },
+    "loading-crop-frame-wait": {
+      "count": 48,
+      "elapsedSumMs": 572.599999666214,
+      "maxMs": 22
+    },
+    "loading-screen-upload-submit": {
+      "count": 283,
+      "elapsedSumMs": 286.60000121593475,
+      "maxMs": 59.90000009536743
+    },
+    "loading-screen-upload-final-submit": {
+      "count": 1,
+      "elapsedSumMs": 4.199999928474426,
+      "maxMs": 4.199999928474426
+    },
+    "loading-budget-frame-wait": {
+      "count": 53,
+      "elapsedSumMs": 466.200000166893,
+      "maxMs": 19.600000023841858
+    },
+    "load-crop-batch": {
+      "count": 1,
+      "elapsedSumMs": 786,
+      "maxMs": 786
+    },
+    "warm-draw-batches": {
+      "count": 1,
+      "elapsedSumMs": 715,
+      "maxMs": 715
+    },
+    "load-warm-gpu": {
+      "count": 1,
+      "elapsedSumMs": 2201.399999976158,
+      "maxMs": 2201.399999976158
+    },
+    "load-far-assets": {
+      "count": 1,
+      "elapsedSumMs": 2343.5,
+      "maxMs": 2343.5
+    }
+  },
+  "cleanup": {
+    "disposed": true,
+    "contextLost": true
+  },
+  "files": {
+    "loading-budget-attribution-18c7d0d7.json": "98a9e64cc668e87c328d8b073746c10b7f92d3c2a88ab6aea718fd851ced2a0a",
+    "loading-budget-attribution-18c7d0d7-cleanup.json": "5ec4fda4f1e26acc3679ad938563596c1d87c782ba1a74eb360c063d3e9ade6f",
+    "loading-budget-attribution-18c7d0d7.png": "5bdadabed33f4171865aa98dff5139a0bd4a4587d1de43f93f55c09c2fc4e37e"
+  },
+  "warmDrawFrameWaits": {
+    "count": 40,
+    "elapsedSumMs": 366.80000019073486,
+    "maxMs": 11.400000095367432,
+    "budgetElapsedSumMs": 338.5999997854233
+  },
+  "cropSlices": {
+    "cpuMs": 207.39999997615814,
+    "steps": 428,
+    "budgetElapsedMs": 210.30000042915344
+  }
+}

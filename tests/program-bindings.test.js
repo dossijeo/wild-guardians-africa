@@ -17,3 +17,6 @@ test('first-use shader failure propagates unchanged, preventing later variants f
  const bad={getUniforms(){throw failure;},getAttributes(){attributes++;}},next={getUniforms(){later++;},getAttributes(){later++;}};
  assert.throws(()=>initializeProgramBindings({info:{programs:[bad,next]}}),error=>error===failure);assert.equal(attributes,0);assert.equal(later,0);
 });
+import {initializeProgramBindingsAsync} from '../src/rendering/program-bindings.js';
+test('cooperative binding reflection yields between real program operations and matches counters',async()=>{let time=0,yields=0,calls=0;const make=()=>({getUniforms(){time+=3;calls++;},getAttributes(){time+=2;calls++;}}),a=make(),b=make();const stats=await initializeProgramBindingsAsync({info:{programs:[a,a,b,{}]}},{now:()=>time,nextFrame:async()=>{yields++;},budgetMs:4});assert.deepEqual(stats,{initialized:2,unsupported:1});assert.equal(calls,4);assert.equal(yields,2);});
+test('cooperative reflection stops before touching programs after cancellation',async()=>{let stop=false,calls=0;const a={getUniforms(){calls++;},getAttributes(){calls++;}};await assert.rejects(initializeProgramBindingsAsync({info:{programs:[a,{...a}]}},{cancelled:()=>stop,budgetMs:0,nextFrame:async()=>{stop=true;}}),/cancelled/);assert.equal(calls,2);});

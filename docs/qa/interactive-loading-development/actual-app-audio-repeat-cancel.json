@@ -1,0 +1,139 @@
+{
+  "trace": {
+    "events": [
+      {
+        "type": "unlock-request",
+        "at": 402971.10000002384
+      },
+      {
+        "type": "unlock-result",
+        "at": 403050.60000002384
+      },
+      {
+        "type": "request",
+        "method": "ambientSound",
+        "id": "amb_birds",
+        "emitter": "loading:ambience",
+        "at": 403051.10000002384
+      },
+      {
+        "type": "result",
+        "method": "ambientSound",
+        "id": "amb_birds",
+        "emitter": "loading:ambience",
+        "started": true,
+        "bus": "ambient",
+        "at": 403370.5
+      },
+      {
+        "type": "unlock-request",
+        "at": 411796.89999997616
+      },
+      {
+        "type": "unlock-result",
+        "at": 411797.2000000477
+      },
+      {
+        "type": "stop",
+        "emitter": "loading:ambience",
+        "family": "amb_birds",
+        "at": 422981.2999999523
+      },
+      {
+        "type": "unlock-request",
+        "at": 423159
+      },
+      {
+        "type": "unlock-result",
+        "at": 423159.7999999523
+      },
+      {
+        "type": "unlock-request",
+        "at": 444864.7000000477
+      },
+      {
+        "type": "unlock-result",
+        "at": 444865.10000002384
+      },
+      {
+        "type": "unlock-request",
+        "at": 451089
+      },
+      {
+        "type": "unlock-result",
+        "at": 451089.39999997616
+      },
+      {
+        "type": "unlock-request",
+        "at": 497949.39999997616
+      },
+      {
+        "type": "unlock-result",
+        "at": 497982.89999997616
+      },
+      {
+        "type": "request",
+        "method": "ambientSound",
+        "id": "amb_birds",
+        "emitter": "loading:ambience",
+        "at": 497983.10000002384
+      },
+      {
+        "type": "result",
+        "method": "ambientSound",
+        "id": "amb_birds",
+        "emitter": "loading:ambience",
+        "started": true,
+        "bus": "ambient",
+        "at": 497983.39999997616
+      },
+      {
+        "type": "unlock-request",
+        "at": 504756.5
+      },
+      {
+        "type": "unlock-result",
+        "at": 504756.89999997616
+      },
+      {
+        "type": "request",
+        "method": "sound",
+        "id": "farm_crop_interact",
+        "emitter": "loading:plant",
+        "at": 504774.7000000477
+      },
+      {
+        "type": "result",
+        "method": "sound",
+        "id": "farm_crop_interact",
+        "emitter": "loading:plant",
+        "started": true,
+        "bus": "world",
+        "at": 504890.60000002384
+      },
+      {
+        "type": "unlock-request",
+        "at": 513352.60000002384
+      },
+      {
+        "type": "unlock-result",
+        "at": 513353.10000002384
+      },
+      {
+        "type": "stop",
+        "emitter": "loading:ambience",
+        "family": "amb_birds",
+        "at": 513362.10000002384
+      }
+    ],
+    "context": "running",
+    "masterGain": 0.699999988079071,
+    "loadingVoices": []
+  },
+  "dom": {
+    "overlay": 0,
+    "prepared": 0,
+    "worldCanvas": 0
+  },
+  "logs": []
+}

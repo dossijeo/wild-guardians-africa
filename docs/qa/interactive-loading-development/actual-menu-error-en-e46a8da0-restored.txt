@@ -1,0 +1,83 @@
+- iframe [active] [id="native-menu"]:
+  - generic "Diorama tridimensional. Selecciona los símbolos luminosos o los botones con sus nombres."
+  - banner:
+    - 'img "Wild Guardians: Africa"'
+    - generic: Una pequeña granja. Un mundo por proteger.
+  - generic: ✦EL SANTUARIO
+  - generic: Donde comienza tu historia
+  - navigation "Herramientas":
+    - button "Silenciar música" [pressed]:
+    - button "Ayuda de navegación":
+  - navigation "Menú principal":
+    - button "Continuar":
+      - generic: Continuar ›
+    - button "Juego nuevo":
+      - generic: Juego nuevo ›
+    - button "Opciones":
+      - generic: Opciones ›
+    - button "Biblioteca":
+      - generic: Biblioteca ›
+    - button "Salir":
+      - generic: Salir ›
+  - contentinfo:
+    - generic: LA SABANA · CREPÚSCULO
+    - paragraph: Cada historia empieza con una semilla.
+    - text: Toca los símbolos luminosos
+    - generic: VIAJE DEL ESPÍRITU · V2.8
+  - dialog "Opciones":
+    - generic: Idioma
+    - combobox "Idioma":
+      - option "English"
+      - option "Español" [selected]
+    - button "Volver al santuario (Escape)" [active]:
+      - text: Volver al santuario
+      - generic: (Escape)
+    - generic: A tu ritmo
+    - heading "La luz del santuario." [level=1]
+    - paragraph: Ajusta la atmósfera. Los cambios se ven directamente en la escena.
+    - generic: Luz ambiental del atardecer
+    - status: 24 %
+    - slider "Luz ambiental del atardecer"
+    - generic: Brillo de los símbolos
+    - status: 95 %
+    - slider "Brillo de los símbolos"
+    - generic: Luz de las luciérnagas
+    - status: 115 %
+    - slider "Luz de las luciérnagas"
+    - generic: Iluminación local independiente del sol.
+    - generic: Luciérnagas
+    - generic: Partículas y luces de colores sobre el modelo.
+    - switch "Luciérnagas" [checked]
+    - generic: Movimiento reducido
+    - generic: Acercamiento directo, sin rodeos y con transiciones breves.
+    - switch "Movimiento reducido"
+    - generic: Música del menú
+    - generic: Balafon's Call · tema principal de Wild Guardians.
+    - switch "Música del menú" [checked]
+    - heading "Calidad de imagen" [level=2]
+    - group "Calidad":
+      - button "Ahorro"
+      - button "Equilibrada"
+      - button "Alta"
+    - button "Restablecer valores"
+    - heading "Audio del juego" [level=2]
+    - text: Sonidos
+    - slider "Sonidos"
+    - text: Música
+    - slider "Música"
+    - generic: Calidad del juego
+    - combobox "Calidad del juego":
+      - option "Muy baja"
+      - option "Baja"
+      - option "Media" [selected]
+      - option "Alta"
+    - generic: Resolución del mundo
+    - combobox "Resolución del mundo":
+      - option "Según calidad" [selected]
+      - option "Ahorro"
+      - option "Ahorro alto"
+      - option "Ahorro máximo"
+    - paragraph: Reduce la nitidez del mundo 3D; el HUD conserva su resolución.
+  - status
+  - generic: Viajando a Opciones. Escape para regresar.
+  - text: ✦

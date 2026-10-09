@@ -5,7 +5,7 @@
 <button id="prepare">Prepare temporary save for production menu</button><button id="cleanup">Remove prepared QA save</button><p id="prepared">No prepared save</p>
 <script type="module">
 import {BrowserSaveRepository} from '../../src/persistence/browser-saves.js';
-import {SaveRepository,serialize} from '../../src/persistence/snapshots.js';
+import {SaveRepository,serialize,deserialize} from '../../src/persistence/snapshots.js';
 import {saveGame} from '../../src/app/save-game.js';
 import {newGame} from '../../src/simulation/game.js';
 const button=document.querySelector('#run');
@@ -13,9 +13,15 @@ let menuSlot=null;
 document.querySelector('#prepare').onclick=async()=>{
  if(menuSlot)await new BrowserSaveRepository(localStorage).delete(menuSlot);
  menuSlot='qa-indexed-menu-'+crypto.randomUUID();
- const state=newGame({seed:712,slotId:menuSlot});state.savedAt=Date.now();
+ const params=new URLSearchParams(location.search);
+ // Explicit setup only: parsing/saving the archived fixture is not a loading
+ // benchmark. No gameplay state is generated or repaired to simplify the test.
+ let state;
+ if(params.has('dense')){const response=await fetch('/.cache/loading-dense-save.bin');if(!response.ok)throw Error('Archived dense save unavailable');const raw=await new Response(new Blob([await response.arrayBuffer()]).stream().pipeThrough(new DecompressionStream('gzip'))).text();state=deserialize(raw);state.slotId=menuSlot;}else state=newGame({seed:712,slotId:menuSlot});
+ if(params.has('time'))state.time=Number(params.get('time'));
+ state.savedAt=Date.now();
  await new BrowserSaveRepository(localStorage).save(state);
- document.querySelector('#prepared').textContent=menuSlot;
+ document.querySelector('#prepared').textContent=params.has('dense')?JSON.stringify({slotId:menuSlot,day:state.day,time:state.time,plants:state.plants.length,workers:state.workers.length,scope:'Temporary QA archive copy; only slot identity, save timestamp and explicit test clock changed. Native save validation retained.'}):menuSlot;
 };
 document.querySelector('#cleanup').onclick=async()=>{
  if(menuSlot){const repo=new BrowserSaveRepository(localStorage);await repo.delete(menuSlot);document.querySelector('#prepared').textContent=(await repo.list()).some(row=>row.slotId===menuSlot)?'Cleanup failed':'Prepared QA save removed';menuSlot=null;}

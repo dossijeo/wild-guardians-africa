@@ -1,0 +1,15 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Loading transfer metadata QA</title><style>body{font:16px system-ui;background:#17231d;color:#f8eed7;padding:24px}button{padding:12px}pre{white-space:pre-wrap}</style><h1>Transport-only cache evidence</h1><p>Parses actual small game metadata using the production transfer owner. No world, GPU or gameplay readiness claim. Repeat tests HTTP cache retention independently of the full game's cache budget.</p><button id="run">Parse metadata</button><button id="cancel" disabled>Cancel</button><pre id="status">Ready. No request owner yet.</pre><script id="report" type="application/json">{}</script><script type="module">
+import {json} from '/src/rendering/asset-fetch.js';
+import {LoadingTransferOwner} from '/src/app/loading-transfer-owner.js';
+import {LoadingProgress} from '/src/app/loading-progress.js';
+const run=document.querySelector('#run'),cancel=document.querySelector('#cancel'),status=document.querySelector('#status');let active=null,iteration=0;
+run.onclick=async()=>{
+ run.disabled=true;cancel.disabled=false;const owner=new LoadingTransferOwner(),controller=new AbortController(),progress=new LoadingProgress([{id:'metadata',weight:1}],{downloads:owner.downloads,workEstimateMs:250}),samples=[];active={owner,controller};const started=performance.now();let raf;
+ const frame=()=>{progress.refresh();samples.push({at:performance.now()-started,progress:progress.value,pending:owner.downloads.snapshot().pending});raf=requestAnimationFrame(frame);};raf=requestAnimationFrame(frame);
+ const result={iteration:++iteration,scope:'Transport/JSON metadata only;250ms preparation cost is an estimate. No world or GPU initialized.'};
+ try{const values=await Promise.all(['/content/skies.json','/content/models.json','/content/ground-materials.json','/content/biome-savanna.json'].map(url=>json(url,{signal:controller.signal})));if(controller.signal.aborted)throw controller.signal.reason;result.metadataCount=values.length;await new Promise(resolve=>requestAnimationFrame(resolve));progress.update('metadata');progress.confirmReady();result.metadataReady=true;}
+ catch(error){result.error=String(error);result.cancelled=controller.signal.aborted;}
+ finally{cancelAnimationFrame(raf);result.elapsedMs=performance.now()-started;result.progress=progress.snapshot();result.downloads=owner.downloads.snapshot({details:true});result.samples=samples;result.monotonic=samples.every((s,i)=>!i||s.progress>=samples[i-1].progress);owner.dispose();result.disposed=true;active=null;document.querySelector('#report').textContent=JSON.stringify(result,null,2);status.textContent=JSON.stringify({...result,downloads:{...result.downloads,requests:undefined},samples:undefined},null,2);run.disabled=false;cancel.disabled=true;}
+};
+cancel.onclick=()=>{active?.controller.abort(new DOMException('QA cancelled','AbortError'));active?.owner.dispose();};addEventListener('pagehide',()=>{active?.controller.abort();active?.owner.dispose();});run.dataset.ready='true';
+</script></html>

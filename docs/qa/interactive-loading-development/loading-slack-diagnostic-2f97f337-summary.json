@@ -1,0 +1,275 @@
+{
+  "source": "2f97f337",
+  "scope": "Single sequential instrumented A/B diagnostic, existing native fixture, B only frame-slack flag. Not a strict ABBA or causal improvement claim. Root receipt verifier0.67s may overlap A; browser retained cache not controlled.",
+  "arms": {
+    "A": {
+      "initializationMs": 9732.199999928474,
+      "totalMs": 13826.299999952316,
+      "frames": {
+        "count": 764,
+        "max": 99.69999999999891,
+        "over50": 2,
+        "over100": 0
+      },
+      "frameSlack": null,
+      "phases": {
+        "loading-crop-construction-step": {
+          "count": 432,
+          "sumMs": 226.40000021457672,
+          "maxMs": 2.100000023841858
+        },
+        "loading-crop-frame-wait": {
+          "count": 52,
+          "sumMs": 631.8999998569489,
+          "maxMs": 13.799999952316284
+        },
+        "load-crop-batch": {
+          "count": 1,
+          "sumMs": 861.7000000476837,
+          "maxMs": 861.7000000476837
+        },
+        "warm-compile-staging": {
+          "count": 1,
+          "sumMs": 120.30000007152557,
+          "maxMs": 120.30000007152557
+        },
+        "warm-compile-world": {
+          "count": 1,
+          "sumMs": 266.8000000715256,
+          "maxMs": 266.8000000715256
+        },
+        "warm-prepare-depth": {
+          "count": 1,
+          "sumMs": 498.10000002384186,
+          "maxMs": 498.10000002384186
+        },
+        "loading-screen-upload-submit": {
+          "count": 283,
+          "sumMs": 232.0999983549118,
+          "maxMs": 53
+        },
+        "loading-screen-upload-final-submit": {
+          "count": 1,
+          "sumMs": 3.5,
+          "maxMs": 3.5
+        },
+        "warm-draw-batches": {
+          "count": 1,
+          "sumMs": 589.6000000238419,
+          "maxMs": 589.6000000238419
+        },
+        "loading-budget-frame-wait": {
+          "count": 46,
+          "sumMs": 402.9000002145767,
+          "maxMs": 13.899999976158142
+        },
+        "load-warm-gpu": {
+          "count": 1,
+          "sumMs": 2058.8000000715256,
+          "maxMs": 2058.8000000715256
+        },
+        "load-far-assets": {
+          "count": 1,
+          "sumMs": 2238.899999976158,
+          "maxMs": 2238.899999976158
+        }
+      },
+      "downloads": {
+        "progress": 1,
+        "estimatedMs": 585.4000005722046,
+        "observedMs": 585.4000005722046,
+        "remainingMs": 0,
+        "pending": 0,
+        "networkPending": 0,
+        "cacheHits": 1,
+        "network": 212,
+        "unknown": 0,
+        "unknownTotals": 0,
+        "failures": 0,
+        "loadedBytes": 98149536,
+        "totalBytes": 98149536,
+        "estimated": false,
+        "byteScope": "Decoded response body; pending totals and time are estimates. Parallel intervals are counted once."
+      },
+      "camera": {
+        "eye": [
+          76.70247532024266,
+          27.37682490650652,
+          30.57367599590944
+        ],
+        "target": [
+          60,
+          12.20192278906814,
+          0
+        ]
+      },
+      "cameraPreserved": true,
+      "logicalUnchanged": true,
+      "resources": {
+        "geometries": 176,
+        "textures": 62,
+        "programs": 41,
+        "owned": 200,
+        "imageDecoder": {
+          "requests": 13,
+          "peakActive": 2,
+          "peakTransferBytes": 2751072,
+          "peakQueued": 1
+        }
+      },
+      "errors": [],
+      "cleanup": {
+        "disposed": true,
+        "contextLost": true
+      },
+      "files": {
+        "loading-slack-diagnostic-2f97f337-A.json": "877cb4e845b4c8d82b59e3559052cc3c9aff6df20d192c57c7f6608030fd18eb",
+        "loading-slack-diagnostic-2f97f337-A-cleanup.json": "11d0fdbc17a97831a67549afe1b15393e6e8b045302f8b230e214b662f3796a3",
+        "loading-slack-diagnostic-2f97f337-A-console.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      }
+    },
+    "B": {
+      "initializationMs": 9295.800000071526,
+      "totalMs": 13398.800000071526,
+      "frames": {
+        "count": 735,
+        "max": 99.79999999999927,
+        "over50": 2,
+        "over100": 0
+      },
+      "frameSlack": {
+        "frames": 492,
+        "invalidFrames": 0,
+        "adaptiveDecisions": 662,
+        "fallbackDecisions": 206,
+        "yields": 25,
+        "continued": 637,
+        "lastTargetMs": 16.600000000000364,
+        "lastReserveMs": 1.8000000238407665,
+        "workSteps": 869,
+        "workCpuMs": 553.7999999523163,
+        "fallbackReasons": {
+          "uncertain-cost": 192,
+          "late-callback": 9,
+          "stalled-interval": 4,
+          "stale-frame": 1
+        }
+      },
+      "phases": {
+        "loading-crop-construction-step": {
+          "count": 432,
+          "sumMs": 225.0999995470047,
+          "maxMs": 2.5
+        },
+        "loading-crop-frame-wait": {
+          "count": 25,
+          "sumMs": 183.59999990463257,
+          "maxMs": 12.700000047683716
+        },
+        "load-crop-batch": {
+          "count": 1,
+          "sumMs": 415.60000002384186,
+          "maxMs": 415.60000002384186
+        },
+        "warm-compile-staging": {
+          "count": 1,
+          "sumMs": 95.5,
+          "maxMs": 95.5
+        },
+        "warm-compile-world": {
+          "count": 1,
+          "sumMs": 234.20000004768372,
+          "maxMs": 234.20000004768372
+        },
+        "warm-prepare-depth": {
+          "count": 1,
+          "sumMs": 454.7000000476837,
+          "maxMs": 454.7000000476837
+        },
+        "loading-screen-upload-submit": {
+          "count": 283,
+          "sumMs": 241.80000042915344,
+          "maxMs": 46.39999997615814
+        },
+        "loading-screen-upload-final-submit": {
+          "count": 1,
+          "sumMs": 3.299999952316284,
+          "maxMs": 3.299999952316284
+        },
+        "warm-draw-batches": {
+          "count": 1,
+          "sumMs": 458.2000000476837,
+          "maxMs": 458.2000000476837
+        },
+        "loading-budget-frame-wait": {
+          "count": 31,
+          "sumMs": 187.39999985694885,
+          "maxMs": 11.199999928474426
+        },
+        "load-warm-gpu": {
+          "count": 1,
+          "sumMs": 1825,
+          "maxMs": 1825
+        },
+        "load-far-assets": {
+          "count": 1,
+          "sumMs": 2414.7000000476837,
+          "maxMs": 2414.7000000476837
+        }
+      },
+      "downloads": {
+        "progress": 1,
+        "estimatedMs": 598.3000004291534,
+        "observedMs": 598.3000004291534,
+        "remainingMs": 0,
+        "pending": 0,
+        "networkPending": 0,
+        "cacheHits": 1,
+        "network": 212,
+        "unknown": 0,
+        "unknownTotals": 0,
+        "failures": 0,
+        "loadedBytes": 98149536,
+        "totalBytes": 98149536,
+        "estimated": false,
+        "byteScope": "Decoded response body; pending totals and time are estimates. Parallel intervals are counted once."
+      },
+      "camera": {
+        "eye": [
+          76.70247532024266,
+          27.37682490650652,
+          30.57367599590944
+        ],
+        "target": [
+          60,
+          12.20192278906814,
+          0
+        ]
+      },
+      "cameraPreserved": true,
+      "logicalUnchanged": true,
+      "resources": {
+        "geometries": 176,
+        "textures": 62,
+        "programs": 41,
+        "owned": 200,
+        "imageDecoder": {
+          "requests": 13,
+          "peakActive": 2,
+          "peakTransferBytes": 2751072,
+          "peakQueued": 1
+        }
+      },
+      "errors": [],
+      "cleanup": {
+        "disposed": true,
+        "contextLost": true
+      },
+      "files": {
+        "loading-slack-diagnostic-2f97f337-B.json": "2beb151e76a57574f5d09fa056f80b62b70d936b5c7879c08f99ac5d90c1cfbd",
+        "loading-slack-diagnostic-2f97f337-B-cleanup.json": "4e328600f5942a74bcea1ce25c477c1fc2d17e6b33b3a9f3e98461fdfa2e00ff",
+        "loading-slack-diagnostic-2f97f337-B-console.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      }
+    }
+  }
+}

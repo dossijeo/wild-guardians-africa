@@ -1,0 +1,4551 @@
+{
+  "prepared": true,
+  "visualInputs": {
+    "growth": 0.78,
+    "night": true,
+    "time": 310,
+    "viewport": [
+      1280,
+      720
+    ],
+    "quality": "media",
+    "locale": "es-ES"
+  },
+  "visualCost": {
+    "mode": "resources",
+    "done": true,
+    "disposed": false,
+    "frame": 540,
+    "scope": "Isolated presentation. GPU wraps synchronous diorama draws only; CSS excluded. CPU draw/overlay are disjoint. All RAF intervals preserved. Resource probes invalidate timing. Sampled heap/requested storage are not physical peak RAM/VRAM.",
+    "initial": {
+      "buffers": {
+        "requests": 0,
+        "requestedBytes": 0,
+        "replacedBytes": 0,
+        "deletedBytes": 0,
+        "liveBytes": 0,
+        "peakBytes": 0,
+        "unattributed": 0,
+        "liveBuffers": 0,
+        "scope": "Observed bufferData requests minus replacement/deleteBuffer calls, after probe installation. WebGL errors are not polled. Excludes textures, programs, driver caches, JavaScript heap, earlier allocations and implicit context-loss release. Binding queries add QA overhead; do not use this run for frametime comparisons."
+      },
+      "textures": {
+        "scope": "Observed texture storage API commands and explicit texture deletion after probe installation. Dimensions/internal formats are not physical VRAM bytes; errors/context-loss/driver compression are not polled. Repeated calls may replace storage. No binding queries.",
+        "unattributed": 0,
+        "liveTextures": 0,
+        "textures": []
+      },
+      "renderer": {
+        "geometries": 0,
+        "textures": 0,
+        "programs": 0
+      },
+      "sampledHeap": 26515408
+    },
+    "ready": {
+      "buffers": {
+        "requests": 81,
+        "requestedBytes": 6231394,
+        "replacedBytes": 0,
+        "deletedBytes": 0,
+        "liveBytes": 6231394,
+        "peakBytes": 6231394,
+        "unattributed": 0,
+        "liveBuffers": 81,
+        "scope": "Observed bufferData requests minus replacement/deleteBuffer calls, after probe installation. WebGL errors are not polled. Excludes textures, programs, driver caches, JavaScript heap, earlier allocations and implicit context-loss release. Binding queries add QA overhead; do not use this run for frametime comparisons."
+      },
+      "textures": {
+        "scope": "Observed texture storage API commands and explicit texture deletion after probe installation. Dimensions/internal formats are not physical VRAM bytes; errors/context-loss/driver compression are not polled. Repeated calls may replace storage. No binding queries.",
+        "unattributed": 0,
+        "liveTextures": 9,
+        "textures": [
+          {
+            "id": 1,
+            "storage": [
+              {
+                "method": "texStorage2D",
+                "levels": 1,
+                "internalFormat": 33190,
+                "width": 1,
+                "height": 1,
+                "target": 3553
+              }
+            ]
+          },
+          {
+            "id": 2,
+            "storage": [
+              {
+                "method": "texStorage2D",
+                "levels": 9,
+                "internalFormat": 32856,
+                "width": 256,
+                "height": 128,
+                "target": 3553
+              }
+            ]
+          },
+          {
+            "id": 3,
+            "storage": [
+              {
+                "method": "texStorage2D",
+                "levels": 9,
+                "internalFormat": 32856,
+                "width": 256,
+                "height": 128,
+                "target": 3553
+              }
+            ]
+          },
+          {
+            "id": 4,
+            "storage": [
+              {
+                "method": "texStorage2D",
+                "levels": 12,
+                "internalFormat": 35907,
+                "width": 2048,
+                "height": 2048,
+                "target": 3553
+              }
+            ]
+          },
+          {
+            "id": 5,
+            "storage": [
+              {
+                "method": "texStorage2D",
+                "levels": 11,
+                "internalFormat": 32856,
+                "width": 1024,
+                "height": 1024,
+                "target": 3553
+              }
+            ]
+          },
+          {
+            "id": 6,
+            "storage": [
+              {
+                "method": "texStorage2D",
+                "levels": 12,
+                "internalFormat": 35907,
+                "width": 2048,
+                "height": 512,
+                "target": 3553
+              }
+            ]
+          },
+          {
+            "id": 7,
+            "storage": [
+              {
+                "method": "texStorage2D",
+                "levels": 11,
+                "internalFormat": 32856,
+                "width": 1024,
+                "height": 1024,
+                "target": 3553
+              }
+            ]
+          },
+          {
+            "id": 8,
+            "storage": [
+              {
+                "method": "texStorage2D",
+                "levels": 1,
+                "internalFormat": 32856,
+                "width": 2048,
+                "height": 1024,
+                "target": 3553
+              }
+            ]
+          },
+          {
+            "id": 9,
+            "storage": [
+              {
+                "method": "texStorage2D",
+                "levels": 1,
+                "internalFormat": 32856,
+                "width": 2048,
+                "height": 1024,
+                "target": 3553
+              }
+            ]
+          }
+        ]
+      },
+      "renderer": {
+        "geometries": 13,
+        "textures": 9,
+        "programs": 7
+      },
+      "sampledHeap": 76686156
+    },
+    "afterDispose": null,
+    "gpu": null,
+    "frames": [
+      {
+        "index": 0,
+        "rafTimestamp": 10994,
+        "rafInterval": null,
+        "measured": false,
+        "drawCpuMs": 2.6999999284744263,
+        "overlayCpuMs": 0.40000009536743164
+      },
+      {
+        "index": 1,
+        "rafTimestamp": 11010.6,
+        "rafInterval": 16.600000000000364,
+        "measured": false,
+        "drawCpuMs": 1.2999999523162842,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 2,
+        "rafTimestamp": 11027.3,
+        "rafInterval": 16.69999999999891,
+        "measured": false,
+        "drawCpuMs": 1.899999976158142,
+        "overlayCpuMs": 0.19999992847442627
+      },
+      {
+        "index": 3,
+        "rafTimestamp": 11044,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 2.200000047683716,
+        "overlayCpuMs": 0.20000004768371582
+      },
+      {
+        "index": 4,
+        "rafTimestamp": 11060.5,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 1.600000023841858,
+        "overlayCpuMs": 0.19999992847442627
+      },
+      {
+        "index": 5,
+        "rafTimestamp": 11077.1,
+        "rafInterval": 16.600000000000364,
+        "measured": false,
+        "drawCpuMs": 1,
+        "overlayCpuMs": 0.19999992847442627
+      },
+      {
+        "index": 6,
+        "rafTimestamp": 11093.8,
+        "rafInterval": 16.69999999999891,
+        "measured": false,
+        "drawCpuMs": 2,
+        "overlayCpuMs": 0.20000004768371582
+      },
+      {
+        "index": 7,
+        "rafTimestamp": 11110.5,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 1.0999999046325684,
+        "overlayCpuMs": 0.20000004768371582
+      },
+      {
+        "index": 8,
+        "rafTimestamp": 11127,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 1.2000000476837158,
+        "overlayCpuMs": 0.19999992847442627
+      },
+      {
+        "index": 9,
+        "rafTimestamp": 11143.6,
+        "rafInterval": 16.600000000000364,
+        "measured": false,
+        "drawCpuMs": 1,
+        "overlayCpuMs": 0.19999992847442627
+      },
+      {
+        "index": 10,
+        "rafTimestamp": 11160.3,
+        "rafInterval": 16.69999999999891,
+        "measured": false,
+        "drawCpuMs": 0.8999999761581421,
+        "overlayCpuMs": 0.20000004768371582
+      },
+      {
+        "index": 11,
+        "rafTimestamp": 11177,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 1.3000000715255737,
+        "overlayCpuMs": 0.19999992847442627
+      },
+      {
+        "index": 12,
+        "rafTimestamp": 11193.5,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 1.100000023841858,
+        "overlayCpuMs": 0.09999990463256836
+      },
+      {
+        "index": 13,
+        "rafTimestamp": 11210.3,
+        "rafInterval": 16.799999999999272,
+        "measured": false,
+        "drawCpuMs": 1.100000023841858,
+        "overlayCpuMs": 0.3999999761581421
+      },
+      {
+        "index": 14,
+        "rafTimestamp": 11227,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 0.5999999046325684,
+        "overlayCpuMs": 0.20000004768371582
+      },
+      {
+        "index": 15,
+        "rafTimestamp": 11243.5,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 0.8000000715255737,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 16,
+        "rafTimestamp": 11260.1,
+        "rafInterval": 16.600000000000364,
+        "measured": false,
+        "drawCpuMs": 0.8999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 17,
+        "rafTimestamp": 11276.7,
+        "rafInterval": 16.600000000000364,
+        "measured": false,
+        "drawCpuMs": 0.8000000715255737,
+        "overlayCpuMs": 0.2999999523162842
+      },
+      {
+        "index": 18,
+        "rafTimestamp": 11293.5,
+        "rafInterval": 16.799999999999272,
+        "measured": false,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 19,
+        "rafTimestamp": 11310,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 0.8999999761581421,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 20,
+        "rafTimestamp": 11326.8,
+        "rafInterval": 16.799999999999272,
+        "measured": false,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 21,
+        "rafTimestamp": 11343.5,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 0.8999999761581421,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 22,
+        "rafTimestamp": 11359.8,
+        "rafInterval": 16.299999999999272,
+        "measured": false,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 23,
+        "rafTimestamp": 11376.6,
+        "rafInterval": 16.80000000000109,
+        "measured": false,
+        "drawCpuMs": 1.2999999523162842,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 24,
+        "rafTimestamp": 11393.3,
+        "rafInterval": 16.69999999999891,
+        "measured": false,
+        "drawCpuMs": 2,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 25,
+        "rafTimestamp": 11409.7,
+        "rafInterval": 16.400000000001455,
+        "measured": false,
+        "drawCpuMs": 1,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 26,
+        "rafTimestamp": 11426.5,
+        "rafInterval": 16.799999999999272,
+        "measured": false,
+        "drawCpuMs": 1.0999999046325684,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 27,
+        "rafTimestamp": 11443,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 1.2999999523162842,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 28,
+        "rafTimestamp": 11459.6,
+        "rafInterval": 16.600000000000364,
+        "measured": false,
+        "drawCpuMs": 1,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 29,
+        "rafTimestamp": 11476.2,
+        "rafInterval": 16.600000000000364,
+        "measured": false,
+        "drawCpuMs": 1.2000000476837158,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 30,
+        "rafTimestamp": 11492.9,
+        "rafInterval": 16.69999999999891,
+        "measured": false,
+        "drawCpuMs": 0.9000000953674316,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 31,
+        "rafTimestamp": 11509.5,
+        "rafInterval": 16.600000000000364,
+        "measured": false,
+        "drawCpuMs": 0.8999999761581421,
+        "overlayCpuMs": 0.20000004768371582
+      },
+      {
+        "index": 32,
+        "rafTimestamp": 11526.1,
+        "rafInterval": 16.600000000000364,
+        "measured": false,
+        "drawCpuMs": 1.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 33,
+        "rafTimestamp": 11542.9,
+        "rafInterval": 16.799999999999272,
+        "measured": false,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 34,
+        "rafTimestamp": 11559.5,
+        "rafInterval": 16.600000000000364,
+        "measured": false,
+        "drawCpuMs": 1.100000023841858,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 35,
+        "rafTimestamp": 11576.1,
+        "rafInterval": 16.600000000000364,
+        "measured": false,
+        "drawCpuMs": 1.5,
+        "overlayCpuMs": 0.20000004768371582
+      },
+      {
+        "index": 36,
+        "rafTimestamp": 11592.7,
+        "rafInterval": 16.600000000000364,
+        "measured": false,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 37,
+        "rafTimestamp": 11609.4,
+        "rafInterval": 16.69999999999891,
+        "measured": false,
+        "drawCpuMs": 1.399999976158142,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 38,
+        "rafTimestamp": 11625.9,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 1.600000023841858,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 39,
+        "rafTimestamp": 11642.6,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 1.5999999046325684,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 40,
+        "rafTimestamp": 11659.2,
+        "rafInterval": 16.600000000000364,
+        "measured": false,
+        "drawCpuMs": 1.2000000476837158,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 41,
+        "rafTimestamp": 11676,
+        "rafInterval": 16.799999999999272,
+        "measured": false,
+        "drawCpuMs": 1,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 42,
+        "rafTimestamp": 11692.5,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 0.8999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 43,
+        "rafTimestamp": 11709,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 1.100000023841858,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 44,
+        "rafTimestamp": 11725.7,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 1.3000000715255737,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 45,
+        "rafTimestamp": 11742.3,
+        "rafInterval": 16.599999999998545,
+        "measured": false,
+        "drawCpuMs": 1.2000000476837158,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 46,
+        "rafTimestamp": 11759,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 1.1999999284744263,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 47,
+        "rafTimestamp": 11775.6,
+        "rafInterval": 16.600000000000364,
+        "measured": false,
+        "drawCpuMs": 1.2000000476837158,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 48,
+        "rafTimestamp": 11792.2,
+        "rafInterval": 16.600000000000364,
+        "measured": false,
+        "drawCpuMs": 1.600000023841858,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 49,
+        "rafTimestamp": 11808.9,
+        "rafInterval": 16.69999999999891,
+        "measured": false,
+        "drawCpuMs": 1.1999999284744263,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 50,
+        "rafTimestamp": 11825.5,
+        "rafInterval": 16.600000000000364,
+        "measured": false,
+        "drawCpuMs": 1.2000000476837158,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 51,
+        "rafTimestamp": 11842,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 1.1999999284744263,
+        "overlayCpuMs": 0.20000004768371582
+      },
+      {
+        "index": 52,
+        "rafTimestamp": 11858.6,
+        "rafInterval": 16.600000000000364,
+        "measured": false,
+        "drawCpuMs": 1.100000023841858,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 53,
+        "rafTimestamp": 11875.5,
+        "rafInterval": 16.899999999999636,
+        "measured": false,
+        "drawCpuMs": 1,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 54,
+        "rafTimestamp": 11891.9,
+        "rafInterval": 16.399999999999636,
+        "measured": false,
+        "drawCpuMs": 1.100000023841858,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 55,
+        "rafTimestamp": 11908.6,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 56,
+        "rafTimestamp": 11925.2,
+        "rafInterval": 16.600000000000364,
+        "measured": false,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 57,
+        "rafTimestamp": 11941.8,
+        "rafInterval": 16.599999999998545,
+        "measured": false,
+        "drawCpuMs": 1.0999999046325684,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 58,
+        "rafTimestamp": 11958.4,
+        "rafInterval": 16.600000000000364,
+        "measured": false,
+        "drawCpuMs": 1.100000023841858,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 59,
+        "rafTimestamp": 11975.1,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 0.8999999761581421,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 60,
+        "rafTimestamp": 11991.8,
+        "rafInterval": 16.69999999999891,
+        "measured": false,
+        "drawCpuMs": 0.8000000715255737,
+        "overlayCpuMs": 0.09999990463256836
+      },
+      {
+        "index": 61,
+        "rafTimestamp": 12008.5,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 1.7999999523162842,
+        "overlayCpuMs": 0.20000004768371582
+      },
+      {
+        "index": 62,
+        "rafTimestamp": 12025,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 1.2000000476837158,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 63,
+        "rafTimestamp": 12041.6,
+        "rafInterval": 16.600000000000364,
+        "measured": false,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 64,
+        "rafTimestamp": 12058.4,
+        "rafInterval": 16.799999999999272,
+        "measured": false,
+        "drawCpuMs": 1.399999976158142,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 65,
+        "rafTimestamp": 12075,
+        "rafInterval": 16.600000000000364,
+        "measured": false,
+        "drawCpuMs": 2.200000047683716,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 66,
+        "rafTimestamp": 12091.5,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 0.8000000715255737,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 67,
+        "rafTimestamp": 12108.1,
+        "rafInterval": 16.600000000000364,
+        "measured": false,
+        "drawCpuMs": 1.2999999523162842,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 68,
+        "rafTimestamp": 12125,
+        "rafInterval": 16.899999999999636,
+        "measured": false,
+        "drawCpuMs": 1.5999999046325684,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 69,
+        "rafTimestamp": 12141.4,
+        "rafInterval": 16.399999999999636,
+        "measured": false,
+        "drawCpuMs": 1.100000023841858,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 70,
+        "rafTimestamp": 12158.1,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 1.5,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 71,
+        "rafTimestamp": 12174.6,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 1.1999999284744263,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 72,
+        "rafTimestamp": 12191.3,
+        "rafInterval": 16.69999999999891,
+        "measured": false,
+        "drawCpuMs": 1.2999999523162842,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 73,
+        "rafTimestamp": 12207.9,
+        "rafInterval": 16.600000000000364,
+        "measured": false,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 74,
+        "rafTimestamp": 12224.5,
+        "rafInterval": 16.600000000000364,
+        "measured": false,
+        "drawCpuMs": 1.399999976158142,
+        "overlayCpuMs": 0.19999992847442627
+      },
+      {
+        "index": 75,
+        "rafTimestamp": 12241.3,
+        "rafInterval": 16.799999999999272,
+        "measured": false,
+        "drawCpuMs": 1.399999976158142,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 76,
+        "rafTimestamp": 12257.8,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 0.9000000953674316,
+        "overlayCpuMs": 0.09999990463256836
+      },
+      {
+        "index": 77,
+        "rafTimestamp": 12274.7,
+        "rafInterval": 16.900000000001455,
+        "measured": false,
+        "drawCpuMs": 1.100000023841858,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 78,
+        "rafTimestamp": 12291.2,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 79,
+        "rafTimestamp": 12307.9,
+        "rafInterval": 16.69999999999891,
+        "measured": false,
+        "drawCpuMs": 1.4000000953674316,
+        "overlayCpuMs": 0.09999990463256836
+      },
+      {
+        "index": 80,
+        "rafTimestamp": 12324.3,
+        "rafInterval": 16.399999999999636,
+        "measured": false,
+        "drawCpuMs": 0.8000000715255737,
+        "overlayCpuMs": 0.09999990463256836
+      },
+      {
+        "index": 81,
+        "rafTimestamp": 12341,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 0.8000000715255737,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 82,
+        "rafTimestamp": 12357.6,
+        "rafInterval": 16.600000000000364,
+        "measured": false,
+        "drawCpuMs": 1.399999976158142,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 83,
+        "rafTimestamp": 12374.2,
+        "rafInterval": 16.600000000000364,
+        "measured": false,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 84,
+        "rafTimestamp": 12390.8,
+        "rafInterval": 16.599999999998545,
+        "measured": false,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 85,
+        "rafTimestamp": 12407.6,
+        "rafInterval": 16.80000000000109,
+        "measured": false,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 86,
+        "rafTimestamp": 12424.1,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 87,
+        "rafTimestamp": 12440.8,
+        "rafInterval": 16.69999999999891,
+        "measured": false,
+        "drawCpuMs": 1,
+        "overlayCpuMs": 0.19999992847442627
+      },
+      {
+        "index": 88,
+        "rafTimestamp": 12457.3,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 1,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 89,
+        "rafTimestamp": 12473.9,
+        "rafInterval": 16.600000000000364,
+        "measured": false,
+        "drawCpuMs": 0.8000000715255737,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 90,
+        "rafTimestamp": 12490.6,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 91,
+        "rafTimestamp": 12507.2,
+        "rafInterval": 16.600000000000364,
+        "measured": false,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 92,
+        "rafTimestamp": 12523.8,
+        "rafInterval": 16.599999999998545,
+        "measured": false,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 93,
+        "rafTimestamp": 12540.5,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 94,
+        "rafTimestamp": 12557,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 95,
+        "rafTimestamp": 12573.7,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 0.5999999046325684,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 96,
+        "rafTimestamp": 12590.4,
+        "rafInterval": 16.69999999999891,
+        "measured": false,
+        "drawCpuMs": 0.7000000476837158,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 97,
+        "rafTimestamp": 12607.1,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 98,
+        "rafTimestamp": 12623.6,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 99,
+        "rafTimestamp": 12640.3,
+        "rafInterval": 16.69999999999891,
+        "measured": false,
+        "drawCpuMs": 0.7000000476837158,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 100,
+        "rafTimestamp": 12657,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 1.2999999523162842,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 101,
+        "rafTimestamp": 12673.6,
+        "rafInterval": 16.600000000000364,
+        "measured": false,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 102,
+        "rafTimestamp": 12690.3,
+        "rafInterval": 16.69999999999891,
+        "measured": false,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 103,
+        "rafTimestamp": 12706.9,
+        "rafInterval": 16.600000000000364,
+        "measured": false,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 104,
+        "rafTimestamp": 12723.5,
+        "rafInterval": 16.600000000000364,
+        "measured": false,
+        "drawCpuMs": 1.100000023841858,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 105,
+        "rafTimestamp": 12740.2,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 106,
+        "rafTimestamp": 12756.7,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 107,
+        "rafTimestamp": 12773.3,
+        "rafInterval": 16.599999999998545,
+        "measured": false,
+        "drawCpuMs": 1,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 108,
+        "rafTimestamp": 12790.1,
+        "rafInterval": 16.80000000000109,
+        "measured": false,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 109,
+        "rafTimestamp": 12806.6,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 0.7000000476837158,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 110,
+        "rafTimestamp": 12823.1,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 0.8000000715255737,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 111,
+        "rafTimestamp": 12839.7,
+        "rafInterval": 16.600000000000364,
+        "measured": false,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 112,
+        "rafTimestamp": 12856.4,
+        "rafInterval": 16.69999999999891,
+        "measured": false,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 113,
+        "rafTimestamp": 12873.1,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 114,
+        "rafTimestamp": 12889.8,
+        "rafInterval": 16.69999999999891,
+        "measured": false,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 115,
+        "rafTimestamp": 12906.6,
+        "rafInterval": 16.80000000000109,
+        "measured": false,
+        "drawCpuMs": 0.8999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 116,
+        "rafTimestamp": 12923,
+        "rafInterval": 16.399999999999636,
+        "measured": false,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 117,
+        "rafTimestamp": 12939.5,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 118,
+        "rafTimestamp": 12956.1,
+        "rafInterval": 16.600000000000364,
+        "measured": false,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 119,
+        "rafTimestamp": 12972.8,
+        "rafInterval": 16.69999999999891,
+        "measured": false,
+        "drawCpuMs": 0.7000000476837158,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 120,
+        "rafTimestamp": 12989.4,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 121,
+        "rafTimestamp": 13006.1,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 122,
+        "rafTimestamp": 13022.7,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0.09999990463256836
+      },
+      {
+        "index": 123,
+        "rafTimestamp": 13039.6,
+        "rafInterval": 16.899999999999636,
+        "measured": true,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 124,
+        "rafTimestamp": 13055.9,
+        "rafInterval": 16.299999999999272,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 125,
+        "rafTimestamp": 13072.5,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 126,
+        "rafTimestamp": 13089.2,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 127,
+        "rafTimestamp": 13105.9,
+        "rafInterval": 16.69999999999891,
+        "measured": true,
+        "drawCpuMs": 1.5999999046325684,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 128,
+        "rafTimestamp": 13122.5,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 129,
+        "rafTimestamp": 13139.3,
+        "rafInterval": 16.799999999999272,
+        "measured": true,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 130,
+        "rafTimestamp": 13155.7,
+        "rafInterval": 16.400000000001455,
+        "measured": true,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 131,
+        "rafTimestamp": 13172.4,
+        "rafInterval": 16.69999999999891,
+        "measured": true,
+        "drawCpuMs": 0.8000000715255737,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 132,
+        "rafTimestamp": 13189,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.7000000476837158,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 133,
+        "rafTimestamp": 13205.7,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.5999999046325684,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 134,
+        "rafTimestamp": 13222.2,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 135,
+        "rafTimestamp": 13238.9,
+        "rafInterval": 16.69999999999891,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 136,
+        "rafTimestamp": 13255.5,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0.20000004768371582
+      },
+      {
+        "index": 137,
+        "rafTimestamp": 13272.3,
+        "rafInterval": 16.799999999999272,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 138,
+        "rafTimestamp": 13288.9,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.9000000953674316,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 139,
+        "rafTimestamp": 13305.6,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.8999999761581421,
+        "overlayCpuMs": 0.20000004768371582
+      },
+      {
+        "index": 140,
+        "rafTimestamp": 13322.1,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 141,
+        "rafTimestamp": 13338.8,
+        "rafInterval": 16.69999999999891,
+        "measured": true,
+        "drawCpuMs": 0.8000000715255737,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 142,
+        "rafTimestamp": 13355.3,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.09999990463256836
+      },
+      {
+        "index": 143,
+        "rafTimestamp": 13372,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.8999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 144,
+        "rafTimestamp": 13388.4,
+        "rafInterval": 16.399999999999636,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 145,
+        "rafTimestamp": 13405.2,
+        "rafInterval": 16.80000000000109,
+        "measured": true,
+        "drawCpuMs": 1.2000000476837158,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 146,
+        "rafTimestamp": 13421.8,
+        "rafInterval": 16.599999999998545,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 147,
+        "rafTimestamp": 13438.5,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 148,
+        "rafTimestamp": 13455.2,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 1.2000000476837158,
+        "overlayCpuMs": 0.19999992847442627
+      },
+      {
+        "index": 149,
+        "rafTimestamp": 13471.7,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 150,
+        "rafTimestamp": 13488.3,
+        "rafInterval": 16.599999999998545,
+        "measured": true,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 151,
+        "rafTimestamp": 13505,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 152,
+        "rafTimestamp": 13521.7,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 153,
+        "rafTimestamp": 13538.3,
+        "rafInterval": 16.599999999998545,
+        "measured": true,
+        "drawCpuMs": 0.7000000476837158,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 154,
+        "rafTimestamp": 13555,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 155,
+        "rafTimestamp": 13571.6,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 1.2000000476837158,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 156,
+        "rafTimestamp": 13588.1,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 157,
+        "rafTimestamp": 13604.7,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.5999999046325684,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 158,
+        "rafTimestamp": 13621.3,
+        "rafInterval": 16.599999999998545,
+        "measured": true,
+        "drawCpuMs": 1.100000023841858,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 159,
+        "rafTimestamp": 13638,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 160,
+        "rafTimestamp": 13654.7,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 1,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 161,
+        "rafTimestamp": 13671.3,
+        "rafInterval": 16.599999999998545,
+        "measured": true,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 162,
+        "rafTimestamp": 13687.9,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.09999990463256836
+      },
+      {
+        "index": 163,
+        "rafTimestamp": 13704.6,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.8000000715255737,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 164,
+        "rafTimestamp": 13721.2,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 165,
+        "rafTimestamp": 13737.7,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.5999999046325684,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 166,
+        "rafTimestamp": 13754.4,
+        "rafInterval": 16.69999999999891,
+        "measured": true,
+        "drawCpuMs": 0.7000000476837158,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 167,
+        "rafTimestamp": 13771,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.8999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 168,
+        "rafTimestamp": 13787.7,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.9000000953674316,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 169,
+        "rafTimestamp": 13804.3,
+        "rafInterval": 16.599999999998545,
+        "measured": true,
+        "drawCpuMs": 0.7000000476837158,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 170,
+        "rafTimestamp": 13821,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 171,
+        "rafTimestamp": 13837.7,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 172,
+        "rafTimestamp": 13854.3,
+        "rafInterval": 16.599999999998545,
+        "measured": true,
+        "drawCpuMs": 0.40000009536743164,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 173,
+        "rafTimestamp": 13870.9,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 174,
+        "rafTimestamp": 13887.4,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.7000000476837158,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 175,
+        "rafTimestamp": 13904.1,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 176,
+        "rafTimestamp": 13921.2,
+        "rafInterval": 17.100000000000364,
+        "measured": true,
+        "drawCpuMs": 1.2000000476837158,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 177,
+        "rafTimestamp": 13937.4,
+        "rafInterval": 16.19999999999891,
+        "measured": true,
+        "drawCpuMs": 0.40000009536743164,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 178,
+        "rafTimestamp": 13953.8,
+        "rafInterval": 16.399999999999636,
+        "measured": true,
+        "drawCpuMs": 0.40000009536743164,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 179,
+        "rafTimestamp": 13970.6,
+        "rafInterval": 16.80000000000109,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 180,
+        "rafTimestamp": 13987.4,
+        "rafInterval": 16.799999999999272,
+        "measured": true,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 181,
+        "rafTimestamp": 14003.9,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 182,
+        "rafTimestamp": 14020.6,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.7000000476837158,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 183,
+        "rafTimestamp": 14037.2,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0.19999992847442627
+      },
+      {
+        "index": 184,
+        "rafTimestamp": 14053.7,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 185,
+        "rafTimestamp": 14070.4,
+        "rafInterval": 16.69999999999891,
+        "measured": true,
+        "drawCpuMs": 0.7000000476837158,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 186,
+        "rafTimestamp": 14087.1,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 1.100000023841858,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 187,
+        "rafTimestamp": 14103.5,
+        "rafInterval": 16.399999999999636,
+        "measured": true,
+        "drawCpuMs": 0.7000000476837158,
+        "overlayCpuMs": 0.09999990463256836
+      },
+      {
+        "index": 188,
+        "rafTimestamp": 14120.3,
+        "rafInterval": 16.799999999999272,
+        "measured": true,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 189,
+        "rafTimestamp": 14136.9,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 190,
+        "rafTimestamp": 14153.5,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.8999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 191,
+        "rafTimestamp": 14170.1,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0.09999990463256836
+      },
+      {
+        "index": 192,
+        "rafTimestamp": 14186.8,
+        "rafInterval": 16.69999999999891,
+        "measured": true,
+        "drawCpuMs": 0.9000000953674316,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 193,
+        "rafTimestamp": 14203.4,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.5999999046325684,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 194,
+        "rafTimestamp": 14220,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.7000000476837158,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 195,
+        "rafTimestamp": 14236.6,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 196,
+        "rafTimestamp": 14253.4,
+        "rafInterval": 16.799999999999272,
+        "measured": true,
+        "drawCpuMs": 1.399999976158142,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 197,
+        "rafTimestamp": 14269.8,
+        "rafInterval": 16.399999999999636,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 198,
+        "rafTimestamp": 14286.4,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 199,
+        "rafTimestamp": 14303.2,
+        "rafInterval": 16.80000000000109,
+        "measured": true,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 200,
+        "rafTimestamp": 14319.9,
+        "rafInterval": 16.69999999999891,
+        "measured": true,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 201,
+        "rafTimestamp": 14336.3,
+        "rafInterval": 16.399999999999636,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 202,
+        "rafTimestamp": 14353.1,
+        "rafInterval": 16.80000000000109,
+        "measured": true,
+        "drawCpuMs": 0.8999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 203,
+        "rafTimestamp": 14369.7,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 204,
+        "rafTimestamp": 14386.3,
+        "rafInterval": 16.599999999998545,
+        "measured": true,
+        "drawCpuMs": 1.2999999523162842,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 205,
+        "rafTimestamp": 14402.9,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.40000009536743164,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 206,
+        "rafTimestamp": 14419.7,
+        "rafInterval": 16.80000000000109,
+        "measured": true,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 207,
+        "rafTimestamp": 14436.2,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 1.1999999284744263,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 208,
+        "rafTimestamp": 14452.9,
+        "rafInterval": 16.69999999999891,
+        "measured": true,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 209,
+        "rafTimestamp": 14469.5,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.5999999046325684,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 210,
+        "rafTimestamp": 14486,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 211,
+        "rafTimestamp": 14502.7,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 212,
+        "rafTimestamp": 14519.3,
+        "rafInterval": 16.599999999998545,
+        "measured": true,
+        "drawCpuMs": 0.7000000476837158,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 213,
+        "rafTimestamp": 14535.9,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 214,
+        "rafTimestamp": 14552.6,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.8999999761581421,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 215,
+        "rafTimestamp": 14569.2,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 216,
+        "rafTimestamp": 14585.8,
+        "rafInterval": 16.599999999998545,
+        "measured": true,
+        "drawCpuMs": 1,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 217,
+        "rafTimestamp": 14602.4,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.40000009536743164,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 218,
+        "rafTimestamp": 14619.1,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 219,
+        "rafTimestamp": 14635.7,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 220,
+        "rafTimestamp": 14652.5,
+        "rafInterval": 16.799999999999272,
+        "measured": true,
+        "drawCpuMs": 0.8999999761581421,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 221,
+        "rafTimestamp": 14669.1,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 222,
+        "rafTimestamp": 14685.6,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 223,
+        "rafTimestamp": 14702.3,
+        "rafInterval": 16.69999999999891,
+        "measured": true,
+        "drawCpuMs": 0.40000009536743164,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 224,
+        "rafTimestamp": 14718.8,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 225,
+        "rafTimestamp": 14735.4,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 226,
+        "rafTimestamp": 14752.1,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 227,
+        "rafTimestamp": 14768.8,
+        "rafInterval": 16.69999999999891,
+        "measured": true,
+        "drawCpuMs": 0.8000000715255737,
+        "overlayCpuMs": 0.09999990463256836
+      },
+      {
+        "index": 228,
+        "rafTimestamp": 14785.3,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.8000000715255737,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 229,
+        "rafTimestamp": 14802,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 230,
+        "rafTimestamp": 14818.6,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0.09999990463256836
+      },
+      {
+        "index": 231,
+        "rafTimestamp": 14835.2,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 232,
+        "rafTimestamp": 14851.9,
+        "rafInterval": 16.69999999999891,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 233,
+        "rafTimestamp": 14868.4,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 1.1999999284744263,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 234,
+        "rafTimestamp": 14885.1,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.9000000953674316,
+        "overlayCpuMs": 0.19999992847442627
+      },
+      {
+        "index": 235,
+        "rafTimestamp": 14901.8,
+        "rafInterval": 16.69999999999891,
+        "measured": true,
+        "drawCpuMs": 0.8000000715255737,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 236,
+        "rafTimestamp": 14918.6,
+        "rafInterval": 16.80000000000109,
+        "measured": true,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 237,
+        "rafTimestamp": 14935,
+        "rafInterval": 16.399999999999636,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 238,
+        "rafTimestamp": 14951.6,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 239,
+        "rafTimestamp": 14968.3,
+        "rafInterval": 16.69999999999891,
+        "measured": true,
+        "drawCpuMs": 0.7000000476837158,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 240,
+        "rafTimestamp": 14984.9,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 241,
+        "rafTimestamp": 15001.5,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.7000000476837158,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 242,
+        "rafTimestamp": 15018.2,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 1,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 243,
+        "rafTimestamp": 15034.8,
+        "rafInterval": 16.599999999998545,
+        "measured": true,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 244,
+        "rafTimestamp": 15051.5,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 245,
+        "rafTimestamp": 15068.1,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 246,
+        "rafTimestamp": 15084.6,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.5999999046325684,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 247,
+        "rafTimestamp": 15101.2,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 248,
+        "rafTimestamp": 15117.9,
+        "rafInterval": 16.69999999999891,
+        "measured": true,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 249,
+        "rafTimestamp": 15134.4,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 250,
+        "rafTimestamp": 15151.3,
+        "rafInterval": 16.899999999999636,
+        "measured": true,
+        "drawCpuMs": 1,
+        "overlayCpuMs": 0.09999990463256836
+      },
+      {
+        "index": 251,
+        "rafTimestamp": 15167.8,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 252,
+        "rafTimestamp": 15184.4,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 253,
+        "rafTimestamp": 15201.2,
+        "rafInterval": 16.80000000000109,
+        "measured": true,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 254,
+        "rafTimestamp": 15217.6,
+        "rafInterval": 16.399999999999636,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 255,
+        "rafTimestamp": 15234.2,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 256,
+        "rafTimestamp": 15250.9,
+        "rafInterval": 16.69999999999891,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 257,
+        "rafTimestamp": 15267.5,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 258,
+        "rafTimestamp": 15284.1,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 259,
+        "rafTimestamp": 15300.8,
+        "rafInterval": 16.69999999999891,
+        "measured": true,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 260,
+        "rafTimestamp": 15317.6,
+        "rafInterval": 16.80000000000109,
+        "measured": true,
+        "drawCpuMs": 0.7000000476837158,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 261,
+        "rafTimestamp": 15334.2,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.09999990463256836
+      },
+      {
+        "index": 262,
+        "rafTimestamp": 15350.8,
+        "rafInterval": 16.599999999998545,
+        "measured": true,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 263,
+        "rafTimestamp": 15367.3,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 1,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 264,
+        "rafTimestamp": 15384.1,
+        "rafInterval": 16.80000000000109,
+        "measured": true,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 265,
+        "rafTimestamp": 15400.7,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 266,
+        "rafTimestamp": 15417.3,
+        "rafInterval": 16.599999999998545,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.09999990463256836
+      },
+      {
+        "index": 267,
+        "rafTimestamp": 15434.2,
+        "rafInterval": 16.900000000001455,
+        "measured": true,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 268,
+        "rafTimestamp": 15450.6,
+        "rafInterval": 16.399999999999636,
+        "measured": true,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 269,
+        "rafTimestamp": 15467.2,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 270,
+        "rafTimestamp": 15483.8,
+        "rafInterval": 16.599999999998545,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 271,
+        "rafTimestamp": 15500.4,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 272,
+        "rafTimestamp": 15517.2,
+        "rafInterval": 16.80000000000109,
+        "measured": true,
+        "drawCpuMs": 0.8000000715255737,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 273,
+        "rafTimestamp": 15533.7,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 274,
+        "rafTimestamp": 15550.3,
+        "rafInterval": 16.599999999998545,
+        "measured": true,
+        "drawCpuMs": 0.8999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 275,
+        "rafTimestamp": 15567.1,
+        "rafInterval": 16.80000000000109,
+        "measured": true,
+        "drawCpuMs": 0.5999999046325684,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 276,
+        "rafTimestamp": 15583.5,
+        "rafInterval": 16.399999999999636,
+        "measured": true,
+        "drawCpuMs": 0.2999999523162842,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 277,
+        "rafTimestamp": 15600.2,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 278,
+        "rafTimestamp": 15616.8,
+        "rafInterval": 16.599999999998545,
+        "measured": true,
+        "drawCpuMs": 0.8000000715255737,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 279,
+        "rafTimestamp": 15633.4,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 280,
+        "rafTimestamp": 15650,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 281,
+        "rafTimestamp": 15666.6,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 282,
+        "rafTimestamp": 15683.3,
+        "rafInterval": 16.69999999999891,
+        "measured": true,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 283,
+        "rafTimestamp": 15700,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.8000000715255737,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 284,
+        "rafTimestamp": 15716.6,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 285,
+        "rafTimestamp": 15733.3,
+        "rafInterval": 16.69999999999891,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.09999990463256836
+      },
+      {
+        "index": 286,
+        "rafTimestamp": 15749.8,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.2999999523162842,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 287,
+        "rafTimestamp": 15766.7,
+        "rafInterval": 16.900000000001455,
+        "measured": true,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 288,
+        "rafTimestamp": 15783.1,
+        "rafInterval": 16.399999999999636,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 289,
+        "rafTimestamp": 15799.7,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.5999999046325684,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 290,
+        "rafTimestamp": 15816.3,
+        "rafInterval": 16.599999999998545,
+        "measured": true,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 291,
+        "rafTimestamp": 15833,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.40000009536743164,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 292,
+        "rafTimestamp": 15849.6,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 293,
+        "rafTimestamp": 15866.3,
+        "rafInterval": 16.69999999999891,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 294,
+        "rafTimestamp": 15882.9,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 295,
+        "rafTimestamp": 15899.4,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 296,
+        "rafTimestamp": 15916.1,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.9000000953674316,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 297,
+        "rafTimestamp": 15932.8,
+        "rafInterval": 16.69999999999891,
+        "measured": true,
+        "drawCpuMs": 1.100000023841858,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 298,
+        "rafTimestamp": 15949.3,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 299,
+        "rafTimestamp": 15966,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 1,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 300,
+        "rafTimestamp": 15982.7,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.8000000715255737,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 301,
+        "rafTimestamp": 15999.2,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 302,
+        "rafTimestamp": 16015.9,
+        "rafInterval": 16.69999999999891,
+        "measured": true,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 303,
+        "rafTimestamp": 16032.4,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 304,
+        "rafTimestamp": 16049.1,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 305,
+        "rafTimestamp": 16065.7,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 306,
+        "rafTimestamp": 16082.5,
+        "rafInterval": 16.799999999999272,
+        "measured": true,
+        "drawCpuMs": 1,
+        "overlayCpuMs": 0.09999990463256836
+      },
+      {
+        "index": 307,
+        "rafTimestamp": 16099,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.2999999523162842,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 308,
+        "rafTimestamp": 16115.6,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 309,
+        "rafTimestamp": 16132.3,
+        "rafInterval": 16.69999999999891,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 310,
+        "rafTimestamp": 16148.9,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 311,
+        "rafTimestamp": 16165.4,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 312,
+        "rafTimestamp": 16182,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 313,
+        "rafTimestamp": 16198.7,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 314,
+        "rafTimestamp": 16215.3,
+        "rafInterval": 16.599999999998545,
+        "measured": true,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 315,
+        "rafTimestamp": 16232,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 316,
+        "rafTimestamp": 16248.6,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 317,
+        "rafTimestamp": 16265.2,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.2999999523162842,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 318,
+        "rafTimestamp": 16282,
+        "rafInterval": 16.799999999999272,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 319,
+        "rafTimestamp": 16298.4,
+        "rafInterval": 16.399999999999636,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 320,
+        "rafTimestamp": 16315.1,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.5999999046325684,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 321,
+        "rafTimestamp": 16331.8,
+        "rafInterval": 16.69999999999891,
+        "measured": true,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 322,
+        "rafTimestamp": 16348.4,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 323,
+        "rafTimestamp": 16365,
+        "rafInterval": 16.600000000000364,
+        "measured": true,
+        "drawCpuMs": 0.7000000476837158,
+        "overlayCpuMs": 0.09999990463256836
+      },
+      {
+        "index": 324,
+        "rafTimestamp": 16381.7,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.09999990463256836
+      },
+      {
+        "index": 325,
+        "rafTimestamp": 16398.3,
+        "rafInterval": 16.599999999998545,
+        "measured": true,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 326,
+        "rafTimestamp": 16415.1,
+        "rafInterval": 16.799999999999272,
+        "measured": true,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 327,
+        "rafTimestamp": 16431.6,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.8999999761581421,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 328,
+        "rafTimestamp": 16448.3,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 1.100000023841858,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 329,
+        "rafTimestamp": 16464.8,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.8000000715255737,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 330,
+        "rafTimestamp": 16481.6,
+        "rafInterval": 16.799999999999272,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 331,
+        "rafTimestamp": 16498,
+        "rafInterval": 16.400000000001455,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 332,
+        "rafTimestamp": 16514.7,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 1,
+        "overlayCpuMs": 0.20000004768371582
+      },
+      {
+        "index": 333,
+        "rafTimestamp": 16531.6,
+        "rafInterval": 16.899999999997817,
+        "measured": true,
+        "drawCpuMs": 0.8999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 334,
+        "rafTimestamp": 16548.1,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 335,
+        "rafTimestamp": 16564.7,
+        "rafInterval": 16.600000000002183,
+        "measured": true,
+        "drawCpuMs": 0.8000000715255737,
+        "overlayCpuMs": 0.09999990463256836
+      },
+      {
+        "index": 336,
+        "rafTimestamp": 16581.3,
+        "rafInterval": 16.599999999998545,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 337,
+        "rafTimestamp": 16597.9,
+        "rafInterval": 16.600000000002183,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 338,
+        "rafTimestamp": 16614.5,
+        "rafInterval": 16.599999999998545,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 339,
+        "rafTimestamp": 16631.1,
+        "rafInterval": 16.599999999998545,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 340,
+        "rafTimestamp": 16647.6,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.8000000715255737,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 341,
+        "rafTimestamp": 16664.3,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 342,
+        "rafTimestamp": 16681,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.8000000715255737,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 343,
+        "rafTimestamp": 16697.7,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 344,
+        "rafTimestamp": 16714.3,
+        "rafInterval": 16.599999999998545,
+        "measured": true,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 345,
+        "rafTimestamp": 16730.8,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 346,
+        "rafTimestamp": 16747.6,
+        "rafInterval": 16.799999999999272,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 347,
+        "rafTimestamp": 16764,
+        "rafInterval": 16.400000000001455,
+        "measured": true,
+        "drawCpuMs": 0.7000000476837158,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 348,
+        "rafTimestamp": 16780.8,
+        "rafInterval": 16.799999999999272,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.09999990463256836
+      },
+      {
+        "index": 349,
+        "rafTimestamp": 16797.4,
+        "rafInterval": 16.600000000002183,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 350,
+        "rafTimestamp": 16813.9,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 351,
+        "rafTimestamp": 16830.7,
+        "rafInterval": 16.799999999999272,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 352,
+        "rafTimestamp": 16847.4,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.7000000476837158,
+        "overlayCpuMs": 0.09999990463256836
+      },
+      {
+        "index": 353,
+        "rafTimestamp": 16863.8,
+        "rafInterval": 16.399999999997817,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 354,
+        "rafTimestamp": 16880.6,
+        "rafInterval": 16.799999999999272,
+        "measured": true,
+        "drawCpuMs": 0.8999999761581421,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 355,
+        "rafTimestamp": 16897.1,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 356,
+        "rafTimestamp": 16913.8,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 357,
+        "rafTimestamp": 16930.4,
+        "rafInterval": 16.600000000002183,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 358,
+        "rafTimestamp": 16947.1,
+        "rafInterval": 16.69999999999709,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 359,
+        "rafTimestamp": 16963.7,
+        "rafInterval": 16.600000000002183,
+        "measured": true,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 360,
+        "rafTimestamp": 16980.3,
+        "rafInterval": 16.599999999998545,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 361,
+        "rafTimestamp": 16996.9,
+        "rafInterval": 16.600000000002183,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 362,
+        "rafTimestamp": 17013.6,
+        "rafInterval": 16.69999999999709,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 363,
+        "rafTimestamp": 17030.3,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.7000000476837158,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 364,
+        "rafTimestamp": 17046.9,
+        "rafInterval": 16.600000000002183,
+        "measured": true,
+        "drawCpuMs": 0.7000000476837158,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 365,
+        "rafTimestamp": 17063.5,
+        "rafInterval": 16.599999999998545,
+        "measured": true,
+        "drawCpuMs": 1.100000023841858,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 366,
+        "rafTimestamp": 17080.1,
+        "rafInterval": 16.599999999998545,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 367,
+        "rafTimestamp": 17096.7,
+        "rafInterval": 16.600000000002183,
+        "measured": true,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 368,
+        "rafTimestamp": 17113.5,
+        "rafInterval": 16.799999999999272,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 369,
+        "rafTimestamp": 17130.6,
+        "rafInterval": 17.099999999998545,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 370,
+        "rafTimestamp": 17146.6,
+        "rafInterval": 16,
+        "measured": true,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 371,
+        "rafTimestamp": 17163.3,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.8000000715255737,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 372,
+        "rafTimestamp": 17179.8,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 373,
+        "rafTimestamp": 17196.6,
+        "rafInterval": 16.799999999999272,
+        "measured": true,
+        "drawCpuMs": 1.100000023841858,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 374,
+        "rafTimestamp": 17213.2,
+        "rafInterval": 16.600000000002183,
+        "measured": true,
+        "drawCpuMs": 0.5999999046325684,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 375,
+        "rafTimestamp": 17229.8,
+        "rafInterval": 16.599999999998545,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 376,
+        "rafTimestamp": 17246.4,
+        "rafInterval": 16.600000000002183,
+        "measured": true,
+        "drawCpuMs": 1.100000023841858,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 377,
+        "rafTimestamp": 17262.9,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 378,
+        "rafTimestamp": 17279.6,
+        "rafInterval": 16.69999999999709,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 379,
+        "rafTimestamp": 17296.3,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.8999999761581421,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 380,
+        "rafTimestamp": 17312.8,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 381,
+        "rafTimestamp": 17329.5,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.7000000476837158,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 382,
+        "rafTimestamp": 17346,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 383,
+        "rafTimestamp": 17362.7,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 384,
+        "rafTimestamp": 17379.8,
+        "rafInterval": 17.099999999998545,
+        "measured": true,
+        "drawCpuMs": 0.40000009536743164,
+        "overlayCpuMs": 0.09999990463256836
+      },
+      {
+        "index": 385,
+        "rafTimestamp": 17396.1,
+        "rafInterval": 16.299999999999272,
+        "measured": true,
+        "drawCpuMs": 0.9000000953674316,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 386,
+        "rafTimestamp": 17412.5,
+        "rafInterval": 16.400000000001455,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 387,
+        "rafTimestamp": 17429.2,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 388,
+        "rafTimestamp": 17445.9,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.7000000476837158,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 389,
+        "rafTimestamp": 17462.6,
+        "rafInterval": 16.69999999999709,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 390,
+        "rafTimestamp": 17479.3,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.8000000715255737,
+        "overlayCpuMs": 0.09999990463256836
+      },
+      {
+        "index": 391,
+        "rafTimestamp": 17495.8,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 392,
+        "rafTimestamp": 17512.4,
+        "rafInterval": 16.600000000002183,
+        "measured": true,
+        "drawCpuMs": 0.7000000476837158,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 393,
+        "rafTimestamp": 17529.1,
+        "rafInterval": 16.69999999999709,
+        "measured": true,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 394,
+        "rafTimestamp": 17545.7,
+        "rafInterval": 16.600000000002183,
+        "measured": true,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 395,
+        "rafTimestamp": 17562.3,
+        "rafInterval": 16.599999999998545,
+        "measured": true,
+        "drawCpuMs": 0.7000000476837158,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 396,
+        "rafTimestamp": 17579,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 397,
+        "rafTimestamp": 17595.7,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 398,
+        "rafTimestamp": 17612.4,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 399,
+        "rafTimestamp": 17628.9,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 400,
+        "rafTimestamp": 17645.5,
+        "rafInterval": 16.599999999998545,
+        "measured": true,
+        "drawCpuMs": 0.7000000476837158,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 401,
+        "rafTimestamp": 17662.1,
+        "rafInterval": 16.599999999998545,
+        "measured": true,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 402,
+        "rafTimestamp": 17678.8,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.2999999523162842,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 403,
+        "rafTimestamp": 17695.3,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.8999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 404,
+        "rafTimestamp": 17711.9,
+        "rafInterval": 16.600000000002183,
+        "measured": true,
+        "drawCpuMs": 0.7000000476837158,
+        "overlayCpuMs": 0.09999990463256836
+      },
+      {
+        "index": 405,
+        "rafTimestamp": 17728.7,
+        "rafInterval": 16.799999999999272,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 406,
+        "rafTimestamp": 17745.2,
+        "rafInterval": 16.5,
+        "measured": true,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 407,
+        "rafTimestamp": 17761.8,
+        "rafInterval": 16.599999999998545,
+        "measured": true,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 408,
+        "rafTimestamp": 17778.4,
+        "rafInterval": 16.600000000002183,
+        "measured": true,
+        "drawCpuMs": 0.8000000715255737,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 409,
+        "rafTimestamp": 17795.1,
+        "rafInterval": 16.69999999999709,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 410,
+        "rafTimestamp": 17811.8,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 1,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 411,
+        "rafTimestamp": 17828.4,
+        "rafInterval": 16.600000000002183,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 412,
+        "rafTimestamp": 17845,
+        "rafInterval": 16.599999999998545,
+        "measured": true,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 413,
+        "rafTimestamp": 17861.6,
+        "rafInterval": 16.599999999998545,
+        "measured": true,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 414,
+        "rafTimestamp": 17878.4,
+        "rafInterval": 16.80000000000291,
+        "measured": true,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 415,
+        "rafTimestamp": 17894.8,
+        "rafInterval": 16.399999999997817,
+        "measured": true,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 416,
+        "rafTimestamp": 17911.5,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 1,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 417,
+        "rafTimestamp": 17928.1,
+        "rafInterval": 16.599999999998545,
+        "measured": true,
+        "drawCpuMs": 0.7000000476837158,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 418,
+        "rafTimestamp": 17944.8,
+        "rafInterval": 16.700000000000728,
+        "measured": true,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 419,
+        "rafTimestamp": 17961.4,
+        "rafInterval": 16.600000000002183,
+        "measured": true,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 420,
+        "rafTimestamp": 17978.1,
+        "rafInterval": 16.69999999999709,
+        "measured": false,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 421,
+        "rafTimestamp": 17994.6,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 422,
+        "rafTimestamp": 18011.2,
+        "rafInterval": 16.600000000002183,
+        "measured": false,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 423,
+        "rafTimestamp": 18027.9,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 0.7000000476837158,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 424,
+        "rafTimestamp": 18044.5,
+        "rafInterval": 16.599999999998545,
+        "measured": false,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 425,
+        "rafTimestamp": 18061.2,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 426,
+        "rafTimestamp": 18077.9,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 427,
+        "rafTimestamp": 18094.6,
+        "rafInterval": 16.69999999999709,
+        "measured": false,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 428,
+        "rafTimestamp": 18111.2,
+        "rafInterval": 16.600000000002183,
+        "measured": false,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 429,
+        "rafTimestamp": 18127.6,
+        "rafInterval": 16.399999999997817,
+        "measured": false,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 430,
+        "rafTimestamp": 18144.5,
+        "rafInterval": 16.900000000001455,
+        "measured": false,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 431,
+        "rafTimestamp": 18161,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 0.5999999046325684,
+        "overlayCpuMs": 0.20000004768371582
+      },
+      {
+        "index": 432,
+        "rafTimestamp": 18177.5,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 433,
+        "rafTimestamp": 18194.1,
+        "rafInterval": 16.599999999998545,
+        "measured": false,
+        "drawCpuMs": 0.8999999761581421,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 434,
+        "rafTimestamp": 18210.9,
+        "rafInterval": 16.80000000000291,
+        "measured": false,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 435,
+        "rafTimestamp": 18227.4,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 436,
+        "rafTimestamp": 18244.2,
+        "rafInterval": 16.799999999999272,
+        "measured": false,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 437,
+        "rafTimestamp": 18260.7,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 438,
+        "rafTimestamp": 18277.5,
+        "rafInterval": 16.799999999999272,
+        "measured": false,
+        "drawCpuMs": 0.5999999046325684,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 439,
+        "rafTimestamp": 18293.9,
+        "rafInterval": 16.400000000001455,
+        "measured": false,
+        "drawCpuMs": 0.8999999761581421,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 440,
+        "rafTimestamp": 18310.6,
+        "rafInterval": 16.69999999999709,
+        "measured": false,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 441,
+        "rafTimestamp": 18327.1,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 442,
+        "rafTimestamp": 18343.9,
+        "rafInterval": 16.80000000000291,
+        "measured": false,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 443,
+        "rafTimestamp": 18360.5,
+        "rafInterval": 16.599999999998545,
+        "measured": false,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 444,
+        "rafTimestamp": 18377.1,
+        "rafInterval": 16.599999999998545,
+        "measured": false,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 445,
+        "rafTimestamp": 18394.8,
+        "rafInterval": 17.700000000000728,
+        "measured": false,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 446,
+        "rafTimestamp": 18410.3,
+        "rafInterval": 15.5,
+        "measured": false,
+        "drawCpuMs": 0.40000009536743164,
+        "overlayCpuMs": 0.09999990463256836
+      },
+      {
+        "index": 447,
+        "rafTimestamp": 18426.9,
+        "rafInterval": 16.600000000002183,
+        "measured": false,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 448,
+        "rafTimestamp": 18443.5,
+        "rafInterval": 16.599999999998545,
+        "measured": false,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 449,
+        "rafTimestamp": 18460.2,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 450,
+        "rafTimestamp": 18476.8,
+        "rafInterval": 16.599999999998545,
+        "measured": false,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 451,
+        "rafTimestamp": 18493.4,
+        "rafInterval": 16.600000000002183,
+        "measured": false,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 452,
+        "rafTimestamp": 18510.1,
+        "rafInterval": 16.69999999999709,
+        "measured": false,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 453,
+        "rafTimestamp": 18526.8,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 454,
+        "rafTimestamp": 18543.3,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 455,
+        "rafTimestamp": 18559.9,
+        "rafInterval": 16.600000000002183,
+        "measured": false,
+        "drawCpuMs": 1.100000023841858,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 456,
+        "rafTimestamp": 18576.6,
+        "rafInterval": 16.69999999999709,
+        "measured": false,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 457,
+        "rafTimestamp": 18593.2,
+        "rafInterval": 16.600000000002183,
+        "measured": false,
+        "drawCpuMs": 0.7000000476837158,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 458,
+        "rafTimestamp": 18609.9,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.09999990463256836
+      },
+      {
+        "index": 459,
+        "rafTimestamp": 18626.5,
+        "rafInterval": 16.599999999998545,
+        "measured": false,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 460,
+        "rafTimestamp": 18643.1,
+        "rafInterval": 16.599999999998545,
+        "measured": false,
+        "drawCpuMs": 0.5999999046325684,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 461,
+        "rafTimestamp": 18659.7,
+        "rafInterval": 16.600000000002183,
+        "measured": false,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 462,
+        "rafTimestamp": 18676.3,
+        "rafInterval": 16.599999999998545,
+        "measured": false,
+        "drawCpuMs": 0.5999999046325684,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 463,
+        "rafTimestamp": 18693,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 464,
+        "rafTimestamp": 18709.6,
+        "rafInterval": 16.599999999998545,
+        "measured": false,
+        "drawCpuMs": 0.8000000715255737,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 465,
+        "rafTimestamp": 18726.3,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 0.7000000476837158,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 466,
+        "rafTimestamp": 18742.8,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 0.5999999046325684,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 467,
+        "rafTimestamp": 18759.5,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 468,
+        "rafTimestamp": 18776.2,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 1,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 469,
+        "rafTimestamp": 18792.7,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 470,
+        "rafTimestamp": 18809.4,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 471,
+        "rafTimestamp": 18825.9,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 0.7000000476837158,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 472,
+        "rafTimestamp": 18842.7,
+        "rafInterval": 16.799999999999272,
+        "measured": false,
+        "drawCpuMs": 0.8000000715255737,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 473,
+        "rafTimestamp": 18859.3,
+        "rafInterval": 16.599999999998545,
+        "measured": false,
+        "drawCpuMs": 0.2999999523162842,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 474,
+        "rafTimestamp": 18875.9,
+        "rafInterval": 16.600000000002183,
+        "measured": false,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 475,
+        "rafTimestamp": 18892.6,
+        "rafInterval": 16.69999999999709,
+        "measured": false,
+        "drawCpuMs": 0.8999999761581421,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 476,
+        "rafTimestamp": 18909.3,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 0.8000000715255737,
+        "overlayCpuMs": 0.09999990463256836
+      },
+      {
+        "index": 477,
+        "rafTimestamp": 18925.8,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 478,
+        "rafTimestamp": 18942.4,
+        "rafInterval": 16.600000000002183,
+        "measured": false,
+        "drawCpuMs": 0.40000009536743164,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 479,
+        "rafTimestamp": 18959.1,
+        "rafInterval": 16.69999999999709,
+        "measured": false,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 480,
+        "rafTimestamp": 18975.6,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 481,
+        "rafTimestamp": 18992.3,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 482,
+        "rafTimestamp": 19008.9,
+        "rafInterval": 16.600000000002183,
+        "measured": false,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 483,
+        "rafTimestamp": 19025.6,
+        "rafInterval": 16.69999999999709,
+        "measured": false,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 484,
+        "rafTimestamp": 19042.3,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 0.7000000476837158,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 485,
+        "rafTimestamp": 19058.8,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0.09999990463256836
+      },
+      {
+        "index": 486,
+        "rafTimestamp": 19075.6,
+        "rafInterval": 16.799999999999272,
+        "measured": false,
+        "drawCpuMs": 0.8999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 487,
+        "rafTimestamp": 19092,
+        "rafInterval": 16.400000000001455,
+        "measured": false,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0.20000004768371582
+      },
+      {
+        "index": 488,
+        "rafTimestamp": 19108.7,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 489,
+        "rafTimestamp": 19125.5,
+        "rafInterval": 16.799999999999272,
+        "measured": false,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 490,
+        "rafTimestamp": 19142.1,
+        "rafInterval": 16.599999999998545,
+        "measured": false,
+        "drawCpuMs": 0.8000000715255737,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 491,
+        "rafTimestamp": 19158.6,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 492,
+        "rafTimestamp": 19175.2,
+        "rafInterval": 16.600000000002183,
+        "measured": false,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 493,
+        "rafTimestamp": 19191.9,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 0.40000009536743164,
+        "overlayCpuMs": 0.09999990463256836
+      },
+      {
+        "index": 494,
+        "rafTimestamp": 19208.5,
+        "rafInterval": 16.599999999998545,
+        "measured": false,
+        "drawCpuMs": 1,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 495,
+        "rafTimestamp": 19225.2,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 496,
+        "rafTimestamp": 19241.8,
+        "rafInterval": 16.599999999998545,
+        "measured": false,
+        "drawCpuMs": 0.8000000715255737,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 497,
+        "rafTimestamp": 19258.5,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 498,
+        "rafTimestamp": 19275.1,
+        "rafInterval": 16.599999999998545,
+        "measured": false,
+        "drawCpuMs": 0.9000000953674316,
+        "overlayCpuMs": 0.19999992847442627
+      },
+      {
+        "index": 499,
+        "rafTimestamp": 19291.7,
+        "rafInterval": 16.600000000002183,
+        "measured": false,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0.09999990463256836
+      },
+      {
+        "index": 500,
+        "rafTimestamp": 19308.4,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 0.8999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 501,
+        "rafTimestamp": 19324.9,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 502,
+        "rafTimestamp": 19341.6,
+        "rafInterval": 16.69999999999709,
+        "measured": false,
+        "drawCpuMs": 1.100000023841858,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 503,
+        "rafTimestamp": 19358.1,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 504,
+        "rafTimestamp": 19374.9,
+        "rafInterval": 16.80000000000291,
+        "measured": false,
+        "drawCpuMs": 1.2000000476837158,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 505,
+        "rafTimestamp": 19391.3,
+        "rafInterval": 16.399999999997817,
+        "measured": false,
+        "drawCpuMs": 0.8999999761581421,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 506,
+        "rafTimestamp": 19408,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 507,
+        "rafTimestamp": 19424.6,
+        "rafInterval": 16.599999999998545,
+        "measured": false,
+        "drawCpuMs": 1.2000000476837158,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 508,
+        "rafTimestamp": 19441.3,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 1.600000023841858,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 509,
+        "rafTimestamp": 19458,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 0.8000000715255737,
+        "overlayCpuMs": 0.19999992847442627
+      },
+      {
+        "index": 510,
+        "rafTimestamp": 19474.6,
+        "rafInterval": 16.599999999998545,
+        "measured": false,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 511,
+        "rafTimestamp": 19491.1,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 512,
+        "rafTimestamp": 19507.8,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 0.30000007152557373,
+        "overlayCpuMs": 0.09999990463256836
+      },
+      {
+        "index": 513,
+        "rafTimestamp": 19524.6,
+        "rafInterval": 16.799999999999272,
+        "measured": false,
+        "drawCpuMs": 0.7000000476837158,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 514,
+        "rafTimestamp": 19541,
+        "rafInterval": 16.400000000001455,
+        "measured": false,
+        "drawCpuMs": 0.40000009536743164,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 515,
+        "rafTimestamp": 19557.8,
+        "rafInterval": 16.799999999999272,
+        "measured": false,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 516,
+        "rafTimestamp": 19574.5,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 1.100000023841858,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 517,
+        "rafTimestamp": 19591,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 0.40000009536743164,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 518,
+        "rafTimestamp": 19607.6,
+        "rafInterval": 16.599999999998545,
+        "measured": false,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 519,
+        "rafTimestamp": 19624.2,
+        "rafInterval": 16.600000000002183,
+        "measured": false,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 520,
+        "rafTimestamp": 19640.9,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 0.7999999523162842,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 521,
+        "rafTimestamp": 19657.4,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 522,
+        "rafTimestamp": 19674.1,
+        "rafInterval": 16.69999999999709,
+        "measured": false,
+        "drawCpuMs": 0.8000000715255737,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 523,
+        "rafTimestamp": 19690.8,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 524,
+        "rafTimestamp": 19707.6,
+        "rafInterval": 16.799999999999272,
+        "measured": false,
+        "drawCpuMs": 0.7000000476837158,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 525,
+        "rafTimestamp": 19723.9,
+        "rafInterval": 16.30000000000291,
+        "measured": false,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 526,
+        "rafTimestamp": 19740.7,
+        "rafInterval": 16.799999999999272,
+        "measured": false,
+        "drawCpuMs": 0.8999999761581421,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 527,
+        "rafTimestamp": 19757.2,
+        "rafInterval": 16.5,
+        "measured": false,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 528,
+        "rafTimestamp": 19773.8,
+        "rafInterval": 16.599999999998545,
+        "measured": false,
+        "drawCpuMs": 0.8000000715255737,
+        "overlayCpuMs": 0.09999990463256836
+      },
+      {
+        "index": 529,
+        "rafTimestamp": 19790.5,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 530,
+        "rafTimestamp": 19807.1,
+        "rafInterval": 16.599999999998545,
+        "measured": false,
+        "drawCpuMs": 0.2999999523162842,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 531,
+        "rafTimestamp": 19823.7,
+        "rafInterval": 16.600000000002183,
+        "measured": false,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 532,
+        "rafTimestamp": 19840.3,
+        "rafInterval": 16.599999999998545,
+        "measured": false,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 533,
+        "rafTimestamp": 19857,
+        "rafInterval": 16.700000000000728,
+        "measured": false,
+        "drawCpuMs": 0.6000000238418579,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 534,
+        "rafTimestamp": 19873.6,
+        "rafInterval": 16.599999999998545,
+        "measured": false,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.09999990463256836
+      },
+      {
+        "index": 535,
+        "rafTimestamp": 19890.2,
+        "rafInterval": 16.600000000002183,
+        "measured": false,
+        "drawCpuMs": 0.5,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 536,
+        "rafTimestamp": 19907.1,
+        "rafInterval": 16.899999999997817,
+        "measured": false,
+        "drawCpuMs": 0.6999999284744263,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 537,
+        "rafTimestamp": 19923.4,
+        "rafInterval": 16.30000000000291,
+        "measured": false,
+        "drawCpuMs": 0.40000009536743164,
+        "overlayCpuMs": 0
+      },
+      {
+        "index": 538,
+        "rafTimestamp": 19940.3,
+        "rafInterval": 16.899999999997817,
+        "measured": false,
+        "drawCpuMs": 0.3999999761581421,
+        "overlayCpuMs": 0.10000002384185791
+      },
+      {
+        "index": 539,
+        "rafTimestamp": 19956.7,
+        "rafInterval": 16.400000000001455,
+        "measured": false,
+        "drawCpuMs": 0.2999999523162842,
+        "overlayCpuMs": 0.10000002384185791
+      }
+    ]
+  },
+  "pose": {
+    "fov": 40,
+    "eye": [
+      5.14335138485106,
+      3.1,
+      6.127473911160347
+    ],
+    "angleDegrees": 3.1399245596740517,
+    "held": false,
+    "reducedMotion": false
+  },
+  "plants": [
+    {
+      "x": -0.96,
+      "z": 1.22,
+      "growth": 210.6
+    },
+    {
+      "x": -1.18,
+      "z": -0.74,
+      "growth": 210.6
+    },
+    {
+      "x": 1,
+      "z": 0.5,
+      "growth": 210.6
+    },
+    {
+      "x": 0.81,
+      "z": -1.42,
+      "growth": 210.6
+    }
+  ],
+  "resources": {
+    "geometries": 13,
+    "textures": 9,
+    "programs": 7
+  }
+}

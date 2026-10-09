@@ -1,0 +1,9 @@
+# Depth batch and menu preload attribution
+
+This source checkpoint adds optional DEV witnesses without changing preparation cadence or quality. Each existing 32-object depth batch records synchronous submission, program-readiness elapsed wait and its existing bounded frame wait separately. These spans are nested, not additive CPU time. The final hardware fence remains the existing warm-final-fence; there is no invented hardware fence per batch. Observer failures cannot alter loading.
+
+Diorama preparation is split into sky, catalogues, maize model, soil texture, maize construction, shader recipes, synchronous upload draws and final fence. The same callback is attached during actual menu preloading, before Start, so that preparation overlapping the menu animation remains visible. Parent lifecycle receipts mark preparation requested/created/ready, Start received and cinematic restoration before controls. They do not claim the originating iframe click timestamp, a presented HUD frame, or exclusive CPU. Total acceptance must include the shared menu transition and preparation; these diagnostics do not justify subtracting their cost.
+
+The separately committed a952163c fix preserves each 32-object frame barrier while observing signal, owner predicate and deadline independently of a suspended RAF. Its pre-fix negative is retained in depth-frame-cancel-negative-2f97f337.json. Directed contracts exercised never-resolving frame waits, late rejection, restoration and optional observer failures: 39 passed. Production build passed in 7.58 seconds. No native measurement is claimed by these checks.
+
+Frame-aware scheduling remains opt-in QA. The sequential A/B185/186 reports are diagnostics, not strict ABBA. Historical main readiness around 7.2 seconds remains lower, and the production regression gate is open.

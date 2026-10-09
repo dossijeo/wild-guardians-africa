@@ -1,0 +1,76 @@
+{
+  "source": "45201f7d1afcde98ccb70ea73041b191d7fa214c",
+  "dayGain": 1.3,
+  "nightGain": 3.0,
+  "edgeGain": 0.6,
+  "scope": "Native visual review only, fixedQA growth78/reduced-motion; no GPU cost or real loading progress evidence",
+  "tabs": [
+    955,
+    956
+  ],
+  "validImages": [
+    "landscape.jpg",
+    "portrait.jpg"
+  ],
+  "negativeImage": "portrait-resize-incomplete.jpg",
+  "negativeScope": "First portrait screenshot captured before viewport resize stabilized; retained, excluded from visual validation; not a production failure claim",
+  "files": [
+    {
+      "path": "cleanup.json",
+      "bytes": 1396,
+      "sha256": "a4e84fc33d5b719af5ed5b9ca2cb536c5c09388a1b37245612e89e4d0eb1164e"
+    },
+    {
+      "path": "console.json",
+      "bytes": 774,
+      "sha256": "812c6a06d4598a049043a1c07d7214646ecab5cda08171e0e3b4bf8b2dc886d4"
+    },
+    {
+      "path": "landscape.jpg",
+      "bytes": 97495,
+      "sha256": "af936b785658339284dd82943769c1d007ec39a06df619d9e9ddbd59bc11d2a8",
+      "dimensions": [
+        1280,
+        720
+      ]
+    },
+    {
+      "path": "landscape.json",
+      "bytes": 1180,
+      "sha256": "a57fa90ce6b36934b595f2c14e4a4bbb529979f41f50ee2da7b00071588dcc36"
+    },
+    {
+      "path": "portrait-cleanup.json",
+      "bytes": 1396,
+      "sha256": "41321ece2cd7c25226ff647d522c28833b7ed86305b2e62fd9e3823d61a59a27"
+    },
+    {
+      "path": "portrait-console.json",
+      "bytes": 2,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "portrait-resize-incomplete.jpg",
+      "bytes": 6146,
+      "sha256": "7e7357205d43797004974686c254b9da05ba87b4d1df33787b0084e4a069a71f",
+      "dimensions": [
+        420,
+        236
+      ]
+    },
+    {
+      "path": "portrait.jpg",
+      "bytes": 49960,
+      "sha256": "96f3670c919f7cf7e4e040f187ad8f2f4b55c7b455393854bdd665318dbfc7b4",
+      "dimensions": [
+        420,
+        900
+      ]
+    },
+    {
+      "path": "portrait.json",
+      "bytes": 1198,
+      "sha256": "50eddf03e865c15994552fd28c36b5e1e33002face049ba50df97585bcdb50e2"
+    }
+  ]
+}

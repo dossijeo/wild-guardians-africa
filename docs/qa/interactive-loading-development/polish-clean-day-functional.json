@@ -1,0 +1,2784 @@
+{
+  "biome": "sabana",
+  "culture": "mapungubwe",
+  "quality": "media",
+  "scope": "Native interactive pipeline: actual weighted milestones, diorama then real cinematic. Preparation starts at Run rather than a menu animation; menu integration has separate real-app QA. Frame intervals and long tasks are CPU scheduling proxies, not GPU timer measurements. Heap/resource counters are coarse proxies.",
+  "stages": [
+    {
+      "stage": "diorama-interactive",
+      "at": 1213.5,
+      "memory": {
+        "usedJSHeapSize": 90024360,
+        "totalJSHeapSize": 107126796
+      },
+      "resources": {
+        "geometries": 11,
+        "textures": 8,
+        "programs": 5,
+        "owned": 49
+      }
+    },
+    {
+      "stage": "configuration",
+      "at": 1246,
+      "memory": {
+        "usedJSHeapSize": 90024360,
+        "totalJSHeapSize": 107126796
+      },
+      "resources": {
+        "geometries": 11,
+        "textures": 8,
+        "programs": 5,
+        "owned": 49
+      }
+    },
+    {
+      "stage": "initial-site",
+      "at": 1666.5,
+      "memory": {
+        "usedJSHeapSize": 93796232,
+        "totalJSHeapSize": 107225564
+      },
+      "resources": {
+        "geometries": 11,
+        "textures": 8,
+        "programs": 5,
+        "owned": 49
+      }
+    },
+    {
+      "stage": "renderer",
+      "at": 1670.6999999284744,
+      "memory": {
+        "usedJSHeapSize": 93796232,
+        "totalJSHeapSize": 107225564
+      },
+      "resources": {
+        "geometries": 11,
+        "textures": 8,
+        "programs": 5,
+        "owned": 49
+      }
+    },
+    {
+      "stage": "load:begin",
+      "at": 1672.2999999523163,
+      "memory": {
+        "usedJSHeapSize": 93796232,
+        "totalJSHeapSize": 107225564
+      },
+      "resources": {
+        "geometries": 11,
+        "textures": 8,
+        "programs": 5,
+        "owned": 49
+      }
+    },
+    {
+      "stage": "load:end",
+      "at": 1673.6999999284744,
+      "memory": {
+        "usedJSHeapSize": 93796232,
+        "totalJSHeapSize": 107225564
+      },
+      "resources": {
+        "geometries": 11,
+        "textures": 8,
+        "programs": 5,
+        "owned": 49
+      }
+    },
+    {
+      "stage": "biome:begin",
+      "at": 1798.1999999284744,
+      "memory": {
+        "usedJSHeapSize": 91899386,
+        "totalJSHeapSize": 108586326
+      },
+      "resources": {
+        "geometries": 11,
+        "textures": 8,
+        "programs": 5,
+        "owned": 49
+      }
+    },
+    {
+      "stage": "biome:end",
+      "at": 2571.7999999523163,
+      "memory": {
+        "usedJSHeapSize": 96566786,
+        "totalJSHeapSize": 111218330
+      },
+      "resources": {
+        "geometries": 11,
+        "textures": 8,
+        "programs": 5,
+        "owned": 132
+      }
+    },
+    {
+      "stage": "village:begin",
+      "at": 2867.399999976158,
+      "memory": {
+        "usedJSHeapSize": 101547179,
+        "totalJSHeapSize": 115551015
+      },
+      "resources": {
+        "geometries": 11,
+        "textures": 8,
+        "programs": 5,
+        "owned": 135
+      }
+    },
+    {
+      "stage": "village:end",
+      "at": 3044.5,
+      "memory": {
+        "usedJSHeapSize": 107163869,
+        "totalJSHeapSize": 122399597
+      },
+      "resources": {
+        "geometries": 11,
+        "textures": 8,
+        "programs": 5,
+        "owned": 147
+      }
+    },
+    {
+      "stage": "warmAnimalModels:begin",
+      "at": 4056.399999976158,
+      "memory": {
+        "usedJSHeapSize": 126920118,
+        "totalJSHeapSize": 144643822
+      },
+      "resources": {
+        "geometries": 11,
+        "textures": 8,
+        "programs": 5,
+        "owned": 152
+      }
+    },
+    {
+      "stage": "warmAnimalModels:end",
+      "at": 5039.199999928474,
+      "memory": {
+        "usedJSHeapSize": 196827557,
+        "totalJSHeapSize": 207694185
+      },
+      "resources": {
+        "geometries": 11,
+        "textures": 8,
+        "programs": 5,
+        "owned": 177
+      }
+    },
+    {
+      "stage": "walls:begin",
+      "at": 6467.799999952316,
+      "memory": {
+        "usedJSHeapSize": 244078914,
+        "totalJSHeapSize": 273353634
+      },
+      "resources": {
+        "geometries": 11,
+        "textures": 8,
+        "programs": 5,
+        "owned": 177
+      }
+    },
+    {
+      "stage": "walls:end",
+      "at": 6979.899999976158,
+      "memory": {
+        "usedJSHeapSize": 250717426,
+        "totalJSHeapSize": 279001798
+      },
+      "resources": {
+        "geometries": 11,
+        "textures": 8,
+        "programs": 5,
+        "owned": 199
+      }
+    },
+    {
+      "stage": "warmAnimalModels:begin",
+      "at": 8296.399999976158,
+      "memory": {
+        "usedJSHeapSize": 257147977,
+        "totalJSHeapSize": 285221885
+      },
+      "resources": {
+        "geometries": 11,
+        "textures": 8,
+        "programs": 5,
+        "owned": 200
+      }
+    },
+    {
+      "stage": "warmAnimalModels:end",
+      "at": 8306.199999928474,
+      "memory": {
+        "usedJSHeapSize": 257147977,
+        "totalJSHeapSize": 285221885
+      },
+      "resources": {
+        "geometries": 11,
+        "textures": 8,
+        "programs": 5,
+        "owned": 200
+      }
+    },
+    {
+      "stage": "warmAnimalGpu:begin",
+      "at": 8347.600000023842,
+      "memory": {
+        "usedJSHeapSize": 257635320,
+        "totalJSHeapSize": 285242040
+      },
+      "resources": {
+        "geometries": 11,
+        "textures": 8,
+        "programs": 5,
+        "owned": 200
+      }
+    },
+    {
+      "stage": "compile-submit",
+      "at": 8385.100000023842,
+      "cpuMs": 16.100000023841858
+    },
+    {
+      "stage": "compile-submit",
+      "at": 8431.399999976158,
+      "cpuMs": 0.3999999761581421
+    },
+    {
+      "stage": "compile-submit",
+      "at": 8494.100000023842,
+      "cpuMs": 62.200000047683716
+    },
+    {
+      "stage": "compile-submit",
+      "at": 8621.299999952316,
+      "cpuMs": 56.5
+    },
+    {
+      "stage": "texture-upload",
+      "at": 8868.799999952316,
+      "cpuMs": 0.5,
+      "width": 1,
+      "height": 1
+    },
+    {
+      "stage": "texture-upload",
+      "at": 8876.799999952316,
+      "cpuMs": 0.10000002384185791,
+      "width": 256,
+      "height": 128
+    },
+    {
+      "stage": "texture-upload",
+      "at": 8890,
+      "cpuMs": 0.10000002384185791,
+      "width": 256,
+      "height": 128
+    },
+    {
+      "stage": "texture-upload",
+      "at": 8900,
+      "cpuMs": 0.10000002384185791,
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "stage": "texture-upload",
+      "at": 8924.5,
+      "cpuMs": 0.10000002384185791,
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "stage": "texture-upload",
+      "at": 8965.699999928474,
+      "cpuMs": 24.299999952316284,
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "stage": "texture-upload",
+      "at": 8973.199999928474,
+      "cpuMs": 6.099999904632568,
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "stage": "texture-upload",
+      "at": 8982.299999952316,
+      "cpuMs": 0.7999999523162842,
+      "width": 256,
+      "height": 256
+    },
+    {
+      "stage": "texture-upload",
+      "at": 8996.699999928474,
+      "cpuMs": 0.3999999761581421,
+      "width": 35,
+      "height": 35
+    },
+    {
+      "stage": "texture-upload",
+      "at": 9019,
+      "cpuMs": 6.100000023841858,
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "stage": "texture-upload",
+      "at": 9036.299999952316,
+      "cpuMs": 6.299999952316284,
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "stage": "texture-upload",
+      "at": 9051,
+      "cpuMs": 5.100000023841858,
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "stage": "texture-upload",
+      "at": 9091.799999952316,
+      "cpuMs": 29.299999952316284,
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "stage": "texture-upload",
+      "at": 9129.600000023842,
+      "cpuMs": 30.300000071525574,
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "stage": "texture-upload",
+      "at": 9158.799999952316,
+      "cpuMs": 28,
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "stage": "texture-upload",
+      "at": 9160.100000023842,
+      "cpuMs": 0.10000002384185791,
+      "width": 35,
+      "height": 35
+    },
+    {
+      "stage": "texture-upload",
+      "at": 9161.699999928474,
+      "cpuMs": 0.19999992847442627,
+      "width": 35,
+      "height": 35
+    },
+    {
+      "stage": "texture-upload",
+      "at": 9180.899999976158,
+      "cpuMs": 0.6000000238418579,
+      "width": 35,
+      "height": 35
+    },
+    {
+      "stage": "texture-upload",
+      "at": 9198.899999976158,
+      "cpuMs": 0.2999999523162842,
+      "width": 35,
+      "height": 35
+    },
+    {
+      "stage": "texture-upload",
+      "at": 9213.199999928474,
+      "cpuMs": 0.2999999523162842,
+      "width": 35,
+      "height": 35
+    },
+    {
+      "stage": "texture-upload",
+      "at": 9229.399999976158,
+      "cpuMs": 0.2999999523162842,
+      "width": 35,
+      "height": 35
+    },
+    {
+      "stage": "texture-upload",
+      "at": 9246.699999928474,
+      "cpuMs": 0.2999999523162842,
+      "width": 35,
+      "height": 35
+    },
+    {
+      "stage": "texture-upload",
+      "at": 9262.899999976158,
+      "cpuMs": 0.3999999761581421,
+      "width": 35,
+      "height": 35
+    },
+    {
+      "stage": "texture-upload",
+      "at": 9311.699999928474,
+      "cpuMs": 32.59999990463257,
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "stage": "texture-upload",
+      "at": 9351.899999976158,
+      "cpuMs": 33.700000047683716,
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "stage": "texture-upload",
+      "at": 9387.399999976158,
+      "cpuMs": 33.39999997615814,
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "stage": "texture-upload",
+      "at": 9423.199999928474,
+      "cpuMs": 33.799999952316284,
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "stage": "texture-upload",
+      "at": 9462.600000023842,
+      "cpuMs": 33.60000002384186,
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "stage": "texture-upload",
+      "at": 9495.799999952316,
+      "cpuMs": 31.899999976158142,
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "stage": "texture-upload",
+      "at": 9529.600000023842,
+      "cpuMs": 32.5,
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "stage": "texture-upload",
+      "at": 9570.399999976158,
+      "cpuMs": 34.5,
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "stage": "texture-upload",
+      "at": 9600.899999976158,
+      "cpuMs": 29.200000047683716,
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "stage": "texture-upload",
+      "at": 9640.399999976158,
+      "cpuMs": 32,
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "stage": "texture-upload",
+      "at": 9672,
+      "cpuMs": 30,
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "stage": "texture-upload",
+      "at": 9706.100000023842,
+      "cpuMs": 32.10000002384186,
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "stage": "texture-upload",
+      "at": 9744,
+      "cpuMs": 30.5,
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "stage": "texture-upload",
+      "at": 9782.100000023842,
+      "cpuMs": 37,
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "stage": "texture-upload",
+      "at": 9820.699999928474,
+      "cpuMs": 35.799999952316284,
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "stage": "texture-upload",
+      "at": 9861.899999976158,
+      "cpuMs": 36.200000047683716,
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "stage": "texture-upload",
+      "at": 9913.299999952316,
+      "cpuMs": 50,
+      "width": 4096,
+      "height": 2048
+    },
+    {
+      "stage": "texture-upload",
+      "at": 9915,
+      "cpuMs": 0,
+      "width": 1,
+      "height": 1
+    },
+    {
+      "stage": "texture-upload",
+      "at": 9930.799999952316,
+      "cpuMs": 0.3999999761581421,
+      "width": 35,
+      "height": 35
+    },
+    {
+      "stage": "world-long-render",
+      "at": 14777.5,
+      "cpuMs": 44.700000047683716,
+      "programsBefore": 43,
+      "programsAfter": 45,
+      "newPrograms": [
+        {
+          "id": 43,
+          "name": "",
+          "cacheKey": "depth,highp,srgb-linear,false,,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,3201,1,142336,srgb,onBeforeCompile() {\n  }",
+          "nearest": {
+            "id": 36,
+            "differences": [
+              {
+                "index": 29,
+                "before": "",
+                "after": "false"
+              },
+              {
+                "index": 48,
+                "before": "3200",
+                "after": "3201"
+              },
+              {
+                "index": 50,
+                "before": "141313",
+                "after": "142336"
+              },
+              {
+                "index": 52,
+                "before": "world-standard-depth-v1|toon",
+                "after": "onBeforeCompile() {\n  }"
+              }
+            ]
+          }
+        },
+        {
+          "id": 44,
+          "name": "",
+          "cacheKey": "depth,highp,srgb-linear,false,,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,3201,1,144416,srgb,onBeforeCompile() {\n  }",
+          "nearest": {
+            "id": 36,
+            "differences": [
+              {
+                "index": 29,
+                "before": "",
+                "after": "false"
+              },
+              {
+                "index": 48,
+                "before": "3200",
+                "after": "3201"
+              },
+              {
+                "index": 50,
+                "before": "141313",
+                "after": "144416"
+              },
+              {
+                "index": 52,
+                "before": "world-standard-depth-v1|toon",
+                "after": "onBeforeCompile() {\n  }"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "stage": "warmAnimalGpu:end",
+      "at": 14800.799999952316,
+      "memory": {
+        "usedJSHeapSize": 282823694,
+        "totalJSHeapSize": 318801210
+      },
+      "resources": {
+        "geometries": 153,
+        "textures": 55,
+        "programs": 45,
+        "owned": 200
+      }
+    },
+    {
+      "stage": "texture-upload",
+      "at": 17714.600000023842,
+      "cpuMs": 0.2999999523162842,
+      "width": 217,
+      "height": 217
+    },
+    {
+      "stage": "compile-submit",
+      "at": 17729.299999952316,
+      "cpuMs": 2.399999976158142
+    },
+    {
+      "stage": "texture-upload",
+      "at": 17835.100000023842,
+      "cpuMs": 25.40000009536743,
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "stage": "texture-upload",
+      "at": 17863.299999952316,
+      "cpuMs": 25.100000023841858,
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "stage": "compile-submit",
+      "at": 17867.299999952316,
+      "cpuMs": 2.5
+    },
+    {
+      "stage": "texture-upload",
+      "at": 18320.899999976158,
+      "cpuMs": 27.200000047683716,
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "stage": "far-prepare-submission",
+      "at": 18321.100000023842,
+      "cpuMs": 27.600000023841858
+    },
+    {
+      "stage": "texture-upload",
+      "at": 18346.699999928474,
+      "cpuMs": 24.59999990463257,
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "stage": "compile-submit",
+      "at": 18350.399999976158,
+      "cpuMs": 0.8999999761581421
+    },
+    {
+      "stage": "texture-upload",
+      "at": 18693.199999928474,
+      "cpuMs": 3.1999999284744263,
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "stage": "texture-upload",
+      "at": 18697.600000023842,
+      "cpuMs": 2.9000000953674316,
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "stage": "compile-submit",
+      "at": 18708.5,
+      "cpuMs": 1.2000000476837158
+    },
+    {
+      "stage": "texture-upload",
+      "at": 19104.699999928474,
+      "cpuMs": 28.399999976158142,
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "stage": "far-prepare-submission",
+      "at": 19104.899999976158,
+      "cpuMs": 28.699999928474426
+    },
+    {
+      "stage": "texture-upload",
+      "at": 19131.899999976158,
+      "cpuMs": 24.800000071525574,
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "stage": "compile-submit",
+      "at": 19134.699999928474,
+      "cpuMs": 0.7999999523162842
+    },
+    {
+      "stage": "world-load",
+      "at": 19223,
+      "memory": {
+        "usedJSHeapSize": 300761665,
+        "totalJSHeapSize": 329167061
+      },
+      "resources": {
+        "geometries": 159,
+        "textures": 65,
+        "programs": 51,
+        "owned": 200
+      }
+    },
+    {
+      "stage": "texture-upload",
+      "at": 19308.899999976158,
+      "cpuMs": 0.10000002384185791,
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "stage": "texture-upload",
+      "at": 19313.399999976158,
+      "cpuMs": 0,
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "stage": "texture-upload",
+      "at": 19315.5,
+      "cpuMs": 0,
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "stage": "far-update",
+      "at": 19318.100000023842,
+      "cpuMs": 37.800000071525574
+    },
+    {
+      "stage": "texture-upload",
+      "at": 19329,
+      "cpuMs": 0,
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "stage": "texture-upload",
+      "at": 19329.100000023842,
+      "cpuMs": 0,
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "stage": "asset-groups-update",
+      "at": 19346.399999976158,
+      "cpuMs": 17.100000023841858
+    },
+    {
+      "stage": "compile-submit",
+      "at": 19348.799999952316,
+      "cpuMs": 1.1999999284744263
+    },
+    {
+      "stage": "world-long-render",
+      "at": 19399.199999928474,
+      "cpuMs": 50,
+      "programsBefore": 51,
+      "programsAfter": 53,
+      "newPrograms": [
+        {
+          "id": 51,
+          "name": "",
+          "cacheKey": "depth,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,3201,3,142336,srgb,onBeforeCompile() {\n  }",
+          "nearest": {
+            "id": 43,
+            "differences": [
+              {
+                "index": 5,
+                "before": "uv",
+                "after": "false"
+              },
+              {
+                "index": 49,
+                "before": "1",
+                "after": "3"
+              }
+            ]
+          }
+        },
+        {
+          "id": 52,
+          "name": "",
+          "cacheKey": "17,18,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,136193,srgb,onBeforeCompile() {\n  }",
+          "nearest": null
+        }
+      ]
+    },
+    {
+      "stage": "texture-upload",
+      "at": 19401.600000023842,
+      "cpuMs": 0,
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "stage": "far-ready",
+      "at": 19431.5,
+      "memory": {
+        "usedJSHeapSize": 280454083,
+        "totalJSHeapSize": 333537179
+      },
+      "resources": {
+        "geometries": 217,
+        "textures": 66,
+        "programs": 53,
+        "owned": 200
+      }
+    },
+    {
+      "stage": "compile-submit",
+      "at": 19471.5,
+      "cpuMs": 2.600000023841858
+    },
+    {
+      "stage": "compile-submit",
+      "at": 19564.699999928474,
+      "cpuMs": 0.5999999046325684
+    },
+    {
+      "stage": "compile-submit",
+      "at": 19607.799999952316,
+      "cpuMs": 0.6999999284744263
+    },
+    {
+      "stage": "world-long-render",
+      "at": 19834.699999928474,
+      "cpuMs": 226.69999992847443,
+      "programsBefore": 54,
+      "programsAfter": 65,
+      "newPrograms": [
+        {
+          "id": 54,
+          "name": "",
+          "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,uv,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,66691,134146,srgb,native-asset-surface-v4|map-bias=0|native-obstruction|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|illustrated-4.1.6|MeshStandardMaterial|resident",
+          "nearest": {
+            "id": 53,
+            "differences": [
+              {
+                "index": 54,
+                "before": "native-asset-surface-v4|map-bias=0.65|native-obstruction|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|illustrated-4.1.6|MeshStandardMaterial|resident",
+                "after": "native-asset-surface-v4|map-bias=0|native-obstruction|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|illustrated-4.1.6|MeshStandardMaterial|resident"
+              }
+            ]
+          }
+        },
+        {
+          "id": 55,
+          "name": "",
+          "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,uv,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,66691,134146,srgb,native-asset-surface-v4|map-bias=0|native-chunk-clip|native-obstruction|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|illustrated-4.1.6|MeshStandardMaterial|resident",
+          "nearest": {
+            "id": 53,
+            "differences": [
+              {
+                "index": 54,
+                "before": "native-asset-surface-v4|map-bias=0.65|native-obstruction|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|illustrated-4.1.6|MeshStandardMaterial|resident",
+                "after": "native-asset-surface-v4|map-bias=0|native-chunk-clip|native-obstruction|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|illustrated-4.1.6|MeshStandardMaterial|resident"
+              }
+            ]
+          }
+        },
+        {
+          "id": 56,
+          "name": "",
+          "cacheKey": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,134146,srgb,african-water-relative-v4.1.4|hdr-endpoints",
+          "nearest": {
+            "id": 11,
+            "differences": [
+              {
+                "index": 31,
+                "before": "",
+                "after": "false"
+              },
+              {
+                "index": 52,
+                "before": "134147",
+                "after": "134146"
+              }
+            ]
+          }
+        },
+        {
+          "id": 57,
+          "name": "",
+          "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,134146,srgb,(shader,renderer)=>{compile(shader,renderer);patchNativeShadow(shader,this.shadowUniforms,'vToonWorld');}|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|illustrated-4.1.6|MeshStandardMaterial|resident",
+          "nearest": {
+            "id": 21,
+            "differences": [
+              {
+                "index": 31,
+                "before": "",
+                "after": "false"
+              },
+              {
+                "index": 52,
+                "before": "134147",
+                "after": "134146"
+              }
+            ]
+          }
+        },
+        {
+          "id": 58,
+          "name": "",
+          "cacheKey": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,2049,132098,srgb,(shader,renderer)=>{compile(shader,renderer);patchNativeShadow(shader,this.shadowUniforms,'vToonWorld');}|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|biome-ground-4.1.10.3|toon-4.1.4|MeshStandardMaterial|resident",
+          "nearest": {
+            "id": 17,
+            "differences": [
+              {
+                "index": 31,
+                "before": "",
+                "after": "false"
+              },
+              {
+                "index": 52,
+                "before": "132099",
+                "after": "132098"
+              }
+            ]
+          }
+        },
+        {
+          "id": 59,
+          "name": "",
+          "cacheKey": "12,13,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,134146,srgb,onBeforeCompile() {\n  }",
+          "nearest": {
+            "id": 46,
+            "differences": [
+              {
+                "index": 30,
+                "before": "",
+                "after": "false"
+              },
+              {
+                "index": 51,
+                "before": "134147",
+                "after": "134146"
+              }
+            ]
+          }
+        },
+        {
+          "id": 60,
+          "name": "",
+          "cacheKey": "basic,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,2049,132098,srgb,far-ground-native-water-mask-v1",
+          "nearest": {
+            "id": 47,
+            "differences": [
+              {
+                "index": 29,
+                "before": "",
+                "after": "false"
+              },
+              {
+                "index": 50,
+                "before": "132099",
+                "after": "132098"
+              }
+            ]
+          }
+        },
+        {
+          "id": 61,
+          "name": "",
+          "cacheKey": "basic,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,2049,134146,srgb,far-ground-native-water-mask-v1:seam-v2",
+          "nearest": {
+            "id": 45,
+            "differences": [
+              {
+                "index": 29,
+                "before": "",
+                "after": "false"
+              },
+              {
+                "index": 50,
+                "before": "134147",
+                "after": "134146"
+              }
+            ]
+          }
+        },
+        {
+          "id": 62,
+          "name": "",
+          "cacheKey": "14,13,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,134146,srgb,onBeforeCompile() {\n  }",
+          "nearest": {
+            "id": 48,
+            "differences": [
+              {
+                "index": 30,
+                "before": "",
+                "after": "false"
+              },
+              {
+                "index": 51,
+                "before": "134147",
+                "after": "134146"
+              }
+            ]
+          }
+        },
+        {
+          "id": 63,
+          "name": "",
+          "cacheKey": "15,13,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,134146,srgb,onBeforeCompile() {\n  }",
+          "nearest": {
+            "id": 49,
+            "differences": [
+              {
+                "index": 30,
+                "before": "",
+                "after": "false"
+              },
+              {
+                "index": 51,
+                "before": "134147",
+                "after": "134146"
+              }
+            ]
+          }
+        },
+        {
+          "id": 64,
+          "name": "",
+          "cacheKey": "16,13,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,134146,srgb,onBeforeCompile() {\n  }",
+          "nearest": {
+            "id": 50,
+            "differences": [
+              {
+                "index": 30,
+                "before": "",
+                "after": "false"
+              },
+              {
+                "index": 51,
+                "before": "134147",
+                "after": "134146"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "stage": "compile-submit",
+      "at": 19860.899999976158,
+      "cpuMs": 0.3999999761581421
+    },
+    {
+      "stage": "reveal-prepared",
+      "at": 19920.399999976158,
+      "memory": {
+        "usedJSHeapSize": 304216486,
+        "totalJSHeapSize": 333665402
+      },
+      "resources": {
+        "geometries": 217,
+        "textures": 66,
+        "programs": 65,
+        "owned": 200
+      }
+    },
+    {
+      "stage": "visible-ready",
+      "at": 19921,
+      "memory": {
+        "usedJSHeapSize": 304216486,
+        "totalJSHeapSize": 333665402
+      },
+      "resources": {
+        "geometries": 217,
+        "textures": 66,
+        "programs": 65,
+        "owned": 200
+      }
+    },
+    {
+      "stage": "compile-submit",
+      "at": 19923.299999952316,
+      "cpuMs": 0.6000000238418579
+    },
+    {
+      "stage": "compile-submit",
+      "at": 19989.5,
+      "cpuMs": 1.3000000715255737
+    },
+    {
+      "stage": "compile-submit",
+      "at": 20038.799999952316,
+      "cpuMs": 1.399999976158142
+    },
+    {
+      "stage": "compile-submit",
+      "at": 20087.699999928474,
+      "cpuMs": 0.5
+    },
+    {
+      "stage": "compile-submit",
+      "at": 20138.299999952316,
+      "cpuMs": 1.1999999284744263
+    },
+    {
+      "stage": "compile-submit",
+      "at": 20204.600000023842,
+      "cpuMs": 0.40000009536743164
+    },
+    {
+      "stage": "native-render",
+      "at": 21090.199999928474,
+      "cpuMs": 22.699999928474426
+    },
+    {
+      "stage": "compile-submit",
+      "at": 21561.899999976158,
+      "cpuMs": 0.6000000238418579
+    },
+    {
+      "stage": "compile-submit",
+      "at": 21563,
+      "cpuMs": 0.8999999761581421
+    },
+    {
+      "stage": "compile-submit",
+      "at": 21564.199999928474,
+      "cpuMs": 1
+    },
+    {
+      "stage": "compile-submit",
+      "at": 21565.299999952316,
+      "cpuMs": 0.7999999523162842
+    },
+    {
+      "stage": "compile-submit",
+      "at": 21859.199999928474,
+      "cpuMs": 0.3999999761581421
+    },
+    {
+      "stage": "compile-submit",
+      "at": 21859.600000023842,
+      "cpuMs": 0.20000004768371582
+    },
+    {
+      "stage": "compile-submit",
+      "at": 21860,
+      "cpuMs": 0.20000004768371582
+    },
+    {
+      "stage": "compile-submit",
+      "at": 21860.5,
+      "cpuMs": 0.30000007152557373
+    },
+    {
+      "stage": "compile-submit",
+      "at": 21894.299999952316,
+      "cpuMs": 0.6000000238418579
+    },
+    {
+      "stage": "compile-submit",
+      "at": 21895.699999928474,
+      "cpuMs": 1
+    },
+    {
+      "stage": "compile-submit",
+      "at": 21896.699999928474,
+      "cpuMs": 0.5999999046325684
+    },
+    {
+      "stage": "compile-submit",
+      "at": 21897.699999928474,
+      "cpuMs": 0.5
+    },
+    {
+      "stage": "compile-submit",
+      "at": 21955.399999976158,
+      "cpuMs": 0.7999999523162842
+    },
+    {
+      "stage": "compile-submit",
+      "at": 22025.100000023842,
+      "cpuMs": 0.9000000953674316
+    },
+    {
+      "stage": "compile-submit",
+      "at": 22026.600000023842,
+      "cpuMs": 0.9000000953674316
+    },
+    {
+      "stage": "compile-submit",
+      "at": 23392.600000023842,
+      "cpuMs": 1.100000023841858
+    },
+    {
+      "stage": "controls-ready",
+      "at": 23996.5,
+      "memory": {
+        "usedJSHeapSize": 289437762,
+        "totalJSHeapSize": 341344118
+      },
+      "resources": {
+        "geometries": 216,
+        "textures": 66,
+        "programs": 61,
+        "owned": 200
+      }
+    }
+  ],
+  "frames": [
+    32.289999999999964,
+    32.710000000000036,
+    16.59999999999991,
+    16.600000000000136,
+    16.700000000000045,
+    16.899999999999864,
+    16.299999999999955,
+    16.700000000000045,
+    16.700000000000045,
+    16.700000000000045,
+    16.399999999999864,
+    16.90000000000009,
+    16.40000000000009,
+    16.59999999999991,
+    16.700000000000045,
+    16.700000000000045,
+    16.399999999999864,
+    16.700000000000045,
+    16.700000000000045,
+    16.899999999999864,
+    16.40000000000009,
+    16.5,
+    16.799999999999955,
+    16.600000000000136,
+    49.799999999999955,
+    16.700000000000045,
+    16.5,
+    16.699999999999818,
+    16.600000000000136,
+    16.59999999999991,
+    16.600000000000136,
+    16.699999999999818,
+    16.700000000000045,
+    16.600000000000136,
+    16.699999999999818,
+    16.5,
+    16.600000000000136,
+    16.700000000000045,
+    16.59999999999991,
+    16.700000000000045,
+    16.59999999999991,
+    16.5,
+    16.799999999999955,
+    16.5,
+    16.700000000000045,
+    16.600000000000136,
+    16.59999999999991,
+    16.59999999999991,
+    16.800000000000182,
+    16.5,
+    16.59999999999991,
+    16.700000000000045,
+    16.59999999999991,
+    16.600000000000136,
+    16.59999999999991,
+    16.59999999999991,
+    16.700000000000273,
+    16.59999999999991,
+    16.59999999999991,
+    16.699999999999818,
+    16.600000000000364,
+    66.59999999999991,
+    16.59999999999991,
+    16.59999999999991,
+    16.59999999999991,
+    16.600000000000364,
+    16.699999999999818,
+    16.800000000000182,
+    16.59999999999991,
+    16.5,
+    16.699999999999818,
+    16.59999999999991,
+    16.700000000000273,
+    16.5,
+    16.699999999999818,
+    16.700000000000273,
+    16.59999999999991,
+    16.59999999999991,
+    16.699999999999818,
+    16.800000000000182,
+    16.300000000000182,
+    16.59999999999991,
+    16.90000000000009,
+    16.399999999999636,
+    16.90000000000009,
+    16.90000000000009,
+    16.09999999999991,
+    16.700000000000273,
+    17,
+    16.199999999999818,
+    16.699999999999818,
+    16.700000000000273,
+    16.5,
+    16.59999999999991,
+    16.59999999999991,
+    16.59999999999991,
+    16.700000000000273,
+    16.699999999999818,
+    16.59999999999991,
+    16.5,
+    16.800000000000182,
+    16.5,
+    16.59999999999991,
+    16.59999999999991,
+    16.800000000000182,
+    16.59999999999991,
+    16.59999999999991,
+    16.600000000000364,
+    16.699999999999818,
+    16.59999999999991,
+    16.59999999999991,
+    16.600000000000364,
+    16.799999999999727,
+    16.5,
+    16.59999999999991,
+    16.700000000000273,
+    16.59999999999991,
+    16.699999999999818,
+    16.5,
+    16.700000000000273,
+    16.59999999999991,
+    16.699999999999818,
+    16.5,
+    33.40000000000009,
+    16.59999999999991,
+    16.600000000000364,
+    16.699999999999818,
+    16.59999999999991,
+    16.700000000000273,
+    16.5,
+    16.59999999999991,
+    16.59999999999991,
+    16.800000000000182,
+    16.399999999999636,
+    16.800000000000182,
+    16.59999999999991,
+    16.700000000000273,
+    16.5,
+    16.799999999999727,
+    16.5,
+    16.59999999999991,
+    16.700000000000273,
+    16.59999999999991,
+    16.5,
+    16.800000000000182,
+    16.5,
+    16.59999999999991,
+    16.699999999999818,
+    16.5,
+    16.700000000000273,
+    16.699999999999818,
+    16.699999999999818,
+    16.700000000000273,
+    16.699999999999818,
+    16.300000000000182,
+    16.799999999999727,
+    16.700000000000273,
+    16.5,
+    17.299999999999727,
+    16,
+    16.5,
+    16.700000000000273,
+    16.59999999999991,
+    16.699999999999818,
+    16.700000000000273,
+    16.5,
+    16.799999999999727,
+    16.600000000000364,
+    16.399999999999636,
+    16.800000000000182,
+    16.59999999999991,
+    16.59999999999991,
+    16.600000000000364,
+    17.199999999999818,
+    16,
+    16.600000000000364,
+    16.699999999999818,
+    16.699999999999818,
+    16.600000000000364,
+    16.699999999999818,
+    16.5,
+    16.599999999999454,
+    16.600000000000364,
+    16.800000000000182,
+    16.5,
+    16.699999999999818,
+    16.600000000000364,
+    16.699999999999818,
+    16.5,
+    16.699999999999818,
+    16.600000000000364,
+    16.599999999999454,
+    16.600000000000364,
+    16.699999999999818,
+    16.800000000000182,
+    16.399999999999636,
+    16.699999999999818,
+    16.600000000000364,
+    16.699999999999818,
+    16.699999999999818,
+    16.5,
+    16.600000000000364,
+    16.699999999999818,
+    16.600000000000364,
+    16.599999999999454,
+    16.700000000000728,
+    16.5,
+    16.699999999999818,
+    16.599999999999454,
+    16.600000000000364,
+    16.699999999999818,
+    16.699999999999818,
+    16.5,
+    16.700000000000728,
+    16.599999999999454,
+    16.800000000000182,
+    16.5,
+    16.600000000000364,
+    16.599999999999454,
+    16.600000000000364,
+    16.699999999999818,
+    16.699999999999818,
+    16.5,
+    16.800000000000182,
+    16.600000000000364,
+    16.5,
+    16.599999999999454,
+    17,
+    16.300000000000182,
+    16.600000000000364,
+    33.19999999999982,
+    16.800000000000182,
+    16.5,
+    16.699999999999818,
+    16.599999999999454,
+    16.600000000000364,
+    16.800000000000182,
+    16.5,
+    16.599999999999454,
+    16.600000000000364,
+    16.600000000000364,
+    16.699999999999818,
+    16.599999999999454,
+    16.600000000000364,
+    16.699999999999818,
+    16.699999999999818,
+    16.5,
+    16.800000000000182,
+    16.5,
+    16.600000000000364,
+    16.699999999999818,
+    16.5,
+    16.699999999999818,
+    16.699999999999818,
+    16.600000000000364,
+    17,
+    32.80000000000018,
+    83.19999999999982,
+    49.80000000000018,
+    16.699999999999818,
+    16.800000000000182,
+    16.5,
+    16.599999999999454,
+    16.600000000000364,
+    16.600000000000364,
+    16.699999999999818,
+    16.599999999999454,
+    16.600000000000364,
+    33.30000000000018,
+    17,
+    16.199999999999818,
+    18.5,
+    14.899999999999636,
+    66.30000000000018,
+    116.5,
+    33.19999999999982,
+    16.700000000000728,
+    16.699999999999818,
+    18.699999999999818,
+    14.600000000000364,
+    16.5,
+    16.699999999999818,
+    17,
+    16.199999999999818,
+    16.5,
+    16.699999999999818,
+    16.600000000000364,
+    16.699999999999818,
+    16.699999999999818,
+    16.5,
+    16.699999999999818,
+    16.600000000000364,
+    16.600000000000364,
+    16.799999999999272,
+    16.5,
+    16.600000000000364,
+    16.600000000000364,
+    16.699999999999818,
+    16.699999999999818,
+    16.699999999999818,
+    16.5,
+    16.699999999999818,
+    16.600000000000364,
+    16.699999999999818,
+    16.5,
+    16.600000000000364,
+    16.699999999999818,
+    16.5,
+    16.800000000000182,
+    16.5,
+    16.699999999999818,
+    16.800000000000182,
+    16.599999999999454,
+    16.600000000000364,
+    16.600000000000364,
+    16.5,
+    16.699999999999818,
+    16.699999999999818,
+    16.5,
+    16.5,
+    16.899999999999636,
+    16.5,
+    16.600000000000364,
+    16.899999999999636,
+    16.400000000000546,
+    16.599999999999454,
+    17.300000000000182,
+    15.900000000000546,
+    16.699999999999818,
+    17.099999999999454,
+    16.200000000000728,
+    16.699999999999818,
+    16.5,
+    16.599999999999454,
+    16.700000000000728,
+    16.599999999999454,
+    16.800000000000182,
+    16.5,
+    16.699999999999818,
+    16.5,
+    16.800000000000182,
+    16.5,
+    16.600000000000364,
+    16.599999999999454,
+    16.699999999999818,
+    16.600000000000364,
+    16.699999999999818,
+    16.5,
+    16.600000000000364,
+    16.699999999999818,
+    16.699999999999818,
+    16.5,
+    16.600000000000364,
+    16.800000000000182,
+    16.5,
+    16.699999999999818,
+    16.5,
+    16.599999999999454,
+    16.800000000000182,
+    16.600000000000364,
+    16.5,
+    16.699999999999818,
+    16.699999999999818,
+    16.600000000000364,
+    16.699999999999818,
+    16.600000000000364,
+    16.599999999999454,
+    16.600000000000364,
+    16.699999999999818,
+    16.5,
+    16.699999999999818,
+    16.699999999999818,
+    16.5,
+    16.700000000000728,
+    16.599999999999454,
+    16.699999999999818,
+    16.700000000000728,
+    16.399999999999636,
+    16.699999999999818,
+    16.600000000000364,
+    16.699999999999818,
+    16.600000000000364,
+    16.5,
+    16.799999999999272,
+    16.600000000000364,
+    16.600000000000364,
+    16.599999999999454,
+    16.699999999999818,
+    16.5,
+    16.700000000000728,
+    16.699999999999818,
+    16.5,
+    16.699999999999818,
+    16.600000000000364,
+    16.599999999999454,
+    16.699999999999818,
+    16.700000000000728,
+    16.599999999999454,
+    16.600000000000364,
+    16.699999999999818,
+    16.600000000000364,
+    16.599999999999454,
+    16.699999999999818,
+    16.600000000000364,
+    16.5,
+    16.700000000000728,
+    16.599999999998545,
+    16.700000000000728,
+    16.700000000000728,
+    16.599999999998545,
+    16.600000000000364,
+    16.5,
+    16.899999999999636,
+    16.400000000001455,
+    16.599999999998545,
+    17.400000000001455,
+    15.899999999999636,
+    16.600000000000364,
+    16.599999999998545,
+    16.700000000000728,
+    16.600000000000364,
+    16.69999999999891,
+    16.700000000000728,
+    16.5,
+    16.700000000000728,
+    16.5,
+    16.69999999999891,
+    16.700000000000728,
+    16.600000000000364,
+    16.5,
+    16.799999999999272,
+    16.600000000000364,
+    16.600000000000364,
+    16.599999999998545,
+    16.700000000000728,
+    16.600000000000364,
+    16.600000000000364,
+    16.599999999998545,
+    16.600000000000364,
+    16.600000000000364,
+    16.700000000000728,
+    16.599999999998545,
+    16.600000000000364,
+    16.600000000000364,
+    16.799999999999272,
+    16.5,
+    16.600000000000364,
+    16.600000000000364,
+    16.700000000000728,
+    16.69999999999891,
+    16.5,
+    16.700000000000728,
+    16.5,
+    16.69999999999891,
+    16.700000000000728,
+    16.600000000000364,
+    16.69999999999891,
+    16.600000000000364,
+    16.600000000000364,
+    16.600000000000364,
+    16.600000000000364,
+    16.69999999999891,
+    16.5,
+    16.80000000000109,
+    16.5,
+    16.599999999998545,
+    16.700000000000728,
+    16.600000000000364,
+    16.69999999999891,
+    16.600000000000364,
+    16.700000000000728,
+    16.5,
+    16.69999999999891,
+    16.700000000000728,
+    16.600000000000364,
+    33.19999999999891,
+    16.600000000000364,
+    16.600000000000364,
+    16.700000000000728,
+    66.39999999999964,
+    16.69999999999891,
+    33.100000000000364,
+    16.80000000000109,
+    49.899999999999636,
+    16.5,
+    16.69999999999891,
+    16.600000000000364,
+    16.600000000000364,
+    16.899999999999636,
+    16.399999999999636,
+    16.80000000000109,
+    16.69999999999891,
+    16.5,
+    16.5,
+    17,
+    16.400000000001455,
+    16.599999999998545,
+    17,
+    16.30000000000109,
+    16.600000000000364,
+    16.69999999999891,
+    16.5,
+    16.700000000000728,
+    33.100000000000364,
+    16.799999999999272,
+    16.5,
+    16.700000000000728,
+    16.799999999999272,
+    16.399999999999636,
+    16.700000000000728,
+    16.600000000000364,
+    49.79999999999927,
+    16.700000000000728,
+    16.5,
+    17,
+    16.399999999999636,
+    16.69999999999891,
+    16.600000000000364,
+    16.600000000000364,
+    16.799999999999272,
+    16.400000000001455,
+    33.29999999999927,
+    33.20000000000073,
+    33.29999999999927,
+    33.20000000000073,
+    50,
+    33.19999999999891,
+    33.20000000000073,
+    33.29999999999927,
+    33.20000000000073,
+    33.399999999999636,
+    33.29999999999927,
+    33.100000000000364,
+    50.100000000000364,
+    33.600000000000364,
+    32.79999999999927,
+    49.80000000000109,
+    49.899999999999636,
+    16.69999999999891,
+    16.5,
+    16.700000000000728,
+    16.700000000000728,
+    16.899999999999636,
+    16.399999999999636,
+    16.5,
+    16.600000000000364,
+    16.69999999999891,
+    16.600000000000364,
+    16.700000000000728,
+    16.5,
+    16.799999999999272,
+    16.5,
+    16.700000000000728,
+    16.69999999999891,
+    16.600000000000364,
+    16.5,
+    16.80000000000109,
+    33.099999999998545,
+    17,
+    16.30000000000109,
+    16.600000000000364,
+    16.799999999999272,
+    16.399999999999636,
+    16.700000000000728,
+    17.399999999999636,
+    15.799999999999272,
+    16.600000000000364,
+    16.700000000000728,
+    16.600000000000364,
+    16.69999999999891,
+    16.600000000000364,
+    16.700000000000728,
+    16.599999999998545,
+    16.600000000000364,
+    16.600000000000364,
+    20.299999999999272,
+    12.900000000001455,
+    16.69999999999891,
+    16.5,
+    16.80000000000109,
+    16.599999999998545,
+    16.5,
+    16.80000000000109,
+    16.600000000000364,
+    16.5,
+    16.69999999999891,
+    16.700000000000728,
+    16.600000000000364,
+    16.599999999998545,
+    16.700000000000728,
+    16.700000000000728,
+    16.5,
+    16.599999999998545,
+    16.600000000000364,
+    16.700000000000728,
+    16.600000000000364,
+    16.599999999998545,
+    16.700000000000728,
+    16.600000000000364,
+    16.69999999999891,
+    16.5,
+    16.600000000000364,
+    16.600000000000364,
+    16.700000000000728,
+    16.599999999998545,
+    17.200000000000728,
+    16.100000000000364,
+    17.69999999999891,
+    18.600000000000364,
+    13.5,
+    16.700000000000728,
+    16.600000000000364,
+    16.599999999998545,
+    16.80000000000109,
+    16.5,
+    16.600000000000364,
+    16.69999999999891,
+    16.600000000000364,
+    16.600000000000364,
+    16.69999999999891,
+    16.700000000000728,
+    16.5,
+    16.600000000000364,
+    16.69999999999891,
+    16.5,
+    16.80000000000109,
+    16.5,
+    16.69999999999891,
+    16.600000000000364,
+    18,
+    15.300000000001091,
+    16.599999999998545,
+    16.700000000000728,
+    16.5,
+    16.700000000000728,
+    17,
+    16.19999999999891,
+    16.80000000000109,
+    16.599999999998545,
+    16.600000000000364,
+    16.600000000000364,
+    16.700000000000728,
+    16.5,
+    16.69999999999891,
+    17,
+    16.30000000000109,
+    16.599999999998545,
+    17.200000000000728,
+    16,
+    16.600000000000364,
+    16.69999999999891,
+    16.5,
+    16.600000000000364,
+    16.700000000000728,
+    16.799999999999272,
+    33.100000000000364,
+    16.700000000000728,
+    16.5,
+    16.799999999999272,
+    16.600000000000364,
+    16.600000000000364,
+    16.69999999999891,
+    16.600000000000364,
+    16.600000000000364,
+    16.5,
+    16.69999999999891,
+    17.200000000000728,
+    16.200000000000728,
+    16.5,
+    16.5,
+    16.799999999999272,
+    33.20000000000073,
+    16.69999999999891,
+    16.700000000000728,
+    16.5,
+    16.600000000000364,
+    16.69999999999891,
+    16.5,
+    16.700000000000728,
+    16.69999999999891,
+    16.600000000000364,
+    16.600000000000364,
+    16.600000000000364,
+    16.69999999999891,
+    16.600000000000364,
+    16.5,
+    16.80000000000109,
+    16.599999999998545,
+    16.600000000000364,
+    16.600000000000364,
+    16.700000000000728,
+    16.599999999998545,
+    16.700000000000728,
+    16.600000000000364,
+    16.600000000000364,
+    16.599999999998545,
+    16.600000000000364,
+    16.80000000000109,
+    16.5,
+    16.599999999998545,
+    16.700000000000728,
+    16.5,
+    16.799999999999272,
+    16.600000000000364,
+    16.600000000000364,
+    16.5,
+    16.799999999999272,
+    16.600000000000364,
+    16.600000000000364,
+    16.600000000000364,
+    16.69999999999891,
+    16.600000000000364,
+    16.600000000000364,
+    16.600000000000364,
+    16.799999999999272,
+    16.5,
+    16.700000000000728,
+    16.399999999999636,
+    16.700000000000728,
+    16.69999999999891,
+    16.700000000000728,
+    16.5,
+    16.600000000000364,
+    16.799999999999272,
+    16.600000000000364,
+    16.69999999999891,
+    16.400000000001455,
+    16.69999999999891,
+    17,
+    16.200000000000728,
+    16.69999999999891,
+    16.900000000001455,
+    16.299999999999272,
+    16.700000000000728,
+    16.69999999999891,
+    16.5,
+    16.700000000000728,
+    16.69999999999891,
+    16.5,
+    16.700000000000728,
+    16.600000000000364,
+    16.600000000000364,
+    16.599999999998545,
+    33.30000000000109,
+    16.69999999999891,
+    16.600000000000364,
+    16.600000000000364,
+    16.700000000000728,
+    16.5,
+    16.799999999999272,
+    17.799999999999272,
+    15.300000000001091,
+    16.600000000000364,
+    16.599999999998545,
+    33.400000000001455,
+    16.599999999998545,
+    16.5,
+    16.700000000000728,
+    16.600000000000364,
+    16.799999999999272,
+    16.5,
+    16.600000000000364,
+    16.600000000000364,
+    16.799999999999272,
+    16.399999999999636,
+    16.700000000000728,
+    16.600000000000364,
+    16.69999999999891,
+    16.600000000000364,
+    16.700000000000728,
+    16.600000000000364,
+    16.69999999999891,
+    16.5,
+    16.600000000000364,
+    16.799999999999272,
+    16.5,
+    16.600000000000364,
+    16.700000000000728,
+    16.600000000000364,
+    16.599999999998545,
+    16.700000000000728,
+    16.5,
+    16.700000000000728,
+    16.599999999998545,
+    16.600000000000364,
+    16.700000000000728,
+    16.600000000000364,
+    16.69999999999891,
+    16.80000000000109,
+    16.399999999999636,
+    16.600000000000364,
+    16.69999999999891,
+    16.600000000000364,
+    16.600000000000364,
+    16.600000000000364,
+    16.599999999998545,
+    16.700000000000728,
+    16.600000000000364,
+    16.600000000000364,
+    16.69999999999891,
+    16.600000000000364,
+    16.600000000000364,
+    16.600000000000364,
+    16.599999999998545,
+    16.700000000000728,
+    16.700000000000728,
+    16.69999999999891,
+    16.5,
+    16.600000000000364,
+    16.600000000000364,
+    16.799999999999272,
+    16.5,
+    16.80000000000109,
+    16.5,
+    16.599999999998545,
+    16.900000000001455,
+    16.399999999999636,
+    16.5,
+    16.69999999999891,
+    16.700000000000728,
+    16.600000000000364,
+    16.600000000000364,
+    16.599999999998545,
+    49.900000000001455,
+    16.69999999999891,
+    16.5,
+    16.80000000000109,
+    16.5,
+    16.599999999998545,
+    16.700000000000728,
+    16.600000000000364,
+    16.600000000000364,
+    16.599999999998545,
+    16.600000000000364,
+    16.700000000000728,
+    16.69999999999891,
+    16.600000000000364,
+    16.600000000000364,
+    16.600000000000364,
+    16.69999999999891,
+    16.600000000000364,
+    16.80000000000109,
+    16.399999999999636,
+    16.69999999999891,
+    16.600000000000364,
+    16.700000000000728,
+    16.69999999999891,
+    16.600000000000364,
+    16.600000000000364,
+    16.600000000000364,
+    16.600000000000364,
+    16.599999999998545,
+    16.600000000000364,
+    16.700000000000728,
+    16.5,
+    16.69999999999891,
+    16.700000000000728,
+    16.5,
+    16.700000000000728,
+    16.599999999998545,
+    16.700000000000728,
+    16.599999999998545,
+    16.600000000002183,
+    16.700000000000728,
+    16.599999999998545,
+    16.599999999998545,
+    16.600000000002183,
+    16.599999999998545,
+    16.700000000000728,
+    16.599999999998545,
+    16.600000000002183,
+    16.599999999998545,
+    16.700000000000728,
+    16.599999999998545,
+    16.600000000002183,
+    16.899999999997817,
+    16.5,
+    16.5,
+    16.700000000000728,
+    16.600000000002183,
+    16.599999999998545,
+    16.700000000000728,
+    16.5,
+    16.700000000000728,
+    16.599999999998545,
+    16.700000000000728,
+    16.700000000000728,
+    16.5,
+    16.69999999999709,
+    16.600000000002183,
+    16.700000000000728,
+    16.5,
+    16.69999999999709,
+    16.600000000002183,
+    16.599999999998545,
+    16.700000000000728,
+    16.799999999999272,
+    16.400000000001455,
+    16.700000000000728,
+    16.69999999999709,
+    16.5,
+    16.600000000002183,
+    16.899999999997817,
+    16.30000000000291,
+    16.69999999999709,
+    16.700000000000728,
+    16.5,
+    16.700000000000728,
+    16.599999999998545,
+    16.600000000002183,
+    16.700000000000728,
+    16.599999999998545,
+    16.700000000000728,
+    16.599999999998545,
+    16.600000000002183,
+    16.599999999998545,
+    16.599999999998545,
+    16.700000000000728,
+    16.600000000002183,
+    16.599999999998545,
+    16.599999999998545,
+    16.700000000000728,
+    16.600000000002183,
+    16.599999999998545,
+    16.599999999998545,
+    16.700000000000728,
+    16.600000000002183,
+    16.69999999999709,
+    16.600000000002183,
+    16.599999999998545,
+    16.600000000002183,
+    16.799999999999272,
+    16.5,
+    16.700000000000728,
+    16.599999999998545,
+    16.700000000000728,
+    16.599999999998545,
+    16.600000000002183,
+    16.599999999998545,
+    16.799999999999272,
+    16.400000000001455,
+    16.799999999999272,
+    16.400000000001455,
+    16.69999999999709,
+    16.600000000002183,
+    16.700000000000728,
+    16.599999999998545,
+    16.700000000000728,
+    16.599999999998545,
+    16.5,
+    16.700000000000728,
+    16.599999999998545,
+    16.700000000000728,
+    16.600000000002183,
+    16.599999999998545,
+    16.700000000000728,
+    16.599999999998545,
+    16.700000000000728,
+    16.5,
+    16.599999999998545,
+    16.700000000000728,
+    16.700000000000728,
+    16.599999999998545,
+    16.600000000002183,
+    16.799999999999272,
+    16.5,
+    16.5,
+    16.700000000000728,
+    16.599999999998545,
+    16.799999999999272,
+    16.600000000002183,
+    16.700000000000728,
+    16.399999999997817,
+    16.700000000000728,
+    16.599999999998545,
+    16.600000000002183,
+    16.700000000000728,
+    16.599999999998545,
+    16.700000000000728,
+    16.5,
+    17,
+    16.299999999999272,
+    16.799999999999272,
+    16.700000000000728,
+    16.400000000001455,
+    16.599999999998545,
+    16.700000000000728,
+    16.599999999998545,
+    16.799999999999272,
+    16.5,
+    16.600000000002183,
+    16.599999999998545,
+    16.600000000002183,
+    16.799999999999272,
+    16.5,
+    16.700000000000728,
+    16.599999999998545,
+    16.599999999998545,
+    16.700000000000728,
+    16.5,
+    16.700000000000728,
+    16.5,
+    16.700000000000728,
+    16.700000000000728,
+    16.599999999998545,
+    16.599999999998545,
+    16.600000000002183,
+    33.29999999999927,
+    16.599999999998545,
+    16.700000000000728,
+    16.5,
+    16.799999999999272,
+    16.600000000002183,
+    16.599999999998545,
+    16.600000000002183,
+    16.69999999999709,
+    16.5,
+    16.700000000000728,
+    16.600000000002183,
+    16.69999999999709,
+    16.5,
+    16.700000000000728,
+    16.700000000000728,
+    16.599999999998545,
+    16.700000000000728,
+    16.400000000001455,
+    16.799999999999272,
+    16.599999999998545,
+    16.5,
+    16.700000000000728,
+    16.600000000002183,
+    16.69999999999709,
+    16.5,
+    16.700000000000728,
+    49.900000000001455,
+    16.700000000000728,
+    16.5,
+    16.799999999999272,
+    16.5,
+    16.700000000000728,
+    16.599999999998545,
+    16.599999999998545,
+    16.80000000000291,
+    16.5,
+    16.69999999999709,
+    16.5,
+    16.700000000000728,
+    16.700000000000728,
+    16.599999999998545,
+    16.5,
+    16.600000000002183,
+    16.700000000000728,
+    16.69999999999709,
+    16.5,
+    16.700000000000728,
+    16.700000000000728,
+    16.5,
+    16.700000000000728,
+    16.599999999998545,
+    16.700000000000728,
+    16.5,
+    16.700000000000728,
+    16.599999999998545,
+    16.600000000002183,
+    16.599999999998545,
+    16.700000000000728,
+    16.599999999998545,
+    16.700000000000728,
+    16.799999999999272,
+    16.400000000001455,
+    16.599999999998545,
+    16.900000000001455,
+    16.399999999997817,
+    16.700000000000728,
+    16.700000000000728,
+    16.5,
+    16.700000000000728,
+    16.599999999998545,
+    16.600000000002183,
+    16.599999999998545,
+    33.20000000000073,
+    16.599999999998545,
+    16.799999999999272,
+    16.600000000002183,
+    16.599999999998545,
+    16.600000000002183,
+    16.599999999998545,
+    16.799999999999272,
+    16.5,
+    16.600000000002183,
+    50.099999999998545,
+    66.29999999999927,
+    16.700000000000728,
+    16.5,
+    33.29999999999927,
+    16.600000000002183,
+    16.599999999998545,
+    16.700000000000728,
+    16.599999999998545,
+    16.700000000000728,
+    16.599999999998545,
+    16.600000000002183,
+    16.599999999998545,
+    16.700000000000728,
+    232.70000000000073,
+    16.700000000000728,
+    16.599999999998545,
+    16.700000000000728,
+    16.599999999998545,
+    16.600000000002183,
+    16.599999999998545,
+    16.700000000000728,
+    16.599999999998545,
+    16.799999999999272,
+    16.400000000001455,
+    16.700000000000728,
+    16.599999999998545,
+    16.700000000000728,
+    16.5,
+    16.799999999999272,
+    16.5,
+    16.600000000002183,
+    16.599999999998545,
+    16.799999999999272,
+    16.600000000002183,
+    16.599999999998545,
+    16.700000000000728,
+    16.599999999998545,
+    16.5,
+    16.600000000002183,
+    16.69999999999709,
+    16.900000000001455,
+    16.400000000001455,
+    16.599999999998545,
+    16.599999999998545,
+    16.80000000000291,
+    16.399999999997817,
+    17.100000000002183,
+    16.19999999999709,
+    16.700000000000728,
+    16.900000000001455,
+    16.299999999999272,
+    16.700000000000728,
+    16.599999999998545,
+    16.600000000002183,
+    16.599999999998545,
+    16.700000000000728,
+    16.599999999998545,
+    16.600000000002183,
+    16.69999999999709,
+    16.600000000002183,
+    16.599999999998545,
+    16.600000000002183,
+    16.599999999998545,
+    16.799999999999272,
+    17.200000000000728,
+    16,
+    16.599999999998545,
+    16.600000000002183,
+    16.599999999998545,
+    16.700000000000728,
+    16.5,
+    16.799999999999272,
+    16.600000000002183,
+    16.599999999998545,
+    16.700000000000728,
+    16.599999999998545,
+    16.5,
+    16.700000000000728,
+    16.599999999998545,
+    16.600000000002183,
+    16.599999999998545,
+    16.700000000000728,
+    16.599999999998545,
+    16.700000000000728,
+    16.600000000002183,
+    16.599999999998545,
+    16.599999999998545,
+    16.600000000002183,
+    16.700000000000728,
+    16.599999999998545,
+    16.700000000000728,
+    16.5,
+    16.700000000000728,
+    16.69999999999709,
+    16.5,
+    16.700000000000728,
+    16.600000000002183,
+    16.799999999999272,
+    16.5,
+    16.599999999998545,
+    16.600000000002183,
+    16.599999999998545,
+    16.700000000000728,
+    16.599999999998545,
+    16.700000000000728,
+    16.599999999998545,
+    16.700000000000728,
+    16.5,
+    16.600000000002183,
+    16.69999999999709,
+    16.600000000002183,
+    16.700000000000728,
+    16.599999999998545,
+    16.599999999998545,
+    16.600000000002183,
+    16.599999999998545,
+    16.700000000000728,
+    16.599999999998545,
+    16.600000000002183,
+    16.599999999998545,
+    16.700000000000728,
+    16.599999999998545,
+    16.600000000002183,
+    16.700000000000728,
+    16.599999999998545,
+    16.599999999998545,
+    16.700000000000728,
+    16.5,
+    16.700000000000728,
+    16.599999999998545,
+    16.700000000000728,
+    16.600000000002183,
+    16.69999999999709,
+    16.700000000000728,
+    16.5,
+    16.700000000000728,
+    16.599999999998545,
+    16.700000000000728,
+    16.5,
+    16.700000000000728,
+    16.599999999998545,
+    16.80000000000291,
+    16.599999999998545,
+    16.400000000001455,
+    33.39999999999782,
+    17,
+    16.200000000000728,
+    16.700000000000728,
+    17.200000000000728,
+    15.899999999997817,
+    16.700000000000728,
+    16.700000000000728,
+    16.5,
+    16.700000000000728,
+    16.69999999999709,
+    16.600000000002183,
+    16.599999999998545,
+    16.600000000002183,
+    16.599999999998545,
+    16.700000000000728,
+    16.599999999998545,
+    16.5,
+    16.799999999999272,
+    16.600000000002183,
+    16.599999999998545,
+    16.600000000002183,
+    16.899999999997817,
+    16.5,
+    16.5,
+    16.700000000000728,
+    16.599999999998545,
+    16.600000000002183,
+    16.700000000000728,
+    16.599999999998545,
+    16.599999999998545,
+    16.600000000002183,
+    16.599999999998545,
+    16.799999999999272,
+    16.400000000001455,
+    16.700000000000728,
+    16.700000000000728,
+    19.299999999999272,
+    14,
+    16.5,
+    16.599999999998545,
+    16.700000000000728,
+    16.700000000000728,
+    16.599999999998545,
+    16.600000000002183,
+    16.599999999998545,
+    16.700000000000728,
+    16.5,
+    16.599999999998545,
+    16.700000000000728,
+    16.599999999998545,
+    16.700000000000728,
+    16.600000000002183,
+    16.599999999998545,
+    16.700000000000728,
+    16.599999999998545,
+    16.600000000002183,
+    21.799999999999272,
+    11.5,
+    16.599999999998545,
+    16.700000000000728,
+    16.599999999998545,
+    16.600000000002183,
+    16.599999999998545,
+    16.700000000000728,
+    16.599999999998545,
+    16.600000000002183,
+    16.599999999998545,
+    16.700000000000728,
+    16.599999999998545,
+    16.600000000002183,
+    16.599999999998545,
+    16.700000000000728,
+    16.799999999999272,
+    16.400000000001455,
+    16.599999999998545,
+    17,
+    16.400000000001455,
+    16.599999999998545,
+    18.600000000002183,
+    14.599999999998545,
+    16.5,
+    16.700000000000728,
+    16.599999999998545,
+    16.799999999999272,
+    16.600000000002183,
+    16.5,
+    16.700000000000728,
+    16.599999999998545,
+    33.20000000000073,
+    16.700000000000728,
+    16.69999999999709,
+    16.700000000000728,
+    16.5,
+    16.600000000002183,
+    16.69999999999709,
+    16.600000000002183,
+    16.599999999998545,
+    33.29999999999927,
+    16.700000000000728,
+    16.5,
+    16.600000000002183,
+    16.799999999999272,
+    33.099999999998545,
+    16.700000000000728,
+    16.5,
+    16.700000000000728,
+    16.700000000000728,
+    33.19999999999709,
+    16.600000000002183,
+    16.700000000000728,
+    16.69999999999709,
+    16.600000000002183,
+    33.20000000000073,
+    16.599999999998545
+  ],
+  "longTasks": [
+    {
+      "start": -212.60000002384186,
+      "duration": 261
+    },
+    {
+      "start": 418.2999999523163,
+      "duration": 63
+    },
+    {
+      "start": 1063.1999999284744,
+      "duration": 90
+    },
+    {
+      "start": 4822.5,
+      "duration": 75
+    },
+    {
+      "start": 8430.399999976158,
+      "duration": 64
+    },
+    {
+      "start": 8558.100000023842,
+      "duration": 63
+    },
+    {
+      "start": 9862.299999952316,
+      "duration": 51
+    },
+    {
+      "start": 14731.600000023842,
+      "duration": 60
+    },
+    {
+      "start": 19324.100000023842,
+      "duration": 76
+    },
+    {
+      "start": 19603.799999952316,
+      "duration": 234
+    }
+  ],
+  "errors": [],
+  "audio": [
+    {
+      "id": "amb_birds",
+      "method": "ambientSound",
+      "requested": 2722.100000023842,
+      "emitter": "loading:ambience",
+      "started": true,
+      "bus": "ambient",
+      "masterGain": 0.699999988079071
+    }
+  ],
+  "progress": {
+    "progress": 1,
+    "ready": true,
+    "estimated": false,
+    "error": null,
+    "elapsed": 18740.700000047684,
+    "unchangedFor": 0,
+    "pending": [],
+    "stages": [
+      {
+        "id": "configuration",
+        "weight": 8,
+        "progress": 1,
+        "started": 2723.7999999523163,
+        "finished": 2723.7999999523163
+      },
+      {
+        "id": "sky",
+        "weight": 4,
+        "progress": 1,
+        "started": 2729.1999999284744,
+        "finished": 2729.1999999284744
+      },
+      {
+        "id": "biome",
+        "weight": 4,
+        "progress": 1,
+        "started": 3919,
+        "finished": 3919
+      },
+      {
+        "id": "buildings",
+        "weight": 8,
+        "progress": 1,
+        "started": 5038.5,
+        "finished": 5038.5
+      },
+      {
+        "id": "animals",
+        "weight": 10,
+        "progress": 1,
+        "started": 6094.899999976158,
+        "finished": 6094.899999976158
+      },
+      {
+        "id": "crops",
+        "weight": 6,
+        "progress": 1,
+        "started": 7478.299999952316,
+        "finished": 7478.299999952316
+      },
+      {
+        "id": "walls",
+        "weight": 4,
+        "progress": 1,
+        "started": 8035.399999976158,
+        "finished": 8035.399999976158
+      },
+      {
+        "id": "vfx",
+        "weight": 2,
+        "progress": 1,
+        "started": 8343.100000023842,
+        "finished": 8343.100000023842
+      },
+      {
+        "id": "chunks",
+        "weight": 8,
+        "progress": 1,
+        "started": 9341.399999976158,
+        "finished": 9341.399999976158
+      },
+      {
+        "id": "gpu",
+        "weight": 15,
+        "progress": 1,
+        "started": 11009.899999976158,
+        "finished": 15856.799999952316
+      },
+      {
+        "id": "far-assets",
+        "weight": 25,
+        "progress": 1,
+        "started": 20274.799999952316,
+        "finished": 20274.799999952316
+      },
+      {
+        "id": "visible-ready",
+        "weight": 6,
+        "progress": 1,
+        "started": 20976.600000023842,
+        "finished": 20976.600000023842
+      }
+    ]
+  },
+  "parallelShaderCompile": true,
+  "restoredLogicalUnchanged": true,
+  "initializationMs": 19921.699999928474,
+  "audioVoicesAtHandoff": 0,
+  "logicalUnchanged": true,
+  "cameraPreserved": true,
+  "totalMs": 23997.5,
+  "camera": {
+    "eye": [
+      76.70247532024266,
+      27.37682490650652,
+      30.57367599590944
+    ],
+    "target": [
+      60,
+      12.20192278906814,
+      0
+    ]
+  },
+  "done": true,
+  "frameSummary": {
+    "count": 1350,
+    "max": 232.70000000000073,
+    "over50": 9,
+    "over100": 2
+  }
+}

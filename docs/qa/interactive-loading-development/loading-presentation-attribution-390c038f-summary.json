@@ -1,0 +1,60 @@
+{
+  "source": "390c038f",
+  "scope": "One opt-in existing-RAF presentation diagnostic; CPU invocation cost only, not GPU duration or statistical/causal comparison.",
+  "initializationMs": 10082.300000071526,
+  "totalMs": 14165.300000071526,
+  "frameSummary": {
+    "count": 778,
+    "max": 100.60000000000036,
+    "over50": 4,
+    "over100": 1
+  },
+  "errors": [],
+  "cameraPreserved": true,
+  "logicalUnchanged": true,
+  "presentation": {
+    "count": 522,
+    "cpuSumMs": 381.2000004053116,
+    "cpuMedianMs": 0.6999999284744263,
+    "cpuP95Ms": 1.2000000476837158,
+    "cpuP99Ms": 1.7000000476837158,
+    "cpuMaxMs": 2.5,
+    "rafMedianMs": 16.600000000000364,
+    "rafP95Ms": 16.80000000000109,
+    "rafP99Ms": 33.400000000001455
+  },
+  "phasePresentation": {
+    "load-crop-batch": {
+      "count": 44,
+      "cpuSumMs": 31.300000071525574,
+      "cpuMedianMs": 0.7000000476837158,
+      "cpuP95Ms": 1.100000023841858,
+      "cpuP99Ms": 1.3000000715255737,
+      "cpuMaxMs": 1.3000000715255737,
+      "rafMedianMs": 16.600000000000364,
+      "rafP95Ms": 16.700000000000728,
+      "rafP99Ms": 16.80000000000109
+    },
+    "warm-draw-batches": {
+      "count": 38,
+      "cpuSumMs": 29.09999990463257,
+      "cpuMedianMs": 0.6000000238418579,
+      "cpuP95Ms": 1.7999999523162842,
+      "cpuP99Ms": 2.1999999284744263,
+      "cpuMaxMs": 2.1999999284744263,
+      "rafMedianMs": 16.600000000000364,
+      "rafP95Ms": 16.80000000000109,
+      "rafP99Ms": 50.099999999998545
+    }
+  },
+  "cleanup": {
+    "disposed": true,
+    "contextLost": true
+  },
+  "files": {
+    "loading-presentation-attribution-390c038f.json": "b21c9224fe1643be2739612a94789d827e49ca143f4ac4358de6ad80e295ea9b",
+    "loading-presentation-attribution-390c038f-cleanup.json": "0c8c7da931d325c7b4387bab7931e69404813d92f3a09a73aa01750e0cb7d3bf",
+    "loading-presentation-attribution-390c038f-console.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "loading-presentation-attribution-390c038f.png": "e7aaabfee021a450c7a379b4cf09d94a5953783a8d312e4a33ffbe4bbbea7973"
+  }
+}

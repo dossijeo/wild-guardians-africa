@@ -8,8 +8,8 @@ export function prepareSharedNativeWorld(world,textures,cancelled){
   owner=new SharedNativePreparation((required,allCancelled)=>prepareNativeFarGpu(
    world.renderer,world.assetGroups.root,world.scene,world.camera,required,
    {cancelled:()=>world.disposed||allCancelled(),diagnoseErrors:world.farGpuDiagnostics===true,
-    isolateRoot:world.farIsolatedPreparation===true,ownedCompilation:world.farOwnedCompilation===true,
-    ownedWaits:world.farOwnedWaits===true}));
+    isolateRoot:world.farIsolatedPreparation===true,zeroVertices:world.farZeroVertexPreparation===true,ownedCompilation:world.farOwnedCompilation===true,
+    ownedWaits:world.farOwnedWaits===true,measureDraw:world.onLoadingGpuDraw}));
   owners.set(world,owner);
  }
  return owner.request(textures,cancelled);

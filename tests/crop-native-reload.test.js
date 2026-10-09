@@ -5,7 +5,7 @@ import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {installCropFrustum} from './browser/crop-frustum.js';
 import {loadCropBridges} from '../src/rendering/crop-library.js';
-import {createCropBatch} from '../src/rendering/crop-batch.js';
+import {createCropBatch,createCropBatchAsync} from '../src/rendering/crop-batch.js';
 import * as Game from '../src/simulation/game.js';
 import {advancePlant,waterPlant} from '../src/simulation/crops.js';
 import {cropSpec} from '../src/simulation/rules.js';
@@ -140,4 +140,38 @@ test('experimental bounds follow membership and origin, reuse paused bounds, and
   const camera=new THREE.PerspectiveCamera(45,1,.1,10);camera.position.set(0,10,0);camera.lookAt(0,10,-1);camera.updateMatrixWorld();mesh.updateMatrixWorld();const frustum=new THREE.Frustum().setFromProjectionMatrix(new THREE.Matrix4().multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse));assert.equal(frustum.intersectsObject(mesh),false);
   view.batch.update([],9,()=>3);assert.equal(mesh.count,0);assert.equal(mesh.visible,false);assert.equal(JSON.stringify(plants),before);candidate.setEnabled(false);assert.ok(candidate.items.every(i=>!i.mesh.frustumCulled));
  }finally{candidate.dispose();view.batch.dispose();}
+});
+
+
+test('V4 loading maize cooperative subset matches native baked bridges and releases only private objects',async()=>{
+ const synchronousScene=new THREE.Scene(),asyncScene=new THREE.Scene();
+ const originalsAndBridges=[...originals,...data.bakedTemplates.values()];
+ let sharedDisposes=0;const listener=()=>sharedDisposes++;
+ for(const mesh of originalsAndBridges){mesh.geometry.addEventListener('dispose',listener);mesh.material.addEventListener('dispose',listener);}
+ const originalAttributes=[...data.bakedTemplates.values()].map(mesh=>Object.keys(mesh.geometry.attributes));
+ const sync=createCropBatch(synchronousScene,renderer,gltf,data,8,{species:['maiz'],shadows:false});
+ let frames=0;
+ const asyncBatch=await createCropBatchAsync(asyncScene,renderer,gltf,data,8,{species:['maiz'],shadows:false,budgetMs:0,nextFrame:async()=>{frames++;}});
+ try{
+  assert.equal(asyncScene.children.length,9);assert.equal(frames,9);
+  for(let index=0;index<9;index++){
+   const expected=synchronousScene.children[index],actual=asyncScene.children[index];
+   assert.equal(actual.name,expected.name);assert.equal(actual.castShadow,false);assert.equal(actual.receiveShadow,false);
+   assert.equal(actual.material.side,THREE.FrontSide);assert.equal(actual.customDepthMaterial.side,THREE.FrontSide);
+   assert.deepEqual(actual.geometry.index.array,expected.geometry.index.array);
+   for(const name of Object.keys(expected.geometry.attributes))assert.deepEqual(actual.geometry.attributes[name].array,expected.geometry.attributes[name].array);
+  }
+  for(const growth of [.065,.2,.53,.78,.95,1]){
+   const state=prepared('maiz',growth*cropSpec('maiz').growth_seconds);
+   assert.deepEqual(renderSnapshot({scene:asyncScene,batch:asyncBatch},state),renderSnapshot({scene:synchronousScene,batch:sync},state));
+  }
+ }finally{asyncBatch.dispose();sync.dispose();}
+ assert.equal(asyncScene.children.length,0);assert.equal(sharedDisposes,0);
+ const owner=new AbortController(),cancelScene=new THREE.Scene();let waits=0;
+ const pending=createCropBatchAsync(cancelScene,renderer,gltf,data,8,{species:['maiz'],shadows:false,budgetMs:0,signal:owner.signal,nextFrame:()=>++waits===6?new Promise(()=>{}):Promise.resolve()});
+ while(waits<6)await new Promise(resolve=>setImmediate(resolve));
+ assert.equal(cancelScene.children.length,6,'Abort after the first native baked bridge was adopted');
+ owner.abort();await assert.rejects(pending,/cancelled/);assert.equal(cancelScene.children.length,0);assert.equal(sharedDisposes,0);
+ assert.deepEqual([...data.bakedTemplates.values()].map(mesh=>Object.keys(mesh.geometry.attributes)),originalAttributes);
+ for(const mesh of originalsAndBridges){mesh.geometry.removeEventListener('dispose',listener);mesh.material.removeEventListener('dispose',listener);}
 });

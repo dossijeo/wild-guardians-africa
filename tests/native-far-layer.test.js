@@ -28,6 +28,28 @@ test('obsolete or failed GPU preparation never replaces the resident visual',asy
  const first=await f.layer.request('a',{});fail=true;await assert.rejects(f.layer.request('b',{}),/GPU failed/);assert.equal(f.layer.current,first);assert.equal(f.scene.children.length,1);
  fail=false;resolvePrepare=null;const late=f.layer.request('c',{});while(resolvePrepare===null)await new Promise(resolve=>setImmediate(resolve));f.layer.dispose();resolvePrepare();assert.equal(await late,null);assert.equal(f.scene.children.length,0);
 });
+
+test('pending preparation witness spans GPU waits after worker delivery and clears on failure or late cancellation',async()=>{
+ let release,fail=false;const f=fixture(async()=>{if(fail)throw Error('GPU failed');await new Promise(resolve=>release=resolve);});
+ const first=f.layer.request('a',{});while(!release)await new Promise(resolve=>setImmediate(resolve));
+ assert.equal(f.layer.stream.pending,null);assert.equal(f.layer.pendingPreparations,1);
+ release();await first;assert.equal(f.layer.pendingPreparations,0);
+ // A resident cache hit starts no new work, whereas a failed candidate is
+ // counted until its owned request leaves the finally block.
+ await f.layer.request('a',{});assert.equal(f.layer.pendingPreparations,0);
+ fail=true;await assert.rejects(f.layer.request('b',{}),/GPU failed/);assert.equal(f.layer.pendingPreparations,0);
+ fail=false;release=null;const late=f.layer.request('c',{});while(!release)await new Promise(resolve=>setImmediate(resolve));
+ f.layer.dispose();assert.equal(f.layer.pendingPreparations,1);release();assert.equal(await late,null);assert.equal(f.layer.pendingPreparations,0);
+ await f.layer.request('d',{});assert.equal(f.layer.pendingPreparations,0);
+});
+
+test('pending witness retains an obsolete in-flight GPU candidate alongside its replacement',async()=>{
+ const releases=[],f=fixture(()=>new Promise(resolve=>releases.push(resolve)));
+ const old=f.layer.request('old',{});while(releases.length<1)await new Promise(resolve=>setImmediate(resolve));
+ const replacement=f.layer.request('new',{});while(releases.length<2)await new Promise(resolve=>setImmediate(resolve));
+ assert.equal(f.layer.pendingPreparations,2);releases[0]();assert.equal(await old,null);assert.equal(f.layer.pendingPreparations,1);
+ releases[1]();assert.equal((await replacement).key,'new');assert.equal(f.layer.pendingPreparations,0);f.layer.dispose();
+});
 test('vegetation-only worker requests allocate no terrain geometry buffers',()=>{
  const profile=JSON.parse(readFileSync('public/content/biome-savanna.json','utf8')).profile;
  const config={seed:'712',biome:'savanna',relief:1,density:1,river:true,n:1,cx:0,cz:0,layers:Array(6).fill(true)};
@@ -50,4 +72,13 @@ test('prepared standby coverage keeps the visual handoff while an unprepared nat
  assert.equal(f.layer.current.prototype.treeState('tree').ready,1);assert.equal(geometry.attributes.nativeVisibility.getX(0),0);assert.ok(Math.abs(logical.getX(0)-.8)<1e-6);
  native.revision++;native.has=()=>true;f.layer.update(chunks,camera,joint,true,.016,{x:0,z:0},new Set(),native);assert.equal(f.layer.current.prototype.treeState('tree').ready,1);assert.ok(Math.abs(geometry.attributes.nativeVisibility.getX(0)-.4)<1e-6);
  f.layer.dispose();geometry.dispose();
+});
+
+
+test('regional attribution separates worker, construction, ground and GPU without altering ownership',async()=>{
+ const spans=[],f=fixture();f.layer.onPrepare=span=>{spans.push(span);throw Error('diagnostic callback');};
+ const region=await f.layer.request('observed',{});assert.equal(f.layer.current,region);
+ assert.deepEqual(spans.map(s=>s.label),['far-region-worker','far-region-create','far-region-attach-ground','far-region-gpu-ready']);
+ assert.ok(spans.every(s=>s.end>=s.start&&s.duration>=0));assert.match(spans[0].scope,/Awaited/);assert.match(spans[1].scope,/Synchronous/);
+ f.layer.dispose();assert.equal(f.scene.children.length,0);
 });

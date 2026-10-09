@@ -1,0 +1,78 @@
+{
+  "scope": "Requested storage and explicit deletion in isolated visual diorama, after renderer construction. No frame timing acceptance, no physical peak RAM/VRAM, no full world coexistence proof.",
+  "cases": [
+    {
+      "case": "v6-day",
+      "requestedBufferBytes": 6227918,
+      "renderer": {
+        "geometries": 11,
+        "textures": 8,
+        "programs": 5
+      },
+      "warningsOrErrors": [],
+      "cleanupVerified": true
+    },
+    {
+      "case": "v6-night",
+      "requestedBufferBytes": 6227918,
+      "renderer": {
+        "geometries": 11,
+        "textures": 8,
+        "programs": 5
+      },
+      "warningsOrErrors": [],
+      "cleanupVerified": true
+    },
+    {
+      "case": "v9-day",
+      "requestedBufferBytes": 6231394,
+      "renderer": {
+        "geometries": 13,
+        "textures": 9,
+        "programs": 7
+      },
+      "warningsOrErrors": [],
+      "cleanupVerified": true
+    },
+    {
+      "case": "v9-night",
+      "requestedBufferBytes": 6231394,
+      "renderer": {
+        "geometries": 13,
+        "textures": 9,
+        "programs": 7
+      },
+      "warningsOrErrors": [],
+      "cleanupVerified": true
+    }
+  ],
+  "extraAtlas": {
+    "method": "texStorage2D",
+    "levels": 12,
+    "internalFormat": 35907,
+    "width": 2048,
+    "height": 512,
+    "target": 3553
+  },
+  "extraAtlasNominalRgbaBytes": 5592412,
+  "ornamentNominalDecodedRgbaBytes": 6290112,
+  "ornamentScope": "HTML/CSS image outside WebGL inventory; cache retained intentionally, not actual browser allocation measurement.",
+  "files": {
+    "visual-resources-v6-day-cleanup.json": "5c4c5955cd702207566da0e0c6365b16976a74e459e51c08f4dff644e41ab79f",
+    "visual-resources-v6-day-console.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "visual-resources-v6-day.jpg": "0d9252be566914d4bae4d267cfce5554e3f08ca67eae2b67a0fd101f4d6785ea",
+    "visual-resources-v6-day.json": "d6234210cdcb96c2971f6b096de683242ce28c0f1f0b7ccff5621ee9b5421705",
+    "visual-resources-v6-night-cleanup.json": "70fa290d1f198fe579ca5eb32e194b9ef22241bc2baee947a7506e0bb6f9400e",
+    "visual-resources-v6-night-console.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "visual-resources-v6-night.jpg": "45f8b6731b481e2292a81450bbdd6051f803ef758c8e8b55e03abb3126337f38",
+    "visual-resources-v6-night.json": "74a8c582b15a1f855c9d712838f6a641645a83602038f083f11068c4cd65b3ff",
+    "visual-resources-v9-day-cleanup.json": "3d18ce187d5ddade8f2beea31062b6e60ef3f2de1c80296fb482fdfd5d42f1b3",
+    "visual-resources-v9-day-console.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "visual-resources-v9-day.jpg": "ba71114506e38dd4efa8c2f1a067dd94e7c71496bfb7bd3204a0562f1c47e0ab",
+    "visual-resources-v9-day.json": "5f6c6a5846572a9a0a26239aec69ae000c87dae9d4be8f92fcb8d15816948cdd",
+    "visual-resources-v9-night-cleanup.json": "fa29cba3d295e7e2e14b2455a901407dcbce386a463b2d9713d4986400f7771d",
+    "visual-resources-v9-night-console.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "visual-resources-v9-night.jpg": "1ade94d2fb3e1b9709fece1d198915860a16cf30bfbb122476cdc85733ca3afe",
+    "visual-resources-v9-night.json": "bd999c9b22ad89f9d8e29d1d8a706f106482c6c8a46b82ae349a61f0b55f3038"
+  }
+}

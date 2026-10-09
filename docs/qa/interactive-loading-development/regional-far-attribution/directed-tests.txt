@@ -1,0 +1,462 @@
+TAP version 13
+# (node:1096) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: HQ profile loads only its chosen biome atlas with stable four-arc settings and retains an explicit legacy switch
+ok 1 - HQ profile loads only its chosen biome atlas with stable four-arc settings and retains an explicit legacy switch
+  ---
+  duration_ms: 7.4337
+  ...
+# Subtest: integrated quality changes reuse owned adapters and atlas resources within the prepared extent
+ok 2 - integrated quality changes reuse owned adapters and atlas resources within the prepared extent
+  ---
+  duration_ms: 2.1397
+  ...
+# Subtest: attachment loads only selected biome resources and releases them once on world close
+ok 3 - attachment loads only selected biome resources and releases them once on world close
+  ---
+  duration_ms: 0.3904
+  ...
+# Subtest: atmosphere options reach the biome adapter and invalid distances allocate no resources
+ok 4 - atmosphere options reach the biome adapter and invalid distances allocate no resources
+  ---
+  duration_ms: 0.5589
+  ...
+# Subtest: late texture arriving after attachment cancellation is immediately released
+ok 5 - late texture arriving after attachment cancellation is immediately released
+  ---
+  duration_ms: 9.6742
+  ...
+# Subtest: late prepared species is disposed after world close without double-releasing earlier textures
+ok 6 - late prepared species is disposed after world close without double-releasing earlier textures
+  ---
+  duration_ms: 1.4785
+  ...
+# Subtest: configured visual radius is reversible on disable/dispose and validated before resource loading
+ok 7 - configured visual radius is reversible on disable/dispose and validated before resource loading
+  ---
+  duration_ms: 1.1827
+  ...
+# Subtest: visual-only radius retains loaded radius ownership and restores both preceding values
+ok 8 - visual-only radius retains loaded radius ownership and restores both preceding values
+  ---
+  duration_ms: 0.9351
+  ...
+# Subtest: prop transition circle is owned and restored independently of exact terrain residency
+ok 9 - prop transition circle is owned and restored independently of exact terrain residency
+  ---
+  duration_ms: 1.428
+  ...
+# Subtest: closing the biome owner releases native upload cache listeners before disposing its atlas textures
+ok 10 - closing the biome owner releases native upload cache listeners before disposing its atlas textures
+  ---
+  duration_ms: 5.2026
+  ...
+# Subtest: late GPU callback cannot resurrect closed owner or disturb replacement false
+ok 11 - late GPU callback cannot resurrect closed owner or disturb replacement false
+  ---
+  duration_ms: 0.8852
+  ...
+# Subtest: late GPU callback cannot resurrect closed owner or disturb replacement true
+ok 12 - late GPU callback cannot resurrect closed owner or disturb replacement true
+  ---
+  duration_ms: 1.0005
+  ...
+# Subtest: faithful impostors remain exact until the atmospheric far landscape and distances stay configurable
+ok 13 - faithful impostors remain exact until the atmospheric far landscape and distances stay configurable
+  ---
+  duration_ms: 2.0607
+  ...
+# Subtest: far ground is independently configurable without changing exact terrain ownership
+ok 14 - far ground is independently configurable without changing exact terrain ownership
+  ---
+  duration_ms: 0.6064
+  ...
+# Subtest: logical native prewarm stays opt-in and invalid options allocate no atlas
+ok 15 - logical native prewarm stays opt-in and invalid options allocate no atlas
+  ---
+  duration_ms: 1.1342
+  ...
+# Subtest: seed changes invalidate the whole far owner and release borrowed preparations once
+ok 16 - seed changes invalidate the whole far owner and release borrowed preparations once
+  ---
+  duration_ms: 0.855
+  ...
+# Subtest: texture storage estimates use loaded atlas dimensions rather than a uniform species size
+ok 17 - texture storage estimates use loaded atlas dimensions rather than a uniform species size
+  ---
+  duration_ms: 0.668
+  ...
+# Subtest: landscape composition forwards existing backdrop controls without altering atlas ownership
+ok 18 - landscape composition forwards existing backdrop controls without altering atlas ownership
+  ---
+  duration_ms: 0.7543
+  ...
+# Subtest: runtime metadata selects linear premultiplied atlases without changing unmarked species
+ok 19 - runtime metadata selects linear premultiplied atlases without changing unmarked species
+  ---
+  duration_ms: 0.831
+  ...
+# Subtest: authored large-tree policy preserves the native color transition envelope and rejects invalid policy before assets
+ok 20 - authored large-tree policy preserves the native color transition envelope and rejects invalid policy before assets
+  ---
+  duration_ms: 0.5791
+  ...
+# Subtest: loading-only bitmap textures retain far-owner disposal and native vertical orientation
+ok 21 - loading-only bitmap textures retain far-owner disposal and native vertical orientation
+  ---
+  duration_ms: 0.6304
+  ...
+# Subtest: parallel loading starts day, night and backdrop before any image resolves, without parallel attachment
+ok 22 - parallel loading starts day, night and backdrop before any image resolves, without parallel attachment
+  ---
+  duration_ms: 12.1712
+  ...
+# Subtest: parallel loading cancellation releases every late image and never attaches a partial region
+ok 23 - parallel loading cancellation releases every late image and never attaches a partial region
+  ---
+  duration_ms: 2.4473
+  ...
+# Subtest: parallel loading observes sibling failure and releases successful images before rejecting
+ok 24 - parallel loading observes sibling failure and releases successful images before rejecting
+  ---
+  duration_ms: 0.8692
+  ...
+# Subtest: parallel images preserve sequential species admission and all exact texture pairs
+ok 25 - parallel images preserve sequential species admission and all exact texture pairs
+  ---
+  duration_ms: 1.4652
+  ...
+# Subtest: zero-vertex preparation is explicit, isolated, and restores positive geometry before fence waits
+ok 26 - zero-vertex preparation is explicit, isolated, and restores positive geometry before fence waits
+  ---
+  duration_ms: 9.4369
+  ...
+# Subtest: zero-vertex draw failure restores renderer ownership and submits no success fence
+ok 27 - zero-vertex draw failure restores renderer ownership and submits no success fence
+  ---
+  duration_ms: 0.707
+  ...
+# Subtest: owned texture frame wait cancels without uploading the remaining texture
+ok 28 - owned texture frame wait cancels without uploading the remaining texture
+  ---
+  duration_ms: 112.4258
+  ...
+# Subtest: owned image decode wait cancels and observes a late decoder rejection
+ok 29 - owned image decode wait cancels and observes a late decoder rejection
+  ---
+  duration_ms: 106.5709
+  ...
+# Subtest: owned fence wait checks cancellation even if RAF never resumes
+ok 30 - owned fence wait checks cancellation even if RAF never resumes
+  ---
+  duration_ms: 109.3438
+  ...
+# Subtest: owned fence from a lost/restored context is never queried or deleted in the new epoch
+ok 31 - owned fence from a lost/restored context is never queried or deleted in the new epoch
+  ---
+  duration_ms: 108.0688
+  ...
+# Subtest: owned fence deadline rejects rather than waiting indefinitely for a frame
+ok 32 - owned fence deadline rejects rather than waiting indefinitely for a frame
+  ---
+  duration_ms: 108.938
+  ...
+# Subtest: owned frame waits cannot wrap the uncancellable Three compiler
+ok 33 - owned frame waits cannot wrap the uncancellable Three compiler
+  ---
+  duration_ms: 0.4991
+  ...
+# Subtest: ownership changing inside the final fence query cannot adopt readiness
+ok 34 - ownership changing inside the final fence query cannot adopt readiness
+  ---
+  duration_ms: 0.4545
+  ...
+# Subtest: a real fence fault is preserved when ownership changes inside the query
+ok 35 - a real fence fault is preserved when ownership changes inside the query
+  ---
+  duration_ms: 0.4576
+  ...
+# Subtest: opt-in owned compilation bypasses Three async polling and preserves native draw/fence recipe
+ok 36 - opt-in owned compilation bypasses Three async polling and preserves native draw/fence recipe
+  ---
+  duration_ms: 13.594
+  ...
+# Subtest: direct owned compilation observes owner cancellation while RAF is suspended
+ok 37 - direct owned compilation observes owner cancellation while RAF is suspended
+  ---
+  duration_ms: 46.3041
+  ...
+# Subtest: direct owned compilation rejects context loss and restoration before another query
+ok 38 - direct owned compilation rejects context loss and restoration before another query
+  ---
+  duration_ms: 46.7237
+  ...
+# Subtest: direct owned compilation applies the native deadline without starting a draw
+ok 39 - direct owned compilation applies the native deadline without starting a draw
+  ---
+  duration_ms: 30.7074
+  ...
+# Subtest: owned compiler candidate cancels the real preparation and stops its readiness queries
+ok 40 - owned compiler candidate cancels the real preparation and stops its readiness queries
+  ---
+  duration_ms: 30.0875
+  ...
+# Subtest: owned compiler candidate cannot fence programs from a lost and restored native cache epoch
+ok 41 - owned compiler candidate cannot fence programs from a lost and restored native cache epoch
+  ---
+  duration_ms: 31.2277
+  ...
+# Subtest: candidate compile waiter lets real preparation unwind an owner abort without late drawing
+ok 42 - candidate compile waiter lets real preparation unwind an owner abort without late drawing
+  ---
+  duration_ms: 1.5995
+  ...
+# Subtest: candidate compile waiter rejects lost/restored context without a stale readiness fence
+ok 43 - candidate compile waiter rejects lost/restored context without a stale readiness fence
+  ---
+  duration_ms: 14.4083
+  ...
+# Subtest: GPU preparation compiles, uploads through zero-pixel draw and yields until fence signals
+ok 44 - GPU preparation compiles, uploads through zero-pixel draw and yields until fence signals
+  ---
+  duration_ms: 1.1432
+  ...
+# Subtest: normal streaming proves completion with an async fence without synchronous error readbacks
+ok 45 - normal streaming proves completion with an async fence without synchronous error readbacks
+  ---
+  duration_ms: 0.5214
+  ...
+# Subtest: isolated upload restores unrelated visibility and shadow scheduling before fencing
+ok 46 - isolated upload restores unrelated visibility and shadow scheduling before fencing
+  ---
+  duration_ms: 0.7346
+  ...
+# Subtest: isolated draw failure restores the full render state without disposing borrowed resources
+ok 47 - isolated draw failure restores the full render state without disposing borrowed resources
+  ---
+  duration_ms: 0.65
+  ...
+# Subtest: isolated cancellation while waiting for the fence leaves the next gameplay draw intact
+ok 48 - isolated cancellation while waiting for the fence leaves the next gameplay draw intact
+  ---
+  duration_ms: 0.7379
+  ...
+# Subtest: overlapping isolated preparation restores flags between out-of-order compile completions
+ok 49 - overlapping isolated preparation restores flags between out-of-order compile completions
+  ---
+  duration_ms: 0.7439
+  ...
+# Subtest: failed zero-pixel draw restores renderer and parent before rejecting
+ok 50 - failed zero-pixel draw restores renderer and parent before rejecting
+  ---
+  duration_ms: 0.5099
+  ...
+# Subtest: overlapping species compilation leaves culling unchanged until each synchronous upload draw
+ok 51 - overlapping species compilation leaves culling unchanged until each synchronous upload draw
+  ---
+  duration_ms: 0.9309
+  ...
+# Subtest: failed upload draw restores native mesh culling without changing intentionally unculled meshes
+ok 52 - failed upload draw restores native mesh culling without changing intentionally unculled meshes
+  ---
+  duration_ms: 0.3707
+  ...
+# Subtest: cancelled preparation never compiles or draws
+ok 53 - cancelled preparation never compiles or draws
+  ---
+  duration_ms: 0.2746
+  ...
+# Subtest: cancellation during fence polling releases the sync and leaves rendering restored
+ok 54 - cancellation during fence polling releases the sync and leaves rendering restored
+  ---
+  duration_ms: 0.4338
+  ...
+# Subtest: texture preparation deduplicates and yields between bounded batches before compilation
+ok 55 - texture preparation deduplicates and yields between bounded batches before compilation
+  ---
+  duration_ms: 0.3882
+  ...
+# Subtest: cancelling between texture batches prevents remaining uploads and compilation
+ok 56 - cancelling between texture batches prevents remaining uploads and compilation
+  ---
+  duration_ms: 0.6933
+  ...
+# Subtest: optional image decoding finishes before upload and cancellation prevents upload
+ok 57 - optional image decoding finishes before upload and cancellation prevents upload
+  ---
+  duration_ms: 0.5727
+  ...
+# Subtest: warm texture generations skip upload budgets but always compile, draw and fence new native packing
+ok 58 - warm texture generations skip upload budgets but always compile, draw and fence new native packing
+  ---
+  duration_ms: 1.1692
+  ...
+# Subtest: context restoration invalidates warm texture budgets independently per renderer
+ok 59 - context restoration invalidates warm texture budgets independently per renderer
+  ---
+  duration_ms: 0.6498
+  ...
+# Subtest: shared image source changes require a new upload budget even without texture wrapper version change
+ok 60 - shared image source changes require a new upload budget even without texture wrapper version change
+  ---
+  duration_ms: 0.3796
+  ...
+# Subtest: closing a renderer owner releases texture and context listeners, including after restoration
+ok 61 - closing a renderer owner releases texture and context listeners, including after restoration
+  ---
+  duration_ms: 0.5945
+  ...
+# Subtest: a late cancelled request cannot create an owner after its cache was released
+ok 62 - a late cancelled request cannot create an owner after its cache was released
+  ---
+  duration_ms: 0.7295
+  ...
+# Subtest: a cancelled generation keeps only uploads already completed for the next generation
+ok 63 - a cancelled generation keeps only uploads already completed for the next generation
+  ---
+  duration_ms: 0.57
+  ...
+# Subtest: a failed texture upload is never reused by a subsequent generation
+ok 64 - a failed texture upload is never reused by a subsequent generation
+  ---
+  duration_ms: 1.0633
+  ...
+# Subtest: context restoration invalidates a completed native tree proof before any handoff can reuse it
+ok 65 - context restoration invalidates a completed native tree proof before any handoff can reuse it
+  ---
+  duration_ms: 1.1023
+  ...
+# Subtest: loss invalidates an in-flight fence generation and clears warm texture ownership before restoration
+ok 66 - loss invalidates an in-flight fence generation and clears warm texture ownership before restoration
+  ---
+  duration_ms: 0.7025
+  ...
+# Subtest: diagnostic error after fence completion rejects the proof and releases the fence
+ok 67 - diagnostic error after fence completion rejects the proof and releases the fence
+  ---
+  duration_ms: 0.3878
+  ...
+# Subtest: opt-in diagnostics distinguish pre-existing GL faults before uploading or drawing
+ok 68 - opt-in diagnostics distinguish pre-existing GL faults before uploading or drawing
+  ---
+  duration_ms: 0.2935
+  ...
+# Subtest: opt-in diagnostic upload-draw faults preserve renderer cleanup and report the failing stage
+ok 69 - opt-in diagnostic upload-draw faults preserve renderer cleanup and report the failing stage
+  ---
+  duration_ms: 0.62
+  ...
+# Subtest: release during initTexture prevents late texture handler registration
+ok 70 - release during initTexture prevents late texture handler registration
+  ---
+  duration_ms: 0.3789
+  ...
+# Subtest: released in-flight compile cannot adopt or release a replacement cache
+ok 71 - released in-flight compile cannot adopt or release a replacement cache
+  ---
+  duration_ms: 0.5752
+  ...
+# Subtest: a restored context cannot accept compilation started in an earlier resource generation
+ok 72 - a restored context cannot accept compilation started in an earlier resource generation
+  ---
+  duration_ms: 0.6033
+  ...
+# Subtest: a real draw fault is not reclassified when ownership changes during that failing draw
+ok 73 - a real draw fault is not reclassified when ownership changes during that failing draw
+  ---
+  duration_ms: 0.3234
+  ...
+# Subtest: loading queue preserves concurrent texture uploads but serializes compilation/fences and rejects stale jobs
+ok 74 - loading queue preserves concurrent texture uploads but serializes compilation/fences and rejects stale jobs
+  ---
+  duration_ms: 2.5596
+  ...
+# Subtest: loading-only preparation cancels owned program polls without Three async timers
+ok 75 - loading-only preparation cancels owned program polls without Three async timers
+  ---
+  duration_ms: 23.9558
+  ...
+# Subtest: queued loading job can stop waiting while an older owner remains pending
+ok 76 - queued loading job can stop waiting while an older owner remains pending
+  ---
+  duration_ms: 1.0853
+  ...
+# Subtest: cooperative image decoder can cancel with suspended RAF and observes late failure
+ok 77 - cooperative image decoder can cancel with suspended RAF and observes late failure
+  ---
+  duration_ms: 108.8432
+  ...
+# Subtest: cooperative never-resolving decode respects deadline without a resumed RAF
+ok 78 - cooperative never-resolving decode respects deadline without a resumed RAF
+  ---
+  duration_ms: 109.0481
+  ...
+# Subtest: cooperative isolated preparation restores world flags before a cancellable held fence
+ok 79 - cooperative isolated preparation restores world flags before a cancellable held fence
+  ---
+  duration_ms: 0.8611
+  ...
+# Subtest: optional GPU upload envelope wraps only synchronous draw, not compile or awaited fence
+ok 80 - optional GPU upload envelope wraps only synchronous draw, not compile or awaited fence
+  ---
+  duration_ms: 0.2759
+  ...
+# Subtest: optional upload envelope preserves native failure and restores borrowed state without a fence
+ok 81 - optional upload envelope preserves native failure and restores borrowed state without a fence
+  ---
+  duration_ms: 0.2095
+  ...
+# Subtest: GPU phase attribution keeps native uploads, queue, draw, fence and restoration unchanged
+ok 82 - GPU phase attribution keeps native uploads, queue, draw, fence and restoration unchanged
+  ---
+  duration_ms: 0.7079
+  ...
+# Subtest: region replacement preserves old visual until prepared, retains tree state and borrows source resources
+ok 83 - region replacement preserves old visual until prepared, retains tree state and borrows source resources
+  ---
+  duration_ms: 14.939
+  ...
+# Subtest: obsolete or failed GPU preparation never replaces the resident visual
+ok 84 - obsolete or failed GPU preparation never replaces the resident visual
+  ---
+  duration_ms: 4.0778
+  ...
+# Subtest: pending preparation witness spans GPU waits after worker delivery and clears on failure or late cancellation
+ok 85 - pending preparation witness spans GPU waits after worker delivery and clears on failure or late cancellation
+  ---
+  duration_ms: 3.8348
+  ...
+# Subtest: pending witness retains an obsolete in-flight GPU candidate alongside its replacement
+ok 86 - pending witness retains an obsolete in-flight GPU candidate alongside its replacement
+  ---
+  duration_ms: 2.5682
+  ...
+# Subtest: vegetation-only worker requests allocate no terrain geometry buffers
+ok 87 - vegetation-only worker requests allocate no terrain geometry buffers
+  ---
+  duration_ms: 25.4393
+  ...
+# Subtest: disposal restores borrowed native color visibility without touching logical obstruction
+ok 88 - disposal restores borrowed native color visibility without touching logical obstruction
+  ---
+  duration_ms: 2.5727
+  ...
+# Subtest: prepared standby coverage keeps the visual handoff while an unprepared native replacement remains hidden
+ok 89 - prepared standby coverage keeps the visual handoff while an unprepared native replacement remains hidden
+  ---
+  duration_ms: 1.2043
+  ...
+# Subtest: regional attribution separates worker, construction, ground and GPU without altering ownership
+ok 90 - regional attribution separates worker, construction, ground and GPU without altering ownership
+  ---
+  duration_ms: 3.1148
+  ...
+1..90
+# tests 90
+# suites 0
+# pass 90
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1263.3044

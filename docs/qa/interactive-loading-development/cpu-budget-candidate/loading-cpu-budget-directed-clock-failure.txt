@@ -1,0 +1,306 @@
+TAP version 13
+# Subtest: depth preload starts with the actual target and recipes, restores scene immediately, then waits for compilation
+ok 1 - depth preload starts with the actual target and recipes, restores scene immediately, then waits for compilation
+  ---
+  duration_ms: 10.6309
+  ...
+# Subtest: synchronous compile errors and asynchronous rejections restore target, shadows and every borrowed material
+ok 2 - synchronous compile errors and asynchronous rejections restore target, shadows and every borrowed material
+  ---
+  duration_ms: 2.6945
+  ...
+# Subtest: preload honors the same explicit diagnostic options as capture without enabling alpha or empty candidates globally
+ok 3 - preload honors the same explicit diagnostic options as capture without enabling alpha or empty candidates globally
+  ---
+  duration_ms: 1.1392
+  ...
+# Subtest: bounded loading depth submissions restore originals and renderer while each program is pending
+ok 4 - bounded loading depth submissions restore originals and renderer while each program is pending
+  ---
+  duration_ms: 2.6588
+  ...
+# Subtest: cancelling after a bounded depth batch cannot leave borrowed materials or renderer state
+ok 5 - cancelling after a bounded depth batch cannot leave borrowed materials or renderer state
+  ---
+  duration_ms: 2.8581
+  ...
+# Subtest: grouped world-depth QA flag applies equally to preload and capture without changing the default
+ok 6 - grouped world-depth QA flag applies equally to preload and capture without changing the default
+  ---
+  duration_ms: 2.1814
+  ...
+# Subtest: a suspended depth frame reacts to owner signal or cancellation predicate before any late frame
+ok 7 - a suspended depth frame reacts to owner signal or cancellation predicate before any late frame
+  ---
+  duration_ms: 26.0624
+  ...
+# Subtest: a depth frame deadline does not require the suspended RAF to resolve
+ok 8 - a depth frame deadline does not require the suspended RAF to resolve
+  ---
+  duration_ms: 15.4346
+  ...
+# Subtest: optional per-batch depth witnesses separate synchronous submission, program readiness and the unchanged frame barrier
+ok 9 - optional per-batch depth witnesses separate synchronous submission, program readiness and the unchanged frame barrier
+  ---
+  duration_ms: 2.3218
+  ...
+# Subtest: opt-in depth slack coalesces cheap batches only inside a delivered presentation frame
+ok 10 - opt-in depth slack coalesces cheap batches only inside a delivered presentation frame
+  ---
+  duration_ms: 1.9748
+  ...
+# Subtest: opt-in depth slack keeps every original barrier when presentation evidence is missing
+ok 11 - opt-in depth slack keeps every original barrier when presentation evidence is missing
+  ---
+  duration_ms: 1.375
+  ...
+# Subtest: cancel after compilation is observed even when a trustworthy depth lane could skip the next barrier
+ok 12 - cancel after compilation is observed even when a trustworthy depth lane could skip the next barrier
+  ---
+  duration_ms: 1.2395
+  ...
+# Subtest: depth CPU candidate coalesces cheap real submissions and restores native recipes before a bounded RAF
+ok 13 - depth CPU candidate coalesces cheap real submissions and restores native recipes before a bounded RAF
+  ---
+  duration_ms: 2.2325
+  ...
+# Subtest: depth CPU candidate retains cancellation during its real suspended frame
+ok 14 - depth CPU candidate retains cancellation during its real suspended frame
+  ---
+  duration_ms: 5.7189
+  ...
+# Subtest: loading compilation snapshots programs before borrowed materials are restored
+ok 15 - loading compilation snapshots programs before borrowed materials are restored
+  ---
+  duration_ms: 30.8548
+  ...
+# Subtest: loading compilation cancellation releases a pending poll immediately
+ok 16 - loading compilation cancellation releases a pending poll immediately
+  ---
+  duration_ms: 2.0006
+  ...
+# Subtest: loading compilation reports timeout without an indefinite poll
+ok 17 - loading compilation reports timeout without an indefinite poll
+  ---
+  duration_ms: 0.637
+  ...
+# Subtest: loading compilation rejects a destroyed owner before submitting programs
+ok 18 - loading compilation rejects a destroyed owner before submitting programs
+  ---
+  duration_ms: 0.399
+  ...
+# Subtest: explicit screen compilation restores target and viewport while its program is still pending
+ok 19 - explicit screen compilation restores target and viewport while its program is still pending
+  ---
+  duration_ms: 24.4329
+  ...
+# Subtest: bounded compiler retains original native objects and target-scene lighting without mutation
+ok 20 - bounded compiler retains original native objects and target-scene lighting without mutation
+  ---
+  duration_ms: 1.4734
+  ...
+# Subtest: bounded compiler cancels before a later submission
+ok 21 - bounded compiler cancels before a later submission
+  ---
+  duration_ms: 0.4845
+  ...
+# Subtest: compilation readiness includes every native variant of a shared material
+ok 22 - compilation readiness includes every native variant of a shared material
+  ---
+  duration_ms: 12.999
+  ...
+# Subtest: loading compilation latches loss and restoration before another program query
+ok 23 - loading compilation latches loss and restoration before another program query
+  ---
+  duration_ms: 30.3159
+  ...
+# Subtest: loading compilation rejects generation changes even without a loss event
+ok 24 - loading compilation rejects generation changes even without a loss event
+  ---
+  duration_ms: 0.9972
+  ...
+# Subtest: submission CPU witness is synchronous and does not include pending program readiness
+ok 25 - submission CPU witness is synchronous and does not include pending program readiness
+  ---
+  duration_ms: 1.0661
+  ...
+# Subtest: optional compile diagnostic failure cannot change native readiness or original submission error
+ok 26 - optional compile diagnostic failure cannot change native readiness or original submission error
+  ---
+  duration_ms: 0.438
+  ...
+# Subtest: optional program readiness witness reports waited wall time separately from submission CPU
+ok 27 - optional program readiness witness reports waited wall time separately from submission CPU
+  ---
+  duration_ms: 12.7998
+  ...
+# Subtest: CPU-budget compiler retains every native object while an actual readiness wait already delivers presentation
+ok 28 - CPU-budget compiler retains every native object while an actual readiness wait already delivers presentation
+  ---
+  duration_ms: 14.6705
+  ...
+# Subtest: a throwing optional CPU observer cannot remove the bounded compilation yield or readiness
+not ok 29 - a throwing optional CPU observer cannot remove the bounded compilation yield or readiness
+  ---
+  duration_ms: 2.6558
+  location: 'file:///C:/Users/PC/.codex/worktrees/interactive-loading-screen/wild-guardians-africa/tests/loading-programs.test.js:68:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    0 !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 0
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/interactive-loading-screen/wild-guardians-africa/tests/loading-programs.test.js:71:190)
+    async Test.run (node:internal/test_runner/test:632:9)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+# Subtest: loading uploads deduplicated resident textures and shader samplers without touching framebuffer or video owners
+ok 30 - loading uploads deduplicated resident textures and shader samplers without touching framebuffer or video owners
+  ---
+  duration_ms: 5.4886
+  ...
+# Subtest: cancelled upload stops before submitting any later native texture
+ok 31 - cancelled upload stops before submitting any later native texture
+  ---
+  duration_ms: 1.3821
+  ...
+# Subtest: empty instanced crop variants compile but do not force unused atlas uploads
+ok 32 - empty instanced crop variants compile but do not force unused atlas uploads
+  ---
+  duration_ms: 1.048
+  ...
+# Subtest: an empty crop does not suppress its sampler shared by a drawable actor
+ok 33 - an empty crop does not suppress its sampler shared by a drawable actor
+  ---
+  duration_ms: 0.5984
+  ...
+# Subtest: already-aborted owner submits no texture or material queries
+ok 34 - already-aborted owner submits no texture or material queries
+  ---
+  duration_ms: 0.9767
+  ...
+# Subtest: native upload that aborts its owner stops before progress callback and subsequent samplers
+ok 35 - native upload that aborts its owner stops before progress callback and subsequent samplers
+  ---
+  duration_ms: 0.7835
+  ...
+# Subtest: cheap submissions share one CPU budget, then yield and reset after the frame
+ok 36 - cheap submissions share one CPU budget, then yield and reset after the frame
+  ---
+  duration_ms: 3.27
+  ...
+# Subtest: ordinary zero budget preserves one yield per submission
+ok 37 - ordinary zero budget preserves one yield per submission
+  ---
+  duration_ms: 1.9106
+  ...
+# Subtest: yield failure propagates and invalid budgets reject
+ok 38 - yield failure propagates and invalid budgets reject
+  ---
+  duration_ms: 1.4818
+  ...
+# Subtest: suspended frame cannot prevent owner cancellation
+ok 39 - suspended frame cannot prevent owner cancellation
+  ---
+  duration_ms: 12.1853
+  ...
+# Subtest: deadline remains bounded when no animation frame arrives
+ok 40 - deadline remains bounded when no animation frame arrives
+  ---
+  duration_ms: 0.5799
+  ...
+# Subtest: cancelled cheap work cannot continue inside its CPU budget
+ok 41 - cancelled cheap work cannot continue inside its CPU budget
+  ---
+  duration_ms: 0.3431
+  ...
+# Subtest: optional yield witness separates elapsed budget from awaited frame and cannot break readiness
+ok 42 - optional yield witness separates elapsed budget from awaited frame and cannot break readiness
+  ---
+  duration_ms: 0.3666
+  ...
+# Subtest: CPU budget accumulates synchronous work across microtasks and ignores readiness wall waiting
+ok 43 - CPU budget accumulates synchronous work across microtasks and ignores readiness wall waiting
+  ---
+  duration_ms: 0.3331
+  ...
+# Subtest: an existing presentation RAF during readiness resets CPU work without requesting a redundant frame
+ok 44 - an existing presentation RAF during readiness resets CPU work without requesting a redundant frame
+  ---
+  duration_ms: 0.4888
+  ...
+# Subtest: CPU-budget cancellation still wakes a suspended frame and prevents further submissions
+ok 45 - CPU-budget cancellation still wakes a suspended frame and prevents further submissions
+  ---
+  duration_ms: 0.8886
+  ...
+# Subtest: CPU work recorded after an awaited RAF belongs to its new epoch and is not lost
+ok 46 - CPU work recorded after an awaited RAF belongs to its new epoch and is not lost
+  ---
+  duration_ms: 0.5243
+  ...
+# Subtest: a missing presentation epoch never resets accumulated CPU across async continuations
+ok 47 - a missing presentation epoch never resets accumulated CPU across async continuations
+  ---
+  duration_ms: 0.2414
+  ...
+# Subtest: screen preload submits on the backbuffer and restores target, viewport, scissor and clearing after a draw error
+ok 48 - screen preload submits on the backbuffer and restores target, viewport, scissor and clearing after a draw error
+  ---
+  duration_ms: 3.3808
+  ...
+# Subtest: GPU readiness waits across frames without a blocking wait and deletes the fence
+ok 49 - GPU readiness waits across frames without a blocking wait and deletes the fence
+  ---
+  duration_ms: 2.5256
+  ...
+# Subtest: cancellation while waiting rejects readiness and releases its fence
+ok 50 - cancellation while waiting rejects readiness and releases its fence
+  ---
+  duration_ms: 0.3892
+  ...
+# Subtest: failed and expired waits release their fences
+ok 51 - failed and expired waits release their fences
+  ---
+  duration_ms: 0.4738
+  ...
+# Subtest: native preload batches actual meshes, restores visibility before every yield and draws full final shadows
+ok 52 - native preload batches actual meshes, restores visibility before every yield and draws full final shadows
+  ---
+  duration_ms: 3.9299
+  ...
+# Subtest: cancelled uploads restore all borrowed visibility and shadow update flags
+ok 53 - cancelled uploads restore all borrowed visibility and shadow update flags
+  ---
+  duration_ms: 1.9966
+  ...
+# Subtest: partial color uploads retain shadow-enabled shader variants but reuse maps until the complete final shadow draw
+ok 54 - partial color uploads retain shadow-enabled shader variants but reuse maps until the complete final shadow draw
+  ---
+  duration_ms: 0.9671
+  ...
+# Subtest: loading shadow priming submits bounded native casters then restores a complete shadow map
+ok 55 - loading shadow priming submits bounded native casters then restores a complete shadow map
+  ---
+  duration_ms: 1.9261
+  ...
+# Subtest: upload attribution observes native draw CPU and waits while preserving all borrowed state
+ok 56 - upload attribution observes native draw CPU and waits while preserving all borrowed state
+  ---
+  duration_ms: 2.2245
+  ...
+1..56
+# tests 56
+# suites 0
+# pass 55
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 435.7092

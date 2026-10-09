@@ -1,0 +1,36 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>Loading owned compilation QA</title>
+<style>body{font:14px system-ui;background:#18251b;color:#eee}canvas{width:480px;height:280px}pre{white-space:pre-wrap}button{padding:12px}</style>
+<h1>Loading compilation and cancellation</h1><p>Native renderer. Pending cases deliberately hold readiness; lifecycle evidence, not driver/GPU performance.</p>
+<button id="run">Run loading compilation QA</button><canvas></canvas><pre id="report">Prepared; GPU inactive.</pre>
+<script type="module">
+import * as THREE from 'three';
+import {compileLoadingPrograms} from '../../src/rendering/loading-programs.js';
+import {renderScreenPreload,waitForGpuPreload} from '../../src/rendering/screen-preload.js';
+const button=document.querySelector('#run'),output=document.querySelector('#report');
+button.onclick=async()=>{
+ button.disabled=true;let renderer,geometry,material,target;const rows=[],errors=[];
+ const assert=(condition,message)=>{if(!condition)throw Error(message);},pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+ try{
+  renderer=new THREE.WebGLRenderer({canvas:document.querySelector('canvas'),antialias:false});renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.setSize(480,280,false);
+  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(42,480/280,.1,100);geometry=new THREE.BoxGeometry();material=new THREE.MeshBasicMaterial({color:0x87b952});scene.add(new THREE.Mesh(geometry,material));camera.position.set(0,2,5);camera.lookAt(0,0,0);
+  await compileLoadingPrograms(renderer,scene,camera,undefined,{screen:true});renderScreenPreload(renderer,scene,camera);await waitForGpuPreload(renderer);renderer.render(scene,camera);
+  rows.push({case:'native-screen-ready-and-fence',passed:true,scope:'Real selected program readiness and real GL fence, without synthetic hold.'});
+  const program=renderer.properties.get(material).currentProgram,originalReady=program.isReady;assert(typeof originalReady==='function','Native selected program missing');
+  target=new THREE.WebGLRenderTarget(8,8);renderer.setRenderTarget(target);renderer.setViewport(1,2,3,4);renderer.setScissor(4,3,2,1);renderer.setScissorTest(true);
+  const restored=()=>{assert(renderer.getRenderTarget()===target,'Borrowed target changed');assert(renderer.getViewport(new THREE.Vector4()).toArray().join(',')==='1,2,3,4','Viewport changed');assert(renderer.getScissor(new THREE.Vector4()).toArray().join(',')==='4,3,2,1','Scissor changed');assert(renderer.getScissorTest(),'ScissorTest changed');};
+  for(const kind of ['owner-cancel','deadline']){
+   let queries=0,timer,caught;const owner=new AbortController();program.isReady=()=>{queries++;return false;};
+   try{const pending=compileLoadingPrograms(renderer,scene,camera,undefined,{screen:true,signal:owner.signal,timeout:kind==='deadline'?25:10000});restored();if(kind==='owner-cancel')timer=setTimeout(()=>owner.abort(),5);await pending;}
+   catch(error){caught=error;}finally{clearTimeout(timer);program.isReady=originalReady;}
+   assert(caught?.message.includes(kind==='owner-cancel'?'cancelled':'timed out'),'Incorrect lifetime result');restored();
+   let lateQueries=0;program.isReady=()=>{lateQueries++;return originalReady.call(program);};await pause(40);program.isReady=originalReady;assert(lateQueries===0,'Late readiness query');
+   rows.push({case:kind,passed:true,queries,lateQueries,rendererRestored:true,error:caught.message,scope:'Native cached program readiness deliberately held false; no physical driver stall claim.'});
+  }
+  renderer.setRenderTarget(null);renderer.setViewport(0,0,480,280);renderer.setScissorTest(false);renderer.render(scene,camera);rows.push({case:'render-after-cancellation',passed:true,render:{...renderer.info.render}});
+  const gl=renderer.getContext(),extension=gl.getExtension('WEBGL_lose_context');assert(extension,'Context loss extension unavailable');let queries=0,caught;program.isReady=()=>{queries++;return false;};
+  const pending=compileLoadingPrograms(renderer,scene,camera,undefined,{screen:true,timeout:10000});extension.loseContext();try{await pending;}catch(error){caught=error;}finally{program.isReady=originalReady;}
+  assert(caught?.message.includes('cancelled'),'Physical context loss did not reject');assert(gl.isContextLost(),'Context loss not observed');const finalQueries=queries;await pause(40);assert(queries===finalQueries,'Stale query after loss');rows.push({case:'native-context-loss',passed:true,queries,error:caught.message,contextLost:true,scope:'Actual WEBGL_lose_context loss. Restoration-between-polls is covered separately by unit event/epoch cases.'});
+ }catch(error){errors.push(String(error));}
+ finally{target?.dispose();geometry?.dispose();material?.dispose();renderer?.dispose();renderer?.forceContextLoss();output.textContent=JSON.stringify({done:true,rows,errors,disposed:!!renderer,contextLost:renderer?.getContext().isContextLost()??null,limitations:['Isolated lifecycle recipe only; full-world loading/cancel/resource/performance coverage remains required.','Synthetic readiness holds do not measure physical driver pending time.']},null,2);}
+};
+</script></html>

@@ -1,0 +1,219 @@
+TAP version 13
+# (node:36288) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: HQ profile loads only its chosen biome atlas with stable four-arc settings and retains an explicit legacy switch
+ok 1 - HQ profile loads only its chosen biome atlas with stable four-arc settings and retains an explicit legacy switch
+  ---
+  duration_ms: 6.995
+  ...
+# Subtest: integrated quality changes reuse owned adapters and atlas resources within the prepared extent
+ok 2 - integrated quality changes reuse owned adapters and atlas resources within the prepared extent
+  ---
+  duration_ms: 2.712
+  ...
+# Subtest: attachment loads only selected biome resources and releases them once on world close
+ok 3 - attachment loads only selected biome resources and releases them once on world close
+  ---
+  duration_ms: 0.5681
+  ...
+# Subtest: atmosphere options reach the biome adapter and invalid distances allocate no resources
+ok 4 - atmosphere options reach the biome adapter and invalid distances allocate no resources
+  ---
+  duration_ms: 0.9403
+  ...
+# Subtest: late texture arriving after attachment cancellation is immediately released
+ok 5 - late texture arriving after attachment cancellation is immediately released
+  ---
+  duration_ms: 11.2851
+  ...
+# Subtest: late prepared species is disposed after world close without double-releasing earlier textures
+ok 6 - late prepared species is disposed after world close without double-releasing earlier textures
+  ---
+  duration_ms: 1.1879
+  ...
+# Subtest: configured visual radius is reversible on disable/dispose and validated before resource loading
+ok 7 - configured visual radius is reversible on disable/dispose and validated before resource loading
+  ---
+  duration_ms: 0.7935
+  ...
+# Subtest: visual-only radius retains loaded radius ownership and restores both preceding values
+ok 8 - visual-only radius retains loaded radius ownership and restores both preceding values
+  ---
+  duration_ms: 0.6765
+  ...
+# Subtest: prop transition circle is owned and restored independently of exact terrain residency
+ok 9 - prop transition circle is owned and restored independently of exact terrain residency
+  ---
+  duration_ms: 1.1063
+  ...
+# Subtest: closing the biome owner releases native upload cache listeners before disposing its atlas textures
+ok 10 - closing the biome owner releases native upload cache listeners before disposing its atlas textures
+  ---
+  duration_ms: 6.5391
+  ...
+# Subtest: late GPU callback cannot resurrect closed owner or disturb replacement false
+ok 11 - late GPU callback cannot resurrect closed owner or disturb replacement false
+  ---
+  duration_ms: 1.2853
+  ...
+# Subtest: late GPU callback cannot resurrect closed owner or disturb replacement true
+ok 12 - late GPU callback cannot resurrect closed owner or disturb replacement true
+  ---
+  duration_ms: 1.4242
+  ...
+# Subtest: faithful impostors remain exact until the atmospheric far landscape and distances stay configurable
+ok 13 - faithful impostors remain exact until the atmospheric far landscape and distances stay configurable
+  ---
+  duration_ms: 2.882
+  ...
+# Subtest: far ground is independently configurable without changing exact terrain ownership
+ok 14 - far ground is independently configurable without changing exact terrain ownership
+  ---
+  duration_ms: 0.8701
+  ...
+# Subtest: logical native prewarm stays opt-in and invalid options allocate no atlas
+ok 15 - logical native prewarm stays opt-in and invalid options allocate no atlas
+  ---
+  duration_ms: 1.101
+  ...
+# Subtest: seed changes invalidate the whole far owner and release borrowed preparations once
+ok 16 - seed changes invalidate the whole far owner and release borrowed preparations once
+  ---
+  duration_ms: 0.9578
+  ...
+# Subtest: texture storage estimates use loaded atlas dimensions rather than a uniform species size
+ok 17 - texture storage estimates use loaded atlas dimensions rather than a uniform species size
+  ---
+  duration_ms: 1.4475
+  ...
+# Subtest: landscape composition forwards existing backdrop controls without altering atlas ownership
+ok 18 - landscape composition forwards existing backdrop controls without altering atlas ownership
+  ---
+  duration_ms: 1.4227
+  ...
+# Subtest: runtime metadata selects linear premultiplied atlases without changing unmarked species
+ok 19 - runtime metadata selects linear premultiplied atlases without changing unmarked species
+  ---
+  duration_ms: 1.4083
+  ...
+# Subtest: authored large-tree policy preserves the native color transition envelope and rejects invalid policy before assets
+ok 20 - authored large-tree policy preserves the native color transition envelope and rejects invalid policy before assets
+  ---
+  duration_ms: 0.9223
+  ...
+# Subtest: loading-only bitmap textures retain far-owner disposal and native vertical orientation
+ok 21 - loading-only bitmap textures retain far-owner disposal and native vertical orientation
+  ---
+  duration_ms: 0.6272
+  ...
+# Subtest: parallel loading starts day, night and backdrop before any image resolves, without parallel attachment
+ok 22 - parallel loading starts day, night and backdrop before any image resolves, without parallel attachment
+  ---
+  duration_ms: 5.4807
+  ...
+# Subtest: parallel loading cancellation releases every late image and never attaches a partial region
+ok 23 - parallel loading cancellation releases every late image and never attaches a partial region
+  ---
+  duration_ms: 1.2474
+  ...
+# Subtest: parallel loading observes sibling failure and releases successful images before rejecting
+ok 24 - parallel loading observes sibling failure and releases successful images before rejecting
+  ---
+  duration_ms: 1.1227
+  ...
+# Subtest: parallel images preserve sequential species admission and all exact texture pairs
+ok 25 - parallel images preserve sequential species admission and all exact texture pairs
+  ---
+  duration_ms: 1.4139
+  ...
+# (node:7036) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: early request starts before consumption and adopts the exact descriptor/result once without a second worker
+ok 26 - early request starts before consumption and adopts the exact descriptor/result once without a second worker
+  ---
+  duration_ms: 12.6079
+  ...
+# Subtest: early and eventual request descriptors generate byte-identical data in all six biomes
+not ok 27 - early and eventual request descriptors generate byte-identical data in all six biomes
+  ---
+  duration_ms: 47.5409
+  location: 'file:///C:/Users/PC/.codex/worktrees/interactive-loading-screen/wild-guardians-africa/tests/initial-far-region.test.js:23:1'
+  failureType: 'testCodeFailure'
+  error: "ENOENT: no such file or directory, open 'C:\\Users\\PC\\.codex\\worktrees\\interactive-loading-screen\\wild-guardians-africa\\public\\content\\biome-grand-river.json'"
+  code: 'ENOENT'
+  stack: |-
+    readFileSync (node:fs:453:20)
+    fixture (file:///C:/Users/PC/.codex/worktrees/interactive-loading-screen/wild-guardians-africa/tests/initial-far-region.test.js:9:27)
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/interactive-loading-screen/wild-guardians-africa/tests/initial-far-region.test.js:25:11)
+    async Test.run (node:internal/test_runner/test:632:9)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+# Subtest: changed descriptor aborts speculative work and uses a real fresh request
+ok 28 - changed descriptor aborts speculative work and uses a real fresh request
+  ---
+  duration_ms: 2.9886
+  ...
+# Subtest: world cancellation aborts background worker and prevents late ignored-abort data adoption
+ok 29 - world cancellation aborts background worker and prevents late ignored-abort data adoption
+  ---
+  duration_ms: 7.9069
+  ...
+# Subtest: regional request cancellation aborts a matched background worker
+ok 30 - regional request cancellation aborts a matched background worker
+  ---
+  duration_ms: 4.023
+  ...
+# Subtest: background failure is observed and retained for eventual readiness
+ok 31 - background failure is observed and retained for eventual readiness
+  ---
+  duration_ms: 3.6682
+  ...
+# Subtest: region replacement preserves old visual until prepared, retains tree state and borrows source resources
+ok 32 - region replacement preserves old visual until prepared, retains tree state and borrows source resources
+  ---
+  duration_ms: 22.3624
+  ...
+# Subtest: obsolete or failed GPU preparation never replaces the resident visual
+ok 33 - obsolete or failed GPU preparation never replaces the resident visual
+  ---
+  duration_ms: 22.1262
+  ...
+# Subtest: pending preparation witness spans GPU waits after worker delivery and clears on failure or late cancellation
+ok 34 - pending preparation witness spans GPU waits after worker delivery and clears on failure or late cancellation
+  ---
+  duration_ms: 10.3656
+  ...
+# Subtest: pending witness retains an obsolete in-flight GPU candidate alongside its replacement
+ok 35 - pending witness retains an obsolete in-flight GPU candidate alongside its replacement
+  ---
+  duration_ms: 3.6467
+  ...
+# Subtest: vegetation-only worker requests allocate no terrain geometry buffers
+ok 36 - vegetation-only worker requests allocate no terrain geometry buffers
+  ---
+  duration_ms: 20.842
+  ...
+# Subtest: disposal restores borrowed native color visibility without touching logical obstruction
+ok 37 - disposal restores borrowed native color visibility without touching logical obstruction
+  ---
+  duration_ms: 1.9688
+  ...
+# Subtest: prepared standby coverage keeps the visual handoff while an unprepared native replacement remains hidden
+ok 38 - prepared standby coverage keeps the visual handoff while an unprepared native replacement remains hidden
+  ---
+  duration_ms: 0.9471
+  ...
+# Subtest: regional attribution separates worker, construction, ground and GPU without altering ownership
+ok 39 - regional attribution separates worker, construction, ground and GPU without altering ownership
+  ---
+  duration_ms: 3.2644
+  ...
+1..39
+# tests 39
+# suites 0
+# pass 38
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 449.1595

@@ -1,0 +1,9 @@
+# Actual native-menu Continue: dense night and cancellation
+
+Runtime944d7206/fixture7b95a50b. A temporary native IndexedDB slot was copied from the audited archive: only slotId, savedAt and explicit test time360 changed; complete native save validation remained. Setup parsing/saving is not a loading benchmark. No real user slot removed. CSS1280x720.
+
+Native-menu Continue loaded day101 through the real snapshot Worker (decode391.3ms). Closed progress reached1/ready true/pending[] after22636ms of its measured progress lifetime. Day101/night21:29 native HUD rendered; pause then Save and return to menu worked. This app run has no RAF or clone attribution instrumentation, therefore no fluency or improvement claim. It is not a precise first-frame capture; the saved screenshot is at35%.
+
+Without tapping the soil, SFX005/amb_night started in ambient bus with master gain.7 and running AudioContext, then stopped at cinematic handoff. LoadingVoices empty; no028 for initial plants. On a second real Continue, Cancel returned the native menu, app-owned loading canvas0/cancel control0, errors/logs empty;005 was stopped and loading voices empty. Cancellation occurred during actual loading, but this run does not certify that the Worker itself was still pending when Cancel was processed. Cancellation DOM progress was overwritten by repeated presentation cleanup (closed/cancelled true but current/snapshotDecode null); preserve this negative evidence and fix QA ownership separately.
+
+Temporary QA slot removal verified; tabs109/110 closed, viewport reset, final inventory empty. Native fixture108 separately records disposed/contextLost true. Actual app verifies DOM/audio cleanup and tab closure, not a queried physical VRAM result. Full matrices, peak memory, loss, download reweighting, paired total timings, final wooden UI mockup and fluidity gates remain open. No PR.
