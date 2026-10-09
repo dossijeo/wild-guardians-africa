@@ -1,6 +1,6 @@
 import {LoadingSyncQueue} from './loading-sync-queue.js';
 import {initialCropCapacity} from './initial-crop-capacity.js';
-import {loadingSyncWitness} from './loading-sync-witness.js';
+import {loadingSyncWitness,loadingAwaitWitness} from './loading-sync-witness.js';
 import {waitGpuFrame} from '../../tools/experiments/wait-gpu-frame.js';
 import {waitGpuPreparation} from '../../tools/experiments/wait-gpu-preparation.js';
 import {initializeLoadingTextures} from './loading-textures.js';
@@ -330,6 +330,7 @@ export class WorldScene {
     }));
   }
   async warmAnimalGpu(){
+    const phase=(label,run)=>loadingAwaitWitness(this.onLoadingSpan,label,run);
     const compile=(scene,camera,target,{screen=true}={})=>this.loadingProgress?(screen?compileLoadingProgramsBatched:compileLoadingPrograms)(this.renderer,scene,camera,target,{signal:this.loading.signal,cancelled:()=>this.disposed,screen,frameBudget:6,onSubmit:this.onLoadingSpan}):this.renderer.compileAsync(scene,camera,target);
     const rigs=await this.animalPreload.spares();if(this.disposed)return;
     const staging=new THREE.Group();
@@ -343,22 +344,22 @@ export class WorldScene {
     try{
       vfxPrimer=new VfxGpuPreload(this.vfxLibrary,this.destructionPass,this.camera,this.scene,this.controls.target);staging.add(vfxPrimer);
       fluidPrimer=new FluidGpuPreload(this.fluidMaterial,{instanced:this.waterPrototypes.some(Boolean)});staging.add(fluidPrimer);
-      await compile(staging,this.camera,this.scene);if(this.disposed)return;
+      await phase('warm-compile-staging',()=>compile(staging,this.camera,this.scene));if(this.disposed)return;
       // The first building hit makes its opening-mask mesh drawable. Compile
       // that retained native recipe even while the intact opening is hidden.
-      await compile(this.destructionPass.scene,this.camera,this.scene);if(this.disposed)return;
+      await phase('warm-compile-destruction',()=>compile(this.destructionPass.scene,this.camera,this.scene));if(this.disposed)return;
       if(this.nav.field.canyon)await compile(this.locomotionVfx.prepareWaterSteps(),this.camera,this.scene);
       if(this.disposed)return;
       // Resident clipped/alpha props can be outside the opening view or on
       // hidden LODs. Prepare their screen variant with the actual shadow state,
       // not only the linear, shadowless variant used by VFX depth capture.
-      await compile(this.scene,this.camera,this.scene);if(this.disposed)return;
-      await this.destructionPass.prepareDepth(this.camera,this.scene,{compile:(scene,camera,target)=>compile(scene,camera,target,{screen:false}),...(this.loadingProgress?{batchSize:32,cancelled:()=>this.disposed||this.loading.signal.aborted}:{})});if(this.disposed)return;
-      this.programBindings=this.loadingProgress?await initializeProgramBindingsAsync(this.renderer,{cancelled:()=>this.disposed}):initializeProgramBindings(this.renderer);
+      await phase('warm-compile-world',()=>compile(this.scene,this.camera,this.scene));if(this.disposed)return;
+      await phase('warm-prepare-depth',()=>this.destructionPass.prepareDepth(this.camera,this.scene,{compile:(scene,camera,target)=>compile(scene,camera,target,{screen:false}),...(this.loadingProgress?{batchSize:32,cancelled:()=>this.disposed||this.loading.signal.aborted}:{})}));if(this.disposed)return;
+      this.programBindings=this.loadingProgress?await phase('warm-program-bindings',()=>initializeProgramBindingsAsync(this.renderer,{cancelled:()=>this.disposed})):initializeProgramBindings(this.renderer);
       // Actual draw uploads vertex buffers, textures and bone textures, and
       // prepares the shadow shader too. Invisible/culled meshes would not.
-      if(this.loadingProgress)this.loadingTextureUploads=await initializeLoadingTextures(this.renderer,this.scene,{frameBudget:6,signal:this.loading.signal,cancelled:()=>this.disposed});
-      if(this.loadingProgress)await renderScreenPreloadBatched(this.renderer,this.scene,this.camera,{warmShadows:true,frameBudget:6,cancelled:()=>this.disposed,onBatch:(done,total)=>this.loadingProgress.update('gpu',done*.8,total)});
+      if(this.loadingProgress)this.loadingTextureUploads=await phase('warm-upload-textures',()=>initializeLoadingTextures(this.renderer,this.scene,{frameBudget:6,signal:this.loading.signal,cancelled:()=>this.disposed}));
+      if(this.loadingProgress)await phase('warm-draw-batches',()=>renderScreenPreloadBatched(this.renderer,this.scene,this.camera,{warmShadows:true,frameBudget:6,cancelled:()=>this.disposed,onBatch:(done,total)=>this.loadingProgress.update('gpu',done*.8,total)}));
       else renderScreenPreload(this.renderer,this.scene,this.camera);
       // The first sprite effect captures world depth with shadows disabled.
       // Warm that actual pass while the loading screen still covers the world,

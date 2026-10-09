@@ -18,3 +18,10 @@ test('deadline remains bounded when no animation frame arrives',async()=>{
 test('cancelled cheap work cannot continue inside its CPU budget',async()=>{
  const work=loadingYieldBudget({frameBudget:6,now:()=>0,cancelled:()=>true,nextFrame:()=>assert.fail('must not request frame')});await assert.rejects(work(),/cancelled/);
 });
+
+test('optional yield witness separates elapsed budget from awaited frame and cannot break readiness',async()=>{
+ let clock=0;const rows=[];
+ const work=loadingYieldBudget({frameBudget:6,now:()=>clock,nextFrame:async()=>{clock+=17;},onYield:row=>{rows.push(row);throw Error('diagnostic');}});
+ clock=5;await work();assert.equal(rows.length,0);clock=9;await work();assert.equal(rows.length,1);
+ assert.equal(rows[0].budgetElapsed,9);assert.equal(rows[0].duration,17);assert.equal(rows[0].frameBudget,6);assert.equal(rows[0].failed,false);
+});

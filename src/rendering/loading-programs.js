@@ -17,7 +17,8 @@ export function compileLoadingPrograms(renderer,scene,camera,targetScene,{signal
  // Submission has already restored screen state. Snapshot all variants through
  // the shared core without submitting or querying the native renderer twice.
  const submitted={compile:()=>materials,properties:renderer.properties};
- return compileGpuPreparation(submitted,scene,camera,targetScene,{check,signal:owner.signal,selectPrograms:properties=>properties.programs?.size?properties.programs.values():[properties.currentProgram]}).then(()=>scene).finally(cleanup);
+ const waitStart=onSubmit?now():null;let waitFailed=false;
+ return compileGpuPreparation(submitted,scene,camera,targetScene,{check,signal:owner.signal,selectPrograms:properties=>properties.programs?.size?properties.programs.values():[properties.currentProgram]}).then(()=>scene,error=>{waitFailed=true;throw error;}).finally(()=>{cleanup();if(onSubmit){const end=now();try{onSubmit({label:'loading-compile-readiness-wait',start:waitStart,end,duration:end-waitStart,failed:waitFailed,scope:'Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.'});}catch{}}});
 }
 
 // Compile bounded views of the original objects against the complete native
@@ -28,7 +29,7 @@ export async function compileLoadingProgramsBatched(renderer,scene,camera,target
  if(!Number.isInteger(batchSize)||batchSize<1)throw Error('Loading compile batch size must be positive');
  const objects=[];scene.traverse(object=>{if(object.isMesh||object.isPoints||object.isLine||object.isSprite)objects.push(object);});
  const target=targetScene??scene;
- const yieldWork=loadingYieldBudget({frameBudget,now,nextFrame,signal:options.signal,cancelled:options.cancelled});
+ const yieldWork=loadingYieldBudget({frameBudget,now,nextFrame,signal:options.signal,cancelled:options.cancelled,onYield:options.onSubmit});
  for(let start=0;start<objects.length;start+=batchSize){
   const batch=objects.slice(start,start+batchSize);
   const view={traverse:callback=>{for(const object of batch)callback(object);},traverseVisible:()=>{}};

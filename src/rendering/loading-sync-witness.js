@@ -6,3 +6,13 @@ export function loadingSyncWitness(witness,label,run,now=()=>performance.now()){
   const end=now();try{witness({label,start,end,duration:end-start,failed,scope:'Synchronous invocation CPU wall time; no GPU queries or awaited work.'});}catch{}
  }
 }
+
+// Optional attribution for an existing asynchronous phase. Elapsed time includes
+// its CPU submissions, awaited readiness/frame delivery and overlapping work;
+// never sum these nested spans as CPU or GPU time. The ordinary path is exact.
+export function loadingAwaitWitness(witness,label,run,now=()=>performance.now()){
+ if(!witness)return run();
+ const start=now();
+ const record=failed=>{const end=now();try{witness({label,start,end,duration:end-start,failed,scope:'Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration.'});}catch{}};
+ try{return Promise.resolve(run()).then(value=>{record(false);return value;},error=>{record(true);throw error;});}catch(error){record(true);throw error;}
+}
