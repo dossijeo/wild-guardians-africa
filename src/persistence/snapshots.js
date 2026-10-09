@@ -1,4 +1,5 @@
 import {BASIC_STEPS,TUTORIAL_IDS} from '../tutorial/messages.js';
+import {validExitFrontier} from './exit-connector-snapshot.js';
 export const SAVE_VERSION=1;
 function wholeMoney(value){
   return value&&typeof value.n==='string'&&typeof value.d==='string'&&/^-?\d+$/.test(value.n)&&/^[1-9]\d*$/.test(value.d)&&BigInt(value.n)%BigInt(value.d)===0n;
@@ -26,6 +27,7 @@ export function validateSnapshot(state) {
   for(const animal of state.raid?.animals??[])if(animal.exitConnectorSearch!==undefined){
     const search=animal.exitConnectorSearch;
     if(!search||typeof search.key!=='string'||search.key.length>256||!Number.isSafeInteger(search.next)||search.next<0||search.next>192)throw new Error('Conector de salida inválido');
+    if(search.fine!==undefined&&!validExitFrontier(search.fine))throw new Error('Conector fraccional inválido');
   }
   for(const name of ['plants','structures','workers','crates','villages','spells','tasks']) {
     if(!Array.isArray(state[name]))throw new Error('Entidades inválidas');
