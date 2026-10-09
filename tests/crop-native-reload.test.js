@@ -141,4 +141,3 @@ test('experimental bounds follow membership and origin, reuse paused bounds, and
   view.batch.update([],9,()=>3);assert.equal(mesh.count,0);assert.equal(mesh.visible,false);assert.equal(JSON.stringify(plants),before);candidate.setEnabled(false);assert.ok(candidate.items.every(i=>!i.mesh.frustumCulled));
  }finally{candidate.dispose();view.batch.dispose();}
 });
-
