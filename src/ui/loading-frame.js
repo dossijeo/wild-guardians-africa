@@ -1,5 +1,5 @@
 // Existing HUD artwork, painted only at attachment/resize. Images are borrowed
-// from the menu's retained frame cache; this presentation owns no GPU resources.
+// from the menu's retained frame cache; this presentation creates no WebGL resources.
 export function paintLoadingFrame(host,images,{dpr=Math.min(globalThis.devicePixelRatio||1,2)}={}){
  const canvas=host.querySelector('.loading-frame'),w=host.clientWidth,h=host.clientHeight;
  if(!canvas||!w||!h)return false;
