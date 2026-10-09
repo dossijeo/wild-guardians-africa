@@ -1,0 +1,38 @@
+{
+  "mainHead": "795f773e83640d3f7541d8e3d826764c3d779750",
+  "featureHead": "7a7a73188c591dfbeb670c88854355e4c7065603",
+  "pullRequest": "https://github.com/dossijeo/wild-guardians-africa/pull/12",
+  "recordedAtUtc": "2026-10-09T03:45:58.495078+00:00",
+  "rootReview": {
+    "runtimeFiles": [
+      "src/simulation/animal-route-clearance.js",
+      "src/simulation/animal-slope-recovery.js",
+      "src/simulation/game.js"
+    ],
+    "scope": "Retreat-only marginal legacy slope recovery, finite monotonic first prefix, failure-only memoization and first-waypoint invalidation; no ordinary slope/fluid/solid relaxation or persisted fields."
+  },
+  "ci": {
+    "validate": {
+      "run": 37879200020,
+      "conclusion": "success"
+    },
+    "windows": {
+      "run": 37879200034,
+      "job": 113654714847,
+      "conclusion": "success"
+    }
+  },
+  "rootMergedVerification": {
+    "command": "node --test tests/actor-fluid-clearance.test.js tests/animal-route-clearance.test.js tests/animal-slope-recovery.test.js tests/worker-slope-recovery.test.js",
+    "exitCode": 0,
+    "tests": 41,
+    "passed": 41,
+    "failed": 0,
+    "durationMs": 2335.1156
+  },
+  "limits": [
+    "Directed correctness verification; CPU work may coexist with functional loading matrix.",
+    "No GPU, physical-device performance or full hundred-night rerun claim.",
+    "Three later Desert stalls recorded on source3324 remain separate investigations."
+  ]
+}
