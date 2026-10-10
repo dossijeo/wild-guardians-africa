@@ -22,105 +22,87 @@
     {
       "attractionMin": 100,
       "attractionMax": 300,
-      "legalEntries": 6,
-      "maxAnimals": 4,
+      "legalEntries": 5,
+      "maxAnimals": 3,
       "strongest": {
-        "budget": 4,
+        "budget": 3,
         "group": [
-          "warthog",
           "warthog",
           "warthog",
           "warthog"
         ],
-        "hits": 16,
-        "structureDamage": 320,
-        "maxFreshCropKills": 8,
-        "maxAlreadyWoundedCropKills": 16
+        "hits": 12,
+        "structureDamage": 240,
+        "maxFreshCropKills": 6,
+        "maxAlreadyWoundedCropKills": 12
       },
-      "maxStructureDamage": 320
+      "maxStructureDamage": 240
     },
     {
       "attractionMin": 300,
       "attractionMax": 800,
-      "legalEntries": 20,
-      "maxAnimals": 7,
+      "legalEntries": 13,
+      "maxAnimals": 4,
       "strongest": {
-        "budget": 7,
+        "budget": 6,
         "group": [
           "warthog",
           "warthog",
           "warthog",
-          "warthog",
-          "warthog",
-          "warthog",
-          "warthog"
+          "hyena"
         ],
-        "hits": 28,
-        "structureDamage": 560,
-        "maxFreshCropKills": 14,
-        "maxAlreadyWoundedCropKills": 28
+        "hits": 17,
+        "structureDamage": 365,
+        "maxFreshCropKills": 8,
+        "maxAlreadyWoundedCropKills": 17
       },
-      "maxStructureDamage": 560
+      "maxStructureDamage": 370
     },
     {
       "attractionMin": 800,
       "attractionMax": 2000,
-      "legalEntries": 64,
-      "maxAnimals": 10,
+      "legalEntries": 37,
+      "maxAnimals": 5,
       "strongest": {
-        "budget": 10,
+        "budget": 9,
         "group": [
           "warthog",
           "warthog",
           "warthog",
-          "warthog",
-          "warthog",
-          "warthog",
-          "warthog",
-          "warthog",
-          "warthog",
-          "warthog"
+          "hyena",
+          "hyena"
         ],
-        "hits": 40,
-        "structureDamage": 800,
-        "maxFreshCropKills": 20,
-        "maxAlreadyWoundedCropKills": 40
+        "hits": 22,
+        "structureDamage": 490,
+        "maxFreshCropKills": 11,
+        "maxAlreadyWoundedCropKills": 22
       },
-      "maxStructureDamage": 800
+      "maxStructureDamage": 520
     },
     {
       "attractionMin": 2000,
       "attractionMax": null,
-      "legalEntries": 200,
-      "maxAnimals": 14,
+      "legalEntries": 89,
+      "maxAnimals": 5,
       "strongest": {
-        "budget": 14,
+        "budget": 13,
         "group": [
           "warthog",
           "warthog",
-          "warthog",
-          "warthog",
-          "warthog",
-          "warthog",
-          "warthog",
-          "warthog",
-          "warthog",
-          "warthog",
-          "warthog",
-          "warthog",
-          "warthog",
-          "warthog"
+          "hyena",
+          "hyena",
+          "buffalo"
         ],
-        "hits": 56,
-        "structureDamage": 1120,
-        "maxFreshCropKills": 28,
-        "maxAlreadyWoundedCropKills": 56
+        "hits": 24,
+        "structureDamage": 620,
+        "maxFreshCropKills": 12,
+        "maxAlreadyWoundedCropKills": 24
       },
-      "maxStructureDamage": 1120
+      "maxStructureDamage": 720
     }
   ],
-  "maxHits": 56,
-  "maxFreshCropKills": 28,
+  "maxHits": 24,
+  "maxFreshCropKills": 12,
   "perAnimalMax": 8,
   "references": [
     {
@@ -132,7 +114,7 @@
       "freshCropHitsRequired": 26,
       "alreadyWoundedHitsRequired": 13,
       "optimisticMinimumAnimals": 4,
-      "currentMaximumFreshCropLossFraction": 0.4666666666666667,
+      "currentMaximumFreshCropLossFraction": 0.2,
       "defenseExpenseReference": 48
     },
     {
@@ -144,7 +126,7 @@
       "freshCropHitsRequired": 42,
       "alreadyWoundedHitsRequired": 21,
       "optimisticMinimumAnimals": 6,
-      "currentMaximumFreshCropLossFraction": 0.28,
+      "currentMaximumFreshCropLossFraction": 0.12,
       "defenseExpenseReference": 84
     },
     {
@@ -156,7 +138,7 @@
       "freshCropHitsRequired": 84,
       "alreadyWoundedHitsRequired": 42,
       "optimisticMinimumAnimals": 11,
-      "currentMaximumFreshCropLossFraction": 0.14,
+      "currentMaximumFreshCropLossFraction": 0.06,
       "defenseExpenseReference": 216
     },
     {
@@ -168,7 +150,7 @@
       "freshCropHitsRequired": 166,
       "alreadyWoundedHitsRequired": 83,
       "optimisticMinimumAnimals": 21,
-      "currentMaximumFreshCropLossFraction": 0.07,
+      "currentMaximumFreshCropLossFraction": 0.03,
       "defenseExpenseReference": 660
     },
     {
@@ -180,7 +162,7 @@
       "freshCropHitsRequired": 248,
       "alreadyWoundedHitsRequired": 124,
       "optimisticMinimumAnimals": 31,
-      "currentMaximumFreshCropLossFraction": 0.04666666666666667,
+      "currentMaximumFreshCropLossFraction": 0.02,
       "defenseExpenseReference": 1344
     },
     {
@@ -192,7 +174,7 @@
       "freshCropHitsRequired": 30,
       "alreadyWoundedHitsRequired": 15,
       "optimisticMinimumAnimals": 4,
-      "currentMaximumFreshCropLossFraction": 0.4666666666666667,
+      "currentMaximumFreshCropLossFraction": 0.2,
       "defenseExpenseReference": 48
     },
     {
@@ -204,7 +186,7 @@
       "freshCropHitsRequired": 48,
       "alreadyWoundedHitsRequired": 24,
       "optimisticMinimumAnimals": 6,
-      "currentMaximumFreshCropLossFraction": 0.28,
+      "currentMaximumFreshCropLossFraction": 0.12,
       "defenseExpenseReference": 84
     },
     {
@@ -216,7 +198,7 @@
       "freshCropHitsRequired": 96,
       "alreadyWoundedHitsRequired": 48,
       "optimisticMinimumAnimals": 12,
-      "currentMaximumFreshCropLossFraction": 0.14,
+      "currentMaximumFreshCropLossFraction": 0.06,
       "defenseExpenseReference": 216
     },
     {
@@ -228,7 +210,7 @@
       "freshCropHitsRequired": 192,
       "alreadyWoundedHitsRequired": 96,
       "optimisticMinimumAnimals": 24,
-      "currentMaximumFreshCropLossFraction": 0.07,
+      "currentMaximumFreshCropLossFraction": 0.03,
       "defenseExpenseReference": 660
     },
     {
@@ -240,7 +222,7 @@
       "freshCropHitsRequired": 288,
       "alreadyWoundedHitsRequired": 144,
       "optimisticMinimumAnimals": 36,
-      "currentMaximumFreshCropLossFraction": 0.04666666666666667,
+      "currentMaximumFreshCropLossFraction": 0.02,
       "defenseExpenseReference": 1344
     },
     {
@@ -252,7 +234,7 @@
       "freshCropHitsRequired": 34,
       "alreadyWoundedHitsRequired": 17,
       "optimisticMinimumAnimals": 5,
-      "currentMaximumFreshCropLossFraction": 0.4666666666666667,
+      "currentMaximumFreshCropLossFraction": 0.2,
       "defenseExpenseReference": 48
     },
     {
@@ -264,7 +246,7 @@
       "freshCropHitsRequired": 56,
       "alreadyWoundedHitsRequired": 28,
       "optimisticMinimumAnimals": 7,
-      "currentMaximumFreshCropLossFraction": 0.28,
+      "currentMaximumFreshCropLossFraction": 0.12,
       "defenseExpenseReference": 84
     },
     {
@@ -276,7 +258,7 @@
       "freshCropHitsRequired": 110,
       "alreadyWoundedHitsRequired": 55,
       "optimisticMinimumAnimals": 14,
-      "currentMaximumFreshCropLossFraction": 0.14,
+      "currentMaximumFreshCropLossFraction": 0.06,
       "defenseExpenseReference": 216
     },
     {
@@ -288,7 +270,7 @@
       "freshCropHitsRequired": 220,
       "alreadyWoundedHitsRequired": 110,
       "optimisticMinimumAnimals": 28,
-      "currentMaximumFreshCropLossFraction": 0.07,
+      "currentMaximumFreshCropLossFraction": 0.03,
       "defenseExpenseReference": 660
     },
     {
@@ -300,7 +282,7 @@
       "freshCropHitsRequired": 330,
       "alreadyWoundedHitsRequired": 165,
       "optimisticMinimumAnimals": 42,
-      "currentMaximumFreshCropLossFraction": 0.04666666666666667,
+      "currentMaximumFreshCropLossFraction": 0.02,
       "defenseExpenseReference": 1344
     }
   ],
@@ -312,8 +294,8 @@
   ],
   "sourceHashes": {
     "tools/audit-native-raid-capacity.mjs": "b30091ec6af590bb42fb2ddcd59e98d94bd939ee179746fa041199fc32152fa2",
-    "src/simulation/rules.js": "3657116cd696581180909bb3928267ff13698fb85831b0274d7bbe86743a2ee8",
-    "src/simulation/balance.js": "0317d5d23326eb0035c8a59e87eae91b80544328e1d647a530188490c556b637",
+    "src/simulation/rules.js": "ee18b7a0f73c3de111d0c765b969b78f10abcac1fc8bf1f2de9d5235f4fbd912",
+    "src/simulation/balance.js": "54cf0dba263fe34d8bf83320c5fb31ba4dde17ad63440bf03f917a532daa1748",
     "src/simulation/raids.js": "79d66a3e3e34e08f862e16510d9ecc5ebbc7a37600ac5c03893cbab928d95c3a"
   }
 }

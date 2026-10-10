@@ -9,8 +9,9 @@ test('native capacity separates two-hit healthy crops from one-hit wounded crops
  for(const t of r.tiers){const a=t.strongest;
   assert.equal(a.hits,a.group.reduce((n,id)=>n+animalSpec(id).hit_budget_max,0));
   assert.equal(a.maxFreshCropKills,Math.floor(a.hits/2));assert.equal(a.maxAlreadyWoundedCropKills,a.hits);
-  assert.ok(t.maxAnimals<=5);
+  assert.ok(t.maxAnimals<=14);
  }
+ assert.ok(r.tiers.at(-1).maxAnimals>5);
  const control=r.references.find(v=>v.night===100&&v.plants===400);
  assert.equal(control.targetKills,110);assert.equal(control.freshCropHitsRequired,220);assert.equal(control.optimisticMinimumAnimals,28);
  assert.ok(control.freshCropHitsRequired>r.maxHits);

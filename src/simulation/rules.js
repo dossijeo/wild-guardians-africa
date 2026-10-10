@@ -25,15 +25,16 @@ export function permission(state,action) {
 export function attraction(plants) { return plants.filter(p=>p.alive).reduce((sum,p)=>sum+cropSpec(p.species).base_harvest_value,0); }
 export function threatTier(value) { return B.threat_tiers.find(t=>value>=t.attraction_min&&(t.attraction_max_exclusive===null||value<t.attraction_max_exclusive))??null; }
 export function compositions(budget,unlocked) {
+  if(!Number.isSafeInteger(budget)||budget<1)return [];
   const species=B.animals.filter(a=>unlocked.includes(a.id));
   const result=[];
   function visit(i,cost,count,group) {
     if(i===species.length) {
-      if(count && count<=5 && cost>=Math.ceil(.75*budget)&&cost<=budget)result.push([...group]);
+      if(count && count<=(B.raids.max_animals??budget) && cost>=Math.ceil(.75*budget)&&cost<=budget)result.push([...group]);
       return;
     }
     const a=species[i];
-    for(let n=0;n<=a.max_per_raid && count+n<=5 && cost+n*a.threat_cost<=budget;n++) {
+    for(let n=0;n<=(a.max_per_raid??Math.floor(budget/a.threat_cost)) && count+n<=(B.raids.max_animals??budget) && cost+n*a.threat_cost<=budget;n++) {
       visit(i+1,cost+n*a.threat_cost,count+n,[...group,...Array(n).fill(a.id)]);
     }
   }

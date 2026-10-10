@@ -5,10 +5,10 @@
 | Atracción mínima | Máximo animales | Máximo golpes | Máximo cultivos nuevos destruidos | Máximo daño estructural |
 |---:|---:|---:|---:|---:|
 | 0 | 2 | 8 | 4 | 160 |
-| 100 | 4 | 16 | 8 | 320 |
-| 300 | 7 | 28 | 14 | 560 |
-| 800 | 10 | 40 | 20 | 800 |
-| 2000 | 14 | 56 | 28 | 1120 |
+| 100 | 3 | 12 | 6 | 240 |
+| 300 | 4 | 17 | 8 | 370 |
+| 800 | 5 | 22 | 11 | 520 |
+| 2000 | 5 | 24 | 12 | 720 |
 
 ## Objetivos orientativos sin defensa
 

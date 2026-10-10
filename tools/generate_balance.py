@@ -17,6 +17,10 @@ if balance['workers']['older_wage'] != 30 or balance['workers']['young_wage'] < 
     raise SystemExit('Tutorial audio requires an older-worker wage of 30 and no wage below 30 coins')
 for animal in balance['animals']:
     animal['structure_hit_damage']=revisions['structure_hit_damage'][animal['id']]
+if revisions.get('unlock_raid_animal_limits',False):
+    balance['raids']['max_animals']=None
+    for animal in balance['animals']:
+        animal['max_per_raid']=None
 harvest_values=revisions.get('crop_harvest_values',{})
 assert set(harvest_values)<=set(c['id'] for c in balance['crops'])
 assert all(type(v) is int and v>0 for v in harvest_values.values())

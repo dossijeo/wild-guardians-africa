@@ -16,7 +16,8 @@ test('Original balance preserves unrelated values with explicit player revisions
  original.crops.forEach(c=>{c.base_harvest_value=harvest[c.id];});
  original.initial_money=1500;
  Object.assign(original.postgame.additional_village_cost,{formula:'2000',fixed_cost:2000});
- original.animals.forEach((a,i)=>{a.structure_hit_damage=[20,25,35,40,60][i];});
+ original.raids.max_animals=null;
+ original.animals.forEach((a,i)=>{a.structure_hit_damage=[20,25,35,40,60][i];a.max_per_raid=null;});
  original.workers.older_wage=30;original.workers.young_wage=40;
  const boundaries=[0,100,300,800,2000];
  original.threat_tiers.forEach((t,i)=>{t.attraction_min=boundaries[i];t.attraction_max_exclusive=boundaries[i+1]??null;t.night_attack_probability=1;});
@@ -92,11 +93,13 @@ test('Every reachable threat budget has unique legal unordered compositions',()=
     assert.equal(new Set(groups.map(g=>JSON.stringify(g))).size,groups.length);
     for(const group of groups) {
       const cost=group.reduce((s,id)=>s+BALANCE.animals.find(a=>a.id===id).threat_cost,0);
-      assert.ok(cost>=Math.ceil(.75*budget)&&cost<=budget);assert.ok(group.length<=5);
-      for(const a of BALANCE.animals)assert.ok(group.filter(id=>id===a.id).length<=a.max_per_raid);
+      assert.ok(cost>=Math.ceil(.75*budget)&&cost<=budget);assert.ok(group.length<=budget);
+      for(const a of BALANCE.animals)assert.ok(group.filter(id=>id===a.id).length<=(a.max_per_raid??budget));
     }
   }
-  assert.deepEqual(compositions(5,['warthog','hyena','buffalo']),[['buffalo'],['warthog','hyena'],['warthog','warthog','hyena']]);
+  assert.ok(compositions(5,['warthog','hyena','buffalo']).some(g=>g.length===5&&g.every(id=>id==='warthog')));
+  assert.ok(compositions(32,['warthog']).some(g=>g.length===32));
+  for(const budget of [0,-1,NaN,Infinity,1.5])assert.deepEqual(compositions(budget,['warthog']),[]);
   assert.ok(!compositions(14,BALANCE.animals.map(a=>a.id)).some(g=>g.length===1&&g[0]==='rhino'));
 });
 test('Building collapse thresholds remain distinct and irreversible',()=>{
