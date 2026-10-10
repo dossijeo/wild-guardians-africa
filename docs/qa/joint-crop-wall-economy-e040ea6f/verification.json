@@ -1,0 +1,24 @@
+{
+  "sourceHashes": {
+    "tools/joint_crop_wall_screen.py": "36b7554c44ef6402cff952a96639df84c55ea2c7dcd4acdc9fea44e5402f2f43",
+    "tools/joint_crop_wall_native_contract.mjs": "4e47dd88cced29d8e3a2d4a87038bd3e7608856e6cfed6d98b60ff2b6bb50890",
+    "src/simulation/game.js": "e9b62e9dfbb3622182f450bc716da195d61db7aa710d620e687a2fcf9580a6fa",
+    "src/simulation/money.js": "850ba63fabb7b0cb292f31572b1d2851f2af983f0479124e5273dfe5d831b9d7",
+    "src/persistence/snapshots.js": "992c9bb29d83f844eabd4a8a6963722ef4f418f62b3531f99e782397aaae9806",
+    "docs\\qa\\joint-crop-wall-economy-e040ea6f\\estimates.json": "de196681d4040b6c435cdf7e7f93df70bb42af119e5391c5fdfa489e4362c70a"
+  },
+  "pythonContracts": {
+    "tests": 7,
+    "passed": true
+  },
+  "nativeContract": {
+    "passed": true,
+    "historicalCost": 10,
+    "newCost": 3,
+    "historicRepairCharged": 3,
+    "newRepairCharged": 1,
+    "gateRepairCharged": 3
+  },
+  "simulationRun": false,
+  "productionEdits": false
+}
