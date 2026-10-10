@@ -5,13 +5,15 @@ import {createHash} from 'node:crypto';
 import {gzipSync} from 'node:zlib';
 import {serialize} from '../src/persistence/snapshots.js';
 import {simulateNativeCampaign} from './native-campaign-runner.mjs';
+import {PROFILES} from '../src/simulation/workforce.js';
 import {intensiveRunProvenance} from './intensive-run-provenance.mjs';
 import {NATIVE_CAMPAIGN_PROTOCOL,nativeCampaignStrategy,campaignProtocolForLabour} from './native-campaign-protocol.mjs';
 export function parseNativeCampaignArgs(args){
- const allowed=new Set(['out','days','seed','strategy','biome','culture','stop-file','stop-cash','stop-min-day','labour-policy','defense-policy','defense-start-day','crop-policy']),o={days:7,seed:712,strategy:'good',biome:'sabana',culture:'mapungubwe'};
+ const allowed=new Set(['out','days','seed','strategy','biome','culture','stop-file','stop-cash','stop-min-day','labour-policy','defense-policy','defense-start-day','crop-policy','profile']),o={days:7,seed:712,strategy:'good',biome:'sabana',culture:'mapungubwe',profile:'olderFemale'};
  for(let i=0;i<args.length;i+=2){const k=args[i]?.replace(/^--/,'');if(!allowed.has(k)||args[i+1]===undefined)throw Error('Use --out DIR --days 1..180 --seed INTEGER --strategy expansive|good|bad|no-walls|no-shield --biome NAME --culture NAME');o[k]=args[i+1];}
  for(const k of ['days','seed'])o[k]=Number(o[k]);
  if(!Number.isSafeInteger(o.days)||o.days<1||o.days>180||!Number.isSafeInteger(o.seed)||o.seed<0)throw Error('Invalid native days/seed');
+ if(!PROFILES.some(p=>p.id===o.profile))throw Error('Unknown native worker profile');
  if(o['stop-cash']!==undefined||o['stop-min-day']!==undefined){
   o['stop-cash']=Number(o['stop-cash']);o['stop-min-day']=Number(o['stop-min-day']);
   if(!Number.isSafeInteger(o['stop-cash'])||o['stop-cash']<1||!Number.isSafeInteger(o['stop-min-day'])||o['stop-min-day']<1)throw Error('Cash calibration stop requires positive --stop-cash and --stop-min-day');
@@ -31,12 +33,12 @@ export function nativeCampaignProvenance(options){
  paths.push('tools/native-closed-defense-policy.mjs','tools/native-funded-defense-policy.mjs','tools/native-obstacle-aware-contour.mjs','tools/native-perimeter-proof.mjs','tools/native-q7-labour-policy.mjs','tools/native-q8-labour-policy.mjs');
  paths.push('tools/native-campaign-crop-policy.mjs');
  for(const path of paths)p.sourceHashes[path]=createHash('sha256').update(readFileSync(new URL(path,root))).digest('hex');
- return {...p,protocol:campaignProtocolForLabour(options.labourPolicy)};
+ return {...p,protocol:{...campaignProtocolForLabour(options.labourPolicy),profile:options.profile??'olderFemale'}};
 }
 export async function runNativeCampaignCase(options,{run=simulateNativeCampaign,provenance=nativeCampaignProvenance}={}){
  const out=options.out;if(existsSync(out)&&readdirSync(out).length)throw Error('Refusing to overwrite original campaign evidence');mkdirSync(out,{recursive:true});
  const save=(name,value)=>writeFileSync(resolve(out,name),JSON.stringify(value,null,2)+'\n');
- const inputs=provenance(options);save('source.json',inputs);save('protocol.json',campaignProtocolForLabour(options.labourPolicy));
+ const inputs=provenance(options);save('source.json',inputs);save('protocol.json',{...campaignProtocolForLabour(options.labourPolicy),profile:options.profile??'olderFemale'});
  save('receipt.json',{status:'running',options,startedAt:inputs.startedAt});
  try{
   if(inputs.trackedChanges.length)throw Error('Freeze tracked runtime before launching native pilot');

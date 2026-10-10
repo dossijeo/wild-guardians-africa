@@ -71,3 +71,17 @@ test('Q8 differs only in affordable six-worker startup; native wages and receipt
  assert.throws(()=>createQ7LabourPolicy({openingStaff:NaN}));assert.throws(()=>createQ7LabourPolicy({openingStaff:0}));
  assert(nativeCampaignProvenance(options).sourceHashes['tools/native-q8-labour-policy.mjs']);
 });
+
+test('native young profile is explicit and pays original40 wages without altering Q8 gates',()=>{
+ const o=parseNativeCampaignArgs(['--out','fixture','--labour-policy','q8','--profile','youngFemale']);assert.equal(o.profile,'youngFemale');
+ assert.equal(nativeCampaignProvenance(o).protocol.profile,'youngFemale');
+ assert.equal(parseNativeCampaignArgs(['--out','fixture']).profile,'olderFemale');
+ assert.throws(()=>parseNativeCampaignArgs(['--out','fixture','--profile','freeWorkers']));
+ const s=Game.newGame({seed:712,slotId:'q8-young-paid'}),nav=new Navigation(712,'sabana');
+ nav.field={canyon:false,riverLevel:0,surface:()=>0,slope:()=>0,fluidInside:()=>false};nav.propsAt=()=>[];nav.setState(s);
+ Game.placeStructure(s,'young-center',{x:-15,z:0},nav);Game.plant(s,'young-first','mijo',0,0,nav);
+ const q=createQ8LabourPolicy({profile:o.profile});assert.equal(q.dawn(s).cost,240);
+ Game.openInitialHiring(s);Game.hire(s,'young-paid-six',{youngFemale:6});q.hired(s,6,{daily:true});
+ assert.equal(s.ledger.entries['young-paid-six'].n,'-240');assert.equal(q.reserve(),240);
+ assert(s.workers.every(w=>w.profile==='youngFemale'));assert.equal(q.report().settings.lastTrialTime,180);
+});

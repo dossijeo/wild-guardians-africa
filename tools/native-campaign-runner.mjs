@@ -39,7 +39,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
  if(!Number.isSafeInteger(days)||days<1||days>180)throw Error('Native protocol permits1–180 days only');
  if(!Number.isSafeInteger(plantsPerWorker)||plantsPerWorker<1)throw new Error('Plants per worker must be a positive integer');
  if(!['legacy','cashflow'].includes(cropPolicy))throw Error('Unknown crop policy');
- const protocol=campaignProtocolForLabour(labourPolicy),q4=labourPolicy==='q4',q5=['q5','q6','q7','q8'].includes(labourPolicy),q6=['q6','q7','q8'].includes(labourPolicy),q7=['q7','q8'].includes(labourPolicy),labourHistory=[],labourObservations=[],labourReasons={};
+ const protocol={...campaignProtocolForLabour(labourPolicy),profile},q4=labourPolicy==='q4',q5=['q5','q6','q7','q8'].includes(labourPolicy),q6=['q6','q7','q8'].includes(labourPolicy),q7=['q7','q8'].includes(labourPolicy),labourHistory=[],labourObservations=[],labourReasons={};
  const policy=nativeCampaignStrategy(strategy);defend=policy.defend;middayHiring=policy.middayHiring;plantsPerWorker=6;
  if(typeof Game.nightEntryPending!=='function')throw Error('Native pending entry handshake is not integrated; no campaign started');
  const opening=createOpeningWorld(world),nav=opening.nav;let s=opening.s,sequence=0;
