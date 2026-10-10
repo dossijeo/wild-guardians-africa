@@ -1,0 +1,209 @@
+TAP version 13
+# (node:53148) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native read-only wall quote is possible without funds; preview/build still enforce real cash
+ok 1 - native read-only wall quote is possible without funds; preview/build still enforce real cash
+  ---
+  duration_ms: 464.53
+  ...
+# Subtest: real partial purchases close paid perimeter, create one worker gate, retain crops and replay saved state
+ok 2 - real partial purchases close paid perimeter, create one worker gate, retain crops and replay saved state
+  ---
+  duration_ms: 645.0304
+  ...
+# Subtest: paid wage protection can postpone purchases while preserving a real future savings target
+ok 3 - paid wage protection can postpone purchases while preserving a real future savings target
+  ---
+  duration_ms: 252.6305
+  ...
+# Subtest: funded defense remains opt-in and cannot lock funds before its declared day
+ok 4 - funded defense remains opt-in and cannot lock funds before its declared day
+  ---
+  duration_ms: 170.9947
+  ...
+# Subtest: legal native removal of small vegetation is allowed and recorded only through paid wall commands
+ok 5 - legal native removal of small vegetation is allowed and recorded only through paid wall commands
+  ---
+  duration_ms: 385.4525
+  ...
+# Subtest: a bounded failed search alone never certifies an enclosure
+ok 6 - a bounded failed search alone never certifies an enclosure
+  ---
+  duration_ms: 2.1664
+  ...
+# Subtest: only positively complete components wholly inside the outline certify poses
+ok 7 - only positively complete components wholly inside the outline certify poses
+  ---
+  duration_ms: 2.2949
+  ...
+# Subtest: a valid direct route or native detour rejects the proposed defense
+ok 8 - a valid direct route or native detour rejects the proposed defense
+  ---
+  duration_ms: 0.7296
+  ...
+# Subtest: an empty origin frontier remains unproven without a positive physical connector
+ok 9 - an empty origin frontier remains unproven without a positive physical connector
+  ---
+  duration_ms: 0.3828
+  ...
+# Subtest: a body-valid pose with a solid obstacle blocking crop contact is not an attack position
+ok 10 - a body-valid pose with a solid obstacle blocking crop contact is not an attack position
+  ---
+  duration_ms: 1.5028
+  ...
+# (node:34004) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: central full damage, frontal90-degree periphery half damage and maximum radius are physical
+ok 11 - central full damage, frontal90-degree periphery half damage and maximum radius are physical
+  ---
+  duration_ms: 10.3221
+  ...
+# Subtest: sector follows current contact heading and rejects a backward or remote contact
+ok 12 - sector follows current contact heading and rejects a backward or remote contact
+  ---
+  duration_ms: 1.9019
+  ...
+# Subtest: a radius-zero or damage-zero profile never manufactures peripheral hits or mandatory deaths
+ok 13 - a radius-zero or damage-zero profile never manufactures peripheral hits or mandatory deaths
+  ---
+  duration_ms: 1.1719
+  ...
+# Subtest: area cap prioritizes the central plant then nearest legal physical candidates
+ok 14 - area cap prioritizes the central plant then nearest legal physical candidates
+  ---
+  duration_ms: 1.8767
+  ...
+# Subtest: native wall footprint occludes peripheral impacts, including animal-blocking gate=false
+ok 15 - native wall footprint occludes peripheral impacts, including animal-blocking gate=false
+  ---
+  duration_ms: 1.1393
+  ...
+# Subtest: native wall footprint occludes peripheral impacts, including animal-blocking gate=true
+ok 16 - native wall footprint occludes peripheral impacts, including animal-blocking gate=true
+  ---
+  duration_ms: 1.0099
+  ...
+# Subtest: a wall between actor and impact prevents a central hit rather than producing splash behind it
+ok 17 - a wall between actor and impact prevents a central hit rather than producing splash behind it
+  ---
+  duration_ms: 1.1997
+  ...
+# Subtest: a native centre footprint blocks rays and is re-evaluated after removal
+ok 18 - a native centre footprint blocks rays and is re-evaluated after removal
+  ---
+  duration_ms: 0.9922
+  ...
+# Subtest: Shield protects each peripheral plant and blocks a crossing ray outside its endpoint
+ok 19 - Shield protects each peripheral plant and blocks a crossing ray outside its endpoint
+  ---
+  duration_ms: 2.033
+  ...
+# Subtest: a shielded central target consumes no crop HP
+ok 20 - a shielded central target consumes no crop HP
+  ---
+  duration_ms: 0.9495
+  ...
+# Subtest: one attack is deduplicated across replay/save and fractional damage persists exactly
+ok 21 - one attack is deduplicated across replay/save and fractional damage persists exactly
+  ---
+  duration_ms: 3.1708
+  ...
+# Subtest: intro destruction cap survives central4 and peripheral2 damage, retaining a living farm
+ok 22 - intro destruction cap survives central4 and peripheral2 damage, retaining a living farm
+  ---
+  duration_ms: 1.0262
+  ...
+# Subtest: grid handles append, death, native position epoch and replacement without scanning all crops per hit
+ok 23 - grid handles append, death, native position epoch and replacement without scanning all crops per hit
+  ---
+  duration_ms: 15.7063
+  ...
+# Subtest: profile and crop fractional bounds reject corrupt saves while supporting legacy integer HP
+ok 24 - profile and crop fractional bounds reject corrupt saves while supporting legacy integer HP
+  ---
+  duration_ms: 1.5543
+  ...
+# Subtest: native warthog profile completes real melee, one impact per attack, dt0.1
+ok 25 - native warthog profile completes real melee, one impact per attack, dt0.1
+  ---
+  duration_ms: 22.6101
+  ...
+# Subtest: native warthog profile completes real melee, one impact per attack, dt1
+ok 26 - native warthog profile completes real melee, one impact per attack, dt1
+  ---
+  duration_ms: 10.4968
+  ...
+# Subtest: native hyena profile completes real melee, one impact per attack, dt0.1
+ok 27 - native hyena profile completes real melee, one impact per attack, dt0.1
+  ---
+  duration_ms: 11.559
+  ...
+# Subtest: native hyena profile completes real melee, one impact per attack, dt1
+ok 28 - native hyena profile completes real melee, one impact per attack, dt1
+  ---
+  duration_ms: 8.0372
+  ...
+# Subtest: native buffalo profile completes real melee, one impact per attack, dt0.1
+ok 29 - native buffalo profile completes real melee, one impact per attack, dt0.1
+  ---
+  duration_ms: 6.261
+  ...
+# Subtest: native buffalo profile completes real melee, one impact per attack, dt1
+ok 30 - native buffalo profile completes real melee, one impact per attack, dt1
+  ---
+  duration_ms: 5.3278
+  ...
+# Subtest: native lion profile completes real melee, one impact per attack, dt0.1
+ok 31 - native lion profile completes real melee, one impact per attack, dt0.1
+  ---
+  duration_ms: 6.8419
+  ...
+# Subtest: native lion profile completes real melee, one impact per attack, dt1
+ok 32 - native lion profile completes real melee, one impact per attack, dt1
+  ---
+  duration_ms: 5.1903
+  ...
+# Subtest: native rhino profile completes real melee, one impact per attack, dt0.1
+ok 33 - native rhino profile completes real melee, one impact per attack, dt0.1
+  ---
+  duration_ms: 12.0389
+  ...
+# Subtest: native rhino profile completes real melee, one impact per attack, dt1
+ok 34 - native rhino profile completes real melee, one impact per attack, dt1
+  ---
+  duration_ms: 10.9281
+  ...
+# Subtest: a native wall strike uses structural profile damage but never applies agricultural splash
+ok 35 - a native wall strike uses structural profile damage but never applies agricultural splash
+  ---
+  duration_ms: 182.5941
+  ...
+# Subtest: native saved attack resumes once and does not duplicate event facts
+ok 36 - native saved attack resumes once and does not duplicate event facts
+  ---
+  duration_ms: 10.7833
+  ...
+# Subtest: native committed contact writes half-point HP, reload preserves it and applied attacks cannot hit twice
+ok 37 - native committed contact writes half-point HP, reload preserves it and applied attacks cannot hit twice
+  ---
+  duration_ms: 2.6282
+  ...
+# Subtest: live wall collapse remains occluding until ruined, and new topology invalidates cached geometry
+ok 38 - live wall collapse remains occluding until ruined, and new topology invalidates cached geometry
+  ---
+  duration_ms: 1.7504
+  ...
+# Subtest: maximal canonical profile and its bounded living queries are valid; malformed and replay IDs are not
+ok 39 - maximal canonical profile and its bounded living queries are valid; malformed and replay IDs are not
+  ---
+  duration_ms: 1.3955
+  ...
+1..39
+# tests 39
+# suites 0
+# pass 39
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2220.5364

@@ -2,6 +2,7 @@
 // A timed/bounded path failure is never evidence of enclosure.
 import {containsPoint} from '../src/world/footprints.js';
 import {centerBoundaryPoint} from '../src/world/centers.js';
+import {agriculturalRayClear} from '../src/simulation/raid-agricultural-impact.js';
 export function nativeServiceComponentProof(s,view,targets,radius,outside,outline){
  const polygon=outline.map(([x,z])=>({x,z})),regions=new Map();let poses=0,blocked=0,certified=0,physicalConnectors=0,emptyNativeOrigins=0;
  const enclosed=region=>{
@@ -13,6 +14,10 @@ export function nativeServiceComponentProof(s,view,targets,radius,outside,outlin
   for(let i=0;i<32;i++){
    const a=angle+i*Math.PI/16,point=target.kind==='center'?centerBoundaryPoint(target,a,radius+.5,s):{x:target.x+Math.sin(a)*reach,z:target.z+Math.cos(a)*reach};poses++;
    if(!view.walkable(point.x,point.z,radius,null,false)){blocked++;continue;}
+   // A body-valid pose behind a solid obstacle cannot hit this crop. Use the
+   // same physical contact ray as the native impact resolver; do not demand
+   // an enclosure certificate for a position that cannot perform the attack.
+   if(target.alive===true&&!agriculturalRayClear(s,view,point,target)){blocked++;continue;}
    if(view.segmentClear(point,outside,radius,null,false))return {valid:false,reason:'native-service-direct-route-open',targetId:target.id,point,poses,blocked,certified};
    if(view.approachPath(outside,point,radius,32))return {valid:false,reason:'native-service-route-open',targetId:target.id,point,poses,blocked,certified};
    // These are exactly the animal A* origin connectors (no worker portals).
@@ -41,5 +46,5 @@ export function nativeServiceComponentProof(s,view,targets,radius,outside,outlin
   }
  }
  return {valid:true,reason:'native-service-poses-in-positive-closed-components',poses,blocked,certified,physicalConnectors,emptyNativeOrigins,regions:regions.size,
-  scope:'Native 32 service poses per target from the tested exterior origin: collision-blocked poses, positively enclosed native origin components,. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof.'};
+  scope:'Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof.'};
 }
