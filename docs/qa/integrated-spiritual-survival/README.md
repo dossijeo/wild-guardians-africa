@@ -176,3 +176,29 @@ and not an isolated GPU performance benchmark. Candidate-2 focused checks: 22
 pass, zero failures. Build: 11.81 seconds on this machine.
 
 Tutorial cross-save ordering now recognizes an already-seen Growth explanation in the player profile, so an unseen Multiply explanation is not stranded waiting for a local-only acknowledgement. Expanded tutorial regression: 21 pass / 3 fail; raw output retained in tutorial-expanded-current.tap. These failures require diagnosis against the new real-watering/sequence requirement before approval, not silent deletion of assertions.
+
+## Guided agricultural tutorial checkpoint
+
+The three prior tutorial failures were old sequence expectations: lessons after
+first delivery, lessons during a raid, or never acknowledging a new lesson while
+workers delivered. Updated player-flow tests retain native paths, delivery, exact
+income and paid wages; all 24 previous tutorial/reminder tests now pass.
+
+The first-day lesson now guides the HUD Magic button, then a concrete valid
+plant in the world after selecting the corresponding power. Fresh useful native
+applications acknowledge the matching lesson and advance to the next power.
+Multiply points to a different valid plant. When none exists, no HUD/world hand
+or action pause is created; the optional explanation can finish or be closed.
+Later-day fallback explains without a first-day hand pause. No fabricated plant
+is added. Global profile history and save reload preserve ordering and targets.
+
+39 guided/tutorial/hand/pause/reminder tests pass (tutorial-guided-final.tap);
+build passes in 10.92 seconds. New cases cover watered-state gating, exact hand
+target, actual native cast while guided, reload, one-plant exception and profile
+history. Real browser visual acceptance remains unverified.
+
+SFX static audit initially could not recognize the new native ternary producer
+`wave ? RaidWaveSpawned : RaidSpawned`. Its extractor now records both literal
+branches, with branch annotations rather than pretending execution. Five source
+audit/extractor tests pass; 100 assigned, 26 unassigned, all 126 original bytes
+unchanged. This is a metadata repair, not proof of audible playback.

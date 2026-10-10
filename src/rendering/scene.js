@@ -565,10 +565,10 @@ export class WorldScene {
     return boxes.filter(b=>b.max[0]>=loX&&b.min[0]<=hiX&&b.max[2]>=loZ&&b.min[2]<=hiZ);
   }
   tutorialGuideTarget(){
-    const step=this.state.tutorial.step,key=step+':'+this.tutorialToolKind+':'+this.nav.version;
+    const step=this.state.tutorial.step,magicGuide=['magic.growth','magic.multiply'].includes(this.state.tutorial.reading),key=step+':'+this.tutorialToolKind+':'+this.nav.version+(magicGuide?':'+this.state.tutorial.reading+':'+this.tutorialSpellKind+':'+this.state.spells.length+':'+this.state.plants.length+':'+Math.floor(this.state.elapsed*5):'');
     let config=null;
-    if(this.tutorialHandsEnabled!==false&&this.state.day===1&&!this.state.result&&step!=='done'){
-      if(this.handTargetKey!==key){this.handTargetKey=key;this.handTargetCache=tutorialHandTarget(this.state,this.nav,this.tutorialToolKind);}config=this.handTargetCache;
+    if(this.tutorialHandsEnabled!==false&&this.state.day===1&&!this.state.result&&(step!=='done'||magicGuide)){
+      if(this.handTargetKey!==key){this.handTargetKey=key;this.handTargetCache=tutorialHandTarget(this.state,this.nav,this.tutorialToolKind,this.tutorialSpellKind);}config=this.handTargetCache;
     }
     return config;
   }

@@ -41,14 +41,15 @@ test('The native farm resumes physical worker actions after reading, and complet
   Game.hire(state,'tutorial-wage',{olderFemale:1});controller.update();assert.equal(state.tutorial.reading,'basic.work');
   Game.advanceReal(state,20,nav);assert.ok(Math.abs(state.elapsed-20)<1e-8);controller.acknowledge();
   Game.tick(state,.25,nav);controller.update();assert.ok(state.elapsed>0);assert.equal(controller.presentation().blocking,false);
-  let ordered=false,carrying=false;
+  let ordered=false,carrying=false;const agriculturalLessons=[];
   for(let i=0;i<2000&&!state.crates.some(c=>c.delivered);i++){
     Game.tick(state,.2,nav);controller.update();
+    if(['magic.growth','magic.multiply'].includes(state.tutorial.reading)){agriculturalLessons.push(state.tutorial.reading);assert.ok(state.plants.filter(p=>p.alive).every(p=>p.water[0].status!=='due'));controller.acknowledge();}
     if(state.tutorial.reading==='basic.harvest'){assert.equal(numberOf(state.ledger.balance),665);controller.acknowledge();Game.harvest(state,'tutorial-order',state.plants[0].id);ordered=true;assert.equal(numberOf(state.ledger.balance),665);}
     if(state.crates.some(c=>!c.delivered)){carrying=true;assert.equal(state.tutorial.step,'harvest');assert.equal(controller.presentation().variant,'delivery');assert.equal(controller.presentation().blocking,false);}
   }
   assert.equal(ordered,true);assert.equal(carrying,true);assert.ok(state.crates.some(c=>c.delivered));assert.equal(numberOf(state.ledger.balance),676);assert.equal(state.day,1);
-  assert.equal(state.tutorial.reading,'basic.complete');assert.equal(profile.basicCompleted,false);controller.acknowledge();assert.equal(profile.basicCompleted,true);assert.equal(controller.presentation().id,'magic.growth');controller.acknowledge();assert.equal(controller.presentation().id,'magic.multiply');controller.acknowledge();assert.equal(controller.presentation(),null);
+  assert.equal(state.tutorial.reading,'basic.complete');assert.equal(profile.basicCompleted,false);controller.acknowledge();assert.equal(profile.basicCompleted,true);while(state.tutorial.reading&&['magic.growth','magic.multiply'].includes(state.tutorial.reading)){agriculturalLessons.push(state.tutorial.reading);controller.acknowledge();}assert.deepEqual(agriculturalLessons,['magic.growth','magic.multiply']);assert.equal(controller.presentation(),null);
   assert.equal(Object.keys(state.ledger.entries).filter(id=>id==='tutorial-wage').length,1);
 });
 test('Only a previously completed basic tutorial can be skipped; new magic still interrupts the second slot',()=>{
@@ -59,11 +60,11 @@ test('Only a previously completed basic tutorial can be skipped; new magic still
   second.day=3;c.update();assert.equal(second.tutorial.reading,'mechanic.defenses');c.acknowledge();assert.equal(second.tutorial.reading,'magic.growth');
   assert.ok(!second.pauses.includes('tutorial-reading'));assert.equal(second.tutorial.step,'done');
 });
-test('The first unknown raid and Shield pause together; known later raids never add another tutorial pause',()=>{
+test('The first raid and Shield lessons take priority; agricultural lessons wait until the raid ends',()=>{
   const {state,profile,controller}=setup();profile.record('basic.complete');controller.skipBasic();
   state.day=2;state.raid={animals:[]};controller.update();assert.equal(state.tutorial.reading,'mechanic.first-raid');
   controller.acknowledge();assert.equal(state.tutorial.reading,'magic.shield');controller.acknowledge();assert.equal(state.tutorial.reading,'mechanic.defenses');controller.acknowledge();
-  assert.equal(state.tutorial.reading,'magic.growth');controller.acknowledge();assert.equal(state.tutorial.reading,'magic.multiply');controller.acknowledge();assert.equal(state.tutorial.reading,null);state.raid=null;controller.update();state.raid={animals:[]};controller.update();assert.equal(state.tutorial.reading,null);assert.ok(!state.pauses.includes('tutorial-reading'));
+  assert.equal(state.tutorial.reading,null);state.raid=null;controller.update();assert.equal(state.tutorial.reading,'magic.growth');controller.acknowledge();assert.equal(state.tutorial.reading,'magic.multiply');controller.acknowledge();state.raid={animals:[]};controller.update();assert.equal(state.tutorial.reading,null);assert.ok(!state.pauses.includes('tutorial-reading'));
 });
 test('Growth, Multiply and recovery have independent IDs; repeats and unrelated pauses remain intact',()=>{
   const {state,profile,controller}=setup();profile.record('basic.complete');profile.record('mechanic.defenses');controller.skipBasic();
@@ -115,7 +116,7 @@ test('a first paid crop completed after day one still closes the basic tutorial 
  for(let dz=-6;dz<=6&&!point;dz+=1.5)for(let dx=4.5;dx<12&&!point;dx+=1.5){const p={x:center.x+dx,z:center.z+dz};if(nav.placement(p.x,p.z,.4).valid&&nav.path(centerServicePoint(center,state,.8),p,.28,null,true))point=p;}
  assert.ok(point);Game.plant(state,'late-seed','mijo',point.x,point.z,nav);Game.pause(state,'hiring');Game.hire(state,'late-wage',{olderFemale:1});c.update();
  assert.equal(state.tutorial.step,'observe');
- for(let i=0;i<2000&&!state.crates.some(crate=>crate.delivered);i++){Game.tick(state,.2,nav);c.update();}
+ for(let i=0;i<2000&&!state.crates.some(crate=>crate.delivered);i++){Game.tick(state,.2,nav);c.update();if(['magic.growth','magic.multiply'].includes(state.tutorial.reading))c.acknowledge();}
  assert.ok(state.crates.some(crate=>crate.delivered));assert.equal(state.tutorial.step,'done');assert.equal(c.presentation().id,'basic.complete');assert.equal(profile.basicCompleted,false);c.acknowledge();assert.equal(profile.basicCompleted,true);
 });
 test('an expired raid instruction is dropped unread while the Shield lesson remains available',()=>{

@@ -1,3 +1,4 @@
+import {literalEventProducers} from './sfx-event-producers.mjs';
 import {POWER_READY_SOUND_IDS} from '../src/audio/power-ready-audio.js';
 import {DESTRUCTION_SOUND_ROUTES} from '../src/audio/destruction-audio.js';
 import {readFileSync,writeFileSync,mkdirSync,readdirSync} from 'node:fs';
@@ -67,8 +68,8 @@ for(const [file,lines] of sourceLines)for(let index=0;index<lines.length;index++
  const seen=new Set();for(const match of lines[index].matchAll(/['"]([a-z0-9_]+)['"]/g))if(bankIds.has(match[1])&&!seen.has(match[1])){
   seen.add(match[1]);const entries=mentions.get(match[1])??[];entries.push({file,line:index+1});mentions.set(match[1],entries);
  }
- if(file.startsWith('src/simulation/')||file.startsWith('src/tutorial/'))for(const match of lines[index].matchAll(/\bemit\([^,]+,\s*['"](\w+)['"]/g)){
-  const entries=eventProducers.get(match[1])??[];entries.push({file,line:index+1,selector:match[0]});eventProducers.set(match[1],entries);
+ if(file.startsWith('src/simulation/')||file.startsWith('src/tutorial/'))for(const match of literalEventProducers(lines[index])){
+  const entries=eventProducers.get(match.event)??[];entries.push({file,line:index+1,selector:match.selector,...(match.branch?{branch:match.branch}:{})});eventProducers.set(match.event,entries);
  }
 }
 const app='src/app/main.js',audioFile='src/audio/audio.js';

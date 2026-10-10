@@ -1,8 +1,10 @@
+import {agriculturalGuidePlant} from '../tutorial/agricultural-guide.js';
 import {HAND_ASSETS,HAND_INFO} from '../rendering/hands-native.js';
 import {assetUrl} from '../rendering/asset-url.js';
 
-export function tutorialHudHandTarget(state,message,toolKind=null){
+export function tutorialHudHandTarget(state,message,toolKind=null,toolSpell=null){
   if(state.day!==1||state.result||state.tutorial.basicSkipped||state.pauses.some(p=>['menu','hiring','hidden','context-lost'].includes(p)))return null;
+  if(['magic.growth','magic.multiply'].includes(message?.id)){const kind=message.id.slice(6);return state.raid||!agriculturalGuidePlant(state,kind)||toolKind==='spell'&&toolSpell===kind?null:'[data-menu="magic"]';}
   const step=state.tutorial.step;
   message??=state.tutorial.guideAfterAuto?.includes('basic.'+step)?{id:'basic.'+step}:null;
   if(!message)return null;

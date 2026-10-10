@@ -7,6 +7,10 @@ import {dailyTutorialMessages,tutorialMessageShownToday,recordTutorialMessageTod
 const known=new Set(TUTORIAL_IDS),reason='tutorial-reading';
 const delivered=s=>s.crates.some(c=>c.delivered)||s.events.some(e=>e.type==='CrateDelivered');
 function readingActionCompleted(s,id){
+  if(['magic.growth','magic.multiply'].includes(id)){
+    const start=s.events.findLastIndex(e=>e.type==='TutorialMessageStarted'&&e.messageId===id);
+    return start>=0&&s.events.slice(start+1).some(e=>e.type==='SpellActivated'&&e.kind===id.slice(6)&&e.benefited);
+  }
   if(id==='basic.center')return s.structures.some(c=>c.kind==='center'&&operational(c));
   if(id==='basic.plant')return s.plants.length>0;
   if(id==='basic.hiring')return s.hiringPaidDay!=null;
