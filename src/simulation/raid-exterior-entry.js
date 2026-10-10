@@ -1,3 +1,4 @@
+import {exteriorGroupWitness} from './raid-exterior-connectivity.js';
 import {wallCollisionFrame} from '../world/wall-collision-frame.js';
 const outside=(p,r,b)=>p.x-r>b[2]||p.x+r<b[0]||p.z-r>b[3]||p.z+r<b[1];
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
@@ -33,16 +34,7 @@ export function exteriorRaidWitness(p,r,box,nav){
  }
  return false;
 }
-function groupWitness(entry,specs,box,nav){
- return entry&&entry.entries.length===specs.length&&entry.exits.length===specs.length&&entry.entries.every((p,i)=>{
-  const radius=specs[i].radius,exit=entry.exits[i];
-  if(!exteriorRaidWitness(p,radius,box,nav))return false;
-  // The exit may share the birth's exterior certificate through a verified
-  // full-radius segment. Independent straight rays are not necessary when
-  // procedural props obstruct only the exit's discretely sampled ray angles.
-  return exteriorRaidWitness(exit,radius,box,nav)||!!nav.segmentClear?.(exit,p,radius,null,false);
- });
-}
+function groupWitness(entry,specs,box,nav){return exteriorGroupWitness(entry,specs,box,nav,exteriorRaidWitness);}
 function localView(nav,eye,focus){const local=Object.create(nav);local.raidView={eye,target:focus};return local;}
 function formation(state,specs,bounds,nav,camera,eye,focus,dx,dz,box,radius){
  const entries=[],exits=[],columns=Math.ceil(Math.sqrt(specs.length)),spacing=radius*2+4;

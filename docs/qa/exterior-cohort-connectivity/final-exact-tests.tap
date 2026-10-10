@@ -1,0 +1,65 @@
+TAP version 13
+# Subtest: an exit root certifies its birth through an actual native segment
+ok 1 - an exit root certifies its birth through an actual native segment
+  ---
+  duration_ms: 5.4417
+  ...
+# Subtest: a multi-radius chain uses existing endpoints and recomputes the exterior root at each radius
+ok 2 - a multi-radius chain uses existing endpoints and recomputes the exterior root at each radius
+  ---
+  duration_ms: 2.5226
+  ...
+# Subtest: a small exterior root cannot lend its footprint through a narrow corridor to a larger actor
+ok 3 - a small exterior root cannot lend its footprint through a narrow corridor to a larger actor
+  ---
+  duration_ms: 1.5374
+  ...
+# Subtest: native fluid rejects an apparently shared exterior certificate
+ok 4 - native fluid rejects an apparently shared exterior certificate
+  ---
+  duration_ms: 0.8391
+  ...
+# Subtest: native slope rejects an apparently shared exterior certificate
+ok 5 - native slope rejects an apparently shared exterior certificate
+  ---
+  duration_ms: 0.7007
+  ...
+# Subtest: native solid rejects an apparently shared exterior certificate
+ok 6 - native solid rejects an apparently shared exterior certificate
+  ---
+  duration_ms: 1.8501
+  ...
+# Subtest: the endpoint graph adds at most its explicit root and directed edge query bounds
+ok 7 - the endpoint graph adds at most its explicit root and directed edge query bounds
+  ---
+  duration_ms: 0.8899
+  ...
+# Subtest: exact frozen good day6 keeps its complete cohort and deterministic spawn
+ok 8 - exact frozen good day6 keeps its complete cohort and deterministic spawn
+  ---
+  duration_ms: 1138.2571
+  ...
+# Subtest: exact frozen expansive day6 keeps its complete cohort and deterministic spawn
+ok 9 - exact frozen expansive day6 keeps its complete cohort and deterministic spawn
+  ---
+  duration_ms: 1003.4386
+  ...
+# Subtest: a new live wall invalidates a previously accepted endpoint connector
+ok 10 - a new live wall invalidates a previously accepted endpoint connector
+  ---
+  duration_ms: 1.2213
+  ...
+# Subtest: graph bounds reject the whole oversized unresolved candidate rather than thinning it
+ok 11 - graph bounds reject the whole oversized unresolved candidate rather than thinning it
+  ---
+  duration_ms: 1.1215
+  ...
+1..11
+# tests 11
+# suites 0
+# pass 11
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2384.8082

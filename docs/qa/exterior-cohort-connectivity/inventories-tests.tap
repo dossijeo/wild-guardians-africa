@@ -1,0 +1,37 @@
+TAP version 13
+# Subtest: native capacity separates two-hit healthy crops from one-hit wounded crops
+ok 1 - native capacity separates two-hit healthy crops from one-hit wounded crops
+  ---
+  duration_ms: 5.4647
+  ...
+# Subtest: capacity evidence reproduces with current native sources
+ok 2 - capacity evidence reproduces with current native sources
+  ---
+  duration_ms: 6.5122
+  ...
+# (node:18032) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: complete catalogue audit reproduces from current source and exact original bytes
+ok 3 - complete catalogue audit reproduces from current source and exact original bytes
+  ---
+  duration_ms: 392.095
+  ...
+# Subtest: assignments, context exceptions, reserves and alternatives stay distinct from audible acceptance
+ok 4 - assignments, context exceptions, reserves and alternatives stay distinct from audible acceptance
+  ---
+  duration_ms: 95.4133
+  ...
+# Subtest: latent wood variant and semantic alternatives do not become real bindings or duplicate files
+ok 5 - latent wood variant and semantic alternatives do not become real bindings or duplicate files
+  ---
+  duration_ms: 0.3536
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 617.3874
