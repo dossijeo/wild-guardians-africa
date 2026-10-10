@@ -5,6 +5,12 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
+    inputs:
+      loading_trace:
+        description: 'Record bounded loading phase attribution (diagnostic overhead; not a benchmark)'
+        type: boolean
+        required: false
+        default: false
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -44,7 +50,9 @@ jobs:
         run: |
           $report = Join-Path $env:RUNNER_TEMP 'desktop-smoke.json'
           $binary = (Resolve-Path src-tauri/target/release/wild-guardians-africa.exe).Path
-          $process = Start-Process -FilePath $binary -ArgumentList '--smoke-report', $report -WindowStyle Hidden -PassThru
+          $smokeArguments = @('--smoke-report', $report)
+          if ('${{ github.event.inputs.loading_trace }}' -eq 'true') { $smokeArguments += '--smoke-loading-trace' }
+          $process = Start-Process -FilePath $binary -ArgumentList $smokeArguments -WindowStyle Hidden -PassThru
           if (-not $process.WaitForExit(240000)) { Stop-Process -Id $process.Id; throw 'WebView2 smoke timed out' }
           if (-not (Test-Path -LiteralPath $report)) { throw 'No WebView2 smoke report' }
           $result = Get-Content -Raw -LiteralPath $report | ConvertFrom-Json
