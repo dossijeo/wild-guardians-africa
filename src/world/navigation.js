@@ -23,6 +23,16 @@ export class Navigation {
     this.config={seed:String(seed),biome:BIOME_IDS[biome]??biome,relief:1,density:1,river:true,n:1,cx:0,cz:0,layers:[true,true,true,true,true,true]};
     this.field=new TerrainField(this.config);this.profile=profile;this.chunks=new Map();this.obstacles=[];this.suppressed=new Set();this.walkCache=new Map();this.segmentCache=new Map();this.failedPaths=new Set();this.closedRegions=new Map();this.searchedRegions=[];this.searchNeighborCache=new Map();
   }
+  invalidateGeometryQueries(){
+    // In-place editor/connector geometry edits must invalidate exact as well
+    // as integer coordinates, and rebuild broad-phase collision bounds.
+    this.version=(this.version??0)+1;
+    if(Object.hasOwn(this,'state')&&this.state)this.state.navigationVersion=this.version;
+    this.workerRouteCache=new Map();this.portalGraphs=new Map();this.preparedPaths=null;
+    this.walkCache.clear();this.segmentCache.clear();this.failedPaths.clear();this.closedRegions.clear();
+    this.searchedRegions=[];this.searchNeighborCache=new Map();
+    this.obstacleBounds=new WeakMap(this.obstacles.map(o=>[o,navigationBounds(o)]));
+  }
   setActiveBounds(bounds){
     if(!validActiveBounds(bounds))throw new RangeError('Invalid active terrain bounds');
     // Presentation metadata: changing it must not invalidate logical routes,

@@ -17,3 +17,18 @@ test('Legacy or invalid epochs conservatively invalidate instead of trusting old
   n.setState(s);assert.equal(n.version,2);
  }
 });
+
+test('geometry invalidation rebuilds enlarged footprints and placement views preserve the live epoch',()=>{
+ const n=new Navigation(19,'sabana',{});
+ n.field={slope:()=>0,fluidInside:()=>false};n.propsAt=()=>[];
+ const s={navigationVersion:4};n.state=s;n.version=4;
+ const house={id:'house',kind:'house',footprint:[{x:0,z:0},{x:1,z:0},{x:1,z:1},{x:0,z:1}]};
+ n.obstacles=[house];n.invalidateGeometryQueries();
+ assert(n.walkable(4,.5,.2,null,false));
+ house.footprint[1].x=5;house.footprint[2].x=5;
+ n.invalidateGeometryQueries();assert.equal(n.walkable(4,.5,.2,null,false),false);
+ assert.equal(s.navigationVersion,n.version);
+ const epoch=n.version,view=n.forBuildingPlacement({id:'planned',kind:'house',footprint:[{x:8,z:0},{x:9,z:0},{x:9,z:1},{x:8,z:1}]});
+ view.invalidateGeometryQueries();assert.equal(n.version,epoch);assert.equal(s.navigationVersion,epoch);
+ assert.equal(view.walkable(8.5,.5,.2,null,false),false);assert(n.walkable(8.5,.5,.2,null,false));
+});

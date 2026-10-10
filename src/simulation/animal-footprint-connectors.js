@@ -36,7 +36,13 @@ function init(nav,actor,end,radius){return {
 export function animalFootprintConnector(actor,end,nav){
  if(actor.status!=='retreating'||!nav.walkable||!nav.segmentClear)return null;
  const radius=actor.radius??.28;let a=attempts.get(actor);
- if(!a||!same(a,nav,actor,end,radius)){a=init(nav,actor,end,radius);attempts.set(actor,a);}
+ if(!a||!same(a,nav,actor,end,radius)){
+  // Selected footprint edits change collision topology even if their objects
+  // were mutated in place. Invalidate native queries before rebuilding.
+  const edited=a&&a.nav===nav&&a.version===nav.version&&a.selected.some(o=>o.source.footprint!==o.polygon||o.polygon.length!==o.geometry.length||o.polygon.some((p,i)=>p.x!==o.geometry[i]?.x||p.z!==o.geometry[i]?.z));
+  if(edited)nav.invalidateGeometryQueries?.();
+  a=init(nav,actor,end,radius);attempts.set(actor,a);
+ }
  if(a.failed)return null;
  if(a.phase==='scan'){
   const obstacles=nav.obstacles??[],limit=Math.min(obstacles.length,a.scan+16);

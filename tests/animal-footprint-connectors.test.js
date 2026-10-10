@@ -13,3 +13,11 @@ test('a failed attempt is not rebuilt every frame and retries after a new topolo
 test('in-place selected footprint edits invalidate the failed geometry proof',()=>{const n=world(),a=actor();n.obstacles[1].footprint=rectangle(-10,-8,-1.6,0);assert.equal(finish(a,end,n),null);n.obstacles[1].footprint[1].x=-1.86;n.obstacles[1].footprint[2].x=-1.86;assert(finish(a,end,n));});
 
 test('a wall ring introduced during recovery invalidates the pending proof and cannot be crossed',()=>{const n=world(),a=actor();assert.equal(animalFootprintConnector(a,end,n),null);const ring=[{x:5.05,z:-8,yaw:0},{x:5.05,z:-4,yaw:0},{x:3.05,z:-6,yaw:Math.PI/2},{x:7.05,z:-6,yaw:Math.PI/2}];n.obstacles.push(...ring.map((wall,i)=>({...wall,id:`wall${i}`,kind:'wall',baseScaleX:3})));assert(n.walkable(a.x,a.z,a.radius,null,false),'The origin itself stays valid');n.version++;assert.equal(finish(a,end,n),null);});
+
+test('edited footprint recovery invalidates actual motion caches and its route remains traversable',()=>{
+ const n=world(),a=actor(),epoch=n.version;
+ n.obstacles[1].footprint=rectangle(-10,-8,-1.6,0);assert.equal(finish(a,end,n),null);
+ n.obstacles[1].footprint[1].x=-1.86;n.obstacles[1].footprint[2].x=-1.86;
+ const p=finish(a,end,n);assert(p);assert.equal(n.version,epoch+1);
+ let previous=a;for(const q of p){assert(n.walkable(q.x,q.z,a.radius,null,false));assert(n.segmentClear(previous,q,a.radius,null,false));previous=q;}
+});

@@ -1,0 +1,89 @@
+TAP version 13
+# Subtest: footprint-derived corners route a full-radius animal through a physically open subcell passage
+ok 1 - footprint-derived corners route a full-radius animal through a physically open subcell passage
+  ---
+  duration_ms: 13.9343
+  ...
+# Subtest: native point and edge validation is capped at eight per recovery call
+ok 2 - native point and edge validation is capped at eight per recovery call
+  ---
+  duration_ms: 2.528
+  ...
+# Subtest: ordinary attacking or walking animals never use exit footprint recovery
+ok 3 - ordinary attacking or walking animals never use exit footprint recovery
+  ---
+  duration_ms: 0.6673
+  ...
+# Subtest: a genuinely narrower gap is rejected without reducing radius
+ok 4 - a genuinely narrower gap is rejected without reducing radius
+  ---
+  duration_ms: 5.1442
+  ...
+# Subtest: water, lava and steep surfaces remain authoritative on every proposed path
+ok 5 - water, lava and steep surfaces remain authoritative on every proposed path
+  ---
+  duration_ms: 8.459
+  ...
+# Subtest: a failed attempt is not rebuilt every frame and retries after a new topology epoch
+ok 6 - a failed attempt is not rebuilt every frame and retries after a new topology epoch
+  ---
+  duration_ms: 6.7755
+  ...
+# Subtest: in-place selected footprint edits invalidate the failed geometry proof
+not ok 7 - in-place selected footprint edits invalidate the failed geometry proof
+  ---
+  duration_ms: 20.3973
+  location: 'file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/tests/animal-footprint-connectors.test.js:13:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+
+      assert(finish(a,end,n))
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/tests/animal-footprint-connectors.test.js:13:267)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+# Subtest: a wall ring introduced during recovery invalidates the pending proof and cannot be crossed
+ok 8 - a wall ring introduced during recovery invalidates the pending proof and cannot be crossed
+  ---
+  duration_ms: 1.7617
+  ...
+# Subtest: a bounded failed search alone never certifies an enclosure
+ok 9 - a bounded failed search alone never certifies an enclosure
+  ---
+  duration_ms: 1.9787
+  ...
+# Subtest: only positively complete components wholly inside the outline certify poses
+ok 10 - only positively complete components wholly inside the outline certify poses
+  ---
+  duration_ms: 2.7937
+  ...
+# Subtest: a valid direct route or native detour rejects the proposed defense
+ok 11 - a valid direct route or native detour rejects the proposed defense
+  ---
+  duration_ms: 0.3593
+  ...
+# Subtest: an empty origin frontier remains unproven without a positive physical connector
+ok 12 - an empty origin frontier remains unproven without a positive physical connector
+  ---
+  duration_ms: 0.4162
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 11
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 212.3862

@@ -1,0 +1,268 @@
+TAP version 13
+# Subtest: footprint-derived corners route a full-radius animal through a physically open subcell passage
+ok 1 - footprint-derived corners route a full-radius animal through a physically open subcell passage
+  ---
+  duration_ms: 19.6443
+  ...
+# Subtest: native point and edge validation is capped at eight per recovery call
+ok 2 - native point and edge validation is capped at eight per recovery call
+  ---
+  duration_ms: 3.4942
+  ...
+# Subtest: ordinary attacking or walking animals never use exit footprint recovery
+ok 3 - ordinary attacking or walking animals never use exit footprint recovery
+  ---
+  duration_ms: 1.0977
+  ...
+# Subtest: a genuinely narrower gap is rejected without reducing radius
+ok 4 - a genuinely narrower gap is rejected without reducing radius
+  ---
+  duration_ms: 12.8621
+  ...
+# Subtest: water, lava and steep surfaces remain authoritative on every proposed path
+ok 5 - water, lava and steep surfaces remain authoritative on every proposed path
+  ---
+  duration_ms: 9.8777
+  ...
+# Subtest: a failed attempt is not rebuilt every frame and retries after a new topology epoch
+ok 6 - a failed attempt is not rebuilt every frame and retries after a new topology epoch
+  ---
+  duration_ms: 9.554
+  ...
+# Subtest: in-place selected footprint edits invalidate the failed geometry proof
+ok 7 - in-place selected footprint edits invalidate the failed geometry proof
+  ---
+  duration_ms: 8.2791
+  ...
+# Subtest: a wall ring introduced during recovery invalidates the pending proof and cannot be crossed
+ok 8 - a wall ring introduced during recovery invalidates the pending proof and cannot be crossed
+  ---
+  duration_ms: 11.0231
+  ...
+# Subtest: edited footprint recovery invalidates actual motion caches and its route remains traversable
+ok 9 - edited footprint recovery invalidates actual motion caches and its route remains traversable
+  ---
+  duration_ms: 9.2555
+  ...
+# (node:49704) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: legacy Desert/Suajili lion exits its marginal footprint physically at dt=0.1
+ok 10 - legacy Desert/Suajili lion exits its marginal footprint physically at dt=0.1
+  ---
+  duration_ms: 185.0048
+  ...
+# Subtest: legacy Desert/Suajili lion exits its marginal footprint physically at dt=1
+ok 11 - legacy Desert/Suajili lion exits its marginal footprint physically at dt=1
+  ---
+  duration_ms: 165.2121
+  ...
+# Subtest: save/load during the tiny marginal exit preserves native continuation at dt=0.1
+ok 12 - save/load during the tiny marginal exit preserves native continuation at dt=0.1
+  ---
+  duration_ms: 1279.372
+  ...
+# Subtest: save/load during the tiny marginal exit preserves native continuation at dt=1
+ok 13 - save/load during the tiny marginal exit preserves native continuation at dt=1
+  ---
+  duration_ms: 245.7479
+  ...
+# Subtest: only retreating animals can use the recovery
+ok 14 - only retreating animals can use the recovery
+  ---
+  duration_ms: 0.3769
+  ...
+# Subtest: steeper footprints, fluid, uphill escapes and solid structures remain forbidden
+ok 15 - steeper footprints, fluid, uphill escapes and solid structures remain forbidden
+  ---
+  duration_ms: 6.7097
+  ...
+# Subtest: the special clearance rejects off-prefix, backward and dynamic-body movement
+ok 16 - the special clearance rejects off-prefix, backward and dynamic-body movement
+  ---
+  duration_ms: 1.5944
+  ...
+# Subtest: a failed legacy recovery is memoized until geometry or origin changes
+ok 17 - a failed legacy recovery is memoized until geometry or origin changes
+  ---
+  duration_ms: 1.9828
+  ...
+# Subtest: an ordinary legal retreat does not rescan a recovery proof each frame
+ok 18 - an ordinary legal retreat does not rescan a recovery proof each frame
+  ---
+  duration_ms: 0.38
+  ...
+# Subtest: a new wall invalidates a memoized marginal segment
+ok 19 - a new wall invalidates a memoized marginal segment
+  ---
+  duration_ms: 1.3422
+  ...
+# Subtest: a new shield invalidates a memoized marginal segment
+ok 20 - a new shield invalidates a memoized marginal segment
+  ---
+  duration_ms: 0.7789
+  ...
+# Subtest: changing the first waypoint inside the same array cannot reuse the old proof
+ok 21 - changing the first waypoint inside the same array cannot reuse the old proof
+  ---
+  duration_ms: 2.4149
+  ...
+# Subtest: an unsampled real intermediate landing may not increase the slope excess
+ok 22 - an unsampled real intermediate landing may not increase the slope excess
+  ---
+  duration_ms: 1.1062
+  ...
+# Subtest: real fluid landing checks remain active inside a memoized recovery
+ok 23 - real fluid landing checks remain active inside a memoized recovery
+  ---
+  duration_ms: 1.2663
+  ...
+# Subtest: the normal strict landing limit resumes after consuming the first recovery waypoint
+ok 24 - the normal strict landing limit resumes after consuming the first recovery waypoint
+  ---
+  duration_ms: 2.0127
+  ...
+# Subtest: failed native tails have a finite candidate budget and do not repeat each frame
+ok 25 - failed native tails have a finite candidate budget and do not repeat each frame
+  ---
+  duration_ms: 5.3973
+  ...
+# Subtest: retry after an unused successful recovery is not memoized as a failure
+ok 26 - retry after an unused successful recovery is not memoized as a failure
+  ---
+  duration_ms: 75.4025
+  ...
+# Subtest: disabled proof revalidates a bad waypoint edited back to good inside the same array
+ok 27 - disabled proof revalidates a bad waypoint edited back to good inside the same array
+  ---
+  duration_ms: 1.9772
+  ...
+# Subtest: disabled proof revalidates replacement of the first waypoint in the same array
+ok 28 - disabled proof revalidates replacement of the first waypoint in the same array
+  ---
+  duration_ms: 1.2052
+  ...
+# (node:8696) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Musgum canyon retreat uses a valid land route beside the river and physically exits, including reload
+ok 29 - Musgum canyon retreat uses a valid land route beside the river and physically exits, including reload
+  ---
+  duration_ms: 425.8579
+  ...
+# Subtest: fractional queries remain exact, replay peak risk and invalidate on topology, terrain or test implementation changes
+ok 30 - fractional queries remain exact, replay peak risk and invalidate on topology, terrain or test implementation changes
+  ---
+  duration_ms: 2.3051
+  ...
+# Subtest: inherited navigation views never share walkability decisions; memory is bounded and thrown queries are not cached
+ok 31 - inherited navigation views never share walkability decisions; memory is bounded and thrown queries are not cached
+  ---
+  duration_ms: 22.8645
+  ...
+# Subtest: native wall changes and worker avoidance retain exact blocking and separate views
+ok 32 - native wall changes and worker avoidance retain exact blocking and separate views
+  ---
+  duration_ms: 3.157
+  ...
+# Subtest: a bounded failed search alone never certifies an enclosure
+ok 33 - a bounded failed search alone never certifies an enclosure
+  ---
+  duration_ms: 3.6052
+  ...
+# Subtest: only positively complete components wholly inside the outline certify poses
+ok 34 - only positively complete components wholly inside the outline certify poses
+  ---
+  duration_ms: 1.7117
+  ...
+# Subtest: a valid direct route or native detour rejects the proposed defense
+ok 35 - a valid direct route or native detour rejects the proposed defense
+  ---
+  duration_ms: 1.4372
+  ...
+# Subtest: an empty origin frontier remains unproven without a positive physical connector
+ok 36 - an empty origin frontier remains unproven without a positive physical connector
+  ---
+  duration_ms: 0.3697
+  ...
+# (node:37080) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Fresh navigation restores the saved route epoch without changing the snapshot; genuine mutations invalidate paths
+ok 37 - Fresh navigation restores the saved route epoch without changing the snapshot; genuine mutations invalidate paths
+  ---
+  duration_ms: 5.9384
+  ...
+# Subtest: Legacy or invalid epochs conservatively invalidate instead of trusting old persisted paths
+ok 38 - Legacy or invalid epochs conservatively invalidate instead of trusting old persisted paths
+  ---
+  duration_ms: 1.8049
+  ...
+# Subtest: geometry invalidation rebuilds enlarged footprints and placement views preserve the live epoch
+ok 39 - geometry invalidation rebuilds enlarged footprints and placement views preserve the live epoch
+  ---
+  duration_ms: 2.208
+  ...
+# (node:53980) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: 100 connected mijo plants allow independent attacks from 1 animals
+ok 40 - 100 connected mijo plants allow independent attacks from 1 animals
+  ---
+  duration_ms: 45.1018
+  ...
+# Subtest: 100 connected mijo plants allow independent attacks from 2 animals
+ok 41 - 100 connected mijo plants allow independent attacks from 2 animals
+  ---
+  duration_ms: 24.7544
+  ...
+# Subtest: 100 connected mijo plants allow independent attacks from 5 animals
+ok 42 - 100 connected mijo plants allow independent attacks from 5 animals
+  ---
+  duration_ms: 117.5108
+  ...
+# Subtest: 100 connected mijo plants allow independent attacks from 12 animals
+ok 43 - 100 connected mijo plants allow independent attacks from 12 animals
+  ---
+  duration_ms: 431.4537
+  ...
+# Subtest: centers permit physically independent simultaneous approach claims
+ok 44 - centers permit physically independent simultaneous approach claims
+  ---
+  duration_ms: 100.1356
+  ...
+# Subtest: individual claims and native RNG replay exactly after a save/reload
+ok 45 - individual claims and native RNG replay exactly after a save/reload
+  ---
+  duration_ms: 1070.4298
+  ...
+# Subtest: destroying one reserved crop frees only that target and preserves other leases
+ok 46 - destroying one reserved crop frees only that target and preserves other leases
+  ---
+  duration_ms: 61.999
+  ...
+# Subtest: actual saturation stages valid waiters and retires after no-progress bound without spending hits
+ok 47 - actual saturation stages valid waiters and retires after no-progress bound without spending hits
+  ---
+  duration_ms: 16.5338
+  ...
+# Subtest: legacy group saves migrate to individual claims without extra RNG draws
+ok 48 - legacy group saves migrate to individual claims without extra RNG draws
+  ---
+  duration_ms: 7.7468
+  ...
+# Subtest: group accessibility uses a complete native component certificate and invalidates when walls open
+ok 49 - group accessibility uses a complete native component certificate and invalidates when walls open
+  ---
+  duration_ms: 64.9019
+  ...
+# Subtest: a protected connected perimeter allows simultaneous attacks on separate pieces
+ok 50 - a protected connected perimeter allows simultaneous attacks on separate pieces
+  ---
+  duration_ms: 107.3595
+  ...
+1..50
+# tests 50
+# suites 0
+# pass 50
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2468.6975
