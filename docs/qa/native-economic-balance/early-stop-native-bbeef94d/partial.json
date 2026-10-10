@@ -1,0 +1,116 @@
+{
+  "strategy": "no-walls",
+  "seed": "712",
+  "day": 1,
+  "time": 0.9999999999999999,
+  "result": null,
+  "entryTransport": {
+    "mode": "real-node-worker-with-production-cooperative-fallback",
+    "updates": 1,
+    "waits": [],
+    "readyContexts": [],
+    "preparer": {
+      "requests": 0,
+      "accepted": 0,
+      "obsolete": 0,
+      "used": 0,
+      "failed": 0
+    },
+    "workerFailure": null,
+    "scope": "Wall-clock waits are separate from simulated activity; no clock, RNG or geometry patches"
+  },
+  "receipts": {
+    "currentFinance": {
+      "opening": 700,
+      "closing": 450,
+      "income": 0,
+      "refunds": 0,
+      "wages": 240,
+      "seeds": 10,
+      "walls": 0,
+      "centers": 0,
+      "villages": 0,
+      "repairs": 0,
+      "otherCredits": 0,
+      "otherDebits": 0,
+      "entries": [
+        {
+          "id": "intensive-plant-0",
+          "coins": -5,
+          "category": "seeds"
+        },
+        {
+          "id": "intensive-hire-1",
+          "coins": -240,
+          "category": "wages"
+        },
+        {
+          "id": "intensive-plant-2",
+          "coins": -5,
+          "category": "seeds"
+        }
+      ],
+      "net": -250,
+      "reconciliationDifference": 0
+    },
+    "daily": [],
+    "nativeEvidence": {
+      "coverageLost": false,
+      "status": "verified",
+      "deliveries": [],
+      "daily": [
+        {
+          "day": 1,
+          "cropPurchases": 2,
+          "wallPieces": 0,
+          "wallOrders": 0,
+          "income": 0,
+          "deliveries": 0,
+          "structureContacts": 0,
+          "atLeast60CropPurchases": false
+        }
+      ],
+      "repairSettlements": {
+        "status": "verified",
+        "coverageLost": false,
+        "baselinePayments": [],
+        "unobservedPayments": [],
+        "completedRepairs": 0,
+        "paidRepairs": 0,
+        "paidCoins": "0",
+        "restoredHp": 0,
+        "receipts": [],
+        "scope": "Observed repair completions and settled payments after observer creation. Arrival endpoints are recorded, not independent proof of route traversal. Pre-existing payments are excluded. No requests, policies, RNG or world state are changed."
+      },
+      "requests": [],
+      "decisions": [
+        {
+          "day": 1,
+          "time": 0,
+          "elapsed": 0,
+          "daylightSeconds": 0.9999999999999999,
+          "reason": "active",
+          "otherActions": 1,
+          "actualSeconds": 0.9999999999999999
+        }
+      ],
+      "meaningfulActivity": {
+        "daylightSeconds": 0.9999999999999999,
+        "unoccupiedSeconds": 0,
+        "unoccupiedFraction": 0,
+        "strictBelow25": true,
+        "creditedPaidRepairDecisionCount": 0
+      },
+      "scope": "Income only native CrateDelivered ledger entries; action time only decisions, paid HP-restoring requests attributed once. Wall purchases do not prove useful interception. Observe at every native tick; record outgoing day before dawn transition."
+    },
+    "raidEvidence": {
+      "status": "verified",
+      "coverageLost": false,
+      "issues": [],
+      "raids": [],
+      "scope": "Generated species and actual native hit budgets; native CropHit/StructureHit and HP receipts, shields and misses. Wall contacts are measured interception, not a guaranteed protection percentage. Replacement costs and lost base value are diagnostics, never ledger expenses or projected income. RaidSpawned raidFacts provide exact native spawn budgets and exposure when available; legacy living snapshots only bracket an observation interval. Initial wound snapshot is after the spawn tick, not an exact pre-attack wound census. Completed observer coverage is not proof of legal spawn geometry or rendered visibility."
+    },
+    "defense": null,
+    "expansion": null
+  }
+}
