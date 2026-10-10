@@ -3,7 +3,11 @@ import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
 import {pathToFileURL} from 'node:url';
 import {createHash} from 'node:crypto';
 import {nightlyExpectation} from './project-campaign-accounting.mjs';
-export function estimate(input,{days=100,scale=.475,wallCost=3,exposure=.1,defend=true}={}) {
+export function seedQuote(baseCost,livingPlants,{plantsPerStep=200,slope=1,freePlants=100}={}) {
+ if(!Number.isSafeInteger(baseCost)||baseCost<=0||!Number.isSafeInteger(livingPlants)||livingPlants<0||!Number.isFinite(plantsPerStep)||plantsPerStep<=0||!Number.isFinite(slope)||slope<0||!Number.isSafeInteger(freePlants)||freePlants<0)throw Error('Invalid scarcity parameters');
+ return Math.ceil(baseCost*(1+slope*Math.max(0,livingPlants-freePlants)/plantsPerStep));
+}
+export function estimate(input,{days=100,scale=.475,wallCost=3,exposure=.1,defend=true,scarcity=null}={}) {
  const B=structuredClone(input.referenceBalance),original=Object.fromEntries(B.crops.map(c=>[c.id,c.base_harvest_value]));
  for(const c of B.crops)c.base_harvest_value=Math.ceil(c.base_harvest_value*scale);
  const cohorts=[{species:'mijo',count:1,readyDay:2}],rows=[];
@@ -35,8 +39,9 @@ export function estimate(input,{days=100,scale=.475,wallCost=3,exposure=.1,defen
   // Millet through day 9, then fixed species sequence in both strategies.
   while(planted<(day===1?116:280)) {
    const crop=day<=9?B.crops.find(c=>c.id==='mijo'):B.crops[seedIndex%B.crops.length],reserve=stock()===0?0:30;
-   if(cash-crop.plant_cost<reserve)break;
-   cash-=crop.plant_cost;seeds+=crop.plant_cost;planted++;if(day>=10)seedIndex++;
+   const seedCost=scarcity?seedQuote(crop.plant_cost,stock(),scarcity):crop.plant_cost;
+   if(cash-seedCost<reserve)break;
+   cash-=seedCost;seeds+=seedCost;planted++;if(day>=10)seedIndex++;
    const readyDay=day+Math.max(1,Math.ceil(crop.growth_seconds/B.clock.day_seconds));
    const previous=cohorts.find(c=>c.species===crop.id&&c.readyDay===readyDay);
    if(previous)previous.count++;else cohorts.push({species:crop.id,count:1,readyDay});
