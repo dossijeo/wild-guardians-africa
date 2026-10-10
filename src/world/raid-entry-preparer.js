@@ -1,4 +1,5 @@
-import {raidEntryKey,raidEntryRequest} from './raid-entry-data.js';
+import {ANIMAL_ACTIONS} from '../simulation/animal-actions-data.js';
+import {raidEntryKey,raidEntryRequest,raidEntryContextKey,activeRaidEntryPlan} from './raid-entry-data.js';
 
 export class RaidEntryPreparer {
   constructor(nav,{createWorker=()=>new Worker(new URL('./raid-entry-worker.js',import.meta.url),{type:'module'})}={}){
@@ -12,20 +13,23 @@ export class RaidEntryPreparer {
     try{this.worker=createWorker();this.worker.onmessage=({data})=>this.receive(data);this.worker.onerror=()=>this.disable();}
     catch{this.disable();}
   }
-  disable(){this.stats.failed++;this.worker?.terminate();this.worker=null;this.pending=null;this.ready=null;}
+  disable(){this.stats.failed++;this.worker?.terminate();this.worker=null;this.pending=null;this.ready=null;this.nav.pendingRaidEntry=null;delete this.nav.raidEntryDemand;}
   receive(data){
     if(this.disposed||data.token!==this.pending?.token)return;
     this.pending=null;
     if(data.error){this.disable();return;}
-    if(data.key!==raidEntryKey(this.state,this.nav,this.state?.nightPlan?.group)){this.stats.obsolete++;return;}
-    this.ready=data;this.stats.accepted++;
+    const plan=activeRaidEntryPlan(this.state);
+    if(data.key!==raidEntryKey(this.state,this.nav,plan?.group)){this.stats.obsolete++;return;}
+    this.ready=data;this.nav.pendingRaidEntry=data.entry?{entry:data.entry,radii:plan.group.map(id=>ANIMAL_ACTIONS.animals[id].presentation.footprint.radius),contextKey:raidEntryContextKey(this.state,this.nav,plan.group)}:null;this.stats.accepted++;
   }
   update(state){
     this.state=state;
     if(this.disposed||!this.worker)return;
-    const plan=state.nightPlan;
-    if(state.raid||state.result||state.postgame||!plan||plan.done){this.ready=null;return;}
-    const key=raidEntryKey(state,this.nav,plan.group);
+    const plan=activeRaidEntryPlan(state);
+    if(state.raid||state.result||state.postgame||!plan||plan.done){this.ready=null;this.nav.pendingRaidEntry=null;return;}
+    const key=raidEntryKey(state,this.nav,plan.group),context=raidEntryContextKey(state,this.nav,plan.group);
+    if(this.nav.pendingRaidEntry&&this.nav.pendingRaidEntry.contextKey!==context)this.nav.pendingRaidEntry=null;
+    if(this.ready&&this.ready.key!==key)this.ready=null;
     if(!key||this.ready?.key===key||this.pending)return;
     const token=++this.token;
     this.pending={token,key};this.stats.requests++;
@@ -35,6 +39,6 @@ export class RaidEntryPreparer {
   dispose(){
     if(this.disposed)return;this.disposed=true;this.worker?.terminate();this.worker=null;
     if(this.nav.preparedRaidEntry===this.take)delete this.nav.preparedRaidEntry;
-    this.pending=null;this.ready=null;this.state=null;
+    this.pending=null;this.ready=null;this.state=null;this.nav.pendingRaidEntry=null;delete this.nav.raidEntryDemand;
   }
 }

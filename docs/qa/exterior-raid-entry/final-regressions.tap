@@ -1,0 +1,471 @@
+TAP version 13
+# Subtest: explicit language overrides browser preferences; unknown preferences fall back to English
+ok 1 - explicit language overrides browser preferences; unknown preferences fall back to English
+  ---
+  duration_ms: 2.5411
+  ...
+# Subtest: browser preference order recognises regional English and Spanish variants
+ok 2 - browser preference order recognises regional English and Spanish variants
+  ---
+  duration_ms: 0.2956
+  ...
+# Subtest: storage failure is safe and persistent override uses its own key
+ok 3 - storage failure is safe and persistent override uses its own key
+  ---
+  duration_ms: 0.4868
+  ...
+# Subtest: catalog translates complete labels and leaves logical IDs and partial words intact
+ok 4 - catalog translates complete labels and leaves logical IDs and partial words intact
+  ---
+  duration_ms: 98.2607
+  ...
+# Subtest: generated catalog matches its reviewed TSV source without stale translations
+ok 5 - generated catalog matches its reviewed TSV source without stale translations
+  ---
+  duration_ms: 15.6607
+  ...
+# Subtest: audited library explanations are fully translated including semicolons and split markup text
+ok 6 - audited library explanations are fully translated including semicolons and split markup text
+  ---
+  duration_ms: 21.6598
+  ...
+# Subtest: ARIA interpolation and language reversal keep source strings and user parameters
+ok 7 - ARIA interpolation and language reversal keep source strings and user parameters
+  ---
+  duration_ms: 0.6743
+  ...
+# Subtest: current hiring dialog translates revised wages and every rendered hiring stepper
+ok 8 - current hiring dialog translates revised wages and every rendered hiring stepper
+  ---
+  duration_ms: 30.9123
+  ...
+# Subtest: revised reserve and dynamic damaged-wall refunds retain their amounts in English
+ok 9 - revised reserve and dynamic damaged-wall refunds retain their amounts in English
+  ---
+  duration_ms: 1.3056
+  ...
+# Subtest: all tutorial messages have complete translations, including mechanics and campaign ending
+ok 10 - all tutorial messages have complete translations, including mechanics and campaign ending
+  ---
+  duration_ms: 0.71
+  ...
+# Subtest: catalog contains no empty messages, malformed placeholders or untranslated key markers
+ok 11 - catalog contains no empty messages, malformed placeholders or untranslated key markers
+  ---
+  duration_ms: 15.1847
+  ...
+# Subtest: agricultural notices and quantitative labels interpolate names and singular/plural in both languages
+ok 12 - agricultural notices and quantitative labels interpolate names and singular/plural in both languages
+  ---
+  duration_ms: 2.331
+  ...
+# Subtest: contract: only a unique delivered-crate settled payment becomes income, not crop maturity or refund
+ok 13 - contract: only a unique delivered-crate settled payment becomes income, not crop maturity or refund
+  ---
+  duration_ms: 3.6438
+  ...
+# Subtest: contract: repair time stays idle; only paid restoring completion credits the original request decision
+ok 14 - contract: repair time stays idle; only paid restoring completion credits the original request decision
+  ---
+  duration_ms: 0.9738
+  ...
+# Subtest: contract: day-boundary events belong to the outgoing decision; missing event windows fail closed
+ok 15 - contract: day-boundary events belong to the outgoing decision; missing event windows fail closed
+  ---
+  duration_ms: 0.6025
+  ...
+# Subtest: every no-command daytime reason counts idle, including navigation, raid and unknown; pending clocks add zero
+ok 16 - every no-command daytime reason counts idle, including navigation, raid and unknown; pending clocks add zero
+  ---
+  duration_ms: 0.5614
+  ...
+# Subtest: daily exact balance begins before hiring and includes proportional hires, seeds, delivery and repair once
+ok 17 - daily exact balance begins before hiring and includes proportional hires, seeds, delivery and repair once
+  ---
+  duration_ms: 3.8571
+  ...
+# Subtest: strategies differ through real earned savings; no grants, projected income or double-reserved village charge
+ok 18 - strategies differ through real earned savings; no grants, projected income or double-reserved village charge
+  ---
+  duration_ms: 1.1133
+  ...
+# Subtest: native negative: declared dawn minimum35 cannot pay wage30 and then seed5 with reserve30
+ok 19 - native negative: declared dawn minimum35 cannot pay wage30 and then seed5 with reserve30
+  ---
+  duration_ms: 16.7717
+  ...
+# Subtest: native positive: fixture65 legally pays wage30 and seed5, preserving30 without bypass
+ok 20 - native positive: fixture65 legally pays wage30 and seed5, preserving30 without bypass
+  ---
+  duration_ms: 1.8701
+  ...
+# Subtest: preselected seeds and affordable opening never use projected income or credit
+ok 21 - preselected seeds and affordable opening never use projected income or credit
+  ---
+  duration_ms: 1.2588
+  ...
+# Subtest: native contacts reconcile budgets and physical crop replacement costs without mutation through reload
+ok 22 - native contacts reconcile budgets and physical crop replacement costs without mutation through reload
+  ---
+  duration_ms: 110.8334
+  ...
+# Subtest: native shield contacts spend budget without reporting fictitious crop or structure damage
+ok 23 - native shield contacts spend budget without reporting fictitious crop or structure damage
+  ---
+  duration_ms: 88.5729
+  ...
+# Subtest: lost event window is incomplete instead of silently inventing raid facts
+ok 24 - lost event window is incomplete instead of silently inventing raid facts
+  ---
+  duration_ms: 2.2196
+  ...
+# Subtest: native wall interception uses measured HP loss rather than protection multiplier
+ok 25 - native wall interception uses measured HP loss rather than protection multiplier
+  ---
+  duration_ms: 1562.2317
+  ...
+# Subtest: native capacity separates two-hit healthy crops from one-hit wounded crops
+ok 26 - native capacity separates two-hit healthy crops from one-hit wounded crops
+  ---
+  duration_ms: 6.6329
+  ...
+# Subtest: capacity evidence reproduces with current native sources
+ok 27 - capacity evidence reproduces with current native sources
+  ---
+  duration_ms: 9.1267
+  ...
+# (node:53600) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: QA-094: media complete group enters side 0 of the camera's active region
+ok 28 - QA-094: media complete group enters side 0 of the camera's active region
+  ---
+  duration_ms: 12.5725
+  ...
+# Subtest: QA-094: media complete group enters side 1 of the camera's active region
+ok 29 - QA-094: media complete group enters side 1 of the camera's active region
+  ---
+  duration_ms: 1.9223
+  ...
+# Subtest: QA-094: media complete group enters side 2 of the camera's active region
+ok 30 - QA-094: media complete group enters side 2 of the camera's active region
+  ---
+  duration_ms: 2.1205
+  ...
+# Subtest: QA-094: media complete group enters side 3 of the camera's active region
+ok 31 - QA-094: media complete group enters side 3 of the camera's active region
+  ---
+  duration_ms: 1.8801
+  ...
+# Subtest: QA-094: alta complete group enters side 0 of the camera's active region
+ok 32 - QA-094: alta complete group enters side 0 of the camera's active region
+  ---
+  duration_ms: 0.9756
+  ...
+# Subtest: QA-094: alta complete group enters side 1 of the camera's active region
+ok 33 - QA-094: alta complete group enters side 1 of the camera's active region
+  ---
+  duration_ms: 2.7184
+  ...
+# Subtest: QA-094: alta complete group enters side 2 of the camera's active region
+ok 34 - QA-094: alta complete group enters side 2 of the camera's active region
+  ---
+  duration_ms: 2.2421
+  ...
+# Subtest: QA-094: alta complete group enters side 3 of the camera's active region
+ok 35 - QA-094: alta complete group enters side 3 of the camera's active region
+  ---
+  duration_ms: 3.4919
+  ...
+# Subtest: QA-095: streaming updates camera bounds without resetting raid state or persisted entry positions
+ok 36 - QA-095: streaming updates camera bounds without resetting raid state or persisted entry positions
+  ---
+  duration_ms: 14.757
+  ...
+# Subtest: active bounds are copied, validated, and retained independently of route invalidation
+ok 37 - active bounds are copied, validated, and retained independently of route invalidation
+  ---
+  duration_ms: 5.0245
+  ...
+# Subtest: a region too small for the complete epic bodies cancels entry instead of spawning outside it
+ok 38 - a region too small for the complete epic bodies cancels entry instead of spawning outside it
+  ---
+  duration_ms: 162.6206
+  ...
+# (node:30204) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: camera heading 0: the complete epic group appears just behind the eye, without overlaps
+ok 39 - camera heading 0: the complete epic group appears just behind the eye, without overlaps
+  ---
+  duration_ms: 22.3536
+  ...
+# Subtest: camera heading 1.5707963267948966: the complete epic group appears just behind the eye, without overlaps
+ok 40 - camera heading 1.5707963267948966: the complete epic group appears just behind the eye, without overlaps
+  ---
+  duration_ms: 2.2457
+  ...
+# Subtest: camera heading 3.141592653589793: the complete epic group appears just behind the eye, without overlaps
+ok 41 - camera heading 3.141592653589793: the complete epic group appears just behind the eye, without overlaps
+  ---
+  duration_ms: 2.3245
+  ...
+# Subtest: camera heading 4.71238898038469: the complete epic group appears just behind the eye, without overlaps
+ok 42 - camera heading 4.71238898038469: the complete epic group appears just behind the eye, without overlaps
+  ---
+  duration_ms: 2.5673
+  ...
+# Subtest: a blocked camera rear falls back to a legal entry instead of placing bodies in obstacles
+ok 43 - a blocked camera rear falls back to a legal entry instead of placing bodies in obstacles
+  ---
+  duration_ms: 5.5703
+  ...
+# Subtest: disconnected water behind the camera uses the near farm side with bounded route searches
+ok 44 - disconnected water behind the camera uses the near farm side with bounded route searches
+  ---
+  duration_ms: 1.1641
+  ...
+# Subtest: camera metadata is copied without invalidating routes, and rendering supplies the actual eye and target
+ok 45 - camera metadata is copied without invalidating routes, and rendering supplies the actual eye and target
+  ---
+  duration_ms: 3.7608
+  ...
+# Subtest: sabana/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 46 - sabana/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 636.6075
+  ...
+# Subtest: gran-rio/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 47 - gran-rio/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 581.8058
+  ...
+# Subtest: manglares/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 48 - manglares/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 693.7552
+  ...
+# Subtest: volcanes/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 49 - volcanes/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 277.9641
+  ...
+# Subtest: gran-canon/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 50 - gran-canon/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 449.0282
+  ...
+# Subtest: desierto/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 51 - desierto/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 2392.8402
+  ...
+# Subtest: sabana/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 52 - sabana/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 336.4829
+  ...
+# Subtest: gran-rio/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 53 - gran-rio/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 284.4986
+  ...
+# Subtest: manglares/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 54 - manglares/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 576.6544
+  ...
+# Subtest: volcanes/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 55 - volcanes/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 232.117
+  ...
+# Subtest: gran-canon/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 56 - gran-canon/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 529.4734
+  ...
+# Subtest: desierto/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 57 - desierto/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 2456.2669
+  ...
+# Subtest: sabana/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 58 - sabana/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 340.0379
+  ...
+# Subtest: gran-rio/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 59 - gran-rio/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 354.6374
+  ...
+# Subtest: manglares/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 60 - manglares/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 613.6228
+  ...
+# Subtest: volcanes/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 61 - volcanes/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 277.8874
+  ...
+# Subtest: gran-canon/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 62 - gran-canon/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 488.6809
+  ...
+# Subtest: desierto/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 63 - desierto/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 2480.5423
+  ...
+# Subtest: sabana/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 64 - sabana/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 298.6149
+  ...
+# Subtest: gran-rio/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 65 - gran-rio/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 382.0216
+  ...
+# Subtest: manglares/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 66 - manglares/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 789.2567
+  ...
+# Subtest: volcanes/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 67 - volcanes/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 312.2159
+  ...
+# Subtest: gran-canon/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 68 - gran-canon/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 603.1772
+  ...
+# Subtest: desierto/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 69 - desierto/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 4593.548
+  ...
+# Subtest: sabana/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 70 - sabana/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 938.1889
+  ...
+# Subtest: gran-rio/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 71 - gran-rio/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 812.7119
+  ...
+# Subtest: manglares/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 72 - manglares/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1245.3041
+  ...
+# Subtest: volcanes/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 73 - volcanes/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 735.3721
+  ...
+# Subtest: gran-canon/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 74 - gran-canon/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 887.7826
+  ...
+# Subtest: desierto/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 75 - desierto/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 3833.4862
+  ...
+# Subtest: travel tracks the approaching animal until farm entry, then leaves camera there once per incursion
+ok 76 - travel tracks the approaching animal until farm entry, then leaves camera there once per incursion
+  ---
+  duration_ms: 10.4257
+  ...
+# Subtest: entry during the initial trip freezes its destination without a snap or further pursuit
+ok 77 - entry during the initial trip freezes its destination without a snap or further pursuit
+  ---
+  duration_ms: 4.7709
+  ...
+# Subtest: manual input cancels ongoing approach tracking without restarting it
+ok 78 - manual input cancels ongoing approach tracking without restarting it
+  ---
+  duration_ms: 0.7827
+  ...
+# Subtest: hidden pause freezes tracking after initial travel and resumes only when visible
+ok 79 - hidden pause freezes tracking after initial travel and resumes only when visible
+  ---
+  duration_ms: 0.7734
+  ...
+# Subtest: manual camera input cancels a trip without snapping or restarting, and holds off an unstarted trip
+ok 80 - manual camera input cancels a trip without snapping or restarting, and holds off an unstarted trip
+  ---
+  duration_ms: 0.6605
+  ...
+# Subtest: menu and hidden pauses hold the trip, while tutorial action pauses permit the visual arrival
+ok 81 - menu and hidden pauses hold the trip, while tutorial action pauses permit the visual arrival
+  ---
+  duration_ms: 0.5061
+  ...
+# Subtest: a departing animal or ended raid stops the trip; saved focus does not replay on reload
+ok 82 - a departing animal or ended raid stops the trip; saved focus does not replay on reload
+  ---
+  duration_ms: 2.4328
+  ...
+# Subtest: sabana: travel to an arrival preserves terrain clearance and centres the actual animal
+ok 83 - sabana: travel to an arrival preserves terrain clearance and centres the actual animal
+  ---
+  duration_ms: 554.169
+  ...
+# Subtest: gran-rio: travel to an arrival preserves terrain clearance and centres the actual animal
+ok 84 - gran-rio: travel to an arrival preserves terrain clearance and centres the actual animal
+  ---
+  duration_ms: 488.4096
+  ...
+# Subtest: manglares: travel to an arrival preserves terrain clearance and centres the actual animal
+ok 85 - manglares: travel to an arrival preserves terrain clearance and centres the actual animal
+  ---
+  duration_ms: 336.7499
+  ...
+# Subtest: volcanes: travel to an arrival preserves terrain clearance and centres the actual animal
+ok 86 - volcanes: travel to an arrival preserves terrain clearance and centres the actual animal
+  ---
+  duration_ms: 309.0976
+  ...
+# Subtest: gran-canon: travel to an arrival preserves terrain clearance and centres the actual animal
+ok 87 - gran-canon: travel to an arrival preserves terrain clearance and centres the actual animal
+  ---
+  duration_ms: 457.4664
+  ...
+# Subtest: desierto: travel to an arrival preserves terrain clearance and centres the actual animal
+ok 88 - desierto: travel to an arrival preserves terrain clearance and centres the actual animal
+  ---
+  duration_ms: 2215.2348
+  ...
+# (node:14392) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: complete catalogue audit reproduces from current source and exact original bytes
+ok 89 - complete catalogue audit reproduces from current source and exact original bytes
+  ---
+  duration_ms: 1300.6827
+  ...
+# Subtest: assignments, context exceptions, reserves and alternatives stay distinct from audible acceptance
+ok 90 - assignments, context exceptions, reserves and alternatives stay distinct from audible acceptance
+  ---
+  duration_ms: 143.1475
+  ...
+# Subtest: latent wood variant and semantic alternatives do not become real bindings or duplicate files
+ok 91 - latent wood variant and semantic alternatives do not become real bindings or duplicate files
+  ---
+  duration_ms: 0.8461
+  ...
+1..91
+# tests 91
+# suites 0
+# pass 91
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 30074.767

@@ -1,3 +1,4 @@
+import {activeRaidEntryPlan} from '../world/raid-entry-data.js';
 import {animalExitConnector} from './animal-exit-connectors.js';
 import {workerReturnRoute} from './worker-return-route.js';
 import {workerRiskClearance} from './worker-route-clearance.js';
@@ -592,13 +593,14 @@ export function foundVillage(s,id,culture,x,z,payload,nav) {
     emit(s,'VillageFounded',{culture,x,z,targetId:s.villages.at(-1).id,presentation:{x,z}});
   });
 }
+export function nightEntryPending(s){return !s.raid&&!s.result&&!!s.nightPlan?.group?.length&&!s.nightPlan.done&&s.time>=s.nightPlan.at;}
 function clockBoundaries(s){
   return [250,300,600,...(s.dayPlan&&!s.dayPlan.done?[s.dayPlan.at]:[]),...(s.nightPlan&&!s.nightPlan.done?[s.nightPlan.at]:[])].filter(Number.isFinite);
 }
 function prepareClockEvents(s,nav){
   if(s.time>=300 && !s.nightPlan){planNight(s);selectEvent(s);emit(s,'NightStarted');}
-  if(s.dayPlan&&!s.dayPlan.done&&s.time>=s.dayPlan.at){s.dayPlan.done=true;if(!s.postgame)spawnRaid(s,s.dayPlan,nav,true);}
-  if(s.nightPlan&&!s.nightPlan.done&&s.time>=s.nightPlan.at){s.nightPlan.done=true;if(s.nightPlan.group?.length)spawnRaid(s,s.nightPlan,nav);}
+  if(s.dayPlan&&!s.dayPlan.done&&s.time>=s.dayPlan.at){s.dayPlan.done=s.postgame||spawnRaid(s,s.dayPlan,nav,true)!==false;}
+  if(s.nightPlan&&!s.nightPlan.done&&s.time>=s.nightPlan.at&&(!s.dayPlan||activeRaidEntryPlan(s)!==s.dayPlan)){s.nightPlan.done=!s.nightPlan.group?.length||spawnRaid(s,s.nightPlan,nav)!==false;}
 }
 export function tick(s,seconds,nav) {
   return withNavigationQueries(nav,()=>tickScoped(s,seconds,nav));
@@ -644,7 +646,7 @@ function tickScoped(s,seconds,nav) {
     // Arrival is an event at the end of this interval. Newly spawned animals
     // must not move for time that elapsed before they existed.
     prepareClockEvents(s,nav);
-    if(s.time>=600 && !s.raid && !s.result)closeNight(s);
+    if(s.time>=600 && !s.raid && !s.result && (!s.nightPlan?.group?.length||s.nightPlan.done))closeNight(s);
   }
 }
 export function advanceReal(s,seconds,nav) {

@@ -1,0 +1,653 @@
+TAP version 13
+# Subtest: QA-102: mapungubwe/1 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 1 - QA-102: mapungubwe/1 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 104.5492
+  ...
+# Subtest: QA-102: mapungubwe/1 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 2 - QA-102: mapungubwe/1 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 47.6849
+  ...
+# Subtest: QA-102: mapungubwe/1 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 3 - QA-102: mapungubwe/1 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 173.7921
+  ...
+# Subtest: QA-102: mapungubwe/4 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 4 - QA-102: mapungubwe/4 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 46.3861
+  ...
+# Subtest: QA-102: mapungubwe/4 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 5 - QA-102: mapungubwe/4 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 26.0101
+  ...
+# Subtest: QA-102: mapungubwe/4 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 6 - QA-102: mapungubwe/4 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 51.6798
+  ...
+# Subtest: QA-102: mapungubwe/712 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 7 - QA-102: mapungubwe/712 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 17.4612
+  ...
+# Subtest: QA-102: mapungubwe/712 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 8 - QA-102: mapungubwe/712 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 12.7898
+  ...
+# Subtest: QA-102: mapungubwe/712 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 9 - QA-102: mapungubwe/712 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 46.8407
+  ...
+# Subtest: QA-102: mapungubwe/123456789 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 10 - QA-102: mapungubwe/123456789 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 25.0137
+  ...
+# Subtest: QA-102: mapungubwe/123456789 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 11 - QA-102: mapungubwe/123456789 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 25.6881
+  ...
+# Subtest: QA-102: mapungubwe/123456789 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 12 - QA-102: mapungubwe/123456789 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 50.1283
+  ...
+# Subtest: QA-102: saheliana/1 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 13 - QA-102: saheliana/1 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 13.686
+  ...
+# Subtest: QA-102: saheliana/1 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 14 - QA-102: saheliana/1 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 14.5739
+  ...
+# Subtest: QA-102: saheliana/1 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 15 - QA-102: saheliana/1 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 59.0502
+  ...
+# Subtest: QA-102: saheliana/4 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 16 - QA-102: saheliana/4 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 23.9273
+  ...
+# Subtest: QA-102: saheliana/4 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 17 - QA-102: saheliana/4 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 17.9606
+  ...
+# Subtest: QA-102: saheliana/4 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 18 - QA-102: saheliana/4 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 57.5524
+  ...
+# Subtest: QA-102: saheliana/712 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 19 - QA-102: saheliana/712 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 16.6776
+  ...
+# Subtest: QA-102: saheliana/712 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 20 - QA-102: saheliana/712 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 14.8803
+  ...
+# Subtest: QA-102: saheliana/712 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 21 - QA-102: saheliana/712 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 49.8767
+  ...
+# Subtest: QA-102: saheliana/123456789 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 22 - QA-102: saheliana/123456789 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 25.3819
+  ...
+# Subtest: QA-102: saheliana/123456789 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 23 - QA-102: saheliana/123456789 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 40.357
+  ...
+# Subtest: QA-102: saheliana/123456789 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 24 - QA-102: saheliana/123456789 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 44.218
+  ...
+# Subtest: QA-102: suajili/1 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 25 - QA-102: suajili/1 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 11.741
+  ...
+# Subtest: QA-102: suajili/1 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 26 - QA-102: suajili/1 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 13.2341
+  ...
+# Subtest: QA-102: suajili/1 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 27 - QA-102: suajili/1 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 46.6234
+  ...
+# Subtest: QA-102: suajili/4 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 28 - QA-102: suajili/4 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 17.9086
+  ...
+# Subtest: QA-102: suajili/4 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 29 - QA-102: suajili/4 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 14.7628
+  ...
+# Subtest: QA-102: suajili/4 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 30 - QA-102: suajili/4 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 39.5367
+  ...
+# Subtest: QA-102: suajili/712 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 31 - QA-102: suajili/712 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 11.1118
+  ...
+# Subtest: QA-102: suajili/712 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 32 - QA-102: suajili/712 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 14.7826
+  ...
+# Subtest: QA-102: suajili/712 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 33 - QA-102: suajili/712 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 54.4253
+  ...
+# Subtest: QA-102: suajili/123456789 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 34 - QA-102: suajili/123456789 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 27.5933
+  ...
+# Subtest: QA-102: suajili/123456789 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 35 - QA-102: suajili/123456789 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 23.2401
+  ...
+# Subtest: QA-102: suajili/123456789 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 36 - QA-102: suajili/123456789 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 44.5654
+  ...
+# Subtest: QA-102: musgum/1 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 37 - QA-102: musgum/1 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 9.6548
+  ...
+# Subtest: QA-102: musgum/1 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 38 - QA-102: musgum/1 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 10.5244
+  ...
+# Subtest: QA-102: musgum/1 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 39 - QA-102: musgum/1 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 47.8656
+  ...
+# Subtest: QA-102: musgum/4 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 40 - QA-102: musgum/4 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 16.7791
+  ...
+# Subtest: QA-102: musgum/4 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 41 - QA-102: musgum/4 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 24.4701
+  ...
+# Subtest: QA-102: musgum/4 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 42 - QA-102: musgum/4 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 55.5202
+  ...
+# Subtest: QA-102: musgum/712 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 43 - QA-102: musgum/712 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 16.4854
+  ...
+# Subtest: QA-102: musgum/712 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 44 - QA-102: musgum/712 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 17.3807
+  ...
+# Subtest: QA-102: musgum/712 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 45 - QA-102: musgum/712 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 44.8557
+  ...
+# Subtest: QA-102: musgum/123456789 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 46 - QA-102: musgum/123456789 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 23.7515
+  ...
+# Subtest: QA-102: musgum/123456789 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 47 - QA-102: musgum/123456789 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 21.1383
+  ...
+# Subtest: QA-102: musgum/123456789 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 48 - QA-102: musgum/123456789 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 40.5532
+  ...
+# Subtest: QA-102: etiope/1 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 49 - QA-102: etiope/1 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 16.2134
+  ...
+# Subtest: QA-102: etiope/1 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 50 - QA-102: etiope/1 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 17.4047
+  ...
+# Subtest: QA-102: etiope/1 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 51 - QA-102: etiope/1 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 50.5921
+  ...
+# Subtest: QA-102: etiope/4 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 52 - QA-102: etiope/4 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 23.0065
+  ...
+# Subtest: QA-102: etiope/4 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 53 - QA-102: etiope/4 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 22.231
+  ...
+# Subtest: QA-102: etiope/4 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 54 - QA-102: etiope/4 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 53.7873
+  ...
+# Subtest: QA-102: etiope/712 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 55 - QA-102: etiope/712 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 11.4949
+  ...
+# Subtest: QA-102: etiope/712 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 56 - QA-102: etiope/712 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 10.969
+  ...
+# Subtest: QA-102: etiope/712 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 57 - QA-102: etiope/712 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 46.6325
+  ...
+# Subtest: QA-102: etiope/123456789 crossing 10000 exact the real candidate is evaluated once and survives reload
+ok 58 - QA-102: etiope/123456789 crossing 10000 exact the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 24.3566
+  ...
+# Subtest: QA-102: etiope/123456789 crossing 10000 before the real candidate is evaluated once and survives reload
+ok 59 - QA-102: etiope/123456789 crossing 10000 before the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 26.3981
+  ...
+# Subtest: QA-102: etiope/123456789 crossing 10000 after the real candidate is evaluated once and survives reload
+ok 60 - QA-102: etiope/123456789 crossing 10000 after the real candidate is evaluated once and survives reload
+  ---
+  duration_ms: 55.0777
+  ...
+# Subtest: QA-103: mapungubwe/1 the same real day has independent daytime and nighttime raids
+ok 61 - QA-103: mapungubwe/1 the same real day has independent daytime and nighttime raids
+  ---
+  duration_ms: 185.034
+  ...
+# Subtest: QA-103: mapungubwe/4 the same real day has independent daytime and nighttime raids
+ok 62 - QA-103: mapungubwe/4 the same real day has independent daytime and nighttime raids
+  ---
+  duration_ms: 250.0397
+  ...
+# Subtest: QA-103: saheliana/1 the same real day has independent daytime and nighttime raids
+ok 63 - QA-103: saheliana/1 the same real day has independent daytime and nighttime raids
+  ---
+  duration_ms: 157.7971
+  ...
+# Subtest: QA-103: saheliana/4 the same real day has independent daytime and nighttime raids
+ok 64 - QA-103: saheliana/4 the same real day has independent daytime and nighttime raids
+  ---
+  duration_ms: 160.9462
+  ...
+# Subtest: QA-103: suajili/1 the same real day has independent daytime and nighttime raids
+ok 65 - QA-103: suajili/1 the same real day has independent daytime and nighttime raids
+  ---
+  duration_ms: 77.5887
+  ...
+# Subtest: QA-103: suajili/4 the same real day has independent daytime and nighttime raids
+ok 66 - QA-103: suajili/4 the same real day has independent daytime and nighttime raids
+  ---
+  duration_ms: 170.3075
+  ...
+# Subtest: QA-103: musgum/1 the same real day has independent daytime and nighttime raids
+ok 67 - QA-103: musgum/1 the same real day has independent daytime and nighttime raids
+  ---
+  duration_ms: 87.7022
+  ...
+# Subtest: QA-103: musgum/4 the same real day has independent daytime and nighttime raids
+ok 68 - QA-103: musgum/4 the same real day has independent daytime and nighttime raids
+  ---
+  duration_ms: 150.0057
+  ...
+# Subtest: QA-103: etiope/1 the same real day has independent daytime and nighttime raids
+ok 69 - QA-103: etiope/1 the same real day has independent daytime and nighttime raids
+  ---
+  duration_ms: 89.5785
+  ...
+# Subtest: QA-103: etiope/4 the same real day has independent daytime and nighttime raids
+ok 70 - QA-103: etiope/4 the same real day has independent daytime and nighttime raids
+  ---
+  duration_ms: 161.8437
+  ...
+# (node:19800) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: pending horizon retains adopted exact terrain while quality changes alta → media {}
+ok 71 - pending horizon retains adopted exact terrain while quality changes alta → media {}
+  ---
+  duration_ms: 4.935
+  ...
+# Subtest: pending horizon retains adopted exact terrain while quality changes alta → media {"farVisualRange":1,"farPreserveTerrain":true}
+ok 72 - pending horizon retains adopted exact terrain while quality changes alta → media {"farVisualRange":1,"farPreserveTerrain":true}
+  ---
+  duration_ms: 0.4132
+  ...
+# Subtest: pending horizon retains adopted exact terrain while quality changes media → alta {}
+ok 73 - pending horizon retains adopted exact terrain while quality changes media → alta {}
+  ---
+  duration_ms: 0.2161
+  ...
+# Subtest: pending horizon retains adopted exact terrain while quality changes media → alta {"farVisualRange":1,"farPreserveTerrain":true}
+ok 74 - pending horizon retains adopted exact terrain while quality changes media → alta {"farVisualRange":1,"farPreserveTerrain":true}
+  ---
+  duration_ms: 0.1784
+  ...
+# Subtest: independent visual terrain covers the previously adopted hole media/3/null
+ok 75 - independent visual terrain covers the previously adopted hole media/3/null
+  ---
+  duration_ms: 0.4437
+  ...
+# Subtest: independent visual terrain covers the previously adopted hole alta/1/null
+ok 76 - independent visual terrain covers the previously adopted hole alta/1/null
+  ---
+  duration_ms: 0.1914
+  ...
+# Subtest: independent visual terrain covers the previously adopted hole media/3/1
+ok 77 - independent visual terrain covers the previously adopted hole media/3/1
+  ---
+  duration_ms: 0.178
+  ...
+# Subtest: independent visual terrain covers the previously adopted hole alta/1/3
+ok 78 - independent visual terrain covers the previously adopted hole alta/1/3
+  ---
+  duration_ms: 0.3797
+  ...
+# Subtest: explicit resident radius also waits for matching adopted horizon before reducing exact chunks
+ok 79 - explicit resident radius also waits for matching adopted horizon before reducing exact chunks
+  ---
+  duration_ms: 0.3559
+  ...
+# Subtest: exact radius changes only when new horizon is adopted media
+ok 80 - exact radius changes only when new horizon is adopted media
+  ---
+  duration_ms: 0.5562
+  ...
+# Subtest: exact radius changes only when new horizon is adopted alta
+ok 81 - exact radius changes only when new horizon is adopted alta
+  ---
+  duration_ms: 0.2228
+  ...
+# Subtest: visual compaction releases excess coverage after smaller horizon is adopted
+ok 82 - visual compaction releases excess coverage after smaller horizon is adopted
+  ---
+  duration_ms: 0.3253
+  ...
+# Subtest: sabana: prepared native entry preserves the entire original post-spawn state
+ok 83 - sabana: prepared native entry preserves the entire original post-spawn state
+  ---
+  duration_ms: 697.0637
+  ...
+# Subtest: gran-rio: prepared native entry preserves the entire original post-spawn state
+ok 84 - gran-rio: prepared native entry preserves the entire original post-spawn state
+  ---
+  duration_ms: 452.7785
+  ...
+# Subtest: manglares: prepared native entry preserves the entire original post-spawn state
+ok 85 - manglares: prepared native entry preserves the entire original post-spawn state
+  ---
+  duration_ms: 364.8503
+  ...
+# Subtest: volcanes: prepared native entry preserves the entire original post-spawn state
+ok 86 - volcanes: prepared native entry preserves the entire original post-spawn state
+  ---
+  duration_ms: 400.1109
+  ...
+# Subtest: gran-canon: prepared native entry preserves the entire original post-spawn state
+ok 87 - gran-canon: prepared native entry preserves the entire original post-spawn state
+  ---
+  duration_ms: 591.2887
+  ...
+# Subtest: desierto: prepared native entry preserves the entire original post-spawn state
+ok 88 - desierto: prepared native entry preserves the entire original post-spawn state
+  ---
+  duration_ms: 2547.3327
+  ...
+# Subtest: camera: obsolete worker replies cannot supply an entry
+ok 89 - camera: obsolete worker replies cannot supply an entry
+  ---
+  duration_ms: 279.5821
+  ...
+# Subtest: bounds: obsolete worker replies cannot supply an entry
+ok 90 - bounds: obsolete worker replies cannot supply an entry
+  ---
+  duration_ms: 281.3683
+  ...
+# Subtest: geometry: obsolete worker replies cannot supply an entry
+ok 91 - geometry: obsolete worker replies cannot supply an entry
+  ---
+  duration_ms: 252.9249
+  ...
+# Subtest: group: obsolete worker replies cannot supply an entry
+ok 92 - group: obsolete worker replies cannot supply an entry
+  ---
+  duration_ms: 276.1056
+  ...
+# Subtest: collapse: obsolete worker replies cannot supply an entry
+ok 93 - collapse: obsolete worker replies cannot supply an entry
+  ---
+  duration_ms: 268.909
+  ...
+# Subtest: rng: obsolete worker replies cannot supply an entry
+ok 94 - rng: obsolete worker replies cannot supply an entry
+  ---
+  duration_ms: 253.0648
+  ...
+# Subtest: a reply accepted before the camera moves is also rejected at the actual spawn
+ok 95 - a reply accepted before the camera moves is also rejected at the actual spawn
+  ---
+  duration_ms: 274.0636
+  ...
+# Subtest: preparation bounds outstanding work, reports failure, and never survives disposal
+ok 96 - preparation bounds outstanding work, reports failure, and never survives disposal
+  ---
+  duration_ms: 267.5332
+  ...
+# Subtest: prepared camera failure still uses the original boundary fallback and RNG
+ok 97 - prepared camera failure still uses the original boundary fallback and RNG
+  ---
+  duration_ms: 372.2666
+  ...
+# (node:54196) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: residency pins actual sparse birth/exit chunks without generating the expanded rectangle
+ok 98 - residency pins actual sparse birth/exit chunks without generating the expanded rectangle
+  ---
+  duration_ms: 4.1778
+  ...
+# Subtest: pins are evicted and bounds restored after cancellation, without disrupting normal chunks
+ok 99 - pins are evicted and bounds restored after cancellation, without disrupting normal chunks
+  ---
+  duration_ms: 1.6784
+  ...
+# Subtest: active actor next-step corridor remains pinned and all demand disappears after real departure
+ok 100 - active actor next-step corridor remains pinned and all demand disappears after real departure
+  ---
+  duration_ms: 0.5632
+  ...
+# Subtest: bounds refresh retains validated sparse demand while a new full worker key is prepared
+ok 101 - bounds refresh retains validated sparse demand while a new full worker key is prepared
+  ---
+  duration_ms: 8.7918
+  ...
+# Subtest: headless driver waits for the same retained daytime owner instead of the nighttime key
+not ok 102 - headless driver waits for the same retained daytime owner instead of the nighttime key
+  ---
+  duration_ms: 36.9197
+  location: 'file:///C:/Users/PC/.codex/worktrees/raid-fractional-exit/wild-guardians-africa/tests/raid-entry-residency.test.js:16:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'group')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/raid-fractional-exit/wild-guardians-africa/tests/raid-entry-residency.test.js:22:38)
+    async Test.run (node:internal/test_runner/test:632:9)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+# Subtest: whole group exterior native entry: closed
+ok 103 - whole group exterior native entry: closed
+  ---
+  duration_ms: 69.4991
+  ...
+# Subtest: whole group exterior native entry: open
+ok 104 - whole group exterior native entry: open
+  ---
+  duration_ms: 40.9269
+  ...
+# Subtest: whole group exterior native entry: gate
+ok 105 - whole group exterior native entry: gate
+  ---
+  duration_ms: 21.416
+  ...
+# Subtest: whole group exterior native entry: separate
+ok 106 - whole group exterior native entry: separate
+  ---
+  duration_ms: 22.9594
+  ...
+# Subtest: whole group exterior native entry: concave
+ok 107 - whole group exterior native entry: concave
+  ---
+  duration_ms: 23.102
+  ...
+# Subtest: whole group exterior native entry: no-walls
+ok 108 - whole group exterior native entry: no-walls
+  ---
+  duration_ms: 2.373
+  ...
+# Subtest: whole group exterior native entry: clipped-bounds
+ok 109 - whole group exterior native entry: clipped-bounds
+  ---
+  duration_ms: 14.7619
+  ...
+# Subtest: closed 40m enclosure starts physically outside then hits a wall
+ok 110 - closed 40m enclosure starts physically outside then hits a wall
+  ---
+  duration_ms: 887.4818
+  ...
+# Subtest: closed 320m enclosure starts physically outside then hits a wall
+ok 111 - closed 320m enclosure starts physically outside then hits a wall
+  ---
+  duration_ms: 6596.2577
+  ...
+# Subtest: residency handshake preserves pending night/RNG and reload creates exactly one complete group
+ok 112 - residency handshake preserves pending night/RNG and reload creates exactly one complete group
+  ---
+  duration_ms: 6198.1062
+  ...
+# Subtest: worker preparation uses the same exterior choice without changing state or RNG
+ok 113 - worker preparation uses the same exterior choice without changing state or RNG
+  ---
+  duration_ms: 482.14
+  ...
+# Subtest: expanded bounds have sparse finite chunk demand and release when raid disappears
+ok 114 - expanded bounds have sparse finite chunk demand and release when raid disappears
+  ---
+  duration_ms: 22.0237
+  ...
+# Subtest: native sabana opening: whole group keeps genuine terrain and fluid legality
+ok 115 - native sabana opening: whole group keeps genuine terrain and fluid legality
+  ---
+  duration_ms: 381.8875
+  ...
+# Subtest: native gran-rio opening: whole group keeps genuine terrain and fluid legality
+ok 116 - native gran-rio opening: whole group keeps genuine terrain and fluid legality
+  ---
+  duration_ms: 377.2914
+  ...
+# Subtest: native manglares opening: whole group keeps genuine terrain and fluid legality
+ok 117 - native manglares opening: whole group keeps genuine terrain and fluid legality
+  ---
+  duration_ms: 308.0063
+  ...
+# Subtest: native volcanes opening: whole group keeps genuine terrain and fluid legality
+ok 118 - native volcanes opening: whole group keeps genuine terrain and fluid legality
+  ---
+  duration_ms: 325.8292
+  ...
+# Subtest: native gran-canon opening: whole group keeps genuine terrain and fluid legality
+ok 119 - native gran-canon opening: whole group keeps genuine terrain and fluid legality
+  ---
+  duration_ms: 537.3877
+  ...
+# Subtest: native desierto opening: whole group keeps genuine terrain and fluid legality
+ok 120 - native desierto opening: whole group keeps genuine terrain and fluid legality
+  ---
+  duration_ms: 2308.8509
+  ...
+# Subtest: a whole 32 cohort is neither thinned nor rerolled when a single near-camera lane cannot fit
+ok 121 - a whole 32 cohort is neither thinned nor rerolled when a single near-camera lane cannot fit
+  ---
+  duration_ms: 132.7215
+  ...
+# Subtest: a whole 72 cohort is neither thinned nor rerolled when a single near-camera lane cannot fit
+ok 122 - a whole 72 cohort is neither thinned nor rerolled when a single near-camera lane cannot fit
+  ---
+  duration_ms: 141.7688
+  ...
+# Subtest: a wall closing a natural cliff pocket cannot admit births in its enclosed interior beyond the wall AABB
+ok 123 - a wall closing a natural cliff pocket cannot admit births in its enclosed interior beyond the wall AABB
+  ---
+  duration_ms: 61.5102
+  ...
+# Subtest: failed whole-group selection is memoized, reports once and retries after native obstacle epoch changes
+ok 124 - failed whole-group selection is memoized, reports once and retries after native obstacle epoch changes
+  ---
+  duration_ms: 23.8806
+  ...
+# Subtest: view invalidation replaces prior sparse demand before whole-group residency can commit
+ok 125 - view invalidation replaces prior sparse demand before whole-group residency can commit
+  ---
+  duration_ms: 28.892
+  ...
+# Subtest: retained daytime entry owns readiness across night and both groups spawn sequentially with native ticks
+ok 126 - retained daytime entry owns readiness across night and both groups spawn sequentially with native ticks
+  ---
+  duration_ms: 963.1713
+  ...
+1..126
+# tests 126
+# suites 0
+# pass 125
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 20309.8032

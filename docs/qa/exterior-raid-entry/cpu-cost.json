@@ -1,0 +1,85 @@
+{
+  "schema": 1,
+  "cpuOnly": true,
+  "generatedAt": "2026-10-10T10:29:33.600Z",
+  "sourceHashes": {
+    "src/simulation/raids.js": "3d8638b58ff5f84c8d3e6e1016093b8d34b1d5bed638792d9bbe2dc0335d64f7",
+    "src/simulation/raid-exterior-entry.js": "38876d0191f05351f2f8c34a097f7c7e4b68c6d079d4f8fffa409c7aacc55bfd",
+    "src/world/raid-entry-residency.js": "5781134723da7eb94b4d314f7ab5f0323ee72cfa43792cf223a87b21c327a7af",
+    "src/world/raid-entry-preparer.js": "d796b652aa7aa9fa1b01dced2576e2053eae46c255ddaaa1c52de8d9c9d5d97c"
+  },
+  "rows": [
+    {
+      "kind": "closed-5",
+      "actors": 5,
+      "selectionMilliseconds": 23.459000000000003,
+      "countsBeforeRetries": {
+        "walkable": 204,
+        "segmentClear": 92,
+        "path": 0
+      },
+      "cachedRetryMilliseconds": 5.046899999999994,
+      "retryNavigationCalls": {
+        "walkable": 0,
+        "segmentClear": 0,
+        "path": 0
+      },
+      "sparseChunkCount": 2
+    },
+    {
+      "kind": "closed-32",
+      "actors": 32,
+      "selectionMilliseconds": 83.98579999999998,
+      "countsBeforeRetries": {
+        "walkable": 3028,
+        "segmentClear": 536,
+        "path": 0
+      },
+      "cachedRetryMilliseconds": 4.449199999999962,
+      "retryNavigationCalls": {
+        "walkable": 0,
+        "segmentClear": 0,
+        "path": 0
+      },
+      "sparseChunkCount": 4
+    },
+    {
+      "kind": "closed-72",
+      "actors": 72,
+      "selectionMilliseconds": 40.79079999999999,
+      "countsBeforeRetries": {
+        "walkable": 456,
+        "segmentClear": 564,
+        "path": 0
+      },
+      "cachedRetryMilliseconds": 3.2235000000000014,
+      "retryNavigationCalls": {
+        "walkable": 0,
+        "segmentClear": 0,
+        "path": 0
+      },
+      "sparseChunkCount": 6
+    },
+    {
+      "kind": "desierto-5",
+      "actors": 5,
+      "selectionMilliseconds": 242.2572,
+      "countsBeforeRetries": {
+        "walkable": 17877,
+        "segmentClear": 2335,
+        "path": 8
+      },
+      "cachedRetryMilliseconds": 1.324800000000323,
+      "retryNavigationCalls": {
+        "walkable": 0,
+        "segmentClear": 0,
+        "path": 0
+      },
+      "sparseChunkCount": 1
+    }
+  ],
+  "limitations": [
+    "Fresh fixture per case, one process; not an isolated statistical benchmark or GPU/frame-time evidence.",
+    "Native terrain memo warming and JIT may change later rows. Worker error still permits synchronous selector fallback."
+  ]
+}
