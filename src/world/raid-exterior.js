@@ -8,6 +8,11 @@ import {containsPoint,footprintDistance} from './footprints.js';
 const cache=new WeakMap(),diagnostics=new WeakMap();
 const counters=nav=>{let value=diagnostics.get(nav);if(!value){value={builds:0,adoptions:0};diagnostics.set(nav,value);}return value;};
 export const raidExteriorDiagnostics=nav=>({...counters(nav)});
+// Read-only deadline instrumentation: never constructs a cache or graph.
+export function hasRaidExteriorGeometry(state,nav,radii){
+ const geometry=cache.get(nav)?.get(raidExteriorInputKey(state,nav));
+ return !!geometry&&geometry.field===nav.field&&radii.every(radius=>geometry.regions.has(radius));
+}
 // Exact physical inputs. Remaining HP, shield duration, camera and simulation
 // clocks are deliberately absent when they do not change collision geometry.
 export function raidExteriorInputKey(state,nav){

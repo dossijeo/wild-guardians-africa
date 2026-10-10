@@ -1,0 +1,48 @@
+TAP version 13
+# {"scope":"CPU frame-hook driver, no RAF/GPU/deadline performance acceptance","kind":"closed","frames":26,"stats":{"frames":26,"deadlineCalls":1,"preparedEntries":0,"warmGeometryFallbacks":1,"coldGeometryFallbacks":0,"maxFrameWorkMs":21.03679999999997,"errors":0},"geometry":{"jobs":1,"aborted":0,"adopted":1,"rejected":0,"workerFailures":1,"steps":2744,"maxStepMs":20.072900000000004,"maxSliceMs":20.762000000000057,"maxUpdateMs":2.9932000000000016,"maxProofMs":0.393100000000004,"maxAdoptionMs":1.268699999999967,"phases":{"geometry-first-yield":{"steps":1,"totalMs":0.004000000000019099,"maxMs":0.004000000000019099},"geometry-navigation":{"steps":1,"totalMs":0.9837999999999738,"maxMs":0.9837999999999738},"geometry-input-proof":{"steps":1,"totalMs":0.8179000000000087,"maxMs":0.8179000000000087},"exterior-wall-layout":{"steps":5,"totalMs":0.22140000000001692,"maxMs":0.17010000000004766},"boundary-bounds":{"steps":5,"totalMs":0.2477999999999838,"maxMs":0.09320000000002437},"boundary-obstacle":{"steps":125,"totalMs":0.270699999999124,"maxMs":0.03750000000002274},"boundary-props-scatter":{"steps":5,"totalMs":20.41449999999986,"maxMs":20.072900000000004},"boundary-prop":{"steps":185,"totalMs":0.20899999999971897,"maxMs":0.014999999999986358},"exterior-virtual-edge":{"steps":125,"totalMs":0.5540000000000873,"maxMs":0.23860000000001946},"face-input":{"steps":210,"totalMs":0.698799999999892,"maxMs":0.11589999999989686},"face-intersection":{"steps":250,"totalMs":10.468099999999254,"maxMs":0.9519999999999982},"face-cut-sort":{"steps":210,"totalMs":0.5189999999993233,"maxMs":0.028099999999994907},"face-node-scan":{"steps":510,"totalMs":1.469400000002338,"maxMs":0.1795999999999367},"face-node-sort":{"steps":210,"totalMs":0.30060000000128184,"maxMs":0.012899999999945067},"face-start":{"steps":420,"totalMs":0.32139999999992597,"maxMs":0.017200000000002547},"face-walk":{"steps":440,"totalMs":0.35589999999922384,"maxMs":0.0027000000000043656},"face-area-hosts":{"steps":20,"totalMs":0.5764999999996689,"maxMs":0.1348000000000411},"face-sort":{"steps":5,"totalMs":0.020000000000095497,"maxMs":0.008200000000101682},"exterior-face-filter":{"steps":10,"totalMs":0.1634999999999991,"maxMs":0.06779999999992015},"exterior-freeze":{"steps":5,"totalMs":0.21249999999997726,"maxMs":0.11629999999991014},"geometry-complete-freeze":{"steps":1,"totalMs":0.8400000000000318,"maxMs":0.8400000000000318}}},"deadline":{"day":1,"time":0,"elapsed":0,"preparedEntry":false,"geometryReady":true,"fallback":"native-sync-entry-warm-geometry"}}
+# {"scope":"CPU frame-hook driver, no RAF/GPU/deadline performance acceptance","kind":"mixed","frames":24,"stats":{"frames":24,"deadlineCalls":1,"preparedEntries":0,"warmGeometryFallbacks":1,"coldGeometryFallbacks":0,"maxFrameWorkMs":23.23070000000007,"errors":0},"geometry":{"jobs":1,"aborted":0,"adopted":1,"rejected":0,"workerFailures":1,"steps":2744,"maxStepMs":19.942399999999907,"maxSliceMs":21.544800000000123,"maxUpdateMs":1.6739999999999782,"maxProofMs":1.9476999999999407,"maxAdoptionMs":1.5024999999998272,"phases":{"geometry-first-yield":{"steps":1,"totalMs":0.005799999999908323,"maxMs":0.005799999999908323},"geometry-navigation":{"steps":1,"totalMs":0.5492999999999029,"maxMs":0.5492999999999029},"geometry-input-proof":{"steps":1,"totalMs":0.6275000000000546,"maxMs":0.6275000000000546},"exterior-wall-layout":{"steps":5,"totalMs":0.0818000000003849,"maxMs":0.052500000000009095},"boundary-bounds":{"steps":5,"totalMs":0.177599999999984,"maxMs":0.039099999999962165},"boundary-obstacle":{"steps":125,"totalMs":0.17119999999886204,"maxMs":0.013800000000173895},"boundary-props-scatter":{"steps":5,"totalMs":20.041500000000042,"maxMs":19.942399999999907},"boundary-prop":{"steps":185,"totalMs":0.20740000000046166,"maxMs":0.017500000000154614},"exterior-virtual-edge":{"steps":125,"totalMs":0.16660000000092623,"maxMs":0.010600000000067666},"face-input":{"steps":210,"totalMs":0.35750000000007276,"maxMs":0.013599999999996726},"face-intersection":{"steps":250,"totalMs":8.66499999999769,"maxMs":0.1632999999999356},"face-cut-sort":{"steps":210,"totalMs":0.7072000000005119,"maxMs":0.0886000000000422},"face-node-scan":{"steps":510,"totalMs":1.2982999999969707,"maxMs":0.02970000000004802},"face-node-sort":{"steps":210,"totalMs":0.2636000000002241,"maxMs":0.003400000000056025},"face-start":{"steps":420,"totalMs":0.31199999999375905,"maxMs":0.005200000000058935},"face-walk":{"steps":440,"totalMs":0.6263999999976022,"maxMs":0.18290000000001783},"face-area-hosts":{"steps":20,"totalMs":0.3958000000004631,"maxMs":0.0625},"face-sort":{"steps":5,"totalMs":0.024799999999686406,"maxMs":0.007599999999911233},"exterior-face-filter":{"steps":10,"totalMs":0.03979999999978645,"maxMs":0.007699999999886131},"exterior-freeze":{"steps":5,"totalMs":0.10120000000051732,"maxMs":0.03490000000010696},"geometry-complete-freeze":{"steps":1,"totalMs":0.817299999999932,"maxMs":0.817299999999932}}},"deadline":{"day":1,"time":0,"elapsed":0,"preparedEntry":false,"geometryReady":true,"fallback":"native-sync-entry-warm-geometry"}}
+# {"scope":"CPU frame-hook driver, no RAF/GPU/deadline performance acceptance","kind":"canyon","frames":33,"stats":{"frames":33,"deadlineCalls":1,"preparedEntries":0,"warmGeometryFallbacks":1,"coldGeometryFallbacks":0,"maxFrameWorkMs":7.194899999999961,"errors":0},"geometry":{"jobs":1,"aborted":0,"adopted":1,"rejected":0,"workerFailures":1,"steps":3862,"maxStepMs":6.26929999999993,"maxSliceMs":6.852399999999989,"maxUpdateMs":2.618400000000065,"maxProofMs":0.49030000000016116,"maxAdoptionMs":1.081899999999905,"phases":{"geometry-first-yield":{"steps":1,"totalMs":0.006200000000035288,"maxMs":0.006200000000035288},"geometry-navigation":{"steps":1,"totalMs":0.6778999999999087,"maxMs":0.6778999999999087},"geometry-input-proof":{"steps":1,"totalMs":1.2472999999999956,"maxMs":1.2472999999999956},"exterior-wall-layout":{"steps":5,"totalMs":0.13560000000006767,"maxMs":0.11239999999997963},"boundary-bounds":{"steps":5,"totalMs":0.15239999999994325,"maxMs":0.03530000000000655},"boundary-obstacle":{"steps":125,"totalMs":0.29429999999865686,"maxMs":0.04560000000014952},"boundary-props-scatter":{"steps":5,"totalMs":6.3168000000000575,"maxMs":6.26929999999993},"boundary-prop":{"steps":40,"totalMs":0.09189999999989595,"maxMs":0.04169999999999163},"boundary-terrain-cell":{"steps":500,"totalMs":5.019500000001017,"maxMs":0.12710000000015498},"exterior-virtual-edge":{"steps":165,"totalMs":0.22260000000005675,"maxMs":0.015299999999797365},"face-input":{"steps":245,"totalMs":0.22910000000229047,"maxMs":0.006399999999985084},"face-intersection":{"steps":320,"totalMs":0.8534000000008746,"maxMs":0.04369999999994434},"face-cut-sort":{"steps":245,"totalMs":0.3366999999973359,"maxMs":0.03660000000013497},"face-node-scan":{"steps":764,"totalMs":1.536100000000033,"maxMs":0.40879999999992833},"face-node-sort":{"steps":271,"totalMs":0.25830000000019027,"maxMs":0.031199999999898864},"face-start":{"steps":556,"totalMs":0.15129999999976462,"maxMs":0.0024000000000796717},"face-walk":{"steps":573,"totalMs":0.18539999999984502,"maxMs":0.0024000000000796717},"face-area-hosts":{"steps":17,"totalMs":0.26640000000020336,"maxMs":0.03700000000003456},"face-sort":{"steps":5,"totalMs":0.009900000000016007,"maxMs":0.002399999999852298},"exterior-face-filter":{"steps":12,"totalMs":0.04989999999952488,"maxMs":0.01160000000004402},"exterior-freeze":{"steps":5,"totalMs":0.06269999999972242,"maxMs":0.016999999999825377},"geometry-complete-freeze":{"steps":1,"totalMs":0.7429999999999382,"maxMs":0.7429999999999382}}},"deadline":{"day":1,"time":0,"elapsed":0,"preparedEntry":false,"geometryReady":true,"fallback":"native-sync-entry-warm-geometry"}}
+# Subtest: OFF is allocation/hook free; actual WorldScene load/render/dispose connections remain explicit
+ok 1 - OFF is allocation/hook free; actual WorldScene load/render/dispose connections remain explicit
+  ---
+  duration_ms: 445.6113
+  ...
+# Subtest: closed: frame-owned continuation adopts whole geometry and native deadline spawn matches cold control
+ok 2 - closed: frame-owned continuation adopts whole geometry and native deadline spawn matches cold control
+  ---
+  duration_ms: 466.8715
+  ...
+# Subtest: mixed: frame-owned continuation adopts whole geometry and native deadline spawn matches cold control
+ok 3 - mixed: frame-owned continuation adopts whole geometry and native deadline spawn matches cold control
+  ---
+  duration_ms: 399.9419
+  ...
+# Subtest: canyon: frame-owned continuation adopts whole geometry and native deadline spawn matches cold control
+ok 4 - canyon: frame-owned continuation adopts whole geometry and native deadline spawn matches cold control
+  ---
+  duration_ms: 513.5466
+  ...
+# Subtest: cold deadline fallback is explicit and preserves spawn/RNG rather than pausing or discarding it
+ok 5 - cold deadline fallback is explicit and preserves spawn/RNG rather than pausing or discarding it
+  ---
+  duration_ms: 315.116
+  ...
+# Subtest: camera/group edits preserve geometry job; paid wall removal invalidates and dispose cannot restore stale ownership
+ok 6 - camera/group edits preserve geometry job; paid wall removal invalidates and dispose cannot restore stale ownership
+  ---
+  duration_ms: 315.4743
+  ...
+# Subtest: prepared delegate result is returned unchanged; lifecycle cancellation leaves all simulated clocks and state intact
+ok 7 - prepared delegate result is returned unchanged; lifecycle cancellation leaves all simulated clocks and state intact
+  ---
+  duration_ms: 324.0422
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2977.5529
