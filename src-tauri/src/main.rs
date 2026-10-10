@@ -23,6 +23,11 @@ fn main() {
                 && std::env::args().any(|arg| arg == "--smoke-report")
                 && webview.label() == "main"
             {
+                // Visual readbacks are opt-in and deliberately excluded from
+                // ordinary smoke/timing runs. The app owns the capture lifecycle.
+                if std::env::args().any(|arg| arg == "--smoke-visual") {
+                    let _ = webview.eval("window.__desktopSmokeVisualCapture = true;");
+                }
                 let _ = webview.eval(include_str!("../smoke.js"));
             }
         })
