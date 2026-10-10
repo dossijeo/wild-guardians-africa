@@ -1,3 +1,6 @@
+import {raidEntryChunks,includeRaidBounds} from '../world/raid-entry-residency.js';
+import {raidEntryKey} from '../world/raid-entry-data.js';
+import {exteriorRaidEntry} from './raid-exterior-entry.js';
 import {createCropGrouping} from './crop-components.js';
 import {cropBecameInactive} from './active-crops.js';
 import {RAID_NOTICE_TEXT} from './raid-notice.js';
@@ -15,7 +18,7 @@ import {ANIMAL_ACTIONS} from './animal-actions-data.js';
 import {actorBlockers,actorSegmentClear} from './actor-motion.js';
 import {activeChunkRegion,validActiveBounds} from '../world/active-region.js';
 import {defensiveGroups,reservedGroup,reconcileDefensiveReservations} from './defensive-groups.js';
-const dist=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
+const dist=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z),entrySelections=new WeakMap();
 export function planNight(s) {
   const at=323+nextRandom(s)*225; // 20:00–05:00 at 2.4 internal minutes/s.
   const value=attraction(s.plants),tier=threatTier(value);
@@ -93,7 +96,7 @@ function nearFarmRaidEntry(s,specs,bounds,nav){
   }
   return null;
 }
-export function chooseRaidEntry(s,specs,bounds,preferredSide,nav){
+function baseRaidEntry(s,specs,bounds,preferredSide,nav){
   const focus=s.structures.find(operational)??s.villages[0];
   const inset=Math.max(...specs.map(({radius})=>radius))+.25;
   const [minX,minZ,maxX,maxZ]=bounds;
@@ -132,12 +135,13 @@ export function chooseRaidEntry(s,specs,bounds,preferredSide,nav){
   }
   return entries?{entries,exits}:null;
 }
+export function chooseRaidEntry(s,specs,bounds,preferredSide,nav){return exteriorRaidEntry(s,specs,bounds,preferredSide,nav,baseRaidEntry,cameraRaidEntry);}
 export function spawnRaid(s,plan,nav,daytime=false) {
-  if(s.raid||s.postgame)return;
+  if(s.raid)return false;if(s.postgame)return;
   let group=plan.group;
-  if(daytime) {
+  if(daytime&&!group) {
     const value=attraction(s.plants);if(value<10000||nextRandom(s)>=.1)return;
-    const budget=randomInt(s,7,10),legal=compositions(budget,threatTier(value).unlocked_species);group=legal[randomInt(s,0,legal.length-1)];
+    const budget=randomInt(s,7,10),legal=compositions(budget,threatTier(value).unlocked_species);group=legal[randomInt(s,0,legal.length-1)];plan.group=[...group];
   }
   if(!group?.length)return;
   const focus=s.structures.find(operational)??s.villages[0];
@@ -145,10 +149,18 @@ export function spawnRaid(s,plan,nav,daytime=false) {
   const bounds=validActiveBounds(nav.activeBounds)?[...nav.activeBounds]:activeChunkRegion(focus).bounds;
   const prepared=!daytime&&nav.preparedRaidEntry?.(s,group,bounds);
   if(prepared)warmRaidNavigation(nav,prepared.warmth);
-  const preferredSide=randomInt(s,0,3);
-  const entry=prepared?prepared.entry:chooseRaidEntry(s,specs,bounds,preferredSide,nav);
+  const preferredSide=randomInt({rng:s.rng},0,3);
+  const selectionKey=raidEntryKey(s,nav,group,bounds)??JSON.stringify([s.rng,nav.version,group,bounds,nav.raidView,s.structures.map(t=>[t.id,t.status,t.hp>0])]);
+  if(nav.raidEntryDemand?.key!==selectionKey)delete nav.raidEntryDemand;
+  let cache=entrySelections.get(nav);if(!cache){cache=new Map();entrySelections.set(nav,cache);}let cached=cache.get(selectionKey);
+  if(!prepared&&!cached){cached={key:selectionKey,entry:chooseRaidEntry(s,specs,bounds,preferredSide,nav)};if(cache.size>=4)cache.delete(cache.keys().next().value);cache.set(selectionKey,cached);}
+  const entry=prepared?prepared.entry:cached.entry;
   const entries=entry?.entries,exits=entry?.exits;
-  if(!entries){notice(s,'La incursión no encuentra una entrada transitable para su grupo completo.');return;}
+  if(!entries){if(nav.raidEntryFailure?.key!==selectionKey){nav.raidEntryFailure={key:selectionKey,version:nav.version,group:[...group],bounds:[...bounds]};if(!s.messages.at(-1)?.text.includes('incursión espera una entrada físicamente exterior'))notice(s,'La incursión espera una entrada físicamente exterior transitable para su grupo completo.');}return false;}
+  nav.raidEntryDemand={entry,radii:specs.map(v=>v.radius),key:selectionKey};
+  if(nav.raidEntryResident&&!nav.raidEntryResident(entry,specs.map(v=>v.radius)))return false;
+  if(entry.selectionBounds)nav.setActiveBounds?.(includeRaidBounds(bounds,raidEntryChunks(entry,specs.map(v=>v.radius))));
+  randomInt(s,0,3);delete nav.raidEntryFailure;delete nav.raidEntryDemand;
   const animals=specs.map(({spec,radius},i)=>({id:`animal-${s.nextId++}`,species:spec.id,...entries[i],spawn:{...entries[i]},exit:{...exits[i]},radius,
     hitsRemaining:plan.introductory&&!daytime?spec.hit_budget_min:randomInt(s,spec.hit_budget_min,spec.hit_budget_max),status:'entering',targetId:null,reservation:null,path:null,attackRemaining:0,attackId:null,hitApplied:false}));
   s.raid={id:`raid-${s.day}-${daytime?'day':'night'}`,animals,encounters:[],reservations:{},daytime};
@@ -163,7 +175,7 @@ export function spawnRaid(s,plan,nav,daytime=false) {
     if(w.status!=='home')w.status='fleeing';
   }
   s.tasks=s.tasks.filter(t=>t.kind!=='repair');
-  notice(s,RAID_NOTICE_TEXT,animals[0].id);emit(s,'RaidSpawned');
+  notice(s,RAID_NOTICE_TEXT,animals[0].id);emit(s,'RaidSpawned');return true;
 }
 function release(s,a) {if(a.reservation&&s.raid.reservations[a.reservation]===a.id)delete s.raid.reservations[a.reservation];a.reservation=null;a.targetId=null;a.path=null;a.approach=null;a.approachShieldId=null;}
 export function reachableApproach(a,target,nav,shield=null){

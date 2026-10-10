@@ -25,10 +25,10 @@
     "src/audio/worker-audio.js": "08f03288dfc052fe07e7b0349aee620d3ece46278abbede81c80200d3ebbdec4",
     "src/rendering/building-effects.js": "3749b6cea1becba3cc9b6bd23c02315a89dcdd4927f81e51e2104689c622dd9e",
     "src/rendering/crop-batch.js": "96f37896195dda9cbf2c2e2e9570c982305c83cdb1e20b3e36671b7754ab233c",
-    "src/rendering/scene.js": "689e707a33d3dbefdd5f008ff1f0d472b71738a5e4c3ee349c3aaf5fe832d418",
+    "src/rendering/scene.js": "9e9aae7b6fde6ba7d31ae0de09151dd50e64bedde0e4b48110fd243338526252",
     "src/simulation/encounters.js": "5c55e938e8bf4d0aa24f57f4bfd0fe32bc5e5bab452c8fb1a6a5c2eac1d3f53c",
-    "src/simulation/game.js": "e9b62e9dfbb3622182f450bc716da195d61db7aa710d620e687a2fcf9580a6fa",
-    "src/simulation/raids.js": "79d66a3e3e34e08f862e16510d9ecc5ebbc7a37600ac5c03893cbab928d95c3a",
+    "src/simulation/game.js": "4eab11e0831153e731a785907448e4e0e286a7065f9ca5bec93283194d7238d7",
+    "src/simulation/raids.js": "39e803c7b1bad2a4091123ed6bea939c48d58438a93ab1053c907020e715ba9e",
     "src/tutorial/controller.js": "2d9b23d425246c3d8fef067cf4b67638f99a6afdcc420cc28319186cfc5f97e9",
     "src/world/navigation.js": "9d44b740809c2d3c0273342364f8b3511e26ada24bea82acd60bda84a8072751",
     "tools/audit_sfx_catalog.mjs": "b18d10538c7d67d25f1b0f00e2ebba5e264d7148569fec56ce8ee9fd8424cc05"
@@ -1002,7 +1002,7 @@
           },
           {
             "file": "src/rendering/scene.js",
-            "line": 88,
+            "line": 89,
             "selector": "this.movementSurfaceAt="
           }
         ],
@@ -2308,7 +2308,7 @@
           "callers": [
             {
               "file": "src/simulation/raids.js",
-              "line": 251,
+              "line": 263,
               "selector": "emit(s,'StructureHit'"
             },
             {
@@ -2370,7 +2370,7 @@
           "callers": [
             {
               "file": "src/simulation/raids.js",
-              "line": 251,
+              "line": 263,
               "selector": "emit(s,'StructureHit'"
             },
             {
@@ -2432,7 +2432,7 @@
           "callers": [
             {
               "file": "src/simulation/raids.js",
-              "line": 251,
+              "line": 263,
               "selector": "emit(s,'StructureHit'"
             },
             {
@@ -2494,7 +2494,7 @@
           "callers": [
             {
               "file": "src/simulation/raids.js",
-              "line": 251,
+              "line": 263,
               "selector": "emit(s,'StructureHit'"
             },
             {
@@ -2556,7 +2556,7 @@
           "callers": [
             {
               "file": "src/simulation/raids.js",
-              "line": 251,
+              "line": 263,
               "selector": "emit(s,'StructureHit'"
             },
             {
@@ -2618,7 +2618,7 @@
           "callers": [
             {
               "file": "src/simulation/raids.js",
-              "line": 251,
+              "line": 263,
               "selector": "emit(s,'StructureHit'"
             },
             {
@@ -2742,7 +2742,7 @@
           "callers": [
             {
               "file": "src/simulation/raids.js",
-              "line": 251,
+              "line": 263,
               "selector": "emit(s,'StructureHit'"
             },
             {
@@ -2804,7 +2804,7 @@
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 627,
+              "line": 628,
               "selector": "emit(s,'StructureRuined'"
             },
             {
@@ -3105,7 +3105,7 @@
           "callers": [
             {
               "file": "src/simulation/raids.js",
-              "line": 251,
+              "line": 263,
               "selector": "emit(s,'StructureHit'"
             },
             {
@@ -6697,7 +6697,7 @@
           "callers": [
             {
               "file": "src/simulation/raids.js",
-              "line": 166,
+              "line": 178,
               "selector": "emit(s,'RaidSpawned'"
             },
             {
@@ -6832,7 +6832,7 @@
           "callers": [
             {
               "file": "src/simulation/raids.js",
-              "line": 251,
+              "line": 263,
               "selector": "emit(s,'StructureHit'"
             },
             {
@@ -6898,7 +6898,7 @@
           "callers": [
             {
               "file": "src/simulation/raids.js",
-              "line": 251,
+              "line": 263,
               "selector": "emit(s,'StructureHit'"
             },
             {
@@ -7034,7 +7034,7 @@
           "callers": [
             {
               "file": "src/simulation/raids.js",
-              "line": 297,
+              "line": 309,
               "selector": "emit(s,'RaidEnded'"
             },
             {
@@ -7171,7 +7171,7 @@
             },
             {
               "file": "src/simulation/raids.js",
-              "line": 298,
+              "line": 310,
               "selector": "emit(s,'GameOver'"
             },
             {

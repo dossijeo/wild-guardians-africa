@@ -13,3 +13,7 @@ export function raidEntryRequest(state,nav,group,key,token){
   return structuredClone({key,token,group,profile:nav.profile,bounds:nav.activeBounds,view:nav.raidView,
     state:{seed,biome,culture,terrainVersion,rng,villages,structures,suppressed,spells,navigationVersion,plants,workers}});
 }
+
+// Residency can expand bounds using a validated pending entry. Keep those pins
+// while its refreshed full-key request runs; geometry/view/RNG changes invalidate.
+export function raidEntryContextKey(state,nav,group){return raidEntryKey(state,nav,group,[]);}
