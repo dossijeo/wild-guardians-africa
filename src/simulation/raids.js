@@ -175,7 +175,9 @@ export function spawnRaid(s,plan,nav,daytime=false) {
     if(w.status!=='home')w.status='fleeing';
   }
   s.tasks=s.tasks.filter(t=>t.kind!=='repair');
-  notice(s,RAID_NOTICE_TEXT,animals[0].id);emit(s,'RaidSpawned');return true;
+  notice(s,RAID_NOTICE_TEXT,animals[0].id);
+  const exposed=s.plants.filter(p=>p.alive);
+  emit(s,'RaidSpawned',{raidFacts:{id:s.raid.id,day:s.day,daytime,elapsed:s.elapsed,exposedLiving:exposed.length,exposedWounded:exposed.filter(p=>(p.attackHits??0)>0).length,actors:animals.map(a=>({id:a.id,species:a.species,hitsRemaining:a.hitsRemaining,spawn:{...a.spawn},exit:{...a.exit}}))}});return true;
 }
 function release(s,a) {if(a.reservation&&s.raid.reservations[a.reservation]===a.id)delete s.raid.reservations[a.reservation];a.reservation=null;a.targetId=null;a.path=null;a.approach=null;a.approachShieldId=null;}
 export function reachableApproach(a,target,nav,shield=null){

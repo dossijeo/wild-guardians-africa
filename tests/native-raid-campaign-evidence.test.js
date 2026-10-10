@@ -17,7 +17,7 @@ test('native contacts reconcile budgets and physical crop replacement costs with
  const initial=s.raid.animals[0].hitsRemaining;let steps=0;
  while(s.raid&&steps++<12000){Game.tick(s,.05,nav);observer.observe(s);if(steps===20){s=deserialize(serialize(s));nav.setState(s);}}
  assert.equal(s.raid,null);const before=serialize(s),r=observer.report(s);assert.equal(serialize(s),before);assert.equal(r.status,'verified');assert.equal(r.raids.length,1);
- const raid=r.raids[0],species=raid.species.warthog;assert.equal(species.generated,1);assert.equal(species.initialHitBudget,initial);assert.equal(species.contacts+species.misses,initial);assert.equal(raid.ended,true);
+ const raid=r.raids[0],species=raid.species.warthog;assert.equal(species.generated,1);assert.equal(species.initialHitBudget,initial);assert.equal(species.contacts+species.misses,initial);assert.equal(raid.ended,true);assert.equal(raid.exposureStatus,'exact-native-spawn');assert.equal(raid.exposedLivingAtSpawn,1);assert.equal(raid.exposedWoundedAtSpawn,0);
  assert.ok(raid.cropHits>0);assert.equal(raid.cropsDestroyed,1);assert.equal(raid.cropReplacementCost,5);assert.equal(raid.lostBaseHarvestValue,11);
  assert.equal(raid.logicalContacts,raid.cropHits+raid.structureHits+raid.shieldContacts);
 });
@@ -37,4 +37,10 @@ test('native wall interception uses measured HP loss rather than protection mult
  const {s,nav}=enclosureFixture(30),observer=createNativeRaidCampaignEvidence(s);spawnRaid(s,{group:['warthog']},nav);observer.observe(s);
  for(let i=0;!s.events.some(e=>e.type==='StructureHit')&&i<2400;i++){s.elapsed+=.05;updateRaid(s,.05,nav);observer.observe(s);}
  const r=observer.report(s);assert.equal(r.status,'verified');const raid=r.raids[0];assert.equal(raid.wallHits,1);assert.equal(raid.wallHpLost,20);assert.equal(raid.cropHits,0);assert.equal(raid.species.warthog.structureHits,1);
+});
+
+test('exact native spawn receipt survives a full incursion between observer calls',()=>{
+ const {s,nav}=fixture(),observer=createNativeRaidCampaignEvidence(s);spawnRaid(s,{group:['warthog']},nav);const initial=s.raid.animals[0].hitsRemaining;
+ for(let i=0;s.raid&&i<12000;i++)Game.tick(s,.05,nav);
+ assert.equal(s.raid,null);const r=observer.report(s);assert.equal(r.status,'verified');assert.equal(r.raids[0].species.warthog.initialHitBudget,initial);assert.equal(r.raids[0].exposedLivingAtSpawn,1);assert.equal(r.raids[0].ended,true);
 });
