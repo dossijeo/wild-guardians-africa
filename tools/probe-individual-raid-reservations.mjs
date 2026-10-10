@@ -38,9 +38,9 @@ function run(layout,count){
   cpu:{updates:samples.length,totalMs:samples.reduce((n,x)=>n+x,0),p50Ms:sorted[Math.floor(sorted.length*.5)],p95Ms:sorted[Math.floor(sorted.length*.95)],p99Ms:sorted[Math.floor(sorted.length*.99)],maxMs:sorted.at(-1)}};
 }
 const rows=[];for(const [layout,count] of [['mono',1],['mono',2],['mono',5],['mono',12],['closed-walls',12],['center-only',12]]){rows.push(run(layout,count));writeFileSync(out+'/rows.json',JSON.stringify(rows,null,2)+'\n');console.log(JSON.stringify(rows.at(-1)));}
-const files=['src/simulation/raids.js','src/simulation/raid-contention.js','src/simulation/defensive-groups.js','src/simulation/raid-target-reservations.js','src/simulation/actor-motion.js','src/world/navigation.js','tools/probe-raid-reservation-saturation.mjs','tools/probe-individual-raid-reservations.mjs','tools/raid-reservation-baseline-loader.mjs'];
+const files=['src/simulation/raids.js','src/simulation/raid-contention.js','src/simulation/defensive-groups.js','src/simulation/raid-target-reservations.js','src/simulation/actor-motion.js','src/world/navigation.js','src/world/wall-collision-frame.js','tools/probe-raid-reservation-saturation.mjs','tools/probe-individual-raid-reservations.mjs','tools/raid-reservation-baseline-loader.mjs'];
 const baseline=process.env.WG_RESERVATION_BASELINE_REF;
-const frozen=new Set([...files.slice(0,3),'src/world/navigation.js']);
+const frozen=new Set([...files.slice(0,3),'src/world/navigation.js','src/world/wall-collision-frame.js']);
 writeFileSync(out+'/source.json',JSON.stringify({gitHead:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),baselineRef:baseline??null,
  sourceHashes:Object.fromEntries(files.map(path=>[path,createHash('sha256').update(baseline&&frozen.has(path)?execFileSync('git',['show',`${baseline}:${path}`]):readFileSync(path)).digest('hex')])),
  scope:'Controlled synthetic fixture, native actor/RNG/hits and wall collision. CPU-only update timings; no GPU/render, campaign economy or acceptance. Baseline loader substitutes immutable core Git blobs only, identical common fixture/metrics. Conservative final-pose flags require diagnosis; actual movement uses native swept checks.'},null,2)+'\n');

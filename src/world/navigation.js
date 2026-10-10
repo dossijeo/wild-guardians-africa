@@ -11,7 +11,7 @@ import {SearchFrontier} from './search-frontier.js';
 import {evictOldest} from './fifo-eviction.js';
 import {gateFrameFootprints,gateSwingPolygon,gatePortalPoints} from './gate-passages.js';
 import {validActiveBounds} from './active-region.js';
-import {wallCollisionFrame,wallCollisionPolygon} from './wall-collision-frame.js';
+import {wallCollisionFrame,wallCollisionPolygon,wallCollisionBounds} from './wall-collision-frame.js';
 import {shortenBuildingRoute} from './building-route-shortcut.js';
 import {animalSegmentClearance} from './animal-segment-clearance.js';
 export const BIOME_IDS={sabana:'savanna','gran-rio':'grand_river',manglares:'mangrove',volcanes:'volcanoes','gran-canon':'canyons',desierto:'desert'};
@@ -144,6 +144,7 @@ export class Navigation {
       if(outsideNavigationBounds(point,point,this.obstacleBounds?.get(o),radius))return false;
       if(worker&&o.gate){const frames=gateFrameFootprints(o);return frames?frames.some(p=>footprintDistance(p,x,z)<radius):false;}
       if(o.kind==='wall'){
+        if(outsideNavigationBounds(point,point,wallCollisionBounds(o,radius),0))return false;
         const {c,s,width,depth}=wallCollisionFrame(o),dx=x-o.x,dz=z-o.z;
         const localX=dx*c-dz*s,localZ=dx*s+dz*c;
         return Math.abs(localX)<width+radius&&Math.abs(localZ)<depth+radius;
@@ -464,6 +465,7 @@ export class Navigation {
       if(outsideNavigationBounds(start,end,this.obstacleBounds?.get(obstacle),radius))continue;
       if(worker&&obstacle.gate){const frames=gateFrameFootprints(obstacle);if(frames?.some(p=>sweptFootprintDistance(start,end,p)<radius))return false;continue;}
       if(obstacle.kind==='wall'){
+        if(outsideNavigationBounds(start,end,wallCollisionBounds(obstacle,radius),0))continue;
         const polygon=wallCollisionPolygon(obstacle,radius);
         if(sweptFootprintDistance(start,end,polygon)<1e-9)return false;
       }else if(obstacle.footprint){

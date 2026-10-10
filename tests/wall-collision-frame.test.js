@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {wallCollisionFrame,wallCollisionPolygon} from '../src/world/wall-collision-frame.js';
+import {wallCollisionFrame,wallCollisionPolygon,wallCollisionBounds} from '../src/world/wall-collision-frame.js';
+import {outsideNavigationBounds} from '../src/world/navigation-bounds.js';
 import {Navigation} from '../src/world/navigation.js';
 import {sweptFootprintDistance} from '../src/world/footprints.js';
 
@@ -32,4 +33,26 @@ test('editing every geometry input invalidates cached wall geometry; gate pose d
 test('arbitrary radii cannot accumulate an unbounded per-wall polygon cache',()=>{
  const wall={x:0,z:0};for(let i=0;i<100;i++)assert.deepEqual(wallCollisionPolygon(wall,i*.01),original(wall,i*.01));
  assert.ok(wallCollisionFrame(wall).polygons.size<=8);
+});
+
+test('diagonal expanded corners remain inside conservative wall bounds, including tangent sweeps',()=>{
+ for(const yaw of [0,Math.PI/4,Math.PI/2,2.71])for(const radius of [0,.28,1.8]){
+  const wall={x:5,z:-7,yaw,baseScaleX:2,gate:true,material:'reforzado'},bounds=wallCollisionBounds(wall,radius);
+  for(const corner of original(wall,radius)){
+   assert.equal(outsideNavigationBounds(corner,corner,bounds,0),false);
+   assert.equal(outsideNavigationBounds({x:corner.x-30,z:corner.z},{x:corner.x+30,z:corner.z},bounds,0),false);
+  }
+  assert.equal(wallCollisionBounds(wall,radius),bounds);
+  wall.x+=50;assert.notEqual(wallCollisionBounds(wall,radius),bounds);
+ }
+});
+
+test('wall bounds radii and geometry edits remain bounded and invalidate together',()=>{
+ const wall={x:0,z:0,yaw:0,material:'madera',gate:false};
+ for(let i=0;i<100;i++)wallCollisionBounds(wall,i*.01);
+ assert(wallCollisionFrame(wall).bounds.size<=8);
+ for(const change of [{z:5},{yaw:.73},{baseScaleX:2},{gate:true},{material:'reforzado'}]){
+  const old=wallCollisionBounds(wall,.28);Object.assign(wall,change);assert.notEqual(wallCollisionBounds(wall,.28),old);
+  for(const corner of original(wall,.28))assert.equal(outsideNavigationBounds(corner,corner,wallCollisionBounds(wall,.28),0),false);
+ }
 });
