@@ -6,7 +6,7 @@ its archived fourteen-night control. Source hashes match, daily/whole ledgers
 reconcile, delivery and raid observers remain verified, and entry reports no
 preparation failures. The paired protected712 campaign remains live.
 
-| Day | Coins | Living | Staff at end | Wages | Planted | Delivered | Destroyed | Center HP |
+| Day | Coins | Living | Starting staff | Wages | Planted | Delivered | Destroyed | Center HP |
 | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
 | 15 | 319 | 26 | 10 | 300 | 89 | 54 | 64 | 600 |
 | 16 | 169 | 4 | 5 | 150 | 64 | 24 | 62 | 600 |

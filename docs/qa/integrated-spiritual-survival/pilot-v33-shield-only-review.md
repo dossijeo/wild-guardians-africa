@@ -7,12 +7,16 @@ the no-defense2026 campaign that loses during night16. The only strategy
 difference is defensive Shield usage; neither buys walls. Both permit paid
 center maintenance when native tasks and funds allow it.
 
-| Day | Coins | Living crops | Staff at end | Wages | Planted | Delivered crates | Destroyed | Center HP |
+| Day | Coins | Living crops | Starting staff | Wages | Planted | Delivered crates | Destroyed | Center HP |
 | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
 | 18 | 360 | 13 | 9 | 270 | 50 | 45 | 45 | 600 |
 | 19 | 120 | 7 | 3 | 118 | 55 | 12 | 49 | 600 |
 | 20 | 76 | 0 | 2 | 60 | 29 | 10 | 26 | 138 |
 | 21 | 30 | 0 | 1 | 30 | 15 | 3 | 12 | Destroyed |
+
+Day19 starts with three workers and hires one additional worker for28 prorated
+coins. Its118 wage total includes that payment; the staff column is the initial
+crew, not the final crew.
 
 Night21 exposes12 crops and destroys12. Shield intercepts7 contacts that
 night, but a native22-point structural contact crosses the damaged center's

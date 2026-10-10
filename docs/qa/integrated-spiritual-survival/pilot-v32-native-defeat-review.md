@@ -5,7 +5,7 @@ timeout or harness failure. Fifteen nights completed; the terminal day16 row is
 preserved separately from that count. Source hashes and the first fourteen
 daily rows exactly match the earlier successful14-night control.
 
-| Day | End cash | Staff at end | Paid wages | Planted | Delivered crates | Destroyed | Living | Center HP |
+| Day | End cash | Starting staff | Paid wages | Planted | Delivered crates | Destroyed | Living | Center HP |
 | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
 | 14 | 403 | 10 | 300 | 62 | 53 | 59 | 10 | 600 |
 | 15 | 122 | 2 | 88 | 54 | 7 | 54 | 3 | 600 |
@@ -18,7 +18,10 @@ native structure damage/collapse mechanics. The snapshot ends with
 the next dawn. This is a physical defeat and subsequent loss of the last
 center, not proof of a particular cash-insolvency threshold.
 
-The labor policy did adapt, reducing to two workers and then one. The earlier
+The labor policy did adapt, renewing two workers and then one. Day15 also
+hires one additional worker for a native prorated28 coins; the88 wage total
+includes that charge. The staff column is the initial crew, not the final crew.
+The earlier
 Q8 excessive renewal is not repeated. Crops were actually replanted, watered
 and attacked; no losses were synthesized to match a percentage.
 
