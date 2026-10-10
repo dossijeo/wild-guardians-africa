@@ -1,0 +1,53 @@
+{
+  "plan": {
+    "changedPolicy": {
+      "plantsPerWorker": 6,
+      "profile": "olderFemale",
+      "scope": "Separate fixed-cohort productive staffing diagnosis; not original strategy or activity acceptance"
+    },
+    "living": 1272,
+    "selection": {
+      "olderFemale": 212
+    },
+    "count": 212,
+    "paidCoins": 6360,
+    "nextDayWages": 6360,
+    "repairReserve": 174,
+    "initialBalance": 62052,
+    "balanceAfterHire": 55692,
+    "remainingAfterBothReserves": 49158,
+    "centerId": "structure-2",
+    "originalCenterHp": 470
+  },
+  "preparationOutcome": null,
+  "scope": "Legal originaltime0 preparation up to1s or earliest actual repair outcome; all commands and payments native",
+  "inputSHA256": "6e156b2dc4a787af289e47c264354ecff06c46223b7711b4fe587cc8ee9b2d9f",
+  "initialSnapshotSHA256": "05292ed2811a0417643d1e611d884199c3960aac913a20285e64d1fecbb72741",
+  "finalSnapshotSHA256": "4f6218c4616dafe0ecb1d92610098408c2100147d8241ae294f14c2133a88105",
+  "commands": {
+    "hire": {
+      "id": "staffing6-diagnostic-hire",
+      "count": 212,
+      "paidCoins": 6360
+    },
+    "repair": {
+      "id": "staffing6-diagnostic-repair",
+      "taskId": "task-62322",
+      "targetId": "structure-2",
+      "noChargeAtRequest": true
+    }
+  },
+  "precedingTasks": 1110,
+  "firstSecondRepairSettlements": {
+    "status": "verified",
+    "coverageLost": false,
+    "baselinePayments": [],
+    "unobservedPayments": [],
+    "completedRepairs": 0,
+    "paidRepairs": 0,
+    "paidCoins": "0",
+    "restoredHp": 0,
+    "receipts": [],
+    "scope": "Observed repair completions and settled payments after observer creation. Arrival endpoints are recorded, not independent proof of route traversal. Pre-existing payments are excluded. No requests, policies, RNG or world state are changed."
+  }
+}
