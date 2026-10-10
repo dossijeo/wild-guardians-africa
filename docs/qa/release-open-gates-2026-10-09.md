@@ -7,6 +7,38 @@ into current-main acceptance.
 
 ## Current-state update through main 8e1909d8
 
+### Superseding checkpoint — 10 October, main c2538f7a
+
+The isolated wall-package Windows run38007229019/source49ef2264 is terminal
+failure, not live. Root independently downloaded official artifact11651569958:
+45,898 bytes, SHA256
+0079ad30b480161eda533a8a03bd9ed104e3946adbb96f1d73b214b35693cf8f,
+matching the published artifact digest. Recipe records wallBufferPackage=true,
+compileWindow=false and resourceOverlap=false. The unchanged90s gate ended
+at90.2359s/85%, with walls completed,83 transfers/zero pending/zero failed,
+25 chunks loaded and six hands adopted. Serial compilation had ten jobs
+started/nine completed; world job10/batch6 of75 was pending program19.
+Its91.9ms observed readiness age is not evidence of a stuck shader. This
+failure neither establishes a total-loading speedup nor authorizes promotion.
+EXE/installer build succeeded; subsequent visibility testing was skipped.
+Original-report archiving is being finalized on the isolated branch. No retry
+or combination of experimental flags is authorized. See the
+[package and wiring review](windows-loading-regression/wall-buffer-package-root-review.md).
+
+The earlier two-batch run38005088945 is also terminal failure, with compilation
+never started. Its [original archive and review](windows-loading-regression/two-batch-window-candidate/native-24b76926/root-review.md)
+supersede the historical live description below. Neither diagnostic changes
+main's production loading recipe; runtime remains equivalent to8ab2381e.
+
+After frozen repair/fixture review, exactly one paired20-night horde pilot is
+now running on88ebf647 (Node51424 confirmed live by root). The responsible arm
+has completed19 nights; neglect has not yet produced a result. Source/tests
+remain immutable during the run. No partial economic/activity acceptance is
+inferred. The [terminal review checklist](horde-defense-terminal-review-checklist.md)
+distinguishes completed paid repairs from requests, and returned audit status
+from actually passing gates. The hundred-night/thirty-combination scope
+remains open.
+
 ### Superseding checkpoint — 10 October, main 5a3e9e74
 
 Main source8ab2381e has terminal Validate Game success38001296018: all3785
