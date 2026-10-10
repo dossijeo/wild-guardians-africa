@@ -1,0 +1,391 @@
+{
+  "scope": "QA-only conservative envelope candidate in a synthetic closed square; isolated native actors, not production integration, biome campaign, or GPU benchmark",
+  "sourceHashes": {
+    "tools/probe-exterior-raid-entry.mjs": "5db31704bff9b8c804d5ec6b25eb0b849cfeb249499df76fd479a9b7550b0c02",
+    "tools/probe-camera-enclosure.mjs": "5335a309f93279b933c5a63af478131a74007324087bf48a474627b6022f1f49",
+    "src/simulation/raids.js": "79d66a3e3e34e08f862e16510d9ecc5ebbc7a37600ac5c03893cbab928d95c3a",
+    "src/world/navigation.js": "9d44b740809c2d3c0273342364f8b3511e26ada24bea82acd60bda84a8072751",
+    "src/world/wall-collision-frame.js": "a5524440405bf0cce834d944507415b573ae56a6517cf74802affefbe9087013"
+  },
+  "rows": [
+    {
+      "candidate": false,
+      "heading": 0,
+      "group": [
+        "warthog"
+      ],
+      "method": "production",
+      "entryMs": null,
+      "spawnMs": 5.266899999999993,
+      "births": [
+        {
+          "species": "warthog",
+          "radius": 1.1,
+          "birth": {
+            "x": 0,
+            "z": 11.1
+          },
+          "insideSquare": true,
+          "distanceFromEye": 3.0999999999999996
+        }
+      ],
+      "targets": [
+        {
+          "species": "warthog",
+          "targetId": "crop",
+          "kind": "crop"
+        }
+      ],
+      "firstHit": {
+        "type": "CropHit",
+        "targetId": "crop"
+      },
+      "steps": 191,
+      "steppedSeconds": 9.55
+    },
+    {
+      "candidate": true,
+      "heading": 0,
+      "group": [
+        "warthog"
+      ],
+      "method": "projected-exterior-camera",
+      "entryMs": 3.6799000000000035,
+      "spawnMs": 0.22409999999999286,
+      "births": [
+        {
+          "species": "warthog",
+          "radius": 1.1,
+          "birth": {
+            "x": -10,
+            "z": 25.42
+          },
+          "insideSquare": false,
+          "distanceFromEye": 20.086224134963743
+        }
+      ],
+      "targets": [
+        {
+          "species": "warthog",
+          "targetId": "wall-13",
+          "kind": "wall"
+        }
+      ],
+      "firstHit": {
+        "type": "StructureHit",
+        "targetId": "wall-13"
+      },
+      "steps": 48,
+      "steppedSeconds": 2.4000000000000004
+    },
+    {
+      "candidate": false,
+      "heading": 1.5707963267948966,
+      "group": [
+        "warthog"
+      ],
+      "method": "production",
+      "entryMs": null,
+      "spawnMs": 1.6177000000000135,
+      "births": [
+        {
+          "species": "warthog",
+          "radius": 1.1,
+          "birth": {
+            "x": 11.1,
+            "z": 6.79678973526781e-16
+          },
+          "insideSquare": true,
+          "distanceFromEye": 3.0999999999999996
+        }
+      ],
+      "targets": [
+        {
+          "species": "warthog",
+          "targetId": "crop",
+          "kind": "crop"
+        }
+      ],
+      "firstHit": {
+        "type": "CropHit",
+        "targetId": "crop"
+      },
+      "steps": 50,
+      "steppedSeconds": 2.5
+    },
+    {
+      "candidate": true,
+      "heading": 1.5707963267948966,
+      "group": [
+        "warthog"
+      ],
+      "method": "projected-exterior-camera",
+      "entryMs": 3.6318999999999733,
+      "spawnMs": 0.10360000000002856,
+      "births": [
+        {
+          "species": "warthog",
+          "radius": 1.1,
+          "birth": {
+            "x": 26.29,
+            "z": -4.999999999999998
+          },
+          "insideSquare": false,
+          "distanceFromEye": 18.961120747466378
+        }
+      ],
+      "targets": [
+        {
+          "species": "warthog",
+          "targetId": "wall-57",
+          "kind": "wall"
+        }
+      ],
+      "firstHit": {
+        "type": "StructureHit",
+        "targetId": "wall-57"
+      },
+      "steps": 53,
+      "steppedSeconds": 2.6500000000000004
+    },
+    {
+      "candidate": false,
+      "heading": 3.141592653589793,
+      "group": [
+        "warthog"
+      ],
+      "method": "production",
+      "entryMs": null,
+      "spawnMs": 0.6604999999999563,
+      "births": [
+        {
+          "species": "warthog",
+          "radius": 1.1,
+          "birth": {
+            "x": 1.359357947053562e-15,
+            "z": -11.1
+          },
+          "insideSquare": true,
+          "distanceFromEye": 3.0999999999999996
+        }
+      ],
+      "targets": [
+        {
+          "species": "warthog",
+          "targetId": "crop",
+          "kind": "crop"
+        }
+      ],
+      "firstHit": {
+        "type": "CropHit",
+        "targetId": "crop"
+      },
+      "steps": 191,
+      "steppedSeconds": 9.55
+    },
+    {
+      "candidate": true,
+      "heading": 3.141592653589793,
+      "group": [
+        "warthog"
+      ],
+      "method": "projected-exterior-camera",
+      "entryMs": 1.262899999999945,
+      "spawnMs": 0.06430000000000291,
+      "births": [
+        {
+          "species": "warthog",
+          "radius": 1.1,
+          "birth": {
+            "x": -9.999999999999998,
+            "z": -25.42
+          },
+          "insideSquare": false,
+          "distanceFromEye": 20.086224134963743
+        }
+      ],
+      "targets": [
+        {
+          "species": "warthog",
+          "targetId": "wall-12",
+          "kind": "wall"
+        }
+      ],
+      "firstHit": {
+        "type": "StructureHit",
+        "targetId": "wall-12"
+      },
+      "steps": 73,
+      "steppedSeconds": 3.6500000000000004
+    },
+    {
+      "candidate": false,
+      "heading": 4.71238898038469,
+      "group": [
+        "warthog"
+      ],
+      "method": "production",
+      "entryMs": null,
+      "spawnMs": 1.5010999999999513,
+      "births": [
+        {
+          "species": "warthog",
+          "radius": 1.1,
+          "birth": {
+            "x": -11.1,
+            "z": -2.0390369205803427e-15
+          },
+          "insideSquare": true,
+          "distanceFromEye": 3.0999999999999996
+        }
+      ],
+      "targets": [
+        {
+          "species": "warthog",
+          "targetId": "crop",
+          "kind": "crop"
+        }
+      ],
+      "firstHit": {
+        "type": "CropHit",
+        "targetId": "crop"
+      },
+      "steps": 264,
+      "steppedSeconds": 13.200000000000001
+    },
+    {
+      "candidate": true,
+      "heading": 4.71238898038469,
+      "group": [
+        "warthog"
+      ],
+      "method": "projected-exterior-camera",
+      "entryMs": 1.3359000000000378,
+      "spawnMs": 0.05490000000008877,
+      "births": [
+        {
+          "species": "warthog",
+          "radius": 1.1,
+          "birth": {
+            "x": -26.29,
+            "z": -5.0000000000000036
+          },
+          "insideSquare": false,
+          "distanceFromEye": 18.961120747466378
+        }
+      ],
+      "targets": [
+        {
+          "species": "warthog",
+          "targetId": "wall-56",
+          "kind": "wall"
+        }
+      ],
+      "firstHit": {
+        "type": "StructureHit",
+        "targetId": "wall-56"
+      },
+      "steps": 86,
+      "steppedSeconds": 4.3
+    },
+    {
+      "candidate": true,
+      "heading": 0,
+      "group": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "method": "projected-exterior-camera",
+      "entryMs": 6.716300000000047,
+      "spawnMs": 0.26119999999991705,
+      "births": [
+        {
+          "species": "warthog",
+          "radius": 1.1,
+          "birth": {
+            "x": -10,
+            "z": 25.87
+          },
+          "insideSquare": false,
+          "distanceFromEye": 20.47771715792559
+        },
+        {
+          "species": "hyena",
+          "radius": 0.9,
+          "birth": {
+            "x": -5.8,
+            "z": 25.669999999999998
+          },
+          "insideSquare": false,
+          "distanceFromEye": 18.597550914031665
+        },
+        {
+          "species": "buffalo",
+          "radius": 0.97,
+          "birth": {
+            "x": -14.2,
+            "z": 25.74
+          },
+          "insideSquare": false,
+          "distanceFromEye": 22.72328321347951
+        },
+        {
+          "species": "lion",
+          "radius": 0.85,
+          "birth": {
+            "x": -10,
+            "z": 29.619999999999997
+          },
+          "insideSquare": false,
+          "distanceFromEye": 23.82067169497955
+        },
+        {
+          "species": "rhino",
+          "radius": 1.55,
+          "birth": {
+            "x": -14.2,
+            "z": 30.32
+          },
+          "insideSquare": false,
+          "distanceFromEye": 26.4541565732117
+        }
+      ],
+      "targets": [
+        {
+          "species": "warthog",
+          "targetId": "wall-13",
+          "kind": "wall"
+        },
+        {
+          "species": "hyena",
+          "targetId": "wall-80",
+          "kind": "wall"
+        },
+        {
+          "species": "buffalo",
+          "targetId": "wall-81",
+          "kind": "wall"
+        },
+        {
+          "species": "lion",
+          "targetId": "wall-12",
+          "kind": "wall"
+        },
+        {
+          "species": "rhino",
+          "targetId": null,
+          "kind": null
+        }
+      ],
+      "firstHit": {
+        "type": "StructureHit",
+        "targetId": "wall-13"
+      },
+      "steps": 50,
+      "steppedSeconds": 2.5
+    }
+  ]
+}

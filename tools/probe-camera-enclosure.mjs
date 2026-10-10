@@ -4,7 +4,7 @@ import {spawnRaid,updateRaid} from '../src/simulation/raids.js';
 import {writeFileSync,mkdirSync,readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
-export function probe(eyeZ) {
+export function enclosureFixture(eyeZ) {
  const s=Game.newGame({seed:712});s.villages=[];s.workers=[];s.structures=[];s.plants=[];s.initialPreparation=false;s.time=400;s.day=6;s.spells=[];
  s.structures.push({id:'center',kind:'center',culture:'mapungubwe',created:1,x:-10,z:-5,yaw:0,status:'intact',hp:600,maxHp:600,cost:800});
  let id=2;
@@ -13,6 +13,10 @@ export function probe(eyeZ) {
  s.plants.push({id:'crop',species:'mijo',x:8,z:0,alive:true,growth:0,attackHits:0});
  const nav=new Navigation(712,'sabana',{});nav.field={blocked:()=>false,slope:()=>0,surface:()=>0};nav.propsAt=()=>[];nav.setState(s);nav.setActiveBounds([-60,-60,60,60]);nav.setRaidView({x:0,z:eyeZ},{x:0,z:0});
  assert.equal(nav.segmentClear({x:0,z:30},{x:0,z:0},1.1,null,false),false,'The real wall collision must block a direct crossing');
+ return {s,nav};
+}
+export function probe(eyeZ) {
+ const {s,nav}=enclosureFixture(eyeZ);
  spawnRaid(s,{group:['warthog']},nav);assert.ok(s.raid);
  const birth={...s.raid.animals[0].spawn};updateRaid(s,0,nav);
  const selected=s.raid.animals[0].targetId,kind=selected==='crop'?'crop':s.structures.find(v=>v.id===selected)?.kind;
