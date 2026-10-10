@@ -47,7 +47,8 @@ test('recorded mixed farm attributes seed investment to live, physically picked 
  assert.throws(()=>summarizeIntensiveFarm(report),/Species seed prices do not reconcile/);
 });
 test('reinvestment without growing labour or maintenance reserves can lose despite a large plantation',()=>{
- const report=simulateIntensiveFarm({days:10,seed:712,reserveLabourGrowth:false,reserveMaintenance:false,burstPlanting:true,cameraEntry:false});
+ const report=simulateIntensiveFarm({days:10,seed:712,reserveLabourGrowth:false,reserveMaintenance:false,burstPlanting:true,cameraEntry:false,magicMode:'scarce'});
+ assert.equal(report.agriculturalMagic.mode,'scarce');
  assert.equal(report.result,'defeat');assert.ok(report.completedNights<10);assert.ok(report.maximumLiving>100);
  assert.ok(report.counts.CrateDelivered>50);assert.equal(report.counts.GameOver,1);assert.equal(report.counts.CampaignWon??0,0);
  assert.ok(auditIntensiveFarm(report));
@@ -70,7 +71,8 @@ test('optional midday hiring uses paid ordinary contracts while preserving next-
 });
 
 test('poor reinvestment can lose with the current near-camera raid policy despite physical harvest income',()=>{
- const report=simulateIntensiveFarm({days:10,seed:712,reserveLabourGrowth:false,reserveMaintenance:false,burstPlanting:true,cameraEntry:true});
+ const report=simulateIntensiveFarm({days:10,seed:712,reserveLabourGrowth:false,reserveMaintenance:false,burstPlanting:true,cameraEntry:true,magicMode:'scarce'});
+ assert.equal(report.agriculturalMagic.mode,'scarce');
  assert.equal(report.policy.cameraEntry,true);assert.equal(report.result,'defeat');assert.ok(report.completedNights<10);
  assert.ok(report.maximumLiving>100);assert.ok(report.counts.CrateDelivered>50);
  assert.equal(report.counts.GameOver,1);assert.equal(report.counts.CampaignWon??0,0);

@@ -20,7 +20,7 @@ import {createNativeExpandingDefensePolicy} from './native-expanding-defense-pol
 import {createNativeCampaignEvidence} from './native-campaign-evidence.mjs';
 
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
-export function simulateIntensiveFarm({days=100,profile='olderFemale',mixed=false,middayHiring=false,plantsPerWorker=12,defend=false,reserveLabourGrowth=true,reserveMaintenance=true,burstPlanting=false,cameraEntry=true,defensePolicy='legacy',nativeEvidence=false,onDay,onTick,onDecision,...world}={}){
+export function simulateIntensiveFarm({days=100,profile='olderFemale',mixed=false,middayHiring=false,plantsPerWorker=12,defend=false,reserveLabourGrowth=true,reserveMaintenance=true,burstPlanting=false,cameraEntry=true,defensePolicy='legacy',nativeEvidence=false,magicMode='intensive',onDay,onTick,onDecision,...world}={}){
  if(!Number.isSafeInteger(plantsPerWorker)||plantsPerWorker<1)throw new Error('Plants per worker must be a positive integer');
  const opening=createOpeningWorld(world),nav=opening.nav;let s=opening.s,sequence=0;
  const worker=PROFILES.find(p=>p.id===profile);if(!worker)throw new Error('Unknown worker profile');
@@ -55,7 +55,7 @@ export function simulateIntensiveFarm({days=100,profile='olderFemale',mixed=fals
   const p=choosePlot();if(!p)return false;
   Game.plant(s,command('plant'),species,p.x,p.z,nav);plantedSequence++;maximumLiving=Math.max(maximumLiving,s.plants.filter(p=>p.alive).length);return true;
  };
- const agriculturalMagic=createAgriculturalMagicPolicy({mode:'intensive'});
+ const agriculturalMagic=createAgriculturalMagicPolicy({mode:magicMode});
  const canCast=(kind,p)=>permission(s,kind)&&s.cooldowns[kind]===0&&
   !s.spells.some(a=>distance(a,p)<a.radius+Game.spellRadius(kind))&&
   (kind!=='shield'||!s.raid?.animals.some(a=>a.status!=='gone'&&distance(a,p)<a.radius+Game.spellRadius(kind)));
@@ -132,7 +132,7 @@ export function simulateIntensiveFarm({days=100,profile='olderFemale',mixed=fals
  }
  const idleRuns=daily.map(r=>r.longestIdle).sort((a,b)=>a-b),unoccupied=daily.reduce((n,r)=>n+r.idle.budget+r.idle.space+r.idle['shift-end'],0);
  const activity={daylightSeconds:daily.length*300,unoccupiedSeconds:unoccupied,unoccupiedFraction:unoccupied/(daily.length*300),longestIdle:Math.max(...idleRuns),p90LongestIdle:idleRuns[Math.ceil(idleRuns.length*.9)-1]};
- return {...(evidence?{nativeEvidence:evidence.report(s)}:{}),biome:s.biome,culture:s.culture,seed:s.seed,policy:{profile,mixed,middayHiring,plantsPerWorker,defend,reserveLabourGrowth,reserveMaintenance,burstPlanting,cameraEntry,defensePolicy},defense:defense?.report(s)??null,additionalHiring,result:s.result,completedNights:s.completedNights,money:numberOf(s.ledger.balance),maximumLiving,plots:plots.length,reloads,counts,activity,daily,state:s,nav};
+ return {...(evidence?{nativeEvidence:evidence.report(s)}:{}),agriculturalMagic:agriculturalMagic.report(s),biome:s.biome,culture:s.culture,seed:s.seed,policy:{profile,mixed,middayHiring,plantsPerWorker,defend,reserveLabourGrowth,reserveMaintenance,burstPlanting,cameraEntry,defensePolicy,magicMode},defense:defense?.report(s)??null,additionalHiring,result:s.result,completedNights:s.completedNights,money:numberOf(s.ledger.balance),maximumLiving,plots:plots.length,reloads,counts,activity,daily,state:s,nav};
 }
 export function auditIntensiveFarm(report,{victory=false}={}){
  const s=report.state,plants=new Map(s.plants.map(p=>[p.id,p]));let balance=1500n;
