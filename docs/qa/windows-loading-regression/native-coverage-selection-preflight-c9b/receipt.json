@@ -1,0 +1,118 @@
+{
+  "source": "c9b60150ab81e42d9dd5b5eefee3bc8bf533343a",
+  "runtimeSourceHashes": [
+    {
+      "path": "src/app/native-smoke-coverage.js",
+      "bytes": 500,
+      "sha256": "7e9bec08858515b327fb85d6efa3b23399e4a9dd25b47d93f341ae98bf765720"
+    },
+    {
+      "path": "src/app/main.js",
+      "bytes": 64882,
+      "sha256": "40c60396d7de52527afd0bbcdeea3758721a20d47d4a9b5ee25125729288c8e1"
+    },
+    {
+      "path": "src-tauri/src/main.rs",
+      "bytes": 7610,
+      "sha256": "3ed8b2c1f5646634717fba744957c41cc18ae04a94c5ec3cd6166264351641a7"
+    },
+    {
+      "path": "src-tauri/smoke.js",
+      "bytes": 17475,
+      "sha256": "9a6cfbb8a3c6b52a2288f241d39b328c04bc9ce41fdb25f2e45a7690baab1179"
+    },
+    {
+      "path": "tools/create_desktop_visibility_fixture.mjs",
+      "bytes": 4529,
+      "sha256": "903bcd9fa42ad2836aeceda1f546ef1d05c68d7bd15f40f6ed91d8df88f07b97"
+    },
+    {
+      "path": "tests/native-smoke-coverage.test.js",
+      "bytes": 7100,
+      "sha256": "b5efa83c0896f411a2945d2a839a33a10b684ae79f3d76dfaf89919d05a5909f"
+    },
+    {
+      "path": "tests/native-smoke-coverage-normalize.js",
+      "bytes": 10032,
+      "sha256": "e3a7cc6a3f37384a2298940311fbe878479d5162e9471cf691665bbfcc7bd445"
+    },
+    {
+      "path": "tests/world-crop-pair-wiring-normalize.js",
+      "bytes": 2185,
+      "sha256": "4e213fe48701c7c18291a75ea3005b53f18f629a986656e4502167b0a0d54e57"
+    },
+    {
+      "path": "docs/qa/sfx-catalog-post-jam/inventory.json",
+      "bytes": 246041,
+      "sha256": "42526df187e28e28f19487ef3d1f2fb3f6ac8a36f02c1177c3e2e15b3ef0b63b"
+    },
+    {
+      "path": "docs/qa/sfx-catalog-post-jam/inventory.md",
+      "bytes": 36727,
+      "sha256": "3e53f5a52526a23f5c3f2328e96d5c646c80a9f9d11a631aea6bbf2a5af8c5c2"
+    }
+  ],
+  "session": 50420,
+  "terminalExitCode": 0,
+  "checks": [
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "seconds": 10.48,
+      "scope": "Vite web build; not Rust compilation",
+      "warnings": [
+        "large minified chunk"
+      ]
+    },
+    {
+      "command": "npm run test:web-package",
+      "exitCode": 0,
+      "files": 720,
+      "bytes": 445283599,
+      "relativeLinks": 860,
+      "runtimeGLBs": 24,
+      "warnings": [
+        "Node experimental JSON modules"
+      ]
+    },
+    {
+      "command": "node --check src/app/main.js src/app/native-smoke-coverage.js src-tauri/smoke.js tools/create_desktop_visibility_fixture.mjs tests/native-smoke-coverage.test.js tests/native-smoke-coverage-normalize.js tests/world-crop-pair-wiring-normalize.js (each checked individually)",
+      "exitCode": 0
+    },
+    {
+      "command": "node tools/audit_sfx_catalog.mjs --check",
+      "exitCode": 0,
+      "total": 126,
+      "assigned": 100,
+      "unassigned": 26,
+      "stale": false
+    },
+    {
+      "command": "python docs/qa/windows-loading-regression/native-coverage-selection/verify.py; git diff --check",
+      "exitCode": 0
+    }
+  ],
+  "logs": [
+    {
+      "path": "build-original.log.gz",
+      "rawBytes": 2321,
+      "rawSha256": "5c647b41a83a8541770e2c80b96a0174e1ac1723dfbdd79eb85946ca32692570",
+      "gzipSha256": "1df01260db9bb1b62a61b7d0bf7d6547471e195adf43f3ae77f4559c934a02b6"
+    },
+    {
+      "path": "package-original.log.gz",
+      "rawBytes": 411,
+      "rawSha256": "bc95bbef544076ff722bdd1c4a1c4dc76e2a065741b0e7c67eb4a7c238ee76d7",
+      "gzipSha256": "6607edfccc1cf78643b280045c1f77e79e506c2b5e8bcb6f705c5d5b36123d26"
+    }
+  ],
+  "notRun": [
+    "Rust compile/unit tests",
+    "CI dispatch",
+    "EXE/native/GPU/browser",
+    "30x2 matrix execution"
+  ],
+  "previous7ePackageBytes": 445283034,
+  "deltaBytes": 565,
+  "scope": "Evidence-only preflight of frozen QA selection source; no runtime edits or native acceptance"
+}
