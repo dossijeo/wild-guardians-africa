@@ -84,6 +84,9 @@ def write_comparison(prefix, directories):
     prefix.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(outputs[2], dpi=140)
     fig.savefig(outputs[3])
+    # Matplotlib uses platform newlines for SVG; keep repository artifacts LF.
+    svg_lines = outputs[3].read_text(encoding='utf-8').splitlines()
+    outputs[3].write_bytes(('\n'.join(line.rstrip() for line in svg_lines) + '\n').encode('utf-8'))
     plt.close(fig)
     outputs[0].write_bytes((json.dumps(dict(source=runs[0][2]['sourceHashes'], summary=summary,
                                           scope='Completed native campaigns with matching source, seed, biome, culture and rule configuration; idle proxy is not measured manual activity.'), indent=2) + '\n').encode('utf-8'))
