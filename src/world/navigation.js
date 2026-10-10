@@ -16,6 +16,7 @@ import {shortenBuildingRoute} from './building-route-shortcut.js';
 import {animalSegmentClearance} from './animal-segment-clearance.js';
 export const BIOME_IDS={sabana:'savanna','gran-rio':'grand_river',manglares:'mangrove',volcanes:'volcanoes','gran-canon':'canyons',desierto:'desert'};
 export const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
+const approachRegionCertificates=new WeakMap();
 export class Navigation {
   constructor(seed,biome,profile) {
     this.config={seed:String(seed),biome:BIOME_IDS[biome]??biome,relief:1,density:1,river:true,n:1,cx:0,cz:0,layers:[true,true,true,true,true,true]};
@@ -242,13 +243,42 @@ export class Navigation {
     }
     return route;
   }
-  approachPath(start,end,radius){
+  approachPath(start,end,radius,margin=16){
     // Animal routes have symmetric terrain/solid collision rules. Search from
     // the service point: an enclosed island then proves failure after exploring
     // its finite component, rather than repeatedly exploring the outer land.
-    const reverse=this.path(end,start,radius,null,false);
+    const reverse=this.path(end,start,radius,null,false,margin);
     if(!reverse)return null;
     return [...reverse.slice(0,-1).reverse(),{x:end.x,z:end.z}];
+  }
+  approachGroupBlocked(start,targets,radius,reach){
+    if(!targets.length)return false;
+    const bounds=[Infinity,Infinity,-Infinity,-Infinity];
+    for(const t of targets){bounds[0]=Math.min(bounds[0],t.x);bounds[1]=Math.min(bounds[1],t.z);bounds[2]=Math.max(bounds[2],t.x);bounds[3]=Math.max(bounds[3],t.z);}
+    return this.approachRegionBlocked(start,targets[0],radius,reach,bounds);
+  }
+  approachRegionBlocked(start,focus,radius,reach,bounds=null){
+    // Only a COMPLETE native closed-component certificate can reject every
+    // service point. All possible 3x3 origin connectors must belong to that
+    // same component; near its boundary fall back to ordinary path searches.
+    const key=(x,z)=>`${x},${z}`,regionKey=(x,z)=>`${radius}:null:false|${key(x,z)}`;
+    let cache=approachRegionCertificates.get(this);
+    if(!cache||cache.version!==this.version){cache={version:this.version,entries:new Map()};approachRegionCertificates.set(this,cache);}
+    const minX=Math.floor((bounds?.[0]??focus.x)-reach)-2,maxX=Math.ceil((bounds?.[2]??focus.x)+reach)+2,minZ=Math.floor((bounds?.[1]??focus.z)-reach)-2,maxZ=Math.ceil((bounds?.[3]??focus.z)+reach)+2;
+    if((maxX-minX+1)*(maxZ-minZ+1)>4096)return false;
+    const certificateKey=`${radius}:${minX}:${minZ}:${maxX}:${maxZ}`;
+    let region=cache.entries.get(certificateKey)??this.closedRegions.get(regionKey(Math.round(focus.x),Math.round(focus.z)));
+    if(!region)for(let z=minZ;z<=maxZ&&!region;z++)for(let x=minX;x<=maxX&&!region;x++)region=this.closedRegions.get(regionKey(x,z));
+    if(!region)return false;
+    if(!cache.entries.has(certificateKey)){
+      for(let z=minZ;z<=maxZ;z++)for(let x=minX;x<=maxX;x++)if(!region.has(key(x,z))&&this.walkable(x,z,radius,null,false))return false;
+      if(cache.entries.size>=512)evictOldest(cache.entries);cache.entries.set(certificateKey,region);
+    }
+    // A connection to any destination grid cell means the actor may reach the
+    // island. No negative inference from merely crossing a wall visually.
+    const ex=Math.round(start.x),ez=Math.round(start.z);
+    for(let z=ez-1;z<=ez+1;z++)for(let x=ex-1;x<=ex+1;x++)if(region.has(key(x,z)))return false;
+    return true;
   }
   portalGraph(radius,ignore){
     this.portalGraphs??=new Map();const cacheKey=`${radius}:${ignore}`;

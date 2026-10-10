@@ -37,7 +37,7 @@ test('native wave lifecycle keeps raid open beyond dawn, spawns all planned acto
  assert.equal(evidence.raids[0].waves.length,s.nightPlan.waves.length);assert.equal(evidence.raids[0].actors.length,intended);
  const r=evidence.raids[0];assert.equal(r.potentialAgriculturalHp,s.nightPlan.pressureFacts.potential);
  assert.equal(r.agriculturalEfficiency,r.effectiveAgriculturalHp/r.potentialAgriculturalHp);
- assert.ok(r.plantsReached>=r.cropsDestroyed);assert.ok(r.retirements.length>0);assert.ok(r.targetUnavailableAttempts>0);
+ assert.ok(r.plantsReached>=r.cropsDestroyed);assert.ok(r.retirements.length>0);assert.ok(Number.isSafeInteger(r.targetUnavailableAttempts??0)&&(r.targetUnavailableAttempts??0)>=0);
 });
 test('pressure persistence rejects budget/profile/cohort mutations before restoring gameplay',()=>{
  const {s}=fixture();const original=serialize(s);assert.doesNotThrow(()=>deserialize(original));

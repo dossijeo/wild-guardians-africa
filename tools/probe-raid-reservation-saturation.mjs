@@ -4,6 +4,12 @@ import {topologyFixture} from './probe-raid-entry-topology.mjs';import {createPl
 function cropGroups(s){const grouping=createCropGrouping(s.plants),seen=new Set(),groups=[];for(const p of grouping.living)if(!seen.has(p.id)){const group=grouping.group(p);group.forEach(p=>seen.add(p.id));groups.push(group.map(p=>p.id));}return groups;}
 export function fixture(layout){
  const {s,nav}=topologyFixture('closed');s.structures=s.structures.filter(t=>t.kind==='center');s.plants=[];s.workers=[];s.villages=[];s.day=20;s.time=400;s.spells=[];
+ if(layout==='closed-walls'){
+  const nodes=[[4,-4],[26,-4],[26,18],[4,18]];
+  for(let side=0;side<4;side++){const [x,z]=nodes[side],[ex,ez]=nodes[(side+1)%4],n=11;
+   for(let i=0;i<n;i++)s.structures.push({id:`wall-${side}-${i}`,kind:'wall',x:x+(ex-x)*(i+.5)/n,z:z+(ez-z)*(i+.5)/n,yaw:Math.atan2(-(ez-z),ex-x),hp:100,maxHp:100,status:'intact',material:'zarzas',cost:10});
+  }
+ }
  if(layout==='connected-walls'){for(let i=0;i<12;i++)s.structures.push({id:'wall-'+i,kind:'wall',x:-11+i*2,z:22,yaw:0,hp:100,maxHp:100,status:'intact',material:'zarzas',cost:10});}
  if(layout!=='center-only')for(let i=0;i<100;i++)s.plants.push(createPlant('crop-'+i,'mijo',8+(i%10)*(layout==='fragmented'?3:1.5),Math.floor(i/10)*(layout==='fragmented'?3:1.5),'center'));
  nav.setState(s);nav.setActiveBounds([-80,-80,100,100]);nav.setRaidView({x:16,z:28},{x:12,z:7});return {s,nav};

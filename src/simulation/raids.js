@@ -22,7 +22,8 @@ import {updateWorkerEncounters} from './encounters.js';
 import {ANIMAL_ACTIONS} from './animal-actions-data.js';
 import {actorBlockers,actorSegmentClear} from './actor-motion.js';
 import {activeChunkRegion,validActiveBounds} from '../world/active-region.js';
-import {defensiveGroups,reservedGroup,reconcileDefensiveReservations} from './defensive-groups.js';
+import {defensiveGroups} from './defensive-groups.js';
+import {targetReservationKey,targetReserved,reservedApproachClear,reconcileTargetReservations} from './raid-target-reservations.js';
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z),entrySelections=new WeakMap();
 export function planNight(s) {
   const prepared=preparePressureNight(s);
@@ -183,10 +184,14 @@ export function reachableApproach(a,target,nav,shield=null){
   const focus=shield??target,r=shield?shield.radius+a.radius+.1:(target.kind==='wall'?1.2:.6)+a.radius;
   const angle=Math.atan2(a.x-focus.x,a.z-focus.z);
   for(let sample=0;sample<32;sample++){
+    if(nav.approachRegionBlocked?.(a,focus,a.radius,r))return null;
     const offset=sample===0?0:Math.ceil(sample/2)*(sample%2?1:-1)*Math.PI/16;
     const point={id:`approach-${target.id}-${shield?.id??'direct'}-${sample}`,...(!shield&&target.kind==='center'?centerBoundaryPoint(target,angle+offset,a.radius+.5,nav.state):{x:focus.x+Math.sin(angle+offset)*r,z:focus.z+Math.cos(angle+offset)*r})};
+    if(nav.state?.raid&&!reservedApproachClear(nav.state,a,point))continue;
     if(nav.state&&!actorSegmentClear(point,point,a,actorBlockers(nav.state,a,false)))continue;
-    const path=nav.approachPath?nav.approachPath(a,point,a.radius):nav.path(a,point,a.radius,null,false);
+    // A complete 32-cell corridor lets the native search certify enclosed
+    // islands once and reuse that proof across nearby crop service points.
+    const path=nav.approachPath?nav.approachPath(a,point,a.radius,32):nav.path(a,point,a.radius,null,false,32);
     if(path)return {point,path};
   }
   return null;
@@ -204,19 +209,26 @@ function targetFor(s,a,nav) {
   const groups=[],seen=new Set(),components=createCropGrouping(s.plants);
   for(const p of components.living)if(!seen.has(p.id)) {
     const group=components.group(p);group.forEach(p=>seen.add(p.id));const id=group.map(p=>p.id).sort()[0];
-    if(!s.raid?.reservations[`crop:${id}`])groups.push({id:`crop:${id}`,targets:group,value:group.length*B.crops.find(c=>c.id===p.species).base_harvest_value});
+    groups.push({id:`crop:${id}`,targets:group,value:group.length*B.crops.find(c=>c.id===p.species).base_harvest_value});
   }
   groups.sort((a,b)=>b.value-a.value||a.id.localeCompare(b.id));
-  for(const group of groups)for(const p of group.targets.filter(p=>canAttackCrop(s,p)).sort((p,q)=>dist(a,p)-dist(a,q))) {
+  for(const group of groups){
+   for(const p of group.targets.filter(p=>canAttackCrop(s,p)).sort((p,q)=>dist(a,p)-dist(a,q))) {
+    // Accessibility belongs to the valued connected zone; a native closed
+    // component proof can reject that zone once, without reserving it.
+    if(nav.approachGroupBlocked?.(a,group.targets,a.radius,.6+a.radius))break;
+    if(targetReserved(s,a,p))continue;
     const shield=spellAt(s,'shield',p),approach=reachableApproach(a,p,nav,shield);
-    if(approach)return {target:p,reservation:group.id,approach,shieldId:shield?.id??null};
+    if(approach)return {target:p,reservation:targetReservationKey(p,a),approach,shieldId:shield?.id??null};
+   }
   }
   // If crops are blocked, resolve the nearest visible barrier, without weakest-material omniscience.
-  const structures=defensiveGroups(s).filter(g=>!reservedGroup(s,a,g)),near=g=>Math.min(...g.targets.map(t=>dist(a,t)));
+  const structures=defensiveGroups(s),near=g=>Math.min(...g.targets.map(t=>dist(a,t)));
   structures.sort((p,q)=>groups.length?near(p)-near(q):q.value-p.value||near(p)-near(q)||p.id.localeCompare(q.id));
   for(const group of structures)for(const structure of [...group.targets].sort((p,q)=>dist(a,p)-dist(a,q)||p.id.localeCompare(q.id))) {
+    if(targetReserved(s,a,structure))continue;
     const shield=spellAt(s,'shield',structure),approach=reachableApproach(a,structure,nav,shield);
-    if(approach)return {target:structure,reservation:group.id,approach,shieldId:shield?.id??null};
+    if(approach)return {target:structure,reservation:targetReservationKey(structure,a),approach,shieldId:shield?.id??null};
   }
   return null;
 }
@@ -230,13 +242,13 @@ export function warmRaidApproaches(state,specs,entry,nav){
     nav.state=preview;
     for(const animal of preview.raid.animals){
       const selected=targetFor(preview,animal,nav);
-      if(selected)preview.raid.reservations[selected.reservation]=animal.id;
+      if(selected){preview.raid.reservations[selected.reservation]=animal.id;animal.targetId=selected.target.id;animal.approach=selected.approach.point;}
     }
   }finally{nav.state=originalState;}
 }
 export function updateRaid(s,dt,nav) {
   if(!s.raid)return;
-  reconcileDefensiveReservations(s,release);
+  reconcileTargetReservations(s,release);
   updateWorkerEncounters(s,nav);
   observeWaitProgress(s);liveWaitQueue(s.raid);
   for(const a of s.raid.animals) {
@@ -291,9 +303,8 @@ export function updateRaid(s,dt,nav) {
     let target=raidTarget(s,a.targetId);
     if(!target) {
       if(a.status!=='waiting')release(s,a);
-      // A released lease belongs to the oldest waiting turn, not whichever
-      // array member happens to run first. All approaches remain exclusive.
-      if(a.status!=='waiting'&&s.raid.waitQueue.length)enqueueWait(s,a);
+      // Search independent targets before staging. Each waiting actor retries
+      // its own bounded search; an unreachable queue head cannot block peers.
       if(a.status==='waiting'){
         const wait=a.raidWait,progress=s.raid.waitProgress;
         if(s.elapsed-Math.max(wait.since,progress?.at??wait.since)>=RAID_WAIT_SECONDS||!nav.walkable(a.spawn.x,a.spawn.z,a.radius,null,false)){
@@ -302,7 +313,6 @@ export function updateRaid(s,dt,nav) {
         if(dist(a,a.spawn)>.08&&(a.path||s.elapsed>=wait.moveRetryAt)){
           walkTo(s,a,{...a.spawn,id:'wait-'+a.id},dt,nav,{speed:1.5,worker:false});if(!a.path)wait.moveRetryAt=s.elapsed+1;
         }
-        if(s.raid.waitQueue[0]!==a.id)continue;
         const epoch=waitEpoch(s,nav);
         if(wait.epoch===epoch&&s.elapsed<wait.retryAt)continue;
         wait.epoch=epoch;wait.retryAt=s.elapsed+1;
@@ -320,7 +330,7 @@ export function updateRaid(s,dt,nav) {
       a.path=selected.approach.path;a.destinationId=a.approach.id;a.pathVersion=nav.version;
     }
     const shield=spellAt(s,'shield',target);
-    if(!a.approach||a.approachShieldId!==(shield?.id??null)||!actorSegmentClear(a.approach,a.approach,a,actorBlockers(s,a,false))) {
+    if(!a.approach||a.approachShieldId!==(shield?.id??null)||!reservedApproachClear(s,a,a.approach)||!actorSegmentClear(a.approach,a.approach,a,actorBlockers(s,a,false))) {
       const approach=reachableApproach(a,target,nav,shield);
       if(!approach){emit(s,'AnimalRouteUnavailable',{targetId:a.id,species:a.species,phase:'approach'});release(s,a);a.status='walking';continue;}
       a.approach=approach.point;a.approachShieldId=shield?.id??null;

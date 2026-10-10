@@ -1,5 +1,3 @@
-import {createCropGrouping} from './crop-components.js';
-import {defensiveGroups,reservedGroup} from './defensive-groups.js';
 export const RAID_WAIT_SECONDS=90;
 export function liveWaitQueue(raid){
  raid.waitQueue??=[];
@@ -9,12 +7,11 @@ export function liveWaitQueue(raid){
  return raid.waitQueue;
 }
 export function occupiedEligibleGroup(state,animal,eligible){
- const grouping=createCropGrouping(state.plants),seen=new Set();
- for(const p of grouping.living)if(!seen.has(p.id)){
-  const group=grouping.group(p);group.forEach(p=>seen.add(p.id));const id=group.map(p=>p.id).sort()[0],owner=state.raid.reservations['crop:'+id];
-  if(owner&&owner!==animal.id&&group.some(eligible)&&state.raid.animals.some(a=>a.id===owner&&!['gone','retreating','waiting'].includes(a.status)))return true;
- }
- return defensiveGroups(state).some(g=>reservedGroup(state,animal,g)&&state.raid.animals.some(a=>a.id!==animal.id&&!['gone','retreating','waiting'].includes(a.status)&&g.targets.some(t=>t.id===a.targetId)));
+ // A failed static search alone is not temporary contention. At least one
+ // live target or approach must actually be occupied by another actor.
+ const targets=new Set(state.plants.filter(eligible).map(p=>p.id));
+ for(const t of state.structures)if(t.status==='intact'&&t.hp>0)targets.add(t.id);
+ return state.raid.animals.some(a=>a!==animal&&!['gone','retreating','waiting'].includes(a.status)&&targets.has(a.targetId));
 }
 export function enqueueWait(state,animal){
  animal.status='waiting';animal.raidWait??={since:state.elapsed,retryAt:state.elapsed,moveRetryAt:state.elapsed,epoch:null};

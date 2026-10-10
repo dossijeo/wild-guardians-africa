@@ -1,5 +1,6 @@
 export function validRaidContention(state){
  const raid=state.raid;if(!raid)return true;
+ if(raid.targetReservationVersion!==undefined&&raid.targetReservationVersion!==2)return false;
  const queue=raid.waitQueue;
  if(queue!==undefined&&(!Array.isArray(queue)||new Set(queue).size!==queue.length||queue.length>raid.animals.length||queue.some(id=>typeof id!=='string'||!raid.animals.some(a=>a.id===id&&a.status==='waiting'&&a.raidWait))))return false;
  if(raid.waitRevision!==undefined&&(!Number.isSafeInteger(raid.waitRevision)||raid.waitRevision<0||raid.waitRevision>4294967295))return false;

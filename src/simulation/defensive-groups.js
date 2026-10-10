@@ -19,21 +19,3 @@ export function defensiveGroups(state){
  }
  cache.set(state,{signature,source:state.structures,groups});return groups;
 }
-export function reservedGroup(state,animal,group){
- const ids=new Set(group.targets.map(t=>t.id));
- return !!(state.raid.reservations[group.id]&&state.raid.reservations[group.id]!==animal.id)||
-  group.targets.some(t=>state.raid.reservations['structure:'+t.id]&&state.raid.reservations['structure:'+t.id]!==animal.id)||
-  state.raid.animals.some(a=>a.id!==animal.id&&!['gone','retreating'].includes(a.status)&&ids.has(a.targetId));
-}
-export function reconcileDefensiveReservations(state,release){
- const groups=defensiveGroups(state),byTarget=new Map(groups.filter(g=>g.id.startsWith('defense:')).flatMap(g=>g.targets.map(t=>[t.id,g]))),claimed=new Set();
- for(const a of state.raid.animals){
-  const group=byTarget.get(a.targetId);if(!group||['gone','retreating'].includes(a.status))continue;
-  if(a.reservation&&state.raid.reservations[a.reservation]===a.id)delete state.raid.reservations[a.reservation];
-  if(claimed.has(group.id)){
-   // Repair legacy overlapping reservations without spending a hit or moving.
-   release(state,a);a.status='walking';a.attackRemaining=0;a.attackId=null;a.hitApplied=false;continue;
-  }
-  claimed.add(group.id);a.reservation=group.id;state.raid.reservations[group.id]=a.id;
- }
-}
