@@ -1,0 +1,2760 @@
+{
+  "sourceHashes": {
+    "tools/audit-native-campaign-plots.mjs": "630dc3d1e6dc0c067f512b56a2f8de911014138491a60a0b7515600420567cd5",
+    "tools/native-campaign-plots.mjs": "fe38943d79a1e2c3c6bcdc3add232820ad6665f667e03d7205a2735bd315b26c",
+    "tools/check_opening.mjs": "b69f5bd13d097062a02ce438dfec04f91a8e8d62735e12b5fc90bfc27a653a93",
+    "src/simulation/game.js": "e9b62e9dfbb3622182f450bc716da195d61db7aa710d620e687a2fcf9580a6fa",
+    "src/simulation/balance.js": "0317d5d23326eb0035c8a59e87eae91b80544328e1d647a530188490c556b637",
+    "src/world/navigation.js": "9d44b740809c2d3c0273342364f8b3511e26ada24bea82acd60bda84a8072751"
+  },
+  "rows": [
+    {
+      "biome": "sabana",
+      "culture": "mapungubwe",
+      "seed": 712,
+      "requested": 60,
+      "paid": 60,
+      "attempts": 60,
+      "cashAfterCenter": 700,
+      "cash": 370,
+      "seedCoins": 300,
+      "wages": 30,
+      "acceptedPlants": [
+        {
+          "id": "plant-3",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 88.5,
+          "z": 0
+        },
+        {
+          "id": "plant-8",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 88.5,
+          "z": -1.5
+        },
+        {
+          "id": "plant-10",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 88.5,
+          "z": 1.5
+        },
+        {
+          "id": "plant-12",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 90,
+          "z": 0
+        },
+        {
+          "id": "plant-14",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 90,
+          "z": -1.5
+        },
+        {
+          "id": "plant-16",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 90,
+          "z": 1.5
+        },
+        {
+          "id": "plant-18",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 88.5,
+          "z": -3
+        },
+        {
+          "id": "plant-20",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 88.5,
+          "z": 3
+        },
+        {
+          "id": "plant-22",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 87,
+          "z": -3
+        },
+        {
+          "id": "plant-24",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 87,
+          "z": 3
+        },
+        {
+          "id": "plant-26",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 91.5,
+          "z": 0
+        },
+        {
+          "id": "plant-28",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 90,
+          "z": -3
+        },
+        {
+          "id": "plant-30",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 90,
+          "z": 3
+        },
+        {
+          "id": "plant-32",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 91.5,
+          "z": -1.5
+        },
+        {
+          "id": "plant-34",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 91.5,
+          "z": 1.5
+        },
+        {
+          "id": "plant-36",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 85.5,
+          "z": -3
+        },
+        {
+          "id": "plant-38",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 85.5,
+          "z": 3
+        },
+        {
+          "id": "plant-40",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 88.5,
+          "z": -4.5
+        },
+        {
+          "id": "plant-42",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 88.5,
+          "z": 4.5
+        },
+        {
+          "id": "plant-44",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 87,
+          "z": -4.5
+        },
+        {
+          "id": "plant-46",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 87,
+          "z": 4.5
+        },
+        {
+          "id": "plant-48",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 91.5,
+          "z": -3
+        },
+        {
+          "id": "plant-50",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 91.5,
+          "z": 3
+        },
+        {
+          "id": "plant-52",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 90,
+          "z": -4.5
+        },
+        {
+          "id": "plant-54",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 90,
+          "z": 4.5
+        },
+        {
+          "id": "plant-56",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 84,
+          "z": -3
+        },
+        {
+          "id": "plant-58",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 84,
+          "z": 3
+        },
+        {
+          "id": "plant-60",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 93,
+          "z": 0
+        },
+        {
+          "id": "plant-62",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 85.5,
+          "z": -4.5
+        },
+        {
+          "id": "plant-64",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 85.5,
+          "z": 4.5
+        },
+        {
+          "id": "plant-66",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 93,
+          "z": -1.5
+        },
+        {
+          "id": "plant-68",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 93,
+          "z": 1.5
+        },
+        {
+          "id": "plant-70",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 91.5,
+          "z": -4.5
+        },
+        {
+          "id": "plant-72",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 91.5,
+          "z": 4.5
+        },
+        {
+          "id": "plant-74",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 93,
+          "z": -3
+        },
+        {
+          "id": "plant-76",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 93,
+          "z": 3
+        },
+        {
+          "id": "plant-78",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 84,
+          "z": -4.5
+        },
+        {
+          "id": "plant-80",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 84,
+          "z": 4.5
+        },
+        {
+          "id": "plant-82",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 88.5,
+          "z": -6
+        },
+        {
+          "id": "plant-84",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 88.5,
+          "z": 6
+        },
+        {
+          "id": "plant-86",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 87,
+          "z": -6
+        },
+        {
+          "id": "plant-88",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 87,
+          "z": 6
+        },
+        {
+          "id": "plant-90",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 82.5,
+          "z": -3
+        },
+        {
+          "id": "plant-92",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 82.5,
+          "z": 3
+        },
+        {
+          "id": "plant-94",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 90,
+          "z": -6
+        },
+        {
+          "id": "plant-96",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 90,
+          "z": 6
+        },
+        {
+          "id": "plant-98",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 85.5,
+          "z": -6
+        },
+        {
+          "id": "plant-100",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 85.5,
+          "z": 6
+        },
+        {
+          "id": "plant-102",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 94.5,
+          "z": 0
+        },
+        {
+          "id": "plant-104",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 94.5,
+          "z": -1.5
+        },
+        {
+          "id": "plant-106",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 94.5,
+          "z": 1.5
+        },
+        {
+          "id": "plant-108",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 93,
+          "z": -4.5
+        },
+        {
+          "id": "plant-110",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 93,
+          "z": 4.5
+        },
+        {
+          "id": "plant-112",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 91.5,
+          "z": -6
+        },
+        {
+          "id": "plant-114",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 91.5,
+          "z": 6
+        },
+        {
+          "id": "plant-116",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 82.5,
+          "z": -4.5
+        },
+        {
+          "id": "plant-118",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 82.5,
+          "z": 4.5
+        },
+        {
+          "id": "plant-120",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 84,
+          "z": -6
+        },
+        {
+          "id": "plant-122",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 84,
+          "z": 6
+        },
+        {
+          "id": "plant-124",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 94.5,
+          "z": -3
+        }
+      ],
+      "elapsed": 0,
+      "diagnosticWallMilliseconds": 731.3098,
+      "plots": {
+        "plots": 60,
+        "transitions": [
+          {
+            "day": 1,
+            "time": 0,
+            "key": "2,1",
+            "bounds": [
+              -24,
+              -72,
+              216,
+              168
+            ],
+            "centerId": "structure-2"
+          }
+        ],
+        "checksPerDecision": 8,
+        "scope": "Native finite resident regions; every placement requires legal outward and return paths. Exhaustion preserved; no inaccessible logical crops."
+      },
+      "reason": "active",
+      "status": "placement-verified",
+      "scope": "Real original terrain, normal paid Game.plant and legal outward/return paths. No simulation ticks: not proof of worker throughput, daily activity, 60 daily completed tasks or campaign survival."
+    },
+    {
+      "biome": "gran-rio",
+      "culture": "mapungubwe",
+      "seed": 712,
+      "requested": 60,
+      "paid": 60,
+      "attempts": 60,
+      "cashAfterCenter": 700,
+      "cash": 370,
+      "seedCoins": 300,
+      "wages": 30,
+      "acceptedPlants": [
+        {
+          "id": "plant-3",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 88.5,
+          "z": 0
+        },
+        {
+          "id": "plant-8",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 88.5,
+          "z": -1.5
+        },
+        {
+          "id": "plant-10",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 88.5,
+          "z": 1.5
+        },
+        {
+          "id": "plant-12",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 90,
+          "z": 0
+        },
+        {
+          "id": "plant-14",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 90,
+          "z": -1.5
+        },
+        {
+          "id": "plant-16",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 90,
+          "z": 1.5
+        },
+        {
+          "id": "plant-18",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 88.5,
+          "z": -3
+        },
+        {
+          "id": "plant-20",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 88.5,
+          "z": 3
+        },
+        {
+          "id": "plant-22",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 87,
+          "z": -3
+        },
+        {
+          "id": "plant-24",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 87,
+          "z": 3
+        },
+        {
+          "id": "plant-26",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 91.5,
+          "z": 0
+        },
+        {
+          "id": "plant-28",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 90,
+          "z": -3
+        },
+        {
+          "id": "plant-30",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 90,
+          "z": 3
+        },
+        {
+          "id": "plant-32",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 91.5,
+          "z": -1.5
+        },
+        {
+          "id": "plant-34",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 91.5,
+          "z": 1.5
+        },
+        {
+          "id": "plant-36",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 85.5,
+          "z": -3
+        },
+        {
+          "id": "plant-38",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 85.5,
+          "z": 3
+        },
+        {
+          "id": "plant-40",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 88.5,
+          "z": -4.5
+        },
+        {
+          "id": "plant-42",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 88.5,
+          "z": 4.5
+        },
+        {
+          "id": "plant-44",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 87,
+          "z": -4.5
+        },
+        {
+          "id": "plant-46",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 87,
+          "z": 4.5
+        },
+        {
+          "id": "plant-48",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 91.5,
+          "z": -3
+        },
+        {
+          "id": "plant-50",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 91.5,
+          "z": 3
+        },
+        {
+          "id": "plant-52",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 90,
+          "z": -4.5
+        },
+        {
+          "id": "plant-54",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 90,
+          "z": 4.5
+        },
+        {
+          "id": "plant-56",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 84,
+          "z": -3
+        },
+        {
+          "id": "plant-58",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 84,
+          "z": 3
+        },
+        {
+          "id": "plant-60",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 93,
+          "z": 0
+        },
+        {
+          "id": "plant-62",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 85.5,
+          "z": -4.5
+        },
+        {
+          "id": "plant-64",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 85.5,
+          "z": 4.5
+        },
+        {
+          "id": "plant-66",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 93,
+          "z": -1.5
+        },
+        {
+          "id": "plant-68",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 93,
+          "z": 1.5
+        },
+        {
+          "id": "plant-70",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 91.5,
+          "z": -4.5
+        },
+        {
+          "id": "plant-72",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 91.5,
+          "z": 4.5
+        },
+        {
+          "id": "plant-74",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 93,
+          "z": -3
+        },
+        {
+          "id": "plant-76",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 93,
+          "z": 3
+        },
+        {
+          "id": "plant-78",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 84,
+          "z": -4.5
+        },
+        {
+          "id": "plant-80",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 84,
+          "z": 4.5
+        },
+        {
+          "id": "plant-82",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 88.5,
+          "z": -6
+        },
+        {
+          "id": "plant-84",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 88.5,
+          "z": 6
+        },
+        {
+          "id": "plant-86",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 87,
+          "z": -6
+        },
+        {
+          "id": "plant-88",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 87,
+          "z": 6
+        },
+        {
+          "id": "plant-90",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 82.5,
+          "z": -3
+        },
+        {
+          "id": "plant-92",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 82.5,
+          "z": 3
+        },
+        {
+          "id": "plant-94",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 90,
+          "z": -6
+        },
+        {
+          "id": "plant-96",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 90,
+          "z": 6
+        },
+        {
+          "id": "plant-98",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 85.5,
+          "z": -6
+        },
+        {
+          "id": "plant-100",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 85.5,
+          "z": 6
+        },
+        {
+          "id": "plant-102",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 94.5,
+          "z": 0
+        },
+        {
+          "id": "plant-104",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 94.5,
+          "z": -1.5
+        },
+        {
+          "id": "plant-106",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 94.5,
+          "z": 1.5
+        },
+        {
+          "id": "plant-108",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 93,
+          "z": -4.5
+        },
+        {
+          "id": "plant-110",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 93,
+          "z": 4.5
+        },
+        {
+          "id": "plant-112",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 91.5,
+          "z": -6
+        },
+        {
+          "id": "plant-114",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 91.5,
+          "z": 6
+        },
+        {
+          "id": "plant-116",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 82.5,
+          "z": -4.5
+        },
+        {
+          "id": "plant-118",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 82.5,
+          "z": 4.5
+        },
+        {
+          "id": "plant-120",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 84,
+          "z": -6
+        },
+        {
+          "id": "plant-122",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 84,
+          "z": 6
+        },
+        {
+          "id": "plant-124",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 94.5,
+          "z": -3
+        }
+      ],
+      "elapsed": 0,
+      "diagnosticWallMilliseconds": 597.7885000000001,
+      "plots": {
+        "plots": 60,
+        "transitions": [
+          {
+            "day": 1,
+            "time": 0,
+            "key": "2,1",
+            "bounds": [
+              -24,
+              -72,
+              216,
+              168
+            ],
+            "centerId": "structure-2"
+          }
+        ],
+        "checksPerDecision": 8,
+        "scope": "Native finite resident regions; every placement requires legal outward and return paths. Exhaustion preserved; no inaccessible logical crops."
+      },
+      "reason": "active",
+      "status": "placement-verified",
+      "scope": "Real original terrain, normal paid Game.plant and legal outward/return paths. No simulation ticks: not proof of worker throughput, daily activity, 60 daily completed tasks or campaign survival."
+    },
+    {
+      "biome": "manglares",
+      "culture": "mapungubwe",
+      "seed": 712,
+      "requested": 60,
+      "paid": 60,
+      "attempts": 60,
+      "cashAfterCenter": 700,
+      "cash": 370,
+      "seedCoins": 300,
+      "wages": 30,
+      "acceptedPlants": [
+        {
+          "id": "plant-3",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 88.5,
+          "z": 0
+        },
+        {
+          "id": "plant-8",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 88.5,
+          "z": -1.5
+        },
+        {
+          "id": "plant-10",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 88.5,
+          "z": 1.5
+        },
+        {
+          "id": "plant-12",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 90,
+          "z": 0
+        },
+        {
+          "id": "plant-14",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 90,
+          "z": -1.5
+        },
+        {
+          "id": "plant-16",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 90,
+          "z": 1.5
+        },
+        {
+          "id": "plant-18",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 88.5,
+          "z": -3
+        },
+        {
+          "id": "plant-20",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 88.5,
+          "z": 3
+        },
+        {
+          "id": "plant-22",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 87,
+          "z": -3
+        },
+        {
+          "id": "plant-24",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 87,
+          "z": 3
+        },
+        {
+          "id": "plant-26",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 91.5,
+          "z": 0
+        },
+        {
+          "id": "plant-28",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 90,
+          "z": -3
+        },
+        {
+          "id": "plant-30",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 90,
+          "z": 3
+        },
+        {
+          "id": "plant-32",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 91.5,
+          "z": -1.5
+        },
+        {
+          "id": "plant-34",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 91.5,
+          "z": 1.5
+        },
+        {
+          "id": "plant-36",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 85.5,
+          "z": -3
+        },
+        {
+          "id": "plant-38",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 85.5,
+          "z": 3
+        },
+        {
+          "id": "plant-40",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 88.5,
+          "z": -4.5
+        },
+        {
+          "id": "plant-42",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 88.5,
+          "z": 4.5
+        },
+        {
+          "id": "plant-44",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 87,
+          "z": -4.5
+        },
+        {
+          "id": "plant-46",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 87,
+          "z": 4.5
+        },
+        {
+          "id": "plant-48",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 91.5,
+          "z": -3
+        },
+        {
+          "id": "plant-50",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 91.5,
+          "z": 3
+        },
+        {
+          "id": "plant-52",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 90,
+          "z": -4.5
+        },
+        {
+          "id": "plant-54",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 90,
+          "z": 4.5
+        },
+        {
+          "id": "plant-56",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 84,
+          "z": -3
+        },
+        {
+          "id": "plant-58",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 84,
+          "z": 3
+        },
+        {
+          "id": "plant-60",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 93,
+          "z": 0
+        },
+        {
+          "id": "plant-62",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 85.5,
+          "z": -4.5
+        },
+        {
+          "id": "plant-64",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 85.5,
+          "z": 4.5
+        },
+        {
+          "id": "plant-66",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 93,
+          "z": -1.5
+        },
+        {
+          "id": "plant-68",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 93,
+          "z": 1.5
+        },
+        {
+          "id": "plant-70",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 91.5,
+          "z": -4.5
+        },
+        {
+          "id": "plant-72",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 91.5,
+          "z": 4.5
+        },
+        {
+          "id": "plant-74",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 93,
+          "z": -3
+        },
+        {
+          "id": "plant-76",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 93,
+          "z": 3
+        },
+        {
+          "id": "plant-78",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 84,
+          "z": -4.5
+        },
+        {
+          "id": "plant-80",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 84,
+          "z": 4.5
+        },
+        {
+          "id": "plant-82",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 88.5,
+          "z": -6
+        },
+        {
+          "id": "plant-84",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 88.5,
+          "z": 6
+        },
+        {
+          "id": "plant-86",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 87,
+          "z": -6
+        },
+        {
+          "id": "plant-88",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 87,
+          "z": 6
+        },
+        {
+          "id": "plant-90",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 82.5,
+          "z": -3
+        },
+        {
+          "id": "plant-92",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 82.5,
+          "z": 3
+        },
+        {
+          "id": "plant-94",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 90,
+          "z": -6
+        },
+        {
+          "id": "plant-96",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 90,
+          "z": 6
+        },
+        {
+          "id": "plant-98",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 85.5,
+          "z": -6
+        },
+        {
+          "id": "plant-100",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 85.5,
+          "z": 6
+        },
+        {
+          "id": "plant-102",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 94.5,
+          "z": 0
+        },
+        {
+          "id": "plant-104",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 94.5,
+          "z": -1.5
+        },
+        {
+          "id": "plant-106",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 94.5,
+          "z": 1.5
+        },
+        {
+          "id": "plant-108",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 93,
+          "z": -4.5
+        },
+        {
+          "id": "plant-110",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 93,
+          "z": 4.5
+        },
+        {
+          "id": "plant-112",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 91.5,
+          "z": -6
+        },
+        {
+          "id": "plant-114",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 91.5,
+          "z": 6
+        },
+        {
+          "id": "plant-116",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 82.5,
+          "z": -4.5
+        },
+        {
+          "id": "plant-118",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 82.5,
+          "z": 4.5
+        },
+        {
+          "id": "plant-120",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 84,
+          "z": -6
+        },
+        {
+          "id": "plant-122",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 84,
+          "z": 6
+        },
+        {
+          "id": "plant-124",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 94.5,
+          "z": -3
+        }
+      ],
+      "elapsed": 0,
+      "diagnosticWallMilliseconds": 750.3937999999998,
+      "plots": {
+        "plots": 60,
+        "transitions": [
+          {
+            "day": 1,
+            "time": 0,
+            "key": "2,1",
+            "bounds": [
+              -24,
+              -72,
+              216,
+              168
+            ],
+            "centerId": "structure-2"
+          }
+        ],
+        "checksPerDecision": 8,
+        "scope": "Native finite resident regions; every placement requires legal outward and return paths. Exhaustion preserved; no inaccessible logical crops."
+      },
+      "reason": "active",
+      "status": "placement-verified",
+      "scope": "Real original terrain, normal paid Game.plant and legal outward/return paths. No simulation ticks: not proof of worker throughput, daily activity, 60 daily completed tasks or campaign survival."
+    },
+    {
+      "biome": "volcanes",
+      "culture": "mapungubwe",
+      "seed": 712,
+      "requested": 60,
+      "paid": 60,
+      "attempts": 60,
+      "cashAfterCenter": 700,
+      "cash": 370,
+      "seedCoins": 300,
+      "wages": 30,
+      "acceptedPlants": [
+        {
+          "id": "plant-3",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 88.5,
+          "z": 0
+        },
+        {
+          "id": "plant-8",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 88.5,
+          "z": -1.5
+        },
+        {
+          "id": "plant-10",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 88.5,
+          "z": 1.5
+        },
+        {
+          "id": "plant-12",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 90,
+          "z": 0
+        },
+        {
+          "id": "plant-14",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 90,
+          "z": -1.5
+        },
+        {
+          "id": "plant-16",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 90,
+          "z": 1.5
+        },
+        {
+          "id": "plant-18",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 88.5,
+          "z": -3
+        },
+        {
+          "id": "plant-20",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 88.5,
+          "z": 3
+        },
+        {
+          "id": "plant-22",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 87,
+          "z": -3
+        },
+        {
+          "id": "plant-24",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 87,
+          "z": 3
+        },
+        {
+          "id": "plant-26",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 91.5,
+          "z": 0
+        },
+        {
+          "id": "plant-28",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 90,
+          "z": -3
+        },
+        {
+          "id": "plant-30",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 90,
+          "z": 3
+        },
+        {
+          "id": "plant-32",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 91.5,
+          "z": -1.5
+        },
+        {
+          "id": "plant-34",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 91.5,
+          "z": 1.5
+        },
+        {
+          "id": "plant-36",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 85.5,
+          "z": -3
+        },
+        {
+          "id": "plant-38",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 85.5,
+          "z": 3
+        },
+        {
+          "id": "plant-40",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 88.5,
+          "z": -4.5
+        },
+        {
+          "id": "plant-42",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 88.5,
+          "z": 4.5
+        },
+        {
+          "id": "plant-44",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 87,
+          "z": -4.5
+        },
+        {
+          "id": "plant-46",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 87,
+          "z": 4.5
+        },
+        {
+          "id": "plant-48",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 91.5,
+          "z": -3
+        },
+        {
+          "id": "plant-50",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 91.5,
+          "z": 3
+        },
+        {
+          "id": "plant-52",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 90,
+          "z": -4.5
+        },
+        {
+          "id": "plant-54",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 90,
+          "z": 4.5
+        },
+        {
+          "id": "plant-56",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 84,
+          "z": -3
+        },
+        {
+          "id": "plant-58",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 84,
+          "z": 3
+        },
+        {
+          "id": "plant-60",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 93,
+          "z": 0
+        },
+        {
+          "id": "plant-62",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 85.5,
+          "z": -4.5
+        },
+        {
+          "id": "plant-64",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 85.5,
+          "z": 4.5
+        },
+        {
+          "id": "plant-66",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 93,
+          "z": -1.5
+        },
+        {
+          "id": "plant-68",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 93,
+          "z": 1.5
+        },
+        {
+          "id": "plant-70",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 91.5,
+          "z": -4.5
+        },
+        {
+          "id": "plant-72",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 91.5,
+          "z": 4.5
+        },
+        {
+          "id": "plant-74",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 93,
+          "z": -3
+        },
+        {
+          "id": "plant-76",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 93,
+          "z": 3
+        },
+        {
+          "id": "plant-78",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 84,
+          "z": -4.5
+        },
+        {
+          "id": "plant-80",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 84,
+          "z": 4.5
+        },
+        {
+          "id": "plant-82",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 88.5,
+          "z": -6
+        },
+        {
+          "id": "plant-84",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 88.5,
+          "z": 6
+        },
+        {
+          "id": "plant-86",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 87,
+          "z": -6
+        },
+        {
+          "id": "plant-88",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 87,
+          "z": 6
+        },
+        {
+          "id": "plant-90",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 82.5,
+          "z": -3
+        },
+        {
+          "id": "plant-92",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 82.5,
+          "z": 3
+        },
+        {
+          "id": "plant-94",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 90,
+          "z": -6
+        },
+        {
+          "id": "plant-96",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 90,
+          "z": 6
+        },
+        {
+          "id": "plant-98",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 85.5,
+          "z": -6
+        },
+        {
+          "id": "plant-100",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 85.5,
+          "z": 6
+        },
+        {
+          "id": "plant-102",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 94.5,
+          "z": 0
+        },
+        {
+          "id": "plant-104",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 94.5,
+          "z": -1.5
+        },
+        {
+          "id": "plant-106",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 94.5,
+          "z": 1.5
+        },
+        {
+          "id": "plant-108",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 93,
+          "z": -4.5
+        },
+        {
+          "id": "plant-110",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 93,
+          "z": 4.5
+        },
+        {
+          "id": "plant-112",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 91.5,
+          "z": -6
+        },
+        {
+          "id": "plant-114",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 91.5,
+          "z": 6
+        },
+        {
+          "id": "plant-116",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 82.5,
+          "z": -4.5
+        },
+        {
+          "id": "plant-118",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 82.5,
+          "z": 4.5
+        },
+        {
+          "id": "plant-120",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 84,
+          "z": -6
+        },
+        {
+          "id": "plant-122",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 84,
+          "z": 6
+        },
+        {
+          "id": "plant-124",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 94.5,
+          "z": -3
+        }
+      ],
+      "elapsed": 0,
+      "diagnosticWallMilliseconds": 831.3435,
+      "plots": {
+        "plots": 60,
+        "transitions": [
+          {
+            "day": 1,
+            "time": 0,
+            "key": "2,1",
+            "bounds": [
+              -24,
+              -72,
+              216,
+              168
+            ],
+            "centerId": "structure-2"
+          }
+        ],
+        "checksPerDecision": 8,
+        "scope": "Native finite resident regions; every placement requires legal outward and return paths. Exhaustion preserved; no inaccessible logical crops."
+      },
+      "reason": "active",
+      "status": "placement-verified",
+      "scope": "Real original terrain, normal paid Game.plant and legal outward/return paths. No simulation ticks: not proof of worker throughput, daily activity, 60 daily completed tasks or campaign survival."
+    },
+    {
+      "biome": "gran-canon",
+      "culture": "mapungubwe",
+      "seed": 712,
+      "requested": 60,
+      "paid": 60,
+      "attempts": 61,
+      "cashAfterCenter": 700,
+      "cash": 370,
+      "seedCoins": 300,
+      "wages": 30,
+      "acceptedPlants": [
+        {
+          "id": "plant-3",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -25.5,
+          "z": 30
+        },
+        {
+          "id": "plant-8",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -25.5,
+          "z": 31.5
+        },
+        {
+          "id": "plant-10",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -25.5,
+          "z": 28.5
+        },
+        {
+          "id": "plant-12",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -25.5,
+          "z": 33
+        },
+        {
+          "id": "plant-14",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -25.5,
+          "z": 27
+        },
+        {
+          "id": "plant-16",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -27,
+          "z": 27
+        },
+        {
+          "id": "plant-18",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -25.5,
+          "z": 34.5
+        },
+        {
+          "id": "plant-20",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -27,
+          "z": 34.5
+        },
+        {
+          "id": "plant-22",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -28.5,
+          "z": 27
+        },
+        {
+          "id": "plant-24",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -28.5,
+          "z": 34.5
+        },
+        {
+          "id": "plant-26",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -25.5,
+          "z": 25.5
+        },
+        {
+          "id": "plant-28",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -27,
+          "z": 25.5
+        },
+        {
+          "id": "plant-30",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -25.5,
+          "z": 36
+        },
+        {
+          "id": "plant-32",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -30,
+          "z": 27
+        },
+        {
+          "id": "plant-34",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -27,
+          "z": 36
+        },
+        {
+          "id": "plant-36",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -24,
+          "z": 36
+        },
+        {
+          "id": "plant-38",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -28.5,
+          "z": 25.5
+        },
+        {
+          "id": "plant-40",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -30,
+          "z": 34.5
+        },
+        {
+          "id": "plant-42",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -28.5,
+          "z": 36
+        },
+        {
+          "id": "plant-44",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -25.5,
+          "z": 24
+        },
+        {
+          "id": "plant-46",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -30,
+          "z": 25.5
+        },
+        {
+          "id": "plant-48",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -27,
+          "z": 24
+        },
+        {
+          "id": "plant-50",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -31.5,
+          "z": 27
+        },
+        {
+          "id": "plant-52",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -30,
+          "z": 36
+        },
+        {
+          "id": "plant-54",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -25.5,
+          "z": 37.5
+        },
+        {
+          "id": "plant-56",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -31.5,
+          "z": 34.5
+        },
+        {
+          "id": "plant-58",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -27,
+          "z": 37.5
+        },
+        {
+          "id": "plant-60",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -28.5,
+          "z": 24
+        },
+        {
+          "id": "plant-62",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -24,
+          "z": 37.5
+        },
+        {
+          "id": "plant-64",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -28.5,
+          "z": 37.5
+        },
+        {
+          "id": "plant-66",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -31.5,
+          "z": 25.5
+        },
+        {
+          "id": "plant-68",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -30,
+          "z": 24
+        },
+        {
+          "id": "plant-70",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -31.5,
+          "z": 36
+        },
+        {
+          "id": "plant-72",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -25.5,
+          "z": 22.5
+        },
+        {
+          "id": "plant-74",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -33,
+          "z": 27
+        },
+        {
+          "id": "plant-76",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -30,
+          "z": 37.5
+        },
+        {
+          "id": "plant-78",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -27,
+          "z": 22.5
+        },
+        {
+          "id": "plant-80",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -33,
+          "z": 34.5
+        },
+        {
+          "id": "plant-82",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -25.5,
+          "z": 39
+        },
+        {
+          "id": "plant-84",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -27,
+          "z": 39
+        },
+        {
+          "id": "plant-86",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -28.5,
+          "z": 22.5
+        },
+        {
+          "id": "plant-88",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -24,
+          "z": 39
+        },
+        {
+          "id": "plant-90",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -31.5,
+          "z": 24
+        },
+        {
+          "id": "plant-92",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -33,
+          "z": 25.5
+        },
+        {
+          "id": "plant-94",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -28.5,
+          "z": 39
+        },
+        {
+          "id": "plant-96",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -31.5,
+          "z": 37.5
+        },
+        {
+          "id": "plant-98",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -22.5,
+          "z": 39
+        },
+        {
+          "id": "plant-100",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -33,
+          "z": 36
+        },
+        {
+          "id": "plant-102",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -30,
+          "z": 22.5
+        },
+        {
+          "id": "plant-104",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -30,
+          "z": 39
+        },
+        {
+          "id": "plant-106",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -34.5,
+          "z": 27
+        },
+        {
+          "id": "plant-108",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -25.5,
+          "z": 21
+        },
+        {
+          "id": "plant-110",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -34.5,
+          "z": 34.5
+        },
+        {
+          "id": "plant-112",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -27,
+          "z": 21
+        },
+        {
+          "id": "plant-114",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -33,
+          "z": 24
+        },
+        {
+          "id": "plant-116",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -31.5,
+          "z": 22.5
+        },
+        {
+          "id": "plant-118",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -25.5,
+          "z": 40.5
+        },
+        {
+          "id": "plant-120",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -28.5,
+          "z": 21
+        },
+        {
+          "id": "plant-122",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -27,
+          "z": 40.5
+        },
+        {
+          "id": "plant-124",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": -33,
+          "z": 37.5
+        }
+      ],
+      "elapsed": 0,
+      "diagnosticWallMilliseconds": 1557.2082000000005,
+      "plots": {
+        "plots": 60,
+        "transitions": [
+          {
+            "day": 1,
+            "time": 0,
+            "key": "-1,1",
+            "bounds": [
+              -168,
+              -72,
+              72,
+              168
+            ],
+            "centerId": "structure-2"
+          }
+        ],
+        "checksPerDecision": 8,
+        "scope": "Native finite resident regions; every placement requires legal outward and return paths. Exhaustion preserved; no inaccessible logical crops."
+      },
+      "reason": "active",
+      "status": "placement-verified",
+      "scope": "Real original terrain, normal paid Game.plant and legal outward/return paths. No simulation ticks: not proof of worker throughput, daily activity, 60 daily completed tasks or campaign survival."
+    },
+    {
+      "biome": "desierto",
+      "culture": "mapungubwe",
+      "seed": 712,
+      "requested": 60,
+      "paid": 60,
+      "attempts": 61,
+      "cashAfterCenter": 700,
+      "cash": 370,
+      "seedCoins": 300,
+      "wages": 30,
+      "acceptedPlants": [
+        {
+          "id": "plant-3",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 100.5,
+          "z": 0
+        },
+        {
+          "id": "plant-8",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 100.5,
+          "z": -1.5
+        },
+        {
+          "id": "plant-10",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 100.5,
+          "z": 1.5
+        },
+        {
+          "id": "plant-12",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 100.5,
+          "z": -3
+        },
+        {
+          "id": "plant-14",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 100.5,
+          "z": 3
+        },
+        {
+          "id": "plant-16",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 99,
+          "z": -3
+        },
+        {
+          "id": "plant-18",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 99,
+          "z": 3
+        },
+        {
+          "id": "plant-20",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 97.5,
+          "z": -3
+        },
+        {
+          "id": "plant-22",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 97.5,
+          "z": 3
+        },
+        {
+          "id": "plant-24",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 100.5,
+          "z": -4.5
+        },
+        {
+          "id": "plant-26",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 100.5,
+          "z": 4.5
+        },
+        {
+          "id": "plant-28",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 99,
+          "z": -4.5
+        },
+        {
+          "id": "plant-30",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 99,
+          "z": 4.5
+        },
+        {
+          "id": "plant-32",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 96,
+          "z": -3
+        },
+        {
+          "id": "plant-34",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 96,
+          "z": 3
+        },
+        {
+          "id": "plant-36",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 105,
+          "z": 0
+        },
+        {
+          "id": "plant-38",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 97.5,
+          "z": -4.5
+        },
+        {
+          "id": "plant-40",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 97.5,
+          "z": 4.5
+        },
+        {
+          "id": "plant-42",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 105,
+          "z": -1.5
+        },
+        {
+          "id": "plant-44",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 105,
+          "z": 1.5
+        },
+        {
+          "id": "plant-46",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 105,
+          "z": -3
+        },
+        {
+          "id": "plant-48",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 105,
+          "z": 3
+        },
+        {
+          "id": "plant-50",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 96,
+          "z": -4.5
+        },
+        {
+          "id": "plant-52",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 96,
+          "z": 4.5
+        },
+        {
+          "id": "plant-54",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 100.5,
+          "z": -6
+        },
+        {
+          "id": "plant-56",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 100.5,
+          "z": 6
+        },
+        {
+          "id": "plant-58",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 99,
+          "z": -6
+        },
+        {
+          "id": "plant-60",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 99,
+          "z": 6
+        },
+        {
+          "id": "plant-62",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 94.5,
+          "z": -3
+        },
+        {
+          "id": "plant-64",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 94.5,
+          "z": 3
+        },
+        {
+          "id": "plant-66",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 97.5,
+          "z": -6
+        },
+        {
+          "id": "plant-68",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 97.5,
+          "z": 6
+        },
+        {
+          "id": "plant-70",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 106.5,
+          "z": 0
+        },
+        {
+          "id": "plant-72",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 106.5,
+          "z": -1.5
+        },
+        {
+          "id": "plant-74",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 106.5,
+          "z": 1.5
+        },
+        {
+          "id": "plant-76",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 105,
+          "z": -4.5
+        },
+        {
+          "id": "plant-78",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 105,
+          "z": 4.5
+        },
+        {
+          "id": "plant-80",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 94.5,
+          "z": -4.5
+        },
+        {
+          "id": "plant-82",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 94.5,
+          "z": 4.5
+        },
+        {
+          "id": "plant-84",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 96,
+          "z": -6
+        },
+        {
+          "id": "plant-86",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 96,
+          "z": 6
+        },
+        {
+          "id": "plant-88",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 106.5,
+          "z": -3
+        },
+        {
+          "id": "plant-90",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 106.5,
+          "z": 3
+        },
+        {
+          "id": "plant-92",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 100.5,
+          "z": -7.5
+        },
+        {
+          "id": "plant-94",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 100.5,
+          "z": 7.5
+        },
+        {
+          "id": "plant-96",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 99,
+          "z": -7.5
+        },
+        {
+          "id": "plant-98",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 99,
+          "z": 7.5
+        },
+        {
+          "id": "plant-100",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 93,
+          "z": -3
+        },
+        {
+          "id": "plant-102",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 93,
+          "z": 3
+        },
+        {
+          "id": "plant-104",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 105,
+          "z": -6
+        },
+        {
+          "id": "plant-106",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 105,
+          "z": 6
+        },
+        {
+          "id": "plant-108",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 97.5,
+          "z": -7.5
+        },
+        {
+          "id": "plant-110",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 97.5,
+          "z": 7.5
+        },
+        {
+          "id": "plant-112",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 106.5,
+          "z": -4.5
+        },
+        {
+          "id": "plant-114",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 106.5,
+          "z": 4.5
+        },
+        {
+          "id": "plant-116",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 108,
+          "z": 0
+        },
+        {
+          "id": "plant-118",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 94.5,
+          "z": -6
+        },
+        {
+          "id": "plant-120",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 94.5,
+          "z": 6
+        },
+        {
+          "id": "plant-122",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 108,
+          "z": -1.5
+        },
+        {
+          "id": "plant-124",
+          "species": "mijo",
+          "centerId": "structure-2",
+          "x": 108,
+          "z": 1.5
+        }
+      ],
+      "elapsed": 0,
+      "diagnosticWallMilliseconds": 5561.8638,
+      "plots": {
+        "plots": 60,
+        "transitions": [
+          {
+            "day": 1,
+            "time": 0,
+            "key": "2,1",
+            "bounds": [
+              -24,
+              -72,
+              216,
+              168
+            ],
+            "centerId": "structure-2"
+          }
+        ],
+        "checksPerDecision": 8,
+        "scope": "Native finite resident regions; every placement requires legal outward and return paths. Exhaustion preserved; no inaccessible logical crops."
+      },
+      "reason": "active",
+      "status": "placement-verified",
+      "scope": "Real original terrain, normal paid Game.plant and legal outward/return paths. No simulation ticks: not proof of worker throughput, daily activity, 60 daily completed tasks or campaign survival."
+    }
+  ]
+}
