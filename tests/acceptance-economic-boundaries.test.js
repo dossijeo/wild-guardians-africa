@@ -100,14 +100,14 @@ test('QA-132: an unaffordable remembered selection does not defeat an otherwise 
  assert.equal(Game.hire(loaded,'repeat',{olderFemale:1}),false);assert.equal(loaded.workers.length,1);
 });
 
-test('QA-134: starting night 100 is not a victory before the guaranteed incursion resolves',()=>{
- for(const culture of Game.CULTURES){
-  const {s,nav}=farm(culture);s.day=100;s.completedNights=99;s.time=299.9;s.dayPlan={done:true};s.ledger.balance=rational(105);
+test('QA-134: final horde resolves before victory; an undefended insolvent farm can lose',()=>{
+ for(const culture of Game.CULTURES)for(const capital of [105,1000]){
+  const {s,nav}=farm(culture);s.day=100;s.completedNights=99;s.time=299.9;s.dayPlan={done:true};s.ledger.balance=rational(capital);
   Game.tick(s,.1,nav);assert.equal(s.time,300);assert.equal(s.result,null);assert.equal(s.completedNights,99);
   assert.equal(s.events.filter(e=>e.type==='NightStarted').length,1);assert.equal(s.events.filter(e=>e.type==='CampaignWon').length,0);
-  Game.tick(s,299.9,nav);assert.equal(s.result,null);assert.equal(s.completedNights,99);assert.equal(s.raid,null);
-  Game.tick(s,.1,nav);assert.equal(s.result,'victory');assert.equal(s.completedNights,100);assert.equal(s.day,101);
-  assert.equal(s.events.filter(e=>e.type==='CampaignWon').length,1);
+  for(let i=0;!s.result&&i<1200;i++){Game.tick(s,1,nav);if(s.raid){assert.equal(s.completedNights,99);assert.equal(s.events.filter(e=>e.type==='CampaignWon').length,0);}}
+  if(capital===105){assert.equal(s.result,'defeat');assert.equal(s.completedNights,99);assert.equal(s.events.filter(e=>e.type==='CampaignWon').length,0);}
+  else {assert.equal(s.result,'victory');assert.equal(s.raid,null);assert.equal(s.completedNights,100);assert.equal(s.day,101);assert.equal(s.events.filter(e=>e.type==='CampaignWon').length,1);}
  }
 });
 
