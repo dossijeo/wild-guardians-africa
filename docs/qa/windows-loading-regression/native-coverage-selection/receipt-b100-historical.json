@@ -3,13 +3,13 @@
   "sources": [
     {
       "path": "src/app/native-smoke-coverage.js",
-      "bytes": 500,
-      "sha256": "7e9bec08858515b327fb85d6efa3b23399e4a9dd25b47d93f341ae98bf765720"
+      "bytes": 497,
+      "sha256": "701114760bb87954e17e62d686cd9ee7ccb9b479891684c137fd98a1be21d827"
     },
     {
       "path": "src/app/main.js",
-      "bytes": 64882,
-      "sha256": "40c60396d7de52527afd0bbcdeea3758721a20d47d4a9b5ee25125729288c8e1"
+      "bytes": 64794,
+      "sha256": "72ec0e332af2c872db2795a0357ae626b3a89ed06da01d161579eea7c0714e0c"
     },
     {
       "path": "src-tauri/src/main.rs",
@@ -18,8 +18,8 @@
     },
     {
       "path": "src-tauri/smoke.js",
-      "bytes": 17475,
-      "sha256": "9a6cfbb8a3c6b52a2288f241d39b328c04bc9ce41fdb25f2e45a7690baab1179"
+      "bytes": 17259,
+      "sha256": "a000efd8666d48465cca8b6e9731f06eb73cf1d3b863ad568478313ad3170bc0"
     },
     {
       "path": "tools/create_desktop_visibility_fixture.mjs",
@@ -28,13 +28,13 @@
     },
     {
       "path": "tests/native-smoke-coverage.test.js",
-      "bytes": 7100,
-      "sha256": "b5efa83c0896f411a2945d2a839a33a10b684ae79f3d76dfaf89919d05a5909f"
+      "bytes": 4616,
+      "sha256": "7a42f62952ceb5367d6e9d75ec6444ab727c7d3fb11850f73727947d1c11eed7"
     },
     {
       "path": "tests/native-smoke-coverage-normalize.js",
-      "bytes": 10032,
-      "sha256": "e3a7cc6a3f37384a2298940311fbe878479d5162e9471cf691665bbfcc7bd445"
+      "bytes": 8329,
+      "sha256": "81b42579fcb84217514c76c64b41b7bcdf7c40f6351ab0b89d0ac4ad7272b9fc"
     },
     {
       "path": "tests/world-crop-pair-wiring-normalize.js",
@@ -44,7 +44,7 @@
     {
       "path": "docs/qa/sfx-catalog-post-jam/inventory.json",
       "bytes": 246041,
-      "sha256": "42526df187e28e28f19487ef3d1f2fb3f6ac8a36f02c1177c3e2e15b3ef0b63b"
+      "sha256": "4e000bc8a6409b48d2c8fd962063f70538b49bb7685c27447f170eea3d4a8675"
     },
     {
       "path": "docs/qa/sfx-catalog-post-jam/inventory.md",
@@ -102,10 +102,10 @@
   "checks": {
     "command": "node --test tests/native-smoke-coverage.test.js tests/desktop-visibility-fixture.test.js tests/loading-visual-fixtures.test.js tests/world-crop-pair-wiring.test.js tests/crop-partition-app.test.js tests/sfx-catalog-audit.test.js",
     "exitCode": 0,
-    "tests": 22,
-    "passed": 22,
+    "tests": 20,
+    "passed": 20,
     "failed": 0,
-    "durationMs": 7165.5792,
+    "durationMs": 7387.7811,
     "representatives": [
       [
         "sabana",
@@ -133,14 +133,12 @@
       ]
     ],
     "defaultFixtureSha256": "04729f96380a4b597f2d47b2271140f361df18b8fddc3c797b31bc6bc7691c37",
-    "SFX": "126/100/26;all rows/bytes/routes unchanged except main hash/callsite line offsets",
-    "defaultWholeFixtureSha256": "28d8bf348c61900a7f4f94a53026a86e638acbca5b058981a43de969788a6406"
+    "SFX": "126/100/26;all rows/bytes/routes unchanged except main hash/callsite line offsets"
   },
   "log": {
-    "path": "cpu-tests-reviewed-original.log.gz",
-    "rawBytes": 6041,
-    "rawSha256": "e8daef2a7a2a4f025e2b6cf6a7f7c26eec28d54508346b198b2053ba2151d476",
-    "gzipSha256": "486a25c483eba41a453f80361a693ba448d708de20e70be66b510580706fed9c"
+    "rawBytes": 5593,
+    "rawSha256": "3859a337eda0587630efa29a1ee782bff62360345e6914d0c4cddf588092e20c",
+    "gzipSha256": "92ee2b91e8cdf44a3c42b43e83f4c63559b0ea68e7765468172b428898c0c372"
   },
   "notRun": [
     "Rust unit tests (added source only)",
@@ -150,6 +148,5 @@
     "native/GPU/browser",
     "60-case execution"
   ],
-  "scope": "QA-only explicit selection, scalar ready provenance, legal paid fixtures; no timings or raster claims",
-  "previousFreeze": "b100623c465eebe014d0792544df026cf8e178c3"
+  "scope": "QA-only explicit selection, scalar ready provenance, legal paid fixtures; no timings or raster claims"
 }

@@ -66,6 +66,12 @@
     report.ok = !error && report.errors.length === 0;
     await window.__TAURI_INTERNALS__.invoke('desktop_smoke_report', {report});
   }
+  function checkSmokeCoveragePreview(selection,preview) {
+    if(preview?.biome!==selection.biome||preview?.culture!==selection.culture)throw Error('Fixture preview does not match requested smoke selection');
+  }
+  function checkSmokeCoverageReady(selection,observation,fixture) {
+    if(observation?.phase!=='ready'||observation.actual?.biome!==selection.biome||observation.actual?.culture!==selection.culture||(fixture&&observation.actual.slotId!==fixture.slotId))throw Error('Actual ready world does not match smoke selection');
+  }
   async function listFixtureForSmoke(menu,fixture,send) {
     const target=menu.contentWindow;
     if(!target)throw Error('Fixture menu window is missing');
@@ -186,7 +192,7 @@
     if (fixture) {
       localStorage.setItem('wild-guardians:slot:'+fixture.slotId,fixture.snapshot);
       report.checks.fixtureMenuList=await listFixtureForSmoke(menu,fixture,send);
-      if(window.__desktopSmokeCoverage===true&&(report.checks.fixtureMenuList.preview.biome!==selection.biome||report.checks.fixtureMenuList.preview.culture!==selection.culture))throw Error('Fixture preview does not match requested smoke selection');
+      if(window.__desktopSmokeCoverage===true)checkSmokeCoveragePreview(selection,report.checks.fixtureMenuList.preview);
       send({action:'load-slot',slotId:fixture.slotId});
     }
     else send({action: 'start', biome: selection.biome, culture: selection.culture});
@@ -203,7 +209,7 @@
     if(window.__desktopSmokeCoverage===true){
       const observation=window.__wildGuardiansSmokeCoverage;
       report.checks.worldSelection={requested:selection,restoredPreview:restored??null,actual:observation??null,scope:'Scalar App configuration/ready provenance; no synthetic clock or saved crops.'};
-      if(observation?.phase!=='ready'||observation.actual?.biome!==selection.biome||observation.actual?.culture!==selection.culture||(fixture&&observation.actual.slotId!==fixture.slotId))throw Error('Actual ready world does not match smoke selection');
+      checkSmokeCoverageReady(selection,observation,fixture);
     }
     await new Promise(resolve => requestAnimationFrame(resolve));
     report.worldPng = world.toDataURL('image/png');

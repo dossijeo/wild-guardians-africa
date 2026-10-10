@@ -7,6 +7,11 @@ const rows=[
   },
   {
     "file": "src/app/main.js",
+    "before": "function clearWorld(){gameplayGpuQa?.close();clearLoadingPresentation();libraryViewer?.dispose();libraryViewer=null;dialogVoice.stop();raidLoading?.remove();raidLoading=null;noticeLifetime.reset();eventCards=null;surfaces.reset();uiAudio.reset();toolSession.clear();budgetWarningUntil=0;lastBudgetBalance=Infinity;reserveWarningShown=false;pendingVillage=null;commandFeedback='';setTutorialInteraction(false);tutorial=null;hudHand?.dispose();hudHand=null;guardian?.dispose();guardian=null;world?.dispose();world=null;nav=null;audio.stop();tool=null;selection=null;document.querySelector('#native-hud-style')?.remove();}\n",
+    "after": "function clearWorld(){if(globalThis.__desktopSmokeCoverage===true)publishNativeSmokeCoverage(null,'disposed');gameplayGpuQa?.close();clearLoadingPresentation();libraryViewer?.dispose();libraryViewer=null;dialogVoice.stop();raidLoading?.remove();raidLoading=null;noticeLifetime.reset();eventCards=null;surfaces.reset();uiAudio.reset();toolSession.clear();budgetWarningUntil=0;lastBudgetBalance=Infinity;reserveWarningShown=false;pendingVillage=null;commandFeedback='';setTutorialInteraction(false);tutorial=null;hudHand?.dispose();hudHand=null;guardian?.dispose();guardian=null;world?.dispose();world=null;nav=null;audio.stop();tool=null;selection=null;document.querySelector('#native-hud-style')?.remove();}\n"
+  },
+  {
+    "file": "src/app/main.js",
     "before": "  if(starting)return;progressQa?.lifecycle('app-start-game-received');starting=true;screen='loading';clearWorld();screenWakeLock.setActive(true);\n",
     "after": "  if(starting)return;if(globalThis.__desktopSmokeCoverage===true)publishNativeSmokeCoverage(null,'starting');progressQa?.lifecycle('app-start-game-received');starting=true;screen='loading';clearWorld();screenWakeLock.setActive(true);\n"
   },
@@ -38,12 +43,17 @@ const rows=[
   {
     "file": "src-tauri/smoke.js",
     "before": "",
+    "after": "  }\n  function checkSmokeCoveragePreview(selection,preview) {\n    if(preview?.biome!==selection.biome||preview?.culture!==selection.culture)throw Error('Fixture preview does not match requested smoke selection');\n  }\n  function checkSmokeCoverageReady(selection,observation,fixture) {\n    if(observation?.phase!=='ready'||observation.actual?.biome!==selection.biome||observation.actual?.culture!==selection.culture||(fixture&&observation.actual.slotId!==fixture.slotId))throw Error('Actual ready world does not match smoke selection');\n"
+  },
+  {
+    "file": "src-tauri/smoke.js",
+    "before": "",
     "after": "    if (window.__desktopSmokeCoverageError) throw Error(window.__desktopSmokeCoverageError);\n    const selection=window.__desktopSmokeSelection??{biome:'gran-canon',culture:'mapungubwe'};\n    if (!['sabana','gran-rio','manglares','volcanes','gran-canon','desierto'].includes(selection.biome)||!['mapungubwe','saheliana','suajili','musgum','etiope'].includes(selection.culture)) throw Error('Invalid smoke world selection');\n"
   },
   {
     "file": "src-tauri/smoke.js",
     "before": "",
-    "after": "      if(window.__desktopSmokeCoverage===true&&(report.checks.fixtureMenuList.preview.biome!==selection.biome||report.checks.fixtureMenuList.preview.culture!==selection.culture))throw Error('Fixture preview does not match requested smoke selection');\n"
+    "after": "      if(window.__desktopSmokeCoverage===true)checkSmokeCoveragePreview(selection,report.checks.fixtureMenuList.preview);\n"
   },
   {
     "file": "src-tauri/smoke.js",
@@ -53,7 +63,7 @@ const rows=[
   {
     "file": "src-tauri/smoke.js",
     "before": "    report.checks.world = {biome: 'gran-canon', culture: 'mapungubwe', width: world.width, height: world.height};\n",
-    "after": "    const restored=report.checks.fixtureMenuList?.preview;\n    report.checks.world = {biome: restored?.biome??selection.biome, culture: restored?.culture??selection.culture, width: world.width, height: world.height, provenance:restored?'actual menu save preview':'requested NewGame selection'};\n    if(window.__desktopSmokeCoverage===true){\n      const observation=window.__wildGuardiansSmokeCoverage;\n      report.checks.worldSelection={requested:selection,restoredPreview:restored??null,actual:observation??null,scope:'Scalar App configuration/ready provenance; no synthetic clock or saved crops.'};\n      if(observation?.phase!=='ready'||observation.actual?.biome!==selection.biome||observation.actual?.culture!==selection.culture||(fixture&&observation.actual.slotId!==fixture.slotId))throw Error('Actual ready world does not match smoke selection');\n    }\n"
+    "after": "    const restored=report.checks.fixtureMenuList?.preview;\n    report.checks.world = {biome: restored?.biome??selection.biome, culture: restored?.culture??selection.culture, width: world.width, height: world.height, provenance:restored?'actual menu save preview':'requested NewGame selection'};\n    if(window.__desktopSmokeCoverage===true){\n      const observation=window.__wildGuardiansSmokeCoverage;\n      report.checks.worldSelection={requested:selection,restoredPreview:restored??null,actual:observation??null,scope:'Scalar App configuration/ready provenance; no synthetic clock or saved crops.'};\n      checkSmokeCoverageReady(selection,observation,fixture);\n    }\n"
   }
 ];
 export function normalizeCoverageWiring(file,text){

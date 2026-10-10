@@ -1,8 +1,9 @@
+import vm from 'node:vm';
 import {normalizeCoverageWiring} from './native-smoke-coverage-normalize.js';import {frozenSource} from './frozen-loading-source.js';import {normalizePairWiring} from './world-crop-pair-wiring-normalize.js';
 import test from 'node:test';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';import {readFileSync} from 'node:fs';
 import {createDesktopVisibilityFixture} from '../tools/create_desktop_visibility_fixture.mjs';import {publishNativeSmokeCoverage} from '../src/app/native-smoke-coverage.js';import {deserialize} from '../src/persistence/snapshots.js';import * as Game from '../src/simulation/game.js';
 const hash=value=>createHash('sha256').update(value).digest('hex');
-test('legacy default native fixture remains byte exact without optional provenance',()=>{const f=createDesktopVisibilityFixture();assert.equal(hash(JSON.stringify(f)),'04729f96380a4b597f2d47b2271140f361df18b8fddc3c797b31bc6bc7691c37');assert.equal('provenance' in f,false);});
+test('legacy default native fixture remains byte exact without optional provenance',()=>{const f=createDesktopVisibilityFixture();assert.equal(hash(JSON.stringify(f)),'04729f96380a4b597f2d47b2271140f361df18b8fddc3c797b31bc6bc7691c37');assert.equal(hash(JSON.stringify(f,null,2)+'\n'),'28d8bf348c61900a7f4f94a53026a86e638acbca5b058981a43de969788a6406');assert.equal('provenance' in f,false);});
 test('representative six biomes and all five cultures retain legal paid first raid night and original visibility invariants',()=>{
  const pairs=Game.BIOMES.map((biome,i)=>[biome,Game.CULTURES[i%5]]);
  assert.equal(new Set(pairs.map(p=>p[1])).size,5);
@@ -23,4 +24,20 @@ test('exact QA source normalization retains historical runtime invariants',()=>{
   const current=readFileSync(file,'utf8');assert.equal(normalizePairWiring(file,current),frozenSource('71d4db4e',file));
   assert.notEqual(normalizeCoverageWiring(file,current+'\n// unrelated edit'),normalizeCoverageWiring(file,current));
  }
+});
+
+test('actual smoke preview/ready checks reject mismatches and disposed/replaced stale readiness',()=>{
+ const text=readFileSync('src-tauri/smoke.js','utf8'),body=text.slice(text.indexOf('  function checkSmokeCoveragePreview'),text.indexOf('  async function listFixtureForSmoke'));
+ const {checkSmokeCoveragePreview:preview,checkSmokeCoverageReady:ready}=vm.runInNewContext(body+';({checkSmokeCoveragePreview,checkSmokeCoverageReady})');
+ const selection={biome:'sabana',culture:'musgum'},scope={__desktopSmokeCoverage:true},state={...selection,seed:712,slotId:'owned',day:1,time:302};
+ assert.doesNotThrow(()=>preview(selection,state));for(const wrong of [{...state,biome:'desierto'},{...state,culture:'etiope'},null])assert.throws(()=>preview(selection,wrong));
+ publishNativeSmokeCoverage(state,'ready',{scope});assert.doesNotThrow(()=>ready(selection,scope.__wildGuardiansSmokeCoverage,{slotId:'owned'}));assert.throws(()=>ready(selection,scope.__wildGuardiansSmokeCoverage,{slotId:'other'}));assert.throws(()=>ready({...selection,biome:'volcanes'},scope.__wildGuardiansSmokeCoverage,null));
+ publishNativeSmokeCoverage(null,'disposed',{scope});assert.throws(()=>ready(selection,scope.__wildGuardiansSmokeCoverage,null));publishNativeSmokeCoverage(null,'starting',{scope});assert.throws(()=>ready(selection,scope.__wildGuardiansSmokeCoverage,null));publishNativeSmokeCoverage({...state,culture:'etiope'},'configuration',{scope});assert.throws(()=>ready(selection,scope.__wildGuardiansSmokeCoverage,null));
+ assert.match(readFileSync('src/app/main.js','utf8'),/function clearWorld\(\)\{if\(globalThis.__desktopSmokeCoverage===true\)publishNativeSmokeCoverage\(null,'disposed'\)/);
+});
+
+test('actual smoke whitelist rejects partial or invalid selection before preflight',()=>{
+ const text=readFileSync('src-tauri/smoke.js','utf8'),body=text.slice(text.indexOf('    const selection='),text.indexOf('    const load ='));
+ for(const value of [{biome:'sabana'},{culture:'musgum'},{biome:'bad',culture:'musgum'},{biome:'sabana',culture:'bad'},{biome:1,culture:'musgum'}])assert.throws(()=>vm.runInNewContext(body,{window:{__desktopSmokeSelection:value}}));
+ assert.doesNotThrow(()=>vm.runInNewContext(body,{window:{}}));assert.doesNotThrow(()=>vm.runInNewContext(body,{window:{__desktopSmokeSelection:{biome:'sabana',culture:'musgum'}}}));
 });
