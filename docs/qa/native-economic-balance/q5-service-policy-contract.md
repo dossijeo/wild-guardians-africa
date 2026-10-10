@@ -1,0 +1,25 @@
+# Q5: opt-in service and renewal policy
+
+Isolated baseline `10a1dae0`. Read the preserved `q4-native-defeat-review`: Q4 hired repeatedly against six pending tasks while travel reservations masqueraded as service, reserved only30 despite19 contracts, then reset capacity to one. Its original native defeat and legacy/Q4 implementations remain unchanged.
+
+Run selection is `--labour-policy q5`; default remains legacy. A/B/D/E share this labour implementation, profile, agricultural recipe, Growth/Multiply and seed decisions. Strategy-specific defense/village spending still differs deliberately. E differs from D solely in the pre-existing explicit Shield permission. No crop purchase limit or agricultural quota is introduced.
+
+## Predeclared candidate
+
+- Start with one funded employee. Preserve the previous selected crew at dawn while there are crops or valid tasks. No unconditional reset to one. New centers receive ordinary native allocation; no assignment overrides.
+- Evaluate additions at most every10 simulated seconds, with numerical tolerance1e-6s. Add at most one employee per evaluation, never a backlog-sized immediate batch.
+- Per center, count valid unassigned tasks and available/busy native employees using the unchanged Q4 workload reader. Require unassigned queue/current active crew >6, every incumbent busy, and actual native completed service in the last30s. Service is WaterSatisfied, settled RepairApplied or CrateDelivered, not a task reservation, CropPicked, elapsed travel, plant purchase or hypothetical income. Mixed task weights are intentionally one observation each.
+- Estimated queue clearance `pending / (completed-last30s /30s)` must exceed60s. This is a provisional heterogeneous service heuristic, not a validated production rate. No service means no additional hire, rather than extrapolating infinite demand.
+- After each settled hire, require another completion from that center before considering another addition. All settled hires protect the full next-day nominal wage: selected crew × actual profile wage. Reserve is not one wage per center and does not shrink when current contracts end or workers go home.
+- Additional affordability: native proportional ceil charge + full enlarged next-day crew wage + requested native repairs + next seed. Actual payment is through Game.hireAdditional and its ledger; only accepted commands increment activity. No adjustment to service/idle seconds.
+- Dawn safe affordability protects both today's paid crew and its full next-day renewal plus repair/seed. If cash is insufficient, explicitly reduce selected capacity to the safe affordable amount. If none is safely funded but one native wage is affordable, permit one emergency contract and disclose reserveShortfall/capacityReduced; no coins or native defeat overrides. Cash29 cannot hire a30 profile. This emergency is not proof of recovery.
+
+Incremental measurements and hires are reported in labourHistory/labourReasons; every ten-second evaluation (including rejected additions) retains workload and service measurements in labourObservations. Source provenance includes the Q5 module. State tracks crew selection in the policy closure across native dawn and snapshot reloads; no production save format changes. Restarting a runner creates a new policy experiment, not a resumption of a partially observed service history.
+
+## Directed verification and limits
+
+15 directed contracts pass (458.7711ms), covering preserved CLI/Q4/D/E contracts plus Q5. Native paid full/proportional hires verify renewal90 after selected crew3 and actual day-two debit90. A controlled reservation-only fixture demonstrates zero measured service cannot justify hiring. A bounded flat-world command fixture runs at most110 one-second ticks, obtains actual WaterSatisfied and an eligible funded increment; no synthetic completion or income is inserted. Financial boundary checks demonstrate rejected additions without full renewal funds and disclose native emergency atcash35. Tests use explicit accounting fixtures for insufficient-funds boundaries, not campaign results. Runner syntax and diff checks pass.
+
+The reservation fixture initially reached an actual completion because native workers finished within10s; it was changed to an explicit reservation-only observation, while the separate native service fixture remains real. Float accumulation near10s is handled by the small tolerance. These changes fix test assumptions, not gameplay.
+
+No campaign, GPU, CI, production balance, prices, attacks, snapshots, world generation or existing receipts were changed. No survival/idle acceptance is claimed. Risk remains: task types have different costs, a30s window can include travel variation, lost/blocked service can prevent capacity additions, and full renewal savings can still underfund agriculture or defenses. Subsequent authorized pilots must retain shortfalls, service histories, cash reconciliation, physical deliveries and all daylight inactivity; reject early if saturation with no deliveries or cash collapse reappears. Do not tune these heuristics silently or infer protection from purchased walls.

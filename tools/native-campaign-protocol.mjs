@@ -54,7 +54,8 @@ export function villageSavingsForState(policy,state,income,spent){
 }
 
 export function campaignProtocolForLabour(name='legacy'){
- if(!['legacy','q4'].includes(name))throw Error('Unknown native labour policy');
+ if(!['legacy','q4','q5'].includes(name))throw Error('Unknown native labour policy');
+ if(name==='q5')return Object.freeze({...NATIVE_CAMPAIGN_PROTOCOL,id:NATIVE_CAMPAIGN_PROTOCOL.id+'-q5',labourPolicy:'10s incremental measured-service queue ratio; full selected-crew next wage; funded dawn continuity',evaluationSeconds:10,serviceWindowSeconds:30,backlogPerWorker:6,maximumClearanceSeconds:60});
  return name==='legacy'?NATIVE_CAMPAIGN_PROTOCOL:Object.freeze({...NATIVE_CAMPAIGN_PROTOCOL,id:NATIVE_CAMPAIGN_PROTOCOL.id+'-q4',labourPolicy:'native backlog and settled cash, one productive-centre daily contract; proportional additions',backlogPerWorker:6});
 }
 
