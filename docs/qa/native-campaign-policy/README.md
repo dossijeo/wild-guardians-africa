@@ -1,6 +1,6 @@
 # Native campaign harness proposal (not campaign acceptance)
 
-Branch starts at main5955feae. Production prices remain those from main, not the historical e040 high-yield economy or the mathematical60% model. Additional villages2000 are a parent-owned production change pending its commit. No simulated exposure multiplier, grants, seed scarcity, altered clock, forced harvests or altered raid target decisions are introduced here.
+Branch starts at main5955feae and incorporates parent main32da7046. Production prices remain those from main, not the historical e040 high-yield economy or the mathematical60% model. Additional villages2000 are implemented in production32da7046. No simulated exposure multiplier, grants, seed scarcity, altered clock, forced harvests or altered raid target decisions are introduced here.
 
 ## Implemented opt-in tools
 
@@ -20,6 +20,18 @@ At least60 crop purchases/day is an observed gate, never a quota or free transac
 6. Clock daylight300 seconds; record partial terminal days separately from full-day activity. Require strict meaningful idle<25%, physical crate delivery accounting, actual paid repairs and actual60 purchases on designated expansion days. Preserve starvation and no-space failures rather than declaring every late farm successful.
 7. Night100 native victory is followed by ordinary postgame continuation before180; do not simply waive victory or clear results in the runner. Keep original snapshots, frozen source hashes and all terminal failures per seed. Select additional seeds before launch; no rerolls.
 
+## Prepared async protocol continuation (not physically piloted)
+
+`native-campaign-runner.mjs` is a separate async runner so legacy synchronous tests do not change. It requires the parent-owned production `Game.nightEntryPending` handshake before creating a world; current32da does not have it. Driver/Node transport uses the production entry computation, advances presentation while native time ticks, and awaits readiness only when native pending has reached600. It checks unchanged serialized state around waits. Missing whole-group entry, worker failure or observational deadline throws with a retained partial serialized state; no timer manufactures an entry. Worker cleanup runs on every exit. No completed campaign is claimed from syntax checks.
+
+Preselected seeds are712,123,2026; four strategies are expansive, good, bad and no-walls. All default olderFemale and six plants per worker, with identical mixed planting/magic rules. Expansive adds legally accepted centre/village purchases; good repairs and hires mid-day; bad intentionally skips repairs and mid-day hiring; no-walls skips walls/repairs while retaining productive/magic effort. These differences are explicit management choices, not false exposure factors. Additional villages require native postgame permission: nights1–100 combat,101–180 peace. Pure opening forecast limits wages to actual cash and does not predict native throughput.
+
+Defense saving defaults to none, removing the arbitrary200–500 lockup. Optional next-stroke saving is explicit. Repeated orders only credit actually accepted native new pieces; paid preview IDs must name real structures. Native plot search revalidates reused slots and outward/return paths, requests finite camera regions and retains navigation/space failures. Its new residency traversal has not undergone a native opening diagnostic; compile success does not prove stable camera or60 purchases. Expansion attempts are bounded scheduled previews, not free villages/centres.
+
+### Preserved native recovery discrepancy
+
+The declared `dawnMinimum` with intact centre and empty field is35. Native fixture35 hires one elder for30, leaving5; planting a seed for5 is then rejected because purchases must preserve30. Fixture65 hires30, plants5, leaves30 and creates the ordinary initial task. The hiring pause forbids planting before the daily contract. Tests use explicit fixture funding, not a claimed new-game trajectory. Neither QA nor this protocol raises dawnMinimum, bypasses purchase budgeting or labels every cash35–64 field defeated. These are different declared and reachable-action thresholds requiring production review.
+
 ## Validation scope
 
-Six short contracts pass: three funded native construction/turnover fixtures, plus three observer ledger/repair/day-boundary contracts. Construction fixture credit is explicitly test setup, not evidence of affordable new-game growth. No campaign, GPU benchmark,100/180-night or physical defense acceptance has run on this branch. Observer tests validate telemetry semantics rather than worker navigation. CPU-heavy opening diagnostics require coordinated release and a frozen runtime protocol.
+Nine short contracts pass (344.4646ms): three funded native construction/turnover fixtures, three observer ledger/repair/day-boundary contracts, and three recovery/protocol contracts. Construction fixture credit is explicitly test setup, not evidence of affordable new-game growth. No campaign, GPU benchmark,100/180-night or physical defense acceptance has run on this branch. Observer tests validate telemetry semantics rather than worker navigation. CPU-heavy opening diagnostics require coordinated release and a frozen runtime protocol.
