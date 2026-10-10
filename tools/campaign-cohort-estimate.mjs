@@ -11,7 +11,7 @@ export function seedPurchaseReserve(livingPlants,policy=null) {
  if(!Number.isSafeInteger(livingPlants)||livingPlants<0)throw Error('Invalid living plant count');
  return livingPlants===0?0:policy?Math.max(30,Math.ceil((livingPlants+1)/6)*30*policy.reserveDays):30;
 }
-export function estimate(input,{days=100,scale=.475,wallCost=3,exposure=.1,defend=true,scarcity=null,policy=null}={}) {
+export function estimate(input,{days=100,scale=.475,wallCost=3,exposure=.1,defend=true,scarcity=null,policy=null,onHarvest=null,onSeedPurchase=null,onCropLoss=null}={}) {
  if(policy&&(!Number.isFinite(policy.reserveDays)||policy.reserveDays<0||!['fixed-budget','perimeter-budget'].includes(policy.walls)))throw Error('Invalid estimate policy');
  const B=structuredClone(input.referenceBalance),original=Object.fromEntries(B.crops.map(c=>[c.id,c.base_harvest_value]));
  for(const c of B.crops)c.base_harvest_value=Math.ceil(c.base_harvest_value*scale);
@@ -36,6 +36,7 @@ export function estimate(input,{days=100,scale=.475,wallCost=3,exposure=.1,defen
   for(const cohort of cohorts)if(cohort.readyDay<=day&&remaining>0) {
    const count=Math.min(cohort.count,remaining),crop=B.crops.find(c=>c.id===cohort.species);
    cohort.count-=count;remaining-=count;harvested+=count;income+=count*crop.base_harvest_value;
+   if(count)onHarvest?.({day,species:crop.id,count,unitPayout:crop.base_harvest_value,income:count*crop.base_harvest_value});
   }
   cash+=income;
   // Budgeted partial construction; wall count does not prove enclosure/protection.
@@ -52,6 +53,7 @@ export function estimate(input,{days=100,scale=.475,wallCost=3,exposure=.1,defen
    const reserve=seedPurchaseReserve(stock(),policy);
    const seedCost=scarcity?seedQuote(crop.plant_cost,stock(),scarcity):crop.plant_cost;
    if(cash-seedCost<reserve)break;
+   onSeedPurchase?.({day,species:crop.id,baseSeed:crop.plant_cost,unitQuote:seedCost,unitPayout:crop.base_harvest_value,livingBeforePurchase:stock()});
    cash-=seedCost;seeds+=seedCost;planted++;if(day>=10)seedIndex++;
    const readyDay=day+Math.max(1,Math.ceil(crop.growth_seconds/B.clock.day_seconds));
    const previous=cohorts.find(c=>c.species===crop.id&&c.readyDay===readyDay);
@@ -65,7 +67,7 @@ export function estimate(input,{days=100,scale=.475,wallCost=3,exposure=.1,defen
   const killed=Math.min(preRaid,Math.floor(expected),day<=5?Math.max(0,Math.min(preRaid-1,Math.ceil(preRaid*.2))):Infinity);
   lossCarry=preRaid>killed?expected%1:0;
   // Approximate species selection: oldest cohorts first. No individual hit proof.
-  let lost=killed;for(const c of cohorts){const n=Math.min(c.count,lost);c.count-=n;lost-=n;}
+  let lost=killed;for(const c of cohorts){const n=Math.min(c.count,lost);c.count-=n;lost-=n;if(n)onCropLoss?.({day,species:c.species,count:n});}
   rows.push({day,status:'estimate',cash,plants:stock(),walls,newWalls,animals:raid.animals,animalMin:raid.min,animalMax:raid.max,force,targets,value,openingPlants,staff,wages,income,harvested,planted,seeds,wallSpend,killed,effectiveExposure});
   if(cash!==before-wages+income-seeds-wallSpend||stock()!==openingPlants+planted-harvested-killed)throw Error('Accounting conservation failed');
  }
