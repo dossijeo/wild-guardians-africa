@@ -6,6 +6,7 @@ import {numberOf,rational} from '../src/simulation/money.js';
 import {cropSpec} from '../src/simulation/rules.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {createQ7LabourPolicy} from '../tools/native-q7-labour-policy.mjs';
+import {createQ8LabourPolicy} from '../tools/native-q8-labour-policy.mjs';
 import {parseNativeCampaignArgs,nativeCampaignProvenance} from '../tools/run_native_campaign.mjs';
 function fixture(){
  const s=Game.newGame({seed:712,slotId:'q7-fixture'}),nav=new Navigation(712,'sabana');
@@ -56,4 +57,17 @@ test('Q7 remains explicit opt-in with source provenance and historical policies 
  const options=parseNativeCampaignArgs(['--out','fixture','--labour-policy','q7']);assert.equal(options.labourPolicy,'q7');
  assert(nativeCampaignProvenance(options).sourceHashes['tools/native-q7-labour-policy.mjs']);
  assert.equal(parseNativeCampaignArgs(['--out','fixture']).labourPolicy,'legacy');
+});
+
+test('Q8 differs only in affordable six-worker startup; native wages and receipt gates remain',()=>{
+ const s=Game.newGame({seed:712,slotId:'q8-paid'}),nav=new Navigation(712,'sabana');
+ nav.field={canyon:false,riverLevel:0,surface:()=>0,slope:()=>0,fluidInside:()=>false};nav.propsAt=()=>[];nav.setState(s);
+ Game.placeStructure(s,'center',{x:-15,z:0},nav);Game.plant(s,'first','mijo',0,0,nav);
+ const q=createQ8LabourPolicy(),options=parseNativeCampaignArgs(['--out','fixture','--labour-policy','q8']);
+ assert.equal(options.labourPolicy,'q8');assert.equal(q.dawn(s).staff,6);assert.equal(q.dawn(s).cost,180);
+ assert.equal(q.report().settings.openingStaff,6);assert.equal(q.report().settings.lastTrialTime,180);
+ Game.openInitialHiring(s);Game.hire(s,'paid-six',{olderFemale:6});q.hired(s,6,{daily:true});assert.equal(s.workers.length,6);assert.equal(s.ledger.entries['paid-six'].n,'-180');
+ assert.equal(q.reserve(),180);s.day=2;s.ledger.balance=rational(179);assert.equal(q.dawn(s).staff,5);
+ assert.throws(()=>createQ7LabourPolicy({openingStaff:NaN}));assert.throws(()=>createQ7LabourPolicy({openingStaff:0}));
+ assert(nativeCampaignProvenance(options).sourceHashes['tools/native-q8-labour-policy.mjs']);
 });

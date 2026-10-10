@@ -4,7 +4,8 @@ import {PROFILES} from '../src/simulation/workforce.js';
 import {cropSpec} from '../src/simulation/rules.js';
 import {numberOf} from '../src/simulation/money.js';
 export const Q7_SETTINGS=Object.freeze({openingStaff:3,lastTrialTime:180});
-export function createQ7LabourPolicy({profile='olderFemale'}={}){
+export function createQ7LabourPolicy({profile='olderFemale',openingStaff=Q7_SETTINGS.openingStaff}={}){
+ if(!Number.isSafeInteger(openingStaff)||openingStaff<1)throw Error('Invalid explicit opening staff');
  const base=createQ6LabourPolicy({profile}),p=PROFILES.find(p=>p.id===profile);
  let started=false,trial=null;const seen=new Set(),history=[];
  const observe=s=>{
@@ -23,8 +24,8 @@ export function createQ7LabourPolicy({profile='olderFemale'}={}){
  return {...base,observe,
   dawn(s,options={}){
    const plan=base.dawn(s,options);if(started||s.day!==1)return plan;
-   const staff=Math.min(Q7_SETTINGS.openingStaff,Math.floor(plan.cash/p.wage)),cost=staff*p.wage,afterPayment=plan.cash-cost;
-   return {...plan,staff,cost,desired:Q7_SETTINGS.openingStaff,afterPayment,recoveryReserve:cost,workingCapitalShortfall:Math.max(0,cost-afterPayment),purchaseBudgetShortfall:Math.max(0,cost+plan.pendingRepair+plan.seedCost-afterPayment),risk:afterPayment<cost,capacityReduced:staff<Q7_SETTINGS.openingStaff,reason:'explicit payable three-worker startup'};
+   const staff=Math.min(openingStaff,Math.floor(plan.cash/p.wage)),cost=staff*p.wage,afterPayment=plan.cash-cost;
+   return {...plan,staff,cost,desired:openingStaff,afterPayment,recoveryReserve:cost,workingCapitalShortfall:Math.max(0,cost-afterPayment),purchaseBudgetShortfall:Math.max(0,cost+plan.pendingRepair+plan.seedCost-afterPayment),risk:afterPayment<cost,capacityReduced:staff<openingStaff,reason:openingStaff===3?'explicit payable three-worker startup':`explicit payable ${openingStaff}-worker startup`};
   },
   additional(s,options={}){
    observe(s);const plan=base.additional(s,options);if(!plan)return null;
@@ -43,6 +44,6 @@ export function createQ7LabourPolicy({profile='olderFemale'}={}){
    }else{trial=null;started=true;}
    base.hired(s,count,options);
   },
-  report:()=>structuredClone({settings:Q7_SETTINGS,history,scope:'Actual receipt screen, not causal marginal profit; no cash is granted from diagnostic replacement margin.'})
+  report:()=>structuredClone({settings:{...Q7_SETTINGS,openingStaff},history,scope:'Actual receipt screen, not causal marginal profit; no cash is granted from diagnostic replacement margin.'})
  };
 }
