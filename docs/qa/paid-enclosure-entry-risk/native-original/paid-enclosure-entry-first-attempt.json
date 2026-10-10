@@ -1,0 +1,9 @@
+{
+  "command": "node tools/diagnose_paid_enclosure_entry.mjs .cache/paid-enclosure-entry-01.json",
+  "exitCode": 1,
+  "sourceSHA256": "1c87bfa77acb637c1618868bc8ae131c7430cbb010bcd23551b4c6546877d747",
+  "failure": "Fixture incorrectly asserted Game.hire return===true; native API returns undefined after successful paid hiring",
+  "stackLine": 26,
+  "resultPayloadWritten": false,
+  "noGameplayChange": true
+}

@@ -1,0 +1,10 @@
+{
+  "command": "node tools/diagnose_paid_enclosure_entry.mjs .cache/paid-enclosure-entry-02.json",
+  "exitCode": 1,
+  "sourceSHA256": "bc11ade16f9857f57067801eea574f6178a61abd9475f420fd7207ecb0ecee38",
+  "failure": "Declared inside-camera paid fixture did not satisfy internal entry assertion",
+  "stackLine": 37,
+  "resultPayloadWritten": false,
+  "rawLimitation": "Assertions preceded report writing in this new fixture; no historical result invented",
+  "noGameplayChange": true
+}

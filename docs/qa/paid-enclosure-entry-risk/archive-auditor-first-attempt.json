@@ -1,0 +1,8 @@
+{
+  "command": "node tools/audit_paid_enclosure_entry_archive.mjs docs/qa/paid-enclosure-entry-risk .cache/paid-enclosure-entry-archive-audit.json",
+  "exitCode": 1,
+  "failure": "Whole row comparison across version03 focus and version04 viewTarget/operationalCenter metadata names",
+  "resultPayloadWritten": false,
+  "originalPayloadsChanged": false,
+  "rawStdoutRetained": false
+}
