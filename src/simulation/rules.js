@@ -6,7 +6,7 @@ export const animalSpec = id => { const c=B.animals.find(c=>c.id===id); if(!c)th
 export const wallSpec = id => { const c=B.walls.find(c=>c.id===id); if(!c)throw new Error('Material desconocido'); return c; };
 export function villageCost(ordinal) {
   if(!Number.isSafeInteger(ordinal)||ordinal<2) throw new Error('Ordinal de poblado inválido');
-  return 50000+25000*(ordinal-2);
+  return B.postgame.additional_village_cost.fixed_cost;
 }
 export const operational = c => c.kind==='center' && c.status==='intact';
 export const spellUnlocked=(state,kind)=>kind==='shield'?state.day>=1&&state.time>=300||state.day>1:kind==='growth'?state.day>=3:kind==='multiply'?state.day>=5:false;
@@ -62,4 +62,3 @@ export function nextRandom(state) {
   return state.rng/4294967296;
 }
 export const randomInt=(state,a,b)=>a+Math.floor(nextRandom(state)*(b-a+1));
-

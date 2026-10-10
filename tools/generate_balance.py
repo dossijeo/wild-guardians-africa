@@ -5,6 +5,10 @@ balance=json.loads((root/'content/balance/balance_confirmado.json').read_text(en
 revisions=json.loads((root/'content/balance/player_revisions.json').read_text(encoding='utf-8'))
 balance['initial_money']=revisions['initial_money']
 balance['workers'].update(revisions['workers'])
+additional_village_cost=revisions['additional_village_cost']
+if type(additional_village_cost) is not int or additional_village_cost<=0:
+    raise SystemExit('Additional villages require a positive fixed integer price')
+balance['postgame']['additional_village_cost'].update({'formula':str(additional_village_cost),'fixed_cost':additional_village_cost})
 # These amounts are spoken in existing tutorial audio. Later economic pilots
 # may vary other parameters, but must not invalidate those instructions.
 if balance['work_center']['cost'] != 800:
