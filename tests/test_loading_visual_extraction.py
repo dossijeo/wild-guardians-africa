@@ -59,6 +59,30 @@ class ExtractionTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'CRC'):
             extractor.png_dimensions(broken)
 
+    def test_advanced_catchup_frames_preserve_original_metadata(self):
+        labels = ['initial', 'preplant', 'additional-plant', 'catchup-mid', 'late', 'mature']
+        frames = [{**self.frame, 'label': label, 'presentationTime': i,
+                   'animationProgress': .65, 'fifthAge': .3 if label == 'catchup-mid' else None}
+                  for i, label in enumerate(labels)]
+        self.write(frames)
+        original = self.source.read_bytes()
+        receipt = extractor.extract(self.source, self.output)
+        self.assertEqual(self.source.read_bytes(), original)
+        self.assertEqual([f['label'] for f in receipt['frames']], labels)
+        self.assertEqual(receipt['frames'][3]['fifthAge'], .3)
+        self.assertEqual(receipt['frames'][1]['animationProgress'], .65)
+        self.assertFalse(receipt['sourceOk'])
+        for label in labels:
+            self.assertEqual((self.output / (label + '.png')).read_bytes(), PNG)
+
+    def test_new_labels_do_not_expand_six_frame_or_duplicate_limits(self):
+        for frames in ([{**self.frame, 'label': 'preplant'}] * 2,
+                       [{**self.frame, 'label': label} for label in sorted(extractor.LABELS)]):
+            self.write(frames)
+            with self.assertRaises(ValueError):
+                extractor.extract(self.source, self.output)
+            self.assertFalse(self.output.exists())
+
 
 if __name__ == '__main__':
     unittest.main()

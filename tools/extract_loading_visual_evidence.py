@@ -12,7 +12,7 @@ import struct
 import zlib
 
 LIMIT = 20_000_000
-LABELS = {'initial', 'additional-plant', 'mature', 'late', 'middle'}
+LABELS = {'initial', 'additional-plant', 'mature', 'late', 'middle', 'preplant', 'catchup-mid'}
 
 
 def png_dimensions(data):
