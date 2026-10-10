@@ -11,14 +11,18 @@ export function seedPurchaseReserve(livingPlants,policy=null) {
  if(!Number.isSafeInteger(livingPlants)||livingPlants<0)throw Error('Invalid living plant count');
  return livingPlants===0?0:policy?Math.max(30,Math.ceil((livingPlants+1)/6)*30*policy.reserveDays):30;
 }
-export function estimate(input,{days=100,scale=.475,wallCost=3,exposure=.1,defend=true,scarcity=null,policy=null,onHarvest=null,onSeedPurchase=null,onCropLoss=null}={}) {
+export function estimate(input,{days=100,scale=.475,wallCost=3,exposure=.1,defend=true,scarcity=null,policy=null,onHarvest=null,onSeedPurchase=null,onCropLoss=null,maintenance=false,postgame=null}={}) {
  if(policy&&(!Number.isFinite(policy.reserveDays)||policy.reserveDays<0||!['fixed-budget','perimeter-budget'].includes(policy.walls)))throw Error('Invalid estimate policy');
  const B=structuredClone(input.referenceBalance),original=Object.fromEntries(B.crops.map(c=>[c.id,c.base_harvest_value]));
  for(const c of B.crops)c.base_harvest_value=Math.ceil(c.base_harvest_value*scale);
  const cohorts=[{species:'mijo',count:1,readyDay:2}],rows=[];
  let cash=1500-800-5,walls=0,seedIndex=0,deliveryCarry=0,lossCarry=0,peakStock=1;
+ let wallPool=[],replacementDebt=0,postgamePlantTarget=null;
+ const wallHP=B.walls.find(w=>w.id==='zarzas').hp;
  const stock=()=>cohorts.reduce((n,c)=>n+c.count,0);
  for(let day=1;day<=days;day++) {
+  const isPostgame=postgame&&day>=postgame.fromDay;
+  if(isPostgame&&postgamePlantTarget===null)postgamePlantTarget=postgame.holdField?stock():Infinity;
   const before=cash,openingPlants=stock(),recoveryMinimum=openingPlants?30:35;
   if(cash<recoveryMinimum) {
    rows.push({day,cash,plants:openingPlants,walls,status:'below simplified recovery minimum; not native defeat',animals:null,force:null});
@@ -39,16 +43,24 @@ export function estimate(input,{days=100,scale=.475,wallCost=3,exposure=.1,defen
    if(count)onHarvest?.({day,species:crop.id,count,unitPayout:crop.base_harvest_value,income:count*crop.base_harvest_value});
   }
   cash+=income;
+  let repairs=0;
+  if(maintenance&&defend)for(const wall of wallPool)if(wall.hp<wallHP) {
+   const price=Math.ceil(wallCost*(wallHP-wall.hp)/wallHP);
+   const reserve=Math.max(35,Math.ceil(stock()/6)*30*(policy?.reserveDays??1));
+   if(cash-price>=reserve){cash-=price;repairs+=price;wall.hp=wallHP;}
+  }
   // Budgeted partial construction; wall count does not prove enclosure/protection.
   peakStock=Math.max(peakStock,stock());
   const perimeterTarget=Math.ceil(8*Math.ceil((Math.sqrt(peakStock*2.25)/2+3)/6)*6/2.18);
   const wallLimit=policy?.walls==='perimeter-budget'?Math.max(0,perimeterTarget-walls):32;
   const wallReserve=policy?Math.max(35,Math.ceil(stock()/6)*30*policy.reserveDays):35;
-  const newWalls=defend&&day>=2?Math.min(32,wallLimit,Math.floor(Math.max(0,cash-wallReserve)*.2/wallCost)):0;
+  const newWalls=defend&&day>=2?Math.min(32,wallLimit,Math.floor(Math.max(0,cash-wallReserve)*(policy?.wallFraction??.2)/wallCost)):0;
   const wallSpend=newWalls*wallCost;cash-=wallSpend;walls+=newWalls;
+  const replacements=maintenance?Math.min(newWalls,replacementDebt):0;replacementDebt-=replacements;
+  if(maintenance)for(let i=0;i<newWalls;i++)wallPool.push({hp:wallHP});
   let planted=0,seeds=0;
   // Millet through day 9, then fixed species sequence in both strategies.
-  while(planted<(day===1?116:280)) {
+  while(planted<(day===1?116:280)&&(!isPostgame||stock()<postgamePlantTarget)) {
    const crop=day<=9?B.crops.find(c=>c.id==='mijo'):B.crops[seedIndex%B.crops.length];
    const reserve=seedPurchaseReserve(stock(),policy);
    const seedCost=scarcity?seedQuote(crop.plant_cost,stock(),scarcity):crop.plant_cost;
@@ -60,16 +72,24 @@ export function estimate(input,{days=100,scale=.475,wallCost=3,exposure=.1,defen
    if(previous)previous.count++;else cohorts.push({species:crop.id,count:1,readyDay});
   }
   peakStock=Math.max(peakStock,stock());
-  const preRaid=stock(),value=cohorts.reduce((n,c)=>n+c.count*original[c.species],0),raid=nightlyExpectation(B,day,value);
+  const preRaid=stock(),value=cohorts.reduce((n,c)=>n+c.count*original[c.species],0),raid=isPostgame?{animals:0,min:0,max:0,hits:0,damage:0}:nightlyExpectation(B,day,value);
   const targets=day<=5?1:Math.floor(1+7*value/(value+10000)),force=day<=5||value<60000?1:2;
-  const effectiveExposure=defend&&walls===0?.9:exposure;
+  const wallQuota=Math.ceil(8*Math.ceil((Math.sqrt(preRaid*2.25)/2+3)/6)*6/2.18);
+  const effectiveExposure=maintenance?(defend&&wallPool.length>=wallQuota?exposure:.9):(defend&&walls===0?.9:exposure);
   const expected=raid.hits*.9*effectiveExposure*.85*targets*force/2+lossCarry;
   const killed=Math.min(preRaid,Math.floor(expected),day<=5?Math.max(0,Math.min(preRaid-1,Math.ceil(preRaid*.2))):Infinity);
   lossCarry=preRaid>killed?expected%1:0;
   // Approximate species selection: oldest cohorts first. No individual hit proof.
   let lost=killed;for(const c of cohorts){const n=Math.min(c.count,lost);c.count-=n;lost-=n;if(n)onCropLoss?.({day,species:c.species,count:n});}
-  rows.push({day,status:'estimate',cash,plants:stock(),walls,newWalls,animals:raid.animals,animalMin:raid.min,animalMax:raid.max,force,targets,value,openingPlants,staff,wages,income,harvested,planted,seeds,wallSpend,killed,effectiveExposure});
-  if(cash!==before-wages+income-seeds-wallSpend||stock()!==openingPlants+planted-harvested-killed)throw Error('Accounting conservation failed');
+  let wallsDestroyed=0;
+  const wallDamage=maintenance?raid.damage*.9*(1-effectiveExposure)*.85:0;
+  if(maintenance){
+   let damage=wallDamage;
+   for(const wall of wallPool){if(damage<=0)break;const applied=Math.min(damage,Math.max(0,wall.hp-wallHP*.2));wall.hp-=applied;damage-=applied;if(wall.hp<=wallHP*.2+1e-9){wall.hp=0;wallsDestroyed++;}}
+   wallPool=wallPool.filter(w=>w.hp>0);walls=wallPool.length;replacementDebt+=wallsDestroyed;
+  }
+  rows.push({day,status:'estimate',cash,plants:stock(),walls,newWalls,animals:raid.animals,animalMin:raid.min,animalMax:raid.max,force,targets,value,openingPlants,staff,wages,income,harvested,planted,seeds,wallSpend,killed,effectiveExposure,...(maintenance?{repairs,replacements,wallsDestroyed,wallDamage,wallQuota,wallHPRemaining:wallPool.reduce((n,w)=>n+w.hp,0),replacementDebt}:{}),...(postgame?{postgame:!!isPostgame,postgamePlantTarget:Number.isFinite(postgamePlantTarget)?postgamePlantTarget:null}: {})});
+  if(cash!==before-wages+income-seeds-wallSpend-repairs||stock()!==openingPlants+planted-harvested-killed)throw Error('Accounting conservation failed');
  }
  return rows;
 }
