@@ -1,3 +1,4 @@
+import {frozenSource} from './frozen-loading-source.js';
 import {normalizeTrace} from './native-loading-trace-source-normalize.js';
 import test from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';import {runInNewContext} from 'node:vm';import {execFileSync} from 'node:child_process';
 import {BrowserSaveRepository} from '../src/persistence/browser-saves.js';
@@ -33,7 +34,7 @@ test('replaced iframe cannot validate a stale reply and later events cannot repo
  f.emit({type:'wild-guardians:menu-data',slots:[{slotId:'owned'}]});assert.equal(f.listeners.size,0);
 });
 test('only fixture flow changed; defaults/world/visibility gates and App preview source are intact',()=>{
- const baseline=execFileSync('git',['show','b76cda99:src-tauri/smoke.js'],{encoding:'utf8'}).replaceAll('\r\n','\n');
+ const baseline=frozenSource('b76cda99','src-tauri/smoke.js').replaceAll('\r\n','\n');
  const block=`    if (fixture) {
       localStorage.setItem('wild-guardians:slot:'+fixture.slotId,fixture.snapshot);
       report.checks.fixtureMenuList=await listFixtureForSmoke(menu,fixture,send);

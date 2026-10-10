@@ -1,3 +1,4 @@
+import {frozenSource} from './frozen-loading-source.js';
 import {normalizeTrace} from './native-loading-trace-source-normalize.js';
 import test from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';import {execFileSync} from 'node:child_process';import {runInNewContext} from 'node:vm';
 import {installNativeLoadingTrace} from '../src/app/native-loading-trace-bridge.js';import {loadingAwaitWitness} from '../src/rendering/loading-sync-witness.js';
@@ -39,7 +40,7 @@ test('trace finish copies pending diagnosis but leaves original ok/failure gates
  const report=await runInNewContext(`${finish}\n(async()=>{await finish(Error('Original90s timeout'));return report;})()`,context);assert.equal(report.ok,false);assert.equal(report.checks.nativeLoadingTrace.pending[0].label,'load');assert.ok(report.errors.includes('Error: Original90s timeout'));
 });
 test('App trace wiring retains ordinary source exactly outside narrow smoke diagnostics',()=>{
- const base=execFileSync('git',['show','71917b71:src/app/main.js'],{encoding:'utf8'}).replaceAll('\r\n','\n');
+ const base=frozenSource('71917b71','src/app/main.js').replaceAll('\r\n','\n');
  const actual=normalizeTrace('src/app/main.js',readFileSync('src/app/main.js','utf8')).replace("import {installNativeLoadingTrace} from './native-loading-trace-bridge.js';\n",'').replace('let owner,diorama,trace;','let owner,diorama;').replace('trace=installNativeLoadingTrace(owner);','').replace(',trace,visual:',',visual:').replace('pending.trace?.close({cancelled:true});','').replace('prepared.trace?.connect();','').replace('prepared.trace?.close();','');assert.equal(actual,base);
  const rust=readFileSync('src-tauri/src/main.rs','utf8');assert.match(rust,/--smoke-report[\s\S]*--smoke-loading-trace/);const bridge=readFileSync('src/app/native-loading-trace-bridge.js','utf8');for(const forbidden of ['setTimeout','requestAnimationFrame','new WebGLRenderer','canvas.getContext','fetch('])assert.equal(bridge.includes(forbidden),false);
 });
@@ -52,7 +53,7 @@ test('graphics snapshot uses existing renderer once only under opt-in, and conte
 });
 
 test('only exact trace hunks differ from frozen ordinary Rust and smoke sources',()=>{
- for(const file of ['src-tauri/src/main.rs','src-tauri/smoke.js'])assert.equal(normalizeTrace(file,readFileSync(file,'utf8')),execFileSync('git',['show','71917b71:'+file],{encoding:'utf8'}).replaceAll('\r\n','\n'));
+ for(const file of ['src-tauri/src/main.rs','src-tauri/smoke.js'])assert.equal(normalizeTrace(file,readFileSync(file,'utf8')),frozenSource('71917b71',file).replaceAll('\r\n','\n'));
 });
 test('prior callback exceptions and optional getter faults preserve flow and terminal cleanup',async()=>{
  const f=setup(),error=Error('prior failure');function prior(){throw error;}prior.onAwaitStart=()=>({});prior.onAwaitEnd=()=>{throw error;};f.world.onLoadingSpan=prior;

@@ -1,3 +1,4 @@
+import {frozenSource} from './frozen-loading-source.js';
 import test from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';import {spawnSync,execFileSync} from 'node:child_process';
 import {loadWorldCropPair} from '../src/rendering/world-crop-pair.js';import {WorldScene} from '../src/rendering/scene.js';
 const deferred=()=>{let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return {promise,resolve,reject};};
@@ -18,7 +19,7 @@ test('real generic Assets + meshopt World callpath retains New/Continue40/32 and
  for(const args of [[],['--pair-overlap']]){const result=spawnSync(process.execPath,['--experimental-loader','./tests/fixtures/world-load-crop-default-loader.mjs','./tests/fixtures/world-load-crop-default.mjs',...args],{encoding:'utf8',timeout:30000});assert.equal(result.status,0,result.stdout+'\n'+result.stderr);assert.match(result.stdout,/New \+ saved Continue PASS/);}
 });
 test('GPU warm, variants, chunk/far fences and remaining source recipe are byte-identical',()=>{
- const base=execFileSync('git',['show','9cc3ba2f:src/rendering/scene.js'],{encoding:'utf8'}).replaceAll('\r\n','\n');let actual=readFileSync('src/rendering/scene.js','utf8');
+ const base=frozenSource('9cc3ba2f','src/rendering/scene.js').replaceAll('\r\n','\n');let actual=readFileSync('src/rendering/scene.js','utf8');
  actual=actual.replace("import {loadWorldCropPair} from './world-crop-pair.js';\n",'');const start=actual.indexOf('    // Experimental scheduling only:'),end=actual.indexOf('    const gltf=cropPair?',start);actual=actual.slice(0,start)+actual.slice(end);actual=actual.replace('const gltf=cropPair?cropPair.gltf:await','const gltf=await');actual=actual.replace('if(cropPair)this.cropBridgeData=cropPair.data;else{','').replace('}this.cropBatch=','this.cropBatch=');assert.equal(actual,base);
 });
 

@@ -1,3 +1,4 @@
+import {frozenSource} from './frozen-loading-source.js';
 import test from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';import {execFileSync,spawnSync} from 'node:child_process';import {runInNewContext} from 'node:vm';
 import {applyLoadingCropPairOverlap} from '../src/app/loading-crop-pair-option.js';import {normalizePairWiring} from './world-crop-pair-wiring-normalize.js';
 test('only strict opt-in mutates the selected owner; absent/false/string leave defaults untouched',()=>{
@@ -5,7 +6,7 @@ test('only strict opt-in mutates the selected owner; absent/false/string leave d
  const owner={},other={};applyLoadingCropPairOverlap(owner,{__desktopSmokeCropPairOverlap:true});assert.deepEqual(owner,{loadingCropPairOverlap:true});assert.deepEqual(other,{});
 });
 test('wiring outside exact hunks matches reviewed71d4; native guards and unchanged deadlines',()=>{
- for(const file of ['src/app/main.js','src-tauri/src/main.rs','src-tauri/smoke.js','.github/workflows/windows.yml'])assert.equal(normalizePairWiring(file,readFileSync(file,'utf8')),execFileSync('git',['show','71d4db4e:'+file],{encoding:'utf8'}).replaceAll('\r\n','\n'),file);
+ for(const file of ['src/app/main.js','src-tauri/src/main.rs','src-tauri/smoke.js','.github/workflows/windows.yml'])assert.equal(normalizePairWiring(file,readFileSync(file,'utf8')),frozenSource('71d4db4e',file).replaceAll('\r\n','\n'),file);
  const rust=readFileSync('src-tauri/src/main.rs','utf8');assert.match(rust,/--smoke-report[\s\S]*webview.label\(\) == "main"[\s\S]*--smoke-crop-pair-overlap[\s\S]*__desktopSmokeCropPairOverlap = true/);
  const app=readFileSync('src/app/main.js','utf8');assert.match(app,/owner=new WorldScene\(canvas,onPick\);applyLoadingCropPairOverlap\(owner\)/);assert.equal((app.match(/applyLoadingCropPairOverlap\(owner\)/g)||[]).length,1);
 });

@@ -1,3 +1,4 @@
+import {frozenSource} from './frozen-loading-source.js';
 import {normalizePairWiring} from './world-crop-pair-wiring-normalize.js';
 import {normalizeTrace} from './native-loading-trace-source-normalize.js';
 import test from 'node:test';
@@ -22,10 +23,10 @@ test('rejected preparation is observed and aborted owner cannot start a new mani
  await assert.rejects(prepareLoadingCropPartition(world),e=>e===error);loading.abort();await assert.rejects(prepareLoadingCropPartition(world),/cancelled/);
 });
 test('App retains current main rules and gates outside partition selection and opt-in visual connection',()=>{
- const base=execFileSync('git',['show','0e94d7be:src/app/main.js'],{encoding:'utf8'});
+ const base=frozenSource('0e94d7be','src/app/main.js');
  const actual=normalizeTrace('src/app/main.js',readFileSync('src/app/main.js','utf8')).replace("import {installLoadingVisualQa} from './loading-visual-bridge.js';\n",'').replace(',visual:installLoadingVisualQa(owner,diorama)','').replace('pending.visual?.close({cancelled:true});','').replace('loadingDiorama?.visualQa?.close({cancelled:true});','').replace('prepared.visual?.close();','').replace("import {prepareLoadingCropPartition} from './loading-crop-partition.js';\n",'').replace('prepareLoadingCropPartition(owner).then(()=>diorama.prepare())','diorama.prepare()');
  assert.equal(actual.replaceAll('\r\n','\n'),base.replaceAll('\r\n','\n'));
- for(const file of ['src/rendering/loading-programs.js','src/rendering/loading-yield-budget.js','src/app/loading-downloads.js','public/menu/native.js','src/ui/menu-integration.js','src/simulation/game.js','src-tauri/smoke.js','src-tauri/src/main.rs','.github/workflows/windows.yml'])assert.equal(normalizeQa(file,readFileSync(file,'utf8').replaceAll('\r\n','\n')),execFileSync('git',['show',(['src-tauri/smoke.js','src-tauri/src/main.rs'].includes(file)?'8fb7f437:':'0e94d7be:')+file],{encoding:'utf8'}).replaceAll('\r\n','\n'),file);
+ for(const file of ['src/rendering/loading-programs.js','src/rendering/loading-yield-budget.js','src/app/loading-downloads.js','public/menu/native.js','src/ui/menu-integration.js','src/simulation/game.js','src-tauri/smoke.js','src-tauri/src/main.rs','.github/workflows/windows.yml'])assert.equal(normalizeQa(file,readFileSync(file,'utf8').replaceAll('\r\n','\n')),frozenSource(['src-tauri/smoke.js','src-tauri/src/main.rs'].includes(file)?'8fb7f437':'0e94d7be',file).replaceAll('\r\n','\n'),file);
 });
 
 // QA branch adds only guarded evidence/action checks; strip these exact hunks
