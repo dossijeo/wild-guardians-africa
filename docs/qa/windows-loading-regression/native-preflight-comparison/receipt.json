@@ -1,0 +1,179 @@
+{
+  "base": "38369875ed471404887401c1e876ab8c10b4f5d6",
+  "userApprovedPolicyCommit": "bd67ec5aaaa3447df9dbe0dacbb61c5a4ce2cfae",
+  "runtimeSourceChanges": [
+    ".github/workflows/windows.yml",
+    "src-tauri/smoke.js",
+    "src-tauri/src/main.rs",
+    "tests/desktop-smoke-failure-observation.test.js",
+    "tests/desktop-smoke-fixture-menu.test.js",
+    "tests/desktop-smoke-preflight-comparison.test.js",
+    "tests/fixtures/partition-visual-normalizer.mjs",
+    "tests/fixtures/preflight-comparison-baseline.json",
+    "tests/fixtures/preflight-comparison-hunks.json",
+    "tests/fixtures/preflight-comparison-normalizer.mjs"
+  ],
+  "source": [
+    {
+      "path": ".github/workflows/windows.yml",
+      "sha256": "da4288fe49b6dea2d99211fb47cb28cadc34c7f9bccceca488efb913d4837e76"
+    },
+    {
+      "path": "src-tauri/smoke.js",
+      "sha256": "af9625cb6d766a8b52cef63e1e2c99957af129d782d64366e69d5f0d4462fadd"
+    },
+    {
+      "path": "src-tauri/src/main.rs",
+      "sha256": "b71792b4f721abba7c72f5ecbbe397f59e915cec8fc61df5306ad5957e96b516"
+    },
+    {
+      "path": "tests/desktop-smoke-failure-observation.test.js",
+      "sha256": "a1071a9c6ba1988859fae448c8279b4eddfa9da023083f4fbf140a5f2ce69322"
+    },
+    {
+      "path": "tests/desktop-smoke-fixture-menu.test.js",
+      "sha256": "ade4bd0aa5d4b1de8277fdb909ae23c186cc04692e48a7dda7045f91d2233d9b"
+    },
+    {
+      "path": "tests/desktop-smoke-preflight-comparison.test.js",
+      "sha256": "dda88fb2329b7f16072ba44d8fdbaf531cac84a9b6ddf51be042691e1908fdbb"
+    },
+    {
+      "path": "tests/fixtures/partition-visual-normalizer.mjs",
+      "sha256": "cf57ab1f7e2e8fdd63c87dfef0b54a9f5d8c91e533a388ff51be15983b2463c5"
+    },
+    {
+      "path": "tests/fixtures/preflight-comparison-baseline.json",
+      "sha256": "f8b40461941e4da83a8a066594a0cc4bc9f2c1990a1f49dd9b945c053c0c41b0"
+    },
+    {
+      "path": "tests/fixtures/preflight-comparison-hunks.json",
+      "sha256": "af4e8e1310fcc1cfc3af4ee5a50cc6cbf449a935a6d510c13a51210adfedf9d1"
+    },
+    {
+      "path": "tests/fixtures/preflight-comparison-normalizer.mjs",
+      "sha256": "9854f79fe03f11b870a58a9f670f72c96eaac6a2d1488c411ee1b8c82a8ba75e"
+    }
+  ],
+  "protected": [
+    {
+      "path": "src/app/main.js",
+      "sha256Lf": "94b3788a0dcfff434b33b0b51dd89915eb1d710ab1af4d6ab1839a507baca4b8"
+    },
+    {
+      "path": "src/app/loading-visual-bridge.js",
+      "sha256Lf": "7bc93894bded6a26593b144144545c1da4f852616935842c6690a3691596311d"
+    },
+    {
+      "path": "src/app/loading-crop-partition.js",
+      "sha256Lf": "a579b25c68b6732727dc257cddb3086572c33b0a3445d4ff30ca1a6bda935b81"
+    },
+    {
+      "path": "src/rendering/loading-diorama.js",
+      "sha256Lf": "736a000a0e1921d4671eef1df917901f763b9f0d2d99fdfd520902bcdbb04cd3"
+    },
+    {
+      "path": "src/rendering/scene.js",
+      "sha256Lf": "689e707a33d3dbefdd5f008ff1f0d472b71738a5e4c3ee349c3aaf5fe832d418"
+    },
+    {
+      "path": "src/rendering/assets.js",
+      "sha256Lf": "7b071399ab96052f741e59c4590c1a5dcaa10a02c23ed01542e6f9ca5433ef1c"
+    },
+    {
+      "path": "src/rendering/crop-partition.js",
+      "sha256Lf": "41375b47870810090c60f641d21876f9a43d625e1d88d774c3f84887d4eb855a"
+    },
+    {
+      "path": "public/content/models.json",
+      "sha256Lf": "d42f6b54a3a5946fc652f1ac87c443cbda45075a10dc4cd49ca5de02a3c5e8c7"
+    },
+    {
+      "path": "public/content/crop-bridges.json",
+      "sha256Lf": "e133b79dc3a21c421a9eec9bd3aad8610967c69cc28eb003b7f06f072fd249d4"
+    }
+  ],
+  "logs": [
+    {
+      "path": "docs/qa/windows-loading-regression/native-preflight-comparison/initial-tests.log.gz",
+      "sha256": "3db0d8a5b8769c6682d6c1e9b7cb1db3e1687f0c58782412306472aaf37b1474",
+      "rawSha256": "5854c290d37e3861c02cf0be542fa9c94233cd547f667a7d57d2ea788fb24643",
+      "rawBytes": 3553
+    },
+    {
+      "path": "docs/qa/windows-loading-regression/native-preflight-comparison/contracts.log.gz",
+      "sha256": "d72766c0e9558aab7d25dcc6b9a0429eca3937088549940292a73a0f3a61a4e3",
+      "rawSha256": "5dc9ea6ac3b85fc13b75bb2a047c83d0ecfc38fcbfe8dc506744726fab5ca0c7",
+      "rawBytes": 5969
+    },
+    {
+      "path": "docs/qa/windows-loading-regression/native-preflight-comparison/policy-contracts.log.gz",
+      "sha256": "b6d78db4b1783694f566a9d88c315f84b621a873c96c71334bc3882a4b1aa776",
+      "rawSha256": "6e4331cd5af298ba2c1cbc832219dda9b50503a8e0e03183bcfcee1a577b8db5",
+      "rawBytes": 6246
+    },
+    {
+      "path": "docs/qa/windows-loading-regression/native-preflight-comparison/final-tests.log.gz",
+      "sha256": "241af5a8f43ca0da4b815a892f8b70baa906c7ac63c4a691dfd45e5cbe54b967",
+      "rawSha256": "96e03bbf2533098b13b0d49c34bff707be84f10d0b625e866500d0f2bcfb37c2",
+      "rawBytes": 9918
+    },
+    {
+      "path": "docs/qa/windows-loading-regression/native-preflight-comparison/build.log.gz",
+      "sha256": "e3979ce0c69d47018a137345f589d2f4149d478319cc6338e3cd85ab01710aff",
+      "rawSha256": "dffe2bcf0c299f8483f6d0a93eed4f588fd046a1bdf5847f5008d885f62ab798",
+      "rawBytes": 2321
+    },
+    {
+      "path": "docs/qa/windows-loading-regression/native-preflight-comparison/package.log.gz",
+      "sha256": "76562943a35b6176134749d14b39b5cb0c80583d5db58b7347f600fca83cc51a",
+      "rawSha256": "f5de5ce995e99fb4291df32eea696923585444cc210981b7a8a9ce32fdec35aa",
+      "rawBytes": 411
+    },
+    {
+      "path": "docs/qa/windows-loading-regression/native-preflight-comparison/syntax.log.gz",
+      "sha256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e",
+      "rawSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "rawBytes": 0
+    },
+    {
+      "path": "docs/qa/windows-loading-regression/native-preflight-comparison/sfx-check.log.gz",
+      "sha256": "133299a6ada03548887cf668af145a3c1571826a8c33d3711be61a8bd2bd9d85",
+      "rawSha256": "257e392abb76253e020752d0df78daa2e51462f8dad7c701f692bd698e1938e2",
+      "rawBytes": 272
+    }
+  ],
+  "checks": {
+    "tests": {
+      "passed": 41,
+      "failed": 0,
+      "durationMs": 425.5393
+    },
+    "build": {
+      "exit": 0,
+      "seconds": 10.94
+    },
+    "package": {
+      "exit": 0,
+      "files": 720,
+      "bytes": 445277937,
+      "relativeLinks": 860,
+      "runtimeGlbs": 24
+    },
+    "sfx": {
+      "stale": false,
+      "originalFiles": 126
+    }
+  },
+  "negative": {
+    "initialTestsExit": 1,
+    "reason": "Copied listing test expected a different fixture clock (302); selected immutable legal fixture actually has370.60000000001605. Assertion now checks repository preview against that fixture snapshot. No runtime change or weakened readiness."
+  },
+  "scope": {
+    "nativeExecuted": false,
+    "rustCompiled": false,
+    "timingBenchmark": false,
+    "actualGraphicsIdentity": "unknown; no safe context exported, no context acquisition attempted",
+    "leanCompatibilityPass": false
+  }
+}

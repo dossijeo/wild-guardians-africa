@@ -3,6 +3,10 @@
   if (window.__desktopSmokeStarted) return;
   window.__desktopSmokeStarted = true;
   const report = {ok: false, origin: location.origin, userAgent: navigator.userAgent, secureContext: isSecureContext, checks: {}, errors: []};
+  // Explicit CI tolerance is not a performance target. Local smoke keeps its
+  // original budget; always retain observed loading time independently.
+  const worldTimeoutMs = window.__desktopSmokeWorldTimeoutMs === 300000 ? 300000 : 90000;
+  report.checks.loadingBudget = {worldTimeoutMs, policy: worldTimeoutMs === 300000 ? 'ci-functional' : 'local-smoke'};
   const consoleError = console.error;
   console.error = (...args) => {report.errors.push(args.map(String).join(' ')); consoleError.apply(console, args);};
   const fail = event => report.errors.push(event.message || String(event.reason));
@@ -42,8 +46,28 @@
       if (!error && (!visual || !visual.frames?.length)) report.errors.push('Requested loading visual evidence is missing');
       report.checks.loadingVisualRunScope = 'Opt-in PNG readback/encoding overhead; not a loading-time or GPU benchmark. Frames are existing diorama canvas, not a composited HUD screenshot.';
     }
+    report.checks.worldGraphicsIdentity = {available: false,
+      scope: 'Unchanged App does not export an existing renderer context handle. No getContext/context acquisition attempted; actual hardware/software identity remains unknown.'};
     report.ok = !error && report.errors.length === 0;
     await window.__TAURI_INTERNALS__.invoke('desktop_smoke_report', {report});
+  }
+  async function listFixtureForSmoke(menu,fixture,send) {
+    const target=menu.contentWindow;
+    if(!target)throw Error('Fixture menu window is missing');
+    return await new Promise((resolve,reject)=>{
+      let settled=false,timer;
+      const cleanup=()=>{target.removeEventListener('message',receive);clearTimeout(timer);};
+      const end=(error,slot)=>{if(settled)return;settled=true;cleanup();if(error)reject(error);else resolve({listed:true,slotId:slot.slotId,preview:{day:slot.day,time:slot.time,biome:slot.biome,culture:slot.culture},scope:'Actual App listedSaves response, not manually decoded fixture clock.'});};
+      const receive=event=>{
+        if(event.origin!==location.origin||event.source!==window||event.data?.type!=='wild-guardians:menu-data'||!Array.isArray(event.data.slots))return;
+        if(menu.contentWindow!==target||document.querySelector('#app iframe')!==menu){end(Error('Fixture menu was replaced'));return;}
+        const slot=event.data.slots.find(slot=>slot?.slotId===fixture.slotId);
+        if(slot)end(null,slot);
+      };
+      target.addEventListener('message',receive);
+      timer=setTimeout(()=>end(Error('Fixture slot did not appear in actual menu save list')),10000);
+      try{send({action:'request-saves'});}catch(error){end(error);}
+    });
   }
   async function checkVisibility(fixture) {
     const transitions=[],wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
@@ -103,6 +127,14 @@
     return {passed:true,transitions,hiddenMs,visibleMs,resumedSimulatedSeconds:delta,hiddenStart:core(hiddenStart),hiddenEnd:core(hiddenEnd),visibleMenuPauses:visibleMenu.pauses,scope:'Real native minimization and restoration. Hidden is the sole blocker during the measured interval; menu is retained at its end to test stacked pauses on restoration. Save buttons intentionally add notices, so comparison covers simulation fields and excludes savedAt, notices, tutorial presentation and their nextId counter. No document.hidden override or synthetic visibilitychange.'};
   }
   try {
+    // QA-only comparison; full compatibility remains the default path.
+    const loadingOnly = window.__desktopSmokeLoadingOnly === true;
+    report.checks.preflightSkipped = loadingOnly;
+    const preflightStartedAt = performance.now();
+    report.checks.preflight = {mode: loadingOnly ? 'loading-only' : 'full', completed: false, startedAt: preflightStartedAt,
+      scope: 'Compatibility preflight wall interval before worldStartedAt; not exclusive CPU or loading readiness.'};
+    if (!loadingOnly) {
+      try {
     const load = async path => { const response = await fetch(new URL(path, location.href)); if (!response.ok) throw Error(`${path}: ${response.status}`); return response; };
     const manifest = await (await load('content/web-assets.json')).json();
     const {decodeWebGlb} = await import(new URL('runtime/glb-legacy.js', location.href));
@@ -133,6 +165,16 @@
     localStorage.setItem('wild-guardians:desktop-smoke', 'roundtrip');
     if (localStorage.getItem('wild-guardians:desktop-smoke') !== 'roundtrip') throw Error('Storage failed');
     localStorage.removeItem('wild-guardians:desktop-smoke'); report.checks.storage = true;
+        report.checks.preflight.completed = true;
+      } finally {
+        report.checks.preflight.finishedAt = performance.now();
+        report.checks.preflight.elapsedMs = report.checks.preflight.finishedAt - preflightStartedAt;
+      }
+    } else {
+      report.checks.preflight.finishedAt = performance.now();
+      report.checks.preflight.elapsedMs = report.checks.preflight.finishedAt - preflightStartedAt;
+      report.checks.preflight.scope = 'Compatibility intentionally skipped for diagnostic loading-only comparison; no model/WebGL/Worker/audio/storage compatibility PASS claim.';
+    }
     const end = performance.now() + 60000;
     while (!document.querySelector('#app iframe') && performance.now() < end) await new Promise(resolve => setTimeout(resolve, 100));
     const menu = document.querySelector('#app iframe');
@@ -141,10 +183,14 @@
     const send = data => dispatchEvent(new MessageEvent('message', {origin: location.origin, source: menu.contentWindow, data: {type: 'wild-guardians:menu', ...data}}));
     send({action: 'settings-change', settings: {quality: 'muy_baja', sfx: 0, music: 0}});
     const fixture = await window.__TAURI_INTERNALS__.invoke('desktop_smoke_fixture');
-    if (fixture) {localStorage.setItem('wild-guardians:slot:'+fixture.slotId,fixture.snapshot);send({action:'load-slot',slotId:fixture.slotId});}
+    if (fixture) {
+      localStorage.setItem('wild-guardians:slot:'+fixture.slotId,fixture.snapshot);
+      report.checks.fixtureMenuList=await listFixtureForSmoke(menu,fixture,send);
+      send({action:'load-slot',slotId:fixture.slotId});
+    }
     else send({action: 'start', biome: 'gran-canon', culture: 'mapungubwe'});
     worldStartedAt = performance.now();
-    const worldEnd = worldStartedAt + 90000;
+    const worldEnd = worldStartedAt + worldTimeoutMs;
     while (document.querySelector('#stage')?.getAttribute('aria-busy') !== 'false' && performance.now() < worldEnd) await new Promise(resolve => setTimeout(resolve, 100));
     if (document.querySelector('#stage')?.getAttribute('aria-busy') !== 'false') throw Error('Production world did not finish loading');
     worldReadyAt = performance.now();

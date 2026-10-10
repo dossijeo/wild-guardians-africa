@@ -5,10 +5,10 @@ import {runInNewContext} from 'node:vm';
 
 const source = await readFile(new URL('../src-tauri/smoke.js', import.meta.url), 'utf8');
 
-async function failedPreflight({query, focused = true, visualRequested=false, visual=null} = {}) {
+async function failedPreflight({query, focused = true, visualRequested=false, visual=null, worldTimeout} = {}) {
   let report;
   const context = {
-    window: {__desktopSmokeVisualCapture:visualRequested,__wildGuardiansLoadingVisualQa:visual,__TAURI_INTERNALS__: {invoke: async (command, args) => {
+    window: {__desktopSmokeWorldTimeoutMs:worldTimeout,__desktopSmokeVisualCapture:visualRequested,__wildGuardiansLoadingVisualQa:visual,__TAURI_INTERNALS__: {invoke: async (command, args) => {
       assert.equal(command, 'desktop_smoke_report'); report = args.report;
     }}},
     location: {origin: 'http://tauri.localhost', href: 'http://tauri.localhost/'},
@@ -21,6 +21,25 @@ async function failedPreflight({query, focused = true, visualRequested=false, vi
   await runInNewContext(source, context);
   return report;
 }
+
+test('CI functional tolerance is explicit and finite; local/default and malformed inputs retain 90 seconds',async()=>{
+ for(const value of [undefined,0,-1,Infinity,'300000',900000]){
+  const report=await failedPreflight({worldTimeout:value});
+  assert.equal(report.checks.loadingBudget.worldTimeoutMs,90000);
+  assert.equal(report.checks.loadingBudget.policy,'local-smoke');
+  assert.equal(report.ok,false,'a larger budget cannot turn a preflight error into success');
+ }
+ const ci=await failedPreflight({worldTimeout:300000});
+ assert.equal(ci.checks.loadingBudget.worldTimeoutMs,300000);
+ assert.equal(ci.checks.loadingBudget.policy,'ci-functional');
+ assert.equal(ci.ok,false);
+ const rust=await readFile(new URL('../src-tauri/src/main.rs',import.meta.url),'utf8');
+ assert.match(rust,/arg == "--smoke-report"[\s\S]*WG_DESKTOP_SMOKE_CI[\s\S]*__desktopSmokeWorldTimeoutMs = 300000/);
+ const workflow=await readFile(new URL('../.github/workflows/windows.yml',import.meta.url),'utf8');
+ assert.match(workflow,/WG_DESKTOP_SMOKE_CI: '1'/);
+ assert.match(workflow,/WaitForExit\(420000\)/);
+ assert.match(workflow,/WaitForExit\(900000\)/);
+});
 
 test('failure report observes loading UI without converting it into readiness or masking failure', async () => {
   const elements = {
@@ -100,5 +119,5 @@ test('native visual injection remains nested inside explicit smoke mode',async()
  const rust=await readFile(new URL('../src-tauri/src/main.rs',import.meta.url),'utf8');
  assert.match(rust,/args\(\)\.any\(\|arg\| arg == "--smoke-report"\)[\s\S]*if std::env::args\(\)\.any\(\|arg\| arg == "--smoke-visual"\)/);
  assert.equal((rust.match(/window\.__desktopSmokeVisualCapture = true/g)??[]).length,1);
- assert.match(source,/worldStartedAt \+ 90000/);assert.match(source,/await wait\(300000\)/);
+ assert.match(source,/worldStartedAt \+ worldTimeoutMs/);assert.match(source,/await wait\(300000\)/);
 });
