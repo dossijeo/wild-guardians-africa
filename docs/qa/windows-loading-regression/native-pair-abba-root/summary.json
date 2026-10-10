@@ -1,0 +1,78 @@
+{
+  "receiptSha256": "abbe3d788193b154f9465a893e6e900a1c4d5355fbef69fdc03a41f5571d5cf8",
+  "executableSha256": "b430294037ad534b5a35e7bb08b2060c4a904e00ffe89ba5ff5cf1376a19dc71",
+  "fixtureSha256": "28d8bf348c61900a7f4f94a53026a86e638acbca5b058981a43de969788a6406",
+  "passes": [
+    {
+      "pass": 1,
+      "mode": "A",
+      "worldReadyMs": 18508.60000002384,
+      "hiddenMs": 300813.3000000715,
+      "reportSha256": "2b21cfc960d8c83c2634c08bc1152983052fee8db1726772d47247c0a1e6c689",
+      "cropPhasesMs": {
+        "load-crop-model": 402.5,
+        "load-crop-bridges": 698.0999999046326
+      }
+    },
+    {
+      "pass": 2,
+      "mode": "B",
+      "worldReadyMs": 18555.80000007153,
+      "hiddenMs": 300183.8000000715,
+      "reportSha256": "3615db6dc984fc4144962ea04d6578fe247032a0b1f01905e6f0d3b24b884c01",
+      "cropPhasesMs": {
+        "load-crop-model": 388.5,
+        "load-crop-bridges": 726.8999999761581,
+        "load-crop-pair-join": 745.1000000238419
+      }
+    },
+    {
+      "pass": 3,
+      "mode": "B",
+      "worldReadyMs": 18304,
+      "hiddenMs": 300864.2999999523,
+      "reportSha256": "dcfa9712a66cb5a1a3e5bdb9f3a773774200dc8d77de9d5f3e85cee186b9ddda",
+      "cropPhasesMs": {
+        "load-crop-model": 377.5,
+        "load-crop-bridges": 712.5999999046326,
+        "load-crop-pair-join": 730.3999999761581
+      }
+    },
+    {
+      "pass": 4,
+      "mode": "A",
+      "worldReadyMs": 18138.900000095367,
+      "hiddenMs": 300632.8000000715,
+      "reportSha256": "c610ae4165138746e63cd0a268b04ce5c71c132179f27b09de15946834647f26",
+      "cropPhasesMs": {
+        "load-crop-model": 370.1999999284744,
+        "load-crop-bridges": 682.7999999523163
+      }
+    }
+  ],
+  "control": {
+    "graphics": {
+      "available": true,
+      "renderer": "WebKit WebGL",
+      "scope": "Single opt-in snapshot of the existing renderer context; no new context or benchmark.",
+      "unmasked": {
+        "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (Intel)"
+      },
+      "vendor": "WebKit",
+      "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+    },
+    "world": {
+      "biome": "gran-canon",
+      "culture": "mapungubwe",
+      "height": 576,
+      "width": 1024
+    }
+  },
+  "meanReadyMs": {
+    "A": 18323.750000059605,
+    "B": 18429.900000035763
+  },
+  "meanDifferenceBMinusAMs": 106.14999997615814,
+  "scope": "Four local saved-world samples with fresh WebView2 profiles. OS/file/driver caches remain warm. Descriptive difference only; not statistical acceptance, GPU timing, frame stability, peak-memory or physical-input evidence. Nested phase wall times must not be added as exclusive CPU/GPU time."
+}
