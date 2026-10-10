@@ -1,0 +1,242 @@
+{
+  "scope": "Bounded entry-selection experiment only; required chunks are demand, not proof of render readiness; no production changes or campaigns",
+  "sourceHashes": {
+    "tools/probe-expanded-raid-entry.mjs": "32b4e842afeeb425802de69be4bfd8f2800491c9206c0589705e58a393d0cbad",
+    "tools/probe-raid-entry-topology.mjs": "bb5e0fca5f129d0c7eb2e8cf728e2f9a79cf730b18c5aa033770f2863697a672",
+    "tools/probe-exterior-raid-entry.mjs": "5db31704bff9b8c804d5ec6b25eb0b849cfeb249499df76fd479a9b7550b0c02",
+    "tools/probe-camera-enclosure.mjs": "5335a309f93279b933c5a63af478131a74007324087bf48a474627b6022f1f49",
+    "src/simulation/raids.js": "79d66a3e3e34e08f862e16510d9ecc5ebbc7a37600ac5c03893cbab928d95c3a",
+    "src/world/navigation.js": "9d44b740809c2d3c0273342364f8b3511e26ada24bea82acd60bda84a8072751",
+    "src/world/active-region.js": "9aec19f69cd36b28a29ccc9424dd5e9ede71bd7b97971d9e1972eca0716f51d3"
+  },
+  "rows": [
+    {
+      "shape": "clipped-bounds",
+      "originalBounds": [
+        -18,
+        -18,
+        18,
+        18
+      ],
+      "entry": {
+        "entries": [
+          {
+            "x": -10,
+            "z": 25.42
+          }
+        ],
+        "exits": [
+          {
+            "x": -10,
+            "z": 28.42
+          }
+        ]
+      },
+      "expandedRings": 1,
+      "selectionBounds": [
+        -66,
+        -66,
+        66,
+        66
+      ],
+      "attempts": [
+        {
+          "rings": 0,
+          "bounds": [
+            -18,
+            -18,
+            18,
+            18
+          ],
+          "method": "active-edge-fallback",
+          "accepted": false,
+          "selectionMs": 22.381699999999995
+        },
+        {
+          "rings": 1,
+          "bounds": [
+            -66,
+            -66,
+            66,
+            66
+          ],
+          "method": "projected-exterior-camera",
+          "accepted": true,
+          "selectionMs": 6.912199999999984
+        }
+      ],
+      "requiredChunks": [
+        "0,0",
+        "0,1"
+      ],
+      "firstHit": "StructureHit",
+      "steppedSeconds": 2.4000000000000004
+    },
+    {
+      "shape": "closed",
+      "originalBounds": [
+        -60,
+        -60,
+        60,
+        60
+      ],
+      "entry": {
+        "entries": [
+          {
+            "x": -10,
+            "z": 25.42
+          }
+        ],
+        "exits": [
+          {
+            "x": -10,
+            "z": 28.42
+          }
+        ]
+      },
+      "expandedRings": 0,
+      "selectionBounds": [
+        -60,
+        -60,
+        60,
+        60
+      ],
+      "attempts": [
+        {
+          "rings": 0,
+          "bounds": [
+            -60,
+            -60,
+            60,
+            60
+          ],
+          "method": "projected-exterior-camera",
+          "accepted": true,
+          "selectionMs": 20.230999999999995
+        }
+      ],
+      "requiredChunks": [
+        "0,0",
+        "0,1"
+      ],
+      "firstHit": "StructureHit",
+      "steppedSeconds": 2.4000000000000004
+    },
+    {
+      "shape": "open",
+      "originalBounds": [
+        -60,
+        -60,
+        60,
+        60
+      ],
+      "entry": {
+        "entries": [
+          {
+            "x": 0,
+            "z": 11.1
+          }
+        ],
+        "exits": [
+          {
+            "x": 0,
+            "z": 14.1
+          }
+        ]
+      },
+      "expandedRings": 0,
+      "selectionBounds": [
+        -60,
+        -60,
+        60,
+        60
+      ],
+      "attempts": [
+        {
+          "rings": 0,
+          "bounds": [
+            -60,
+            -60,
+            60,
+            60
+          ],
+          "method": "unchanged-native-exterior-witness",
+          "accepted": true,
+          "selectionMs": 1.3483000000001084
+        }
+      ],
+      "requiredChunks": [
+        "0,0"
+      ],
+      "firstHit": "CropHit",
+      "steppedSeconds": 9.5
+    },
+    {
+      "shape": "oversized-enclosure",
+      "originalBounds": [
+        -18,
+        -18,
+        18,
+        18
+      ],
+      "entry": null,
+      "expandedRings": null,
+      "selectionBounds": null,
+      "attempts": [
+        {
+          "rings": 0,
+          "bounds": [
+            -18,
+            -18,
+            18,
+            18
+          ],
+          "method": "active-edge-fallback",
+          "accepted": false,
+          "selectionMs": 15.401899999999841
+        },
+        {
+          "rings": 1,
+          "bounds": [
+            -66,
+            -66,
+            66,
+            66
+          ],
+          "method": "active-edge-fallback",
+          "accepted": false,
+          "selectionMs": 28.841199999999844
+        },
+        {
+          "rings": 2,
+          "bounds": [
+            -114,
+            -114,
+            114,
+            114
+          ],
+          "method": "active-edge-fallback",
+          "accepted": false,
+          "selectionMs": 27.551600000000235
+        }
+      ],
+      "requiredChunks": [],
+      "firstHit": null,
+      "steppedSeconds": 0
+    }
+  ],
+  "footprint": [
+    {
+      "quality": "media",
+      "baseChunks": 25,
+      "oneFullRingExtra": 24,
+      "twoFullRingsExtra": 56
+    },
+    {
+      "quality": "alta",
+      "baseChunks": 49,
+      "oneFullRingExtra": 32,
+      "twoFullRingsExtra": 72
+    }
+  ]
+}
