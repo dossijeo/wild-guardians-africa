@@ -1,0 +1,78 @@
+{
+  "baseline": "8faa9f19daa49d659e909e5687426885d70ee4a2",
+  "changed": {
+    ".github/workflows/windows.yml": "f8ade383731333f5b300e7a4e9515ba197d805bdad10b5e96ee68656ffef5bdc",
+    "src-tauri/src/main.rs": "3a9060de1bbe359b3df7f44c6b605db4c3bf9f7b3f4c55c642df73021cd8246f",
+    "src-tauri/smoke.js": "64a284a2c252d5fc5243d20ba2d531929bce598df215019e6553a6a54594223c",
+    "tests/wall-buffer-package.test.js": "80fca6940fa6fda90a56406adbf92377a70fe782dece750f5ffc850de7db8911"
+  },
+  "unchanged": {
+    "src/rendering/assets.js": "492631f5d0c8a1a9c20a2c9b336e611fdfaec33c4698c74d1031f5cdc7d90847",
+    "src/rendering/scene.js": "d8a41ff52ce8b7cfb13b418f95ad12100c1a79cf47932a259dcaaadfd0f14d6e",
+    "src/rendering/wall-buffer-package.js": "04248c618c20fa504cfe6850dfa1e139e19bc89f9c1345f11989904c526c8262",
+    "src/rendering/loading-programs.js": "a1354397f1ba0543fd4dffcd5143e82c4b211f750a9df367ac902dd70730c8c2",
+    "tools/experiments/compile-gpu-preparation.js": "6085d3f898f8d934bef62b2f79a160c9753179cad2db70b82f0c493d1fef1500",
+    "tools/prepare_wall_buffer_package.mjs": "7b5a20b577fe52d451ead96af4c446a69c779f8b61cd384a6be71e6a1ca15bf2",
+    "public/content/walls.json": "0f6eaf0a7bf4816243d9cf888e6cadb96c03e18c55f97208faaf9ec21f2fea30",
+    "content/manifests/wall-buffer-package.json": "3df89d693cd283b6b2fa151118052ae9ac1f9c2b73b18215b3ecb2717cb137dc",
+    "docs/qa/sfx-catalog-post-jam/inventory.json": "852c0e3cff092eec25deac0365417d156fd16ae23e719ea937dc442340b25238"
+  },
+  "checks": [
+    {
+      "log": "tests.log",
+      "args": [
+        "node",
+        "--test",
+        "tests/wall-buffer-package.test.js",
+        "tests/assets-lifecycle.test.js",
+        "tests/loading-readiness-snapshot.test.js",
+        "tests/loading-compile-window.test.js",
+        "tests/desktop-smoke-failure-observation.test.js",
+        "tests/desktop-visibility-fixture.test.js",
+        "tests/sfx-catalog-audit.test.js"
+      ],
+      "exitCode": 0,
+      "sha256": "ba0c8fa5b67650791c988ea02a80a896e8343a7e9a9bb10114a1da5c7189c1b1"
+    },
+    {
+      "log": "sfx-check.log",
+      "args": [
+        "node",
+        "tools/audit_sfx_catalog.mjs",
+        "--check"
+      ],
+      "exitCode": 0,
+      "sha256": "061692e2b2097fc0e0e6dac5e76945eeb9318836cf22ba73fc6641e0c4dc7451"
+    },
+    {
+      "log": "build.log",
+      "args": [
+        "npm.cmd",
+        "run",
+        "build"
+      ],
+      "exitCode": 0,
+      "sha256": "226aaa0e1ef48c6918fd397a21a5a05ad80e4f8056ec3f27d7aed13bcfe39ee1"
+    },
+    {
+      "log": "package.log",
+      "args": [
+        "npm.cmd",
+        "run",
+        "test:web-package"
+      ],
+      "exitCode": 0,
+      "sha256": "3551d3c222a96f93aac2a451cde293506f554993247cb0e9e167c26f18018d7b"
+    }
+  ],
+  "session": 38901,
+  "exitCode": 0,
+  "tests": 66,
+  "defaultEnabled": false,
+  "dispatchExecuted": false,
+  "futureInputs": {
+    "wall_buffer_package": true,
+    "compile_window": false,
+    "resource_overlap": false
+  }
+}

@@ -1,0 +1,348 @@
+TAP version 13
+# (node:30360) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: pending shared GLTF promises are not cache hits and a completed model is
+ok 1 - pending shared GLTF promises are not cache hits and a completed model is
+  ---
+  duration_ms: 7.3213
+  ...
+# Subtest: closing the packed biome owner aborts its original binary request
+ok 2 - closing the packed biome owner aborts its original binary request
+  ---
+  duration_ms: 2.2382
+  ...
+# Subtest: offscene packed prototypes and standalone textures are owned and released once; caches clear
+ok 3 - offscene packed prototypes and standalone textures are owned and released once; caches clear
+  ---
+  duration_ms: 228.1858
+  ...
+# Subtest: scene borrowers can dispose source resources first without causing duplicate disposal at owner close
+ok 4 - scene borrowers can dispose source resources first without causing duplicate disposal at owner close
+  ---
+  duration_ms: 3.2028
+  ...
+# Subtest: inflight model and texture finishing after close dispose once without resurrecting caches
+ok 5 - inflight model and texture finishing after close dispose once without resurrecting caches
+  ---
+  duration_ms: 1.3046
+  ...
+# Subtest: a failed standalone texture is retryable while open
+ok 6 - a failed standalone texture is retryable while open
+  ---
+  duration_ms: 0.7966
+  ...
+# Subtest: pending building cannot create new procedural resources after its owner closes
+ok 7 - pending building cannot create new procedural resources after its owner closes
+  ---
+  duration_ms: 0.7517
+  ...
+# Subtest: packed biome, village and wall binary loads cannot allocate prototypes after close
+ok 8 - packed biome, village and wall binary loads cannot allocate prototypes after close
+  ---
+  duration_ms: 14.2561
+  ...
+# Subtest: failed building download clears both caches; concurrent retry prepares the original model once
+ok 9 - failed building download clears both caches; concurrent retry prepares the original model once
+  ---
+  duration_ms: 860.7462
+  ...
+# Subtest: failure report observes loading UI without converting it into readiness or masking failure
+ok 10 - failure report observes loading UI without converting it into readiness or masking failure
+  ---
+  duration_ms: 6.3482
+  ...
+# Subtest: early failure tolerates loading elements not yet created
+ok 11 - early failure tolerates loading elements not yet created
+  ---
+  duration_ms: 2.8305
+  ...
+# Subtest: an observation fault preserves the original failure and still publishes the report
+ok 12 - an observation fault preserves the original failure and still publishes the report
+  ---
+  duration_ms: 1.5037
+  ...
+# Subtest: world wait stops at the ready gate and excludes the later five-minute visibility test
+ok 13 - world wait stops at the ready gate and excludes the later five-minute visibility test
+  ---
+  duration_ms: 1.5317
+  ...
+# Subtest: original finish reads readiness exactly once without masking original gate failure
+ok 14 - original finish reads readiness exactly once without masking original gate failure
+  ---
+  duration_ms: 2.6076
+  ...
+# Subtest: desktop visibility fixture uses paid native first-night gameplay and survives hidden restoration unchanged
+ok 15 - desktop visibility fixture uses paid native first-night gameplay and survives hidden restoration unchanged
+  ---
+  duration_ms: 1030.4592
+  ...
+# Subtest: strict two-job window uses original core/objects/allvariants and third submission waits for settlement
+ok 16 - strict two-job window uses original core/objects/allvariants and third submission waits for settlement
+  ---
+  duration_ms: 62.2541
+  ...
+# Subtest: default OFF remains serial; ready jobs do not force RAF and strict guard requires both smoke booleans
+ok 17 - default OFF remains serial; ready jobs do not force RAF and strict guard requires both smoke booleans
+  ---
+  duration_ms: 29.4453
+  ...
+# Subtest: external abort drains both pending core jobs with no late queries or extra submissions
+ok 18 - external abort drains both pending core jobs with no late queries or extra submissions
+  ---
+  duration_ms: 43.7235
+  ...
+# Subtest: first real asynchronous program error aborts sibling and is preserved exactly
+ok 19 - first real asynchronous program error aborts sibling and is preserved exactly
+  ---
+  duration_ms: 17.4474
+  ...
+# Subtest: synchronous second compile or selection fault aborts and drains original pending sibling
+ok 20 - synchronous second compile or selection fault aborts and drains original pending sibling
+  ---
+  duration_ms: 60.5444
+  ...
+# Subtest: epoch replacement and loss-restoration latch cannot permit queries or third batch
+ok 21 - epoch replacement and loss-restoration latch cannot permit queries or third batch
+  ---
+  duration_ms: 91.9392
+  ...
+# Subtest: original per-job deadline and suspended budget RAF cancellation remain authoritative
+ok 22 - original per-job deadline and suspended budget RAF cancellation remain authoritative
+  ---
+  duration_ms: 17.0464
+  ...
+# Subtest: CPU16 budget and diagnostic faults preserve complete submissions/readiness
+ok 23 - CPU16 budget and diagnostic faults preserve complete submissions/readiness
+  ---
+  duration_ms: 1.7796
+  ...
+# Subtest: partial budget setup failure removes external ownership listener and preserves error
+ok 24 - partial budget setup failure removes external ownership listener and preserves error
+  ---
+  duration_ms: 1.0774
+  ...
+# Subtest: wiring is smoke-only opt-in and original gates remain exact
+ok 25 - wiring is smoke-only opt-in and original gates remain exact
+  ---
+  duration_ms: 5.2238
+  ...
+# Subtest: abort drain releases all original poll timers/context listeners and external signal listener
+ok 26 - abort drain releases all original poll timers/context listeners and external signal listener
+  ---
+  duration_ms: 4.604
+  ...
+# Subtest: actual original per-job observation retains scalar window high-water and terminal clear
+ok 27 - actual original per-job observation retains scalar window high-water and terminal clear
+  ---
+  duration_ms: 16.5213
+  ...
+# Subtest: snapshot distinguishes real milestones and presentation maturity without scheduling work
+ok 28 - snapshot distinguishes real milestones and presentation maturity without scheduling work
+  ---
+  duration_ms: 6.7595
+  ...
+# Subtest: bounded copies never retain region prototypes, promises, jobs or source arrays
+ok 29 - bounded copies never retain region prototypes, promises, jobs or source arrays
+  ---
+  duration_ms: 1.8625
+  ...
+# Subtest: observer faults are contained per section and absent owners remain unknown
+ok 30 - observer faults are contained per section and absent owners remain unknown
+  ---
+  duration_ms: 0.3761
+  ...
+# Subtest: context identity borrows renderer only, skips dead owners and tolerates driver faults
+ok 31 - context identity borrows renderer only, skips dead owners and tolerates driver faults
+  ---
+  duration_ms: 1.7707
+  ...
+# Subtest: span tracker preserves interleaved same-label awaits and prior callback contract
+ok 32 - span tracker preserves interleaved same-label awaits and prior callback contract
+  ---
+  duration_ms: 1.4863
+  ...
+# Subtest: tracker contains observation faults but retains original callback exceptions
+ok 33 - tracker contains observation faults but retains original callback exceptions
+  ---
+  duration_ms: 0.8931
+  ...
+# Subtest: tracker bounds active rows and reports omissions without extending waits
+ok 34 - tracker bounds active rows and reports omissions without extending waits
+  ---
+  duration_ms: 0.6946
+  ...
+# Subtest: transfer snapshot reads real LoadingDownloads records without snapshot/refresh/cache assumptions
+ok 35 - transfer snapshot reads real LoadingDownloads records without snapshot/refresh/cache assumptions
+  ---
+  duration_ms: 18.0518
+  ...
+# Subtest: bridge normal path and unavailable/failing WeakRef never publish or mutate
+ok 36 - bridge normal path and unavailable/failing WeakRef never publish or mutate
+  ---
+  duration_ms: 0.8326
+  ...
+# (node:40892) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: bridge abort/dispose releases own callback and cannot erase replacement World
+ok 37 - bridge abort/dispose releases own callback and cannot erase replacement World
+  ---
+  duration_ms: 423.943
+  ...
+# Subtest: failed real World constructor does not install a snapshot owner
+ok 38 - failed real World constructor does not install a snapshot owner
+  ---
+  duration_ms: 8.0003
+  ...
+# Subtest: dead WeakRef and callback replacement remain safe without a strong fallback
+ok 39 - dead WeakRef and callback replacement remain safe without a strong fallback
+  ---
+  duration_ms: 0.8185
+  ...
+# Subtest: bridge observes real actor/chunk/far properties while work remains pending
+ok 40 - bridge observes real actor/chunk/far properties while work remains pending
+  ---
+  duration_ms: 25.1996
+  ...
+# Subtest: bridge publication/connect/presentation faults do not leak ownership or change application exceptions
+ok 41 - bridge publication/connect/presentation faults do not leak ownership or change application exceptions
+  ---
+  duration_ms: 0.6128
+  ...
+# Subtest: bridge registration follows every successful constructor step and original gates stay intact
+ok 42 - bridge registration follows every successful constructor step and original gates stay intact
+  ---
+  duration_ms: 7.1099
+  ...
+# Subtest: early summaries retain bounded selected labels and independent nested intervals without resource references
+ok 43 - early summaries retain bounded selected labels and independent nested intervals without resource references
+  ---
+  duration_ms: 0.7215
+  ...
+# Subtest: early selected-label cap reports omitted events and does not retain arbitrary labels or chunk histories
+ok 44 - early selected-label cap reports omitted events and does not retain arbitrary labels or chunk histories
+  ---
+  duration_ms: 19.9168
+  ...
+# Subtest: application boundary observes success/error once and observer faults never alter original calls
+ok 45 - application boundary observes success/error once and observer faults never alter original calls
+  ---
+  duration_ms: 3.7137
+  ...
+# Subtest: terminal release clears early rows and late boundaries cannot repopulate or invoke retained hooks
+ok 46 - terminal release clears early rows and late boundaries cannot repopulate or invoke retained hooks
+  ---
+  duration_ms: 0.8184
+  ...
+# Subtest: selected early records preserve prior hook receiver arguments returns and original exceptions exactly once
+ok 47 - selected early records preserve prior hook receiver arguments returns and original exceptions exactly once
+  ---
+  duration_ms: 0.6794
+  ...
+# Subtest: reconnect uses one tracker, preserves active early blocks, drops old hooks and abort terminates retained callbacks
+ok 48 - reconnect uses one tracker, preserves active early blocks, drops old hooks and abort terminates retained callbacks
+  ---
+  duration_ms: 0.8291
+  ...
+# Subtest: reconnect remains bounded through replacements and guards externally forwarded retained tracker without clobbering ownership
+ok 49 - reconnect remains bounded through replacements and guards externally forwarded retained tracker without clobbering ownership
+  ---
+  duration_ms: 1.9135
+  ...
+# Subtest: rebound hook can deliver an unrelated nested event with original receiver return and exception semantics
+ok 50 - rebound hook can deliver an unrelated nested event with original receiver return and exception semantics
+  ---
+  duration_ms: 0.4747
+  ...
+# (node:32152) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: complete catalogue audit reproduces from current source and exact original bytes
+ok 51 - complete catalogue audit reproduces from current source and exact original bytes
+  ---
+  duration_ms: 631.4022
+  ...
+# Subtest: assignments, context exceptions, reserves and alternatives stay distinct from audible acceptance
+ok 52 - assignments, context exceptions, reserves and alternatives stay distinct from audible acceptance
+  ---
+  duration_ms: 136.4056
+  ...
+# Subtest: latent wood variant and semantic alternatives do not become real bindings or duplicate files
+ok 53 - latent wood variant and semantic alternatives do not become real bindings or duplicate files
+  ---
+  duration_ms: 0.8522
+  ...
+# (node:41680) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: all160 unique payloads, aligned lanes and original descriptor bytes are exact
+ok 54 - all160 unique payloads, aligned lanes and original descriptor bytes are exact
+  ---
+  duration_ms: 97.881
+  ...
+# Subtest: generator deterministic and originals untouched
+ok 55 - generator deterministic and originals untouched
+  ---
+  duration_ms: 335.8438
+  ...
+# Subtest: resolved descriptor URLs and subset descriptor remain compatible
+ok 56 - resolved descriptor URLs and subset descriptor remain compatible
+  ---
+  duration_ms: 4.0456
+  ...
+# Subtest: unknown descriptor rejected before any request; truncated payload rejected
+ok 57 - unknown descriptor rejected before any request; truncated payload rejected
+  ---
+  duration_ms: 5.324
+  ...
+# Subtest: abort before fetch and late body delivery do not adopt any lane
+ok 58 - abort before fetch and late body delivery do not adopt any lane
+  ---
+  duration_ms: 5.8976
+  ...
+# Subtest: reader checks owner after decode and each later lane read; request rejection propagated
+ok 59 - reader checks owner after decode and each later lane read; request rejection propagated
+  ---
+  duration_ms: 7.0532
+  ...
+# Subtest: real Assets.walls identical geometries/morph peers/bounds/material recipes,160→1requests
+ok 60 - real Assets.walls identical geometries/morph peers/bounds/material recipes,160→1requests
+  ---
+  duration_ms: 221.1254
+  ...
+# Subtest: real Assets owner disposed during pending package releases material exactlyonce and no late geometry
+ok 61 - real Assets owner disposed during pending package releases material exactlyonce and no late geometry
+  ---
+  duration_ms: 16.384
+  ...
+# Subtest: flag requires both smoke booleans; normal path defaultsOFF
+ok 62 - flag requires both smoke booleans; normal path defaultsOFF
+  ---
+  duration_ms: 0.7155
+  ...
+# Subtest: packed geometry and morph lanes share one buffer, not160 full copies
+ok 63 - packed geometry and morph lanes share one buffer, not160 full copies
+  ---
+  duration_ms: 24.3523
+  ...
+# Subtest: descriptor field type mismatch fails before fetch
+ok 64 - descriptor field type mismatch fails before fetch
+  ---
+  duration_ms: 2.2749
+  ...
+# Subtest: real late texture after cancellation disposed once; package not requested
+ok 65 - real late texture after cancellation disposed once; package not requested
+  ---
+  duration_ms: 1.0601
+  ...
+# Subtest: CLI and both native smoke invocations record explicit OFF default flag without gate changes
+ok 66 - CLI and both native smoke invocations record explicit OFF default flag without gate changes
+  ---
+  duration_ms: 4.2056
+  ...
+1..66
+# tests 66
+# suites 0
+# pass 66
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1455.5721

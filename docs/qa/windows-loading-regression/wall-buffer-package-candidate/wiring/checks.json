@@ -1,0 +1,48 @@
+[
+  {
+    "log": "tests.log",
+    "args": [
+      "node",
+      "--test",
+      "tests/wall-buffer-package.test.js",
+      "tests/assets-lifecycle.test.js",
+      "tests/loading-readiness-snapshot.test.js",
+      "tests/loading-compile-window.test.js",
+      "tests/desktop-smoke-failure-observation.test.js",
+      "tests/desktop-visibility-fixture.test.js",
+      "tests/sfx-catalog-audit.test.js"
+    ],
+    "exitCode": 0,
+    "sha256": "ba0c8fa5b67650791c988ea02a80a896e8343a7e9a9bb10114a1da5c7189c1b1"
+  },
+  {
+    "log": "sfx-check.log",
+    "args": [
+      "node",
+      "tools/audit_sfx_catalog.mjs",
+      "--check"
+    ],
+    "exitCode": 0,
+    "sha256": "061692e2b2097fc0e0e6dac5e76945eeb9318836cf22ba73fc6641e0c4dc7451"
+  },
+  {
+    "log": "build.log",
+    "args": [
+      "npm.cmd",
+      "run",
+      "build"
+    ],
+    "exitCode": 0,
+    "sha256": "226aaa0e1ef48c6918fd397a21a5a05ad80e4f8056ec3f27d7aed13bcfe39ee1"
+  },
+  {
+    "log": "package.log",
+    "args": [
+      "npm.cmd",
+      "run",
+      "test:web-package"
+    ],
+    "exitCode": 0,
+    "sha256": "3551d3c222a96f93aac2a451cde293506f554993247cb0e9e167c26f18018d7b"
+  }
+]

@@ -6,6 +6,10 @@ on:
   pull_request:
   workflow_dispatch:
     inputs:
+      wall_buffer_package:
+        description: 'Experimental contiguous wall buffers (smoke only)'
+        type: boolean
+        default: false
       compile_window:
         description: 'Experimental strict two-batch compilation window (smoke only)'
         type: boolean
@@ -54,6 +58,7 @@ jobs:
           $report = Join-Path $env:RUNNER_TEMP 'desktop-smoke.json'
           $binary = (Resolve-Path src-tauri/target/release/wild-guardians-africa.exe).Path
           $smokeArgs = @('--smoke-report', $report)
+          if ('${{ inputs.wall_buffer_package }}' -eq 'true') { $smokeArgs += '--smoke-wall-buffer-package' }
           if ('${{ inputs.compile_window }}' -eq 'true') { $smokeArgs += '--smoke-compile-window' }
           if ('${{ inputs.resource_overlap }}' -eq 'true') { $smokeArgs += '--smoke-resource-overlap' }
           $process = Start-Process -FilePath $binary -ArgumentList $smokeArgs -WindowStyle Hidden -PassThru
@@ -76,6 +81,7 @@ jobs:
           $report = Join-Path $env:RUNNER_TEMP 'desktop-visibility.json'
           $binary = (Resolve-Path src-tauri/target/release/wild-guardians-africa.exe).Path
           $smokeArgs = @('--smoke-report', $report, '--smoke-fixture', $fixture)
+          if ('${{ inputs.wall_buffer_package }}' -eq 'true') { $smokeArgs += '--smoke-wall-buffer-package' }
           if ('${{ inputs.compile_window }}' -eq 'true') { $smokeArgs += '--smoke-compile-window' }
           if ('${{ inputs.resource_overlap }}' -eq 'true') { $smokeArgs += '--smoke-resource-overlap' }
           $process = Start-Process -FilePath $binary -ArgumentList $smokeArgs -WindowStyle Hidden -PassThru
