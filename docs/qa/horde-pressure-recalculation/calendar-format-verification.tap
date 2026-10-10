@@ -1,0 +1,55 @@
+TAP version 13
+# Subtest: invalid calendar intro override fails before write
+ok 1 - invalid calendar intro override fails before write
+  ---
+  duration_ms: 165.6094
+  ...
+# Subtest: invalid calendar calendar gap fails before write
+ok 2 - invalid calendar calendar gap fails before write
+  ---
+  duration_ms: 154.9053
+  ...
+# Subtest: invalid calendar incomplete campaign fails before write
+ok 3 - invalid calendar incomplete campaign fails before write
+  ---
+  duration_ms: 133.5767
+  ...
+# Subtest: invalid calendar unbounded budget fails before write
+ok 4 - invalid calendar unbounded budget fails before write
+  ---
+  duration_ms: 130.1201
+  ...
+# Subtest: invalid calendar noninteger budget fails before write
+ok 5 - invalid calendar noninteger budget fails before write
+  ---
+  duration_ms: 131.0741
+  ...
+# Subtest: omitting calendar retains canonical original intervals and no extra field
+ok 6 - omitting calendar retains canonical original intervals and no extra field
+  ---
+  duration_ms: 138.0554
+  ...
+# Subtest: canonical calendar has exact boundary ranges and native tier fallback
+ok 7 - canonical calendar has exact boundary ranges and native tier fallback
+  ---
+  duration_ms: 2.9626
+  ...
+# Subtest: first five introductions and postgame keep exact single timing draw
+ok 8 - first five introductions and postgame keep exact single timing draw
+  ---
+  duration_ms: 3.3858
+  ...
+# Subtest: ordinary plans use one budget and one uniform rank draw, independent of cash and spells
+ok 9 - ordinary plans use one budget and one uniform rank draw, independent of cash and spells
+  ---
+  duration_ms: 23.7958
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 984.9755
