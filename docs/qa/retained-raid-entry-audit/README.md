@@ -52,3 +52,45 @@ cuando ésta está dentro de un recinto defendido.
 
 Reproducir: `node tools/probe-exterior-raid-entry.mjs docs/qa/retained-raid-entry-audit`.
 Comprobaciones: `node --test tests/exterior-raid-entry-experiment.test.js`.
+
+## Refinamiento por conectividad y casos negativos
+
+`topology-candidates.json` registra21 casos: producción, envolvente y candidata
+con testigo de conectividad, para siete topologías. Los impactos se producen con
+el actor nativo; no se reconstruye una campaña ni se altera producción.
+
+| Topología | Producción | Envolvente | Testigo de conectividad |
+|:---|:---|:---|:---|
+| Cuadrado cerrado | CropHit dentro | StructureHit fuera | StructureHit fuera |
+| Cuadrado abierto, hueco10m | CropHit,3,1m del ojo | CropHit,20,1m del ojo | CropHit,misma entrada3,1m |
+| Puerta adobe | CropHit dentro | StructureHit fuera | StructureHit fuera |
+| Dos recintos separados, cámara entre ambos | CropHit,3,1m | CropHit,20,1m | CropHit,misma entrada3,1m |
+| Recinto cóncavo en L | CropHit dentro | StructureHit fuera | StructureHit fuera |
+| Sin muros | CropHit | Misma entrada | Misma entrada |
+| Muros fuera del borde activo | CropHit dentro | Sin entrada aceptada | Sin entrada aceptada |
+
+El testigo usa hasta16 segmentos nativos desde nacimiento y salida hasta el
+exterior de la envolvente, con el radio del animal y `worker=false`. Basta un
+paso libre para conservar la entrada actual. No hay A* ni floodfill adicional;
+un resultado negativo no prueba encierro porque puede existir una ruta curva.
+La puerta es transitable para trabajadores según reglas distintas, pero para
+animales conserva colisión de muralla: no debe interpretarse como hueco abierto.
+
+**Resultado:** la envolvente simple produce un alejamiento innecesario en casos
+abiertos; no promoverla sola. El testigo evita esa regresión en los casos
+probados, pero no resuelve rutas exteriores curvas ni cobertura natural de los
+seis biomas. La candidata tampoco garantiza incursión si no queda exterior
+dentro de los límites activos. Es un gate bloqueante de integración: se necesita
+una estrategia de extensión/preparación del área exterior, validando navegación
+y residencia visual, o un selector topológico que encuentre un exterior legal.
+No aceptar un nacimiento interior para hacer pasar el ensayo ni suprimir la
+incursión garantizada como solución.
+
+Ambas candidatas permanecen exclusivamente en herramientas QA. No se cambia
+la cámara del jugador, el RNG, dinero, precios, balance o formato de guardado.
+El actor se actualiza hasta su primer impacto o un límite diagnóstico120s; esos
+pasos no son duración completa de incursión. Las muestras CPU no permiten
+concluir una mejora de FPS o coste general de inicialización.
+
+Reproducir: `node tools/probe-raid-entry-topology.mjs docs/qa/retained-raid-entry-audit`.
+Comprobaciones: `node --test tests/raid-entry-topology-experiment.test.js`.

@@ -1,0 +1,361 @@
+{
+  "scope": "Isolated native actor fixtures on synthetic flat terrain; sufficient direct exterior witness only; not production, complete topology detection, biome campaign, or render QA",
+  "sourceHashes": {
+    "tools/probe-raid-entry-topology.mjs": "bb5e0fca5f129d0c7eb2e8cf728e2f9a79cf730b18c5aa033770f2863697a672",
+    "tools/probe-exterior-raid-entry.mjs": "5db31704bff9b8c804d5ec6b25eb0b849cfeb249499df76fd479a9b7550b0c02",
+    "tools/probe-camera-enclosure.mjs": "5335a309f93279b933c5a63af478131a74007324087bf48a474627b6022f1f49",
+    "src/simulation/raids.js": "79d66a3e3e34e08f862e16510d9ecc5ebbc7a37600ac5c03893cbab928d95c3a",
+    "src/world/navigation.js": "9d44b740809c2d3c0273342364f8b3511e26ada24bea82acd60bda84a8072751",
+    "src/world/wall-collision-frame.js": "a5524440405bf0cce834d944507415b573ae56a6517cf74802affefbe9087013"
+  },
+  "rows": [
+    {
+      "shape": "closed",
+      "kind": "production",
+      "method": "production-camera",
+      "entryMs": 6.631299999999982,
+      "entry": {
+        "x": 0,
+        "z": 11.1
+      },
+      "distanceFromEye": 3.0999999999999996,
+      "targetKind": "crop",
+      "firstHit": "CropHit",
+      "steppedSeconds": 9.55,
+      "witnesses": null
+    },
+    {
+      "shape": "closed",
+      "kind": "envelope",
+      "method": "projected-exterior-camera",
+      "entryMs": 4.446400000000011,
+      "entry": {
+        "x": -10,
+        "z": 25.42
+      },
+      "distanceFromEye": 20.086224134963743,
+      "targetKind": "wall",
+      "firstHit": "StructureHit",
+      "steppedSeconds": 2.4000000000000004,
+      "witnesses": null
+    },
+    {
+      "shape": "closed",
+      "kind": "connected",
+      "method": "projected-exterior-camera",
+      "entryMs": 14.635600000000068,
+      "entry": {
+        "x": -10,
+        "z": 25.42
+      },
+      "distanceFromEye": 20.086224134963743,
+      "targetKind": "wall",
+      "firstHit": "StructureHit",
+      "steppedSeconds": 2.4000000000000004,
+      "witnesses": null
+    },
+    {
+      "shape": "open",
+      "kind": "production",
+      "method": "production-camera",
+      "entryMs": 0.9677000000001499,
+      "entry": {
+        "x": 0,
+        "z": 11.1
+      },
+      "distanceFromEye": 3.0999999999999996,
+      "targetKind": "crop",
+      "firstHit": "CropHit",
+      "steppedSeconds": 9.55,
+      "witnesses": null
+    },
+    {
+      "shape": "open",
+      "kind": "envelope",
+      "method": "projected-exterior-camera",
+      "entryMs": 2.2905000000000655,
+      "entry": {
+        "x": -10,
+        "z": 25.42
+      },
+      "distanceFromEye": 20.086224134963743,
+      "targetKind": "crop",
+      "firstHit": "CropHit",
+      "steppedSeconds": 19.1,
+      "witnesses": null
+    },
+    {
+      "shape": "open",
+      "kind": "connected",
+      "method": "unchanged-native-exterior-witness",
+      "entryMs": 2.193499999999858,
+      "entry": {
+        "x": 0,
+        "z": 11.1
+      },
+      "distanceFromEye": 3.0999999999999996,
+      "targetKind": "crop",
+      "firstHit": "CropHit",
+      "steppedSeconds": 9.55,
+      "witnesses": [
+        {
+          "birth": {
+            "kind": "native-clear-segment",
+            "end": {
+              "x": 0,
+              "z": 22.32
+            }
+          },
+          "exit": {
+            "kind": "native-clear-segment",
+            "end": {
+              "x": 0,
+              "z": 22.32
+            }
+          }
+        }
+      ]
+    },
+    {
+      "shape": "gate",
+      "kind": "production",
+      "method": "production-camera",
+      "entryMs": 1.490799999999581,
+      "entry": {
+        "x": 0,
+        "z": 11.1
+      },
+      "distanceFromEye": 3.0999999999999996,
+      "targetKind": "crop",
+      "firstHit": "CropHit",
+      "steppedSeconds": 9.55,
+      "witnesses": null
+    },
+    {
+      "shape": "gate",
+      "kind": "envelope",
+      "method": "projected-exterior-camera",
+      "entryMs": 1.6539000000002488,
+      "entry": {
+        "x": -10,
+        "z": 25.508000000000003
+      },
+      "distanceFromEye": 20.162590706553562,
+      "targetKind": "wall",
+      "firstHit": "StructureHit",
+      "steppedSeconds": 2.4000000000000004,
+      "witnesses": null
+    },
+    {
+      "shape": "gate",
+      "kind": "connected",
+      "method": "projected-exterior-camera",
+      "entryMs": 7.074499999999716,
+      "entry": {
+        "x": -10,
+        "z": 25.508000000000003
+      },
+      "distanceFromEye": 20.162590706553562,
+      "targetKind": "wall",
+      "firstHit": "StructureHit",
+      "steppedSeconds": 2.4000000000000004,
+      "witnesses": null
+    },
+    {
+      "shape": "separate",
+      "kind": "production",
+      "method": "production-camera",
+      "entryMs": 3.601599999999962,
+      "entry": {
+        "x": 0,
+        "z": 11.1
+      },
+      "distanceFromEye": 3.0999999999999996,
+      "targetKind": "crop",
+      "firstHit": "CropHit",
+      "steppedSeconds": 9.55,
+      "witnesses": null
+    },
+    {
+      "shape": "separate",
+      "kind": "envelope",
+      "method": "projected-exterior-camera",
+      "entryMs": 3.834200000000237,
+      "entry": {
+        "x": -10,
+        "z": 25.42
+      },
+      "distanceFromEye": 20.086224134963743,
+      "targetKind": "crop",
+      "firstHit": "CropHit",
+      "steppedSeconds": 18.3,
+      "witnesses": null
+    },
+    {
+      "shape": "separate",
+      "kind": "connected",
+      "method": "unchanged-native-exterior-witness",
+      "entryMs": 9.950700000000325,
+      "entry": {
+        "x": 0,
+        "z": 11.1
+      },
+      "distanceFromEye": 3.0999999999999996,
+      "targetKind": "crop",
+      "firstHit": "CropHit",
+      "steppedSeconds": 9.55,
+      "witnesses": [
+        {
+          "birth": {
+            "kind": "native-clear-segment",
+            "end": {
+              "x": 0,
+              "z": 22.32
+            }
+          },
+          "exit": {
+            "kind": "native-clear-segment",
+            "end": {
+              "x": 0,
+              "z": 22.32
+            }
+          }
+        }
+      ]
+    },
+    {
+      "shape": "concave",
+      "kind": "production",
+      "method": "production-camera",
+      "entryMs": 1.3271999999997206,
+      "entry": {
+        "x": -8,
+        "z": 11.1
+      },
+      "distanceFromEye": 3.0999999999999996,
+      "targetKind": "crop",
+      "firstHit": "CropHit",
+      "steppedSeconds": 2.5,
+      "witnesses": null
+    },
+    {
+      "shape": "concave",
+      "kind": "envelope",
+      "method": "projected-exterior-camera",
+      "entryMs": 3.042899999999463,
+      "entry": {
+        "x": -10,
+        "z": 25.42
+      },
+      "distanceFromEye": 17.534434692912118,
+      "targetKind": "wall",
+      "firstHit": "StructureHit",
+      "steppedSeconds": 2.4000000000000004,
+      "witnesses": null
+    },
+    {
+      "shape": "concave",
+      "kind": "connected",
+      "method": "projected-exterior-camera",
+      "entryMs": 9.912900000000263,
+      "entry": {
+        "x": -10,
+        "z": 25.42
+      },
+      "distanceFromEye": 17.534434692912118,
+      "targetKind": "wall",
+      "firstHit": "StructureHit",
+      "steppedSeconds": 2.4000000000000004,
+      "witnesses": null
+    },
+    {
+      "shape": "no-walls",
+      "kind": "production",
+      "method": "production-camera",
+      "entryMs": 0.7582000000002154,
+      "entry": {
+        "x": 0,
+        "z": 11.1
+      },
+      "distanceFromEye": 3.0999999999999996,
+      "targetKind": "crop",
+      "firstHit": "CropHit",
+      "steppedSeconds": 9.55,
+      "witnesses": null
+    },
+    {
+      "shape": "no-walls",
+      "kind": "envelope",
+      "method": "unchanged-no-walls",
+      "entryMs": 0.4855999999999767,
+      "entry": {
+        "x": 0,
+        "z": 11.1
+      },
+      "distanceFromEye": 3.0999999999999996,
+      "targetKind": "crop",
+      "firstHit": "CropHit",
+      "steppedSeconds": 9.55,
+      "witnesses": null
+    },
+    {
+      "shape": "no-walls",
+      "kind": "connected",
+      "method": "unchanged-native-exterior-witness",
+      "entryMs": 0.14159999999992579,
+      "entry": {
+        "x": 0,
+        "z": 11.1
+      },
+      "distanceFromEye": 3.0999999999999996,
+      "targetKind": "crop",
+      "firstHit": "CropHit",
+      "steppedSeconds": 9.55,
+      "witnesses": [
+        {
+          "birth": {
+            "kind": "no-walls"
+          },
+          "exit": {
+            "kind": "no-walls"
+          }
+        }
+      ]
+    },
+    {
+      "shape": "clipped-bounds",
+      "kind": "production",
+      "method": "production-camera",
+      "entryMs": 0.6545999999998457,
+      "entry": {
+        "x": 0,
+        "z": 11.1
+      },
+      "distanceFromEye": 3.0999999999999996,
+      "targetKind": "crop",
+      "firstHit": "CropHit",
+      "steppedSeconds": 9.55,
+      "witnesses": null
+    },
+    {
+      "shape": "clipped-bounds",
+      "kind": "envelope",
+      "method": "active-edge-fallback",
+      "entryMs": 3.9661999999998443,
+      "entry": null,
+      "targetKind": null,
+      "firstHit": null,
+      "limitation": "No accepted exterior entry inside current bounds"
+    },
+    {
+      "shape": "clipped-bounds",
+      "kind": "connected",
+      "method": "active-edge-fallback",
+      "entryMs": 8.761000000000422,
+      "entry": null,
+      "targetKind": null,
+      "firstHit": null,
+      "limitation": "No accepted exterior entry inside current bounds"
+    }
+  ]
+}
