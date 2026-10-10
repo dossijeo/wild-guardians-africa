@@ -25,10 +25,10 @@ export function preparePressureNight(state) {
 
 // Next wave becomes due only after every existing actor has physically left.
 // This never removes actors or manufactures an entry certificate.
-export function nextPressureWave(raid,elapsed) {
+export function nextPressureWave(raid,time) {
   if(!raid?.waves||raid.animals.some(a=>a.status!=='gone'))return null;
   const index=raid.waveIndex+1,actors=raid.waves[index];
   if(!actors)return null;
-  if(!Number.isFinite(elapsed)||elapsed<0)throw Error('Invalid wave time');
-  return {index,at:elapsed,group:actors.map(a=>a.species),actors:structuredClone(actors),done:false};
+  if(!Number.isFinite(time)||time<0||time>600)throw Error('Invalid wave time');
+  return {index,at:time,group:actors.map(a=>a.species),actors:structuredClone(actors),done:false};
 }

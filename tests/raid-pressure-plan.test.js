@@ -27,7 +27,7 @@ test('postgame permanently produces no actors and does not advance agricultural 
 test('pending waves wait for actual departure and copy immutable descriptors',()=>{
  const p=preparePressureNight(state(100)).plan,raid={waveIndex:0,waves:p.waves,animals:[{status:'exiting'}]};
  assert.equal(nextPressureWave(raid,599),null);raid.animals[0].status='gone';
- const next=nextPressureWave(raid,601);assert.equal(next.index,1);assert.equal(next.at,601);assert.equal(next.actors.length,16);
+ const next=nextPressureWave(raid,600);assert.equal(next.index,1);assert.equal(next.at,600);assert.equal(next.actors.length,16);
  next.actors[0].hits=0;assert.notEqual(raid.waves[1][0].hits,0);
- raid.waveIndex=2;assert.equal(nextPressureWave(raid,602),null);
+ assert.throws(()=>nextPressureWave(raid,601));raid.waveIndex=2;assert.equal(nextPressureWave(raid,600),null);
 });
