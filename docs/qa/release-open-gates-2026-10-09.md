@@ -5,7 +5,39 @@ update below supersedes the historical checkpoint text that follows. Earlier
 sources, failed candidates and measurements are retained, not silently changed
 into current-main acceptance.
 
-## Current-state checkpoint — 10 October, evidence main749194e2
+## Current-state checkpoint — 10 October, minimal production source025
+
+The independently reviewed minimal crop-partition extraction is frozen at
+`02554d0ab756dc4360dd24be0f615b469375773d`; it remains outside main. Its
+[full Validate originals](windows-loading-regression/validate-production-025-root/README.md)
+prove 3,839 passed tests, zero failures/skips, build9.04s and itch ZIP388379707
+bytes with verified CRCs. The production diff excludes rejected crop overlap,
+QA selection and scheduling experiments. It preserves main9d Scene, gameplay,
+camera, persistence and native smoke/workflow source.
+
+Root reviewed actual canonical ownership, parser cleanup, late-result rejection
+and manifest/cache retry contracts. They cover real GLTF/meshopt parsing and
+40 crop states/32 bridges; mocked image loading is not native raster evidence.
+No confirmed extraction defect was found. Remaining extraction-specific checks
+are native texture orientation/color/alpha, representative remainder morph and
+shadow rendering, App-level cancellation/retry, and the exact packaged runtime.
+The common WorldScene crop path does not select a different partition by biome
+or culture; that fact does not establish all-biome visual acceptance.
+
+Production025 contains the Rust `--smoke-visual` flag but its App does not install
+the visual collector. The advanced plant/progress65 CLI flags are also absent.
+Historical7e captures therefore cannot be presented as025 captures. A separate
+QA-only overlay is being prepared, keeping production025 frozen and identifying
+observer changes explicitly. The ordinary Windows run38030771951 is live on
+exact025 at this checkpoint, not passed. Earlier native failures below remain
+negative; no duplicate run or readiness timeout change has been made.
+
+Browser UI access was checked again with the current enabled CUA tool and still
+fails initialization with OS error3. This prevents composited-UI and physical
+input assertions through that tool; CLI/native report work remains available.
+Portrait, full visual matrix and campaign/master-plan acceptance remain open.
+
+## Earlier checkpoint — 10 October, evidence main749194e2
 
 The isolated28b crop-partition lineage now has a real corrected-menu native
 night preview: the App's actual save list supplies the saved time, the initial
