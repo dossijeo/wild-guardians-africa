@@ -1,0 +1,511 @@
+TAP version 13
+# (node:49784) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: QA-094: media complete group enters side 0 of the camera's active region
+ok 1 - QA-094: media complete group enters side 0 of the camera's active region
+  ---
+  duration_ms: 15.4721
+  ...
+# Subtest: QA-094: media complete group enters side 1 of the camera's active region
+ok 2 - QA-094: media complete group enters side 1 of the camera's active region
+  ---
+  duration_ms: 1.2321
+  ...
+# Subtest: QA-094: media complete group enters side 2 of the camera's active region
+ok 3 - QA-094: media complete group enters side 2 of the camera's active region
+  ---
+  duration_ms: 1.491
+  ...
+# Subtest: QA-094: media complete group enters side 3 of the camera's active region
+ok 4 - QA-094: media complete group enters side 3 of the camera's active region
+  ---
+  duration_ms: 1.8424
+  ...
+# Subtest: QA-094: alta complete group enters side 0 of the camera's active region
+ok 5 - QA-094: alta complete group enters side 0 of the camera's active region
+  ---
+  duration_ms: 1.295
+  ...
+# Subtest: QA-094: alta complete group enters side 1 of the camera's active region
+ok 6 - QA-094: alta complete group enters side 1 of the camera's active region
+  ---
+  duration_ms: 0.8837
+  ...
+# Subtest: QA-094: alta complete group enters side 2 of the camera's active region
+ok 7 - QA-094: alta complete group enters side 2 of the camera's active region
+  ---
+  duration_ms: 1.1249
+  ...
+# Subtest: QA-094: alta complete group enters side 3 of the camera's active region
+ok 8 - QA-094: alta complete group enters side 3 of the camera's active region
+  ---
+  duration_ms: 4.4441
+  ...
+# Subtest: QA-095: streaming updates camera bounds without resetting raid state or persisted entry positions
+ok 9 - QA-095: streaming updates camera bounds without resetting raid state or persisted entry positions
+  ---
+  duration_ms: 15.1987
+  ...
+# Subtest: active bounds are copied, validated, and retained independently of route invalidation
+ok 10 - active bounds are copied, validated, and retained independently of route invalidation
+  ---
+  duration_ms: 5.7574
+  ...
+# Subtest: a region too small for the complete epic bodies cancels entry instead of spawning outside it
+ok 11 - a region too small for the complete epic bodies cancels entry instead of spawning outside it
+  ---
+  duration_ms: 99.9625
+  ...
+# (node:18896) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: camera heading 0: the complete epic group appears just behind the eye, without overlaps
+ok 12 - camera heading 0: the complete epic group appears just behind the eye, without overlaps
+  ---
+  duration_ms: 17.5305
+  ...
+# Subtest: camera heading 1.5707963267948966: the complete epic group appears just behind the eye, without overlaps
+ok 13 - camera heading 1.5707963267948966: the complete epic group appears just behind the eye, without overlaps
+  ---
+  duration_ms: 2.3657
+  ...
+# Subtest: camera heading 3.141592653589793: the complete epic group appears just behind the eye, without overlaps
+ok 14 - camera heading 3.141592653589793: the complete epic group appears just behind the eye, without overlaps
+  ---
+  duration_ms: 2.9426
+  ...
+# Subtest: camera heading 4.71238898038469: the complete epic group appears just behind the eye, without overlaps
+ok 15 - camera heading 4.71238898038469: the complete epic group appears just behind the eye, without overlaps
+  ---
+  duration_ms: 2.8164
+  ...
+# Subtest: a blocked camera rear falls back to a legal entry instead of placing bodies in obstacles
+ok 16 - a blocked camera rear falls back to a legal entry instead of placing bodies in obstacles
+  ---
+  duration_ms: 5.9952
+  ...
+# Subtest: disconnected water behind the camera uses the near farm side with bounded route searches
+ok 17 - disconnected water behind the camera uses the near farm side with bounded route searches
+  ---
+  duration_ms: 1.1261
+  ...
+# Subtest: camera metadata is copied without invalidating routes, and rendering supplies the actual eye and target
+ok 18 - camera metadata is copied without invalidating routes, and rendering supplies the actual eye and target
+  ---
+  duration_ms: 2.1772
+  ...
+# Subtest: sabana/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 19 - sabana/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 517.9518
+  ...
+# Subtest: gran-rio/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 20 - gran-rio/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 353.5735
+  ...
+# Subtest: manglares/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 21 - manglares/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 858.4265
+  ...
+# Subtest: volcanes/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 22 - volcanes/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 327.4697
+  ...
+# Subtest: gran-canon/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 23 - gran-canon/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 529.7293
+  ...
+# Subtest: desierto/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 24 - desierto/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 2728.1537
+  ...
+# Subtest: sabana/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 25 - sabana/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 381.1271
+  ...
+# Subtest: gran-rio/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 26 - gran-rio/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 345.6172
+  ...
+# Subtest: manglares/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 27 - manglares/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 668.9057
+  ...
+# Subtest: volcanes/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 28 - volcanes/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 281.4893
+  ...
+# Subtest: gran-canon/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 29 - gran-canon/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 530.9054
+  ...
+# Subtest: desierto/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 30 - desierto/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 2672.7551
+  ...
+# Subtest: sabana/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 31 - sabana/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 455.6093
+  ...
+# Subtest: gran-rio/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 32 - gran-rio/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 387.1217
+  ...
+# Subtest: manglares/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 33 - manglares/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 870.3225
+  ...
+# Subtest: volcanes/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 34 - volcanes/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 317.3847
+  ...
+# Subtest: gran-canon/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 35 - gran-canon/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 733.5152
+  ...
+# Subtest: desierto/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 36 - desierto/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 4753.3769
+  ...
+# Subtest: sabana/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 37 - sabana/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 586.8992
+  ...
+# Subtest: gran-rio/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 38 - gran-rio/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 758.9078
+  ...
+# Subtest: manglares/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 39 - manglares/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 858.0108
+  ...
+# Subtest: volcanes/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 40 - volcanes/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 295.5796
+  ...
+# Subtest: gran-canon/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 41 - gran-canon/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1151.581
+  ...
+# Subtest: desierto/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 42 - desierto/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 4978.118
+  ...
+# Subtest: sabana/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 43 - sabana/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 825.1866
+  ...
+# Subtest: gran-rio/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 44 - gran-rio/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 875.7819
+  ...
+# Subtest: manglares/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 45 - manglares/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 633.1436
+  ...
+# Subtest: volcanes/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 46 - volcanes/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 664.2812
+  ...
+# Subtest: gran-canon/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 47 - gran-canon/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1231.8165
+  ...
+# Subtest: desierto/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 48 - desierto/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 3339.0314
+  ...
+# Subtest: sabana: prepared native entry preserves the entire original post-spawn state
+ok 49 - sabana: prepared native entry preserves the entire original post-spawn state
+  ---
+  duration_ms: 897.035
+  ...
+# Subtest: gran-rio: prepared native entry preserves the entire original post-spawn state
+ok 50 - gran-rio: prepared native entry preserves the entire original post-spawn state
+  ---
+  duration_ms: 700.3649
+  ...
+# Subtest: manglares: prepared native entry preserves the entire original post-spawn state
+ok 51 - manglares: prepared native entry preserves the entire original post-spawn state
+  ---
+  duration_ms: 431.1671
+  ...
+# Subtest: volcanes: prepared native entry preserves the entire original post-spawn state
+ok 52 - volcanes: prepared native entry preserves the entire original post-spawn state
+  ---
+  duration_ms: 525.2596
+  ...
+# Subtest: gran-canon: prepared native entry preserves the entire original post-spawn state
+ok 53 - gran-canon: prepared native entry preserves the entire original post-spawn state
+  ---
+  duration_ms: 813.9231
+  ...
+# Subtest: desierto: prepared native entry preserves the entire original post-spawn state
+ok 54 - desierto: prepared native entry preserves the entire original post-spawn state
+  ---
+  duration_ms: 3048.4434
+  ...
+# Subtest: camera: obsolete worker replies cannot supply an entry
+ok 55 - camera: obsolete worker replies cannot supply an entry
+  ---
+  duration_ms: 308.0536
+  ...
+# Subtest: bounds: obsolete worker replies cannot supply an entry
+ok 56 - bounds: obsolete worker replies cannot supply an entry
+  ---
+  duration_ms: 291.9954
+  ...
+# Subtest: geometry: obsolete worker replies cannot supply an entry
+ok 57 - geometry: obsolete worker replies cannot supply an entry
+  ---
+  duration_ms: 322.818
+  ...
+# Subtest: group: obsolete worker replies cannot supply an entry
+ok 58 - group: obsolete worker replies cannot supply an entry
+  ---
+  duration_ms: 312.2535
+  ...
+# Subtest: collapse: obsolete worker replies cannot supply an entry
+ok 59 - collapse: obsolete worker replies cannot supply an entry
+  ---
+  duration_ms: 309.0656
+  ...
+# Subtest: rng: obsolete worker replies cannot supply an entry
+ok 60 - rng: obsolete worker replies cannot supply an entry
+  ---
+  duration_ms: 302.4871
+  ...
+# Subtest: a reply accepted before the camera moves is also rejected at the actual spawn
+ok 61 - a reply accepted before the camera moves is also rejected at the actual spawn
+  ---
+  duration_ms: 299.5765
+  ...
+# Subtest: preparation bounds outstanding work, reports failure, and never survives disposal
+ok 62 - preparation bounds outstanding work, reports failure, and never survives disposal
+  ---
+  duration_ms: 333.3458
+  ...
+# Subtest: prepared camera failure still uses the original boundary fallback and RNG
+ok 63 - prepared camera failure still uses the original boundary fallback and RNG
+  ---
+  duration_ms: 384.8437
+  ...
+# (node:53384) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: residency pins actual sparse birth/exit chunks without generating the expanded rectangle
+ok 64 - residency pins actual sparse birth/exit chunks without generating the expanded rectangle
+  ---
+  duration_ms: 4.6638
+  ...
+# Subtest: pins are evicted and bounds restored after cancellation, without disrupting normal chunks
+ok 65 - pins are evicted and bounds restored after cancellation, without disrupting normal chunks
+  ---
+  duration_ms: 1.7406
+  ...
+# Subtest: active actor next-step corridor remains pinned and all demand disappears after real departure
+ok 66 - active actor next-step corridor remains pinned and all demand disappears after real departure
+  ---
+  duration_ms: 0.5881
+  ...
+# Subtest: bounds refresh retains validated sparse demand while a new full worker key is prepared
+ok 67 - bounds refresh retains validated sparse demand while a new full worker key is prepared
+  ---
+  duration_ms: 9.4057
+  ...
+# Subtest: headless driver waits for the same retained daytime owner instead of the nighttime key
+ok 68 - headless driver waits for the same retained daytime owner instead of the nighttime key
+  ---
+  duration_ms: 44.6043
+  ...
+# Subtest: original expansive712 rhino exit shares a native exterior certificate without requiring an independent straight ray
+ok 69 - original expansive712 rhino exit shares a native exterior certificate without requiring an independent straight ray
+  ---
+  duration_ms: 985.1624
+  ...
+# Subtest: a shared certificate never bypasses current native fluid rejection
+ok 70 - a shared certificate never bypasses current native fluid rejection
+  ---
+  duration_ms: 1347.3629
+  ...
+# Subtest: a shared certificate never bypasses current native steep rejection
+ok 71 - a shared certificate never bypasses current native steep rejection
+  ---
+  duration_ms: 1170.4612
+  ...
+# Subtest: a shared certificate never bypasses current native solid rejection
+ok 72 - a shared certificate never bypasses current native solid rejection
+  ---
+  duration_ms: 745.8843
+  ...
+# Subtest: exact rejected snapshot resolves through normal Game.tick dt=0.1, reload=null
+ok 73 - exact rejected snapshot resolves through normal Game.tick dt=0.1, reload=null
+  ---
+  duration_ms: 34699.1615
+  ...
+# Subtest: exact rejected snapshot resolves through normal Game.tick dt=1, reload=null
+ok 74 - exact rejected snapshot resolves through normal Game.tick dt=1, reload=null
+  ---
+  duration_ms: 27556.4402
+  ...
+# Subtest: exact rejected snapshot resolves through normal Game.tick dt=0.1, reload=5
+ok 75 - exact rejected snapshot resolves through normal Game.tick dt=0.1, reload=5
+  ---
+  duration_ms: 41552.8662
+  ...
+# Subtest: whole group exterior native entry: closed
+ok 76 - whole group exterior native entry: closed
+  ---
+  duration_ms: 66.8788
+  ...
+# Subtest: whole group exterior native entry: open
+ok 77 - whole group exterior native entry: open
+  ---
+  duration_ms: 35.0432
+  ...
+# Subtest: whole group exterior native entry: gate
+ok 78 - whole group exterior native entry: gate
+  ---
+  duration_ms: 49.014
+  ...
+# Subtest: whole group exterior native entry: separate
+ok 79 - whole group exterior native entry: separate
+  ---
+  duration_ms: 28.2995
+  ...
+# Subtest: whole group exterior native entry: concave
+ok 80 - whole group exterior native entry: concave
+  ---
+  duration_ms: 34.9528
+  ...
+# Subtest: whole group exterior native entry: no-walls
+ok 81 - whole group exterior native entry: no-walls
+  ---
+  duration_ms: 2.7799
+  ...
+# Subtest: whole group exterior native entry: clipped-bounds
+ok 82 - whole group exterior native entry: clipped-bounds
+  ---
+  duration_ms: 26.0365
+  ...
+# Subtest: closed 40m enclosure starts physically outside then hits a wall
+ok 83 - closed 40m enclosure starts physically outside then hits a wall
+  ---
+  duration_ms: 1130.7947
+  ...
+# Subtest: closed 320m enclosure starts physically outside then hits a wall
+ok 84 - closed 320m enclosure starts physically outside then hits a wall
+  ---
+  duration_ms: 7972.9626
+  ...
+# Subtest: residency handshake preserves pending night/RNG and reload creates exactly one complete group
+ok 85 - residency handshake preserves pending night/RNG and reload creates exactly one complete group
+  ---
+  duration_ms: 10235.8094
+  ...
+# Subtest: worker preparation uses the same exterior choice without changing state or RNG
+ok 86 - worker preparation uses the same exterior choice without changing state or RNG
+  ---
+  duration_ms: 537.9506
+  ...
+# Subtest: expanded bounds have sparse finite chunk demand and release when raid disappears
+ok 87 - expanded bounds have sparse finite chunk demand and release when raid disappears
+  ---
+  duration_ms: 22.4275
+  ...
+# Subtest: native sabana opening: whole group keeps genuine terrain and fluid legality
+ok 88 - native sabana opening: whole group keeps genuine terrain and fluid legality
+  ---
+  duration_ms: 1099.3133
+  ...
+# Subtest: native gran-rio opening: whole group keeps genuine terrain and fluid legality
+ok 89 - native gran-rio opening: whole group keeps genuine terrain and fluid legality
+  ---
+  duration_ms: 803.1109
+  ...
+# Subtest: native manglares opening: whole group keeps genuine terrain and fluid legality
+ok 90 - native manglares opening: whole group keeps genuine terrain and fluid legality
+  ---
+  duration_ms: 354.8668
+  ...
+# Subtest: native volcanes opening: whole group keeps genuine terrain and fluid legality
+ok 91 - native volcanes opening: whole group keeps genuine terrain and fluid legality
+  ---
+  duration_ms: 1454.274
+  ...
+# Subtest: native gran-canon opening: whole group keeps genuine terrain and fluid legality
+ok 92 - native gran-canon opening: whole group keeps genuine terrain and fluid legality
+  ---
+  duration_ms: 615.8279
+  ...
+# Subtest: native desierto opening: whole group keeps genuine terrain and fluid legality
+ok 93 - native desierto opening: whole group keeps genuine terrain and fluid legality
+  ---
+  duration_ms: 5622.85
+  ...
+# Subtest: a whole 32 cohort is neither thinned nor rerolled when a single near-camera lane cannot fit
+ok 94 - a whole 32 cohort is neither thinned nor rerolled when a single near-camera lane cannot fit
+  ---
+  duration_ms: 174.118
+  ...
+# Subtest: a whole 72 cohort is neither thinned nor rerolled when a single near-camera lane cannot fit
+ok 95 - a whole 72 cohort is neither thinned nor rerolled when a single near-camera lane cannot fit
+  ---
+  duration_ms: 145.2717
+  ...
+# Subtest: a wall closing a natural cliff pocket cannot admit births in its enclosed interior beyond the wall AABB
+ok 96 - a wall closing a natural cliff pocket cannot admit births in its enclosed interior beyond the wall AABB
+  ---
+  duration_ms: 74.0719
+  ...
+# Subtest: failed whole-group selection is memoized, reports once and retries after native obstacle epoch changes
+ok 97 - failed whole-group selection is memoized, reports once and retries after native obstacle epoch changes
+  ---
+  duration_ms: 25.1718
+  ...
+# Subtest: view invalidation replaces prior sparse demand before whole-group residency can commit
+ok 98 - view invalidation replaces prior sparse demand before whole-group residency can commit
+  ---
+  duration_ms: 28.8714
+  ...
+# Subtest: retained daytime entry owns readiness across night and both groups spawn sequentially with native ticks
+ok 99 - retained daytime entry owns readiness across night and both groups spawn sequentially with native ticks
+  ---
+  duration_ms: 2229.1807
+  ...
+1..99
+# tests 99
+# suites 0
+# pass 99
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 108411.903
