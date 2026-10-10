@@ -1,17 +1,19 @@
 import * as THREE from 'three';
 
 // Opt-in engine-handler evidence, never physical/trusted pointer input.
-export function createLoadingVisualPlantQa(diorama,report,{enabled=false}={}){
+export function createLoadingVisualPlantQa(diorama,report,{enabled=false,startProgress=0}={}){
  if(!enabled)return null;
- const row={scope:'Synthetic engine-handler raycast; not physical/trusted input or save planting.',attempted:false,closed:false,candidates:0,result:null};
+ if(!Number.isFinite(startProgress)||startProgress<0||startProgress>=1)throw Error('Invalid natural planting progress selector');
+ const row={scope:'Synthetic engine-handler raycast; not physical/trusted input or save planting.',attempted:false,closed:false,candidates:0,result:null,startProgress};
  report.plantAction=row;
  let owner=diorama;
- const close=({cancelled=false}={})=>{if(row.closed)return;row.closed=true;row.cancelled=cancelled;if(!row.attempted)row.skipped=cancelled?'owner cancelled':'eligible initial draw absent';owner=null;};
+ const close=({cancelled=false}={})=>{if(row.closed)return;row.closed=true;row.cancelled=cancelled;if(!row.attempted)row.skipped=cancelled?'owner cancelled':startProgress>0?'eligible natural-progress draw absent':'eligible initial draw absent';owner=null;};
  const afterDraw=(actual,progress)=>{
   if(row.closed||row.attempted||actual!==owner)return;
   if(owner.disposed||owner.world.disposed||owner.world.loading.signal.aborted){close({cancelled:true});return;}
   if(!owner.prepared||!owner.interactive||!owner.plants.accepting||owner.world.cinematic||progress>=1)return;
-  const initial=report.frames?.find(frame=>frame.label==='initial');
+  if(progress<startProgress)return;
+  const initial=report.frames?.find(frame=>frame.label===(startProgress>0?'preplant':'initial'));
   if(!initial||initial.plants.length!==4||owner.plants.plants.length!==4)return;
   row.attempted=true;
   try{
@@ -32,7 +34,7 @@ export function createLoadingVisualPlantQa(diorama,report,{enabled=false}={}){
     selected={clientX:rect.left+(ndc.x+1)*rect.width/2,clientY:rect.top+(1-ndc.y)*rect.height/2,point:hit.point.toArray()};break;
    }
    if(!selected){row.skipped='no safe projected ground point';return;}
-   row.selected=selected;row.beforeCount=owner.plants.plants.length;row.progress=progress;
+   row.selected=selected;row.beforeCount=owner.plants.plants.length;row.progress=progress;row.presentationTime=owner.plants.time;row.animationProgress=owner.plants.progress;
    const logical=owner.state.plants,ids=logical?.map(p=>p.id)??null;
    const plant=owner.plantAt(selected.clientX,selected.clientY);
    row.afterCount=owner.plants.plants.length;row.result=plant?{id:plant.id,x:plant.x,z:plant.z,growth:plant.growth}:null;

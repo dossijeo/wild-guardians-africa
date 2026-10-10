@@ -35,6 +35,9 @@ fn main() {
                     let _ = webview.eval("window.__desktopSmokeVisualCapture = true;");
                     if std::env::args().any(|arg| arg == "--smoke-visual-plant") {
                         let _ = webview.eval("window.__desktopSmokeVisualPlant = true;");
+                        if std::env::args().any(|arg| arg == "--smoke-visual-plant-progress65") {
+                            let _ = webview.eval("window.__desktopSmokeVisualPlantProgress65 = true;");
+                        }
                     }
                 }
                 let _ = webview.eval(include_str!("../smoke.js"));

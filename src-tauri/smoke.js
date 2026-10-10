@@ -48,6 +48,14 @@
         if (!action?.result || action.afterCount !== 5 || action.logicalPlantsUnchanged !== true || !additional) {
           report.errors.push('Requested synthetic loading plant evidence is missing or failed');
         }
+        if (window.__desktopSmokeVisualPlantProgress65 === true) {
+          const before = visual?.frames?.find(frame=>frame.label==='preplant');
+          const mid = visual?.frames?.find(frame=>frame.label==='catchup-mid');
+          const mature = visual?.frames?.find(frame=>frame.label==='mature');
+          if (!before || before.progress<.65 || before.plants.length!==4 || action?.progress<.65 || !mid || mid.plants.length!==5 || !(mid.plants[4].growth>0 && mid.plants[4].growth<mid.plants[0].growth) || !mature || mature.plants.length!==5 || !mature.plants.every(plant=>plant.growth===mature.plants[0].growth)) {
+            report.errors.push('Natural-progress65 planting/catch-up evidence is missing or failed');
+          }
+        }
       }
       // Never turn a missing/empty capture into positive visual evidence. Keep
       // preflight errors intact and leave ordinary timing runs unchanged.

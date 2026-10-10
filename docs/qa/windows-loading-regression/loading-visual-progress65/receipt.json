@@ -1,0 +1,167 @@
+{
+  "base": "46257d59b16a20fc40515b6af2f5124cbc87e8d3",
+  "scope": "QA-only natural progress65; no native raster or timing evidence",
+  "sources": [
+    {
+      "path": "src/app/loading-visual-qa.js",
+      "bytes": 3670,
+      "sha256": "7399031fdd3ffcdc1bed207f0f5d862c09f392d3d0bc5ae0be94d82bf7e07690"
+    },
+    {
+      "path": "src/app/loading-visual-plant-qa.js",
+      "bytes": 3494,
+      "sha256": "1ab5938e775775ad431bdeceb78376d0f042b5f1991dc093e6961f2053d1a346"
+    },
+    {
+      "path": "src/app/loading-visual-bridge.js",
+      "bytes": 2311,
+      "sha256": "7bc93894bded6a26593b144144545c1da4f852616935842c6690a3691596311d"
+    },
+    {
+      "path": "src-tauri/smoke.js",
+      "bytes": 15632,
+      "sha256": "05c1eb81958a943188ce959ac4df8cab2456538fa1dbabe6fafd6c7a44d5f318"
+    },
+    {
+      "path": "src-tauri/src/main.rs",
+      "bytes": 4512,
+      "sha256": "ba29843b4e4c9a73136ee831f52f10daa71f25986321e6c045db1e32f5406130"
+    },
+    {
+      "path": "tests/world-crop-pair-wiring-normalize.js",
+      "bytes": 2065,
+      "sha256": "4c9fa3bf83d51b0336ea2ed571880038456062d453f4f089255c6d9263143f87"
+    },
+    {
+      "path": "tests/loading-visual-progress65.test.js",
+      "bytes": 4703,
+      "sha256": "74cc5840bf4f0f5e437568c6e2f1d00fd06537e6878b12eb03066ab7609f1eb9"
+    }
+  ],
+  "unchanged": [
+    {
+      "path": "src/app/main.js",
+      "sha256": "1c4079365f8de65332fe0801c98b0df712ed09f1dc39882b40aba7a9cd88caad",
+      "byteIdenticalToBase": true
+    },
+    {
+      "path": "src/rendering/scene.js",
+      "sha256": "45173a5ce0b7414b5e3ba20f8681ffc706d47d68805e25c2ab42e214aab8ada7",
+      "byteIdenticalToBase": true
+    },
+    {
+      "path": "src/rendering/loading-diorama.js",
+      "sha256": "736a000a0e1921d4671eef1df917901f763b9f0d2d99fdfd520902bcdbb04cd3",
+      "byteIdenticalToBase": true
+    },
+    {
+      "path": "src/rendering/loading-plants.js",
+      "sha256": "8f5aba68d7a78f801356887c4f4704dc73b5c1f4d3154e4f8cca346bf8f5dc21",
+      "byteIdenticalToBase": true
+    },
+    {
+      "path": "src/rendering/assets.js",
+      "sha256": "7b071399ab96052f741e59c4590c1a5dcaa10a02c23ed01542e6f9ca5433ef1c",
+      "byteIdenticalToBase": true
+    },
+    {
+      "path": ".github/workflows/windows.yml",
+      "sha256": "f3f585925f3f8c528a6332cc7072a5e9aec2ca1b9627df0155276f538a1b62f8",
+      "byteIdenticalToBase": true
+    },
+    {
+      "path": "src/rendering/world-crop-pair.js",
+      "sha256": "9adb97bd320cce0845353444dd01f65cc7b8c8c2dadf3cf4cec255ede2411367",
+      "byteIdenticalToBase": true
+    }
+  ],
+  "cpu": {
+    "command": "node --test tests/loading-visual-progress65.test.js",
+    "exitCode": 0,
+    "tests": 4,
+    "passed": 4,
+    "failed": 0,
+    "durationMs": 292.0206,
+    "rawBytes": 1328,
+    "rawSha256": "7e7074d6fa61b0a530ed5f9ae8909c6486c2e58140f37a9972ce89393e67bcd5",
+    "gzipSha256": "ff503ca4592704a7eef891349ae634901abc45d3ae5e8c7b61d4266c761b9b8a"
+  },
+  "notRun": [
+    "Windows CI",
+    "native/GPU/browser"
+  ],
+  "plannedChecks": [
+    "root frozen source review before any native launch",
+    "real PNG frames with threshold, intermediate deficit and mature equality; CPU mocks do not prove raster"
+  ],
+  "checks": [
+    {
+      "command": "node --test tests/loading-visual-progress65.test.js tests/loading-visual-qa.test.js tests/loading-visual-bridge.test.js tests/loading-visual-plant-qa.test.js tests/loading-visual-plant-report.test.js tests/world-crop-pair-wiring.test.js tests/loading-visual-fixtures.test.js",
+      "exitCode": 0,
+      "passed": 32,
+      "failed": 0,
+      "durationMs": 3554.9488
+    },
+    {
+      "command": "node --test tests/crop-partition-app.test.js tests/native-loading-trace.test.js tests/native-loading-trace-bridge.test.js tests/sfx-catalog-audit.test.js",
+      "exitCode": 0,
+      "passed": 23,
+      "failed": 0,
+      "durationMs": 723.3068
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "durationSeconds": 11.64,
+      "warnings": [
+        "Vite large chunk warning"
+      ]
+    },
+    {
+      "command": "npm run test:web-package",
+      "exitCode": 0,
+      "files": 720,
+      "bytes": 445283034,
+      "relativeLinks": 860,
+      "runtimeGLBs": 24
+    },
+    {
+      "command": "node tools/audit_sfx_catalog.mjs --check",
+      "exitCode": 0,
+      "total": 126,
+      "assigned": 100,
+      "unassigned": 26,
+      "stale": false
+    },
+    {
+      "command": "node --check three modified visual helpers and src-tauri/smoke.js; git diff --check",
+      "exitCode": 0
+    }
+  ],
+  "logs": [
+    {
+      "path": "affected-tests.log.gz",
+      "rawBytes": 7700,
+      "rawSha256": "5a80bf9b9c8de3d3a58b00e88a877d414c4bea9983d36fc925c585065053b60f",
+      "gzipSha256": "53bdb25022b5572dce3e11df8c00a31371ab5701f730d60d3bd0373a37933511"
+    },
+    {
+      "path": "invariants.log.gz",
+      "rawBytes": 5640,
+      "rawSha256": "fc5f78e4f4a3bd7005392dd09129467087fd9ae69d19903343bc3f52dcd038e1",
+      "gzipSha256": "ebb79650750617c3261fc017d0c30696e6a7498cef24188df7b65e6a87ceea67"
+    },
+    {
+      "path": "build.log.gz",
+      "rawBytes": 2321,
+      "rawSha256": "344e394f2cb700b4b8d46b6d0928aef7158feed547cdeb8f2e20b124107105b3",
+      "gzipSha256": "40f57b0e7ee4c0900bd2905995641d238d057288dd902150c9e1a6bf6966a928"
+    },
+    {
+      "path": "package.log.gz",
+      "rawBytes": 411,
+      "rawSha256": "14472c95130117f598c3959ecc1134026b444e0b479e71d5e4897eb9a9e76939",
+      "gzipSha256": "fe80264e3a898abbe6b113f87811dd85e5fce3ed22c00ebb416ecd3f1641f74c"
+    }
+  ]
+}
