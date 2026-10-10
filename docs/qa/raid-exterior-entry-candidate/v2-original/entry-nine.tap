@@ -1,0 +1,59 @@
+TAP version 13
+# {"scope":"CPU observation, not frame/GPU acceptance","cameraMilliseconds":7.518400000000042,"entry":{"entries":[{"x":81.4,"z":12.1}],"exits":[{"x":81.4,"z":15.1}]}}
+# {"scope":"entry-only CPU observation; no horde gameplay activated","milliseconds":46.35630000000015,"entry":{"entries":[{"x":94.3,"z":12.1},{"x":81.7,"z":12.1},{"x":94.3,"z":16.1},{"x":81.7,"z":16.1},{"x":77.5,"z":11.9},{"x":77.5,"z":15.9},{"x":85.9,"z":21.9},{"x":90.1,"z":21.97},{"x":98.5,"z":17.97},{"x":81.7,"z":21.85},{"x":94.3,"z":21.85},{"x":73.3,"z":12.55}],"exits":[{"x":94.3,"z":15.1},{"x":81.7,"z":15.1},{"x":94.3,"z":19.1},{"x":81.7,"z":19.1},{"x":77.5,"z":14.9},{"x":77.5,"z":18.9},{"x":85.9,"z":24.9},{"x":90.1,"z":24.97},{"x":98.5,"z":20.97},{"x":81.7,"z":24.85},{"x":94.3,"z":24.85},{"x":73.3,"z":15.55}]}}
+# {"scope":"paid native Canyon closed-region proof, not campaign","stroke":[[-22,24],[-34,24],[-34,36],[-22,36]],"paidCoins":160,"inside":{"x":-30,"z":26},"outside":{"x":-40,"z":26},"radius":1.1,"interiorWalkable":true,"exteriorWalkable":true,"exteriorRoute":null,"finiteNativeGridNodes":14,"snapshotSHA256":"44f4708b52c1744478f362f9032ca88e42589641731688f00ba3d6a14290415d","entry":{"entries":[{"x":-36.6,"z":29.1}],"exits":[{"x":-36.6,"z":32.1}]}}
+# {"scope":"one native paid-enclosure physical raid, not campaign","spawn":{"x":81.4,"z":12.1},"exit":{"x":81.4,"z":15.1},"elapsed":5.2499999999999964,"actualHits":2,"paidBalance":525}
+# Subtest: paid17-piece enclosure: direct and prepared select exterior close legal approaches without changing RNG
+ok 1 - paid17-piece enclosure: direct and prepared select exterior close legal approaches without changing RNG
+  ---
+  duration_ms: 681.5023
+  ...
+# Subtest: mixed paid walls, removal/reclosure and save/reload invalidate protected region ownership
+ok 2 - mixed paid walls, removal/reclosure and save/reload invalidate protected region ownership
+  ---
+  duration_ms: 439.932
+  ...
+# Subtest: interior prepared reply is refused at actual spawn with unchanged allocation/RNG versus native direct spawn
+ok 3 - interior prepared reply is refused at actual spawn with unchanged allocation/RNG versus native direct spawn
+  ---
+  duration_ms: 382.1574
+  ...
+# Subtest: twelve full-size bodies keep whole-group separation and reversible exterior escape
+ok 4 - twelve full-size bodies keep whole-group separation and reversible exterior escape
+  ---
+  duration_ms: 411.9957
+  ...
+# Subtest: native Canyon automatic-gate U remains an OPEN control: full-radius native west escape
+ok 5 - native Canyon automatic-gate U remains an OPEN control: full-radius native west escape
+  ---
+  duration_ms: 529.9926
+  ...
+# Subtest: separate paid native Canyon cliff enclosure has a walkable full-radius interior and a finite native closed region
+ok 6 - separate paid native Canyon cliff enclosure has a walkable full-radius interior and a finite native closed region
+  ---
+  duration_ms: 422.7785
+  ...
+# Subtest: prepared replies require active bounds, native walkability, full-body separation and reversible escape
+ok 7 - prepared replies require active bounds, native walkability, full-body separation and reversible escape
+  ---
+  duration_ms: 389.3488
+  ...
+# Subtest: one selection query scans geometry once and shares cached polygons for all candidates/radii
+ok 8 - one selection query scans geometry once and shares cached polygons for all candidates/radii
+  ---
+  duration_ms: 379.6351
+  ...
+# Subtest: ordinary raid physically approaches the paid enclosure, spends real wall hits and returns to its exterior exit across save/reload
+ok 9 - ordinary raid physically approaches the paid enclosure, spends real wall hits and returns to its exterior exit across save/reload
+  ---
+  duration_ms: 439.1956
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4280.145

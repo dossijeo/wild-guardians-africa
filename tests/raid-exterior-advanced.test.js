@@ -1,0 +1,21 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {gunzipSync} from 'node:zlib';
+import {createHash} from 'node:crypto';
+import {performance} from 'node:perf_hooks';
+import {deserialize,serialize} from '../src/persistence/snapshots.js';
+import {Navigation} from '../src/world/navigation.js';
+import {createRaidExteriorQuery,exteriorRaidEntry} from '../src/world/raid-exterior.js';
+import {cameraRaidEntry} from '../src/simulation/raids.js';
+import {animalSpec} from '../src/simulation/rules.js';
+import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
+import {activeChunkRegion} from '../src/world/active-region.js';
+test('retained advanced farm: native geometry queries and whole entry with103paid walls and865living crops',()=>{
+ const bytes=readFileSync(new URL('../docs/qa/horde-self-consistent-pilot-e040ea6f-20/native-original/responsible/state.json.gz',import.meta.url)),s=deserialize(gunzipSync(bytes).toString()),profile=JSON.parse(readFileSync(new URL('../public/content/biome-canyons.json',import.meta.url))).profile,nav=new Navigation(s.seed,s.biome,profile);
+ assert.equal(s.structures.filter(w=>w.kind==='wall').length,103);assert.equal(s.plants.filter(p=>p.alive).length,865);nav.setState(s);
+ const center=s.structures.find(w=>w.kind==='center'),eye={x:center.x+1,z:center.z+1};nav.setActiveBounds(activeChunkRegion(eye).bounds);nav.setRaidView(eye,center);const before=serialize(s),radius=ANIMAL_ACTIONS.animals.warthog.presentation.footprint.radius,group=[{spec:animalSpec('warthog'),radius}];
+ const cold=performance.now(),query=createRaidExteriorQuery(s,nav),regions=query.regionsFor(radius),coldMs=performance.now()-cold;const warm=performance.now(),again=createRaidExteriorQuery(s,nav);for(let i=0;i<200;i++)assert.equal(again.regionsFor(radius),regions);const warmMs=performance.now()-warm;
+ const start=performance.now(),entry=cameraRaidEntry(s,group,nav.activeBounds,nav,nav.raidView,2,query),entryMs=performance.now()-start;assert.ok(exteriorRaidEntry(s,nav,group,entry));assert.equal(serialize(s),before);
+ console.log(JSON.stringify({scope:'historical legal farm restored under candidate main navigation, geometry/entry-only; not campaign or frame/GPU acceptance',originalGzipSHA256:createHash('sha256').update(bytes).digest('hex'),livePlants:865,historicalPlants:5188,walls:103,regions:regions.length,coldMs,warm200LookupsMs:warmMs,entryMs,entry}));
+});

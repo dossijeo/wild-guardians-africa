@@ -1,11 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {performance} from 'node:perf_hooks';
-import {createHash} from 'node:crypto';
 import * as Game from '../src/simulation/game.js';
 import {createOpeningWorld} from '../tools/check_opening.mjs';
 import {cameraRaidEntry,chooseRaidEntry,spawnRaid,reachableApproach} from '../src/simulation/raids.js';
-import {createRaidExteriorQuery,raidExteriorRegions,outsideRaidRegions,exteriorRaidEntry} from '../src/world/raid-exterior.js';
+import {raidExteriorRegions,outsideRaidRegions,exteriorRaidEntry} from '../src/world/raid-exterior.js';
 import {raidEntryRequest,raidEntryKey} from '../src/world/raid-entry-data.js';
 import {computeRaidEntry} from '../src/world/compute-raid-entry.js';
 import {Navigation} from '../src/world/navigation.js';
@@ -51,38 +50,8 @@ test('twelve full-size bodies keep whole-group separation and reversible exterio
  const {s,nav}=fixture(),group=['warthog','warthog','warthog','warthog','hyena','hyena','hyena','buffalo','buffalo','lion','lion','rhino'];
  const before=serialize(s),start=performance.now(),entry=chooseRaidEntry(s,specs(group),nav.activeBounds,0,nav);legal(s,nav,group,entry);assert.equal(serialize(s),before);console.log(JSON.stringify({scope:'entry-only CPU observation; no horde gameplay activated',milliseconds:performance.now()-start,entry}));
 });
-test('native Canyon automatic-gate U remains an OPEN control: full-radius native west escape',()=>{
+test('native Canyon cliff boundary participates, without manufacturing omitted river edges',()=>{
  const {s,nav}=createOpeningWorld({biome:'gran-canon'}),stroke=[[-25,-8],[-40,-8],[-40,8],[-25,8]];
  assert.equal(Game.buildWallChain(s,'cliff','zarzas',stroke,nav,options),true);assert.equal(s.structures.filter(p=>p.autoGate).length,1);
- const before=serialize(s),regions=raidExteriorRegions(s,nav,1.1),a={x:-39,z:-6},b={x:-44,z:-6};assert.equal(regions.length,0);assert.ok(nav.walkable(a.x,a.z,1.1,null,false));assert.ok(nav.walkable(b.x,b.z,1.1,null,false));assert.ok(nav.segmentClear(a,b,1.1,null,false));assert.ok(nav.segmentClear(b,a,1.1,null,false));assert.equal(outsideRaidRegions(a,1.1,regions),true);assert.equal(serialize(s),before);
-});
-test('separate paid native Canyon cliff enclosure has a walkable full-radius interior and a finite native closed region',()=>{
- const {s,nav}=createOpeningWorld({biome:'gran-canon'}),stroke=[[-22,24],[-34,24],[-34,36],[-22,36]];
- assert.equal(Game.buildWallChain(s,'nativeclosed','zarzas',stroke,nav,options),true);assert.equal(s.ledger.entries.nativeclosed.n,'-160');assert.equal(s.structures.filter(p=>p.autoGate).length,1);
- const before=serialize(s),inside={x:-30,z:26},outside={x:-40,z:26},regions=raidExteriorRegions(s,nav,1.1);
- assert.ok(nav.walkable(inside.x,inside.z,1.1,null,false));assert.ok(nav.walkable(outside.x,outside.z,1.1,null,false));assert.equal(outsideRaidRegions(inside,1.1,regions),false);
- assert.equal(nav.path(inside,outside,1.1,null,false),null);assert.ok(nav.closedRegions.has('1.1:null:false|-30,26'),'exhausted native search must prove a finite component, not just bounded search failure');
- nav.setActiveBounds([-120,-120,120,120]);nav.setRaidView(inside,{x:-30,z:24});const entry=cameraRaidEntry(s,specs(['warthog']),nav.activeBounds,nav);legal(s,nav,['warthog'],entry);assert.ok(Math.hypot(entry.entries[0].x-inside.x,entry.entries[0].z-inside.z)<20);assert.equal(serialize(s),before);
- console.log(JSON.stringify({scope:'paid native Canyon closed-region proof, not campaign',stroke,paidCoins:160,inside,outside,radius:1.1,interiorWalkable:true,exteriorWalkable:true,exteriorRoute:null,finiteNativeGridNodes:nav.closedRegions.get('1.1:null:false|-30,26').size,snapshotSHA256:createHash('sha256').update(before).digest('hex'),entry}));
-});
-test('prepared replies require active bounds, native walkability, full-body separation and reversible escape',()=>{
- const {s,nav}=fixture(),group=['warthog'],valid=cameraRaidEntry(s,specs(group),nav.activeBounds,nav);assert.ok(exteriorRaidEntry(s,nav,specs(group),valid));
- assert.equal(exteriorRaidEntry(s,nav,specs(group),{entries:[{x:10000,z:12}],exits:[{x:10000,z:15}]}),false);
- const wall=s.structures.find(w=>w.kind==='wall');assert.equal(exteriorRaidEntry(s,nav,specs(group),{entries:[{x:wall.x,z:wall.z}],exits:valid.exits}),false);
- assert.equal(exteriorRaidEntry(s,nav,specs(['warthog','warthog']),{entries:[...valid.entries,...valid.entries],exits:[...valid.exits,...valid.exits]}),false);
- const original=nav.segmentClear;let calls=0;nav.segmentClear=function(a,b,...args){calls++;return calls%2?original.call(this,a,b,...args):false;};assert.equal(exteriorRaidEntry(s,nav,specs(group),valid),false);assert.equal(calls,2);nav.segmentClear=original;
-});
-test('one selection query scans geometry once and shares cached polygons for all candidates/radii',()=>{
- const {s,nav}=fixture();raidExteriorRegions(s,nav,1.1);let scans=0;const observed=Object.create(s);Object.defineProperty(observed,'structures',{get(){scans++;return s.structures;}});
- const query=createRaidExteriorQuery(observed,nav),regions=query.regionsFor(1.1);assert.equal(scans,1);for(let i=0;i<200;i++)assert.equal(query.regionsFor(1.1),regions);assert.equal(scans,1);
-});
-test('ordinary raid physically approaches the paid enclosure, spends real wall hits and returns to its exterior exit across save/reload',()=>{
- let {s,nav}=fixture();const balance=numberOf(s.ledger.balance);spawnRaid(s,{group:['warthog']},nav);assert.ok(s.raid);const originalActor=s.raid.animals[0],id=originalActor.id,spawn={...originalActor.spawn},exit={...originalActor.exit};
- assert.ok(outsideRaidRegions(spawn,1.1,raidExteriorRegions(s,nav,1.1)));let reloaded=false,last=originalActor,firstTarget=null;
- for(let i=0;i<480&&s.raid;i++){
-  Game.tick(s,.25,nav);if(s.raid){last=s.raid.animals.find(a=>a.id===id);if(!firstTarget&&last.targetId)firstTarget=s.structures.find(w=>w.id===last.targetId)?.kind;assert.ok(nav.walkable(last.x,last.z,last.radius,null,false));}
-  if(!reloaded&&s.time>=.25&&s.raid){const saved=serialize(s),profile=nav.profile,bounds=nav.activeBounds,view=nav.raidView;s=deserialize(saved);nav=new Navigation(s.seed,s.biome,profile);nav.setState(s);nav.setActiveBounds(bounds);nav.setRaidView(view.eye,view.target);assert.equal(serialize(s),saved);assert.deepEqual(s.raid.animals[0].spawn,spawn);assert.deepEqual(s.raid.animals[0].exit,exit);reloaded=true;}
- }
- assert.equal(firstTarget,'wall');assert.equal(s.raid,null);assert.equal(last.status,'gone');assert.ok(Math.hypot(last.x-exit.x,last.z-exit.z)<1e-7);assert.ok(reloaded);assert.ok(s.events.some(e=>e.type==='StructureHit'));assert.equal(s.events.filter(e=>e.type==='RaidEnded').length,1);assert.equal(numberOf(s.ledger.balance),balance);
- console.log(JSON.stringify({scope:'one native paid-enclosure physical raid, not campaign',spawn,exit,elapsed:s.elapsed,actualHits:s.events.filter(e=>e.type==='StructureHit').length,paidBalance:balance}));
+ const before=serialize(s),regions=raidExteriorRegions(s,nav,1.1);assert.ok(regions.length>0);assert.equal(outsideRaidRegions({x:-34,z:0},1.1,regions),false);assert.equal(serialize(s),before);
 });

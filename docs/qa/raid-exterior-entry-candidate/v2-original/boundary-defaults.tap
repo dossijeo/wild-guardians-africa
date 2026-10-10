@@ -1,0 +1,105 @@
+TAP version 13
+# Subtest: a building completes an open wall stroke and the door is on the village-to-crop side
+ok 1 - a building completes an open wall stroke and the door is on the village-to-crop side
+  ---
+  duration_ms: 52.6054
+  ...
+# Subtest: a natural canyon cliff completes the enclosure without placing a gate into the cliff
+ok 2 - a natural canyon cliff completes the enclosure without placing a gate into the cliff
+  ---
+  duration_ms: 17.6358
+  ...
+# Subtest: the native Grand Canyon cliff closes a paid perimeter with a traversable door
+ok 3 - the native Grand Canyon cliff closes a paid perimeter with a traversable door
+  ---
+  duration_ms: 647.4232
+  ...
+# Subtest: a genuinely open wall beside a building does not receive an unnecessary gate
+ok 4 - a genuinely open wall beside a building does not receive an unnecessary gate
+  ---
+  duration_ms: 1.9906
+  ...
+# Subtest: closing a mixed-material perimeter converts the latest new piece and preserves every older piece
+ok 5 - closing a mixed-material perimeter converts the latest new piece and preserves every older piece
+  ---
+  duration_ms: 7.6175
+  ...
+# Subtest: the recorded native perimeter keeps skipped rock modules and creates one accessible gate
+ok 6 - the recorded native perimeter keeps skipped rock modules and creates one accessible gate # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.157
+  ...
+# Subtest: incremental zarzas closure and rebuilding preserve the other materials
+ok 7 - incremental zarzas closure and rebuilding preserve the other materials # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1198
+  ...
+# Subtest: incremental empalizada closure and rebuilding preserve the other materials
+ok 8 - incremental empalizada closure and rebuilding preserve the other materials # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.154
+  ...
+# Subtest: incremental adobe closure and rebuilding preserve the other materials
+ok 9 - incremental adobe closure and rebuilding preserve the other materials # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0883
+  ...
+# Subtest: incremental piedra closure and rebuilding preserve the other materials
+ok 10 - incremental piedra closure and rebuilding preserve the other materials # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1664
+  ...
+# Subtest: incremental reforzado closure and rebuilding preserve the other materials
+ok 11 - incremental reforzado closure and rebuilding preserve the other materials # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0696
+  ...
+# Subtest: rebuilding several removed blocks adds a door only when the final gap closes
+ok 12 - rebuilding several removed blocks adds a door only when the final gap closes # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0561
+  ...
+# Subtest: an existing usable gate survives later perimeter edits without adding another door
+ok 13 - an existing usable gate survives later perimeter edits without adding another door # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0529
+  ...
+# Subtest: an existing zarzas door is preserved when multiple gaps are rebuilt with other materials
+ok 14 - an existing zarzas door is preserved when multiple gaps are rebuilt with other materials # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1043
+  ...
+# Subtest: an existing empalizada door is preserved when multiple gaps are rebuilt with other materials
+ok 15 - an existing empalizada door is preserved when multiple gaps are rebuilt with other materials # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0554
+  ...
+# Subtest: an existing adobe door is preserved when multiple gaps are rebuilt with other materials
+ok 16 - an existing adobe door is preserved when multiple gaps are rebuilt with other materials # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0521
+  ...
+# Subtest: an existing piedra door is preserved when multiple gaps are rebuilt with other materials
+ok 17 - an existing piedra door is preserved when multiple gaps are rebuilt with other materials # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0939
+  ...
+# Subtest: an existing reforzado door is preserved when multiple gaps are rebuilt with other materials
+ok 18 - an existing reforzado door is preserved when multiple gaps are rebuilt with other materials # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1641
+  ...
+# Subtest: an obstructed approach to an existing door does not make the planner create a second door
+ok 19 - an obstructed approach to an existing door does not make the planner create a second door # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.087
+  ...
+1..19
+# tests 19
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 14
+# todo 0
+# duration_ms 971.3084

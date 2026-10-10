@@ -1,0 +1,82 @@
+{
+  "base": "9f0f65edb54612e7565b6ef3862faa556bb3c6ae",
+  "previousFrozenCandidate": "d579a209be82de67051f442b75f6a6ab8c2fa532",
+  "sources": {
+    "src/simulation/raids.js": "bf4eee2222e98f3c95290a1cf2c1124e03f2aeb932129cde0d0d44295fe023d6",
+    "src/world/boundary-gates.js": "2d87f7499de46d9a93b89a3e0a37321aec1c22b5dc840490c8799276f2423d05",
+    "src/world/raid-exterior.js": "d3e771e3744805dd761d679eca81254340875558a682841d2e747653627ca4da",
+    "tests/raid-exterior-entry.test.js": "f5958e47cb18ef1a06994a2fec8923c3c393e569c2001ea576edca6084281cf5",
+    "tests/raid-exterior-advanced.test.js": "460c762ba7b9d43fbef75844d70b96e090193a54725e542ff88f66641d0c741a",
+    "tests/raid-entry-preparer.test.js": "b39dd712780c8e8652666f5cea83b4d56c59a4b6fa2504d1dec1f17b6d37416f",
+    "tests/boundary-gates.test.js": "bfbafb96471412e9325b8e6beafb7115f5052c86f5ba59afb0a03e5153891d08",
+    "tools/audit_raid_exterior_v2.mjs": "8557cbf565cddb53e94ee2e128dabc77752475ef0234244dff6a4a3e4ec309c0"
+  },
+  "payloads": {
+    "v2-original/advanced.tap": {
+      "bytes": 888,
+      "sha256": "50807e8da850cf10471efadd3a64fc1ea0cc5b8250f773ff7a693a39bf13a098"
+    },
+    "v2-original/boundary-defaults.tap": {
+      "bytes": 4930,
+      "sha256": "4ee67d70e6e7e3bba7dff75844ddec1ec0075bd8835898b8186d0ffb5f04e4af"
+    },
+    "v2-original/entry-nine.tap": {
+      "bytes": 3910,
+      "sha256": "f6f5e3c9cd45ebd09e435e3a94cb6a7eadc26c86448dd3df4deed98971a2a2c1"
+    },
+    "v2-original/native-cliff-probes-d579.json": {
+      "bytes": 48526,
+      "sha256": "c20d3149ce988a488fa33a2c92a29ddc737c715712c171f0dbb2c21575f0bca7"
+    },
+    "v2-original/original-d579-test.js.txt": {
+      "bytes": 6288,
+      "sha256": "5c5a387ac0d1ba2100a1c8309c7ec27fcdc8ad4bbf7746249162952a1c25a9b3"
+    },
+    "v2-original/preparer.tap": {
+      "bytes": 3100,
+      "sha256": "7e52da6307b6c8fcffab199b9ce4d4d1e4f46d4bff7e8175bc183ac8dd6c3fb7"
+    }
+  },
+  "tests": [
+    {
+      "command": "node --test tests/raid-exterior-entry.test.js",
+      "exit": 0,
+      "pass": 9,
+      "durationMilliseconds": 4280.145
+    },
+    {
+      "command": "node --test tests/raid-entry-preparer.test.js",
+      "exit": 0,
+      "pass": 15,
+      "durationMilliseconds": 7873.2567
+    },
+    {
+      "command": "node --test tests/raid-exterior-advanced.test.js",
+      "exit": 0,
+      "pass": 1,
+      "durationMilliseconds": 762.4388
+    },
+    {
+      "command": "node --test --test-name-pattern='building completes|natural canyon|native Grand Canyon|genuinely open|mixed-material perimeter' tests/boundary-gates.test.js",
+      "exit": 0,
+      "pass": 5,
+      "skipped": 14,
+      "durationMilliseconds": 971.3084
+    }
+  ],
+  "intermediateFailure": {
+    "command": "node --test --test-name-pattern='ordinary raid physically' tests/raid-exterior-entry.test.js",
+    "exit": 1,
+    "passed": 0,
+    "failed": 1,
+    "skipped": 8,
+    "durationMilliseconds": 1156.2589,
+    "failure": "reloaded flag false: firstfixture used >=5s activeRaid threshold",
+    "rawStdoutRetained": false,
+    "sourceBlobRetained": false,
+    "missingEvidenceNotReconstructed": true
+  },
+  "performanceAcceptance": false,
+  "campaignExecuted": false,
+  "productionPromoted": false
+}
