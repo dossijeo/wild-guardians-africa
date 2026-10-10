@@ -7,6 +7,8 @@ import {parseNativeCampaignArgs,runNativeCampaignCase} from '../tools/run_native
 const fakeProvenance=()=>({trackedChanges:[],startedAt:'fixture',sourceHashes:{fixture:'synthetic'}});
 test('CLI fixes baseline defaults, accepts100 combat +80peace days and refuses invalid cases',()=>{
  const o=parseNativeCampaignArgs(['--out','fixture']);assert.equal(o.days,7);assert.equal(o.seed,712);
+ assert.equal(o.plotFluidClearance,0);assert.equal(parseNativeCampaignArgs(['--out','fixture','--plot-fluid-clearance','1.5']).plotFluidClearance,1.5);
+ for(const margin of ['-1','NaN','4'])assert.throws(()=>parseNativeCampaignArgs(['--out','fixture','--plot-fluid-clearance',margin]),/clearance/);
  assert.equal(parseNativeCampaignArgs(['--out','fixture','--days','180']).days,180);
  for(const n of ['0','181','1.5'])assert.throws(()=>parseNativeCampaignArgs(['--out','fixture','--days',n]));
  assert.throws(()=>parseNativeCampaignArgs(['--out','fixture','--strategy','reroll']));

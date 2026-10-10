@@ -1,8 +1,17 @@
 import {activeChunkRegion} from '../src/world/active-region.js';
 import {nativeCameraPose} from '../src/rendering/terrain-camera.js';
 import {centerServicePoint} from '../src/world/centers.js';
+import {footprintFluidSample} from '../src/world/fluid-placement.js';
+export function sampledPlotFluidClearance(nav,p,radius){
+ if(!Number.isFinite(radius)||radius<0||radius>3)throw Error('Invalid plot fluid clearance');
+ if(!radius)return true;
+ const polygon=Array.from({length:16},(_,i)=>({x:p.x+Math.cos(i*Math.PI/8)*radius,z:p.z+Math.sin(i*Math.PI/8)*radius}));
+ return !footprintFluidSample(nav.field,polygon);
+}
 // Bounded searches and genuine camera residency; no permanent gigantic bounds.
-export function createNativeCampaignPlots(nav,getState,{spacing=1.5,checksPerDecision=8}={}){
+export function createNativeCampaignPlots(nav,getState,{spacing=1.5,checksPerDecision=8,fluidClearance=0}={}){
+ if(!Number.isFinite(fluidClearance)||fluidClearance<0||fluidClearance>3)throw Error('Invalid plot fluid clearance');
+ let fluidClearanceRejected=0;
  let candidates=[],index=0,regions=new Set(),plots=[],transitions=[],lastReason='searching',reuseCursor=0,regionAnchor=null;
  const offsets=[[0,0],[96,0],[-96,0],[0,96],[0,-96],[96,96],[-96,96],[96,-96],[-96,-96]];
  const focus=p=>{
@@ -18,7 +27,9 @@ export function createNativeCampaignPlots(nav,getState,{spacing=1.5,checksPerDec
    candidates.sort((a,b)=>Math.hypot(a.x-origin.x,a.z-origin.z)-Math.hypot(b.x-origin.x,b.z-origin.z)||a.z-b.z||a.x-b.x);return true;
   }return false;
  }
- function valid(p,s){const c=s.structures.find(c=>c.id===p.centerId&&c.status==='intact');if(!c)return false;const origin=centerServicePoint(c,s,.8);return nav.placement(p.x,p.z,.4).valid&&nav.path(origin,p,.28,null,true)&&nav.path(p,origin,.28,null,true);}
+ function valid(p,s){const c=s.structures.find(c=>c.id===p.centerId&&c.status==='intact');if(!c)return false;
+  if(!sampledPlotFluidClearance(nav,p,fluidClearance)){fluidClearanceRejected++;return false;}
+  const origin=centerServicePoint(c,s,.8);return nav.placement(p.x,p.z,.4).valid&&nav.path(origin,p,.28,null,true)&&nav.path(p,origin,.28,null,true);}
  function choose(){
   const s=getState(),occupied=new Set(s.plants.filter(p=>p.alive).map(p=>p.x+','+p.z));
   // Reused plots revalidate current walls, fluids and paths; old legality is not cached.
@@ -32,5 +43,5 @@ export function createNativeCampaignPlots(nav,getState,{spacing=1.5,checksPerDec
    const p=candidates[index++];if(occupied.has(p.x+','+p.z)||!valid(p,s))continue;plots.push(p);lastReason='active';return p;
   }lastReason='searching';return null;
  }
- return {choose,reason:()=>lastReason,report:()=>({plots:plots.length,transitions:structuredClone(transitions),checksPerDecision,scope:'Native finite resident regions; every placement requires legal outward and return paths. Exhaustion preserved; no inaccessible logical crops.'})};
+ return {choose,reason:()=>lastReason,report:()=>({plots:plots.length,transitions:structuredClone(transitions),checksPerDecision,fluidClearance,fluidClearanceRejected,scope:'Native finite resident regions; every placement requires legal outward and return paths. Optional sampled fluid margin is a player placement preference, not a production restriction or farm size cap.'})};
 }

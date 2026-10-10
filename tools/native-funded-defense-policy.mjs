@@ -10,10 +10,11 @@ import {nativePerimeterProof} from './native-perimeter-proof.mjs';
 import {containsPoint} from '../src/world/footprints.js';
 import {centerFootprint} from '../src/world/centers.js';
 import {operational} from '../src/simulation/rules.js';
+import {shoreDefenseContours} from './native-shore-defense-contour.mjs';
 const options={smooth:false,snap:false};
 const sameSlot=(q,w)=>w.kind==='wall'&&Math.hypot(q.x-w.x,q.z-w.z)<.35&&Math.abs(Math.sin(q.angle+(w.yaw??0)))<.18;
 const matches=(q,w)=>w.status==='intact'&&w.hp>0&&sameSlot(q,w);
-export function createNativeFundedDefensePolicy({startDay=6,material='zarzas',interval=5,chunkPieces=8,maxSlots=256,repairWalls=true,obstacleAware=false}={}){
+export function createNativeFundedDefensePolicy({startDay=6,material='zarzas',interval=5,chunkPieces=8,maxSlots=256,repairWalls=true,obstacleAware=false,shoreRouting=false}={}){
  if(!Number.isSafeInteger(startDay)||startDay<1||!Number.isFinite(interval)||interval<=0||!Number.isSafeInteger(chunkPieces)||chunkPieces<1||!Number.isSafeInteger(maxSlots)||maxSlots<4||chunkPieces>maxSlots||maxSlots>256)throw Error('Invalid bounded funded defense policy');
  const spec=wallSpec(material),history=[],owned=new Set();let next=-Infinity,planned=null,completed=null,remainingCost=0,repairRequests=0,failedPlanning=null;
  const coverage=(s,nav,candidate=planned)=>{
@@ -87,6 +88,15 @@ export function createNativeFundedDefensePolicy({startDay=6,material='zarzas',in
     if(routedPlan){planned=routed.candidate;remainingCost=routedPlan.cost;break;}
    }
   }
+  if(!planned&&shoreRouting)for(const padding of [2,3,4]){
+   const shore=shoreDefenseContours(s,nav,{padding,step:.25,maxCells:30000});
+   if(!shore.candidates.length)attempts.push({shore:true,padding,legal:false,routing:shore.reason});
+   for(const candidate of shore.candidates){
+    const detail={bounds:candidate.bounds,shore:true,parameters:candidate.shoreParameters},plan=quote(s,nav,candidate,detail);attempts.push({...detail,legal:!!plan,cost:plan?.cost??null});
+    if(plan){planned=candidate;remainingCost=plan.cost;break;}
+   }
+   if(planned)break;
+  }
   const row={day:s.day,time:s.time,protectedCash,pendingRepairCoins:pending,attempts,paidCost:0,paidPieces:0,remainingCost,complete:false};history.push(row);
   if(!planned){
    remainingCost=0;row.reason='no-bounded-legal-contour';
@@ -112,5 +122,5 @@ export function createNativeFundedDefensePolicy({startDay=6,material='zarzas',in
   row.reason=row.complete?'paid-native-contour-completed':'paid-native-contour-in-progress';
   if(row.complete){completed=planned;planned=null;remainingCost=0;}return 1;
  }
- return {act,reserve:s=>s.day>=startDay?remainingCost:0,report:()=>structuredClone({startDay,material,interval,chunkPieces,maxSlots,obstacleAware,planned,completed,remainingCost,repairRequests,history,paidCost:history.reduce((n,r)=>n+r.paidCost,0),paidPieces:history.reduce((n,r)=>n+r.paidPieces,0),scope:'Saved actual funds and paid native partial strokes; complete geometric coverage is not a universal interception guarantee.'})};
+ return {act,reserve:s=>s.day>=startDay?remainingCost:0,report:()=>structuredClone({startDay,material,interval,chunkPieces,maxSlots,obstacleAware,shoreRouting,planned,completed,remainingCost,repairRequests,history,paidCost:history.reduce((n,r)=>n+r.paidCost,0),paidPieces:history.reduce((n,r)=>n+r.paidPieces,0),scope:'Saved actual funds and paid native partial strokes; complete geometric coverage is not a universal interception guarantee.'})};
 }

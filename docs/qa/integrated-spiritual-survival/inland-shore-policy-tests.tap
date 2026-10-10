@@ -1,0 +1,130 @@
+TAP version 13
+# (node:52364) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: CLI fixes baseline defaults, accepts100 combat +80peace days and refuses invalid cases
+ok 1 - CLI fixes baseline defaults, accepts100 combat +80peace days and refuses invalid cases
+  ---
+  duration_ms: 4.1114
+  ...
+# Subtest: cooperative calibration stop preserves partial receipt without inventing native defeat
+ok 2 - cooperative calibration stop preserves partial receipt without inventing native defeat
+  ---
+  duration_ms: 20.1956
+  ...
+# Subtest: stop-file is observed on a tick even before a daily checkpoint
+ok 3 - stop-file is observed on a tick even before a daily checkpoint
+  ---
+  duration_ms: 9.7895
+  ...
+# Subtest: partial tool error keeps original daily journal, source receipt and native result without inventing defeat
+ok 4 - partial tool error keeps original daily journal, source receipt and native result without inventing defeat
+  ---
+  duration_ms: 15.171
+  ...
+# (node:26236) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: explicit inland preference samples water but does not modify production placement
+ok 5 - explicit inland preference samples water but does not modify production placement
+  ---
+  duration_ms: 18.4333
+  ...
+# Subtest: native canyon inland policy can purchase sixty routed crops without income or size quota
+ok 6 - native canyon inland policy can purchase sixty routed crops without income or size quota
+  ---
+  duration_ms: 2849.6147
+  ...
+# Subtest: native plot audit uses paid commands with no time advance or projected income
+ok 7 - native plot audit uses paid commands with no time advance or projected income
+  ---
+  duration_ms: 462.6611
+  ...
+# Subtest: exhausted observation budget stays incomplete and invalid limits are rejected
+ok 8 - exhausted observation budget stays incomplete and invalid limits are rejected
+  ---
+  duration_ms: 375.6885
+  ...
+# (node:49612) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: unchanged native geometric failures are not retried; topology and crop occupancy invalidate
+ok 9 - unchanged native geometric failures are not retried; topology and crop occupancy invalidate
+  ---
+  duration_ms: 3723.1524
+  ...
+# Subtest: wall contour uses placement rather than walking rules, remains deterministic and obeys search limits
+ok 10 - wall contour uses placement rather than walking rules, remains deterministic and obeys search limits
+  ---
+  duration_ms: 50.0924
+  ...
+# Subtest: shore envelope preserves land and enforces a bounded deterministic planning search
+ok 11 - shore envelope preserves land and enforces a bounded deterministic planning search
+  ---
+  duration_ms: 4.1314
+  ...
+# (node:5228) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native read-only wall quote is possible without funds; preview/build still enforce real cash
+ok 12 - native read-only wall quote is possible without funds; preview/build still enforce real cash
+  ---
+  duration_ms: 668.5713
+  ...
+# Subtest: real partial purchases close paid perimeter, create one worker gate, retain crops and replay saved state
+ok 13 - real partial purchases close paid perimeter, create one worker gate, retain crops and replay saved state
+  ---
+  duration_ms: 857.6875
+  ...
+# Subtest: paid wage protection can postpone purchases while preserving a real future savings target
+ok 14 - paid wage protection can postpone purchases while preserving a real future savings target
+  ---
+  duration_ms: 411.5423
+  ...
+# Subtest: funded defense remains opt-in and cannot lock funds before its declared day
+ok 15 - funded defense remains opt-in and cannot lock funds before its declared day
+  ---
+  duration_ms: 306.988
+  ...
+# Subtest: legal native removal of small vegetation is allowed and recorded only through paid wall commands
+ok 16 - legal native removal of small vegetation is allowed and recorded only through paid wall commands
+  ---
+  duration_ms: 719.0624
+  ...
+# (node:5376) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: bounded native contour routes around real obstacles without modifying the retained campaign
+ok 17 - bounded native contour routes around real obstacles without modifying the retained campaign
+  ---
+  duration_ms: 2630.1345
+  ...
+# Subtest: routed savings uses actual cash and cannot promote proposed walls into live protection
+ok 18 - routed savings uses actual cash and cannot promote proposed walls into live protection
+  ---
+  duration_ms: 1598.8757
+  ...
+# Subtest: native perimeter proof rejects an open quote instead of claiming isolation from a bounded path failure
+ok 19 - native perimeter proof rejects an open quote instead of claiming isolation from a bounded path failure
+  ---
+  duration_ms: 325.1428
+  ...
+# Subtest: cached predictive queries recheck crop extent and invalidate native geometry epochs
+ok 20 - cached predictive queries recheck crop extent and invalidate native geometry epochs
+  ---
+  duration_ms: 2819.0977
+  ...
+# Subtest: routed policy retains real partial purchases and native gate creation in an affordable opening
+ok 21 - routed policy retains real partial purchases and native gate creation in an affordable opening
+  ---
+  duration_ms: 653.5394
+  ...
+# Subtest: damage to a paid enclosing wall requests native maintenance instead of buying a second perimeter
+ok 22 - damage to a paid enclosing wall requests native maintenance instead of buying a second perimeter
+  ---
+  duration_ms: 573.1644
+  ...
+1..22
+# tests 22
+# suites 0
+# pass 22
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 8961.5283
