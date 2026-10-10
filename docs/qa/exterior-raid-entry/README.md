@@ -43,3 +43,15 @@ The16-ray witness is sufficient, not a complete reachability/enclosure classifie
 Large-group birth legality and spacing do not establish long-term traffic, destruction rate, survival or campaign economics. None of those is claimed here. Existing ordinary near-camera arrival tests remain applicable; a giant enclosure necessarily moves birth farther out.
 
 Renderer tests use the real streaming method with CPU doubles. They do not prove visual floor/chunk readiness, absence of horizon overlap or visibility during the director's camera travel. Chunk installation is a logical readiness gate; resident color groups still obey existing near/far visibility policy, and animal meshes are independent entities. Actual renderer QA remains required before claiming visible acceptance, particularly for exterior pins and a moving camera.
+
+## Sequential readiness owner refinement
+
+Parent review found that a retained daytime group could compete with the nighttime group for the single residency demand. `activeRaidEntryPlan` is now the shared pure owner selector: a rolled daytime plan whose trigger has passed stays ahead of the nighttime plan until its complete raid spawns. Production clock events, the worker preparer and the headless driver use that ownership policy. Group choice and original side/hit draws remain untouched. The preparer may now supply the daytime entry as well as nighttime entry.
+
+The directed coexistence test begins with a retained group at time200, waits100 simulated seconds with residency rejected across the night trigger, verifies stable demand and unchanged RNG, then accepts residency. Normal Game.tick motion resolves the daytime raid and spawns the retained nighttime group; neither plan disappears and each spawn consumes exactly its native side/hit draws. A separate driver test verifies it waits for that daytime key rather than reaching a false nighttime observation deadline. The driver samples accepted ready-context evidence after its asynchronous yield, so the first returned worker result is recorded as well.
+
+Initial217-case preparation exposed one diagnostic observer failure: readiness was accepted while `readyContexts` remained empty because it was read before the yield. The full pre-fix125/126 trace is preserved as `owner-context-before-yield-failure.tap`; no physical failure is inferred from it. After correction, all217 directed contracts passed in25.84s, archived in `owner-final-regressions.tap`.
+
+The source-pinned CPU diagnostic was regenerated after this refinement: closed5/32/72 took23.46/83.99/40.79ms, native Desert5 took242.26ms;100 memoized retries again performed zero navigation calls. The initial diagnostic is preserved as `cpu-cost-before-owner.json`. Neither pair is a controlled before/after performance comparison.
+
+Final owner-refinement production build passed in13.54s; the existing bundle/import warnings remain. No local processes remain active after validation.

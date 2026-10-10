@@ -1,6 +1,6 @@
 import {performance} from 'node:perf_hooks';
 import {RaidEntryPreparer} from '../src/world/raid-entry-preparer.js';
-import {raidEntryKey} from '../src/world/raid-entry-data.js';
+import {raidEntryKey,activeRaidEntryPlan} from '../src/world/raid-entry-data.js';
 import {serialize} from '../src/persistence/snapshots.js';
 import {createNodeRaidEntryWorker} from './node-raid-entry-transport.mjs';
 export class NativeCampaignEntryDriver{
@@ -9,16 +9,17 @@ export class NativeCampaignEntryDriver{
   this.preparer=new RaidEntryPreparer(nav,{createWorker:()=>this.worker=createWorker()});
  }
  check(){if(this.worker?.failure)throw Error(`Entry worker failed: ${this.worker.failure.message}`);if(this.preparer.cooperativeError)throw Error(`Cooperative preparation failed: ${this.preparer.cooperativeError}`);}
- async advancePresentation(s){this.check();this.preparer.update(s);this.updates++;const ready=this.preparer.ready;if(ready&&ready.key!==this.lastContextKey){this.lastContextKey=ready.key;this.contexts.push({key:ready.key,token:ready.token,day:s.day,time:s.time,elapsed:s.elapsed,group:[...(s.nightPlan?.group??[])],entryActors:ready.entry?.entries.length??0,diagnostics:ready.diagnostics??null});}await new Promise(resolve=>setImmediate(resolve));this.check();}
+ async advancePresentation(s){this.check();this.preparer.update(s);this.updates++;await new Promise(resolve=>setImmediate(resolve));this.check();const ready=this.preparer.ready;if(ready&&ready.key!==this.lastContextKey){this.lastContextKey=ready.key;this.contexts.push({key:ready.key,token:ready.token,day:s.day,time:s.time,elapsed:s.elapsed,group:[...(activeRaidEntryPlan(s)?.group??[])],entryActors:ready.entry?.entries.length??0,diagnostics:ready.diagnostics??null});}}
  async waitForEntry(s){
   const began=performance.now(),frozen=serialize(s);let updates=0;
   while(true){
    await this.advancePresentation(s);updates++;
    
-   const ready=this.preparer.ready,key=raidEntryKey(s,this.nav,s.nightPlan?.group);
+   const plan=activeRaidEntryPlan(s),ready=this.preparer.ready,key=raidEntryKey(s,this.nav,plan?.group);
+   if(!plan)throw Error('No pending whole-group entry plan to observe');
    if(ready&&ready.key===key){
     if(serialize(s)!==frozen)throw Error('Pending entry wait changed simulated state');
-    const row={day:s.day,time:s.time,elapsed:s.elapsed,key,updates,waitMilliseconds:performance.now()-began,group:[...s.nightPlan.group],entryActors:ready.entry?.entries.length??0,diagnostics:ready.diagnostics??null};this.waits.push(row);
+    const row={day:s.day,time:s.time,elapsed:s.elapsed,key,updates,waitMilliseconds:performance.now()-began,group:[...plan.group],entryActors:ready.entry?.entries.length??0,diagnostics:ready.diagnostics??null};this.waits.push(row);
     if(!ready.entry)throw Error('Completed preparation has no valid whole-group entry; case incomplete');
     return ready;
    }

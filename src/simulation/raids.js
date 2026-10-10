@@ -147,7 +147,7 @@ export function spawnRaid(s,plan,nav,daytime=false) {
   const focus=s.structures.find(operational)??s.villages[0];
   const specs=group.map(id=>({spec:animalSpec(id),radius:ANIMAL_ACTIONS.animals[id].presentation.footprint.radius}));
   const bounds=validActiveBounds(nav.activeBounds)?[...nav.activeBounds]:activeChunkRegion(focus).bounds;
-  const prepared=!daytime&&nav.preparedRaidEntry?.(s,group,bounds);
+  const prepared=nav.preparedRaidEntry?.(s,group,bounds);
   if(prepared)warmRaidNavigation(nav,prepared.warmth);
   const preferredSide=randomInt({rng:s.rng},0,3);
   const selectionKey=raidEntryKey(s,nav,group,bounds)??JSON.stringify([s.rng,nav.version,group,bounds,nav.raidView,s.structures.map(t=>[t.id,t.status,t.hp>0])]);

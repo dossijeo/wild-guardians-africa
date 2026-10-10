@@ -17,3 +17,13 @@ export function raidEntryRequest(state,nav,group,key,token){
 // Residency can expand bounds using a validated pending entry. Keep those pins
 // while its refreshed full-key request runs; geometry/view/RNG changes invalidate.
 export function raidEntryContextKey(state,nav,group){return raidEntryKey(state,nav,group,[]);}
+
+// One readiness owner: an already rolled daytime raid remains ahead of night.
+// This selector observes state only; it never chooses a group or advances RNG.
+export function activeRaidEntryPlan(state){
+  if(state.raid||state.result||state.postgame)return null;
+  const day=state.dayPlan;
+  if(day&&!day.done&&day.group?.length&&state.time>=day.at)return day;
+  const night=state.nightPlan;
+  return night&&!night.done&&night.group?.length?night:null;
+}

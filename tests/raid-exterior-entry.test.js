@@ -1,3 +1,4 @@
+import {createPlant} from '../src/simulation/crops.js';
 import test from 'node:test';import assert from 'node:assert/strict';
 import {topologyFixture} from '../tools/probe-raid-entry-topology.mjs';
 import {chooseRaidEntry,spawnRaid,updateRaid} from '../src/simulation/raids.js';
@@ -42,4 +43,23 @@ test('view invalidation replaces prior sparse demand before whole-group residenc
  assert.notEqual(nav.raidEntryDemand.key,old.key);assert.equal(s.rng,rng);assert.equal(s.raid,null);
  nav.raidEntryResident=()=>true;assert.equal(spawnRaid(s,plan,nav),true);
  assert.equal(nav.raidEntryDemand,undefined);assert.equal(s.raid.animals.length,group.length);
+});
+
+
+test('retained daytime entry owns readiness across night and both groups spawn sequentially with native ticks',()=>{
+ const {s,nav}=topologyFixture('closed');s.plants=[createPlant('crop','mijo',8,0,'center')];nav.setState(s);s.time=200;
+ s.dayPlan={at:200,group:['warthog'],done:false};s.nightPlan={at:300.1,group:['hyena'],done:false};
+ const rng=s.rng;nav.raidEntryResident=()=>false;Game.tick(s,.1,nav);
+ const demand=nav.raidEntryDemand;assert(demand);Game.tick(s,100.1,nav);assert.equal(s.dayPlan.done,false);assert.equal(s.nightPlan.done,false);
+ assert.equal(s.rng,rng);assert.equal(s.raid,null);Game.tick(s,.3,nav);assert.equal(nav.raidEntryDemand.key,demand.key);
+ const requests=[],worker={postMessage(r){requests.push(r);},terminate(){}},p=new RaidEntryPreparer(nav,{createWorker:()=>worker});
+ p.update(s);assert.deepEqual(requests[0].group,['warthog']);
+ worker.onmessage({data:{key:requests[0].key,token:requests[0].token,entry:demand.entry}});
+ nav.raidEntryResident=()=>true;Game.tick(s,.1,nav);assert.equal(s.raid.daytime,true);
+ assert.equal(s.dayPlan.done,true);assert.equal(s.nightPlan.done,false);assert.equal(p.stats.used,1);
+ const expected={rng};nextRandom(expected);nextRandom(expected);assert.equal(s.rng,expected.rng);
+ let beforeNight;for(let i=0;i<2000&&!s.nightPlan.done&&!s.result;i++){beforeNight=s.rng;Game.tick(s,.1,nav);}
+ assert.equal(s.result,null);assert.equal(s.nightPlan.done,true);assert.equal(s.raid.daytime,false);
+ assert.deepEqual(s.raid.animals.map(a=>a.species),['hyena']);assert.deepEqual(s.dayPlan.group,['warthog']);
+ assert.equal(s.events.filter(e=>e.type==='RaidSpawned').length,2);const nightDraws={rng:beforeNight};nextRandom(nightDraws);nextRandom(nightDraws);assert.equal(s.rng,nightDraws.rng);p.dispose();
 });
