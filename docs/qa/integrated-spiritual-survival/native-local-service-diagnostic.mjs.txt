@@ -1,0 +1,43 @@
+import fs from 'node:fs';
+import {gunzipSync} from 'node:zlib';
+import {performance} from 'node:perf_hooks';
+import {createHash} from 'node:crypto';
+import {deserialize,serialize} from './src/persistence/snapshots.js';
+import {createOpeningWorld} from './tools/check_opening.mjs';
+import * as Game from './src/simulation/game.js';
+import {nativePerimeterProof} from './tools/native-perimeter-proof.mjs';
+import {containsPoint} from './src/world/footprints.js';
+const input='docs/qa/integrated-spiritual-survival/pilot-v6-good-canyon-712-inland/partial-state.json.gz',out='docs/qa/integrated-spiritual-survival/canyon-fractional-local-connector-v1.json';
+if(fs.existsSync(out))throw Error('Refuse overwrite');
+const bytes=fs.readFileSync(input),s=deserialize(gunzipSync(bytes).toString());
+const {nav}=createOpeningWorld({seed:s.seed,biome:s.biome,culture:s.culture,terrainVersion:s.terrainVersion});nav.setState(s);
+const before=serialize(s);
+const candidate=JSON.parse(fs.readFileSync('docs/qa/integrated-spiritual-survival/canyon-native-contact-proof-v1.json')).rows[0].candidate;
+const plan=Game.quoteWallChain(s,'zarzas',candidate.points,nav,{smooth:false,snap:false}),proof=nativePerimeterProof(s,nav,plan,candidate.bounds,{outline:candidate.points});
+const check=proof.checks.at(-1),origin=check.services.point,radius=check.radius;
+const view=nav.forBuildingPlacement({id:'local-diagnostic',kind:'house',x:1e12,z:1e12,radius:0},plan.suppressed);
+const updates=new Map(plan.updates.map(w=>[w.id,w]));view.obstacles=[...nav.obstacles.map(w=>updates.has(w.id)?{...w,...updates.get(w.id)}:w),...plan.pieces];
+nativePerimeterProof(s,view,{pieces:[],updates:[],suppressed:[]},candidate.bounds,{outline:candidate.points});
+// Populate certificates on this exact query view, using the same exterior probe.
+view.approachPath(check.outside,origin,radius,32);
+const polygon=candidate.points.map(([x,z])=>({x,z})),enclosed=region=>region&&[...region].every(id=>{const [x,z]=id.split(',').map(Number);return containsPoint(polygon,x,z);});
+const step=.125,limit=24,queue=[{ix:0,iz:0,x:origin.x,z:origin.z,parent:-1}],seen=new Set(['0,0']);let route=null,expanded=0,at=performance.now();
+for(let cursor=0;cursor<queue.length&&expanded<5000;cursor++){
+ const p=queue[cursor];expanded++;
+ for(let dz=-1;dz<=1&&!route;dz++)for(let dx=-1;dx<=1&&!route;dx++){
+  const q={x:Math.round(p.x)+dx,z:Math.round(p.z)+dz},region=view.closedRegions.get(`${radius}:null:false|${q.x},${q.z}`);
+  if(!enclosed(region)||!view.walkable(q.x,q.z,radius,null,false)||!view.segmentClear(p,q,radius,null,false))continue;
+  route=[q];for(let i=cursor;i>=0;i=queue[i].parent)route.unshift({x:queue[i].x,z:queue[i].z});
+ }
+ if(route)break;
+ for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){
+  if(!dx&&!dz)continue;const ix=p.ix+dx,iz=p.iz+dz,key=ix+','+iz;
+  if(Math.abs(ix)>limit||Math.abs(iz)>limit||seen.has(key))continue;seen.add(key);
+  const q={ix,iz,x:origin.x+ix*step,z:origin.z+iz*step,parent:cursor};
+  if(!view.walkable(q.x,q.z,radius,null,false)||!view.segmentClear(p,q,radius,null,false))continue;queue.push(q);
+ }
+}
+if(route)for(let i=0;i<route.length;i++){if(!view.walkable(route[i].x,route[i].z,radius,null,false)||i&&!view.segmentClear(route[i-1],route[i],radius,null,false))throw Error('Invalid physical connector');}
+if(serialize(s)!==before)throw Error('Diagnostic modified snapshot');
+const result={input,inputSha256:createHash('sha256').update(bytes).digest('hex'),origin,radius,step,bound:3,nodeCap:5000,expanded,queued:queue.length,milliseconds:performance.now()-at,route,scope:'Bounded native point/segment connector research. A negative search is not enclosure evidence; a positive connector alone is not paid campaign protection.'};
+fs.writeFileSync(out,JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));
