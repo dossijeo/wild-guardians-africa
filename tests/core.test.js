@@ -15,7 +15,7 @@ test('Original balance preserves unrelated values with explicit player revisions
  const harvest={mijo:11,girasol:36,sorgo:13,maiz:17,batata:23,algodon:178,yuca:32,platano:267};
  original.crops.forEach(c=>{c.base_harvest_value=harvest[c.id];});
  original.initial_money=1500;
- Object.assign(original.postgame.additional_village_cost,{formula:'2000',fixed_cost:2000});
+ original.postgame.additional_village_cost={formula:'round1000(50000 * 1.6^(n-2))',min_n:2,initial_village_ordinal:1,variant:'proposed',rounding:'nearest thousand, half upward, exact integer fractions'};
  original.raids.max_animals=null;
  original.animals.forEach((a,i)=>{a.structure_hit_damage=[20,25,35,40,60][i];a.max_per_raid=null;});
  original.workers.older_wage=30;original.workers.young_wage=40;
@@ -111,9 +111,10 @@ test('Permission matrix handles stacked pauses, night, raid and center recovery'
   s.structures=[{kind:'center',status:'intact'}];assert.ok(permission(s,'plant'));s.time=300;assert.ok(!permission(s,'center'));assert.ok(permission(s,'shield'));
   s.pauses=['hiring','hidden'];assert.ok(!permission(s,'shield'));s.pauses.pop();assert.ok(!permission(s,'shield'));s.pauses=[];s.time=0;s.raid={};assert.ok(!permission(s,'plant'));
 });
-test('Economic dawn thresholds and fixed unlimited village costs',()=>{
+test('Economic dawn thresholds and exponential unlimited village costs',()=>{
   const s={structures:[],plants:[],crates:[]};assert.equal(dawnMinimum(s),835);s.crates=[{}];assert.equal(dawnMinimum(s),830);s.structures=[{kind:'center',status:'intact'}];assert.equal(dawnMinimum(s),30);s.crates=[];assert.equal(dawnMinimum(s),35);
-  for(const [n,cost] of [[2,2000],[3,2000],[10,2000],[50,2000],[100,2000]])assert.equal(villageCost(n),cost);
+  for(const [n,cost] of [[2,50000],[3,80000],[10,2147000]])assert.equal(villageCost(n),cost);
+  assert.equal(typeof villageCost(100),'bigint');
 });
 const snapshot=()=>newGame({seed:123,slotId:'one'});
 class Storage {

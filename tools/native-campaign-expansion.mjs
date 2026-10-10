@@ -1,7 +1,7 @@
 import {readFileSync} from 'node:fs';
 import * as Game from '../src/simulation/game.js';
-import {permission,operational} from '../src/simulation/rules.js';
-import {numberOf} from '../src/simulation/money.js';
+import {permission,operational,villageCost} from '../src/simulation/rules.js';
+import {numberOf,compare,rational,add} from '../src/simulation/money.js';
 // At most one native geometry/path preview per scheduled attempt. No credited
 // action unless a real purchase is accepted. Villages respect postgame gating.
 export function createNativeCampaignExpansion({interval=30}={}){
@@ -13,7 +13,7 @@ export function createNativeCampaignExpansion({interval=30}={}){
   const cash=numberOf(s.ledger.balance),first=s.villages[0],culture=s.culture;
   // Native postgame is peaceful. Never pretend these purchases occurred in
   // the hundred combat nights when the production permission forbids them.
-  if(permission(s,'village')&&cash>=reserve+2000){
+  if(permission(s,'village')&&compare(s.ledger.balance,add(rational(reserve),rational(villageCost(s.villages.length+1))))>=0){
    const i=villageIndex++,[dx,dz]=directions[i%directions.length],r=96*(1+Math.floor(i/directions.length));
    const payload=payloads.find(v=>v.id===(culture==='saheliana'?'saheliano':culture));
    const p=Game.previewVillage(s,culture,first.x+dx*r,first.z+dz*r,payload,nav);

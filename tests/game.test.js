@@ -57,18 +57,18 @@ test('Starting an attack immediately cancels manual repair orders and releases t
   assert.ok(!s.tasks.some(t=>t.kind==='repair'));assert.equal(numberOf(s.ledger.balance),before);assert.equal(target.hp,damaged);
 });
 
-test('Postgame founding uses complete native village, valid departure, exact fixed costs and persistent state',()=>{
+test('Postgame founding uses complete native village, valid departure, exact exponential costs and persistent state',()=>{
   const s=ready();placeStructure(s,'center',{x:4,z:0},nav);s.postgame=true;s.day=101;s.initialPreparation=false;s.ledger.balance=rational(1000000);
   const payload=JSON.parse(readFileSync(new URL('../public/content/villages.json',import.meta.url),'utf8')).find(v=>v.id==='suajili');
   const preview=previewVillage(s,'suajili',100,50,payload,nav);
-  assert.equal(numberOf(s.ledger.balance),1000000);assert.equal(preview.cost,2000);
+  assert.equal(numberOf(s.ledger.balance),1000000);assert.equal(preview.cost,50000);
   assert.equal(preview.buildings.length,payload.units.length);assert.ok(preview.entry);
   assert.equal(foundVillage(s,'village-command','suajili',100,50,payload,nav),true);
-  assert.equal(numberOf(s.ledger.balance),998000);assert.equal(s.villages.length,2);
+  assert.equal(numberOf(s.ledger.balance),950000);assert.equal(s.villages.length,2);
   assert.ok(s.villages[1].buildings.every(b=>b.footprint.length>=3));
   assert.equal(foundVillage(s,'village-command','suajili',100,50,payload,nav),false);
-  assert.equal(numberOf(s.ledger.balance),998000);
-  assert.equal(previewVillage(s,'suajili',200,50,payload,nav).cost,2000);
+  assert.equal(numberOf(s.ledger.balance),950000);
+  assert.equal(previewVillage(s,'suajili',200,50,payload,nav).cost,80000);
   assert.deepEqual(deserialize(serialize(s)).villages,s.villages);
 });
 test('A village without a walkable departure is rejected before charging or founding',()=>{

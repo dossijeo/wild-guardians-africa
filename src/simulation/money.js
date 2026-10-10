@@ -41,3 +41,8 @@ export function formatMoney(value,locale='es-ES') {
   const suffix=scale===1e9?'B':scale===1e6?'M':scale===1e3?'K':'';
   return new Intl.NumberFormat(locale,{maximumFractionDigits:2}).format(n/scale)+suffix;
 }
+// Purchase quotes must match the full integer debit, even past Number precision.
+export function formatWholeCoins(value,locale='es-ES') {
+  if(typeof value!=='bigint'&&(typeof value!=='number'||!Number.isSafeInteger(value)))throw Error('Precio entero inválido');
+  return new Intl.NumberFormat(locale,{maximumFractionDigits:0}).format(BigInt(value));
+}

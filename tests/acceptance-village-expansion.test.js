@@ -8,6 +8,7 @@ import {Navigation} from '../src/world/navigation.js';
 import {villageLayout,findVillageEntry} from '../src/world/villages.js';
 import {footprintsOverlap} from '../src/world/footprints.js';
 import {SaveRepository,serialize} from '../src/persistence/snapshots.js';
+import {villageCost} from '../src/simulation/rules.js';
 
 const catalogue=JSON.parse(readFileSync(new URL('../public/content/villages.json',import.meta.url),'utf8'));
 const payload=culture=>catalogue.find(v=>v.id===(culture==='saheliana'?'saheliano':culture));
@@ -35,9 +36,9 @@ for(const culture of Game.CULTURES)test(`QA-142 ${culture}: paid native founding
  const {s}=fixture(culture),draft=villageLayout(payload(culture),150,0);
  const props=draft.map((b,i)=>({id:`qa-bush:${culture}:${i}`,slot:5,radius:.1,x:b.footprint.reduce((n,p)=>n+p.x,0)/b.footprint.length,z:b.footprint.reduce((n,p)=>n+p.z,0)/b.footprint.length}));
  const nav=navigation(s,props),before=serialize(s),preview=Game.previewVillage(s,culture,150,0,payload(culture),nav);
- assert.equal(preview.valid,true);assert.equal(serialize(s),before);assert.equal(preview.cost,2000);assert.deepEqual(new Set(preview.suppress),new Set(props.map(p=>p.id)));
+ assert.equal(preview.valid,true);assert.equal(serialize(s),before);assert.equal(preview.cost,50000);assert.deepEqual(new Set(preview.suppress),new Set(props.map(p=>p.id)));
  assert.equal(Game.foundVillage(s,'qa-found',culture,150,0,payload(culture),nav),true);
- assert.equal(numberOf(s.ledger.balance),199998000);assert.equal(s.villages.length,2);
+ assert.equal(numberOf(s.ledger.balance),199950000);assert.equal(s.villages.length,2);
  assert.deepEqual(s.villages[1].buildings,preview.buildings);assert.deepEqual(s.villages[1].entry,preview.entry);assert.equal(s.villages[1].culture,culture);
  assert.equal(s.events.filter(e=>e.type==='VillageFounded').length,1);assert.equal(s.commandIds.filter(id=>id==='qa-found').length,1);
  const audio=new AudioSystem({sfx:1,music:1}),cues=[];audio.sound=async(id,options)=>{cues.push({id,options});};audio.remember(s.events.filter(e=>e.type!=='VillageFounded'));const domainBeforeAudio=serialize(s);audio.process(s.events,{state:s,listener:{x:150,z:0}});audio.process(s.events,{state:s});assert.equal(serialize(s),domainBeforeAudio);assert.deepEqual(cues.map(c=>c.id),['build_complete']);assert.equal(cues[0].options.emitter,s.villages[1].id);assert.equal(cues[0].options.gain,1);assert.deepEqual(s.events.find(e=>e.type==='VillageFounded').presentation,{x:150,z:0});
@@ -45,18 +46,18 @@ for(const culture of Game.CULTURES)test(`QA-142 ${culture}: paid native founding
  const loaded=saved(s),fresh=navigation(loaded,props);assert.equal(serialize(loaded),serialize(s));assert.equal(fresh.propsAt(150,0,80).length,0);
  for(const [state,n] of [[s,nav],[loaded,fresh]]){
   const paid=serialize(state);assert.equal(Game.foundVillage(state,'qa-found',culture,150,0,payload(culture),n),false);assert.equal(serialize(state),paid);
-  assert.equal(Game.previewVillage(state,culture,300,0,payload(culture),n).cost,2000);
+  assert.equal(Game.previewVillage(state,culture,300,0,payload(culture),n).cost,80000);
  }
 });
 
 for(const culture of Game.CULTURES)test(`QA-138/140 ${culture}: one invalid native unit or spent preview funds cannot partially found`,()=>{
- const {s,nav}=fixture(culture,2030),native=payload(culture),layout=villageLayout(native,150,0);
+ const {s,nav}=fixture(culture,50030),native=payload(culture),layout=villageLayout(native,150,0);
  let badPoint;
  for(const b of layout){for(const point of b.footprint){nav.field.slope=(x,z)=>Math.hypot(x-point.x,z-point.z)<.01?.6:0;const bad=layout.filter(unit=>!nav.placementFootprint(unit).valid);if(bad.length===1){badPoint=point;break;}}if(badPoint)break;}
  assert.ok(badPoint,'exactly one unit is unbuildable');const before=serialize(s),preview=Game.previewVillage(s,culture,150,0,native,nav);
  assert.equal(preview.valid,false);assert.equal(preview.buildings.length,layout.length);assert.throws(()=>Game.foundVillage(s,'qa-invalid',culture,150,0,native,nav));assert.equal(serialize(s),before);
  nav.field.slope=()=>0;assert.equal(Game.previewVillage(s,culture,150,0,native,nav).valid,true);
- Game.placeStructure(s,'qa-other-purchase',{kind:'wall',material:'adobe',x:100,z:100,yaw:0},nav);assert.equal(numberOf(s.ledger.balance),1995);
+ Game.placeStructure(s,'qa-other-purchase',{kind:'wall',material:'adobe',x:100,z:100,yaw:0},nav);assert.equal(numberOf(s.ledger.balance),49995);
  const spent=serialize(s);assert.throws(()=>Game.foundVillage(s,'qa-unfunded',culture,150,0,native,nav),e=>e.code==='hiring-reserve');assert.equal(serialize(s),spent);
  assert.ok(!s.commandIds.includes('qa-invalid')&&!s.commandIds.includes('qa-unfunded'));assert.equal(s.villages.length,1);
 });
@@ -69,26 +70,27 @@ for(const culture of Game.CULTURES)test(`QA-141 ${culture}: contiguous complete 
  const first=Game.previewVillage(s,culture,150,0,native,nav);assert.equal(first.valid,true);Game.foundVillage(s,'qa-adjacent-a',culture,150,0,native,nav);
  const second=Game.previewVillage(s,culture,150+shift,0,native,nav);assert.equal(second.valid,true);
  for(const a of first.buildings)for(const b of second.buildings)assert.equal(footprintsOverlap(a.footprint,b.footprint),false);
- Game.foundVillage(s,'qa-adjacent-b',culture,150+shift,0,native,nav);assert.equal(s.villages.length,3);assert.equal(numberOf(s.ledger.balance),199996000);
+ Game.foundVillage(s,'qa-adjacent-b',culture,150+shift,0,native,nav);assert.equal(s.villages.length,3);assert.equal(numberOf(s.ledger.balance),199870000);
  assert.equal(serialize(saved(s)),serialize(s));
 });
 
 test('QA-137: actually found villages through ordinal 100 with all five native cultures and exact uncapped costs',()=>{
- const {s,nav}=fixture(),milestones=new Map([[2,2000],[3,2000],[4,2000],[10,2000],[20,2000],[50,2000],[100,2000]]);let spent=0;
+ const capital=Array.from({length:99},(_,i)=>BigInt(villageCost(i+2))).reduce((a,b)=>a+b,200000000n);
+ const {s,nav}=fixture('mapungubwe',capital),milestones=new Map([[2,50000],[3,80000],[4,128000],[10,2147000]]);let spent=0n;
  let routeQueries=0;const path=nav.path.bind(nav);nav.path=(...args)=>{routeQueries++;return path(...args);};
  for(let ordinal=2;ordinal<=100;ordinal++){
-  const i=ordinal-2,culture=Game.CULTURES[i%5],x=150+(i%10)*80,z=Math.floor(i/10)*80,native=payload(culture),before=numberOf(s.ledger.balance);
+  const i=ordinal-2,culture=Game.CULTURES[i%5],x=150+(i%10)*80,z=Math.floor(i/10)*80,native=payload(culture),before=BigInt(s.ledger.balance.n);
   const preview=Game.previewVillage(s,culture,x,z,native,nav);assert.equal(preview.valid,true,`ordinal ${ordinal}`);
   if(milestones.has(ordinal))assert.equal(preview.cost,milestones.get(ordinal));
-  assert.equal(Game.foundVillage(s,'qa-ordinal-'+ordinal,culture,x,z,native,nav),true);spent+=preview.cost;
-  assert.equal(s.villages.length,ordinal);assert.equal(before-numberOf(s.ledger.balance),preview.cost);assert.equal(numberOf(s.ledger.balance),200000000-spent);
+  assert.equal(Game.foundVillage(s,'qa-ordinal-'+ordinal,culture,x,z,native,nav),true);spent+=BigInt(preview.cost);
+  assert.equal(s.villages.length,ordinal);assert.equal(before-BigInt(s.ledger.balance.n),BigInt(preview.cost));assert.equal(BigInt(s.ledger.balance.n),capital-spent);
   assert.equal(s.villages.at(-1).buildings.length,native.units.length);assert.equal(s.villages.at(-1).culture,culture);
   assert.equal(s.structures[0].villageId,'village-1','the reachable nearest home remains selected');
  }
  assert.equal(s.events.filter(e=>e.type==='VillageFounded').length,99);assert.equal(Object.keys(s.ledger.entries).filter(k=>k.startsWith('qa-ordinal-')).length,99);
- const loaded=saved(s);assert.equal(serialize(loaded),serialize(s));const fresh=navigation(loaded);assert.equal(Game.previewVillage(loaded,'mapungubwe',1200,0,payload('mapungubwe'),fresh).cost,2000);
+ const loaded=saved(s);assert.equal(serialize(loaded),serialize(s));const fresh=navigation(loaded);assert.equal(Game.previewVillage(loaded,'mapungubwe',1200,0,payload('mapungubwe'),fresh).cost,villageCost(101));
  assert.ok(routeQueries<=198,'native routing remains active while distant candidates are bounded');
- console.log('QA-137: '+JSON.stringify({villages:s.villages.length,routeQueries,spent,balance:numberOf(s.ledger.balance)}));
+ console.log('QA-137: '+JSON.stringify({villages:s.villages.length,routeQueries,spent:String(spent),balance:s.ledger.balance.n}));
 });
 
 

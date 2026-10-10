@@ -369,10 +369,11 @@ export const BALANCE = {
     "attacks": false,
     "max_villages": null,
     "additional_village_cost": {
-      "formula": "2000",
+      "formula": "round1000(50000 * 1.6^(n-2))",
       "min_n": 2,
       "initial_village_ordinal": 1,
-      "fixed_cost": 2000
+      "variant": "proposed",
+      "rounding": "nearest thousand, half upward, exact integer fractions"
     },
     "culture_stats_differ": false
   },
