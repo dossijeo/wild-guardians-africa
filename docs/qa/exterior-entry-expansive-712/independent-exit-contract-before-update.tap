@@ -393,9 +393,9 @@ not ok 77 - whole group exterior native entry: open
   failureType: 'testCodeFailure'
   error: |-
     The expression evaluated to a falsy value:
-    
+
       assert(exteriorRaidWitness(entry.exits[i],specs[i].radius,box,nav))
-    
+
   code: 'ERR_ASSERTION'
   name: 'AssertionError'
   expected: true
