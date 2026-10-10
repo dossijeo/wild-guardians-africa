@@ -23,6 +23,9 @@ fn main() {
                 && std::env::args().any(|arg| arg == "--smoke-report")
                 && webview.label() == "main"
             {
+                if std::env::args().any(|arg| arg == "--smoke-crop-pair-overlap") {
+                    let _ = webview.eval("window.__desktopSmokeCropPairOverlap = true;");
+                }
                 if std::env::args().any(|arg| arg == "--smoke-loading-trace") {
                     let _ = webview.eval("window.__desktopSmokeLoadingTrace = true;");
                 }

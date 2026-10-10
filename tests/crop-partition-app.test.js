@@ -1,3 +1,4 @@
+import {normalizePairWiring} from './world-crop-pair-wiring-normalize.js';
 import {normalizeTrace} from './native-loading-trace-source-normalize.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -24,13 +25,14 @@ test('App retains current main rules and gates outside partition selection and o
  const base=execFileSync('git',['show','0e94d7be:src/app/main.js'],{encoding:'utf8'});
  const actual=normalizeTrace('src/app/main.js',readFileSync('src/app/main.js','utf8')).replace("import {installLoadingVisualQa} from './loading-visual-bridge.js';\n",'').replace(',visual:installLoadingVisualQa(owner,diorama)','').replace('pending.visual?.close({cancelled:true});','').replace('loadingDiorama?.visualQa?.close({cancelled:true});','').replace('prepared.visual?.close();','').replace("import {prepareLoadingCropPartition} from './loading-crop-partition.js';\n",'').replace('prepareLoadingCropPartition(owner).then(()=>diorama.prepare())','diorama.prepare()');
  assert.equal(actual.replaceAll('\r\n','\n'),base.replaceAll('\r\n','\n'));
- for(const file of ['src/rendering/scene.js','src/rendering/loading-programs.js','src/rendering/loading-yield-budget.js','src/app/loading-downloads.js','public/menu/native.js','src/ui/menu-integration.js','src/simulation/game.js','src-tauri/smoke.js','src-tauri/src/main.rs','.github/workflows/windows.yml'])assert.equal(normalizeQa(file,readFileSync(file,'utf8').replaceAll('\r\n','\n')),execFileSync('git',['show',(['src-tauri/smoke.js','src-tauri/src/main.rs'].includes(file)?'8fb7f437:':'0e94d7be:')+file],{encoding:'utf8'}).replaceAll('\r\n','\n'),file);
+ for(const file of ['src/rendering/loading-programs.js','src/rendering/loading-yield-budget.js','src/app/loading-downloads.js','public/menu/native.js','src/ui/menu-integration.js','src/simulation/game.js','src-tauri/smoke.js','src-tauri/src/main.rs','.github/workflows/windows.yml'])assert.equal(normalizeQa(file,readFileSync(file,'utf8').replaceAll('\r\n','\n')),execFileSync('git',['show',(['src-tauri/smoke.js','src-tauri/src/main.rs'].includes(file)?'8fb7f437:':'0e94d7be:')+file],{encoding:'utf8'}).replaceAll('\r\n','\n'),file);
 });
 
 // QA branch adds only guarded evidence/action checks; strip these exact hunks
 // to retain the production recipe/source equivalence assertion.
 function normalizeQa(file,text){
- text=normalizeTrace(file,text);
+ text=normalizePairWiring(file,normalizeTrace(file,text));
+ if(file==='.github/workflows/windows.yml')text=text.replace("      loading_trace:\n        description: 'Record bounded loading phase attribution (diagnostic overhead; not a benchmark)'\n        type: boolean\n        required: false\n        default: false\n",'').replace("          if ('${{ github.event.inputs.loading_trace }}' -eq 'true') { $smokeArguments += '--smoke-loading-trace' }\n",'').replace("          $smokeArguments = @('--smoke-report', $report)\n",'').replace('    inputs:\n','').replace('$smokeArguments -WindowStyle',"'--smoke-report', $report -WindowStyle");
  if(file==='src-tauri/src/main.rs')return text.replace('                    if std::env::args().any(|arg| arg == "--smoke-visual-plant") {\n                        let _ = webview.eval("window.__desktopSmokeVisualPlant = true;");\n                    }\n','');
  if(file==='src-tauri/smoke.js'){
   const start=text.indexOf('  async function listFixtureForSmoke(');

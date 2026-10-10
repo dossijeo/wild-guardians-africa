@@ -1,0 +1,152 @@
+{
+  "base": "71d4db4e2d1ffab79d199c53fcdc3a530978e92a",
+  "source": [
+    {
+      "path": "src/app/loading-crop-pair-option.js",
+      "sha256": "a888bd3c35c03b21821a9756be7883082989f3232cd77d68e09a7178dd0a1a84"
+    },
+    {
+      "path": "src/app/main.js",
+      "sha256": "1c4079365f8de65332fe0801c98b0df712ed09f1dc39882b40aba7a9cd88caad"
+    },
+    {
+      "path": "src-tauri/src/main.rs",
+      "sha256": "296e769b18a79c1f0417c2decf7804d76fa0f25837306f96b3a210a1e811b055"
+    },
+    {
+      "path": "src-tauri/smoke.js",
+      "sha256": "dc7a543f9f1c31dae124bb39326eea50087a31dad89f82f03e573d0c99e958f3"
+    },
+    {
+      "path": ".github/workflows/windows.yml",
+      "sha256": "f3f585925f3f8c528a6332cc7072a5e9aec2ca1b9627df0155276f538a1b62f8"
+    },
+    {
+      "path": "tests/world-crop-pair-wiring.test.js",
+      "sha256": "7a22a83551eeb1f124466d31a11dec185963a4b7804952f059fc57b8e9ba06f1"
+    },
+    {
+      "path": "tests/world-crop-pair-wiring-normalize.js",
+      "sha256": "db6ff19a8f3eefa8b81bc7af3dc66770b4db1fb300cd4d3f5d76fce7214b994d"
+    },
+    {
+      "path": "tests/native-loading-trace-source-normalize.js",
+      "sha256": "68dff7b22fbb995995b56dab8b11096adb702c821cb769683ce7403d41cb2b52"
+    },
+    {
+      "path": "tests/native-loading-trace-bridge.test.js",
+      "sha256": "e60615616c1ffd51e06b31e5d319e5bd15f9cc7a92c4a98073d0c11792379ec9"
+    },
+    {
+      "path": "tests/crop-partition-app.test.js",
+      "sha256": "1b4b2a703a376dc440c40dde3d03e757dec63f260e19b2160ff3ef843308993b"
+    },
+    {
+      "path": "docs/qa/sfx-catalog-post-jam/inventory.json",
+      "sha256": "e22f5ecc2de1a38f910b0c5eaa03bf92ac617d8b8215e34d6ef1f0ea3a724747"
+    },
+    {
+      "path": "docs/qa/sfx-catalog-post-jam/inventory.md",
+      "sha256": "1b8841e959ee4f6ed283fea1479b35ceb7c012067829378de9894811a42f5fda"
+    }
+  ],
+  "unchanged": [
+    {
+      "path": "src/rendering/world-crop-pair.js",
+      "sha256": "9adb97bd320cce0845353444dd01f65cc7b8c8c2dadf3cf4cec255ede2411367"
+    },
+    {
+      "path": "src/rendering/scene.js",
+      "sha256": "45173a5ce0b7414b5e3ba20f8681ffc706d47d68805e25c2ab42e214aab8ada7"
+    },
+    {
+      "path": "src/rendering/assets.js",
+      "sha256": "7b071399ab96052f741e59c4590c1a5dcaa10a02c23ed01542e6f9ca5433ef1c"
+    },
+    {
+      "path": "src/rendering/animal-preload.js",
+      "sha256": "e518990bdd7292783eee32c34c34908ad068d36ef0424c57c51564d13288c5e6"
+    },
+    {
+      "path": "src/rendering/crop-partition.js",
+      "sha256": "41375b47870810090c60f641d21876f9a43d625e1d88d774c3f84887d4eb855a"
+    },
+    {
+      "path": "src/rendering/loading-programs.js",
+      "sha256": "dbf8a88021bc47d1ffdf2ae8bad8dad9c7a74671e9d8a2338f90f3f9eb511c54"
+    },
+    {
+      "path": "src/rendering/loading-yield-budget.js",
+      "sha256": "576ae137b4ef2e156547ca74704c244a2c4891a283a86ee590ca04c972d72c17"
+    },
+    {
+      "path": "src/rendering/loading-diorama.js",
+      "sha256": "736a000a0e1921d4671eef1df917901f763b9f0d2d99fdfd520902bcdbb04cd3"
+    },
+    {
+      "path": "src/app/native-loading-trace-bridge.js",
+      "sha256": "daf4617f611d585b1dd37acb51d7a834a16a0db63282446d007bd5d4e0c5d1f0"
+    },
+    {
+      "path": "public/content/models.json",
+      "sha256": "d42f6b54a3a5946fc652f1ac87c443cbda45075a10dc4cd49ca5de02a3c5e8c7"
+    },
+    {
+      "path": "public/content/crop-bridges.json",
+      "sha256": "e133b79dc3a21c421a9eec9bd3aad8610967c69cc28eb003b7f06f072fd249d4"
+    }
+  ],
+  "logs": [
+    {
+      "path": "world-crop-pair-wiring-tests.log.gz",
+      "originalBytes": 17490,
+      "originalSha256": "fef277dad4f989418604db229d327b7b0053a45a009efaf3810386a2f179d0a4",
+      "gzipSha256": "ef6b640d14f83427108d3edcefadc8d439610a90852f496d32f1220e9534556a",
+      "exitCode": 0
+    },
+    {
+      "path": "world-crop-pair-wiring-build.log.gz",
+      "originalBytes": 2321,
+      "originalSha256": "8d029343046f6f75f4b17e5080557bb46d04ecd5717b9af4461a82a2ac899238",
+      "gzipSha256": "b9f79dcd729b470929740055e1a96da61175af9be657650a6e6cf18a2e161552",
+      "exitCode": 0
+    },
+    {
+      "path": "world-crop-pair-wiring-package.log.gz",
+      "originalBytes": 411,
+      "originalSha256": "ca708efead95bf950aa32ee4a55d0c4b1eaf09d32f1cc8606c4c3cbac9691920",
+      "gzipSha256": "3b9b09907f20cfd459f86b0a7fb1c1e26bc2710f192f38e42023346681b8aec6",
+      "exitCode": 0
+    },
+    {
+      "path": "world-crop-pair-wiring-sfx-refresh.log.gz",
+      "originalBytes": 272,
+      "originalSha256": "33bcc0f8ffd7f8316de422d7fa2fbc5111259462e8ce5afe75a5058e789d48ad",
+      "gzipSha256": "959bb985a654087f05ba2dab60165f3be2da53a99021065f007c43c6937b383f",
+      "exitCode": 0
+    },
+    {
+      "path": "world-crop-pair-wiring-sfx-check.log.gz",
+      "originalBytes": 272,
+      "originalSha256": "d35ba86261f45301d45cebea8d563b18f48fe9c7adc17a9d596924d94ff57221",
+      "gzipSha256": "2c71c5860bfd2a4e784d801ed3e9402ddb1050f2a76de73dab7985bc9f2cee3a",
+      "exitCode": 0
+    }
+  ],
+  "tests": {
+    "pass": 72,
+    "fail": 0,
+    "skippedWindows": 0,
+    "durationMs": 5066.2969,
+    "powerShellArgvCases": 5,
+    "nonWindows": "Only actual PowerShell subprocess test explicitly skips; portable source and guard assertions remain."
+  },
+  "buildSeconds": 10.27,
+  "package": {
+    "files": 720,
+    "bytes": 445281843,
+    "links": 860,
+    "glbs": 24
+  },
+  "dispatch": "Not performed; root review required."
+}

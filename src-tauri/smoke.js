@@ -16,6 +16,7 @@
     finished = true;
     clearTimeout(timeout);
     if (error) report.errors.push(String(error));
+    report.checks.loadingRecipe={cropPairOverlap:window.__desktopSmokeCropPairOverlap===true};
     if (window.__desktopSmokeLoadingTrace === true) {
       try { report.checks.nativeLoadingTrace = window.__wildGuardiansNativeLoadingTrace?.report ?? {available:false}; }
       catch (traceError) { report.checks.nativeLoadingTrace = {available:false,error:String(traceError)}; }

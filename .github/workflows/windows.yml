@@ -6,6 +6,11 @@ on:
   pull_request:
   workflow_dispatch:
     inputs:
+      crop_pair_overlap:
+        description: 'Overlap complete World steady and bridge sources (experimental)'
+        type: boolean
+        required: false
+        default: false
       loading_trace:
         description: 'Record bounded loading phase attribution (diagnostic overhead; not a benchmark)'
         type: boolean
@@ -52,6 +57,7 @@ jobs:
           $binary = (Resolve-Path src-tauri/target/release/wild-guardians-africa.exe).Path
           $smokeArguments = @('--smoke-report', $report)
           if ('${{ github.event.inputs.loading_trace }}' -eq 'true') { $smokeArguments += '--smoke-loading-trace' }
+          if ('${{ github.event.inputs.crop_pair_overlap }}' -eq 'true') { $smokeArguments += '--smoke-crop-pair-overlap' }
           $process = Start-Process -FilePath $binary -ArgumentList $smokeArguments -WindowStyle Hidden -PassThru
           if (-not $process.WaitForExit(240000)) { Stop-Process -Id $process.Id; throw 'WebView2 smoke timed out' }
           if (-not (Test-Path -LiteralPath $report)) { throw 'No WebView2 smoke report' }

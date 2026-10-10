@@ -40,7 +40,7 @@ test('trace finish copies pending diagnosis but leaves original ok/failure gates
 });
 test('App trace wiring retains ordinary source exactly outside narrow smoke diagnostics',()=>{
  const base=execFileSync('git',['show','71917b71:src/app/main.js'],{encoding:'utf8'}).replaceAll('\r\n','\n');
- const actual=readFileSync('src/app/main.js','utf8').replaceAll('\r\n','\n').replace("import {installNativeLoadingTrace} from './native-loading-trace-bridge.js';\n",'').replace('let owner,diorama,trace;','let owner,diorama;').replace('trace=installNativeLoadingTrace(owner);','').replace(',trace,visual:',',visual:').replace('pending.trace?.close({cancelled:true});','').replace('prepared.trace?.connect();','').replace('prepared.trace?.close();','');assert.equal(actual,base);
+ const actual=normalizeTrace('src/app/main.js',readFileSync('src/app/main.js','utf8')).replace("import {installNativeLoadingTrace} from './native-loading-trace-bridge.js';\n",'').replace('let owner,diorama,trace;','let owner,diorama;').replace('trace=installNativeLoadingTrace(owner);','').replace(',trace,visual:',',visual:').replace('pending.trace?.close({cancelled:true});','').replace('prepared.trace?.connect();','').replace('prepared.trace?.close();','');assert.equal(actual,base);
  const rust=readFileSync('src-tauri/src/main.rs','utf8');assert.match(rust,/--smoke-report[\s\S]*--smoke-loading-trace/);const bridge=readFileSync('src/app/native-loading-trace-bridge.js','utf8');for(const forbidden of ['setTimeout','requestAnimationFrame','new WebGLRenderer','canvas.getContext','fetch('])assert.equal(bridge.includes(forbidden),false);
 });
 test('graphics snapshot uses existing renderer once only under opt-in, and context failures are data',()=>{
