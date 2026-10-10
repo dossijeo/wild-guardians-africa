@@ -19,7 +19,7 @@ import {createNativeExpandingDefensePolicy} from './native-expanding-defense-pol
 import {createNativeCampaignEvidence} from './native-campaign-evidence.mjs';
 import {createNativeRaidCampaignEvidence} from './native-raid-campaign-evidence.mjs';
 import {NativeCampaignEntryDriver} from './native-campaign-entry-driver.mjs';
-import {nativeCampaignStrategy,affordableOpening,villageSavingsFromTotals,campaignProtocolForLabour,NATIVE_CAMPAIGN_PROTOCOL} from './native-campaign-protocol.mjs';
+import {nativeCampaignStrategy,campaignMagicAllowed,affordableOpening,villageSavingsFromTotals,campaignProtocolForLabour,NATIVE_CAMPAIGN_PROTOCOL} from './native-campaign-protocol.mjs';
 import {createNativeCampaignPlots} from './native-campaign-plots.mjs';
 import {createNativeCampaignExpansion} from './native-campaign-expansion.mjs';
 
@@ -63,7 +63,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
   const p=choosePlot();if(!p)return false;
   if(!Game.plant(s,command('plant'),species,p.x,p.z,nav))return false;plantedSequence++;maximumLiving=Math.max(maximumLiving,s.plants.filter(p=>p.alive).length);return true;
  };
- const canCast=(kind,p)=>permission(s,kind)&&s.cooldowns[kind]===0&&
+ const canCast=(kind,p)=>campaignMagicAllowed(policy,kind)&&permission(s,kind)&&s.cooldowns[kind]===0&&
   !s.spells.some(a=>distance(a,p)<a.radius+Game.spellRadius(kind))&&
   (kind!=='shield'||!s.raid?.animals.some(a=>a.status!=='gone'&&distance(a,p)<a.radius+Game.spellRadius(kind)));
  const cast=(kind,p)=>canCast(kind,p)&&Game.cast(s,command(kind),kind,p.x,p.z,nav);
@@ -168,6 +168,6 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
  }
  const idleRuns=daily.map(r=>r.longestIdle).sort((a,b)=>a-b),unoccupied=daily.reduce((n,r)=>n+r.unoccupiedSeconds,0),daylight=daily.reduce((n,r)=>n+r.daylightSeconds,0);
  const activity={daylightSeconds:daylight,unoccupiedSeconds:unoccupied,unoccupiedFraction:daylight?unoccupied/daylight:null,longestIdle:Math.max(...idleRuns),p90LongestIdle:idleRuns[Math.ceil(idleRuns.length*.9)-1]};
- return {protocol,strategy,labourPolicy,labourHistory,labourReasons,raidEvidence:raidEvidence.report(s),entryTransport:driver.report(),peaceAfter100:true,expansion:expansion?.report()??null,plotSearch:plotSearch.report(),...(evidence?{nativeEvidence:evidence.report(s)}:{}),biome:s.biome,culture:s.culture,seed:s.seed,policy:{profile,mixed,middayHiring,plantsPerWorker,defend,cashPolicy:policy.cashPolicy,reserveMaintenance,burstPlanting,cameraEntry,defensePolicy},defense:defense?.report(s)??null,additionalHiring,result:s.result,completedNights:s.completedNights,money:numberOf(s.ledger.balance),maximumLiving,plots:plots.length,reloads,counts,activity,daily,state:s,nav};
- } catch(error){let receipts;try{receipts=partialEvidence();}catch(e){receipts={evidenceError:e.message};}error.nativeCampaignPartial={strategy,seed:s.seed,day:s.day,time:s.time,result:s.result,state:serialize(s),entryTransport:driver.report(),receipts};throw error;} finally {await driver.dispose();}
+ return {protocol,strategy,labourPolicy,labourHistory,labourReasons,raidEvidence:raidEvidence.report(s),entryTransport:driver.report(),peaceAfter100:true,expansion:expansion?.report()??null,plotSearch:plotSearch.report(),...(evidence?{nativeEvidence:evidence.report(s)}:{}),biome:s.biome,culture:s.culture,seed:s.seed,policy:{profile,mixed,middayHiring,plantsPerWorker,defend,shieldEnabled:policy.shield,cashPolicy:policy.cashPolicy,reserveMaintenance,burstPlanting,cameraEntry,defensePolicy},defense:defense?.report(s)??null,additionalHiring,result:s.result,completedNights:s.completedNights,money:numberOf(s.ledger.balance),maximumLiving,plots:plots.length,reloads,counts,activity,daily,state:s,nav};
+ } catch(error){let receipts;try{receipts=partialEvidence();}catch(e){receipts={evidenceError:e.message};}error.nativeCampaignPartial={strategy,policy:{shieldEnabled:policy.shield},seed:s.seed,day:s.day,time:s.time,result:s.result,state:serialize(s),entryTransport:driver.report(),receipts};throw error;} finally {await driver.dispose();}
 }
