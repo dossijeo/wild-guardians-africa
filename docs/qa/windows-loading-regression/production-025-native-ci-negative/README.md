@@ -1,0 +1,9 @@
+# Minimal production025 native CI failure
+
+[Run38030771951](https://github.com/dossijeo/wild-guardians-africa/actions/runs/38030771951), job114151063908, is terminal FAILURE on exact `02554d0ab756dc4360dd24be0f615b469375773d`. Compilation and executable/installer checks passed. The packaged New Game smoke did not reach readiness by90194.3ms at the unchanged90-second gate; genuine native minimization/restoration was skipped.
+
+The original report shows85%, Bringing your world to life,1028×720, visible/focused and busy. That presentation does not identify the blocking operation or actual renderer. The only reported error is `Production world did not finish loading`. All24 model preflight decodes and audio/storage/worker/WebGL compatibility probes completed beforehand. There were no enabled visual captures or loading traces. The world PNG is requested only after readiness; it cannot explain this readiness timeout.
+
+The preceding compatibility preflight performs substantial decoding outside the measured world interval. Its possible retained-memory/GC/cache effects are a hypothesis, not measured causality. A separate same-EXE full-versus-loading-only comparison is being prepared, with the same legal saved fixture, fresh profiles and original gate. It will not replace the full compatibility test. New Game's default Date.now seed also prevents treating these independent CI starts as a controlled comparison.
+
+The original run/job/artifact metadata, full log and raw report are archived losslessly with SHA256. The report digest `c56b62944dbad356459aa3146a321f5b19b522b7e5f30bf2fee075016d35c59b` matches the official raw artifact. The3,839-test web success remains valid in its own scope; it does not replace this native negative. No retry, timeout change or production promotion followed this result.
