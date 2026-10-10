@@ -57,6 +57,7 @@ export class LoadingDiorama {
   }
   async prepare() {
     const {world}=this,phase=(label,run)=>loadingAwaitWitness(world.onLoadingSpan,label,run),sync=(label,run)=>loadingSyncWitness(world.onLoadingSpan,label,run);
+    if(world.cropPartition&&(this.resourceOverlap||this.serialImageChain))throw Error('Crop partition must remain isolated');
     if(this.resourceOverlap&&this.serialImageChain)throw Error('Loading resource recipes must remain isolated');
     let gltf,preparedBridges,soilTexture,mountainTexture,mountains,atlasUrl;
     if(this.resourceOverlap){
@@ -92,7 +93,7 @@ export class LoadingDiorama {
       await phase('diorama-prepare-sky',()=>world.loadReady(world.sky.load()));if(this.disposed)throw Error('Loading diorama cancelled');
       const [models,bridges,ground]=await phase('diorama-prepare-catalogues',()=>world.loadReady(Promise.all([json('/content/models.json',{signal:world.loading.signal}),json('/content/crop-bridges.json',{signal:world.loading.signal}),json('/content/ground-materials.json',{signal:world.loading.signal})])));
       const descriptor=models.find(m=>m.source.includes('Cultivos'));if(!descriptor)throw Error('Missing native maize model');
-      [gltf,preparedBridges]=await Promise.all([phase('diorama-prepare-maize-model',()=>world.loadReady(world.assets.model(descriptor.url))),phase('diorama-prepare-maize-bridges',()=>world.loadReady(loadCropBridges(bridges,url=>world.assets.model(url))))]);if(this.disposed)throw Error('Loading diorama cancelled');
+      [gltf,preparedBridges]=await Promise.all([phase('diorama-prepare-maize-model',()=>world.loadReady(world.cropPartition?world.cropPartition.models('maize'):world.assets.model(descriptor.url))),phase('diorama-prepare-maize-bridges',()=>world.loadReady(world.cropPartition?world.cropPartition.bridges(bridges,'maize'):loadCropBridges(bridges,url=>world.assets.model(url))))]);if(this.disposed)throw Error('Loading diorama cancelled');
       soilTexture=await phase('diorama-prepare-soil-texture',()=>world.loadReady(world.assets.texture(ground.canyons.base,false)));
       this.ground.material.map=this.textureOwner.borrow(soilTexture);
       this.ground.material.color.set('#a59b8d');this.ground.material.needsUpdate=true;

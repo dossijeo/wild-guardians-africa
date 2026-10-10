@@ -26,9 +26,9 @@ export class Assets {
   }
   release(resource){if(resource&&!this.disposedResources.has(resource)){this.disposedResources.add(resource);this.ownedResources.delete(resource);resource.dispose();}}
   ownModel(gltf){gltf.scene.traverse(mesh=>{if(!mesh.isMesh)return;this.own(mesh.geometry);for(const material of Array.isArray(mesh.material)?mesh.material:[mesh.material]){this.own(material);for(const value of Object.values(material))if(value?.isTexture)this.own(value);}});return gltf;}
-  async model(url) {
+  async model(url,loader=this.loader) {
     this.assertOpen();
-    if(!this.cache.has(url)){const source=assetUrl(url),transfer=beginAssetTransfer(source,'gltf');this.activeModelTransfers.add(source);const pending=this.loader.loadAsync(source,event=>updateAssetTransfer(transfer,event.loaded,event.lengthComputable?event.total:null)).then(gltf=>{finishAssetTransfer(transfer);this.activeModelTransfers.delete(source);this.ownModel(gltf);if(!this.modelsDisposed)this.modelSources.set(url,gltf);return gltf;},error=>{finishAssetTransfer(transfer,{failed:true});this.activeModelTransfers.delete(source);throw error;});this.cache.set(url,pending);pending.catch(()=>{if(this.cache.get(url)===pending)this.cache.delete(url);});}else if(this.modelSources.has(url))cachedAssetTransfer(assetUrl(url));return this.cache.get(url);
+    if(!this.cache.has(url)){const source=assetUrl(url),transfer=beginAssetTransfer(source,'gltf');this.activeModelTransfers.add(source);const pending=loader.loadAsync(source,event=>updateAssetTransfer(transfer,event.loaded,event.lengthComputable?event.total:null)).then(gltf=>{finishAssetTransfer(transfer);this.activeModelTransfers.delete(source);this.ownModel(gltf);if(!this.modelsDisposed)this.modelSources.set(url,gltf);return gltf;},error=>{finishAssetTransfer(transfer,{failed:true});this.activeModelTransfers.delete(source);throw error;});this.cache.set(url,pending);pending.catch(()=>{if(this.cache.get(url)===pending)this.cache.delete(url);});}else if(this.modelSources.has(url))cachedAssetTransfer(assetUrl(url));return this.cache.get(url);
   }
   disposeModels(){
     if(this.modelsDisposed)return;this.modelsDisposed=true;

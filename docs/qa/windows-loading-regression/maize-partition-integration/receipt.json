@@ -1,0 +1,59 @@
+{
+  "base": "ca33aacf6485606348204fac39b4f1099c66a8f5",
+  "scope": "CPU adapter and conditional diorama/World integration only; no App/CLI selection or production partition assets.",
+  "sourceHashes": {
+    "src/rendering/crop-partition.js": "34797ae7b74d1ff0763ae274e81a453988df11aa7c06cb90b2713329e377cfe3",
+    "src/rendering/assets.js": "92cdb93124473a987ea179484d87422c86737599a7a16ff0599362dc48a8cd1e",
+    "src/rendering/loading-diorama.js": "36d4bcd95a5d9d7b3f0efb30faf2920ec9006bd4820b26066fcbffef3c942d46",
+    "src/rendering/scene.js": "12eddcfca985b97d0073fd0e115dd36c8b9046d82a308004f6d749b3cc0cc409",
+    "tests/crop-partition-lifecycle.test.js": "b717d85453a5dc3bfb77cb0a7a0ee2e93f910620bf014def2ceeebad454df1ab",
+    "tests/fixtures/world-load-crop-partition.mjs": "e5240ed9ae1d51337cc78c68db2b9dbeebb81cc4aa3925b83fc9af6088f93fa8",
+    "tests/loading-serial-images.test.js": "40d261bfcd3620ae9824e34db8268c9956c018077e0d5fe6ceee8201d6bca614",
+    "docs/qa/sfx-catalog-post-jam/inventory.json": "ade69a39236f159e47f5f66baf3cd6f1613d31c691bf8679f356091c44d9f7ec"
+  },
+  "unchangedHashes": {
+    "src/app/main.js": "dbd681259acf5c26c0a8aba50cf02fdeb1d29d82c3c72e834e9179813afead35",
+    "src/app/loading-progress.js": "806b60554f8d46dbb779e11d0fecdeb677d58f2384aeee6415225769e1e78df3",
+    "src/app/loading-downloads.js": "f38b7a905c0f270c867047b2b33faf8fedf242a57a1d67c3d5cdfb4b8e6e797b",
+    "src/app/loading-transfer-owner.js": "84155bf2184afbd8de8ca839e67775890c4af1ea87b2f5074d72ee2de4c71920",
+    "src/rendering/crop-batch.js": "96f37896195dda9cbf2c2e2e9570c982305c83cdb1e20b3e36671b7754ab233c",
+    "src/rendering/loading-programs.js": "a1354397f1ba0543fd4dffcd5143e82c4b211f750a9df367ac902dd70730c8c2",
+    "tools/experiments/compile-gpu-preparation.js": "6085d3f898f8d934bef62b2f79a160c9753179cad2db70b82f0c493d1fef1500",
+    ".github/workflows/windows.yml": "2b5d68f65285d9c936ee2089f8bc1f6d4d4d2f2446471db8f99260f50c83836e",
+    "src-tauri/smoke.js": "1caf359bf11d1b8cac421e75e193e366ec88ef0016634bf4d0159c4ef3c37824",
+    "src-tauri/src/main.rs": "007af64e56ba59ae644623966fcd64ca70a975b600250e3d0f68215e5c689a2c",
+    "public/content/models.json": "9fbdddec82c57f60777cec4751142cf06db58bf99916ebb403c80e8c98ddacc1",
+    "public/content/crop-bridges.json": "1cb26e0d61bdb0aa780d6976e54c57537b8cf9fe77518b49691b9c4cd292185f",
+    "content/manifests/web-assets.json": "fed88f8bcfce8f2296764a41324c20ad663f74f4a9dc17cd1f32b6179623bd41"
+  },
+  "logHashes": {
+    "docs/qa/windows-loading-regression/maize-partition-integration/tests.log": "24aecb347f6d99b3ea61522d916bcc7470c95715304b5ffd8c294100fcf864c3",
+    "docs/qa/windows-loading-regression/maize-partition-integration/build.log": "61bee1ae8c718c098c7dad329c631c4cf5cd7c1ffa054061fe72bb36eb830bbb",
+    "docs/qa/windows-loading-regression/maize-partition-integration/package.log": "d11f2913e9c29cea890f8b779eb4f009e9b3a5d44be20c448d63aafd8c13658a"
+  },
+  "tests": {
+    "pass": 37,
+    "fail": 0,
+    "durationMs": 10489.461
+  },
+  "build": {
+    "exit": 0,
+    "seconds": 11.37
+  },
+  "package": {
+    "exit": 0,
+    "files": 712,
+    "bytes": 450454711,
+    "links": 860,
+    "runtimeGLBs": 22
+  },
+  "nativeEvidence": false,
+  "normalSelection": false,
+  "pending": [
+    "source review",
+    "false-default App/CLI selection",
+    "immutable candidate publication",
+    "manifest expectedBytes composition before requests",
+    "native authorization"
+  ]
+}

@@ -1,0 +1,17 @@
+# Isolated partition adapter: CPU review
+
+Default OFF. App/World constructor does not import or create CropPartition. A candidate caller must assign `world.cropPartition` before diorama preparation. CLI, workflow, smoke gates and asset registrations remain unchanged. Generated files remain in `.cache`; this source freeze does not yet provide an executable App opt-in.
+
+Diorama's conditional path awaits maize5 + bridges4. World.load completes40 +32 through the same Assets owner and exact URLs; remainder35 +28 load later. No original full GLB is requested on the selected path. Resolved maize sources reuse Assets.model's actual cache. Full batch/material/shadow/depth/readiness/fence code remains intact. The serial-image invariant removes only the explicit candidate conditionals/isolation guard before comparing the prior prepare source byte-for-byte.
+
+Each source uses a private native GLTFLoader and the original loading manager/MeshoptDecoder. Its beforeRoot plugin routes external images through Assets.texture. Canonical ownership combines URI, color interpretation and sampler contract; incompatible color/sampler/UV transforms reject instead of mutating borrowed maps. CPU tests check actual Texture identity across parsers and crop-batch disposal, rather than URI equality. Base/emissive maps are SRGB, normal maps linear. Node supplies Texture doubles for image loading: no claim of native image decoding, GPU upload or raster proof.
+
+Partial parse geometries/materials are tracked before successful model completion, so failure/abort releases them. Late arrivals cannot publish a model after owner close. Successful sources remain borrowed from Assets until World close. Identity-matched failures clear caches for explicit retry. Object clones share resources without moving cached scenes.
+
+37 tests pass: real GLTF+meshopt parsing and offline bit equivalence, actual LoadingDiorama.prepare until adoption, actual WorldScene.load New/saved callpaths with unrelated renderer modules doubled, cancellation/late disposal/retry, sampler/map identity, existing Assets lifecycle and genuine byte/cache telemetry. Build11.37s and package PASS. Experimental JSON module and existing chunk-size warnings remain in logs. Inventory SFX changes only scene.js fingerprint;126 rows/classifications/bytes unchanged.
+
+Future wiring must await manifest before preparation, assign one partition owner to World, retain versioned immutable relative URLs, and compose the existing transfer owner's expectedBytes callback before starting requests. `partition.expectedBytes(url)` provides exact manifest sizes, falling back to assetExpectedBytes for other resources. Existing native progress/body timings and original milestone gates remain authoritative. The CPU GLB test observes original FileLoader events and marks only resolved exactURL cache reuse. Native texture decoding/telemetry and measured work weights remain unvalidated; no fake cache or timer is introduced.
+
+Offline size: four GLBs33,198,180B + six shared WebPs7,648,314B + manifest16,901B =40,863,395B (+18,599B vs original two runtime GLBs). First maize GLBs3,796,380B + referenced images3,610,746B. These are file sizes, not timing savings. Current package contains prior diagnostic wall package but no partitions:712 files450,454,711B22GLBs. Publication and eventual avoiding dual-library package weight require separate review; originals remain untouched.
+
+No new run/GPU/PR/promotion, timeout/compiler/Rust/cache architecture or unrelated main changes. All historical negatives retained.
