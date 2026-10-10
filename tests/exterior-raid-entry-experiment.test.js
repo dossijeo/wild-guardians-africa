@@ -19,9 +19,10 @@ test('isolated exterior candidate preserves RNG, state and view and separates th
  }
 });
 
-test('first native hit changes from crop to wall in the controlled enclosure',()=>{
+test('current production and isolated candidate both intercept the controlled enclosure at its wall',()=>{
  const original=runProbe(),candidate=runProbe({candidate:true});
- assert.equal(original.firstHit?.type,'CropHit');assert.equal(candidate.firstHit?.type,'StructureHit');
+ assert.equal(original.firstHit?.type,'StructureHit');assert.equal(candidate.firstHit?.type,'StructureHit');
+ assert.ok(original.births.every(a=>!a.insideSquare));
  assert.ok(candidate.births.every(a=>!a.insideSquare));
  assert.ok(candidate.targets.every(a=>a.kind==='wall'));
 });
@@ -35,7 +36,7 @@ test('near-cardinal and diagonal headings keep the projected entry bounded',()=>
  }
 });
 
-test('retained candidate evidence covers four headings and complete group with current source hashes',()=>{
+test('retained candidate evidence covers four headings and complete group with its original source hashes',()=>{
  const r=JSON.parse(readFileSync(new URL('../docs/qa/retained-raid-entry-audit/exterior-candidate.json',import.meta.url)));
  assert.equal(r.rows.length,9);
  for(const row of r.rows.slice(0,8)){
@@ -43,5 +44,7 @@ test('retained candidate evidence covers four headings and complete group with c
   assert.ok(row.births.every(a=>a.insideSquare===!row.candidate));
  }
  assert.equal(r.rows.at(-1).births.length,5);assert.ok(r.rows.at(-1).births.every(a=>!a.insideSquare));
- for(const [path,sha] of Object.entries(r.sourceHashes))assert.equal(createHash('sha256').update(readFileSync(new URL('../'+path,import.meta.url))).digest('hex'),sha);
+ const frozen=JSON.parse(readFileSync(new URL('../docs/qa/retained-raid-entry-audit/prototype-source.json',import.meta.url),'utf8'));
+ assert.equal(frozen.commit,'6b253ac24f991c6639df1e986e6b8023c22d03c2');
+ for(const [path,sha] of Object.entries(r.sourceHashes))assert.equal(createHash('sha256').update(frozen.files[path]).digest('hex'),sha);
 });

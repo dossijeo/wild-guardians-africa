@@ -1,0 +1,126 @@
+TAP version 13
+# Subtest: bounded expansion finds an exterior entry without changing live bounds, RNG or camera
+not ok 1 - bounded expansion finds an exterior entry without changing live bounds, RNG or camera
+  ---
+  duration_ms: 39.8538
+  location: 'file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/.cache-magic-baseline/tests/expanded-raid-entry-experiment.test.js:9:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    0 !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 0
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/.cache-magic-baseline/tests/expanded-raid-entry-experiment.test.js:12:9)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.start (node:internal/test_runner/test:542:17)
+    startSubtest (node:internal/test_runner/harness:216:17)
+  ...
+# Subtest: entry chunk demand includes whole bodies and exits at negative and positive seams
+ok 2 - entry chunk demand includes whole bodies and exits at negative and positive seams
+  ---
+  duration_ms: 1.1338
+  ...
+# Subtest: evidence retains the successful native wall impact and bounded failure
+not ok 3 - evidence retains the successful native wall impact and bounded failure
+  ---
+  duration_ms: 8.2914
+  location: 'file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/.cache-magic-baseline/tests/expanded-raid-entry-experiment.test.js:22:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + '5c88e8fcd5b703a23e3fbabe5f7b60d356eaae6375d7cdc28f169f6f7e82ba0f'
+    - '79d66a3e3e34e08f862e16510d9ecc5ebbc7a37600ac5c03893cbab928d95c3a'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: '79d66a3e3e34e08f862e16510d9ecc5ebbc7a37600ac5c03893cbab928d95c3a'
+  actual: '5c88e8fcd5b703a23e3fbabe5f7b60d356eaae6375d7cdc28f169f6f7e82ba0f'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/.cache-magic-baseline/tests/expanded-raid-entry-experiment.test.js:26:61)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+# Subtest: isolated exterior candidate preserves RNG, state and view and separates the complete epic group
+ok 4 - isolated exterior candidate preserves RNG, state and view and separates the complete epic group
+  ---
+  duration_ms: 34.2607
+  ...
+# Subtest: first native hit changes from crop to wall in the controlled enclosure
+not ok 5 - first native hit changes from crop to wall in the controlled enclosure
+  ---
+  duration_ms: 1620.2348
+  location: 'file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/.cache-magic-baseline/tests/exterior-raid-entry-experiment.test.js:22:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'StructureHit'
+    - 'CropHit'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'CropHit'
+  actual: 'StructureHit'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/.cache-magic-baseline/tests/exterior-raid-entry-experiment.test.js:24:9)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async startSubtest (node:internal/test_runner/harness:216:3)
+  ...
+# Subtest: near-cardinal and diagonal headings keep the projected entry bounded
+ok 6 - near-cardinal and diagonal headings keep the projected entry bounded
+  ---
+  duration_ms: 8.1897
+  ...
+# Subtest: retained candidate evidence covers four headings and complete group with current source hashes
+not ok 7 - retained candidate evidence covers four headings and complete group with current source hashes
+  ---
+  duration_ms: 6.2709
+  location: 'file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/.cache-magic-baseline/tests/exterior-raid-entry-experiment.test.js:38:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + '5c88e8fcd5b703a23e3fbabe5f7b60d356eaae6375d7cdc28f169f6f7e82ba0f'
+    - '79d66a3e3e34e08f862e16510d9ecc5ebbc7a37600ac5c03893cbab928d95c3a'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: '79d66a3e3e34e08f862e16510d9ecc5ebbc7a37600ac5c03893cbab928d95c3a'
+  actual: '5c88e8fcd5b703a23e3fbabe5f7b60d356eaae6375d7cdc28f169f6f7e82ba0f'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/.cache-magic-baseline/tests/exterior-raid-entry-experiment.test.js:46:64)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 3
+# fail 4
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1906.3007
