@@ -1,0 +1,921 @@
+{
+  "checks": {
+    "audio": {
+      "channels": 2,
+      "id": "amb_wind_soft",
+      "sampleRate": 44100,
+      "seconds": 12,
+      "url": "assets/audio/861578037e994d78d4730970c542ff330f4adb680372feae4f89a19525ba507c.opus"
+    },
+    "audioSeconds": 12,
+    "loadingAtFinish": {
+      "canvas": {
+        "height": 720,
+        "width": 1028
+      },
+      "displayedProgress": "85",
+      "focused": true,
+      "phaseLabel": "Bringing your world to life...",
+      "readyGateReached": false,
+      "scope": "Presentation snapshot only; displayed progress and canvas dimensions do not establish world readiness or GPU identity.",
+      "stageBusy": "true",
+      "visibility": "visible",
+      "worldWaitMs": 90016.90000000002
+    },
+    "loadingReadinessAtFinish": {
+      "context": {
+        "contextLost": false,
+        "renderer": "WebKit WebGL",
+        "scope": "Existing World renderer context at finish only; identity is not a measured cause.",
+        "unmaskedRenderer": "ANGLE (Microsoft, Microsoft Basic Render Driver (0x0000008C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "unmaskedVendor": "Google Inc. (Microsoft)",
+        "vendor": "WebKit",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+      },
+      "readiness": {
+        "actors": null,
+        "chunks": {
+          "busy": false,
+          "busyJob": null,
+          "closed": false,
+          "created": 25,
+          "desired": 25,
+          "discarded": 0,
+          "epoch": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "loaded": 25,
+          "omittedWaiters": 0,
+          "queued": 0,
+          "scope": "Existing queue only. whenReady defaults to a nine-chunk subset; outer work may continue. A null waiter minimum denotes idle waiting, not zero required chunks.",
+          "waiterCount": 0,
+          "waiterMinimums": []
+        },
+        "compilation": {
+          "active": [
+            {
+              "associationCount": 8,
+              "associationOmitted": 0,
+              "associations": [
+                {
+                  "cacheKey": "basic,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,4,0,0,0,1,133123,srgb,onBeforeCompile(){}",
+                  "cacheKeyTruncated": false,
+                  "current": true,
+                  "firstObservedSelection": {
+                    "job": 5,
+                    "phase": "warm-compile-world"
+                  },
+                  "materialId": 6,
+                  "materialName": "",
+                  "materialType": "MeshBasicMaterial",
+                  "materialUuid": "d39dec7c-f653-4afc-8f9f-25964d705e8e",
+                  "programId": 16,
+                  "programName": "",
+                  "side": 2
+                },
+                {
+                  "cacheKey": "basic,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,1,133123,srgb,onBeforeCompile(){}",
+                  "cacheKeyTruncated": false,
+                  "current": true,
+                  "firstObservedSelection": {
+                    "job": 5,
+                    "phase": "warm-compile-world"
+                  },
+                  "materialId": 7,
+                  "materialName": "",
+                  "materialType": "MeshBasicMaterial",
+                  "materialUuid": "0f31969d-f1d3-48d9-b2ac-0164e1d04d81",
+                  "programId": 17,
+                  "programName": "",
+                  "side": 2
+                },
+                {
+                  "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,131,131075,srgb,bioma-growth-pbr-v3-opaque|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|toon-4.1.4|MeshStandardMaterial|resident",
+                  "cacheKeyTruncated": false,
+                  "current": true,
+                  "firstObservedSelection": {
+                    "job": 5,
+                    "phase": "warm-compile-world"
+                  },
+                  "materialId": 114,
+                  "materialName": "atlas_0",
+                  "materialType": "MeshStandardMaterial",
+                  "materialUuid": "7592e43b-0e6d-4ab8-a123-5dc7b1be8b96",
+                  "programId": 18,
+                  "programName": "atlas_0",
+                  "side": 0
+                },
+                {
+                  "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,131,131075,srgb,bioma-growth-pbr-v3-opaque|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|toon-4.1.4|MeshStandardMaterial|resident",
+                  "cacheKeyTruncated": false,
+                  "current": true,
+                  "firstObservedSelection": {
+                    "job": 5,
+                    "phase": "warm-compile-world"
+                  },
+                  "materialId": 116,
+                  "materialName": "atlas_0",
+                  "materialType": "MeshStandardMaterial",
+                  "materialUuid": "2a372a87-5c5c-4c3b-8097-53a5c9c0fa2f",
+                  "programId": 18,
+                  "programName": "atlas_0",
+                  "side": 0
+                },
+                {
+                  "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,131,131075,srgb,bioma-growth-pbr-v3-opaque|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|toon-4.1.4|MeshStandardMaterial|resident",
+                  "cacheKeyTruncated": false,
+                  "current": true,
+                  "firstObservedSelection": {
+                    "job": 5,
+                    "phase": "warm-compile-world"
+                  },
+                  "materialId": 118,
+                  "materialName": "atlas_0",
+                  "materialType": "MeshStandardMaterial",
+                  "materialUuid": "81c24d90-d2a3-4581-8b5e-e9b3065c5608",
+                  "programId": 18,
+                  "programName": "atlas_0",
+                  "side": 0
+                },
+                {
+                  "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,131,131075,srgb,bioma-growth-pbr-v3-opaque|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|toon-4.1.4|MeshStandardMaterial|resident",
+                  "cacheKeyTruncated": false,
+                  "current": true,
+                  "firstObservedSelection": {
+                    "job": 5,
+                    "phase": "warm-compile-world"
+                  },
+                  "materialId": 120,
+                  "materialName": "atlas_0",
+                  "materialType": "MeshStandardMaterial",
+                  "materialUuid": "e228b905-847d-4708-a601-6e81fce8c9b6",
+                  "programId": 18,
+                  "programName": "atlas_0",
+                  "side": 0
+                },
+                {
+                  "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,131,131075,srgb,bioma-growth-pbr-v3-opaque|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|toon-4.1.4|MeshStandardMaterial|resident",
+                  "cacheKeyTruncated": false,
+                  "current": true,
+                  "firstObservedSelection": {
+                    "job": 5,
+                    "phase": "warm-compile-world"
+                  },
+                  "materialId": 122,
+                  "materialName": "atlas_0",
+                  "materialType": "MeshStandardMaterial",
+                  "materialUuid": "b11e135a-27ad-4e7c-bf7e-90cbe3829c91",
+                  "programId": 18,
+                  "programName": "atlas_0",
+                  "side": 0
+                },
+                {
+                  "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,131,131075,srgb,bioma-growth-pbr-v3-opaque|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|toon-4.1.4|MeshStandardMaterial|resident",
+                  "cacheKeyTruncated": false,
+                  "current": true,
+                  "firstObservedSelection": {
+                    "job": 5,
+                    "phase": "warm-compile-world"
+                  },
+                  "materialId": 124,
+                  "materialName": "atlas_0",
+                  "materialType": "MeshStandardMaterial",
+                  "materialUuid": "58668518-9206-4a8a-b108-0a1ea62e6906",
+                  "programId": 18,
+                  "programName": "atlas_0",
+                  "side": 0
+                }
+              ],
+              "context": {
+                "batch": {
+                  "batches": 78,
+                  "categories": {
+                    "batched": 0,
+                    "instanced": 6,
+                    "line": 0,
+                    "mesh": 8,
+                    "points": 0,
+                    "skinned": 0,
+                    "sprite": 0
+                  },
+                  "end": 8,
+                  "names": [
+                    {
+                      "name": "",
+                      "type": "Mesh",
+                      "uuid": "673b0290-0630-4afa-8f6a-8b1ebd25775f"
+                    },
+                    {
+                      "name": "",
+                      "type": "Mesh",
+                      "uuid": "045c9ab8-b15e-48c3-a7af-39ff4f15f2e2"
+                    },
+                    {
+                      "name": "maiz_01_brote",
+                      "type": "Mesh",
+                      "uuid": "598ff2b0-d649-47bf-8f5c-3be1f02035f5"
+                    },
+                    {
+                      "name": "maiz_02_joven",
+                      "type": "Mesh",
+                      "uuid": "ac6c322a-ec25-4be0-88f6-742012c8c349"
+                    },
+                    {
+                      "name": "maiz_03_adulto",
+                      "type": "Mesh",
+                      "uuid": "81afc51e-288b-4118-89c2-313b355e12fe"
+                    },
+                    {
+                      "name": "maiz_04_desarrollo",
+                      "type": "Mesh",
+                      "uuid": "4f688df8-ff6f-49c4-826f-6ff3ef98412f"
+                    },
+                    {
+                      "name": "maiz_05_maduro",
+                      "type": "Mesh",
+                      "uuid": "6f8ff6e5-c8eb-48fe-8fbe-566093ddcebc"
+                    },
+                    {
+                      "name": "algodon_01_brote",
+                      "type": "Mesh",
+                      "uuid": "7d532dcb-e134-44f7-a600-506e01db24e9"
+                    }
+                  ],
+                  "namesOmitted": 0,
+                  "objects": 619,
+                  "ordinal": 1,
+                  "start": 0,
+                  "window": null
+                },
+                "screen": true,
+                "start": 137828.59999999998
+              },
+              "elapsed": 1230.5,
+              "id": 5,
+              "lastPollAt": 138986,
+              "pendingCount": 1,
+              "pendingIds": [
+                18
+              ],
+              "pendingIdsOmitted": 0,
+              "phase": "warm-compile-world",
+              "polls": 9,
+              "readinessElapsed": 1224.9000000000233,
+              "selectedAt": 137834.19999999995,
+              "selectedCount": 3
+            }
+          ],
+          "at": 139059.09999999998,
+          "completed": 4,
+          "droppedIdentities": 0,
+          "droppedJobs": 0,
+          "faults": 0,
+          "lastFinished": {
+            "associationCount": 1,
+            "associationOmitted": 0,
+            "associations": [
+              {
+                "cacheKey": "16,17,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,4,0,0,0,3,2049,srgb,onBeforeCompile(){}",
+                "cacheKeyTruncated": false,
+                "current": true,
+                "firstObservedSelection": {
+                  "job": 4,
+                  "phase": "load-warm-gpu"
+                },
+                "materialId": 303,
+                "materialName": "",
+                "materialType": "ShaderMaterial",
+                "materialUuid": "48df05f9-6725-4d95-b88b-99b7f811c9ed",
+                "programId": 15,
+                "programName": "",
+                "side": 2
+              }
+            ],
+            "context": {
+              "batch": {
+                "batches": 1,
+                "categories": {
+                  "batched": 0,
+                  "instanced": 1,
+                  "line": 0,
+                  "mesh": 1,
+                  "points": 0,
+                  "skinned": 0,
+                  "sprite": 0
+                },
+                "end": 1,
+                "names": [
+                  {
+                    "name": "canyon-step-ripples",
+                    "type": "Mesh",
+                    "uuid": "fa2515a2-30a2-4d77-b5b4-e9d883a10279"
+                  }
+                ],
+                "namesOmitted": 0,
+                "objects": 1,
+                "ordinal": 1,
+                "start": 0,
+                "window": null
+              },
+              "screen": true,
+              "start": 137682.69999999995
+            },
+            "end": 137828,
+            "id": 4,
+            "lastPollAt": 137828,
+            "outcome": "resolved",
+            "pendingCount": 0,
+            "pendingIds": [],
+            "pendingIdsOmitted": 0,
+            "phase": "load-warm-gpu",
+            "polls": 2,
+            "selectedAt": 137683.19999999995,
+            "selectedCount": 1
+          },
+          "rejected": 0,
+          "scope": "Job selection and pending results of existing isReady calls only. First observed selection is not program creation or exhaustive mesh consumers. Nested elapsed values are not additive CPU/GPU time.",
+          "started": 5,
+          "windowHighWater": 0
+        },
+        "far": null,
+        "hands": {
+          "disposed": false,
+          "loaded": 6,
+          "loadedKinds": [
+            "press",
+            "tap",
+            "pinch",
+            "point",
+            "drag",
+            "open"
+          ],
+          "omitted": 0,
+          "required": 6,
+          "scope": "Private image texture adoption only; unadopted does not prove a pending request, decode or GPU state. Per-kind await spans combine image delivery/decode and promise scheduling.",
+          "unadoptedKinds": []
+        },
+        "issues": [],
+        "owner": {
+          "aborted": false,
+          "disposed": false,
+          "present": true
+        },
+        "presentation": {
+          "cinematicArmed": false,
+          "cinematicDone": false,
+          "cinematicPresent": false,
+          "cinematicTime": null,
+          "dioramaPresent": true,
+          "disposed": false,
+          "interactive": true,
+          "orbitSettled": true,
+          "orbitSpeed": 0,
+          "orbitStopping": false,
+          "plantsCount": 4,
+          "plantsMature": false,
+          "plantsProgress": 0.8566249593348646,
+          "plantsReady": false,
+          "prepared": true
+        },
+        "progress": {
+          "failed": false,
+          "omitted": 0,
+          "ready": false,
+          "stages": [
+            {
+              "finished": 80762.09999999998,
+              "id": "configuration",
+              "progress": 1,
+              "started": 80762.09999999998
+            },
+            {
+              "finished": 80774.09999999998,
+              "id": "sky",
+              "progress": 1,
+              "started": 80774.09999999998
+            },
+            {
+              "finished": 87434.40000000002,
+              "id": "biome",
+              "progress": 1,
+              "started": 87434.40000000002
+            },
+            {
+              "finished": 98407.59999999998,
+              "id": "buildings",
+              "progress": 1,
+              "started": 98407.59999999998
+            },
+            {
+              "finished": 109147.5,
+              "id": "animals",
+              "progress": 1,
+              "started": 109147.5
+            },
+            {
+              "finished": 110293.80000000005,
+              "id": "crops",
+              "progress": 1,
+              "started": 110293.69999999995
+            },
+            {
+              "finished": 115300.69999999995,
+              "id": "walls",
+              "progress": 1,
+              "started": 115300.69999999995
+            },
+            {
+              "finished": 117985.5,
+              "id": "vfx",
+              "progress": 1,
+              "started": 117985.5
+            },
+            {
+              "finished": 122262.19999999995,
+              "id": "chunks",
+              "progress": 1,
+              "started": 119028.30000000005
+            },
+            {
+              "finished": null,
+              "id": "gpu",
+              "progress": 0,
+              "started": null
+            },
+            {
+              "finished": null,
+              "id": "far-assets",
+              "progress": 0,
+              "started": null
+            },
+            {
+              "finished": null,
+              "id": "visible-ready",
+              "progress": 0,
+              "started": null
+            }
+          ],
+          "value": 0.8566249593348646
+        },
+        "scope": "One-time observational readiness snapshot. Queue counts are logical state, not GPU completion or physical memory.",
+        "spans": {
+          "active": [
+            {
+              "duration": null,
+              "elapsed": 58287.70000000007,
+              "end": null,
+              "failed": false,
+              "label": "app-world-load",
+              "start": 80771.59999999998
+            },
+            {
+              "duration": null,
+              "elapsed": 13670.900000000023,
+              "end": null,
+              "failed": false,
+              "label": "load-warm-gpu",
+              "start": 125388.40000000002
+            },
+            {
+              "duration": null,
+              "elapsed": 1231.2000000000698,
+              "end": null,
+              "failed": false,
+              "label": "warm-compile-world",
+              "start": 137828.09999999998
+            }
+          ],
+          "at": 139059.30000000005,
+          "closed": false,
+          "dropped": 0,
+          "early": {
+            "dropped": 0,
+            "rows": [
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 49038.40000000002,
+                "label": "diorama-prepare-sky",
+                "lastDuration": 5223.29999999993,
+                "lastEnd": 54261.69999999995,
+                "lastStart": 49038.40000000002
+              },
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 49039.5,
+                "label": "app-prepared-pending",
+                "lastDuration": 24988.5,
+                "lastEnd": 74028,
+                "lastStart": 49039.5
+              },
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 54261.90000000002,
+                "label": "diorama-prepare-catalogues",
+                "lastDuration": 527.1999999999534,
+                "lastEnd": 54789.09999999998,
+                "lastStart": 54261.90000000002
+              },
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 54789.69999999995,
+                "label": "diorama-prepare-maize-model",
+                "lastDuration": 7633.70000000007,
+                "lastEnd": 62423.40000000002,
+                "lastStart": 54789.69999999995
+              },
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 54790.80000000005,
+                "label": "diorama-prepare-maize-bridges",
+                "lastDuration": 12756.5,
+                "lastEnd": 67547.30000000005,
+                "lastStart": 54790.80000000005
+              },
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 54791.30000000005,
+                "label": "diorama-prepare-soil-texture",
+                "lastDuration": 1505.7999999999302,
+                "lastEnd": 56297.09999999998,
+                "lastStart": 54791.30000000005
+              },
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 56297.19999999995,
+                "label": "diorama-prepare-mountain-atlas",
+                "lastDuration": 1169.2000000000698,
+                "lastEnd": 57466.40000000002,
+                "lastStart": 56297.19999999995
+              },
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 67550.40000000002,
+                "label": "diorama-prepare-maize-batch",
+                "lastDuration": 180.29999999993015,
+                "lastEnd": 67730.69999999995,
+                "lastStart": 67550.40000000002
+              },
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 67731.80000000005,
+                "label": "diorama-compile-maize",
+                "lastDuration": 4941.399999999907,
+                "lastEnd": 72673.19999999995,
+                "lastStart": 67731.80000000005
+              },
+              {
+                "begun": 0,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 72673.40000000002,
+                "label": "diorama-upload-maize-soil",
+                "lastDuration": 119.29999999993017,
+                "lastEnd": 72792.69999999995,
+                "lastStart": 72673.40000000002
+              },
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 72792.69999999995,
+                "label": "diorama-compile-sky",
+                "lastDuration": 674.4000000000233,
+                "lastEnd": 73467.09999999998,
+                "lastStart": 72792.69999999995
+              },
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 73467.19999999995,
+                "label": "diorama-compile-mist",
+                "lastDuration": 340.20000000006985,
+                "lastEnd": 73807.40000000002,
+                "lastStart": 73467.19999999995
+              },
+              {
+                "begun": 0,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 73807.5,
+                "label": "diorama-upload-mist",
+                "lastDuration": 2.5,
+                "lastEnd": 73810,
+                "lastStart": 73807.5
+              },
+              {
+                "begun": 0,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 73810,
+                "label": "diorama-warm-day-night-sky",
+                "lastDuration": 7.199999999953434,
+                "lastEnd": 73817.19999999995,
+                "lastStart": 73810
+              },
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 73817.30000000005,
+                "label": "diorama-final-fence",
+                "lastDuration": 210.5,
+                "lastEnd": 74027.80000000005,
+                "lastStart": 73817.30000000005
+              },
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 74028,
+                "label": "app-pre-world-setup",
+                "lastDuration": 6743.599999999977,
+                "lastEnd": 80771.59999999998,
+                "lastStart": 74028
+              }
+            ],
+            "scope": "First 16 selected early labels; counts and first/latest timestamps only, not a timeline or additive CPU/GPU durations."
+          },
+          "lastCompleted": {
+            "duration": 5.400000000023283,
+            "end": 137834,
+            "failed": false,
+            "label": "loading-compile-submit",
+            "start": 137828.59999999998
+          },
+          "scope": "Nested awaited wall spans; do not sum as exclusive CPU/GPU time. Associations are labels, not exhaustive readiness proof."
+        },
+        "transfers": {
+          "cache": {
+            "application-cache": 3,
+            "browser-cache": 0,
+            "network": 239,
+            "unknown": 0,
+            "validated-cache": 0
+          },
+          "count": 242,
+          "disposed": false,
+          "failed": 0,
+          "gltf": {
+            "completed": 8,
+            "count": 8,
+            "omitted": 0,
+            "omittedCompleted": 0,
+            "pending": 0,
+            "rows": [
+              {
+                "afterResponseEnd": 955.6000000000932,
+                "association": "heuristic-url-window",
+                "cache": "network",
+                "duration": 12755.800000000048,
+                "end": 67546.80000000005,
+                "failed": false,
+                "id": 20,
+                "loaded": 26536168,
+                "start": 54791,
+                "timing": {
+                  "decodedBodySize": 26536168,
+                  "encodedBodySize": 26536168,
+                  "responseEnd": 66591.19999999995,
+                  "responseStatus": 200,
+                  "startTime": 54791.09999999998,
+                  "transferSize": 26536468
+                },
+                "total": 26536168,
+                "unknownReason": null,
+                "untilResponseEnd": 11800.199999999952,
+                "url": "http://tauri.localhost/assets/web/2fdb3468b7646ebe16d0f3d3d25538ce5b20d6dee1d3830256d2f62599826dcc.glb"
+              },
+              {
+                "afterResponseEnd": 2743.79999999993,
+                "association": "heuristic-url-window",
+                "cache": "network",
+                "duration": 10481,
+                "end": 109126.09999999998,
+                "failed": false,
+                "id": 64,
+                "loaded": 7123932,
+                "start": 98645.09999999998,
+                "timing": {
+                  "decodedBodySize": 7123932,
+                  "encodedBodySize": 7123932,
+                  "responseEnd": 106382.30000000005,
+                  "responseStatus": 200,
+                  "startTime": 98645.19999999995,
+                  "transferSize": 7124232
+                },
+                "total": 7123932,
+                "unknownReason": null,
+                "untilResponseEnd": 7737.20000000007,
+                "url": "http://tauri.localhost/assets/web/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb"
+              },
+              {
+                "afterResponseEnd": 3525.0999999999767,
+                "association": "heuristic-url-window",
+                "cache": "network",
+                "duration": 8202,
+                "end": 106847,
+                "failed": false,
+                "id": 63,
+                "loaded": 6980244,
+                "start": 98645,
+                "timing": {
+                  "decodedBodySize": 6980244,
+                  "encodedBodySize": 6980244,
+                  "responseEnd": 103321.90000000002,
+                  "responseStatus": 200,
+                  "startTime": 98645,
+                  "transferSize": 6980544
+                },
+                "total": 6980244,
+                "unknownReason": null,
+                "untilResponseEnd": 4676.900000000023,
+                "url": "http://tauri.localhost/assets/web/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb"
+              },
+              {
+                "afterResponseEnd": 3455.29999999993,
+                "association": "heuristic-url-window",
+                "cache": "network",
+                "duration": 7632.899999999907,
+                "end": 62422.69999999995,
+                "failed": false,
+                "id": 19,
+                "loaded": 14308628,
+                "start": 54789.80000000005,
+                "timing": {
+                  "decodedBodySize": 14308628,
+                  "encodedBodySize": 14308628,
+                  "responseEnd": 58967.40000000002,
+                  "responseStatus": 200,
+                  "startTime": 54790.80000000005,
+                  "transferSize": 14308928
+                },
+                "total": 14308628,
+                "unknownReason": null,
+                "untilResponseEnd": 4177.599999999977,
+                "url": "http://tauri.localhost/assets/web/8f6c9ef7472a2d7f8ffda7f08a78f8027f91d14a8f92b8eeca4084b0f379da36.glb"
+              },
+              {
+                "afterResponseEnd": 2038.5999999999767,
+                "association": "heuristic-url-window",
+                "cache": "network",
+                "duration": 6293.199999999953,
+                "end": 104937.5,
+                "failed": false,
+                "id": 60,
+                "loaded": 6927276,
+                "start": 98644.30000000005,
+                "timing": {
+                  "decodedBodySize": 6927276,
+                  "encodedBodySize": 6927276,
+                  "responseEnd": 102898.90000000002,
+                  "responseStatus": 200,
+                  "startTime": 98644.5,
+                  "transferSize": 6927576
+                },
+                "total": 6927276,
+                "unknownReason": null,
+                "untilResponseEnd": 4254.599999999977,
+                "url": "http://tauri.localhost/assets/web/cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869.glb"
+              },
+              {
+                "afterResponseEnd": 2444.20000000007,
+                "association": "heuristic-url-window",
+                "cache": "network",
+                "duration": 6187.300000000047,
+                "end": 104831.90000000002,
+                "failed": false,
+                "id": 61,
+                "loaded": 6401848,
+                "start": 98644.59999999998,
+                "timing": {
+                  "decodedBodySize": 6401848,
+                  "encodedBodySize": 6401848,
+                  "responseEnd": 102387.69999999995,
+                  "responseStatus": 200,
+                  "startTime": 98644.80000000005,
+                  "transferSize": 6402148
+                },
+                "total": 6401848,
+                "unknownReason": null,
+                "untilResponseEnd": 3743.0999999999767,
+                "url": "http://tauri.localhost/assets/web/7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb"
+              },
+              {
+                "afterResponseEnd": 2379.1999999999534,
+                "association": "heuristic-url-window",
+                "cache": "network",
+                "duration": 4124.79999999993,
+                "end": 102769.69999999995,
+                "failed": false,
+                "id": 62,
+                "loaded": 5970792,
+                "start": 98644.90000000002,
+                "timing": {
+                  "decodedBodySize": 5970792,
+                  "encodedBodySize": 5970792,
+                  "responseEnd": 100390.5,
+                  "responseStatus": 200,
+                  "startTime": 98644.90000000002,
+                  "transferSize": 5971092
+                },
+                "total": 5970792,
+                "unknownReason": null,
+                "untilResponseEnd": 1745.5999999999767,
+                "url": "http://tauri.localhost/assets/web/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb"
+              },
+              {
+                "afterResponseEnd": 3087.9000000000233,
+                "association": "heuristic-url-window",
+                "cache": "network",
+                "duration": 3673.4000000000233,
+                "end": 94310.40000000002,
+                "failed": false,
+                "id": 55,
+                "loaded": 6890088,
+                "start": 90637,
+                "timing": {
+                  "decodedBodySize": 6890088,
+                  "encodedBodySize": 6890088,
+                  "responseEnd": 91222.5,
+                  "responseStatus": 200,
+                  "startTime": 90637.19999999995,
+                  "transferSize": 6890388
+                },
+                "total": 6890088,
+                "unknownReason": null,
+                "untilResponseEnd": 585.5,
+                "url": "http://tauri.localhost/assets/web/fedb713c0b32df33f11111a91e2c3e0616a0345ec9be9a8beeecaa0b93ef26cb.glb"
+              }
+            ],
+            "scope": "Largest completed GLTF request durations, stable insertion-order ties. Existing ResourceTiming association is heuristic URL plus time window, never exact identity. ResponseEnd is a browser timeline boundary; end follows GLTF completion before ownModel. Intervals are not exclusive CPU or physical transport; network/cache evidence does not identify Internet or disk cost."
+          },
+          "loadedBytes": 125863653,
+          "omitted": 0,
+          "pending": 0,
+          "rows": [],
+          "scope": "Observed transfer records only; unknown is not a cache hit. End null can include post-transfer decoding/preparation."
+        }
+      }
+    },
+    "loadingRecipe": {
+      "compileWindow": false,
+      "resourceOverlap": false,
+      "serialImageChain": true,
+      "wallBufferPackage": false
+    },
+    "menu": "http://tauri.localhost/menu/index.html",
+    "models": [
+      "assets/web/0ab73565649737fc15d853aa9d52a9ecacff3fbf9f5664cc21ec4e54452ef894.glb",
+      "assets/web/25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238.glb",
+      "assets/web/3ba902fd9bfc99589348ba9202513e9daa63442a6c2b21bb23a15bf58bd546f7.glb",
+      "assets/web/4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141.glb",
+      "assets/web/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb",
+      "assets/web/6c43390aa864c32555795b2be638f8e1e8d4154fa85e6991580ebb0d7fcde309.glb",
+      "assets/web/6fb0b48a96d820d1738c6e36ed2d1cacaf54844df37298450b79d68b4703d80c.glb",
+      "assets/web/7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb",
+      "assets/web/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb",
+      "assets/web/9cb17849416e2d2578eb5806c4874fc496fdf9a1aa421d3a10fe3a346933674e.glb",
+      "assets/web/a748ca0cea0d4d0d4abd95071577a8457e63f22433e618be77934c079f4cf89c.glb",
+      "assets/web/b27ce08a5f860912783d5978cec8a012b28d7a55e2c7a69cc992f91f8bbd5a76.glb",
+      "assets/web/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb",
+      "assets/web/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+      "assets/web/cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869.glb",
+      "assets/web/db01314e4e0a03f4e1aaa31e8207cee85a42294edffb003633282bb574ef28cd.glb",
+      "assets/web/e870835e4fa3c1cc4fdbcd048a2ca64da97d2ea4f48ea3192da6aba692e05202.glb",
+      "assets/web/eddde4e46932cf9fd056315e34af03f07595cd1ce4de61b4d7d6ac7be5d873e9.glb",
+      "assets/web/f3ae53d5ce3b57419fd31e74e2572ada9cc61392c2e7ac20dac484ec194d5e9f.glb",
+      "assets/web/fedb713c0b32df33f11111a91e2c3e0616a0345ec9be9a8beeecaa0b93ef26cb.glb",
+      "assets/web/8f6c9ef7472a2d7f8ffda7f08a78f8027f91d14a8f92b8eeca4084b0f379da36.glb",
+      "assets/web/2fdb3468b7646ebe16d0f3d3d25538ce5b20d6dee1d3830256d2f62599826dcc.glb"
+    ],
+    "storage": true,
+    "webgl2": true,
+    "worker": true
+  },
+  "errors": [
+    "Error: Production world did not finish loading"
+  ],
+  "ok": false,
+  "origin": "http://tauri.localhost",
+  "secureContext": true,
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0"
+}
