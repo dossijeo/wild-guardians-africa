@@ -1,0 +1,510 @@
+{
+  "base": "9d41d25ba032f702728b7921893dae8c005a8ca2",
+  "selectedSource": "c1f3f9b33920dd18b25b2b894e99d2e1bc931e98",
+  "sources": [
+    {
+      "path": ".gitattributes",
+      "bytes": 139,
+      "sha256": "af149eec44ace9bcf475307a274282499ae15c1e771272eba942d525107ef3fa"
+    },
+    {
+      "path": "content/manifests/crop-partition-runtime.json",
+      "bytes": 6821,
+      "sha256": "21e7dd13cd7afcca7e3f41912931936653de7b279ff99a15b44e4506e242f3fa"
+    },
+    {
+      "path": "docs/qa/sfx-catalog-post-jam/inventory.json",
+      "bytes": 246030,
+      "sha256": "be30fcd05beda51ae62f81d69db929da42d309e6e148c2ff8a92d9e081980e82"
+    },
+    {
+      "path": "docs/qa/sfx-catalog-post-jam/inventory.md",
+      "bytes": 36716,
+      "sha256": "37045107ab2e8a368ed1da74b535939f6b4e44ea35b746e0ceb2d0eb18178a3e"
+    },
+    {
+      "path": "public/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/maize-bridges.glb",
+      "bytes": 3026892,
+      "sha256": "a2bddab996ee27dc8ef1f1f3e05f9f119d21795c41d5c3ffeef186b46720e3c6"
+    },
+    {
+      "path": "public/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/maize-steady.glb",
+      "bytes": 769488,
+      "sha256": "837df8716abb75bf98a9136905a2a1047dd66aecc97b3ac0c02fcaac5c7317bd"
+    },
+    {
+      "path": "public/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/partition-manifest.json",
+      "bytes": 2313,
+      "sha256": "98e4f7db28fa5f0c2a6ef4536405a9bb7a96b1613125a4b140324472b7d4bb77"
+    },
+    {
+      "path": "public/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/remainder-bridges.glb",
+      "bytes": 23509472,
+      "sha256": "ec086f81b1e27accb9426d335fc488f7bd9edb86db2305f27f7c3c147df98b27"
+    },
+    {
+      "path": "public/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/remainder-steady.glb",
+      "bytes": 5892328,
+      "sha256": "4871a9aab58e9f24593f0c4fbdd14cc8c287805ced2a795253446a81b803fdb1"
+    },
+    {
+      "path": "public/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/textures/15252f23f992e780e8e5aa328d6e58e1b68d7c58d604d1cd9bdbb6ca1319a605.webp",
+      "bytes": 2239664,
+      "sha256": "15252f23f992e780e8e5aa328d6e58e1b68d7c58d604d1cd9bdbb6ca1319a605"
+    },
+    {
+      "path": "public/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/textures/4a1d3be8ba489b904db99d3c40ec0a4ee75e3469c13d365211c1837f61a7f8c2.webp",
+      "bytes": 203030,
+      "sha256": "4a1d3be8ba489b904db99d3c40ec0a4ee75e3469c13d365211c1837f61a7f8c2"
+    },
+    {
+      "path": "public/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/textures/6dd33b3bd7eaf625c4f386353466fe456f5b3b2cc3e926fc9e8974ad45610422.webp",
+      "bytes": 238208,
+      "sha256": "6dd33b3bd7eaf625c4f386353466fe456f5b3b2cc3e926fc9e8974ad45610422"
+    },
+    {
+      "path": "public/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/textures/6f9023998bc0853a50beaeafe984bc204639ba886a1f64a450dba998cd239e51.webp",
+      "bytes": 1371082,
+      "sha256": "6f9023998bc0853a50beaeafe984bc204639ba886a1f64a450dba998cd239e51"
+    },
+    {
+      "path": "public/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/textures/919a0e1460f95cd86527210d16442a6bbc1a457ccc18e50a50c1096584f4629c.webp",
+      "bytes": 2285832,
+      "sha256": "919a0e1460f95cd86527210d16442a6bbc1a457ccc18e50a50c1096584f4629c"
+    },
+    {
+      "path": "public/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/textures/bfbdf6826eb1625288e0e3c3e8f645d46ca13d3dc500e8a348c52462c8b3c018.webp",
+      "bytes": 1310498,
+      "sha256": "bfbdf6826eb1625288e0e3c3e8f645d46ca13d3dc500e8a348c52462c8b3c018"
+    },
+    {
+      "path": "public/content/crop-bridges.json",
+      "bytes": 297520,
+      "sha256": "e133b79dc3a21c421a9eec9bd3aad8610967c69cc28eb003b7f06f072fd249d4"
+    },
+    {
+      "path": "public/content/models.json",
+      "bytes": 9097,
+      "sha256": "d42f6b54a3a5946fc652f1ac87c443cbda45075a10dc4cd49ca5de02a3c5e8c7"
+    },
+    {
+      "path": "src/app/loading-crop-partition.js",
+      "bytes": 991,
+      "sha256": "a579b25c68b6732727dc257cddb3086572c33b0a3445d4ff30ca1a6bda935b81"
+    },
+    {
+      "path": "src/app/main.js",
+      "bytes": 63902,
+      "sha256": "d9cbea28f19f95674960bee59dd2099959d71112a3c2af0408f1cd5efd49c992"
+    },
+    {
+      "path": "src/rendering/asset-url.js",
+      "bytes": 2227,
+      "sha256": "3c49530b0a55eae0797784c1f2d374daa0dbbd20e0ecc3664991c586b5fc9f1f"
+    },
+    {
+      "path": "src/rendering/assets.js",
+      "bytes": 12517,
+      "sha256": "7b071399ab96052f741e59c4590c1a5dcaa10a02c23ed01542e6f9ca5433ef1c"
+    },
+    {
+      "path": "src/rendering/crop-partition.js",
+      "bytes": 9990,
+      "sha256": "41375b47870810090c60f641d21876f9a43d625e1d88d774c3f84887d4eb855a"
+    },
+    {
+      "path": "src/rendering/crop-runtime.js",
+      "bytes": 1242,
+      "sha256": "254c9c386e3aa04af884b36658cdf1a7559349d4d395db2fa91f19f5abaabf38"
+    },
+    {
+      "path": "src/rendering/loading-diorama.js",
+      "bytes": 15415,
+      "sha256": "684ec25e716f7db45a069d12ccb71b4cbb7a8f8ddb2132bac87a1bfe22c4d7e5"
+    },
+    {
+      "path": "tests/crop-library-partition.test.js",
+      "bytes": 6311,
+      "sha256": "8dfc0b3a094a4c6cfaefe0bb59c5b0387c997cfa18c569cfd56d5ba7a7d91d7d"
+    },
+    {
+      "path": "tests/crop-native-reload.test.js",
+      "bytes": 14309,
+      "sha256": "19a83a74f430b7d539346f668a926dcdda4122e85d7b4af0187aeb75c53f4970"
+    },
+    {
+      "path": "tests/crop-partition-app.test.js",
+      "bytes": 2423,
+      "sha256": "0ea9c4dd0df665f50a7975bde6aaebcb9a28b35c86a96d5061e9003a8b326aba"
+    },
+    {
+      "path": "tests/crop-partition-checkout.test.js",
+      "bytes": 1583,
+      "sha256": "b14e6154c1a7ea2f630a79ceae53ee4d5a01fd3c23c287abcf5e6db9b076b285"
+    },
+    {
+      "path": "tests/crop-partition-lifecycle.test.js",
+      "bytes": 12105,
+      "sha256": "a221fa3311883f73c1f3ea68ef8e996ca0a10c8c269012f77b61f32e55ed8217"
+    },
+    {
+      "path": "tests/crop-runtime-integration.test.js",
+      "bytes": 8903,
+      "sha256": "8e54c67e71bc1b53a67a3eebacecbcb751053ac6b7586da02bdd14e59662c6ff"
+    },
+    {
+      "path": "tests/fixtures/crop-partition-hosting-loader.mjs",
+      "bytes": 502,
+      "sha256": "818f3ecc27d119fb548c6ef651d4fe65483b0a33d89e21d68933e663e85450ce"
+    },
+    {
+      "path": "tests/fixtures/crop-partition-hosting.mjs",
+      "bytes": 2058,
+      "sha256": "432640fe6919f418780d25dbf9d223c998d22f54d8cb4889bd26cead9a0aeb93"
+    },
+    {
+      "path": "tests/fixtures/crop-partition-main-baseline.json",
+      "bytes": 1979,
+      "sha256": "dd470d55b4cd3fa3f377adddc25109d7753d735fb1cc709eeacd462979100b56"
+    },
+    {
+      "path": "tests/fixtures/crop-runtime-hosting.mjs",
+      "bytes": 1638,
+      "sha256": "f08a6c75e55606352c8fd9494aa6079637d2bd27ba2bdd21a79a95b97699ef09"
+    },
+    {
+      "path": "tests/fixtures/world-load-crop-default-loader.mjs",
+      "bytes": 328,
+      "sha256": "e2f7008b7f76a38c7f924d5c6d05b841e9b1e1f4061f95f51bba5a6936ecee05"
+    },
+    {
+      "path": "tests/fixtures/world-load-crop-default.mjs",
+      "bytes": 4112,
+      "sha256": "d39ac407df923711062c0d9716d3d8cafb5262b678405ff9acfbd7d80126b949"
+    },
+    {
+      "path": "tests/web-package.test.js",
+      "bytes": 2894,
+      "sha256": "5634ba7dd7947fb6cd823026ff421b3a670c3405f27f558e551178fc16ad47c4"
+    },
+    {
+      "path": "tools/check_web_package.mjs",
+      "bytes": 7372,
+      "sha256": "1a2afdaaafeaf4441830d0e500208eb6216db4a96cfdea99510222d890ec3b59"
+    },
+    {
+      "path": "tools/experiments/partition-crop-library.mjs",
+      "bytes": 6750,
+      "sha256": "3c39a9b90e7a83673371aa3ce59757855fb1c39312832c31cfd190600764189d"
+    },
+    {
+      "path": "tools/experiments/publish-crop-partition.mjs",
+      "bytes": 3056,
+      "sha256": "81cdf5a1dfc1144a50fb2e28a330228d49fc775277e93347469739995d183102"
+    },
+    {
+      "path": "tools/web-package.mjs",
+      "bytes": 5737,
+      "sha256": "44c1a11a607ff90efd67f7c43141347dc78dc5b041f5d4707f766ed778277282"
+    }
+  ],
+  "payloads": [
+    {
+      "path": "public/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/maize-bridges.glb",
+      "bytes": 3026892,
+      "sha256": "a2bddab996ee27dc8ef1f1f3e05f9f119d21795c41d5c3ffeef186b46720e3c6"
+    },
+    {
+      "path": "public/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/maize-steady.glb",
+      "bytes": 769488,
+      "sha256": "837df8716abb75bf98a9136905a2a1047dd66aecc97b3ac0c02fcaac5c7317bd"
+    },
+    {
+      "path": "public/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/partition-manifest.json",
+      "bytes": 2313,
+      "sha256": "98e4f7db28fa5f0c2a6ef4536405a9bb7a96b1613125a4b140324472b7d4bb77"
+    },
+    {
+      "path": "public/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/remainder-bridges.glb",
+      "bytes": 23509472,
+      "sha256": "ec086f81b1e27accb9426d335fc488f7bd9edb86db2305f27f7c3c147df98b27"
+    },
+    {
+      "path": "public/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/remainder-steady.glb",
+      "bytes": 5892328,
+      "sha256": "4871a9aab58e9f24593f0c4fbdd14cc8c287805ced2a795253446a81b803fdb1"
+    },
+    {
+      "path": "public/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/textures/15252f23f992e780e8e5aa328d6e58e1b68d7c58d604d1cd9bdbb6ca1319a605.webp",
+      "bytes": 2239664,
+      "sha256": "15252f23f992e780e8e5aa328d6e58e1b68d7c58d604d1cd9bdbb6ca1319a605"
+    },
+    {
+      "path": "public/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/textures/4a1d3be8ba489b904db99d3c40ec0a4ee75e3469c13d365211c1837f61a7f8c2.webp",
+      "bytes": 203030,
+      "sha256": "4a1d3be8ba489b904db99d3c40ec0a4ee75e3469c13d365211c1837f61a7f8c2"
+    },
+    {
+      "path": "public/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/textures/6dd33b3bd7eaf625c4f386353466fe456f5b3b2cc3e926fc9e8974ad45610422.webp",
+      "bytes": 238208,
+      "sha256": "6dd33b3bd7eaf625c4f386353466fe456f5b3b2cc3e926fc9e8974ad45610422"
+    },
+    {
+      "path": "public/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/textures/6f9023998bc0853a50beaeafe984bc204639ba886a1f64a450dba998cd239e51.webp",
+      "bytes": 1371082,
+      "sha256": "6f9023998bc0853a50beaeafe984bc204639ba886a1f64a450dba998cd239e51"
+    },
+    {
+      "path": "public/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/textures/919a0e1460f95cd86527210d16442a6bbc1a457ccc18e50a50c1096584f4629c.webp",
+      "bytes": 2285832,
+      "sha256": "919a0e1460f95cd86527210d16442a6bbc1a457ccc18e50a50c1096584f4629c"
+    },
+    {
+      "path": "public/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/textures/bfbdf6826eb1625288e0e3c3e8f645d46ca13d3dc500e8a348c52462c8b3c018.webp",
+      "bytes": 1310498,
+      "sha256": "bfbdf6826eb1625288e0e3c3e8f645d46ca13d3dc500e8a348c52462c8b3c018"
+    }
+  ],
+  "payloadTotal": 40848807,
+  "replacedRuntimeBytes": 40844796,
+  "payloadDelta": 4011,
+  "package": {
+    "baselineSource": ".cache\\validate-38013118033\\official-itch.zip",
+    "baselineZipSha256": "f26f55d1ff057e906e0a19ae7192ef85a40ff0e6bdf1d38e69fc65e21f925ceb",
+    "baselineFiles": 711,
+    "baselineBytes": 445254165,
+    "files": 720,
+    "bytes": 445270909,
+    "deltaBytes": 16744,
+    "paths": [
+      {
+        "path": "assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/maize-bridges.glb",
+        "before": 0,
+        "after": 3026892,
+        "delta": 3026892
+      },
+      {
+        "path": "assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/maize-steady.glb",
+        "before": 0,
+        "after": 769488,
+        "delta": 769488
+      },
+      {
+        "path": "assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/partition-manifest.json",
+        "before": 0,
+        "after": 2313,
+        "delta": 2313
+      },
+      {
+        "path": "assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/remainder-bridges.glb",
+        "before": 0,
+        "after": 23509472,
+        "delta": 23509472
+      },
+      {
+        "path": "assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/remainder-steady.glb",
+        "before": 0,
+        "after": 5892328,
+        "delta": 5892328
+      },
+      {
+        "path": "assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/textures/15252f23f992e780e8e5aa328d6e58e1b68d7c58d604d1cd9bdbb6ca1319a605.webp",
+        "before": 0,
+        "after": 2239664,
+        "delta": 2239664
+      },
+      {
+        "path": "assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/textures/4a1d3be8ba489b904db99d3c40ec0a4ee75e3469c13d365211c1837f61a7f8c2.webp",
+        "before": 0,
+        "after": 203030,
+        "delta": 203030
+      },
+      {
+        "path": "assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/textures/6dd33b3bd7eaf625c4f386353466fe456f5b3b2cc3e926fc9e8974ad45610422.webp",
+        "before": 0,
+        "after": 238208,
+        "delta": 238208
+      },
+      {
+        "path": "assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/textures/6f9023998bc0853a50beaeafe984bc204639ba886a1f64a450dba998cd239e51.webp",
+        "before": 0,
+        "after": 1371082,
+        "delta": 1371082
+      },
+      {
+        "path": "assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/textures/919a0e1460f95cd86527210d16442a6bbc1a457ccc18e50a50c1096584f4629c.webp",
+        "before": 0,
+        "after": 2285832,
+        "delta": 2285832
+      },
+      {
+        "path": "assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/textures/bfbdf6826eb1625288e0e3c3e8f645d46ca13d3dc500e8a348c52462c8b3c018.webp",
+        "before": 0,
+        "after": 1310498,
+        "delta": 1310498
+      },
+      {
+        "path": "assets/far-vegetation-B-rno4BZ.js",
+        "before": 77102,
+        "after": 0,
+        "delta": -77102
+      },
+      {
+        "path": "assets/far-vegetation-KyLURfi5.js",
+        "before": 0,
+        "after": 77102,
+        "delta": 77102
+      },
+      {
+        "path": "assets/index-DKNVKDwD.js",
+        "before": 1666748,
+        "after": 0,
+        "delta": -1666748
+      },
+      {
+        "path": "assets/index-s9mVcg_F.js",
+        "before": 0,
+        "after": 1681531,
+        "delta": 1681531
+      },
+      {
+        "path": "assets/web/2fdb3468b7646ebe16d0f3d3d25538ce5b20d6dee1d3830256d2f62599826dcc.glb",
+        "before": 26536168,
+        "after": 0,
+        "delta": -26536168
+      },
+      {
+        "path": "assets/web/8f6c9ef7472a2d7f8ffda7f08a78f8027f91d14a8f92b8eeca4084b0f379da36.glb",
+        "before": 14308628,
+        "after": 0,
+        "delta": -14308628
+      },
+      {
+        "path": "content/crop-bridges.json",
+        "before": 297476,
+        "after": 297519,
+        "delta": 43
+      },
+      {
+        "path": "content/models.json",
+        "before": 9106,
+        "after": 9141,
+        "delta": 35
+      },
+      {
+        "path": "content/web-assets.json",
+        "before": 169962,
+        "after": 167834,
+        "delta": -2128
+      }
+    ],
+    "glbs": 24
+  },
+  "protectedByteExactAgainstBase": [
+    "src/rendering/scene.js",
+    "src/rendering/loading-programs.js",
+    "src/rendering/loading-yield-budget.js",
+    "src/app/loading-downloads.js",
+    "src/simulation",
+    "src/persistence",
+    "src/navigation",
+    "src/audio",
+    "src/ui",
+    "public/menu",
+    "public/library",
+    "src-tauri",
+    ".github/workflows",
+    "tools/extract_loading_visual_evidence.py",
+    "tools/benchmark_animal_rig_preparation.mjs",
+    "tools/run_native_loading_pair.ps1"
+  ],
+  "sfx": "All126rows/100assigned26unassigned exact after normalizing only mainSHA and +1 main caller line",
+  "logs": [
+    {
+      "originalBytes": 16177,
+      "originalSha256": "16e5a1fd6e4740736cd46848bf9cf988b6ea3d1e0e41823159bb4b13f78259af",
+      "path": "docs/qa/windows-loading-regression/partition-production-minimal/contracts.log.gz",
+      "bytes": 3521,
+      "sha256": "b314a9e9702901bf9ac3ad0446053c62ea1a8cb0b73db58aa6d6443b6f31fd63"
+    },
+    {
+      "originalBytes": 14693,
+      "originalSha256": "b73a321475d07112ab8e827925c1b0da09283216427e1cf77fd8a0880b9093b9",
+      "path": "docs/qa/windows-loading-regression/partition-production-minimal/contracts-missing-qa-helper.log.gz",
+      "bytes": 3386,
+      "sha256": "43b39d35cb656ffab3ef425729d90dad0d4719f2f95e1353dcb72ee9887be190"
+    },
+    {
+      "originalBytes": 2320,
+      "originalSha256": "ca9cbca67074febeb13482b7d950ed25f5688a93bcb45a0a0e5ecf5696029913",
+      "path": "docs/qa/windows-loading-regression/partition-production-minimal/build.log.gz",
+      "bytes": 963,
+      "sha256": "45f9860ad66cab6d19bc0acc1b9f4203b2c00f0b2c02b44306bc44b816f84b74"
+    },
+    {
+      "originalBytes": 411,
+      "originalSha256": "1f06320332fa708fa7f3d8044ebcf2e53fcb7d29db5450fddd05acbca959dec4",
+      "path": "docs/qa/windows-loading-regression/partition-production-minimal/package.log.gz",
+      "bytes": 314,
+      "sha256": "94693101d6eb23d3eefd3ffe69d0d07977b3bcff892b05326b02f188a36f4705"
+    },
+    {
+      "originalBytes": 2915,
+      "originalSha256": "912489037ab76523f96d2ee202855035ac0847886540feb97d1d93f56ada4112",
+      "path": "docs/qa/windows-loading-regression/partition-production-minimal/syntax.log.gz",
+      "bytes": 354,
+      "sha256": "e33d4f980e05d7deb7aff680298b94a7187afce24bbe7ea4259ad3652182e93c"
+    },
+    {
+      "originalBytes": 272,
+      "originalSha256": "7b4051e9697289f48615b7c32c7c2ea38e5568b01e9e54636e58ce077c7880a7",
+      "path": "docs/qa/windows-loading-regression/partition-production-minimal/sfx-refresh.log.gz",
+      "bytes": 221,
+      "sha256": "756d61995435f1917ed30043bc85da8e38d1141e236617fc1995fc3fc1896db9"
+    },
+    {
+      "originalBytes": 272,
+      "originalSha256": "8678e56cc3b677565ff12759f9d6fc399784b8c264f20f690063fde99b2d71a7",
+      "path": "docs/qa/windows-loading-regression/partition-production-minimal/sfx-check.log.gz",
+      "bytes": 221,
+      "sha256": "1008e3f52e9894cec30a89e8f11bd1b6fe688e1cea1e76dc4959cbdd67d5ec1c"
+    },
+    {
+      "originalBytes": 2731,
+      "originalSha256": "51b9f4f11d5db1283bec21bd91fca0ecb034f40fc276bc42c912761a37305286",
+      "path": "docs/qa/windows-loading-regression/partition-production-minimal/library-closure.log.gz",
+      "bytes": 850,
+      "sha256": "3cf847538393bf9663700e1035e9422d110df6322723bb24f18195f5428b5d3a"
+    }
+  ],
+  "checks": {
+    "contracts": "60/60 PASS; session58284 exit0 10967.2475ms",
+    "build": "session48146 exit0 Vite9.96s existing chunk warning",
+    "package": "exit0 720files445270909B860links24GLBs",
+    "syntax": "23changedJS/MJS PASS",
+    "sfx": "126exactoriginal stalefalse",
+    "checkout": "Pending source commit then real Git autocrlf checkout"
+  },
+  "negatives": [
+    {
+      "scope": "Nonexistent tests/loading-transfer-metadata.test.js failed before tests",
+      "exitCode": 1,
+      "originalLog": "not retained; conversation toolchunk91b16d; no recreated original"
+    },
+    {
+      "scope": "Copied test imported excluded world-crop-pair helper; narrowly corrected to serial World completion",
+      "exitCode": 1,
+      "tests": 49,
+      "pass": 48,
+      "fail": 1,
+      "session": 10628,
+      "log": "contracts-missing-qa-helper.log.gz"
+    },
+    {
+      "scope": "Receipt generator traversed textures directory as file; fixed to is_file recursive enumeration",
+      "exitCode": 1,
+      "toolChunk": "518ff4",
+      "runtimeImpact": false
+    }
+  ]
+}

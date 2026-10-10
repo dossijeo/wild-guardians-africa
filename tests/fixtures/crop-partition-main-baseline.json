@@ -1,0 +1,55 @@
+{
+  "ref": "9d41d25ba032f702728b7921893dae8c005a8ca2",
+  "scope": "Exact whole UTF8 source hashes after CRLF/LF normalization; only App partition import/await hunks removed",
+  "mainSha256": "419979d9dc4e5a57aac6d7610b036a4de0c31d67ec14d49f86bfc883525f1416",
+  "unchanged": [
+    {
+      "path": "src/rendering/scene.js",
+      "sha256": "689e707a33d3dbefdd5f008ff1f0d472b71738a5e4c3ee349c3aaf5fe832d418"
+    },
+    {
+      "path": "src/rendering/loading-programs.js",
+      "sha256": "dbf8a88021bc47d1ffdf2ae8bad8dad9c7a74671e9d8a2338f90f3f9eb511c54"
+    },
+    {
+      "path": "src/rendering/loading-yield-budget.js",
+      "sha256": "576ae137b4ef2e156547ca74704c244a2c4891a283a86ee590ca04c972d72c17"
+    },
+    {
+      "path": "src/app/loading-downloads.js",
+      "sha256": "34dda467ec9becf1b9cbe82eb5c5d40f0aa1d8f3383f9b3a3f236b46a1befdf3"
+    },
+    {
+      "path": "public/menu/native.js",
+      "sha256": "27a5b971d56f281e6a6dc486a02ec0ea144af89238e5c4b763de6ef31c5e3df8"
+    },
+    {
+      "path": "src/ui/menu-integration.js",
+      "sha256": "32d165048c7c92dc5008ff3c01584ab690dbdadb2dd1af24698966cbf42d01ae"
+    },
+    {
+      "path": "src/simulation/game.js",
+      "sha256": "e9b62e9dfbb3622182f450bc716da195d61db7aa710d620e687a2fcf9580a6fa"
+    },
+    {
+      "path": "src-tauri/smoke.js",
+      "sha256": "de3a1e5105526c7d23223c6179fa6bc46197cf6afbddbc4918324371a9bbc1f0"
+    },
+    {
+      "path": "src-tauri/src/main.rs",
+      "sha256": "4478383e6ba2fa5c8c83fe15ce4314c230b66054b630f5e1624ca9e5088c9bc9"
+    },
+    {
+      "path": ".github/workflows/windows.yml",
+      "sha256": "8a5b0f980f3c9c0aea3fd8d09586df0b97bd164bfc531945f0306d013983bbbc"
+    },
+    {
+      "path": "tools/extract_loading_visual_evidence.py",
+      "sha256": "bd5fa93d91f3675449e8da8128bfab59dd45ebe4f1525a308b12dd38183dda05"
+    },
+    {
+      "path": "tools/run_native_loading_pair.ps1",
+      "sha256": "12afaa2f1171eae7e6a7889e1af4a12a019f657622f6a70a212e6b097e6cb7bc"
+    }
+  ]
+}

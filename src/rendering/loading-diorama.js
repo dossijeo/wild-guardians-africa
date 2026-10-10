@@ -1,3 +1,4 @@
+import {cropCollectionKind} from './crop-runtime.js';
 import {loadingSyncWitness,loadingAwaitWitness} from './loading-sync-witness.js';
 import {waitGpuFrame} from '../../tools/experiments/wait-gpu-frame.js';
 import {compileLoadingPrograms} from './loading-programs.js';
@@ -57,7 +58,9 @@ export class LoadingDiorama {
     const {world}=this,phase=(label,run)=>loadingAwaitWitness(world.onLoadingSpan,label,run),sync=(label,run)=>loadingSyncWitness(world.onLoadingSpan,label,run);await phase('diorama-prepare-sky',()=>world.loadReady(world.sky.load()));if(this.disposed)throw Error('Loading diorama cancelled');
     const [models,bridges,ground]=await phase('diorama-prepare-catalogues',()=>world.loadReady(Promise.all([json('/content/models.json',{signal:world.loading.signal}),json('/content/crop-bridges.json',{signal:world.loading.signal}),json('/content/ground-materials.json',{signal:world.loading.signal})])));
     const descriptor=models.find(m=>m.source.includes('Cultivos'));if(!descriptor)throw Error('Missing native maize model');
-    const [gltf,preparedBridges]=await Promise.all([phase('diorama-prepare-maize-model',()=>world.loadReady(world.assets.model(descriptor.url))),phase('diorama-prepare-maize-bridges',()=>world.loadReady(loadCropBridges(bridges,url=>world.assets.model(url))))]);if(this.disposed)throw Error('Loading diorama cancelled');
+    const partition=world.cropPartition??(cropCollectionKind(descriptor.url)?await world.loadReady(world.assets.getCropPartition()):null);
+    if(this.disposed)throw Error('Loading diorama cancelled');
+    const [gltf,preparedBridges]=await Promise.all([phase('diorama-prepare-maize-model',()=>world.loadReady(partition?partition.models('maize'):world.assets.model(descriptor.url))),phase('diorama-prepare-maize-bridges',()=>world.loadReady(partition?partition.bridges(bridges,'maize'):loadCropBridges(bridges,url=>world.assets.model(url))))]);if(this.disposed)throw Error('Loading diorama cancelled');
     // Reuse the existing canyon earth bitmap through the world's cache. The
     // diorama borrows its pixel Source through a locally owned Texture object.
     // This does not decode/copy pixels or require separate shared GL storage.

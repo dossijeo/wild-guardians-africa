@@ -1,3 +1,4 @@
+import {prepareLoadingCropPartition} from './loading-crop-partition.js';
 import {installLoadingGameplayGpuQa} from './loading-gameplay-gpu-qa.js';
 import {LibraryViewer} from '../ui/library-viewer.js';
 import {EventCards} from '../ui/event-cards.js';
@@ -83,7 +84,7 @@ function prepareLoadingScene(){
  let owner,diorama;const transfers=new LoadingTransferOwner();
  try{owner=new WorldScene(canvas,onPick);if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')&&new URLSearchParams(location.search).has('qa-loading-far-full-scene'))owner.farIsolatedPreparation=false;if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')&&new URLSearchParams(location.search).has('qa-loading-zero-vertices'))owner.farZeroVertexPreparation=true;owner.loadingCpuBudget=!(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading-legacy-pacing'));owner.controls.enabled=false;owner.qualitySetting(settings.quality);applyWorldResolution(owner,settings.resolution);if(progressQa)owner.onLoadingSpan=span=>{if(!owner.disposed)progressQa.loadingSpan(span);};
  diorama=new LoadingDiorama(owner,{batchedUpload:import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')&&new URLSearchParams(location.search).has('qa-loading-diorama-batches')});const preparation={world:owner,diorama,canvas,transfers};preparedLoading=preparation;
- preparation.pending=Promise.all([diorama.prepare(),prepareLoadingFrames(loadLoadingFrameImages,{signal:owner.loading.signal})]).then(([,images])=>{preparation.frameImages=images;if(!owner.disposed)progressQa?.lifecycle('app-preloading-ready');});preparation.pending.catch(()=>{});return preparation;
+ preparation.pending=Promise.all([prepareLoadingCropPartition(owner).then(()=>diorama.prepare()),prepareLoadingFrames(loadLoadingFrameImages,{signal:owner.loading.signal})]).then(([,images])=>{preparation.frameImages=images;if(!owner.disposed)progressQa?.lifecycle('app-preloading-ready');});preparation.pending.catch(()=>{});return preparation;
  }catch(failure){transfers.dispose();diorama?.dispose();owner?.dispose();canvas.remove();throw failure;}
 }
 function releasePreparedLoading(){const pending=preparedLoading;preparedLoading=null;if(pending){progressQa?.close(null,pending.transfers,{cancelled:true});pending.transfers.dispose();pending.diorama.dispose();pending.world.dispose();pending.canvas.remove();}}
