@@ -7,3 +7,12 @@ test('late updates cannot revive a closed loading owner',()=>{const d=new Loadin
 
 test('completed transport stops accruing network time while native parsing remains pending',()=>{let time=0;const d=new LoadingDownloads({now:()=>time,expectedBytes:()=>1000});const id=d.begin('parse-later');time=100;d.applyTiming(id,{startTime:0,responseEnd:100,transferSize:1300,encodedBodySize:1000,decodedBodySize:1000});time=5000;const s=d.snapshot();assert.equal(s.pending,1);assert.equal(s.networkPending,0);assert.equal(s.observedMs,100);assert.equal(s.remainingMs,0);assert.equal(s.totalBytes,1000);assert.equal(s.progress,.99);d.finish(id);assert.equal(d.snapshot().pending,0);});
 test('cached response remains native-pending but contributes zero transfer weight before parsing finishes',()=>{let time=0;const d=new LoadingDownloads({now:()=>time});const id=d.begin('cache-parse');d.applyTiming(id,{startTime:0,responseEnd:10,transferSize:0,encodedBodySize:50,decodedBodySize:50});time=5000;const s=d.snapshot();assert.equal(s.pending,1);assert.equal(s.networkPending,0);assert.equal(s.cacheHits,1);assert.equal(s.estimatedMs,0);assert.equal(s.totalBytes,0);d.finish(id);assert.equal(d.snapshot().pending,0);});
+
+test('cached response decode failure remains visible without adding download weight',()=>{
+ let time=0;const d=new LoadingDownloads({now:()=>time});const id=d.begin('cached-invalid.glb');
+ d.applyTiming(id,{startTime:0,responseEnd:10,transferSize:0,encodedBodySize:50,decodedBodySize:50});
+ time=5000;d.finish(id,{failed:true});const s=d.snapshot({details:true});
+ assert.equal(s.failures,1);assert.equal(s.cacheHits,1);assert.equal(s.pending,0);
+ assert.equal(s.estimatedMs,0);assert.equal(s.totalBytes,0);assert.equal(s.requests[0].failed,true);
+ d.finish(id);assert.equal(d.snapshot().failures,1);
+});

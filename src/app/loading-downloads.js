@@ -22,9 +22,10 @@ export class LoadingDownloads {
   const now=this.now(),intervals=[];let loaded=0,total=0,remaining=0,pending=0,networkPending=0,cacheHits=0,unknown=0,network=0,failures=0,unknownTotals=0;
   for(const request of this.requests.values()){
    const complete=request.end!==null;if(!complete)pending++;
+   // Cache evidence describes transport, not whether native decoding succeeded.
+   if(request.failed)failures++;
    if(request.cache.endsWith('cache')){cacheHits++;continue;}
    if(request.cache==='network')network++;else unknown++;
-   if(request.failed)failures++;
    const transferComplete=complete||Number.isFinite(request.timing?.responseEnd);if(!transferComplete)networkPending++;
    const size=Math.max(request.loaded,request.total??this.unknownBytes);if(request.total===null)unknownTotals++;
    total+=size;loaded+=transferComplete?size:Math.min(request.loaded,size);if(!transferComplete)remaining+=Math.max(0,size-request.loaded);

@@ -2,7 +2,7 @@ import test from 'node:test';import assert from 'node:assert/strict';
 import {LoadingTransferOwner} from '../src/app/loading-transfer-owner.js';
 import {LoadingProgress} from '../src/app/loading-progress.js';
 import {LoadingDownloads} from '../src/app/loading-downloads.js';
-import {beginAssetTransfer,finishAssetTransfer,cachedAssetTransfer} from '../src/rendering/asset-transfer.js';
+import {beginAssetTransfer,finishAssetTransfer,cachedAssetTransfer,observeLoadingManager} from '../src/rendering/asset-transfer.js';
 
 test('a verified cached load has zero download weight, preserving preparation progress',()=>{
  const downloads=new LoadingDownloads(),id=downloads.begin('resident');downloads.finish(id,{timing:{transferSize:0,decodedBodySize:100}});
@@ -34,4 +34,16 @@ test('observed native Worker scripts contribute real transfer evidence without e
  owner.resource(entry);assert.equal(owner.downloads.requests.size,1);
  owner.resource({...entry,name:'http://localhost/assets/far-helper.js',initiatorType:'script',transferSize:0});assert.equal(owner.downloads.snapshot().cacheHits,1);
  owner.resource({...entry,name:'http://localhost/unrelated/metrics.js'});assert.equal(owner.downloads.requests.size,2);owner.dispose();
+});
+
+test('native manager errors survive cached transport evidence through the loading owner',()=>{
+ const owner=new LoadingTransferOwner(),manager={itemStart(){},itemEnd(){},itemError(){}};
+ const observation=observeLoadingManager(manager),url='http://localhost/assets/cached-invalid.glb';
+ try{
+  manager.itemStart(url);const request=[...owner.downloads.requests.values()][0];
+  owner.resource({name:url,initiatorType:'fetch',startTime:request.start,responseEnd:performance.now(),transferSize:0,encodedBodySize:50,decodedBodySize:50});
+  manager.itemError(url);manager.itemEnd(url);const result=owner.downloads.snapshot();
+  assert.equal(result.failures,1);assert.equal(result.cacheHits,1);assert.equal(result.pending,0);
+  assert.equal(result.estimatedMs,0);assert.equal(result.totalBytes,0);assert.equal(owner.ids.size,0);
+ }finally{observation.release();owner.dispose();}
 });
