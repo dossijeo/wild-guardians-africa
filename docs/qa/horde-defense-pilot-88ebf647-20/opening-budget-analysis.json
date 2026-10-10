@@ -1,0 +1,108 @@
+{
+  "source": "88ebf647b6bbe0d589125e4136d65e73fdf303a6",
+  "inputSHA256": "b60c3088daccdd2005914e0ab8ca7d92c254e79f8962a931b7e9a0fa8303ec4a",
+  "rows": [
+    {
+      "day": 1,
+      "budgetSeconds": 164.99999999999184,
+      "balanceRange": [
+        280,
+        280
+      ],
+      "staffRange": [
+        6,
+        6
+      ],
+      "pendingTaskRange": [
+        12,
+        40
+      ],
+      "workerSeconds": {
+        "idle": 0,
+        "walking": 574.9999999999703,
+        "acting": 414.999999999981,
+        "carrying": 0
+      }
+    },
+    {
+      "day": 2,
+      "budgetSeconds": 146.0000000000332,
+      "balanceRange": [
+        360,
+        614
+      ],
+      "staffRange": [
+        8,
+        8
+      ],
+      "pendingTaskRange": [
+        93,
+        180
+      ],
+      "workerSeconds": {
+        "idle": 0,
+        "walking": 800.0000000001819,
+        "acting": 360.00000000008185,
+        "carrying": 0
+      }
+    },
+    {
+      "day": 3,
+      "budgetSeconds": 223.9999999997965,
+      "balanceRange": [
+        104,
+        533
+      ],
+      "staffRange": [
+        17,
+        17
+      ],
+      "pendingTaskRange": [
+        140,
+        192
+      ],
+      "workerSeconds": {
+        "idle": 0,
+        "walking": 2718.99999999753,
+        "acting": 1065.9999999990316,
+        "carrying": 22.99999999997908
+      }
+    },
+    {
+      "day": 4,
+      "budgetSeconds": 0,
+      "balanceRange": null,
+      "staffRange": null,
+      "pendingTaskRange": null,
+      "workerSeconds": {
+        "idle": 0,
+        "walking": 0,
+        "acting": 0,
+        "carrying": 0
+      }
+    },
+    {
+      "day": 5,
+      "budgetSeconds": 38.99999999996453,
+      "balanceRange": [
+        245,
+        1169
+      ],
+      "staffRange": [
+        36,
+        36
+      ],
+      "pendingTaskRange": [
+        364,
+        389
+      ],
+      "workerSeconds": {
+        "idle": 0,
+        "walking": 1073.9999999990232,
+        "acting": 153.99999999985994,
+        "carrying": 175.99999999983993
+      }
+    }
+  ],
+  "scope": "Budget-only zero-action daylight observations, days1–5. Worker-seconds are aggregate worker occupancy, not player inactivity. No per-route length, task identity, first-delivery timestamp or complete reserve breakdown is retained here; no causal attribution or parameter change follows."
+}

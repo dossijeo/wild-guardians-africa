@@ -31,3 +31,13 @@ paid maintenance and risk from neglecting defenses. A 20-night survival result
 does not prove that neglect cannot lose by night 100. The centre cost remains
 800 and minimum wage remains 30. No next campaign or production promotion is
 approved by this review.
+
+Opening-budget observations can be reproduced with the adjacent
+`opening-budget-analysis.mjs`, using only the retained raw report. Days 1–5 have
+574 budget-idle seconds plus 100 shift-end seconds. No workers are observed idle
+in those budget samples; walking worker-time exceeds acting worker-time on each
+sampled day. This points toward checking travel/throughput as well as action
+duration, but does not establish route lengths or a causal repair diagnosis.
+The retained decision rows lack per-task identities, reserve breakdowns and
+first-delivery timestamps. Do not invent those fields or approve a timing
+coefficient from aggregate worker occupancy alone.
