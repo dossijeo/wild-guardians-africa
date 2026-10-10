@@ -1,3 +1,4 @@
+import {publishNativeSmokeCoverage} from './native-smoke-coverage.js';
 import {applyLoadingCropPairOverlap} from './loading-crop-pair-option.js';
 import {installNativeLoadingTrace} from './native-loading-trace-bridge.js';
 import {prepareLoadingCropPartition} from './loading-crop-partition.js';
@@ -153,7 +154,7 @@ async function loadScreen() {
   document.querySelectorAll('[data-delete-slot]').forEach(el=>el.onclick=()=>safe(async()=>{await saves.delete(el.dataset.deleteSlot);await loadScreen();}));
 }
 async function startGame(loaded=null,{slotId,preview}={}) {
-  if(starting)return;progressQa?.lifecycle('app-start-game-received');starting=true;screen='loading';clearWorld();screenWakeLock.setActive(true);
+  if(starting)return;if(globalThis.__desktopSmokeCoverage===true)publishNativeSmokeCoverage(null,'starting');progressQa?.lifecycle('app-start-game-received');starting=true;screen='loading';clearWorld();screenWakeLock.setActive(true);
   let prepared;const loadingToken=++loadingGeneration,assertLoading=()=>{if(loadingToken!==loadingGeneration||prepared?.world.disposed)throw new DOMException('Loading cancelled','AbortError');};
   // Retain the complete menu frame until the diorama has actually warmed.
   if(!document.querySelector('#native-menu'))app.innerHTML='<div class="loading" role="status">Preparing your land…</div>';
@@ -188,7 +189,7 @@ async function startGame(loaded=null,{slotId,preview}={}) {
     }
     nav.setState(next);
     for(const village of next.villages)if(!village.entry)village.entry=findVillageEntry(nav,[],village.x,village.z);
-    state=next;audio.remember(state.events);loadingProgress.update('configuration');
+    state=next;if(globalThis.__desktopSmokeCoverage===true)publishNativeSmokeCoverage(state,'configuration');audio.remember(state.events);loadingProgress.update('configuration');
     resumeLoadedWorld(state,{hidden:document.hidden});
     if(document.hidden)audio.suspend();
     const nativeStyle=document.createElement('link');nativeStyle.id='native-hud-style';nativeStyle.rel='stylesheet';nativeStyle.href=assetUrl('/content/hud.css');document.head.append(nativeStyle);
@@ -213,7 +214,7 @@ async function startGame(loaded=null,{slotId,preview}={}) {
     loadingProgress.update('visible-ready');loadingDiorama.loadingReady=true;loadingDiorama.stopPlanting();loadingDiorama.render(0,1,{ready:true});
     if(!loadingDiorama.plants.mature)await new Promise((resolve,reject)=>{loadingMature={resolve,reject};});assertLoading();loadingProgress.confirmReady();
     loadingCinema.start();await loadingCinema.finished;assertLoading();progressQa?.cameraPose('cinematic-completed',world);loadingCinema=null;prepared.trace?.close();prepared.visual?.close();loadingDiorama.dispose();loadingDiorama=null;loadingAudio?.dispose();loadingAudio=null;world.loadingActorQueue?.dispose();progressQa?.lifecycle('app-cinematic-restored-before-controls');progressQa?.close(loadingProgress,loadingTransfers);loadingTransfers.dispose();loadingTransfers=null;world.onLoadingSpan=null;world.onLoadingActorQueue=null;world.onLoadingGpuDraw=null;world.controls.enabled=true;clearInterval(loadingDiagnostic);loadingDiagnostic=null;
-    world.render(0);loadingOverlay?.dispose();loadingOverlay=null;document.querySelector('#stage').classList.remove('world-loading');document.querySelector('#stage').setAttribute('aria-busy','false');tutorial=new TutorialController(state,tutorialProfile,{onError:e=>error('No se ha podido guardar la memoria del tutorial: '+e.message),isNarrating:id=>guardian?.voice?.active&&guardian?.key?.startsWith(id+':')});screen='game';screenWakeLock.setActive(true);bind('pause',pauseDialog);lastFrame=performance.now();updateUI(true);save();audio.gameplay(state.day).catch(()=>{});
+    world.render(0);loadingOverlay?.dispose();loadingOverlay=null;document.querySelector('#stage').classList.remove('world-loading');document.querySelector('#stage').setAttribute('aria-busy','false');tutorial=new TutorialController(state,tutorialProfile,{onError:e=>error('No se ha podido guardar la memoria del tutorial: '+e.message),isNarrating:id=>guardian?.voice?.active&&guardian?.key?.startsWith(id+':')});screen='game';if(globalThis.__desktopSmokeCoverage===true)publishNativeSmokeCoverage(state,'ready');screenWakeLock.setActive(true);bind('pause',pauseDialog);lastFrame=performance.now();updateUI(true);save();audio.gameplay(state.day).catch(()=>{});
   } catch(e){if(loadingToken===loadingGeneration){loadingProgress?.fail(e);state=null;clearWorld();releasePreparedLoading();menu();error(e.message,{loadingFailure:true});}}finally{if(loadingToken===loadingGeneration){starting=false;const stats=document.querySelector('#stats');if(stats)stats.textContent='';}}
 }
 function guidedHudAction(action,open){

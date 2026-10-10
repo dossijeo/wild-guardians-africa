@@ -1,0 +1,1175 @@
+{
+  "scope": "PLAN ONLY;30New day+30legalContinue first-raid night; no instances executed",
+  "cases": [
+    {
+      "id": "sabana-mapungubwe",
+      "newDay": {
+        "arguments": [
+          "--smoke-report",
+          "sabana-mapungubwe-new.json",
+          "--smoke-biome",
+          "sabana",
+          "--smoke-culture",
+          "mapungubwe"
+        ],
+        "seed": "Game.newGame normal random seed; actual seed must be recorded by App provenance"
+      },
+      "continueNight": {
+        "fixtureGenerator": [
+          "node",
+          "tools/create_desktop_visibility_fixture.mjs",
+          "sabana-mapungubwe-night-fixture.json",
+          "--seed",
+          "712",
+          "--biome",
+          "sabana",
+          "--culture",
+          "mapungubwe",
+          "--slot-id",
+          "qa-native-coverage-sabana-mapungubwe-712"
+        ],
+        "arguments": [
+          "--smoke-report",
+          "sabana-mapungubwe-continue.json",
+          "--smoke-fixture",
+          "sabana-mapungubwe-night-fixture.json",
+          "--smoke-biome",
+          "sabana",
+          "--smoke-culture",
+          "mapungubwe"
+        ]
+      }
+    },
+    {
+      "id": "sabana-saheliana",
+      "newDay": {
+        "arguments": [
+          "--smoke-report",
+          "sabana-saheliana-new.json",
+          "--smoke-biome",
+          "sabana",
+          "--smoke-culture",
+          "saheliana"
+        ],
+        "seed": "Game.newGame normal random seed; actual seed must be recorded by App provenance"
+      },
+      "continueNight": {
+        "fixtureGenerator": [
+          "node",
+          "tools/create_desktop_visibility_fixture.mjs",
+          "sabana-saheliana-night-fixture.json",
+          "--seed",
+          "712",
+          "--biome",
+          "sabana",
+          "--culture",
+          "saheliana",
+          "--slot-id",
+          "qa-native-coverage-sabana-saheliana-712"
+        ],
+        "arguments": [
+          "--smoke-report",
+          "sabana-saheliana-continue.json",
+          "--smoke-fixture",
+          "sabana-saheliana-night-fixture.json",
+          "--smoke-biome",
+          "sabana",
+          "--smoke-culture",
+          "saheliana"
+        ]
+      }
+    },
+    {
+      "id": "sabana-suajili",
+      "newDay": {
+        "arguments": [
+          "--smoke-report",
+          "sabana-suajili-new.json",
+          "--smoke-biome",
+          "sabana",
+          "--smoke-culture",
+          "suajili"
+        ],
+        "seed": "Game.newGame normal random seed; actual seed must be recorded by App provenance"
+      },
+      "continueNight": {
+        "fixtureGenerator": [
+          "node",
+          "tools/create_desktop_visibility_fixture.mjs",
+          "sabana-suajili-night-fixture.json",
+          "--seed",
+          "712",
+          "--biome",
+          "sabana",
+          "--culture",
+          "suajili",
+          "--slot-id",
+          "qa-native-coverage-sabana-suajili-712"
+        ],
+        "arguments": [
+          "--smoke-report",
+          "sabana-suajili-continue.json",
+          "--smoke-fixture",
+          "sabana-suajili-night-fixture.json",
+          "--smoke-biome",
+          "sabana",
+          "--smoke-culture",
+          "suajili"
+        ]
+      }
+    },
+    {
+      "id": "sabana-musgum",
+      "newDay": {
+        "arguments": [
+          "--smoke-report",
+          "sabana-musgum-new.json",
+          "--smoke-biome",
+          "sabana",
+          "--smoke-culture",
+          "musgum"
+        ],
+        "seed": "Game.newGame normal random seed; actual seed must be recorded by App provenance"
+      },
+      "continueNight": {
+        "fixtureGenerator": [
+          "node",
+          "tools/create_desktop_visibility_fixture.mjs",
+          "sabana-musgum-night-fixture.json",
+          "--seed",
+          "712",
+          "--biome",
+          "sabana",
+          "--culture",
+          "musgum",
+          "--slot-id",
+          "qa-native-coverage-sabana-musgum-712"
+        ],
+        "arguments": [
+          "--smoke-report",
+          "sabana-musgum-continue.json",
+          "--smoke-fixture",
+          "sabana-musgum-night-fixture.json",
+          "--smoke-biome",
+          "sabana",
+          "--smoke-culture",
+          "musgum"
+        ]
+      }
+    },
+    {
+      "id": "sabana-etiope",
+      "newDay": {
+        "arguments": [
+          "--smoke-report",
+          "sabana-etiope-new.json",
+          "--smoke-biome",
+          "sabana",
+          "--smoke-culture",
+          "etiope"
+        ],
+        "seed": "Game.newGame normal random seed; actual seed must be recorded by App provenance"
+      },
+      "continueNight": {
+        "fixtureGenerator": [
+          "node",
+          "tools/create_desktop_visibility_fixture.mjs",
+          "sabana-etiope-night-fixture.json",
+          "--seed",
+          "712",
+          "--biome",
+          "sabana",
+          "--culture",
+          "etiope",
+          "--slot-id",
+          "qa-native-coverage-sabana-etiope-712"
+        ],
+        "arguments": [
+          "--smoke-report",
+          "sabana-etiope-continue.json",
+          "--smoke-fixture",
+          "sabana-etiope-night-fixture.json",
+          "--smoke-biome",
+          "sabana",
+          "--smoke-culture",
+          "etiope"
+        ]
+      }
+    },
+    {
+      "id": "gran-rio-mapungubwe",
+      "newDay": {
+        "arguments": [
+          "--smoke-report",
+          "gran-rio-mapungubwe-new.json",
+          "--smoke-biome",
+          "gran-rio",
+          "--smoke-culture",
+          "mapungubwe"
+        ],
+        "seed": "Game.newGame normal random seed; actual seed must be recorded by App provenance"
+      },
+      "continueNight": {
+        "fixtureGenerator": [
+          "node",
+          "tools/create_desktop_visibility_fixture.mjs",
+          "gran-rio-mapungubwe-night-fixture.json",
+          "--seed",
+          "712",
+          "--biome",
+          "gran-rio",
+          "--culture",
+          "mapungubwe",
+          "--slot-id",
+          "qa-native-coverage-gran-rio-mapungubwe-712"
+        ],
+        "arguments": [
+          "--smoke-report",
+          "gran-rio-mapungubwe-continue.json",
+          "--smoke-fixture",
+          "gran-rio-mapungubwe-night-fixture.json",
+          "--smoke-biome",
+          "gran-rio",
+          "--smoke-culture",
+          "mapungubwe"
+        ]
+      }
+    },
+    {
+      "id": "gran-rio-saheliana",
+      "newDay": {
+        "arguments": [
+          "--smoke-report",
+          "gran-rio-saheliana-new.json",
+          "--smoke-biome",
+          "gran-rio",
+          "--smoke-culture",
+          "saheliana"
+        ],
+        "seed": "Game.newGame normal random seed; actual seed must be recorded by App provenance"
+      },
+      "continueNight": {
+        "fixtureGenerator": [
+          "node",
+          "tools/create_desktop_visibility_fixture.mjs",
+          "gran-rio-saheliana-night-fixture.json",
+          "--seed",
+          "712",
+          "--biome",
+          "gran-rio",
+          "--culture",
+          "saheliana",
+          "--slot-id",
+          "qa-native-coverage-gran-rio-saheliana-712"
+        ],
+        "arguments": [
+          "--smoke-report",
+          "gran-rio-saheliana-continue.json",
+          "--smoke-fixture",
+          "gran-rio-saheliana-night-fixture.json",
+          "--smoke-biome",
+          "gran-rio",
+          "--smoke-culture",
+          "saheliana"
+        ]
+      }
+    },
+    {
+      "id": "gran-rio-suajili",
+      "newDay": {
+        "arguments": [
+          "--smoke-report",
+          "gran-rio-suajili-new.json",
+          "--smoke-biome",
+          "gran-rio",
+          "--smoke-culture",
+          "suajili"
+        ],
+        "seed": "Game.newGame normal random seed; actual seed must be recorded by App provenance"
+      },
+      "continueNight": {
+        "fixtureGenerator": [
+          "node",
+          "tools/create_desktop_visibility_fixture.mjs",
+          "gran-rio-suajili-night-fixture.json",
+          "--seed",
+          "712",
+          "--biome",
+          "gran-rio",
+          "--culture",
+          "suajili",
+          "--slot-id",
+          "qa-native-coverage-gran-rio-suajili-712"
+        ],
+        "arguments": [
+          "--smoke-report",
+          "gran-rio-suajili-continue.json",
+          "--smoke-fixture",
+          "gran-rio-suajili-night-fixture.json",
+          "--smoke-biome",
+          "gran-rio",
+          "--smoke-culture",
+          "suajili"
+        ]
+      }
+    },
+    {
+      "id": "gran-rio-musgum",
+      "newDay": {
+        "arguments": [
+          "--smoke-report",
+          "gran-rio-musgum-new.json",
+          "--smoke-biome",
+          "gran-rio",
+          "--smoke-culture",
+          "musgum"
+        ],
+        "seed": "Game.newGame normal random seed; actual seed must be recorded by App provenance"
+      },
+      "continueNight": {
+        "fixtureGenerator": [
+          "node",
+          "tools/create_desktop_visibility_fixture.mjs",
+          "gran-rio-musgum-night-fixture.json",
+          "--seed",
+          "712",
+          "--biome",
+          "gran-rio",
+          "--culture",
+          "musgum",
+          "--slot-id",
+          "qa-native-coverage-gran-rio-musgum-712"
+        ],
+        "arguments": [
+          "--smoke-report",
+          "gran-rio-musgum-continue.json",
+          "--smoke-fixture",
+          "gran-rio-musgum-night-fixture.json",
+          "--smoke-biome",
+          "gran-rio",
+          "--smoke-culture",
+          "musgum"
+        ]
+      }
+    },
+    {
+      "id": "gran-rio-etiope",
+      "newDay": {
+        "arguments": [
+          "--smoke-report",
+          "gran-rio-etiope-new.json",
+          "--smoke-biome",
+          "gran-rio",
+          "--smoke-culture",
+          "etiope"
+        ],
+        "seed": "Game.newGame normal random seed; actual seed must be recorded by App provenance"
+      },
+      "continueNight": {
+        "fixtureGenerator": [
+          "node",
+          "tools/create_desktop_visibility_fixture.mjs",
+          "gran-rio-etiope-night-fixture.json",
+          "--seed",
+          "712",
+          "--biome",
+          "gran-rio",
+          "--culture",
+          "etiope",
+          "--slot-id",
+          "qa-native-coverage-gran-rio-etiope-712"
+        ],
+        "arguments": [
+          "--smoke-report",
+          "gran-rio-etiope-continue.json",
+          "--smoke-fixture",
+          "gran-rio-etiope-night-fixture.json",
+          "--smoke-biome",
+          "gran-rio",
+          "--smoke-culture",
+          "etiope"
+        ]
+      }
+    },
+    {
+      "id": "manglares-mapungubwe",
+      "newDay": {
+        "arguments": [
+          "--smoke-report",
+          "manglares-mapungubwe-new.json",
+          "--smoke-biome",
+          "manglares",
+          "--smoke-culture",
+          "mapungubwe"
+        ],
+        "seed": "Game.newGame normal random seed; actual seed must be recorded by App provenance"
+      },
+      "continueNight": {
+        "fixtureGenerator": [
+          "node",
+          "tools/create_desktop_visibility_fixture.mjs",
+          "manglares-mapungubwe-night-fixture.json",
+          "--seed",
+          "712",
+          "--biome",
+          "manglares",
+          "--culture",
+          "mapungubwe",
+          "--slot-id",
+          "qa-native-coverage-manglares-mapungubwe-712"
+        ],
+        "arguments": [
+          "--smoke-report",
+          "manglares-mapungubwe-continue.json",
+          "--smoke-fixture",
+          "manglares-mapungubwe-night-fixture.json",
+          "--smoke-biome",
+          "manglares",
+          "--smoke-culture",
+          "mapungubwe"
+        ]
+      }
+    },
+    {
+      "id": "manglares-saheliana",
+      "newDay": {
+        "arguments": [
+          "--smoke-report",
+          "manglares-saheliana-new.json",
+          "--smoke-biome",
+          "manglares",
+          "--smoke-culture",
+          "saheliana"
+        ],
+        "seed": "Game.newGame normal random seed; actual seed must be recorded by App provenance"
+      },
+      "continueNight": {
+        "fixtureGenerator": [
+          "node",
+          "tools/create_desktop_visibility_fixture.mjs",
+          "manglares-saheliana-night-fixture.json",
+          "--seed",
+          "712",
+          "--biome",
+          "manglares",
+          "--culture",
+          "saheliana",
+          "--slot-id",
+          "qa-native-coverage-manglares-saheliana-712"
+        ],
+        "arguments": [
+          "--smoke-report",
+          "manglares-saheliana-continue.json",
+          "--smoke-fixture",
+          "manglares-saheliana-night-fixture.json",
+          "--smoke-biome",
+          "manglares",
+          "--smoke-culture",
+          "saheliana"
+        ]
+      }
+    },
+    {
+      "id": "manglares-suajili",
+      "newDay": {
+        "arguments": [
+          "--smoke-report",
+          "manglares-suajili-new.json",
+          "--smoke-biome",
+          "manglares",
+          "--smoke-culture",
+          "suajili"
+        ],
+        "seed": "Game.newGame normal random seed; actual seed must be recorded by App provenance"
+      },
+      "continueNight": {
+        "fixtureGenerator": [
+          "node",
+          "tools/create_desktop_visibility_fixture.mjs",
+          "manglares-suajili-night-fixture.json",
+          "--seed",
+          "712",
+          "--biome",
+          "manglares",
+          "--culture",
+          "suajili",
+          "--slot-id",
+          "qa-native-coverage-manglares-suajili-712"
+        ],
+        "arguments": [
+          "--smoke-report",
+          "manglares-suajili-continue.json",
+          "--smoke-fixture",
+          "manglares-suajili-night-fixture.json",
+          "--smoke-biome",
+          "manglares",
+          "--smoke-culture",
+          "suajili"
+        ]
+      }
+    },
+    {
+      "id": "manglares-musgum",
+      "newDay": {
+        "arguments": [
+          "--smoke-report",
+          "manglares-musgum-new.json",
+          "--smoke-biome",
+          "manglares",
+          "--smoke-culture",
+          "musgum"
+        ],
+        "seed": "Game.newGame normal random seed; actual seed must be recorded by App provenance"
+      },
+      "continueNight": {
+        "fixtureGenerator": [
+          "node",
+          "tools/create_desktop_visibility_fixture.mjs",
+          "manglares-musgum-night-fixture.json",
+          "--seed",
+          "712",
+          "--biome",
+          "manglares",
+          "--culture",
+          "musgum",
+          "--slot-id",
+          "qa-native-coverage-manglares-musgum-712"
+        ],
+        "arguments": [
+          "--smoke-report",
+          "manglares-musgum-continue.json",
+          "--smoke-fixture",
+          "manglares-musgum-night-fixture.json",
+          "--smoke-biome",
+          "manglares",
+          "--smoke-culture",
+          "musgum"
+        ]
+      }
+    },
+    {
+      "id": "manglares-etiope",
+      "newDay": {
+        "arguments": [
+          "--smoke-report",
+          "manglares-etiope-new.json",
+          "--smoke-biome",
+          "manglares",
+          "--smoke-culture",
+          "etiope"
+        ],
+        "seed": "Game.newGame normal random seed; actual seed must be recorded by App provenance"
+      },
+      "continueNight": {
+        "fixtureGenerator": [
+          "node",
+          "tools/create_desktop_visibility_fixture.mjs",
+          "manglares-etiope-night-fixture.json",
+          "--seed",
+          "712",
+          "--biome",
+          "manglares",
+          "--culture",
+          "etiope",
+          "--slot-id",
+          "qa-native-coverage-manglares-etiope-712"
+        ],
+        "arguments": [
+          "--smoke-report",
+          "manglares-etiope-continue.json",
+          "--smoke-fixture",
+          "manglares-etiope-night-fixture.json",
+          "--smoke-biome",
+          "manglares",
+          "--smoke-culture",
+          "etiope"
+        ]
+      }
+    },
+    {
+      "id": "volcanes-mapungubwe",
+      "newDay": {
+        "arguments": [
+          "--smoke-report",
+          "volcanes-mapungubwe-new.json",
+          "--smoke-biome",
+          "volcanes",
+          "--smoke-culture",
+          "mapungubwe"
+        ],
+        "seed": "Game.newGame normal random seed; actual seed must be recorded by App provenance"
+      },
+      "continueNight": {
+        "fixtureGenerator": [
+          "node",
+          "tools/create_desktop_visibility_fixture.mjs",
+          "volcanes-mapungubwe-night-fixture.json",
+          "--seed",
+          "712",
+          "--biome",
+          "volcanes",
+          "--culture",
+          "mapungubwe",
+          "--slot-id",
+          "qa-native-coverage-volcanes-mapungubwe-712"
+        ],
+        "arguments": [
+          "--smoke-report",
+          "volcanes-mapungubwe-continue.json",
+          "--smoke-fixture",
+          "volcanes-mapungubwe-night-fixture.json",
+          "--smoke-biome",
+          "volcanes",
+          "--smoke-culture",
+          "mapungubwe"
+        ]
+      }
+    },
+    {
+      "id": "volcanes-saheliana",
+      "newDay": {
+        "arguments": [
+          "--smoke-report",
+          "volcanes-saheliana-new.json",
+          "--smoke-biome",
+          "volcanes",
+          "--smoke-culture",
+          "saheliana"
+        ],
+        "seed": "Game.newGame normal random seed; actual seed must be recorded by App provenance"
+      },
+      "continueNight": {
+        "fixtureGenerator": [
+          "node",
+          "tools/create_desktop_visibility_fixture.mjs",
+          "volcanes-saheliana-night-fixture.json",
+          "--seed",
+          "712",
+          "--biome",
+          "volcanes",
+          "--culture",
+          "saheliana",
+          "--slot-id",
+          "qa-native-coverage-volcanes-saheliana-712"
+        ],
+        "arguments": [
+          "--smoke-report",
+          "volcanes-saheliana-continue.json",
+          "--smoke-fixture",
+          "volcanes-saheliana-night-fixture.json",
+          "--smoke-biome",
+          "volcanes",
+          "--smoke-culture",
+          "saheliana"
+        ]
+      }
+    },
+    {
+      "id": "volcanes-suajili",
+      "newDay": {
+        "arguments": [
+          "--smoke-report",
+          "volcanes-suajili-new.json",
+          "--smoke-biome",
+          "volcanes",
+          "--smoke-culture",
+          "suajili"
+        ],
+        "seed": "Game.newGame normal random seed; actual seed must be recorded by App provenance"
+      },
+      "continueNight": {
+        "fixtureGenerator": [
+          "node",
+          "tools/create_desktop_visibility_fixture.mjs",
+          "volcanes-suajili-night-fixture.json",
+          "--seed",
+          "712",
+          "--biome",
+          "volcanes",
+          "--culture",
+          "suajili",
+          "--slot-id",
+          "qa-native-coverage-volcanes-suajili-712"
+        ],
+        "arguments": [
+          "--smoke-report",
+          "volcanes-suajili-continue.json",
+          "--smoke-fixture",
+          "volcanes-suajili-night-fixture.json",
+          "--smoke-biome",
+          "volcanes",
+          "--smoke-culture",
+          "suajili"
+        ]
+      }
+    },
+    {
+      "id": "volcanes-musgum",
+      "newDay": {
+        "arguments": [
+          "--smoke-report",
+          "volcanes-musgum-new.json",
+          "--smoke-biome",
+          "volcanes",
+          "--smoke-culture",
+          "musgum"
+        ],
+        "seed": "Game.newGame normal random seed; actual seed must be recorded by App provenance"
+      },
+      "continueNight": {
+        "fixtureGenerator": [
+          "node",
+          "tools/create_desktop_visibility_fixture.mjs",
+          "volcanes-musgum-night-fixture.json",
+          "--seed",
+          "712",
+          "--biome",
+          "volcanes",
+          "--culture",
+          "musgum",
+          "--slot-id",
+          "qa-native-coverage-volcanes-musgum-712"
+        ],
+        "arguments": [
+          "--smoke-report",
+          "volcanes-musgum-continue.json",
+          "--smoke-fixture",
+          "volcanes-musgum-night-fixture.json",
+          "--smoke-biome",
+          "volcanes",
+          "--smoke-culture",
+          "musgum"
+        ]
+      }
+    },
+    {
+      "id": "volcanes-etiope",
+      "newDay": {
+        "arguments": [
+          "--smoke-report",
+          "volcanes-etiope-new.json",
+          "--smoke-biome",
+          "volcanes",
+          "--smoke-culture",
+          "etiope"
+        ],
+        "seed": "Game.newGame normal random seed; actual seed must be recorded by App provenance"
+      },
+      "continueNight": {
+        "fixtureGenerator": [
+          "node",
+          "tools/create_desktop_visibility_fixture.mjs",
+          "volcanes-etiope-night-fixture.json",
+          "--seed",
+          "712",
+          "--biome",
+          "volcanes",
+          "--culture",
+          "etiope",
+          "--slot-id",
+          "qa-native-coverage-volcanes-etiope-712"
+        ],
+        "arguments": [
+          "--smoke-report",
+          "volcanes-etiope-continue.json",
+          "--smoke-fixture",
+          "volcanes-etiope-night-fixture.json",
+          "--smoke-biome",
+          "volcanes",
+          "--smoke-culture",
+          "etiope"
+        ]
+      }
+    },
+    {
+      "id": "gran-canon-mapungubwe",
+      "newDay": {
+        "arguments": [
+          "--smoke-report",
+          "gran-canon-mapungubwe-new.json",
+          "--smoke-biome",
+          "gran-canon",
+          "--smoke-culture",
+          "mapungubwe"
+        ],
+        "seed": "Game.newGame normal random seed; actual seed must be recorded by App provenance"
+      },
+      "continueNight": {
+        "fixtureGenerator": [
+          "node",
+          "tools/create_desktop_visibility_fixture.mjs",
+          "gran-canon-mapungubwe-night-fixture.json",
+          "--seed",
+          "712",
+          "--biome",
+          "gran-canon",
+          "--culture",
+          "mapungubwe",
+          "--slot-id",
+          "qa-native-coverage-gran-canon-mapungubwe-712"
+        ],
+        "arguments": [
+          "--smoke-report",
+          "gran-canon-mapungubwe-continue.json",
+          "--smoke-fixture",
+          "gran-canon-mapungubwe-night-fixture.json",
+          "--smoke-biome",
+          "gran-canon",
+          "--smoke-culture",
+          "mapungubwe"
+        ]
+      }
+    },
+    {
+      "id": "gran-canon-saheliana",
+      "newDay": {
+        "arguments": [
+          "--smoke-report",
+          "gran-canon-saheliana-new.json",
+          "--smoke-biome",
+          "gran-canon",
+          "--smoke-culture",
+          "saheliana"
+        ],
+        "seed": "Game.newGame normal random seed; actual seed must be recorded by App provenance"
+      },
+      "continueNight": {
+        "fixtureGenerator": [
+          "node",
+          "tools/create_desktop_visibility_fixture.mjs",
+          "gran-canon-saheliana-night-fixture.json",
+          "--seed",
+          "712",
+          "--biome",
+          "gran-canon",
+          "--culture",
+          "saheliana",
+          "--slot-id",
+          "qa-native-coverage-gran-canon-saheliana-712"
+        ],
+        "arguments": [
+          "--smoke-report",
+          "gran-canon-saheliana-continue.json",
+          "--smoke-fixture",
+          "gran-canon-saheliana-night-fixture.json",
+          "--smoke-biome",
+          "gran-canon",
+          "--smoke-culture",
+          "saheliana"
+        ]
+      }
+    },
+    {
+      "id": "gran-canon-suajili",
+      "newDay": {
+        "arguments": [
+          "--smoke-report",
+          "gran-canon-suajili-new.json",
+          "--smoke-biome",
+          "gran-canon",
+          "--smoke-culture",
+          "suajili"
+        ],
+        "seed": "Game.newGame normal random seed; actual seed must be recorded by App provenance"
+      },
+      "continueNight": {
+        "fixtureGenerator": [
+          "node",
+          "tools/create_desktop_visibility_fixture.mjs",
+          "gran-canon-suajili-night-fixture.json",
+          "--seed",
+          "712",
+          "--biome",
+          "gran-canon",
+          "--culture",
+          "suajili",
+          "--slot-id",
+          "qa-native-coverage-gran-canon-suajili-712"
+        ],
+        "arguments": [
+          "--smoke-report",
+          "gran-canon-suajili-continue.json",
+          "--smoke-fixture",
+          "gran-canon-suajili-night-fixture.json",
+          "--smoke-biome",
+          "gran-canon",
+          "--smoke-culture",
+          "suajili"
+        ]
+      }
+    },
+    {
+      "id": "gran-canon-musgum",
+      "newDay": {
+        "arguments": [
+          "--smoke-report",
+          "gran-canon-musgum-new.json",
+          "--smoke-biome",
+          "gran-canon",
+          "--smoke-culture",
+          "musgum"
+        ],
+        "seed": "Game.newGame normal random seed; actual seed must be recorded by App provenance"
+      },
+      "continueNight": {
+        "fixtureGenerator": [
+          "node",
+          "tools/create_desktop_visibility_fixture.mjs",
+          "gran-canon-musgum-night-fixture.json",
+          "--seed",
+          "712",
+          "--biome",
+          "gran-canon",
+          "--culture",
+          "musgum",
+          "--slot-id",
+          "qa-native-coverage-gran-canon-musgum-712"
+        ],
+        "arguments": [
+          "--smoke-report",
+          "gran-canon-musgum-continue.json",
+          "--smoke-fixture",
+          "gran-canon-musgum-night-fixture.json",
+          "--smoke-biome",
+          "gran-canon",
+          "--smoke-culture",
+          "musgum"
+        ]
+      }
+    },
+    {
+      "id": "gran-canon-etiope",
+      "newDay": {
+        "arguments": [
+          "--smoke-report",
+          "gran-canon-etiope-new.json",
+          "--smoke-biome",
+          "gran-canon",
+          "--smoke-culture",
+          "etiope"
+        ],
+        "seed": "Game.newGame normal random seed; actual seed must be recorded by App provenance"
+      },
+      "continueNight": {
+        "fixtureGenerator": [
+          "node",
+          "tools/create_desktop_visibility_fixture.mjs",
+          "gran-canon-etiope-night-fixture.json",
+          "--seed",
+          "712",
+          "--biome",
+          "gran-canon",
+          "--culture",
+          "etiope",
+          "--slot-id",
+          "qa-native-coverage-gran-canon-etiope-712"
+        ],
+        "arguments": [
+          "--smoke-report",
+          "gran-canon-etiope-continue.json",
+          "--smoke-fixture",
+          "gran-canon-etiope-night-fixture.json",
+          "--smoke-biome",
+          "gran-canon",
+          "--smoke-culture",
+          "etiope"
+        ]
+      }
+    },
+    {
+      "id": "desierto-mapungubwe",
+      "newDay": {
+        "arguments": [
+          "--smoke-report",
+          "desierto-mapungubwe-new.json",
+          "--smoke-biome",
+          "desierto",
+          "--smoke-culture",
+          "mapungubwe"
+        ],
+        "seed": "Game.newGame normal random seed; actual seed must be recorded by App provenance"
+      },
+      "continueNight": {
+        "fixtureGenerator": [
+          "node",
+          "tools/create_desktop_visibility_fixture.mjs",
+          "desierto-mapungubwe-night-fixture.json",
+          "--seed",
+          "712",
+          "--biome",
+          "desierto",
+          "--culture",
+          "mapungubwe",
+          "--slot-id",
+          "qa-native-coverage-desierto-mapungubwe-712"
+        ],
+        "arguments": [
+          "--smoke-report",
+          "desierto-mapungubwe-continue.json",
+          "--smoke-fixture",
+          "desierto-mapungubwe-night-fixture.json",
+          "--smoke-biome",
+          "desierto",
+          "--smoke-culture",
+          "mapungubwe"
+        ]
+      }
+    },
+    {
+      "id": "desierto-saheliana",
+      "newDay": {
+        "arguments": [
+          "--smoke-report",
+          "desierto-saheliana-new.json",
+          "--smoke-biome",
+          "desierto",
+          "--smoke-culture",
+          "saheliana"
+        ],
+        "seed": "Game.newGame normal random seed; actual seed must be recorded by App provenance"
+      },
+      "continueNight": {
+        "fixtureGenerator": [
+          "node",
+          "tools/create_desktop_visibility_fixture.mjs",
+          "desierto-saheliana-night-fixture.json",
+          "--seed",
+          "712",
+          "--biome",
+          "desierto",
+          "--culture",
+          "saheliana",
+          "--slot-id",
+          "qa-native-coverage-desierto-saheliana-712"
+        ],
+        "arguments": [
+          "--smoke-report",
+          "desierto-saheliana-continue.json",
+          "--smoke-fixture",
+          "desierto-saheliana-night-fixture.json",
+          "--smoke-biome",
+          "desierto",
+          "--smoke-culture",
+          "saheliana"
+        ]
+      }
+    },
+    {
+      "id": "desierto-suajili",
+      "newDay": {
+        "arguments": [
+          "--smoke-report",
+          "desierto-suajili-new.json",
+          "--smoke-biome",
+          "desierto",
+          "--smoke-culture",
+          "suajili"
+        ],
+        "seed": "Game.newGame normal random seed; actual seed must be recorded by App provenance"
+      },
+      "continueNight": {
+        "fixtureGenerator": [
+          "node",
+          "tools/create_desktop_visibility_fixture.mjs",
+          "desierto-suajili-night-fixture.json",
+          "--seed",
+          "712",
+          "--biome",
+          "desierto",
+          "--culture",
+          "suajili",
+          "--slot-id",
+          "qa-native-coverage-desierto-suajili-712"
+        ],
+        "arguments": [
+          "--smoke-report",
+          "desierto-suajili-continue.json",
+          "--smoke-fixture",
+          "desierto-suajili-night-fixture.json",
+          "--smoke-biome",
+          "desierto",
+          "--smoke-culture",
+          "suajili"
+        ]
+      }
+    },
+    {
+      "id": "desierto-musgum",
+      "newDay": {
+        "arguments": [
+          "--smoke-report",
+          "desierto-musgum-new.json",
+          "--smoke-biome",
+          "desierto",
+          "--smoke-culture",
+          "musgum"
+        ],
+        "seed": "Game.newGame normal random seed; actual seed must be recorded by App provenance"
+      },
+      "continueNight": {
+        "fixtureGenerator": [
+          "node",
+          "tools/create_desktop_visibility_fixture.mjs",
+          "desierto-musgum-night-fixture.json",
+          "--seed",
+          "712",
+          "--biome",
+          "desierto",
+          "--culture",
+          "musgum",
+          "--slot-id",
+          "qa-native-coverage-desierto-musgum-712"
+        ],
+        "arguments": [
+          "--smoke-report",
+          "desierto-musgum-continue.json",
+          "--smoke-fixture",
+          "desierto-musgum-night-fixture.json",
+          "--smoke-biome",
+          "desierto",
+          "--smoke-culture",
+          "musgum"
+        ]
+      }
+    },
+    {
+      "id": "desierto-etiope",
+      "newDay": {
+        "arguments": [
+          "--smoke-report",
+          "desierto-etiope-new.json",
+          "--smoke-biome",
+          "desierto",
+          "--smoke-culture",
+          "etiope"
+        ],
+        "seed": "Game.newGame normal random seed; actual seed must be recorded by App provenance"
+      },
+      "continueNight": {
+        "fixtureGenerator": [
+          "node",
+          "tools/create_desktop_visibility_fixture.mjs",
+          "desierto-etiope-night-fixture.json",
+          "--seed",
+          "712",
+          "--biome",
+          "desierto",
+          "--culture",
+          "etiope",
+          "--slot-id",
+          "qa-native-coverage-desierto-etiope-712"
+        ],
+        "arguments": [
+          "--smoke-report",
+          "desierto-etiope-continue.json",
+          "--smoke-fixture",
+          "desierto-etiope-night-fixture.json",
+          "--smoke-biome",
+          "desierto",
+          "--smoke-culture",
+          "etiope"
+        ]
+      }
+    }
+  ]
+}

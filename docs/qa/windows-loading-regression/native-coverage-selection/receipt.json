@@ -1,0 +1,152 @@
+{
+  "base": "7eaeacc02af55924c1b931ab53387faffaae8b13",
+  "sources": [
+    {
+      "path": "src/app/native-smoke-coverage.js",
+      "bytes": 497,
+      "sha256": "701114760bb87954e17e62d686cd9ee7ccb9b479891684c137fd98a1be21d827"
+    },
+    {
+      "path": "src/app/main.js",
+      "bytes": 64794,
+      "sha256": "72ec0e332af2c872db2795a0357ae626b3a89ed06da01d161579eea7c0714e0c"
+    },
+    {
+      "path": "src-tauri/src/main.rs",
+      "bytes": 7610,
+      "sha256": "3ed8b2c1f5646634717fba744957c41cc18ae04a94c5ec3cd6166264351641a7"
+    },
+    {
+      "path": "src-tauri/smoke.js",
+      "bytes": 17259,
+      "sha256": "a000efd8666d48465cca8b6e9731f06eb73cf1d3b863ad568478313ad3170bc0"
+    },
+    {
+      "path": "tools/create_desktop_visibility_fixture.mjs",
+      "bytes": 4529,
+      "sha256": "903bcd9fa42ad2836aeceda1f546ef1d05c68d7bd15f40f6ed91d8df88f07b97"
+    },
+    {
+      "path": "tests/native-smoke-coverage.test.js",
+      "bytes": 4616,
+      "sha256": "7a42f62952ceb5367d6e9d75ec6444ab727c7d3fb11850f73727947d1c11eed7"
+    },
+    {
+      "path": "tests/native-smoke-coverage-normalize.js",
+      "bytes": 8329,
+      "sha256": "81b42579fcb84217514c76c64b41b7bcdf7c40f6351ab0b89d0ac4ad7272b9fc"
+    },
+    {
+      "path": "tests/world-crop-pair-wiring-normalize.js",
+      "bytes": 2185,
+      "sha256": "4e213fe48701c7c18291a75ea3005b53f18f629a986656e4502167b0a0d54e57"
+    },
+    {
+      "path": "docs/qa/sfx-catalog-post-jam/inventory.json",
+      "bytes": 246041,
+      "sha256": "4e000bc8a6409b48d2c8fd962063f70538b49bb7685c27447f170eea3d4a8675"
+    },
+    {
+      "path": "docs/qa/sfx-catalog-post-jam/inventory.md",
+      "bytes": 36727,
+      "sha256": "3e53f5a52526a23f5c3f2328e96d5c646c80a9f9d11a631aea6bbf2a5af8c5c2"
+    }
+  ],
+  "unchanged": [
+    {
+      "path": "src/rendering/scene.js",
+      "sha256": "45173a5ce0b7414b5e3ba20f8681ffc706d47d68805e25c2ab42e214aab8ada7",
+      "byteIdenticalToBase": true
+    },
+    {
+      "path": "src/rendering/loading-diorama.js",
+      "sha256": "736a000a0e1921d4671eef1df917901f763b9f0d2d99fdfd520902bcdbb04cd3",
+      "byteIdenticalToBase": true
+    },
+    {
+      "path": "src/rendering/loading-plants.js",
+      "sha256": "8f5aba68d7a78f801356887c4f4704dc73b5c1f4d3154e4f8cca346bf8f5dc21",
+      "byteIdenticalToBase": true
+    },
+    {
+      "path": "src/rendering/assets.js",
+      "sha256": "7b071399ab96052f741e59c4590c1a5dcaa10a02c23ed01542e6f9ca5433ef1c",
+      "byteIdenticalToBase": true
+    },
+    {
+      "path": "src/simulation/game.js",
+      "sha256": "e9b62e9dfbb3622182f450bc716da195d61db7aa710d620e687a2fcf9580a6fa",
+      "byteIdenticalToBase": true
+    },
+    {
+      "path": "src/persistence/snapshots.js",
+      "sha256": "992c9bb29d83f844eabd4a8a6963722ef4f418f62b3531f99e782397aaae9806",
+      "byteIdenticalToBase": true
+    },
+    {
+      "path": ".github/workflows/windows.yml",
+      "sha256": "f3f585925f3f8c528a6332cc7072a5e9aec2ca1b9627df0155276f538a1b62f8",
+      "byteIdenticalToBase": true
+    },
+    {
+      "path": "package.json",
+      "sha256": "7901f2c6f33ac67dfda62b50019ebf3d850c49b3fdeccea14e51d62384d8d72d",
+      "byteIdenticalToBase": true
+    },
+    {
+      "path": "public/content/models.json",
+      "sha256": "d42f6b54a3a5946fc652f1ac87c443cbda45075a10dc4cd49ca5de02a3c5e8c7",
+      "byteIdenticalToBase": true
+    }
+  ],
+  "checks": {
+    "command": "node --test tests/native-smoke-coverage.test.js tests/desktop-visibility-fixture.test.js tests/loading-visual-fixtures.test.js tests/world-crop-pair-wiring.test.js tests/crop-partition-app.test.js tests/sfx-catalog-audit.test.js",
+    "exitCode": 0,
+    "tests": 20,
+    "passed": 20,
+    "failed": 0,
+    "durationMs": 7387.7811,
+    "representatives": [
+      [
+        "sabana",
+        "mapungubwe"
+      ],
+      [
+        "gran-rio",
+        "saheliana"
+      ],
+      [
+        "manglares",
+        "suajili"
+      ],
+      [
+        "volcanes",
+        "musgum"
+      ],
+      [
+        "gran-canon",
+        "etiope"
+      ],
+      [
+        "desierto",
+        "mapungubwe"
+      ]
+    ],
+    "defaultFixtureSha256": "04729f96380a4b597f2d47b2271140f361df18b8fddc3c797b31bc6bc7691c37",
+    "SFX": "126/100/26;all rows/bytes/routes unchanged except main hash/callsite line offsets"
+  },
+  "log": {
+    "rawBytes": 5593,
+    "rawSha256": "3859a337eda0587630efa29a1ee782bff62360345e6914d0c4cddf588092e20c",
+    "gzipSha256": "92ee2b91e8cdf44a3c42b43e83f4c63559b0ea68e7765468172b428898c0c372"
+  },
+  "notRun": [
+    "Rust unit tests (added source only)",
+    "build",
+    "package",
+    "Windows CI",
+    "native/GPU/browser",
+    "60-case execution"
+  ],
+  "scope": "QA-only explicit selection, scalar ready provenance, legal paid fixtures; no timings or raster claims"
+}

@@ -1,4 +1,6 @@
+import {normalizeCoverageWiring} from './native-smoke-coverage-normalize.js';
 export function normalizePairWiring(file,text){
+ text=normalizeCoverageWiring(file,text);
  if(file==='src/app/main.js')return text.replace("import {applyLoadingCropPairOverlap} from './loading-crop-pair-option.js';\n",'').replace('applyLoadingCropPairOverlap(owner);','');
  if(file==='src-tauri/src/main.rs')return text.replace('                        if std::env::args().any(|arg| arg == "--smoke-visual-plant-progress65") {\n                            let _ = webview.eval("window.__desktopSmokeVisualPlantProgress65 = true;");\n                        }\n','').replace('                if std::env::args().any(|arg| arg == "--smoke-crop-pair-overlap") {\n                    let _ = webview.eval("window.__desktopSmokeCropPairOverlap = true;");\n                }\n','');
  if(file==='src-tauri/smoke.js')return text.replace(`        if (window.__desktopSmokeVisualPlantProgress65 === true) {

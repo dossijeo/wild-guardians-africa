@@ -62,6 +62,7 @@
       if (!error && (!visual || !visual.frames?.length)) report.errors.push('Requested loading visual evidence is missing');
       report.checks.loadingVisualRunScope = 'Opt-in PNG readback/encoding overhead; not a loading-time or GPU benchmark. Frames are existing diorama canvas, not a composited HUD screenshot.';
     }
+    if(window.__desktopSmokeCoverage===true&&!report.checks.worldSelection)report.checks.worldSelection={requested:window.__desktopSmokeSelection,actual:window.__wildGuardiansSmokeCoverage??null};
     report.ok = !error && report.errors.length === 0;
     await window.__TAURI_INTERNALS__.invoke('desktop_smoke_report', {report});
   }
@@ -141,6 +142,9 @@
     return {passed:true,transitions,hiddenMs,visibleMs,resumedSimulatedSeconds:delta,hiddenStart:core(hiddenStart),hiddenEnd:core(hiddenEnd),visibleMenuPauses:visibleMenu.pauses,scope:'Real native minimization and restoration. Hidden is the sole blocker during the measured interval; menu is retained at its end to test stacked pauses on restoration. Save buttons intentionally add notices, so comparison covers simulation fields and excludes savedAt, notices, tutorial presentation and their nextId counter. No document.hidden override or synthetic visibilitychange.'};
   }
   try {
+    if (window.__desktopSmokeCoverageError) throw Error(window.__desktopSmokeCoverageError);
+    const selection=window.__desktopSmokeSelection??{biome:'gran-canon',culture:'mapungubwe'};
+    if (!['sabana','gran-rio','manglares','volcanes','gran-canon','desierto'].includes(selection.biome)||!['mapungubwe','saheliana','suajili','musgum','etiope'].includes(selection.culture)) throw Error('Invalid smoke world selection');
     const load = async path => { const response = await fetch(new URL(path, location.href)); if (!response.ok) throw Error(`${path}: ${response.status}`); return response; };
     const manifest = await (await load('content/web-assets.json')).json();
     const {decodeWebGlb} = await import(new URL('runtime/glb-legacy.js', location.href));
@@ -182,9 +186,10 @@
     if (fixture) {
       localStorage.setItem('wild-guardians:slot:'+fixture.slotId,fixture.snapshot);
       report.checks.fixtureMenuList=await listFixtureForSmoke(menu,fixture,send);
+      if(window.__desktopSmokeCoverage===true&&(report.checks.fixtureMenuList.preview.biome!==selection.biome||report.checks.fixtureMenuList.preview.culture!==selection.culture))throw Error('Fixture preview does not match requested smoke selection');
       send({action:'load-slot',slotId:fixture.slotId});
     }
-    else send({action: 'start', biome: 'gran-canon', culture: 'mapungubwe'});
+    else send({action: 'start', biome: selection.biome, culture: selection.culture});
     worldStartedAt = performance.now();
     const worldEnd = worldStartedAt + 90000;
     while (document.querySelector('#stage')?.getAttribute('aria-busy') !== 'false' && performance.now() < worldEnd) await new Promise(resolve => setTimeout(resolve, 100));
@@ -193,7 +198,13 @@
     await new Promise(resolve => setTimeout(resolve, 1000));
     const world = document.querySelector('#world');
     if (!world || world.width === 0 || world.height === 0) throw Error('Production world canvas missing');
-    report.checks.world = {biome: 'gran-canon', culture: 'mapungubwe', width: world.width, height: world.height};
+    const restored=report.checks.fixtureMenuList?.preview;
+    report.checks.world = {biome: restored?.biome??selection.biome, culture: restored?.culture??selection.culture, width: world.width, height: world.height, provenance:restored?'actual menu save preview':'requested NewGame selection'};
+    if(window.__desktopSmokeCoverage===true){
+      const observation=window.__wildGuardiansSmokeCoverage;
+      report.checks.worldSelection={requested:selection,restoredPreview:restored??null,actual:observation??null,scope:'Scalar App configuration/ready provenance; no synthetic clock or saved crops.'};
+      if(observation?.phase!=='ready'||observation.actual?.biome!==selection.biome||observation.actual?.culture!==selection.culture||(fixture&&observation.actual.slotId!==fixture.slotId))throw Error('Actual ready world does not match smoke selection');
+    }
     await new Promise(resolve => requestAnimationFrame(resolve));
     report.worldPng = world.toDataURL('image/png');
     if (fixture) report.checks.visibility = await checkVisibility(fixture);

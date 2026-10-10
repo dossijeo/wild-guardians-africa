@@ -40,6 +40,11 @@ fn main() {
                         }
                     }
                 }
+                match smoke_coverage_selection(&std::env::args().collect::<Vec<_>>()) {
+                    Ok(Some(selection)) => { let _ = webview.eval(&format!("window.__desktopSmokeCoverage = true; window.__desktopSmokeSelection = {};", selection)); }
+                    Err(error) => { let _ = webview.eval(&format!("window.__desktopSmokeCoverageError = {};", serde_json::json!(error))); }
+                    Ok(None) => {}
+                }
                 let _ = webview.eval(include_str!("../smoke.js"));
             }
         })
@@ -81,4 +86,45 @@ fn desktop_smoke_report(app: tauri::AppHandle, report: serde_json::Value) -> Res
         .map_err(|e| e.to_string())?;
     app.exit(if report["ok"].as_bool() == Some(true) { 0 } else { 1 });
     Ok(())
+}
+
+// Explicit paired selection is available only inside the guarded smoke page load.
+fn smoke_coverage_selection(args: &[String]) -> Result<Option<serde_json::Value>, String> {
+    if !args.iter().any(|arg| arg == "--smoke-report") { return Ok(None); }
+    let read = |flag: &str| -> Result<Option<String>, String> {
+        let indexes: Vec<_> = args.iter().enumerate().filter(|(_, arg)| arg.as_str() == flag).map(|(index, _)| index).collect();
+        if indexes.len() > 1 { return Err(format!("Duplicate {}", flag)); }
+        match indexes.first() {
+            Some(index) => args.get(index + 1).filter(|value| !value.starts_with("--")).cloned().map(Some).ok_or(format!("Missing {} value", flag)),
+            None => Ok(None),
+        }
+    };
+    match (read("--smoke-biome")?, read("--smoke-culture")?) {
+        (None, None) => Ok(None),
+        (Some(biome), Some(culture)) => {
+            if !["sabana", "gran-rio", "manglares", "volcanes", "gran-canon", "desierto"].contains(&biome.as_str()) || !["mapungubwe", "saheliana", "suajili", "musgum", "etiope"].contains(&culture.as_str()) { return Err("Invalid smoke biome/culture selection".into()); }
+            Ok(Some(serde_json::json!({"biome":biome,"culture":culture})))
+        }
+        _ => Err("Smoke biome and culture must be supplied together".into()),
+    }
+}
+
+#[cfg(test)]
+mod smoke_coverage_tests {
+    use super::smoke_coverage_selection;
+    fn args(values: &[&str]) -> Vec<String> { values.iter().map(|value| value.to_string()).collect() }
+    #[test]
+    fn paired_selection_and_off_guard() {
+        assert_eq!(smoke_coverage_selection(&args(&["app", "--smoke-report", "report.json"])).unwrap(), None);
+        assert_eq!(smoke_coverage_selection(&args(&["app", "--smoke-biome", "sabana", "--smoke-culture", "musgum"])).unwrap(), None);
+        let selected=smoke_coverage_selection(&args(&["app", "--smoke-report", "report.json", "--smoke-biome", "sabana", "--smoke-culture", "musgum"])).unwrap().unwrap();
+        assert_eq!(selected["biome"], "sabana"); assert_eq!(selected["culture"], "musgum");
+    }
+    #[test]
+    fn partial_duplicate_missing_and_invalid_fail() {
+        for tail in [vec!["--smoke-biome", "sabana"],vec!["--smoke-culture", "musgum"],vec!["--smoke-biome"],vec!["--smoke-biome", "bad", "--smoke-culture", "musgum"],vec!["--smoke-biome", "sabana", "--smoke-culture", "bad"],vec!["--smoke-biome", "sabana", "--smoke-biome", "sabana", "--smoke-culture", "musgum"]] {
+            let mut values=vec!["app", "--smoke-report", "report.json"]; values.extend(tail);
+            assert!(smoke_coverage_selection(&args(&values)).is_err());
+        }
+    }
 }
