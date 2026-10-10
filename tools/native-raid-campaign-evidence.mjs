@@ -8,9 +8,9 @@ export function createNativeRaidCampaignEvidence(initial){
  function begin(s,events,event){
   const facts=event?.raidFacts,cohort=facts?.actors??s.raid?.animals;
   if(!cohort){issue('RaidSpawned and exit occurred without an observable cohort');return;}
-  const r={id:facts?.id??s.raid.id,day:facts?.day??s.day,daytime:!!(facts?.daytime??s.raid.daytime),spawnElapsed:facts?.elapsed??null,exposureStatus:facts?'exact-native-spawn':'observation-interval',observedAt:s.elapsed,ended:false,species:{},cropHits:0,cropsDestroyed:0,cropReplacementCost:0,lostBaseHarvestValue:0,structureHits:0,wallHits:0,centerHits:0,structureHpLost:0,wallHpLost:0,structuresRuined:[],shieldContacts:0,misses:0,logicalContacts:0,workerHits:0,actors:[]};
+  const r={id:facts?.id??s.raid.id,day:facts?.day??s.day,daytime:!!(facts?.daytime??s.raid.daytime),spawnElapsed:facts?.elapsed??null,exposureStatus:facts?'exact-native-spawn':'observation-interval',observedAt:s.elapsed,ended:false,species:{},cropHits:0,cropsDestroyed:0,cropReplacementCost:0,lostBaseHarvestValue:0,structureHits:0,wallHits:0,centerHits:0,structureHpLost:0,wallHpLost:0,structuresRuined:[],shieldContacts:0,misses:0,logicalContacts:0,workerHits:0,workerIncapacitations:0,actors:[]};
   for(const a of cohort){
-   const spec=animalSpec(a.species),v=r.species[a.species]??={generated:0,initialHitBudget:0,maximumStructureDamage:0,contacts:0,misses:0,cropHits:0,structureHits:0,shieldContacts:0,workerHits:0};
+   const spec=animalSpec(a.species),v=r.species[a.species]??={generated:0,initialHitBudget:0,maximumStructureDamage:0,contacts:0,misses:0,cropHits:0,structureHits:0,shieldContacts:0,workerHits:0,workerIncapacitations:0};
    r.actors.push({id:a.id,species:a.species,spawn:structuredClone(a.spawn),exit:structuredClone(a.exit)});
    v.generated++;v.initialHitBudget+=a.hitsRemaining;
    assert.ok(Number.isSafeInteger(a.hitsRemaining)&&a.hitsRemaining>=0);
@@ -54,7 +54,7 @@ export function createNativeRaidCampaignEvidence(initial){
     r.waves.push({index:f.waveIndex,elapsed:f.elapsed,actors:f.actors.length,exposedLiving:f.exposedLiving});
     for(const a of f.actors){
      if(r.actors.some(v=>v.id===a.id)){issue('Duplicate native wave actor');continue;}
-     const spec=animalSpec(a.species),v=r.species[a.species]??={generated:0,initialHitBudget:0,maximumStructureDamage:0,contacts:0,misses:0,cropHits:0,structureHits:0,shieldContacts:0,workerHits:0};
+     const spec=animalSpec(a.species),v=r.species[a.species]??={generated:0,initialHitBudget:0,maximumStructureDamage:0,contacts:0,misses:0,cropHits:0,structureHits:0,shieldContacts:0,workerHits:0,workerIncapacitations:0};
      assert.ok(Number.isSafeInteger(a.hitsRemaining)&&a.hitsRemaining>=0);
      r.actors.push({id:a.id,species:a.species,spawn:structuredClone(a.spawn),exit:structuredClone(a.exit)});
      v.generated++;v.initialHitBudget+=a.hitsRemaining;v.maximumStructureDamage+=a.hitsRemaining*(a.damageProfile?.structureDamage??spec.structure_hit_damage);
@@ -84,7 +84,7 @@ export function createNativeRaidCampaignEvidence(initial){
     r.structureHits++;r.structureHpLost+=loss;pendingStructure++;
     if(hit.kind==='wall'){r.wallHits++;r.wallHpLost+=loss;}else if(hit.kind==='center')r.centerHits++;
    }
-   if(e.type==='WorkerHit'){const species=r.actors.find(a=>a.id===e.animalId)?.species,v=r.species[species];if(!v)issue('Worker hit actor missing');else{r.workerHits++;v.workerHits++;}}
+   if(e.type==='WorkerHit'||e.type==='WorkerIncapacitated'){const species=r.actors.find(a=>a.id===e.animalId)?.species,v=r.species[species];if(!v)issue('Worker hit actor missing');else{r.workerHits++;v.workerHits++;if(e.type==='WorkerIncapacitated'){r.workerIncapacitations++;v.workerIncapacitations++;}}}
    if(e.type==='StructureRuined')r.structuresRuined.push(e.targetId);
    if(e.type==='AnimalLogicalHit'||e.type==='AnimalLogicalMiss'){
     const v=r.species[e.species];if(!v){issue('Logical contact species absent');continue;}

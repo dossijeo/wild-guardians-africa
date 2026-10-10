@@ -6,6 +6,7 @@ import {enclosureFixture} from '../tools/probe-camera-enclosure.mjs';
 import {spawnRaid,updateRaid} from '../src/simulation/raids.js';
 import {createNativeRaidCampaignEvidence} from '../tools/native-raid-campaign-evidence.mjs';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
+import {updateWorkerEncounters} from '../src/simulation/encounters.js';
 function fixture(){
  const s=Game.newGame({seed:712,slotId:'raid-observer'});Game.resume(s,'intro');
  const nav=new Navigation(712,'sabana',{});nav.field={blocked:()=>false,slope:()=>0,surface:()=>0};nav.propsAt=()=>[];nav.activeBounds=[-48,-48,48,48];nav.setState(s);
@@ -54,4 +55,18 @@ test('exact native spawn receipt survives a full incursion between observer call
  const {s,nav}=fixture(),observer=createNativeRaidCampaignEvidence(s);spawnRaid(s,{group:['warthog']},nav);const initial=s.raid.animals[0].hitsRemaining;
  for(let i=0;s.raid&&i<12000;i++)Game.tick(s,.05,nav);
  assert.equal(s.raid,null);const r=observer.report(s);assert.equal(r.status,'verified');assert.equal(r.raids[0].species.warthog.initialHitBudget,initial);assert.equal(r.raids[0].exposedLivingAtSpawn,1);assert.equal(r.raids[0].ended,true);
+});
+
+test('native worker incapacitation consumes an observed hit without pretending it damaged crops',()=>{
+ const {s,nav}=fixture(),observer=createNativeRaidCampaignEvidence(s);spawnRaid(s,{group:['warthog']},nav);observer.observe(s);
+ const animal=s.raid.animals[0],initial=animal.hitsRemaining;assert.ok(initial>=2);
+ // Two physical overlap fixtures: the second worker has one prior injury.
+ s.people=[{id:'observer-person-one',profile:'olderMale'},{id:'observer-person-two',profile:'olderMale'}];
+ s.workers=s.people.map((person,i)=>({id:`observer-worker-${i}`,personId:person.id,profile:person.profile,x:animal.x,z:animal.z+.1,hits:i,status:'fleeing',incapacitated:false}));
+ updateWorkerEncounters(s,nav);assert.ok(s.events.some(e=>e.type==='WorkerHit'));assert.ok(s.events.some(e=>e.type==='WorkerIncapacitated'));
+ assert.equal(animal.hitsRemaining,initial-2);const before=serialize(s),report=observer.report(s);assert.equal(serialize(s),before);
+ assert.equal(report.status,'verified');const raid=report.raids[0],species=raid.species.warthog;
+ assert.equal(raid.workerHits,2);assert.equal(raid.workerIncapacitations,1);assert.equal(species.workerHits,2);assert.equal(species.workerIncapacitations,1);
+ assert.equal(species.observedBudgetConsumed,2);assert.equal(species.unconsumedOrUnobservedBudget,animal.hitsRemaining);assert.equal(raid.cropHits,0);assert.equal(raid.structureHits,0);
+ observer.observe(s);assert.equal(observer.report(s).raids[0].workerHits,2,'Repeated observation must not duplicate encounters');
 });

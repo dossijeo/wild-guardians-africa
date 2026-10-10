@@ -1,0 +1,124 @@
+TAP version 13
+# (node:6724) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: A rejected frontal encounter rolls once, but later physical overlap makes the hit mandatory
+ok 1 - A rejected frontal encounter rolls once, but later physical overlap makes the hit mandatory
+  ---
+  duration_ms: 3.6129
+  ...
+# Subtest: A non-overlapping passage behind the animal never rolls or spends a hit
+ok 2 - A non-overlapping passage behind the animal never rolls or spends a hit
+  ---
+  duration_ms: 0.5471
+  ...
+# Subtest: One continuing encounter hits once; leaving and returning permits the second hit of the same animal
+ok 3 - One continuing encounter hits once; leaving and returning permits the second hit of the same animal
+  ---
+  duration_ms: 0.687
+  ...
+# Subtest: Saving inside a rejected encounter preserves its roll and resumes without frame-by-frame retries
+ok 4 - Saving inside a rejected encounter preserves its roll and resumes without frame-by-frame retries
+  ---
+  duration_ms: 2.0872
+  ...
+# Subtest: Continuous relative trajectories detect an overlap even when both endpoints lie outside the encounter radius
+ok 5 - Continuous relative trajectories detect an overlap even when both endpoints lie outside the encounter radius
+  ---
+  duration_ms: 0.3925
+  ...
+# Subtest: Physical pushes check their whole path and turn along a wall instead of crossing it
+ok 6 - Physical pushes check their whole path and turn along a wall instead of crossing it
+  ---
+  duration_ms: 0.2812
+  ...
+# Subtest: A completely blocked push keeps the worker on valid terrain and does not jump to a valid far endpoint
+ok 7 - A completely blocked push keeps the worker on valid terrain and does not jump to a valid far endpoint
+  ---
+  duration_ms: 0.2457
+  ...
+# Subtest: Retreating animals and exhausted hit budgets cannot create a free worker hit
+ok 8 - Retreating animals and exhausted hit budgets cannot create a free worker hit
+  ---
+  duration_ms: 0.2772
+  ...
+# Subtest: Recovery remains attached to the injured person during re-hiring and clears on the following day
+ok 9 - Recovery remains attached to the injured person during re-hiring and clears on the following day
+  ---
+  duration_ms: 59.5831
+  ...
+# Subtest: Valid frontal encounters preserve the approved sixty-percent probability across a reproducible sample
+ok 10 - Valid frontal encounters preserve the approved sixty-percent probability across a reproducible sample
+  ---
+  duration_ms: 59.2948
+  ...
+# Subtest: Raid survivors return walking even with urgent tasks, and resume ordinary running only after arrival
+ok 11 - Raid survivors return walking even with urgent tasks, and resume ordinary running only after arrival
+  ---
+  duration_ms: 18.1581
+  ...
+# Subtest: contract: only a unique delivered-crate settled payment becomes income, not crop maturity or refund
+ok 12 - contract: only a unique delivered-crate settled payment becomes income, not crop maturity or refund
+  ---
+  duration_ms: 3.7987
+  ...
+# Subtest: contract: repair time stays idle; only paid restoring completion credits the original request decision
+ok 13 - contract: repair time stays idle; only paid restoring completion credits the original request decision
+  ---
+  duration_ms: 0.9726
+  ...
+# Subtest: contract: day-boundary events belong to the outgoing decision; missing event windows fail closed
+ok 14 - contract: day-boundary events belong to the outgoing decision; missing event windows fail closed
+  ---
+  duration_ms: 0.6041
+  ...
+# Subtest: every no-command daytime reason counts idle, including navigation, raid and unknown; pending clocks add zero
+ok 15 - every no-command daytime reason counts idle, including navigation, raid and unknown; pending clocks add zero
+  ---
+  duration_ms: 0.631
+  ...
+# (node:52008) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: observer contract counts several area receipts as one consumed attack and sums clamped damage
+ok 16 - observer contract counts several area receipts as one consumed attack and sums clamped damage
+  ---
+  duration_ms: 15.5245
+  ...
+# Subtest: native contacts reconcile budgets and physical crop replacement costs without mutation through reload
+ok 17 - native contacts reconcile budgets and physical crop replacement costs without mutation through reload
+  ---
+  duration_ms: 98.0536
+  ...
+# Subtest: native shield contacts spend budget without reporting fictitious crop or structure damage
+ok 18 - native shield contacts spend budget without reporting fictitious crop or structure damage
+  ---
+  duration_ms: 60.199
+  ...
+# Subtest: lost event window is incomplete instead of silently inventing raid facts
+ok 19 - lost event window is incomplete instead of silently inventing raid facts
+  ---
+  duration_ms: 2.6466
+  ...
+# Subtest: native wall interception uses measured HP loss rather than protection multiplier
+ok 20 - native wall interception uses measured HP loss rather than protection multiplier
+  ---
+  duration_ms: 166.8939
+  ...
+# Subtest: exact native spawn receipt survives a full incursion between observer calls
+ok 21 - exact native spawn receipt survives a full incursion between observer calls
+  ---
+  duration_ms: 54.7813
+  ...
+# Subtest: native worker incapacitation consumes an observed hit without pretending it damaged crops
+ok 22 - native worker incapacitation consumes an observed hit without pretending it damaged crops
+  ---
+  duration_ms: 6.6245
+  ...
+1..22
+# tests 22
+# suites 0
+# pass 22
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 657.3599
