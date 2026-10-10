@@ -1,0 +1,138 @@
+{
+  "source": "8a516d46108559bbed4a826987df7f5e6196a5f5",
+  "checkout": "C:\\Users\\PC\\.codex\\worktrees\\interactive-loading-screen\\wild-guardians-africa\\.cache\\loading-shallow-gv9ctos5\\checkout",
+  "shallow": true,
+  "commitCount": 1,
+  "historicalRefAbsent": true,
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "clone",
+        "--shared",
+        "--bare",
+        "C:\\Users\\PC\\.codex\\worktrees\\interactive-loading-screen\\wild-guardians-africa",
+        "C:\\Users\\PC\\.codex\\worktrees\\interactive-loading-screen\\wild-guardians-africa\\.cache\\loading-shallow-gv9ctos5\\proxy.git"
+      ],
+      "cwd": "C:\\Users\\PC\\.codex\\worktrees\\interactive-loading-screen\\wild-guardians-africa",
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "config",
+        "uploadpack.allowFilter",
+        "true"
+      ],
+      "cwd": "C:\\Users\\PC\\.codex\\worktrees\\interactive-loading-screen\\wild-guardians-africa\\.cache\\loading-shallow-gv9ctos5\\proxy.git",
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "clone",
+        "--depth",
+        "1",
+        "--filter=blob:none",
+        "--no-checkout",
+        "file:///C:/Users/PC/.codex/worktrees/interactive-loading-screen/wild-guardians-africa/.cache/loading-shallow-gv9ctos5/proxy.git",
+        "C:\\Users\\PC\\.codex\\worktrees\\interactive-loading-screen\\wild-guardians-africa\\.cache\\loading-shallow-gv9ctos5\\checkout"
+      ],
+      "cwd": "C:\\Users\\PC\\.codex\\worktrees\\interactive-loading-screen\\wild-guardians-africa",
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "sparse-checkout",
+        "init",
+        "--no-cone"
+      ],
+      "cwd": "C:\\Users\\PC\\.codex\\worktrees\\interactive-loading-screen\\wild-guardians-africa\\.cache\\loading-shallow-gv9ctos5\\checkout",
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "sparse-checkout",
+        "set",
+        "--no-cone",
+        "/src/",
+        "/src-tauri/smoke.js",
+        "/src-tauri/src/main.rs",
+        "/tests/",
+        "/content/",
+        "/public/content/",
+        "/public/menu/native.js",
+        "/.github/workflows/windows.yml",
+        "/package.json"
+      ],
+      "cwd": "C:\\Users\\PC\\.codex\\worktrees\\interactive-loading-screen\\wild-guardians-africa\\.cache\\loading-shallow-gv9ctos5\\checkout",
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "checkout"
+      ],
+      "cwd": "C:\\Users\\PC\\.codex\\worktrees\\interactive-loading-screen\\wild-guardians-africa\\.cache\\loading-shallow-gv9ctos5\\checkout",
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "--is-shallow-repository"
+      ],
+      "cwd": "C:\\Users\\PC\\.codex\\worktrees\\interactive-loading-screen\\wild-guardians-africa\\.cache\\loading-shallow-gv9ctos5\\checkout",
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "rev-list",
+        "--count",
+        "HEAD"
+      ],
+      "cwd": "C:\\Users\\PC\\.codex\\worktrees\\interactive-loading-screen\\wild-guardians-africa\\.cache\\loading-shallow-gv9ctos5\\checkout",
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "cat-file",
+        "-e",
+        "0e94d7be^{commit}"
+      ],
+      "cwd": "C:\\Users\\PC\\.codex\\worktrees\\interactive-loading-screen\\wild-guardians-africa\\.cache\\loading-shallow-gv9ctos5\\checkout",
+      "exitCode": 128
+    },
+    {
+      "argv": [
+        "node",
+        "--test",
+        "--test-name-pattern=App retains|only fixture flow|App trace wiring|only exact trace hunks|wiring outside|GPU warm|frozen source",
+        "tests/crop-partition-app.test.js",
+        "tests/desktop-smoke-fixture-menu.test.js",
+        "tests/native-loading-trace-bridge.test.js",
+        "tests/world-crop-pair.test.js",
+        "tests/world-crop-pair-wiring.test.js",
+        "tests/frozen-loading-source.test.js"
+      ],
+      "cwd": "C:\\Users\\PC\\.codex\\worktrees\\interactive-loading-screen\\wild-guardians-africa\\.cache\\loading-shallow-gv9ctos5\\checkout",
+      "exitCode": 1
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "C:\\Users\\PC\\.codex\\worktrees\\interactive-loading-screen\\wild-guardians-africa\\.cache\\loading-shallow-gv9ctos5\\checkout",
+      "exitCode": 0
+    }
+  ],
+  "testExitCode": 1,
+  "logSha256": "59521e49f7b21a55f304a0fa2a93826581da0ae007cd739febff3aa417dcd6e9",
+  "scope": "Actual depth1 partial Git checkout; source invariant tests only, no asset payload parsing or native execution."
+}

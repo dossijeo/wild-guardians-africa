@@ -1,0 +1,178 @@
+{
+  "runtimeBaseline": "28b681f36b7a49ce6f89f4f5fd2307f9d96ffa93",
+  "sourceFixCommit": "8a516d46",
+  "scope": "Tests and evidence only; runtime, wiring, assets and gates byte-identical. No build or CI dispatch needed/performed.",
+  "originalValidateRun": 38024594104,
+  "originalFailure": {
+    "tests": 3882,
+    "passed": 3875,
+    "failed": 6,
+    "skip": 1,
+    "cause": "Historical refs absent in shallow Git checkout; six source equivalence invariants failed before comparison."
+  },
+  "fixtures": {
+    "count": 19,
+    "rawBytes": 475517,
+    "gzipBytes": 148850,
+    "provenance": "manifest contains exact full Git commits, paths, original Git blob OIDs and SHA256; verified independently against original Git show bytes."
+  },
+  "source": [
+    {
+      "path": "tests/crop-partition-app.test.js",
+      "sha256": "b508745c4b1753147f87cc4997ca3111235417e78e3f9cd2994e6269e47a4d42"
+    },
+    {
+      "path": "tests/desktop-smoke-fixture-menu.test.js",
+      "sha256": "806265ce12d49c6a34134dd29c73bd4e91aabc837a96d16aeb3110ab959bbf35"
+    },
+    {
+      "path": "tests/fixtures/frozen-loading-source/0e94d7be-.github_workflows_windows.yml.gz",
+      "sha256": "cece8a27fb20810e3e6f3f6bc646862726975670addacc986df06c73ab332911"
+    },
+    {
+      "path": "tests/fixtures/frozen-loading-source/0e94d7be-public_menu_native.js.gz",
+      "sha256": "2eec5c6d83468b9db3dd11b388bcd003ce2ae4136dbfcccc949d148b8663d07b"
+    },
+    {
+      "path": "tests/fixtures/frozen-loading-source/0e94d7be-src_app_loading-downloads.js.gz",
+      "sha256": "45ed5f98fad8253d315fa536f4993abbe62908a53f49b1082d21c4a2866f2181"
+    },
+    {
+      "path": "tests/fixtures/frozen-loading-source/0e94d7be-src_app_main.js.gz",
+      "sha256": "f58303e24ad2ee30ffd9776ebe36884a1ca1de919cd11b8c5a2612d88049f27b"
+    },
+    {
+      "path": "tests/fixtures/frozen-loading-source/0e94d7be-src_rendering_loading-programs.js.gz",
+      "sha256": "29b8d5c5efa32f51bddf0512c556e2c60470122752de83a5156a4a81c2d8a56e"
+    },
+    {
+      "path": "tests/fixtures/frozen-loading-source/0e94d7be-src_rendering_loading-yield-budget.js.gz",
+      "sha256": "197ad4cd273761c3e21c1bb076ba8f52225cc63cd7db53b6cc15503e6504f165"
+    },
+    {
+      "path": "tests/fixtures/frozen-loading-source/0e94d7be-src_simulation_game.js.gz",
+      "sha256": "7754bdafd59b67c248a369c25820dd923468c6423fcff5d9fdb09510a9c367ea"
+    },
+    {
+      "path": "tests/fixtures/frozen-loading-source/0e94d7be-src_ui_menu-integration.js.gz",
+      "sha256": "e9b115146e544c5e06a662630bff4cb9248e53f99d27356ff8c03c7b4b89725a"
+    },
+    {
+      "path": "tests/fixtures/frozen-loading-source/71917b71-src-tauri_smoke.js.gz",
+      "sha256": "f4ac217c9e9ec92f2f123cd4af21884322ce12a7c4b64accc2cb24d8efa861f1"
+    },
+    {
+      "path": "tests/fixtures/frozen-loading-source/71917b71-src-tauri_src_main.rs.gz",
+      "sha256": "f2729a419a3f1d2dbb87a43239db452f4efc8b7e88298da9848a02ee22a39680"
+    },
+    {
+      "path": "tests/fixtures/frozen-loading-source/71917b71-src_app_main.js.gz",
+      "sha256": "97fdb7ce3ebe194d88f4d59307546d587e8ab2df49e31b7549e1012ca5ad4ac9"
+    },
+    {
+      "path": "tests/fixtures/frozen-loading-source/71d4db4e-.github_workflows_windows.yml.gz",
+      "sha256": "09ecc167fcbb7bb3d862387f060ba38a4ba06d234d90e382ac861e7ab02cb4c0"
+    },
+    {
+      "path": "tests/fixtures/frozen-loading-source/71d4db4e-src-tauri_smoke.js.gz",
+      "sha256": "ae3de1919c438a22db88b813da77a9489b195b93acbb11710315b7a1038b757a"
+    },
+    {
+      "path": "tests/fixtures/frozen-loading-source/71d4db4e-src-tauri_src_main.rs.gz",
+      "sha256": "69eb1ed1b8972f6fe9d4ebb8ea479c4452c604ada74744552d998e3f917ac228"
+    },
+    {
+      "path": "tests/fixtures/frozen-loading-source/71d4db4e-src_app_main.js.gz",
+      "sha256": "6a739decb3449fe1b85f2c9c6f9274253ffaec19a49a0d0a6088a922f9ec2dd8"
+    },
+    {
+      "path": "tests/fixtures/frozen-loading-source/8fb7f437-src-tauri_smoke.js.gz",
+      "sha256": "88a249af120738f654a4f2baf41c4b0182861825a541139713b0ea4ee4c65fc1"
+    },
+    {
+      "path": "tests/fixtures/frozen-loading-source/8fb7f437-src-tauri_src_main.rs.gz",
+      "sha256": "65176d5e1e8ac7972db4f710b603d407f9daf2a14a70efbf59a1f5b0781e0982"
+    },
+    {
+      "path": "tests/fixtures/frozen-loading-source/9cc3ba2f-src_rendering_scene.js.gz",
+      "sha256": "bd391283410e9aea951ca83604e389a8b4aa606fa670d752844d23040d4cd60c"
+    },
+    {
+      "path": "tests/fixtures/frozen-loading-source/b76cda99-src-tauri_smoke.js.gz",
+      "sha256": "6732739f1caa94c96c971e44999b2f21c518a11fa6365ac425219c8f0e408681"
+    },
+    {
+      "path": "tests/fixtures/frozen-loading-source/manifest.json",
+      "sha256": "3e320c69f8d1dd271adccd0e8e870539309779d4d1d64eea7d456d94a5cb6a4e"
+    },
+    {
+      "path": "tests/frozen-loading-source.js",
+      "sha256": "2693262ade0a5b0563950bceca5f4ac3702c47e7e6315a3c2e9a0e115db46631"
+    },
+    {
+      "path": "tests/frozen-loading-source.test.js",
+      "sha256": "03e3a94bed0d5d9bbb4dbb4352b02ca8bcdd54e7f2ce244061631c868971625f"
+    },
+    {
+      "path": "tests/native-loading-trace-bridge.test.js",
+      "sha256": "7c3877ffc94139a4853c6147ab32ff827afe04e0c690be3851e4f064c00d9c26"
+    },
+    {
+      "path": "tests/world-crop-pair-wiring.test.js",
+      "sha256": "e8d487a87f94268d778d3eead696b48d273de7f0622d381c65ea2d6612ea8830"
+    },
+    {
+      "path": "tests/world-crop-pair.test.js",
+      "sha256": "7876be289fe6d84af8dae1425b682fac774b3d1fd012f09e5ca48f88ae09049c"
+    }
+  ],
+  "logs": [
+    {
+      "path": "validate-failed-original.log.gz",
+      "bytes": 1932120,
+      "sha256": "9d9dfe97811438e4fd2228f496bf6a7b8e69a3afa28ae2b977c66355a64d1f7a",
+      "gzipSha256": "57595ace09684aff2d88ee075df68b28abb6f5744dad2367ac7c06f7f9fb7058"
+    },
+    {
+      "path": "local-targeted-tests.log.gz",
+      "bytes": 7208,
+      "sha256": "bd36b3b295d447501ea8ee436125df30c9f257988edb07576e68818d3f4aacdd",
+      "gzipSha256": "87be946b25b6b40bf405062d9c1d8bd820411e7812e69cfc9d4cf53db24b444f"
+    },
+    {
+      "path": "fixture-identity.log.gz",
+      "bytes": 339,
+      "sha256": "773d2758b1e7a6b52fb9b7a8e95e59165b4f7278e72cc0e321f7ee6bd7b138c5",
+      "gzipSha256": "e66526c98e0391f3eb0da8d3865f0602ed7f479d6fec56e468cd2e7d3f4cbd1a"
+    },
+    {
+      "path": "shallow-source-tests.log.gz",
+      "bytes": 8199,
+      "sha256": "b70f8a46f42ef1dfa7bc68fb60020a4882d67040c607c91dffc7b62316a73e18",
+      "gzipSha256": "8aa0abefeca778d5a004afbeb023d0525540796518d5be4b7c0215fca8fbde04"
+    },
+    {
+      "path": "shallow-incomplete-sparse-negative.log.gz",
+      "bytes": 9116,
+      "sha256": "59521e49f7b21a55f304a0fa2a93826581da0ae007cd739febff3aa417dcd6e9",
+      "gzipSha256": "28398ee3e33c258ab939ca50975a7c5b2c9db7db813db03cc3d893c942a0e02c"
+    }
+  ],
+  "shallowProof": {
+    "depth": 1,
+    "commitCount": 1,
+    "historicalRefAbsent": true,
+    "passedInvariantAndIdentityTests": 7,
+    "failed": 0,
+    "otherTestsNotSelected": 24,
+    "durationMs": 2668.6823,
+    "source": "8a516d46",
+    "receipt": "shallow-receipt.json"
+  },
+  "localPriorTargeted": {
+    "pass": 30,
+    "fail": 0,
+    "durationMs": 8379.0378,
+    "scope": "Original affected files all tests; completed before root native reservation."
+  }
+}

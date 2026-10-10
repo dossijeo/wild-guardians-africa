@@ -9,7 +9,7 @@ run(['git','clone','--shared','--bare',str(root),str(proxy)])
 run(['git','config','uploadpack.allowFilter','true'],proxy)
 run(['git','clone','--depth','1','--filter=blob:none','--no-checkout',proxy.as_uri(),str(checkout)])
 run(['git','sparse-checkout','init','--no-cone'],checkout)
-run(['git','sparse-checkout','set','--no-cone','/src/','/src-tauri/smoke.js','/src-tauri/src/main.rs','/tests/','/content/','/public/content/','/public/menu/native.js','/.github/workflows/windows.yml','/package.json'],checkout)
+run(['git','sparse-checkout','set','--no-cone','/src/','/tools/','/src-tauri/smoke.js','/src-tauri/src/main.rs','/tests/','/content/','/public/content/','/public/menu/native.js','/.github/workflows/windows.yml','/package.json'],checkout)
 run(['git','checkout'],checkout)
 assert run(['git','rev-parse','--is-shallow-repository'],checkout).stdout.strip()=='true'
 assert run(['git','rev-list','--count','HEAD'],checkout).stdout.strip()=='1'
