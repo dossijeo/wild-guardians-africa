@@ -26,7 +26,7 @@ export class RaidEntryPreparer {
     this.state=state;
     if(this.disposed||!this.worker)return;
     const plan=activeRaidEntryPlan(state);
-    if(state.raid||state.result||state.postgame||!plan||plan.done){this.ready=null;this.nav.pendingRaidEntry=null;return;}
+    if(state.result||state.postgame||!plan||plan.done){this.ready=null;this.nav.pendingRaidEntry=null;return;}
     const key=raidEntryKey(state,this.nav,plan.group),context=raidEntryContextKey(state,this.nav,plan.group);
     if(this.nav.pendingRaidEntry&&this.nav.pendingRaidEntry.contextKey!==context)this.nav.pendingRaidEntry=null;
     if(this.ready&&this.ready.key!==key)this.ready=null;

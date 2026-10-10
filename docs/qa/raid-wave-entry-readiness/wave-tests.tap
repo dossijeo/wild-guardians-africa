@@ -1,0 +1,85 @@
+TAP version 13
+# Subtest: only all-gone previous actors permit valid1..16 next-wave preparation
+ok 1 - only all-gone previous actors permit valid1..16 next-wave preparation
+  ---
+  duration_ms: 283.377
+  ...
+# Subtest: malformed/finished waves do not escape active raid veto
+ok 2 - malformed/finished waves do not escape active raid veto
+  ---
+  duration_ms: 1690.0401
+  ...
+# Subtest: request copies current workers/incapacitation and wave owner without former raid actors
+ok 3 - request copies current workers/incapacitation and wave owner without former raid actors
+  ---
+  duration_ms: 176.6861
+  ...
+# Subtest: native complete16-actor prepared entry remains exterior/legal and keeps exact state/RNG through reload
+ok 4 - native complete16-actor prepared entry remains exterior/legal and keeps exact state/RNG through reload
+  ---
+  duration_ms: 415.1063
+  ...
+# Subtest: wave-index: stale wave reply cannot install or be taken
+ok 5 - wave-index: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 218.5173
+  ...
+# Subtest: raid-id: stale wave reply cannot install or be taken
+ok 6 - raid-id: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 198.8471
+  ...
+# Subtest: camera: stale wave reply cannot install or be taken
+ok 7 - camera: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 198.8104
+  ...
+# Subtest: topology: stale wave reply cannot install or be taken
+ok 8 - topology: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 228.8015
+  ...
+# Subtest: bounds: stale wave reply cannot install or be taken
+ok 9 - bounds: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 205.348
+  ...
+# Subtest: rng: stale wave reply cannot install or be taken
+ok 10 - rng: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 189.9263
+  ...
+# Subtest: worker: stale wave reply cannot install or be taken
+ok 11 - worker: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 206.7462
+  ...
+# Subtest: finished: stale wave reply cannot install or be taken
+ok 12 - finished: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 214.0106
+  ...
+# Subtest: active-actor: stale wave reply cannot install or be taken
+ok 13 - active-actor: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 190.3499
+  ...
+# Subtest: accepted wave cannot leak through changed identity and disposal rejects delayed reply
+ok 14 - accepted wave cannot leak through changed identity and disposal rejects delayed reply
+  ---
+  duration_ms: 182.0812
+  ...
+# Subtest: result/postgame remove readiness; ordinary no-raid key stays byte-identical
+ok 15 - result/postgame remove readiness; ordinary no-raid key stays byte-identical
+  ---
+  duration_ms: 176.7248
+  ...
+1..15
+# tests 15
+# suites 0
+# pass 15
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4968.1484
