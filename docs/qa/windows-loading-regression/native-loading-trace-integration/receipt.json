@@ -1,0 +1,140 @@
+{
+  "base": "71917b71c76251b961ffa221efcb51520fc34b0a",
+  "helperOriginalCommit": "a7fe45c17af31f9df46204f621e6ed9e6c4bcb42",
+  "helperCherryPick": "8820a003",
+  "source": [
+    {
+      "path": "src/app/native-loading-trace.js",
+      "sha256": "c48d23eebdd1e03e173f4b6dcfde5d54fce6ab5bc7c6b99cb204aa3a8f3bc43a"
+    },
+    {
+      "path": "src/app/native-loading-trace-bridge.js",
+      "sha256": "daf4617f611d585b1dd37acb51d7a834a16a0db63282446d007bd5d4e0c5d1f0"
+    },
+    {
+      "path": "src/rendering/loading-sync-witness.js",
+      "sha256": "bb02d552af8fc6aaace81960e3f32bfff63fd7b58727f4cdccf3bc605afe74ed"
+    },
+    {
+      "path": "src/app/main.js",
+      "sha256": "ce5c61661d203fa616f80cbe99a48e3599a3aa94d41e0559410cd83effc0bbd4"
+    },
+    {
+      "path": "src-tauri/smoke.js",
+      "sha256": "4ed8966ee767bbf4e9c08c72714a89766b9657470f8988230eca69ac7fb2042d"
+    },
+    {
+      "path": "src-tauri/src/main.rs",
+      "sha256": "45a87c96b83252569f0be030914f5426ee91b042d84a0a2726178aefa41f39c7"
+    },
+    {
+      "path": "tests/native-loading-trace.test.js",
+      "sha256": "2ad55c544a805faabdb2990886693ca3c2904bb33f0518a0e98bce7903966c4a"
+    },
+    {
+      "path": "tests/native-loading-trace-bridge.test.js",
+      "sha256": "f2c4f46760c6312fb3e86d519e56cdca2aa61b38335c0754661622c09c83e20d"
+    },
+    {
+      "path": "tests/native-loading-trace-source-normalize.js",
+      "sha256": "098fe2985e2951ca94d4ddb6afb3ffca9fa78302fbb5574ecf17685e7d245572"
+    },
+    {
+      "path": "tests/desktop-smoke-fixture-menu.test.js",
+      "sha256": "512b40ab0c81176dfe6fde1ee70088f05b1fce38dcf3260e09491c6f793d645c"
+    },
+    {
+      "path": "tests/crop-partition-app.test.js",
+      "sha256": "068f72abe89f0d555f1ebd990c7ca6920c8c8bbcc98a88a4081fdaf3fb5d5c5a"
+    },
+    {
+      "path": "docs/qa/sfx-catalog-post-jam/inventory.json",
+      "sha256": "78dd5ff5a4f41afbdf3b8430064f71f89a8e8ec89137536ab32cd772ccd2deec"
+    },
+    {
+      "path": "docs/qa/sfx-catalog-post-jam/inventory.md",
+      "sha256": "160eaf85ddf90128a3d9171ba4a3dd751045b27efddecd54323c7aad64f13f6e"
+    }
+  ],
+  "unchangedRecipe": [
+    {
+      "path": "src/rendering/scene.js",
+      "sha256": "689e707a33d3dbefdd5f008ff1f0d472b71738a5e4c3ee349c3aaf5fe832d418"
+    },
+    {
+      "path": "src/rendering/loading-diorama.js",
+      "sha256": "736a000a0e1921d4671eef1df917901f763b9f0d2d99fdfd520902bcdbb04cd3"
+    },
+    {
+      "path": "src/rendering/loading-programs.js",
+      "sha256": "dbf8a88021bc47d1ffdf2ae8bad8dad9c7a74671e9d8a2338f90f3f9eb511c54"
+    },
+    {
+      "path": "src/rendering/loading-yield-budget.js",
+      "sha256": "576ae137b4ef2e156547ca74704c244a2c4891a283a86ee590ca04c972d72c17"
+    },
+    {
+      "path": "src/app/loading-downloads.js",
+      "sha256": "34dda467ec9becf1b9cbe82eb5c5d40f0aa1d8f3383f9b3a3f236b46a1befdf3"
+    },
+    {
+      "path": ".github/workflows/windows.yml",
+      "sha256": "8a5b0f980f3c9c0aea3fd8d09586df0b97bd164bfc531945f0306d013983bbbc"
+    }
+  ],
+  "logs": [
+    {
+      "path": "native-loading-attribution-final-tests.log.gz",
+      "originalBytes": 8557,
+      "originalSha256": "212ece350ae022fc13fe476444c81e0e92df964404721750dc54b82ea41c372e",
+      "gzipSha256": "9e2d7b1f7badb2b89ae29e4734418ece1f79e7e689ef7c3d871e67b93e3a1b06",
+      "exitCode": 0
+    },
+    {
+      "path": "native-loading-attribution-build.log.gz",
+      "originalBytes": 2321,
+      "originalSha256": "5404b61f9c9d3f5bfb0f97a06603c1eaf682bdfcc99fe5811bb34006ddc03e2d",
+      "gzipSha256": "2d52e0df0f58e72f1dabb8efaa1464d9e50c21430dd1b1d50225cf0fe2b50255",
+      "exitCode": 0
+    },
+    {
+      "path": "native-loading-attribution-package.log.gz",
+      "originalBytes": 411,
+      "originalSha256": "fdf67ea0a5a8c2ca4b0ed3129da6f4666472867fa37dff0ce33e0ec823fe982f",
+      "gzipSha256": "ad9ad4adc13104dad031c3ccfdf73a261072291a982cc1be9c8ef15f1e0c1613",
+      "exitCode": 0
+    },
+    {
+      "path": "native-loading-attribution-sfx-refresh.log.gz",
+      "originalBytes": 272,
+      "originalSha256": "bac235f605d8b7b913edb8a1da6b8fb22d7ef52b79be7f67e8c67c8a4d11c41e",
+      "gzipSha256": "62e1e6b93f3e61bbba13f53141e619680fb48f56e675d45da2a9e135fe8e1b5c",
+      "exitCode": 0
+    },
+    {
+      "path": "native-loading-attribution-sfx-check.log.gz",
+      "originalBytes": 272,
+      "originalSha256": "349134133839559830f0c876bee796ae1717fc8223a20a300eebfb082f569504",
+      "gzipSha256": "552467013cfd3cc59af9d99953e3730f04bab458ed44bbbd864a13a9abd882ea",
+      "exitCode": 0
+    }
+  ],
+  "tests": {
+    "passed": 36,
+    "failed": 0,
+    "durationMs": 913.9954
+  },
+  "build": {
+    "exitCode": 0,
+    "seconds": 10.65
+  },
+  "package": {
+    "exitCode": 0,
+    "files": 720,
+    "bytes": 445281215,
+    "relativeLinks": 860,
+    "runtimeGlbs": 24
+  },
+  "sfx": "126 original files, 100 assigned, 26 unassigned; App fingerprint and App line references only.",
+  "nativeAcceptance": "Not executed; no CI/native/GPU/Rust compile or performance claim."
+}

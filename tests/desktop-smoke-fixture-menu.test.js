@@ -1,3 +1,4 @@
+import {normalizeTrace} from './native-loading-trace-source-normalize.js';
 import test from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';import {runInNewContext} from 'node:vm';import {execFileSync} from 'node:child_process';
 import {BrowserSaveRepository} from '../src/persistence/browser-saves.js';
 const source=readFileSync('src-tauri/smoke.js','utf8'),helper=source.slice(source.indexOf('  async function listFixtureForSmoke('),source.indexOf('  async function checkVisibility('));
@@ -38,7 +39,7 @@ test('only fixture flow changed; defaults/world/visibility gates and App preview
       report.checks.fixtureMenuList=await listFixtureForSmoke(menu,fixture,send);
       send({action:'load-slot',slotId:fixture.slotId});
     }`;
- assert.equal(source.replaceAll('\r\n','\n').replace(helper.replaceAll('\r\n','\n'),'').replace(block,"    if (fixture) {localStorage.setItem('wild-guardians:slot:'+fixture.slotId,fixture.snapshot);send({action:'load-slot',slotId:fixture.slotId});}"),baseline);
+ assert.equal(normalizeTrace('src-tauri/smoke.js',source).replace(helper.replaceAll('\r\n','\n'),'').replace(block,"    if (fixture) {localStorage.setItem('wild-guardians:slot:'+fixture.slotId,fixture.snapshot);send({action:'load-slot',slotId:fixture.slotId});}"),baseline);
  const app=readFileSync('src/app/main.js','utf8');assert.match(app,/request-saves'\)respond\(\{slots:\(await listedSaves\(\)\)/);assert.match(app,/preview:savePreviews.get\(data.slotId\)/);
  assert.equal(helper.includes('JSON.parse'),false);assert.equal(helper.includes('snapshot'),false);
 });

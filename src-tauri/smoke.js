@@ -16,6 +16,10 @@
     finished = true;
     clearTimeout(timeout);
     if (error) report.errors.push(String(error));
+    if (window.__desktopSmokeLoadingTrace === true) {
+      try { report.checks.nativeLoadingTrace = window.__wildGuardiansNativeLoadingTrace?.report ?? {available:false}; }
+      catch (traceError) { report.checks.nativeLoadingTrace = {available:false,error:String(traceError)}; }
+    }
     // Read presentation state only. This is diagnostic context, not proof of
     // readiness or a GPU measurement; do not acquire another WebGL context.
     try {
