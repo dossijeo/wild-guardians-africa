@@ -1,0 +1,50 @@
+TAP version 13
+# Subtest: original expansive712 rhino exit shares a native exterior certificate without requiring an independent straight ray
+ok 1 - original expansive712 rhino exit shares a native exterior certificate without requiring an independent straight ray # SKIP test name does not match pattern
+  ---
+  duration_ms: 1.2411
+  ...
+# Subtest: a shared certificate never bypasses current native fluid rejection
+ok 2 - a shared certificate never bypasses current native fluid rejection # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1113
+  ...
+# Subtest: a shared certificate never bypasses current native steep rejection
+ok 3 - a shared certificate never bypasses current native steep rejection # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0751
+  ...
+# Subtest: a shared certificate never bypasses current native solid rejection
+ok 4 - a shared certificate never bypasses current native solid rejection # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0673
+  ...
+# Subtest: exact rejected snapshot resolves through normal Game.tick dt=0.1, reload=null
+ok 5 - exact rejected snapshot resolves through normal Game.tick dt=0.1, reload=null # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0703
+  ...
+# Subtest: exact rejected snapshot resolves through normal Game.tick dt=1, reload=null
+ok 6 - exact rejected snapshot resolves through normal Game.tick dt=1, reload=null # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0583
+  ...
+# Subtest: exact rejected snapshot resolves through normal Game.tick dt=0.1, reload=5
+ok 7 - exact rejected snapshot resolves through normal Game.tick dt=0.1, reload=5 # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0542
+  ...
+# Subtest: the real preparation engine returns the original rhino group without changing its frozen state
+ok 8 - the real preparation engine returns the original rhino group without changing its frozen state
+  ---
+  duration_ms: 7970.7964
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 7
+# todo 0
+# duration_ms 8212.3415
