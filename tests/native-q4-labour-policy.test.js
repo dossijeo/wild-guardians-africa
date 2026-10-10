@@ -28,8 +28,8 @@ test('Q4 additions use native proportional ceil, real saturated FIFO backlog, hi
  s.workers.at(-1).incapacitated=true;s.ledger.balance=rational(51);assert.equal(q4AdditionalPlan(s,{pendingRepair:2}).count,0);
  for(const t of s.tasks)t.blocked=true;assert.equal(q4AdditionalPlan(s).reason,'no saturated native backlog');
 });
-test('Q4 same productive labour recipe for defended and no-wall strategies; legacy protocol untouched',()=>{
+test('Q4 keeps the same labour recipe for defended and no-wall strategies under the single-plant protocol',()=>{
  assert.equal(parseNativeCampaignArgs(['--out','fixture','--labour-policy','q4']).labourPolicy,'q4');
- assert.equal(campaignProtocolForLabour('legacy').id,'native-constant-economy-v3');assert.match(campaignProtocolForLabour('q4').id,/-q4$/);
+ assert.equal(campaignProtocolForLabour('legacy').id,'native-constant-economy-v4-single-plant-magic');assert.match(campaignProtocolForLabour('q4').id,/-q4$/);
  for(const name of ['good','expansive','no-walls'])assert.equal(nativeCampaignStrategy(name).middayHiring,true);assert.equal(nativeCampaignStrategy('bad').middayHiring,false);assert.throws(()=>campaignProtocolForLabour('fake'));
 });

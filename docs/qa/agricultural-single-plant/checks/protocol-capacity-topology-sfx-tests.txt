@@ -1,0 +1,77 @@
+TAP version 13
+# Subtest: Q4 native first contract pays30 rather than forecast240, preserving actual planting funds
+ok 1 - Q4 native first contract pays30 rather than forecast240, preserving actual planting funds
+  ---
+  duration_ms: 12.4883
+  ...
+# Subtest: Q4 does not consume364 as360 salary and cash35 permits native emergency wage30 with explicit risk
+ok 2 - Q4 does not consume364 as360 salary and cash35 permits native emergency wage30 with explicit risk
+  ---
+  duration_ms: 2.1634
+  ...
+# Subtest: Q4 additions use native proportional ceil, real saturated FIFO backlog, historical pending repairs and one payment
+ok 3 - Q4 additions use native proportional ceil, real saturated FIFO backlog, historical pending repairs and one payment
+  ---
+  duration_ms: 4.3069
+  ...
+# Subtest: Q4 keeps the same labour recipe for defended and no-wall strategies under the single-plant protocol
+ok 4 - Q4 keeps the same labour recipe for defended and no-wall strategies under the single-plant protocol
+  ---
+  duration_ms: 0.7323
+  ...
+# Subtest: native capacity separates two-hit healthy crops from one-hit wounded crops
+ok 5 - native capacity separates two-hit healthy crops from one-hit wounded crops
+  ---
+  duration_ms: 6.8554
+  ...
+# Subtest: capacity evidence reproduces with current native sources
+ok 6 - capacity evidence reproduces with current native sources
+  ---
+  duration_ms: 8.4395
+  ...
+# Subtest: exterior witnesses preserve nearby entries through openings and between separate enclosures
+ok 7 - exterior witnesses preserve nearby entries through openings and between separate enclosures
+  ---
+  duration_ms: 26.6214
+  ...
+# Subtest: closed and concave walls including animal-blocking gate do not provide a false exterior witness
+ok 8 - closed and concave walls including animal-blocking gate do not provide a false exterior witness
+  ---
+  duration_ms: 19.6171
+  ...
+# Subtest: current clipped-bounds selection produces an exterior spawn while preserving live bounds
+ok 9 - current clipped-bounds selection produces an exterior spawn while preserving live bounds
+  ---
+  duration_ms: 11.2082
+  ...
+# Subtest: retained paired topology results preserve their historical impacts and original sources
+ok 10 - retained paired topology results preserve their historical impacts and original sources
+  ---
+  duration_ms: 6.1595
+  ...
+# (node:53500) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: complete catalogue audit reproduces from current source and exact original bytes
+ok 11 - complete catalogue audit reproduces from current source and exact original bytes
+  ---
+  duration_ms: 310.7385
+  ...
+# Subtest: assignments, context exceptions, reserves and alternatives stay distinct from audible acceptance
+ok 12 - assignments, context exceptions, reserves and alternatives stay distinct from audible acceptance
+  ---
+  duration_ms: 93.3347
+  ...
+# Subtest: latent wood variant and semantic alternatives do not become real bindings or duplicate files
+ok 13 - latent wood variant and semantic alternatives do not become real bindings or duplicate files
+  ---
+  duration_ms: 0.3454
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 594.9584
