@@ -21,3 +21,12 @@ test('GPU warm, variants, chunk/far fences and remaining source recipe are byte-
  const base=execFileSync('git',['show','9cc3ba2f:src/rendering/scene.js'],{encoding:'utf8'}).replaceAll('\r\n','\n');let actual=readFileSync('src/rendering/scene.js','utf8');
  actual=actual.replace("import {loadWorldCropPair} from './world-crop-pair.js';\n",'');const start=actual.indexOf('    // Experimental scheduling only:'),end=actual.indexOf('    const gltf=cropPair?',start);actual=actual.slice(0,start)+actual.slice(end);actual=actual.replace('const gltf=cropPair?cropPair.gltf:await','const gltf=await');actual=actual.replace('if(cropPair)this.cropBridgeData=cropPair.data;else{','').replace('}this.cropBatch=','this.cropBatch=');assert.equal(actual,base);
 });
+
+test('controlled deferred calendar proves max vs sum scheduling only, not native savings',async()=>{
+ async function calendar(parallel){let clock=0;const events=[],starts=[],load=(label,duration,value)=>()=>{starts.push({label,at:clock});return new Promise(resolve=>events.push({at:clock+duration,resolve:()=>resolve(value)}));};let done=false,result;
+ const steady=load('steady',3,{scene:'40'}),bridges=load('bridges',15,{bakedTemplates:'32'});
+ const work=(parallel?loadWorldCropPair(steady,bridges):(async()=>({gltf:await steady(),data:await bridges()}))()).then(value=>{done=true;result=value;});
+ for(let guard=0;!done&&guard<30;guard++){await Promise.resolve();if(events.length){events.sort((a,b)=>a.at-b.at);const next=events.shift();clock=next.at;next.resolve();}else await Promise.resolve();}await work;return {clock,starts,result};
+ }
+ const serial=await calendar(false),parallel=await calendar(true);assert.equal(serial.clock,18);assert.equal(parallel.clock,15);assert.deepEqual(serial.starts,[{label:'steady',at:0},{label:'bridges',at:3}]);assert.deepEqual(parallel.starts,[{label:'steady',at:0},{label:'bridges',at:0}]);assert.deepEqual(parallel.result,serial.result);
+});
