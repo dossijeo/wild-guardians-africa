@@ -92,6 +92,15 @@ export class Navigation {
     // replacing the state still rebuild and invalidate routes normally.
     if(this.state!==state||removedProps.length){this.setState(state);return;}
   }
+  syncCenterRepair(state,center,previousStatus) {
+    // Restoring HP on an intact centre does not move its collision footprint.
+    // Keep active routes and static queries; reconstruction still changes topology.
+    const obstacle=this.obstacles.find(o=>o.id===center.id&&o.kind==='center');
+    const footprint=center.kind==='center'?centerFootprint(center,state).footprint:null;
+    const unchanged=obstacle?.footprint&&footprint&&obstacle.footprint.length===footprint.length&&footprint.every((p,i)=>p.x===obstacle.footprint[i].x&&p.z===obstacle.footprint[i].z);
+    if(this.state!==state||previousStatus!=='intact'||center.status!=='intact'||!unchanged){this.setState(state);return;}
+    obstacle.hp=center.hp;obstacle.maxHp=center.maxHp;obstacle.collapseRemaining=center.collapseRemaining;
+  }
   forBuildingPlacement(building,suppress=[]) {
     // Route the proposed footprint without polluting live paths or caches.
     return Object.assign(Object.create(this),{

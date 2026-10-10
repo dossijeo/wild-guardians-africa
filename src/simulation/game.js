@@ -429,7 +429,8 @@ function completeTask(s,w,t,target,nav) {
       if(transact(s.ledger,paymentId,negate(repairCost(target)))){
         const visual=target.kind==='wall'?wallVisualAt(target,s.elapsed):null;
         delete target.wallPresentation;target.hp=target.maxHp;target.status='intact';target.collapseRemaining=0;
-        if(visual!==null)recordWallPresentation(target,visual,s.elapsed);nav.setState(s);
+        if(visual!==null)recordWallPresentation(target,visual,s.elapsed);
+        if(target.kind==='center'&&nav.syncCenterRepair)nav.syncCenterRepair(s,target,previousStatus);else nav.setState(s);
         // Read the settled ledger debit: proportional repair prices may be
         // fractional before transact rounds the actual payment to whole coins.
         emit(s,'RepairApplied',{workerId:w.id,targetId:target.id,
