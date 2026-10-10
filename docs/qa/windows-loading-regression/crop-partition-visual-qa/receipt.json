@@ -1,0 +1,275 @@
+{
+  "baseProduction": "12dd78a2",
+  "priorProposal": "e4a4c326",
+  "branch": "codex/crop-partition-visual-qa",
+  "sources": {
+    ".gitattributes": {
+      "bytes": 297,
+      "sha256": "14e9fdcfc5694dc23a6c3201699d85c73196941781cebdfcd1bc9292aa815fe4"
+    },
+    "src-tauri/src/main.rs": {
+      "bytes": 3907,
+      "sha256": "5671caaba9cecc98f2c314ebdf8f055faf51e5391c005ed71f8efe386c52be9c"
+    },
+    "src-tauri/smoke.js": {
+      "bytes": 13103,
+      "sha256": "fe563e3495a3c80a3de9eae33c9b8f497b2707f8ac3c02424a02cff13c0edb94"
+    },
+    "src/app/loading-visual-bridge.js": {
+      "bytes": 2104,
+      "sha256": "f05d837e7d60a5051b50c262dd69837a94fcdfdaa7c9cb8d3626cf2d6ec31ac1"
+    },
+    "src/app/loading-visual-plant-qa.js": {
+      "bytes": 3130,
+      "sha256": "cea56e746bf079d5deb0c8b45376e9950a296aac158954b7a0fb54c11e0f942b"
+    },
+    "tools/create_loading_visual_fixtures.mjs": {
+      "bytes": 4119,
+      "sha256": "8855f53af39a839c9bc10d3defd3916a251f4c455170a20b7bb0e1a03ce41fd8"
+    },
+    "tools/run_loading_visual_qa.py": {
+      "bytes": 3233,
+      "sha256": "9f38cb76650abc39865f6ed17635268c6a2e3c0dee1655c74619753f304bbacd"
+    },
+    "tests/crop-partition-app.test.js": {
+      "bytes": 4101,
+      "sha256": "ae857248f95aea4cd96583a6499d269cd37f761688d75d428e4e480c750657d1"
+    },
+    "tests/loading-visual-plant-qa.test.js": {
+      "bytes": 7625,
+      "sha256": "fd9f4f3596f80ac6c41e86515b11ab01e7127b47aa5c3110c0c61913c60efcb7"
+    },
+    "tests/loading-visual-plant-report.test.js": {
+      "bytes": 1583,
+      "sha256": "fce3efe6c58b53e6afe8b317c6b4506738aafec2d0ea826fa24847ef9382a5d3"
+    },
+    "tests/loading-visual-fixtures.test.js": {
+      "bytes": 2535,
+      "sha256": "2c270c52f8ccee73e187b8d543e0f37d1cf3b3bbbad49fa0129f386175bd3806"
+    }
+  },
+  "unchangedNormalizedSources": [
+    "src/app/main.js",
+    "src/app/loading-visual-qa.js",
+    "src/rendering/loading-diorama.js",
+    "src/rendering/scene.js",
+    "src/rendering/loading-programs.js",
+    "src/rendering/loading-yield-budget.js",
+    ".github/workflows/windows.yml",
+    "public/content/models.json",
+    "public/content/crop-bridges.json",
+    "src/rendering/crop-partition.js",
+    "src/rendering/assets.js",
+    "docs/qa/sfx-catalog-post-jam/inventory.json"
+  ],
+  "files": {
+    "fixtures/day-fixture.json": {
+      "bytes": 20632,
+      "sha256": "bd0dab503d00560cc7895af525d0131742515de822ff5f7a00a8acc763c4d0c9"
+    },
+    "fixtures/night-fixture.json": {
+      "bytes": 21141,
+      "sha256": "4b3c6f0bfb9f130daa37b68e104054e4c0cb1fa7c0bafaceb41c6708c3dc8c0d"
+    },
+    "fixtures/day-provenance.json": {
+      "bytes": 1217,
+      "sha256": "25cd333dcfade730c4e96a343311ef8b83c1b3b5623d7fe07bbcee225c668d51"
+    },
+    "fixtures/night-provenance.json": {
+      "bytes": 1612,
+      "sha256": "27f4ec94af2b5be0842652a86a31149361db2b7bc14b266cb68be6f42bbeec1c"
+    },
+    "tests.log.gz": {
+      "bytes": 2115,
+      "sha256": "6dd6bbdde963a7a5e84d8f19a9f4616b9e393a354e5225f6671298506ca89641",
+      "originalBytes": 8172,
+      "originalSha256": "4824cfe3ed7c46dd2c5e8d102fd1d02924bb9e4899de2f82af469123cf771af4"
+    },
+    "build.log.gz": {
+      "bytes": 965,
+      "sha256": "448e7e0dec572d8711ab66eb67f5315c83c0036d2971496b59f009a68a07bc6b",
+      "originalBytes": 2320,
+      "originalSha256": "88f5f28ea1342f86f44e771ddca088452228bb7a3f8d4350a9ca7e39e45dc63f"
+    },
+    "package.log.gz": {
+      "bytes": 313,
+      "sha256": "307e4e4fa15b1926b78b6e807b217d8b9120af6ddcd96b0d90fb33632e92e16f",
+      "originalBytes": 411,
+      "originalSha256": "8834d0889bb39c6ce1d42d9adf08002f7fd39632ddc52b0be6bf4eace9818a2b"
+    },
+    "fixture-generation.log.gz": {
+      "bytes": 328,
+      "sha256": "0e21ed199b0c4234007bd32d6020f292945e22f05d99ef6e4cf8ff641506647e",
+      "originalBytes": 459,
+      "originalSha256": "fc9affa3bf0371083cd1efb356c12c2e37e86b90effdc4e451c4d529faa84491"
+    },
+    "sfx-check.log.gz": {
+      "bytes": 220,
+      "sha256": "3609a87b6b2dd73bdfbafd96d0fc0e1c939a165a09e9099faad19c6128f17d63",
+      "originalBytes": 272,
+      "originalSha256": "8ee7187647c2def93f871b8a24cebd358e113027f2b9ed2cc6cdb4a554a2ec9c"
+    }
+  },
+  "tests": {
+    "command": "node --test tests/crop-partition-app.test.js tests/loading-visual-plant-qa.test.js tests/loading-visual-plant-report.test.js tests/loading-visual-fixtures.test.js tests/loading-visual-bridge.test.js tests/loading-visual-qa.test.js tests/desktop-smoke-failure-observation.test.js",
+    "pass": 36,
+    "fail": 0,
+    "durationMs": 1580.6982
+  },
+  "build": {
+    "seconds": 9.93,
+    "producerSession": 46800,
+    "exitCode": 0
+  },
+  "package": {
+    "files": 720,
+    "bytes": 445276527,
+    "relativeLinks": 860,
+    "runtimeGLBs": 24,
+    "deltaVsProductionBytes": 2575
+  },
+  "gates": {
+    "worldMs": 90000,
+    "hiddenMs": 300000,
+    "fixtureProcessMs": 900000
+  },
+  "nativeExecuted": false,
+  "nativePortrait": "pending; no window-resize API introduced",
+  "inputScope": "One synthetic engine-handler plantAt/raycast after actual initial PNG; never physical/trusted input.",
+  "logicalStateScope": "Runtime reports plant array identity/IDs only; real full serialized day/night saves unchanged in CPU tests, not a native full-state assertion.",
+  "fixtures": {
+    "day": {
+      "label": "day",
+      "seed": "712",
+      "biome": "gran-canon",
+      "culture": "mapungubwe",
+      "terrainVersion": "4.1.10.3",
+      "day": 1,
+      "time": 0,
+      "elapsed": 0,
+      "skyNight": 0,
+      "snapshotBytes": 18585,
+      "snapshotSha256": "1085d3824c5db48bef5d338ae909833426d767f8ec63eb93f499a3a4e1c0663c",
+      "commands": [
+        {
+          "operation": "createOpeningWorld/placeStructure",
+          "seed": 712,
+          "biome": "gran-canon",
+          "culture": "mapungubwe"
+        },
+        {
+          "operation": "Game.plant",
+          "id": "loading-visual-paid-yuca",
+          "species": "yuca",
+          "x": -25.5,
+          "z": 24
+        },
+        {
+          "operation": "Game.openInitialHiring/Game.hire",
+          "id": "loading-visual-paid-hire",
+          "selection": {
+            "youngFemale": 1
+          }
+        },
+        {
+          "operation": "directed tutorial presentation skipped",
+          "scope": "same as original visibility fixture"
+        },
+        {
+          "operation": "Game.pause",
+          "reason": "menu",
+          "time": 0
+        }
+      ],
+      "plants": [
+        {
+          "id": "plant-3",
+          "species": "yuca",
+          "alive": true,
+          "growth": 0,
+          "x": -25.5,
+          "z": 24
+        }
+      ],
+      "balance": {
+        "n": "648",
+        "d": "1"
+      },
+      "tutorialPresentationBypass": true
+    },
+    "night": {
+      "label": "night",
+      "seed": "712",
+      "biome": "gran-canon",
+      "culture": "mapungubwe",
+      "terrainVersion": "4.1.10.3",
+      "day": 1,
+      "time": 302.00000000000045,
+      "elapsed": 301.9999999999905,
+      "skyNight": 0.991770252950989,
+      "snapshotBytes": 19040,
+      "snapshotSha256": "de438caf0d677ee9f1029f4fb43fab0ab182dbb1fc7684f3c37465cc33042e61",
+      "commands": [
+        {
+          "operation": "createOpeningWorld/placeStructure",
+          "seed": 712,
+          "biome": "gran-canon",
+          "culture": "mapungubwe"
+        },
+        {
+          "operation": "Game.plant",
+          "id": "loading-visual-paid-yuca",
+          "species": "yuca",
+          "x": -25.5,
+          "z": 24
+        },
+        {
+          "operation": "Game.openInitialHiring/Game.hire",
+          "id": "loading-visual-paid-hire",
+          "selection": {
+            "youngFemale": 1
+          }
+        },
+        {
+          "operation": "directed tutorial presentation skipped",
+          "scope": "same as original visibility fixture"
+        },
+        {
+          "operation": "Game.pause",
+          "reason": "menu",
+          "time": 0
+        },
+        {
+          "operation": "Game.resume",
+          "reason": "menu"
+        },
+        {
+          "operation": "Game.tick",
+          "seconds": 0.1,
+          "count": 3020,
+          "scope": "normal simulation progression, no time assignment"
+        },
+        {
+          "operation": "Game.pause",
+          "reason": "menu",
+          "time": 302.00000000000045
+        }
+      ],
+      "plants": [
+        {
+          "id": "plant-3",
+          "species": "yuca",
+          "alive": true,
+          "growth": 243.9999999999808,
+          "x": -25.5,
+          "z": 24
+        }
+      ],
+      "balance": {
+        "n": "648",
+        "d": "1"
+      },
+      "tutorialPresentationBypass": true
+    }
+  }
+}

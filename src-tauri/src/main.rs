@@ -27,6 +27,9 @@ fn main() {
                 // ordinary smoke/timing runs. The app owns the capture lifecycle.
                 if std::env::args().any(|arg| arg == "--smoke-visual") {
                     let _ = webview.eval("window.__desktopSmokeVisualCapture = true;");
+                    if std::env::args().any(|arg| arg == "--smoke-visual-plant") {
+                        let _ = webview.eval("window.__desktopSmokeVisualPlant = true;");
+                    }
                 }
                 let _ = webview.eval(include_str!("../smoke.js"));
             }

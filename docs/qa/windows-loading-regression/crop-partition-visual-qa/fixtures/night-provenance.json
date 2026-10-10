@@ -1,0 +1,74 @@
+{
+  "label": "night",
+  "seed": "712",
+  "biome": "gran-canon",
+  "culture": "mapungubwe",
+  "terrainVersion": "4.1.10.3",
+  "day": 1,
+  "time": 302.00000000000045,
+  "elapsed": 301.9999999999905,
+  "skyNight": 0.991770252950989,
+  "snapshotBytes": 19040,
+  "snapshotSha256": "de438caf0d677ee9f1029f4fb43fab0ab182dbb1fc7684f3c37465cc33042e61",
+  "commands": [
+    {
+      "operation": "createOpeningWorld/placeStructure",
+      "seed": 712,
+      "biome": "gran-canon",
+      "culture": "mapungubwe"
+    },
+    {
+      "operation": "Game.plant",
+      "id": "loading-visual-paid-yuca",
+      "species": "yuca",
+      "x": -25.5,
+      "z": 24
+    },
+    {
+      "operation": "Game.openInitialHiring/Game.hire",
+      "id": "loading-visual-paid-hire",
+      "selection": {
+        "youngFemale": 1
+      }
+    },
+    {
+      "operation": "directed tutorial presentation skipped",
+      "scope": "same as original visibility fixture"
+    },
+    {
+      "operation": "Game.pause",
+      "reason": "menu",
+      "time": 0
+    },
+    {
+      "operation": "Game.resume",
+      "reason": "menu"
+    },
+    {
+      "operation": "Game.tick",
+      "seconds": 0.1,
+      "count": 3020,
+      "scope": "normal simulation progression, no time assignment"
+    },
+    {
+      "operation": "Game.pause",
+      "reason": "menu",
+      "time": 302.00000000000045
+    }
+  ],
+  "plants": [
+    {
+      "id": "plant-3",
+      "species": "yuca",
+      "alive": true,
+      "growth": 243.9999999999808,
+      "x": -25.5,
+      "z": 24
+    }
+  ],
+  "balance": {
+    "n": "648",
+    "d": "1"
+  },
+  "tutorialPresentationBypass": true
+}

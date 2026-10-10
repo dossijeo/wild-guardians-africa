@@ -37,6 +37,13 @@
     if (window.__desktopSmokeVisualCapture === true) {
       const visual = window.__wildGuardiansLoadingVisualQa?.report;
       report.checks.loadingVisual = visual ?? {available: false, scope: 'Visual capture requested; application collector was not installed.'};
+      if (window.__desktopSmokeVisualPlant === true) {
+        const action = visual?.plantAction;
+        const additional = visual?.frames?.find(frame => frame.label === 'additional-plant' && frame.plants?.length === 5);
+        if (!action?.result || action.afterCount !== 5 || action.logicalPlantsUnchanged !== true || !additional) {
+          report.errors.push('Requested synthetic loading plant evidence is missing or failed');
+        }
+      }
       // Never turn a missing/empty capture into positive visual evidence. Keep
       // preflight errors intact and leave ordinary timing runs unchanged.
       if (!error && (!visual || !visual.frames?.length)) report.errors.push('Requested loading visual evidence is missing');

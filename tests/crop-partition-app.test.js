@@ -23,5 +23,20 @@ test('App retains current main rules and gates outside partition selection and o
  const base=execFileSync('git',['show','0e94d7be:src/app/main.js'],{encoding:'utf8'});
  const actual=readFileSync('src/app/main.js','utf8').replace("import {installLoadingVisualQa} from './loading-visual-bridge.js';\n",'').replace(',visual:installLoadingVisualQa(owner,diorama)','').replace('pending.visual?.close({cancelled:true});','').replace('loadingDiorama?.visualQa?.close({cancelled:true});','').replace('prepared.visual?.close();','').replace("import {prepareLoadingCropPartition} from './loading-crop-partition.js';\n",'').replace('prepareLoadingCropPartition(owner).then(()=>diorama.prepare())','diorama.prepare()');
  assert.equal(actual.replaceAll('\r\n','\n'),base.replaceAll('\r\n','\n'));
- for(const file of ['src/rendering/scene.js','src/rendering/loading-programs.js','src/rendering/loading-yield-budget.js','src/app/loading-downloads.js','public/menu/native.js','src/ui/menu-integration.js','src/simulation/game.js','src-tauri/smoke.js','src-tauri/src/main.rs','.github/workflows/windows.yml'])assert.equal(readFileSync(file,'utf8').replaceAll('\r\n','\n'),execFileSync('git',['show',(['src-tauri/smoke.js','src-tauri/src/main.rs'].includes(file)?'8fb7f437:':'0e94d7be:')+file],{encoding:'utf8'}).replaceAll('\r\n','\n'),file);
+ for(const file of ['src/rendering/scene.js','src/rendering/loading-programs.js','src/rendering/loading-yield-budget.js','src/app/loading-downloads.js','public/menu/native.js','src/ui/menu-integration.js','src/simulation/game.js','src-tauri/smoke.js','src-tauri/src/main.rs','.github/workflows/windows.yml'])assert.equal(normalizeQa(file,readFileSync(file,'utf8').replaceAll('\r\n','\n')),execFileSync('git',['show',(['src-tauri/smoke.js','src-tauri/src/main.rs'].includes(file)?'8fb7f437:':'0e94d7be:')+file],{encoding:'utf8'}).replaceAll('\r\n','\n'),file);
 });
+
+// QA branch adds only guarded evidence/action checks; strip these exact hunks
+// to retain the production recipe/source equivalence assertion.
+function normalizeQa(file,text){
+ if(file==='src-tauri/src/main.rs')return text.replace('                    if std::env::args().any(|arg| arg == "--smoke-visual-plant") {\n                        let _ = webview.eval("window.__desktopSmokeVisualPlant = true;");\n                    }\n','');
+ if(file==='src-tauri/smoke.js')return text.replace(`      if (window.__desktopSmokeVisualPlant === true) {
+        const action = visual?.plantAction;
+        const additional = visual?.frames?.find(frame => frame.label === 'additional-plant' && frame.plants?.length === 5);
+        if (!action?.result || action.afterCount !== 5 || action.logicalPlantsUnchanged !== true || !additional) {
+          report.errors.push('Requested synthetic loading plant evidence is missing or failed');
+        }
+      }
+`,'');
+ return text;
+}

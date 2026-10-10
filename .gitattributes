@@ -1,2 +1,4 @@
 # Hash-addressed partition manifests are binary resources, even though JSON.
 public/assets/crop-partition-*/partition-manifest.json -text
+# Frozen native QA fixtures/provenance must keep their recorded byte hashes.
+docs/qa/windows-loading-regression/crop-partition-visual-qa/fixtures/*.json -text
