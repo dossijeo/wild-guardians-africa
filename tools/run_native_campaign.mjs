@@ -26,7 +26,7 @@ export function nativeCampaignProvenance(options){
  const p=intensiveRunProvenance(options),root=new URL('../',import.meta.url);
  for(const path of ['content/balance/raid_pressure_candidate.json','content/balance/player_revisions.json'])p.sourceHashes[path]=createHash('sha256').update(readFileSync(new URL(path,root))).digest('hex');
  const paths=['tools/native-campaign-runner.mjs','tools/native-campaign-protocol.mjs','tools/native-q4-labour-policy.mjs','tools/native-q5-labour-policy.mjs','tools/native-q6-labour-policy.mjs','tools/native-campaign-finance.mjs','tools/native-campaign-evidence.mjs','tools/repair-settlement-evidence.mjs','tools/native-raid-campaign-evidence.mjs','tools/native-campaign-entry-driver.mjs','tools/native-campaign-expansion.mjs','tools/native-campaign-plots.mjs','tools/native-expanding-defense-policy.mjs','tools/node-raid-entry-transport.mjs','tools/node-raid-entry-worker.mjs','tools/run_native_campaign.mjs'];
- paths.push('tools/native-closed-defense-policy.mjs');
+ paths.push('tools/native-closed-defense-policy.mjs','tools/native-q7-labour-policy.mjs');
  for(const path of paths)p.sourceHashes[path]=createHash('sha256').update(readFileSync(new URL(path,root))).digest('hex');
  return {...p,protocol:campaignProtocolForLabour(options.labourPolicy)};
 }
