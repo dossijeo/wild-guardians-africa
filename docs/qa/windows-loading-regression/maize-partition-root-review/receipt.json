@@ -1,0 +1,35 @@
+{
+  "candidateCommit": "4b1108180210d2155e7d5e254b025209e7cc8f46",
+  "rootTests": {
+    "pass": 43,
+    "fail": 0,
+    "durationMs": 2820.0436
+  },
+  "logSha256": "0804110e260dea98c89655a22efa8b6b78da724e822eeaafd7d589d215ad7280",
+  "agentTests": {
+    "pass": 54,
+    "fail": 0,
+    "scope": "Separate retained candidate receipt, not root repeated total"
+  },
+  "receiptVerifier": "pass",
+  "nativeTrialAuthorized": {
+    "count": 1,
+    "crop_partition": true,
+    "serial_image_chain": false,
+    "wall_buffer_package": false,
+    "compile_window": false,
+    "resource_overlap": false,
+    "gatesUnchanged": true
+  },
+  "promotionAuthorized": false,
+  "scope": "Frozen source and CPU lifecycle/URL/ownership review. Real images, native readiness, frame times and final package size remain unverified.",
+  "rootAdditionalTests": {
+    "pass": 11,
+    "fail": 0,
+    "durationMs": 10962.0365,
+    "scope": "Offline partition preservation, early-region owner and original desktop gates; separate invocation"
+  },
+  "gatesLogSha256": "668a767ae636d64df247a875891697299e5ca6a1e6792857dec5f3f930a612df",
+  "rootTotalTests": 54,
+  "nativeRun": 38014169890
+}
