@@ -9,7 +9,7 @@ import {Navigation,BIOME_IDS} from '../src/world/navigation.js';
 import * as Game from '../src/simulation/game.js';
 import {HordeEntryDriver} from './horde-entry-driver.mjs';
 import {createRepairSettlementEvidence} from './repair-settlement-evidence.mjs';
-import {observeRepairQueue,classifyRepairTransition} from './horde-repair-continuation-observation.mjs';
+import {observeRepairQueue,classifyRepairTransition,repairContinuationBoundary} from './horde-repair-continuation-observation.mjs';
 const hash=b=>createHash('sha256').update(b).digest('hex');
 const own=['tools/continue_horde_repair_snapshot.mjs','tools/horde-repair-continuation-observation.mjs'];
 export async function continueRepairSnapshot(inputDirectory,output){
@@ -34,7 +34,7 @@ export async function continueRepairSnapshot(inputDirectory,output){
    if(transition.status!=='pending'){status=transition.status;reason=transition;break;}
    if(trace.length%40===0)writeFileSync(output+'/status.json',JSON.stringify(statusRow(),null,2)+'\n');
   }
-  if(status==='running'){status=s.result?'native-result':s.pauses.length?'blocking-pause':s.time>=300?'daylight-ended-repair-pending':'incomplete';reason={result:s.result,pauses:[...s.pauses],time:s.time};}
+  if(status==='running'){const boundary=repairContinuationBoundary(s);status=boundary.status==='pending'?'incomplete':boundary.status;reason=boundary.reason;}
  }catch(e){status='incomplete';error={name:e.name,message:e.message,stack:e.stack};}
  finally{
   try{await driver?.dispose();}catch(e){status='incomplete';error??={message:e.message,stack:e.stack};}

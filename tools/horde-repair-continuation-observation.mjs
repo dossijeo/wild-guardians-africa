@@ -1,5 +1,11 @@
 import {contractExpired,PROFILES} from '../src/simulation/workforce.js';
 const fifo=(a,b)=>a.created-b.created||a.id.localeCompare(b.id);
+export function repairContinuationBoundary(s){
+ if(s.day!==21||s.time>300)return {status:'incomplete',reason:'Exceeded same-day daylight boundary'};
+ if(s.result)return {status:'native-result',reason:{result:s.result}};
+ if(s.pauses.length)return {status:'blocking-pause',reason:{pauses:[...s.pauses]}};
+ return s.time>=300?{status:'daylight-ended-repair-pending',reason:{time:s.time}}:{status:'pending',reason:null};
+}
 export function observeRepairQueue(s,taskId){
  const task=s.tasks.find(t=>t.id===taskId),sorted=[...s.tasks].sort(fifo),rank=sorted.findIndex(t=>t.id===taskId),preceding=rank<0?[]:sorted.slice(0,rank),assigned=s.workers.find(w=>w.taskId===taskId);
  const availability={workers:0,expired:0,shiftEnded:0,incapacitated:0,idleWithoutTask:0,reservationCandidatesBeforeRoute:0},phases={};
