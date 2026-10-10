@@ -1,0 +1,346 @@
+{
+  "schema": "wg-animal-rig-cpu-attribution/1",
+  "source": "d65e7dc32c45bdfb9a395a53fcbccdbe15ed605f",
+  "node": "v20.11.0",
+  "platform": "win32",
+  "sources": {
+    "src/rendering/animal-preload.js": "e518990bdd7292783eee32c34c34908ad068d36ef0424c57c51564d13288c5e6",
+    "src/rendering/animal-actions.js": "3f7d2195584d66617e15b88e10aac54c053f20504027c3d243a04a6e79230739",
+    "src/rendering/skin-envelope.js": "11f3c2558c3fff79e602032c5cea5998f06c011013514ba1c84f7490b64de7cb",
+    "src/rendering/fixed-pose.js": "5fbff66fd8ee54a68855a1b5903647d400295b4ef87648326f8e7d26719f13bb",
+    "tools/benchmark_animal_rig_preparation.mjs": "4ca8168d4ee4ceac30aef4ec3bc55580b6d4ed2d66f1fa12a86a5f9b3d608d8b"
+  },
+  "scope": "Node CPU diagnostic of original authored geometry, skinning and clips. Material texture references removed solely to avoid browser image decoding. No downloads, image decode, compressed-GLB decode, uploads, rendering, GPU or WARP timing. Eight repetitions include first-use/JIT effects; not an end-to-end loading comparison.",
+  "records": [
+    {
+      "species": "warthog",
+      "url": "/assets/cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869.glb",
+      "assetSha256": "cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869",
+      "skins": 1,
+      "vertices": 26422,
+      "geometryParseMs": 95.2622,
+      "samples": [
+        {
+          "repetition": 0,
+          "clipMs": 7.073399999999992,
+          "rigMs": 57.68090000000001,
+          "groundSamples": 232,
+          "boundActions": 7
+        },
+        {
+          "repetition": 1,
+          "clipMs": 8.564300000000003,
+          "rigMs": 12.411699999999996,
+          "groundSamples": 232,
+          "boundActions": 7
+        },
+        {
+          "repetition": 2,
+          "clipMs": 6.55559999999997,
+          "rigMs": 13.889099999999985,
+          "groundSamples": 232,
+          "boundActions": 7
+        },
+        {
+          "repetition": 3,
+          "clipMs": 7.1188000000000216,
+          "rigMs": 17.821799999999996,
+          "groundSamples": 232,
+          "boundActions": 7
+        },
+        {
+          "repetition": 4,
+          "clipMs": 4.369899999999973,
+          "rigMs": 6.728599999999972,
+          "groundSamples": 232,
+          "boundActions": 7
+        },
+        {
+          "repetition": 5,
+          "clipMs": 4.522199999999998,
+          "rigMs": 11.754399999999976,
+          "groundSamples": 232,
+          "boundActions": 7
+        },
+        {
+          "repetition": 6,
+          "clipMs": 5.676999999999964,
+          "rigMs": 9.977800000000002,
+          "groundSamples": 232,
+          "boundActions": 7
+        },
+        {
+          "repetition": 7,
+          "clipMs": 5.031999999999982,
+          "rigMs": 7.8659999999999854,
+          "groundSamples": 232,
+          "boundActions": 7
+        }
+      ]
+    },
+    {
+      "species": "hyena",
+      "url": "/assets/7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb",
+      "assetSha256": "7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25",
+      "skins": 1,
+      "vertices": 23576,
+      "geometryParseMs": 52.01679999999999,
+      "samples": [
+        {
+          "repetition": 0,
+          "clipMs": 4.648599999999988,
+          "rigMs": 13.694399999999973,
+          "groundSamples": 1077,
+          "boundActions": 6
+        },
+        {
+          "repetition": 1,
+          "clipMs": 4.0575999999999794,
+          "rigMs": 11.277699999999982,
+          "groundSamples": 1077,
+          "boundActions": 6
+        },
+        {
+          "repetition": 2,
+          "clipMs": 6.5878999999999905,
+          "rigMs": 13.176899999999932,
+          "groundSamples": 1077,
+          "boundActions": 6
+        },
+        {
+          "repetition": 3,
+          "clipMs": 7.607599999999934,
+          "rigMs": 11.48560000000009,
+          "groundSamples": 1077,
+          "boundActions": 6
+        },
+        {
+          "repetition": 4,
+          "clipMs": 5.543300000000045,
+          "rigMs": 17.28219999999999,
+          "groundSamples": 1077,
+          "boundActions": 6
+        },
+        {
+          "repetition": 5,
+          "clipMs": 21.04430000000002,
+          "rigMs": 11.282600000000002,
+          "groundSamples": 1077,
+          "boundActions": 6
+        },
+        {
+          "repetition": 6,
+          "clipMs": 5.586000000000013,
+          "rigMs": 11.037999999999897,
+          "groundSamples": 1077,
+          "boundActions": 6
+        },
+        {
+          "repetition": 7,
+          "clipMs": 6.172500000000014,
+          "rigMs": 10.167100000000005,
+          "groundSamples": 1077,
+          "boundActions": 6
+        }
+      ]
+    },
+    {
+      "species": "buffalo",
+      "url": "/assets/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb",
+      "assetSha256": "88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b",
+      "skins": 1,
+      "vertices": 26860,
+      "geometryParseMs": 50.737499999999955,
+      "samples": [
+        {
+          "repetition": 0,
+          "clipMs": 4.563099999999963,
+          "rigMs": 21.709500000000048,
+          "groundSamples": 1180,
+          "boundActions": 6
+        },
+        {
+          "repetition": 1,
+          "clipMs": 3.086999999999989,
+          "rigMs": 7.298000000000002,
+          "groundSamples": 1180,
+          "boundActions": 6
+        },
+        {
+          "repetition": 2,
+          "clipMs": 4.476999999999975,
+          "rigMs": 7.148000000000025,
+          "groundSamples": 1180,
+          "boundActions": 6
+        },
+        {
+          "repetition": 3,
+          "clipMs": 3.622700000000009,
+          "rigMs": 8.092599999999948,
+          "groundSamples": 1180,
+          "boundActions": 6
+        },
+        {
+          "repetition": 4,
+          "clipMs": 5.170500000000061,
+          "rigMs": 12.345100000000002,
+          "groundSamples": 1180,
+          "boundActions": 6
+        },
+        {
+          "repetition": 5,
+          "clipMs": 4.25750000000005,
+          "rigMs": 18.596200000000067,
+          "groundSamples": 1180,
+          "boundActions": 6
+        },
+        {
+          "repetition": 6,
+          "clipMs": 11.166100000000029,
+          "rigMs": 14.788000000000011,
+          "groundSamples": 1180,
+          "boundActions": 6
+        },
+        {
+          "repetition": 7,
+          "clipMs": 5.21550000000002,
+          "rigMs": 14.347399999999993,
+          "groundSamples": 1180,
+          "boundActions": 6
+        }
+      ]
+    },
+    {
+      "species": "lion",
+      "url": "/assets/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb",
+      "assetSha256": "5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b",
+      "skins": 1,
+      "vertices": 24506,
+      "geometryParseMs": 54.15120000000002,
+      "samples": [
+        {
+          "repetition": 0,
+          "clipMs": 7.941199999999981,
+          "rigMs": 19.056499999999915,
+          "groundSamples": 1435,
+          "boundActions": 6
+        },
+        {
+          "repetition": 1,
+          "clipMs": 14.039599999999837,
+          "rigMs": 11.359100000000126,
+          "groundSamples": 1435,
+          "boundActions": 6
+        },
+        {
+          "repetition": 2,
+          "clipMs": 4.948899999999867,
+          "rigMs": 8.617899999999963,
+          "groundSamples": 1435,
+          "boundActions": 6
+        },
+        {
+          "repetition": 3,
+          "clipMs": 3.3646000000001095,
+          "rigMs": 10.695900000000165,
+          "groundSamples": 1435,
+          "boundActions": 6
+        },
+        {
+          "repetition": 4,
+          "clipMs": 25.146199999999908,
+          "rigMs": 13.014799999999923,
+          "groundSamples": 1435,
+          "boundActions": 6
+        },
+        {
+          "repetition": 5,
+          "clipMs": 8.578199999999924,
+          "rigMs": 9.040300000000116,
+          "groundSamples": 1435,
+          "boundActions": 6
+        },
+        {
+          "repetition": 6,
+          "clipMs": 5.58159999999998,
+          "rigMs": 7.425600000000031,
+          "groundSamples": 1435,
+          "boundActions": 6
+        },
+        {
+          "repetition": 7,
+          "clipMs": 3.2059999999999036,
+          "rigMs": 6.871700000000146,
+          "groundSamples": 1435,
+          "boundActions": 6
+        }
+      ]
+    },
+    {
+      "species": "rhino",
+      "url": "/assets/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb",
+      "assetSha256": "b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82",
+      "skins": 1,
+      "vertices": 24792,
+      "geometryParseMs": 60.09669999999983,
+      "samples": [
+        {
+          "repetition": 0,
+          "clipMs": 5.301899999999932,
+          "rigMs": 9.605999999999995,
+          "groundSamples": 1235,
+          "boundActions": 6
+        },
+        {
+          "repetition": 1,
+          "clipMs": 4.062600000000202,
+          "rigMs": 11.835199999999986,
+          "groundSamples": 1235,
+          "boundActions": 6
+        },
+        {
+          "repetition": 2,
+          "clipMs": 5.1603000000000065,
+          "rigMs": 10.714699999999993,
+          "groundSamples": 1235,
+          "boundActions": 6
+        },
+        {
+          "repetition": 3,
+          "clipMs": 5.398200000000088,
+          "rigMs": 11.619799999999941,
+          "groundSamples": 1235,
+          "boundActions": 6
+        },
+        {
+          "repetition": 4,
+          "clipMs": 5.249200000000201,
+          "rigMs": 12.208200000000033,
+          "groundSamples": 1235,
+          "boundActions": 6
+        },
+        {
+          "repetition": 5,
+          "clipMs": 5.157899999999927,
+          "rigMs": 13.03020000000015,
+          "groundSamples": 1235,
+          "boundActions": 6
+        },
+        {
+          "repetition": 6,
+          "clipMs": 6.143199999999979,
+          "rigMs": 13.241700000000037,
+          "groundSamples": 1235,
+          "boundActions": 6
+        },
+        {
+          "repetition": 7,
+          "clipMs": 7.223499999999831,
+          "rigMs": 9.454899999999952,
+          "groundSamples": 1235,
+          "boundActions": 6
+        }
+      ]
+    }
+  ]
+}
