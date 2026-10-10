@@ -1,0 +1,29 @@
+{
+  "scope": "Source/unit freeze only; no campaign executed; initial reserve lock known",
+  "baseHead": "e590c7cddb81b13b55e069651fa212b26ae238b8",
+  "runtimeSource": "88ebf647b6bbe0d589125e4136d65e73fdf303a6",
+  "hashes": {
+    "tools/horde-defense-staffing6-comparison.mjs": "ac640587c1de934b0c01889dea0e4538f1fb604da033168f250017e36eb188d8",
+    "tests/horde-staffing6-protocol.test.js": "2ad86d83063bcb03b6344b8d4e1f4988554b03d18312b9afe9a9ca2ec83b9400",
+    "docs/qa/horde-defense-pilot-88ebf647-20/staffing6-paired-source-review.md": "14ec9f46ba1a6c166dcfb52b7695bbad2c258d97a4aebb52c2cf171c625af96b"
+  },
+  "checks": [
+    {
+      "command": "node --check tools/horde-defense-staffing6-comparison.mjs",
+      "exitCode": 0
+    },
+    {
+      "exitCode": 0,
+      "passed": 4,
+      "milliseconds": 665.0956,
+      "command": "node --test tests/horde-staffing6-protocol.test.js"
+    },
+    {
+      "exitCode": 0,
+      "passed": 10,
+      "milliseconds": 1879.5857,
+      "command": "node --test tests/horde-staffing6-protocol.test.js tests/horde-comparison-retention.test.js (before extra arithmetic test)"
+    }
+  ],
+  "campaignExecuted": false
+}
