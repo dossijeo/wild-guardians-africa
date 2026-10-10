@@ -76,7 +76,7 @@ test('smoke selection requires both explicit booleans; normal gameplay does not 
  assert.equal(loadingResourceOverlapEnabled({__desktopSmokeStarted:true,__desktopSmokeResourceOverlap:true}),true);
  assert.equal(loadingResourceOverlapEnabled({get __desktopSmokeResourceOverlap(){throw Error('normal read');}}),false);
  const rust=readFileSync(new URL('../src-tauri/src/main.rs',import.meta.url),'utf8'),smoke=readFileSync(new URL('../src-tauri/smoke.js',import.meta.url),'utf8'),workflow=readFileSync(new URL('../.github/workflows/windows.yml',import.meta.url),'utf8');
- assert.ok(rust.indexOf('arg == "--smoke-report"')<rust.indexOf('arg == "--smoke-resource-overlap"'));assert.match(smoke,/loadingRecipe=\{resourceOverlap:window\.__desktopSmokeResourceOverlap===true\}/);
+ assert.ok(rust.indexOf('arg == "--smoke-report"')<rust.indexOf('arg == "--smoke-resource-overlap"'));assert.match(smoke,/loadingRecipe=\{[^\n]*resourceOverlap:window\.__desktopSmokeResourceOverlap===true/);
  assert.match(smoke,/worldStartedAt \+ 90000/);assert.match(workflow,/resource_overlap:[\s\S]*?default: false/);assert.equal((workflow.match(/inputs\.resource_overlap/g)||[]).length,2);assert.match(workflow,/WaitForExit\(240000\)/);assert.match(workflow,/WaitForExit\(900000\)/);
 });
 

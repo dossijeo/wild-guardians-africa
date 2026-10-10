@@ -1,0 +1,90 @@
+{
+  "baseline": "98edab86bce238baf7566de26f62c04afa9e180d",
+  "changed": {
+    "src/rendering/loading-diorama.js": "1f0fee69a82d0499e2904abe5ece4d34c1084710c16d19ab25adb872dd4f5dd5",
+    "src/rendering/loading-serial-images.js": "7887071bb0e6979b83a7e216aa36e9a8869bed5c33c2d884f0a4987e98d42f8e",
+    "tests/loading-serial-images.test.js": "2bec265f7f9be656c230c0c8c0dd9d56b5b81fee3b0919c1b994a42d7b5764fe",
+    "tests/loading-resource-overlap.test.js": "ab607d55c2533c9d8de5e4ffa38ef94754604abac4775ec4234f1906d840328d"
+  },
+  "unchanged": {
+    "src/app/main.js": "b3f5b8dd4ada493ad41fec5d499e297673b9c09239787a6de206adc1085717ba",
+    "src/rendering/assets.js": "492631f5d0c8a1a9c20a2c9b336e611fdfaec33c4698c74d1031f5cdc7d90847",
+    "src/rendering/scene.js": "d8a41ff52ce8b7cfb13b418f95ad12100c1a79cf47932a259dcaaadfd0f14d6e",
+    "src/rendering/loading-programs.js": "a1354397f1ba0543fd4dffcd5143e82c4b211f750a9df367ac902dd70730c8c2",
+    "src/rendering/loading-resource-overlap.js": "10e0c6b399fb68967a6972ab5262983b04045934bf6956ae7c1f8b7bb9c6913b",
+    "src/rendering/sky.js": "68bdb13271abb34d9fe0ca11d86de153e3371061d83652e852648ef554e25dd9",
+    "src/rendering/crop-library.js": "1f6308773529e162d449129a90a31b448e48696a6b766c30fe678401c21842ef",
+    "src/rendering/loading-texture-owner.js": "5920c3567fe43888a300655bd1bd01b8ca2181405e2dc86192fe2a5984cc451b",
+    "src/rendering/loading-image-decoder.js": "88b3d1a980847f2c1d3325310b2d36d6b38643387ebb8d9ba9f43f6c7cb638a3",
+    "src-tauri/smoke.js": "64a284a2c252d5fc5243d20ba2d531929bce598df215019e6553a6a54594223c",
+    "src-tauri/src/main.rs": "3a9060de1bbe359b3df7f44c6b605db4c3bf9f7b3f4c55c642df73021cd8246f",
+    ".github/workflows/windows.yml": "f8ade383731333f5b300e7a4e9515ba197d805bdad10b5e96ee68656ffef5bdc",
+    "docs/qa/sfx-catalog-post-jam/inventory.json": "852c0e3cff092eec25deac0365417d156fd16ae23e719ea937dc442340b25238",
+    "public/content/models.json": "9fbdddec82c57f60777cec4751142cf06db58bf99916ebb403c80e8c98ddacc1",
+    "public/content/crop-bridges.json": "1cb26e0d61bdb0aa780d6976e54c57537b8cf9fe77518b49691b9c4cd292185f",
+    "public/content/ground-materials.json": "f21f6ec1582f57e3b5346021894f54a46a785f8b22d9eca6eb2154440e1fa5f5"
+  },
+  "normalOffBranchSha256": "82ed677497b0787d2f3933a382a67c609220690e91a549f62d01f8b36dd08631",
+  "gpuTailSha256": "e6cf40b6b99f5d8a40bb5fad7d4ee10eb8e8f97e627b650fd3fcdf2fc496f729",
+  "checks": [
+    {
+      "log": "tests.log",
+      "args": [
+        "node",
+        "--test",
+        "tests/loading-serial-images.test.js",
+        "tests/loading-resource-overlap.test.js",
+        "tests/loading-diorama-disposal.test.js",
+        "tests/loading-diorama-upload.test.js",
+        "tests/assets-lifecycle.test.js",
+        "tests/sfx-catalog-audit.test.js"
+      ],
+      "exitCode": 0,
+      "sha256": "12f5450d8809f7cf323ecc45a723cb1a61049913692501f2c3ae9d03e0677ab6"
+    },
+    {
+      "log": "sfx-check.log",
+      "args": [
+        "node",
+        "tools/audit_sfx_catalog.mjs",
+        "--check"
+      ],
+      "exitCode": 0,
+      "sha256": "57a76409221817b8b926bb904cd60850d487c554046c7c090ceb905809ce6277"
+    },
+    {
+      "log": "build.log",
+      "args": [
+        "npm.cmd",
+        "run",
+        "build"
+      ],
+      "exitCode": 0,
+      "sha256": "9862e31093cbf413d516e4c3bf54597ef1359af40ef501ada0715d2c02d08450"
+    },
+    {
+      "log": "package.log",
+      "args": [
+        "npm.cmd",
+        "run",
+        "test:web-package"
+      ],
+      "exitCode": 0,
+      "sha256": "8323d9fd4f5cb35b7d5383b041b686a19813c78a51446f98b296ac7f904beabc"
+    }
+  ],
+  "logs": {
+    "build.log": "9862e31093cbf413d516e4c3bf54597ef1359af40ef501ada0715d2c02d08450",
+    "initial-tests-negative.log": "fb713d3652ebac6d9f4577e87fde313d0265fb4a01d84e8bb367d5ffd7cfdaea",
+    "package.log": "8323d9fd4f5cb35b7d5383b041b686a19813c78a51446f98b296ac7f904beabc",
+    "sfx-check.log": "57a76409221817b8b926bb904cd60850d487c554046c7c090ceb905809ce6277",
+    "tests.log": "12f5450d8809f7cf323ecc45a723cb1a61049913692501f2c3ae9d03e0677ab6"
+  },
+  "session": 35243,
+  "exitCode": 0,
+  "tests": 35,
+  "defaultEnabled": false,
+  "cliWired": false,
+  "nativeEvidence": false,
+  "theoreticalTailOpportunityMs": 2733.2
+}

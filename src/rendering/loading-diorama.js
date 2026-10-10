@@ -1,3 +1,4 @@
+import {loadWithSerialImages} from './loading-serial-images.js';
 import {loadingSyncWitness,loadingAwaitWitness} from './loading-sync-witness.js';
 import {waitGpuFrame} from '../../tools/experiments/wait-gpu-frame.js';
 import {compileLoadingPrograms} from './loading-programs.js';
@@ -23,8 +24,8 @@ import {renderScreenPreload,renderScreenPreloadBatched,waitForGpuPreload} from '
 // Borrows the world renderer, sky and asset collection. Only local geometries,
 // cloned materials and the small instanced crop batch belong to this owner.
 export class LoadingDiorama {
-  constructor(world,{state={day:1,time:0,biome:'sabana'},focusVignette=true,batchedUpload=false,resourceOverlap=false,reducedMotion=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches??false}={}) {
-    this.world=world;this.batchedUpload=batchedUpload;this.resourceOverlap=resourceOverlap;this.textureOwner=new LoadingTextureOwner();world.assets.asyncTextureImages=true;this.state=state;this.scene=new THREE.Scene();this.plants=new LoadingPlants();this.camera=new THREE.PerspectiveCamera(40,1,.1,80);this.camera.position.set(4.8,3.1,6.4);this.camera.lookAt(0,1.15,0);this.baseQuaternion=this.camera.quaternion.clone();
+  constructor(world,{state={day:1,time:0,biome:'sabana'},focusVignette=true,batchedUpload=false,resourceOverlap=false,serialImageChain=false,reducedMotion=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches??false}={}) {
+    this.world=world;this.batchedUpload=batchedUpload;this.resourceOverlap=resourceOverlap;this.serialImageChain=serialImageChain;this.textureOwner=new LoadingTextureOwner();world.assets.asyncTextureImages=true;this.state=state;this.scene=new THREE.Scene();this.plants=new LoadingPlants();this.camera=new THREE.PerspectiveCamera(40,1,.1,80);this.camera.position.set(4.8,3.1,6.4);this.camera.lookAt(0,1.15,0);this.baseQuaternion=this.camera.quaternion.clone();
     this.sun=new THREE.DirectionalLight('#ffe2a8',3);this.sun.position.set(-30,55,25);this.ambient=new THREE.HemisphereLight('#ebf1d9','#765b3b',2);this.scene.add(this.sun,this.ambient);
     this.toon=new AfricanToon();this.toon.uniforms.uFineNoise.value=0;
     this.orbit=new LoadingOrbit({reducedMotion});this.focus=new THREE.Vector3(0,1.15,0);this.focusLight=new LoadingFocusLight({enabled:focusVignette});
@@ -56,6 +57,7 @@ export class LoadingDiorama {
   }
   async prepare() {
     const {world}=this,phase=(label,run)=>loadingAwaitWitness(world.onLoadingSpan,label,run),sync=(label,run)=>loadingSyncWitness(world.onLoadingSpan,label,run);
+    if(this.resourceOverlap&&this.serialImageChain)throw Error('Loading resource recipes must remain isolated');
     let gltf,preparedBridges,soilTexture,mountainTexture,mountains,atlasUrl;
     if(this.resourceOverlap){
       mountains=mountainBackdropProfile('savanna',712);atlasUrl=assetUrl(mountains.atlas);
@@ -74,6 +76,18 @@ export class LoadingDiorama {
         }
       });
       [gltf,preparedBridges,soilTexture,mountainTexture]=resources;
+    }else if(this.serialImageChain){
+      await phase('diorama-prepare-sky',()=>world.loadReady(world.sky.load()));if(this.disposed)throw Error('Loading diorama cancelled');
+      const [models,bridges,ground]=await phase('diorama-prepare-catalogues',()=>world.loadReady(Promise.all([json('/content/models.json',{signal:world.loading.signal}),json('/content/crop-bridges.json',{signal:world.loading.signal}),json('/content/ground-materials.json',{signal:world.loading.signal})])));
+      const descriptor=models.find(m=>m.source.includes('Cultivos'));if(!descriptor)throw Error('Missing native maize model');
+      mountains=mountainBackdropProfile('savanna',712);atlasUrl=assetUrl(mountains.atlas);
+      [gltf,preparedBridges,soilTexture,mountainTexture]=await loadWithSerialImages({
+        assertOpen:()=>{if(this.disposed||world.disposed||this.abort.signal.aborted||world.loading.signal.aborted)throw new DOMException('Loading diorama cancelled','AbortError');},
+        model:()=>phase('diorama-prepare-maize-model',()=>world.loadReady(world.assets.model(descriptor.url))),
+        bridges:()=>phase('diorama-prepare-maize-bridges',()=>world.loadReady(loadCropBridges(bridges,url=>world.assets.model(url)))),
+        soil:()=>phase('diorama-prepare-soil-texture',()=>world.loadReady(world.assets.texture(ground.canyons.base,false))),
+        atlas:()=>phase('diorama-prepare-mountain-atlas',()=>world.loadReady(this.loadBackdropTexture(atlasUrl)))
+      });
     }else{
       await phase('diorama-prepare-sky',()=>world.loadReady(world.sky.load()));if(this.disposed)throw Error('Loading diorama cancelled');
       const [models,bridges,ground]=await phase('diorama-prepare-catalogues',()=>world.loadReady(Promise.all([json('/content/models.json',{signal:world.loading.signal}),json('/content/crop-bridges.json',{signal:world.loading.signal}),json('/content/ground-materials.json',{signal:world.loading.signal})])));
@@ -89,7 +103,7 @@ export class LoadingDiorama {
     // Shared assets remain owned by World; only the loading texture clone and
     // separately loaded backdrop belong to this presentation. No GPU warm work
     // or scene adoption starts until every required resource and sky is ready.
-    if(this.resourceOverlap){this.ground.material.map=this.textureOwner.borrow(soilTexture);this.ground.material.color.set('#a59b8d');this.ground.material.needsUpdate=true;}
+    if(this.resourceOverlap||this.serialImageChain){this.ground.material.map=this.textureOwner.borrow(soilTexture);this.ground.material.color.set('#a59b8d');this.ground.material.needsUpdate=true;}
     const layout=mountains.arcLayout.slice(0,3).map((arc,index)=>({...arc,angle:Math.atan2(-4.8,-6.4)+(index-1)*.45,height:index===1?6.5:4.6,baseY:-1.4}));
     const backdropOwner={scene:this.scene,camera:this.camera,nav:{config:{biome:'savanna'},field:{surface:()=>0}},toon:this.toon};
     this.backdrop=createBiomeBackdrop(backdropOwner,mountainTexture,{radius:35,arcLayout:layout,stableAltitude:false,parallax:0,fogMix:.2,fogBaseMix:.8,fogDayColor:'#decba6',fogNightColor:'#26364a'});

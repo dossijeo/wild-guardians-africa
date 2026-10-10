@@ -1,0 +1,401 @@
+TAP version 13
+# (node:14968) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: sky and catalogues start together; all four resources start after catalogues and adoption waits for every resource and sky
+ok 1 - sky and catalogues start together; all four resources start after catalogues and adoption waits for every resource and sky
+  ---
+  duration_ms: 2.4832
+  ...
+# Subtest: early sky failure and synchronous resource failure propagate while all late sibling rejections are observed
+ok 2 - early sky failure and synchronous resource failure propagate while all late sibling rejections are observed
+  ---
+  duration_ms: 1.4801
+  ...
+# Subtest: abort after catalogues prevents all resource starts; closed owner rejects before adoption
+ok 3 - abort after catalogues prevents all resource starts; closed owner rejects before adoption
+  ---
+  duration_ms: 0.4765
+  ...
+# Subtest: actual Assets URL cache and V4 bridge loader reuse the same model promises without making private rigs or disposing borrowed models
+ok 4 - actual Assets URL cache and V4 bridge loader reuse the same model promises without making private rigs or disposing borrowed models
+  ---
+  duration_ms: 6.1852
+  ...
+# Subtest: real World.loadReady cancellation rejects scheduling, and original backdrop late-arrival disposer releases its private texture exactly once
+ok 5 - real World.loadReady cancellation rejects scheduling, and original backdrop late-arrival disposer releases its private texture exactly once
+  ---
+  duration_ms: 2.2196
+  ...
+# Subtest: candidate is OFF by default and does not change setup, warming, shader variants or fences
+ok 6 - candidate is OFF by default and does not change setup, warming, shader variants or fences
+  ---
+  duration_ms: 3.1452
+  ...
+# Subtest: actual diorama prepare dispatches the four existing loaders before sky finishes, then reaches the same adoption boundary without early GPU work
+ok 7 - actual diorama prepare dispatches the four existing loaders before sky finishes, then reaches the same adoption boundary without early GPU work
+  ---
+  duration_ms: 37.8684
+  ...
+# Subtest: smoke selection requires both explicit booleans; normal gameplay does not read experimental selection
+not ok 8 - smoke selection requires both explicit booleans; normal gameplay does not read experimental selection
+  ---
+  duration_ms: 4.8587
+  location: 'file:///C:/Users/PC/.codex/worktrees/interactive-loading-screen/wild-guardians-africa/tests/loading-resource-overlap.test.js:74:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /loadingRecipe=\{resourceOverlap:window\.__desktopSmokeResourceOverlap===true\}/. Input:
+    
+    '// Runs only when the executable receives --smoke-report PATH. Normal play is untouched.\n' +
+      '(async () => {\n' +
+      '  if (window.__desktopSmokeStarted) return;\n' +
+      '  window.__desktopSmokeStarted = true;\n' +
+      '  const report = {ok: false, origin: location.origin, userAgent: navigator.userAgent, secureContext: isSecureContext, checks: {}, errors: []};\n' +
+      '  report.checks.loadingRecipe={wallBufferPackage:window.__desktopSmokeWallBufferPackage===true,resourceOverlap:window.__desktopSmokeResourceOverlap===true,compileWindow:window.__desktopSmokeCompileWindow===true};\n' +
+      '  const consoleError = console.error;\n' +
+      "  console.error = (...args) => {report.errors.push(args.map(String).join(' ')); consoleError.apply(console, args);};\n" +
+      '  const fail = event => report.errors.push(event.message || String(event.reason));\n' +
+      "  addEventListener('error', fail); addEventListener('unhandledrejection', fail);\n" +
+      "  const timeout = setTimeout(() => finish(new Error('Desktop smoke timed out')), 720000);\n" +
+      '  let finished = false;\n' +
+      '  let worldStartedAt = null;\n' +
+      '  let worldReadyAt = null;\n' +
+      '  async function finish(error) {\n' +
+      '    if (finished) return;\n' +
+      '    finished = true;\n' +
+      '    clearTimeout(timeout);\n' +
+      '    if (error) report.errors.push(String(error));\n' +
+      '    // Read presentation state only. This is diagnostic context, not proof of\n' +
+      '    // readiness or a GPU measurement; do not acquire another WebGL context.\n' +
+      '    try {\n' +
+      "      const stage = document.querySelector('#stage'), world = document.querySelector('#world');\n" +
+      "      const progress = document.querySelector('.interactive-loading-track');\n" +
+      '      report.checks.loadingAtFinish = {\n' +
+      '        worldWaitMs: worldStartedAt === null ? null : (worldReadyAt ?? performance.now()) - worldStartedAt,\n' +
+      '        readyGateReached: worldReadyAt !== null,\n' +
+      "        stageBusy: stage?.getAttribute('aria-busy') ?? null,\n" +
+      "        displayedProgress: progress?.getAttribute('aria-valuenow') ?? null,\n" +
+      "        phaseLabel: document.querySelector('.interactive-loading-title')?.textContent ?? null,\n" +
+      '        visibility: document.visibilityState, focused: document.hasFocus(),\n' +
+      '        canvas: world ? {width: world.width, height: world.height} : null,\n' +
+      "        scope: 'Presentation snapshot only; displayed progress and canvas dimensions do not establish world readiness or GPU identity.'\n" +
+      '      };\n' +
+      '    } catch (observationError) {\n' +
+      '      report.checks.loadingObservationError = String(observationError);\n' +
+      '    }\n' +
+      '    // One finish-only read from the successful World owner; no new loop/context.\n' +
+      '    try{report.checks.loadingReadinessAtFinish=window.__desktopSmokeLoadingReadiness?.()??null;}catch(observationError){report.checks.loadingReadinessObservationError=String(observationError);}\n' +
+      '    report.ok = !error && report.errors.length === 0;\n' +
+      "    await window.__TAURI_INTERNALS__.invoke('desktop_smoke_report', {report});\n" +
+      '  }\n' +
+      '  async function checkVisibility(fixture) {\n' +
+      '    const transitions=[],wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));\n' +
+      "    report.checks.visibility={passed:false,phase:'visible-baseline',transitions};\n" +
+      "    document.addEventListener('visibilitychange',()=>transitions.push({state:document.visibilityState,at:performance.now()}));\n" +
+      "    const until=async predicate=>{const deadline=performance.now()+20000;while(!predicate()){if(performance.now()>deadline)throw Error('Native visibility transition absent');await wait(100);}};\n" +
+      "    const core=s=>Object.fromEntries(['day','time','elapsed','rng','ledger','plants','structures','workers','crates','tasks','spells','cooldowns','raid','nightPlan','dayPlan','result','completedNights','postgame','commandIds','villages','suppressed'].map(key=>[key,s[key]]));\n" +
+      '    const readSlot=()=>new Promise((resolve,reject)=>{\n' +
+      "      const request=indexedDB.open('wild-guardians-saves',1);\n" +
+      '      request.onerror=()=>reject(request.error);\n' +
+      '      request.onsuccess=()=>{\n' +
+      "        const db=request.result,tx=db.transaction('slots','readonly'),get=tx.objectStore('slots').get(fixture.slotId);let text=null;\n" +
+      '        get.onsuccess=()=>{text=get.result?.primary??null;};\n' +
+      '        tx.oncomplete=()=>{db.close();resolve(text);};tx.onabort=()=>{db.close();reject(tx.error);};\n' +
+      '      };\n' +
+      '    });\n' +
+      '    const sample=async({resume=true}={})=>{\n' +
+      '      const previous=await readSlot();\n' +
+      "      if(!document.querySelector('#save'))document.querySelector('#menuButton').click();\n" +
+      "      const save=document.querySelector('#save');if(!save)throw Error('Pause/save UI missing');save.click();\n" +
+      '      const deadline=performance.now()+20000;let text=await readSlot();\n' +
+      "      while(!text||text===previous){if(performance.now()>deadline)throw Error('IndexedDB save did not commit');await wait(50);text=await readSlot();}\n" +
+      '      const snapshot=JSON.parse(text);\n' +
+      "      report.checks.saveBackend='IndexedDB';\n" +
+      "      if(snapshot.slotId!==fixture.slotId)throw Error('Wrong visibility slot');\n" +
+      "      if(resume)document.querySelector('#resume').click();\n" +
+      '      return snapshot;\n' +
+      '    };\n' +
+      "    if(document.hidden)throw Error('Visibility fixture starts hidden');\n" +
+      '    const before=await sample();await wait(2000);const advancing=await sample();\n' +
+      "    if(advancing.elapsed<=before.elapsed||advancing.pauses.some(p=>p!=='menu'))throw Error('Visible fixture does not advance freely');\n" +
+      "    if(!advancing.raid||!advancing.spells.some(s=>s.kind==='shield'&&s.remaining>0))throw Error('Visibility fixture lost active raid or magic');\n" +
+      "    report.checks.visibility.phase='minimize';\n" +
+      "    report.checks.visibility.nativeMinimized=await window.__TAURI_INTERNALS__.invoke('desktop_smoke_minimize');\n" +
+      "    if(!report.checks.visibility.nativeMinimized)throw Error('Native window did not minimize');\n" +
+      '    await until(()=>document.hidden);\n' +
+      "    report.checks.visibility.phase='hidden-interval';\n" +
+      '    // Saving briefly opens the menu; close it so hidden is the sole blocker\n' +
+      '    // during the measured interval. Retain the menu only at its end.\n' +
+      '    const hiddenStart=await sample(),hiddenAt=performance.now();\n' +
+      "    if(!hiddenStart.pauses.includes('hidden')||!hiddenStart.pauses.includes('menu'))throw Error('Hidden/menu pauses not stacked');\n" +
+      '    await wait(300000);\n' +
+      "    if(!document.hidden)throw Error('Native hidden interval too short');\n" +
+      '    const hiddenEnd=await sample({resume:false}),hiddenMs=performance.now()-hiddenAt;\n' +
+      "    if(JSON.stringify(core(hiddenStart))!==JSON.stringify(core(hiddenEnd)))throw Error('Game progressed while genuinely hidden');\n" +
+      "    report.checks.visibility.phase='restore';\n" +
+      '    await until(()=>!document.hidden);\n' +
+      '    const visibleMenu=await sample({resume:false});\n' +
+      "    if(visibleMenu.pauses.includes('hidden')||!visibleMenu.pauses.includes('menu'))throw Error('Native restore released the wrong pause');\n" +
+      "    if(JSON.stringify(core(hiddenEnd))!==JSON.stringify(core(visibleMenu)))throw Error('Game advanced behind retained menu');\n" +
+      "    report.checks.visibility.phase='resume';\n" +
+      "    document.querySelector('#resume').click();const resumedAt=performance.now();await wait(2000);const resumed=await sample();\n" +
+      '    const delta=resumed.elapsed-visibleMenu.elapsed,visibleMs=performance.now()-resumedAt;\n' +
+      '    const maxScale=visibleMenu.raid&&resumed.raid&&visibleMenu.raid.id===resumed.raid.id?1:5;\n' +
+      "    if(delta<=0||delta>visibleMs/1000*maxScale+.1)throw Error('Visible game failed to resume or caught up hidden time');\n" +
+      "    if(!transitions.some(t=>t.state==='hidden')||!transitions.some(t=>t.state==='visible'))throw Error('Real visibility events missing');\n" +
+      "    return {passed:true,transitions,hiddenMs,visibleMs,resumedSimulatedSeconds:delta,hiddenStart:core(hiddenStart),hiddenEnd:core(hiddenEnd),visibleMenuPauses:visibleMenu.pauses,scope:'Real native minimization and restoration. Hidden is the sole blocker during the measured interval; menu is retained at its end to test stacked pauses on restoration. Save buttons intentionally add notices, so comparison covers simulation fields and excludes savedAt, notices, tutorial presentation and their nextId counter. No document.hidden override or synthetic visibilitychange.'};\n" +
+      '  }\n' +
+      '  try {\n' +
+      '    const load = async path => { const response = await fetch(new URL(path, location.href)); if (!response.ok) throw Error(`${path}: ${response.status}`); return response; };\n' +
+      "    const manifest = await (await load('content/web-assets.json')).json();\n" +
+      "    const {decodeWebGlb} = await import(new URL('runtime/glb-legacy.js', location.href));\n" +
+      '    report.checks.models = [];\n' +
+      '    // Decode every shipped culture, worker and beast using the production WASM decoder.\n' +
+      "    const models = manifest.records.filter(record => record.source.endsWith('.glb') && record.runtime.endsWith('.glb'));\n" +
+      "    if (!models.length) throw Error('No runtime models in package manifest');\n" +
+      '    for (const model of models) {\n' +
+      '      const decoded = await decodeWebGlb(await (await load(model.runtime)).arrayBuffer());\n' +
+      "      if (new DataView(decoded).getUint32(0, true) !== 0x46546c67) throw Error('Invalid decoded GLB');\n" +
+      '      report.checks.models.push(model.runtime);\n' +
+      '    }\n' +
+      "    const canvas = document.createElement('canvas'), gl = canvas.getContext('webgl2');\n" +
+      "    if (!gl) throw Error('WebGL 2 unavailable');\n" +
+      "    report.checks.webgl2 = true; gl.getExtension('WEBGL_lose_context')?.loseContext();\n" +
+      "    const blob = URL.createObjectURL(new Blob(['postMessage(42)'], {type: 'text/javascript'}));\n" +
+      '    const worker = new Worker(blob);\n' +
+      "    await new Promise((resolve, reject) => {worker.onmessage = event => event.data === 42 ? resolve() : reject(Error('Worker reply')); worker.onerror = reject;});\n" +
+      '    worker.terminate(); URL.revokeObjectURL(blob); report.checks.worker = true;\n' +
+      '    const variants = new Map(manifest.records.map(record => [record.source, record.runtime]));\n' +
+      "    const runtime = path => variants.get(path.replace(/^\\//, '')) ?? path;\n" +
+      "    const bank = await (await load(runtime('content/sfx.json'))).json();\n" +
+      '    const context = new AudioContext();\n' +
+      '    const sample = bank.items[0], audioUrl = runtime(sample.audio.url);\n' +
+      '    const audio = await context.decodeAudioData(await (await load(audioUrl)).arrayBuffer());\n' +
+      '    report.checks.audio = {id: sample.id, url: audioUrl, seconds: audio.duration, channels: audio.numberOfChannels, sampleRate: audi'... 2395 more characters
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: |-
+    // Runs only when the executable receives --smoke-report PATH. Normal play is untouched.
+    (async () => {
+      if (window.__desktopSmokeStarted) return;
+      window.__desktopSmokeStarted = true;
+      const report = {ok: false, origin: location.origin, userAgent: navigator.userAgent, secureContext: isSecureContext, checks: {}, errors: []};
+      report.checks.loadingRecipe={wallBufferPackage:window.__desktopSmokeWallBufferPackage===true,resourceOverlap:window.__desktopSmokeResourceOverlap===true,compileWindow:window.__desktopSmokeCompileWindow===true};
+      const consoleError = console.error;
+      console.error = (...args) => {report.errors.push(args.map(String).join(' ')); consoleError.apply(console, args);};
+      const fail = event => report.errors.push(event.message || String(event.reason));
+      addEventListener('error', fail); addEventListener('unhandledrejection', fail);
+      const timeout = setTimeout(() => finish(new Error('Desktop smoke timed out')), 720000);
+      let finished = false;
+      let worldStartedAt = null;
+      let worldReadyAt = null;
+      async function finish(error) {
+        if (finished) return;
+        finished = true;
+        clearTimeout(timeout);
+        if (error) report.errors.push(String(error));
+        // Read presentation state only. This is diagnostic context, not proof of
+        // readiness or a GPU measurement; do not acquire another WebGL context.
+        try {
+          const stage = document.querySelector('#stage'), world = document.querySelector('#world');
+          const progress = document.querySelector('.interactive-loading-track');
+          report.checks.loadingAtFinish = {
+            worldWaitMs: worldStartedAt === null ? null : (worldReadyAt ?? performance.now()) - worldStartedAt,
+            readyGateReached: worldReadyAt !== null,
+            stageBusy: stage?.getAttribute('aria-busy') ?? null,
+            displayedProgress: progress?.getAttribute('aria-valuenow') ?? null,
+            phaseLabel: document.querySelector('.interactive-loading-title')?.textContent ?? null,
+            visibility: document.visibilityState, focused: document.hasFocus(),
+            canvas: world ? {width: world.width, height: world.height} : null,
+            scope: 'Presentation snapshot only; displayed progress and canvas dimensions do not establish world readiness or GPU identity.'
+          };
+        } catch (observationError) {
+          report.checks.loadingObservationError = String(observationError);
+        }
+        // One finish-only read from the successful World owner; no new loop/context.
+        try{report.checks.loadingReadinessAtFinish=window.__desktopSmokeLoadingReadiness?.()??null;}catch(observationError){report.checks.loadingReadinessObservationError=String(observationError);}
+        report.ok = !error && report.errors.length === 0;
+        await window.__TAURI_INTERNALS__.invoke('desktop_smoke_report', {report});
+      }
+      async function checkVisibility(fixture) {
+        const transitions=[],wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+        report.checks.visibility={passed:false,phase:'visible-baseline',transitions};
+        document.addEventListener('visibilitychange',()=>transitions.push({state:document.visibilityState,at:performance.now()}));
+        const until=async predicate=>{const deadline=performance.now()+20000;while(!predicate()){if(performance.now()>deadline)throw Error('Native visibility transition absent');await wait(100);}};
+        const core=s=>Object.fromEntries(['day','time','elapsed','rng','ledger','plants','structures','workers','crates','tasks','spells','cooldowns','raid','nightPlan','dayPlan','result','completedNights','postgame','commandIds','villages','suppressed'].map(key=>[key,s[key]]));
+        const readSlot=()=>new Promise((resolve,reject)=>{
+          const request=indexedDB.open('wild-guardians-saves',1);
+          request.onerror=()=>reject(request.error);
+          request.onsuccess=()=>{
+            const db=request.result,tx=db.transaction('slots','readonly'),get=tx.objectStore('slots').get(fixture.slotId);let text=null;
+            get.onsuccess=()=>{text=get.result?.primary??null;};
+            tx.oncomplete=()=>{db.close();resolve(text);};tx.onabort=()=>{db.close();reject(tx.error);};
+          };
+        });
+        const sample=async({resume=true}={})=>{
+          const previous=await readSlot();
+          if(!document.querySelector('#save'))document.querySelector('#menuButton').click();
+          const save=document.querySelector('#save');if(!save)throw Error('Pause/save UI missing');save.click();
+          const deadline=performance.now()+20000;let text=await readSlot();
+          while(!text||text===previous){if(performance.now()>deadline)throw Error('IndexedDB save did not commit');await wait(50);text=await readSlot();}
+          const snapshot=JSON.parse(text);
+          report.checks.saveBackend='IndexedDB';
+          if(snapshot.slotId!==fixture.slotId)throw Error('Wrong visibility slot');
+          if(resume)document.querySelector('#resume').click();
+          return snapshot;
+        };
+        if(document.hidden)throw Error('Visibility fixture starts hidden');
+        const before=await sample();await wait(2000);const advancing=await sample();
+        if(advancing.elapsed<=before.elapsed||advancing.pauses.some(p=>p!=='menu'))throw Error('Visible fixture does not advance freely');
+        if(!advancing.raid||!advancing.spells.some(s=>s.kind==='shield'&&s.remaining>0))throw Error('Visibility fixture lost active raid or magic');
+        report.checks.visibility.phase='minimize';
+        report.checks.visibility.nativeMinimized=await window.__TAURI_INTERNALS__.invoke('desktop_smoke_minimize');
+        if(!report.checks.visibility.nativeMinimized)throw Error('Native window did not minimize');
+        await until(()=>document.hidden);
+        report.checks.visibility.phase='hidden-interval';
+        // Saving briefly opens the menu; close it so hidden is the sole blocker
+        // during the measured interval. Retain the menu only at its end.
+        const hiddenStart=await sample(),hiddenAt=performance.now();
+        if(!hiddenStart.pauses.includes('hidden')||!hiddenStart.pauses.includes('menu'))throw Error('Hidden/menu pauses not stacked');
+        await wait(300000);
+        if(!document.hidden)throw Error('Native hidden interval too short');
+        const hiddenEnd=await sample({resume:false}),hiddenMs=performance.now()-hiddenAt;
+        if(JSON.stringify(core(hiddenStart))!==JSON.stringify(core(hiddenEnd)))throw Error('Game progressed while genuinely hidden');
+        report.checks.visibility.phase='restore';
+        await until(()=>!document.hidden);
+        const visibleMenu=await sample({resume:false});
+        if(visibleMenu.pauses.includes('hidden')||!visibleMenu.pauses.includes('menu'))throw Error('Native restore released the wrong pause');
+        if(JSON.stringify(core(hiddenEnd))!==JSON.stringify(core(visibleMenu)))throw Error('Game advanced behind retained menu');
+        report.checks.visibility.phase='resume';
+        document.querySelector('#resume').click();const resumedAt=performance.now();await wait(2000);const resumed=await sample();
+        const delta=resumed.elapsed-visibleMenu.elapsed,visibleMs=performance.now()-resumedAt;
+        const maxScale=visibleMenu.raid&&resumed.raid&&visibleMenu.raid.id===resumed.raid.id?1:5;
+        if(delta<=0||delta>visibleMs/1000*maxScale+.1)throw Error('Visible game failed to resume or caught up hidden time');
+        if(!transitions.some(t=>t.state==='hidden')||!transitions.some(t=>t.state==='visible'))throw Error('Real visibility events missing');
+        return {passed:true,transitions,hiddenMs,visibleMs,resumedSimulatedSeconds:delta,hiddenStart:core(hiddenStart),hiddenEnd:core(hiddenEnd),visibleMenuPauses:visibleMenu.pauses,scope:'Real native minimization and restoration. Hidden is the sole blocker during the measured interval; menu is retained at its end to test stacked pauses on restoration. Save buttons intentionally add notices, so comparison covers simulation fields and excludes savedAt, notices, tutorial presentation and their nextId counter. No document.hidden override or synthetic visibilitychange.'};
+      }
+      try {
+        const load = async path => { const response = await fetch(new URL(path, location.href)); if (!response.ok) throw Error(`${path}: ${response.status}`); return response; };
+        const manifest = await (await load('content/web-assets.json')).json();
+        const {decodeWebGlb} = await import(new URL('runtime/glb-legacy.js', location.href));
+        report.checks.models = [];
+        // Decode every shipped culture, worker and beast using the production WASM decoder.
+        const models = manifest.records.filter(record => record.source.endsWith('.glb') && record.runtime.endsWith('.glb'));
+        if (!models.length) throw Error('No runtime models in package manifest');
+        for (const model of models) {
+          const decoded = await decodeWebGlb(await (await load(model.runtime)).arrayBuffer());
+          if (new DataView(decoded).getUint32(0, true) !== 0x46546c67) throw Error('Invalid decoded GLB');
+          report.checks.models.push(model.runtime);
+        }
+        const canvas = document.createElement('canvas'), gl = canvas.getContext('webgl2');
+        if (!gl) throw Error('WebGL 2 unavailable');
+        report.checks.webgl2 = true; gl.getExtension('WEBGL_lose_context')?.loseContext();
+        const blob = URL.createObjectURL(new Blob(['postMessage(42)'], {type: 'text/javascript'}));
+        const worker = new Worker(blob);
+        await new Promise((resolve, reject) => {worker.onmessage = event => event.data === 42 ? resolve() : reject(Error('Worker reply')); worker.onerror = reject;});
+        worker.terminate(); URL.revokeObjectURL(blob); report.checks.worker = true;
+        const variants = new Map(manifest.records.map(record => [record.source, record.runtime]));
+        const runtime = path => variants.get(path.replace(/^\//, '')) ?? path;
+        const bank = await (await load(runtime('content/sfx.json'))).json();
+        const context = new AudioContext();
+        const sample = bank.items[0], audioUrl = runtime(sample.audio.url);
+        const audio = await context.decodeAudioData(await (await load(audioUrl)).arrayBuffer());
+        report.checks.audio = {id: sample.id, url: audioUrl, seconds: audio.duration, channels: audio.numberOfChannels, sampleRate: audio.sampleRate};
+        report.checks.audioSeconds = audio.duration; await context.close();
+        localStorage.setItem('wild-guardians:desktop-smoke', 'roundtrip');
+        if (localStorage.getItem('wild-guardians:desktop-smoke') !== 'roundtrip') throw Error('Storage failed');
+        localStorage.removeItem('wild-guardians:desktop-smoke'); report.checks.storage = true;
+        const end = performance.now() + 60000;
+        while (!document.querySelector('#app iframe') && performance.now() < end) await new Promise(resolve => setTimeout(resolve, 100));
+        const menu = document.querySelector('#app iframe');
+        if (!menu) throw Error('Native menu iframe did not appear');
+        report.checks.menu = menu.src;
+        const send = data => dispatchEvent(new MessageEvent('message', {origin: location.origin, source: menu.contentWindow, data: {type: 'wild-guardians:menu', ...data}}));
+        send({action: 'settings-change', settings: {quality: 'muy_baja', sfx: 0, music: 0}});
+        const fixture = await window.__TAURI_INTERNALS__.invoke('desktop_smoke_fixture');
+        if (fixture) {localStorage.setItem('wild-guardians:slot:'+fixture.slotId,fixture.snapshot);send({action:'load-slot',slotId:fixture.slotId});}
+        else send({action: 'start', biome: 'gran-canon', culture: 'mapungubwe'});
+        worldStartedAt = performance.now();
+        const worldEnd = worldStartedAt + 90000;
+        while (document.querySelector('#stage')?.getAttribute('aria-busy') !== 'false' && performance.now() < worldEnd) await new Promise(resolve => setTimeout(resolve, 100));
+        if (document.querySelector('#stage')?.getAttribute('aria-busy') !== 'false') throw Error('Production world did not finish loading');
+        worldReadyAt = performance.now();
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const world = document.querySelector('#world');
+        if (!world || world.width === 0 || world.height === 0) throw Error('Production world canvas missing');
+        report.checks.world = {biome: 'gran-canon', culture: 'mapungubwe', width: world.width, height: world.height};
+        await new Promise(resolve => requestAnimationFrame(resolve));
+        report.worldPng = world.toDataURL('image/png');
+        if (fixture) report.checks.visibility = await checkVisibility(fixture);
+        report.checks.saveKeys = Object.keys(localStorage).filter(key => key.startsWith('wild-guardians:'));
+        await finish();
+      } catch (error) { await finish(error); }
+    })();
+    
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/interactive-loading-screen/wild-guardians-africa/tests/loading-resource-overlap.test.js:79:110)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+# Subtest: actual prepare sibling rejection closes presentation through dispose, observes late failures and releases pending atlas exactly once
+ok 9 - actual prepare sibling rejection closes presentation through dispose, observes late failures and releases pending atlas exactly once
+  ---
+  duration_ms: 7.5526
+  ...
+# (node:28068) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real prepare preserves sky/catalogues, overlaps GLB pair with soil then atlas, joins before scene/GPU adoption
+ok 10 - real prepare preserves sky/catalogues, overlaps GLB pair with soil then atlas, joins before scene/GPU adoption
+  ---
+  duration_ms: 40.8003
+  ...
+# Subtest: default OFF real prepare preserves GLB join before soil, then atlas
+ok 11 - default OFF real prepare preserves GLB join before soil, then atlas
+  ---
+  duration_ms: 6.6186
+  ...
+# Subtest: failed GLB sibling prevents atlas after late soil and observes late bridge rejection
+ok 12 - failed GLB sibling prevents atlas after late soil and observes late bridge rejection
+  ---
+  duration_ms: 6.36
+  ...
+# Subtest: soil failure never starts atlas; all pending GLB rejections observed
+ok 13 - soil failure never starts atlas; all pending GLB rejections observed
+  ---
+  duration_ms: 6.8787
+  ...
+# Subtest: real TextureLoader fallback atlas arrival after failed sibling is disposed exactly once
+ok 14 - real TextureLoader fallback atlas arrival after failed sibling is disposed exactly once
+  ---
+  duration_ms: 5.3433
+  ...
+# Subtest: abort during pending soil prevents atlas and late shared resources dispose once
+ok 15 - abort during pending soil prevents atlas and late shared resources dispose once
+  ---
+  duration_ms: 5.6139
+  ...
+# Subtest: sky failure prevents every catalogue/resource start; mutually exclusive recipes fail before loading
+ok 16 - sky failure prevents every catalogue/resource start; mutually exclusive recipes fail before loading
+  ---
+  duration_ms: 2.4813
+  ...
+# Subtest: GPU warm tail and ordinary selection unchanged; no CLI/workflow wiring
+ok 17 - GPU warm tail and ordinary selection unchanged; no CLI/workflow wiring
+  ---
+  duration_ms: 263.6184
+  ...
+1..17
+# tests 17
+# suites 0
+# pass 16
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 772.5453
