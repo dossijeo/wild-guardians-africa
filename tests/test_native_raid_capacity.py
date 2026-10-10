@@ -31,6 +31,16 @@ class CapacityBounds(unittest.TestCase):
         self.assertEqual(row['configuredHpUpper'], 42)
         self.assertEqual(row['optimisticStartCohortLossUpper'], 23)
 
+    def test_single_point_candidate_uses_recorded_health_not_historical_two_points(self):
+        report = fixture(damage=4, cap=7, hits=3)
+        report['protocol'] = {'cropHitPoints': 1}
+        row = capacity.capacity_rows(report)[0]
+        self.assertEqual(row['configuredHpUpper'], 21)
+        self.assertEqual(row['optimisticStartCohortLossUpper'], 23)
+        report['protocol']['cropHitPoints'] = 3
+        with self.assertRaisesRegex(ValueError, 'resistance'):
+            capacity.capacity_rows(report)
+
     def test_incomplete_or_unfinished_evidence_is_rejected(self):
         report = fixture()
         report['raidEvidence']['coverageLost'] = True

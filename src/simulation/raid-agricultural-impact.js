@@ -1,5 +1,6 @@
 import {fluidAt} from '../world/fluid-placement.js';
-import {activeCrops,cropBecameInactive} from './active-crops.js';
+import {applyCropImpact} from './crop-impact-health.js';
+import {activeCrops} from './active-crops.js';
 import {sweptFootprintDistance,edgeDistance} from '../world/footprints.js';
 import {wallCollisionPolygon} from '../world/wall-collision-frame.js';
 // Plants never move in gameplay. Editors must invalidate, or update nav topology.
@@ -68,11 +69,9 @@ export function resolveAgriculturalImpact(state,animal,target,nav){
  let reached=0;
  for(const p of [target,...candidates]){
   if(reached>=profile.areaCap)break;if(!p.alive||shieldBlocks(state,animal,p)||shieldBlocks(state,point,p)||!agriculturalRayClear(state,nav,animal,p)||!agriculturalRayClear(state,nav,point,p))continue;
-  const central=p===target,before=p.attackHits??0,requestedDamage=profile.cropDamage*(central?1:profile.peripheralWeight??.5);let damage=requestedDamage;
-  if(state.raid?.introCropLimit!==undefined&&(state.raid.introCropsDestroyed??0)>=state.raid.introCropLimit)damage=Math.min(damage,Math.max(0,1-before));
-  damage=Math.min(damage,2-before);if(damage<=0)continue;reached++;p.attackHits=before+damage;
-  if(p.attackHits>=2){p.alive=false;p.harvestRequested=false;cropBecameInactive(state.plants);if(state.raid?.introCropLimit!==undefined)state.raid.introCropsDestroyed=(state.raid.introCropsDestroyed??0)+1;}
-  fact.hits.push({targetId:p.id,requestedDamage,damage,before,after:p.attackHits,central,attackId:animal.attackId,animalId:animal.id,destroyed:!p.alive});
+  const central=p===target,requestedDamage=profile.cropDamage*(central?1:profile.peripheralWeight??.5),hit=applyCropImpact(state,p,requestedDamage);
+  if(!hit)continue;reached++;
+  fact.hits.push({targetId:p.id,...hit,central,attackId:animal.attackId,animalId:animal.id});
  }
  return fact;
 }

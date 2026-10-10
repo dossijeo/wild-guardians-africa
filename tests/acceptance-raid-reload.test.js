@@ -89,9 +89,8 @@ for(const id of species)test(`QA-097: ${id} a destroyed crop releases its reserv
  // explicit attack. Do not force a target, clip, animal position or hit count.
 
  const a=s.raid.animals[0],banana=s.plants[1],millet=s.plants[0];until(s,nav,()=>a.targetId===banana.id);const budget=a.hitsRemaining,reservation=a.reservation;
- until(s,nav,()=>banana.attackHits===1);assert.equal(banana.alive,true);assert.equal(a.hitsRemaining,budget-1);
- until(s,nav,()=>!banana.alive);assert.equal(a.hitsRemaining,budget-2);assert.equal(millet.alive,true);
- until(s,nav,()=>a.targetId===millet.id);assert.equal(a.hitsRemaining,budget-2);assert.equal(s.raid.reservations[reservation],undefined);
+ until(s,nav,()=>!banana.alive);assert.equal(banana.attackHits,1);assert.equal(a.hitsRemaining,budget-1);assert.equal(millet.alive,true);
+ until(s,nav,()=>a.targetId===millet.id);assert.equal(a.hitsRemaining,budget-1);assert.equal(s.raid.reservations[reservation],undefined);
  assert.equal(s.raid.reservations[a.reservation],a.id);assert.equal(Object.values(s.raid.reservations).filter(owner=>owner===a.id).length,1);
- until(s,nav,()=>!millet.alive);assert.equal(a.hitsRemaining,budget-4);assert.equal(s.events.filter(e=>e.type==='CropDestroyed').length,2);
+ until(s,nav,()=>!millet.alive);assert.equal(a.hitsRemaining,budget-2);assert.equal(s.events.filter(e=>e.type==='CropDestroyed').length,2);
 });

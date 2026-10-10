@@ -8,6 +8,9 @@ from pathlib import Path
 
 
 def capacity_rows(report):
+    hp = report.get('protocol', {}).get('cropHitPoints', 2)
+    if hp not in (1, 2):
+        raise ValueError('Invalid crop resistance')
     evidence = report['raidEvidence']
     if evidence['status'] != 'verified' or evidence['coverageLost']:
         raise ValueError('Incomplete native observer coverage')
@@ -31,7 +34,7 @@ def capacity_rows(report):
                 raise ValueError('Invalid native attack profile or hit budget')
             # Overestimate: every assigned hit reaches its maximum plant count,
             # all peripheral plants get half damage, no obstacle/shield/miss.
-            hp_upper += budget * (min(2, damage) + (cap - 1) * min(2, damage * .5))
+            hp_upper += budget * (min(hp, damage) + (cap - 1) * min(hp, damage * .5))
         census, wounded = raid['exposedLivingAtSpawn'], raid['exposedWoundedAtSpawn']
         if not isinstance(census, int) or not isinstance(wounded, int) or not 0 <= wounded <= census:
             raise ValueError('Missing exact native crop census')
@@ -47,10 +50,10 @@ def capacity_rows(report):
                          destroyedFraction=raid['cropsDestroyed'] / census if census else None,
                          orientativeUnprotectedLoss=reference,
                          # Treat all already wounded crops as free kills. Healthy
-                         # crops still need two HP. This deliberately loose bound
+                         # crops need the recorded resistance. This deliberately loose bound
                          # does not rely on the directional reference lattice.
-                         optimisticStartCohortLossUpper=min(census, wounded + math.floor(hp_upper / 2)),
-                         meetsOrientativeCapacity=min(census, wounded + math.floor(hp_upper / 2)) >= reference))
+                         optimisticStartCohortLossUpper=min(census, wounded + math.floor(hp_upper / hp)),
+                         meetsOrientativeCapacity=min(census, wounded + math.floor(hp_upper / hp)) >= reference))
     return rows
 
 

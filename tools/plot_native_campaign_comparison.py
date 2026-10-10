@@ -26,6 +26,8 @@ def collect(directories, *, vary_defense_material=False):
     for path, report, source in runs[1:]:
         if source['sourceHashes'] != runs[0][2]['sourceHashes']:
             raise ValueError(f'{path}: frozen sources differ')
+        if report.get('protocol', {}).get('cropHitPoints', 2) != first.get('protocol', {}).get('cropHitPoints', 2):
+            raise ValueError(f'{path}: crop resistance differs')
         for key in ('seed', 'biome', 'culture', 'labourPolicy'):
             if report[key] != first[key]:
                 raise ValueError(f'{path}: {key} differs')

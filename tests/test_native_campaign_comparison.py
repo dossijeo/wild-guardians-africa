@@ -34,6 +34,11 @@ class EvidenceIntegrity(unittest.TestCase):
     def test_matching_frozen_rules_are_comparable(self):
         self.assertEqual(len(comparison.collect(self.paths)), 2)
 
+    def test_changed_crop_health_cannot_be_hidden(self):
+        self.modify('report', lambda q: q.update(protocol={'cropHitPoints': 1}))
+        with self.assertRaisesRegex(ValueError, 'crop resistance differs'):
+            comparison.collect(self.paths)
+
     def test_running_campaign_is_not_completion(self):
         self.modify('receipt', lambda q: q.update(status='running'))
         with self.assertRaisesRegex(ValueError, 'terminal'):

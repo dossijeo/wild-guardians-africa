@@ -5,7 +5,6 @@ import {raidEntryChunks,includeRaidBounds} from '../world/raid-entry-residency.j
 import {raidEntryKey} from '../world/raid-entry-data.js';
 import {exteriorRaidEntry} from './raid-exterior-entry.js';
 import {createCropGrouping} from './crop-components.js';
-import {cropBecameInactive} from './active-crops.js';
 import {RAID_NOTICE_TEXT} from './raid-notice.js';
 import {warmRaidNavigation} from '../world/raid-navigation-warmth.js';
 import {centerBoundaryPoint,centerCulture,centerDeliveryPoint} from '../world/centers.js';
@@ -25,6 +24,7 @@ import {actorBlockers,actorSegmentClear} from './actor-motion.js';
 import {activeChunkRegion,validActiveBounds} from '../world/active-region.js';
 import {defensiveGroups} from './defensive-groups.js';
 import {targetReservationKey,targetReserved,reservedApproachClear,reconcileTargetReservations} from './raid-target-reservations.js';
+import {applyCropImpact,cropImpactDamage,CROP_HIT_POINTS} from './crop-impact-health.js';
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z),entrySelections=new WeakMap();
 export function planNight(s) {
   const prepared=preparePressureNight(s);
@@ -210,7 +210,7 @@ export function reachableApproach(a,target,nav,shield=null){
   return null;
 }
 function canAttackCrop(s,p){
-  return p.alive&&((p.attackHits??0)<1||s.raid.introCropLimit===undefined||(s.raid.introCropsDestroyed??0)<s.raid.introCropLimit);
+  return p.alive&&(cropImpactDamage(p)<CROP_HIT_POINTS-1||s.raid.introCropLimit===undefined||(s.raid.introCropsDestroyed??0)<s.raid.introCropLimit);
 }
 export function raidTarget(s,id){
   const eligible=t=>t.id===id&&(!('alive' in t)||canAttackCrop(s,t))&&(!('status' in t)||t.status==='intact');
@@ -285,8 +285,8 @@ export function updateRaid(s,dt,nav) {
               if(agriculturalImpact){
                 for(const hit of agriculturalImpact.hits){emit(s,'CropHit',{...hit,hits:hit.after});if(hit.destroyed){emit(s,'CropDestroyed',{targetId:hit.targetId,attackId:a.attackId,animalId:a.id});}}
               }else {
-                target.attackHits=Math.min(2,(target.attackHits??0)+1);emit(s,'CropHit',{targetId:target.id,hits:target.attackHits});
-                if(target.attackHits>=2){target.alive=false;target.harvestRequested=false;cropBecameInactive(s.plants);if(s.raid.introCropLimit!==undefined)s.raid.introCropsDestroyed++;emit(s,'CropDestroyed',{targetId:target.id});}
+                const hit=applyCropImpact(s,target,1);
+                if(hit){emit(s,'CropHit',{targetId:target.id,...hit,hits:hit.after});if(hit.destroyed)emit(s,'CropDestroyed',{targetId:target.id});}
               }
             }
             else {

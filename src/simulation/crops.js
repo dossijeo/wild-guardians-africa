@@ -1,7 +1,8 @@
 import {cropSpec} from './rules.js';
+import {CROP_HIT_POINTS} from './crop-impact-health.js';
 export function createPlant(id,species,x,z,centerId) {
   const c=cropSpec(species);
-  return {id,species,x,z,centerId,alive:true,growth:0,harvestRequested:false,
+  return {id,species,x,z,centerId,alive:true,growth:0,harvestRequested:false,attackHitPoints:CROP_HIT_POINTS,
     water:Array.from({length:c.total_waters},(_,i)=>({at:i*c.growth_seconds/c.total_waters,status:i?'future':'due',wait:0}))};
 }
 function satisfyWater(p,water,magic) {

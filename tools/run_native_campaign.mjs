@@ -1,3 +1,4 @@
+import {CROP_HIT_POINTS} from '../src/simulation/crop-impact-health.js';
 import {readFileSync,writeFileSync,mkdirSync,existsSync,readdirSync,appendFileSync} from 'node:fs';
 import {resolve,dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -33,16 +34,16 @@ export function calibrationStop(reason){const error=Error(reason);error.code='NA
 export function nativeCampaignProvenance(options){
  const p=intensiveRunProvenance(options),root=new URL('../',import.meta.url);
  for(const path of ['content/balance/raid_pressure_candidate.json','content/balance/player_revisions.json'])p.sourceHashes[path]=createHash('sha256').update(readFileSync(new URL(path,root))).digest('hex');
- const paths=['src/simulation/agricultural-power.js','tools/native-agricultural-magic.mjs','tools/native-campaign-runner.mjs','tools/native-campaign-protocol.mjs','tools/native-q4-labour-policy.mjs','tools/native-q5-labour-policy.mjs','tools/native-q6-labour-policy.mjs','tools/native-campaign-finance.mjs','tools/native-campaign-evidence.mjs','tools/repair-settlement-evidence.mjs','tools/native-raid-campaign-evidence.mjs','tools/native-campaign-entry-driver.mjs','tools/native-campaign-expansion.mjs','tools/native-campaign-plots.mjs','tools/native-expanding-defense-policy.mjs','tools/node-raid-entry-transport.mjs','tools/node-raid-entry-worker.mjs','tools/run_native_campaign.mjs'];
+ const paths=['src/simulation/crop-impact-health.js','src/simulation/agricultural-power.js','tools/native-agricultural-magic.mjs','tools/native-campaign-runner.mjs','tools/native-campaign-protocol.mjs','tools/native-q4-labour-policy.mjs','tools/native-q5-labour-policy.mjs','tools/native-q6-labour-policy.mjs','tools/native-campaign-finance.mjs','tools/native-campaign-evidence.mjs','tools/repair-settlement-evidence.mjs','tools/native-raid-campaign-evidence.mjs','tools/native-campaign-entry-driver.mjs','tools/native-campaign-expansion.mjs','tools/native-campaign-plots.mjs','tools/native-expanding-defense-policy.mjs','tools/node-raid-entry-transport.mjs','tools/node-raid-entry-worker.mjs','tools/run_native_campaign.mjs'];
  paths.push('tools/native-closed-defense-policy.mjs','tools/native-funded-defense-policy.mjs','tools/native-obstacle-aware-contour.mjs','tools/native-perimeter-proof.mjs','tools/native-q7-labour-policy.mjs','tools/native-q8-labour-policy.mjs');
  paths.push('tools/native-campaign-crop-policy.mjs','tools/native-shore-defense-contour.mjs','tools/native-service-component-proof.mjs');
  for(const path of paths)p.sourceHashes[path]=createHash('sha256').update(readFileSync(new URL(path,root))).digest('hex');
- return {...p,protocol:{...campaignProtocolForLabour(options.labourPolicy),profile:options.profile??'olderFemale',plotFluidClearance:options.plotFluidClearance??0,defenseMaterial:options.defenseMaterial??'zarzas'}};
+ return {...p,protocol:{...campaignProtocolForLabour(options.labourPolicy),profile:options.profile??'olderFemale',plotFluidClearance:options.plotFluidClearance??0,defenseMaterial:options.defenseMaterial??'zarzas',cropHitPoints:CROP_HIT_POINTS}};
 }
 export async function runNativeCampaignCase(options,{run=simulateNativeCampaign,provenance=nativeCampaignProvenance}={}){
  const out=options.out;if(existsSync(out)&&readdirSync(out).length)throw Error('Refusing to overwrite original campaign evidence');mkdirSync(out,{recursive:true});
  const save=(name,value)=>writeFileSync(resolve(out,name),JSON.stringify(value,null,2)+'\n');
- const inputs=provenance(options);save('source.json',inputs);save('protocol.json',{...campaignProtocolForLabour(options.labourPolicy),profile:options.profile??'olderFemale',plotFluidClearance:options.plotFluidClearance??0,defenseMaterial:options.defenseMaterial??'zarzas'});
+ const inputs=provenance(options);save('source.json',inputs);save('protocol.json',{...campaignProtocolForLabour(options.labourPolicy),profile:options.profile??'olderFemale',plotFluidClearance:options.plotFluidClearance??0,defenseMaterial:options.defenseMaterial??'zarzas',cropHitPoints:CROP_HIT_POINTS});
  save('receipt.json',{status:'running',options,startedAt:inputs.startedAt});
  try{
   if(inputs.trackedChanges.length)throw Error('Freeze tracked runtime before launching native pilot');

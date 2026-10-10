@@ -54,7 +54,10 @@ export function validateSnapshot(state) {
   for(const a of state.spells)if(a.exposureApplied!==undefined&&(a.kind!=='multiply'||typeof a.exposureApplied!=='boolean'))throw new Error('Exposición mágica inválida');
   for(const a of state.spells)if(a.targetPlantId!==undefined&&(!['growth','multiply'].includes(a.kind)||typeof a.targetPlantId!=='string'||!state.plants.some(p=>p.id===a.targetPlantId)||!Number.isFinite(a.remaining)||a.remaining<0))throw new Error('Objetivo mágico inválido');
   for(const a of state.spells)if(a.growthSecondsAdded!==undefined&&(a.kind!=='growth'||!Number.isFinite(a.growthSecondsAdded)||a.growthSecondsAdded<0||a.growthSecondsAdded>15+1e-6))throw new Error('Progreso mágico inválido');
-  for(const p of state.plants)if(p.attackHits!==undefined&&(!Number.isFinite(p.attackHits)||!Number.isSafeInteger(p.attackHits*2)||p.attackHits<0||p.attackHits>2||p.alive&&p.attackHits>=2))throw new Error('Daño de cultivo inválido');
+  for(const p of state.plants){
+    const hp=p.attackHitPoints??2;
+    if(![1,2].includes(hp)||p.attackHits!==undefined&&(!Number.isFinite(p.attackHits)||!Number.isSafeInteger(p.attackHits*(hp===1?4:2))||p.attackHits<0||p.attackHits>hp||p.alive&&p.attackHits>=hp))throw new Error('Daño de cultivo inválido');
+  }
   const workers=new Map(state.workers.map(w=>[w.id,w])),crates=new Map(state.crates.map(c=>[c.id,c])),plants=new Map(state.plants.map(p=>[p.id,p]));
   for(const structure of state.structures)if(structure.kind==='wall'&&(structure.baseScaleX!==undefined&&(!Number.isFinite(structure.baseScaleX)||structure.baseScaleX<=0)||structure.autoGate!==undefined&&typeof structure.autoGate!=='boolean'))throw new Error('Módulo de defensa inválido');
   for(const structure of state.structures)if(structure.gateOpen!==undefined&&(!structure.gate||!Number.isFinite(structure.gateOpen)||structure.gateOpen<0||structure.gateOpen>1))throw new Error('Apertura de puerta inválida');

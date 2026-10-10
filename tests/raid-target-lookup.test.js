@@ -2,10 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {raidTarget} from '../src/simulation/raids.js';
 
-// The previous implementation is the independent selection reference. This
+// The independent selection reference uses the current one-point resistance. This
 // also covers invalid earlier matches rather than only unique valid IDs.
 const reference=(s,id)=>[...s.plants,...s.structures].find(t=>t.id===id&&
- (!('alive' in t)||(t.alive&&((t.attackHits??0)<1||s.raid.introCropLimit===undefined||(s.raid.introCropsDestroyed??0)<s.raid.introCropLimit)))&&
+ (!('alive' in t)||(t.alive&&(s.raid.introCropLimit===undefined||(s.raid.introCropsDestroyed??0)<s.raid.introCropLimit)))&&
  (!('status' in t)||t.status==='intact'));
 
 test('raid target lookup retains the previous selection across crop damage, introductory limits and structure states',()=>{

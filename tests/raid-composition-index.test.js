@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {BALANCE as B} from '../src/simulation/balance.js';
 import {compositions,nextRandom,randomInt,threatTier,attraction} from '../src/simulation/rules.js';
 import {createRaidCompositionIndex} from '../src/simulation/raid-composition-index.js';
+import {RAID_PRESSURE_CANDIDATE} from '../src/simulation/raid-pressure-budget.js';
 import {planNight} from '../src/simulation/raids.js';
 import {estimateNativeHorde} from '../tools/estimate-native-horde-budgets.mjs';
 
@@ -22,7 +23,7 @@ test('pressure nights retain arrival timing and full native hit rolls with exact
   const p=state.nightPlan.pressureFacts.pressure;
   for(const actor of state.nightPlan.waves.flat()){
    nextRandom(expected); // one native draw selects rank in the prebudgeted mix
-   const native=B.animals.find(a=>a.id===actor.species),extra=Math.floor(2*p);
+   const native=B.animals.find(a=>a.id===actor.species),extra=Math.floor(RAID_PRESSURE_CANDIDATE.hitPressureSteps*p);
    assert.equal(actor.hits,randomInt(expected,native.hit_budget_min+extra,native.hit_budget_max+extra));
   }
   assert.equal(state.rng,expected.rng);

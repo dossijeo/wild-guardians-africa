@@ -305,7 +305,8 @@ export const BALANCE = {
     "worker_collision_knockback_m": [
       1.5,
       2
-    ]
+    ],
+    "crop_hit_points": 1
   },
   "spells": [
     {

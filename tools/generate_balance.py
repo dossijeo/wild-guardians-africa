@@ -5,6 +5,10 @@ balance=json.loads((root/'content/balance/balance_confirmado.json').read_text(en
 revisions=json.loads((root/'content/balance/player_revisions.json').read_text(encoding='utf-8'))
 balance['initial_money']=revisions['initial_money']
 balance['workers'].update(revisions['workers'])
+crop_hit_points=revisions['crop_hit_points']
+if type(crop_hit_points) is not int or crop_hit_points not in (1,2):
+    raise SystemExit('Crop impact resistance must be an explicit one/two-point candidate')
+balance['raids']['crop_hit_points']=crop_hit_points
 for spell in balance['spells']:
     if spell['id'] in revisions.get('agricultural_magic', {}):
         spell.update(revisions['agricultural_magic'][spell['id']])

@@ -1,3 +1,4 @@
+import {CROP_HIT_POINTS} from '../src/simulation/crop-impact-health.js';
 import {agriculturalPowerReport} from '../src/simulation/agricultural-power.js';
 import {createAgriculturalMagicPolicy} from './native-agricultural-magic.mjs';
 // A player strategy using only ordinary commands on native terrain. No overrides
@@ -41,7 +42,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
  if(!Number.isSafeInteger(days)||days<1||days>180)throw Error('Native protocol permits1–180 days only');
  if(!Number.isSafeInteger(plantsPerWorker)||plantsPerWorker<1)throw new Error('Plants per worker must be a positive integer');
  if(!['legacy','cashflow'].includes(cropPolicy))throw Error('Unknown crop policy');
- const protocol={...campaignProtocolForLabour(labourPolicy),profile,plotFluidClearance,defenseMaterial},q4=labourPolicy==='q4',q5=['q5','q6','q7','q8'].includes(labourPolicy),q6=['q6','q7','q8'].includes(labourPolicy),q7=['q7','q8'].includes(labourPolicy),labourHistory=[],labourObservations=[],labourReasons={};
+ const protocol={...campaignProtocolForLabour(labourPolicy),profile,plotFluidClearance,defenseMaterial,cropHitPoints:CROP_HIT_POINTS},q4=labourPolicy==='q4',q5=['q5','q6','q7','q8'].includes(labourPolicy),q6=['q6','q7','q8'].includes(labourPolicy),q7=['q7','q8'].includes(labourPolicy),labourHistory=[],labourObservations=[],labourReasons={};
  const policy=nativeCampaignStrategy(strategy),agriculturalMagic=createAgriculturalMagicPolicy({mode:policy.agriculturalMagic});defend=policy.defend;middayHiring=policy.middayHiring;plantsPerWorker=6;
  if(typeof Game.nightEntryPending!=='function')throw Error('Native pending entry handshake is not integrated; no campaign started');
  const opening=createOpeningWorld(world),nav=opening.nav;let s=opening.s,sequence=0;
