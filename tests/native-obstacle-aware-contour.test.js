@@ -1,0 +1,58 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {gunzipSync} from 'node:zlib';
+import {deserialize,serialize} from '../src/persistence/snapshots.js';
+import {createOpeningWorld} from '../tools/check_opening.mjs';
+import {closedDefenseContours} from '../tools/native-closed-defense-policy.mjs';
+import {obstacleAwareContour} from '../tools/native-obstacle-aware-contour.mjs';
+import {createNativeFundedDefensePolicy} from '../tools/native-funded-defense-policy.mjs';
+import {nativePerimeterProof} from '../tools/native-perimeter-proof.mjs';
+import * as Game from '../src/simulation/game.js';
+import {wallStroke} from '../src/world/wall-layout.js';
+import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
+
+const source=new URL('../docs/qa/native-economic-balance/pilot-funded-5985791f-q8-good-day6-712-7/state.json.gz',import.meta.url);
+function snapshot(){
+ const bytes=readFileSync(source),s=deserialize(gunzipSync(bytes).toString());
+ const {nav}=createOpeningWorld({seed:s.seed,biome:s.biome,culture:s.culture});nav.setState(s);
+ Game.hire(s,'routed-diagnostic-paid-hire',{olderFemale:11});
+ return {s,nav,bytes};
+}
+test('bounded native contour routes around real obstacles without modifying the retained campaign',()=>{
+ const {s,nav,bytes}=snapshot(),before=serialize(s),c=closedDefenseContours(s)[0];
+ const a=obstacleAwareContour(s,nav,c),b=obstacleAwareContour(s,nav,c);assert(a.candidate);assert.deepEqual(a,b);
+ const q=Game.quoteWallChain(s,'zarzas',a.candidate.points,nav,{smooth:false,snap:false});
+ assert.equal(q.pieces.length,wallStroke(a.candidate.points,s.structures,{smooth:false,snap:false}).length);
+ assert.equal(q.pieces.length,74);assert.equal(q.cost,740);assert.equal(q.gates,1);
+ assert.equal(serialize(s),before);assert.deepEqual(readFileSync(source),bytes);
+ // This is a prospective collision view, never a paid campaign outcome.
+ const view=nav.forBuildingPlacement({id:'proposal-only',x:1e12,z:1e12,radius:0,kind:'house'});
+ view.obstacles=[...nav.obstacles,...q.pieces];
+ const crop=s.plants.find(p=>p.alive),bounds=a.candidate.bounds;
+ for(const radius of new Set(Object.values(ANIMAL_ACTIONS.animals).map(a=>a.presentation.footprint.radius))){
+  const outside={x:bounds[2]+6,z:crop.z};
+  assert.equal(view.approachPath(outside,crop,radius,32),null);
+ }
+});
+test('routed savings uses actual cash and cannot promote proposed walls into live protection',()=>{
+ const {s,nav}=snapshot(),before=serialize(s),p=createNativeFundedDefensePolicy({obstacleAware:true});
+ assert.equal(p.act(s,nav,{command:k=>'routed-'+k,reserve:330}),0);
+ const r=p.report();assert.equal(r.remainingCost,740);assert.equal(r.paidPieces,0);assert.equal(r.completed,null);
+ assert(r.history[0].attempts.some(a=>a.routed&&a.legal));assert.equal(serialize(s),before);
+});
+test('native perimeter proof rejects an open quote instead of claiming isolation from a bounded path failure',()=>{
+ const {s,nav}=snapshot(),candidate=closedDefenseContours(s)[0],before=serialize(s);
+ assert.equal(nativePerimeterProof(s,nav,{pieces:[],updates:[]},candidate.bounds).valid,false);
+ assert.equal(serialize(s),before);
+});
+test('routed policy retains real partial purchases and native gate creation in an affordable opening',()=>{
+ const {s,nav}=createOpeningWorld(),center=s.structures[0];
+ Game.plant(s,'routed-first-seed','mijo',center.x+6,center.z+1,nav);Game.openInitialHiring(s);Game.hire(s,'routed-hire',{olderFemale:1});
+ const p=createNativeFundedDefensePolicy({startDay:1,obstacleAware:true});let id=0;
+ for(let i=0;i<20&&!p.report().completed;i++){p.act(s,nav,{command:k=>`routed-${k}-${id++}`,reserve:160});Game.tick(s,5,nav);}
+ const r=p.report();assert(r.completed);assert(r.paidPieces>0);assert.equal(r.paidCost,r.paidPieces*10);
+ assert.equal(s.structures.filter(w=>w.gate).length,1);
+ for(const row of r.history.filter(r=>r.paidCost))assert(s.ledger.entries[row.paymentId]);
+ assert.equal(p.reserve(s),0);
+});

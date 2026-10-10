@@ -42,10 +42,10 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
  if(typeof Game.nightEntryPending!=='function')throw Error('Native pending entry handshake is not integrated; no campaign started');
  const opening=createOpeningWorld(world),nav=opening.nav;let s=opening.s,sequence=0;
  const worker=PROFILES.find(p=>p.id===profile);if(!worker)throw new Error('Unknown worker profile');
- if(!['legacy','expanding','closed','funded'].includes(defensePolicy))throw Error('Unknown defense policy');
- if(!Number.isSafeInteger(defenseStartDay)||defenseStartDay<1||defenseStartDay!==1&&!['closed','funded'].includes(defensePolicy))throw Error('Explicit defense start requires closed/funded policy and positive integer day');
+ if(!['legacy','expanding','closed','funded','routed'].includes(defensePolicy))throw Error('Unknown defense policy');
+ if(!Number.isSafeInteger(defenseStartDay)||defenseStartDay<1||defenseStartDay!==1&&!['closed','funded','routed'].includes(defensePolicy))throw Error('Explicit defense start requires closed/funded/routed policy and positive integer day');
  const q5Policy=labourPolicy==='q8'?createQ8LabourPolicy({profile}):q7?createQ7LabourPolicy({profile}):q6?createQ6LabourPolicy({profile}):q5?createQ5LabourPolicy({profile}):null;
- const defense=defend?(defensePolicy==='funded'?createNativeFundedDefensePolicy({startDay:defenseStartDay,repairWalls:policy.repair}):defensePolicy==='closed'?createNativeClosedDefensePolicy({startDay:defenseStartDay,repairWalls:policy.repair}):defensePolicy==='expanding'?createNativeExpandingDefensePolicy({repairWalls:policy.repair,reserveMode:'none'}):createFarmDefensePolicy()):null;
+ const defense=defend?(['funded','routed'].includes(defensePolicy)?createNativeFundedDefensePolicy({startDay:defenseStartDay,repairWalls:policy.repair,obstacleAware:defensePolicy==='routed'}):defensePolicy==='closed'?createNativeClosedDefensePolicy({startDay:defenseStartDay,repairWalls:policy.repair}):defensePolicy==='expanding'?createNativeExpandingDefensePolicy({repairWalls:policy.repair,reserveMode:'none'}):createFarmDefensePolicy()):null;
  const driver=new NativeCampaignEntryDriver(nav);let partialEvidence=()=>({});
  try {
  const evidence=nativeEvidence?createNativeCampaignEvidence(s):null,raidEvidence=createNativeRaidCampaignEvidence(s);
@@ -98,7 +98,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
   // The original dawn-only strategy remains the default, including old runs.
   if(q5&&middayHiring){
    const plan=q5Policy.additional(s,{pendingRepair:maintenanceReserve(),seedCost:cropSpec(nextSpecies()).plant_cost});
-   if(plan&&defensePolicy==='funded'){plan.defenseReserve=defense?.reserve(s)??0;if(plan.count&&numberOf(s.ledger.balance)<plan.required+plan.defenseReserve){plan.count=0;plan.reason='cash earmarked for physical defense';}}
+   if(plan&&['funded','routed'].includes(defensePolicy)){plan.defenseReserve=defense?.reserve(s)??0;if(plan.count&&numberOf(s.ledger.balance)<plan.required+plan.defenseReserve){plan.count=0;plan.reason='cash earmarked for physical defense';}}
    if(plan){labourObservations.push({day:s.day,time:s.time,...plan});labourReasons[plan.reason]=(labourReasons[plan.reason]??0)+1;
     if(plan.count){const id=command('hire'),beforeWorkers=new Set(s.workers.map(w=>w.id));if(Game.hireAdditional(s,id,{[profile]:plan.count},plan.centerId)){const workerIds=s.workers.filter(w=>!beforeWorkers.has(w.id)).map(w=>w.id);q5Policy.hired(s,plan.count,{id,workerIds,centerId:plan.centerId});staff+=plan.count;nextWages=q5Policy.reserve();actions++;labourHistory.push({day:s.day,time:s.time,id,kind:'additional',...plan,workerIds,paidCoins:-numberOf(s.ledger.entries[id])});}}
    }
@@ -123,7 +123,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
   // takes priority. Still retain wages and already requested native repairs.
   // Closed policy itself accounts for every pending native repair. Pass only
   // wage protection so the same repair is not reserved twice in its budget.
-  if(defense)actions+=defense.act(s,nav,{command,reserve:labourReserve()+(['closed','funded'].includes(defensePolicy)?0:maintenanceReserve())});
+  if(defense)actions+=defense.act(s,nav,{command,reserve:labourReserve()+(['closed','funded','routed'].includes(defensePolicy)?0:maintenanceReserve())});
   if(expansion)actions+=expansion.act(s,nav,{command,reserve:labourReserve()+maintenanceReserve(),villageSavings:savingsReserve()});
   const live=s.plants.filter(p=>p.alive);
   for(const kind of ['multiply','growth'])if(s.day>=(kind==='multiply'?5:3)&&s.cooldowns[kind]===0){
