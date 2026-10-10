@@ -15,6 +15,8 @@ node tools/benchmark-area-crop-targets.mjs --output docs/qa/raid-area-impact-ker
 
 11 tests passed,0 failed/skipped,354.8133ms. Selection is compared against a brute-force oracle for40 dense/permuted fixtures. Tests include protected primary/secondary, strict radius/cap, alive history, state immutability and native wall geometry. The native-solid test deliberately isolates terrain and props; it proves the existing solid wall/animal gate envelope blocks secondary rays, not full biome navigation or shield rendering. Animals currently treat even open worker gates as solid; this policy is preserved in that test.
 
+Supplemental terrain/occlusion contracts:13 tests passed,0 failed/skipped,275.6506ms. Using the actual native terrain validator with controlled fields, ordinary fluid blocks a secondary ray while flat Canyon water remains traversable. A Canyon cliff step, center hull and collidable prop each block targets behind them. These validate selector/callback composition, not procedural biome generation, live raid damage or rendered effects.
+
 One Node20.11 CPU diagnostic,300 warmed samples per case,1001 living crops with/without100000 dead records, four native wall obstacles, terrain/props isolated:
 
 | Dead history | Cold selection | Median | p95 | Maximum | Occlusion queries/impact |

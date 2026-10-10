@@ -36,6 +36,24 @@ test('death invalidation, append and replaced array do not retain stale targets 
  const before=JSON.stringify(plants);assert.deepEqual(select(plants).map(p=>p.id),['root','b']);assert.equal(JSON.stringify(plants),before);
  assert.deepEqual(select(JSON.parse(before)).map(p=>p.id),['root','b']);
 });
+test('native terrain rules block secondary rays across fluids, except flat Canyon water',()=>{
+ for(const canyon of [false,true]){
+  const nav=new Navigation(712,'sabana');nav.field={canyon,riverLevel:0,surface:()=>0,slope:()=>0,fluidInside:x=>Math.abs(x)<.5};nav.propsAt=()=>[];
+  const plants=[crop('root',-1,0),crop('across',1,0)],origin={x:-2,z:0};
+  const selected=select(plants,{canHit:p=>nav.segmentClear(origin,p,.01,null,false)}).map(p=>p.id);
+  assert.deepEqual(selected,canyon?['root','across']:['root']);
+ }
+});
+test('native Canyon slope, building hull and collidable prop each stop area reaching behind them',()=>{
+ const plants=[crop('root',-1,0),crop('behind',1,0)],origin={x:-2,z:0};
+ for(const blocker of ['cliff','building','prop']){
+  const nav=new Navigation(712,'sabana');
+  nav.field={canyon:blocker==='cliff',riverLevel:0,surface:x=>blocker==='cliff'&&x>=0?5:0,slope:()=>0,fluidInside:()=>false};
+  nav.propsAt=()=>blocker==='prop'?[{slot:0,x:0,z:0,radius:.3}]:[];
+  if(blocker==='building')nav.obstacles=[{id:'building',kind:'center',footprint:[{x:-.4,z:-.4},{x:.4,z:-.4},{x:.4,z:.4},{x:-.4,z:.4}]}];
+  assert.deepEqual(select(plants,{canHit:p=>nav.segmentClear(origin,p,.01,null,false)}).map(p=>p.id),['root'],blocker);
+ }
+});
 test('bounded selector agrees with brute-force oracle over dense farms and input permutations',()=>{
  for(let run=0;run<40;run++){
   const root=crop('root',-.25,.3),others=Array.from({length:600},(_,i)=>crop('p'+i,(i%30-15)*.31,(Math.floor(i/30)-10)*.47,i%7!==0));
