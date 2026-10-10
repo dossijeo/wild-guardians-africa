@@ -1,0 +1,87 @@
+{
+  "source": "12dd78a2d4fb375ad569ea695a0253be1e78de65",
+  "ok": true,
+  "errors": [],
+  "loading": {
+    "canvas": {
+      "height": 576,
+      "width": 1024
+    },
+    "displayedProgress": null,
+    "focused": true,
+    "phaseLabel": null,
+    "readyGateReached": true,
+    "scope": "Presentation snapshot only; displayed progress and canvas dimensions do not establish world readiness or GPU identity.",
+    "stageBusy": "false",
+    "visibility": "visible",
+    "worldWaitMs": 17492.099999904633
+  },
+  "visibility": {
+    "passed": true,
+    "hiddenMs": 300956.2000000477,
+    "visibleMs": 2133.899999976158,
+    "resumedSimulatedSeconds": 2.095299999999668,
+    "visibleMenuPauses": [
+      "menu"
+    ],
+    "transitions": [
+      {
+        "at": 27723.10000002384,
+        "state": "hidden"
+      },
+      {
+        "at": 337736.5,
+        "state": "visible"
+      }
+    ]
+  },
+  "hiddenFields": 21,
+  "hiddenEqual": true,
+  "frameNight": {
+    "initial": 0,
+    "middle": 1,
+    "late": 1,
+    "mature": 1
+  },
+  "files": {
+    "desktop-smoke.json.gz": {
+      "bytes": 4491318,
+      "sha256": "08307a242cb2c03e53fa6c4e3e9885d30027cd2d894479947d3533d681782733",
+      "originalBytes": 6018516,
+      "originalSha256": "d30a6808ad27d0b32842d77f976905a03d667c0983b2c521533138bb9eea7d9d"
+    },
+    "launch-receipt.json": {
+      "bytes": 1380,
+      "sha256": "2b5e390784fc39ced3aeff67d39a42b0b9f9d7d9886533ffbaaf02f4ca92ca7a"
+    },
+    "fixture.json": {
+      "bytes": 23608,
+      "sha256": "28d8bf348c61900a7f4f94a53026a86e638acbca5b058981a43de969788a6406"
+    },
+    "extraction-receipt.json": {
+      "bytes": 5109,
+      "sha256": "2654e95c0fb93d54053f65709d2853fa78ae7c8612be26a1907dfd30f7ff730c"
+    },
+    "world.png": {
+      "bytes": 879958,
+      "sha256": "25a93a3242f67c5f2b00a9dfe11e8139e9863e75d8c7dbae7245ba1c64111b65"
+    },
+    "initial.png": {
+      "bytes": 961830,
+      "sha256": "b5f22ee3ae7b8d6f3aca4424e57ca81ea6b55c2650c84075b318c46c700456f3"
+    },
+    "middle.png": {
+      "bytes": 855183,
+      "sha256": "eff2abdac059dbc12696c14299e88a2d37703360892c4d18d52e9f07c482c362"
+    },
+    "late.png": {
+      "bytes": 862311,
+      "sha256": "b9d15bc7cde9ada99f26420e18885343832449efdf819465831a457f23e75881"
+    },
+    "mature.png": {
+      "bytes": 870656,
+      "sha256": "1d2244e85da21c6f5eb0d8c121465461d9cbfbb94a5c42d76e3a0e03dabcf6ae"
+    }
+  },
+  "scope": "Actual native canvas/visibility, original gates; initial daylight from harness missing request-saves, no first-frame night or physical input/full HUD acceptance."
+}

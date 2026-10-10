@@ -1,0 +1,9 @@
+# Local native night evidence and first-frame coverage limitation
+
+The official `12dd78a2` executable was launched with a legally prepared paid-center/cassava/worker/first-raid/shield fixture in a new WebView2 profile. The original readiness and native visibility gates remained unchanged. Readiness completed in 17,492.1 ms; native hiding lasted 300,956.2 ms. All 21 compared simulation fields remained identical. Restoration retained only the menu pause, and subsequent play advanced 2.0953 simulated seconds. The original report exited successfully with no errors.
+
+Four actual diorama canvas frames were extracted. Intermediate, late and mature frames have night factor 1 and show all four maize plants, a visible central light pool, dark surrounding terrain and a nocturnal sky. The first frame has night factor 0. This must remain an explicit coverage limitation: the fixture harness sends `load-slot` immediately after inserting a save, bypassing the real menu's `request-saves` listing. The application therefore has no validated preview clock for its first draw. This observation alone does not prove that the real Continue-menu route has the same issue. A separate QA correction must exercise the real listing response before loading.
+
+`world.png` shows the actual canyon world and a visible animal. It does not visibly establish the fixture cassava's rendering. The images exclude the HTML HUD and loading interface; physical touch, portrait, cancellation, first-frame night coherence and full farm rendering remain unverified. Readback overhead and machine differences prohibit causal loading/GPU performance claims or replacement of the retained CI failure.
+
+Run `python docs/qa/windows-loading-regression/partition-12dd-native-night-root/verify.py` to check original report, fixture and PNG bytes, visibility equality and the first-frame limitation.
