@@ -7,6 +7,29 @@ into current-main acceptance.
 
 ## Current-state update through main 8e1909d8
 
+### Superseding checkpoint — 10 October, main edb586df
+
+The single paired Canyon/Sahelian pilot on frozen `88ebf647` is terminal,
+2266783.8539 ms. Both strategies completed 20 nights alive. Independently checked
+raw and annotated payload hashes pass for both arms; this does not approve the
+campaign. Responsible observed daylight inactivity is 32.15%, neglect 31.4667%,
+both above the user's strict 25% limit. Neglect has not demonstrated a defeat.
+Both have zero completed/paid repairs, despite responsible repair requests.
+Native strike reconciliation and physical deliveries pass within this pilot's
+scope; 100-night survival and the 30-combination matrix remain open.
+
+The original responsible report incorrectly labels all 145 owned walls ruined:
+its helper tests centre-only operational status. Native state instead contains
+145 intact walls, including four gates. Original output must remain unchanged;
+a separately identified diagnostic correction is required. No balance parameters
+or production wall mechanics are approved by these results.
+
+Root reviewed frozen loading candidate `93d584ef` and independently passed its
+68 CPU contracts and receipt verifier. One isolated Windows trial is authorized
+with the serial image chain enabled and all other candidate options disabled.
+See [the wiring review](windows-loading-regression/serial-image-chain-wiring-root-review.md).
+Native readiness remains unproven; the next trial must retain the original gates.
+
 ### Superseding checkpoint — 10 October, main c2538f7a
 
 The isolated wall-package Windows run38007229019/source49ef2264 is terminal
