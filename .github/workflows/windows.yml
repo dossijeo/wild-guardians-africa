@@ -6,6 +6,10 @@ on:
   pull_request:
   workflow_dispatch:
     inputs:
+      crop_partition:
+        description: 'Experimental maize/remainder partition with canonical textures (smoke only)'
+        type: boolean
+        default: false
       serial_image_chain:
         description: 'Experimental diorama serial image chain (smoke only)'
         type: boolean
@@ -62,6 +66,7 @@ jobs:
           $report = Join-Path $env:RUNNER_TEMP 'desktop-smoke.json'
           $binary = (Resolve-Path src-tauri/target/release/wild-guardians-africa.exe).Path
           $smokeArgs = @('--smoke-report', $report)
+          if ('${{ inputs.crop_partition }}' -eq 'true') { $smokeArgs += '--smoke-crop-partition' }
           if ('${{ inputs.serial_image_chain }}' -eq 'true') { $smokeArgs += '--smoke-serial-image-chain' }
           if ('${{ inputs.wall_buffer_package }}' -eq 'true') { $smokeArgs += '--smoke-wall-buffer-package' }
           if ('${{ inputs.compile_window }}' -eq 'true') { $smokeArgs += '--smoke-compile-window' }
@@ -86,6 +91,7 @@ jobs:
           $report = Join-Path $env:RUNNER_TEMP 'desktop-visibility.json'
           $binary = (Resolve-Path src-tauri/target/release/wild-guardians-africa.exe).Path
           $smokeArgs = @('--smoke-report', $report, '--smoke-fixture', $fixture)
+          if ('${{ inputs.crop_partition }}' -eq 'true') { $smokeArgs += '--smoke-crop-partition' }
           if ('${{ inputs.serial_image_chain }}' -eq 'true') { $smokeArgs += '--smoke-serial-image-chain' }
           if ('${{ inputs.wall_buffer_package }}' -eq 'true') { $smokeArgs += '--smoke-wall-buffer-package' }
           if ('${{ inputs.compile_window }}' -eq 'true') { $smokeArgs += '--smoke-compile-window' }

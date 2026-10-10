@@ -1,0 +1,127 @@
+{
+  "base": "0a416fd32c8f055727f5fd01d0e2bddba48b4784",
+  "scope": "Smoke-only crop partition App/CLI and immutable publication; gameplay default OFF; no native trial authorized",
+  "sourceHashes": {
+    ".github/workflows/windows.yml": "c28e797f0105e5b10c3c626072ac5c7ca35f2fa035a3ac108ec03fbc7b3b878d",
+    "src-tauri/src/main.rs": "76cbba51ce4ae20327065b34d54a3f084d156ea34cb679b678b36f3c81bdbb20",
+    "src-tauri/smoke.js": "207c5a6e7388d4711d5dd594eec8cd8b01f57fa1b630f69eaafd2d7ad635142d",
+    "src/app/main.js": "981800e021ae86abdca3fa951207ab8ecb0a19cb79c8620b4540eb328864de3b",
+    "src/app/loading-crop-partition.js": "12626647470f5e88f3fe40decbe6b754b26d4bd616341d2cbce6ebd99eaed21b",
+    "tests/loading-crop-partition.test.js": "23a056fed8a33eaa453d347b3b61c20ba754deae3399f09c44b149e4de9b47a9",
+    "tools/experiments/publish-crop-partition.mjs": "ce6e1289e13e675ce739ce89e1d5ef6d2c968b5799193dd760c2e0c800a98079",
+    "content/manifests/crop-partition-runtime.json": "7d2989dc696a1eb1981f009cae3e8d58ee5bf55158e22a65a4f1c6b760e1c9bc",
+    "docs/qa/sfx-catalog-post-jam/inventory.json": "6733b73540c4ae6c60883a7009849ce014309a166aa6285483cd8dd4b429dbfe",
+    "docs/qa/sfx-catalog-post-jam/inventory.md": "8433ceb7cdf01c55de830e9acababadad99dafe787f76dbf2bb2f5aefcc4dc40"
+  },
+  "unchangedHashes": {
+    "src/rendering/assets.js": "92cdb93124473a987ea179484d87422c86737599a7a16ff0599362dc48a8cd1e",
+    "src/rendering/scene.js": "12eddcfca985b97d0073fd0e115dd36c8b9046d82a308004f6d749b3cc0cc409",
+    "src/rendering/loading-diorama.js": "36d4bcd95a5d9d7b3f0efb30faf2920ec9006bd4820b26066fcbffef3c942d46",
+    "src/app/loading-progress.js": "806b60554f8d46dbb779e11d0fecdeb677d58f2384aeee6415225769e1e78df3",
+    "src/app/loading-transfer-owner.js": "84155bf2184afbd8de8ca839e67775890c4af1ea87b2f5074d72ee2de4c71920",
+    "src/rendering/crop-batch.js": "96f37896195dda9cbf2c2e2e9570c982305c83cdb1e20b3e36671b7754ab233c",
+    "src/rendering/loading-programs.js": "a1354397f1ba0543fd4dffcd5143e82c4b211f750a9df367ac902dd70730c8c2",
+    "tools/experiments/compile-gpu-preparation.js": "6085d3f898f8d934bef62b2f79a160c9753179cad2db70b82f0c493d1fef1500",
+    "public/content/models.json": "9fbdddec82c57f60777cec4751142cf06db58bf99916ebb403c80e8c98ddacc1",
+    "public/content/crop-bridges.json": "1cb26e0d61bdb0aa780d6976e54c57537b8cf9fe77518b49691b9c4cd292185f",
+    "content/manifests/web-assets.json": "fed88f8bcfce8f2296764a41324c20ad663f74f4a9dc17cd1f32b6179623bd41",
+    "src/rendering/crop-partition.js": "613bba16d473846486118c1c810048a3d5266f6444daf44700cad7547c90b62e",
+    "src-tauri/Cargo.toml": "6eee519debcbaf4e2d1670eaa91fed91920dd6bf730fca24ed347dcedf11975e",
+    "src-tauri/Cargo.lock": "1195357f67e217fd3fa4fa10772e66a57386455364415aeb11151bc34811fd46"
+  },
+  "logHashes": {
+    "docs/qa/windows-loading-regression/maize-partition-wiring/tests.log": "b21abcdf38d8ddfc9b76dffb5ed350214719d9aaf4e813e02080dd08a5189597",
+    "docs/qa/windows-loading-regression/maize-partition-wiring/build.log": "3e5331697e364b98d7a26876229cc47c398eb512b711bfa8434c3058be9bc51c",
+    "docs/qa/windows-loading-regression/maize-partition-wiring/package.log": "919f65072b38b6ca22d4dc44d292226d990ea1778331efcf77c8fd6fcdfb1130",
+    "docs/qa/windows-loading-regression/maize-partition-wiring/missing-test-path.log": "58e891160b220cb23a20c585e042d28a66f1fd0884244164673b6d61a65887dd"
+  },
+  "publication": {
+    "public/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/maize-bridges.glb": {
+      "sha256": "a2bddab996ee27dc8ef1f1f3e05f9f119d21795c41d5c3ffeef186b46720e3c6",
+      "bytes": 3026892
+    },
+    "public/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/maize-steady.glb": {
+      "sha256": "837df8716abb75bf98a9136905a2a1047dd66aecc97b3ac0c02fcaac5c7317bd",
+      "bytes": 769488
+    },
+    "public/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/partition-manifest.json": {
+      "sha256": "98e4f7db28fa5f0c2a6ef4536405a9bb7a96b1613125a4b140324472b7d4bb77",
+      "bytes": 2313
+    },
+    "public/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/remainder-bridges.glb": {
+      "sha256": "ec086f81b1e27accb9426d335fc488f7bd9edb86db2305f27f7c3c147df98b27",
+      "bytes": 23509472
+    },
+    "public/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/remainder-steady.glb": {
+      "sha256": "4871a9aab58e9f24593f0c4fbdd14cc8c287805ced2a795253446a81b803fdb1",
+      "bytes": 5892328
+    },
+    "public/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/textures/15252f23f992e780e8e5aa328d6e58e1b68d7c58d604d1cd9bdbb6ca1319a605.webp": {
+      "sha256": "15252f23f992e780e8e5aa328d6e58e1b68d7c58d604d1cd9bdbb6ca1319a605",
+      "bytes": 2239664
+    },
+    "public/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/textures/4a1d3be8ba489b904db99d3c40ec0a4ee75e3469c13d365211c1837f61a7f8c2.webp": {
+      "sha256": "4a1d3be8ba489b904db99d3c40ec0a4ee75e3469c13d365211c1837f61a7f8c2",
+      "bytes": 203030
+    },
+    "public/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/textures/6dd33b3bd7eaf625c4f386353466fe456f5b3b2cc3e926fc9e8974ad45610422.webp": {
+      "sha256": "6dd33b3bd7eaf625c4f386353466fe456f5b3b2cc3e926fc9e8974ad45610422",
+      "bytes": 238208
+    },
+    "public/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/textures/6f9023998bc0853a50beaeafe984bc204639ba886a1f64a450dba998cd239e51.webp": {
+      "sha256": "6f9023998bc0853a50beaeafe984bc204639ba886a1f64a450dba998cd239e51",
+      "bytes": 1371082
+    },
+    "public/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/textures/919a0e1460f95cd86527210d16442a6bbc1a457ccc18e50a50c1096584f4629c.webp": {
+      "sha256": "919a0e1460f95cd86527210d16442a6bbc1a457ccc18e50a50c1096584f4629c",
+      "bytes": 2285832
+    },
+    "public/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/textures/bfbdf6826eb1625288e0e3c3e8f645d46ca13d3dc500e8a348c52462c8b3c018.webp": {
+      "sha256": "bfbdf6826eb1625288e0e3c3e8f645d46ca13d3dc500e8a348c52462c8b3c018",
+      "bytes": 1310498
+    }
+  },
+  "tests": {
+    "pass": 54,
+    "fail": 0,
+    "durationMs": 11483.8385
+  },
+  "build": {
+    "exit": 0,
+    "seconds": 10.59,
+    "scope": "Runtime/App exact; subsequent generator-only descriptor write-if-different adjustment covered by final tests and syntax"
+  },
+  "package": {
+    "exit": 0,
+    "files": 723,
+    "bytes": 491312005,
+    "relativeLinks": 860,
+    "existingManifestGLBs": 22,
+    "additionalPartitionGLBs": 4,
+    "publishedFiles": 11,
+    "publishedBytes": 40848807,
+    "packagedPublicationByteExact": true,
+    "experimentalPackageDeltaBytes": 40857294
+  },
+  "syntaxExit": 0,
+  "diffCheckExit": 0,
+  "sfxAuditExit": 0,
+  "nativeEvidence": false,
+  "dispatch": null,
+  "experimentalOverhead": "Originals and partitions coexist only for candidate comparison. Added 40.85 MB is NOT accepted as a final production size. Promotion would require replacing original full runtime libraries, retaining originals outside runtime and auditing every consumer/alias/preflight before excluding them; no deletion authorized now.",
+  "gates": {
+    "worldReadyMs": 90000,
+    "nativeHiddenMs": 300000,
+    "hostVisibilityMs": 900000,
+    "states": 40,
+    "bridges": 32,
+    "oldHypotheses": false,
+    "cropPartitionDefault": false
+  },
+  "limitations": [
+    "Native image orientation/colorspace/material raster pending; texture doubles are not native image evidence.",
+    "No timing saving, RAM peak or physical transfer cause claim.",
+    "Original smoke model preflight still fetches full libraries; App partition reuse scope does not remove preflight requests.",
+    "Earlier missing test path exit1 was a command typo before tests, not runtime failure; retained separately."
+  ]
+}

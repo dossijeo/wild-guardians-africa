@@ -25,10 +25,11 @@ fn main() {
             {
                 // Explicit smoke-only selection; normal gameplay never evaluates it.
                 let overlap = std::env::args().any(|arg| arg == "--smoke-resource-overlap");
+                let crop_partition = std::env::args().any(|arg| arg == "--smoke-crop-partition");
                 let serial_image_chain = std::env::args().any(|arg| arg == "--smoke-serial-image-chain");
                 let wall_buffer_package = std::env::args().any(|arg| arg == "--smoke-wall-buffer-package");
                 let compile_window = std::env::args().any(|arg| arg == "--smoke-compile-window");
-                let _ = webview.eval(&format!("window.__desktopSmokeSerialImageChain={serial_image_chain};window.__desktopSmokeWallBufferPackage={wall_buffer_package};window.__desktopSmokeCompileWindow={compile_window};window.__desktopSmokeResourceOverlap={overlap};\n{}", include_str!("../smoke.js")));
+                let _ = webview.eval(&format!("window.__desktopSmokeCropPartition={crop_partition};window.__desktopSmokeSerialImageChain={serial_image_chain};window.__desktopSmokeWallBufferPackage={wall_buffer_package};window.__desktopSmokeCompileWindow={compile_window};window.__desktopSmokeResourceOverlap={overlap};\n{}", include_str!("../smoke.js")));
             }
         })
         .run(tauri::generate_context!())
