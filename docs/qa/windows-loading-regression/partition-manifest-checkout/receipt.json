@@ -1,0 +1,70 @@
+{
+  "base": "bb1b490538f304ec98049446e6ac103659233d66",
+  "attributeCommit": "aab15a35",
+  "failedRun": 38018893383,
+  "failedScope": "web-package byte validation; Rust/native never executed",
+  "correction": "public/assets/crop-partition-*/partition-manifest.json -text",
+  "payloadBytes": 2313,
+  "payloadSha256": "98e4f7db28fa5f0c2a6ef4536405a9bb7a96b1613125a4b140324472b7d4bb77",
+  "checks": {
+    "tests": 4,
+    "fail": 0,
+    "command": "node --test tests/crop-partition-checkout.test.js tests/web-package.test.js",
+    "testMs": 1050.7411,
+    "producerSession": 22388,
+    "producerExit": 0,
+    "buildSeconds": 10.94,
+    "packageFiles": 720,
+    "packageBytes": 445273952,
+    "relativeLinks": 860,
+    "runtimeGLBs": 24
+  },
+  "sources": {
+    ".gitattributes": {
+      "bytes": 138,
+      "sha256": "2f313a8b149f34d134dd916fa6adb7d2a7f5f8677b8f57c1c2563b6921dc9237"
+    },
+    "tests/crop-partition-checkout.test.js": {
+      "bytes": 1583,
+      "sha256": "b14e6154c1a7ea2f630a79ceae53ee4d5a01fd3c23c287abcf5e6db9b076b285"
+    }
+  },
+  "files": {
+    "crlf-before-receipt.json": {
+      "bytes": 552,
+      "sha256": "7a190a9d3f4493c35fac6d08238c44e2c1c6b2d022e005436cef64075c643809"
+    },
+    "full-original.log.gz": {
+      "bytes": 12533,
+      "sha256": "4ccd52c43e65284e86813fd832edf9de16fb5bbe46d0ac5188e2430b87bb4525"
+    },
+    "job-original.json": {
+      "bytes": 4357,
+      "sha256": "5b14dc4937557518cabff148eaaeb3ea57ec462c34d2f82ebc2d806c337bd656"
+    },
+    "run-original.json": {
+      "bytes": 13332,
+      "sha256": "ea6b1397d671a52bb5d33f9de49d89680481a85d07600888ddda62c169d44ae8"
+    },
+    "tests.log.gz": {
+      "bytes": 514,
+      "sha256": "85c80c8d8e33dad112e9fd037b69730b94b3b777086f79d1103cff7a886d76ae",
+      "originalBytes": 1179,
+      "originalSha256": "82cf294ae12f32628cb96c701442e2fb1b3545c6331d61fb8b1fb78c86784aec"
+    },
+    "build.log.gz": {
+      "bytes": 963,
+      "sha256": "fc7a789ba1432fc2cab61bfeca8e7e2d7736e73db15c11acaf3ed9d14aace82b",
+      "originalBytes": 2321,
+      "originalSha256": "5989aa3a3c795a4406a26c5276f9ce3500ea43fde04e4fcc7dd0bd580fe83952"
+    },
+    "package.log.gz": {
+      "bytes": 314,
+      "sha256": "e6b2157aed019ebeb0267bde75b82f792418939b0f2d6cddef0fcbc5a63e2825",
+      "originalBytes": 411,
+      "originalSha256": "19d12f4cb08eaae52dab6b5879ceb527e8825fb04f0e50ba5b1102a9a72b6867"
+    }
+  },
+  "runtimeChanges": false,
+  "nativeRunsExecuted": false
+}
