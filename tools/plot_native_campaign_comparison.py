@@ -45,6 +45,7 @@ def write_comparison(prefix, directories):
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
+    from matplotlib.ticker import MaxNLocator
     fig, axes = plt.subplots(2, 2, figsize=(12, 8), constrained_layout=True)
     summary, rows = [], []
     for path, report, _ in runs:
@@ -72,6 +73,11 @@ def write_comparison(prefix, directories):
     for axis, title in zip(axes.flat, ('Available coins', 'Living crops', 'Cumulative destroyed crops', 'Paid walls and repairs (coins)')):
         axis.set_title(title)
         axis.set_xlabel('Completed native night')
+        axis.xaxis.set_major_locator(MaxNLocator(integer=True))
+        first_day = min(d['day'] for _, report, _ in runs for d in report['daily'])
+        last_day = max(d['day'] for _, report, _ in runs for d in report['daily'])
+        axis.set_xlim(first_day if first_day < last_day else first_day - .5,
+                      last_day if first_day < last_day else last_day + .5)
         axis.grid(alpha=.25)
         axis.legend()
     for axis in axes[1]:

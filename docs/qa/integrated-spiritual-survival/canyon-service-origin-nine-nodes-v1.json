@@ -1,0 +1,190 @@
+{
+  "input": "docs/qa/integrated-spiritual-survival/pilot-v6-good-canyon-712-inland/partial-state.json.gz",
+  "inputSha256": "3d65277721f7059850ee4f7ecc0713fe7db506288edb0c67a92e113ab03b327b",
+  "priorDiagnostic": "docs/qa/integrated-spiritual-survival/canyon-river-service-proof-strict-v1.json",
+  "priorDiagnosticSha256": "73dbf21e4fa9f5e8a491481479e7b79172b4e43377773f563683a3dd3e22cf05",
+  "sourceHashes": {
+    "public/content/biome-canyons.json": "a0da0d39766ef48e44ef82bc9b9ab6093bce0ae2bf6abd3035a626792823ff6d",
+    "tools/diagnose-native-service-origin.mjs": "ce37c4942e0cd0621db41dfa2968e439b79d460985fca6db0450b4905997a44d",
+    "src/world/navigation.js": "84ff9370c99e3891dd0036257450a312372b9c3d58be55051b40bb476fab81df",
+    "src/simulation/raid-agricultural-impact.js": "cd6b07f3d612edecf51f00aaa00b27ee21dbf831ebcbaa97b2fc5801cfb94efe",
+    "src/world/wall-layout.js": "c74a70ecd45e121d0e5d04b406962c1dff1039bda6d5df593333fbd63e1d4d8a"
+  },
+  "targetId": "plant-1668",
+  "target": {
+    "x": -13.5,
+    "z": 55.5
+  },
+  "point": {
+    "x": -14.02818644229418,
+    "z": 53.88413519062497
+  },
+  "radius": 1.1,
+  "outside": {
+    "x": -38,
+    "z": 76.5
+  },
+  "proposed": {
+    "pointBodyClear": true,
+    "pointCanHitCrop": true,
+    "directToExterior": false,
+    "nativeApproachFound": false,
+    "nativeOriginNodes": [
+      {
+        "x": -15,
+        "z": 53,
+        "bodyClear": false,
+        "segmentClear": false,
+        "usable": false,
+        "centerOnWater": false
+      },
+      {
+        "x": -14,
+        "z": 53,
+        "bodyClear": false,
+        "segmentClear": false,
+        "usable": false,
+        "centerOnWater": false
+      },
+      {
+        "x": -13,
+        "z": 53,
+        "bodyClear": false,
+        "segmentClear": false,
+        "usable": false,
+        "centerOnWater": false
+      },
+      {
+        "x": -15,
+        "z": 54,
+        "bodyClear": false,
+        "segmentClear": false,
+        "usable": false,
+        "centerOnWater": false
+      },
+      {
+        "x": -14,
+        "z": 54,
+        "bodyClear": false,
+        "segmentClear": false,
+        "usable": false,
+        "centerOnWater": false
+      },
+      {
+        "x": -13,
+        "z": 54,
+        "bodyClear": false,
+        "segmentClear": false,
+        "usable": false,
+        "centerOnWater": false
+      },
+      {
+        "x": -15,
+        "z": 55,
+        "bodyClear": false,
+        "segmentClear": false,
+        "usable": false,
+        "centerOnWater": false
+      },
+      {
+        "x": -14,
+        "z": 55,
+        "bodyClear": false,
+        "segmentClear": false,
+        "usable": false,
+        "centerOnWater": false
+      },
+      {
+        "x": -13,
+        "z": 55,
+        "bodyClear": false,
+        "segmentClear": false,
+        "usable": false,
+        "centerOnWater": false
+      }
+    ],
+    "usableNativeOrigins": 0
+  },
+  "withoutProposedWalls": {
+    "pointBodyClear": true,
+    "pointCanHitCrop": true,
+    "directToExterior": false,
+    "nativeApproachFound": false,
+    "nativeOriginNodes": [
+      {
+        "x": -15,
+        "z": 53,
+        "bodyClear": false,
+        "segmentClear": false,
+        "usable": false,
+        "centerOnWater": false
+      },
+      {
+        "x": -14,
+        "z": 53,
+        "bodyClear": false,
+        "segmentClear": false,
+        "usable": false,
+        "centerOnWater": false
+      },
+      {
+        "x": -13,
+        "z": 53,
+        "bodyClear": false,
+        "segmentClear": false,
+        "usable": false,
+        "centerOnWater": false
+      },
+      {
+        "x": -15,
+        "z": 54,
+        "bodyClear": false,
+        "segmentClear": false,
+        "usable": false,
+        "centerOnWater": false
+      },
+      {
+        "x": -14,
+        "z": 54,
+        "bodyClear": false,
+        "segmentClear": false,
+        "usable": false,
+        "centerOnWater": false
+      },
+      {
+        "x": -13,
+        "z": 54,
+        "bodyClear": false,
+        "segmentClear": false,
+        "usable": false,
+        "centerOnWater": false
+      },
+      {
+        "x": -15,
+        "z": 55,
+        "bodyClear": false,
+        "segmentClear": false,
+        "usable": false,
+        "centerOnWater": false
+      },
+      {
+        "x": -14,
+        "z": 55,
+        "bodyClear": false,
+        "segmentClear": false,
+        "usable": false,
+        "centerOnWater": false
+      },
+      {
+        "x": -13,
+        "z": 55,
+        "bodyClear": false,
+        "segmentClear": false,
+        "usable": false,
+        "centerOnWater": false
+      }
+    ],
+    "usableNativeOrigins": 0
+  },
+  "scope": "Exact retained failed pose and nine native lattice origin queries, with and without proposed unpaid walls. Read-only diagnosis, not a perimeter certificate, paid protection, continuous-space proof or economic result."
+}
