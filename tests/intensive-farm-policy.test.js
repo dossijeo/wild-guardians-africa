@@ -46,10 +46,10 @@ test('recorded mixed farm attributes seed investment to live, physically picked 
  debit.n='-151';report.state.ledger.balance.n=String(BigInt(report.state.ledger.balance.n)-1n);
  assert.throws(()=>summarizeIntensiveFarm(report),/Species seed prices do not reconcile/);
 });
-test('reinvestment without growing labour or maintenance reserves can lose despite a large plantation',()=>{
- const report=simulateIntensiveFarm({days:10,seed:712,reserveLabourGrowth:false,reserveMaintenance:false,burstPlanting:true,cameraEntry:false,magicMode:'scarce'});
+test('scarce-magic reinvestment without labour or maintenance reserves loses natively within the fourteen-day control',()=>{
+ const report=simulateIntensiveFarm({days:14,seed:712,reserveLabourGrowth:false,reserveMaintenance:false,burstPlanting:true,cameraEntry:false,magicMode:'scarce'});
  assert.equal(report.agriculturalMagic.mode,'scarce');
- assert.equal(report.result,'defeat');assert.ok(report.completedNights<10);assert.ok(report.maximumLiving>100);
+ assert.equal(report.result,'defeat');assert.ok(report.completedNights<14);assert.ok(report.maximumLiving>100);
  assert.ok(report.counts.CrateDelivered>50);assert.equal(report.counts.GameOver,1);assert.equal(report.counts.CampaignWon??0,0);
  assert.ok(auditIntensiveFarm(report));
  assert.equal(summarizeIntensiveFarm(report).campaign100,'unverified');
@@ -70,10 +70,10 @@ test('optional midday hiring uses paid ordinary contracts while preserving next-
  for(const row of Object.values(summary.bySpecies))assert.ok(row.lostBeforeFirstWater<=row.lostWithPendingWater&&row.lostWithPendingWater<=row.destroyed);
 });
 
-test('poor reinvestment can lose with the current near-camera raid policy despite physical harvest income',()=>{
- const report=simulateIntensiveFarm({days:10,seed:712,reserveLabourGrowth:false,reserveMaintenance:false,burstPlanting:true,cameraEntry:true,magicMode:'scarce'});
+test('scarce-magic poor reinvestment loses natively within fourteen days with the near-camera raid policy',()=>{
+ const report=simulateIntensiveFarm({days:14,seed:712,reserveLabourGrowth:false,reserveMaintenance:false,burstPlanting:true,cameraEntry:true,magicMode:'scarce'});
  assert.equal(report.agriculturalMagic.mode,'scarce');
- assert.equal(report.policy.cameraEntry,true);assert.equal(report.result,'defeat');assert.ok(report.completedNights<10);
+ assert.equal(report.policy.cameraEntry,true);assert.equal(report.result,'defeat');assert.ok(report.completedNights<14);
  assert.ok(report.maximumLiving>100);assert.ok(report.counts.CrateDelivered>50);
  assert.equal(report.counts.GameOver,1);assert.equal(report.counts.CampaignWon??0,0);
  assert.equal(report.counts.RaidSpawned,report.counts.RaidEnded,'No unfinished raid can stand in for economic defeat');

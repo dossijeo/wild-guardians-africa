@@ -86,6 +86,26 @@ The ten-second mode timeout and ongoing effects earn zero activity credit.
 The campaign's remaining non-magic decision-window metric is explicitly a
 proxy; it cannot certify a human inactivity fraction below 25%.
 
+## Poor-management short controls
+
+The legacy ten-day defeat expectation no longer holds after the reform. Both
+scarce-magic controls survive ten days with 32 coins, 323 live plants and a
+centre at 225 HP. Their failed expectations and complete native states remain
+in poor-management-scarce-diagnostic; they are not classified as defeats.
+
+Repeating with the specified fourteen-day short-calibration horizon gives
+authentic GameOver on day 12 (legacy entry) and day 14 (near-camera entry).
+The last centre reaches zero HP. Spawned/ended raids reconcile at 12/12 and
+14/14, with 11/13 successfully closed nights. No damage, prices, wages or
+production rules were changed to obtain these outcomes. The unit control now
+states its scarce-magic policy and fourteen-day horizon explicitly. This
+preserves the native-defeat requirement while updating its observation window;
+it is not approval of the new progressive-horde economy or a 100-night result.
+
+Browser QA could not initialize the official computer-use runtime: kernel asset
+initialization returns Windows os error 3. No screenshot, mobile interaction
+or GPU acceptance is claimed from the headless/geometry checks above.
+
 Before PR/merge: finish regression checks, update remaining old campaign
 helpers, verify pointer/morph presentation in a real browser when available,
 and review activity observer limitations. No definitive horde calibration
