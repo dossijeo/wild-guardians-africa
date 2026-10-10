@@ -1,0 +1,1736 @@
+{
+  "scope": "Frozen original high-yield economy; terminal capacity screen, no historical contact replay/campaign",
+  "sourceSHA256": "cd5f6e90d2417fc917bc0f5d4c60381bcaf8ddfb28fe49e10d714418d629206f",
+  "prices": {
+    "mijo": 33,
+    "girasol": 108,
+    "sorgo": 39,
+    "maiz": 51,
+    "batata": 69,
+    "algodon": 534,
+    "yuca": 96,
+    "platano": 801
+  },
+  "fixed": {
+    "center": 800,
+    "start": 1500,
+    "elder": 30,
+    "young": 40
+  },
+  "profiles": {
+    "responsible": {
+      "terminalLiving": 865,
+      "terminalLivingBaseValue": 245946,
+      "bands": [
+        {
+          "radius": 2,
+          "countsIncludingTargetClippedTo8": {
+            "mean": 4.227745664739884,
+            "min": 2,
+            "max": 5
+          },
+          "usableMeanByCap": {
+            "1": 1.0,
+            "2": 2.0,
+            "3": 2.967630057803468,
+            "4": 3.7595375722543354,
+            "6": 4.227745664739884,
+            "8": 4.227745664739884
+          }
+        },
+        {
+          "radius": 3,
+          "countsIncludingTargetClippedTo8": {
+            "mean": 7.650867052023122,
+            "min": 2,
+            "max": 8
+          },
+          "usableMeanByCap": {
+            "1": 1.0,
+            "2": 2.0,
+            "3": 2.9965317919075143,
+            "4": 3.9884393063583814,
+            "6": 5.927167630057803,
+            "8": 7.650867052023122
+          }
+        },
+        {
+          "radius": 4,
+          "countsIncludingTargetClippedTo8": {
+            "mean": 7.926011560693642,
+            "min": 3,
+            "max": 8
+          },
+          "usableMeanByCap": {
+            "1": 1.0,
+            "2": 2.0,
+            "3": 3.0,
+            "4": 3.997687861271676,
+            "6": 5.979190751445087,
+            "8": 7.926011560693642
+          }
+        },
+        {
+          "radius": 5,
+          "countsIncludingTargetClippedTo8": {
+            "mean": 7.986127167630058,
+            "min": 5,
+            "max": 8
+          },
+          "usableMeanByCap": {
+            "1": 1.0,
+            "2": 2.0,
+            "3": 3.0,
+            "4": 4.0,
+            "6": 5.9988439306358385,
+            "8": 7.986127167630058
+          }
+        }
+      ],
+      "scope": "terminal spatial population only; does not establish alive-at-contact, walls, shield or ingress. Candidate filtering still required."
+    },
+    "neglect": {
+      "terminalLiving": 893,
+      "terminalLivingBaseValue": 235869,
+      "bands": [
+        {
+          "radius": 2,
+          "countsIncludingTargetClippedTo8": {
+            "mean": 4.393057110862262,
+            "min": 1,
+            "max": 5
+          },
+          "usableMeanByCap": {
+            "1": 1.0,
+            "2": 1.9988801791713326,
+            "3": 2.984322508398656,
+            "4": 3.8309070548712207,
+            "6": 4.393057110862262,
+            "8": 4.393057110862262
+          }
+        },
+        {
+          "radius": 3,
+          "countsIncludingTargetClippedTo8": {
+            "mean": 7.76595744680851,
+            "min": 3,
+            "max": 8
+          },
+          "usableMeanByCap": {
+            "1": 1.0,
+            "2": 2.0,
+            "3": 3.0,
+            "4": 3.9977603583426653,
+            "6": 5.959686450167973,
+            "8": 7.76595744680851
+          }
+        },
+        {
+          "radius": 4,
+          "countsIncludingTargetClippedTo8": {
+            "mean": 7.948488241881299,
+            "min": 5,
+            "max": 8
+          },
+          "usableMeanByCap": {
+            "1": 1.0,
+            "2": 2.0,
+            "3": 3.0,
+            "4": 4.0,
+            "6": 5.989921612541993,
+            "8": 7.948488241881299
+          }
+        },
+        {
+          "radius": 5,
+          "countsIncludingTargetClippedTo8": {
+            "mean": 7.994400895856663,
+            "min": 6,
+            "max": 8
+          },
+          "usableMeanByCap": {
+            "1": 1.0,
+            "2": 2.0,
+            "3": 3.0,
+            "4": 4.0,
+            "6": 6.0,
+            "8": 7.994400895856663
+          }
+        }
+      ],
+      "scope": "terminal spatial population only; does not establish alive-at-contact, walls, shield or ingress. Candidate filtering still required."
+    }
+  },
+  "actorEnvelopes": [
+    {
+      "cap": 5,
+      "scale": 1,
+      "speciesCaps": [
+        3,
+        2,
+        2,
+        2,
+        1
+      ],
+      "meanActors": 3.2052396878483833,
+      "meanStrikes": 13.086148272017837
+    },
+    {
+      "cap": 10,
+      "scale": 3,
+      "speciesCaps": [
+        8,
+        5,
+        4,
+        3,
+        2
+      ],
+      "meanActors": 8.145156221778931,
+      "meanStrikes": 34.9768437664783
+    },
+    {
+      "cap": 12,
+      "scale": 3,
+      "speciesCaps": [
+        8,
+        5,
+        4,
+        3,
+        2
+      ],
+      "meanActors": 8.992077005693218,
+      "meanStrikes": 37.24536673085207
+    }
+  ],
+  "requiredNeglectKillsPerDayForNegative500": 152.14175354392654,
+  "centralAssumptions": {
+    "spent": 0.9,
+    "cropContact": 0.9,
+    "samePerCropShield": 0.15,
+    "lostHarvest": 0.75,
+    "deliveryAdverseBound": 303,
+    "notVerified": true
+  },
+  "candidates": [
+    {
+      "cap": 10,
+      "maximumAffected": 8,
+      "radius": 3,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 7.708412249415816,
+      "potentialDailyKills": 185.63056844903977,
+      "neglectNetAdverse": -4302.779442689316,
+      "terminalCapacityPass": true,
+      "curveAtTerminal": {
+        "effectiveTargets": 7,
+        "meanTargets": 6.876594450090297,
+        "killsBeforeAdditionalOcclusion": 165.59910075651626,
+        "neglectNetAdverse": -2028.1318099242417
+      },
+      "unverifiedGoodExposurePoint1": {
+        "kills": 18.399900084057364,
+        "goodNetBeforeRepair": 14080.884707786534
+      }
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 8,
+      "radius": 3,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 7.708412249415816,
+      "potentialDailyKills": 197.67016842632515,
+      "neglectNetAdverse": -5669.920782911337,
+      "terminalCapacityPass": true,
+      "curveAtTerminal": {
+        "effectiveTargets": 7,
+        "meanTargets": 6.876594450090297,
+        "killsBeforeAdditionalOcclusion": 176.33950276230965,
+        "neglectNetAdverse": -3247.744390111842
+      },
+      "unverifiedGoodExposurePoint1": {
+        "kills": 19.593278084701073,
+        "goodNetBeforeRepair": 13945.3721988768
+      }
+    }
+  ],
+  "allCapacityRows": [
+    {
+      "cap": 5,
+      "maximumAffected": 1,
+      "radius": 2,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 1.0,
+      "potentialDailyKills": 4.504906542642141,
+      "neglectNetAdverse": 16264.712885502278,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 1,
+      "radius": 2,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 1.0,
+      "potentialDailyKills": 9.009813085284282,
+      "neglectNetAdverse": 15753.163998504175,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 1,
+      "radius": 3,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 1.0,
+      "potentialDailyKills": 4.504906542642141,
+      "neglectNetAdverse": 16264.712885502278,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 1,
+      "radius": 3,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 1.0,
+      "potentialDailyKills": 9.009813085284282,
+      "neglectNetAdverse": 15753.163998504175,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 1,
+      "radius": 4,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 1.0,
+      "potentialDailyKills": 4.504906542642141,
+      "neglectNetAdverse": 16264.712885502278,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 1,
+      "radius": 4,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 1.0,
+      "potentialDailyKills": 9.009813085284282,
+      "neglectNetAdverse": 15753.163998504175,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 1,
+      "radius": 5,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 1.0,
+      "potentialDailyKills": 4.504906542642141,
+      "neglectNetAdverse": 16264.712885502278,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 1,
+      "radius": 5,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 1.0,
+      "potentialDailyKills": 9.009813085284282,
+      "neglectNetAdverse": 15753.163998504175,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 2,
+      "radius": 2,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 1.9994400895856663,
+      "potentialDailyKills": 9.007290741195456,
+      "neglectNetAdverse": 15753.450420053447,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 2,
+      "radius": 2,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 1.9994400895856663,
+      "potentialDailyKills": 18.014581482390913,
+      "neglectNetAdverse": 14730.639067606511,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 2,
+      "radius": 3,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 2.0,
+      "potentialDailyKills": 9.009813085284282,
+      "neglectNetAdverse": 15753.163998504175,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 2,
+      "radius": 3,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 2.0,
+      "potentialDailyKills": 18.019626170568564,
+      "neglectNetAdverse": 14730.06622450797,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 2,
+      "radius": 4,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 2.0,
+      "potentialDailyKills": 9.009813085284282,
+      "neglectNetAdverse": 15753.163998504175,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 2,
+      "radius": 4,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 2.0,
+      "potentialDailyKills": 18.019626170568564,
+      "neglectNetAdverse": 14730.06622450797,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 2,
+      "radius": 5,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 2.0,
+      "potentialDailyKills": 9.009813085284282,
+      "neglectNetAdverse": 15753.163998504175,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 2,
+      "radius": 5,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 2.0,
+      "potentialDailyKills": 18.019626170568564,
+      "neglectNetAdverse": 14730.06622450797,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 3,
+      "radius": 2,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 2.975976283101062,
+      "potentialDailyKills": 13.406495028489815,
+      "neglectNetAdverse": 15253.904417147281,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 3,
+      "radius": 2,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 2.975976283101062,
+      "potentialDailyKills": 26.81299005697963,
+      "neglectNetAdverse": 13731.547061794183,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 3,
+      "radius": 3,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 2.9982658959537574,
+      "potentialDailyKills": 13.506907651262882,
+      "neglectNetAdverse": 15242.502190500867,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 3,
+      "radius": 3,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 2.9982658959537574,
+      "potentialDailyKills": 27.013815302525764,
+      "neglectNetAdverse": 13708.742608501352,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 3,
+      "radius": 4,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 3.0,
+      "potentialDailyKills": 13.514719627926423,
+      "neglectNetAdverse": 15241.615111506071,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 3,
+      "radius": 4,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 3.0,
+      "potentialDailyKills": 27.029439255852846,
+      "neglectNetAdverse": 13706.968450511764,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 3,
+      "radius": 5,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 3.0,
+      "potentialDailyKills": 13.514719627926423,
+      "neglectNetAdverse": 15241.615111506071,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 3,
+      "radius": 5,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 3.0,
+      "potentialDailyKills": 27.029439255852846,
+      "neglectNetAdverse": 13706.968450511764,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 4,
+      "radius": 2,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 3.7952223135627783,
+      "potentialDailyKills": 17.097121831150403,
+      "neglectNetAdverse": 14834.820022086977,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 4,
+      "radius": 2,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 3.7952223135627783,
+      "potentialDailyKills": 34.194243662300806,
+      "neglectNetAdverse": 12893.378271673573,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 4,
+      "radius": 3,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 3.9930998323505236,
+      "potentialDailyKills": 17.98854156017911,
+      "neglectNetAdverse": 14733.59599758916,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 4,
+      "radius": 3,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 3.9930998323505236,
+      "potentialDailyKills": 35.97708312035822,
+      "neglectNetAdverse": 12690.930222677938,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 4,
+      "radius": 4,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 3.998843930635838,
+      "potentialDailyKills": 18.014418186126203,
+      "neglectNetAdverse": 14730.657610504499,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 4,
+      "radius": 4,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 3.998843930635838,
+      "potentialDailyKills": 36.02883637225241,
+      "neglectNetAdverse": 12685.053448508617,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 4,
+      "radius": 5,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 4.0,
+      "potentialDailyKills": 18.019626170568564,
+      "neglectNetAdverse": 14730.06622450797,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 4,
+      "radius": 5,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 4.0,
+      "potentialDailyKills": 36.03925234113713,
+      "neglectNetAdverse": 12683.870676515558,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 6,
+      "radius": 2,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 4.310401387801074,
+      "potentialDailyKills": 19.417955413318822,
+      "neglectNetAdverse": 14571.280740055663,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 6,
+      "radius": 2,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 4.310401387801074,
+      "potentialDailyKills": 38.835910826637644,
+      "neglectNetAdverse": 12366.299707610946,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 6,
+      "radius": 3,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 5.943427040112888,
+      "potentialDailyKills": 26.774583358720765,
+      "neglectNetAdverse": 13735.908285176203,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 6,
+      "radius": 3,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 5.943427040112888,
+      "potentialDailyKills": 53.54916671744153,
+      "neglectNetAdverse": 10695.554797852028,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 6,
+      "radius": 4,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 5.98455618199354,
+      "potentialDailyKills": 26.959866299072168,
+      "neglectNetAdverse": 13714.86871842397,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 6,
+      "radius": 4,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 5.98455618199354,
+      "potentialDailyKills": 53.919732598144336,
+      "neglectNetAdverse": 10653.47566434756,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 6,
+      "radius": 5,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 5.99942196531792,
+      "potentialDailyKills": 27.026835263631668,
+      "neglectNetAdverse": 13707.264143510029,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 6,
+      "radius": 5,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 5.99942196531792,
+      "potentialDailyKills": 54.053670527263336,
+      "neglectNetAdverse": 10638.266514519677,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 8,
+      "radius": 2,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 4.310401387801074,
+      "potentialDailyKills": 19.417955413318822,
+      "neglectNetAdverse": 14571.280740055663,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 8,
+      "radius": 2,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 4.310401387801074,
+      "potentialDailyKills": 38.835910826637644,
+      "neglectNetAdverse": 12366.299707610946,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 8,
+      "radius": 3,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 7.708412249415816,
+      "potentialDailyKills": 34.72567677577614,
+      "neglectNetAdverse": 12833.032065789177,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 8,
+      "radius": 3,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 7.708412249415816,
+      "potentialDailyKills": 69.45135355155227,
+      "neglectNetAdverse": 8889.802359077974,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 8,
+      "radius": 4,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 7.937249901287471,
+      "potentialDailyKills": 35.75656901089562,
+      "neglectNetAdverse": 12715.970419670974,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 8,
+      "radius": 4,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 7.937249901287471,
+      "potentialDailyKills": 71.51313802179124,
+      "neglectNetAdverse": 8655.679066841567,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 8,
+      "radius": 5,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 7.990264031743361,
+      "potentialDailyKills": 35.995392714038836,
+      "neglectNetAdverse": 12688.851100241092,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 5,
+      "maximumAffected": 8,
+      "radius": 5,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 7.990264031743361,
+      "potentialDailyKills": 71.99078542807767,
+      "neglectNetAdverse": 8601.4404279818,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 1,
+      "radius": 2,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 1.0,
+      "potentialDailyKills": 12.040778466610153,
+      "neglectNetAdverse": 15408.986610433953,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 1,
+      "radius": 2,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 1.0,
+      "potentialDailyKills": 24.081556933220305,
+      "neglectNetAdverse": 14041.711448367525,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 1,
+      "radius": 3,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 1.0,
+      "potentialDailyKills": 12.040778466610153,
+      "neglectNetAdverse": 15408.986610433953,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 1,
+      "radius": 3,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 1.0,
+      "potentialDailyKills": 24.081556933220305,
+      "neglectNetAdverse": 14041.711448367525,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 1,
+      "radius": 4,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 1.0,
+      "potentialDailyKills": 12.040778466610153,
+      "neglectNetAdverse": 15408.986610433953,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 1,
+      "radius": 4,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 1.0,
+      "potentialDailyKills": 24.081556933220305,
+      "neglectNetAdverse": 14041.711448367525,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 1,
+      "radius": 5,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 1.0,
+      "potentialDailyKills": 12.040778466610153,
+      "neglectNetAdverse": 15408.986610433953,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 1,
+      "radius": 5,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 1.0,
+      "potentialDailyKills": 24.081556933220305,
+      "neglectNetAdverse": 14041.711448367525,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 2,
+      "radius": 2,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 1.9994400895856663,
+      "potentialDailyKills": 24.074815175960165,
+      "neglectNetAdverse": 14042.476999970026,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 2,
+      "radius": 2,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 1.9994400895856663,
+      "potentialDailyKills": 48.14963035192033,
+      "neglectNetAdverse": 11308.69222743967,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 2,
+      "radius": 3,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 2.0,
+      "potentialDailyKills": 24.081556933220305,
+      "neglectNetAdverse": 14041.711448367525,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 2,
+      "radius": 3,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 2.0,
+      "potentialDailyKills": 48.16311386644061,
+      "neglectNetAdverse": 11307.161124234666,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 2,
+      "radius": 4,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 2.0,
+      "potentialDailyKills": 24.081556933220305,
+      "neglectNetAdverse": 14041.711448367525,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 2,
+      "radius": 4,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 2.0,
+      "potentialDailyKills": 48.16311386644061,
+      "neglectNetAdverse": 11307.161124234666,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 2,
+      "radius": 5,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 2.0,
+      "potentialDailyKills": 24.081556933220305,
+      "neglectNetAdverse": 14041.711448367525,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 2,
+      "radius": 5,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 2.0,
+      "potentialDailyKills": 48.16311386644061,
+      "neglectNetAdverse": 11307.161124234666,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 3,
+      "radius": 2,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 2.975976283101062,
+      "potentialDailyKills": 35.833071146705784,
+      "neglectNetAdverse": 12707.28331771753,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 3,
+      "radius": 2,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 2.975976283101062,
+      "potentialDailyKills": 71.66614229341157,
+      "neglectNetAdverse": 8638.304862934678,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 3,
+      "radius": 3,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 2.9982658959537574,
+      "potentialDailyKills": 36.1014554371716,
+      "neglectNetAdverse": 12676.807283691962,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 3,
+      "radius": 3,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 2.9982658959537574,
+      "potentialDailyKills": 72.2029108743432,
+      "neglectNetAdverse": 8577.352794883544,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 3,
+      "radius": 4,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 3.0,
+      "potentialDailyKills": 36.12233539983046,
+      "neglectNetAdverse": 12674.436286301096,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 3,
+      "radius": 4,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 3.0,
+      "potentialDailyKills": 72.24467079966092,
+      "neglectNetAdverse": 8572.610800101811,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 3,
+      "radius": 5,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 3.0,
+      "potentialDailyKills": 36.12233539983046,
+      "neglectNetAdverse": 12674.436286301096,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 3,
+      "radius": 5,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 3.0,
+      "potentialDailyKills": 72.24467079966092,
+      "neglectNetAdverse": 8572.610800101811,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 4,
+      "radius": 2,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 3.7952223135627783,
+      "potentialDailyKills": 45.697431109145064,
+      "neglectNetAdverse": 11587.148568645709,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 4,
+      "radius": 2,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 3.7952223135627783,
+      "potentialDailyKills": 91.39486221829013,
+      "neglectNetAdverse": 6398.035364791036,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 4,
+      "radius": 3,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 3.9930998323505236,
+      "potentialDailyKills": 48.080030476390796,
+      "neglectNetAdverse": 11316.59555207589,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 4,
+      "radius": 3,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 3.9930998323505236,
+      "potentialDailyKills": 96.16006095278159,
+      "neglectNetAdverse": 5856.929331651401,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 4,
+      "radius": 4,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 3.998843930635838,
+      "potentialDailyKills": 48.149193891334704,
+      "neglectNetAdverse": 11308.741789161912,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 4,
+      "radius": 4,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 3.998843930635838,
+      "potentialDailyKills": 96.29838778266941,
+      "neglectNetAdverse": 5841.221805823443,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 4,
+      "radius": 5,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 4.0,
+      "potentialDailyKills": 48.16311386644061,
+      "neglectNetAdverse": 11307.161124234666,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 4,
+      "radius": 5,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 4.0,
+      "potentialDailyKills": 96.32622773288122,
+      "neglectNetAdverse": 5838.060475968956,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 6,
+      "radius": 2,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 4.310401387801074,
+      "potentialDailyKills": 51.90058821268168,
+      "neglectNetAdverse": 10882.757016423311,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 6,
+      "radius": 2,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 4.310401387801074,
+      "potentialDailyKills": 103.80117642536337,
+      "neglectNetAdverse": 4989.252260346242,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 6,
+      "radius": 3,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 5.943427040112888,
+      "potentialDailyKills": 71.56348832245978,
+      "neglectNetAdverse": 8649.96160300004,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 6,
+      "radius": 3,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 5.943427040112888,
+      "potentialDailyKills": 143.12697664491955,
+      "neglectNetAdverse": 523.6614334997012,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 6,
+      "radius": 4,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 5.98455618199354,
+      "potentialDailyKills": 72.05871520836648,
+      "neglectNetAdverse": 8593.726748869518,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 6,
+      "radius": 4,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 5.98455618199354,
+      "potentialDailyKills": 144.11743041673296,
+      "neglectNetAdverse": 411.1917252386593,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 6,
+      "radius": 5,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 5.99942196531792,
+      "potentialDailyKills": 72.23771081210798,
+      "neglectNetAdverse": 8573.401132565432,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 6,
+      "radius": 5,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 5.99942196531792,
+      "potentialDailyKills": 144.47542162421595,
+      "neglectNetAdverse": 370.54049263048546,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 8,
+      "radius": 2,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 4.310401387801074,
+      "potentialDailyKills": 51.90058821268168,
+      "neglectNetAdverse": 10882.757016423311,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 8,
+      "radius": 2,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 4.310401387801074,
+      "potentialDailyKills": 103.80117642536337,
+      "neglectNetAdverse": 4989.252260346242,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 8,
+      "radius": 3,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 7.708412249415816,
+      "potentialDailyKills": 92.81528422451989,
+      "neglectNetAdverse": 6236.74116490553,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 8,
+      "radius": 3,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 7.708412249415816,
+      "potentialDailyKills": 185.63056844903977,
+      "neglectNetAdverse": -4302.779442689316,
+      "terminalCapacityPass": true,
+      "curveAtTerminal": {
+        "effectiveTargets": 7,
+        "meanTargets": 6.876594450090297,
+        "killsBeforeAdditionalOcclusion": 165.59910075651626,
+        "neglectNetAdverse": -2028.1318099242417
+      },
+      "unverifiedGoodExposurePoint1": {
+        "kills": 18.399900084057364,
+        "goodNetBeforeRepair": 14080.884707786534
+      }
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 8,
+      "radius": 4,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 7.937249901287471,
+      "potentialDailyKills": 95.57066769552574,
+      "neglectNetAdverse": 5923.857127355812,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 8,
+      "radius": 4,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 7.937249901287471,
+      "potentialDailyKills": 191.14133539105148,
+      "neglectNetAdverse": -4928.547517788753,
+      "terminalCapacityPass": true
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 8,
+      "radius": 5,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 7.990264031743361,
+      "potentialDailyKills": 96.20899909594507,
+      "neglectNetAdverse": 5851.372223544926,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 10,
+      "maximumAffected": 8,
+      "radius": 5,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 7.990264031743361,
+      "potentialDailyKills": 192.41799819189015,
+      "neglectNetAdverse": -5073.517325410528,
+      "terminalCapacityPass": true
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 1,
+      "radius": 2,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 1.0,
+      "potentialDailyKills": 12.821717497095827,
+      "neglectNetAdverse": 15320.308080018975,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 1,
+      "radius": 2,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 1.0,
+      "potentialDailyKills": 25.643434994191654,
+      "neglectNetAdverse": 13864.354387537569,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 1,
+      "radius": 3,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 1.0,
+      "potentialDailyKills": 12.821717497095827,
+      "neglectNetAdverse": 15320.308080018975,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 1,
+      "radius": 3,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 1.0,
+      "potentialDailyKills": 25.643434994191654,
+      "neglectNetAdverse": 13864.354387537569,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 1,
+      "radius": 4,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 1.0,
+      "potentialDailyKills": 12.821717497095827,
+      "neglectNetAdverse": 15320.308080018975,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 1,
+      "radius": 4,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 1.0,
+      "potentialDailyKills": 25.643434994191654,
+      "neglectNetAdverse": 13864.354387537569,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 1,
+      "radius": 5,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 1.0,
+      "potentialDailyKills": 12.821717497095827,
+      "neglectNetAdverse": 15320.308080018975,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 1,
+      "radius": 5,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 1.0,
+      "potentialDailyKills": 25.643434994191654,
+      "neglectNetAdverse": 13864.354387537569,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 2,
+      "radius": 2,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 1.9994400895856663,
+      "potentialDailyKills": 25.636255981035386,
+      "neglectNetAdverse": 13865.169591172777,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 2,
+      "radius": 2,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 1.9994400895856663,
+      "potentialDailyKills": 51.27251196207077,
+      "neglectNetAdverse": 10954.077409845171,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 2,
+      "radius": 3,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 2.0,
+      "potentialDailyKills": 25.643434994191654,
+      "neglectNetAdverse": 13864.354387537569,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 2,
+      "radius": 3,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 2.0,
+      "potentialDailyKills": 51.28686998838331,
+      "neglectNetAdverse": 10952.447002574756,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 2,
+      "radius": 4,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 2.0,
+      "potentialDailyKills": 25.643434994191654,
+      "neglectNetAdverse": 13864.354387537569,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 2,
+      "radius": 4,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 2.0,
+      "potentialDailyKills": 51.28686998838331,
+      "neglectNetAdverse": 10952.447002574756,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 2,
+      "radius": 5,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 2.0,
+      "potentialDailyKills": 25.643434994191654,
+      "neglectNetAdverse": 13864.354387537569,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 2,
+      "radius": 5,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 2.0,
+      "potentialDailyKills": 51.28686998838331,
+      "neglectNetAdverse": 10952.447002574756,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 3,
+      "radius": 2,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 2.975976283101062,
+      "potentialDailyKills": 38.15712717997909,
+      "neglectNetAdverse": 12443.378114382298,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 3,
+      "radius": 2,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 2.975976283101062,
+      "potentialDailyKills": 76.31425435995818,
+      "neglectNetAdverse": 8110.494456264217,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 3,
+      "radius": 3,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 2.9982658959537574,
+      "potentialDailyKills": 38.442918299095986,
+      "neglectNetAdverse": 12410.925470245436,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 3,
+      "radius": 3,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 2.9982658959537574,
+      "potentialDailyKills": 76.88583659819197,
+      "neglectNetAdverse": 8045.589167990493,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 3,
+      "radius": 4,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 3.0,
+      "potentialDailyKills": 38.46515249128748,
+      "neglectNetAdverse": 12408.400695056162,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 3,
+      "radius": 4,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 3.0,
+      "potentialDailyKills": 76.93030498257497,
+      "neglectNetAdverse": 8040.539617611943,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 3,
+      "radius": 5,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 3.0,
+      "potentialDailyKills": 38.46515249128748,
+      "neglectNetAdverse": 12408.400695056162,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 3,
+      "radius": 5,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 3.0,
+      "potentialDailyKills": 76.93030498257497,
+      "neglectNetAdverse": 8040.539617611943,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 4,
+      "radius": 2,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 3.7952223135627783,
+      "potentialDailyKills": 48.66126834317638,
+      "neglectNetAdverse": 11250.593831280828,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 4,
+      "radius": 2,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 3.7952223135627783,
+      "potentialDailyKills": 97.32253668635276,
+      "neglectNetAdverse": 5724.925890061277,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 4,
+      "radius": 3,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 3.9930998323505236,
+      "potentialDailyKills": 51.198397988099124,
+      "neglectNetAdverse": 10962.49332714275,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 4,
+      "radius": 3,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 3.9930998323505236,
+      "potentialDailyKills": 102.39679597619825,
+      "neglectNetAdverse": 5148.724881785123,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 4,
+      "radius": 4,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 3.998843930635838,
+      "potentialDailyKills": 51.272047193588975,
+      "neglectNetAdverse": 10954.130186034272,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 4,
+      "radius": 4,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 3.998843930635838,
+      "potentialDailyKills": 102.54409438717795,
+      "neglectNetAdverse": 5131.998599568164,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 4,
+      "radius": 5,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 4.0,
+      "potentialDailyKills": 51.28686998838331,
+      "neglectNetAdverse": 10952.447002574756,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 4,
+      "radius": 5,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 4.0,
+      "potentialDailyKills": 102.57373997676662,
+      "neglectNetAdverse": 5128.632232649132,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 6,
+      "radius": 2,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 4.310401387801074,
+      "potentialDailyKills": 55.26674889347516,
+      "neglectNetAdverse": 10500.51695585443,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 6,
+      "radius": 2,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 4.310401387801074,
+      "potentialDailyKills": 110.53349778695032,
+      "neglectNetAdverse": 4224.77213920848,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 6,
+      "radius": 3,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 5.943427040112888,
+      "potentialDailyKills": 76.20494247292788,
+      "neglectNetAdverse": 8122.907227454187,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 6,
+      "radius": 3,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 5.943427040112888,
+      "potentialDailyKills": 152.40988494585577,
+      "neglectNetAdverse": -530.4473175920066,
+      "terminalCapacityPass": true
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 6,
+      "radius": 4,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 5.98455618199354,
+      "potentialDailyKills": 76.73228871101956,
+      "neglectNetAdverse": 8063.02510146446,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 6,
+      "radius": 4,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 5.98455618199354,
+      "potentialDailyKills": 153.46457742203913,
+      "neglectNetAdverse": -650.2115695714565,
+      "terminalCapacityPass": true
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 6,
+      "radius": 5,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 5.99942196531792,
+      "potentialDailyKills": 76.9228935851778,
+      "neglectNetAdverse": 8041.381209341702,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 6,
+      "radius": 5,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 5.99942196531792,
+      "potentialDailyKills": 153.8457871703556,
+      "neglectNetAdverse": -693.4993538169765,
+      "terminalCapacityPass": true
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 8,
+      "radius": 2,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 4.310401387801074,
+      "potentialDailyKills": 55.26674889347516,
+      "neglectNetAdverse": 10500.51695585443,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 8,
+      "radius": 2,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 4.310401387801074,
+      "potentialDailyKills": 110.53349778695032,
+      "neglectNetAdverse": 4224.77213920848,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 8,
+      "radius": 3,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 7.708412249415816,
+      "potentialDailyKills": 98.83508421316257,
+      "neglectNetAdverse": 5553.170494794522,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 8,
+      "radius": 3,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 7.708412249415816,
+      "potentialDailyKills": 197.67016842632515,
+      "neglectNetAdverse": -5669.920782911337,
+      "terminalCapacityPass": true,
+      "curveAtTerminal": {
+        "effectiveTargets": 7,
+        "meanTargets": 6.876594450090297,
+        "killsBeforeAdditionalOcclusion": 176.33950276230965,
+        "neglectNetAdverse": -3247.744390111842
+      },
+      "unverifiedGoodExposurePoint1": {
+        "kills": 19.593278084701073,
+        "goodNetBeforeRepair": 13945.3721988768
+      }
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 8,
+      "radius": 4,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 7.937249901287471,
+      "potentialDailyKills": 101.76917593815969,
+      "neglectNetAdverse": 5219.993470573212,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 8,
+      "radius": 4,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 7.937249901287471,
+      "potentialDailyKills": 203.53835187631938,
+      "neglectNetAdverse": -6336.274831353956,
+      "terminalCapacityPass": true
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 8,
+      "radius": 5,
+      "attackHitIncrement": 1,
+      "terminalMeanTargetsBeforeWalls": 7.990264031743361,
+      "potentialDailyKills": 102.4489081422193,
+      "neglectNetAdverse": 5142.807351582267,
+      "terminalCapacityPass": false
+    },
+    {
+      "cap": 12,
+      "maximumAffected": 8,
+      "radius": 5,
+      "attackHitIncrement": 2,
+      "terminalMeanTargetsBeforeWalls": 7.990264031743361,
+      "potentialDailyKills": 204.8978162844386,
+      "neglectNetAdverse": -6490.647069335842,
+      "terminalCapacityPass": true
+    }
+  ],
+  "cappedCurve": {
+    "continuousPressure": "1+(Nmax-1)*V/(V+10000)",
+    "V": "sum original base payouts of living crops, no cash; freeze at raid creation",
+    "effectiveTargets": "floor continuous pressure, stable no new RNG; fullN ceiling is not achieved at finiteV",
+    "increment": "1 until declared postintro value threshold;2 above threshold. Discrete operation, not continuous damage. Threshold requires pilot review.",
+    "structuralDamage": "keep native frozen damage, optional bounded1\u20131.5 separately, never scale from area target count"
+  },
+  "requirements": [
+    "First5 introduction: original one target/increment1/two-hit survival and global20% destruction limit",
+    "Query spatial grid only once per committed impact, bounded radius5/candidates limit; cost benchmark pending",
+    "Affected crops independently check alive, radius, shield and animal-to-target nav segment; do not pass solid walls",
+    "Deterministic distance then stableID order; no new RNG",
+    "One attackId atomically records all crop hit effects and decrements actor budget once; reload idempotence contract required",
+    "Original zero structural contacts means structural scaling alone is ineffective in that observed history",
+    "Terminal geometry upper capacity is not a promised contact count; audit historical/replayed target population before selection",
+    "No crop mutation/deletion across remote farm, no shield bypass",
+    "Source-compatible candidate remains OFF until paired bounded physical/CPU pilot and parent approval"
+  ]
+}

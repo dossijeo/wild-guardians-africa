@@ -1,0 +1,110 @@
+{
+  "status": "OFF analytical review; no production import",
+  "frozenBalance": "e040ea6f highyield mijo33 versusmainmijo11",
+  "fixedPrices": {
+    "mijo": 33,
+    "girasol": 108,
+    "sorgo": 39,
+    "maiz": 51,
+    "batata": 69,
+    "algodon": 534,
+    "yuca": 96,
+    "platano": 801
+  },
+  "fixedCenterStartWages": [
+    800,
+    1500,
+    30,
+    40
+  ],
+  "options": [
+    {
+      "id": "area-10",
+      "maxAnimals": 10,
+      "lateThreatScale": 3,
+      "lateSpeciesCaps": [
+        8,
+        5,
+        4,
+        3,
+        2
+      ],
+      "minimumAnimals": 6,
+      "individualHitBudgets": "unchanged",
+      "cropArea": {
+        "radius": 3,
+        "maximumTargets": 8,
+        "bySpecies": {
+          "warthog": {
+            "radius": 3,
+            "maxTargets": 8
+          },
+          "hyena": {
+            "radius": 3,
+            "maxTargets": 8
+          },
+          "buffalo": {
+            "radius": 3,
+            "maxTargets": 8
+          },
+          "lion": {
+            "radius": 3,
+            "maxTargets": 8
+          },
+          "rhino": {
+            "radius": 3,
+            "maxTargets": 8
+          }
+        },
+        "smoothValuePressure": "floor(1+7*livingCropBaseValue/(livingCropBaseValue+10000))",
+        "attackHitIncrement": "1below60000livingCropBaseValue;2at/above60000; frozen atspawn",
+        "firstFive": "original1target/1increment/20%destructioncap"
+      }
+    },
+    {
+      "id": "area-12",
+      "maxAnimals": 12,
+      "lateThreatScale": 3,
+      "lateSpeciesCaps": [
+        8,
+        5,
+        4,
+        3,
+        2
+      ],
+      "minimumAnimals": 6,
+      "individualHitBudgets": "unchanged",
+      "cropArea": {
+        "radius": 3,
+        "maximumTargets": 8,
+        "bySpecies": {
+          "warthog": {
+            "radius": 3,
+            "maxTargets": 8
+          },
+          "hyena": {
+            "radius": 3,
+            "maxTargets": 8
+          },
+          "buffalo": {
+            "radius": 3,
+            "maxTargets": 8
+          },
+          "lion": {
+            "radius": 3,
+            "maxTargets": 8
+          },
+          "rhino": {
+            "radius": 3,
+            "maxTargets": 8
+          }
+        },
+        "smoothValuePressure": "floor(1+7*livingCropBaseValue/(livingCropBaseValue+10000))",
+        "attackHitIncrement": "1below60000livingCropBaseValue;2at/above60000; frozen atspawn",
+        "firstFive": "original1target/1increment/20%destructioncap"
+      }
+    }
+  ],
+  "structureDamage": "unchanged frozen native, separate optional max1.5notapplied",
+  "readiness": "Requires rootkernel/nativeocclusion/reload integration and boundedpairedpilot, no100-nightclaim"
+}
