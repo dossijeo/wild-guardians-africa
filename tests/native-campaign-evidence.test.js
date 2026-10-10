@@ -18,3 +18,10 @@ test('contract: day-boundary events belong to the outgoing decision; missing eve
  const s=fixture(),o=createNativeCampaignEvidence(s);s.time=299.5;o.decision(s,{seconds:1,otherActions:1});s.day=2;s.time=.5;s.elapsed=1;s.events.push({id:'last-placement',type:'CropPlaced'});o.observe(s);assert.equal(o.report(s).daily[0].day,1);assert.equal(o.report(s).meaningfulActivity.daylightSeconds,.5);
  s.events=[];assert.equal(o.report(s).status,'incomplete');
 });
+
+test('every no-command daytime reason counts idle, including navigation, raid and unknown; pending clocks add zero',()=>{
+ const s=fixture(),o=createNativeCampaignEvidence(s);
+ for(const reason of ['navigation','incursion','unrecognised']){o.decision(s,{seconds:1,reason});s.time++;s.elapsed++;o.finishDecision(s);}
+ o.decision(s,{seconds:1,reason:'navigation'});o.finishDecision(s);
+ const r=o.report(s).meaningfulActivity;assert.equal(r.daylightSeconds,3);assert.equal(r.unoccupiedSeconds,3);assert.equal(r.unoccupiedFraction,1);assert.equal(r.strictBelow25,false);
+});

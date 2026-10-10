@@ -30,8 +30,15 @@ export function createNativeCampaignEvidence(initial){
   const decisionIndex=decisions.length;
   for(const task of s.tasks)if(task.kind==='repair'&&!knownTasks.has(task.id))requests.push({taskId:task.id,targetId:task.targetId,decisionIndex,day:s.day,time:s.time});
   for(const task of s.tasks)knownTasks.add(task.id);
-  decisions.push({day:s.day,time:s.time,daylightSeconds:s.time<300?Math.min(seconds,300-s.time):0,reason,otherActions});
+  decisions.push({day:s.day,time:s.time,elapsed:s.elapsed,daylightSeconds:s.time<300?Math.min(seconds,300-s.time):0,reason,otherActions});
   observe(s);
+ }
+ // The async driver calls this immediately after its native tick. Pending
+ // transport time and terminal partial ticks cannot manufacture daylight.
+ function finishDecision(s){
+  const r=decisions.at(-1);if(!r)throw Error('No decision to settle');
+  const dt=s.elapsed-r.elapsed;assert.ok(dt>=0);
+  r.daylightSeconds=r.time<300?Math.min(dt,300-r.time):0;r.actualSeconds=dt;
  }
  function report(s){
   observe(s);const settlement=repairs.report(s),credited=new Set();
@@ -39,5 +46,5 @@ export function createNativeCampaignEvidence(initial){
   const daylight=decisions.reduce((n,r)=>n+r.daylightSeconds,0),idle=decisions.reduce((n,r,i)=>n+(r.otherActions||credited.has(i)?0:r.daylightSeconds),0);
   return structuredClone({coverageLost,status:coverageLost||settlement.status!=='verified'?'incomplete':'verified',deliveries,daily:[...daily.values()].map(r=>({...r,atLeast60CropPurchases:r.cropPurchases>=60})),repairSettlements:settlement,requests,decisions,meaningfulActivity:{daylightSeconds:daylight,unoccupiedSeconds:idle,unoccupiedFraction:daylight?idle/daylight:null,strictBelow25:daylight>0&&idle/daylight<.25,creditedPaidRepairDecisionCount:credited.size},scope:'Income only native CrateDelivered ledger entries; action time only decisions, paid HP-restoring requests attributed once. Wall purchases do not prove useful interception. Observe at every native tick; record outgoing day before dawn transition.'});
  }
- return {observe,decision,report};
+ return {observe,decision,finishDecision,report};
 }
