@@ -34,10 +34,10 @@ test('fluid footprint uses all five native sample positions without querying slo
  assert(actorFluidClear({field},{x:1,z:2},.28));assert.equal(calls,5);
 });
 
-for(const worker of [true,false])test(`Canyon water remains traversable for ${worker?'workers':'animals'}`,()=>{
+for(const worker of [true,false])test(`Canyon water ${worker?'remains traversable for workers':'blocks animals'}`,()=>{
  const nav=world(true),actor={id:'actor',x:0,z:0,status:'walking',radius:.28,path:[{x:4,z:0}],pathVersion:nav.version,destinationId:'task'};
  const state={structures:[],workers:worker?[actor]:[],raid:worker?null:{animals:[actor]}};
- walkTo(state,actor,{id:'task',x:4,z:0},.05,nav,{speed:2,worker});assert.equal(actor.x,.1);assert.equal(actor.terrainAvoidance,undefined);
+ walkTo(state,actor,{id:'task',x:4,z:0},.05,nav,{speed:2,worker});assert.equal(actor.x,worker?.1:0);assert.equal(actor.terrainAvoidance,undefined);
 });
 
 test('minimal adapters keep their dynamic-motion contract and blockers precede fluids',()=>{

@@ -10,10 +10,11 @@ function bounds(pieces){
 }
 function terrainEdges(nav,box){
  if(!nav.field.canyon)return [];
+ // Rivers and cliffs block hostile movement, even where workers can cross.
  // Bounded, cached contour queries run on construction, never on render frames.
  const step=Math.max(2,Math.ceil(Math.sqrt((box[2]-box[0])*(box[3]-box[1])/4096))),x0=Math.floor(box[0]/step),z0=Math.floor(box[1]/step),x1=Math.ceil(box[2]/step),z1=Math.ceil(box[3]/step);
  let cache=terrainSamples.get(nav.field);if(!cache){cache=new Map();terrainSamples.set(nav.field,cache);}
- const blocked=(x,z)=>{const key=x+','+z;if(!cache.has(key)){if(cache.size>=16384)cache.clear();cache.set(key,!nav.terrainValid(x,z,.28,true));}return cache.get(key);};
+ const blocked=(x,z)=>{const key=x+','+z;if(!cache.has(key)){if(cache.size>=16384)cache.clear();cache.set(key,!nav.terrainValid(x,z,.28,false));}return cache.get(key);};
  const edges=[];
  for(let iz=z0;iz<z1;iz++)for(let ix=x0;ix<x1;ix++){
   const x=ix*step,z=iz*step,points=[[x,z],[x+step,z],[x+step,z+step],[x,z+step]],values=points.map(p=>blocked(...p)),cuts=[];

@@ -1,0 +1,237 @@
+{
+  "commit": "f66a8dca1aac7ad4585287f95d155a0b5946dadf",
+  "sourceHashes": {
+    "src/world/navigation.js": "6641456d8d8c9f305d48aa485c5e326d718b985773ed8d1671dce9a3be8ff5fa",
+    "src/world/canyon-land-access.js": "93993a743a36f223f593e454929a72c0055cb3d8924a0dbdbe0180549c2dad37",
+    "src/world/villages.js": "8983c3801a6857e4632090441fa4200b21e4cdd9681c2adb049c85619d134d2a",
+    "src/world/boundary-gates.js": "7ee50ec9cf8009ab6564cb15e5b8582c6ef5c49a9050fd61b4eb4d348893b898",
+    "src/simulation/actor-fluid-clearance.js": "d5a3bce4eeaeb649cc2b1a47c1a23b8188106ac84fcb8ec1b7fb92a6ae9e3df4",
+    "src/simulation/raids.js": "ebe6046be930ea7471b1f2234c4c332eb3b3f2dc192ae1b0e8b0e7d51408633b",
+    "src/simulation/worker-route-clearance.js": "36f855f7ca81a20cd852d543da36dfe42746f48429d58d6af482d531a9b8a7c4",
+    "tools/probe-canyon-natural-defense.mjs": "2188140335f3e9caa5d6e527813ee59c30c84df7370d544a96621214c4c6848d"
+  },
+  "scope": "Native deterministic terrain/worker routes/hostile exterior entry and approach only; no economic campaign or damage calibration.",
+  "rows": [
+    {
+      "seed": 712,
+      "culture": "mapungubwe",
+      "openingAndProbeMs": 2642.391,
+      "plantableWorkerRoutedPoints": 17,
+      "landWitness": {
+        "entry": {
+          "x": -25.499999999999996,
+          "z": 65
+        },
+        "target": {
+          "x": -25.5,
+          "z": 33
+        },
+        "radius": 1.1,
+        "path": [
+          {
+            "x": -26,
+            "z": 64
+          },
+          {
+            "x": -26,
+            "z": 63
+          },
+          {
+            "x": -26,
+            "z": 62
+          },
+          {
+            "x": -26,
+            "z": 61
+          },
+          {
+            "x": -26,
+            "z": 60
+          },
+          {
+            "x": -26,
+            "z": 59
+          },
+          {
+            "x": -27,
+            "z": 58
+          },
+          {
+            "x": -28,
+            "z": 57
+          },
+          {
+            "x": -28,
+            "z": 56
+          },
+          {
+            "x": -28,
+            "z": 55
+          },
+          {
+            "x": -28,
+            "z": 54
+          },
+          {
+            "x": -28,
+            "z": 53
+          },
+          {
+            "x": -28,
+            "z": 52
+          },
+          {
+            "x": -29,
+            "z": 51
+          },
+          {
+            "x": -30,
+            "z": 50
+          },
+          {
+            "x": -30,
+            "z": 49
+          },
+          {
+            "x": -30,
+            "z": 48
+          },
+          {
+            "x": -30,
+            "z": 47
+          },
+          {
+            "x": -30,
+            "z": 46
+          },
+          {
+            "x": -30,
+            "z": 45
+          },
+          {
+            "x": -30,
+            "z": 44
+          },
+          {
+            "x": -30,
+            "z": 43
+          },
+          {
+            "x": -29,
+            "z": 42
+          },
+          {
+            "x": -29,
+            "z": 41
+          },
+          {
+            "x": -28,
+            "z": 40
+          },
+          {
+            "x": -28,
+            "z": 39
+          },
+          {
+            "x": -27,
+            "z": 38
+          },
+          {
+            "x": -27,
+            "z": 37
+          },
+          {
+            "x": -27,
+            "z": 36
+          },
+          {
+            "x": -26,
+            "z": 35
+          },
+          {
+            "x": -26,
+            "z": 34
+          },
+          {
+            "x": -25.5,
+            "z": 33
+          }
+        ]
+      },
+      "riverWorkerPass": true,
+      "riverHostileBlocked": true,
+      "entries": [
+        {
+          "species": "warthog",
+          "radius": 1.1,
+          "entry": {
+            "x": -154.33459543678035,
+            "z": 30.572305649518967
+          },
+          "exit": {
+            "x": -157.33459543678035,
+            "z": 30.572305649518967
+          },
+          "dry": true,
+          "centerReachable": false
+        },
+        {
+          "species": "hyena",
+          "radius": 0.9,
+          "entry": {
+            "x": -154.53459543678034,
+            "z": 30.572305649518967
+          },
+          "exit": {
+            "x": -157.53459543678034,
+            "z": 30.572305649518967
+          },
+          "dry": true,
+          "centerReachable": false
+        },
+        {
+          "species": "buffalo",
+          "radius": 0.97,
+          "entry": {
+            "x": -154.46459543678034,
+            "z": 30.572305649518967
+          },
+          "exit": {
+            "x": -157.46459543678034,
+            "z": 30.572305649518967
+          },
+          "dry": true,
+          "centerReachable": false
+        },
+        {
+          "species": "lion",
+          "radius": 0.85,
+          "entry": {
+            "x": -154.58459543678035,
+            "z": 30.572305649518967
+          },
+          "exit": {
+            "x": -157.58459543678035,
+            "z": 30.572305649518967
+          },
+          "dry": true,
+          "centerReachable": false
+        },
+        {
+          "species": "rhino",
+          "radius": 1.55,
+          "entry": {
+            "x": -153.88459543678033,
+            "z": 30.572305649518967
+          },
+          "exit": {
+            "x": -156.88459543678033,
+            "z": 30.572305649518967
+          },
+          "dry": true,
+          "centerReachable": false
+        }
+      ]
+    }
+  ]
+}

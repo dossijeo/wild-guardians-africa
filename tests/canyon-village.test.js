@@ -26,12 +26,12 @@ for(const culture of ['mapungubwe','saheliana','suajili','musgum','etiope'])test
     assert.equal(field.waterInfo(x,z).inside,true);
     assert.equal(nav.workerSurface(x,z),field.riverLevel);
     assert.equal(nav.terrainValid(x,z,.28,true),true);
-    assert.equal(nav.terrainValid(x,z,.28,false),true);
+    assert.equal(nav.terrainValid(x,z,.28,false),false);
     assert.equal(nav.placement(x,z,.4).valid,false,'water is still not buildable');
   }
   const z=village.z-4,x=field.riverX(z),a={x:x-10,z},b={x:x+10,z};
   assert.ok(nav.path(a,b,.28,null,true),'workers cross the actual river');
-  assert.equal(nav.segmentClear(a,b,.28,null,false),true,'animals share the canyon water crossing');
+  assert.equal(nav.segmentClear(a,b,.28,null,false),false,'animals cannot cross the canyon river');
   const saved=deserialize(serialize(s)),restored=new Navigation(s.seed,s.biome,nav.profile);restored.setState(saved);
   assert.deepEqual(saved,s);assert.deepEqual(restored.config,nav.config);
   assert.deepEqual(restored.path(a,b,.28,null,true),nav.path(a,b,.28,null,true));

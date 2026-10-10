@@ -1,3 +1,4 @@
+import {canyonRaidFormation} from './canyon-raid-formation.js';
 import {resolveAgriculturalImpact,validDamageProfile} from './raid-agricultural-impact.js';
 import {liveWaitQueue,occupiedEligibleGroup,enqueueWait,leaveWait,observeWaitProgress,waitEpoch,RAID_WAIT_SECONDS} from './raid-contention.js';
 import {raidEntryChunks,includeRaidBounds} from '../world/raid-entry-residency.js';
@@ -53,7 +54,7 @@ export function cameraRaidEntry(s,specs,bounds,nav,view=nav.raidView,maxSearches
       for(const candidate of candidates){
         const point={x:candidate.x,z:candidate.z},exit={x:point.x+bx*3,z:point.z+bz*3};
         // A reachable lateral probe can still be far outside the near-arrival
-        // area, especially once canyon water becomes traversable. Keep the
+        // area, especially beside a winding canyon river. Keep the
         // original camera/farm distance contract before spending path searches.
         const camera=nav.raidView?.eye??view.eye;
         if(dist(point,camera)>=20&&(!focus||dist(point,focus)>=12))continue;
@@ -133,7 +134,19 @@ function baseRaidEntry(s,specs,bounds,preferredSide,nav){
   }
   return entries?{entries,exits}:null;
 }
-export function chooseRaidEntry(s,specs,bounds,preferredSide,nav){return exteriorRaidEntry(s,specs,bounds,preferredSide,nav,baseRaidEntry,cameraRaidEntry);}
+export function chooseRaidEntry(s,specs,bounds,preferredSide,nav){
+  if(!nav.field?.canyon)return exteriorRaidEntry(s,specs,bounds,preferredSide,nav,baseRaidEntry,cameraRaidEntry);
+  // Dry plateau/other-bank entries need not connect to the canyon farm.
+  // Require native target approaches rather than granting river crossings.
+  const connectedBase=(state,group,box,side,navigation)=>{
+    const entry=baseRaidEntry(state,group,box,side,navigation);if(!entry)return null;
+    const targets=[...state.structures.filter(t=>operational(t)||t.kind==='wall'&&t.hp>0&&t.status!=='collapsing'),...state.plants.filter(p=>p.alive)];
+    return entry.entries.every((point,i)=>targets.length===0||targets.slice().sort((a,b)=>dist(a,point)-dist(b,point)).slice(0,8).some(target=>reachableApproach({...point,radius:group[i].radius},target,navigation)))?entry:null;
+  };
+  // The existing projected-camera fallback may need a bounded land detour.
+  const connectedCamera=(...args)=>{args[5]=Math.max(args[5]??2,2);return cameraRaidEntry(...args);};
+  return exteriorRaidEntry(s,specs,bounds,preferredSide,nav,connectedBase,connectedCamera)??canyonRaidFormation(s,specs,bounds,nav,reachableApproach);
+}
 export function spawnRaid(s,plan,nav,daytime=false) {
   const previous=s.raid,wave=previous&&eligiblePendingRaidWavePlan(s)===plan;
   if(previous&&!wave)return false;if(s.postgame)return;

@@ -1,0 +1,301 @@
+TAP version 13
+# (node:27300) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: animals detour on land around a finite river; workers cross directly
+ok 1 - animals detour on land around a finite river; workers cross directly
+  ---
+  duration_ms: 22.5224
+  ...
+# Subtest: river completes a paid U perimeter without water wall pieces and preserves worker access on reload
+ok 2 - river completes a paid U perimeter without water wall pieces and preserves worker access on reload
+  ---
+  duration_ms: 39.8643
+  ...
+# Subtest: land-access witness rejects a naturally isolated farm and accepts a verified same-bank approach
+ok 3 - land-access witness rejects a naturally isolated farm and accepts a verified same-bank approach
+  ---
+  duration_ms: 2.7816
+  ...
+# Subtest: a real area impact cannot damage crops on the opposite river bank
+ok 4 - a real area impact cannot damage crops on the opposite river bank
+  ---
+  duration_ms: 3.6526
+  ...
+# (node:3076) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: central full damage, frontal90-degree periphery half damage and maximum radius are physical
+ok 5 - central full damage, frontal90-degree periphery half damage and maximum radius are physical
+  ---
+  duration_ms: 7.6459
+  ...
+# Subtest: sector follows current contact heading and rejects a backward or remote contact
+ok 6 - sector follows current contact heading and rejects a backward or remote contact
+  ---
+  duration_ms: 2.9791
+  ...
+# Subtest: a radius-zero or damage-zero profile never manufactures peripheral hits or mandatory deaths
+ok 7 - a radius-zero or damage-zero profile never manufactures peripheral hits or mandatory deaths
+  ---
+  duration_ms: 1.1678
+  ...
+# Subtest: area cap prioritizes the central plant then nearest legal physical candidates
+ok 8 - area cap prioritizes the central plant then nearest legal physical candidates
+  ---
+  duration_ms: 1.1383
+  ...
+# Subtest: native wall footprint occludes peripheral impacts, including animal-blocking gate=false
+ok 9 - native wall footprint occludes peripheral impacts, including animal-blocking gate=false
+  ---
+  duration_ms: 2.5485
+  ...
+# Subtest: native wall footprint occludes peripheral impacts, including animal-blocking gate=true
+ok 10 - native wall footprint occludes peripheral impacts, including animal-blocking gate=true
+  ---
+  duration_ms: 1.1495
+  ...
+# Subtest: a wall between actor and impact prevents a central hit rather than producing splash behind it
+ok 11 - a wall between actor and impact prevents a central hit rather than producing splash behind it
+  ---
+  duration_ms: 1.1201
+  ...
+# Subtest: a native centre footprint blocks rays and is re-evaluated after removal
+ok 12 - a native centre footprint blocks rays and is re-evaluated after removal
+  ---
+  duration_ms: 0.9634
+  ...
+# Subtest: Shield protects each peripheral plant and blocks a crossing ray outside its endpoint
+ok 13 - Shield protects each peripheral plant and blocks a crossing ray outside its endpoint
+  ---
+  duration_ms: 1.1593
+  ...
+# Subtest: a shielded central target consumes no crop HP
+ok 14 - a shielded central target consumes no crop HP
+  ---
+  duration_ms: 0.8895
+  ...
+# Subtest: one attack is deduplicated across replay/save and fractional damage persists exactly
+ok 15 - one attack is deduplicated across replay/save and fractional damage persists exactly
+  ---
+  duration_ms: 2.9331
+  ...
+# Subtest: intro destruction cap survives central4 and peripheral2 damage, retaining a living farm
+ok 16 - intro destruction cap survives central4 and peripheral2 damage, retaining a living farm
+  ---
+  duration_ms: 1.2518
+  ...
+# Subtest: grid handles append, death, native position epoch and replacement without scanning all crops per hit
+ok 17 - grid handles append, death, native position epoch and replacement without scanning all crops per hit
+  ---
+  duration_ms: 18.3424
+  ...
+# Subtest: profile and crop fractional bounds reject corrupt saves while supporting legacy integer HP
+ok 18 - profile and crop fractional bounds reject corrupt saves while supporting legacy integer HP
+  ---
+  duration_ms: 2.4142
+  ...
+# Subtest: native warthog profile completes real melee, one impact per attack, dt0.1
+ok 19 - native warthog profile completes real melee, one impact per attack, dt0.1
+  ---
+  duration_ms: 28.5532
+  ...
+# Subtest: native warthog profile completes real melee, one impact per attack, dt1
+ok 20 - native warthog profile completes real melee, one impact per attack, dt1
+  ---
+  duration_ms: 10.0698
+  ...
+# Subtest: native hyena profile completes real melee, one impact per attack, dt0.1
+ok 21 - native hyena profile completes real melee, one impact per attack, dt0.1
+  ---
+  duration_ms: 12.0853
+  ...
+# Subtest: native hyena profile completes real melee, one impact per attack, dt1
+ok 22 - native hyena profile completes real melee, one impact per attack, dt1
+  ---
+  duration_ms: 12.0642
+  ...
+# Subtest: native buffalo profile completes real melee, one impact per attack, dt0.1
+ok 23 - native buffalo profile completes real melee, one impact per attack, dt0.1
+  ---
+  duration_ms: 11.0707
+  ...
+# Subtest: native buffalo profile completes real melee, one impact per attack, dt1
+ok 24 - native buffalo profile completes real melee, one impact per attack, dt1
+  ---
+  duration_ms: 9.3744
+  ...
+# Subtest: native lion profile completes real melee, one impact per attack, dt0.1
+ok 25 - native lion profile completes real melee, one impact per attack, dt0.1
+  ---
+  duration_ms: 11.0413
+  ...
+# Subtest: native lion profile completes real melee, one impact per attack, dt1
+ok 26 - native lion profile completes real melee, one impact per attack, dt1
+  ---
+  duration_ms: 8.8647
+  ...
+# Subtest: native rhino profile completes real melee, one impact per attack, dt0.1
+ok 27 - native rhino profile completes real melee, one impact per attack, dt0.1
+  ---
+  duration_ms: 7.3393
+  ...
+# Subtest: native rhino profile completes real melee, one impact per attack, dt1
+ok 28 - native rhino profile completes real melee, one impact per attack, dt1
+  ---
+  duration_ms: 6.2617
+  ...
+# Subtest: a native wall strike uses structural profile damage but never applies agricultural splash
+ok 29 - a native wall strike uses structural profile damage but never applies agricultural splash
+  ---
+  duration_ms: 201.0904
+  ...
+# Subtest: native saved attack resumes once and does not duplicate event facts
+ok 30 - native saved attack resumes once and does not duplicate event facts
+  ---
+  duration_ms: 9.6716
+  ...
+# Subtest: native committed contact writes half-point HP, reload preserves it and applied attacks cannot hit twice
+ok 31 - native committed contact writes half-point HP, reload preserves it and applied attacks cannot hit twice
+  ---
+  duration_ms: 2.4428
+  ...
+# Subtest: live wall collapse remains occluding until ruined, and new topology invalidates cached geometry
+ok 32 - live wall collapse remains occluding until ruined, and new topology invalidates cached geometry
+  ---
+  duration_ms: 1.8605
+  ...
+# Subtest: maximal canonical profile and its bounded living queries are valid; malformed and replay IDs are not
+ok 33 - maximal canonical profile and its bounded living queries are valid; malformed and replay IDs are not
+  ---
+  duration_ms: 1.8519
+  ...
+# (node:27020) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: whole group exterior native entry: closed
+ok 34 - whole group exterior native entry: closed
+  ---
+  duration_ms: 54.7741
+  ...
+# Subtest: whole group exterior native entry: open
+ok 35 - whole group exterior native entry: open
+  ---
+  duration_ms: 16.1821
+  ...
+# Subtest: whole group exterior native entry: gate
+ok 36 - whole group exterior native entry: gate
+  ---
+  duration_ms: 30.3615
+  ...
+# Subtest: whole group exterior native entry: separate
+ok 37 - whole group exterior native entry: separate
+  ---
+  duration_ms: 12.1722
+  ...
+# Subtest: whole group exterior native entry: concave
+ok 38 - whole group exterior native entry: concave
+  ---
+  duration_ms: 25.6571
+  ...
+# Subtest: whole group exterior native entry: no-walls
+ok 39 - whole group exterior native entry: no-walls
+  ---
+  duration_ms: 2.9476
+  ...
+# Subtest: whole group exterior native entry: clipped-bounds
+ok 40 - whole group exterior native entry: clipped-bounds
+  ---
+  duration_ms: 23.0649
+  ...
+# Subtest: closed 40m enclosure starts physically outside then hits a wall
+ok 41 - closed 40m enclosure starts physically outside then hits a wall
+  ---
+  duration_ms: 181.7797
+  ...
+# Subtest: closed 320m enclosure starts physically outside then hits a wall
+ok 42 - closed 320m enclosure starts physically outside then hits a wall
+  ---
+  duration_ms: 5423.475
+  ...
+# Subtest: residency handshake preserves pending night/RNG and reload creates exactly one complete group
+ok 43 - residency handshake preserves pending night/RNG and reload creates exactly one complete group
+  ---
+  duration_ms: 564.8096
+  ...
+# Subtest: worker preparation uses the same exterior choice without changing state or RNG
+ok 44 - worker preparation uses the same exterior choice without changing state or RNG
+  ---
+  duration_ms: 510.1172
+  ...
+# Subtest: expanded bounds have sparse finite chunk demand and release when raid disappears
+ok 45 - expanded bounds have sparse finite chunk demand and release when raid disappears
+  ---
+  duration_ms: 26.3658
+  ...
+# Subtest: native sabana opening: whole group keeps genuine terrain and fluid legality
+ok 46 - native sabana opening: whole group keeps genuine terrain and fluid legality
+  ---
+  duration_ms: 423.9002
+  ...
+# Subtest: native gran-rio opening: whole group keeps genuine terrain and fluid legality
+ok 47 - native gran-rio opening: whole group keeps genuine terrain and fluid legality
+  ---
+  duration_ms: 384.8007
+  ...
+# Subtest: native manglares opening: whole group keeps genuine terrain and fluid legality
+ok 48 - native manglares opening: whole group keeps genuine terrain and fluid legality
+  ---
+  duration_ms: 338.0749
+  ...
+# Subtest: native volcanes opening: whole group keeps genuine terrain and fluid legality
+ok 49 - native volcanes opening: whole group keeps genuine terrain and fluid legality
+  ---
+  duration_ms: 377.85
+  ...
+# Subtest: native gran-canon opening: whole group keeps genuine terrain and fluid legality
+ok 50 - native gran-canon opening: whole group keeps genuine terrain and fluid legality
+  ---
+  duration_ms: 1868.1627
+  ...
+# Subtest: native desierto opening: whole group keeps genuine terrain and fluid legality
+ok 51 - native desierto opening: whole group keeps genuine terrain and fluid legality
+  ---
+  duration_ms: 2356.3298
+  ...
+# Subtest: a whole 32 cohort is neither thinned nor rerolled when a single near-camera lane cannot fit
+ok 52 - a whole 32 cohort is neither thinned nor rerolled when a single near-camera lane cannot fit
+  ---
+  duration_ms: 48.5226
+  ...
+# Subtest: a whole 72 cohort is neither thinned nor rerolled when a single near-camera lane cannot fit
+ok 53 - a whole 72 cohort is neither thinned nor rerolled when a single near-camera lane cannot fit
+  ---
+  duration_ms: 55.8498
+  ...
+# Subtest: a wall closing a natural cliff pocket cannot admit births in its enclosed interior beyond the wall AABB
+ok 54 - a wall closing a natural cliff pocket cannot admit births in its enclosed interior beyond the wall AABB
+  ---
+  duration_ms: 62.65
+  ...
+# Subtest: failed whole-group selection is memoized, reports once and retries after native obstacle epoch changes
+ok 55 - failed whole-group selection is memoized, reports once and retries after native obstacle epoch changes
+  ---
+  duration_ms: 29.1607
+  ...
+# Subtest: view invalidation replaces prior sparse demand before whole-group residency can commit
+ok 56 - view invalidation replaces prior sparse demand before whole-group residency can commit
+  ---
+  duration_ms: 23.5003
+  ...
+# Subtest: retained daytime entry owns readiness across night and both groups spawn sequentially with native ticks
+ok 57 - retained daytime entry owns readiness across night and both groups spawn sequentially with native ticks
+  ---
+  duration_ms: 224.5841
+  ...
+1..57
+# tests 57
+# suites 0
+# pass 57
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 13355.7658

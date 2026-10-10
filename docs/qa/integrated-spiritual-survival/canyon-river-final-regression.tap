@@ -1,0 +1,907 @@
+TAP version 13
+# (node:38308) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: worker rejects a wet landing missed by a dry coarse route
+ok 1 - worker rejects a wet landing missed by a dry coarse route
+  ---
+  duration_ms: 7.1282
+  ...
+# Subtest: animal rejects a wet landing missed by a dry coarse route
+ok 2 - animal rejects a wet landing missed by a dry coarse route
+  ---
+  duration_ms: 0.946
+  ...
+# Subtest: cached animal prefixes still check the next actual fluid landing
+ok 3 - cached animal prefixes still check the next actual fluid landing
+  ---
+  duration_ms: 16.1925
+  ...
+# Subtest: fluid footprint uses all five native sample positions without querying slopes
+ok 4 - fluid footprint uses all five native sample positions without querying slopes
+  ---
+  duration_ms: 0.3637
+  ...
+# Subtest: Canyon water remains traversable for workers
+ok 5 - Canyon water remains traversable for workers
+  ---
+  duration_ms: 0.9812
+  ...
+# Subtest: Canyon water blocks animals
+ok 6 - Canyon water blocks animals
+  ---
+  duration_ms: 0.4951
+  ...
+# Subtest: minimal adapters keep their dynamic-motion contract and blockers precede fluids
+ok 7 - minimal adapters keep their dynamic-motion contract and blockers precede fluids
+  ---
+  duration_ms: 0.5829
+  ...
+# Subtest: animal quarter-metre proof rejects a narrow forbidden band before landing
+ok 8 - animal quarter-metre proof rejects a narrow forbidden band before landing
+  ---
+  duration_ms: 5.8341
+  ...
+# Subtest: near-limit proof checks the full footprint rather than only its center
+ok 9 - near-limit proof checks the full footprint rather than only its center
+  ---
+  duration_ms: 1.6739
+  ...
+# Subtest: ordinary flat edges always retain the live coarse sweep without extra terrain refinement
+ok 10 - ordinary flat edges always retain the live coarse sweep without extra terrain refinement
+  ---
+  duration_ms: 3.0244
+  ...
+# Subtest: near-limit cache invalidates when the geometry epoch changes
+ok 11 - near-limit cache invalidates when the geometry epoch changes
+  ---
+  duration_ms: 2.4421
+  ...
+# Subtest: water, lava and newly introduced solids remain forbidden
+ok 12 - water, lava and newly introduced solids remain forbidden
+  ---
+  duration_ms: 0.7057
+  ...
+# Subtest: a terrain-only proof never bypasses fresh solids or changed prop queries
+ok 13 - a terrain-only proof never bypasses fresh solids or changed prop queries
+  ---
+  duration_ms: 1.545
+  ...
+# Subtest: near-limit terrain proofs reuse fine samples while coarse solids are checked on every query
+ok 14 - near-limit terrain proofs reuse fine samples while coarse solids are checked on every query
+  ---
+  duration_ms: 1.508
+  ...
+# (node:34752) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: legacy Desert/Suajili lion exits its marginal footprint physically at dt=0.1
+ok 15 - legacy Desert/Suajili lion exits its marginal footprint physically at dt=0.1
+  ---
+  duration_ms: 470.3343
+  ...
+# Subtest: legacy Desert/Suajili lion exits its marginal footprint physically at dt=1
+ok 16 - legacy Desert/Suajili lion exits its marginal footprint physically at dt=1
+  ---
+  duration_ms: 252.5088
+  ...
+# Subtest: save/load during the tiny marginal exit preserves native continuation at dt=0.1
+ok 17 - save/load during the tiny marginal exit preserves native continuation at dt=0.1
+  ---
+  duration_ms: 1788.1607
+  ...
+# Subtest: save/load during the tiny marginal exit preserves native continuation at dt=1
+ok 18 - save/load during the tiny marginal exit preserves native continuation at dt=1
+  ---
+  duration_ms: 317.3019
+  ...
+# Subtest: only retreating animals can use the recovery
+ok 19 - only retreating animals can use the recovery
+  ---
+  duration_ms: 1.0568
+  ...
+# Subtest: steeper footprints, fluid, uphill escapes and solid structures remain forbidden
+ok 20 - steeper footprints, fluid, uphill escapes and solid structures remain forbidden
+  ---
+  duration_ms: 8.11
+  ...
+# Subtest: the special clearance rejects off-prefix, backward and dynamic-body movement
+ok 21 - the special clearance rejects off-prefix, backward and dynamic-body movement
+  ---
+  duration_ms: 1.8158
+  ...
+# Subtest: a failed legacy recovery is memoized until geometry or origin changes
+ok 22 - a failed legacy recovery is memoized until geometry or origin changes
+  ---
+  duration_ms: 5.5979
+  ...
+# Subtest: an ordinary legal retreat does not rescan a recovery proof each frame
+ok 23 - an ordinary legal retreat does not rescan a recovery proof each frame
+  ---
+  duration_ms: 1.8267
+  ...
+# Subtest: a new wall invalidates a memoized marginal segment
+ok 24 - a new wall invalidates a memoized marginal segment
+  ---
+  duration_ms: 2.1838
+  ...
+# Subtest: a new shield invalidates a memoized marginal segment
+ok 25 - a new shield invalidates a memoized marginal segment
+  ---
+  duration_ms: 0.813
+  ...
+# Subtest: changing the first waypoint inside the same array cannot reuse the old proof
+ok 26 - changing the first waypoint inside the same array cannot reuse the old proof
+  ---
+  duration_ms: 0.8078
+  ...
+# Subtest: an unsampled real intermediate landing may not increase the slope excess
+ok 27 - an unsampled real intermediate landing may not increase the slope excess
+  ---
+  duration_ms: 2.1647
+  ...
+# Subtest: real fluid landing checks remain active inside a memoized recovery
+ok 28 - real fluid landing checks remain active inside a memoized recovery
+  ---
+  duration_ms: 1.7262
+  ...
+# Subtest: the normal strict landing limit resumes after consuming the first recovery waypoint
+ok 29 - the normal strict landing limit resumes after consuming the first recovery waypoint
+  ---
+  duration_ms: 1.6702
+  ...
+# Subtest: failed native tails have a finite candidate budget and do not repeat each frame
+ok 30 - failed native tails have a finite candidate budget and do not repeat each frame
+  ---
+  duration_ms: 5.6144
+  ...
+# Subtest: retry after an unused successful recovery is not memoized as a failure
+ok 31 - retry after an unused successful recovery is not memoized as a failure
+  ---
+  duration_ms: 86.2709
+  ...
+# Subtest: disabled proof revalidates a bad waypoint edited back to good inside the same array
+ok 32 - disabled proof revalidates a bad waypoint edited back to good inside the same array
+  ---
+  duration_ms: 1.2066
+  ...
+# Subtest: disabled proof revalidates replacement of the first waypoint in the same array
+ok 33 - disabled proof revalidates replacement of the first waypoint in the same array
+  ---
+  duration_ms: 1.0065
+  ...
+# (node:23988) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a building completes an open wall stroke and the door is on the village-to-crop side
+ok 34 - a building completes an open wall stroke and the door is on the village-to-crop side
+  ---
+  duration_ms: 82.4478
+  ...
+# Subtest: a natural canyon cliff completes the enclosure without placing a gate into the cliff
+ok 35 - a natural canyon cliff completes the enclosure without placing a gate into the cliff
+  ---
+  duration_ms: 18.643
+  ...
+# Subtest: the native Grand Canyon cliff closes a paid perimeter with a traversable door
+ok 36 - the native Grand Canyon cliff closes a paid perimeter with a traversable door
+  ---
+  duration_ms: 3533.1813
+  ...
+# Subtest: a genuinely open wall beside a building does not receive an unnecessary gate
+ok 37 - a genuinely open wall beside a building does not receive an unnecessary gate
+  ---
+  duration_ms: 6.5156
+  ...
+# Subtest: closing a mixed-material perimeter converts the latest new piece and preserves every older piece
+ok 38 - closing a mixed-material perimeter converts the latest new piece and preserves every older piece
+  ---
+  duration_ms: 14.8024
+  ...
+# Subtest: the recorded native perimeter keeps skipped rock modules and creates one accessible gate
+ok 39 - the recorded native perimeter keeps skipped rock modules and creates one accessible gate
+  ---
+  duration_ms: 668.7939
+  ...
+# Subtest: incremental zarzas closure and rebuilding preserve the other materials
+ok 40 - incremental zarzas closure and rebuilding preserve the other materials
+  ---
+  duration_ms: 10.4125
+  ...
+# Subtest: incremental empalizada closure and rebuilding preserve the other materials
+ok 41 - incremental empalizada closure and rebuilding preserve the other materials
+  ---
+  duration_ms: 8.1878
+  ...
+# Subtest: incremental adobe closure and rebuilding preserve the other materials
+ok 42 - incremental adobe closure and rebuilding preserve the other materials
+  ---
+  duration_ms: 6.417
+  ...
+# Subtest: incremental piedra closure and rebuilding preserve the other materials
+ok 43 - incremental piedra closure and rebuilding preserve the other materials
+  ---
+  duration_ms: 8.2916
+  ...
+# Subtest: incremental reforzado closure and rebuilding preserve the other materials
+ok 44 - incremental reforzado closure and rebuilding preserve the other materials
+  ---
+  duration_ms: 5.7661
+  ...
+# Subtest: rebuilding several removed blocks adds a door only when the final gap closes
+ok 45 - rebuilding several removed blocks adds a door only when the final gap closes
+  ---
+  duration_ms: 7.0023
+  ...
+# Subtest: an existing usable gate survives later perimeter edits without adding another door
+ok 46 - an existing usable gate survives later perimeter edits without adding another door
+  ---
+  duration_ms: 5.1034
+  ...
+# Subtest: an existing zarzas door is preserved when multiple gaps are rebuilt with other materials
+ok 47 - an existing zarzas door is preserved when multiple gaps are rebuilt with other materials
+  ---
+  duration_ms: 11.899
+  ...
+# Subtest: an existing empalizada door is preserved when multiple gaps are rebuilt with other materials
+ok 48 - an existing empalizada door is preserved when multiple gaps are rebuilt with other materials
+  ---
+  duration_ms: 8.5322
+  ...
+# Subtest: an existing adobe door is preserved when multiple gaps are rebuilt with other materials
+ok 49 - an existing adobe door is preserved when multiple gaps are rebuilt with other materials
+  ---
+  duration_ms: 8.7519
+  ...
+# Subtest: an existing piedra door is preserved when multiple gaps are rebuilt with other materials
+ok 50 - an existing piedra door is preserved when multiple gaps are rebuilt with other materials
+  ---
+  duration_ms: 8.4767
+  ...
+# Subtest: an existing reforzado door is preserved when multiple gaps are rebuilt with other materials
+ok 51 - an existing reforzado door is preserved when multiple gaps are rebuilt with other materials
+  ---
+  duration_ms: 10.8861
+  ...
+# Subtest: an obstructed approach to an existing door does not make the planner create a second door
+ok 52 - an obstructed approach to an existing door does not make the planner create a second door
+  ---
+  duration_ms: 4.4145
+  ...
+# (node:48288) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: animals detour on land around a finite river; workers cross directly
+ok 53 - animals detour on land around a finite river; workers cross directly
+  ---
+  duration_ms: 70.1528
+  ...
+# Subtest: river completes a paid U perimeter without water wall pieces and preserves worker access on reload
+ok 54 - river completes a paid U perimeter without water wall pieces and preserves worker access on reload
+  ---
+  duration_ms: 52.3736
+  ...
+# Subtest: land-access witness rejects a naturally isolated farm and accepts a verified same-bank approach
+ok 55 - land-access witness rejects a naturally isolated farm and accepts a verified same-bank approach
+  ---
+  duration_ms: 3.618
+  ...
+# Subtest: a real area impact cannot damage crops on the opposite river bank
+ok 56 - a real area impact cannot damage crops on the opposite river bank
+  ---
+  duration_ms: 4.0961
+  ...
+# Subtest: cooperative canyon initialization preserves the deterministic synchronous site
+ok 57 - cooperative canyon initialization preserves the deterministic synchronous site
+  ---
+  duration_ms: 5094.4959
+  ...
+# Subtest: native mixed canyon waves retain all 16 dry bodies without overlap and deterministic placement
+ok 58 - native mixed canyon waves retain all 16 dry bodies without overlap and deterministic placement
+  ---
+  duration_ms: 2944.4392
+  ...
+# Subtest: a native canyon column physically arrives and attacks, with no water landings
+ok 59 - a native canyon column physically arrives and attacks, with no water landings
+  ---
+  duration_ms: 2876.7233
+  ...
+# (node:43000) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Musgum canyon retreat uses a valid land route beside the river and physically exits, including reload
+ok 60 - Musgum canyon retreat uses a valid land route beside the river and physically exits, including reload
+  ---
+  duration_ms: 845.7549
+  ...
+# (node:29724) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: canyon opening keeps mapungubwe at native scale on both banks, with a surviving river and save
+ok 61 - canyon opening keeps mapungubwe at native scale on both banks, with a surviving river and save
+  ---
+  duration_ms: 3005.7198
+  ...
+# Subtest: canyon opening keeps saheliana at native scale on both banks, with a surviving river and save
+ok 62 - canyon opening keeps saheliana at native scale on both banks, with a surviving river and save
+  ---
+  duration_ms: 1773.1099
+  ...
+# Subtest: canyon opening keeps suajili at native scale on both banks, with a surviving river and save
+ok 63 - canyon opening keeps suajili at native scale on both banks, with a surviving river and save
+  ---
+  duration_ms: 3954.6163
+  ...
+# Subtest: canyon opening keeps musgum at native scale on both banks, with a surviving river and save
+ok 64 - canyon opening keeps musgum at native scale on both banks, with a surviving river and save
+  ---
+  duration_ms: 4776.3177
+  ...
+# Subtest: canyon opening keeps etiope at native scale on both banks, with a surviving river and save
+ok 65 - canyon opening keeps etiope at native scale on both banks, with a surviving river and save
+  ---
+  duration_ms: 686.4781
+  ...
+# Subtest: crew avoids fluid outside the canyon while solid collision remains active
+ok 66 - crew avoids fluid outside the canyon while solid collision remains active
+  ---
+  duration_ms: 2003.531
+  ...
+# Subtest: river-bank layouts also work for different seeds without reusing a single suitable location
+ok 67 - river-bank layouts also work for different seeds without reusing a single suitable location
+  ---
+  duration_ms: 26108.9989
+  ...
+# Subtest: Gate frames retain original mesh hashes and the height of all four exported bodies
+ok 68 - Gate frames retain original mesh hashes and the height of all four exported bodies
+  ---
+  duration_ms: 566.2372
+  ...
+# Subtest: Worker controllers pass through open native arches while their pillars remain solid
+ok 69 - Worker controllers pass through open native arches while their pillars remain solid
+  ---
+  duration_ms: 7.5605
+  ...
+# Subtest: Short modules preserve their actual opening width instead of ignoring the whole gate
+ok 70 - Short modules preserve their actual opening width instead of ignoring the whole gate
+  ---
+  duration_ms: 0.5965
+  ...
+# Subtest: Frame transforms are cached and update when placement or scale changes
+ok 71 - Frame transforms are cached and update when placement or scale changes
+  ---
+  duration_ms: 0.6717
+  ...
+# Subtest: Convex frame projection retains side boundaries and a positive controller clearance
+ok 72 - Convex frame projection retains side boundaries and a positive controller clearance
+  ---
+  duration_ms: 0.4602
+  ...
+# Subtest: Every original triangle below native body height is covered by the physical frame projection
+ok 73 - Every original triangle below native body height is covered by the physical frame projection
+  ---
+  duration_ms: 51.8084
+  ...
+# Subtest: A direct segment cannot tunnel through a small prop between valid sampled endpoints
+ok 74 - A direct segment cannot tunnel through a small prop between valid sampled endpoints
+  ---
+  duration_ms: 11.8599
+  ...
+# Subtest: Directed edge caches retain collision semantics and invalidate when structures or shields change
+ok 75 - Directed edge caches retain collision semantics and invalidate when structures or shields change
+  ---
+  duration_ms: 5.5389
+  ...
+# Subtest: Failed routes are reused only for identical endpoints and clear when an obstacle changes
+ok 76 - Failed routes are reused only for identical endpoints and clear when an obstacle changes
+  ---
+  duration_ms: 1.078
+  ...
+# Subtest: Exhaustively explored enclosed regions reject other unreachable targets without another flood search
+ok 77 - Exhaustively explored enclosed regions reject other unreachable targets without another flood search
+  ---
+  duration_ms: 5.2638
+  ...
+# Subtest: A search touching corridor bounds does not certify a globally closed region
+ok 78 - A search touching corridor bounds does not certify a globally closed region
+  ---
+  duration_ms: 78.3427
+  ...
+# Subtest: Region reuse matches fresh searches across origins, endpoints, radii and actor permissions
+ok 79 - Region reuse matches fresh searches across origins, endpoints, radii and actor permissions
+  ---
+  duration_ms: 1533.0776
+  ...
+# Subtest: A diagonal grid edge with valid corners still detours around an intervening prop
+ok 80 - A diagonal grid edge with valid corners still detours around an intervening prop
+  ---
+  duration_ms: 1.8092
+  ...
+# Subtest: Fractional positions connect to a valid grid point even when their rounded start cell is blocked
+ok 81 - Fractional positions connect to a valid grid point even when their rounded start cell is blocked
+  ---
+  duration_ms: 1.2001
+  ...
+# Subtest: Swept paths respect native polygon edges, rotated walls and worker-only gate passage
+ok 82 - Swept paths respect native polygon edges, rotated walls and worker-only gate passage
+  ---
+  duration_ms: 12.8275
+  ...
+# Subtest: Every repair waypoint remains outside rotated native wall footprints and wider gates
+ok 83 - Every repair waypoint remains outside rotated native wall footprints and wider gates
+  ---
+  duration_ms: 16.6811
+  ...
+# Subtest: Center repair paths go around the center footprint and reject a completely inaccessible destination
+ok 84 - Center repair paths go around the center footprint and reject a completely inaccessible destination
+  ---
+  duration_ms: 1.6207
+  ...
+# Subtest: Wider searches find physical detours beyond the local corridor without reusing its cached failure
+ok 85 - Wider searches find physical detours beyond the local corridor without reusing its cached failure
+  ---
+  duration_ms: 151.3589
+  ...
+# (node:41572) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: central full damage, frontal90-degree periphery half damage and maximum radius are physical
+ok 86 - central full damage, frontal90-degree periphery half damage and maximum radius are physical
+  ---
+  duration_ms: 27.6775
+  ...
+# Subtest: sector follows current contact heading and rejects a backward or remote contact
+ok 87 - sector follows current contact heading and rejects a backward or remote contact
+  ---
+  duration_ms: 5.2427
+  ...
+# Subtest: a radius-zero or damage-zero profile never manufactures peripheral hits or mandatory deaths
+ok 88 - a radius-zero or damage-zero profile never manufactures peripheral hits or mandatory deaths
+  ---
+  duration_ms: 2.3279
+  ...
+# Subtest: area cap prioritizes the central plant then nearest legal physical candidates
+ok 89 - area cap prioritizes the central plant then nearest legal physical candidates
+  ---
+  duration_ms: 2.3937
+  ...
+# Subtest: native wall footprint occludes peripheral impacts, including animal-blocking gate=false
+ok 90 - native wall footprint occludes peripheral impacts, including animal-blocking gate=false
+  ---
+  duration_ms: 3.7658
+  ...
+# Subtest: native wall footprint occludes peripheral impacts, including animal-blocking gate=true
+ok 91 - native wall footprint occludes peripheral impacts, including animal-blocking gate=true
+  ---
+  duration_ms: 3.5908
+  ...
+# Subtest: a wall between actor and impact prevents a central hit rather than producing splash behind it
+ok 92 - a wall between actor and impact prevents a central hit rather than producing splash behind it
+  ---
+  duration_ms: 15.8355
+  ...
+# Subtest: a native centre footprint blocks rays and is re-evaluated after removal
+ok 93 - a native centre footprint blocks rays and is re-evaluated after removal
+  ---
+  duration_ms: 2.5826
+  ...
+# Subtest: Shield protects each peripheral plant and blocks a crossing ray outside its endpoint
+ok 94 - Shield protects each peripheral plant and blocks a crossing ray outside its endpoint
+  ---
+  duration_ms: 2.2892
+  ...
+# Subtest: a shielded central target consumes no crop HP
+ok 95 - a shielded central target consumes no crop HP
+  ---
+  duration_ms: 2.6858
+  ...
+# Subtest: one attack is deduplicated across replay/save and fractional damage persists exactly
+ok 96 - one attack is deduplicated across replay/save and fractional damage persists exactly
+  ---
+  duration_ms: 7.0998
+  ...
+# Subtest: intro destruction cap survives central4 and peripheral2 damage, retaining a living farm
+ok 97 - intro destruction cap survives central4 and peripheral2 damage, retaining a living farm
+  ---
+  duration_ms: 2.0244
+  ...
+# Subtest: grid handles append, death, native position epoch and replacement without scanning all crops per hit
+ok 98 - grid handles append, death, native position epoch and replacement without scanning all crops per hit
+  ---
+  duration_ms: 125.9227
+  ...
+# Subtest: profile and crop fractional bounds reject corrupt saves while supporting legacy integer HP
+ok 99 - profile and crop fractional bounds reject corrupt saves while supporting legacy integer HP
+  ---
+  duration_ms: 6.3239
+  ...
+# Subtest: native warthog profile completes real melee, one impact per attack, dt0.1
+ok 100 - native warthog profile completes real melee, one impact per attack, dt0.1
+  ---
+  duration_ms: 71.3119
+  ...
+# Subtest: native warthog profile completes real melee, one impact per attack, dt1
+ok 101 - native warthog profile completes real melee, one impact per attack, dt1
+  ---
+  duration_ms: 13.1898
+  ...
+# Subtest: native hyena profile completes real melee, one impact per attack, dt0.1
+ok 102 - native hyena profile completes real melee, one impact per attack, dt0.1
+  ---
+  duration_ms: 28.2877
+  ...
+# Subtest: native hyena profile completes real melee, one impact per attack, dt1
+ok 103 - native hyena profile completes real melee, one impact per attack, dt1
+  ---
+  duration_ms: 8.7036
+  ...
+# Subtest: native buffalo profile completes real melee, one impact per attack, dt0.1
+ok 104 - native buffalo profile completes real melee, one impact per attack, dt0.1
+  ---
+  duration_ms: 14.1881
+  ...
+# Subtest: native buffalo profile completes real melee, one impact per attack, dt1
+ok 105 - native buffalo profile completes real melee, one impact per attack, dt1
+  ---
+  duration_ms: 8.2792
+  ...
+# Subtest: native lion profile completes real melee, one impact per attack, dt0.1
+ok 106 - native lion profile completes real melee, one impact per attack, dt0.1
+  ---
+  duration_ms: 12.5112
+  ...
+# Subtest: native lion profile completes real melee, one impact per attack, dt1
+ok 107 - native lion profile completes real melee, one impact per attack, dt1
+  ---
+  duration_ms: 8.9821
+  ...
+# Subtest: native rhino profile completes real melee, one impact per attack, dt0.1
+ok 108 - native rhino profile completes real melee, one impact per attack, dt0.1
+  ---
+  duration_ms: 32.5419
+  ...
+# Subtest: native rhino profile completes real melee, one impact per attack, dt1
+ok 109 - native rhino profile completes real melee, one impact per attack, dt1
+  ---
+  duration_ms: 9.6939
+  ...
+# Subtest: a native wall strike uses structural profile damage but never applies agricultural splash
+ok 110 - a native wall strike uses structural profile damage but never applies agricultural splash
+  ---
+  duration_ms: 287.2941
+  ...
+# Subtest: native saved attack resumes once and does not duplicate event facts
+ok 111 - native saved attack resumes once and does not duplicate event facts
+  ---
+  duration_ms: 14.7404
+  ...
+# Subtest: native committed contact writes half-point HP, reload preserves it and applied attacks cannot hit twice
+ok 112 - native committed contact writes half-point HP, reload preserves it and applied attacks cannot hit twice
+  ---
+  duration_ms: 4.6975
+  ...
+# Subtest: live wall collapse remains occluding until ruined, and new topology invalidates cached geometry
+ok 113 - live wall collapse remains occluding until ruined, and new topology invalidates cached geometry
+  ---
+  duration_ms: 10.1615
+  ...
+# Subtest: maximal canonical profile and its bounded living queries are valid; malformed and replay IDs are not
+ok 114 - maximal canonical profile and its bounded living queries are valid; malformed and replay IDs are not
+  ---
+  duration_ms: 25.1389
+  ...
+# (node:27760) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: camera heading 0: the complete epic group appears just behind the eye, without overlaps
+ok 115 - camera heading 0: the complete epic group appears just behind the eye, without overlaps
+  ---
+  duration_ms: 18.1136
+  ...
+# Subtest: camera heading 1.5707963267948966: the complete epic group appears just behind the eye, without overlaps
+ok 116 - camera heading 1.5707963267948966: the complete epic group appears just behind the eye, without overlaps
+  ---
+  duration_ms: 2.2738
+  ...
+# Subtest: camera heading 3.141592653589793: the complete epic group appears just behind the eye, without overlaps
+ok 117 - camera heading 3.141592653589793: the complete epic group appears just behind the eye, without overlaps
+  ---
+  duration_ms: 1.9282
+  ...
+# Subtest: camera heading 4.71238898038469: the complete epic group appears just behind the eye, without overlaps
+ok 118 - camera heading 4.71238898038469: the complete epic group appears just behind the eye, without overlaps
+  ---
+  duration_ms: 38.4254
+  ...
+# Subtest: a blocked camera rear falls back to a legal entry instead of placing bodies in obstacles
+ok 119 - a blocked camera rear falls back to a legal entry instead of placing bodies in obstacles
+  ---
+  duration_ms: 5.421
+  ...
+# Subtest: disconnected water behind the camera uses the near farm side with bounded route searches
+ok 120 - disconnected water behind the camera uses the near farm side with bounded route searches
+  ---
+  duration_ms: 1.219
+  ...
+# Subtest: camera metadata is copied without invalidating routes, and rendering supplies the actual eye and target
+ok 121 - camera metadata is copied without invalidating routes, and rendering supplies the actual eye and target
+  ---
+  duration_ms: 2.5409
+  ...
+# (node:28464) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: whole group exterior native entry: closed
+ok 122 - whole group exterior native entry: closed
+  ---
+  duration_ms: 119.0287
+  ...
+# Subtest: whole group exterior native entry: open
+ok 123 - whole group exterior native entry: open
+  ---
+  duration_ms: 41.3423
+  ...
+# Subtest: whole group exterior native entry: gate
+ok 124 - whole group exterior native entry: gate
+  ---
+  duration_ms: 42.5639
+  ...
+# Subtest: whole group exterior native entry: separate
+ok 125 - whole group exterior native entry: separate
+  ---
+  duration_ms: 36.0872
+  ...
+# Subtest: whole group exterior native entry: concave
+ok 126 - whole group exterior native entry: concave
+  ---
+  duration_ms: 63.1183
+  ...
+# Subtest: whole group exterior native entry: no-walls
+ok 127 - whole group exterior native entry: no-walls
+  ---
+  duration_ms: 3.1337
+  ...
+# Subtest: whole group exterior native entry: clipped-bounds
+ok 128 - whole group exterior native entry: clipped-bounds
+  ---
+  duration_ms: 71.1967
+  ...
+# Subtest: closed 40m enclosure starts physically outside then hits a wall
+ok 129 - closed 40m enclosure starts physically outside then hits a wall
+  ---
+  duration_ms: 282.9036
+  ...
+# Subtest: closed 320m enclosure starts physically outside then hits a wall
+ok 130 - closed 320m enclosure starts physically outside then hits a wall
+  ---
+  duration_ms: 7663.9309
+  ...
+# Subtest: residency handshake preserves pending night/RNG and reload creates exactly one complete group
+ok 131 - residency handshake preserves pending night/RNG and reload creates exactly one complete group
+  ---
+  duration_ms: 725.6064
+  ...
+# Subtest: worker preparation uses the same exterior choice without changing state or RNG
+ok 132 - worker preparation uses the same exterior choice without changing state or RNG
+  ---
+  duration_ms: 585.958
+  ...
+# Subtest: expanded bounds have sparse finite chunk demand and release when raid disappears
+ok 133 - expanded bounds have sparse finite chunk demand and release when raid disappears
+  ---
+  duration_ms: 27.9907
+  ...
+# Subtest: native sabana opening: whole group keeps genuine terrain and fluid legality
+ok 134 - native sabana opening: whole group keeps genuine terrain and fluid legality
+  ---
+  duration_ms: 433.5419
+  ...
+# Subtest: native gran-rio opening: whole group keeps genuine terrain and fluid legality
+ok 135 - native gran-rio opening: whole group keeps genuine terrain and fluid legality
+  ---
+  duration_ms: 393.0003
+  ...
+# Subtest: native manglares opening: whole group keeps genuine terrain and fluid legality
+ok 136 - native manglares opening: whole group keeps genuine terrain and fluid legality
+  ---
+  duration_ms: 333.6303
+  ...
+# Subtest: native volcanes opening: whole group keeps genuine terrain and fluid legality
+ok 137 - native volcanes opening: whole group keeps genuine terrain and fluid legality
+  ---
+  duration_ms: 352.2991
+  ...
+# Subtest: native gran-canon opening: whole group keeps genuine terrain and fluid legality
+ok 138 - native gran-canon opening: whole group keeps genuine terrain and fluid legality
+  ---
+  duration_ms: 1991.6606
+  ...
+# Subtest: native desierto opening: whole group keeps genuine terrain and fluid legality
+ok 139 - native desierto opening: whole group keeps genuine terrain and fluid legality
+  ---
+  duration_ms: 2536.2697
+  ...
+# Subtest: a whole 32 cohort is neither thinned nor rerolled when a single near-camera lane cannot fit
+ok 140 - a whole 32 cohort is neither thinned nor rerolled when a single near-camera lane cannot fit
+  ---
+  duration_ms: 54.2982
+  ...
+# Subtest: a whole 72 cohort is neither thinned nor rerolled when a single near-camera lane cannot fit
+ok 141 - a whole 72 cohort is neither thinned nor rerolled when a single near-camera lane cannot fit
+  ---
+  duration_ms: 57.5968
+  ...
+# Subtest: a wall closing a natural cliff pocket cannot admit births in its enclosed interior beyond the wall AABB
+ok 142 - a wall closing a natural cliff pocket cannot admit births in its enclosed interior beyond the wall AABB
+  ---
+  duration_ms: 68.204
+  ...
+# Subtest: failed whole-group selection is memoized, reports once and retries after native obstacle epoch changes
+ok 143 - failed whole-group selection is memoized, reports once and retries after native obstacle epoch changes
+  ---
+  duration_ms: 29.4994
+  ...
+# Subtest: view invalidation replaces prior sparse demand before whole-group residency can commit
+ok 144 - view invalidation replaces prior sparse demand before whole-group residency can commit
+  ---
+  duration_ms: 23.3339
+  ...
+# Subtest: retained daytime entry owns readiness across night and both groups spawn sequentially with native ticks
+ok 145 - retained daytime entry owns readiness across night and both groups spawn sequentially with native ticks
+  ---
+  duration_ms: 247.1172
+  ...
+# (node:38532) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: 100 connected mijo plants allow independent attacks from 1 animals
+ok 146 - 100 connected mijo plants allow independent attacks from 1 animals
+  ---
+  duration_ms: 99.2731
+  ...
+# Subtest: 100 connected mijo plants allow independent attacks from 2 animals
+ok 147 - 100 connected mijo plants allow independent attacks from 2 animals
+  ---
+  duration_ms: 42.3747
+  ...
+# Subtest: 100 connected mijo plants allow independent attacks from 5 animals
+ok 148 - 100 connected mijo plants allow independent attacks from 5 animals
+  ---
+  duration_ms: 198.5822
+  ...
+# Subtest: 100 connected mijo plants allow independent attacks from 12 animals
+ok 149 - 100 connected mijo plants allow independent attacks from 12 animals
+  ---
+  duration_ms: 805.4389
+  ...
+# Subtest: centers permit physically independent simultaneous approach claims
+ok 150 - centers permit physically independent simultaneous approach claims
+  ---
+  duration_ms: 119.273
+  ...
+# Subtest: individual claims and native RNG replay exactly after a save/reload
+ok 151 - individual claims and native RNG replay exactly after a save/reload
+  ---
+  duration_ms: 1508.713
+  ...
+# Subtest: destroying one reserved crop frees only that target and preserves other leases
+ok 152 - destroying one reserved crop frees only that target and preserves other leases
+  ---
+  duration_ms: 70.4855
+  ...
+# Subtest: actual saturation stages valid waiters and retires after no-progress bound without spending hits
+ok 153 - actual saturation stages valid waiters and retires after no-progress bound without spending hits
+  ---
+  duration_ms: 18.9543
+  ...
+# Subtest: legacy group saves migrate to individual claims without extra RNG draws
+ok 154 - legacy group saves migrate to individual claims without extra RNG draws
+  ---
+  duration_ms: 8.1364
+  ...
+# Subtest: group accessibility uses a complete native component certificate and invalidates when walls open
+ok 155 - group accessibility uses a complete native component certificate and invalidates when walls open
+  ---
+  duration_ms: 80.473
+  ...
+# Subtest: a protected connected perimeter allows simultaneous attacks on separate pieces
+ok 156 - a protected connected perimeter allows simultaneous attacks on separate pieces
+  ---
+  duration_ms: 129.3991
+  ...
+# Subtest: return search resumes bounded native slices rather than draining synchronously
+ok 157 - return search resumes bounded native slices rather than draining synchronously
+  ---
+  duration_ms: 3.7992
+  ...
+# Subtest: ordinary worker tasks never start a return search
+ok 158 - ordinary worker tasks never start a return search
+  ---
+  duration_ms: 0.3482
+  ...
+# Subtest: failed search memo follows exact origin, destination and navigation epoch
+ok 159 - failed search memo follows exact origin, destination and navigation epoch
+  ---
+  duration_ms: 0.4655
+  ...
+# Subtest: only eight pending searches retain native frontier memory per navigation
+ok 160 - only eight pending searches retain native frontier memory per navigation
+  ---
+  duration_ms: 0.808
+  ...
+# Subtest: a never-ending iterator is abandoned and memoized at its explicit total bound
+ok 161 - a never-ending iterator is abandoned and memoized at its explicit total bound
+  ---
+  duration_ms: 15.3744
+  ...
+# Subtest: native worker avoidance view is used for the wider search
+ok 162 - native worker avoidance view is used for the wider search
+  ---
+  duration_ms: 0.3822
+  ...
+# Subtest: wider native return does not cross water
+ok 163 - wider native return does not cross water
+  ---
+  duration_ms: 8.3254
+  ...
+# Subtest: wider native return does not cross lava
+ok 164 - wider native return does not cross lava
+  ---
+  duration_ms: 0.2863
+  ...
+# Subtest: wider native return does not cross solid
+ok 165 - wider native return does not cross solid
+  ---
+  duration_ms: 1.9223
+  ...
+# Subtest: wider native return does not cross steep
+ok 166 - wider native return does not cross steep
+  ---
+  duration_ms: 0.4678
+  ...
+# Subtest: a real closed wall ring cannot be escaped by enlarging the search corridor
+ok 167 - a real closed wall ring cannot be escaped by enlarging the search corridor
+  ---
+  duration_ms: 5.0799
+  ...
+# Subtest: a new navigation epoch abandons the pending return proof
+ok 168 - a new navigation epoch abandons the pending return proof
+  ---
+  duration_ms: 0.3809
+  ...
+# Subtest: dry canyon cliffs retain their worker-surface slope restriction
+ok 169 - dry canyon cliffs retain their worker-surface slope restriction
+  ---
+  duration_ms: 0.4152
+  ...
+# (node:25752) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: refinement catches a narrow steep strip missed by the ordinary coarse samples
+ok 170 - refinement catches a narrow steep strip missed by the ordinary coarse samples
+  ---
+  duration_ms: 25.6809
+  ...
+# Subtest: a risky restored connector is rejected and replanned without teleporting the worker
+ok 171 - a risky restored connector is rejected and replanned without teleporting the worker
+  ---
+  duration_ms: 54.0858
+  ...
+# Subtest: dynamic blockers retain priority and never create a terrain avoidance point
+ok 172 - dynamic blockers retain priority and never create a terrain avoidance point
+  ---
+  duration_ms: 0.417
+  ...
+# Subtest: shared terrain-risk metadata retains its peak and actual geometry changes invalidate it
+ok 173 - shared terrain-risk metadata retains its peak and actual geometry changes invalidate it
+  ---
+  duration_ms: 0.949
+  ...
+# Subtest: private avoided-point views are isolated per worker, bounded and replaced on geometry changes
+ok 174 - private avoided-point views are isolated per worker, bounded and replaced on geometry changes
+  ---
+  duration_ms: 34.5174
+  ...
+# Subtest: optional learned terrain points round-trip and malformed or oversized save data is rejected
+ok 175 - optional learned terrain points round-trip and malformed or oversized save data is rejected
+  ---
+  duration_ms: 5.1375
+  ...
+1..175
+# tests 175
+# suites 0
+# pass 175
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 43798.3859

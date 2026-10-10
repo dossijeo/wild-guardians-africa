@@ -1,3 +1,4 @@
+import {fluidAt} from '../world/fluid-placement.js';
 import {activeCrops,cropBecameInactive} from './active-crops.js';
 import {sweptFootprintDistance,edgeDistance} from '../world/footprints.js';
 import {wallCollisionPolygon} from '../world/wall-collision-frame.js';
@@ -37,6 +38,13 @@ function solidIndex(state,nav){
  }solidIndexes.set(nav,index);return index;
 }
 export function agriculturalRayClear(state,nav,start,end){
+ // A canyon river stops physical agricultural impacts as well as hostile feet.
+ // Reuse the native fluid classification; this runs only when resolving a hit.
+ if(nav.field?.canyon){
+  const samples=Math.max(1,Math.ceil(Math.hypot(end.x-start.x,end.z-start.z)/.25));
+  for(let i=0;i<=samples;i++)if(fluidAt(nav.field,start.x+(end.x-start.x)*i/samples,start.z+(end.z-start.z)*i/samples))return false;
+ }
+
  const index=solidIndex(state,nav),items=new Set(index.large);
  for(let x=Math.floor(Math.min(start.x,end.x)/CELL);x<=Math.floor(Math.max(start.x,end.x)/CELL);x++)for(let z=Math.floor(Math.min(start.z,end.z)/CELL);z<=Math.floor(Math.max(start.z,end.z)/CELL);z++)for(const item of index.cells.get(x+','+z)??[])items.add(item);
  for(const {o,entity,polygon} of items){if(entity.status==='ruined')continue;if(polygon?sweptFootprintDistance(start,end,polygon)<=1e-8:edgeDistance(start,end,o.x,o.z)<=o.radius)return false;}return true;

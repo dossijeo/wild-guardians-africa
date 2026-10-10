@@ -1,0 +1,37 @@
+TAP version 13
+# (node:28464) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: animals detour on land around a finite river; workers cross directly
+ok 1 - animals detour on land around a finite river; workers cross directly
+  ---
+  duration_ms: 24.3139
+  ...
+# Subtest: river completes a paid U perimeter without water wall pieces and preserves worker access on reload
+ok 2 - river completes a paid U perimeter without water wall pieces and preserves worker access on reload
+  ---
+  duration_ms: 30.0308
+  ...
+# Subtest: land-access witness rejects a naturally isolated farm and accepts a verified same-bank approach
+ok 3 - land-access witness rejects a naturally isolated farm and accepts a verified same-bank approach
+  ---
+  duration_ms: 1.4558
+  ...
+# Subtest: a real area impact cannot damage crops on the opposite river bank
+ok 4 - a real area impact cannot damage crops on the opposite river bank
+  ---
+  duration_ms: 2.4641
+  ...
+# Subtest: cooperative canyon initialization preserves the deterministic synchronous site
+ok 5 - cooperative canyon initialization preserves the deterministic synchronous site
+  ---
+  duration_ms: 2925.3042
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3236.4539

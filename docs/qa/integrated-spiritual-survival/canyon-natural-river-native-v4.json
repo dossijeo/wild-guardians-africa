@@ -1,0 +1,388 @@
+{
+  "commit": "f66a8dca1aac7ad4585287f95d155a0b5946dadf",
+  "sourceHashes": {
+    "src/world/navigation.js": "6641456d8d8c9f305d48aa485c5e326d718b985773ed8d1671dce9a3be8ff5fa",
+    "src/world/canyon-land-access.js": "93993a743a36f223f593e454929a72c0055cb3d8924a0dbdbe0180549c2dad37",
+    "src/world/villages.js": "6bf27fa24ead18f521106b95e7497125c8031e5b9eae6004e4e0e814fd2e43ab",
+    "src/world/boundary-gates.js": "7ee50ec9cf8009ab6564cb15e5b8582c6ef5c49a9050fd61b4eb4d348893b898",
+    "src/simulation/actor-fluid-clearance.js": "d5a3bce4eeaeb649cc2b1a47c1a23b8188106ac84fcb8ec1b7fb92a6ae9e3df4",
+    "src/simulation/raids.js": "8b7a4e5b8f251c2f9b9610534d35459396c9d102eca128a593fd236d6b725826",
+    "src/simulation/canyon-raid-formation.js": "303e23d73c5d5e200ff19297956ea85fe3df2847f8769a0f48e8dd7abfcd95e6",
+    "src/simulation/raid-agricultural-impact.js": "cd6b07f3d612edecf51f00aaa00b27ee21dbf831ebcbaa97b2fc5801cfb94efe",
+    "src/simulation/worker-route-clearance.js": "36f855f7ca81a20cd852d543da36dfe42746f48429d58d6af482d531a9b8a7c4",
+    "tools/probe-canyon-natural-defense.mjs": "c1f2e72e8527a94558f02593101cc26508521623da36069e29dd6c0025d72dd5"
+  },
+  "scope": "Native deterministic terrain/worker routes/hostile exterior entry and approach only; no economic campaign or damage calibration.",
+  "rows": [
+    {
+      "seed": 712,
+      "culture": "mapungubwe",
+      "openingAndProbeMs": 3382.3226,
+      "plantableWorkerRoutedPoints": 17,
+      "landWitness": {
+        "entry": {
+          "x": -25.499999999999996,
+          "z": 65
+        },
+        "target": {
+          "x": -25.5,
+          "z": 33
+        },
+        "radius": 1.1,
+        "path": [
+          {
+            "x": -26,
+            "z": 64
+          },
+          {
+            "x": -26,
+            "z": 63
+          },
+          {
+            "x": -26,
+            "z": 62
+          },
+          {
+            "x": -26,
+            "z": 61
+          },
+          {
+            "x": -26,
+            "z": 60
+          },
+          {
+            "x": -26,
+            "z": 59
+          },
+          {
+            "x": -27,
+            "z": 58
+          },
+          {
+            "x": -28,
+            "z": 57
+          },
+          {
+            "x": -28,
+            "z": 56
+          },
+          {
+            "x": -28,
+            "z": 55
+          },
+          {
+            "x": -28,
+            "z": 54
+          },
+          {
+            "x": -28,
+            "z": 53
+          },
+          {
+            "x": -28,
+            "z": 52
+          },
+          {
+            "x": -29,
+            "z": 51
+          },
+          {
+            "x": -30,
+            "z": 50
+          },
+          {
+            "x": -30,
+            "z": 49
+          },
+          {
+            "x": -30,
+            "z": 48
+          },
+          {
+            "x": -30,
+            "z": 47
+          },
+          {
+            "x": -30,
+            "z": 46
+          },
+          {
+            "x": -30,
+            "z": 45
+          },
+          {
+            "x": -30,
+            "z": 44
+          },
+          {
+            "x": -30,
+            "z": 43
+          },
+          {
+            "x": -29,
+            "z": 42
+          },
+          {
+            "x": -29,
+            "z": 41
+          },
+          {
+            "x": -28,
+            "z": 40
+          },
+          {
+            "x": -28,
+            "z": 39
+          },
+          {
+            "x": -27,
+            "z": 38
+          },
+          {
+            "x": -27,
+            "z": 37
+          },
+          {
+            "x": -27,
+            "z": 36
+          },
+          {
+            "x": -26,
+            "z": 35
+          },
+          {
+            "x": -26,
+            "z": 34
+          },
+          {
+            "x": -25.5,
+            "z": 33
+          }
+        ]
+      },
+      "riverWorkerPass": true,
+      "riverHostileBlocked": true,
+      "entries": [
+        {
+          "species": "warthog",
+          "radius": 1.1,
+          "entry": {
+            "x": -30.684595436780327,
+            "z": 41.67230564951897
+          },
+          "exit": {
+            "x": -30.684595436780327,
+            "z": 44.67230564951897
+          },
+          "dry": true,
+          "centerReachable": true
+        },
+        {
+          "species": "hyena",
+          "radius": 0.9,
+          "entry": {
+            "x": -30.684595436780327,
+            "z": 41.472305649518965
+          },
+          "exit": {
+            "x": -30.684595436780327,
+            "z": 44.472305649518965
+          },
+          "dry": true,
+          "centerReachable": true
+        },
+        {
+          "species": "buffalo",
+          "radius": 0.97,
+          "entry": {
+            "x": -30.684595436780327,
+            "z": 41.542305649518966
+          },
+          "exit": {
+            "x": -30.684595436780327,
+            "z": 44.542305649518966
+          },
+          "dry": true,
+          "centerReachable": true
+        },
+        {
+          "species": "lion",
+          "radius": 0.85,
+          "entry": {
+            "x": -30.684595436780327,
+            "z": 41.42230564951897
+          },
+          "exit": {
+            "x": -30.684595436780327,
+            "z": 44.42230564951897
+          },
+          "dry": true,
+          "centerReachable": true
+        },
+        {
+          "species": "rhino",
+          "radius": 1.55,
+          "entry": {
+            "x": -30.684595436780327,
+            "z": 42.122305649518964
+          },
+          "exit": {
+            "x": -30.684595436780327,
+            "z": 45.122305649518964
+          },
+          "dry": true,
+          "centerReachable": true
+        }
+      ],
+      "formations": [
+        {
+          "group": [
+            "warthog",
+            "warthog",
+            "warthog",
+            "warthog",
+            "warthog",
+            "warthog",
+            "warthog",
+            "warthog",
+            "warthog",
+            "warthog",
+            "warthog",
+            "warthog"
+          ],
+          "count": 12,
+          "selectionMs": 355.6559000000002,
+          "pairwiseClear": true,
+          "dry": true,
+          "entry": {
+            "entries": [
+              {
+                "x": -31.466921717543585,
+                "z": 42.57230564951897
+              },
+              {
+                "x": -30.427382176141204,
+                "z": 46.27230564951897
+              },
+              {
+                "x": -29.283082825233706,
+                "z": 49.972305649518965
+              },
+              {
+                "x": -28.039364977085153,
+                "z": 53.67230564951897
+              },
+              {
+                "x": -26.702436381261798,
+                "z": 57.372305649518964
+              },
+              {
+                "x": -25.27929436905726,
+                "z": 61.07230564951897
+              },
+              {
+                "x": -23.777641658374414,
+                "z": 64.77230564951897
+              },
+              {
+                "x": -22.205795179749668,
+                "z": 68.47230564951897
+              },
+              {
+                "x": -20.572588353251184,
+                "z": 72.17230564951896
+              },
+              {
+                "x": -18.88726731079827,
+                "z": 75.87230564951898
+              },
+              {
+                "x": -17.159381618390395,
+                "z": 79.57230564951897
+              },
+              {
+                "x": -15.39867010720174,
+                "z": 83.27230564951897
+              }
+            ],
+            "exits": [
+              {
+                "x": -30.63223393541681,
+                "z": 45.57230564951897
+              },
+              {
+                "x": -29.507371879151343,
+                "z": 49.27230564951897
+              },
+              {
+                "x": -28.282012141609727,
+                "z": 52.972305649518965
+              },
+              {
+                "x": -26.962204218096108,
+                "z": 56.67230564951897
+              },
+              {
+                "x": -25.554802298593707,
+                "z": 60.372305649518964
+              },
+              {
+                "x": -24.0673824357073,
+                "z": 64.07230564951897
+              },
+              {
+                "x": -22.50815266009731,
+                "z": 67.77230564951897
+              },
+              {
+                "x": -20.885856460378086,
+                "z": 71.47230564951897
+              },
+              {
+                "x": -19.20967011012049,
+                "z": 75.17230564951896
+              },
+              {
+                "x": -17.48909438550875,
+                "z": 78.87230564951898
+              },
+              {
+                "x": -15.733841272749173,
+                "z": 82.57230564951897
+              },
+              {
+                "x": -13.953716313958054,
+                "z": 86.27230564951897
+              }
+            ]
+          }
+        },
+        {
+          "group": [
+            "warthog",
+            "hyena",
+            "buffalo",
+            "lion",
+            "rhino",
+            "warthog",
+            "hyena",
+            "buffalo",
+            "lion",
+            "rhino",
+            "warthog",
+            "hyena",
+            "buffalo",
+            "lion",
+            "rhino",
+            "warthog"
+          ],
+          "count": 0,
+          "selectionMs": 542.9357999999997,
+          "pairwiseClear": false,
+          "dry": false,
+          "entry": null
+        }
+      ]
+    }
+  ]
+}
