@@ -9,6 +9,7 @@ import {centerBoundaryPoint,centerCulture,centerDeliveryPoint} from '../world/ce
 import {BALANCE as B} from './balance.js';
 import {nextRandom,randomInt,attraction,threatTier,animalSpec,operational,hitStructure,collapseThreshold} from './rules.js';
 import {createRaidCompositionIndex} from './raid-composition-index.js';
+import {nightThreatBudget} from './raid-threat-budget.js';
 import {emit,notice,walkTo,rebuildTasks,spellAt,dropCarriedCrate,recoverDisplacedWorkers} from './game.js';
 import {contractExpired} from './workforce.js';
 import {cancelIdle} from './idle.js';
@@ -27,7 +28,7 @@ export function planNight(s) {
   const introductory=!s.postgame&&s.day<=5;
   if(introductory)group=[B.animals[s.day-1].id];
   else if(!s.postgame){
-    const budget=randomInt(s,tier.threat_min,tier.threat_max),legal=createRaidCompositionIndex(budget,tier.unlocked_species);
+    const range=nightThreatBudget(s.day,tier,s.postgame),budget=randomInt(s,range.min,range.max),legal=createRaidCompositionIndex(budget,tier.unlocked_species);
     group=legal.at(randomInt(s,0,legal.count-1));
   }
   s.nightPlan={at,attraction:value,group,done:false,...(introductory?{introductory:true}:{})};

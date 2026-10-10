@@ -1,0 +1,103 @@
+TAP version 13
+# Subtest: every rank matches native enumeration, including species subsets and ordering
+ok 1 - every rank matches native enumeration, including species subsets and ordering
+  ---
+  duration_ms: 71.0682
+  ...
+# Subtest: night plans keep the original group, timing and final RNG state
+not ok 2 - night plans keep the original group, timing and final RNG state
+  ---
+  duration_ms: 3.5443
+  location: 'file:///C:/Users/PC/.codex/worktrees/raid-shared-worker-priority/wild-guardians-africa/tests/raid-composition-index.test.js:17:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected ... Lines skipped
+    
+      {
+        at: 323.01416379236616,
+    ...
+          'warthog',
+          'warthog',
+    +     'hyena'
+    -     'warthog'
+        ]
+      }
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    at: 323.01416379236616
+    attraction: 550
+    group:
+      0: 'warthog'
+      1: 'warthog'
+      2: 'warthog'
+      3: 'warthog'
+    done: false
+  actual:
+    at: 323.01416379236616
+    attraction: 550
+    group:
+      0: 'warthog'
+      1: 'warthog'
+      2: 'warthog'
+      3: 'hyena'
+    done: false
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/raid-shared-worker-priority/wild-guardians-africa/tests/raid-composition-index.test.js:23:27)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async startSubtest (node:internal/test_runner/harness:216:3)
+  ...
+# Subtest: large budgets preserve exact counts without retaining all group arrays
+ok 3 - large budgets preserve exact counts without retaining all group arrays
+  ---
+  duration_ms: 5.9551
+  ...
+# Subtest: invalid ranks and budgets are rejected; empty species produce zero groups
+ok 4 - invalid ranks and budgets are rejected; empty species produce zero groups
+  ---
+  duration_ms: 0.5181
+  ...
+# Subtest: canonical calendar has exact boundary ranges and native tier fallback
+ok 5 - canonical calendar has exact boundary ranges and native tier fallback
+  ---
+  duration_ms: 2.8636
+  ...
+# Subtest: first five introductions and postgame keep exact single timing draw
+ok 6 - first five introductions and postgame keep exact single timing draw
+  ---
+  duration_ms: 4.4249
+  ...
+# Subtest: ordinary plans use one budget and one uniform rank draw, independent of cash and spells
+not ok 7 - ordinary plans use one budget and one uniform rank draw, independent of cash and spells
+  ---
+  duration_ms: 2.5768
+  location: 'file:///C:/Users/PC/.codex/worktrees/raid-shared-worker-priority/wild-guardians-africa/tests/raid-threat-calendar.test.js:28:1'
+  failureType: 'testCodeFailure'
+  error: 'Posición inválida'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    validateSnapshot (file:///C:/Users/PC/.codex/worktrees/raid-shared-worker-priority/wild-guardians-africa/src/persistence/snapshots.js:40:144)
+    serialize (file:///C:/Users/PC/.codex/worktrees/raid-shared-worker-priority/wild-guardians-africa/src/persistence/snapshots.js:76:36)
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/raid-shared-worker-priority/wild-guardians-africa/tests/raid-threat-calendar.test.js:35:28)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 5
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 288.3682

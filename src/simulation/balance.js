@@ -305,6 +305,86 @@ export const BALANCE = {
     "worker_collision_knockback_m": [
       1.5,
       2
+    ],
+    "night_budget_calendar": [
+      {
+        "first_night": 6,
+        "last_night": 15,
+        "tier_budgets": [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            12,
+            18
+          ],
+          [
+            24,
+            36
+          ]
+        ]
+      },
+      {
+        "first_night": 16,
+        "last_night": 30,
+        "tier_budgets": [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            12,
+            18
+          ],
+          [
+            48,
+            72
+          ]
+        ]
+      },
+      {
+        "first_night": 31,
+        "last_night": 100,
+        "tier_budgets": [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            12,
+            18
+          ],
+          [
+            72,
+            96
+          ]
+        ]
+      }
     ]
   },
   "spells": [

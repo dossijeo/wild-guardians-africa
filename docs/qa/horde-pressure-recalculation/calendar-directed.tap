@@ -1,0 +1,180 @@
+TAP version 13
+# Subtest: QA-087: all ten attraction boundaries select the exact confirmed tier
+ok 1 - QA-087: all ten attraction boundaries select the exact confirmed tier
+  ---
+  duration_ms: 2.8951
+  ...
+# Subtest: QA-087: actual living plant base values drive night planning independently of cash, crates, maturity and yield bonuses
+ok 2 - QA-087: actual living plant base values drive night planning independently of cash, crates, maturity and yield bonuses
+  ---
+  duration_ms: 8.0333
+  ...
+# Subtest: QA-088 revised: the first-night clock spawns one mandatory warthog with zero attraction and preserves its plan on reload
+ok 3 - QA-088 revised: the first-night clock spawns one mandatory warthog with zero attraction and preserves its plan on reload
+  ---
+  duration_ms: 66.8699
+  ...
+# Subtest: QA-089 revised: a thousand guaranteed nightly plans use fresh independent timing and composition draws
+ok 4 - QA-089 revised: a thousand guaranteed nightly plans use fresh independent timing and composition draws
+  ---
+  duration_ms: 43.2554
+  ...
+# Subtest: QA-090: budget three chooses precisely three warthogs or one unlocked hyena
+ok 5 - QA-090: budget three chooses precisely three warthogs or one unlocked hyena
+  ---
+  duration_ms: 0.5334
+  ...
+# Subtest: QA-091: sixteen night and four daytime budgets exactly match an independent Cartesian count oracle
+ok 6 - QA-091: sixteen night and four daytime budgets exactly match an independent Cartesian count oracle
+  ---
+  duration_ms: 25.4841
+  ...
+# Subtest: QA-092: all 120 unlocked-order permutations and repeated IDs preserve the same unweighted composition list
+ok 7 - QA-092: all 120 unlocked-order permutations and repeated IDs preserve the same unweighted composition list
+  ---
+  duration_ms: 32.063
+  ...
+# Subtest: QA-093: affordable locked lions and rhinos cannot enter the legal composition pool
+ok 8 - QA-093: affordable locked lions and rhinos cannot enter the legal composition pool
+  ---
+  duration_ms: 0.762
+  ...
+# Subtest: balance generation rejects 600-coin centre without writing
+ok 9 - balance generation rejects 600-coin centre without writing
+  ---
+  duration_ms: 410.4981
+  ...
+# Subtest: balance generation rejects changed older-worker wage without writing
+ok 10 - balance generation rejects changed older-worker wage without writing
+  ---
+  duration_ms: 182.6318
+  ...
+# Subtest: balance generation rejects wage below the minimum without writing
+ok 11 - balance generation rejects wage below the minimum without writing
+  ---
+  duration_ms: 166.5981
+  ...
+# Subtest: audio-backed prices allow independent harvest, threat and movement revisions
+ok 12 - audio-backed prices allow independent harvest, threat and movement revisions
+  ---
+  duration_ms: 179.9186
+  ...
+# Subtest: CLI fixes baseline defaults, accepts100 combat +80peace days and refuses invalid cases
+ok 13 - CLI fixes baseline defaults, accepts100 combat +80peace days and refuses invalid cases
+  ---
+  duration_ms: 4.3166
+  ...
+# Subtest: cooperative calibration stop preserves partial receipt without inventing native defeat
+ok 14 - cooperative calibration stop preserves partial receipt without inventing native defeat
+  ---
+  duration_ms: 17.5831
+  ...
+# Subtest: stop-file is observed on a tick even before a daily checkpoint
+ok 15 - stop-file is observed on a tick even before a daily checkpoint
+  ---
+  duration_ms: 22.2669
+  ...
+# Subtest: partial tool error keeps original daily journal, source receipt and native result without inventing defeat
+ok 16 - partial tool error keeps original daily journal, source receipt and native result without inventing defeat
+  ---
+  duration_ms: 14.5424
+  ...
+# Subtest: Q4 native first contract pays30 rather than forecast240, preserving actual planting funds
+ok 17 - Q4 native first contract pays30 rather than forecast240, preserving actual planting funds
+  ---
+  duration_ms: 22.1842
+  ...
+# Subtest: Q4 does not consume364 as360 salary, and no safe35 contract is not declared game defeat
+ok 18 - Q4 does not consume364 as360 salary, and no safe35 contract is not declared game defeat
+  ---
+  duration_ms: 4.1219
+  ...
+# Subtest: Q4 additions use native proportional ceil, real saturated FIFO backlog, historical pending repairs and one payment
+ok 19 - Q4 additions use native proportional ceil, real saturated FIFO backlog, historical pending repairs and one payment
+  ---
+  duration_ms: 7.4633
+  ...
+# Subtest: Q4 same productive labour recipe for defended and no-wall strategies; legacy protocol untouched
+ok 20 - Q4 same productive labour recipe for defended and no-wall strategies; legacy protocol untouched
+  ---
+  duration_ms: 2.5153
+  ...
+# Subtest: native contacts reconcile budgets and physical crop replacement costs without mutation through reload
+ok 21 - native contacts reconcile budgets and physical crop replacement costs without mutation through reload
+  ---
+  duration_ms: 138.6307
+  ...
+# Subtest: native shield contacts spend budget without reporting fictitious crop or structure damage
+ok 22 - native shield contacts spend budget without reporting fictitious crop or structure damage
+  ---
+  duration_ms: 76.9726
+  ...
+# Subtest: lost event window is incomplete instead of silently inventing raid facts
+ok 23 - lost event window is incomplete instead of silently inventing raid facts
+  ---
+  duration_ms: 2.1748
+  ...
+# Subtest: native wall interception uses measured HP loss rather than protection multiplier
+ok 24 - native wall interception uses measured HP loss rather than protection multiplier
+  ---
+  duration_ms: 958.7548
+  ...
+# Subtest: exact native spawn receipt survives a full incursion between observer calls
+ok 25 - exact native spawn receipt survives a full incursion between observer calls
+  ---
+  duration_ms: 38.8666
+  ...
+# Subtest: native worker hit and incapacitation each consume one budget through reload
+ok 26 - native worker hit and incapacitation each consume one budget through reload
+  ---
+  duration_ms: 7.7649
+  ...
+# Subtest: unidentified incapacitation cannot invent species budget coverage
+ok 27 - unidentified incapacitation cannot invent species budget coverage
+  ---
+  duration_ms: 2.5493
+  ...
+# Subtest: every rank matches native enumeration, including species subsets and ordering
+ok 28 - every rank matches native enumeration, including species subsets and ordering
+  ---
+  duration_ms: 100.0919
+  ...
+# Subtest: night plans keep exact uniform native enumeration, timing and final RNG state
+ok 29 - night plans keep exact uniform native enumeration, timing and final RNG state
+  ---
+  duration_ms: 17.1321
+  ...
+# Subtest: large budgets preserve exact counts without retaining all group arrays
+ok 30 - large budgets preserve exact counts without retaining all group arrays
+  ---
+  duration_ms: 12.0587
+  ...
+# Subtest: invalid ranks and budgets are rejected; empty species produce zero groups
+ok 31 - invalid ranks and budgets are rejected; empty species produce zero groups
+  ---
+  duration_ms: 1.8727
+  ...
+# Subtest: canonical calendar has exact boundary ranges and native tier fallback
+ok 32 - canonical calendar has exact boundary ranges and native tier fallback
+  ---
+  duration_ms: 3.9075
+  ...
+# Subtest: first five introductions and postgame keep exact single timing draw
+ok 33 - first five introductions and postgame keep exact single timing draw
+  ---
+  duration_ms: 5.6168
+  ...
+# Subtest: ordinary plans use one budget and one uniform rank draw, independent of cash and spells
+ok 34 - ordinary plans use one budget and one uniform rank draw, independent of cash and spells
+  ---
+  duration_ms: 35.7078
+  ...
+1..34
+# tests 34
+# suites 0
+# pass 34
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1627.8867

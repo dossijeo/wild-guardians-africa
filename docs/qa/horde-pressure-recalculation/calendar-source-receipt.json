@@ -1,0 +1,63 @@
+{
+  "scope": "Canonical calendar candidate, no campaign/build/GPU/CI/main promotion",
+  "integratedMain": "e4e885251497db0589c368fcfae8f091d814f2c3",
+  "sourceHashes": {
+    "content/balance/balance_confirmado.json": "e47c98f615a7d72f87024d495195205f898207d1da817a9ca6428ebe4dbc3eee",
+    "content/balance/player_revisions.json": "1fb1bc26289a5d69b7c0b5871ed755227b0f98677eb2f5bf3d27dfa021ba7438",
+    "src/simulation/balance.js": "4896e8cf2d047e6fe8a2b4d0b6f11a0ce2d0620f6ac068da0414eff2a01dc58d",
+    "src/simulation/raids.js": "44ab451aa2c899ea437888b1bbb45238dafd534202bccdf4bb9c86679a6759d7",
+    "src/simulation/raid-threat-budget.js": "22fca3d71cfa42c5a509895435c405eaf55e1b597b424d9a2bcecf20c98e5090",
+    "src/simulation/raid-composition-index.js": "21bd73be8ede1b7d9449eafe8a0fe0ed89a339eeb9e7523ab78017efb3546322",
+    "tools/generate_balance.py": "45955d5d0fb5dca94e9ed29e9efff08f63881cac63c3006a1e36ebef22e3ce4a",
+    "tools/native-raid-campaign-evidence.mjs": "f74a9485e92af1c93bac90b3bbdf56a851f3894989e01c703a8d942436ec614d",
+    "tools/native-q4-labour-policy.mjs": "5fe6ca97cf0f3115ba99c9f64a11a0b917cf019d5c94289dc66e27dafd47a9bf",
+    "tools/run_native_campaign.mjs": "919e7961771645ef754bf66a9aca1d6d0d794835810642e4bc33692bfa2dfc13",
+    "tools/native-campaign-runner.mjs": "a57b2fc203ffce1d7a57d64fd838fe7f0729fa4674828f71dddf1e29f611f05b",
+    "tools/native-campaign-protocol.mjs": "86391353699a35c7669492bd5fd11c7c5dc48664dbeeebc9b363609543915cef",
+    "tests/raid-threat-calendar.test.js": "e725274dd3a16458673f4c5e43d7cbec71be9f1f2bb92508ff969c338b15ddda",
+    "tests/raid-threat-calendar-generator.test.js": "b5888aded89e14b21adc79b845c1398856d97af3e16d144b82031f85540353e0",
+    "tests/raid-composition-index.test.js": "d037e8ad9579831b4d7392e2e064a4af21294bdde903d72de50ea8e64374a0d4"
+  },
+  "logs": {
+    "calendar-original-negative.tap": "c67e871886ae8ff8e31b9a36d419fa7031756cb44936c3a4a23e546641b4c3a5",
+    "calendar-directed.tap": "c13a2a5012398c9783ce90cecf0a5063d338a1cde217eb4aff96ed396e7a05fe",
+    "calendar-generator.tap": "2926f0b2ac5067957767cdc7bdd1fb7a3c9a1eb633029c2c961dcb8cb57510fd"
+  },
+  "checks": {
+    "directed": {
+      "passed": 34,
+      "failed": 0,
+      "exit": 0,
+      "suiteMs": 1627.8867
+    },
+    "generator": {
+      "passed": 6,
+      "failed": 0,
+      "exit": 0,
+      "suiteMs": 1007.1613
+    },
+    "generatorCheck": "exit0"
+  },
+  "originalNegative": {
+    "exit": 1,
+    "scope": "Unmodified original rank planning oracle using old budget ranges plus new malformed save fixture; retained targeted replay7tests5pass2fail"
+  },
+  "constraints": {
+    "center": 800,
+    "wages": [
+      30,
+      40
+    ],
+    "pricesAndDamageUnchanged": true,
+    "firstFiveIntroUnchanged": true,
+    "postgamePeaceUnchanged": true,
+    "rngDrawCountUnchanged": true
+  },
+  "openGates": [
+    "actual larger-group entry/traversal/deadline",
+    "real paid defense benefit",
+    "negligent native defeat",
+    "100-night global inactivity",
+    "six-biome and30culture coverage"
+  ]
+}

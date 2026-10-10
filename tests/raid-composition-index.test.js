@@ -14,11 +14,13 @@ test('every rank matches native enumeration, including species subsets and order
   for(let rank=0;rank<original.length;rank++)assert.deepEqual(index.at(rank),original[rank]);
  }
 });
-test('night plans keep the original group, timing and final RNG state',()=>{
+test('night plans keep exact uniform native enumeration, timing and final RNG state',()=>{
  for(const seed of [1,712,123,2026,4294967295])for(const count of [0,10,50,100,300]){
   const state={rng:seed,day:6,postgame:false,plants:Array.from({length:count},()=>({alive:true,species:'mijo'}))};
   const expected=structuredClone(state),at=323+nextRandom(expected)*225,tier=threatTier(attraction(expected.plants));
-  const budget=randomInt(expected,tier.threat_min,tier.threat_max),groups=compositions(budget,tier.unlocked_species);
+  // Independent candidate day6 budget table; the rank implementation does not select the interval.
+  const [min,max]=[[1,2],[3,4],[6,9],[12,18],[24,36]][B.threat_tiers.findIndex(t=>t.attraction_min===tier.attraction_min)];
+  const budget=randomInt(expected,min,max),groups=compositions(budget,tier.unlocked_species);
   const group=groups[randomInt(expected,0,groups.length-1)];
   planNight(state);assert.deepEqual(state.nightPlan,{at,attraction:attraction(expected.plants),group,done:false});assert.equal(state.rng,expected.rng);
  }
