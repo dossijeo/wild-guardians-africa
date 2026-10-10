@@ -1,7 +1,6 @@
 import {createCropGrouping} from './crop-components.js';
 import {cropBecameInactive} from './active-crops.js';
 import {RAID_NOTICE_TEXT} from './raid-notice.js';
-import {warmRaidNavigation} from '../world/raid-navigation-warmth.js';
 import {createRaidExteriorQuery,outsideRaidRegions,raidPerimeterAnchors,exteriorRaidEntry} from '../world/raid-exterior.js';
 import {centerBoundaryPoint,centerCulture,centerDeliveryPoint} from '../world/centers.js';
 import {BALANCE as B} from './balance.js';
@@ -153,7 +152,8 @@ export function spawnRaid(s,plan,nav,daytime=false) {
   // Validate the current physical enclosure as well as the preparer's request
   // key. A stale/malformed interior reply must never create actors there.
   const prepared=proposed&&exteriorRaidEntry(s,nav,specs,proposed.entry,bounds)?proposed:null;
-  if(prepared)warmRaidNavigation(nav,prepared.warmth);
+  // Owned preparation installs warmth before independent body validation.
+  // A keyed entry supplied by another hook does not own collision caches.
   const preferredSide=randomInt(s,0,3);
   const entry=prepared?prepared.entry:chooseRaidEntry(s,specs,bounds,preferredSide,nav);
   const entries=entry?.entries,exits=entry?.exits;

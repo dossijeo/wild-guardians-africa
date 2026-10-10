@@ -1,0 +1,37 @@
+import {createHash} from 'node:crypto';
+import {mkdirSync,writeFileSync} from 'node:fs';
+import {gzipSync} from 'node:zlib';
+import {resolve} from 'node:path';
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import * as Game from '../src/simulation/game.js';
+import {createOpeningWorld} from '../tools/check_opening.mjs';
+import {RaidEntryPreparer} from '../src/world/raid-entry-preparer.js';
+import {computeRaidEntry} from '../src/world/compute-raid-entry.js';
+import {spawnRaid} from '../src/simulation/raids.js';
+import {Navigation} from '../src/world/navigation.js';
+import {serialize,deserialize} from '../src/persistence/snapshots.js';
+import {raidExteriorDiagnostics} from '../src/world/raid-exterior.js';
+const group=['warthog','warthog','warthog','warthog','hyena','hyena','hyena','buffalo','buffalo','lion','lion','rhino'];
+test('owned prepared group12 travels natively, spends reserved hits and physically exits across save/reload',()=>{
+ let {s,nav}=createOpeningWorld({seed:712,biome:'sabana',culture:'saheliana'});
+ assert.ok(Game.plant(s,'crop','mijo',88,9,nav));assert.ok(Game.buildWallChain(s,'walls','zarzas',[[85,6.2],[92,6.2],[92,17],[85,17],[85,6.2]],nav,{smooth:false,snap:false}));
+ nav.setActiveBounds([-24,-120,216,120]);nav.setRaidView({x:88,z:9},{x:88,z:6.5});s.nightPlan={at:400,group,done:false};
+ const worker={requests:[],postMessage(data){this.requests.push(data);},terminate(){}},preparer=new RaidEntryPreparer(nav,{createWorker:()=>worker});preparer.update(s);worker.onmessage({data:computeRaidEntry(worker.requests[0])});spawnRaid(s,{group},nav);
+ assert.equal(raidExteriorDiagnostics(nav).builds,0);const initialSnapshot=serialize(s);const initial=s.raid.animals.map(a=>({id:a.id,spawn:{...a.spawn},exit:{...a.exit},hits:a.hitsRemaining})),observed=new Map();let reloaded=false;
+ preparer.dispose();
+ for(let i=0;i<1200&&s.raid;i++){
+  // Hold the actual native actor references before the tick which clears the
+  // raid. A copied last sample would miss the final physical exit transition.
+  for(const a of s.raid.animals)observed.set(a.id,a);
+  Game.tick(s,.25,nav);for(const a of s.raid?.animals??[]){observed.set(a.id,a);assert.ok(nav.walkable(a.x,a.z,a.radius,null,false));}
+  if(!reloaded&&s.raid){const snapshot=serialize(s),profile=nav.profile,bounds=nav.activeBounds,view=nav.raidView;s=deserialize(snapshot);nav=new Navigation(s.seed,s.biome,profile);nav.setState(s);nav.setActiveBounds(bounds);nav.setRaidView(view.eye,view.target);assert.equal(serialize(s),snapshot);reloaded=true;}
+ }
+ assert.equal(s.raid,null,'whole raid must end through ordinary native ticks');assert.ok(reloaded);assert.equal(observed.size,12);assert.equal(s.events.filter(e=>e.type==='RaidEnded').length,1);
+ for(const init of initial){const a=observed.get(init.id);assert.equal(a.status,'gone');assert.ok(Math.hypot(a.x-init.exit.x,a.z-init.exit.z)<1e-7);assert.deepEqual(a.spawn,init.spawn);assert.deepEqual(a.exit,init.exit);}
+ const finalSnapshot=serialize(s),sha=value=>createHash('sha256').update(value).digest('hex');
+ assert.deepEqual(s.ledger,deserialize(initialSnapshot).ledger);
+ assert.equal(initial.reduce((n,a)=>n+a.hits,0)-[...observed.values()].reduce((n,a)=>n+a.hitsRemaining,0),s.events.filter(e=>['AnimalLogicalHit','AnimalLogicalMiss','WorkerHit','WorkerIncapacitated'].includes(e.type)).length);
+ if(process.env.RAID_EXTERIOR_EVIDENCE){const out=resolve(process.env.RAID_EXTERIOR_EVIDENCE);mkdirSync(out,{recursive:true});writeFileSync(resolve(out,'initial-state.json.gz'),gzipSync(initialSnapshot));writeFileSync(resolve(out,'final-state.json.gz'),gzipSync(finalSnapshot));}
+ console.log(JSON.stringify({initialStateSHA256:sha(initialSnapshot),finalStateSHA256:sha(finalSnapshot),scope:'one paid enclosure native group12 physical fixture, not campaign/fullmatrix/balance acceptance',actors:12,elapsed:s.elapsed,logicalHits:s.events.filter(e=>e.type==='AnimalLogicalHit').length,structureHits:s.events.filter(e=>e.type==='StructureHit').length,unusedHits:[...observed.values()].reduce((n,a)=>n+a.hitsRemaining,0),terminalExits:[...observed.values()].map(a=>({id:a.id,status:a.status,x:a.x,z:a.z,exit:a.exit}))}));
+});

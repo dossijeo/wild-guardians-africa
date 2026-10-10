@@ -1,3 +1,6 @@
+import {raidExteriorPayload,raidExteriorInputKey} from './raid-exterior.js';
+import {completeRaidEntryResult,raidRequestProof} from './raid-entry-result.js';
+import {TerrainField} from './terrain.js';
 import {Navigation} from './navigation.js';
 import {chooseRaidEntry,warmRaidApproaches} from '../simulation/raids.js';
 import {animalSpec,randomInt} from '../simulation/rules.js';
@@ -7,8 +10,11 @@ import {raidNavigationWarmth,navigationPathKey} from './raid-navigation-warmth.j
 export function computeRaidEntry(request){
   const {state,profile,group,bounds,view,key,token}=request;
   const nav=new Navigation(state.seed,state.biome,profile);
+  if(request.config&&JSON.stringify(nav.config)!==JSON.stringify(request.config)){nav.config=structuredClone(request.config);nav.field=new TerrainField(nav.config);}
   nav.setState(state);nav.setActiveBounds(bounds);nav.setRaidView(view.eye,view.target);
   const specs=group.map(id=>({spec:animalSpec(id),radius:ANIMAL_ACTIONS.animals[id].presentation.footprint.radius}));
+  if(request.geometryKey&&request.geometryKey!==raidExteriorInputKey(state,nav))throw Error('Raid geometry request does not match reconstructed navigation');
+  const proof=raidRequestProof(request);
   // Only the isolated request copy advances. The real spawn still consumes
   // its original RNG draw, even when this prepared result is accepted.
   const entry=chooseRaidEntry(state,specs,bounds,randomInt(state,0,3),nav);
@@ -22,5 +28,5 @@ export function computeRaidEntry(request){
     return route;
   };
   warmRaidApproaches(state,specs,entry,nav);
-  return {key,token,entry,warmth:raidNavigationWarmth(nav)};
+  return completeRaidEntryResult({key,token,owner:request.owner,proof,entry,geometry:raidExteriorPayload(state,nav,specs.map(p=>p.radius)),warmth:raidNavigationWarmth(nav)});
 }

@@ -1,0 +1,96 @@
+TAP version 13
+# {"scope":"CPU observation only, group12 entry/save/native reversible escape; not completed physical raid or frame guarantee","adoptionMs":4.605199999999968,"spawnMs":7.572800000000143,"mainGraph":{"builds":0,"adoptions":1}}
+# Subtest: owned complete graph adopted before spawn: group12 exterior, exact direct state and no main graph build
+ok 1 - owned complete graph adopted before spawn: group12 exterior, exact direct state and no main graph build
+  ---
+  duration_ms: 998.244
+  ...
+# Subtest: camera-only obsolescence adopts full current geometry, never the old entry
+ok 2 - camera-only obsolescence adopts full current geometry, never the old entry
+  ---
+  duration_ms: 389.9469
+  ...
+# Subtest: position: current input ownership rejects complete but physically stale graph
+ok 3 - position: current input ownership rejects complete but physically stale graph
+  ---
+  duration_ms: 366.2595
+  ...
+# Subtest: material: current input ownership rejects complete but physically stale graph
+ok 4 - material: current input ownership rejects complete but physically stale graph
+  ---
+  duration_ms: 454.1686
+  ...
+# Subtest: gate: current input ownership rejects complete but physically stale graph
+ok 5 - gate: current input ownership rejects complete but physically stale graph
+  ---
+  duration_ms: 508.3998
+  ...
+# Subtest: profile: current input ownership rejects complete but physically stale graph
+ok 6 - profile: current input ownership rejects complete but physically stale graph
+  ---
+  duration_ms: 546.9272
+  ...
+# Subtest: suppression: current input ownership rejects complete but physically stale graph
+ok 7 - suppression: current input ownership rejects complete but physically stale graph
+  ---
+  duration_ms: 512.1211
+  ...
+# Subtest: field: current input ownership rejects complete but physically stale graph
+ok 8 - field: current input ownership rejects complete but physically stale graph
+  ---
+  duration_ms: 538.811
+  ...
+# Subtest: collapse: current input ownership rejects complete but physically stale graph
+ok 9 - collapse: current input ownership rejects complete but physically stale graph
+  ---
+  duration_ms: 659.6799
+  ...
+# Subtest: HP and active shield duration do not invalidate geometry when collision is unchanged
+ok 10 - HP and active shield duration do not invalidate geometry when collision is unchanged
+  ---
+  duration_ms: 508.7082
+  ...
+# Subtest: key/token-shaped cloned or arbitrary replies cannot mint trusted geometry or warmth
+ok 11 - key/token-shaped cloned or arbitrary replies cannot mint trusted geometry or warmth
+  ---
+  duration_ms: 581.1728
+  ...
+# Subtest: malformed complete graph rejects atomically, without caching even its first valid radius
+ok 12 - malformed complete graph rejects atomically, without caching even its first valid radius
+  ---
+  duration_ms: 882.7244
+  ...
+# Subtest: cancelled/disposed/error replies never install complete geometry
+ok 13 - cancelled/disposed/error replies never install complete geometry
+  ---
+  duration_ms: 1027.7999
+  ...
+# Subtest: pending plan cancellation and wrong owner never adopt a graph
+ok 14 - pending plan cancellation and wrong owner never adopt a graph # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1816
+  ...
+# Subtest: an internally computed but different snapshot proof cannot adopt graph/cache data
+ok 15 - an internally computed but different snapshot proof cannot adopt graph/cache data # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.2519
+  ...
+# Subtest: in-process completed payload is immutable and oversized polygon transport is rejected atomically
+ok 16 - in-process completed payload is immutable and oversized polygon transport is rejected atomically # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1371
+  ...
+# Subtest: independent body validation rejects malformed arrays or bounds without throwing
+ok 17 - independent body validation rejects malformed arrays or bounds without throwing # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1812
+  ...
+1..17
+# tests 17
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+# skipped 4
+# todo 0
+# duration_ms 8192.876

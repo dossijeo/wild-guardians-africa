@@ -1,0 +1,22 @@
+TAP version 13
+# {"scope":"single descriptive CPU sample, in-process private navigator stands in for browser worker computation; no concurrent performance comparison/frame claim","originalGzipSHA256":"1b0f1a153aaf9c7adcb91b394d232886016124316570f3e90df01bb280bb4a0b","walls":103,"livePlants":865,"geometryKeyBytes":38777,"replyJSONBytes":388826,"keyMs":0.6032999999999902,"requestMs":6.807600000000008,"privateComputeMs":313.5197,"adoptionMs":5.228200000000015,"spawnMs":4.529799999999909,"mainGraph":{"builds":0,"adoptions":1}}
+# {"scope":"negative performance gate retained; native direct fallback still builds cold graph synchronously, NOT production acceptance","coldSpawnMs":203.53499999999997,"mainGraph":{"builds":1,"adoptions":0}}
+# Subtest: advanced retained legal farm: owned worker preparation transfers graph, main adoption and spawn never build it
+ok 1 - advanced retained legal farm: owned worker preparation transfers graph, main adoption and spawn never build it
+  ---
+  duration_ms: 528.592
+  ...
+# Subtest: worker unavailable remains an explicit cold fallback blocker, without suppressing native spawn
+ok 2 - worker unavailable remains an explicit cold fallback blocker, without suppressing native spawn
+  ---
+  duration_ms: 249.9407
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 973.8834
