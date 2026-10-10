@@ -7,11 +7,16 @@ export function seedQuote(baseCost,livingPlants,{plantsPerStep=200,slope=1,freeP
  if(!Number.isSafeInteger(baseCost)||baseCost<=0||!Number.isSafeInteger(livingPlants)||livingPlants<0||!Number.isFinite(plantsPerStep)||plantsPerStep<=0||!Number.isFinite(slope)||slope<0||!Number.isSafeInteger(freePlants)||freePlants<0)throw Error('Invalid scarcity parameters');
  return Math.ceil(baseCost*(1+slope*Math.max(0,livingPlants-freePlants)/plantsPerStep));
 }
-export function estimate(input,{days=100,scale=.475,wallCost=3,exposure=.1,defend=true,scarcity=null}={}) {
+export function seedPurchaseReserve(livingPlants,policy=null) {
+ if(!Number.isSafeInteger(livingPlants)||livingPlants<0)throw Error('Invalid living plant count');
+ return livingPlants===0?0:policy?Math.max(30,Math.ceil((livingPlants+1)/6)*30*policy.reserveDays):30;
+}
+export function estimate(input,{days=100,scale=.475,wallCost=3,exposure=.1,defend=true,scarcity=null,policy=null}={}) {
+ if(policy&&(!Number.isFinite(policy.reserveDays)||policy.reserveDays<0||!['fixed-budget','perimeter-budget'].includes(policy.walls)))throw Error('Invalid estimate policy');
  const B=structuredClone(input.referenceBalance),original=Object.fromEntries(B.crops.map(c=>[c.id,c.base_harvest_value]));
  for(const c of B.crops)c.base_harvest_value=Math.ceil(c.base_harvest_value*scale);
  const cohorts=[{species:'mijo',count:1,readyDay:2}],rows=[];
- let cash=1500-800-5,walls=0,seedIndex=0,deliveryCarry=0,lossCarry=0;
+ let cash=1500-800-5,walls=0,seedIndex=0,deliveryCarry=0,lossCarry=0,peakStock=1;
  const stock=()=>cohorts.reduce((n,c)=>n+c.count,0);
  for(let day=1;day<=days;day++) {
   const before=cash,openingPlants=stock(),recoveryMinimum=openingPlants?30:35;
@@ -23,7 +28,8 @@ export function estimate(input,{days=100,scale=.475,wallCost=3,exposure=.1,defen
   const staff=Math.min(day===1?7:Math.max(1,Math.ceil(openingPlants/6)),Math.floor((cash-(openingPlants?0:5))/30));
   const wages=staff*30;cash-=wages;
   // No sale of today's seedlings. Only explicitly age-eligible cohorts deliver.
-  const throughput=staff*input.calibration.early.deliveriesPerWorker+deliveryCarry;
+  const deliveryRate=policy?.deliveryBand==='calendar'&&day>=10?input.calibration.late.deliveriesPerWorker:input.calibration.early.deliveriesPerWorker;
+  const throughput=staff*deliveryRate+deliveryCarry;
   let remaining=Math.floor(throughput),harvested=0,income=0;
   const mature=cohorts.filter(c=>c.readyDay<=day).reduce((n,c)=>n+c.count,0);
   deliveryCarry=mature>remaining?throughput-remaining:0;
@@ -33,12 +39,17 @@ export function estimate(input,{days=100,scale=.475,wallCost=3,exposure=.1,defen
   }
   cash+=income;
   // Budgeted partial construction; wall count does not prove enclosure/protection.
-  const newWalls=defend&&day>=2?Math.min(32,Math.floor(Math.max(0,cash-35)*.2/wallCost)):0;
+  peakStock=Math.max(peakStock,stock());
+  const perimeterTarget=Math.ceil(8*Math.ceil((Math.sqrt(peakStock*2.25)/2+3)/6)*6/2.18);
+  const wallLimit=policy?.walls==='perimeter-budget'?Math.max(0,perimeterTarget-walls):32;
+  const wallReserve=policy?Math.max(35,Math.ceil(stock()/6)*30*policy.reserveDays):35;
+  const newWalls=defend&&day>=2?Math.min(32,wallLimit,Math.floor(Math.max(0,cash-wallReserve)*.2/wallCost)):0;
   const wallSpend=newWalls*wallCost;cash-=wallSpend;walls+=newWalls;
   let planted=0,seeds=0;
   // Millet through day 9, then fixed species sequence in both strategies.
   while(planted<(day===1?116:280)) {
-   const crop=day<=9?B.crops.find(c=>c.id==='mijo'):B.crops[seedIndex%B.crops.length],reserve=stock()===0?0:30;
+   const crop=day<=9?B.crops.find(c=>c.id==='mijo'):B.crops[seedIndex%B.crops.length];
+   const reserve=seedPurchaseReserve(stock(),policy);
    const seedCost=scarcity?seedQuote(crop.plant_cost,stock(),scarcity):crop.plant_cost;
    if(cash-seedCost<reserve)break;
    cash-=seedCost;seeds+=seedCost;planted++;if(day>=10)seedIndex++;
@@ -46,6 +57,7 @@ export function estimate(input,{days=100,scale=.475,wallCost=3,exposure=.1,defen
    const previous=cohorts.find(c=>c.species===crop.id&&c.readyDay===readyDay);
    if(previous)previous.count++;else cohorts.push({species:crop.id,count:1,readyDay});
   }
+  peakStock=Math.max(peakStock,stock());
   const preRaid=stock(),value=cohorts.reduce((n,c)=>n+c.count*original[c.species],0),raid=nightlyExpectation(B,day,value);
   const targets=day<=5?1:Math.floor(1+7*value/(value+10000)),force=day<=5||value<60000?1:2;
   const effectiveExposure=defend&&walls===0?.9:exposure;
