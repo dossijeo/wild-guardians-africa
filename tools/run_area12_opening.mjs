@@ -24,7 +24,9 @@ export function auditArea12Opening(r,days){
   for(const p of applied){assert.ok(p.postHits>=p.previousHits&&p.postHits<=2);assert.equal(cropDestroyed.filter(e=>e.attackId===hit.attackId&&e.targetId===p.id).length,p.destroyed?1:0);}
  }
  const allExit=r.raids.every(a=>a.terminalActors?.every(t=>t.status==='gone'&&t.exitDistance<1e-8));
- return {completedRequestedNights:r.completedNights>=days,allRaidsPhysicallyEnded:allExit,spentStrikes:strikes.spentStrikes,strikeBudgetExactlyMatched:true,areaImpactReceiptIdsMatched:true,areaImpactCount:impacts.length,damagedPlants:cropHits.length,areaDestroyedPlants:cropDestroyed.length,paidRepairEvidence:r.repairSettlements.status,actualInterceptionCount:r.raidFacts.filter(e=>e.type==='StructureHit').length,observedActivity:r.observedActivity,strictActivityBelow25:r.observedActivity.unoccupiedFraction<.25,no100NightAcceptance:true};
+ const meaningful=r.meaningfulObservedActivity;
+ const meaningfulAvailable=Number.isFinite(meaningful?.unoccupiedFraction)&&meaningful.unoccupiedFraction>=0&&meaningful.unoccupiedFraction<=1;
+ return {completedRequestedNights:r.completedNights>=days,allRaidsPhysicallyEnded:allExit,spentStrikes:strikes.spentStrikes,strikeBudgetExactlyMatched:true,areaImpactReceiptIdsMatched:true,areaImpactCount:impacts.length,damagedPlants:cropHits.length,areaDestroyedPlants:cropDestroyed.length,paidRepairEvidence:r.repairSettlements.status,actualInterceptionCount:r.raidFacts.filter(e=>e.type==='StructureHit').length,observedActivity:r.observedActivity,rawActivityBelow25:r.observedActivity.unoccupiedFraction<.25,meaningfulObservedActivity:meaningful??null,meaningfulActivityAvailable:meaningfulAvailable,strictActivityBelow25:meaningfulAvailable&&meaningful.unoccupiedFraction<.25,no100NightAcceptance:true};
 }
 export async function runArea12Opening(output,days=6){
  assert.ok(output);assert.ok(Number.isSafeInteger(days)&&days>=1&&days<=6,'Only1–6nights permitted before parent review');mkdirSync(output,{recursive:false});
