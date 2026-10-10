@@ -1,0 +1,11 @@
+# Actual native partition maize capture
+
+Official383 executable, artifact11662241596, SHA25636eee4b680948a852f71382ede83344b8076bdf373891f7feb8473165f24f521. One owned local process6272, fresh WebView2 profile, immutable fixture28d8bf348c61900a7f4f94a53026a86e638acbca5b058981a43de969788a6406. Exact source38369875ed471404887401c1e876ab8c10b4f5d6 is the reviewed025 production partition plus guarded QA collector, not current-main integration547. No trace, overlap or CI environment override.
+
+Report `ok=true`, no errors, exit0. Synthetic engine-handler planting was triggered at natural67.8034% after requesting65%. The initial four plants were at183.069 growth; the fifth was observed at2.3235 then32.0524 while those four were183.4261. All five later reached270. Logical farm plants remained unchanged. This is real engine/canvas evidence, not physical mouse/touch acceptance. Readback adds overhead;19539.8ms worldWait must not be used as a performance comparison. Native hidden interval300184.4ms retained all21 core fields exactly.
+
+Root inspected `initial`, `catchup-mid` and `mature` PNGs. Maize leaves, shape and textured surfaces remain visible at the inspected angles; the fifth plant appears as a seedling and catches up. No glaring missing surfaces, deformation or missing material was apparent. This is bounded visual inspection, not multiview/all-crop/shadow acceptance.
+
+The initial frame is daytime (`night=0`), later frames are night (`night=1`): this source's smoke harness loads the slot directly without first requesting its menu preview. That known harness deficit is corrected in e5, not silently corrected here. Do not claim this run proves seamless Continue lighting or a fully nocturnal first frame. PNGs exclude composited HTML UI; portrait, actual interaction, failure/cancellation and remainder-crop visual coverage remain separate. The world screenshot follows the raid animal and cannot validate the saved yuca crop's appearance.
+
+`frames/receipt.json` links every PNG to metadata and the original report hash. The generic launcher receipt retains its exact source, executable, fixture, profile and arguments. The original CI383 failure is a different execution and remains visible in official metadata.
