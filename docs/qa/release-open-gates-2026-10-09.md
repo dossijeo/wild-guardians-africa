@@ -5,7 +5,7 @@ update below supersedes the historical checkpoint text that follows. Earlier
 sources, failed candidates and measurements are retained, not silently changed
 into current-main acceptance.
 
-## Current-state checkpoint — 10 October, main e285d327
+## Current-state checkpoint — 10 October, main a285af7e
 
 This checkpoint supersedes older live-run and unchanged-runtime descriptions
 below. Main now includes the intact-centre repair navigation optimization
@@ -35,9 +35,15 @@ The distinct 212-worker day21 repair diagnostic paid174 at physical arrival
 and restored centre HP470→600 at time235.25. It does not explain every
 historical repair failure. A new paired20-night pilot on frozen e040ea6f uses
 a self-consistent opening crew and the same six-plants-per-worker policy in
-both arms. PID47872 is independently confirmed live; no partial campaign
-acceptance, parameter promotion or100-night result is claimed. This frozen
-pilot does not contain main's later centre-navigation optimization.
+both arms. PID47872/session46684 is terminal with actual exit0. Root verified
+all21 original payload hashes and the read-only terminal auditor, archived in
+[the pilot review](horde-self-consistent-pilot-e040ea6f-20/root-review.md).
+Global inactivity is12.5167% responsible and12.5% neglect, below25%, but both
+survive and neither has structure hits or paid repairs. The paid perimeter has
+25 omitted slots and191 terminal plants outside it, so defensive effectiveness
+and negligent defeat remain unproven. No parameter promotion or100-night
+result is claimed. This frozen pilot does not contain main's later
+centre-navigation optimization.
 
 Loading crop partitions are still an isolated, unselected candidate. Frozen
 0a416fd3 fixes nested CDN/Tauri URL resolution and independently validates
@@ -51,7 +57,10 @@ experimental options false and original gates/model preflight preserved.
 [Root review](windows-loading-regression/maize-partition-root-review/README.md)
 authorizes the trial, not promotion. The temporary40.85MB package duplication
 must be eliminated before any eventual final integration. No production flag
-is enabled and no native readiness or performance result is accepted yet.
+is enabled. The packaged WebView2 smoke step has passed; genuine native
+minimization/restoration remains live. Original reports and rendered capture
+must still be inspected before accepting readiness or promoting this candidate.
+No performance result is inferred from a workflow step alone.
 
 ## Current-state update through main 8e1909d8
 
