@@ -1,0 +1,36 @@
+{
+  "input": "docs/qa/integrated-spiritual-survival/pilot-v25-no-shield-single-hit-sabana-123-fourteen/state.json.gz",
+  "inputSha256": "310d2f471aa9343b63fbc7bc759a8e0771126c7d1706067094daac05d35b65d9",
+  "sourceHashes": {
+    "tools/probe-native-center-recovery.mjs": "1f96c42cbbaad122ebe8b2ddc9278ba6c3b370ac3d33d2307f2747be3b1be3eb",
+    "src/simulation/game.js": "b216594fd241d10746d7d9b3a7802f7a6eca41c2709d25edd6501f5834e80c6f",
+    "src/world/navigation.js": "84ff9370c99e3891dd0036257450a312372b9c3d58be55051b40bb476fab81df",
+    "public/content/biome-savanna.json": "adb68fd97b2c45ef681313d4bc3418c3aac76101857391b961521f5cddfc4411"
+  },
+  "before": {
+    "day": 15,
+    "time": 0,
+    "cash": 517,
+    "hp": 358,
+    "live": 0,
+    "deliveredCrates": 994,
+    "undeliveredCrates": 0
+  },
+  "elapsed": 17.60000000006403,
+  "repair": {
+    "taskId": "task-11697",
+    "paymentId": "repair:task-11697",
+    "paidCoins": 323,
+    "previousHp": 358,
+    "previousStatus": "intact",
+    "restoredHp": 600,
+    "maxHp": 600
+  },
+  "after": {
+    "cash": 164,
+    "hp": 600,
+    "live": 0,
+    "result": null
+  },
+  "scope": "Single real hiring and physical paid center repair on a copied retained state. No funding override, fabricated movement, campaign continuation or survival acceptance."
+}
