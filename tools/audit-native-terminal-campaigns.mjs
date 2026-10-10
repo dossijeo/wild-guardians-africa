@@ -25,13 +25,19 @@ const cases=dirs.map(dir=>{
   assert.equal(d.day,index+1);assert.equal(d.finance.reconciliationDifference,0);
   if(index)assert.equal(d.finance.opening,rows[index-1].finance.closing);
   let delta=0n;
+  const categories=Object.fromEntries(['income','refunds','wages','seeds','walls','centers','villages','repairs','otherCredits','otherDebits'].map(k=>[k,0n]));
   for(const e of d.finance.entries){
    assert.ok(!ids.has(e.id),'Duplicate paid economic entry');ids.add(e.id);
    const coins=BigInt(e.coins);delta+=coins;
+   assert.ok(Object.hasOwn(categories,e.category),'Unknown journal category');
+   const credit=['income','refunds','otherCredits'].includes(e.category);
+   assert.ok(credit?coins>0n:coins<=0n,'Journal category has incorrect economic sign');
+   categories[e.category]+=coins<0n?-coins:coins;
    if(e.category==='income'){assert.ok(coins>0n);incomeIds.set(e.id,coins);}
   }
   assert.equal(BigInt(d.finance.opening)+delta,BigInt(d.finance.closing));
   assert.equal(d.money,d.finance.closing);
+  for(const [key,value] of Object.entries(categories))assert.equal(BigInt(d.finance[key]),value,`Incorrect ${key} subtotal`);
   for(const key of ['income','refunds','wages','seeds','walls','centers','villages','repairs','otherCredits','otherDebits'])totals[key]=(totals[key]??0)+d.finance[key];
  }
  const delivered=new Set();
