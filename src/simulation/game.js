@@ -163,7 +163,9 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
   const updates=converted.map(p=>({id:p.entityId,gate:true,autoGate:true,maxHp:p.maxHp,hp:p.hp})).filter(update=>{const piece=[...s.structures,...newPieces].find(p=>p.id===update.id),candidate={...piece,...update};return nav.wallPlacement(candidate).valid&&!cropOverlap(candidate);});
   return updates;
 }
-export function previewWallChain(s,material,points,nav,options={}) {
+// Geometry/price quote is read-only and may describe a future purchase. Actual
+// preview/build still enforce available cash and the native hiring reserve.
+export function quoteWallChain(s,material,points,nav,options={}) {
   if(!permission(s,'wall'))throw new Error('Esta acción no está disponible ahora');
   const spec=wallSpec(material),slots=wallStroke(points,s.structures,{...options,maxPieces:Infinity});
   const cropOverlap=piece=>{const c=Math.cos(piece.yaw),sn=Math.sin(piece.yaw),scale=piece.gate?(piece.material==='reforzado'?1.6:['adobe','piedra'].includes(piece.material)?1.4:1):1;return s.plants.some(p=>p.alive&&Math.abs((p.x-piece.x)*c-(p.z-piece.z)*sn)<1.09*(piece.baseScaleX??1)*scale+.4&&Math.abs((p.x-piece.x)*sn+(p.z-piece.z)*c)<.22*scale+.4);};
@@ -178,8 +180,12 @@ export function previewWallChain(s,material,points,nav,options={}) {
     for(const key of check.suppress??[])suppressed.add(key);
   }
   const cost=spec.cost*newPieces.length;
-  if(compare(s.ledger.balance,rational(cost))<0)throw new Error('No hay monedas suficientes para todo el trazado');
   return {pieces:newPieces,previewPieces:checks,updates,suppressed:[...suppressed],cost,gates:updates.length};
+}
+export function previewWallChain(s,material,points,nav,options={}) {
+  const plan=quoteWallChain(s,material,points,nav,options);
+  if(compare(s.ledger.balance,rational(plan.cost))<0)throw new Error('No hay monedas suficientes para todo el trazado');
+  return plan;
 }
 export function buildWallChain(s,id,material,points,nav,options={}) {
   if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;

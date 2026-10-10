@@ -18,8 +18,8 @@ export function parseNativeCampaignArgs(args){
  }
  if(o['stop-file'])o['stop-file']=resolve(o['stop-file']);
  o.labourPolicy=o['labour-policy']??'legacy';delete o['labour-policy'];campaignProtocolForLabour(o.labourPolicy);
- o.defensePolicy=o['defense-policy']??'expanding';delete o['defense-policy'];if(!['legacy','expanding','closed'].includes(o.defensePolicy))throw Error('Unknown defense policy');
- o.defenseStartDay=Number(o['defense-start-day']??1);delete o['defense-start-day'];if(!Number.isSafeInteger(o.defenseStartDay)||o.defenseStartDay<1||o.defenseStartDay!==1&&o.defensePolicy!=='closed')throw Error('Explicit defense start requires closed policy and positive integer day');
+ o.defensePolicy=o['defense-policy']??'expanding';delete o['defense-policy'];if(!['legacy','expanding','closed','funded'].includes(o.defensePolicy))throw Error('Unknown defense policy');
+ o.defenseStartDay=Number(o['defense-start-day']??1);delete o['defense-start-day'];if(!Number.isSafeInteger(o.defenseStartDay)||o.defenseStartDay<1||o.defenseStartDay!==1&&!['closed','funded'].includes(o.defensePolicy))throw Error('Explicit defense start requires closed/funded policy and positive integer day');
  nativeCampaignStrategy(o.strategy);if(!o.out)throw Error('Explicit output directory required');o.out=resolve(o.out);return o;
 }
 export function calibrationStop(reason){const error=Error(reason);error.code='NATIVE_CALIBRATION_STOP';return error;}
@@ -27,7 +27,7 @@ export function nativeCampaignProvenance(options){
  const p=intensiveRunProvenance(options),root=new URL('../',import.meta.url);
  for(const path of ['content/balance/raid_pressure_candidate.json','content/balance/player_revisions.json'])p.sourceHashes[path]=createHash('sha256').update(readFileSync(new URL(path,root))).digest('hex');
  const paths=['tools/native-campaign-runner.mjs','tools/native-campaign-protocol.mjs','tools/native-q4-labour-policy.mjs','tools/native-q5-labour-policy.mjs','tools/native-q6-labour-policy.mjs','tools/native-campaign-finance.mjs','tools/native-campaign-evidence.mjs','tools/repair-settlement-evidence.mjs','tools/native-raid-campaign-evidence.mjs','tools/native-campaign-entry-driver.mjs','tools/native-campaign-expansion.mjs','tools/native-campaign-plots.mjs','tools/native-expanding-defense-policy.mjs','tools/node-raid-entry-transport.mjs','tools/node-raid-entry-worker.mjs','tools/run_native_campaign.mjs'];
- paths.push('tools/native-closed-defense-policy.mjs','tools/native-q7-labour-policy.mjs','tools/native-q8-labour-policy.mjs');
+ paths.push('tools/native-closed-defense-policy.mjs','tools/native-funded-defense-policy.mjs','tools/native-q7-labour-policy.mjs','tools/native-q8-labour-policy.mjs');
  for(const path of paths)p.sourceHashes[path]=createHash('sha256').update(readFileSync(new URL(path,root))).digest('hex');
  return {...p,protocol:campaignProtocolForLabour(options.labourPolicy)};
 }
