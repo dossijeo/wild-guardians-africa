@@ -7,6 +7,27 @@ into current-main acceptance.
 
 ## Current-state update through main 8e1909d8
 
+### Superseding checkpoint — 10 October, main 4b217f39
+
+The isolated serial-image-chain native trial
+[38009458201](https://github.com/dossijeo/wild-guardians-africa/actions/runs/38009458201)
+on `93d584ef` is terminal failure at 90016.9 ms, 85%, world not ready.
+Root independently downloaded and matched the official artifact and verified
+[the retained original archive](windows-loading-regression/serial-image-chain-candidate/native-93d584ef/root-review.md).
+Image scheduling was exercised, but no whole-loading benefit or native acceptance
+is established. Build/installer pass; minimization is skipped. All candidate
+options remain OFF in production. Next work is a read-only audit of crop resource
+granularity, preserving complete world readiness and shared resource ownership.
+
+The distinct legal day-21 repair continuation is terminal at daylight time 300,
+after 299 further simulated seconds. The actual repair remains unassigned behind
+417 FIFO tasks, from 1110 initially, with no observed raid, cancellation or repair
+payment. All 106 paid workers reached shift end. Source and ledger audits plus
+[independent terminal review](horde-defense-pilot-88ebf647-20/repair-continuation-a0c36ca7/root-review.md)
+pass within this diagnostic's scope. It does not reconstruct fourteen historical
+requests or approve the campaign. A separately named larger paid crew fixture is
+being designed; no new campaign or balance change has been launched.
+
 ### Superseding checkpoint — 10 October, main edb586df
 
 The single paired Canyon/Sahelian pilot on frozen `88ebf647` is terminal,
