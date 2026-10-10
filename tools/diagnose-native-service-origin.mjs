@@ -6,9 +6,13 @@ import {createHash} from 'node:crypto';
 import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import {Navigation,BIOME_IDS} from '../src/world/navigation.js';
 import * as Game from '../src/simulation/game.js';
+import {nativeServiceComponentProof} from './native-service-component-proof.mjs';
+import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
+import {operational} from '../src/simulation/rules.js';
+import {centerFootprint} from '../src/world/centers.js';
 import {agriculturalRayClear} from '../src/simulation/raid-agricultural-impact.js';
-const [diagnostic,output]=process.argv.slice(2);
-if(!diagnostic||!output||existsSync(output))throw Error('Requires retained failed perimeter diagnostic and fresh output');
+const [diagnostic,output,mode='one-origin']=process.argv.slice(2);
+if(!diagnostic||!output||existsSync(output)||!['one-origin','all-targets'].includes(mode))throw Error('Requires retained failed perimeter diagnostic and fresh output');
 const prior=JSON.parse(readFileSync(diagnostic)),snapshot=readFileSync(prior.input),s=deserialize(gunzipSync(snapshot).toString()),before=serialize(s);
 const biomeFile=`public/content/biome-${BIOME_IDS[s.biome]}.json`,profile=JSON.parse(readFileSync(biomeFile)).profile;
 const nav=new Navigation(s.seed,s.biome,profile);nav.setState(s);
@@ -32,7 +36,21 @@ function examine(view){
  return {pointBodyClear:view.walkable(point.x,point.z,radius,null,false),pointCanHitCrop:agriculturalRayClear(s,view,point,target),directToExterior:direct,nativeApproachFound:!!approach,nativeOriginNodes:origins,usableNativeOrigins:origins.filter(p=>p.usable).length};
 }
 const proposed=examine(proposal),withoutProposedWalls=examine(nav);
+const targetAudit=[];
+if(mode==='all-targets'){
+ const targets=[...s.plants.filter(p=>p.alive),...s.structures.filter(operational)],land=[...s.plants.filter(p=>p.alive),...s.structures.filter(operational).flatMap(c=>centerFootprint(c,s).footprint)];
+ assert.ok(targets.length<=1000,'Retained diagnostic target count exceeds bounded QA scope');
+ const radii=[...new Set(Object.values(ANIMAL_ACTIONS.animals).map(a=>a.presentation.footprint.radius))].sort((a,b)=>b-a);
+ for(const r of radii){
+  assert.ok(proposal.walkable(check.outside.x,check.outside.z,r,null,false),'Exterior probe must remain physically valid');
+  const groupBlocked=proposal.approachGroupBlocked(check.outside,land,r,.6+r);
+  for(const t of targets){
+   const services=nativeServiceComponentProof(s,proposal,[t],r,check.outside,first.candidate.points);
+   targetAudit.push({targetId:t.id,kind:t.kind??'crop',radius:r,groupBlocked,services});
+  }
+ }
+}
 assert.ok(serialize(s)===before,'Diagnostic must preserve native state, RNG and ledger');
-const files=[biomeFile,'tools/diagnose-native-service-origin.mjs','src/world/navigation.js','src/simulation/raid-agricultural-impact.js','src/world/wall-layout.js'];
-const result={input:prior.input,inputSha256:createHash('sha256').update(snapshot).digest('hex'),priorDiagnostic:diagnostic,priorDiagnosticSha256:createHash('sha256').update(readFileSync(diagnostic)).digest('hex'),sourceHashes:Object.fromEntries(files.map(p=>[p,createHash('sha256').update(readFileSync(p)).digest('hex')])),targetId:target.id,target:{x:target.x,z:target.z},point,radius,outside:check.outside,proposed,withoutProposedWalls,scope:'Exact retained failed pose and nine native lattice origin queries, with and without proposed unpaid walls. Read-only diagnosis, not a perimeter certificate, paid protection, continuous-space proof or economic result.'};
-writeFileSync(output,JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));
+const files=['tools/native-service-component-proof.mjs','src/simulation/animal-actions-data.js','src/world/centers.js',biomeFile,'tools/diagnose-native-service-origin.mjs','src/world/navigation.js','src/simulation/raid-agricultural-impact.js','src/world/wall-layout.js'];
+const result={input:prior.input,inputSha256:createHash('sha256').update(snapshot).digest('hex'),priorDiagnostic:diagnostic,priorDiagnosticSha256:createHash('sha256').update(readFileSync(diagnostic)).digest('hex'),sourceHashes:Object.fromEntries(files.map(p=>[p,createHash('sha256').update(readFileSync(p)).digest('hex')])),mode,targetAudit,targetId:target.id,target:{x:target.x,z:target.z},point,radius,outside:check.outside,proposed,withoutProposedWalls,scope:'Exact retained failed pose and nine native lattice origin queries, with and without proposed unpaid walls. Read-only diagnosis, not a perimeter certificate, paid protection, continuous-space proof or economic result.'};
+writeFileSync(output,JSON.stringify(result,null,2)+'\n');const reasons={};for(const q of targetAudit)reasons[q.services.reason]=(reasons[q.services.reason]??0)+1;console.log(JSON.stringify({mode,proposedUsableOrigins:proposed.usableNativeOrigins,naturalUsableOrigins:withoutProposedWalls.usableNativeOrigins,targetChecks:targetAudit.length,reasons}));
