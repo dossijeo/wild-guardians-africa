@@ -5,7 +5,36 @@ update below supersedes the historical checkpoint text that follows. Earlier
 sources, failed candidates and measurements are retained, not silently changed
 into current-main acceptance.
 
-## Current-state checkpoint — 10 October, main 3df49f29
+## Current-state checkpoint — 10 October, runtime a7fe45c1
+
+The final deduplicated crop partition remains isolated at12dd78a2. Its official
+Windows run38019388562 built successfully but failed the unchanged90-second
+world readiness gate. The exact official executable completed local day and
+night visual runs in separate WebView2 profiles. Actual initial/intermediate/
+late/mature diorama PNGs show four maize plants; the native night run also
+preserved all21 simulation fields during300956.2ms of genuine hiding and
+restored normal play. [Day evidence](windows-loading-regression/partition-12dd-native-day-root/README.md)
+and [night evidence](windows-loading-regression/partition-12dd-native-night-root/README.md)
+retain both the positive local observations and the CI failure. These different
+machines and opt-in readbacks are not causal performance comparisons. Initial
+night-frame coverage remains incomplete because the old fixture harness bypasses
+the actual menu's save listing. Physical input, portrait, composited loading UI
+and final deduplicated full-biome acceptance remain open.
+
+The original Desierto/Saheliana terminal night100 snapshot is no longer blocked
+on runtime a7fe45c1. A bounded read-only replay reaches its exact original exit
+after18.1 simulated seconds, retains the ledger and produces the native victory.
+[Independent coverage review](saheliana-final-current-audit/README.md) records
+181 valid full-radius static footprints and explicitly partial swept-leg
+coverage. This recovers an existing terminal snapshot; it does not approve a
+fresh100-night campaign or the proposed balance/horde parameters. The original
+failed campaign remains failed and unmodified.
+
+Main a7fe45c1 adds bounded optional unresolved-phase diagnostic helpers; their
+runtime connection is still isolated work, not an optimization or changed gate.
+Paid-enclosure exterior entry/prewarming remains isolated and unpromoted.
+
+## Earlier checkpoint — 10 October, main 3df49f29
 
 Web run38016098976 passes all3792 tests, build and the direct itch package.
 [Verified originals](ci-main-3df49f29/README.md) retain the full log and official

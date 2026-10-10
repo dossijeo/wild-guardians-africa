@@ -1,0 +1,22 @@
+# Current-main replay of the original Sahelian day100 terminal
+
+Frozen original source3324d17dd2305ea8595aea311c518cc6db2404ad/run37876748172, job113646986727. Original archive is referenced in current-native.json; no original bytes were edited or duplicated. Uncompressed SHA256 da68eb2a2c4904c0681537946500368964f451b5a3ca307c0fc7d5b96ac59d73 was checked before deserialization.
+
+Read-only diagnostic runtime: a7fe45c17af31f9df46204f621e6ed9e6c4bcb42. The replay constructs Navigation from original seed/biome/state and the recorded desert profile hash. It does not reset RNG, money, actors, time or result. Only normal Game.tick advances the copied in-memory original state. Budget60 simulated seconds,20s wall loop limit,dt0.1. No renderer/GPU, no full campaign rerun, no runtime fix, PR or CI.
+
+Result: **the original animal is no longer blocked on current main**. In18.1 simulated seconds normal movement reaches the exact original exit(81.22902044431812,14.372321712700312), with radius1.1/hits0 unchanged. The normal simulation clears the raid and produces day101/completedNights100/victory. Original integer ledger343700 remains unchanged. This is recovery of an already terminal night100 snapshot, not fresh100-night campaign acceptance.
+
+current-native.json records every tick, motion, terrain validity, observable consumed native swept legs, connector cursor/fine expansion, result and source/input hashes. Normal speed bounds and terrain checks pass. Its sweep observations cover only ticks retaining the previous path array. The first moving tick that installs a new path has no externally reconstructed swept-leg proof; no straight chord is substituted for that unknown route. Wall1.715s is a bounded diagnostic observation, not a performance acceptance benchmark.
+
+Geometry: current immutable world inspection finds both original origin and exit legal. At z=-3 west of the center, full-radius legal center samples range x75.725..75.925 (step0.025). Projected actor-anchored0.5m lattice columns75.706769 and76.206769 are blocked at that slice. The earlier lattice cannot represent this narrow but physically legal center-position band. Current main already contains PR16's bounded real-footprint corner connector, which resolves it without reducing the physical animal radius or relaxing obstacles. geometry.json contains actual footprint polygons and all slice samples. The earlier original-current-negative.json and physical7-leg proof remain in ../saheliana-final-raid/.
+
+Scripts are archived exactly as executed from repository cwd on a7fe45c1; replay.mjs requires that exact HEAD to avoid silently testing a different runtime. To reproduce, copy this diagnostic folder into an untracked location in a disposable checkout pinned to a7fe45c1 and run its scripts from repository cwd (the output folder docs/qa/saheliana-final-current-audit must exist). Source and original receipts stay frozen for review. No new campaign or GPU acceptance claim.
+
+
+## Separate static-footprint coverage correction
+
+The first report current-native.json is preserved byte-for-byte. It checks terrainValid on every position, which must not be presented as the full static obstacle footprint check. The second report static-footprint-native.json repeats normal ticks on unchanged runtime a7fe45c1 (diagnostic-only checkout HEAD878648df) and calls nav.walkable(actor.x,actor.z,1.1,null,false) after every tick: all181 positions pass. This checks native static terrain/fluid/props/structure footprint policy with worker=false, not dynamic-body collision evidence.
+
+Sweeps remain explicitly partial:102 ticks have no retained prior path array,101 stationary and one moving tick when a new path is installed. That moving tick has valid final full-radius static footprint and normal speed, but this diagnostic does not externally observe its individual traversed legs and does not claim a swept proof for it. Remaining observable consumed legs use segmentClear; no chord is used to replace an unobserved turn. No assertion of complete independent dynamic-body or all-tick swept-path coverage is made.
+
+The second replay again terminates natively at18.1 simulated seconds with unchanged exit/radius/hits/ledger. Runtime source is checked unchanged with git diff against a7fe45c1; original report SHA is recorded and checked after execution. No runtime files, original snapshot or first report were rewritten. No CI/GPU/campaign was run.
