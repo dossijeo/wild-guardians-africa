@@ -1,3 +1,4 @@
+import {liveWaitQueue,occupiedEligibleGroup,enqueueWait,leaveWait,observeWaitProgress,waitEpoch,RAID_WAIT_SECONDS} from './raid-contention.js';
 import {raidEntryChunks,includeRaidBounds} from '../world/raid-entry-residency.js';
 import {raidEntryKey} from '../world/raid-entry-data.js';
 import {exteriorRaidEntry} from './raid-exterior-entry.js';
@@ -180,7 +181,7 @@ export function spawnRaid(s,plan,nav,daytime=false) {
   const exposed=s.plants.filter(p=>p.alive);
   emit(s,'RaidSpawned',{raidFacts:{id:s.raid.id,day:s.day,daytime,elapsed:s.elapsed,exposedLiving:exposed.length,exposedWounded:exposed.filter(p=>(p.attackHits??0)>0).length,actors:animals.map(a=>({id:a.id,species:a.species,hitsRemaining:a.hitsRemaining,spawn:{...a.spawn},exit:{...a.exit}}))}});return true;
 }
-function release(s,a) {if(a.reservation&&s.raid.reservations[a.reservation]===a.id)delete s.raid.reservations[a.reservation];a.reservation=null;a.targetId=null;a.path=null;a.approach=null;a.approachShieldId=null;}
+function release(s,a) {if(a.reservation&&s.raid.reservations[a.reservation]===a.id){delete s.raid.reservations[a.reservation];s.raid.waitRevision=((s.raid.waitRevision??0)+1)>>>0;}a.reservation=null;a.targetId=null;a.path=null;a.approach=null;a.approachShieldId=null;}
 export function reachableApproach(a,target,nav,shield=null){
   const focus=shield??target,r=shield?shield.radius+a.radius+.1:(target.kind==='wall'?1.2:.6)+a.radius;
   const angle=Math.atan2(a.x-focus.x,a.z-focus.z);
@@ -240,6 +241,7 @@ export function updateRaid(s,dt,nav) {
   if(!s.raid)return;
   reconcileDefensiveReservations(s,release);
   updateWorkerEncounters(s,nav);
+  observeWaitProgress(s);liveWaitQueue(s.raid);
   for(const a of s.raid.animals) {
     if(a.status==='gone')continue;
     if(a.status==='attacking'){
@@ -248,7 +250,7 @@ export function updateRaid(s,dt,nav) {
       if(a.attackRemaining>1e-9)continue;
       const target=raidTarget(s,a.targetId);
       if(!a.hitApplied&&a.hitsRemaining>0){
-        a.hitApplied=true;a.hitsRemaining--;
+        a.hitApplied=true;a.hitsRemaining--;observeWaitProgress(s);
         const shield=target?spellAt(s,'shield',target):null;
         const expiredBorder=!!a.approachShieldId&&a.approachShieldId!==shield?.id;
         // A committed border animation stays at that border. Losing the barrier
@@ -278,16 +280,38 @@ export function updateRaid(s,dt,nav) {
       // Finish the committed animation before spending another hit or retreating.
       continue;
     }
-    if(a.hitsRemaining<=0&&a.status!=='retreating'){release(s,a);a.status='retreating';emit(s,'AnimalRetreating',{targetId:a.id});}
+    if(a.hitsRemaining<=0&&a.status!=='retreating'){release(s,a);leaveWait(s.raid,a);a.status='retreating';emit(s,'AnimalRetreating',{targetId:a.id});}
     if(a.status==='retreating') {
       if(walkTo(s,a,{...(a.exit??a.spawn),id:`exit-${a.id}`},dt,nav,{speed:3.8,worker:false,expandRoute:true,routeVia:a.spawn}))a.status='gone';continue;
     }
     if(a.hitsRemaining<=0)continue;
     let target=raidTarget(s,a.targetId);
     if(!target) {
-      release(s,a);const selected=targetFor(s,a,nav);
-      if(!selected){a.status='retreating';continue;}
-      target=selected.target;a.targetId=target.id;a.reservation=selected.reservation;s.raid.reservations[a.reservation]=a.id;
+      if(a.status!=='waiting')release(s,a);
+      // A released lease belongs to the oldest waiting turn, not whichever
+      // array member happens to run first. All approaches remain exclusive.
+      if(a.status!=='waiting'&&s.raid.waitQueue.length)enqueueWait(s,a);
+      if(a.status==='waiting'){
+        const wait=a.raidWait,progress=s.raid.waitProgress;
+        if(s.elapsed-Math.max(wait.since,progress?.at??wait.since)>=RAID_WAIT_SECONDS||!nav.walkable(a.spawn.x,a.spawn.z,a.radius,null,false)){
+          leaveWait(s.raid,a);a.status='retreating';continue;
+        }
+        if(dist(a,a.spawn)>.08&&(a.path||s.elapsed>=wait.moveRetryAt)){
+          walkTo(s,a,{...a.spawn,id:'wait-'+a.id},dt,nav,{speed:1.5,worker:false});if(!a.path)wait.moveRetryAt=s.elapsed+1;
+        }
+        if(s.raid.waitQueue[0]!==a.id)continue;
+        const epoch=waitEpoch(s,nav);
+        if(wait.epoch===epoch&&s.elapsed<wait.retryAt)continue;
+        wait.epoch=epoch;wait.retryAt=s.elapsed+1;
+      }
+      const selected=targetFor(s,a,nav);
+      if(!selected){
+        if(occupiedEligibleGroup(s,a,p=>canAttackCrop(s,p)))enqueueWait(s,a);
+        else {leaveWait(s.raid,a);a.status='retreating';}
+        continue;
+      }
+      if(a.status==='waiting')a.status='entering';leaveWait(s.raid,a);
+      target=selected.target;a.targetId=target.id;a.reservation=selected.reservation;s.raid.reservations[a.reservation]=a.id;s.raid.waitRevision=((s.raid.waitRevision??0)+1)>>>0;
       a.approach=selected.approach.point;a.approachShieldId=selected.shieldId;
       a.path=selected.approach.path;a.destinationId=a.approach.id;a.pathVersion=nav.version;
     }
