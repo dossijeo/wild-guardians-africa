@@ -1,5 +1,21 @@
 # Tareas pendientes posteriores a la Jam
 
+## Feedback de guardado y salida Windows — pendiente, sin desplazar balance
+
+Solicitud del10 de octubre:
+
+- **Guardar partida:** el botón debe dar feedback visible al jugador sobre el
+  resultado real del guardado. Ahora parece que no hace nada. Revisar confirmación
+  de éxito y error sin anunciar éxito antes de que la persistencia termine; cubrir
+  español e inglés y no disparar un guardado adicional para mostrar el mensaje.
+- **Salir del menú principal en Windows:** cerrar realmente la aplicación Tauri
+  desde ese botón, con su API/capacidad correspondiente y prueba del ejecutable.
+  El comportamiento web debe tratarse por separado, sin suponer que el navegador
+  permite cerrar una pestaña abierta por el usuario.
+
+No implementar todavía. La prioridad actual sigue siendo el equilibrio económico
+con ataques y defensa físicos y campañas nativas comparativas100/180 días.
+
 ## Estado vigente de las integraciones (9 de octubre)
 
 ### Restricciones de balance confirmadas por el usuario
