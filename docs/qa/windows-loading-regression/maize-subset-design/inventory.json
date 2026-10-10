@@ -1,0 +1,1007 @@
+{
+  "sourceRef": "b43b15a8115f6eca2e64cc64e900d166f321dff2",
+  "scope": "Read-only GLB JSON/range inventory, no decoding/timing/GPU/new asset output. Decoded buffer-view bytes are logical geometry storage, not measured heap/VRAM. Subset payload bytes exclude rebuilt container JSON/padding and are not generated file sizes.",
+  "assets": {
+    "steady": {
+      "logicalUrl": "/assets/8f6c9ef7472a2d7f8ffda7f08a78f8027f91d14a8f92b8eeca4084b0f379da36.glb",
+      "runtimePath": "public/assets/web/8f6c9ef7472a2d7f8ffda7f08a78f8027f91d14a8f92b8eeca4084b0f379da36.glb",
+      "sourceBytes": 18839704,
+      "runtimeBytes": 14308628,
+      "runtimeSha256": "20a6b90af04317cdd9b31f10199fecb235401ebe5411ad3417dfcfcda86f9050",
+      "jsonChunkBytes": 79264,
+      "decodedGeometryBytes": 8146042,
+      "encodedGeometryPayloadBytes": 6580778,
+      "imagePayloadBytes": 7648314,
+      "containerMetadataAndPaddingBytes": 79536,
+      "materialImageGroups": [
+        {
+          "material": 0,
+          "images": [
+            0,
+            1
+          ]
+        },
+        {
+          "material": 1,
+          "images": [
+            3,
+            4
+          ]
+        }
+      ],
+      "images": [
+        {
+          "index": 0,
+          "name": "normal",
+          "bytes": 2239664,
+          "referencedByMaterial": true
+        },
+        {
+          "index": 1,
+          "name": "base",
+          "bytes": 1371082,
+          "referencedByMaterial": true
+        },
+        {
+          "index": 2,
+          "name": "roughness",
+          "bytes": 238208,
+          "referencedByMaterial": false
+        },
+        {
+          "index": 3,
+          "name": "normal",
+          "bytes": 2285832,
+          "referencedByMaterial": true
+        },
+        {
+          "index": 4,
+          "name": "base",
+          "bytes": 1310498,
+          "referencedByMaterial": true
+        },
+        {
+          "index": 5,
+          "name": "roughness",
+          "bytes": 203030,
+          "referencedByMaterial": false
+        }
+      ],
+      "crossSpeciesGeometryViewsShared": false,
+      "species": [
+        {
+          "species": "maiz",
+          "nodes": [
+            "maiz_01_brote",
+            "maiz_02_joven",
+            "maiz_03_adulto",
+            "maiz_04_desarrollo",
+            "maiz_05_maduro"
+          ],
+          "vertices": 26362,
+          "triangles": 14070,
+          "decodedGeometryBytes": 928004,
+          "encodedGeometryPayloadBytes": 758073,
+          "bufferViews": [
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25
+          ],
+          "materialIndices": [
+            0
+          ],
+          "imageIndices": [
+            0,
+            1
+          ],
+          "requiredEmbeddedImagePayloadBytes": 3610746,
+          "subsetEncodedPayloadBytes": 4368819,
+          "attributes": {
+            "POSITION": 26362,
+            "NORMAL": 26362,
+            "TEXCOORD_0": 26362
+          }
+        },
+        {
+          "species": "algodon",
+          "nodes": [
+            "algodon_01_brote",
+            "algodon_02_joven",
+            "algodon_03_adulto",
+            "algodon_04_desarrollo",
+            "algodon_05_maduro"
+          ],
+          "vertices": 22018,
+          "triangles": 11649,
+          "decodedGeometryBytes": 774470,
+          "encodedGeometryPayloadBytes": 631144,
+          "bufferViews": [
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45
+          ],
+          "materialIndices": [
+            0
+          ],
+          "imageIndices": [
+            0,
+            1
+          ],
+          "requiredEmbeddedImagePayloadBytes": 3610746,
+          "subsetEncodedPayloadBytes": 4241890,
+          "attributes": {
+            "POSITION": 22018,
+            "NORMAL": 22018,
+            "TEXCOORD_0": 22018
+          }
+        },
+        {
+          "species": "girasol",
+          "nodes": [
+            "girasol_01_brote",
+            "girasol_02_joven",
+            "girasol_03_adulto",
+            "girasol_04_desarrollo",
+            "girasol_05_maduro"
+          ],
+          "vertices": 16696,
+          "triangles": 9252,
+          "decodedGeometryBytes": 589784,
+          "encodedGeometryPayloadBytes": 484456,
+          "bufferViews": [
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65
+          ],
+          "materialIndices": [
+            0
+          ],
+          "imageIndices": [
+            0,
+            1
+          ],
+          "requiredEmbeddedImagePayloadBytes": 3610746,
+          "subsetEncodedPayloadBytes": 4095202,
+          "attributes": {
+            "POSITION": 16696,
+            "NORMAL": 16696,
+            "TEXCOORD_0": 16696
+          }
+        },
+        {
+          "species": "platano",
+          "nodes": [
+            "platano_01_brote",
+            "platano_02_joven",
+            "platano_03_adulto",
+            "platano_04_desarrollo",
+            "platano_05_maduro"
+          ],
+          "vertices": 24739,
+          "triangles": 13145,
+          "decodedGeometryBytes": 870518,
+          "encodedGeometryPayloadBytes": 710432,
+          "bufferViews": [
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85
+          ],
+          "materialIndices": [
+            0
+          ],
+          "imageIndices": [
+            0,
+            1
+          ],
+          "requiredEmbeddedImagePayloadBytes": 3610746,
+          "subsetEncodedPayloadBytes": 4321178,
+          "attributes": {
+            "POSITION": 24739,
+            "NORMAL": 24739,
+            "TEXCOORD_0": 24739
+          }
+        },
+        {
+          "species": "sorgo",
+          "nodes": [
+            "sorgo_01_brote",
+            "sorgo_02_joven",
+            "sorgo_03_adulto",
+            "sorgo_04_desarrollo",
+            "sorgo_05_maduro"
+          ],
+          "vertices": 46080,
+          "triangles": 21886,
+          "decodedGeometryBytes": 1605876,
+          "encodedGeometryPayloadBytes": 1294524,
+          "bufferViews": [
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            103,
+            104,
+            105
+          ],
+          "materialIndices": [
+            1
+          ],
+          "imageIndices": [
+            3,
+            4
+          ],
+          "requiredEmbeddedImagePayloadBytes": 3596330,
+          "subsetEncodedPayloadBytes": 4890854,
+          "attributes": {
+            "POSITION": 46080,
+            "NORMAL": 46080,
+            "TEXCOORD_0": 46080
+          }
+        },
+        {
+          "species": "mijo",
+          "nodes": [
+            "mijo_01_brote",
+            "mijo_02_joven",
+            "mijo_03_adulto",
+            "mijo_04_desarrollo",
+            "mijo_05_maduro"
+          ],
+          "vertices": 31071,
+          "triangles": 15059,
+          "decodedGeometryBytes": 1084626,
+          "encodedGeometryPayloadBytes": 872564,
+          "bufferViews": [
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            124,
+            125
+          ],
+          "materialIndices": [
+            1
+          ],
+          "imageIndices": [
+            3,
+            4
+          ],
+          "requiredEmbeddedImagePayloadBytes": 3596330,
+          "subsetEncodedPayloadBytes": 4468894,
+          "attributes": {
+            "POSITION": 31071,
+            "NORMAL": 31071,
+            "TEXCOORD_0": 31071
+          }
+        },
+        {
+          "species": "yuca",
+          "nodes": [
+            "yuca_01_brote",
+            "yuca_02_joven",
+            "yuca_03_adulto",
+            "yuca_04_desarrollo",
+            "yuca_05_maduro"
+          ],
+          "vertices": 31851,
+          "triangles": 15066,
+          "decodedGeometryBytes": 1109628,
+          "encodedGeometryPayloadBytes": 891416,
+          "bufferViews": [
+            126,
+            127,
+            128,
+            129,
+            130,
+            131,
+            132,
+            133,
+            134,
+            135,
+            136,
+            137,
+            138,
+            139,
+            140,
+            141,
+            142,
+            143,
+            144,
+            145
+          ],
+          "materialIndices": [
+            1
+          ],
+          "imageIndices": [
+            3,
+            4
+          ],
+          "requiredEmbeddedImagePayloadBytes": 3596330,
+          "subsetEncodedPayloadBytes": 4487746,
+          "attributes": {
+            "POSITION": 31851,
+            "NORMAL": 31851,
+            "TEXCOORD_0": 31851
+          }
+        },
+        {
+          "species": "batata",
+          "nodes": [
+            "batata_01_brote",
+            "batata_02_joven",
+            "batata_03_adulto",
+            "batata_04_desarrollo",
+            "batata_05_maduro"
+          ],
+          "vertices": 33970,
+          "triangles": 16016,
+          "decodedGeometryBytes": 1183136,
+          "encodedGeometryPayloadBytes": 938169,
+          "bufferViews": [
+            146,
+            147,
+            148,
+            149,
+            150,
+            151,
+            152,
+            153,
+            154,
+            155,
+            156,
+            157,
+            158,
+            159,
+            160,
+            161,
+            162,
+            163,
+            164,
+            165
+          ],
+          "materialIndices": [
+            1
+          ],
+          "imageIndices": [
+            3,
+            4
+          ],
+          "requiredEmbeddedImagePayloadBytes": 3596330,
+          "subsetEncodedPayloadBytes": 4534499,
+          "attributes": {
+            "POSITION": 33970,
+            "NORMAL": 33970,
+            "TEXCOORD_0": 33970
+          }
+        }
+      ]
+    },
+    "bridges": {
+      "logicalUrl": "/assets/2fdb3468b7646ebe16d0f3d3d25538ce5b20d6dee1d3830256d2f62599826dcc.glb",
+      "runtimePath": "public/assets/web/2fdb3468b7646ebe16d0f3d3d25538ce5b20d6dee1d3830256d2f62599826dcc.glb",
+      "sourceBytes": 48988728,
+      "runtimeBytes": 26536168,
+      "runtimeSha256": "0ff5a9e32ab61f6b4b5a66223e3e4735cccd272c13275563fc8a8eac7818477c",
+      "jsonChunkBytes": 101780,
+      "decodedGeometryBytes": 48928050,
+      "encodedGeometryPayloadBytes": 26433966,
+      "imagePayloadBytes": 0,
+      "containerMetadataAndPaddingBytes": 102202,
+      "materialImageGroups": [],
+      "images": [],
+      "crossSpeciesGeometryViewsShared": false,
+      "species": [
+        {
+          "species": "maiz",
+          "nodes": [
+            "puente_maiz_1_2",
+            "puente_maiz_2_3",
+            "puente_maiz_3_4",
+            "puente_maiz_4_5"
+          ],
+          "vertices": 58585,
+          "triangles": 29151,
+          "decodedGeometryBytes": 5330386,
+          "encodedGeometryPayloadBytes": 3013969,
+          "bufferViews": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ],
+          "materialIndices": [],
+          "imageIndices": [],
+          "requiredEmbeddedImagePayloadBytes": 0,
+          "subsetEncodedPayloadBytes": 3013969,
+          "attributes": {
+            "POSITION": 58585,
+            "NORMAL": 58585,
+            "TEXCOORD_0": 58585,
+            "_AROOT": 58585,
+            "_APEERROOT": 58585,
+            "_ASPIN": 58585,
+            "_APART": 58585
+          }
+        },
+        {
+          "species": "algodon",
+          "nodes": [
+            "puente_algodon_1_2",
+            "puente_algodon_2_3",
+            "puente_algodon_3_4",
+            "puente_algodon_4_5"
+          ],
+          "vertices": 50861,
+          "triangles": 25006,
+          "decodedGeometryBytes": 4625804,
+          "encodedGeometryPayloadBytes": 2561310,
+          "bufferViews": [
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63
+          ],
+          "materialIndices": [],
+          "imageIndices": [],
+          "requiredEmbeddedImagePayloadBytes": 0,
+          "subsetEncodedPayloadBytes": 2561310,
+          "attributes": {
+            "POSITION": 50861,
+            "NORMAL": 50861,
+            "TEXCOORD_0": 50861,
+            "_AROOT": 50861,
+            "_APEERROOT": 50861,
+            "_ASPIN": 50861,
+            "_APART": 50861
+          }
+        },
+        {
+          "species": "girasol",
+          "nodes": [
+            "puente_girasol_1_2",
+            "puente_girasol_2_3",
+            "puente_girasol_3_4",
+            "puente_girasol_4_5"
+          ],
+          "vertices": 36997,
+          "triangles": 19054,
+          "decodedGeometryBytes": 3370060,
+          "encodedGeometryPayloadBytes": 1868059,
+          "bufferViews": [
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95
+          ],
+          "materialIndices": [],
+          "imageIndices": [],
+          "requiredEmbeddedImagePayloadBytes": 0,
+          "subsetEncodedPayloadBytes": 1868059,
+          "attributes": {
+            "POSITION": 36997,
+            "NORMAL": 36997,
+            "TEXCOORD_0": 36997,
+            "_AROOT": 36997,
+            "_APEERROOT": 36997,
+            "_ASPIN": 36997,
+            "_APART": 36997
+          }
+        },
+        {
+          "species": "platano",
+          "nodes": [
+            "puente_platano_1_2",
+            "puente_platano_2_3",
+            "puente_platano_3_4",
+            "puente_platano_4_5"
+          ],
+          "vertices": 51070,
+          "triangles": 25664,
+          "decodedGeometryBytes": 4648144,
+          "encodedGeometryPayloadBytes": 2498647,
+          "bufferViews": [
+            96,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            124,
+            125,
+            126,
+            127
+          ],
+          "materialIndices": [],
+          "imageIndices": [],
+          "requiredEmbeddedImagePayloadBytes": 0,
+          "subsetEncodedPayloadBytes": 2498647,
+          "attributes": {
+            "POSITION": 51070,
+            "NORMAL": 51070,
+            "TEXCOORD_0": 51070,
+            "_AROOT": 51070,
+            "_APEERROOT": 51070,
+            "_ASPIN": 51070,
+            "_APART": 51070
+          }
+        },
+        {
+          "species": "sorgo",
+          "nodes": [
+            "puente_sorgo_1_2",
+            "puente_sorgo_2_3",
+            "puente_sorgo_3_4",
+            "puente_sorgo_4_5"
+          ],
+          "vertices": 105982,
+          "triangles": 48071,
+          "decodedGeometryBytes": 9614842,
+          "encodedGeometryPayloadBytes": 5217234,
+          "bufferViews": [
+            128,
+            129,
+            130,
+            131,
+            132,
+            133,
+            134,
+            135,
+            136,
+            137,
+            138,
+            139,
+            140,
+            141,
+            142,
+            143,
+            144,
+            145,
+            146,
+            147,
+            148,
+            149,
+            150,
+            151,
+            152,
+            153,
+            154,
+            155,
+            156,
+            157,
+            158,
+            159
+          ],
+          "materialIndices": [],
+          "imageIndices": [],
+          "requiredEmbeddedImagePayloadBytes": 0,
+          "subsetEncodedPayloadBytes": 5217234,
+          "attributes": {
+            "POSITION": 105982,
+            "NORMAL": 105982,
+            "TEXCOORD_0": 105982,
+            "_AROOT": 105982,
+            "_APEERROOT": 105982,
+            "_ASPIN": 105982,
+            "_APART": 105982
+          }
+        },
+        {
+          "species": "mijo",
+          "nodes": [
+            "puente_mijo_1_2",
+            "puente_mijo_2_3",
+            "puente_mijo_3_4",
+            "puente_mijo_4_5"
+          ],
+          "vertices": 76720,
+          "triangles": 35159,
+          "decodedGeometryBytes": 6962314,
+          "encodedGeometryPayloadBytes": 3618958,
+          "bufferViews": [
+            160,
+            161,
+            162,
+            163,
+            164,
+            165,
+            166,
+            167,
+            168,
+            169,
+            170,
+            171,
+            172,
+            173,
+            174,
+            175,
+            176,
+            177,
+            178,
+            179,
+            180,
+            181,
+            182,
+            183,
+            184,
+            185,
+            186,
+            187,
+            188,
+            189,
+            190,
+            191
+          ],
+          "materialIndices": [],
+          "imageIndices": [],
+          "requiredEmbeddedImagePayloadBytes": 0,
+          "subsetEncodedPayloadBytes": 3618958,
+          "attributes": {
+            "POSITION": 76720,
+            "NORMAL": 76720,
+            "TEXCOORD_0": 76720,
+            "_AROOT": 76720,
+            "_APEERROOT": 76720,
+            "_ASPIN": 76720,
+            "_APART": 76720
+          }
+        },
+        {
+          "species": "yuca",
+          "nodes": [
+            "puente_yuca_1_2",
+            "puente_yuca_2_3",
+            "puente_yuca_3_4",
+            "puente_yuca_4_5"
+          ],
+          "vertices": 77313,
+          "triangles": 34801,
+          "decodedGeometryBytes": 7012350,
+          "encodedGeometryPayloadBytes": 3722203,
+          "bufferViews": [
+            192,
+            193,
+            194,
+            195,
+            196,
+            197,
+            198,
+            199,
+            200,
+            201,
+            202,
+            203,
+            204,
+            205,
+            206,
+            207,
+            208,
+            209,
+            210,
+            211,
+            212,
+            213,
+            214,
+            215,
+            216,
+            217,
+            218,
+            219,
+            220,
+            221,
+            222,
+            223
+          ],
+          "materialIndices": [],
+          "imageIndices": [],
+          "requiredEmbeddedImagePayloadBytes": 0,
+          "subsetEncodedPayloadBytes": 3722203,
+          "attributes": {
+            "POSITION": 77313,
+            "NORMAL": 77313,
+            "TEXCOORD_0": 77313,
+            "_AROOT": 77313,
+            "_APEERROOT": 77313,
+            "_ASPIN": 77313,
+            "_APART": 77313
+          }
+        },
+        {
+          "species": "batata",
+          "nodes": [
+            "puente_batata_1_2",
+            "puente_batata_2_3",
+            "puente_batata_3_4",
+            "puente_batata_4_5"
+          ],
+          "vertices": 81194,
+          "triangles": 36513,
+          "decodedGeometryBytes": 7364150,
+          "encodedGeometryPayloadBytes": 3933586,
+          "bufferViews": [
+            224,
+            225,
+            226,
+            227,
+            228,
+            229,
+            230,
+            231,
+            232,
+            233,
+            234,
+            235,
+            236,
+            237,
+            238,
+            239,
+            240,
+            241,
+            242,
+            243,
+            244,
+            245,
+            246,
+            247,
+            248,
+            249,
+            250,
+            251,
+            252,
+            253,
+            254,
+            255
+          ],
+          "materialIndices": [],
+          "imageIndices": [],
+          "requiredEmbeddedImagePayloadBytes": 0,
+          "subsetEncodedPayloadBytes": 3933586,
+          "attributes": {
+            "POSITION": 81194,
+            "NORMAL": 81194,
+            "TEXCOORD_0": 81194,
+            "_AROOT": 81194,
+            "_APEERROOT": 81194,
+            "_ASPIN": 81194,
+            "_APART": 81194
+          }
+        }
+      ]
+    }
+  },
+  "sourceHashes": {
+    "public/assets/web/8f6c9ef7472a2d7f8ffda7f08a78f8027f91d14a8f92b8eeca4084b0f379da36.glb": "20a6b90af04317cdd9b31f10199fecb235401ebe5411ad3417dfcfcda86f9050",
+    "public/assets/web/2fdb3468b7646ebe16d0f3d3d25538ce5b20d6dee1d3830256d2f62599826dcc.glb": "0ff5a9e32ab61f6b4b5a66223e3e4735cccd272c13275563fc8a8eac7818477c",
+    "public/content/models.json": "9fbdddec82c57f60777cec4751142cf06db58bf99916ebb403c80e8c98ddacc1",
+    "public/content/crop-bridges.json": "1cb26e0d61bdb0aa780d6976e54c57537b8cf9fe77518b49691b9c4cd292185f",
+    "content/manifests/web-assets.json": "fed88f8bcfce8f2296764a41324c20ad663f74f4a9dc17cd1f32b6179623bd41",
+    "content/manifests/crops-v4.json": "9a08f6af296649083ff80ce3556de69e953d978e8d3300c11df176ce3550f008",
+    "src/rendering/crop-library.js": "1f6308773529e162d449129a90a31b448e48696a6b766c30fe678401c21842ef",
+    "src/rendering/crop-batch.js": "96f37896195dda9cbf2c2e2e9570c982305c83cdb1e20b3e36671b7754ab233c",
+    "src/rendering/loading-diorama.js": "1f0fee69a82d0499e2904abe5ece4d34c1084710c16d19ab25adb872dd4f5dd5",
+    "src/rendering/assets.js": "492631f5d0c8a1a9c20a2c9b336e611fdfaec33c4698c74d1031f5cdc7d90847",
+    "src/rendering/scene.js": "d8a41ff52ce8b7cfb13b418f95ad12100c1a79cf47932a259dcaaadfd0f14d6e",
+    "src/rendering/asset-url.js": "7ae72fe0b9e040bd08419dd4746cf5c1d20d46521aa31a057a6586e021b587d2",
+    "tools/compress_web_assets.mjs": "e8b256f23ae88341f911c591a4f86b1dadf644337ad96071ee57bb81ddb37d52",
+    "tools/bake_crops_lab_v4.mjs": "83bd7ebe346276de2753160c43a26256d0a33f211e003d843b5c9e2779d9ecd2"
+  },
+  "metadata": {
+    "path": "public/content/crop-bridges.json",
+    "actualBytes": 297473,
+    "canonicalCompactBytes": 297472,
+    "faceLabelsEntries": 116143,
+    "canonicalBytesWithoutFaceLabels": 58377,
+    "canonicalFaceLabelsRemovableBytes": 239095,
+    "hypotheticalV4MinimalCompactBytes": 748,
+    "scope": "V4 path reads model/pair cardinality, pair a/b and baked template metadata; faceLabels/regions/mappings are used by legacy V3 branch and offline authoring. This minimal structure is not shipped/validated and removing it would require version-specific compatibility tests."
+  },
+  "alternativesByteLedger": {
+    "currentRuntimeGlbsBytes": 40844796,
+    "maizeEncodedGeometryBytes": 3772042,
+    "maizeDecodedGeometryBytes": 6258390,
+    "maizeWithNeededEmbeddedImagesPayloadBytes": 7382788,
+    "remainingSevenEncodedGeometryBytes": 29242702,
+    "duplicateGroup0ImagesIfTwoEmbeddedSteadyFilesBytes": 3610746,
+    "scope": "Logical existing range totals, excluding new GLB metadata/padding and any new network latency. Not a generated-asset/package-size or performance measurement."
+  }
+}
