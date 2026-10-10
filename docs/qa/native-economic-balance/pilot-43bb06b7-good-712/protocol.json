@@ -1,0 +1,26 @@
+{
+  "id": "native-constant-economy-v2",
+  "seeds": [
+    712,
+    123,
+    2026
+  ],
+  "strategies": [
+    "expansive",
+    "good",
+    "bad",
+    "no-walls"
+  ],
+  "daySeconds": 300,
+  "combatNights": 100,
+  "postgamePeaceNights": 80,
+  "minDailyCropPurchases": 60,
+  "strictMaximumIdleFraction": 0.25,
+  "profile": "olderFemale",
+  "plantsPerWorker": 6,
+  "plotSpacing": 1.5,
+  "plantDecisionSeconds": 1,
+  "seedPricing": "constant production prices",
+  "income": "native CrateDelivered only",
+  "damage": "native contacts/occlusion only; no assumed exposure"
+}
