@@ -30,10 +30,14 @@ test('native wave lifecycle keeps raid open beyond dawn, spawns all planned acto
   observer.observe(s);
  }
  assert.equal(s.raid,null);assert.ok(reloaded);assert.ok(maximum<=16);
- const generated=s.events.filter(e=>['RaidSpawned','RaidWaveSpawned'].includes(e.type)).reduce((n,e)=>n+e.raidFacts.actors.length,0);
- assert.equal(generated,intended);assert.equal(s.events.filter(e=>e.type==='RaidEnded').length,1);
+ // The native event ring is bounded; use the continuously observed receipts,
+ // not a final buffer that may have evicted the first wave's spawn.
+ assert.equal(s.events.filter(e=>e.type==='RaidEnded').length,1);
  const evidence=observer.report(s);assert.equal(evidence.status,'verified');assert.equal(evidence.raids.length,1);
  assert.equal(evidence.raids[0].waves.length,s.nightPlan.waves.length);assert.equal(evidence.raids[0].actors.length,intended);
+ const r=evidence.raids[0];assert.equal(r.potentialAgriculturalHp,s.nightPlan.pressureFacts.potential);
+ assert.equal(r.agriculturalEfficiency,r.effectiveAgriculturalHp/r.potentialAgriculturalHp);
+ assert.ok(r.plantsReached>=r.cropsDestroyed);assert.ok(r.retirements.length>0);assert.ok(r.targetUnavailableAttempts>0);
 });
 test('pressure persistence rejects budget/profile/cohort mutations before restoring gameplay',()=>{
  const {s}=fixture();const original=serialize(s);assert.doesNotThrow(()=>deserialize(original));

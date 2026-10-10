@@ -283,7 +283,7 @@ export function updateRaid(s,dt,nav) {
       // Finish the committed animation before spending another hit or retreating.
       continue;
     }
-    if(a.hitsRemaining<=0&&a.status!=='retreating'){release(s,a);leaveWait(s.raid,a);a.status='retreating';emit(s,'AnimalRetreating',{targetId:a.id});}
+    if(a.hitsRemaining<=0&&a.status!=='retreating'){release(s,a);leaveWait(s.raid,a);a.status='retreating';emit(s,'AnimalRetreating',{targetId:a.id,species:a.species,hitsRemaining:a.hitsRemaining,reason:'budget-exhausted'});}
     if(a.status==='retreating') {
       if(walkTo(s,a,{...(a.exit??a.spawn),id:`exit-${a.id}`},dt,nav,{speed:3.8,worker:false,expandRoute:true,routeVia:a.spawn}))a.status='gone';continue;
     }
@@ -297,7 +297,7 @@ export function updateRaid(s,dt,nav) {
       if(a.status==='waiting'){
         const wait=a.raidWait,progress=s.raid.waitProgress;
         if(s.elapsed-Math.max(wait.since,progress?.at??wait.since)>=RAID_WAIT_SECONDS||!nav.walkable(a.spawn.x,a.spawn.z,a.radius,null,false)){
-          leaveWait(s.raid,a);a.status='retreating';continue;
+          leaveWait(s.raid,a);a.status='retreating';emit(s,'AnimalRetreating',{targetId:a.id,species:a.species,hitsRemaining:a.hitsRemaining,reason:'waiting-expired-or-stage-blocked'});continue;
         }
         if(dist(a,a.spawn)>.08&&(a.path||s.elapsed>=wait.moveRetryAt)){
           walkTo(s,a,{...a.spawn,id:'wait-'+a.id},dt,nav,{speed:1.5,worker:false});if(!a.path)wait.moveRetryAt=s.elapsed+1;
@@ -309,8 +309,9 @@ export function updateRaid(s,dt,nav) {
       }
       const selected=targetFor(s,a,nav);
       if(!selected){
+        emit(s,'AnimalTargetUnavailable',{targetId:a.id,species:a.species,hitsRemaining:a.hitsRemaining});
         if(occupiedEligibleGroup(s,a,p=>canAttackCrop(s,p)))enqueueWait(s,a);
-        else {leaveWait(s.raid,a);a.status='retreating';}
+        else {leaveWait(s.raid,a);a.status='retreating';emit(s,'AnimalRetreating',{targetId:a.id,species:a.species,hitsRemaining:a.hitsRemaining,reason:'no-reachable-unleased-target'});}
         continue;
       }
       if(a.status==='waiting')a.status='entering';leaveWait(s.raid,a);
@@ -321,7 +322,7 @@ export function updateRaid(s,dt,nav) {
     const shield=spellAt(s,'shield',target);
     if(!a.approach||a.approachShieldId!==(shield?.id??null)||!actorSegmentClear(a.approach,a.approach,a,actorBlockers(s,a,false))) {
       const approach=reachableApproach(a,target,nav,shield);
-      if(!approach){release(s,a);a.status='walking';continue;}
+      if(!approach){emit(s,'AnimalRouteUnavailable',{targetId:a.id,species:a.species,phase:'approach'});release(s,a);a.status='walking';continue;}
       a.approach=approach.point;a.approachShieldId=shield?.id??null;
       a.path=approach.path;a.destinationId=a.approach.id;a.pathVersion=nav.version;
     }
@@ -331,7 +332,7 @@ export function updateRaid(s,dt,nav) {
         a.status='attacking';a.hitApplied=false;a.attackId=`attack-${s.sequence++}`;
         const roll=nextRandom(s);a.animation=roll<.45?'Right_Hand_Sword_Slash':roll<.75?'Charged_Upward_Slash':roll<.9?'Weapon_Combo':'Weapon_Combo_2';
         a.attackDuration=ANIMAL_ACTIONS.animals[a.species].clips[a.animation].duration;a.attackRemaining=a.attackDuration;
-      } else if(!a.path){release(s,a);a.status='walking';}
+      } else if(!a.path){emit(s,'AnimalRouteUnavailable',{targetId:a.id,species:a.species,phase:'travel'});release(s,a);a.status='walking';}
       else if(dist(a,s.structures.find(operational)??target)<25)a.status='walking';
     }
   }

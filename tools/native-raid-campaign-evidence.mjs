@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {animalSpec,cropSpec} from '../src/simulation/rules.js';
 export function createNativeRaidCampaignEvidence(initial){
  let lastEvent=initial.events.at(-1)?.id,lastElapsed=initial.elapsed,current=null,coverageLost=false,previousLiving=initial.plants.filter(p=>p.alive).length;
- const raids=[],issues=[],observedEvents=new Set();
+ const raids=[],issues=[],observedEvents=new Set(),reachedPlants=new WeakMap();
  function issue(reason){coverageLost=true;issues.push(reason);}
  function begin(s,events,event){
   const facts=event?.raidFacts,cohort=facts?.actors??s.raid?.animals;
@@ -43,6 +43,11 @@ export function createNativeRaidCampaignEvidence(initial){
    if(e.type==='RaidSpawned')continue;
    if(!current){if(['RaidWaveSpawned','CropHit','StructureHit','AnimalLogicalHit','AnimalLogicalMiss','RaidEnded'].includes(e.type))issue('Raid fact without captured cohort');continue;}
    const r=current;
+   if(e.type==='AnimalTargetUnavailable')r.targetUnavailableAttempts=(r.targetUnavailableAttempts??0)+1;
+   if(e.type==='AnimalRouteUnavailable')r.routeUnavailableAttempts=(r.routeUnavailableAttempts??0)+1;
+   if(e.type==='AnimalRetreating'){
+    r.retirements??=[];r.retirements.push({id:e.targetId,species:e.species,hitsRemaining:e.hitsRemaining??null,reason:e.reason??null});
+   }
    if(e.type==='RaidWaveSpawned'){
     const f=e.raidFacts;
     if(!f||f.id!==r.id||f.waveIndex!==r.waves.length){issue('Wave identity or order mismatch');continue;}
@@ -57,6 +62,7 @@ export function createNativeRaidCampaignEvidence(initial){
    }
    if(e.type==='CropHit'){
     r.cropHits++;
+    let reached=reachedPlants.get(r);if(!reached){reached=new Set();reachedPlants.set(r,reached);}reached.add(e.targetId);
     if(e.attackId){
      assert.ok(typeof e.animalId==='string'&&Number.isFinite(e.before)&&Number.isFinite(e.after)&&e.after>=e.before&&e.after<=2);
      assert.ok(Math.abs(e.damage-(e.after-e.before))<1e-9,'Crop damage must equal native clamped HP receipt');
@@ -70,6 +76,7 @@ export function createNativeRaidCampaignEvidence(initial){
    if(e.type==='CropDestroyed'){
     const p=s.plants.find(p=>p.id===e.targetId);if(!p){issue('Destroyed plant identity missing');continue;}
     assert.equal(p.alive,false);r.cropsDestroyed++;r.cropReplacementCost+=cropSpec(p.species).plant_cost;r.lostBaseHarvestValue+=cropSpec(p.species).base_harvest_value;
+    r.lossesByCropSpecies??={};const loss=r.lossesByCropSpecies[p.species]??={destroyed:0,seedReplacementCost:0,lostBaseHarvestValue:0};loss.destroyed++;loss.seedReplacementCost+=cropSpec(p.species).plant_cost;loss.lostBaseHarvestValue+=cropSpec(p.species).base_harvest_value;
    }
    if(e.type==='StructureHit'){
     const hit=e.structureHit;if(!hit){issue('Structure hit lacks HP receipt');continue;}
@@ -91,12 +98,23 @@ export function createNativeRaidCampaignEvidence(initial){
      else issue('Unshielded logical contact lacks native damage fact');
     }
    }
-   if(e.type==='RaidEnded'){r.ended=true;r.endedAt=s.elapsed;current=null;}
+   if(e.type==='RaidEnded'){r.ended=true;r.endedAt=s.elapsed;r.woundedAfterAttack=s.plants.filter(p=>p.alive&&(p.attackHits??0)>0&&reachedPlants.get(r)?.has(p.id)).length;current=null;}
   }
   if(pendingCrop||pendingStructure||areaContacts.size)issue('Native damage lacks associated logical contact in observation window');
   lastEvent=s.events.at(-1)?.id??lastEvent;lastElapsed=s.elapsed;previousLiving=s.plants.filter(p=>p.alive).length;
  }
  if(initial.raid)issue('Observer created during active raid; initial cohort budget unknown');
- function report(s){observe(s);for(const r of raids)for(const v of Object.values(r.species)){v.observedBudgetConsumed=v.contacts+v.misses+v.workerHits;v.unconsumedOrUnobservedBudget=v.initialHitBudget-v.observedBudgetConsumed;assert.ok(v.unconsumedOrUnobservedBudget>=0,'Observed contacts exceed native initial budget');}return structuredClone({status:coverageLost?'incomplete':'verified',coverageLost,issues,raids,scope:'Generated species and actual native hit budgets; native CropHit/StructureHit and HP receipts, shields and misses. Wall contacts are measured interception, not a guaranteed protection percentage. Replacement costs and lost base value are diagnostics, never ledger expenses or projected income. RaidSpawned raidFacts provide exact native spawn budgets and exposure when available; legacy living snapshots only bracket an observation interval. Initial wound snapshot is after the spawn tick, not an exact pre-attack wound census. Completed observer coverage is not proof of legal spawn geometry or rendered visibility.'});}
+ function report(s){
+  observe(s);
+  for(const r of raids){
+   for(const v of Object.values(r.species)){v.observedBudgetConsumed=v.contacts+v.misses+v.workerHits;v.unconsumedOrUnobservedBudget=v.initialHitBudget-v.observedBudgetConsumed;assert.ok(v.unconsumedOrUnobservedBudget>=0,'Observed contacts exceed native initial budget');}
+   r.plantsReached=reachedPlants.get(r)?.size??0;
+   r.potentialAgriculturalHp=r.pressureFacts?.potential??null;
+   r.effectiveAgriculturalHp=r.agriculturalHpDamage??0;
+   r.agriculturalEfficiency=r.potentialAgriculturalHp>0?r.effectiveAgriculturalHp/r.potentialAgriculturalHp:null;
+   r.destroyedFraction=r.exposedLivingAtSpawn>0?r.cropsDestroyed/r.exposedLivingAtSpawn:null;
+  }
+  return structuredClone({status:coverageLost?'incomplete':'verified',coverageLost,issues,raids,scope:'Native budgets, wave receipts, clamped agricultural HP and structural HP; E divides actual HP by the recorded directional reference potential, never by guaranteed casualties. A partial encounter is not its final efficiency. Unavailable target/route events are real decisions, not fabricated consumed hits. Costs and lost base value are diagnostics, never ledger expenses or projected income. Exact exposure requires native spawn receipt. Completed observer coverage is not proof of legal spawn geometry, rendered visibility or economic acceptance.'});
+ }
  return {observe,report};
 }
