@@ -1,0 +1,113 @@
+{
+  "reportSha256": "683ddbaf8f535b10993afe5af3dab67539d479255ca3f84fce815ee42c4470f0",
+  "allSevenRepairPaymentsMatchNativeHpAndLedger": true,
+  "paidCoins": 46,
+  "receipts": [
+    {
+      "targetId": "structure-4032",
+      "paymentId": "repair:task-4756",
+      "originalPrice": 10,
+      "hpBefore": 56,
+      "hpMax": 100,
+      "expectedCoins": 5,
+      "paidCoins": 5,
+      "workerArrival": {
+        "elapsed": 3769.6999999972018,
+        "x": 93.36000000000001,
+        "z": 15.260000000000003,
+        "yaw": 0.9623416729861165
+      }
+    },
+    {
+      "targetId": "structure-4041",
+      "paymentId": "repair:task-4781",
+      "originalPrice": 10,
+      "hpBefore": 56,
+      "hpMax": 100,
+      "expectedCoins": 5,
+      "paidCoins": 5,
+      "workerArrival": {
+        "elapsed": 3769.9999999972015,
+        "x": 88.28999999999999,
+        "z": 14.660000000000002,
+        "yaw": -0.21296157299150575
+      }
+    },
+    {
+      "targetId": "structure-4018",
+      "paymentId": "repair:task-4755",
+      "originalPrice": 10,
+      "hpBefore": 56,
+      "hpMax": 100,
+      "expectedCoins": 5,
+      "paidCoins": 5,
+      "workerArrival": {
+        "elapsed": 3775.5999999971964,
+        "x": 101.86000000000001,
+        "z": 9.81000000000001,
+        "yaw": 0.8316818039585407
+      }
+    },
+    {
+      "targetId": "structure-4034",
+      "paymentId": "repair:task-4780",
+      "originalPrice": 10,
+      "hpBefore": 34,
+      "hpMax": 100,
+      "expectedCoins": 7,
+      "paidCoins": 7,
+      "workerArrival": {
+        "elapsed": 3776.3999999971957,
+        "x": 91.94,
+        "z": 15.260000000000002,
+        "yaw": -0.41137203005479034
+      }
+    },
+    {
+      "targetId": "structure-4033",
+      "paymentId": "repair:task-4779",
+      "originalPrice": 10,
+      "hpBefore": 0,
+      "hpMax": 100,
+      "expectedCoins": 10,
+      "paidCoins": 10,
+      "workerArrival": {
+        "elapsed": 3784.799999997188,
+        "x": 92.65,
+        "z": 14.660000000000002,
+        "yaw": 0.907778176970172
+      }
+    },
+    {
+      "targetId": "structure-4042",
+      "paymentId": "repair:task-4782",
+      "originalPrice": 10,
+      "hpBefore": 34,
+      "hpMax": 100,
+      "expectedCoins": 7,
+      "paidCoins": 7,
+      "workerArrival": {
+        "elapsed": 3786.5999999971864,
+        "x": 86.11,
+        "z": 14.660000000000002,
+        "yaw": -0.16760227069026315
+      }
+    },
+    {
+      "targetId": "structure-4030",
+      "paymentId": "repair:task-4778",
+      "originalPrice": 10,
+      "hpBefore": 34,
+      "hpMax": 100,
+      "expectedCoins": 7,
+      "paidCoins": 7,
+      "workerArrival": {
+        "elapsed": 3788.099999997185,
+        "x": 99.19,
+        "z": 14.660000000000002,
+        "yaw": 0.4806983017781073
+      }
+    }
+  ],
+  "scope": "This seven-night seed verifies actual native repair settlements; snapshot end health can be lower due to later attacks. No future repair or automatic intact-wall maintenance is credited."
+}
