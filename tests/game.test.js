@@ -114,11 +114,14 @@ test('New midday center does not move plants or employees',()=>{
   const s=ready();placeStructure(s,'center',{x:4,z:0},nav);plant(s,'plant','mijo',12,0,nav);openInitialHiring(s);hire(s,'hire',{olderMale:1});s.ledger.balance=rational(5000);const original=s.plants[0].centerId;placeStructure(s,'second',{x:18,z:0},nav);
   assert.equal(s.plants[0].centerId,original);assert.equal(s.workers[0].centerId,original);plant(s,'new','mijo',24,0,nav);assert.equal(s.plants[1].centerId,s.structures[1].id);
 });
-test('Growth/multiply permissions, area nonoverlap, cooldown from activation and expiry',()=>{
-  const s=setup();assert.throws(()=>cast(s,'early','growth',10,0,nav));s.day=5;
-  cast(s,'growth','growth',10,0,nav);assert.equal(s.cooldowns.growth,90);assert.equal(s.spells[0].remaining,30);
-  assert.throws(()=>cast(s,'overlap','multiply',11,0,nav),/solaparse/);tick(s,30,nav);assert.equal(s.spells.length,0);assert.ok(Math.abs(s.cooldowns.growth-60)<1e-8);
+test('Day-one Growth/Multiply target one plant, exclude simultaneous effects and have no cooldown',()=>{
+ const s=setup(),p=s.plants[0];cast(s,'growth','growth',p.x,p.z,nav,p.id);
+ assert.equal(s.cooldowns.growth,0);assert.equal(s.spells[0].remaining,30);
+ assert.throws(()=>cast(s,'overlap','multiply',p.x,p.z,nav,p.id),/solaparse/);
+ tick(s,30,nav);assert.equal(s.spells.length,0);assert.equal(s.cooldowns.growth,0);
+ cast(s,'multiply','multiply',p.x,p.z,nav,p.id);assert.equal(p.multiplyHarvest,true);
 });
+
 test('First nights introduce mandatory warthog and hyena even with zero attraction',()=>{
   const s=ready();s.day=1;planNight(s);assert.deepEqual(s.nightPlan.group,['warthog']);s.day=2;planNight(s);assert.deepEqual(s.nightPlan.group,['hyena']);
 });

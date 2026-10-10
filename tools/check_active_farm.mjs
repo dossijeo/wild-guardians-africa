@@ -1,3 +1,4 @@
+import {createAgriculturalMagicPolicy} from './native-agricultural-magic.mjs';
 import {centerServicePoint} from '../src/world/centers.js';
 // Legal farming diagnostic. Never alters money, clock, growth, RNG, raid budgets or results.
 import {pathToFileURL} from 'node:url';
@@ -28,6 +29,7 @@ export function simulateActiveFarm({days=100,startDay=5,profile='olderMale',repa
     if(e.type==='CrateDelivered'){const crate=s.crates.find(c=>c.id===e.targetId);deliveries[crate.species]=(deliveries[crate.species]??0)+1;}
     if(e.type==='SpellActivated')magic[e.kind]=(magic[e.kind]??0)+1;
   }};
+  const agriculturalMagic=createAgriculturalMagicPolicy({mode:'moderate'});
   const canCast=(kind,p)=>permission(s,kind)&&s.cooldowns[kind]===0&&nav.terrainValid(p.x,p.z,.2)&&
     !s.spells.some(a=>a.remaining>0&&distance(a,p)<a.radius+Game.spellRadius(kind))&&
     (kind!=='shield'||!s.raid?.animals.some(a=>a.status!=='gone'&&distance(a,p)<a.radius+Game.spellRadius(kind)));
@@ -45,19 +47,7 @@ export function simulateActiveFarm({days=100,startDay=5,profile='olderMale',repa
     if(!permission(s,'plant'))return;
     const live=s.plants.filter(p=>p.alive);
     for(const p of live.filter(p=>isMature(p)&&!p.harvestRequested))Game.harvest(s,id('harvest'),p.id);
-    if(s.day>=5&&s.cooldowns.multiply===0){
-      const picking=s.workers.filter(w=>w.status==='acting'&&s.tasks.find(t=>t.id===w.taskId)?.kind==='harvest');
-      for(const w of picking){const p=s.plants.find(p=>p.id===s.tasks.find(t=>t.id===w.taskId).targetId);if((p.species===species||diversified)&&cast('multiply',p))break;}
-    }
-    if(s.day>=3&&s.cooldowns.growth===0){
-      const growing=live.filter(p=>!isMature(p)&&p.water[0].status!=='due'&&!p.water.some(w=>w.status==='due')&&
-        p.water.some(w=>w.status==='future'&&w.at>p.growth&&w.at-p.growth<=40));
-      const coverage=new Map(growing.map(p=>[p.id,live.filter(q=>distance(q,p)<=Game.spellRadius('growth')).length]));
-      growing.sort((a,b)=>coverage.get(b.id)-coverage.get(a.id));
-      for(const p of growing)if(cast('growth',p))break;
-    }
-    if(s.day<startDay||!s.workers.some(w=>w.contractDay===s.day&&s.time<PROFILES.find(p=>p.id===w.profile).end))return;
-    if(diversifyDay!==null&&s.day>=diversifyDay&&numberOf(s.ledger.balance)>=1500)diversified=true;
+    agriculturalMagic.act(s,nav,id);
     // Fill this strategy's fixed set of plots. It is not a gameplay entity limit.
     // After startup, keep a full next-day wage while financing the following crop cohort.
     // If nothing survives, restart production instead of reserving an unusable wage.

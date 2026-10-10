@@ -1,4 +1,5 @@
 import {raidEntryChunks,raidResidentDemand,includeRaidBounds} from '../world/raid-entry-residency.js';
+import {PreciseTap} from '../ui/precise-tap.js';
 import {startInitialFarRegion} from './initial-far-region.js';
 import {LoadingSyncQueue} from './loading-sync-queue.js';
 import {initialCropCapacity} from './initial-crop-capacity.js';
@@ -106,8 +107,11 @@ export class WorldScene {
     canvas.addEventListener('pointerup',()=>this.raidCamera?.endManual(),listenerOptions);
     canvas.addEventListener('pointercancel',()=>this.raidCamera?.endManual(),listenerOptions);
     canvas.addEventListener('wheel',()=>this.raidCamera?.cancel(),listenerOptions);
-    let down=null;canvas.addEventListener('pointerdown',e=>{if(e.button===0&&!e.shiftKey)down=[e.clientX,e.clientY];},listenerOptions);canvas.addEventListener('pointerup',e=>{if(this.controls.enabled&&this.state&&down&&Math.hypot(e.clientX-down[0],e.clientY-down[1])<5)onPick(this.pick(e));down=null;},listenerOptions);
-    canvas.addEventListener('pointercancel',()=>{down=null;},listenerOptions);
+    const tap=new PreciseTap();
+    canvas.addEventListener('pointerdown',e=>tap.down(e),listenerOptions);
+    canvas.addEventListener('pointermove',e=>tap.move(e),listenerOptions);
+    canvas.addEventListener('pointerup',e=>{const gesture=tap.up(e);if(this.controls.enabled&&this.state&&gesture)onPick({...this.pick(e),...gesture});},listenerOptions);
+    canvas.addEventListener('pointercancel',e=>tap.up(e,true),listenerOptions);
     this.resizeObserver=new ResizeObserver(()=>this.resize());this.resizeObserver.observe(canvas);this.quality='media';this.resize();
     canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();this.onContextLost?.();},listenerOptions);canvas.addEventListener('webglcontextrestored',()=>this.onContextRestored?.(),listenerOptions);
   }

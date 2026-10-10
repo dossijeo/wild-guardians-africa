@@ -48,7 +48,7 @@ test('The native farm resumes physical worker actions after reading, and complet
     if(state.crates.some(c=>!c.delivered)){carrying=true;assert.equal(state.tutorial.step,'harvest');assert.equal(controller.presentation().variant,'delivery');assert.equal(controller.presentation().blocking,false);}
   }
   assert.equal(ordered,true);assert.equal(carrying,true);assert.ok(state.crates.some(c=>c.delivered));assert.equal(numberOf(state.ledger.balance),676);assert.equal(state.day,1);
-  assert.equal(state.tutorial.reading,'basic.complete');assert.equal(profile.basicCompleted,false);controller.acknowledge();assert.equal(profile.basicCompleted,true);assert.equal(controller.presentation(),null);
+  assert.equal(state.tutorial.reading,'basic.complete');assert.equal(profile.basicCompleted,false);controller.acknowledge();assert.equal(profile.basicCompleted,true);assert.equal(controller.presentation().id,'magic.growth');controller.acknowledge();assert.equal(controller.presentation().id,'magic.multiply');controller.acknowledge();assert.equal(controller.presentation(),null);
   assert.equal(Object.keys(state.ledger.entries).filter(id=>id==='tutorial-wage').length,1);
 });
 test('Only a previously completed basic tutorial can be skipped; new magic still interrupts the second slot',()=>{
@@ -63,7 +63,7 @@ test('The first unknown raid and Shield pause together; known later raids never 
   const {state,profile,controller}=setup();profile.record('basic.complete');controller.skipBasic();
   state.day=2;state.raid={animals:[]};controller.update();assert.equal(state.tutorial.reading,'mechanic.first-raid');
   controller.acknowledge();assert.equal(state.tutorial.reading,'magic.shield');controller.acknowledge();assert.equal(state.tutorial.reading,'mechanic.defenses');controller.acknowledge();
-  assert.equal(state.tutorial.reading,null);state.raid=null;controller.update();state.raid={animals:[]};controller.update();assert.equal(state.tutorial.reading,null);assert.ok(!state.pauses.includes('tutorial-reading'));
+  assert.equal(state.tutorial.reading,'magic.growth');controller.acknowledge();assert.equal(state.tutorial.reading,'magic.multiply');controller.acknowledge();assert.equal(state.tutorial.reading,null);state.raid=null;controller.update();state.raid={animals:[]};controller.update();assert.equal(state.tutorial.reading,null);assert.ok(!state.pauses.includes('tutorial-reading'));
 });
 test('Growth, Multiply and recovery have independent IDs; repeats and unrelated pauses remain intact',()=>{
   const {state,profile,controller}=setup();profile.record('basic.complete');profile.record('mechanic.defenses');controller.skipBasic();

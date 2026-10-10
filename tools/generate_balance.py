@@ -5,6 +5,9 @@ balance=json.loads((root/'content/balance/balance_confirmado.json').read_text(en
 revisions=json.loads((root/'content/balance/player_revisions.json').read_text(encoding='utf-8'))
 balance['initial_money']=revisions['initial_money']
 balance['workers'].update(revisions['workers'])
+for spell in balance['spells']:
+    if spell['id'] in revisions.get('agricultural_magic', {}):
+        spell.update(revisions['agricultural_magic'][spell['id']])
 additional_village_cost=revisions['additional_village_cost']
 if type(additional_village_cost) is not int or additional_village_cost<=0:
     raise SystemExit('Additional villages require a positive fixed integer price')

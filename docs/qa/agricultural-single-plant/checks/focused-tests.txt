@@ -1,0 +1,442 @@
+TAP version 13
+# Subtest: paced policies execute native single-plant applications without duration credit or artificial income
+ok 1 - paced policies execute native single-plant applications without duration credit or artificial income
+  ---
+  duration_ms: 92.9802
+  ...
+# Subtest: one pointer tap selects once; cancellation, drag-back and pinch select nothing
+ok 2 - one pointer tap selects once; cancellation, drag-back and pinch select nothing
+  ---
+  duration_ms: 1.4651
+  ...
+# Subtest: day-one native agricultural commands have no cooldown, no worker requirement and exact single-plant effects
+ok 3 - day-one native agricultural commands have no cooldown, no worker requirement and exact single-plant effects
+  ---
+  duration_ms: 22.3845
+  ...
+# Subtest: per-target growth repeats to maturity; snapshots preserve targets, watering and bonus without RNG changes
+ok 4 - per-target growth repeats to maturity; snapshots preserve targets, watering and bonus without RNG changes
+  ---
+  duration_ms: 44.4039
+  ...
+# Subtest: Multiply retains one boolean harvest benefit after expiry and repeated visual applications
+ok 5 - Multiply retains one boolean harvest benefit after expiry and repeated visual applications
+  ---
+  duration_ms: 9.4352
+  ...
+# Subtest: same command never executes twice; another new tap on another plant is independent
+ok 6 - same command never executes twice; another new tap on another plant is independent
+  ---
+  duration_ms: 1.2922
+  ...
+# Subtest: agricultural selection expires ten seconds after selection/last use, without cancelling native effects
+ok 7 - agricultural selection expires ten seconds after selection/last use, without cancelling native effects
+  ---
+  duration_ms: 0.9843
+  ...
+# Subtest: old area spells retain their existing effects; new agricultural casting remains by plant identity
+ok 8 - old area spells retain their existing effects; new agricultural casting remains by plant identity
+  ---
+  duration_ms: 1.5303
+  ...
+# Subtest: growth: native blessing lasts its approved simulated duration without hearts, extra gameplay or lost reload phase
+ok 9 - growth: native blessing lasts its approved simulated duration without hearts, extra gameplay or lost reload phase
+  ---
+  duration_ms: 173.4447
+  ...
+# Subtest: multiply: native blessing lasts its approved simulated duration without hearts, extra gameplay or lost reload phase
+ok 10 - multiply: native blessing lasts its approved simulated duration without hearts, extra gameplay or lost reload phase
+  ---
+  duration_ms: 63.96
+  ...
+# Subtest: QA-115: growth crosses sunset on the real clock; native VFX continue without night agriculture
+ok 11 - QA-115: growth crosses sunset on the real clock; native VFX continue without night agriculture
+  ---
+  duration_ms: 36.9269
+  ...
+# Subtest: QA-115: multiply crosses sunset on the real clock; native VFX continue without night agriculture
+ok 12 - QA-115: multiply crosses sunset on the real clock; native VFX continue without night agriculture
+  ---
+  duration_ms: 22.8661
+  ...
+# Subtest: A route blocked after reservation releases its worker without deleting the task or starting an action
+ok 13 - A route blocked after reservation releases its worker without deleting the task or starting an action
+  ---
+  duration_ms: 15.6985
+  ...
+# Subtest: Repair settles its rounded current price exactly once on arrival, without an extra animation delay
+ok 14 - Repair settles its rounded current price exactly once on arrival, without an extra animation delay
+  ---
+  duration_ms: 18.4688
+  ...
+# Subtest: Funds spent after requesting repair cancel execution at arrival without partial payment
+ok 15 - Funds spent after requesting repair cancel execution at arrival without partial payment
+  ---
+  duration_ms: 4.9803
+  ...
+# Subtest: Surviving repair order becomes full reconstruction and does not wait for collapse to finish
+ok 16 - Surviving repair order becomes full reconstruction and does not wait for collapse to finish
+  ---
+  duration_ms: 6.1621
+  ...
+# Subtest: Starting an attack immediately cancels manual repair orders and releases the worker
+ok 17 - Starting an attack immediately cancels manual repair orders and releases the worker
+  ---
+  duration_ms: 5.6646
+  ...
+# Subtest: Postgame founding uses complete native village, valid departure, exact fixed costs and persistent state
+ok 18 - Postgame founding uses complete native village, valid departure, exact fixed costs and persistent state
+  ---
+  duration_ms: 15.4048
+  ...
+# Subtest: A village without a walkable departure is rejected before charging or founding
+ok 19 - A village without a walkable departure is rejected before charging or founding
+  ---
+  duration_ms: 1.4522
+  ...
+# Subtest: 30 canonical combinations validate and each new game starts isolated at 1500
+ok 20 - 30 canonical combinations validate and each new game starts isolated at 1500
+  ---
+  duration_ms: 5.5271
+  ...
+# Subtest: First day center/plant/tutorial hiring sequence and payment idempotency
+ok 21 - First day center/plant/tutorial hiring sequence and payment idempotency
+  ---
+  duration_ms: 0.939
+  ...
+# Subtest: Invalid placement makes no economic or world modification
+ok 22 - Invalid placement makes no economic or world modification
+  ---
+  duration_ms: 0.6878
+  ...
+# Subtest: Workers physically plant, water and harvest; only crate delivery pays
+ok 23 - Workers physically plant, water and harvest; only crate delivery pays
+  ---
+  duration_ms: 53.8348
+  ...
+# Subtest: Stacked pauses freeze crops and spell clocks
+ok 24 - Stacked pauses freeze crops and spell clocks
+  ---
+  duration_ms: 1.6081
+  ...
+# Subtest: Manual harvest orders survive queue reconstruction, manual repairs do not
+ok 25 - Manual harvest orders survive queue reconstruction, manual repairs do not
+  ---
+  duration_ms: 1.7412
+  ...
+# Subtest: New midday center does not move plants or employees
+ok 26 - New midday center does not move plants or employees
+  ---
+  duration_ms: 2.1265
+  ...
+# Subtest: Day-one Growth/Multiply target one plant, exclude simultaneous effects and have no cooldown
+ok 27 - Day-one Growth/Multiply target one plant, exclude simultaneous effects and have no cooldown
+  ---
+  duration_ms: 14.081
+  ...
+# Subtest: First nights introduce mandatory warthog and hyena even with zero attraction
+ok 28 - First nights introduce mandatory warthog and hyena even with zero attraction
+  ---
+  duration_ms: 1.1734
+  ...
+# Subtest: Raid drops a carried crate, frees tasks and preserves its value
+ok 29 - Raid drops a carried crate, frees tasks and preserves its value
+  ---
+  duration_ms: 1.5156
+  ...
+# Subtest: Combo attack counts one logical hit; active raid survives roundtrip
+ok 30 - Combo attack counts one logical hit; active raid survives roundtrip
+  ---
+  duration_ms: 4.6779
+  ...
+# Subtest: Attack crossing dawn prevents events, hiring and night completion until departure
+ok 31 - Attack crossing dawn prevents events, hiring and night completion until departure
+  ---
+  duration_ms: 2.9916
+  ...
+# Subtest: Final raid defeat takes precedence over hundredth night victory
+ok 32 - Final raid defeat takes precedence over hundredth night victory
+  ---
+  duration_ms: 0.9105
+  ...
+# Subtest: Hundredth completed night wins only after economic check; postgame suppresses attacks
+ok 33 - Hundredth completed night wins only after economic check; postgame suppresses attacks
+  ---
+  duration_ms: 0.7166
+  ...
+# Subtest: Event frost leaves mature plants intact; favorable growth keeps mandatory water debt
+ok 34 - Event frost leaves mature plants intact; favorable growth keeps mandatory water debt
+  ---
+  duration_ms: 0.5383
+  ...
+# Subtest: Plague consumes half remaining tolerance without killing plants or changing coins
+ok 35 - Plague consumes half remaining tolerance without killing plants or changing coins
+  ---
+  duration_ms: 0.4135
+  ...
+# Subtest: cards and game validation agree on unlock dates, pauses, infrastructure and workers
+ok 36 - cards and game validation agree on unlock dates, pauses, infrastructure and workers
+  ---
+  duration_ms: 22.6155
+  ...
+# Subtest: agricultural cards ignore legacy cooldowns and never show a cooldown ring
+ok 37 - agricultural cards ignore legacy cooldowns and never show a cooldown ring
+  ---
+  duration_ms: 0.5493
+  ...
+# Subtest: native markup keeps original symbols and translated status labels
+ok 38 - native markup keeps original symbols and translated status labels
+  ---
+  duration_ms: 0.8051
+  ...
+# Subtest: the spell panel describes direct placement in both languages
+ok 39 - the spell panel describes direct placement in both languages
+  ---
+  duration_ms: 0.4209
+  ...
+# Subtest: stable agricultural card refresh preserves scroll and hides stale legacy cooldown
+ok 40 - stable agricultural card refresh preserves scroll and hides stale legacy cooldown
+  ---
+  duration_ms: 1.2501
+  ...
+# Subtest: shield: tapping elevated crop covers it instead of terrain behind it
+ok 41 - shield: tapping elevated crop covers it instead of terrain behind it
+  ---
+  duration_ms: 13.2967
+  ...
+# Subtest: growth: tapping elevated crop covers it instead of terrain behind it
+ok 42 - growth: tapping elevated crop covers it instead of terrain behind it
+  ---
+  duration_ms: 1.2483
+  ...
+# Subtest: multiply: tapping elevated crop covers it instead of terrain behind it
+ok 43 - multiply: tapping elevated crop covers it instead of terrain behind it
+  ---
+  duration_ms: 1.1064
+  ...
+# Subtest: agricultural powers require a live plant hit, while Shield keeps free placement
+ok 44 - agricultural powers require a live plant hit, while Shield keeps free placement
+  ---
+  duration_ms: 2.7076
+  ...
+# Subtest: Aiming all powers, moving their area, and clearing presentation preserve every simulation field
+ok 45 - Aiming all powers, moving their area, and clearing presentation preserve every simulation field
+  ---
+  duration_ms: 29.6988
+  ...
+# Subtest: Real-time advancement uses day ×1 and night ×5 while preserving independent cooldowns across reload
+ok 46 - Real-time advancement uses day ×1 and night ×5 while preserving independent cooldowns across reload
+  ---
+  duration_ms: 14.5831
+  ...
+# Subtest: Preview and confirmation agree on overlap, terrain, cooldown, locks, blocking pauses and infrastructure
+ok 47 - Preview and confirmation agree on overlap, terrain, cooldown, locks, blocking pauses and infrastructure
+  ---
+  duration_ms: 9.1783
+  ...
+# Subtest: Confirmation rechecks a draft after day/night, worker or raid changes without consuming it
+ok 48 - Confirmation rechecks a draft after day/night, worker or raid changes without consuming it
+  ---
+  duration_ms: 5.5871
+  ...
+# Subtest: Shield preview rejects an animal touching its area without moving or repelling it
+ok 49 - Shield preview rejects an animal touching its area without moving or repelling it
+  ---
+  duration_ms: 0.8139
+  ...
+# Subtest: One confirmation starts the exact duration and cooldown; replay, pause and snapshot do not restart either
+ok 50 - One confirmation starts the exact duration and cooldown; replay, pause and snapshot do not restart either
+  ---
+  duration_ms: 13.6939
+  ...
+# Subtest: shield appears once per day without pausing, including a completed global tutorial
+ok 51 - shield appears once per day without pausing, including a completed global tutorial
+  ---
+  duration_ms: 12.0858
+  ...
+# Subtest: shield waits for availability, removes obsolete advice when cast or animals leave, and preserves menu pauses
+ok 52 - shield waits for availability, removes obsolete advice when cast or animals leave, and preserves menu pauses
+  ---
+  duration_ms: 1.0093
+  ...
+# Subtest: saved acknowledged raids do not replay shield advice; an unfinished reminder remains readable after restoration
+ok 53 - saved acknowledged raids do not replay shield advice; an unfinished reminder remains readable after restoration
+  ---
+  duration_ms: 2.2045
+  ...
+# Subtest: an arriving raid takes priority over ordinary advice and leaves that explanation queued
+ok 54 - an arriving raid takes priority over ordinary advice and leaves that explanation queued
+  ---
+  duration_ms: 0.4556
+  ...
+# Subtest: render-frequency updates reuse the peaceful plant check until simulated time advances
+ok 55 - render-frequency updates reuse the peaceful plant check until simulated time advances
+  ---
+  duration_ms: 1.598
+  ...
+# Subtest: growth cannot repeat today and receives its full reading time on the following day
+ok 56 - growth cannot repeat today and receives its full reading time on the following day
+  ---
+  duration_ms: 1.055
+  ...
+# Subtest: multiply requires working labour and unmarked live crops, with a gap between peaceful reminders
+ok 57 - multiply requires working labour and unmarked live crops, with a gap between peaceful reminders
+  ---
+  duration_ms: 0.9295
+  ...
+# Subtest: new reminders are bilingual and saved reminder times reject corrupt values
+ok 58 - new reminders are bilingual and saved reminder times reject corrupt values
+  ---
+  duration_ms: 1.0924
+  ...
+# Subtest: Basic readings advance only manually and do not create, plant or pay anything
+ok 59 - Basic readings advance only manually and do not create, plant or pay anything
+  ---
+  duration_ms: 11.6132
+  ...
+# Subtest: An already placed native center is recognized without charging a second one
+ok 60 - An already placed native center is recognized without charging a second one
+  ---
+  duration_ms: 430.2704
+  ...
+# Subtest: The native farm resumes physical worker actions after reading, and completes only after a paid delivery
+ok 61 - The native farm resumes physical worker actions after reading, and completes only after a paid delivery
+  ---
+  duration_ms: 434.7909
+  ...
+# Subtest: Only a previously completed basic tutorial can be skipped; new magic still interrupts the second slot
+ok 62 - Only a previously completed basic tutorial can be skipped; new magic still interrupts the second slot
+  ---
+  duration_ms: 0.5615
+  ...
+# Subtest: The first unknown raid and Shield pause together; known later raids never add another tutorial pause
+ok 63 - The first unknown raid and Shield pause together; known later raids never add another tutorial pause
+  ---
+  duration_ms: 0.608
+  ...
+# Subtest: Growth, Multiply and recovery have independent IDs; repeats and unrelated pauses remain intact
+ok 64 - Growth, Multiply and recovery have independent IDs; repeats and unrelated pauses remain intact
+  ---
+  duration_ms: 0.3284
+  ...
+# Subtest: Loading preserves an unfinished reading and queue without replaying its sound or silently acknowledging it
+ok 65 - Loading preserves an unfinished reading and queue without replaying its sound or silently acknowledging it
+  ---
+  duration_ms: 1.331
+  ...
+# Subtest: Global profile writes merge seen IDs and malformed or unknown data cannot silence messages
+ok 66 - Global profile writes merge seen IDs and malformed or unknown data cannot silence messages
+  ---
+  duration_ms: 0.8982
+  ...
+# Subtest: Storage failure leaves the slot acknowledged and playable without manufacturing a global completion
+ok 67 - Storage failure leaves the slot acknowledged and playable without manufacturing a global completion
+  ---
+  duration_ms: 0.4872
+  ...
+# Subtest: Victory is narrated per campaign before the result choices, and expansion appears after hiring
+ok 68 - Victory is narrated per campaign before the result choices, and expansion appears after hiring
+  ---
+  duration_ms: 0.7673
+  ...
+# Subtest: Snapshots reject unknown tutorial IDs and incoherent modal pauses while retaining legacy slots
+ok 69 - Snapshots reject unknown tutorial IDs and incoherent modal pauses while retaining legacy slots
+  ---
+  duration_ms: 1.42
+  ...
+# Subtest: A loaded defeat takes priority over an unfinished explanation without marking that message seen
+ok 70 - A loaded defeat takes priority over an unfinished explanation without marking that message seen
+  ---
+  duration_ms: 0.2936
+  ...
+# Subtest: Profile memory lives outside slot listings and never changes another slot snapshot
+ok 71 - Profile memory lives outside slot listings and never changes another slot snapshot
+  ---
+  duration_ms: 0.6622
+  ...
+# Subtest: a first paid crop completed after day one still closes the basic tutorial after actual delivery
+ok 72 - a first paid crop completed after day one still closes the basic tutorial after actual delivery
+  ---
+  duration_ms: 304.4101
+  ...
+# Subtest: an expired raid instruction is dropped unread while the Shield lesson remains available
+ok 73 - an expired raid instruction is dropped unread while the Shield lesson remains available
+  ---
+  duration_ms: 0.7433
+  ...
+# Subtest: a deliberately finished basic tutorial is not reopened by missing early game entities
+ok 74 - a deliberately finished basic tutorial is not reopened by missing early game entities
+  ---
+  duration_ms: 0.157
+  ...
+# (node:18772) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: shared calendar predicate preserves the approved exact boundaries
+ok 75 - shared calendar predicate preserves the approved exact boundaries
+  ---
+  duration_ms: 3.0686
+  ...
+# Subtest: live milestones play once, tolerate a dropped frame and never mutate the simulation
+ok 76 - live milestones play once, tolerate a dropped frame and never mutate the simulation
+  ---
+  duration_ms: 9.9988
+  ...
+# Subtest: saved unlocks, replaced snapshots, backwards clocks and disposal seed silently
+ok 77 - saved unlocks, replaced snapshots, backwards clocks and disposal seed silently
+  ---
+  duration_ms: 0.4919
+  ...
+# Subtest: simultaneous new milestones coalesce and hiring defers only the live cue
+ok 78 - simultaneous new milestones coalesce and hiring defers only the live cue
+  ---
+  duration_ms: 1.8631
+  ...
+# Subtest: pending decode is cancelled on pause
+ok 79 - pending decode is cancelled on pause
+  ---
+  duration_ms: 0.9572
+  ...
+# Subtest: pending decode is cancelled on result
+ok 80 - pending decode is cancelled on result
+  ---
+  duration_ms: 0.5858
+  ...
+# Subtest: pending decode is cancelled on replacement
+ok 81 - pending decode is cancelled on replacement
+  ---
+  duration_ms: 0.5166
+  ...
+# Subtest: pending decode is cancelled on dispose
+ok 82 - pending decode is cancelled on dispose
+  ---
+  duration_ms: 1.4323
+  ...
+# Subtest: pending decode is cancelled on expiry
+ok 83 - pending decode is cancelled on expiry
+  ---
+  duration_ms: 1.0515
+  ...
+# Subtest: defeat discards deferred milestones and playback failures do not retry every frame
+ok 84 - defeat discards deferred milestones and playback failures do not retry every frame
+  ---
+  duration_ms: 1.0874
+  ...
+# Subtest: actual paid calendar through day five produces three unlocks without changing money or RNG
+ok 85 - actual paid calendar through day five produces three unlocks without changing money or RNG
+  ---
+  duration_ms: 635.2617
+  ...
+# Subtest: postgame unlock dispatches once and loading its saved event is silent
+ok 86 - postgame unlock dispatches once and loading its saved event is silent
+  ---
+  duration_ms: 2.0805
+  ...
+1..86
+# tests 86
+# suites 0
+# pass 86
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1639.2331

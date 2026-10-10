@@ -1,0 +1,222 @@
+TAP version 13
+# QA-136: {"culture":"mapungubwe","nights":300,"day":401,"dayPlans":300,"nightPlans":300,"reloads":12,"midnightSaves":300,"attraction":10146,"raids":0,"balance":193500}
+# QA-136: {"culture":"saheliana","nights":300,"day":401,"dayPlans":300,"nightPlans":300,"reloads":12,"midnightSaves":300,"attraction":10146,"raids":0,"balance":193500}
+# QA-136: {"culture":"suajili","nights":300,"day":401,"dayPlans":300,"nightPlans":300,"reloads":12,"midnightSaves":300,"attraction":10146,"raids":0,"balance":193500}
+# QA-136: {"culture":"musgum","nights":300,"day":401,"dayPlans":300,"nightPlans":300,"reloads":12,"midnightSaves":300,"attraction":10146,"raids":0,"balance":193500}
+# QA-136: {"culture":"etiope","nights":300,"day":401,"dayPlans":300,"nightPlans":300,"reloads":12,"midnightSaves":300,"attraction":10146,"raids":0,"balance":193500}
+# Subtest: QA-135/136 mapungubwe: continue actual last-night outcome and run 300 complete postgame nights with high attraction
+ok 1 - QA-135/136 mapungubwe: continue actual last-night outcome and run 300 complete postgame nights with high attraction
+  ---
+  duration_ms: 29232.642
+  ...
+# Subtest: QA-135/136 saheliana: continue actual last-night outcome and run 300 complete postgame nights with high attraction
+ok 2 - QA-135/136 saheliana: continue actual last-night outcome and run 300 complete postgame nights with high attraction
+  ---
+  duration_ms: 29211.7871
+  ...
+# Subtest: QA-135/136 suajili: continue actual last-night outcome and run 300 complete postgame nights with high attraction
+ok 3 - QA-135/136 suajili: continue actual last-night outcome and run 300 complete postgame nights with high attraction
+  ---
+  duration_ms: 28725.8878
+  ...
+# Subtest: QA-135/136 musgum: continue actual last-night outcome and run 300 complete postgame nights with high attraction
+ok 4 - QA-135/136 musgum: continue actual last-night outcome and run 300 complete postgame nights with high attraction
+  ---
+  duration_ms: 29710.6177
+  ...
+# Subtest: QA-135/136 etiope: continue actual last-night outcome and run 300 complete postgame nights with high attraction
+ok 5 - QA-135/136 etiope: continue actual last-night outcome and run 300 complete postgame nights with high attraction
+  ---
+  duration_ms: 29762.083
+  ...
+# Subtest: shield appears once per day without pausing, including a completed global tutorial
+ok 6 - shield appears once per day without pausing, including a completed global tutorial
+  ---
+  duration_ms: 32.5695
+  ...
+# Subtest: shield waits for availability, removes obsolete advice when cast or animals leave, and preserves menu pauses
+ok 7 - shield waits for availability, removes obsolete advice when cast or animals leave, and preserves menu pauses
+  ---
+  duration_ms: 1.1133
+  ...
+# Subtest: saved acknowledged raids do not replay shield advice; an unfinished reminder remains readable after restoration
+ok 8 - saved acknowledged raids do not replay shield advice; an unfinished reminder remains readable after restoration
+  ---
+  duration_ms: 3.2931
+  ...
+# Subtest: an arriving raid takes priority over ordinary advice and leaves that explanation queued
+ok 9 - an arriving raid takes priority over ordinary advice and leaves that explanation queued
+  ---
+  duration_ms: 0.9476
+  ...
+# Subtest: render-frequency updates reuse the peaceful plant check until simulated time advances
+ok 10 - render-frequency updates reuse the peaceful plant check until simulated time advances
+  ---
+  duration_ms: 1.6657
+  ...
+# Subtest: growth cannot repeat today and receives its full reading time on the following day
+ok 11 - growth cannot repeat today and receives its full reading time on the following day
+  ---
+  duration_ms: 1.0621
+  ...
+# Subtest: multiply requires working labour and unmarked live crops, with a gap between peaceful reminders
+ok 12 - multiply requires working labour and unmarked live crops, with a gap between peaceful reminders
+  ---
+  duration_ms: 0.906
+  ...
+# Subtest: new reminders are bilingual and saved reminder times reject corrupt values
+ok 13 - new reminders are bilingual and saved reminder times reject corrupt values
+  ---
+  duration_ms: 1.3903
+  ...
+# Subtest: Basic readings advance only manually and do not create, plant or pay anything
+ok 14 - Basic readings advance only manually and do not create, plant or pay anything
+  ---
+  duration_ms: 13.9787
+  ...
+# Subtest: An already placed native center is recognized without charging a second one
+ok 15 - An already placed native center is recognized without charging a second one
+  ---
+  duration_ms: 504.9607
+  ...
+# Subtest: The native farm resumes physical worker actions after reading, and completes only after a paid delivery
+ok 16 - The native farm resumes physical worker actions after reading, and completes only after a paid delivery
+  ---
+  duration_ms: 626.6382
+  ...
+# Subtest: Only a previously completed basic tutorial can be skipped; new magic still interrupts the second slot
+ok 17 - Only a previously completed basic tutorial can be skipped; new magic still interrupts the second slot
+  ---
+  duration_ms: 0.8489
+  ...
+# Subtest: The first unknown raid and Shield pause together; known later raids never add another tutorial pause
+ok 18 - The first unknown raid and Shield pause together; known later raids never add another tutorial pause
+  ---
+  duration_ms: 0.7225
+  ...
+# Subtest: Growth, Multiply and recovery have independent IDs; repeats and unrelated pauses remain intact
+ok 19 - Growth, Multiply and recovery have independent IDs; repeats and unrelated pauses remain intact
+  ---
+  duration_ms: 0.4575
+  ...
+# Subtest: Loading preserves an unfinished reading and queue without replaying its sound or silently acknowledging it
+ok 20 - Loading preserves an unfinished reading and queue without replaying its sound or silently acknowledging it
+  ---
+  duration_ms: 5.1165
+  ...
+# Subtest: Global profile writes merge seen IDs and malformed or unknown data cannot silence messages
+ok 21 - Global profile writes merge seen IDs and malformed or unknown data cannot silence messages
+  ---
+  duration_ms: 1.9434
+  ...
+# Subtest: Storage failure leaves the slot acknowledged and playable without manufacturing a global completion
+ok 22 - Storage failure leaves the slot acknowledged and playable without manufacturing a global completion
+  ---
+  duration_ms: 0.9498
+  ...
+# Subtest: Victory is narrated per campaign before the result choices, and expansion appears after hiring
+ok 23 - Victory is narrated per campaign before the result choices, and expansion appears after hiring
+  ---
+  duration_ms: 0.8272
+  ...
+# Subtest: Snapshots reject unknown tutorial IDs and incoherent modal pauses while retaining legacy slots
+ok 24 - Snapshots reject unknown tutorial IDs and incoherent modal pauses while retaining legacy slots
+  ---
+  duration_ms: 1.677
+  ...
+# Subtest: A loaded defeat takes priority over an unfinished explanation without marking that message seen
+ok 25 - A loaded defeat takes priority over an unfinished explanation without marking that message seen
+  ---
+  duration_ms: 0.3765
+  ...
+# Subtest: Profile memory lives outside slot listings and never changes another slot snapshot
+ok 26 - Profile memory lives outside slot listings and never changes another slot snapshot
+  ---
+  duration_ms: 1.1064
+  ...
+# Subtest: a first paid crop completed after day one still closes the basic tutorial after actual delivery
+ok 27 - a first paid crop completed after day one still closes the basic tutorial after actual delivery
+  ---
+  duration_ms: 449.4642
+  ...
+# Subtest: an expired raid instruction is dropped unread while the Shield lesson remains available
+ok 28 - an expired raid instruction is dropped unread while the Shield lesson remains available
+  ---
+  duration_ms: 0.8153
+  ...
+# Subtest: a deliberately finished basic tutorial is not reopened by missing early game entities
+ok 29 - a deliberately finished basic tutorial is not reopened by missing early game entities
+  ---
+  duration_ms: 0.2397
+  ...
+# (node:11476) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: shared calendar predicate preserves the approved exact boundaries
+ok 30 - shared calendar predicate preserves the approved exact boundaries
+  ---
+  duration_ms: 3.0913
+  ...
+# Subtest: live milestones play once, tolerate a dropped frame and never mutate the simulation
+ok 31 - live milestones play once, tolerate a dropped frame and never mutate the simulation
+  ---
+  duration_ms: 11.0861
+  ...
+# Subtest: saved unlocks, replaced snapshots, backwards clocks and disposal seed silently
+ok 32 - saved unlocks, replaced snapshots, backwards clocks and disposal seed silently
+  ---
+  duration_ms: 0.4034
+  ...
+# Subtest: simultaneous new milestones coalesce and hiring defers only the live cue
+ok 33 - simultaneous new milestones coalesce and hiring defers only the live cue
+  ---
+  duration_ms: 1.6809
+  ...
+# Subtest: pending decode is cancelled on pause
+ok 34 - pending decode is cancelled on pause
+  ---
+  duration_ms: 0.9954
+  ...
+# Subtest: pending decode is cancelled on result
+ok 35 - pending decode is cancelled on result
+  ---
+  duration_ms: 0.7615
+  ...
+# Subtest: pending decode is cancelled on replacement
+ok 36 - pending decode is cancelled on replacement
+  ---
+  duration_ms: 0.5688
+  ...
+# Subtest: pending decode is cancelled on dispose
+ok 37 - pending decode is cancelled on dispose
+  ---
+  duration_ms: 0.989
+  ...
+# Subtest: pending decode is cancelled on expiry
+ok 38 - pending decode is cancelled on expiry
+  ---
+  duration_ms: 1.0872
+  ...
+# Subtest: defeat discards deferred milestones and playback failures do not retry every frame
+ok 39 - defeat discards deferred milestones and playback failures do not retry every frame
+  ---
+  duration_ms: 0.8997
+  ...
+# Subtest: actual paid calendar through day five produces three unlocks without changing money or RNG
+ok 40 - actual paid calendar through day five produces three unlocks without changing money or RNG
+  ---
+  duration_ms: 874.7223
+  ...
+# Subtest: postgame unlock dispatches once and loading its saved event is silent
+ok 41 - postgame unlock dispatches once and loading its saved event is silent
+  ---
+  duration_ms: 1.503
+  ...
+1..41
+# tests 41
+# suites 0
+# pass 41
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 146999.7889

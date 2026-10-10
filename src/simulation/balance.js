@@ -324,27 +324,31 @@ export const BALANCE = {
       "id": "growth",
       "name": "Crecimiento",
       "duration_seconds": 30,
-      "cooldown_seconds": 90,
+      "cooldown_seconds": 0,
       "unlock": "day_3",
       "coverage_reference_plants": [
         9,
         10
       ],
       "growth_multiplier": 1.5,
-      "radius_m": null
+      "radius_m": null,
+      "available_day": 1,
+      "target": "single-plant"
     },
     {
       "id": "multiply",
       "name": "Multiplicar",
       "duration_seconds": 15,
-      "cooldown_seconds": 120,
+      "cooldown_seconds": 0,
       "unlock": "day_5",
       "coverage_reference_plants": [
         6,
         8
       ],
       "harvest_multiplier": 2,
-      "radius_m": null
+      "radius_m": null,
+      "available_day": 1,
+      "target": "single-plant"
     }
   ],
   "no_overlap_between_spell_areas": true,

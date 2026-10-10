@@ -4,6 +4,10 @@ import {cast} from '../simulation/game.js';
 // takes precedence so a power aimed at that crop actually covers the crop.
 export function castPickedSpell(state,id,kind,{entityId,point},nav){
   const plant=state.plants.find(p=>p.id===entityId&&p.alive);
+  if(kind!=='shield'){
+    if(!plant)return false;
+    return cast(state,id,kind,plant.x,plant.z,nav,plant.id);
+  }
   const target=plant??point??state.structures.find(s=>s.id===entityId);
   if(!target)return false;
   return cast(state,id,kind,target.x,target.z,nav);

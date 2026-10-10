@@ -52,13 +52,13 @@ test('render-frequency updates reuse the peaceful plant check until simulated ti
  s.elapsed+=2;c.update();assert.ok(scans>initial);
 });
 test('growth cannot repeat today and receives its full reading time on the following day',()=>{
- const {s,c}=setup(),p=createPlant('plant','mijo',10,10,'center');s.plants.push(p);c.update();assert.equal(c.presentation(),null);
+ const {s,c}=setup(),p=createPlant('plant','mijo',10,10,'center');s.plants.push(p);p.multiplyHarvest=true;c.update();assert.equal(c.presentation(),null);
  p.water[0].status='manual';s.elapsed+=2;c.update();assert.equal(c.presentation().id,'reminder.growth');
- c.advance(60);c.update();assert.equal(c.presentation(),null);
+ c.advance(60);c.update();if(c.presentation()?.id==='reminder.multiply')c.dismiss();assert.equal(c.presentation(),null);
  s.elapsed+=119;c.update();assert.equal(c.presentation(),null);
  s.elapsed+=1;c.update();assert.equal(c.presentation(),null);
  s.day++;c.update();assert.equal(c.presentation().id,'reminder.growth');assert.equal(c.advance(1),false);
- c.dismiss();s.cooldowns.growth=90;s.elapsed+=120;c.update();assert.equal(c.presentation(),null);
+ c.dismiss();s.cooldowns.growth=90;s.elapsed+=120;c.update();assert.notEqual(c.presentation()?.id,'reminder.growth');
 });
 test('multiply requires working labour and unmarked live crops, with a gap between peaceful reminders',()=>{
  const {s,c}=setup(),p=createPlant('plant','mijo',10,10,'center');s.plants.push(p);
