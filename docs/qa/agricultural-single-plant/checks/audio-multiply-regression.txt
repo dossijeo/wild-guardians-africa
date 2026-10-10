@@ -1,0 +1,97 @@
+TAP version 13
+# Subtest: marked sprout earns double only after physical collection and delivery (none)
+ok 1 - marked sprout earns double only after physical collection and delivery (none)
+  ---
+  duration_ms: 109.8498
+  ...
+# Subtest: marked sprout earns double only after physical collection and delivery (active)
+ok 2 - marked sprout earns double only after physical collection and delivery (active)
+  ---
+  duration_ms: 72.7149
+  ...
+# Subtest: marked sprout earns double only after physical collection and delivery (expired)
+ok 3 - marked sprout earns double only after physical collection and delivery (expired)
+  ---
+  duration_ms: 55.2553
+  ...
+# Subtest: marked sprout earns double only after physical collection and delivery (carrying)
+ok 4 - marked sprout earns double only after physical collection and delivery (carrying)
+  ---
+  duration_ms: 58.951
+  ...
+# Subtest: targeted exposure never includes neighbouring new sprouts, even during the active interval
+ok 5 - targeted exposure never includes neighbouring new sprouts, even during the active interval
+  ---
+  duration_ms: 5.7331
+  ...
+# Subtest: legacy active areas are marked once, and pauses freeze the exposure interval
+ok 6 - legacy active areas are marked once, and pauses freeze the exposure interval
+  ---
+  duration_ms: 2.637
+  ...
+# Subtest: Shield accepts finite terrain; agricultural powers require their plant even when terrain placement is invalid
+ok 7 - Shield accepts finite terrain; agricultural powers require their plant even when terrain placement is invalid
+  ---
+  duration_ms: 5.8954
+  ...
+# Subtest: saved exposure fields reject malformed state while accepting older absent fields
+ok 8 - saved exposure fields reject malformed state while accepting older absent fields
+  ---
+  duration_ms: 3.0541
+  ...
+# Subtest: repeated casts mark the same slow-growing crop without stacking beyond double
+ok 9 - repeated casts mark the same slow-growing crop without stacking beyond double
+  ---
+  duration_ms: 225.7737
+  ...
+# (node:20660) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real positive cooldown transitions group simultaneously ready spells into one UI cue
+ok 10 - real positive cooldown transitions group simultaneously ready spells into one UI cue
+  ---
+  duration_ms: 8.279
+  ...
+# Subtest: load, replacement, rollback, locked spells and unchanged simulated time seed silently
+ok 11 - load, replacement, rollback, locked spells and unchanged simulated time seed silently
+  ---
+  duration_ms: 0.4307
+  ...
+# Subtest: pauses, result, disposal, elapsed loading and recasting reject obsolete requests
+ok 12 - pauses, result, disposal, elapsed loading and recasting reject obsolete requests
+  ---
+  duration_ms: 3.5857
+  ...
+# Subtest: native simulated Growth duration ending does not count as cooldown completion
+ok 13 - native simulated Growth duration ending does not count as cooldown completion
+  ---
+  duration_ms: 31.9723
+  ...
+# Subtest: AudioSystem stop/suspend and a suspended context release the observer
+ok 14 - AudioSystem stop/suspend and a suspended context release the observer
+  ---
+  duration_ms: 0.8981
+  ...
+# Subtest: cooldown preparation shares one cold download/decode without playing or mutating gameplay
+ok 15 - cooldown preparation shares one cold download/decode without playing or mutating gameplay
+  ---
+  duration_ms: 3.9687
+  ...
+# Subtest: preparation is lazy, cancels stale bank requests and throttles failed downloads
+ok 16 - preparation is lazy, cancels stale bank requests and throttles failed downloads
+  ---
+  duration_ms: 2.4084
+  ...
+# Subtest: leaving during the cold download prevents decoding and clears its cache entry
+ok 17 - leaving during the cold download prevents decoding and clears its cache entry
+  ---
+  duration_ms: 0.9847
+  ...
+1..17
+# tests 17
+# suites 0
+# pass 17
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 804.1815

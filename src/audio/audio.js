@@ -234,7 +234,7 @@ export class AudioSystem {
     if(this.seen.size>2000)this.seen=new Set(events.map(e=>e.id));
   }
   preparePowerReadySound(state){
-    if(this.context?.state!=='running'||state.result||state.pauses?.length||!Object.values(state.cooldowns??{}).some(value=>value>0))return;
+    if(this.context?.state!=='running'||state.result||state.pauses?.length||!(state.cooldowns?.shield>0))return;
     if(this.powerReadyPreparation||this.context.currentTime<(this.powerReadyRetryAt??0))return;
     const generation=this.generation,current=()=>generation===this.generation&&this.context?.state==='running';
     // Fetch and decode during the cooldown, before the short freshness window

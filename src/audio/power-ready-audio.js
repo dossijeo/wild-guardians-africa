@@ -1,6 +1,7 @@
 import {spellUnlocked} from '../simulation/rules.js';
 export const POWER_READY_SOUND_IDS=Object.freeze(['spirit_power_charge']);
-const kinds=['shield','growth','multiply'];
+// Agricultural powers have no cooldown, including when loading legacy fields.
+const kinds=['shield'];
 // Observe a real simulated cooldown edge, never initial availability/history.
 export class PowerReadyAudio {
  constructor(play,stopVoice,clock){this.play=play;this.stopVoice=stopVoice;this.clock=clock;this.ticket=0;this.dispose();}
