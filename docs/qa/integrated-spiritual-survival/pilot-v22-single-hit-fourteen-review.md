@@ -29,3 +29,5 @@ Total destroyed crops divided by summed per-raid starting exposure is 4.58% prot
 This is promising short evidence, not final balance approval. A productive no-wall strategy **with Shield** still needs testing to separate wall protection from magic. Additional preselected seeds 123 and 2026, longer coherent pilots, other strategies and Gran Cañón coverage remain necessary before 100/180-day acceptance. The q8 policy renews previously hired crews while work remains; record its labor decisions rather than attributing every financial difference to resistance alone. Do not compensate policy/navigation bugs by modifying damage or prices.
 
 Manual inactivity is not measured: bot decision-window idle proxies remain 67.6% and 62.2%. No under-25% human-action acceptance, mobile/GPU approval or main merge is claimed.
+
+Plot presentation correction: the first plot labeled its X axis as completed nights even though the terminal day is not a survived night. Retained originals are unchanged; `pilot-v22-single-hit-fourteen-terminal-charts` labels the axis as native day, marks the defeated strategy and records terminalDay separately from completed nights.

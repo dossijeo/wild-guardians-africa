@@ -60,6 +60,8 @@ def write_comparison(prefix, directories, *, vary_defense_material=False):
         material = report['policy'].get('defenseMaterial', 'zarzas')
         if vary_defense_material:
             label += ' / ' + material
+        if report['result'] == 'defeat':
+            label += ' (defeat)'
         days = report['daily']
         x = [d['day'] for d in days]
         cumulative_losses, cumulative_defense = [], []
@@ -73,7 +75,7 @@ def write_comparison(prefix, directories, *, vary_defense_material=False):
                              living=day['living'], destroyed=day['destroyed'],
                              delivered=day['delivered'], planted=day['planted'],
                              **{k: day['finance'][k] for k in ('income', 'seeds', 'wages', 'walls', 'repairs', 'reconciliationDifference')}))
-        summary.append(dict(path=str(path), strategy=label, defenseMaterial=material, nights=report['completedNights'],
+        summary.append(dict(path=str(path), strategy=label, defenseMaterial=material, nights=report['completedNights'], terminalDay=days[-1]['day'],
                             result=report['result'], cash=report['money'], living=days[-1]['living'],
                             destroyed=losses, paidDefense=defense,
                             decisionIdleProxy=report['activity']['unoccupiedFraction'],
@@ -82,7 +84,7 @@ def write_comparison(prefix, directories, *, vary_defense_material=False):
             axis.plot(x, y, marker='o', markersize=3, label=label)
     for axis, title in zip(axes.flat, ('Available coins', 'Living crops', 'Cumulative destroyed crops', 'Paid walls and repairs (coins)')):
         axis.set_title(title)
-        axis.set_xlabel('Completed native night')
+        axis.set_xlabel('Native day (includes terminal defeat)')
         axis.xaxis.set_major_locator(MaxNLocator(integer=True))
         first_day = min(d['day'] for _, report, _ in runs for d in report['daily'])
         last_day = max(d['day'] for _, report, _ in runs for d in report['daily'])
