@@ -5,7 +5,7 @@ import {Navigation} from '../src/world/navigation.js';
 import {rational,numberOf} from '../src/simulation/money.js';
 import {hiringCost} from '../src/simulation/workforce.js';
 import {createQ5LabourPolicy} from '../tools/native-q5-labour-policy.mjs';
-import {campaignProtocolForLabour,nativeCampaignStrategy} from '../tools/native-campaign-protocol.mjs';
+import {campaignProtocolForLabour,nativeCampaignStrategy,NATIVE_CAMPAIGN_PROTOCOL} from '../tools/native-campaign-protocol.mjs';
 import {parseNativeCampaignArgs} from '../tools/run_native_campaign.mjs';
 function fixture(){
  const s=Game.newGame({seed:712,slotId:'q5-contract'}),nav=new Navigation(712,'sabana');
@@ -51,7 +51,7 @@ test('Q5 cash-limited dawn discloses lost capacity; native emergency does not ma
 });
 test('Q5 opt-in/provenance remains comparable A/B/D/E; legacy and Q4 kept',()=>{
  assert.equal(parseNativeCampaignArgs(['--out','fixture','--labour-policy','q5']).labourPolicy,'q5');assert.match(campaignProtocolForLabour('q5').id,/-q5$/);
- assert.equal(campaignProtocolForLabour('legacy').id,'native-constant-economy-v3');assert.match(campaignProtocolForLabour('q4').id,/-q4$/);
+ assert.equal(campaignProtocolForLabour('legacy').id,NATIVE_CAMPAIGN_PROTOCOL.id);assert.match(campaignProtocolForLabour('q4').id,/-q4$/);
  for(const strategy of ['expansive','good','no-walls','no-shield'])assert.equal(nativeCampaignStrategy(strategy).middayHiring,true);
  const {shield:d,...D}=nativeCampaignStrategy('no-walls'),{shield:e,...E}=nativeCampaignStrategy('no-shield');assert.deepEqual(D,E);assert.equal(d,true);assert.equal(e,false);
 });

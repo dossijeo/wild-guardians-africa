@@ -55,7 +55,8 @@ export function villageSavingsForState(policy,state,income,spent){
 }
 
 export function campaignProtocolForLabour(name='legacy'){
- if(!['legacy','q4','q5','q6','q7','q8'].includes(name))throw Error('Unknown native labour policy');
+ if(!['legacy','q4','q5','q6','q7','q8','q9'].includes(name))throw Error('Unknown native labour policy');
+ if(name==='q9')return Object.freeze({...campaignProtocolForLabour('q8'),id:NATIVE_CAMPAIGN_PROTOCOL.id+'-q9',renewalWorkUnitsPerWorker:6,dawnRenewal:'at most previous crew and ceiling(max(living,pending)/6) per productive centre; native wages and Q8 trial gates unchanged'});
  if(name==='q8')return Object.freeze({...campaignProtocolForLabour('q7'),id:NATIVE_CAMPAIGN_PROTOCOL.id+'-q8',openingStaff:6});
  if(name==='q7')return Object.freeze({...campaignProtocolForLabour('q6'),id:NATIVE_CAMPAIGN_PROTOCOL.id+'-q7',openingStaff:3,lastTrialTime:180,trialGate:'last new worker physical delivery and center settled replacement margin >= proportional salary + full next wage; current cash affordability remains separate'});
  if(name==='q6')return Object.freeze({...campaignProtocolForLabour('q5'),id:NATIVE_CAMPAIGN_PROTOCOL.id+'-q6',dawnFunding:'payable current full crew salary; disclose workingCapitalShortfall; subsequent purchases protect complete next wage'});

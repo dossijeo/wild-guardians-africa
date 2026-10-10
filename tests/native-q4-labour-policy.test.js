@@ -5,7 +5,7 @@ import {Navigation} from '../src/world/navigation.js';
 import {rational,numberOf} from '../src/simulation/money.js';
 import {q4DawnPlan,q4AdditionalPlan,q4RecoveryReserve} from '../tools/native-q4-labour-policy.mjs';
 import {parseNativeCampaignArgs} from '../tools/run_native_campaign.mjs';
-import {campaignProtocolForLabour,nativeCampaignStrategy} from '../tools/native-campaign-protocol.mjs';
+import {campaignProtocolForLabour,nativeCampaignStrategy,NATIVE_CAMPAIGN_PROTOCOL} from '../tools/native-campaign-protocol.mjs';
 function fixture(){
  const s=Game.newGame({seed:712,slotId:'q4-contract'}),nav=new Navigation(712,'sabana');
  nav.field={canyon:false,riverLevel:0,surface:()=>0,slope:()=>0,fluidInside:()=>false};nav.propsAt=()=>[];nav.setState(s);
@@ -30,6 +30,6 @@ test('Q4 additions use native proportional ceil, real saturated FIFO backlog, hi
 });
 test('Q4 keeps the same labour recipe for defended and no-wall strategies under the single-plant protocol',()=>{
  assert.equal(parseNativeCampaignArgs(['--out','fixture','--labour-policy','q4']).labourPolicy,'q4');
- assert.equal(campaignProtocolForLabour('legacy').id,'native-constant-economy-v4-single-plant-magic');assert.match(campaignProtocolForLabour('q4').id,/-q4$/);
+ assert.equal(campaignProtocolForLabour('legacy').id,NATIVE_CAMPAIGN_PROTOCOL.id);assert.match(campaignProtocolForLabour('q4').id,/-q4$/);
  for(const name of ['good','expansive','no-walls'])assert.equal(nativeCampaignStrategy(name).middayHiring,true);assert.equal(nativeCampaignStrategy('bad').middayHiring,false);assert.throws(()=>campaignProtocolForLabour('fake'));
 });
