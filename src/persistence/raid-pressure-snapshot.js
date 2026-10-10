@@ -1,6 +1,6 @@
 import {BALANCE as B} from '../simulation/balance.js';
 import {threatTier} from '../simulation/rules.js';
-import {validateRaidPressureMemory,raidPressureSummary,raidSpeciesPressure,referenceRaidArea,planRaidProductComposition} from '../simulation/raid-pressure-budget.js';
+import {validateRaidPressureMemory,raidPressureSummary,raidSpeciesPressure,referenceRaidArea,planRaidProductComposition,raidPressureCandidateForVersion} from '../simulation/raid-pressure-budget.js';
 const equal=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
 export function validatePressureSnapshot(s){
  const memory=s.raidPressureMemory;
@@ -9,7 +9,7 @@ export function validatePressureSnapshot(s){
  if(p.pressureVersion!==1||p.night!==s.day||!Number.isFinite(p.at)||p.at<323||p.at>=548||typeof p.done!=='boolean'||!Array.isArray(p.waves)||!Array.isArray(p.actors))throw Error('Invalid pressure night plan');
  if(p.peaceful){if(!s.postgame||p.group.length||p.actors.length||p.waves.length||s.raid)throw Error('Invalid peaceful plan');return;}
  if(s.postgame||!memory)throw Error('Invalid active pressure memory');
- const f=p.pressureFacts,summary=raidPressureSummary(p.night,f.observedValue,memory);
+ const f=p.pressureFacts,config=raidPressureCandidateForVersion(f?.candidateVersion),summary=raidPressureSummary(p.night,f.observedValue,memory);
  for(const [k,v] of Object.entries(summary))if(f[k]!==v)throw Error('Pressure summary mismatch');
  const actors=p.waves.flat();
  if(p.waves.some(w=>!Array.isArray(w)||!w.length||w.length>16)||actors.length!==summary.targetAnimals||!equal(p.actors,p.waves[0])||!equal(p.group,p.actors.map(a=>a.species)))throw Error('Invalid pressure cohort');
@@ -19,10 +19,10 @@ export function validatePressureSnapshot(s){
   else {
    const spec=raidSpeciesPressure(a.species,summary.pressure),profile={cropDamage:spec.cropDamage,structureDamage:spec.structureDamage,attackRadius:spec.attackRadius,areaCap:spec.areaCap,peripheralWeight:.5};
    if(!unlocked.includes(a.species)||!Number.isSafeInteger(a.hits)||a.hits<spec.minHits||a.hits>spec.maxHits||!equal(a.damageProfile,profile))throw Error('Invalid pressure actor');
-   potential+=a.hits*spec.cropDamage*referenceRaidArea(spec).effective;
+   potential+=a.hits*spec.cropDamage*referenceRaidArea(spec,config).effective;
   }
  }
- const budget=summary.introductory?potential:planRaidProductComposition(actors.length,summary.pressure,unlocked).q;
+ const budget=summary.introductory?potential:planRaidProductComposition(actors.length,summary.pressure,unlocked,config).q;
  if(f.budget!==budget||Math.abs(f.potential-potential)>1e-9||potential>budget+1e-9)throw Error('Invalid pressure product');
  const r=s.raid;if(!r?.waves)return;
  if(!equal(r.waves,p.waves)||!Number.isSafeInteger(r.waveIndex)||r.waveIndex<0||r.waveIndex>=p.waves.length||!equal(r.pressureFacts,p.pressureFacts))throw Error('Invalid active waves');

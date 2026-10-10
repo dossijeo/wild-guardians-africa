@@ -1,0 +1,11 @@
+# Military budget candidate 2 — experimental only
+
+The sole military calibration change is qMeanMultiplier 1 -> 1.5, with canonical candidate version 2. This raises the joint composition feasibility budget; it does not directly multiply any animal's physical damage. Full native hit ranges, species unlocks, introductory nights 1–5, pressure formula and EMA, count formula, maximum 16 active bodies, crop/structure damage and directional radii remain unchanged. Original agricultural prices, wages and centre costs remain unchanged.
+
+Across the 101 tested pressures and three unlocked-species sets, the new budget admits the intended Hamilton-rounded species composition without pre-RNG downgrades, and the maximum full-hit reference product stays within Q. Previous candidate-1 native campaigns and their negative results remain immutable. No target loss percentage is applied to crops.
+
+Save compatibility: pressureVersion 1 is retained as the plan format. New live plans record pressureFacts.candidateVersion=2. Missing provenance denotes immutable historical recipe 1, including its multiplier 1; snapshot validation recomputes the appropriate historical budget. Already committed plans are reused without changing RNG, EMA, actors, waves or money. Unknown versions and forged budgets fail. The following night uses candidate 2. EMA schema remains version 1.
+
+Two genuine candidate-1 fixtures were generated before editing runtime source from commit 2317c92b: planned night 99 and a physically spawned active 16-animal first wave of a 19-animal raid. Tests require exact snapshot round-trip equality, retained original budget 119, unchanged retry descriptors and successful next-night migration. Fixture hashes are recorded beside the originals.
+
+Validation: 93 tests pass covering budget, RNG, saved plans, active waves, individual reservations, physical area impacts, shield/obstacle interception, wave readiness and canyon river defense. Production Vite build passes in 9.85 s. These functional checks do not establish the economic balance or device/GPU acceptance. Fresh short native pilots must measure the actual damage and economic effect before any main integration or long-campaign acceptance.

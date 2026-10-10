@@ -1,0 +1,489 @@
+TAP version 13
+# (node:54248) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: animals detour on land around a finite river; workers cross directly
+ok 1 - animals detour on land around a finite river; workers cross directly
+  ---
+  duration_ms: 31.6645
+  ...
+# Subtest: river completes a paid U perimeter without water wall pieces and preserves worker access on reload
+ok 2 - river completes a paid U perimeter without water wall pieces and preserves worker access on reload
+  ---
+  duration_ms: 53.3698
+  ...
+# Subtest: a mixed river and cliff perimeter creates a door on the last paid stroke and preserves it after rebuilding
+ok 3 - a mixed river and cliff perimeter creates a door on the last paid stroke and preserves it after rebuilding
+  ---
+  duration_ms: 47.7653
+  ...
+# Subtest: land-access witness rejects a naturally isolated farm and accepts a verified same-bank approach
+ok 4 - land-access witness rejects a naturally isolated farm and accepts a verified same-bank approach
+  ---
+  duration_ms: 2.0689
+  ...
+# Subtest: a real area impact cannot damage crops on the opposite river bank
+ok 5 - a real area impact cannot damage crops on the opposite river bank
+  ---
+  duration_ms: 2.5889
+  ...
+# Subtest: cooperative canyon initialization preserves the deterministic synchronous site
+ok 6 - cooperative canyon initialization preserves the deterministic synchronous site
+  ---
+  duration_ms: 4252.1076
+  ...
+# Subtest: native mixed canyon waves retain all 16 dry bodies without overlap and deterministic placement
+ok 7 - native mixed canyon waves retain all 16 dry bodies without overlap and deterministic placement
+  ---
+  duration_ms: 2860.6531
+  ...
+# Subtest: a native canyon column physically arrives and attacks, with no water landings
+ok 8 - a native canyon column physically arrives and attacks, with no water landings
+  ---
+  duration_ms: 2517.8173
+  ...
+# (node:18400) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: central full damage, frontal90-degree periphery half damage and maximum radius are physical
+ok 9 - central full damage, frontal90-degree periphery half damage and maximum radius are physical
+  ---
+  duration_ms: 17.2458
+  ...
+# Subtest: sector follows current contact heading and rejects a backward or remote contact
+ok 10 - sector follows current contact heading and rejects a backward or remote contact
+  ---
+  duration_ms: 9.4048
+  ...
+# Subtest: a radius-zero or damage-zero profile never manufactures peripheral hits or mandatory deaths
+ok 11 - a radius-zero or damage-zero profile never manufactures peripheral hits or mandatory deaths
+  ---
+  duration_ms: 2.2852
+  ...
+# Subtest: area cap prioritizes the central plant then nearest legal physical candidates
+ok 12 - area cap prioritizes the central plant then nearest legal physical candidates
+  ---
+  duration_ms: 2.0706
+  ...
+# Subtest: native wall footprint occludes peripheral impacts, including animal-blocking gate=false
+ok 13 - native wall footprint occludes peripheral impacts, including animal-blocking gate=false
+  ---
+  duration_ms: 3.5242
+  ...
+# Subtest: native wall footprint occludes peripheral impacts, including animal-blocking gate=true
+ok 14 - native wall footprint occludes peripheral impacts, including animal-blocking gate=true
+  ---
+  duration_ms: 1.9146
+  ...
+# Subtest: a wall between actor and impact prevents a central hit rather than producing splash behind it
+ok 15 - a wall between actor and impact prevents a central hit rather than producing splash behind it
+  ---
+  duration_ms: 2.5416
+  ...
+# Subtest: a native centre footprint blocks rays and is re-evaluated after removal
+ok 16 - a native centre footprint blocks rays and is re-evaluated after removal
+  ---
+  duration_ms: 2.0283
+  ...
+# Subtest: Shield protects each peripheral plant and blocks a crossing ray outside its endpoint
+ok 17 - Shield protects each peripheral plant and blocks a crossing ray outside its endpoint
+  ---
+  duration_ms: 2.4409
+  ...
+# Subtest: a shielded central target consumes no crop HP
+ok 18 - a shielded central target consumes no crop HP
+  ---
+  duration_ms: 1.5264
+  ...
+# Subtest: one attack is deduplicated across replay/save and fractional damage persists exactly
+ok 19 - one attack is deduplicated across replay/save and fractional damage persists exactly
+  ---
+  duration_ms: 5.0527
+  ...
+# Subtest: intro destruction cap survives central4 and peripheral2 damage, retaining a living farm
+ok 20 - intro destruction cap survives central4 and peripheral2 damage, retaining a living farm
+  ---
+  duration_ms: 1.7697
+  ...
+# Subtest: grid handles append, death, native position epoch and replacement without scanning all crops per hit
+ok 21 - grid handles append, death, native position epoch and replacement without scanning all crops per hit
+  ---
+  duration_ms: 37.2328
+  ...
+# Subtest: profile and crop fractional bounds reject corrupt saves while supporting legacy integer HP
+ok 22 - profile and crop fractional bounds reject corrupt saves while supporting legacy integer HP
+  ---
+  duration_ms: 2.7094
+  ...
+# Subtest: native warthog profile completes real melee, one impact per attack, dt0.1
+ok 23 - native warthog profile completes real melee, one impact per attack, dt0.1
+  ---
+  duration_ms: 33.1035
+  ...
+# Subtest: native warthog profile completes real melee, one impact per attack, dt1
+ok 24 - native warthog profile completes real melee, one impact per attack, dt1
+  ---
+  duration_ms: 13.3834
+  ...
+# Subtest: native hyena profile completes real melee, one impact per attack, dt0.1
+ok 25 - native hyena profile completes real melee, one impact per attack, dt0.1
+  ---
+  duration_ms: 33.921
+  ...
+# Subtest: native hyena profile completes real melee, one impact per attack, dt1
+ok 26 - native hyena profile completes real melee, one impact per attack, dt1
+  ---
+  duration_ms: 9.3042
+  ...
+# Subtest: native buffalo profile completes real melee, one impact per attack, dt0.1
+ok 27 - native buffalo profile completes real melee, one impact per attack, dt0.1
+  ---
+  duration_ms: 20.1274
+  ...
+# Subtest: native buffalo profile completes real melee, one impact per attack, dt1
+ok 28 - native buffalo profile completes real melee, one impact per attack, dt1
+  ---
+  duration_ms: 11.4686
+  ...
+# Subtest: native lion profile completes real melee, one impact per attack, dt0.1
+ok 29 - native lion profile completes real melee, one impact per attack, dt0.1
+  ---
+  duration_ms: 23.6552
+  ...
+# Subtest: native lion profile completes real melee, one impact per attack, dt1
+ok 30 - native lion profile completes real melee, one impact per attack, dt1
+  ---
+  duration_ms: 9.2456
+  ...
+# Subtest: native rhino profile completes real melee, one impact per attack, dt0.1
+ok 31 - native rhino profile completes real melee, one impact per attack, dt0.1
+  ---
+  duration_ms: 14.7169
+  ...
+# Subtest: native rhino profile completes real melee, one impact per attack, dt1
+ok 32 - native rhino profile completes real melee, one impact per attack, dt1
+  ---
+  duration_ms: 10.4125
+  ...
+# Subtest: a native wall strike uses structural profile damage but never applies agricultural splash
+ok 33 - a native wall strike uses structural profile damage but never applies agricultural splash
+  ---
+  duration_ms: 253.1099
+  ...
+# Subtest: native saved attack resumes once and does not duplicate event facts
+ok 34 - native saved attack resumes once and does not duplicate event facts
+  ---
+  duration_ms: 10.9306
+  ...
+# Subtest: native committed contact writes half-point HP, reload preserves it and applied attacks cannot hit twice
+ok 35 - native committed contact writes half-point HP, reload preserves it and applied attacks cannot hit twice
+  ---
+  duration_ms: 2.8038
+  ...
+# Subtest: live wall collapse remains occluding until ruined, and new topology invalidates cached geometry
+ok 36 - live wall collapse remains occluding until ruined, and new topology invalidates cached geometry
+  ---
+  duration_ms: 1.9066
+  ...
+# Subtest: maximal canonical profile and its bounded living queries are valid; malformed and replay IDs are not
+ok 37 - maximal canonical profile and its bounded living queries are valid; malformed and replay IDs are not
+  ---
+  duration_ms: 1.7515
+  ...
+# (node:32900) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: 100 connected mijo plants allow independent attacks from 1 animals
+ok 38 - 100 connected mijo plants allow independent attacks from 1 animals
+  ---
+  duration_ms: 82.3812
+  ...
+# Subtest: 100 connected mijo plants allow independent attacks from 2 animals
+ok 39 - 100 connected mijo plants allow independent attacks from 2 animals
+  ---
+  duration_ms: 40.8295
+  ...
+# Subtest: 100 connected mijo plants allow independent attacks from 5 animals
+ok 40 - 100 connected mijo plants allow independent attacks from 5 animals
+  ---
+  duration_ms: 128.5892
+  ...
+# Subtest: 100 connected mijo plants allow independent attacks from 12 animals
+ok 41 - 100 connected mijo plants allow independent attacks from 12 animals
+  ---
+  duration_ms: 588.8046
+  ...
+# Subtest: centers permit physically independent simultaneous approach claims
+ok 42 - centers permit physically independent simultaneous approach claims
+  ---
+  duration_ms: 105.3834
+  ...
+# Subtest: individual claims and native RNG replay exactly after a save/reload
+ok 43 - individual claims and native RNG replay exactly after a save/reload
+  ---
+  duration_ms: 1169.8212
+  ...
+# Subtest: destroying one reserved crop frees only that target and preserves other leases
+ok 44 - destroying one reserved crop frees only that target and preserves other leases
+  ---
+  duration_ms: 61.0035
+  ...
+# Subtest: actual saturation stages valid waiters and retires after no-progress bound without spending hits
+ok 45 - actual saturation stages valid waiters and retires after no-progress bound without spending hits
+  ---
+  duration_ms: 15.4819
+  ...
+# Subtest: legacy group saves migrate to individual claims without extra RNG draws
+ok 46 - legacy group saves migrate to individual claims without extra RNG draws
+  ---
+  duration_ms: 8.6043
+  ...
+# Subtest: group accessibility uses a complete native component certificate and invalidates when walls open
+ok 47 - group accessibility uses a complete native component certificate and invalidates when walls open
+  ---
+  duration_ms: 60.2356
+  ...
+# Subtest: a protected connected perimeter allows simultaneous attacks on separate pieces
+ok 48 - a protected connected perimeter allows simultaneous attacks on separate pieces
+  ---
+  duration_ms: 103.657
+  ...
+# Subtest: V uses only native living agricultural base value, not cash/maturity/magic bonuses
+ok 49 - V uses only native living agricultural base value, not cash/maturity/magic bonuses
+  ---
+  duration_ms: 3.7246
+  ...
+# Subtest: five-night EMA is pure/idempotent, initializes legacy, persists exactly and never invents missing samples
+ok 50 - five-night EMA is pure/idempotent, initializes legacy, persists exactly and never invents missing samples
+  ---
+  duration_ms: 3.715
+  ...
+# Subtest: P follows independent formula with clamping and growing/retiring agriculture
+ok 51 - P follows independent formula with clamping and growing/retiring agriculture
+  ---
+  duration_ms: 0.6489
+  ...
+# Subtest: species formulas apply jointly with no cash-dependent input
+ok 52 - species formulas apply jointly with no cash-dependent input
+  ---
+  duration_ms: 1.0099
+  ...
+# Subtest: mixture interpolates weak opening to final proportions, preserves unlocks and finite rounding
+ok 53 - mixture interpolates weak opening to final proportions, preserves unlocks and finite rounding
+  ---
+  duration_ms: 2.2455
+  ...
+# Subtest: reference directional area is below cap when radius/spacing cannot reach neighbours
+ok 54 - reference directional area is below cap when radius/spacing cannot reach neighbours
+  ---
+  duration_ms: 0.9991
+  ...
+# Subtest: Q controls joint product without deleting animals or materializing composition lists
+ok 55 - Q controls joint product without deleting animals or materializing composition lists
+  ---
+  duration_ms: 14.2816
+  ...
+# Subtest: selection deterministically roundtrips RNG and leaves inputs/config/balance unchanged
+ok 56 - selection deterministically roundtrips RNG and leaves inputs/config/balance unchanged
+  ---
+  duration_ms: 3.0401
+  ...
+# Subtest: introductions keep original one actor/min budget without new random draws
+ok 57 - introductions keep original one actor/min budget without new random draws
+  ---
+  duration_ms: 0.4843
+  ...
+# Subtest: explicit infeasible Q rejects composition before any random draw
+ok 58 - explicit infeasible Q rejects composition before any random draw
+  ---
+  duration_ms: 1.0335
+  ...
+# Subtest: invalid inputs reject bounded work instead of propagating unsafe values
+ok 59 - invalid inputs reject bounded work instead of propagating unsafe values
+  ---
+  duration_ms: 0.6959
+  ...
+# Subtest: peaceful postgame has no actor, pressure draw or budget assignment
+ok 60 - peaceful postgame has no actor, pressure draw or budget assignment
+  ---
+  duration_ms: 0.2831
+  ...
+# Subtest: unintegrated candidate configuration matches the pure module decisions
+ok 61 - unintegrated candidate configuration matches the pure module decisions
+  ---
+  duration_ms: 6.1259
+  ...
+# Subtest: full-range hit roll is independent of remaining Q after composition is fixed
+ok 62 - full-range hit roll is independent of remaining Q after composition is fixed
+  ---
+  duration_ms: 11.9959
+  ...
+# Subtest: composition adjusts before RNG under maximum shares, finite swaps, exact N and transparent Q floor
+ok 63 - composition adjusts before RNG under maximum shares, finite swaps, exact N and transparent Q floor
+  ---
+  duration_ms: 89.9962
+  ...
+# Subtest: strict config/source contracts reject unknown keys, drift, malformed numbers and unreviewed costs
+ok 64 - strict config/source contracts reject unknown keys, drift, malformed numbers and unreviewed costs
+  ---
+  duration_ms: 6.2382
+  ...
+# (node:26792) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: historical untagged planned and active multi-wave saves retain actors, RNG, EMA and paid state
+ok 65 - historical untagged planned and active multi-wave saves retain actors, RNG, EMA and paid state
+  ---
+  duration_ms: 29.9039
+  ...
+# Subtest: following night adopts candidate 2 once; tagged saved plan reuses with no reroll
+ok 66 - following night adopts candidate 2 once; tagged saved plan reuses with no reroll
+  ---
+  duration_ms: 9.7315
+  ...
+# Subtest: unknown provenance and changing a historical budget recipe are rejected
+ok 67 - unknown provenance and changing a historical budget recipe are rejected
+  ---
+  duration_ms: 41.4949
+  ...
+# Subtest: 1.5 budget preserves intended species composition and full maximum-hit envelope across pressures
+ok 68 - 1.5 budget preserves intended species composition and full maximum-hit envelope across pressures
+  ---
+  duration_ms: 123.0421
+  ...
+# (node:33284) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native wave lifecycle keeps raid open beyond dawn, spawns all planned actors and roundtrips between waves
+ok 69 - native wave lifecycle keeps raid open beyond dawn, spawns all planned actors and roundtrips between waves
+  ---
+  duration_ms: 945.5118
+  ...
+# Subtest: pressure persistence rejects budget/profile/cohort mutations before restoring gameplay
+ok 70 - pressure persistence rejects budget/profile/cohort mutations before restoring gameplay
+  ---
+  duration_ms: 15.2009
+  ...
+# (node:30324) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: night preparation is pure, deterministic, cash-independent and bounded into physical cohorts
+ok 71 - night preparation is pure, deterministic, cash-independent and bounded into physical cohorts
+  ---
+  duration_ms: 18.6017
+  ...
+# Subtest: initial five species preserve original single-target profiles
+ok 72 - initial five species preserve original single-target profiles
+  ---
+  duration_ms: 5.92
+  ...
+# Subtest: committed plan survives retry and JSON reload without advancing RNG or EMA
+ok 73 - committed plan survives retry and JSON reload without advancing RNG or EMA
+  ---
+  duration_ms: 10.6248
+  ...
+# Subtest: postgame permanently produces no actors and does not advance agricultural EMA
+ok 74 - postgame permanently produces no actors and does not advance agricultural EMA
+  ---
+  duration_ms: 1.541
+  ...
+# Subtest: pending waves wait for actual departure and copy immutable descriptors
+ok 75 - pending waves wait for actual departure and copy immutable descriptors
+  ---
+  duration_ms: 7.6291
+  ...
+# (node:52428) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: only all-gone previous actors permit valid1..16 next-wave preparation
+ok 76 - only all-gone previous actors permit valid1..16 next-wave preparation
+  ---
+  duration_ms: 512.9964
+  ...
+# Subtest: malformed/finished waves do not escape active raid veto
+ok 77 - malformed/finished waves do not escape active raid veto
+  ---
+  duration_ms: 2573.039
+  ...
+# Subtest: request copies current workers/incapacitation and wave owner without former raid actors
+ok 78 - request copies current workers/incapacitation and wave owner without former raid actors
+  ---
+  duration_ms: 228.224
+  ...
+# Subtest: native complete16-actor prepared entry remains exterior/legal and keeps exact state/RNG through reload
+ok 79 - native complete16-actor prepared entry remains exterior/legal and keeps exact state/RNG through reload
+  ---
+  duration_ms: 489.7584
+  ...
+# Subtest: retained paid closed enclosure prepares an exterior mixed next wave from its inside camera
+ok 80 - retained paid closed enclosure prepares an exterior mixed next wave from its inside camera
+  ---
+  duration_ms: 1729.164
+  ...
+# Subtest: wave-index: stale wave reply cannot install or be taken
+ok 81 - wave-index: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 296.6897
+  ...
+# Subtest: raid-id: stale wave reply cannot install or be taken
+ok 82 - raid-id: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 305.6046
+  ...
+# Subtest: camera: stale wave reply cannot install or be taken
+ok 83 - camera: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 271.2167
+  ...
+# Subtest: topology: stale wave reply cannot install or be taken
+ok 84 - topology: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 271.4587
+  ...
+# Subtest: bounds: stale wave reply cannot install or be taken
+ok 85 - bounds: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 279.8199
+  ...
+# Subtest: rng: stale wave reply cannot install or be taken
+ok 86 - rng: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 261.2001
+  ...
+# Subtest: worker: stale wave reply cannot install or be taken
+ok 87 - worker: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 256.7767
+  ...
+# Subtest: worker-position: stale wave reply cannot install or be taken
+ok 88 - worker-position: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 241.1239
+  ...
+# Subtest: worker-incap: stale wave reply cannot install or be taken
+ok 89 - worker-incap: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 298.6427
+  ...
+# Subtest: finished: stale wave reply cannot install or be taken
+ok 90 - finished: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 295.9492
+  ...
+# Subtest: active-actor: stale wave reply cannot install or be taken
+ok 91 - active-actor: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 283.4614
+  ...
+# Subtest: accepted wave cannot leak through changed identity and disposal rejects delayed reply
+ok 92 - accepted wave cannot leak through changed identity and disposal rejects delayed reply
+  ---
+  duration_ms: 312.8981
+  ...
+# Subtest: result/postgame remove readiness; ordinary no-raid key stays byte-identical
+ok 93 - result/postgame remove readiness; ordinary no-raid key stays byte-identical
+  ---
+  duration_ms: 328.9974
+  ...
+1..93
+# tests 93
+# suites 0
+# pass 93
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10079.5577

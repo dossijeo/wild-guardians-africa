@@ -89,7 +89,7 @@ test('composition adjusts before RNG under maximum shares, finite swaps, exact N
   for(const id of ids)assert.ok(plan.counts[id]<=plan.caps[id]);
   assert.equal(plan.q,Math.max(plan.requestedQ,plan.minimumLegalWorstCase));
  }
- const low=planRaidProductComposition(4,0,ids);assert.equal(low.requestedQ,12);assert.equal(low.minimumLegalWorstCase,16);assert.equal(low.q,16);assert.equal(low.qRaisedForRangeSafety,true);
+ const low=planRaidProductComposition(4,0,ids);assert.equal(low.requestedQ,18);assert.equal(low.minimumLegalWorstCase,16);assert.equal(low.q,18);assert.equal(low.qRaisedForRangeSafety,false);
 });
 test('strict config/source contracts reject unknown keys, drift, malformed numbers and unreviewed costs',async()=>{
  const {readFileSync}=await import('node:fs'),original=JSON.parse(readFileSync(new URL('../content/balance/raid_pressure_candidate.json',import.meta.url)));
