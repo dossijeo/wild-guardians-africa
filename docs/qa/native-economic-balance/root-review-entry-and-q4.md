@@ -1,0 +1,9 @@
+# Revisión raíz: entrada física y candidata de contratación
+
+PR21 revisada contra head65365e3345b2336ddfa4836cf3745e450ffffcb0 y mergeada enbe04a5ca. El grafo conecta únicamente nacimientos/salidas previamente elegidos; cada raíz y segmento se comprueba con el radio real del actor. No reutiliza certificados de un animal pequeño para pasar otro grande. Tiene límites explícitos de trabajo y rechaza el candidato completo cuando no acredita conectividad; no elimina individuos ni resamplea RNG.
+
+Se inspeccionaron el helper, integración y pruebas de segmentos nativos, estrechez, lava/agua, pendiente, sólidos y límites.15/15 pruebas raíz posmerge (11 conectividad y4 selector) PASS. El agente conserva replays exactos de los dos guardados negativos originales con dt0,1/dt1 y recarga a5s, ambos completan noche6. Esto acredita esos casos y un certificado exterior suficiente, no una clasificación global de recintos ni éxito de futuras hordas grandes. CI seguía en curso al revisar el PR; no se esperó Windows por indicación del jugador.
+
+Q4 revisada enb6a5c368 e integrada como opción de QA ena18bb934. CLI predeterminada conserva legacy, explícita `--labour-policy q4` usa contratación mínima al amanecer y contrataciones adicionales nativas según saturación real de cola y dinero cobrado.14/14 contratos raíz PASS (Q4, CLI y resumen). Mantiene precios y mecánicas de producción, no acredita todavía throughput,25%inactividad ni supervivencia. La estrategia mala gestión omite contratación intermedia de forma explícita; las otras comparten la misma política laboral.
+
+No se ha lanzado una nueva campaña100/180. La presión vigente ya fue descartada por el excedente de la tanda detenida. La candidata de presión requiere fuentes congeladas, métricas corregidas y pilotos pareados cortos antes de ampliar el horizonte; conservar errores técnicos por separado de derrota económica.

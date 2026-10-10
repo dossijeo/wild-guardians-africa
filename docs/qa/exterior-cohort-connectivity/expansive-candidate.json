@@ -1,0 +1,6770 @@
+{
+  "certificate": {
+    "kind": "expansive",
+    "inputSha": "03ceedf735adf8ac716d908a646ad495e76046e69d144aa9f24d81207bb51ce2",
+    "stateUnchanged": true,
+    "group": [
+      "warthog",
+      "warthog",
+      "buffalo"
+    ],
+    "base": {
+      "entries": [
+        {
+          "x": 103.58471694415393,
+          "z": 27.212077660375726
+        },
+        {
+          "x": 106.48073939839215,
+          "z": 25.62997338298186
+        },
+        {
+          "x": 105.44009377855218,
+          "z": 30.608322174891466
+        }
+      ],
+      "exits": [
+        {
+          "x": 105.02299355996654,
+          "z": 29.844825346046846
+        },
+        {
+          "x": 107.91901601420476,
+          "z": 28.26272106865298
+        },
+        {
+          "x": 106.8783703943648,
+          "z": 33.24106986056258
+        }
+      ]
+    },
+    "entry": {
+      "entries": [
+        {
+          "x": 103.58471694415393,
+          "z": 27.212077660375726
+        },
+        {
+          "x": 106.48073939839215,
+          "z": 25.62997338298186
+        },
+        {
+          "x": 105.44009377855218,
+          "z": 30.608322174891466
+        }
+      ],
+      "exits": [
+        {
+          "x": 105.02299355996654,
+          "z": 29.844825346046846
+        },
+        {
+          "x": 107.91901601420476,
+          "z": 28.26272106865298
+        },
+        {
+          "x": 106.8783703943648,
+          "z": 33.24106986056258
+        }
+      ]
+    },
+    "wholeGroup": true,
+    "proof": [
+      {
+        "birth": {
+          "x": 103.58471694415393,
+          "z": 27.212077660375726
+        },
+        "exit": {
+          "x": 105.02299355996654,
+          "z": 29.844825346046846
+        },
+        "radius": 1.1,
+        "birthWalkable": true,
+        "exitWalkable": true,
+        "birthRay": true,
+        "exitRay": false
+      },
+      {
+        "birth": {
+          "x": 106.48073939839215,
+          "z": 25.62997338298186
+        },
+        "exit": {
+          "x": 107.91901601420476,
+          "z": 28.26272106865298
+        },
+        "radius": 1.1,
+        "birthWalkable": true,
+        "exitWalkable": true,
+        "birthRay": false,
+        "exitRay": false
+      },
+      {
+        "birth": {
+          "x": 105.44009377855218,
+          "z": 30.608322174891466
+        },
+        "exit": {
+          "x": 106.8783703943648,
+          "z": 33.24106986056258
+        },
+        "radius": 0.97,
+        "birthWalkable": true,
+        "exitWalkable": true,
+        "birthRay": false,
+        "exitRay": false
+      }
+    ]
+  },
+  "replays": [
+    {
+      "kind": "expansive",
+      "inputSha": "03ceedf735adf8ac716d908a646ad495e76046e69d144aa9f24d81207bb51ce2",
+      "dt": 0.1,
+      "reloadAfter": null,
+      "reloaded": false,
+      "simulatedSeconds": 16.89999999998463,
+      "completedBefore": 5,
+      "completedAfter": 6,
+      "result": null,
+      "raidRemaining": null,
+      "events": [
+        {
+          "id": "event-8413",
+          "type": "RaidSpawned",
+          "raidFacts": {
+            "id": "raid-6-night",
+            "day": 6,
+            "daytime": false,
+            "elapsed": 3599.999999997357,
+            "exposedLiving": 171,
+            "exposedWounded": 0,
+            "actors": [
+              {
+                "id": "animal-4876",
+                "species": "warthog",
+                "hitsRemaining": 3,
+                "spawn": {
+                  "x": 103.58471694415393,
+                  "z": 27.212077660375726
+                },
+                "exit": {
+                  "x": 105.02299355996654,
+                  "z": 29.844825346046846
+                }
+              },
+              {
+                "id": "animal-4877",
+                "species": "warthog",
+                "hitsRemaining": 2,
+                "spawn": {
+                  "x": 106.48073939839215,
+                  "z": 25.62997338298186
+                },
+                "exit": {
+                  "x": 107.91901601420476,
+                  "z": 28.26272106865298
+                }
+              },
+              {
+                "id": "animal-4878",
+                "species": "buffalo",
+                "hitsRemaining": 4,
+                "spawn": {
+                  "x": 105.44009377855218,
+                  "z": 30.608322174891466
+                },
+                "exit": {
+                  "x": 106.8783703943648,
+                  "z": 33.24106986056258
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "event-8415",
+          "type": "StructureHit",
+          "animalId": "animal-4876",
+          "targetId": "structure-4212",
+          "structureHit": {
+            "kind": "wall",
+            "x": 99.83606557377048,
+            "z": 18,
+            "previousHp": 100,
+            "hp": 80,
+            "maxHp": 100,
+            "criticalThreshold": 40,
+            "firstHitThisRaid": true
+          }
+        },
+        {
+          "id": "event-8418",
+          "type": "StructureHit",
+          "animalId": "animal-4876",
+          "targetId": "structure-4212",
+          "structureHit": {
+            "kind": "wall",
+            "x": 99.83606557377048,
+            "z": 18,
+            "previousHp": 80,
+            "hp": 60,
+            "maxHp": 100,
+            "criticalThreshold": 40,
+            "firstHitThisRaid": false
+          }
+        },
+        {
+          "id": "event-8422",
+          "type": "StructureHit",
+          "animalId": "animal-4877",
+          "targetId": "structure-4209",
+          "structureHit": {
+            "kind": "wall",
+            "x": 102,
+            "z": 5.016393442622956,
+            "previousHp": 100,
+            "hp": 80,
+            "maxHp": 100,
+            "criticalThreshold": 40,
+            "firstHitThisRaid": true
+          }
+        },
+        {
+          "id": "event-8425",
+          "type": "StructureHit",
+          "animalId": "animal-4876",
+          "targetId": "structure-4212",
+          "structureHit": {
+            "kind": "wall",
+            "x": 99.83606557377048,
+            "z": 18,
+            "previousHp": 60,
+            "hp": 40,
+            "maxHp": 100,
+            "criticalThreshold": 40,
+            "firstHitThisRaid": false
+          }
+        },
+        {
+          "id": "event-8428",
+          "type": "StructureHit",
+          "animalId": "animal-4877",
+          "targetId": "structure-4209",
+          "structureHit": {
+            "kind": "wall",
+            "x": 102,
+            "z": 5.016393442622956,
+            "previousHp": 80,
+            "hp": 60,
+            "maxHp": 100,
+            "criticalThreshold": 40,
+            "firstHitThisRaid": false
+          }
+        }
+      ],
+      "rows": [
+        {
+          "elapsed": 0.09999999999990905,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 103.44148888929088,
+          "z": 26.860103621133984,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.09999999999990905,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106.7224354367316,
+          "z": 25.336744760485665,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.09999999999990905,
+          "id": "animal-4878",
+          "species": "buffalo",
+          "x": 105.44009377855218,
+          "z": 30.608322174891466,
+          "status": "retreating",
+          "hits": 4,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.1999999999998181,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 103.29826083442784,
+          "z": 26.50812958189224,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.1999999999998181,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106.96413147507104,
+          "z": 25.043516137989467,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.1999999999998181,
+          "id": "animal-4878",
+          "species": "buffalo",
+          "x": 105.62227548322178,
+          "z": 30.94180354840981,
+          "status": "retreating",
+          "hits": 4,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.29999999999972715,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 103.15503277956479,
+          "z": 26.1561555426505,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.29999999999972715,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 24.676393309408986,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.29999999999972715,
+          "id": "animal-4878",
+          "species": "buffalo",
+          "x": 105.80445718789139,
+          "z": 31.27528492192815,
+          "status": "retreating",
+          "hits": 4,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.3999999999996362,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 103.01180472470175,
+          "z": 25.804181503408756,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.3999999999996362,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 24.296393309408987,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.3999999999996362,
+          "id": "animal-4878",
+          "species": "buffalo",
+          "x": 105.98663889256099,
+          "z": 31.608766295446493,
+          "status": "retreating",
+          "hits": 4,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.49999999999954525,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 102.8685766698387,
+          "z": 25.452207464167014,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.49999999999954525,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 23.91639330940899,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.49999999999954525,
+          "id": "animal-4878",
+          "species": "buffalo",
+          "x": 106.16882059723058,
+          "z": 31.942247668964836,
+          "status": "retreating",
+          "hits": 4,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.5999999999994543,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 102.72534861497566,
+          "z": 25.10023342492527,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.5999999999994543,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 23.53639330940899,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.5999999999994543,
+          "id": "animal-4878",
+          "species": "buffalo",
+          "x": 106.35100230190018,
+          "z": 32.27572904248318,
+          "status": "retreating",
+          "hits": 4,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.6999999999993634,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 102.58212056011261,
+          "z": 24.74825938568353,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.6999999999993634,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 23.15639330940899,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.6999999999993634,
+          "id": "animal-4878",
+          "species": "buffalo",
+          "x": 106.53318400656977,
+          "z": 32.609210416001524,
+          "status": "retreating",
+          "hits": 4,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.7999999999992724,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 102.43889250524957,
+          "z": 24.396285346441786,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.7999999999992724,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 22.77639330940899,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.7999999999992724,
+          "id": "animal-4878",
+          "species": "buffalo",
+          "x": 106.71536571123937,
+          "z": 32.94269178951986,
+          "status": "retreating",
+          "hits": 4,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.8999999999991815,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 102.29566445038652,
+          "z": 24.044311307200044,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.8999999999991815,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 22.396393309408992,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.9999999999990905,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 102.15243639552348,
+          "z": 23.6923372679583,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.9999999999990905,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 22.016393309408993,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.0999999999989996,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 102.00920834066044,
+          "z": 23.34036322871656,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.0999999999989996,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 21.636393309408994,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.1999999999989086,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 101.86598028579738,
+          "z": 22.988389189474816,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.1999999999989086,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 21.256393309408995,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.2999999999988177,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 101.72275223093433,
+          "z": 22.636415150233073,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.2999999999988177,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 20.876393309408996,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.3999999999987267,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 101.57952417607127,
+          "z": 22.28444111099133,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.3999999999987267,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 20.496393309408997,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.4999999999986358,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 101.43629612120823,
+          "z": 21.93246707174959,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.4999999999986358,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 20.116393309409,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.5999999999985448,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 101.29306806634517,
+          "z": 21.58049303250785,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.5999999999985448,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 19.736393309409,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.6999999999984539,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 101.14984001148213,
+          "z": 21.228518993266107,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.6999999999984539,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 19.356393309409,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.799999999998363,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 101.00661195661907,
+          "z": 20.876544954024368,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.799999999998363,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 18.976393309409,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.899999999998272,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.86338390175602,
+          "z": 20.524570914782625,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.899999999998272,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 18.596393309409002,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.999999999998181,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.72015584689296,
+          "z": 20.172596875540886,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.999999999998181,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 18.216393309409003,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.09999999999809,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.09999999999809,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 17.836393309409004,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.199999999997999,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.199999999997999,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 17.456393309409005,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.299999999997908,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.299999999997908,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 17.076393309409006,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.399999999997817,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.399999999997817,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 16.696393309409007,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.4999999999977263,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.4999999999977263,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 16.31639330940901,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.5999999999976353,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.5999999999976353,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 15.936393309409008,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.6999999999975444,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.6999999999975444,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 15.556393309409007,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.7999999999974534,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.7999999999974534,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 15.176393309409006,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.8999999999973625,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.8999999999973625,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 14.796393309409005,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.9999999999972715,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.9999999999972715,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 14.416393309409004,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.0999999999971806,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.0999999999971806,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 14.036393309409004,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.1999999999970896,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.1999999999970896,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 13.656393309409003,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.2999999999969987,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.2999999999969987,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 13.276393309409002,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.3999999999969077,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.3999999999969077,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 12.896393309409001,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.4999999999968168,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.4999999999968168,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 12.516393309409,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.599999999996726,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.599999999996726,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 12.136393309409,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.699999999996635,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.699999999996635,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106.82774405714069,
+          "z": 11.827744057140691,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.799999999996544,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.799999999996544,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106.5590434802898,
+          "z": 11.559043480289803,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.899999999996453,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.899999999996453,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106.29034290343891,
+          "z": 11.290342903438916,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.999999999996362,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.999999999996362,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106.02164232658802,
+          "z": 11.021642326588026,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.099999999996271,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.099999999996271,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 10.650606871782092,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.19999999999618,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.19999999999618,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 10.27060687178209,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.299999999996089,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.299999999996089,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 9.89060687178209,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.399999999995998,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.399999999995998,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 9.51060687178209,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.499999999995907,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.499999999995907,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 9.360606871782089,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.599999999995816,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.599999999995816,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 9.210606871782089,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.699999999995725,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.699999999995725,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 9.060606871782088,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.799999999995634,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.799999999995634,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 8.910606871782088,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.8999999999955435,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.8999999999955435,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 8.760606871782088,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.9999999999954525,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.9999999999954525,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 8.610606871782087,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.099999999995362,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.099999999995362,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 8.460606871782087,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.199999999995271,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.199999999995271,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 8.310606871782086,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.29999999999518,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.29999999999518,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 8.160606871782086,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.399999999995089,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "walking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.399999999995089,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 8.010606871782086,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.499999999994998,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.499999999994998,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 105.90143417378631,
+          "z": 7.901434173786307,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.599999999994907,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.599999999994907,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 105.79536815660833,
+          "z": 7.795368156608325,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.699999999994816,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.699999999994816,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 105.68930213943035,
+          "z": 7.689302139430343,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.799999999994725,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.799999999994725,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 105.58323612225237,
+          "z": 7.583236122252362,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.899999999994634,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.899999999994634,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 105.47717010507439,
+          "z": 7.477170105074381,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.999999999994543,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.999999999994543,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 105.37110408789641,
+          "z": 7.3711040878964,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.099999999994452,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.099999999994452,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 105.26503807071843,
+          "z": 7.26503807071842,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.199999999994361,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.199999999994361,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 105.15897205354045,
+          "z": 7.158972053540441,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.29999999999427,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.29999999999427,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 105.05290603636247,
+          "z": 7.0529060363624625,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.399999999994179,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.399999999994179,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 104.92774087462561,
+          "z": 6.979249435652501,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.499999999994088,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.499999999994088,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 104.78356780466488,
+          "z": 6.937847432100757,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.599999999993997,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.599999999993997,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 104.63939473470415,
+          "z": 6.896445428549012,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.699999999993906,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.699999999993906,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 104.49522166474343,
+          "z": 6.855043424997268,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.799999999993815,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.799999999993815,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 104.3510485947827,
+          "z": 6.813641421445523,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.8999999999937245,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.8999999999937245,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 104.20687552482197,
+          "z": 6.772239417893779,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.9999999999936335,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.9999999999936335,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 104.06270245486124,
+          "z": 6.730837414342035,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.099999999993543,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.099999999993543,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.91852938490051,
+          "z": 6.68943541079029,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.199999999993452,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.199999999993452,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.77435631493978,
+          "z": 6.648033407238546,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.299999999993361,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.299999999993361,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.39999999999327,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.39999999999327,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.499999999993179,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.499999999993179,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.599999999993088,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.599999999993088,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.699999999992997,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.699999999992997,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.799999999992906,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.799999999992906,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.899999999992815,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.899999999992815,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.999999999992724,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.999999999992724,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.099999999992633,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.099999999992633,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.199999999992542,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.199999999992542,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.299999999992451,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.299999999992451,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.39999999999236,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.39999999999236,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.49999999999227,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.49999999999227,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.599999999992178,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.599999999992178,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.699999999992087,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.699999999992087,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.799999999991996,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.799999999991996,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.899999999991905,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.899999999991905,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "walking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.999999999991815,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.999999999991815,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.099999999991724,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.099999999991724,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.199999999991633,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.199999999991633,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.299999999991542,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "walking",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.299999999991542,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.39999999999145,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.85737901178236,
+          "z": 20.47758459806968,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.39999999999145,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.49999999999136,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 101.01178580193894,
+          "z": 20.824800011255128,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.49999999999136,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.599999999991269,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 101.16619259209553,
+          "z": 21.172015424440577,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.599999999991269,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.699999999991178,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 101.32059938225211,
+          "z": 21.519230837626026,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.699999999991178,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.799999999991087,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 101.4750061724087,
+          "z": 21.866446250811475,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.799999999991087,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.899999999990996,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 101.62941296256528,
+          "z": 22.213661663996923,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.899999999990996,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.999999999990905,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 101.78381975272187,
+          "z": 22.560877077182372,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.999999999990905,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.099999999990814,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 101.93822654287845,
+          "z": 22.90809249036782,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.099999999990814,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.199999999990723,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 102.09263333303504,
+          "z": 23.25530790355327,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.199999999990723,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.299999999990632,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 102.24704012319162,
+          "z": 23.60252331673872,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.299999999990632,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.399999999990541,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 102.40144691334821,
+          "z": 23.949738729924167,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.399999999990541,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.49999999999045,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 102.5558537035048,
+          "z": 24.296954143109616,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.49999999999045,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.59999999999036,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 102.71026049366138,
+          "z": 24.644169556295065,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.59999999999036,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "walking",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.699999999990268,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 102.86466728381795,
+          "z": 24.991384969480514,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.699999999990268,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 104.0200968557911,
+          "z": 6.718602416748473,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.799999999990177,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 103.01907407397454,
+          "z": 25.338600382665962,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.799999999990177,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 104.3853352996916,
+          "z": 6.823487492412892,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.899999999990087,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 103.17348086413111,
+          "z": 25.68581579585141,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.899999999990087,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 104.75057374359211,
+          "z": 6.92837256807731,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.999999999989996,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 103.3278876542877,
+          "z": 26.03303120903686,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.999999999989996,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 105.08520133109019,
+          "z": 7.085201331090187,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.099999999989905,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 103.48229444444426,
+          "z": 26.38024662222231,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.099999999989905,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 105.35390190794108,
+          "z": 7.353901907941076,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.199999999989814,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 103.63670123460085,
+          "z": 26.727462035407758,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.199999999989814,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 105.62260248479197,
+          "z": 7.6226024847919645,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.299999999989723,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 103.79110802475742,
+          "z": 27.074677448593206,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.299999999989723,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 105.89130306164286,
+          "z": 7.891303061642854,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.399999999989632,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 103.945514814914,
+          "z": 27.421892861778655,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.399999999989632,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 8.226279315586895,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.49999999998954,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 104.09992160507058,
+          "z": 27.769108274964104,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.49999999998954,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 8.606279315586896,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.59999999998945,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 104.25432839522716,
+          "z": 28.116323688149553,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.59999999998945,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 8.986279315586897,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.699999999989359,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 104.40873518538373,
+          "z": 28.463539101335,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.699999999989359,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 9.366279315586898,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.799999999989268,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 104.56314197554032,
+          "z": 28.81075451452045,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.799999999989268,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 9.746279315586898,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.899999999989177,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 104.71754876569689,
+          "z": 29.1579699277059,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.899999999989177,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 10.126279315586899,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.999999999989086,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 104.87195555585348,
+          "z": 29.505185340891348,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.999999999989086,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 10.5062793155869,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 12.099999999988995,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 10.8862793155869,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 12.199999999988904,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106.1882879097412,
+          "z": 11.18828790974121,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 12.299999999988813,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106.4569884865921,
+          "z": 11.456988486592097,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 12.399999999988722,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106.72568906344299,
+          "z": 11.725689063442985,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 12.499999999988631,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106.99438964029387,
+          "z": 11.994389640293873,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 12.59999999998854,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 12.372065753213805,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 12.69999999998845,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 12.752065753213806,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 12.799999999988358,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 13.132065753213807,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 12.899999999988268,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 13.512065753213808,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 12.999999999988177,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 13.892065753213808,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 13.099999999988086,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 14.272065753213809,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 13.199999999987995,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 14.65206575321381,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 13.299999999987904,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 15.03206575321381,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 13.399999999987813,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 15.412065753213811,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 13.499999999987722,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 15.792065753213812,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 13.59999999998763,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 16.17206575321381,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 13.69999999998754,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 16.55206575321381,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 13.799999999987449,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 16.93206575321381,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 13.899999999987358,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 17.31206575321381,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 13.999999999987267,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 17.692065753213807,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 14.099999999987176,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 18.072065753213806,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 14.199999999987085,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 18.452065753213805,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 14.299999999986994,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 18.832065753213804,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 14.399999999986903,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 19.212065753213803,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 14.499999999986812,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 19.592065753213802,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 14.599999999986721,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 19.9720657532138,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 14.69999999998663,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 20.3520657532138,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 14.79999999998654,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 20.7320657532138,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 14.899999999986449,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 21.1120657532138,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 14.999999999986358,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 21.492065753213797,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 15.099999999986267,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 21.872065753213796,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 15.199999999986176,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 22.252065753213795,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 15.299999999986085,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 22.632065753213794,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 15.399999999985994,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 23.012065753213793,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 15.499999999985903,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 23.392065753213792,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 15.599999999985812,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 23.77206575321379,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 15.699999999985721,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 24.15206575321379,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 15.79999999998563,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 24.53206575321379,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 15.899999999985539,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 24.91206575321379,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 15.999999999985448,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 25.292065753213787,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 16.099999999985357,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 25.672065753213786,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 16.199999999985266,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 26.052065753213785,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 16.299999999985175,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 26.432065753213784,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 16.399999999985084,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 26.812065753213783,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 16.499999999984993,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107.11302180066966,
+          "z": 27.15529110126136,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 16.599999999984902,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107.33663420181786,
+          "z": 27.462532853067223,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 16.69999999998481,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107.56024660296606,
+          "z": 27.76977460487309,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 16.79999999998472,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107.78385900411426,
+          "z": 28.077016356678953,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        }
+      ]
+    },
+    {
+      "kind": "expansive",
+      "inputSha": "03ceedf735adf8ac716d908a646ad495e76046e69d144aa9f24d81207bb51ce2",
+      "dt": 1,
+      "reloadAfter": null,
+      "reloaded": false,
+      "simulatedSeconds": 16.89999999998463,
+      "completedBefore": 5,
+      "completedAfter": 6,
+      "result": null,
+      "raidRemaining": null,
+      "events": [
+        {
+          "id": "event-8413",
+          "type": "RaidSpawned",
+          "raidFacts": {
+            "id": "raid-6-night",
+            "day": 6,
+            "daytime": false,
+            "elapsed": 3599.999999997357,
+            "exposedLiving": 171,
+            "exposedWounded": 0,
+            "actors": [
+              {
+                "id": "animal-4876",
+                "species": "warthog",
+                "hitsRemaining": 3,
+                "spawn": {
+                  "x": 103.58471694415393,
+                  "z": 27.212077660375726
+                },
+                "exit": {
+                  "x": 105.02299355996654,
+                  "z": 29.844825346046846
+                }
+              },
+              {
+                "id": "animal-4877",
+                "species": "warthog",
+                "hitsRemaining": 2,
+                "spawn": {
+                  "x": 106.48073939839215,
+                  "z": 25.62997338298186
+                },
+                "exit": {
+                  "x": 107.91901601420476,
+                  "z": 28.26272106865298
+                }
+              },
+              {
+                "id": "animal-4878",
+                "species": "buffalo",
+                "hitsRemaining": 4,
+                "spawn": {
+                  "x": 105.44009377855218,
+                  "z": 30.608322174891466
+                },
+                "exit": {
+                  "x": 106.8783703943648,
+                  "z": 33.24106986056258
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "event-8415",
+          "type": "StructureHit",
+          "animalId": "animal-4876",
+          "targetId": "structure-4212",
+          "structureHit": {
+            "kind": "wall",
+            "x": 99.83606557377048,
+            "z": 18,
+            "previousHp": 100,
+            "hp": 80,
+            "maxHp": 100,
+            "criticalThreshold": 40,
+            "firstHitThisRaid": true
+          }
+        },
+        {
+          "id": "event-8418",
+          "type": "StructureHit",
+          "animalId": "animal-4876",
+          "targetId": "structure-4212",
+          "structureHit": {
+            "kind": "wall",
+            "x": 99.83606557377048,
+            "z": 18,
+            "previousHp": 80,
+            "hp": 60,
+            "maxHp": 100,
+            "criticalThreshold": 40,
+            "firstHitThisRaid": false
+          }
+        },
+        {
+          "id": "event-8422",
+          "type": "StructureHit",
+          "animalId": "animal-4877",
+          "targetId": "structure-4209",
+          "structureHit": {
+            "kind": "wall",
+            "x": 102,
+            "z": 5.016393442622956,
+            "previousHp": 100,
+            "hp": 80,
+            "maxHp": 100,
+            "criticalThreshold": 40,
+            "firstHitThisRaid": true
+          }
+        },
+        {
+          "id": "event-8425",
+          "type": "StructureHit",
+          "animalId": "animal-4876",
+          "targetId": "structure-4212",
+          "structureHit": {
+            "kind": "wall",
+            "x": 99.83606557377048,
+            "z": 18,
+            "previousHp": 60,
+            "hp": 40,
+            "maxHp": 100,
+            "criticalThreshold": 40,
+            "firstHitThisRaid": false
+          }
+        },
+        {
+          "id": "event-8428",
+          "type": "StructureHit",
+          "animalId": "animal-4877",
+          "targetId": "structure-4209",
+          "structureHit": {
+            "kind": "wall",
+            "x": 102,
+            "z": 5.016393442622956,
+            "previousHp": 80,
+            "hp": 60,
+            "maxHp": 100,
+            "criticalThreshold": 40,
+            "firstHitThisRaid": false
+          }
+        }
+      ],
+      "rows": [
+        {
+          "elapsed": 0.9999999999990905,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 102.15243639552348,
+          "z": 23.6923372679583,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.9999999999990905,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 22.016393309408993,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.999999999998181,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.72015584689296,
+          "z": 20.172596875540886,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.999999999998181,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 18.216393309409003,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.9999999999972715,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.9999999999972715,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 14.416393309409004,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.999999999996362,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.999999999996362,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106.02164232658802,
+          "z": 11.021642326588026,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.9999999999954525,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.9999999999954525,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 8.610606871782087,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.999999999994543,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.999999999994543,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 105.37110408789641,
+          "z": 7.3711040878964,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.9999999999936335,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.9999999999936335,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 104.06270245486124,
+          "z": 6.730837414342035,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.999999999992724,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.999999999992724,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.999999999991815,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.999999999991815,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.999999999990905,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 101.78381975272187,
+          "z": 22.560877077182372,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.999999999990905,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.999999999989996,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 103.3278876542877,
+          "z": 26.03303120903686,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.999999999989996,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 105.08520133109019,
+          "z": 7.085201331090187,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.999999999989086,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 104.87195555585348,
+          "z": 29.505185340891348,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.999999999989086,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 10.5062793155869,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 12.999999999988177,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 13.892065753213808,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 13.999999999987267,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 17.692065753213807,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 14.999999999986358,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 21.492065753213797,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 15.999999999985448,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 25.292065753213787,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        }
+      ]
+    },
+    {
+      "kind": "expansive",
+      "inputSha": "03ceedf735adf8ac716d908a646ad495e76046e69d144aa9f24d81207bb51ce2",
+      "dt": 0.1,
+      "reloadAfter": 5,
+      "reloaded": true,
+      "simulatedSeconds": 16.89999999998463,
+      "completedBefore": 5,
+      "completedAfter": 6,
+      "result": null,
+      "raidRemaining": null,
+      "events": [
+        {
+          "id": "event-8413",
+          "type": "RaidSpawned",
+          "raidFacts": {
+            "id": "raid-6-night",
+            "day": 6,
+            "daytime": false,
+            "elapsed": 3599.999999997357,
+            "exposedLiving": 171,
+            "exposedWounded": 0,
+            "actors": [
+              {
+                "id": "animal-4876",
+                "species": "warthog",
+                "hitsRemaining": 3,
+                "spawn": {
+                  "x": 103.58471694415393,
+                  "z": 27.212077660375726
+                },
+                "exit": {
+                  "x": 105.02299355996654,
+                  "z": 29.844825346046846
+                }
+              },
+              {
+                "id": "animal-4877",
+                "species": "warthog",
+                "hitsRemaining": 2,
+                "spawn": {
+                  "x": 106.48073939839215,
+                  "z": 25.62997338298186
+                },
+                "exit": {
+                  "x": 107.91901601420476,
+                  "z": 28.26272106865298
+                }
+              },
+              {
+                "id": "animal-4878",
+                "species": "buffalo",
+                "hitsRemaining": 4,
+                "spawn": {
+                  "x": 105.44009377855218,
+                  "z": 30.608322174891466
+                },
+                "exit": {
+                  "x": 106.8783703943648,
+                  "z": 33.24106986056258
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "event-8415",
+          "type": "StructureHit",
+          "animalId": "animal-4876",
+          "targetId": "structure-4212",
+          "structureHit": {
+            "kind": "wall",
+            "x": 99.83606557377048,
+            "z": 18,
+            "previousHp": 100,
+            "hp": 80,
+            "maxHp": 100,
+            "criticalThreshold": 40,
+            "firstHitThisRaid": true
+          }
+        },
+        {
+          "id": "event-8418",
+          "type": "StructureHit",
+          "animalId": "animal-4876",
+          "targetId": "structure-4212",
+          "structureHit": {
+            "kind": "wall",
+            "x": 99.83606557377048,
+            "z": 18,
+            "previousHp": 80,
+            "hp": 60,
+            "maxHp": 100,
+            "criticalThreshold": 40,
+            "firstHitThisRaid": false
+          }
+        },
+        {
+          "id": "event-8422",
+          "type": "StructureHit",
+          "animalId": "animal-4877",
+          "targetId": "structure-4209",
+          "structureHit": {
+            "kind": "wall",
+            "x": 102,
+            "z": 5.016393442622956,
+            "previousHp": 100,
+            "hp": 80,
+            "maxHp": 100,
+            "criticalThreshold": 40,
+            "firstHitThisRaid": true
+          }
+        },
+        {
+          "id": "event-8425",
+          "type": "StructureHit",
+          "animalId": "animal-4876",
+          "targetId": "structure-4212",
+          "structureHit": {
+            "kind": "wall",
+            "x": 99.83606557377048,
+            "z": 18,
+            "previousHp": 60,
+            "hp": 40,
+            "maxHp": 100,
+            "criticalThreshold": 40,
+            "firstHitThisRaid": false
+          }
+        },
+        {
+          "id": "event-8428",
+          "type": "StructureHit",
+          "animalId": "animal-4877",
+          "targetId": "structure-4209",
+          "structureHit": {
+            "kind": "wall",
+            "x": 102,
+            "z": 5.016393442622956,
+            "previousHp": 80,
+            "hp": 60,
+            "maxHp": 100,
+            "criticalThreshold": 40,
+            "firstHitThisRaid": false
+          }
+        }
+      ],
+      "rows": [
+        {
+          "elapsed": 0.09999999999990905,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 103.44148888929088,
+          "z": 26.860103621133984,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.09999999999990905,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106.7224354367316,
+          "z": 25.336744760485665,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.09999999999990905,
+          "id": "animal-4878",
+          "species": "buffalo",
+          "x": 105.44009377855218,
+          "z": 30.608322174891466,
+          "status": "retreating",
+          "hits": 4,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.1999999999998181,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 103.29826083442784,
+          "z": 26.50812958189224,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.1999999999998181,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106.96413147507104,
+          "z": 25.043516137989467,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.1999999999998181,
+          "id": "animal-4878",
+          "species": "buffalo",
+          "x": 105.62227548322178,
+          "z": 30.94180354840981,
+          "status": "retreating",
+          "hits": 4,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.29999999999972715,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 103.15503277956479,
+          "z": 26.1561555426505,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.29999999999972715,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 24.676393309408986,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.29999999999972715,
+          "id": "animal-4878",
+          "species": "buffalo",
+          "x": 105.80445718789139,
+          "z": 31.27528492192815,
+          "status": "retreating",
+          "hits": 4,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.3999999999996362,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 103.01180472470175,
+          "z": 25.804181503408756,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.3999999999996362,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 24.296393309408987,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.3999999999996362,
+          "id": "animal-4878",
+          "species": "buffalo",
+          "x": 105.98663889256099,
+          "z": 31.608766295446493,
+          "status": "retreating",
+          "hits": 4,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.49999999999954525,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 102.8685766698387,
+          "z": 25.452207464167014,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.49999999999954525,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 23.91639330940899,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.49999999999954525,
+          "id": "animal-4878",
+          "species": "buffalo",
+          "x": 106.16882059723058,
+          "z": 31.942247668964836,
+          "status": "retreating",
+          "hits": 4,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.5999999999994543,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 102.72534861497566,
+          "z": 25.10023342492527,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.5999999999994543,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 23.53639330940899,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.5999999999994543,
+          "id": "animal-4878",
+          "species": "buffalo",
+          "x": 106.35100230190018,
+          "z": 32.27572904248318,
+          "status": "retreating",
+          "hits": 4,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.6999999999993634,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 102.58212056011261,
+          "z": 24.74825938568353,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.6999999999993634,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 23.15639330940899,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.6999999999993634,
+          "id": "animal-4878",
+          "species": "buffalo",
+          "x": 106.53318400656977,
+          "z": 32.609210416001524,
+          "status": "retreating",
+          "hits": 4,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.7999999999992724,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 102.43889250524957,
+          "z": 24.396285346441786,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.7999999999992724,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 22.77639330940899,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.7999999999992724,
+          "id": "animal-4878",
+          "species": "buffalo",
+          "x": 106.71536571123937,
+          "z": 32.94269178951986,
+          "status": "retreating",
+          "hits": 4,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.8999999999991815,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 102.29566445038652,
+          "z": 24.044311307200044,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.8999999999991815,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 22.396393309408992,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.9999999999990905,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 102.15243639552348,
+          "z": 23.6923372679583,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 0.9999999999990905,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 22.016393309408993,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.0999999999989996,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 102.00920834066044,
+          "z": 23.34036322871656,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.0999999999989996,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 21.636393309408994,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.1999999999989086,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 101.86598028579738,
+          "z": 22.988389189474816,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.1999999999989086,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 21.256393309408995,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.2999999999988177,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 101.72275223093433,
+          "z": 22.636415150233073,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.2999999999988177,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 20.876393309408996,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.3999999999987267,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 101.57952417607127,
+          "z": 22.28444111099133,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.3999999999987267,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 20.496393309408997,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.4999999999986358,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 101.43629612120823,
+          "z": 21.93246707174959,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.4999999999986358,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 20.116393309409,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.5999999999985448,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 101.29306806634517,
+          "z": 21.58049303250785,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.5999999999985448,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 19.736393309409,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.6999999999984539,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 101.14984001148213,
+          "z": 21.228518993266107,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.6999999999984539,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 19.356393309409,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.799999999998363,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 101.00661195661907,
+          "z": 20.876544954024368,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.799999999998363,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 18.976393309409,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.899999999998272,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.86338390175602,
+          "z": 20.524570914782625,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.899999999998272,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 18.596393309409002,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.999999999998181,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.72015584689296,
+          "z": 20.172596875540886,
+          "status": "entering",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 1.999999999998181,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 18.216393309409003,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.09999999999809,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.09999999999809,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 17.836393309409004,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.199999999997999,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.199999999997999,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 17.456393309409005,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.299999999997908,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.299999999997908,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 17.076393309409006,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.399999999997817,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.399999999997817,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 16.696393309409007,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.4999999999977263,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.4999999999977263,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 16.31639330940901,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.5999999999976353,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.5999999999976353,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 15.936393309409008,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.6999999999975444,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.6999999999975444,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 15.556393309409007,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.7999999999974534,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.7999999999974534,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 15.176393309409006,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.8999999999973625,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.8999999999973625,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 14.796393309409005,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.9999999999972715,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 2.9999999999972715,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 14.416393309409004,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.0999999999971806,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.0999999999971806,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 14.036393309409004,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.1999999999970896,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.1999999999970896,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 13.656393309409003,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.2999999999969987,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.2999999999969987,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 13.276393309409002,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.3999999999969077,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.3999999999969077,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 12.896393309409001,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.4999999999968168,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.4999999999968168,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 12.516393309409,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.599999999996726,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 3,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.599999999996726,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 12.136393309409,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.699999999996635,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.699999999996635,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106.82774405714069,
+          "z": 11.827744057140691,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.799999999996544,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.799999999996544,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106.5590434802898,
+          "z": 11.559043480289803,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.899999999996453,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.899999999996453,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106.29034290343891,
+          "z": 11.290342903438916,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.999999999996362,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 3.999999999996362,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106.02164232658802,
+          "z": 11.021642326588026,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.099999999996271,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.099999999996271,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 10.650606871782092,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.19999999999618,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.19999999999618,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 10.27060687178209,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.299999999996089,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.299999999996089,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 9.89060687178209,
+          "status": "entering",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.399999999995998,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.399999999995998,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 9.51060687178209,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.499999999995907,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.499999999995907,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 9.360606871782089,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.599999999995816,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.599999999995816,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 9.210606871782089,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.699999999995725,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.699999999995725,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 9.060606871782088,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.799999999995634,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.799999999995634,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 8.910606871782088,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.8999999999955435,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.8999999999955435,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 8.760606871782088,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.9999999999954525,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 4.9999999999954525,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 8.610606871782087,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.099999999995362,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.099999999995362,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 8.460606871782087,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.199999999995271,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.199999999995271,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 8.310606871782086,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.29999999999518,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.29999999999518,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 8.160606871782086,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.399999999995089,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "walking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.399999999995089,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 8.010606871782086,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.499999999994998,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.499999999994998,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 105.90143417378631,
+          "z": 7.901434173786307,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.599999999994907,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.599999999994907,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 105.79536815660833,
+          "z": 7.795368156608325,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.699999999994816,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.699999999994816,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 105.68930213943035,
+          "z": 7.689302139430343,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.799999999994725,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.799999999994725,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 105.58323612225237,
+          "z": 7.583236122252362,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.899999999994634,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.899999999994634,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 105.47717010507439,
+          "z": 7.477170105074381,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.999999999994543,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 5.999999999994543,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 105.37110408789641,
+          "z": 7.3711040878964,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.099999999994452,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.099999999994452,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 105.26503807071843,
+          "z": 7.26503807071842,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.199999999994361,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.199999999994361,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 105.15897205354045,
+          "z": 7.158972053540441,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.29999999999427,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.29999999999427,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 105.05290603636247,
+          "z": 7.0529060363624625,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.399999999994179,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.399999999994179,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 104.92774087462561,
+          "z": 6.979249435652501,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.499999999994088,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.499999999994088,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 104.78356780466488,
+          "z": 6.937847432100757,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.599999999993997,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.599999999993997,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 104.63939473470415,
+          "z": 6.896445428549012,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.699999999993906,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.699999999993906,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 104.49522166474343,
+          "z": 6.855043424997268,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.799999999993815,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.799999999993815,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 104.3510485947827,
+          "z": 6.813641421445523,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.8999999999937245,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.8999999999937245,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 104.20687552482197,
+          "z": 6.772239417893779,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.9999999999936335,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 6.9999999999936335,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 104.06270245486124,
+          "z": 6.730837414342035,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.099999999993543,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.099999999993543,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.91852938490051,
+          "z": 6.68943541079029,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.199999999993452,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.199999999993452,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.77435631493978,
+          "z": 6.648033407238546,
+          "status": "walking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.299999999993361,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.299999999993361,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.39999999999327,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.39999999999327,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.499999999993179,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.499999999993179,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.599999999993088,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.599999999993088,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.699999999992997,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.699999999992997,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.799999999992906,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.799999999992906,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.899999999992815,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.899999999992815,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.999999999992724,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 7.999999999992724,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.099999999992633,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.099999999992633,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.199999999992542,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.199999999992542,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.299999999992451,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.299999999992451,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.39999999999236,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.39999999999236,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.49999999999227,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.49999999999227,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.599999999992178,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.599999999992178,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.699999999992087,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.699999999992087,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.799999999991996,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.799999999991996,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 2,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.899999999991905,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.899999999991905,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "walking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.999999999991815,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 8.999999999991815,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.099999999991724,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.099999999991724,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.199999999991633,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.199999999991633,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.299999999991542,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.70297222162577,
+          "z": 20.13036918488423,
+          "status": "walking",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.299999999991542,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.39999999999145,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 100.85737901178236,
+          "z": 20.47758459806968,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.39999999999145,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.49999999999136,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 101.01178580193894,
+          "z": 20.824800011255128,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.49999999999136,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.599999999991269,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 101.16619259209553,
+          "z": 21.172015424440577,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.599999999991269,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.699999999991178,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 101.32059938225211,
+          "z": 21.519230837626026,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.699999999991178,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.799999999991087,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 101.4750061724087,
+          "z": 21.866446250811475,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.799999999991087,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.899999999990996,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 101.62941296256528,
+          "z": 22.213661663996923,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.899999999990996,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.999999999990905,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 101.78381975272187,
+          "z": 22.560877077182372,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 9.999999999990905,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.099999999990814,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 101.93822654287845,
+          "z": 22.90809249036782,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.099999999990814,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.199999999990723,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 102.09263333303504,
+          "z": 23.25530790355327,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.199999999990723,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.299999999990632,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 102.24704012319162,
+          "z": 23.60252331673872,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.299999999990632,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.399999999990541,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 102.40144691334821,
+          "z": 23.949738729924167,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.399999999990541,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.49999999999045,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 102.5558537035048,
+          "z": 24.296954143109616,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.49999999999045,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "attacking",
+          "hits": 1,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.59999999999036,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 102.71026049366138,
+          "z": 24.644169556295065,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.59999999999036,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 103.65485841189059,
+          "z": 6.613717341084053,
+          "status": "walking",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.699999999990268,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 102.86466728381795,
+          "z": 24.991384969480514,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.699999999990268,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 104.0200968557911,
+          "z": 6.718602416748473,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.799999999990177,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 103.01907407397454,
+          "z": 25.338600382665962,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.799999999990177,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 104.3853352996916,
+          "z": 6.823487492412892,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.899999999990087,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 103.17348086413111,
+          "z": 25.68581579585141,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.899999999990087,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 104.75057374359211,
+          "z": 6.92837256807731,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.999999999989996,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 103.3278876542877,
+          "z": 26.03303120903686,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 10.999999999989996,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 105.08520133109019,
+          "z": 7.085201331090187,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.099999999989905,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 103.48229444444426,
+          "z": 26.38024662222231,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.099999999989905,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 105.35390190794108,
+          "z": 7.353901907941076,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.199999999989814,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 103.63670123460085,
+          "z": 26.727462035407758,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.199999999989814,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 105.62260248479197,
+          "z": 7.6226024847919645,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.299999999989723,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 103.79110802475742,
+          "z": 27.074677448593206,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.299999999989723,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 105.89130306164286,
+          "z": 7.891303061642854,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.399999999989632,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 103.945514814914,
+          "z": 27.421892861778655,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.399999999989632,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 8.226279315586895,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.49999999998954,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 104.09992160507058,
+          "z": 27.769108274964104,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.49999999998954,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 8.606279315586896,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.59999999998945,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 104.25432839522716,
+          "z": 28.116323688149553,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.59999999998945,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 8.986279315586897,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.699999999989359,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 104.40873518538373,
+          "z": 28.463539101335,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.699999999989359,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 9.366279315586898,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.799999999989268,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 104.56314197554032,
+          "z": 28.81075451452045,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.799999999989268,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 9.746279315586898,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.899999999989177,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 104.71754876569689,
+          "z": 29.1579699277059,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.899999999989177,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 10.126279315586899,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.999999999989086,
+          "id": "animal-4876",
+          "species": "warthog",
+          "x": 104.87195555585348,
+          "z": 29.505185340891348,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 11.999999999989086,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 10.5062793155869,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 12.099999999988995,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106,
+          "z": 10.8862793155869,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 12.199999999988904,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106.1882879097412,
+          "z": 11.18828790974121,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 12.299999999988813,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106.4569884865921,
+          "z": 11.456988486592097,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 12.399999999988722,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106.72568906344299,
+          "z": 11.725689063442985,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 12.499999999988631,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 106.99438964029387,
+          "z": 11.994389640293873,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 12.59999999998854,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 12.372065753213805,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 12.69999999998845,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 12.752065753213806,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 12.799999999988358,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 13.132065753213807,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 12.899999999988268,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 13.512065753213808,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 12.999999999988177,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 13.892065753213808,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 13.099999999988086,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 14.272065753213809,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 13.199999999987995,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 14.65206575321381,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 13.299999999987904,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 15.03206575321381,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 13.399999999987813,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 15.412065753213811,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 13.499999999987722,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 15.792065753213812,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 13.59999999998763,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 16.17206575321381,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 13.69999999998754,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 16.55206575321381,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 13.799999999987449,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 16.93206575321381,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 13.899999999987358,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 17.31206575321381,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 13.999999999987267,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 17.692065753213807,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 14.099999999987176,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 18.072065753213806,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 14.199999999987085,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 18.452065753213805,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 14.299999999986994,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 18.832065753213804,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 14.399999999986903,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 19.212065753213803,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 14.499999999986812,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 19.592065753213802,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 14.599999999986721,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 19.9720657532138,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 14.69999999998663,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 20.3520657532138,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 14.79999999998654,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 20.7320657532138,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 14.899999999986449,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 21.1120657532138,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 14.999999999986358,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 21.492065753213797,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 15.099999999986267,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 21.872065753213796,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 15.199999999986176,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 22.252065753213795,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 15.299999999986085,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 22.632065753213794,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 15.399999999985994,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 23.012065753213793,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 15.499999999985903,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 23.392065753213792,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 15.599999999985812,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 23.77206575321379,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 15.699999999985721,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 24.15206575321379,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 15.79999999998563,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 24.53206575321379,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 15.899999999985539,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 24.91206575321379,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 15.999999999985448,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 25.292065753213787,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 16.099999999985357,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 25.672065753213786,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 16.199999999985266,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 26.052065753213785,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 16.299999999985175,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 26.432065753213784,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 16.399999999985084,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107,
+          "z": 26.812065753213783,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 16.499999999984993,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107.11302180066966,
+          "z": 27.15529110126136,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 16.599999999984902,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107.33663420181786,
+          "z": 27.462532853067223,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 16.69999999998481,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107.56024660296606,
+          "z": 27.76977460487309,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        },
+        {
+          "elapsed": 16.79999999998472,
+          "id": "animal-4877",
+          "species": "warthog",
+          "x": 107.78385900411426,
+          "z": 28.077016356678953,
+          "status": "retreating",
+          "hits": 0,
+          "staticFootprint": true
+        }
+      ]
+    }
+  ],
+  "scope": "Exact snapshot; bounded Game.tick. Static footprint samples, no universal swept-leg or performance claim."
+}

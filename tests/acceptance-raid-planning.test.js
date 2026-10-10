@@ -7,7 +7,9 @@ import {rational} from '../src/simulation/money.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 
 // Independent contract table: do not derive the expected values from BALANCE.
-const species=['warthog','hyena','buffalo','lion','rhino'],costs=[1,3,5,7,10],caps=[3,2,2,2,1];
+// Revised user contract: no global or per-species cap; only the budget limits
+// copies. Keep this oracle independent of both production implementations.
+const species=['warthog','hyena','buffalo','lion','rhino'],costs=[1,3,5,7,10];
 const tiers=[
  [0,100,1,1,2,1], [100,300,1,3,4,2],
  [300,800,1,5,7,3], [800,2000,1,7,10,4],
@@ -16,8 +18,8 @@ const tiers=[
 const signature=group=>species.map(id=>group.filter(x=>x===id).length).join(',');
 function expectedCompositions(budget,unlocked){
  let vectors=[[]];
- for(let i=0;i<species.length;i++)vectors=vectors.flatMap(v=>Array.from({length:unlocked.includes(species[i])?caps[i]+1:1},(_,n)=>[...v,n]));
- return vectors.filter(v=>{const count=v.reduce((a,b)=>a+b,0),spent=v.reduce((a,n,i)=>a+n*costs[i],0);return count>0&&count<=5&&spent*4>=budget*3&&spent<=budget;}).map(v=>v.join(',')).sort();
+ for(let i=0;i<species.length;i++)vectors=vectors.flatMap(v=>Array.from({length:unlocked.includes(species[i])?Math.floor(budget/costs[i])+1:1},(_,n)=>[...v,n]));
+ return vectors.filter(v=>{const count=v.reduce((a,b)=>a+b,0),spent=v.reduce((a,n,i)=>a+n*costs[i],0);return count>0&&spent*4>=budget*3&&spent<=budget;}).map(v=>v.join(',')).sort();
 }
 function fixture(){const s=Game.newGame({seed:712,slotId:'raid-planning'});s.day=6;s.plants=Array.from({length:111},(_,i)=>({id:'crop-'+i,species:'mijo',alive:true,growth:0}));return s;}
 function permutations(list){return list.length?list.flatMap((x,i)=>permutations(list.filter((_,j)=>j!==i)).map(rest=>[x,...rest])):[[]];}

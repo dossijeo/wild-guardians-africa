@@ -1,13 +1,32 @@
-import {readFileSync,writeFileSync,mkdirSync,existsSync} from 'node:fs';
+import {readFileSync,writeFileSync,mkdirSync,existsSync,readdirSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import assert from 'node:assert/strict';
+
+export function summarizeNativeRaid(r){
+ const species=Object.values(r.species??{}),sum=k=>species.reduce((n,s)=>n+(s[k]??0),0);
+ const budget=sum('initialHitBudget'),consumed=sum('observedBudgetConsumed');
+ assert.ok(consumed<=budget,'Consumed strikes exceed original native budget');
+ const exact=r.exposureStatus==='exact-native-spawn'&&Number.isInteger(r.exposedLivingAtSpawn);
+ return {id:r.id,day:r.day,daytime:r.daytime,ended:r.ended,animals:r.actors.length,
+  exposedLiving:exact?r.exposedLivingAtSpawn:null,exposedWounded:exact?r.exposedWoundedAtSpawn:null,
+  hitBudget:budget,consumedStrikes:consumed,remainingOrUnobservedStrikes:budget-consumed,
+  potentialStructureDamage:sum('maximumStructureDamage'),structureHpLost:r.structureHpLost??0,wallHpLost:r.wallHpLost??0,
+  cropHits:r.cropHits??0,destroyed:r.cropsDestroyed??0,workerHits:r.workerHits??0,misses:r.misses??0,
+  shieldContacts:r.shieldContacts??0,wallHits:r.wallHits??0,centerHits:r.centerHits??0,
+  replacementCost:r.cropReplacementCost??0,lostBaseHarvestValue:r.lostBaseHarvestValue??0,
+  destroyedFraction:exact&&r.ended&&r.exposedLivingAtSpawn>0?r.cropsDestroyed/r.exposedLivingAtSpawn:null,
+  freshCropKillUpperBound:Math.floor(budget/2),woundedCropKillUpperBound:budget,
+  targetUnprotected:!r.daytime?.2057+.0007*(r.day-1):null,
+  targetProtected:!r.daytime?.0351+.0001*(r.day-1):null,
+  species:r.species??{},scope:'Per completed raid, exact spawn census only. Targets are reference hypotheses, never deletion rules. Kill upper bounds assume every strike reaches crops; they are not expected or guaranteed damage. Replacement cost and lost base harvest are diagnostic opportunity losses, never ledger expenses.'};
+}
 
 export function summarizeNativeCase({receipt,source,report,partial}){
  assert.notEqual(receipt.status,'running','Only terminal evidence can be summarized');
  const data=report??partial?.receipts;
  assert.ok(data,'Missing native evidence');
- const native=data.nativeEvidence,raids=data.raidEvidence?.raids??[];
+ const native=data.nativeEvidence,raids=data.raidEvidence?.raids??[],raidRows=raids.map(summarizeNativeRaid);
  const daily=(data.daily??[]).map(d=>{
   const f=d.finance,expenses=['wages','seeds','walls','centers','villages','repairs','otherDebits'].reduce((n,k)=>n+f[k],0),credits=f.income+f.refunds+f.otherCredits;
   assert.equal(f.closing-f.opening,credits-expenses,'Daily journal must reconcile');
@@ -31,17 +50,20 @@ export function summarizeNativeCase({receipt,source,report,partial}){
   income:daily.reduce((n,d)=>n+d.income,0),expenses:daily.reduce((n,d)=>n+d.expenses,0),
   net:daily.reduce((n,d)=>n+d.net,0),wallPieces:daily.reduce((n,d)=>n+(d.wallPieces??0),0),
   wallHits:daily.reduce((n,d)=>n+d.wallHits,0),idleFraction:daylight?idle/daylight:null,
-  observerStatus:native?.status??null,raidObserverStatus:data.raidEvidence?.status??null,daily,
+  observerStatus:native?.status??null,raidObserverStatus:data.raidEvidence?.status??null,daily,raids:raidRows,
   scope:'Completed native days only. Partial current day remains in original receipts. No extrapolation to100/180. Day1 opening already paid center800; daily net excludes that opening capital. Purchases include first hiring-trigger seed, unlike loop-only planted count. Additional wages are already in wages. No GPU/touch/visual acceptance.'};
 }
 const read=path=>JSON.parse(readFileSync(path,'utf8'));
 export function readNativeCase(dir){return summarizeNativeCase({receipt:read(resolve(dir,'receipt.json')),source:read(resolve(dir,'source.json')),report:existsSync(resolve(dir,'report.json'))?read(resolve(dir,'report.json')):null,partial:existsSync(resolve(dir,'partial.json'))?read(resolve(dir,'partial.json')):null});}
 const pct=x=>x===null?'—':(100*x).toFixed(2)+'%';
 export function writeNativeComparison(out,cases){
+ if(existsSync(out)&&readdirSync(out).length)throw Error('Refusing to overwrite original comparison evidence');
  mkdirSync(out,{recursive:true});
  writeFileSync(resolve(out,'comparison.json'),JSON.stringify(cases,null,2)+'\n');
  const columns=['strategy','seed','status','day','money','income','expenses','net','purchased','living','delivered','destroyed','walls','repairs','wallPieces','animals','cropHits','wallHits','centerHits','destroyedByAttacks','shieldContacts','idleFraction'];
  writeFileSync(resolve(out,'daily.csv'),columns.join(',')+'\n'+cases.flatMap(c=>c.daily.map(d=>columns.map(k=>d[k]??c[k]??'').join(','))).join('\n')+'\n');
+ const raidColumns=['strategy','seed','id','day','daytime','ended','animals','exposedLiving','exposedWounded','hitBudget','consumedStrikes','remainingOrUnobservedStrikes','potentialStructureDamage','structureHpLost','wallHpLost','cropHits','destroyed','destroyedFraction','workerHits','misses','shieldContacts','wallHits','centerHits','replacementCost','lostBaseHarvestValue','freshCropKillUpperBound','woundedCropKillUpperBound','targetUnprotected','targetProtected'];
+ writeFileSync(resolve(out,'raids.csv'),raidColumns.join(',')+'\n'+cases.flatMap(c=>c.raids.map(r=>raidColumns.map(k=>r[k]??c[k]??'').join(','))).join('\n')+'\n');
  const lines=['# Piloto nativo: resultados observados','',
   '| Estrategia | Semilla | Estado | Días completos | Dinero | Vivas | Ingresos | Gastos | Neto diario acumulado | Muros comprados | Golpes a muros | Inactividad |',
   '|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|',

@@ -7,7 +7,8 @@ import {RAID_NOTICE_TEXT} from './raid-notice.js';
 import {warmRaidNavigation} from '../world/raid-navigation-warmth.js';
 import {centerBoundaryPoint,centerCulture,centerDeliveryPoint} from '../world/centers.js';
 import {BALANCE as B} from './balance.js';
-import {nextRandom,randomInt,compositions,attraction,threatTier,animalSpec,operational,hitStructure,collapseThreshold} from './rules.js';
+import {nextRandom,randomInt,attraction,threatTier,animalSpec,operational,hitStructure,collapseThreshold} from './rules.js';
+import {createRaidCompositionIndex} from './raid-composition-index.js';
 import {emit,notice,walkTo,rebuildTasks,spellAt,dropCarriedCrate,recoverDisplacedWorkers} from './game.js';
 import {contractExpired} from './workforce.js';
 import {cancelIdle} from './idle.js';
@@ -26,8 +27,8 @@ export function planNight(s) {
   const introductory=!s.postgame&&s.day<=5;
   if(introductory)group=[B.animals[s.day-1].id];
   else if(!s.postgame){
-    const budget=randomInt(s,tier.threat_min,tier.threat_max),legal=compositions(budget,tier.unlocked_species);
-    group=legal[randomInt(s,0,legal.length-1)];
+    const budget=randomInt(s,tier.threat_min,tier.threat_max),legal=createRaidCompositionIndex(budget,tier.unlocked_species);
+    group=legal.at(randomInt(s,0,legal.count-1));
   }
   s.nightPlan={at,attraction:value,group,done:false,...(introductory?{introductory:true}:{})};
 }
@@ -141,7 +142,7 @@ export function spawnRaid(s,plan,nav,daytime=false) {
   let group=plan.group;
   if(daytime&&!group) {
     const value=attraction(s.plants);if(value<10000||nextRandom(s)>=.1)return;
-    const budget=randomInt(s,7,10),legal=compositions(budget,threatTier(value).unlocked_species);group=legal[randomInt(s,0,legal.length-1)];plan.group=[...group];
+    const budget=randomInt(s,7,10),legal=createRaidCompositionIndex(budget,threatTier(value).unlocked_species);group=legal.at(randomInt(s,0,legal.count-1));plan.group=[...group];
   }
   if(!group?.length)return;
   const focus=s.structures.find(operational)??s.villages[0];
