@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "status": "pure-unintegrated-candidate",
+  "pressure": {
+    "dayWeight": 0.45,
+    "valueWeight": 0.55,
+    "valueScale": 1000,
+    "logDenominator": 26,
+    "firstNight": 1,
+    "lastNight": 100
+  },
+  "ema": {
+    "alpha": 0.3333333333333333,
+    "nominalWindowNights": 5,
+    "update": "once-per-night-plan",
+    "effective": "max(current agricultural value, EMA)"
+  },
+  "composition": {
+    "initial": [
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    "final": [
+      0.25,
+      0.28,
+      0.23,
+      0.16,
+      0.08
+    ],
+    "species": [
+      "warthog",
+      "hyena",
+      "buffalo",
+      "lion",
+      "rhino"
+    ],
+    "interpolation": "linear-pressure; renormalize native unlocked; Hamilton integer rounding"
+  },
+  "reference": {
+    "spacing": 1.5,
+    "coneRadians": 1.5707963267948966,
+    "centralWeight": 1,
+    "peripheralWeight": 0.5
+  },
+  "q": {
+    "meanMultiplier": 1,
+    "unit": "reference agricultural HP points",
+    "round": "floor half-point",
+    "selection": "keep N and rounded species quotas, cap rolled hits reserving minimum for remaining actors"
+  },
+  "waveActiveLimit": 16,
+  "speciesCropBaseDamage": [
+    1,
+    1,
+    2,
+    2,
+    3
+  ],
+  "speciesBaseAttackRadii": [
+    0.7,
+    1.2,
+    2,
+    1.6,
+    2.8
+  ]
+}
