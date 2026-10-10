@@ -27,6 +27,9 @@ Windows run38012364835 is terminal failure at90007ms/87% displayed, with
 readyGateReached=false. Build and installer pass; world readiness remains open.
 [The independently verified original artifact](windows-loading-regression/normal-e2-38012364835/review.md)
 is retained. No changed90-second gate or exclusive bottleneck is inferred.
+The later normal6faa run38013118055 also fails at90168.4ms/86% displayed,
+with unchanged loading runtime; [its independently verified originals](windows-loading-regression/normal-6faa-38013118055/review.md)
+are retained. Neither presentation snapshot isolates a bottleneck.
 
 The distinct 212-worker day21 repair diagnostic paid174 at physical arrival
 and restored centre HP470→600 at time235.25. It does not explain every
@@ -41,8 +44,14 @@ Loading crop partitions are still an isolated, unselected candidate. Frozen
 cropIndex/stage rather than relying on composite IDs. Root receipt verification
 and31 directed lifecycle/hosting/serial-image tests pass. Node tests mock image
 decoding; they do not prove native image rendering or loading-time improvement.
-App/CLI wiring and immutable candidate assets are being prepared separately;
-no new native partition trial has been dispatched or production flag enabled.
+Later wiring/publication freeze4b110818 has root54 directed tests PASS in
+two invocations and its receipt verifier passes. Exactly one isolated Windows
+run38014169890 is live on that exact SHA, crop_partition=true, the other four
+experimental options false and original gates/model preflight preserved.
+[Root review](windows-loading-regression/maize-partition-root-review/README.md)
+authorizes the trial, not promotion. The temporary40.85MB package duplication
+must be eliminated before any eventual final integration. No production flag
+is enabled and no native readiness or performance result is accepted yet.
 
 ## Current-state update through main 8e1909d8
 
