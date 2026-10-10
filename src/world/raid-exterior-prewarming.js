@@ -1,3 +1,4 @@
+import {isSharedRaidReply} from './raid-shared-worker.js';
 import {Navigation} from './navigation.js';
 import {TerrainField} from './terrain.js';
 import {ANIMAL_ACTIONS} from '../simulation/animal-actions-data.js';
@@ -29,17 +30,17 @@ export const computeRaidExteriorGeometry=request=>drainGeometrySteps(computeRaid
 // Experimental geometry-only prewarming: caller owns scheduling. No game
 // clock, raid plan, RNG, live navigator patches or renderer loops are changed.
 export class RaidExteriorPrewarmer {
- constructor(nav,{createWorker=()=>new Worker(new URL('./raid-entry-worker.js',import.meta.url),{type:'module'}),now=()=>performance.now()}={}){
-  this.nav=nav;this.createWorker=createWorker;this.now=now;this.owner=`exterior-prewarmer-${++ownerSequence}`;this.token=0;this.stats={jobs:0,aborted:0,adopted:0,rejected:0,workerFailures:0,steps:0,maxStepMs:0,maxSliceMs:0,maxUpdateMs:0,maxProofMs:0,maxAdoptionMs:0,phases:{}};this.status='idle';
+ constructor(nav,{createWorker=()=>new Worker(new URL('./raid-entry-worker.js',import.meta.url),{type:'module'}),now=()=>performance.now(),transport=null}={}){
+  this.nav=nav;this.transport=transport;this.createWorker=createWorker;this.now=now;this.owner=`exterior-prewarmer-${++ownerSequence}`;this.token=0;this.stats={jobs:0,aborted:0,adopted:0,rejected:0,workerFailures:0,steps:0,maxStepMs:0,maxSliceMs:0,maxUpdateMs:0,maxProofMs:0,maxAdoptionMs:0,phases:{}};this.status='idle';
   this.openWorker();
  }
  openWorker(){
-  try{this.worker=this.createWorker();if(!this.worker)throw Error('Worker unavailable');this.worker.onmessage=event=>this.receive(event.data,event);this.worker.onerror=error=>this.workerFailed(error);}
+  try{if(this.transport){this.worker=this.transport.worker;if(!this.worker)throw Error('Shared raid Worker unavailable');this.channel??=this.transport.channel('geometry',this.owner,event=>this.receive(event.data,event),error=>this.workerFailed(error));return;}this.worker=this.createWorker();if(!this.worker)throw Error('Worker unavailable');this.worker.onmessage=event=>this.receive(event.data,event);this.worker.onerror=error=>this.workerFailed(error);}
   catch(error){this.worker=null;this.stats.workerFailures++;this.lastError=String(error);}
  }
  cancel(){
   if(!this.pending)return;this.stats.aborted++;this.pending.iterator?.return();
-  if(this.pending.worker){this.worker?.terminate();this.worker=null;}
+  if(this.pending.worker){if(this.channel)this.channel.cancel();else {this.worker?.terminate();this.worker=null;}}
   this.pending=null;this.status='cancelled';
  }
  update(state){const started=this.now();try{return this.updateInputs(state);}finally{this.stats.maxUpdateMs=Math.max(this.stats.maxUpdateMs,this.now()-started);}}
@@ -53,11 +54,11 @@ export class RaidExteriorPrewarmer {
   if(this.pending){const hadWorker=!!this.pending.worker;this.cancel();if(hadWorker)this.openWorker();}
   const request=raidExteriorGeometryRequest(state,this.nav,this.owner,++this.token);
   this.pending={key,field:this.nav.field,token:request.token,proof:proof(request),request,worker:this.worker};this.stats.jobs++;this.status='working';
-  if(this.worker){try{this.worker.postMessage(request);}catch(error){this.workerFailed(error);}}
+  if(this.worker){try{if(this.channel)this.channel.post(request);else this.worker.postMessage(request);}catch(error){this.workerFailed(error);}}
   else this.pending.iterator=computeRaidExteriorGeometrySteps(request);
  }
  workerFailed(error){
-  this.lastError=String(error?.message??error);this.stats.workerFailures++;this.worker?.terminate();this.worker=null;
+  this.lastError=String(error?.message??error);this.stats.workerFailures++;if(this.channel){this.channel.close();this.channel=null;}else this.worker?.terminate();this.worker=null;
   if(this.pending){const request=this.pending.request;this.pending.iterator?.return();this.pending={...this.pending,token:++this.token,worker:null,request:immutable({...request,token:this.token})};this.pending.proof=proof(this.pending.request);this.pending.iterator=computeRaidExteriorGeometrySteps(this.pending.request);this.status='working';}
  }
  receive(data,event){const started=this.now();try{return this.receiveOwned(data,event);}finally{this.stats.maxAdoptionMs=Math.max(this.stats.maxAdoptionMs,this.now()-started);}}
@@ -65,7 +66,7 @@ export class RaidExteriorPrewarmer {
   const pending=this.pending;if(this.disposed||!pending||data?.token!==pending.token)return;
   if(this.state?.result||this.state?.postgame||pending.field!==this.nav.field||pending.key!==raidExteriorInputKey(this.state,this.nav)){this.cancel();return;}
   if(data.error){this.workerFailed(new Error(data.error));return;}
-  const origin=isComputedRaidEntryResult(data)||(pending.worker===this.worker&&nativeOwnedRaidReply(event,pending.worker));
+  const origin=isComputedRaidEntryResult(data)||(pending.worker===this.worker&&nativeOwnedRaidReply(event,pending.worker))||isSharedRaidReply(data,pending.worker,this.owner,'geometry');
   if(!origin||data.kind!=='raid-exterior-geometry'||data.owner!==this.owner||data.key!==pending.key||data.proof!==pending.proof||typeof data.proof!=='string'||data.proof.length>16000000||!adoptRaidExteriorPayload(this.state,this.nav,data.geometry,CANONICAL_RAID_RADII)){
    this.stats.rejected++;this.failedKey=pending.key;pending.iterator?.return();this.pending=null;this.status='failed';this.lastError='Unowned, stale or malformed exterior geometry result';return;
   }
@@ -84,5 +85,5 @@ export class RaidExteriorPrewarmer {
   }}catch(error){this.lastError=String(error?.stack??error);this.failedKey=this.pending?.key;this.pending?.iterator.return();this.pending=null;this.status='failed';}
   this.stats.maxSliceMs=Math.max(this.stats.maxSliceMs,this.now()-started);return this.status;
  }
- dispose(){if(this.disposed)return;this.cancel();this.worker?.terminate();this.worker=null;this.state=null;this.disposed=true;this.status='disposed';}
+ dispose(){if(this.disposed)return;this.cancel();if(this.channel)this.channel.close();else this.worker?.terminate();this.channel=null;this.worker=null;this.state=null;this.disposed=true;this.status='disposed';}
 }

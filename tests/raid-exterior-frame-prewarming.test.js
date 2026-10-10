@@ -21,7 +21,7 @@ function finish(controller,state){let frames=0;do{controller.frame(state);}while
 test('OFF is allocation/hook free; actual WorldScene load/render/dispose connections remain explicit',()=>{
  const {nav}=fixture(),before=nav.preparedRaidEntry;for(const enabled of [undefined,false,1,'true'])assert.equal(createRaidExteriorFramePrewarming(nav,{enabled}),undefined);assert.equal(nav.preparedRaidEntry,before);
  const source=readFileSync(new URL('../src/rendering/scene.js',import.meta.url),'utf8');
- assert.ok(source.includes('raidExteriorPrewarming=false'));assert.ok(source.includes('this.raidExteriorFramePrewarming=createRaidExteriorFramePrewarming(this.nav,{enabled:raidExteriorPrewarming});'));
+ assert.ok(source.includes('raidExteriorPrewarming=false'));assert.ok(source.includes('new RaidEntryPreparer(this.nav,{shareExteriorWorker:raidExteriorPrewarming===true})'));assert.ok(source.includes('this.raidExteriorFramePrewarming=createRaidExteriorFramePrewarming(this.nav,{enabled:raidExteriorPrewarming,transport:this.raidEntryPreparer.transport});'));
  assert.ok(source.includes('this.raidExteriorFramePrewarming?.frame(this.state);this.syncChunks();yield;'));assert.ok(source.includes('this.raidExteriorFramePrewarming?.dispose();this.raidEntryPreparer?.dispose();'));
 });
 for(const kind of ['closed','mixed','canyon'])test(`${kind}: frame-owned continuation adopts whole geometry and native deadline spawn matches cold control`,()=>{

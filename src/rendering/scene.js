@@ -157,8 +157,8 @@ export class WorldScene {
     [this.models,this.workerLibraries,this.wateringPaths]=await this.loadReady(Promise.all([json('/content/models.json',{signal:this.loading.signal}),json('/content/worker-actions.json',{signal:this.loading.signal}),json('/content/watering-emitters.json',{signal:this.loading.signal})]));
     this.warmedAnimals=new Set();
     this.animalPreload=new AnimalPreload(this.assets,id=>this.models.find(m=>m.source.includes(animalSources[id])),{skinEnvelope:this.animalSkinEnvelope===true});
-    this.raidEntryPreparer=new RaidEntryPreparer(this.nav);
-    this.raidExteriorFramePrewarming=createRaidExteriorFramePrewarming(this.nav,{enabled:raidExteriorPrewarming});
+    this.raidEntryPreparer=new RaidEntryPreparer(this.nav,{shareExteriorWorker:raidExteriorPrewarming===true});
+    this.raidExteriorFramePrewarming=createRaidExteriorFramePrewarming(this.nav,{enabled:raidExteriorPrewarming,transport:this.raidEntryPreparer.transport});
     await phase('load-animal-models',()=>this.loadReady(this.warmAnimalModels(Object.keys(animalSources))));await milestone('animals');
     for(const [profile,library] of Object.entries(this.workerLibraries)){const path=this.wateringPaths.profiles[profile];if(path?.sourceSha256!==library.sha256)throw Error('Recorrido de regadera desactualizado: '+profile);this.wateringEmitters.set(profile,createWateringEmitter(path));}
     const cropModel=this.models.find(m=>m.source.includes('Cultivos'));

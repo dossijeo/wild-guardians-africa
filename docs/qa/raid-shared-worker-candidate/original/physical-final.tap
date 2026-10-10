@@ -1,0 +1,16 @@
+TAP version 13
+# {"scope":"one actual Node shared-worker/native paid-enclosure physical parity; not campaign or browser renderer","initialSHA256":"20566cb86fdeca91548ecf997195eb5938e099182ee93cf9ea81d76035a9f376","finalSHA256":"7cc578fb4475b3e5148c629f991d66bed7256ce670153d1c5197ccd975d20416","ticks":41,"actors":12,"reloaded":true,"actualWarmChunks":["2,0","2,1","1,0","1,1"],"transport":{"posted":2,"replied":2,"cancelled":0,"rejected":0,"failed":0,"requestJsonBytes":134844,"replyJsonBytes":410518,"packMs":3.629199999999855,"postMs":0.41580000000021755,"workerComputeMs":511.4111999999999,"maxQueueWaitMs":488.46479999999985},"records":[{"job":1,"kind":"geometry","queueWaitMs":0.601099999999974,"replyElapsedMs":488.70539999999994,"computeMs":93.89639999999997,"geometryReused":false,"cancelled":false},{"job":2,"kind":"entry","queueWaitMs":488.46479999999985,"replyElapsedMs":425.3949,"computeMs":417.5147999999999,"geometryReused":true,"cancelled":false}]}
+# Subtest: one actual shared Node worker preserves full spawn/RNG, every physical route tick, reload and all12native exits against original entry preparation
+ok 1 - one actual shared Node worker preserves full spawn/RNG, every physical route tick, reload and all12native exits against original entry preparation
+  ---
+  duration_ms: 2414.5562
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2652.4001

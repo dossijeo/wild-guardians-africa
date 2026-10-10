@@ -4,16 +4,16 @@ import {ANIMAL_ACTIONS} from '../simulation/animal-actions-data.js';
 
 // Explicit experimental load option, OFF unless boolean true. The caller is
 // the existing render loop. No worker/RAF, simulation pause or raid deferral.
-export function createRaidExteriorFramePrewarming(nav,{enabled=false,maxSteps=128,maxMillis=2,now=()=>performance.now()}={}){
+export function createRaidExteriorFramePrewarming(nav,{enabled=false,maxSteps=128,maxMillis=2,now=()=>performance.now(),transport=null}={}){
  if(enabled!==true)return;
- return new RaidExteriorFramePrewarming(nav,{maxSteps,maxMillis,now});
+ return new RaidExteriorFramePrewarming(nav,{maxSteps,maxMillis,now,transport});
 }
 export class RaidExteriorFramePrewarming {
- constructor(nav,{maxSteps=128,maxMillis=2,now=()=>performance.now()}={}){
+ constructor(nav,{maxSteps=128,maxMillis=2,now=()=>performance.now(),transport=null}={}){
   this.nav=nav;this.maxSteps=maxSteps;this.maxMillis=maxMillis;this.now=now;
-  // Keep the existing entry preparer's single Worker. This first integration
-  // uses actual cooperative CPU continuations, not a second worker/loop.
-  this.geometry=new RaidExteriorPrewarmer(nav,{createWorker:()=>null,now});
+  // Share the existing entry Worker when explicitly connected. Unavailable
+  // transport retains the actual cooperative continuation; no second loop.
+  this.geometry=new RaidExteriorPrewarmer(nav,{createWorker:()=>null,now,transport});
   this.stats={frames:0,deadlineCalls:0,preparedEntries:0,warmGeometryFallbacks:0,coldGeometryFallbacks:0,maxFrameWorkMs:0,errors:0};
   this.deadlines=[];this.delegate=nav.preparedRaidEntry;
   this.take=(state,group,bounds)=>{
