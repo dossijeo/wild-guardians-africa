@@ -1,0 +1,301 @@
+{
+  "scope": "Native-rule upper capacity bounds, not realized damage, economic projection or campaign acceptance",
+  "tiers": [
+    {
+      "attractionMin": 0,
+      "attractionMax": 100,
+      "legalEntries": 2,
+      "maxAnimals": 2,
+      "strongest": {
+        "budget": 2,
+        "group": [
+          "warthog",
+          "warthog"
+        ],
+        "hits": 8,
+        "structureDamage": 160,
+        "maxFreshCropKills": 4,
+        "maxAlreadyWoundedCropKills": 8
+      },
+      "maxStructureDamage": 160
+    },
+    {
+      "attractionMin": 100,
+      "attractionMax": 300,
+      "legalEntries": 5,
+      "maxAnimals": 3,
+      "strongest": {
+        "budget": 3,
+        "group": [
+          "warthog",
+          "warthog",
+          "warthog"
+        ],
+        "hits": 12,
+        "structureDamage": 240,
+        "maxFreshCropKills": 6,
+        "maxAlreadyWoundedCropKills": 12
+      },
+      "maxStructureDamage": 240
+    },
+    {
+      "attractionMin": 300,
+      "attractionMax": 800,
+      "legalEntries": 13,
+      "maxAnimals": 4,
+      "strongest": {
+        "budget": 6,
+        "group": [
+          "warthog",
+          "warthog",
+          "warthog",
+          "hyena"
+        ],
+        "hits": 17,
+        "structureDamage": 365,
+        "maxFreshCropKills": 8,
+        "maxAlreadyWoundedCropKills": 17
+      },
+      "maxStructureDamage": 370
+    },
+    {
+      "attractionMin": 800,
+      "attractionMax": 2000,
+      "legalEntries": 37,
+      "maxAnimals": 5,
+      "strongest": {
+        "budget": 9,
+        "group": [
+          "warthog",
+          "warthog",
+          "warthog",
+          "hyena",
+          "hyena"
+        ],
+        "hits": 22,
+        "structureDamage": 490,
+        "maxFreshCropKills": 11,
+        "maxAlreadyWoundedCropKills": 22
+      },
+      "maxStructureDamage": 520
+    },
+    {
+      "attractionMin": 2000,
+      "attractionMax": null,
+      "legalEntries": 89,
+      "maxAnimals": 5,
+      "strongest": {
+        "budget": 13,
+        "group": [
+          "warthog",
+          "warthog",
+          "hyena",
+          "hyena",
+          "buffalo"
+        ],
+        "hits": 24,
+        "structureDamage": 620,
+        "maxFreshCropKills": 12,
+        "maxAlreadyWoundedCropKills": 24
+      },
+      "maxStructureDamage": 720
+    }
+  ],
+  "maxHits": 24,
+  "maxFreshCropKills": 12,
+  "perAnimalMax": 8,
+  "references": [
+    {
+      "night": 1,
+      "plants": 60,
+      "unprotectedFraction": 0.2057,
+      "protectedFraction": 0.0351,
+      "targetKills": 13,
+      "freshCropHitsRequired": 26,
+      "alreadyWoundedHitsRequired": 13,
+      "optimisticMinimumAnimals": 4,
+      "currentMaximumFreshCropLossFraction": 0.2,
+      "defenseExpenseReference": 48
+    },
+    {
+      "night": 1,
+      "plants": 100,
+      "unprotectedFraction": 0.2057,
+      "protectedFraction": 0.0351,
+      "targetKills": 21,
+      "freshCropHitsRequired": 42,
+      "alreadyWoundedHitsRequired": 21,
+      "optimisticMinimumAnimals": 6,
+      "currentMaximumFreshCropLossFraction": 0.12,
+      "defenseExpenseReference": 84
+    },
+    {
+      "night": 1,
+      "plants": 200,
+      "unprotectedFraction": 0.2057,
+      "protectedFraction": 0.0351,
+      "targetKills": 42,
+      "freshCropHitsRequired": 84,
+      "alreadyWoundedHitsRequired": 42,
+      "optimisticMinimumAnimals": 11,
+      "currentMaximumFreshCropLossFraction": 0.06,
+      "defenseExpenseReference": 216
+    },
+    {
+      "night": 1,
+      "plants": 400,
+      "unprotectedFraction": 0.2057,
+      "protectedFraction": 0.0351,
+      "targetKills": 83,
+      "freshCropHitsRequired": 166,
+      "alreadyWoundedHitsRequired": 83,
+      "optimisticMinimumAnimals": 21,
+      "currentMaximumFreshCropLossFraction": 0.03,
+      "defenseExpenseReference": 660
+    },
+    {
+      "night": 1,
+      "plants": 600,
+      "unprotectedFraction": 0.2057,
+      "protectedFraction": 0.0351,
+      "targetKills": 124,
+      "freshCropHitsRequired": 248,
+      "alreadyWoundedHitsRequired": 124,
+      "optimisticMinimumAnimals": 31,
+      "currentMaximumFreshCropLossFraction": 0.02,
+      "defenseExpenseReference": 1344
+    },
+    {
+      "night": 50,
+      "plants": 60,
+      "unprotectedFraction": 0.24,
+      "protectedFraction": 0.04,
+      "targetKills": 15,
+      "freshCropHitsRequired": 30,
+      "alreadyWoundedHitsRequired": 15,
+      "optimisticMinimumAnimals": 4,
+      "currentMaximumFreshCropLossFraction": 0.2,
+      "defenseExpenseReference": 48
+    },
+    {
+      "night": 50,
+      "plants": 100,
+      "unprotectedFraction": 0.24,
+      "protectedFraction": 0.04,
+      "targetKills": 24,
+      "freshCropHitsRequired": 48,
+      "alreadyWoundedHitsRequired": 24,
+      "optimisticMinimumAnimals": 6,
+      "currentMaximumFreshCropLossFraction": 0.12,
+      "defenseExpenseReference": 84
+    },
+    {
+      "night": 50,
+      "plants": 200,
+      "unprotectedFraction": 0.24,
+      "protectedFraction": 0.04,
+      "targetKills": 48,
+      "freshCropHitsRequired": 96,
+      "alreadyWoundedHitsRequired": 48,
+      "optimisticMinimumAnimals": 12,
+      "currentMaximumFreshCropLossFraction": 0.06,
+      "defenseExpenseReference": 216
+    },
+    {
+      "night": 50,
+      "plants": 400,
+      "unprotectedFraction": 0.24,
+      "protectedFraction": 0.04,
+      "targetKills": 96,
+      "freshCropHitsRequired": 192,
+      "alreadyWoundedHitsRequired": 96,
+      "optimisticMinimumAnimals": 24,
+      "currentMaximumFreshCropLossFraction": 0.03,
+      "defenseExpenseReference": 660
+    },
+    {
+      "night": 50,
+      "plants": 600,
+      "unprotectedFraction": 0.24,
+      "protectedFraction": 0.04,
+      "targetKills": 144,
+      "freshCropHitsRequired": 288,
+      "alreadyWoundedHitsRequired": 144,
+      "optimisticMinimumAnimals": 36,
+      "currentMaximumFreshCropLossFraction": 0.02,
+      "defenseExpenseReference": 1344
+    },
+    {
+      "night": 100,
+      "plants": 60,
+      "unprotectedFraction": 0.275,
+      "protectedFraction": 0.045,
+      "targetKills": 17,
+      "freshCropHitsRequired": 34,
+      "alreadyWoundedHitsRequired": 17,
+      "optimisticMinimumAnimals": 5,
+      "currentMaximumFreshCropLossFraction": 0.2,
+      "defenseExpenseReference": 48
+    },
+    {
+      "night": 100,
+      "plants": 100,
+      "unprotectedFraction": 0.275,
+      "protectedFraction": 0.045,
+      "targetKills": 28,
+      "freshCropHitsRequired": 56,
+      "alreadyWoundedHitsRequired": 28,
+      "optimisticMinimumAnimals": 7,
+      "currentMaximumFreshCropLossFraction": 0.12,
+      "defenseExpenseReference": 84
+    },
+    {
+      "night": 100,
+      "plants": 200,
+      "unprotectedFraction": 0.275,
+      "protectedFraction": 0.045,
+      "targetKills": 55,
+      "freshCropHitsRequired": 110,
+      "alreadyWoundedHitsRequired": 55,
+      "optimisticMinimumAnimals": 14,
+      "currentMaximumFreshCropLossFraction": 0.06,
+      "defenseExpenseReference": 216
+    },
+    {
+      "night": 100,
+      "plants": 400,
+      "unprotectedFraction": 0.275,
+      "protectedFraction": 0.045,
+      "targetKills": 110,
+      "freshCropHitsRequired": 220,
+      "alreadyWoundedHitsRequired": 110,
+      "optimisticMinimumAnimals": 28,
+      "currentMaximumFreshCropLossFraction": 0.03,
+      "defenseExpenseReference": 660
+    },
+    {
+      "night": 100,
+      "plants": 600,
+      "unprotectedFraction": 0.275,
+      "protectedFraction": 0.045,
+      "targetKills": 165,
+      "freshCropHitsRequired": 330,
+      "alreadyWoundedHitsRequired": 165,
+      "optimisticMinimumAnimals": 42,
+      "currentMaximumFreshCropLossFraction": 0.02,
+      "defenseExpenseReference": 1344
+    }
+  ],
+  "caveats": [
+    "Each native hit affects one target; fresh crops require two hits. Already wounded crops may need one, so the fresh bound cannot be applied to wounded stock.",
+    "Hits spent on walls, shields, workers, misses, inaccessible targets and travel lower realized crop damage. No negative loss or exposure factor is applied.",
+    "Introductory nights have one species and the native 20% destruction safeguard; full-tier capacity must not be attributed to night1.",
+    "Optimistic animal minimum assumes every animal has the globally largest hit budget and all hits become crop hits, ignoring unlocks, composition and frequency. It is a lower bound, not a recommended horde."
+  ],
+  "sourceHashes": {
+    "tools/audit-native-raid-capacity.mjs": "b30091ec6af590bb42fb2ddcd59e98d94bd939ee179746fa041199fc32152fa2",
+    "src/simulation/rules.js": "ee18b7a0f73c3de111d0c765b969b78f10abcac1fc8bf1f2de9d5235f4fbd912",
+    "src/simulation/balance.js": "54cf0dba263fe34d8bf83320c5fb31ba4dde17ad63440bf03f917a532daa1748",
+    "src/simulation/raids.js": "79d66a3e3e34e08f862e16510d9ecc5ebbc7a37600ac5c03893cbab928d95c3a"
+  }
+}
