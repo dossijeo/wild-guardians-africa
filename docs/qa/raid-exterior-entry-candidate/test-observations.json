@@ -1,0 +1,36 @@
+{
+  "base": "9f0f65edb54612e7565b6ef3862faa556bb3c6ae",
+  "sourceHashes": {
+    "src/simulation/raids.js": "d071a63e704d0e58cbd9a26f8028ea93025a1ff368471c43603014139eef2935",
+    "src/world/boundary-gates.js": "2d87f7499de46d9a93b89a3e0a37321aec1c22b5dc840490c8799276f2423d05",
+    "src/world/raid-exterior.js": "24d9302a6a58488f3e2d9ce8cca9a49f3cfc274625b7028469019ed19487e387",
+    "tests/raid-exterior-entry.test.js": "5c5a387ac0d1ba2100a1c8309c7ec27fcdc8ad4bbf7746249162952a1c25a9b3"
+  },
+  "rawStdoutRetained": false,
+  "observationsFromToolCommandResults": true,
+  "tests": [
+    {
+      "command": "node --test tests/raid-entry-preparer.test.js",
+      "exitCode": 0,
+      "passed": 15,
+      "failed": 0,
+      "durationMilliseconds": 6594.8839
+    },
+    {
+      "command": "node --test tests/raid-exterior-entry.test.js",
+      "exitCode": 1,
+      "passed": 4,
+      "failed": 1,
+      "durationMilliseconds": 2430.6443,
+      "failure": "native Canyon cliff boundary participates, without manufacturing omitted river edges: regions.length>0 false"
+    }
+  ],
+  "cpuObservations": {
+    "cameraMilliseconds": 5.6548,
+    "group12Milliseconds": 40.398,
+    "performanceAcceptance": false
+  },
+  "productionAcceptance": false,
+  "campaignExecuted": false,
+  "noSourceChangesDuringTests": true
+}

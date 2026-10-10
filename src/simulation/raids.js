@@ -2,6 +2,7 @@ import {createCropGrouping} from './crop-components.js';
 import {cropBecameInactive} from './active-crops.js';
 import {RAID_NOTICE_TEXT} from './raid-notice.js';
 import {warmRaidNavigation} from '../world/raid-navigation-warmth.js';
+import {raidExteriorRegions,outsideRaidRegions,raidPerimeterAnchors,exteriorRaidEntry} from '../world/raid-exterior.js';
 import {centerBoundaryPoint,centerCulture,centerDeliveryPoint} from '../world/centers.js';
 import {BALANCE as B} from './balance.js';
 import {nextRandom,randomInt,compositions,attraction,threatTier,animalSpec,operational,hitStructure,collapseThreshold} from './rules.js';
@@ -32,14 +33,16 @@ export function planDay(s) {s.dayPlan={at:(115+nextRandom(s)*420)/2.4,done:false
 export function cameraRaidEntry(s,specs,bounds,nav,view=nav.raidView,maxSearches=2){
   if(!view)return null;
   const dx=view.eye.x-view.target.x,dz=view.eye.z-view.target.z,length=Math.hypot(dx,dz);if(length<1e-6)return null;
-  const bx=dx/length,bz=dz/length,spacing=Math.max(...specs.map(v=>v.radius))*2+1.1;
+  const backX=dx/length,backZ=dz/length,spacing=Math.max(...specs.map(v=>v.radius))*2+1.1;
   const [minX,minZ,maxX,maxZ]=bounds;
   const centers=s.structures.filter(operational),walls=s.structures.filter(t=>t.kind==='wall'&&t.hp>0&&t.status!=='collapsing');
   // If the camera looks across disconnected water, try the near farm side.
   // Never perform an unbounded sequence of full A* searches during spawning.
-  const focus=centers[0],anchors=[view.eye];
-  if(focus)anchors.push(centerBoundaryPoint(focus,Math.atan2(bx,bz),2,s));
-  for(const anchor of anchors){
+  const focus=centers[0],anchors=[{point:view.eye,bx:backX,bz:backZ}];
+  if(focus)anchors.push({point:centerBoundaryPoint(focus,Math.atan2(backX,backZ),2,s),bx:backX,bz:backZ});
+  const regions=specs.map(({radius})=>raidExteriorRegions(s,nav,radius));
+  anchors.push(...raidPerimeterAnchors(regions[0],view));
+  for(const {point:anchor,bx,bz,perimeter} of anchors){
     const points=[],exits=[];let searches=0;
     for(let i=0;i<specs.length;i++){
       const {radius}=specs[i];let chosen=null;
@@ -55,7 +58,8 @@ export function cameraRaidEntry(s,specs,bounds,nav,view=nav.raidView,maxSearches
         // area, especially once canyon water becomes traversable. Keep the
         // original camera/farm distance contract before spending path searches.
         const camera=nav.raidView?.eye??view.eye;
-        if(dist(point,camera)>=20&&(!focus||dist(point,focus)>=12))continue;
+        if(dist(point,camera)>=20&&(!focus||dist(point,focus)>=12)&&(!perimeter||dist(point,anchor)>=20))continue;
+        if(!outsideRaidRegions(point,radius,regions[i])||!outsideRaidRegions(exit,radius,regions[i]))continue;
         if([point,exit].some(p=>p.x-radius<minX||p.x+radius>maxX||p.z-radius<minZ||p.z+radius>maxZ))continue;
         if(!nav.walkable(point.x,point.z,radius,null,false)||!nav.walkable(exit.x,exit.z,radius,null,false))continue;
         if(points.some((p,j)=>dist(p,point)<=specs[j].radius+radius+1))continue;
@@ -121,7 +125,8 @@ export function chooseRaidEntry(s,specs,bounds,preferredSide,nav){
             {x:along+offset,z:side===3?maxZ-inset:minZ+inset};
           const point={x:exit.x+(side===0?3:side===1?-3:0),z:exit.z+(side===2?3:side===3?-3:0)};
           const clear=()=>nav.segmentClear?nav.segmentClear(point,exit,radius,null,false):!!nav.path(point,exit,radius,null,false);
-          if(point.x-radius>=minX&&point.x+radius<=maxX&&point.z-radius>=minZ&&point.z+radius<=maxZ&&nav.walkable(point.x,point.z,radius,null,false)&&nav.walkable(exit.x,exit.z,radius,null,false)&&points.every((p,j)=>dist(p,point)>specs[j].radius+radius+1)&&clear()){
+          const regions=raidExteriorRegions(s,nav,radius);
+          if(outsideRaidRegions(point,radius,regions)&&outsideRaidRegions(exit,radius,regions)&&point.x-radius>=minX&&point.x+radius<=maxX&&point.z-radius>=minZ&&point.z+radius<=maxZ&&nav.walkable(point.x,point.z,radius,null,false)&&nav.walkable(exit.x,exit.z,radius,null,false)&&points.every((p,j)=>dist(p,point)>specs[j].radius+radius+1)&&clear()){
             spawn=point;retreats.push(exit);break;
           }
         }
@@ -143,7 +148,10 @@ export function spawnRaid(s,plan,nav,daytime=false) {
   const focus=s.structures.find(operational)??s.villages[0];
   const specs=group.map(id=>({spec:animalSpec(id),radius:ANIMAL_ACTIONS.animals[id].presentation.footprint.radius}));
   const bounds=validActiveBounds(nav.activeBounds)?[...nav.activeBounds]:activeChunkRegion(focus).bounds;
-  const prepared=!daytime&&nav.preparedRaidEntry?.(s,group,bounds);
+  const proposed=!daytime&&nav.preparedRaidEntry?.(s,group,bounds);
+  // Validate the current physical enclosure as well as the preparer's request
+  // key. A stale/malformed interior reply must never create actors there.
+  const prepared=proposed&&exteriorRaidEntry(s,nav,specs,proposed.entry)?proposed:null;
   if(prepared)warmRaidNavigation(nav,prepared.warmth);
   const preferredSide=randomInt(s,0,3);
   const entry=prepared?prepared.entry:chooseRaidEntry(s,specs,bounds,preferredSide,nav);
