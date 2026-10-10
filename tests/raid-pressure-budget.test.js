@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {BALANCE as B} from '../src/simulation/balance.js';
-import {agriculturalRaidValue,validateRaidPressureMemory,updateRaidPressureMemory,raidPressure,raidPressureSummary,raidSpeciesPressure,raidCompositionWeights,raidCompositionCounts,referenceRaidArea,raidProductEnvelope,selectBudgetedRaid,RAID_PRESSURE_CANDIDATE as C} from '../src/simulation/raid-pressure-budget.js';
+import {agriculturalRaidValue,validateRaidPressureMemory,updateRaidPressureMemory,raidPressure,raidPressureSummary,raidSpeciesPressure,raidCompositionWeights,raidCompositionCounts,referenceRaidArea,raidProductEnvelope,selectBudgetedRaid,planRaidProductComposition,validateRaidPressureConfiguration,validateRaidPressureRuntimeConfig,validateRaidPressureSource,RAID_PRESSURE_CANDIDATE as C} from '../src/simulation/raid-pressure-budget.js';
 const ids=B.animals.map(a=>a.id);
 test('V uses only native living agricultural base value, not cash/maturity/magic bonuses',()=>{
  const plants=B.crops.map(c=>({species:c.id,alive:true,growth:999,multiplyHarvest:true,harvestBonus:999}));assert.equal(agriculturalRaidValue(plants),577);
@@ -27,7 +27,7 @@ test('P follows independent formula with clamping and growing/retiring agricultu
 test('species formulas apply jointly with no cash-dependent input',()=>{
  const bases=[1,1,2,2,3],radii=[.7,1.2,2,1.6,2.8];
  for(let i=0;i<ids.length;i++)for(const p of [0,.49,.5,.66,1]){
-  const s=raidSpeciesPressure(ids[i],p),a=B.animals[i];assert.equal(s.minHits,a.hit_budget_min+Math.floor(2*p));assert.equal(s.maxHits,a.hit_budget_max+Math.floor(2*p));assert.equal(s.cropDamage,bases[i]+Math.floor(1.5*p));assert.equal(s.structureDamage,a.structure_hit_damage*(1+.5*p));assert.equal(s.attackRadius,radii[i]*(1+.3*p));assert.equal(s.areaCap,1+Math.floor(6*p));
+  const s=raidSpeciesPressure(ids[i],p),a=B.animals[i];assert.equal(s.minHits,a.hit_budget_min+Math.floor(2*p));assert.equal(s.maxHits,a.hit_budget_max+Math.floor(2*p));assert.equal(s.cropDamage,bases[i]+Math.floor(1.5*p));assert.equal(s.structureDamage,Math.round(a.structure_hit_damage*(1+.5*p)));assert.equal(s.attackRadius,radii[i]*(1+.3*p));assert.equal(s.areaCap,1+Math.floor(6*p));
  }
 });
 test('mixture interpolates weak opening to final proportions, preserves unlocks and finite rounding',()=>{
@@ -58,9 +58,9 @@ test('selection deterministically roundtrips RNG and leaves inputs/config/balanc
 test('introductions keep original one actor/min budget without new random draws',()=>{
  for(let night=1;night<=5;night++){const r=selectBudgetedRaid({night,pressure:1,unlocked:ids,rng:712});assert.equal(r.rng,712);assert.equal(r.draws,0);assert.deepEqual(r.actors,[{species:ids[night-1],hits:B.animals[night-1].hit_budget_min}]);}
 });
-test('infeasible Q returns explicit unselected result rather than synthetic zero damage or omitted actors',()=>{
- const config={...C,qMeanMultiplier:.1},counts=raidCompositionCounts(34,1,ids),e=raidProductEnvelope(counts,1,config);assert.equal(e.feasible,false);
- const r=selectBudgetedRaid({night:6,pressure:1,unlocked:ids,rng:712,config});assert.equal(r.status,'infeasible-budget');assert.equal(r.rng,712);assert.equal(r.draws,0);assert.deepEqual(r.actors,[]);assert.equal(r.targetAnimals,34);
+test('explicit infeasible Q rejects composition before any random draw',()=>{
+ const plan=planRaidProductComposition(34,1,ids,C,B,0);assert.equal(plan.status,'infeasible-budget');assert.equal(plan.counts,null);
+ const r=selectBudgetedRaid({night:6,pressure:1,unlocked:ids,rng:712,qBudget:0});assert.equal(r.status,'infeasible-budget');assert.equal(r.rng,712);assert.equal(r.draws,0);assert.deepEqual(r.actors,[]);assert.equal(r.targetAnimals,34);
 });
 test('invalid inputs reject bounded work instead of propagating unsafe values',()=>{
  for(const p of [-1,NaN,Infinity,1.1])assert.throws(()=>raidSpeciesPressure('rhino',p));assert.throws(()=>raidPressure(0,0));assert.throws(()=>raidPressure(1,-1));assert.throws(()=>raidCompositionCounts(10000,1,ids));assert.throws(()=>referenceRaidArea({attackRadius:100,areaCap:7}));assert.throws(()=>selectBudgetedRaid({night:6,pressure:1,unlocked:ids,rng:1,config:{...C,activeWaveLimit:0}}));
@@ -72,4 +72,29 @@ test('unintegrated candidate configuration matches the pure module decisions',as
  const {readFileSync}=await import('node:fs');const c=JSON.parse(readFileSync(new URL('../content/balance/raid_pressure_candidate.json',import.meta.url)));
  assert.equal(c.ema.alpha,C.emaAlpha);assert.equal(c.reference.spacing,C.referenceSpacing);assert.equal(c.reference.coneRadians,C.referenceConeRadians);assert.equal(c.reference.peripheralWeight,C.peripheralWeight);assert.equal(c.q.meanMultiplier,C.qMeanMultiplier);assert.equal(c.waveActiveLimit,C.activeWaveLimit);assert.deepEqual(c.composition.final,raidCompositionWeights(1,ids));
  for(let i=0;i<ids.length;i++){const spec=raidSpeciesPressure(ids[i],0);assert.equal(spec.cropDamage,c.speciesCropBaseDamage[i]);assert.equal(spec.attackRadius,c.speciesBaseAttackRadii[i]);}
+});
+
+test('full-range hit roll is independent of remaining Q after composition is fixed',()=>{
+ for(const p of [0,.2,.5,1])for(const seed of [1,712,2026,4294967295]){
+  const result=selectBudgetedRaid({night:6,pressure:p,unlocked:ids,rng:seed});let rng=seed;
+  const draw=()=>{rng^=rng<<13;rng^=rng>>>17;rng^=rng<<5;rng>>>=0;return rng/4294967296;};
+  for(const actor of result.actors){draw();const spec=raidSpeciesPressure(actor.species,p),r=draw();assert.equal(actor.hits,spec.minHits+Math.floor(r*(spec.maxHits-spec.minHits+1)));}
+  assert.equal(result.rng,rng);assert.ok(result.plan.maximumProduct<=result.plan.q+1e-9);
+ }
+});
+test('composition adjusts before RNG under maximum shares, finite swaps, exact N and transparent Q floor',()=>{
+ for(let i=0;i<=100;i++)for(const unlocked of [ids.slice(0,1),ids.slice(0,2),ids]){
+  const p=i/100,n=Math.round(4+30*p),plan=planRaidProductComposition(n,p,unlocked);
+  assert.equal(plan.status,'planned');assert.equal(Object.values(plan.counts).reduce((a,b)=>a+b,0),n);assert.ok(plan.maximumProduct<=plan.q+1e-9);assert.ok(plan.adjustments.length<=n*ids.length);
+  for(const id of ids)assert.ok(plan.counts[id]<=plan.caps[id]);
+  assert.equal(plan.q,Math.max(plan.requestedQ,plan.minimumLegalWorstCase));
+ }
+ const low=planRaidProductComposition(4,0,ids);assert.equal(low.requestedQ,12);assert.equal(low.minimumLegalWorstCase,16);assert.equal(low.q,16);assert.equal(low.qRaisedForRangeSafety,true);
+});
+test('strict config/source contracts reject unknown keys, drift, malformed numbers and unreviewed costs',async()=>{
+ const {readFileSync}=await import('node:fs'),original=JSON.parse(readFileSync(new URL('../content/balance/raid_pressure_candidate.json',import.meta.url)));
+ assert.equal(validateRaidPressureConfiguration(original),original);assert.equal(validateRaidPressureRuntimeConfig(C),C);assert.equal(validateRaidPressureSource(B),B);
+ for(const mutate of [c=>c.pressure.dayWeight=.5,c=>c.q.meanMultiplier=.5,c=>c.reference.spacing=0,c=>c.unknown=true,c=>c.ema.alpha=NaN,c=>c.structureRounding='none']){const c=structuredClone(original);mutate(c);assert.throws(()=>validateRaidPressureConfiguration(c));}
+ for(const mutate of [b=>b.work_center.cost=600,b=>b.workers.young_wage=39,b=>b.crops[0].plant_cost=4,b=>b.crops[0].base_harvest_value=33,b=>b.animals[0].hit_budget_max=5,b=>b.animals[0].structure_hit_damage=10]){const b=structuredClone(B);mutate(b);assert.throws(()=>validateRaidPressureSource(b));}
+ assert.throws(()=>validateRaidPressureRuntimeConfig({...C,qMeanMultiplier:.5}));assert.throws(()=>validateRaidPressureRuntimeConfig({...C,unknown:1}));
 });
