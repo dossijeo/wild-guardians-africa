@@ -5,6 +5,7 @@ import {mkdtempSync,writeFileSync,rmSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join,resolve,dirname} from 'node:path';
 import {spawnSync} from 'node:child_process';
+import {gzipSync} from 'node:zlib';
 function run(change=()=>{}){
  const parent=resolve(tmpdir()),dir=mkdtempSync(join(parent,'wild-guardians-audit-test-'));
  assert.equal(dirname(resolve(dir)),parent);
@@ -13,6 +14,7 @@ function run(change=()=>{}){
  try{
   change(fixture);
   for(const k of ['receipt','source','report'])writeFileSync(join(dir,k+'.json'),JSON.stringify(fixture[k]));
+  if(fixture.state)writeFileSync(join(dir,'state.json.gz'),gzipSync(JSON.stringify(fixture.state)));
   writeFileSync(join(dir,'days.jsonl'),fixture.rows.map(d=>JSON.stringify(d)).join('\n')+'\n');
   return spawnSync(process.execPath,['tools/audit-native-terminal-campaigns.mjs',dir],{encoding:'utf8'});
  }finally{
@@ -37,4 +39,14 @@ test('rejects transport failures and incomplete native strike accounting',()=>{
 test('accepts terminal defeat row without inventing an extra completed night',()=>{
  assert.equal(run(f=>{f.receipt.status='observed-native-defeat';f.receipt.result='defeat';f.receipt.completedNights=0;f.report.result='defeat';f.report.completedNights=0;f.rows[0].result='defeat';}).status,0);
  assert.notEqual(run(f=>{f.receipt.status='incomplete-harness-error';}).status,0);
+});
+
+test('accepts dawn economic defeat only with consistent native terminal snapshot evidence',()=>{
+ const dawn=f=>{f.receipt.status='observed-native-defeat';f.receipt.result='defeat';f.report.result='defeat';f.rows[0].result='defeat';f.state={result:'defeat',day:2,time:0,completedNights:1,raid:null,ledger:{balance:{n:'105',d:'1'}},events:[{type:'RaidEnded'},{type:'GameOver'}]};};
+ const valid=run(dawn);assert.equal(valid.status,0);assert.match(valid.stdout,/dawn-after-completed-night/);
+ assert.notEqual(run(f=>{dawn(f);delete f.state;}).status,0);
+ assert.notEqual(run(f=>{dawn(f);f.state.raid={};}).status,0);
+ assert.notEqual(run(f=>{dawn(f);f.state.time=600;}).status,0);
+ assert.notEqual(run(f=>{dawn(f);f.state.ledger.balance.n='106';}).status,0);
+ assert.notEqual(run(f=>{dawn(f);f.state.events.reverse();}).status,0);
 });

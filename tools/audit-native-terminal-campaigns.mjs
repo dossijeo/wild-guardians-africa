@@ -2,6 +2,7 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {resolve,join} from 'node:path';
+import {gunzipSync} from 'node:zlib';
 
 const dirs=process.argv.slice(2);
 assert.ok(dirs.length,'Pass terminal campaign directories');
@@ -13,7 +14,19 @@ const cases=dirs.map(dir=>{
  const defeated=receipt.status==='observed-native-defeat';
  assert.equal(receipt.result,defeated?'defeat':null);assert.equal(report.result,receipt.result);
  const rows=readFileSync(join(root,'days.jsonl'),'utf8').trim().split(/\r?\n/).map(JSON.parse);
- assert.equal(rows.length,receipt.completedNights+(defeated?1:0));assert.equal(report.completedNights,receipt.completedNights);
+ let defeatPhase=defeated?'during-terminal-night':null;
+ if(defeated&&rows.length===receipt.completedNights){
+  // Economic irreversibility is also checked at dawn, after the last raid
+  // has completed. It does not invent another played or completed night.
+  const state=JSON.parse(gunzipSync(readFileSync(join(root,'state.json.gz'))));
+  assert.equal(state.result,'defeat');assert.equal(state.completedNights,receipt.completedNights);
+  assert.equal(state.day,rows.at(-1).day+1);assert.equal(state.time,0);assert.equal(state.raid,null);
+  assert.equal(state.ledger.balance.d,'1');assert.equal(BigInt(state.ledger.balance.n),BigInt(report.money));
+  const over=state.events.findLastIndex(e=>e.type==='GameOver'),ended=state.events.findLastIndex(e=>e.type==='RaidEnded');
+  assert.ok(ended>=0&&over>ended,'Dawn defeat requires a completed native raid followed by GameOver');
+  defeatPhase='dawn-after-completed-night';
+ }else assert.equal(rows.length,receipt.completedNights+(defeated?1:0));
+ assert.equal(report.completedNights,receipt.completedNights);
  assert.equal(rows.at(-1).result,receipt.result);
  assert.equal(report.nativeEvidence.status,'verified');assert.equal(report.nativeEvidence.coverageLost,false);
  assert.equal(report.raidEvidence.status,'verified');assert.equal(report.raidEvidence.coverageLost,false);
@@ -62,6 +75,6 @@ const cases=dirs.map(dir=>{
   assert.ok(r.cropsDestroyed<=r.exposedLivingAtSpawn);
  }
  const reference=(base,slope)=>exposure?postIntroduction.reduce((n,r)=>n+r.exposedLivingAtSpawn*(base+slope*(r.day-1)),0)/exposure:null;
- return {directory:dir,seed:report.seed,strategy:report.strategy,status:receipt.status,result:report.result,terminalDay:rows.at(-1).day,completedNights:receipt.completedNights,money:report.money,living:rows.at(-1).living,centerHp:rows.at(-1).centerHp,destroyed:report.counts.CropDestroyed??0,totals,strikes:{assigned,consumed,unused},postIntroduction:{exposure,losses,weightedDestroyedFraction:exposure?losses/exposure:null,unprotectedReferenceFraction:reference(.2057,.0007),protectedReferenceFraction:reference(.0351,.0001),scope:'References are hypotheses only, never applied damage; exposure is the native census at each raid spawn'},ledgerAndDeliveryMatch:true,sourceHashesMatch:true,scope:'Native terminal evidence only; not hundred-night or human activity acceptance'};
+ return {directory:dir,seed:report.seed,strategy:report.strategy,status:receipt.status,result:report.result,defeatPhase,terminalDay:rows.at(-1).day,completedNights:receipt.completedNights,money:report.money,living:rows.at(-1).living,centerHp:rows.at(-1).centerHp,destroyed:report.counts.CropDestroyed??0,totals,strikes:{assigned,consumed,unused},postIntroduction:{exposure,losses,weightedDestroyedFraction:exposure?losses/exposure:null,unprotectedReferenceFraction:reference(.2057,.0007),protectedReferenceFraction:reference(.0351,.0001),scope:'References are hypotheses only, never applied damage; exposure is the native census at each raid spawn'},ledgerAndDeliveryMatch:true,sourceHashesMatch:true,scope:'Native terminal evidence only; not hundred-night or human activity acceptance'};
 });
 console.log(JSON.stringify({cases},null,2));
