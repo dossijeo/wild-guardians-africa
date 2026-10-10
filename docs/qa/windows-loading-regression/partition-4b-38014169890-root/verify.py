@@ -21,4 +21,7 @@ assert s['ok'] and not s['errors'] and v['ok'] and not v['errors']
 recipe=s['checks']['loadingRecipe'];assert recipe['cropPartition'] and sum(bool(x) for x in recipe.values())==1
 a=s['checks']['loadingAtFinish'];assert a['readyGateReached'] and a['worldWaitMs']==70924
 x=v['checks']['visibility'];assert x['passed'] and x['hiddenMs']>=300000 and x['resumedSimulatedSeconds']>0
+assert len(x['hiddenStart'])==21 and x['hiddenStart']==x['hiddenEnd']
+assert [t['state'] for t in x['transitions']]==['hidden','visible']
+assert x['visibleMenuPauses']==['menu']
 print('PASS original API digests, exact run, native readiness and genuine hidden/restoration; bounded single-run evidence')

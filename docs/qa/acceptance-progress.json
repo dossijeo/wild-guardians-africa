@@ -196,9 +196,10 @@
         "docs/qa-acceptance-clock.md",
         "docs/qa/windows-desktop/native-visibility.md",
         "docs/qa/windows-desktop/desktop-visibility-ccb2ce2.json",
-        "docs/qa/windows-desktop/desktop-visibility-7495dac.json"
+        "docs/qa/windows-desktop/desktop-visibility-7495dac.json",
+        "docs/qa/windows-loading-regression/partition-4b-38014169890-root/README.md"
       ],
-      "notes": "Domain checks preserve the whole simulation during 1800 seconds of blocked real time. Native Windows 7495dac additionally verifies genuine hidden/visible transitions and 300912.8 ms of unchanged simulation: elapsed 372.1, shield 18.5 and cooldown 88.5. Restoration keeps menu; resuming advances 0.8 simulated seconds during 2517.5 visible ms without offline catch-up. QA-014 remains partial: real web browser tab hiding and physical phone are not proved by the Windows result."
+      "notes": "Domain checks preserve the whole simulation during 1800 seconds of blocked real time. Native Windows 7495dac additionally verifies genuine hidden/visible transitions and 300912.8 ms of unchanged simulation: elapsed 372.1, shield 18.5 and cooldown 88.5. Restoration keeps menu; resuming advances 0.8 simulated seconds during 2517.5 visible ms without offline catch-up. Isolated native partition candidate4b110818 run38014169890 additionally passes genuine300113.2ms minimization: root independently verifies all21 retained simulation fields identical, hidden/visible transitions, menu retained on restoration and1.2 simulated seconds after resume. Its official artifact digest is checked; this is candidate-specific evidence, not default-main readiness or a web/mobile result. QA-014 remains partial: real web browser tab hiding and physical phone are not proved by the Windows result."
     },
     {
       "id": "QA-015",
