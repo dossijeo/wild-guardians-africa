@@ -33,6 +33,12 @@ retain this negative result. Trace and overlap were OFF; the label does not
 identify the blocking phase. Native visibility was skipped. No rerun or
 readiness acceptance follows from compilation alone.
 
+The unpartitioned main9d baseline also fails official Windows run38028855374
+at90046.9ms without readiness (displayed86%). [Exact originals](windows-loading-regression/main-9d-native-ci-negative/README.md)
+preserve that independent failure. These unpaired observations do not establish
+a partition-induced regression or identify the slow phase; native restoration
+was skipped. The unchanged90-second gate remains a diagnostic failure.
+
 Advanced-progress fifth-plant catch-up now passes one local native night run
 of exact7e: natural66.19% planting, captured intermediate fifth growth,
 all five mature, logical farm unchanged, and300411.6ms real hiding with
