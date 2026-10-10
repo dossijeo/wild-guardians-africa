@@ -1,0 +1,16 @@
+TAP version 13
+# {"scope":"one actual Node shared-worker/native paid-enclosure physical parity; not campaign or browser renderer","initialSHA256":"20566cb86fdeca91548ecf997195eb5938e099182ee93cf9ea81d76035a9f376","finalSHA256":"7cc578fb4475b3e5148c629f991d66bed7256ce670153d1c5197ccd975d20416","ticks":41,"actors":12,"reloaded":true,"actualWarmChunks":["2,0","2,1","1,0","1,1"],"transport":{"posted":2,"replied":2,"cancelled":0,"rejected":0,"failed":0,"requestJsonBytes":134844,"replyJsonBytes":410863,"packMs":4.419100000000185,"postMs":0.554700000000139,"workerComputeMs":527.3823999999985,"maxQueueWaitMs":634.7081,"suspensions":1,"resumes":0},"records":[{"job":1,"kind":"geometry","queueWaitMs":0.6084999999999354,"workerQueueWaitMs":null,"replyElapsedMs":638.2836000000001,"computeMs":120.25159999999835,"geometryReused":false,"cancelled":false,"geometryMetrics":{"steps":2744,"slices":32,"maxStepMs":78.1291,"maxStepPhase":"boundary-props-scatter","maxSliceMs":79.77269999999999,"sliceCpuMs":124.94639999999947,"stepHistogram":{"le0_1":2646,"le0_5":84,"le2":13,"le10":0,"gt10":1},"sliceHistogram":{"le0_1":0,"le0_5":4,"le2":14,"le10":13,"gt10":1}}},{"job":2,"kind":"entry","queueWaitMs":634.7081,"workerQueueWaitMs":0.2340999999998985,"replyElapsedMs":415.8496,"computeMs":407.13080000000014,"geometryReused":true,"cancelled":false,"geometryMetrics":null}]}
+# Subtest: one actual shared Node worker preserves full spawn/RNG, every physical route tick, reload and all12native exits against original entry preparation
+ok 1 - one actual shared Node worker preserves full spawn/RNG, every physical route tick, reload and all12native exits against original entry preparation
+  ---
+  duration_ms: 2578.873
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2794.1936

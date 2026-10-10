@@ -1,0 +1,31 @@
+TAP version 13
+# diagnostic run 0 starting
+# {"partialRun":0,"stats":{"posted":2,"replied":1,"cancelled":0,"rejected":0,"failed":0,"requestJsonBytes":340451,"replyJsonBytes":409290,"packMs":4.853700000000117,"postMs":1.1665999999997894,"workerComputeMs":492.37689999999975,"maxQueueWaitMs":10.636400000000094,"suspensions":1,"resumes":0},"records":[{"job":2,"kind":"entry","queueWaitMs":10.636400000000094,"workerQueueWaitMs":0.05550000000016553,"replyElapsedMs":500.125,"computeMs":492.37689999999975,"geometryReused":false,"cancelled":false,"geometryMetrics":null}],"geometryStatus":"working","error":"Error: Actual shared worker timeout: advanced priority entry and eventual geometry"}
+# Subtest: actual single Node thread prioritizes entry between continuous geometry slices with one ack and local continuations; canonical geometry and snapshots stay exact
+not ok 1 - actual single Node thread prioritizes entry between continuous geometry slices with one ack and local continuations; canonical geometry and snapshots stay exact
+  ---
+  duration_ms: 8540.9036
+  location: 'file:///C:/Users/PC/.codex/worktrees/raid-shared-worker-priority/wild-guardians-africa/tests/raid-worker-local-node.test.js:25:1'
+  failureType: 'testCodeFailure'
+  error: 'Actual shared worker timeout: advanced priority entry and eventual geometry'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    wait (file:///C:/Users/PC/.codex/worktrees/raid-shared-worker-priority/wild-guardians-africa/tests/raid-worker-local-node.test.js:23:124)
+    async TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/raid-shared-worker-priority/wild-guardians-africa/tests/raid-worker-local-node.test.js:36:100)
+    async Test.run (node:internal/test_runner/test:632:9)
+    async startSubtest (node:internal/test_runner/harness:216:3)
+  ...
+# Subtest: unexpected actual Node exit is actionable; private geometry falls back cooperatively and no second thread is created
+ok 2 - unexpected actual Node exit is actionable; private geometry falls back cooperatively and no second thread is created
+  ---
+  duration_ms: 1112.4958
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 1
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 9935.0286

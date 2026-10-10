@@ -2,12 +2,10 @@
 // notification permits entry delivery; all further scheduling is Worker-local.
 export function createRaidWorkerGeometryScheduler({steps,computeEntry,cacheGeometry,getGeometry,post,now=()=>performance.now(),schedule=null,maxSteps=128,maxMillis=2}){
  let geometry=null,disposed=false,scheduled=false,entryStreak=0;const entries=[];
- let channel=null,localTasks=0;const continuations=[];
+ let channel=null;const continuations=[];
  function enqueue(fn){
   if(schedule){schedule(fn);return;}
-  // A recurring port can monopolize another message source in Node's event
-  // loop. Yield to a timer every eight local tasks, not every geometry slice.
-  if(typeof MessageChannel!=='function'||++localTasks>=8){localTasks=0;setTimeout(fn,0);return;}
+  if(typeof MessageChannel!=='function'){setTimeout(fn,0);return;}
   channel??=new MessageChannel();channel.port1.onmessage=()=>continuations.shift()?.();continuations.push(fn);channel.port2.postMessage(null);
  }
  const reply=(job,extra)=>post({kind:'raid-preparation-reply',job:job.job,jobKind:job.jobKind,owner:job.owner,...extra});
@@ -20,9 +18,8 @@ export function createRaidWorkerGeometryScheduler({steps,computeEntry,cacheGeome
   const started=now();let count=0;
   try{
    while(count<maxSteps&&now()-started<maxMillis){
-    const before=now(),next=job.iterator.next(),ms=now()-before;job.computeMs+=ms;job.metrics.steps++;if(ms>job.metrics.maxStepMs){job.metrics.maxStepMs=ms;job.metrics.maxStepPhase=job.phase;}record(job.metrics.stepHistogram,ms);count++;
+    const before=now(),next=job.iterator.next(),ms=now()-before;job.computeMs+=ms;job.metrics.steps++;job.metrics.maxStepMs=Math.max(job.metrics.maxStepMs,ms);record(job.metrics.stepHistogram,ms);count++;
     if(next.done){const sliceMs=now()-started;job.metrics.slices++;job.metrics.sliceCpuMs+=sliceMs;job.metrics.maxSliceMs=Math.max(job.metrics.maxSliceMs,sliceMs);record(job.metrics.sliceHistogram,sliceMs);cacheGeometry(job.request.key,next.value.geometry);geometry=null;reply(job,{result:next.value,computeMs:job.computeMs,geometryMetrics:job.metrics});return;}
-    job.phase=next.value?.phase??'unknown';
    }
    const sliceMs=now()-started;job.metrics.slices++;job.metrics.sliceCpuMs+=sliceMs;job.metrics.maxSliceMs=Math.max(job.metrics.maxSliceMs,sliceMs);record(job.metrics.sliceHistogram,sliceMs);
    if(!job.announced){job.announced=true;post({kind:'raid-geometry-suspended',job:job.job,owner:job.owner,token:job.request.token,key:job.request.key,slice:1});}
@@ -45,7 +42,7 @@ export function createRaidWorkerGeometryScheduler({steps,computeEntry,cacheGeome
    if(!Number.isSafeInteger(data.job)||!['entry','geometry'].includes(data.jobKind)||data.request?.owner!==data.owner){reply(data,{error:'Invalid shared raid job',computeMs:0});return true;}
    if(data.jobKind==='geometry'){
     if(geometry){reply(data,{error:'Geometry job already owned',computeMs:0});return true;}
-    geometry={...data,iterator:steps(data.request),phase:'geometry-first-yield',computeMs:0,announced:false,cancelled:false,metrics:{steps:0,slices:0,maxStepMs:0,maxStepPhase:null,maxSliceMs:0,sliceCpuMs:0,stepHistogram:histogram(),sliceHistogram:histogram()}};
+    geometry={...data,iterator:steps(data.request),computeMs:0,announced:false,cancelled:false,metrics:{steps:0,slices:0,maxStepMs:0,maxSliceMs:0,sliceCpuMs:0,stepHistogram:histogram(),sliceHistogram:histogram()}};
    }else{
     if(entries.length){reply(data,{error:'Entry queue already owned',computeMs:0});return true;}
     entries.push({...data,receivedAt:now()});

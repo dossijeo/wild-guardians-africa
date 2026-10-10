@@ -41,7 +41,7 @@ export class SharedRaidPreparationWorker {
   const job=data?.job===this.active?.id?this.active:data?.job===this.background?.id?this.background:null;
   if(!job){if(origin&&Number.isSafeInteger(data?.job)&&data.job<=this.sequence){this.stats.rejected++;return;}if(this.active||this.background)this.fail(Error('Unknown shared raid job'));return;}
   if(data?.kind==='raid-geometry-suspended'){
-   if(origin&&job===this.background&&data.owner===job.channel.owner&&data.token===job.request.token&&data.key===job.request.key&&data.slice===1){this.stats.rejected++;return;}
+   if(origin&&job===this.background){this.stats.rejected++;return;}
    if(!origin||job.channel.kind!=='geometry'||job!==this.active||data.owner!==job.channel.owner||data.token!==job.request.token||data.key!==job.request.key||data.slice!==1){this.fail(Error('Unowned or malformed geometry suspension'));return;}
    this.stats.suspensions++;this.active=null;
    if(job.cancelled||job.channel.closed)this.worker.postMessage({kind:'raid-geometry-cancel',job:job.id,owner:job.channel.owner});
