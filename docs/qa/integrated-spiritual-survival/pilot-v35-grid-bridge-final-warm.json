@@ -1,0 +1,65 @@
+{
+  "input": "docs/qa/integrated-spiritual-survival/pilot-v35-good-q9-single-hit-sabana-123-twentyone/partial-state.json.gz",
+  "snapshotSha256": "707f32d30a75b6742b2b7828e8fd86ec9359c298d695ac96e531a532e19f7e4d",
+  "node": "v20.11.0",
+  "platform": "win32",
+  "warmNative": true,
+  "warmMilliseconds": 128.4953,
+  "calls": 975,
+  "pathPoints": 159,
+  "searchMilliseconds": {
+    "p50": 0.8976000000000113,
+    "p95": 2.537900000000036,
+    "maximum": 59.27009999999996,
+    "total": 1205.7320999999986
+  },
+  "maximumNativeClearanceQueriesPerCall": 145,
+  "slowest": [
+    {
+      "call": 18,
+      "milliseconds": 59.27009999999996,
+      "clearanceQueries": 109,
+      "queryOrigin": {
+        "x": 70.4187371019411,
+        "z": 9.239755179814308
+      }
+    },
+    {
+      "call": 20,
+      "milliseconds": 16.08630000000005,
+      "clearanceQueries": 126,
+      "queryOrigin": {
+        "x": 70.4187371019411,
+        "z": 9.239755179814308
+      }
+    },
+    {
+      "call": 19,
+      "milliseconds": 15.341300000000047,
+      "clearanceQueries": 127,
+      "queryOrigin": {
+        "x": 70.4187371019411,
+        "z": 9.239755179814308
+      }
+    },
+    {
+      "call": 34,
+      "milliseconds": 12.19640000000004,
+      "clearanceQueries": 107,
+      "queryOrigin": {
+        "x": 70.4187371019411,
+        "z": 9.239755179814308
+      }
+    },
+    {
+      "call": 235,
+      "milliseconds": 10.837200000000053,
+      "clearanceQueries": 104,
+      "queryOrigin": {
+        "x": 70.4187371019411,
+        "z": 9.239755179814308
+      }
+    }
+  ],
+  "scope": "Isolated connector CPU diagnostic, excluding navigator construction and disclosed existing route warmup; no synchronous grid drain, GPU or full-frame performance claim. Query instrumentation adds overhead."
+}

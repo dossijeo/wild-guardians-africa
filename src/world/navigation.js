@@ -325,9 +325,9 @@ export class Navigation {
     const search=this.findPathSteps(start,end,radius,ignore,worker,margin);let step;
     do{step=search.next();}while(!step.done);return step.value;
   }
-  *findPathSteps(start,end,radius=.3,ignore=null,worker=true,margin=16) {
+  *findPathSteps(start,end,radius=.3,ignore=null,worker=true,margin=16,{skipDirect=false}={}) {
     if(!this.walkable(end.x,end.z,radius,ignore,worker))return null;
-    if(this.segmentClear(start,end,radius,ignore,worker))return [{x:end.x,z:end.z}];
+    if(!skipDirect&&this.segmentClear(start,end,radius,ignore,worker))return [{x:end.x,z:end.z}];
     // A* on a local corridor. Search bounds are a technical route limit, not world bounds.
     const cell=1,key=(x,z)=>`${x},${z}`,sx=Math.round(start.x),sz=Math.round(start.z),ex=Math.round(end.x),ez=Math.round(end.z);
     const maxVisited=12000*Math.max(1,(margin/16)**2),minX=Math.min(sx,ex)-margin,maxX=Math.max(sx,ex)+margin,minZ=Math.min(sz,ez)-margin,maxZ=Math.max(sz,ez)+margin;

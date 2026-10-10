@@ -1,5 +1,6 @@
 import {SearchFrontier} from '../world/search-frontier.js';
 import {animalFootprintConnector} from './animal-footprint-connectors.js';
+import {animalGridExitBridge} from './animal-grid-exit-bridge.js';
 const distances=[4,8,12,16,24,32];
 const angles=32,budget=8;
 // An open fractional corridor can have no usable one-metre grid cells. Try
@@ -28,7 +29,12 @@ export function animalExitConnector(actor,end,nav){
   const path=fractionalExit(actor,end,nav,search,radius);if(path)return path;
   // A lattice can still miss a passage narrower than its cell spacing. Use
   // footprint-derived physical corners only after the unchanged search ends.
-  if(search.fine?.visited&&(search.fine.visited>=4096||!search.fine.items.length))return animalFootprintConnector(actor,end,nav);
+  if(search.fine?.visited&&(search.fine.visited>=4096||!search.fine.items.length)){
+   const bridge=animalGridExitBridge(actor,end,nav);
+   if(bridge.path){delete actor.exitConnectorSearch;return bridge.path;}
+   if(bridge.pending)return null;
+   return animalFootprintConnector(actor,end,nav);
+  }
  }
  return null;
 }
