@@ -15,7 +15,7 @@ const sameSlot=(q,w)=>w.kind==='wall'&&Math.hypot(q.x-w.x,q.z-w.z)<.35&&Math.abs
 const matches=(q,w)=>w.status==='intact'&&w.hp>0&&sameSlot(q,w);
 export function createNativeFundedDefensePolicy({startDay=6,material='zarzas',interval=5,chunkPieces=8,maxSlots=256,repairWalls=true,obstacleAware=false}={}){
  if(!Number.isSafeInteger(startDay)||startDay<1||!Number.isFinite(interval)||interval<=0||!Number.isSafeInteger(chunkPieces)||chunkPieces<1||!Number.isSafeInteger(maxSlots)||maxSlots<4||chunkPieces>maxSlots||maxSlots>256)throw Error('Invalid bounded funded defense policy');
- const spec=wallSpec(material),history=[],owned=new Set();let next=-Infinity,planned=null,completed=null,remainingCost=0,repairRequests=0;
+ const spec=wallSpec(material),history=[],owned=new Set();let next=-Infinity,planned=null,completed=null,remainingCost=0,repairRequests=0,failedPlanning=null;
  const coverage=(s,nav,candidate=planned)=>{
   if(!candidate)return false;
   if(wallStroke(candidate.points,[],options).every(q=>s.structures.some(w=>matches(q,w))))return true;
@@ -70,6 +70,14 @@ export function createNativeFundedDefensePolicy({startDay=6,material='zarzas',in
    }
   }
   if(planned&&coverage(s,nav)){completed=planned;planned=null;remainingCost=0;}
+  // A failed geometric search is not useful player activity. Reuse only an
+  // identical static problem, never worker-passage failures or unpaid plans.
+  const signature=!planned?JSON.stringify([nav.version,completed?.bounds,
+   s.plants.filter(p=>p.alive).map(p=>[p.x,p.z]),
+   s.structures.filter(c=>c.kind==='center'&&operational(c)).map(c=>centerFootprint(c,s).footprint)]):null;
+  if(!planned&&failedPlanning?.nav===nav&&failedPlanning.field===nav.field&&failedPlanning.signature===signature){
+   history.push({day:s.day,time:s.time,protectedCash,pendingRepairCoins:pending,attempts:[],paidCost:0,paidPieces:0,remainingCost:0,complete:false,reason:'unchanged-geometric-planning-failure',originalAttemptIndex:failedPlanning.index});return 0;
+  }
   const attempts=[];
   if(!planned)for(const candidate of closedDefenseContours(s,{previous:completed?.bounds})){
    const detail={bounds:candidate.bounds},plan=quote(s,nav,candidate,detail);attempts.push({...detail,legal:!!plan,cost:plan?.cost??null});
@@ -80,7 +88,12 @@ export function createNativeFundedDefensePolicy({startDay=6,material='zarzas',in
    }
   }
   const row={day:s.day,time:s.time,protectedCash,pendingRepairCoins:pending,attempts,paidCost:0,paidPieces:0,remainingCost,complete:false};history.push(row);
-  if(!planned){remainingCost=0;row.reason='no-bounded-legal-contour';return 0;}
+  if(!planned){
+   remainingCost=0;row.reason='no-bounded-legal-contour';
+   const transient=attempts.some(a=>['worker-passage-not-observable','native-worker-route-blocked'].includes(a.nativeBarrierProof?.reason));
+   failedPlanning=transient?null:{nav,field:nav.field,signature,index:history.length-1};return 0;
+  }
+  failedPlanning=null;
   row.bounds=planned.bounds;
   const plan=quote(s,nav,planned);
   if(!plan){remainingCost=0;planned=null;row.reason='geometry-changed-or-repair-pending';return 0;}
