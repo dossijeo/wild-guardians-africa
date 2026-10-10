@@ -5,10 +5,10 @@ import {runInNewContext} from 'node:vm';
 
 const source = await readFile(new URL('../src-tauri/smoke.js', import.meta.url), 'utf8');
 
-async function failedPreflight({query, focused = true} = {}) {
+async function failedPreflight({query, focused = true, visualRequested=false, visual=null} = {}) {
   let report;
   const context = {
-    window: {__TAURI_INTERNALS__: {invoke: async (command, args) => {
+    window: {__desktopSmokeVisualCapture:visualRequested,__wildGuardiansLoadingVisualQa:visual,__TAURI_INTERNALS__: {invoke: async (command, args) => {
       assert.equal(command, 'desktop_smoke_report'); report = args.report;
     }}},
     location: {origin: 'http://tauri.localhost', href: 'http://tauri.localhost/'},
@@ -69,4 +69,36 @@ test('world wait stops at the ready gate and excludes the later five-minute visi
   assert.equal(report.checks.loadingAtFinish.worldWaitMs, 18000);
   assert.equal(report.checks.loadingAtFinish.readyGateReached, true);
   assert.equal(report.ok, true);
+});
+
+test('opt-in visual export retains pixels/metadata without claiming readiness or hiding preflight failure',async()=>{
+ const visual={report:{frames:[{label:'initial',progress:.2,night:1,plants:[{id:'loading-maize-1'}],png:'data:image/png;base64,AAAA'}],errors:[],closed:true,cancelled:true}};
+ const report=await failedPreflight({visualRequested:true,visual});
+ assert.equal(report.ok,false);assert.deepEqual(Array.from(report.errors),['Error: Original preflight failure']);
+ assert.equal(report.checks.loadingVisual.frames[0].png,visual.report.frames[0].png);
+ assert.equal(report.checks.loadingVisual.cancelled,true);assert.match(report.checks.loadingVisualRunScope,/not a loading-time or GPU benchmark/);
+ assert.equal(report.checks.loadingAtFinish.readyGateReached,false);
+});
+
+test('missing visual collector remains explicitly unavailable, ordinary smoke exports no pixels',async()=>{
+ const requested=await failedPreflight({visualRequested:true});assert.equal(requested.checks.loadingVisual.available,false);
+ assert.deepEqual(Array.from(requested.errors),['Error: Original preflight failure']);
+ const ordinary=await failedPreflight();assert.equal(ordinary.checks.loadingVisual,undefined);
+});
+
+test('requested but empty captures cannot pass an otherwise successful native smoke',async()=>{
+ const finishSource=source.slice(source.indexOf('  async function finish(error)'),source.indexOf('  async function checkVisibility(fixture)'));
+ const context={report:{checks:{},errors:[]},finished:false,timeout:1,worldStartedAt:0,worldReadyAt:100,
+  performance:{now:()=>100},clearTimeout(){},document:{querySelector:()=>null,visibilityState:'visible',hasFocus:()=>true},
+  window:{__desktopSmokeVisualCapture:true,__wildGuardiansLoadingVisualQa:{report:{frames:[],errors:[]}},__TAURI_INTERNALS__:{invoke:async()=>{}}}};
+ const report=await runInNewContext(`${finishSource}\n(async()=>{await finish();return report;})()`,context);
+ assert.equal(report.ok,false);assert.equal(report.checks.loadingAtFinish.readyGateReached,true);
+ assert.deepEqual(Array.from(report.errors),['Requested loading visual evidence is missing']);
+});
+
+test('native visual injection remains nested inside explicit smoke mode',async()=>{
+ const rust=await readFile(new URL('../src-tauri/src/main.rs',import.meta.url),'utf8');
+ assert.match(rust,/args\(\)\.any\(\|arg\| arg == "--smoke-report"\)[\s\S]*if std::env::args\(\)\.any\(\|arg\| arg == "--smoke-visual"\)/);
+ assert.equal((rust.match(/window\.__desktopSmokeVisualCapture = true/g)??[]).length,1);
+ assert.match(source,/worldStartedAt \+ 90000/);assert.match(source,/await wait\(300000\)/);
 });

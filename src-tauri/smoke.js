@@ -34,6 +34,14 @@
     } catch (observationError) {
       report.checks.loadingObservationError = String(observationError);
     }
+    if (window.__desktopSmokeVisualCapture === true) {
+      const visual = window.__wildGuardiansLoadingVisualQa?.report;
+      report.checks.loadingVisual = visual ?? {available: false, scope: 'Visual capture requested; application collector was not installed.'};
+      // Never turn a missing/empty capture into positive visual evidence. Keep
+      // preflight errors intact and leave ordinary timing runs unchanged.
+      if (!error && (!visual || !visual.frames?.length)) report.errors.push('Requested loading visual evidence is missing');
+      report.checks.loadingVisualRunScope = 'Opt-in PNG readback/encoding overhead; not a loading-time or GPU benchmark. Frames are existing diorama canvas, not a composited HUD screenshot.';
+    }
     report.ok = !error && report.errors.length === 0;
     await window.__TAURI_INTERNALS__.invoke('desktop_smoke_report', {report});
   }
