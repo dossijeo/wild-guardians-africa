@@ -1,0 +1,99 @@
+{
+  "scope": "Static native entry reconstruction in retained final topology; not original stored birth coordinates, not a campaign or rendering/physical-input QA",
+  "retainedSourceCommit": "4d939cb8",
+  "currentSourceHashes": {
+    "src/simulation/raids.js": "79d66a3e3e34e08f862e16510d9ecc5ebbc7a37600ac5c03893cbab928d95c3a",
+    "src/world/navigation.js": "9d44b740809c2d3c0273342364f8b3511e26ada24bea82acd60bda84a8072751",
+    "src/world/terrain.js": "f5e0937e2c235b5e4fd495a4ce5e7baa9fc518d1b194de20b3458fe65d7afc59",
+    "tools/audit-retained-raid-entry.mjs": "cd28b0d9232cf55f71b4a51acfd23d3dcc492549a43d43ae128c65bb0e3545cb"
+  },
+  "stateSHA256": "eadf7055c2f1dd0a1270eed24e1432af622b862ac816a14c0cd24ec0ae370a3d",
+  "reportSHA256": "7e8300bc43a3ae42d34812d0d15f918ab016b32bccf6bc7d1c6f728041a15264",
+  "biomeProfileSHA256": "a0da0d39766ef48e44ef82bc9b9ab6093bce0ae2bf6abd3035a626792823ff6d",
+  "day": 6,
+  "finalStateDay": 7,
+  "view": {
+    "eye": {
+      "x": -20.109218197310216,
+      "z": 90.49061976029355
+    },
+    "target": {
+      "x": -20.109218197310216,
+      "z": 59.05401533842087
+    }
+  },
+  "bounds": [
+    -120,
+    -24,
+    120,
+    216
+  ],
+  "wallCount": 428,
+  "wallBounds": {
+    "minX": -54,
+    "maxX": 0,
+    "minZ": 24,
+    "maxZ": 96.00000000000001
+  },
+  "elapsedMs": 71.53349999999995,
+  "actors": [
+    {
+      "species": "warthog",
+      "radius": 1.1,
+      "entry": {
+        "x": -20.109218197310216,
+        "z": 93.59061976029355
+      },
+      "exit": {
+        "x": -20.109218197310216,
+        "z": 96.59061976029355
+      },
+      "retainedExit": {
+        "x": -20.109218197310216,
+        "z": 96.59061976029355
+      },
+      "replayExitMatchesRetained": true,
+      "insideAggregateWallBoundingBox": true,
+      "distanceFromEye": 3.0999999999999943
+    },
+    {
+      "species": "hyena",
+      "radius": 0.9,
+      "entry": {
+        "x": -16.809218197310216,
+        "z": 93.39061976029356
+      },
+      "exit": {
+        "x": -16.809218197310216,
+        "z": 96.39061976029356
+      },
+      "retainedExit": {
+        "x": -16.809218197310216,
+        "z": 96.39061976029356
+      },
+      "replayExitMatchesRetained": true,
+      "insideAggregateWallBoundingBox": true,
+      "distanceFromEye": 4.393176527297763
+    },
+    {
+      "species": "lion",
+      "radius": 0.85,
+      "entry": {
+        "x": -20.109218197310216,
+        "z": 97.34061976029355
+      },
+      "exit": {
+        "x": -20.109218197310216,
+        "z": 100.34061976029355
+      },
+      "retainedExit": {
+        "x": -20.109218197310216,
+        "z": 100.34061976029355
+      },
+      "replayExitMatchesRetained": true,
+      "insideAggregateWallBoundingBox": false,
+      "distanceFromEye": 6.849999999999994
+    }
+  ],
+  "caveat": "A bounding box does not establish a closed enclosure. Matching retreat points supports reproducibility but cannot recover unrecorded original spawn facts. No defense efficacy inferred."
+}
