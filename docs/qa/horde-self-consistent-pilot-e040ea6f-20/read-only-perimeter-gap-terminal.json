@@ -1,0 +1,7091 @@
+{
+  "scope": "Read-only terminal gap attribution and local native reversible crossings, not reconstruction of day10 omission causes or actual complete raid routes",
+  "source": "e040ea6f9edf62c7924e3b32bd34b28780c39e5f",
+  "sourceCount": 394,
+  "inputHashes": {
+    "state": "746c086e2df46a2857adc528eca4b56ad60baff968459964f6546f6e715aa999",
+    "report": "934650fc57636d8926766d08cc3bc8bc8a1ca5cae62268c18fd2354e648eada0"
+  },
+  "snapshotUnchanged": true,
+  "built": {
+    "day": 10,
+    "time": 0,
+    "bounds": [
+      -54.5,
+      20.5,
+      3.5,
+      101
+    ],
+    "expected": 128,
+    "owned": 103,
+    "gaps": 25
+  },
+  "reasonCounts": {
+    "No se puede construir sobre agua o lava": 9,
+    "Un árbol o roca grande ocupa este terreno": 12,
+    "La muralla queda dentro de un edificio": 4
+  },
+  "localReversibleCrossingCounts": {
+    "warthog": 5,
+    "hyena": 9,
+    "buffalo": 9,
+    "lion": 9,
+    "rhino": 5
+  },
+  "observedAttackCounts": {
+    "total": 186,
+    "targetInside": 180,
+    "targetOutside": 4,
+    "missingTargetPosition": 2,
+    "actorInside": 180
+  },
+  "gaps": [
+    {
+      "index": 3,
+      "piece": {
+        "kind": "wall",
+        "material": "zarzas",
+        "gate": false,
+        "baseScaleX": 0.9926892201834862,
+        "x": -46.92578125,
+        "z": 20.5,
+        "yaw": -1.641687187315755e-15
+      },
+      "terminalNativeWallPlacement": {
+        "valid": false,
+        "fluid": true,
+        "reason": "No se puede construir sobre agua o lava"
+      },
+      "terminalCropOverlapIds": [],
+      "crossings": {
+        "warthog": {
+          "radius": 1.1,
+          "a": {
+            "x": -46.92578125,
+            "z": 18.9
+          },
+          "b": {
+            "x": -46.92578125,
+            "z": 22.1
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": false,
+          "reverse": false
+        },
+        "hyena": {
+          "radius": 0.9,
+          "a": {
+            "x": -46.92578125,
+            "z": 19.1
+          },
+          "b": {
+            "x": -46.92578125,
+            "z": 21.9
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": true,
+          "reverse": true
+        },
+        "buffalo": {
+          "radius": 0.97,
+          "a": {
+            "x": -46.92578125,
+            "z": 19.03
+          },
+          "b": {
+            "x": -46.92578125,
+            "z": 21.97
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": true,
+          "reverse": true
+        },
+        "lion": {
+          "radius": 0.85,
+          "a": {
+            "x": -46.92578125,
+            "z": 19.15
+          },
+          "b": {
+            "x": -46.92578125,
+            "z": 21.85
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": true,
+          "reverse": true
+        },
+        "rhino": {
+          "radius": 1.55,
+          "a": {
+            "x": -46.92578125,
+            "z": 18.45
+          },
+          "b": {
+            "x": -46.92578125,
+            "z": 22.55
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": false,
+          "reverse": false
+        }
+      }
+    },
+    {
+      "index": 4,
+      "piece": {
+        "kind": "wall",
+        "material": "zarzas",
+        "gate": false,
+        "baseScaleX": 0.9926892201834862,
+        "x": -44.76171875,
+        "z": 20.5,
+        "yaw": 1.641687187315755e-15
+      },
+      "terminalNativeWallPlacement": {
+        "valid": false,
+        "fluid": true,
+        "reason": "No se puede construir sobre agua o lava"
+      },
+      "terminalCropOverlapIds": [],
+      "crossings": {
+        "warthog": {
+          "radius": 1.1,
+          "a": {
+            "x": -44.76171875,
+            "z": 18.9
+          },
+          "b": {
+            "x": -44.76171875,
+            "z": 22.1
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": true,
+          "reverse": true
+        },
+        "hyena": {
+          "radius": 0.9,
+          "a": {
+            "x": -44.76171875,
+            "z": 19.1
+          },
+          "b": {
+            "x": -44.76171875,
+            "z": 21.9
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": true,
+          "reverse": true
+        },
+        "buffalo": {
+          "radius": 0.97,
+          "a": {
+            "x": -44.76171875,
+            "z": 19.03
+          },
+          "b": {
+            "x": -44.76171875,
+            "z": 21.97
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": true,
+          "reverse": true
+        },
+        "lion": {
+          "radius": 0.85,
+          "a": {
+            "x": -44.76171875,
+            "z": 19.15
+          },
+          "b": {
+            "x": -44.76171875,
+            "z": 21.85
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": true,
+          "reverse": true
+        },
+        "rhino": {
+          "radius": 1.55,
+          "a": {
+            "x": -44.76171875,
+            "z": 18.45
+          },
+          "b": {
+            "x": -44.76171875,
+            "z": 22.55
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": true,
+          "reverse": true
+        }
+      }
+    },
+    {
+      "index": 5,
+      "piece": {
+        "kind": "wall",
+        "material": "zarzas",
+        "gate": false,
+        "baseScaleX": 0.9926892201834894,
+        "x": -42.59765625,
+        "z": 20.5,
+        "yaw": 0
+      },
+      "terminalNativeWallPlacement": {
+        "valid": false,
+        "fluid": true,
+        "reason": "No se puede construir sobre agua o lava"
+      },
+      "terminalCropOverlapIds": [],
+      "crossings": {
+        "warthog": {
+          "radius": 1.1,
+          "a": {
+            "x": -42.59765625,
+            "z": 18.9
+          },
+          "b": {
+            "x": -42.59765625,
+            "z": 22.1
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": true,
+          "reverse": true
+        },
+        "hyena": {
+          "radius": 0.9,
+          "a": {
+            "x": -42.59765625,
+            "z": 19.1
+          },
+          "b": {
+            "x": -42.59765625,
+            "z": 21.9
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": true,
+          "reverse": true
+        },
+        "buffalo": {
+          "radius": 0.97,
+          "a": {
+            "x": -42.59765625,
+            "z": 19.03
+          },
+          "b": {
+            "x": -42.59765625,
+            "z": 21.97
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": true,
+          "reverse": true
+        },
+        "lion": {
+          "radius": 0.85,
+          "a": {
+            "x": -42.59765625,
+            "z": 19.15
+          },
+          "b": {
+            "x": -42.59765625,
+            "z": 21.85
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": true,
+          "reverse": true
+        },
+        "rhino": {
+          "radius": 1.55,
+          "a": {
+            "x": -42.59765625,
+            "z": 18.45
+          },
+          "b": {
+            "x": -42.59765625,
+            "z": 22.55
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": true,
+          "reverse": true
+        }
+      }
+    },
+    {
+      "index": 6,
+      "piece": {
+        "kind": "wall",
+        "material": "zarzas",
+        "gate": false,
+        "baseScaleX": 0.9926892201834829,
+        "x": -40.43359375,
+        "z": 20.5,
+        "yaw": 0
+      },
+      "terminalNativeWallPlacement": {
+        "valid": false,
+        "fluid": true,
+        "reason": "No se puede construir sobre agua o lava"
+      },
+      "terminalCropOverlapIds": [],
+      "crossings": {
+        "warthog": {
+          "radius": 1.1,
+          "a": {
+            "x": -40.43359375,
+            "z": 18.9
+          },
+          "b": {
+            "x": -40.43359375,
+            "z": 22.1
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": false,
+          "reverse": false
+        },
+        "hyena": {
+          "radius": 0.9,
+          "a": {
+            "x": -40.43359375,
+            "z": 19.1
+          },
+          "b": {
+            "x": -40.43359375,
+            "z": 21.9
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": true,
+          "reverse": true
+        },
+        "buffalo": {
+          "radius": 0.97,
+          "a": {
+            "x": -40.43359375,
+            "z": 19.03
+          },
+          "b": {
+            "x": -40.43359375,
+            "z": 21.97
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": true,
+          "reverse": true
+        },
+        "lion": {
+          "radius": 0.85,
+          "a": {
+            "x": -40.43359375,
+            "z": 19.15
+          },
+          "b": {
+            "x": -40.43359375,
+            "z": 21.85
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": true,
+          "reverse": true
+        },
+        "rhino": {
+          "radius": 1.55,
+          "a": {
+            "x": -40.43359375,
+            "z": 18.45
+          },
+          "b": {
+            "x": -40.43359375,
+            "z": 22.55
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": false,
+          "reverse": false
+        }
+      }
+    },
+    {
+      "index": 71,
+      "piece": {
+        "kind": "wall",
+        "material": "zarzas",
+        "gate": false,
+        "baseScaleX": 0.9926892201834869,
+        "x": -12.73046875,
+        "z": 101,
+        "yaw": -3.141592653589793
+      },
+      "terminalNativeWallPlacement": {
+        "valid": false,
+        "fluid": true,
+        "reason": "No se puede construir sobre agua o lava"
+      },
+      "terminalCropOverlapIds": [],
+      "crossings": {
+        "warthog": {
+          "radius": 1.1,
+          "a": {
+            "x": -12.73046875,
+            "z": 102.6
+          },
+          "b": {
+            "x": -12.73046875,
+            "z": 99.4
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": false,
+          "reverse": false
+        },
+        "hyena": {
+          "radius": 0.9,
+          "a": {
+            "x": -12.73046875,
+            "z": 102.4
+          },
+          "b": {
+            "x": -12.73046875,
+            "z": 99.6
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": true,
+          "reverse": true
+        },
+        "buffalo": {
+          "radius": 0.97,
+          "a": {
+            "x": -12.73046875,
+            "z": 102.47
+          },
+          "b": {
+            "x": -12.73046875,
+            "z": 99.53
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": true,
+          "reverse": true
+        },
+        "lion": {
+          "radius": 0.85,
+          "a": {
+            "x": -12.73046875,
+            "z": 102.35
+          },
+          "b": {
+            "x": -12.73046875,
+            "z": 99.65
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": true,
+          "reverse": true
+        },
+        "rhino": {
+          "radius": 1.55,
+          "a": {
+            "x": -12.73046875,
+            "z": 103.05
+          },
+          "b": {
+            "x": -12.73046875,
+            "z": 98.95
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": false,
+          "reverse": false
+        }
+      }
+    },
+    {
+      "index": 72,
+      "piece": {
+        "kind": "wall",
+        "material": "zarzas",
+        "gate": false,
+        "baseScaleX": 0.9926892201834869,
+        "x": -14.89453125,
+        "z": 101,
+        "yaw": -3.1415926535897865
+      },
+      "terminalNativeWallPlacement": {
+        "valid": false,
+        "fluid": true,
+        "reason": "No se puede construir sobre agua o lava"
+      },
+      "terminalCropOverlapIds": [],
+      "crossings": {
+        "warthog": {
+          "radius": 1.1,
+          "a": {
+            "x": -14.89453124999999,
+            "z": 102.6
+          },
+          "b": {
+            "x": -14.89453125000001,
+            "z": 99.4
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": true,
+          "reverse": true
+        },
+        "hyena": {
+          "radius": 0.9,
+          "a": {
+            "x": -14.894531249999991,
+            "z": 102.4
+          },
+          "b": {
+            "x": -14.894531250000009,
+            "z": 99.6
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": true,
+          "reverse": true
+        },
+        "buffalo": {
+          "radius": 0.97,
+          "a": {
+            "x": -14.89453124999999,
+            "z": 102.47
+          },
+          "b": {
+            "x": -14.89453125000001,
+            "z": 99.53
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": true,
+          "reverse": true
+        },
+        "lion": {
+          "radius": 0.85,
+          "a": {
+            "x": -14.894531249999991,
+            "z": 102.35
+          },
+          "b": {
+            "x": -14.894531250000009,
+            "z": 99.65
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": true,
+          "reverse": true
+        },
+        "rhino": {
+          "radius": 1.55,
+          "a": {
+            "x": -14.894531249999986,
+            "z": 103.05
+          },
+          "b": {
+            "x": -14.894531250000014,
+            "z": 98.95
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": true,
+          "reverse": true
+        }
+      }
+    },
+    {
+      "index": 73,
+      "piece": {
+        "kind": "wall",
+        "material": "zarzas",
+        "gate": false,
+        "baseScaleX": 0.9926892201834854,
+        "x": -17.05859375,
+        "z": 101,
+        "yaw": 3.1415926535897865
+      },
+      "terminalNativeWallPlacement": {
+        "valid": false,
+        "fluid": true,
+        "reason": "No se puede construir sobre agua o lava"
+      },
+      "terminalCropOverlapIds": [],
+      "crossings": {
+        "warthog": {
+          "radius": 1.1,
+          "a": {
+            "x": -17.05859375000001,
+            "z": 102.6
+          },
+          "b": {
+            "x": -17.05859374999999,
+            "z": 99.4
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": true,
+          "reverse": true
+        },
+        "hyena": {
+          "radius": 0.9,
+          "a": {
+            "x": -17.05859375000001,
+            "z": 102.4
+          },
+          "b": {
+            "x": -17.05859374999999,
+            "z": 99.6
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": true,
+          "reverse": true
+        },
+        "buffalo": {
+          "radius": 0.97,
+          "a": {
+            "x": -17.05859375000001,
+            "z": 102.47
+          },
+          "b": {
+            "x": -17.05859374999999,
+            "z": 99.53
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": true,
+          "reverse": true
+        },
+        "lion": {
+          "radius": 0.85,
+          "a": {
+            "x": -17.05859375000001,
+            "z": 102.35
+          },
+          "b": {
+            "x": -17.05859374999999,
+            "z": 99.65
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": true,
+          "reverse": true
+        },
+        "rhino": {
+          "radius": 1.55,
+          "a": {
+            "x": -17.058593750000014,
+            "z": 103.05
+          },
+          "b": {
+            "x": -17.058593749999986,
+            "z": 98.95
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": true,
+          "reverse": true
+        }
+      }
+    },
+    {
+      "index": 74,
+      "piece": {
+        "kind": "wall",
+        "material": "zarzas",
+        "gate": false,
+        "baseScaleX": 0.9926892201834862,
+        "x": -19.22265625,
+        "z": 101,
+        "yaw": -3.141592653589793
+      },
+      "terminalNativeWallPlacement": {
+        "valid": false,
+        "fluid": true,
+        "reason": "No se puede construir sobre agua o lava"
+      },
+      "terminalCropOverlapIds": [],
+      "crossings": {
+        "warthog": {
+          "radius": 1.1,
+          "a": {
+            "x": -19.22265625,
+            "z": 102.6
+          },
+          "b": {
+            "x": -19.22265625,
+            "z": 99.4
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": true,
+          "reverse": true
+        },
+        "hyena": {
+          "radius": 0.9,
+          "a": {
+            "x": -19.22265625,
+            "z": 102.4
+          },
+          "b": {
+            "x": -19.22265625,
+            "z": 99.6
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": true,
+          "reverse": true
+        },
+        "buffalo": {
+          "radius": 0.97,
+          "a": {
+            "x": -19.22265625,
+            "z": 102.47
+          },
+          "b": {
+            "x": -19.22265625,
+            "z": 99.53
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": true,
+          "reverse": true
+        },
+        "lion": {
+          "radius": 0.85,
+          "a": {
+            "x": -19.22265625,
+            "z": 102.35
+          },
+          "b": {
+            "x": -19.22265625,
+            "z": 99.65
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": true,
+          "reverse": true
+        },
+        "rhino": {
+          "radius": 1.55,
+          "a": {
+            "x": -19.22265625,
+            "z": 103.05
+          },
+          "b": {
+            "x": -19.22265625,
+            "z": 98.95
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": true,
+          "reverse": true
+        }
+      }
+    },
+    {
+      "index": 75,
+      "piece": {
+        "kind": "wall",
+        "material": "zarzas",
+        "gate": false,
+        "baseScaleX": 0.9926892201834862,
+        "x": -21.38671875,
+        "z": 101,
+        "yaw": -3.141592653589793
+      },
+      "terminalNativeWallPlacement": {
+        "valid": false,
+        "fluid": true,
+        "reason": "No se puede construir sobre agua o lava"
+      },
+      "terminalCropOverlapIds": [],
+      "crossings": {
+        "warthog": {
+          "radius": 1.1,
+          "a": {
+            "x": -21.38671875,
+            "z": 102.6
+          },
+          "b": {
+            "x": -21.38671875,
+            "z": 99.4
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": false,
+          "reverse": false
+        },
+        "hyena": {
+          "radius": 0.9,
+          "a": {
+            "x": -21.38671875,
+            "z": 102.4
+          },
+          "b": {
+            "x": -21.38671875,
+            "z": 99.6
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": true,
+          "reverse": true
+        },
+        "buffalo": {
+          "radius": 0.97,
+          "a": {
+            "x": -21.38671875,
+            "z": 102.47
+          },
+          "b": {
+            "x": -21.38671875,
+            "z": 99.53
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": true,
+          "reverse": true
+        },
+        "lion": {
+          "radius": 0.85,
+          "a": {
+            "x": -21.38671875,
+            "z": 102.35
+          },
+          "b": {
+            "x": -21.38671875,
+            "z": 99.65
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": true,
+          "reverse": true
+        },
+        "rhino": {
+          "radius": 1.55,
+          "a": {
+            "x": -21.38671875,
+            "z": 103.05
+          },
+          "b": {
+            "x": -21.38671875,
+            "z": 98.95
+          },
+          "aWalkable": true,
+          "bWalkable": true,
+          "forward": false,
+          "reverse": false
+        }
+      }
+    },
+    {
+      "index": 82,
+      "piece": {
+        "kind": "wall",
+        "material": "zarzas",
+        "gate": false,
+        "baseScaleX": 0.9926892201834796,
+        "x": -36.53515625,
+        "z": 101,
+        "yaw": -3.141592653589793
+      },
+      "terminalNativeWallPlacement": {
+        "valid": false,
+        "reason": "Un árbol o roca grande ocupa este terreno"
+      },
+      "terminalCropOverlapIds": [
+        "plant-47040"
+      ],
+      "crossings": {
+        "warthog": {
+          "radius": 1.1,
+          "a": {
+            "x": -36.53515625,
+            "z": 102.6
+          },
+          "b": {
+            "x": -36.53515625,
+            "z": 99.4
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "hyena": {
+          "radius": 0.9,
+          "a": {
+            "x": -36.53515625,
+            "z": 102.4
+          },
+          "b": {
+            "x": -36.53515625,
+            "z": 99.6
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "buffalo": {
+          "radius": 0.97,
+          "a": {
+            "x": -36.53515625,
+            "z": 102.47
+          },
+          "b": {
+            "x": -36.53515625,
+            "z": 99.53
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "lion": {
+          "radius": 0.85,
+          "a": {
+            "x": -36.53515625,
+            "z": 102.35
+          },
+          "b": {
+            "x": -36.53515625,
+            "z": 99.65
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "rhino": {
+          "radius": 1.55,
+          "a": {
+            "x": -36.53515625,
+            "z": 103.05
+          },
+          "b": {
+            "x": -36.53515625,
+            "z": 98.95
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        }
+      }
+    },
+    {
+      "index": 83,
+      "piece": {
+        "kind": "wall",
+        "material": "zarzas",
+        "gate": false,
+        "baseScaleX": 0.9926892201834894,
+        "x": -38.69921875,
+        "z": 101,
+        "yaw": -3.141592653589793
+      },
+      "terminalNativeWallPlacement": {
+        "valid": false,
+        "reason": "Un árbol o roca grande ocupa este terreno"
+      },
+      "terminalCropOverlapIds": [],
+      "crossings": {
+        "warthog": {
+          "radius": 1.1,
+          "a": {
+            "x": -38.69921875,
+            "z": 102.6
+          },
+          "b": {
+            "x": -38.69921875,
+            "z": 99.4
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "hyena": {
+          "radius": 0.9,
+          "a": {
+            "x": -38.69921875,
+            "z": 102.4
+          },
+          "b": {
+            "x": -38.69921875,
+            "z": 99.6
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "buffalo": {
+          "radius": 0.97,
+          "a": {
+            "x": -38.69921875,
+            "z": 102.47
+          },
+          "b": {
+            "x": -38.69921875,
+            "z": 99.53
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "lion": {
+          "radius": 0.85,
+          "a": {
+            "x": -38.69921875,
+            "z": 102.35
+          },
+          "b": {
+            "x": -38.69921875,
+            "z": 99.65
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "rhino": {
+          "radius": 1.55,
+          "a": {
+            "x": -38.69921875,
+            "z": 103.05
+          },
+          "b": {
+            "x": -38.69921875,
+            "z": 98.95
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        }
+      }
+    },
+    {
+      "index": 84,
+      "piece": {
+        "kind": "wall",
+        "material": "zarzas",
+        "gate": false,
+        "baseScaleX": 0.9926892201834862,
+        "x": -40.86328125,
+        "z": 101,
+        "yaw": -3.141592653589793
+      },
+      "terminalNativeWallPlacement": {
+        "valid": false,
+        "reason": "Un árbol o roca grande ocupa este terreno"
+      },
+      "terminalCropOverlapIds": [],
+      "crossings": {
+        "warthog": {
+          "radius": 1.1,
+          "a": {
+            "x": -40.86328125,
+            "z": 102.6
+          },
+          "b": {
+            "x": -40.86328125,
+            "z": 99.4
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "hyena": {
+          "radius": 0.9,
+          "a": {
+            "x": -40.86328125,
+            "z": 102.4
+          },
+          "b": {
+            "x": -40.86328125,
+            "z": 99.6
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "buffalo": {
+          "radius": 0.97,
+          "a": {
+            "x": -40.86328125,
+            "z": 102.47
+          },
+          "b": {
+            "x": -40.86328125,
+            "z": 99.53
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "lion": {
+          "radius": 0.85,
+          "a": {
+            "x": -40.86328125,
+            "z": 102.35
+          },
+          "b": {
+            "x": -40.86328125,
+            "z": 99.65
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "rhino": {
+          "radius": 1.55,
+          "a": {
+            "x": -40.86328125,
+            "z": 103.05
+          },
+          "b": {
+            "x": -40.86328125,
+            "z": 98.95
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        }
+      }
+    },
+    {
+      "index": 85,
+      "piece": {
+        "kind": "wall",
+        "material": "zarzas",
+        "gate": false,
+        "baseScaleX": 0.9926892201834862,
+        "x": -43.02734375,
+        "z": 101,
+        "yaw": -3.141592653589793
+      },
+      "terminalNativeWallPlacement": {
+        "valid": false,
+        "reason": "Un árbol o roca grande ocupa este terreno"
+      },
+      "terminalCropOverlapIds": [],
+      "crossings": {
+        "warthog": {
+          "radius": 1.1,
+          "a": {
+            "x": -43.02734375,
+            "z": 102.6
+          },
+          "b": {
+            "x": -43.02734375,
+            "z": 99.4
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "hyena": {
+          "radius": 0.9,
+          "a": {
+            "x": -43.02734375,
+            "z": 102.4
+          },
+          "b": {
+            "x": -43.02734375,
+            "z": 99.6
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "buffalo": {
+          "radius": 0.97,
+          "a": {
+            "x": -43.02734375,
+            "z": 102.47
+          },
+          "b": {
+            "x": -43.02734375,
+            "z": 99.53
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "lion": {
+          "radius": 0.85,
+          "a": {
+            "x": -43.02734375,
+            "z": 102.35
+          },
+          "b": {
+            "x": -43.02734375,
+            "z": 99.65
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "rhino": {
+          "radius": 1.55,
+          "a": {
+            "x": -43.02734375,
+            "z": 103.05
+          },
+          "b": {
+            "x": -43.02734375,
+            "z": 98.95
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        }
+      }
+    },
+    {
+      "index": 86,
+      "piece": {
+        "kind": "wall",
+        "material": "zarzas",
+        "gate": false,
+        "baseScaleX": 0.9926892201834829,
+        "x": -45.19140625,
+        "z": 101,
+        "yaw": -3.141592653589793
+      },
+      "terminalNativeWallPlacement": {
+        "valid": false,
+        "reason": "Un árbol o roca grande ocupa este terreno"
+      },
+      "terminalCropOverlapIds": [],
+      "crossings": {
+        "warthog": {
+          "radius": 1.1,
+          "a": {
+            "x": -45.19140625,
+            "z": 102.6
+          },
+          "b": {
+            "x": -45.19140625,
+            "z": 99.4
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "hyena": {
+          "radius": 0.9,
+          "a": {
+            "x": -45.19140625,
+            "z": 102.4
+          },
+          "b": {
+            "x": -45.19140625,
+            "z": 99.6
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "buffalo": {
+          "radius": 0.97,
+          "a": {
+            "x": -45.19140625,
+            "z": 102.47
+          },
+          "b": {
+            "x": -45.19140625,
+            "z": 99.53
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "lion": {
+          "radius": 0.85,
+          "a": {
+            "x": -45.19140625,
+            "z": 102.35
+          },
+          "b": {
+            "x": -45.19140625,
+            "z": 99.65
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "rhino": {
+          "radius": 1.55,
+          "a": {
+            "x": -45.19140625,
+            "z": 103.05
+          },
+          "b": {
+            "x": -45.19140625,
+            "z": 98.95
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        }
+      }
+    },
+    {
+      "index": 87,
+      "piece": {
+        "kind": "wall",
+        "material": "zarzas",
+        "gate": false,
+        "baseScaleX": 0.9926892201834894,
+        "x": -47.35546875,
+        "z": 101,
+        "yaw": -3.141592653589793
+      },
+      "terminalNativeWallPlacement": {
+        "valid": false,
+        "reason": "Un árbol o roca grande ocupa este terreno"
+      },
+      "terminalCropOverlapIds": [],
+      "crossings": {
+        "warthog": {
+          "radius": 1.1,
+          "a": {
+            "x": -47.35546875,
+            "z": 102.6
+          },
+          "b": {
+            "x": -47.35546875,
+            "z": 99.4
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "hyena": {
+          "radius": 0.9,
+          "a": {
+            "x": -47.35546875,
+            "z": 102.4
+          },
+          "b": {
+            "x": -47.35546875,
+            "z": 99.6
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "buffalo": {
+          "radius": 0.97,
+          "a": {
+            "x": -47.35546875,
+            "z": 102.47
+          },
+          "b": {
+            "x": -47.35546875,
+            "z": 99.53
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "lion": {
+          "radius": 0.85,
+          "a": {
+            "x": -47.35546875,
+            "z": 102.35
+          },
+          "b": {
+            "x": -47.35546875,
+            "z": 99.65
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "rhino": {
+          "radius": 1.55,
+          "a": {
+            "x": -47.35546875,
+            "z": 103.05
+          },
+          "b": {
+            "x": -47.35546875,
+            "z": 98.95
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        }
+      }
+    },
+    {
+      "index": 88,
+      "piece": {
+        "kind": "wall",
+        "material": "zarzas",
+        "gate": false,
+        "baseScaleX": 0.9926892201834862,
+        "x": -49.51953125,
+        "z": 101,
+        "yaw": -3.141592653589793
+      },
+      "terminalNativeWallPlacement": {
+        "valid": false,
+        "reason": "Un árbol o roca grande ocupa este terreno"
+      },
+      "terminalCropOverlapIds": [],
+      "crossings": {
+        "warthog": {
+          "radius": 1.1,
+          "a": {
+            "x": -49.51953125,
+            "z": 102.6
+          },
+          "b": {
+            "x": -49.51953125,
+            "z": 99.4
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "hyena": {
+          "radius": 0.9,
+          "a": {
+            "x": -49.51953125,
+            "z": 102.4
+          },
+          "b": {
+            "x": -49.51953125,
+            "z": 99.6
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "buffalo": {
+          "radius": 0.97,
+          "a": {
+            "x": -49.51953125,
+            "z": 102.47
+          },
+          "b": {
+            "x": -49.51953125,
+            "z": 99.53
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "lion": {
+          "radius": 0.85,
+          "a": {
+            "x": -49.51953125,
+            "z": 102.35
+          },
+          "b": {
+            "x": -49.51953125,
+            "z": 99.65
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "rhino": {
+          "radius": 1.55,
+          "a": {
+            "x": -49.51953125,
+            "z": 103.05
+          },
+          "b": {
+            "x": -49.51953125,
+            "z": 98.95
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        }
+      }
+    },
+    {
+      "index": 89,
+      "piece": {
+        "kind": "wall",
+        "material": "zarzas",
+        "gate": false,
+        "baseScaleX": 0.9926892201834862,
+        "x": -51.68359375,
+        "z": 101,
+        "yaw": -3.141592653589793
+      },
+      "terminalNativeWallPlacement": {
+        "valid": false,
+        "reason": "Un árbol o roca grande ocupa este terreno"
+      },
+      "terminalCropOverlapIds": [],
+      "crossings": {
+        "warthog": {
+          "radius": 1.1,
+          "a": {
+            "x": -51.68359375,
+            "z": 102.6
+          },
+          "b": {
+            "x": -51.68359375,
+            "z": 99.4
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "hyena": {
+          "radius": 0.9,
+          "a": {
+            "x": -51.68359375,
+            "z": 102.4
+          },
+          "b": {
+            "x": -51.68359375,
+            "z": 99.6
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "buffalo": {
+          "radius": 0.97,
+          "a": {
+            "x": -51.68359375,
+            "z": 102.47
+          },
+          "b": {
+            "x": -51.68359375,
+            "z": 99.53
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "lion": {
+          "radius": 0.85,
+          "a": {
+            "x": -51.68359375,
+            "z": 102.35
+          },
+          "b": {
+            "x": -51.68359375,
+            "z": 99.65
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "rhino": {
+          "radius": 1.55,
+          "a": {
+            "x": -51.68359375,
+            "z": 103.05
+          },
+          "b": {
+            "x": -51.68359375,
+            "z": 98.95
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        }
+      }
+    },
+    {
+      "index": 90,
+      "piece": {
+        "kind": "wall",
+        "material": "zarzas",
+        "gate": false,
+        "baseScaleX": 0.8196373595192555,
+        "x": -53.6328125,
+        "z": 100.78515625,
+        "yaw": 2.898734878057015
+      },
+      "terminalNativeWallPlacement": {
+        "valid": false,
+        "reason": "Un árbol o roca grande ocupa este terreno"
+      },
+      "terminalCropOverlapIds": [],
+      "crossings": {
+        "warthog": {
+          "radius": 1.1,
+          "a": {
+            "x": -54.01757652864559,
+            "z": 102.33820378380584
+          },
+          "b": {
+            "x": -53.24804847135441,
+            "z": 99.23210871619416
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "hyena": {
+          "radius": 0.9,
+          "a": {
+            "x": -53.969481025064894,
+            "z": 102.1440728420801
+          },
+          "b": {
+            "x": -53.296143974935106,
+            "z": 99.4262396579199
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "buffalo": {
+          "radius": 0.97,
+          "a": {
+            "x": -53.98631445131814,
+            "z": 102.21201867168412
+          },
+          "b": {
+            "x": -53.27931054868186,
+            "z": 99.35829382831588
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "lion": {
+          "radius": 0.85,
+          "a": {
+            "x": -53.95745714916972,
+            "z": 102.09554010664868
+          },
+          "b": {
+            "x": -53.30816785083028,
+            "z": 99.47477239335132
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "rhino": {
+          "radius": 1.55,
+          "a": {
+            "x": -54.12579141170217,
+            "z": 102.77499840268874
+          },
+          "b": {
+            "x": -53.13983358829783,
+            "z": 98.79531409731126
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        }
+      }
+    },
+    {
+      "index": 91,
+      "piece": {
+        "kind": "wall",
+        "material": "zarzas",
+        "gate": false,
+        "baseScaleX": 0.9926892201834862,
+        "x": -54.5,
+        "z": 99.48828125,
+        "yaw": 1.5707963267948966
+      },
+      "terminalNativeWallPlacement": {
+        "valid": false,
+        "reason": "Un árbol o roca grande ocupa este terreno"
+      },
+      "terminalCropOverlapIds": [],
+      "crossings": {
+        "warthog": {
+          "radius": 1.1,
+          "a": {
+            "x": -56.1,
+            "z": 99.48828125
+          },
+          "b": {
+            "x": -52.9,
+            "z": 99.48828125
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "hyena": {
+          "radius": 0.9,
+          "a": {
+            "x": -55.9,
+            "z": 99.48828125
+          },
+          "b": {
+            "x": -53.1,
+            "z": 99.48828125
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "buffalo": {
+          "radius": 0.97,
+          "a": {
+            "x": -55.97,
+            "z": 99.48828125
+          },
+          "b": {
+            "x": -53.03,
+            "z": 99.48828125
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "lion": {
+          "radius": 0.85,
+          "a": {
+            "x": -55.85,
+            "z": 99.48828125
+          },
+          "b": {
+            "x": -53.15,
+            "z": 99.48828125
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "rhino": {
+          "radius": 1.55,
+          "a": {
+            "x": -56.55,
+            "z": 99.48828125
+          },
+          "b": {
+            "x": -52.45,
+            "z": 99.48828125
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        }
+      }
+    },
+    {
+      "index": 92,
+      "piece": {
+        "kind": "wall",
+        "material": "zarzas",
+        "gate": false,
+        "baseScaleX": 0.9926892201834796,
+        "x": -54.5,
+        "z": 97.32421875,
+        "yaw": 1.5707963267948966
+      },
+      "terminalNativeWallPlacement": {
+        "valid": false,
+        "reason": "Un árbol o roca grande ocupa este terreno"
+      },
+      "terminalCropOverlapIds": [],
+      "crossings": {
+        "warthog": {
+          "radius": 1.1,
+          "a": {
+            "x": -56.1,
+            "z": 97.32421875
+          },
+          "b": {
+            "x": -52.9,
+            "z": 97.32421875
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "hyena": {
+          "radius": 0.9,
+          "a": {
+            "x": -55.9,
+            "z": 97.32421875
+          },
+          "b": {
+            "x": -53.1,
+            "z": 97.32421875
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "buffalo": {
+          "radius": 0.97,
+          "a": {
+            "x": -55.97,
+            "z": 97.32421875
+          },
+          "b": {
+            "x": -53.03,
+            "z": 97.32421875
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "lion": {
+          "radius": 0.85,
+          "a": {
+            "x": -55.85,
+            "z": 97.32421875
+          },
+          "b": {
+            "x": -53.15,
+            "z": 97.32421875
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "rhino": {
+          "radius": 1.55,
+          "a": {
+            "x": -56.55,
+            "z": 97.32421875
+          },
+          "b": {
+            "x": -52.45,
+            "z": 97.32421875
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        }
+      }
+    },
+    {
+      "index": 93,
+      "piece": {
+        "kind": "wall",
+        "material": "zarzas",
+        "gate": false,
+        "baseScaleX": 0.9926892201834927,
+        "x": -54.5,
+        "z": 95.16015625,
+        "yaw": 1.5707963267948966
+      },
+      "terminalNativeWallPlacement": {
+        "valid": false,
+        "reason": "Un árbol o roca grande ocupa este terreno"
+      },
+      "terminalCropOverlapIds": [],
+      "crossings": {
+        "warthog": {
+          "radius": 1.1,
+          "a": {
+            "x": -56.1,
+            "z": 95.16015625
+          },
+          "b": {
+            "x": -52.9,
+            "z": 95.16015625
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "hyena": {
+          "radius": 0.9,
+          "a": {
+            "x": -55.9,
+            "z": 95.16015625
+          },
+          "b": {
+            "x": -53.1,
+            "z": 95.16015625
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "buffalo": {
+          "radius": 0.97,
+          "a": {
+            "x": -55.97,
+            "z": 95.16015625
+          },
+          "b": {
+            "x": -53.03,
+            "z": 95.16015625
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "lion": {
+          "radius": 0.85,
+          "a": {
+            "x": -55.85,
+            "z": 95.16015625
+          },
+          "b": {
+            "x": -53.15,
+            "z": 95.16015625
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "rhino": {
+          "radius": 1.55,
+          "a": {
+            "x": -56.55,
+            "z": 95.16015625
+          },
+          "b": {
+            "x": -52.45,
+            "z": 95.16015625
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        }
+      }
+    },
+    {
+      "index": 117,
+      "piece": {
+        "kind": "wall",
+        "material": "zarzas",
+        "gate": false,
+        "baseScaleX": 0.9926892201834862,
+        "x": -54.5,
+        "z": 43.22265625,
+        "yaw": 1.5707963267948966
+      },
+      "terminalNativeWallPlacement": {
+        "valid": false,
+        "reason": "La muralla queda dentro de un edificio"
+      },
+      "terminalCropOverlapIds": [],
+      "crossings": {
+        "warthog": {
+          "radius": 1.1,
+          "a": {
+            "x": -56.1,
+            "z": 43.22265625
+          },
+          "b": {
+            "x": -52.9,
+            "z": 43.22265625
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "hyena": {
+          "radius": 0.9,
+          "a": {
+            "x": -55.9,
+            "z": 43.22265625
+          },
+          "b": {
+            "x": -53.1,
+            "z": 43.22265625
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "buffalo": {
+          "radius": 0.97,
+          "a": {
+            "x": -55.97,
+            "z": 43.22265625
+          },
+          "b": {
+            "x": -53.03,
+            "z": 43.22265625
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "lion": {
+          "radius": 0.85,
+          "a": {
+            "x": -55.85,
+            "z": 43.22265625
+          },
+          "b": {
+            "x": -53.15,
+            "z": 43.22265625
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "rhino": {
+          "radius": 1.55,
+          "a": {
+            "x": -56.55,
+            "z": 43.22265625
+          },
+          "b": {
+            "x": -52.45,
+            "z": 43.22265625
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        }
+      }
+    },
+    {
+      "index": 118,
+      "piece": {
+        "kind": "wall",
+        "material": "zarzas",
+        "gate": false,
+        "baseScaleX": 0.9926892201834862,
+        "x": -54.5,
+        "z": 41.05859375,
+        "yaw": 1.5707963267948966
+      },
+      "terminalNativeWallPlacement": {
+        "valid": false,
+        "reason": "La muralla queda dentro de un edificio"
+      },
+      "terminalCropOverlapIds": [],
+      "crossings": {
+        "warthog": {
+          "radius": 1.1,
+          "a": {
+            "x": -56.1,
+            "z": 41.05859375
+          },
+          "b": {
+            "x": -52.9,
+            "z": 41.05859375
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "hyena": {
+          "radius": 0.9,
+          "a": {
+            "x": -55.9,
+            "z": 41.05859375
+          },
+          "b": {
+            "x": -53.1,
+            "z": 41.05859375
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "buffalo": {
+          "radius": 0.97,
+          "a": {
+            "x": -55.97,
+            "z": 41.05859375
+          },
+          "b": {
+            "x": -53.03,
+            "z": 41.05859375
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "lion": {
+          "radius": 0.85,
+          "a": {
+            "x": -55.85,
+            "z": 41.05859375
+          },
+          "b": {
+            "x": -53.15,
+            "z": 41.05859375
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "rhino": {
+          "radius": 1.55,
+          "a": {
+            "x": -56.55,
+            "z": 41.05859375
+          },
+          "b": {
+            "x": -52.45,
+            "z": 41.05859375
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        }
+      }
+    },
+    {
+      "index": 122,
+      "piece": {
+        "kind": "wall",
+        "material": "zarzas",
+        "gate": false,
+        "baseScaleX": 0.9926892201834862,
+        "x": -54.5,
+        "z": 32.40234375,
+        "yaw": 1.5707963267948966
+      },
+      "terminalNativeWallPlacement": {
+        "valid": false,
+        "reason": "La muralla queda dentro de un edificio"
+      },
+      "terminalCropOverlapIds": [],
+      "crossings": {
+        "warthog": {
+          "radius": 1.1,
+          "a": {
+            "x": -56.1,
+            "z": 32.40234375
+          },
+          "b": {
+            "x": -52.9,
+            "z": 32.40234375
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "hyena": {
+          "radius": 0.9,
+          "a": {
+            "x": -55.9,
+            "z": 32.40234375
+          },
+          "b": {
+            "x": -53.1,
+            "z": 32.40234375
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "buffalo": {
+          "radius": 0.97,
+          "a": {
+            "x": -55.97,
+            "z": 32.40234375
+          },
+          "b": {
+            "x": -53.03,
+            "z": 32.40234375
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "lion": {
+          "radius": 0.85,
+          "a": {
+            "x": -55.85,
+            "z": 32.40234375
+          },
+          "b": {
+            "x": -53.15,
+            "z": 32.40234375
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "rhino": {
+          "radius": 1.55,
+          "a": {
+            "x": -56.55,
+            "z": 32.40234375
+          },
+          "b": {
+            "x": -52.45,
+            "z": 32.40234375
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        }
+      }
+    },
+    {
+      "index": 123,
+      "piece": {
+        "kind": "wall",
+        "material": "zarzas",
+        "gate": false,
+        "baseScaleX": 0.9926892201834878,
+        "x": -54.5,
+        "z": 30.23828125,
+        "yaw": 1.5707963267948966
+      },
+      "terminalNativeWallPlacement": {
+        "valid": false,
+        "reason": "La muralla queda dentro de un edificio"
+      },
+      "terminalCropOverlapIds": [],
+      "crossings": {
+        "warthog": {
+          "radius": 1.1,
+          "a": {
+            "x": -56.1,
+            "z": 30.23828125
+          },
+          "b": {
+            "x": -52.9,
+            "z": 30.23828125
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "hyena": {
+          "radius": 0.9,
+          "a": {
+            "x": -55.9,
+            "z": 30.23828125
+          },
+          "b": {
+            "x": -53.1,
+            "z": 30.23828125
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "buffalo": {
+          "radius": 0.97,
+          "a": {
+            "x": -55.97,
+            "z": 30.23828125
+          },
+          "b": {
+            "x": -53.03,
+            "z": 30.23828125
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "lion": {
+          "radius": 0.85,
+          "a": {
+            "x": -55.85,
+            "z": 30.23828125
+          },
+          "b": {
+            "x": -53.15,
+            "z": 30.23828125
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        },
+        "rhino": {
+          "radius": 1.55,
+          "a": {
+            "x": -56.55,
+            "z": 30.23828125
+          },
+          "b": {
+            "x": -52.45,
+            "z": 30.23828125
+          },
+          "aWalkable": false,
+          "bWalkable": false,
+          "forward": false,
+          "reverse": false
+        }
+      }
+    }
+  ],
+  "observedAttacks": [
+    {
+      "eventId": "event-30520",
+      "raidId": "raid-10-night",
+      "day": 10,
+      "animalId": "animal-20967",
+      "targetId": "plant-17511",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 5861.3000000030725,
+        "animal": {
+          "x": -26.85043096792024,
+          "z": 91.91100122676634,
+          "heading": -1.8149811671688931
+        },
+        "target": {
+          "x": -28.5,
+          "z": 91.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-30524",
+      "raidId": "raid-10-night",
+      "day": 10,
+      "animalId": "animal-20967",
+      "targetId": "plant-17511",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 5863.000000003079,
+        "animal": {
+          "x": -26.85043096792024,
+          "z": 91.91100122676634,
+          "heading": -1.8149811671688931
+        },
+        "target": {
+          "x": -28.5,
+          "z": 91.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-30527",
+      "raidId": "raid-10-night",
+      "day": 10,
+      "animalId": "animal-20967",
+      "targetId": "plant-20202",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 5865.600000003088,
+        "animal": {
+          "x": -28.314292200221036,
+          "z": 91.71997548446215,
+          "heading": -1.700557516564652
+        },
+        "target": {
+          "x": -30,
+          "z": 91.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-30531",
+      "raidId": "raid-10-night",
+      "day": 10,
+      "animalId": "animal-20967",
+      "targetId": "plant-20202",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 5869.500000003102,
+        "animal": {
+          "x": -28.314292200221036,
+          "z": 91.71997548446215,
+          "heading": -1.700557516564652
+        },
+        "target": {
+          "x": -30,
+          "z": 91.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-30535",
+      "raidId": "raid-10-night",
+      "day": 10,
+      "animalId": "animal-20969",
+      "targetId": "plant-20054",
+      "species": "buffalo",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 5874.5000000031205,
+        "animal": {
+          "x": -41.24650782302599,
+          "z": 71.01051560757855,
+          "heading": -2.2992729026096175
+        },
+        "target": {
+          "x": -43.5,
+          "z": 69
+        },
+        "shield": {
+          "id": "spell-20970",
+          "x": -43.5,
+          "z": 69,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-30537",
+      "raidId": "raid-10-night",
+      "day": 10,
+      "animalId": "animal-20969",
+      "targetId": "plant-20054",
+      "species": "buffalo",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 5876.200000003127,
+        "animal": {
+          "x": -41.24650782302599,
+          "z": 71.01051560757855,
+          "heading": -2.2992729026096175
+        },
+        "target": {
+          "x": -43.5,
+          "z": 69
+        },
+        "shield": {
+          "id": "spell-20970",
+          "x": -43.5,
+          "z": 69,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-30539",
+      "raidId": "raid-10-night",
+      "day": 10,
+      "animalId": "animal-20969",
+      "targetId": "plant-20054",
+      "species": "buffalo",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 5877.900000003133,
+        "animal": {
+          "x": -41.24650782302599,
+          "z": 71.01051560757855,
+          "heading": -2.2992729026096175
+        },
+        "target": {
+          "x": -43.5,
+          "z": 69
+        },
+        "shield": {
+          "id": "spell-20970",
+          "x": -43.5,
+          "z": 69,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-30541",
+      "raidId": "raid-10-night",
+      "day": 10,
+      "animalId": "animal-20969",
+      "targetId": "plant-20054",
+      "species": "buffalo",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 5882.60000000315,
+        "animal": {
+          "x": -41.24650782302599,
+          "z": 71.01051560757855,
+          "heading": -2.2992729026096175
+        },
+        "target": {
+          "x": -43.5,
+          "z": 69
+        },
+        "shield": {
+          "id": "spell-20970",
+          "x": -43.5,
+          "z": 69,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-30545",
+      "raidId": "raid-10-night",
+      "day": 10,
+      "animalId": "animal-20968",
+      "targetId": "plant-20846",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 5886.800000003165,
+        "animal": {
+          "x": -23.98110277957353,
+          "z": 47.999880960296565,
+          "heading": -3.128994173366083
+        },
+        "target": {
+          "x": -24,
+          "z": 46.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-30549",
+      "raidId": "raid-10-night",
+      "day": 10,
+      "animalId": "animal-20968",
+      "targetId": "plant-20846",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 5891.500000003182,
+        "animal": {
+          "x": -23.98110277957353,
+          "z": 47.999880960296565,
+          "heading": -3.128994173366083
+        },
+        "target": {
+          "x": -24,
+          "z": 46.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-30552",
+      "raidId": "raid-10-night",
+      "day": 10,
+      "animalId": "animal-20968",
+      "targetId": "plant-20137",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 5909.300000003247,
+        "animal": {
+          "x": -43.51505024651341,
+          "z": 50.78804663338338,
+          "heading": -1.4290195922713098
+        },
+        "target": {
+          "x": -45,
+          "z": 51
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-30556",
+      "raidId": "raid-10-night",
+      "day": 10,
+      "animalId": "animal-20968",
+      "targetId": "plant-20137",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 5911.000000003253,
+        "animal": {
+          "x": -43.51505024651341,
+          "z": 50.78804663338338,
+          "heading": -1.4290195922713098
+        },
+        "target": {
+          "x": -45,
+          "z": 51
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-34386",
+      "raidId": "raid-11-night",
+      "day": 11,
+      "animalId": "animal-23653",
+      "targetId": "plant-23317",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 6475.1000000052245,
+        "animal": {
+          "x": -33.12247908129863,
+          "z": 73.71844884517394,
+          "heading": -1.1518023738160077
+        },
+        "target": {
+          "x": -36,
+          "z": 75
+        },
+        "shield": {
+          "id": "spell-23658",
+          "x": -36,
+          "z": 75,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-34388",
+      "raidId": "raid-11-night",
+      "day": 11,
+      "animalId": "animal-23653",
+      "targetId": "plant-23317",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 6478.500000005237,
+        "animal": {
+          "x": -33.12247908129863,
+          "z": 73.71844884517394,
+          "heading": -1.1518023738160077
+        },
+        "target": {
+          "x": -36,
+          "z": 75
+        },
+        "shield": {
+          "id": "spell-23658",
+          "x": -36,
+          "z": 75,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-34390",
+      "raidId": "raid-11-night",
+      "day": 11,
+      "animalId": "animal-23653",
+      "targetId": "plant-23317",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 6480.200000005243,
+        "animal": {
+          "x": -33.12247908129863,
+          "z": 73.71844884517394,
+          "heading": -1.1518023738160077
+        },
+        "target": {
+          "x": -36,
+          "z": 75
+        },
+        "shield": {
+          "id": "spell-23658",
+          "x": -36,
+          "z": 75,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-34394",
+      "raidId": "raid-11-night",
+      "day": 11,
+      "animalId": "animal-23653",
+      "targetId": "plant-23317",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 6481.900000005249,
+        "animal": {
+          "x": -33.12247908129863,
+          "z": 73.71844884517394,
+          "heading": -1.1518023738160077
+        },
+        "target": {
+          "x": -36,
+          "z": 75
+        },
+        "shield": {
+          "id": "spell-23658",
+          "x": -36,
+          "z": 75,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-34397",
+      "raidId": "raid-11-night",
+      "day": 11,
+      "animalId": "animal-23655",
+      "targetId": "plant-20180",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 6484.200000005258,
+        "animal": {
+          "x": -35.189579846344984,
+          "z": 82.73777213841961,
+          "heading": -0.5707699405691338
+        },
+        "target": {
+          "x": -36,
+          "z": 84
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-34401",
+      "raidId": "raid-11-night",
+      "day": 11,
+      "animalId": "animal-23651",
+      "targetId": "plant-20344",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 6484.90000000526,
+        "animal": {
+          "x": -43.31021574064372,
+          "z": 70.3139108900775,
+          "heading": -1.461112349860585
+        },
+        "target": {
+          "x": -45,
+          "z": 70.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-34407",
+      "raidId": "raid-11-night",
+      "day": 11,
+      "animalId": "animal-23655",
+      "targetId": "plant-20180",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 6487.60000000527,
+        "animal": {
+          "x": -35.189579846344984,
+          "z": 82.73777213841961,
+          "heading": -0.5707699405691338
+        },
+        "target": {
+          "x": -36,
+          "z": 84
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-34409",
+      "raidId": "raid-11-night",
+      "day": 11,
+      "animalId": "animal-23654",
+      "targetId": "plant-19873",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 6488.000000005271,
+        "animal": {
+          "x": -42.00148294095621,
+          "z": 67.43331699050928,
+          "heading": -1.5263263314177706
+        },
+        "target": {
+          "x": -43.5,
+          "z": 67.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-34412",
+      "raidId": "raid-11-night",
+      "day": 11,
+      "animalId": "animal-23656",
+      "targetId": "plant-22681",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 6488.3000000052725,
+        "animal": {
+          "x": -28.385211985398335,
+          "z": 51.575489144562084,
+          "heading": 1.9645520518354724
+        },
+        "target": {
+          "x": -27,
+          "z": 51
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-34416",
+      "raidId": "raid-11-night",
+      "day": 11,
+      "animalId": "animal-23651",
+      "targetId": "plant-20344",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 6488.800000005274,
+        "animal": {
+          "x": -43.31021574064372,
+          "z": 70.3139108900775,
+          "heading": -1.461112349860585
+        },
+        "target": {
+          "x": -45,
+          "z": 70.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-34420",
+      "raidId": "raid-11-night",
+      "day": 11,
+      "animalId": "animal-23654",
+      "targetId": "plant-19873",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 6489.700000005278,
+        "animal": {
+          "x": -42.00148294095621,
+          "z": 67.43331699050928,
+          "heading": -1.5263263314177706
+        },
+        "target": {
+          "x": -43.5,
+          "z": 67.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-34423",
+      "raidId": "raid-11-night",
+      "day": 11,
+      "animalId": "animal-23652",
+      "targetId": "plant-20674",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 6490.100000005279,
+        "animal": {
+          "x": -20.71352975324985,
+          "z": 48.175689350007005,
+          "heading": -2.9722728590369303
+        },
+        "target": {
+          "x": -21,
+          "z": 46.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-34427",
+      "raidId": "raid-11-night",
+      "day": 11,
+      "animalId": "animal-23655",
+      "targetId": "plant-19647",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 6491.500000005284,
+        "animal": {
+          "x": -35.74709069645716,
+          "z": 79.47852523961598,
+          "heading": -2.97217719776411
+        },
+        "target": {
+          "x": -36,
+          "z": 78
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-34431",
+      "raidId": "raid-11-night",
+      "day": 11,
+      "animalId": "animal-23656",
+      "targetId": "plant-22681",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 6492.200000005287,
+        "animal": {
+          "x": -28.385211985398335,
+          "z": 51.575489144562084,
+          "heading": 1.9645520518354724
+        },
+        "target": {
+          "x": -27,
+          "z": 51
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-34433",
+      "raidId": "raid-11-night",
+      "day": 11,
+      "animalId": "animal-23657",
+      "targetId": "plant-20625",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 6492.300000005287,
+        "animal": {
+          "x": -19.55068873100399,
+          "z": 52.54468607793457,
+          "heading": -1.6016191918842833
+        },
+        "target": {
+          "x": -21,
+          "z": 52.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-34438",
+      "raidId": "raid-11-night",
+      "day": 11,
+      "animalId": "animal-23652",
+      "targetId": "plant-20674",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 6494.000000005293,
+        "animal": {
+          "x": -20.71352975324985,
+          "z": 48.175689350007005,
+          "heading": -2.9722728590369303
+        },
+        "target": {
+          "x": -21,
+          "z": 46.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-34440",
+      "raidId": "raid-11-night",
+      "day": 11,
+      "animalId": "animal-23654",
+      "targetId": "plant-23114",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 6494.000000005293,
+        "animal": {
+          "x": -45.26059644671288,
+          "z": 69.65508649430888,
+          "heading": -0.972451447615615
+        },
+        "target": {
+          "x": -46.5,
+          "z": 70.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-34445",
+      "raidId": "raid-11-night",
+      "day": 11,
+      "animalId": "animal-23655",
+      "targetId": "plant-19647",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 6495.400000005298,
+        "animal": {
+          "x": -35.74709069645716,
+          "z": 79.47852523961598,
+          "heading": -2.97217719776411
+        },
+        "target": {
+          "x": -36,
+          "z": 78
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-34448",
+      "raidId": "raid-11-night",
+      "day": 11,
+      "animalId": "animal-23654",
+      "targetId": "plant-23114",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 6495.700000005299,
+        "animal": {
+          "x": -45.26059644671288,
+          "z": 69.65508649430888,
+          "heading": -0.972451447615615
+        },
+        "target": {
+          "x": -46.5,
+          "z": 70.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-34451",
+      "raidId": "raid-11-night",
+      "day": 11,
+      "animalId": "animal-23657",
+      "targetId": "plant-20625",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 6495.700000005299,
+        "animal": {
+          "x": -19.55068873100399,
+          "z": 52.54468607793457,
+          "heading": -1.6016191918842833
+        },
+        "target": {
+          "x": -21,
+          "z": 52.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-34454",
+      "raidId": "raid-11-night",
+      "day": 11,
+      "animalId": "animal-23652",
+      "targetId": "plant-20807",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 6496.100000005301,
+        "animal": {
+          "x": -21.260089291575053,
+          "z": 47.66302254283102,
+          "heading": -2.324207775181572
+        },
+        "target": {
+          "x": -22.5,
+          "z": 46.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-34458",
+      "raidId": "raid-11-night",
+      "day": 11,
+      "animalId": "animal-23656",
+      "targetId": "plant-20688",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 6500.000000005315,
+        "animal": {
+          "x": -22.49546646226988,
+          "z": 51.11653351546233,
+          "heading": 1.6485636998606523
+        },
+        "target": {
+          "x": -21,
+          "z": 51
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-34462",
+      "raidId": "raid-11-night",
+      "day": 11,
+      "animalId": "animal-23652",
+      "targetId": "plant-20807",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 6500.800000005318,
+        "animal": {
+          "x": -21.260089291575053,
+          "z": 47.66302254283102,
+          "heading": -2.324207775181572
+        },
+        "target": {
+          "x": -22.5,
+          "z": 46.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-34466",
+      "raidId": "raid-11-night",
+      "day": 11,
+      "animalId": "animal-23656",
+      "targetId": "plant-20688",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 6501.700000005321,
+        "animal": {
+          "x": -22.49546646226988,
+          "z": 51.11653351546233,
+          "heading": 1.6485636998606523
+        },
+        "target": {
+          "x": -21,
+          "z": 51
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-34469",
+      "raidId": "raid-11-night",
+      "day": 11,
+      "animalId": "animal-23655",
+      "targetId": "plant-22758",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 6520.100000005388,
+        "animal": {
+          "x": -5.899967920628313,
+          "z": 90.96140012884179,
+          "heading": 1.203528740951242
+        },
+        "target": {
+          "x": -4.5,
+          "z": 91.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-34473",
+      "raidId": "raid-11-night",
+      "day": 11,
+      "animalId": "animal-23657",
+      "targetId": "plant-22813",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 6529.500000005422,
+        "animal": {
+          "x": -43.603309184428156,
+          "z": 71.6104428595222,
+          "heading": -1.2987946105502286
+        },
+        "target": {
+          "x": -45,
+          "z": 72
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-34478",
+      "raidId": "raid-11-night",
+      "day": 11,
+      "animalId": "animal-23657",
+      "targetId": "plant-22813",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 6531.200000005429,
+        "animal": {
+          "x": -43.603309184428156,
+          "z": 71.6104428595222,
+          "heading": -1.2987946105502286
+        },
+        "target": {
+          "x": -45,
+          "z": 72
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-34481",
+      "raidId": "raid-11-night",
+      "day": 11,
+      "animalId": "animal-23656",
+      "targetId": "plant-23044",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 6532.800000005434,
+        "animal": {
+          "x": -42.66569005067972,
+          "z": 81.25343395342838,
+          "heading": -0.5898142100451221
+        },
+        "target": {
+          "x": -43.5,
+          "z": 82.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-38479",
+      "raidId": "raid-12-night",
+      "day": 12,
+      "animalId": "animal-26444",
+      "targetId": "plant-26089",
+      "species": "buffalo",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 7077.400000007333,
+        "animal": {
+          "x": -11.993402572493746,
+          "z": 95.60007370805631,
+          "heading": 1.4379802649983382
+        },
+        "target": {
+          "x": -9,
+          "z": 96
+        },
+        "shield": {
+          "id": "spell-26447",
+          "x": -9,
+          "z": 96,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-38481",
+      "raidId": "raid-12-night",
+      "day": 12,
+      "animalId": "animal-26444",
+      "targetId": "plant-26089",
+      "species": "buffalo",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 7080.800000007345,
+        "animal": {
+          "x": -11.993402572493746,
+          "z": 95.60007370805631,
+          "heading": 1.4379802649983382
+        },
+        "target": {
+          "x": -9,
+          "z": 96
+        },
+        "shield": {
+          "id": "spell-26447",
+          "x": -9,
+          "z": 96,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-38484",
+      "raidId": "raid-12-night",
+      "day": 12,
+      "animalId": "animal-26444",
+      "targetId": "plant-26089",
+      "species": "buffalo",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 7082.500000007351,
+        "animal": {
+          "x": -11.993402572493746,
+          "z": 95.60007370805631,
+          "heading": 1.4379802649983382
+        },
+        "target": {
+          "x": -9,
+          "z": 96
+        },
+        "shield": {
+          "id": "spell-26447",
+          "x": -9,
+          "z": 96,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-38487",
+      "raidId": "raid-12-night",
+      "day": 12,
+      "animalId": "animal-26445",
+      "targetId": "plant-23547",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 7085.400000007362,
+        "animal": {
+          "x": -19.76229393239771,
+          "z": 74.92607920292926,
+          "heading": 2.959698942337791
+        },
+        "target": {
+          "x": -19.5,
+          "z": 73.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-38489",
+      "raidId": "raid-12-night",
+      "day": 12,
+      "animalId": "animal-26444",
+      "targetId": "plant-26089",
+      "species": "buffalo",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 7085.900000007364,
+        "animal": {
+          "x": -11.993402572493746,
+          "z": 95.60007370805631,
+          "heading": 1.4379802649983382
+        },
+        "target": {
+          "x": -9,
+          "z": 96
+        },
+        "shield": {
+          "id": "spell-26447",
+          "x": -9,
+          "z": 96,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-38494",
+      "raidId": "raid-12-night",
+      "day": 12,
+      "animalId": "animal-26445",
+      "targetId": "plant-23547",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 7090.100000007379,
+        "animal": {
+          "x": -19.76229393239771,
+          "z": 74.92607920292926,
+          "heading": 2.959698942337791
+        },
+        "target": {
+          "x": -19.5,
+          "z": 73.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-38496",
+      "raidId": "raid-12-night",
+      "day": 12,
+      "animalId": "animal-26446",
+      "targetId": "plant-25262",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 7092.000000007386,
+        "animal": {
+          "x": -40.93085745096712,
+          "z": 71.47950712598096,
+          "heading": -2.3124689613460925
+        },
+        "target": {
+          "x": -42,
+          "z": 70.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-38500",
+      "raidId": "raid-12-night",
+      "day": 12,
+      "animalId": "animal-26446",
+      "targetId": "plant-25262",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 7093.700000007392,
+        "animal": {
+          "x": -40.93085745096712,
+          "z": 71.47950712598096,
+          "heading": -2.3124689613460925
+        },
+        "target": {
+          "x": -42,
+          "z": 70.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-38503",
+      "raidId": "raid-12-night",
+      "day": 12,
+      "animalId": "animal-26445",
+      "targetId": "plant-23329",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 7107.500000007442,
+        "animal": {
+          "x": -8.31407921467654,
+          "z": 91.8000937402315,
+          "heading": 0.5961175977449281
+        },
+        "target": {
+          "x": -7.5,
+          "z": 93
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-38507",
+      "raidId": "raid-12-night",
+      "day": 12,
+      "animalId": "animal-26445",
+      "targetId": "plant-23329",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 7110.900000007455,
+        "animal": {
+          "x": -8.31407921467654,
+          "z": 91.8000937402315,
+          "heading": 0.5961175977449281
+        },
+        "target": {
+          "x": -7.5,
+          "z": 93
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-38511",
+      "raidId": "raid-12-night",
+      "day": 12,
+      "animalId": "animal-26446",
+      "targetId": "plant-26320",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 7121.600000007494,
+        "animal": {
+          "x": -5.7925610698536065,
+          "z": 89.34289583725341,
+          "heading": 1.100472152999971
+        },
+        "target": {
+          "x": -4.5,
+          "z": 90
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-38515",
+      "raidId": "raid-12-night",
+      "day": 12,
+      "animalId": "animal-26446",
+      "targetId": "plant-26320",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 7125.500000007508,
+        "animal": {
+          "x": -5.7925610698536065,
+          "z": 89.34289583725341,
+          "heading": 1.100472152999971
+        },
+        "target": {
+          "x": -4.5,
+          "z": 90
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-38518",
+      "raidId": "raid-12-night",
+      "day": 12,
+      "animalId": "animal-26446",
+      "targetId": "plant-25402",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 7129.8000000075235,
+        "animal": {
+          "x": -7.044256277132024,
+          "z": 93.12348350570491,
+          "heading": -0.3197255338401881
+        },
+        "target": {
+          "x": -7.5,
+          "z": 94.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-43150",
+      "raidId": "raid-13-night",
+      "day": 13,
+      "animalId": "animal-29665",
+      "targetId": "plant-26089",
+      "species": "buffalo",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 7620.000000009226,
+        "animal": {
+          "x": -11.993909746663883,
+          "z": 95.60388836317144,
+          "heading": 1.4392545110692372
+        },
+        "target": {
+          "x": -9,
+          "z": 96
+        },
+        "shield": {
+          "id": "spell-29667",
+          "x": -9,
+          "z": 96,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-43154",
+      "raidId": "raid-13-night",
+      "day": 13,
+      "animalId": "animal-29666",
+      "targetId": "plant-22915",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 7623.600000009239,
+        "animal": {
+          "x": -42.132860696998385,
+          "z": 84.48314607127479,
+          "heading": -1.9104962592845793
+        },
+        "target": {
+          "x": -43.5,
+          "z": 84
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-43156",
+      "raidId": "raid-13-night",
+      "day": 13,
+      "animalId": "animal-29665",
+      "targetId": "plant-26089",
+      "species": "buffalo",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 7624.700000009243,
+        "animal": {
+          "x": -11.993909746663883,
+          "z": 95.60388836317144,
+          "heading": 1.4392545110692372
+        },
+        "target": {
+          "x": -9,
+          "z": 96
+        },
+        "shield": {
+          "id": "spell-29667",
+          "x": -9,
+          "z": 96,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-43160",
+      "raidId": "raid-13-night",
+      "day": 13,
+      "animalId": "animal-29666",
+      "targetId": "plant-22915",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 7625.300000009245,
+        "animal": {
+          "x": -42.132860696998385,
+          "z": 84.48314607127479,
+          "heading": -1.9104962592845793
+        },
+        "target": {
+          "x": -43.5,
+          "z": 84
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-43161",
+      "raidId": "raid-13-night",
+      "day": 13,
+      "animalId": "animal-29665",
+      "targetId": "plant-26089",
+      "species": "buffalo",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 7628.100000009255,
+        "animal": {
+          "x": -11.993909746663883,
+          "z": 95.60388836317144,
+          "heading": 1.4392545110692372
+        },
+        "target": {
+          "x": -9,
+          "z": 96
+        },
+        "shield": {
+          "id": "spell-29667",
+          "x": -9,
+          "z": 96,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-43163",
+      "raidId": "raid-13-night",
+      "day": 13,
+      "animalId": "animal-29665",
+      "targetId": "plant-26089",
+      "species": "buffalo",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 7631.500000009268,
+        "animal": {
+          "x": -11.993909746663883,
+          "z": 95.60388836317144,
+          "heading": 1.4392545110692372
+        },
+        "target": {
+          "x": -9,
+          "z": 96
+        },
+        "shield": {
+          "id": "spell-29667",
+          "x": -9,
+          "z": 96,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-43165",
+      "raidId": "raid-13-night",
+      "day": 13,
+      "animalId": "animal-29665",
+      "targetId": "plant-26089",
+      "species": "buffalo",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 7633.200000009274,
+        "animal": {
+          "x": -11.993909746663883,
+          "z": 95.60388836317144,
+          "heading": 1.4392545110692372
+        },
+        "target": {
+          "x": -9,
+          "z": 96
+        },
+        "shield": {
+          "id": "spell-29667",
+          "x": -9,
+          "z": 96,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-43167",
+      "raidId": "raid-13-night",
+      "day": 13,
+      "animalId": "animal-29665",
+      "targetId": "plant-26089",
+      "species": "buffalo",
+      "type": "AnimalLogicalMiss",
+      "presentation": null
+    },
+    {
+      "eventId": "event-43171",
+      "raidId": "raid-13-night",
+      "day": 13,
+      "animalId": "animal-29666",
+      "targetId": "plant-25965",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 7644.100000009314,
+        "animal": {
+          "x": -16.44614237123048,
+          "z": 82.60569882748585,
+          "heading": 1.6437567835225957
+        },
+        "target": {
+          "x": -15,
+          "z": 82.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-43175",
+      "raidId": "raid-13-night",
+      "day": 13,
+      "animalId": "animal-29666",
+      "targetId": "plant-25965",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 7645.80000000932,
+        "animal": {
+          "x": -16.44614237123048,
+          "z": 82.60569882748585,
+          "heading": 1.6437567835225957
+        },
+        "target": {
+          "x": -15,
+          "z": 82.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-43179",
+      "raidId": "raid-13-night",
+      "day": 13,
+      "animalId": "animal-29666",
+      "targetId": "plant-28085",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 7655.600000009355,
+        "animal": {
+          "x": -8.44588495624337,
+          "z": 91.90099970448026,
+          "heading": 0.7106604020517995
+        },
+        "target": {
+          "x": -7.5,
+          "z": 93
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-43182",
+      "raidId": "raid-13-night",
+      "day": 13,
+      "animalId": "animal-29664",
+      "targetId": "plant-25776",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 7656.90000000936,
+        "animal": {
+          "x": -25.369840172473424,
+          "z": 32.994342135957574,
+          "heading": -3.0547101701275077
+        },
+        "target": {
+          "x": -25.5,
+          "z": 31.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-43186",
+      "raidId": "raid-13-night",
+      "day": 13,
+      "animalId": "animal-29664",
+      "targetId": "plant-25776",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 7658.600000009366,
+        "animal": {
+          "x": -25.369840172473424,
+          "z": 32.994342135957574,
+          "heading": -3.0547101701275077
+        },
+        "target": {
+          "x": -25.5,
+          "z": 31.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-43190",
+      "raidId": "raid-13-night",
+      "day": 13,
+      "animalId": "animal-29664",
+      "targetId": "plant-28085",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 7707.700000009545,
+        "animal": {
+          "x": -7.928122773991109,
+          "z": 91.56239404203023,
+          "heading": 0.28943960239671057
+        },
+        "target": {
+          "x": -7.5,
+          "z": 93
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-43193",
+      "raidId": "raid-13-night",
+      "day": 13,
+      "animalId": "animal-29664",
+      "targetId": "plant-25913",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 7754.900000009717,
+        "animal": {
+          "x": -25.31303120126895,
+          "z": 32.94406906649641,
+          "heading": -3.07817089122947
+        },
+        "target": {
+          "x": -25.5,
+          "z": 30
+        },
+        "shield": {
+          "id": "spell-29668",
+          "x": -25.5,
+          "z": 30,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-43195",
+      "raidId": "raid-13-night",
+      "day": 13,
+      "animalId": "animal-29664",
+      "targetId": "plant-25913",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 7756.600000009723,
+        "animal": {
+          "x": -25.31303120126895,
+          "z": 32.94406906649641,
+          "heading": -3.07817089122947
+        },
+        "target": {
+          "x": -25.5,
+          "z": 30
+        },
+        "shield": {
+          "id": "spell-29668",
+          "x": -25.5,
+          "z": 30,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-46320",
+      "raidId": "raid-14-day",
+      "day": 14,
+      "animalId": "animal-32075",
+      "targetId": "plant-29598",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 7929.10000001028,
+        "animal": {
+          "x": -39.05088487176385,
+          "z": 80.6068965445825,
+          "heading": -1.9298578154112438
+        },
+        "target": {
+          "x": -42,
+          "z": 79.5
+        },
+        "shield": {
+          "id": "spell-32086",
+          "x": -42,
+          "z": 79.5,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-46394",
+      "raidId": "raid-14-day",
+      "day": 14,
+      "animalId": "animal-32076",
+      "targetId": "plant-31376",
+      "species": "buffalo",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 7959.700000010392,
+        "animal": {
+          "x": -28.330199408705734,
+          "z": 33.06079074804924,
+          "heading": -3.033227446120289
+        },
+        "target": {
+          "x": -28.5,
+          "z": 31.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-46401",
+      "raidId": "raid-14-day",
+      "day": 14,
+      "animalId": "animal-32076",
+      "targetId": "plant-31376",
+      "species": "buffalo",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 7961.400000010398,
+        "animal": {
+          "x": -28.330199408705734,
+          "z": 33.06079074804924,
+          "heading": -3.033227446120289
+        },
+        "target": {
+          "x": -28.5,
+          "z": 31.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-47565",
+      "raidId": "raid-14-night",
+      "day": 14,
+      "animalId": "animal-33156",
+      "targetId": "plant-20151",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 8140.100000011036,
+        "animal": {
+          "x": -30.12983418193714,
+          "z": 85.91490743163212,
+          "heading": -1.7143605060485612
+        },
+        "target": {
+          "x": -33,
+          "z": 85.5
+        },
+        "shield": {
+          "id": "spell-33157",
+          "x": -33,
+          "z": 85.5,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-47567",
+      "raidId": "raid-14-night",
+      "day": 14,
+      "animalId": "animal-33156",
+      "targetId": "plant-20151",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 8144.00000001105,
+        "animal": {
+          "x": -30.12983418193714,
+          "z": 85.91490743163212,
+          "heading": -1.7143605060485612
+        },
+        "target": {
+          "x": -33,
+          "z": 85.5
+        },
+        "shield": {
+          "id": "spell-33157",
+          "x": -33,
+          "z": 85.5,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-47570",
+      "raidId": "raid-14-night",
+      "day": 14,
+      "animalId": "animal-33155",
+      "targetId": "plant-29598",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 8144.400000011052,
+        "animal": {
+          "x": -40.836930225892445,
+          "z": 80.36589185269143,
+          "heading": -2.2107606128272685
+        },
+        "target": {
+          "x": -42,
+          "z": 79.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-47572",
+      "raidId": "raid-14-night",
+      "day": 14,
+      "animalId": "animal-33156",
+      "targetId": "plant-20151",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 8145.7000000110565,
+        "animal": {
+          "x": -30.12983418193714,
+          "z": 85.91490743163212,
+          "heading": -1.7143605060485612
+        },
+        "target": {
+          "x": -33,
+          "z": 85.5
+        },
+        "shield": {
+          "id": "spell-33157",
+          "x": -33,
+          "z": 85.5,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-47574",
+      "raidId": "raid-14-night",
+      "day": 14,
+      "animalId": "animal-33156",
+      "targetId": "plant-20151",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 8147.400000011063,
+        "animal": {
+          "x": -30.12983418193714,
+          "z": 85.91490743163212,
+          "heading": -1.7143605060485612
+        },
+        "target": {
+          "x": -33,
+          "z": 85.5
+        },
+        "shield": {
+          "id": "spell-33157",
+          "x": -33,
+          "z": 85.5,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-47578",
+      "raidId": "raid-14-night",
+      "day": 14,
+      "animalId": "animal-33155",
+      "targetId": "plant-29598",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 8147.800000011064,
+        "animal": {
+          "x": -40.836930225892445,
+          "z": 80.36589185269143,
+          "heading": -2.2107606128272685
+        },
+        "target": {
+          "x": -42,
+          "z": 79.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-47581",
+      "raidId": "raid-14-night",
+      "day": 14,
+      "animalId": "animal-33155",
+      "targetId": "plant-28589",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 8151.900000011079,
+        "animal": {
+          "x": -41.36030068708687,
+          "z": 79.3012627671068,
+          "heading": -2.684688503445807
+        },
+        "target": {
+          "x": -42,
+          "z": 78
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-47585",
+      "raidId": "raid-14-night",
+      "day": 14,
+      "animalId": "animal-33155",
+      "targetId": "plant-28589",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 8156.600000011096,
+        "animal": {
+          "x": -41.36030068708687,
+          "z": 79.3012627671068,
+          "heading": -2.684688503445807
+        },
+        "target": {
+          "x": -42,
+          "z": 78
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-47589",
+      "raidId": "raid-14-night",
+      "day": 14,
+      "animalId": "animal-33155",
+      "targetId": "plant-20135",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 8165.80000001113,
+        "animal": {
+          "x": -35.69630146173708,
+          "z": 83.18063267538562,
+          "heading": 0.9702650037242536
+        },
+        "target": {
+          "x": -34.5,
+          "z": 84
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-47592",
+      "raidId": "raid-14-night",
+      "day": 14,
+      "animalId": "animal-33154",
+      "targetId": "plant-26164",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 8168.70000001114,
+        "animal": {
+          "x": -18.315234300557453,
+          "z": 52.219151441546295,
+          "heading": -2.370497561056115
+        },
+        "target": {
+          "x": -19.5,
+          "z": 51
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-47596",
+      "raidId": "raid-14-night",
+      "day": 14,
+      "animalId": "animal-33154",
+      "targetId": "plant-26164",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 8170.400000011146,
+        "animal": {
+          "x": -18.315234300557453,
+          "z": 52.219151441546295,
+          "heading": -2.370497561056115
+        },
+        "target": {
+          "x": -19.5,
+          "z": 51
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-47599",
+      "raidId": "raid-14-night",
+      "day": 14,
+      "animalId": "animal-33154",
+      "targetId": "plant-31509",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 8174.600000011162,
+        "animal": {
+          "x": -19.45211720257059,
+          "z": 51.70289319631229,
+          "heading": -1.9970543752956078
+        },
+        "target": {
+          "x": -21,
+          "z": 51
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-47603",
+      "raidId": "raid-14-night",
+      "day": 14,
+      "animalId": "animal-33154",
+      "targetId": "plant-31509",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 8176.300000011168,
+        "animal": {
+          "x": -19.45211720257059,
+          "z": 51.70289319631229,
+          "heading": -1.9970543752956078
+        },
+        "target": {
+          "x": -21,
+          "z": 51
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-52617",
+      "raidId": "raid-15-night",
+      "day": 15,
+      "animalId": "animal-36793",
+      "targetId": "plant-36625",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 8850.400000013542,
+        "animal": {
+          "x": -27.163745650616825,
+          "z": 55.17478044146685,
+          "heading": 2.585144866477513
+        },
+        "target": {
+          "x": -25.5,
+          "z": 52.5
+        },
+        "shield": {
+          "id": "spell-36798",
+          "x": -25.5,
+          "z": 52.5,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-52621",
+      "raidId": "raid-15-night",
+      "day": 15,
+      "animalId": "animal-36793",
+      "targetId": "plant-36625",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 8853.800000013554,
+        "animal": {
+          "x": -27.163745650616825,
+          "z": 55.17478044146685,
+          "heading": 2.585144866477513
+        },
+        "target": {
+          "x": -25.5,
+          "z": 52.5
+        },
+        "shield": {
+          "id": "spell-36798",
+          "x": -25.5,
+          "z": 52.5,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-52624",
+      "raidId": "raid-15-night",
+      "day": 15,
+      "animalId": "animal-36797",
+      "targetId": "plant-29076",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 8854.500000013557,
+        "animal": {
+          "x": -42.13190909373093,
+          "z": 80.5195551309631,
+          "heading": -1.233071512414538
+        },
+        "target": {
+          "x": -43.5,
+          "z": 81
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-52626",
+      "raidId": "raid-15-night",
+      "day": 15,
+      "animalId": "animal-36793",
+      "targetId": "plant-36625",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 8855.50000001356,
+        "animal": {
+          "x": -27.163745650616825,
+          "z": 55.17478044146685,
+          "heading": 2.585144866477513
+        },
+        "target": {
+          "x": -25.5,
+          "z": 52.5
+        },
+        "shield": {
+          "id": "spell-36798",
+          "x": -25.5,
+          "z": 52.5,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-52629",
+      "raidId": "raid-15-night",
+      "day": 15,
+      "animalId": "animal-36792",
+      "targetId": "plant-29500",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 8856.200000013563,
+        "animal": {
+          "x": -29.379769557076703,
+          "z": 91.41718156515942,
+          "heading": -0.37346249543489185
+        },
+        "target": {
+          "x": -30,
+          "z": 93
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-52633",
+      "raidId": "raid-15-night",
+      "day": 15,
+      "animalId": "animal-36792",
+      "targetId": "plant-29500",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 8857.90000001357,
+        "animal": {
+          "x": -29.379769557076703,
+          "z": 91.41718156515942,
+          "heading": -0.37346249543489185
+        },
+        "target": {
+          "x": -30,
+          "z": 93
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-52637",
+      "raidId": "raid-15-night",
+      "day": 15,
+      "animalId": "animal-36797",
+      "targetId": "plant-29076",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 8859.200000013574,
+        "animal": {
+          "x": -42.13190909373093,
+          "z": 80.5195551309631,
+          "heading": -1.233071512414538
+        },
+        "target": {
+          "x": -43.5,
+          "z": 81
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-52640",
+      "raidId": "raid-15-night",
+      "day": 15,
+      "animalId": "animal-36793",
+      "targetId": "plant-36625",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 8860.200000013578,
+        "animal": {
+          "x": -27.163745650616825,
+          "z": 55.17478044146685,
+          "heading": 2.585144866477513
+        },
+        "target": {
+          "x": -25.5,
+          "z": 52.5
+        },
+        "shield": {
+          "id": "spell-36798",
+          "x": -25.5,
+          "z": 52.5,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-52643",
+      "raidId": "raid-15-night",
+      "day": 15,
+      "animalId": "animal-36795",
+      "targetId": "plant-22872",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 8861.700000013583,
+        "animal": {
+          "x": -5.340183823781293,
+          "z": 94.75738536051749,
+          "heading": 0.5945337256601283
+        },
+        "target": {
+          "x": -4.5,
+          "z": 96
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-52648",
+      "raidId": "raid-15-night",
+      "day": 15,
+      "animalId": "animal-36795",
+      "targetId": "plant-22872",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 8863.40000001359,
+        "animal": {
+          "x": -5.340183823781293,
+          "z": 94.75738536051749,
+          "heading": 0.5945337256601283
+        },
+        "target": {
+          "x": -4.5,
+          "z": 96
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-52650",
+      "raidId": "raid-15-night",
+      "day": 15,
+      "animalId": "animal-36796",
+      "targetId": "plant-25438",
+      "species": "buffalo",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 8864.700000013594,
+        "animal": {
+          "x": -47.94525284222364,
+          "z": 61.718314624765085,
+          "heading": -1.7103022966914627
+        },
+        "target": {
+          "x": -49.5,
+          "z": 61.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-52654",
+      "raidId": "raid-15-night",
+      "day": 15,
+      "animalId": "animal-36794",
+      "targetId": "plant-25402",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 8865.900000013598,
+        "animal": {
+          "x": -9.026192342466523,
+          "z": 93.7511762999233,
+          "heading": 1.1146580155947998
+        },
+        "target": {
+          "x": -7.5,
+          "z": 94.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-52657",
+      "raidId": "raid-15-night",
+      "day": 15,
+      "animalId": "animal-36796",
+      "targetId": "plant-25438",
+      "species": "buffalo",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 8866.4000000136,
+        "animal": {
+          "x": -47.94525284222364,
+          "z": 61.718314624765085,
+          "heading": -1.7103022966914627
+        },
+        "target": {
+          "x": -49.5,
+          "z": 61.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-52660",
+      "raidId": "raid-15-night",
+      "day": 15,
+      "animalId": "animal-36797",
+      "targetId": "plant-31890",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 8873.900000013628,
+        "animal": {
+          "x": -30.95034352011514,
+          "z": 93.4048528894367,
+          "heading": 0.714724447815332
+        },
+        "target": {
+          "x": -30,
+          "z": 94.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-52665",
+      "raidId": "raid-15-night",
+      "day": 15,
+      "animalId": "animal-36797",
+      "targetId": "plant-31890",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 8877.30000001364,
+        "animal": {
+          "x": -30.95034352011514,
+          "z": 93.4048528894367,
+          "heading": 0.714724447815332
+        },
+        "target": {
+          "x": -30,
+          "z": 94.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-52667",
+      "raidId": "raid-15-night",
+      "day": 15,
+      "animalId": "animal-36796",
+      "targetId": "plant-25480",
+      "species": "buffalo",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 8879.600000013648,
+        "animal": {
+          "x": -46.63881610622314,
+          "z": 76.43614895573361,
+          "heading": 0.08853351371548873
+        },
+        "target": {
+          "x": -46.5,
+          "z": 78
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-52671",
+      "raidId": "raid-15-night",
+      "day": 15,
+      "animalId": "animal-36796",
+      "targetId": "plant-25480",
+      "species": "buffalo",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 8883.00000001366,
+        "animal": {
+          "x": -46.63881610622314,
+          "z": 76.43614895573361,
+          "heading": 0.08853351371548873
+        },
+        "target": {
+          "x": -46.5,
+          "z": 78
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-52674",
+      "raidId": "raid-15-night",
+      "day": 15,
+      "animalId": "animal-36794",
+      "targetId": "plant-35900",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 8888.40000001368,
+        "animal": {
+          "x": -36.2316172948604,
+          "z": 86.63190340281437,
+          "heading": -2.299396049915455
+        },
+        "target": {
+          "x": -37.5,
+          "z": 85.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-52679",
+      "raidId": "raid-15-night",
+      "day": 15,
+      "animalId": "animal-36797",
+      "targetId": "plant-35730",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 8900.200000013723,
+        "animal": {
+          "x": -44.33849424208809,
+          "z": 67.29031396654047,
+          "heading": -2.667860191865799
+        },
+        "target": {
+          "x": -45,
+          "z": 66
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-52682",
+      "raidId": "raid-15-night",
+      "day": 15,
+      "animalId": "animal-36795",
+      "targetId": "plant-36625",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 8901.300000013727,
+        "animal": {
+          "x": -24.082081834113644,
+          "z": 52.98939562201707,
+          "heading": -1.9031446520703545
+        },
+        "target": {
+          "x": -25.5,
+          "z": 52.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-52686",
+      "raidId": "raid-15-night",
+      "day": 15,
+      "animalId": "animal-36796",
+      "targetId": "plant-32910",
+      "species": "buffalo",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 8917.600000013786,
+        "animal": {
+          "x": -27.889486189777617,
+          "z": 103.70627888701046,
+          "heading": 0.6023151245343316
+        },
+        "target": {
+          "x": -27,
+          "z": 105
+        },
+        "shield": null
+      },
+      "actorInside": false,
+      "targetInside": false
+    },
+    {
+      "eventId": "event-52690",
+      "raidId": "raid-15-night",
+      "day": 15,
+      "animalId": "animal-36796",
+      "targetId": "plant-32910",
+      "species": "buffalo",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 8919.300000013793,
+        "animal": {
+          "x": -27.889486189777617,
+          "z": 103.70627888701046,
+          "heading": 0.6023151245343316
+        },
+        "target": {
+          "x": -27,
+          "z": 105
+        },
+        "shield": null
+      },
+      "actorInside": false,
+      "targetInside": false
+    },
+    {
+      "eventId": "event-57601",
+      "raidId": "raid-16-night",
+      "day": 16,
+      "animalId": "animal-40266",
+      "targetId": "plant-35900",
+      "species": "rhino",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 9529.500000015933,
+        "animal": {
+          "x": -34.16436497858663,
+          "z": 86.85408234754046,
+          "heading": -1.9564166569080659
+        },
+        "target": {
+          "x": -37.5,
+          "z": 85.5
+        },
+        "shield": {
+          "id": "spell-40267",
+          "x": -37.5,
+          "z": 85.5,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-57604",
+      "raidId": "raid-16-night",
+      "day": 16,
+      "animalId": "animal-40266",
+      "targetId": "plant-35900",
+      "species": "rhino",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 9534.20000001595,
+        "animal": {
+          "x": -34.16436497858663,
+          "z": 86.85408234754046,
+          "heading": -1.9564166569080659
+        },
+        "target": {
+          "x": -37.5,
+          "z": 85.5
+        },
+        "shield": {
+          "id": "spell-40267",
+          "x": -37.5,
+          "z": 85.5,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-57607",
+      "raidId": "raid-16-night",
+      "day": 16,
+      "animalId": "animal-40265",
+      "targetId": "plant-39395",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 9536.000000015956,
+        "animal": {
+          "x": -51.52291345283306,
+          "z": 64.13811329811465,
+          "heading": -2.432176317653078
+        },
+        "target": {
+          "x": -52.5,
+          "z": 63
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-57609",
+      "raidId": "raid-16-night",
+      "day": 16,
+      "animalId": "animal-40266",
+      "targetId": "plant-35900",
+      "species": "rhino",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 9538.900000015967,
+        "animal": {
+          "x": -34.16436497858663,
+          "z": 86.85408234754046,
+          "heading": -1.9564166569080659
+        },
+        "target": {
+          "x": -37.5,
+          "z": 85.5
+        },
+        "shield": {
+          "id": "spell-40267",
+          "x": -37.5,
+          "z": 85.5,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-57613",
+      "raidId": "raid-16-night",
+      "day": 16,
+      "animalId": "animal-40265",
+      "targetId": "plant-39395",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 9539.400000015969,
+        "animal": {
+          "x": -51.52291345283306,
+          "z": 64.13811329811465,
+          "heading": -2.432176317653078
+        },
+        "target": {
+          "x": -52.5,
+          "z": 63
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-57614",
+      "raidId": "raid-16-night",
+      "day": 16,
+      "animalId": "animal-40266",
+      "targetId": "plant-35900",
+      "species": "rhino",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 9540.600000015973,
+        "animal": {
+          "x": -34.16436497858663,
+          "z": 86.85408234754046,
+          "heading": -1.9564166569080659
+        },
+        "target": {
+          "x": -37.5,
+          "z": 85.5
+        },
+        "shield": {
+          "id": "spell-40267",
+          "x": -37.5,
+          "z": 85.5,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-57616",
+      "raidId": "raid-16-night",
+      "day": 16,
+      "animalId": "animal-40266",
+      "targetId": "plant-35900",
+      "species": "rhino",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 9544.500000015987,
+        "animal": {
+          "x": -34.16436497858663,
+          "z": 86.85408234754046,
+          "heading": -1.9564166569080659
+        },
+        "target": {
+          "x": -37.5,
+          "z": 85.5
+        },
+        "shield": {
+          "id": "spell-40267",
+          "x": -37.5,
+          "z": 85.5,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-57620",
+      "raidId": "raid-16-night",
+      "day": 16,
+      "animalId": "animal-40266",
+      "targetId": "plant-35900",
+      "species": "rhino",
+      "type": "AnimalLogicalMiss",
+      "presentation": null
+    },
+    {
+      "eventId": "event-57623",
+      "raidId": "raid-16-night",
+      "day": 16,
+      "animalId": "animal-40264",
+      "targetId": "plant-36625",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 9548.700000016002,
+        "animal": {
+          "x": -26.328614999826026,
+          "z": 53.98438444550707,
+          "heading": 2.63245943127033
+        },
+        "target": {
+          "x": -25.5,
+          "z": 52.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-57626",
+      "raidId": "raid-16-night",
+      "day": 16,
+      "animalId": "animal-40263",
+      "targetId": "plant-36284",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 9549.600000016006,
+        "animal": {
+          "x": -43.905749785126744,
+          "z": 62.80100594435607,
+          "heading": -2.442299896457796
+        },
+        "target": {
+          "x": -45,
+          "z": 61.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-57630",
+      "raidId": "raid-16-night",
+      "day": 16,
+      "animalId": "animal-40263",
+      "targetId": "plant-36284",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 9553.000000016018,
+        "animal": {
+          "x": -43.905749785126744,
+          "z": 62.80100594435607,
+          "heading": -2.442299896457796
+        },
+        "target": {
+          "x": -45,
+          "z": 61.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-57634",
+      "raidId": "raid-16-night",
+      "day": 16,
+      "animalId": "animal-40266",
+      "targetId": "plant-35900",
+      "species": "rhino",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 9553.200000016019,
+        "animal": {
+          "x": -35.50788463998924,
+          "z": 86.30868806867,
+          "heading": -1.9564166569080665
+        },
+        "target": {
+          "x": -37.5,
+          "z": 85.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-57637",
+      "raidId": "raid-16-night",
+      "day": 16,
+      "animalId": "animal-40264",
+      "targetId": "plant-25710",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 9564.30000001606,
+        "animal": {
+          "x": -45.1550484774512,
+          "z": 62.80708536256547,
+          "heading": 0.09133190823978567
+        },
+        "target": {
+          "x": -45,
+          "z": 64.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-57641",
+      "raidId": "raid-16-night",
+      "day": 16,
+      "animalId": "animal-40264",
+      "targetId": "plant-25710",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 9569.000000016076,
+        "animal": {
+          "x": -45.1550484774512,
+          "z": 62.80708536256547,
+          "heading": 0.09133190823978567
+        },
+        "target": {
+          "x": -45,
+          "z": 64.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-57645",
+      "raidId": "raid-16-night",
+      "day": 16,
+      "animalId": "animal-40266",
+      "targetId": "plant-25864",
+      "species": "rhino",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 9573.100000016091,
+        "animal": {
+          "x": -42.85864907848921,
+          "z": 60.19265573166892,
+          "heading": -1.6605239957854252
+        },
+        "target": {
+          "x": -45,
+          "z": 60
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-57649",
+      "raidId": "raid-16-night",
+      "day": 16,
+      "animalId": "animal-40265",
+      "targetId": "plant-36050",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 9578.50000001611,
+        "animal": {
+          "x": -5.72337383603336,
+          "z": 96.63203890795208,
+          "heading": 0.9537352504774043
+        },
+        "target": {
+          "x": -4.5,
+          "z": 97.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-62977",
+      "raidId": "raid-17-night",
+      "day": 17,
+      "animalId": "animal-44077",
+      "targetId": "plant-36050",
+      "species": "buffalo",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 10079.600000017854,
+        "animal": {
+          "x": -6.044659346514561,
+          "z": 97.21905960912463,
+          "heading": 1.390884398312558
+        },
+        "target": {
+          "x": -4.5,
+          "z": 97.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-62979",
+      "raidId": "raid-17-night",
+      "day": 17,
+      "animalId": "animal-44076",
+      "targetId": "plant-42863",
+      "species": "buffalo",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 10080.800000017858,
+        "animal": {
+          "x": -31.669030760467013,
+          "z": 86.7108893159657,
+          "heading": -2.685193942434687
+        },
+        "target": {
+          "x": -33,
+          "z": 84
+        },
+        "shield": {
+          "id": "spell-44078",
+          "x": -33,
+          "z": 84,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-62981",
+      "raidId": "raid-17-night",
+      "day": 17,
+      "animalId": "animal-44076",
+      "targetId": "plant-42863",
+      "species": "buffalo",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 10084.20000001787,
+        "animal": {
+          "x": -31.669030760467013,
+          "z": 86.7108893159657,
+          "heading": -2.685193942434687
+        },
+        "target": {
+          "x": -33,
+          "z": 84
+        },
+        "shield": {
+          "id": "spell-44078",
+          "x": -33,
+          "z": 84,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-62984",
+      "raidId": "raid-17-night",
+      "day": 17,
+      "animalId": "animal-44074",
+      "targetId": "plant-39944",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 10085.300000017874,
+        "animal": {
+          "x": -17.89941660837792,
+          "z": 75.19702179754115,
+          "heading": -3.0823913773440372
+        },
+        "target": {
+          "x": -18,
+          "z": 73.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-62988",
+      "raidId": "raid-17-night",
+      "day": 17,
+      "animalId": "animal-44074",
+      "targetId": "plant-39944",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 10088.700000017887,
+        "animal": {
+          "x": -17.89941660837792,
+          "z": 75.19702179754115,
+          "heading": -3.0823913773440372
+        },
+        "target": {
+          "x": -18,
+          "z": 73.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-62989",
+      "raidId": "raid-17-night",
+      "day": 17,
+      "animalId": "animal-44076",
+      "targetId": "plant-42863",
+      "species": "buffalo",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 10088.900000017888,
+        "animal": {
+          "x": -31.669030760467013,
+          "z": 86.7108893159657,
+          "heading": -2.685193942434687
+        },
+        "target": {
+          "x": -33,
+          "z": 84
+        },
+        "shield": {
+          "id": "spell-44078",
+          "x": -33,
+          "z": 84,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-62992",
+      "raidId": "raid-17-night",
+      "day": 17,
+      "animalId": "animal-44076",
+      "targetId": "plant-42863",
+      "species": "buffalo",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 10090.600000017894,
+        "animal": {
+          "x": -31.669030760467013,
+          "z": 86.7108893159657,
+          "heading": -2.685193942434687
+        },
+        "target": {
+          "x": -33,
+          "z": 84
+        },
+        "shield": {
+          "id": "spell-44078",
+          "x": -33,
+          "z": 84,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-62995",
+      "raidId": "raid-17-night",
+      "day": 17,
+      "animalId": "animal-44074",
+      "targetId": "plant-43783",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 10093.000000017902,
+        "animal": {
+          "x": -17.946541746406947,
+          "z": 73.69915926714442,
+          "heading": -3.110141437173706
+        },
+        "target": {
+          "x": -18,
+          "z": 72
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-62999",
+      "raidId": "raid-17-night",
+      "day": 17,
+      "animalId": "animal-44075",
+      "targetId": "plant-42551",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 10102.600000017937,
+        "animal": {
+          "x": -23.977319622809333,
+          "z": 52.759859061921055,
+          "heading": 1.744914157674341
+        },
+        "target": {
+          "x": -22.5,
+          "z": 52.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-63003",
+      "raidId": "raid-17-night",
+      "day": 17,
+      "animalId": "animal-44077",
+      "targetId": "plant-43499",
+      "species": "buffalo",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 10104.900000017946,
+        "animal": {
+          "x": -35.969782020811394,
+          "z": 90.35118789296891,
+          "heading": -1.7963915637311227
+        },
+        "target": {
+          "x": -37.5,
+          "z": 90
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-63007",
+      "raidId": "raid-17-night",
+      "day": 17,
+      "animalId": "animal-44075",
+      "targetId": "plant-42551",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 10106.00000001795,
+        "animal": {
+          "x": -23.977319622809333,
+          "z": 52.759859061921055,
+          "heading": 1.744914157674341
+        },
+        "target": {
+          "x": -22.5,
+          "z": 52.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-63010",
+      "raidId": "raid-17-night",
+      "day": 17,
+      "animalId": "animal-44077",
+      "targetId": "plant-43499",
+      "species": "buffalo",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 10106.600000017952,
+        "animal": {
+          "x": -35.969782020811394,
+          "z": 90.35118789296891,
+          "heading": -1.7963915637311227
+        },
+        "target": {
+          "x": -37.5,
+          "z": 90
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-63013",
+      "raidId": "raid-17-night",
+      "day": 17,
+      "animalId": "animal-44073",
+      "targetId": "plant-36665",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 10115.300000017984,
+        "animal": {
+          "x": -32.64623904300217,
+          "z": 34.662784768183776,
+          "heading": -2.931966061760195
+        },
+        "target": {
+          "x": -33,
+          "z": 33
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-63017",
+      "raidId": "raid-17-night",
+      "day": 17,
+      "animalId": "animal-44073",
+      "targetId": "plant-36665",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 10117.00000001799,
+        "animal": {
+          "x": -32.64623904300217,
+          "z": 34.662784768183776,
+          "heading": -2.931966061760195
+        },
+        "target": {
+          "x": -33,
+          "z": 33
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-63020",
+      "raidId": "raid-17-night",
+      "day": 17,
+      "animalId": "animal-44073",
+      "targetId": "plant-42903",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 10121.800000018007,
+        "animal": {
+          "x": -32.81103151603408,
+          "z": 33.189464682101296,
+          "heading": -3.030204526771019
+        },
+        "target": {
+          "x": -33,
+          "z": 31.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-63024",
+      "raidId": "raid-17-night",
+      "day": 17,
+      "animalId": "animal-44077",
+      "targetId": "plant-26208",
+      "species": "buffalo",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 10125.800000018022,
+        "animal": {
+          "x": -20.54864535280011,
+          "z": 73.16843610182616,
+          "heading": 2.4101728331798973
+        },
+        "target": {
+          "x": -19.5,
+          "z": 72
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-63028",
+      "raidId": "raid-17-night",
+      "day": 17,
+      "animalId": "animal-44075",
+      "targetId": "plant-43533",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 10132.000000018044,
+        "animal": {
+          "x": -33.99966389115411,
+          "z": 81.08590531498596,
+          "heading": -0.3400745842865043
+        },
+        "target": {
+          "x": -34.5,
+          "z": 82.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-63032",
+      "raidId": "raid-17-night",
+      "day": 17,
+      "animalId": "animal-44075",
+      "targetId": "plant-43533",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 10133.70000001805,
+        "animal": {
+          "x": -33.99966389115411,
+          "z": 81.08590531498596,
+          "heading": -0.3400745842865043
+        },
+        "target": {
+          "x": -34.5,
+          "z": 82.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-68090",
+      "raidId": "raid-18-night",
+      "day": 18,
+      "animalId": "animal-47720",
+      "targetId": "plant-42863",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 10727.90000002013,
+        "animal": {
+          "x": -31.26830569407114,
+          "z": 86.38824932341947,
+          "heading": -2.51422585472557
+        },
+        "target": {
+          "x": -33,
+          "z": 84
+        },
+        "shield": {
+          "id": "spell-47723",
+          "x": -33,
+          "z": 84,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-68092",
+      "raidId": "raid-18-night",
+      "day": 18,
+      "animalId": "animal-47720",
+      "targetId": "plant-42863",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 10729.600000020137,
+        "animal": {
+          "x": -31.26830569407114,
+          "z": 86.38824932341947,
+          "heading": -2.51422585472557
+        },
+        "target": {
+          "x": -33,
+          "z": 84
+        },
+        "shield": {
+          "id": "spell-47723",
+          "x": -33,
+          "z": 84,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-68095",
+      "raidId": "raid-18-night",
+      "day": 18,
+      "animalId": "animal-47720",
+      "targetId": "plant-42863",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 10734.300000020154,
+        "animal": {
+          "x": -31.26830569407114,
+          "z": 86.38824932341947,
+          "heading": -2.51422585472557
+        },
+        "target": {
+          "x": -33,
+          "z": 84
+        },
+        "shield": {
+          "id": "spell-47723",
+          "x": -33,
+          "z": 84,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-68098",
+      "raidId": "raid-18-night",
+      "day": 18,
+      "animalId": "animal-47721",
+      "targetId": "plant-46447",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 10735.300000020157,
+        "animal": {
+          "x": -35.13090736703762,
+          "z": 79.22257024147103,
+          "heading": -2.5236063387567214
+        },
+        "target": {
+          "x": -36,
+          "z": 78
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-68102",
+      "raidId": "raid-18-night",
+      "day": 18,
+      "animalId": "animal-47721",
+      "targetId": "plant-46447",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 10737.000000020163,
+        "animal": {
+          "x": -35.13090736703762,
+          "z": 79.22257024147103,
+          "heading": -2.5236063387567214
+        },
+        "target": {
+          "x": -36,
+          "z": 78
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-68106",
+      "raidId": "raid-18-night",
+      "day": 18,
+      "animalId": "animal-47719",
+      "targetId": "plant-36360",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 10741.40000002018,
+        "animal": {
+          "x": -42.287065356953704,
+          "z": 70.19112952767453,
+          "heading": -2.3471246335216867
+        },
+        "target": {
+          "x": -43.5,
+          "z": 69
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-68109",
+      "raidId": "raid-18-night",
+      "day": 18,
+      "animalId": "animal-47721",
+      "targetId": "plant-46266",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 10742.100000020182,
+        "animal": {
+          "x": -34.78354517131692,
+          "z": 81.02704306382608,
+          "heading": 0.1901743598452123
+        },
+        "target": {
+          "x": -34.5,
+          "z": 82.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-68113",
+      "raidId": "raid-18-night",
+      "day": 18,
+      "animalId": "animal-47719",
+      "targetId": "plant-36360",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 10744.800000020192,
+        "animal": {
+          "x": -42.287065356953704,
+          "z": 70.19112952767453,
+          "heading": -2.3471246335216867
+        },
+        "target": {
+          "x": -43.5,
+          "z": 69
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-68118",
+      "raidId": "raid-18-night",
+      "day": 18,
+      "animalId": "animal-47722",
+      "targetId": "plant-42903",
+      "species": "buffalo",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 10764.800000020265,
+        "animal": {
+          "x": -32.565587806544464,
+          "z": 33.008703432148664,
+          "heading": -2.861238841157822
+        },
+        "target": {
+          "x": -33,
+          "z": 31.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-68121",
+      "raidId": "raid-18-night",
+      "day": 18,
+      "animalId": "animal-47722",
+      "targetId": "plant-47608",
+      "species": "buffalo",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 10789.700000020355,
+        "animal": {
+          "x": -44.42340261847038,
+          "z": 63.03971391172374,
+          "heading": -0.37606087889063966
+        },
+        "target": {
+          "x": -45,
+          "z": 64.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-68125",
+      "raidId": "raid-18-night",
+      "day": 18,
+      "animalId": "animal-47722",
+      "targetId": "plant-47608",
+      "species": "buffalo",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 10794.400000020372,
+        "animal": {
+          "x": -44.42340261847038,
+          "z": 63.03971391172374,
+          "heading": -0.37606087889063966
+        },
+        "target": {
+          "x": -45,
+          "z": 64.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-68129",
+      "raidId": "raid-18-night",
+      "day": 18,
+      "animalId": "animal-47722",
+      "targetId": "plant-46266",
+      "species": "buffalo",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 10809.600000020358,
+        "animal": {
+          "x": -35.21321533217164,
+          "z": 81.10134926091061,
+          "heading": 0.47156078728977857
+        },
+        "target": {
+          "x": -34.5,
+          "z": 82.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-68132",
+      "raidId": "raid-18-night",
+      "day": 18,
+      "animalId": "animal-47722",
+      "targetId": "plant-42482",
+      "species": "buffalo",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 10842.300000020477,
+        "animal": {
+          "x": -34.5434199412871,
+          "z": 34.51968784954648,
+          "heading": 3.127214694210239
+        },
+        "target": {
+          "x": -34.5,
+          "z": 31.5
+        },
+        "shield": {
+          "id": "spell-47724",
+          "x": -34.5,
+          "z": 31.5,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-68134",
+      "raidId": "raid-18-night",
+      "day": 18,
+      "animalId": "animal-47722",
+      "targetId": "plant-42482",
+      "species": "buffalo",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 10845.70000002049,
+        "animal": {
+          "x": -34.5434199412871,
+          "z": 34.51968784954648,
+          "heading": 3.127214694210239
+        },
+        "target": {
+          "x": -34.5,
+          "z": 31.5
+        },
+        "shield": {
+          "id": "spell-47724",
+          "x": -34.5,
+          "z": 31.5,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-73271",
+      "raidId": "raid-19-night",
+      "day": 19,
+      "animalId": "animal-51399",
+      "targetId": "plant-50893",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 11373.500000022397,
+        "animal": {
+          "x": -14.755402170576946,
+          "z": 74.88902498952686,
+          "heading": 2.7316678402439036
+        },
+        "target": {
+          "x": -13.5,
+          "z": 72
+        },
+        "shield": {
+          "id": "spell-51402",
+          "x": -13.5,
+          "z": 72,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-73273",
+      "raidId": "raid-19-night",
+      "day": 19,
+      "animalId": "animal-51399",
+      "targetId": "plant-50893",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 11375.200000022403,
+        "animal": {
+          "x": -14.755402170576946,
+          "z": 74.88902498952686,
+          "heading": 2.7316678402439036
+        },
+        "target": {
+          "x": -13.5,
+          "z": 72
+        },
+        "shield": {
+          "id": "spell-51402",
+          "x": -13.5,
+          "z": 72,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-73277",
+      "raidId": "raid-19-night",
+      "day": 19,
+      "animalId": "animal-51401",
+      "targetId": "plant-47595",
+      "species": "rhino",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 11385.10000002244,
+        "animal": {
+          "x": -37.4751825011661,
+          "z": 70.5157280743095,
+          "heading": -2.353205093312781
+        },
+        "target": {
+          "x": -39,
+          "z": 69
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-73281",
+      "raidId": "raid-19-night",
+      "day": 19,
+      "animalId": "animal-51401",
+      "targetId": "plant-47595",
+      "species": "rhino",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 11386.800000022446,
+        "animal": {
+          "x": -37.4751825011661,
+          "z": 70.5157280743095,
+          "heading": -2.353205093312781
+        },
+        "target": {
+          "x": -39,
+          "z": 69
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-73285",
+      "raidId": "raid-19-night",
+      "day": 19,
+      "animalId": "animal-51400",
+      "targetId": "plant-50106",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 11400.200000022494,
+        "animal": {
+          "x": -32.84116189155572,
+          "z": 32.991566443476735,
+          "heading": -3.0355016790614338
+        },
+        "target": {
+          "x": -33,
+          "z": 31.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-73290",
+      "raidId": "raid-19-night",
+      "day": 19,
+      "animalId": "animal-51400",
+      "targetId": "plant-50106",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 11401.9000000225,
+        "animal": {
+          "x": -32.84116189155572,
+          "z": 32.991566443476735,
+          "heading": -3.0355016790614338
+        },
+        "target": {
+          "x": -33,
+          "z": 31.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-73292",
+      "raidId": "raid-19-night",
+      "day": 19,
+      "animalId": "animal-51398",
+      "targetId": "plant-42664",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 11402.400000022502,
+        "animal": {
+          "x": -33.960803338975495,
+          "z": 41.902446770402904,
+          "heading": 2.540943123346805
+        },
+        "target": {
+          "x": -33,
+          "z": 40.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-73295",
+      "raidId": "raid-19-night",
+      "day": 19,
+      "animalId": "animal-51401",
+      "targetId": "plant-46155",
+      "species": "rhino",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 11403.700000022507,
+        "animal": {
+          "x": -17.14999947355506,
+          "z": 70.50150456404452,
+          "heading": 1.5714961240820247
+        },
+        "target": {
+          "x": -15,
+          "z": 70.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-73299",
+      "raidId": "raid-19-night",
+      "day": 19,
+      "animalId": "animal-51398",
+      "targetId": "plant-42664",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 11404.100000022509,
+        "animal": {
+          "x": -33.960803338975495,
+          "z": 41.902446770402904,
+          "heading": 2.540943123346805
+        },
+        "target": {
+          "x": -33,
+          "z": 40.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-73303",
+      "raidId": "raid-19-night",
+      "day": 19,
+      "animalId": "animal-51401",
+      "targetId": "plant-46155",
+      "species": "rhino",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 11407.600000022521,
+        "animal": {
+          "x": -17.14999947355506,
+          "z": 70.50150456404452,
+          "heading": 1.5714961240820247
+        },
+        "target": {
+          "x": -15,
+          "z": 70.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-73306",
+      "raidId": "raid-19-night",
+      "day": 19,
+      "animalId": "animal-51401",
+      "targetId": "plant-50163",
+      "species": "rhino",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 11441.300000022644,
+        "animal": {
+          "x": -33.59284390802644,
+          "z": 39.49244733387097,
+          "heading": 1.8018930939927256
+        },
+        "target": {
+          "x": -31.5,
+          "z": 39
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-73310",
+      "raidId": "raid-19-night",
+      "day": 19,
+      "animalId": "animal-51401",
+      "targetId": "plant-50163",
+      "species": "rhino",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 11446.000000022661,
+        "animal": {
+          "x": -33.59284390802644,
+          "z": 39.49244733387097,
+          "heading": 1.8018930939927256
+        },
+        "target": {
+          "x": -31.5,
+          "z": 39
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-73314",
+      "raidId": "raid-19-night",
+      "day": 19,
+      "animalId": "animal-51400",
+      "targetId": "plant-42711",
+      "species": "hyena",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 11453.300000022688,
+        "animal": {
+          "x": -6.66757412458798,
+          "z": 85.65674098246816,
+          "heading": 0.46122944272495875
+        },
+        "target": {
+          "x": -6,
+          "z": 87
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-78620",
+      "raidId": "raid-20-night",
+      "day": 20,
+      "animalId": "animal-55209",
+      "targetId": "plant-42711",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 12003.51634562264,
+        "animal": {
+          "x": -7.4514754002849894,
+          "z": 87.88499670189641,
+          "heading": 2.118333815760546
+        },
+        "target": {
+          "x": -6,
+          "z": 87
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-78622",
+      "raidId": "raid-20-night",
+      "day": 20,
+      "animalId": "animal-55210",
+      "targetId": "plant-39150",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 12004.300000024614,
+        "animal": {
+          "x": -28.379568822651528,
+          "z": 92.01400661423473,
+          "heading": -1.8779605750335002
+        },
+        "target": {
+          "x": -30,
+          "z": 91.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-78627",
+      "raidId": "raid-20-night",
+      "day": 20,
+      "animalId": "animal-55211",
+      "targetId": "plant-47071",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 12005.700000024619,
+        "animal": {
+          "x": -27.42908365807212,
+          "z": 104.02243251455882,
+          "heading": -0.8309363900314538
+        },
+        "target": {
+          "x": -28.5,
+          "z": 105
+        },
+        "shield": null
+      },
+      "actorInside": false,
+      "targetInside": false
+    },
+    {
+      "eventId": "event-78630",
+      "raidId": "raid-20-night",
+      "day": 20,
+      "animalId": "animal-55209",
+      "targetId": "plant-53864",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 12007.700000024626,
+        "animal": {
+          "x": -6.16425403633373,
+          "z": 88.15321692292315,
+          "heading": 1.3653643777690858
+        },
+        "target": {
+          "x": -4.5,
+          "z": 88.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-78633",
+      "raidId": "raid-20-night",
+      "day": 20,
+      "animalId": "animal-55210",
+      "targetId": "plant-39150",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 12007.700000024626,
+        "animal": {
+          "x": -28.379568822651528,
+          "z": 92.01400661423473,
+          "heading": -1.8779605750335002
+        },
+        "target": {
+          "x": -30,
+          "z": 91.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-78639",
+      "raidId": "raid-20-night",
+      "day": 20,
+      "animalId": "animal-55211",
+      "targetId": "plant-47071",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 12009.100000024631,
+        "animal": {
+          "x": -27.42908365807212,
+          "z": 104.02243251455882,
+          "heading": -0.8309363900314538
+        },
+        "target": {
+          "x": -28.5,
+          "z": 105
+        },
+        "shield": null
+      },
+      "actorInside": false,
+      "targetInside": false
+    },
+    {
+      "eventId": "event-78642",
+      "raidId": "raid-20-night",
+      "day": 20,
+      "animalId": "animal-55209",
+      "targetId": "plant-53864",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 12011.100000024639,
+        "animal": {
+          "x": -6.16425403633373,
+          "z": 88.15321692292315,
+          "heading": 1.3653643777690858
+        },
+        "target": {
+          "x": -4.5,
+          "z": 88.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-78644",
+      "raidId": "raid-20-night",
+      "day": 20,
+      "animalId": "animal-55210",
+      "targetId": "plant-47508",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 12012.000000024642,
+        "animal": {
+          "x": -29.822604618348116,
+          "z": 91.7763055077499,
+          "heading": -1.7340532218526552
+        },
+        "target": {
+          "x": -31.5,
+          "z": 91.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-78646",
+      "raidId": "raid-20-night",
+      "day": 20,
+      "animalId": "animal-55212",
+      "targetId": "plant-54005",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 12012.500000024644,
+        "animal": {
+          "x": -19.455769952423925,
+          "z": 76.00813353823509,
+          "heading": 2.615694913294799
+        },
+        "target": {
+          "x": -18,
+          "z": 73.5
+        },
+        "shield": {
+          "id": "spell-55213",
+          "x": -18,
+          "z": 73.5,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-78648",
+      "raidId": "raid-20-night",
+      "day": 20,
+      "animalId": "animal-55212",
+      "targetId": "plant-54005",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 12017.20000002466,
+        "animal": {
+          "x": -19.455769952423925,
+          "z": 76.00813353823509,
+          "heading": 2.615694913294799
+        },
+        "target": {
+          "x": -18,
+          "z": 73.5
+        },
+        "shield": {
+          "id": "spell-55213",
+          "x": -18,
+          "z": 73.5,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-78650",
+      "raidId": "raid-20-night",
+      "day": 20,
+      "animalId": "animal-55212",
+      "targetId": "plant-54005",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 12021.100000024675,
+        "animal": {
+          "x": -19.455769952423925,
+          "z": 76.00813353823509,
+          "heading": 2.615694913294799
+        },
+        "target": {
+          "x": -18,
+          "z": 73.5
+        },
+        "shield": {
+          "id": "spell-55213",
+          "x": -18,
+          "z": 73.5,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-78652",
+      "raidId": "raid-20-night",
+      "day": 20,
+      "animalId": "animal-55212",
+      "targetId": "plant-54005",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 12024.500000024687,
+        "animal": {
+          "x": -19.455769952423925,
+          "z": 76.00813353823509,
+          "heading": 2.615694913294799
+        },
+        "target": {
+          "x": -18,
+          "z": 73.5
+        },
+        "shield": {
+          "id": "spell-55213",
+          "x": -18,
+          "z": 73.5,
+          "radius": 1.95
+        }
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-78656",
+      "raidId": "raid-20-night",
+      "day": 20,
+      "animalId": "animal-55209",
+      "targetId": "plant-43377",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 12037.800000024736,
+        "animal": {
+          "x": -39.01536300455784,
+          "z": 69.82816241871053,
+          "heading": -2.0796246802402294
+        },
+        "target": {
+          "x": -40.5,
+          "z": 69
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-78660",
+      "raidId": "raid-20-night",
+      "day": 20,
+      "animalId": "animal-55208",
+      "targetId": "plant-38734",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 12041.70000002475,
+        "animal": {
+          "x": -27.042937483681023,
+          "z": 36.62423243749371,
+          "heading": -1.029605056224758
+        },
+        "target": {
+          "x": -28.5,
+          "z": 37.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-78664",
+      "raidId": "raid-20-night",
+      "day": 20,
+      "animalId": "animal-55208",
+      "targetId": "plant-38734",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 12045.600000024764,
+        "animal": {
+          "x": -27.042937483681023,
+          "z": 36.62423243749371,
+          "heading": -1.029605056224758
+        },
+        "target": {
+          "x": -28.5,
+          "z": 37.5
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-78667",
+      "raidId": "raid-20-night",
+      "day": 20,
+      "animalId": "animal-55208",
+      "targetId": "plant-53656",
+      "species": "warthog",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 12050.400000024782,
+        "animal": {
+          "x": -25.883241728307855,
+          "z": 37.28173747803798,
+          "heading": -2.424870765217355
+        },
+        "target": {
+          "x": -27,
+          "z": 36
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-78671",
+      "raidId": "raid-20-night",
+      "day": 20,
+      "animalId": "animal-55211",
+      "targetId": "plant-54123",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 12056.700000024804,
+        "animal": {
+          "x": -46.009247692609335,
+          "z": 52.3644274157282,
+          "heading": -2.7963235974139318
+        },
+        "target": {
+          "x": -46.5,
+          "z": 51
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    },
+    {
+      "eventId": "event-78675",
+      "raidId": "raid-20-night",
+      "day": 20,
+      "animalId": "animal-55211",
+      "targetId": "plant-54123",
+      "species": "lion",
+      "type": "AnimalLogicalHit",
+      "presentation": {
+        "elapsed": 12058.40000002481,
+        "animal": {
+          "x": -46.009247692609335,
+          "z": 52.3644274157282,
+          "heading": -2.7963235974139318
+        },
+        "target": {
+          "x": -46.5,
+          "z": 51
+        },
+        "shield": null
+      },
+      "actorInside": true,
+      "targetInside": true
+    }
+  ],
+  "milliseconds": 376.7627,
+  "unknowns": [
+    "Construction-time native rejection receipts and pre-construction snapshot were not retained",
+    "Final plants/suppressions/gate state differ from construction time; terminal classifications are not exact historical cause",
+    "Complete actor movement paths were not retained; attack coordinates and physical terminal exits cannot reconstruct paths",
+    "Local perpendicular crossing proves only that segment at terminal state, not entry-to-target reachability or protection",
+    "No enclosure correction, gameplay commands, A-star path searches, clock advancement, RNG draws, money or source mutations"
+  ]
+}
