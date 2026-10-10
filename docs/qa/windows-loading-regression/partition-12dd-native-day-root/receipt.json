@@ -1,0 +1,108 @@
+{
+  "source": "12dd78a2d4fb375ad569ea695a0253be1e78de65",
+  "officialRun": 38019388562,
+  "exeSha256": "eb3aa72b96258c65bdd6fd551990bcbc26239afdd3789f3be62445239e6a2bcf",
+  "ci": {
+    "ok": false,
+    "loading": {
+      "canvas": {
+        "height": 720,
+        "width": 1028
+      },
+      "displayedProgress": "87",
+      "focused": true,
+      "phaseLabel": "Bringing your world to life...",
+      "readyGateReached": false,
+      "scope": "Presentation snapshot only; displayed progress and canvas dimensions do not establish world readiness or GPU identity.",
+      "stageBusy": "true",
+      "visibility": "visible",
+      "worldWaitMs": 90018.19999999995
+    },
+    "errors": [
+      "Error: Production world did not finish loading"
+    ]
+  },
+  "local": {
+    "ok": true,
+    "loading": {
+      "canvas": {
+        "height": 576,
+        "width": 1024
+      },
+      "displayedProgress": null,
+      "focused": true,
+      "phaseLabel": null,
+      "readyGateReached": true,
+      "scope": "Presentation snapshot only; displayed progress and canvas dimensions do not establish world readiness or GPU identity.",
+      "stageBusy": "false",
+      "visibility": "visible",
+      "worldWaitMs": 17042.700000047684
+    },
+    "errors": [],
+    "labels": [
+      "initial",
+      "middle",
+      "late",
+      "mature"
+    ]
+  },
+  "files": {
+    "ci/desktop-smoke.json.gz": {
+      "bytes": 1583,
+      "sha256": "e4278a18ac272a168429a5412ff15a94c5cc07f6bb90114455c94f8f07a4ff1c",
+      "originalBytes": 3252,
+      "originalSha256": "93061a2501320ccc4a21b67b2717083ad288e376de48c2a09c9499439ac843c3"
+    },
+    "local/desktop-smoke.json.gz": {
+      "bytes": 4932706,
+      "sha256": "2c436dda43aebc83cc8f1deaa2cb23b14982ae5a33e440726ed58dbfd16b443e",
+      "originalBytes": 6523975,
+      "originalSha256": "783462f7ccf3ac77941ca26b36ee8b24614be08e6e08056e717d5aed09137f89"
+    },
+    "ci/run-original.json": {
+      "bytes": 13333,
+      "sha256": "329077be3de306f4a29dbe412e8975f8d97bf3cdb682bd2ed81ee51edbd2e4e0"
+    },
+    "ci/job-original.json": {
+      "bytes": 4360,
+      "sha256": "757fe54233726d582de375317cae9a98cfa27c0f67b38fa1d230d21ff71ca2d8"
+    },
+    "ci/artifacts-original.json": {
+      "bytes": 2279,
+      "sha256": "f3066268ea25f8802a56c180fc3189a801723104d4739eba334b146d9c9dfc08"
+    },
+    "ci/receipt.json": {
+      "bytes": 868,
+      "sha256": "7507561ac335629bc3cddcb7d67925d21d9eac5f547a4e40d8ed39fd19045ae4"
+    },
+    "exe-receipt.json": {
+      "bytes": 302,
+      "sha256": "6698e9dcb4b58b493a126ef581e27c326c0e8b90758b11d586ffaba2b7337d86"
+    },
+    "local/launch-receipt.json": {
+      "bytes": 979,
+      "sha256": "884f7ffa3259dc67e26900a9716ec77041d27686089856971dad886a4f25fe41"
+    },
+    "local/extraction-receipt.json": {
+      "bytes": 5098,
+      "sha256": "ded1fd0b80cbb8420c0860252417e984dc587eac3b8e9608a8e2630c6ef9fa2c"
+    },
+    "local/initial.png": {
+      "bytes": 961830,
+      "sha256": "b5f22ee3ae7b8d6f3aca4424e57ca81ea6b55c2650c84075b318c46c700456f3"
+    },
+    "local/middle.png": {
+      "bytes": 985326,
+      "sha256": "7f307ea897b5c04762d6dc613648f0ccaa0b2013316ea57aceb2b9214283dcc0"
+    },
+    "local/late.png": {
+      "bytes": 989667,
+      "sha256": "153c4e70a17eb7af98c276b90521c5de305a334281246aaa2f675439a1eb2526"
+    },
+    "local/mature.png": {
+      "bytes": 997884,
+      "sha256": "dff23864eefc3f3f9bacbb08ad239a3b1ca801538c9760d151ba0248a82316e3"
+    }
+  },
+  "scope": "Same official EXE, different machines and opt-in readback overhead; not causal A/B, GPU benchmark, HUD screenshot, physical input or production acceptance."
+}
