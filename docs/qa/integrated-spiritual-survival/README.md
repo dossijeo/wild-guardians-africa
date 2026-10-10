@@ -155,3 +155,22 @@ or military coefficients. No 14/21/100-night expansion is approved yet.
 Two attempted canyon launches used an invalid biome key (`gran_canon`); their
 zero-day ENOENT harness failures are retained. Corrected runs use the actual
 registered key `gran-canon`. This is not an economic or navigation defeat.
+
+## Candidate 2 scaled native fixture
+
+Fresh repeat frozen at 9fd01ec2; full snapshots, receipts, ledger and hashes in
+`native-power-50-200-500-v2/`. No campaign claim: these are explicitly prefunded
+plots, identical per-size initial states and the same real workers/navigation.
+
+| Plants | No magic income / deliveries | Moderate | Intensive |
+|---:|---:|---:|---:|
+|50|484 / 44|579 / 44|564 / 42|
+|200|726 / 66|788 / 65|769 / 61|
+|500|22 / 2|22 / 2|32 / 2|
+
+Same outcomes as candidate 1 for the millet-only fixtures, as expected: the
+new per-plant monetary concentration cap changes expensive-crop allocation,
+not millet. Do not attribute nonexistent differences to that change. CPU
+measurements are retained per case, but these are different productive workloads
+and not an isolated GPU performance benchmark. Candidate-2 focused checks: 22
+pass, zero failures. Build: 11.81 seconds on this machine.
