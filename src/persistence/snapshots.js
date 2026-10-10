@@ -1,3 +1,4 @@
+import {validDamageProfile} from '../simulation/raid-agricultural-impact.js';
 import {validRaidContention} from './raid-contention-snapshot.js';
 import {BASIC_STEPS,TUTORIAL_IDS} from '../tutorial/messages.js';
 import {validExitFrontier} from './exit-connector-snapshot.js';
@@ -29,6 +30,10 @@ export function validateSnapshot(state) {
   }
   if(!validRaidContention(state))throw new Error('Turnos de incursión inválidos');
   const ids=new Set();
+  for(const animal of state.raid?.animals??[]){
+    if(animal.damageProfile!==undefined&&!validDamageProfile(animal.damageProfile))throw new Error('Perfil de impacto inválido');
+    const ids=animal.agriculturalAttackIds;if(ids!==undefined&&(!Array.isArray(ids)||ids.length>64||new Set(ids).size!==ids.length||ids.some(id=>typeof id!=='string'||!id.length||id.length>96)))throw new Error('Impactos agrícolas inválidos');
+  }
   for(const animal of state.raid?.animals??[])if(animal.exit!==undefined&&(!animal.exit||!Number.isFinite(animal.exit.x)||!Number.isFinite(animal.exit.z)))throw new Error('Salida de animal inválida');
   for(const animal of state.raid?.animals??[])if(animal.exitConnectorSearch!==undefined){
     const search=animal.exitConnectorSearch;
@@ -44,7 +49,7 @@ export function validateSnapshot(state) {
   }
   for(const p of state.plants)if(p.multiplyHarvest!==undefined&&typeof p.multiplyHarvest!=='boolean')throw new Error('Beneficio de multiplicación inválido');
   for(const a of state.spells)if(a.exposureApplied!==undefined&&(a.kind!=='multiply'||typeof a.exposureApplied!=='boolean'))throw new Error('Exposición mágica inválida');
-  for(const p of state.plants)if(p.attackHits!==undefined&&(!Number.isInteger(p.attackHits)||p.attackHits<0||p.attackHits>2||p.alive&&p.attackHits>=2))throw new Error('Daño de cultivo inválido');
+  for(const p of state.plants)if(p.attackHits!==undefined&&(!Number.isFinite(p.attackHits)||!Number.isSafeInteger(p.attackHits*2)||p.attackHits<0||p.attackHits>2||p.alive&&p.attackHits>=2))throw new Error('Daño de cultivo inválido');
   const workers=new Map(state.workers.map(w=>[w.id,w])),crates=new Map(state.crates.map(c=>[c.id,c])),plants=new Map(state.plants.map(p=>[p.id,p]));
   for(const structure of state.structures)if(structure.kind==='wall'&&(structure.baseScaleX!==undefined&&(!Number.isFinite(structure.baseScaleX)||structure.baseScaleX<=0)||structure.autoGate!==undefined&&typeof structure.autoGate!=='boolean'))throw new Error('Módulo de defensa inválido');
   for(const structure of state.structures)if(structure.gateOpen!==undefined&&(!structure.gate||!Number.isFinite(structure.gateOpen)||structure.gateOpen<0||structure.gateOpen>1))throw new Error('Apertura de puerta inválida');

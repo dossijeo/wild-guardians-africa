@@ -28,9 +28,9 @@ for(const id of species)test(`${id}: first physical crop hit survives reload; se
  s=deserialize(serialize(s));nav=navigation(s);until(s,nav,()=>!s.plants[0].alive);
  assert.equal(s.plants[0].attackHits,2);assert.equal(s.events.filter(e=>e.type==='CropHit').length,2);assert.equal(s.events.filter(e=>e.type==='CropDestroyed').length,1);
 });
-test('saved damage cannot be fractional, exceed two strikes or leave a living crop with two strikes',()=>{
+test('saved damage supports exact half points but rejects invalid HP and living crops at two points',()=>{
  const s=Game.newGame();Game.resume(s,'intro');const nav=navigation(s);Game.placeStructure(s,'center',{x:-12,z:0},nav);Game.plant(s,'seed','mijo',8,4,nav);
- for(const hits of [-1,.5,3,2]){s.plants[0].attackHits=hits;assert.throws(()=>serialize(s));}s.plants[0].attackHits=1;assert.doesNotThrow(()=>serialize(s));
+ for(const hits of [-1,.25,3,2]){s.plants[0].attackHits=hits;assert.throws(()=>serialize(s));}for(const hits of [.5,1,1.5]){s.plants[0].attackHits=hits;assert.doesNotThrow(()=>serialize(s));}
 });
 
 for(const [index,id] of species.entries())for(const count of [1,2,5,10,20,50])test(`introductory ${id} threatens crops and buildings but cannot destroy all ${count} starting plants`,()=>{
