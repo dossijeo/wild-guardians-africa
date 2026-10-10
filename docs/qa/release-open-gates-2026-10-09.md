@@ -25,6 +25,14 @@ full Validate run38025767621 passes3882tests,0fail with one real-PowerShell
 test skipped on Linux; all asset/build/package checks pass. Its six earlier
 shallow-Git-reference failures remain archived separately.
 
+Windows run38027670851, exact source7eaeacc0, is terminal FAILURE despite
+successful compilation and installer checks. The default smoke did not reach
+world readiness within90seconds (90100.9ms; displayed76%, Awakening nature).
+[Original report and full log](windows-loading-regression/progress65-7e-native-ci-root/README.md)
+retain this negative result. Trace and overlap were OFF; the label does not
+identify the blocking phase. Native visibility was skipped. No rerun or
+readiness acceptance follows from compilation alone.
+
 Advanced-progress fifth-plant catch-up is being validated by a new opt-in
 QA selector; no native65% result is claimed yet. Portrait, composited UI,
 physical touch/mouse, all-biome/culture visual acceptance and final deduplicated
