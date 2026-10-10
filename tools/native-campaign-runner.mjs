@@ -17,6 +17,7 @@ import {intensiveRunProvenance} from './intensive-run-provenance.mjs';
 import {createFarmDefensePolicy} from './farm-defense-policy.mjs';
 import {createNativeExpandingDefensePolicy} from './native-expanding-defense-policy.mjs';
 import {createNativeCampaignEvidence} from './native-campaign-evidence.mjs';
+import {createNativeRaidCampaignEvidence} from './native-raid-campaign-evidence.mjs';
 import {NativeCampaignEntryDriver} from './native-campaign-entry-driver.mjs';
 import {nativeCampaignStrategy,affordableOpening,villageSavingsFromTotals,NATIVE_CAMPAIGN_PROTOCOL} from './native-campaign-protocol.mjs';
 import {createNativeCampaignPlots} from './native-campaign-plots.mjs';
@@ -36,7 +37,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',profile='
  const defense=defend?(defensePolicy==='expanding'?createNativeExpandingDefensePolicy({repairWalls:policy.repair,reserveMode:'none'}):createFarmDefensePolicy()):null;
  const driver=new NativeCampaignEntryDriver(nav);
  try {
- const evidence=nativeEvidence?createNativeCampaignEvidence(s):null;
+ const evidence=nativeEvidence?createNativeCampaignEvidence(s):null,raidEvidence=createNativeRaidCampaignEvidence(s);
  const command=kind=>`intensive-${kind}-${sequence++}`,center=s.structures[0],origin=centerServicePoint(center,s,.8);
  if(cameraEntry){
   const pose=nativeCameraPose(nav.field,[center.x,0,center.z],nav.field.canyon?0:.5,nav.field.canyon?1.18:1.16,nav.field.canyon?34:38);
@@ -142,7 +143,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',profile='
    Game.tick(s,dt,nav);evidence?.finishDecision(s);
    const actualDt=s.elapsed-tickStart,daylightDt=tickTime<300?Math.min(actualDt,300-tickTime):0;daylightSeconds+=daylightDt;
    if(!decision.actions){idle[decision.reason]=(idle[decision.reason]??0)+actualDt;unoccupiedSeconds+=daylightDt;idleRun+=daylightDt;longestIdle=Math.max(longestIdle,idleRun);}else idleRun=0;
-   collect();evidence?.observe(s);onTick?.(s,nav);await driver.advancePresentation(s);
+   collect();evidence?.observe(s);raidEvidence.observe(s);onTick?.(s,nav);await driver.advancePresentation(s);
    if(s.raid&&!savedRaids.has(s.raid.id)){savedRaids.add(s.raid.id);s=deserialize(serialize(s));nav.setState(s);reloads++;}
    if(s.elapsed-start>2400)throw new Error(`Unfinished real incursion on day ${day}: ${JSON.stringify(s.raid)}`);
   }
@@ -155,6 +156,6 @@ export async function simulateNativeCampaign({days=100,strategy='good',profile='
  }
  const idleRuns=daily.map(r=>r.longestIdle).sort((a,b)=>a-b),unoccupied=daily.reduce((n,r)=>n+r.unoccupiedSeconds,0),daylight=daily.reduce((n,r)=>n+r.daylightSeconds,0);
  const activity={daylightSeconds:daylight,unoccupiedSeconds:unoccupied,unoccupiedFraction:daylight?unoccupied/daylight:null,longestIdle:Math.max(...idleRuns),p90LongestIdle:idleRuns[Math.ceil(idleRuns.length*.9)-1]};
- return {protocol:NATIVE_CAMPAIGN_PROTOCOL,strategy,entryTransport:driver.report(),peaceAfter100:true,expansion:expansion?.report()??null,plotSearch:plotSearch.report(),...(evidence?{nativeEvidence:evidence.report(s)}:{}),biome:s.biome,culture:s.culture,seed:s.seed,policy:{profile,mixed,middayHiring,plantsPerWorker,defend,cashPolicy:policy.cashPolicy,reserveMaintenance,burstPlanting,cameraEntry,defensePolicy},defense:defense?.report(s)??null,additionalHiring,result:s.result,completedNights:s.completedNights,money:numberOf(s.ledger.balance),maximumLiving,plots:plots.length,reloads,counts,activity,daily,state:s,nav};
+ return {protocol:NATIVE_CAMPAIGN_PROTOCOL,strategy,raidEvidence:raidEvidence.report(s),entryTransport:driver.report(),peaceAfter100:true,expansion:expansion?.report()??null,plotSearch:plotSearch.report(),...(evidence?{nativeEvidence:evidence.report(s)}:{}),biome:s.biome,culture:s.culture,seed:s.seed,policy:{profile,mixed,middayHiring,plantsPerWorker,defend,cashPolicy:policy.cashPolicy,reserveMaintenance,burstPlanting,cameraEntry,defensePolicy},defense:defense?.report(s)??null,additionalHiring,result:s.result,completedNights:s.completedNights,money:numberOf(s.ledger.balance),maximumLiving,plots:plots.length,reloads,counts,activity,daily,state:s,nav};
  } catch(error){error.nativeCampaignPartial={strategy,seed:s.seed,day:s.day,time:s.time,result:s.result,state:serialize(s),entryTransport:driver.report()};throw error;} finally {await driver.dispose();}
 }
