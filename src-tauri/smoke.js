@@ -3,6 +3,10 @@
   if (window.__desktopSmokeStarted) return;
   window.__desktopSmokeStarted = true;
   const report = {ok: false, origin: location.origin, userAgent: navigator.userAgent, secureContext: isSecureContext, checks: {}, errors: []};
+  // Explicit CI tolerance is not a performance target. Local smoke keeps its
+  // original budget; always retain observed loading time independently.
+  const worldTimeoutMs = window.__desktopSmokeWorldTimeoutMs === 300000 ? 300000 : 90000;
+  report.checks.loadingBudget = {worldTimeoutMs, policy: worldTimeoutMs === 300000 ? 'ci-functional' : 'local-smoke'};
   const consoleError = console.error;
   console.error = (...args) => {report.errors.push(args.map(String).join(' ')); consoleError.apply(console, args);};
   const fail = event => report.errors.push(event.message || String(event.reason));
@@ -144,7 +148,7 @@
     if (fixture) {localStorage.setItem('wild-guardians:slot:'+fixture.slotId,fixture.snapshot);send({action:'load-slot',slotId:fixture.slotId});}
     else send({action: 'start', biome: 'gran-canon', culture: 'mapungubwe'});
     worldStartedAt = performance.now();
-    const worldEnd = worldStartedAt + 90000;
+    const worldEnd = worldStartedAt + worldTimeoutMs;
     while (document.querySelector('#stage')?.getAttribute('aria-busy') !== 'false' && performance.now() < worldEnd) await new Promise(resolve => setTimeout(resolve, 100));
     if (document.querySelector('#stage')?.getAttribute('aria-busy') !== 'false') throw Error('Production world did not finish loading');
     worldReadyAt = performance.now();

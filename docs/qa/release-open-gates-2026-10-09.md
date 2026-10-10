@@ -5,7 +5,35 @@ update below supersedes the historical checkpoint text that follows. Earlier
 sources, failed candidates and measurements are retained, not silently changed
 into current-main acceptance.
 
-## Current-state checkpoint — 10 October, minimal production source025
+## User-approved CI timeout policy — 10 October
+
+The user clarified that90seconds is an assistant-selected smoke cutoff, not a
+GitHub limit, and explicitly requested tolerance for slow CI while local loading
+remains reasonable. This supersedes the older unchanged90-second CI gate text
+below. Windows CI now supplies `WG_DESKTOP_SMOKE_CI=1`: only explicit native
+smoke mode receives a300000ms world-readiness budget. Local smoke retains90000ms;
+normal play has no such diagnostic timeout. The initial process watchdog becomes
+420000ms to allow preflight plus loading; the900000ms fixture watchdog,
+300000ms genuine hidden test and60-minute workflow budget remain unchanged.
+
+Every report records the selected budget/policy and actual worldWaitMs. Allowing
+five minutes establishes functional CI tolerance, not production performance
+acceptance. Earlier90-second failures remain original evidence that their
+cutoff was exceeded; they alone no longer imply a blocking game defect under
+the user's revised policy. Errors, missing readiness or corrupted restoration
+remain failures. The latest production025 run failed at90194.3ms/85%; its
+[original report](windows-loading-regression/production-025-native-ci-negative/README.md)
+is preserved. Existing025/383 jobs use their frozen old policies, not this patch.
+
+Nine directed smoke observation/budget tests pass, covering explicit CI budget,
+local default/malformed input fallback, preservation of original failures,
+readiness timing and hidden duration. Native Rust compilation and the revised
+Windows run remain pending. The first attempted combined test command named a
+fixture-menu test absent from main and ran no tests; the actual existing test
+file was then run successfully. Preflight overhead is still an unmeasured
+hypothesis and is being investigated separately from this policy correction.
+
+## Earlier checkpoint — 10 October, minimal production source025
 
 The independently reviewed minimal crop-partition extraction is frozen at
 `02554d0ab756dc4360dd24be0f615b469375773d`; it remains outside main. Its
