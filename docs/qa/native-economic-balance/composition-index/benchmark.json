@@ -1,0 +1,730 @@
+{
+  "scope": "Isolated Node CPU/heap allocation diagnostic, AB/BA8 pairs, GC before each sample. Heap delta includes temporary allocations; not peak app RAM/VRAM, GPU or browser frame benchmark. No raid pressure changes.",
+  "node": "v20.11.0",
+  "sourceHashes": {
+    "src/simulation/raid-composition-index.js": "21bd73be8ede1b7d9449eafe8a0fe0ed89a339eeb9e7523ab78017efb3546322",
+    "src/simulation/rules.js": "3657116cd696581180909bb3928267ff13698fb85831b0274d7bbe86743a2ee8",
+    "src/simulation/balance.js": "0317d5d23326eb0035c8a59e87eae91b80544328e1d647a530188490c556b637",
+    "tools/benchmark-raid-composition-index.mjs": "53ca72d97127e5c386f91dd7aee1ebbd6d16a39d328e35088f7ae46cad50647d"
+  },
+  "summary": [
+    {
+      "budget": 14,
+      "variant": "enumerated",
+      "medianMilliseconds": 0.15570000000000306,
+      "medianAllocatedHeapBytes": 113616,
+      "compositions": 58
+    },
+    {
+      "budget": 14,
+      "variant": "indexed",
+      "medianMilliseconds": 0.09555000000000291,
+      "medianAllocatedHeapBytes": 266108,
+      "compositions": 58
+    },
+    {
+      "budget": 72,
+      "variant": "enumerated",
+      "medianMilliseconds": 23.76640000000002,
+      "medianAllocatedHeapBytes": 14651660,
+      "compositions": 25537
+    },
+    {
+      "budget": 72,
+      "variant": "indexed",
+      "medianMilliseconds": 1.3754000000000133,
+      "medianAllocatedHeapBytes": 276348,
+      "compositions": 25537
+    }
+  ],
+  "samples": [
+    {
+      "budget": 14,
+      "variant": "enumerated",
+      "milliseconds": 0.16490000000000293,
+      "allocatedHeapBytes": 118152,
+      "count": 58,
+      "selected": [
+        "warthog",
+        "warthog",
+        "warthog",
+        "hyena",
+        "hyena",
+        "hyena"
+      ]
+    },
+    {
+      "budget": 14,
+      "variant": "indexed",
+      "milliseconds": 0.21470000000000766,
+      "allocatedHeapBytes": 207296,
+      "count": 58,
+      "selected": [
+        "warthog",
+        "warthog",
+        "warthog",
+        "hyena",
+        "hyena",
+        "hyena"
+      ]
+    },
+    {
+      "budget": 14,
+      "variant": "indexed",
+      "milliseconds": 0.09590000000000032,
+      "allocatedHeapBytes": 17752,
+      "count": 58,
+      "selected": [
+        "warthog",
+        "warthog",
+        "warthog",
+        "hyena",
+        "hyena",
+        "hyena"
+      ]
+    },
+    {
+      "budget": 14,
+      "variant": "enumerated",
+      "milliseconds": 0.15209999999999013,
+      "allocatedHeapBytes": 115096,
+      "count": 58,
+      "selected": [
+        "warthog",
+        "warthog",
+        "warthog",
+        "hyena",
+        "hyena",
+        "hyena"
+      ]
+    },
+    {
+      "budget": 14,
+      "variant": "enumerated",
+      "milliseconds": 0.15109999999999957,
+      "allocatedHeapBytes": 113616,
+      "count": 58,
+      "selected": [
+        "warthog",
+        "warthog",
+        "warthog",
+        "hyena",
+        "hyena",
+        "hyena"
+      ]
+    },
+    {
+      "budget": 14,
+      "variant": "indexed",
+      "milliseconds": 0.1320999999999941,
+      "allocatedHeapBytes": 270776,
+      "count": 58,
+      "selected": [
+        "warthog",
+        "warthog",
+        "warthog",
+        "hyena",
+        "hyena",
+        "hyena"
+      ]
+    },
+    {
+      "budget": 14,
+      "variant": "indexed",
+      "milliseconds": 0.07189999999999941,
+      "allocatedHeapBytes": 269720,
+      "count": 58,
+      "selected": [
+        "warthog",
+        "warthog",
+        "warthog",
+        "hyena",
+        "hyena",
+        "hyena"
+      ]
+    },
+    {
+      "budget": 14,
+      "variant": "enumerated",
+      "milliseconds": 0.1728999999999985,
+      "allocatedHeapBytes": 113616,
+      "count": 58,
+      "selected": [
+        "warthog",
+        "warthog",
+        "warthog",
+        "hyena",
+        "hyena",
+        "hyena"
+      ]
+    },
+    {
+      "budget": 14,
+      "variant": "enumerated",
+      "milliseconds": 0.15460000000000207,
+      "allocatedHeapBytes": 113616,
+      "count": 58,
+      "selected": [
+        "warthog",
+        "warthog",
+        "warthog",
+        "hyena",
+        "hyena",
+        "hyena"
+      ]
+    },
+    {
+      "budget": 14,
+      "variant": "indexed",
+      "milliseconds": 0.08010000000000161,
+      "allocatedHeapBytes": 14592,
+      "count": 58,
+      "selected": [
+        "warthog",
+        "warthog",
+        "warthog",
+        "hyena",
+        "hyena",
+        "hyena"
+      ]
+    },
+    {
+      "budget": 14,
+      "variant": "indexed",
+      "milliseconds": 0.08509999999999707,
+      "allocatedHeapBytes": 266560,
+      "count": 58,
+      "selected": [
+        "warthog",
+        "warthog",
+        "warthog",
+        "hyena",
+        "hyena",
+        "hyena"
+      ]
+    },
+    {
+      "budget": 14,
+      "variant": "enumerated",
+      "milliseconds": 0.15680000000000405,
+      "allocatedHeapBytes": 113616,
+      "count": 58,
+      "selected": [
+        "warthog",
+        "warthog",
+        "warthog",
+        "hyena",
+        "hyena",
+        "hyena"
+      ]
+    },
+    {
+      "budget": 14,
+      "variant": "enumerated",
+      "milliseconds": 0.15279999999999916,
+      "allocatedHeapBytes": 113616,
+      "count": 58,
+      "selected": [
+        "warthog",
+        "warthog",
+        "warthog",
+        "hyena",
+        "hyena",
+        "hyena"
+      ]
+    },
+    {
+      "budget": 14,
+      "variant": "indexed",
+      "milliseconds": 0.0952000000000055,
+      "allocatedHeapBytes": 265656,
+      "count": 58,
+      "selected": [
+        "warthog",
+        "warthog",
+        "warthog",
+        "hyena",
+        "hyena",
+        "hyena"
+      ]
+    },
+    {
+      "budget": 14,
+      "variant": "indexed",
+      "milliseconds": 0.17610000000000525,
+      "allocatedHeapBytes": 518440,
+      "count": 58,
+      "selected": [
+        "warthog",
+        "warthog",
+        "warthog",
+        "hyena",
+        "hyena",
+        "hyena"
+      ]
+    },
+    {
+      "budget": 14,
+      "variant": "enumerated",
+      "milliseconds": 0.2687999999999988,
+      "allocatedHeapBytes": 363256,
+      "count": 58,
+      "selected": [
+        "warthog",
+        "warthog",
+        "warthog",
+        "hyena",
+        "hyena",
+        "hyena"
+      ]
+    },
+    {
+      "budget": 72,
+      "variant": "enumerated",
+      "milliseconds": 28.644299999999987,
+      "allocatedHeapBytes": 9323784,
+      "count": 25537,
+      "selected": [
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "hyena",
+        "buffalo",
+        "buffalo",
+        "buffalo",
+        "lion",
+        "lion",
+        "rhino"
+      ]
+    },
+    {
+      "budget": 72,
+      "variant": "indexed",
+      "milliseconds": 1.6430000000000007,
+      "allocatedHeapBytes": 416536,
+      "count": 25537,
+      "selected": [
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "hyena",
+        "buffalo",
+        "buffalo",
+        "buffalo",
+        "lion",
+        "lion",
+        "rhino"
+      ]
+    },
+    {
+      "budget": 72,
+      "variant": "indexed",
+      "milliseconds": 1.1423999999999808,
+      "allocatedHeapBytes": 158800,
+      "count": 25537,
+      "selected": [
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "hyena",
+        "buffalo",
+        "buffalo",
+        "buffalo",
+        "lion",
+        "lion",
+        "rhino"
+      ]
+    },
+    {
+      "budget": 72,
+      "variant": "enumerated",
+      "milliseconds": 26.30030000000002,
+      "allocatedHeapBytes": 14886456,
+      "count": 25537,
+      "selected": [
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "hyena",
+        "buffalo",
+        "buffalo",
+        "buffalo",
+        "lion",
+        "lion",
+        "rhino"
+      ]
+    },
+    {
+      "budget": 72,
+      "variant": "enumerated",
+      "milliseconds": 22.210800000000006,
+      "allocatedHeapBytes": 14906312,
+      "count": 25537,
+      "selected": [
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "hyena",
+        "buffalo",
+        "buffalo",
+        "buffalo",
+        "lion",
+        "lion",
+        "rhino"
+      ]
+    },
+    {
+      "budget": 72,
+      "variant": "indexed",
+      "milliseconds": 1.37560000000002,
+      "allocatedHeapBytes": 658408,
+      "count": 25537,
+      "selected": [
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "hyena",
+        "buffalo",
+        "buffalo",
+        "buffalo",
+        "lion",
+        "lion",
+        "rhino"
+      ]
+    },
+    {
+      "budget": 72,
+      "variant": "indexed",
+      "milliseconds": 1.6448000000000036,
+      "allocatedHeapBytes": 393896,
+      "count": 25537,
+      "selected": [
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "hyena",
+        "buffalo",
+        "buffalo",
+        "buffalo",
+        "lion",
+        "lion",
+        "rhino"
+      ]
+    },
+    {
+      "budget": 72,
+      "variant": "enumerated",
+      "milliseconds": 22.58650000000003,
+      "allocatedHeapBytes": 14521056,
+      "count": 25537,
+      "selected": [
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "hyena",
+        "buffalo",
+        "buffalo",
+        "buffalo",
+        "lion",
+        "lion",
+        "rhino"
+      ]
+    },
+    {
+      "budget": 72,
+      "variant": "enumerated",
+      "milliseconds": 25.251300000000015,
+      "allocatedHeapBytes": 14723152,
+      "count": 25537,
+      "selected": [
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "hyena",
+        "buffalo",
+        "buffalo",
+        "buffalo",
+        "lion",
+        "lion",
+        "rhino"
+      ]
+    },
+    {
+      "budget": 72,
+      "variant": "indexed",
+      "milliseconds": 1.9379999999999882,
+      "allocatedHeapBytes": 158800,
+      "count": 25537,
+      "selected": [
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "hyena",
+        "buffalo",
+        "buffalo",
+        "buffalo",
+        "lion",
+        "lion",
+        "rhino"
+      ]
+    },
+    {
+      "budget": 72,
+      "variant": "indexed",
+      "milliseconds": 0.8412999999999897,
+      "allocatedHeapBytes": 437480,
+      "count": 25537,
+      "selected": [
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "hyena",
+        "buffalo",
+        "buffalo",
+        "buffalo",
+        "lion",
+        "lion",
+        "rhino"
+      ]
+    },
+    {
+      "budget": 72,
+      "variant": "enumerated",
+      "milliseconds": 22.19319999999999,
+      "allocatedHeapBytes": 14652528,
+      "count": 25537,
+      "selected": [
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "hyena",
+        "buffalo",
+        "buffalo",
+        "buffalo",
+        "lion",
+        "lion",
+        "rhino"
+      ]
+    },
+    {
+      "budget": 72,
+      "variant": "enumerated",
+      "milliseconds": 18.490499999999997,
+      "allocatedHeapBytes": 13199528,
+      "count": 25537,
+      "selected": [
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "hyena",
+        "buffalo",
+        "buffalo",
+        "buffalo",
+        "lion",
+        "lion",
+        "rhino"
+      ]
+    },
+    {
+      "budget": 72,
+      "variant": "indexed",
+      "milliseconds": 1.043200000000013,
+      "allocatedHeapBytes": 158800,
+      "count": 25537,
+      "selected": [
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "hyena",
+        "buffalo",
+        "buffalo",
+        "buffalo",
+        "lion",
+        "lion",
+        "rhino"
+      ]
+    },
+    {
+      "budget": 72,
+      "variant": "indexed",
+      "milliseconds": 1.3752000000000066,
+      "allocatedHeapBytes": 158800,
+      "count": 25537,
+      "selected": [
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "hyena",
+        "buffalo",
+        "buffalo",
+        "buffalo",
+        "lion",
+        "lion",
+        "rhino"
+      ]
+    },
+    {
+      "budget": 72,
+      "variant": "enumerated",
+      "milliseconds": 24.946300000000008,
+      "allocatedHeapBytes": 14650792,
+      "count": 25537,
+      "selected": [
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "hyena",
+        "buffalo",
+        "buffalo",
+        "buffalo",
+        "lion",
+        "lion",
+        "rhino"
+      ]
+    }
+  ]
+}
