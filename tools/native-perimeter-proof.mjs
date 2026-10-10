@@ -3,10 +3,19 @@
 import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
 import {centerFootprint} from '../src/world/centers.js';
 import {operational} from '../src/simulation/rules.js';
-export function nativePerimeterProof(s,nav,plan,bounds){
- const updates=new Map(plan.updates.map(q=>[q.id,q]));
- const view=nav.forBuildingPlacement({id:'qa-empty-proposal',x:1e12,z:1e12,radius:0,kind:'house'});
- view.obstacles=[...nav.obstacles.map(w=>updates.has(w.id)?{...w,...updates.get(w.id)}:w),...plan.pieces];
+const proofViews=new WeakMap();
+export function nativePerimeterProof(s,nav,plan,bounds,{cache=true}={}){
+ // Native epochs invalidate obstacle/terrain/suppression changes. Bounds and
+ // living crops are rechecked below on every call; they do not alter graph
+ // geometry. Retain only one bounded native-query view per navigator.
+ const key=JSON.stringify([nav.version,plan.pieces,plan.updates,plan.suppressed??[]]),old=cache?proofViews.get(nav):null;
+ let view=old?.key===key&&old.state===s?old.view:null;
+ if(!view){
+  const updates=new Map(plan.updates.map(q=>[q.id,q]));
+  view=nav.forBuildingPlacement({id:'qa-empty-proposal',x:1e12,z:1e12,radius:0,kind:'house'});
+  view.obstacles=[...nav.obstacles.map(w=>updates.has(w.id)?{...w,...updates.get(w.id)}:w),...plan.pieces];
+  if(cache)proofViews.set(nav,{key,state:s,view});
+ }
  const land=[...s.plants.filter(p=>p.alive),...s.structures.filter(operational).flatMap(c=>centerFootprint(c,s).footprint)],radii=[...new Set(Object.values(ANIMAL_ACTIONS.animals).map(a=>a.presentation.footprint.radius))];
  const checks=[];
  for(const radius of radii){

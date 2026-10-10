@@ -47,6 +47,21 @@ test('native perimeter proof rejects an open quote instead of claiming isolation
  assert.equal(nativePerimeterProof(s,nav,{pieces:[],updates:[]},candidate.bounds).valid,false);
  assert.equal(serialize(s),before);
 });
+
+test('cached predictive queries recheck crop extent and invalidate native geometry epochs',()=>{
+ const {s,nav}=snapshot(),c=closedDefenseContours(s)[0],route=obstacleAwareContour(s,nav,c).candidate;
+ const plan=Game.quoteWallChain(s,'zarzas',route.points,nav,{smooth:false,snap:false}),before=serialize(s);
+ assert.deepEqual(nativePerimeterProof(s,nav,plan,route.bounds),nativePerimeterProof(s,nav,plan,route.bounds,{cache:false}));
+ assert.deepEqual(nativePerimeterProof(s,nav,plan,route.bounds),nativePerimeterProof(s,nav,plan,route.bounds,{cache:false}));
+ assert.equal(serialize(s),before);
+ // Diagnostic geometry edits are confined to this clone, not a campaign.
+ const first=s.plants.find(p=>p.alive),x=first.x;first.x=route.bounds[2]+10;
+ assert.deepEqual(nativePerimeterProof(s,nav,plan,route.bounds),nativePerimeterProof(s,nav,plan,route.bounds,{cache:false}));first.x=x;
+ nav.setState(s);
+ assert.deepEqual(nativePerimeterProof(s,nav,plan,route.bounds),nativePerimeterProof(s,nav,plan,route.bounds,{cache:false}));
+ const changed={...plan,pieces:plan.pieces.slice(1)};
+ assert.deepEqual(nativePerimeterProof(s,nav,changed,route.bounds),nativePerimeterProof(s,nav,changed,route.bounds,{cache:false}));
+});
 test('routed policy retains real partial purchases and native gate creation in an affordable opening',()=>{
  const {s,nav}=createOpeningWorld(),center=s.structures[0];
  Game.plant(s,'routed-first-seed','mijo',center.x+6,center.z+1,nav);Game.openInitialHiring(s);Game.hire(s,'routed-hire',{olderFemale:1});
