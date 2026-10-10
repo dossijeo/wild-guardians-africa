@@ -36,3 +36,19 @@ test('comparison exports individual waves and never overwrites retained evidence
   assert.throws(()=>writeNativeComparison(dir,[s]),/overwrite/);
  }finally{rmSync(dir,{recursive:true,force:true});}
 });
+test('daily activity credits only settled useful repairs once, and preserves raw idle',()=>{
+ const f=fixture(),native=f.report.nativeEvidence;
+ native.decisions=[{day:1,daylightSeconds:60,otherActions:1},{day:1,daylightSeconds:120,otherActions:0},{day:1,daylightSeconds:120,otherActions:0}];
+ native.requests=[{taskId:'useful',decisionIndex:1},{taskId:'unpaid',decisionIndex:2}];
+ native.repairSettlements={receipts:[{taskId:'useful',paidCoins:3,previousHp:90,restoredHp:100},{taskId:'useful',paidCoins:3,previousHp:90,restoredHp:100},{taskId:'unpaid',paidCoins:0,previousHp:90,restoredHp:100}]};
+ f.report.daily[0].unoccupiedSeconds=240;
+ const s=summarizeNativeCase(f);assert.equal(s.idleFraction,.4);assert.equal(s.daily[0].rawDecisionIdleFraction,.8);
+ assert.match(s.daily[0].activityBasis,/once-credited/);
+ native.decisions[0].daylightSeconds=61;assert.throws(()=>summarizeNativeCase(f),/daylight/);
+});
+test('defense curve is a labeled reference, never included in actual expenses or cash',()=>{
+ const f=fixture(),d=summarizeNativeCase(f).daily[0];
+ assert.equal(d.expenses,75);assert.equal(d.money,675);assert.equal(d.cumulativeOperatingNet,-25);
+ assert.equal(d.referenceRepairCostAtEndLiving,12+.42*7+.003*49);assert.equal(d.repairs,0);
+ assert.equal(d.centers,0);assert.equal(d.villages,0);assert.match(d.activityBasis,/legacy/);
+});

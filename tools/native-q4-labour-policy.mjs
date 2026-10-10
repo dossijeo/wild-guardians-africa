@@ -22,11 +22,12 @@ const budgetUnits=(pendingRepair,seedCost)=>{if(!Number.isSafeInteger(pendingRep
 export function q4DawnPlan(s,{profile='olderFemale',pendingRepair=0,seedCost=5}={}){
  budgetUnits(pendingRepair,seedCost);const p=PROFILES.find(p=>p.id===profile);if(!p)throw Error('Unknown Q4 labour profile');
  const desired=Math.max(1,q4Workload(s).filter(c=>c.living||c.pending).length),cash=numberOf(s.ledger.balance);
- // Preserve legal recovery budget if possible. If not, disclose that no safe
- // contract fits; never mint funds or override native dawnMinimum/GameOver.
+ // Preserve recovery budget where possible. Otherwise permit one actual
+ // affordable emergency contract; harvesting existing crops may recover cash.
+ // This is not proof of recovery and never overrides native GameOver.
  const affordable=Math.max(0,Math.floor((cash-pendingRepair-seedCost)/(2*p.wage)));
- const staff=Math.min(desired,affordable);
- return {staff,cost:staff*p.wage,cash,desired,pendingRepair,seedCost,recoveryReserve:staff*p.wage,reason:staff?'minimum productive centre coverage':'no safe funded contract'};
+ const safeStaff=Math.min(desired,affordable),emergency=!safeStaff&&cash>=p.wage,staff=safeStaff||(emergency?1:0);
+ return {staff,cost:staff*p.wage,cash,desired,pendingRepair,seedCost,recoveryReserve:staff*p.wage,emergency,reserveShortfall:staff?Math.max(0,2*staff*p.wage+pendingRepair+seedCost-cash):0,reason:emergency?'affordable emergency contract; recovery unproven':staff?'minimum productive centre coverage':'no safe funded contract'};
 }
 export function q4AdditionalPlan(s,{profile='olderFemale',pendingRepair=0,seedCost=5,backlogPerWorker=6}={}){
  budgetUnits(pendingRepair,seedCost);const p=PROFILES.find(p=>p.id===profile);if(!p)throw Error('Unknown Q4 labour profile');

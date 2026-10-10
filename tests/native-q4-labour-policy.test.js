@@ -15,8 +15,8 @@ test('Q4 native first contract pays30 rather than forecast240, preserving actual
  const {s,nav}=fixture(),plan=q4DawnPlan(s);assert.equal(plan.staff,1);Game.openInitialHiring(s);Game.hire(s,'q4-daily',{olderFemale:plan.staff});assert.equal(s.ledger.entries['q4-daily'].n,'-30');
  assert.equal(numberOf(s.ledger.balance),665);assert.equal(Game.plant(s,'q4-seed','mijo',1.5,0,nav),true);assert.equal(numberOf(s.ledger.balance),660);assert.equal(q4RecoveryReserve(s,30),30);
 });
-test('Q4 does not consume364 as360 salary, and no safe35 contract is not declared game defeat',()=>{
- const {s}=fixture();s.ledger.balance=rational(364);assert.equal(q4DawnPlan(s).cost,30);s.ledger.balance=rational(35);assert.equal(q4DawnPlan(s).staff,0);assert.equal(s.result,null);assert.equal(q4DawnPlan({...s,ledger:{...s.ledger,balance:rational(65)}}).staff,1);
+test('Q4 does not consume364 as360 salary and cash35 permits native emergency wage30 with explicit risk',()=>{
+ const {s}=fixture();s.ledger.balance=rational(364);assert.equal(q4DawnPlan(s).cost,30);s.ledger.balance=rational(35);const emergency=q4DawnPlan(s);assert.equal(emergency.staff,1);assert.equal(emergency.emergency,true);assert.equal(emergency.reserveShortfall,30);Game.openInitialHiring(s);Game.hire(s,'emergency',{olderFemale:emergency.staff});assert.equal(numberOf(s.ledger.balance),5);assert.equal(s.ledger.entries.emergency.n,'-30');assert.equal(s.plants[0].alive,true);assert.equal(s.tasks[0].kind,'initial');assert.equal(s.result,null);assert.equal(q4DawnPlan({...s,ledger:{...s.ledger,balance:rational(29)}}).staff,0);assert.equal(q4DawnPlan({...s,ledger:{...s.ledger,balance:rational(65)}}).staff,1);
 });
 test('Q4 additions use native proportional ceil, real saturated FIFO backlog, historical pending repairs and one payment',()=>{
  const {s,nav,center}=fixture();Game.openInitialHiring(s);Game.hire(s,'daily',{olderFemale:1});
