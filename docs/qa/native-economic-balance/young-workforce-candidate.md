@@ -6,8 +6,10 @@ trabajadores iniciales pagados, cultivos históricos, mismos criterios de
 contratación adicional, salarios reservados y defensa trazada con mantenimiento
 desde el día 6. No se cambia crecimiento, FIFO, animación, recorrido ni daño.
 
-Las mayores cobran 30; las jóvenes 40 y usan la velocidad nativa 1,5. La razón
-nominal velocidad/jornal mejora un 12,5 %, pero eso no predice producción ni
+Las mayores cobran 30; las jóvenes 40 y usan el factor nativo de trabajo 1,5.
+Este factor divide la duración de las acciones en `game.js`; los recorridos
+de `moveWorker` no reciben ese factor de perfil. La razón nominal de trabajo
+estacionario/jornal mejora un 12,5 %, pero eso no predice producción ni
 beneficio: hay crecimiento, riego, rutas y esperas. Además, el primer contrato
 cuesta 240 en vez de 180 y su renovación inmoviliza más capital. El resultado
 debe observarse en entregas y pagos reales.
