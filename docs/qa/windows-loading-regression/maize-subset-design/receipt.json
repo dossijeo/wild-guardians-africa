@@ -1,0 +1,27 @@
+{
+  "baseline": "b43b15a8115f6eca2e64cc64e900d166f321dff2",
+  "scope": "Read-only design/asset audit. No runtime/assets/build/native/GPU changes.",
+  "files": {
+    "audit.py": {
+      "bytes": 7554,
+      "sha256": "69fde751ba689c7165428a2102a9c6d4aaf40601cf41f4d4ee3d2306d0ee2ff8"
+    },
+    "inventory.json": {
+      "bytes": 26312,
+      "sha256": "f871107cf384ec9cdbb0d3afeaf8e3b08e626c6bc4bad7ca359dcb9d3e191f60"
+    },
+    "proposal.md": {
+      "bytes": 10798,
+      "sha256": "8e9532ee68e97605e4f0c8fa92bde95497e2f385670ae748b8397f36d4b3450d"
+    },
+    "verify.py": {
+      "bytes": 998,
+      "sha256": "5bb1745da595f564c9b53a6ce7ba4425ed45dd0b89a15ac0308e15eceb77329e"
+    }
+  },
+  "verification": {
+    "exitCode": 0,
+    "command": "python docs/qa/windows-loading-regression/maize-subset-design/verify.py"
+  },
+  "runtimeUnchanged": true
+}
