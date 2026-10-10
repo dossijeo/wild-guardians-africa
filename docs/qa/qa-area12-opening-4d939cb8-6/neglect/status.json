@@ -1,0 +1,33 @@
+{
+  "arm": "neglect",
+  "status": "native-terminal-audited",
+  "error": null,
+  "result": null,
+  "completedNights": 6,
+  "gates": {
+    "completedRequestedNights": true,
+    "allRaidsPhysicallyEnded": true,
+    "spentStrikes": 26,
+    "strikeBudgetExactlyMatched": true,
+    "areaImpactReceiptIdsMatched": true,
+    "areaImpactCount": 26,
+    "damagedPlants": 26,
+    "areaDestroyedPlants": 13,
+    "paidRepairEvidence": "verified",
+    "actualInterceptionCount": 0,
+    "observedActivity": {
+      "daylightSeconds": 1799.9999999989197,
+      "unoccupiedSeconds": 470.99999999987824,
+      "unoccupiedFraction": 0.2616666666667561
+    },
+    "strictActivityBelow25": false,
+    "no100NightAcceptance": true
+  },
+  "payloadHashes": {
+    "report.json.gz": "b51dcc157b423a4ad86e99831132bbcfa1971a00db81e310ad4d5688cc1f251b",
+    "native-report.json.gz": "39474c6fc63ca2da731fe131bec9020d5a13f31a275ee1daa0a43d4716938688",
+    "state.json.gz": "892a4f622e2893bd737c836dc148a69d3fdda7b974f8bb59b5f0a613c455068f",
+    "native-state.json.gz": "892a4f622e2893bd737c836dc148a69d3fdda7b974f8bb59b5f0a613c455068f"
+  },
+  "sourceUnchanged": true
+}

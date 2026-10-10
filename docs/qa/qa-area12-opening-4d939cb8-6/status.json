@@ -1,0 +1,74 @@
+{
+  "protocol": "qa-area12-opening-v1",
+  "milliseconds": 620980.8035,
+  "results": [
+    {
+      "arm": "responsible",
+      "status": "native-terminal-audited",
+      "error": null,
+      "result": null,
+      "completedNights": 6,
+      "gates": {
+        "completedRequestedNights": true,
+        "allRaidsPhysicallyEnded": true,
+        "spentStrikes": 30,
+        "strikeBudgetExactlyMatched": true,
+        "areaImpactReceiptIdsMatched": true,
+        "areaImpactCount": 30,
+        "damagedPlants": 40,
+        "areaDestroyedPlants": 16,
+        "paidRepairEvidence": "verified",
+        "actualInterceptionCount": 0,
+        "observedActivity": {
+          "daylightSeconds": 1799.9999999989193,
+          "unoccupiedSeconds": 944.9999999995019,
+          "unoccupiedFraction": 0.5250000000000385
+        },
+        "strictActivityBelow25": false,
+        "no100NightAcceptance": true
+      },
+      "payloadHashes": {
+        "report.json.gz": "6fd55d66adc5412d58ecd6e28b1e17c3625d07968e52e5d6980fa42cd4e23bce",
+        "native-report.json.gz": "7e8300bc43a3ae42d34812d0d15f918ab016b32bccf6bc7d1c6f728041a15264",
+        "state.json.gz": "eadf7055c2f1dd0a1270eed24e1432af622b862ac816a14c0cd24ec0ae370a3d",
+        "native-state.json.gz": "eadf7055c2f1dd0a1270eed24e1432af622b862ac816a14c0cd24ec0ae370a3d"
+      },
+      "sourceUnchanged": true
+    },
+    {
+      "arm": "neglect",
+      "status": "native-terminal-audited",
+      "error": null,
+      "result": null,
+      "completedNights": 6,
+      "gates": {
+        "completedRequestedNights": true,
+        "allRaidsPhysicallyEnded": true,
+        "spentStrikes": 26,
+        "strikeBudgetExactlyMatched": true,
+        "areaImpactReceiptIdsMatched": true,
+        "areaImpactCount": 26,
+        "damagedPlants": 26,
+        "areaDestroyedPlants": 13,
+        "paidRepairEvidence": "verified",
+        "actualInterceptionCount": 0,
+        "observedActivity": {
+          "daylightSeconds": 1799.9999999989197,
+          "unoccupiedSeconds": 470.99999999987824,
+          "unoccupiedFraction": 0.2616666666667561
+        },
+        "strictActivityBelow25": false,
+        "no100NightAcceptance": true
+      },
+      "payloadHashes": {
+        "report.json.gz": "b51dcc157b423a4ad86e99831132bbcfa1971a00db81e310ad4d5688cc1f251b",
+        "native-report.json.gz": "39474c6fc63ca2da731fe131bec9020d5a13f31a275ee1daa0a43d4716938688",
+        "state.json.gz": "892a4f622e2893bd737c836dc148a69d3fdda7b974f8bb59b5f0a613c455068f",
+        "native-state.json.gz": "892a4f622e2893bd737c836dc148a69d3fdda7b974f8bb59b5f0a613c455068f"
+      },
+      "sourceUnchanged": true
+    }
+  ],
+  "status": "paired-diagnostic-terminal",
+  "scope": "No20/100night approval; preserve negative activity/contact gates; no reroll"
+}
