@@ -16,7 +16,7 @@ Todos los días concilian con el ledger, sin créditos ficticios ni cobros doble
 | Saldo final | 429 | 318 | 589 |
 | Cultivos vivos | 176 | 99 | 191 |
 | Brotes comprados | 79 | 0 | 50 |
-| Cajas entregadas | 56 | 55 | 56 |
+| Cajas entregadas | 55 | 55 | 56 |
 | Murallas compradas ese día | 0 | 480 | 0 |
 | Reparaciones efectivamente cobradas | 49 | 64 | 0 |
 | Cultivos destruidos en la incursión | 2 | 0 | 15 |
