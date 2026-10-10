@@ -5,7 +5,22 @@ update below supersedes the historical checkpoint text that follows. Earlier
 sources, failed candidates and measurements are retained, not silently changed
 into current-main acceptance.
 
-## Current-state checkpoint — 10 October, main a285af7e
+## Current-state checkpoint — 10 October, main 3df49f29
+
+Web run38016098976 passes all3792 tests, build and the direct itch package.
+[Verified originals](ci-main-3df49f29/README.md) retain the full log and official
+artifact metadata. The itch blob has the same SHA256 as the earlier independently
+downloaded, CRC-verified package. Normal Windows9f0f65ed run38015626895 passes
+EXE/installer builds but fails world readiness at90086.7ms; native visibility is
+skipped. This does not supersede the positive isolated partition trial below
+or accept its final deduplicated package, which is still under development.
+
+Main3df49f29 also retains [an independently reproduced interior raid entry](paid-enclosure-entry-risk/root-review.md)
+inside a paid enclosure. An isolated correction is under review; natural-boundary
+coverage and final physical entry/escape validation remain open. No wall, gate,
+raid or balance correction is promoted by this checkpoint.
+
+## Earlier checkpoint — 10 October, main a285af7e
 
 This checkpoint supersedes older live-run and unchanged-runtime descriptions
 below. Main now includes the intact-centre repair navigation optimization

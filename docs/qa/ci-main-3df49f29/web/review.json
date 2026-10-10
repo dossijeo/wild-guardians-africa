@@ -1,0 +1,26 @@
+{
+  "commit": "3df49f29a6c902c74b58a2081ce9fc17a75f5c2e",
+  "run": 38016098976,
+  "originalLogBytes": 2027496,
+  "originalLogSha256": "8dde092e26f7bfba95046d414d338b5f7b43074033327e4d776948bfda809008",
+  "summary": [
+    "validate\tRun actions/setup-python@v5\t2026-10-10T02:16:40.6946589Z Successfully set up CPython (3.12.15)",
+    "validate\tRun npm run verify:assets\t2026-10-10T02:16:43.6913322Z PASS: 25 sources, 507 resources, 126 exact SFX matches",
+    "validate\tRun npm run verify:assets\t2026-10-10T02:16:43.6914243Z PASS: four full worker libraries exported by the original labs, 48 actions with provenance",
+    "validate\tRun npm run verify:assets\t2026-10-10T02:16:43.6915042Z PASS: six separate material textures and ten original material maps in two intact source ZIPs",
+    "validate\tRun npm run verify:web-assets\t2026-10-10T02:17:04.9787750Z PASS: all GLBs, byte-exact geometry/animation, textures/alpha, local decoder and conformance",
+    "validate\tRun npm run verify:plan\t2026-10-10T02:17:08.2281671Z PASS \u00b7 123,048 aserciones \u00b7 5000 escenarios de reparto \u00b7 20 combinaciones de contexto/presupuesto",
+    "validate\tRun npm run verify:balance\t2026-10-10T02:17:08.5571956Z PASS: balance reproduces original data and approved player revisions",
+    "validate\tRun npm test\t2026-10-10T02:24:03.5516801Z # Subtest: Fractional wallet balances and settled ledger entries are rejected while a pending harvest formula remains valid",
+    "validate\tRun npm test\t2026-10-10T02:24:03.5517419Z ok 1007 - Fractional wallet balances and settled ledger entries are rejected while a pending harvest formula remains valid",
+    "validate\tRun npm test\t2026-10-10T02:24:03.7206290Z # Subtest: damaged CRC, truncation, missing end and chained streams are rejected",
+    "validate\tRun npm test\t2026-10-10T02:24:03.7206520Z ok 2542 - damaged CRC, truncation, missing end and chained streams are rejected",
+    "validate\tRun npm test\t2026-10-10T02:24:03.7316695Z # Subtest: axis rejection retains strict circular edges, identity, duplicate entries and original ordering",
+    "validate\tRun npm test\t2026-10-10T02:24:03.7317002Z ok 2667 - axis rejection retains strict circular edges, identity, duplicate entries and original ordering",
+    "validate\tRun npm test\t2026-10-10T02:24:03.8253311Z # tests 3792",
+    "validate\tRun npm test\t2026-10-10T02:24:03.8253457Z # pass 3792",
+    "validate\tRun npm test\t2026-10-10T02:24:03.8253528Z # fail 0",
+    "validate\tRun npm run test:web-package\t2026-10-10T02:24:15.2211664Z PASS: 711 files / 445254165 bytes, 860 relative links, 22 runtime GLBs, no original GLBs, demo village or superseded ground duplicates",
+    "validate\tRun python tools/package_itch.py\t2026-10-10T02:24:29.0231658Z /home/runner/work/wild-guardians-africa/wild-guardians-africa/test-results/wild-guardians-itch.zip: 388367056 bytes; verified CRCs"
+  ]
+}
