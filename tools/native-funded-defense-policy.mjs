@@ -11,13 +11,19 @@ export function createNativeFundedDefensePolicy({startDay=6,material='zarzas',in
  if(!Number.isSafeInteger(startDay)||startDay<1||!Number.isFinite(interval)||interval<=0||!Number.isSafeInteger(chunkPieces)||chunkPieces<1||!Number.isSafeInteger(maxSlots)||maxSlots<4||chunkPieces>maxSlots||maxSlots>256)throw Error('Invalid bounded funded defense policy');
  const spec=wallSpec(material),history=[],owned=new Set();let next=-Infinity,planned=null,completed=null,remainingCost=0,repairRequests=0;
  const coverage=s=>planned&&wallStroke(planned.points,[],options).every(q=>s.structures.some(w=>matches(q,w)));
- const quote=(s,nav,candidate)=>{
+ const quote=(s,nav,candidate,detail={})=>{
   const [x0,z0,x1,z1]=candidate.bounds;
-  if(2*(Math.ceil((x1-x0)/WALL_UNIT)+Math.ceil((z1-z0)/WALL_UNIT))>maxSlots)return null;
+  if(2*(Math.ceil((x1-x0)/WALL_UNIT)+Math.ceil((z1-z0)/WALL_UNIT))>maxSlots){detail.reason='slot-bound';return null;}
   const all=wallStroke(candidate.points,[],options),missing=wallStroke(candidate.points,s.structures,options);
-  if(all.length>maxSlots||all.some(q=>s.structures.some(w=>w.kind==='wall'&&!matches(q,w)&&Math.hypot(q.x-w.x,q.z-w.z)<.35)))return null;
+  if(all.length>maxSlots){detail.reason='slot-bound';return null;}
+  if(all.some(q=>s.structures.some(w=>w.kind==='wall'&&!matches(q,w)&&Math.hypot(q.x-w.x,q.z-w.z)<.35))){detail.reason='damaged-or-conflicting-wall';return null;}
   const plan=Game.quoteWallChain(s,material,candidate.points,nav,options);
-  if(plan.pieces.length!==missing.length||plan.suppressed.length||!all.every(q=>[...s.structures,...plan.pieces].some(w=>matches(q,w))))return null;
+  detail.expectedPieces=missing.length;detail.legalPieces=plan.pieces.length;detail.nativeVegetationRemoval=plan.suppressed.length;
+  if(plan.pieces.length!==missing.length){detail.reason='native-placement-omissions';return null;}
+  if(!all.every(q=>[...s.structures,...plan.pieces].some(w=>matches(q,w)))){detail.reason='incomplete-geometric-coverage';return null;}
+  // Small vegetation cleared by a legal native purchase is allowed. Never
+  // move props or bypass large trees/rocks rejected by native wallPlacement.
+  detail.reason='complete-native-legal-quote';
   return plan;
  };
  function act(s,nav,{command,reserve:cashProtection}){
@@ -32,7 +38,7 @@ export function createNativeFundedDefensePolicy({startDay=6,material='zarzas',in
   if(planned&&coverage(s)){completed=planned;planned=null;remainingCost=0;}
   const attempts=[];
   if(!planned)for(const candidate of closedDefenseContours(s,{previous:completed?.bounds})){
-   const plan=quote(s,nav,candidate);attempts.push({bounds:candidate.bounds,legal:!!plan,cost:plan?.cost??null});
+   const detail={bounds:candidate.bounds},plan=quote(s,nav,candidate,detail);attempts.push({...detail,legal:!!plan,cost:plan?.cost??null});
    if(plan){planned=candidate;remainingCost=plan.cost;break;}
   }
   const row={day:s.day,time:s.time,protectedCash,pendingRepairCoins:pending,attempts,paidCost:0,paidPieces:0,remainingCost,complete:false};history.push(row);
@@ -45,10 +51,11 @@ export function createNativeFundedDefensePolicy({startDay=6,material='zarzas',in
   const funds=Math.max(0,numberOf(s.ledger.balance)-protectedCash-pending),count=Math.min(chunkPieces,Math.floor(funds/spec.cost),plan.pieces.length);
   if(!count){row.reason='saving-actual-cash-for-native-perimeter';return 0;}
   const purchase=Game.previewWallChain(s,material,planned.points,nav,{...options,maxPieces:count});
-  if(purchase.pieces.length!==count||purchase.suppressed.length){row.reason='native-partial-preview-rejected';return 0;}
+  if(purchase.pieces.length!==count){row.reason='native-partial-preview-rejected';return 0;}
   const id=command('wall'),cash=numberOf(s.ledger.balance);
   if(!Game.buildWallChain(s,id,material,planned.points,nav,{...options,maxPieces:count})){row.reason='native-build-rejected';return 0;}
-  row.paidCost=cash-numberOf(s.ledger.balance);row.paidPieces=count;row.paymentId=id;row.ids=purchase.pieces.map(w=>w.id);
+  row.paidCost=cash-numberOf(s.ledger.balance);row.paidPieces=count;row.paymentId=id;row.ids=purchase.pieces.map(w=>w.id);row.nativeSuppressedProps=[...purchase.suppressed];
+  if(!row.nativeSuppressedProps.every(id=>s.suppressed.includes(id)))throw Error('Native vegetation removal receipt mismatch');
   if(row.paidCost!==purchase.cost||!row.ids.every(id=>s.structures.some(w=>w.id===id)))throw Error('Funded native wall settlement mismatch');
   row.complete=coverage(s);remainingCost=wallStroke(planned.points,s.structures,options).length*spec.cost;row.remainingCost=remainingCost;
   row.reason=row.complete?'paid-native-contour-completed':'paid-native-contour-in-progress';

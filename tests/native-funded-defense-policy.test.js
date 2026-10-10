@@ -38,3 +38,12 @@ test('funded defense remains opt-in and cannot lock funds before its declared da
  const {s,nav,options}=fixture(),policy=createNativeFundedDefensePolicy({startDay:6}),before=serialize(s);assert.equal(policy.act(s,nav,options),0);assert.equal(policy.reserve(s),0);assert.equal(serialize(s),before);
  assert.throws(()=>createNativeFundedDefensePolicy({chunkPieces:0}));
 });
+
+test('legal native removal of small vegetation is allowed and recorded only through paid wall commands',()=>{
+ const {s,nav,options}=fixture(),c=s.structures[0];Game.plant(s,'border-seed','mijo',c.x+6,c.z+9,nav);
+ const policy=createNativeFundedDefensePolicy({startDay:1}),before=[...s.suppressed];
+ for(let i=0;i<20&&!policy.report().completed;i++){policy.act(s,nav,options);Game.tick(s,5,nav);}
+ const report=policy.report();assert(report.completed);assert(report.history.some(r=>r.nativeSuppressedProps?.length));
+ const ids=new Set(report.history.flatMap(r=>r.nativeSuppressedProps??[]));for(const id of ids)assert(s.suppressed.includes(id));
+ assert.equal(s.suppressed.filter(id=>!before.includes(id)).length,ids.size);
+});
