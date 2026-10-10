@@ -171,7 +171,7 @@ export const BALANCE = {
       "structure_hit_damage": 20,
       "hit_budget_min": 2,
       "hit_budget_max": 4,
-      "max_per_raid": 3
+      "max_per_raid": null
     },
     {
       "id": "hyena",
@@ -180,7 +180,7 @@ export const BALANCE = {
       "structure_hit_damage": 25,
       "hit_budget_min": 3,
       "hit_budget_max": 5,
-      "max_per_raid": 2
+      "max_per_raid": null
     },
     {
       "id": "buffalo",
@@ -189,7 +189,7 @@ export const BALANCE = {
       "structure_hit_damage": 35,
       "hit_budget_min": 4,
       "hit_budget_max": 6,
-      "max_per_raid": 2
+      "max_per_raid": null
     },
     {
       "id": "lion",
@@ -198,7 +198,7 @@ export const BALANCE = {
       "structure_hit_damage": 40,
       "hit_budget_min": 4,
       "hit_budget_max": 7,
-      "max_per_raid": 2
+      "max_per_raid": null
     },
     {
       "id": "rhino",
@@ -207,7 +207,7 @@ export const BALANCE = {
       "structure_hit_damage": 60,
       "hit_budget_min": 5,
       "hit_budget_max": 8,
-      "max_per_raid": 1
+      "max_per_raid": null
     }
   ],
   "threat_tiers": [
@@ -287,7 +287,7 @@ export const BALANCE = {
       7,
       10
     ],
-    "max_animals": 5,
+    "max_animals": null,
     "min_budget_spend_fraction": 0.75,
     "max_budget_spend_fraction": 1,
     "independent_rolls": true,
