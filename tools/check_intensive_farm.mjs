@@ -111,7 +111,7 @@ export function simulateIntensiveFarm({days=100,profile='olderFemale',mixed=fals
    const decision=act();actions+=decision.actions;
    const centerRequests=s.tasks.filter(t=>t.kind==='repair'&&!beforeRepairs.has(t.id)&&s.structures.some(c=>c.id===t.targetId&&c.kind==='center')).length;
    const dt=s.time<300||s.raid?1:5;
-   evidence?.decision(s,{seconds:dt,reason:decision.reason,otherActions:Math.max(0,decision.actions-centerRequests)});
+   evidence?.decision(s,{seconds:dt,reason:decision.reason,otherActions:Math.max(0,decision.actions-centerRequests-(decision.magicActions??0))});
    // Optional evidence only: immutable scalar observations, not navigation or
    // game commands. Values describe the state after this strategy's decision.
    if(onDecision)onDecision(Object.freeze({day:s.day,time:s.time,seconds:dt,

@@ -51,7 +51,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
  const expansion=policy.foundVillages?createNativeCampaignExpansion():null;
  const daily=[],counts={},seen=new Set(),savedRaids=new Set(),additionalHiring={count:0,cost:0};let maximumLiving=0,reloads=0,settledDeliveryIncome=0;
  let financeStart=campaignFinanceCheckpoint(s);
- partialEvidence=()=>({currentFinance:campaignFinanceDelta(financeStart,s),daily:structuredClone(daily),nativeEvidence:evidence?.report(s)??null,raidEvidence:raidEvidence.report(s),labourHistory,labourReasons,defense:defense?.report(s)??null,expansion:expansion?.report()??null});
+ partialEvidence=()=>({currentFinance:campaignFinanceDelta(financeStart,s),daily:structuredClone(daily),agriculturalMagic:agriculturalMagic.report(s),nativeEvidence:evidence?.report(s)??null,raidEvidence:raidEvidence.report(s),labourHistory,labourReasons,defense:defense?.report(s)??null,expansion:expansion?.report()??null});
  const collect=()=>{for(const e of s.events)if(!seen.has(e.id)){seen.add(e.id);counts[e.type]=(counts[e.type]??0)+1;if(e.type==='CrateDelivered'){const q=s.ledger.entries['deliver:'+e.targetId];assert.ok(q&&q.d==='1'&&Number(q.n)>0);settledDeliveryIncome+=Number(q.n);}if(e.type==='HiringConfirmed'&&e.additional){additionalHiring.count+=e.count;additionalHiring.cost+=e.cost;}}};
  const plotSearch=createNativeCampaignPlots(nav,()=>s);
  const choosePlot=()=>{const p=plotSearch.choose();if(p&&!plots.some(q=>q.x===p.x&&q.z===p.z))plots.push(p);return p;};

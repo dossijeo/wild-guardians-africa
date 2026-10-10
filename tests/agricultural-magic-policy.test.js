@@ -3,8 +3,18 @@ import assert from 'node:assert/strict';
 import * as Game from '../src/simulation/game.js';
 import {createAgriculturalMagicPolicy} from '../tools/native-agricultural-magic.mjs';
 import {PreciseTap} from '../src/ui/precise-tap.js';
+import {createNativeCampaignEvidence} from '../tools/native-campaign-evidence.mjs';
 import {clearNavigation} from './clear-navigation.js';
 const nav=clearNavigation();
+test('a successful native agricultural application earns no occupied decision-window credit',()=>{
+ const s=fixture(),evidence=createNativeCampaignEvidence(s),policy=createAgriculturalMagicPolicy({mode:'intensive'});
+ assert.equal(policy.act(s,nav),true);
+ evidence.decision(s,{seconds:1,otherActions:0});Game.tick(s,1,nav);evidence.finishDecision(s);
+ const report=evidence.report(s);
+ assert.equal(report.status,'verified');assert.ok(Math.abs(report.meaningfulActivity.daylightSeconds-1)<1e-9);
+ assert.equal(report.meaningfulActivity.unoccupiedSeconds,report.meaningfulActivity.daylightSeconds);
+ assert.equal(policy.report(s).applications,1);assert.equal(policy.report(s).effectDurationActivityCreditSeconds,0);
+});
 function fixture(){
  const s=Game.newGame({slotId:'policy',seed:712});Game.resume(s,'intro');Game.placeStructure(s,'center',{x:0,z:0},nav);
  for(let i=0;i<6;i++)Game.plant(s,'seed-'+i,'mijo',6+i*1.5,0,nav);

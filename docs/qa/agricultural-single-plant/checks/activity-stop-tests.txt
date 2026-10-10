@@ -1,0 +1,45 @@
+TAP version 13
+# Subtest: a successful native agricultural application earns no occupied decision-window credit
+ok 1 - a successful native agricultural application earns no occupied decision-window credit
+  ---
+  duration_ms: 14.1197
+  ...
+# Subtest: paced policies execute native single-plant applications without duration credit or artificial income
+ok 2 - paced policies execute native single-plant applications without duration credit or artificial income
+  ---
+  duration_ms: 38.636
+  ...
+# Subtest: one pointer tap selects once; cancellation, drag-back and pinch select nothing
+ok 3 - one pointer tap selects once; cancellation, drag-back and pinch select nothing
+  ---
+  duration_ms: 2.331
+  ...
+# Subtest: CLI fixes baseline defaults, accepts100 combat +80peace days and refuses invalid cases
+ok 4 - CLI fixes baseline defaults, accepts100 combat +80peace days and refuses invalid cases
+  ---
+  duration_ms: 3.2657
+  ...
+# Subtest: cooperative calibration stop preserves partial receipt without inventing native defeat
+ok 5 - cooperative calibration stop preserves partial receipt without inventing native defeat
+  ---
+  duration_ms: 13.9605
+  ...
+# Subtest: stop-file is observed on a tick even before a daily checkpoint
+ok 6 - stop-file is observed on a tick even before a daily checkpoint
+  ---
+  duration_ms: 9.0963
+  ...
+# Subtest: partial tool error keeps original daily journal, source receipt and native result without inventing defeat
+ok 7 - partial tool error keeps original daily journal, source receipt and native result without inventing defeat
+  ---
+  duration_ms: 9.9229
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 338.0848
