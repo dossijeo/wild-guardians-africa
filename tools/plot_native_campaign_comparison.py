@@ -84,7 +84,7 @@ def write_comparison(prefix, directories, *, vary_defense_material=False):
             axis.plot(x, y, marker='o', markersize=3, label=label)
     for axis, title in zip(axes.flat, ('Available coins', 'Living crops', 'Cumulative destroyed crops', 'Paid walls and repairs (coins)')):
         axis.set_title(title)
-        axis.set_xlabel('Native day (includes terminal defeat)')
+        axis.set_xlabel('Native day (includes terminal defeat)' if any(report['result'] is not None for _, report, _ in runs) else 'Native day')
         axis.xaxis.set_major_locator(MaxNLocator(integer=True))
         first_day = min(d['day'] for _, report, _ in runs for d in report['daily'])
         last_day = max(d['day'] for _, report, _ in runs for d in report['daily'])

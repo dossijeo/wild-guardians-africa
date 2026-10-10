@@ -36,3 +36,8 @@ configuration. It must finish before the complete three-seed comparison and
 the next recovery pilots. Human input-time inactivity remains unmeasured;
 the automated idle proxy must not be reported as human activity acceptance.
 No production merge or hundred/180-day approval follows from this report.
+
+The paired712 money/population/loss/paid-defense charts are saved as
+`pilot-v29-q9-sabana-712-fourteen-final-charts.{png,svg,csv,json}`. The rendered
+PNG was inspected. Its axes correctly say native day because neither campaign
+contains a terminal defeat. The plotting utility's ten regression tests pass.
