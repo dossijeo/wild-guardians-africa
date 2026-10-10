@@ -9,10 +9,12 @@ let referenceHashes;
 const cases=dirs.map(dir=>{
  const root=resolve(dir),read=name=>JSON.parse(readFileSync(join(root,name),'utf8'));
  const receipt=read('receipt.json'),report=read('report.json'),source=read('source.json');
- assert.equal(receipt.status,'observed-horizon','Only completed observed horizons are accepted by this audit');
- assert.equal(receipt.result,null);assert.equal(report.result,null);
+ assert.ok(['observed-horizon','observed-native-defeat'].includes(receipt.status),'Only terminal native observations are accepted');
+ const defeated=receipt.status==='observed-native-defeat';
+ assert.equal(receipt.result,defeated?'defeat':null);assert.equal(report.result,receipt.result);
  const rows=readFileSync(join(root,'days.jsonl'),'utf8').trim().split(/\r?\n/).map(JSON.parse);
- assert.equal(rows.length,receipt.completedNights);assert.equal(report.completedNights,receipt.completedNights);
+ assert.equal(rows.length,receipt.completedNights+(defeated?1:0));assert.equal(report.completedNights,receipt.completedNights);
+ assert.equal(rows.at(-1).result,receipt.result);
  assert.equal(report.nativeEvidence.status,'verified');assert.equal(report.nativeEvidence.coverageLost,false);
  assert.equal(report.raidEvidence.status,'verified');assert.equal(report.raidEvidence.coverageLost,false);
  assert.deepEqual(report.raidEvidence.issues,[]);
@@ -40,7 +42,7 @@ const cases=dirs.map(dir=>{
  assert.equal(delivered.size,incomeIds.size);
  assert.equal(report.money,rows.at(-1).money);
  const raids=report.raidEvidence.raids;
- assert.equal(raids.length,receipt.completedNights);
+ assert.equal(raids.length,rows.length);
  let assigned=0,consumed=0,unused=0;
  for(const r of raids){assert.equal(r.ended,true);for(const v of Object.values(r.species)){
   assert.equal(v.initialHitBudget,v.observedBudgetConsumed+v.unconsumedOrUnobservedBudget);
@@ -54,6 +56,6 @@ const cases=dirs.map(dir=>{
   assert.ok(r.cropsDestroyed<=r.exposedLivingAtSpawn);
  }
  const reference=(base,slope)=>exposure?postIntroduction.reduce((n,r)=>n+r.exposedLivingAtSpawn*(base+slope*(r.day-1)),0)/exposure:null;
- return {directory:dir,seed:report.seed,strategy:report.strategy,completedNights:receipt.completedNights,money:report.money,living:rows.at(-1).living,centerHp:rows.at(-1).centerHp,destroyed:report.counts.CropDestroyed??0,totals,strikes:{assigned,consumed,unused},postIntroduction:{exposure,losses,weightedDestroyedFraction:exposure?losses/exposure:null,unprotectedReferenceFraction:reference(.2057,.0007),protectedReferenceFraction:reference(.0351,.0001),scope:'References are hypotheses only, never applied damage; exposure is the native census at each raid spawn'},ledgerAndDeliveryMatch:true,sourceHashesMatch:true,scope:'Native fourteen-night evidence only; not hundred-night or human activity acceptance'};
+ return {directory:dir,seed:report.seed,strategy:report.strategy,status:receipt.status,result:report.result,terminalDay:rows.at(-1).day,completedNights:receipt.completedNights,money:report.money,living:rows.at(-1).living,centerHp:rows.at(-1).centerHp,destroyed:report.counts.CropDestroyed??0,totals,strikes:{assigned,consumed,unused},postIntroduction:{exposure,losses,weightedDestroyedFraction:exposure?losses/exposure:null,unprotectedReferenceFraction:reference(.2057,.0007),protectedReferenceFraction:reference(.0351,.0001),scope:'References are hypotheses only, never applied damage; exposure is the native census at each raid spawn'},ledgerAndDeliveryMatch:true,sourceHashesMatch:true,scope:'Native terminal evidence only; not hundred-night or human activity acceptance'};
 });
 console.log(JSON.stringify({cases},null,2));

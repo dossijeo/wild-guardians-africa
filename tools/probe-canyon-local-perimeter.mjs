@@ -1,0 +1,36 @@
+// Predictive strict proof for one legal local wall; no live construction.
+import assert from 'node:assert/strict';
+import {readFileSync,writeFileSync,existsSync} from 'node:fs';
+import {gunzipSync} from 'node:zlib';
+import {createHash} from 'node:crypto';
+import {deserialize,serialize} from '../src/persistence/snapshots.js';
+import {Navigation,BIOME_IDS} from '../src/world/navigation.js';
+import * as Game from '../src/simulation/game.js';
+import {nativePerimeterProof} from './native-perimeter-proof.mjs';
+const [retained,local,output,selection='first']=process.argv.slice(2);
+assert.ok(retained&&local&&output&&!existsSync(output));
+assert.ok(['first','nearest'].includes(selection));
+const prior=JSON.parse(readFileSync(retained)),localProbe=JSON.parse(readFileSync(local));
+assert.equal(prior.input,localProbe.input);
+const bytes=readFileSync(prior.input),state=deserialize(gunzipSync(bytes).toString()),before=serialize(state);
+assert.equal(createHash('sha256').update(bytes).digest('hex'),localProbe.snapshotSha256);
+const nav=new Navigation(state.seed,state.biome,JSON.parse(readFileSync(`public/content/biome-${BIOME_IDS[state.biome]}.json`)).profile);nav.setState(state);
+const failed=prior.rows.find(r=>r.proof?.checks?.some(c=>c.services?.reason==='native-service-origin-unproven'));
+assert.ok(failed);
+const candidates=localProbe.rows.filter(r=>r.blocksPose&&!r.gate);
+if(selection==='nearest')candidates.sort((a,b)=>{
+ const distance=r=>Math.hypot((r.points[0][0]+r.points[1][0])/2-localProbe.point.x,(r.points[0][1]+r.points[1][1])/2-localProbe.point.z);
+ return distance(a)-distance(b);
+});
+const choice=candidates[0];assert.ok(choice);
+const options={smooth:false,snap:false};
+const base=Game.quoteWallChain(state,'zarzas',failed.candidate.points,nav,options);
+const extra=Game.quoteWallChain(state,'zarzas',choice.points,nav,options);
+assert.equal(base.pieces.length,failed.quote.count);assert.equal(base.cost,failed.quote.cost);
+assert.equal(extra.pieces.length,1);assert.equal(extra.updates.length,0);assert.equal(extra.pieces[0].gate,false);
+const plan={...base,pieces:[...base.pieces,...extra.pieces.map((p,i)=>({...p,id:`qa-local-proposal-${i}`}))],suppressed:[...new Set([...(base.suppressed??[]),...(extra.suppressed??[])])]};
+const started=performance.now();
+const proof=nativePerimeterProof(state,nav,plan,failed.candidate.bounds,{cache:false,outline:failed.candidate.points});
+assert.equal(serialize(state),before);assert.deepEqual(readFileSync(prior.input),bytes);
+const result={input:prior.input,selection,snapshotSha256:localProbe.snapshotSha256,points:choice.points,extraCost:extra.cost,baseCost:base.cost,totalQuotedPieces:plan.pieces.length,proof,wallClockMs:performance.now()-started,stateUnchanged:true,scope:'Strict predictive native perimeter proof, not paid defense or complete worker-service, visual, GPU or economic acceptance'};
+writeFileSync(output,JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify({valid:proof.valid,reason:proof.reason,wallClockMs:result.wallClockMs,stateUnchanged:true}));

@@ -1,0 +1,73 @@
+{
+  "input": "docs/qa/integrated-spiritual-survival/pilot-v6-good-canyon-712-inland/partial-state.json.gz",
+  "snapshotSha256": "3d65277721f7059850ee4f7ecc0713fe7db506288edb0c67a92e113ab03b327b",
+  "points": [
+    [
+      -15.57318644229418,
+      52.88413519062497
+    ],
+    [
+      -14.48318644229418,
+      52.88413519062497
+    ]
+  ],
+  "extraCost": 10,
+  "baseCost": 590,
+  "totalQuotedPieces": 60,
+  "proof": {
+    "valid": false,
+    "reason": "native-service-origin-unproven",
+    "checks": [
+      {
+        "radius": 1.1,
+        "inside": {
+          "x": -12,
+          "z": 76.5
+        },
+        "outside": {
+          "x": -38,
+          "z": 76.5
+        },
+        "completeClosedComponent": false,
+        "services": {
+          "valid": true,
+          "reason": "native-service-poses-in-positive-closed-components",
+          "poses": 3776,
+          "blocked": 1201,
+          "certified": 2575,
+          "physicalConnectors": 0,
+          "emptyNativeOrigins": 0,
+          "regions": 3,
+          "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+        }
+      },
+      {
+        "radius": 0.9,
+        "inside": {
+          "x": -12,
+          "z": 76.5
+        },
+        "outside": {
+          "x": -38,
+          "z": 76.5
+        },
+        "completeClosedComponent": false,
+        "services": {
+          "valid": false,
+          "reason": "native-service-origin-unproven",
+          "targetId": "plant-1668",
+          "point": {
+            "x": -13.678939325219273,
+            "z": 54.01071133829265
+          },
+          "poses": 374,
+          "blocked": 183,
+          "certified": 190
+        }
+      }
+    ]
+  },
+  "wallClockMs": 3654.4253,
+  "stateUnchanged": true,
+  "scope": "Strict predictive native perimeter proof, not paid defense or complete worker-service, visual, GPU or economic acceptance"
+}
