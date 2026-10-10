@@ -475,6 +475,13 @@
       "path": "docs/qa/windows-loading-regression/partition-production-minimal/library-closure.log.gz",
       "bytes": 850,
       "sha256": "3cf847538393bf9663700e1035e9422d110df6322723bb24f18195f5428b5d3a"
+    },
+    {
+      "path": "docs/qa/windows-loading-regression/partition-production-minimal/checkout.log.gz",
+      "bytes": 208,
+      "sha256": "dd2010899c95785e7c1a44b2e3226a7e348963153bdfbd23b99c92f0f3bf4c0e",
+      "originalBytes": 336,
+      "originalSha256": "accab115663c97d932d6b85031a085e971ea2639f74269b0b090beea28b2cf8f"
     }
   ],
   "checks": {
@@ -483,7 +490,7 @@
     "package": "exit0 720files445270909B860links24GLBs",
     "syntax": "23changedJS/MJS PASS",
     "sfx": "126exactoriginal stalefalse",
-    "checkout": "Pending source commit then real Git autocrlf checkout"
+    "checkout": "1/1 PASS actual shared sparse Git checkout at sourceCommit with core.autocrlf=true; manifest2313B/SHA98e4f7db; exit0 duration1249.1043ms"
   },
   "negatives": [
     {
@@ -506,5 +513,6 @@
       "toolChunk": "518ff4",
       "runtimeImpact": false
     }
-  ]
+  ],
+  "sourceCommit": "d332bf842718db50e3fca3b27285abdcadc50c45"
 }

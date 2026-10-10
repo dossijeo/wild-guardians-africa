@@ -8,6 +8,8 @@ The 11 replacement resources total 40,848,807 bytes, replacing 40,844,796 bytes 
 
 The usable legacy library loads its separate manifest and `be4bb7e7…glb`; it does not load the replaced crop collections or models.json. A specific closure test confirms its direct GLB payloads remain physical resources. Library files are unchanged.
 
+Source frozen commit: `d332bf842718db50e3fca3b27285abdcadc50c45`. Subsequent receipt commit changes evidence only.
+
 ## Checks
 
 - 60/60 contract tests, session58284 exit0, 10,967.2475ms; exact command appears below.
@@ -15,7 +17,7 @@ The usable legacy library loads its separate manifest and `be4bb7e7…glb`; it d
 - Build exit0, Vite9.96s. Existing chunk-size warning retained. Package exit0.
 - Changed-source syntax 23 files PASS; subsequent added library test `node --check` PASS.
 - SFX audit retains all126 original files, 100 assigned/26 unassigned and all row semantics; only App source hash/+1 caller line changes.
-- Actual Git core.autocrlf=true checkout must follow the source commit; hash-addressed manifest uses `-text` and must remain 2313 bytes/SHA98e4f7db….
+- Actual Git core.autocrlf=true shared sparse checkout of source `d332bf842718db50e3fca3b27285abdcadc50c45`: 1/1 PASS, 1249.1043ms, exit0. Hash-addressed manifest retains2313 bytes/SHA98e4f7db… with `-text`.
 
 ```powershell
 node --test tests/crop-library-partition.test.js tests/crop-partition-lifecycle.test.js tests/crop-runtime-integration.test.js tests/crop-partition-app.test.js tests/assets-lifecycle.test.js tests/crop-native-reload.test.js tests/web-package.test.js tests/loading-diorama-disposal.test.js tests/loading-diorama-upload.test.js tests/sfx-catalog-audit.test.js
