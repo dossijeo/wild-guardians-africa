@@ -5,7 +5,34 @@ update below supersedes the historical checkpoint text that follows. Earlier
 sources, failed candidates and measurements are retained, not silently changed
 into current-main acceptance.
 
-## Current-state checkpoint — 10 October, runtime a7fe45c1
+## Current-state checkpoint — 10 October, evidence main749194e2
+
+The isolated28b crop-partition lineage now has a real corrected-menu native
+night preview: the App's actual save list supplies the saved time, the initial
+PNG is already night1, four initial sprouts and five mature maize plants are
+visible, and the synthetic fifth plant does not modify the logical farm.
+[Exact report and images](windows-loading-regression/partition-28b-native-night-root/README.md)
+also retain300478.9ms of real hiding with all21 simulation fields unchanged.
+This closes the earlier directed initial-night-frame gap; it does not rewrite
+the old12dd capture, prove composited HTML UI or represent physical input.
+
+The complete-source crop-overlap experiment passed four local native A/B/B/A
+runs on the same Intel GPU, fixture and viewport. Mean A18.32375s versus
+B18.42990s establishes no total-load saving in this small comparison.
+[Originals and limitations](windows-loading-regression/native-pair-abba-root/README.md)
+are archived; crop overlap remains OFF and unpromoted. The exact branche140
+full Validate run38025767621 passes3882tests,0fail with one real-PowerShell
+test skipped on Linux; all asset/build/package checks pass. Its six earlier
+shallow-Git-reference failures remain archived separately.
+
+Advanced-progress fifth-plant catch-up is being validated by a new opt-in
+QA selector; no native65% result is claimed yet. Portrait, composited UI,
+physical touch/mouse, all-biome/culture visual acceptance and final deduplicated
+production integration remain open. Main749194e2 adds evidence only; it does
+not activate the isolated crop recipe or close the full campaign/master-plan
+scope below. Prior native failures remain failed.
+
+## Earlier checkpoint — 10 October, runtime a7fe45c1
 
 The final deduplicated crop partition remains isolated at12dd78a2. Its official
 Windows run38019388562 built successfully but failed the unchanged90-second
