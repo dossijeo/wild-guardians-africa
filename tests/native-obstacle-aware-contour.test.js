@@ -11,6 +11,7 @@ import {nativePerimeterProof} from '../tools/native-perimeter-proof.mjs';
 import * as Game from '../src/simulation/game.js';
 import {wallStroke} from '../src/world/wall-layout.js';
 import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
+import {hitStructure} from '../src/simulation/rules.js';
 
 const source=new URL('../docs/qa/native-economic-balance/pilot-funded-5985791f-q8-good-day6-712-7/state.json.gz',import.meta.url);
 function snapshot(){
@@ -55,4 +56,20 @@ test('routed policy retains real partial purchases and native gate creation in a
  assert.equal(s.structures.filter(w=>w.gate).length,1);
  for(const row of r.history.filter(r=>r.paidCost))assert(s.ledger.entries[row.paymentId]);
  assert.equal(p.reserve(s),0);
+});
+
+test('damage to a paid enclosing wall requests native maintenance instead of buying a second perimeter',()=>{
+ const {s,nav}=createOpeningWorld(),c=s.structures[0];
+ Game.plant(s,'maintain-seed','mijo',c.x+6,c.z+1,nav);Game.openInitialHiring(s);Game.hire(s,'maintain-hire',{olderFemale:1});
+ const p=createNativeFundedDefensePolicy({startDay:1,obstacleAware:true});let id=0;
+ const options={command:k=>`maintain-${k}-${id++}`,reserve:30};
+ for(let i=0;i<20&&!p.report().completed;i++){p.act(s,nav,options);Game.tick(s,5,nav);}
+ assert(p.report().completed);
+ const before=p.report().paidCost,pieces=p.report().paidPieces,wall=s.structures.find(w=>w.kind==='wall'&&!w.gate);
+ assert(hitStructure(wall,wall.maxHp,s.elapsed));nav.setState(s);Game.tick(s,5,nav);
+ p.act(s,nav,options);
+ assert.equal(p.report().paidCost,before);assert.equal(p.report().paidPieces,pieces);
+ assert.equal(p.report().history.at(-1).reason,'maintaining-paid-native-contour');
+ assert(s.tasks.some(t=>t.kind==='repair'&&t.targetId===wall.id)||wall.status==='collapsing');
+ assert.equal(p.report().history.at(-1).complete,false);
 });

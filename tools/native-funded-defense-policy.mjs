@@ -7,17 +7,21 @@ import {permission,wallSpec} from '../src/simulation/rules.js';
 import {HIRING_RESERVE} from '../src/simulation/budget.js';
 import {obstacleAwareContour} from './native-obstacle-aware-contour.mjs';
 import {nativePerimeterProof} from './native-perimeter-proof.mjs';
+import {containsPoint} from '../src/world/footprints.js';
+import {centerFootprint} from '../src/world/centers.js';
+import {operational} from '../src/simulation/rules.js';
 const options={smooth:false,snap:false};
-const matches=(q,w)=>w.kind==='wall'&&w.status==='intact'&&w.hp>0&&Math.hypot(q.x-w.x,q.z-w.z)<.35&&Math.abs(Math.sin(q.angle+(w.yaw??0)))<.18;
+const sameSlot=(q,w)=>w.kind==='wall'&&Math.hypot(q.x-w.x,q.z-w.z)<.35&&Math.abs(Math.sin(q.angle+(w.yaw??0)))<.18;
+const matches=(q,w)=>w.status==='intact'&&w.hp>0&&sameSlot(q,w);
 export function createNativeFundedDefensePolicy({startDay=6,material='zarzas',interval=5,chunkPieces=8,maxSlots=256,repairWalls=true,obstacleAware=false}={}){
  if(!Number.isSafeInteger(startDay)||startDay<1||!Number.isFinite(interval)||interval<=0||!Number.isSafeInteger(chunkPieces)||chunkPieces<1||!Number.isSafeInteger(maxSlots)||maxSlots<4||chunkPieces>maxSlots||maxSlots>256)throw Error('Invalid bounded funded defense policy');
  const spec=wallSpec(material),history=[],owned=new Set();let next=-Infinity,planned=null,completed=null,remainingCost=0,repairRequests=0;
- const coverage=(s,nav)=>{
-  if(!planned)return false;
-  if(wallStroke(planned.points,[],options).every(q=>s.structures.some(w=>matches(q,w))))return true;
+ const coverage=(s,nav,candidate=planned)=>{
+  if(!candidate)return false;
+  if(wallStroke(candidate.points,[],options).every(q=>s.structures.some(w=>matches(q,w))))return true;
   if(!obstacleAware)return false;
-  const plan=Game.quoteWallChain(s,material,planned.points,nav,options);
-  return !plan.pieces.length&&!plan.updates.length&&nativePerimeterProof(s,nav,plan,planned.bounds).valid;
+  const plan=Game.quoteWallChain(s,material,candidate.points,nav,options);
+  return !plan.pieces.length&&!plan.updates.length&&nativePerimeterProof(s,nav,plan,candidate.bounds).valid;
  };
  const quote=(s,nav,candidate,detail={})=>{
   const [x0,z0,x1,z1]=candidate.bounds;
@@ -46,6 +50,24 @@ export function createNativeFundedDefensePolicy({startDay=6,material='zarzas',in
   let pending=s.tasks.filter(t=>t.kind==='repair').reduce((n,t)=>{const w=s.structures.find(w=>w.id===t.targetId);return n+(w?numberOf(Game.repairCost(w)):0);},0);
   for(const w of s.structures)if(repairWalls&&owned.has(w.id)&&['intact','ruined'].includes(w.status)&&w.hp<w.maxHp*.8&&!s.tasks.some(t=>t.kind==='repair'&&t.targetId===w.id)){
    const cost=numberOf(Game.repairCost(w));if(numberOf(s.ledger.balance)>=protectedCash+pending+cost&&Game.requestRepair(s,command('repair'),w.id)){pending+=cost;repairRequests++;}
+  }
+  if(obstacleAware&&completed&&!planned){
+   const polygon=completed.points.slice(0,-1).map(([x,z])=>({x,z}));
+   const land=[...s.plants.filter(p=>p.alive),...s.structures.filter(operational).flatMap(c=>centerFootprint(c,s).footprint)];
+   if(land.every(p=>containsPoint(polygon,p.x,p.z))){
+    const slots=wallStroke(completed.points,[],options);
+    const damaged=s.structures.filter(w=>slots.some(q=>sameSlot(q,w))&&(w.status!=='intact'||w.hp<=0));
+    if(damaged.length||coverage(s,nav,completed)){
+     // Broken paid walls are repaired/rebuilt through native worker tasks.
+     // Never buy a second perimeter merely to route around our own damage.
+     remainingCost=damaged.filter(w=>!s.tasks.some(t=>t.kind==='repair'&&t.targetId===w.id)).reduce((sum,w)=>sum+numberOf(Game.repairCost(w)),0);
+     history.push({day:s.day,time:s.time,protectedCash,pendingRepairCoins:pending,attempts:[],paidCost:0,paidPieces:0,remainingCost,complete:!damaged.length,bounds:completed.bounds,reason:damaged.length?'maintaining-paid-native-contour':'existing-paid-native-contour'});
+     return 0;
+    }
+    // A deleted piece without a repairable entity must be repurchased along
+    // the original paid trace, rather than selecting a fresh outer ring.
+    planned=completed;
+   }
   }
   if(planned&&coverage(s,nav)){completed=planned;planned=null;remainingCost=0;}
   const attempts=[];
