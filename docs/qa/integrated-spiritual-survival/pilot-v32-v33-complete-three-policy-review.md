@@ -1,4 +1,4 @@
-#2026: complete21-night comparison with physical defenses
+# 2026: complete21-night comparison with physical defenses
 
 All three2026 controls are now terminal. They share identical frozen sources,
 Q9 labor, HP1, constant prices, native magic and the same pressure generator.
