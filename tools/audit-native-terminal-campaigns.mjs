@@ -46,6 +46,14 @@ const cases=dirs.map(dir=>{
   assert.equal(v.initialHitBudget,v.observedBudgetConsumed+v.unconsumedOrUnobservedBudget);
   assigned+=v.initialHitBudget;consumed+=v.observedBudgetConsumed;unused+=v.unconsumedOrUnobservedBudget;
  }}
- return {directory:dir,seed:report.seed,strategy:report.strategy,completedNights:receipt.completedNights,money:report.money,living:rows.at(-1).living,centerHp:rows.at(-1).centerHp,destroyed:report.counts.CropDestroyed??0,totals,strikes:{assigned,consumed,unused},ledgerAndDeliveryMatch:true,sourceHashesMatch:true,scope:'Native fourteen-night evidence only; not hundred-night or human activity acceptance'};
+ const postIntroduction=raids.filter(r=>r.day>=6);
+ const exposure=postIntroduction.reduce((n,r)=>n+r.exposedLivingAtSpawn,0);
+ const losses=postIntroduction.reduce((n,r)=>n+r.cropsDestroyed,0);
+ for(const r of postIntroduction){
+  assert.ok(Number.isSafeInteger(r.exposedLivingAtSpawn)&&r.exposedLivingAtSpawn>=0);
+  assert.ok(r.cropsDestroyed<=r.exposedLivingAtSpawn);
+ }
+ const reference=(base,slope)=>exposure?postIntroduction.reduce((n,r)=>n+r.exposedLivingAtSpawn*(base+slope*(r.day-1)),0)/exposure:null;
+ return {directory:dir,seed:report.seed,strategy:report.strategy,completedNights:receipt.completedNights,money:report.money,living:rows.at(-1).living,centerHp:rows.at(-1).centerHp,destroyed:report.counts.CropDestroyed??0,totals,strikes:{assigned,consumed,unused},postIntroduction:{exposure,losses,weightedDestroyedFraction:exposure?losses/exposure:null,unprotectedReferenceFraction:reference(.2057,.0007),protectedReferenceFraction:reference(.0351,.0001),scope:'References are hypotheses only, never applied damage; exposure is the native census at each raid spawn'},ledgerAndDeliveryMatch:true,sourceHashesMatch:true,scope:'Native fourteen-night evidence only; not hundred-night or human activity acceptance'};
 });
 console.log(JSON.stringify({cases},null,2));
