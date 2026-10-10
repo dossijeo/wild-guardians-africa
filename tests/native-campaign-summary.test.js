@@ -1,6 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {summarizeNativeCase,summarizeNativeRaid,writeNativeComparison} from '../tools/summarize-native-campaigns.mjs';
+
+test('Area raids report native HP efficiency and never reuse single-plant legacy casualty bounds',()=>{
+ const r=summarizeNativeRaid({...raid(),pressureFacts:{pressure:.7},potentialAgriculturalHp:100,effectiveAgriculturalHp:28,agriculturalEfficiency:.28,plantsReached:19,woundedAfterAttack:5,targetUnavailableAttempts:3,routeUnavailableAttempts:1});
+ assert.equal(r.freshCropKillUpperBound,null);assert.equal(r.woundedCropKillUpperBound,null);
+ assert.equal(r.referencePotentialAgriculturalHp,100);assert.equal(r.effectiveAgriculturalHp,28);
+ assert.equal(r.agriculturalEfficiency,.28);assert.equal(r.plantsReached,19);assert.equal(r.woundedAfterAttack,5);
+ assert.equal(r.targetUnavailableAttempts,3);assert.equal(r.routeUnavailableAttempts,1);
+});
 import {mkdtempSync,readFileSync,rmSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';

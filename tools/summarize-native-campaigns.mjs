@@ -16,10 +16,16 @@ export function summarizeNativeRaid(r){
   shieldContacts:r.shieldContacts??0,wallHits:r.wallHits??0,centerHits:r.centerHits??0,
   replacementCost:r.cropReplacementCost??0,lostBaseHarvestValue:r.lostBaseHarvestValue??0,
   destroyedFraction:exact&&r.ended&&r.exposedLivingAtSpawn>0?r.cropsDestroyed/r.exposedLivingAtSpawn:null,
-  freshCropKillUpperBound:Math.floor(budget/2),woundedCropKillUpperBound:budget,
+  // Single-plant legacy bounds do not apply to profiled area attacks. Q is a
+  // density-reference potential, not a universal physical upper bound.
+  freshCropKillUpperBound:r.pressureFacts?null:Math.floor(budget/2),woundedCropKillUpperBound:r.pressureFacts?null:budget,
+  pressure:r.pressureFacts?.pressure??null,referencePotentialAgriculturalHp:r.potentialAgriculturalHp??null,
+  effectiveAgriculturalHp:r.effectiveAgriculturalHp??null,agriculturalEfficiency:r.agriculturalEfficiency??null,
+  plantsReached:r.plantsReached??null,woundedAfterAttack:r.woundedAfterAttack??null,
+  targetUnavailableAttempts:r.targetUnavailableAttempts??0,routeUnavailableAttempts:r.routeUnavailableAttempts??0,
   targetUnprotected:!r.daytime?.2057+.0007*(r.day-1):null,
   targetProtected:!r.daytime?.0351+.0001*(r.day-1):null,
-  species:r.species??{},scope:'Per completed raid, exact spawn census only. Targets are reference hypotheses, never deletion rules. Kill upper bounds assume every strike reaches crops; they are not expected or guaranteed damage. Replacement cost and lost base harvest are diagnostic opportunity losses, never ledger expenses.'};
+  species:r.species??{},scope:'Per completed raid, exact spawn census only. Targets are reference hypotheses, never deletion rules. Legacy single-plant kill bounds are omitted for area-profiled raids. Q is reference-density potential, not a guaranteed casualty count or universal upper bound. Replacement cost and lost base harvest are diagnostic opportunity losses, never ledger expenses.'};
 }
 
 export function summarizeNativeCase({receipt,source,report,partial}){
@@ -59,7 +65,7 @@ export function summarizeNativeCase({receipt,source,report,partial}){
  return {strategy:source.arguments.strategy,seed:source.arguments.seed,gitHead:source.gitHead,
   labourPolicy:data.labourPolicy??source.arguments.labourPolicy??null,
   requestedDays:source.arguments.days??null,biome:data.biome??source.arguments.biome??null,culture:data.culture??source.arguments.culture??null,
-  shieldEnabled:typeof data.shieldEnabled==='boolean'?data.shieldEnabled:null,
+  shieldEnabled:typeof data.policy?.shieldEnabled==='boolean'?data.policy.shieldEnabled:typeof data.shieldEnabled==='boolean'?data.shieldEnabled:null,
   protocolId:data.protocol?.id??source.protocol?.id??null,
   status:receipt.status,result:receipt.result??receipt.nativeResult??null,error:receipt.message??null,
   observedDays:daily.length,completedNights:report?.completedNights??null,
@@ -80,7 +86,7 @@ export function writeNativeComparison(out,cases){
  writeFileSync(resolve(out,'comparison.json'),JSON.stringify(cases,null,2)+'\n');
  const columns=['strategy','seed','status','day','money','income','expenses','net','cumulativeOperatingNet','seeds','wages','walls','repairs','centers','villages','refunds','otherCredits','otherDebits','purchased','living','delivered','destroyed','wallPieces','animals','cropHits','wallHits','centerHits','destroyedByAttacks','shieldContacts','referenceRepairCostAtEndLiving','idleFraction','rawDecisionIdleFraction','activityBasis','gitHead','labourPolicy','shieldEnabled','biome','culture','requestedDays','protocolId'];
  writeFileSync(resolve(out,'daily.csv'),columns.join(',')+'\n'+cases.flatMap(c=>c.daily.map(d=>columns.map(k=>d[k]??c[k]??'').join(','))).join('\n')+'\n');
- const raidColumns=['strategy','seed','id','day','daytime','ended','animals','exposedLiving','exposedWounded','hitBudget','consumedStrikes','remainingOrUnobservedStrikes','potentialStructureDamage','structureHpLost','wallHpLost','cropHits','destroyed','destroyedFraction','workerHits','misses','shieldContacts','wallHits','centerHits','replacementCost','lostBaseHarvestValue','freshCropKillUpperBound','woundedCropKillUpperBound','targetUnprotected','targetProtected'];
+ const raidColumns=['strategy','seed','id','day','daytime','ended','animals','exposedLiving','exposedWounded','hitBudget','consumedStrikes','remainingOrUnobservedStrikes','potentialStructureDamage','structureHpLost','wallHpLost','cropHits','destroyed','destroyedFraction','workerHits','misses','shieldContacts','wallHits','centerHits','replacementCost','lostBaseHarvestValue','freshCropKillUpperBound','woundedCropKillUpperBound','targetUnprotected','targetProtected','pressure','referencePotentialAgriculturalHp','effectiveAgriculturalHp','agriculturalEfficiency','plantsReached','woundedAfterAttack','targetUnavailableAttempts','routeUnavailableAttempts'];
  writeFileSync(resolve(out,'raids.csv'),raidColumns.join(',')+'\n'+cases.flatMap(c=>c.raids.map(r=>raidColumns.map(k=>r[k]??c[k]??'').join(','))).join('\n')+'\n');
  const lines=['# Piloto nativo: resultados observados','',
   '| Estrategia | Contratación declarada | Fuente | Semilla | Estado | Días completos / solicitados | Dinero | Vivas | Ingresos | Gastos | Neto diario acumulado | Muros comprados | Golpes a muros | Inactividad |',
