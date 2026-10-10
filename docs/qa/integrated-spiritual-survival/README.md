@@ -112,3 +112,46 @@ functional checkpoints, not campaign acceptance. Browser QA remains unavailable
 through the previously documented official runtime initialization error.
 
 Pilot v1 was refused before simulation because the generated English message catalog remained unstaged. This is retained as a harness freeze error, with zero native campaign days, not a defeat. Freeze the catalog and use a fresh v2 evidence directory.
+
+## Candidate 2: accounting clarity and concentration cap
+
+All pilots and 50/200/500 fixtures above use frozen 7c274e9e candidate 1.
+Do not relabel them as candidate 2 results. Two protected pilots were stopped
+cooperatively to inspect CPU routing cost: Sabana day 7 at time 240, Gran Cañón
+day 7 at time 31. Neither had an active raid or a native defeat at the stop.
+Snapshots, receipts and source hashes remain original.
+
+Candidate 2 explicitly limits one Multiply entitlement to at most 11 additional
+coins before diminishing returns, or the base value if cheaper. Thus an
+expensive crop cannot absorb most of the 132-coin daily capacity in one touch.
+Requests use this cap, independent of farm composition. ×2 remains an absolute
+ceiling, not a promised result for every species. This is an announced candidate
+change, not an alteration to seed/harvest prices or prior commitments. The
+reference-millet table is unchanged; higher-price harvests receive a lower
+percentage benefit. New native evidence must use the new source hash.
+
+Power reports now separate genuinely pending effects from expired or destroyed
+(forfeited) allocations, without returning any potency to available capacity.
+Fractional Growth also respects the original next-checkpoint agricultural-event
+tolerance penalty. These fixes do not retroactively alter old evidence.
+
+The first pilot with immediate perimeter construction failed on day 3 after
+590 coins of wall purchases, zero crop losses and zero replanting on days 2–3.
+This indicates a poor opening defense/capital policy, not proof of excessive
+physical attack pressure. Defense postponed to day 6 allowed completed seven-
+night passive and expansive Sabana controls and unprotected controls in both
+Sabana and Gran Cañón. No-shield Sabana lost 42 plants, Gran Cañón 36.
+The protected expansive control lost zero. These single-seed openings do not
+prove 100-night survivability or a balanced defense advantage.
+
+Non-magic decision-window inactivity remains approximately 68–81% in those
+completed controls; no <25% acceptance or human activity duration is claimed.
+The 500-plant single-center fixture remains heavily worker-congested, delivering
+only two crates in its measured daylight window. Intensive applications do not
+automatically improve throughput: moderate beats intensive in the 50/200 cases.
+Diagnose native work scheduling and application strategy before changing prices
+or military coefficients. No 14/21/100-night expansion is approved yet.
+
+Two attempted canyon launches used an invalid biome key (`gran_canon`); their
+zero-day ENOENT harness failures are retained. Corrected runs use the actual
+registered key `gran-canon`. This is not an economic or navigation defeat.

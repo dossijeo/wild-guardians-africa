@@ -2,7 +2,7 @@ import {rational,add,negate,multiply,compare,numberOf} from './money.js';
 
 // Frozen candidate: 12 original 30-second, +50% growth applications;
 // 12 reference millet harvests at 11 coins. Never derives from farm wealth.
-export const AGRICULTURAL_POWER=Object.freeze({version:1,growth:180,multiply:132,plantGrowthCap:15,referenceGrowth:15,referenceHarvest:11});
+export const AGRICULTURAL_POWER=Object.freeze({version:1,growth:180,multiply:132,plantGrowthCap:15,plantMultiplyCap:11,referenceGrowth:15,referenceHarvest:11});
 const zero=()=>rational(0);
 const subtract=(a,b)=>add(a,negate(b));
 const divide=(a,b)=>rational(BigInt(a.n)*BigInt(b.d),BigInt(a.d)*BigInt(b.n));
@@ -18,7 +18,7 @@ function row(s,day=s.day){
 export function commitAgriculturalPower(s,p,kind,baseHarvest){
   const account=row(s)[kind];account.applications++;
   if(kind==='multiply'&&(p.multiplyPower||p.multiplyHarvest))return {day:s.day,amount:zero(),intensity:0,benefited:false};
-  const cap=kind==='growth'?rational(AGRICULTURAL_POWER.plantGrowthCap):rational(baseHarvest);
+  const cap=kind==='growth'?rational(AGRICULTURAL_POWER.plantGrowthCap):rational(Math.min(baseHarvest,AGRICULTURAL_POWER.plantMultiplyCap));
   const prior=kind==='growth'?p.growthPowerCommitted??zero():zero();
   const remaining=subtract(cap,minimum(cap,prior));
   // Nanosecond units keep repeated same-plant requests bounded in serialized
@@ -56,7 +56,12 @@ export function agriculturalPowerReport(s,day=s.day){
   const days=s.agriculturalPower?.days[day];
   return Object.fromEntries(['growth','multiply'].map(kind=>{
     const a=days?.[kind]??{budget:rational(AGRICULTURAL_POWER[kind]),requested:zero(),committed:zero(),consumed:zero(),liquidated:zero(),paid:'0',applications:0};
-    return [kind,{...a,available:subtract(a.budget,a.committed),pending:subtract(a.committed,a.consumed)}];
+    let pending=zero();
+    if(kind==='growth')for(const spell of s.spells??[]){
+      if(spell.kind===kind&&spell.remaining>0&&spell.power?.day===Number(day)&&s.plants?.some(p=>p.id===spell.targetPlantId&&p.alive))pending=add(pending,subtract(spell.power.amount,spell.power.consumed??zero()));
+    }
+    else for(const e of [...(s.plants??[]),...(s.crates??[])])if(e.multiplyPower?.day===Number(day)&&e.alive!==false&&!e.delivered&&!e.multiplyPowerSettled)pending=add(pending,e.multiplyPower.amount);
+    return [kind,{...a,available:subtract(a.budget,a.committed),pending,forfeited:subtract(subtract(a.committed,a.consumed),pending),unpaidFraction:subtract(a.liquidated,rational(a.paid))}];
   }));
 }
 export function validateAgriculturalPower(s){

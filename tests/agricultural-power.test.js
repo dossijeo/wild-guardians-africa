@@ -50,6 +50,29 @@ test('native casts, active powers and pending harvest entitlement survive reload
  Game.tick(s,15,nav);Game.cast(s,'duplicate','multiply',p.x,p.z,nav,p.id);assert.equal(s.events.at(-1).benefited,false);assert.equal(numberOf(s.plants[0].multiplyPower.amount),132/13);
  const corrupt=JSON.parse(serialize(s));corrupt.agriculturalPower.days[1].multiply.committed=rational(133);assert.throws(()=>deserialize(JSON.stringify(corrupt)),/espiritual/);
 });
+test('one expensive harvest cannot absorb the whole daily budget and composition does not inflate the reference capacity',()=>{
+ const s=state(),power=commitAgriculturalPower(s,{},'multiply',100000);
+ assert.ok(numberOf(power.amount)<11);assert.ok(power.intensity<.00011);
+ assert.equal(numberOf(agriculturalPowerReport(s).multiply.budget),132);
+ assert.equal(compare(power.amount,commitAgriculturalPower(state(),{},'multiply',11).amount),0);
+});
+test('fractional Growth preserves agricultural event water penalties at the next real checkpoint',()=>{
+ const p=createPlant('penalty','mijo',0,0,null);waterPlant(p);p.nextTolerancePenalty=.5;
+ advancePlant(p,p.water[1].at/1.25,.5);
+ assert.equal(p.water[1].status,'due');assert.equal(p.nextTolerancePenalty,0);
+ assert.ok(Math.abs(p.water[1].wait-cropSpec('mijo').derived_tolerance_seconds*.5)<1e-7);
+});
+test('expired and destroyed commitments are forfeited, never incorrectly reported as pending or refunded',()=>{
+ const s=state(),p={id:'expired',alive:true};s.plants.push(p);
+ const power=commitAgriculturalPower(s,p,'growth',11);s.spells.push({kind:'growth',targetPlantId:p.id,remaining:30,power});
+ assert.equal(compare(agriculturalPowerReport(s).growth.pending,power.amount),0);
+ s.spells[0].remaining=0;assert.equal(numberOf(agriculturalPowerReport(s).growth.pending),0);
+ assert.equal(compare(agriculturalPowerReport(s).growth.forfeited,power.amount),0);
+ const m=commitAgriculturalPower(s,p,'multiply',11);p.alive=false;
+ assert.equal(numberOf(agriculturalPowerReport(s).multiply.pending),0);
+ assert.equal(compare(agriculturalPowerReport(s).multiply.forfeited,m.amount),0);
+ assert.equal(compare(agriculturalPowerReport(s).multiply.available,rational(132)), -1);
+});
 test('the native worker must harvest and deliver before any committed Multiply income enters the ledger',()=>{
  const nav={placement:()=>({valid:true}),setState(){},path:(_a,b)=>[{x:b.x,z:b.z}]};
  let s=Game.newGame({slotId:'power-delivery',seed:712});Game.resume(s,'intro');Game.placeStructure(s,'center',{x:0,z:0},nav);Game.plant(s,'seed','mijo',6,0,nav);Game.openInitialHiring(s);Game.hire(s,'hire',{olderFemale:1});s.tutorial.step='done';s.dayPlan={done:true};

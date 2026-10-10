@@ -1,0 +1,121 @@
+TAP version 13
+# (node:14316) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a successful native agricultural application earns no occupied decision-window credit
+ok 1 - a successful native agricultural application earns no occupied decision-window credit
+  ---
+  duration_ms: 45.2204
+  ...
+# Subtest: paced policies execute native single-plant applications without duration credit or artificial income
+ok 2 - paced policies execute native single-plant applications without duration credit or artificial income
+  ---
+  duration_ms: 618.253
+  ...
+# Subtest: one pointer tap selects once; cancellation, drag-back and pinch select nothing
+ok 3 - one pointer tap selects once; cancellation, drag-back and pinch select nothing
+  ---
+  duration_ms: 27.8755
+  ...
+# (node:50744) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: 200 distinct applications retain measurable declining marginal power without exceeding either budget
+ok 4 - 200 distinct applications retain measurable declining marginal power without exceeding either budget
+  ---
+  duration_ms: 607.9877
+  ...
+# Subtest: aggregate entitlement is order invariant for cheap and expensive crops; repeat touches cannot mint another harvest bonus
+ok 5 - aggregate entitlement is order invariant for cheap and expensive crops; repeat touches cannot mint another harvest bonus
+  ---
+  duration_ms: 0.7444
+  ...
+# Subtest: fractional payouts cannot exploit ceil: paid whole coins equal floor of delivered entitlements and settlement is idempotent
+ok 6 - fractional payouts cannot exploit ceil: paid whole coins equal floor of delivered entitlements and settlement is idempotent
+  ---
+  duration_ms: 5.0533
+  ...
+# Subtest: day rollover does not refund commitments or increase one plant lifetime growth cap
+ok 7 - day rollover does not refund commitments or increase one plant lifetime growth cap
+  ---
+  duration_ms: 4.2956
+  ...
+# Subtest: execution records actual growth only; unused power remains committed
+ok 8 - execution records actual growth only; unused power remains committed
+  ---
+  duration_ms: 0.6113
+  ...
+# Subtest: fractional Growth does not grant a free watering checkpoint; legacy full-strength snapshots retain their old behavior
+ok 9 - fractional Growth does not grant a free watering checkpoint; legacy full-strength snapshots retain their old behavior
+  ---
+  duration_ms: 1.5476
+  ...
+# Subtest: native casts, active powers and pending harvest entitlement survive reload without replenishment
+ok 10 - native casts, active powers and pending harvest entitlement survive reload without replenishment
+  ---
+  duration_ms: 29.7154
+  ...
+# Subtest: fractional Growth preserves agricultural event water penalties at the next real checkpoint
+ok 11 - fractional Growth preserves agricultural event water penalties at the next real checkpoint
+  ---
+  duration_ms: 0.248
+  ...
+# Subtest: expired and destroyed commitments are forfeited, never incorrectly reported as pending or refunded
+ok 12 - expired and destroyed commitments are forfeited, never incorrectly reported as pending or refunded
+  ---
+  duration_ms: 0.576
+  ...
+# Subtest: the native worker must harvest and deliver before any committed Multiply income enters the ledger
+ok 13 - the native worker must harvest and deliver before any committed Multiply income enters the ledger
+  ---
+  duration_ms: 68.3746
+  ...
+# (node:14848) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: shield appears once per day without pausing, including a completed global tutorial
+ok 14 - shield appears once per day without pausing, including a completed global tutorial
+  ---
+  duration_ms: 61.7835
+  ...
+# Subtest: shield waits for availability, removes obsolete advice when cast or animals leave, and preserves menu pauses
+ok 15 - shield waits for availability, removes obsolete advice when cast or animals leave, and preserves menu pauses
+  ---
+  duration_ms: 7.2113
+  ...
+# Subtest: saved acknowledged raids do not replay shield advice; an unfinished reminder remains readable after restoration
+ok 16 - saved acknowledged raids do not replay shield advice; an unfinished reminder remains readable after restoration
+  ---
+  duration_ms: 4.0532
+  ...
+# Subtest: an arriving raid takes priority over ordinary advice and leaves that explanation queued
+ok 17 - an arriving raid takes priority over ordinary advice and leaves that explanation queued
+  ---
+  duration_ms: 1.0555
+  ...
+# Subtest: render-frequency updates reuse the peaceful plant check until simulated time advances
+ok 18 - render-frequency updates reuse the peaceful plant check until simulated time advances
+  ---
+  duration_ms: 2.0253
+  ...
+# Subtest: growth cannot repeat today and receives its full reading time on the following day
+ok 19 - growth cannot repeat today and receives its full reading time on the following day
+  ---
+  duration_ms: 13.2335
+  ...
+# Subtest: multiply requires working labour and unmarked live crops, with a gap between peaceful reminders
+ok 20 - multiply requires working labour and unmarked live crops, with a gap between peaceful reminders
+  ---
+  duration_ms: 1.2761
+  ...
+# Subtest: new reminders are bilingual and saved reminder times reject corrupt values
+ok 21 - new reminders are bilingual and saved reminder times reject corrupt values
+  ---
+  duration_ms: 16.8148
+  ...
+1..21
+# tests 21
+# suites 0
+# pass 21
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3177.4496

@@ -1,0 +1,2001 @@
+{
+  "count": 500,
+  "mode": "moderate",
+  "fixtureHash": "8b24d512f940b93a0b2abeef58792e56c1023ff59b8e00595f4c806cd2b21fad",
+  "workers": 50,
+  "timeSeconds": 300,
+  "cpuMilliseconds": 8273.675299999999,
+  "income": 22,
+  "delivered": 2,
+  "picked": 3,
+  "plantsBenefited": 38,
+  "magic": {
+    "mode": "moderate",
+    "cadenceSeconds": 4,
+    "applications": 65,
+    "records": [
+      {
+        "day": 1,
+        "time": 0,
+        "elapsed": 0,
+        "kind": "multiply",
+        "targetPlantId": "plant-3",
+        "spellId": "spell-1603",
+        "selectionCpuSeconds": 0.0000031999999991967344,
+        "applicationCpuSeconds": 0.0001675000000032014,
+        "searchCpuSeconds": 0.00002119999999922584,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "132",
+            "d": "13"
+          },
+          "intensity": 0.9230769230769231,
+          "benefited": true
+        },
+        "durationSeconds": 15,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 4.000000000000002,
+        "elapsed": 4.000000000000002,
+        "kind": "multiply",
+        "targetPlantId": "plant-5",
+        "spellId": "spell-1604",
+        "selectionCpuSeconds": 0.000002200000002630986,
+        "applicationCpuSeconds": 0.0001231999999981781,
+        "searchCpuSeconds": 0.00016269999999713036,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "792",
+            "d": "91"
+          },
+          "intensity": 0.7912087912087912,
+          "benefited": true
+        },
+        "durationSeconds": 15,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 8.999999999999984,
+        "elapsed": 8.999999999999984,
+        "kind": "multiply",
+        "targetPlantId": "plant-7",
+        "spellId": "spell-1605",
+        "selectionCpuSeconds": 0.000002200000002630986,
+        "applicationCpuSeconds": 0.00012219999999797437,
+        "searchCpuSeconds": 0.0001834999999991851,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "264",
+            "d": "35"
+          },
+          "intensity": 0.6857142857142857,
+          "benefited": true
+        },
+        "durationSeconds": 15,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 13.999999999999966,
+        "elapsed": 13.999999999999966,
+        "kind": "multiply",
+        "targetPlantId": "plant-9",
+        "spellId": "spell-1606",
+        "selectionCpuSeconds": 0.0000020999999978812413,
+        "applicationCpuSeconds": 0.00013650000000052387,
+        "searchCpuSeconds": 0.00025280000000202563,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "33",
+            "d": "5"
+          },
+          "intensity": 0.6,
+          "benefited": true
+        },
+        "durationSeconds": 15,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 17.999999999999986,
+        "elapsed": 17.999999999999986,
+        "kind": "growth",
+        "targetPlantId": "plant-35",
+        "spellId": "spell-1607",
+        "selectionCpuSeconds": 0.0000030000000006111805,
+        "applicationCpuSeconds": 0.00011449999999967985,
+        "searchCpuSeconds": 0.000030600000001868465,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "180",
+            "d": "13"
+          },
+          "intensity": 0.9230769230769231,
+          "benefited": true,
+          "consumed": {
+            "n": "69230769",
+            "d": "5000000"
+          }
+        },
+        "durationSeconds": 30,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 22.000000000000043,
+        "elapsed": 22.000000000000043,
+        "kind": "multiply",
+        "targetPlantId": "plant-37",
+        "spellId": "spell-1608",
+        "selectionCpuSeconds": 0.00000420000000303844,
+        "applicationCpuSeconds": 0.00011899999999877764,
+        "searchCpuSeconds": 0.000027299999997921987,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "99",
+            "d": "17"
+          },
+          "intensity": 0.5294117647058824,
+          "benefited": true
+        },
+        "durationSeconds": 15,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 26.0000000000001,
+        "elapsed": 26.0000000000001,
+        "kind": "growth",
+        "targetPlantId": "plant-39",
+        "spellId": "spell-1609",
+        "selectionCpuSeconds": 0.0000033999999977822882,
+        "applicationCpuSeconds": 0.00011279999999896973,
+        "searchCpuSeconds": 0.000025300000001152512,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "1080",
+            "d": "91"
+          },
+          "intensity": 0.7912087912087912,
+          "benefited": true,
+          "consumed": {
+            "n": "1080",
+            "d": "91"
+          }
+        },
+        "durationSeconds": 30,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 30.000000000000156,
+        "elapsed": 30.000000000000156,
+        "kind": "multiply",
+        "targetPlantId": "plant-41",
+        "spellId": "spell-1610",
+        "selectionCpuSeconds": 0.000004399999997986015,
+        "applicationCpuSeconds": 0.0001555000000007567,
+        "searchCpuSeconds": 0.00003680000000167638,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "88",
+            "d": "17"
+          },
+          "intensity": 0.47058823529411764,
+          "benefited": true
+        },
+        "durationSeconds": 15,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 34.00000000000021,
+        "elapsed": 34.00000000000021,
+        "kind": "growth",
+        "targetPlantId": "plant-43",
+        "spellId": "spell-1611",
+        "selectionCpuSeconds": 0.0000034000000014202668,
+        "applicationCpuSeconds": 0.00012150000000110594,
+        "searchCpuSeconds": 0.00002719999999681022,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "72",
+            "d": "7"
+          },
+          "intensity": 0.6857142857142857,
+          "benefited": true,
+          "consumed": {
+            "n": "51428571",
+            "d": "5000000"
+          }
+        },
+        "durationSeconds": 30,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 38.00000000000027,
+        "elapsed": 38.00000000000027,
+        "kind": "multiply",
+        "targetPlantId": "plant-45",
+        "spellId": "spell-1612",
+        "selectionCpuSeconds": 0.0000028999999994994143,
+        "applicationCpuSeconds": 0.00010100000000238652,
+        "searchCpuSeconds": 0.0000338000000010652,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "88",
+            "d": "19"
+          },
+          "intensity": 0.42105263157894735,
+          "benefited": true
+        },
+        "durationSeconds": 15,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 42.00000000000033,
+        "elapsed": 42.00000000000033,
+        "kind": "growth",
+        "targetPlantId": "plant-47",
+        "spellId": "spell-1613",
+        "selectionCpuSeconds": 0.000003200000002834713,
+        "applicationCpuSeconds": 0.00012029999999867868,
+        "searchCpuSeconds": 0.000027099999999336432,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "9",
+            "d": "1"
+          },
+          "intensity": 0.6,
+          "benefited": true,
+          "consumed": {
+            "n": "9",
+            "d": "1"
+          }
+        },
+        "durationSeconds": 30,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 46.000000000000384,
+        "elapsed": 46.000000000000384,
+        "kind": "multiply",
+        "targetPlantId": "plant-49",
+        "spellId": "spell-1614",
+        "selectionCpuSeconds": 0.00000390000000334112,
+        "applicationCpuSeconds": 0.00010049999999682768,
+        "searchCpuSeconds": 0.00003169999999954598,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "396",
+            "d": "95"
+          },
+          "intensity": 0.37894736842105264,
+          "benefited": true
+        },
+        "durationSeconds": 15,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 51.0000000000003,
+        "elapsed": 51.0000000000003,
+        "kind": "growth",
+        "targetPlantId": "plant-51",
+        "spellId": "spell-1615",
+        "selectionCpuSeconds": 0.0000031999999991967344,
+        "applicationCpuSeconds": 0.00012780000000202563,
+        "searchCpuSeconds": 0.00003719999999884749,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "135",
+            "d": "17"
+          },
+          "intensity": 0.5294117647058824,
+          "benefited": true,
+          "consumed": {
+            "n": "19852941",
+            "d": "2500000"
+          }
+        },
+        "durationSeconds": 30,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 55.000000000000355,
+        "elapsed": 55.000000000000355,
+        "kind": "multiply",
+        "targetPlantId": "plant-53",
+        "spellId": "spell-1616",
+        "selectionCpuSeconds": 0.000003999999997176929,
+        "applicationCpuSeconds": 0.00010310000000026776,
+        "searchCpuSeconds": 0.000029900000001362058,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "132",
+            "d": "35"
+          },
+          "intensity": 0.34285714285714286,
+          "benefited": true
+        },
+        "durationSeconds": 15,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 59.00000000000041,
+        "elapsed": 59.00000000000041,
+        "kind": "growth",
+        "targetPlantId": "plant-55",
+        "spellId": "spell-1617",
+        "selectionCpuSeconds": 0.000003899999999703141,
+        "applicationCpuSeconds": 0.00012889999999970313,
+        "searchCpuSeconds": 0.000035799999997834675,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "120",
+            "d": "17"
+          },
+          "intensity": 0.47058823529411764,
+          "benefited": true,
+          "consumed": {
+            "n": "1347619061",
+            "d": "250000000"
+          }
+        },
+        "durationSeconds": 30,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 63.00000000000047,
+        "elapsed": 63.00000000000047,
+        "kind": "multiply",
+        "targetPlantId": "plant-57",
+        "spellId": "spell-1618",
+        "selectionCpuSeconds": 0.0000036000000000058206,
+        "applicationCpuSeconds": 0.00010859999999956926,
+        "searchCpuSeconds": 0.000034299999999348076,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "24",
+            "d": "7"
+          },
+          "intensity": 0.3116883116883117,
+          "benefited": true
+        },
+        "durationSeconds": 15,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 68.00000000000026,
+        "elapsed": 68.00000000000026,
+        "kind": "growth",
+        "targetPlantId": "plant-59",
+        "spellId": "spell-1619",
+        "selectionCpuSeconds": 0.0000027999999983876477,
+        "applicationCpuSeconds": 0.00007999999999810825,
+        "searchCpuSeconds": 0.000021700000001146692,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "120",
+            "d": "19"
+          },
+          "intensity": 0.42105263157894735,
+          "benefited": true,
+          "consumed": {
+            "n": "450000009",
+            "d": "125000000"
+          }
+        },
+        "durationSeconds": 30,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 72.99999999999997,
+        "elapsed": 72.99999999999997,
+        "kind": "multiply",
+        "targetPlantId": "plant-61",
+        "spellId": "spell-1620",
+        "selectionCpuSeconds": 0.0000034000000014202668,
+        "applicationCpuSeconds": 0.00011579999999958091,
+        "searchCpuSeconds": 0.000029999999998835845,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "72",
+            "d": "23"
+          },
+          "intensity": 0.2845849802371542,
+          "benefited": true
+        },
+        "durationSeconds": 15,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 77.99999999999969,
+        "elapsed": 77.99999999999969,
+        "kind": "growth",
+        "targetPlantId": "plant-63",
+        "spellId": "spell-1623",
+        "selectionCpuSeconds": 0.0000036000000000058206,
+        "applicationCpuSeconds": 0.0001415000000015425,
+        "searchCpuSeconds": 0.000033000000003085005,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "108",
+            "d": "19"
+          },
+          "intensity": 0.37894736842105264,
+          "benefited": true,
+          "consumed": {
+            "n": "2182300837",
+            "d": "1000000000"
+          }
+        },
+        "durationSeconds": 30,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 82.99999999999926,
+        "elapsed": 82.99999999999926,
+        "kind": "multiply",
+        "targetPlantId": "plant-65",
+        "spellId": "spell-1628",
+        "selectionCpuSeconds": 0.00000480000000243308,
+        "applicationCpuSeconds": 0.0001371999999973923,
+        "searchCpuSeconds": 0.0000415999999968335,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "66",
+            "d": "23"
+          },
+          "intensity": 0.2608695652173913,
+          "benefited": true
+        },
+        "durationSeconds": 15,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 87.99999999999898,
+        "elapsed": 87.99999999999898,
+        "kind": "growth",
+        "targetPlantId": "plant-67",
+        "spellId": "spell-1635",
+        "selectionCpuSeconds": 0.000004099999998288695,
+        "applicationCpuSeconds": 0.00012120000000140863,
+        "searchCpuSeconds": 0.000037900000002991876,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "36",
+            "d": "7"
+          },
+          "intensity": 0.34285714285714286,
+          "benefited": true,
+          "consumed": {
+            "n": "468292679",
+            "d": "1000000000"
+          }
+        },
+        "durationSeconds": 30,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 92.99999999999869,
+        "elapsed": 92.99999999999869,
+        "kind": "multiply",
+        "targetPlantId": "plant-69",
+        "spellId": "spell-1674",
+        "selectionCpuSeconds": 0.00000480000000243308,
+        "applicationCpuSeconds": 0.0002720999999983178,
+        "searchCpuSeconds": 0.000030299999998533167,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "66",
+            "d": "25"
+          },
+          "intensity": 0.24,
+          "benefited": true
+        },
+        "durationSeconds": 15,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 97.99999999999841,
+        "elapsed": 97.99999999999841,
+        "kind": "growth",
+        "targetPlantId": "plant-103",
+        "spellId": "spell-1683",
+        "selectionCpuSeconds": 0.0000059999999975843825,
+        "applicationCpuSeconds": 0.002219300000000658,
+        "searchCpuSeconds": 0.0010549000000028173,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "360",
+            "d": "77"
+          },
+          "intensity": 0.3116883116883117,
+          "benefited": true,
+          "consumed": {
+            "n": "16853933",
+            "d": "125000000"
+          }
+        },
+        "durationSeconds": 30,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 102.99999999999812,
+        "elapsed": 102.99999999999812,
+        "kind": "multiply",
+        "targetPlantId": "plant-105",
+        "spellId": "spell-1718",
+        "selectionCpuSeconds": 0.000003999999997176929,
+        "applicationCpuSeconds": 0.00016830000000118162,
+        "searchCpuSeconds": 0.00003600000000005821,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "792",
+            "d": "325"
+          },
+          "intensity": 0.22153846153846155,
+          "benefited": true
+        },
+        "durationSeconds": 15,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 107.99999999999784,
+        "elapsed": 107.99999999999784,
+        "kind": "growth",
+        "targetPlantId": "plant-203",
+        "spellId": "spell-1731",
+        "selectionCpuSeconds": 0.000004300000000512227,
+        "applicationCpuSeconds": 0.00025059999999939466,
+        "searchCpuSeconds": 0.000055899999999383,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "1080",
+            "d": "253"
+          },
+          "intensity": 0.2845849802371542,
+          "benefited": true,
+          "consumed": {
+            "n": "99653979",
+            "d": "1000000000"
+          }
+        },
+        "durationSeconds": 30,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 112.99999999999756,
+        "elapsed": 112.99999999999756,
+        "kind": "multiply",
+        "targetPlantId": "plant-205",
+        "spellId": "spell-1759",
+        "selectionCpuSeconds": 0.0000027999999983876477,
+        "applicationCpuSeconds": 0.00010419999999794527,
+        "searchCpuSeconds": 0.0000253999999986263,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "88",
+            "d": "39"
+          },
+          "intensity": 0.20512820512820512,
+          "benefited": true
+        },
+        "durationSeconds": 15,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 117.99999999999713,
+        "elapsed": 117.99999999999713,
+        "kind": "growth",
+        "targetPlantId": "plant-297",
+        "spellId": "spell-1777",
+        "selectionCpuSeconds": 0.0000038000000022293535,
+        "applicationCpuSeconds": 0.0001525999999976193,
+        "searchCpuSeconds": 0.000052700000000186266,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "90",
+            "d": "23"
+          },
+          "intensity": 0.2608695652173913,
+          "benefited": true,
+          "consumed": {
+            "n": "12980769",
+            "d": "62500000"
+          }
+        },
+        "durationSeconds": 30,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 122.99999999999685,
+        "elapsed": 122.99999999999685,
+        "kind": "multiply",
+        "targetPlantId": "plant-299",
+        "spellId": "spell-1795",
+        "selectionCpuSeconds": 0.000004400000001623994,
+        "applicationCpuSeconds": 0.0001418999999987136,
+        "searchCpuSeconds": 0.000027099999999336432,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "44",
+            "d": "21"
+          },
+          "intensity": 0.19047619047619047,
+          "benefited": true
+        },
+        "durationSeconds": 15,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 127.99999999999656,
+        "elapsed": 127.99999999999656,
+        "kind": "growth",
+        "targetPlantId": "plant-365",
+        "spellId": "spell-1822",
+        "selectionCpuSeconds": 0.000004199999999400461,
+        "applicationCpuSeconds": 0.000967899999999645,
+        "searchCpuSeconds": 0.00006320000000050641,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "18",
+            "d": "5"
+          },
+          "intensity": 0.24,
+          "benefited": true,
+          "consumed": {
+            "n": "3",
+            "d": "20"
+          }
+        },
+        "durationSeconds": 30,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 132.99999999999628,
+        "elapsed": 132.99999999999628,
+        "kind": "multiply",
+        "targetPlantId": "plant-367",
+        "spellId": "spell-1846",
+        "selectionCpuSeconds": 0.0000037999999985913745,
+        "applicationCpuSeconds": 0.00014589999999952853,
+        "searchCpuSeconds": 0.000027399999999033754,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "396",
+            "d": "203"
+          },
+          "intensity": 0.17733990147783252,
+          "benefited": true
+        },
+        "durationSeconds": 15,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 137.999999999996,
+        "elapsed": 137.999999999996,
+        "kind": "growth",
+        "targetPlantId": "plant-435",
+        "spellId": "spell-1863",
+        "selectionCpuSeconds": 0.000003899999999703141,
+        "applicationCpuSeconds": 0.00014640000000144937,
+        "searchCpuSeconds": 0.00005189999999856809,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "216",
+            "d": "65"
+          },
+          "intensity": 0.22153846153846155,
+          "benefited": true,
+          "consumed": {
+            "n": "124653739",
+            "d": "500000000"
+          }
+        },
+        "durationSeconds": 30,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 142.9999999999957,
+        "elapsed": 142.9999999999957,
+        "kind": "multiply",
+        "targetPlantId": "plant-437",
+        "spellId": "spell-1885",
+        "selectionCpuSeconds": 0.000004799999998795101,
+        "applicationCpuSeconds": 0.0001477000000013504,
+        "searchCpuSeconds": 0.00004050000000279397,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "264",
+            "d": "145"
+          },
+          "intensity": 0.16551724137931034,
+          "benefited": true
+        },
+        "durationSeconds": 15,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 147.99999999999528,
+        "elapsed": 147.99999999999528,
+        "kind": "growth",
+        "targetPlantId": "plant-511",
+        "spellId": "spell-1902",
+        "selectionCpuSeconds": 0.0000027999999983876477,
+        "applicationCpuSeconds": 0.00010059999999793945,
+        "searchCpuSeconds": 0.000034500000001571604,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "40",
+            "d": "13"
+          },
+          "intensity": 0.20512820512820512,
+          "benefited": true,
+          "consumed": {
+            "n": "2616279",
+            "d": "31250000"
+          }
+        },
+        "durationSeconds": 30,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 152.999999999995,
+        "elapsed": 152.999999999995,
+        "kind": "multiply",
+        "targetPlantId": "plant-513",
+        "spellId": "spell-1919",
+        "selectionCpuSeconds": 0.0000048999999999068676,
+        "applicationCpuSeconds": 0.0001775999999990745,
+        "searchCpuSeconds": 0.00003080000000045402,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "264",
+            "d": "155"
+          },
+          "intensity": 0.15483870967741936,
+          "benefited": true
+        },
+        "durationSeconds": 15,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 157.9999999999947,
+        "elapsed": 157.9999999999947,
+        "kind": "growth",
+        "targetPlantId": "plant-593",
+        "spellId": "spell-1941",
+        "selectionCpuSeconds": 0.0000036000000000058206,
+        "applicationCpuSeconds": 0.0001717000000026019,
+        "searchCpuSeconds": 0.00006139999999868451,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "20",
+            "d": "7"
+          },
+          "intensity": 0.19047619047619047,
+          "benefited": true,
+          "consumed": {
+            "n": "43478263",
+            "d": "250000000"
+          }
+        },
+        "durationSeconds": 30,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 162.99999999999443,
+        "elapsed": 162.99999999999443,
+        "kind": "multiply",
+        "targetPlantId": "plant-595",
+        "spellId": "spell-1956",
+        "selectionCpuSeconds": 0.0000048999999999068676,
+        "applicationCpuSeconds": 0.00017379999999684516,
+        "searchCpuSeconds": 0.00004000000000087312,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "99",
+            "d": "62"
+          },
+          "intensity": 0.14516129032258066,
+          "benefited": true
+        },
+        "durationSeconds": 15,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 167.99999999999415,
+        "elapsed": 167.99999999999415,
+        "kind": "growth",
+        "targetPlantId": "plant-615",
+        "spellId": "spell-1966",
+        "selectionCpuSeconds": 0.000003200000002834713,
+        "applicationCpuSeconds": 0.0001356999999989057,
+        "searchCpuSeconds": 0.000030599999998230486,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "540",
+            "d": "203"
+          },
+          "intensity": 0.17733990147783252,
+          "benefited": true,
+          "consumed": {
+            "n": "89592759",
+            "d": "1000000000"
+          }
+        },
+        "durationSeconds": 30,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 172.99999999999386,
+        "elapsed": 172.99999999999386,
+        "kind": "multiply",
+        "targetPlantId": "plant-617",
+        "spellId": "spell-1982",
+        "selectionCpuSeconds": 0.0000036000000000058206,
+        "applicationCpuSeconds": 0.0001702999999979511,
+        "searchCpuSeconds": 0.00002779999999984284,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "3",
+            "d": "2"
+          },
+          "intensity": 0.13636363636363635,
+          "benefited": true
+        },
+        "durationSeconds": 15,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 177.99999999999343,
+        "elapsed": 177.99999999999343,
+        "kind": "growth",
+        "targetPlantId": "plant-667",
+        "spellId": "spell-1995",
+        "selectionCpuSeconds": 0.0000041000000019266736,
+        "applicationCpuSeconds": 0.00015160000000105357,
+        "searchCpuSeconds": 0.00003689999999915017,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "72",
+            "d": "29"
+          },
+          "intensity": 0.16551724137931034,
+          "benefited": true,
+          "consumed": {
+            "n": "229299361",
+            "d": "1000000000"
+          }
+        },
+        "durationSeconds": 30,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 182.99999999999315,
+        "elapsed": 182.99999999999315,
+        "kind": "multiply",
+        "targetPlantId": "plant-669",
+        "spellId": "spell-2016",
+        "selectionCpuSeconds": 0.000004199999999400461,
+        "applicationCpuSeconds": 0.00016159999999945286,
+        "searchCpuSeconds": 0.0000352999999995518,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "24",
+            "d": "17"
+          },
+          "intensity": 0.12834224598930483,
+          "benefited": true
+        },
+        "durationSeconds": 15,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 187.99999999999287,
+        "elapsed": 187.99999999999287,
+        "kind": "growth",
+        "targetPlantId": "plant-699",
+        "spellId": "spell-2031",
+        "selectionCpuSeconds": 0.0000031000000017229467,
+        "applicationCpuSeconds": 0.00014240000000063447,
+        "searchCpuSeconds": 0.00003139999999984866,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "72",
+            "d": "31"
+          },
+          "intensity": 0.15483870967741936,
+          "benefited": true,
+          "consumed": {
+            "n": "71856283",
+            "d": "500000000"
+          }
+        },
+        "durationSeconds": 30,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 192.99999999999258,
+        "elapsed": 192.99999999999258,
+        "kind": "multiply",
+        "targetPlantId": "plant-701",
+        "spellId": "spell-2057",
+        "selectionCpuSeconds": 0.000003899999999703141,
+        "applicationCpuSeconds": 0.00014609999999811409,
+        "searchCpuSeconds": 0.000026099999999132707,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "792",
+            "d": "595"
+          },
+          "intensity": 0.12100840336134454,
+          "benefited": true
+        },
+        "durationSeconds": 15,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 197.9999999999923,
+        "elapsed": 197.9999999999923,
+        "kind": "growth",
+        "targetPlantId": "plant-763",
+        "spellId": "spell-2085",
+        "selectionCpuSeconds": 0.0000037000000011175873,
+        "applicationCpuSeconds": 0.0001574000000000524,
+        "searchCpuSeconds": 0.000039000000000669386,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "135",
+            "d": "62"
+          },
+          "intensity": 0.14516129032258066,
+          "benefited": true,
+          "consumed": {
+            "n": "4195489",
+            "d": "10000000"
+          }
+        },
+        "durationSeconds": 30,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 202.999999999992,
+        "elapsed": 202.999999999992,
+        "kind": "multiply",
+        "targetPlantId": "plant-765",
+        "spellId": "spell-2118",
+        "selectionCpuSeconds": 0.000004199999999400461,
+        "applicationCpuSeconds": 0.00016849999999976717,
+        "searchCpuSeconds": 0.00003800000000046566,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "44",
+            "d": "35"
+          },
+          "intensity": 0.11428571428571428,
+          "benefited": true
+        },
+        "durationSeconds": 15,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 207.9999999999916,
+        "elapsed": 207.9999999999916,
+        "kind": "growth",
+        "targetPlantId": "plant-775",
+        "spellId": "spell-2148",
+        "selectionCpuSeconds": 0.0000036000000000058206,
+        "applicationCpuSeconds": 0.00016669999999794526,
+        "searchCpuSeconds": 0.000028699999998934798,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "45",
+            "d": "22"
+          },
+          "intensity": 0.13636363636363635,
+          "benefited": true,
+          "consumed": {
+            "n": "63829789",
+            "d": "500000000"
+          }
+        },
+        "durationSeconds": 30,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 212.9999999999913,
+        "elapsed": 212.9999999999913,
+        "kind": "multiply",
+        "targetPlantId": "plant-777",
+        "spellId": "spell-2180",
+        "selectionCpuSeconds": 0.0000046000000002095475,
+        "applicationCpuSeconds": 0.0002651999999980035,
+        "searchCpuSeconds": 0.000025200000000040745,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "44",
+            "d": "37"
+          },
+          "intensity": 0.10810810810810811,
+          "benefited": true
+        },
+        "durationSeconds": 15,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 217.99999999999102,
+        "elapsed": 217.99999999999102,
+        "kind": "growth",
+        "targetPlantId": "plant-833",
+        "spellId": "spell-2205",
+        "selectionCpuSeconds": 0.0000037999999985913745,
+        "applicationCpuSeconds": 0.00012110000000029686,
+        "searchCpuSeconds": 0.0001536999999989348,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "360",
+            "d": "187"
+          },
+          "intensity": 0.12834224598930483,
+          "benefited": true,
+          "consumed": {
+            "n": "90452257",
+            "d": "500000000"
+          }
+        },
+        "durationSeconds": 30,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 222.99999999999073,
+        "elapsed": 222.99999999999073,
+        "kind": "multiply",
+        "targetPlantId": "plant-835",
+        "spellId": "spell-2227",
+        "selectionCpuSeconds": 0.0000027999999983876477,
+        "applicationCpuSeconds": 0.0001694999999999709,
+        "searchCpuSeconds": 0.000028500000000349247,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "792",
+            "d": "703"
+          },
+          "intensity": 0.10241820768136557,
+          "benefited": true
+        },
+        "durationSeconds": 15,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 227.99999999999045,
+        "elapsed": 227.99999999999045,
+        "kind": "growth",
+        "targetPlantId": "plant-869",
+        "spellId": "spell-2256",
+        "selectionCpuSeconds": 0.000004499999999097781,
+        "applicationCpuSeconds": 0.00020060000000012224,
+        "searchCpuSeconds": 0.00005280000000129803,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "216",
+            "d": "119"
+          },
+          "intensity": 0.12100840336134454,
+          "benefited": true,
+          "consumed": {
+            "n": "45641837",
+            "d": "1000000000"
+          }
+        },
+        "durationSeconds": 30,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 232.99999999999017,
+        "elapsed": 232.99999999999017,
+        "kind": "multiply",
+        "targetPlantId": "plant-871",
+        "spellId": "spell-2286",
+        "selectionCpuSeconds": 0.0000037000000011175873,
+        "applicationCpuSeconds": 0.00018659999999727007,
+        "searchCpuSeconds": 0.00003120000000126311,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "264",
+            "d": "247"
+          },
+          "intensity": 0.09716599190283401,
+          "benefited": true
+        },
+        "durationSeconds": 15,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 237.99999999998974,
+        "elapsed": 237.99999999998974,
+        "kind": "growth",
+        "targetPlantId": "plant-901",
+        "spellId": "spell-2307",
+        "selectionCpuSeconds": 0.000004400000001623994,
+        "applicationCpuSeconds": 0.0001801999999988766,
+        "searchCpuSeconds": 0.000051400000000285215,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "12",
+            "d": "7"
+          },
+          "intensity": 0.11428571428571428,
+          "benefited": true,
+          "consumed": {
+            "n": "132432439",
+            "d": "500000000"
+          }
+        },
+        "durationSeconds": 30,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 242.99999999998946,
+        "elapsed": 242.99999999998946,
+        "kind": "multiply",
+        "targetPlantId": "plant-903",
+        "spellId": "spell-2330",
+        "selectionCpuSeconds": 0.000004399999997986015,
+        "applicationCpuSeconds": 0.00038119999999980793,
+        "searchCpuSeconds": 0.000028900000001158332,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "66",
+            "d": "65"
+          },
+          "intensity": 0.09230769230769231,
+          "benefited": true
+        },
+        "durationSeconds": 15,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 247.99999999998917,
+        "elapsed": 247.99999999998917,
+        "kind": "growth",
+        "targetPlantId": "plant-929",
+        "spellId": "spell-2360",
+        "selectionCpuSeconds": 0.0000033999999977822882,
+        "applicationCpuSeconds": 0.0001886000000013155,
+        "searchCpuSeconds": 0.00003889999999955762,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "60",
+            "d": "37"
+          },
+          "intensity": 0.10810810810810811,
+          "benefited": true,
+          "consumed": {
+            "n": "1025641",
+            "d": "200000000"
+          }
+        },
+        "durationSeconds": 30,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 252.99999999999983,
+        "elapsed": 252.9999999999889,
+        "kind": "multiply",
+        "targetPlantId": "plant-931",
+        "spellId": "spell-2380",
+        "selectionCpuSeconds": 0.0000033999999977822882,
+        "applicationCpuSeconds": 0.00019789999999920838,
+        "searchCpuSeconds": 0.000029900000001362058,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "198",
+            "d": "205"
+          },
+          "intensity": 0.08780487804878048,
+          "benefited": true
+        },
+        "durationSeconds": 15,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 256.9999999999999,
+        "elapsed": 256.9999999999889,
+        "kind": "growth",
+        "targetPlantId": "plant-971",
+        "spellId": "spell-2397",
+        "selectionCpuSeconds": 0.0000036000000000058206,
+        "applicationCpuSeconds": 0.00013810000000012224,
+        "searchCpuSeconds": 0.00003139999999984866,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "1080",
+            "d": "703"
+          },
+          "intensity": 0.10241820768136557,
+          "benefited": true,
+          "consumed": {
+            "n": "23870093",
+            "d": "100000000"
+          }
+        },
+        "durationSeconds": 30,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 261.0000000000008,
+        "elapsed": 260.9999999999898,
+        "kind": "multiply",
+        "targetPlantId": "plant-973",
+        "spellId": "spell-2410",
+        "selectionCpuSeconds": 0.0000046000000002095475,
+        "applicationCpuSeconds": 0.0001978000000017346,
+        "searchCpuSeconds": 0.000028500000000349247,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "264",
+            "d": "287"
+          },
+          "intensity": 0.08362369337979095,
+          "benefited": true
+        },
+        "durationSeconds": 15,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 265.0000000000017,
+        "elapsed": 264.99999999999073,
+        "kind": "multiply",
+        "targetPlantId": "plant-975",
+        "spellId": "spell-2423",
+        "selectionCpuSeconds": 0.0000018999999992956873,
+        "applicationCpuSeconds": 0.00019790000000284634,
+        "searchCpuSeconds": 0.00035910000000149013,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "264",
+            "d": "301"
+          },
+          "intensity": 0.07973421926910298,
+          "benefited": true
+        },
+        "durationSeconds": 15,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 269.00000000000244,
+        "elapsed": 268.9999999999915,
+        "kind": "multiply",
+        "targetPlantId": "plant-977",
+        "spellId": "spell-2437",
+        "selectionCpuSeconds": 0.0000020999999978812413,
+        "applicationCpuSeconds": 0.0001841999999996915,
+        "searchCpuSeconds": 0.0002968000000000757,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "36",
+            "d": "43"
+          },
+          "intensity": 0.07610993657505286,
+          "benefited": true
+        },
+        "durationSeconds": 15,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 273.00000000000335,
+        "elapsed": 272.9999999999924,
+        "kind": "multiply",
+        "targetPlantId": "plant-979",
+        "spellId": "spell-2448",
+        "selectionCpuSeconds": 0.0000026999999972758815,
+        "applicationCpuSeconds": 0.0001907000000028347,
+        "searchCpuSeconds": 0.0003460000000013679,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "4",
+            "d": "5"
+          },
+          "intensity": 0.07272727272727272,
+          "benefited": true
+        },
+        "durationSeconds": 15,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 277.00000000000426,
+        "elapsed": 276.9999999999933,
+        "kind": "growth",
+        "targetPlantId": "plant-609",
+        "spellId": "spell-2461",
+        "selectionCpuSeconds": 0.0000048999999999068676,
+        "applicationCpuSeconds": 0.00019949999999880675,
+        "searchCpuSeconds": 0.000252200000002631,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "360",
+            "d": "247"
+          },
+          "intensity": 0.09716599190283401,
+          "benefited": true,
+          "consumed": {
+            "n": "1",
+            "d": "200000000"
+          }
+        },
+        "durationSeconds": 30,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 281.0000000000052,
+        "elapsed": 280.9999999999942,
+        "kind": "multiply",
+        "targetPlantId": "plant-611",
+        "spellId": "spell-2472",
+        "selectionCpuSeconds": 0.000003899999999703141,
+        "applicationCpuSeconds": 0.00016570000000137953,
+        "searchCpuSeconds": 0.000030599999998230486,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "88",
+            "d": "115"
+          },
+          "intensity": 0.06956521739130435,
+          "benefited": true
+        },
+        "durationSeconds": 15,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 285.0000000000061,
+        "elapsed": 284.9999999999951,
+        "kind": "multiply",
+        "targetPlantId": "plant-613",
+        "spellId": "spell-2479",
+        "selectionCpuSeconds": 0.000003899999999703141,
+        "applicationCpuSeconds": 0.00021779999999853316,
+        "searchCpuSeconds": 0.000352100000000064,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "792",
+            "d": "1081"
+          },
+          "intensity": 0.0666049953746531,
+          "benefited": true
+        },
+        "durationSeconds": 15,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 289.000000000007,
+        "elapsed": 288.999999999996,
+        "kind": "multiply",
+        "targetPlantId": "plant-615",
+        "spellId": "spell-2490",
+        "selectionCpuSeconds": 0.0000017000000007101334,
+        "applicationCpuSeconds": 0.00012299999999959254,
+        "searchCpuSeconds": 0.0001834999999991851,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "33",
+            "d": "47"
+          },
+          "intensity": 0.06382978723404255,
+          "benefited": true
+        },
+        "durationSeconds": 15,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 293.0000000000079,
+        "elapsed": 292.99999999999693,
+        "kind": "multiply",
+        "targetPlantId": "plant-619",
+        "spellId": "spell-2501",
+        "selectionCpuSeconds": 0.0000020999999978812413,
+        "applicationCpuSeconds": 0.0001841999999996915,
+        "searchCpuSeconds": 0.0003274000000019441,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "33",
+            "d": "49"
+          },
+          "intensity": 0.061224489795918366,
+          "benefited": true
+        },
+        "durationSeconds": 15,
+        "redundantMultiply": false
+      },
+      {
+        "day": 1,
+        "time": 297.0000000000088,
+        "elapsed": 296.99999999999784,
+        "kind": "multiply",
+        "targetPlantId": "plant-625",
+        "spellId": "spell-2512",
+        "selectionCpuSeconds": 0.0000018999999992956873,
+        "applicationCpuSeconds": 0.0002407999999995809,
+        "searchCpuSeconds": 0.0003198000000011234,
+        "potentialBenefit": true,
+        "power": {
+          "day": 1,
+          "amount": {
+            "n": "792",
+            "d": "1225"
+          },
+          "intensity": 0.05877551020408163,
+          "benefited": true
+        },
+        "durationSeconds": 15,
+        "redundantMultiply": false
+      }
+    ],
+    "dailyPower": {
+      "1": {
+        "growth": {
+          "budget": {
+            "n": "180",
+            "d": "1"
+          },
+          "requested": {
+            "n": "405",
+            "d": "1"
+          },
+          "committed": {
+            "n": "1620",
+            "d": "13"
+          },
+          "consumed": {
+            "n": "613580411427",
+            "d": "9100000000"
+          },
+          "liquidated": {
+            "n": "0",
+            "d": "1"
+          },
+          "paid": "0",
+          "applications": 27,
+          "available": {
+            "n": "720",
+            "d": "13"
+          },
+          "pending": {
+            "n": "520419588573",
+            "d": "9100000000"
+          }
+        },
+        "multiply": {
+          "budget": {
+            "n": "132",
+            "d": "1"
+          },
+          "requested": {
+            "n": "418",
+            "d": "1"
+          },
+          "committed": {
+            "n": "2508",
+            "d": "25"
+          },
+          "consumed": {
+            "n": "0",
+            "d": "1"
+          },
+          "liquidated": {
+            "n": "0",
+            "d": "1"
+          },
+          "paid": "0",
+          "applications": 38,
+          "available": {
+            "n": "792",
+            "d": "25"
+          },
+          "pending": {
+            "n": "2508",
+            "d": "25"
+          }
+        }
+      }
+    },
+    "deliveredBonuses": [
+      {
+        "id": "event-3993",
+        "crateId": "crate-2502",
+        "income": {
+          "n": "0",
+          "d": "1"
+        }
+      },
+      {
+        "id": "event-4008",
+        "crateId": "crate-2503",
+        "income": {
+          "n": "0",
+          "d": "1"
+        }
+      }
+    ],
+    "additionalDeliveredIncome": 0,
+    "economicallyRedundantMultiply": 0,
+    "plantsBenefited": [
+      "plant-3",
+      "plant-5",
+      "plant-7",
+      "plant-9",
+      "plant-37",
+      "plant-41",
+      "plant-45",
+      "plant-49",
+      "plant-53",
+      "plant-57",
+      "plant-61",
+      "plant-65",
+      "plant-69",
+      "plant-105",
+      "plant-205",
+      "plant-299",
+      "plant-367",
+      "plant-437",
+      "plant-513",
+      "plant-595",
+      "plant-617",
+      "plant-669",
+      "plant-701",
+      "plant-765",
+      "plant-777",
+      "plant-835",
+      "plant-871",
+      "plant-903",
+      "plant-931",
+      "plant-973",
+      "plant-975",
+      "plant-977",
+      "plant-979",
+      "plant-611",
+      "plant-613",
+      "plant-615",
+      "plant-619",
+      "plant-625",
+      "plant-35",
+      "plant-39",
+      "plant-43",
+      "plant-47",
+      "plant-51",
+      "plant-55",
+      "plant-59",
+      "plant-63",
+      "plant-67",
+      "plant-103",
+      "plant-203",
+      "plant-297",
+      "plant-365",
+      "plant-435",
+      "plant-511",
+      "plant-593",
+      "plant-667",
+      "plant-699",
+      "plant-763",
+      "plant-775",
+      "plant-833",
+      "plant-869",
+      "plant-901",
+      "plant-929",
+      "plant-971",
+      "plant-609"
+    ],
+    "summedEffectSimSeconds": 1348.9999999999657,
+    "selectionCpuSeconds": 0.000236399999990681,
+    "applicationCpuSeconds": 0.013230099999982484,
+    "executionGrowthSecondsAdded": 67.42641895704108,
+    "humanManualActivitySeconds": null,
+    "selectedModeActivityCreditSeconds": 0,
+    "effectDurationActivityCreditSeconds": 0
+  },
+  "autonomousWorkerSampleSeconds": {
+    "moving": 10077,
+    "acting": 4867,
+    "carrying": 6,
+    "idle": 50
+  },
+  "daily": [
+    {
+      "time": 9.99999999999998,
+      "balance": 96700,
+      "alive": 500,
+      "mature": 0,
+      "delivered": 0
+    },
+    {
+      "time": 20.000000000000014,
+      "balance": 96700,
+      "alive": 500,
+      "mature": 0,
+      "delivered": 0
+    },
+    {
+      "time": 30.000000000000156,
+      "balance": 96700,
+      "alive": 500,
+      "mature": 0,
+      "delivered": 0
+    },
+    {
+      "time": 40.0000000000003,
+      "balance": 96700,
+      "alive": 500,
+      "mature": 0,
+      "delivered": 0
+    },
+    {
+      "time": 50.000000000000284,
+      "balance": 96700,
+      "alive": 500,
+      "mature": 0,
+      "delivered": 0
+    },
+    {
+      "time": 60.000000000000426,
+      "balance": 96700,
+      "alive": 500,
+      "mature": 0,
+      "delivered": 0
+    },
+    {
+      "time": 70.00000000000014,
+      "balance": 96700,
+      "alive": 500,
+      "mature": 0,
+      "delivered": 0
+    },
+    {
+      "time": 79.99999999999957,
+      "balance": 96700,
+      "alive": 500,
+      "mature": 0,
+      "delivered": 0
+    },
+    {
+      "time": 89.99999999999886,
+      "balance": 96700,
+      "alive": 500,
+      "mature": 0,
+      "delivered": 0
+    },
+    {
+      "time": 99.9999999999983,
+      "balance": 96700,
+      "alive": 500,
+      "mature": 0,
+      "delivered": 0
+    },
+    {
+      "time": 109.99999999999773,
+      "balance": 96700,
+      "alive": 500,
+      "mature": 0,
+      "delivered": 0
+    },
+    {
+      "time": 119.99999999999702,
+      "balance": 96700,
+      "alive": 500,
+      "mature": 0,
+      "delivered": 0
+    },
+    {
+      "time": 129.99999999999645,
+      "balance": 96700,
+      "alive": 500,
+      "mature": 0,
+      "delivered": 0
+    },
+    {
+      "time": 139.99999999999588,
+      "balance": 96700,
+      "alive": 500,
+      "mature": 0,
+      "delivered": 0
+    },
+    {
+      "time": 149.99999999999517,
+      "balance": 96700,
+      "alive": 500,
+      "mature": 0,
+      "delivered": 0
+    },
+    {
+      "time": 159.9999999999946,
+      "balance": 96700,
+      "alive": 500,
+      "mature": 0,
+      "delivered": 0
+    },
+    {
+      "time": 169.99999999999403,
+      "balance": 96700,
+      "alive": 500,
+      "mature": 0,
+      "delivered": 0
+    },
+    {
+      "time": 179.99999999999332,
+      "balance": 96700,
+      "alive": 500,
+      "mature": 3,
+      "delivered": 0
+    },
+    {
+      "time": 189.99999999999275,
+      "balance": 96700,
+      "alive": 500,
+      "mature": 19,
+      "delivered": 0
+    },
+    {
+      "time": 199.99999999999218,
+      "balance": 96700,
+      "alive": 500,
+      "mature": 54,
+      "delivered": 0
+    },
+    {
+      "time": 209.99999999999147,
+      "balance": 96700,
+      "alive": 500,
+      "mature": 96,
+      "delivered": 0
+    },
+    {
+      "time": 219.9999999999909,
+      "balance": 96700,
+      "alive": 500,
+      "mature": 130,
+      "delivered": 0
+    },
+    {
+      "time": 229.99999999999034,
+      "balance": 96700,
+      "alive": 500,
+      "mature": 166,
+      "delivered": 0
+    },
+    {
+      "time": 239.99999999998963,
+      "balance": 96700,
+      "alive": 500,
+      "mature": 189,
+      "delivered": 0
+    },
+    {
+      "time": 250,
+      "balance": 96700,
+      "alive": 500,
+      "mature": 223,
+      "delivered": 0
+    },
+    {
+      "time": 260.00000000000057,
+      "balance": 96700,
+      "alive": 500,
+      "mature": 252,
+      "delivered": 0
+    },
+    {
+      "time": 270.0000000000027,
+      "balance": 96700,
+      "alive": 500,
+      "mature": 279,
+      "delivered": 0
+    },
+    {
+      "time": 280.00000000000495,
+      "balance": 96700,
+      "alive": 500,
+      "mature": 307,
+      "delivered": 0
+    },
+    {
+      "time": 290.0000000000072,
+      "balance": 96700,
+      "alive": 500,
+      "mature": 327,
+      "delivered": 0
+    },
+    {
+      "time": 300,
+      "balance": 96722,
+      "alive": 497,
+      "mature": 349,
+      "delivered": 2
+    }
+  ]
+}

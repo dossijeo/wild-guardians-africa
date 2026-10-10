@@ -31,7 +31,7 @@ export function advancePlant(p,seconds,growthMagic=false) {
     p.growth+=step*rate;left-=step;if(magic)extraGrowth+=step*.5*intensity;
     if(next && p.growth>=next.at-1e-9) {
       if(magic&&growthMagic===true)satisfyWater(p,next,true);else next.status='due';
-      if(!magic&&p.nextTolerancePenalty){next.wait=tolerance*p.nextTolerancePenalty;p.nextTolerancePenalty=0;}
+      if(next.status==='due'&&p.nextTolerancePenalty){next.wait=tolerance*p.nextTolerancePenalty;p.nextTolerancePenalty=0;}
     }
     if(p.growth>=spec.growth_seconds-1e-9) {
       p.growth=p.water.some(w=>w.status==='due')?spec.growth_seconds-1e-7:spec.growth_seconds;

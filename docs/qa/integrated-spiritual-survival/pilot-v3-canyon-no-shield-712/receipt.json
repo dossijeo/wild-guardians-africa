@@ -1,0 +1,9 @@
+{
+  "status": "incomplete-harness-error",
+  "message": "ENOENT: no such file or directory, open 'C:\\Users\\PC\\.codex\\worktrees\\agricultural-single-plant-magic\\wild-guardians-africa\\public\\content\\biome-undefined.json'",
+  "stack": "Error: ENOENT: no such file or directory, open 'C:\\Users\\PC\\.codex\\worktrees\\agricultural-single-plant-magic\\wild-guardians-africa\\public\\content\\biome-undefined.json'\n    at readFileSync (node:fs:453:20)\n    at read (file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/tools/check_opening.mjs:10:29)\n    at createOpeningWorld (file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/tools/check_opening.mjs:15:39)\n    at simulateNativeCampaign (file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/tools/native-campaign-runner.mjs:47:16)\n    at runNativeCampaignCase (file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/tools/run_native_campaign.mjs:45:17)\n    at file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/tools/run_native_campaign.mjs:63:20\n    at ModuleJob.run (node:internal/modules/esm/module_job:218:25)\n    at async ModuleLoader.import (node:internal/modules/esm/loader:329:24)\n    at async loadESM (node:internal/process/esm_loader:28:7)\n    at async handleMainPromise (node:internal/modules/run_main:113:12)",
+  "finishedAt": "2026-10-10T17:26:42.395Z",
+  "nativeResult": null,
+  "completedDailyRows": null,
+  "scope": "Transport/deadline/tool error is not invented game defeat; no rerun performed"
+}
