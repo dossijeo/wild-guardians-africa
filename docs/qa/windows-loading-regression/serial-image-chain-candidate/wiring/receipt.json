@@ -1,0 +1,117 @@
+{
+  "baseline": "37427276c669b6ffd74573b6c62a540a9292ecca",
+  "changed": {
+    "src/rendering/loading-serial-images.js": "e06471f11b035a42f698dda7da9285efea02210eab6b2969bb93b5e00712df71",
+    "src/app/main.js": "dbd681259acf5c26c0a8aba50cf02fdeb1d29d82c3c72e834e9179813afead35",
+    "src-tauri/smoke.js": "1caf359bf11d1b8cac421e75e193e366ec88ef0016634bf4d0159c4ef3c37824",
+    "src-tauri/src/main.rs": "007af64e56ba59ae644623966fcd64ca70a975b600250e3d0f68215e5c689a2c",
+    ".github/workflows/windows.yml": "2b5d68f65285d9c936ee2089f8bc1f6d4d4d2f2446471db8f99260f50c83836e",
+    "tests/loading-serial-images.test.js": "8bff76eacfd07ca8ef74f7273eea3e64adad6fbaf31860ea25f5e02242cd132c",
+    "docs/qa/sfx-catalog-post-jam/inventory.json": "cadbdfd4a6b1d49ca0e46c21a68541857d266e2a29225b7762169f782bc7578a",
+    "docs/qa/sfx-catalog-post-jam/inventory.md": "8d3dda15bb11ecddc4a261f9e491bb57ddd12741c0930a9801e2b313cfcac89b"
+  },
+  "unchanged": {
+    "src/rendering/loading-diorama.js": "1f0fee69a82d0499e2904abe5ece4d34c1084710c16d19ab25adb872dd4f5dd5",
+    "src/rendering/assets.js": "492631f5d0c8a1a9c20a2c9b336e611fdfaec33c4698c74d1031f5cdc7d90847",
+    "src/rendering/scene.js": "d8a41ff52ce8b7cfb13b418f95ad12100c1a79cf47932a259dcaaadfd0f14d6e",
+    "src/rendering/loading-programs.js": "a1354397f1ba0543fd4dffcd5143e82c4b211f750a9df367ac902dd70730c8c2",
+    "src/rendering/loading-yield-budget.js": "576ae137b4ef2e156547ca74704c244a2c4891a283a86ee590ca04c972d72c17",
+    "src/rendering/loading-resource-overlap.js": "10e0c6b399fb68967a6972ab5262983b04045934bf6956ae7c1f8b7bb9c6913b",
+    "src/rendering/loading-texture-owner.js": "5920c3567fe43888a300655bd1bd01b8ca2181405e2dc86192fe2a5984cc451b"
+  },
+  "checks": [
+    {
+      "log": "tests.log",
+      "args": [
+        "node",
+        "--test",
+        "tests/loading-serial-images.test.js",
+        "tests/loading-resource-overlap.test.js",
+        "tests/loading-diorama-disposal.test.js",
+        "tests/loading-diorama-upload.test.js",
+        "tests/assets-lifecycle.test.js",
+        "tests/sfx-catalog-audit.test.js",
+        "tests/loading-compile-window.test.js",
+        "tests/wall-buffer-package.test.js",
+        "tests/desktop-visibility-fixture.test.js",
+        "tests/desktop-smoke-failure-observation.test.js"
+      ],
+      "exitCode": 0,
+      "sha256": "6da8fd0ae6ff12f931a6cb1b3bc56a2fc35000a48d09ec1a129961c96fea9afa"
+    },
+    {
+      "log": "sfx-check.log",
+      "args": [
+        "node",
+        "tools/audit_sfx_catalog.mjs",
+        "--check"
+      ],
+      "exitCode": 0,
+      "sha256": "d917b3b667af9ae1484af248a17d830f46b0d3cb21694487f055248b24e3e6ea"
+    },
+    {
+      "log": "build.log",
+      "args": [
+        "npm.cmd",
+        "run",
+        "build"
+      ],
+      "exitCode": 0,
+      "sha256": "26d87ec85eb8565264f989985bfad375748ba63875ce8a92f4f5b8b7867512a1"
+    },
+    {
+      "log": "package.log",
+      "args": [
+        "npm.cmd",
+        "run",
+        "test:web-package"
+      ],
+      "exitCode": 0,
+      "sha256": "1bfa2c890dfb7e5299a346ed4f48900635a10bf4c902439d8e3cb197335a7b8d"
+    }
+  ],
+  "logs": {
+    "build.log": "26d87ec85eb8565264f989985bfad375748ba63875ce8a92f4f5b8b7867512a1",
+    "package.log": "1bfa2c890dfb7e5299a346ed4f48900635a10bf4c902439d8e3cb197335a7b8d",
+    "sfx-check.log": "d917b3b667af9ae1484af248a17d830f46b0d3cb21694487f055248b24e3e6ea",
+    "tests.log": "6da8fd0ae6ff12f931a6cb1b3bc56a2fc35000a48d09ec1a129961c96fea9afa"
+  },
+  "syntaxFiles": [
+    "src/app/main.js",
+    "src/rendering/loading-serial-images.js",
+    "src-tauri/smoke.js",
+    "tests/loading-serial-images.test.js"
+  ],
+  "defaultEnabled": false,
+  "nativeEvidence": false,
+  "requiredTrialInputs": {
+    "serial_image_chain": true,
+    "wall_buffer_package": false,
+    "compile_window": false,
+    "resource_overlap": false
+  },
+  "readinessMs": 90000,
+  "hiddenMs": 300000,
+  "hostVisibilityTimeoutMs": 900000,
+  "tests": {
+    "pass": 68,
+    "fail": 0,
+    "durationMs": 1319.0943
+  },
+  "buildSeconds": 10.83,
+  "package": {
+    "files": 712,
+    "bytes": 450454366,
+    "links": 860,
+    "runtimeGlbs": 22
+  },
+  "parentIndependentCoreReview": {
+    "pass": 35,
+    "fail": 0,
+    "durationMs": 1232.308
+  },
+  "process": {
+    "session": 5783,
+    "exitCode": 0
+  }
+}

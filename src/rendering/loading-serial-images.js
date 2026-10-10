@@ -10,3 +10,5 @@ export async function loadWithSerialImages({assertOpen,model,bridges,soil,atlas}
  const [gltf,prepared,[texture,backdrop]]=await Promise.all([modelPending,bridgePending,images]);
  check();return [gltf,prepared,texture,backdrop];
 }
+
+export const loadingSerialImageChainEnabled=(scope=globalThis)=>scope.__desktopSmokeStarted===true&&scope.__desktopSmokeSerialImageChain===true;

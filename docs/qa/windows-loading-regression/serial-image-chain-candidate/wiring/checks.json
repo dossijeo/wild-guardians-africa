@@ -1,0 +1,51 @@
+[
+  {
+    "log": "tests.log",
+    "args": [
+      "node",
+      "--test",
+      "tests/loading-serial-images.test.js",
+      "tests/loading-resource-overlap.test.js",
+      "tests/loading-diorama-disposal.test.js",
+      "tests/loading-diorama-upload.test.js",
+      "tests/assets-lifecycle.test.js",
+      "tests/sfx-catalog-audit.test.js",
+      "tests/loading-compile-window.test.js",
+      "tests/wall-buffer-package.test.js",
+      "tests/desktop-visibility-fixture.test.js",
+      "tests/desktop-smoke-failure-observation.test.js"
+    ],
+    "exitCode": 0,
+    "sha256": "6da8fd0ae6ff12f931a6cb1b3bc56a2fc35000a48d09ec1a129961c96fea9afa"
+  },
+  {
+    "log": "sfx-check.log",
+    "args": [
+      "node",
+      "tools/audit_sfx_catalog.mjs",
+      "--check"
+    ],
+    "exitCode": 0,
+    "sha256": "d917b3b667af9ae1484af248a17d830f46b0d3cb21694487f055248b24e3e6ea"
+  },
+  {
+    "log": "build.log",
+    "args": [
+      "npm.cmd",
+      "run",
+      "build"
+    ],
+    "exitCode": 0,
+    "sha256": "26d87ec85eb8565264f989985bfad375748ba63875ce8a92f4f5b8b7867512a1"
+  },
+  {
+    "log": "package.log",
+    "args": [
+      "npm.cmd",
+      "run",
+      "test:web-package"
+    ],
+    "exitCode": 0,
+    "sha256": "1bfa2c890dfb7e5299a346ed4f48900635a10bf4c902439d8e3cb197335a7b8d"
+  }
+]

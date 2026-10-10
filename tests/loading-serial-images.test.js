@@ -6,6 +6,7 @@ import {execFileSync} from 'node:child_process';
 import {LoadingDiorama} from '../src/rendering/loading-diorama.js';
 import {Assets} from '../src/rendering/assets.js';
 import {WorldScene} from '../src/rendering/scene.js';
+import {loadingSerialImageChainEnabled} from '../src/rendering/loading-serial-images.js';
 const deferred=()=>{let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return {promise,resolve,reject};};
 const flush=async()=>{for(let i=0;i<4;i++)await new Promise(r=>setImmediate(r));};
 function fixture(t,{enabled=true}={}){
@@ -30,5 +31,22 @@ test('soil failure never starts atlas; all pending GLB rejections observed',asyn
 test('real TextureLoader fallback atlas arrival after failed sibling is disposed exactly once',async t=>{const f=fixture(t),pending=f.owner.prepare().catch(e=>{f.close();throw e;}),error=Error('bridge failure'),rejected=assert.rejects(pending,e=>e===error);f.sky.resolve();await flush();f.soil.resolve(new THREE.Texture());await flush();assert.ok(f.calls.includes('atlas'));f.bridge.reject(error);await rejected;let disposed=0;const texture=new THREE.Texture();texture.addEventListener('dispose',()=>disposed++);f.atlas.resolve(texture);f.model.resolve(f.steady);await flush();assert.equal(disposed,1);assert.equal(f.owner.backdropTexture,undefined);f.close();assert.equal(disposed,1);});
 test('abort during pending soil prevents atlas and late shared resources dispose once',async t=>{const f=fixture(t),pending=f.owner.prepare(),rejected=assert.rejects(pending);f.sky.resolve();await flush();f.close();await rejected;let count=0;const texture=new THREE.Texture();texture.addEventListener('dispose',()=>count++);f.soil.resolve(texture);f.model.resolve(f.steady);f.bridge.resolve(f.bridges);await flush();assert.ok(!f.calls.includes('atlas'));assert.equal(count,1);assert.equal(f.adoptions,0);});
 test('sky failure prevents every catalogue/resource start; mutually exclusive recipes fail before loading',async t=>{const f=fixture(t),error=Error('sky'),pending=f.owner.prepare(),rejected=assert.rejects(pending,e=>e===error);f.sky.reject(error);await rejected;assert.deepEqual(f.calls,['sky']);f.owner.resourceOverlap=true;await assert.rejects(f.owner.prepare(),/isolated/);assert.deepEqual(f.calls,['sky']);f.close();});
-test('GPU warm tail and ordinary selection unchanged; no CLI/workflow wiring',()=>{const source=readFileSync(new URL('../src/rendering/loading-diorama.js',import.meta.url),'utf8'),original=execFileSync('git',['show','98edab86:src/rendering/loading-diorama.js'],{encoding:'utf8'}),tail=s=>s.slice(s.indexOf('    const layout=mountains.arcLayout'));assert.equal(tail(source),tail(original));assert.match(source,/serialImageChain=false/);for(const path of ['src/app/main.js','src-tauri/smoke.js','src-tauri/src/main.rs','.github/workflows/windows.yml'])assert.equal(readFileSync(new URL('../'+path,import.meta.url),'utf8'),execFileSync('git',['show','98edab86:'+path],{encoding:'utf8'}));});
+test('GPU warm tail and default OFF loader branch remain byte-identical',()=>{const source=readFileSync(new URL('../src/rendering/loading-diorama.js',import.meta.url),'utf8'),original=execFileSync('git',['show','37427276:src/rendering/loading-diorama.js'],{encoding:'utf8'});assert.equal(source,original);assert.match(source,/serialImageChain=false/);});
+test('serial image selection requires explicit smoke ownership and boolean opt-in',()=>{
+ for(const value of [undefined,null,false,0,1,'true',{}])assert.equal(loadingSerialImageChainEnabled({__desktopSmokeStarted:true,__desktopSmokeSerialImageChain:value}),false);
+ assert.equal(loadingSerialImageChainEnabled({__desktopSmokeStarted:true,__desktopSmokeSerialImageChain:true}),true);
+ let reads=0;assert.equal(loadingSerialImageChainEnabled({get __desktopSmokeSerialImageChain(){reads++;throw Error('ordinary path must not read flag');}}),false);assert.equal(reads,0);
+ assert.equal(loadingSerialImageChainEnabled({__desktopSmokeStarted:false,__desktopSmokeSerialImageChain:true}),false);
+});
+test('App, guarded CLI, explicit recipe and both original workflow gates wire smoke-only selection',()=>{
+ const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8'),app=read('src/app/main.js'),rust=read('src-tauri/src/main.rs'),smoke=read('src-tauri/smoke.js'),workflow=read('.github/workflows/windows.yml');
+ assert.match(app,/serialImageChain:loadingSerialImageChainEnabled\(\)/);
+ assert.ok(rust.indexOf('arg == "--smoke-report"')<rust.indexOf('let serial_image_chain'));
+ assert.match(rust,/let serial_image_chain = std::env::args\(\).any\(\|arg\| arg == "--smoke-serial-image-chain"\)/);
+ assert.match(smoke,/serialImageChain:window.__desktopSmokeSerialImageChain===true/);
+ assert.match(workflow,/serial_image_chain:[\s\S]*?type: boolean\s+default: false/);
+ assert.equal(workflow.match(/\$smokeArgs \+= '--smoke-serial-image-chain'/g).length,2);
+ assert.match(smoke,/worldEnd = worldStartedAt \+ 90000/);assert.match(smoke,/await wait\(300000\)/);assert.match(workflow,/WaitForExit\(900000\)/);
+ for(const flag of ['wall_buffer_package','compile_window','resource_overlap'])assert.match(workflow,new RegExp(flag+':[\\s\\S]*?type: boolean\\s+default: false'));
+});
 test('existing bitmap atlas path retains flipY/owner disposer after abort',async t=>{const f=fixture(t),previousWorker=globalThis.Worker,previousBitmap=globalThis.createImageBitmap;try{globalThis.Worker=function(){};globalThis.createImageBitmap=()=>{};let options;f.assets.loadingTexture=(url,value)=>{f.calls.push('bitmap atlas');options=value;return f.atlas.promise;};const pending=f.owner.prepare(),rejected=assert.rejects(pending);f.sky.resolve();await flush();f.soil.resolve(new THREE.Texture());await flush();assert.deepEqual(options,{flipY:true,premultiplyAlpha:false});assert.ok(f.calls.includes('bitmap atlas'));f.close();await rejected;const texture=new THREE.Texture();let count=0;texture.addEventListener('dispose',()=>count++);f.atlas.resolve(texture);f.model.resolve(f.steady);f.bridge.resolve(f.bridges);await flush();assert.equal(count,1);assert.equal(f.adoptions,0);}finally{globalThis.Worker=previousWorker;globalThis.createImageBitmap=previousBitmap;}});

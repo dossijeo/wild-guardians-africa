@@ -1,0 +1,364 @@
+TAP version 13
+# (node:16040) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: pending shared GLTF promises are not cache hits and a completed model is
+ok 1 - pending shared GLTF promises are not cache hits and a completed model is
+  ---
+  duration_ms: 8.8687
+  ...
+# Subtest: closing the packed biome owner aborts its original binary request
+ok 2 - closing the packed biome owner aborts its original binary request
+  ---
+  duration_ms: 2.4215
+  ...
+# Subtest: offscene packed prototypes and standalone textures are owned and released once; caches clear
+ok 3 - offscene packed prototypes and standalone textures are owned and released once; caches clear
+  ---
+  duration_ms: 242.3458
+  ...
+# Subtest: scene borrowers can dispose source resources first without causing duplicate disposal at owner close
+ok 4 - scene borrowers can dispose source resources first without causing duplicate disposal at owner close
+  ---
+  duration_ms: 2.7583
+  ...
+# Subtest: inflight model and texture finishing after close dispose once without resurrecting caches
+ok 5 - inflight model and texture finishing after close dispose once without resurrecting caches
+  ---
+  duration_ms: 0.7923
+  ...
+# Subtest: a failed standalone texture is retryable while open
+ok 6 - a failed standalone texture is retryable while open
+  ---
+  duration_ms: 0.4857
+  ...
+# Subtest: pending building cannot create new procedural resources after its owner closes
+ok 7 - pending building cannot create new procedural resources after its owner closes
+  ---
+  duration_ms: 0.4229
+  ...
+# Subtest: packed biome, village and wall binary loads cannot allocate prototypes after close
+ok 8 - packed biome, village and wall binary loads cannot allocate prototypes after close
+  ---
+  duration_ms: 11.5159
+  ...
+# Subtest: failed building download clears both caches; concurrent retry prepares the original model once
+ok 9 - failed building download clears both caches; concurrent retry prepares the original model once
+  ---
+  duration_ms: 694.1616
+  ...
+# Subtest: failure report observes loading UI without converting it into readiness or masking failure
+ok 10 - failure report observes loading UI without converting it into readiness or masking failure
+  ---
+  duration_ms: 8.0837
+  ...
+# Subtest: early failure tolerates loading elements not yet created
+ok 11 - early failure tolerates loading elements not yet created
+  ---
+  duration_ms: 2.4417
+  ...
+# Subtest: an observation fault preserves the original failure and still publishes the report
+ok 12 - an observation fault preserves the original failure and still publishes the report
+  ---
+  duration_ms: 2.889
+  ...
+# Subtest: world wait stops at the ready gate and excludes the later five-minute visibility test
+ok 13 - world wait stops at the ready gate and excludes the later five-minute visibility test
+  ---
+  duration_ms: 2.2365
+  ...
+# Subtest: original finish reads readiness exactly once without masking original gate failure
+ok 14 - original finish reads readiness exactly once without masking original gate failure
+  ---
+  duration_ms: 3.6351
+  ...
+# Subtest: desktop visibility fixture uses paid native first-night gameplay and survives hidden restoration unchanged
+ok 15 - desktop visibility fixture uses paid native first-night gameplay and survives hidden restoration unchanged
+  ---
+  duration_ms: 881.0364
+  ...
+# Subtest: strict two-job window uses original core/objects/allvariants and third submission waits for settlement
+ok 16 - strict two-job window uses original core/objects/allvariants and third submission waits for settlement
+  ---
+  duration_ms: 80.5249
+  ...
+# Subtest: default OFF remains serial; ready jobs do not force RAF and strict guard requires both smoke booleans
+ok 17 - default OFF remains serial; ready jobs do not force RAF and strict guard requires both smoke booleans
+  ---
+  duration_ms: 31.0998
+  ...
+# Subtest: external abort drains both pending core jobs with no late queries or extra submissions
+ok 18 - external abort drains both pending core jobs with no late queries or extra submissions
+  ---
+  duration_ms: 44.2894
+  ...
+# Subtest: first real asynchronous program error aborts sibling and is preserved exactly
+ok 19 - first real asynchronous program error aborts sibling and is preserved exactly
+  ---
+  duration_ms: 17.4024
+  ...
+# Subtest: synchronous second compile or selection fault aborts and drains original pending sibling
+ok 20 - synchronous second compile or selection fault aborts and drains original pending sibling
+  ---
+  duration_ms: 60.1184
+  ...
+# Subtest: epoch replacement and loss-restoration latch cannot permit queries or third batch
+ok 21 - epoch replacement and loss-restoration latch cannot permit queries or third batch
+  ---
+  duration_ms: 93.7379
+  ...
+# Subtest: original per-job deadline and suspended budget RAF cancellation remain authoritative
+ok 22 - original per-job deadline and suspended budget RAF cancellation remain authoritative
+  ---
+  duration_ms: 16.158
+  ...
+# Subtest: CPU16 budget and diagnostic faults preserve complete submissions/readiness
+ok 23 - CPU16 budget and diagnostic faults preserve complete submissions/readiness
+  ---
+  duration_ms: 1.3416
+  ...
+# Subtest: partial budget setup failure removes external ownership listener and preserves error
+ok 24 - partial budget setup failure removes external ownership listener and preserves error
+  ---
+  duration_ms: 0.5328
+  ...
+# Subtest: wiring is smoke-only opt-in and original gates remain exact
+ok 25 - wiring is smoke-only opt-in and original gates remain exact
+  ---
+  duration_ms: 4.3412
+  ...
+# Subtest: abort drain releases all original poll timers/context listeners and external signal listener
+ok 26 - abort drain releases all original poll timers/context listeners and external signal listener
+  ---
+  duration_ms: 4.4005
+  ...
+# Subtest: actual original per-job observation retains scalar window high-water and terminal clear
+ok 27 - actual original per-job observation retains scalar window high-water and terminal clear
+  ---
+  duration_ms: 17.2912
+  ...
+# (node:26932) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: diorama disposes its private shadow fallback exactly once without touching native owners
+ok 28 - diorama disposes its private shadow fallback exactly once without touching native owners
+  ---
+  duration_ms: 6.5239
+  ...
+# Subtest: loading-only mountain atlas arriving after either owner closes is disposed without adoption
+ok 29 - loading-only mountain atlas arriving after either owner closes is disposed without adoption
+  ---
+  duration_ms: 1.6005
+  ...
+# Subtest: presentation mountain foot feathers the actual native recipe without changing a separate world material
+ok 30 - presentation mountain foot feathers the actual native recipe without changing a separate world material
+  ---
+  duration_ms: 11.2193
+  ...
+# (node:29744) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: diorama upload splits all five stages/four bridges, restores renderer and visibility before each real frame, then submits the complete scene
+ok 31 - diorama upload splits all five stages/four bridges, restores renderer and visibility before each real frame, then submits the complete scene
+  ---
+  duration_ms: 18.6999
+  ...
+# Subtest: cancel while batched diorama RAF is suspended restores all borrowed state and never submits a later group or disposes shared crop sources
+ok 32 - cancel while batched diorama RAF is suspended restores all borrowed state and never submits a later group or disposes shared crop sources
+  ---
+  duration_ms: 4.8422
+  ...
+# (node:52504) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: sky and catalogues start together; all four resources start after catalogues and adoption waits for every resource and sky
+ok 33 - sky and catalogues start together; all four resources start after catalogues and adoption waits for every resource and sky
+  ---
+  duration_ms: 2.2993
+  ...
+# Subtest: early sky failure and synchronous resource failure propagate while all late sibling rejections are observed
+ok 34 - early sky failure and synchronous resource failure propagate while all late sibling rejections are observed
+  ---
+  duration_ms: 2.5761
+  ...
+# Subtest: abort after catalogues prevents all resource starts; closed owner rejects before adoption
+ok 35 - abort after catalogues prevents all resource starts; closed owner rejects before adoption
+  ---
+  duration_ms: 0.8206
+  ...
+# Subtest: actual Assets URL cache and V4 bridge loader reuse the same model promises without making private rigs or disposing borrowed models
+ok 36 - actual Assets URL cache and V4 bridge loader reuse the same model promises without making private rigs or disposing borrowed models
+  ---
+  duration_ms: 6.6063
+  ...
+# Subtest: real World.loadReady cancellation rejects scheduling, and original backdrop late-arrival disposer releases its private texture exactly once
+ok 37 - real World.loadReady cancellation rejects scheduling, and original backdrop late-arrival disposer releases its private texture exactly once
+  ---
+  duration_ms: 2.5821
+  ...
+# Subtest: candidate is OFF by default and does not change setup, warming, shader variants or fences
+ok 38 - candidate is OFF by default and does not change setup, warming, shader variants or fences
+  ---
+  duration_ms: 2.751
+  ...
+# Subtest: actual diorama prepare dispatches the four existing loaders before sky finishes, then reaches the same adoption boundary without early GPU work
+ok 39 - actual diorama prepare dispatches the four existing loaders before sky finishes, then reaches the same adoption boundary without early GPU work
+  ---
+  duration_ms: 48.9699
+  ...
+# Subtest: smoke selection requires both explicit booleans; normal gameplay does not read experimental selection
+ok 40 - smoke selection requires both explicit booleans; normal gameplay does not read experimental selection
+  ---
+  duration_ms: 3.2225
+  ...
+# Subtest: actual prepare sibling rejection closes presentation through dispose, observes late failures and releases pending atlas exactly once
+ok 41 - actual prepare sibling rejection closes presentation through dispose, observes late failures and releases pending atlas exactly once
+  ---
+  duration_ms: 6.2647
+  ...
+# (node:52820) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real prepare preserves sky/catalogues, overlaps GLB pair with soil then atlas, joins before scene/GPU adoption
+ok 42 - real prepare preserves sky/catalogues, overlaps GLB pair with soil then atlas, joins before scene/GPU adoption
+  ---
+  duration_ms: 54.9736
+  ...
+# Subtest: default OFF real prepare preserves GLB join before soil, then atlas
+ok 43 - default OFF real prepare preserves GLB join before soil, then atlas
+  ---
+  duration_ms: 6.0521
+  ...
+# Subtest: failed GLB sibling prevents atlas after late soil and observes late bridge rejection
+ok 44 - failed GLB sibling prevents atlas after late soil and observes late bridge rejection
+  ---
+  duration_ms: 7.4442
+  ...
+# Subtest: soil failure never starts atlas; all pending GLB rejections observed
+ok 45 - soil failure never starts atlas; all pending GLB rejections observed
+  ---
+  duration_ms: 6.8572
+  ...
+# Subtest: real TextureLoader fallback atlas arrival after failed sibling is disposed exactly once
+ok 46 - real TextureLoader fallback atlas arrival after failed sibling is disposed exactly once
+  ---
+  duration_ms: 6.1974
+  ...
+# Subtest: abort during pending soil prevents atlas and late shared resources dispose once
+ok 47 - abort during pending soil prevents atlas and late shared resources dispose once
+  ---
+  duration_ms: 9.802
+  ...
+# Subtest: sky failure prevents every catalogue/resource start; mutually exclusive recipes fail before loading
+ok 48 - sky failure prevents every catalogue/resource start; mutually exclusive recipes fail before loading
+  ---
+  duration_ms: 2.03
+  ...
+# Subtest: GPU warm tail and default OFF loader branch remain byte-identical
+ok 49 - GPU warm tail and default OFF loader branch remain byte-identical
+  ---
+  duration_ms: 53.9407
+  ...
+# Subtest: serial image selection requires explicit smoke ownership and boolean opt-in
+ok 50 - serial image selection requires explicit smoke ownership and boolean opt-in
+  ---
+  duration_ms: 0.356
+  ...
+# Subtest: App, guarded CLI, explicit recipe and both original workflow gates wire smoke-only selection
+ok 51 - App, guarded CLI, explicit recipe and both original workflow gates wire smoke-only selection
+  ---
+  duration_ms: 2.9704
+  ...
+# Subtest: existing bitmap atlas path retains flipY/owner disposer after abort
+ok 52 - existing bitmap atlas path retains flipY/owner disposer after abort
+  ---
+  duration_ms: 7.5304
+  ...
+# (node:31848) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: complete catalogue audit reproduces from current source and exact original bytes
+ok 53 - complete catalogue audit reproduces from current source and exact original bytes
+  ---
+  duration_ms: 568.1331
+  ...
+# Subtest: assignments, context exceptions, reserves and alternatives stay distinct from audible acceptance
+ok 54 - assignments, context exceptions, reserves and alternatives stay distinct from audible acceptance
+  ---
+  duration_ms: 129.8674
+  ...
+# Subtest: latent wood variant and semantic alternatives do not become real bindings or duplicate files
+ok 55 - latent wood variant and semantic alternatives do not become real bindings or duplicate files
+  ---
+  duration_ms: 0.522
+  ...
+# (node:13680) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: all160 unique payloads, aligned lanes and original descriptor bytes are exact
+ok 56 - all160 unique payloads, aligned lanes and original descriptor bytes are exact
+  ---
+  duration_ms: 98.9949
+  ...
+# Subtest: generator deterministic and originals untouched
+ok 57 - generator deterministic and originals untouched
+  ---
+  duration_ms: 273.053
+  ...
+# Subtest: resolved descriptor URLs and subset descriptor remain compatible
+ok 58 - resolved descriptor URLs and subset descriptor remain compatible
+  ---
+  duration_ms: 2.7923
+  ...
+# Subtest: unknown descriptor rejected before any request; truncated payload rejected
+ok 59 - unknown descriptor rejected before any request; truncated payload rejected
+  ---
+  duration_ms: 3.7633
+  ...
+# Subtest: abort before fetch and late body delivery do not adopt any lane
+ok 60 - abort before fetch and late body delivery do not adopt any lane
+  ---
+  duration_ms: 5.7307
+  ...
+# Subtest: reader checks owner after decode and each later lane read; request rejection propagated
+ok 61 - reader checks owner after decode and each later lane read; request rejection propagated
+  ---
+  duration_ms: 6.3654
+  ...
+# Subtest: real Assets.walls identical geometries/morph peers/bounds/material recipes,160→1requests
+ok 62 - real Assets.walls identical geometries/morph peers/bounds/material recipes,160→1requests
+  ---
+  duration_ms: 176.7137
+  ...
+# Subtest: real Assets owner disposed during pending package releases material exactlyonce and no late geometry
+ok 63 - real Assets owner disposed during pending package releases material exactlyonce and no late geometry
+  ---
+  duration_ms: 26.6843
+  ...
+# Subtest: flag requires both smoke booleans; normal path defaultsOFF
+ok 64 - flag requires both smoke booleans; normal path defaultsOFF
+  ---
+  duration_ms: 0.6503
+  ...
+# Subtest: packed geometry and morph lanes share one buffer, not160 full copies
+ok 65 - packed geometry and morph lanes share one buffer, not160 full copies
+  ---
+  duration_ms: 24.6782
+  ...
+# Subtest: descriptor field type mismatch fails before fetch
+ok 66 - descriptor field type mismatch fails before fetch
+  ---
+  duration_ms: 1.3011
+  ...
+# Subtest: real late texture after cancellation disposed once; package not requested
+ok 67 - real late texture after cancellation disposed once; package not requested
+  ---
+  duration_ms: 0.7476
+  ...
+# Subtest: CLI and both native smoke invocations record explicit OFF default flag without gate changes
+ok 68 - CLI and both native smoke invocations record explicit OFF default flag without gate changes
+  ---
+  duration_ms: 3.7479
+  ...
+1..68
+# tests 68
+# suites 0
+# pass 68
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1319.0943
