@@ -8,7 +8,7 @@ defeat. The accepted inactivity gate remains false for both arms. This is not
 
 The responsible raw report records 14 repair commands on days 7–20, seven at
 daytime zero. Their recorded balances range from 1984 to 43011 coins. There are
-no completed repairs or payments. Daily pending task counts range from 690 to
+no completed repairs or payments. Daily pending task counts range from 651 to
 1110 over those days (not a continuous measurement of queue size). Centre HP
 is 470 after night seven and remains at that value in later daily snapshots.
 These observations do not establish which individual repair failed or why.
