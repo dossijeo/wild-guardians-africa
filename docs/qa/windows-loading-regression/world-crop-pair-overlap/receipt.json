@@ -1,0 +1,141 @@
+{
+  "base": "9cc3ba2f7be4824f133fb9666e0ce50c61827897",
+  "source": [
+    {
+      "path": "src/rendering/world-crop-pair.js",
+      "sha256": "9adb97bd320cce0845353444dd01f65cc7b8c8c2dadf3cf4cec255ede2411367"
+    },
+    {
+      "path": "src/rendering/scene.js",
+      "sha256": "45173a5ce0b7414b5e3ba20f8681ffc706d47d68805e25c2ab42e214aab8ada7"
+    },
+    {
+      "path": "tests/world-crop-pair.test.js",
+      "sha256": "00a0b457b18937260730455181a7cd000f8ea346a450e6d02acbec911452e88b"
+    },
+    {
+      "path": "tests/fixtures/world-load-crop-default.mjs",
+      "sha256": "c393c63185b7d6061e2eca03eb59c03b1a975a2dcfe92447b201fb066af41c15"
+    },
+    {
+      "path": "tests/crop-partition-lifecycle.test.js",
+      "sha256": "1fd6a87d4e6eee8659c903c9e11ee437d7fc40356d3f759b753bfdb620d47a8c"
+    },
+    {
+      "path": "docs/qa/sfx-catalog-post-jam/inventory.json",
+      "sha256": "15e63346b0f12c36ae5b7e6cea4c2d7f60128cf04eafe263b0921d49959ee8b4"
+    }
+  ],
+  "unchanged": [
+    {
+      "path": "src/app/main.js",
+      "sha256": "ce5c61661d203fa616f80cbe99a48e3599a3aa94d41e0559410cd83effc0bbd4"
+    },
+    {
+      "path": "src-tauri/src/main.rs",
+      "sha256": "45a87c96b83252569f0be030914f5426ee91b042d84a0a2726178aefa41f39c7"
+    },
+    {
+      "path": "src-tauri/smoke.js",
+      "sha256": "4ed8966ee767bbf4e9c08c72714a89766b9657470f8988230eca69ac7fb2042d"
+    },
+    {
+      "path": ".github/workflows/windows.yml",
+      "sha256": "f95841dc7a23bc45d7e7438f92800796d3287ba756b02df5e8f79041405893ae"
+    },
+    {
+      "path": "src/rendering/assets.js",
+      "sha256": "7b071399ab96052f741e59c4590c1a5dcaa10a02c23ed01542e6f9ca5433ef1c"
+    },
+    {
+      "path": "src/rendering/animal-preload.js",
+      "sha256": "e518990bdd7292783eee32c34c34908ad068d36ef0424c57c51564d13288c5e6"
+    },
+    {
+      "path": "src/rendering/crop-library.js",
+      "sha256": "1f6308773529e162d449129a90a31b448e48696a6b766c30fe678401c21842ef"
+    },
+    {
+      "path": "src/rendering/crop-partition.js",
+      "sha256": "41375b47870810090c60f641d21876f9a43d625e1d88d774c3f84887d4eb855a"
+    },
+    {
+      "path": "src/rendering/loading-programs.js",
+      "sha256": "dbf8a88021bc47d1ffdf2ae8bad8dad9c7a74671e9d8a2338f90f3f9eb511c54"
+    },
+    {
+      "path": "src/rendering/loading-yield-budget.js",
+      "sha256": "576ae137b4ef2e156547ca74704c244a2c4891a283a86ee590ca04c972d72c17"
+    },
+    {
+      "path": "src/rendering/loading-diorama.js",
+      "sha256": "736a000a0e1921d4671eef1df917901f763b9f0d2d99fdfd520902bcdbb04cd3"
+    },
+    {
+      "path": "public/content/crop-bridges.json",
+      "sha256": "e133b79dc3a21c421a9eec9bd3aad8610967c69cc28eb003b7f06f072fd249d4"
+    },
+    {
+      "path": "public/content/models.json",
+      "sha256": "d42f6b54a3a5946fc652f1ac87c443cbda45075a10dc4cd49ca5de02a3c5e8c7"
+    }
+  ],
+  "logs": [
+    {
+      "path": "world-crop-pair-tests.log.gz",
+      "bytes": 10574,
+      "sha256": "e87bba0fb520cf592f7263fd43bda65df2d7e606487b18a7e887b00db7213ddd",
+      "gzipSha256": "df7533f60e697e3a9083755bedb46e65bd732e02a5c6f8d3c913da3900c72abd",
+      "exitCode": 0
+    },
+    {
+      "path": "world-crop-pair-build.log.gz",
+      "bytes": 2321,
+      "sha256": "c7b1af9ec8ef6543ec6314d4b4bc3ac8ee06d04aaacea9e462a1d3fbbd782580",
+      "gzipSha256": "d943d9a062026e80c0ab3efc9a98d4dbd151fcea90254316ef42beacb9388663",
+      "exitCode": 0
+    },
+    {
+      "path": "world-crop-pair-package.log.gz",
+      "bytes": 411,
+      "sha256": "656ceb8bf8679a01a1a2f33759f98d231a95b4c0c86c7fb506a95baf99429327",
+      "gzipSha256": "a4689f608ee47db76cc4b7d1dab1c153ea5d34474d4c7219b1b26169594a0f4a",
+      "exitCode": 0
+    },
+    {
+      "path": "world-crop-pair-sfx-refresh.log.gz",
+      "bytes": 272,
+      "sha256": "3efa33655db77b908eae86edb0e44f04acf4193d0e80d885ee0f972a5f4cb01d",
+      "gzipSha256": "54aa90cf42833edbe034bd7b4580107af15159726a1172777d15a5655dd73062",
+      "exitCode": 0
+    },
+    {
+      "path": "world-crop-pair-sfx-check.log.gz",
+      "bytes": 272,
+      "sha256": "cc00769453a0fbe057e284c8bc65145b993c6aae38f0a47e7004315a86b540a0",
+      "gzipSha256": "942a90d47fd9e6971ae665b8c75e5d01e9c0701ea953d55c5a30f774e9c46968",
+      "exitCode": 0
+    },
+    {
+      "path": "world-crop-pair-source-negative.log.gz",
+      "bytes": 134148,
+      "sha256": "8a11519ed5253a16e77d324963f5737b74b8e07fb80ac21a0c878e791067e4cf",
+      "gzipSha256": "d181da1fa0f250948f2b05ab61d94e241695489a458be49048c7abc1b1e990d9",
+      "exitCode": 1
+    }
+  ],
+  "tests": {
+    "passed": 42,
+    "failed": 0,
+    "durationMs": 5876.3325
+  },
+  "buildSeconds": 11.8,
+  "package": {
+    "files": 720,
+    "bytes": 445281741,
+    "links": 860,
+    "glbs": 24
+  },
+  "activation": "World.loadingCropPairOverlap === true; default absent/OFF. No App/CLI/workflow wiring yet.",
+  "native": "Not executed; no timing improvement claim."
+}

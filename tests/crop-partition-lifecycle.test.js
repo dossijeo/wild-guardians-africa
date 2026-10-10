@@ -1,3 +1,4 @@
+import {loadWorldCropPair} from '../src/rendering/world-crop-pair.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -109,4 +110,10 @@ test('composite identity aliases cannot substitute out-of-range or fractional cr
   returnEach.push(assert.rejects(library.models('all'),/Ambiguous crop state identity/));
  }
  return Promise.all(returnEach);
+});
+
+test('concurrent World pair reuses prepared maize, four actual partitions and canonical textures',async t=>{
+ const f=fixture(t),maize=await f.library.models('maize'),initial=await f.library.bridges(metadata,'maize');assert.equal(initial.bakedTemplates.size,4);const map=materials(maize.scene)[0].map;
+ const pair=await loadWorldCropPair(()=>f.library.models('all'),()=>f.library.bridges(metadata,'all'));assert.equal(materials(pair.gltf.scene).length,40);assert.equal(pair.data.bakedTemplates.size,32);assert.equal(f.requests.length,4);assert.equal(new Set(f.requests).size,4);assert.equal(f.images.length,4);assert.ok(materials(pair.gltf.scene).some(material=>material.map===map));
+ f.assets.disposeModels();assert.equal(f.disposed.size,4);assert.ok([...f.disposed.values()].every(count=>count===1));
 });
