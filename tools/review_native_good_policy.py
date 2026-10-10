@@ -18,4 +18,9 @@ def audit():
   # Repeated gap observations are counts of observations, NOT unique holes.
   out.append({'case':name,'reportSHA256':hashlib.sha256(raw).hexdigest(),'sourceHead':source['gitHead'],'meaningfulActivity':r['nativeEvidence']['meaningfulActivity'],'idleDaylightByReason':dict(reasons),'wallAttempts':len(h),'zeroFundsAttempts':sum(x['availablePieces']==0 for x in h),'paidWallOrders':sum(x['paidPieces']>0 for x in h),'paidPieces':r['defense']['paidPieces'],'paidCost':r['defense']['paidCost'],'gateCount':sum(x.get('gates',0) for x in h),'paidRepairDecisionCredits':r['nativeEvidence']['meaningfulActivity']['creditedPaidRepairDecisionCount'],'gapReasonObservations':dict(gaps),'days':[{k:x[k] for k in ['day','before','money','wages','planted','living','finance','daylightSeconds','unoccupiedSeconds']} for x in r['daily']]})
  return {'scope':'Retained original reports only; no counterfactual native run, physical closure or performance claim','cases':out}
-if __name__=='__main__':print(json.dumps(audit(),indent=2))
+if __name__=='__main__':
+ result=audit()
+ for case in result['cases']:
+  for day in case['days']:
+   day['finance']={k:v for k,v in day['finance'].items() if k!='entries'}
+ print(json.dumps(result,indent=2))
