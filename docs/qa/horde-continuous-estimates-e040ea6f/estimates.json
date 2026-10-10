@@ -1,0 +1,404 @@
+{
+  "scope": "Continuous stationary algebraic estimates, no simulation, empirical survival distribution, production promotion or100night claim",
+  "source": "e040ea6f9edf62c7924e3b32bd34b28780c39e5f",
+  "inputSha256": "7c646c728977cf2fb1a2e31dbcef64e46a223d7715068d9204c539fff653defb",
+  "fixed": {
+    "initialMoney": 1500,
+    "centerCost": 800,
+    "elderWage": 30,
+    "youngWage": 40,
+    "cropHitsToDestroy": 2
+  },
+  "equations": [
+    "goodNet(y)=Ag*y-Cg",
+    "badNet(y)=Ab*y-Cb",
+    "lowerY=(Cg+marginGoal+rounding)/Ag",
+    "upperY=(Cb-negativeGoal-rounding)/Ab",
+    "admissible only lowerY<y<upperY and Ag,Ab>0"
+  ],
+  "centralUnverifiedScenario": {
+    "spent": 0.9,
+    "goodCropTargets": 0.25,
+    "badCropTargets": 0.775,
+    "goodShield": 0.325,
+    "badShield": 0.25,
+    "lostHarvest": 0.75,
+    "repairService": 0.75,
+    "verified": false
+  },
+  "centralStrikeMultipliers": [
+    {
+      "aggregateStrikeMultiplier": 2,
+      "effectiveAllocatedBudget": 76.62865012837081,
+      "lowerY": 0.40429097647874396,
+      "upperY": 0.3633805341142765,
+      "goodCoefficient": 24907.11023071014,
+      "badCoefficient": 23640.942231018424,
+      "goodCosts": 9216.719916437516,
+      "badCosts": 9443.65821487223,
+      "roundingCoinsPerDay": 353,
+      "goodMarginGoal": 500,
+      "badNegativeGoal": 500,
+      "hasInterval": false,
+      "notIndividualHitRecommendation": true
+    },
+    {
+      "aggregateStrikeMultiplier": 4,
+      "effectiveAllocatedBudget": 153.25730025674162,
+      "lowerY": 0.4216268698132995,
+      "upperY": 0.41554535174076546,
+      "goodCoefficient": 24389.132412654435,
+      "badCoefficient": 21856.796413271004,
+      "goodCosts": 9430.113556609575,
+      "badCosts": 9935.490153479,
+      "roundingCoinsPerDay": 353,
+      "goodMarginGoal": 500,
+      "badNegativeGoal": 500,
+      "hasInterval": false,
+      "notIndividualHitRecommendation": true
+    },
+    {
+      "aggregateStrikeMultiplier": 8,
+      "effectiveAllocatedBudget": 306.51460051348323,
+      "lowerY": 0.45860573657418585,
+      "upperY": 0.5504088033989928,
+      "goodCoefficient": 23353.176776543034,
+      "badCoefficient": 18288.50477777617,
+      "goodCosts": 9856.90083695369,
+      "badCosts": 10919.154030692544,
+      "roundingCoinsPerDay": 353,
+      "goodMarginGoal": 500,
+      "badNegativeGoal": 500,
+      "hasInterval": true,
+      "notIndividualHitRecommendation": true
+    }
+  ],
+  "strongUnverifiedExposureHypothesis": {
+    "spent": 0.9,
+    "goodCropTargets": 0.1,
+    "badCropTargets": 0.9,
+    "goodShield": 0.35,
+    "badShield": 0.15,
+    "lostHarvest": 0.75,
+    "repairService": 0.75,
+    "verified": false,
+    "criticalAssumption": "90% fewer crop target contacts is not established by the original paid rectangle."
+  },
+  "hypotheticalHordeEnvelope": {
+    "meanNightActors": 22.009957263077638,
+    "meanNightStrikes": 105.6071316636355,
+    "stage": {
+      "cap": 24,
+      "scale": 12,
+      "caps": [
+        12,
+        8,
+        6,
+        5,
+        4
+      ]
+    },
+    "hitBudgetsPerAnimal": "unchanged original2-8; this is a hypothetical raised actor/composition cap"
+  },
+  "strongHypothesisContinuousInterval": {
+    "lowerY": 0.4021508131725048,
+    "upperY": 0.4062058561935086,
+    "goodCoefficient": 25053.449999999997,
+    "badCoefficient": 22156.164758317816,
+    "goodCosts": 9222.26529027669,
+    "badCosts": 9852.96387561693,
+    "roundingCoinsPerDay": 353,
+    "goodMarginGoal": 500,
+    "badNegativeGoal": 500
+  },
+  "conditionalCandidates": [
+    {
+      "yieldScaleAggregate": 0.405,
+      "allocatedStrikesMean": 106.67608999696883,
+      "actorEnvelope": {
+        "meanNightActors": 22.009957263077638,
+        "meanNightStrikes": 105.6071316636355,
+        "stage": {
+          "cap": 24,
+          "scale": 12,
+          "caps": [
+            12,
+            8,
+            6,
+            5,
+            4
+          ]
+        },
+        "hitBudgetsPerAnimal": "unchanged original2-8; this is a hypothetical raised actor/composition cap"
+      },
+      "margins": {
+        "goodAfterAdverseRounding": 571.3819597233105,
+        "badAfterAdverseRounding": -526.7171484982136
+      },
+      "classification": "CONDITIONAL diagnostic point only; narrow continuous interval, not ready integer-price/robust/100night candidate",
+      "tooNarrowForPriceMapping": true,
+      "structureDamageMultiplier": 1,
+      "firstFiveDays": "unchanged is an explicit conditional phase assumption; changing later payouts needs named experiment approval. Alternatively retaining mijo33 requires an exact integer crop-price mapping and recalibration."
+    }
+  ],
+  "pairedSameShieldSensitivity": [
+    {
+      "sameShieldCoverage": 0.15,
+      "lowerY": 0.40422011565335997,
+      "upperY": 0.4054837095505977,
+      "goodCoefficient": 25053.449999999997,
+      "badCoefficient": 22156.164758317816,
+      "goodCosts": 9258.10845651567,
+      "badCosts": 9852.96387561693,
+      "roundingCoinsPerDay": 369,
+      "goodMarginGoal": 500,
+      "badNegativeGoal": 500,
+      "hasInterval": true,
+      "tooNarrowForPriceMapping": true
+    },
+    {
+      "sameShieldCoverage": 0.25,
+      "lowerY": 0.4031854644129324,
+      "upperY": 0.39421714295211036,
+      "goodCoefficient": 25053.449999999997,
+      "badCoefficient": 22540.74396895876,
+      "goodCosts": 9240.18687339618,
+      "badCosts": 9746.947687457934,
+      "roundingCoinsPerDay": 361,
+      "goodMarginGoal": 500,
+      "badNegativeGoal": 500,
+      "hasInterval": false,
+      "tooNarrowForPriceMapping": true
+    },
+    {
+      "sameShieldCoverage": 0.35,
+      "lowerY": 0.4021508131725048,
+      "upperY": 0.38332857645902035,
+      "goodCoefficient": 25053.449999999997,
+      "badCoefficient": 22925.323179599705,
+      "goodCosts": 9222.26529027669,
+      "badCosts": 9640.931499298937,
+      "roundingCoinsPerDay": 353,
+      "goodMarginGoal": 500,
+      "badNegativeGoal": 500,
+      "hasInterval": false,
+      "tooNarrowForPriceMapping": true
+    }
+  ],
+  "sourceReportSHA256": {
+    "responsible": "934650fc57636d8926766d08cc3bc8bc8a1ca5cae62268c18fd2354e648eada0",
+    "neglect": "b23767609dbb1a15da85762a74a935d305024e86f849f948ece36927490d86ba"
+  },
+  "cashBufferBounds": [
+    {
+      "originalObservedDay": 5,
+      "cash": 9501,
+      "observedNextWageReserve": 2400,
+      "nativeMinimumWithOperationalCenterAndLivingCrops": 30,
+      "atConstant500DeficitDaysUntil30": 19,
+      "atConstant500DeficitDaysUntilObservedWageReserve": 15,
+      "requiredDailyDeficitToReach30Before100": 99.69473684210526,
+      "limitation": "Static buffer division only. These are original unchanged-arm balances; not cash forecast after candidate prices/stock/hordes change."
+    },
+    {
+      "originalObservedDay": 20,
+      "cash": 324466,
+      "observedNextWageReserve": 4470,
+      "nativeMinimumWithOperationalCenterAndLivingCrops": 30,
+      "atConstant500DeficitDaysUntil30": 649,
+      "atConstant500DeficitDaysUntilObservedWageReserve": 640,
+      "requiredDailyDeficitToReach30Before100": 4055.45,
+      "limitation": "Static buffer division only. These are original unchanged-arm balances; not cash forecast after candidate prices/stock/hordes change."
+    }
+  ],
+  "sensitivity": [
+    {
+      "badCropFraction": 0.775,
+      "badShieldFraction": 0.15,
+      "lostHarvestFraction": 0.5,
+      "interval": [
+        0.39656276042926986,
+        0.38484345986900437
+      ],
+      "valid": false
+    },
+    {
+      "badCropFraction": 0.775,
+      "badShieldFraction": 0.15,
+      "lostHarvestFraction": 0.75,
+      "interval": [
+        0.39656276042926986,
+        0.3987055886041868
+      ],
+      "valid": true
+    },
+    {
+      "badCropFraction": 0.775,
+      "badShieldFraction": 0.15,
+      "lostHarvestFraction": 1,
+      "interval": [
+        0.39656276042926986,
+        0.4136036649569137
+      ],
+      "valid": true
+    },
+    {
+      "badCropFraction": 0.775,
+      "badShieldFraction": 0.25,
+      "lostHarvestFraction": 0.5,
+      "interval": [
+        0.39656276042926986,
+        0.3773893071752973
+      ],
+      "valid": false
+    },
+    {
+      "badCropFraction": 0.775,
+      "badShieldFraction": 0.25,
+      "lostHarvestFraction": 0.75,
+      "interval": [
+        0.39656276042926986,
+        0.38897079740920937
+      ],
+      "valid": false
+    },
+    {
+      "badCropFraction": 0.775,
+      "badShieldFraction": 0.25,
+      "lostHarvestFraction": 1,
+      "interval": [
+        0.39656276042926986,
+        0.4012856285386752
+      ],
+      "valid": true
+    },
+    {
+      "badCropFraction": 0.9,
+      "badShieldFraction": 0.15,
+      "lostHarvestFraction": 0.5,
+      "interval": [
+        0.39656276042926986,
+        0.3952942188197398
+      ],
+      "valid": false
+    },
+    {
+      "badCropFraction": 0.9,
+      "badShieldFraction": 0.15,
+      "lostHarvestFraction": 0.75,
+      "interval": [
+        0.39656276042926986,
+        0.412524639318979
+      ],
+      "valid": true
+    },
+    {
+      "badCropFraction": 0.9,
+      "badShieldFraction": 0.15,
+      "lostHarvestFraction": 1,
+      "interval": [
+        0.39656276042926986,
+        0.43132562749435893
+      ],
+      "valid": true
+    },
+    {
+      "badCropFraction": 0.9,
+      "badShieldFraction": 0.25,
+      "lostHarvestFraction": 0.5,
+      "interval": [
+        0.39656276042926986,
+        0.38642428237926124
+      ],
+      "valid": false
+    },
+    {
+      "badCropFraction": 0.9,
+      "badShieldFraction": 0.25,
+      "lostHarvestFraction": 0.75,
+      "interval": [
+        0.39656276042926986,
+        0.4007830309371659
+      ],
+      "valid": true
+    },
+    {
+      "badCropFraction": 0.9,
+      "badShieldFraction": 0.25,
+      "lostHarvestFraction": 1,
+      "interval": [
+        0.39656276042926986,
+        0.4162500447946353
+      ],
+      "valid": true
+    }
+  ],
+  "originalPayoutNeglectThreshold": {
+    "allocatedStrikesPerDay": 578.6348468049702,
+    "timesOriginalExpectedBudget": 15.102310841587897,
+    "approxActorsAtHypotheticalMeanHitsPerActor": 120.59534283791422,
+    "scope": "Original payout under central neglect contacts; not acceptable actor count without CPU/path/visual validation"
+  },
+  "protectionThresholds": [
+    {
+      "y": 0.4,
+      "maximumGoodCropTargetFractionFor500CoinsGoal": null,
+      "requiredReductionVsBadCropFractionPoint9": null,
+      "maximumPossibleGoodMarginAtKink": 451.03675677205683,
+      "badMarginAtPoint": -637.4979722898024,
+      "equation": "cGoodMax=(I*y-S-W+D*V-K*.9-defense-rounding-goal)/(A*V-K), A=B*q*(1-shieldGood)/2, K=B*q*(1-shieldGood)*damage*wallCostPerHP/service, V=seedUnit+payout*y*loss; valid on positive-extra-kills branch only"
+    },
+    {
+      "y": 0.405,
+      "maximumGoodCropTargetFractionFor500CoinsGoal": 0.17753066426307468,
+      "requiredReductionVsBadCropFractionPoint9": 0.8027437063743614,
+      "maximumPossibleGoodMarginAtKink": 576.3040067720576,
+      "badMarginAtPoint": -526.7171484982136,
+      "equation": "cGoodMax=(I*y-S-W+D*V-K*.9-defense-rounding-goal)/(A*V-K), A=B*q*(1-shieldGood)/2, K=B*q*(1-shieldGood)*damage*wallCostPerHP/service, V=seedUnit+payout*y*loss; valid on positive-extra-kills branch only"
+    },
+    {
+      "y": 1,
+      "maximumGoodCropTargetFractionFor500CoinsGoal": 0.9,
+      "requiredReductionVsBadCropFractionPoint9": 0.0,
+      "maximumPossibleGoodMarginAtKink": 15483.106756772055,
+      "badMarginAtPoint": 12656.200882700887,
+      "equation": "cGoodMax=(I*y-S-W+D*V-K*.9-defense-rounding-goal)/(A*V-K), A=B*q*(1-shieldGood)/2, K=B*q*(1-shieldGood)*damage*wallCostPerHP/service, V=seedUnit+payout*y*loss; valid on positive-extra-kills branch only"
+    }
+  ],
+  "openingStatic": {
+    "firstDayOriginalPaidDeliveries": 25,
+    "mijoPayout": 33,
+    "firstDayIncome": 825,
+    "firstDayPlants": 116,
+    "firstDayAdditionalSeeds": 116,
+    "initialSeedCost": 5,
+    "firstDaySeedCost": 585,
+    "firstDayElderWages": 210,
+    "centerCost": 800,
+    "initialMoney": 1500,
+    "originalEndingCash": 730,
+    "nextObservedWageReserve": 480,
+    "maintenanceReserve": 100,
+    "minimumGlobalYForSameObservedDay1And580Reserve": 0.8181818181818182,
+    "candidateGlobalYPoint4EndingCash": 235.0,
+    "interpretation": "Uniform global price cut fails observed next labour/maintenance reserve. Keep introduction/mijo unchanged or redesign and separately measure opening; unchanged count is not predicted after later costs diverge."
+  },
+  "rounding": {
+    "coinsPerDelivery": 1,
+    "dailyBound": 353,
+    "deliveryPeakRetained": 303,
+    "assumedMeanRepairPaymentBound": 50,
+    "source": "303 original peak daily deliveries plusceil(~50hypothetical damaging structure contacts) as positive repair-charge rounding allowance; no validated bound for changed future farms",
+    "basePriceMapping": "Round intended crop base prices upward to integers first, recompute effective weighted yield, then allow less than1extra coin per paid transaction. Do not interpret aggregatey as an exact per-crop multiplier or ignore price-rounding/mix changes.",
+    "repairRounding": "Add less than1coin per actual repair payment, number unknown because original paid repairs0; candidates require recomputation with retained payment counts."
+  },
+  "noUnconditionalCandidates": true,
+  "constraints": [
+    "Rules currently reject maxAnimals>12;24actor envelope requires an explicitly approved isolated candidate change and performance/physical QA, never silently applied",
+    "Early five nights remain original single-species intro with20%destruction limit; late arithmetic cannot set early damage",
+    "Do not increase individual hit budgets to achieve aggregate pressure; actor counts/composition constraints must be tested",
+    "No assigned injury/failure probability or guarantee of<25%idle",
+    "Conditional margins depend on unverified crop exposure reduction, shield coverage, replacement/lost harvest and timely paid repairs",
+    "Currentlastcenter economic guard must be explicitly resolved before converting centre collapse into defeat"
+  ]
+}
