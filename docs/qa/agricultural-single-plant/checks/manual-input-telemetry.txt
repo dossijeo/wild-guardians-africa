@@ -1,0 +1,30 @@
+TAP version 13
+# Subtest: measured contact stays separate from effect time; repeated Multiply earns no useful contact credit
+ok 1 - measured contact stays separate from effect time; repeated Multiply earns no useful contact credit
+  ---
+  duration_ms: 17.2108
+  ...
+# Subtest: a native Growth effect that cannot grow earns no useful contact credit despite thirty seconds of visuals
+ok 2 - a native Growth effect that cannot grow earns no useful contact credit despite thirty seconds of visuals
+  ---
+  duration_ms: 21.2843
+  ...
+# Subtest: productive native Growth is credited only after actual extra growth, without mutating native state
+ok 3 - productive native Growth is credited only after actual extra growth, without mutating native state
+  ---
+  duration_ms: 19.5344
+  ...
+# Subtest: button contact is consumed once; cancellation and keyboard selection report unknown duration
+ok 4 - button contact is consumed once; cancellation and keyboard selection report unknown duration
+  ---
+  duration_ms: 0.6707
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 245.4372
