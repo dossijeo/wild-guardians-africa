@@ -1,0 +1,195 @@
+TAP version 13
+# (node:26988) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: shield appears once per day without pausing, including a completed global tutorial
+ok 1 - shield appears once per day without pausing, including a completed global tutorial
+  ---
+  duration_ms: 6.5825
+  ...
+# Subtest: shield waits for availability, removes obsolete advice when cast or animals leave, and preserves menu pauses
+ok 2 - shield waits for availability, removes obsolete advice when cast or animals leave, and preserves menu pauses
+  ---
+  duration_ms: 1.1997
+  ...
+# Subtest: saved acknowledged raids do not replay shield advice; an unfinished reminder remains readable after restoration
+ok 3 - saved acknowledged raids do not replay shield advice; an unfinished reminder remains readable after restoration
+  ---
+  duration_ms: 3.464
+  ...
+# Subtest: an arriving raid takes priority over ordinary advice and leaves that explanation queued
+ok 4 - an arriving raid takes priority over ordinary advice and leaves that explanation queued
+  ---
+  duration_ms: 0.7256
+  ...
+# Subtest: render-frequency updates reuse the peaceful plant check until simulated time advances
+ok 5 - render-frequency updates reuse the peaceful plant check until simulated time advances
+  ---
+  duration_ms: 2.325
+  ...
+# Subtest: growth cannot repeat today and receives its full reading time on the following day
+ok 6 - growth cannot repeat today and receives its full reading time on the following day
+  ---
+  duration_ms: 1.9961
+  ...
+# Subtest: multiply requires working labour and unmarked live crops, with a gap between peaceful reminders
+ok 7 - multiply requires working labour and unmarked live crops, with a gap between peaceful reminders
+  ---
+  duration_ms: 0.9513
+  ...
+# Subtest: new reminders are bilingual and saved reminder times reject corrupt values
+ok 8 - new reminders are bilingual and saved reminder times reject corrupt values
+  ---
+  duration_ms: 1.7038
+  ...
+# (node:52324) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Basic readings advance only manually and do not create, plant or pay anything
+ok 9 - Basic readings advance only manually and do not create, plant or pay anything
+  ---
+  duration_ms: 7.6391
+  ...
+# Subtest: An already placed native center is recognized without charging a second one
+ok 10 - An already placed native center is recognized without charging a second one
+  ---
+  duration_ms: 335.9297
+  ...
+# Subtest: The native farm resumes physical worker actions after reading, and completes only after a paid delivery
+not ok 11 - The native farm resumes physical worker actions after reading, and completes only after a paid delivery
+  ---
+  duration_ms: 431.2257
+  location: 'file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/tests/tutorial.test.js:34:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + undefined
+    - 'delivery'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'delivery'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/tests/tutorial.test.js:48:109)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+# Subtest: Only a previously completed basic tutorial can be skipped; new magic still interrupts the second slot
+ok 12 - Only a previously completed basic tutorial can be skipped; new magic still interrupts the second slot
+  ---
+  duration_ms: 0.948
+  ...
+# Subtest: The first unknown raid and Shield pause together; known later raids never add another tutorial pause
+not ok 13 - The first unknown raid and Shield pause together; known later raids never add another tutorial pause
+  ---
+  duration_ms: 1.2162
+  location: 'file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/tests/tutorial.test.js:62:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + null
+    - 'magic.growth'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'magic.growth'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/tests/tutorial.test.js:66:10)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+# Subtest: Growth, Multiply and recovery have independent IDs; repeats and unrelated pauses remain intact
+ok 14 - Growth, Multiply and recovery have independent IDs; repeats and unrelated pauses remain intact
+  ---
+  duration_ms: 0.8387
+  ...
+# Subtest: Loading preserves an unfinished reading and queue without replaying its sound or silently acknowledging it
+ok 15 - Loading preserves an unfinished reading and queue without replaying its sound or silently acknowledging it
+  ---
+  duration_ms: 3.4413
+  ...
+# Subtest: Global profile writes merge seen IDs and malformed or unknown data cannot silence messages
+ok 16 - Global profile writes merge seen IDs and malformed or unknown data cannot silence messages
+  ---
+  duration_ms: 1.0275
+  ...
+# Subtest: Storage failure leaves the slot acknowledged and playable without manufacturing a global completion
+ok 17 - Storage failure leaves the slot acknowledged and playable without manufacturing a global completion
+  ---
+  duration_ms: 0.524
+  ...
+# Subtest: Victory is narrated per campaign before the result choices, and expansion appears after hiring
+ok 18 - Victory is narrated per campaign before the result choices, and expansion appears after hiring
+  ---
+  duration_ms: 0.5423
+  ...
+# Subtest: Snapshots reject unknown tutorial IDs and incoherent modal pauses while retaining legacy slots
+ok 19 - Snapshots reject unknown tutorial IDs and incoherent modal pauses while retaining legacy slots
+  ---
+  duration_ms: 1.2078
+  ...
+# Subtest: A loaded defeat takes priority over an unfinished explanation without marking that message seen
+ok 20 - A loaded defeat takes priority over an unfinished explanation without marking that message seen
+  ---
+  duration_ms: 0.3717
+  ...
+# Subtest: Profile memory lives outside slot listings and never changes another slot snapshot
+ok 21 - Profile memory lives outside slot listings and never changes another slot snapshot
+  ---
+  duration_ms: 1.1175
+  ...
+# Subtest: a first paid crop completed after day one still closes the basic tutorial after actual delivery
+not ok 22 - a first paid crop completed after day one still closes the basic tutorial after actual delivery
+  ---
+  duration_ms: 371.7833
+  location: 'file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/tests/tutorial.test.js:111:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'magic.growth'
+    - 'basic.complete'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'basic.complete'
+  actual: 'magic.growth'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/tests/tutorial.test.js:119:103)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+# Subtest: an expired raid instruction is dropped unread while the Shield lesson remains available
+ok 23 - an expired raid instruction is dropped unread while the Shield lesson remains available
+  ---
+  duration_ms: 0.4903
+  ...
+# Subtest: a deliberately finished basic tutorial is not reopened by missing early game entities
+ok 24 - a deliberately finished basic tutorial is not reopened by missing early game entities
+  ---
+  duration_ms: 0.2935
+  ...
+1..24
+# tests 24
+# suites 0
+# pass 21
+# fail 3
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1497.8394

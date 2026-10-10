@@ -78,7 +78,7 @@ export class TutorialController {
     const working=s.hiringPaidDay===s.day&&s.workers.length>0;
     const teachAgriculture=!s.raid&&((working&&watered)||s.day>1);
     enqueue('magic.growth',teachAgriculture);
-    enqueue('magic.multiply',teachAgriculture&&t.seen.includes('magic.growth'));
+    enqueue('magic.multiply',teachAgriculture&&this.seen('magic.growth',globalSeen));
     enqueue('worker.recovery',s.workers.some(w=>w.incapacitated)||s.people.some(p=>p.recoveryUntil>=s.day));
     enqueue('campaign.liberation',s.result==='victory',true);
     enqueue('world.expansion',s.postgame&&!s.result);

@@ -174,3 +174,5 @@ not millet. Do not attribute nonexistent differences to that change. CPU
 measurements are retained per case, but these are different productive workloads
 and not an isolated GPU performance benchmark. Candidate-2 focused checks: 22
 pass, zero failures. Build: 11.81 seconds on this machine.
+
+Tutorial cross-save ordering now recognizes an already-seen Growth explanation in the player profile, so an unseen Multiply explanation is not stranded waiting for a local-only acknowledgement. Expanded tutorial regression: 21 pass / 3 fail; raw output retained in tutorial-expanded-current.tap. These failures require diagnosis against the new real-watering/sequence requirement before approval, not silent deletion of assertions.
