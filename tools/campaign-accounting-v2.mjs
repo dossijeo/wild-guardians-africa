@@ -56,4 +56,3 @@ export function projectAffordable(B,calibration,{arm='responsible',cropExposure=
  }
  return rows;
 }
-
