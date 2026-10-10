@@ -1,3 +1,4 @@
+import {validRaidContention} from './raid-contention-snapshot.js';
 import {BASIC_STEPS,TUTORIAL_IDS} from '../tutorial/messages.js';
 import {validExitFrontier} from './exit-connector-snapshot.js';
 export const SAVE_VERSION=1;
@@ -26,6 +27,7 @@ export function validateSnapshot(state) {
     const r=state.raid;
     if(!Number.isSafeInteger(r.introPlantCount)||r.introPlantCount<0||!Number.isSafeInteger(r.introCropLimit)||r.introCropLimit<0||r.introCropLimit>Math.max(0,r.introPlantCount-1)||!Number.isSafeInteger(r.introCropsDestroyed)||r.introCropsDestroyed<0||r.introCropsDestroyed>r.introCropLimit)throw new Error('Límite de incursión inicial inválido');
   }
+  if(!validRaidContention(state))throw new Error('Turnos de incursión inválidos');
   const ids=new Set();
   for(const animal of state.raid?.animals??[])if(animal.exit!==undefined&&(!animal.exit||!Number.isFinite(animal.exit.x)||!Number.isFinite(animal.exit.z)))throw new Error('Salida de animal inválida');
   for(const animal of state.raid?.animals??[])if(animal.exitConnectorSearch!==undefined){

@@ -27,7 +27,7 @@ export function animalPose(animal,elapsed){
   const attacking=animal.status==='attacking';
   const name=attacking?animal.animation:['entering','retreating'].includes(animal.status)?'Running':'Walking';
   const spec=ANIMAL_ACTIONS.animals[animal.species].clips[name];
-  const time=attacking?Math.max(0,(animal.attackDuration??spec.duration)-animal.attackRemaining):(animal.motionPhase??elapsed);
+  const time=attacking?Math.max(0,(animal.attackDuration??spec.duration)-animal.attackRemaining):animal.status==='waiting'&&!animal.path?0:(animal.motionPhase??elapsed);
   return {name,time:attacking?Math.min(time,spec.duration):time%spec.duration,loop:!attacking,key:attacking?animal.attackId:name};
 }
 export function applyAnimalPose(data,animal,elapsed){
