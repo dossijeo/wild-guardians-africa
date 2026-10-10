@@ -1,0 +1,50 @@
+TAP version 13
+# Subtest: owned suspension gives entry priority, then two entries yield a geometry slice; acknowledgements install no graph
+ok 1 - owned suspension gives entry priority, then two entries yield a geometry slice; acknowledgements install no graph
+  ---
+  duration_ms: 3.0075
+  ...
+# Subtest: late old suspension cannot release a newer job; malformed current suspension fails closed
+ok 2 - late old suspension cannot release a newer job; malformed current suspension fails closed
+  ---
+  duration_ms: 0.4373
+  ...
+# Subtest: continuous generator resumes without restart, entry only sees complete graph, cancel suppresses scheduled work
+ok 3 - continuous generator resumes without restart, entry only sees complete graph, cancel suppresses scheduled work
+  ---
+  duration_ms: 0.8292
+  ...
+# Subtest: one active job, bounded entry priority and geometry fairness with explicit owners
+ok 4 - one active job, bounded entry priority and geometry fairness with explicit owners
+  ---
+  duration_ms: 4.1821
+  ...
+# Subtest: cancellation suppresses an active result without terminating peer; unowned, malformed and wrong-owner replies fail closed
+ok 5 - cancellation suppresses an active result without terminating peer; unowned, malformed and wrong-owner replies fail closed
+  ---
+  duration_ms: 1.5286
+  ...
+# Subtest: geometry result error resumes true cooperative work and does not destroy the existing entry worker
+ok 6 - geometry result error resumes true cooperative work and does not destroy the existing entry worker
+  ---
+  duration_ms: 686.3404
+  ...
+# Subtest: shared reply capability is not arbitrary keyed object authority; stale wall reply never installs partial geometry
+ok 7 - shared reply capability is not arbitrary keyed object authority; stale wall reply never installs partial geometry
+  ---
+  duration_ms: 559.6057
+  ...
+# Subtest: duplicate late owned job cannot poison a newer active peer or install a cancelled result
+ok 8 - duplicate late owned job cannot poison a newer active peer or install a cancelled result
+  ---
+  duration_ms: 0.9156
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1866.8607
