@@ -33,8 +33,12 @@ retain this negative result. Trace and overlap were OFF; the label does not
 identify the blocking phase. Native visibility was skipped. No rerun or
 readiness acceptance follows from compilation alone.
 
-Advanced-progress fifth-plant catch-up is being validated by a new opt-in
-QA selector; no native65% result is claimed yet. Portrait, composited UI,
+Advanced-progress fifth-plant catch-up now passes one local native night run
+of exact7e: natural66.19% planting, captured intermediate fifth growth,
+all five mature, logical farm unchanged, and300411.6ms real hiding with
+all21 fields identical. [Original report and six inspected canvas frames](windows-loading-regression/progress65-7e-native-night-root/README.md)
+close this directed handler case only; the negative CI above remains failed.
+Portrait, composited UI,
 physical touch/mouse, all-biome/culture visual acceptance and final deduplicated
 production integration remain open. Main749194e2 adds evidence only; it does
 not activate the isolated crop recipe or close the full campaign/master-plan
