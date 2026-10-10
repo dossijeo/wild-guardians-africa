@@ -1,0 +1,25 @@
+{
+  "scope": "Read-only final snapshot and retained attack presentations; not historical full route/spawn evidence",
+  "command": "node tools/diagnose_horde_perimeter_gaps.mjs docs/qa/horde-self-consistent-pilot-e040ea6f-20/native-original .cache/horde-self-consistent-perimeter-gap-terminal.json",
+  "exitCode": 0,
+  "syntaxExitCode": 0,
+  "sourceCount": 394,
+  "snapshotUnchanged": true,
+  "cpuMillisecondsDescriptive": 376.7627,
+  "astarQueries": 0,
+  "nativeSimulationTicks": 0,
+  "hashes": {
+    "tools/diagnose_horde_perimeter_gaps.mjs": "d055b649e3a3309289555af8f19ab024fa1ed3fa4a206ab9c35e844fa18a1dce",
+    "docs/qa/horde-self-consistent-pilot-e040ea6f-20/read-only-perimeter-gap-terminal.json": "5a2be6aa9ef3bb1b696cdc1b7ad1daaebe49f61fd8df4decf876d46814763a89",
+    "docs/qa/horde-self-consistent-pilot-e040ea6f-20/perimeter-gap-review.md": "68cb6d42647f7056c09839cf7fee71bac23e9aaf04f2650b202104e97d4999c6"
+  },
+  "gapCount": 25,
+  "terminalReasons": {
+    "fluid": 9,
+    "bigProp": 12,
+    "building": 4
+  },
+  "historicalConstructionReceiptsAvailable": false,
+  "fullActorMovementPathsAvailable": false,
+  "noCampaign": true
+}
