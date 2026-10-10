@@ -1,5 +1,9 @@
 # Alternativas matemáticas, sin nuevas simulaciones
 
+**Revisión posterior: se retira la interpretación de separación económica del borrador v2.** La insolvencia del día56 depende de jornales vacíos y una reserva opcional que bloquea reinversión; los ingresos mixtos también anticipan madurez. Véase [review.md](review.md). Se conservan estas tablas como evidencia histórica, no como candidatas seleccionables. La [tabla revisada por cohortes de100 días](cohort-estimate.md) registra las nuevas hipótesis y sus limitaciones.
+
+[Trayectoria completa1–100 al60% de ganancias](full-100-day-hypothesis.md): ilustración contable con todas las columnas solicitadas; protección hipotética y política aún pendiente de revisión. No se presenta como balance aprobado.
+
 [72 combinaciones](screen.md) — [Borrador condicional de100 días](conditional-draft.md)
 
 Este trabajo responde a la prioridad de estimar primero los100 días y descartar parámetros incoherentes antes de nuevas campañas nativas. El diagnóstico corto anterior ya terminó; no se inicia otra simulación, PR ni cambio de balance de producción.

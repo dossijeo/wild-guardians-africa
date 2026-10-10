@@ -1,0 +1,85 @@
+// Deterministic accounting recurrence, not a replay of the native simulation.
+import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
+import {pathToFileURL} from 'node:url';
+import {createHash} from 'node:crypto';
+import {nightlyExpectation} from './project-campaign-accounting.mjs';
+export function estimate(input,{days=100,scale=.475,wallCost=3,exposure=.1,defend=true}={}) {
+ const B=structuredClone(input.referenceBalance),original=Object.fromEntries(B.crops.map(c=>[c.id,c.base_harvest_value]));
+ for(const c of B.crops)c.base_harvest_value=Math.ceil(c.base_harvest_value*scale);
+ const cohorts=[{species:'mijo',count:1,readyDay:2}],rows=[];
+ let cash=1500-800-5,walls=0,seedIndex=0,deliveryCarry=0,lossCarry=0;
+ const stock=()=>cohorts.reduce((n,c)=>n+c.count,0);
+ for(let day=1;day<=days;day++) {
+  const before=cash,openingPlants=stock(),recoveryMinimum=openingPlants?30:35;
+  if(cash<recoveryMinimum) {
+   rows.push({day,cash,plants:openingPlants,walls,status:'below simplified recovery minimum; not native defeat',animals:null,force:null});
+   continue;
+  }
+  // Pay wages from opening cash. Keep seed liquidity when the field is empty.
+  const staff=Math.min(day===1?7:Math.max(1,Math.ceil(openingPlants/6)),Math.floor((cash-(openingPlants?0:5))/30));
+  const wages=staff*30;cash-=wages;
+  // No sale of today's seedlings. Only explicitly age-eligible cohorts deliver.
+  const throughput=staff*input.calibration.early.deliveriesPerWorker+deliveryCarry;
+  let remaining=Math.floor(throughput),harvested=0,income=0;
+  const mature=cohorts.filter(c=>c.readyDay<=day).reduce((n,c)=>n+c.count,0);
+  deliveryCarry=mature>remaining?throughput-remaining:0;
+  for(const cohort of cohorts)if(cohort.readyDay<=day&&remaining>0) {
+   const count=Math.min(cohort.count,remaining),crop=B.crops.find(c=>c.id===cohort.species);
+   cohort.count-=count;remaining-=count;harvested+=count;income+=count*crop.base_harvest_value;
+  }
+  cash+=income;
+  // Budgeted partial construction; wall count does not prove enclosure/protection.
+  const newWalls=defend&&day>=2?Math.min(32,Math.floor(Math.max(0,cash-35)*.2/wallCost)):0;
+  const wallSpend=newWalls*wallCost;cash-=wallSpend;walls+=newWalls;
+  let planted=0,seeds=0;
+  // Millet through day 9, then fixed species sequence in both strategies.
+  while(planted<(day===1?116:280)) {
+   const crop=day<=9?B.crops.find(c=>c.id==='mijo'):B.crops[seedIndex%B.crops.length],reserve=stock()===0?0:30;
+   if(cash-crop.plant_cost<reserve)break;
+   cash-=crop.plant_cost;seeds+=crop.plant_cost;planted++;if(day>=10)seedIndex++;
+   const readyDay=day+Math.max(1,Math.ceil(crop.growth_seconds/B.clock.day_seconds));
+   const previous=cohorts.find(c=>c.species===crop.id&&c.readyDay===readyDay);
+   if(previous)previous.count++;else cohorts.push({species:crop.id,count:1,readyDay});
+  }
+  const preRaid=stock(),value=cohorts.reduce((n,c)=>n+c.count*original[c.species],0),raid=nightlyExpectation(B,day,value);
+  const targets=day<=5?1:Math.floor(1+7*value/(value+10000)),force=day<=5||value<60000?1:2;
+  const effectiveExposure=defend&&walls===0?.9:exposure;
+  const expected=raid.hits*.9*effectiveExposure*.85*targets*force/2+lossCarry;
+  const killed=Math.min(preRaid,Math.floor(expected),day<=5?Math.max(0,Math.min(preRaid-1,Math.ceil(preRaid*.2))):Infinity);
+  lossCarry=preRaid>killed?expected%1:0;
+  // Approximate species selection: oldest cohorts first. No individual hit proof.
+  let lost=killed;for(const c of cohorts){const n=Math.min(c.count,lost);c.count-=n;lost-=n;}
+  rows.push({day,status:'estimate',cash,plants:stock(),walls,newWalls,animals:raid.animals,animalMin:raid.min,animalMax:raid.max,force,targets,value,openingPlants,staff,wages,income,harvested,planted,seeds,wallSpend,killed,effectiveExposure});
+  if(cash!==before-wages+income-seeds-wallSpend||stock()!==openingPlants+planted-harvested-killed)throw Error('Accounting conservation failed');
+ }
+ return rows;
+}
+if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href) {
+ const raw=readFileSync(process.argv[2]),input=JSON.parse(raw),out=process.argv[3];mkdirSync(out,{recursive:true});
+ const scenarios={conditionalDefense:estimate(input),unprotected:estimate(input,{defend:false,exposure:.9}),full100Hypothesis:estimate(input,{scale:.6})};
+ const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
+ writeFileSync(out+'/cohort-estimate.json',JSON.stringify({scope:'100-day deterministic accounting, no native simulation or production changes',inputSHA256:hash(raw),sourceSHA256:hash(readFileSync(new URL('./campaign-cohort-estimate.mjs',import.meta.url))),scenarios},null,2)+'\n');
+ const table=rows=>['| Día | Dinero | Plantas | Murallas acumuladas | Animales media [rango] | Fuerza |','|---:|---:|---:|---:|---:|---:|',...rows.map(r=>r.status!=='estimate'?`| ${r.day} | — | — | — | — | — |`:`| ${r.day} | ${r.cash} | ${r.plants} | ${r.walls} | ${r.animals.toFixed(2)} [${r.animalMin}–${r.animalMax}] | ×${r.force} |`)].join('\n');
+ writeFileSync(out+'/cohort-estimate.md',['# Estimación contable revisada: 100 días','',
+ 'No es una simulación ni una candidata aprobada. Centro800, inicio1500, jornales30/40. La cuenta utiliza ancianos30. Ganancias de la referencia histórica×0,475 redondeadas hacia arriba; zarzas3. No cambia producción.', '',
+ 'Dinero y plantas al cerrar cada noche. Animales: esperanza y rango de composiciones legales; no son cantidades fraccionarias en una partida. Fuerza por cultivo; daño a edificios×1. Presión según puntos originales por especie, propuesta aún no implementada.', '',
+ 'Con esta política conservadora, la cuenta deja de poder reinvertir el día44 con defensa supuesta (9 monedas) y el día18 sin defensa (5 monedas). No demuestra derrota nativa ni inviabilidad de otra política. Las filas posteriores quedan desconocidas; el JSON conserva el estado al detenerse, sin seguir gastando ni inventar incursiones.', '',
+ '## Supuestos explícitos', '',
+ '- Mijo hasta día9; desde día10 las ocho especies en secuencia fija idéntica en ambas estrategias. Costes enteros reales. Se contrata con caja disponible. Las cosechas cobradas preceden a las nuevas compras, sin anticipar ingresos de esos brotes.',
+ '- Una cohorte madura como pronto el día siguiente, o tras ceil(crecimiento/300) jornadas. Se supone riego completo y sólo crecimiento diurno; no se modelan FIFO, checkpoints ni recorridos. Es una convención conservadora de edad, no una medición de productividad.',
+ '- Entregas limitadas por productividad histórica temprana por trabajador. Se cobra el precio de la especie entregada, sin mezcla ficticia ni bonos de magia/eventos.',
+ '- Reserva opcional30; una finca vacía puede reinvertir sin reservar100 adicionales. Si no puede pagar jornal+semilla, se conserva el estado y se marca insuficiencia; no se siguen cobrando jornales sin trabajo.',
+ '- Defensa destina20% del excedente sobre35 a hasta32 piezas/día; construcción parcial. Antes de la primera pieza, exposición90%; después10% es una hipótesis externa, NO se deduce del número de muros. No se modela cierre, puertas, deterioro ni reparación: no acredita estrategia responsable. El gasto continuado tampoco constituye una política óptima de construcción.',
+ '- Sin defensa: exposición90%. Pérdidas agregadas estimadas a partir de golpes; distribución sobre cohortes antiguas primero. No acredita dos golpes físicos sobre la misma planta ni incidencia real del escudo.',
+ '- No estima inactividad, agua, pérdida del centro ni probabilidad de victoria. El resultado depende de los supuestos, especialmente protección, madurez y productividad.', '',
+ '## Defensa condicional (protección no demostrada)', '',table(scenarios.conditionalDefense),'',
+ '## Sin defensa', '',table(scenarios.unprotected),'',
+ 'Las cifras sustituyen la interpretación del borrador v2, cuya falsa insolvencia y anticipación de ingresos quedan documentadas en review.md. No se acepta el balance ni se inicia una campaña con estas cuentas.'].join('\n')+'\n');
+ writeFileSync(out+'/full-100-day-hypothesis.md',['# Hipótesis matemática completa: días1–100','',
+ '**Ilustración condicionada, no balance elegido ni prueba de victoria.** Misma recurrencia y limitaciones de [cohort-estimate.md](cohort-estimate.md), pero ganancias60% de la referencia histórica: mijo20, girasol65, sorgo24, maíz31, batata42, algodón321, yuca58, plátano481. Semillas originales; zarzas3, centro800, inicio1500, jornales30/40.', '',
+ 'Dinero: disponible después de gastos, entregas e incursión. Plantas: vivas después de la incursión. Murallas: piezas acumuladas, sin acreditar cierre o deterioro. Animales: media [mínimo–máximo], no un RNG concreto. Fuerza: daño por cultivo; edificios×1. Primeras5 noches: una nueva especie cada noche. Alcance crece con valor según floor(1+7V/(V+10000)); fuerza×2 desde60000 puntos.', '',
+ table(scenarios.full100Hypothesis),'',
+ 'Se mantiene exposición de cultivos10% desde la primera pieza como hipótesis externa. El exceso de piezas compradas, la contratación irregular y la liquidez reducida muestran que esta política requiere revisión. No debe interpretarse como demostración de estrategia responsable. La versión sin defensa al60% se queda sin capacidad de recuperación en esta cuenta el día16 con34 monedas; esa diferencia tampoco acredita derrota nativa ni robustez frente a otras políticas.', '',
+ 'No se ha simulado el motor, modificado precios de producción ni estimado tiempo de inactividad. Se registra una trayectoria matemática completa para revisar coherencia antes de campañas, con los supuestos a la vista.'].join('\n')+'\n');
+ console.log(JSON.stringify(Object.fromEntries(Object.entries(scenarios).map(([k,r])=>[k,{first:r[0],last:r.at(-1),firstInsufficient:r.find(d=>d.status!=='estimate')??null}]))));
+}
