@@ -36,3 +36,10 @@ abierto, ahorro sin ingresos ficticios, compras parciales reales y puerta.
 El planificador es una herramienta de QA con coste de búsqueda considerable;
 no se ejecuta durante los fotogramas del juego. La protección, rentabilidad e
 inactividad todavía deben medirse en campañas nativas congeladas.
+
+Pilotos posteriores conservados en
+`pilot-routed-q8-good-day6-712-7` y
+`pilot-maintained-routed-q8-good-day6-712-7`: la defensa intercepta golpes reales,
+pero ninguna candidata satisface la inactividad inferior al 25 %. La segunda
+prioriza mantenimiento nativo del perímetro pagado en vez de comprar un recinto
+exterior ante daños; no limita el crecimiento agrícola ni altera producción.
