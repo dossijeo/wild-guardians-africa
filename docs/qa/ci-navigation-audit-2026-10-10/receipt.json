@@ -1,0 +1,23 @@
+{
+  "run": 38012364832,
+  "testedCommit": "e2d92c1edd6e129af9aaa555d40d9c68ada5f2d0",
+  "result": "failure",
+  "tests": 3792,
+  "pass": 3790,
+  "fail": 2,
+  "reason": "Generated SFX inventory source hashes and line references stale after navigation optimization",
+  "fixCommit": "6faa09b0",
+  "semanticRowsUnchanged": true,
+  "localSfxTests": {
+    "pass": 3,
+    "fail": 0,
+    "durationMs": 616.1439
+  },
+  "rawLog": {
+    "file": "validate-38012364832-failed-original.log.gz",
+    "sha256": "2f9af725c2eb83cbbe9b3a8231f4f8559b940659629b808cffa4fa165f1e7da9",
+    "bytes": 1864982,
+    "compressedSha256": "bdc6b6e9c5ca80c5fe7c5d0133b7edaf4f16c1347fbd93f398498118238b8142"
+  },
+  "scope": "Local targeted tests pass; replacement GitHub run pending. Does not prove audible playback or full release acceptance."
+}
