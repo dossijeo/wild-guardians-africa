@@ -1,0 +1,134 @@
+{
+  "source": "b76cda991fe8f59e851b1caac67c4f4b2bd71e47",
+  "officialRun": 38020828966,
+  "ci": {
+    "ok": false,
+    "loading": {
+      "canvas": {
+        "height": 720,
+        "width": 1028
+      },
+      "displayedProgress": "84",
+      "focused": true,
+      "phaseLabel": "Bringing your world to life...",
+      "readyGateReached": false,
+      "scope": "Presentation snapshot only; displayed progress and canvas dimensions do not establish world readiness or GPU identity.",
+      "stageBusy": "true",
+      "visibility": "visible",
+      "worldWaitMs": 90088.90000000036
+    },
+    "errors": [
+      "Error: Production world did not finish loading"
+    ]
+  },
+  "local": {
+    "ok": true,
+    "loading": {
+      "canvas": {
+        "height": 576,
+        "width": 1024
+      },
+      "displayedProgress": null,
+      "focused": true,
+      "phaseLabel": null,
+      "readyGateReached": true,
+      "scope": "Presentation snapshot only; displayed progress and canvas dimensions do not establish world readiness or GPU identity.",
+      "stageBusy": "false",
+      "visibility": "visible",
+      "worldWaitMs": 17452.799999952316
+    },
+    "errors": [],
+    "action": {
+      "afterCount": 5,
+      "attempted": true,
+      "beforeCount": 4,
+      "cancelled": false,
+      "candidates": 1,
+      "closed": true,
+      "logicalPlantsUnchanged": true,
+      "progress": 0,
+      "result": {
+        "growth": 0,
+        "id": "loading-maize-5",
+        "x": 3.399999999999998,
+        "z": -2.6645352591003757e-15
+      },
+      "scope": "Synthetic engine-handler raycast; not physical/trusted input or save planting.",
+      "selected": {
+        "clientX": 842.9504356931095,
+        "clientY": 472.0854764875661,
+        "point": [
+          3.399999999999998,
+          0.09,
+          -2.6645352591003757e-15
+        ]
+      }
+    },
+    "labels": [
+      "initial",
+      "additional-plant",
+      "middle",
+      "late",
+      "mature"
+    ]
+  },
+  "files": {
+    "docs/qa/windows-loading-regression/visual-b76-native-plant-root/ci-smoke.json.gz": {
+      "bytes": 1585,
+      "sha256": "2360224336daa79f3f56abba9b233fbdb1d24fa784a84fdc5a86c4214720a642",
+      "originalBytes": 3252,
+      "originalSha256": "037ae209682fbf9c486cad7cb2c9223a467a9948edfd0e266dd3c5aa6348a898"
+    },
+    "docs/qa/windows-loading-regression/visual-b76-native-plant-root/local-smoke.json.gz": {
+      "bytes": 5976929,
+      "sha256": "313dd1c060e6e03f627bdc679c3245aaf0a257c45ee80302a4801f4bdd41d9bf",
+      "originalBytes": 7905527,
+      "originalSha256": "07377603b0e8f1e64084d425f046abe633018eededb323b6fb4993bd883cbf6b"
+    },
+    "docs/qa/windows-loading-regression/visual-b76-native-plant-root/artifacts-original.json": {
+      "bytes": 2367,
+      "sha256": "7e2379751e7149d43cf8178800ee82c5c30601d363ebecba3bcc514659eabc8b"
+    },
+    "docs/qa/windows-loading-regression/visual-b76-native-plant-root/run-original.json": {
+      "bytes": 13320,
+      "sha256": "98a964f5aff574c62b2745c8bee35a82ca30e807e998e27a9b404fd37cbba324"
+    },
+    "docs/qa/windows-loading-regression/visual-b76-native-plant-root/job-original.json": {
+      "bytes": 4355,
+      "sha256": "ce4267b3127872bed393b5e60d8b354cdcd826ef8fdc0f98b8ad0e0c0a0f4045"
+    },
+    "docs/qa/windows-loading-regression/visual-b76-native-plant-root/exe-receipt.json": {
+      "bytes": 294,
+      "sha256": "bbbd3aa5d29ac2b78f481f53f90b6508ad62bbd9c8fba93b4843fa6d07c074e6"
+    },
+    "docs/qa/windows-loading-regression/visual-b76-native-plant-root/launch-receipt.json": {
+      "bytes": 1031,
+      "sha256": "d12feb28f66e92a8516a79d6665b3a19a5d2b007801466b202d1765c66afd290"
+    },
+    "docs/qa/windows-loading-regression/visual-b76-native-plant-root/extraction-receipt.json": {
+      "bytes": 7689,
+      "sha256": "cf0bc8707bece10edf6f884d6c40e543bde8e88fe5b42087d4d5a1575241a122"
+    },
+    "docs/qa/interactive-loading-development/native-b76-local-day/initial.png": {
+      "bytes": 961830,
+      "sha256": "b5f22ee3ae7b8d6f3aca4424e57ca81ea6b55c2650c84075b318c46c700456f3"
+    },
+    "docs/qa/interactive-loading-development/native-b76-local-day/additional-plant.png": {
+      "bytes": 965911,
+      "sha256": "d5fff5fbb08cfff9e57524df36d4f3c4fdc87e7da928e073f1149873b7ba9aac"
+    },
+    "docs/qa/interactive-loading-development/native-b76-local-day/middle.png": {
+      "bytes": 993161,
+      "sha256": "732f8e23b99708b4e818aee2163f25afa544935797178a1602fc7d8def210dd6"
+    },
+    "docs/qa/interactive-loading-development/native-b76-local-day/late.png": {
+      "bytes": 999842,
+      "sha256": "adc01b27febe2b68332b139d9d698e7b6aa1aace7a61eeba4fde6cb218948b7d"
+    },
+    "docs/qa/interactive-loading-development/native-b76-local-day/mature.png": {
+      "bytes": 1009566,
+      "sha256": "faccd73cb3985bde64c60a81f95a58978ed2c67f5aa8991370041aa1c6f9270c"
+    }
+  },
+  "scope": "Actual native existing-draw canvas, synthetic engine-handler raycast. No physical touch, composited UI, mid-load65percent planting or causal GPU/loading timing acceptance."
+}
