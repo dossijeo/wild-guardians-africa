@@ -1,0 +1,62 @@
+{
+  "base": "8f3c0021",
+  "scope": "Unintegrated pure pressure/product-budget module; no production import/format/generation, no campaign/GPU/CI",
+  "sources": {
+    "src/simulation/raid-pressure-budget.js": "6e4ee41f2d7b1cf57f685dac414ea37c1113bb41099935e487a269bb447a2378",
+    "content/balance/raid_pressure_candidate.json": "81840662936e8f16c4cf4f499616404b877df6da558ee8fa564e29e71d18e934",
+    "tests/raid-pressure-budget.test.js": "7341b2bc2abae04c4279aad9b3f3b03d5043e84a61ef5df70b5948fa4f901986",
+    "tools/screen-raid-pressure-product.mjs": "21026da9e656832081beb0a64ca8a3fc7c0c65125031a7e3081acd6c14acf9b2"
+  },
+  "evidence": {
+    "directed-tests.tap": "7a1f592feffdc34afc120f4fff2a66250acec1a3243398b3385ca0ca7e011939",
+    "README.md": "ad43e01cdc882084af64df408669da1f5679f32abc5e7f1bd0fe6f84b6873f4d",
+    "reference-envelopes.json": "87275edc5384d5ec4ae87bd2158cfc7de4379fdf49ba6c6cd24b0166e532cbba"
+  },
+  "protectedUnchanged": {
+    "src/simulation/raids.js": {
+      "baseBlob": "d30cdb9c059de56d2a374d437aca0c27b08f74fd",
+      "workingTreeSha256": "5c88e8fcd5b703a23e3fbabe5f7b60d356eaae6375d7cdc28f169f6f7e82ba0f",
+      "gitFilteredBlobMatchesBase": true
+    },
+    "src/simulation/game.js": {
+      "baseBlob": "37d577e098dcb0a00b27b56a21830ea23c5ddc4e",
+      "workingTreeSha256": "56694bf7ef370436156ea626891ea5e57abc6af2b7f42c3174f3a5d476677cec",
+      "gitFilteredBlobMatchesBase": true
+    },
+    "src/persistence/snapshots.js": {
+      "baseBlob": "5d132ebf0ffbfb89e4b7f28eef77ee6cc27d22ea",
+      "workingTreeSha256": "992c9bb29d83f844eabd4a8a6963722ef4f418f62b3531f99e782397aaae9806",
+      "gitFilteredBlobMatchesBase": true
+    },
+    "src/simulation/balance.js": {
+      "baseBlob": "a8614796decf7e869ff32c0fab1ea3a6601b0109",
+      "workingTreeSha256": "0317d5d23326eb0035c8a59e87eae91b80544328e1d647a530188490c556b637",
+      "gitFilteredBlobMatchesBase": true
+    },
+    "content/balance/player_revisions.json": {
+      "baseBlob": "fb036c6c165a51ed370c6445e887600439d272fa",
+      "workingTreeSha256": "4750784bfa92bfb803be67ee084dce6bbada50954f2afa92e06b59b2d35e31fd",
+      "gitFilteredBlobMatchesBase": true
+    },
+    "tools/generate_balance.py": {
+      "baseBlob": "1bf674db9482fcb5f26549c9ff00a955941f7f36",
+      "workingTreeSha256": "5e26157584cd55a3fe4a32f22a7007c75faf20acee067c9c5f0c613dc1b9faf9",
+      "gitFilteredBlobMatchesBase": true
+    }
+  },
+  "tests": {
+    "command": "node --test tests/raid-pressure-budget.test.js",
+    "exit": 0,
+    "passed": 13,
+    "failed": 0,
+    "suiteMs": 188.3476
+  },
+  "syntaxCheckExit": 0,
+  "openDecisions": [
+    "EMA5night candidate",
+    "weak-mixture interpolation/rounded normalized quotas",
+    "90degree lattice and peripheral0.5 reference weight",
+    "Q agricultural mean-product multiplier1.0 and conditional hit selection",
+    "physical runtime/waves/exposure and save integration not implemented"
+  ]
+}
