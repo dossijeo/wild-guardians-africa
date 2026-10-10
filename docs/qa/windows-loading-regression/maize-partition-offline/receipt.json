@@ -1,0 +1,82 @@
+{
+  "baseline": "ccd88f5cccde9f2bc3bede09f7bdf41818a122c1",
+  "outputDirectory": ".cache/maize-partition-candidate",
+  "generator": "node tools/experiments/partition-crop-library.mjs",
+  "assets": {
+    "maize-steady.glb": {
+      "bytes": 769488,
+      "sha256": "837df8716abb75bf98a9136905a2a1047dd66aecc97b3ac0c02fcaac5c7317bd"
+    },
+    "remainder-steady.glb": {
+      "bytes": 5892328,
+      "sha256": "4871a9aab58e9f24593f0c4fbdd14cc8c287805ced2a795253446a81b803fdb1"
+    },
+    "maize-bridges.glb": {
+      "bytes": 3026892,
+      "sha256": "a2bddab996ee27dc8ef1f1f3e05f9f119d21795c41d5c3ffeef186b46720e3c6"
+    },
+    "remainder-bridges.glb": {
+      "bytes": 23509472,
+      "sha256": "ec086f81b1e27accb9426d335fc488f7bd9edb86db2305f27f7c3c147df98b27"
+    },
+    "textures/15252f23f992e780e8e5aa328d6e58e1b68d7c58d604d1cd9bdbb6ca1319a605.webp": {
+      "bytes": 2239664,
+      "sha256": "15252f23f992e780e8e5aa328d6e58e1b68d7c58d604d1cd9bdbb6ca1319a605"
+    },
+    "textures/6f9023998bc0853a50beaeafe984bc204639ba886a1f64a450dba998cd239e51.webp": {
+      "bytes": 1371082,
+      "sha256": "6f9023998bc0853a50beaeafe984bc204639ba886a1f64a450dba998cd239e51"
+    },
+    "textures/6dd33b3bd7eaf625c4f386353466fe456f5b3b2cc3e926fc9e8974ad45610422.webp": {
+      "bytes": 238208,
+      "sha256": "6dd33b3bd7eaf625c4f386353466fe456f5b3b2cc3e926fc9e8974ad45610422"
+    },
+    "textures/919a0e1460f95cd86527210d16442a6bbc1a457ccc18e50a50c1096584f4629c.webp": {
+      "bytes": 2285832,
+      "sha256": "919a0e1460f95cd86527210d16442a6bbc1a457ccc18e50a50c1096584f4629c"
+    },
+    "textures/bfbdf6826eb1625288e0e3c3e8f645d46ca13d3dc500e8a348c52462c8b3c018.webp": {
+      "bytes": 1310498,
+      "sha256": "bfbdf6826eb1625288e0e3c3e8f645d46ca13d3dc500e8a348c52462c8b3c018"
+    },
+    "textures/4a1d3be8ba489b904db99d3c40ec0a4ee75e3469c13d365211c1837f61a7f8c2.webp": {
+      "bytes": 203030,
+      "sha256": "4a1d3be8ba489b904db99d3c40ec0a4ee75e3469c13d365211c1837f61a7f8c2"
+    },
+    "partition-manifest.json": {
+      "bytes": 16901,
+      "sha256": "9438523436af44a03cf85e6bb25731431dc587e6304dd7a416e10c04dd78070a"
+    }
+  },
+  "sourceHashes": {
+    "tools/experiments/partition-crop-library.mjs": "73d7d3d259acace921da37b134da5d761231b0a4740a8af9b2c2ea18a9e88639",
+    "tests/crop-library-partition.test.js": "8dfc0b3a094a4c6cfaefe0bb59c5b0387c997cfa18c569cfd56d5ba7a7d91d7d",
+    "src/rendering/loading-diorama.js": "1f0fee69a82d0499e2904abe5ece4d34c1084710c16d19ab25adb872dd4f5dd5",
+    "src/rendering/crop-library.js": "1f6308773529e162d449129a90a31b448e48696a6b766c30fe678401c21842ef",
+    "src/rendering/crop-batch.js": "96f37896195dda9cbf2c2e2e9570c982305c83cdb1e20b3e36671b7754ab233c",
+    "src/rendering/assets.js": "492631f5d0c8a1a9c20a2c9b336e611fdfaec33c4698c74d1031f5cdc7d90847",
+    "src/rendering/scene.js": "d8a41ff52ce8b7cfb13b418f95ad12100c1a79cf47932a259dcaaadfd0f14d6e",
+    "src/rendering/asset-url.js": "7ae72fe0b9e040bd08419dd4746cf5c1d20d46521aa31a057a6586e021b587d2",
+    "src-tauri/smoke.js": "1caf359bf11d1b8cac421e75e193e366ec88ef0016634bf4d0159c4ef3c37824",
+    "src-tauri/src/main.rs": "007af64e56ba59ae644623966fcd64ca70a975b600250e3d0f68215e5c689a2c",
+    ".github/workflows/windows.yml": "2b5d68f65285d9c936ee2089f8bc1f6d4d4d2f2446471db8f99260f50c83836e",
+    "public/content/models.json": "9fbdddec82c57f60777cec4751142cf06db58bf99916ebb403c80e8c98ddacc1",
+    "public/content/crop-bridges.json": "1cb26e0d61bdb0aa780d6976e54c57537b8cf9fe77518b49691b9c4cd292185f",
+    "content/manifests/web-assets.json": "fed88f8bcfce8f2296764a41324c20ad663f74f4a9dc17cd1f32b6179623bd41"
+  },
+  "checks": {
+    "args": [
+      "node",
+      "--test",
+      "tests/crop-library-partition.test.js"
+    ],
+    "exitCode": 0,
+    "sha256": "df8724965aafc9de196c81210546465bfdb03de82a9f89dd46ecffdf88835b42"
+  },
+  "normalRuntimeChanged": false,
+  "nativeEvidence": false,
+  "process": {
+    "session": 87493,
+    "exitCode": 0
+  }
+}

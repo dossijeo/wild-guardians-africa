@@ -1,0 +1,30 @@
+TAP version 13
+# Subtest: all40 stages/32 authored transitions partition once with exact extras, transforms and primitive semantics
+ok 1 - all40 stages/32 authored transitions partition once with exact extras, transforms and primitive semantics
+  ---
+  duration_ms: 13.5128
+  ...
+# Subtest: real meshopt decoder preserves every compressed slice and decoded attribute/index bit pattern
+ok 2 - real meshopt decoder preserves every compressed slice and decoded attribute/index bit pattern
+  ---
+  duration_ms: 11830.335
+  ...
+# Subtest: material/UV/sampler definitions remain exact; every original image stored once with shared URI and unchanged WebP bytes
+ok 3 - material/UV/sampler definitions remain exact; every original image stored once with shared URI and unchanged WebP bytes
+  ---
+  duration_ms: 29.0103
+  ...
+# Subtest: repeat generation is byte deterministic, refuses production output and leaves original assets/manifests unchanged
+ok 4 - repeat generation is byte deterministic, refuses production output and leaves original assets/manifests unchanged
+  ---
+  duration_ms: 526.9663
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 12869.5423
