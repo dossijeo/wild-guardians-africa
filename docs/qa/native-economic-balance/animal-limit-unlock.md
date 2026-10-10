@@ -1,9 +1,9 @@
-# Desbloqueo de cantidades de incursi髇
+# Desbloqueo de cantidades de incursi贸n
 
-Autorizaci髇 del jugador: retirar el l韒ite de animales para calibrar el balance mediante hordas reales.
+Autorizaci贸n del jugador: retirar el l铆mite de animales para calibrar el balance mediante hordas reales.
 
-La revisi髇 expl韈ita `unlock_raid_animal_limits` elimina el m醲imo global de cinco y los m醲imos por especie. `null` significa sin tope adicional: el presupuesto de amenaza y los costes positivos de cada especie siguen limitando cada composici髇. Se conserva la enumeraci髇 determinista de grupos 鷑icos, especies desbloqueadas, RNG, da駉, golpes, introducciones y postgame. Los presupuestos actuales permiten hasta 14 animales, sin garantizar que se sortee ese grupo.
+La revisi贸n expl铆cita `unlock_raid_animal_limits` elimina el m谩ximo global de cinco y los m谩ximos por especie. `null` significa sin tope adicional: el presupuesto de amenaza y los costes positivos de cada especie siguen limitando cada composici贸n. Se conserva la enumeraci贸n determinista de grupos 煤nicos, especies desbloqueadas, RNG, da帽o, golpes, introducciones y postgame. Los presupuestos actuales permiten hasta 14 animales, sin garantizar que se sortee ese grupo.
 
-Se conserva la auditor韆 anterior en `capacity-before-unlock.json/md`; `capacity.json/md` refleja las nuevas reglas. La capacidad m醲ima te髍ica sube de 24 a 56 golpes, pero no equivale a destrucci髇 realizada. Sigue insuficiente para el objetivo orientativo de 110 plantas sanas de una finca de 400: requiere calibrar presupuestos/composici髇 mediante campa馻s.
+Se conserva la auditor铆a anterior en `capacity-before-unlock.json/md`; `capacity.json/md` refleja las nuevas reglas. La capacidad m谩xima te贸rica sube de 24 a 56 golpes, pero no equivale a destrucci贸n realizada. Sigue insuficiente para el objetivo orientativo de 110 plantas sanas de una finca de 400: requiere calibrar presupuestos/composici贸n mediante campa帽as.
 
-La formaci髇 f韘ica exterior y la preparaci髇 de chunks para grupos grandes se validan por separado antes de aceptar campa馻s. La prueba de composici髇 de 32 fac髊ueros comprueba ausencia de topes, no una incursi髇 f韘ica ni rendimiento GPU.
+La formaci贸n f铆sica exterior y la preparaci贸n de chunks para grupos grandes se validan por separado antes de aceptar campa帽as. La prueba de composici贸n de 32 fac贸queros comprueba ausencia de topes, no una incursi贸n f铆sica ni rendimiento GPU.

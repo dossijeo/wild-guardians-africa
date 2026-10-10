@@ -3,7 +3,7 @@
   "sourceHashes": {
     "src/simulation/balance.js": "0317d5d23326eb0035c8a59e87eae91b80544328e1d647a530188490c556b637",
     "src/simulation/rules.js": "3657116cd696581180909bb3928267ff13698fb85831b0274d7bbe86743a2ee8",
-    "tools/estimate-native-horde-budgets.mjs": "37f77a2a8009f198576e7c591d79c84998fad26a291f374f6cca7ee815510090"
+    "tools/estimate-native-horde-budgets.mjs": "ac1ba695cf29c5b061cbb933dc0d6dd77e53273221075311d818f0e7d5ccc73d"
   },
   "rows": [
     {
@@ -18,6 +18,7 @@
       "compositions": 58,
       "meanAnimals": 6.120689655172414,
       "meanMaximumHits": 27.724137931034484,
+      "meanRolledHits": 21.42241379310345,
       "meanMaximumStructureDamage": 694.3965517241379,
       "maxAnimals": 14,
       "maxHits": 56
@@ -34,6 +35,7 @@
       "compositions": 349,
       "meanAnimals": 9.363896848137536,
       "meanMaximumHits": 43.38968481375358,
+      "meanRolledHits": 33.64756446991404,
       "meanMaximumStructureDamage": 1138.4383954154728,
       "maxAnimals": 24,
       "maxHits": 96
@@ -50,6 +52,7 @@
       "compositions": 1523,
       "meanAnimals": 13.275114904793172,
       "meanMaximumHits": 62.35981615233093,
+      "meanRolledHits": 48.455351280367694,
       "meanMaximumStructureDamage": 1682.3046618516087,
       "maxAnimals": 36,
       "maxHits": 144
@@ -66,6 +69,7 @@
       "compositions": 4708,
       "meanAnimals": 17.160365335598982,
       "meanMaximumHits": 81.23916737468139,
+      "meanRolledHits": 63.19413763806287,
       "meanMaximumStructureDamage": 2225.8496176720478,
       "maxAnimals": 48,
       "maxHits": 192
@@ -82,6 +86,7 @@
       "compositions": 11784,
       "meanAnimals": 21.02418533604888,
       "meanMaximumHits": 100.04293957909029,
+      "meanRolledHits": 77.87648506449423,
       "meanMaximumStructureDamage": 2768.8976578411407,
       "maxAnimals": 60,
       "maxHits": 240
@@ -98,9 +103,44 @@
       "compositions": 25537,
       "meanAnimals": 24.880252183106865,
       "meanMaximumHits": 118.8203782746603,
+      "meanRolledHits": 92.53906097035674,
       "meanMaximumStructureDamage": 3311.895289188237,
       "maxAnimals": 72,
       "maxHits": 288
+    },
+    {
+      "budget": 96,
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "compositions": 89881,
+      "meanAnimals": 32.572623802583415,
+      "meanMaximumHits": 156.30538156006276,
+      "meanRolledHits": 121.81222950345457,
+      "meanMaximumStructureDamage": 4397.451519230983,
+      "maxAnimals": 96,
+      "maxHits": 384
+    },
+    {
+      "budget": 132,
+      "unlocked": [
+        "warthog",
+        "hyena",
+        "buffalo",
+        "lion",
+        "rhino"
+      ],
+      "compositions": 378695,
+      "meanAnimals": 44.08934366706716,
+      "meanMaximumHits": 212.4567369519006,
+      "meanRolledHits": 165.66514873446968,
+      "meanMaximumStructureDamage": 6025.407425500733,
+      "maxAnimals": 132,
+      "maxHits": 528
     }
   ]
 }

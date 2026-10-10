@@ -8,6 +8,8 @@ test('dynamic capacity counts match native uniform compositions across all curre
   const groups=compositions(b,tier.unlocked_species),r=estimateNativeHorde(b,tier.unlocked_species),hits=g=>g.reduce((n,id)=>n+animalSpec(id).hit_budget_max,0);
   assert.equal(r.compositions,groups.length);assert.equal(r.maxAnimals,Math.max(...groups.map(g=>g.length)));assert.equal(r.maxHits,Math.max(...groups.map(hits)));
   assert.ok(Math.abs(r.meanAnimals-groups.reduce((n,g)=>n+g.length,0)/groups.length)<1e-9);
+  const rolled=g=>g.reduce((n,id)=>{const a=animalSpec(id);return n+(a.hit_budget_min+a.hit_budget_max)/2;},0);
+  assert.ok(Math.abs(r.meanRolledHits-groups.reduce((n,g)=>n+rolled(g),0)/groups.length)<1e-9);
   assert.ok(Math.abs(r.meanMaximumHits-groups.reduce((n,g)=>n+hits(g),0)/groups.length)<1e-9);
  }
 });
