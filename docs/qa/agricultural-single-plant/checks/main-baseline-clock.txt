@@ -1,0 +1,134 @@
+TAP version 13
+# Subtest: QA-011: accelerated night splits at raid arrival before moving the animal at normal speed
+ok 1 - QA-011: accelerated night splits at raid arrival before moving the animal at normal speed
+  ---
+  duration_ms: 14.2416
+  ...
+# Subtest: QA-011: one real frame straddling raid arrival matches two frames split at its boundary
+not ok 2 - QA-011: one real frame straddling raid arrival matches two frames split at its boundary
+  ---
+  duration_ms: 5.4565
+  location: 'file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/.cache-magic-baseline/tests/acceptance-clock.test.js:25:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected ... Lines skipped
+    
+      [
+        {
+    ...
+            day: 1,
+            daytime: false,
+    +       elapsed: 0.05000000000001137,
+    -       elapsed: 0.05,
+            exposedLiving: 0,
+    ...
+          type: 'RaidSpawned'
+        }
+      ]
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0:
+      id: 'event-2'
+      type: 'PlacementCommitted'
+      kind: 'center'
+      targetId: 'structure-2'
+      presentation:
+        x: 4
+        z: 0
+    1:
+      id: 'event-4'
+      type: 'RaidSpawned'
+      raidFacts:
+        id: 'raid-1-night'
+        day: 1
+        daytime: false
+        elapsed: 0.05
+        exposedLiving: 0
+        exposedWounded: 0
+        actors:
+          0:
+            id: 'animal-3'
+            species: 'warthog'
+            hitsRemaining: 2
+            spawn:
+              x: -115.65
+              z: 0
+            exit:
+              x: -118.65
+              z: 0
+  actual:
+    0:
+      id: 'event-2'
+      type: 'PlacementCommitted'
+      kind: 'center'
+      targetId: 'structure-2'
+      presentation:
+        x: 4
+        z: 0
+    1:
+      id: 'event-4'
+      type: 'RaidSpawned'
+      raidFacts:
+        id: 'raid-1-night'
+        day: 1
+        daytime: false
+        elapsed: 0.05000000000001137
+        exposedLiving: 0
+        exposedWounded: 0
+        actors:
+          0:
+            id: 'animal-3'
+            species: 'warthog'
+            hitsRemaining: 2
+            spawn:
+              x: -115.65
+              z: 0
+            exit:
+              x: -118.65
+              z: 0
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/.cache-magic-baseline/tests/acceptance-clock.test.js:31:10)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async startSubtest (node:internal/test_runner/harness:216:3)
+  ...
+# Subtest: QA-009/010/015: 300 real daytime seconds and 60 calm-night seconds reach one blocked dawn
+ok 3 - QA-009/010/015: 300 real daytime seconds and 60 calm-night seconds reach one blocked dawn
+  ---
+  duration_ms: 217.934
+  ...
+# Subtest: QA-009/010: fractional daylight-to-night frame uses each side of the boundary at its own speed
+ok 4 - QA-009/010: fractional daylight-to-night frame uses each side of the boundary at its own speed
+  ---
+  duration_ms: 0.8648
+  ...
+# Subtest: QA-010: a full calm night preserves growth and remaining water tolerance
+ok 5 - QA-010: a full calm night preserves growth and remaining water tolerance
+  ---
+  duration_ms: 24.0949
+  ...
+# Subtest: QA-012/013: only the last animal leaving restores accelerated night and emits one end
+ok 6 - QA-012/013: only the last animal leaving restores accelerated night and emits one end
+  ---
+  duration_ms: 1.7485
+  ...
+# Subtest: QA-007/014: blocked real-time advances preserve every field until all pause causes clear
+ok 7 - QA-007/014: blocked real-time advances preserve every field until all pause causes clear
+  ---
+  duration_ms: 0.4372
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 6
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 866.7399
