@@ -1,0 +1,215 @@
+{
+  "version": 1,
+  "manifest": "/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/partition-manifest.json",
+  "manifestBytes": 2313,
+  "manifestSha256": "98e4f7db28fa5f0c2a6ef4536405a9bb7a96b1613125a4b140324472b7d4bb77",
+  "collections": {
+    "steady": "/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/partition-manifest.json#steady",
+    "bridges": "/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/partition-manifest.json#bridges"
+  },
+  "replaced": [
+    {
+      "kind": "steady",
+      "source": "assets/8f6c9ef7472a2d7f8ffda7f08a78f8027f91d14a8f92b8eeca4084b0f379da36.glb",
+      "runtime": "assets/web/8f6c9ef7472a2d7f8ffda7f08a78f8027f91d14a8f92b8eeca4084b0f379da36.glb",
+      "sourceSha256": "8f6c9ef7472a2d7f8ffda7f08a78f8027f91d14a8f92b8eeca4084b0f379da36",
+      "runtimeSha256": "20a6b90af04317cdd9b31f10199fecb235401ebe5411ad3417dfcfcda86f9050",
+      "beforeBytes": 18839704,
+      "afterBytes": 14308628,
+      "compressedViews": 160,
+      "images": [
+        {
+          "index": 0,
+          "beforeBytes": 2342352,
+          "afterBytes": 2239664,
+          "before": [
+            1024,
+            1024
+          ],
+          "after": [
+            1024,
+            1024
+          ],
+          "alpha": false,
+          "quality": 95,
+          "lossless": true,
+          "role": "normal",
+          "alphaQuality": 100
+        },
+        {
+          "index": 1,
+          "beforeBytes": 2678012,
+          "afterBytes": 1371082,
+          "before": [
+            2048,
+            2048
+          ],
+          "after": [
+            2048,
+            2048
+          ],
+          "alpha": false,
+          "quality": 90,
+          "lossless": false,
+          "role": "color",
+          "alphaQuality": 100
+        },
+        {
+          "index": 2,
+          "beforeBytes": 346840,
+          "afterBytes": 238208,
+          "before": [
+            1024,
+            1024
+          ],
+          "after": [
+            1024,
+            1024
+          ],
+          "alpha": false,
+          "quality": 95,
+          "lossless": false,
+          "role": "data",
+          "alphaQuality": 100
+        },
+        {
+          "index": 3,
+          "beforeBytes": 2391603,
+          "afterBytes": 2285832,
+          "before": [
+            1024,
+            1024
+          ],
+          "after": [
+            1024,
+            1024
+          ],
+          "alpha": false,
+          "quality": 95,
+          "lossless": true,
+          "role": "normal",
+          "alphaQuality": 100
+        },
+        {
+          "index": 4,
+          "beforeBytes": 2569141,
+          "afterBytes": 1310498,
+          "before": [
+            2048,
+            2048
+          ],
+          "after": [
+            2048,
+            2048
+          ],
+          "alpha": false,
+          "quality": 90,
+          "lossless": false,
+          "role": "color",
+          "alphaQuality": 100
+        },
+        {
+          "index": 5,
+          "beforeBytes": 312138,
+          "afterBytes": 203030,
+          "before": [
+            1024,
+            1024
+          ],
+          "after": [
+            1024,
+            1024
+          ],
+          "alpha": false,
+          "quality": 95,
+          "lossless": false,
+          "role": "data",
+          "alphaQuality": 100
+        }
+      ],
+      "geometryTolerance": 0,
+      "animationTolerance": 0
+    },
+    {
+      "kind": "bridges",
+      "source": "assets/2fdb3468b7646ebe16d0f3d3d25538ce5b20d6dee1d3830256d2f62599826dcc.glb",
+      "runtime": "assets/web/2fdb3468b7646ebe16d0f3d3d25538ce5b20d6dee1d3830256d2f62599826dcc.glb",
+      "sourceSha256": "2fdb3468b7646ebe16d0f3d3d25538ce5b20d6dee1d3830256d2f62599826dcc",
+      "runtimeSha256": "0ff5a9e32ab61f6b4b5a66223e3e4735cccd272c13275563fc8a8eac7818477c",
+      "beforeBytes": 48988728,
+      "afterBytes": 26536168,
+      "compressedViews": 256,
+      "images": [],
+      "geometryTolerance": 0,
+      "animationTolerance": 0
+    }
+  ],
+  "runtimeAssets": [
+    {
+      "path": "assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/maize-steady.glb",
+      "bytes": 769488,
+      "sha256": "837df8716abb75bf98a9136905a2a1047dd66aecc97b3ac0c02fcaac5c7317bd",
+      "kind": "partition"
+    },
+    {
+      "path": "assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/remainder-steady.glb",
+      "bytes": 5892328,
+      "sha256": "4871a9aab58e9f24593f0c4fbdd14cc8c287805ced2a795253446a81b803fdb1",
+      "kind": "partition"
+    },
+    {
+      "path": "assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/maize-bridges.glb",
+      "bytes": 3026892,
+      "sha256": "a2bddab996ee27dc8ef1f1f3e05f9f119d21795c41d5c3ffeef186b46720e3c6",
+      "kind": "partition"
+    },
+    {
+      "path": "assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/remainder-bridges.glb",
+      "bytes": 23509472,
+      "sha256": "ec086f81b1e27accb9426d335fc488f7bd9edb86db2305f27f7c3c147df98b27",
+      "kind": "partition"
+    },
+    {
+      "path": "assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/textures/15252f23f992e780e8e5aa328d6e58e1b68d7c58d604d1cd9bdbb6ca1319a605.webp",
+      "bytes": 2239664,
+      "sha256": "15252f23f992e780e8e5aa328d6e58e1b68d7c58d604d1cd9bdbb6ca1319a605",
+      "kind": "image"
+    },
+    {
+      "path": "assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/textures/6f9023998bc0853a50beaeafe984bc204639ba886a1f64a450dba998cd239e51.webp",
+      "bytes": 1371082,
+      "sha256": "6f9023998bc0853a50beaeafe984bc204639ba886a1f64a450dba998cd239e51",
+      "kind": "image"
+    },
+    {
+      "path": "assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/textures/6dd33b3bd7eaf625c4f386353466fe456f5b3b2cc3e926fc9e8974ad45610422.webp",
+      "bytes": 238208,
+      "sha256": "6dd33b3bd7eaf625c4f386353466fe456f5b3b2cc3e926fc9e8974ad45610422",
+      "kind": "image"
+    },
+    {
+      "path": "assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/textures/919a0e1460f95cd86527210d16442a6bbc1a457ccc18e50a50c1096584f4629c.webp",
+      "bytes": 2285832,
+      "sha256": "919a0e1460f95cd86527210d16442a6bbc1a457ccc18e50a50c1096584f4629c",
+      "kind": "image"
+    },
+    {
+      "path": "assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/textures/bfbdf6826eb1625288e0e3c3e8f645d46ca13d3dc500e8a348c52462c8b3c018.webp",
+      "bytes": 1310498,
+      "sha256": "bfbdf6826eb1625288e0e3c3e8f645d46ca13d3dc500e8a348c52462c8b3c018",
+      "kind": "image"
+    },
+    {
+      "path": "assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/textures/4a1d3be8ba489b904db99d3c40ec0a4ee75e3469c13d365211c1837f61a7f8c2.webp",
+      "bytes": 203030,
+      "sha256": "4a1d3be8ba489b904db99d3c40ec0a4ee75e3469c13d365211c1837f61a7f8c2",
+      "kind": "image"
+    },
+    {
+      "path": "assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/partition-manifest.json",
+      "bytes": 2313,
+      "sha256": "98e4f7db28fa5f0c2a6ef4536405a9bb7a96b1613125a4b140324472b7d4bb77",
+      "kind": "manifest"
+    }
+  ]
+}
