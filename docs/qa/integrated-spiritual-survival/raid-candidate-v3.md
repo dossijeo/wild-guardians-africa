@@ -1,0 +1,15 @@
+# Candidate 3: joint count and attack-budget calibration
+
+Implemented on the experimental integration branch after the reproducible nine-variant preflight. No main integration or economic acceptance is claimed.
+
+For nights after the five unchanged introductions, raw population is round(4 + 30 * sqrt(P)); the introductory ceiling is 8 + 2 * (night - 6). The actual planned count is the smaller of these quantities. The ceiling increases by two each night, not necessarily the actual census when agricultural pressure changes. P retains the original time/value formula and max(current, EMA) agricultural input. The formula reaches 34 at P=1; active waves retain their limit of 16, with all budgeted animals physically entering and departing.
+
+Hit ranges use original species min/max plus floor(4 * P), replacing candidate-1/2 floor(2 * P). Native animations and attack resolution consume every hit normally. Central crop damage, radii, directional area limits, structural damage per impact, species proportions and unlocks, individual reservations, obstacle/Shield interception and construction rules are unchanged. Q remains the joint reference mean times 1.5 and constrains the full maximum-hit composition before RNG. It is not an automatic damage grant or a desired percentage of plants deleted.
+
+The recorded night-14 pressure from candidate 2 yields 21 animals and 129.5 mean reference HP under candidate 3, matching the preflight. This is planning evidence; current native economy and RNG can change the subsequent pressure and outcome. Neither casualties nor income are forecast as if already observed. Prices, wages, the work centre cost, crop income, agricultural power and real delivered-crate accounting are unchanged.
+
+Save compatibility now chooses the complete immutable recipe by pressureFacts.candidateVersion: untagged means historical 1, tagged 2 retains its old linear population and hit progression, and new plans are tagged 3. The plan/EMA schema remains 1. Snapshot validation checks count and hit profiles with the saved version. No committed night is regenerated. Unknown recipes or stripped/forged provenance fail.
+
+Genuine planned and active-wave candidate-2 fixtures were captured before source edits at commit 634ac65f, with 19 actors, 16 initially active and original budget 141. Hashes and recipe provenance are recorded. Candidate-1 fixtures remain unchanged. Both versions preserve exact snapshot bytes, RNG, actors, money and EMA on reload; the next night adopts candidate 3.
+
+Validation: 98 tests pass, including historical migration, tagged current plans, unknown/forged budgets, full native hit-range RNG, wave completion, individual reservations, physical area attacks, obstacles, shields, canyon river defense and preflight reproducibility. Vite production build passes in 9.67 seconds. The existing large-bundle warning remains. Native short campaigns, cross-seed/biome coverage, 100-night survival, postgame progression, manual inactivity and GPU/device acceptance remain outstanding.

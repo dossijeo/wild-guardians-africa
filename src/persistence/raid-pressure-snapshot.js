@@ -9,7 +9,7 @@ export function validatePressureSnapshot(s){
  if(p.pressureVersion!==1||p.night!==s.day||!Number.isFinite(p.at)||p.at<323||p.at>=548||typeof p.done!=='boolean'||!Array.isArray(p.waves)||!Array.isArray(p.actors))throw Error('Invalid pressure night plan');
  if(p.peaceful){if(!s.postgame||p.group.length||p.actors.length||p.waves.length||s.raid)throw Error('Invalid peaceful plan');return;}
  if(s.postgame||!memory)throw Error('Invalid active pressure memory');
- const f=p.pressureFacts,config=raidPressureCandidateForVersion(f?.candidateVersion),summary=raidPressureSummary(p.night,f.observedValue,memory);
+ const f=p.pressureFacts,config=raidPressureCandidateForVersion(f?.candidateVersion),summary=raidPressureSummary(p.night,f.observedValue,memory,config);
  for(const [k,v] of Object.entries(summary))if(f[k]!==v)throw Error('Pressure summary mismatch');
  const actors=p.waves.flat();
  if(p.waves.some(w=>!Array.isArray(w)||!w.length||w.length>16)||actors.length!==summary.targetAnimals||!equal(p.actors,p.waves[0])||!equal(p.group,p.actors.map(a=>a.species)))throw Error('Invalid pressure cohort');
@@ -17,7 +17,7 @@ export function validatePressureSnapshot(s){
  for(const a of actors){
   if(summary.introductory){const native=B.animals[p.night-1];if(a.species!==native.id||a.hits!==native.hit_budget_min||a.damageProfile!==undefined)throw Error('Invalid introduction');potential+=a.hits;}
   else {
-   const spec=raidSpeciesPressure(a.species,summary.pressure),profile={cropDamage:spec.cropDamage,structureDamage:spec.structureDamage,attackRadius:spec.attackRadius,areaCap:spec.areaCap,peripheralWeight:.5};
+   const spec=raidSpeciesPressure(a.species,summary.pressure,B,config),profile={cropDamage:spec.cropDamage,structureDamage:spec.structureDamage,attackRadius:spec.attackRadius,areaCap:spec.areaCap,peripheralWeight:.5};
    if(!unlocked.includes(a.species)||!Number.isSafeInteger(a.hits)||a.hits<spec.minHits||a.hits>spec.maxHits||!equal(a.damageProfile,profile))throw Error('Invalid pressure actor');
    potential+=a.hits*spec.cropDamage*referenceRaidArea(spec,config).effective;
   }

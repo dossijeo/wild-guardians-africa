@@ -1,10 +1,12 @@
 // Pure, unintegrated candidate. No clock, state, command or damage mutations.
 import {BALANCE as B} from './balance.js';
-export const RAID_PRESSURE_CANDIDATE=Object.freeze({version:2,emaAlpha:1/3,referenceSpacing:1.5,referenceConeRadians:Math.PI/2,peripheralWeight:.5,qMeanMultiplier:1.5,activeWaveLimit:16});
+export const RAID_PRESSURE_CANDIDATE=Object.freeze({version:3,emaAlpha:1/3,referenceSpacing:1.5,referenceConeRadians:Math.PI/2,peripheralWeight:.5,qMeanMultiplier:1.5,activeWaveLimit:16,countPower:.5,introCountStart:8,introCountRise:2,hitPressureSteps:4});
 // Saved plans retain their original budget recipe; missing provenance means v1.
 const LEGACY_RAID_PRESSURE_CANDIDATE=Object.freeze({version:1,emaAlpha:1/3,referenceSpacing:1.5,referenceConeRadians:Math.PI/2,peripheralWeight:.5,qMeanMultiplier:1,activeWaveLimit:16});
+const SECOND_RAID_PRESSURE_CANDIDATE=Object.freeze({version:2,emaAlpha:1/3,referenceSpacing:1.5,referenceConeRadians:Math.PI/2,peripheralWeight:.5,qMeanMultiplier:1.5,activeWaveLimit:16});
 export function raidPressureCandidateForVersion(version=1){
  if(version===1)return LEGACY_RAID_PRESSURE_CANDIDATE;
+ if(version===2)return SECOND_RAID_PRESSURE_CANDIDATE;
  if(version===RAID_PRESSURE_CANDIDATE.version)return RAID_PRESSURE_CANDIDATE;
  throw Error('Unknown raid pressure candidate version');
 }
@@ -30,14 +32,21 @@ export function updateRaidPressureMemory(previous,d,value,config=RAID_PRESSURE_C
 export function raidPressure(d,value){
  day(d);finite(value,'agricultural value');return Math.max(0,Math.min(1,.45*(d-1)/99+.55*Math.log1p(value/1000)/Math.log(26)));
 }
-export function raidPressureSummary(d,value,memory){
+export function raidAnimalCount(d,p,config=RAID_PRESSURE_CANDIDATE){
+ day(d);pressure(p);if(d<=5)return 1;
+ const power=config.countPower??1,start=config.introCountStart??null,rise=config.introCountRise??0;
+ if(!(power>0&&power<=1)||start!==null&&(!Number.isSafeInteger(start)||start<1||start>34)||!Number.isSafeInteger(rise)||rise<0||rise>34)throw Error('Invalid raid count recipe');
+ const count=Math.round(4+30*Math.pow(p,power));
+ return start===null?count:Math.min(count,start+rise*Math.min(d-6,34));
+}
+export function raidPressureSummary(d,value,memory,config=RAID_PRESSURE_CANDIDATE){
  day(d);finite(value,'agricultural value');validateRaidPressureMemory(memory);if(memory.lastDay!==d)throw Error('Plan requires current night EMA sample');
  // EMA is idempotent; caller owns/persists a selected plan, never rerolls it.
  const effectiveValue=Math.max(value,memory.ema),p=raidPressure(d,effectiveValue);
- return {night:d,observedValue:value,capturedValue:memory.sample,effectiveValue,pressure:p,targetAnimals:d<=5?1:Math.round(4+30*p),areaCap:1+Math.floor(6*p),introductory:d<=5};
+ return {night:d,observedValue:value,capturedValue:memory.sample,effectiveValue,pressure:p,targetAnimals:raidAnimalCount(d,p,config),areaCap:1+Math.floor(6*p),introductory:d<=5};
 }
-export function raidSpeciesPressure(id,p,balance=B){
- pressure(p);const i=IDS.indexOf(id),a=balance.animals.find(a=>a.id===id);if(i<0||!a)throw Error('Unknown raid species');const extra=Math.floor(2*p);
+export function raidSpeciesPressure(id,p,balance=B,config=RAID_PRESSURE_CANDIDATE){
+ pressure(p);const i=IDS.indexOf(id),a=balance.animals.find(a=>a.id===id);if(i<0||!a)throw Error('Unknown raid species');const steps=config.hitPressureSteps??2;if(!Number.isSafeInteger(steps)||steps<0||steps>8)throw Error('Invalid raid hit recipe');const extra=Math.floor(steps*p);
  return {id,minHits:a.hit_budget_min+extra,maxHits:a.hit_budget_max+extra,cropDamage:CROP[i]+Math.floor(1.5*p),structureDamage:Math.round(a.structure_hit_damage*(1+.5*p)),attackRadius:RADII[i]*(1+.3*p),areaCap:1+Math.floor(6*p)};
 }
 export function raidCompositionWeights(p,unlocked){
@@ -70,7 +79,7 @@ export function referenceRaidArea(spec,config=RAID_PRESSURE_CANDIDATE){
 export function raidProductEnvelope(counts,p,config=RAID_PRESSURE_CANDIDATE,balance=B){
  if(!counts||Object.keys(counts).some(id=>!IDS.includes(id)))throw Error('Unknown composition fields');
  const total=Object.values(counts).reduce((n,v)=>n+v,0);if(!Number.isSafeInteger(total)||total<1||total>34)throw Error('Unbounded product cohort');
- const rows=IDS.map(id=>{const count=counts[id]??0;if(!Number.isSafeInteger(count)||count<0)throw Error('Invalid composition count');const s=raidSpeciesPressure(id,p,balance),area=referenceRaidArea(s,config);
+ const rows=IDS.map(id=>{const count=counts[id]??0;if(!Number.isSafeInteger(count)||count<0)throw Error('Invalid composition count');const s=raidSpeciesPressure(id,p,balance,config),area=referenceRaidArea(s,config);
   return {...s,count,area:area.effective,minProduct:count*s.minHits*s.cropDamage*area.effective,meanProduct:count*(s.minHits+s.maxHits)/2*s.cropDamage*area.effective,maxProduct:count*s.maxHits*s.cropDamage*area.effective,minStructureProduct:count*s.minHits*s.structureDamage,meanStructureProduct:count*(s.minHits+s.maxHits)/2*s.structureDamage,maxStructureProduct:count*s.maxHits*s.structureDamage};});
  const sum=k=>rows.reduce((n,r)=>n+r[k],0),mean=sum('meanProduct'),min=sum('minProduct');
  if(!(config.qMeanMultiplier>0&&config.qMeanMultiplier<=2))throw Error('Invalid Q multiplier');
@@ -109,7 +118,7 @@ export function selectBudgetedRaid({night,pressure:p,unlocked,rng,postgame=false
  if(postgame)return {status:'peaceful-postgame',actors:[],rng,draws:0};
  validateRaidPressureRuntimeConfig(config);
  if(night<=5){const a=balance.animals[night-1];return {introductory:true,actors:[{species:a.id,hits:a.hit_budget_min}],rng,draws:0,scope:'Existing introduction min-hits and actor; runtime intro cap remains authoritative'};}
- const targetAnimals=Math.round(4+30*p),plan=planRaidProductComposition(targetAnimals,p,unlocked,config,balance,qBudget);
+ const targetAnimals=raidAnimalCount(night,p,config),plan=planRaidProductComposition(targetAnimals,p,unlocked,config,balance,qBudget);
  if(plan.status!=='planned')return {status:'infeasible-budget',targetAnimals,plan,rng,draws:0,actors:[]};
  const {counts,envelope}=plan,remaining={...counts},actors=[];let spentProduct=0,draws=0;
  for(let left=targetAnimals;left>0;left--){
@@ -143,6 +152,6 @@ function equalConfig(a,b){
  const ka=Object.keys(a).sort(),kb=Object.keys(b).sort();return ka.length===kb.length&&ka.every((k,i)=>k===kb[i]&&equalConfig(a[k],b[k]));
 }
 export function validateRaidPressureConfiguration(json,balance=B){
- const expected={version:2,status:'pure-unintegrated-candidate',pressure:{dayWeight:.45,valueWeight:.55,valueScale:1000,logDenominator:26,firstNight:1,lastNight:100},ema:{alpha:1/3,nominalWindowNights:5,update:'once-per-night-plan',effective:'max(current agricultural value, EMA)'},composition:{initial:[1,0,0,0,0],final:SHARES,species:IDS,interpolation:'linear-pressure; renormalize native unlocked; Hamilton integer rounding'},reference:{spacing:1.5,coneRadians:Math.PI/2,centralWeight:1,peripheralWeight:.5},q:{meanMultiplier:1.5,unit:'reference agricultural HP points',round:'floor half-point',feasibility:'at least cheapest legal capped worst-case product',selection:'adjust composition before RNG; full native-range hit rolls'},waveActiveLimit:16,speciesCropBaseDamage:CROP,speciesBaseAttackRadii:RADII,structureRounding:'Math.round'};
+ const expected={version:3,population:{base:4,span:30,pressurePower:.5,introStartAtNight6:8,introRisePerNight:2},hitPressureSteps:4,status:'pure-unintegrated-candidate',pressure:{dayWeight:.45,valueWeight:.55,valueScale:1000,logDenominator:26,firstNight:1,lastNight:100},ema:{alpha:1/3,nominalWindowNights:5,update:'once-per-night-plan',effective:'max(current agricultural value, EMA)'},composition:{initial:[1,0,0,0,0],final:SHARES,species:IDS,interpolation:'linear-pressure; renormalize native unlocked; Hamilton integer rounding'},reference:{spacing:1.5,coneRadians:Math.PI/2,centralWeight:1,peripheralWeight:.5},q:{meanMultiplier:1.5,unit:'reference agricultural HP points',round:'floor half-point',feasibility:'at least cheapest legal capped worst-case product',selection:'adjust composition before RNG; full native-range hit rolls'},waveActiveLimit:16,speciesCropBaseDamage:CROP,speciesBaseAttackRadii:RADII,structureRounding:'Math.round'};
  if(!equalConfig(json,expected))throw Error('Canonical pressure config/runtime drift');validateRaidPressureSource(balance);return json;
 }

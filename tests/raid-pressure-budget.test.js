@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {BALANCE as B} from '../src/simulation/balance.js';
-import {agriculturalRaidValue,validateRaidPressureMemory,updateRaidPressureMemory,raidPressure,raidPressureSummary,raidSpeciesPressure,raidCompositionWeights,raidCompositionCounts,referenceRaidArea,raidProductEnvelope,selectBudgetedRaid,planRaidProductComposition,validateRaidPressureConfiguration,validateRaidPressureRuntimeConfig,validateRaidPressureSource,RAID_PRESSURE_CANDIDATE as C} from '../src/simulation/raid-pressure-budget.js';
+import {agriculturalRaidValue,raidAnimalCount,validateRaidPressureMemory,updateRaidPressureMemory,raidPressure,raidPressureSummary,raidSpeciesPressure,raidCompositionWeights,raidCompositionCounts,referenceRaidArea,raidProductEnvelope,selectBudgetedRaid,planRaidProductComposition,validateRaidPressureConfiguration,validateRaidPressureRuntimeConfig,validateRaidPressureSource,RAID_PRESSURE_CANDIDATE as C} from '../src/simulation/raid-pressure-budget.js';
 const ids=B.animals.map(a=>a.id);
 test('V uses only native living agricultural base value, not cash/maturity/magic bonuses',()=>{
  const plants=B.crops.map(c=>({species:c.id,alive:true,growth:999,multiplyHarvest:true,harvestBonus:999}));assert.equal(agriculturalRaidValue(plants),577);
@@ -27,7 +27,7 @@ test('P follows independent formula with clamping and growing/retiring agricultu
 test('species formulas apply jointly with no cash-dependent input',()=>{
  const bases=[1,1,2,2,3],radii=[.7,1.2,2,1.6,2.8];
  for(let i=0;i<ids.length;i++)for(const p of [0,.49,.5,.66,1]){
-  const s=raidSpeciesPressure(ids[i],p),a=B.animals[i];assert.equal(s.minHits,a.hit_budget_min+Math.floor(2*p));assert.equal(s.maxHits,a.hit_budget_max+Math.floor(2*p));assert.equal(s.cropDamage,bases[i]+Math.floor(1.5*p));assert.equal(s.structureDamage,Math.round(a.structure_hit_damage*(1+.5*p)));assert.equal(s.attackRadius,radii[i]*(1+.3*p));assert.equal(s.areaCap,1+Math.floor(6*p));
+  const s=raidSpeciesPressure(ids[i],p),a=B.animals[i];assert.equal(s.minHits,a.hit_budget_min+Math.floor(4*p));assert.equal(s.maxHits,a.hit_budget_max+Math.floor(4*p));assert.equal(s.cropDamage,bases[i]+Math.floor(1.5*p));assert.equal(s.structureDamage,Math.round(a.structure_hit_damage*(1+.5*p)));assert.equal(s.attackRadius,radii[i]*(1+.3*p));assert.equal(s.areaCap,1+Math.floor(6*p));
  }
 });
 test('mixture interpolates weak opening to final proportions, preserves unlocks and finite rounding',()=>{
@@ -45,7 +45,7 @@ test('reference directional area is below cap when radius/spacing cannot reach n
 });
 test('Q controls joint product without deleting animals or materializing composition lists',()=>{
  for(const p of [0,.1,.5,.9,1])for(const seed of [1,712,2026]){
-  const result=selectBudgetedRaid({night:6,pressure:p,unlocked:ids,rng:seed});assert.equal(result.status,'selected');assert.equal(result.actors.length,Math.round(4+30*p));assert.equal(result.draws,result.actors.length*2);assert.ok(result.spentProduct<=result.envelope.q+1e-9);
+  const result=selectBudgetedRaid({night:6,pressure:p,unlocked:ids,rng:seed});assert.equal(result.status,'selected');assert.equal(result.actors.length,raidAnimalCount(6,p));assert.equal(result.draws,result.actors.length*2);assert.ok(result.spentProduct<=result.envelope.q+1e-9);
   assert.equal(result.spentProduct,result.actors.reduce((n,a)=>n+a.product,0));assert.ok(result.waves.every(w=>w.length<=16));assert.equal(result.waves.flat().length,result.actors.length);
   for(const a of result.actors){const s=raidSpeciesPressure(a.species,p);assert.ok(a.hits>=s.minHits&&a.hits<=s.maxHits);}
  }
@@ -60,7 +60,7 @@ test('introductions keep original one actor/min budget without new random draws'
 });
 test('explicit infeasible Q rejects composition before any random draw',()=>{
  const plan=planRaidProductComposition(34,1,ids,C,B,0);assert.equal(plan.status,'infeasible-budget');assert.equal(plan.counts,null);
- const r=selectBudgetedRaid({night:6,pressure:1,unlocked:ids,rng:712,qBudget:0});assert.equal(r.status,'infeasible-budget');assert.equal(r.rng,712);assert.equal(r.draws,0);assert.deepEqual(r.actors,[]);assert.equal(r.targetAnimals,34);
+ const r=selectBudgetedRaid({night:6,pressure:1,unlocked:ids,rng:712,qBudget:0});assert.equal(r.status,'infeasible-budget');assert.equal(r.rng,712);assert.equal(r.draws,0);assert.deepEqual(r.actors,[]);assert.equal(r.targetAnimals,8);
 });
 test('invalid inputs reject bounded work instead of propagating unsafe values',()=>{
  for(const p of [-1,NaN,Infinity,1.1])assert.throws(()=>raidSpeciesPressure('rhino',p));assert.throws(()=>raidPressure(0,0));assert.throws(()=>raidPressure(1,-1));assert.throws(()=>raidCompositionCounts(10000,1,ids));assert.throws(()=>referenceRaidArea({attackRadius:100,areaCap:7}));assert.throws(()=>selectBudgetedRaid({night:6,pressure:1,unlocked:ids,rng:1,config:{...C,activeWaveLimit:0}}));
@@ -97,4 +97,14 @@ test('strict config/source contracts reject unknown keys, drift, malformed numbe
  for(const mutate of [c=>c.pressure.dayWeight=.5,c=>c.q.meanMultiplier=.5,c=>c.reference.spacing=0,c=>c.unknown=true,c=>c.ema.alpha=NaN,c=>c.structureRounding='none']){const c=structuredClone(original);mutate(c);assert.throws(()=>validateRaidPressureConfiguration(c));}
  for(const mutate of [b=>b.work_center.cost=600,b=>b.workers.young_wage=39,b=>b.crops[0].plant_cost=4,b=>b.crops[0].base_harvest_value=33,b=>b.animals[0].hit_budget_max=5,b=>b.animals[0].structure_hit_damage=10]){const b=structuredClone(B);mutate(b);assert.throws(()=>validateRaidPressureSource(b));}
  assert.throws(()=>validateRaidPressureRuntimeConfig({...C,qMeanMultiplier:.5}));assert.throws(()=>validateRaidPressureRuntimeConfig({...C,unknown:1}));
+});
+
+test('candidate-3 count warmup and joint hit progression match the selected native-pressure preflight',()=>{
+ assert.equal(raidAnimalCount(6,1),8);assert.equal(raidAnimalCount(7,1),10);assert.equal(raidAnimalCount(8,1),12);assert.equal(raidAnimalCount(100,1),34);
+ assert.equal(raidAnimalCount(14,.3227955420253256),21);
+ for(let d=1;d<=5;d++)assert.equal(raidAnimalCount(d,1),1);
+ const counts=raidCompositionCounts(21,.3227955420253256,ids.slice(0,4)),envelope=raidProductEnvelope(counts,.3227955420253256);
+ assert.equal(envelope.mean,129.5);assert(envelope.max<=envelope.q);
+ for(const config of [{...C,countPower:0},{...C,introCountStart:-1},{...C,introCountRise:NaN}])assert.throws(()=>raidAnimalCount(6,.5,config));
+ assert.throws(()=>raidSpeciesPressure('warthog',.5,B,{...C,hitPressureSteps:NaN}));
 });
