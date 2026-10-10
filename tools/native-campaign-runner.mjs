@@ -139,6 +139,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',profile='
     labourReserve:labourReserve(1),maintenanceReserve:maintenanceReserve(),
     defenseReserve:defense?.reserve(s)??0,living:s.plants.filter(p=>p.alive).length,
     pendingTasks:s.tasks.length}));
+   raidEvidence.observe(s);
    const tickStart=s.elapsed,tickTime=s.time;
    Game.tick(s,dt,nav);evidence?.finishDecision(s);
    const actualDt=s.elapsed-tickStart,daylightDt=tickTime<300?Math.min(actualDt,300-tickTime):0;daylightSeconds+=daylightDt;
