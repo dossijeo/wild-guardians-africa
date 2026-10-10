@@ -19,18 +19,28 @@ are not matched and the existing silent reading fallback is used.
 
 ## Evidence so far
 
-86 focused tests pass: native commands, target isolation, maturity, repeated
+135 final focused tests pass: native commands, target isolation, maturity, repeated
 blessings, save/load, exact gesture handling, selection expiry, VFX lifecycle,
 spell cards, tutorials and unlock audio. A separate 41-test suite includes five
 300-night postgame controls; all pass with agricultural reminders updated.
 The Vite build passes. These are CPU/domain/geometry tests, not visual GPU QA.
+The seven-night compatibility pilot completes seven native incursions, five
+save/reloads and 38 physically delivered crates (final balance 2,355). Its legacy
+one-worker strategy is a compatibility control, not new-balance acceptance.
 
 The initial full test-suite attempt was stopped in the legacy 100-night
 active-farm test after discovering it still used the old strategy. Its partial
 output is diagnostic, not a completed campaign or economic defeat. That harness
 now uses the shared single-plant native policy and awaits another run. The
-clock test also exposed an exact floating-point timestamp comparison that needs
-baseline verification before changing anything unrelated.
+clock test also exposed an exact floating-point timestamp comparison. It fails
+identically on untouched main 8f3c0021 (0.05 versus 0.05000000000001137 in raid
+metadata); this baseline failure is independent of agricultural magic. The
+timestamp comparison now uses the test's existing epsilon; all other raid
+facts remain exact. Four historical entry-prototype failures also reproduced on
+main. Their original seven-file-plus source is frozen at 6b253ac2 and hash-checked
+against the retained reports. Current-selector tests now require exterior entry
+and wall interception instead of expecting the former interior-spawn defect.
+All seven prototype tests pass; no entry or attack implementation was changed.
 
 ## Controlled native daytime comparison
 
@@ -56,7 +66,11 @@ initial-native-journals retains a failed observer attempt: slicing a capped
 event list missed deliveries. native-journals-v2 fixes event observation and
 checks reconciliation. native-journals-v3 additionally captures completed
 growth effects without losing them to the event ring. Historical inputs and
-outcomes are retained; no dataset is overwritten.
+outcomes are retained; no dataset is overwritten. native-journals-v4 repeats
+the comparison after the final point-overlap/observer refinements, with explicit
+source commit and source hashes, distinct benefited identities, actual extra
+growth, effect execution duration and CPU decision timings. Its incomes and
+delivered counts are identical to v3.
 
 ## Activity accounting and integration gate
 
