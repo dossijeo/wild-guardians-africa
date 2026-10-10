@@ -19,7 +19,10 @@ Validate Game run38012364832 on e2d92c1e is terminal failure: 3790 of3792
 checks passed. The two failures are obsolete generated SFX source hashes and
 line references, corrected by main6faa09b0. All126 catalogue rows have identical
 semantics and all3 local SFX checks pass; [the original log and receipt](ci-navigation-audit-2026-10-10/receipt.json)
-are retained. Replacement run38013118033 is live, not yet accepted.
+are retained. Replacement run38013118033 is terminal success: all3792
+tests, resource/source checks, build and direct itch package validation pass.
+[Its original log and metadata](validate-main-38013118033/README.md) are retained.
+This web CI result does not close Windows or campaign/physical QA gates.
 Windows run38012364835 is terminal failure at90007ms/87% displayed, with
 readyGateReached=false. Build and installer pass; world readiness remains open.
 [The independently verified original artifact](windows-loading-regression/normal-e2-38012364835/review.md)
