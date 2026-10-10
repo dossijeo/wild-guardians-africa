@@ -36,12 +36,24 @@ export function createNativeRaidCampaignEvidence(initial){
   if(events.filter(e=>e.type==='RaidSpawned').length>1)issue('Multiple unobserved cohorts in one observation');
   if(spawnAt>=0){if(current&&!current.ended)issue('Spawn observed before previous raid ended');begin(s,events.slice(spawnAt+1),events[spawnAt]);}
   let pendingCrop=0,pendingStructure=0;
+  const areaContacts=new Map();
   for(const e of events){
    observedEvents.add(e.id);
    if(e.type==='RaidSpawned')continue;
    if(!current){if(['CropHit','StructureHit','AnimalLogicalHit','AnimalLogicalMiss','RaidEnded'].includes(e.type))issue('Raid fact without captured cohort');continue;}
    const r=current;
-   if(e.type==='CropHit'){r.cropHits++;pendingCrop++;}
+   if(e.type==='CropHit'){
+    r.cropHits++;
+    if(e.attackId){
+     assert.ok(typeof e.animalId==='string'&&Number.isFinite(e.before)&&Number.isFinite(e.after)&&e.after>=e.before&&e.after<=2);
+     assert.ok(Math.abs(e.damage-(e.after-e.before))<1e-9,'Crop damage must equal native clamped HP receipt');
+     const hit=areaContacts.get(e.attackId)??{animalId:e.animalId,plants:new Set()};
+     assert.equal(hit.animalId,e.animalId);assert.ok(!hit.plants.has(e.targetId),'Duplicate plant receipt for one attack');
+     hit.plants.add(e.targetId);areaContacts.set(e.attackId,hit);
+     r.agriculturalHpDamage=(r.agriculturalHpDamage??0)+e.damage;
+     const key=e.central?'centralHpDamage':'peripheralHpDamage';r[key]=(r[key]??0)+e.damage;
+    }else pendingCrop++;
+   }
    if(e.type==='CropDestroyed'){
     const p=s.plants.find(p=>p.id===e.targetId);if(!p){issue('Destroyed plant identity missing');continue;}
     assert.equal(p.alive,false);r.cropsDestroyed++;r.cropReplacementCost+=cropSpec(p.species).plant_cost;r.lostBaseHarvestValue+=cropSpec(p.species).base_harvest_value;
@@ -60,6 +72,7 @@ export function createNativeRaidCampaignEvidence(initial){
     else {
      r.logicalContacts++;v.contacts++;
      if(e.presentation?.shield){r.shieldContacts++;v.shieldContacts++;}
+     else if(areaContacts.has(e.attackId)){v.cropHits++;areaContacts.delete(e.attackId);}
      else if(pendingCrop){v.cropHits++;pendingCrop--;}
      else if(pendingStructure){v.structureHits++;pendingStructure--;}
      else issue('Unshielded logical contact lacks native damage fact');
@@ -67,7 +80,7 @@ export function createNativeRaidCampaignEvidence(initial){
    }
    if(e.type==='RaidEnded'){r.ended=true;r.endedAt=s.elapsed;current=null;}
   }
-  if(pendingCrop||pendingStructure)issue('Native damage lacks associated logical contact in observation window');
+  if(pendingCrop||pendingStructure||areaContacts.size)issue('Native damage lacks associated logical contact in observation window');
   lastEvent=s.events.at(-1)?.id??lastEvent;lastElapsed=s.elapsed;previousLiving=s.plants.filter(p=>p.alive).length;
  }
  if(initial.raid)issue('Observer created during active raid; initial cohort budget unknown');
