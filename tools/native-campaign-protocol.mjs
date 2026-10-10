@@ -41,3 +41,8 @@ export function villageSavingsFromTotals(policy,income,spent){
  for(const n of [income,spent])if(!Number.isSafeInteger(n)||n<0)throw Error('Invalid settled savings totals');
  return policy.cashPolicy==='progressive-village'?Math.min(2000,Math.max(0,Math.floor(income/5)-spent)):0;
 }
+
+export function campaignProtocolForLabour(name='legacy'){
+ if(!['legacy','q4'].includes(name))throw Error('Unknown native labour policy');
+ return name==='legacy'?NATIVE_CAMPAIGN_PROTOCOL:Object.freeze({...NATIVE_CAMPAIGN_PROTOCOL,id:NATIVE_CAMPAIGN_PROTOCOL.id+'-q4',labourPolicy:'native backlog and settled cash, one productive-centre daily contract; proportional additions',backlogPerWorker:6});
+}
