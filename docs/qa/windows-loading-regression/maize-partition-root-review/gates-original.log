@@ -1,0 +1,65 @@
+TAP version 13
+# Subtest: all40 stages/32 authored transitions partition once with exact extras, transforms and primitive semantics
+ok 1 - all40 stages/32 authored transitions partition once with exact extras, transforms and primitive semantics
+  ---
+  duration_ms: 14.8632
+  ...
+# Subtest: real meshopt decoder preserves every compressed slice and decoded attribute/index bit pattern
+ok 2 - real meshopt decoder preserves every compressed slice and decoded attribute/index bit pattern
+  ---
+  duration_ms: 9825.7273
+  ...
+# Subtest: material/UV/sampler definitions remain exact; every original image stored once with shared URI and unchanged WebP bytes
+ok 3 - material/UV/sampler definitions remain exact; every original image stored once with shared URI and unchanged WebP bytes
+  ---
+  duration_ms: 31.7156
+  ...
+# Subtest: repeat generation is byte deterministic, refuses production output and leaves original assets/manifests unchanged
+ok 4 - repeat generation is byte deterministic, refuses production output and leaves original assets/manifests unchanged
+  ---
+  duration_ms: 553.5722
+  ...
+# Subtest: failure report observes loading UI without converting it into readiness or masking failure
+ok 5 - failure report observes loading UI without converting it into readiness or masking failure
+  ---
+  duration_ms: 6.3714
+  ...
+# Subtest: early failure tolerates loading elements not yet created
+ok 6 - early failure tolerates loading elements not yet created
+  ---
+  duration_ms: 1.6637
+  ...
+# Subtest: an observation fault preserves the original failure and still publishes the report
+ok 7 - an observation fault preserves the original failure and still publishes the report
+  ---
+  duration_ms: 1.4296
+  ...
+# Subtest: world wait stops at the ready gate and excludes the later five-minute visibility test
+ok 8 - world wait stops at the ready gate and excludes the later five-minute visibility test
+  ---
+  duration_ms: 1.2737
+  ...
+# Subtest: original finish reads readiness exactly once without masking original gate failure
+ok 9 - original finish reads readiness exactly once without masking original gate failure
+  ---
+  duration_ms: 2.6163
+  ...
+# Subtest: desktop visibility fixture uses paid native first-night gameplay and survives hidden restoration unchanged
+ok 10 - desktop visibility fixture uses paid native first-night gameplay and survives hidden restoration unchanged
+  ---
+  duration_ms: 920.8801
+  ...
+# Subtest: WorldScene.load passes its real local early-region owner to later attachment
+ok 11 - WorldScene.load passes its real local early-region owner to later attachment
+  ---
+  duration_ms: 602.6707
+  ...
+1..11
+# tests 11
+# suites 0
+# pass 11
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10962.0365
