@@ -1,0 +1,17 @@
+{
+  "gitHead": "0f438944baf9a3f0db04aa73dc8a4f8f9919cee6",
+  "baselineRef": null,
+  "sourceHashes": {
+    "src/simulation/raids.js": "ebe6046be930ea7471b1f2234c4c332eb3b3f2dc192ae1b0e8b0e7d51408633b",
+    "src/simulation/raid-contention.js": "e915994e1d4fbe3ee1328cd8fc79d4c842769e13a3838d361b10157c00f5972d",
+    "src/simulation/defensive-groups.js": "9baf067afa9d882ef8fffb56164a0a55b73dc5da1f7a716291614bf5c48d146e",
+    "src/simulation/raid-target-reservations.js": "f75a97adb1d513d9bca838956eb767bad502af3908f201d41daff747fdceb4b9",
+    "src/simulation/actor-motion.js": "37d17c7045a937f0f3633c175efd566d7d38c271a2a9b5e152e97b1f25527c18",
+    "src/world/navigation.js": "68957cd8e407e6e6cd944af8fc5bfd7bc1f14c39bbc52f302884c2d2e6cf70a1",
+    "src/world/wall-collision-frame.js": "88f456e37302c17e03663863f9ce33744c2d7f20f43e876a236049c91e77c8c3",
+    "tools/probe-raid-reservation-saturation.mjs": "a7becdf7632e1734addf2849f26431861a29ba6aec3ba5099b1d9c69887bec56",
+    "tools/probe-individual-raid-reservations.mjs": "63c59fb80af42cd0e099a32684763f4a6c70a64893bd7cfc2dfe2f0e6a43d4ad",
+    "tools/raid-reservation-baseline-loader.mjs": "bdf6d750d7b60d65b8c60317285dd07f32d5a061cca28175e718fec32f20c8a9"
+  },
+  "scope": "Controlled synthetic fixture, native actor/RNG/hits and wall collision. CPU-only update timings; no GPU/render, campaign economy or acceptance. Baseline loader substitutes immutable core Git blobs only, identical common fixture/metrics. Conservative final-pose flags require diagnosis; actual movement uses native swept checks."
+}

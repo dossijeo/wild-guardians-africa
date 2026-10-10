@@ -110,3 +110,5 @@ area-magic fixtures; the initial two failures remain in joint-policy-first.tap.
 The combined Vite build passes in 19.10 seconds on this machine. These are
 functional checkpoints, not campaign acceptance. Browser QA remains unavailable
 through the previously documented official runtime initialization error.
+
+Pilot v1 was refused before simulation because the generated English message catalog remained unstaged. This is retained as a harness freeze error, with zero native campaign days, not a defeat. Freeze the catalog and use a fresh v2 evidence directory.
