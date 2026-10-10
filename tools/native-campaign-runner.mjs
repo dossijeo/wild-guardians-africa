@@ -19,7 +19,7 @@ import {createNativeExpandingDefensePolicy} from './native-expanding-defense-pol
 import {createNativeCampaignEvidence} from './native-campaign-evidence.mjs';
 import {createNativeRaidCampaignEvidence} from './native-raid-campaign-evidence.mjs';
 import {NativeCampaignEntryDriver} from './native-campaign-entry-driver.mjs';
-import {nativeCampaignStrategy,campaignMagicAllowed,affordableOpening,villageSavingsFromTotals,campaignProtocolForLabour,NATIVE_CAMPAIGN_PROTOCOL} from './native-campaign-protocol.mjs';
+import {nativeCampaignStrategy,campaignMagicAllowed,affordableOpening,villageSavingsForState,campaignProtocolForLabour,NATIVE_CAMPAIGN_PROTOCOL} from './native-campaign-protocol.mjs';
 import {createNativeCampaignPlots} from './native-campaign-plots.mjs';
 import {createNativeCampaignExpansion} from './native-campaign-expansion.mjs';
 
@@ -57,7 +57,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
  const nextSpecies=()=>mixed&&s.day>=10&&numberOf(s.ledger.balance)>1000?['mijo','girasol','sorgo','maiz','batata','algodon','yuca','platano'][plantedSequence%8]:'mijo';
  const labourReserve=(additional=0)=>q4?q4RecoveryReserve(s,worker.wage):policy.cashPolicy==='progressive-village'?Math.max(nextWages,Math.ceil((s.plants.filter(p=>p.alive).length+additional)/plantsPerWorker)*worker.wage):nextWages;
  const maintenanceReserve=()=>policy.repair?s.tasks.filter(t=>t.kind==='repair').reduce((n,t)=>{const c=s.structures.find(c=>c.id===t.targetId);return n+(c?Math.ceil(numberOf(Game.repairCost(c))):0);},0):0;
- const savingsReserve=(additional=0)=>Math.min(villageSavingsFromTotals(policy,settledDeliveryIncome,expansion?.paidVillageCoins()??0),Math.max(0,numberOf(s.ledger.balance)-labourReserve(additional)-maintenanceReserve()-cropSpec(nextSpecies()).plant_cost));
+ const savingsReserve=(additional=0)=>Math.min(villageSavingsForState(policy,s,settledDeliveryIncome,expansion?.paidVillageCoins()??0),Math.max(0,numberOf(s.ledger.balance)-labourReserve(additional)-maintenanceReserve()-cropSpec(nextSpecies()).plant_cost));
  const plant=()=>{
   const species=nextSpecies();if(numberOf(s.ledger.balance)<labourReserve(1)+maintenanceReserve()+(defense?.reserve(s)??0)+savingsReserve(1)+cropSpec(species).plant_cost)return false;
   const p=choosePlot();if(!p)return false;

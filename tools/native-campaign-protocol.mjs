@@ -1,4 +1,5 @@
 // Preselected comparison, not an adaptive search for winning seeds.
+import {villageCost} from '../src/simulation/rules.js';
 export const NATIVE_CAMPAIGN_SEEDS=Object.freeze([712,123,2026]);
 const productiveNoWalls=Object.freeze({defend:false,repair:false,foundVillages:false,middayHiring:true,cashPolicy:'minimum-reinvestment',shield:true});
 export const NATIVE_CAMPAIGN_STRATEGIES=Object.freeze({
@@ -39,9 +40,17 @@ export function villageSavingsTarget(policy,entries){
  return villageSavingsFromTotals(policy,income,spent);
 }
 
-export function villageSavingsFromTotals(policy,income,spent){
+export function villageSavingsFromTotals(policy,income,spent,nextCost=villageCost(2)){
  for(const n of [income,spent])if(!Number.isSafeInteger(n)||n<0)throw Error('Invalid settled savings totals');
- return policy.cashPolicy==='progressive-village'?Math.min(2000,Math.max(0,Math.floor(income/5)-spent)):0;
+ if(typeof nextCost!=='bigint'&&!Number.isSafeInteger(nextCost)||BigInt(nextCost)<1n)throw Error('Invalid next village quote');
+ if(policy.cashPolicy!=='progressive-village')return 0;
+ const earned=BigInt(income)/5n-BigInt(spent),limit=BigInt(nextCost);
+ // Earned is bounded by the checked safe totals, even when the quote is huge.
+ return earned<=0n?0:Number(earned<limit?earned:limit);
+}
+export function villageSavingsForState(policy,state,income,spent){
+ // Survival decisions do not park scarce wages/repair cash for locked villages.
+ return state.postgame?villageSavingsFromTotals(policy,income,spent,villageCost(state.villages.length+1)):0;
 }
 
 export function campaignProtocolForLabour(name='legacy'){
