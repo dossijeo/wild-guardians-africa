@@ -1,0 +1,908 @@
+{
+  "checks": {
+    "audio": {
+      "channels": 2,
+      "id": "amb_wind_soft",
+      "sampleRate": 44100,
+      "seconds": 12,
+      "url": "assets/audio/861578037e994d78d4730970c542ff330f4adb680372feae4f89a19525ba507c.opus"
+    },
+    "audioSeconds": 12,
+    "loadingAtFinish": {
+      "canvas": {
+        "height": 720,
+        "width": 1028
+      },
+      "displayedProgress": null,
+      "focused": true,
+      "phaseLabel": null,
+      "readyGateReached": true,
+      "scope": "Presentation snapshot only; displayed progress and canvas dimensions do not establish world readiness or GPU identity.",
+      "stageBusy": "false",
+      "visibility": "visible",
+      "worldWaitMs": 70924
+    },
+    "loadingReadinessAtFinish": {
+      "context": {
+        "contextLost": false,
+        "renderer": "WebKit WebGL",
+        "scope": "Existing World renderer context at finish only; identity is not a measured cause.",
+        "unmaskedRenderer": "ANGLE (Microsoft, Microsoft Basic Render Driver (0x0000008C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "unmaskedVendor": "Google Inc. (Microsoft)",
+        "vendor": "WebKit",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+      },
+      "readiness": {
+        "actors": null,
+        "chunks": {
+          "busy": false,
+          "busyJob": null,
+          "closed": false,
+          "created": 25,
+          "desired": 25,
+          "discarded": 0,
+          "epoch": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "loaded": 25,
+          "omittedWaiters": 0,
+          "queued": 0,
+          "scope": "Existing queue only. whenReady defaults to a nine-chunk subset; outer work may continue. A null waiter minimum denotes idle waiting, not zero required chunks.",
+          "waiterCount": 0,
+          "waiterMinimums": []
+        },
+        "compilation": {
+          "active": [],
+          "at": 101939.59999999998,
+          "completed": 94,
+          "droppedIdentities": 0,
+          "droppedJobs": 0,
+          "faults": 0,
+          "lastFinished": {
+            "associationCount": 14,
+            "associationOmitted": 0,
+            "associations": [
+              {
+                "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,uv,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,66691,131075,srgb,native-asset-surface-v4|map-bias=0.65|native-obstruction|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|illustrated-4.1.6|MeshStandardMaterial|resident",
+                "cacheKeyTruncated": false,
+                "current": false,
+                "firstObservedSelection": {
+                  "job": 15,
+                  "phase": "warm-compile-world"
+                },
+                "materialId": 47,
+                "materialName": "",
+                "materialType": "MeshStandardMaterial",
+                "materialUuid": "817d09fc-e3a8-4a4f-a135-9b94ea999293",
+                "programId": 21,
+                "programName": "",
+                "side": 0
+              },
+              {
+                "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,uv,false,false,false,false,uv,false,false,uv,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,66691,131075,srgb,native-asset-surface-v4|map-bias=0.65|native-obstruction|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|illustrated-4.1.6|MeshStandardMaterial|resident",
+                "cacheKeyTruncated": false,
+                "current": true,
+                "firstObservedSelection": {
+                  "job": 79,
+                  "phase": "warm-prepare-depth"
+                },
+                "materialId": 47,
+                "materialName": "",
+                "materialType": "MeshStandardMaterial",
+                "materialUuid": "817d09fc-e3a8-4a4f-a135-9b94ea999293",
+                "programId": 32,
+                "programName": "",
+                "side": 0
+              },
+              {
+                "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,uv,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,66691,131075,srgb,native-asset-surface-v4|map-bias=0.65|native-obstruction|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|illustrated-4.1.6|MeshStandardMaterial|resident",
+                "cacheKeyTruncated": false,
+                "current": false,
+                "firstObservedSelection": {
+                  "job": 15,
+                  "phase": "warm-compile-world"
+                },
+                "materialId": 48,
+                "materialName": "",
+                "materialType": "MeshStandardMaterial",
+                "materialUuid": "5bb6ae20-054d-4c5d-8010-6c4e4c4cee65",
+                "programId": 21,
+                "programName": "",
+                "side": 0
+              },
+              {
+                "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,uv,false,false,false,false,uv,false,false,uv,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,66691,131075,srgb,native-asset-surface-v4|map-bias=0.65|native-obstruction|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|illustrated-4.1.6|MeshStandardMaterial|resident",
+                "cacheKeyTruncated": false,
+                "current": true,
+                "firstObservedSelection": {
+                  "job": 79,
+                  "phase": "warm-prepare-depth"
+                },
+                "materialId": 48,
+                "materialName": "",
+                "materialType": "MeshStandardMaterial",
+                "materialUuid": "5bb6ae20-054d-4c5d-8010-6c4e4c4cee65",
+                "programId": 32,
+                "programName": "",
+                "side": 0
+              },
+              {
+                "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,uv,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,66691,131075,srgb,native-asset-surface-v4|map-bias=0.65|native-obstruction|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|illustrated-4.1.6|MeshStandardMaterial|resident",
+                "cacheKeyTruncated": false,
+                "current": false,
+                "firstObservedSelection": {
+                  "job": 15,
+                  "phase": "warm-compile-world"
+                },
+                "materialId": 49,
+                "materialName": "",
+                "materialType": "MeshStandardMaterial",
+                "materialUuid": "d19063e0-9e95-44cd-a840-34685bd324ca",
+                "programId": 21,
+                "programName": "",
+                "side": 0
+              },
+              {
+                "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,uv,false,false,false,false,uv,false,false,uv,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,66691,131075,srgb,native-asset-surface-v4|map-bias=0.65|native-obstruction|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|illustrated-4.1.6|MeshStandardMaterial|resident",
+                "cacheKeyTruncated": false,
+                "current": true,
+                "firstObservedSelection": {
+                  "job": 79,
+                  "phase": "warm-prepare-depth"
+                },
+                "materialId": 49,
+                "materialName": "",
+                "materialType": "MeshStandardMaterial",
+                "materialUuid": "d19063e0-9e95-44cd-a840-34685bd324ca",
+                "programId": 32,
+                "programName": "",
+                "side": 0
+              },
+              {
+                "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,uv,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,66691,131075,srgb,native-asset-surface-v4|map-bias=0.65|native-obstruction|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|illustrated-4.1.6|MeshStandardMaterial|resident",
+                "cacheKeyTruncated": false,
+                "current": false,
+                "firstObservedSelection": {
+                  "job": 15,
+                  "phase": "warm-compile-world"
+                },
+                "materialId": 50,
+                "materialName": "",
+                "materialType": "MeshStandardMaterial",
+                "materialUuid": "17cd4dcb-e7e9-4074-9562-ae25c22a7b84",
+                "programId": 21,
+                "programName": "",
+                "side": 0
+              },
+              {
+                "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,uv,false,false,false,false,uv,false,false,uv,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,66691,131075,srgb,native-asset-surface-v4|map-bias=0.65|native-obstruction|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|illustrated-4.1.6|MeshStandardMaterial|resident",
+                "cacheKeyTruncated": false,
+                "current": true,
+                "firstObservedSelection": {
+                  "job": 79,
+                  "phase": "warm-prepare-depth"
+                },
+                "materialId": 50,
+                "materialName": "",
+                "materialType": "MeshStandardMaterial",
+                "materialUuid": "17cd4dcb-e7e9-4074-9562-ae25c22a7b84",
+                "programId": 32,
+                "programName": "",
+                "side": 0
+              },
+              {
+                "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,uv,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,66691,131075,srgb,native-asset-surface-v4|map-bias=0|native-obstruction|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|illustrated-4.1.6|MeshStandardMaterial|resident",
+                "cacheKeyTruncated": false,
+                "current": false,
+                "firstObservedSelection": {
+                  "job": 18,
+                  "phase": "warm-compile-world"
+                },
+                "materialId": 51,
+                "materialName": "",
+                "materialType": "MeshStandardMaterial",
+                "materialUuid": "df706d95-aeca-4de5-9a3b-49e067aa1e64",
+                "programId": 22,
+                "programName": "",
+                "side": 0
+              },
+              {
+                "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,uv,false,false,false,false,uv,false,false,uv,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,66691,131075,srgb,native-asset-surface-v4|map-bias=0|native-obstruction|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|illustrated-4.1.6|MeshStandardMaterial|resident",
+                "cacheKeyTruncated": false,
+                "current": true,
+                "firstObservedSelection": {
+                  "job": 80,
+                  "phase": "warm-prepare-depth"
+                },
+                "materialId": 51,
+                "materialName": "",
+                "materialType": "MeshStandardMaterial",
+                "materialUuid": "df706d95-aeca-4de5-9a3b-49e067aa1e64",
+                "programId": 33,
+                "programName": "",
+                "side": 0
+              },
+              {
+                "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,uv,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,66691,131075,srgb,native-asset-surface-v4|map-bias=0|native-obstruction|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|illustrated-4.1.6|MeshStandardMaterial|resident",
+                "cacheKeyTruncated": false,
+                "current": false,
+                "firstObservedSelection": {
+                  "job": 18,
+                  "phase": "warm-compile-world"
+                },
+                "materialId": 53,
+                "materialName": "",
+                "materialType": "MeshStandardMaterial",
+                "materialUuid": "313070a3-cfad-4207-be84-4d5bbf1f30fb",
+                "programId": 22,
+                "programName": "",
+                "side": 0
+              },
+              {
+                "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,uv,false,false,false,false,uv,false,false,uv,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,66691,131075,srgb,native-asset-surface-v4|map-bias=0|native-obstruction|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|illustrated-4.1.6|MeshStandardMaterial|resident",
+                "cacheKeyTruncated": false,
+                "current": true,
+                "firstObservedSelection": {
+                  "job": 80,
+                  "phase": "warm-prepare-depth"
+                },
+                "materialId": 53,
+                "materialName": "",
+                "materialType": "MeshStandardMaterial",
+                "materialUuid": "313070a3-cfad-4207-be84-4d5bbf1f30fb",
+                "programId": 33,
+                "programName": "",
+                "side": 0
+              },
+              {
+                "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,uv,false,false,uv,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,66691,131075,srgb,native-asset-surface-v4|map-bias=0|native-obstruction|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|illustrated-4.1.6|MeshStandardMaterial|resident",
+                "cacheKeyTruncated": false,
+                "current": false,
+                "firstObservedSelection": {
+                  "job": 18,
+                  "phase": "warm-compile-world"
+                },
+                "materialId": 54,
+                "materialName": "",
+                "materialType": "MeshStandardMaterial",
+                "materialUuid": "bea7d8ca-4abb-49eb-813a-58400792422f",
+                "programId": 22,
+                "programName": "",
+                "side": 0
+              },
+              {
+                "cacheKey": "physical,STANDARD,,highp,srgb-linear,false,,uv,false,false,false,false,uv,false,false,uv,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,,,false,0,,1,0,0,0,1,0,1,0,0,0,0,2,0,0,0,0,66691,131075,srgb,native-asset-surface-v4|map-bias=0|native-obstruction|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|object|illustrated-4.1.6|MeshStandardMaterial|resident",
+                "cacheKeyTruncated": false,
+                "current": true,
+                "firstObservedSelection": {
+                  "job": 80,
+                  "phase": "warm-prepare-depth"
+                },
+                "materialId": 54,
+                "materialName": "",
+                "materialType": "MeshStandardMaterial",
+                "materialUuid": "bea7d8ca-4abb-49eb-813a-58400792422f",
+                "programId": 33,
+                "programName": "",
+                "side": 0
+              }
+            ],
+            "context": {
+              "batch": null,
+              "screen": false,
+              "start": 89830.70000000007
+            },
+            "end": 89830.90000000002,
+            "id": 94,
+            "lastPollAt": 89830.90000000002,
+            "outcome": "resolved",
+            "pendingCount": 0,
+            "pendingIds": [],
+            "pendingIdsOmitted": 0,
+            "phase": "warm-prepare-depth",
+            "polls": 1,
+            "selectedAt": 89830.90000000002,
+            "selectedCount": 4
+          },
+          "rejected": 0,
+          "scope": "Job selection and pending results of existing isReady calls only. First observed selection is not program creation or exhaustive mesh consumers. Nested elapsed values are not additive CPU/GPU time.",
+          "started": 94,
+          "windowHighWater": 0
+        },
+        "far": {
+          "adapters": [
+            {
+              "closed": false,
+              "current": true,
+              "currentKey": "5.468636536414272:1.4366044218726906",
+              "epoch": 1,
+              "errorCount": 0,
+              "index": 0,
+              "pendingPreparations": 0,
+              "streamClosed": false,
+              "streamError": false,
+              "streamPending": false,
+              "streamPendingKey": null
+            },
+            {
+              "closed": false,
+              "current": true,
+              "currentKey": "5.468636536414272:1.4366044218726906",
+              "epoch": 1,
+              "errorCount": 0,
+              "index": 1,
+              "pendingPreparations": 0,
+              "streamClosed": false,
+              "streamError": false,
+              "streamPending": false,
+              "streamPendingKey": null
+            }
+          ],
+          "count": 2,
+          "enabled": true,
+          "omitted": 0
+        },
+        "hands": {
+          "disposed": false,
+          "loaded": 6,
+          "loadedKinds": [
+            "press",
+            "tap",
+            "pinch",
+            "drag",
+            "point",
+            "open"
+          ],
+          "omitted": 0,
+          "required": 6,
+          "scope": "Private image texture adoption only; unadopted does not prove a pending request, decode or GPU state. Per-kind await spans combine image delivery/decode and promise scheduling.",
+          "unadoptedKinds": []
+        },
+        "issues": [],
+        "owner": {
+          "aborted": false,
+          "disposed": false,
+          "present": true
+        },
+        "presentation": {
+          "cinematicArmed": true,
+          "cinematicDone": true,
+          "cinematicPresent": true,
+          "cinematicTime": 0.5281999999999971,
+          "dioramaPresent": true,
+          "disposed": true,
+          "interactive": false,
+          "orbitSettled": true,
+          "orbitSpeed": 0,
+          "orbitStopping": true,
+          "plantsCount": 4,
+          "plantsMature": true,
+          "plantsProgress": 1,
+          "plantsReady": true,
+          "prepared": true
+        },
+        "progress": {
+          "failed": false,
+          "omitted": 0,
+          "ready": true,
+          "stages": [
+            {
+              "finished": 48939.59999999998,
+              "id": "configuration",
+              "progress": 1,
+              "started": 48939.59999999998
+            },
+            {
+              "finished": 48948.30000000005,
+              "id": "sky",
+              "progress": 1,
+              "started": 48948.30000000005
+            },
+            {
+              "finished": 52082.09999999998,
+              "id": "biome",
+              "progress": 1,
+              "started": 52082.09999999998
+            },
+            {
+              "finished": 56342.90000000002,
+              "id": "buildings",
+              "progress": 1,
+              "started": 56342.90000000002
+            },
+            {
+              "finished": 58923.40000000002,
+              "id": "animals",
+              "progress": 1,
+              "started": 58923.40000000002
+            },
+            {
+              "finished": 66785.20000000007,
+              "id": "crops",
+              "progress": 1,
+              "started": 66785.20000000007
+            },
+            {
+              "finished": 68949.40000000002,
+              "id": "walls",
+              "progress": 1,
+              "started": 68949.40000000002
+            },
+            {
+              "finished": 70032.59999999998,
+              "id": "vfx",
+              "progress": 1,
+              "started": 70032.59999999998
+            },
+            {
+              "finished": 71406.90000000002,
+              "id": "chunks",
+              "progress": 1,
+              "started": 70412.5
+            },
+            {
+              "finished": 91444.09999999998,
+              "id": "gpu",
+              "progress": 1,
+              "started": 91002.20000000008
+            },
+            {
+              "finished": 95572.40000000002,
+              "id": "far-assets",
+              "progress": 1,
+              "started": 95572.40000000002
+            },
+            {
+              "finished": 98787.90000000002,
+              "id": "visible-ready",
+              "progress": 1,
+              "started": 98787.90000000002
+            }
+          ],
+          "value": 1
+        },
+        "scope": "One-time observational readiness snapshot. Queue counts are logical state, not GPU completion or physical memory.",
+        "spans": {
+          "active": [],
+          "at": 101939.59999999998,
+          "closed": false,
+          "dropped": 0,
+          "early": {
+            "dropped": 0,
+            "rows": [
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 29490.5,
+                "label": "app-prepared-pending",
+                "lastDuration": 18880.70000000007,
+                "lastEnd": 48371.20000000007,
+                "lastStart": 29490.5
+              },
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 30328.70000000007,
+                "label": "diorama-prepare-sky",
+                "lastDuration": 8116.899999999907,
+                "lastEnd": 38445.59999999998,
+                "lastStart": 30328.70000000007
+              },
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 38445.70000000007,
+                "label": "diorama-prepare-catalogues",
+                "lastDuration": 3049.1999999999534,
+                "lastEnd": 41494.90000000002,
+                "lastStart": 38445.70000000007
+              },
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 41495,
+                "label": "diorama-prepare-maize-model",
+                "lastDuration": 2718.70000000007,
+                "lastEnd": 44213.70000000007,
+                "lastStart": 41495
+              },
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 41495.20000000007,
+                "label": "diorama-prepare-maize-bridges",
+                "lastDuration": 1334.6999999999534,
+                "lastEnd": 42829.90000000002,
+                "lastStart": 41495.20000000007
+              },
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 44213.80000000005,
+                "label": "diorama-prepare-soil-texture",
+                "lastDuration": 797.9000000000233,
+                "lastEnd": 45011.70000000007,
+                "lastStart": 44213.80000000005
+              },
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 45012.59999999998,
+                "label": "diorama-prepare-mountain-atlas",
+                "lastDuration": 581.5,
+                "lastEnd": 45594.09999999998,
+                "lastStart": 45012.59999999998
+              },
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 45598.59999999998,
+                "label": "diorama-prepare-maize-batch",
+                "lastDuration": 125.70000000006983,
+                "lastEnd": 45724.30000000005,
+                "lastStart": 45598.59999999998
+              },
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 45724.90000000002,
+                "label": "diorama-compile-maize",
+                "lastDuration": 1651.5999999999767,
+                "lastEnd": 47376.5,
+                "lastStart": 45724.90000000002
+              },
+              {
+                "begun": 0,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 47376.5,
+                "label": "diorama-upload-maize-soil",
+                "lastDuration": 355.0999999999767,
+                "lastEnd": 47731.59999999998,
+                "lastStart": 47376.5
+              },
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 47731.59999999998,
+                "label": "diorama-compile-sky",
+                "lastDuration": 241.90000000002328,
+                "lastEnd": 47973.5,
+                "lastStart": 47731.59999999998
+              },
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 47973.70000000007,
+                "label": "diorama-compile-mist",
+                "lastDuration": 239.19999999995343,
+                "lastEnd": 48212.90000000002,
+                "lastStart": 47973.70000000007
+              },
+              {
+                "begun": 0,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 48212.90000000002,
+                "label": "diorama-upload-mist",
+                "lastDuration": 2.199999999953434,
+                "lastEnd": 48215.09999999998,
+                "lastStart": 48212.90000000002
+              },
+              {
+                "begun": 0,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 48215.20000000007,
+                "label": "diorama-warm-day-night-sky",
+                "lastDuration": 6.799999999930151,
+                "lastEnd": 48222,
+                "lastStart": 48215.20000000007
+              },
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 48222,
+                "label": "diorama-final-fence",
+                "lastDuration": 149,
+                "lastEnd": 48371,
+                "lastStart": 48222
+              },
+              {
+                "begun": 1,
+                "completed": 1,
+                "failed": 0,
+                "firstStart": 48371.20000000007,
+                "label": "app-pre-world-setup",
+                "lastDuration": 575.5,
+                "lastEnd": 48946.70000000007,
+                "lastStart": 48371.20000000007
+              }
+            ],
+            "scope": "First 16 selected early labels; counts and first/latest timestamps only, not a timeline or additive CPU/GPU durations."
+          },
+          "lastCompleted": {
+            "duration": 741.0999999999767,
+            "end": 99638,
+            "failed": false,
+            "label": "app-cinematic-finished",
+            "start": 98896.90000000002
+          },
+          "scope": "Nested awaited wall spans; do not sum as exclusive CPU/GPU time. Associations are labels, not exhaustive readiness proof."
+        },
+        "transfers": {
+          "cache": {
+            "application-cache": 3,
+            "browser-cache": 0,
+            "network": 253,
+            "unknown": 0,
+            "validated-cache": 0
+          },
+          "count": 256,
+          "disposed": true,
+          "failed": 0,
+          "gltf": {
+            "completed": 10,
+            "count": 10,
+            "omitted": 2,
+            "omittedCompleted": 2,
+            "pending": 0,
+            "rows": [
+              {
+                "afterResponseEnd": 409.19999999995343,
+                "association": "heuristic-url-window",
+                "cache": "network",
+                "duration": 5720,
+                "end": 66313.90000000002,
+                "failed": false,
+                "id": 75,
+                "loaded": 23509472,
+                "start": 60593.90000000002,
+                "timing": {
+                  "decodedBodySize": 23509472,
+                  "encodedBodySize": 23509472,
+                  "responseEnd": 65904.70000000007,
+                  "responseStatus": 200,
+                  "startTime": 60594.09999999998,
+                  "transferSize": 23509772
+                },
+                "total": 23509472,
+                "unknownReason": null,
+                "untilResponseEnd": 5310.800000000047,
+                "url": "http://tauri.localhost/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/remainder-bridges.glb"
+              },
+              {
+                "afterResponseEnd": 2375.8000000000466,
+                "association": "heuristic-url-window",
+                "cache": "network",
+                "duration": 2717.70000000007,
+                "end": 44213.20000000007,
+                "failed": false,
+                "id": 20,
+                "loaded": 769488,
+                "start": 41495.5,
+                "timing": {
+                  "decodedBodySize": 769488,
+                  "encodedBodySize": 769488,
+                  "responseEnd": 41837.40000000002,
+                  "responseStatus": 200,
+                  "startTime": 41496.20000000007,
+                  "transferSize": 769788
+                },
+                "total": 769488,
+                "unknownReason": null,
+                "untilResponseEnd": 341.9000000000233,
+                "url": "http://tauri.localhost/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/maize-steady.glb"
+              },
+              {
+                "afterResponseEnd": 1111.0999999999767,
+                "association": "heuristic-url-window",
+                "cache": "network",
+                "duration": 2381.0999999999767,
+                "end": 58913.40000000002,
+                "failed": false,
+                "id": 65,
+                "loaded": 5970792,
+                "start": 56532.30000000005,
+                "timing": {
+                  "decodedBodySize": 5970792,
+                  "encodedBodySize": 5970792,
+                  "responseEnd": 57802.30000000005,
+                  "responseStatus": 200,
+                  "startTime": 56532.30000000005,
+                  "transferSize": 5971092
+                },
+                "total": 5970792,
+                "unknownReason": null,
+                "untilResponseEnd": 1270,
+                "url": "http://tauri.localhost/assets/web/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb"
+              },
+              {
+                "afterResponseEnd": 1153.8000000000466,
+                "association": "heuristic-url-window",
+                "cache": "network",
+                "duration": 2214.9000000000233,
+                "end": 58746.70000000007,
+                "failed": false,
+                "id": 63,
+                "loaded": 6927276,
+                "start": 56531.80000000005,
+                "timing": {
+                  "decodedBodySize": 6927276,
+                  "encodedBodySize": 6927276,
+                  "responseEnd": 57592.90000000002,
+                  "responseStatus": 200,
+                  "startTime": 56532.09999999998,
+                  "transferSize": 6927576
+                },
+                "total": 6927276,
+                "unknownReason": null,
+                "untilResponseEnd": 1061.0999999999767,
+                "url": "http://tauri.localhost/assets/web/cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869.glb"
+              },
+              {
+                "afterResponseEnd": 1208.8000000000466,
+                "association": "heuristic-url-window",
+                "cache": "network",
+                "duration": 2138.5999999999767,
+                "end": 58670.90000000002,
+                "failed": false,
+                "id": 66,
+                "loaded": 6980244,
+                "start": 56532.30000000005,
+                "timing": {
+                  "decodedBodySize": 6980244,
+                  "encodedBodySize": 6980244,
+                  "responseEnd": 57462.09999999998,
+                  "responseStatus": 200,
+                  "startTime": 56532.5,
+                  "transferSize": 6980544
+                },
+                "total": 6980244,
+                "unknownReason": null,
+                "untilResponseEnd": 929.7999999999302,
+                "url": "http://tauri.localhost/assets/web/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb"
+              },
+              {
+                "afterResponseEnd": 1237.3000000000466,
+                "association": "heuristic-url-window",
+                "cache": "network",
+                "duration": 1990.4000000000233,
+                "end": 58522.90000000002,
+                "failed": false,
+                "id": 67,
+                "loaded": 7123932,
+                "start": 56532.5,
+                "timing": {
+                  "decodedBodySize": 7123932,
+                  "encodedBodySize": 7123932,
+                  "responseEnd": 57285.59999999998,
+                  "responseStatus": 200,
+                  "startTime": 56532.5,
+                  "transferSize": 7124232
+                },
+                "total": 7123932,
+                "unknownReason": null,
+                "untilResponseEnd": 753.0999999999767,
+                "url": "http://tauri.localhost/assets/web/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb"
+              },
+              {
+                "afterResponseEnd": 890.9000000000233,
+                "association": "heuristic-url-window",
+                "cache": "network",
+                "duration": 1503.5,
+                "end": 58035.70000000007,
+                "failed": false,
+                "id": 64,
+                "loaded": 6401848,
+                "start": 56532.20000000007,
+                "timing": {
+                  "decodedBodySize": 6401848,
+                  "encodedBodySize": 6401848,
+                  "responseEnd": 57144.80000000005,
+                  "responseStatus": 200,
+                  "startTime": 56532.30000000005,
+                  "transferSize": 6402148
+                },
+                "total": 6401848,
+                "unknownReason": null,
+                "untilResponseEnd": 612.5999999999767,
+                "url": "http://tauri.localhost/assets/web/7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb"
+              },
+              {
+                "afterResponseEnd": 954.5,
+                "association": "heuristic-url-window",
+                "cache": "network",
+                "duration": 1476,
+                "end": 60401.30000000005,
+                "failed": false,
+                "id": 70,
+                "loaded": 5892328,
+                "start": 58925.30000000005,
+                "timing": {
+                  "decodedBodySize": 5892328,
+                  "encodedBodySize": 5892328,
+                  "responseEnd": 59446.80000000005,
+                  "responseStatus": 200,
+                  "startTime": 58925.59999999998,
+                  "transferSize": 5892628
+                },
+                "total": 5892328,
+                "unknownReason": null,
+                "untilResponseEnd": 521.5,
+                "url": "http://tauri.localhost/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e/remainder-steady.glb"
+              }
+            ],
+            "scope": "Largest completed GLTF request durations, stable insertion-order ties. Existing ResourceTiming association is heuristic URL plus time window, never exact identity. ResponseEnd is a browser timeline boundary; end follows GLTF completion before ownModel. Intervals are not exclusive CPU or physical transport; network/cache evidence does not identify Internet or disk cost."
+          },
+          "loadedBytes": 128286404,
+          "omitted": 0,
+          "pending": 0,
+          "rows": [],
+          "scope": "Observed transfer records only; unknown is not a cache hit. End null can include post-transfer decoding/preparation."
+        }
+      }
+    },
+    "loadingRecipe": {
+      "compileWindow": false,
+      "cropPartition": true,
+      "resourceOverlap": false,
+      "serialImageChain": false,
+      "wallBufferPackage": false
+    },
+    "menu": "http://tauri.localhost/menu/index.html",
+    "models": [
+      "assets/web/0ab73565649737fc15d853aa9d52a9ecacff3fbf9f5664cc21ec4e54452ef894.glb",
+      "assets/web/25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238.glb",
+      "assets/web/3ba902fd9bfc99589348ba9202513e9daa63442a6c2b21bb23a15bf58bd546f7.glb",
+      "assets/web/4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141.glb",
+      "assets/web/5ac817bcc5a8147c69f0e9876d2e37a94228272b14b85be1d1ecbfd6e2d0527b.glb",
+      "assets/web/6c43390aa864c32555795b2be638f8e1e8d4154fa85e6991580ebb0d7fcde309.glb",
+      "assets/web/6fb0b48a96d820d1738c6e36ed2d1cacaf54844df37298450b79d68b4703d80c.glb",
+      "assets/web/7de8ad72063cfeeb74f5d334069b77a3ac5c06c39a6c674a75b21ff51a210c25.glb",
+      "assets/web/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb",
+      "assets/web/9cb17849416e2d2578eb5806c4874fc496fdf9a1aa421d3a10fe3a346933674e.glb",
+      "assets/web/a748ca0cea0d4d0d4abd95071577a8457e63f22433e618be77934c079f4cf89c.glb",
+      "assets/web/b27ce08a5f860912783d5978cec8a012b28d7a55e2c7a69cc992f91f8bbd5a76.glb",
+      "assets/web/b396fba7b2c500770a3770222fc6a3b5b9a17fce66933ad53d569ae349affc82.glb",
+      "assets/web/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+      "assets/web/cb7a23479fb9210b6cda1ab13cbddd85b3ebce10cad863f1dd8ae1d9d66e4869.glb",
+      "assets/web/db01314e4e0a03f4e1aaa31e8207cee85a42294edffb003633282bb574ef28cd.glb",
+      "assets/web/e870835e4fa3c1cc4fdbcd048a2ca64da97d2ea4f48ea3192da6aba692e05202.glb",
+      "assets/web/eddde4e46932cf9fd056315e34af03f07595cd1ce4de61b4d7d6ac7be5d873e9.glb",
+      "assets/web/f3ae53d5ce3b57419fd31e74e2572ada9cc61392c2e7ac20dac484ec194d5e9f.glb",
+      "assets/web/fedb713c0b32df33f11111a91e2c3e0616a0345ec9be9a8beeecaa0b93ef26cb.glb",
+      "assets/web/8f6c9ef7472a2d7f8ffda7f08a78f8027f91d14a8f92b8eeca4084b0f379da36.glb",
+      "assets/web/2fdb3468b7646ebe16d0f3d3d25538ce5b20d6dee1d3830256d2f62599826dcc.glb"
+    ],
+    "saveKeys": [
+      "wild-guardians:settings"
+    ],
+    "storage": true,
+    "webgl2": true,
+    "worker": true,
+    "world": {
+      "biome": "gran-canon",
+      "culture": "mapungubwe",
+      "height": 720,
+      "width": 1028
+    }
+  },
+  "errors": [],
+  "ok": true,
+  "origin": "http://tauri.localhost",
+  "secureContext": true,
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0"
+}
