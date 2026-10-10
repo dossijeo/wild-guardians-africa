@@ -1,0 +1,119 @@
+{
+  "scope": "Read-only retained terminal evidence; no replay or production change",
+  "sourceHead": "6cdf5d842492c8a60d1a05d266a84427419455d5",
+  "originalHashes": {
+    "analysis.md": "416297275f5b9d16907d39fc8614b5ac9b43b508a32f5bb449b66581f14f2030",
+    "days.jsonl": "f1445e0fbb9669d69e67a3d17c81f8cb9d4fdcc47fe471260e0c59d7e4dddec9",
+    "protocol.json": "743b61a491673c7a62aec4a389f2782d7d7d8a26bb764aaca618d166ad12067c",
+    "receipt.json": "1c6b09278458ca66b2a6ff26261b84051b191ab8bc8057a5886ecb5e8d1ab631",
+    "report.json": "7febc666ec9a7318d5b404c6edf5ed0e16b496271e0195278a6a042cb13c10fc",
+    "source.json": "9279de78bb6df25def2528884bf63791e48486448fc19474e0dadd4db837ecc0",
+    "state.json.gz": "6abc98f79f0353b429dc72ff8ee98758bcdd9558746e4c8507be1077829d7d9b"
+  },
+  "result": "defeat",
+  "completedNights": 4,
+  "activity": {
+    "daylightSeconds": 1199.999999999484,
+    "unoccupiedSeconds": 1001.9999999995845,
+    "unoccupiedFraction": 0.8350000000000127,
+    "strictBelow25": false,
+    "creditedPaidRepairDecisionCount": 0
+  },
+  "total": {
+    "opening": 700,
+    "income": 990,
+    "wages": 720,
+    "seeds": 970,
+    "closing": 0
+  },
+  "days": [
+    {
+      "day": 1,
+      "cashOpening": 700,
+      "cashClosing": 33,
+      "dailyStaff": 1,
+      "additionalStaff": 18,
+      "terminalDailyCrew": 19,
+      "fullRenewalCostAt30": 570,
+      "recordedNextLabourReserve": 30,
+      "wages": 536,
+      "income": 319,
+      "seeds": 450,
+      "living": 61,
+      "pendingTasks": 1,
+      "hiresBefore30seconds": 18,
+      "hireCoinsBefore30seconds": 525
+    },
+    {
+      "day": 2,
+      "cashOpening": 33,
+      "cashClosing": 100,
+      "dailyStaff": 1,
+      "additionalStaff": 1,
+      "terminalDailyCrew": 2,
+      "fullRenewalCostAt30": 60,
+      "recordedNextLabourReserve": 30,
+      "wages": 33,
+      "income": 110,
+      "seeds": 10,
+      "living": 53,
+      "pendingTasks": 53,
+      "hiresBefore30seconds": 1,
+      "hireCoinsBefore30seconds": 30
+    },
+    {
+      "day": 3,
+      "cashOpening": 100,
+      "cashClosing": 30,
+      "dailyStaff": 1,
+      "additionalStaff": 11,
+      "terminalDailyCrew": 12,
+      "fullRenewalCostAt30": 360,
+      "recordedNextLabourReserve": 30,
+      "wages": 121,
+      "income": 561,
+      "seeds": 510,
+      "living": 104,
+      "pendingTasks": 55,
+      "hiresBefore30seconds": 2,
+      "hireCoinsBefore30seconds": 60
+    },
+    {
+      "day": 4,
+      "cashOpening": 30,
+      "cashClosing": 0,
+      "dailyStaff": 1,
+      "additionalStaff": 0,
+      "terminalDailyCrew": 1,
+      "fullRenewalCostAt30": 30,
+      "recordedNextLabourReserve": 30,
+      "wages": 30,
+      "income": 0,
+      "seeds": 0,
+      "living": 104,
+      "pendingTasks": 98,
+      "hiresBefore30seconds": 1,
+      "hireCoinsBefore30seconds": 30
+    }
+  ],
+  "terminalTasks": {
+    "initial": 35,
+    "water": 56,
+    "harvest": 7
+  },
+  "terminalTaskBlocked": 0,
+  "terminalTaskAssigned": 0,
+  "terminalWorkerCount": 0,
+  "terminalCenterHp": [
+    [
+      "structure-2",
+      600,
+      "intact"
+    ]
+  ],
+  "attackContacts": {
+    "shield": 13,
+    "crop": 0,
+    "structure": 0
+  }
+}

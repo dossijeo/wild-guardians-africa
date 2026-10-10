@@ -1,5 +1,31 @@
 # Exclusividad de conjuntos defensivos
 
+## Actualización en la rama de equilibrio — 10 de octubre de 2026
+
+La exclusividad por conjunto descrita debajo es evidencia histórica, no la
+regla vigente en `codex/survival-expansion-balance`. Desde `24cb0cfd`, los
+grupos conectados conservan su valoración, prioridad y comprobación compartida
+de accesibilidad; **no se reservan**. Después de elegir un grupo accesible,
+cada animal reserva únicamente una planta o pieza de muralla concreta.
+Los centros permiten aproximaciones simultáneas físicamente separadas.
+
+La accesibilidad compartida puede descartar un grupo mediante un certificado
+completo del componente nativo de navegación. Si no existe ese certificado,
+se conserva la búsqueda normal de rutas. La ruta final y la separación física
+del puesto de ataque siguen comprobándose para el objetivo y animal elegidos;
+eso no convierte al grupo en una reserva exclusiva ni exige sustituir su
+análisis compartido por una auditoría individual de todas sus plantas.
+
+Verificación repetida tras esta aclaración: `node --test
+tests/raid-individual-reservations.test.js`, **11/11 aprobadas**. Incluye cien
+mijos conectados con 1, 2, 5 y 12 animales, ataques simultáneos contra piezas
+independientes de un perímetro cerrado, invalidación de accesibilidad al abrir
+murallas, recarga determinista, destrucción del objetivo y espera acotada.
+No se han cambiado cantidades de animales, presupuestos de golpes ni daño.
+La integración en `main` continúa pendiente de la validación del equilibrio.
+
+## Evidencia histórica anterior
+
 Corrección `f51ea33` de la desviación registrada en
 [la auditoría diurna](qa-daytime-raids.md), sección 13.7 del plan, QA-096.
 

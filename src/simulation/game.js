@@ -164,7 +164,9 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
   const updates=converted.map(p=>({id:p.entityId,gate:true,autoGate:true,maxHp:p.maxHp,hp:p.hp})).filter(update=>{const piece=[...s.structures,...newPieces].find(p=>p.id===update.id),candidate={...piece,...update};return nav.wallPlacement(candidate).valid&&!cropOverlap(candidate);});
   return updates;
 }
-export function previewWallChain(s,material,points,nav,options={}) {
+// Geometry/price quote is read-only and may describe a future purchase. Actual
+// preview/build still enforce available cash and the native hiring reserve.
+export function quoteWallChain(s,material,points,nav,options={}) {
   if(!permission(s,'wall'))throw new Error('Esta acción no está disponible ahora');
   const spec=wallSpec(material),slots=wallStroke(points,s.structures,{...options,maxPieces:Infinity});
   const cropOverlap=piece=>{const c=Math.cos(piece.yaw),sn=Math.sin(piece.yaw),scale=piece.gate?(piece.material==='reforzado'?1.6:['adobe','piedra'].includes(piece.material)?1.4:1):1;return s.plants.some(p=>p.alive&&Math.abs((p.x-piece.x)*c-(p.z-piece.z)*sn)<1.09*(piece.baseScaleX??1)*scale+.4&&Math.abs((p.x-piece.x)*sn+(p.z-piece.z)*c)<.22*scale+.4);};
@@ -179,8 +181,12 @@ export function previewWallChain(s,material,points,nav,options={}) {
     for(const key of check.suppress??[])suppressed.add(key);
   }
   const cost=spec.cost*newPieces.length;
-  if(compare(s.ledger.balance,rational(cost))<0)throw new Error('No hay monedas suficientes para todo el trazado');
   return {pieces:newPieces,previewPieces:checks,updates,suppressed:[...suppressed],cost,gates:updates.length};
+}
+export function previewWallChain(s,material,points,nav,options={}) {
+  const plan=quoteWallChain(s,material,points,nav,options);
+  if(compare(s.ledger.balance,rational(plan.cost))<0)throw new Error('No hay monedas suficientes para todo el trazado');
+  return plan;
 }
 export function buildWallChain(s,id,material,points,nav,options={}) {
   if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
@@ -622,11 +628,13 @@ export function foundVillage(s,id,culture,x,z,payload,nav) {
     emit(s,'VillageFounded',{culture,x,z,targetId:s.villages.at(-1).id,presentation:{x,z}});
   });
 }
-export function nightEntryPending(s){return !s.raid&&!s.result&&!!s.nightPlan?.group?.length&&!s.nightPlan.done&&s.time>=s.nightPlan.at;}
+export function nightEntryPending(s){const plan=activeRaidEntryPlan(s);return !s.result&&!!plan?.group?.length&&!plan.done&&s.time>=plan.at;}
 function clockBoundaries(s){
   return [250,300,600,...(s.dayPlan&&!s.dayPlan.done?[s.dayPlan.at]:[]),...(s.nightPlan&&!s.nightPlan.done?[s.nightPlan.at]:[])].filter(Number.isFinite);
 }
 function prepareClockEvents(s,nav){
+  const wave=s.raid?.pendingWavePlan;
+  if(wave&&!wave.done&&s.time>=wave.at)spawnRaid(s,wave,nav);
   if(s.time>=300 && !s.nightPlan){planNight(s);selectEvent(s);emit(s,'NightStarted');}
   if(s.dayPlan&&!s.dayPlan.done&&s.time>=s.dayPlan.at){s.dayPlan.done=s.postgame||spawnRaid(s,s.dayPlan,nav,true)!==false;}
   if(s.nightPlan&&!s.nightPlan.done&&s.time>=s.nightPlan.at&&(!s.dayPlan||activeRaidEntryPlan(s)!==s.dayPlan)){s.nightPlan.done=!s.nightPlan.group?.length||spawnRaid(s,s.nightPlan,nav)!==false;}

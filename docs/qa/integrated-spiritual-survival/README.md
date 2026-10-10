@@ -91,3 +91,22 @@ hordes) finished: sunflower case passed; mixed eight-crop case failed its line-3
 assertion after approximately 72 minutes total. Raw output retained under
 `../agricultural-single-plant/checks/legacy-100-night-result.txt`. It is neither
 approval nor a classified economic defeat for this new integration.
+
+## Joint integration checkpoint
+
+Merged existing experimental `codex/survival-expansion-balance` (6f7ced54)
+into this branch only, preserving its source and all historical artifacts.
+Resolved snapshot validation for both power and raid state; retained exterior
+wave entry, individual leases, physical agricultural area damage and exact
+exponential city prices. Six protocol strategies now include passive management.
+The runner preserves Q5–Q8 physical labor policies and excludes magic selection
+windows from the activity-duration proxy. Each daily row records exact power
+accounts; magic receipts include committed powers and actually delivered bonus
+income. Provenance hashes include the new power module and native magic policy.
+
+75 joint power/reservation/area/pressure/city-price tests pass. A further 34
+policy/finance/contention tests pass after updating the old five-strategy and
+area-magic fixtures; the initial two failures remain in joint-policy-first.tap.
+The combined Vite build passes in 19.10 seconds on this machine. These are
+functional checkpoints, not campaign acceptance. Browser QA remains unavailable
+through the previously documented official runtime initialization error.

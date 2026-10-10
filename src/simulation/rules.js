@@ -1,12 +1,12 @@
 import {HIRING_RESERVE} from './budget.js';
+import {expansionVillagePriceForRuntime} from './village-expansion-price.js';
 import {BALANCE as B} from './balance.js';
 import {wallVisualAt,recordWallPresentation} from './structure-presentation.js';
 export const cropSpec = id => { const c=B.crops.find(c=>c.id===id); if(!c)throw new Error('Cultivo desconocido'); return c; };
 export const animalSpec = id => { const c=B.animals.find(c=>c.id===id); if(!c)throw new Error('Animal desconocido'); return c; };
 export const wallSpec = id => { const c=B.walls.find(c=>c.id===id); if(!c)throw new Error('Material desconocido'); return c; };
 export function villageCost(ordinal) {
-  if(!Number.isSafeInteger(ordinal)||ordinal<2) throw new Error('Ordinal de poblado inválido');
-  return B.postgame.additional_village_cost.fixed_cost;
+  return expansionVillagePriceForRuntime(ordinal,B.postgame.additional_village_cost.variant);
 }
 export const operational = c => c.kind==='center' && c.status==='intact';
 export const spellUnlocked=(state,kind)=>kind==='shield'?state.day>=1&&state.time>=300||state.day>1:['growth','multiply'].includes(kind)&&state.day>=1;

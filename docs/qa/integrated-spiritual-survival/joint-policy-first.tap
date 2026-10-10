@@ -1,0 +1,221 @@
+TAP version 13
+# (node:52072) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a successful native agricultural application earns no occupied decision-window credit
+ok 1 - a successful native agricultural application earns no occupied decision-window credit
+  ---
+  duration_ms: 31.4163
+  ...
+# Subtest: paced policies execute native single-plant applications without duration credit or artificial income
+ok 2 - paced policies execute native single-plant applications without duration credit or artificial income
+  ---
+  duration_ms: 73.9966
+  ...
+# Subtest: one pointer tap selects once; cancellation, drag-back and pinch select nothing
+ok 3 - one pointer tap selects once; cancellation, drag-back and pinch select nothing
+  ---
+  duration_ms: 2.5124
+  ...
+# (node:51256) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: 200 distinct applications retain measurable declining marginal power without exceeding either budget
+ok 4 - 200 distinct applications retain measurable declining marginal power without exceeding either budget
+  ---
+  duration_ms: 144.7422
+  ...
+# Subtest: aggregate entitlement is order invariant for cheap and expensive crops; repeat touches cannot mint another harvest bonus
+ok 5 - aggregate entitlement is order invariant for cheap and expensive crops; repeat touches cannot mint another harvest bonus
+  ---
+  duration_ms: 0.7067
+  ...
+# Subtest: fractional payouts cannot exploit ceil: paid whole coins equal floor of delivered entitlements and settlement is idempotent
+ok 6 - fractional payouts cannot exploit ceil: paid whole coins equal floor of delivered entitlements and settlement is idempotent
+  ---
+  duration_ms: 6.8428
+  ...
+# Subtest: day rollover does not refund commitments or increase one plant lifetime growth cap
+ok 7 - day rollover does not refund commitments or increase one plant lifetime growth cap
+  ---
+  duration_ms: 5.4841
+  ...
+# Subtest: execution records actual growth only; unused power remains committed
+ok 8 - execution records actual growth only; unused power remains committed
+  ---
+  duration_ms: 0.6191
+  ...
+# Subtest: fractional Growth does not grant a free watering checkpoint; legacy full-strength snapshots retain their old behavior
+ok 9 - fractional Growth does not grant a free watering checkpoint; legacy full-strength snapshots retain their old behavior
+  ---
+  duration_ms: 0.9497
+  ...
+# Subtest: native casts, active powers and pending harvest entitlement survive reload without replenishment
+ok 10 - native casts, active powers and pending harvest entitlement survive reload without replenishment
+  ---
+  duration_ms: 34.9676
+  ...
+# Subtest: the native worker must harvest and deliver before any committed Multiply income enters the ledger
+ok 11 - the native worker must harvest and deliver before any committed Multiply income enters the ledger
+  ---
+  duration_ms: 85.093
+  ...
+# Subtest: daily exact balance begins before hiring and includes proportional hires, seeds, delivery and repair once
+ok 12 - daily exact balance begins before hiring and includes proportional hires, seeds, delivery and repair once
+  ---
+  duration_ms: 3.3818
+  ...
+# Subtest: postgame savings use the next ordinal price, without pre-victory cash lock or fictitious debits
+ok 13 - postgame savings use the next ordinal price, without pre-victory cash lock or fictitious debits
+  ---
+  duration_ms: 1.0529
+  ...
+# Subtest: strategies differ through real earned savings; no grants, projected income or double-reserved village charge
+ok 14 - strategies differ through real earned savings; no grants, projected income or double-reserved village charge
+  ---
+  duration_ms: 0.6583
+  ...
+# (node:46220) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: E uses exactly D productive settings except explicit shield permission, retaining all existing shield defaults
+not ok 15 - E uses exactly D productive settings except explicit shield permission, retaining all existing shield defaults
+  ---
+  duration_ms: 5.079
+  location: 'file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/tests/native-strategy-e-no-shield.test.js:10:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    6 !== 5
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 5
+  actual: 6
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/tests/native-strategy-e-no-shield.test.js:13:9)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.start (node:internal/test_runner/test:542:17)
+    startSubtest (node:internal/test_runner/harness:216:17)
+  ...
+# Subtest: same command gate used by runner executes native D shield but leaves E unchanged; growth and multiply remain equal without new RNG
+not ok 16 - same command gate used by runner executes native D shield but leaves E unchanged; growth and multiply remain equal without new RNG
+  ---
+  duration_ms: 21.4878
+  location: 'file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/tests/native-strategy-e-no-shield.test.js:15:1'
+  failureType: 'testCodeFailure'
+  error: 'Selecciona una planta para aplicar esta magia'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    agriculturalTarget (file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/src/simulation/game.js:378:33)
+    validateSpell (file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/src/simulation/game.js:388:16)
+    Module.cast (file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/src/simulation/game.js:398:14)
+    cast (file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/tests/native-strategy-e-no-shield.test.js:17:64)
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/tests/native-strategy-e-no-shield.test.js:19:87)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+  ...
+# (node:19364) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a full connected crop cohort consumes real native budget at dt0.1
+ok 17 - a full connected crop cohort consumes real native budget at dt0.1
+  ---
+  duration_ms: 585.5326
+  ...
+# Subtest: a full connected crop cohort consumes real native budget at dt1
+ok 18 - a full connected crop cohort consumes real native budget at dt1
+  ---
+  duration_ms: 134.9138
+  ...
+# Subtest: waiters stage at their certified separated births without stealing existing reservations
+ok 19 - waiters stage at their certified separated births without stealing existing reservations
+  ---
+  duration_ms: 10.5452
+  ...
+# Subtest: FIFO save/reload preserves turns and complete native final consumption
+ok 20 - FIFO save/reload preserves turns and complete native final consumption
+  ---
+  duration_ms: 449.1116
+  ...
+# Subtest: absence of all remaining native targets retires instead of waiting forever
+ok 21 - absence of all remaining native targets retires instead of waiting forever
+  ---
+  duration_ms: 35.4546
+  ...
+# Subtest: a physically unreachable owner expires its queue after bounded no-hit time without spending budget
+ok 22 - a physically unreachable owner expires its queue after bounded no-hit time without spending budget
+  ---
+  duration_ms: 2.9574
+  ...
+# Subtest: corrupt optional queue state is rejected while legacy saves remain compatible
+ok 23 - corrupt optional queue state is rejected while legacy saves remain compatible
+  ---
+  duration_ms: 8.0134
+  ...
+# Subtest: mixed models/radii and native budgets preserve exclusive leases: hyena,buffalo,lion,rhino,warthog
+ok 24 - mixed models/radii and native budgets preserve exclusive leases: hyena,buffalo,lion,rhino,warthog
+  ---
+  duration_ms: 54.9498
+  ...
+# Subtest: mixed models/radii and native budgets preserve exclusive leases: buffalo,buffalo,buffalo,buffalo,buffalo,buffalo,buffalo,buffalo
+ok 25 - mixed models/radii and native budgets preserve exclusive leases: buffalo,buffalo,buffalo,buffalo,buffalo,buffalo,buffalo,buffalo
+  ---
+  duration_ms: 194.7628
+  ...
+# Subtest: Shield still consumes actual native hits while protecting crops and releasing turns
+ok 26 - Shield still consumes actual native hits while protecting crops and releasing turns
+  ---
+  duration_ms: 27.1856
+  ...
+# Subtest: connected walls retain individual piece leases and collapse releases eligible attacks
+ok 27 - connected walls retain individual piece leases and collapse releases eligible attacks
+  ---
+  duration_ms: 653.5914
+  ...
+# Subtest: a just-exhausted owner still holds a temporary lease until native release on the next tick
+ok 28 - a just-exhausted owner still holds a temporary lease until native release on the next tick
+  ---
+  duration_ms: 4.0427
+  ...
+# Subtest: waiting poses do not keep walking in place at an exterior staging birth
+ok 29 - waiting poses do not keep walking in place at an exterior staging birth
+  ---
+  duration_ms: 2.1492
+  ...
+# Subtest: two contiguous crop species retain individually reserved plants through native attacks
+ok 30 - two contiguous crop species retain individually reserved plants through native attacks
+  ---
+  duration_ms: 270.1854
+  ...
+# Subtest: native first-five introduction protection survives a queued cohort without destroying all crops
+ok 31 - native first-five introduction protection survives a queued cohort without destroying all crops
+  ---
+  duration_ms: 42.1643
+  ...
+# Subtest: wall collapse and an existing open gate release claims without inventing an extra lease
+ok 32 - wall collapse and an existing open gate release claims without inventing an extra lease
+  ---
+  duration_ms: 129.1222
+  ...
+# Subtest: an isolated FIFO head cannot indefinitely starve a later animal with native access
+ok 33 - an isolated FIFO head cannot indefinitely starve a later animal with native access
+  ---
+  duration_ms: 9190.4883
+  ...
+# Subtest: head retry epochs never enumerate a dense farm and observe lease/topology/progress revisions
+ok 34 - head retry epochs never enumerate a dense farm and observe lease/topology/progress revisions
+  ---
+  duration_ms: 4.6001
+  ...
+1..34
+# tests 34
+# suites 0
+# pass 32
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 12422.7979

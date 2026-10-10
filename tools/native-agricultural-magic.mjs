@@ -1,3 +1,5 @@
+import {agriculturalPowerReport} from '../src/simulation/agricultural-power.js';
+import {compare,rational,numberOf} from '../src/simulation/money.js';
 import {performance} from 'node:perf_hooks';
 import {castPickedSpell} from '../src/app/spell-placement.js';
 import {ToolSession} from '../src/ui/tool-session.js';
@@ -9,11 +11,11 @@ export const AGRICULTURAL_MAGIC_CADENCE=Object.freeze({intensive:1,moderate:4,sc
 // Cadence limits opportunities; it is never credited as occupied manual time.
 export function createAgriculturalMagicPolicy({mode='moderate'}={}){
  if(!Object.hasOwn(AGRICULTURAL_MAGIC_CADENCE,mode))throw Error('Unknown agricultural magic policy');
- const session=new ToolSession(),records=[],completed=new Map();let nextAt=0,sequence=0,lastKind='growth',plantCursor=0,lastEvent=null;
+ const session=new ToolSession(),records=[],completed=new Map(),deliveredBonuses=[];let nextAt=0,sequence=0,lastKind='growth',plantCursor=0,lastEvent=null;
  function observe(s){
   const tail=lastEvent?s.events.findIndex(e=>e.id===lastEvent):-1;
   if(lastEvent&&tail<0)throw Error('Agricultural activity observer lost event coverage');
-  for(const e of s.events.slice(tail+1))if(e.type==='AgriculturalSpellEnded')completed.set(e.spellId,e);
+  for(const e of s.events.slice(tail+1)){if(e.type==='AgriculturalSpellEnded')completed.set(e.spellId,e);if(e.type==='CrateDelivered'&&e.multiplyIncome)deliveredBonuses.push({id:e.id,crateId:e.targetId,income:e.multiplyIncome});}
   lastEvent=s.events.at(-1)?.id??null;
  }
  return {
@@ -33,7 +35,7 @@ export function createAgriculturalMagicPolicy({mode='moderate'}={}){
     for(let n=0;n<live.length;n++){
      const index=(plantCursor+n)%live.length,p=live[index];
      if(occupied.has(p.id)||s.spells.some(a=>a.remaining>0&&a.targetPlantId!==undefined&&Math.hypot(a.x-p.x,a.z-p.z)<1e-6)||areas.some(a=>Math.hypot(a.x-p.x,a.z-p.z)<=a.radius))continue;
-     if(k==='multiply'?p.multiplyHarvest:isMature(p)||p.water.some(w=>w.status==='due'))continue;
+     if(k==='multiply'?p.multiplyHarvest:isMature(p)||p.water.some(w=>w.status==='due')||p.growthPowerCommitted&&compare(p.growthPowerCommitted,rational(15))>=0)continue;
      chosen=p;kind=k;plantCursor=index+1;break;
     }
     if(chosen)break;
@@ -51,13 +53,13 @@ export function createAgriculturalMagicPolicy({mode='moderate'}={}){
    const event=s.events.at(-1);
    records.push({day:s.day,time:s.time,elapsed:s.elapsed,kind,targetPlantId:chosen.id,spellId:s.spells.at(-1).id,
     selectionCpuSeconds:selectionSeconds,applicationCpuSeconds:applicationSeconds,searchCpuSeconds:(selectedAt-started)/1000,
-    potentialBenefit:!!event.benefited,durationSeconds:event.duration,redundantMultiply:kind==='multiply'&&!event.benefited});
+    potentialBenefit:!!event.benefited,power:event.power,durationSeconds:event.duration,redundantMultiply:kind==='multiply'&&!event.benefited});
    return true;
   },
   report(s){
    observe(s);
    return {mode,cadenceSeconds:Number.isFinite(AGRICULTURAL_MAGIC_CADENCE[mode])?AGRICULTURAL_MAGIC_CADENCE[mode]:null,
-    applications:records.length,records:[...records],economicallyRedundantMultiply:records.filter(r=>r.redundantMultiply).length,
+    applications:records.length,records:[...records],dailyPower:Object.fromEntries(Object.keys(s.agriculturalPower?.days??{}).map(day=>[day,agriculturalPowerReport(s,day)])),deliveredBonuses:[...deliveredBonuses],additionalDeliveredIncome:deliveredBonuses.reduce((n,e)=>n+numberOf(e.income),0),economicallyRedundantMultiply:records.filter(r=>r.redundantMultiply).length,
     plantsBenefited:[...new Set([...records.filter(r=>r.kind==='multiply'&&r.potentialBenefit).map(r=>r.targetPlantId),
      ...[...completed.values()].filter(e=>e.growthSecondsAdded>0).map(e=>e.targetPlantId),
      ...s.spells.filter(a=>a.growthSecondsAdded>0).map(a=>a.targetPlantId)])],

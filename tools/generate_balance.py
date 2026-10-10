@@ -9,9 +9,11 @@ for spell in balance['spells']:
     if spell['id'] in revisions.get('agricultural_magic', {}):
         spell.update(revisions['agricultural_magic'][spell['id']])
 additional_village_cost=revisions['additional_village_cost']
-if type(additional_village_cost) is not int or additional_village_cost<=0:
-    raise SystemExit('Additional villages require a positive fixed integer price')
-balance['postgame']['additional_village_cost'].update({'formula':str(additional_village_cost),'fixed_cost':additional_village_cost})
+if not isinstance(additional_village_cost,dict) or set(additional_village_cost)!={'variant'} or additional_village_cost['variant'] not in ['moderate','proposed','demanding']:
+    raise SystemExit('Additional villages require a declared exponential candidate')
+variant=additional_village_cost['variant']
+ratio={'moderate':'1.4','proposed':'1.6','demanding':'1.8'}[variant]
+balance['postgame']['additional_village_cost']={'formula':f'round1000(50000 * {ratio}^(n-2))','min_n':2,'initial_village_ordinal':1,'variant':variant,'rounding':'nearest thousand, half upward, exact integer fractions'}
 # These amounts are spoken in existing tutorial audio. Later economic pilots
 # may vary other parameters, but must not invalidate those instructions.
 if balance['work_center']['cost'] != 800:

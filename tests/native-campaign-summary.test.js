@@ -1,6 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {summarizeNativeCase,summarizeNativeRaid,writeNativeComparison} from '../tools/summarize-native-campaigns.mjs';
+
+test('Area raids report native HP efficiency and never reuse single-plant legacy casualty bounds',()=>{
+ const r=summarizeNativeRaid({...raid(),pressureFacts:{pressure:.7},potentialAgriculturalHp:100,effectiveAgriculturalHp:28,agriculturalEfficiency:.28,plantsReached:19,woundedAfterAttack:5,targetUnavailableAttempts:3,routeUnavailableAttempts:1});
+ assert.equal(r.freshCropKillUpperBound,null);assert.equal(r.woundedCropKillUpperBound,null);
+ assert.equal(r.referencePotentialAgriculturalHp,100);assert.equal(r.effectiveAgriculturalHp,28);
+ assert.equal(r.agriculturalEfficiency,.28);assert.equal(r.plantsReached,19);assert.equal(r.woundedAfterAttack,5);
+ assert.equal(r.targetUnavailableAttempts,3);assert.equal(r.routeUnavailableAttempts,1);
+});
 import {mkdtempSync,readFileSync,rmSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
@@ -11,6 +19,14 @@ test('summary preserves native opening seed and never double counts additional w
 test('partial remains incomplete and reports only completed days',()=>{
  const f=fixture();f.receipt={status:'incomplete-harness-error',message:'entry failed',nativeResult:null};f.partial={day:2,time:600,receipts:f.report};delete f.report;
  const s=summarizeNativeCase(f);assert.equal(s.observedDays,1);assert.equal(s.result,null);assert.equal(s.completedNights,null);assert.equal(s.incompleteAt.day,2);assert.equal(s.status,'incomplete-harness-error');
+});
+test('comparisons declare source and labour without inventing identical controls or missing shield permissions',()=>{
+ const a=fixture();a.source.arguments={strategy:'no-walls',seed:712,days:6,labourPolicy:'q4',biome:'sabana',culture:'mapungubwe'};
+ const s=summarizeNativeCase(a);assert.equal(s.labourPolicy,'q4');assert.equal(s.requestedDays,6);assert.equal(s.shieldEnabled,null);
+ const b=fixture();b.report.shieldEnabled=false;b.report.labourPolicy='legacy';const e=summarizeNativeCase(b);assert.equal(e.shieldEnabled,false);assert.equal(e.labourPolicy,'legacy');
+ const dir=mkdtempSync(join(tmpdir(),'wg-native-provenance-'));
+ try{writeNativeComparison(dir,[s,e]);const text=readFileSync(join(dir,'comparison.md'),'utf8');assert.match(text,/q4.*frozen.*1 \/ 6/);assert.match(text,/no acredita que campañas de versiones distintas/);assert.match(readFileSync(join(dir,'daily.csv'),'utf8'),/gitHead,labourPolicy,shieldEnabled,biome,culture,requestedDays,protocolId/);}
+ finally{rmSync(dir,{recursive:true,force:true});}
 });
 test('summary rejects live cases, ledger discrepancies and fictitious income',()=>{
  const a=fixture();a.receipt.status='running';assert.throws(()=>summarizeNativeCase(a),/terminal/);

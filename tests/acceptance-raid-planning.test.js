@@ -53,12 +53,13 @@ test('QA-088 revised: the first-night clock spawns one mandatory warthog with ze
  const ordinary=Game.newGame({seed:712});ordinary.day=2;planNight(ordinary);assert.deepEqual(ordinary.nightPlan.group,['hyena']);
 });
 
-test('QA-089 revised: a thousand guaranteed nightly plans use fresh independent timing and composition draws',()=>{
+test('QA-089 pressure revision: campaign nights use fresh timing and two draws per budgeted actor',()=>{
  const s=fixture();let oracle=s.rng;const groups=new Set();
  const draw=()=>{oracle^=oracle<<13;oracle^=oracle>>>17;oracle^=oracle<<5;oracle>>>=0;return oracle/4294967296;};
- for(let i=0;i<1000;i++){
-  const when=draw();draw();draw();
+ for(let i=0;i<95;i++){
+  const when=draw();
   s.day=6+i;s.completedNights=5+i;planNight(s);
+  for(const actor of s.nightPlan.waves.flat()){draw();const hitRoll=draw(),index=species.indexOf(actor.species),min=[2,3,4,4,5][index]+Math.floor(2*s.nightPlan.pressureFacts.pressure),max=[4,5,6,7,8][index]+Math.floor(2*s.nightPlan.pressureFacts.pressure);assert.equal(actor.hits,min+Math.floor(hitRoll*(max-min+1)));}
   assert.equal(s.nightPlan.at,323+when*225);assert.ok(s.nightPlan.group.length>0);assert.equal(s.rng,oracle);
   groups.add(signature(s.nightPlan.group));s.nightPlan.done=true;
  }

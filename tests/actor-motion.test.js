@@ -165,7 +165,7 @@ test('Crowded crop approaches are recomputed outside the other native bodies and
   state.raid.animals=animals;state.raid.reservations=Object.fromEntries(animals.map(a=>[a.reservation,a.id]));
   assert.equal(actorSegmentClear(endpoints[1],endpoints[1],animals[1],[animals[0],animals[2]]),false);
   const approach=reachableApproach(animals[1],state.plants[1],nav);
-  assert.ok(approach);assert.ok(actorSegmentClear(approach.point,approach.point,animals[1],[animals[0],animals[2]]));
+  assert.equal(approach,null,'Overlapping legacy attack-slot claims must not manufacture an impossible independent approach');
   for(let i=0;i<3000&&state.raid;i++){
     state.elapsed+=.1;updateRaid(state,.1,nav);
     for(let a=0;a<animals.length;a++)for(let b=a+1;b<animals.length;b++)if(animals[a].status!=='gone'&&animals[b].status!=='gone')assert.ok(Math.hypot(animals[a].x-animals[b].x,animals[a].z-animals[b].z)>=2.2-1e-8);

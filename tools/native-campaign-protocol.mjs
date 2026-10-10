@@ -1,13 +1,16 @@
 // Preselected comparison, not an adaptive search for winning seeds.
+import {villageCost} from '../src/simulation/rules.js';
 export const NATIVE_CAMPAIGN_SEEDS=Object.freeze([712,123,2026]);
+const productiveNoWalls=Object.freeze({defend:false,repair:false,foundVillages:false,middayHiring:true,cashPolicy:'minimum-reinvestment',shield:true});
 export const NATIVE_CAMPAIGN_STRATEGIES=Object.freeze({
  expansive:Object.freeze({defend:true,repair:true,foundVillages:true,middayHiring:true,cashPolicy:'minimum-reinvestment',agriculturalMagic:'intensive',shield:true}),
  good:Object.freeze({defend:true,repair:true,foundVillages:true,middayHiring:true,cashPolicy:'progressive-village',agriculturalMagic:'moderate',shield:true}),
  bad:Object.freeze({defend:false,repair:false,foundVillages:false,middayHiring:false,cashPolicy:'minimum-reinvestment',agriculturalMagic:'scarce',shield:true}),
  'no-walls':Object.freeze({defend:false,repair:false,foundVillages:false,middayHiring:true,cashPolicy:'minimum-reinvestment',agriculturalMagic:'moderate',shield:true}),
+ passive:Object.freeze({defend:true,repair:true,foundVillages:true,middayHiring:true,cashPolicy:'progressive-village',agriculturalMagic:'none',shield:true}),
  'no-shield':Object.freeze({defend:false,repair:false,foundVillages:false,middayHiring:true,cashPolicy:'minimum-reinvestment',agriculturalMagic:'moderate',shield:false}),
 });
-export const NATIVE_CAMPAIGN_PROTOCOL=Object.freeze({id:'native-constant-economy-v4-single-plant-magic',seeds:NATIVE_CAMPAIGN_SEEDS,strategies:Object.keys(NATIVE_CAMPAIGN_STRATEGIES),defensePriority:'physical walls and repairs before discretionary village savings; wages protected',daySeconds:300,combatNights:100,postgamePeaceNights:80,minDailyCropPurchases:60,strictMaximumIdleFraction:.25,profile:'olderFemale',plantsPerWorker:6,plotSpacing:1.5,plantDecisionSeconds:1,seedPricing:'constant production prices',income:'native CrateDelivered only',damage:'native contacts/occlusion only; no assumed exposure'});
+export const NATIVE_CAMPAIGN_PROTOCOL=Object.freeze({id:'native-spiritual-survival-v5-shared-daily-power',seeds:NATIVE_CAMPAIGN_SEEDS,strategies:Object.keys(NATIVE_CAMPAIGN_STRATEGIES),shieldByStrategy:Object.freeze(Object.fromEntries(Object.entries(NATIVE_CAMPAIGN_STRATEGIES).map(([key,value])=>[key,value.shield]))),defensePriority:'physical walls and repairs before discretionary village savings; wages protected',daySeconds:300,combatNights:100,postgamePeaceNights:80,minDailyCropPurchases:60,strictMaximumIdleFraction:.25,profile:'olderFemale',plantsPerWorker:6,plotSpacing:1.5,plantDecisionSeconds:1,seedPricing:'constant production prices',income:'native CrateDelivered only',damage:'native contacts/occlusion only; no assumed exposure'});
 export function nativeCampaignStrategy(name){const strategy=NATIVE_CAMPAIGN_STRATEGIES[name];if(!strategy)throw Error('Unknown preselected strategy');return strategy;}
 // Forecast is a budget rule, never a claim of worker physical throughput.
 export function affordableOpening({cash,living,wage=30,seedCost=5,plantsPerWorker=6,repairReserve=0}){
@@ -38,12 +41,27 @@ export function villageSavingsTarget(policy,entries){
  return villageSavingsFromTotals(policy,income,spent);
 }
 
-export function villageSavingsFromTotals(policy,income,spent){
+export function villageSavingsFromTotals(policy,income,spent,nextCost=villageCost(2)){
  for(const n of [income,spent])if(!Number.isSafeInteger(n)||n<0)throw Error('Invalid settled savings totals');
- return policy.cashPolicy==='progressive-village'?Math.min(2000,Math.max(0,Math.floor(income/5)-spent)):0;
+ if(typeof nextCost!=='bigint'&&!Number.isSafeInteger(nextCost)||BigInt(nextCost)<1n)throw Error('Invalid next village quote');
+ if(policy.cashPolicy!=='progressive-village')return 0;
+ const earned=BigInt(income)/5n-BigInt(spent),limit=BigInt(nextCost);
+ // Earned is bounded by the checked safe totals, even when the quote is huge.
+ return earned<=0n?0:Number(earned<limit?earned:limit);
+}
+export function villageSavingsForState(policy,state,income,spent){
+ // Survival decisions do not park scarce wages/repair cash for locked villages.
+ return state.postgame?villageSavingsFromTotals(policy,income,spent,villageCost(state.villages.length+1)):0;
 }
 
 export function campaignProtocolForLabour(name='legacy'){
- if(!['legacy','q4'].includes(name))throw Error('Unknown native labour policy');
+ if(!['legacy','q4','q5','q6','q7','q8'].includes(name))throw Error('Unknown native labour policy');
+ if(name==='q8')return Object.freeze({...campaignProtocolForLabour('q7'),id:NATIVE_CAMPAIGN_PROTOCOL.id+'-q8',openingStaff:6});
+ if(name==='q7')return Object.freeze({...campaignProtocolForLabour('q6'),id:NATIVE_CAMPAIGN_PROTOCOL.id+'-q7',openingStaff:3,lastTrialTime:180,trialGate:'last new worker physical delivery and center settled replacement margin >= proportional salary + full next wage; current cash affordability remains separate'});
+ if(name==='q6')return Object.freeze({...campaignProtocolForLabour('q5'),id:NATIVE_CAMPAIGN_PROTOCOL.id+'-q6',dawnFunding:'payable current full crew salary; disclose workingCapitalShortfall; subsequent purchases protect complete next wage'});
+ if(name==='q5')return Object.freeze({...NATIVE_CAMPAIGN_PROTOCOL,id:NATIVE_CAMPAIGN_PROTOCOL.id+'-q5',labourPolicy:'10s incremental measured-service queue ratio; full selected-crew next wage; funded dawn continuity',evaluationSeconds:10,serviceWindowSeconds:30,backlogPerWorker:6,maximumClearanceSeconds:60});
  return name==='legacy'?NATIVE_CAMPAIGN_PROTOCOL:Object.freeze({...NATIVE_CAMPAIGN_PROTOCOL,id:NATIVE_CAMPAIGN_PROTOCOL.id+'-q4',labourPolicy:'native backlog and settled cash, one productive-centre daily contract; proportional additions',backlogPerWorker:6});
 }
+
+// Player command permission only; never changes spells, damage, RNG or waves.
+export function campaignMagicAllowed(policy,kind){return ['shield','growth','multiply'].includes(kind)&&(kind!=='shield'||policy.shield===true);}

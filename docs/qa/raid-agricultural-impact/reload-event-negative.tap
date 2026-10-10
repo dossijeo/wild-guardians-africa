@@ -1,0 +1,125 @@
+TAP version 13
+# Subtest: central full damage, frontal90-degree periphery half damage and maximum radius are physical
+ok 1 - central full damage, frontal90-degree periphery half damage and maximum radius are physical
+  ---
+  duration_ms: 7.2512
+  ...
+# Subtest: sector follows current contact heading and rejects a backward or remote contact
+ok 2 - sector follows current contact heading and rejects a backward or remote contact
+  ---
+  duration_ms: 3.6839
+  ...
+# Subtest: a radius-zero or damage-zero profile never manufactures peripheral hits or mandatory deaths
+ok 3 - a radius-zero or damage-zero profile never manufactures peripheral hits or mandatory deaths
+  ---
+  duration_ms: 1.9356
+  ...
+# Subtest: area cap prioritizes the central plant then nearest legal physical candidates
+ok 4 - area cap prioritizes the central plant then nearest legal physical candidates
+  ---
+  duration_ms: 1.9217
+  ...
+# Subtest: native wall footprint occludes peripheral impacts, including animal-blocking gate=false
+ok 5 - native wall footprint occludes peripheral impacts, including animal-blocking gate=false
+  ---
+  duration_ms: 1.2285
+  ...
+# Subtest: native wall footprint occludes peripheral impacts, including animal-blocking gate=true
+ok 6 - native wall footprint occludes peripheral impacts, including animal-blocking gate=true
+  ---
+  duration_ms: 1.859
+  ...
+# Subtest: a wall between actor and impact prevents a central hit rather than producing splash behind it
+ok 7 - a wall between actor and impact prevents a central hit rather than producing splash behind it
+  ---
+  duration_ms: 1.0407
+  ...
+# Subtest: a native centre footprint blocks rays and is re-evaluated after removal
+ok 8 - a native centre footprint blocks rays and is re-evaluated after removal
+  ---
+  duration_ms: 1.104
+  ...
+# Subtest: Shield protects each peripheral plant and blocks a crossing ray outside its endpoint
+ok 9 - Shield protects each peripheral plant and blocks a crossing ray outside its endpoint
+  ---
+  duration_ms: 1.3031
+  ...
+# Subtest: a shielded central target consumes no crop HP
+ok 10 - a shielded central target consumes no crop HP
+  ---
+  duration_ms: 1.1061
+  ...
+# Subtest: one attack is deduplicated across replay/save and fractional damage persists exactly
+ok 11 - one attack is deduplicated across replay/save and fractional damage persists exactly
+  ---
+  duration_ms: 2.9606
+  ...
+# Subtest: intro destruction cap survives central4 and peripheral2 damage, retaining a living farm
+ok 12 - intro destruction cap survives central4 and peripheral2 damage, retaining a living farm
+  ---
+  duration_ms: 2.9145
+  ...
+# Subtest: grid handles append, death, native position epoch and replacement without scanning all crops per hit
+ok 13 - grid handles append, death, native position epoch and replacement without scanning all crops per hit
+  ---
+  duration_ms: 17.0792
+  ...
+# Subtest: profile and crop fractional bounds reject corrupt saves while supporting legacy integer HP
+ok 14 - profile and crop fractional bounds reject corrupt saves while supporting legacy integer HP
+  ---
+  duration_ms: 1.796
+  ...
+# Subtest: native optional profile completes its real melee attacks, emits one impact fact each, dt0.1
+ok 15 - native optional profile completes its real melee attacks, emits one impact fact each, dt0.1
+  ---
+  duration_ms: 25.3073
+  ...
+# Subtest: native optional profile completes its real melee attacks, emits one impact fact each, dt1
+ok 16 - native optional profile completes its real melee attacks, emits one impact fact each, dt1
+  ---
+  duration_ms: 6.1587
+  ...
+# Subtest: a native wall strike uses structural profile damage but never applies agricultural splash
+ok 17 - a native wall strike uses structural profile damage but never applies agricultural splash
+  ---
+  duration_ms: 874.5759
+  ...
+# Subtest: native saved attack resumes once and does not duplicate event facts
+ok 18 - native saved attack resumes once and does not duplicate event facts
+  ---
+  duration_ms: 8.4941
+  ...
+# Subtest: native committed contact writes half-point HP, reload preserves it and applied attacks cannot hit twice
+not ok 19 - native committed contact writes half-point HP, reload preserves it and applied attacks cannot hit twice
+  ---
+  duration_ms: 3.2653
+  location: 'file:///C:/Users/PC/.codex/worktrees/raid-fractional-exit/wild-guardians-africa/tests/raid-agricultural-impact.test.js:31:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    1 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/raid-fractional-exit/wild-guardians-africa/tests/raid-agricultural-impact.test.js:34:214)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+1..19
+# tests 19
+# suites 0
+# pass 18
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1206.2229

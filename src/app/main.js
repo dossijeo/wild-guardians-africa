@@ -41,7 +41,7 @@ import {BALANCE as B} from '../simulation/balance.js';
 import {villageCost} from '../simulation/rules.js';
 import * as Game from '../simulation/game.js';
 import {PROFILES} from '../simulation/workforce.js';
-import {formatMoney,numberOf} from '../simulation/money.js';
+import {formatMoney,formatWholeCoins,numberOf} from '../simulation/money.js';
 import {isMature} from '../simulation/crops.js';
 import {cropSpec,permission,operational,attraction} from '../simulation/rules.js';
 import {BrowserSaveRepository} from '../persistence/browser-saves.js';
@@ -365,12 +365,12 @@ function buildPanel(){
 function cancelVillagePreview(){world?.clearVillagePreview();pendingVillage=null;if(tool?.kind==='village')tool=null;hideHudPanel();}
 function villageCulturePanel() {
   if(state.pauses.includes('hiring'))return;
-  showHudPanel('Un nuevo poblado',`<div><p>Coste: ${localMoney({n:String(villageCost(state.villages.length+1)),d:'1'})} monedas</p><div class="action-grid">${selector.cultures.map(c=>`<button data-village-culture="${c.id}">${c.name}</button>`).join('')}</div></div>`);
+  showHudPanel('Un nuevo poblado',`<div><p>Coste: ${formatWholeCoins(villageCost(state.villages.length+1),moneyLocale())} monedas</p><div class="action-grid">${selector.cultures.map(c=>`<button data-village-culture="${c.id}">${c.name}</button>`).join('')}</div></div>`);
   document.querySelectorAll('[data-village-culture]').forEach(el=>el.onclick=()=>safe(async()=>{const culture=el.dataset.villageCulture,payload=villageCatalog.find(v=>v.id===(culture==='saheliana'?'saheliano':culture));await world.ensureVillage(culture,payload);armTool({kind:'village',culture});if(pendingVillage){pendingVillage=Game.previewVillage(state,culture,pendingVillage.x,pendingVillage.z,payload,nav);world.showVillagePreview(pendingVillage);villageConfirmPanel();}else hideHudPanel();}));
 }
 function villageConfirmPanel() {
   if(state.pauses.includes('hiring'))return;
-  const p=pendingVillage;showHudPanel('Fundar poblado',`<div><p>${p.valid?'Ubicación válida':'Ubicación inválida: '+esc(p.reason)}</p><p>${localMoney({n:String(p.cost),d:'1'})} monedas. Toca otra posición para recolocar.</p>${button('found-village','Confirmar poblado')}${button('change-village-culture','Cambiar cultura')}${button('cancel-village','Cancelar')}</div>`);document.querySelector('#found-village').disabled=!p.valid||!permission(state,'village');
+  const p=pendingVillage;showHudPanel('Fundar poblado',`<div><p>${p.valid?'Ubicación válida':'Ubicación inválida: '+esc(p.reason)}</p><p>${formatWholeCoins(p.cost,moneyLocale())} monedas. Toca otra posición para recolocar.</p>${button('found-village','Confirmar poblado')}${button('change-village-culture','Cambiar cultura')}${button('cancel-village','Cancelar')}</div>`);document.querySelector('#found-village').disabled=!p.valid||!permission(state,'village');
   bind('change-village-culture',villageCulturePanel);bind('found-village',()=>{const payload=villageCatalog.find(v=>v.id===(p.culture==='saheliana'?'saheliano':p.culture));Game.foundVillage(state,commandId(),p.culture,p.x,p.z,payload,nav);world.clearVillagePreview();pendingVillage=null;tool=null;hideHudPanel();save();world.syncResidentProps();});bind('cancel-village',cancelVillagePreview);
 }
 function contextPanel() {

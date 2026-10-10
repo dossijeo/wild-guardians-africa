@@ -1,3 +1,6 @@
+import {validDamageProfile} from '../simulation/raid-agricultural-impact.js';
+import {validRaidContention} from './raid-contention-snapshot.js';
+import {validatePressureSnapshot} from './raid-pressure-snapshot.js';
 import {validateAgriculturalPower} from '../simulation/agricultural-power.js';
 import {BASIC_STEPS,TUTORIAL_IDS} from '../tutorial/messages.js';
 import {validExitFrontier} from './exit-connector-snapshot.js';
@@ -7,6 +10,7 @@ function wholeMoney(value){
 }
 export function validateSnapshot(state) {
   if(!state || state.saveVersion!==SAVE_VERSION || typeof state.slotId!=='string')throw new Error('Guardado incompatible');
+  validatePressureSnapshot(state);
   if(!Number.isFinite(state.time)||state.time<0||state.time>600 || !Number.isSafeInteger(state.day)||state.day<1)throw new Error('Reloj inválido');
   if(!state.ledger||!wholeMoney(state.ledger.balance)||BigInt(state.ledger.balance.n)<0n)throw new Error('Saldo inválido');
   if(!state.ledger.entries||typeof state.ledger.entries!=='object'||Array.isArray(state.ledger.entries)||!Object.values(state.ledger.entries).every(wholeMoney))throw new Error('Libro monetario inválido');
@@ -27,7 +31,12 @@ export function validateSnapshot(state) {
     const r=state.raid;
     if(!Number.isSafeInteger(r.introPlantCount)||r.introPlantCount<0||!Number.isSafeInteger(r.introCropLimit)||r.introCropLimit<0||r.introCropLimit>Math.max(0,r.introPlantCount-1)||!Number.isSafeInteger(r.introCropsDestroyed)||r.introCropsDestroyed<0||r.introCropsDestroyed>r.introCropLimit)throw new Error('Límite de incursión inicial inválido');
   }
+  if(!validRaidContention(state))throw new Error('Turnos de incursión inválidos');
   const ids=new Set();
+  for(const animal of state.raid?.animals??[]){
+    if(animal.damageProfile!==undefined&&!validDamageProfile(animal.damageProfile))throw new Error('Perfil de impacto inválido');
+    const ids=animal.agriculturalAttackIds;if(ids!==undefined&&(!Array.isArray(ids)||ids.length>64||new Set(ids).size!==ids.length||ids.some(id=>typeof id!=='string'||!id.length||id.length>96)))throw new Error('Impactos agrícolas inválidos');
+  }
   for(const animal of state.raid?.animals??[])if(animal.exit!==undefined&&(!animal.exit||!Number.isFinite(animal.exit.x)||!Number.isFinite(animal.exit.z)))throw new Error('Salida de animal inválida');
   for(const animal of state.raid?.animals??[])if(animal.exitConnectorSearch!==undefined){
     const search=animal.exitConnectorSearch;
@@ -45,7 +54,7 @@ export function validateSnapshot(state) {
   for(const a of state.spells)if(a.exposureApplied!==undefined&&(a.kind!=='multiply'||typeof a.exposureApplied!=='boolean'))throw new Error('Exposición mágica inválida');
   for(const a of state.spells)if(a.targetPlantId!==undefined&&(!['growth','multiply'].includes(a.kind)||typeof a.targetPlantId!=='string'||!state.plants.some(p=>p.id===a.targetPlantId)||!Number.isFinite(a.remaining)||a.remaining<0))throw new Error('Objetivo mágico inválido');
   for(const a of state.spells)if(a.growthSecondsAdded!==undefined&&(a.kind!=='growth'||!Number.isFinite(a.growthSecondsAdded)||a.growthSecondsAdded<0||a.growthSecondsAdded>15+1e-6))throw new Error('Progreso mágico inválido');
-  for(const p of state.plants)if(p.attackHits!==undefined&&(!Number.isInteger(p.attackHits)||p.attackHits<0||p.attackHits>2||p.alive&&p.attackHits>=2))throw new Error('Daño de cultivo inválido');
+  for(const p of state.plants)if(p.attackHits!==undefined&&(!Number.isFinite(p.attackHits)||!Number.isSafeInteger(p.attackHits*2)||p.attackHits<0||p.attackHits>2||p.alive&&p.attackHits>=2))throw new Error('Daño de cultivo inválido');
   const workers=new Map(state.workers.map(w=>[w.id,w])),crates=new Map(state.crates.map(c=>[c.id,c])),plants=new Map(state.plants.map(p=>[p.id,p]));
   for(const structure of state.structures)if(structure.kind==='wall'&&(structure.baseScaleX!==undefined&&(!Number.isFinite(structure.baseScaleX)||structure.baseScaleX<=0)||structure.autoGate!==undefined&&typeof structure.autoGate!=='boolean'))throw new Error('Módulo de defensa inválido');
   for(const structure of state.structures)if(structure.gateOpen!==undefined&&(!structure.gate||!Number.isFinite(structure.gateOpen)||structure.gateOpen<0||structure.gateOpen>1))throw new Error('Apertura de puerta inválida');
