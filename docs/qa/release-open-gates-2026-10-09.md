@@ -52,15 +52,18 @@ and31 directed lifecycle/hosting/serial-image tests pass. Node tests mock image
 decoding; they do not prove native image rendering or loading-time improvement.
 Later wiring/publication freeze4b110818 has root54 directed tests PASS in
 two invocations and its receipt verifier passes. Exactly one isolated Windows
-run38014169890 is live on that exact SHA, crop_partition=true, the other four
+run38014169890 completed successfully on that exact SHA, crop_partition=true, the other four
 experimental options false and original gates/model preflight preserved.
 [Root review](windows-loading-regression/maize-partition-root-review/README.md)
 authorizes the trial, not promotion. The temporary40.85MB package duplication
 must be eliminated before any eventual final integration. No production flag
-is enabled. The packaged WebView2 smoke step has passed; genuine native
-minimization/restoration remains live. Original reports and rendered capture
-must still be inspected before accepting readiness or promoting this candidate.
-No performance result is inferred from a workflow step alone.
+is enabled. Root independently verified official artifact digests and inspected
+the PNG. Readiness reached at70924ms and genuine native minimization lasted
+300113.2ms with successful restoration; [original reports and bounded review](windows-loading-regression/partition-4b-38014169890-root/README.md)
+are retained. The capture proves the canyon landscape renders, but contains no
+crops. Native crop/diorama visuals and final deduplicated default package still
+require validation before promotion. This single native trial is not an AB/BA
+performance comparison or physical/full-biome acceptance.
 
 ## Current-state update through main 8e1909d8
 
