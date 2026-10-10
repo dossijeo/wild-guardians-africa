@@ -1,0 +1,39 @@
+{
+  "checks": [
+    {
+      "index": 0,
+      "mode": "original",
+      "invalidEndpoints": []
+    },
+    {
+      "index": 1,
+      "mode": "candidate",
+      "invalidEndpoints": []
+    },
+    {
+      "index": 2,
+      "mode": "candidate",
+      "invalidEndpoints": []
+    },
+    {
+      "index": 3,
+      "mode": "original",
+      "invalidEndpoints": []
+    }
+  ],
+  "newInvalid": [],
+  "payloadHashes": {
+    "arm-0-original.json.gz": "7b3e9e2caee12df794eeeaed71eccc06fac33cb82c2bc641d32e9beae596e16f",
+    "arm-1-candidate.json.gz": "70c3694d9c7930f20ea86af747d7284f98887374c9ffbbde77b35108bdbaead2",
+    "arm-2-candidate.json.gz": "70c3694d9c7930f20ea86af747d7284f98887374c9ffbbde77b35108bdbaead2",
+    "arm-3-original.json.gz": "7b3e9e2caee12df794eeeaed71eccc06fac33cb82c2bc641d32e9beae596e16f",
+    "checkpoint.json.gz": "44fe6bd2d4fe6e2d8b8c97ddc68643114a2b46b7e6ff41dda411c4893847d5d2",
+    "provenance.json": "609a849a092866642d6f9b8c4f530955daacef6322f1da4a9ebe460852aa1e34",
+    "report.json": "a0b5b289d58651b1e1afc69cdd3bca682f53684d73fa6a0aefaab3759f5234be",
+    "status.json": "22042888d9d709dfbaf5d88fb341e22b5cab09c8c7a76d2d2390edc6dafea623"
+  },
+  "ledgerAndTaskIdsEqual": true,
+  "withinVariantSnapshotsExact": true,
+  "maxPositionDifference": 0.1020336872434829,
+  "scope": "Read-only raw snapshot audit, fresh native navigation endpoint checks. No full trajectory, GPU, mobile or all-biome performance acceptance."
+}

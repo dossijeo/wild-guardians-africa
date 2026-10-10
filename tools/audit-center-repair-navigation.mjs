@@ -1,0 +1,21 @@
+import fs from 'node:fs';import path from 'node:path';import zlib from 'node:zlib';import assert from 'node:assert/strict';import crypto from 'node:crypto';
+import {Navigation,BIOME_IDS} from '../src/world/navigation.js';
+import {serialize,deserialize} from '../src/persistence/snapshots.js';
+const dir=path.resolve(process.argv[2]),report=JSON.parse(fs.readFileSync(path.join(dir,'report.json')));
+const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
+assert.equal(JSON.parse(fs.readFileSync(path.join(dir,'status.json'))).phase,'completed');assert.deepEqual(report.changedSources,[]);assert.equal(report.arms.length,4);
+const states=report.arms.map(a=>deserialize(zlib.gunzipSync(fs.readFileSync(path.join(dir,'arm-'+a.index+'-'+a.mode+'.json.gz'))).toString()));
+assert.equal(serialize(states[0]),serialize(states[3]),'original ABBA repeat');assert.equal(serialize(states[1]),serialize(states[2]),'candidate ABBA repeat');
+const checks=states.map((state,index)=>{
+ const arm=report.arms[index],profile=JSON.parse(fs.readFileSync(new URL('../public/content/biome-'+BIOME_IDS[state.biome]+'.json',import.meta.url))).profile;
+ const nav=new Navigation(state.seed,state.biome,profile);nav.setState(state);
+ assert.deepEqual(state.ledger,states[0].ledger);assert.deepEqual(state.tasks.map(t=>t.id),states[0].tasks.map(t=>t.id));
+ assert.equal(arm.receipt.repair.paidCoins,174);assert.equal(state.ledger.entries[arm.receipt.repair.paymentId].n,'-174');
+ assert.equal(state.structures.find(e=>e.id===arm.receipt.targetId).hp,600);
+ const invalid=state.workers.filter(w=>!nav.walkable(w.x,w.z,.28,null,true)).map(w=>w.id);
+ return {index,mode:arm.mode,invalidEndpoints:invalid};
+});
+const originalInvalid=new Set(checks[0].invalidEndpoints),newInvalid=checks[1].invalidEndpoints.filter(id=>!originalInvalid.has(id));assert.deepEqual(newInvalid,[],'no newly invalid worker endpoints');
+const payloadHashes=Object.fromEntries(fs.readdirSync(dir).filter(f=>f.endsWith('.json')||f.endsWith('.gz')).map(f=>[f,sha(fs.readFileSync(path.join(dir,f)))]));
+const audit={checks,newInvalid,payloadHashes,ledgerAndTaskIdsEqual:true,withinVariantSnapshotsExact:true,maxPositionDifference:Math.max(...states[0].workers.map((w,i)=>Math.hypot(w.x-states[1].workers[i].x,w.z-states[1].workers[i].z))),scope:'Read-only raw snapshot audit, fresh native navigation endpoint checks. No full trajectory, GPU, mobile or all-biome performance acceptance.'};
+fs.writeFileSync(process.argv[3],JSON.stringify(audit,null,2));console.log(JSON.stringify({newInvalid,checks,maxPositionDifference:audit.maxPositionDifference}));
