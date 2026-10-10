@@ -1,0 +1,13 @@
+# Original wall-package diagnostic 38007229019
+
+Frozen49ef22640983d34f50e6dc93af453e6929e828a2; wall_buffer_package=true, compile_window=false, resource_overlap=false. Officialartifact11651569958 is45898 bytes directJSON, SHA256 `0079ad30b480161eda533a8a03bd9ed104e3946adbb96f1d73b214b35693cf8f`. Original90s gate failed: worldWait90.2359 s, visible/focused/stagebusy/85%, “Bringing your world to life...”. Build/installer passed; minimization skipped. No retry occurred.
+
+The package flag is recorded true. Required walls and subsequent stages completed sufficiently to reach warmGPU. Transfer aggregates are83, pending0, failed0,80network/3application-cache; all8 observedGLTF requests completed. The159 fewer transfer records relative to originalf92 count242 is consistent with160→1 binary reduction. Completed nonGLTF rows are not retained here, so there is no explicit per-package native request duration or independent URL count trace. Source/CPU proof establishes the one-request loader; do not invent a wall-load timing from aggregates.
+
+Existing context is WARP/MicrosoftBasicRenderDriver, no loss; identity is not cause. Chunks loaded25/desired25/queued0/waiters0; hands6/6 adopted. Compilation is originalserial, windowHighWater0,10started/9completed. Activejob10 is worldbatch6/75 (595objects); program19 is pending from the Standard resident crop-bridge recipe. Selection happened only91.9ms before snapshot, with one poll recorded. It does not establish a prolonged shader stall or explain the full90s. There is no omitted association/identity/job data in this snapshot; first-observed selection is not program creation or exhaustive mesh consumption.
+
+ActiveWorld.load56.173 s contains warmGPU13.1422 s, which contains worldcompile2.915 s. PreparedPending28.3666 s and pre-worldsetup5.6983 s precedeWorld.load; early16 labels/dropped0. BridgeGLTF13.032 s has heuristic untilresponseEnd12.017 s + after1.015 s; those intervals are not exclusive parse/CPU/physical delivery. No child durations are summed as extra elapsed costs.
+
+Original24b stopped earlier with56pending BIN transfers and zero compiler jobs; originalf92 reachedbatch10/program20. Different early loads, random world structure (595objects/75batches here versus613/77 f92) and runner/cache/order prevent a causal speed comparison. This candidate does not pass readiness and remains diagnostic/defaultOFF. No PR, promotion, deletion or new run is justified by this result.
+
+Receipt hashes preserve report, dispatch inputs, run/jobs/artifacts/full job log and watcher chronology. Watcher60242/PID17236 exit0 indicates observation completion only. `verify.py` checks exact original bytes and the failure scope.
