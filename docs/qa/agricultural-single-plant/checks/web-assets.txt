@@ -1,0 +1,29 @@
+
+> wild-guardians-africa@0.1.0 verify:web-assets
+> node tools/verify_web_assets.mjs
+
+(node:34752) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+0ab735656497 bytes exact 2558194 PSNR min 33.35 validator errors 473
+25e4ab988c87 bytes exact 2562250 PSNR min 36.96 validator errors 473
+3ba902fd9bfc bytes exact 845132 PSNR min 34.89 validator errors 0
+4c3d590d278e bytes exact 2958234 PSNR min 35.09 validator errors 473
+5ac817bcc5a8 bytes exact 1766610 PSNR min 35.04 validator errors 0
+6c43390aa864 bytes exact 777068 PSNR min 32.87 validator errors 0
+6fb0b48a96d8 bytes exact 5758064 PSNR min 36.07 validator errors 0
+7de8ad72063c bytes exact 2106310 PSNR min 37.15 validator errors 0
+88552fdb555a bytes exact 1938904 PSNR min 38.14 validator errors 0
+9cb17849416e bytes exact 1896130 PSNR min 39.00 validator errors 0
+a748ca0cea0d bytes exact 1500146 PSNR min 39.60 validator errors 0
+b27ce08a5f86 bytes exact 1558006 PSNR min 39.73 validator errors 0
+b396fba7b2c5 bytes exact 2211438 PSNR min 34.64 validator errors 0
+be4bb7e7eab2 bytes exact 7207582 PSNR min 34.73 validator errors 0
+cb7a23479fb9 bytes exact 2691410 PSNR min 38.64 validator errors 1
+db01314e4e0a bytes exact 1496090 PSNR min 36.52 validator errors 0
+e870835e4fa3 bytes exact 2620110 PSNR min 35.55 validator errors 473
+eddde4e46932 bytes exact 758054 PSNR min 34.27 validator errors 0
+f3ae53d5ce3b bytes exact 890884 PSNR min 33.99 validator errors 0
+fedb713c0b32 bytes exact 532536 PSNR min 32.93 validator errors 0
+8f6c9ef7472a bytes exact 8146042 PSNR min 34.73 validator errors 0
+2fdb3468b764 bytes exact 48928050 PSNR min Infinity validator errors 0
+PASS: all GLBs, byte-exact geometry/animation, textures/alpha, local decoder and conformance
