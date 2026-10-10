@@ -1,0 +1,25 @@
+# Native campaign harness proposal (not campaign acceptance)
+
+Branch starts at main5955feae. Production prices remain those from main, not the historical e040 high-yield economy or the mathematical60% model. Additional villages2000 are a parent-owned production change pending its commit. No simulated exposure multiplier, grants, seed scarcity, altered clock, forced harvests or altered raid target decisions are introduced here.
+
+## Implemented opt-in tools
+
+`simulateIntensiveFarm({defend:true,defensePolicy:'expanding',nativeEvidence:true})` uses ordinary native commands. Legacy defaults stay unchanged. The new defense policy retries a finite quantized envelope around crops/centre hulls, expands its cumulative bounds, buys only affordable new legal pieces, and retains omissions/gaps. Crop turnover cannot shrink the envelope into redundant paid rings. Ruined/damaged owned walls generate manual FIFO repair requests; an uncompleted request does not become useful activity. Existing historical target.cost is never rewritten. Built wall count does not establish interception or closure.
+
+`createNativeCampaignEvidence` observes each native tick and player decision. Income is exclusively a unique CrateDelivered event matched to its settled deliver:crate ledger entry, not maturity, picking, refunds or estimated payout. It records crop purchases, wall pieces/orders, structure contacts and repair settlements. Paid HP-restoring completions credit only their original request decision; autonomous travel/repair time is not user activity. Missing event windows fail incomplete, including after reload. Day boundary events remain attributed to the outgoing decision. Reports are cloned.
+
+At least60 crop purchases/day is an observed gate, never a quota or free transaction. The harness can attempt one plant each simulated second while time<280, up to280/day, without imposing a plant-count cap. If liquidity, routes or legal plots prevent60, preserve that negative result. A purchase does not represent a whole simulated second of arbitrary UI occupancy: action-based idle remains a policy proxy, not physical human interaction timing.
+
+## Required next integration before long campaigns
+
+1. Incorporate parent's committed fixed village price and physically external raid entrance. The old synchronous harness does not implement modern async entry/planning readiness; it must not drive100/180-night runs unchanged when a raid requests async entrance. Reuse the modern shared driver rather than bypassing transport.
+2. Freeze a four-strategy protocol (expansive, good, bad, no walls) before running. Pair equal seeds, biome/culture and productive/magic rules where attributing defense effects. Differences in risky purchasing, hiring or expansion must be explicit. Bad decisions may be poor management; do not manufacture defeat with arbitrary compulsory reserves or inaccessible crops.
+3. Plot selection currently stops at initial resident bounds. Expand native camera/chunk bounds as a player would, and revalidate reused plots after walls/topology changes. Worker routes must remain physically legal both ways. Define a reproducible spatial candidate order for paid new villages/centres; use Game.previewVillage/foundVillage/placeStructure, never manually append them or gift workers.
+4. Current hiring can consume opening liquidity. Adopt a transparent affordable opening/next-wage policy, with an emergency seed+journal fallback when the field is empty. Reserve repairs by their pending actual costs, not a permanent arbitrary100. Preserve raw decisions, denied reasons and bad-policy negatives.
+5. Record attack allocation/contacts/misses/shields/secondary damage and route/entrance witnesses. A financed perimeter cannot stand in for useful interception. Report plants outside, native omissions, gates, HP loss, paid repairs and rebuilding, with actual targeting/occlusion unchanged.
+6. Clock daylight300 seconds; record partial terminal days separately from full-day activity. Require strict meaningful idle<25%, physical crate delivery accounting, actual paid repairs and actual60 purchases on designated expansion days. Preserve starvation and no-space failures rather than declaring every late farm successful.
+7. Night100 native victory is followed by ordinary postgame continuation before180; do not simply waive victory or clear results in the runner. Keep original snapshots, frozen source hashes and all terminal failures per seed. Select additional seeds before launch; no rerolls.
+
+## Validation scope
+
+Six short contracts pass: three funded native construction/turnover fixtures, plus three observer ledger/repair/day-boundary contracts. Construction fixture credit is explicitly test setup, not evidence of affordable new-game growth. No campaign, GPU benchmark,100/180-night or physical defense acceptance has run on this branch. Observer tests validate telemetry semantics rather than worker navigation. CPU-heavy opening diagnostics require coordinated release and a frozen runtime protocol.
