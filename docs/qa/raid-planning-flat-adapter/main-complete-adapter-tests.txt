@@ -1,0 +1,50 @@
+TAP version 13
+# Subtest: QA-087: all ten attraction boundaries select the exact confirmed tier
+ok 1 - QA-087: all ten attraction boundaries select the exact confirmed tier
+  ---
+  duration_ms: 1.9374
+  ...
+# Subtest: QA-087: actual living plant base values drive night planning independently of cash, crates, maturity and yield bonuses
+ok 2 - QA-087: actual living plant base values drive night planning independently of cash, crates, maturity and yield bonuses
+  ---
+  duration_ms: 4.858
+  ...
+# Subtest: QA-088 revised: the first-night clock spawns one mandatory warthog with zero attraction and preserves its plan on reload
+ok 3 - QA-088 revised: the first-night clock spawns one mandatory warthog with zero attraction and preserves its plan on reload
+  ---
+  duration_ms: 33.0167
+  ...
+# Subtest: QA-089 revised: a thousand guaranteed nightly plans use fresh independent timing and composition draws
+ok 4 - QA-089 revised: a thousand guaranteed nightly plans use fresh independent timing and composition draws
+  ---
+  duration_ms: 33.0155
+  ...
+# Subtest: QA-090: budget three chooses precisely three warthogs or one unlocked hyena
+ok 5 - QA-090: budget three chooses precisely three warthogs or one unlocked hyena
+  ---
+  duration_ms: 0.1929
+  ...
+# Subtest: QA-091: sixteen night and four daytime budgets exactly match an independent Cartesian count oracle
+ok 6 - QA-091: sixteen night and four daytime budgets exactly match an independent Cartesian count oracle
+  ---
+  duration_ms: 9.1887
+  ...
+# Subtest: QA-092: all 120 unlocked-order permutations and repeated IDs preserve the same unweighted composition list
+ok 7 - QA-092: all 120 unlocked-order permutations and repeated IDs preserve the same unweighted composition list
+  ---
+  duration_ms: 8.5318
+  ...
+# Subtest: QA-093: affordable locked lions and rhinos cannot enter the legal composition pool
+ok 8 - QA-093: affordable locked lions and rhinos cannot enter the legal composition pool
+  ---
+  duration_ms: 0.4248
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 274.078

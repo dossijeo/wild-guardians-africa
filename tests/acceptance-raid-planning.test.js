@@ -39,7 +39,8 @@ test('QA-087: actual living plant base values drive night planning independently
 });
 
 test('QA-088 revised: the first-night clock spawns one mandatory warthog with zero attraction and preserves its plan on reload',()=>{
- const nav={placement:()=>({valid:true}),setState(){},walkable:()=>true,path:(_a,b)=>[{x:b.x,z:b.z}]};
+ // Domain clock/plan test: explicitly flat and clear, not physical route QA.
+ const nav={placement:()=>({valid:true}),setState(){},walkable:()=>true,segmentClear:()=>true,path:(_a,b)=>[{x:b.x,z:b.z}]};
  let s=Game.newGame({seed:712});Game.resume(s,'intro');Game.placeStructure(s,'center',{x:0,z:0},nav);s.initialPreparation=false;
  Game.tick(s,300.01,nav);assert.equal(s.day,1);assert.equal(s.nightPlan.attraction,0);assert.deepEqual(s.nightPlan.group,['warthog']);
  assert.equal(s.events.filter(e=>e.type==='RaidSpawned').length,0);
