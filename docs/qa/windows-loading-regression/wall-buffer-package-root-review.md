@@ -34,3 +34,22 @@ isolated measurement must keep compiler-window and resource-overlap options
 OFF and preserve the original 90-second readiness gate, complete wall stage,
 shader variants and GPU fences. No native run, PR, merge or performance claim
 is approved by these CPU results.
+
+## Wiring review and bounded native measurement authorization
+
+Root subsequently reviewed frozen `49ef22640983d34f50e6dc93af453e6929e828a2`.
+The source delta from `8faa9f19` adds only the false-default workflow input,
+its argument to both smoke invocations, the existing smoke-only Rust guarded
+injection, explicit recipe reporting and the source-wiring test. The reviewed
+loader and packed data remain unchanged. Independent verifier PASS and
+66/66 directed tests PASS (1391.843 ms) cover the package/lifecycle,
+readiness observation, compiler-window contracts, failure observation,
+visibility fixture and SFX audit. No native Rust build is inferred from these
+JavaScript tests.
+
+Exactly one Windows workflow dispatch is authorized on this frozen source:
+`wall_buffer_package=true`, `compile_window=false`, `resource_overlap=false`.
+Other hypotheses remain OFF. Preserve original readiness and visibility
+gates, original reports/logs/artifacts and terminal failures. No retry or
+promotion is authorized. At this review boundary the dispatch is authorized,
+not yet independently observed or complete.
