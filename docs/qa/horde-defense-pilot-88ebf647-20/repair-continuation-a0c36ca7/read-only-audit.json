@@ -1,0 +1,42 @@
+{
+  "status": "read-only-continuation-audited",
+  "sourceHashesVerified": 392,
+  "processExit": 0,
+  "initialSnapshotSHA256": "9a13add0d47c9fc8fc56603e63510060eb34e4db5c394fb8226f3110c985a1c9",
+  "finalSnapshotSHA256": "860c50bae40f764eacddd81e9597655b9490449141160de6aa0a3b0ea8a8e13c",
+  "simulatedSeconds": 298.9999999999909,
+  "frames": 1197,
+  "phaseActorSeconds": {
+    "walking": 25037.749999999127,
+    "acting": 3217.749999999909,
+    "carrying": 3438.5
+  },
+  "eventCounts": {
+    "CropPicked": 141,
+    "WaterSatisfied": 552,
+    "CrateDelivered": 141,
+    "CropMatured": 171,
+    "HarvestRequested": 171,
+    "NightStarted": 1
+  },
+  "initialFifoRank": 1110,
+  "finalFifoRank": 417,
+  "reservedSamples": 0,
+  "idleWorkerSamples": 0,
+  "paidRepairs": 0,
+  "newDeliveredPayments": 141,
+  "earnedCoins": "50679",
+  "inputHashes": {
+    "events.json.gz": "7bf4a5c8742b23ba912cee9dc955a2270d2b2af7c36bf214d2d8a1d66d1e979d",
+    "final-state.json.gz": "df1b52e3e6f167412f7f6c5a04e8941a8c7a567b0d73a10ca1b34ceb73f94c0b",
+    "initial-state.json.gz": "e0f20a42cc659dfbaa5bee94066462ed2f246b710e2bc97272d19b99adedcbf0",
+    "provenance.json": "92d99ba8c105e6e0525948c13c815720e46ca93588f467e9597103e2e8b0e34e",
+    "report.json": "2d2b68ec7366f0723b22ebfc3720b980ba887b24236cae584debb75e7a4d1adc",
+    "status.json": "2fe9500d9cb27b932dfbc6ec48386f1f4fb6120c09fd0be45258a2892008eba0",
+    "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout.log": "1c4150a1d026390401e7aa3856829a8916bcea0c8da7520397f87750290fcd07",
+    "trace.json.gz": "ae2910b3de6e3d77699c2ddc0e4a3e2f1c007cc3e7af6f9a10549b0c84d440da"
+  },
+  "auditorSHA256": "8edc7a127bbb739b00a2345d99d6f703dcb879b8d7be03806a833e53513ebb6b",
+  "scope": "Read-only new day21 repair sequence; 299s without assignment before daylight ended, not history of fourteen requests or balance acceptance. Actor-seconds use left-endpoint samples, no substep timestamps"
+}
