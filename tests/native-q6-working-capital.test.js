@@ -47,3 +47,14 @@ test('Q6 opt-in shares Q5 service settings and A/B/D/E comparability without cha
  for(const name of ['expansive','good','no-walls','no-shield'])assert.equal(nativeCampaignStrategy(name).middayHiring,true);
  assert.equal(nativeCampaignStrategy('no-walls').shield,true);assert.equal(nativeCampaignStrategy('no-shield').shield,false);assert.match(q6.id,/-q6$/);
 });
+
+test('Q6 telemetry distinguishes candidate enlarged renewal reserve from current crew',()=>{
+ const s=Game.newGame({seed:712,slotId:'q6-reserve-label'}),nav=new Navigation(712,'sabana');
+ nav.field={canyon:false,riverLevel:0,surface:()=>0,slope:()=>0,fluidInside:()=>false};nav.propsAt=()=>[];nav.setState(s);
+ Game.placeStructure(s,'center',{x:-15,z:0},nav);for(let n=0;n<17;n++)Game.plant(s,'p'+n,'mijo',n*1.5,0,nav);
+ const q=createQ6LabourPolicy();Game.openInitialHiring(s);Game.hire(s,'daily',{olderFemale:1});q.hired(s,1,{daily:true});
+ let candidate;for(let n=0;n<110;n++){Game.tick(s,1,nav);q.observe(s);const plan=q.additional(s);if(plan?.count){candidate=plan;break;}}
+ assert(candidate);assert.equal(candidate.currentRecoveryReserve,30);assert.equal(candidate.recoveryReserve,60);
+ assert.equal(candidate.required,candidate.cost+60+5);assert.equal(q.reserve(),30);
+ assert.equal(s.workers.length,1);assert.equal(s.ledger.entries['candidate'],undefined);
+});

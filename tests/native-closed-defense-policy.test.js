@@ -7,7 +7,15 @@ import {numberOf} from '../src/simulation/money.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {gatePortalPoints} from '../src/world/gate-passages.js';
 import {hitStructure} from '../src/simulation/rules.js';
+import {parseNativeCampaignArgs,nativeCampaignProvenance} from '../tools/run_native_campaign.mjs';
 function fixture(){const {s,nav}=createOpeningWorld();let id=0;return {s,nav,options:{command:k=>'closed-'+k+'-'+id++,reserve:160}};}
+
+test('closed defense is explicit opt-in and recorded in CLI source provenance',()=>{
+ const options=parseNativeCampaignArgs(['--out','fixture','--defense-policy','closed']);assert.equal(options.defensePolicy,'closed');
+ assert.equal(parseNativeCampaignArgs(['--out','fixture']).defensePolicy,'expanding');
+ assert.throws(()=>parseNativeCampaignArgs(['--out','fixture','--defense-policy','unknown']));
+ const p=nativeCampaignProvenance(options);assert.equal(typeof p.sourceHashes['tools/native-closed-defense-policy.mjs'],'string');
+});
 test('day1 native paid complete contour preserves crops, props, reserves and a worker-only gate',()=>{
  const {s,nav,options}=fixture(),policy=createNativeClosedDefensePolicy(),before=numberOf(s.ledger.balance),suppression=structuredClone(s.suppressed),rng=s.rng;
  assert.equal(policy.act(s,nav,options),1);const r=policy.report(),row=r.history.at(-1);

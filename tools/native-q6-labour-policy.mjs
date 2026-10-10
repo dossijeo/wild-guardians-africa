@@ -18,7 +18,9 @@ export function createQ6LabourPolicy({profile='olderFemale'}={}){
   additional(s,options={}){
    const plan=base.additional(s,options);if(!plan)return null;
    const capital=workingCapital(s);
-   return {...plan,...capital,...(capital.workingCapitalShortfall?{count:0,reason:'working capital awaiting settled income'}:{})};
+   // The candidate renewal reserve belongs to the enlarged crew. Expose the
+   // current crew separately; working-capital telemetry must not overwrite it.
+   return {...capital,...plan,currentRecoveryReserve:capital.recoveryReserve,...(capital.workingCapitalShortfall?{count:0,reason:'working capital awaiting settled income'}:{})};
   }
  };
 }
