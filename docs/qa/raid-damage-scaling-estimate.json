@@ -1,0 +1,621 @@
+{
+  "scope": "Static per-target damage bounds; no measured defence efficacy, campaign or GPU result",
+  "cropSemantics": "Current crop: attackHits+=1, destroyed at2. Hypothetical scaled hit still targets only one crop; no splash damage assumed.",
+  "illustrativeActors": {
+    "hitsPerAnimal": 6,
+    "current10": 30,
+    "scaled10At10x": 60,
+    "current100": 300,
+    "limits": "Upper bounds with all hits unshielded on available crops; introductions, missed hits, travel and worker contacts reduce them."
+  },
+  "sources": [
+    {
+      "name": "current-main",
+      "initialMoney": 1500,
+      "centerCost": 800,
+      "cropPrices": {
+        "mijo": 11,
+        "girasol": 36,
+        "sorgo": 13,
+        "maiz": 17,
+        "batata": 23,
+        "algodon": 178,
+        "yuca": 32,
+        "platano": 267
+      },
+      "rows": [
+        {
+          "species": "warthog",
+          "multiplier": 1,
+          "baseDamage": 20,
+          "scaledDamage": 20,
+          "centerHits": 24,
+          "wallHits": {
+            "zarzas": 4,
+            "empalizada": 8,
+            "adobe": 12,
+            "reforzado": 16,
+            "piedra": 20
+          }
+        },
+        {
+          "species": "warthog",
+          "multiplier": 2,
+          "baseDamage": 20,
+          "scaledDamage": 40,
+          "centerHits": 12,
+          "wallHits": {
+            "zarzas": 2,
+            "empalizada": 4,
+            "adobe": 6,
+            "reforzado": 8,
+            "piedra": 10
+          }
+        },
+        {
+          "species": "warthog",
+          "multiplier": 4,
+          "baseDamage": 20,
+          "scaledDamage": 80,
+          "centerHits": 6,
+          "wallHits": {
+            "zarzas": 1,
+            "empalizada": 2,
+            "adobe": 3,
+            "reforzado": 4,
+            "piedra": 5
+          }
+        },
+        {
+          "species": "warthog",
+          "multiplier": 10,
+          "baseDamage": 20,
+          "scaledDamage": 200,
+          "centerHits": 3,
+          "wallHits": {
+            "zarzas": 1,
+            "empalizada": 1,
+            "adobe": 2,
+            "reforzado": 2,
+            "piedra": 2
+          }
+        },
+        {
+          "species": "hyena",
+          "multiplier": 1,
+          "baseDamage": 25,
+          "scaledDamage": 25,
+          "centerHits": 19,
+          "wallHits": {
+            "zarzas": 4,
+            "empalizada": 7,
+            "adobe": 10,
+            "reforzado": 13,
+            "piedra": 16
+          }
+        },
+        {
+          "species": "hyena",
+          "multiplier": 2,
+          "baseDamage": 25,
+          "scaledDamage": 50,
+          "centerHits": 10,
+          "wallHits": {
+            "zarzas": 2,
+            "empalizada": 4,
+            "adobe": 5,
+            "reforzado": 7,
+            "piedra": 8
+          }
+        },
+        {
+          "species": "hyena",
+          "multiplier": 4,
+          "baseDamage": 25,
+          "scaledDamage": 100,
+          "centerHits": 5,
+          "wallHits": {
+            "zarzas": 1,
+            "empalizada": 2,
+            "adobe": 3,
+            "reforzado": 4,
+            "piedra": 4
+          }
+        },
+        {
+          "species": "hyena",
+          "multiplier": 10,
+          "baseDamage": 25,
+          "scaledDamage": 250,
+          "centerHits": 2,
+          "wallHits": {
+            "zarzas": 1,
+            "empalizada": 1,
+            "adobe": 1,
+            "reforzado": 2,
+            "piedra": 2
+          }
+        },
+        {
+          "species": "buffalo",
+          "multiplier": 1,
+          "baseDamage": 35,
+          "scaledDamage": 35,
+          "centerHits": 14,
+          "wallHits": {
+            "zarzas": 3,
+            "empalizada": 5,
+            "adobe": 7,
+            "reforzado": 10,
+            "piedra": 12
+          }
+        },
+        {
+          "species": "buffalo",
+          "multiplier": 2,
+          "baseDamage": 35,
+          "scaledDamage": 70,
+          "centerHits": 7,
+          "wallHits": {
+            "zarzas": 2,
+            "empalizada": 3,
+            "adobe": 4,
+            "reforzado": 5,
+            "piedra": 6
+          }
+        },
+        {
+          "species": "buffalo",
+          "multiplier": 4,
+          "baseDamage": 35,
+          "scaledDamage": 140,
+          "centerHits": 4,
+          "wallHits": {
+            "zarzas": 1,
+            "empalizada": 2,
+            "adobe": 2,
+            "reforzado": 3,
+            "piedra": 3
+          }
+        },
+        {
+          "species": "buffalo",
+          "multiplier": 10,
+          "baseDamage": 35,
+          "scaledDamage": 350,
+          "centerHits": 2,
+          "wallHits": {
+            "zarzas": 1,
+            "empalizada": 1,
+            "adobe": 1,
+            "reforzado": 1,
+            "piedra": 2
+          }
+        },
+        {
+          "species": "lion",
+          "multiplier": 1,
+          "baseDamage": 40,
+          "scaledDamage": 40,
+          "centerHits": 12,
+          "wallHits": {
+            "zarzas": 2,
+            "empalizada": 4,
+            "adobe": 6,
+            "reforzado": 8,
+            "piedra": 10
+          }
+        },
+        {
+          "species": "lion",
+          "multiplier": 2,
+          "baseDamage": 40,
+          "scaledDamage": 80,
+          "centerHits": 6,
+          "wallHits": {
+            "zarzas": 1,
+            "empalizada": 2,
+            "adobe": 3,
+            "reforzado": 4,
+            "piedra": 5
+          }
+        },
+        {
+          "species": "lion",
+          "multiplier": 4,
+          "baseDamage": 40,
+          "scaledDamage": 160,
+          "centerHits": 3,
+          "wallHits": {
+            "zarzas": 1,
+            "empalizada": 1,
+            "adobe": 2,
+            "reforzado": 2,
+            "piedra": 3
+          }
+        },
+        {
+          "species": "lion",
+          "multiplier": 10,
+          "baseDamage": 40,
+          "scaledDamage": 400,
+          "centerHits": 2,
+          "wallHits": {
+            "zarzas": 1,
+            "empalizada": 1,
+            "adobe": 1,
+            "reforzado": 1,
+            "piedra": 1
+          }
+        },
+        {
+          "species": "rhino",
+          "multiplier": 1,
+          "baseDamage": 60,
+          "scaledDamage": 60,
+          "centerHits": 8,
+          "wallHits": {
+            "zarzas": 2,
+            "empalizada": 3,
+            "adobe": 4,
+            "reforzado": 6,
+            "piedra": 7
+          }
+        },
+        {
+          "species": "rhino",
+          "multiplier": 2,
+          "baseDamage": 60,
+          "scaledDamage": 120,
+          "centerHits": 4,
+          "wallHits": {
+            "zarzas": 1,
+            "empalizada": 2,
+            "adobe": 2,
+            "reforzado": 3,
+            "piedra": 4
+          }
+        },
+        {
+          "species": "rhino",
+          "multiplier": 4,
+          "baseDamage": 60,
+          "scaledDamage": 240,
+          "centerHits": 2,
+          "wallHits": {
+            "zarzas": 1,
+            "empalizada": 1,
+            "adobe": 1,
+            "reforzado": 2,
+            "piedra": 2
+          }
+        },
+        {
+          "species": "rhino",
+          "multiplier": 10,
+          "baseDamage": 60,
+          "scaledDamage": 600,
+          "centerHits": 1,
+          "wallHits": {
+            "zarzas": 1,
+            "empalizada": 1,
+            "adobe": 1,
+            "reforzado": 1,
+            "piedra": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "frozen-pilot",
+      "path": "docs/qa/horde-self-consistent-pilot-e040ea6f-20/frozen-source-files.json.gz",
+      "sha256": "cd5f6e90d2417fc917bc0f5d4c60381bcaf8ddfb28fe49e10d714418d629206f",
+      "initialMoney": 1500,
+      "centerCost": 800,
+      "cropPrices": {
+        "mijo": 33,
+        "girasol": 108,
+        "sorgo": 39,
+        "maiz": 51,
+        "batata": 69,
+        "algodon": 534,
+        "yuca": 96,
+        "platano": 801
+      },
+      "rows": [
+        {
+          "species": "warthog",
+          "multiplier": 1,
+          "baseDamage": 10,
+          "scaledDamage": 10,
+          "centerHits": 48,
+          "wallHits": {
+            "zarzas": 8,
+            "empalizada": 16,
+            "adobe": 24,
+            "reforzado": 32,
+            "piedra": 40
+          }
+        },
+        {
+          "species": "warthog",
+          "multiplier": 2,
+          "baseDamage": 10,
+          "scaledDamage": 20,
+          "centerHits": 24,
+          "wallHits": {
+            "zarzas": 4,
+            "empalizada": 8,
+            "adobe": 12,
+            "reforzado": 16,
+            "piedra": 20
+          }
+        },
+        {
+          "species": "warthog",
+          "multiplier": 4,
+          "baseDamage": 10,
+          "scaledDamage": 40,
+          "centerHits": 12,
+          "wallHits": {
+            "zarzas": 2,
+            "empalizada": 4,
+            "adobe": 6,
+            "reforzado": 8,
+            "piedra": 10
+          }
+        },
+        {
+          "species": "warthog",
+          "multiplier": 10,
+          "baseDamage": 10,
+          "scaledDamage": 100,
+          "centerHits": 5,
+          "wallHits": {
+            "zarzas": 1,
+            "empalizada": 2,
+            "adobe": 3,
+            "reforzado": 4,
+            "piedra": 4
+          }
+        },
+        {
+          "species": "hyena",
+          "multiplier": 1,
+          "baseDamage": 12.5,
+          "scaledDamage": 12.5,
+          "centerHits": 38,
+          "wallHits": {
+            "zarzas": 7,
+            "empalizada": 13,
+            "adobe": 20,
+            "reforzado": 26,
+            "piedra": 32
+          }
+        },
+        {
+          "species": "hyena",
+          "multiplier": 2,
+          "baseDamage": 12.5,
+          "scaledDamage": 25,
+          "centerHits": 19,
+          "wallHits": {
+            "zarzas": 4,
+            "empalizada": 7,
+            "adobe": 10,
+            "reforzado": 13,
+            "piedra": 16
+          }
+        },
+        {
+          "species": "hyena",
+          "multiplier": 4,
+          "baseDamage": 12.5,
+          "scaledDamage": 50,
+          "centerHits": 10,
+          "wallHits": {
+            "zarzas": 2,
+            "empalizada": 4,
+            "adobe": 5,
+            "reforzado": 7,
+            "piedra": 8
+          }
+        },
+        {
+          "species": "hyena",
+          "multiplier": 10,
+          "baseDamage": 12.5,
+          "scaledDamage": 125,
+          "centerHits": 4,
+          "wallHits": {
+            "zarzas": 1,
+            "empalizada": 2,
+            "adobe": 2,
+            "reforzado": 3,
+            "piedra": 4
+          }
+        },
+        {
+          "species": "buffalo",
+          "multiplier": 1,
+          "baseDamage": 17.5,
+          "scaledDamage": 17.5,
+          "centerHits": 28,
+          "wallHits": {
+            "zarzas": 5,
+            "empalizada": 10,
+            "adobe": 14,
+            "reforzado": 19,
+            "piedra": 23
+          }
+        },
+        {
+          "species": "buffalo",
+          "multiplier": 2,
+          "baseDamage": 17.5,
+          "scaledDamage": 35,
+          "centerHits": 14,
+          "wallHits": {
+            "zarzas": 3,
+            "empalizada": 5,
+            "adobe": 7,
+            "reforzado": 10,
+            "piedra": 12
+          }
+        },
+        {
+          "species": "buffalo",
+          "multiplier": 4,
+          "baseDamage": 17.5,
+          "scaledDamage": 70,
+          "centerHits": 7,
+          "wallHits": {
+            "zarzas": 2,
+            "empalizada": 3,
+            "adobe": 4,
+            "reforzado": 5,
+            "piedra": 6
+          }
+        },
+        {
+          "species": "buffalo",
+          "multiplier": 10,
+          "baseDamage": 17.5,
+          "scaledDamage": 175,
+          "centerHits": 3,
+          "wallHits": {
+            "zarzas": 1,
+            "empalizada": 1,
+            "adobe": 2,
+            "reforzado": 2,
+            "piedra": 3
+          }
+        },
+        {
+          "species": "lion",
+          "multiplier": 1,
+          "baseDamage": 20,
+          "scaledDamage": 20,
+          "centerHits": 24,
+          "wallHits": {
+            "zarzas": 4,
+            "empalizada": 8,
+            "adobe": 12,
+            "reforzado": 16,
+            "piedra": 20
+          }
+        },
+        {
+          "species": "lion",
+          "multiplier": 2,
+          "baseDamage": 20,
+          "scaledDamage": 40,
+          "centerHits": 12,
+          "wallHits": {
+            "zarzas": 2,
+            "empalizada": 4,
+            "adobe": 6,
+            "reforzado": 8,
+            "piedra": 10
+          }
+        },
+        {
+          "species": "lion",
+          "multiplier": 4,
+          "baseDamage": 20,
+          "scaledDamage": 80,
+          "centerHits": 6,
+          "wallHits": {
+            "zarzas": 1,
+            "empalizada": 2,
+            "adobe": 3,
+            "reforzado": 4,
+            "piedra": 5
+          }
+        },
+        {
+          "species": "lion",
+          "multiplier": 10,
+          "baseDamage": 20,
+          "scaledDamage": 200,
+          "centerHits": 3,
+          "wallHits": {
+            "zarzas": 1,
+            "empalizada": 1,
+            "adobe": 2,
+            "reforzado": 2,
+            "piedra": 2
+          }
+        },
+        {
+          "species": "rhino",
+          "multiplier": 1,
+          "baseDamage": 30,
+          "scaledDamage": 30,
+          "centerHits": 16,
+          "wallHits": {
+            "zarzas": 3,
+            "empalizada": 6,
+            "adobe": 8,
+            "reforzado": 11,
+            "piedra": 14
+          }
+        },
+        {
+          "species": "rhino",
+          "multiplier": 2,
+          "baseDamage": 30,
+          "scaledDamage": 60,
+          "centerHits": 8,
+          "wallHits": {
+            "zarzas": 2,
+            "empalizada": 3,
+            "adobe": 4,
+            "reforzado": 6,
+            "piedra": 7
+          }
+        },
+        {
+          "species": "rhino",
+          "multiplier": 4,
+          "baseDamage": 30,
+          "scaledDamage": 120,
+          "centerHits": 4,
+          "wallHits": {
+            "zarzas": 1,
+            "empalizada": 2,
+            "adobe": 2,
+            "reforzado": 3,
+            "piedra": 4
+          }
+        },
+        {
+          "species": "rhino",
+          "multiplier": 10,
+          "baseDamage": 30,
+          "scaledDamage": 300,
+          "centerHits": 2,
+          "wallHits": {
+            "zarzas": 1,
+            "empalizada": 1,
+            "adobe": 1,
+            "reforzado": 2,
+            "piedra": 2
+          }
+        }
+      ]
+    }
+  ],
+  "interpretation": [
+    "Structure damage scales HP loss but saturates at one destroyed target per committed attack.",
+    "Crop damage saturates when a hit becomes lethal; damage alone cannot replace arbitrary actor/attack count.",
+    "Larger damage may weaken responsible walls more than it harms undefended crops. Protection must be measured with actual paths.",
+    "Current attraction sums living crops base harvest values; it ignores cash, crop progress and defense capital. Selecting a different farm value measure is a design decision."
+  ],
+  "candidateProtocol": [
+    "Compare fixed prior economy plus scaled structural damage against reduced harvest/cheap walls, separately.",
+    "Use smooth capped value scaling, freeze it per raid, preserve first-five-night crop destruction cap.",
+    "Measure native crops destroyed, structure damage, repairs paid, reserve, raid duration and meaningful activity.",
+    "Reject single-hit center destruction or cheaper weak walls becoming pointless unless explicitly intended and tested."
+  ]
+}
