@@ -14,8 +14,9 @@ export function createNativeRaidCampaignEvidence(initial){
    r.actors.push({id:a.id,species:a.species,spawn:structuredClone(a.spawn),exit:structuredClone(a.exit)});
    v.generated++;v.initialHitBudget+=a.hitsRemaining;
    assert.ok(Number.isSafeInteger(a.hitsRemaining)&&a.hitsRemaining>=0);
-   v.maximumStructureDamage+=a.hitsRemaining*spec.structure_hit_damage;
+   v.maximumStructureDamage+=a.hitsRemaining*(a.damageProfile?.structureDamage??spec.structure_hit_damage);
   }
+  r.pressureFacts=facts?.pressureFacts??null;r.waves=[{index:facts?.waveIndex??0,elapsed:facts?.elapsed??null,actors:cohort.length}];
   // tick() may complete contacts between spawn and this observation. Add only
   // native budget-consumption facts in this same spawn window, by species.
   for(const e of (facts?[]:events))if(['AnimalLogicalHit','AnimalLogicalMiss','WorkerHit'].includes(e.type)){
@@ -40,8 +41,20 @@ export function createNativeRaidCampaignEvidence(initial){
   for(const e of events){
    observedEvents.add(e.id);
    if(e.type==='RaidSpawned')continue;
-   if(!current){if(['CropHit','StructureHit','AnimalLogicalHit','AnimalLogicalMiss','RaidEnded'].includes(e.type))issue('Raid fact without captured cohort');continue;}
+   if(!current){if(['RaidWaveSpawned','CropHit','StructureHit','AnimalLogicalHit','AnimalLogicalMiss','RaidEnded'].includes(e.type))issue('Raid fact without captured cohort');continue;}
    const r=current;
+   if(e.type==='RaidWaveSpawned'){
+    const f=e.raidFacts;
+    if(!f||f.id!==r.id||f.waveIndex!==r.waves.length){issue('Wave identity or order mismatch');continue;}
+    r.waves.push({index:f.waveIndex,elapsed:f.elapsed,actors:f.actors.length,exposedLiving:f.exposedLiving});
+    for(const a of f.actors){
+     if(r.actors.some(v=>v.id===a.id)){issue('Duplicate native wave actor');continue;}
+     const spec=animalSpec(a.species),v=r.species[a.species]??={generated:0,initialHitBudget:0,maximumStructureDamage:0,contacts:0,misses:0,cropHits:0,structureHits:0,shieldContacts:0,workerHits:0};
+     assert.ok(Number.isSafeInteger(a.hitsRemaining)&&a.hitsRemaining>=0);
+     r.actors.push({id:a.id,species:a.species,spawn:structuredClone(a.spawn),exit:structuredClone(a.exit)});
+     v.generated++;v.initialHitBudget+=a.hitsRemaining;v.maximumStructureDamage+=a.hitsRemaining*(a.damageProfile?.structureDamage??spec.structure_hit_damage);
+    }
+   }
    if(e.type==='CropHit'){
     r.cropHits++;
     if(e.attackId){
@@ -52,7 +65,7 @@ export function createNativeRaidCampaignEvidence(initial){
      hit.plants.add(e.targetId);areaContacts.set(e.attackId,hit);
      r.agriculturalHpDamage=(r.agriculturalHpDamage??0)+e.damage;
      const key=e.central?'centralHpDamage':'peripheralHpDamage';r[key]=(r[key]??0)+e.damage;
-    }else pendingCrop++;
+    }else {pendingCrop++;r.agriculturalHpDamage=(r.agriculturalHpDamage??0)+1;r.centralHpDamage=(r.centralHpDamage??0)+1;}
    }
    if(e.type==='CropDestroyed'){
     const p=s.plants.find(p=>p.id===e.targetId);if(!p){issue('Destroyed plant identity missing');continue;}

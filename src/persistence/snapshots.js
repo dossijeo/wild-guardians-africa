@@ -1,5 +1,6 @@
 import {validDamageProfile} from '../simulation/raid-agricultural-impact.js';
 import {validRaidContention} from './raid-contention-snapshot.js';
+import {validatePressureSnapshot} from './raid-pressure-snapshot.js';
 import {BASIC_STEPS,TUTORIAL_IDS} from '../tutorial/messages.js';
 import {validExitFrontier} from './exit-connector-snapshot.js';
 export const SAVE_VERSION=1;
@@ -8,6 +9,7 @@ function wholeMoney(value){
 }
 export function validateSnapshot(state) {
   if(!state || state.saveVersion!==SAVE_VERSION || typeof state.slotId!=='string')throw new Error('Guardado incompatible');
+  validatePressureSnapshot(state);
   if(!Number.isFinite(state.time)||state.time<0||state.time>600 || !Number.isSafeInteger(state.day)||state.day<1)throw new Error('Reloj inválido');
   if(!state.ledger||!wholeMoney(state.ledger.balance)||BigInt(state.ledger.balance.n)<0n)throw new Error('Saldo inválido');
   if(!state.ledger.entries||typeof state.ledger.entries!=='object'||Array.isArray(state.ledger.entries)||!Object.values(state.ledger.entries).every(wholeMoney))throw new Error('Libro monetario inválido');

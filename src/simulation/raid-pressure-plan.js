@@ -8,7 +8,7 @@ validateRaidPressureConfiguration(candidate);
 // Transactional preparation only. The scheduler commits RNG/memory together
 // with the plan; neither a readiness retry nor a save reload may reroll it.
 export function preparePressureNight(state) {
-  if(state.nightPlan?.pressureVersion===1 && state.nightPlan.night===state.day)
+  if(state.nightPlan?.pressureVersion===1 && state.nightPlan.night===state.day && !!state.nightPlan.peaceful===!!state.postgame)
     return {plan:structuredClone(state.nightPlan),memory:structuredClone(state.raidPressureMemory),rng:state.rng,reused:true};
   const random={rng:state.rng},at=323+nextRandom(random)*225;
   const value=agriculturalRaidValue(state.plants);

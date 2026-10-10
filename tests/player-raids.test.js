@@ -10,7 +10,7 @@ function until(s,nav,check){for(let i=0;!check()&&i<6000&&!s.pauses.length;i++)G
 test('all 100 campaign nights have animals even with no crops, for 30 seeds',()=>{
  for(let seed=1;seed<=30;seed++){
   const s=Game.newGame({seed});
-  for(let day=1;day<=100;day++){s.day=day;planNight(s);assert.ok(s.nightPlan.group.length>=1&&s.nightPlan.group.length<=2);if(day<=5)assert.deepEqual(s.nightPlan.group,[species[day-1]]);}
+  for(let day=1;day<=100;day++){s.day=day;planNight(s);const expected=day<=5?1:Math.round(4+30*.45*(day-1)/99);assert.equal(s.nightPlan.waves.flat().length,expected);assert.ok(s.nightPlan.group.length>=1&&s.nightPlan.group.length<=16);if(day<=5)assert.deepEqual(s.nightPlan.group,[species[day-1]]);}
   s.postgame=true;planNight(s);assert.deepEqual(s.nightPlan.group,[]);
  }
 });

@@ -14,13 +14,18 @@ test('every rank matches native enumeration, including species subsets and order
   for(let rank=0;rank<original.length;rank++)assert.deepEqual(index.at(rank),original[rank]);
  }
 });
-test('night plans keep the original group, timing and final RNG state',()=>{
+test('pressure nights retain arrival timing and full native hit rolls with exact RNG accounting',()=>{
  for(const seed of [1,712,123,2026,4294967295])for(const count of [0,10,50,100,300]){
   const state={rng:seed,day:6,postgame:false,plants:Array.from({length:count},()=>({alive:true,species:'mijo'}))};
-  const expected=structuredClone(state),at=323+nextRandom(expected)*225,tier=threatTier(attraction(expected.plants));
-  const budget=randomInt(expected,tier.threat_min,tier.threat_max),groups=compositions(budget,tier.unlocked_species);
-  const group=groups[randomInt(expected,0,groups.length-1)];
-  planNight(state);assert.deepEqual(state.nightPlan,{at,attraction:attraction(expected.plants),group,done:false});assert.equal(state.rng,expected.rng);
+  const expected=structuredClone(state),at=323+nextRandom(expected)*225;
+  planNight(state);assert.equal(state.nightPlan.at,at);assert.equal(state.nightPlan.attraction,attraction(expected.plants));
+  const p=state.nightPlan.pressureFacts.pressure;
+  for(const actor of state.nightPlan.waves.flat()){
+   nextRandom(expected); // one native draw selects rank in the prebudgeted mix
+   const native=B.animals.find(a=>a.id===actor.species),extra=Math.floor(2*p);
+   assert.equal(actor.hits,randomInt(expected,native.hit_budget_min+extra,native.hit_budget_max+extra));
+  }
+  assert.equal(state.rng,expected.rng);
  }
 });
 test('large budgets preserve exact counts without retaining all group arrays',()=>{

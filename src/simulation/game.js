@@ -593,11 +593,13 @@ export function foundVillage(s,id,culture,x,z,payload,nav) {
     emit(s,'VillageFounded',{culture,x,z,targetId:s.villages.at(-1).id,presentation:{x,z}});
   });
 }
-export function nightEntryPending(s){return !s.raid&&!s.result&&!!s.nightPlan?.group?.length&&!s.nightPlan.done&&s.time>=s.nightPlan.at;}
+export function nightEntryPending(s){const plan=activeRaidEntryPlan(s);return !s.result&&!!plan?.group?.length&&!plan.done&&s.time>=plan.at;}
 function clockBoundaries(s){
   return [250,300,600,...(s.dayPlan&&!s.dayPlan.done?[s.dayPlan.at]:[]),...(s.nightPlan&&!s.nightPlan.done?[s.nightPlan.at]:[])].filter(Number.isFinite);
 }
 function prepareClockEvents(s,nav){
+  const wave=s.raid?.pendingWavePlan;
+  if(wave&&!wave.done&&s.time>=wave.at)spawnRaid(s,wave,nav);
   if(s.time>=300 && !s.nightPlan){planNight(s);selectEvent(s);emit(s,'NightStarted');}
   if(s.dayPlan&&!s.dayPlan.done&&s.time>=s.dayPlan.at){s.dayPlan.done=s.postgame||spawnRaid(s,s.dayPlan,nav,true)!==false;}
   if(s.nightPlan&&!s.nightPlan.done&&s.time>=s.nightPlan.at&&(!s.dayPlan||activeRaidEntryPlan(s)!==s.dayPlan)){s.nightPlan.done=!s.nightPlan.group?.length||spawnRaid(s,s.nightPlan,nav)!==false;}

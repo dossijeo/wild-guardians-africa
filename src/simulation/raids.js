@@ -11,6 +11,8 @@ import {centerBoundaryPoint,centerCulture,centerDeliveryPoint} from '../world/ce
 import {BALANCE as B} from './balance.js';
 import {nextRandom,randomInt,attraction,threatTier,animalSpec,operational,hitStructure,collapseThreshold} from './rules.js';
 import {createRaidCompositionIndex} from './raid-composition-index.js';
+import {preparePressureNight,nextPressureWave} from './raid-pressure-plan.js';
+import {eligiblePendingRaidWavePlan} from '../world/raid-entry-data.js';
 import {emit,notice,walkTo,rebuildTasks,spellAt,dropCarriedCrate,recoverDisplacedWorkers} from './game.js';
 import {contractExpired} from './workforce.js';
 import {cancelIdle} from './idle.js';
@@ -23,16 +25,8 @@ import {activeChunkRegion,validActiveBounds} from '../world/active-region.js';
 import {defensiveGroups,reservedGroup,reconcileDefensiveReservations} from './defensive-groups.js';
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z),entrySelections=new WeakMap();
 export function planNight(s) {
-  const at=323+nextRandom(s)*225; // 20:00–05:00 at 2.4 internal minutes/s.
-  const value=attraction(s.plants),tier=threatTier(value);
-  let group=[];
-  const introductory=!s.postgame&&s.day<=5;
-  if(introductory)group=[B.animals[s.day-1].id];
-  else if(!s.postgame){
-    const budget=randomInt(s,tier.threat_min,tier.threat_max),legal=createRaidCompositionIndex(budget,tier.unlocked_species);
-    group=legal.at(randomInt(s,0,legal.count-1));
-  }
-  s.nightPlan={at,attraction:value,group,done:false,...(introductory?{introductory:true}:{})};
+  const prepared=preparePressureNight(s);
+  s.nightPlan=prepared.plan;s.raidPressureMemory=prepared.memory;s.rng=prepared.rng;
 }
 export function planDay(s) {s.dayPlan={at:(115+nextRandom(s)*420)/2.4,done:false};}
 export function cameraRaidEntry(s,specs,bounds,nav,view=nav.raidView,maxSearches=2){
@@ -140,7 +134,8 @@ function baseRaidEntry(s,specs,bounds,preferredSide,nav){
 }
 export function chooseRaidEntry(s,specs,bounds,preferredSide,nav){return exteriorRaidEntry(s,specs,bounds,preferredSide,nav,baseRaidEntry,cameraRaidEntry);}
 export function spawnRaid(s,plan,nav,daytime=false) {
-  if(s.raid)return false;if(s.postgame)return;
+  const previous=s.raid,wave=previous&&eligiblePendingRaidWavePlan(s)===plan;
+  if(previous&&!wave)return false;if(s.postgame)return;
   let group=plan.group;
   if(daytime&&!group) {
     const value=attraction(s.plants);if(value<10000||nextRandom(s)>=.1)return;
@@ -165,22 +160,23 @@ export function spawnRaid(s,plan,nav,daytime=false) {
   if(entry.selectionBounds)nav.setActiveBounds?.(includeRaidBounds(bounds,raidEntryChunks(entry,specs.map(v=>v.radius))));
   randomInt(s,0,3);delete nav.raidEntryFailure;delete nav.raidEntryDemand;
   const animals=specs.map(({spec,radius},i)=>({id:`animal-${s.nextId++}`,species:spec.id,...entries[i],spawn:{...entries[i]},exit:{...exits[i]},radius,
-    hitsRemaining:plan.introductory&&!daytime?spec.hit_budget_min:randomInt(s,spec.hit_budget_min,spec.hit_budget_max),status:'entering',targetId:null,reservation:null,path:null,attackRemaining:0,attackId:null,hitApplied:false}));
-  s.raid={id:`raid-${s.day}-${daytime?'day':'night'}`,animals,encounters:[],reservations:{},daytime};
+    hitsRemaining:plan.actors?.[i]?.hits??(plan.introductory&&!daytime?spec.hit_budget_min:randomInt(s,spec.hit_budget_min,spec.hit_budget_max)),...(plan.actors?.[i]?.damageProfile?{damageProfile:structuredClone(plan.actors[i].damageProfile)}:{}),status:'entering',targetId:null,reservation:null,path:null,attackRemaining:0,attackId:null,hitApplied:false}));
+  if(wave){previous.animals.push(...animals);previous.waveIndex=plan.index;delete previous.pendingWavePlan;}
+  else s.raid={id:`raid-${s.day}-${daytime?'day':'night'}`,animals,encounters:[],reservations:{},daytime,...(plan.pressureVersion===1?{waves:structuredClone(plan.waves),waveIndex:0,pressureFacts:structuredClone(plan.pressureFacts)}:{})};
   if(plan.introductory&&!daytime){
     const count=s.plants.filter(p=>p.alive).length;
     s.raid.introPlantCount=count;s.raid.introCropLimit=Math.max(0,Math.min(count-1,Math.ceil(count*.2)));s.raid.introCropsDestroyed=0;
   }
-  for(const w of s.workers) {
+  for(const w of wave?[]:s.workers) {
     cancelIdle(w);
     releaseTask(s,w);w.path=null;w.hits=0;
     if(w.crateId)dropCarriedCrate(s,w);
     if(w.status!=='home')w.status='fleeing';
   }
   s.tasks=s.tasks.filter(t=>t.kind!=='repair');
-  notice(s,RAID_NOTICE_TEXT,animals[0].id);
+  if(!wave)notice(s,RAID_NOTICE_TEXT,animals[0].id);
   const exposed=s.plants.filter(p=>p.alive);
-  emit(s,'RaidSpawned',{raidFacts:{id:s.raid.id,day:s.day,daytime,elapsed:s.elapsed,exposedLiving:exposed.length,exposedWounded:exposed.filter(p=>(p.attackHits??0)>0).length,actors:animals.map(a=>({id:a.id,species:a.species,hitsRemaining:a.hitsRemaining,spawn:{...a.spawn},exit:{...a.exit}}))}});return true;
+  emit(s,wave?'RaidWaveSpawned':'RaidSpawned',{raidFacts:{id:s.raid.id,day:s.day,daytime,elapsed:s.elapsed,waveIndex:s.raid.waveIndex??0,pressureFacts:s.raid.pressureFacts??null,exposedLiving:exposed.length,exposedWounded:exposed.filter(p=>(p.attackHits??0)>0).length,actors:animals.map(a=>({id:a.id,species:a.species,hitsRemaining:a.hitsRemaining,...(a.damageProfile?{damageProfile:structuredClone(a.damageProfile)}:{}),spawn:{...a.spawn},exit:{...a.exit}}))}});return true;
 }
 function release(s,a) {if(a.reservation&&s.raid.reservations[a.reservation]===a.id){delete s.raid.reservations[a.reservation];s.raid.waitRevision=((s.raid.waitRevision??0)+1)>>>0;}a.reservation=null;a.targetId=null;a.path=null;a.approach=null;a.approachShieldId=null;}
 export function reachableApproach(a,target,nav,shield=null){
@@ -340,6 +336,8 @@ export function updateRaid(s,dt,nav) {
     }
   }
   if(s.raid.animals.every(a=>a.status==='gone')) {
+    const pending=s.raid.pendingWavePlan??nextPressureWave(s.raid,s.time);
+    if(pending){s.raid.pendingWavePlan=pending;return;}
     s.raid=null;nav.setState(s);emit(s,'RaidEnded');
     if(!s.structures.some(operational)&&compare(s.ledger.balance,rational(B.work_center.cost))<0){s.result='defeat';notice(s,'Cayó el último centro; faltan monedas para que otro nazca.');emit(s,'GameOver');return;}
     for(const w of s.workers) {
