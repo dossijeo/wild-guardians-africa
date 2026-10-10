@@ -94,3 +94,30 @@ concluir una mejora de FPS o coste general de inicialización.
 
 Reproducir: `node tools/probe-raid-entry-topology.mjs docs/qa/retained-raid-entry-audit`.
 Comprobaciones: `node --test tests/raid-entry-topology-experiment.test.js`.
+
+## Expansión acotada del área de selección
+
+`expanded-candidate.json` prueba la selección original, más un máximo de dos
+anillos48m adicionales. No cambia los límites activos de navegación, la vista,
+el RNG o el estado durante la selección; registra los límites propuestos como
+datos separados. En el recinto pequeño que cruza el borde activo, un anillo
+permite encontrar nacimiento exterior y el actor nativo completa StructureHit.
+El caso abierto conserva entrada y CropHit sin expansión.
+
+Un recinto320×320m supera ambos anillos: queda fallo explícito, no nacimiento
+interior ni supuesto de derrota. Por tanto, esto todavía no resuelve la expansión
+libre: un límite fijo de búsqueda no puede convertirse en límite artificial de
+plantación ni excusa para omitir ataques garantizados.
+
+La herramienta calcula los chunks que cubren nacimiento y salida con el radio
+completo del animal y margen1m. En el caso pequeño pide `0,0` y `0,1`. Eso es
+**demanda**, no prueba de carga o renderizado. Generar un anillo completo añadiría
+24chunks a media o32 a alta; dos anillos56/72. La integración debería preparar
+los chunks realmente necesarios, sin ampliar indiscriminadamente toda la escena.
+Falta coordinar selector, preparación asíncrona, residencia/horizonte y seguimiento
+de cámara, manteniendo el grupo completo y sus puntos persistidos. Los tests de
+borde activo actuales expresan el contrato antiguo y no deben saltarse pasando
+una entrada exterior preparada sin actualizar su contrato de disponibilidad.
+
+Reproducir: `node tools/probe-expanded-raid-entry.mjs docs/qa/retained-raid-entry-audit`.
+Comprobaciones: `node --test tests/expanded-raid-entry-experiment.test.js`.
