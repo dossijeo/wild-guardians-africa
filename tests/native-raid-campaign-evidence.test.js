@@ -44,3 +44,33 @@ test('exact native spawn receipt survives a full incursion between observer call
  for(let i=0;s.raid&&i<12000;i++)Game.tick(s,.05,nav);
  assert.equal(s.raid,null);const r=observer.report(s);assert.equal(r.status,'verified');assert.equal(r.raids[0].species.warthog.initialHitBudget,initial);assert.equal(r.raids[0].exposedLivingAtSpawn,1);assert.equal(r.raids[0].ended,true);
 });
+
+
+test('native worker hit and incapacitation each consume one budget through reload',async()=>{
+ const {updateWorkerEncounters}=await import('../src/simulation/encounters.js');
+ let {s,nav}=fixture();const observer=createNativeRaidCampaignEvidence(s);
+ spawnRaid(s,{group:['warthog']},nav);observer.observe(s);
+ const a=s.raid.animals[0],initial=a.hitsRemaining;
+ s.people=[{id:'observer-person',profile:'olderMale',recoveryUntil:0}];
+ s.workers=[{id:'observer-worker',personId:'observer-person',profile:'olderMale',x:a.x,z:a.z+.1,hits:0,status:'fleeing',incapacitated:false}];
+ updateWorkerEncounters(s,nav);observer.observe(s);
+ assert.equal(s.events.at(-1).type,'WorkerHit');assert.equal(a.hitsRemaining,initial-1);
+ s=deserialize(serialize(s));nav.setState(s);
+ const restored=s.raid.animals[0],w=s.workers[0];
+ w.x=restored.x+5;w.z=restored.z;updateWorkerEncounters(s,nav);
+ w.x=restored.x;w.z=restored.z+.1;updateWorkerEncounters(s,nav);
+ assert.equal(s.events.at(-1).type,'WorkerIncapacitated');assert.equal(restored.hitsRemaining,initial-2);
+ const before=serialize(s),r=observer.report(s);assert.equal(serialize(s),before);
+ assert.equal(r.status,'verified');const v=r.raids[0].species.warthog;
+ assert.equal(v.workerHits,1);assert.equal(v.workerIncapacitations,1);
+ assert.equal(v.observedBudgetConsumed,2);assert.equal(v.unconsumedOrUnobservedBudget,initial-2);
+ assert.equal(r.raids[0].cropHits,0);
+});
+
+test('unidentified incapacitation cannot invent species budget coverage',()=>{
+ const {s,nav}=fixture(),observer=createNativeRaidCampaignEvidence(s);
+ spawnRaid(s,{group:['warthog']},nav);observer.observe(s);
+ Game.emit(s,'WorkerIncapacitated',{animalId:'missing-actor',targetId:'missing-worker'});
+ const r=observer.report(s);assert.equal(r.status,'incomplete');assert.ok(r.issues.includes('Worker hit actor missing'));
+ assert.equal(r.raids[0].species.warthog.observedBudgetConsumed,0);
+});

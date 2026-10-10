@@ -1,0 +1,16 @@
+{
+  "scope": "observer accounting only; no gameplay or historical reconstruction",
+  "command": "node --test tests/native-raid-campaign-evidence.test.js tests/encounters.test.js",
+  "exitCode": 0,
+  "passed": 18,
+  "failed": 0,
+  "observedSuiteMs": 1292.5833,
+  "outputRetention": "Tool result e03eb9; this receipt is a summary, not an original stdout file",
+  "hashes": {
+    "tools/native-raid-campaign-evidence.mjs": "f74a9485e92af1c93bac90b3bbdf56a851f3894989e01c703a8d942436ec614d",
+    "tests/native-raid-campaign-evidence.test.js": "b549df24fb1cdb2a8b51f68aadcf742c33da684cec9ff6d0c864af9559416eb9",
+    "src/simulation/encounters.js": "5c55e938e8bf4d0aa24f57f4bfd0fe32bc5e5bab452c8fb1a6a5c2eac1d3f53c",
+    "src/simulation/balance.js": "0317d5d23326eb0035c8a59e87eae91b80544328e1d647a530188490c556b637",
+    "src/simulation/raids.js": "d341d05afa32af4ebb7de65044b29ac54ba2c0ab5628f53300994bbaeb8ccd40"
+  }
+}

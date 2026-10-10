@@ -8,9 +8,9 @@ export function createNativeRaidCampaignEvidence(initial){
  function begin(s,events,event){
   const facts=event?.raidFacts,cohort=facts?.actors??s.raid?.animals;
   if(!cohort){issue('RaidSpawned and exit occurred without an observable cohort');return;}
-  const r={id:facts?.id??s.raid.id,day:facts?.day??s.day,daytime:!!(facts?.daytime??s.raid.daytime),spawnElapsed:facts?.elapsed??null,exposureStatus:facts?'exact-native-spawn':'observation-interval',observedAt:s.elapsed,ended:false,species:{},cropHits:0,cropsDestroyed:0,cropReplacementCost:0,lostBaseHarvestValue:0,structureHits:0,wallHits:0,centerHits:0,structureHpLost:0,wallHpLost:0,structuresRuined:[],shieldContacts:0,misses:0,logicalContacts:0,workerHits:0,actors:[]};
+  const r={id:facts?.id??s.raid.id,day:facts?.day??s.day,daytime:!!(facts?.daytime??s.raid.daytime),spawnElapsed:facts?.elapsed??null,exposureStatus:facts?'exact-native-spawn':'observation-interval',observedAt:s.elapsed,ended:false,species:{},cropHits:0,cropsDestroyed:0,cropReplacementCost:0,lostBaseHarvestValue:0,structureHits:0,wallHits:0,centerHits:0,structureHpLost:0,wallHpLost:0,structuresRuined:[],shieldContacts:0,misses:0,logicalContacts:0,workerHits:0,workerIncapacitations:0,actors:[]};
   for(const a of cohort){
-   const spec=animalSpec(a.species),v=r.species[a.species]??={generated:0,initialHitBudget:0,maximumStructureDamage:0,contacts:0,misses:0,cropHits:0,structureHits:0,shieldContacts:0,workerHits:0};
+   const spec=animalSpec(a.species),v=r.species[a.species]??={generated:0,initialHitBudget:0,maximumStructureDamage:0,contacts:0,misses:0,cropHits:0,structureHits:0,shieldContacts:0,workerHits:0,workerIncapacitations:0};
    r.actors.push({id:a.id,species:a.species,spawn:structuredClone(a.spawn),exit:structuredClone(a.exit)});
    v.generated++;v.initialHitBudget+=a.hitsRemaining;
    assert.ok(Number.isSafeInteger(a.hitsRemaining)&&a.hitsRemaining>=0);
@@ -18,7 +18,7 @@ export function createNativeRaidCampaignEvidence(initial){
   }
   // tick() may complete contacts between spawn and this observation. Add only
   // native budget-consumption facts in this same spawn window, by species.
-  for(const e of (facts?[]:events))if(['AnimalLogicalHit','AnimalLogicalMiss','WorkerHit'].includes(e.type)){
+  for(const e of (facts?[]:events))if(['AnimalLogicalHit','AnimalLogicalMiss','WorkerHit','WorkerIncapacitated'].includes(e.type)){
    const species=e.species??r.actors.find(a=>a.id===e.animalId)?.species,v=r.species[species];if(!v){issue('Contact species missing from spawned cohort');continue;}
    v.initialHitBudget++;v.maximumStructureDamage+=animalSpec(species).structure_hit_damage;
   }
@@ -52,7 +52,7 @@ export function createNativeRaidCampaignEvidence(initial){
     r.structureHits++;r.structureHpLost+=loss;pendingStructure++;
     if(hit.kind==='wall'){r.wallHits++;r.wallHpLost+=loss;}else if(hit.kind==='center')r.centerHits++;
    }
-   if(e.type==='WorkerHit'){const species=r.actors.find(a=>a.id===e.animalId)?.species,v=r.species[species];if(!v)issue('Worker hit actor missing');else{r.workerHits++;v.workerHits++;}}
+   if(e.type==='WorkerHit'||e.type==='WorkerIncapacitated'){const species=r.actors.find(a=>a.id===e.animalId)?.species,v=r.species[species];if(!v)issue('Worker hit actor missing');else{const key=e.type==='WorkerHit'?'workerHits':'workerIncapacitations';r[key]++;v[key]++;}}
    if(e.type==='StructureRuined')r.structuresRuined.push(e.targetId);
    if(e.type==='AnimalLogicalHit'||e.type==='AnimalLogicalMiss'){
     const v=r.species[e.species];if(!v){issue('Logical contact species absent');continue;}
@@ -71,6 +71,6 @@ export function createNativeRaidCampaignEvidence(initial){
   lastEvent=s.events.at(-1)?.id??lastEvent;lastElapsed=s.elapsed;previousLiving=s.plants.filter(p=>p.alive).length;
  }
  if(initial.raid)issue('Observer created during active raid; initial cohort budget unknown');
- function report(s){observe(s);for(const r of raids)for(const v of Object.values(r.species)){v.observedBudgetConsumed=v.contacts+v.misses+v.workerHits;v.unconsumedOrUnobservedBudget=v.initialHitBudget-v.observedBudgetConsumed;assert.ok(v.unconsumedOrUnobservedBudget>=0,'Observed contacts exceed native initial budget');}return structuredClone({status:coverageLost?'incomplete':'verified',coverageLost,issues,raids,scope:'Generated species and actual native hit budgets; native CropHit/StructureHit and HP receipts, shields and misses. Wall contacts are measured interception, not a guaranteed protection percentage. Replacement costs and lost base value are diagnostics, never ledger expenses or projected income. RaidSpawned raidFacts provide exact native spawn budgets and exposure when available; legacy living snapshots only bracket an observation interval. Initial wound snapshot is after the spawn tick, not an exact pre-attack wound census. Completed observer coverage is not proof of legal spawn geometry or rendered visibility.'});}
+ function report(s){observe(s);for(const r of raids)for(const v of Object.values(r.species)){v.observedBudgetConsumed=v.contacts+v.misses+v.workerHits+v.workerIncapacitations;v.unconsumedOrUnobservedBudget=v.initialHitBudget-v.observedBudgetConsumed;assert.ok(v.unconsumedOrUnobservedBudget>=0,'Observed contacts exceed native initial budget');}return structuredClone({status:coverageLost?'incomplete':'verified',coverageLost,issues,raids,scope:'Generated species and actual native hit budgets; native CropHit/StructureHit and HP receipts, shields, misses, WorkerHit and WorkerIncapacitated (one native hit each). Wall contacts are measured interception, not a guaranteed protection percentage. Replacement costs and lost base value are diagnostics, never ledger expenses or projected income. RaidSpawned raidFacts provide exact native spawn budgets and exposure when available; legacy living snapshots only bracket an observation interval. Initial wound snapshot is after the spawn tick, not an exact pre-attack wound census. Completed observer coverage is not proof of legal spawn geometry or rendered visibility.'});}
  return {observe,report};
 }
