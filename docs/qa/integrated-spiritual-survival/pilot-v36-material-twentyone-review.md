@@ -29,8 +29,8 @@ destruction and physical crates. No income, repairs or loss fractions are inject
 Empalizada spends 801 more on defense, ends with 267 more cash and 74 more living
 crops. It initially sacrifices planting: day 6 buys one crop versus 77 with zarzas,
 because its perimeter costs twice as much. It then recovers. At day 14 it has
-200 living crops and 562 coins; at day 21 it has 175 and 950. Productive inventory
-still declines by 25 in the final week, versus 91 with zarzas. Thus this is
+189 living crops and 864 coins; at day 21 it has 175 and 950. Productive inventory
+still declines by 14 in the final week, versus 91 with zarzas. Thus this is
 promising protection evidence, not acceptance of 100-night sustainability.
 
 The reduction of 286 cumulative destroyed plants is an observed policy outcome,
