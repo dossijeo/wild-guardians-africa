@@ -1,0 +1,5489 @@
+{
+  "status": "read-only-terminal-audit",
+  "source": "e040ea6f9edf62c7924e3b32bd34b28780c39e5f",
+  "rows": [
+    {
+      "arm": "responsible",
+      "initialHiringPlan": {
+        "policy": "minimum-self-consistent-opening-v1",
+        "status": "self-consistent",
+        "cause": null,
+        "count": 7,
+        "paidToday": 210,
+        "nextDayWages": 210,
+        "balanceAfterHire": 485,
+        "seedBudget": 175,
+        "newSeeds": 35,
+        "forecastLiving": 36,
+        "capacityProxy": 42,
+        "inputs": {
+          "money": 695,
+          "living": 1,
+          "wage": 30,
+          "seedCost": 5,
+          "maintenanceReserve": 100,
+          "defenseReserve": 0,
+          "plantsPerWorker": 6
+        },
+        "minimumLivingCrew": 1,
+        "affordable": 23
+      },
+      "result": null,
+      "completedNights": 20,
+      "money": 315871,
+      "sourceHashCount": 394,
+      "snapshotSHA256": "746c086e2df46a2857adc528eca4b56ad60baff968459964f6546f6e715aa999",
+      "roundtrip": true,
+      "summaryReproduced": true,
+      "gates": {
+        "actualHiringPayments": [
+          {
+            "id": "intensive-hire-1",
+            "kind": "hire",
+            "day": 1,
+            "time": 0,
+            "elapsed": 0,
+            "balance": 695,
+            "paid": 210
+          },
+          {
+            "id": "intensive-hire-119",
+            "kind": "hire",
+            "day": 2,
+            "time": 0,
+            "elapsed": 599.9999999999901,
+            "balance": 730,
+            "paid": 480
+          },
+          {
+            "id": "intensive-hire-248",
+            "kind": "hire",
+            "day": 3,
+            "time": 0,
+            "elapsed": 1199.9999999998488,
+            "balance": 1199,
+            "paid": 870
+          },
+          {
+            "id": "intensive-hire-499",
+            "kind": "hire",
+            "day": 4,
+            "time": 0,
+            "elapsed": 1799.9999999992258,
+            "balance": 3493,
+            "paid": 1440
+          },
+          {
+            "id": "intensive-hire-784",
+            "kind": "hire",
+            "day": 5,
+            "time": 0,
+            "elapsed": 2399.999999998603,
+            "balance": 4976,
+            "paid": 2160
+          },
+          {
+            "id": "intensive-hire-1073",
+            "kind": "hire",
+            "day": 6,
+            "time": 0,
+            "elapsed": 2999.9999999979796,
+            "balance": 9501,
+            "paid": 2400
+          },
+          {
+            "id": "intensive-hire-1362",
+            "kind": "hire",
+            "day": 7,
+            "time": 0,
+            "elapsed": 3599.999999997357,
+            "balance": 15172,
+            "paid": 2490
+          },
+          {
+            "id": "intensive-hire-1651",
+            "kind": "hire",
+            "day": 8,
+            "time": 0,
+            "elapsed": 4199.999999997206,
+            "balance": 20852,
+            "paid": 2520
+          },
+          {
+            "id": "intensive-hire-1940",
+            "kind": "hire",
+            "day": 9,
+            "time": 0,
+            "elapsed": 4799.999999999306,
+            "balance": 27096,
+            "paid": 2520
+          },
+          {
+            "id": "intensive-hire-2229",
+            "kind": "hire",
+            "day": 10,
+            "time": 0,
+            "elapsed": 5400.000000001408,
+            "balance": 32218,
+            "paid": 2610
+          },
+          {
+            "id": "intensive-hire-2519",
+            "kind": "hire",
+            "day": 11,
+            "time": 0,
+            "elapsed": 6000.000000003509,
+            "balance": 28323,
+            "paid": 2550
+          },
+          {
+            "id": "intensive-hire-2808",
+            "kind": "hire",
+            "day": 12,
+            "time": 0,
+            "elapsed": 6600.000000005611,
+            "balance": 23790,
+            "paid": 2700
+          },
+          {
+            "id": "intensive-hire-3097",
+            "kind": "hire",
+            "day": 13,
+            "time": 0,
+            "elapsed": 7200.000000007711,
+            "balance": 19170,
+            "paid": 3420
+          },
+          {
+            "id": "intensive-hire-3387",
+            "kind": "hire",
+            "day": 14,
+            "time": 0,
+            "elapsed": 7800.0000000098125,
+            "balance": 41865,
+            "paid": 3540
+          },
+          {
+            "id": "intensive-hire-3615",
+            "kind": "hire",
+            "day": 15,
+            "time": 0,
+            "elapsed": 8400.000000011913,
+            "balance": 68527,
+            "paid": 3750
+          },
+          {
+            "id": "intensive-hire-3904",
+            "kind": "hire",
+            "day": 16,
+            "time": 0,
+            "elapsed": 9000.000000014017,
+            "balance": 106345,
+            "paid": 3810
+          },
+          {
+            "id": "intensive-hire-4193",
+            "kind": "hire",
+            "day": 17,
+            "time": 0,
+            "elapsed": 9600.00000001612,
+            "balance": 131923,
+            "paid": 4200
+          },
+          {
+            "id": "intensive-hire-4482",
+            "kind": "hire",
+            "day": 18,
+            "time": 0,
+            "elapsed": 10200.000000018223,
+            "balance": 180277,
+            "paid": 4050
+          },
+          {
+            "id": "intensive-hire-4772",
+            "kind": "hire",
+            "day": 19,
+            "time": 0,
+            "elapsed": 10863.700000020555,
+            "balance": 219973,
+            "paid": 4170
+          },
+          {
+            "id": "intensive-hire-5061",
+            "kind": "hire",
+            "day": 20,
+            "time": 0,
+            "elapsed": 11463.700000022656,
+            "balance": 261520,
+            "paid": 4350
+          }
+        ],
+        "allRaidsPhysicallyEnded": true,
+        "spentStrikes": 261,
+        "strikeEvidenceMatches": true,
+        "strikeEvidence": {
+          "spentStrikes": 261,
+          "counts": {
+            "AnimalLogicalHit": 253,
+            "AnimalLogicalMiss": 2,
+            "WorkerHit": 4,
+            "WorkerIncapacitated": 2
+          },
+          "raids": [
+            {
+              "raidId": "raid-1-night",
+              "actors": [
+                {
+                  "id": "animal-360",
+                  "species": "warthog",
+                  "hitsAllocated": 2,
+                  "hitsRemaining": 0,
+                  "spent": 2,
+                  "events": [
+                    {
+                      "id": "event-553",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-340",
+                      "attackId": "attack-552"
+                    },
+                    {
+                      "id": "event-555",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-340",
+                      "attackId": "attack-554"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-2-night",
+              "actors": [
+                {
+                  "id": "animal-1113",
+                  "species": "hyena",
+                  "hitsAllocated": 3,
+                  "hitsRemaining": 0,
+                  "spent": 3,
+                  "events": [
+                    {
+                      "id": "event-1740",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-1056",
+                      "attackId": "attack-1739"
+                    },
+                    {
+                      "id": "event-1742",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-1056",
+                      "attackId": "attack-1741"
+                    },
+                    {
+                      "id": "event-1744",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-1056",
+                      "attackId": "attack-1743"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-3-night",
+              "actors": [
+                {
+                  "id": "animal-2444",
+                  "species": "buffalo",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-3680",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-2329",
+                      "attackId": "attack-3679"
+                    },
+                    {
+                      "id": "event-3682",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-2329",
+                      "attackId": "attack-3681"
+                    },
+                    {
+                      "id": "event-3684",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-2329",
+                      "attackId": "attack-3683"
+                    },
+                    {
+                      "id": "event-3686",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-2329",
+                      "attackId": "attack-3685"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-4-night",
+              "actors": [
+                {
+                  "id": "animal-4305",
+                  "species": "lion",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-6340",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-3564",
+                      "attackId": "attack-6338"
+                    },
+                    {
+                      "id": "event-6344",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-3564",
+                      "attackId": "attack-6341"
+                    },
+                    {
+                      "id": "event-6347",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-3263",
+                      "attackId": "attack-6345"
+                    },
+                    {
+                      "id": "event-6351",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-3263",
+                      "attackId": "attack-6348"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-5-night",
+              "actors": [
+                {
+                  "id": "animal-6770",
+                  "species": "rhino",
+                  "hitsAllocated": 5,
+                  "hitsRemaining": 0,
+                  "spent": 5,
+                  "events": [
+                    {
+                      "id": "event-9906",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-5498",
+                      "attackId": "attack-9904"
+                    },
+                    {
+                      "id": "event-9910",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-5498",
+                      "attackId": "attack-9907"
+                    },
+                    {
+                      "id": "event-9913",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-6064",
+                      "attackId": "attack-9912"
+                    },
+                    {
+                      "id": "event-9915",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-6064",
+                      "attackId": "attack-9914"
+                    },
+                    {
+                      "id": "event-9917",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-6064",
+                      "attackId": "attack-9916"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-6-night",
+              "actors": [
+                {
+                  "id": "animal-9486",
+                  "species": "buffalo",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-13830",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-8449",
+                      "attackId": "attack-13828"
+                    },
+                    {
+                      "id": "event-13834",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-8449",
+                      "attackId": "attack-13831"
+                    },
+                    {
+                      "id": "event-13837",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-8455",
+                      "attackId": "attack-13835"
+                    },
+                    {
+                      "id": "event-13842",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-8455",
+                      "attackId": "attack-13838"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-9487",
+                  "species": "buffalo",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-13845",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-8808",
+                      "attackId": "attack-13844"
+                    },
+                    {
+                      "id": "event-13847",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-8808",
+                      "attackId": "attack-13846"
+                    },
+                    {
+                      "id": "event-13849",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-8808",
+                      "attackId": "attack-13848"
+                    },
+                    {
+                      "id": "event-13851",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-8808",
+                      "attackId": "attack-13850"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-7-night",
+              "actors": [
+                {
+                  "id": "animal-12274",
+                  "species": "hyena",
+                  "hitsAllocated": 5,
+                  "hitsRemaining": 0,
+                  "spent": 5,
+                  "events": [
+                    {
+                      "id": "event-17926",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-10914",
+                      "attackId": "attack-17922"
+                    },
+                    {
+                      "id": "event-17931",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-10914",
+                      "attackId": "attack-17928"
+                    },
+                    {
+                      "id": "event-17937",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-10911",
+                      "attackId": "attack-17932"
+                    },
+                    {
+                      "id": "event-17942",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-10911",
+                      "attackId": "attack-17938"
+                    },
+                    {
+                      "id": "event-17948",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-10916",
+                      "attackId": "attack-17943"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-12275",
+                  "species": "rhino",
+                  "hitsAllocated": 6,
+                  "hitsRemaining": 0,
+                  "spent": 6,
+                  "events": [
+                    {
+                      "id": "event-17924",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-8693",
+                      "attackId": "attack-17921"
+                    },
+                    {
+                      "id": "event-17935",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-8693",
+                      "attackId": "attack-17927"
+                    },
+                    {
+                      "id": "event-17945",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-8755",
+                      "attackId": "attack-17939"
+                    },
+                    {
+                      "id": "event-17952",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-8755",
+                      "attackId": "attack-17946"
+                    },
+                    {
+                      "id": "event-17955",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-12175",
+                      "attackId": "attack-17954"
+                    },
+                    {
+                      "id": "event-17957",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-12175",
+                      "attackId": "attack-17956"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-8-night",
+              "actors": [
+                {
+                  "id": "animal-15147",
+                  "species": "buffalo",
+                  "hitsAllocated": 6,
+                  "hitsRemaining": 0,
+                  "spent": 6,
+                  "events": [
+                    {
+                      "id": "event-22068",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-14384",
+                      "attackId": "attack-22063"
+                    },
+                    {
+                      "id": "event-22074",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-14384",
+                      "attackId": "attack-22069"
+                    },
+                    {
+                      "id": "event-22079",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-14384",
+                      "attackId": "attack-22075"
+                    },
+                    {
+                      "id": "event-22081",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-14384",
+                      "attackId": "attack-22080"
+                    },
+                    {
+                      "id": "event-22087",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-14384",
+                      "attackId": "attack-22082"
+                    },
+                    {
+                      "id": "event-22089",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-14384",
+                      "attackId": "attack-22088"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-15148",
+                  "species": "buffalo",
+                  "hitsAllocated": 5,
+                  "hitsRemaining": 0,
+                  "spent": 5,
+                  "events": [
+                    {
+                      "id": "event-22066",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-12054",
+                      "attackId": "attack-22064"
+                    },
+                    {
+                      "id": "event-22072",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-12054",
+                      "attackId": "attack-22067"
+                    },
+                    {
+                      "id": "event-22077",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-12070",
+                      "attackId": "attack-22073"
+                    },
+                    {
+                      "id": "event-22085",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-12070",
+                      "attackId": "attack-22078"
+                    },
+                    {
+                      "id": "event-22092",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-12051",
+                      "attackId": "attack-22086"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-9-night",
+              "actors": [
+                {
+                  "id": "animal-17942",
+                  "species": "warthog",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-26204",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-14384",
+                      "attackId": "attack-26198"
+                    },
+                    {
+                      "id": "event-26215",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-14384",
+                      "attackId": "attack-26205"
+                    },
+                    {
+                      "id": "event-26221",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-14476",
+                      "attackId": "attack-26216"
+                    },
+                    {
+                      "id": "event-26233",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-14476",
+                      "attackId": "attack-26222"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-17943",
+                  "species": "warthog",
+                  "hitsAllocated": 3,
+                  "hitsRemaining": 0,
+                  "spent": 3,
+                  "events": [
+                    {
+                      "id": "event-26200",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-14199",
+                      "attackId": "attack-26197"
+                    },
+                    {
+                      "id": "event-26208",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-14199",
+                      "attackId": "attack-26202"
+                    },
+                    {
+                      "id": "event-26218",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-16892",
+                      "attackId": "attack-26212"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-17944",
+                  "species": "warthog",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-26239",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-14630",
+                      "attackId": "attack-26235"
+                    },
+                    {
+                      "id": "event-26241",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-14630",
+                      "attackId": "attack-26240"
+                    },
+                    {
+                      "id": "event-26243",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-14630",
+                      "attackId": "attack-26242"
+                    },
+                    {
+                      "id": "event-26245",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-14630",
+                      "attackId": "attack-26244"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-17945",
+                  "species": "hyena",
+                  "hitsAllocated": 5,
+                  "hitsRemaining": 0,
+                  "spent": 5,
+                  "events": [
+                    {
+                      "id": "event-26210",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-17152",
+                      "attackId": "attack-26201"
+                    },
+                    {
+                      "id": "event-26225",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-17152",
+                      "attackId": "attack-26211"
+                    },
+                    {
+                      "id": "event-26229",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-17678",
+                      "attackId": "attack-26226"
+                    },
+                    {
+                      "id": "event-26238",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-17678",
+                      "attackId": "attack-26230"
+                    },
+                    {
+                      "id": "event-26249",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-17210",
+                      "attackId": "attack-26247"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-17946",
+                  "species": "buffalo",
+                  "hitsAllocated": 5,
+                  "hitsRemaining": 0,
+                  "spent": 5,
+                  "events": [
+                    {
+                      "id": "event-26253",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-14594",
+                      "attackId": "attack-26251"
+                    },
+                    {
+                      "id": "event-26257",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-14594",
+                      "attackId": "attack-26254"
+                    },
+                    {
+                      "id": "event-26260",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-17347",
+                      "attackId": "attack-26258"
+                    },
+                    {
+                      "id": "event-26264",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-17347",
+                      "attackId": "attack-26261"
+                    },
+                    {
+                      "id": "event-26267",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-17383",
+                      "attackId": "attack-26265"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-10-night",
+              "actors": [
+                {
+                  "id": "animal-20967",
+                  "species": "warthog",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-30520",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-17511",
+                      "attackId": "attack-30518"
+                    },
+                    {
+                      "id": "event-30524",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-17511",
+                      "attackId": "attack-30521"
+                    },
+                    {
+                      "id": "event-30527",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20202",
+                      "attackId": "attack-30525"
+                    },
+                    {
+                      "id": "event-30531",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20202",
+                      "attackId": "attack-30528"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-20968",
+                  "species": "hyena",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-30545",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20846",
+                      "attackId": "attack-30543"
+                    },
+                    {
+                      "id": "event-30549",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20846",
+                      "attackId": "attack-30546"
+                    },
+                    {
+                      "id": "event-30552",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20137",
+                      "attackId": "attack-30550"
+                    },
+                    {
+                      "id": "event-30556",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20137",
+                      "attackId": "attack-30553"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-20969",
+                  "species": "buffalo",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-30535",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20054",
+                      "attackId": "attack-30534"
+                    },
+                    {
+                      "id": "event-30537",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20054",
+                      "attackId": "attack-30536"
+                    },
+                    {
+                      "id": "event-30539",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20054",
+                      "attackId": "attack-30538"
+                    },
+                    {
+                      "id": "event-30541",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20054",
+                      "attackId": "attack-30540"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-11-night",
+              "actors": [
+                {
+                  "id": "animal-23651",
+                  "species": "warthog",
+                  "hitsAllocated": 2,
+                  "hitsRemaining": 0,
+                  "spent": 2,
+                  "events": [
+                    {
+                      "id": "event-34401",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20344",
+                      "attackId": "attack-34393"
+                    },
+                    {
+                      "id": "event-34416",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20344",
+                      "attackId": "attack-34402"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-23652",
+                  "species": "warthog",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-34423",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20674",
+                      "attackId": "attack-34403"
+                    },
+                    {
+                      "id": "event-34438",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20674",
+                      "attackId": "attack-34424"
+                    },
+                    {
+                      "id": "event-34454",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20807",
+                      "attackId": "attack-34442"
+                    },
+                    {
+                      "id": "event-34462",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20807",
+                      "attackId": "attack-34455"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-23653",
+                  "species": "warthog",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-34386",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-23317",
+                      "attackId": "attack-34385"
+                    },
+                    {
+                      "id": "event-34388",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-23317",
+                      "attackId": "attack-34387"
+                    },
+                    {
+                      "id": "event-34390",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-23317",
+                      "attackId": "attack-34389"
+                    },
+                    {
+                      "id": "event-34394",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-23317",
+                      "attackId": "attack-34391"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-23654",
+                  "species": "hyena",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-34409",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-19873",
+                      "attackId": "attack-34404"
+                    },
+                    {
+                      "id": "event-34420",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-19873",
+                      "attackId": "attack-34410"
+                    },
+                    {
+                      "id": "event-34440",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-23114",
+                      "attackId": "attack-34434"
+                    },
+                    {
+                      "id": "event-34448",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-23114",
+                      "attackId": "attack-34441"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-23655",
+                  "species": "hyena",
+                  "hitsAllocated": 5,
+                  "hitsRemaining": 0,
+                  "spent": 5,
+                  "events": [
+                    {
+                      "id": "event-34397",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20180",
+                      "attackId": "attack-34392"
+                    },
+                    {
+                      "id": "event-34407",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20180",
+                      "attackId": "attack-34398"
+                    },
+                    {
+                      "id": "event-34427",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-19647",
+                      "attackId": "attack-34421"
+                    },
+                    {
+                      "id": "event-34445",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-19647",
+                      "attackId": "attack-34428"
+                    },
+                    {
+                      "id": "event-34469",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-22758",
+                      "attackId": "attack-34467"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-23656",
+                  "species": "hyena",
+                  "hitsAllocated": 5,
+                  "hitsRemaining": 0,
+                  "spent": 5,
+                  "events": [
+                    {
+                      "id": "event-34412",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-22681",
+                      "attackId": "attack-34399"
+                    },
+                    {
+                      "id": "event-34431",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-22681",
+                      "attackId": "attack-34413"
+                    },
+                    {
+                      "id": "event-34458",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20688",
+                      "attackId": "attack-34456"
+                    },
+                    {
+                      "id": "event-34466",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20688",
+                      "attackId": "attack-34459"
+                    },
+                    {
+                      "id": "event-34481",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-23044",
+                      "attackId": "attack-34475"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-23657",
+                  "species": "lion",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-34433",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20625",
+                      "attackId": "attack-34425"
+                    },
+                    {
+                      "id": "event-34451",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20625",
+                      "attackId": "attack-34435"
+                    },
+                    {
+                      "id": "event-34473",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-22813",
+                      "attackId": "attack-34471"
+                    },
+                    {
+                      "id": "event-34478",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-22813",
+                      "attackId": "attack-34474"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-12-night",
+              "actors": [
+                {
+                  "id": "animal-26444",
+                  "species": "buffalo",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-38479",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-26089",
+                      "attackId": "attack-38478"
+                    },
+                    {
+                      "id": "event-38481",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-26089",
+                      "attackId": "attack-38480"
+                    },
+                    {
+                      "id": "event-38484",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-26089",
+                      "attackId": "attack-38482"
+                    },
+                    {
+                      "id": "event-38489",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-26089",
+                      "attackId": "attack-38485"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-26445",
+                  "species": "lion",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-38487",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-23547",
+                      "attackId": "attack-38483"
+                    },
+                    {
+                      "id": "event-38494",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-23547",
+                      "attackId": "attack-38488"
+                    },
+                    {
+                      "id": "event-38503",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-23329",
+                      "attackId": "attack-38501"
+                    },
+                    {
+                      "id": "event-38507",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-23329",
+                      "attackId": "attack-38504"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-26446",
+                  "species": "lion",
+                  "hitsAllocated": 5,
+                  "hitsRemaining": 0,
+                  "spent": 5,
+                  "events": [
+                    {
+                      "id": "event-38496",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-25262",
+                      "attackId": "attack-38491"
+                    },
+                    {
+                      "id": "event-38500",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-25262",
+                      "attackId": "attack-38497"
+                    },
+                    {
+                      "id": "event-38511",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-26320",
+                      "attackId": "attack-38509"
+                    },
+                    {
+                      "id": "event-38515",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-26320",
+                      "attackId": "attack-38512"
+                    },
+                    {
+                      "id": "event-38518",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-25402",
+                      "attackId": "attack-38516"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-13-night",
+              "actors": [
+                {
+                  "id": "animal-29664",
+                  "species": "hyena",
+                  "hitsAllocated": 5,
+                  "hitsRemaining": 0,
+                  "spent": 5,
+                  "events": [
+                    {
+                      "id": "event-43182",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-25776",
+                      "attackId": "attack-43176"
+                    },
+                    {
+                      "id": "event-43186",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-25776",
+                      "attackId": "attack-43183"
+                    },
+                    {
+                      "id": "event-43190",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-28085",
+                      "attackId": "attack-43187"
+                    },
+                    {
+                      "id": "event-43193",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-25913",
+                      "attackId": "attack-43192"
+                    },
+                    {
+                      "id": "event-43195",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-25913",
+                      "attackId": "attack-43194"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-29665",
+                  "species": "buffalo",
+                  "hitsAllocated": 6,
+                  "hitsRemaining": 0,
+                  "spent": 6,
+                  "events": [
+                    {
+                      "id": "event-43150",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-26089",
+                      "attackId": "attack-43149"
+                    },
+                    {
+                      "id": "event-43156",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-26089",
+                      "attackId": "attack-43151"
+                    },
+                    {
+                      "id": "event-43161",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-26089",
+                      "attackId": "attack-43157"
+                    },
+                    {
+                      "id": "event-43163",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-26089",
+                      "attackId": "attack-43162"
+                    },
+                    {
+                      "id": "event-43165",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-26089",
+                      "attackId": "attack-43164"
+                    },
+                    {
+                      "id": "event-43167",
+                      "type": "AnimalLogicalMiss",
+                      "targetId": "plant-26089",
+                      "attackId": "attack-43166"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-29666",
+                  "species": "lion",
+                  "hitsAllocated": 5,
+                  "hitsRemaining": 0,
+                  "spent": 5,
+                  "events": [
+                    {
+                      "id": "event-43154",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-22915",
+                      "attackId": "attack-43152"
+                    },
+                    {
+                      "id": "event-43160",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-22915",
+                      "attackId": "attack-43155"
+                    },
+                    {
+                      "id": "event-43171",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-25965",
+                      "attackId": "attack-43169"
+                    },
+                    {
+                      "id": "event-43175",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-25965",
+                      "attackId": "attack-43172"
+                    },
+                    {
+                      "id": "event-43179",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-28085",
+                      "attackId": "attack-43177"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-14-day",
+              "actors": [
+                {
+                  "id": "animal-32075",
+                  "species": "warthog",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-46289",
+                      "type": "WorkerHit",
+                      "targetId": "worker-30758"
+                    },
+                    {
+                      "id": "event-46294",
+                      "type": "WorkerHit",
+                      "targetId": "worker-30781"
+                    },
+                    {
+                      "id": "event-46296",
+                      "type": "WorkerIncapacitated",
+                      "targetId": "worker-30741"
+                    },
+                    {
+                      "id": "event-46320",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-29598",
+                      "attackId": "attack-46312"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-32076",
+                  "species": "buffalo",
+                  "hitsAllocated": 5,
+                  "hitsRemaining": 0,
+                  "spent": 5,
+                  "events": [
+                    {
+                      "id": "event-46295",
+                      "type": "WorkerHit",
+                      "targetId": "worker-30741"
+                    },
+                    {
+                      "id": "event-46323",
+                      "type": "WorkerIncapacitated",
+                      "targetId": "worker-30758"
+                    },
+                    {
+                      "id": "event-46348",
+                      "type": "WorkerHit",
+                      "targetId": "worker-30817"
+                    },
+                    {
+                      "id": "event-46394",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-31376",
+                      "attackId": "attack-46386"
+                    },
+                    {
+                      "id": "event-46401",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-31376",
+                      "attackId": "attack-46395"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-14-night",
+              "actors": [
+                {
+                  "id": "animal-33154",
+                  "species": "warthog",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-47592",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-26164",
+                      "attackId": "attack-47587"
+                    },
+                    {
+                      "id": "event-47596",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-26164",
+                      "attackId": "attack-47593"
+                    },
+                    {
+                      "id": "event-47599",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-31509",
+                      "attackId": "attack-47597"
+                    },
+                    {
+                      "id": "event-47603",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-31509",
+                      "attackId": "attack-47600"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-33155",
+                  "species": "lion",
+                  "hitsAllocated": 5,
+                  "hitsRemaining": 0,
+                  "spent": 5,
+                  "events": [
+                    {
+                      "id": "event-47570",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-29598",
+                      "attackId": "attack-47564"
+                    },
+                    {
+                      "id": "event-47578",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-29598",
+                      "attackId": "attack-47571"
+                    },
+                    {
+                      "id": "event-47581",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-28589",
+                      "attackId": "attack-47579"
+                    },
+                    {
+                      "id": "event-47585",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-28589",
+                      "attackId": "attack-47582"
+                    },
+                    {
+                      "id": "event-47589",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20135",
+                      "attackId": "attack-47586"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-33156",
+                  "species": "lion",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-47565",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20151",
+                      "attackId": "attack-47563"
+                    },
+                    {
+                      "id": "event-47567",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20151",
+                      "attackId": "attack-47566"
+                    },
+                    {
+                      "id": "event-47572",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20151",
+                      "attackId": "attack-47568"
+                    },
+                    {
+                      "id": "event-47574",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20151",
+                      "attackId": "attack-47573"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-15-night",
+              "actors": [
+                {
+                  "id": "animal-36792",
+                  "species": "warthog",
+                  "hitsAllocated": 2,
+                  "hitsRemaining": 0,
+                  "spent": 2,
+                  "events": [
+                    {
+                      "id": "event-52629",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-29500",
+                      "attackId": "attack-52620"
+                    },
+                    {
+                      "id": "event-52633",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-29500",
+                      "attackId": "attack-52630"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-36793",
+                  "species": "warthog",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-52617",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-36625",
+                      "attackId": "attack-52616"
+                    },
+                    {
+                      "id": "event-52621",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-36625",
+                      "attackId": "attack-52618"
+                    },
+                    {
+                      "id": "event-52626",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-36625",
+                      "attackId": "attack-52622"
+                    },
+                    {
+                      "id": "event-52640",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-36625",
+                      "attackId": "attack-52627"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-36794",
+                  "species": "warthog",
+                  "hitsAllocated": 2,
+                  "hitsRemaining": 0,
+                  "spent": 2,
+                  "events": [
+                    {
+                      "id": "event-52654",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-25402",
+                      "attackId": "attack-52645"
+                    },
+                    {
+                      "id": "event-52674",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-35900",
+                      "attackId": "attack-52672"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-36795",
+                  "species": "hyena",
+                  "hitsAllocated": 3,
+                  "hitsRemaining": 0,
+                  "spent": 3,
+                  "events": [
+                    {
+                      "id": "event-52643",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-22872",
+                      "attackId": "attack-52638"
+                    },
+                    {
+                      "id": "event-52648",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-22872",
+                      "attackId": "attack-52644"
+                    },
+                    {
+                      "id": "event-52682",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-36625",
+                      "attackId": "attack-52677"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-36796",
+                  "species": "buffalo",
+                  "hitsAllocated": 6,
+                  "hitsRemaining": 0,
+                  "spent": 6,
+                  "events": [
+                    {
+                      "id": "event-52650",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-25438",
+                      "attackId": "attack-52639"
+                    },
+                    {
+                      "id": "event-52657",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-25438",
+                      "attackId": "attack-52651"
+                    },
+                    {
+                      "id": "event-52667",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-25480",
+                      "attackId": "attack-52662"
+                    },
+                    {
+                      "id": "event-52671",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-25480",
+                      "attackId": "attack-52668"
+                    },
+                    {
+                      "id": "event-52686",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-32910",
+                      "attackId": "attack-52684"
+                    },
+                    {
+                      "id": "event-52690",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-32910",
+                      "attackId": "attack-52687"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-36797",
+                  "species": "lion",
+                  "hitsAllocated": 5,
+                  "hitsRemaining": 0,
+                  "spent": 5,
+                  "events": [
+                    {
+                      "id": "event-52624",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-29076",
+                      "attackId": "attack-52619"
+                    },
+                    {
+                      "id": "event-52637",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-29076",
+                      "attackId": "attack-52625"
+                    },
+                    {
+                      "id": "event-52660",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-31890",
+                      "attackId": "attack-52658"
+                    },
+                    {
+                      "id": "event-52665",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-31890",
+                      "attackId": "attack-52661"
+                    },
+                    {
+                      "id": "event-52679",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-35730",
+                      "attackId": "attack-52676"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-16-night",
+              "actors": [
+                {
+                  "id": "animal-40263",
+                  "species": "warthog",
+                  "hitsAllocated": 2,
+                  "hitsRemaining": 0,
+                  "spent": 2,
+                  "events": [
+                    {
+                      "id": "event-57626",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-36284",
+                      "attackId": "attack-57619"
+                    },
+                    {
+                      "id": "event-57630",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-36284",
+                      "attackId": "attack-57627"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-40264",
+                  "species": "warthog",
+                  "hitsAllocated": 3,
+                  "hitsRemaining": 0,
+                  "spent": 3,
+                  "events": [
+                    {
+                      "id": "event-57623",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-36625",
+                      "attackId": "attack-57618"
+                    },
+                    {
+                      "id": "event-57637",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-25710",
+                      "attackId": "attack-57635"
+                    },
+                    {
+                      "id": "event-57641",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-25710",
+                      "attackId": "attack-57638"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-40265",
+                  "species": "hyena",
+                  "hitsAllocated": 3,
+                  "hitsRemaining": 0,
+                  "spent": 3,
+                  "events": [
+                    {
+                      "id": "event-57607",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-39395",
+                      "attackId": "attack-57603"
+                    },
+                    {
+                      "id": "event-57613",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-39395",
+                      "attackId": "attack-57608"
+                    },
+                    {
+                      "id": "event-57649",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-36050",
+                      "attackId": "attack-57647"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-40266",
+                  "species": "rhino",
+                  "hitsAllocated": 8,
+                  "hitsRemaining": 0,
+                  "spent": 8,
+                  "events": [
+                    {
+                      "id": "event-57601",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-35900",
+                      "attackId": "attack-57600"
+                    },
+                    {
+                      "id": "event-57604",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-35900",
+                      "attackId": "attack-57602"
+                    },
+                    {
+                      "id": "event-57609",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-35900",
+                      "attackId": "attack-57605"
+                    },
+                    {
+                      "id": "event-57614",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-35900",
+                      "attackId": "attack-57610"
+                    },
+                    {
+                      "id": "event-57616",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-35900",
+                      "attackId": "attack-57615"
+                    },
+                    {
+                      "id": "event-57620",
+                      "type": "AnimalLogicalMiss",
+                      "targetId": "plant-35900",
+                      "attackId": "attack-57617"
+                    },
+                    {
+                      "id": "event-57634",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-35900",
+                      "attackId": "attack-57624"
+                    },
+                    {
+                      "id": "event-57645",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-25864",
+                      "attackId": "attack-57643"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-17-night",
+              "actors": [
+                {
+                  "id": "animal-44073",
+                  "species": "warthog",
+                  "hitsAllocated": 3,
+                  "hitsRemaining": 0,
+                  "spent": 3,
+                  "events": [
+                    {
+                      "id": "event-63013",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-36665",
+                      "attackId": "attack-63011"
+                    },
+                    {
+                      "id": "event-63017",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-36665",
+                      "attackId": "attack-63014"
+                    },
+                    {
+                      "id": "event-63020",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-42903",
+                      "attackId": "attack-63018"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-44074",
+                  "species": "warthog",
+                  "hitsAllocated": 3,
+                  "hitsRemaining": 0,
+                  "spent": 3,
+                  "events": [
+                    {
+                      "id": "event-62984",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-39944",
+                      "attackId": "attack-62978"
+                    },
+                    {
+                      "id": "event-62988",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-39944",
+                      "attackId": "attack-62985"
+                    },
+                    {
+                      "id": "event-62995",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-43783",
+                      "attackId": "attack-62991"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-44075",
+                  "species": "hyena",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-62999",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-42551",
+                      "attackId": "attack-62997"
+                    },
+                    {
+                      "id": "event-63007",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-42551",
+                      "attackId": "attack-63000"
+                    },
+                    {
+                      "id": "event-63028",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-43533",
+                      "attackId": "attack-63026"
+                    },
+                    {
+                      "id": "event-63032",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-43533",
+                      "attackId": "attack-63029"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-44076",
+                  "species": "buffalo",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-62979",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-42863",
+                      "attackId": "attack-62973"
+                    },
+                    {
+                      "id": "event-62981",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-42863",
+                      "attackId": "attack-62980"
+                    },
+                    {
+                      "id": "event-62989",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-42863",
+                      "attackId": "attack-62982"
+                    },
+                    {
+                      "id": "event-62992",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-42863",
+                      "attackId": "attack-62990"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-44077",
+                  "species": "buffalo",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-62977",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-36050",
+                      "attackId": "attack-62974"
+                    },
+                    {
+                      "id": "event-63003",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-43499",
+                      "attackId": "attack-63001"
+                    },
+                    {
+                      "id": "event-63010",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-43499",
+                      "attackId": "attack-63004"
+                    },
+                    {
+                      "id": "event-63024",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-26208",
+                      "attackId": "attack-63022"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-18-night",
+              "actors": [
+                {
+                  "id": "animal-47719",
+                  "species": "warthog",
+                  "hitsAllocated": 2,
+                  "hitsRemaining": 0,
+                  "spent": 2,
+                  "events": [
+                    {
+                      "id": "event-68106",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-36360",
+                      "attackId": "attack-68104"
+                    },
+                    {
+                      "id": "event-68113",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-36360",
+                      "attackId": "attack-68107"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-47720",
+                  "species": "hyena",
+                  "hitsAllocated": 3,
+                  "hitsRemaining": 0,
+                  "spent": 3,
+                  "events": [
+                    {
+                      "id": "event-68090",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-42863",
+                      "attackId": "attack-68089"
+                    },
+                    {
+                      "id": "event-68092",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-42863",
+                      "attackId": "attack-68091"
+                    },
+                    {
+                      "id": "event-68095",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-42863",
+                      "attackId": "attack-68093"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-47721",
+                  "species": "hyena",
+                  "hitsAllocated": 3,
+                  "hitsRemaining": 0,
+                  "spent": 3,
+                  "events": [
+                    {
+                      "id": "event-68098",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-46447",
+                      "attackId": "attack-68094"
+                    },
+                    {
+                      "id": "event-68102",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-46447",
+                      "attackId": "attack-68099"
+                    },
+                    {
+                      "id": "event-68109",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-46266",
+                      "attackId": "attack-68103"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-47722",
+                  "species": "buffalo",
+                  "hitsAllocated": 6,
+                  "hitsRemaining": 0,
+                  "spent": 6,
+                  "events": [
+                    {
+                      "id": "event-68118",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-42903",
+                      "attackId": "attack-68115"
+                    },
+                    {
+                      "id": "event-68121",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-47608",
+                      "attackId": "attack-68119"
+                    },
+                    {
+                      "id": "event-68125",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-47608",
+                      "attackId": "attack-68122"
+                    },
+                    {
+                      "id": "event-68129",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-46266",
+                      "attackId": "attack-68126"
+                    },
+                    {
+                      "id": "event-68132",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-42482",
+                      "attackId": "attack-68131"
+                    },
+                    {
+                      "id": "event-68134",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-42482",
+                      "attackId": "attack-68133"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-19-night",
+              "actors": [
+                {
+                  "id": "animal-51398",
+                  "species": "warthog",
+                  "hitsAllocated": 2,
+                  "hitsRemaining": 0,
+                  "spent": 2,
+                  "events": [
+                    {
+                      "id": "event-73292",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-42664",
+                      "attackId": "attack-73282"
+                    },
+                    {
+                      "id": "event-73299",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-42664",
+                      "attackId": "attack-73293"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-51399",
+                  "species": "warthog",
+                  "hitsAllocated": 2,
+                  "hitsRemaining": 0,
+                  "spent": 2,
+                  "events": [
+                    {
+                      "id": "event-73271",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-50893",
+                      "attackId": "attack-73270"
+                    },
+                    {
+                      "id": "event-73273",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-50893",
+                      "attackId": "attack-73272"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-51400",
+                  "species": "hyena",
+                  "hitsAllocated": 3,
+                  "hitsRemaining": 0,
+                  "spent": 3,
+                  "events": [
+                    {
+                      "id": "event-73285",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-50106",
+                      "attackId": "attack-73283"
+                    },
+                    {
+                      "id": "event-73290",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-50106",
+                      "attackId": "attack-73286"
+                    },
+                    {
+                      "id": "event-73314",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-42711",
+                      "attackId": "attack-73312"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-51401",
+                  "species": "rhino",
+                  "hitsAllocated": 6,
+                  "hitsRemaining": 0,
+                  "spent": 6,
+                  "events": [
+                    {
+                      "id": "event-73277",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-47595",
+                      "attackId": "attack-73275"
+                    },
+                    {
+                      "id": "event-73281",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-47595",
+                      "attackId": "attack-73278"
+                    },
+                    {
+                      "id": "event-73295",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-46155",
+                      "attackId": "attack-73287"
+                    },
+                    {
+                      "id": "event-73303",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-46155",
+                      "attackId": "attack-73296"
+                    },
+                    {
+                      "id": "event-73306",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-50163",
+                      "attackId": "attack-73304"
+                    },
+                    {
+                      "id": "event-73310",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-50163",
+                      "attackId": "attack-73307"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-20-night",
+              "actors": [
+                {
+                  "id": "animal-55208",
+                  "species": "warthog",
+                  "hitsAllocated": 3,
+                  "hitsRemaining": 0,
+                  "spent": 3,
+                  "events": [
+                    {
+                      "id": "event-78660",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-38734",
+                      "attackId": "attack-78658"
+                    },
+                    {
+                      "id": "event-78664",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-38734",
+                      "attackId": "attack-78661"
+                    },
+                    {
+                      "id": "event-78667",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-53656",
+                      "attackId": "attack-78665"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-55209",
+                  "species": "warthog",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-78620",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-42711",
+                      "attackId": "attack-78616"
+                    },
+                    {
+                      "id": "event-78630",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-53864",
+                      "attackId": "attack-78623"
+                    },
+                    {
+                      "id": "event-78642",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-53864",
+                      "attackId": "attack-78634"
+                    },
+                    {
+                      "id": "event-78656",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-43377",
+                      "attackId": "attack-78654"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-55210",
+                  "species": "warthog",
+                  "hitsAllocated": 3,
+                  "hitsRemaining": 0,
+                  "spent": 3,
+                  "events": [
+                    {
+                      "id": "event-78622",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-39150",
+                      "attackId": "attack-78615"
+                    },
+                    {
+                      "id": "event-78633",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-39150",
+                      "attackId": "attack-78624"
+                    },
+                    {
+                      "id": "event-78644",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-47508",
+                      "attackId": "attack-78636"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-55211",
+                  "species": "lion",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-78627",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-47071",
+                      "attackId": "attack-78617"
+                    },
+                    {
+                      "id": "event-78639",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-47071",
+                      "attackId": "attack-78628"
+                    },
+                    {
+                      "id": "event-78671",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-54123",
+                      "attackId": "attack-78669"
+                    },
+                    {
+                      "id": "event-78675",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-54123",
+                      "attackId": "attack-78672"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-55212",
+                  "species": "lion",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-78646",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-54005",
+                      "attackId": "attack-78635"
+                    },
+                    {
+                      "id": "event-78648",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-54005",
+                      "attackId": "attack-78647"
+                    },
+                    {
+                      "id": "event-78650",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-54005",
+                      "attackId": "attack-78649"
+                    },
+                    {
+                      "id": "event-78652",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-54005",
+                      "attackId": "attack-78651"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "strikeEvidenceMatches": true,
+          "scope": "Exact native allocation minus remaining budgets equals four exclusive consumer event types per actor and raid; no gameplay commands or inferred missing events"
+        },
+        "ledgerHydrationMaturityCrateReceipts": true,
+        "repairSettlements": true,
+        "completedRequestedNights": true,
+        "everyWorkdayPaidStaffAndPhysicalDelivery": true,
+        "strictGlobalActivityBelow25": true,
+        "physicalPaidDeliveries": 4242,
+        "responsible100Accepted": false,
+        "nativeNeglectDefeat": false,
+        "scope": "20-night pilot is not100-night acceptance; paid crate audit does not independently prove temporal route/FIFO traversal"
+      },
+      "observedActivity": {
+        "daylightSeconds": 6000.000000012634,
+        "unoccupiedSeconds": 751.0000000006264,
+        "unoccupiedFraction": 0.12516666666650753
+      },
+      "bands": [
+        {
+          "start": 1,
+          "end": 5,
+          "daylight": 1499.9999999992017,
+          "idle": 450.999999999906,
+          "fraction": 0.300666666666764
+        },
+        {
+          "start": 6,
+          "end": 15,
+          "daylight": 3000.0000000080395,
+          "idle": 200.000000000422,
+          "fraction": 0.06666666666662868
+        },
+        {
+          "start": 16,
+          "end": 20,
+          "daylight": 1500.0000000053897,
+          "idle": 100.00000000029843,
+          "fraction": 0.06666666666662607
+        }
+      ],
+      "counts": {
+        "PlacementCommitted": 1,
+        "CropPlaced": 5188,
+        "HiringConfirmed": 20,
+        "WaterSatisfied": 11473,
+        "CropMatured": 4393,
+        "HarvestRequested": 4439,
+        "CropPicked": 4242,
+        "CrateDelivered": 4242,
+        "TutorialCompleted": 1,
+        "NightStarted": 20,
+        "RaidSpawned": 21,
+        "SpellActivated": 141,
+        "AnimalLogicalHit": 253,
+        "AnimalRetreating": 65,
+        "RaidEnded": 21,
+        "Dawn": 20,
+        "AgriculturalEventApplied": 8,
+        "CropHit": 177,
+        "CropDestroyed": 81,
+        "WallChainBuilt": 1,
+        "AnimalLogicalMiss": 2,
+        "CrateDropped": 3,
+        "WorkerHit": 4,
+        "WorkerIncapacitated": 2
+      },
+      "cashflow": {
+        "openingBalance": "1500",
+        "harvestIncome": "497811",
+        "seedCosts": "127370",
+        "wageCosts": "54240",
+        "repairCosts": "0",
+        "centreCosts": "800",
+        "wallCosts": "1030",
+        "otherNet": "0",
+        "operatingCashFlow": "316201",
+        "netCashFlowAfterConstruction": "314371",
+        "endingBalance": "315871"
+      },
+      "paidWallCoins": 1030,
+      "repair": {
+        "requestedCommands": 0,
+        "nativeRequests": 0,
+        "completed": 0,
+        "paid": 0,
+        "paidCoins": "0",
+        "restoredHp": 0,
+        "pendingFinal": 0,
+        "coverageStatus": "verified",
+        "interruptionScope": "No per-task cancellation receipt exists. Native spawn removes repair tasks; requests without arrivals are not labelled individually completed or cancelled."
+      },
+      "defense": {
+        "original": {
+          "startDay": 10,
+          "savingTarget": 500,
+          "capitalTarget": 1280,
+          "material": "zarzas",
+          "built": {
+            "day": 10,
+            "time": 0,
+            "bounds": [
+              -54.5,
+              20.5,
+              3.5,
+              101
+            ],
+            "points": [
+              [
+                -54.5,
+                20.5
+              ],
+              [
+                3.5,
+                20.5
+              ],
+              [
+                3.5,
+                101
+              ],
+              [
+                -54.5,
+                101
+              ],
+              [
+                -54.5,
+                20.5
+              ]
+            ],
+            "cost": 1030,
+            "ids": [
+              "structure-19511",
+              "structure-19512",
+              "structure-19513",
+              "structure-19514",
+              "structure-19515",
+              "structure-19516",
+              "structure-19517",
+              "structure-19518",
+              "structure-19519",
+              "structure-19520",
+              "structure-19521",
+              "structure-19522",
+              "structure-19523",
+              "structure-19524",
+              "structure-19525",
+              "structure-19526",
+              "structure-19527",
+              "structure-19528",
+              "structure-19529",
+              "structure-19530",
+              "structure-19531",
+              "structure-19532",
+              "structure-19533",
+              "structure-19534",
+              "structure-19535",
+              "structure-19536",
+              "structure-19537",
+              "structure-19538",
+              "structure-19539",
+              "structure-19540",
+              "structure-19541",
+              "structure-19542",
+              "structure-19543",
+              "structure-19544",
+              "structure-19545",
+              "structure-19546",
+              "structure-19547",
+              "structure-19548",
+              "structure-19549",
+              "structure-19550",
+              "structure-19551",
+              "structure-19552",
+              "structure-19553",
+              "structure-19554",
+              "structure-19555",
+              "structure-19556",
+              "structure-19557",
+              "structure-19558",
+              "structure-19559",
+              "structure-19560",
+              "structure-19561",
+              "structure-19562",
+              "structure-19563",
+              "structure-19564",
+              "structure-19565",
+              "structure-19566",
+              "structure-19567",
+              "structure-19568",
+              "structure-19569",
+              "structure-19570",
+              "structure-19571",
+              "structure-19572",
+              "structure-19573",
+              "structure-19574",
+              "structure-19575",
+              "structure-19576",
+              "structure-19577",
+              "structure-19578",
+              "structure-19579",
+              "structure-19580",
+              "structure-19581",
+              "structure-19582",
+              "structure-19583",
+              "structure-19584",
+              "structure-19585",
+              "structure-19586",
+              "structure-19587",
+              "structure-19588",
+              "structure-19589",
+              "structure-19590",
+              "structure-19591",
+              "structure-19592",
+              "structure-19593",
+              "structure-19594",
+              "structure-19595",
+              "structure-19596",
+              "structure-19597",
+              "structure-19598",
+              "structure-19599",
+              "structure-19600",
+              "structure-19601",
+              "structure-19602",
+              "structure-19603",
+              "structure-19604",
+              "structure-19605",
+              "structure-19606",
+              "structure-19607",
+              "structure-19608",
+              "structure-19609",
+              "structure-19610",
+              "structure-19611",
+              "structure-19612",
+              "structure-19613"
+            ],
+            "pieces": 103,
+            "expectedPieces": 128
+          },
+          "repairRequests": 0,
+          "livingOutsideInitialPerimeter": 191,
+          "scope": "One paid initial perimeter with ordinary manual repair requests. Native skipped modules are retained as gaps; later outside plantings are not claimed protected. No plant cap or free construction.",
+          "initialNativeSkippedModules": 25,
+          "currentOwnedOperational": 0,
+          "currentOwnedRuined": 103
+        },
+        "correctedOwnedWallStates": {
+          "ownedIds": 103,
+          "intact": 103,
+          "ruined": 0,
+          "collapsing": 0,
+          "other": 0,
+          "missing": 0,
+          "nonWall": 0,
+          "fullHp": 103,
+          "gates": 2,
+          "scope": "Derived native wall status only; intact/fullHP does not prove a closed perimeter or protected crops"
+        },
+        "completeEnclosureClaim": false
+      },
+      "raids": {
+        "spawned": 21,
+        "ended": 21,
+        "allocatedHits": 261,
+        "spentHits": 261,
+        "unusedHits": 0,
+        "actors": 65,
+        "maximumSimultaneousOwners": 7,
+        "allEnded": true
+      },
+      "scope": "Separate self-consistent initial staffing twenty-night diagnostic; no100night/matrix/current-main acceptance. Raw erroneous wall report preserved."
+    },
+    {
+      "arm": "neglect",
+      "initialHiringPlan": {
+        "policy": "minimum-self-consistent-opening-v1",
+        "status": "self-consistent",
+        "cause": null,
+        "count": 7,
+        "paidToday": 210,
+        "nextDayWages": 210,
+        "balanceAfterHire": 485,
+        "seedBudget": 175,
+        "newSeeds": 35,
+        "forecastLiving": 36,
+        "capacityProxy": 42,
+        "inputs": {
+          "money": 695,
+          "living": 1,
+          "wage": 30,
+          "seedCost": 5,
+          "maintenanceReserve": 100,
+          "defenseReserve": 0,
+          "plantsPerWorker": 6
+        },
+        "minimumLivingCrew": 1,
+        "affordable": 23
+      },
+      "result": null,
+      "completedNights": 20,
+      "money": 324466,
+      "sourceHashCount": 394,
+      "snapshotSHA256": "4f113b04b5413548a61d2868bd85b7199017d9c22af2f6f3565ed4ee528c0473",
+      "roundtrip": true,
+      "summaryReproduced": true,
+      "gates": {
+        "actualHiringPayments": [
+          {
+            "id": "intensive-hire-1",
+            "kind": "hire",
+            "day": 1,
+            "time": 0,
+            "elapsed": 0,
+            "balance": 695,
+            "paid": 210
+          },
+          {
+            "id": "intensive-hire-119",
+            "kind": "hire",
+            "day": 2,
+            "time": 0,
+            "elapsed": 599.9999999999901,
+            "balance": 730,
+            "paid": 480
+          },
+          {
+            "id": "intensive-hire-248",
+            "kind": "hire",
+            "day": 3,
+            "time": 0,
+            "elapsed": 1199.9999999998488,
+            "balance": 1199,
+            "paid": 870
+          },
+          {
+            "id": "intensive-hire-499",
+            "kind": "hire",
+            "day": 4,
+            "time": 0,
+            "elapsed": 1799.9999999992258,
+            "balance": 3493,
+            "paid": 1440
+          },
+          {
+            "id": "intensive-hire-784",
+            "kind": "hire",
+            "day": 5,
+            "time": 0,
+            "elapsed": 2399.999999998603,
+            "balance": 4976,
+            "paid": 2160
+          },
+          {
+            "id": "intensive-hire-1073",
+            "kind": "hire",
+            "day": 6,
+            "time": 0,
+            "elapsed": 2999.9999999979796,
+            "balance": 9501,
+            "paid": 2400
+          },
+          {
+            "id": "intensive-hire-1362",
+            "kind": "hire",
+            "day": 7,
+            "time": 0,
+            "elapsed": 3599.999999997357,
+            "balance": 15172,
+            "paid": 2490
+          },
+          {
+            "id": "intensive-hire-1651",
+            "kind": "hire",
+            "day": 8,
+            "time": 0,
+            "elapsed": 4199.999999997206,
+            "balance": 20852,
+            "paid": 2520
+          },
+          {
+            "id": "intensive-hire-1940",
+            "kind": "hire",
+            "day": 9,
+            "time": 0,
+            "elapsed": 4799.999999999306,
+            "balance": 27096,
+            "paid": 2520
+          },
+          {
+            "id": "intensive-hire-2229",
+            "kind": "hire",
+            "day": 10,
+            "time": 0,
+            "elapsed": 5400.000000001408,
+            "balance": 32218,
+            "paid": 2610
+          },
+          {
+            "id": "intensive-hire-2518",
+            "kind": "hire",
+            "day": 11,
+            "time": 0,
+            "elapsed": 6000.000000003509,
+            "balance": 29419,
+            "paid": 2550
+          },
+          {
+            "id": "intensive-hire-2807",
+            "kind": "hire",
+            "day": 12,
+            "time": 0,
+            "elapsed": 6600.000000005611,
+            "balance": 24949,
+            "paid": 2700
+          },
+          {
+            "id": "intensive-hire-3097",
+            "kind": "hire",
+            "day": 13,
+            "time": 0,
+            "elapsed": 7209.900000007747,
+            "balance": 20134,
+            "paid": 3420
+          },
+          {
+            "id": "intensive-hire-3386",
+            "kind": "hire",
+            "day": 14,
+            "time": 0,
+            "elapsed": 7809.900000009849,
+            "balance": 42367,
+            "paid": 3540
+          },
+          {
+            "id": "intensive-hire-3635",
+            "kind": "hire",
+            "day": 15,
+            "time": 0,
+            "elapsed": 8409.900000011949,
+            "balance": 71457,
+            "paid": 3750
+          },
+          {
+            "id": "intensive-hire-3924",
+            "kind": "hire",
+            "day": 16,
+            "time": 0,
+            "elapsed": 9009.900000014051,
+            "balance": 103209,
+            "paid": 3810
+          },
+          {
+            "id": "intensive-hire-4214",
+            "kind": "hire",
+            "day": 17,
+            "time": 0,
+            "elapsed": 9609.900000016154,
+            "balance": 152523,
+            "paid": 4080
+          },
+          {
+            "id": "intensive-hire-4503",
+            "kind": "hire",
+            "day": 18,
+            "time": 0,
+            "elapsed": 10209.900000018255,
+            "balance": 204696,
+            "paid": 3900
+          },
+          {
+            "id": "intensive-hire-4766",
+            "kind": "hire",
+            "day": 19,
+            "time": 0,
+            "elapsed": 10809.900000020358,
+            "balance": 238009,
+            "paid": 3900
+          },
+          {
+            "id": "intensive-hire-5056",
+            "kind": "hire",
+            "day": 20,
+            "time": 0,
+            "elapsed": 11409.900000022462,
+            "balance": 297286,
+            "paid": 4140
+          }
+        ],
+        "allRaidsPhysicallyEnded": true,
+        "spentStrikes": 279,
+        "strikeEvidenceMatches": true,
+        "strikeEvidence": {
+          "spentStrikes": 279,
+          "counts": {
+            "AnimalLogicalHit": 268,
+            "AnimalLogicalMiss": 0,
+            "WorkerHit": 10,
+            "WorkerIncapacitated": 1
+          },
+          "raids": [
+            {
+              "raidId": "raid-1-night",
+              "actors": [
+                {
+                  "id": "animal-360",
+                  "species": "warthog",
+                  "hitsAllocated": 2,
+                  "hitsRemaining": 0,
+                  "spent": 2,
+                  "events": [
+                    {
+                      "id": "event-553",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-340",
+                      "attackId": "attack-552"
+                    },
+                    {
+                      "id": "event-555",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-340",
+                      "attackId": "attack-554"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-2-night",
+              "actors": [
+                {
+                  "id": "animal-1113",
+                  "species": "hyena",
+                  "hitsAllocated": 3,
+                  "hitsRemaining": 0,
+                  "spent": 3,
+                  "events": [
+                    {
+                      "id": "event-1740",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-1056",
+                      "attackId": "attack-1739"
+                    },
+                    {
+                      "id": "event-1742",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-1056",
+                      "attackId": "attack-1741"
+                    },
+                    {
+                      "id": "event-1744",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-1056",
+                      "attackId": "attack-1743"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-3-night",
+              "actors": [
+                {
+                  "id": "animal-2444",
+                  "species": "buffalo",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-3680",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-2329",
+                      "attackId": "attack-3679"
+                    },
+                    {
+                      "id": "event-3682",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-2329",
+                      "attackId": "attack-3681"
+                    },
+                    {
+                      "id": "event-3684",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-2329",
+                      "attackId": "attack-3683"
+                    },
+                    {
+                      "id": "event-3686",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-2329",
+                      "attackId": "attack-3685"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-4-night",
+              "actors": [
+                {
+                  "id": "animal-4305",
+                  "species": "lion",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-6340",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-3564",
+                      "attackId": "attack-6338"
+                    },
+                    {
+                      "id": "event-6344",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-3564",
+                      "attackId": "attack-6341"
+                    },
+                    {
+                      "id": "event-6347",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-3263",
+                      "attackId": "attack-6345"
+                    },
+                    {
+                      "id": "event-6351",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-3263",
+                      "attackId": "attack-6348"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-5-night",
+              "actors": [
+                {
+                  "id": "animal-6770",
+                  "species": "rhino",
+                  "hitsAllocated": 5,
+                  "hitsRemaining": 0,
+                  "spent": 5,
+                  "events": [
+                    {
+                      "id": "event-9906",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-5498",
+                      "attackId": "attack-9904"
+                    },
+                    {
+                      "id": "event-9910",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-5498",
+                      "attackId": "attack-9907"
+                    },
+                    {
+                      "id": "event-9913",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-6064",
+                      "attackId": "attack-9912"
+                    },
+                    {
+                      "id": "event-9915",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-6064",
+                      "attackId": "attack-9914"
+                    },
+                    {
+                      "id": "event-9917",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-6064",
+                      "attackId": "attack-9916"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-6-night",
+              "actors": [
+                {
+                  "id": "animal-9486",
+                  "species": "buffalo",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-13830",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-8449",
+                      "attackId": "attack-13828"
+                    },
+                    {
+                      "id": "event-13834",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-8449",
+                      "attackId": "attack-13831"
+                    },
+                    {
+                      "id": "event-13837",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-8455",
+                      "attackId": "attack-13835"
+                    },
+                    {
+                      "id": "event-13842",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-8455",
+                      "attackId": "attack-13838"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-9487",
+                  "species": "buffalo",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-13845",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-8808",
+                      "attackId": "attack-13844"
+                    },
+                    {
+                      "id": "event-13847",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-8808",
+                      "attackId": "attack-13846"
+                    },
+                    {
+                      "id": "event-13849",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-8808",
+                      "attackId": "attack-13848"
+                    },
+                    {
+                      "id": "event-13851",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-8808",
+                      "attackId": "attack-13850"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-7-night",
+              "actors": [
+                {
+                  "id": "animal-12274",
+                  "species": "hyena",
+                  "hitsAllocated": 5,
+                  "hitsRemaining": 0,
+                  "spent": 5,
+                  "events": [
+                    {
+                      "id": "event-17926",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-10914",
+                      "attackId": "attack-17922"
+                    },
+                    {
+                      "id": "event-17931",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-10914",
+                      "attackId": "attack-17928"
+                    },
+                    {
+                      "id": "event-17937",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-10911",
+                      "attackId": "attack-17932"
+                    },
+                    {
+                      "id": "event-17942",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-10911",
+                      "attackId": "attack-17938"
+                    },
+                    {
+                      "id": "event-17948",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-10916",
+                      "attackId": "attack-17943"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-12275",
+                  "species": "rhino",
+                  "hitsAllocated": 6,
+                  "hitsRemaining": 0,
+                  "spent": 6,
+                  "events": [
+                    {
+                      "id": "event-17924",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-8693",
+                      "attackId": "attack-17921"
+                    },
+                    {
+                      "id": "event-17935",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-8693",
+                      "attackId": "attack-17927"
+                    },
+                    {
+                      "id": "event-17945",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-8755",
+                      "attackId": "attack-17939"
+                    },
+                    {
+                      "id": "event-17952",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-8755",
+                      "attackId": "attack-17946"
+                    },
+                    {
+                      "id": "event-17955",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-12175",
+                      "attackId": "attack-17954"
+                    },
+                    {
+                      "id": "event-17957",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-12175",
+                      "attackId": "attack-17956"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-8-night",
+              "actors": [
+                {
+                  "id": "animal-15147",
+                  "species": "buffalo",
+                  "hitsAllocated": 6,
+                  "hitsRemaining": 0,
+                  "spent": 6,
+                  "events": [
+                    {
+                      "id": "event-22068",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-14384",
+                      "attackId": "attack-22063"
+                    },
+                    {
+                      "id": "event-22074",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-14384",
+                      "attackId": "attack-22069"
+                    },
+                    {
+                      "id": "event-22079",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-14384",
+                      "attackId": "attack-22075"
+                    },
+                    {
+                      "id": "event-22081",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-14384",
+                      "attackId": "attack-22080"
+                    },
+                    {
+                      "id": "event-22087",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-14384",
+                      "attackId": "attack-22082"
+                    },
+                    {
+                      "id": "event-22089",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-14384",
+                      "attackId": "attack-22088"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-15148",
+                  "species": "buffalo",
+                  "hitsAllocated": 5,
+                  "hitsRemaining": 0,
+                  "spent": 5,
+                  "events": [
+                    {
+                      "id": "event-22066",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-12054",
+                      "attackId": "attack-22064"
+                    },
+                    {
+                      "id": "event-22072",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-12054",
+                      "attackId": "attack-22067"
+                    },
+                    {
+                      "id": "event-22077",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-12070",
+                      "attackId": "attack-22073"
+                    },
+                    {
+                      "id": "event-22085",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-12070",
+                      "attackId": "attack-22078"
+                    },
+                    {
+                      "id": "event-22092",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-12051",
+                      "attackId": "attack-22086"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-9-night",
+              "actors": [
+                {
+                  "id": "animal-17942",
+                  "species": "warthog",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-26204",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-14384",
+                      "attackId": "attack-26198"
+                    },
+                    {
+                      "id": "event-26215",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-14384",
+                      "attackId": "attack-26205"
+                    },
+                    {
+                      "id": "event-26221",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-14476",
+                      "attackId": "attack-26216"
+                    },
+                    {
+                      "id": "event-26233",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-14476",
+                      "attackId": "attack-26222"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-17943",
+                  "species": "warthog",
+                  "hitsAllocated": 3,
+                  "hitsRemaining": 0,
+                  "spent": 3,
+                  "events": [
+                    {
+                      "id": "event-26200",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-14199",
+                      "attackId": "attack-26197"
+                    },
+                    {
+                      "id": "event-26208",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-14199",
+                      "attackId": "attack-26202"
+                    },
+                    {
+                      "id": "event-26218",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-16892",
+                      "attackId": "attack-26212"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-17944",
+                  "species": "warthog",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-26239",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-14630",
+                      "attackId": "attack-26235"
+                    },
+                    {
+                      "id": "event-26241",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-14630",
+                      "attackId": "attack-26240"
+                    },
+                    {
+                      "id": "event-26243",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-14630",
+                      "attackId": "attack-26242"
+                    },
+                    {
+                      "id": "event-26245",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-14630",
+                      "attackId": "attack-26244"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-17945",
+                  "species": "hyena",
+                  "hitsAllocated": 5,
+                  "hitsRemaining": 0,
+                  "spent": 5,
+                  "events": [
+                    {
+                      "id": "event-26210",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-17152",
+                      "attackId": "attack-26201"
+                    },
+                    {
+                      "id": "event-26225",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-17152",
+                      "attackId": "attack-26211"
+                    },
+                    {
+                      "id": "event-26229",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-17678",
+                      "attackId": "attack-26226"
+                    },
+                    {
+                      "id": "event-26238",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-17678",
+                      "attackId": "attack-26230"
+                    },
+                    {
+                      "id": "event-26249",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-17210",
+                      "attackId": "attack-26247"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-17946",
+                  "species": "buffalo",
+                  "hitsAllocated": 5,
+                  "hitsRemaining": 0,
+                  "spent": 5,
+                  "events": [
+                    {
+                      "id": "event-26253",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-14594",
+                      "attackId": "attack-26251"
+                    },
+                    {
+                      "id": "event-26257",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-14594",
+                      "attackId": "attack-26254"
+                    },
+                    {
+                      "id": "event-26260",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-17347",
+                      "attackId": "attack-26258"
+                    },
+                    {
+                      "id": "event-26264",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-17347",
+                      "attackId": "attack-26261"
+                    },
+                    {
+                      "id": "event-26267",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-17383",
+                      "attackId": "attack-26265"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-10-night",
+              "actors": [
+                {
+                  "id": "animal-20867",
+                  "species": "warthog",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-30427",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20351",
+                      "attackId": "attack-30425"
+                    },
+                    {
+                      "id": "event-30431",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20351",
+                      "attackId": "attack-30428"
+                    },
+                    {
+                      "id": "event-30435",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-17511",
+                      "attackId": "attack-30432"
+                    },
+                    {
+                      "id": "event-30442",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-17511",
+                      "attackId": "attack-30436"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-20868",
+                  "species": "hyena",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-30448",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-19952",
+                      "attackId": "attack-30444"
+                    },
+                    {
+                      "id": "event-30452",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-19952",
+                      "attackId": "attack-30449"
+                    },
+                    {
+                      "id": "event-30457",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-17004",
+                      "attackId": "attack-30453"
+                    },
+                    {
+                      "id": "event-30463",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-17004",
+                      "attackId": "attack-30458"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-20869",
+                  "species": "buffalo",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-30438",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20628",
+                      "attackId": "attack-30437"
+                    },
+                    {
+                      "id": "event-30445",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20628",
+                      "attackId": "attack-30439"
+                    },
+                    {
+                      "id": "event-30454",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20628",
+                      "attackId": "attack-30446"
+                    },
+                    {
+                      "id": "event-30459",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20628",
+                      "attackId": "attack-30455"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-11-night",
+              "actors": [
+                {
+                  "id": "animal-23551",
+                  "species": "warthog",
+                  "hitsAllocated": 2,
+                  "hitsRemaining": 0,
+                  "spent": 2,
+                  "events": [
+                    {
+                      "id": "event-34325",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20342",
+                      "attackId": "attack-34321"
+                    },
+                    {
+                      "id": "event-34338",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20342",
+                      "attackId": "attack-34326"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-23552",
+                  "species": "warthog",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-34348",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-22301",
+                      "attackId": "attack-34343"
+                    },
+                    {
+                      "id": "event-34358",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-22301",
+                      "attackId": "attack-34352"
+                    },
+                    {
+                      "id": "event-34362",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-22342",
+                      "attackId": "attack-34359"
+                    },
+                    {
+                      "id": "event-34366",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-22342",
+                      "attackId": "attack-34363"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-23553",
+                  "species": "warthog",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-34310",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-19868",
+                      "attackId": "attack-34306"
+                    },
+                    {
+                      "id": "event-34316",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-19868",
+                      "attackId": "attack-34311"
+                    },
+                    {
+                      "id": "event-34373",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-19986",
+                      "attackId": "attack-34368"
+                    },
+                    {
+                      "id": "event-34385",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-19986",
+                      "attackId": "attack-34374"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-23554",
+                  "species": "hyena",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-34334",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-22649",
+                      "attackId": "attack-34329"
+                    },
+                    {
+                      "id": "event-34346",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-22649",
+                      "attackId": "attack-34335"
+                    },
+                    {
+                      "id": "event-34370",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-23287",
+                      "attackId": "attack-34360"
+                    },
+                    {
+                      "id": "event-34381",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-23287",
+                      "attackId": "attack-34371"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-23555",
+                  "species": "hyena",
+                  "hitsAllocated": 5,
+                  "hitsRemaining": 0,
+                  "spent": 5,
+                  "events": [
+                    {
+                      "id": "event-34331",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-22786",
+                      "attackId": "attack-34328"
+                    },
+                    {
+                      "id": "event-34351",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-22786",
+                      "attackId": "attack-34332"
+                    },
+                    {
+                      "id": "event-34377",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20060",
+                      "attackId": "attack-34375"
+                    },
+                    {
+                      "id": "event-34389",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20060",
+                      "attackId": "attack-34378"
+                    },
+                    {
+                      "id": "event-34400",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20147",
+                      "attackId": "attack-34398"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-23556",
+                  "species": "hyena",
+                  "hitsAllocated": 5,
+                  "hitsRemaining": 0,
+                  "spent": 5,
+                  "events": [
+                    {
+                      "id": "event-34307",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-22250",
+                      "attackId": "attack-34305"
+                    },
+                    {
+                      "id": "event-34312",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-22250",
+                      "attackId": "attack-34308"
+                    },
+                    {
+                      "id": "event-34317",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-22250",
+                      "attackId": "attack-34313"
+                    },
+                    {
+                      "id": "event-34319",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-22250",
+                      "attackId": "attack-34318"
+                    },
+                    {
+                      "id": "event-34322",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-22250",
+                      "attackId": "attack-34320"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-23557",
+                  "species": "lion",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-34341",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-22621",
+                      "attackId": "attack-34327"
+                    },
+                    {
+                      "id": "event-34355",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-22621",
+                      "attackId": "attack-34342"
+                    },
+                    {
+                      "id": "event-34392",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-23105",
+                      "attackId": "attack-34390"
+                    },
+                    {
+                      "id": "event-34396",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-23105",
+                      "attackId": "attack-34393"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-12-night",
+              "actors": [
+                {
+                  "id": "animal-26322",
+                  "species": "buffalo",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-38357",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-25368",
+                      "attackId": "attack-38352"
+                    },
+                    {
+                      "id": "event-38361",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-25368",
+                      "attackId": "attack-38358"
+                    },
+                    {
+                      "id": "event-38367",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20434",
+                      "attackId": "attack-38365"
+                    },
+                    {
+                      "id": "event-38371",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20434",
+                      "attackId": "attack-38368"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-26323",
+                  "species": "lion",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-38343",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-25217",
+                      "attackId": "attack-38342"
+                    },
+                    {
+                      "id": "event-38345",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-25217",
+                      "attackId": "attack-38344"
+                    },
+                    {
+                      "id": "event-38347",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-25217",
+                      "attackId": "attack-38346"
+                    },
+                    {
+                      "id": "event-38349",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-25217",
+                      "attackId": "attack-38348"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-26324",
+                  "species": "lion",
+                  "hitsAllocated": 5,
+                  "hitsRemaining": 0,
+                  "spent": 5,
+                  "events": [
+                    {
+                      "id": "event-38354",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20486",
+                      "attackId": "attack-38351"
+                    },
+                    {
+                      "id": "event-38364",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20486",
+                      "attackId": "attack-38355"
+                    },
+                    {
+                      "id": "event-38375",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-19549",
+                      "attackId": "attack-38373"
+                    },
+                    {
+                      "id": "event-38379",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-19549",
+                      "attackId": "attack-38376"
+                    },
+                    {
+                      "id": "event-38382",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-19677",
+                      "attackId": "attack-38381"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-13-night",
+              "actors": [
+                {
+                  "id": "animal-29599",
+                  "species": "hyena",
+                  "hitsAllocated": 5,
+                  "hitsRemaining": 0,
+                  "spent": 5,
+                  "events": [
+                    {
+                      "id": "event-43106",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-28312",
+                      "attackId": "attack-43102"
+                    },
+                    {
+                      "id": "event-43109",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-28312",
+                      "attackId": "attack-43107"
+                    },
+                    {
+                      "id": "event-43117",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-28312",
+                      "attackId": "attack-43110"
+                    },
+                    {
+                      "id": "event-43122",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-28312",
+                      "attackId": "attack-43118"
+                    },
+                    {
+                      "id": "event-43124",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-28312",
+                      "attackId": "attack-43123"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-29600",
+                  "species": "buffalo",
+                  "hitsAllocated": 6,
+                  "hitsRemaining": 0,
+                  "spent": 6,
+                  "events": [
+                    {
+                      "id": "event-43104",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20064",
+                      "attackId": "attack-43101"
+                    },
+                    {
+                      "id": "event-43113",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20064",
+                      "attackId": "attack-43105"
+                    },
+                    {
+                      "id": "event-43128",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-22401",
+                      "attackId": "attack-43126"
+                    },
+                    {
+                      "id": "event-43136",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-22401",
+                      "attackId": "attack-43129"
+                    },
+                    {
+                      "id": "event-43146",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20254",
+                      "attackId": "attack-43144"
+                    },
+                    {
+                      "id": "event-43150",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-20254",
+                      "attackId": "attack-43147"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-29601",
+                  "species": "lion",
+                  "hitsAllocated": 5,
+                  "hitsRemaining": 0,
+                  "spent": 5,
+                  "events": [
+                    {
+                      "id": "event-43115",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-28836",
+                      "attackId": "attack-43108"
+                    },
+                    {
+                      "id": "event-43121",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-28836",
+                      "attackId": "attack-43116"
+                    },
+                    {
+                      "id": "event-43132",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-25227",
+                      "attackId": "attack-43130"
+                    },
+                    {
+                      "id": "event-43139",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-25227",
+                      "attackId": "attack-43133"
+                    },
+                    {
+                      "id": "event-43142",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-28108",
+                      "attackId": "attack-43140"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-14-day",
+              "actors": [
+                {
+                  "id": "animal-31940",
+                  "species": "warthog",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-46148",
+                      "type": "WorkerHit",
+                      "targetId": "worker-30624"
+                    },
+                    {
+                      "id": "event-46173",
+                      "type": "WorkerHit",
+                      "targetId": "worker-30705"
+                    },
+                    {
+                      "id": "event-46185",
+                      "type": "WorkerHit",
+                      "targetId": "worker-30718"
+                    },
+                    {
+                      "id": "event-46195",
+                      "type": "WorkerHit",
+                      "targetId": "worker-30634"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-31941",
+                  "species": "buffalo",
+                  "hitsAllocated": 5,
+                  "hitsRemaining": 0,
+                  "spent": 5,
+                  "events": [
+                    {
+                      "id": "event-46170",
+                      "type": "WorkerHit",
+                      "targetId": "worker-30675"
+                    },
+                    {
+                      "id": "event-46224",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-22738",
+                      "attackId": "attack-46219"
+                    },
+                    {
+                      "id": "event-46234",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-22738",
+                      "attackId": "attack-46225"
+                    },
+                    {
+                      "id": "event-46239",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-22738",
+                      "attackId": "attack-46235"
+                    },
+                    {
+                      "id": "event-46242",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-22738",
+                      "attackId": "attack-46240"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-14-night",
+              "actors": [
+                {
+                  "id": "animal-33058",
+                  "species": "warthog",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-47530",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-32981",
+                      "attackId": "attack-47528"
+                    },
+                    {
+                      "id": "event-47534",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-32981",
+                      "attackId": "attack-47531"
+                    },
+                    {
+                      "id": "event-47537",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-29097",
+                      "attackId": "attack-47535"
+                    },
+                    {
+                      "id": "event-47541",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-29097",
+                      "attackId": "attack-47538"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-33059",
+                  "species": "lion",
+                  "hitsAllocated": 5,
+                  "hitsRemaining": 0,
+                  "spent": 5,
+                  "events": [
+                    {
+                      "id": "event-47523",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-22738",
+                      "attackId": "attack-47521"
+                    },
+                    {
+                      "id": "event-47527",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-22738",
+                      "attackId": "attack-47524"
+                    },
+                    {
+                      "id": "event-47545",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-31256",
+                      "attackId": "attack-47543"
+                    },
+                    {
+                      "id": "event-47549",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-31256",
+                      "attackId": "attack-47546"
+                    },
+                    {
+                      "id": "event-47552",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-22915",
+                      "attackId": "attack-47551"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-33060",
+                  "species": "lion",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-47513",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-29002",
+                      "attackId": "attack-47512"
+                    },
+                    {
+                      "id": "event-47515",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-29002",
+                      "attackId": "attack-47514"
+                    },
+                    {
+                      "id": "event-47517",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-29002",
+                      "attackId": "attack-47516"
+                    },
+                    {
+                      "id": "event-47519",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-29002",
+                      "attackId": "attack-47518"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-15-night",
+              "actors": [
+                {
+                  "id": "animal-36749",
+                  "species": "warthog",
+                  "hitsAllocated": 2,
+                  "hitsRemaining": 0,
+                  "spent": 2,
+                  "events": [
+                    {
+                      "id": "event-52707",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-35180",
+                      "attackId": "attack-52705"
+                    },
+                    {
+                      "id": "event-52712",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-35180",
+                      "attackId": "attack-52708"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-36750",
+                  "species": "warthog",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-52738",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-22915",
+                      "attackId": "attack-52736"
+                    },
+                    {
+                      "id": "event-52743",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-22915",
+                      "attackId": "attack-52739"
+                    },
+                    {
+                      "id": "event-52759",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-36299",
+                      "attackId": "attack-52757"
+                    },
+                    {
+                      "id": "event-52763",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-36299",
+                      "attackId": "attack-52760"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-36751",
+                  "species": "warthog",
+                  "hitsAllocated": 2,
+                  "hitsRemaining": 0,
+                  "spent": 2,
+                  "events": [
+                    {
+                      "id": "event-52727",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-35579",
+                      "attackId": "attack-52723"
+                    },
+                    {
+                      "id": "event-52734",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-35579",
+                      "attackId": "attack-52728"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-36752",
+                  "species": "hyena",
+                  "hitsAllocated": 3,
+                  "hitsRemaining": 0,
+                  "spent": 3,
+                  "events": [
+                    {
+                      "id": "event-52715",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-31449",
+                      "attackId": "attack-52714"
+                    },
+                    {
+                      "id": "event-52718",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-31449",
+                      "attackId": "attack-52716"
+                    },
+                    {
+                      "id": "event-52724",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-31449",
+                      "attackId": "attack-52719"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-36753",
+                  "species": "buffalo",
+                  "hitsAllocated": 6,
+                  "hitsRemaining": 0,
+                  "spent": 6,
+                  "events": [
+                    {
+                      "id": "event-52745",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-31845",
+                      "attackId": "attack-52740"
+                    },
+                    {
+                      "id": "event-52749",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-31845",
+                      "attackId": "attack-52746"
+                    },
+                    {
+                      "id": "event-52771",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-22655",
+                      "attackId": "attack-52769"
+                    },
+                    {
+                      "id": "event-52775",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-22655",
+                      "attackId": "attack-52772"
+                    },
+                    {
+                      "id": "event-52779",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-25963",
+                      "attackId": "attack-52776"
+                    },
+                    {
+                      "id": "event-52782",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-29002",
+                      "attackId": "attack-52780"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-36754",
+                  "species": "lion",
+                  "hitsAllocated": 5,
+                  "hitsRemaining": 0,
+                  "spent": 5,
+                  "events": [
+                    {
+                      "id": "event-52721",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-31507",
+                      "attackId": "attack-52717"
+                    },
+                    {
+                      "id": "event-52731",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-31507",
+                      "attackId": "attack-52722"
+                    },
+                    {
+                      "id": "event-52752",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-25029",
+                      "attackId": "attack-52750"
+                    },
+                    {
+                      "id": "event-52756",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-25029",
+                      "attackId": "attack-52753"
+                    },
+                    {
+                      "id": "event-52767",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-25963",
+                      "attackId": "attack-52765"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-16-night",
+              "actors": [
+                {
+                  "id": "animal-40317",
+                  "species": "hyena",
+                  "hitsAllocated": 3,
+                  "hitsRemaining": 0,
+                  "spent": 3,
+                  "events": [
+                    {
+                      "id": "event-57841",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-39512",
+                      "attackId": "attack-57839"
+                    },
+                    {
+                      "id": "event-57846",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-39512",
+                      "attackId": "attack-57842"
+                    },
+                    {
+                      "id": "event-57852",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-35222",
+                      "attackId": "attack-57847"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-40318",
+                  "species": "buffalo",
+                  "hitsAllocated": 5,
+                  "hitsRemaining": 0,
+                  "spent": 5,
+                  "events": [
+                    {
+                      "id": "event-57849",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-26002",
+                      "attackId": "attack-57843"
+                    },
+                    {
+                      "id": "event-57855",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-26002",
+                      "attackId": "attack-57850"
+                    },
+                    {
+                      "id": "event-57859",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-26168",
+                      "attackId": "attack-57857"
+                    },
+                    {
+                      "id": "event-57863",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-26168",
+                      "attackId": "attack-57860"
+                    },
+                    {
+                      "id": "event-57866",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-25691",
+                      "attackId": "attack-57865"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-40319",
+                  "species": "buffalo",
+                  "hitsAllocated": 5,
+                  "hitsRemaining": 0,
+                  "spent": 5,
+                  "events": [
+                    {
+                      "id": "event-57829",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-31706",
+                      "attackId": "attack-57828"
+                    },
+                    {
+                      "id": "event-57831",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-31706",
+                      "attackId": "attack-57830"
+                    },
+                    {
+                      "id": "event-57833",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-31706",
+                      "attackId": "attack-57832"
+                    },
+                    {
+                      "id": "event-57835",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-31706",
+                      "attackId": "attack-57834"
+                    },
+                    {
+                      "id": "event-57837",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-31706",
+                      "attackId": "attack-57836"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-17-night",
+              "actors": [
+                {
+                  "id": "animal-44085",
+                  "species": "warthog",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-63258",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-35222",
+                      "attackId": "attack-63241"
+                    },
+                    {
+                      "id": "event-63264",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-38742",
+                      "attackId": "attack-63259"
+                    },
+                    {
+                      "id": "event-63269",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-38742",
+                      "attackId": "attack-63265"
+                    },
+                    {
+                      "id": "event-63275",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-42484",
+                      "attackId": "attack-63270"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-44086",
+                  "species": "warthog",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-63211",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-38926",
+                      "attackId": "attack-63210"
+                    },
+                    {
+                      "id": "event-63214",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-38926",
+                      "attackId": "attack-63212"
+                    },
+                    {
+                      "id": "event-63222",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-38926",
+                      "attackId": "attack-63215"
+                    },
+                    {
+                      "id": "event-63224",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-38926",
+                      "attackId": "attack-63223"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-44087",
+                  "species": "warthog",
+                  "hitsAllocated": 3,
+                  "hitsRemaining": 0,
+                  "spent": 3,
+                  "events": [
+                    {
+                      "id": "event-63235",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-42979",
+                      "attackId": "attack-63227"
+                    },
+                    {
+                      "id": "event-63240",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-42979",
+                      "attackId": "attack-63236"
+                    },
+                    {
+                      "id": "event-63251",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-31805",
+                      "attackId": "attack-63242"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-44088",
+                  "species": "warthog",
+                  "hitsAllocated": 3,
+                  "hitsRemaining": 0,
+                  "spent": 3,
+                  "events": [
+                    {
+                      "id": "event-63229",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-25691",
+                      "attackId": "attack-63226"
+                    },
+                    {
+                      "id": "event-63233",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-25691",
+                      "attackId": "attack-63230"
+                    },
+                    {
+                      "id": "event-63272",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-29192",
+                      "attackId": "attack-63266"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-44089",
+                  "species": "warthog",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-63248",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-28029",
+                      "attackId": "attack-63243"
+                    },
+                    {
+                      "id": "event-63255",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-28029",
+                      "attackId": "attack-63249"
+                    },
+                    {
+                      "id": "event-63294",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-28907",
+                      "attackId": "attack-63292"
+                    },
+                    {
+                      "id": "event-63298",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-28907",
+                      "attackId": "attack-63295"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-44090",
+                  "species": "hyena",
+                  "hitsAllocated": 5,
+                  "hitsRemaining": 0,
+                  "spent": 5,
+                  "events": [
+                    {
+                      "id": "event-63245",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-28758",
+                      "attackId": "attack-63237"
+                    },
+                    {
+                      "id": "event-63262",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-28758",
+                      "attackId": "attack-63246"
+                    },
+                    {
+                      "id": "event-63283",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-36509",
+                      "attackId": "attack-63278"
+                    },
+                    {
+                      "id": "event-63291",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-36509",
+                      "attackId": "attack-63284"
+                    },
+                    {
+                      "id": "event-63303",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-29192",
+                      "attackId": "attack-63300"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-44091",
+                  "species": "buffalo",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-63217",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-36568",
+                      "attackId": "attack-63213"
+                    },
+                    {
+                      "id": "event-63221",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-36568",
+                      "attackId": "attack-63218"
+                    },
+                    {
+                      "id": "event-63280",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-29319",
+                      "attackId": "attack-63277"
+                    },
+                    {
+                      "id": "event-63287",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-29319",
+                      "attackId": "attack-63281"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-18-day",
+              "actors": [
+                {
+                  "id": "animal-46594",
+                  "species": "rhino",
+                  "hitsAllocated": 6,
+                  "hitsRemaining": 0,
+                  "spent": 6,
+                  "events": [
+                    {
+                      "id": "event-66282",
+                      "type": "WorkerHit",
+                      "targetId": "worker-45354"
+                    },
+                    {
+                      "id": "event-66285",
+                      "type": "WorkerIncapacitated",
+                      "targetId": "worker-45354"
+                    },
+                    {
+                      "id": "event-66289",
+                      "type": "WorkerHit",
+                      "targetId": "worker-45329"
+                    },
+                    {
+                      "id": "event-66368",
+                      "type": "WorkerHit",
+                      "targetId": "worker-45426"
+                    },
+                    {
+                      "id": "event-66378",
+                      "type": "WorkerHit",
+                      "targetId": "worker-45418"
+                    },
+                    {
+                      "id": "event-66391",
+                      "type": "WorkerHit",
+                      "targetId": "worker-45407"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-18-night",
+              "actors": [
+                {
+                  "id": "animal-48022",
+                  "species": "warthog",
+                  "hitsAllocated": 3,
+                  "hitsRemaining": 0,
+                  "spent": 3,
+                  "events": [
+                    {
+                      "id": "event-68343",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-46184",
+                      "attackId": "attack-68341"
+                    },
+                    {
+                      "id": "event-68347",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-46184",
+                      "attackId": "attack-68344"
+                    },
+                    {
+                      "id": "event-68361",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-47848",
+                      "attackId": "attack-68353"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-48023",
+                  "species": "buffalo",
+                  "hitsAllocated": 5,
+                  "hitsRemaining": 0,
+                  "spent": 5,
+                  "events": [
+                    {
+                      "id": "event-68331",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-28955",
+                      "attackId": "attack-68330"
+                    },
+                    {
+                      "id": "event-68333",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-28955",
+                      "attackId": "attack-68332"
+                    },
+                    {
+                      "id": "event-68335",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-28955",
+                      "attackId": "attack-68334"
+                    },
+                    {
+                      "id": "event-68337",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-28955",
+                      "attackId": "attack-68336"
+                    },
+                    {
+                      "id": "event-68339",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-28955",
+                      "attackId": "attack-68338"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-48024",
+                  "species": "rhino",
+                  "hitsAllocated": 5,
+                  "hitsRemaining": 0,
+                  "spent": 5,
+                  "events": [
+                    {
+                      "id": "event-68351",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-42484",
+                      "attackId": "attack-68348"
+                    },
+                    {
+                      "id": "event-68355",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-47490",
+                      "attackId": "attack-68352"
+                    },
+                    {
+                      "id": "event-68359",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-47490",
+                      "attackId": "attack-68356"
+                    },
+                    {
+                      "id": "event-68365",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-43641",
+                      "attackId": "attack-68363"
+                    },
+                    {
+                      "id": "event-68369",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-43641",
+                      "attackId": "attack-68366"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-19-night",
+              "actors": [
+                {
+                  "id": "animal-51685",
+                  "species": "warthog",
+                  "hitsAllocated": 3,
+                  "hitsRemaining": 0,
+                  "spent": 3,
+                  "events": [
+                    {
+                      "id": "event-73343",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-51421",
+                      "attackId": "attack-73341"
+                    },
+                    {
+                      "id": "event-73348",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-51421",
+                      "attackId": "attack-73344"
+                    },
+                    {
+                      "id": "event-73355",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-43836",
+                      "attackId": "attack-73349"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-51686",
+                  "species": "warthog",
+                  "hitsAllocated": 2,
+                  "hitsRemaining": 0,
+                  "spent": 2,
+                  "events": [
+                    {
+                      "id": "event-73352",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-43103",
+                      "attackId": "attack-73345"
+                    },
+                    {
+                      "id": "event-73359",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-43103",
+                      "attackId": "attack-73353"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-51687",
+                  "species": "warthog",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-73332",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-32677",
+                      "attackId": "attack-73328"
+                    },
+                    {
+                      "id": "event-73338",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-32677",
+                      "attackId": "attack-73333"
+                    },
+                    {
+                      "id": "event-73383",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-43735",
+                      "attackId": "attack-73381"
+                    },
+                    {
+                      "id": "event-73387",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-43735",
+                      "attackId": "attack-73384"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-51688",
+                  "species": "warthog",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-73326",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-32862",
+                      "attackId": "attack-73325"
+                    },
+                    {
+                      "id": "event-73329",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-32862",
+                      "attackId": "attack-73327"
+                    },
+                    {
+                      "id": "event-73334",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-32862",
+                      "attackId": "attack-73330"
+                    },
+                    {
+                      "id": "event-73339",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-32862",
+                      "attackId": "attack-73335"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-51689",
+                  "species": "rhino",
+                  "hitsAllocated": 8,
+                  "hitsRemaining": 0,
+                  "spent": 8,
+                  "events": [
+                    {
+                      "id": "event-73362",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-50270",
+                      "attackId": "attack-73350"
+                    },
+                    {
+                      "id": "event-73366",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-50270",
+                      "attackId": "attack-73363"
+                    },
+                    {
+                      "id": "event-73369",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-50195",
+                      "attackId": "attack-73367"
+                    },
+                    {
+                      "id": "event-73373",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-50195",
+                      "attackId": "attack-73370"
+                    },
+                    {
+                      "id": "event-73376",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-47404",
+                      "attackId": "attack-73374"
+                    },
+                    {
+                      "id": "event-73380",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-47404",
+                      "attackId": "attack-73377"
+                    },
+                    {
+                      "id": "event-73391",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-46055",
+                      "attackId": "attack-73390"
+                    },
+                    {
+                      "id": "event-73393",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-46055",
+                      "attackId": "attack-73392"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "raidId": "raid-20-night",
+              "actors": [
+                {
+                  "id": "animal-55462",
+                  "species": "warthog",
+                  "hitsAllocated": 3,
+                  "hitsRemaining": 0,
+                  "spent": 3,
+                  "events": [
+                    {
+                      "id": "event-78919",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-46055",
+                      "attackId": "attack-78917"
+                    },
+                    {
+                      "id": "event-78926",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-46055",
+                      "attackId": "attack-78923"
+                    },
+                    {
+                      "id": "event-78930",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-43836",
+                      "attackId": "attack-78927"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-55463",
+                  "species": "hyena",
+                  "hitsAllocated": 4,
+                  "hitsRemaining": 0,
+                  "spent": 4,
+                  "events": [
+                    {
+                      "id": "event-78898",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-54197",
+                      "attackId": "attack-78897"
+                    },
+                    {
+                      "id": "event-78900",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-54197",
+                      "attackId": "attack-78899"
+                    },
+                    {
+                      "id": "event-78902",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-54197",
+                      "attackId": "attack-78901"
+                    },
+                    {
+                      "id": "event-78904",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-54197",
+                      "attackId": "attack-78903"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-55464",
+                  "species": "buffalo",
+                  "hitsAllocated": 5,
+                  "hitsRemaining": 0,
+                  "spent": 5,
+                  "events": [
+                    {
+                      "id": "event-78915",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-47703",
+                      "attackId": "attack-78910"
+                    },
+                    {
+                      "id": "event-78922",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-47703",
+                      "attackId": "attack-78916"
+                    },
+                    {
+                      "id": "event-78941",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-39295",
+                      "attackId": "attack-78939"
+                    },
+                    {
+                      "id": "event-78945",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-39295",
+                      "attackId": "attack-78942"
+                    },
+                    {
+                      "id": "event-78948",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-54880",
+                      "attackId": "attack-78946"
+                    }
+                  ]
+                },
+                {
+                  "id": "animal-55465",
+                  "species": "lion",
+                  "hitsAllocated": 5,
+                  "hitsRemaining": 0,
+                  "spent": 5,
+                  "events": [
+                    {
+                      "id": "event-78908",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-50228",
+                      "attackId": "attack-78906"
+                    },
+                    {
+                      "id": "event-78913",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-50228",
+                      "attackId": "attack-78909"
+                    },
+                    {
+                      "id": "event-78934",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-50878",
+                      "attackId": "attack-78932"
+                    },
+                    {
+                      "id": "event-78938",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-50878",
+                      "attackId": "attack-78935"
+                    },
+                    {
+                      "id": "event-78952",
+                      "type": "AnimalLogicalHit",
+                      "targetId": "plant-54649",
+                      "attackId": "attack-78951"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "strikeEvidenceMatches": true,
+          "scope": "Exact native allocation minus remaining budgets equals four exclusive consumer event types per actor and raid; no gameplay commands or inferred missing events"
+        },
+        "ledgerHydrationMaturityCrateReceipts": true,
+        "repairSettlements": true,
+        "completedRequestedNights": true,
+        "everyWorkdayPaidStaffAndPhysicalDelivery": true,
+        "strictGlobalActivityBelow25": true,
+        "physicalPaidDeliveries": 4202,
+        "responsible100Accepted": false,
+        "nativeNeglectDefeat": false,
+        "scope": "20-night pilot is not100-night acceptance; paid crate audit does not independently prove temporal route/FIFO traversal"
+      },
+      "observedActivity": {
+        "daylightSeconds": 6000.000000012636,
+        "unoccupiedSeconds": 750.0000000006228,
+        "unoccupiedFraction": 0.12499999999984056
+      },
+      "bands": [
+        {
+          "start": 1,
+          "end": 5,
+          "daylight": 1499.9999999992017,
+          "idle": 450.999999999906,
+          "fraction": 0.300666666666764
+        },
+        {
+          "start": 6,
+          "end": 15,
+          "daylight": 3000.0000000080395,
+          "idle": 199.00000000041837,
+          "fraction": 0.06633333333329502
+        },
+        {
+          "start": 16,
+          "end": 20,
+          "daylight": 1500.0000000053915,
+          "idle": 100.00000000029843,
+          "fraction": 0.066666666666626
+        }
+      ],
+      "counts": {
+        "PlacementCommitted": 1,
+        "CropPlaced": 5181,
+        "HiringConfirmed": 20,
+        "WaterSatisfied": 11479,
+        "CropMatured": 4384,
+        "HarvestRequested": 4384,
+        "CropPicked": 4202,
+        "CrateDelivered": 4202,
+        "TutorialCompleted": 1,
+        "NightStarted": 20,
+        "RaidSpawned": 22,
+        "SpellActivated": 145,
+        "AnimalLogicalHit": 268,
+        "AnimalRetreating": 66,
+        "RaidEnded": 22,
+        "Dawn": 20,
+        "AgriculturalEventApplied": 5,
+        "CropHit": 183,
+        "CropDestroyed": 86,
+        "CrateDropped": 7,
+        "WorkerHit": 10,
+        "WorkerIncapacitated": 1
+      },
+      "cashflow": {
+        "openingBalance": "1500",
+        "harvestIncome": "504327",
+        "seedCosts": "127071",
+        "wageCosts": "53490",
+        "repairCosts": "0",
+        "centreCosts": "800",
+        "wallCosts": "0",
+        "otherNet": "0",
+        "operatingCashFlow": "323766",
+        "netCashFlowAfterConstruction": "322966",
+        "endingBalance": "324466"
+      },
+      "paidWallCoins": 0,
+      "repair": {
+        "requestedCommands": 0,
+        "nativeRequests": 0,
+        "completed": 0,
+        "paid": 0,
+        "paidCoins": "0",
+        "restoredHp": 0,
+        "pendingFinal": 0,
+        "coverageStatus": "verified",
+        "interruptionScope": "No per-task cancellation receipt exists. Native spawn removes repair tasks; requests without arrivals are not labelled individually completed or cancelled."
+      },
+      "defense": {
+        "original": null,
+        "correctedOwnedWallStates": {
+          "ownedIds": 0,
+          "intact": 0,
+          "ruined": 0,
+          "collapsing": 0,
+          "other": 0,
+          "missing": 0,
+          "nonWall": 0,
+          "fullHp": 0,
+          "gates": 0,
+          "scope": "Derived native wall status only; intact/fullHP does not prove a closed perimeter or protected crops"
+        },
+        "completeEnclosureClaim": false
+      },
+      "raids": {
+        "spawned": 22,
+        "ended": 22,
+        "allocatedHits": 279,
+        "spentHits": 279,
+        "unusedHits": 0,
+        "actors": 66,
+        "maximumSimultaneousOwners": 7,
+        "allEnded": true
+      },
+      "scope": "Separate self-consistent initial staffing twenty-night diagnostic; no100night/matrix/current-main acceptance. Raw erroneous wall report preserved."
+    }
+  ],
+  "auditorHashes": {
+    "tools/audit_horde_self_consistent_pilot.mjs": "9fd5228c1bcf6b95c70f1c9237f50a69a34fb8918fa942d23abc7c1d9c51e6af",
+    "tools/horde-defense-terminal-derivative.mjs": "41312fda6b95b91177a7302b25e9818d562287d68dd80595698eeb6fc3830c0b"
+  },
+  "inputHashes": {
+    "provenance.json": "f53ddad6c6892cd6e4630e5d5c8da64dfee452c051d74036e0fa185f81ad865f",
+    "status.json": "50abfbc6f076c1e2f4490d95e2cd98845859c854233b6c8c30e334983f47b72b",
+    "responsible/report.json.gz": "934650fc57636d8926766d08cc3bc8bc8a1ca5cae62268c18fd2354e648eada0",
+    "responsible/state.json.gz": "1b0f1a153aaf9c7adcb91b394d232886016124316570f3e90df01bb280bb4a0b",
+    "responsible/native-report.json.gz": "ce5f12122473d7d9ddc5d9061718bcb8818ee3d63a1b28f99cb2bb2ea8f35987",
+    "responsible/native-state.json.gz": "1b0f1a153aaf9c7adcb91b394d232886016124316570f3e90df01bb280bb4a0b",
+    "responsible/status.json": "cd319615869347a823273c6e502d81b77ca5553bd944b4294af9192d3845a241",
+    "neglect/report.json.gz": "b23767609dbb1a15da85762a74a935d305024e86f849f948ece36927490d86ba",
+    "neglect/state.json.gz": "a1652ddfb8cfaf467a53a4c7f983bf0d67847852084ee08f324a7151d8f2444a",
+    "neglect/native-report.json.gz": "9a3b466b9bc6d7f1b5fdc6e3d7a9151a0f2c7b6950e56a6ab6f1210a4962c04c",
+    "neglect/native-state.json.gz": "a1652ddfb8cfaf467a53a4c7f983bf0d67847852084ee08f324a7151d8f2444a",
+    "neglect/status.json": "8e8cff3425c27870559329d0ecd8d49688a989b4c09e254d7fd048971b8dd958"
+  },
+  "scope": "Exit0 verifies original receipts and preserves false gates, not economic acceptance"
+}

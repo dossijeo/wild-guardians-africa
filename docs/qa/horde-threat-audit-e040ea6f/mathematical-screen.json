@@ -1,0 +1,3337 @@
+{
+  "scope": "Static conditional parameter screen; estimates are not100night survival/defeat, cash trajectory, probabilities, repair feasibility or idle acceptance",
+  "frozenSource": "e040ea6f9edf62c7924e3b32bd34b28780c39e5f",
+  "sourceHashes": {
+    "src/simulation/balance.js": "87c091da8465bd9ce64e909fa9c1e625f344c6cc01ace8260f60729997ca537a",
+    "src/simulation/raids.js": "8cd530da47578360943191e15696c10bd991f87bf9f6a281013d2f41c937d204",
+    "src/simulation/game.js": "5fe9bcbd7c5e123af8b18a072cffbb0ac470a5fa0ef5d25a262bd2c6fc822440",
+    "src/simulation/rules.js": "0be52a566a423fddff1cfe141a094e0e24e1c7265599a8d6df7712e7d493f739",
+    "tools/horde-defense-self-consistent-farm.mjs": "a4712fa2d1769e210cb0d939a9d73f496b4ea53b92e3a7d9f0f3b7088d46e197"
+  },
+  "fixed": {
+    "initialMoney": 1500,
+    "centerCost": 800,
+    "elderWage": 30,
+    "youngWage": 40,
+    "cropHitsToDestroy": 2
+  },
+  "balance": {
+    "dayRaidEnvelope": {
+      "budgetRange": [
+        7,
+        10
+      ],
+      "legalOptions": 38,
+      "minimumStrikes": 4,
+      "maximumStrikes": 22,
+      "meanStrikesUniformBudgetAndComposition": 10.689583333333333,
+      "maximumConcentratedStructureHpDamage": 260.0
+    },
+    "dayRaidProbability": 0.1,
+    "dayRaidAttractionMinimum": 10000,
+    "spells": [
+      {
+        "id": "shield",
+        "name": "Escudo",
+        "duration_seconds": 20,
+        "cooldown_seconds": 90,
+        "unlock": "night_1",
+        "coverage_reference_plants": [
+          5,
+          6
+        ],
+        "radius_m": null
+      },
+      {
+        "id": "growth",
+        "name": "Crecimiento",
+        "duration_seconds": 30,
+        "cooldown_seconds": 90,
+        "unlock": "day_3",
+        "coverage_reference_plants": [
+          9,
+          10
+        ],
+        "growth_multiplier": 1.5,
+        "radius_m": null
+      },
+      {
+        "id": "multiply",
+        "name": "Multiplicar",
+        "duration_seconds": 15,
+        "cooldown_seconds": 120,
+        "unlock": "day_5",
+        "coverage_reference_plants": [
+          6,
+          8
+        ],
+        "harvest_multiplier": 2,
+        "radius_m": null
+      }
+    ],
+    "walls": [
+      {
+        "id": "zarzas",
+        "name": "Zarzas",
+        "cost": 10,
+        "hp": 100,
+        "gate_hp": 60
+      },
+      {
+        "id": "empalizada",
+        "name": "Madera",
+        "cost": 20,
+        "hp": 200,
+        "gate_hp": 120
+      },
+      {
+        "id": "adobe",
+        "name": "Adobe",
+        "cost": 35,
+        "hp": 300,
+        "gate_hp": 180
+      },
+      {
+        "id": "reforzado",
+        "name": "Adobe reforzado",
+        "cost": 55,
+        "hp": 400,
+        "gate_hp": 240
+      },
+      {
+        "id": "piedra",
+        "name": "Piedra",
+        "cost": 80,
+        "hp": 500,
+        "gate_hp": 300
+      }
+    ],
+    "stages": [
+      {
+        "days": [
+          6,
+          10
+        ],
+        "budgetRange": [
+          10,
+          14
+        ],
+        "legalOptions": 89,
+        "minimumStrikes": 5,
+        "maximumStrikes": 24,
+        "meanStrikesUniformBudgetAndComposition": 13.086148272017837,
+        "maximumConcentratedStructureHpDamage": 360.0
+      },
+      {
+        "days": [
+          11,
+          20
+        ],
+        "budgetRange": [
+          15,
+          21
+        ],
+        "legalOptions": 298,
+        "minimumStrikes": 9,
+        "maximumStrikes": 35,
+        "meanStrikesUniformBudgetAndComposition": 20.025715368488953,
+        "maximumConcentratedStructureHpDamage": 545.0
+      },
+      {
+        "days": [
+          21,
+          40
+        ],
+        "budgetRange": [
+          20,
+          28
+        ],
+        "legalOptions": 762,
+        "minimumStrikes": 12,
+        "maximumStrikes": 45,
+        "meanStrikesUniformBudgetAndComposition": 25.96786421851695,
+        "maximumConcentratedStructureHpDamage": 742.5
+      },
+      {
+        "days": [
+          41,
+          100
+        ],
+        "budgetRange": [
+          30,
+          42
+        ],
+        "legalOptions": 2668,
+        "minimumStrikes": 18,
+        "maximumStrikes": 63,
+        "meanStrikesUniformBudgetAndComposition": 37.24536673085207,
+        "maximumConcentratedStructureHpDamage": 1080.0
+      }
+    ],
+    "center": {
+      "cost": 800,
+      "max_hp": 600,
+      "collapse_damage_fraction": 0.79,
+      "collapse_seconds": 3.2,
+      "max_workers": null
+    }
+  },
+  "empiricalProxies": [
+    {
+      "arm": "responsible",
+      "dailyIncome": 24890.55,
+      "dailySeeds": 6368.5,
+      "dailyWages": 2712.0,
+      "averageRealizedPayout": 117.35289957567186,
+      "averageSeedPayment": 24.5508866615266,
+      "destroyedPerDay": 4.05,
+      "plantedPerDay": 259.4,
+      "lastPaidStaff": 145,
+      "terminalCash": 315871
+    },
+    {
+      "arm": "neglect",
+      "dailyIncome": 25216.35,
+      "dailySeeds": 6353.55,
+      "dailyWages": 2674.5,
+      "averageRealizedPayout": 120.0207044264636,
+      "averageSeedPayment": 24.52634626519977,
+      "destroyedPerDay": 4.3,
+      "plantedPerDay": 259.05,
+      "lastPaidStaff": 138,
+      "terminalCash": 324466
+    }
+  ],
+  "sameProductivityForBothArms": true,
+  "empiricalStrikeConsumers": [
+    {
+      "arm": "responsible",
+      "allocated": 261,
+      "consumerTotals": {
+        "shielded-crop": 76,
+        "unshielded-crop": 177,
+        "miss:shield-expired": 2,
+        "WorkerHit": 4,
+        "WorkerIncapacitated": 2
+      }
+    },
+    {
+      "arm": "neglect",
+      "allocated": 279,
+      "consumerTotals": {
+        "shielded-crop": 85,
+        "unshielded-crop": 183,
+        "WorkerHit": 10,
+        "WorkerIncapacitated": 1
+      }
+    }
+  ],
+  "conditionalAssumptions": {
+    "spentFraction": [
+      0.7,
+      1
+    ],
+    "responsibleCropFraction": [
+      0.15,
+      0.35
+    ],
+    "neglectCropFraction": [
+      0.65,
+      0.9
+    ],
+    "responsibleShieldCoverage": [
+      0.25,
+      0.4
+    ],
+    "neglectShieldCoverage": [
+      0.15,
+      0.35
+    ],
+    "lostHarvestFraction": [
+      0.5,
+      1
+    ],
+    "repairServiceFactor": [
+      0.5,
+      1
+    ],
+    "wallCostPerHp": 0.1,
+    "defenseAmortizedCoinsPerDay": 51.5,
+    "note": "Exposure and service bounds are proposed test conditions, not identified defensive efficacy. Lost yield0 is an additional failure-of-identification case."
+  },
+  "zeroContactDegeneracy": {
+    "spentFraction": 0,
+    "damageEffect": 0,
+    "reason": "Horde or damage changes cannot distinguish arms if attacks never contact assets."
+  },
+  "currentLegalCeilingAtRetainedProductivity": {
+    "0": {
+      "freshCropDeathsPerNightPlusPossibleDayRaid": 42.5,
+      "incrementalDailyPenalty": 943.9815921356978,
+      "minimumObservedDailyMarginMinusPenalty": 14866.0684078643,
+      "maximumAlreadyOneHitCropDeaths": 85,
+      "alreadyOneHitMarginStress": 13822.65572474942
+    },
+    "0.5": {
+      "freshCropDeathsPerNightPlusPossibleDayRaid": 42.5,
+      "incrementalDailyPenalty": 3251.379634734461,
+      "minimumObservedDailyMarginMinusPenalty": 12558.670365265538,
+      "maximumAlreadyOneHitCropDeaths": 85,
+      "alreadyOneHitMarginStress": 8964.817713088305
+    },
+    "1": {
+      "freshCropDeathsPerNightPlusPossibleDayRaid": 42.5,
+      "incrementalDailyPenalty": 5558.777677333223,
+      "minimumObservedDailyMarginMinusPenalty": 10251.272322666777,
+      "maximumAlreadyOneHitCropDeaths": 85,
+      "alreadyOneHitMarginStress": 4106.9797014271935
+    }
+  },
+  "unitLossSensitivity": {
+    "averageSeed": 24.5508866615266,
+    "averageRealizedHarvest": 120.0207044264636,
+    "maximumCanonicalSeed": 150,
+    "maximumFemaleHarvestWithMultiplyAndPositiveEvent": 2082.6,
+    "warning": "High-value targeting can violate mean-payout stress assumption; this is not an impossibility proof for all crop mixes."
+  },
+  "grid": [
+    {
+      "hitBudgetMultiplier": 1,
+      "yieldMultiplier": 1,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            15561.733501746026,
+            16121.311434092802
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            14276.835120889516,
+            16051.671800268527
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 1,
+      "yieldMultiplier": 1,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            13963.6011749667,
+            14532.923934092802
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            12619.618175021158,
+            14453.367394216146
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 1,
+      "yieldMultiplier": 1,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            12365.468848187375,
+            12944.5364340928
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            10962.4012291528,
+            12855.062988163763
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 1,
+      "yieldMultiplier": 1,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            15506.41719493461,
+            16105.822868185605
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            14276.835120889516,
+            16051.671800268527
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 1,
+      "yieldMultiplier": 1,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            13908.284868155282,
+            14517.435368185605
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            12619.618175021158,
+            14453.367394216146
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 1,
+      "yieldMultiplier": 1,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            12310.152541375957,
+            12929.047868185604
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            10962.4012291528,
+            12855.062988163763
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 1,
+      "yieldMultiplier": 1,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            15451.10088812319,
+            16090.334302278408
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            14276.835120889516,
+            16051.671800268527
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 1,
+      "yieldMultiplier": 1,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            13852.968561343863,
+            14501.946802278408
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            12619.618175021158,
+            14453.367394216146
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 1,
+      "yieldMultiplier": 1,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            12254.836234564538,
+            12913.559302278407
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            10962.4012291528,
+            12855.062988163763
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 1,
+      "yieldMultiplier": 0.75,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            9368.463722827339,
+            9817.2239340928
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            8372.409394798779,
+            9771.824444149013
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 1,
+      "yieldMultiplier": 0.75,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            7770.331396048013,
+            8228.8364340928
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            6715.192448930419,
+            8173.520038096631
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 1,
+      "yieldMultiplier": 0.75,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            6172.199069268687,
+            6640.448934092799
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            5057.975503062061,
+            6575.215632044248
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 1,
+      "yieldMultiplier": 0.75,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            9313.147416015921,
+            9801.735368185604
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            8372.409394798779,
+            9771.824444149013
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 1,
+      "yieldMultiplier": 0.75,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            7715.015089236595,
+            8213.347868185603
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            6715.192448930419,
+            8173.520038096631
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 1,
+      "yieldMultiplier": 0.75,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            6116.882762457269,
+            6624.960368185602
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            5057.975503062061,
+            6575.215632044248
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 1,
+      "yieldMultiplier": 0.75,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            9257.831109204502,
+            9786.246802278407
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            8372.409394798779,
+            9771.824444149013
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 1,
+      "yieldMultiplier": 0.75,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            7659.698782425177,
+            8197.859302278406
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            6715.192448930419,
+            8173.520038096631
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 1,
+      "yieldMultiplier": 0.75,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            6061.5664556458505,
+            6609.471802278405
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            5057.975503062061,
+            6575.215632044248
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 1,
+      "yieldMultiplier": 0.5,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            3175.1939439086523,
+            3513.136434092802
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            2467.9836687080415,
+            3491.9770880295005
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 1,
+      "yieldMultiplier": 0.5,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            1577.0616171293264,
+            1924.7489340928023
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            810.7667228396828,
+            1893.6726819771195
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 1,
+      "yieldMultiplier": 0.5,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -21.070709649999607,
+            336.3614340928016
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -846.4502230286757,
+            295.3682759247375
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 1,
+      "yieldMultiplier": 0.5,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            3119.8776370972346,
+            3497.647868185605
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            2467.9836687080415,
+            3491.9770880295005
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 1,
+      "yieldMultiplier": 0.5,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            1521.7453103179087,
+            1909.2603681856053
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            810.7667228396828,
+            1893.6726819771195
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 1,
+      "yieldMultiplier": 0.5,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -76.38701646141729,
+            320.87286818560466
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -846.4502230286757,
+            295.3682759247375
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 1,
+      "yieldMultiplier": 0.5,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            3064.561330285817,
+            3482.159302278408
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            2467.9836687080415,
+            3491.9770880295005
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 1,
+      "yieldMultiplier": 0.5,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            1466.429003506491,
+            1893.7718022784084
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            810.7667228396828,
+            1893.6726819771195
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 1,
+      "yieldMultiplier": 0.5,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -131.703323272835,
+            305.3843022784077
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -846.4502230286757,
+            295.3682759247375
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 1,
+      "yieldMultiplier": 0.35,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -540.7679234425605,
+            -269.3160659071991
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -1074.671766946402,
+            -275.9313256422086
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 1,
+      "yieldMultiplier": 0.35,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -2138.900250221886,
+            -1857.703565907199
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -2731.8887128147603,
+            -1874.2357316945897
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 1,
+      "yieldMultiplier": 0.35,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -3737.0325770012123,
+            -3446.0910659071997
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -4389.105658683119,
+            -3472.5401377469716
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 1,
+      "yieldMultiplier": 0.35,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -596.084230253978,
+            -284.8046318143961
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -1074.671766946402,
+            -275.9313256422086
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 1,
+      "yieldMultiplier": 0.35,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -2194.2165570333036,
+            -1873.192131814396
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -2731.8887128147603,
+            -1874.2357316945897
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 1,
+      "yieldMultiplier": 0.35,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -3792.34888381263,
+            -3461.5796318143966
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -4389.105658683119,
+            -3472.5401377469716
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 1,
+      "yieldMultiplier": 0.35,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -651.4005370653958,
+            -300.293197721593
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -1074.671766946402,
+            -275.9313256422086
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 1,
+      "yieldMultiplier": 0.35,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -2249.5328638447218,
+            -1888.6806977215929
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -2731.8887128147603,
+            -1874.2357316945897
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 1,
+      "yieldMultiplier": 0.35,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -3847.6651906240477,
+            -3477.0681977215936
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -4389.105658683119,
+            -3472.5401377469716
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 2,
+      "yieldMultiplier": 1,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            14779.402059585693,
+            16094.558456616734
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            12158.105297872675,
+            15572.570583094284
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 2,
+      "yieldMultiplier": 1,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            13150.404633282244,
+            14506.170956616734
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            10410.93863339116,
+            13939.491498244724
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 2,
+      "yieldMultiplier": 1,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            11521.407206978798,
+            12917.783456616733
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            8663.771968909648,
+            12306.412413395166
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 2,
+      "yieldMultiplier": 1,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            14668.769445962856,
+            16052.31691323347
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            12158.105297872675,
+            15572.570583094284
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 2,
+      "yieldMultiplier": 1,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            13039.772019659407,
+            14463.929413233469
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            10410.93863339116,
+            13939.491498244724
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 2,
+      "yieldMultiplier": 1,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            11410.774593355962,
+            12875.541913233468
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            8663.771968909648,
+            12306.412413395166
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 2,
+      "yieldMultiplier": 1,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            14558.13683234002,
+            16010.075369850207
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            12158.105297872675,
+            15572.570583094284
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 2,
+      "yieldMultiplier": 1,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            12929.139406036571,
+            14421.687869850206
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            10410.93863339116,
+            13939.491498244724
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 2,
+      "yieldMultiplier": 1,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            11300.141979733125,
+            12833.300369850205
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            8663.771968909648,
+            12306.412413395166
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 2,
+      "yieldMultiplier": 0.75,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            8737.020964980113,
+            9790.470956616733
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            6693.4123089229915,
+            9377.723852471152
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 2,
+      "yieldMultiplier": 0.75,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            7108.0235386766635,
+            8202.083456616732
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            4946.245644441478,
+            7744.644767621594
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 2,
+      "yieldMultiplier": 0.75,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            5479.026112373216,
+            6613.695956616732
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            3199.0789799599665,
+            6111.565682772035
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 2,
+      "yieldMultiplier": 0.75,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            8626.388351357276,
+            9748.229413233468
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            6693.4123089229915,
+            9377.723852471152
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 2,
+      "yieldMultiplier": 0.75,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            6997.390925053828,
+            8159.8419132334675
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            4946.245644441478,
+            7744.644767621594
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 2,
+      "yieldMultiplier": 0.75,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            5368.393498750381,
+            6571.454413233468
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            3199.0789799599665,
+            6111.565682772035
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 2,
+      "yieldMultiplier": 0.75,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            8515.755737734442,
+            9705.987869850205
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            6693.4123089229915,
+            9377.723852471152
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 2,
+      "yieldMultiplier": 0.75,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            6886.758311430993,
+            8117.600369850204
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            4946.245644441478,
+            7744.644767621594
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 2,
+      "yieldMultiplier": 0.75,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            5257.760885127545,
+            6529.212869850203
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            3199.0789799599665,
+            6111.565682772035
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 2,
+      "yieldMultiplier": 0.5,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            2694.639870374533,
+            3486.3834566167347
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            1228.7193199733115,
+            3182.877121848025
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 2,
+      "yieldMultiplier": 0.5,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            1065.6424440710857,
+            1897.995956616735
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -518.4473445082012,
+            1549.7980369984668
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 2,
+      "yieldMultiplier": 0.5,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -563.3549822323617,
+            309.60845661673414
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -2265.6140089897135,
+            -83.28104785109207
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 2,
+      "yieldMultiplier": 0.5,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            2584.0072567516977,
+            3444.1419132334704
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            1228.7193199733115,
+            3182.877121848025
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 2,
+      "yieldMultiplier": 0.5,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            955.0098304482503,
+            1855.7544132334704
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -518.4473445082012,
+            1549.7980369984668
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 2,
+      "yieldMultiplier": 0.5,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -673.9875958551971,
+            267.36691323346975
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -2265.6140089897135,
+            -83.28104785109207
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 2,
+      "yieldMultiplier": 0.5,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            2473.3746431288623,
+            3401.900369850206
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            1228.7193199733115,
+            3182.877121848025
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 2,
+      "yieldMultiplier": 0.5,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            844.377216825415,
+            1813.512869850206
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -518.4473445082012,
+            1549.7980369984668
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 2,
+      "yieldMultiplier": 0.5,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -784.6202094780325,
+            225.12536985020535
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -2265.6140089897135,
+            -83.28104785109207
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 2,
+      "yieldMultiplier": 0.35,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -930.7887863888149,
+            -296.06904338326655
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -2050.0964733964975,
+            -534.0309165258539
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 2,
+      "yieldMultiplier": 0.35,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -2559.7862126922623,
+            -1884.4565433832663
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -3797.2631378780097,
+            -2167.1100013754117
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 2,
+      "yieldMultiplier": 0.35,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -4188.783638995709,
+            -3472.844043383267
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -5544.429802359523,
+            -3800.1890862249707
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 2,
+      "yieldMultiplier": 0.35,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -1041.4214000116503,
+            -338.31058676653095
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -2050.0964733964975,
+            -534.0309165258539
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 2,
+      "yieldMultiplier": 0.35,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -2670.4188263150977,
+            -1926.6980867665309
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -3797.2631378780097,
+            -2167.1100013754117
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 2,
+      "yieldMultiplier": 0.35,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -4299.416252618545,
+            -3515.0855867665314
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -5544.429802359523,
+            -3800.1890862249707
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 2,
+      "yieldMultiplier": 0.35,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -1152.0540136344857,
+            -380.55213014979535
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -2050.0964733964975,
+            -534.0309165258539
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 2,
+      "yieldMultiplier": 0.35,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -2781.051439937933,
+            -1968.9396301497952
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -3797.2631378780097,
+            -2167.1100013754117
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 2,
+      "yieldMultiplier": 0.35,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -4410.048866241381,
+            -3557.3271301497957
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -5544.429802359523,
+            -3800.1890862249707
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 4,
+      "yieldMultiplier": 1,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            13214.739175265024,
+            15986.561674622448
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            7920.645651838989,
+            14614.368148745796
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 4,
+      "yieldMultiplier": 1,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            11524.011549913332,
+            14393.401451824086
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            5993.579550131166,
+            12911.739706301883
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 4,
+      "yieldMultiplier": 1,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            9833.283924561641,
+            12800.241229025725
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            4066.513448423346,
+            11209.11126385797
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 4,
+      "yieldMultiplier": 1,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            12993.473948019353,
+            15902.07858785592
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            7920.645651838989,
+            14614.368148745796
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 4,
+      "yieldMultiplier": 1,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            11302.746322667661,
+            14308.918365057558
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            5993.579550131166,
+            12911.739706301883
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 4,
+      "yieldMultiplier": 1,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            9612.01869731597,
+            12715.758142259197
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            4066.513448423346,
+            11209.11126385797
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 4,
+      "yieldMultiplier": 1,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            12772.208720773682,
+            15817.59550108939
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            7920.645651838989,
+            14614.368148745796
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 4,
+      "yieldMultiplier": 1,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            11081.48109542199,
+            14224.435278291028
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            5993.579550131166,
+            12911.739706301883
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 4,
+      "yieldMultiplier": 1,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            9390.7534700703,
+            12631.275055492668
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            4066.513448423346,
+            11209.11126385797
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 4,
+      "yieldMultiplier": 0.75,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            7474.135449285657,
+            9694.140261476841
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            3335.4181371714185,
+            8589.522669115433
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 4,
+      "yieldMultiplier": 0.75,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            5783.407823933967,
+            8100.98003867848
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            1408.3520354635975,
+            6886.89422667152
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 4,
+      "yieldMultiplier": 0.75,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            4092.6801985822767,
+            6507.819815880119
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -518.7140662442234,
+            5184.265784227608
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 4,
+      "yieldMultiplier": 0.75,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            7252.870222039986,
+            9609.657174710313
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            3335.4181371714185,
+            8589.522669115433
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 4,
+      "yieldMultiplier": 0.75,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            5562.142596688296,
+            8016.496951911951
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            1408.3520354635975,
+            6886.89422667152
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 4,
+      "yieldMultiplier": 0.75,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            3871.414971336606,
+            6423.33672911359
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -518.7140662442234,
+            5184.265784227608
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 4,
+      "yieldMultiplier": 0.75,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            7031.604994794316,
+            9525.174087943784
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            3335.4181371714185,
+            8589.522669115433
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 4,
+      "yieldMultiplier": 0.75,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            5340.877369442625,
+            7932.013865145423
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            1408.3520354635975,
+            6886.89422667152
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 4,
+      "yieldMultiplier": 0.75,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            3650.149744090935,
+            6338.853642347061
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -518.7140662442234,
+            5184.265784227608
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 4,
+      "yieldMultiplier": 0.5,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            1733.531723306295,
+            3401.7188483312375
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -1249.809377496148,
+            2564.6771894850735
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 4,
+      "yieldMultiplier": 0.5,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            42.80409795460449,
+            1808.5586255328765
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -3176.875479203969,
+            862.0487470411617
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 4,
+      "yieldMultiplier": 0.5,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -1647.9235273970858,
+            215.3984027345149
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -5103.94158091179,
+            -840.579695402751
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 4,
+      "yieldMultiplier": 0.5,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            1512.2664960606241,
+            3317.2357615647084
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -1249.809377496148,
+            2564.6771894850735
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 4,
+      "yieldMultiplier": 0.5,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -178.46112929106624,
+            1724.0755387663478
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -3176.875479203969,
+            862.0487470411617
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 4,
+      "yieldMultiplier": 0.5,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -1869.1887546427565,
+            130.91531596798606
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -5103.94158091179,
+            -840.579695402751
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 4,
+      "yieldMultiplier": 0.5,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            1291.0012688149534,
+            3232.7526747981797
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -1249.809377496148,
+            2564.6771894850735
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 4,
+      "yieldMultiplier": 0.5,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -399.72635653673706,
+            1639.5924519998189
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -3176.875479203969,
+            862.0487470411617
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 4,
+      "yieldMultiplier": 0.5,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -2090.4539818884273,
+            46.43222920145726
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -5103.94158091179,
+            -840.579695402751
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 4,
+      "yieldMultiplier": 0.35,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -1710.8305122813238,
+            -373.7339995561272
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -4000.945886296689,
+            -1050.2300982931442
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 4,
+      "yieldMultiplier": 0.35,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -3401.5581376330138,
+            -1966.894222354488
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -5928.0119880045095,
+            -2752.858540737056
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 4,
+      "yieldMultiplier": 0.35,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -5092.285762984705,
+            -3560.0544451528494
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -7855.078089712331,
+            -4455.486983180969
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 4,
+      "yieldMultiplier": 0.35,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -1932.0957395269945,
+            -458.217086322656
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -4000.945886296689,
+            -1050.2300982931442
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 4,
+      "yieldMultiplier": 0.35,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -3622.8233648786845,
+            -2051.377309121017
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -5928.0119880045095,
+            -2752.858540737056
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 4,
+      "yieldMultiplier": 0.35,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -5313.550990230376,
+            -3644.5375319193786
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -7855.078089712331,
+            -4455.486983180969
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 4,
+      "yieldMultiplier": 0.35,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -2153.360966772665,
+            -542.7001730891848
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -4000.945886296689,
+            -1050.2300982931442
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 4,
+      "yieldMultiplier": 0.35,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -3844.0885921243553,
+            -2135.8603958875456
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -5928.0119880045095,
+            -2752.858540737056
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 4,
+      "yieldMultiplier": 0.35,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -5534.816217476046,
+            -3729.0206186859073
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -7855.078089712331,
+            -4455.486983180969
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 8,
+      "yieldMultiplier": 1,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            10085.413406623684,
+            15493.850331802127
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -554.2736402283826,
+            12697.963280048822
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 8,
+      "yieldMultiplier": 1,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            8271.225383175508,
+            13871.059613460608
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -2841.13861638882,
+            10856.236122416201
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 8,
+      "yieldMultiplier": 1,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            6457.037359727332,
+            12248.26889511909
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -5128.003592549256,
+            9014.508964783581
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 8,
+      "yieldMultiplier": 1,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            9642.882952132342,
+            15324.88415826907
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -554.2736402283826,
+            12697.963280048822
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 8,
+      "yieldMultiplier": 1,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            7828.694928684166,
+            13702.09343992755
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -2841.13861638882,
+            10856.236122416201
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 8,
+      "yieldMultiplier": 1,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            6014.50690523599,
+            12079.302721586033
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -5128.003592549256,
+            9014.508964783581
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 8,
+      "yieldMultiplier": 1,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            9200.352497641,
+            15155.917984736012
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -554.2736402283826,
+            12697.963280048822
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 8,
+      "yieldMultiplier": 1,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            7386.164474192825,
+            13533.127266394493
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -2841.13861638882,
+            10856.236122416201
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 8,
+      "yieldMultiplier": 1,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            5571.976450744649,
+            11910.336548052976
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -5128.003592549256,
+            9014.508964783581
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 8,
+      "yieldMultiplier": 0.75,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            4948.364417896751,
+            9273.855487126812
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -3380.5702063317276,
+            7013.120302403995
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 8,
+      "yieldMultiplier": 0.75,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            3134.176394448574,
+            7651.064768785293
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -5667.435182492165,
+            5171.393144771374
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 8,
+      "yieldMultiplier": 0.75,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            1319.988371000397,
+            6028.274050443774
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -7954.3001586526025,
+            3329.6659871387537
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 8,
+      "yieldMultiplier": 0.75,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            4505.833963405409,
+            9104.889313593754
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -3380.5702063317276,
+            7013.120302403995
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 8,
+      "yieldMultiplier": 0.75,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            2691.6459399572323,
+            7482.098595252235
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -5667.435182492165,
+            5171.393144771374
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 8,
+      "yieldMultiplier": 0.75,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            877.4579165090555,
+            5859.307876910716
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -7954.3001586526025,
+            3329.6659871387537
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 8,
+      "yieldMultiplier": 0.75,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            4063.3035089140676,
+            8935.923140060697
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -3380.5702063317276,
+            7013.120302403995
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 8,
+      "yieldMultiplier": 0.75,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            2249.1154854658907,
+            7313.132421719178
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -5667.435182492165,
+            5171.393144771374
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 8,
+      "yieldMultiplier": 0.75,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            434.9274620177139,
+            5690.341703377659
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -7954.3001586526025,
+            3329.6659871387537
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 8,
+      "yieldMultiplier": 0.5,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -188.6845708301816,
+            3053.8606424514983
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -6206.866772435067,
+            1328.2773247591708
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 8,
+      "yieldMultiplier": 0.5,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -2002.872594278358,
+            1431.0699241099812
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -8493.731748595505,
+            -513.4498328734489
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 8,
+      "yieldMultiplier": 0.5,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -3817.0606177265345,
+            -191.72079423153727
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -10780.596724755942,
+            -2355.1769905060696
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 8,
+      "yieldMultiplier": 0.5,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -631.2150253215231,
+            2884.894468918441
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -6206.866772435067,
+            1328.2773247591708
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 8,
+      "yieldMultiplier": 0.5,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -2445.4030487696996,
+            1262.1037505769236
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -8493.731748595505,
+            -513.4498328734489
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 8,
+      "yieldMultiplier": 0.5,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -4259.591072217876,
+            -360.6869677645949
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -10780.596724755942,
+            -2355.1769905060696
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 8,
+      "yieldMultiplier": 0.5,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -1073.7454798128647,
+            2715.928295385383
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -6206.866772435067,
+            1328.2773247591708
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 8,
+      "yieldMultiplier": 0.5,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -2887.933503261041,
+            1093.137577043866
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -8493.731748595505,
+            -513.4498328734489
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 8,
+      "yieldMultiplier": 0.5,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -4702.1215267092175,
+            -529.6531412976525
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -10780.596724755942,
+            -2355.1769905060696
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 8,
+      "yieldMultiplier": 0.35,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -3270.9139640663416,
+            -678.1362643536909
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -7902.644712097072,
+            -2082.628461827726
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 8,
+      "yieldMultiplier": 0.35,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -5085.1019875145175,
+            -2300.9269826952086
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -10189.509688257509,
+            -3924.355619460345
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 8,
+      "yieldMultiplier": 0.35,
+      "structureDamageMultiplier": 1,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -6899.290010962695,
+            -3923.717701036727
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -12476.374664417948,
+            -5766.082777092965
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 8,
+      "yieldMultiplier": 0.35,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -3713.444418557683,
+            -847.1024378867485
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -7902.644712097072,
+            -2082.628461827726
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 8,
+      "yieldMultiplier": 0.35,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -5527.632442005859,
+            -2469.893156228266
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -10189.509688257509,
+            -3924.355619460345
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 8,
+      "yieldMultiplier": 0.35,
+      "structureDamageMultiplier": 2,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -7341.820465454037,
+            -4092.683874569784
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -12476.374664417948,
+            -5766.082777092965
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 8,
+      "yieldMultiplier": 0.35,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -4155.974873049025,
+            -1016.0686114198061
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -7902.644712097072,
+            -2082.628461827726
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 8,
+      "yieldMultiplier": 0.35,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1.25,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -5970.162896497201,
+            -2638.859329761324
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -10189.509688257509,
+            -3924.355619460345
+          ]
+        }
+      }
+    },
+    {
+      "hitBudgetMultiplier": 8,
+      "yieldMultiplier": 0.35,
+      "structureDamageMultiplier": 3,
+      "seedPriceMultiplier": 1.5,
+      "conditionalScreenPass": false,
+      "outcomes": {
+        "responsible": {
+          "dailyNetRange": [
+            -7784.350919945378,
+            -4261.6500481028415
+          ]
+        },
+        "neglect": {
+          "dailyNetRange": [
+            -12476.374664417948,
+            -5766.082777092965
+          ]
+        }
+      }
+    }
+  ],
+  "conditionalShortlist": [],
+  "unconditionalRobustCandidates": [],
+  "limits": [
+    "Linear repair approximation excludes integer-ceil per transaction; rounding can add less than one coin per successful repair and should be conservatively added before candidate approval",
+    "No evidence for positive structure-target fraction or defended enclosure efficacy",
+    "No hundred-night trajectory extrapolation; grid is stationary late-night plus0.1eligibledayraid expectation; stress ceiling allows one full dayraid regardlessprobability",
+    "Legal maximum is an allocation ceiling, not a GPU or physical contact measurement",
+    "Damage concentration/collapse and delayed repair are nonlinear and unmodelled in cash margins",
+    "Cash proxy already includes retained losses; incremental damage beyond baseline is an accounting stress estimate, not counterfactual fitting",
+    "Seed replacement assumes same stock is replenished; lost harvest uses realized paid crate average, not promised income",
+    "Yield changes could break initial liquidity/staffing; promising late margins require opening diagnostic",
+    "No probability estimate for distribution of survival or defeat from one20nightseed",
+    "Shield20/90 timing limits do not imply29%area coverage or fixed contact coverage"
+  ]
+}
