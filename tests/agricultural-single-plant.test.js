@@ -76,3 +76,23 @@ test('old area spells retain their existing effects; new agricultural casting re
  Game.cast(loaded,'new','growth',6,0,nav,loaded.plants[0].id);
  assert.equal(Game.spellAt(loaded,'growth',loaded.plants[1]),undefined);
 });
+test('a replacement seed at the same point cannot overlap an unfinished application on the old plant',()=>{
+ const s=farm(),p=s.plants[0];
+ Game.cast(s,'old-effect','multiply',p.x,p.z,nav,p.id);
+ p.alive=false;p.harvestRequested=false;
+ Game.plant(s,'replacement','mijo',p.x,p.z,nav);const replacement=s.plants.at(-1);
+ assert.notEqual(replacement.id,p.id);
+ assert.throws(()=>Game.cast(s,'overlap-replacement','growth',replacement.x,replacement.z,nav,replacement.id),/solaparse/);
+ Game.tick(s,15,nav);
+ assert.equal(Game.cast(s,'after-expiry','growth',replacement.x,replacement.z,nav,replacement.id),true);
+});
+test('Shield exclusion treats a targeted application as a point consistently in either casting order',()=>{
+ for(const first of ['growth','shield']){
+  const s=farm(),p=s.plants[0];s.day=2;
+  if(first==='growth'){Game.cast(s,'a','growth',p.x,p.z,nav,p.id);Game.cast(s,'b','shield',p.x+2,p.z,nav);}
+  else {Game.cast(s,'a','shield',p.x+2,p.z,nav);Game.cast(s,'b','growth',p.x,p.z,nav,p.id);}
+  assert.equal(s.spells.length,2);
+ }
+ const s=farm(),p=s.plants[0];s.day=2;Game.cast(s,'shield','shield',p.x,p.z,nav);
+ assert.throws(()=>Game.cast(s,'inside','growth',p.x,p.z,nav,p.id),/solaparse/);
+});

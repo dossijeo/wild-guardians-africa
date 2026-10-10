@@ -325,10 +325,10 @@ export const BALANCE = {
       "name": "Crecimiento",
       "duration_seconds": 30,
       "cooldown_seconds": 0,
-      "unlock": "day_3",
+      "unlock": "day_1",
       "coverage_reference_plants": [
-        9,
-        10
+        1,
+        1
       ],
       "growth_multiplier": 1.5,
       "radius_m": null,
@@ -340,10 +340,10 @@ export const BALANCE = {
       "name": "Multiplicar",
       "duration_seconds": 15,
       "cooldown_seconds": 0,
-      "unlock": "day_5",
+      "unlock": "day_1",
       "coverage_reference_plants": [
-        6,
-        8
+        1,
+        1
       ],
       "harvest_multiplier": 2,
       "radius_m": null,

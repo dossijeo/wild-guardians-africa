@@ -69,6 +69,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
   (kind!=='shield'||!s.raid?.animals.some(a=>a.status!=='gone'&&distance(a,p)<a.radius+Game.spellRadius(kind)));
  const cast=(kind,p)=>canCast(kind,p)&&Game.cast(s,command(kind),kind,p.x,p.z,nav);
  const act=()=>{
+    agriculturalMagic.observe(s);
   let actions=0;
   if(s.raid){
    const threats=s.raid.animals.filter(a=>a.hitsRemaining>0).map(a=>({a,target:[...s.plants,...s.structures].find(t=>t.id===a.targetId)}));

@@ -35,6 +35,7 @@ export function simulateActiveFarm({days=100,startDay=5,profile='olderMale',repa
     (kind!=='shield'||!s.raid?.animals.some(a=>a.status!=='gone'&&distance(a,p)<a.radius+Game.spellRadius(kind)));
   const cast=(kind,p)=>{if(canCast(kind,p))return Game.cast(s,id(kind),kind,p.x,p.z,nav);return false;};
   const act=()=>{
+    agriculturalMagic.observe(s);
     if(s.raid&&s.cooldowns.shield===0){
       const threats=s.raid.animals.filter(a=>a.hitsRemaining>0).map(a=>({a,target:[...s.plants,...s.structures].find(t=>t.id===a.targetId)}));
       threats.sort((a,b)=>Number(b.target?.kind==='center')-Number(a.target?.kind==='center'));

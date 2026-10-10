@@ -341,13 +341,17 @@ export function requestRepair(s,id,targetId) {
 export const spellRadius=id=>({shield:1.95,growth:.65,multiply:.65})[id]; // Agricultural radius is visual only; gameplay uses the plant identity.
 const agriculturalSpellIndex=new WeakMap();
 export function spellAt(s,id,p) {
+  if(!s.spells.length)return undefined;
   let index=agriculturalSpellIndex.get(s);
   if(!index||index.source!==s.spells||index.length!==s.spells.length){
     index={source:s.spells,length:s.spells.length,targets:new Map(),areas:[]};
-    for(const a of s.spells)if(a.targetPlantId!==undefined)index.targets.set(a.kind+':'+a.targetPlantId,a);else index.areas.push(a);
+    for(const a of s.spells)if(a.targetPlantId!==undefined){
+      if(!index.targets.has(a.kind))index.targets.set(a.kind,new Map());
+      index.targets.get(a.kind).set(a.targetPlantId,a);
+    }else index.areas.push(a);
     agriculturalSpellIndex.set(s,index);
   }
-  const a=index.targets.get(id+':'+p.id);
+  const a=index.targets.get(id)?.get(p.id);
   return a?.remaining>0?a:index.areas.find(a=>a.kind===id&&a.remaining>0&&dist(a,p)<=a.radius);
 }
 function markMultiplyTargets(s,area){
@@ -376,8 +380,8 @@ function validateSpell(s,kind,x,z,nav,targetPlantId) {
   const radius=spellRadius(kind);
   const target=agriculturalTarget(s,kind,x,z,targetPlantId);
   if(s.spells.some(a=>a.remaining>0&&(target?
-    a.targetPlantId!==undefined?a.targetPlantId===target.id:dist(a,target)<=a.radius:
-    dist(a,{x,z})<a.radius+radius)))throw new Error('Las áreas mágicas no pueden solaparse');
+    a.targetPlantId!==undefined?a.targetPlantId===target.id||dist(a,target)<1e-6:dist(a,target)<=a.radius:
+    a.targetPlantId!==undefined?dist(a,{x,z})<=radius:dist(a,{x,z})<a.radius+radius)))throw new Error('Las áreas mágicas no pueden solaparse');
   if(kind==='shield'&&s.raid?.animals.some(a=>a.status!=='gone'&&dist(a,{x,z})<radius+a.radius))throw new Error('El Escudo solapa un animal');
   if(!permission(s,kind))throw new Error('Esta acción no está disponible ahora');
   return spec;

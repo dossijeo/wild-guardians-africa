@@ -32,7 +32,7 @@ export function createAgriculturalMagicPolicy({mode='moderate'}={}){
     if(!permission(s,k))continue;
     for(let n=0;n<live.length;n++){
      const index=(plantCursor+n)%live.length,p=live[index];
-     if(occupied.has(p.id)||areas.some(a=>Math.hypot(a.x-p.x,a.z-p.z)<=a.radius))continue;
+     if(occupied.has(p.id)||s.spells.some(a=>a.remaining>0&&a.targetPlantId!==undefined&&Math.hypot(a.x-p.x,a.z-p.z)<1e-6)||areas.some(a=>Math.hypot(a.x-p.x,a.z-p.z)<=a.radius))continue;
      if(k==='multiply'?p.multiplyHarvest:isMature(p)||p.water.some(w=>w.status==='due'))continue;
      chosen=p;kind=k;plantCursor=index+1;break;
     }

@@ -1,3 +1,4 @@
+import {createAgriculturalMagicPolicy} from './native-agricultural-magic.mjs';
 // A player strategy using only ordinary commands on native terrain. No overrides
 // to balances, growth, task order, worker movement, RNG or animal damage/budgets.
 import {pathToFileURL} from 'node:url';
@@ -54,19 +55,13 @@ export function simulateIntensiveFarm({days=100,profile='olderFemale',mixed=fals
   const p=choosePlot();if(!p)return false;
   Game.plant(s,command('plant'),species,p.x,p.z,nav);plantedSequence++;maximumLiving=Math.max(maximumLiving,s.plants.filter(p=>p.alive).length);return true;
  };
+ const agriculturalMagic=createAgriculturalMagicPolicy({mode:'intensive'});
  const canCast=(kind,p)=>permission(s,kind)&&s.cooldowns[kind]===0&&
   !s.spells.some(a=>distance(a,p)<a.radius+Game.spellRadius(kind))&&
   (kind!=='shield'||!s.raid?.animals.some(a=>a.status!=='gone'&&distance(a,p)<a.radius+Game.spellRadius(kind)));
  const cast=(kind,p)=>canCast(kind,p)&&Game.cast(s,command(kind),kind,p.x,p.z,nav);
- const bestMagicPoint=(kind,plants)=>{
-  let best=null,score=0;
-  for(const p of plants)if(canCast(kind,p)){
-   const coverage=plants.reduce((total,q)=>total+Number(distance(p,q)<=Game.spellRadius(kind)),0);
-   if(coverage>score){best=p;score=coverage;}
-  }
-  return best;
- };
  const act=()=>{
+    agriculturalMagic.observe(s);
   let actions=0;
   if(s.raid){
    const threats=s.raid.animals.filter(a=>a.hitsRemaining>0).map(a=>({a,target:[...s.plants,...s.structures].find(t=>t.id===a.targetId)}));
@@ -92,14 +87,10 @@ export function simulateIntensiveFarm({days=100,profile='olderFemale',mixed=fals
   // Request repairs before reinvesting, preserving their real FIFO position.
   for(const c of s.structures.filter(operational))if(c.hp<(reserveMaintenance?600:540)&&!s.tasks.some(t=>t.kind==='repair'&&t.targetId===c.id)&&numberOf(s.ledger.balance)>=numberOf(Game.repairCost(c))+labourReserve()){Game.requestRepair(s,command('repair'),c.id);actions++;}
   if(defense)actions+=defense.act(s,nav,{command,reserve:labourReserve()+maintenanceReserve()});
-  const live=s.plants.filter(p=>p.alive);
-  for(const kind of ['multiply','growth'])if(s.day>=(kind==='multiply'?5:3)&&s.cooldowns[kind]===0){
-   const eligible=live.filter(p=>kind==='multiply'?!p.multiplyHarvest:!isMature(p)&&p.water.every(w=>w.status!=='due'));
-   const point=bestMagicPoint(kind,eligible);if(point&&cast(kind,point))actions++;
-  }
+  const magicActions=Number(agriculturalMagic.act(s,nav,command));actions+=magicActions;
   // Replant as money arrives. No fixed plot or plant-count limit.
   if(s.time<worker.end-20){if(burstPlanting){while(plant())actions++;}else if(plant())actions++;}
-  return {actions,reason:actions?'active':s.time>=worker.end-20?'shift-end':candidateIndex>=candidates.length?'space':'budget'};
+  return {actions,magicActions,reason:actions?'active':s.time>=worker.end-20?'shift-end':candidateIndex>=candidates.length?'space':'budget'};
  };
  // The mandatory first seed opens hiring normally. Staff is paid immediately.
  plant();Game.openInitialHiring(s);
@@ -129,7 +120,7 @@ export function simulateIntensiveFarm({days=100,profile='olderFemale',mixed=fals
     labourReserve:labourReserve(1),maintenanceReserve:maintenanceReserve(),
     defenseReserve:defense?.reserve(s)??0,living:s.plants.filter(p=>p.alive).length,
     pendingTasks:s.tasks.length}));
-   if(!decision.actions){idle[decision.reason]=(idle[decision.reason]??0)+dt;if(s.time<300&&!s.raid){idleRun+=dt;longestIdle=Math.max(longestIdle,idleRun);}}else idleRun=0;
+   if(decision.actions===(decision.magicActions??0)){idle[decision.reason]=(idle[decision.reason]??0)+dt;if(s.time<300&&!s.raid){idleRun+=dt;longestIdle=Math.max(longestIdle,idleRun);}}else idleRun=0;
    Game.tick(s,dt,nav);collect();evidence?.observe(s);onTick?.(s,nav);
    if(s.raid&&!savedRaids.has(s.raid.id)){savedRaids.add(s.raid.id);s=deserialize(serialize(s));nav.setState(s);reloads++;}
    if(s.elapsed-start>2400)throw new Error(`Unfinished real incursion on day ${day}: ${JSON.stringify(s.raid)}`);

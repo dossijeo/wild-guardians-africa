@@ -19,6 +19,8 @@ test('Original balance preserves unrelated values with explicit player revisions
  original.raids.max_animals=null;
  original.animals.forEach((a,i)=>{a.structure_hit_damage=[20,25,35,40,60][i];a.max_per_raid=null;});
  original.workers.older_wage=30;original.workers.young_wage=40;
+ const revisions=JSON.parse(fs.readFileSync(new URL('../content/balance/player_revisions.json',import.meta.url),'utf8'));
+ for(const spell of original.spells)if(revisions.agricultural_magic[spell.id])Object.assign(spell,revisions.agricultural_magic[spell.id]);
  const boundaries=[0,100,300,800,2000];
  original.threat_tiers.forEach((t,i)=>{t.attraction_min=boundaries[i];t.attraction_max_exclusive=boundaries[i+1]??null;t.night_attack_probability=1;});
  assert.deepEqual(BALANCE,original);

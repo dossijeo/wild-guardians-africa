@@ -1,4 +1,5 @@
-import {mkdirSync,writeFileSync,existsSync} from 'node:fs';
+import {mkdirSync,writeFileSync,existsSync,readFileSync} from 'node:fs';
+import {execFileSync} from 'node:child_process';
 import {performance} from 'node:perf_hooks';
 import {createHash} from 'node:crypto';
 import {createOpeningWorld} from './check_opening.mjs';
@@ -11,6 +12,9 @@ import assert from 'node:assert/strict';
 const directory=process.argv[2];
 if(!directory||existsSync(directory))throw Error('Supply a fresh output directory');
 mkdirSync(directory,{recursive:true});
+const sourceFiles=['src/simulation/game.js','src/simulation/crops.js','src/simulation/rules.js','src/simulation/balance.js','tools/native-agricultural-magic.mjs','tools/benchmark-agricultural-magic.mjs'];
+const source={commit:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),hashes:Object.fromEntries(sourceFiles.map(path=>[path,createHash('sha256').update(readFileSync(path)).digest('hex')]))};
+writeFileSync(directory+'/source.json',JSON.stringify(source,null,2));
 const rows=[];
 for(const count of [50,200,500]){
  const opening=createOpeningWorld({seed:712}),s=opening.s,nav=opening.nav;

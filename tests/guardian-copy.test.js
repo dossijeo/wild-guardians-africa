@@ -16,6 +16,11 @@ test('all supplied Spirit replacements preserve the exact Spanish and paired Eng
 });
 test('tutorial and post-raid copy use supplied replacements while unrelated messages stay unchanged',()=>{
  const replacements=new Set(Object.values(supplied.es));
- for(const message of [...Object.values(TUTORIAL_MESSAGES),DEFENSES_FOLLOWUP])assert.ok(replacements.has(message.text));
+ for(const [id,message] of [...Object.entries(TUTORIAL_MESSAGES),['followup',DEFENSES_FOLLOWUP]]){
+  if(['magic.growth','magic.multiply'].includes(id)){
+   assert.ok(message.text.includes('primer día'));assert.ok(message.text.includes('No hay recarga'));
+   assert.notEqual(translate(message.text,'en'),message.text);
+  }else assert.ok(replacements.has(message.text));
+ }
  for(const text of ['toString','Construir','mensaje futuro',null,undefined])assert.equal(guardianCopy(text),text);
 });
