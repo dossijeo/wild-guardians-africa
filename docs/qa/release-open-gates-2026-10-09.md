@@ -20,8 +20,10 @@ checks passed. The two failures are obsolete generated SFX source hashes and
 line references, corrected by main6faa09b0. All126 catalogue rows have identical
 semantics and all3 local SFX checks pass; [the original log and receipt](ci-navigation-audit-2026-10-10/receipt.json)
 are retained. Replacement run38013118033 is live, not yet accepted.
-Windows run38012364835 remains live in the packaged WebView2 smoke step;
-no Windows success or changed90-second readiness gate is inferred.
+Windows run38012364835 is terminal failure at90007ms/87% displayed, with
+readyGateReached=false. Build and installer pass; world readiness remains open.
+[The independently verified original artifact](windows-loading-regression/normal-e2-38012364835/review.md)
+is retained. No changed90-second gate or exclusive bottleneck is inferred.
 
 The distinct 212-worker day21 repair diagnostic paid174 at physical arrival
 and restored centre HP470→600 at time235.25. It does not explain every
