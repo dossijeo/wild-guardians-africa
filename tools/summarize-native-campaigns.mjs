@@ -57,6 +57,10 @@ export function summarizeNativeCase({receipt,source,report,partial}){
  });
  const daylight=daily.reduce((n,d)=>n+d.daylightSeconds,0),idle=daily.reduce((n,d)=>n+d.daylightSeconds*(d.idleFraction??0),0);
  return {strategy:source.arguments.strategy,seed:source.arguments.seed,gitHead:source.gitHead,
+  labourPolicy:data.labourPolicy??source.arguments.labourPolicy??null,
+  requestedDays:source.arguments.days??null,biome:data.biome??source.arguments.biome??null,culture:data.culture??source.arguments.culture??null,
+  shieldEnabled:typeof data.shieldEnabled==='boolean'?data.shieldEnabled:null,
+  protocolId:data.protocol?.id??source.protocol?.id??null,
   status:receipt.status,result:receipt.result??receipt.nativeResult??null,error:receipt.message??null,
   observedDays:daily.length,completedNights:report?.completedNights??null,
   incompleteAt:partial?{day:partial.day,time:partial.time}:null,
@@ -74,17 +78,17 @@ export function writeNativeComparison(out,cases){
  if(existsSync(out)&&readdirSync(out).length)throw Error('Refusing to overwrite original comparison evidence');
  mkdirSync(out,{recursive:true});
  writeFileSync(resolve(out,'comparison.json'),JSON.stringify(cases,null,2)+'\n');
- const columns=['strategy','seed','status','day','money','income','expenses','net','cumulativeOperatingNet','seeds','wages','walls','repairs','centers','villages','refunds','otherCredits','otherDebits','purchased','living','delivered','destroyed','wallPieces','animals','cropHits','wallHits','centerHits','destroyedByAttacks','shieldContacts','referenceRepairCostAtEndLiving','idleFraction','rawDecisionIdleFraction','activityBasis'];
+ const columns=['strategy','seed','status','day','money','income','expenses','net','cumulativeOperatingNet','seeds','wages','walls','repairs','centers','villages','refunds','otherCredits','otherDebits','purchased','living','delivered','destroyed','wallPieces','animals','cropHits','wallHits','centerHits','destroyedByAttacks','shieldContacts','referenceRepairCostAtEndLiving','idleFraction','rawDecisionIdleFraction','activityBasis','gitHead','labourPolicy','shieldEnabled','biome','culture','requestedDays','protocolId'];
  writeFileSync(resolve(out,'daily.csv'),columns.join(',')+'\n'+cases.flatMap(c=>c.daily.map(d=>columns.map(k=>d[k]??c[k]??'').join(','))).join('\n')+'\n');
  const raidColumns=['strategy','seed','id','day','daytime','ended','animals','exposedLiving','exposedWounded','hitBudget','consumedStrikes','remainingOrUnobservedStrikes','potentialStructureDamage','structureHpLost','wallHpLost','cropHits','destroyed','destroyedFraction','workerHits','misses','shieldContacts','wallHits','centerHits','replacementCost','lostBaseHarvestValue','freshCropKillUpperBound','woundedCropKillUpperBound','targetUnprotected','targetProtected'];
  writeFileSync(resolve(out,'raids.csv'),raidColumns.join(',')+'\n'+cases.flatMap(c=>c.raids.map(r=>raidColumns.map(k=>r[k]??c[k]??'').join(','))).join('\n')+'\n');
  const lines=['# Piloto nativo: resultados observados','',
-  '| Estrategia | Semilla | Estado | Días completos | Dinero | Vivas | Ingresos | Gastos | Neto diario acumulado | Muros comprados | Golpes a muros | Inactividad |',
-  '|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|',
-  ...cases.map(c=>`| ${c.strategy} | ${c.seed} | ${c.status} | ${c.observedDays} | ${c.money} | ${c.living} | ${c.income} | ${c.expenses} | ${c.net} | ${c.wallPieces} | ${c.wallHits} | ${pct(c.idleFraction)} |`),
+  '| Estrategia | Contratación declarada | Fuente | Semilla | Estado | Días completos / solicitados | Dinero | Vivas | Ingresos | Gastos | Neto diario acumulado | Muros comprados | Golpes a muros | Inactividad |',
+  '|---|---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|',
+  ...cases.map(c=>`| ${c.strategy} | ${c.labourPolicy??'no registrada'} | ${c.gitHead?.slice(0,8)??'sin fuente'} | ${c.seed} | ${c.status} | ${c.observedDays} / ${c.requestedDays??'—'} | ${c.money} | ${c.living} | ${c.income} | ${c.expenses} | ${c.net} | ${c.wallPieces} | ${c.wallHits} | ${pct(c.idleFraction)} |`),
   '',...cases.filter(c=>c.error).map(c=>`- ${c.strategy}: incompleto en día ${c.incompleteAt?.day}, hora interna ${c.incompleteAt?.time}. ${c.error}`),
   '',cases[0]?.scope??'',
-  '', 'Las campañas comparten código y economía; sus decisiones pueden consumir RNG y modificar atracción. Compartir semilla no garantiza cohortes idénticas. Una compra de muro no acredita recinto cerrado ni protección eficaz.',
+  '', 'Consultar las fuentes, políticas y condiciones declaradas: esta tabla no acredita que campañas de versiones distintas compartan código o parámetros. Las decisiones pueden consumir RNG y modificar atracción; compartir semilla no garantiza cohortes idénticas. Una compra de muro no acredita recinto cerrado ni protección eficaz. Un control sin murallas puede conservar escudos; si ese permiso no está registrado, no se infiere de su nombre.',
   '', '![Dinero por día](money.svg)', '', '![Plantas vivas por día](living.svg)', ''];
  writeFileSync(resolve(out,'comparison.md'),lines.join('\n'));
  const colors=['#2f855a','#b7791f','#c53030','#2b6cb0'];

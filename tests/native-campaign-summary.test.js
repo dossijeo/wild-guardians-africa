@@ -12,6 +12,14 @@ test('partial remains incomplete and reports only completed days',()=>{
  const f=fixture();f.receipt={status:'incomplete-harness-error',message:'entry failed',nativeResult:null};f.partial={day:2,time:600,receipts:f.report};delete f.report;
  const s=summarizeNativeCase(f);assert.equal(s.observedDays,1);assert.equal(s.result,null);assert.equal(s.completedNights,null);assert.equal(s.incompleteAt.day,2);assert.equal(s.status,'incomplete-harness-error');
 });
+test('comparisons declare source and labour without inventing identical controls or missing shield permissions',()=>{
+ const a=fixture();a.source.arguments={strategy:'no-walls',seed:712,days:6,labourPolicy:'q4',biome:'sabana',culture:'mapungubwe'};
+ const s=summarizeNativeCase(a);assert.equal(s.labourPolicy,'q4');assert.equal(s.requestedDays,6);assert.equal(s.shieldEnabled,null);
+ const b=fixture();b.report.shieldEnabled=false;b.report.labourPolicy='legacy';const e=summarizeNativeCase(b);assert.equal(e.shieldEnabled,false);assert.equal(e.labourPolicy,'legacy');
+ const dir=mkdtempSync(join(tmpdir(),'wg-native-provenance-'));
+ try{writeNativeComparison(dir,[s,e]);const text=readFileSync(join(dir,'comparison.md'),'utf8');assert.match(text,/q4.*frozen.*1 \/ 6/);assert.match(text,/no acredita que campañas de versiones distintas/);assert.match(readFileSync(join(dir,'daily.csv'),'utf8'),/gitHead,labourPolicy,shieldEnabled,biome,culture,requestedDays,protocolId/);}
+ finally{rmSync(dir,{recursive:true,force:true});}
+});
 test('summary rejects live cases, ledger discrepancies and fictitious income',()=>{
  const a=fixture();a.receipt.status='running';assert.throws(()=>summarizeNativeCase(a),/terminal/);
  const b=fixture();b.report.daily[0].finance.closing++;assert.throws(()=>summarizeNativeCase(b),/reconcile/);
