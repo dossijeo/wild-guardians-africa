@@ -97,7 +97,9 @@ export async function simulateNativeCampaign({days=100,strategy='good',profile='
   }
   // Request repairs before reinvesting, preserving their real FIFO position.
   for(const c of (policy.repair?s.structures.filter(operational):[]))if(c.hp<(reserveMaintenance?600:540)&&!s.tasks.some(t=>t.kind==='repair'&&t.targetId===c.id)&&numberOf(s.ledger.balance)>=numberOf(Game.repairCost(c))+labourReserve()){const taskCount=s.tasks.length;Game.requestRepair(s,command('repair'),c.id);if(s.tasks.length>taskCount)actions++;}
-  if(defense)actions+=defense.act(s,nav,{command,reserve:labourReserve()+maintenanceReserve()+savingsReserve()});
+  // Village savings are discretionary: building/maintaining physical protection
+  // takes priority. Still retain wages and already requested native repairs.
+  if(defense)actions+=defense.act(s,nav,{command,reserve:labourReserve()+maintenanceReserve()});
   if(expansion)actions+=expansion.act(s,nav,{command,reserve:labourReserve()+maintenanceReserve(),villageSavings:savingsReserve()});
   const live=s.plants.filter(p=>p.alive);
   for(const kind of ['multiply','growth'])if(s.day>=(kind==='multiply'?5:3)&&s.cooldowns[kind]===0){
