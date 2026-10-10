@@ -1,0 +1,239 @@
+{
+  "inputSHA256": "31489e9457a74e60e2cef0d43c7b9c115e2ac1fe81dbdaa6d3821f954388c188",
+  "source": "88ebf647b6bbe0d589125e4136d65e73fdf303a6",
+  "rows": [
+    {
+      "day": 1,
+      "budgetSeconds": 164.99999999999184,
+      "shiftEndSeconds": 20,
+      "balanceRange": [
+        280,
+        280
+      ],
+      "staff": 6,
+      "pendingTaskRange": [
+        12,
+        40
+      ],
+      "queueRanges": {
+        "initial": {
+          "min": 1,
+          "max": 40
+        },
+        "water": {
+          "min": 1,
+          "max": 18
+        },
+        "harvest": {
+          "min": 1,
+          "max": 17
+        }
+      },
+      "workerActorSeconds": {
+        "walking": 574.9999999999703,
+        "acting": 414.999999999981
+      },
+      "derivedReserveAttribution": {
+        "maintenanceOnlySeconds": 164.99999999999184,
+        "belowLabourPlusSeedSeconds": 0,
+        "nextWagesRange": [
+          180,
+          180
+        ],
+        "labourReserveRange": [
+          180,
+          180
+        ],
+        "scope": "Counterfactual removal of reserve component, not spend permission or a proposed policy change. No attribution between present-team and future-growth reserve without additional retained state."
+      },
+      "physicalDeliveriesInDay": 20,
+      "firstDeliveryTime": null,
+      "scope": "Left-endpoint sampled actor-seconds; not travel metres or player elapsed seconds"
+    },
+    {
+      "day": 2,
+      "budgetSeconds": 146.0000000000332,
+      "shiftEndSeconds": 20,
+      "balanceRange": [
+        360,
+        614
+      ],
+      "staff": 8,
+      "pendingTaskRange": [
+        93,
+        180
+      ],
+      "queueRanges": {
+        "harvest": {
+          "min": 28,
+          "max": 28
+        },
+        "initial": {
+          "min": 65,
+          "max": 158
+        },
+        "water": {
+          "min": 16,
+          "max": 67
+        }
+      },
+      "workerActorSeconds": {
+        "arriving": 8.000000000001819,
+        "walking": 800.0000000001819,
+        "acting": 360.00000000008185
+      },
+      "derivedReserveAttribution": {
+        "maintenanceOnlySeconds": 146.0000000000332,
+        "belowLabourPlusSeedSeconds": 0,
+        "nextWagesRange": [
+          240,
+          240
+        ],
+        "labourReserveRange": [
+          270,
+          510
+        ],
+        "scope": "Counterfactual removal of reserve component, not spend permission or a proposed policy change. No attribution between present-team and future-growth reserve without additional retained state."
+      },
+      "physicalDeliveriesInDay": 28,
+      "firstDeliveryTime": null,
+      "scope": "Left-endpoint sampled actor-seconds; not travel metres or player elapsed seconds"
+    },
+    {
+      "day": 3,
+      "budgetSeconds": 223.9999999997965,
+      "shiftEndSeconds": 20,
+      "balanceRange": [
+        104,
+        533
+      ],
+      "staff": 17,
+      "pendingTaskRange": [
+        140,
+        192
+      ],
+      "queueRanges": {
+        "harvest": {
+          "min": 1,
+          "max": 80
+        },
+        "water": {
+          "min": 21,
+          "max": 91
+        },
+        "initial": {
+          "min": 1,
+          "max": 100
+        }
+      },
+      "workerActorSeconds": {
+        "walking": 2718.99999999753,
+        "acting": 1065.9999999990316,
+        "carrying": 22.99999999997908
+      },
+      "derivedReserveAttribution": {
+        "maintenanceOnlySeconds": 0.9999999999990905,
+        "belowLabourPlusSeedSeconds": 222.9999999997974,
+        "nextWagesRange": [
+          510,
+          510
+        ],
+        "labourReserveRange": [
+          510,
+          510
+        ],
+        "scope": "Counterfactual removal of reserve component, not spend permission or a proposed policy change. No attribution between present-team and future-growth reserve without additional retained state."
+      },
+      "physicalDeliveriesInDay": 70,
+      "firstDeliveryTime": null,
+      "scope": "Left-endpoint sampled actor-seconds; not travel metres or player elapsed seconds"
+    },
+    {
+      "day": 4,
+      "budgetSeconds": 0,
+      "shiftEndSeconds": 20,
+      "balanceRange": [
+        null,
+        null
+      ],
+      "staff": 16,
+      "pendingTaskRange": [
+        null,
+        null
+      ],
+      "queueRanges": {},
+      "workerActorSeconds": {},
+      "derivedReserveAttribution": {
+        "maintenanceOnlySeconds": 0,
+        "belowLabourPlusSeedSeconds": 0,
+        "nextWagesRange": [
+          null,
+          null
+        ],
+        "labourReserveRange": [
+          null,
+          null
+        ],
+        "scope": "Counterfactual removal of reserve component, not spend permission or a proposed policy change. No attribution between present-team and future-growth reserve without additional retained state."
+      },
+      "physicalDeliveriesInDay": 32,
+      "firstDeliveryTime": null,
+      "scope": "Left-endpoint sampled actor-seconds; not travel metres or player elapsed seconds"
+    },
+    {
+      "day": 5,
+      "budgetSeconds": 38.99999999996453,
+      "shiftEndSeconds": 20,
+      "balanceRange": [
+        245,
+        1169
+      ],
+      "staff": 36,
+      "pendingTaskRange": [
+        364,
+        389
+      ],
+      "queueRanges": {
+        "harvest": {
+          "min": 61,
+          "max": 100
+        },
+        "water": {
+          "min": 45,
+          "max": 67
+        },
+        "initial": {
+          "min": 236,
+          "max": 236
+        }
+      },
+      "workerActorSeconds": {
+        "walking": 1073.9999999990232,
+        "acting": 153.99999999985994,
+        "carrying": 175.99999999983993
+      },
+      "derivedReserveAttribution": {
+        "maintenanceOnlySeconds": 2.9999999999972715,
+        "belowLabourPlusSeedSeconds": 35.99999999996726,
+        "nextWagesRange": [
+          1080,
+          1080
+        ],
+        "labourReserveRange": [
+          1080,
+          1080
+        ],
+        "scope": "Counterfactual removal of reserve component, not spend permission or a proposed policy change. No attribution between present-team and future-growth reserve without additional retained state."
+      },
+      "physicalDeliveriesInDay": 100,
+      "firstDeliveryTime": null,
+      "scope": "Left-endpoint sampled actor-seconds; not travel metres or player elapsed seconds"
+    }
+  ],
+  "missingMeasurements": [
+    "First delivered crate timestamp for each historical day",
+    "Worker positions, routes and taskIDs in retained decision samples",
+    "Direct onDecision reserve fields; restricted derivation assumptions are explicit"
+  ],
+  "noNewSimulation": true
+}
