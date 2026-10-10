@@ -1,0 +1,19 @@
+# Separately named initial staffing policy: source preflight
+
+Prepared protocol `horde-defense-self-consistent-comparison-v1` uses `minimum-self-consistent-opening-v1` on day1 only. No campaign has run with it. The earlier ratio12 campaign and unexecuted parameter-only ratio6 runner are untouched. All390 original source hashes remain required. Centre800, wage30/40 and frozen88eb gameplay parameters are unchanged; the parent’s independent repair navigation-cache candidate is not incorporated.
+
+New files are `tools/horde-initial-staffing-policy.mjs` (pure forecast), `tools/horde-defense-self-consistent-farm.mjs` (separate original strategy copy with day1 selection and report additions), and `tools/horde-defense-self-consistent-comparison.mjs` (distinct paired20 caller). The copied native strategy is checked against its original after removing only the declared hiring/report additions; later daily living-only target, ratio6 passed by caller, dawn-only hiring, selected-crop logic, real commands, wages, repairs, magic, planting, FIFO, routes, worker transport, reservations and strict audits stay identical. No callbacks force money or state.
+
+Initial selection subtracts actual today wages and tomorrow wages, actual maintenance and defence reserves before counting seeds at the actual selectedCrop price. It searches minimum sufficient crew with at least one seed and enough ratio-based capacity for existing+forecast plants. The documented opening chooses7, pays210, retains485 and forecasts35 seeds after210 tomorrow+100 maintenance. This proxy does not demonstrate physical throughput or campaign activity.
+
+If no feasible investment cohort exists, report `fallback-no-investment` and its reason, choose only ceil(living/ratio) minimum crew clipped to what current coins afford, and pay via native Game.hire. Report capacity/reserve shortfalls without pretending those funds are reserved. The usual native planting guard remains authoritative; the forecast never plants anything. If not even one mandatory worker is affordable, count0 and report `infeasible-no-affordable-worker`; the runner throws an actionable error retaining native state and forecast in partialReport. It does not confirm hiring with zero workers, emit a fictional defeat, inject money or waive a native gate. This is an incomplete diagnostic, not playable acceptance.
+
+Both arms use the same policy. Defence and actual centre/wall repairs remain their sole contrast; endogenous quantities after actual expense differ normally. The old erroneous wall counters remain preserved and a separate named native wall-state derivative remains additive. Provenance includes390 frozen original sources+four new/derivative sources (394 total). Retention writes raw report/state before strict audit and retains errors; post-run source drift marks incomplete. The forecast and policy name are present in normal and partial native reports.
+
+Predeclared unit coverage: exact today/tomorrow/one-seed boundary, seed-price change, damaged-centre and defence reserves, fallback/insufficient living capacity/no affordable worker, invalid integer inputs, input purity, both-arm option identity and390 source parity. No GPU or simulation is needed. Tests and syntax await the parent’s CPU release; results will be frozen separately. The declared paired20 command remains unauthorised:
+
+```
+node tools/horde-defense-self-consistent-comparison.mjs .cache/horde-self-consistent-paired20-01
+```
+
+Prior paired20 ratio12 took~37.8minutes; ratio6 can cost more. No CPU estimate from one successful repair justifies extrapolation. Require explicit CPU slot and source review before any run; no100/matrix/promotion. Global<25% is assessed only on a complete100-night campaign, with real negligent defeat and ledger/physical delivery/paid repair/route gates retained. A future20 diagnostic can expose early defects but cannot approve the full campaign.

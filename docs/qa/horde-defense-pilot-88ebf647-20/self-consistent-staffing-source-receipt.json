@@ -1,0 +1,38 @@
+{
+  "scope": "Policy/source/unit preflight only; no campaign or native simulation",
+  "baseHead": "b892752ffd9e1e6c381e94e69ae7016d9d1c8e1c",
+  "originalRuntime": "88ebf647b6bbe0d589125e4136d65e73fdf303a6",
+  "originalSourceCount": 390,
+  "originalSourcesUnchanged": true,
+  "totalProvenanceCount": 394,
+  "hashes": {
+    "tools/horde-initial-staffing-policy.mjs": "999d3036b412ba60d9bdee37a5ec6aa88a28f39ffe508bc58da20801f1b7c76c",
+    "tools/horde-defense-self-consistent-farm.mjs": "a4712fa2d1769e210cb0d939a9d73f496b4ea53b92e3a7d9f0f3b7088d46e197",
+    "tools/horde-defense-self-consistent-comparison.mjs": "9c2a817f71e014489c806da000bbdeb5a81acde5c4e3539341d0da36081e954f",
+    "tests/horde-initial-staffing-policy.test.js": "8be11750ed6b8615642298101252b18c844f435a3ce871b738a84502fbe5bba6",
+    "docs/qa/horde-defense-pilot-88ebf647-20/self-consistent-staffing-implementation.md": "0ea86f2b401092af33f451c40d0f138ed9e3a2339c6981ab4b36db883c75740d"
+  },
+  "checks": [
+    {
+      "passed": 7,
+      "milliseconds": 566.3238,
+      "command": "node --test tests/horde-initial-staffing-policy.test.js",
+      "exitCode": 0,
+      "failed": 0
+    },
+    {
+      "command": "node --check tools/horde-defense-self-consistent-comparison.mjs",
+      "exitCode": 0
+    },
+    {
+      "command": "node --check tools/horde-defense-self-consistent-farm.mjs",
+      "exitCode": 0
+    },
+    {
+      "command": "node --check tools/horde-initial-staffing-policy.mjs",
+      "exitCode": 0
+    }
+  ],
+  "noCampaign": true,
+  "noRepairCacheCandidate": true
+}
