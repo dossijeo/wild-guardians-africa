@@ -1,0 +1,39 @@
+{
+  "input": "docs\\qa\\integrated-spiritual-survival\\pilot-v21-no-shield-single-hit-sabana-712-seven",
+  "reportSha256": "7bad9e5133bff33d187f5e2fe43fdf1aec26f1583a69f0bd39ee9b2cc7702074",
+  "rows": [
+    {
+      "night": 6,
+      "census": 190,
+      "wounded": 0,
+      "animals": 8,
+      "assignedHits": 23,
+      "unusedHits": 0,
+      "referencePotentialHp": 23,
+      "configuredHpUpper": 34.5,
+      "actualCropHp": 23,
+      "destroyed": 23,
+      "destroyedFraction": 0.12105263157894737,
+      "orientativeUnprotectedLoss": 39.748,
+      "optimisticStartCohortLossUpper": 34,
+      "meetsOrientativeCapacity": false
+    },
+    {
+      "night": 7,
+      "census": 186,
+      "wounded": 0,
+      "animals": 10,
+      "assignedHits": 34,
+      "unusedHits": 0,
+      "referencePotentialHp": 44,
+      "configuredHpUpper": 53.5,
+      "actualCropHp": 37,
+      "destroyed": 37,
+      "destroyedFraction": 0.1989247311827957,
+      "orientativeUnprotectedLoss": 39.0414,
+      "optimisticStartCohortLossUpper": 53,
+      "meetsOrientativeCapacity": true
+    }
+  ],
+  "scope": "Configured full-budget upper bound for the crop cohort exposed at spawn; all wounded plants treated as free kills, perfect contacts, maximum area cap. Reference potential is a directional lattice estimate, not a universal cap. Native pilot does not plant during incursions. This diagnostic cannot inflict losses, approve balance, or guarantee theoretical damage is physically reachable."
+}
