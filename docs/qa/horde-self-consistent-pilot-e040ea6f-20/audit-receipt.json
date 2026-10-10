@@ -1,0 +1,21 @@
+{
+  "scope": "Read-only original terminal audit; no replay or balance promotion",
+  "sourceHead": "e040ea6f9edf62c7924e3b32bd34b28780c39e5f",
+  "producerProcessId": 47872,
+  "producerSession": 46684,
+  "producerExitCode": 0,
+  "sourceCount": 394,
+  "originalSourceCount": 390,
+  "archivePayloads": 21,
+  "command": "node tools/audit_horde_self_consistent_pilot.mjs docs/qa/horde-self-consistent-pilot-e040ea6f-20/native-original docs/qa/horde-self-consistent-pilot-e040ea6f-20/read-only-terminal-audit.json",
+  "auditorExitCode": 0,
+  "syntaxExitCode": 0,
+  "hashes": {
+    "tools/audit_horde_self_consistent_pilot.mjs": "9fd5228c1bcf6b95c70f1c9237f50a69a34fb8918fa942d23abc7c1d9c51e6af",
+    "docs/qa/horde-self-consistent-pilot-e040ea6f-20/archive-manifest.json": "78a9976f7ca398b0697cc330c15bb31a1dd30dbb6a00528d39b2d0cab18a85fc",
+    "docs/qa/horde-self-consistent-pilot-e040ea6f-20/read-only-terminal-audit.json": "988d2de28a37f5e163bfd83bbde30e6c94834cc583aebbc9295b04488fdc5aeb",
+    "docs/qa/horde-self-consistent-pilot-e040ea6f-20/README.md": "902019b8bb7efb5843eb8b336cb7c814327aafb2341da20a841f2c3950041e5c"
+  },
+  "nativeNeglectDefeat": false,
+  "responsible100Accepted": false
+}
