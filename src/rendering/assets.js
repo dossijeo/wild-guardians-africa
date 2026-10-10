@@ -1,4 +1,6 @@
 import {wallBufferReader} from './wall-buffer-package.js';
+import {CropPartition} from './crop-partition.js';
+import {cropCollectionKind,cropHistoricalKind,cropRuntimeDescriptor} from './crop-runtime.js';
 import {prepareLoadingImage,ownLoadingBitmap} from './loading-image.js';
 import {LoadingImageDecoder} from './loading-image-decoder.js';
 import {prepareBiomeTangentsAsync} from './prepare-biome-tangents.js';
@@ -26,12 +28,23 @@ export class Assets {
   }
   release(resource){if(resource&&!this.disposedResources.has(resource)){this.disposedResources.add(resource);this.ownedResources.delete(resource);resource.dispose();}}
   ownModel(gltf){gltf.scene.traverse(mesh=>{if(!mesh.isMesh)return;this.own(mesh.geometry);for(const material of Array.isArray(mesh.material)?mesh.material:[mesh.material]){this.own(material);for(const value of Object.values(material))if(value?.isTexture)this.own(value);}});return gltf;}
+  async getCropPartition(){
+    this.assertOpen();
+    if(!this.cropPartitionPending){
+      const pending=CropPartition.load(this,new URL(assetUrl(cropRuntimeDescriptor.manifest),globalThis.location?.href??'http://localhost/').href).then(partition=>{this.assertOpen();this.cropPartition=partition;return partition;});
+      this.cropPartitionPending=pending;
+      pending.catch(()=>{if(this.cropPartitionPending===pending)this.cropPartitionPending=null;});
+    }
+    return this.cropPartitionPending;
+  }
   async model(url,loader=this.loader) {
     this.assertOpen();
+    const collection=loader===this.loader&&(cropCollectionKind(url)??cropHistoricalKind(url));
+    if(collection){const partition=await this.getCropPartition();return collection==='steady'?partition.models('all'):partition.bridgeModels('all');}
     if(!this.cache.has(url)){const source=assetUrl(url),transfer=beginAssetTransfer(source,'gltf');this.activeModelTransfers.add(source);const pending=loader.loadAsync(source,event=>updateAssetTransfer(transfer,event.loaded,event.lengthComputable?event.total:null)).then(gltf=>{finishAssetTransfer(transfer);this.activeModelTransfers.delete(source);this.ownModel(gltf);if(!this.modelsDisposed)this.modelSources.set(url,gltf);return gltf;},error=>{finishAssetTransfer(transfer,{failed:true});this.activeModelTransfers.delete(source);throw error;});this.cache.set(url,pending);pending.catch(()=>{if(this.cache.get(url)===pending)this.cache.delete(url);});}else if(this.modelSources.has(url))cachedAssetTransfer(assetUrl(url));return this.cache.get(url);
   }
   disposeModels(){
-    if(this.modelsDisposed)return;this.modelsDisposed=true;
+    if(this.modelsDisposed)return;this.modelsDisposed=true;this.cropPartition?.dispose();this.cropPartition=null;this.cropPartitionPending=null;
     // Also owns packed biome/village/wall prototypes and standalone textures,
     // including resources whose meshes never entered the rendered scene.
     for(const resource of this.ownedResources)this.release(resource);

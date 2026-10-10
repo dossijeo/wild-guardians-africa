@@ -5,10 +5,10 @@ const ROOT=fileURLToPath(new URL('../../',import.meta.url)),hash=b=>crypto.creat
 const read=p=>JSON.parse(fs.readFileSync(path.join(ROOT,p),'utf8'));
 export function partitionCropLibrary(out=path.join(ROOT,'.cache/maize-partition-candidate')){
  out=path.resolve(out);const allowed=path.join(ROOT,'.cache')+path.sep;assert.ok(out.startsWith(allowed),'Candidate output must stay within own .cache');
- const crop=read('public/content/models.json').find(m=>m.source.includes('Cultivos')),bridges=read('public/content/crop-bridges.json'),records=read('content/manifests/web-assets.json').records;
+ const authored=read('content/manifests/crops-v4.json'),crop={url:authored.steady.url},bridges=read('public/content/crop-bridges.json'),records=read('content/manifests/web-assets.json').records;
  const manifest={version:1,scope:'Offline candidate only; geometry slices copied without re-encoding, images external and shared by URI. A future canonical texture owner is required across parser instances.',sourceRecipeVersion:bridges.recipeVersion,sources:{},partitions:[],textures:[],metadata:{source:'public/content/crop-bridges.json',sha256:hash(fs.readFileSync(path.join(ROOT,'public/content/crop-bridges.json')))}};
  assert.equal(bridges.recipeVersion,4);fs.mkdirSync(path.join(out,'textures'),{recursive:true});
- for(const [kind,url]of [['steady',crop.url],['bridges',bridges.bakedAsset]]){
+ for(const [kind,url]of [['steady',crop.url],['bridges',authored.bridges.url]]){
   const record=records.find(r=>'/'+r.source===url);assert.ok(record);const sourceBytes=fs.readFileSync(path.join(ROOT,'public',record.runtime));assert.equal(hash(sourceBytes),record.runtimeSha256);
   const original=readGlb(sourceBytes),j=original.json;assert.equal(j.nodes.length,kind==='steady'?40:32);assert.equal(j.scenes.length,1);assert.equal(j.scenes[0].nodes.length,j.nodes.length);assert.ok(!j.skins&&!j.animations);
   const identities=j.nodes.map(node=>kind==='steady'?node.extras.cropIndex*5+node.extras.stage-1:node.extras.bridgeIndex);assert.deepEqual([...identities].sort((a,b)=>a-b),j.nodes.map((_,i)=>i));

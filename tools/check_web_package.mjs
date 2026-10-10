@@ -3,7 +3,9 @@ import {createHash} from 'node:crypto';
 import {publicText} from './web-package.mjs';
 import {readFile,readdir,stat} from 'node:fs/promises';
 import {resolve,extname,dirname,relative} from 'node:path';
-const root=resolve('dist'),manifest=JSON.parse(await readFile('content/manifests/web-assets.json','utf8'));let files=0,bytes=0,links=0;
+import {runtimeGeometryManifest,cropRuntimeDescriptor} from '../src/rendering/crop-runtime.js';
+import wallDiagnostic from '../content/manifests/wall-buffer-package.json' with {type:'json'};
+const root=resolve('dist'),manifest=runtimeGeometryManifest(JSON.parse(await readFile('content/manifests/web-assets.json','utf8')));let files=0,bytes=0,links=0;
 const inventory=new Set();
 async function collect(dir){for(const name of await readdir(dir)){const path=resolve(dir,name);if((await stat(path)).isDirectory())await collect(path);else inventory.add(relative(root,path).replaceAll('\\','/'));}}
 await collect(root);
@@ -14,7 +16,10 @@ for(const record of spiritManifest.records){
  assert.equal(createHash('sha256').update(bytes).digest('hex'),record.sha256,'Original Spirit clip changed in package: '+record.path);
 }
 async function exists(file){return inventory.has(relative(root,file).replaceAll('\\','/'));}
-for(const item of manifest.records){assert(!await exists(resolve(root,item.source)),'Original GLB duplicated in dist');assert(await exists(resolve(root,item.runtime)),'Runtime GLB missing');}
+for(const item of manifest.records){if(!item.partition)assert(!await exists(resolve(root,item.source)),'Original GLB duplicated in dist');assert(await exists(resolve(root,item.runtime)),'Runtime GLB missing');}
+for(const item of cropRuntimeDescriptor.replaced)for(const file of [item.source,item.runtime])assert(!await exists(resolve(root,file)),'Retired full crop GLB duplicated in dist');
+assert(!await exists(resolve(root,wallDiagnostic.url.slice(1))),'Rejected diagnostic wall archive duplicated in dist');
+for(const item of cropRuntimeDescriptor.runtimeAssets){const bytes=await readFile(resolve(root,item.path));assert.equal(bytes.length,item.bytes);assert.equal(createHash('sha256').update(bytes).digest('hex'),item.sha256);}
 const musicManifest=JSON.parse(await readFile('content/manifests/audio-runtime.json','utf8'));
 const sfxManifest=JSON.parse(await readFile('content/manifests/sfx-runtime.json','utf8'));
 const audioManifest={records:[...musicManifest.records,...sfxManifest.records]};
@@ -54,7 +59,7 @@ async function walk(dir){for(const name of await readdir(dir)){const path=resolv
  const context=path.startsWith(resolve(root,'library')+ (process.platform==='win32'?'\\':'/'))?root:dirname(path);
  for(const url of urls){if(/^(?:https?:|data:|#|blob:)/.test(url))continue;assert(await exists(resolve(context,url.split(/[?#]/)[0])),'Missing relative resource '+url+' from '+path);links++;}
  if(extname(path)==='.json'&&path!==resolve(root,'content/web-assets.json')){
-  async function values(value){if(typeof value==='string'&&/^(?:assets|library|content)\//.test(value)){assert(await exists(resolve(root,value)),'Missing JSON resource '+value+' from '+path);links++;}else if(value&&typeof value==='object')for(const item of Object.values(value))await values(item);}
+  async function values(value){if(typeof value==='string'&&/^(?:assets|library|content)\//.test(value)){assert(await exists(resolve(root,value.split(/[?#]/)[0])),'Missing JSON resource '+value+' from '+path);links++;}else if(value&&typeof value==='object')for(const item of Object.values(value))await values(item);}
   await values(JSON.parse(text));
  }
 }}

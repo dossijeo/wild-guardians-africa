@@ -20,11 +20,10 @@ function fixture(t,{manifestRequest}={}){
  t.after(()=>{world.loading.abort();transfers.dispose();assets.disposeModels();globalThis.self=self;globalThis.ProgressEvent=event;});
  return {assets,world,transfers,calls,previous};
 }
-test('selection is strict boolean smoke ownership; ordinary path never reads candidate getter',()=>{
- let reads=0;assert.equal(loadingCropPartitionEnabled({get __desktopSmokeCropPartition(){reads++;throw Error('ordinary');}}),false);assert.equal(reads,0);
- for(const value of [undefined,null,false,0,1,'true',{}])assert.equal(loadingCropPartitionEnabled({__desktopSmokeStarted:true,__desktopSmokeCropPartition:value}),false);
- assert.equal(loadingCropPartitionEnabled(scope),true);
+test('integration uses collection by default without reading smoke flags',()=>{
+ let reads=0;assert.equal(loadingCropPartitionEnabled({get __desktopSmokeCropPartition(){reads++;throw Error('ordinary');}}),true);assert.equal(reads,0);assert.equal(loadingCropPartitionEnabled({}),true);
 });
+
 test('one prepared owner supplies exact pending bytes, actual maize cache reuse and all40/32 completion',async t=>{
  const f=fixture(t),partition=await prepareLoadingCropPartition(f.world,f.transfers,{scope});assert.strictEqual(f.world.cropPartition,partition);
  await partition.models('maize');await partition.bridges(JSON.parse(fs.readFileSync('public/content/crop-bridges.json')),'maize');
@@ -51,8 +50,8 @@ test('restore is identity guarded and disposed/replaced owners cannot be adopted
  const pending=deferred(),f=fixture(t,{manifestRequest:()=>pending.promise}),loading=prepareLoadingCropPartition(f.world,f.transfers,{scope}),rejected=assert.rejects(loading,/cancelled/),replacement=()=>42;
  f.transfers.downloads.expectedBytes=replacement;f.world.disposed=true;pending.resolve(new Response(JSON.stringify(manifest)));await rejected;assert.strictEqual(f.transfers.downloads.expectedBytes,replacement);assert.equal(f.world.cropPartition,undefined);
 });
-test('OFF or combined recipes reject before requests or estimator mutation',async t=>{
- const f=fixture(t);await assert.rejects(prepareLoadingCropPartition(f.world,f.transfers,{scope:{}}),/ownership/);
+test('combined recipes reject before requests or estimator mutation',async t=>{
+ const f=fixture(t);
  for(const flag of ['__desktopSmokeWallBufferPackage','__desktopSmokeCompileWindow','__desktopSmokeResourceOverlap','__desktopSmokeSerialImageChain'])await assert.rejects(prepareLoadingCropPartition(f.world,f.transfers,{scope:{...scope,[flag]:true}}),/isolated/);
  assert.equal(f.calls.length,0);assert.strictEqual(f.transfers.downloads.expectedBytes,f.previous);
 });
@@ -62,10 +61,10 @@ test('immutable publication hashes/sizes, relative URLs and original full assets
  const offline=JSON.parse(fs.readFileSync('docs/qa/windows-loading-regression/maize-partition-offline/partition-manifest.json'));for(const original of Object.values(offline.sources))assert.equal(sha(fs.readFileSync('public/'+original.runtime)),original.sha256);
  const again=publishCropPartition();assert.deepEqual(again.descriptor,descriptor);assert.deepEqual(again.manifest,manifest);assert.equal(again.totalBytes,40848807);
 });
-test('App OFF prepare unchanged and CLI/workflow/recipe explicitly guard both original gates',()=>{
+test('App other preparation unchanged and original CLI/workflow gates preserved',()=>{
  const read=file=>fs.readFileSync(file,'utf8'),app=read('src/app/main.js'),old=execFileSync('git',['show','0a416fd3:src/app/main.js'],{encoding:'utf8'});
  const normal=app.replace("import {loadingCropPartitionEnabled,prepareLoadingCropPartition} from './loading-crop-partition.js';\n",'').replace('const dioramaPending=loadingCropPartitionEnabled()?prepareLoadingCropPartition(owner,transfers).then(()=>diorama.prepare()):diorama.prepare();preparation.pending=Promise.all([dioramaPending,prepareLoadingFrames(','preparation.pending=Promise.all([diorama.prepare(),prepareLoadingFrames(');
  assert.equal(normal.replaceAll('\r\n','\n'),old.replaceAll('\r\n','\n'));
- const rust=read('src-tauri/src/main.rs'),workflow=read('.github/workflows/windows.yml'),smoke=read('src-tauri/smoke.js');assert.ok(rust.indexOf('arg == "--smoke-report"')<rust.indexOf('let crop_partition'));assert.match(rust,/--smoke-crop-partition/);assert.match(smoke,/cropPartition:window.__desktopSmokeCropPartition===true/);
+ const rust=read('src-tauri/src/main.rs'),workflow=read('.github/workflows/windows.yml'),smoke=read('src-tauri/smoke.js');assert.ok(rust.indexOf('arg == "--smoke-report"')<rust.indexOf('let crop_partition'));assert.match(rust,/--smoke-crop-partition/);assert.match(smoke,/cropPartition:true,cropPartitionRequested:window.__desktopSmokeCropPartition===true/);
  assert.match(workflow,/crop_partition:[\s\S]*?type: boolean\s+default: false/);assert.equal(workflow.match(/\$smokeArgs \+= '--smoke-crop-partition'/g).length,2);assert.match(smoke,/worldEnd = worldStartedAt \+ 90000/);assert.match(smoke,/await wait\(300000\)/);assert.match(workflow,/WaitForExit\(900000\)/);
 });

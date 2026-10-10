@@ -1,0 +1,308 @@
+{
+  "base": "4b1108180210d2155e7d5e254b025209e7cc8f46",
+  "previousEvidenceCommit": "4d22277d",
+  "comparisonMain": "f8d735c1",
+  "status": "INTEGRATION_CANDIDATE_FROZEN_CPU_NOT_NATIVE_OR_PROMOTED",
+  "tests": {
+    "command": "node --test tests/loading-crop-partition.test.js tests/crop-partition-lifecycle.test.js tests/assets-lifecycle.test.js tests/loading-serial-images.test.js tests/crop-runtime-integration.test.js tests/crop-native-reload.test.js tests/web-package.test.js tests/crop-library-partition.test.js tests/sfx-catalog-audit.test.js tests/wall-buffer-package.test.js",
+    "passed": 84,
+    "failed": 0,
+    "durationMs": 13812.4816
+  },
+  "nativeTrial": {
+    "runId": 38014169890,
+    "source": "4b110818",
+    "scope": "Earlier opt-in/coexistence package; not acceptance of deduplicated default candidate"
+  },
+  "unchanged": [
+    {
+      "path": "src/rendering/scene.js",
+      "sha256": "12eddcfca985b97d0073fd0e115dd36c8b9046d82a308004f6d749b3cc0cc409",
+      "byteEqualTo": "4b110818"
+    },
+    {
+      "path": "src/rendering/loading-programs.js",
+      "sha256": "a1354397f1ba0543fd4dffcd5143e82c4b211f750a9df367ac902dd70730c8c2",
+      "byteEqualTo": "4b110818"
+    },
+    {
+      "path": "src/rendering/loading-yield-budget.js",
+      "sha256": "576ae137b4ef2e156547ca74704c244a2c4891a283a86ee590ca04c972d72c17",
+      "byteEqualTo": "4b110818"
+    },
+    {
+      "path": "src/rendering/crop-batch.js",
+      "sha256": "96f37896195dda9cbf2c2e2e9570c982305c83cdb1e20b3e36671b7754ab233c",
+      "byteEqualTo": "4b110818"
+    },
+    {
+      "path": "src/rendering/crop-library.js",
+      "sha256": "1f6308773529e162d449129a90a31b448e48696a6b766c30fe678401c21842ef",
+      "byteEqualTo": "4b110818"
+    },
+    {
+      "path": ".github/workflows/windows.yml",
+      "sha256": "c28e797f0105e5b10c3c626072ac5c7ca35f2fa035a3ac108ec03fbc7b3b878d",
+      "byteEqualTo": "4b110818"
+    },
+    {
+      "path": "content/manifests/crops-v4.json",
+      "sha256": "9a08f6af296649083ff80ce3556de69e953d978e8d3300c11df176ce3550f008",
+      "byteEqualTo": "4b110818"
+    },
+    {
+      "path": "content/manifests/web-assets.json",
+      "sha256": "fed88f8bcfce8f2296764a41324c20ad663f74f4a9dc17cd1f32b6179623bd41",
+      "byteEqualTo": "4b110818"
+    },
+    {
+      "path": "content/manifests/web-assets-verification.json",
+      "sha256": "0d901dfb48cefe4ab3c8ad89534a49dd137d6ac7f17d38aa581084eca6bcba8d",
+      "byteEqualTo": "4b110818"
+    },
+    {
+      "path": "src/app/main.js",
+      "sha256": "981800e021ae86abdca3fa951207ab8ecb0a19cb79c8620b4540eb328864de3b",
+      "byteEqualTo": "4b110818"
+    },
+    {
+      "path": "src-tauri/src/main.rs",
+      "sha256": "76cbba51ce4ae20327065b34d54a3f084d156ea34cb679b678b36f3c81bdbb20",
+      "byteEqualTo": "4b110818"
+    },
+    {
+      "path": "tools/experiments/compile-gpu-preparation.js",
+      "sha256": "6085d3f898f8d934bef62b2f79a160c9753179cad2db70b82f0c493d1fef1500",
+      "byteEqualTo": "4b110818"
+    },
+    {
+      "path": "src/rendering/fluid-preload.js",
+      "sha256": "aae24fef19edf75416fb1d4b61560a5446cc504965a471859a8a21d03886c060",
+      "byteEqualTo": "4b110818"
+    },
+    {
+      "path": "src/rendering/african-toon.js",
+      "sha256": "168c176ade6a1fba87cfc282a291da38cfd1f0611cd59d09df59d531a11b0138",
+      "byteEqualTo": "4b110818"
+    },
+    {
+      "path": "src/rendering/loading-cinematic.js",
+      "sha256": "644f4dfc67b9ff794381bd5dd530c4bc58293bc1bd037565231e7aedba2e7206",
+      "byteEqualTo": "4b110818"
+    }
+  ],
+  "integrationSelection": {
+    "newModules": [
+      "src/rendering/crop-runtime.js",
+      "src/rendering/crop-partition.js",
+      "src/app/loading-crop-partition.js"
+    ],
+    "modifiedPaths": [
+      "content/manifests/crop-partition-runtime.json",
+      "public/content/crop-bridges.json",
+      "public/content/models.json",
+      "src-tauri/smoke.js",
+      "src/app/loading-crop-partition.js",
+      "src/rendering/asset-url.js",
+      "src/rendering/assets.js",
+      "src/rendering/crop-partition.js",
+      "src/rendering/crop-runtime.js",
+      "src/rendering/loading-diorama.js",
+      "src/rendering/wall-buffer-package.js",
+      "tools/check_web_package.mjs",
+      "tools/experiments/partition-crop-library.mjs",
+      "tools/experiments/publish-crop-partition.mjs",
+      "tools/web-package.mjs"
+    ],
+    "mainRequiredFragments": "src/app/main.js existing candidate import and prepareLoadingCropPartition conditional only; do not replace current main.js or scene.js",
+    "doNotCarry": "Historical experimental workflow/Rust/observation hooks and unrelated menu/library/navigation files; current main fixes retained including e2d92c1e and 0e94d7be",
+    "archiveExclusionScope": "Historical branch has rejected wall-pack source. Exact archive exclusion/PROD guard is packaging-only. Current main has no wall experiment and must not acquire wall-loader recipe changes during extraction.",
+    "publishedFiles": "All eleven versioned public/assets/crop-partition-v1-98e4f7db28fa5f0c2a6e files from reviewed4b required; preserve authored originals/manifests in source, not dist.",
+    "excludedHistoricalRuntime": "src/rendering/assets.js wall import/use, scene diagnostic/wall/compile-window options, App experimental flags, Rust/workflow experiment inputs, public/menu/native.js historical differences must not overwrite main. Apply only singleton/private-loader/default collection changes."
+  },
+  "package": {
+    "files": 720,
+    "bytes": 445336440,
+    "links": 860,
+    "glbs": 24,
+    "originalCropRuntimeRemoved": 40844796,
+    "publishedPartitionBytes": 40848807,
+    "archivedWallBytesExcluded": 5135464,
+    "officialBaselineBytes": 445254165,
+    "deltaBytes": 82275,
+    "newZipProduced": false
+  },
+  "files": [
+    {
+      "path": "content/manifests/crop-partition-runtime.json",
+      "bytes": 6821,
+      "sha256": "21e7dd13cd7afcca7e3f41912931936653de7b279ff99a15b44e4506e242f3fa"
+    },
+    {
+      "path": "public/content/crop-bridges.json",
+      "bytes": 297520,
+      "sha256": "e133b79dc3a21c421a9eec9bd3aad8610967c69cc28eb003b7f06f072fd249d4"
+    },
+    {
+      "path": "public/content/models.json",
+      "bytes": 9097,
+      "sha256": "d42f6b54a3a5946fc652f1ac87c443cbda45075a10dc4cd49ca5de02a3c5e8c7"
+    },
+    {
+      "path": "src-tauri/smoke.js",
+      "bytes": 12541,
+      "sha256": "873493d43e4eddcbdb51c0edc6e640c11ae12f7c5b9c34b56d29b8df9d0b95e7"
+    },
+    {
+      "path": "src/app/loading-crop-partition.js",
+      "bytes": 1825,
+      "sha256": "d9ab2404ec778534910741efca005792434334a56d2cdb7ffba816f532a20692"
+    },
+    {
+      "path": "src/rendering/asset-url.js",
+      "bytes": 2227,
+      "sha256": "3c49530b0a55eae0797784c1f2d374daa0dbbd20e0ecc3664991c586b5fc9f1f"
+    },
+    {
+      "path": "src/rendering/assets.js",
+      "bytes": 12838,
+      "sha256": "e910e755716e48b5871659832690ea6c7574d73f985f08d45254bbf16deddace"
+    },
+    {
+      "path": "src/rendering/crop-partition.js",
+      "bytes": 9990,
+      "sha256": "41375b47870810090c60f641d21876f9a43d625e1d88d774c3f84887d4eb855a"
+    },
+    {
+      "path": "src/rendering/crop-runtime.js",
+      "bytes": 1242,
+      "sha256": "254c9c386e3aa04af884b36658cdf1a7559349d4d395db2fa91f19f5abaabf38"
+    },
+    {
+      "path": "src/rendering/loading-diorama.js",
+      "bytes": 19064,
+      "sha256": "dddb3e117b4a1deb5d9913c0e7bb14f3d2e681e86b97294dddd1cb5542a76a5b"
+    },
+    {
+      "path": "src/rendering/wall-buffer-package.js",
+      "bytes": 2160,
+      "sha256": "7f2bc8a0f7f0087c18cf9b6466136bbc104d428773b18f5ef780d8466a45bed3"
+    },
+    {
+      "path": "tests/crop-native-reload.test.js",
+      "bytes": 14309,
+      "sha256": "19a83a74f430b7d539346f668a926dcdda4122e85d7b4af0187aeb75c53f4970"
+    },
+    {
+      "path": "tests/crop-runtime-integration.test.js",
+      "bytes": 8060,
+      "sha256": "53977c9f0616304480da091ec4ac3de305588b1ce7afcb7a7a208d04bea27942"
+    },
+    {
+      "path": "tests/fixtures/crop-runtime-hosting.mjs",
+      "bytes": 1638,
+      "sha256": "f08a6c75e55606352c8fd9494aa6079637d2bd27ba2bdd21a79a95b97699ef09"
+    },
+    {
+      "path": "tests/fixtures/world-load-crop-default-loader.mjs",
+      "bytes": 328,
+      "sha256": "e2f7008b7f76a38c7f924d5c6d05b841e9b1e1f4061f95f51bba5a6936ecee05"
+    },
+    {
+      "path": "tests/fixtures/world-load-crop-default.mjs",
+      "bytes": 3825,
+      "sha256": "6ae20df9736cbf4583e2352566a2793198920837b319bfcc5e6640860a59235b"
+    },
+    {
+      "path": "tests/loading-crop-partition.test.js",
+      "bytes": 8638,
+      "sha256": "be8ee33dc23481ff4ef6cbeb5a55c8e475bfb49bd715b6f4ac516cf7e2e5c58b"
+    },
+    {
+      "path": "tests/loading-serial-images.test.js",
+      "bytes": 10944,
+      "sha256": "8b3cc982f6f4b6124d51e7ee776864f398e026a442e26f4e1c0cb711e741b040"
+    },
+    {
+      "path": "tests/web-package.test.js",
+      "bytes": 3841,
+      "sha256": "faccb515820537f547741b9b63d2f7b9a38cc03421a728b797ae30c22c560181"
+    },
+    {
+      "path": "tools/check_web_package.mjs",
+      "bytes": 7587,
+      "sha256": "dc4dce3472a220d23848d8f4a874e2a86bf8e5cb311eb7b5af0f0c307665a271"
+    },
+    {
+      "path": "tools/experiments/partition-crop-library.mjs",
+      "bytes": 6750,
+      "sha256": "3c39a9b90e7a83673371aa3ce59757855fb1c39312832c31cfd190600764189d"
+    },
+    {
+      "path": "tools/experiments/publish-crop-partition.mjs",
+      "bytes": 3056,
+      "sha256": "81cdf5a1dfc1144a50fb2e28a330228d49fc775277e93347469739995d183102"
+    },
+    {
+      "path": "tools/web-package.mjs",
+      "bytes": 6370,
+      "sha256": "68d57340678cfeaadc2609a294f4b047a7f10a1a242f2b633d16aa5fd95402da"
+    },
+    {
+      "path": "docs/qa/windows-loading-regression/crop-partition-deduplicated/crop-deduplicated-authored-v4.log",
+      "bytes": 122,
+      "sha256": "dd767088e05fd65bd4d233779a9a599f7fbe7f03c939796f0a56a5b638355c30"
+    },
+    {
+      "path": "docs/qa/windows-loading-regression/crop-partition-deduplicated/crop-deduplicated-changed-syntax.json",
+      "bytes": 1905,
+      "sha256": "5d13a9133deee8a14d1d6f1ffb412558ec3e764ec838e6fd510f6e239d1da102"
+    },
+    {
+      "path": "docs/qa/windows-loading-regression/crop-partition-deduplicated/crop-deduplicated-freeze-build.log",
+      "bytes": 2321,
+      "sha256": "3c81e04366e7b93c7237975efab7414fa75c2fb9c54b35350ec1998f5ad44295"
+    },
+    {
+      "path": "docs/qa/windows-loading-regression/crop-partition-deduplicated/crop-deduplicated-freeze-package.log",
+      "bytes": 411,
+      "sha256": "b6a8f2f2088eb2b47306687277d593045950779f0964cbcf66126455d724903e"
+    },
+    {
+      "path": "docs/qa/windows-loading-regression/crop-partition-deduplicated/crop-deduplicated-freeze-tests.log",
+      "bytes": 21267,
+      "sha256": "18008e8e761dbd40dba7462a56ab91933419fcc75fb5f7af0135aeb0b09417a9"
+    },
+    {
+      "path": "docs/qa/windows-loading-regression/crop-partition-deduplicated/crop-deduplicated-published-guard-tests.log",
+      "bytes": 1228,
+      "sha256": "2f0c01e26cdfbe546021bd4a521fc2a3e52c398f64c6e4a088db0d6e2ed53aaa"
+    },
+    {
+      "path": "docs/qa/windows-loading-regression/crop-partition-deduplicated/crop-partition-deduplicated-first-tests.log",
+      "bytes": 65018,
+      "sha256": "29338987c8874ce2842904c89edd7e8312e6abeb5743d28b83eb8ec2947611da"
+    },
+    {
+      "path": "docs/qa/windows-loading-regression/crop-partition-deduplicated/historical-branch-diff-vs-main.txt",
+      "bytes": 40509,
+      "sha256": "6537b98131699c61bfb8748ddd165c6ce9e1421d8ba996a1f0d116216ba10c58"
+    },
+    {
+      "path": "docs/qa/windows-loading-regression/crop-partition-deduplicated/package-diff.json",
+      "bytes": 62121,
+      "sha256": "8d65a520ff80f4bc391ba31a4cf378e31bce15f624ae90c2680b10d2dc3ffb92"
+    },
+    {
+      "path": "docs/qa/windows-loading-regression/crop-partition-deduplicated/README.md",
+      "bytes": 6662,
+      "sha256": "523ff2fa692ab67be4ade8c08071e6e1ff458a94b0e45ca2d133fc4b771ab9e4"
+    },
+    {
+      "path": "docs/qa/windows-loading-regression/crop-partition-deduplicated/verify.py",
+      "bytes": 2037,
+      "sha256": "af7df04bb155aa70ed5cd88f6898d0f502e9d0a1ea302a1442799b4b919dba97"
+    }
+  ],
+  "sourceFreeze": "Recorded by the commit containing this receipt; source/data hashes below pin content independently."
+}

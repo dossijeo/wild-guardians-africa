@@ -14,12 +14,17 @@ import {SaveRepository,serialize} from '../src/persistence/snapshots.js';
 
 const catalogue=JSON.parse(readFileSync('public/content/models.json'));
 const source=catalogue.find(m=>m.source.includes('Cultivos'));
+const authored=JSON.parse(readFileSync('content/manifests/crops-v4.json'));
 let data=JSON.parse(readFileSync('public/content/crop-bridges.json'));
 const ids=['maiz','algodon','girasol','platano','sorgo','mijo','yuca','batata'];
 const marks=[.065,.27,.53,.78,1];
 // Node cannot decode the embedded images. Preserve every native accessor,
 // index, classification and bridge datum; texture appearance needs WebGL QA.
 async function loadCpuModel(url){
+// This offline reference test retains the authored originals. Runtime
+// collection loading (including canonical textures) is exercised separately.
+if(url.endsWith('partition-manifest.json#steady'))url=authored.steady.url;
+if(url.endsWith('partition-manifest.json#bridges'))url=authored.bridges.url;
 const buffer=readFileSync('public'+url),size=buffer.readUInt32LE(12);
 const doc=JSON.parse(buffer.subarray(20,20+size));
 for(const m of doc.materials??[]){

@@ -23,4 +23,8 @@ export async function wallBufferReader(pack,{signal,assertOpen,load=bytes}={}){
   return new Uint8Array(buffer,entry.offset,entry.length);
  };
 }
-export const wallBufferPackageEnabled=(scope=globalThis)=>scope.__desktopSmokeStarted===true&&scope.__desktopSmokeWallBufferPackage===true;
+export const wallBufferPackageEnabled=(scope=globalThis)=>{
+ const selected=scope.__desktopSmokeStarted===true&&scope.__desktopSmokeWallBufferPackage===true;
+ if(selected&&import.meta.env?.PROD===true)throw Error('Wall buffer package is an archived source/dev diagnostic, unavailable in published packages');
+ return selected;
+};

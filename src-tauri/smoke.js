@@ -3,7 +3,7 @@
   if (window.__desktopSmokeStarted) return;
   window.__desktopSmokeStarted = true;
   const report = {ok: false, origin: location.origin, userAgent: navigator.userAgent, secureContext: isSecureContext, checks: {}, errors: []};
-  report.checks.loadingRecipe={cropPartition:window.__desktopSmokeCropPartition===true,serialImageChain:window.__desktopSmokeSerialImageChain===true,wallBufferPackage:window.__desktopSmokeWallBufferPackage===true,resourceOverlap:window.__desktopSmokeResourceOverlap===true,compileWindow:window.__desktopSmokeCompileWindow===true};
+  report.checks.loadingRecipe={cropPartition:true,cropPartitionRequested:window.__desktopSmokeCropPartition===true,serialImageChain:window.__desktopSmokeSerialImageChain===true,wallBufferPackage:window.__desktopSmokeWallBufferPackage===true,resourceOverlap:window.__desktopSmokeResourceOverlap===true,compileWindow:window.__desktopSmokeCompileWindow===true};
   const consoleError = console.error;
   console.error = (...args) => {report.errors.push(args.map(String).join(' ')); consoleError.apply(console, args);};
   const fail = event => report.errors.push(event.message || String(event.reason));

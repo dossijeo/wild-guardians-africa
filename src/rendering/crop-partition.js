@@ -1,4 +1,4 @@
-// Isolated candidate. No normal-path selection or production asset registration.
+// Canonical partition owner; source resources remain owned by its Assets.
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
@@ -64,6 +64,13 @@ export class CropPartition {
   return this.once('bridges:'+scope,async()=>{const sources=await Promise.all((scope==='maize'?['maize']:['maize','remainder']).map(group=>this.part(group,'bridges'))),bakedTemplates=new Map();
    for(const gltf of sources)gltf.scene.traverse(mesh=>{if(!mesh.isMesh)return;const e=mesh.userData,index=e.bridgeIndex,pair=data.pairs.find(p=>p.a===e.a&&p.b===e.b);if(!Number.isInteger(index)||index<0||index>=32||bakedTemplates.has(index)||(scope==='maize'&&index>=4)||!pair||Math.floor(e.a/5)*4+e.a%5!==index||e.b!==e.a+1)throw Error('Ambiguous crop bridge identity');bakedTemplates.set(index,mesh);});
    if(bakedTemplates.size!==(scope==='maize'?4:32))throw Error('Incomplete crop bridges');return {...data,bakedTemplates,partitionScope:scope};
+  });
+ }
+ bridgeModels(scope='all'){
+  if(!['maize','all'].includes(scope))throw Error('Invalid crop partition scope');
+  return this.once('bridgeModels:'+scope,async()=>{const sources=await Promise.all((scope==='maize'?['maize']:['maize','remainder']).map(group=>this.part(group,'bridges'))),scene=new THREE.Group(),ids=new Set();
+   for(const gltf of sources){gltf.scene.traverse(mesh=>{if(!mesh.isMesh)return;const e=mesh.userData,id=e.bridgeIndex;if(!Number.isInteger(id)||id<0||id>=32||ids.has(id)||(scope==='maize'&&id>=4)||e.b!==e.a+1||Math.floor(e.a/5)*4+e.a%5!==id)throw Error('Ambiguous crop bridge identity');ids.add(id);});scene.add(gltf.scene.clone(true));}
+   if(ids.size!==(scope==='maize'?4:32))throw Error('Incomplete crop bridges');return {scene};
   });
  }
  dispose(){if(this.closed)return;this.closed=true;this.assets.preparation.signal.removeEventListener('abort',this.onAbort);for(const source of this.sources.values()){if(!source.state.complete)source.cleanup();else source.state.owned.clear();}this.sources.clear();this.pending.clear();this.textures.clear();this.textureConfigs.clear();this.textureRecords.clear();}

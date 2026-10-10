@@ -1,4 +1,4 @@
-// Diagnostic publication only. Originals and normal asset aliases stay intact.
+// Deterministic runtime publication. Historical originals remain reproducible offline.
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -16,6 +16,10 @@ export function publishCropPartition(){
  write('partition-manifest.json',bytes);
  for(const record of [...manifest.partitions,...manifest.textures]){const file=record.file??record.uri,data=fs.readFileSync(path.join(source,file));assert.equal(data.length,record.bytes);assert.equal(sha(data),record.sha256);write(file,data);}
  const descriptor={version:1,manifest:'/'+directory+'/partition-manifest.json',manifestBytes:bytes.length,manifestSha256:digest};
+ descriptor.collections=Object.fromEntries(['steady','bridges'].map(kind=>[kind,descriptor.manifest+'#'+kind]));
+ const authored=JSON.parse(fs.readFileSync(path.join(root,'content/manifests/crops-v4.json'),'utf8')),original=JSON.parse(fs.readFileSync(path.join(root,'content/manifests/web-assets.json'),'utf8'));
+ descriptor.replaced=['steady','bridges'].map(kind=>({kind,...original.records.find(row=>'/'+row.source===authored[kind].url)}));
+ descriptor.runtimeAssets=[...manifest.partitions,...manifest.textures].map(row=>({path:directory+'/'+(row.file??row.uri),bytes:row.bytes,sha256:row.sha256,kind:row.file?'partition':'image'})).concat({path:descriptor.manifest.slice(1),bytes:bytes.length,sha256:digest,kind:'manifest'});
  const descriptorPath=path.join(root,'content/manifests/crop-partition-runtime.json'),descriptorBytes=Buffer.from(JSON.stringify(descriptor,null,2)+'\n');
  if(!fs.existsSync(descriptorPath)||!fs.readFileSync(descriptorPath).equals(descriptorBytes))fs.writeFileSync(descriptorPath,descriptorBytes);
  return {descriptor,manifest,totalBytes:bytes.length+[...manifest.partitions,...manifest.textures].reduce((sum,item)=>sum+item.bytes,0)};

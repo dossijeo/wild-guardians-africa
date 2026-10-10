@@ -1,11 +1,9 @@
 import descriptor from '../../content/manifests/crop-partition-runtime.json' with {type:'json'};
-import {CropPartition} from '../rendering/crop-partition.js';
 import {assetUrl} from '../rendering/asset-url.js';
 
-export const loadingCropPartitionEnabled=(scope=globalThis)=>scope.__desktopSmokeStarted===true&&scope.__desktopSmokeCropPartition===true;
-// Selected only by the guarded smoke caller. One owner spans transition and World.
+export const loadingCropPartitionEnabled=()=>true;
+// Integration candidate: one canonical Assets owner spans transition and World.
 export async function prepareLoadingCropPartition(world,transfers,{scope=globalThis,url=descriptor.manifest,manifestBytes=descriptor.manifestBytes}={}){
- if(!loadingCropPartitionEnabled(scope))throw Error('Crop partition selection requires explicit smoke ownership');
  if(['__desktopSmokeWallBufferPackage','__desktopSmokeCompileWindow','__desktopSmokeResourceOverlap','__desktopSmokeSerialImageChain'].some(flag=>scope[flag]===true))throw Error('Crop partition recipe must remain isolated');
  if(world.cropPartition)throw Error('Crop partition already prepared');
  const downloads=transfers.downloads,previous=downloads.expectedBytes,resolved=new URL(assetUrl(url),globalThis.location?.href??'http://localhost/').href;
@@ -15,7 +13,7 @@ export async function prepareLoadingCropPartition(world,transfers,{scope=globalT
  downloads.expectedBytes=expected;world.loading.signal.addEventListener('abort',close,{once:true});
  try{
   if(world.disposed||world.loading.signal.aborted)throw Error('Crop partition preparation cancelled');
-  const loaded=await CropPartition.load(world.assets,resolved);
+  const loaded=await world.assets.getCropPartition();
   if(closed||world.disposed||world.loading.signal.aborted){loaded.dispose();throw Error('Crop partition preparation cancelled');}
   partition=loaded;world.cropPartition=partition;return partition;
  }catch(error){close();throw error;}
