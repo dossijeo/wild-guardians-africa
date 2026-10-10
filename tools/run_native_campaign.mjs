@@ -8,7 +8,7 @@ import {simulateNativeCampaign} from './native-campaign-runner.mjs';
 import {intensiveRunProvenance} from './intensive-run-provenance.mjs';
 import {NATIVE_CAMPAIGN_PROTOCOL,nativeCampaignStrategy,campaignProtocolForLabour} from './native-campaign-protocol.mjs';
 export function parseNativeCampaignArgs(args){
- const allowed=new Set(['out','days','seed','strategy','biome','culture','stop-file','stop-cash','stop-min-day','labour-policy','defense-policy']),o={days:7,seed:712,strategy:'good',biome:'sabana',culture:'mapungubwe'};
+ const allowed=new Set(['out','days','seed','strategy','biome','culture','stop-file','stop-cash','stop-min-day','labour-policy','defense-policy','defense-start-day']),o={days:7,seed:712,strategy:'good',biome:'sabana',culture:'mapungubwe'};
  for(let i=0;i<args.length;i+=2){const k=args[i]?.replace(/^--/,'');if(!allowed.has(k)||args[i+1]===undefined)throw Error('Use --out DIR --days 1..180 --seed INTEGER --strategy expansive|good|bad|no-walls|no-shield --biome NAME --culture NAME');o[k]=args[i+1];}
  for(const k of ['days','seed'])o[k]=Number(o[k]);
  if(!Number.isSafeInteger(o.days)||o.days<1||o.days>180||!Number.isSafeInteger(o.seed)||o.seed<0)throw Error('Invalid native days/seed');
@@ -19,6 +19,7 @@ export function parseNativeCampaignArgs(args){
  if(o['stop-file'])o['stop-file']=resolve(o['stop-file']);
  o.labourPolicy=o['labour-policy']??'legacy';delete o['labour-policy'];campaignProtocolForLabour(o.labourPolicy);
  o.defensePolicy=o['defense-policy']??'expanding';delete o['defense-policy'];if(!['legacy','expanding','closed'].includes(o.defensePolicy))throw Error('Unknown defense policy');
+ o.defenseStartDay=Number(o['defense-start-day']??1);delete o['defense-start-day'];if(!Number.isSafeInteger(o.defenseStartDay)||o.defenseStartDay<1||o.defenseStartDay!==1&&o.defensePolicy!=='closed')throw Error('Explicit defense start requires closed policy and positive integer day');
  nativeCampaignStrategy(o.strategy);if(!o.out)throw Error('Explicit output directory required');o.out=resolve(o.out);return o;
 }
 export function calibrationStop(reason){const error=Error(reason);error.code='NATIVE_CALIBRATION_STOP';return error;}
