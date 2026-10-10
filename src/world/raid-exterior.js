@@ -1,6 +1,7 @@
 import {wallLayout,WALL_UNIT} from './wall-layout.js';
-import {boundaryFaces} from './boundary-faces.js';
-import {boundaryEdges} from './boundary-gates.js';
+import {boundaryFacesSteps} from './boundary-faces.js';
+import {boundaryEdgesSteps} from './boundary-gates.js';
+import {drainGeometrySteps} from './geometry-steps.js';
 import {containsPoint,footprintDistance} from './footprints.js';
 
 // Private per-navigator cache; no saved simulation data or random draws.
@@ -48,17 +49,20 @@ export function createRaidExteriorQuery(state,nav){
  // Scan geometry once per selection, not once per candidate or actor. A cache
  // hit does not construct wallLayout at all; direct edits still change the key.
  const signature=raidExteriorInputKey(state,nav),geometry=geometryFor(nav,signature);
- return {regionsFor(radius){
+ return {regionsFor(radius){return drainGeometrySteps(this.regionsForSteps(radius));},*regionsForSteps(radius){
  if(geometry.regions.has(radius))return geometry.regions.get(radius);
  counters(nav).builds++;
+ yield {phase:"exterior-wall-layout"};
  const layout=geometry.layout??=wallLayout(state.structures,{}),pieces=layout.pieces.filter(p=>p.hp>0&&!p.collapse);
  if(!pieces.length){geometry.regions.set(radius,Object.freeze([]));return geometry.regions.get(radius);}
  // Physical edges only. The omitted construction slots used to choose an
  // automatic gate are deliberately absent, especially traversable rivers.
- const natural=nav.field&&nav.propsAt&&nav.terrainValid?boundaryEdges({...layout,pieces},nav,{radius,worker:false}):[];
- const virtual=natural.map(([a,b],i)=>({id:-i-1,hp:1,x:(a[0]+b[0])/2,z:(a[1]+b[1])/2,angle:Math.atan2(b[1]-a[1],b[0]-a[0]),scaleX:Math.hypot(b[0]-a[0],b[1]-a[1])/WALL_UNIT}));
+ const natural=nav.field&&nav.propsAt&&nav.terrainValid?yield* boundaryEdgesSteps({...layout,pieces},nav,{radius,worker:false}):[];
+ const virtual=[];for(let i=0;i<natural.length;i++){yield {phase:"exterior-virtual-edge"};const [a,b]=natural[i];virtual.push({id:-i-1,hp:1,x:(a[0]+b[0])/2,z:(a[1]+b[1])/2,angle:Math.atan2(b[1]-a[1],b[0]-a[0]),scaleX:Math.hypot(b[0]-a[0],b[1]-a[1])/WALL_UNIT});}
  const ids=new Set(pieces.map(p=>p.id));
- const regions=boundaryFaces([...pieces,...virtual]).filter(f=>f.ids.some(id=>ids.has(id))).map(f=>f.polygon.map(([x,z])=>({x,z})));
+ const faces=yield* boundaryFacesSteps([...pieces,...virtual]),regions=[];
+ for(const face of faces){yield {phase:"exterior-face-filter"};if(face.ids.some(id=>ids.has(id)))regions.push(face.polygon.map(([x,z])=>({x,z})));}
+ yield {phase:"exterior-freeze"};
  if(geometry.regions.size>=8)geometry.regions.clear();const immutable=freezeRegions(regions);geometry.regions.set(radius,immutable);return immutable;
  }};
 }

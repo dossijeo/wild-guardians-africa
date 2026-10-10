@@ -1,0 +1,49 @@
+TAP version 13
+# {"scope":"exact before/after native graph/gate ordering, no campaign or frame acceptance","biome":"sabana","regions":[{"radius":1.1,"faces":2},{"radius":0.9,"faces":2},{"radius":0.97,"faces":2},{"radius":0.85,"faces":2},{"radius":1.55,"faces":2}]}
+# {"scope":"exact before/after native graph/gate ordering, no campaign or frame acceptance","biome":"gran-canon","regions":[{"radius":1.1,"faces":2},{"radius":0.9,"faces":2},{"radius":0.97,"faces":2},{"radius":0.85,"faces":2},{"radius":1.55,"faces":4}]}
+# {"scope":"no Worker eventual geometry-only progress, not deadline acceptance","pumps":34,"steps":3862,"maxStepMs":5.767800000000079,"maxSliceMs":6.540899999999965,"maxProofMs":1.7361000000000786,"maxUpdateMs":2.0583999999998923,"phases":{"geometry-first-yield":{"steps":1,"totalMs":0.016699999999900683,"maxMs":0.016699999999900683},"geometry-navigation":{"steps":1,"totalMs":0.6088999999999487,"maxMs":0.6088999999999487},"geometry-input-proof":{"steps":1,"totalMs":1.0268000000000939,"maxMs":1.0268000000000939},"exterior-wall-layout":{"steps":5,"totalMs":0.15890000000035798,"maxMs":0.09940000000005966},"boundary-bounds":{"steps":5,"totalMs":0.17700000000036198,"maxMs":0.049299999999902866},"boundary-obstacle":{"steps":125,"totalMs":0.35580000000004475,"maxMs":0.04690000000005057},"boundary-props-scatter":{"steps":5,"totalMs":5.8935999999998785,"maxMs":5.767800000000079},"boundary-prop":{"steps":40,"totalMs":0.06849999999894862,"maxMs":0.014300000000048385},"boundary-terrain-cell":{"steps":500,"totalMs":5.776399999990872,"maxMs":0.1067000000000462},"exterior-virtual-edge":{"steps":165,"totalMs":0.548699999999144,"maxMs":0.12779999999997926},"face-input":{"steps":245,"totalMs":0.2935000000011314,"maxMs":0.012100000000145883},"face-intersection":{"steps":320,"totalMs":1.0998000000008687,"maxMs":0.0702000000001135},"face-cut-sort":{"steps":245,"totalMs":0.3653000000006159,"maxMs":0.028799999999819192},"face-node-scan":{"steps":764,"totalMs":1.1607999999994263,"maxMs":0.031300000000101136},"face-node-sort":{"steps":271,"totalMs":0.16680000000496875,"maxMs":0.0019999999999527063},"face-start":{"steps":556,"totalMs":0.18920000000503023,"maxMs":0.01319999999986976},"face-walk":{"steps":573,"totalMs":0.20569999999702304,"maxMs":0.0015000000000782165},"face-area-hosts":{"steps":17,"totalMs":0.4067999999992935,"maxMs":0.06639999999993051},"face-sort":{"steps":5,"totalMs":0.019800000000259388,"maxMs":0.009900000000016007},"exterior-face-filter":{"steps":12,"totalMs":0.25699999999915235,"maxMs":0.13440000000014152},"exterior-freeze":{"steps":5,"totalMs":0.2713000000003376,"maxMs":0.19860000000016953},"geometry-complete-freeze":{"steps":1,"totalMs":1.2974999999996726,"maxMs":1.2974999999996726}}}
+# Subtest: sabana: shared generator polygons, physical boundaries and default gates equal frozen819 native ordering
+ok 1 - sabana: shared generator polygons, physical boundaries and default gates equal frozen819 native ordering
+  ---
+  duration_ms: 579.0406
+  ...
+# Subtest: gran-canon: shared generator polygons, physical boundaries and default gates equal frozen819 native ordering
+ok 2 - gran-canon: shared generator polygons, physical boundaries and default gates equal frozen819 native ordering
+  ---
+  duration_ms: 636.2282
+  ...
+# Subtest: no-worker preparation makes bounded continuation progress and installs only complete canonical geometry
+ok 3 - no-worker preparation makes bounded continuation progress and installs only complete canonical geometry
+  ---
+  duration_ms: 475.4593
+  ...
+# Subtest: camera and group changes do not restart geometry; legal wall edit aborts partial work before adopting fresh geometry
+ok 4 - camera and group changes do not restart geometry; legal wall edit aborts partial work before adopting fresh geometry
+  ---
+  duration_ms: 388.5643
+  ...
+# Subtest: disposal closes private iterators and late worker replies cannot install graphs
+ok 5 - disposal closes private iterators and late worker replies cannot install graphs
+  ---
+  duration_ms: 323.0878
+  ...
+# Subtest: owned worker failure changes to real cooperative computation; malformed unowned reply fails without restarting
+ok 6 - owned worker failure changes to real cooperative computation; malformed unowned reply fails without restarting
+  ---
+  duration_ms: 403.6756
+  ...
+# {"scope":"real worker_threads geometry transport/parity, not browser MessageEvent/adoption or frame acceptance","radii":[1.1,0.9,0.97,0.85,1.55],"owner":"native-node-worker","token":1}
+# Subtest: real Node worker drains the same geometry iterator and returns exact sync geometry/proof without game mutation
+ok 7 - real Node worker drains the same geometry iterator and returns exact sync geometry/proof without game mutation
+  ---
+  duration_ms: 875.3377
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4136.6183

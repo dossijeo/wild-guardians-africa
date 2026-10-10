@@ -1,0 +1,154 @@
+TAP version 13
+# Subtest: a building completes an open wall stroke and the door is on the village-to-crop side
+ok 1 - a building completes an open wall stroke and the door is on the village-to-crop side
+  ---
+  duration_ms: 53.8604
+  ...
+# Subtest: a natural canyon cliff completes the enclosure without placing a gate into the cliff
+ok 2 - a natural canyon cliff completes the enclosure without placing a gate into the cliff
+  ---
+  duration_ms: 16.898
+  ...
+# Subtest: the native Grand Canyon cliff closes a paid perimeter with a traversable door
+ok 3 - the native Grand Canyon cliff closes a paid perimeter with a traversable door
+  ---
+  duration_ms: 618.3787
+  ...
+# Subtest: a genuinely open wall beside a building does not receive an unnecessary gate
+ok 4 - a genuinely open wall beside a building does not receive an unnecessary gate
+  ---
+  duration_ms: 4.3526
+  ...
+# Subtest: closing a mixed-material perimeter converts the latest new piece and preserves every older piece
+ok 5 - closing a mixed-material perimeter converts the latest new piece and preserves every older piece
+  ---
+  duration_ms: 11.9136
+  ...
+# Subtest: the recorded native perimeter keeps skipped rock modules and creates one accessible gate
+ok 6 - the recorded native perimeter keeps skipped rock modules and creates one accessible gate
+  ---
+  duration_ms: 604.0243
+  ...
+# Subtest: incremental zarzas closure and rebuilding preserve the other materials
+ok 7 - incremental zarzas closure and rebuilding preserve the other materials
+  ---
+  duration_ms: 7.7085
+  ...
+# Subtest: incremental empalizada closure and rebuilding preserve the other materials
+ok 8 - incremental empalizada closure and rebuilding preserve the other materials
+  ---
+  duration_ms: 8.5394
+  ...
+# Subtest: incremental adobe closure and rebuilding preserve the other materials
+ok 9 - incremental adobe closure and rebuilding preserve the other materials
+  ---
+  duration_ms: 8.614
+  ...
+# Subtest: incremental piedra closure and rebuilding preserve the other materials
+ok 10 - incremental piedra closure and rebuilding preserve the other materials
+  ---
+  duration_ms: 7.7777
+  ...
+# Subtest: incremental reforzado closure and rebuilding preserve the other materials
+ok 11 - incremental reforzado closure and rebuilding preserve the other materials
+  ---
+  duration_ms: 6.961
+  ...
+# Subtest: rebuilding several removed blocks adds a door only when the final gap closes
+ok 12 - rebuilding several removed blocks adds a door only when the final gap closes
+  ---
+  duration_ms: 4.9899
+  ...
+# Subtest: an existing usable gate survives later perimeter edits without adding another door
+ok 13 - an existing usable gate survives later perimeter edits without adding another door
+  ---
+  duration_ms: 2.3392
+  ...
+# Subtest: an existing zarzas door is preserved when multiple gaps are rebuilt with other materials
+ok 14 - an existing zarzas door is preserved when multiple gaps are rebuilt with other materials
+  ---
+  duration_ms: 4.0023
+  ...
+# Subtest: an existing empalizada door is preserved when multiple gaps are rebuilt with other materials
+ok 15 - an existing empalizada door is preserved when multiple gaps are rebuilt with other materials
+  ---
+  duration_ms: 3.6277
+  ...
+# Subtest: an existing adobe door is preserved when multiple gaps are rebuilt with other materials
+ok 16 - an existing adobe door is preserved when multiple gaps are rebuilt with other materials
+  ---
+  duration_ms: 6.4856
+  ...
+# Subtest: an existing piedra door is preserved when multiple gaps are rebuilt with other materials
+ok 17 - an existing piedra door is preserved when multiple gaps are rebuilt with other materials
+  ---
+  duration_ms: 3.6718
+  ...
+# Subtest: an existing reforzado door is preserved when multiple gaps are rebuilt with other materials
+ok 18 - an existing reforzado door is preserved when multiple gaps are rebuilt with other materials
+  ---
+  duration_ms: 3.3513
+  ...
+# Subtest: an obstructed approach to an existing door does not make the planner create a second door
+ok 19 - an obstructed approach to an existing door does not make the planner create a second door
+  ---
+  duration_ms: 2.6068
+  ...
+# {"scope":"CPU observation, not frame/GPU acceptance","cameraMilliseconds":8.726199999999949,"entry":{"entries":[{"x":81.4,"z":12.1}],"exits":[{"x":81.4,"z":15.1}]}}
+# {"scope":"entry-only CPU observation; no horde gameplay activated","milliseconds":43.85159999999996,"entry":{"entries":[{"x":94.3,"z":12.1},{"x":81.7,"z":12.1},{"x":94.3,"z":16.1},{"x":81.7,"z":16.1},{"x":77.5,"z":11.9},{"x":77.5,"z":15.9},{"x":85.9,"z":21.9},{"x":90.1,"z":21.97},{"x":98.5,"z":17.97},{"x":81.7,"z":21.85},{"x":94.3,"z":21.85},{"x":73.3,"z":12.55}],"exits":[{"x":94.3,"z":15.1},{"x":81.7,"z":15.1},{"x":94.3,"z":19.1},{"x":81.7,"z":19.1},{"x":77.5,"z":14.9},{"x":77.5,"z":18.9},{"x":85.9,"z":24.9},{"x":90.1,"z":24.97},{"x":98.5,"z":20.97},{"x":81.7,"z":24.85},{"x":94.3,"z":24.85},{"x":73.3,"z":15.55}]}}
+# {"scope":"paid native Canyon closed-region proof, not campaign","stroke":[[-22,24],[-34,24],[-34,36],[-22,36]],"paidCoins":160,"inside":{"x":-30,"z":26},"outside":{"x":-40,"z":26},"radius":1.1,"interiorWalkable":true,"exteriorWalkable":true,"exteriorRoute":null,"finiteNativeGridNodes":14,"snapshotSHA256":"44f4708b52c1744478f362f9032ca88e42589641731688f00ba3d6a14290415d","entry":{"entries":[{"x":-36.6,"z":29.1}],"exits":[{"x":-36.6,"z":32.1}]}}
+# {"scope":"one native paid-enclosure physical raid, not campaign","spawn":{"x":81.4,"z":12.1},"exit":{"x":81.4,"z":15.1},"elapsed":5.2499999999999964,"actualHits":2,"paidBalance":525}
+# Subtest: paid17-piece enclosure: direct and prepared select exterior close legal approaches without changing RNG
+ok 20 - paid17-piece enclosure: direct and prepared select exterior close legal approaches without changing RNG
+  ---
+  duration_ms: 667.5648
+  ...
+# Subtest: mixed paid walls, removal/reclosure and save/reload invalidate protected region ownership
+ok 21 - mixed paid walls, removal/reclosure and save/reload invalidate protected region ownership
+  ---
+  duration_ms: 591.5928
+  ...
+# Subtest: interior prepared reply is refused at actual spawn with unchanged allocation/RNG versus native direct spawn
+ok 22 - interior prepared reply is refused at actual spawn with unchanged allocation/RNG versus native direct spawn
+  ---
+  duration_ms: 458.8275
+  ...
+# Subtest: twelve full-size bodies keep whole-group separation and reversible exterior escape
+ok 23 - twelve full-size bodies keep whole-group separation and reversible exterior escape
+  ---
+  duration_ms: 458.231
+  ...
+# Subtest: native Canyon automatic-gate U remains an OPEN control: full-radius native west escape
+ok 24 - native Canyon automatic-gate U remains an OPEN control: full-radius native west escape
+  ---
+  duration_ms: 537.5196
+  ...
+# Subtest: separate paid native Canyon cliff enclosure has a walkable full-radius interior and a finite native closed region
+ok 25 - separate paid native Canyon cliff enclosure has a walkable full-radius interior and a finite native closed region
+  ---
+  duration_ms: 589.6331
+  ...
+# Subtest: prepared replies require active bounds, native walkability, full-body separation and reversible escape
+ok 26 - prepared replies require active bounds, native walkability, full-body separation and reversible escape
+  ---
+  duration_ms: 490.6451
+  ...
+# Subtest: one selection query scans geometry once and shares cached polygons for all candidates/radii
+ok 27 - one selection query scans geometry once and shares cached polygons for all candidates/radii
+  ---
+  duration_ms: 449.5702
+  ...
+# Subtest: ordinary raid physically approaches the paid enclosure, spends real wall hits and returns to its exterior exit across save/reload
+ok 28 - ordinary raid physically approaches the paid enclosure, spends real wall hits and returns to its exterior exit across save/reload
+  ---
+  duration_ms: 525.4148
+  ...
+1..28
+# tests 28
+# suites 0
+# pass 28
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5006.1281

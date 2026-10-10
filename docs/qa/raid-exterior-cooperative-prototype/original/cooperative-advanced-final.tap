@@ -1,0 +1,16 @@
+TAP version 13
+# {"scope":"single descriptive CPU observation over5canonical radii, tight test driver with no RAF spacing; not GPU/frametime/deadline or before-after performance acceptance","originalGzipSHA256":"1b0f1a153aaf9c7adcb91b394d232886016124316570f3e90df01bb280bb4a0b","walls":103,"livingCrops":865,"counts":[{"radius":1.1,"regions":4},{"radius":0.9,"regions":4},{"radius":0.97,"regions":4},{"radius":0.85,"regions":4},{"radius":1.55,"regions":4}],"pumps":872,"cooperativeTotalMs":1039.0031000000001,"baselineAllRadiiMs":588.5116,"stats":{"jobs":1,"aborted":0,"adopted":1,"rejected":0,"workerFailures":1,"steps":89220,"maxStepMs":34.16239999999999,"maxSliceMs":35.06730000000002,"maxUpdateMs":5.597000000000008,"maxProofMs":1.5433000000000447,"maxAdoptionMs":2.211999999999989,"phases":{"geometry-first-yield":{"steps":1,"totalMs":0.005699999999990268,"maxMs":0.005699999999990268},"geometry-navigation":{"steps":1,"totalMs":1.233000000000004,"maxMs":1.233000000000004},"geometry-input-proof":{"steps":1,"totalMs":1.2496000000000151,"maxMs":1.2496000000000151},"exterior-wall-layout":{"steps":5,"totalMs":0.606099999999941,"maxMs":0.49679999999997904},"boundary-bounds":{"steps":5,"totalMs":0.7893000000000825,"maxMs":0.29009999999999536},"boundary-obstacle":{"steps":555,"totalMs":1.1724000000009767,"maxMs":0.20410000000001105},"boundary-props-scatter":{"steps":5,"totalMs":34.481200000000115,"maxMs":34.16239999999999},"boundary-prop":{"steps":55,"totalMs":0.8561999999996601,"maxMs":0.46510000000000673},"boundary-terrain-cell":{"steps":7260,"totalMs":82.5261999999934,"maxMs":1.480700000000013},"exterior-virtual-edge":{"steps":1985,"totalMs":3.038900000000467,"maxMs":1.400000000000034},"face-input":{"steps":2500,"totalMs":4.710400000002721,"maxMs":0.24389999999999645},"face-intersection":{"steps":20720,"totalMs":360.4767000000078,"maxMs":4.772899999999936},"face-cut-sort":{"steps":2500,"totalMs":6.031600000005483,"maxMs":0.2658999999999878},"face-node-scan":{"steps":41246,"totalMs":85.15020000002534,"maxMs":0.8507000000001881},"face-node-sort":{"steps":2383,"totalMs":2.6064000000015994,"maxMs":0.09149999999999636},"face-start":{"steps":4832,"totalMs":3.7729999999993424,"maxMs":0.09939999999994598},"face-walk":{"steps":4957,"totalMs":4.589300000009757,"maxMs":0.05570000000000164},"face-area-hosts":{"steps":125,"totalMs":3.9906999999998334,"maxMs":0.685100000000034},"face-sort":{"steps":5,"totalMs":0.19689999999991414,"maxMs":0.14629999999999654},"exterior-face-filter":{"steps":73,"totalMs":0.5489000000003443,"maxMs":0.10350000000005366},"exterior-freeze":{"steps":5,"totalMs":0.38629999999989195,"maxMs":0.16819999999995616},"geometry-complete-freeze":{"steps":1,"totalMs":1.943899999999985,"maxMs":1.943899999999985}}},"productionReady":false}
+# Subtest: advanced no-worker canonical prewarming: resumable native work, exact frozen819 polygons, measured indivisible cold risk
+ok 1 - advanced no-worker canonical prewarming: resumable native work, exact frozen819 polygons, measured indivisible cold risk
+  ---
+  duration_ms: 1819.3447
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1989.9714
