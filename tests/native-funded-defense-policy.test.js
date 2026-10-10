@@ -7,7 +7,20 @@ import {closedDefenseContours} from '../tools/native-closed-defense-policy.mjs';
 import {numberOf,rational} from '../src/simulation/money.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {gatePortalPoints} from '../src/world/gate-passages.js';
+import {wallSpec} from '../src/simulation/rules.js';
 function fixture(){const {s,nav}=createOpeningWorld();let id=0;const c=s.structures[0];Game.plant(s,'seed','mijo',c.x+6,c.z+1,nav);Game.openInitialHiring(s);Game.hire(s,'hire',{olderFemale:1});return {s,nav,options:{command:k=>'funded-'+k+'-'+id++,reserve:160}};}
+
+test('chosen wall material uses native price and HP and pays its actual ledger debit',()=>{
+ for(const material of ['zarzas','empalizada']){
+  const {s,nav,options}=fixture(),before=numberOf(s.ledger.balance),policy=createNativeFundedDefensePolicy({startDay:1,material,chunkPieces:8});
+  assert.equal(policy.act(s,nav,options),1);
+  const report=policy.report(),purchase=report.history.find(r=>r.paidCost),spec=wallSpec(material),walls=s.structures.filter(w=>w.kind==='wall');
+  assert.equal(report.material,material);assert.equal(walls.length,8);
+  assert(walls.every(w=>w.material===material&&w.cost===spec.cost&&w.maxHp===(w.gate?spec.gate_hp:spec.hp)));
+  assert.equal(before-numberOf(s.ledger.balance),8*spec.cost);
+  assert.equal(numberOf(s.ledger.entries[purchase.paymentId]),-8*spec.cost);
+ }
+});
 test('native read-only wall quote is possible without funds; preview/build still enforce real cash',()=>{
  const {s,nav}=fixture(),candidate=closedDefenseContours(s)[0];s.ledger.balance=rational(30);const before=serialize(s);
  const quote=Game.quoteWallChain(s,'zarzas',candidate.points,nav,{smooth:false,snap:false});assert(quote.cost>30);assert.equal(serialize(s),before);

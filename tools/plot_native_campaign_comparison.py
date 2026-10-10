@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 
 
-def collect(directories):
+def collect(directories, *, vary_defense_material=False):
     runs = []
     for directory in directories:
         path = Path(directory)
@@ -33,11 +33,16 @@ def collect(directories):
         for key in ('profile', 'cropPolicy', 'defensePolicy', 'defenseStartDay', 'plotFluidClearance'):
             if report['policy'][key] != first['policy'][key]:
                 raise ValueError(f'{path}: policy setting {key} differs')
+        if vary_defense_material:
+            if report['strategy'] != first['strategy']:
+                raise ValueError('Material experiment must preserve the player strategy')
+        elif report['policy'].get('defenseMaterial', 'zarzas') != first['policy'].get('defenseMaterial', 'zarzas'):
+            raise ValueError(f'{path}: policy setting defenseMaterial differs')
     return runs
 
 
-def write_comparison(prefix, directories):
-    runs = collect(directories)
+def write_comparison(prefix, directories, *, vary_defense_material=False):
+    runs = collect(directories, vary_defense_material=vary_defense_material)
     prefix = Path(prefix)
     outputs = [Path(str(prefix) + suffix) for suffix in ('.json', '.csv', '.png', '.svg')]
     if any(p.exists() for p in outputs):
@@ -50,6 +55,9 @@ def write_comparison(prefix, directories):
     summary, rows = [], []
     for path, report, _ in runs:
         label = report['strategy']
+        material = report['policy'].get('defenseMaterial', 'zarzas')
+        if vary_defense_material:
+            label += ' / ' + material
         days = report['daily']
         x = [d['day'] for d in days]
         cumulative_losses, cumulative_defense = [], []
@@ -59,11 +67,11 @@ def write_comparison(prefix, directories):
             defense += day['finance']['walls'] + day['finance']['repairs']
             cumulative_losses.append(losses)
             cumulative_defense.append(defense)
-            rows.append(dict(strategy=label, day=day['day'], cash=day['money'],
+            rows.append(dict(strategy=label, defenseMaterial=material, day=day['day'], cash=day['money'],
                              living=day['living'], destroyed=day['destroyed'],
                              delivered=day['delivered'], planted=day['planted'],
                              **{k: day['finance'][k] for k in ('income', 'seeds', 'wages', 'walls', 'repairs', 'reconciliationDifference')}))
-        summary.append(dict(path=str(path), strategy=label, nights=report['completedNights'],
+        summary.append(dict(path=str(path), strategy=label, defenseMaterial=material, nights=report['completedNights'],
                             result=report['result'], cash=report['money'], living=days[-1]['living'],
                             destroyed=losses, paidDefense=defense,
                             decisionIdleProxy=report['activity']['unoccupiedFraction'],
@@ -94,7 +102,7 @@ def write_comparison(prefix, directories):
     svg_lines = outputs[3].read_text(encoding='utf-8').splitlines()
     outputs[3].write_bytes(('\n'.join(line.rstrip() for line in svg_lines) + '\n').encode('utf-8'))
     plt.close(fig)
-    outputs[0].write_bytes((json.dumps(dict(source=runs[0][2]['sourceHashes'], summary=summary,
+    outputs[0].write_bytes((json.dumps(dict(source=runs[0][2]['sourceHashes'], summary=summary, varyDefenseMaterial=vary_defense_material,
                                           scope='Completed native campaigns with matching source, seed, biome, culture and rule configuration; idle proxy is not measured manual activity.'), indent=2) + '\n').encode('utf-8'))
     with outputs[1].open('w', newline='', encoding='utf-8') as stream:
         writer = csv.DictWriter(stream, fieldnames=list(rows[0]), lineterminator='\n')
@@ -106,6 +114,7 @@ def write_comparison(prefix, directories):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--out', required=True)
+    parser.add_argument('--vary-defense-material', action='store_true', help='Explicit same-strategy, one-factor material comparison')
     parser.add_argument('directories', nargs='+')
     args = parser.parse_args()
-    print(json.dumps(write_comparison(args.out, args.directories)))
+    print(json.dumps(write_comparison(args.out, args.directories, vary_defense_material=args.vary_defense_material)))

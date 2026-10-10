@@ -68,6 +68,28 @@ class EvidenceIntegrity(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'completed-night'):
             comparison.collect(self.paths)
 
+    def test_material_difference_requires_declared_single_factor_experiment(self):
+        for path in self.paths:
+            q = json.loads((path / 'report.json').read_text(encoding='utf-8'))
+            q['strategy'] = 'good'
+            self.save(path, 'report', q)
+        self.modify('report', lambda q: q['policy'].update(defenseMaterial='empalizada'))
+        with self.assertRaisesRegex(ValueError, 'defenseMaterial differs'):
+            comparison.collect(self.paths)
+        self.assertEqual(len(comparison.collect(self.paths, vary_defense_material=True)), 2)
+        self.modify('report', lambda q: q.update(strategy='no-shield'))
+        with self.assertRaisesRegex(ValueError, 'preserve the player strategy'):
+            comparison.collect(self.paths, vary_defense_material=True)
+
+    def test_material_experiment_cannot_hide_a_second_rule_change(self):
+        for path in self.paths:
+            q = json.loads((path / 'report.json').read_text(encoding='utf-8'))
+            q['strategy'] = 'good'
+            self.save(path, 'report', q)
+        self.modify('report', lambda q: q['policy'].update(defenseMaterial='empalizada', defenseStartDay=5))
+        with self.assertRaisesRegex(ValueError, 'policy setting defenseStartDay differs'):
+            comparison.collect(self.paths, vary_defense_material=True)
+
 
 if __name__ == '__main__':
     unittest.main()

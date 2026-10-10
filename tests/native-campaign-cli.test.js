@@ -15,6 +15,14 @@ test('CLI fixes baseline defaults, accepts100 combat +80peace days and refuses i
  assert.throws(()=>parseNativeCampaignArgs(['--out','fixture','--stop-cash','10000']));
  assert.equal(parseNativeCampaignArgs(['--out','fixture','--stop-cash','10000','--stop-min-day','7'])['stop-cash'],10000);
 });
+
+test('defense material is an explicit native player choice with unchanged default',()=>{
+ assert.equal(parseNativeCampaignArgs(['--out','fixture']).defenseMaterial,'zarzas');
+ const chosen=parseNativeCampaignArgs(['--out','fixture','--defense-policy','shore','--defense-material','empalizada']);
+ assert.equal(chosen.defenseMaterial,'empalizada');
+ assert.throws(()=>parseNativeCampaignArgs(['--out','fixture','--defense-material','empalizada']),/requires funded/);
+ assert.throws(()=>parseNativeCampaignArgs(['--out','fixture','--defense-policy','shore','--defense-material','free-invincible-wall']),/Material desconocido/);
+});
 test('cooperative calibration stop preserves partial receipt without inventing native defeat',async()=>{
  const out=mkdtempSync(join(tmpdir(),'native-stop-contract-'));
  try{
