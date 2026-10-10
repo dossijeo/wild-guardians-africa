@@ -5,6 +5,40 @@ update below supersedes the historical checkpoint text that follows. Earlier
 sources, failed candidates and measurements are retained, not silently changed
 into current-main acceptance.
 
+## Current-state checkpoint — 10 October, main e285d327
+
+This checkpoint supersedes older live-run and unchanged-runtime descriptions
+below. Main now includes the intact-centre repair navigation optimization
+`e2d92c1e`; it retains caches only when the exact existing collision footprint
+is unchanged. Walls and gates still follow their original rebuild path.
+[The retained AB/BA diagnostic](center-repair-route-preservation.md) and
+44 directed regressions support this bounded change. They do not approve
+full-game GPU, mobile, Windows initialization or campaign balance.
+
+Validate Game run38012364832 on e2d92c1e is terminal failure: 3790 of3792
+checks passed. The two failures are obsolete generated SFX source hashes and
+line references, corrected by main6faa09b0. All126 catalogue rows have identical
+semantics and all3 local SFX checks pass; [the original log and receipt](ci-navigation-audit-2026-10-10/receipt.json)
+are retained. Replacement run38013118033 is live, not yet accepted.
+Windows run38012364835 remains live in the packaged WebView2 smoke step;
+no Windows success or changed90-second readiness gate is inferred.
+
+The distinct 212-worker day21 repair diagnostic paid174 at physical arrival
+and restored centre HP470→600 at time235.25. It does not explain every
+historical repair failure. A new paired20-night pilot on frozen e040ea6f uses
+a self-consistent opening crew and the same six-plants-per-worker policy in
+both arms. PID47872 is independently confirmed live; no partial campaign
+acceptance, parameter promotion or100-night result is claimed. This frozen
+pilot does not contain main's later centre-navigation optimization.
+
+Loading crop partitions are still an isolated, unselected candidate. Frozen
+0a416fd3 fixes nested CDN/Tauri URL resolution and independently validates
+cropIndex/stage rather than relying on composite IDs. Root receipt verification
+and31 directed lifecycle/hosting/serial-image tests pass. Node tests mock image
+decoding; they do not prove native image rendering or loading-time improvement.
+App/CLI wiring and immutable candidate assets are being prepared separately;
+no new native partition trial has been dispatched or production flag enabled.
+
 ## Current-state update through main 8e1909d8
 
 ### Superseding checkpoint — 10 October, main 4b217f39
