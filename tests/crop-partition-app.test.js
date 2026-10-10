@@ -30,7 +30,15 @@ test('App retains current main rules and gates outside partition selection and o
 // to retain the production recipe/source equivalence assertion.
 function normalizeQa(file,text){
  if(file==='src-tauri/src/main.rs')return text.replace('                    if std::env::args().any(|arg| arg == "--smoke-visual-plant") {\n                        let _ = webview.eval("window.__desktopSmokeVisualPlant = true;");\n                    }\n','');
- if(file==='src-tauri/smoke.js')return text.replace(`      if (window.__desktopSmokeVisualPlant === true) {
+ if(file==='src-tauri/smoke.js'){
+  const start=text.indexOf('  async function listFixtureForSmoke(');
+  if(start>=0){const end=text.indexOf('  async function checkVisibility(',start);text=text.slice(0,start)+text.slice(end);}
+  text=text.replace(`    if (fixture) {
+      localStorage.setItem('wild-guardians:slot:'+fixture.slotId,fixture.snapshot);
+      report.checks.fixtureMenuList=await listFixtureForSmoke(menu,fixture,send);
+      send({action:'load-slot',slotId:fixture.slotId});
+    }`,"    if (fixture) {localStorage.setItem('wild-guardians:slot:'+fixture.slotId,fixture.snapshot);send({action:'load-slot',slotId:fixture.slotId});}");
+  return text.replace(`      if (window.__desktopSmokeVisualPlant === true) {
         const action = visual?.plantAction;
         const additional = visual?.frames?.find(frame => frame.label === 'additional-plant' && frame.plants?.length === 5);
         if (!action?.result || action.afterCount !== 5 || action.logicalPlantsUnchanged !== true || !additional) {
@@ -38,5 +46,6 @@ function normalizeQa(file,text){
         }
       }
 `,'');
+ }
  return text;
 }

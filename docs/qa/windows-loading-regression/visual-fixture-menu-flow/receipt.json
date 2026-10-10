@@ -1,0 +1,61 @@
+{
+  "base": "b76cda991fe8f59e851b1caac67c4f4b2bd71e47",
+  "branch": "codex/crop-visual-fixture-menu",
+  "sources": {
+    "src-tauri/smoke.js": {
+      "bytes": 14503,
+      "sha256": "787ff169a01a4e975179d3d56be91afe2a5c7fdfa4ac4f67bd877ba2cdd7c6ac"
+    },
+    "tests/crop-partition-app.test.js": {
+      "bytes": 4720,
+      "sha256": "a500ee39acc731bb1ab6b2fae1eb5ac981f8787d7eaeb5fa617d1d1061669f60"
+    },
+    "tests/desktop-smoke-fixture-menu.test.js": {
+      "bytes": 4912,
+      "sha256": "04f3c67f59c8694145be6a544eb2f5be8890591598fb3ef086173488f92ed866"
+    }
+  },
+  "files": {
+    "tests.log.gz": {
+      "bytes": 1144,
+      "sha256": "b5638d51774506b1cc074da0cca03834bfcdd70ce81b31c3c263945d827103a1",
+      "originalBytes": 4109,
+      "originalSha256": "483a5d738813a8a59c36900c7cf73a3bf557580f9b7e6a8fd8c027e02ce9d445"
+    },
+    "sfx.log.gz": {
+      "bytes": 220,
+      "sha256": "22e892227277c220baa15c5885cf9e2626abcb75f5e242b70771b52f60f10213",
+      "originalBytes": 272,
+      "originalSha256": "62951cfd99f8fe85582b5ad6951d14239c066d4d226da668ab55af88b2347f69"
+    }
+  },
+  "unchangedNormalizedSources": [
+    "src/app/main.js",
+    "src-tauri/src/main.rs",
+    ".github/workflows/windows.yml",
+    "src/rendering/loading-diorama.js",
+    "src/rendering/scene.js",
+    "src/app/loading-visual-bridge.js",
+    "src/app/loading-visual-plant-qa.js",
+    "src/rendering/loading-programs.js",
+    "src/rendering/loading-yield-budget.js"
+  ],
+  "tests": {
+    "command": "node --test tests/crop-partition-app.test.js tests/desktop-smoke-fixture-menu.test.js tests/loading-visual-plant-report.test.js tests/desktop-smoke-failure-observation.test.js",
+    "pass": 18,
+    "fail": 0,
+    "durationMs": 817.9495
+  },
+  "syntax": "node --check src-tauri/smoke.js PASS",
+  "sfxAudit": "126/100/26 current; no regenerated inventory",
+  "gates": {
+    "worldMs": 90000,
+    "hiddenMs": 300000,
+    "fixtureProcessMs": 900000,
+    "newFixtureListingWaitMs": 10000
+  },
+  "normalWithoutFixture": "byte exact after removing only new helper and fixture branch",
+  "nativeExecuted": false,
+  "rustCompiled": false,
+  "scope": "Harness-only fixture list parity; original initial daytime PNG is prior harness coverage deficit, not demonstrated production lighting bug."
+}

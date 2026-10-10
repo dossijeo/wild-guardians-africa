@@ -52,6 +52,24 @@
     report.ok = !error && report.errors.length === 0;
     await window.__TAURI_INTERNALS__.invoke('desktop_smoke_report', {report});
   }
+  async function listFixtureForSmoke(menu,fixture,send) {
+    const target=menu.contentWindow;
+    if(!target)throw Error('Fixture menu window is missing');
+    return await new Promise((resolve,reject)=>{
+      let settled=false,timer;
+      const cleanup=()=>{target.removeEventListener('message',receive);clearTimeout(timer);};
+      const end=(error,slot)=>{if(settled)return;settled=true;cleanup();if(error)reject(error);else resolve({listed:true,slotId:slot.slotId,preview:{day:slot.day,time:slot.time,biome:slot.biome,culture:slot.culture},scope:'Actual App listedSaves response, not manually decoded fixture clock.'});};
+      const receive=event=>{
+        if(event.origin!==location.origin||event.source!==window||event.data?.type!=='wild-guardians:menu-data'||!Array.isArray(event.data.slots))return;
+        if(menu.contentWindow!==target||document.querySelector('#app iframe')!==menu){end(Error('Fixture menu was replaced'));return;}
+        const slot=event.data.slots.find(slot=>slot?.slotId===fixture.slotId);
+        if(slot)end(null,slot);
+      };
+      target.addEventListener('message',receive);
+      timer=setTimeout(()=>end(Error('Fixture slot did not appear in actual menu save list')),10000);
+      try{send({action:'request-saves'});}catch(error){end(error);}
+    });
+  }
   async function checkVisibility(fixture) {
     const transitions=[],wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
     report.checks.visibility={passed:false,phase:'visible-baseline',transitions};
@@ -148,7 +166,11 @@
     const send = data => dispatchEvent(new MessageEvent('message', {origin: location.origin, source: menu.contentWindow, data: {type: 'wild-guardians:menu', ...data}}));
     send({action: 'settings-change', settings: {quality: 'muy_baja', sfx: 0, music: 0}});
     const fixture = await window.__TAURI_INTERNALS__.invoke('desktop_smoke_fixture');
-    if (fixture) {localStorage.setItem('wild-guardians:slot:'+fixture.slotId,fixture.snapshot);send({action:'load-slot',slotId:fixture.slotId});}
+    if (fixture) {
+      localStorage.setItem('wild-guardians:slot:'+fixture.slotId,fixture.snapshot);
+      report.checks.fixtureMenuList=await listFixtureForSmoke(menu,fixture,send);
+      send({action:'load-slot',slotId:fixture.slotId});
+    }
     else send({action: 'start', biome: 'gran-canon', culture: 'mapungubwe'});
     worldStartedAt = performance.now();
     const worldEnd = worldStartedAt + 90000;
