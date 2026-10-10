@@ -26,3 +26,12 @@ test('preselected seeds and affordable opening never use projected income or cre
  assert.deepEqual(NATIVE_CAMPAIGN_SEEDS,[712,123,2026]);assert.equal(nativeCampaignStrategy('expansive').foundVillages,true);assert.equal(nativeCampaignStrategy('bad').repair,false);assert.throws(()=>nativeCampaignStrategy('reroll'));
  for(const cash of [0,5,30,35,65,695,1500]){const a=affordableOpening({cash,living:1});assert.ok(a.wages<=cash);assert.equal(a.wages,a.staff*30);}
 });
+
+
+test('productive no-wall controls retain paid center maintenance; bad management alone neglects it',()=>{
+ for(const id of ['good','expansive','passive','no-walls','no-shield'])assert.equal(nativeCampaignStrategy(id).repair,true,id);
+ for(const id of ['no-walls','no-shield'])assert.equal(nativeCampaignStrategy(id).defend,false,id);
+ assert.equal(nativeCampaignStrategy('no-walls').shield,true);
+ assert.equal(nativeCampaignStrategy('no-shield').shield,false);
+ assert.equal(nativeCampaignStrategy('bad').repair,false);
+});

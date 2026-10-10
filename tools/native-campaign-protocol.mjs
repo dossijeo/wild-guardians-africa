@@ -1,16 +1,16 @@
 // Preselected comparison, not an adaptive search for winning seeds.
 import {villageCost} from '../src/simulation/rules.js';
 export const NATIVE_CAMPAIGN_SEEDS=Object.freeze([712,123,2026]);
-const productiveNoWalls=Object.freeze({defend:false,repair:false,foundVillages:false,middayHiring:true,cashPolicy:'minimum-reinvestment',shield:true});
+const productiveNoWalls=Object.freeze({defend:false,repair:true,foundVillages:false,middayHiring:true,cashPolicy:'minimum-reinvestment',shield:true});
 export const NATIVE_CAMPAIGN_STRATEGIES=Object.freeze({
  expansive:Object.freeze({defend:true,repair:true,foundVillages:true,middayHiring:true,cashPolicy:'minimum-reinvestment',agriculturalMagic:'intensive',shield:true}),
  good:Object.freeze({defend:true,repair:true,foundVillages:true,middayHiring:true,cashPolicy:'progressive-village',agriculturalMagic:'moderate',shield:true}),
  bad:Object.freeze({defend:false,repair:false,foundVillages:false,middayHiring:false,cashPolicy:'minimum-reinvestment',agriculturalMagic:'scarce',shield:true}),
- 'no-walls':Object.freeze({defend:false,repair:false,foundVillages:false,middayHiring:true,cashPolicy:'minimum-reinvestment',agriculturalMagic:'moderate',shield:true}),
+ 'no-walls':Object.freeze({defend:false,repair:true,foundVillages:false,middayHiring:true,cashPolicy:'minimum-reinvestment',agriculturalMagic:'moderate',shield:true}),
  passive:Object.freeze({defend:true,repair:true,foundVillages:true,middayHiring:true,cashPolicy:'progressive-village',agriculturalMagic:'none',shield:true}),
- 'no-shield':Object.freeze({defend:false,repair:false,foundVillages:false,middayHiring:true,cashPolicy:'minimum-reinvestment',agriculturalMagic:'moderate',shield:false}),
+ 'no-shield':Object.freeze({defend:false,repair:true,foundVillages:false,middayHiring:true,cashPolicy:'minimum-reinvestment',agriculturalMagic:'moderate',shield:false}),
 });
-export const NATIVE_CAMPAIGN_PROTOCOL=Object.freeze({id:'native-spiritual-survival-v5-shared-daily-power',seeds:NATIVE_CAMPAIGN_SEEDS,strategies:Object.keys(NATIVE_CAMPAIGN_STRATEGIES),shieldByStrategy:Object.freeze(Object.fromEntries(Object.entries(NATIVE_CAMPAIGN_STRATEGIES).map(([key,value])=>[key,value.shield]))),defensePriority:'physical walls and repairs before discretionary village savings; wages protected',daySeconds:300,combatNights:100,postgamePeaceNights:80,minDailyCropPurchases:60,strictMaximumIdleFraction:.25,profile:'olderFemale',plantsPerWorker:6,plotSpacing:1.5,plantDecisionSeconds:1,seedPricing:'constant production prices',income:'native CrateDelivered only',damage:'native contacts/occlusion only; no assumed exposure'});
+export const NATIVE_CAMPAIGN_PROTOCOL=Object.freeze({id:'native-spiritual-survival-v6-paid-productive-center-maintenance',seeds:NATIVE_CAMPAIGN_SEEDS,strategies:Object.keys(NATIVE_CAMPAIGN_STRATEGIES),centerRepairByStrategy:Object.freeze(Object.fromEntries(Object.entries(NATIVE_CAMPAIGN_STRATEGIES).map(([key,value])=>[key,value.repair]))),shieldByStrategy:Object.freeze(Object.fromEntries(Object.entries(NATIVE_CAMPAIGN_STRATEGIES).map(([key,value])=>[key,value.shield]))),defensePriority:'physical walls and repairs before discretionary village savings; wages protected',daySeconds:300,combatNights:100,postgamePeaceNights:80,minDailyCropPurchases:60,strictMaximumIdleFraction:.25,profile:'olderFemale',plantsPerWorker:6,plotSpacing:1.5,plantDecisionSeconds:1,seedPricing:'constant production prices',income:'native CrateDelivered only',damage:'native contacts/occlusion only; no assumed exposure'});
 export function nativeCampaignStrategy(name){const strategy=NATIVE_CAMPAIGN_STRATEGIES[name];if(!strategy)throw Error('Unknown preselected strategy');return strategy;}
 // Forecast is a budget rule, never a claim of worker physical throughput.
 export function affordableOpening({cash,living,wage=30,seedCost=5,plantsPerWorker=6,repairReserve=0}){
