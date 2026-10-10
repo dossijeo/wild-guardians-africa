@@ -112,6 +112,7 @@ export class LoadingDiorama {
     const shadow=world.renderer.shadowMap.enabled,autoClear=world.renderer.autoClear;
     try{world.renderer.shadowMap.enabled=false;world.renderer.autoClear=false;withScreenTarget(world.renderer,()=>{world.renderer.clear();world.sky.render(world.renderer,this.camera,this.state);if(!skyOnly){this.mist.render(world.renderer,this.camera,night);world.renderer.render(this.scene,this.camera);}});}
     finally{world.renderer.shadowMap.enabled=shadow;world.renderer.autoClear=autoClear;}
+    if(!skyOnly)this.onAfterDraw?.(this,progress);
   }
   async freezeForCinematic({nextFrame,timeout=30000}={}) {
     this.stopPlanting();this.orbit.stop();

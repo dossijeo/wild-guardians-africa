@@ -1,3 +1,4 @@
+import {undoVisualQa} from './fixtures/partition-visual-normalizer.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -22,7 +23,7 @@ test('rejected preparation is observed and aborted owner cannot start a new mani
 test('minimal integration preserves current main outside exact App partition await',()=>{
  const baseline=JSON.parse(readFileSync('tests/fixtures/crop-partition-main-baseline.json','utf8'));
  const sha=text=>createHash('sha256').update(text.replaceAll('\r\n','\n')).digest('hex');
- const actual=readFileSync('src/app/main.js','utf8').replace("import {prepareLoadingCropPartition} from './loading-crop-partition.js';\n",'').replace('prepareLoadingCropPartition(owner).then(()=>diorama.prepare())','diorama.prepare()');
+ const actual=readFileSync('src/app/main.js','utf8').replace("import {installLoadingVisualQa} from './loading-visual-bridge.js';\n",'').replace(',visual:globalThis.__desktopSmokeVisualCapture===true?installLoadingVisualQa(owner,diorama):null','').replace('pending.visual?.close({cancelled:true});','').replace('loadingDiorama?.visualQa?.close({cancelled:true});','').replace('prepared.visual?.close();','').replace("import {prepareLoadingCropPartition} from './loading-crop-partition.js';\n",'').replace('prepareLoadingCropPartition(owner).then(()=>diorama.prepare())','diorama.prepare()');
  assert.equal(sha(actual),baseline.mainSha256);
- for(const row of baseline.unchanged)assert.equal(sha(readFileSync(row.path,'utf8')),row.sha256,row.path);
+ for(const row of baseline.unchanged)assert.equal(sha(undoVisualQa(row.path,readFileSync(row.path,'utf8'))),row.sha256,row.path);
 });

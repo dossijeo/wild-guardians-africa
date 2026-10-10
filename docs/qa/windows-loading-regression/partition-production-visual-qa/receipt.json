@@ -1,0 +1,158 @@
+{
+  "base": "02554d0ab756dc4360dd24be0f615b469375773d",
+  "reviewedVisualSource": "c1f3f9b33920dd18b25b2b894e99d2e1bc931e98",
+  "scope": "QA-only branch; App/Rust/diorama explicitly differ. No CI/native/GPU launch. Captures contain PNG readback overhead and cannot be used as timing benchmark.",
+  "sources": [
+    {
+      "path": "docs/qa/sfx-catalog-post-jam/inventory.json",
+      "bytes": 246030,
+      "sha256": "b65b05ef2d060134364d516b2bb978720e1011f84e098c63cae6b952e5d6a493"
+    },
+    {
+      "path": "docs/qa/sfx-catalog-post-jam/inventory.md",
+      "bytes": 36716,
+      "sha256": "0b17946186112f87aabf4761840381e28472d7d4979ff20014b7643f244d15e0"
+    },
+    {
+      "path": "src-tauri/src/main.rs",
+      "bytes": 4135,
+      "sha256": "11580a920296dba54b32ab790364d9b06120a926593711fe8129c6a4350048c6"
+    },
+    {
+      "path": "src/app/loading-visual-bridge.js",
+      "bytes": 2311,
+      "sha256": "7bc93894bded6a26593b144144545c1da4f852616935842c6690a3691596311d"
+    },
+    {
+      "path": "src/app/loading-visual-plant-qa.js",
+      "bytes": 3494,
+      "sha256": "1ab5938e775775ad431bdeceb78376d0f042b5f1991dc093e6961f2053d1a346"
+    },
+    {
+      "path": "src/app/loading-visual-qa.js",
+      "bytes": 3670,
+      "sha256": "7399031fdd3ffcdc1bed207f0f5d862c09f392d3d0bc5ae0be94d82bf7e07690"
+    },
+    {
+      "path": "src/app/main.js",
+      "bytes": 64180,
+      "sha256": "94b3788a0dcfff434b33b0b51dd89915eb1d710ab1af4d6ab1839a507baca4b8"
+    },
+    {
+      "path": "src/rendering/loading-diorama.js",
+      "bytes": 15466,
+      "sha256": "736a000a0e1921d4671eef1df917901f763b9f0d2d99fdfd520902bcdbb04cd3"
+    },
+    {
+      "path": "tests/crop-partition-app.test.js",
+      "bytes": 2873,
+      "sha256": "db89d7c990b9e5fdf0ea6519869b2b04b73eaa8f196821f6b97be5bccc0c2107"
+    },
+    {
+      "path": "tests/fixtures/partition-visual-normalizer.mjs",
+      "bytes": 1137,
+      "sha256": "0de240139c98a66c4a56e6defe8d8d5b37d0c8d667fb5ea1b1c0da0cd5ce7947"
+    },
+    {
+      "path": "tests/fixtures/partition-visual-production-baseline.json",
+      "bytes": 2430,
+      "sha256": "76bcf2f4acaf2e48301d541ca036919462a63b9ce4b9a2d38aa16a11483f5ba9"
+    },
+    {
+      "path": "tests/loading-visual-bridge.test.js",
+      "bytes": 3922,
+      "sha256": "51b5078f1a8050730f064b48dd96ed36f532ec788f9020a80b8988b7caac6520"
+    },
+    {
+      "path": "tests/loading-visual-progress65.test.js",
+      "bytes": 4410,
+      "sha256": "9dc937ba20a7a9ac4ba43e75078a7b17e4527d2cae7f8a606797f64f895f0f83"
+    },
+    {
+      "path": "tests/partition-visual-source.test.js",
+      "bytes": 1340,
+      "sha256": "5d8d1bfa529ff662eac6402cfe20a931d95b03ac9d7ed820c88fdd8be5a61b63"
+    }
+  ],
+  "logs": [
+    {
+      "path": "docs/qa/windows-loading-regression/partition-production-visual-qa/contracts.log.gz",
+      "bytes": 1456,
+      "sha256": "44706570dd0a1d9f6ef5318d82e3360a0aa39a8fdbfaf3b92917b77d59b0c68a",
+      "originalBytes": 5085,
+      "originalSha256": "32ce7b2991101e3db85fb872da933c50b18ee612b2e6faf0a1e618f624ee4956"
+    },
+    {
+      "path": "docs/qa/windows-loading-regression/partition-production-visual-qa/pre-normalizer-negative.log.gz",
+      "bytes": 1893,
+      "sha256": "18ba63d4acc4dc38b8b43785b5342b45bec81e3826434168e45c2b63ca059fca",
+      "originalBytes": 6069,
+      "originalSha256": "203fe49070db392855817a34a03ca4199e244d502e5c9915d8b88e7fd8fe712c"
+    },
+    {
+      "path": "docs/qa/windows-loading-regression/partition-production-visual-qa/build.log.gz",
+      "bytes": 965,
+      "sha256": "08e2178fe3f9b5e3d906e607718844d0c36f9432ae79460f2478b177b0de66fe",
+      "originalBytes": 2321,
+      "originalSha256": "edc23eb597095dcccf47052f6f4c5579ad6a60c0fe5c78f6135e0fb88f8c1101"
+    },
+    {
+      "path": "docs/qa/windows-loading-regression/partition-production-visual-qa/package.log.gz",
+      "bytes": 314,
+      "sha256": "675b8712feca71bbcf49bc293935efe3a3273a3ebb1689c900c53960e9126fc5",
+      "originalBytes": 411,
+      "originalSha256": "abf32dff1e1af735eba489fdf14969c2e2f9956a174a4acac3b2a53ec2d4b188"
+    },
+    {
+      "path": "docs/qa/windows-loading-regression/partition-production-visual-qa/sfx-refresh.log.gz",
+      "bytes": 220,
+      "sha256": "b64ac6df57cf3cfadac98352db0dc0cf5c15fc5680e2ca7dd929b09dd3799358",
+      "originalBytes": 272,
+      "originalSha256": "554ae151f978cee5e0444012aaae7599a33362b21ac57ee848e577fc991bc031"
+    },
+    {
+      "path": "docs/qa/windows-loading-regression/partition-production-visual-qa/sfx-check.log.gz",
+      "bytes": 220,
+      "sha256": "a98887299141c8965b53538c0b2ffe43fd66a6df734dec1241dad4cb9fbd3eb5",
+      "originalBytes": 272,
+      "originalSha256": "fc4de8f731b86cfab1b4fe2f581c7086a8d3a511ac11764efc7f6f64ff9812e4"
+    },
+    {
+      "path": "docs/qa/windows-loading-regression/partition-production-visual-qa/syntax.log.gz",
+      "bytes": 240,
+      "sha256": "76b921e968360ccc741769b5bdd4789f6b9ba89f23bc5f6d3916a8b1ed1103b8",
+      "originalBytes": 1080,
+      "originalSha256": "e7d3e3b1467d3afff83a9d9d5136d28f56765102fef8370fe33fc2c251380875"
+    }
+  ],
+  "protectedByteExact": [
+    "public",
+    "content",
+    ".github/workflows",
+    "src/rendering/scene.js",
+    "src/rendering/assets.js",
+    "src/rendering/crop-partition.js",
+    "src/rendering/crop-runtime.js",
+    "src/rendering/asset-url.js",
+    "src/app/loading-crop-partition.js",
+    "src/simulation",
+    "src/persistence",
+    "src/navigation",
+    "src/audio",
+    "src/ui",
+    "src-tauri/smoke.js",
+    "tools",
+    "package.json",
+    ".gitattributes"
+  ],
+  "checks": {
+    "tests": "22/22 PASS exit0 421.6239ms",
+    "build": "session11285 exit0 Vite10.11s; existing chunk warning",
+    "package": "720files445277937B860links24physicalGLBs; +7028B vs production025",
+    "syntax": "10JS/MJS PASS",
+    "sfx": "126 rows/100assigned26unassigned exact; only mainSHA/+1 lines",
+    "rust": "Source-guard tests only. Rust compiler/native not run."
+  },
+  "negative": "21/22 initially failed production-parity check for new Rust guards; fixed exact QA normalizer, original log retained",
+  "defaults": "Without --smoke-report+--smoke-visual no collector/readback/action. Plant nested under visual/report and only with --smoke-visual-plant; progress65 additionally requires --smoke-visual-plant-progress65. No trace/coverage/overlap/selection flags."
+}
