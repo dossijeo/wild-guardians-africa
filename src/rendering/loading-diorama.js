@@ -99,7 +99,7 @@ export class LoadingDiorama {
   }
   plantAt(clientX,clientY) {
     const rect=this.world.canvas.getBoundingClientRect();this.cursor.set((clientX-rect.left)/rect.width*2-1,1-(clientY-rect.top)/rect.height*2);this.camera.updateMatrixWorld();this.ray.setFromCamera(this.cursor,this.camera);
-    const hit=this.ray.intersectObject(this.ground)[0],plant=hit?this.plants.plant(hit.point.x,hit.point.z):null;if(plant)this.onPlant?.(plant);return plant;
+    const hit=this.ray.intersectObject(this.ground)[0],plant=hit?this.plants.plantNearby(hit.point.x,hit.point.z):null;if(plant)this.onPlant?.(plant);return plant;
   }
   show(state) {this.state=state;this.interactive=true;this.world.controls.enabled=false;}
   render(dt,progress,{ready=false,skyOnly=false}={}) {

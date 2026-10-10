@@ -24,6 +24,7 @@ import {TutorialHudHand,tutorialHudHandTarget} from '../ui/tutorial-hud-hand.js'
 import {GameScreenWakeLock} from '../ui/screen-wake-lock.js';
 import {spellCardsMarkup,refreshSpellCards} from '../ui/spell-cards.js';
 import {castPickedSpell} from './spell-placement.js';
+import {plantNearTouch} from './plant-placement.js';
 import {UiAudio,guidedPlacementKind} from '../audio/ui-audio.js';
 import {ToolSession} from '../ui/tool-session.js';
 import {RESERVE_MESSAGE,HIRING_RESERVE,BUDGET_WARNING_THRESHOLD} from '../simulation/budget.js';
@@ -226,7 +227,7 @@ function onPick({entityId,point}) {
     if(tool?.kind==='spell'){
       if(castPickedSpell(state,commandId(),tool.spell,{entityId,point},nav))save();return;
     }
-    if(pickedPlant&&tool?.kind!=='spell'){cancelTool();closeSurface();selection=null;return;}
+    if(pickedPlant&&tool?.kind!=='spell'&&tool?.kind!=='plant'){cancelTool();closeSurface();selection=null;return;}
     const pickedCenter=state.structures.find(s=>s.id===entityId&&s.kind==='center'&&operational(s));
     if(pickedCenter&&!state.raid&&state.time<300&&state.hiringPaidDay===state.day){cancelTool();hiringDialog(pickedCenter.id);return;}
     if(tool&&point) {
@@ -234,7 +235,7 @@ function onPick({entityId,point}) {
       if(tool.kind==='village') {const payload=villageCatalog.find(v=>v.id===(tool.culture==='saheliana'?'saheliano':tool.culture));pendingVillage=Game.previewVillage(state,tool.culture,point.x,point.z,payload,nav);world.showVillagePreview(pendingVillage);villageConfirmPanel();return;}
       const guided=guidedPlacementKind(tool,world.hands);let committed=false;
       if(tool.kind==='center'||tool.kind==='wall')committed=Game.placeStructure(state,commandId(),{...tool,x:point.x,z:point.z},nav);
-      else if(tool.kind==='plant')committed=Game.plant(state,commandId(),tool.species,Math.round(point.x/1.5)*1.5,Math.round(point.z/1.5)*1.5,nav);
+      else if(tool.kind==='plant')committed=plantNearTouch(state,commandId(),tool.species,point,nav);
       if(committed===false)return;
       uiAudio.guidedPlacement(guided);
 
