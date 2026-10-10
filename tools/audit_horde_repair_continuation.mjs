@@ -1,0 +1,25 @@
+import {readFileSync,writeFileSync} from 'node:fs';
+import {gunzipSync} from 'node:zlib';
+import {createHash} from 'node:crypto';
+import {pathToFileURL} from 'node:url';
+import assert from 'node:assert/strict';
+import {serialize,deserialize} from '../src/persistence/snapshots.js';
+import {observeRepairQueue} from './horde-repair-continuation-observation.mjs';
+const hash=b=>createHash('sha256').update(b).digest('hex');
+export function auditContinuation(directory){
+ const json=p=>JSON.parse(readFileSync(directory+'/'+p,'utf8')),gz=p=>gunzipSync(readFileSync(directory+'/'+p+'.json.gz')).toString(),receipt=json('archive-receipt.json');
+ for(const [p,h]of Object.entries(receipt.payloads))assert.equal(hash(readFileSync(directory+'/'+p)),h,'Original payload mismatch: '+p);
+ const report=json('report.json'),status=json('status.json'),provenance=json('provenance.json');assert.equal(receipt.processExit,0);assert.equal(report.status,'daylight-ended-repair-pending');assert.equal(status.status,report.status);assert.equal(report.error,null);assert.deepEqual(report.sourceChanged,[]);
+ for(const [p,h]of Object.entries(provenance.sourceHashes))assert.equal(hash(readFileSync(new URL('../'+p,import.meta.url))),h,'Frozen source mismatch: '+p);
+ const initialRaw=gz('initial-state'),finalRaw=gz('final-state'),initial=deserialize(initialRaw),final=deserialize(finalRaw);assert.equal(serialize(initial),initialRaw);assert.equal(serialize(final),finalRaw);assert.equal(hash(initialRaw),provenance.inputSnapshotSHA256);assert.equal(hash(finalRaw),report.finalSnapshotSHA256);
+ assert.equal(initial.day,21);assert.equal(initial.time,1);assert.equal(final.day,21);assert.equal(final.time,300);assert.equal(final.completedNights,initial.completedNights);assert.equal(final.result,null);assert.deepEqual(final.commandIds,initial.commandIds);assert.equal(final.hiringPaidDay,initial.hiringPaidDay);
+ const trace=JSON.parse(gz('trace')),events=JSON.parse(gz('events')),taskId=report.taskId;assert.equal(trace.length,report.frames);assert.equal(new Set(events.map(e=>e.id)).size,events.length);assert.equal(events.length,report.eventsRecorded);
+ assert.deepEqual(observeRepairQueue(initial,taskId),trace[0]);const observedFinal=observeRepairQueue(final,taskId);for(const [k,v]of Object.entries(observedFinal))assert.deepEqual(v,trace.at(-1)[k]);
+ const phaseActorSeconds={},eventCounts={},newEntries=Object.entries(final.ledger.entries).filter(([id])=>!Object.hasOwn(initial.ledger.entries,id));let seconds=0;
+ for(let i=0;i<trace.length-1;i++){const before=trace[i],after=trace[i+1],dt=after.elapsed-before.elapsed;assert.ok(dt>0&&dt<=.2500001);assert.equal(before.day,21);assert.ok(after.time<=300);seconds+=dt;for(const[k,n]of Object.entries(before.phases))phaseActorSeconds[k]=(phaseActorSeconds[k]??0)+n*dt;assert.ok(before.taskExists);assert.equal(before.task.workerId,null);assert.equal(before.assigned,null);}
+ for(const e of events)eventCounts[e.type]=(eventCounts[e.type]??0)+1;assert.equal(eventCounts.RaidSpawned??0,0);assert.equal(eventCounts.RepairApplied??0,0);assert.ok(Math.abs(seconds-299)<1e-6);
+ for(const[id,e]of Object.entries(initial.ledger.entries))assert.deepEqual(final.ledger.entries[id],e);let income=0n;for(const[id,e]of newEntries){assert.ok(id.startsWith('deliver:'));assert.equal(e.d,'1');const crate=final.crates.find(c=>c.id===id.slice(8));assert.ok(crate?.delivered);const value=(BigInt(crate.value.n)+BigInt(crate.value.d)-1n)/BigInt(crate.value.d);assert.equal(BigInt(e.n),value);income+=BigInt(e.n);}
+ assert.equal(BigInt(final.ledger.balance.n)-BigInt(initial.ledger.balance.n),income);assert.equal(newEntries.length,eventCounts.CrateDelivered);assert.equal(report.repairSettlements.status,'verified');assert.equal(report.repairSettlements.paidRepairs,0);assert.equal(report.repairSettlements.completedRepairs,0);
+ return {status:'read-only-continuation-audited',sourceHashesVerified:Object.keys(provenance.sourceHashes).length,processExit:receipt.processExit,initialSnapshotSHA256:hash(initialRaw),finalSnapshotSHA256:hash(finalRaw),simulatedSeconds:seconds,frames:trace.length,phaseActorSeconds,eventCounts,initialFifoRank:trace[0].fifoRank,finalFifoRank:trace.at(-1).fifoRank,reservedSamples:trace.filter(t=>t.task.workerId!==null).length,idleWorkerSamples:trace.filter(t=>t.availability.idleWithoutTask>0).length,paidRepairs:0,newDeliveredPayments:newEntries.length,earnedCoins:income.toString(),inputHashes:receipt.payloads,auditorSHA256:hash(readFileSync(new URL('./audit_horde_repair_continuation.mjs',import.meta.url))),scope:'Read-only new day21 repair sequence; 299s without assignment before daylight ended, not history of fourteen requests or balance acceptance. Actor-seconds use left-endpoint samples, no substep timestamps'};
+}
+if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){const r=auditContinuation(process.argv[2]);writeFileSync(process.argv[3],JSON.stringify(r,null,2)+'\n');console.log(JSON.stringify({status:r.status,seconds:r.simulatedSeconds,rank:r.finalFifoRank,paid:r.paidRepairs}));}

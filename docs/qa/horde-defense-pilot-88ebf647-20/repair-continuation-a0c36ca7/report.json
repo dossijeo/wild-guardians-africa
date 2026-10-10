@@ -1,0 +1,127 @@
+{
+  "status": "daylight-ended-repair-pending",
+  "reason": {
+    "time": 300
+  },
+  "error": null,
+  "pid": 54232,
+  "startedUTC": "2026-10-10T00:42:01.224Z",
+  "day": 21,
+  "time": 300,
+  "elapsed": 12408.600000024911,
+  "taskId": "task-62110",
+  "frames": 1197,
+  "milliseconds": 73006.5358,
+  "sourceChanged": [],
+  "inputSnapshotSHA256": "9a13add0d47c9fc8fc56603e63510060eb34e4db5c394fb8226f3110c985a1c9",
+  "finalSnapshotSHA256": "860c50bae40f764eacddd81e9597655b9490449141160de6aa0a3b0ea8a8e13c",
+  "initial": {
+    "day": 21,
+    "time": 1,
+    "elapsed": 12109.60000002492,
+    "taskExists": true,
+    "fifoRank": 1110,
+    "precedingKinds": {
+      "harvest": 141,
+      "water": 348,
+      "initial": 571,
+      "crate": 50
+    },
+    "task": {
+      "id": "task-62110",
+      "createdSequence": 76920,
+      "targetId": "structure-2",
+      "centerId": "structure-2",
+      "workerId": null,
+      "blocked": false
+    },
+    "assigned": null,
+    "availability": {
+      "workers": 106,
+      "expired": 0,
+      "shiftEnded": 0,
+      "incapacitated": 0,
+      "idleWithoutTask": 0,
+      "reservationCandidatesBeforeRoute": 0
+    },
+    "phases": {
+      "walking": 106
+    },
+    "raidId": null,
+    "scope": "Candidate counts omit repairRoute; sequence is FIFO ordering, never a creation timestamp"
+  },
+  "final": {
+    "day": 21,
+    "time": 300,
+    "elapsed": 12408.600000024911,
+    "taskExists": true,
+    "fifoRank": 417,
+    "precedingKinds": {
+      "initial": 367,
+      "crate": 50
+    },
+    "task": {
+      "id": "task-62110",
+      "createdSequence": 76920,
+      "targetId": "structure-2",
+      "centerId": "structure-2",
+      "workerId": null,
+      "blocked": false
+    },
+    "assigned": null,
+    "availability": {
+      "workers": 106,
+      "expired": 0,
+      "shiftEnded": 106,
+      "incapacitated": 0,
+      "idleWithoutTask": 0,
+      "reservationCandidatesBeforeRoute": 0
+    },
+    "phases": {
+      "returning": 96,
+      "acting": 10
+    },
+    "raidId": null,
+    "scope": "Candidate counts omit repairRoute; sequence is FIFO ordering, never a creation timestamp",
+    "stepMilliseconds": 20.55229999999574,
+    "transition": {
+      "status": "pending",
+      "eventIds": []
+    }
+  },
+  "repairSettlements": {
+    "status": "verified",
+    "coverageLost": false,
+    "baselinePayments": [],
+    "unobservedPayments": [],
+    "completedRepairs": 0,
+    "paidRepairs": 0,
+    "paidCoins": "0",
+    "restoredHp": 0,
+    "receipts": [],
+    "scope": "Observed repair completions and settled payments after observer creation. Arrival endpoints are recorded, not independent proof of route traversal. Pre-existing payments are excluded. No requests, policies, RNG or world state are changed."
+  },
+  "transport": {
+    "mode": "real-node-worker-with-production-cooperative-fallback",
+    "updates": 1196,
+    "waits": [],
+    "readyContexts": [],
+    "preparer": {
+      "requests": 0,
+      "accepted": 0,
+      "obsolete": 0,
+      "used": 0,
+      "failed": 0,
+      "cooperativeRequests": 0,
+      "cooperativeSlices": 0,
+      "cooperativeCompleted": 0,
+      "cooperativeAborts": 0,
+      "cooperativeErrors": 0
+    },
+    "workerFailure": null,
+    "scope": "Wall-clock waits are separate from simulated activity; no clock, RNG or geometry patches"
+  },
+  "eventsRecorded": 1177,
+  "noNewCommands": true,
+  "scope": "This legal continuation may explain its own repair outcome only, never reconstruct the original fourteen requests or approve balance"
+}
