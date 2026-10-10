@@ -1,4 +1,5 @@
 import {createCropGrouping} from './crop-components.js';
+import {area12Enabled,freezeArea12Pressure,area12Compositions,area12Constraints,area12Targets} from './qa-area12-policy.js';
 import {cropBecameInactive} from './active-crops.js';
 import {RAID_NOTICE_TEXT} from './raid-notice.js';
 import {warmRaidNavigation} from '../world/raid-navigation-warmth.js';
@@ -32,7 +33,8 @@ export function planNight(s) {
   else if(!s.postgame){
     const stage=B.raids.night_horde_stages?.find(stage=>s.day>=stage.first&&s.day<=stage.last);
     const budget=Math.ceil(randomInt(s,tier.threat_min,tier.threat_max)*(stage?.budget_scale??1));
-    const legal=compositions(budget,tier.unlocked_species,stage?{maxAnimals:stage.max_animals,minAnimals:stage.min_animals,speciesCaps:stage.species_caps}:{});
+    const constraints=area12Enabled(s)?area12Constraints(stage):stage?{maxAnimals:stage.max_animals,minAnimals:stage.min_animals,speciesCaps:stage.species_caps}:{};
+    const legal=area12Enabled(s)?area12Compositions(budget,tier.unlocked_species,constraints):compositions(budget,tier.unlocked_species,constraints);
     if(!legal.length)throw Error('No legal composition for the planned night');
     group=[...legal[randomInt(s,0,legal.length-1)]];
   }
@@ -197,6 +199,8 @@ export function spawnRaid(s,plan,nav,daytime=false) {
     const count=s.plants.filter(p=>p.alive).length;
     s.raid.introPlantCount=count;s.raid.introCropLimit=Math.max(0,Math.min(count-1,Math.ceil(count*.2)));s.raid.introCropsDestroyed=0;
   }
+  const areaPressure=freezeArea12Pressure(s,!s.postgame&&s.day<=5);
+  if(areaPressure)s.raid.areaPressure=areaPressure;
   for(const w of s.workers) {
     cancelIdle(w);
     releaseTask(s,w);w.path=null;w.hits=0;
@@ -204,7 +208,7 @@ export function spawnRaid(s,plan,nav,daytime=false) {
     if(w.status!=='home')w.status='fleeing';
   }
   s.tasks=s.tasks.filter(t=>t.kind!=='repair');
-  notice(s,RAID_NOTICE_TEXT,animals[0].id);emit(s,'RaidSpawned',{raidId:s.raid.id,animals:animals.map(a=>({id:a.id,species:a.species,hitsAllocated:a.hitsRemaining}))});
+  notice(s,RAID_NOTICE_TEXT,animals[0].id);emit(s,'RaidSpawned',{raidId:s.raid.id,animals:animals.map(a=>({id:a.id,species:a.species,hitsAllocated:a.hitsRemaining})),...(areaPressure?{areaPressure:{...areaPressure}}:{})});
   return 'spawned';
 }
 function release(s,a) {if(a.reservation&&s.raid.reservations[a.reservation]===a.id)delete s.raid.reservations[a.reservation];a.reservation=null;a.targetId=null;a.path=null;a.approach=null;a.approachShieldId=null;}
@@ -290,10 +294,19 @@ export function updateRaid(s,dt,nav) {
         // A committed border animation stays at that border. Losing the barrier
         // does not turn it into a ranged hit on the protected target.
         if(target&&!expiredBorder){
+          let areaImpact=s.raid.areaPressure&&'alive' in target?{radius:s.raid.areaPressure.radius,increment:s.raid.introCropLimit!==undefined?1:s.raid.areaPressure.increment,appliedTargets:[],reason:shield?'primary-shielded':null}:undefined;
           if(!shield){
             if('alive' in target){
-              target.attackHits=(target.attackHits??0)+1;emit(s,'CropHit',{targetId:target.id,hits:target.attackHits});
-              if(target.attackHits>=2){target.alive=false;target.harvestRequested=false;cropBecameInactive(s.plants);if(s.raid.introCropLimit!==undefined)s.raid.introCropsDestroyed++;emit(s,'CropDestroyed',{targetId:target.id});}
+              const targets=area12Targets(s,a,target,nav,p=>spellAt(s,'shield',p)),increment=s.raid.introCropLimit!==undefined?1:s.raid.areaPressure?.increment??1;
+              for(const plant of targets){
+                // Recheck the global introduction limit before every mutation.
+                if(s.raid.introCropLimit!==undefined&&(plant.attackHits??0)+increment>=2&&s.raid.introCropsDestroyed>=s.raid.introCropLimit)continue;
+                const previousHits=plant.attackHits??0;
+                plant.attackHits=Math.min(2,previousHits+increment);emit(s,'CropHit',{targetId:plant.id,hits:plant.attackHits,...(areaImpact?{animalId:a.id,attackId:a.attackId,primaryTargetId:target.id}:{})});
+                if(plant.attackHits>=2){plant.alive=false;plant.harvestRequested=false;cropBecameInactive(s.plants);if(s.raid.introCropLimit!==undefined)s.raid.introCropsDestroyed++;emit(s,'CropDestroyed',{targetId:plant.id,...(areaImpact?{animalId:a.id,attackId:a.attackId,primaryTargetId:target.id}:{})});}
+                areaImpact?.appliedTargets.push({id:plant.id,x:plant.x,z:plant.z,previousHits,postHits:plant.attackHits,destroyed:!plant.alive});
+              }
+              if(areaImpact&&!areaImpact.appliedTargets.length)areaImpact.reason='no-eligible-crop-or-primary-occluded';
             }
             else {
               const previousHp=target.hp;hitStructure(target,animalSpec(a.species).structure_hit_damage,s.elapsed);
@@ -307,7 +320,7 @@ export function updateRaid(s,dt,nav) {
           // another damage command. It survives target movement, raid end/save.
           emit(s,'AnimalLogicalHit',{raidId:s.raid.id,animalId:a.id,attackId:a.attackId,targetId:target.id,species:a.species,presentation:{elapsed:s.elapsed,
             animal:{x:a.x,z:a.z,heading:a.heading},target:{x:target.x,z:target.z,kind:target.kind,...(target.kind==='center'?{culture:centerCulture(target,s),yaw:target.yaw}:{}),...(target.kind==='wall'?{material:target.material,gate:target.gate,yaw:target.yaw,baseScaleX:target.baseScaleX}:{})},
-            shield:shield?{id:shield.id,x:shield.x,z:shield.z,radius:shield.radius}:null}});
+            shield:shield?{id:shield.id,x:shield.x,z:shield.z,radius:shield.radius}:null,...(areaImpact?{areaImpact}:{})}});
         }else emit(s,'AnimalLogicalMiss',{raidId:s.raid.id,animalId:a.id,attackId:a.attackId,targetId:a.targetId,species:a.species,...(expiredBorder?{reason:'shield-expired'}:{})});
       }
       a.status='walking';a.path=null;if(!target||target.alive===false||target.status&&target.status!=='intact')release(s,a);

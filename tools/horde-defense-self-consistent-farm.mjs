@@ -14,22 +14,26 @@ import {createRepairSettlementEvidence} from './repair-settlement-evidence.mjs';
 import {HordeEntryDriver} from './horde-entry-driver.mjs';
 import {requestComparisonCenterRepairs} from './horde-defense-actions.mjs';
 import {createFarmDefensePolicy} from './farm-defense-policy.mjs';
+import {createArea12ExpandingDefensePolicy} from './area12-expanding-defense-policy.mjs';
+import {AREA12_ID} from '../src/simulation/qa-area12-policy.js';
+import {repairActivity} from './area12-repair-activity.mjs';
 import {INITIAL_STAFFING_POLICY,initialStaffingPlan} from './horde-initial-staffing-policy.mjs';
 
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 // Separate comparison scenario. Productive policy copied from the immutable original;
 // only explicit defensive actions and asynchronous presentation driver differ.
-export async function simulateHordeSelfConsistentFarm({initialStaffingPolicy=INITIAL_STAFFING_POLICY,days=100,profile='olderFemale',mixed=false,middayHiring=false,plantsPerWorker=12,arm='responsible',reserveLabourGrowth=true,reserveMaintenance=true,burstPlanting=false,cameraEntry=true,onDay,onTick,onDecision,...world}={}){
+export async function simulateHordeSelfConsistentFarm({qaArea12=false,initialStaffingPolicy=INITIAL_STAFFING_POLICY,days=100,profile='olderFemale',mixed=false,middayHiring=false,plantsPerWorker=12,arm='responsible',reserveLabourGrowth=true,reserveMaintenance=true,burstPlanting=false,cameraEntry=true,onDay,onTick,onDecision,...world}={}){
  if(initialStaffingPolicy!==INITIAL_STAFFING_POLICY)throw Error('Unknown initial staffing policy');
  if(!Number.isSafeInteger(plantsPerWorker)||plantsPerWorker<1)throw new Error('Plants per worker must be a positive integer');
  if(!['responsible','neglect'].includes(arm))throw Error('Unknown comparison arm');
  const opening=createOpeningWorld(world),nav=opening.nav;let s=opening.s,sequence=0;
+ if(qaArea12)s.qaRaidArea=AREA12_ID;
  const settlement=createRepairSettlementEvidence(s),commands=[],raidFacts=[],decisions=[],raids=new Map();let raidActors=null;
  const defenseEnabled=arm==='responsible';
  const worker=PROFILES.find(p=>p.id===profile);if(!worker)throw new Error('Unknown worker profile');
  const driver=new HordeEntryDriver(nav);let initialHiringPlan=null;
  try{
- const defense=defenseEnabled?createFarmDefensePolicy():null;
+ const defense=defenseEnabled?(qaArea12?createArea12ExpandingDefensePolicy():createFarmDefensePolicy()):null;
  const command=kind=>{const id=`intensive-${kind}-${sequence++}`;commands.push({id,kind,day:s.day,time:s.time,elapsed:s.elapsed,balance:numberOf(s.ledger.balance)});return id;};const center=s.structures[0],origin=centerServicePoint(center,s,.8);
  if(cameraEntry){
   const pose=nativeCameraPose(nav.field,[center.x,0,center.z],nav.field.canyon?0:.5,nav.field.canyon?1.18:1.16,nav.field.canyon?34:38);
@@ -39,7 +43,7 @@ export async function simulateHordeSelfConsistentFarm({initialStaffingPolicy=INI
  for(let z=Math.ceil(bounds[1]/grid)*grid;z<=bounds[3];z+=grid)for(let x=Math.ceil(bounds[0]/grid)*grid;x<=bounds[2];x+=grid)candidates.push({x,z});
  candidates.sort((a,b)=>distance(a,origin)-distance(b,origin)||a.z-b.z||a.x-b.x);
  const plots=[];let candidateIndex=0,nextWages=worker.wage,staff=1,plantedSequence=0;
- const daily=[],counts={},seen=new Set(),savedRaids=new Set(),additionalHiring={count:0,cost:0};let maximumLiving=0,reloads=0;
+ const daily=[],counts={},seen=new Set(),savedRaids=new Set(),additionalHiring={count:0,cost:0},repairRequests=[];let maximumLiving=0,reloads=0,lastCenterRepairRequests=0;
  const collect=()=>{
   settlement.observe(s);
   if(s.raid){raidActors=s.raid.animals;let row=raids.get(s.raid.id);if(!row){const allocation=s.events.find(e=>e.type==='RaidSpawned'&&e.raidId===s.raid.id);if(!allocation)throw Error('Missing native allocation at first observed raid');row={id:s.raid.id,day:s.day,spawnElapsed:s.elapsed,species:allocation.animals.map(a=>a.species),allocatedActors:structuredClone(allocation.animals),initialHitBudgets:allocation.animals.map(a=>a.hitsAllocated),maxOwners:0,terminalActors:null};raids.set(s.raid.id,row);}
@@ -103,7 +107,7 @@ export async function simulateHordeSelfConsistentFarm({initialStaffingPolicy=INI
    }
   }
   // Request repairs before reinvesting, preserving their real FIFO position.
-  actions+=requestComparisonCenterRepairs(s,{enabled:defenseEnabled,command,labourReserve,reserveMaintenance});
+  lastCenterRepairRequests=requestComparisonCenterRepairs(s,{enabled:defenseEnabled,command,labourReserve,reserveMaintenance});actions+=lastCenterRepairRequests;
   if(defense)actions+=defense.act(s,nav,{command,reserve:labourReserve()+maintenanceReserve()});
   const live=s.plants.filter(p=>p.alive);
   for(const kind of ['multiply','growth'])if(s.day>=(kind==='multiply'?5:3)&&s.cooldowns[kind]===0){
@@ -134,7 +138,9 @@ export async function simulateHordeSelfConsistentFarm({initialStaffingPolicy=INI
    if(s.pauses.length)throw new Error('Unexpected pause: '+s.pauses);
    await driver.advancePresentation(s);
    if(Game.nightEntryPending(s)&&s.time>=600)await driver.waitForEntry(s);
+   lastCenterRepairRequests=0;
    const decision=act();actions+=decision.actions;
+   if(qaArea12)for(const task of s.tasks)if(task.kind==='repair'&&!repairRequests.some(r=>r.taskId===task.id))repairRequests.push({taskId:task.id,targetId:task.targetId,day:s.day,time:s.time,elapsed:s.elapsed,decisionIndex:decisions.length});
    const dt=s.time<300||s.raid?1:5;
    // Optional evidence only: immutable scalar observations, not navigation or
    // game commands. Values describe the state after this strategy's decision.
@@ -147,7 +153,7 @@ export async function simulateHordeSelfConsistentFarm({initialStaffingPolicy=INI
    if(!decision.actions){idle[decision.reason]=(idle[decision.reason]??0)+dt;if(s.time<300&&!s.raid){idleRun+=dt;longestIdle=Math.max(longestIdle,idleRun);}}else idleRun=0;
    const observation={balance:numberOf(s.ledger.balance),staff,living:s.plants.filter(p=>p.alive).length,pendingTasks:s.tasks.length,queueKinds:s.tasks.reduce((counts,t)=>{counts[t.kind]=(counts[t.kind]??0)+1;return counts;},{}),workerStates:s.workers.reduce((counts,w)=>{counts[w.status]=(counts[w.status]??0)+1;return counts;},{})};
    const elapsedBefore=s.elapsed,timeBefore=s.time;Game.tick(s,dt,nav);collect();onTick?.(s,nav);
-   decisions.push({...observation,day,time:timeBefore,requestedSeconds:dt,simulatedSeconds:s.elapsed-elapsedBefore,actions:decision.actions,reason:decision.reason,daylightSeconds:timeBefore<300?Math.min(s.elapsed-elapsedBefore,300-timeBefore):0});
+   decisions.push({...observation,day,time:timeBefore,requestedSeconds:dt,simulatedSeconds:s.elapsed-elapsedBefore,actions:decision.actions,reason:decision.reason,...(qaArea12?{centerRepairRequests:lastCenterRepairRequests}:{}),daylightSeconds:timeBefore<300?Math.min(s.elapsed-elapsedBefore,300-timeBefore):0});
    await driver.advancePresentation(s);
    if(s.raid&&!savedRaids.has(s.raid.id)){savedRaids.add(s.raid.id);s=deserialize(serialize(s));nav.setState(s);reloads++;raidActors=s.raid?.animals??null;settlement.observe(s);await driver.advancePresentation(s);}
    if(s.elapsed-start>2400)throw new Error(`Unfinished real incursion on day ${day}: ${JSON.stringify(s.raid)}`);
@@ -160,6 +166,6 @@ export async function simulateHordeSelfConsistentFarm({initialStaffingPolicy=INI
  const idleRuns=daily.map(r=>r.longestIdle).sort((a,b)=>a-b),unoccupied=daily.reduce((n,r)=>n+r.idle.budget+r.idle.space+r.idle['shift-end'],0);
  const activity={daylightSeconds:daily.length*300,unoccupiedSeconds:unoccupied,unoccupiedFraction:unoccupied/(daily.length*300),longestIdle:Math.max(...idleRuns),p90LongestIdle:idleRuns[Math.ceil(idleRuns.length*.9)-1]};
  const daytime=decisions.reduce((n,d)=>n+d.daylightSeconds,0),idleTime=decisions.reduce((n,d)=>n+(!d.actions&&['budget','space','shift-end'].includes(d.reason)?d.daylightSeconds:0),0);
- return {protocol:'horde-defense-comparison-v1',initialStaffingPolicy:INITIAL_STAFFING_POLICY,initialHiringPlan,repairSettlements:settlement.report(s),entryTransport:driver.report(),commands,raidFacts,raids:[...raids.values()],decisions,observedActivity:{daylightSeconds:daytime,unoccupiedSeconds:idleTime,unoccupiedFraction:daytime?idleTime/daytime:null},biome:s.biome,culture:s.culture,seed:s.seed,policy:{profile,mixed,middayHiring,plantsPerWorker,arm,defend:defenseEnabled,centerRepairs:defenseEnabled,reserveLabourGrowth,reserveMaintenance,burstPlanting,cameraEntry},defense:defense?(()=>{const r=defense.report(s),owned=new Set(r.built?.ids??[]);return {...r,initialNativeSkippedModules:r.built?r.built.expectedPieces-r.built.pieces:null,currentOwnedOperational:s.structures.filter(w=>owned.has(w.id)&&operational(w)).length,currentOwnedRuined:s.structures.filter(w=>owned.has(w.id)&&!operational(w)).length};})():null,additionalHiring,result:s.result,completedNights:s.completedNights,money:numberOf(s.ledger.balance),maximumLiving,plots:plots.length,reloads,counts,activity,daily,state:s,nav};
+ return {protocol:'horde-defense-comparison-v1',...(qaArea12?{qaCandidate:AREA12_ID,meaningfulObservedActivity:repairActivity(decisions,repairRequests,settlement.report(s).receipts)}:{}),initialStaffingPolicy:INITIAL_STAFFING_POLICY,initialHiringPlan,repairSettlements:settlement.report(s),entryTransport:driver.report(),commands,raidFacts,raids:[...raids.values()],decisions,observedActivity:{daylightSeconds:daytime,unoccupiedSeconds:idleTime,unoccupiedFraction:daytime?idleTime/daytime:null},biome:s.biome,culture:s.culture,seed:s.seed,policy:{profile,mixed,middayHiring,plantsPerWorker,arm,defend:defenseEnabled,centerRepairs:defenseEnabled,reserveLabourGrowth,reserveMaintenance,burstPlanting,cameraEntry},defense:defense?(()=>{const r=defense.report(s),owned=new Set(r.built?.ids??[]);return {...r,initialNativeSkippedModules:r.built?r.built.expectedPieces-r.built.pieces:null,currentOwnedOperational:s.structures.filter(w=>owned.has(w.id)&&operational(w)).length,currentOwnedRuined:s.structures.filter(w=>owned.has(w.id)&&!operational(w)).length};})():null,additionalHiring,result:s.result,completedNights:s.completedNights,money:numberOf(s.ledger.balance),maximumLiving,plots:plots.length,reloads,counts,activity,daily,state:s,nav};
  }catch(error){error.partialReport={protocol:'horde-defense-comparison-v1',arm,state:s,commands,raidFacts,raids:[...raids.values()],decisions,repairSettlements:settlement.report(s),entryTransport:driver.report(),initialStaffingPolicy:INITIAL_STAFFING_POLICY,initialHiringPlan,scope:'Incomplete native case; no synthetic outcome'};throw error;}finally{await driver.dispose();}
 }

@@ -1,10 +1,14 @@
 import {BASIC_STEPS,TUTORIAL_IDS} from '../tutorial/messages.js';
 import {validExitFrontier} from './exit-connector-snapshot.js';
+import {AREA12_ID,validArea12Pressure} from '../simulation/qa-area12-policy.js';
 export const SAVE_VERSION=1;
 function wholeMoney(value){
   return value&&typeof value.n==='string'&&typeof value.d==='string'&&/^-?\d+$/.test(value.n)&&/^[1-9]\d*$/.test(value.d)&&BigInt(value.n)%BigInt(value.d)===0n;
 }
 export function validateSnapshot(state) {
+  if(state?.qaRaidArea!==undefined&&state.qaRaidArea!==AREA12_ID)throw new Error('Invalid QA area candidate');
+  if(state?.raid?.areaPressure!==undefined&&(!validArea12Pressure(state.raid.areaPressure)||state.qaRaidArea!==AREA12_ID))throw new Error('Invalid QA area pressure');
+  if(state?.raid?.areaPressure&&state.raid.introCropLimit!==undefined&&state.raid.areaPressure.radius!==0)throw new Error('Invalid introductory QA area pressure');
   if(!state || state.saveVersion!==SAVE_VERSION || typeof state.slotId!=='string')throw new Error('Guardado incompatible');
   if(!Number.isFinite(state.time)||state.time<0||state.time>600 || !Number.isSafeInteger(state.day)||state.day<1)throw new Error('Reloj inválido');
   if(!state.ledger||!wholeMoney(state.ledger.balance)||BigInt(state.ledger.balance.n)<0n)throw new Error('Saldo inválido');
