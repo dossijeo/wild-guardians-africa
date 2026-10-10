@@ -13,6 +13,7 @@ import {actorFluidClear} from '../src/simulation/actor-fluid-clearance.js';
 import * as Game from '../src/simulation/game.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {gatePortalPoints} from '../src/world/gate-passages.js';
+import {rational} from '../src/simulation/money.js';
 
 function world(fluidInside){
  const nav=new Navigation(712,'gran-canon',{});
@@ -39,6 +40,35 @@ test('river completes a paid U perimeter without water wall pieces and preserves
  assert(!nav.path({x:11,z:4},s.plants[0],1.1,null,false));
  const saved=deserialize(serialize(s)),frozen=serialize(saved);assert.equal(serialize(deserialize(frozen)),frozen);nav.setState(saved);
  assert(nav.path({x:8,z:4},{x:12,z:4},.28,null,true));assert(!nav.segmentClear({x:8,z:4},{x:12,z:4},1.1,null,false));
+});
+
+test('a mixed river and cliff perimeter creates a door on the last paid stroke and preserves it after rebuilding',()=>{
+ const {s,nav}=world(x=>x>=9);s.ledger.balance=rational(20000);
+ nav.field.surface=(_x,z)=>Math.max(0,z-9)*20;nav.setState(s);
+ s.villages[0].entry={x:-4,z:4};
+ Game.placeStructure(s,'mixed-center',{x:-10,z:-10},nav);Game.plant(s,'mixed-crop','mijo',4,4,nav);
+ const options={smooth:false,snap:false};
+ assert(Game.buildWallChain(s,'river-base','zarzas',[[10,0],[0,0]],nav,options));
+ assert.equal(s.structures.filter(w=>w.autoGate).length,0);
+ const older=structuredClone(s.structures);
+ assert(Game.buildWallChain(s,'cliff-close','piedra',[[0,0],[0,10]],nav,options));
+ const gates=s.structures.filter(w=>w.autoGate);assert.equal(gates.length,1);
+ const gate=structuredClone(gates[0]);assert.equal(gate.material,'piedra');
+ assert.deepEqual(s.structures.slice(0,older.length),older);
+ assert(gatePortalPoints(gate).every(p=>nav.walkable(p.x,p.z,.28,null,true)));
+ assert(nav.path(s.villages[0].entry,s.plants[0],.28,null,true));
+ const wall=s.structures.find(w=>w.kind==='wall'&&!w.gate);
+ assert(Game.removeWall(s,'mixed-remove',wall.id,nav));
+ assert(Game.placeStructure(s,'mixed-rebuild',{kind:'wall',material:'adobe',x:wall.x,z:wall.z,yaw:wall.yaw},nav));
+ assert.equal(s.structures.filter(w=>w.autoGate).length,1);
+ assert.deepEqual(s.structures.find(w=>w.id===gate.id),gate);
+ const loaded=deserialize(serialize(s));nav.setState(loaded);
+ assert.equal(loaded.structures.filter(w=>w.autoGate).length,1);
+ assert(Game.removeWall(loaded,'mixed-gate-remove',gate.id,nav));
+ const unchanged=structuredClone(loaded.structures);
+ assert(Game.placeStructure(loaded,'mixed-gate-rebuild',{kind:'wall',material:'empalizada',x:gate.x,z:gate.z,yaw:gate.yaw},nav));
+ assert.deepEqual(loaded.structures.slice(0,unchanged.length),unchanged);
+ assert.equal(loaded.structures.filter(w=>w.autoGate).length,1);assert(loaded.structures.at(-1).autoGate);
 });
 test('land-access witness rejects a naturally isolated farm and accepts a verified same-bank approach',()=>{
  const {nav}=world((x,z)=>Math.hypot(x,z)>5);assert.equal(canyonLandAccess(nav,[{x:0,z:0}]),null);

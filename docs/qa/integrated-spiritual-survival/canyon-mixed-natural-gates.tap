@@ -1,0 +1,276 @@
+TAP version 13
+# (node:53220) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a building completes an open wall stroke and the door is on the village-to-crop side
+ok 1 - a building completes an open wall stroke and the door is on the village-to-crop side
+  ---
+  duration_ms: 69.5283
+  ...
+# Subtest: a natural canyon cliff completes the enclosure without placing a gate into the cliff
+ok 2 - a natural canyon cliff completes the enclosure without placing a gate into the cliff
+  ---
+  duration_ms: 18.3165
+  ...
+# Subtest: the native Grand Canyon cliff closes a paid perimeter with a traversable door
+ok 3 - the native Grand Canyon cliff closes a paid perimeter with a traversable door
+  ---
+  duration_ms: 2601.759
+  ...
+# Subtest: a genuinely open wall beside a building does not receive an unnecessary gate
+ok 4 - a genuinely open wall beside a building does not receive an unnecessary gate
+  ---
+  duration_ms: 3.8368
+  ...
+# Subtest: closing a mixed-material perimeter converts the latest new piece and preserves every older piece
+ok 5 - closing a mixed-material perimeter converts the latest new piece and preserves every older piece
+  ---
+  duration_ms: 15.8489
+  ...
+# Subtest: the recorded native perimeter keeps skipped rock modules and creates one accessible gate
+ok 6 - the recorded native perimeter keeps skipped rock modules and creates one accessible gate
+  ---
+  duration_ms: 694.897
+  ...
+# Subtest: incremental zarzas closure and rebuilding preserve the other materials
+ok 7 - incremental zarzas closure and rebuilding preserve the other materials
+  ---
+  duration_ms: 11.3446
+  ...
+# Subtest: incremental empalizada closure and rebuilding preserve the other materials
+ok 8 - incremental empalizada closure and rebuilding preserve the other materials
+  ---
+  duration_ms: 10.2728
+  ...
+# Subtest: incremental adobe closure and rebuilding preserve the other materials
+ok 9 - incremental adobe closure and rebuilding preserve the other materials
+  ---
+  duration_ms: 11.1313
+  ...
+# Subtest: incremental piedra closure and rebuilding preserve the other materials
+ok 10 - incremental piedra closure and rebuilding preserve the other materials
+  ---
+  duration_ms: 11.5959
+  ...
+# Subtest: incremental reforzado closure and rebuilding preserve the other materials
+ok 11 - incremental reforzado closure and rebuilding preserve the other materials
+  ---
+  duration_ms: 8.7729
+  ...
+# Subtest: rebuilding several removed blocks adds a door only when the final gap closes
+ok 12 - rebuilding several removed blocks adds a door only when the final gap closes
+  ---
+  duration_ms: 6.9189
+  ...
+# Subtest: an existing usable gate survives later perimeter edits without adding another door
+ok 13 - an existing usable gate survives later perimeter edits without adding another door
+  ---
+  duration_ms: 6.5325
+  ...
+# Subtest: an existing zarzas door is preserved when multiple gaps are rebuilt with other materials
+ok 14 - an existing zarzas door is preserved when multiple gaps are rebuilt with other materials
+  ---
+  duration_ms: 16.5269
+  ...
+# Subtest: an existing empalizada door is preserved when multiple gaps are rebuilt with other materials
+ok 15 - an existing empalizada door is preserved when multiple gaps are rebuilt with other materials
+  ---
+  duration_ms: 53.0292
+  ...
+# Subtest: an existing adobe door is preserved when multiple gaps are rebuilt with other materials
+ok 16 - an existing adobe door is preserved when multiple gaps are rebuilt with other materials
+  ---
+  duration_ms: 11.0755
+  ...
+# Subtest: an existing piedra door is preserved when multiple gaps are rebuilt with other materials
+ok 17 - an existing piedra door is preserved when multiple gaps are rebuilt with other materials
+  ---
+  duration_ms: 10.1274
+  ...
+# Subtest: an existing reforzado door is preserved when multiple gaps are rebuilt with other materials
+ok 18 - an existing reforzado door is preserved when multiple gaps are rebuilt with other materials
+  ---
+  duration_ms: 15.4716
+  ...
+# Subtest: an obstructed approach to an existing door does not make the planner create a second door
+ok 19 - an obstructed approach to an existing door does not make the planner create a second door
+  ---
+  duration_ms: 13.5936
+  ...
+# (node:35460) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: animals detour on land around a finite river; workers cross directly
+ok 20 - animals detour on land around a finite river; workers cross directly
+  ---
+  duration_ms: 30.9805
+  ...
+# Subtest: river completes a paid U perimeter without water wall pieces and preserves worker access on reload
+ok 21 - river completes a paid U perimeter without water wall pieces and preserves worker access on reload
+  ---
+  duration_ms: 48.4532
+  ...
+# Subtest: a mixed river and cliff perimeter creates a door on the last paid stroke and preserves it after rebuilding
+ok 22 - a mixed river and cliff perimeter creates a door on the last paid stroke and preserves it after rebuilding
+  ---
+  duration_ms: 42.3173
+  ...
+# Subtest: land-access witness rejects a naturally isolated farm and accepts a verified same-bank approach
+ok 23 - land-access witness rejects a naturally isolated farm and accepts a verified same-bank approach
+  ---
+  duration_ms: 2.7393
+  ...
+# Subtest: a real area impact cannot damage crops on the opposite river bank
+ok 24 - a real area impact cannot damage crops on the opposite river bank
+  ---
+  duration_ms: 2.8657
+  ...
+# Subtest: cooperative canyon initialization preserves the deterministic synchronous site
+ok 25 - cooperative canyon initialization preserves the deterministic synchronous site
+  ---
+  duration_ms: 4827.7662
+  ...
+# Subtest: native mixed canyon waves retain all 16 dry bodies without overlap and deterministic placement
+ok 26 - native mixed canyon waves retain all 16 dry bodies without overlap and deterministic placement
+  ---
+  duration_ms: 3031.251
+  ...
+# Subtest: a native canyon column physically arrives and attacks, with no water landings
+ok 27 - a native canyon column physically arrives and attacks, with no water landings
+  ---
+  duration_ms: 2559.7132
+  ...
+# Subtest: Partition clips triangles into frame and leaf while retaining interpolated texture coordinates
+ok 28 - Partition clips triangles into frame and leaf while retaining interpolated texture coordinates
+  ---
+  duration_ms: 3.0641
+  ...
+# Subtest: Every closed native leaf preserves total source surface area, bounds and regional pivots
+ok 29 - Every closed native leaf preserves total source surface area, bounds and regional pivots
+  ---
+  duration_ms: 711.5572
+  ...
+# Subtest: Opening is a rigid hinge rotation: frames remain fixed and normals do not accumulate rotation
+ok 30 - Opening is a rigid hinge rotation: frames remain fixed and normals do not accumulate rotation
+  ---
+  duration_ms: 602.8694
+  ...
+# Subtest: Full original gate geometry leaves a swept controller corridor when the leaf is open
+ok 31 - Full original gate geometry leaves a swept controller corridor when the leaf is open
+  ---
+  duration_ms: 530.4382
+  ...
+# Subtest: Production mesh applies opening changes without changing health, opacity or the closed source bridge
+ok 32 - Production mesh applies opening changes without changing health, opacity or the closed source bridge
+  ---
+  duration_ms: 446.9719
+  ...
+# Subtest: Gate frames retain original mesh hashes and the height of all four exported bodies
+ok 33 - Gate frames retain original mesh hashes and the height of all four exported bodies
+  ---
+  duration_ms: 271.2916
+  ...
+# Subtest: Worker controllers pass through open native arches while their pillars remain solid
+ok 34 - Worker controllers pass through open native arches while their pillars remain solid
+  ---
+  duration_ms: 10.1859
+  ...
+# Subtest: Short modules preserve their actual opening width instead of ignoring the whole gate
+ok 35 - Short modules preserve their actual opening width instead of ignoring the whole gate
+  ---
+  duration_ms: 0.6406
+  ...
+# Subtest: Frame transforms are cached and update when placement or scale changes
+ok 36 - Frame transforms are cached and update when placement or scale changes
+  ---
+  duration_ms: 0.7821
+  ...
+# Subtest: Convex frame projection retains side boundaries and a positive controller clearance
+ok 37 - Convex frame projection retains side boundaries and a positive controller clearance
+  ---
+  duration_ms: 0.435
+  ...
+# Subtest: Every original triangle below native body height is covered by the physical frame projection
+ok 38 - Every original triangle below native body height is covered by the physical frame projection
+  ---
+  duration_ms: 29.4744
+  ...
+# (node:28788) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Workers request a near crossing and wait without spending run distance or movement phases
+ok 39 - Workers request a near crossing and wait without spending run distance or movement phases
+  ---
+  duration_ms: 6.5636
+  ...
+# Subtest: All four native profiles wait in Idle and preserve the crate carrying pose
+ok 40 - All four native profiles wait in Idle and preserve the crate carrying pose
+  ---
+  duration_ms: 0.6663
+  ...
+# Subtest: Pauses, preparation and end states freeze leaf clocks; closing waits for body occupancy
+ok 41 - Pauses, preparation and end states freeze leaf clocks; closing waits for body occupancy
+  ---
+  duration_ms: 0.9794
+  ...
+# Subtest: Passing beside a closed gate does not request opening or stop a worker
+ok 42 - Passing beside a closed gate does not request opening or stop a worker
+  ---
+  duration_ms: 1.7942
+  ...
+# Subtest: Collapsing gates hold crossing until rubble; legacy occupants restore a safe open pose
+ok 43 - Collapsing gates hold crossing until rubble; legacy occupants restore a safe open pose
+  ---
+  duration_ms: 0.5708
+  ...
+# Subtest: Physical collision uses current leaf phase while route planning includes the opened leaf
+ok 44 - Physical collision uses current leaf phase while route planning includes the opened leaf
+  ---
+  duration_ms: 32.4428
+  ...
+# Subtest: Paid workers cross three original leaf materials without penetrating a closing or moving leaf
+ok 45 - Paid workers cross three original leaf materials without penetrating a closing or moving leaf
+  ---
+  duration_ms: 490.499
+  ...
+# Subtest: Opening and waiting persist exactly through save/reload and reject malformed phases
+ok 46 - Opening and waiting persist exactly through save/reload and reject malformed phases
+  ---
+  duration_ms: 9.7377
+  ...
+# Subtest: Encounter pushes cannot drive a worker through a closed gate or its moving sweep
+ok 47 - Encounter pushes cannot drive a worker through a closed gate or its moving sweep
+  ---
+  duration_ms: 23.3555
+  ...
+# Subtest: A large locomotion step approaches safely and cannot jump through a closed leaf
+ok 48 - A large locomotion step approaches safely and cannot jump through a closed leaf
+  ---
+  duration_ms: 2.1015
+  ...
+# Subtest: Fractional gate portals connect enclosed grid regions and retain exact swept collisions
+ok 49 - Fractional gate portals connect enclosed grid regions and retain exact swept collisions
+  ---
+  duration_ms: 220.2469
+  ...
+# Subtest: zarzas: a real harvested crate waits, crosses and charges only on delivery
+ok 50 - zarzas: a real harvested crate waits, crosses and charges only on delivery
+  ---
+  duration_ms: 218.2315
+  ...
+# Subtest: empalizada: a real harvested crate waits, crosses and charges only on delivery
+ok 51 - empalizada: a real harvested crate waits, crosses and charges only on delivery
+  ---
+  duration_ms: 167.7989
+  ...
+# Subtest: reforzado: a real harvested crate waits, crosses and charges only on delivery
+ok 52 - reforzado: a real harvested crate waits, crosses and charges only on delivery
+  ---
+  duration_ms: 173.1761
+  ...
+1..52
+# tests 52
+# suites 0
+# pass 52
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10846.4138
