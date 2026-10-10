@@ -1,0 +1,86 @@
+{
+  "runId": 38025767621,
+  "jobId": 114136169816,
+  "headSha": "e1403747b74dc017428ce45563ff7416d4c66834",
+  "branch": "codex/world-crop-pair-overlap",
+  "url": "https://github.com/dossijeo/wild-guardians-africa/actions/runs/38025767621",
+  "conclusion": "success",
+  "files": [
+    {
+      "original": "run.json",
+      "path": "run.json",
+      "bytes": 13303,
+      "sha256": "4735f59cbcb74998fde334184b37597b59c7bb0d295c6ddba86442ac9231ee5d",
+      "storedBytes": 13303,
+      "storedSha256": "4735f59cbcb74998fde334184b37597b59c7bb0d295c6ddba86442ac9231ee5d",
+      "gzip": false
+    },
+    {
+      "original": "jobs.json",
+      "path": "jobs.json",
+      "bytes": 4469,
+      "sha256": "64df0ce564dd7c04eb601c9f780fbf56e29231f1a8be47b3f1f5f72e3a538273",
+      "storedBytes": 4469,
+      "storedSha256": "64df0ce564dd7c04eb601c9f780fbf56e29231f1a8be47b3f1f5f72e3a538273",
+      "gzip": false
+    },
+    {
+      "original": "artifacts.json",
+      "path": "artifacts.json",
+      "bytes": 1508,
+      "sha256": "0f3989a8549f86d115acf8990d760a9f61a78976273a5a25fdb01839e95dd9fd",
+      "storedBytes": 1508,
+      "storedSha256": "0f3989a8549f86d115acf8990d760a9f61a78976273a5a25fdb01839e95dd9fd",
+      "gzip": false
+    },
+    {
+      "original": "job.log",
+      "path": "job.log.gz",
+      "bytes": 2072926,
+      "sha256": "a12f85a13a9e13ff851de240771847d779341e5dc5fbed710f0f088d8082e59f",
+      "storedBytes": 287461,
+      "storedSha256": "e4ee6f16999efc3520cd1f1f0eb1e6a888c2ea527273c58ffdc79426f636afbf",
+      "gzip": true
+    },
+    {
+      "original": "capture-receipt.json",
+      "path": "capture-receipt-original.json",
+      "bytes": 565,
+      "sha256": "01e6bc81c0b3f54f9cafc32643cf5df1eb1fd93d6b7626dc6cda96f7cc65f937",
+      "storedBytes": 565,
+      "storedSha256": "01e6bc81c0b3f54f9cafc32643cf5df1eb1fd93d6b7626dc6cda96f7cc65f937",
+      "gzip": false
+    }
+  ],
+  "tests": {
+    "total": 3883,
+    "passed": 3882,
+    "failed": 0,
+    "skipped": 1,
+    "skipScope": "Only real PowerShell subprocess argv test on Linux; all source invariants active."
+  },
+  "buildSeconds": 7.07,
+  "package": {
+    "files": 720,
+    "bytes": 445281843,
+    "relativeLinks": 860,
+    "runtimeGlbs": 24,
+    "itchBytes": 388384467,
+    "itchCrcVerified": true
+  },
+  "artifactsMetadataOnly": [
+    {
+      "id": 11660610729,
+      "name": "wild-guardians-itch.zip",
+      "bytes": 388384467,
+      "digest": "sha256:ddcc13c57debcc13f4728fbbbcce1a6b91a494f482f82498dda4d44552da9e1e"
+    },
+    {
+      "id": 11660226096,
+      "name": "wild-guardians-build",
+      "bytes": 389296278,
+      "digest": "sha256:30831f5d63ff45d40755ca282a429f0adb8c0675c54aa0f2d6b7b8f73fff1341"
+    }
+  ],
+  "nativeScope": "Web Validate only; not new native evidence. Runtime remains byte-identical28b native EXE."
+}
