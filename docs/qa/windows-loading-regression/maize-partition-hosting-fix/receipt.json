@@ -1,0 +1,40 @@
+{
+  "base": "0edebfdebb276310fd01c99e0bfa1c4255b3c118",
+  "scope": "Unselected candidate adapter hosting/component identity correction only; App/CLI/assets/gates unchanged",
+  "sourceHashes": {
+    "src/rendering/crop-partition.js": "613bba16d473846486118c1c810048a3d5266f6444daf44700cad7547c90b62e",
+    "tests/crop-partition-lifecycle.test.js": "a7b81d4ec008f2cbb82a46ad517cd18eb43940fa329287f700c1dd3df2a2ab26",
+    "tests/fixtures/crop-partition-hosting-loader.mjs": "818f3ecc27d119fb548c6ef651d4fe65483b0a33d89e21d68933e663e85450ce",
+    "tests/fixtures/crop-partition-hosting.mjs": "432640fe6919f418780d25dbf9d223c998d22f54d8cb4889bd26cead9a0aeb93"
+  },
+  "unchangedHashes": {
+    "src/app/main.js": "dbd681259acf5c26c0a8aba50cf02fdeb1d29d82c3c72e834e9179813afead35",
+    "src/rendering/assets.js": "92cdb93124473a987ea179484d87422c86737599a7a16ff0599362dc48a8cd1e",
+    "src/rendering/scene.js": "12eddcfca985b97d0073fd0e115dd36c8b9046d82a308004f6d749b3cc0cc409",
+    "src/rendering/loading-diorama.js": "36d4bcd95a5d9d7b3f0efb30faf2920ec9006bd4820b26066fcbffef3c942d46",
+    "src/app/loading-progress.js": "806b60554f8d46dbb779e11d0fecdeb677d58f2384aeee6415225769e1e78df3",
+    "src/app/loading-transfer-owner.js": "84155bf2184afbd8de8ca839e67775890c4af1ea87b2f5074d72ee2de4c71920",
+    "src/rendering/crop-batch.js": "96f37896195dda9cbf2c2e2e9570c982305c83cdb1e20b3e36671b7754ab233c",
+    "src/rendering/loading-programs.js": "a1354397f1ba0543fd4dffcd5143e82c4b211f750a9df367ac902dd70730c8c2",
+    "tools/experiments/compile-gpu-preparation.js": "6085d3f898f8d934bef62b2f79a160c9753179cad2db70b82f0c493d1fef1500",
+    "src-tauri/src/main.rs": "007af64e56ba59ae644623966fcd64ca70a975b600250e3d0f68215e5c689a2c",
+    "src-tauri/smoke.js": "1caf359bf11d1b8cac421e75e193e366ec88ef0016634bf4d0159c4ef3c37824",
+    ".github/workflows/windows.yml": "2b5d68f65285d9c936ee2089f8bc1f6d4d4d2f2446471db8f99260f50c83836e",
+    "public/content/models.json": "9fbdddec82c57f60777cec4751142cf06db58bf99916ebb403c80e8c98ddacc1",
+    "public/content/crop-bridges.json": "1cb26e0d61bdb0aa780d6976e54c57537b8cf9fe77518b49691b9c4cd292185f",
+    "content/manifests/web-assets.json": "fed88f8bcfce8f2296764a41324c20ad663f74f4a9dc17cd1f32b6179623bd41",
+    "docs/qa/sfx-catalog-post-jam/inventory.json": "ade69a39236f159e47f5f66baf3cd6f1613d31c691bf8679f356091c44d9f7ec"
+  },
+  "logHashes": {
+    "docs/qa/windows-loading-regression/maize-partition-hosting-fix/tests.log": "4a5ce32100d70ee53dc30db1ba37ecc9a85748fb50c3ddb03225a8ba0e9375fe"
+  },
+  "tests": {
+    "pass": 39,
+    "fail": 0,
+    "durationMs": 10261.3496
+  },
+  "changedSyntaxExit": 0,
+  "diffCheckExit": 0,
+  "nativeEvidence": false,
+  "build": "No rerun: this bounded followup changes only adapter unimported in production; previous build belongs to0ed freeze."
+}

@@ -93,3 +93,20 @@ test('existing transfer owner reports real GLB bytes and only resolved exactURL 
  const cache=[...transfers.downloads.requests.values()].filter(row=>row.kind==='collection-cache');assert.equal(cache.length,1);assert.equal(cache[0].cache,'application-cache');
  assert.equal(transfers.downloads.snapshot().pending,0);assert.equal(transfers.downloads.snapshot().loadedBytes,rows.reduce((sum,row)=>sum+row.loaded,0));
 });
+test('manifest, GLB and texture resolve against actual nested CDN and Tauri module base',()=>{
+ for(const moduleUrl of ['https://cdn.itch.zone/html/9876/game/assets/index.js','https://tauri.localhost/assets/index.js']){
+  const result=spawnSync(process.execPath,['--experimental-loader','./tests/fixtures/crop-partition-hosting-loader.mjs','./tests/fixtures/crop-partition-hosting.mjs'],{encoding:'utf8',env:{...process.env,CROP_HOST_MODULE:moduleUrl}});
+  assert.equal(result.status,0,result.stdout+'\n'+result.stderr);assert.match(result.stdout,/expected bytes PASS/);
+ }
+});
+test('composite identity aliases cannot substitute out-of-range or fractional cropIndex/stage',t=>{
+ const f=fixture(t),returnEach=[];
+ for(const [cropIndex,stage]of [[0,6],[1,0],[-1,6],[8,-4],[.2,0]]){
+  const library=new CropPartition(f.assets,manifest,'http://localhost/partition/manifest.json'),alias=cropIndex*5+stage-1;
+  library.part=async group=>{const scene=new THREE.Scene();for(let id=group==='maize'?0:5;id<(group==='maize'?5:40);id++){const mesh=new THREE.Mesh();mesh.userData=id===alias?{cropIndex,stage}:{cropIndex:Math.floor(id/5),stage:id%5+1};scene.add(mesh);}return {scene};};
+  t.after(()=>library.dispose());assert.equal(Number.isInteger(alias)&&alias>=0&&alias<40,true);
+  // All forty composite IDs still exist once; invalid component fields must reject.
+  returnEach.push(assert.rejects(library.models('all'),/Ambiguous crop state identity/));
+ }
+ return Promise.all(returnEach);
+});

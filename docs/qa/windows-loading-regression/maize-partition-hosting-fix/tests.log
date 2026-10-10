@@ -1,0 +1,213 @@
+TAP version 13
+# (node:52876) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: pending shared GLTF promises are not cache hits and a completed model is
+ok 1 - pending shared GLTF promises are not cache hits and a completed model is
+  ---
+  duration_ms: 8.0411
+  ...
+# Subtest: closing the packed biome owner aborts its original binary request
+ok 2 - closing the packed biome owner aborts its original binary request
+  ---
+  duration_ms: 2.6425
+  ...
+# Subtest: offscene packed prototypes and standalone textures are owned and released once; caches clear
+ok 3 - offscene packed prototypes and standalone textures are owned and released once; caches clear
+  ---
+  duration_ms: 250.5424
+  ...
+# Subtest: scene borrowers can dispose source resources first without causing duplicate disposal at owner close
+ok 4 - scene borrowers can dispose source resources first without causing duplicate disposal at owner close
+  ---
+  duration_ms: 3.4314
+  ...
+# Subtest: inflight model and texture finishing after close dispose once without resurrecting caches
+ok 5 - inflight model and texture finishing after close dispose once without resurrecting caches
+  ---
+  duration_ms: 1.1032
+  ...
+# Subtest: a failed standalone texture is retryable while open
+ok 6 - a failed standalone texture is retryable while open
+  ---
+  duration_ms: 0.614
+  ...
+# Subtest: pending building cannot create new procedural resources after its owner closes
+ok 7 - pending building cannot create new procedural resources after its owner closes
+  ---
+  duration_ms: 0.5775
+  ...
+# Subtest: packed biome, village and wall binary loads cannot allocate prototypes after close
+ok 8 - packed biome, village and wall binary loads cannot allocate prototypes after close
+  ---
+  duration_ms: 12.5063
+  ...
+# Subtest: failed building download clears both caches; concurrent retry prepares the original model once
+ok 9 - failed building download clears both caches; concurrent retry prepares the original model once
+  ---
+  duration_ms: 746.5744
+  ...
+# Subtest: all40 stages/32 authored transitions partition once with exact extras, transforms and primitive semantics
+ok 10 - all40 stages/32 authored transitions partition once with exact extras, transforms and primitive semantics
+  ---
+  duration_ms: 12.9107
+  ...
+# Subtest: real meshopt decoder preserves every compressed slice and decoded attribute/index bit pattern
+ok 11 - real meshopt decoder preserves every compressed slice and decoded attribute/index bit pattern
+  ---
+  duration_ms: 9142.0246
+  ...
+# Subtest: material/UV/sampler definitions remain exact; every original image stored once with shared URI and unchanged WebP bytes
+ok 12 - material/UV/sampler definitions remain exact; every original image stored once with shared URI and unchanged WebP bytes
+  ---
+  duration_ms: 26.5592
+  ...
+# Subtest: repeat generation is byte deterministic, refuses production output and leaves original assets/manifests unchanged
+ok 13 - repeat generation is byte deterministic, refuses production output and leaves original assets/manifests unchanged
+  ---
+  duration_ms: 514.6465
+  ...
+# (node:29444) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native GLTF parser + meshopt load maize once, complete40/32 and share actual canonical texture objects
+ok 14 - native GLTF parser + meshopt load maize once, complete40/32 and share actual canonical texture objects
+  ---
+  duration_ms: 300.0852
+  ...
+# Subtest: cancel during real parse image await rejects adoption and disposes late texture exactly once
+ok 15 - cancel during real parse image await rejects adoption and disposes late texture exactly once
+  ---
+  duration_ms: 12.7157
+  ...
+# Subtest: failed image/model caches permit explicit retry without changing exact URLs
+ok 16 - failed image/model caches permit explicit retry without changing exact URLs
+  ---
+  duration_ms: 21.8393
+  ...
+# Subtest: manifest rejects escapes, incomplete libraries and incompatible canonical sampler bindings
+ok 17 - manifest rejects escapes, incomplete libraries and incompatible canonical sampler bindings
+  ---
+  duration_ms: 1.0549
+  ...
+# Subtest: canonical texture rejects incompatible sampler or color interpretation rather than mutating a borrowed map
+ok 18 - canonical texture rejects incompatible sampler or color interpretation rather than mutating a borrowed map
+  ---
+  duration_ms: 0.9519
+  ...
+# Subtest: explicit adapter close during parsing releases partial owned geometry/materials and prevents late cache publication
+ok 19 - explicit adapter close during parsing releases partial owned geometry/materials and prevents late cache publication
+  ---
+  duration_ms: 12.9356
+  ...
+# Subtest: real LoadingDiorama.prepare uses only maize partitions before soil adoption, world completion reuses them
+ok 20 - real LoadingDiorama.prepare uses only maize partitions before soil adoption, world completion reuses them
+  ---
+  duration_ms: 217.722
+  ...
+# Subtest: actual WorldScene.load completes all crop gates for new and saved state without original full models
+ok 21 - actual WorldScene.load completes all crop gates for new and saved state without original full models
+  ---
+  duration_ms: 465.2948
+  ...
+# Subtest: existing transfer owner reports real GLB bytes and only resolved exactURL reuse as application cache
+ok 22 - existing transfer owner reports real GLB bytes and only resolved exactURL reuse as application cache
+  ---
+  duration_ms: 57.2755
+  ...
+# Subtest: manifest, GLB and texture resolve against actual nested CDN and Tauri module base
+ok 23 - manifest, GLB and texture resolve against actual nested CDN and Tauri module base
+  ---
+  duration_ms: 646.3886
+  ...
+# Subtest: composite identity aliases cannot substitute out-of-range or fractional cropIndex/stage
+ok 24 - composite identity aliases cannot substitute out-of-range or fractional cropIndex/stage
+  ---
+  duration_ms: 7.8299
+  ...
+# (node:51164) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real prepare preserves sky/catalogues, overlaps GLB pair with soil then atlas, joins before scene/GPU adoption
+ok 25 - real prepare preserves sky/catalogues, overlaps GLB pair with soil then atlas, joins before scene/GPU adoption
+  ---
+  duration_ms: 72.0626
+  ...
+# Subtest: default OFF real prepare preserves GLB join before soil, then atlas
+ok 26 - default OFF real prepare preserves GLB join before soil, then atlas
+  ---
+  duration_ms: 8.579
+  ...
+# Subtest: failed GLB sibling prevents atlas after late soil and observes late bridge rejection
+ok 27 - failed GLB sibling prevents atlas after late soil and observes late bridge rejection
+  ---
+  duration_ms: 8.5602
+  ...
+# Subtest: soil failure never starts atlas; all pending GLB rejections observed
+ok 28 - soil failure never starts atlas; all pending GLB rejections observed
+  ---
+  duration_ms: 8.7166
+  ...
+# Subtest: real TextureLoader fallback atlas arrival after failed sibling is disposed exactly once
+ok 29 - real TextureLoader fallback atlas arrival after failed sibling is disposed exactly once
+  ---
+  duration_ms: 6.0206
+  ...
+# Subtest: abort during pending soil prevents atlas and late shared resources dispose once
+ok 30 - abort during pending soil prevents atlas and late shared resources dispose once
+  ---
+  duration_ms: 7.6863
+  ...
+# Subtest: sky failure prevents every catalogue/resource start; mutually exclusive recipes fail before loading
+ok 31 - sky failure prevents every catalogue/resource start; mutually exclusive recipes fail before loading
+  ---
+  duration_ms: 5.5073
+  ...
+# Subtest: GPU warm tail and default OFF loader branch remain byte-identical
+ok 32 - GPU warm tail and default OFF loader branch remain byte-identical
+  ---
+  duration_ms: 97.2689
+  ...
+# Subtest: serial image selection requires explicit smoke ownership and boolean opt-in
+ok 33 - serial image selection requires explicit smoke ownership and boolean opt-in
+  ---
+  duration_ms: 0.976
+  ...
+# Subtest: App, guarded CLI, explicit recipe and both original workflow gates wire smoke-only selection
+ok 34 - App, guarded CLI, explicit recipe and both original workflow gates wire smoke-only selection
+  ---
+  duration_ms: 2.2923
+  ...
+# Subtest: existing bitmap atlas path retains flipY/owner disposer after abort
+ok 35 - existing bitmap atlas path retains flipY/owner disposer after abort
+  ---
+  duration_ms: 9.2259
+  ...
+# (node:22876) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: complete catalogue audit reproduces from current source and exact original bytes
+ok 36 - complete catalogue audit reproduces from current source and exact original bytes
+  ---
+  duration_ms: 624.4447
+  ...
+# Subtest: assignments, context exceptions, reserves and alternatives stay distinct from audible acceptance
+ok 37 - assignments, context exceptions, reserves and alternatives stay distinct from audible acceptance
+  ---
+  duration_ms: 131.816
+  ...
+# Subtest: latent wood variant and semantic alternatives do not become real bindings or duplicate files
+ok 38 - latent wood variant and semantic alternatives do not become real bindings or duplicate files
+  ---
+  duration_ms: 0.49
+  ...
+# Subtest: WorldScene.load passes its real local early-region owner to later attachment
+ok 39 - WorldScene.load passes its real local early-region owner to later attachment
+  ---
+  duration_ms: 641.3482
+  ...
+1..39
+# tests 39
+# suites 0
+# pass 39
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10261.3496

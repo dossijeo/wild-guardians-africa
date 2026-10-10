@@ -3,16 +3,17 @@ import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
 import {json} from './asset-fetch.js';
+import {assetUrl} from './asset-url.js';
 const mag={9728:THREE.NearestFilter,9729:THREE.LinearFilter},min={...mag,9984:THREE.NearestMipmapNearestFilter,9985:THREE.LinearMipmapNearestFilter,9986:THREE.NearestMipmapLinearFilter,9987:THREE.LinearMipmapLinearFilter},wrap={33071:THREE.ClampToEdgeWrapping,33648:THREE.MirroredRepeatWrapping,10497:THREE.RepeatWrapping};
 export class CropPartition {
  constructor(assets,manifest,url){
-  this.assets=assets;this.manifest=manifest;this.base=new URL('.',new URL(url,globalThis.location?.href??'http://localhost/'));this.pending=new Map();this.textures=new Map();this.textureConfigs=new Map();this.sources=new Map();this.closed=false;
+  this.assets=assets;this.manifest=manifest;this.base=new URL('.',new URL(assetUrl(url),globalThis.location?.href??'http://localhost/'));this.pending=new Map();this.textures=new Map();this.textureConfigs=new Map();this.sources=new Map();this.closed=false;
   if(manifest.version!==1||manifest.sourceRecipeVersion!==4||manifest.partitions?.length!==4||manifest.textures?.length!==6)throw Error('Incomplete crop partition manifest');
   const specs=new Set();for(const entry of manifest.partitions){const key=entry.group+':'+entry.kind;if(specs.has(key)||!['maize','remainder'].includes(entry.group)||!['steady','bridges'].includes(entry.kind)||!(entry.bytes>0))throw Error('Ambiguous crop partition');specs.add(key);this.localUrl(entry.file);}
   this.textureRecords=new Map();for(const t of manifest.textures){const uri=this.localUrl(t.uri);if(this.textureRecords.has(uri)||!(t.bytes>0))throw Error('Ambiguous crop texture');this.textureRecords.set(uri,t);}
   this.onAbort=()=>this.dispose();assets.preparation.signal.addEventListener('abort',this.onAbort,{once:true});if(assets.preparation.signal.aborted)this.dispose();
  }
- static async load(assets,url){const manifest=await json(url,{signal:assets.preparation.signal});assets.assertOpen();return new CropPartition(assets,manifest,url);}
+ static async load(assets,url){const resolved=assetUrl(url),manifest=await json(resolved,{signal:assets.preparation.signal});assets.assertOpen();return new CropPartition(assets,manifest,resolved);}
  assertOpen(){this.assets.assertOpen();if(this.closed||this.assets.preparation.signal.aborted)throw Error('Crop partition cancelled');}
  localUrl(relative){if(typeof relative!=='string'||relative.startsWith('/')||relative.includes('..')||/^[a-z]+:/i.test(relative))throw Error('Crop partition URI must remain relative');const url=new URL(relative,this.base);if(!url.href.startsWith(this.base.href))throw Error('Crop partition URI escapes library');return url.href;}
  expectedBytes(url){for(const entry of this.manifest.partitions)if(this.localUrl(entry.file)===url)return entry.bytes;return this.textureRecords.get(url)?.bytes??null;}
@@ -54,7 +55,7 @@ export class CropPartition {
  models(scope='all'){
   if(!['maize','all'].includes(scope))throw Error('Invalid crop partition scope');
   return this.once('models:'+scope,async()=>{const sources=await Promise.all((scope==='maize'?['maize']:['maize','remainder']).map(group=>this.part(group,'steady'))),scene=new THREE.Group(),ids=new Set();
-   for(const gltf of sources){gltf.scene.traverse(mesh=>{if(!mesh.isMesh)return;const m=mesh.userData,id=m.cropIndex*5+m.stage-1;if(!Number.isInteger(id)||id<0||id>=40||ids.has(id)||(scope==='maize'&&id>=5))throw Error('Ambiguous crop state identity');ids.add(id);});scene.add(gltf.scene.clone(true));}
+   for(const gltf of sources){gltf.scene.traverse(mesh=>{if(!mesh.isMesh)return;const m=mesh.userData,id=m.cropIndex*5+m.stage-1;if(!Number.isInteger(m.cropIndex)||m.cropIndex<0||m.cropIndex>7||!Number.isInteger(m.stage)||m.stage<1||m.stage>5||ids.has(id)||(scope==='maize'&&id>=5))throw Error('Ambiguous crop state identity');ids.add(id);});scene.add(gltf.scene.clone(true));}
    if(ids.size!==(scope==='maize'?5:40))throw Error('Incomplete crop states');return {scene};
   });
  }
