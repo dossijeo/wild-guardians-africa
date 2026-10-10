@@ -1,0 +1,48 @@
+{
+  "scope": "Node CPU microbenchmark of experimental selector with native solid geometry; flat terrain/props isolated. Not GPU, full navigation, campaign, or frame-time acceptance.",
+  "runtime": "v20.11.0",
+  "rows": [
+    {
+      "historyDead": 0,
+      "living": 1001,
+      "samples": 300,
+      "coldMs": 5.559399999999997,
+      "medianMs": 0.14920000000000755,
+      "p95Ms": 0.47520000000000095,
+      "maxMs": 1.3178000000000054,
+      "meanMs": 0.20148699999999978,
+      "occlusionQueriesPerImpact": 20,
+      "selected": [
+        "root",
+        "p500",
+        "p460",
+        "p499",
+        "p501",
+        "p459",
+        "p461",
+        "p420"
+      ]
+    },
+    {
+      "historyDead": 100000,
+      "living": 1001,
+      "samples": 300,
+      "coldMs": 2.3052999999999884,
+      "medianMs": 0.08650000000000091,
+      "p95Ms": 0.44280000000003383,
+      "maxMs": 6.986400000000003,
+      "meanMs": 0.17161800000000113,
+      "occlusionQueriesPerImpact": 20,
+      "selected": [
+        "root",
+        "p500",
+        "p460",
+        "p499",
+        "p501",
+        "p459",
+        "p461",
+        "p420"
+      ]
+    }
+  ]
+}
