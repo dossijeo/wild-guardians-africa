@@ -9,7 +9,9 @@ async function collect(dir){for(const name of await readdir(dir)){const path=res
 await collect(root);
 const spiritManifest=JSON.parse(await readFile('content/manifests/spirit-voices.json','utf8'));
 assert.equal(spiritManifest.records.length,54);
-for(const record of spiritManifest.records){
+const agriculturalVoices=JSON.parse(await readFile('content/manifests/agricultural-spirit-voices.json','utf8'));
+assert.equal(agriculturalVoices.records.length,6);
+for(const record of [...spiritManifest.records,...agriculturalVoices.records]){
  const bytes=await readFile(resolve(root,record.path));
  assert.equal(createHash('sha256').update(bytes).digest('hex'),record.sha256,'Original Spirit clip changed in package: '+record.path);
 }

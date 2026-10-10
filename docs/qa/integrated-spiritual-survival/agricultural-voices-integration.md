@@ -1,0 +1,9 @@
+# Updated agricultural tutorial narration
+
+Six supplied original Ogg/Opus stereo 48 kHz clips are extracted without transcoding by tools/extract_agricultural_spirit_voices.py. The additive agricultural manifest preserves the historical 54-clip bank and records the supplied lab hash, original byte hashes, message IDs and declared durations. The exact existing Spanish and English strings match all six recordings. No tutorial copy, mechanics, save format, prices or campaign policy changes are required.
+
+SpiritVoice resolves the agricultural catalog first by exact text and language, retains streamed single-clip playback and its existing ended/skip/close lifecycle. It does not preload or decode the full bank into RAM. The web-package verifier checks the six new files as well as the historical files. Offline verification decodes all 60 clips completely, with no errors. New duration measurements: Growth ES 13.690375 s / EN 10.393125 s; Multiply ES 15.315771 s / EN 14.526292 s; Multiply reminder ES 12.436479 s / EN 9.417896 s. Playback advances from the real ended event rather than these rounded estimates.
+
+The two agricultural spells already use a 0.65 m visual radius, with their native VFX scaled by radius / 0.79 and centered on the selected plant. Shield remains 1.95 m. Agricultural gameplay selection uses plant identity, never that visual radius. The activation SFX remains a nonspatial interface cue; there is no sound-area radius to shrink. This is a source and functional-scale verification, not new visual or listening acceptance.
+
+Validation: 20 voice/lifecycle and reduced-radius tests pass; full offline media decode passes for 60 clips; Vite production build passes in 9.09 s; packaged web audit passes with all six new files and relative links. Added compressed media weighs 779,175 bytes. Browser listening and physical-device acceptance have not been performed for these new recordings.

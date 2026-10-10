@@ -19,9 +19,11 @@ def main():
     report = {'scope': 'Exact bytes, format and full offline decode; no browser playback or perceptual acceptance.',
               'toolSha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
               'manifestSha256': hashlib.sha256(manifest_path.read_bytes()).hexdigest(),
+              'agriculturalManifestSha256': hashlib.sha256((root / 'content/manifests/agricultural-spirit-voices.json').read_bytes()).hexdigest(),
               'ffprobe': run([args.ffprobe, '-version']).stdout.splitlines()[0],
               'ffmpeg': run([args.ffmpeg, '-version']).stdout.splitlines()[0], 'records': []}
-    for record in manifest['records']:
+    agricultural = json.loads((root / 'content/manifests/agricultural-spirit-voices.json').read_text(encoding='utf-8'))
+    for record in manifest['records'] + agricultural['records']:
         path = (root / 'public' / record['path']).resolve()
         path.relative_to((root / 'public').resolve())
         data = path.read_bytes()
