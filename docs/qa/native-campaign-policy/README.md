@@ -51,3 +51,15 @@ This continuation has not run a native opening or campaign. Pure accounting and 
 Validation for v2: nine focused accounting/observer/native-recovery contracts passed in208.8608ms before the cache refinement; final focused and defense-regression result is recorded in the commit review message. Savings use incrementally observed unique settled deliveries and native village receipts in the runner, not a full ledger walk each decision. No native campaign was launched.
 
 Final focused regression:12 contracts passed (531.3296ms), including native paid defense and turnover; runner/expansion syntax checks passed. No campaign or GPU process was started.
+
+## Prepared pilot CLI (must wait for reviewed entrance handshake)
+
+`node tools/run_native_campaign.mjs --out CASE_DIRECTORY --days 7 --seed 712 --strategy expansive --biome sabana --culture mapungubwe`
+
+Repeat only after authorisation with good/bad/no-walls and the same712, production prices and raid budget. This first baseline is seven native nights; no candidate calibration, reroll or100-night acceptance. Seeds123/2026 and further cultures remain preselected subsequent coverage. Explicit days accepts1..180, with native100 combat then80peace. Source receipt hashes all simulation/world/content inputs plus runner, protocol, finance, observers, policies, entry driver/transport and CLI. Tracked mutable runtime refuses launch. Existing nonempty evidence directories refuse overwrite.
+
+`days.jsonl` is appended at each completed native day; source/protocol/running receipt exist before simulation. Final report and gzip full state retain outputs. An exception preserves partial serialized state, current daily finance, completed days and observer receipts when available. Entry waits, the2400 simulated-second watchdog and any tool exception are incomplete observations, not native defeat. CLI exit1 means incomplete harness error; exit2 means an observed native defeat; exit0 means horizon observed, never proof of activity/protection/survival acceptance. Native result and meaningful idle remain explicit in receipt.
+
+Labour review: production `max_workers` is null;64 is the urgency-pass optimisation threshold, not a hiring cap. Harness wages use real30/40 per selected profile, proportional ceil through native hiringCost for additional contracts. Staffing is forecast living/6 bounded by actual cash, no artificial64-worker cap; A reserves already planned next wages, B can reserve larger living-load wages. A native hire rejection or recovery discrepancy is retained as an incomplete/failed action, never rescued by balance assignment. Pending repair expenses use stored historical target.cost. This staffing forecast does not establish throughput or guarantee reserve sufficiency.
+
+CLI validation: eight short contracts passed in283.8935ms, including injected error/file preservation tests; they do not execute the native campaign engine. Syntax checks passed. Driver plan-active correction is owned by the exterior-entry PR; pending day/night cohorts must share its authoritative helper before launch.
