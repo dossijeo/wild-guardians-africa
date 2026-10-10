@@ -27,19 +27,33 @@ export function summarizeNativeCase({receipt,source,report,partial}){
  const data=report??partial?.receipts;
  assert.ok(data,'Missing native evidence');
  const native=data.nativeEvidence,raids=data.raidEvidence?.raids??[],raidRows=raids.map(summarizeNativeRaid);
+ const creditedRepairs=new Set();
+ for(const payment of native?.repairSettlements?.receipts??[])if(payment.paidCoins>0&&payment.restoredHp>payment.previousHp){
+  const request=native.requests?.find(r=>r.taskId===payment.taskId);if(request)creditedRepairs.add(request.decisionIndex);
+ }
+ let cumulativeOperatingNet=0;
  const daily=(data.daily??[]).map(d=>{
   const f=d.finance,expenses=['wages','seeds','walls','centers','villages','repairs','otherDebits'].reduce((n,k)=>n+f[k],0),credits=f.income+f.refunds+f.otherCredits;
   assert.equal(f.closing-f.opening,credits-expenses,'Daily journal must reconcile');
   const observed=native?.daily?.find(r=>r.day===d.day);
   if(observed)assert.equal(observed.income,f.income,'Only physically delivered income');
+  const decisions=native?.decisions?.map((r,index)=>({...r,index})).filter(r=>r.day===d.day);
+  const daylight=decisions?.reduce((n,r)=>n+r.daylightSeconds,0);
+  if(decisions)assert.ok(Math.abs(daylight-d.daylightSeconds)<1e-5,'Decision daylight must match completed native day');
+  const idle=decisions?decisions.reduce((n,r)=>n+(r.otherActions||creditedRepairs.has(r.index)?0:r.daylightSeconds),0):d.unoccupiedSeconds;
+  cumulativeOperatingNet+=credits-expenses;
   const attacks=raids.filter(r=>r.day===d.day),sum=k=>attacks.reduce((n,r)=>n+(r[k]??0),0);
   return {day:d.day,money:f.closing,income:f.income,expenses,net:credits-expenses,
-   seeds:f.seeds,wages:f.wages,walls:f.walls,repairs:f.repairs,
+   seeds:f.seeds,wages:f.wages,walls:f.walls,repairs:f.repairs,centers:f.centers,villages:f.villages,
+   refunds:f.refunds,otherCredits:f.otherCredits,otherDebits:f.otherDebits,cumulativeOperatingNet,
+   referenceRepairCostAtEndLiving:12+.42*d.living+.003*d.living*d.living,
    purchased:observed?.cropPurchases??null,living:d.living,delivered:d.delivered,destroyed:d.destroyed,
    wallPieces:observed?.wallPieces??null,animals:attacks.reduce((n,r)=>n+r.actors.length,0),
    cropHits:sum('cropHits'),wallHits:sum('wallHits'),centerHits:sum('centerHits'),
    destroyedByAttacks:sum('cropsDestroyed'),shieldContacts:sum('shieldContacts'),
-   daylightSeconds:d.daylightSeconds,idleFraction:d.daylightSeconds?d.unoccupiedSeconds/d.daylightSeconds:null};
+   daylightSeconds:d.daylightSeconds,idleFraction:d.daylightSeconds?idle/d.daylightSeconds:null,
+   rawDecisionIdleFraction:d.daylightSeconds?d.unoccupiedSeconds/d.daylightSeconds:null,
+   activityBasis:decisions?'native decisions plus once-credited paid HP-restoring repair requests':'legacy raw decisions; repair credit evidence unavailable'};
  });
  const daylight=daily.reduce((n,d)=>n+d.daylightSeconds,0),idle=daily.reduce((n,d)=>n+d.daylightSeconds*(d.idleFraction??0),0);
  return {strategy:source.arguments.strategy,seed:source.arguments.seed,gitHead:source.gitHead,
@@ -51,7 +65,7 @@ export function summarizeNativeCase({receipt,source,report,partial}){
   net:daily.reduce((n,d)=>n+d.net,0),wallPieces:daily.reduce((n,d)=>n+(d.wallPieces??0),0),
   wallHits:daily.reduce((n,d)=>n+d.wallHits,0),idleFraction:daylight?idle/daylight:null,
   observerStatus:native?.status??null,raidObserverStatus:data.raidEvidence?.status??null,daily,raids:raidRows,
-  scope:'Completed native days only. Partial current day remains in original receipts. No extrapolation to100/180. Day1 opening already paid center800; daily net excludes that opening capital. Purchases include first hiring-trigger seed, unlike loop-only planted count. Additional wages are already in wages. No GPU/touch/visual acceptance.'};
+  scope:'Completed native days only. Partial current day remains in original receipts. No extrapolation to100/180. Day1 opening already paid center800; cumulative operating net excludes that opening capital. Purchases include first hiring-trigger seed, unlike loop-only planted count. Additional wages are already in wages. Repair reference uses end-of-day living plants and is a hypothetical comparison only, never a fee; actual repairs include all structures. Activity uses native decisions plus once-credited paid HP-restoring requests when available; raw legacy activity is labeled separately. No GPU/touch/visual acceptance.'};
 }
 const read=path=>JSON.parse(readFileSync(path,'utf8'));
 export function readNativeCase(dir){return summarizeNativeCase({receipt:read(resolve(dir,'receipt.json')),source:read(resolve(dir,'source.json')),report:existsSync(resolve(dir,'report.json'))?read(resolve(dir,'report.json')):null,partial:existsSync(resolve(dir,'partial.json'))?read(resolve(dir,'partial.json')):null});}
@@ -60,7 +74,7 @@ export function writeNativeComparison(out,cases){
  if(existsSync(out)&&readdirSync(out).length)throw Error('Refusing to overwrite original comparison evidence');
  mkdirSync(out,{recursive:true});
  writeFileSync(resolve(out,'comparison.json'),JSON.stringify(cases,null,2)+'\n');
- const columns=['strategy','seed','status','day','money','income','expenses','net','purchased','living','delivered','destroyed','walls','repairs','wallPieces','animals','cropHits','wallHits','centerHits','destroyedByAttacks','shieldContacts','idleFraction'];
+ const columns=['strategy','seed','status','day','money','income','expenses','net','cumulativeOperatingNet','seeds','wages','walls','repairs','centers','villages','refunds','otherCredits','otherDebits','purchased','living','delivered','destroyed','wallPieces','animals','cropHits','wallHits','centerHits','destroyedByAttacks','shieldContacts','referenceRepairCostAtEndLiving','idleFraction','rawDecisionIdleFraction','activityBasis'];
  writeFileSync(resolve(out,'daily.csv'),columns.join(',')+'\n'+cases.flatMap(c=>c.daily.map(d=>columns.map(k=>d[k]??c[k]??'').join(','))).join('\n')+'\n');
  const raidColumns=['strategy','seed','id','day','daytime','ended','animals','exposedLiving','exposedWounded','hitBudget','consumedStrikes','remainingOrUnobservedStrikes','potentialStructureDamage','structureHpLost','wallHpLost','cropHits','destroyed','destroyedFraction','workerHits','misses','shieldContacts','wallHits','centerHits','replacementCost','lostBaseHarvestValue','freshCropKillUpperBound','woundedCropKillUpperBound','targetUnprotected','targetProtected'];
  writeFileSync(resolve(out,'raids.csv'),raidColumns.join(',')+'\n'+cases.flatMap(c=>c.raids.map(r=>raidColumns.map(k=>r[k]??c[k]??'').join(','))).join('\n')+'\n');
