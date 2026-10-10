@@ -3,8 +3,9 @@
 import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
 import {centerFootprint} from '../src/world/centers.js';
 import {operational} from '../src/simulation/rules.js';
+import {nativeServiceComponentProof} from './native-service-component-proof.mjs';
 const proofViews=new WeakMap();
-export function nativePerimeterProof(s,nav,plan,bounds,{cache=true}={}){
+export function nativePerimeterProof(s,nav,plan,bounds,{cache=true,outline=null}={}){
  // Native epochs invalidate obstacle/terrain/suppression changes. Bounds and
  // living crops are rechecked below on every call; they do not alter graph
  // geometry. Retain only one bounded native-query view per navigator.
@@ -26,7 +27,12 @@ export function nativePerimeterProof(s,nav,plan,bounds,{cache=true}={}){
   if(!outside)return {valid:false,reason:'no-clear-exterior-probe',checks};
   if(view.approachPath(outside,inside,radius,32))return {valid:false,reason:'native-animal-route-through-perimeter',radius,checks};
   const complete=view.approachGroupBlocked(outside,land,radius,.6+radius);checks.push({radius,inside:{x:inside.x,z:inside.z},outside,completeClosedComponent:complete});
-  if(!complete)return {valid:false,reason:'no-complete-native-component-certificate',checks};
+  if(!complete){
+   if(!outline)return {valid:false,reason:'no-complete-native-component-certificate',checks};
+   const targets=[...s.plants.filter(p=>p.alive),...s.structures.filter(operational)];
+   const services=nativeServiceComponentProof(s,view,targets,radius,outside,outline);checks.at(-1).services=services;
+   if(!services.valid)return {valid:false,reason:services.reason,checks};
+  }
  }
  const worker=s.workers.find(w=>!w.incapacitated&&w.status!=='home'),destination=s.plants.find(p=>p.alive&&view.walkable(p.x,p.z,.28,null,true));
  if(!worker||!destination)return {valid:false,reason:'worker-passage-not-observable',checks};

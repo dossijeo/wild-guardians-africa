@@ -1,0 +1,45 @@
+// Positive native grid certificates for actual service poses, not AABB filler.
+// A timed/bounded path failure is never evidence of enclosure.
+import {containsPoint} from '../src/world/footprints.js';
+import {centerBoundaryPoint} from '../src/world/centers.js';
+export function nativeServiceComponentProof(s,view,targets,radius,outside,outline){
+ const polygon=outline.map(([x,z])=>({x,z})),regions=new Map();let poses=0,blocked=0,certified=0,physicalConnectors=0,emptyNativeOrigins=0;
+ const enclosed=region=>{
+  if(regions.has(region))return regions.get(region);
+  const valid=[...region].every(id=>{const [x,z]=id.split(',').map(Number);return containsPoint(polygon,x,z);});regions.set(region,valid);return valid;
+ };
+ for(const target of targets){
+  const angle=Math.atan2(outside.x-target.x,outside.z-target.z),reach=.6+radius;
+  for(let i=0;i<32;i++){
+   const a=angle+i*Math.PI/16,point=target.kind==='center'?centerBoundaryPoint(target,a,radius+.5,s):{x:target.x+Math.sin(a)*reach,z:target.z+Math.cos(a)*reach};poses++;
+   if(!view.walkable(point.x,point.z,radius,null,false)){blocked++;continue;}
+   if(view.segmentClear(point,outside,radius,null,false))return {valid:false,reason:'native-service-direct-route-open',targetId:target.id,point,poses,blocked,certified};
+   if(view.approachPath(outside,point,radius,32))return {valid:false,reason:'native-service-route-open',targetId:target.id,point,poses,blocked,certified};
+   // These are exactly the animal A* origin connectors (no worker portals).
+   // Require positively exhausted, boundary-free components for every usable
+   // connector. Narrow poses with no connectors remain unproven, not accepted.
+   let connectors=0;
+   for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){
+    const q={x:Math.round(point.x)+dx,z:Math.round(point.z)+dz};
+    if(!view.walkable(q.x,q.z,radius,null,false)||!view.segmentClear(point,q,radius,null,false))continue;
+    connectors++;const region=view.closedRegions.get(`${radius}:null:false|${q.x},${q.z}`);
+    if(!region||!enclosed(region))return {valid:false,reason:'native-service-component-unproven',targetId:target.id,point,poses,blocked,certified};
+   }
+   if(!connectors){
+    // Some valid fractional poses have no usable 3x3 lattice connector. Do
+    // not interpret the empty A* frontier as enclosure: require a real clear
+    // body-width segment to a positively certified enclosed native component.
+    let connected=false;
+    for(let dz=-3;dz<=3&&!connected;dz++)for(let dx=-3;dx<=3&&!connected;dx++){
+     const q={x:Math.round(point.x)+dx,z:Math.round(point.z)+dz},region=view.closedRegions.get(`${radius}:null:false|${q.x},${q.z}`);
+     if(region&&enclosed(region)&&view.walkable(q.x,q.z,radius,null,false)&&view.segmentClear(point,q,radius,null,false))connected=true;
+    }
+    if(!connected)return {valid:false,reason:'native-service-origin-unproven',targetId:target.id,point,poses,blocked,certified};
+    physicalConnectors++;
+   }
+   certified++;
+  }
+ }
+ return {valid:true,reason:'native-service-poses-in-positive-closed-components',poses,blocked,certified,physicalConnectors,emptyNativeOrigins,regions:regions.size,
+  scope:'Native 32 service poses per target from the tested exterior origin: collision-blocked poses, positively enclosed native origin components,. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof.'};
+}

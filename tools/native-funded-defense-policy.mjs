@@ -22,7 +22,7 @@ export function createNativeFundedDefensePolicy({startDay=6,material='zarzas',in
   if(wallStroke(candidate.points,[],options).every(q=>s.structures.some(w=>matches(q,w))))return true;
   if(!obstacleAware)return false;
   const plan=Game.quoteWallChain(s,material,candidate.points,nav,options);
-  return !plan.pieces.length&&!plan.updates.length&&nativePerimeterProof(s,nav,plan,candidate.bounds).valid;
+  return !plan.pieces.length&&!plan.updates.length&&nativePerimeterProof(s,nav,plan,candidate.bounds,{outline:candidate.shoreRouted?candidate.points:null}).valid;
  };
  const quote=(s,nav,candidate,detail={})=>{
   const [x0,z0,x1,z1]=candidate.bounds;
@@ -35,7 +35,7 @@ export function createNativeFundedDefensePolicy({startDay=6,material='zarzas',in
   if(plan.pieces.length!==missing.length||!all.every(q=>[...s.structures,...plan.pieces].some(w=>matches(q,w)))){
    detail.reason='native-placement-omissions';
    if(!obstacleAware)return null;
-   detail.nativeBarrierProof=nativePerimeterProof(s,nav,plan,candidate.bounds);
+   detail.nativeBarrierProof=nativePerimeterProof(s,nav,plan,candidate.bounds,{outline:candidate.shoreRouted?candidate.points:null});
    if(!detail.nativeBarrierProof.valid)return null;
   }
   // Small vegetation cleared by a legal native purchase is allowed. Never

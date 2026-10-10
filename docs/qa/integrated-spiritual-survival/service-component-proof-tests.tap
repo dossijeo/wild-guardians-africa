@@ -1,0 +1,106 @@
+TAP version 13
+# (node:53240) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: unchanged native geometric failures are not retried; topology and crop occupancy invalidate
+ok 1 - unchanged native geometric failures are not retried; topology and crop occupancy invalidate
+  ---
+  duration_ms: 3771.583
+  ...
+# Subtest: wall contour uses placement rather than walking rules, remains deterministic and obeys search limits
+ok 2 - wall contour uses placement rather than walking rules, remains deterministic and obeys search limits
+  ---
+  duration_ms: 50.3054
+  ...
+# Subtest: shore envelope preserves land and enforces a bounded deterministic planning search
+ok 3 - shore envelope preserves land and enforces a bounded deterministic planning search
+  ---
+  duration_ms: 4.0435
+  ...
+# (node:53444) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native read-only wall quote is possible without funds; preview/build still enforce real cash
+ok 4 - native read-only wall quote is possible without funds; preview/build still enforce real cash
+  ---
+  duration_ms: 601.3854
+  ...
+# Subtest: real partial purchases close paid perimeter, create one worker gate, retain crops and replay saved state
+ok 5 - real partial purchases close paid perimeter, create one worker gate, retain crops and replay saved state
+  ---
+  duration_ms: 784.7461
+  ...
+# Subtest: paid wage protection can postpone purchases while preserving a real future savings target
+ok 6 - paid wage protection can postpone purchases while preserving a real future savings target
+  ---
+  duration_ms: 379.9441
+  ...
+# Subtest: funded defense remains opt-in and cannot lock funds before its declared day
+ok 7 - funded defense remains opt-in and cannot lock funds before its declared day
+  ---
+  duration_ms: 274.6224
+  ...
+# Subtest: legal native removal of small vegetation is allowed and recorded only through paid wall commands
+ok 8 - legal native removal of small vegetation is allowed and recorded only through paid wall commands
+  ---
+  duration_ms: 644.2521
+  ...
+# (node:2316) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: bounded native contour routes around real obstacles without modifying the retained campaign
+ok 9 - bounded native contour routes around real obstacles without modifying the retained campaign
+  ---
+  duration_ms: 2303.0837
+  ...
+# Subtest: routed savings uses actual cash and cannot promote proposed walls into live protection
+ok 10 - routed savings uses actual cash and cannot promote proposed walls into live protection
+  ---
+  duration_ms: 1571.4728
+  ...
+# Subtest: native perimeter proof rejects an open quote instead of claiming isolation from a bounded path failure
+ok 11 - native perimeter proof rejects an open quote instead of claiming isolation from a bounded path failure
+  ---
+  duration_ms: 336.3476
+  ...
+# Subtest: cached predictive queries recheck crop extent and invalidate native geometry epochs
+ok 12 - cached predictive queries recheck crop extent and invalidate native geometry epochs
+  ---
+  duration_ms: 2724.2699
+  ...
+# Subtest: routed policy retains real partial purchases and native gate creation in an affordable opening
+ok 13 - routed policy retains real partial purchases and native gate creation in an affordable opening
+  ---
+  duration_ms: 603.6683
+  ...
+# Subtest: damage to a paid enclosing wall requests native maintenance instead of buying a second perimeter
+ok 14 - damage to a paid enclosing wall requests native maintenance instead of buying a second perimeter
+  ---
+  duration_ms: 509.5107
+  ...
+# Subtest: a bounded failed search alone never certifies an enclosure
+ok 15 - a bounded failed search alone never certifies an enclosure
+  ---
+  duration_ms: 2.5252
+  ...
+# Subtest: only positively complete components wholly inside the outline certify poses
+ok 16 - only positively complete components wholly inside the outline certify poses
+  ---
+  duration_ms: 2.0913
+  ...
+# Subtest: a valid direct route or native detour rejects the proposed defense
+ok 17 - a valid direct route or native detour rejects the proposed defense
+  ---
+  duration_ms: 1.5381
+  ...
+# Subtest: an empty origin frontier remains unproven without a positive physical connector
+ok 18 - an empty origin frontier remains unproven without a positive physical connector
+  ---
+  duration_ms: 0.2866
+  ...
+1..18
+# tests 18
+# suites 0
+# pass 18
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 8371.0114

@@ -2,9 +2,11 @@
 import {readFileSync,writeFileSync,existsSync} from 'node:fs';
 import assert from 'node:assert/strict';
 const root='docs/qa/integrated-spiritual-survival';
+const [version='v5',suffix='cache']=process.argv.slice(2);
+if(!/^v[0-9]+$/.test(version)||! /^[a-z0-9-]+$/.test(suffix))throw Error('Invalid retained pilot version/suffix');
 const labels=[['good','Buena gestión','#226f42'],['expansive','Expansiva','#955520'],['passive','Pasiva','#6459a0'],['no-shield','Sin defensas','#a82732']];
 const runs=labels.map(([strategy,label,color])=>{
- const dir=`${root}/pilot-v5-${strategy}-sabana-712-cache`,r=JSON.parse(readFileSync(dir+'/report.json')),source=JSON.parse(readFileSync(dir+'/source.json')),receipt=JSON.parse(readFileSync(dir+'/receipt.json'));
+ const dir=`${root}/pilot-${version}-${strategy}-sabana-712-${suffix}`,r=JSON.parse(readFileSync(dir+'/report.json')),source=JSON.parse(readFileSync(dir+'/source.json')),receipt=JSON.parse(readFileSync(dir+'/receipt.json'));
  assert.equal(receipt.status,'observed-horizon');assert.equal(r.completedNights,7);
  for(const d of r.daily)assert.equal(d.finance.reconciliationDifference,0);
  return {strategy,label,color,r,source};
@@ -16,7 +18,7 @@ const summary=runs.map(({strategy,label,r})=>({strategy,label,nights:r.completed
  wallHits:sum(r.raidEvidence.raids,q=>q.wallHits),shieldContacts:sum(r.raidEvidence.raids,q=>q.shieldContacts),cropHits:sum(r.raidEvidence.raids,q=>q.cropHits),
  applications:r.agriculturalMagic.applications,additionalIncome:r.agriculturalMagic.additionalDeliveredIncome,growthSeconds:r.agriculturalMagic.executionGrowthSecondsAdded,
  humanManualActivitySeconds:r.agriculturalMagic.humanManualActivitySeconds,decisionIdleProxy:r.nativeEvidence.meaningfulActivity.unoccupiedFraction}));
-const out=root+'/pilot-v5-sabana-comparison';
+const out=root+'/pilot-'+version+'-sabana-comparison';
 if(existsSync(out+'.json'))throw Error('Refusing to overwrite frozen comparison');
 writeFileSync(out+'.json',JSON.stringify({source:runs[0].source.sourceHashes,scope:'Seven native nights, one seed and biome. Not 100-night balance or measured human inactivity acceptance.',summary},null,2)+'\n');
 writeFileSync(out+'.csv','strategy,day,cash,living,planted,delivered,destroyed,income,seeds,wages,walls,repairs,reconciliation\n'+runs.flatMap(({strategy,r})=>r.daily.map(d=>[strategy,d.day,d.money,d.living,d.planted,d.delivered,d.destroyed,d.finance.income,d.finance.seeds,d.finance.wages,d.finance.walls,d.finance.repairs,d.finance.reconciliationDifference].join(','))).join('\n')+'\n');
