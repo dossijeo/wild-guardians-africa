@@ -1,3 +1,4 @@
+import {cachedFractionalWalkability} from './fractional-walkability-cache.js';
 import {ViewMap,ViewSet,trimViewRegions} from './worker-view-cache.js';
 import {fluidAt,footprintFluidSample,FLUID_PLACEMENT_REASON} from './fluid-placement.js';
 import {navigationBounds,outsideNavigationBounds} from './navigation-bounds.js';
@@ -131,6 +132,7 @@ export class Navigation {
   }
   walkable(x,z,radius=.3,ignore=null,worker=false) {
     const exact=Number.isInteger(x)&&Number.isInteger(z),key=`${x},${z}:${radius}:${ignore}:${worker}`;
+    if(!exact)return cachedFractionalWalkability(this,x,z,radius,ignore,worker);
     if(exact&&this.walkCache.has(key))return this.walkCache.get(key);
     const result=this.testWalkable(x,z,radius,ignore,worker);
     if(exact){if(this.walkCache.size>=50000)evictOldest(this.walkCache);this.walkCache.set(key,result);}

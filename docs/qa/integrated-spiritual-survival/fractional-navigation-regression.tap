@@ -1,0 +1,380 @@
+TAP version 13
+# (node:53468) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: 200 distinct applications retain measurable declining marginal power without exceeding either budget
+ok 1 - 200 distinct applications retain measurable declining marginal power without exceeding either budget
+  ---
+  duration_ms: 214.592
+  ...
+# Subtest: aggregate entitlement is order invariant for cheap and expensive crops; repeat touches cannot mint another harvest bonus
+ok 2 - aggregate entitlement is order invariant for cheap and expensive crops; repeat touches cannot mint another harvest bonus
+  ---
+  duration_ms: 0.7941
+  ...
+# Subtest: fractional payouts cannot exploit ceil: paid whole coins equal floor of delivered entitlements and settlement is idempotent
+ok 3 - fractional payouts cannot exploit ceil: paid whole coins equal floor of delivered entitlements and settlement is idempotent
+  ---
+  duration_ms: 4.8898
+  ...
+# Subtest: day rollover does not refund commitments or increase one plant lifetime growth cap
+ok 4 - day rollover does not refund commitments or increase one plant lifetime growth cap
+  ---
+  duration_ms: 9.1525
+  ...
+# Subtest: execution records actual growth only; unused power remains committed
+ok 5 - execution records actual growth only; unused power remains committed
+  ---
+  duration_ms: 0.9152
+  ...
+# Subtest: fractional Growth does not grant a free watering checkpoint; legacy full-strength snapshots retain their old behavior
+ok 6 - fractional Growth does not grant a free watering checkpoint; legacy full-strength snapshots retain their old behavior
+  ---
+  duration_ms: 0.9463
+  ...
+# Subtest: native casts, active powers and pending harvest entitlement survive reload without replenishment
+ok 7 - native casts, active powers and pending harvest entitlement survive reload without replenishment
+  ---
+  duration_ms: 31.1247
+  ...
+# Subtest: one expensive harvest cannot absorb the whole daily budget and composition does not inflate the reference capacity
+ok 8 - one expensive harvest cannot absorb the whole daily budget and composition does not inflate the reference capacity
+  ---
+  duration_ms: 0.5089
+  ...
+# Subtest: fractional Growth preserves agricultural event water penalties at the next real checkpoint
+ok 9 - fractional Growth preserves agricultural event water penalties at the next real checkpoint
+  ---
+  duration_ms: 0.7488
+  ...
+# Subtest: expired and destroyed commitments are forfeited, never incorrectly reported as pending or refunded
+ok 10 - expired and destroyed commitments are forfeited, never incorrectly reported as pending or refunded
+  ---
+  duration_ms: 1.0078
+  ...
+# Subtest: the native worker must harvest and deliver before any committed Multiply income enters the ledger
+ok 11 - the native worker must harvest and deliver before any committed Multiply income enters the ledger
+  ---
+  duration_ms: 110.0056
+  ...
+# Subtest: fractional queries remain exact, replay peak risk and invalidate on topology, terrain or test implementation changes
+ok 12 - fractional queries remain exact, replay peak risk and invalidate on topology, terrain or test implementation changes
+  ---
+  duration_ms: 2.9236
+  ...
+# Subtest: inherited navigation views never share walkability decisions; memory is bounded and thrown queries are not cached
+ok 13 - inherited navigation views never share walkability decisions; memory is bounded and thrown queries are not cached
+  ---
+  duration_ms: 28.0418
+  ...
+# Subtest: native wall changes and worker avoidance retain exact blocking and separate views
+ok 14 - native wall changes and worker avoidance retain exact blocking and separate views
+  ---
+  duration_ms: 3.0524
+  ...
+# Subtest: Conservative obstacle bounds preserve exact point/segment collision results for all cultures and rotations
+ok 15 - Conservative obstacle bounds preserve exact point/segment collision results for all cultures and rotations
+  ---
+  duration_ms: 255.4717
+  ...
+# Subtest: Bounds include tangencies and narrow crossings; setState replaces geometry bounds and previews fall back to exact polygons
+ok 16 - Bounds include tangencies and narrow crossings; setState replaces geometry bounds and previews fall back to exact polygons
+  ---
+  duration_ms: 1.0113
+  ...
+# (node:25184) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Fresh navigation restores the saved route epoch without changing the snapshot; genuine mutations invalidate paths
+ok 17 - Fresh navigation restores the saved route epoch without changing the snapshot; genuine mutations invalidate paths
+  ---
+  duration_ms: 17.9861
+  ...
+# Subtest: Legacy or invalid epochs conservatively invalidate instead of trusting old persisted paths
+ok 18 - Legacy or invalid epochs conservatively invalidate instead of trusting old persisted paths
+  ---
+  duration_ms: 1.5139
+  ...
+# Subtest: one failure beyond capacity retains recent failed routes and evicts only the oldest
+ok 19 - one failure beyond capacity retains recent failed routes and evicts only the oldest
+  ---
+  duration_ms: 202.1574
+  ...
+# Subtest: geometry invalidation still retries previously failed routes after capacity eviction
+ok 20 - geometry invalidation still retries previously failed routes after capacity eviction
+  ---
+  duration_ms: 252.2039
+  ...
+# Subtest: Repeated overlapping A* searches preserve waypoint order while reusing cell geometry
+ok 21 - Repeated overlapping A* searches preserve waypoint order while reusing cell geometry
+  ---
+  duration_ms: 195.8361
+  ...
+# Subtest: Geometry epochs, actor permissions and proposed buildings cannot contaminate neighbor results
+ok 22 - Geometry epochs, actor permissions and proposed buildings cannot contaminate neighbor results
+  ---
+  duration_ms: 3.1447
+  ...
+# Subtest: Transient neighbor graph stays bounded and route arrays cannot mutate its cached points
+ok 23 - Transient neighbor graph stays bounded and route arrays cannot mutate its cached points
+  ---
+  duration_ms: 38.8629
+  ...
+# (node:52120) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native walk queries survive capacity pressure without losing true or false results
+ok 24 - native walk queries survive capacity pressure without losing true or false results
+  ---
+  duration_ms: 595.4654
+  ...
+# Subtest: native segment cache stays bounded, directed and separated by radius, ignore and worker
+ok 25 - native segment cache stays bounded, directed and separated by radius, ignore and worker
+  ---
+  duration_ms: 432.5105
+  ...
+# Subtest: fractional walk queries retain exact results independently of integer cache pressure
+ok 26 - fractional walk queries retain exact results independently of integer cache pressure
+  ---
+  duration_ms: 381.8124
+  ...
+# Subtest: successful exact queries are shared only inside the synchronous scope, with independent waypoints
+ok 27 - successful exact queries are shared only inside the synchronous scope, with independent waypoints
+  ---
+  duration_ms: 9.4167
+  ...
+# Subtest: clear crops retain same-scope routes, geometry invalidates and previews/dynamic clones stay separate
+ok 28 - clear crops retain same-scope routes, geometry invalidates and previews/dynamic clones stay separate
+  ---
+  duration_ms: 1.0399
+  ...
+# Subtest: failed query rules still prevail and throwing work always releases scope
+ok 29 - failed query rules still prevail and throwing work always releases scope
+  ---
+  duration_ms: 1.0198
+  ...
+# Subtest: temporary memory is bounded by route count and waypoint count
+ok 30 - temporary memory is bounded by route count and waypoint count
+  ---
+  duration_ms: 13.1258
+  ...
+# Subtest: A direct segment cannot tunnel through a small prop between valid sampled endpoints
+ok 31 - A direct segment cannot tunnel through a small prop between valid sampled endpoints
+  ---
+  duration_ms: 10.1718
+  ...
+# Subtest: Directed edge caches retain collision semantics and invalidate when structures or shields change
+ok 32 - Directed edge caches retain collision semantics and invalidate when structures or shields change
+  ---
+  duration_ms: 2.5742
+  ...
+# Subtest: Failed routes are reused only for identical endpoints and clear when an obstacle changes
+ok 33 - Failed routes are reused only for identical endpoints and clear when an obstacle changes
+  ---
+  duration_ms: 0.8832
+  ...
+# Subtest: Exhaustively explored enclosed regions reject other unreachable targets without another flood search
+ok 34 - Exhaustively explored enclosed regions reject other unreachable targets without another flood search
+  ---
+  duration_ms: 18.5506
+  ...
+# Subtest: A search touching corridor bounds does not certify a globally closed region
+ok 35 - A search touching corridor bounds does not certify a globally closed region
+  ---
+  duration_ms: 71.1731
+  ...
+# Subtest: Region reuse matches fresh searches across origins, endpoints, radii and actor permissions
+ok 36 - Region reuse matches fresh searches across origins, endpoints, radii and actor permissions
+  ---
+  duration_ms: 1022.2567
+  ...
+# Subtest: A diagonal grid edge with valid corners still detours around an intervening prop
+ok 37 - A diagonal grid edge with valid corners still detours around an intervening prop
+  ---
+  duration_ms: 1.0415
+  ...
+# Subtest: Fractional positions connect to a valid grid point even when their rounded start cell is blocked
+ok 38 - Fractional positions connect to a valid grid point even when their rounded start cell is blocked
+  ---
+  duration_ms: 0.9903
+  ...
+# Subtest: Swept paths respect native polygon edges, rotated walls and worker-only gate passage
+ok 39 - Swept paths respect native polygon edges, rotated walls and worker-only gate passage
+  ---
+  duration_ms: 1.9942
+  ...
+# Subtest: Every repair waypoint remains outside rotated native wall footprints and wider gates
+ok 40 - Every repair waypoint remains outside rotated native wall footprints and wider gates
+  ---
+  duration_ms: 5.8966
+  ...
+# Subtest: Center repair paths go around the center footprint and reject a completely inaccessible destination
+ok 41 - Center repair paths go around the center footprint and reject a completely inaccessible destination
+  ---
+  duration_ms: 1.1075
+  ...
+# Subtest: Wider searches find physical detours beyond the local corridor without reusing its cached failure
+ok 42 - Wider searches find physical detours beyond the local corridor without reusing its cached failure
+  ---
+  duration_ms: 112.5422
+  ...
+# (node:23624) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: 100 connected mijo plants allow independent attacks from 1 animals
+ok 43 - 100 connected mijo plants allow independent attacks from 1 animals
+  ---
+  duration_ms: 81.7196
+  ...
+# Subtest: 100 connected mijo plants allow independent attacks from 2 animals
+ok 44 - 100 connected mijo plants allow independent attacks from 2 animals
+  ---
+  duration_ms: 24.4301
+  ...
+# Subtest: 100 connected mijo plants allow independent attacks from 5 animals
+ok 45 - 100 connected mijo plants allow independent attacks from 5 animals
+  ---
+  duration_ms: 119.0415
+  ...
+# Subtest: 100 connected mijo plants allow independent attacks from 12 animals
+ok 46 - 100 connected mijo plants allow independent attacks from 12 animals
+  ---
+  duration_ms: 498.1375
+  ...
+# Subtest: centers permit physically independent simultaneous approach claims
+ok 47 - centers permit physically independent simultaneous approach claims
+  ---
+  duration_ms: 93.1429
+  ...
+# Subtest: individual claims and native RNG replay exactly after a save/reload
+ok 48 - individual claims and native RNG replay exactly after a save/reload
+  ---
+  duration_ms: 1088.0217
+  ...
+# Subtest: destroying one reserved crop frees only that target and preserves other leases
+ok 49 - destroying one reserved crop frees only that target and preserves other leases
+  ---
+  duration_ms: 31.882
+  ...
+# Subtest: actual saturation stages valid waiters and retires after no-progress bound without spending hits
+ok 50 - actual saturation stages valid waiters and retires after no-progress bound without spending hits
+  ---
+  duration_ms: 7.7989
+  ...
+# Subtest: legacy group saves migrate to individual claims without extra RNG draws
+ok 51 - legacy group saves migrate to individual claims without extra RNG draws
+  ---
+  duration_ms: 4.4064
+  ...
+# Subtest: group accessibility uses a complete native component certificate and invalidates when walls open
+ok 52 - group accessibility uses a complete native component certificate and invalidates when walls open
+  ---
+  duration_ms: 39.8827
+  ...
+# Subtest: a protected connected perimeter allows simultaneous attacks on separate pieces
+ok 53 - a protected connected perimeter allows simultaneous attacks on separate pieces
+  ---
+  duration_ms: 78.4309
+  ...
+# Subtest: return search resumes bounded native slices rather than draining synchronously
+ok 54 - return search resumes bounded native slices rather than draining synchronously
+  ---
+  duration_ms: 3.6923
+  ...
+# Subtest: ordinary worker tasks never start a return search
+ok 55 - ordinary worker tasks never start a return search
+  ---
+  duration_ms: 0.3102
+  ...
+# Subtest: failed search memo follows exact origin, destination and navigation epoch
+ok 56 - failed search memo follows exact origin, destination and navigation epoch
+  ---
+  duration_ms: 0.4952
+  ...
+# Subtest: only eight pending searches retain native frontier memory per navigation
+ok 57 - only eight pending searches retain native frontier memory per navigation
+  ---
+  duration_ms: 0.8425
+  ...
+# Subtest: a never-ending iterator is abandoned and memoized at its explicit total bound
+ok 58 - a never-ending iterator is abandoned and memoized at its explicit total bound
+  ---
+  duration_ms: 34.6615
+  ...
+# Subtest: native worker avoidance view is used for the wider search
+ok 59 - native worker avoidance view is used for the wider search
+  ---
+  duration_ms: 0.3797
+  ...
+# Subtest: wider native return does not cross water
+ok 60 - wider native return does not cross water
+  ---
+  duration_ms: 2.5673
+  ...
+# Subtest: wider native return does not cross lava
+ok 61 - wider native return does not cross lava
+  ---
+  duration_ms: 0.2415
+  ...
+# Subtest: wider native return does not cross solid
+ok 62 - wider native return does not cross solid
+  ---
+  duration_ms: 3.2936
+  ...
+# Subtest: wider native return does not cross steep
+ok 63 - wider native return does not cross steep
+  ---
+  duration_ms: 0.5112
+  ...
+# Subtest: a real closed wall ring cannot be escaped by enlarging the search corridor
+ok 64 - a real closed wall ring cannot be escaped by enlarging the search corridor
+  ---
+  duration_ms: 4.5338
+  ...
+# Subtest: a new navigation epoch abandons the pending return proof
+ok 65 - a new navigation epoch abandons the pending return proof
+  ---
+  duration_ms: 0.3606
+  ...
+# Subtest: dry canyon cliffs retain their worker-surface slope restriction
+ok 66 - dry canyon cliffs retain their worker-surface slope restriction
+  ---
+  duration_ms: 0.415
+  ...
+# (node:50152) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: refinement catches a narrow steep strip missed by the ordinary coarse samples
+ok 67 - refinement catches a narrow steep strip missed by the ordinary coarse samples
+  ---
+  duration_ms: 17.4186
+  ...
+# Subtest: a risky restored connector is rejected and replanned without teleporting the worker
+ok 68 - a risky restored connector is rejected and replanned without teleporting the worker
+  ---
+  duration_ms: 19.906
+  ...
+# Subtest: dynamic blockers retain priority and never create a terrain avoidance point
+ok 69 - dynamic blockers retain priority and never create a terrain avoidance point
+  ---
+  duration_ms: 0.4068
+  ...
+# Subtest: shared terrain-risk metadata retains its peak and actual geometry changes invalidate it
+ok 70 - shared terrain-risk metadata retains its peak and actual geometry changes invalidate it
+  ---
+  duration_ms: 0.911
+  ...
+# Subtest: private avoided-point views are isolated per worker, bounded and replaced on geometry changes
+ok 71 - private avoided-point views are isolated per worker, bounded and replaced on geometry changes
+  ---
+  duration_ms: 22.8745
+  ...
+# Subtest: optional learned terrain points round-trip and malformed or oversized save data is rejected
+ok 72 - optional learned terrain points round-trip and malformed or oversized save data is rejected
+  ---
+  duration_ms: 6.1272
+  ...
+1..72
+# tests 72
+# suites 0
+# pass 72
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2664.0915

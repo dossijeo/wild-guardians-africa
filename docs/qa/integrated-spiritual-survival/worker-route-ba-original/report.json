@@ -1,0 +1,92 @@
+{
+  "mode": "original",
+  "baselineSource": "f60e926d",
+  "runtimeHashes": {
+    "tools/profile-native-worker-routes.mjs": "4c07293c83e284932e3c1c3d17c28975a7e57b662bf078b22346ecbc96263e92",
+    "src/world/navigation.js": "f0845ecfa0a59d47c62eac7d41e327226bf45ebe2bbf7419f24be680cacae8f3",
+    "src/world/fractional-walkability-cache.js": "9a5d3b0df8fc12c73568772881970a4390a62d25aff990892706929ee141f123"
+  },
+  "finalStateSha256": "204552fae8ec34e51a1f0a977eff5192c3890e9dddb9cd7d0854cd0490b8e40d",
+  "source": "f60e926d296fd0db4698c37dc150ebb31e355872",
+  "input": "docs/qa/integrated-spiritual-survival/pilot-v3-good-sabana-712-defense6/partial-state.json.gz",
+  "inputSha256": "528229d1263f429941e1dc5ae558528167bdc5b761bfa5cc0c54b2b8d491d9e9",
+  "day": 7,
+  "startTime": 239.99999999998943,
+  "endTime": 241.99999999998988,
+  "simulatedSeconds": 2.000000000007276,
+  "frames": [
+    489.9625,
+    312.94319999999993,
+    307.49620000000004,
+    286.6322,
+    373.5625000000002,
+    320.1301000000003,
+    284.68449999999984,
+    393.3916000000004,
+    413.7935000000002,
+    421.1573999999996,
+    392.6185999999998,
+    347.60220000000027,
+    399.65959999999995,
+    355.7442999999994,
+    412.76720000000023,
+    440.54219999999987,
+    389.3663999999999,
+    391.8681000000006,
+    359.3036000000002,
+    401.8167000000003,
+    400.5142999999998,
+    368.05109999999877,
+    406.0214999999989,
+    416.34239999999954,
+    413.5493999999999,
+    384.3215999999993,
+    455.4349000000002,
+    455.5730999999996,
+    424.5128999999997,
+    408.10529999999926,
+    413.79979999999887,
+    409.65759999999864,
+    435.96570000000065,
+    373.53780000000006,
+    380.1995999999999,
+    400.7590999999993,
+    398.1713,
+    395.2957999999999,
+    413.9485000000004,
+    387.90350000000035
+  ],
+  "queries": {
+    "path": {
+      "calls": 36586,
+      "milliseconds": 218.86780000007968
+    },
+    "workerPath": {
+      "calls": 12,
+      "milliseconds": 8.572499999999309
+    },
+    "coarseSegmentClear": {
+      "calls": 1312,
+      "milliseconds": 46.05509999999492
+    },
+    "segmentClear": {
+      "calls": 352044,
+      "milliseconds": 1508.4349999994377
+    },
+    "portalGraph": {
+      "calls": 919,
+      "milliseconds": 1.175000000000864
+    },
+    "walkable": {
+      "calls": 392318,
+      "milliseconds": 12350.685699999742
+    }
+  },
+  "totalCpuMilliseconds": 15636.707799999995,
+  "p50": 399.65959999999995,
+  "p95": 455.5730999999996,
+  "maximum": 489.9625,
+  "workers": 13,
+  "tasks": 145,
+  "scope": "Read-only input; copied native snapshot advanced for two simulated daylight seconds, no player decisions, no raid, no campaign or GPU acceptance. Query timing is nested and instrumented: do not add categories or compare directly with uninstrumented gameplay."
+}

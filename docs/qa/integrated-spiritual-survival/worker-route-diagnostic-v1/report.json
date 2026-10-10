@@ -1,0 +1,84 @@
+{
+  "source": "f60e926d296fd0db4698c37dc150ebb31e355872",
+  "input": "docs/qa/integrated-spiritual-survival/pilot-v3-good-sabana-712-defense6/partial-state.json.gz",
+  "inputSha256": "528229d1263f429941e1dc5ae558528167bdc5b761bfa5cc0c54b2b8d491d9e9",
+  "day": 7,
+  "startTime": 239.99999999998943,
+  "endTime": 241.99999999998988,
+  "simulatedSeconds": 2.000000000007276,
+  "frames": [
+    511.9746000000001,
+    282.9477999999999,
+    265.90970000000016,
+    278.1951999999999,
+    301.0588,
+    256.52329999999984,
+    303.4760000000001,
+    339.8964000000001,
+    437.18430000000035,
+    455.8343,
+    423.24350000000004,
+    436.60599999999977,
+    448.4942000000001,
+    428.21340000000055,
+    429.241,
+    412.7997999999998,
+    400.3028000000004,
+    379.8585000000003,
+    419.3729999999996,
+    415.71680000000106,
+    474.91330000000016,
+    461.3603000000003,
+    458.60360000000037,
+    429.04559999999947,
+    417.5798999999988,
+    421.89010000000053,
+    427.46039999999994,
+    431.40929999999935,
+    420.4508000000005,
+    398.6985999999997,
+    436.4600999999984,
+    428.1116000000002,
+    471.53300000000127,
+    431.84449999999924,
+    427.1240999999991,
+    441.58530000000064,
+    419.4535999999989,
+    386.83100000000013,
+    402.7480000000014,
+    439.1860000000015
+  ],
+  "queries": {
+    "path": {
+      "calls": 36586,
+      "milliseconds": 235.10359999980165
+    },
+    "workerPath": {
+      "calls": 12,
+      "milliseconds": 10.49920000000236
+    },
+    "coarseSegmentClear": {
+      "calls": 1312,
+      "milliseconds": 51.65070000000594
+    },
+    "segmentClear": {
+      "calls": 352044,
+      "milliseconds": 1607.0520999997616
+    },
+    "portalGraph": {
+      "calls": 919,
+      "milliseconds": 1.947399999999675
+    },
+    "walkable": {
+      "calls": 392318,
+      "milliseconds": 12836.504999999539
+    }
+  },
+  "totalCpuMilliseconds": 16253.138500000003,
+  "p50": 427.1240999999991,
+  "p95": 474.91330000000016,
+  "maximum": 511.9746000000001,
+  "workers": 13,
+  "tasks": 145,
+  "scope": "Read-only input; copied native snapshot advanced for two simulated daylight seconds, no player decisions, no raid, no campaign or GPU acceptance. Query timing is nested and instrumented: do not add categories or compare directly with uninstrumented gameplay."
+}

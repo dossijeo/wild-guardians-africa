@@ -48,11 +48,14 @@ test('native segment cache stays bounded, directed and separated by radius, igno
   queries.forEach((args,i)=>assert.equal(nav.segmentClear(...args),expected[i]));
   assert.equal(calls,queries.length*2+2);
 });
-test('fractional walk queries remain uncached under pressure',()=>{
+test('fractional walk queries retain exact results independently of integer cache pressure',()=>{
   const {nav}=createOpeningWorld();pressure(nav.walkCache,50000);
   let calls=0;const raw=nav.testWalkable.bind(nav);
   nav.testWalkable=(...args)=>{calls++;return raw(...args);};
   const args=[.25,.75,.28,null,true],expected=raw(...args);
   assert.equal(nav.walkable(...args),expected);assert.equal(nav.walkable(...args),expected);
-  assert.equal(calls,2);assert.equal(nav.walkCache.size,50000);
+  assert.equal(calls,1);assert.equal(nav.walkCache.size,50000);
+  const neighboring=[.250000001,.75,.28,null,true];
+  assert.equal(nav.walkable(...neighboring),raw(...neighboring));assert.equal(calls,2,'no coordinate rounding');
+  nav.version++;assert.equal(nav.walkable(...args),expected);assert.equal(calls,3,'topology epoch invalidates fractional results');
 });
