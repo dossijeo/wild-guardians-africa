@@ -1,0 +1,150 @@
+TAP version 13
+# Subtest: 200 distinct applications retain measurable declining marginal power without exceeding either budget
+ok 1 - 200 distinct applications retain measurable declining marginal power without exceeding either budget
+  ---
+  duration_ms: 134.011
+  ...
+# Subtest: aggregate entitlement is order invariant for cheap and expensive crops; repeat touches cannot mint another harvest bonus
+ok 2 - aggregate entitlement is order invariant for cheap and expensive crops; repeat touches cannot mint another harvest bonus
+  ---
+  duration_ms: 0.7283
+  ...
+# Subtest: fractional payouts cannot exploit ceil: paid whole coins equal floor of delivered entitlements and settlement is idempotent
+ok 3 - fractional payouts cannot exploit ceil: paid whole coins equal floor of delivered entitlements and settlement is idempotent
+  ---
+  duration_ms: 4.5978
+  ...
+# Subtest: day rollover does not refund commitments or increase one plant lifetime growth cap
+ok 4 - day rollover does not refund commitments or increase one plant lifetime growth cap
+  ---
+  duration_ms: 4.2492
+  ...
+# Subtest: execution records actual growth only; unused power remains committed
+ok 5 - execution records actual growth only; unused power remains committed
+  ---
+  duration_ms: 0.6114
+  ...
+# Subtest: fractional Growth does not grant a free watering checkpoint; legacy full-strength snapshots retain their old behavior
+ok 6 - fractional Growth does not grant a free watering checkpoint; legacy full-strength snapshots retain their old behavior
+  ---
+  duration_ms: 1.1229
+  ...
+# Subtest: native casts, active powers and pending harvest entitlement survive reload without replenishment
+ok 7 - native casts, active powers and pending harvest entitlement survive reload without replenishment
+  ---
+  duration_ms: 32.1323
+  ...
+# Subtest: the native worker must harvest and deliver before any committed Multiply income enters the ledger
+ok 8 - the native worker must harvest and deliver before any committed Multiply income enters the ledger
+  ---
+  duration_ms: 80.8099
+  ...
+# Subtest: explicit language overrides browser preferences; unknown preferences fall back to English
+ok 9 - explicit language overrides browser preferences; unknown preferences fall back to English
+  ---
+  duration_ms: 6.2558
+  ...
+# Subtest: browser preference order recognises regional English and Spanish variants
+ok 10 - browser preference order recognises regional English and Spanish variants
+  ---
+  duration_ms: 0.4139
+  ...
+# Subtest: storage failure is safe and persistent override uses its own key
+ok 11 - storage failure is safe and persistent override uses its own key
+  ---
+  duration_ms: 0.3414
+  ...
+# Subtest: catalog translates complete labels and leaves logical IDs and partial words intact
+ok 12 - catalog translates complete labels and leaves logical IDs and partial words intact
+  ---
+  duration_ms: 109.8541
+  ...
+# Subtest: generated catalog matches its reviewed TSV source without stale translations
+ok 13 - generated catalog matches its reviewed TSV source without stale translations
+  ---
+  duration_ms: 40.3783
+  ...
+# Subtest: audited library explanations are fully translated including semicolons and split markup text
+ok 14 - audited library explanations are fully translated including semicolons and split markup text
+  ---
+  duration_ms: 23.2019
+  ...
+# Subtest: ARIA interpolation and language reversal keep source strings and user parameters
+ok 15 - ARIA interpolation and language reversal keep source strings and user parameters
+  ---
+  duration_ms: 0.7792
+  ...
+# Subtest: current hiring dialog translates revised wages and every rendered hiring stepper
+ok 16 - current hiring dialog translates revised wages and every rendered hiring stepper
+  ---
+  duration_ms: 29.8862
+  ...
+# Subtest: revised reserve and dynamic damaged-wall refunds retain their amounts in English
+ok 17 - revised reserve and dynamic damaged-wall refunds retain their amounts in English
+  ---
+  duration_ms: 1.9474
+  ...
+# Subtest: all tutorial messages have complete translations, including mechanics and campaign ending
+ok 18 - all tutorial messages have complete translations, including mechanics and campaign ending
+  ---
+  duration_ms: 2.258
+  ...
+# Subtest: catalog contains no empty messages, malformed placeholders or untranslated key markers
+ok 19 - catalog contains no empty messages, malformed placeholders or untranslated key markers
+  ---
+  duration_ms: 6.6237
+  ...
+# Subtest: agricultural notices and quantitative labels interpolate names and singular/plural in both languages
+ok 20 - agricultural notices and quantitative labels interpolate names and singular/plural in both languages
+  ---
+  duration_ms: 2.3342
+  ...
+# Subtest: shield appears once per day without pausing, including a completed global tutorial
+ok 21 - shield appears once per day without pausing, including a completed global tutorial
+  ---
+  duration_ms: 11.0825
+  ...
+# Subtest: shield waits for availability, removes obsolete advice when cast or animals leave, and preserves menu pauses
+ok 22 - shield waits for availability, removes obsolete advice when cast or animals leave, and preserves menu pauses
+  ---
+  duration_ms: 1.0417
+  ...
+# Subtest: saved acknowledged raids do not replay shield advice; an unfinished reminder remains readable after restoration
+ok 23 - saved acknowledged raids do not replay shield advice; an unfinished reminder remains readable after restoration
+  ---
+  duration_ms: 4.0951
+  ...
+# Subtest: an arriving raid takes priority over ordinary advice and leaves that explanation queued
+ok 24 - an arriving raid takes priority over ordinary advice and leaves that explanation queued
+  ---
+  duration_ms: 0.5412
+  ...
+# Subtest: render-frequency updates reuse the peaceful plant check until simulated time advances
+ok 25 - render-frequency updates reuse the peaceful plant check until simulated time advances
+  ---
+  duration_ms: 3.5125
+  ...
+# Subtest: growth cannot repeat today and receives its full reading time on the following day
+ok 26 - growth cannot repeat today and receives its full reading time on the following day
+  ---
+  duration_ms: 1.2025
+  ...
+# Subtest: multiply requires working labour and unmarked live crops, with a gap between peaceful reminders
+ok 27 - multiply requires working labour and unmarked live crops, with a gap between peaceful reminders
+  ---
+  duration_ms: 1.0086
+  ...
+# Subtest: new reminders are bilingual and saved reminder times reject corrupt values
+ok 28 - new reminders are bilingual and saved reminder times reject corrupt values
+  ---
+  duration_ms: 1.2825
+  ...
+1..28
+# tests 28
+# suites 0
+# pass 28
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 533.4786

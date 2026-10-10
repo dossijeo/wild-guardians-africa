@@ -1,3 +1,4 @@
+import {validateAgriculturalPower} from '../simulation/agricultural-power.js';
 import {BASIC_STEPS,TUTORIAL_IDS} from '../tutorial/messages.js';
 import {validExitFrontier} from './exit-connector-snapshot.js';
 export const SAVE_VERSION=1;
@@ -73,6 +74,7 @@ export function validateSnapshot(state) {
       if(!crate||crate.delivered||crate.carrierId!==worker.id||worker.status!=='carrying')throw new Error('Carga de trabajador inválida');
     }else if(worker.status==='carrying')throw new Error('Trabajador sin carga');
   }
+  validateAgriculturalPower(state);
   return state;
 }
 export function serialize(state) { validateSnapshot(state);return JSON.stringify(state); }

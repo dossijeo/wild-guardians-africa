@@ -20,16 +20,17 @@ export function advancePlant(p,seconds,growthMagic=false) {
     let dueCount=0,remainingTolerance=Infinity;
     for(const water of p.water)if(water.status==='due'){dueCount++;remainingTolerance=Math.min(remainingTolerance,tolerance-water.wait);}
     const magic=growthMagic && dueCount===0;
-    const rate=magic?1.5:1;
+    const intensity=growthMagic===true?1:typeof growthMagic==='number'?Math.min(1,Math.max(0,growthMagic)):0;
+    const rate=magic?1+.5*intensity:1;
     const next=p.water.find(w=>w.status==='future');
     const untilCheckpoint=next?Math.max(0,(next.at-p.growth)/rate):Infinity;
     const untilDry=dueCount?Math.max(0,remainingTolerance):Infinity;
     if(untilDry<=1e-9) return extraGrowth;
     const step=Math.min(left,untilCheckpoint,untilDry,(spec.growth_seconds-p.growth)/rate);
     if(dueCount)for(const water of p.water)if(water.status==='due')water.wait+=step;
-    p.growth+=step*rate;left-=step;if(magic)extraGrowth+=step*.5;
+    p.growth+=step*rate;left-=step;if(magic)extraGrowth+=step*.5*intensity;
     if(next && p.growth>=next.at-1e-9) {
-      if(magic)satisfyWater(p,next,true);else next.status='due';
+      if(magic&&growthMagic===true)satisfyWater(p,next,true);else next.status='due';
       if(!magic&&p.nextTolerancePenalty){next.wait=tolerance*p.nextTolerancePenalty;p.nextTolerancePenalty=0;}
     }
     if(p.growth>=spec.growth_seconds-1e-9) {

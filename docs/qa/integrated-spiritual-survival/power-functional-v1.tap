@@ -1,0 +1,50 @@
+TAP version 13
+# Subtest: 200 distinct applications retain measurable declining marginal power without exceeding either budget
+ok 1 - 200 distinct applications retain measurable declining marginal power without exceeding either budget
+  ---
+  duration_ms: 77.5405
+  ...
+# Subtest: aggregate entitlement is order invariant for cheap and expensive crops; repeat touches cannot mint another harvest bonus
+ok 2 - aggregate entitlement is order invariant for cheap and expensive crops; repeat touches cannot mint another harvest bonus
+  ---
+  duration_ms: 0.7116
+  ...
+# Subtest: fractional payouts cannot exploit ceil: paid whole coins equal floor of delivered entitlements and settlement is idempotent
+ok 3 - fractional payouts cannot exploit ceil: paid whole coins equal floor of delivered entitlements and settlement is idempotent
+  ---
+  duration_ms: 4.7942
+  ...
+# Subtest: day rollover does not refund commitments or increase one plant lifetime growth cap
+ok 4 - day rollover does not refund commitments or increase one plant lifetime growth cap
+  ---
+  duration_ms: 4.7335
+  ...
+# Subtest: execution records actual growth only; unused power remains committed
+ok 5 - execution records actual growth only; unused power remains committed
+  ---
+  duration_ms: 0.9901
+  ...
+# Subtest: fractional Growth does not grant a free watering checkpoint; legacy full-strength snapshots retain their old behavior
+ok 6 - fractional Growth does not grant a free watering checkpoint; legacy full-strength snapshots retain their old behavior
+  ---
+  duration_ms: 1.2636
+  ...
+# Subtest: native casts, active powers and pending harvest entitlement survive reload without replenishment
+ok 7 - native casts, active powers and pending harvest entitlement survive reload without replenishment
+  ---
+  duration_ms: 26.3897
+  ...
+# Subtest: the native worker must harvest and deliver before any committed Multiply income enters the ledger
+ok 8 - the native worker must harvest and deliver before any committed Multiply income enters the ledger
+  ---
+  duration_ms: 69.2871
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 402.732

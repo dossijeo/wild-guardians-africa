@@ -1,3 +1,4 @@
+import {commitAgriculturalPower,consumeGrowthPower,settleMultiplyPower} from './agricultural-power.js';
 import {activeRaidEntryPlan} from '../world/raid-entry-data.js';
 import {animalExitConnector} from './animal-exit-connectors.js';
 import {workerReturnRoute} from './worker-return-route.js';
@@ -389,14 +390,14 @@ function validateSpell(s,kind,x,z,nav,targetPlantId) {
 export function cast(s,id,kind,x,z,nav,targetPlantId) {
   if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
   const spec=validateSpell(s,kind,x,z,nav,targetPlantId),radius=spellRadius(kind);
-  const target=agriculturalTarget(s,kind,x,z,targetPlantId),benefited=kind==='multiply'?!target.multiplyHarvest:kind==='growth'&&target.water.every(w=>w.status!=='due');
+  const target=agriculturalTarget(s,kind,x,z,targetPlantId);
   return commit(s,id,kind,()=>{
     const area={id:`spell-${s.nextId++}`,kind,x,z,radius,remaining:spec.duration_seconds};
     if(target)area.targetPlantId=target.id;
-    if(kind==='multiply')markMultiplyTargets(s,area);
+    if(target){area.power=commitAgriculturalPower(s,target,kind,cropSpec(target.species).base_harvest_value);if(kind==='multiply'){target.multiplyHarvest=true;area.exposureApplied=true;}}
     s.spells.push(area);s.cooldowns[kind]=kind==='shield'?spec.cooldown_seconds:0;
     if(kind==='shield')nav.setState(s);
-    emit(s,'SpellActivated',{kind,x,z,targetPlantId:target?.id,benefited,duration:spec.duration_seconds});
+    emit(s,'SpellActivated',{kind,x,z,targetPlantId:target?.id,benefited:area.power?.benefited??false,power:area.power??null,duration:spec.duration_seconds});
   });
 }
 export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignore=null,worker=true,motion=null,expandRoute=false,routeVia=null}={}) {
@@ -444,11 +445,11 @@ function completeTask(s,w,t,target,nav) {
     if(isMature(target)&&target.harvestRequested) {
       let value=rational(cropSpec(target.species).base_harvest_value);
       if(profile(w).male)value=multiply(value,6,5);
-      if(target.multiplyHarvest||spellAt(s,'multiply',target))value=multiply(value,2);
+      if(!target.multiplyPower&&(target.multiplyHarvest||spellAt(s,'multiply',target)))value=multiply(value,2);
       if(target.harvestBonus)value=multiply(value,100+target.harvestBonus,100);
       target.alive=false;target.harvestRequested=false;target.multiplyHarvest=false;
       cropBecameInactive(s.plants);
-      const crate={id:`crate-${s.nextId++}`,sourcePlantId:target.id,species:target.species,x:w.x,z:w.z,value,profile:w.profile,carrierId:w.id,delivered:false,centerId:w.centerId};s.crates.push(crate);w.crateId=crate.id;w.status='carrying';w.path=null;emit(s,'CropPicked',{workerId:w.id,targetId:target.id});
+      const crate={id:`crate-${s.nextId++}`,sourcePlantId:target.id,species:target.species,x:w.x,z:w.z,value,multiplyPower:target.multiplyPower??null,profile:w.profile,carrierId:w.id,delivered:false,centerId:w.centerId};delete target.multiplyPower;s.crates.push(crate);w.crateId=crate.id;w.status='carrying';w.path=null;emit(s,'CropPicked',{workerId:w.id,targetId:target.id});
     }
   } else if(t.kind==='crate') {target.carrierId=w.id;w.crateId=target.id;target.centerId=w.centerId;w.status='carrying';w.path=null;}
   else if(t.kind==='repair') {
@@ -539,7 +540,7 @@ function updateWorkers(s,dt,nav) {
         const delivered=walkTo(s,w,{...w.deliveryApproach,id:`delivery-${center.id}-${crate.id}`},dt,nav,{motion:{carrying:true}});
         crate.x=w.x;crate.z=w.z;
         if(delivered) {
-          transact(s.ledger,`deliver:${crate.id}`,crate.value);crate.delivered=true;crate.carrierId=null;w.crateId=null;w.deliveryApproach=null;w.status=ended?'returning':'idle';w.path=null;emit(s,'CrateDelivered',{workerId:w.id,targetId:crate.id});
+          const extraIncome=settleMultiplyPower(s,crate);transact(s.ledger,`deliver:${crate.id}`,add(crate.value,extraIncome));crate.multiplyIncome=extraIncome;crate.delivered=true;crate.carrierId=null;w.crateId=null;w.deliveryApproach=null;w.status=ended?'returning':'idle';w.path=null;emit(s,'CrateDelivered',{workerId:w.id,targetId:crate.id,multiplyIncome:crate.multiplyIncome});
           if(s.tutorial.step==='observe'||s.tutorial.step==='harvest'){s.tutorial.step='done';if(!s.tutorial.basicSkipped)emit(s,'TutorialCompleted',{workerId:w.id,targetId:crate.id});}
         }
         continue;
@@ -661,8 +662,8 @@ function tickScoped(s,seconds,nav) {
       const enqueueCrop=taskEnqueuer(s);
       for(const p of activeCrops(s.plants)) {
         if(!p.alive)continue;
-        const before=isMature(p),growthSpell=spellAt(s,'growth',p),extra=advancePlant(p,step,!!growthSpell);
-        if(growthSpell&&extra>0)growthSpell.growthSecondsAdded=(growthSpell.growthSecondsAdded??0)+extra;
+        const before=isMature(p),growthSpell=spellAt(s,'growth',p),extra=advancePlant(p,step,growthSpell?.power?growthSpell.power.intensity:!!growthSpell);
+        if(growthSpell&&extra>0){growthSpell.growthSecondsAdded=(growthSpell.growthSecondsAdded??0)+extra;consumeGrowthPower(s,growthSpell,extra);}
         if(!before&&isMature(p)){emit(s,'CropMatured',{targetId:p.id});if(s.tutorial.step==='observe')s.tutorial.step='harvest';}
         if(!p.harvestRequested)queueMatureHarvest(s,p,enqueueCrop);
         if(p.alive&&p.water.some(w=>w.status==='due')&&p.centerId&&s.structures.some(c=>c.id===p.centerId&&operational(c)))enqueueCrop(p.centerId,p.water[0].status==='due'?'initial':'water',p.id);

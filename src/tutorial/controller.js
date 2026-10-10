@@ -73,9 +73,12 @@ export class TutorialController {
     enqueue('mechanic.first-raid',!!s.raid);
     enqueue('magic.shield',!!s.raid);
     // Availability is day one; teach after the basic flow rather than interrupting its hands.
-    const teachAgriculture=t.basicSkipped&&(s.day>1||s.structures.length>0)||t.seen.includes('basic.complete');
+    const live=s.plants.filter(p=>p.alive);
+    const watered=live.length>0&&live.every(p=>p.water[0].status!=='due'&&!p.water.some(w=>w.status==='due'));
+    const working=s.hiringPaidDay===s.day&&s.workers.length>0;
+    const teachAgriculture=!s.raid&&((working&&watered)||s.day>1);
     enqueue('magic.growth',teachAgriculture);
-    enqueue('magic.multiply',teachAgriculture);
+    enqueue('magic.multiply',teachAgriculture&&t.seen.includes('magic.growth'));
     enqueue('worker.recovery',s.workers.some(w=>w.incapacitated)||s.people.some(p=>p.recoveryUntil>=s.day));
     enqueue('campaign.liberation',s.result==='victory',true);
     enqueue('world.expansion',s.postgame&&!s.result);
