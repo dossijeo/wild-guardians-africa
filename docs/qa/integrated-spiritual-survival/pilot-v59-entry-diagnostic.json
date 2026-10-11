@@ -1,0 +1,223 @@
+{
+  "input": "docs/qa/integrated-spiritual-survival/pilot-v59-common-good-q9-breach-first-2026-fourteen/partial-state.json.gz",
+  "inputSha256": "b12539c2eff33d65204ed41656e60a47763be8eb0e1b693d534392f4ea06aa6d",
+  "day": 13,
+  "time": 600,
+  "bounds": [
+    -24,
+    -120,
+    216,
+    120
+  ],
+  "view": {
+    "eye": {
+      "x": 112.70247532024266,
+      "z": 21.57367599590944
+    },
+    "target": {
+      "x": 96,
+      "z": -9
+    }
+  },
+  "rows": [
+    {
+      "species": [
+        "warthog",
+        "lion",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "buffalo",
+        "warthog",
+        "hyena",
+        "warthog",
+        "warthog",
+        "warthog"
+      ],
+      "nativeChosenActors": 0,
+      "chosen": null,
+      "cameraCandidateActors": 0,
+      "cameraExteriorCertified": false,
+      "cameraPoses": []
+    },
+    {
+      "species": [
+        "warthog"
+      ],
+      "nativeChosenActors": 0,
+      "chosen": null,
+      "cameraCandidateActors": 1,
+      "cameraExteriorCertified": false,
+      "cameraPoses": [
+        {
+          "point": {
+            "x": 99.70858221872454,
+            "z": 32.204703324738944
+          },
+          "radius": 1.1,
+          "bodyClear": true,
+          "exteriorWitness": false
+        },
+        {
+          "point": {
+            "x": 101.14685883453716,
+            "z": 34.837451010410064
+          },
+          "radius": 1.1,
+          "bodyClear": true,
+          "exteriorWitness": false
+        }
+      ]
+    },
+    {
+      "species": [
+        "lion"
+      ],
+      "nativeChosenActors": 1,
+      "chosen": {
+        "entries": [
+          {
+            "x": 123.23579842759706,
+            "z": 11.921132066142842
+          }
+        ],
+        "exits": [
+          {
+            "x": 125.66309947289132,
+            "z": 13.684143590641025
+          }
+        ],
+        "selectionBounds": [
+          -24,
+          -120,
+          216,
+          120
+        ]
+      },
+      "cameraCandidateActors": 1,
+      "cameraExteriorCertified": false,
+      "cameraPoses": [
+        {
+          "point": {
+            "x": 99.32545106550637,
+            "z": 32.129135345847615
+          },
+          "radius": 0.85,
+          "bodyClear": true,
+          "exteriorWitness": false
+        },
+        {
+          "point": {
+            "x": 100.76372768131898,
+            "z": 34.761883031518735
+          },
+          "radius": 0.85,
+          "bodyClear": true,
+          "exteriorWitness": false
+        }
+      ]
+    },
+    {
+      "species": [
+        "buffalo"
+      ],
+      "nativeChosenActors": 1,
+      "chosen": {
+        "entries": [
+          {
+            "x": 124.03809507920809,
+            "z": 11.020732109005063
+          }
+        ],
+        "exits": [
+          {
+            "x": 126.46539612450235,
+            "z": 12.783743633503246
+          }
+        ],
+        "selectionBounds": [
+          -24,
+          -120,
+          216,
+          120
+        ]
+      },
+      "cameraCandidateActors": 1,
+      "cameraExteriorCertified": false,
+      "cameraPoses": [
+        {
+          "point": {
+            "x": 100.78711422916346,
+            "z": 31.46736439150773
+          },
+          "radius": 0.97,
+          "bodyClear": true,
+          "exteriorWitness": false
+        },
+        {
+          "point": {
+            "x": 102.22539084497608,
+            "z": 34.10011207717885
+          },
+          "radius": 0.97,
+          "bodyClear": true,
+          "exteriorWitness": false
+        }
+      ]
+    },
+    {
+      "species": [
+        "hyena"
+      ],
+      "nativeChosenActors": 1,
+      "chosen": {
+        "entries": [
+          {
+            "x": 123.57008869910165,
+            "z": 11.545965417335434
+          }
+        ],
+        "exits": [
+          {
+            "x": 125.9973897443959,
+            "z": 13.308976941833617
+          }
+        ],
+        "selectionBounds": [
+          -24,
+          -120,
+          216,
+          120
+        ]
+      },
+      "cameraCandidateActors": 1,
+      "cameraExteriorCertified": false,
+      "cameraPoses": [
+        {
+          "point": {
+            "x": 101.36786223478444,
+            "z": 31.07033573515246
+          },
+          "radius": 0.9,
+          "bodyClear": true,
+          "exteriorWitness": false
+        },
+        {
+          "point": {
+            "x": 102.80613885059705,
+            "z": 33.70308342082358
+          },
+          "radius": 0.9,
+          "bodyClear": true,
+          "exteriorWitness": false
+        }
+      ]
+    }
+  ],
+  "scope": "Original full pending group and isolated-species native entry queries on copied states. Never reduces a real raid, bypasses geometry or accepts an uncertified spawn."
+}
