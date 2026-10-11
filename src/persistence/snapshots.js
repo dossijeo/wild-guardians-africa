@@ -42,6 +42,7 @@ export function validateSnapshot(state) {
     const search=animal.exitConnectorSearch;
     if(!search||typeof search.key!=='string'||search.key.length>256||!Number.isSafeInteger(search.next)||search.next<0||search.next>192)throw new Error('Conector de salida inválido');
     if(search.fine!==undefined&&!validExitFrontier(search.fine))throw new Error('Conector fraccional inválido');
+    if(search.quarter!==undefined&&!validExitFrontier(search.quarter))throw new Error('Conector fraccional fino inválido');
   }
   for(const name of ['plants','structures','workers','crates','villages','spells','tasks']) {
     if(!Array.isArray(state[name]))throw new Error('Entidades inválidas');

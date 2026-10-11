@@ -1,0 +1,65 @@
+{
+  "input": "docs/qa/integrated-spiritual-survival/pilot-v47-good-q9-empalizada-short-yield-sabana-123-twentyone/partial-state.json.gz",
+  "snapshotSha256": "24feedf817d0c164e9903e3150aaf076ac677f9722df89200a557eb088a7e2ef",
+  "node": "v20.11.0",
+  "platform": "win32",
+  "warmNative": true,
+  "warmMilliseconds": 94.26169999999999,
+  "calls": 32,
+  "pathPoints": 18,
+  "searchMilliseconds": {
+    "p50": 0.9148000000000138,
+    "p95": 8.301199999999994,
+    "maximum": 23.76679999999999,
+    "total": 75.2881999999997
+  },
+  "maximumNativeClearanceQueriesPerCall": 67,
+  "slowest": [
+    {
+      "call": 31,
+      "milliseconds": 23.76679999999999,
+      "clearanceQueries": 9,
+      "queryOrigin": {
+        "x": 103.97107145087567,
+        "z": -1.255064014435444
+      }
+    },
+    {
+      "call": 27,
+      "milliseconds": 8.301199999999994,
+      "clearanceQueries": 61,
+      "queryOrigin": {
+        "x": 103.97107145087567,
+        "z": -1.255064014435444
+      }
+    },
+    {
+      "call": 21,
+      "milliseconds": 5.252999999999986,
+      "clearanceQueries": 13,
+      "queryOrigin": {
+        "x": 103.97107145087567,
+        "z": -1.255064014435444
+      }
+    },
+    {
+      "call": 29,
+      "milliseconds": 4.562800000000038,
+      "clearanceQueries": 57,
+      "queryOrigin": {
+        "x": 103.97107145087567,
+        "z": -1.255064014435444
+      }
+    },
+    {
+      "call": 0,
+      "milliseconds": 3.142700000000019,
+      "clearanceQueries": 4,
+      "queryOrigin": {
+        "x": 104.22108650082741,
+        "z": 3.237985337040415
+      }
+    }
+  ],
+  "scope": "Isolated connector CPU diagnostic, excluding navigator construction and disclosed existing route warmup; no synchronous grid drain, GPU or full-frame performance claim. Query instrumentation adds overhead."
+}
