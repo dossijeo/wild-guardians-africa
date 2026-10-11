@@ -10,6 +10,8 @@ The original launch was at `2026-10-11T13:58:32.456Z`; the terminal receipt was 
 - Read-only terminal verification: `v118-native-terminal-audit.json`.
 - Initial cohort observation: `military-baseline-v1-first-terminal-observation.json` (retained format rejection).
 - Corrected native-format cohort observation: `military-baseline-v1-first-terminal-format-corrected.json`.
+- Daily finance and incursion tables, with money/living-crop graphs: `v118-native-summary/`. Reproduce with `node tools/summarize-native-campaigns.mjs NEW_OUTPUT_DIRECTORY docs/qa/integrated-spiritual-survival/campaign-v118-q15-good-sabana-123-hundred`.
+- Paid repair reconciliation and physical damage: `v118-native-defense-costs.json`. Reproduce with `node tools/audit-native-defense-costs.mjs docs/qa/integrated-spiritual-survival/campaign-v118-q15-good-sabana-123-hundred NEW_OUTPUT.json`.
 - The retained progress file is the last pre-terminal heartbeat; the terminal receipt, report and snapshot determine the outcome.
 
 The auditor verifies native defeat at dawn after the completed night, exact ledger reconciliation, physical crop/crate delivery evidence, strike accounting and the frozen source hashes. The center remained intact at 138 HP, but the farm had no living plants and only 19 coins, below the unchanged recovery requirement. This is neither a technical timeout nor a victory.
@@ -27,6 +29,8 @@ The first cohort observer rejected the native report's textual seed and the fina
 | Final balance | 19 |
 
 All 1,555 assigned animal strikes were consumed; unused strike budget was zero. There were 122 plants destroyed. The weighted post-introduction crop loss was 4.252% of the summed pre-incursion censuses. This is a repeated-night exposure measure, not the fraction of distinct plants lost, nor proof of a causal wall advantage without paired strategies.
+
+The native observer recorded 1,233 contacts with walls and 25 with the center, causing 30,854 and 550 HP of damage respectively. There were 322 paid repair completions, restoring 27,105 HP for 2,865 coins. Restored HP need not equal inflicted damage: the terminal farm still contains unrepaired damage. The table distinguishes payments during a day from damage during its following night; same-row repair spending must not be interpreted as the bill for that night's attacks. Use the existing observer's settled `effectiveAgriculturalHp` field: its sparse intermediate `agriculturalHpDamage` field is absent when no agricultural damage occurred. A preliminary exporter rejected those absent fields and wrote no results; the retained tables reuse the established reporting tools rather than inventing damage values.
 
 The daily evidence also shows stock contraction during nights without crop destruction. For example, nights 19–24 recorded no destroyed plants; salaries and paid repairs still consumed capital. Calibration must therefore inspect structural attack expenditure and replacement funding as well as agricultural attack damage. This observation does not authorize a new player-policy change, altered wages, cheaper repairs or changed crop economics.
 
