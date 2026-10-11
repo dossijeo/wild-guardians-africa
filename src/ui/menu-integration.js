@@ -1,6 +1,13 @@
 // Inserted inside the original menu closure by prepare_menu.py.
 const nativeRenderPanel=renderPanel;
 const sendProduction=(action,detail={})=>parent.postMessage({type:'wild-guardians:menu',action,...detail},location.origin);
+window.addEventListener('wildguardians:action',event=>{
+ if(event.detail?.action!=='exit')return;
+ // Native detection belongs to the host. Preserve the web farewell while
+ // avoiding window.close in both environments.
+ event.preventDefault();sendProduction('exit');
+ if(!parent.__TAURI_INTERNALS__){state='end';$('#end').classList.add('visible');$('#panelstage').inert=true;$('#end-back').focus();}
+});
 let productionLabViewer=null;
 const nativeStartMenuMusic=startMenuMusic;
 startMenuMusic=async function(...args){

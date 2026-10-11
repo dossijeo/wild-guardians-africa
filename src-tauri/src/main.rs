@@ -17,7 +17,7 @@ fn main() {
                 }
             }
         })
-        .invoke_handler(tauri::generate_handler![desktop_smoke_report, desktop_smoke_fixture, desktop_smoke_minimize])
+        .invoke_handler(tauri::generate_handler![exit_application, desktop_smoke_report, desktop_smoke_fixture, desktop_smoke_minimize])
         .on_page_load(|webview, payload| {
             if payload.event() == tauri::webview::PageLoadEvent::Finished
                 && std::env::args().any(|arg| arg == "--smoke-report")
@@ -38,6 +38,13 @@ fn main() {
         })
         .run(tauri::generate_context!())
         .expect("Failed to run Wild Guardians Africa");
+}
+
+// Invoked only after the frontend has committed any active game's save.
+// AppHandle.exit terminates the application, rather than merely hiding a window.
+#[tauri::command]
+fn exit_application(app: tauri::AppHandle) {
+    app.exit(0);
 }
 
 #[tauri::command]
