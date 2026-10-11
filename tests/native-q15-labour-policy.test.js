@@ -7,6 +7,7 @@ import {rational,numberOf} from '../src/simulation/money.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {liquidityRenewal,createQ15LabourPolicy} from '../tools/native-q15-labour-policy.mjs';
 import {createQ14LabourPolicy} from '../tools/native-q14-labour-policy.mjs';
+import {parseNativeCampaignArgs,nativeCampaignProvenance} from '../tools/run_native_campaign.mjs';
 test('retained Canyon paid-plan diagnosis preserves recovery coins without inventing receipts',()=>{
  const report=JSON.parse(readFileSync(new URL('../docs/qa/integrated-spiritual-survival/pilot-v99-q14-entry-retry-good-canyon-712-seven/report.json',import.meta.url)));
  const historical=report.labourHistory.find(p=>p.day===7&&p.kind==='daily'),before=JSON.stringify(historical);
@@ -53,4 +54,12 @@ test('well-funded plans, original day-one startup, pending repairs and emergenci
  assert.equal(createQ15LabourPolicy().dawn(s).staff,6);
  assert.equal(createQ15LabourPolicy({profile:'youngFemale'}).dawn(s).cost,240);
  assert.throws(()=>liquidityRenewal({...plan,cash:3.5},30));assert.throws(()=>liquidityRenewal(plan,0));
+});
+test('Q15 is explicit opt-in and its implementation is frozen in campaign provenance',()=>{
+ const options=parseNativeCampaignArgs(['--out','q15-fixture','--labour-policy','q15']),source=nativeCampaignProvenance(options);
+ assert.equal(options.labourPolicy,'q15');assert(source.protocol.id.endsWith('-q15'));
+ assert(source.sourceHashes['tools/native-q15-labour-policy.mjs']);
+ assert(source.protocol.dawnFunding.includes('minimum native next-hire'));
+ assert.equal(parseNativeCampaignArgs(['--out','default-fixture']).labourPolicy,'legacy');
+ assert.equal(parseNativeCampaignArgs(['--out','old-fixture','--labour-policy','q14']).labourPolicy,'q14');
 });
