@@ -1,0 +1,280 @@
+{
+  "snapshotSha256": "16c675084dba7ef99dd4dfdf7295a3b96520ab0aea5f8da5e8fd1577cea3b624",
+  "sourceHashes": {
+    "src/simulation/game.js": "d89ca57d6ee03ff0be1345647277c683391b4745b1e09b9928f404b4b1712a10",
+    "src/simulation/gates.js": "07af1e6aa93653f7aeed8e1622533331cc534a95aaae5b9607d4c1b9f00f7734",
+    "src/simulation/actor-motion.js": "37d17c7045a937f0f3633c175efd566d7d38c271a2a9b5e152e97b1f25527c18",
+    "src/simulation/worker-return-route.js": "8b3c8c87f88bbed47fadcf8896417cc2dc8c55ea75db74fda9d67091df7c3f7c",
+    "src/simulation/worker-route-clearance.js": "2e59f9848680d3227dc940d613df39b74d0006bd2cbb5fd252e19d38eed2122f",
+    "src/world/navigation.js": "fffb43a7c3f1117bfe07bcda725107d6a1c95794979a54384b786d1ed106efe0",
+    "src/world/worker-wall-overlap-recovery.js": "d7ec920a2070b6a2a505410f8fccfb9d5019a46c587a897b304c9d558a1d3d88"
+  },
+  "initial": {
+    "id": "worker-52429",
+    "personId": "person-5",
+    "profile": "olderFemale",
+    "contractDay": 57,
+    "centerId": "structure-2",
+    "villageId": "village-1",
+    "x": 101.37,
+    "z": 14.660000000000002,
+    "status": "fleeing",
+    "taskId": null,
+    "crateId": null,
+    "path": null,
+    "hits": 0,
+    "incapacitated": false,
+    "recovering": false,
+    "runRemaining": 105.80409353316266,
+    "actionRemaining": -0.09999999999983378,
+    "idleState": null,
+    "running": false,
+    "taskApproach": null,
+    "destinationId": "home-village-1",
+    "pathVersion": 1517,
+    "runPhase": 44.08503897215176,
+    "heading": -1.3909428270024615,
+    "gateWaiting": false,
+    "walkPhase": 271.56737888857475
+  },
+  "destination": {
+    "x": 60,
+    "z": 0,
+    "id": "home-village-1"
+  },
+  "final": {
+    "id": "worker-52429",
+    "personId": "person-5",
+    "profile": "olderFemale",
+    "contractDay": 57,
+    "centerId": "structure-2",
+    "villageId": "village-1",
+    "x": 60,
+    "z": 0,
+    "status": "fleeing",
+    "taskId": null,
+    "crateId": null,
+    "path": [],
+    "hits": 0,
+    "incapacitated": false,
+    "recovering": false,
+    "runRemaining": 105.80409353316266,
+    "actionRemaining": -0.09999999999983378,
+    "idleState": null,
+    "running": true,
+    "taskApproach": null,
+    "destinationId": "home-village-1",
+    "pathVersion": 1517,
+    "runPhase": 73.1193063400676,
+    "heading": -2.7686049317897097,
+    "gateWaiting": false,
+    "walkPhase": 271.56737888857475
+  },
+  "steps": 1200,
+  "dt": 0.1,
+  "reached": true,
+  "maximumStep": 0.24000000000000357,
+  "trace": [
+    {
+      "step": 0,
+      "x": 101.37,
+      "z": 14.660000000000002,
+      "path": 0,
+      "gateWaiting": false,
+      "displacement": 0,
+      "reached": false
+    },
+    {
+      "step": 1,
+      "x": 101.37,
+      "z": 14.660000000000002,
+      "path": 0,
+      "gateWaiting": false,
+      "displacement": 0,
+      "reached": false
+    },
+    {
+      "step": 2,
+      "x": 101.37,
+      "z": 14.660000000000002,
+      "path": 0,
+      "gateWaiting": false,
+      "displacement": 0,
+      "reached": false
+    },
+    {
+      "step": 3,
+      "x": 101.37,
+      "z": 14.660000000000002,
+      "path": 0,
+      "gateWaiting": false,
+      "displacement": 0,
+      "reached": false
+    },
+    {
+      "step": 4,
+      "x": 101.37,
+      "z": 14.660000000000002,
+      "path": 0,
+      "gateWaiting": false,
+      "displacement": 0,
+      "reached": false
+    },
+    {
+      "step": 50,
+      "x": 101.37,
+      "z": 14.660000000000002,
+      "path": 0,
+      "gateWaiting": false,
+      "displacement": 0,
+      "reached": false
+    },
+    {
+      "step": 100,
+      "x": 101.37,
+      "z": 14.660000000000002,
+      "path": 0,
+      "gateWaiting": false,
+      "displacement": 0,
+      "reached": false
+    },
+    {
+      "step": 150,
+      "x": 101.37,
+      "z": 14.660000000000002,
+      "path": 0,
+      "gateWaiting": false,
+      "displacement": 0,
+      "reached": false
+    },
+    {
+      "step": 200,
+      "x": 101.37,
+      "z": 14.660000000000002,
+      "path": 0,
+      "gateWaiting": false,
+      "displacement": 0,
+      "reached": false
+    },
+    {
+      "step": 250,
+      "x": 101.37,
+      "z": 14.660000000000002,
+      "path": 0,
+      "gateWaiting": false,
+      "displacement": 0,
+      "reached": false
+    },
+    {
+      "step": 300,
+      "x": 101.37,
+      "z": 14.660000000000002,
+      "path": 0,
+      "gateWaiting": false,
+      "displacement": 0,
+      "reached": false
+    },
+    {
+      "step": 350,
+      "x": 101.37,
+      "z": 14.660000000000002,
+      "path": 0,
+      "gateWaiting": false,
+      "displacement": 0,
+      "reached": false
+    },
+    {
+      "step": 400,
+      "x": 101.37,
+      "z": 14.660000000000002,
+      "path": 0,
+      "gateWaiting": false,
+      "displacement": 0,
+      "reached": false
+    },
+    {
+      "step": 450,
+      "x": 101.37,
+      "z": 14.660000000000002,
+      "path": 0,
+      "gateWaiting": false,
+      "displacement": 0,
+      "reached": false
+    },
+    {
+      "step": 500,
+      "x": 101.37,
+      "z": 14.660000000000002,
+      "path": 0,
+      "gateWaiting": false,
+      "displacement": 0,
+      "reached": false
+    },
+    {
+      "step": 550,
+      "x": 104.71932098826758,
+      "z": 15.43864197653523,
+      "path": 5,
+      "gateWaiting": false,
+      "displacement": 0.239999999999998,
+      "reached": false
+    },
+    {
+      "step": 600,
+      "x": 97.51569274141565,
+      "z": 20.71534442503274,
+      "path": 3,
+      "gateWaiting": false,
+      "displacement": 0.23999999999999827,
+      "reached": false
+    },
+    {
+      "step": 650,
+      "x": 85.61648780718107,
+      "z": 22.267414633845945,
+      "path": 3,
+      "gateWaiting": false,
+      "displacement": 0.23999999999999827,
+      "reached": false
+    },
+    {
+      "step": 700,
+      "x": 73.66406361254167,
+      "z": 23,
+      "path": 2,
+      "gateWaiting": false,
+      "displacement": 0.23999999999999488,
+      "reached": false
+    },
+    {
+      "step": 750,
+      "x": 66.326789559182,
+      "z": 16.16846220679886,
+      "path": 1,
+      "gateWaiting": false,
+      "displacement": 0.24000000000000024,
+      "reached": false
+    },
+    {
+      "step": 800,
+      "x": 61.9539973762158,
+      "z": 4.993548850329718,
+      "path": 1,
+      "gateWaiting": false,
+      "displacement": 0.2400000000000026,
+      "reached": false
+    },
+    {
+      "step": 823,
+      "x": 60,
+      "z": 0,
+      "path": 0,
+      "gateWaiting": false,
+      "displacement": 0.08224168299858739,
+      "reached": true
+    }
+  ],
+  "milliseconds": 2173.8484,
+  "domainStateUnchanged": true,
+  "scope": "Isolated native walkTo and gate-animation replay from an archived copy. No campaign, task execution, clock advance, animal attack or income is simulated. Failure to reach within this bounded probe is not a certified unreachable route. A successful departure does not certify whole-campaign recovery."
+}

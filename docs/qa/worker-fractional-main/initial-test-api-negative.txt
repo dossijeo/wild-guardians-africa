@@ -1,0 +1,76 @@
+TAP version 13
+# Subtest: archived valid fractional origin obtains a wholly native swept route to the village
+ok 1 - archived valid fractional origin obtains a wholly native swept route to the village
+  ---
+  duration_ms: 2504.0033
+  ...
+# Subtest: native departure moves continuously and survives reload without income, clock or task changes
+ok 2 - native departure moves continuously and survives reload without income, clock or task changes
+  ---
+  duration_ms: 3101.892
+  ...
+# Subtest: local connector never ignores a new enclosing solid, and failure is cached until topology changes
+not ok 3 - local connector never ignores a new enclosing solid, and failure is cached until topology changes
+  ---
+  duration_ms: 133.1076
+  location: 'file:///C:/Users/PC/.codex/worktrees/worker-fractional-main/wild-guardians-africa/tests/worker-fractional-connector.test.js:30:1'
+  failureType: 'testCodeFailure'
+  error: 'nav.invalidateGeometryQueries is not a function'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/worker-fractional-main/wild-guardians-africa/tests/worker-fractional-connector.test.js:32:91)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+# Subtest: ordinary active work receives no fractional departure exception
+ok 4 - ordinary active work receives no fractional departure exception
+  ---
+  duration_ms: 738.9566
+  ...
+# Subtest: smaller native search quanta preserve the exact route and final explored region
+ok 5 - smaller native search quanta preserve the exact route and final explored region
+  ---
+  duration_ms: 4483.167
+  ...
+# Subtest: topology changes invalidate an in-progress search before returning its old route
+not ok 6 - topology changes invalidate an in-progress search before returning its old route
+  ---
+  duration_ms: 205.059
+  location: 'file:///C:/Users/PC/.codex/worktrees/worker-fractional-main/wild-guardians-africa/tests/worker-fractional-connector.test.js:53:1'
+  failureType: 'testCodeFailure'
+  error: 'nav.invalidateGeometryQueries is not a function'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/worker-fractional-main/wild-guardians-africa/tests/worker-fractional-connector.test.js:55:77)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+# Subtest: removed actors cannot retain all eight active search slots
+ok 7 - removed actors cannot retain all eight active search slots
+  ---
+  duration_ms: 2414.867
+  ...
+# Subtest: cooperative smoothing preserves the existing bounded shortcut recipe
+ok 8 - cooperative smoothing preserves the existing bounded shortcut recipe
+  ---
+  duration_ms: 2718.3505
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 6
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 16871.1323
