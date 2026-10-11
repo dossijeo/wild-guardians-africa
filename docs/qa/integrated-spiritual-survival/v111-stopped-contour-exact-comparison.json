@@ -1,0 +1,24 @@
+{
+  "scope": "Sequential isolated cold/warm observations, not ABBA statistical acceptance or full campaign performance",
+  "snapshotSha256": "a7a7d012f02004f07b9e3f2c22e9d8087ccd0d5f436f80abd1df708a9208ee7e",
+  "comparisons": [
+    {
+      "temperature": "cold",
+      "baselineMs": 33219.475300000006,
+      "tiledMs": 23374.6146,
+      "reductionPercent": 29.635810352489234,
+      "proofExactlyEqual": true,
+      "valid": false,
+      "reason": "native-worker-route-blocked"
+    },
+    {
+      "temperature": "warm",
+      "baselineMs": 20001.1198,
+      "tiledMs": 12338.052299999996,
+      "reductionPercent": 38.31319234436066,
+      "proofExactlyEqual": true,
+      "valid": false,
+      "reason": "native-worker-route-blocked"
+    }
+  ]
+}
