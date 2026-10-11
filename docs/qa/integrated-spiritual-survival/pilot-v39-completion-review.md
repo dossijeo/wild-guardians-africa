@@ -1,0 +1,11 @@
+# Seed 123 good management: native twenty-one-night completion
+
+The frozen Q9 Sabana/Mapungubwe zarzas campaign completes twenty-one nights with no native defeat. It finishes with 540 coins, 115 live crops and an intact 600-HP centre. The full terminal auditor reconciles 22,709 actual delivery income against 9,023 wages, 11,563 seeds, 480 wall purchases and 1,803 real repairs from the post-centre 700-coin opening. Census and paid-worker/delivery audits also pass. All 1,125 assigned attacks are consumed; 329 crops are destroyed through native impacts.
+
+The first sixteen complete daily rows are exactly identical to the earlier retained seed-123 campaign that failed technically during night seventeen. With the incremental native grid bridge, the campaign now completes the previously stalled night and reaches twenty-one. This is stronger regression evidence than the isolated retreat replay; it does not erase the original failed receipt or constitute a new economic parameter adjustment.
+
+There is still insufficient economic evidence to launch a hundred-night acceptance run: live crops fall from 168 on day fourteen to 115 on day twenty-one (53 fewer, approximately 31.5%). Closing cash changes from 590 to 540. Days fifteen through twenty-one lose 197 crops despite real paid repairs and continuous purchases. Positive cash alone is not sustainable productive capacity. Weighted crop destruction after the introduction is approximately 11.65%, compared with the orientative protected reference of 3.63%. These reference percentages are never applied as synthetic damage.
+
+The progression plot has been visually inspected. It separates closing cash, live crop census, actual delivery/salary/seed/repair flows and native purchases/destruction. It is a single-campaign diagnostic; the existing paired comparison tool correctly rejects one campaign and remains unchanged. No cross-seed or changed-source comparison is presented as a controlled causal result. The graph is not gameplay visual QA or a GPU benchmark.
+
+The separate empalizada seed-123 repeat is live on the short-yield candidate source. Its full result is needed to assess stronger physical defense and the later traffic fix. This zarzas completion does not establish hundred-night survival, acceptable human inactivity, postgame financing or main readiness.
