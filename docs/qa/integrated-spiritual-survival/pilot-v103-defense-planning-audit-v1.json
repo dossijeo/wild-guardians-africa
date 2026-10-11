@@ -1,0 +1,196 @@
+{
+  "status": "verified-native-defense-planning-history",
+  "directory": "docs/qa/integrated-spiritual-survival/pilot-v103-q15-good-sabana-123-seven",
+  "reportSha256": "9bfd9237a67a5ea3da4b48d256e56b179c701511101635b364840e8f2b519e1a",
+  "receiptSha256": "5efb14475fef6079411c1432c8ea2a5941077bd8aae830e1556290c6bf159bbc",
+  "sourceSha256": "a64c65e7b7d7ee0ca96ccf03f2730023d98f1ac8bc2bdefc8f86a4fb6c4af795",
+  "defenseActive": true,
+  "paidCost": 780,
+  "paidPieces": 78,
+  "historyReasonCounts": {
+    "saving-actual-cash-for-native-perimeter": 66,
+    "paid-native-contour-in-progress": 31,
+    "geometry-changed-or-repair-pending": 1,
+    "paid-native-contour-completed": 1,
+    "existing-paid-native-contour": 1
+  },
+  "proofReasonCounts": {
+    "native-complete-components-and-worker-route": 2,
+    "no-complete-native-component-certificate": 9,
+    "no-proof-recorded": 9
+  },
+  "routingReasonCounts": {
+    "no-bounded-side-route": 9
+  },
+  "daily": [
+    {
+      "day": 6,
+      "decisions": 50,
+      "geometricSearches": 2,
+      "candidates": 20,
+      "paidCost": 330,
+      "paidPieces": 33,
+      "reasons": {
+        "saving-actual-cash-for-native-perimeter": 34,
+        "paid-native-contour-in-progress": 15,
+        "geometry-changed-or-repair-pending": 1
+      },
+      "firstPaidAt": 30.000000000000156
+    },
+    {
+      "day": 7,
+      "decisions": 50,
+      "geometricSearches": 0,
+      "candidates": 0,
+      "paidCost": 450,
+      "paidPieces": 45,
+      "reasons": {
+        "saving-actual-cash-for-native-perimeter": 32,
+        "paid-native-contour-in-progress": 16,
+        "paid-native-contour-completed": 1,
+        "existing-paid-native-contour": 1
+      },
+      "firstPaidAt": 36.000000000000085
+    }
+  ],
+  "firstExamples": {
+    "native-complete-components-and-worker-route": {
+      "historyIndex": 0,
+      "day": 6,
+      "time": 0,
+      "bounds": [
+        71.94000000000001,
+        -15.260000000000002,
+        102.46000000000001,
+        15.260000000000002
+      ],
+      "shore": false,
+      "routed": false,
+      "legal": true,
+      "cost": 480,
+      "protectedCash": 275,
+      "pendingRepairCoins": 0,
+      "proof": {
+        "valid": true,
+        "reason": "native-complete-components-and-worker-route",
+        "checks": [
+          {
+            "radius": 1.1,
+            "inside": {
+              "x": 81,
+              "z": -6
+            },
+            "outside": {
+              "x": 81,
+              "z": -21.26
+            },
+            "completeClosedComponent": true
+          },
+          {
+            "radius": 0.9,
+            "inside": {
+              "x": 81,
+              "z": -6
+            },
+            "outside": {
+              "x": 108.46000000000001,
+              "z": -6
+            },
+            "completeClosedComponent": true
+          },
+          {
+            "radius": 0.97,
+            "inside": {
+              "x": 81,
+              "z": -6
+            },
+            "outside": {
+              "x": 108.46000000000001,
+              "z": -6
+            },
+            "completeClosedComponent": true
+          },
+          {
+            "radius": 0.85,
+            "inside": {
+              "x": 78,
+              "z": -1.5
+            },
+            "outside": {
+              "x": 78,
+              "z": -21.26
+            },
+            "completeClosedComponent": true
+          },
+          {
+            "radius": 1.55,
+            "inside": {
+              "x": 81,
+              "z": -6
+            },
+            "outside": {
+              "x": 81,
+              "z": -21.26
+            },
+            "completeClosedComponent": true
+          }
+        ],
+        "scope": "Predictive native geometry, not paid campaign interception."
+      }
+    },
+    "no-complete-native-component-certificate": {
+      "historyIndex": 44,
+      "day": 6,
+      "time": 264.0000000000013,
+      "bounds": [
+        71.94000000000001,
+        -15.260000000000002,
+        104.64000000000001,
+        15.260000000000002
+      ],
+      "shore": false,
+      "routed": false,
+      "legal": false,
+      "cost": null,
+      "protectedCash": 365,
+      "pendingRepairCoins": 0,
+      "proof": {
+        "valid": false,
+        "reason": "no-complete-native-component-certificate",
+        "checks": [
+          {
+            "radius": 1.1,
+            "inside": {
+              "x": 85.5,
+              "z": 10.5
+            },
+            "outside": {
+              "x": 110.64000000000001,
+              "z": 10.5
+            },
+            "completeClosedComponent": false
+          }
+        ]
+      }
+    },
+    "no-proof-recorded": {
+      "historyIndex": 44,
+      "day": 6,
+      "time": 264.0000000000013,
+      "bounds": [
+        71.94000000000001,
+        -15.260000000000002,
+        104.64000000000001,
+        15.260000000000002
+      ],
+      "shore": false,
+      "routed": true,
+      "legal": false,
+      "cost": null,
+      "protectedCash": 365,
+      "pendingRepairCoins": 0,
+      "proof": null
+    }
+  },
+  "scope": "Recorded policy decision history and actual paid wall ledger only. A failed certificate is not proof of physical impossibility; no missing reasons are inferred. Does not time calculations, approve player strategy, classify a live run or calibrate animal damage."
+}
