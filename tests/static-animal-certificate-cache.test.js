@@ -37,7 +37,7 @@ test('negative proofs and explicitly uncached probes are never reused',()=>{
 
 function anchoredFixture(){
  const f=fixture();f.state.plants.push({id:'harvested',alive:true,x:3,z:4,species:'mijo'});
- let calls=0;const compute=()=>{calls++;return {valid:true,checks:[{anchorTargetId:'crop',radius:1,services:{poses:64}}]};};
+ let calls=0;const compute=()=>{calls++;return {valid:true,checks:[{anchorTargetId:'crop',inside:{x:1,z:2},outside:{x:20,z:2},radius:1,services:{poses:64}}]};};
  return {...f,query:()=>staticAnimalCertificate(f.state,f.view,f.plan,f.bounds,f.outline,compute),calls:()=>calls};
 }
 test('harvested nonanchor targets retain positive coverage with explicit historical census',()=>{
@@ -47,9 +47,27 @@ test('harvested nonanchor targets retain positive coverage with explicit histori
  assert.deepEqual(retained.retainedCoverage.removedCropIds,['harvested']);assert.equal(retained.checks[0].services.poses,64);
 });
 for(const [name,mutate] of [
- ['anchor removed',f=>f.state.plants[0].alive=false],
  ['survivor moved',f=>{f.state.plants[1].alive=false;f.state.plants[0].x++;}],
  ['new target replaces harvested target',f=>{f.state.plants[1].alive=false;f.state.plants.push({id:'new',alive:true,x:3,z:4});}],
  ['remaining targets reordered',f=>f.state.plants.reverse()],
  ['all targets removed',f=>f.state.plants.forEach(p=>p.alive=false)]
 ])test(`superset reuse rejects ${name}`,()=>{const f=anchoredFixture();f.query();mutate(f);f.query();assert.equal(f.calls(),2);});
+
+test('harvested anchor survives only as an explicit geometric reference covering unchanged survivors',()=>{
+ const f=anchoredFixture();f.query();f.state.plants[0].alive=false;
+ const proof=f.query();assert.equal(f.calls(),1);assert.equal(proof.valid,true);
+ assert.deepEqual(proof.retainedCoverage.retiredAnchorTargetIds,['crop']);
+ assert.deepEqual(proof.retainedCoverage.removedCropIds,['crop']);
+ assert.deepEqual(proof.checks[0].inside,{x:1,z:2});assert.deepEqual(proof.checks[0].outside,{x:20,z:2});
+ f.state.plants[1].x++;f.query();assert.equal(f.calls(),2);
+});
+
+for(const [name,check] of [
+ ['unknown original target',{anchorTargetId:'foreign',inside:{x:1,z:2},outside:{x:20,z:2}}],
+ ['missing geometric coordinates',{anchorTargetId:'crop'}],
+ ['nonfinite exterior coordinate',{anchorTargetId:'crop',inside:{x:1,z:2},outside:{x:Infinity,z:2}}]
+])test(`retired-anchor reuse rejects ${name}`,()=>{
+ const f=anchoredFixture();let calls=0;
+ const query=()=>staticAnimalCertificate(f.state,f.view,f.plan,f.bounds,f.outline,()=>{calls++;return {valid:true,checks:[check]};});
+ query();f.state.plants[0].alive=false;query();assert.equal(calls,2);
+});

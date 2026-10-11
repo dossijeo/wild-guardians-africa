@@ -1,5 +1,10 @@
 # Conservative certificate reuse after native harvests
 
+Historical first candidate, frozen at `8d0ff9c3`. The subsequent retired-anchor
+extension and its independent physical validation are documented separately in
+`retired-anchor-certificate-review.md`; the live-anchor requirement below describes
+this historical candidate, not the subsequent implementation.
+
 The 100-night campaign remains stopped. This experiment advances a copy of its
 preserved day-9 snapshot for five simulated seconds, with actual native worker
 movement, harvests, deliveries and RNG. It issues no player commands. Production

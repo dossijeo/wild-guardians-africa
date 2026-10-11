@@ -40,7 +40,8 @@ for(let step=0;step<=20;step++){
   const proof=certify(state,nav,plan,contour.bounds,{outline:contour.points}),proofMs=performance.now()-begin;
   assert.equal(serialize(state),before,'Certification must not change the advancing native state');
   const row={step,simulatedSeconds:state.elapsed-initialElapsed,day:state.day,time:state.time,living:state.plants.filter(p=>p.alive).length,ledgerEntries:Object.keys(state.ledger.entries).length,version:nav.version,tickMs,proofMs,valid:proof.valid,reason:proof.reason,terrainRequests:proof.terrainTileDiagnostics.requests,retainedCoverage:proof.animalCertificateCoverage??null,stateSha256:createHash('sha256').update(serialize(state)).digest('hex')};
-  appendFileSync(output,JSON.stringify(row)+'\n');console.log(JSON.stringify(row));
+  const {terrainTileDiagnostics,terrainMemoDiagnostics,...physicalProof}=proof;
+  appendFileSync(output,JSON.stringify({...row,physicalProof})+'\n');console.log(JSON.stringify(row));
  }
 }
 const total={status:'completed-short-native-probe',simulatedSeconds:state.elapsed-initialElapsed,totalWallMs:performance.now()-started,tickMs,result:state.result,scope:'Real native workers/ticks and read-only certification; not restarted 100-night campaign'};
