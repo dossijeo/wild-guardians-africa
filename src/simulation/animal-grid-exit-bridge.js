@@ -1,5 +1,5 @@
 const attempts=new WeakMap();
-const reaches=[.5,1,2,4,8,16],angles=16,budget=8,maxSlices=2048;
+const reaches=[.5,1,2,4,8,16],angles=16,candidateAngles=2*angles,budget=8,maxSlices=2048;
 // A physical local connector can reach the normal grid without seeing the
 // distant exit directly. Use the existing incremental native route search;
 // never drain its iterator synchronously or relax hostile-body collision.
@@ -29,11 +29,15 @@ export function animalGridExitBridge(actor,end,nav){
   return {pending:true,path:null};
  }
  const heading=Math.atan2(end.x-actor.x,end.z-actor.z);
- for(let count=0;count<budget&&a.next<reaches.length*angles;count++){
-  const index=a.next++,sample=index%angles;
+ for(let count=0;count<budget&&a.next<reaches.length*candidateAngles;count++){
+  const index=a.next++,sample=Math.floor((index%candidateAngles)/2);
   const offset=sample===0?0:Math.ceil(sample/2)*(sample%2?1:-1)*Math.PI/8;
-  const reach=reaches[Math.floor(index/angles)];
-  const point={x:actor.x+Math.sin(heading+offset)*reach,z:actor.z+Math.cos(heading+offset)*reach};
+  const reach=reaches[Math.floor(index/candidateAngles)];
+  // Interleave world-aligned directions with the original exit-relative fan.
+  // Tight straight passages may reject every rotated sample despite having
+  // an open physical connector. Proposals still need native swept clearance.
+  const angle=index%2?sample*Math.PI/8:heading+offset;
+  const point={x:actor.x+Math.sin(angle)*reach,z:actor.z+Math.cos(angle)*reach};
   if(!nav.walkable(point.x,point.z,radius,null,false)||!nav.segmentClear(actor,point,radius,null,false))continue;
   a.point=point;a.slices=0;
   // The direct fast-path itself samples a potentially very long fractional
@@ -42,6 +46,6 @@ export function animalGridExitBridge(actor,end,nav){
   a.iterator=nav.findPathSteps(point,{x:end.x,z:end.z},radius,null,false,64,{skipDirect:true});
   return {pending:true,path:null};
  }
- if(a.next===reaches.length*angles){a.failed=true;return {pending:false,path:null};}
+ if(a.next===reaches.length*candidateAngles){a.failed=true;return {pending:false,path:null};}
  return {pending:true,path:null};
 }
