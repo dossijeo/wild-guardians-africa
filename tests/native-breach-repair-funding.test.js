@@ -13,10 +13,10 @@ test('whole-coin quotes match native upward rounding and full reconstruction',()
  assert.equal(settledRepairQuote({cost:20,hp:0,maxHp:200,status:'ruined'}),20);
 });
 test('breached funding prioritizes ruined pieces and preserves native minimum without mutating state',()=>{
- const s={structures:[{id:'scratched',kind:'wall',hp:100,maxHp:200,status:'intact'},
+ const s={plants:[{alive:true}],crates:[],structures:[{kind:"center",status:"intact"},{id:'scratched',kind:'wall',hp:100,maxHp:200,status:'intact'},
   {id:'gap',kind:'wall',hp:0,maxHp:200,status:'ruined'}]},before=JSON.stringify(s),owned=new Set(['gap','scratched']);
  const p=breachRepairFunding(s,owned,210);assert.equal(p.protectedCash,30);assert.equal(p.ordered[0].id,'gap');
- assert.equal(JSON.stringify(s),before);s.structures[1].status='intact';s.structures[1].hp=200;
+ assert.equal(JSON.stringify(s),before);s.structures.find(w=>w.id==='gap').status='intact';s.structures.find(w=>w.id==='gap').hp=200;
  assert.equal(breachRepairFunding(s,owned,210).protectedCash,210);
 });
 test('native repair requests are funded before scratches, survive reload and do not grant free HP or coins',()=>{

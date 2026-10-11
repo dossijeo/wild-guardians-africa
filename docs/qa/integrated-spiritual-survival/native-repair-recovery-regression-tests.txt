@@ -1,0 +1,203 @@
+TAP version 13
+# (node:47892) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: whole-coin quotes match native upward rounding and full reconstruction
+ok 1 - whole-coin quotes match native upward rounding and full reconstruction
+  ---
+  duration_ms: 7.3024
+  ...
+# Subtest: breached funding prioritizes ruined pieces and preserves native minimum without mutating state
+ok 2 - breached funding prioritizes ruined pieces and preserves native minimum without mutating state
+  ---
+  duration_ms: 0.7864
+  ...
+# Subtest: native repair requests are funded before scratches, survive reload and do not grant free HP or coins
+ok 3 - native repair requests are funded before scratches, survive reload and do not grant free HP or coins
+  ---
+  duration_ms: 732.6049
+  ...
+# Subtest: repair candidate is opt-in, named in provenance and requires supported defense policy
+ok 4 - repair candidate is opt-in, named in provenance and requires supported defense policy
+  ---
+  duration_ms: 321.122
+  ...
+# Subtest: common integration retains Q12 affordable-profile recovery alongside breach-first repair choices
+ok 5 - common integration retains Q12 affordable-profile recovery alongside breach-first repair choices
+  ---
+  duration_ms: 316.5677
+  ...
+# (node:18800) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: chosen wall material uses native price and HP and pays its actual ledger debit
+ok 6 - chosen wall material uses native price and HP and pays its actual ledger debit
+  ---
+  duration_ms: 942.3478
+  ...
+# Subtest: native read-only wall quote is possible without funds; preview/build still enforce real cash
+ok 7 - native read-only wall quote is possible without funds; preview/build still enforce real cash
+  ---
+  duration_ms: 368.5182
+  ...
+# Subtest: real partial purchases close paid perimeter, create one worker gate, retain crops and replay saved state
+ok 8 - real partial purchases close paid perimeter, create one worker gate, retain crops and replay saved state
+  ---
+  duration_ms: 560.2483
+  ...
+# Subtest: paid wage protection can postpone purchases while preserving a real future savings target
+ok 9 - paid wage protection can postpone purchases while preserving a real future savings target
+  ---
+  duration_ms: 256.7399
+  ...
+# Subtest: rolling investment buys a paid partial wall while preserving replant cash, not an unpaid-contour debt
+ok 10 - rolling investment buys a paid partial wall while preserving replant cash, not an unpaid-contour debt
+  ---
+  duration_ms: 278.3808
+  ...
+# Subtest: funded defense remains opt-in and cannot lock funds before its declared day
+ok 11 - funded defense remains opt-in and cannot lock funds before its declared day
+  ---
+  duration_ms: 236.0828
+  ...
+# Subtest: legal native removal of small vegetation is allowed and recorded only through paid wall commands
+ok 12 - legal native removal of small vegetation is allowed and recorded only through paid wall commands
+  ---
+  duration_ms: 457.0003
+  ...
+# Subtest: unfunded recertification defers geometry without changing commands, state or later paid purchases
+ok 13 - unfunded recertification defers geometry without changing commands, state or later paid purchases
+  ---
+  duration_ms: 1293.8761
+  ...
+# Subtest: rolling next-piece earmark preserves small delivery surpluses for a real purchase without charging a fee
+ok 14 - rolling next-piece earmark preserves small delivery surpluses for a real purchase without charging a fee
+  ---
+  duration_ms: 315.4483
+  ...
+# Subtest: rolling next-piece earmark releases after actual native completion and remains opt-in
+ok 15 - rolling next-piece earmark releases after actual native completion and remains opt-in
+  ---
+  duration_ms: 438.4145
+  ...
+# (node:27436) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: empty farm retains the actual 35-coin recovery floor, independently of requested full-crew reserve
+ok 16 - empty farm retains the actual 35-coin recovery floor, independently of requested full-crew reserve
+  ---
+  duration_ms: 2.2126
+  ...
+# Subtest: remaining living crops or undelivered crates retain the native 30-coin breached recovery rule
+ok 17 - remaining living crops or undelivered crates retain the native 30-coin breached recovery rule
+  ---
+  duration_ms: 0.4593
+  ...
+# Subtest: unbreached funding preserves both the requested reserve and native recovery floor
+ok 18 - unbreached funding preserves both the requested reserve and native recovery floor
+  ---
+  duration_ms: 0.3473
+  ...
+# Subtest: native worker repairs leave cash for a paid replacement seed and minimum next wage
+ok 19 - native worker repairs leave cash for a paid replacement seed and minimum next wage
+  ---
+  duration_ms: 134.24
+  ...
+# Subtest: retains first provisional IDs only, including previews and gate updates
+ok 20 - retains first provisional IDs only, including previews and gate updates
+  ---
+  duration_ms: 5.913
+  ...
+# Subtest: invalidates on native epoch
+ok 21 - invalidates on native epoch
+  ---
+  duration_ms: 0.446
+  ...
+# Subtest: invalidates on actual damage
+ok 22 - invalidates on actual damage
+  ---
+  duration_ms: 0.272
+  ...
+# Subtest: invalidates on obstacle
+ok 23 - invalidates on obstacle
+  ---
+  duration_ms: 0.3071
+  ...
+# Subtest: invalidates on suppression
+ok 24 - invalidates on suppression
+  ---
+  duration_ms: 0.6326
+  ...
+# Subtest: invalidates on gate selection
+ok 25 - invalidates on gate selection
+  ---
+  duration_ms: 0.3511
+  ...
+# Subtest: invalidates on position
+ok 26 - invalidates on position
+  ---
+  duration_ms: 0.2612
+  ...
+# Subtest: invalidates on price
+ok 27 - invalidates on price
+  ---
+  duration_ms: 0.2152
+  ...
+# Subtest: invalidates on actual gate update
+ok 28 - invalidates on actual gate update
+  ---
+  duration_ms: 0.4978
+  ...
+# Subtest: invalidates on additional piece
+ok 29 - invalidates on additional piece
+  ---
+  duration_ms: 0.6096
+  ...
+# Subtest: a real structure claiming a retained alias forces fresh native metadata
+ok 30 - a real structure claiming a retained alias forces fresh native metadata
+  ---
+  duration_ms: 0.417
+  ...
+# Subtest: a currently conflicting native quote is never transformed
+ok 31 - a currently conflicting native quote is never transformed
+  ---
+  duration_ms: 1.9572
+  ...
+# Subtest: state identities and navigator identities never share aliases
+ok 32 - state identities and navigator identities never share aliases
+  ---
+  duration_ms: 0.2727
+  ...
+# Subtest: unsupported and empty plans discard prior record
+ok 33 - unsupported and empty plans discard prior record
+  ---
+  duration_ms: 0.3286
+  ...
+# Subtest: duplicate virtual IDs never enter the alias record
+ok 34 - duplicate virtual IDs never enter the alias record
+  ---
+  duration_ms: 0.2118
+  ...
+# (node:19068) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native hires change virtual IDs but actual paid wall IDs, gates and ledger remain exact
+ok 35 - native hires change virtual IDs but actual paid wall IDs, gates and ledger remain exact
+  ---
+  duration_ms: 63.6762
+  ...
+# Subtest: native removal and mixed-material reconstruction invalidate old virtual aliases without adding a second gate
+ok 36 - native removal and mixed-material reconstruction invalidate old virtual aliases without adding a second gate
+  ---
+  duration_ms: 14.6885
+  ...
+# Subtest: native river closure retains the chosen gate and aliases never become actual purchase identifiers
+ok 37 - native river closure retains the chosen gate and aliases never become actual purchase identifiers
+  ---
+  duration_ms: 35.8217
+  ...
+1..37
+# tests 37
+# suites 0
+# pass 37
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5493.7271

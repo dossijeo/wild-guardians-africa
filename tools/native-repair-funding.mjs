@@ -1,6 +1,7 @@
 // QA player budgeting only; native commands, FIFO, prices and money are intact.
 import {repairCost} from '../src/simulation/game.js';
 import {HIRING_RESERVE} from '../src/simulation/budget.js';
+import {dawnMinimum} from "../src/simulation/rules.js";
 export function settledRepairQuote(target){
  const q=repairCost(target),n=BigInt(q.n),d=BigInt(q.d);
  if(n<0n||d<=0n)throw Error('Invalid native repair quote');
@@ -14,5 +15,8 @@ export function breachRepairFunding(s,owned,reserve){
  const breached=walls.some(w=>w.status==='ruined'||w.status==='collapsing');
  const ordered=walls.toSorted((a,b)=>Number(b.status==='ruined')-Number(a.status==='ruined')||
   a.hp/a.maxHp-b.hp/b.maxHp||a.id.localeCompare(b.id));
- return {breached,ordered,protectedCash:breached?HIRING_RESERVE:Math.max(HIRING_RESERVE,reserve)};
+ // A breached, empty farm still needs seed cash as well as its minimum wage.
+ // Use native recovery requirements, never predicted crop income.
+ const recovery=Math.max(HIRING_RESERVE,dawnMinimum(s));
+ return {breached,ordered,protectedCash:breached?recovery:Math.max(recovery,reserve)};
 }
