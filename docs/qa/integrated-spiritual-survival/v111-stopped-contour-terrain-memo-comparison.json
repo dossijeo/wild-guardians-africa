@@ -1,0 +1,38 @@
+{
+  "scope": "Exact physical certificate comparison; excludes only terrain execution counters. Sequential observations are not statistical ABBA or campaign acceptance.",
+  "snapshotSha256": "a7a7d012f02004f07b9e3f2c22e9d8087ccd0d5f436f80abd1df708a9208ee7e",
+  "rows": [
+    {
+      "temperature": "cold",
+      "baselineMs": 11054.6355,
+      "candidateMs": 45333.3261,
+      "physicalCertificateExactlyEqual": true,
+      "memo": {
+        "capacity": 65536,
+        "requests": 1303274,
+        "hits": 416002,
+        "misses": 887272,
+        "evictions": 821736,
+        "fallbacks": 0,
+        "maxEntries": 65536
+      }
+    },
+    {
+      "temperature": "warm",
+      "baselineMs": 3.5244000000002416,
+      "candidateMs": 8.267500000001746,
+      "physicalCertificateExactlyEqual": true,
+      "memo": {
+        "capacity": 65536,
+        "requests": 0,
+        "hits": 0,
+        "misses": 0,
+        "evictions": 0,
+        "fallbacks": 0,
+        "maxEntries": 0
+      }
+    }
+  ],
+  "campaignMayRestart": false,
+  "limitation": "Cold certification and evolving native targets still need short representative workload measurement before restarting the campaign."
+}

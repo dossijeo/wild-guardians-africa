@@ -36,3 +36,20 @@ test('reusing an animal certificate still requires a fresh worker-service check'
  assert.equal(second.valid,false);assert.equal(second.reason,'worker-passage-not-observable');
  assert.deepEqual(second.animalChecks,first.checks,'retained static certificate is independent of worker availability');
 });
+
+test('optional exact terrain memo preserves the entire physical certificate',()=>{
+ const a=fixture(),b=fixture(),before=serialize(b.s),original=b.nav.terrainValid;
+ const expected=nativeIntegratedPerimeterProof(a.s,a.nav,plan,a.contour.bounds,{outline:a.contour.points,cache:false});
+ const actual=nativeIntegratedPerimeterProof(b.s,b.nav,plan,b.contour.bounds,{outline:b.contour.points,cache:false,terrainMemo:true});
+ const physical=proof=>{const {terrainTileDiagnostics,terrainMemoDiagnostics,...rest}=proof;return rest;};
+ assert.deepEqual(physical(actual),physical(expected));assert.equal(actual.valid,true);
+ assert(actual.terrainMemoDiagnostics.hits>0);assert(actual.terrainMemoDiagnostics.maxEntries<=65536);
+ assert.equal(b.nav.terrainValid,original);assert.equal(Object.hasOwn(b.nav,'terrainValid'),false);assert.equal(serialize(b.s),before);
+});
+
+test('terrain memo and lattice are both restored when certification throws',()=>{
+ const {s,nav,contour}=fixture(),lattice=nav.field.lattice,terrain=nav.terrainValid;
+ assert.throws(()=>nativeIntegratedPerimeterProof(s,nav,{pieces:[],updates:null},contour.bounds,{outline:contour.points,terrainMemo:true}));
+ assert.equal(nav.field.lattice,lattice);assert.equal(nav.terrainValid,terrain);
+ assert.equal(Object.hasOwn(nav,'terrainValid'),false);assert.equal(Object.hasOwn(nav.field,'lattice'),false);
+});
