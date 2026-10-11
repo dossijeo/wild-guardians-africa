@@ -1,0 +1,176 @@
+{
+  "input": "docs/qa/integrated-spiritual-survival/pilot-v98-q14-passive-zarzas-canyon-712-seven/partial-state.json.gz",
+  "inputSha256": "f80b4d0e9ea228a1f06e217f6d73bdd337b48588201be6ddecb44d9a38f32c62",
+  "sourceHashes": {
+    "tools/probe-native-entry-bounds.mjs": "3e64469621dbe1232f09c66d933a6aed8b03c6de4da957a530cd5b425c5fb2c1",
+    "src/simulation/raids.js": "e74e5049eabde4d7a2cc424c8d375252e6bc2f03b9298731ed298724c2663c3b",
+    "src/simulation/raid-exterior-entry.js": "b0b66880814b077dcc6ef55c6115b1401c1f838ff0c2ee617e03b90eac65877d",
+    "src/simulation/raid-exterior-connectivity.js": "d7557a805f0bd3e7f80344ee7b4621c64827afa40c70762c778944ad1bf456c1",
+    "src/simulation/raid-exterior-detour.js": "d80f387663e9740e04cf6116e3e7202f41188efebc1df8869c83bf38d26a42b4",
+    "src/world/navigation.js": "21b82f33c62581436a6cef702b66af272ae9d3b096cb2b20ee858f0a50196743"
+  },
+  "group": [
+    "warthog",
+    "warthog",
+    "warthog",
+    "warthog",
+    "hyena",
+    "warthog",
+    "warthog",
+    "warthog",
+    "warthog",
+    "warthog"
+  ],
+  "originalBounds": [
+    -120,
+    -24,
+    120,
+    216
+  ],
+  "view": {
+    "eye": {
+      "x": -13.5,
+      "z": 102.33851813332714
+    },
+    "target": {
+      "x": -13.5,
+      "z": 67.5
+    }
+  },
+  "rows": [
+    {
+      "padding": 0,
+      "bounds": [
+        -120,
+        -24,
+        120,
+        216
+      ],
+      "actors": 0,
+      "entry": null,
+      "milliseconds": 31279.2542
+    },
+    {
+      "padding": 24,
+      "bounds": [
+        -144,
+        -48,
+        144,
+        240
+      ],
+      "actors": 10,
+      "entry": {
+        "entries": [
+          {
+            "x": -34.87531483563685,
+            "z": -6
+          },
+          {
+            "x": -30.12531483563685,
+            "z": -6
+          },
+          {
+            "x": -34.46906205775986,
+            "z": -9.7
+          },
+          {
+            "x": -29.719062057759857,
+            "z": -9.7
+          },
+          {
+            "x": -28.133310499443915,
+            "z": -20.8
+          },
+          {
+            "x": -33.99729035163381,
+            "z": -13.399999999999999
+          },
+          {
+            "x": -29.24729035163381,
+            "z": -13.399999999999999
+          },
+          {
+            "x": -33.46641201535984,
+            "z": -17.1
+          },
+          {
+            "x": -28.716412015359843,
+            "z": -17.1
+          },
+          {
+            "x": -32.883310499443915,
+            "z": -20.8
+          }
+        ],
+        "exits": [
+          {
+            "x": -34.55113194516019,
+            "z": -9
+          },
+          {
+            "x": -29.801131945160193,
+            "z": -9
+          },
+          {
+            "x": -34.091279873249206,
+            "z": -12.7
+          },
+          {
+            "x": -29.341279873249203,
+            "z": -12.7
+          },
+          {
+            "x": -27.627168092974124,
+            "z": -23.8
+          },
+          {
+            "x": -33.57106887909345,
+            "z": -16.4
+          },
+          {
+            "x": -28.821068879093453,
+            "z": -16.4
+          },
+          {
+            "x": -32.99730090646766,
+            "z": -20.1
+          },
+          {
+            "x": -28.247300906467657,
+            "z": -20.1
+          },
+          {
+            "x": -32.377168092974124,
+            "z": -23.8
+          }
+        ]
+      },
+      "milliseconds": 4271.694899999999
+    },
+    {
+      "padding": 48,
+      "bounds": [
+        -168,
+        -72,
+        168,
+        264
+      ],
+      "actors": 0,
+      "entry": null,
+      "milliseconds": 51128.7932
+    },
+    {
+      "padding": 96,
+      "bounds": [
+        -216,
+        -120,
+        216,
+        312
+      ],
+      "actors": 0,
+      "entry": null,
+      "milliseconds": 66797.47830000002
+    }
+  ],
+  "scope": "Read-only copied-state native complete-wave selection. Bounds expansion is diagnostic only, not resident chunks, actual spawn, GPU/frame time or campaign completion."
+}

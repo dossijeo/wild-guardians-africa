@@ -1,0 +1,24 @@
+# Q14 Canyon functional-stage entry failure
+
+v98 (passive, seed 712, Gran Canyon/Sahel) ended with `incomplete-harness-error` while preparing the night-seven group. Six nights completed; the retained state is day seven, time 600, with no active raid and no native result. This is not an economic defeat, seventh-night survival or valid balance comparison.
+
+The partial financial audit reconciles 587 recorded unique paid entries against the retained snapshot, including the incomplete day. It has 221 coins, 70 living plants and three paid zarzas pieces costing 30 coins. It hired one native additional older woman on day two, time 70, paying 23 coins. Q14 recorded 21 cash-limited measured recommendations. These observations prove native decisions occurred, not improved long-term profitability or protective efficacy; the perimeter did not close.
+
+The exact original pending wave is nine warthogs and one hyena. The prepared result had no valid whole-group entry, with no worker failure. The diagnostic preserves the original state and probes the complete wave, plus explicitly labelled isolated species. The full group yields zero actors; the isolated warthog and hyena each have a valid native selection. No animal is removed from the real raid.
+
+The full-wave bounds diagnostic records:
+
+| Extra search padding | Native selected actors | Query milliseconds |
+|---|---:|---:|
+| 0 m | 0 | 31,279.25 |
+| 24 m | 10 | 4,271.69 |
+| 48 m | 0 | 51,128.79 |
+| 96 m | 0 | 66,797.48 |
+
+These are read-only selection timings with other processes active, not GPU measurements, rendering residency or an isolated benchmark. Enlarging search bounds does not monotonically improve this bounded greedy/certificate search. The successful +24 m case returned the canyon-bank formation, not a projected rectangle, with births ranging in Z from -6 toward -20.8. Its complete native proof still checks body clearance, navigation, exterior connectivity and every actor; no synthetic spawn occurred.
+
+The unmodified fallback-specific diagnostic also failed. It recorded 300,221 walkability calls, 3,027,745 segment checks and 842 approach attempts, 824 unsuccessful. Those include nested native calls, not independent search allocations or theoretical damage. The input serialized state and source hashes remain unchanged.
+
+Next repair candidate: a single bounded 24 m retry after original Canyon entry paths fail, with sparse residency demand for each selected birth/exit and original RNG/group preservation. It must be tested with this exact retained state, native spawn/attack/exit, save/load, river restrictions and the rest of the entry regression. It is not implemented or accepted by these diagnostics.
+
+v97 is being stopped cooperatively to finish functional validation before further balance calibration. Its state must remain frozen until the process acknowledges the stop. All campaign and diagnostic originals are retained.

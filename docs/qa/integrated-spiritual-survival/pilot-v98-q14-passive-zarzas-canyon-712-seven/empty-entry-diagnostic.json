@@ -1,0 +1,128 @@
+{
+  "input": "docs/qa/integrated-spiritual-survival/pilot-v98-q14-passive-zarzas-canyon-712-seven/partial-state.json.gz",
+  "inputSha256": "f80b4d0e9ea228a1f06e217f6d73bdd337b48588201be6ddecb44d9a38f32c62",
+  "day": 7,
+  "time": 600,
+  "bounds": [
+    -120,
+    -24,
+    120,
+    216
+  ],
+  "view": {
+    "eye": {
+      "x": -13.5,
+      "z": 102.33851813332714
+    },
+    "target": {
+      "x": -13.5,
+      "z": 67.5
+    }
+  },
+  "rows": [
+    {
+      "species": [
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "hyena",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog",
+        "warthog"
+      ],
+      "nativeChosenActors": 0,
+      "chosen": null,
+      "cameraCandidateActors": 0,
+      "cameraExteriorCertified": false,
+      "cameraPoses": []
+    },
+    {
+      "species": [
+        "warthog"
+      ],
+      "nativeChosenActors": 1,
+      "chosen": {
+        "entries": [
+          {
+            "x": -34.87531483563685,
+            "z": -6
+          }
+        ],
+        "exits": [
+          {
+            "x": -34.55113194516019,
+            "z": -9
+          }
+        ]
+      },
+      "cameraCandidateActors": 1,
+      "cameraExteriorCertified": false,
+      "cameraPoses": [
+        {
+          "point": {
+            "x": 3,
+            "z": 105.43851813332714
+          },
+          "radius": 1.1,
+          "bodyClear": true,
+          "exteriorWitness": false
+        },
+        {
+          "point": {
+            "x": 3,
+            "z": 108.43851813332714
+          },
+          "radius": 1.1,
+          "bodyClear": true,
+          "exteriorWitness": false
+        }
+      ]
+    },
+    {
+      "species": [
+        "hyena"
+      ],
+      "nativeChosenActors": 1,
+      "chosen": {
+        "entries": [
+          {
+            "x": -35.075314835636846,
+            "z": -6
+          }
+        ],
+        "exits": [
+          {
+            "x": -34.751131945160196,
+            "z": -9
+          }
+        ]
+      },
+      "cameraCandidateActors": 1,
+      "cameraExteriorCertified": false,
+      "cameraPoses": [
+        {
+          "point": {
+            "x": -4.799999999999999,
+            "z": 105.23851813332715
+          },
+          "radius": 0.9,
+          "bodyClear": true,
+          "exteriorWitness": false
+        },
+        {
+          "point": {
+            "x": -4.799999999999999,
+            "z": 108.23851813332715
+          },
+          "radius": 0.9,
+          "bodyClear": true,
+          "exteriorWitness": false
+        }
+      ]
+    }
+  ],
+  "scope": "Original full pending group and isolated-species native entry queries on copied states. Never reduces a real raid, bypasses geometry or accepts an uncertified spawn."
+}
