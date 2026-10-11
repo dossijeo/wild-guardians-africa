@@ -1,0 +1,62 @@
+node:internal/process/esm_loader:34
+      internalBinding('errors').triggerUncaughtException(
+                                ^
+
+locator.click: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator('#close-panel')
+    - locator resolved to <button id="close-panel">Cerrar panel</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div id="panel">Panel de prueba</div> intercepts pointer events
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div id="panel">Panel de prueba</div> intercepts pointer events
+    - retrying click action
+      - waiting 100ms
+    36 × waiting for element to be visible, enabled and stable
+       - element is visible, enabled and stable
+       - scrolling into view if needed
+       - done scrolling
+       - <div id="panel">Panel de prueba</div> intercepts pointer events
+     - retrying click action
+       - waiting 500ms
+
+    at C:\Users\PC\.codex\worktrees\worker-gate-tutorial-fixes\wild-guardians-africa\tools\check-worker-gate-tutorial-browser.mjs:23:80 {
+  log: [
+    "  - waiting for locator('#close-panel')",
+    '    - locator resolved to <button id="close-panel">Cerrar panel</button>',
+    '  - attempting click action',
+    '    2 × waiting for element to be visible, enabled and stable',
+    '      - element is visible, enabled and stable',
+    '      - scrolling into view if needed',
+    '      - done scrolling',
+    '      - <div id="panel">Panel de prueba</div> intercepts pointer events',
+    '    - retrying click action',
+    '    - waiting 20ms',
+    '    2 × waiting for element to be visible, enabled and stable',
+    '      - element is visible, enabled and stable',
+    '      - scrolling into view if needed',
+    '      - done scrolling',
+    '      - <div id="panel">Panel de prueba</div> intercepts pointer events',
+    '    - retrying click action',
+    '      - waiting 100ms',
+    '    36 × waiting for element to be visible, enabled and stable',
+    '       - element is visible, enabled and stable',
+    '       - scrolling into view if needed',
+    '       - done scrolling',
+    '       - <div id="panel">Panel de prueba</div> intercepts pointer events',
+    '     - retrying click action',
+    '       - waiting 500ms'
+  ],
+  name: 'TimeoutError'
+}
+
+Node.js v20.11.0

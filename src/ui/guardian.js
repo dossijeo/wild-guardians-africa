@@ -57,8 +57,13 @@ export class NativeGuardian {
       if(closeAfter&&this.key===key)this.hide();
     });
   }
-  hide({immediate=false}={}){
+  hide({immediate=false,interrupt=false}={}){
     this.voice?.stop();
+    // Opening an interface surface is a player dismissal, not a temporary
+    // background pause. Acknowledge only the actually displayed message.
+    const dismiss=interrupt&&this.key?this.dismiss:null;
+    this.dismiss=null;
+    dismiss?.();
     this.root.classList.remove('reading','result-narration');this.root.removeAttribute('aria-modal');this.root.setAttribute('aria-hidden','true');this.root.inert=true;
     this.blocking=false;this.advance=null;this.skip=null;this.key=null;
     if(immediate){this.lifecycle.close();this.root.classList.remove('visible','leaving');this.root.classList.add('closed');this.lastStamp=null;this.present('hidden');}

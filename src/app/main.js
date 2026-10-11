@@ -285,7 +285,7 @@ function openSurface(kind,key=kind){
   if(!surfaces.open(kind,{mandatory:kind==='hiring',force:kind==='result'}))return false;
   dialogVoice.stop();world?.hiringRoutePreparer?.cancel();
   const beforePause=state.pauses.slice();
-  setTutorialInteraction(false);guardian?.hide({immediate:true});
+  setTutorialInteraction(false);guardian?.hide({immediate:true,interrupt:true});
   if(kind!=='context'){selection=null;document.querySelector('#context').replaceChildren();}
   if(kind!=='panel')document.querySelector('#panel').replaceChildren();
   if(kind!=='modal'&&kind!=='hiring'&&kind!=='result')document.querySelector('#modal').replaceChildren();
