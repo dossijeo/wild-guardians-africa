@@ -1,8 +1,10 @@
 # Game Juice — presentation QA, integration pending
 
 Branch: `feature/game-juice-polish`. Baseline: `origin/main` at
-`8f3c00218a38d302556247ca07bd6a4fe348d08c`. No PR or merge yet: the full
-baseline validation is red and must be resolved without weakening its tests.
+`8f3c00218a38d302556247ca07bd6a4fe348d08c`. Its baseline CI is red. The
+discrepancies below have now been diagnosed and repaired as QA-only changes;
+`baseline-and-juice-final-tests.txt` records 38/38 passing focused tests. Full CI
+is still required before PR/integration; no production balance changes.
 
 ## Architecture and guarantees
 
@@ -125,10 +127,30 @@ game.js is identical to main. The nine are:
 The two SFX inventory failures in main are resolved here by regenerating source
 line anchors/hashes only: the 126 original files, 100 assignments and 26 pending
 items remain unchanged. No audio assignment or audible-acceptance claim changes.
-The other nine tests/goldens, simulation behavior and historical reports are
-untouched. A broad development suite excluded the two long campaign files only
+The original failed results, snapshots and historical reports remain untouched.
+A broad development suite excluded the two long campaign files only
 to avoid duplicating root's live campaigns; it is NOT a full acceptance run and
 does not substitute for CI. Its original failed receipt is retained. Root is
-investigating the baseline discrepancy independently; no merge with red checks.
+reviewed the baseline classification; no merge with red checks.
+
+### QA-only reconciliation
+
+- Reused `333ec3cf`: only fractional `raidFacts.elapsed` uses the preexisting
+  clock epsilon; every other field remains exact.
+- Reused `67cb0079`: retained historical experiments validate against their
+  preserved source at commit `6b253ac`; runtime expectations now test the exterior
+  spawn correction already present in main.
+- Reused only `raid-entry-topology-experiment.test.js` from `d52d2d82`, NOT its
+  experimental magic or capacity evidence. Exterior clipped-bound entries are
+  checked physically outside the enclosure and preserve the live bounds.
+- The current crop golden differs from the preserved d2d067f5 snapshot in exactly
+  ONE field: `events[193].raidFacts`. `current-main-crop-golden-diff.json` records
+  that difference. Both hashes are retained, the new metadata is asserted
+  completely, and removing only that metadata must reproduce the entire original
+  snapshot byte for byte. All money, plants, workers, paths, RNG and times match.
+- Current native capacity was regenerated separately in
+  `docs/qa/native-economic-balance/main-8f3c0021-capacity/`. Every capacity value
+  must match the original historical file exactly; only source provenance differs.
+  No historical capacity file was overwritten and no magic branch evidence used.
 
 Broad selected receipt: `broad-selected-development.txt.gz` (3921 tests; 3910 pass, 11 fail before SFX regeneration). Full historical logs are gzip-compressed losslessly to keep QA storage small. No tests were suppressed in CI.
