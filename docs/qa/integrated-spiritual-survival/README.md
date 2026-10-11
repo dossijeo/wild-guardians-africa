@@ -4,6 +4,47 @@ Branch: `codex/integrated-spiritual-survival-balance`. Main is unchanged.
 This supersedes the proposal to merge unrestricted full-strength individual
 magic separately. No complete campaign may approve a partial integration.
 
+## Current checkpoint — 11 October
+
+The historical sections below retain their original source/QA context. Joint
+integration is present on this experimental branch; it is **not approved for
+main**. The latest native crop resistance is one direct impact (`cd377ab0`),
+with shielding, physical area checks and introductory protection retained.
+Military pressure candidate v3 and agricultural power candidate 2 remain frozen.
+No new prices or invisible losses were introduced in the recent diagnostics.
+
+| Retained observation | Outcome | What remains unproved |
+|---|---|---|
+| v67, productive no-walls/Shield, seed 712 | Native defeat during night 21 | Other seeds, no-shield control and full strategy coverage |
+| v68, good/empalizada/contour, seed 712 | 21 survived; 59 plants, 365 coins; 1,553 paid repairs | Stock declines; no sustainable 100-night or postgame proof |
+| v75/v76, passive/good rolling empalizada | Passive defeats after night 12; good 14 ends with 20 plants | Neither ever closes its contour; reject long extension |
+| v79/v80, passive/good rolling zarzas | Passive loses centre during night 13; good 14 ends with 163 plants, 476 coins | Passive allocation failure unresolved; one active seed is insufficient |
+
+Good zarzas first records a complete contour on day nine, with 266 actual wall
+contacts and 561 paid repair coins by day fourteen. This is physical native
+evidence, not a synthetic reduction of crop damage. Both fourteen-night zarzas
+cases exactly reproduce their seven-night prefixes. See
+[the fourteen-night review](pilot-v79-v80-zarzas-fourteen-review.md),
+[the contact/repair review](native-defense-contact-cost-review.md) and
+[the retained parameter index](retained-experiment-index-v2.md).
+
+Running at this checkpoint: v81 extends good zarzas to 21 nights; v82 replays
+passive zarzas with scalar purchase telemetry. Their live receipts are not
+terminal acceptance. Require exact source/prefix or replay equality before
+using their results. Do not modify campaign-imported code while either runs.
+
+Remaining gates include coherent 7/14/21 pilots across seeds 712/123/2026 and
+both requested biome/culture pairs, all six real strategies, optional rather
+than compulsory agricultural magic, responsible 100-night survival, authentic
+bad-management defeats, 180-day postgame expansion comparisons, performance,
+persisted/UI compatibility and visual QA. Human inactivity below 25% remains
+unmeasured; scalar decision windows and shader/effect durations cannot approve it.
+
+The official browser runtime was retried on 11 October and still failed before
+creating a surface: `failed to write kernel assets` / missing path (error 3).
+This is a QA access limitation, not a native gameplay defeat or a passing visual
+test. Existing physical Wake Lock acceptance remains valid and is not reopened.
+
 ## Power candidate 1
 
 Separate, frozen daily capacities: Growth 180 seconds (12 × 15 extra seconds
