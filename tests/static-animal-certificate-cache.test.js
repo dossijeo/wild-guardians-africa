@@ -34,3 +34,22 @@ test('negative proofs and explicitly uncached probes are never reused',()=>{
  staticAnimalCertificate(f.state,f.view,f.plan,f.bounds,f.outline,()=>({valid:true}),{cache:false});
  f.query();assert.equal(f.calls(),2);
 });
+
+function anchoredFixture(){
+ const f=fixture();f.state.plants.push({id:'harvested',alive:true,x:3,z:4,species:'mijo'});
+ let calls=0;const compute=()=>{calls++;return {valid:true,checks:[{anchorTargetId:'crop',radius:1,services:{poses:64}}]};};
+ return {...f,query:()=>staticAnimalCertificate(f.state,f.view,f.plan,f.bounds,f.outline,compute),calls:()=>calls};
+}
+test('harvested nonanchor targets retain positive coverage with explicit historical census',()=>{
+ const f=anchoredFixture();f.query();f.state.plants[1].alive=false;
+ const retained=f.query();assert.equal(f.calls(),1);assert.equal(retained.valid,true);
+ assert.equal(retained.retainedCoverage.certifiedCropCount,2);assert.equal(retained.retainedCoverage.currentCropCount,1);
+ assert.deepEqual(retained.retainedCoverage.removedCropIds,['harvested']);assert.equal(retained.checks[0].services.poses,64);
+});
+for(const [name,mutate] of [
+ ['anchor removed',f=>f.state.plants[0].alive=false],
+ ['survivor moved',f=>{f.state.plants[1].alive=false;f.state.plants[0].x++;}],
+ ['new target replaces harvested target',f=>{f.state.plants[1].alive=false;f.state.plants.push({id:'new',alive:true,x:3,z:4});}],
+ ['remaining targets reordered',f=>f.state.plants.reverse()],
+ ['all targets removed',f=>f.state.plants.forEach(p=>p.alive=false)]
+])test(`superset reuse rejects ${name}`,()=>{const f=anchoredFixture();f.query();mutate(f);f.query();assert.equal(f.calls(),2);});

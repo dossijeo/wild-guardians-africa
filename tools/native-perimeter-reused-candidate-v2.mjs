@@ -25,9 +25,10 @@ export function nativePerimeterReusedCandidateV2(s,nav,plan,bounds,{cache=true,o
  const animals=staticAnimalCertificate(s,view,plan,bounds,outline,()=>certifyAnimals(),{cache});
  if(!animals.valid)return animals;
  const checks=animals.checks;
+ const coverage=animals.retainedCoverage?{animalCertificateCoverage:animals.retainedCoverage}:{};
  const workerService=nativeWorkerServiceProofV2(s,view);
- if(!workerService.valid)return {...workerService,animalChecks:checks};
- return {valid:true,reason:'native-complete-components-and-worker-service-routes',checks,workerService,scope:'Predictive native geometry only; no paid protection or campaign outcome.'};
+ if(!workerService.valid)return {...workerService,animalChecks:checks,...coverage};
+ return {valid:true,reason:'native-complete-components-and-worker-service-routes',checks,workerService,...coverage,scope:'Predictive native geometry only; no paid protection or campaign outcome.'};
  function certifyAnimals(){
  const checks=[];
  for(const radius of radii){

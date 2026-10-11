@@ -1,0 +1,53 @@
+{
+  "scope": "Sequential five-second native probe from stopped snapshot, with real worker harvests and no player commands. Timing observations are not AB/BA or whole-campaign acceptance.",
+  "snapshotSha256": "a7a7d012f02004f07b9e3f2c22e9d8087ccd0d5f436f80abd1df708a9208ee7e",
+  "baselineReference": {
+    "commit": "3161e728",
+    "cache": "dc6b8c960efdc8b935e23cc49c796c8772b8dd93d0b9a5cb891b0983677da996",
+    "proof": "b781994f96f44436d48ec48c6f3c4cf7e9631096a3c195afaf7ab8da685aec60",
+    "integration": "13aca83bb1795e2a0f0226696707a6eada54ecde2ed513156e78a3189462a8c5"
+  },
+  "rows": [
+    {
+      "step": 0,
+      "living": 178,
+      "nativeStateExactlyEqual": true,
+      "reason": "native-worker-centre-service-unproven",
+      "baselineProofMs": 11394.3965,
+      "candidateProofMs": 12856.302399999999,
+      "retainedCoverage": null
+    },
+    {
+      "step": 10,
+      "living": 175,
+      "nativeStateExactlyEqual": true,
+      "reason": "native-worker-centre-service-unproven",
+      "baselineProofMs": 13272.992199999999,
+      "candidateProofMs": 4.922700000000987,
+      "retainedCoverage": {
+        "certifiedCropCount": 178,
+        "currentCropCount": 175,
+        "removedCropIds": [
+          "plant-5232",
+          "plant-5235",
+          "plant-5253"
+        ],
+        "scope": "Positive superset certificate; surviving targets and exterior anchors unchanged. Counters describe original certification."
+      }
+    },
+    {
+      "step": 20,
+      "living": 169,
+      "nativeStateExactlyEqual": true,
+      "reason": "native-worker-centre-service-unproven",
+      "baselineProofMs": 13463.003399999998,
+      "candidateProofMs": 13084.9817,
+      "retainedCoverage": null
+    }
+  ],
+  "baselineTotalWallMs": 38413.4141,
+  "candidateTotalWallMs": 26248.1614,
+  "allNativeStatesExactlyEqual": true,
+  "campaignMayRestart": false,
+  "limitation": "Removing a certificate anchor still requires full recertification; new targets and geometry changes also invalidate the certificate."
+}
