@@ -28,7 +28,7 @@ def plot(directory, prefix):
     axes[0, 0].set_title('Saldo al cierre'); axes[0, 0].set_ylabel('Monedas')
     axes[0, 1].plot(days, [r['living'] for r in rows], color='#387642', marker='o')
     axes[0, 1].set_title('Cultivos vivos al cierre'); axes[0, 1].set_ylabel('Plantas')
-    for key, label, color in [('income', 'Entregas cobradas', '#387642'), ('wages', 'Jornales', '#657ab2'), ('seeds', 'Semillas', '#a87816'), ('repairs', 'Reparaciones', '#b85a4c')]:
+    for key, label, color in [('income', 'Entregas cobradas', '#387642'), ('wages', 'Jornales', '#657ab2'), ('seeds', 'Semillas', '#a87816'), ('walls', 'Murallas', '#8f6ba8'), ('repairs', 'Reparaciones', '#b85a4c')]:
         axes[1, 0].plot(days, [r['finance'][key] for r in rows], label=label, color=color)
     axes[1, 0].set_title('Movimientos económicos reales'); axes[1, 0].set_ylabel('Monedas'); axes[1, 0].legend(fontsize=8)
     axes[1, 1].bar(days, [r['destroyed'] for r in rows], color='#b85a4c', label='Destruidas')
