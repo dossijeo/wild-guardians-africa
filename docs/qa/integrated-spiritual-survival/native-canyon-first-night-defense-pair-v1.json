@@ -1,0 +1,109 @@
+{
+  "status": "verified-native-first-night-defense-pair",
+  "inputs": [
+    "docs/qa/integrated-spiritual-survival/native-paid-canyon-planted-night-v1.json",
+    "docs/qa/integrated-spiritual-survival/native-canyon-unprotected-night-v1.json"
+  ],
+  "inputReportHashes": [
+    "1344853f3e10f1efacff72a717a05f83d05d1bb3e5765a424ac15ded8992d9e1",
+    "bd614abd1ebe5d7676c5dc88ff348bb14c9931aa149326b11b7231dd761d1745"
+  ],
+  "sameEngineSources": true,
+  "sameRngAndNightPlan": true,
+  "sameFullCropState": true,
+  "nightPlan": {
+    "pressureVersion": 1,
+    "night": 1,
+    "at": 370.5022702361457,
+    "attraction": 88,
+    "group": [
+      "warthog"
+    ],
+    "actors": [
+      {
+        "species": "warthog",
+        "hits": 2
+      }
+    ],
+    "waves": [
+      [
+        {
+          "species": "warthog",
+          "hits": 2
+        }
+      ]
+    ],
+    "done": false,
+    "introductory": true,
+    "pressureFacts": {
+      "night": 1,
+      "observedValue": 88,
+      "capturedValue": 88,
+      "effectiveValue": 88,
+      "pressure": 0.014237647993921146,
+      "targetAnimals": 1,
+      "areaCap": 1,
+      "introductory": true,
+      "candidateVersion": 3,
+      "budget": 2,
+      "potential": 2,
+      "composition": {
+        "warthog": 1
+      },
+      "referenceEnvelope": null,
+      "compositionAdjustments": [],
+      "qRaisedForRangeSafety": false
+    }
+  },
+  "rows": [
+    {
+      "defense": "paid-perimeter",
+      "opening": 338,
+      "closing": 338,
+      "logicalHits": 2,
+      "logicalMisses": 0,
+      "structureHits": [
+        {
+          "kind": "wall",
+          "damage": 20
+        },
+        {
+          "kind": "wall",
+          "damage": 20
+        }
+      ],
+      "cropsDestroyed": 0,
+      "livingAfter": 8,
+      "retreats": [
+        {
+          "species": "warthog",
+          "hitsRemaining": 0,
+          "reason": "budget-exhausted"
+        }
+      ]
+    },
+    {
+      "defense": "native-wall-removal",
+      "opening": 678,
+      "closing": 678,
+      "logicalHits": 2,
+      "logicalMisses": 0,
+      "structureHits": [
+        {
+          "kind": "center",
+          "damage": 20
+        }
+      ],
+      "cropsDestroyed": 1,
+      "livingAfter": 7,
+      "retreats": [
+        {
+          "species": "warthog",
+          "hitsRemaining": 0,
+          "reason": "budget-exhausted"
+        }
+      ]
+    }
+  ],
+  "scope": "Same native first-night plan, RNG, full crop state, terrain and engine sources; wall removal is a real daytime decision with genuine refunds. Worker positions/path state differ after replaying the day. No further hiring, purchases or magic during night. This measures immediate physical interception, not long-term economic strategy or later-night balance. Normal introductory crop safeguards remain active."
+}

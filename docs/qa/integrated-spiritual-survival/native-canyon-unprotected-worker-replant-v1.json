@@ -1,0 +1,4746 @@
+{
+  "status": "observed-native-worker-day",
+  "input": "docs/qa/integrated-spiritual-survival/native-canyon-no-wall-opening-v1-state.json.gz",
+  "inputSha256": "2fc63778b4f5a56fcf82e83d4b68374b6d4d2c6ac97d34ff2309cf0d00352a9c",
+  "snapshotPath": "docs/qa/integrated-spiritual-survival/native-canyon-unprotected-worker-replant-v1-state.json.gz",
+  "stopReason": "daylight-complete",
+  "day": 1,
+  "time": 300,
+  "result": null,
+  "pauses": [],
+  "opening": 630,
+  "closing": 678,
+  "income": 88,
+  "otherNet": -40,
+  "entries": [
+    {
+      "id": "deliver:crate-73",
+      "coins": 11
+    },
+    {
+      "id": "deliver:crate-74",
+      "coins": 11
+    },
+    {
+      "id": "deliver:crate-76",
+      "coins": 11
+    },
+    {
+      "id": "deliver:crate-78",
+      "coins": 11
+    },
+    {
+      "id": "deliver:crate-80",
+      "coins": 11
+    },
+    {
+      "id": "deliver:crate-82",
+      "coins": 11
+    },
+    {
+      "id": "deliver:crate-85",
+      "coins": 11
+    },
+    {
+      "id": "deliver:crate-86",
+      "coins": 11
+    },
+    {
+      "id": "paid-night-replant-0",
+      "coins": -5
+    },
+    {
+      "id": "paid-night-replant-1",
+      "coins": -5
+    },
+    {
+      "id": "paid-night-replant-2",
+      "coins": -5
+    },
+    {
+      "id": "paid-night-replant-3",
+      "coins": -5
+    },
+    {
+      "id": "paid-night-replant-4",
+      "coins": -5
+    },
+    {
+      "id": "paid-night-replant-5",
+      "coins": -5
+    },
+    {
+      "id": "paid-night-replant-6",
+      "coins": -5
+    },
+    {
+      "id": "paid-night-replant-7",
+      "coins": -5
+    }
+  ],
+  "replantCount": 8,
+  "reconciliationDifference": 0,
+  "reloaded": true,
+  "steps": 600,
+  "distanceMetres": 173.17533536634076,
+  "maximumGateOpen": 0,
+  "wateredPlants": [
+    "plant-3",
+    "plant-5",
+    "plant-7",
+    "plant-9",
+    "plant-11",
+    "plant-13",
+    "plant-15",
+    "plant-17"
+  ],
+  "waterEvents": 16,
+  "deliveredCrates": 8,
+  "living": 8,
+  "events": [
+    {
+      "id": "event-97",
+      "type": "WaterSatisfied",
+      "workerId": "worker-20",
+      "targetId": "plant-3",
+      "time": 41.00000000000031
+    },
+    {
+      "id": "event-98",
+      "type": "WaterSatisfied",
+      "workerId": "worker-20",
+      "targetId": "plant-5",
+      "time": 48.50000000000042
+    },
+    {
+      "id": "event-99",
+      "type": "WaterSatisfied",
+      "workerId": "worker-20",
+      "targetId": "plant-7",
+      "time": 56.50000000000053
+    },
+    {
+      "id": "event-100",
+      "type": "WaterSatisfied",
+      "workerId": "worker-20",
+      "targetId": "plant-9",
+      "time": 65.00000000000058
+    },
+    {
+      "id": "event-101",
+      "type": "WaterSatisfied",
+      "workerId": "worker-20",
+      "targetId": "plant-11",
+      "time": 74.00000000000007
+    },
+    {
+      "id": "event-102",
+      "type": "WaterSatisfied",
+      "workerId": "worker-20",
+      "targetId": "plant-13",
+      "time": 83.9999999999995
+    },
+    {
+      "id": "event-103",
+      "type": "WaterSatisfied",
+      "workerId": "worker-20",
+      "targetId": "plant-15",
+      "time": 97.9999999999987
+    },
+    {
+      "id": "event-104",
+      "type": "WaterSatisfied",
+      "workerId": "worker-20",
+      "targetId": "plant-17",
+      "time": 105.99999999999825
+    },
+    {
+      "id": "event-106",
+      "type": "WaterSatisfied",
+      "workerId": "worker-20",
+      "targetId": "plant-3",
+      "time": 117.4999999999976
+    },
+    {
+      "id": "event-108",
+      "type": "WaterSatisfied",
+      "workerId": "worker-20",
+      "targetId": "plant-5",
+      "time": 122.99999999999729
+    },
+    {
+      "id": "event-110",
+      "type": "WaterSatisfied",
+      "workerId": "worker-20",
+      "targetId": "plant-7",
+      "time": 130.99999999999685
+    },
+    {
+      "id": "event-112",
+      "type": "WaterSatisfied",
+      "workerId": "worker-20",
+      "targetId": "plant-9",
+      "time": 140.99999999999628
+    },
+    {
+      "id": "event-114",
+      "type": "WaterSatisfied",
+      "workerId": "worker-20",
+      "targetId": "plant-11",
+      "time": 151.49999999999568
+    },
+    {
+      "id": "event-116",
+      "type": "WaterSatisfied",
+      "workerId": "worker-20",
+      "targetId": "plant-13",
+      "time": 162.99999999999503
+    },
+    {
+      "id": "event-119",
+      "type": "WaterSatisfied",
+      "workerId": "worker-20",
+      "targetId": "plant-15",
+      "time": 177.99999999999417
+    },
+    {
+      "id": "event-120",
+      "type": "CropMatured",
+      "targetId": "plant-3",
+      "time": 180.999999999994
+    },
+    {
+      "id": "event-121",
+      "type": "HarvestRequested",
+      "targetId": "plant-3",
+      "count": 1,
+      "automatic": true,
+      "time": 180.999999999994
+    },
+    {
+      "id": "event-123",
+      "type": "WaterSatisfied",
+      "workerId": "worker-20",
+      "targetId": "plant-17",
+      "time": 182.49999999999392
+    },
+    {
+      "id": "event-124",
+      "type": "CropMatured",
+      "targetId": "plant-5",
+      "time": 188.49999999999358
+    },
+    {
+      "id": "event-125",
+      "type": "HarvestRequested",
+      "targetId": "plant-5",
+      "count": 1,
+      "automatic": true,
+      "time": 188.49999999999358
+    },
+    {
+      "id": "event-127",
+      "type": "CropPicked",
+      "workerId": "worker-20",
+      "targetId": "plant-3",
+      "time": 189.9999999999935
+    },
+    {
+      "id": "event-128",
+      "type": "CrateDelivered",
+      "workerId": "worker-20",
+      "targetId": "crate-73",
+      "multiplyIncome": {
+        "n": "0",
+        "d": "1"
+      },
+      "time": 189.9999999999935
+    },
+    {
+      "id": "event-129",
+      "type": "TutorialCompleted",
+      "workerId": "worker-20",
+      "targetId": "crate-73",
+      "time": 189.9999999999935
+    },
+    {
+      "id": "event-130",
+      "type": "CropPicked",
+      "workerId": "worker-20",
+      "targetId": "plant-5",
+      "time": 194.9999999999932
+    },
+    {
+      "id": "event-131",
+      "type": "CrateDelivered",
+      "workerId": "worker-20",
+      "targetId": "crate-74",
+      "multiplyIncome": {
+        "n": "0",
+        "d": "1"
+      },
+      "time": 195.49999999999318
+    },
+    {
+      "id": "event-132",
+      "type": "CropMatured",
+      "targetId": "plant-7",
+      "time": 196.49999999999312
+    },
+    {
+      "id": "event-133",
+      "type": "HarvestRequested",
+      "targetId": "plant-7",
+      "count": 1,
+      "automatic": true,
+      "time": 196.49999999999312
+    },
+    {
+      "id": "event-135",
+      "type": "CropPicked",
+      "workerId": "worker-20",
+      "targetId": "plant-7",
+      "time": 202.99999999999275
+    },
+    {
+      "id": "event-136",
+      "type": "CrateDelivered",
+      "workerId": "worker-20",
+      "targetId": "crate-76",
+      "multiplyIncome": {
+        "n": "0",
+        "d": "1"
+      },
+      "time": 202.99999999999275
+    },
+    {
+      "id": "event-137",
+      "type": "CropMatured",
+      "targetId": "plant-9",
+      "time": 204.99999999999264
+    },
+    {
+      "id": "event-138",
+      "type": "HarvestRequested",
+      "targetId": "plant-9",
+      "count": 1,
+      "automatic": true,
+      "time": 204.99999999999264
+    },
+    {
+      "id": "event-140",
+      "type": "CropPicked",
+      "workerId": "worker-20",
+      "targetId": "plant-9",
+      "time": 212.4999999999922
+    },
+    {
+      "id": "event-141",
+      "type": "CrateDelivered",
+      "workerId": "worker-20",
+      "targetId": "crate-78",
+      "multiplyIncome": {
+        "n": "0",
+        "d": "1"
+      },
+      "time": 212.99999999999218
+    },
+    {
+      "id": "event-142",
+      "type": "CropMatured",
+      "targetId": "plant-11",
+      "time": 213.99999999999213
+    },
+    {
+      "id": "event-143",
+      "type": "HarvestRequested",
+      "targetId": "plant-11",
+      "count": 1,
+      "automatic": true,
+      "time": 213.99999999999213
+    },
+    {
+      "id": "event-145",
+      "type": "CropPicked",
+      "workerId": "worker-20",
+      "targetId": "plant-11",
+      "time": 223.4999999999916
+    },
+    {
+      "id": "event-146",
+      "type": "CrateDelivered",
+      "workerId": "worker-20",
+      "targetId": "crate-80",
+      "multiplyIncome": {
+        "n": "0",
+        "d": "1"
+      },
+      "time": 223.4999999999916
+    },
+    {
+      "id": "event-147",
+      "type": "CropMatured",
+      "targetId": "plant-13",
+      "time": 223.99999999999156
+    },
+    {
+      "id": "event-148",
+      "type": "HarvestRequested",
+      "targetId": "plant-13",
+      "count": 1,
+      "automatic": true,
+      "time": 223.99999999999156
+    },
+    {
+      "id": "event-150",
+      "type": "CropPicked",
+      "workerId": "worker-20",
+      "targetId": "plant-13",
+      "time": 234.49999999999096
+    },
+    {
+      "id": "event-151",
+      "type": "CrateDelivered",
+      "workerId": "worker-20",
+      "targetId": "crate-82",
+      "multiplyIncome": {
+        "n": "0",
+        "d": "1"
+      },
+      "time": 234.99999999999093
+    },
+    {
+      "id": "event-152",
+      "type": "CropMatured",
+      "targetId": "plant-15",
+      "time": 237.99999999999076
+    },
+    {
+      "id": "event-153",
+      "type": "HarvestRequested",
+      "targetId": "plant-15",
+      "count": 1,
+      "automatic": true,
+      "time": 237.99999999999076
+    },
+    {
+      "id": "event-155",
+      "type": "CropMatured",
+      "targetId": "plant-17",
+      "time": 245.9999999999903
+    },
+    {
+      "id": "event-156",
+      "type": "HarvestRequested",
+      "targetId": "plant-17",
+      "count": 1,
+      "automatic": true,
+      "time": 245.9999999999903
+    },
+    {
+      "id": "event-158",
+      "type": "CropPicked",
+      "workerId": "worker-20",
+      "targetId": "plant-15",
+      "time": 246.99999999999025
+    },
+    {
+      "id": "event-159",
+      "type": "CrateDelivered",
+      "workerId": "worker-20",
+      "targetId": "crate-85",
+      "multiplyIncome": {
+        "n": "0",
+        "d": "1"
+      },
+      "time": 247.49999999999022
+    },
+    {
+      "id": "event-160",
+      "type": "CropPicked",
+      "workerId": "worker-20",
+      "targetId": "plant-17",
+      "time": 251.9999999999999
+    },
+    {
+      "id": "event-161",
+      "type": "CrateDelivered",
+      "workerId": "worker-20",
+      "targetId": "crate-86",
+      "multiplyIncome": {
+        "n": "0",
+        "d": "1"
+      },
+      "time": 252.49999999999986
+    },
+    {
+      "id": "event-163",
+      "type": "CropPlaced",
+      "targetId": "plant-87",
+      "time": 299.50000000000955
+    },
+    {
+      "id": "event-165",
+      "type": "CropPlaced",
+      "targetId": "plant-89",
+      "time": 299.50000000000955
+    },
+    {
+      "id": "event-167",
+      "type": "CropPlaced",
+      "targetId": "plant-91",
+      "time": 299.50000000000955
+    },
+    {
+      "id": "event-169",
+      "type": "CropPlaced",
+      "targetId": "plant-93",
+      "time": 299.50000000000955
+    },
+    {
+      "id": "event-171",
+      "type": "CropPlaced",
+      "targetId": "plant-95",
+      "time": 299.50000000000955
+    },
+    {
+      "id": "event-173",
+      "type": "CropPlaced",
+      "targetId": "plant-97",
+      "time": 299.50000000000955
+    },
+    {
+      "id": "event-175",
+      "type": "CropPlaced",
+      "targetId": "plant-99",
+      "time": 299.50000000000955
+    },
+    {
+      "id": "event-177",
+      "type": "CropPlaced",
+      "targetId": "plant-101",
+      "time": 299.50000000000955
+    },
+    {
+      "id": "event-178",
+      "type": "NightStarted",
+      "time": 300
+    }
+  ],
+  "trace": [
+    {
+      "time": 0.9999999999999999,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -43.88236480611845,
+          "z": 8.395473240437049,
+          "status": "walking",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 2.0000000000000004,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -43.735028611142404,
+          "z": 10.790946480874105,
+          "status": "walking",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 3.0000000000000013,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -43.587692416166355,
+          "z": 13.186419721311161,
+          "status": "walking",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 4.000000000000002,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -43.44035622119031,
+          "z": 15.581892961748217,
+          "status": "walking",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 4.999999999999998,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -43.29302002621426,
+          "z": 17.977366202185273,
+          "status": "walking",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 5.999999999999995,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -43.14568383123821,
+          "z": 20.37283944262233,
+          "status": "walking",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 6.999999999999991,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -42.99834763626216,
+          "z": 22.768312683059385,
+          "status": "walking",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 7.999999999999988,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -42.85101144128608,
+          "z": 25.16378592349644,
+          "status": "walking",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 8.999999999999984,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -42.70367524631,
+          "z": 27.559259163933497,
+          "status": "walking",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 9.99999999999998,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -42.556339051333914,
+          "z": 29.954732404370553,
+          "status": "walking",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 10.999999999999977,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -42.40900285635782,
+          "z": 32.35020564480761,
+          "status": "walking",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 11.999999999999973,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -42.26166666138174,
+          "z": 34.745678885244665,
+          "status": "walking",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 12.99999999999997,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -42.114330466405654,
+          "z": 37.14115212568172,
+          "status": "walking",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 13.999999999999966,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -41.7057771618786,
+          "z": 39.449987870068036,
+          "status": "walking",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 14.999999999999963,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -40.392378690720136,
+          "z": 41.45871494360457,
+          "status": "walking",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 15.99999999999996,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -39.07898021956167,
+          "z": 43.4674420171411,
+          "status": "walking",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 16.99999999999997,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -37.76558174840321,
+          "z": 45.47616909067764,
+          "status": "walking",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 17.999999999999986,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -36.45218327724474,
+          "z": 47.48489616421417,
+          "status": "walking",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 19,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -35.13878480608622,
+          "z": 49.493623237750704,
+          "status": "walking",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 20.000000000000014,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -33.8253863349277,
+          "z": 51.50235031128724,
+          "status": "walking",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 21.00000000000003,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -32.51198786376918,
+          "z": 53.51107738482377,
+          "status": "walking",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 22.000000000000043,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -31.198589392610675,
+          "z": 55.519804458360305,
+          "status": "walking",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 23.000000000000057,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -29.885190921452175,
+          "z": 57.52853153189682,
+          "status": "walking",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 24.00000000000007,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -28.571792450293675,
+          "z": 59.53725860543331,
+          "status": "walking",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 25.000000000000085,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -27.258393979135175,
+          "z": 61.5459856789698,
+          "status": "walking",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 26.0000000000001,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -25.944995507976675,
+          "z": 63.55471275250629,
+          "status": "walking",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 27.000000000000114,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -24.326809699377442,
+          "z": 65,
+          "status": "walking",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 28.000000000000128,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -21.926809699377458,
+          "z": 65,
+          "status": "walking",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 29.000000000000142,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -19.526809699377473,
+          "z": 65,
+          "status": "walking",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 30.000000000000156,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -17.12680969937749,
+          "z": 65,
+          "status": "walking",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 31.00000000000017,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -14.898539669478426,
+          "z": 64.74634917369606,
+          "status": "walking",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 32.000000000000185,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -14.00720204622857,
+          "z": 62.51800511557143,
+          "status": "walking",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 33.0000000000002,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.115864422978717,
+          "z": 60.28966105744679,
+          "status": "walking",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 34.00000000000021,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.082759190145946,
+          "z": 59.217502687515754,
+          "status": "acting",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 35.00000000000023,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.082759190145946,
+          "z": 59.217502687515754,
+          "status": "acting",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 36.00000000000024,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.082759190145946,
+          "z": 59.217502687515754,
+          "status": "acting",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 37.000000000000256,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.082759190145946,
+          "z": 59.217502687515754,
+          "status": "acting",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 38.00000000000027,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.082759190145946,
+          "z": 59.217502687515754,
+          "status": "acting",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 39.000000000000284,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.082759190145946,
+          "z": 59.217502687515754,
+          "status": "acting",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 40.0000000000003,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.082759190145946,
+          "z": 59.217502687515754,
+          "status": "acting",
+          "taskId": "task-21",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 41.00000000000031,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.109478142848506,
+          "z": 59.26761166101108,
+          "status": "acting",
+          "taskId": "task-22",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 42.00000000000033,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.109478142848506,
+          "z": 59.26761166101108,
+          "status": "acting",
+          "taskId": "task-22",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 43.00000000000034,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.109478142848506,
+          "z": 59.26761166101108,
+          "status": "acting",
+          "taskId": "task-22",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 44.000000000000355,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.109478142848506,
+          "z": 59.26761166101108,
+          "status": "acting",
+          "taskId": "task-22",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 45.00000000000037,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.109478142848506,
+          "z": 59.26761166101108,
+          "status": "acting",
+          "taskId": "task-22",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 46.000000000000384,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.109478142848506,
+          "z": 59.26761166101108,
+          "status": "acting",
+          "taskId": "task-22",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 47.0000000000004,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.109478142848506,
+          "z": 59.26761166101108,
+          "status": "acting",
+          "taskId": "task-22",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 48.00000000000041,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.109478142848506,
+          "z": 59.26761166101108,
+          "status": "acting",
+          "taskId": "task-22",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 49.000000000000426,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.35913338053812,
+          "z": 57.817958798180804,
+          "status": "acting",
+          "taskId": "task-23",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 50.00000000000044,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.35913338053812,
+          "z": 57.817958798180804,
+          "status": "acting",
+          "taskId": "task-23",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 51.000000000000455,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.35913338053812,
+          "z": 57.817958798180804,
+          "status": "acting",
+          "taskId": "task-23",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 52.00000000000047,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.35913338053812,
+          "z": 57.817958798180804,
+          "status": "acting",
+          "taskId": "task-23",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 53.00000000000048,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.35913338053812,
+          "z": 57.817958798180804,
+          "status": "acting",
+          "taskId": "task-23",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 54.0000000000005,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.35913338053812,
+          "z": 57.817958798180804,
+          "status": "acting",
+          "taskId": "task-23",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 55.00000000000051,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.35913338053812,
+          "z": 57.817958798180804,
+          "status": "acting",
+          "taskId": "task-23",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 56.000000000000526,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.35913338053812,
+          "z": 57.817958798180804,
+          "status": "acting",
+          "taskId": "task-23",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 57.00000000000054,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.432534567151915,
+          "z": 59.736555229378304,
+          "status": "walking",
+          "taskId": "task-24",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 58.000000000000554,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.468269278703412,
+          "z": 60.670606751096926,
+          "status": "acting",
+          "taskId": "task-24",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 59.00000000000057,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.468269278703412,
+          "z": 60.670606751096926,
+          "status": "acting",
+          "taskId": "task-24",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 60.00000000000058,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.468269278703412,
+          "z": 60.670606751096926,
+          "status": "acting",
+          "taskId": "task-24",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 61.0000000000006,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.468269278703412,
+          "z": 60.670606751096926,
+          "status": "acting",
+          "taskId": "task-24",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 62.00000000000061,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.468269278703412,
+          "z": 60.670606751096926,
+          "status": "acting",
+          "taskId": "task-24",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 63.000000000000625,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.468269278703412,
+          "z": 60.670606751096926,
+          "status": "acting",
+          "taskId": "task-24",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 64.00000000000064,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.468269278703412,
+          "z": 60.670606751096926,
+          "status": "acting",
+          "taskId": "task-24",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 65.00000000000058,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.472687655550931,
+          "z": 59.95062030820649,
+          "status": "walking",
+          "taskId": "task-25",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 66.00000000000053,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.487415578376,
+          "z": 57.550665498571696,
+          "status": "walking",
+          "taskId": "task-25",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 67.00000000000047,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.494906593356331,
+          "z": 56.329984371665375,
+          "status": "acting",
+          "taskId": "task-25",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 68.00000000000041,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.494906593356331,
+          "z": 56.329984371665375,
+          "status": "acting",
+          "taskId": "task-25",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 69.00000000000036,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.494906593356331,
+          "z": 56.329984371665375,
+          "status": "acting",
+          "taskId": "task-25",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 70.0000000000003,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.494906593356331,
+          "z": 56.329984371665375,
+          "status": "acting",
+          "taskId": "task-25",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 71.00000000000024,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.494906593356331,
+          "z": 56.329984371665375,
+          "status": "acting",
+          "taskId": "task-25",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 72.00000000000018,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.494906593356331,
+          "z": 56.329984371665375,
+          "status": "acting",
+          "taskId": "task-25",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 73.00000000000013,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.494906593356331,
+          "z": 56.329984371665375,
+          "status": "acting",
+          "taskId": "task-25",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 74.00000000000007,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.49508986387715,
+          "z": 56.56998430169019,
+          "status": "walking",
+          "taskId": "task-26",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 75.00000000000001,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.49692256908533,
+          "z": 58.969983601938345,
+          "status": "walking",
+          "taskId": "task-26",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 75.99999999999996,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.49875527429351,
+          "z": 61.3699829021865,
+          "status": "walking",
+          "taskId": "task-26",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 76.9999999999999,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.499366189448839,
+          "z": 62.17000024199751,
+          "status": "acting",
+          "taskId": "task-26",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 77.99999999999984,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.499366189448839,
+          "z": 62.17000024199751,
+          "status": "acting",
+          "taskId": "task-26",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 78.99999999999979,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.499366189448839,
+          "z": 62.17000024199751,
+          "status": "acting",
+          "taskId": "task-26",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 79.99999999999973,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.499366189448839,
+          "z": 62.17000024199751,
+          "status": "acting",
+          "taskId": "task-26",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 80.99999999999967,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.499366189448839,
+          "z": 62.17000024199751,
+          "status": "acting",
+          "taskId": "task-26",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 81.99999999999962,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.499366189448839,
+          "z": 62.17000024199751,
+          "status": "acting",
+          "taskId": "task-26",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 82.99999999999956,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.499366189448839,
+          "z": 62.17000024199751,
+          "status": "acting",
+          "taskId": "task-26",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 83.9999999999995,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.499391324652251,
+          "z": 61.84600024297249,
+          "status": "walking",
+          "taskId": "task-27",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 84.99999999999945,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.499475108663624,
+          "z": 60.7660002462224,
+          "status": "walking",
+          "taskId": "task-27",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 85.99999999999939,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.499558892674997,
+          "z": 59.68600024947231,
+          "status": "walking",
+          "taskId": "task-27",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 86.99999999999933,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.49964267668637,
+          "z": 58.60600025272222,
+          "status": "walking",
+          "taskId": "task-27",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 87.99999999999928,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.499726460697744,
+          "z": 57.52600025597213,
+          "status": "walking",
+          "taskId": "task-27",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 88.99999999999922,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.499810244709117,
+          "z": 56.44600025922204,
+          "status": "walking",
+          "taskId": "task-27",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 89.99999999999916,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.49989402872049,
+          "z": 55.36600026247195,
+          "status": "walking",
+          "taskId": "task-27",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 90.9999999999991,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.499935610435704,
+          "z": 54.8299999975024,
+          "status": "acting",
+          "taskId": "task-27",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 91.99999999999905,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.499935610435704,
+          "z": 54.8299999975024,
+          "status": "acting",
+          "taskId": "task-27",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 92.99999999999899,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.499935610435704,
+          "z": 54.8299999975024,
+          "status": "acting",
+          "taskId": "task-27",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 93.99999999999893,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.499935610435704,
+          "z": 54.8299999975024,
+          "status": "acting",
+          "taskId": "task-27",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 94.99999999999888,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.499935610435704,
+          "z": 54.8299999975024,
+          "status": "acting",
+          "taskId": "task-27",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 95.99999999999882,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.499935610435704,
+          "z": 54.8299999975024,
+          "status": "acting",
+          "taskId": "task-27",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 96.99999999999876,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.499935610435704,
+          "z": 54.8299999975024,
+          "status": "acting",
+          "taskId": "task-27",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 97.9999999999987,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.688933509204604,
+          "z": 54.7254256494961,
+          "status": "walking",
+          "taskId": "task-28",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 98.99999999999865,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -14.273758074175067,
+          "z": 54.40183661502418,
+          "status": "acting",
+          "taskId": "task-28",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 99.9999999999986,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -14.273758074175067,
+          "z": 54.40183661502418,
+          "status": "acting",
+          "taskId": "task-28",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 100.99999999999854,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -14.273758074175067,
+          "z": 54.40183661502418,
+          "status": "acting",
+          "taskId": "task-28",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 101.99999999999848,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -14.273758074175067,
+          "z": 54.40183661502418,
+          "status": "acting",
+          "taskId": "task-28",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 102.99999999999842,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -14.273758074175067,
+          "z": 54.40183661502418,
+          "status": "acting",
+          "taskId": "task-28",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 103.99999999999837,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -14.273758074175067,
+          "z": 54.40183661502418,
+          "status": "acting",
+          "taskId": "task-28",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 104.99999999999831,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -14.273758074175067,
+          "z": 54.40183661502418,
+          "status": "acting",
+          "taskId": "task-28",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 105.99999999999825,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -14.273758074175067,
+          "z": 54.40183661502418,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 106.9999999999982,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -14.273758074175067,
+          "z": 54.40183661502418,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 107.99999999999814,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -14.273758074175067,
+          "z": 54.40183661502418,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 108.99999999999808,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -14.273758074175067,
+          "z": 54.40183661502418,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 109.99999999999802,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -14.273758074175067,
+          "z": 54.40183661502418,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 110.99999999999797,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -14.195577437938148,
+          "z": 54.6031914960616,
+          "status": "walking",
+          "taskId": "task-63",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 111.99999999999791,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.80467425675355,
+          "z": 55.609965901248685,
+          "status": "walking",
+          "taskId": "task-63",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 112.99999999999785,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.472960655283385,
+          "z": 56.62272303996044,
+          "status": "walking",
+          "taskId": "task-63",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 113.9999999999978,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.65398839386359,
+          "z": 57.68440967725499,
+          "status": "acting",
+          "taskId": "task-63",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 114.99999999999774,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.65398839386359,
+          "z": 57.68440967725499,
+          "status": "acting",
+          "taskId": "task-63",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 115.99999999999768,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.65398839386359,
+          "z": 57.68440967725499,
+          "status": "acting",
+          "taskId": "task-63",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 116.99999999999763,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.65398839386359,
+          "z": 57.68440967725499,
+          "status": "acting",
+          "taskId": "task-63",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 117.99999999999757,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.65398839386359,
+          "z": 57.68440967725499,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 118.99999999999751,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.596658409526915,
+          "z": 58.54650553787374,
+          "status": "walking",
+          "taskId": "task-64",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 119.99999999999746,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.55507394328639,
+          "z": 59.171829207970426,
+          "status": "acting",
+          "taskId": "task-64",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 120.9999999999974,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.55507394328639,
+          "z": 59.171829207970426,
+          "status": "acting",
+          "taskId": "task-64",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 121.99999999999734,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.55507394328639,
+          "z": 59.171829207970426,
+          "status": "acting",
+          "taskId": "task-64",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 122.99999999999729,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.55507394328639,
+          "z": 59.171829207970426,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 123.99999999999723,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.55507394328639,
+          "z": 59.171829207970426,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 124.99999999999717,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.55507394328639,
+          "z": 59.171829207970426,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 125.99999999999712,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.55507394328639,
+          "z": 59.171829207970426,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 126.99999999999706,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.533171394540002,
+          "z": 58.30810686927676,
+          "status": "walking",
+          "taskId": "task-65",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 127.999999999997,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.521040642892942,
+          "z": 57.82973326518023,
+          "status": "acting",
+          "taskId": "task-65",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 128.99999999999696,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.521040642892942,
+          "z": 57.82973326518023,
+          "status": "acting",
+          "taskId": "task-65",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 129.9999999999969,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.521040642892942,
+          "z": 57.82973326518023,
+          "status": "acting",
+          "taskId": "task-65",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 130.99999999999685,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.521040642892942,
+          "z": 57.82973326518023,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 131.9999999999968,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.521040642892942,
+          "z": 57.82973326518023,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 132.99999999999673,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.521040642892942,
+          "z": 57.82973326518023,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 133.99999999999667,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.521040642892942,
+          "z": 57.82973326518023,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 134.99999999999662,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.51918326936336,
+          "z": 58.15372794131484,
+          "status": "walking",
+          "taskId": "task-66",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 135.99999999999656,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.512992024264754,
+          "z": 59.233710195096876,
+          "status": "walking",
+          "taskId": "task-66",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 136.9999999999965,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.506800779166142,
+          "z": 60.31369244887891,
+          "status": "walking",
+          "taskId": "task-66",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 137.99999999999645,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.504758086510968,
+          "z": 60.670013638297135,
+          "status": "acting",
+          "taskId": "task-66",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 138.9999999999964,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.504758086510968,
+          "z": 60.670013638297135,
+          "status": "acting",
+          "taskId": "task-66",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 139.99999999999633,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.504758086510968,
+          "z": 60.670013638297135,
+          "status": "acting",
+          "taskId": "task-66",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 140.99999999999628,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.504758086510968,
+          "z": 60.670013638297135,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 141.99999999999622,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.504758086510968,
+          "z": 60.670013638297135,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 142.99999999999616,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.504758086510968,
+          "z": 60.670013638297135,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 143.9999999999961,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.504658691584472,
+          "z": 60.56201368403488,
+          "status": "walking",
+          "taskId": "task-67",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 144.99999999999605,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.503664742319517,
+          "z": 59.482014141412336,
+          "status": "walking",
+          "taskId": "task-67",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 145.999999999996,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.50267079305456,
+          "z": 58.40201459878979,
+          "status": "walking",
+          "taskId": "task-67",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 146.99999999999594,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.501676843789605,
+          "z": 57.322015056167245,
+          "status": "walking",
+          "taskId": "task-67",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 147.99999999999588,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.500763868416588,
+          "z": 56.32999964849694,
+          "status": "acting",
+          "taskId": "task-67",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 148.99999999999582,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.500763868416588,
+          "z": 56.32999964849694,
+          "status": "acting",
+          "taskId": "task-67",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 149.99999999999577,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.500763868416588,
+          "z": 56.32999964849694,
+          "status": "acting",
+          "taskId": "task-67",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 150.9999999999957,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.500763868416588,
+          "z": 56.32999964849694,
+          "status": "acting",
+          "taskId": "task-67",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 151.99999999999565,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.500763868416588,
+          "z": 56.32999964849694,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 152.9999999999956,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.500763868416588,
+          "z": 56.32999964849694,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 153.99999999999554,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.500726762966467,
+          "z": 56.65399964637223,
+          "status": "walking",
+          "taskId": "task-68",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 154.99999999999548,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.500603078132732,
+          "z": 57.73399963928986,
+          "status": "walking",
+          "taskId": "task-68",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 155.99999999999542,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.500479393298997,
+          "z": 58.8139996322075,
+          "status": "walking",
+          "taskId": "task-68",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 156.99999999999537,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.500355708465262,
+          "z": 59.89399962512513,
+          "status": "walking",
+          "taskId": "task-68",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 157.9999999999953,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.500232023631524,
+          "z": 60.97399961804277,
+          "status": "walking",
+          "taskId": "task-68",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 158.99999999999525,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.50010833879778,
+          "z": 62.0539996109604,
+          "status": "walking",
+          "taskId": "task-68",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 159.9999999999952,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.500095054085188,
+          "z": 62.17000000544294,
+          "status": "acting",
+          "taskId": "task-68",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 160.99999999999514,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.500095054085188,
+          "z": 62.17000000544294,
+          "status": "acting",
+          "taskId": "task-68",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 161.99999999999508,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.500095054085188,
+          "z": 62.17000000544294,
+          "status": "acting",
+          "taskId": "task-68",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 162.99999999999503,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.500095054085188,
+          "z": 62.17000000544294,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 163.99999999999497,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.500095054085188,
+          "z": 62.17000000544294,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 164.9999999999949,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.500095054085188,
+          "z": 62.17000000544294,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 165.99999999999486,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.500095054085188,
+          "z": 62.17000000544294,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 166.9999999999948,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.500095054085188,
+          "z": 62.17000000544294,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 167.99999999999474,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.500092541027369,
+          "z": 61.95400000545755,
+          "status": "walking",
+          "taskId": "task-69",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 168.99999999999469,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.500079975738275,
+          "z": 60.874000005530625,
+          "status": "walking",
+          "taskId": "task-69",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 169.99999999999463,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.500067410449182,
+          "z": 59.7940000056037,
+          "status": "walking",
+          "taskId": "task-69",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 170.99999999999457,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.500054845160088,
+          "z": 58.71400000567677,
+          "status": "walking",
+          "taskId": "task-69",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 171.99999999999451,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.500042279870991,
+          "z": 57.63400000574985,
+          "status": "walking",
+          "taskId": "task-69",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 172.99999999999446,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.500029714581888,
+          "z": 56.55400000582292,
+          "status": "walking",
+          "taskId": "task-69",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 173.9999999999944,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.500017149292786,
+          "z": 55.474000005895995,
+          "status": "walking",
+          "taskId": "task-69",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 174.99999999999434,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.500009656657362,
+          "z": 54.82999999994382,
+          "status": "acting",
+          "taskId": "task-69",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 175.9999999999943,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.500009656657362,
+          "z": 54.82999999994382,
+          "status": "acting",
+          "taskId": "task-69",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 176.99999999999423,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.500009656657362,
+          "z": 54.82999999994382,
+          "status": "acting",
+          "taskId": "task-69",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 177.99999999999417,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.500009656657362,
+          "z": 54.82999999994382,
+          "status": "walking",
+          "taskId": "task-70",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 178.99999999999412,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -14.27376647781906,
+          "z": 54.4018518026097,
+          "status": "acting",
+          "taskId": "task-70",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 179.99999999999406,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -14.27376647781906,
+          "z": 54.4018518026097,
+          "status": "acting",
+          "taskId": "task-70",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 180.999999999994,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -14.27376647781906,
+          "z": 54.4018518026097,
+          "status": "acting",
+          "taskId": "task-70",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 181.99999999999395,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -14.27376647781906,
+          "z": 54.4018518026097,
+          "status": "acting",
+          "taskId": "task-70",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 182.9999999999939,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -14.079608350709133,
+          "z": 55.132494411329674,
+          "status": "walking",
+          "taskId": "task-71",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 183.99999999999383,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.802239597694953,
+          "z": 56.17626956664395,
+          "status": "walking",
+          "taskId": "task-71",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 184.99999999999378,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.628639586067992,
+          "z": 57.23900230191253,
+          "status": "walking",
+          "taskId": "task-71",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 185.99999999999372,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.519033177504358,
+          "z": 58.31342607082396,
+          "status": "walking",
+          "taskId": "task-71",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 186.99999999999366,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.5,
+          "z": 58.5,
+          "status": "acting",
+          "taskId": "task-71",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 187.9999999999936,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.5,
+          "z": 58.5,
+          "status": "acting",
+          "taskId": "task-71",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 188.99999999999355,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.5,
+          "z": 58.5,
+          "status": "acting",
+          "taskId": "task-71",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 189.9999999999935,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.348805625652227,
+          "z": 58.49991793996287,
+          "status": "walking",
+          "taskId": "task-72",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 190.99999999999343,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.457110885991346,
+          "z": 59.57447364842237,
+          "status": "walking",
+          "taskId": "task-72",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 191.99999999999338,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.5,
+          "z": 60,
+          "status": "acting",
+          "taskId": "task-72",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 192.99999999999332,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.5,
+          "z": 60,
+          "status": "acting",
+          "taskId": "task-72",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 193.99999999999326,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.5,
+          "z": 60,
+          "status": "acting",
+          "taskId": "task-72",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 194.9999999999932,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.5,
+          "z": 60,
+          "status": "carrying",
+          "taskId": null,
+          "crateId": "crate-74"
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 195.99999999999315,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.34799150793151,
+          "z": 59.9999174981043,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 196.9999999999931,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.391715062628847,
+          "z": 59.137024543697684,
+          "status": "walking",
+          "taskId": "task-75",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 197.99999999999304,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.446369506000526,
+          "z": 58.05840835068941,
+          "status": "walking",
+          "taskId": "task-75",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 198.99999999999298,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.5,
+          "z": 57,
+          "status": "acting",
+          "taskId": "task-75",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 199.99999999999292,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.5,
+          "z": 57,
+          "status": "acting",
+          "taskId": "task-75",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 200.99999999999287,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.5,
+          "z": 57,
+          "status": "acting",
+          "taskId": "task-75",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 201.9999999999928,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.5,
+          "z": 57,
+          "status": "acting",
+          "taskId": "task-75",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 202.99999999999275,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.369616482714909,
+          "z": 56.983381798774154,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 203.9999999999927,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.369616482714909,
+          "z": 56.983381798774154,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 204.99999999999264,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.37896566100339,
+          "z": 57.307246883130794,
+          "status": "walking",
+          "taskId": "task-77",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 205.99999999999258,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.41012958863166,
+          "z": 58.386797164319596,
+          "status": "walking",
+          "taskId": "task-77",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 206.99999999999253,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.441293516259922,
+          "z": 59.4663474455084,
+          "status": "walking",
+          "taskId": "task-77",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 207.99999999999247,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.472457443888185,
+          "z": 60.5458977266972,
+          "status": "walking",
+          "taskId": "task-77",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 208.9999999999924,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.5,
+          "z": 61.5,
+          "status": "acting",
+          "taskId": "task-77",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 209.99999999999235,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.5,
+          "z": 61.5,
+          "status": "acting",
+          "taskId": "task-77",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 210.9999999999923,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.5,
+          "z": 61.5,
+          "status": "acting",
+          "taskId": "task-77",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 211.99999999999224,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.5,
+          "z": 61.5,
+          "status": "acting",
+          "taskId": "task-77",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 212.99999999999218,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.409134698002326,
+          "z": 61.511934814646935,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 213.99999999999213,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.410766840104563,
+          "z": 61.40394714816526,
+          "status": "walking",
+          "taskId": "task-79",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 214.99999999999207,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.427088261126922,
+          "z": 60.32407048334849,
+          "status": "walking",
+          "taskId": "task-79",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 215.999999999992,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.443409682149278,
+          "z": 59.24419381853173,
+          "status": "walking",
+          "taskId": "task-79",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 216.99999999999196,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.459731103171633,
+          "z": 58.16431715371496,
+          "status": "walking",
+          "taskId": "task-79",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 217.9999999999919,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.476052524193989,
+          "z": 57.084440488898196,
+          "status": "walking",
+          "taskId": "task-79",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 218.99999999999184,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.492373945216345,
+          "z": 56.00456382408143,
+          "status": "walking",
+          "taskId": "task-79",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 219.9999999999918,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.5,
+          "z": 55.5,
+          "status": "acting",
+          "taskId": "task-79",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 220.99999999999173,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.5,
+          "z": 55.5,
+          "status": "acting",
+          "taskId": "task-79",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 221.99999999999167,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.5,
+          "z": 55.5,
+          "status": "acting",
+          "taskId": "task-79",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 222.99999999999162,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.5,
+          "z": 55.5,
+          "status": "acting",
+          "taskId": "task-79",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 223.99999999999156,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.747485154992036,
+          "z": 55.93209509556446,
+          "status": "walking",
+          "taskId": "task-81",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 224.9999999999915,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.635952280276111,
+          "z": 57.006320592309706,
+          "status": "walking",
+          "taskId": "task-81",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 225.99999999999145,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.601115070626733,
+          "z": 58.085308353099975,
+          "status": "walking",
+          "taskId": "task-81",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 226.9999999999914,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.578899806912958,
+          "z": 59.165079848397994,
+          "status": "walking",
+          "taskId": "task-81",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 227.99999999999133,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.556684543199179,
+          "z": 60.24485134369601,
+          "status": "walking",
+          "taskId": "task-81",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 228.99999999999127,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.534469279485398,
+          "z": 61.32462283899403,
+          "status": "walking",
+          "taskId": "task-81",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 229.99999999999122,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.512254015771617,
+          "z": 62.40439433429205,
+          "status": "walking",
+          "taskId": "task-81",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 230.99999999999116,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.5,
+          "z": 63,
+          "status": "acting",
+          "taskId": "task-81",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 231.9999999999911,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.5,
+          "z": 63,
+          "status": "acting",
+          "taskId": "task-81",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 232.99999999999105,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.5,
+          "z": 63,
+          "status": "acting",
+          "taskId": "task-81",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 233.999999999991,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.5,
+          "z": 63,
+          "status": "acting",
+          "taskId": "task-81",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 234.99999999999093,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.848544252783782,
+          "z": 62.505803263353016,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 235.99999999999088,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.676087150123491,
+          "z": 61.43966136485075,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 236.99999999999082,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.634308480244222,
+          "z": 60.36162917432325,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 237.99999999999076,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.613791918446603,
+          "z": 59.38984572586778,
+          "status": "walking",
+          "taskId": "task-83",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 238.9999999999907,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.59099573867147,
+          "z": 58.31008633869504,
+          "status": "walking",
+          "taskId": "task-83",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 239.99999999999065,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.568199558896337,
+          "z": 57.230326951522294,
+          "status": "walking",
+          "taskId": "task-83",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 240.9999999999906,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.545403379121204,
+          "z": 56.15056756434955,
+          "status": "walking",
+          "taskId": "task-83",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 241.99999999999054,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.522607199346071,
+          "z": 55.07080817717681,
+          "status": "walking",
+          "taskId": "task-83",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 242.99999999999048,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.5,
+          "z": 54,
+          "status": "acting",
+          "taskId": "task-83",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 243.99999999999042,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.5,
+          "z": 54,
+          "status": "acting",
+          "taskId": "task-83",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 244.99999999999037,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.5,
+          "z": 54,
+          "status": "acting",
+          "taskId": "task-83",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 245.9999999999903,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.5,
+          "z": 54,
+          "status": "acting",
+          "taskId": "task-83",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 246.99999999999025,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -13.87195996516032,
+          "z": 54.219703855946904,
+          "status": "carrying",
+          "taskId": null,
+          "crateId": "crate-85"
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 247.9999999999902,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -14.712404822962856,
+          "z": 54.16818854809901,
+          "status": "walking",
+          "taskId": "task-84",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 248.99999999999014,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -15,
+          "z": 54,
+          "status": "acting",
+          "taskId": "task-84",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 250,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -15,
+          "z": 54,
+          "status": "acting",
+          "taskId": "task-84",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 250.99999999999994,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -15,
+          "z": 54,
+          "status": "acting",
+          "taskId": "task-84",
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 251.9999999999999,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -15,
+          "z": 54,
+          "status": "carrying",
+          "taskId": null,
+          "crateId": "crate-86"
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 252.99999999999983,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -14.933586978356812,
+          "z": 53.9027596208033,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 253.99999999999977,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -14.933586978356812,
+          "z": 53.9027596208033,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 254.99999999999972,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -14.933586978356812,
+          "z": 53.9027596208033,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 255.99999999999966,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -14.933586978356812,
+          "z": 53.9027596208033,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 256.9999999999999,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -14.933586978356812,
+          "z": 53.9027596208033,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 258.0000000000001,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -14.933586978356812,
+          "z": 53.9027596208033,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 259.00000000000034,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -14.933586978356812,
+          "z": 53.9027596208033,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 260.00000000000057,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -14.933586978356812,
+          "z": 53.9027596208033,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 261.0000000000008,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -14.933586978356812,
+          "z": 53.9027596208033,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 262.000000000001,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -14.933586978356812,
+          "z": 53.9027596208033,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 263.00000000000125,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -14.933586978356812,
+          "z": 53.9027596208033,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 264.0000000000015,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -15.009315930657564,
+          "z": 53.82575880403211,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 265.0000000000017,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -15.766605453665083,
+          "z": 53.05575063632022,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 266.00000000000193,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -16.52389497667259,
+          "z": 52.285742468608326,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 267.00000000000216,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 268.0000000000024,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 269.0000000000026,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 270.00000000000284,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 271.00000000000307,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 272.0000000000033,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 273.0000000000035,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 274.00000000000375,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 275.000000000004,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 276.0000000000042,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 277.00000000000443,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 278.00000000000466,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 279.0000000000049,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 280.0000000000051,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 281.00000000000534,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 282.00000000000557,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 283.0000000000058,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 284.000000000006,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 285.00000000000625,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 286.0000000000065,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 287.0000000000067,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 288.00000000000693,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 289.00000000000716,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 290.0000000000074,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 291.0000000000076,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 292.00000000000784,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 293.0000000000081,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 294.0000000000083,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 295.0000000000085,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 296.00000000000875,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 297.000000000009,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 298.0000000000092,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 299.00000000000944,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    },
+    {
+      "time": 300,
+      "workers": [
+        {
+          "id": "worker-20",
+          "x": -15.384027030541276,
+          "z": 53.56442914457248,
+          "status": "returning",
+          "taskId": null,
+          "crateId": null
+        }
+      ],
+      "gates": []
+    }
+  ],
+  "cpuObservationMilliseconds": 601.8697000000001,
+  "sourceHashes": {
+    "tools/probe-native-paid-canyon-worker-day-replant.mjs": "47ea45fbc76daf1503e5b2f4b7e89e47891e42e4284b454350185aeea7d9d61e",
+    "src/simulation/game.js": "b216594fd241d10746d7d9b3a7802f7a6eca41c2709d25edd6501f5834e80c6f",
+    "src/simulation/crops.js": "659c4d4457d18e32a8f99168b59ca34ec5dd62c38fb42336906bbd3b2be37d8b",
+    "src/simulation/tasks.js": "97909386cb23254856ca20157250b58cbf868152c5b36495600dd803bec70f92",
+    "src/simulation/gates.js": "07af1e6aa93653f7aeed8e1622533331cc534a95aaae5b9607d4c1b9f00f7734",
+    "src/simulation/locomotion.js": "8019c30d12424f253a7904fea9ee8f76208b4396eb476325408ee33425e2b6cc",
+    "src/world/navigation.js": "21b82f33c62581436a6cef702b66af272ae9d3b096cb2b20ee858f0a50196743",
+    "src/world/work-points.js": "cb741c085c97c046f6e0e477bb83b6f81c2e953c7c3ed14cf0d4a42920ba7939",
+    "src/persistence/snapshots.js": "0b95f044daec22d7e0de3fc840ab7c5d551e870733fa1addddf3ad0239c53457",
+    "public/content/biome-canyons.json": "a0da0d39766ef48e44ef82bc9b9ab6093bce0ae2bf6abd3035a626792823ff6d"
+  },
+  "scope": "Actual saved paid eight-crop Canyon fixture, native daytime ticks and worker tasks, one passive reload at simulated second 150, a single paid replant of the original eight locations at second 299, no magic, synthetic crop growth, forced paths or economic grants. No night attack, campaign balance, human activity, rendering or controlled performance acceptance."
+}
