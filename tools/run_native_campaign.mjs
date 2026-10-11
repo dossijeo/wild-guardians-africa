@@ -33,7 +33,7 @@ export function parseNativeCampaignArgs(args){
  o.repairPolicy=o['repair-policy']??'legacy';delete o['repair-policy'];if(!['legacy','breach-first'].includes(o.repairPolicy)||o.repairPolicy!=='legacy'&&!['funded','routed','shore'].includes(o.defensePolicy))throw Error('Unsupported native repair policy');
  o.defenseFunding=o['defense-funding']??'contour';delete o['defense-funding'];if(!['contour','rolling'].includes(o.defenseFunding)||o.defenseFunding==='rolling'&&!['funded','routed','shore'].includes(o.defensePolicy))throw Error('Unsupported defense funding choice');
  o.defensePieceReserve=Number(o['defense-piece-reserve']??0);delete o['defense-piece-reserve'];if(![0,1].includes(o.defensePieceReserve)||o.defensePieceReserve&&o.defenseFunding!=='rolling')throw Error('Invalid rolling piece reserve');
- o.perimeterQa=o['perimeter-qa']??'legacy';delete o['perimeter-qa'];if(!['legacy','incremental-v3','worker-first-v4'].includes(o.perimeterQa))throw Error('Unknown perimeter QA candidate');
+ o.perimeterQa=o['perimeter-qa']??'legacy';delete o['perimeter-qa'];if(!['legacy','incremental-v3','worker-first-v4','stable-plan-v5'].includes(o.perimeterQa))throw Error('Unknown perimeter QA candidate');
  nativeCampaignStrategy(o.strategy);if(!o.out)throw Error('Explicit output directory required');o.out=resolve(o.out);return o;
 }
 export function calibrationStop(reason){const error=Error(reason);error.code='NATIVE_CALIBRATION_STOP';return error;}
@@ -50,6 +50,7 @@ export function nativeCampaignProvenance(options){
  paths.push('tools/native-q15-labour-policy.mjs');
  paths.push('tools/native-integrated-perimeter-proof.mjs','tools/native-perimeter-reused-candidate-v2.mjs','tools/native-reused-service-component-proof-v2.mjs','tools/native-interior-attack-anchor.mjs','tools/native-worker-service-proof-v2.mjs','tools/terrain-lattice-tile-candidate.mjs');
  paths.push('tools/native-worker-service-proof-v3.mjs','tools/static-animal-certificate-cache.mjs','src/world/worker-wall-overlap-recovery.js','tools/native-proof-failure-details.mjs');
+ paths.push('tools/native-stable-plan-perimeter-proof.mjs','tools/stable-prospective-wall-plan-candidate.mjs');
  for(const path of paths)p.sourceHashes[path]=createHash('sha256').update(readFileSync(new URL(path,root))).digest('hex');
  return {...p,protocol:{...campaignProtocolForLabour(options.labourPolicy),profile:options.profile??'olderFemale',plotFluidClearance:options.plotFluidClearance??0,defenseMaterial:options.defenseMaterial??'zarzas',repairPolicy:options.repairPolicy??'legacy',defenseFunding:options.defenseFunding??'contour',defensePieceReserve:options.defensePieceReserve??0,perimeterQa:options.perimeterQa??'legacy',cropHitPoints:CROP_HIT_POINTS}};
 }

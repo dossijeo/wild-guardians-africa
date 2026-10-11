@@ -1,0 +1,155 @@
+TAP version 13
+# (node:41720) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: incremental perimeter QA is explicit and invalid choices are rejected
+ok 1 - incremental perimeter QA is explicit and invalid choices are rejected
+  ---
+  duration_ms: 4.0877
+  ...
+# Subtest: CLI fixes baseline defaults, accepts100 combat +80peace days and refuses invalid cases
+ok 2 - CLI fixes baseline defaults, accepts100 combat +80peace days and refuses invalid cases
+  ---
+  duration_ms: 1.1482
+  ...
+# Subtest: defense material is an explicit native player choice with unchanged default
+ok 3 - defense material is an explicit native player choice with unchanged default
+  ---
+  duration_ms: 0.516
+  ...
+# Subtest: rolling defense spending is opt-in and recorded in campaign provenance
+ok 4 - rolling defense spending is opt-in and recorded in campaign provenance
+  ---
+  duration_ms: 0.8236
+  ...
+# Subtest: cooperative calibration stop preserves partial receipt without inventing native defeat
+ok 5 - cooperative calibration stop preserves partial receipt without inventing native defeat
+  ---
+  duration_ms: 26.3539
+  ...
+# Subtest: stop-file is observed on a tick even before a daily checkpoint
+ok 6 - stop-file is observed on a tick even before a daily checkpoint
+  ---
+  duration_ms: 13.9849
+  ...
+# Subtest: partial tool error keeps original daily journal, source receipt and native result without inventing defeat
+ok 7 - partial tool error keeps original daily journal, source receipt and native result without inventing defeat
+  ---
+  duration_ms: 15.6978
+  ...
+# Subtest: rolling next-piece reserve is explicit, bounded and never silently changes historical policies
+ok 8 - rolling next-piece reserve is explicit, bounded and never silently changes historical policies
+  ---
+  duration_ms: 7.3535
+  ...
+# (node:30572) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: incremental Canyon completion requires actual native coverage (legacy)
+ok 9 - incremental Canyon completion requires actual native coverage (legacy)
+  ---
+  duration_ms: 3372.8443
+  ...
+# Subtest: incremental Canyon completion requires actual native coverage (incremental-v3)
+ok 10 - incremental Canyon completion requires actual native coverage (incremental-v3)
+  ---
+  duration_ms: 3221.394
+  ...
+# Subtest: incremental Canyon completion requires actual native coverage (worker-first-v4)
+ok 11 - incremental Canyon completion requires actual native coverage (worker-first-v4)
+  ---
+  duration_ms: 2808.8404
+  ...
+# Subtest: incremental Canyon completion requires actual native coverage (stable-plan-v5)
+ok 12 - incremental Canyon completion requires actual native coverage (stable-plan-v5)
+  ---
+  duration_ms: 2698.8222
+  ...
+# (node:52808) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: chosen wall material uses native price and HP and pays its actual ledger debit
+ok 13 - chosen wall material uses native price and HP and pays its actual ledger debit
+  ---
+  duration_ms: 1034.989
+  ...
+# Subtest: native read-only wall quote is possible without funds; preview/build still enforce real cash
+ok 14 - native read-only wall quote is possible without funds; preview/build still enforce real cash
+  ---
+  duration_ms: 310.2245
+  ...
+# Subtest: real partial purchases close paid perimeter, create one worker gate, retain crops and replay saved state
+ok 15 - real partial purchases close paid perimeter, create one worker gate, retain crops and replay saved state
+  ---
+  duration_ms: 593.1262
+  ...
+# Subtest: paid wage protection can postpone purchases while preserving a real future savings target
+ok 16 - paid wage protection can postpone purchases while preserving a real future savings target
+  ---
+  duration_ms: 312.9886
+  ...
+# Subtest: rolling investment buys a paid partial wall while preserving replant cash, not an unpaid-contour debt
+ok 17 - rolling investment buys a paid partial wall while preserving replant cash, not an unpaid-contour debt
+  ---
+  duration_ms: 325.8314
+  ...
+# Subtest: funded defense remains opt-in and cannot lock funds before its declared day
+ok 18 - funded defense remains opt-in and cannot lock funds before its declared day
+  ---
+  duration_ms: 287.2919
+  ...
+# Subtest: legal native removal of small vegetation is allowed and recorded only through paid wall commands
+ok 19 - legal native removal of small vegetation is allowed and recorded only through paid wall commands
+  ---
+  duration_ms: 552.4235
+  ...
+# Subtest: unfunded recertification defers geometry without changing commands, state or later paid purchases
+ok 20 - unfunded recertification defers geometry without changing commands, state or later paid purchases
+  ---
+  duration_ms: 1494.103
+  ...
+# Subtest: rolling next-piece earmark preserves small delivery surpluses for a real purchase without charging a fee
+ok 21 - rolling next-piece earmark preserves small delivery surpluses for a real purchase without charging a fee
+  ---
+  duration_ms: 382.0958
+  ...
+# Subtest: rolling next-piece earmark releases after actual native completion and remains opt-in
+ok 22 - rolling next-piece earmark releases after actual native completion and remains opt-in
+  ---
+  duration_ms: 555.7055
+  ...
+# (node:31452) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: empty farm retains the actual 35-coin recovery floor, independently of requested full-crew reserve
+ok 23 - empty farm retains the actual 35-coin recovery floor, independently of requested full-crew reserve
+  ---
+  duration_ms: 6.2216
+  ...
+# Subtest: remaining living crops or undelivered crates retain the native 30-coin breached recovery rule
+ok 24 - remaining living crops or undelivered crates retain the native 30-coin breached recovery rule
+  ---
+  duration_ms: 0.4664
+  ...
+# Subtest: unbreached funding preserves both the requested reserve and native recovery floor
+ok 25 - unbreached funding preserves both the requested reserve and native recovery floor
+  ---
+  duration_ms: 0.2533
+  ...
+# Subtest: native worker repairs leave cash for a paid replacement seed and minimum next wage
+ok 26 - native worker repairs leave cash for a paid replacement seed and minimum next wage
+  ---
+  duration_ms: 131.0891
+  ...
+# (node:44080) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: stable prospective plan QA is opt-in and both loaded modules are hashed
+ok 27 - stable prospective plan QA is opt-in and both loaded modules are hashed
+  ---
+  duration_ms: 470.4856
+  ...
+1..27
+# tests 27
+# suites 0
+# pass 27
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 12470.8064

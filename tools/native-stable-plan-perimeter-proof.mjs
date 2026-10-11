@@ -1,4 +1,4 @@
-// Future opt-in QA protocol. No production or campaign imports this module.
+// Explicit opt-in QA protocol; default campaigns retain the original proof.
 // Gate selection and real purchases must continue using their original quote.
 import {nativeIntegratedPerimeterProof} from './native-integrated-perimeter-proof.mjs';
 import {stableProspectiveWallPlan} from './stable-prospective-wall-plan-candidate.mjs';
