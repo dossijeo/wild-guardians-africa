@@ -1,0 +1,51 @@
+{
+  "cases": [
+    {
+      "directory": "docs/qa/integrated-spiritual-survival/military-baseline-v1-good-sabana-712",
+      "seed": "712",
+      "strategy": "good",
+      "status": "observed-native-defeat",
+      "result": "defeat",
+      "defeatPhase": "dawn-after-completed-night",
+      "victoryPhase": null,
+      "postgameDays": 0,
+      "daytimeRaids": 0,
+      "terminalDay": 36,
+      "completedNights": 36,
+      "money": 16,
+      "living": 0,
+      "centerHp": [
+        142
+      ],
+      "destroyed": 992,
+      "totals": {
+        "income": 44495,
+        "refunds": 0,
+        "wages": 17826,
+        "seeds": 23130,
+        "walls": 470,
+        "centers": 0,
+        "villages": 0,
+        "repairs": 3753,
+        "otherCredits": 0,
+        "otherDebits": 0
+      },
+      "strikes": {
+        "assigned": 2536,
+        "consumed": 2536,
+        "unused": 0
+      },
+      "postIntroduction": {
+        "exposure": 5365,
+        "losses": 992,
+        "weightedDestroyedFraction": 0.18490214352283318,
+        "unprotectedReferenceFraction": 0.21821140726933838,
+        "protectedReferenceFraction": 0.036887343895619755,
+        "scope": "Nighttime references are hypotheses only, never applied damage; exposure is the native census at each raid spawn"
+      },
+      "ledgerAndDeliveryMatch": true,
+      "sourceHashesMatch": true,
+      "scope": "Native terminal result and ledger only; a single hundred-night victory does not establish the strategy/seed matrix, human activity or general release acceptance"
+    }
+  ]
+}
