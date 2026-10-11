@@ -6,7 +6,7 @@ import {firstCameraVolumeHit} from './camera-volume-sweep.js';
 export class CameraVolumeIndex {
  constructor({cellSize=16,maxCells=256}={}){
   if(!(cellSize>0)||!Number.isFinite(cellSize)||!Number.isSafeInteger(maxCells)||maxCells<1)throw Error('Invalid camera volume index');
-  this.cellSize=cellSize;this.maxCells=maxCells;this.records=new Map();this.cells=new Map();this.large=new Set();this.lastCandidates=0;
+  this.cellSize=cellSize;this.maxCells=maxCells;this.records=new Map();this.cells=new Map();this.large=new Set();this.lastCandidates=0;this.revision=0;
  }
  range(minX,minZ,maxX,maxZ){return [Math.floor(minX/this.cellSize),Math.floor(minZ/this.cellSize),Math.floor(maxX/this.cellSize),Math.floor(maxZ/this.cellSize)];}
  keys(range){
@@ -31,12 +31,14 @@ export class CameraVolumeIndex {
   if(keys===null)this.large.add(box);
   else for(const key of keys){let bucket=this.cells.get(key);if(!bucket)this.cells.set(key,bucket=new Set());bucket.add(box);}
   box.keys=keys;
+  this.revision++;
  }
  delete(id){
   const box=this.records.get(id);if(!box)return;
   if(box.keys===null)this.large.delete(box);
   else for(const key of box.keys){const bucket=this.cells.get(key);bucket.delete(box);if(!bucket.size)this.cells.delete(key);}
   this.records.delete(id);
+  this.revision++;
  }
  sweep(start,end,radius=0){
   if(start.length!==3||end.length!==3||!Number.isFinite(radius)||radius<0||start.some((x,i)=>!Number.isFinite(x)||!Number.isFinite(end[i])))throw Error('Invalid camera exclusion query');
@@ -45,6 +47,11 @@ export class CameraVolumeIndex {
   if(keys!==null)for(const key of keys)for(const box of this.cells.get(key)??[])candidates.add(box);
   this.lastCandidates=keys===null?this.records.size:candidates.size;
   return firstCameraVolumeHit(start,end,candidates,radius);
+ }
+ queryXZ(minX,minZ,maxX,maxZ){
+  const keys=this.keys(this.range(minX,minZ,maxX,maxZ)),found=keys===null?new Set(this.records.values()):new Set(this.large);
+  if(keys)for(const key of keys)for(const box of this.cells.get(key)??[])found.add(box);
+  return [...found].filter(box=>box.worldMin[0]<=maxX&&box.worldMax[0]>=minX&&box.worldMin[2]<=maxZ&&box.worldMax[2]>=minZ);
  }
  clear(){this.records.clear();this.cells.clear();this.large.clear();this.lastCandidates=0;}
 }

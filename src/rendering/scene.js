@@ -12,6 +12,7 @@ import {FluidGpuPreload} from './fluid-preload.js';
 import {chunkInPropTransition} from './prop-transition-residency.js';
 import {CameraBuildingRegistry} from './camera-building-registry.js';
 import {CameraTreeRegistry} from './camera-tree-registry.js';
+import {CameraWallRegistry} from './camera-wall-registry.js';
 import {CameraExclusionMotion} from './camera-exclusion-motion.js';
 import {constrainCameraToTerrain} from './camera-terrain-exclusion.js';
 import {installCameraPoseResolver} from './terrain-camera.js';
@@ -178,6 +179,7 @@ export class WorldScene {
     this.chunkStream=new NativeChunkStream(this.nav.config,this.pack.profile,{loaded:()=>this.chunks,onData:data=>this.installChunk(data),onError:error=>this.onError?.(error),onFallback:error=>console.warn('Generación local de chunks:',error.message??error)});
     this.syncChunks();await phase('load-chunks-horizon-ready',()=>this.loadReady(Promise.all([this.chunkStream.whenReady(),this.horizon.whenReady()])));if(this.disposed)throw new Error('Carga de mundo cancelada');this.syncChunks();await milestone('chunks');
     await this.loadReady(this.prepareSavedAnimalRigs(state));loadingSyncWitness(this.onLoadingSpan,'restore-sync',()=>this.sync(0));
+    this.setCameraExclusion(true,{trees:true});this.updateCamera();
     this.hands=loadingSyncWitness(this.onLoadingSpan,'hands-constructor',()=>new NativeHands(this.scene,(x,z)=>this.nav.field.surface(x,z),{motion:!matchMedia('(prefers-reduced-motion: reduce)').matches,onError:e=>this.onError?.(e)}));
     await phase('load-hands-ready',()=>this.loadReady(this.hands.ready));
     await phase('load-active-animal-actors',()=>this.loadReady(this.loadedAnimalActors()));
@@ -219,25 +221,66 @@ export class WorldScene {
   }
   setCameraExclusion(enabled,options={}){
     this.releaseCameraExclusion?.();this.releaseCameraExclusion=null;this.cameraExclusion=null;
-    if(!enabled)return;
+    if(!enabled){if(this.controls)this.controls.maxDistance=65;return;}
     const registry=new CameraBuildingRegistry(options),motion=new CameraExclusionMotion(registry.index,options);let last=performance.now();
     const trees=options.trees?new CameraTreeRegistry(registry.index,options.trees===true?{}:options.trees):null;
-    this.cameraExclusion={registry,motion,trees};
-    const release=installCameraPoseResolver(this.camera,(pose,previous,context)=>{
+    const walls=new CameraWallRegistry(registry.index,options.walls);
+    this.cameraExclusion={registry,motion,trees,walls};let clearance=20,roofCache=null;
+    this.cameraDirtyEntities=new Map();
+    const refresh=()=>{
+      if(!this.state||!this.cameraVolumesDirty)return;
+      if(this.cameraDirtyEntities.size){
+        for(const [id,entity] of this.cameraDirtyEntities){
+          if(!entity){registry.remove(id);walls.remove(id);}
+          else if(entity.kind==='wall')walls.sync(this.objects,[entity],{partial:true});
+          else registry.sync(this.objects,[entity],{partial:true});
+        }
+        this.cameraDirtyEntities.clear();
+      }else{registry.sync(this.objects,[...this.state.villages,...this.state.structures.filter(e=>e.kind==='center')]);walls.sync(this.objects,this.state.structures.filter(e=>e.kind==='wall'));}
+      this.cameraVolumesDirty=false;
+    };
+    const resolve=(pose,previous,context)=>{
       const now=performance.now(),seconds=Math.max(0,(now-last)/1000);last=now;
-      registry.sync(this.objects,[...this.state.villages,...this.state.structures.filter(e=>e.kind==='center')]);
+      refresh();
       trees?.sync(this.chunks,this.chunkRevision);
       let eye=motion.resolve(pose.eye,previous?.eye,seconds,{reset:context==='focus'});
       // A focus/first pose must recover from the requested destination, rather
       // than an intermediate nearest-face exit that terrain would undo.
-      const terrain=constrainCameraToTerrain(context==='focus'||!previous?pose.eye:eye,motion,this.nav.field);
+      const terrain=constrainCameraToTerrain(context==='focus'||!previous?pose.eye:eye,motion,this.nav.field,clearance);
       if(terrain.point.some((value,i)=>Math.abs(value-eye[i])>motion.skin))motion.corrected=motion.stats.corrected=true;
       eye=terrain.point;
       motion.stats.unresolved||=!terrain.resolved;motion.stats.terrainRecoveryIterations=terrain.iterations;
-      const ground=this.nav.field.surface(eye[0],eye[2]);motion.stats.terrainConflict=eye[1]<ground+2||eye[1]>ground+20;
+      const ground=this.nav.field.surface(eye[0],eye[2]);motion.stats.terrainConflict=eye[1]<ground+2||eye[1]>ground+clearance;motion.stats.maxClearance=clearance;
       return {...pose,eye,altitude:eye[1]-ground};
-    });
-    this.releaseCameraExclusion=()=>{release();trees?.clear();registry.clear();};
+    };
+    resolve.clearance=(target,distance,previous)=>{
+      refresh();trees?.sync(this.chunks,this.chunkRevision);
+      const field=this.nav.field,r=Math.min(100,distance)+3,ground=field.surface(target[0],target[2]);
+      const key=[target[0],target[2],r,registry.index.revision].join('|');
+      if(roofCache?.key!==key){let roof=20;for(const box of registry.index.queryXZ(target[0]-r,target[2]-r,target[0]+r,target[2]+r))roof=Math.max(roof,box.worldMax[1]-ground+3);roofCache={key,roof};}
+      // Keep the previous safe altitude while leaving a tall roof's neighborhood.
+      // Descending remains a player action; crossing its edge cannot slam the
+      // camera down onto the roof merely because the ordinary ceiling resumes.
+      clearance=Math.max(20,roofCache.roof,previous?.altitude??20);if(this.controls)this.controls.maxDistance=Math.max(65,clearance+4);return clearance;
+    };
+    resolve.minimumDistance=target=>{
+      // Only a large building at the point of interest restricts close zoom.
+      // Nearby crops/NPCs retain the ordinary four-metre orbital distance.
+      let minimum=4;const ground=this.nav.field.surface(target[0],target[2]);
+      for(const box of registry.index.queryXZ(target[0]-3,target[2]-3,target[0]+3,target[2]+3)){
+        if(String(box.id).startsWith('camera-tree:')||String(box.id).startsWith('camera-wall:'))continue;
+        const cx=(box.min[0]+box.max[0])/2,cz=(box.min[2]+box.max[2])/2,c=Math.cos(box.yaw??0),s=Math.sin(box.yaw??0),dx=target[0]-cx,dz=target[2]-cz;
+        const x=c*dx-s*dz+cx,z=s*dx+c*dz+cz;
+        const separation=Math.hypot(Math.max(box.min[0]-x,x-box.max[0],0),Math.max(box.min[2]-z,z-box.max[2],0));
+        const weight=Math.max(0,1-separation/3);
+        const span=Math.max(box.worldMax[0]-box.worldMin[0],box.worldMax[2]-box.worldMin[2]);
+        minimum=Math.max(minimum,4+Math.max(0,box.worldMax[1]-ground+span*.45-4)*weight);
+      }
+      return minimum;
+    };
+    this.cameraVolumesDirty=true;
+    const release=installCameraPoseResolver(this.camera,resolve);
+    this.releaseCameraExclusion=()=>{release();trees?.clear();walls.clear();registry.clear();};
   }
   updateCamera(){return updateTerrainCamera(this.camera,this.controls,this.nav?.field);}
   focus(point) {this.raidCamera?.cancel();if(this.nav)focusTerrainCamera(this.camera,this.controls,this.nav.field,point);}
@@ -480,7 +523,7 @@ export class WorldScene {
     this.raidEntryPreparer?.update(s);
     this.prepareUpcomingAnimalRigs(s);
     const desired=new Set();
-    for(const v of s.villages){desired.add(v.id);if(!this.objects.has(v.id)){const mesh=this.villageMesh(v);this.objects.set(v.id,mesh);this.scene.add(mesh);}}
+    for(const v of s.villages){desired.add(v.id);if(!this.objects.has(v.id)){const mesh=this.villageMesh(v);this.objects.set(v.id,mesh);this.scene.add(mesh);this.cameraVolumesDirty=true;this.cameraDirtyEntities?.set(v.id,v);}}
     const visiblePlants=s.plants.filter(p=>p.alive&&Math.hypot(p.x-this.controls.target.x,p.z-this.controls.target.z)<140);
     if(visiblePlants.length>this.cropBatch.capacity)loadingSyncWitness(this.onLoadingSpan,'sync-crop-resize',()=>{this.cropBatch.dispose();this.cropBatch=createCropBatch(this.scene,this.renderer,this.cropGltf,this.cropBridgeData,2**Math.ceil(Math.log2(visiblePlants.length)));});
     if(this.onLoadingSpan)loadingSyncWitness(this.onLoadingSpan,'sync-crop-update',()=>this.cropBatch.update(visiblePlants,s.elapsed,(x,z)=>this.nav.field.surface(x,z),this.renderOrigin,this.nav.field));
@@ -495,7 +538,7 @@ export class WorldScene {
         else if('profile' in e||'hitsRemaining' in e) {mesh=new THREE.Group();}
         else if(e.kind==='shield')mesh=new THREE.Group();
         else mesh=new THREE.Group();
-      mesh.userData.entityId=e.id;this.objects.set(e.id,mesh);this.scene.add(mesh);
+      mesh.userData.entityId=e.id;this.objects.set(e.id,mesh);this.scene.add(mesh);if(e.kind==='center'||e.kind==='wall'){this.cameraVolumesDirty=true;this.cameraDirtyEntities?.set(e.id,e);}
       }
       mesh.position.set(e.x,('profile' in e||'hitsRemaining' in e?this.nav.actorSurface(e.x,e.z):this.nav.field.surface(e.x,e.z))+.025,e.z);
       if(!('value' in e)&&('profile' in e||'hitsRemaining' in e)&&!this.mixers.has(e.id))this.requestActor(e,'profile' in e?'worker':'animal',mesh);
@@ -503,6 +546,10 @@ export class WorldScene {
       if('profile' in e&&!('value' in e))mesh.visible=e.status!=='home';
       if(e.kind==='wall'){mesh.rotation.y=e.yaw;mesh.update(e,dt,s.elapsed);}
       else if(e.kind==='center')mesh.update(e,s.elapsed);
+      if(e.kind==='wall'||e.kind==='center'){
+        const key=[mesh.stageKey,mesh.gateOpen,mesh.visual,mesh.damage,mesh.position.x,mesh.position.y,mesh.position.z,mesh.rotation.y].join('|');
+        if(mesh.userData.cameraVolumeKey!==key){mesh.userData.cameraVolumeKey=key;this.cameraVolumesDirty=true;this.cameraDirtyEntities?.set(e.id,e);}
+      }
       if(e.species&&'growth' in e) {
         const growth=e.growth/cropSpec(e.species).growth_seconds,stage=growth>=1?4:Math.max(0,marks.findIndex(m=>growth<m)-1),key=`${cropIds.indexOf(e.species)}:${stage}`;
         if(mesh.userData.stageKey!==key){mesh.clear();mesh.add(this.cropModels[cropIds.indexOf(e.species)*5+stage].clone());mesh.userData.stageKey=key;}
@@ -510,7 +557,7 @@ export class WorldScene {
       }
       if(!('value' in e)&&('profile' in e||'hitsRemaining' in e))this.updateActor(e,dt,'profile' in e?'worker':'animal');
     }
-    for(const [id,mesh] of this.objects)if(!desired.has(id)){this.scene.remove(mesh);if(mesh.userData.nativeWall||mesh.userData.nativeBuilding)mesh.dispose();releaseActorRig(this.mixers.get(id));this.objects.delete(id);this.mixers.delete(id);}
+    for(const [id,mesh] of this.objects)if(!desired.has(id)){this.scene.remove(mesh);if(mesh.userData.nativeWall||mesh.userData.nativeBuilding)mesh.dispose();releaseActorRig(this.mixers.get(id));this.objects.delete(id);this.mixers.delete(id);if(mesh.userData.nativeWall||mesh.userData.nativeBuilding||mesh.userData.units||this.cameraExclusion?.registry.roots.has(id)){this.cameraVolumesDirty=true;this.cameraDirtyEntities?.set(id,null);}}
     const night=s.time>=300,tint=night?'#263747':this.pack.profile.bg;
     this.renderer.setClearColor(tint);this.scene.fog=null;this.destructionPass.night=skyNight(s);this.destructionPass.nightLight=1.12;this.sun.intensity=3-2.6*this.destructionPass.night;this.ambient.intensity=2-.9*this.destructionPass.night;
     updateShadowCamera(this.sun,this.controls.target);

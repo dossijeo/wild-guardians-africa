@@ -1,0 +1,47 @@
+TAP version 13
+# (node:54080) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: wall volumes follow finite native part envelopes, gate hinge and deletion
+ok 1 - wall volumes follow finite native part envelopes, gate hinge and deletion
+  ---
+  duration_ms: 10.8942
+  ...
+# Subtest: contextual height permits tall roof overflight and preserves intent leaving its neighborhood
+ok 2 - contextual height permits tall roof overflight and preserves intent leaving its neighborhood
+  ---
+  duration_ms: 1600.4624
+  ...
+# Subtest: indexed neighborhood query excludes distant populations and retains large intersecting bounds
+ok 3 - indexed neighborhood query excludes distant populations and retains large intersecting bounds
+  ---
+  duration_ms: 8.2215
+  ...
+# Subtest: building focus has a contextual visual distance with a gradual boundary and crops stay close
+ok 4 - building focus has a contextual visual distance with a gradual boundary and crops stay close
+  ---
+  duration_ms: 23.1869
+  ...
+# Subtest: partial wall refresh retains unrelated pieces and removes explicit destroyed pieces
+ok 5 - partial wall refresh retains unrelated pieces and removes explicit destroyed pieces
+  ---
+  duration_ms: 2.9735
+  ...
+# Subtest: queued gate updates and multiple destruction keep other native camera records intact
+ok 6 - queued gate updates and multiple destruction keep other native camera records intact
+  ---
+  duration_ms: 9.0869
+  ...
+# Subtest: WorldScene.load passes its real local early-region owner to later attachment
+ok 7 - WorldScene.load passes its real local early-region owner to later attachment
+  ---
+  duration_ms: 745.3541
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2457.3011

@@ -17,8 +17,12 @@ fn main() {
                 }
             }
         })
-        .invoke_handler(tauri::generate_handler![desktop_smoke_report, desktop_smoke_fixture, desktop_smoke_minimize])
+        .invoke_handler(tauri::generate_handler![exit_application, desktop_exit_qa_config, desktop_exit_qa_report, desktop_smoke_report, desktop_smoke_fixture, desktop_smoke_minimize])
         .on_page_load(|webview, payload| {
+            if payload.event() == tauri::webview::PageLoadEvent::Finished
+                && std::env::args().any(|arg| arg == "--exit-qa-report") && webview.label() == "main" {
+                let _ = webview.eval(include_str!("../exit-qa.js"));
+            }
             if payload.event() == tauri::webview::PageLoadEvent::Finished
                 && std::env::args().any(|arg| arg == "--smoke-report")
                 && webview.label() == "main"
@@ -38,6 +42,31 @@ fn main() {
         })
         .run(tauri::generate_context!())
         .expect("Failed to run Wild Guardians Africa");
+}
+
+// Invoked only after the frontend has committed any active game's save.
+// AppHandle.exit terminates the application, rather than merely hiding a window.
+#[tauri::command]
+fn exit_application(app: tauri::AppHandle) {
+    app.exit(0);
+}
+
+#[tauri::command]
+fn desktop_exit_qa_config() -> Result<serde_json::Value, String> {
+    let args: Vec<String> = std::env::args().collect();
+    if !args.iter().any(|arg| arg == "--exit-qa-report") { return Err("Exit QA is disabled".into()); }
+    let stage = args.iter().position(|arg| arg == "--exit-qa-stage").and_then(|i| args.get(i+1)).ok_or("Missing exit QA stage")?;
+    let path = args.iter().position(|arg| arg == "--exit-qa-fixture").and_then(|i| args.get(i+1)).ok_or("Missing exit QA fixture")?;
+    let text = std::fs::read_to_string(path).map_err(|error| error.to_string())?;
+    let fixture: serde_json::Value = serde_json::from_str(&text).map_err(|error| error.to_string())?;
+    Ok(serde_json::json!({"stage":stage,"fixture":fixture}))
+}
+
+#[tauri::command]
+fn desktop_exit_qa_report(report: serde_json::Value) -> Result<(), String> {
+    let args: Vec<String> = std::env::args().collect();
+    let path = args.iter().position(|arg| arg == "--exit-qa-report").and_then(|i| args.get(i+1)).ok_or("Exit QA is disabled")?;
+    std::fs::write(path, serde_json::to_vec_pretty(&report).map_err(|error| error.to_string())?).map_err(|error| error.to_string())
 }
 
 #[tauri::command]
