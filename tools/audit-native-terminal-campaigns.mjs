@@ -11,10 +11,24 @@ const cases=dirs.map(dir=>{
  const root=resolve(dir),read=name=>JSON.parse(readFileSync(join(root,name),'utf8'));
  const receipt=read('receipt.json'),report=read('report.json'),source=read('source.json');
  assert.ok(['observed-horizon','observed-native-defeat'].includes(receipt.status),'Only terminal native observations are accepted');
- const defeated=receipt.status==='observed-native-defeat';
- assert.equal(receipt.result,defeated?'defeat':null);assert.equal(report.result,receipt.result);
+ const defeated=receipt.status==='observed-native-defeat',won=receipt.status==='observed-horizon'&&receipt.result==='victory';
+ assert.equal(receipt.result,defeated?'defeat':won?'victory':null);assert.equal(report.result,receipt.result);
  const rows=readFileSync(join(root,'days.jsonl'),'utf8').trim().split(/\r?\n/).map(JSON.parse);
  let defeatPhase=defeated?'during-terminal-night':null;
+ let victoryPhase=null;
+ if(won){
+  assert.equal(receipt.completedNights,100,'Victory requires exactly one hundred completed nights');
+  assert.equal(rows.length,100,'Victory requires one hundred complete daily ledger rows');
+  const state=JSON.parse(gunzipSync(readFileSync(join(root,'state.json.gz'))));
+  assert.equal(state.result,'victory');assert.equal(state.postgame,false);
+  assert.equal(state.completedNights,100);assert.equal(state.day,101);assert.equal(state.time,0);assert.equal(state.raid,null);
+  assert.equal(state.ledger.balance.d,'1');assert.equal(BigInt(state.ledger.balance.n),BigInt(report.money));
+  const wonAt=state.events.findLastIndex(e=>e.type==='CampaignWon'),ended=state.events.findLastIndex(e=>e.type==='RaidEnded');
+  assert.ok(ended>=0&&wonAt>ended,'Victory must follow the completed hundredth native raid');
+  assert(!state.events.some(e=>e.type==='GameOver'),'Victory snapshot contains a defeat event');
+  victoryPhase='dawn-after-hundredth-night';
+ }
+
  if(defeated&&rows.length===receipt.completedNights){
   // Economic irreversibility is also checked at dawn, after the last raid
   // has completed. It does not invent another played or completed night.
@@ -75,6 +89,6 @@ const cases=dirs.map(dir=>{
   assert.ok(r.cropsDestroyed<=r.exposedLivingAtSpawn);
  }
  const reference=(base,slope)=>exposure?postIntroduction.reduce((n,r)=>n+r.exposedLivingAtSpawn*(base+slope*(r.day-1)),0)/exposure:null;
- return {directory:dir,seed:report.seed,strategy:report.strategy,status:receipt.status,result:report.result,defeatPhase,terminalDay:rows.at(-1).day,completedNights:receipt.completedNights,money:report.money,living:rows.at(-1).living,centerHp:rows.at(-1).centerHp,destroyed:report.counts.CropDestroyed??0,totals,strikes:{assigned,consumed,unused},postIntroduction:{exposure,losses,weightedDestroyedFraction:exposure?losses/exposure:null,unprotectedReferenceFraction:reference(.2057,.0007),protectedReferenceFraction:reference(.0351,.0001),scope:'References are hypotheses only, never applied damage; exposure is the native census at each raid spawn'},ledgerAndDeliveryMatch:true,sourceHashesMatch:true,scope:'Native terminal evidence only; not hundred-night or human activity acceptance'};
+ return {directory:dir,seed:report.seed,strategy:report.strategy,status:receipt.status,result:report.result,defeatPhase,victoryPhase,terminalDay:rows.at(-1).day,completedNights:receipt.completedNights,money:report.money,living:rows.at(-1).living,centerHp:rows.at(-1).centerHp,destroyed:report.counts.CropDestroyed??0,totals,strikes:{assigned,consumed,unused},postIntroduction:{exposure,losses,weightedDestroyedFraction:exposure?losses/exposure:null,unprotectedReferenceFraction:reference(.2057,.0007),protectedReferenceFraction:reference(.0351,.0001),scope:'References are hypotheses only, never applied damage; exposure is the native census at each raid spawn'},ledgerAndDeliveryMatch:true,sourceHashesMatch:true,scope:'Native terminal result and ledger only; a single hundred-night victory does not establish the strategy/seed matrix, human activity or general release acceptance'};
 });
 console.log(JSON.stringify({cases},null,2));

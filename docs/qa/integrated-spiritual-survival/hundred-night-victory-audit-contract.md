@@ -1,0 +1,7 @@
+# Hundred-night victory audit contract
+
+The native terminal auditor previously assumed every observed-horizon result was null, rejecting a legitimate result=victory at the hundredth dawn. It now accepts the existing native victory outcome only with exactly 100 completed nights and 100 consecutive daily ledger rows, a matching compressed native snapshot at day101/time0, no active raid or postgame, exact ledger balance, CampaignWon after the last RaidEnded and no GameOver in the terminal event window. The previous delivery, ledger subtotal, source comparison, transport, observer coverage and strike-budget checks still apply.
+
+Six parser-contract tests pass. The hundred-night parser fixture is synthetic and explicitly does not establish native campaign acceptance; deliberately missing/shortened/corrupt snapshots, premature counts, active raids, reordered victory, defeat events, wrong balance, postgame and unfinished-night time are rejected. The updated auditor also passes the three preserved real seven-night Canyon campaigns v107/v108/v109 with unchanged ledger, delivery and strike conclusions (see victory-audit-short-campaign-regression.json).
+
+No simulation, observer imported by a live campaign, economic parameter or saved-game format changed. The v111 native hundred-night campaign remains running and must still supply its actual terminal evidence. This change prepares validation and cannot approve survival, the strategy/seed matrix, postgame180 or human inactivity.

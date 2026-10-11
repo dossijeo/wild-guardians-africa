@@ -50,3 +50,20 @@ test('accepts dawn economic defeat only with consistent native terminal snapshot
  assert.notEqual(run(f=>{dawn(f);f.state.ledger.balance.n='106';}).status,0);
  assert.notEqual(run(f=>{dawn(f);f.state.events.reverse();}).status,0);
 });
+
+
+function hundredNightVictory(f){
+ const row=f.rows[0],raid=f.report.raidEvidence.raids[0];
+ f.rows=Array.from({length:100},(_,i)=>({...structuredClone(row),day:i+1,money:105+i*5,result:i===99?'victory':null,finance:{...structuredClone(row.finance),opening:100+i*5,closing:105+i*5,entries:[{id:'deliver:crate-'+(i+1),coins:10,category:'income'},{id:'hire-'+(i+1),coins:-5,category:'wages'}]}}));
+ f.receipt.result=f.report.result='victory';f.receipt.completedNights=f.report.completedNights=100;f.report.money=600;
+ f.report.nativeEvidence.deliveries=f.rows.map(d=>({paymentId:d.finance.entries[0].id,coins:10}));
+ f.report.raidEvidence.raids=f.rows.map(d=>({...structuredClone(raid),day:d.day}));
+ f.state={result:'victory',postgame:false,day:101,time:0,completedNights:100,raid:null,ledger:{balance:{n:'600',d:'1'}},events:[{type:'RaidEnded'},{type:'CampaignWon'}]};
+}
+
+test('accepts hundred-night victory only with complete ledgers and the native victory snapshot',()=>{
+ const valid=run(hundredNightVictory);assert.equal(valid.status,0,valid.stderr);assert.match(valid.stdout,/dawn-after-hundredth-night/);
+ for(const mutate of [f=>{delete f.state;},f=>{f.receipt.completedNights=99;},f=>{f.rows.pop();},f=>{f.state.raid={};},f=>{f.state.events.reverse();},f=>{f.state.events.push({type:'GameOver'});},f=>{f.state.ledger.balance.n='601';},f=>{f.state.postgame=true;},f=>{f.state.time=600;}]){
+  const rejected=run(f=>{hundredNightVictory(f);mutate(f);});assert.notEqual(rejected.status,0);
+ }
+});
