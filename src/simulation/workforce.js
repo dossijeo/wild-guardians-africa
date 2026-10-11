@@ -1,4 +1,5 @@
 import {BALANCE} from './balance.js';
+import {rational,rationalNumber,add,negate,multiply} from './money.js';
 export const PROFILES = [
   {id:'olderMale',name:'Hombre mayor',wage:BALANCE.workers.older_wage,speed:1,male:true,end:250},
   {id:'olderFemale',name:'Mujer mayor',wage:BALANCE.workers.older_wage,speed:1,male:false,end:300},
@@ -38,12 +39,19 @@ export function allocateWorkers(centers,total) {
 export function hiringCost(selection,{time=0}={}) {
   if(!Number.isFinite(time)||time<0)throw new Error('Hora de contratación inválida');
   if(Object.keys(selection).some(id=>!PROFILES.some(p=>p.id===id))) throw new Error('Perfil desconocido');
-  return Math.ceil(PROFILES.reduce((sum,p)=>{
+  const elapsed=rationalNumber(time);
+  const cost=PROFILES.reduce((sum,p)=>{
     const count=selection[p.id]??0;
     if(!Number.isSafeInteger(count)||count<0) throw new Error('Cantidad inválida');
     if(count&&time>=p.end)throw new Error('La jornada de este perfil ya ha terminado');
-    return sum+count*p.wage*Math.max(0,1-time/p.end);
-  },0));
+    if(!count)return sum;
+    // Calculate the remaining shift exactly, then round the complete bill once.
+    // Floating subtraction made 30 * (1 - 100/300) charge 21 instead of 20.
+    return add(sum,multiply(add(rational(p.end),negate(elapsed)),BigInt(count)*BigInt(p.wage),p.end));
+  },rational(0));
+  const whole=(BigInt(cost.n)+BigInt(cost.d)-1n)/BigInt(cost.d);
+  if(whole>BigInt(Number.MAX_SAFE_INTEGER))throw new Error('Coste de contratación no representable');
+  return Number(whole);
 }
 export function distributeProfiles(quotas,selection) {
   const centers=Object.keys(quotas);
