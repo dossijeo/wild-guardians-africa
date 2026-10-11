@@ -1,0 +1,17 @@
+{
+  "status": "verified-interrupted-complete-prefix",
+  "oldDirectory": "docs/qa/integrated-spiritual-survival/pilot-v97-q14-good-zarzas-canyon-712-seven",
+  "newDirectory": "docs/qa/integrated-spiritual-survival/pilot-v99-q14-entry-retry-good-canyon-712-seven",
+  "oldStatus": "stopped-early-calibration",
+  "identicalCompleteDays": 5,
+  "newCompletedNights": 7,
+  "sourceDifferences": [
+    {
+      "path": "src/simulation/raids.js",
+      "before": "e74e5049eabde4d7a2cc424c8d375252e6bc2f03b9298731ed298724c2663c3b",
+      "after": "8daa672b4a92831166fbde7be3c10cc6e123d3d8fadac008c791210fef9ebcfd",
+      "verifiedCommit": "45016ead"
+    }
+  ],
+  "scope": "Only retained completed days are compared. The sole source delta is the exact bounded Canyon entry retry. Excludes the interrupted day, identical-source balance, long-term survival, human activity and performance acceptance."
+}

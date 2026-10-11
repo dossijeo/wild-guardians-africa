@@ -30,6 +30,21 @@ The plot `v100-entry-retry-passive-canyon-progress.png` was inspected: declining
 
 ## v99: good player policy
 
-The paired good-policy campaign was launched from the same frozen sources and opening, rather than continuing either historical interrupted snapshot. It remains under observation until its authoritative process exits and the terminal evidence passes the same audits. No incomplete day is substituted for a native result.
+The paired good-policy campaign was launched from the same frozen sources and opening, rather than continuing either historical interrupted snapshot. It ended with native economic defeat at day eight dawn, after seven complete nights. All six audits pass. Its first five complete days exactly match stopped v97 under the separately verified entry-only source delta. The complete v99/v100 comparison retains identical full source hashes and player-policy settings apart from strategy; the PNG was inspected.
+
+The centre remains at 600 HP and 111 plants remain alive. Closing money is 15 coins, below the minimum actual hiring cost. The retained ledger is `700 + 3,091 delivered income - 1,707 wages - 2,039 seeds - 30 walls = 15`. The 530 additional coins from Multiply are already inside those delivered earnings, not another credit.
+
+| Day | Opening cash | Closing cash | Income | Wages | Seeds | Walls | Living | Destroyed | Dawn staff |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 6 | 380 | 303 | 946 | 268 | 725 | 30 | 145 | 17 | 7 |
+| 7 | 303 | 15 | 12 | 300 | 0 | 0 | 111 | 33 | 10 |
+
+The day-seven hiring command paid for ten workers and left three coins. Only one physical crate was delivered, providing 12 coins. This is a real native defeat but does not establish that the automated policy deserves its `good` label or that the military curve is calibrated correctly. It had increased the crop workload sharply the previous day and left too little actual liquidity for recovery.
+
+All 78 assigned hits were consumed: 65 crop kills, twelve shield interceptions and no wall/centre contacts. Three paid wall pieces never closed a perimeter. The defense planner recorded twenty `no-bounded-legal-contour` outcomes and subsequently cached unchanged planning failures. `remainingCost: 0` means the plan was absent, **not** that the defense was completed or free. This geometric/planning failure must be investigated before evaluating defended balance.
+
+The initial-water route audit has zero eligible plants; it proves no access claim about later checkpoints. A separate all-due-water audit checks 79 surviving plants with pending later irrigation and finds 79 valid native routes from their associated centre service point, with the snapshot and all frozen sources unchanged. It does not replay their dynamic worker positions, job ordering, queue throughput or the preceding day. There are also 24 surviving plants with both irrigation checkpoints done and eight whose later checkpoint is still future. The native daily census verifies only one crop was picked/delivered during day seven; losing income cannot simply be blamed on a missing initial watering route.
+
+Do not extend this failed policy to fourteen or one hundred nights, disguise the native defeat as a technical timeout, soften military pressure to hide it, or increase prices/income. Next calibration must inspect measured workload/harvest timing, liquidity-preserving hiring and physically legal Canyon contour planning, retaining this failed candidate unchanged. The paired passive result is not proof that agricultural magic is harmful: the different policy produced different planting, hiring and RNG histories.
 
 Scope: functional entry/combat continuity and native short economic evidence. No 100/180-night, multi-seed, browser visual, GPU or human activity acceptance.
