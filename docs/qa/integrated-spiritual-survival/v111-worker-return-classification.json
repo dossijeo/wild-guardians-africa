@@ -1,0 +1,630 @@
+{
+  "scope": "Read-only worker service diagnostic on stopped snapshot, no ticks or campaign restart",
+  "snapshotSha256": "a7a7d012f02004f07b9e3f2c22e9d8087ccd0d5f436f80abd1df708a9208ee7e",
+  "sourceHashes": {
+    "tools/native-worker-service-proof-v2.mjs": "86e53164024dacdfc4cf633303a9c1b43503f3ffdd3352d054955129630662ce",
+    "src/simulation/game.js": "b216594fd241d10746d7d9b3a7802f7a6eca41c2709d25edd6501f5834e80c6f",
+    "src/world/work-points.js": "cb741c085c97c046f6e0e477bb83b6f81c2e953c7c3ed14cf0d4a42920ba7939",
+    "src/world/centers.js": "7a826b2bf3bb0793b0e4453c3a9ae487741f2ddf41c79433434091806739a7f4",
+    "src/world/navigation.js": "21b82f33c62581436a6cef702b66af272ae9d3b096cb2b20ee858f0a50196743",
+    "src/world/worker-slope-recovery.js": "6ef690dd055479608ac164b4adadc1f033036f60d837c2b176ca2998c3a3c1bd"
+  },
+  "toolSha256": "a310ae2695440622dd196f2d6b303065aa2e55e4cefc90efa0e950d4e4dc9046",
+  "proof": {
+    "valid": false,
+    "reason": "native-worker-centre-service-unproven",
+    "workerId": "worker-6087",
+    "checks": {
+      "workers": [],
+      "crops": []
+    }
+  },
+  "worker": {
+    "id": "worker-6087",
+    "personId": "person-13",
+    "profile": "olderFemale",
+    "contractDay": 8,
+    "centerId": "structure-2",
+    "villageId": "village-1",
+    "x": 96.97022565646142,
+    "z": 15.43353444834352,
+    "status": "fleeing",
+    "taskId": null,
+    "crateId": null,
+    "path": null,
+    "hits": 0,
+    "incapacitated": false,
+    "recovering": false,
+    "runRemaining": 105.80409353316266,
+    "actionRemaining": -0.09999999999999098,
+    "idleState": null,
+    "running": false,
+    "taskApproach": null,
+    "destinationId": "home-village-1",
+    "pathVersion": 84,
+    "runPhase": 44.08503897215176,
+    "heading": 0.05251328944853786,
+    "gateWaiting": false,
+    "deliveryApproach": null,
+    "carryPhase": 9.408472013607627,
+    "walkPhase": 124.61083920462421
+  },
+  "workerWalkable": false,
+  "workerTerrainValid": true,
+  "terrainSamples": [
+    {
+      "x": 96.97022565646142,
+      "z": 15.43353444834352,
+      "slope": 0.12953191536967895,
+      "water": {
+        "shore": 16.128048397887415,
+        "inside": false,
+        "level": null
+      }
+    },
+    {
+      "x": 97.25022565646142,
+      "z": 15.43353444834352,
+      "slope": 0.1301146850034649,
+      "water": {
+        "shore": 15.880253848118572,
+        "inside": false,
+        "level": null
+      }
+    },
+    {
+      "x": 96.69022565646142,
+      "z": 15.43353444834352,
+      "slope": 0.12838973827857522,
+      "water": {
+        "shore": 16.37655914175184,
+        "inside": false,
+        "level": null
+      }
+    },
+    {
+      "x": 96.97022565646142,
+      "z": 15.71353444834352,
+      "slope": 0.1287404180058408,
+      "water": {
+        "shore": 16.25903794128058,
+        "inside": false,
+        "level": null
+      }
+    },
+    {
+      "x": 96.97022565646142,
+      "z": 15.153534448343521,
+      "slope": 0.13016445369833984,
+      "water": {
+        "shore": 15.999680979723353,
+        "inside": false,
+        "level": null
+      }
+    }
+  ],
+  "overlaps": [
+    {
+      "kind": "wall",
+      "material": "zarzas",
+      "gate": false,
+      "baseScaleX": 0.9999999999999966,
+      "x": 97.01000000000002,
+      "z": 15.260000000000002,
+      "yaw": -3.141592653589793,
+      "maxHp": 100,
+      "hp": 100,
+      "status": "intact",
+      "cost": 10,
+      "collapseRemaining": 0,
+      "villageId": "village-1",
+      "id": "structure-4425",
+      "created": 6445,
+      "wallPresentation": {
+        "from": 0,
+        "to": 1,
+        "at": 4392.3999999979005
+      },
+      "radius": 0.7
+    }
+  ],
+  "propOverlaps": [],
+  "homeRoutes": {
+    "point": {
+      "x": 60,
+      "z": 0
+    },
+    "walkable": true,
+    "ordinary": null,
+    "nativeWorker": null,
+    "slopeRecovery": null
+  },
+  "center": {
+    "id": "structure-2",
+    "created": 1,
+    "kind": "center",
+    "material": "zarzas",
+    "gate": false,
+    "x": 83,
+    "z": 0,
+    "yaw": 0,
+    "culture": "mapungubwe",
+    "maxHp": 600,
+    "hp": 600,
+    "status": "intact",
+    "villageId": "village-1",
+    "cost": 800,
+    "collapseRemaining": 0,
+    "radius": 4.609913858297798,
+    "footprint": [
+      {
+        "x": 78.84500122070312,
+        "z": 0.45933905243873596
+      },
+      {
+        "x": 78.84576797485352,
+        "z": -0.39208611845970154
+      },
+      {
+        "x": 78.85539722442627,
+        "z": -1.6194431781768799
+      },
+      {
+        "x": 78.86334419250488,
+        "z": -1.8279401063919067
+      },
+      {
+        "x": 78.88424587249756,
+        "z": -2.041696310043335
+      },
+      {
+        "x": 80.42854595184326,
+        "z": -2.1234261989593506
+      },
+      {
+        "x": 85.70803093910217,
+        "z": -2.1226730346679688
+      },
+      {
+        "x": 86.76587271690369,
+        "z": -2.059067726135254
+      },
+      {
+        "x": 87.13859939575195,
+        "z": -2.0305912494659424
+      },
+      {
+        "x": 87.15013408660889,
+        "z": -1.8132530450820923
+      },
+      {
+        "x": 87.1518726348877,
+        "z": -1.2685413360595703
+      },
+      {
+        "x": 87.15499877929688,
+        "z": 1.2632697820663452
+      },
+      {
+        "x": 87.15331745147705,
+        "z": 1.7855961322784424
+      },
+      {
+        "x": 87.12932109832764,
+        "z": 2.0245535373687744
+      },
+      {
+        "x": 85.83907222747803,
+        "z": 2.1188242435455322
+      },
+      {
+        "x": 85.52755069732666,
+        "z": 2.1230716705322266
+      },
+      {
+        "x": 80.4761106967926,
+        "z": 2.1234261989593506
+      },
+      {
+        "x": 80.18675541877747,
+        "z": 2.111541748046875
+      },
+      {
+        "x": 79.03440618515015,
+        "z": 2.0248031616210938
+      },
+      {
+        "x": 78.86327457427979,
+        "z": 1.9988224506378174
+      },
+      {
+        "x": 78.85449504852295,
+        "z": 1.6053260564804077
+      }
+    ]
+  },
+  "entrances": [
+    {
+      "clearance": 0.6,
+      "point": {
+        "x": 87.75499901771545,
+        "z": 0
+      },
+      "walkable": true,
+      "path": null
+    },
+    {
+      "clearance": 0.8,
+      "point": {
+        "x": 87.95499901771545,
+        "z": 0
+      },
+      "walkable": true,
+      "path": null
+    }
+  ],
+  "routes": [
+    {
+      "crop": {
+        "id": "plant-5573",
+        "x": 93,
+        "z": 10.5
+      },
+      "watering": null,
+      "delivery": [
+        {
+          "clearance": 0.6,
+          "destination": {
+            "x": 87.47096753949175,
+            "z": 2.5177854394593595
+          },
+          "walkable": true,
+          "fromWorker": null,
+          "fromWatering": null
+        },
+        {
+          "clearance": 0.8,
+          "destination": {
+            "x": 87.58484968654645,
+            "z": 2.6821960734895547
+          },
+          "walkable": true,
+          "fromWorker": null,
+          "fromWatering": null
+        }
+      ]
+    },
+    {
+      "crop": {
+        "id": "plant-5148",
+        "x": 96,
+        "z": 9
+      },
+      "watering": null,
+      "delivery": [
+        {
+          "clearance": 0.6,
+          "destination": {
+            "x": 87.60096671287249,
+            "z": 2.3954314340957286
+          },
+          "walkable": true,
+          "fromWorker": null,
+          "fromWatering": null
+        },
+        {
+          "clearance": 0.8,
+          "destination": {
+            "x": 87.75818191772078,
+            "z": 2.51905739967138
+          },
+          "walkable": true,
+          "fromWorker": null,
+          "fromWatering": null
+        }
+      ]
+    },
+    {
+      "crop": {
+        "id": "plant-5519",
+        "x": 94.5,
+        "z": 9
+      },
+      "watering": null,
+      "delivery": [
+        {
+          "clearance": 0.6,
+          "destination": {
+            "x": 87.56510819649807,
+            "z": 2.436972747721778
+          },
+          "walkable": true,
+          "fromWorker": null,
+          "fromWatering": null
+        },
+        {
+          "clearance": 0.8,
+          "destination": {
+            "x": 87.71037056255487,
+            "z": 2.574445817839446
+          },
+          "walkable": true,
+          "fromWorker": null,
+          "fromWatering": null
+        }
+      ]
+    },
+    {
+      "crop": {
+        "id": "plant-6705",
+        "x": 91.5,
+        "z": 10.5
+      },
+      "watering": null,
+      "delivery": [
+        {
+          "clearance": 0.6,
+          "destination": {
+            "x": 87.40432076313101,
+            "z": 2.5578219354180405
+          },
+          "walkable": true,
+          "fromWorker": null,
+          "fromWatering": null
+        },
+        {
+          "clearance": 0.8,
+          "destination": {
+            "x": 87.49598731806547,
+            "z": 2.7355780681011295
+          },
+          "walkable": true,
+          "fromWorker": null,
+          "fromWatering": null
+        }
+      ]
+    },
+    {
+      "crop": {
+        "id": "plant-5498",
+        "x": 93,
+        "z": 9
+      },
+      "watering": null,
+      "delivery": [
+        {
+          "clearance": 0.6,
+          "destination": {
+            "x": 87.51567233449326,
+            "z": 2.483609876300381
+          },
+          "walkable": true,
+          "fromWorker": null,
+          "fromWatering": null
+        },
+        {
+          "clearance": 0.8,
+          "destination": {
+            "x": 87.6444560798818,
+            "z": 2.63662865594425
+          },
+          "walkable": true,
+          "fromWorker": null,
+          "fromWatering": null
+        }
+      ]
+    },
+    {
+      "crop": {
+        "id": "plant-5516",
+        "x": 96,
+        "z": 7.5
+      },
+      "watering": null,
+      "delivery": [
+        {
+          "clearance": 0.6,
+          "destination": {
+            "x": 87.63988999990026,
+            "z": 2.3397033378556653
+          },
+          "walkable": true,
+          "fromWorker": null,
+          "fromWatering": null
+        },
+        {
+          "clearance": 0.8,
+          "destination": {
+            "x": 87.8100796337578,
+            "z": 2.4447532713512956
+          },
+          "walkable": true,
+          "fromWorker": null,
+          "fromWatering": null
+        }
+      ]
+    },
+    {
+      "crop": {
+        "id": "plant-5494",
+        "x": 94.5,
+        "z": 7.5
+      },
+      "watering": null,
+      "delivery": [
+        {
+          "clearance": 0.6,
+          "destination": {
+            "x": 87.61096474844508,
+            "z": 2.3823515171025034
+          },
+          "walkable": true,
+          "fromWorker": null,
+          "fromWatering": null
+        },
+        {
+          "clearance": 0.8,
+          "destination": {
+            "x": 87.77151263181757,
+            "z": 2.5016175103470797
+          },
+          "walkable": true,
+          "fromWorker": null,
+          "fromWatering": null
+        }
+      ]
+    },
+    {
+      "crop": {
+        "id": "plant-5693",
+        "x": 91.5,
+        "z": 9
+      },
+      "watering": null,
+      "delivery": [
+        {
+          "clearance": 0.6,
+          "destination": {
+            "x": 87.44789812530873,
+            "z": 2.532991024066888
+          },
+          "walkable": true,
+          "fromWorker": null,
+          "fromWatering": null
+        },
+        {
+          "clearance": 0.8,
+          "destination": {
+            "x": 87.55409046763575,
+            "z": 2.7024701862995926
+          },
+          "walkable": true,
+          "fromWorker": null,
+          "fromWatering": null
+        }
+      ]
+    },
+    {
+      "crop": {
+        "id": "plant-6376",
+        "x": 90,
+        "z": 10.5
+      },
+      "watering": null,
+      "delivery": [
+        {
+          "clearance": 0.6,
+          "destination": {
+            "x": 87.32180310285639,
+            "z": 2.5928410332127267
+          },
+          "walkable": true,
+          "fromWorker": null,
+          "fromWatering": null
+        },
+        {
+          "clearance": 0.8,
+          "destination": {
+            "x": 87.38596377103265,
+            "z": 2.7822701984940443
+          },
+          "walkable": true,
+          "fromWorker": null,
+          "fromWatering": null
+        }
+      ]
+    },
+    {
+      "crop": {
+        "id": "plant-5338",
+        "x": 93,
+        "z": 7.5
+      },
+      "watering": null,
+      "delivery": [
+        {
+          "clearance": 0.6,
+          "destination": {
+            "x": 87.56809790912774,
+            "z": 2.4337905228723886
+          },
+          "walkable": true,
+          "fromWorker": null,
+          "fromWatering": null
+        },
+        {
+          "clearance": 0.8,
+          "destination": {
+            "x": 87.71435684606112,
+            "z": 2.5702028513735935
+          },
+          "walkable": true,
+          "fromWorker": null,
+          "fromWatering": null
+        }
+      ]
+    },
+    {
+      "crop": {
+        "id": "plant-6387",
+        "x": 88.5,
+        "z": 12
+      },
+      "watering": null,
+      "delivery": [
+        {
+          "clearance": 0.6,
+          "destination": {
+            "x": 87.21099683742058,
+            "z": 2.6189684376224798
+          },
+          "walkable": true,
+          "fromWorker": null,
+          "fromWatering": null
+        },
+        {
+          "clearance": 0.8,
+          "destination": {
+            "x": 87.23822208378489,
+            "z": 2.8171067377070482
+          },
+          "walkable": true,
+          "fromWorker": null,
+          "fromWatering": null
+        }
+      ]
+    },
+    {
+      "crop": {
+        "id": "plant-5525",
+        "x": 97.5,
+        "z": 6
+      },
+      "watering": null,
+      "delivery": [
+        {
+          "clearance": 0.6,
+          "destination": {
+            "x": 87.68956841571945,
+            "z": 2.239316065187929
+          },
+          "walkable": true,
+          "fromWorker": null,
+          "fromWatering": null
+        },
+        {
+          "clearance": 0.8,
+          "destination": {
+            "x": 87.87631752151673,
+            "z": 2.3109035744609807
+          },
+          "walkable": true,
+          "fromWorker": null,
+          "fromWatering": null
+        }
+      ]
+    }
+  ],
+  "stateUnchanged": true,
+  "milliseconds": 81.53470000000002
+}

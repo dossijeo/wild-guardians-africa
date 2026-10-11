@@ -1,0 +1,46 @@
+import {readFileSync,writeFileSync} from 'node:fs';
+import {join} from 'node:path';
+import {gunzipSync} from 'node:zlib';
+import {createHash} from 'node:crypto';
+import {performance} from 'node:perf_hooks';
+import assert from 'node:assert/strict';
+import {deserialize,serialize} from '../src/persistence/snapshots.js';
+import {Navigation,BIOME_IDS} from '../src/world/navigation.js';
+import {centerServicePoint,centerDeliveryPoint,centerFootprint} from '../src/world/centers.js';
+import {wateringRoute} from '../src/world/work-points.js';
+import {nativeWorkerServiceProofV2} from './native-worker-service-proof-v2.mjs';
+import {workerSlopeRecoveryPath} from '../src/world/worker-slope-recovery.js';
+import {footprintDistance} from '../src/world/footprints.js';
+import {wallCollisionPolygon} from '../src/world/wall-collision-frame.js';
+const [directory,output]=process.argv.slice(2);
+if(!directory||!output)throw Error('STOPPED_DIR FRESH_OUTPUT required');
+assert.equal(JSON.parse(readFileSync(join(directory,'receipt.json'))).status,'stopped-early-calibration');
+const bytes=readFileSync(join(directory,'partial-state.json.gz')),state=deserialize(gunzipSync(bytes).toString());
+const profile=JSON.parse(readFileSync(`public/content/biome-${BIOME_IDS[state.biome]}.json`)).profile;
+const nav=new Navigation(state.seed,state.biome,profile);nav.setState(state);
+const view=nav.forBuildingPlacement({id:'qa-empty-worker-proposal',x:1e12,z:1e12,radius:0,kind:'house'});view.obstacles=[...nav.obstacles];
+const before=serialize(state),started=performance.now(),proof=nativeWorkerServiceProofV2(state,view);
+const worker=state.workers.find(w=>w.id===proof.workerId);assert(worker,'Expected diagnostic worker rejection');
+const center=state.structures.find(s=>s.id===worker.centerId);assert(center);
+const crops=state.plants.filter(p=>p.alive&&p.centerId===center.id).sort((a,b)=>Math.hypot(a.x-worker.x,a.z-worker.z)-Math.hypot(b.x-worker.x,b.z-worker.z)||a.id.localeCompare(b.id)).slice(0,12);
+const describePath=path=>path?{length:path.length,destination:path.at(-1)}:null;
+const routes=crops.map(crop=>{
+ const watering=wateringRoute(worker,crop,view),results=[.6,.8].map(clearance=>{
+  const destination=centerDeliveryPoint(center,crop,state,clearance);
+  return {clearance,destination,walkable:view.walkable(destination.x,destination.z,.28,null,true),fromWorker:describePath(view.path(worker,destination,.28,null,true,32)),fromWatering:watering?describePath(view.path(watering.destination,destination,.28,null,true,32)):null};
+ });
+ return {crop:{id:crop.id,x:crop.x,z:crop.z},watering:watering?{destination:watering.destination,path:describePath(watering.path)}:null,delivery:results};
+});
+const entrances=[.6,.8].map(clearance=>{
+ const point=centerServicePoint(center,state,clearance);return {clearance,point,walkable:view.walkable(point.x,point.z,.28,null,true),path:describePath(view.path(worker,point,.28,null,true,32))};
+});
+const village=state.villages.find(v=>v.id===worker.villageId),home=village?.entry??village;
+const homeRoutes=home?{point:{x:home.x,z:home.z},walkable:view.walkable(home.x,home.z,.28,null,true),ordinary:describePath(view.path(worker,home,.28,null,true)),nativeWorker:describePath(view.workerPath(worker,home,.28,null)),slopeRecovery:describePath(workerSlopeRecoveryPath(view,worker,home,.28))}:null;
+const terrainSamples=[[0,0],[.28,0],[-.28,0],[0,.28],[0,-.28]].map(([dx,dz])=>({x:worker.x+dx,z:worker.z+dz,slope:view.field.slope(worker.x+dx,worker.z+dz),water:view.field.waterInfo(worker.x+dx,worker.z+dz)}));
+const overlaps=view.obstacles.filter(o=>{const polygon=o.kind==='wall'?wallCollisionPolygon(o,0):o.footprint;return polygon?footprintDistance(polygon,worker.x,worker.z)<.28:Math.hypot(o.x-worker.x,o.z-worker.z)<o.radius+.28;});
+const propOverlaps=view.propsAt(worker.x,worker.z,4.28).filter(p=>(p.slot<4||p.slot>=10&&p.slot<=12||p.slot>=18)&&Math.hypot(p.x-worker.x,p.z-worker.z)<(p.radius??1.5)+.28);
+assert.equal(serialize(state),before,'Diagnostic must not modify native state or economy');
+const sourceHashes=Object.fromEntries(['tools/native-worker-service-proof-v2.mjs','src/simulation/game.js','src/world/work-points.js','src/world/centers.js','src/world/navigation.js','src/world/worker-slope-recovery.js'].map(path=>[path,createHash('sha256').update(readFileSync(path)).digest('hex')]));
+const report={scope:'Read-only worker service diagnostic on stopped snapshot, no ticks or campaign restart',snapshotSha256:createHash('sha256').update(bytes).digest('hex'),sourceHashes,toolSha256:createHash('sha256').update(readFileSync(new URL(import.meta.url))).digest('hex'),proof,worker,workerWalkable:view.walkable(worker.x,worker.z,.28,null,true),workerTerrainValid:view.terrainValid(worker.x,worker.z,.28,true),terrainSamples,overlaps,propOverlaps,homeRoutes,center:centerFootprint(center,state),entrances,routes,stateUnchanged:true,milliseconds:performance.now()-started};
+writeFileSync(output,JSON.stringify(report,null,2)+'\n',{flag:'wx'});
+console.log(JSON.stringify({workerId:worker.id,status:worker.status,workerWalkable:report.workerWalkable,entrances,routes:routes.map(r=>({crop:r.crop.id,watering:!!r.watering,delivery:r.delivery.map(d=>({clearance:d.clearance,walkable:d.walkable,fromWorker:!!d.fromWorker,fromWatering:!!d.fromWatering}))})),milliseconds:report.milliseconds}));

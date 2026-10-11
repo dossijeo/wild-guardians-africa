@@ -1,0 +1,351 @@
+{
+  "scope": "Isolated native walkTo from stopped snapshot; no campaign restart, no farming or player commands",
+  "snapshotSha256": "a7a7d012f02004f07b9e3f2c22e9d8087ccd0d5f436f80abd1df708a9208ee7e",
+  "sourceHashes": {
+    "src/simulation/game.js": "181467ae9ad4dcd08132287c7d6f8796d3b6221c5851ea65245855c1ce3d6799",
+    "src/world/worker-wall-overlap-recovery.js": "8cf7e190a600ed7c77c9554f8b33b36b879477dc247505722fc2c2f963d6b93c",
+    "src/simulation/actor-motion.js": "2a85659094bac1947989d8141a249d980c0b5e8977827f3f2455a864b916d841",
+    "src/simulation/worker-route-clearance.js": "36f855f7ca81a20cd852d543da36dfe42746f48429d58d6af482d531a9b8a7c4"
+  },
+  "initial": {
+    "x": 96.97022565646142,
+    "z": 15.43353444834352
+  },
+  "destination": {
+    "x": 60,
+    "z": 0,
+    "id": "home-village-1"
+  },
+  "planned": [
+    {
+      "x": 96.97022565646142,
+      "z": 15.760010000000001
+    },
+    {
+      "x": 82,
+      "z": 16
+    },
+    {
+      "x": 70,
+      "z": 5
+    },
+    {
+      "x": 69,
+      "z": 3
+    },
+    {
+      "x": 60,
+      "z": 0
+    }
+  ],
+  "trace": [
+    {
+      "tick": 0,
+      "x": 96.97022565646142,
+      "z": 15.55353444834352,
+      "distance": 0.11999999999999922,
+      "walkable": false,
+      "reached": false
+    },
+    {
+      "tick": 1,
+      "x": 96.97022565646142,
+      "z": 15.673534448343519,
+      "distance": 0.11999999999999922,
+      "walkable": false,
+      "reached": false
+    },
+    {
+      "tick": 2,
+      "x": 96.9367055151444,
+      "z": 15.760547366563424,
+      "distance": 0.09324616780896325,
+      "walkable": true,
+      "reached": false
+    },
+    {
+      "tick": 3,
+      "x": 96.8167209320477,
+      "z": 15.762470857949472,
+      "distance": 0.11999999999999963,
+      "walkable": true,
+      "reached": false
+    },
+    {
+      "tick": 4,
+      "x": 96.696736348951,
+      "z": 15.76439434933552,
+      "distance": 0.11999999999999963,
+      "walkable": true,
+      "reached": false
+    },
+    {
+      "tick": 5,
+      "x": 96.57675176585431,
+      "z": 15.766317840721568,
+      "distance": 0.11999999999999963,
+      "walkable": true,
+      "reached": false
+    },
+    {
+      "tick": 6,
+      "x": 96.45676718275762,
+      "z": 15.768241332107616,
+      "distance": 0.11999999999999963,
+      "walkable": true,
+      "reached": false
+    },
+    {
+      "tick": 7,
+      "x": 96.33678259966092,
+      "z": 15.770164823493664,
+      "distance": 0.11999999999999963,
+      "walkable": true,
+      "reached": false
+    },
+    {
+      "tick": 8,
+      "x": 96.21679801656423,
+      "z": 15.772088314879712,
+      "distance": 0.11999999999999963,
+      "walkable": true,
+      "reached": false
+    },
+    {
+      "tick": 9,
+      "x": 96.09681343346753,
+      "z": 15.77401180626576,
+      "distance": 0.11999999999999963,
+      "walkable": true,
+      "reached": false
+    },
+    {
+      "tick": 10,
+      "x": 95.97682885037084,
+      "z": 15.775935297651808,
+      "distance": 0.11999999999999963,
+      "walkable": true,
+      "reached": false
+    },
+    {
+      "tick": 11,
+      "x": 95.85684426727414,
+      "z": 15.777858789037856,
+      "distance": 0.11999999999999963,
+      "walkable": true,
+      "reached": false
+    },
+    {
+      "tick": 12,
+      "x": 95.73685968417745,
+      "z": 15.779782280423904,
+      "distance": 0.11999999999999963,
+      "walkable": true,
+      "reached": false
+    },
+    {
+      "tick": 13,
+      "x": 95.61687510108075,
+      "z": 15.781705771809952,
+      "distance": 0.11999999999999963,
+      "walkable": true,
+      "reached": false
+    },
+    {
+      "tick": 14,
+      "x": 95.49689051798406,
+      "z": 15.783629263196,
+      "distance": 0.11999999999999963,
+      "walkable": true,
+      "reached": false
+    },
+    {
+      "tick": 15,
+      "x": 95.37690593488736,
+      "z": 15.785552754582048,
+      "distance": 0.11999999999999963,
+      "walkable": true,
+      "reached": false
+    },
+    {
+      "tick": 16,
+      "x": 95.25692135179067,
+      "z": 15.787476245968096,
+      "distance": 0.11999999999999963,
+      "walkable": true,
+      "reached": false
+    },
+    {
+      "tick": 17,
+      "x": 95.13693676869397,
+      "z": 15.789399737354143,
+      "distance": 0.11999999999999963,
+      "walkable": true,
+      "reached": false
+    },
+    {
+      "tick": 18,
+      "x": 95.01695218559728,
+      "z": 15.791323228740191,
+      "distance": 0.11999999999999963,
+      "walkable": true,
+      "reached": false
+    },
+    {
+      "tick": 19,
+      "x": 94.89696760250058,
+      "z": 15.79324672012624,
+      "distance": 0.11999999999999963,
+      "walkable": true,
+      "reached": false
+    },
+    {
+      "tick": 20,
+      "x": 94.77698301940389,
+      "z": 15.795170211512287,
+      "distance": 0.11999999999999963,
+      "walkable": true,
+      "reached": false
+    },
+    {
+      "tick": 40,
+      "x": 92.37729135746999,
+      "z": 15.833640039233217,
+      "distance": 0.11999999999999961,
+      "walkable": true,
+      "reached": false
+    },
+    {
+      "tick": 60,
+      "x": 89.97759969553609,
+      "z": 15.87210986695414,
+      "distance": 0.11999999999999961,
+      "walkable": true,
+      "reached": false
+    },
+    {
+      "tick": 80,
+      "x": 87.57790803360218,
+      "z": 15.910579694675064,
+      "distance": 0.11999999999999961,
+      "walkable": true,
+      "reached": false
+    },
+    {
+      "tick": 100,
+      "x": 85.17821637166828,
+      "z": 15.949049522395988,
+      "distance": 0.11999999999999961,
+      "walkable": true,
+      "reached": false
+    },
+    {
+      "tick": 120,
+      "x": 82.77852470973438,
+      "z": 15.987519350116912,
+      "distance": 0.11999999999999961,
+      "walkable": true,
+      "reached": false
+    },
+    {
+      "tick": 140,
+      "x": 80.80479651642504,
+      "z": 14.904396806722975,
+      "distance": 0.1199999999999988,
+      "walkable": true,
+      "reached": false
+    },
+    {
+      "tick": 160,
+      "x": 79.03562657994327,
+      "z": 13.282657698281373,
+      "distance": 0.1199999999999988,
+      "walkable": true,
+      "reached": false
+    },
+    {
+      "tick": 180,
+      "x": 77.2664566434615,
+      "z": 11.660918589839746,
+      "distance": 0.12000000000000002,
+      "walkable": true,
+      "reached": false
+    },
+    {
+      "tick": 200,
+      "x": 75.49728670697972,
+      "z": 10.039179481398111,
+      "distance": 0.12000000000000002,
+      "walkable": true,
+      "reached": false
+    },
+    {
+      "tick": 220,
+      "x": 73.72811677049795,
+      "z": 8.417440372956476,
+      "distance": 0.12000000000000002,
+      "walkable": true,
+      "reached": false
+    },
+    {
+      "tick": 240,
+      "x": 71.95894683401617,
+      "z": 6.795701264514838,
+      "distance": 0.12000000000000002,
+      "walkable": true,
+      "reached": false
+    },
+    {
+      "tick": 260,
+      "x": 70.1897768975344,
+      "z": 5.1739621560732,
+      "distance": 0.12000000000000002,
+      "walkable": true,
+      "reached": false
+    },
+    {
+      "tick": 280,
+      "x": 69.04182042650822,
+      "z": 3.083640853016428,
+      "distance": 0.12000000000000097,
+      "walkable": true,
+      "reached": false
+    },
+    {
+      "tick": 300,
+      "x": 66.8118746062069,
+      "z": 2.270624868735661,
+      "distance": 0.12000000000000428,
+      "walkable": true,
+      "reached": false
+    },
+    {
+      "tick": 320,
+      "x": 64.53503469088558,
+      "z": 1.5116782302952354,
+      "distance": 0.12000000000000428,
+      "walkable": true,
+      "reached": false
+    },
+    {
+      "tick": 340,
+      "x": 62.25819477556426,
+      "z": 0.7527315918547967,
+      "distance": 0.12000000000000462,
+      "walkable": true,
+      "reached": false
+    },
+    {
+      "tick": 360,
+      "x": 60,
+      "z": 0,
+      "distance": 0.10034629702518943,
+      "walkable": true,
+      "reached": true
+    }
+  ],
+  "reached": true,
+  "reloaded": true,
+  "economyPlantsRngUnchanged": true,
+  "milliseconds": 120.4015
+}
