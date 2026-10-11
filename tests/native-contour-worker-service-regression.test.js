@@ -8,6 +8,7 @@ import {wateringRoute,canWaterFrom} from '../src/world/work-points.js';
 import {centerServicePoint,centerDeliveryPoint} from '../src/world/centers.js';
 import * as Game from '../src/simulation/game.js';
 import {nativeWorkerServiceProof} from '../tools/native-worker-service-proof.mjs';
+import {nativeWorkerServiceProofV2} from '../tools/native-worker-service-proof-v2.mjs';
 const root=new URL('../docs/qa/integrated-spiritual-survival/',import.meta.url);
 function fixture(){
  const s=deserialize(gunzipSync(readFileSync(new URL('pilot-v97-q14-good-zarzas-canyon-712-seven/partial-state.json.gz',root))).toString());
@@ -66,4 +67,27 @@ test('experimental service proof requires the physical return route, not only su
  const rejected=nativeWorkerServiceProof(s,blockedReturn);
  assert.equal(rejected.valid,false);assert.equal(rejected.reason,'native-crop-delivery-route-unproven');
  assert.equal(rejected.checks.workers.length,10);assert.equal(rejected.checks.crops.length,0);
+});
+test('associated-centre candidate proves all native workers and crops without routing to crop pivots',()=>{
+ const {s,view}=fixture(),before=serialize(s),proof=nativeWorkerServiceProofV2(s,view);
+ assert(proof.valid);assert.equal(proof.checks.workers.length,10);assert.equal(proof.checks.crops.length,123);
+ assert.equal(serialize(s),before);
+});
+test('associated-centre candidate rejects workers whose assigned centre is missing',()=>{
+ const {s,view}=fixture(),broken={...s,workers:s.workers.map(w=>({...w,centerId:'missing-assignment'}))};
+ const proof=nativeWorkerServiceProofV2(broken,view);
+ assert.equal(proof.valid,false);assert.equal(proof.reason,'native-worker-centre-not-operational');
+});
+test('independent centres separated by a solid barrier need local worker access, not a shared crop target',()=>{
+ // Geometry-only unit fixture: no campaign actions, income or survival claim.
+ const s={seed:'712',culture:'mapungubwe',villages:[],suppressed:[],spells:[],structures:[
+  {id:'a',kind:'center',status:'intact',x:0,z:0},
+  {id:'b',kind:'center',status:'intact',x:40,z:0}],
+  plants:[{id:'crop-a',alive:true,species:'mijo',centerId:'a',x:10,z:0},{id:'crop-b',alive:true,species:'mijo',centerId:'b',x:50,z:0}],
+  workers:[{id:'worker-a',centerId:'a',status:'idle',x:11,z:0},{id:'worker-b',centerId:'b',status:'idle',x:51,z:0}]};
+ const nav=new Navigation(712,'sabana',{});nav.field={blocked:()=>false,slope:()=>0,surface:()=>0};nav.propsAt=()=>[];nav.setState(s);
+ nav.obstacles.push({id:'dividing-wall',kind:'house',footprint:[{x:19,z:-100},{x:21,z:-100},{x:21,z:100},{x:19,z:100}]});
+ const old=nativeWorkerServiceProof(s,nav);assert.equal(old.valid,false);assert.equal(old.workerId,'worker-b');
+ const proof=nativeWorkerServiceProofV2(s,nav);assert(proof.valid);assert.equal(proof.checks.workers.length,2);assert.equal(proof.checks.crops.length,2);
+ assert.deepEqual(proof.checks.workers.map(w=>w.centerId),['a','b']);
 });

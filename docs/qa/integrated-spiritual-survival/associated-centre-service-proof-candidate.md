@@ -1,0 +1,11 @@
+# Associated-centre service proof, isolated v2
+
+The first candidate routes all workers to one globally selected crop before checking centre-to-crop services. That is unnecessarily restrictive for independent farms whose workers belong to different centres. This is a semantic issue, not a reason to weaken solid obstacles or accept failed routes.
+
+The isolated v2 helper first proves each worker can reach its own operational centre service point. When that route is unproven, it tries at most eight nearest crops assigned to that same centre and requires both a valid native watering pose and a native return to the authored delivery edge. Distance ordering uses deterministic ID ties, without RNG or locale-dependent sorting. The alternative-search bound does not limit plants, gameplay or income; failure remains unproven and rejects the proposal.
+
+Every living crop is then independently checked for watering access from its assigned operational centre and return to its nearest delivery edge. No worker or crop is skipped. Centre lookup and per-centre crop grouping are indexed rather than repeated full structure scans. There is no cached proof approval that could outlive a geometry, worker or planting change.
+
+The retained 123-crop/10-worker Canyon regression passes without modifying state. Missing assigned centres reject the proposal. A separate geometry-only native-navigation unit fixture has two working centres separated by a long solid barrier: the old global-target helper rejects worker B's cross-barrier query, while v2 verifies both local worker/centre links and both crop service/return routes. This is unit geometry, not campaign movement, economic success or wall-interception evidence. Existing obstacle, return-path and positive-enclosure regressions remain passing: 14 tests in the combined two-file run.
+
+The v1 helper, its benchmark runner and the active v105 campaign remain unchanged. v2 is not imported by the campaign or perimeter policy. It has no dense-farm performance approval yet. Preserve the pending v1 Desert measurement before modifying that runner; then compare v2 on the same retained inputs and integrate only after native enclosure, gates, paid construction and maintenance checks pass.
