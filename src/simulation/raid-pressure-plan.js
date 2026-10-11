@@ -17,7 +17,7 @@ export function preparePressureNight(state) {
   if(state.postgame)return {plan:{pressureVersion:1,night:state.day,at,attraction:value,group:[],actors:[],waves:[],done:false,peaceful:true},memory:state.raidPressureMemory?structuredClone(state.raidPressureMemory):null,rng:random.rng,reused:false};
   const memory=updateRaidPressureMemory(state.raidPressureMemory??null,state.day,value);
   const summary=raidPressureSummary(state.day,value,memory);
-  const selection=selectBudgetedRaid({night:state.day,pressure:summary.pressure,unlocked:threatTier(summary.effectiveValue).unlocked_species,rng:random.rng});
+  const selection=selectBudgetedRaid({night:state.day,pressure:summary.pressure,agriculturalValue:summary.observedValue,unlocked:threatTier(summary.effectiveValue).unlocked_species,rng:random.rng});
   if(selection.status==='infeasible-budget')throw Error('Pressure composition is infeasible');
   // Introductory profiles retain original damage and single-target behaviour.
   const actors=selection.actors.map(a=>({species:a.species,hits:a.hits,...(!summary.introductory?{damageProfile:{cropDamage:a.cropDamage,structureDamage:a.structureDamage,attackRadius:a.attackRadius,areaCap:a.areaCap,peripheralWeight:RAID_PRESSURE_CANDIDATE.peripheralWeight}}:{})}));

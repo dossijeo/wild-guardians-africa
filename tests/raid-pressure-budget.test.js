@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {BALANCE as B} from '../src/simulation/balance.js';
-import {agriculturalRaidValue,raidAnimalCount,validateRaidPressureMemory,updateRaidPressureMemory,raidPressure,raidPressureSummary,raidSpeciesPressure,raidCompositionWeights,raidCompositionCounts,referenceRaidArea,raidProductEnvelope,selectBudgetedRaid,planRaidProductComposition,validateRaidPressureConfiguration,validateRaidPressureRuntimeConfig,validateRaidPressureSource,RAID_PRESSURE_CANDIDATE as C} from '../src/simulation/raid-pressure-budget.js';
+import {agriculturalRaidValue,raidAnimalCount,raidRecoveryAnimalCount,validateRaidPressureMemory,updateRaidPressureMemory,raidPressure,raidPressureSummary,raidSpeciesPressure,raidCompositionWeights,raidCompositionCounts,referenceRaidArea,raidProductEnvelope,selectBudgetedRaid,planRaidProductComposition,validateRaidPressureConfiguration,validateRaidPressureRuntimeConfig,validateRaidPressureSource,RAID_PRESSURE_CANDIDATE as C} from '../src/simulation/raid-pressure-budget.js';
 const ids=B.animals.map(a=>a.id);
 test('V uses only native living agricultural base value, not cash/maturity/magic bonuses',()=>{
  const plants=B.crops.map(c=>({species:c.id,alive:true,growth:999,multiplyHarvest:true,harvestBonus:999}));assert.equal(agriculturalRaidValue(plants),577);
@@ -45,28 +45,28 @@ test('reference directional area is below cap when radius/spacing cannot reach n
 });
 test('Q controls joint product without deleting animals or materializing composition lists',()=>{
  for(const p of [0,.1,.5,.9,1])for(const seed of [1,712,2026]){
-  const result=selectBudgetedRaid({night:6,pressure:p,unlocked:ids,rng:seed});assert.equal(result.status,'selected');assert.equal(result.actors.length,raidAnimalCount(6,p));assert.equal(result.draws,result.actors.length*2);assert.ok(result.spentProduct<=result.envelope.q+1e-9);
+  const result=selectBudgetedRaid({agriculturalValue:1000,night:6,pressure:p,unlocked:ids,rng:seed});assert.equal(result.status,'selected');assert.equal(result.actors.length,raidRecoveryAnimalCount(6,p,1000));assert.equal(result.draws,result.actors.length*2);assert.ok(result.spentProduct<=result.envelope.q+1e-9);
   assert.equal(result.spentProduct,result.actors.reduce((n,a)=>n+a.product,0));assert.ok(result.waves.every(w=>w.length<=16));assert.equal(result.waves.flat().length,result.actors.length);
   for(const a of result.actors){const s=raidSpeciesPressure(a.species,p);assert.ok(a.hits>=s.minHits&&a.hits<=s.maxHits);}
  }
 });
 test('selection deterministically roundtrips RNG and leaves inputs/config/balance unchanged',()=>{
- const input={night:6,pressure:.75,unlocked:ids,rng:712},before=JSON.stringify({input,B,C});
+ const input={agriculturalValue:1000,night:6,pressure:.75,unlocked:ids,rng:712},before=JSON.stringify({input,B,C});
  const one=selectBudgetedRaid(input),two=selectBudgetedRaid(JSON.parse(JSON.stringify(input)));assert.deepEqual(one,two);assert.equal(JSON.stringify({input,B,C}),before);
- const after=selectBudgetedRaid({...input,rng:one.rng});assert.notEqual(after.rng,one.rng);
+ const after=selectBudgetedRaid({agriculturalValue:1000,...input,rng:one.rng});assert.notEqual(after.rng,one.rng);
 });
 test('introductions keep original one actor/min budget without new random draws',()=>{
- for(let night=1;night<=5;night++){const r=selectBudgetedRaid({night,pressure:1,unlocked:ids,rng:712});assert.equal(r.rng,712);assert.equal(r.draws,0);assert.deepEqual(r.actors,[{species:ids[night-1],hits:B.animals[night-1].hit_budget_min}]);}
+ for(let night=1;night<=5;night++){const r=selectBudgetedRaid({agriculturalValue:1000,night,pressure:1,unlocked:ids,rng:712});assert.equal(r.rng,712);assert.equal(r.draws,0);assert.deepEqual(r.actors,[{species:ids[night-1],hits:B.animals[night-1].hit_budget_min}]);}
 });
 test('explicit infeasible Q rejects composition before any random draw',()=>{
  const plan=planRaidProductComposition(34,1,ids,C,B,0);assert.equal(plan.status,'infeasible-budget');assert.equal(plan.counts,null);
- const r=selectBudgetedRaid({night:6,pressure:1,unlocked:ids,rng:712,qBudget:0});assert.equal(r.status,'infeasible-budget');assert.equal(r.rng,712);assert.equal(r.draws,0);assert.deepEqual(r.actors,[]);assert.equal(r.targetAnimals,8);
+ const r=selectBudgetedRaid({agriculturalValue:1000,night:6,pressure:1,unlocked:ids,rng:712,qBudget:0});assert.equal(r.status,'infeasible-budget');assert.equal(r.rng,712);assert.equal(r.draws,0);assert.deepEqual(r.actors,[]);assert.equal(r.targetAnimals,4);
 });
 test('invalid inputs reject bounded work instead of propagating unsafe values',()=>{
- for(const p of [-1,NaN,Infinity,1.1])assert.throws(()=>raidSpeciesPressure('rhino',p));assert.throws(()=>raidPressure(0,0));assert.throws(()=>raidPressure(1,-1));assert.throws(()=>raidCompositionCounts(10000,1,ids));assert.throws(()=>referenceRaidArea({attackRadius:100,areaCap:7}));assert.throws(()=>selectBudgetedRaid({night:6,pressure:1,unlocked:ids,rng:1,config:{...C,activeWaveLimit:0}}));
+ for(const p of [-1,NaN,Infinity,1.1])assert.throws(()=>raidSpeciesPressure('rhino',p));assert.throws(()=>raidPressure(0,0));assert.throws(()=>raidPressure(1,-1));assert.throws(()=>raidCompositionCounts(10000,1,ids));assert.throws(()=>referenceRaidArea({attackRadius:100,areaCap:7}));assert.throws(()=>selectBudgetedRaid({agriculturalValue:1000,night:6,pressure:1,unlocked:ids,rng:1,config:{...C,activeWaveLimit:0}}));
 });
 
-test('peaceful postgame has no actor, pressure draw or budget assignment',()=>{const r=selectBudgetedRaid({night:101,pressure:1,unlocked:ids,rng:712,postgame:true});assert.deepEqual(r,{status:'peaceful-postgame',actors:[],rng:712,draws:0});});
+test('peaceful postgame has no actor, pressure draw or budget assignment',()=>{const r=selectBudgetedRaid({agriculturalValue:1000,night:101,pressure:1,unlocked:ids,rng:712,postgame:true});assert.deepEqual(r,{status:'peaceful-postgame',actors:[],rng:712,draws:0});});
 
 test('unintegrated candidate configuration matches the pure module decisions',async()=>{
  const {readFileSync}=await import('node:fs');const c=JSON.parse(readFileSync(new URL('../content/balance/raid_pressure_candidate.json',import.meta.url)));
@@ -76,7 +76,7 @@ test('unintegrated candidate configuration matches the pure module decisions',as
 
 test('full-range hit roll is independent of remaining Q after composition is fixed',()=>{
  for(const p of [0,.2,.5,1])for(const seed of [1,712,2026,4294967295]){
-  const result=selectBudgetedRaid({night:6,pressure:p,unlocked:ids,rng:seed});let rng=seed;
+  const result=selectBudgetedRaid({agriculturalValue:1000,night:6,pressure:p,unlocked:ids,rng:seed});let rng=seed;
   const draw=()=>{rng^=rng<<13;rng^=rng>>>17;rng^=rng<<5;rng>>>=0;return rng/4294967296;};
   for(const actor of result.actors){draw();const spec=raidSpeciesPressure(actor.species,p),r=draw();assert.equal(actor.hits,spec.minHits+Math.floor(r*(spec.maxHits-spec.minHits+1)));}
   assert.equal(result.rng,rng);assert.ok(result.plan.maximumProduct<=result.plan.q+1e-9);

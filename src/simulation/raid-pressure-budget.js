@@ -1,12 +1,14 @@
 // Pure, unintegrated candidate. No clock, state, command or damage mutations.
 import {BALANCE as B} from './balance.js';
-export const RAID_PRESSURE_CANDIDATE=Object.freeze({version:3,emaAlpha:1/3,referenceSpacing:1.5,referenceConeRadians:Math.PI/2,peripheralWeight:.5,qMeanMultiplier:1.5,activeWaveLimit:16,countPower:.5,introCountStart:8,introCountRise:2,hitPressureSteps:4});
+const THIRD_RAID_PRESSURE_CANDIDATE=Object.freeze({version:3,emaAlpha:1/3,referenceSpacing:1.5,referenceConeRadians:Math.PI/2,peripheralWeight:.5,qMeanMultiplier:1.5,activeWaveLimit:16,countPower:.5,introCountStart:8,introCountRise:2,hitPressureSteps:4});
+export const RAID_PRESSURE_CANDIDATE=Object.freeze({...THIRD_RAID_PRESSURE_CANDIDATE,version:4,populationValueScale:1000});
 // Saved plans retain their original budget recipe; missing provenance means v1.
 const LEGACY_RAID_PRESSURE_CANDIDATE=Object.freeze({version:1,emaAlpha:1/3,referenceSpacing:1.5,referenceConeRadians:Math.PI/2,peripheralWeight:.5,qMeanMultiplier:1,activeWaveLimit:16});
 const SECOND_RAID_PRESSURE_CANDIDATE=Object.freeze({version:2,emaAlpha:1/3,referenceSpacing:1.5,referenceConeRadians:Math.PI/2,peripheralWeight:.5,qMeanMultiplier:1.5,activeWaveLimit:16});
 export function raidPressureCandidateForVersion(version=1){
  if(version===1)return LEGACY_RAID_PRESSURE_CANDIDATE;
  if(version===2)return SECOND_RAID_PRESSURE_CANDIDATE;
+ if(version===3)return THIRD_RAID_PRESSURE_CANDIDATE;
  if(version===RAID_PRESSURE_CANDIDATE.version)return RAID_PRESSURE_CANDIDATE;
  throw Error('Unknown raid pressure candidate version');
 }
@@ -39,11 +41,22 @@ export function raidAnimalCount(d,p,config=RAID_PRESSURE_CANDIDATE){
  const count=Math.round(4+30*Math.pow(p,power));
  return start===null?count:Math.min(count,start+rise*Math.min(d-6,34));
 }
+// Quantity-only recovery response. EMA still determines species/hits/damage;
+// the current living harvest value limits how many attackers that farm faces.
+// One physical animal remains guaranteed; never a synthetic loss percentage.
+export function raidRecoveryAnimalCount(d,p,value,config=RAID_PRESSURE_CANDIDATE){
+ finite(value,'current agricultural value');
+ const base=raidAnimalCount(d,p,config);
+ if(d<=5||config.version<4)return base;
+ const scale=finite(config.populationValueScale,'population value scale');
+ if(!scale)throw Error('Zero population value scale');
+ return Math.max(1,Math.round(base*(value/(value+scale))));
+}
 export function raidPressureSummary(d,value,memory,config=RAID_PRESSURE_CANDIDATE){
  day(d);finite(value,'agricultural value');validateRaidPressureMemory(memory);if(memory.lastDay!==d)throw Error('Plan requires current night EMA sample');
  // EMA is idempotent; caller owns/persists a selected plan, never rerolls it.
  const effectiveValue=Math.max(value,memory.ema),p=raidPressure(d,effectiveValue);
- return {night:d,observedValue:value,capturedValue:memory.sample,effectiveValue,pressure:p,targetAnimals:raidAnimalCount(d,p,config),areaCap:1+Math.floor(6*p),introductory:d<=5};
+ return {night:d,observedValue:value,capturedValue:memory.sample,effectiveValue,pressure:p,targetAnimals:raidRecoveryAnimalCount(d,p,value,config),areaCap:1+Math.floor(6*p),introductory:d<=5};
 }
 export function raidSpeciesPressure(id,p,balance=B,config=RAID_PRESSURE_CANDIDATE){
  pressure(p);const i=IDS.indexOf(id),a=balance.animals.find(a=>a.id===id);if(i<0||!a)throw Error('Unknown raid species');const steps=config.hitPressureSteps??2;if(!Number.isSafeInteger(steps)||steps<0||steps>8)throw Error('Invalid raid hit recipe');const extra=Math.floor(steps*p);
@@ -112,13 +125,13 @@ export function planRaidProductComposition(n,p,unlocked,config=RAID_PRESSURE_CAN
  return {...meta,status:'planned',counts,envelope:{...envelope,q},adjustments,maximumProduct:envelope.max};
 }
 function draw(rng){if(!Number.isInteger(rng)||rng<0||rng>4294967295)throw Error('Invalid RNG');rng^=rng<<13;rng^=rng>>>17;rng^=rng<<5;return {rng:rng>>>0,value:(rng>>>0)/4294967296};}
-export function selectBudgetedRaid({night,pressure:p,unlocked,rng,postgame=false,config=RAID_PRESSURE_CANDIDATE,balance=B,qBudget=null}){
+export function selectBudgetedRaid({night,pressure:p,unlocked,rng,postgame=false,config=RAID_PRESSURE_CANDIDATE,balance=B,qBudget=null,agriculturalValue=null}){
  day(night);pressure(p);validateRaidPressureSource(balance);
  if(!Number.isInteger(rng)||rng<0||rng>4294967295)throw Error('Invalid RNG');
  if(postgame)return {status:'peaceful-postgame',actors:[],rng,draws:0};
  validateRaidPressureRuntimeConfig(config);
  if(night<=5){const a=balance.animals[night-1];return {introductory:true,actors:[{species:a.id,hits:a.hit_budget_min}],rng,draws:0,scope:'Existing introduction min-hits and actor; runtime intro cap remains authoritative'};}
- const targetAnimals=raidAnimalCount(night,p,config),plan=planRaidProductComposition(targetAnimals,p,unlocked,config,balance,qBudget);
+ const targetAnimals=config.version>=4?raidRecoveryAnimalCount(night,p,agriculturalValue,config):raidAnimalCount(night,p,config),plan=planRaidProductComposition(targetAnimals,p,unlocked,config,balance,qBudget);
  if(plan.status!=='planned')return {status:'infeasible-budget',targetAnimals,plan,rng,draws:0,actors:[]};
  const {counts,envelope}=plan,remaining={...counts},actors=[];let spentProduct=0,draws=0;
  for(let left=targetAnimals;left>0;left--){
@@ -133,8 +146,8 @@ export function selectBudgetedRaid({night,pressure:p,unlocked,rng,postgame=false
  return {status:'selected',introductory:false,targetAnimals,counts,envelope,plan,actors,rng,draws,spentProduct,remainingProduct:plan.q-spentProduct,waves:Array.from({length:Math.ceil(actors.length/config.activeWaveLimit)},(_,i)=>actors.slice(i*config.activeWaveLimit,(i+1)*config.activeWaveLimit)),scope:'Descriptor selection only; composition fixed before full native-range rolls, no physical damage'};
 }
 export function validateRaidPressureRuntimeConfig(config){
- const keys=Object.keys(RAID_PRESSURE_CANDIDATE).sort();if(!config||Object.keys(config).sort().join('|')!==keys.join('|'))throw Error('Unknown or missing pressure config fields');
- for(const key of keys)if(config[key]!==RAID_PRESSURE_CANDIDATE[key])throw Error('Unreviewed pressure config drift: '+key);
+ const expected=raidPressureCandidateForVersion(config?.version),keys=Object.keys(expected).sort();if(!config||Object.keys(config).sort().join('|')!==keys.join('|'))throw Error('Unknown or missing pressure config fields');
+ for(const key of keys)if(config[key]!==expected[key])throw Error('Unreviewed pressure config drift: '+key);
  return config;
 }
 export function validateRaidPressureSource(balance=B){
@@ -152,6 +165,6 @@ function equalConfig(a,b){
  const ka=Object.keys(a).sort(),kb=Object.keys(b).sort();return ka.length===kb.length&&ka.every((k,i)=>k===kb[i]&&equalConfig(a[k],b[k]));
 }
 export function validateRaidPressureConfiguration(json,balance=B){
- const expected={version:3,population:{base:4,span:30,pressurePower:.5,introStartAtNight6:8,introRisePerNight:2},hitPressureSteps:4,status:'pure-unintegrated-candidate',pressure:{dayWeight:.45,valueWeight:.55,valueScale:1000,logDenominator:26,firstNight:1,lastNight:100},ema:{alpha:1/3,nominalWindowNights:5,update:'once-per-night-plan',effective:'max(current agricultural value, EMA)'},composition:{initial:[1,0,0,0,0],final:SHARES,species:IDS,interpolation:'linear-pressure; renormalize native unlocked; Hamilton integer rounding'},reference:{spacing:1.5,coneRadians:Math.PI/2,centralWeight:1,peripheralWeight:.5},q:{meanMultiplier:1.5,unit:'reference agricultural HP points',round:'floor half-point',feasibility:'at least cheapest legal capped worst-case product',selection:'adjust composition before RNG; full native-range hit rolls'},waveActiveLimit:16,speciesCropBaseDamage:CROP,speciesBaseAttackRadii:RADII,structureRounding:'Math.round'};
+ const expected={version:4,population:{base:4,span:30,pressurePower:.5,introStartAtNight6:8,introRisePerNight:2,currentValueScale:1000,recovery:'max(1, round(base count * current value / (current value + scale)))'},hitPressureSteps:4,status:'pure-unintegrated-candidate',pressure:{dayWeight:.45,valueWeight:.55,valueScale:1000,logDenominator:26,firstNight:1,lastNight:100},ema:{alpha:1/3,nominalWindowNights:5,update:'once-per-night-plan',effective:'max(current agricultural value, EMA)'},composition:{initial:[1,0,0,0,0],final:SHARES,species:IDS,interpolation:'linear-pressure; renormalize native unlocked; Hamilton integer rounding'},reference:{spacing:1.5,coneRadians:Math.PI/2,centralWeight:1,peripheralWeight:.5},q:{meanMultiplier:1.5,unit:'reference agricultural HP points',round:'floor half-point',feasibility:'at least cheapest legal capped worst-case product',selection:'adjust composition before RNG; full native-range hit rolls'},waveActiveLimit:16,speciesCropBaseDamage:CROP,speciesBaseAttackRadii:RADII,structureRounding:'Math.round'};
  if(!equalConfig(json,expected))throw Error('Canonical pressure config/runtime drift');validateRaidPressureSource(balance);return json;
 }

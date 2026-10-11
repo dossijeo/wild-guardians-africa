@@ -1,6 +1,6 @@
 {
-  "version": 3,
-  "population": {"base": 4, "span": 30, "pressurePower": 0.5, "introStartAtNight6": 8, "introRisePerNight": 2},
+  "version": 4,
+  "population": {"base": 4, "span": 30, "pressurePower": 0.5, "introStartAtNight6": 8, "introRisePerNight": 2, "currentValueScale": 1000, "recovery": "max(1, round(base count * current value / (current value + scale)))"},
   "hitPressureSteps": 4,
   "status": "pure-unintegrated-candidate",
   "pressure": {
