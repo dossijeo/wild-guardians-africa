@@ -59,7 +59,8 @@ test('QA-089 pressure revision: campaign nights use fresh timing and two draws p
  for(let i=0;i<95;i++){
   const when=draw();
   s.day=6+i;s.completedNights=5+i;planNight(s);
-  for(const actor of s.nightPlan.waves.flat()){draw();const hitRoll=draw(),index=species.indexOf(actor.species),min=[2,3,4,4,5][index]+Math.floor(2*s.nightPlan.pressureFacts.pressure),max=[4,5,6,7,8][index]+Math.floor(2*s.nightPlan.pressureFacts.pressure);assert.equal(actor.hits,min+Math.floor(hitRoll*(max-min+1)));}
+  // Candidate v3's four pressure steps remain frozen in quantity-only v4.
+  for(const actor of s.nightPlan.waves.flat()){draw();const hitRoll=draw(),index=species.indexOf(actor.species),min=[2,3,4,4,5][index]+Math.floor(4*s.nightPlan.pressureFacts.pressure),max=[4,5,6,7,8][index]+Math.floor(4*s.nightPlan.pressureFacts.pressure);assert.equal(actor.hits,min+Math.floor(hitRoll*(max-min+1)));}
   assert.equal(s.nightPlan.at,323+when*225);assert.ok(s.nightPlan.group.length>0);assert.equal(s.rng,oracle);
   groups.add(signature(s.nightPlan.group));s.nightPlan.done=true;
  }
