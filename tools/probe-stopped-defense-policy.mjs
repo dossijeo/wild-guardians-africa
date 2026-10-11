@@ -1,0 +1,26 @@
+// Compare fresh QA policy searches; this does not restore the historical policy.
+import assert from 'node:assert/strict';
+import {readFileSync,writeFileSync,existsSync} from 'node:fs';
+import {gunzipSync} from 'node:zlib';
+import {createHash} from 'node:crypto';
+import {performance} from 'node:perf_hooks';
+import {deserialize,serialize} from '../src/persistence/snapshots.js';
+import {Navigation,BIOME_IDS} from '../src/world/navigation.js';
+import {createNativeFundedDefensePolicy} from './native-funded-defense-policy.mjs';
+const [directory,output,perimeterQa]=process.argv.slice(2);
+assert(directory&&output&&!existsSync(output)&&['incremental-v3','worker-first-v4'].includes(perimeterQa));
+const read=name=>JSON.parse(readFileSync(directory+'/'+name));
+assert.equal(read('receipt.json').status,'stopped-early-calibration');
+const bytes=readFileSync(directory+'/partial-state.json.gz'),s=deserialize(gunzipSync(bytes).toString());
+const retained=read('partial.json').receipts.defense;
+const options=Object.fromEntries(['startDay','material','interval','chunkPieces','maxSlots','repairPolicy','pieceReserve'].map(k=>[k,retained[k]]));
+Object.assign(options,{obstacleAware:retained.obstacleAware,shoreRouting:retained.shoreRouting,funding:retained.funding,perimeterQa});
+const nav=new Navigation(s.seed,s.biome,JSON.parse(readFileSync(`public/content/biome-${BIOME_IDS[s.biome]}.json`)).profile);nav.setState(s);
+const policy=createNativeFundedDefensePolicy(options),before=serialize(s);let commands=0;
+const start=performance.now(),paidPieces=policy.act(s,nav,{command:kind=>`fresh-defense-probe-${kind}-${commands++}`,reserve:retained.history.at(-1).protectedCash});
+const milliseconds=performance.now()-start,report=policy.report();
+const hash=b=>createHash('sha256').update(b).digest('hex');
+const paths=['tools/probe-stopped-defense-policy.mjs','tools/native-funded-defense-policy.mjs','tools/native-perimeter-reused-candidate-v2.mjs','tools/native-integrated-perimeter-proof.mjs','tools/native-worker-service-proof-v3.mjs'];
+const result={scope:'One complete fresh QA policy search on a copied stopped native snapshot. Historical completed/planned contour is not restored. Actual native commands are allowed on the copy; no campaign completion or gameplay frame-time claim.',perimeterQa,options,milliseconds,paidPieces,commands,stateUnchanged:serialize(s)===before,snapshotSha256:hash(bytes),report,sourceHashes:Object.fromEntries(paths.map(p=>[p,hash(readFileSync(p))]))};
+writeFileSync(output,JSON.stringify(result,null,2)+'\n',{flag:'wx'});
+console.log(JSON.stringify({perimeterQa,milliseconds,paidPieces,commands,stateUnchanged:result.stateUnchanged,reason:report.history.at(-1)?.reason,attempts:report.history.at(-1)?.attempts.length}));

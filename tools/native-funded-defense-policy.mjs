@@ -19,8 +19,8 @@ const options={smooth:false,snap:false};
 const sameSlot=(q,w)=>w.kind==='wall'&&Math.hypot(q.x-w.x,q.z-w.z)<.35&&Math.abs(Math.sin(q.angle+(w.yaw??0)))<.18;
 const matches=(q,w)=>w.status==='intact'&&w.hp>0&&sameSlot(q,w);
 export function createNativeFundedDefensePolicy({startDay=6,material='zarzas',interval=5,chunkPieces=8,maxSlots=256,repairWalls=true,obstacleAware=false,shoreRouting=false,repairPolicy='legacy',funding:defenseFunding='contour',pieceReserve=0,perimeterQa='legacy'}={}){
- if(!['legacy','incremental-v3'].includes(perimeterQa))throw Error('Unknown perimeter QA candidate');
- const proofOptions=perimeterQa==='incremental-v3'?{workerServiceProof:nativeWorkerServiceProofV3,incrementalCrops:true}:{};
+ if(!['legacy','incremental-v3','worker-first-v4'].includes(perimeterQa))throw Error('Unknown perimeter QA candidate');
+ const proofOptions=perimeterQa!=='legacy'?{workerServiceProof:nativeWorkerServiceProofV3,incrementalCrops:true,workersFirst:perimeterQa==='worker-first-v4'}:{};
  if(!['contour','rolling'].includes(defenseFunding))throw Error('Unknown defense funding choice');
  if(![0,1].includes(pieceReserve)||pieceReserve&&defenseFunding!=='rolling')throw Error('Invalid rolling piece reserve');
  if(!['legacy','breach-first'].includes(repairPolicy))throw Error('Unknown native repair policy');

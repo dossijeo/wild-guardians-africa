@@ -44,7 +44,7 @@ import {campaignCropChoice} from './native-campaign-crop-policy.mjs';
 
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 export async function simulateNativeCampaign({days=100,strategy='good',labourPolicy='legacy',profile='olderFemale',mixed=true,cropPolicy='legacy',middayHiring=false,plantsPerWorker=12,defend=false,reserveLabourGrowth=true,reserveMaintenance=true,burstPlanting=false,cameraEntry=true,defensePolicy='expanding',defenseStartDay=1,defenseMaterial='zarzas',repairPolicy='legacy',defenseFunding='contour',defensePieceReserve=0,perimeterQa='legacy',plotFluidClearance=0,nativeEvidence=true,onDay,onTick,onDecision,...world}={}){
- if(!['legacy','incremental-v3'].includes(perimeterQa))throw Error('Unknown perimeter QA candidate');
+ if(!['legacy','incremental-v3','worker-first-v4'].includes(perimeterQa))throw Error('Unknown perimeter QA candidate');
  if(!Number.isSafeInteger(days)||days<1||days>180)throw Error('Native protocol permits1–180 days only');
  if(!Number.isSafeInteger(plantsPerWorker)||plantsPerWorker<1)throw new Error('Plants per worker must be a positive integer');
  if(!['legacy','cashflow'].includes(cropPolicy))throw Error('Unknown crop policy');

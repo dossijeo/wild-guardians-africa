@@ -8,6 +8,7 @@ const fakeProvenance=()=>({trackedChanges:[],startedAt:'fixture',sourceHashes:{f
 test('incremental perimeter QA is explicit and invalid choices are rejected',()=>{
  assert.equal(parseNativeCampaignArgs(['--out','fixture']).perimeterQa,'legacy');
  assert.equal(parseNativeCampaignArgs(['--out','fixture','--perimeter-qa','incremental-v3']).perimeterQa,'incremental-v3');
+ assert.equal(parseNativeCampaignArgs(['--out','fixture','--perimeter-qa','worker-first-v4']).perimeterQa,'worker-first-v4');
  assert.throws(()=>parseNativeCampaignArgs(['--out','fixture','--perimeter-qa','ignore-workers']),/perimeter QA/);
 });
 test('CLI fixes baseline defaults, accepts100 combat +80peace days and refuses invalid cases',()=>{

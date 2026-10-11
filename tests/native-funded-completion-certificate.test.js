@@ -6,7 +6,7 @@ import {deserialize} from '../src/persistence/snapshots.js';
 import {Navigation,BIOME_IDS} from '../src/world/navigation.js';
 import {createNativeFundedDefensePolicy} from '../tools/native-funded-defense-policy.mjs';
 import {nativeIntegratedPerimeterProof} from '../tools/native-integrated-perimeter-proof.mjs';
-for(const perimeterQa of ['legacy','incremental-v3'])test(`incremental Canyon completion requires actual native coverage (${perimeterQa})`,()=>{
+for(const perimeterQa of ['legacy','incremental-v3','worker-first-v4'])test(`incremental Canyon completion requires actual native coverage (${perimeterQa})`,()=>{
  const s=deserialize(gunzipSync(readFileSync(new URL('../docs/qa/integrated-spiritual-survival/native-paid-canyon-eight-crop-service-v2-state.json.gz',import.meta.url))).toString());
  const profile=JSON.parse(readFileSync(new URL('../public/content/biome-'+BIOME_IDS[s.biome]+'.json',import.meta.url))).profile;
  const nav=new Navigation(s.seed,s.biome,profile);nav.setState(s);

@@ -33,7 +33,7 @@ export function parseNativeCampaignArgs(args){
  o.repairPolicy=o['repair-policy']??'legacy';delete o['repair-policy'];if(!['legacy','breach-first'].includes(o.repairPolicy)||o.repairPolicy!=='legacy'&&!['funded','routed','shore'].includes(o.defensePolicy))throw Error('Unsupported native repair policy');
  o.defenseFunding=o['defense-funding']??'contour';delete o['defense-funding'];if(!['contour','rolling'].includes(o.defenseFunding)||o.defenseFunding==='rolling'&&!['funded','routed','shore'].includes(o.defensePolicy))throw Error('Unsupported defense funding choice');
  o.defensePieceReserve=Number(o['defense-piece-reserve']??0);delete o['defense-piece-reserve'];if(![0,1].includes(o.defensePieceReserve)||o.defensePieceReserve&&o.defenseFunding!=='rolling')throw Error('Invalid rolling piece reserve');
- o.perimeterQa=o['perimeter-qa']??'legacy';delete o['perimeter-qa'];if(!['legacy','incremental-v3'].includes(o.perimeterQa))throw Error('Unknown perimeter QA candidate');
+ o.perimeterQa=o['perimeter-qa']??'legacy';delete o['perimeter-qa'];if(!['legacy','incremental-v3','worker-first-v4'].includes(o.perimeterQa))throw Error('Unknown perimeter QA candidate');
  nativeCampaignStrategy(o.strategy);if(!o.out)throw Error('Explicit output directory required');o.out=resolve(o.out);return o;
 }
 export function calibrationStop(reason){const error=Error(reason);error.code='NATIVE_CALIBRATION_STOP';return error;}

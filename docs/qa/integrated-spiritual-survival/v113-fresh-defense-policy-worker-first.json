@@ -1,0 +1,1723 @@
+{
+  "scope": "One complete fresh QA policy search on a copied stopped native snapshot. Historical completed/planned contour is not restored. Actual native commands are allowed on the copy; no campaign completion or gameplay frame-time claim.",
+  "perimeterQa": "worker-first-v4",
+  "options": {
+    "startDay": 6,
+    "material": "zarzas",
+    "interval": 5,
+    "chunkPieces": 8,
+    "maxSlots": 256,
+    "repairPolicy": "breach-first",
+    "pieceReserve": 0,
+    "obstacleAware": true,
+    "shoreRouting": true,
+    "funding": "rolling",
+    "perimeterQa": "worker-first-v4"
+  },
+  "milliseconds": 9914.6431,
+  "paidPieces": 0,
+  "commands": 0,
+  "stateUnchanged": true,
+  "snapshotSha256": "b16754994ce99a38c11871ddb0b5373d0c37869a2352c5068163553a724e1af4",
+  "report": {
+    "startDay": 6,
+    "material": "zarzas",
+    "interval": 5,
+    "chunkPieces": 8,
+    "maxSlots": 256,
+    "obstacleAware": true,
+    "shoreRouting": true,
+    "repairPolicy": "breach-first",
+    "funding": "rolling",
+    "pieceReserve": 0,
+    "perimeterQa": "worker-first-v4",
+    "discretionaryNewWallFraction": 0.5,
+    "planned": null,
+    "completed": null,
+    "remainingCost": 0,
+    "repairRequests": 0,
+    "coverageDiagnostics": null,
+    "history": [
+      {
+        "day": 11,
+        "time": 266.00000000000176,
+        "protectedCash": 575,
+        "repairFunding": {
+          "policy": "breach-first",
+          "breached": false,
+          "protectedCash": 575,
+          "pendingQuotedCoins": 0
+        },
+        "pendingRepairCoins": 0,
+        "attempts": [
+          {
+            "bounds": [
+              69.76,
+              -17.44,
+              106.82000000000001,
+              17.44
+            ],
+            "expectedPieces": 66,
+            "legalPieces": 56,
+            "nativeVegetationRemoval": 3,
+            "reason": "native-worker-centre-service-unproven",
+            "nativeBarrierProof": {
+              "valid": false,
+              "reason": "native-worker-centre-service-unproven",
+              "workerId": "worker-9842",
+              "checks": {
+                "workers": [
+                  {
+                    "workerId": "worker-9830",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9831",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9832",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9833",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9834",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9835",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9836",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9837",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9838",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9839",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9840",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9841",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  }
+                ],
+                "crops": []
+              },
+              "returnChecks": [],
+              "workerProofVersion": "service-and-home-v3",
+              "scope": "Worker service rejected before animal certification; no animal protection claimed.",
+              "animalCertificateSkipped": true,
+              "terrainTileDiagnostics": {
+                "side": 32,
+                "capacity": 16,
+                "tiles": 4,
+                "requests": 110844,
+                "hits": 110467,
+                "misses": 377,
+                "evictions": 0,
+                "fallbacks": 0,
+                "invalidations": 0,
+                "typedArrayBytes": 36864,
+                "maximumTypedArrayBytes": 147456
+              },
+              "integrationVersion": "contact-service-reuse-v2"
+            },
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              69.76,
+              -17.44,
+              106.82000000000001,
+              17.44
+            ],
+            "routing": "no-bounded-side-route",
+            "routed": true,
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              67.58,
+              -17.44,
+              109.00000000000001,
+              17.44
+            ],
+            "expectedPieces": 70,
+            "legalPieces": 60,
+            "nativeVegetationRemoval": 3,
+            "reason": "native-worker-centre-service-unproven",
+            "nativeBarrierProof": {
+              "valid": false,
+              "reason": "native-worker-centre-service-unproven",
+              "workerId": "worker-9842",
+              "checks": {
+                "workers": [
+                  {
+                    "workerId": "worker-9830",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9831",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9832",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9833",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9834",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9835",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9836",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9837",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9838",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9839",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9840",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9841",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  }
+                ],
+                "crops": []
+              },
+              "returnChecks": [],
+              "workerProofVersion": "service-and-home-v3",
+              "scope": "Worker service rejected before animal certification; no animal protection claimed.",
+              "animalCertificateSkipped": true,
+              "terrainTileDiagnostics": {
+                "side": 32,
+                "capacity": 16,
+                "tiles": 4,
+                "requests": 110844,
+                "hits": 110467,
+                "misses": 377,
+                "evictions": 0,
+                "fallbacks": 0,
+                "invalidations": 0,
+                "typedArrayBytes": 36864,
+                "maximumTypedArrayBytes": 147456
+              },
+              "integrationVersion": "contact-service-reuse-v2"
+            },
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              67.58,
+              -17.44,
+              109.00000000000001,
+              17.44
+            ],
+            "routing": "no-bounded-side-route",
+            "routed": true,
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              69.76,
+              -19.62,
+              106.82000000000001,
+              19.62
+            ],
+            "expectedPieces": 70,
+            "legalPieces": 58,
+            "nativeVegetationRemoval": 3,
+            "reason": "native-worker-centre-service-unproven",
+            "nativeBarrierProof": {
+              "valid": false,
+              "reason": "native-worker-centre-service-unproven",
+              "workerId": "worker-9842",
+              "checks": {
+                "workers": [
+                  {
+                    "workerId": "worker-9830",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9831",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9832",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9833",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9834",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9835",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9836",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9837",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9838",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9839",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9840",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9841",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  }
+                ],
+                "crops": []
+              },
+              "returnChecks": [],
+              "workerProofVersion": "service-and-home-v3",
+              "scope": "Worker service rejected before animal certification; no animal protection claimed.",
+              "animalCertificateSkipped": true,
+              "terrainTileDiagnostics": {
+                "side": 32,
+                "capacity": 16,
+                "tiles": 4,
+                "requests": 110844,
+                "hits": 110467,
+                "misses": 377,
+                "evictions": 0,
+                "fallbacks": 0,
+                "invalidations": 0,
+                "typedArrayBytes": 36864,
+                "maximumTypedArrayBytes": 147456
+              },
+              "integrationVersion": "contact-service-reuse-v2"
+            },
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              69.76,
+              -19.62,
+              106.82000000000001,
+              19.62
+            ],
+            "routing": "no-bounded-side-route",
+            "routed": true,
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              67.58,
+              -19.62,
+              109.00000000000001,
+              19.62
+            ],
+            "expectedPieces": 75,
+            "legalPieces": 62,
+            "nativeVegetationRemoval": 3,
+            "reason": "native-worker-centre-service-unproven",
+            "nativeBarrierProof": {
+              "valid": false,
+              "reason": "native-worker-centre-service-unproven",
+              "workerId": "worker-9842",
+              "checks": {
+                "workers": [
+                  {
+                    "workerId": "worker-9830",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9831",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9832",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9833",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9834",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9835",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9836",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9837",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9838",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9839",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9840",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9841",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  }
+                ],
+                "crops": []
+              },
+              "returnChecks": [],
+              "workerProofVersion": "service-and-home-v3",
+              "scope": "Worker service rejected before animal certification; no animal protection claimed.",
+              "animalCertificateSkipped": true,
+              "terrainTileDiagnostics": {
+                "side": 32,
+                "capacity": 16,
+                "tiles": 4,
+                "requests": 110844,
+                "hits": 110467,
+                "misses": 377,
+                "evictions": 0,
+                "fallbacks": 0,
+                "invalidations": 0,
+                "typedArrayBytes": 36864,
+                "maximumTypedArrayBytes": 147456
+              },
+              "integrationVersion": "contact-service-reuse-v2"
+            },
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              67.58,
+              -19.62,
+              109.00000000000001,
+              19.62
+            ],
+            "routing": "no-bounded-side-route",
+            "routed": true,
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              65.4,
+              -17.44,
+              111.18,
+              17.44
+            ],
+            "expectedPieces": 74,
+            "legalPieces": 61,
+            "nativeVegetationRemoval": 6,
+            "reason": "native-worker-centre-service-unproven",
+            "nativeBarrierProof": {
+              "valid": false,
+              "reason": "native-worker-centre-service-unproven",
+              "workerId": "worker-9842",
+              "checks": {
+                "workers": [
+                  {
+                    "workerId": "worker-9830",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9831",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9832",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9833",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9834",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9835",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9836",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9837",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9838",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9839",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9840",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9841",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  }
+                ],
+                "crops": []
+              },
+              "returnChecks": [],
+              "workerProofVersion": "service-and-home-v3",
+              "scope": "Worker service rejected before animal certification; no animal protection claimed.",
+              "animalCertificateSkipped": true,
+              "terrainTileDiagnostics": {
+                "side": 32,
+                "capacity": 16,
+                "tiles": 4,
+                "requests": 110844,
+                "hits": 110467,
+                "misses": 377,
+                "evictions": 0,
+                "fallbacks": 0,
+                "invalidations": 0,
+                "typedArrayBytes": 36864,
+                "maximumTypedArrayBytes": 147456
+              },
+              "integrationVersion": "contact-service-reuse-v2"
+            },
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              65.4,
+              -17.44,
+              111.18,
+              17.44
+            ],
+            "routing": "no-bounded-side-route",
+            "routed": true,
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              69.76,
+              -21.8,
+              106.82000000000001,
+              21.8
+            ],
+            "expectedPieces": 74,
+            "legalPieces": 61,
+            "nativeVegetationRemoval": 3,
+            "reason": "native-worker-centre-service-unproven",
+            "nativeBarrierProof": {
+              "valid": false,
+              "reason": "native-worker-centre-service-unproven",
+              "workerId": "worker-9842",
+              "checks": {
+                "workers": [
+                  {
+                    "workerId": "worker-9830",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9831",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9832",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9833",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9834",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9835",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9836",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9837",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9838",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9839",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9840",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9841",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  }
+                ],
+                "crops": []
+              },
+              "returnChecks": [],
+              "workerProofVersion": "service-and-home-v3",
+              "scope": "Worker service rejected before animal certification; no animal protection claimed.",
+              "animalCertificateSkipped": true,
+              "terrainTileDiagnostics": {
+                "side": 32,
+                "capacity": 16,
+                "tiles": 4,
+                "requests": 110844,
+                "hits": 110467,
+                "misses": 377,
+                "evictions": 0,
+                "fallbacks": 0,
+                "invalidations": 0,
+                "typedArrayBytes": 36864,
+                "maximumTypedArrayBytes": 147456
+              },
+              "integrationVersion": "contact-service-reuse-v2"
+            },
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              69.76,
+              -21.8,
+              106.82000000000001,
+              21.8
+            ],
+            "routing": "no-bounded-side-route",
+            "routed": true,
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              65.4,
+              -19.62,
+              111.18,
+              19.62
+            ],
+            "expectedPieces": 78,
+            "legalPieces": 63,
+            "nativeVegetationRemoval": 6,
+            "reason": "native-worker-centre-service-unproven",
+            "nativeBarrierProof": {
+              "valid": false,
+              "reason": "native-worker-centre-service-unproven",
+              "workerId": "worker-9842",
+              "checks": {
+                "workers": [
+                  {
+                    "workerId": "worker-9830",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9831",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9832",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9833",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9834",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9835",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9836",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9837",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9838",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9839",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9840",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9841",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  }
+                ],
+                "crops": []
+              },
+              "returnChecks": [],
+              "workerProofVersion": "service-and-home-v3",
+              "scope": "Worker service rejected before animal certification; no animal protection claimed.",
+              "animalCertificateSkipped": true,
+              "terrainTileDiagnostics": {
+                "side": 32,
+                "capacity": 16,
+                "tiles": 4,
+                "requests": 110844,
+                "hits": 110467,
+                "misses": 377,
+                "evictions": 0,
+                "fallbacks": 0,
+                "invalidations": 0,
+                "typedArrayBytes": 36864,
+                "maximumTypedArrayBytes": 147456
+              },
+              "integrationVersion": "contact-service-reuse-v2"
+            },
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              65.4,
+              -19.62,
+              111.18,
+              19.62
+            ],
+            "routing": "no-bounded-side-route",
+            "routed": true,
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              67.58,
+              -21.8,
+              109.00000000000001,
+              21.8
+            ],
+            "expectedPieces": 78,
+            "legalPieces": 65,
+            "nativeVegetationRemoval": 2,
+            "reason": "native-worker-centre-service-unproven",
+            "nativeBarrierProof": {
+              "valid": false,
+              "reason": "native-worker-centre-service-unproven",
+              "workerId": "worker-9842",
+              "checks": {
+                "workers": [
+                  {
+                    "workerId": "worker-9830",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9831",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9832",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9833",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9834",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9835",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9836",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9837",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9838",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9839",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9840",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9841",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  }
+                ],
+                "crops": []
+              },
+              "returnChecks": [],
+              "workerProofVersion": "service-and-home-v3",
+              "scope": "Worker service rejected before animal certification; no animal protection claimed.",
+              "animalCertificateSkipped": true,
+              "terrainTileDiagnostics": {
+                "side": 32,
+                "capacity": 16,
+                "tiles": 4,
+                "requests": 110844,
+                "hits": 110467,
+                "misses": 377,
+                "evictions": 0,
+                "fallbacks": 0,
+                "invalidations": 0,
+                "typedArrayBytes": 36864,
+                "maximumTypedArrayBytes": 147456
+              },
+              "integrationVersion": "contact-service-reuse-v2"
+            },
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              67.58,
+              -21.8,
+              109.00000000000001,
+              21.8
+            ],
+            "routing": "no-bounded-side-route",
+            "routed": true,
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              65.4,
+              -21.8,
+              111.18,
+              21.8
+            ],
+            "expectedPieces": 82,
+            "legalPieces": 67,
+            "nativeVegetationRemoval": 6,
+            "reason": "native-worker-centre-service-unproven",
+            "nativeBarrierProof": {
+              "valid": false,
+              "reason": "native-worker-centre-service-unproven",
+              "workerId": "worker-9842",
+              "checks": {
+                "workers": [
+                  {
+                    "workerId": "worker-9830",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9831",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9832",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9833",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9834",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9835",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9836",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9837",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9838",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9839",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9840",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9841",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  }
+                ],
+                "crops": []
+              },
+              "returnChecks": [],
+              "workerProofVersion": "service-and-home-v3",
+              "scope": "Worker service rejected before animal certification; no animal protection claimed.",
+              "animalCertificateSkipped": true,
+              "terrainTileDiagnostics": {
+                "side": 32,
+                "capacity": 16,
+                "tiles": 4,
+                "requests": 110844,
+                "hits": 110467,
+                "misses": 377,
+                "evictions": 0,
+                "fallbacks": 0,
+                "invalidations": 0,
+                "typedArrayBytes": 36864,
+                "maximumTypedArrayBytes": 147456
+              },
+              "integrationVersion": "contact-service-reuse-v2"
+            },
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              65.4,
+              -21.8,
+              111.18,
+              21.8
+            ],
+            "routing": "no-bounded-side-route",
+            "routed": true,
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              71.5,
+              -15.5,
+              105.75,
+              15.75
+            ],
+            "shore": true,
+            "parameters": {
+              "padding": 2,
+              "step": 0.25,
+              "maxCells": 30000,
+              "waterFringe": 0
+            },
+            "reason": "damaged-or-conflicting-wall",
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              70.5,
+              -16.5,
+              106.75,
+              16.75
+            ],
+            "shore": true,
+            "parameters": {
+              "padding": 3,
+              "step": 0.25,
+              "maxCells": 30000,
+              "waterFringe": 0
+            },
+            "expectedPieces": 66,
+            "legalPieces": 53,
+            "nativeVegetationRemoval": 4,
+            "reason": "native-worker-centre-service-unproven",
+            "nativeBarrierProof": {
+              "valid": false,
+              "reason": "native-worker-centre-service-unproven",
+              "workerId": "worker-9842",
+              "checks": {
+                "workers": [
+                  {
+                    "workerId": "worker-9830",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9831",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9832",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9833",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9834",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9835",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9836",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9837",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9838",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9839",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9840",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  },
+                  {
+                    "workerId": "worker-9841",
+                    "centerId": "structure-2",
+                    "via": "centre-service",
+                    "destination": {
+                      "x": 87.95499901771545,
+                      "z": 0
+                    }
+                  }
+                ],
+                "crops": []
+              },
+              "returnChecks": [],
+              "workerProofVersion": "service-and-home-v3",
+              "scope": "Worker service rejected before animal certification; no animal protection claimed.",
+              "animalCertificateSkipped": true,
+              "terrainTileDiagnostics": {
+                "side": 32,
+                "capacity": 16,
+                "tiles": 4,
+                "requests": 110844,
+                "hits": 110467,
+                "misses": 377,
+                "evictions": 0,
+                "fallbacks": 0,
+                "invalidations": 0,
+                "typedArrayBytes": 36864,
+                "maximumTypedArrayBytes": 147456
+              },
+              "integrationVersion": "contact-service-reuse-v2"
+            },
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              69.5,
+              -17.5,
+              107.75,
+              17.75
+            ],
+            "shore": true,
+            "parameters": {
+              "padding": 4,
+              "step": 0.25,
+              "maxCells": 30000,
+              "waterFringe": 0
+            },
+            "reason": "damaged-or-conflicting-wall",
+            "legal": false,
+            "cost": null
+          }
+        ],
+        "paidCost": 0,
+        "paidPieces": 0,
+        "remainingCost": 0,
+        "complete": false,
+        "reason": "no-bounded-legal-contour"
+      }
+    ],
+    "paidCost": 0,
+    "paidPieces": 0,
+    "scope": "Saved actual funds and paid native partial strokes; complete geometric coverage is not a universal interception guarantee."
+  },
+  "sourceHashes": {
+    "tools/probe-stopped-defense-policy.mjs": "963dffcf0748954cdebc6205acd00bf67fceaafed29435b4637f75125cf3481c",
+    "tools/native-funded-defense-policy.mjs": "fdf45a64b2b34750dec7034e3ef7c218abea823f83689ccddaa24ab0bf2c10fc",
+    "tools/native-perimeter-reused-candidate-v2.mjs": "074477d30394979a07ed9b1c7d1ef951f52881dc14961fb6be5d3804e29c3d68",
+    "tools/native-integrated-perimeter-proof.mjs": "a83a898a588f77171d9d9266cbe3ff82da71c1d6e7c99205ffb99f5ff250e7e9",
+    "tools/native-worker-service-proof-v3.mjs": "6456c76eed308886195d62a8776a4f41c93bd20d71a51cf3d68e10018698fa10"
+  }
+}
