@@ -27,10 +27,10 @@
     "src/rendering/crop-batch.js": "96f37896195dda9cbf2c2e2e9570c982305c83cdb1e20b3e36671b7754ab233c",
     "src/rendering/scene.js": "1cfa87f7364e4adc7697790b64a99aa7a4180d36df5bd15f2de85d85bac415a2",
     "src/simulation/encounters.js": "5c55e938e8bf4d0aa24f57f4bfd0fe32bc5e5bab452c8fb1a6a5c2eac1d3f53c",
-    "src/simulation/game.js": "b216594fd241d10746d7d9b3a7802f7a6eca41c2709d25edd6501f5834e80c6f",
-    "src/simulation/raids.js": "ebe6046be930ea7471b1f2234c4c332eb3b3f2dc192ae1b0e8b0e7d51408633b",
+    "src/simulation/game.js": "181467ae9ad4dcd08132287c7d6f8796d3b6221c5851ea65245855c1ce3d6799",
+    "src/simulation/raids.js": "8daa672b4a92831166fbde7be3c10cc6e123d3d8fadac008c791210fef9ebcfd",
     "src/tutorial/controller.js": "08dff0252047aba85e6627b71f8589557d7122b2cfaad9dc6941afcaba40b596",
-    "src/world/navigation.js": "68957cd8e407e6e6cd944af8fc5bfd7bc1f14c39bbc52f302884c2d2e6cf70a1",
+    "src/world/navigation.js": "21b82f33c62581436a6cef702b66af272ae9d3b096cb2b20ee858f0a50196743",
     "tools/audit_sfx_catalog.mjs": "2b125f80744b28c17207c3fec1bb83862978cbb525a5b63c4c4f85260467e58f"
   },
   "classificationCounts": {
@@ -997,7 +997,7 @@
         "sources": [
           {
             "file": "src/world/navigation.js",
-            "line": 155,
+            "line": 167,
             "selector": "p.slot>=18"
           },
           {
@@ -1534,7 +1534,7 @@
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 458,
+              "line": 460,
               "selector": "emit(s,'CropPicked'"
             },
             {
@@ -1596,7 +1596,7 @@
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 337,
+              "line": 338,
               "selector": "emit(s,'CrateDropped'"
             },
             {
@@ -1720,7 +1720,7 @@
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 104,
+              "line": 105,
               "selector": "emit(s,'PlacementCommitted'"
             },
             {
@@ -1745,7 +1745,7 @@
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 199,
+              "line": 200,
               "selector": "emit(s,'WallChainBuilt'"
             },
             {
@@ -1800,7 +1800,7 @@
         "sources": [
           {
             "file": "src/simulation/game.js",
-            "line": 581,
+            "line": 583,
             "selector": "if(t.kind==='repair'){completeTask"
           }
         ],
@@ -1843,7 +1843,7 @@
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 199,
+              "line": 200,
               "selector": "emit(s,'WallChainBuilt'"
             },
             {
@@ -1905,7 +1905,7 @@
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 199,
+              "line": 200,
               "selector": "emit(s,'WallChainBuilt'"
             },
             {
@@ -1973,7 +1973,7 @@
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 199,
+              "line": 200,
               "selector": "emit(s,'WallChainBuilt'"
             },
             {
@@ -1998,7 +1998,7 @@
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 199,
+              "line": 200,
               "selector": "emit(s,'WallChainBuilt'"
             },
             {
@@ -2072,7 +2072,7 @@
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 104,
+              "line": 105,
               "selector": "emit(s,'PlacementCommitted'"
             },
             {
@@ -2097,7 +2097,7 @@
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 199,
+              "line": 200,
               "selector": "emit(s,'WallChainBuilt'"
             },
             {
@@ -2122,7 +2122,7 @@
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 628,
+              "line": 630,
               "selector": "emit(s,'VillageFounded'"
             },
             {
@@ -2184,7 +2184,7 @@
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 472,
+              "line": 474,
               "selector": "emit(s,'RepairApplied'"
             },
             {
@@ -2246,7 +2246,7 @@
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 210,
+              "line": 211,
               "selector": "emit(s,'WallRemoved'"
             },
             {
@@ -2308,7 +2308,7 @@
           "callers": [
             {
               "file": "src/simulation/raids.js",
-              "line": 283,
+              "line": 304,
               "selector": "emit(s,'StructureHit'"
             },
             {
@@ -2370,7 +2370,7 @@
           "callers": [
             {
               "file": "src/simulation/raids.js",
-              "line": 283,
+              "line": 304,
               "selector": "emit(s,'StructureHit'"
             },
             {
@@ -2432,7 +2432,7 @@
           "callers": [
             {
               "file": "src/simulation/raids.js",
-              "line": 283,
+              "line": 304,
               "selector": "emit(s,'StructureHit'"
             },
             {
@@ -2494,7 +2494,7 @@
           "callers": [
             {
               "file": "src/simulation/raids.js",
-              "line": 283,
+              "line": 304,
               "selector": "emit(s,'StructureHit'"
             },
             {
@@ -2556,7 +2556,7 @@
           "callers": [
             {
               "file": "src/simulation/raids.js",
-              "line": 283,
+              "line": 304,
               "selector": "emit(s,'StructureHit'"
             },
             {
@@ -2618,7 +2618,7 @@
           "callers": [
             {
               "file": "src/simulation/raids.js",
-              "line": 283,
+              "line": 304,
               "selector": "emit(s,'StructureHit'"
             },
             {
@@ -2742,7 +2742,7 @@
           "callers": [
             {
               "file": "src/simulation/raids.js",
-              "line": 283,
+              "line": 304,
               "selector": "emit(s,'StructureHit'"
             },
             {
@@ -2804,7 +2804,7 @@
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 667,
+              "line": 669,
               "selector": "emit(s,'StructureRuined'"
             },
             {
@@ -3105,7 +3105,7 @@
           "callers": [
             {
               "file": "src/simulation/raids.js",
-              "line": 283,
+              "line": 304,
               "selector": "emit(s,'StructureHit'"
             },
             {
@@ -5446,7 +5446,7 @@
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 406,
+              "line": 407,
               "selector": "emit(s,'SpellActivated'"
             },
             {
@@ -5643,12 +5643,12 @@
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 238,
+              "line": 239,
               "selector": "emit(s,'HarvestRequested'"
             },
             {
               "file": "src/simulation/game.js",
-              "line": 281,
+              "line": 282,
               "selector": "emit(s,'HarvestRequested'"
             },
             {
@@ -5893,7 +5893,7 @@
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 225,
+              "line": 226,
               "selector": "emit(s,'CropPlaced'"
             },
             {
@@ -6042,12 +6042,12 @@
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 258,
+              "line": 259,
               "selector": "emit(s,'HiringConfirmed'"
             },
             {
               "file": "src/simulation/game.js",
-              "line": 276,
+              "line": 277,
               "selector": "emit(s,'HiringConfirmed'"
             },
             {
@@ -6109,7 +6109,7 @@
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 550,
+              "line": 552,
               "selector": "emit(s,'TutorialCompleted'"
             },
             {
@@ -6205,7 +6205,7 @@
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 608,
+              "line": 610,
               "selector": "emit(s,'PostgameStarted'"
             },
             {
@@ -6421,7 +6421,7 @@
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 210,
+              "line": 211,
               "selector": "emit(s,'WallRemoved'"
             },
             {
@@ -6483,12 +6483,12 @@
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 258,
+              "line": 259,
               "selector": "emit(s,'HiringConfirmed'"
             },
             {
               "file": "src/simulation/game.js",
-              "line": 276,
+              "line": 277,
               "selector": "emit(s,'HiringConfirmed'"
             },
             {
@@ -6550,7 +6550,7 @@
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 549,
+              "line": 551,
               "selector": "emit(s,'CrateDelivered'"
             },
             {
@@ -6697,7 +6697,7 @@
           "callers": [
             {
               "file": "src/simulation/raids.js",
-              "line": 180,
+              "line": 201,
               "selector": "emit(s,wave?'RaidWaveSpawned':'RaidSpawned'",
               "branch": "wave false"
             },
@@ -6833,7 +6833,7 @@
           "callers": [
             {
               "file": "src/simulation/raids.js",
-              "line": 283,
+              "line": 304,
               "selector": "emit(s,'StructureHit'"
             },
             {
@@ -6899,7 +6899,7 @@
           "callers": [
             {
               "file": "src/simulation/raids.js",
-              "line": 283,
+              "line": 304,
               "selector": "emit(s,'StructureHit'"
             },
             {
@@ -7035,7 +7035,7 @@
           "callers": [
             {
               "file": "src/simulation/raids.js",
-              "line": 352,
+              "line": 373,
               "selector": "emit(s,'RaidEnded'"
             },
             {
@@ -7101,7 +7101,7 @@
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 604,
+              "line": 606,
               "selector": "emit(s,'CampaignWon'"
             },
             {
@@ -7167,12 +7167,12 @@
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 603,
+              "line": 605,
               "selector": "emit(s,'GameOver'"
             },
             {
               "file": "src/simulation/raids.js",
-              "line": 353,
+              "line": 374,
               "selector": "emit(s,'GameOver'"
             },
             {
