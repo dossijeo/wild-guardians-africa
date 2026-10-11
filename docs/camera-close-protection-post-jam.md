@@ -79,3 +79,21 @@ su tejado. Verificar subida, cruce, salida y descenso por ambos lados con edific
 solapados y terreno variable, además de los gestos y recorridos ya enumerados.
 El alcance de esta revisión es documentar la dependencia; no se ha alterado el
 rango de cámara ni activado el prototipo.
+
+
+## Candidate developed on 11 October 2026
+
+The independent `feature/post-jam-usability-polish` candidate negotiates finite
+contextual building clearance before the terrain ceiling, preserves raw orbital
+intent, and allows overflight and descent. Contextual zoom protection falls off
+within three metres of the building footprint; ordinary crops/NPCs/animals keep
+the normal close range. Large native trees and live wall/gate geometry have
+separate cached finite volumes. Open natural formations retain the existing
+reversible proximity fade rather than an artificial solid bounding box.
+
+Five cultures and six biomes were captured with native orbit/overflight/zoom,
+plus actual mouse gestures, emulated multitouch and orientation. The older
+negative roof-framing results are preserved. Native Windows exit/restart,
+mobile Library layouts and performance coverage are documented separately in
+[QA evidence](qa/post-jam-usability-polish/README.md). This entry records the
+candidate; it does not declare a main merge or physical Android acceptance.

@@ -20,8 +20,10 @@ try{
    const t=type==='touchStart'?[[300,180],[520,180]]:type==='touchMove'?[[250,170],[570,210]]:[];
    await cdp.send('Input.dispatchTouchEvent',{type,touchPoints:t.map(([x,y],id)=>({x,y,id}))});await page.waitForTimeout(80);
   }
-  await page.setViewportSize({width:390,height:844});await page.waitForTimeout(500);await page.screenshot({path:`${out}/case-${index}-touch-portrait.png`});
-  await page.locator('#qaControls').evaluate(e=>e.open=true);await page.locator('#cameraReport').tap();const after=JSON.parse(await page.locator('#cameraExclusionReport').textContent());assert.notEqual(after.motion.unresolved,true);assert.notEqual(after.motion.terrainConflict,true);assert.deepEqual(errors,[]);
+  await page.setViewportSize({width:390,height:844});await page.waitForTimeout(500);
+  // The isolated fixture has no permanent render loop. Resize clears its
+  // drawing buffer, so request a fresh real render before capturing it.
+  await page.locator('#qaControls').evaluate(e=>e.open=true);await page.locator('#cameraExclusionReport').evaluate(e=>e.textContent='');await page.locator('#cameraReport').tap();await page.waitForFunction(()=>document.querySelector('#cameraExclusionReport').textContent.startsWith('{'),null,{timeout:180000});const after=JSON.parse(await page.locator('#cameraExclusionReport').textContent());await page.locator('#qaControls').evaluate(e=>e.open=false);await page.screenshot({path:`${out}/case-${index}-touch-portrait.png`});assert.notEqual(after.motion.unresolved,true);assert.notEqual(after.motion.terrainConflict,true);assert.deepEqual(errors,[]);
   results.push({index,samples,after,errors,touchEmulated:true});await writeFile(out+'/progress.json',JSON.stringify(results,null,2));await page.close();
  }
  await writeFile(out+'/report.json',JSON.stringify(results,null,2));

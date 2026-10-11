@@ -19,7 +19,7 @@ try{
   if(lab==='walls'){await frame.locator('[data-material=piedra]').tap();read=()=>frame.locator('[data-material=piedra]').getAttribute('aria-checked');}
   if(lab==='destruction'){await frame.locator('[data-stage="50"]').tap({timeout:180000});read=()=>frame.locator('#damageValue').textContent();}
   if(lab==='sfx'){assert.equal(await music.evaluate(a=>a.paused),true);await frame.locator('#search').fill('004');read=()=>frame.locator('#search').inputValue();await frame.locator('[data-action=play]').first().tap();await page.waitForTimeout(700);}
-  const before=await read();const language=await frame.locator('html').getAttribute('lang');assert.equal(language,'en');
+  const before=await read();const language=await frame.locator('html').getAttribute('lang');assert.equal(language,'en');if(['crops','destruction'].includes(lab))assert((await frame.locator('.lab-controls-toggle').textContent()).startsWith('Controls'),'Initial English toggle');
   await page.screenshot({path:`${out}/${lab}-en-390x844.png`});
   await page.setViewportSize({width:844,height:390});await page.waitForTimeout(700);assert.equal(await read(),before);
   if(lab==='walls'){
@@ -31,11 +31,14 @@ try{
   }
   await page.screenshot({path:`${out}/${lab}-en-844x390.png`});
   await page.setViewportSize({width:360,height:640});await page.waitForTimeout(700);assert.equal(await read(),before);await page.screenshot({path:`${out}/${lab}-en-360x640.png`});
+  await page.evaluate(()=>window.WildGuardiansLanguage.setLanguage('es'));await page.waitForTimeout(500);assert.equal(await frame.locator('html').getAttribute('lang'),'es');assert.equal(await read(),before);
+  if(['crops','destruction'].includes(lab))assert((await frame.locator('.lab-controls-toggle').textContent()).startsWith('Controles'));
+  await page.evaluate(()=>window.WildGuardiansLanguage.setLanguage('en'));await page.waitForTimeout(500);assert.equal(await frame.locator('html').getAttribute('lang'),'en');const afterOrientation=await read();assert.equal(afterOrientation,before);if(['crops','destruction'].includes(lab))assert((await frame.locator('.lab-controls-toggle').textContent()).startsWith('Controls'),'English toggle after language roundtrip');
   if(lab==='sfx'){
    await frame.locator('#search').press('Escape');await menu.locator('.production-lab-frame').waitFor({state:'detached'});await page.waitForTimeout(700);
    assert.equal(await music.evaluate(a=>a.volume),previousMusic.volume);if(!previousMusic.paused)assert.equal(await music.evaluate(a=>a.paused),false);
   }else await menu.locator('.production-lab-header button').first().tap();
-  results.push({lab,before,afterOrientation:await Promise.resolve(before),language,touch:true,musicRestored:lab==='sfx',errors:[...errors]});assert.deepEqual(errors,[]);
+  results.push({lab,before,afterOrientation,language,touch:true,runtimeLanguageRoundtrip:true,musicRestored:lab==='sfx',errors:[...errors]});assert.deepEqual(errors,[]);
   await page.setViewportSize({width:390,height:844});
  }
  await writeFile(out+'/report.json',JSON.stringify({previousMusic,results},null,2));
