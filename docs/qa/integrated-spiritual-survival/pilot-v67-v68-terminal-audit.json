@@ -1,0 +1,90 @@
+{
+  "cases": [
+    {
+      "directory": "docs/qa/integrated-spiritual-survival/pilot-v67-common-no-walls-712-twentyone",
+      "seed": "712",
+      "strategy": "no-walls",
+      "status": "observed-native-defeat",
+      "result": "defeat",
+      "defeatPhase": "during-terminal-night",
+      "terminalDay": 21,
+      "completedNights": 20,
+      "money": 34,
+      "living": 0,
+      "centerHp": [],
+      "destroyed": 870,
+      "totals": {
+        "income": 19060,
+        "refunds": 0,
+        "wages": 7562,
+        "seeds": 12164,
+        "walls": 0,
+        "centers": 0,
+        "villages": 0,
+        "repairs": 0,
+        "otherCredits": 0,
+        "otherDebits": 0
+      },
+      "strikes": {
+        "assigned": 1040,
+        "consumed": 1024,
+        "unused": 16
+      },
+      "postIntroduction": {
+        "exposure": 2416,
+        "losses": 870,
+        "weightedDestroyedFraction": 0.36009933774834435,
+        "unprotectedReferenceFraction": 0.21318675496688738,
+        "protectedReferenceFraction": 0.03616953642384106,
+        "scope": "References are hypotheses only, never applied damage; exposure is the native census at each raid spawn"
+      },
+      "ledgerAndDeliveryMatch": true,
+      "sourceHashesMatch": true,
+      "scope": "Native terminal evidence only; not hundred-night or human activity acceptance"
+    },
+    {
+      "directory": "docs/qa/integrated-spiritual-survival/pilot-v68-common-good-712-twentyone",
+      "seed": "712",
+      "strategy": "good",
+      "status": "observed-horizon",
+      "result": null,
+      "defeatPhase": null,
+      "terminalDay": 21,
+      "completedNights": 21,
+      "money": 365,
+      "living": 59,
+      "centerHp": [
+        600
+      ],
+      "destroyed": 26,
+      "totals": {
+        "income": 13037,
+        "refunds": 0,
+        "wages": 4894,
+        "seeds": 5445,
+        "walls": 1480,
+        "centers": 0,
+        "villages": 0,
+        "repairs": 1553,
+        "otherCredits": 0,
+        "otherDebits": 0
+      },
+      "strikes": {
+        "assigned": 777,
+        "consumed": 777,
+        "unused": 0
+      },
+      "postIntroduction": {
+        "exposure": 1188,
+        "losses": 26,
+        "weightedDestroyedFraction": 0.021885521885521887,
+        "unprotectedReferenceFraction": 0.2142431818181818,
+        "protectedReferenceFraction": 0.03632045454545454,
+        "scope": "References are hypotheses only, never applied damage; exposure is the native census at each raid spawn"
+      },
+      "ledgerAndDeliveryMatch": true,
+      "sourceHashesMatch": true,
+      "scope": "Native terminal evidence only; not hundred-night or human activity acceptance"
+    }
+  ]
+}
