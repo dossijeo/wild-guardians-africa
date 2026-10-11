@@ -10,7 +10,8 @@ import {Navigation,BIOME_IDS} from '../src/world/navigation.js';
 import * as Game from '../src/simulation/game.js';
 import {NativeCampaignEntryDriver} from './native-campaign-entry-driver.mjs';
 import {createNativeRaidCampaignEvidence} from './native-raid-campaign-evidence.mjs';
-const [inputFile,output]=process.argv.slice(2);
+const [inputFile,output,waitArgument]=process.argv.slice(2),maxWaitMilliseconds=waitArgument===undefined?30000:Number(waitArgument);
+assert(Number.isSafeInteger(maxWaitMilliseconds)&&maxWaitMilliseconds>=30000&&maxWaitMilliseconds<=120000,'Explicit observation wait must be 30000..120000 ms');
 if(!inputFile||!output||existsSync(output))throw Error('Requires retained entry diagnostic and fresh output');
 const input=JSON.parse(readFileSync(inputFile)),raw=readFileSync(input.input);
 const sha=b=>createHash('sha256').update(b).digest('hex');assert.equal(sha(raw),input.inputSha256);
@@ -20,7 +21,7 @@ const sourceHead=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim
 const s=deserialize(gunzipSync(raw).toString()),before={day:s.day,time:s.time,elapsed:s.elapsed,rng:s.rng,plants:s.plants.filter(p=>p.alive).length};
 const nav=new Navigation(s.seed,s.biome,JSON.parse(readFileSync(`public/content/biome-${BIOME_IDS[s.biome]}.json`)).profile);
 nav.setState(s);nav.setActiveBounds(input.bounds);nav.setRaidView(input.view.eye,input.view.target);
-const observer=createNativeRaidCampaignEvidence(s),driver=new NativeCampaignEntryDriver(nav),began=performance.now();
+const observer=createNativeRaidCampaignEvidence(s),driver=new NativeCampaignEntryDriver(nav,{maxWaitMilliseconds}),began=performance.now();
 let spawned=null,completed=false;
 try{
  await driver.waitForEntry(s);const readyMilliseconds=performance.now()-began;
@@ -36,7 +37,7 @@ try{
  completed=!s.raid;const evidence=observer.report(s);
  assert.equal(sha(readFileSync(input.input)),input.inputSha256);
  for(const p of sourceFiles)assert.equal(sha(readFileSync(p)),sourceHashes[p],'Source changed during replay');
- writeFileSync(output,JSON.stringify({input:input.input,inputSha256:input.inputSha256,sourceHead,sourceHashes,before,readyMilliseconds,totalMilliseconds:performance.now()-began,
+ writeFileSync(output,JSON.stringify({input:input.input,inputSha256:input.inputSha256,sourceHead,sourceHashes,maxWaitMilliseconds,before,readyMilliseconds,totalMilliseconds:performance.now()-began,
   completed,nativeResult:s.result,after:{day:s.day,time:s.time,elapsed:s.elapsed,plants:s.plants.filter(p=>p.alive).length},spawned,evidence,entryTransport:driver.report(),
   scope:'Retained night replay through real preparation worker and native ticks only. No policy, magic, money, crop or attack overrides. A 1800 simulated-second observation limit is not a defeat.'},null,2)+'\n');
  assert(completed,'Native incursion did not finish within retained replay observation');assert.equal(evidence.status,'verified');

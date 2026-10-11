@@ -145,7 +145,15 @@ export function chooseRaidEntry(s,specs,bounds,preferredSide,nav){
   };
   // The existing projected-camera fallback may need a bounded land detour.
   const connectedCamera=(...args)=>{args[5]=Math.max(args[5]??2,2);return cameraRaidEntry(...args);};
-  return exteriorRaidEntry(s,specs,bounds,preferredSide,nav,connectedBase,connectedCamera)??canyonRaidFormation(s,specs,bounds,nav,reachableApproach);
+  const entry=exteriorRaidEntry(s,specs,bounds,preferredSide,nav,connectedBase,connectedCamera)??canyonRaidFormation(s,specs,bounds,nav,reachableApproach);
+  if(entry)return entry;
+  // One half-chunk search extension lets a complete bank formation straddle
+  // the current resident edge. It is not a terrain override or a smaller wave.
+  // The existing sparse birth/exit residency demand gates the actual spawn.
+  const expanded=bounds.map((value,i)=>value+(i<2?-24:24));
+  const view=Object.assign(Object.create(nav),{activeBounds:expanded});
+  const bank=canyonRaidFormation(s,specs,expanded,view,reachableApproach);
+  return bank?{...bank,selectionBounds:expanded}:null;
 }
 export function spawnRaid(s,plan,nav,daytime=false) {
   const previous=s.raid,wave=previous&&eligiblePendingRaidWavePlan(s)===plan;

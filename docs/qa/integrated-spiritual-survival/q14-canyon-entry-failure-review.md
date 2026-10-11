@@ -22,3 +22,13 @@ The unmodified fallback-specific diagnostic also failed. It recorded 300,221 wal
 Next repair candidate: a single bounded 24 m retry after original Canyon entry paths fail, with sparse residency demand for each selected birth/exit and original RNG/group preservation. It must be tested with this exact retained state, native spawn/attack/exit, save/load, river restrictions and the rest of the entry regression. It is not implemented or accepted by these diagnostics.
 
 v97 is being stopped cooperatively to finish functional validation before further balance calibration. Its state must remain frozen until the process acknowledges the stop. All campaign and diagnostic originals are retained.
+
+## Bounded retry candidate
+
+v97 acknowledged its cooperative stop after five complete days, at day six time 133. The retained partial ledger reconciles 556 entries and 283 coins, with no active raid or native result. It is not a sixth-night outcome.
+
+After that acknowledgement, the Canyon entry selector gained one +24 m bank-formation retry after all original choices fail. A borrowed navigation view carries expanded search bounds without changing the original navigator's bounds. Each actor still requires native body, route and exterior checks; the returned entry carries selection bounds so the existing sparse birth/exit residency demand can gate actual spawning. No groups or species are removed and no RNG draw is added.
+
+The exact failed snapshot now passes its full-wave regression, including all ten actors, unchanged serialized state/RNG, original nav bounds, non-overlapping bodies, clear exit segments, positive exterior certificates and fewer than twenty sparse required chunks. The combined entry, residency, camera, wave-readiness and natural-defense regression passes 77 tests. These tests do not establish completed combat or economic survival.
+
+The next retained-night replay uses an explicitly recorded 90-second wall-clock observation allowance because the cold selection regression took about 37 seconds under concurrent tests. This allowance affects only the diagnostic observer, not simulated time, native attacks, production loading or campaign rules. Native readiness must still actually complete.
