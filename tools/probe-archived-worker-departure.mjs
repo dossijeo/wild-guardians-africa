@@ -9,7 +9,7 @@ import {deserialize} from '../src/persistence/snapshots.js';
 import {Navigation,BIOME_IDS} from '../src/world/navigation.js';
 import {walkTo} from '../src/simulation/game.js';
 import {advanceGateLeaves} from '../src/simulation/gates.js';
-export function probeArchivedWorkerDeparture(snapshotPath,actorId,{steps=600,dt=.1}={}){
+export function probeArchivedWorkerDeparture(snapshotPath,actorId,{steps=1200,dt=.1}={}){
  assert(Number.isSafeInteger(steps)&&steps>0&&steps<=3000&&Number.isFinite(dt)&&dt>0&&dt<=.1);
  const bytes=readFileSync(snapshotPath),s=deserialize(gunzipSync(bytes).toString());
  const worker=s.workers.find(w=>w.id===actorId);assert(worker,'Archived actor required');

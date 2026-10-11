@@ -20,7 +20,7 @@ test('archived valid fractional origin obtains a wholly native swept route to th
 });
 test('native departure moves continuously and survives reload without income, clock or task changes',()=>{
  let {s,w,nav,end}=world();const before=JSON.stringify([s.result,s.day,s.time,s.elapsed,s.ledger,s.plants,s.rng,s.tasks]);let reached=false,reloaded=false;
- for(let i=0;i<600&&!reached;i++){
+ for(let i=0;i<1200&&!reached;i++){
   advanceGateLeaves({...s,result:null,initialPreparation:false,pauses:[]},.1);
   const x=w.x,z=w.z;reached=walkTo(s,w,end,.1,nav,{motion:{flight:true}});assert(Math.hypot(w.x-x,w.z-z)<=.240000001);
   if(i===10){s=deserialize(serialize(s));w=s.workers.find(p=>p.id==='worker-52429');nav=navigation(s);reloaded=true;}
@@ -39,4 +39,26 @@ test('ordinary active work receives no fractional departure exception',()=>{
  for(const status of ['idle','walking','acting','carrying','arriving']){
   const {w,nav,end}=world();w.status=status;nav.workerPath=()=>{throw Error('No extra search for ordinary work');};assert.equal(workerFractionalConnector(nav,w,end),null);
  }
+});
+test('smaller native search quanta preserve the exact route and final explored region',()=>{
+ const {s,w,end}=world(),grid={x:103,z:14};const runs=[];
+ for(const quantum of [8,4]){
+  const nav=navigation(s),search=nav.findPathSteps(grid,end,.28,null,true,16,{yieldEvery:quantum});let step,slices=0;
+  do{step=search.next();slices++;}while(!step.done);
+  runs.push({path:step.value,slices});
+ }
+ assert.deepEqual(runs[0].path,runs[1].path);assert(runs[1].slices>runs[0].slices);
+ for(const yieldEvery of [0,9,NaN,1.5])assert.throws(()=>navigation(s).findPathSteps(w,end,.28,null,true,16,{yieldEvery}).next(),/yield quantum/);
+});
+test('topology changes invalidate an in-progress search before returning its old route',()=>{
+ const {w,nav,end}=world();assert.equal(workerFractionalConnector(nav,w,end),null);
+ nav.obstacles.push({id:'new-solid',kind:'house',x:w.x,z:w.z,radius:2});nav.invalidateGeometryQueries();
+ assert.equal(connector(nav,w,end),null);
+});
+test('removed actors cannot retain all eight active search slots',()=>{
+ const {s,w,nav,end}=world(),original=structuredClone(w);
+ for(let i=0;i<8;i++){
+  const actor={...structuredClone(original),id:'pending-'+i};s.workers.push(actor);assert.equal(workerFractionalConnector(nav,actor,end),null);
+ }
+ s.workers=[w];assert(connector(nav,w,end),'Removed pending actors must free bounded search slots');
 });

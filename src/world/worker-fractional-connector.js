@@ -14,7 +14,7 @@ function* search(nav,actor,end,radius){
    tails.add(key);if(++attempts>8)return null;
    // Reuse the native resumable A*: do not synchronously drain a large
    // ordinary search merely to connect this short fractional prefix.
-   const tail=yield*nav.findPathSteps(grid,end,radius,null,true);
+   const tail=yield*nav.findPathSteps(grid,end,radius,null,true,16,{yieldEvery:4});
    if(tail){const prefix=[];for(let node=head;node>0;node=queue[node].parent)prefix.push({x:queue[node].x,z:queue[node].z});prefix.reverse();return [...prefix,grid,...tail];}
   }
   for(const [dx,dz] of offsets){
@@ -38,7 +38,7 @@ export function workerFractionalConnector(nav,actor,end,radius=.28){
  if(attempt?.key!==key){
   memo.active.delete(actor);
   attempt=null;
-  for(const [body,row] of memo.active)if(body.path?.length||body.x!==row.x||body.z!==row.z||!['fleeing','returning','incapacitated'].includes(body.status))memo.active.delete(body);
+  for(const [body,row] of memo.active)if(body.path?.length||body.x!==row.x||body.z!==row.z||!['fleeing','returning','incapacitated'].includes(body.status)||Array.isArray(nav.state?.workers)&&!nav.state.workers.includes(body))memo.active.delete(body);
   if(memo.active.size>=MAX_ACTIVE)return null;
   const view=nav.workerNavigationView?.(actor,radius,null)??nav;
   let ordinary=false;
