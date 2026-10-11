@@ -35,9 +35,11 @@ test('watering approaches avoid solids and fluid, except canyon water, and rejec
  let previous=worker;for(const point of route.path){assert.ok(nav.segmentClear(previous,point,.28,null,true));previous=point;}
  nav.field={blocked:()=>true,slope:()=>0,surface:()=>0};nav.walkCache.clear();
  nav.segmentCache.clear();nav.failedPaths.clear();assert.equal(wateringRoute(worker,plant,nav),null);
- nav.field.canyon=true;nav.field.riverLevel=.2;nav.field.waterInfo=()=>({inside:true,level:.2});nav.walkCache.clear();nav.segmentCache.clear();nav.failedPaths.clear();
+ // This fixture changes terrain in place. Advance the native topology epoch,
+ // as real navigation invalidation does, including exact fractional caches.
+ nav.field.canyon=true;nav.field.riverLevel=.2;nav.field.waterInfo=()=>({inside:true,level:.2});nav.version++;nav.walkCache.clear();nav.segmentCache.clear();nav.failedPaths.clear();
  const fluidRoute=wateringRoute(worker,plant,nav);assert.ok(fluidRoute);
  previous=worker;for(const point of fluidRoute.path){assert.ok(nav.segmentClear(previous,point,.28,null,true));previous=point;}
- nav.field.canyon=false;nav.field.waterInfo=()=>({inside:false});nav.field.slope=()=>.6;nav.walkCache.clear();nav.segmentCache.clear();nav.failedPaths.clear();
+ nav.field.canyon=false;nav.field.waterInfo=()=>({inside:false});nav.field.slope=()=>.6;nav.version++;nav.walkCache.clear();nav.segmentCache.clear();nav.failedPaths.clear();
  assert.equal(wateringRoute(worker,plant,nav),null);
 });
