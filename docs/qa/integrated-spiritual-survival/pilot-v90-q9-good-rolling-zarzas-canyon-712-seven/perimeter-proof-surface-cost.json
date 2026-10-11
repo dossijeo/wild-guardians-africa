@@ -1,0 +1,284 @@
+{
+  "surfaceMemoStats": [
+    {
+      "hits": 22974103,
+      "misses": 20893093,
+      "evictions": 20860325,
+      "invalidations": 0,
+      "peakEntries": 32768,
+      "capacity": 32768
+    }
+  ],
+  "baselinePhysicalMatch": true,
+  "status": "observed-hypothetical-proof-cpu",
+  "directory": "docs/qa/integrated-spiritual-survival/pilot-v90-q9-good-rolling-zarzas-canyon-712-seven",
+  "snapshotSha256": "bf193cf625f19b9fe86731e30ebb445ebb2d7ce3f4489d52d7dbf7a455f39ab1",
+  "toolSha256": "eed06afee800e6887b8fb45658a1e627ea64a67d04e0ee702a888c9128284a8f",
+  "sourceDifferences": [
+    {
+      "path": "src/world/boundary-faces.js",
+      "expected": "d55f44fc65151a46085096ebb588f79ec6020f508d075f820a161bc3cf18d53f",
+      "actual": "ad7d52a0740e4735ce33538f550dfa9a682cacef04637add33ea944785d9c285"
+    }
+  ],
+  "coldMilliseconds": 277185.1127,
+  "warmMilliseconds": 207763.45179999998,
+  "coldCalls": {
+    "path": 14564,
+    "approachPath": 14563,
+    "approachGroupBlocked": 5,
+    "walkable": 317387
+  },
+  "warmCalls": {
+    "path": 14564,
+    "approachPath": 14563,
+    "approachGroupBlocked": 5,
+    "walkable": 152339
+  },
+  "proof": {
+    "valid": true,
+    "reason": "native-complete-components-and-worker-route",
+    "checks": [
+      {
+        "radius": 1.1,
+        "inside": {
+          "x": -22.5,
+          "z": 49.5
+        },
+        "outside": {
+          "x": 0.75,
+          "z": 49.5
+        },
+        "completeClosedComponent": false,
+        "services": {
+          "valid": true,
+          "reason": "native-service-poses-in-positive-closed-components",
+          "poses": 4256,
+          "blocked": 1358,
+          "certified": 2898,
+          "physicalConnectors": 1,
+          "emptyNativeOrigins": 0,
+          "regions": 3,
+          "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+        }
+      },
+      {
+        "radius": 0.9,
+        "inside": {
+          "x": -22.5,
+          "z": 49.5
+        },
+        "outside": {
+          "x": 0.75,
+          "z": 49.5
+        },
+        "completeClosedComponent": false,
+        "services": {
+          "valid": true,
+          "reason": "native-service-poses-in-positive-closed-components",
+          "poses": 4256,
+          "blocked": 1152,
+          "certified": 3104,
+          "physicalConnectors": 0,
+          "emptyNativeOrigins": 0,
+          "regions": 4,
+          "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+        }
+      },
+      {
+        "radius": 0.97,
+        "inside": {
+          "x": -22.5,
+          "z": 49.5
+        },
+        "outside": {
+          "x": 0.75,
+          "z": 49.5
+        },
+        "completeClosedComponent": false,
+        "services": {
+          "valid": true,
+          "reason": "native-service-poses-in-positive-closed-components",
+          "poses": 4256,
+          "blocked": 1229,
+          "certified": 3027,
+          "physicalConnectors": 1,
+          "emptyNativeOrigins": 0,
+          "regions": 4,
+          "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+        }
+      },
+      {
+        "radius": 0.85,
+        "inside": {
+          "x": -22.5,
+          "z": 49.5
+        },
+        "outside": {
+          "x": 0.75,
+          "z": 49.5
+        },
+        "completeClosedComponent": false,
+        "services": {
+          "valid": true,
+          "reason": "native-service-poses-in-positive-closed-components",
+          "poses": 4256,
+          "blocked": 1089,
+          "certified": 3167,
+          "physicalConnectors": 1,
+          "emptyNativeOrigins": 0,
+          "regions": 4,
+          "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+        }
+      },
+      {
+        "radius": 1.55,
+        "inside": {
+          "x": -22.5,
+          "z": 49.5
+        },
+        "outside": {
+          "x": 0.75,
+          "z": 49.5
+        },
+        "completeClosedComponent": false,
+        "services": {
+          "valid": true,
+          "reason": "native-service-poses-in-positive-closed-components",
+          "poses": 4256,
+          "blocked": 1894,
+          "certified": 2362,
+          "physicalConnectors": 0,
+          "emptyNativeOrigins": 0,
+          "regions": 3,
+          "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+        }
+      }
+    ],
+    "scope": "Predictive native geometry, not paid campaign interception."
+  },
+  "warmProof": {
+    "valid": true,
+    "reason": "native-complete-components-and-worker-route",
+    "checks": [
+      {
+        "radius": 1.1,
+        "inside": {
+          "x": -22.5,
+          "z": 49.5
+        },
+        "outside": {
+          "x": 0.75,
+          "z": 49.5
+        },
+        "completeClosedComponent": false,
+        "services": {
+          "valid": true,
+          "reason": "native-service-poses-in-positive-closed-components",
+          "poses": 4256,
+          "blocked": 1358,
+          "certified": 2898,
+          "physicalConnectors": 1,
+          "emptyNativeOrigins": 0,
+          "regions": 2,
+          "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+        }
+      },
+      {
+        "radius": 0.9,
+        "inside": {
+          "x": -22.5,
+          "z": 49.5
+        },
+        "outside": {
+          "x": 0.75,
+          "z": 49.5
+        },
+        "completeClosedComponent": false,
+        "services": {
+          "valid": true,
+          "reason": "native-service-poses-in-positive-closed-components",
+          "poses": 4256,
+          "blocked": 1152,
+          "certified": 3104,
+          "physicalConnectors": 0,
+          "emptyNativeOrigins": 0,
+          "regions": 4,
+          "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+        }
+      },
+      {
+        "radius": 0.97,
+        "inside": {
+          "x": -22.5,
+          "z": 49.5
+        },
+        "outside": {
+          "x": 0.75,
+          "z": 49.5
+        },
+        "completeClosedComponent": false,
+        "services": {
+          "valid": true,
+          "reason": "native-service-poses-in-positive-closed-components",
+          "poses": 4256,
+          "blocked": 1229,
+          "certified": 3027,
+          "physicalConnectors": 1,
+          "emptyNativeOrigins": 0,
+          "regions": 3,
+          "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+        }
+      },
+      {
+        "radius": 0.85,
+        "inside": {
+          "x": -22.5,
+          "z": 49.5
+        },
+        "outside": {
+          "x": 0.75,
+          "z": 49.5
+        },
+        "completeClosedComponent": false,
+        "services": {
+          "valid": true,
+          "reason": "native-service-poses-in-positive-closed-components",
+          "poses": 4256,
+          "blocked": 1089,
+          "certified": 3167,
+          "physicalConnectors": 1,
+          "emptyNativeOrigins": 0,
+          "regions": 3,
+          "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+        }
+      },
+      {
+        "radius": 1.55,
+        "inside": {
+          "x": -22.5,
+          "z": 49.5
+        },
+        "outside": {
+          "x": 0.75,
+          "z": 49.5
+        },
+        "completeClosedComponent": false,
+        "services": {
+          "valid": true,
+          "reason": "native-service-poses-in-positive-closed-components",
+          "poses": 4256,
+          "blocked": 1894,
+          "certified": 2362,
+          "physicalConnectors": 0,
+          "emptyNativeOrigins": 0,
+          "regions": 2,
+          "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+        }
+      }
+    ],
+    "scope": "Predictive native geometry, not paid campaign interception."
+  },
+  "semanticWarmMatch": true,
+  "scope": "Two native QA hypothetical-perimeter queries on an unchanged snapshot, first CPU-profiled and second cached. Unpaid proposed walls are not actual protection. Not campaign, frame, GPU or profitability acceptance."
+}

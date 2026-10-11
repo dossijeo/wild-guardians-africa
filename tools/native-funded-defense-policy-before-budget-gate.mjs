@@ -111,14 +111,6 @@ export function createNativeFundedDefensePolicy({startDay=6,material='zarzas',in
   }
   failedPlanning=null;
   row.bounds=planned.bounds;
-  // Preserve the chosen trace, but do not recertify hypothetical geometry
-  // when even one base-price piece cannot be funded. A future funded attempt
-  // still takes the full native quote and physical proof before any command.
-  const preliminaryAvailable=Math.max(0,numberOf(s.ledger.balance)-protectedCash-pending);
-  const preliminaryFunds=defenseFunding==='rolling'?Math.floor(preliminaryAvailable/2):preliminaryAvailable;
-  if(remainingCost>0&&preliminaryFunds<spec.cost){
-   row.reason='saving-actual-cash-for-native-perimeter';row.geometryCheckDeferred=true;row.remainingCostIsLastQuote=true;return 0;
-  }
   const plan=quote(s,nav,planned);
   if(!plan){remainingCost=0;planned=null;row.reason='geometry-changed-or-repair-pending';return 0;}
   remainingCost=plan.cost;row.remainingCost=remainingCost;

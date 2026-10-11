@@ -8,6 +8,7 @@ import {numberOf,rational} from '../src/simulation/money.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {gatePortalPoints} from '../src/world/gate-passages.js';
 import {wallSpec} from '../src/simulation/rules.js';
+import {createNativeFundedDefensePolicy as referencePolicy} from '../tools/native-funded-defense-policy-before-budget-gate.mjs';
 function fixture(){const {s,nav}=createOpeningWorld();let id=0;const c=s.structures[0];Game.plant(s,'seed','mijo',c.x+6,c.z+1,nav);Game.openInitialHiring(s);Game.hire(s,'hire',{olderFemale:1});return {s,nav,options:{command:k=>'funded-'+k+'-'+id++,reserve:160}};}
 
 test('chosen wall material uses native price and HP and pays its actual ledger debit',()=>{
@@ -77,4 +78,27 @@ test('legal native removal of small vegetation is allowed and recorded only thro
  const report=policy.report();assert(report.completed);assert(report.history.some(r=>r.nativeSuppressedProps?.length));
  const ids=new Set(report.history.flatMap(r=>r.nativeSuppressedProps??[]));for(const id of ids)assert(s.suppressed.includes(id));
  assert.equal(s.suppressed.filter(id=>!before.includes(id)).length,ids.size);
+});
+
+test('unfunded recertification defers geometry without changing commands, state or later paid purchases',()=>{
+ for(const funding of ['rolling','contour']){
+  const baseline=fixture(),candidate=fixture(),a=referencePolicy({startDay:1,funding}),b=createNativeFundedDefensePolicy({startDay:1,funding});
+  let oldChecks=0,newChecks=0;
+  for(const [world,count] of [[baseline,()=>oldChecks++],[candidate,()=>newChecks++]]){
+   const original=world.nav.wallPlacement.bind(world.nav);world.nav.wallPlacement=(...args)=>{count();return original(...args);};
+   world.options.reserve=numberOf(world.s.ledger.balance)-5;
+  }
+  assert.equal(a.act(baseline.s,baseline.nav,baseline.options),0);assert.equal(b.act(candidate.s,candidate.nav,candidate.options),0);
+  assert.deepEqual(b.report().planned,a.report().planned);assert.equal(serialize(candidate.s),serialize(baseline.s));
+  oldChecks=0;newChecks=0;
+  baseline.s.elapsed+=6;candidate.s.elapsed+=6;
+  a.act(baseline.s,baseline.nav,baseline.options);b.act(candidate.s,candidate.nav,candidate.options);
+  assert(newChecks<oldChecks,'Unfunded repeated attempt must avoid redundant native geometry work');
+  assert.equal(b.report().history.at(-1).geometryCheckDeferred,true);assert.equal(b.report().paidCost,0);
+  assert.equal(serialize(candidate.s),serialize(baseline.s));
+  baseline.options.reserve=160;candidate.options.reserve=160;
+  baseline.s.elapsed+=6;candidate.s.elapsed+=6;
+  assert.equal(a.act(baseline.s,baseline.nav,baseline.options),1);assert.equal(b.act(candidate.s,candidate.nav,candidate.options),1);
+  assert.equal(serialize(candidate.s),serialize(baseline.s));assert.equal(b.report().paidCost,a.report().paidCost);
+ }
 });
