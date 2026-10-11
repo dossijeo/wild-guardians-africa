@@ -1,0 +1,126 @@
+TAP version 13
+# (node:51208) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: current agricultural value reduces count immediately despite high historical EMA
+ok 1 - current agricultural value reduces count immediately despite high historical EMA
+  ---
+  duration_ms: 8.6597
+  ...
+# Subtest: count is monotonic in current farm value, bounded and retains guaranteed introductory attacks
+ok 2 - count is monotonic in current farm value, bounded and retains guaranteed introductory attacks
+  ---
+  duration_ms: 14.9706
+  ...
+# Subtest: quantity adjustment preserves individual profiles, exact budget and determinism
+ok 3 - quantity adjustment preserves individual profiles, exact budget and determinism
+  ---
+  duration_ms: 18.8531
+  ...
+# Subtest: new plan quantity survives validation and reload without reroll or EMA reset
+ok 4 - new plan quantity survives validation and reload without reroll or EMA reset
+  ---
+  duration_ms: 11.9449
+  ...
+# Subtest: already committed candidate-3 plan retains its historical cohort after loading
+ok 5 - already committed candidate-3 plan retains its historical cohort after loading
+  ---
+  duration_ms: 9.2791
+  ...
+# (node:41564) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: 100 connected mijo plants allow independent attacks from 1 animals
+ok 6 - 100 connected mijo plants allow independent attacks from 1 animals
+  ---
+  duration_ms: 91.1607
+  ...
+# Subtest: 100 connected mijo plants allow independent attacks from 2 animals
+ok 7 - 100 connected mijo plants allow independent attacks from 2 animals
+  ---
+  duration_ms: 41.6782
+  ...
+# Subtest: 100 connected mijo plants allow independent attacks from 5 animals
+ok 8 - 100 connected mijo plants allow independent attacks from 5 animals
+  ---
+  duration_ms: 209.4446
+  ...
+# Subtest: 100 connected mijo plants allow independent attacks from 12 animals
+ok 9 - 100 connected mijo plants allow independent attacks from 12 animals
+  ---
+  duration_ms: 1130.9442
+  ...
+# Subtest: centers permit physically independent simultaneous approach claims
+ok 10 - centers permit physically independent simultaneous approach claims
+  ---
+  duration_ms: 158.8855
+  ...
+# Subtest: individual claims and native RNG replay exactly after a save/reload
+ok 11 - individual claims and native RNG replay exactly after a save/reload
+  ---
+  duration_ms: 2860.2726
+  ...
+# Subtest: destroying one reserved crop frees only that target and preserves other leases
+ok 12 - destroying one reserved crop frees only that target and preserves other leases
+  ---
+  duration_ms: 155.1332
+  ...
+# Subtest: actual saturation stages valid waiters and retires after no-progress bound without spending hits
+ok 13 - actual saturation stages valid waiters and retires after no-progress bound without spending hits
+  ---
+  duration_ms: 22.7015
+  ...
+# Subtest: legacy group saves migrate to individual claims without extra RNG draws
+ok 14 - legacy group saves migrate to individual claims without extra RNG draws
+  ---
+  duration_ms: 10.1245
+  ...
+# Subtest: group accessibility uses a complete native component certificate and invalidates when walls open
+ok 15 - group accessibility uses a complete native component certificate and invalidates when walls open
+  ---
+  duration_ms: 102.8728
+  ...
+# Subtest: a protected connected perimeter allows simultaneous attacks on separate pieces
+ok 16 - a protected connected perimeter allows simultaneous attacks on separate pieces
+  ---
+  duration_ms: 215.2231
+  ...
+# (node:19732) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: historical untagged planned and active multi-wave saves retain actors, RNG, EMA and paid state
+ok 17 - historical untagged planned and active multi-wave saves retain actors, RNG, EMA and paid state
+  ---
+  duration_ms: 41.2405
+  ...
+# Subtest: following night adopts candidate 4 once; tagged saved plan reuses with no reroll
+ok 18 - following night adopts candidate 4 once; tagged saved plan reuses with no reroll
+  ---
+  duration_ms: 49.5147
+  ...
+# Subtest: unknown provenance and changing a historical budget recipe are rejected
+ok 19 - unknown provenance and changing a historical budget recipe are rejected
+  ---
+  duration_ms: 26.4384
+  ...
+# Subtest: 1.5 budget preserves intended species composition and full maximum-hit envelope across pressures
+ok 20 - 1.5 budget preserves intended species composition and full maximum-hit envelope across pressures
+  ---
+  duration_ms: 158.4029
+  ...
+# Subtest: candidate-2 planned save retains its complete historical count/hit recipe
+ok 21 - candidate-2 planned save retains its complete historical count/hit recipe
+  ---
+  duration_ms: 14.7735
+  ...
+# Subtest: candidate-2 active save retains its complete historical count/hit recipe
+ok 22 - candidate-2 active save retains its complete historical count/hit recipe
+  ---
+  duration_ms: 13.9457
+  ...
+1..22
+# tests 22
+# suites 0
+# pass 22
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5724.8463
