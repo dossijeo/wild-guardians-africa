@@ -1,0 +1,114 @@
+{
+  "scope": "Short sampled live CLI CPU diagnostic, not render GPU or uninstrumented performance",
+  "profileSha256": "6d666a933ab5e43608cb95490217368ef0dae2e9d7920632d34d1a92592d881f",
+  "durationMs": 27942.376,
+  "observations": [
+    {
+      "day": 8,
+      "time": 260.00000000000057,
+      "elapsed": 4459.999999998145,
+      "function": "nativeServiceComponentProof",
+      "targetId": "plant-5284",
+      "poses": 1522
+    },
+    {
+      "day": 8,
+      "time": 264.3000000000014,
+      "elapsed": 4464.299999998159,
+      "function": "reserveAvailableTasks/wateringRoute"
+    }
+  ],
+  "top": [
+    {
+      "function": "findBuildingRoute",
+      "file": "file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/src/world/building-route-shortcut.js",
+      "line": 29,
+      "selfMs": 11147.844
+    },
+    {
+      "function": "wateringRoute",
+      "file": "file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/src/world/work-points.js",
+      "line": 36,
+      "selfMs": 5217.052
+    },
+    {
+      "function": "cachedFractionalWalkability",
+      "file": "file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/src/world/fractional-walkability-cache.js",
+      "line": 6,
+      "selfMs": 2506.945
+    },
+    {
+      "function": "edgeDistance",
+      "file": "file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/src/world/footprints.js",
+      "line": 9,
+      "selfMs": 1251.345
+    },
+    {
+      "function": "(garbage collector)",
+      "file": "",
+      "line": 0,
+      "selfMs": 878.109
+    },
+    {
+      "function": "canWaterFrom",
+      "file": "file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/src/world/work-points.js",
+      "line": 28,
+      "selfMs": 816.693
+    },
+    {
+      "function": "cachedFractionalWalkability",
+      "file": "file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/src/world/fractional-walkability-cache.js",
+      "line": 6,
+      "selfMs": 716.658
+    },
+    {
+      "function": "findPathSteps",
+      "file": "file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/src/world/navigation.js",
+      "line": 328,
+      "selfMs": 709.04
+    },
+    {
+      "function": "nativePerimeterProof",
+      "file": "file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/tools/native-perimeter-proof.mjs",
+      "line": 8,
+      "selfMs": 472.995
+    },
+    {
+      "function": "",
+      "file": "file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/src/simulation/game.js",
+      "line": 500,
+      "selfMs": 446.286
+    },
+    {
+      "function": "lattice",
+      "file": "file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/src/world/terrain.js",
+      "line": 411,
+      "selfMs": 432.662
+    },
+    {
+      "function": "path",
+      "file": "file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/src/world/navigation.js",
+      "line": 217,
+      "selfMs": 401.767
+    },
+    {
+      "function": "workerSurface",
+      "file": "file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/src/world/navigation.js",
+      "line": 123,
+      "selfMs": 350.601
+    },
+    {
+      "function": "distance",
+      "file": "file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/src/world/building-route-shortcut.js",
+      "line": 18,
+      "selfMs": 349.515
+    },
+    {
+      "function": "walkable",
+      "file": "file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/src/world/navigation.js",
+      "line": 143,
+      "selfMs": 332.73
+    }
+  ],
+  "inspection": "Node CLI attached to confirmed PID51796; bounded pauses and CPU sampling; resumed and debugger detached. No source, RNG, economic or simulation-state values assigned."
+}
