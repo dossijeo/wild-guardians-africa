@@ -1,0 +1,382 @@
+TAP version 13
+# (node:12024) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: incremental new crop coverage matches independent complete native certification
+ok 1 - incremental new crop coverage matches independent complete native certification
+  ---
+  duration_ms: 1142.8847
+  ...
+# Subtest: a legal near-boundary new crop with an unproven native origin is not certified
+ok 2 - a legal near-boundary new crop with an unproven native origin is not certified
+  ---
+  duration_ms: 548.4177
+  ...
+# Subtest: integrated QA proof preserves certificates and restores terrain resource ownership
+ok 3 - integrated QA proof preserves certificates and restores terrain resource ownership
+  ---
+  duration_ms: 979.5431
+  ...
+# Subtest: an exception in the proof also restores the native lattice method
+ok 4 - an exception in the proof also restores the native lattice method
+  ---
+  duration_ms: 4.5436
+  ...
+# Subtest: reusing an animal certificate still requires a fresh worker-service check
+ok 5 - reusing an animal certificate still requires a fresh worker-service check
+  ---
+  duration_ms: 579.5333
+  ...
+# Subtest: optional exact terrain memo preserves the entire physical certificate
+ok 6 - optional exact terrain memo preserves the entire physical certificate
+  ---
+  duration_ms: 1334.5109
+  ...
+# Subtest: terrain memo and lattice are both restored when certification throws
+ok 7 - terrain memo and lattice are both restored when certification throws
+  ---
+  duration_ms: 4.7947
+  ...
+# Subtest: retired anchor coverage is freshly reproducible from original geometric origins and rejects opened walls
+ok 8 - retired anchor coverage is freshly reproducible from original geometric origins and rejects opened walls
+  ---
+  duration_ms: 663.4005
+  ...
+# Subtest: retains first provisional IDs only, including previews and gate updates
+ok 9 - retains first provisional IDs only, including previews and gate updates
+  ---
+  duration_ms: 4.5644
+  ...
+# Subtest: invalidates on native epoch
+ok 10 - invalidates on native epoch
+  ---
+  duration_ms: 0.4212
+  ...
+# Subtest: invalidates on actual damage
+ok 11 - invalidates on actual damage
+  ---
+  duration_ms: 0.2756
+  ...
+# Subtest: invalidates on obstacle
+ok 12 - invalidates on obstacle
+  ---
+  duration_ms: 0.8096
+  ...
+# Subtest: invalidates on suppression
+ok 13 - invalidates on suppression
+  ---
+  duration_ms: 0.5407
+  ...
+# Subtest: invalidates on gate selection
+ok 14 - invalidates on gate selection
+  ---
+  duration_ms: 0.327
+  ...
+# Subtest: invalidates on position
+ok 15 - invalidates on position
+  ---
+  duration_ms: 0.3182
+  ...
+# Subtest: invalidates on price
+ok 16 - invalidates on price
+  ---
+  duration_ms: 0.2523
+  ...
+# Subtest: invalidates on actual gate update
+ok 17 - invalidates on actual gate update
+  ---
+  duration_ms: 0.4179
+  ...
+# Subtest: invalidates on additional piece
+ok 18 - invalidates on additional piece
+  ---
+  duration_ms: 0.4153
+  ...
+# Subtest: a real structure claiming a retained alias forces fresh native metadata
+ok 19 - a real structure claiming a retained alias forces fresh native metadata
+  ---
+  duration_ms: 0.253
+  ...
+# Subtest: a currently conflicting native quote is never transformed
+ok 20 - a currently conflicting native quote is never transformed
+  ---
+  duration_ms: 1.2956
+  ...
+# Subtest: state identities and navigator identities never share aliases
+ok 21 - state identities and navigator identities never share aliases
+  ---
+  duration_ms: 0.2507
+  ...
+# Subtest: unsupported and empty plans discard prior record
+ok 22 - unsupported and empty plans discard prior record
+  ---
+  duration_ms: 0.2845
+  ...
+# Subtest: duplicate virtual IDs never enter the alias record
+ok 23 - duplicate virtual IDs never enter the alias record
+  ---
+  duration_ms: 0.1831
+  ...
+# Subtest: identical static proof is reused despite worker movement; returned diagnostics are isolated
+ok 24 - identical static proof is reused despite worker movement; returned diagnostics are isolated
+  ---
+  duration_ms: 3.2011
+  ...
+# Subtest: static certificate invalidates on crop added
+ok 25 - static certificate invalidates on crop added
+  ---
+  duration_ms: 0.562
+  ...
+# Subtest: static certificate invalidates on crop destroyed
+ok 26 - static certificate invalidates on crop destroyed
+  ---
+  duration_ms: 0.3144
+  ...
+# Subtest: static certificate invalidates on crop moved
+ok 27 - static certificate invalidates on crop moved
+  ---
+  duration_ms: 0.2817
+  ...
+# Subtest: static certificate invalidates on wall damaged
+ok 28 - static certificate invalidates on wall damaged
+  ---
+  duration_ms: 0.1904
+  ...
+# Subtest: static certificate invalidates on geometry epoch
+ok 29 - static certificate invalidates on geometry epoch
+  ---
+  duration_ms: 0.2184
+  ...
+# Subtest: static certificate invalidates on obstacle geometry
+ok 30 - static certificate invalidates on obstacle geometry
+  ---
+  duration_ms: 0.3117
+  ...
+# Subtest: static certificate invalidates on proposal update
+ok 31 - static certificate invalidates on proposal update
+  ---
+  duration_ms: 0.2941
+  ...
+# Subtest: static certificate invalidates on bounds
+ok 32 - static certificate invalidates on bounds
+  ---
+  duration_ms: 1.3535
+  ...
+# Subtest: static certificate invalidates on outline
+ok 33 - static certificate invalidates on outline
+  ---
+  duration_ms: 0.6944
+  ...
+# Subtest: static certificate invalidates on suppression
+ok 34 - static certificate invalidates on suppression
+  ---
+  duration_ms: 0.8526
+  ...
+# Subtest: static certificate invalidates on terrain configuration
+ok 35 - static certificate invalidates on terrain configuration
+  ---
+  duration_ms: 0.1841
+  ...
+# Subtest: static certificate invalidates on terrain cache replacement
+ok 36 - static certificate invalidates on terrain cache replacement
+  ---
+  duration_ms: 0.1726
+  ...
+# Subtest: static certificate invalidates on terrain function replacement
+ok 37 - static certificate invalidates on terrain function replacement
+  ---
+  duration_ms: 0.3247
+  ...
+# Subtest: static certificate invalidates on navigation adapter replacement
+ok 38 - static certificate invalidates on navigation adapter replacement
+  ---
+  duration_ms: 0.2848
+  ...
+# Subtest: negative proofs and explicitly uncached probes are never reused
+ok 39 - negative proofs and explicitly uncached probes are never reused
+  ---
+  duration_ms: 0.4263
+  ...
+# Subtest: harvested nonanchor targets retain positive coverage with explicit historical census
+ok 40 - harvested nonanchor targets retain positive coverage with explicit historical census
+  ---
+  duration_ms: 1.6172
+  ...
+# Subtest: superset reuse rejects survivor moved
+ok 41 - superset reuse rejects survivor moved
+  ---
+  duration_ms: 0.5939
+  ...
+# Subtest: superset reuse rejects new target replaces harvested target
+ok 42 - superset reuse rejects new target replaces harvested target
+  ---
+  duration_ms: 0.4125
+  ...
+# Subtest: superset reuse rejects remaining targets reordered
+ok 43 - superset reuse rejects remaining targets reordered
+  ---
+  duration_ms: 0.4192
+  ...
+# Subtest: superset reuse rejects all targets removed
+ok 44 - superset reuse rejects all targets removed
+  ---
+  duration_ms: 0.3185
+  ...
+# Subtest: harvested anchor survives only as an explicit geometric reference covering unchanged survivors
+ok 45 - harvested anchor survives only as an explicit geometric reference covering unchanged survivors
+  ---
+  duration_ms: 0.4244
+  ...
+# Subtest: retired-anchor reuse rejects unknown original target
+ok 46 - retired-anchor reuse rejects unknown original target
+  ---
+  duration_ms: 0.3468
+  ...
+# Subtest: retired-anchor reuse rejects missing geometric coordinates
+ok 47 - retired-anchor reuse rejects missing geometric coordinates
+  ---
+  duration_ms: 0.1989
+  ...
+# Subtest: retired-anchor reuse rejects nonfinite exterior coordinate
+ok 48 - retired-anchor reuse rejects nonfinite exterior coordinate
+  ---
+  duration_ms: 0.34
+  ...
+# Subtest: opt-in additions require fresh proof and retain only positive cumulative coverage
+ok 49 - opt-in additions require fresh proof and retain only positive cumulative coverage
+  ---
+  duration_ms: 0.7737
+  ...
+# Subtest: failed additions remain failed on repeated attempts without replacing original positive coverage
+ok 50 - failed additions remain failed on repeated attempts without replacing original positive coverage
+  ---
+  duration_ms: 0.4234
+  ...
+# Subtest: opt-in extension invalidates on moved survivor
+ok 51 - opt-in extension invalidates on moved survivor
+  ---
+  duration_ms: 0.3102
+  ...
+# Subtest: opt-in extension invalidates on reordered survivors
+ok 52 - opt-in extension invalidates on reordered survivors
+  ---
+  duration_ms: 0.2191
+  ...
+# Subtest: opt-in extension invalidates on geometry change
+ok 53 - opt-in extension invalidates on geometry change
+  ---
+  duration_ms: 0.175
+  ...
+# Subtest: opt-in extension invalidates on suppression change
+ok 54 - opt-in extension invalidates on suppression change
+  ---
+  duration_ms: 0.1863
+  ...
+# Subtest: exact native surface, slope and fluids with lattice tiles: sabana / 1
+ok 55 - exact native surface, slope and fluids with lattice tiles: sabana / 1
+  ---
+  duration_ms: 31.7552
+  ...
+# Subtest: exact native surface, slope and fluids with lattice tiles: gran-rio / 1
+ok 56 - exact native surface, slope and fluids with lattice tiles: gran-rio / 1
+  ---
+  duration_ms: 14.7122
+  ...
+# Subtest: exact native surface, slope and fluids with lattice tiles: manglares / 1
+ok 57 - exact native surface, slope and fluids with lattice tiles: manglares / 1
+  ---
+  duration_ms: 8.2576
+  ...
+# Subtest: exact native surface, slope and fluids with lattice tiles: volcanes / 1
+ok 58 - exact native surface, slope and fluids with lattice tiles: volcanes / 1
+  ---
+  duration_ms: 13.8414
+  ...
+# Subtest: exact native surface, slope and fluids with lattice tiles: gran-canon / 1
+ok 59 - exact native surface, slope and fluids with lattice tiles: gran-canon / 1
+  ---
+  duration_ms: 8.1284
+  ...
+# Subtest: exact native surface, slope and fluids with lattice tiles: desierto / 1
+ok 60 - exact native surface, slope and fluids with lattice tiles: desierto / 1
+  ---
+  duration_ms: 10.7311
+  ...
+# Subtest: exact native surface, slope and fluids with lattice tiles: sabana / 712
+ok 61 - exact native surface, slope and fluids with lattice tiles: sabana / 712
+  ---
+  duration_ms: 15.6739
+  ...
+# Subtest: exact native surface, slope and fluids with lattice tiles: gran-rio / 712
+ok 62 - exact native surface, slope and fluids with lattice tiles: gran-rio / 712
+  ---
+  duration_ms: 12.9654
+  ...
+# Subtest: exact native surface, slope and fluids with lattice tiles: manglares / 712
+ok 63 - exact native surface, slope and fluids with lattice tiles: manglares / 712
+  ---
+  duration_ms: 6.9149
+  ...
+# Subtest: exact native surface, slope and fluids with lattice tiles: volcanes / 712
+ok 64 - exact native surface, slope and fluids with lattice tiles: volcanes / 712
+  ---
+  duration_ms: 12.6562
+  ...
+# Subtest: exact native surface, slope and fluids with lattice tiles: gran-canon / 712
+ok 65 - exact native surface, slope and fluids with lattice tiles: gran-canon / 712
+  ---
+  duration_ms: 8.1184
+  ...
+# Subtest: exact native surface, slope and fluids with lattice tiles: desierto / 712
+ok 66 - exact native surface, slope and fluids with lattice tiles: desierto / 712
+  ---
+  duration_ms: 7.698
+  ...
+# Subtest: exact native surface, slope and fluids with lattice tiles: sabana / 2026
+ok 67 - exact native surface, slope and fluids with lattice tiles: sabana / 2026
+  ---
+  duration_ms: 6.177
+  ...
+# Subtest: exact native surface, slope and fluids with lattice tiles: gran-rio / 2026
+ok 68 - exact native surface, slope and fluids with lattice tiles: gran-rio / 2026
+  ---
+  duration_ms: 9.641
+  ...
+# Subtest: exact native surface, slope and fluids with lattice tiles: manglares / 2026
+ok 69 - exact native surface, slope and fluids with lattice tiles: manglares / 2026
+  ---
+  duration_ms: 4.8295
+  ...
+# Subtest: exact native surface, slope and fluids with lattice tiles: volcanes / 2026
+ok 70 - exact native surface, slope and fluids with lattice tiles: volcanes / 2026
+  ---
+  duration_ms: 7.8532
+  ...
+# Subtest: exact native surface, slope and fluids with lattice tiles: gran-canon / 2026
+ok 71 - exact native surface, slope and fluids with lattice tiles: gran-canon / 2026
+  ---
+  duration_ms: 7.8749
+  ...
+# Subtest: exact native surface, slope and fluids with lattice tiles: desierto / 2026
+ok 72 - exact native surface, slope and fluids with lattice tiles: desierto / 2026
+  ---
+  duration_ms: 6.479
+  ...
+# Subtest: bounded tiles preserve negative boundaries, custom undefined values and explicit invalidation
+ok 73 - bounded tiles preserve negative boundaries, custom undefined values and explicit invalidation
+  ---
+  duration_ms: 0.7863
+  ...
+# Subtest: non-lattice inputs use the original method and configuration is bounded
+ok 74 - non-lattice inputs use the original method and configuration is bounded
+  ---
+  duration_ms: 1.687
+  ...
+1..74
+# tests 74
+# suites 0
+# pass 74
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5560.4432

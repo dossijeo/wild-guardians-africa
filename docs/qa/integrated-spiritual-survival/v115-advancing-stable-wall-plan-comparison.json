@@ -1,0 +1,266 @@
+{
+  "status": "completed-copied-native-probe",
+  "scope": "Five simulated native seconds without player commands. Candidate aliases QA-only pending metadata after native gate choice. Native states and worker proofs must agree; final retained animal origins independently re-certified against all current targets. Concurrent CPU times are diagnostic, not isolated acceptance or game FPS.",
+  "snapshotSha256": "6ecab8f0978876d60df697e26402f65fb46f40c5234d0553e57145b663c84aa0",
+  "promoted": false,
+  "sourceHashes": {
+    "tools/compare-advancing-stable-wall-plan.mjs": "4ddcc913361b99d8a5a08422eee8ce83f17391be73aa6058dd8c18a62b337a67",
+    "tools/stable-prospective-wall-plan-candidate.mjs": "f756edcb421dfd50cace2b74008e9843b9ef5254bf13d0b42c0bba1c0ed38eb9"
+  },
+  "runs": [
+    {
+      "mode": "baseline",
+      "step": 0,
+      "simulatedSeconds": 0,
+      "milliseconds": 21495.3456,
+      "valid": true,
+      "workerChecks": 1,
+      "stateSha256": "559ece913e762dd92fc6afed1d7666bec385be4a685bcba8cd036660052a4d8b",
+      "living": 233,
+      "ledgerEntries": 2306,
+      "retainedCoverage": null,
+      "terrainTileDiagnostics": {
+        "side": 32,
+        "capacity": 16,
+        "tiles": 6,
+        "requests": 103539255,
+        "hits": 103537608,
+        "misses": 1647,
+        "evictions": 0,
+        "fallbacks": 0,
+        "invalidations": 0,
+        "typedArrayBytes": 55296,
+        "maximumTypedArrayBytes": 147456
+      }
+    },
+    {
+      "mode": "baseline",
+      "step": 10,
+      "simulatedSeconds": 2.5,
+      "milliseconds": 25595.8773,
+      "valid": true,
+      "workerChecks": 2,
+      "stateSha256": "541e8b0cb7e184ed7d955fb441f0b2b877730afcbecfbe0852afd65a56f55fe8",
+      "living": 230,
+      "ledgerEntries": 2307,
+      "retainedCoverage": null,
+      "terrainTileDiagnostics": {
+        "side": 32,
+        "capacity": 16,
+        "tiles": 6,
+        "requests": 102273399,
+        "hits": 102271752,
+        "misses": 1647,
+        "evictions": 0,
+        "fallbacks": 0,
+        "invalidations": 0,
+        "typedArrayBytes": 55296,
+        "maximumTypedArrayBytes": 147456
+      }
+    },
+    {
+      "mode": "baseline",
+      "step": 20,
+      "simulatedSeconds": 5,
+      "milliseconds": 26107.6452,
+      "valid": true,
+      "workerChecks": 3,
+      "stateSha256": "66c7cc8391af87da04f9d711f95970edd27cb8b7cb2a49e0e319742d870efde9",
+      "living": 227,
+      "ledgerEntries": 2308,
+      "retainedCoverage": null,
+      "terrainTileDiagnostics": {
+        "side": 32,
+        "capacity": 16,
+        "tiles": 6,
+        "requests": 101282133,
+        "hits": 101280488,
+        "misses": 1645,
+        "evictions": 0,
+        "fallbacks": 0,
+        "invalidations": 0,
+        "typedArrayBytes": 55296,
+        "maximumTypedArrayBytes": 147456
+      }
+    },
+    {
+      "mode": "candidate",
+      "step": 0,
+      "simulatedSeconds": 0,
+      "milliseconds": 22539.12460000001,
+      "valid": true,
+      "workerChecks": 1,
+      "stateSha256": "559ece913e762dd92fc6afed1d7666bec385be4a685bcba8cd036660052a4d8b",
+      "living": 233,
+      "ledgerEntries": 2306,
+      "retainedCoverage": null,
+      "terrainTileDiagnostics": {
+        "side": 32,
+        "capacity": 16,
+        "tiles": 6,
+        "requests": 103539255,
+        "hits": 103537608,
+        "misses": 1647,
+        "evictions": 0,
+        "fallbacks": 0,
+        "invalidations": 0,
+        "typedArrayBytes": 55296,
+        "maximumTypedArrayBytes": 147456
+      }
+    },
+    {
+      "mode": "candidate",
+      "step": 10,
+      "simulatedSeconds": 2.5,
+      "milliseconds": 183.17260000000533,
+      "valid": true,
+      "workerChecks": 2,
+      "stateSha256": "541e8b0cb7e184ed7d955fb441f0b2b877730afcbecfbe0852afd65a56f55fe8",
+      "living": 230,
+      "ledgerEntries": 2307,
+      "retainedCoverage": {
+        "certifiedCropCount": 233,
+        "currentCropCount": 230,
+        "removedCropIds": [
+          "plant-9249",
+          "plant-9267",
+          "plant-9323"
+        ],
+        "retiredAnchorTargetIds": [],
+        "scope": "Positive superset certificate; surviving targets unchanged. Original anchor coordinates and exterior origins remain geometric references, not necessarily living targets. Counters describe original certification."
+      },
+      "terrainTileDiagnostics": {
+        "side": 32,
+        "capacity": 16,
+        "tiles": 4,
+        "requests": 149928,
+        "hits": 149149,
+        "misses": 779,
+        "evictions": 0,
+        "fallbacks": 0,
+        "invalidations": 0,
+        "typedArrayBytes": 36864,
+        "maximumTypedArrayBytes": 147456
+      }
+    },
+    {
+      "mode": "candidate",
+      "step": 20,
+      "simulatedSeconds": 5,
+      "milliseconds": 102.5063000000082,
+      "valid": true,
+      "workerChecks": 3,
+      "stateSha256": "66c7cc8391af87da04f9d711f95970edd27cb8b7cb2a49e0e319742d870efde9",
+      "living": 227,
+      "ledgerEntries": 2308,
+      "retainedCoverage": {
+        "certifiedCropCount": 233,
+        "currentCropCount": 227,
+        "removedCropIds": [
+          "plant-9205",
+          "plant-9249",
+          "plant-9267",
+          "plant-9323",
+          "plant-9337",
+          "plant-10121"
+        ],
+        "retiredAnchorTargetIds": [],
+        "scope": "Positive superset certificate; surviving targets unchanged. Original anchor coordinates and exterior origins remain geometric references, not necessarily living targets. Counters describe original certification."
+      },
+      "terrainTileDiagnostics": {
+        "side": 32,
+        "capacity": 16,
+        "tiles": 4,
+        "requests": 101622,
+        "hits": 100890,
+        "misses": 732,
+        "evictions": 0,
+        "fallbacks": 0,
+        "invalidations": 0,
+        "typedArrayBytes": 36864,
+        "maximumTypedArrayBytes": 147456
+      }
+    }
+  ],
+  "independentFinalChecks": [
+    {
+      "radius": 1.1,
+      "proof": {
+        "valid": true,
+        "reason": "native-service-poses-in-positive-closed-components",
+        "poses": 7296,
+        "blocked": 1079,
+        "certified": 6217,
+        "physicalConnectors": 0,
+        "emptyNativeOrigins": 0,
+        "reusedComponents": 6215,
+        "regions": 2,
+        "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+      }
+    },
+    {
+      "radius": 0.9,
+      "proof": {
+        "valid": true,
+        "reason": "native-service-poses-in-positive-closed-components",
+        "poses": 7296,
+        "blocked": 865,
+        "certified": 6431,
+        "physicalConnectors": 0,
+        "emptyNativeOrigins": 0,
+        "reusedComponents": 6429,
+        "regions": 2,
+        "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+      }
+    },
+    {
+      "radius": 0.97,
+      "proof": {
+        "valid": true,
+        "reason": "native-service-poses-in-positive-closed-components",
+        "poses": 7296,
+        "blocked": 942,
+        "certified": 6354,
+        "physicalConnectors": 0,
+        "emptyNativeOrigins": 0,
+        "reusedComponents": 6352,
+        "regions": 2,
+        "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+      }
+    },
+    {
+      "radius": 0.85,
+      "proof": {
+        "valid": true,
+        "reason": "native-service-poses-in-positive-closed-components",
+        "poses": 7296,
+        "blocked": 805,
+        "certified": 6491,
+        "physicalConnectors": 0,
+        "emptyNativeOrigins": 0,
+        "reusedComponents": 6489,
+        "regions": 2,
+        "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+      }
+    },
+    {
+      "radius": 1.55,
+      "proof": {
+        "valid": true,
+        "reason": "native-service-poses-in-positive-closed-components",
+        "poses": 7296,
+        "blocked": 1736,
+        "certified": 5560,
+        "physicalConnectors": 1,
+        "emptyNativeOrigins": 0,
+        "reusedComponents": 5557,
+        "regions": 2,
+        "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+      }
+    }
+  ],
+  "allTwentyOneNativeStatesEqual": true,
+  "allThreeFreshWorkerProofsEqual": true,
+  "initialFullCertificateEqual": true,
+  "finalCurrentTargetsIndependentlyCertified": true
+}
