@@ -1,0 +1,87 @@
+{
+  "status": "verified-declared-qa-policy-experiment",
+  "oldDirectory": "docs/qa/integrated-spiritual-survival/pilot-v101-q14-entry-retry-good-savanna-123-seven",
+  "newDirectory": "docs/qa/integrated-spiritual-survival/pilot-v103-q15-good-sabana-123-seven",
+  "identicalRecordedGameRulesAndManifests": true,
+  "identicalNonPolicyInputs": true,
+  "addedSources": [
+    {
+      "path": "tools/native-q15-labour-policy.mjs",
+      "after": "c156565ae1a37483505b2883cdea4162f2d8bbc4c7909a672958d992692ed691"
+    }
+  ],
+  "changedSources": [
+    {
+      "path": "tools/native-campaign-protocol.mjs",
+      "before": "98f91cfaf59919050478238497e141e662047621575d05100fdd303abcb9bd41",
+      "after": "6e81c04b6522e188abb829e66cc6a109c26467c8c75297cc9e31d4256949ba3b"
+    },
+    {
+      "path": "tools/native-campaign-runner.mjs",
+      "before": "0e5bdf19a0931601fcb3eeb53ef5606da927c34f3001be1e307a8b6d1db06100",
+      "after": "2311066df411b753ee42570835b85648d53a789414db1d5d65e3f2c47af139e1"
+    },
+    {
+      "path": "tools/run_native_campaign.mjs",
+      "before": "0d7c2bf17cff2f97f467de3c6e3748a584c9595f7dd15ec6b4787d91f7a13a87",
+      "after": "facde90c8f2db6bfa876eaa71926d4b73eba88fdaaad99576b55a9f500bc18b6"
+    }
+  ],
+  "summary": [
+    {
+      "directory": "docs/qa/integrated-spiritual-survival/pilot-v101-q14-entry-retry-good-savanna-123-seven",
+      "labourPolicy": "q14",
+      "result": null,
+      "completedNights": 7,
+      "money": 731,
+      "living": 176,
+      "totalDestroyed": 27,
+      "totals": {
+        "income": 6045,
+        "wages": 1963,
+        "seeds": 3271,
+        "walls": 780,
+        "repairs": 0
+      },
+      "centerHp": [
+        600
+      ],
+      "paidWallPieces": 78,
+      "firstRecordedCompleteContour": {
+        "day": 7,
+        "time": 288.0000000000067,
+        "reason": "paid-native-contour-completed"
+      },
+      "decisionIdleProxy": 0.6933333333333266,
+      "humanManualTimeMeasured": false
+    },
+    {
+      "directory": "docs/qa/integrated-spiritual-survival/pilot-v103-q15-good-sabana-123-seven",
+      "labourPolicy": "q15",
+      "result": null,
+      "completedNights": 7,
+      "money": 731,
+      "living": 176,
+      "totalDestroyed": 27,
+      "totals": {
+        "income": 6045,
+        "wages": 1963,
+        "seeds": 3271,
+        "walls": 780,
+        "repairs": 0
+      },
+      "centerHp": [
+        600
+      ],
+      "paidWallPieces": 78,
+      "firstRecordedCompleteContour": {
+        "day": 7,
+        "time": 288.0000000000067,
+        "reason": "paid-native-contour-completed"
+      },
+      "decisionIdleProxy": 0.6933333333333266,
+      "humanManualTimeMeasured": false
+    }
+  ],
+  "scope": "Q14 versus Q15 player decisions under identical recorded game rules and manifests; binary assets are not checksummed by this audit. Source deltas are exact opt-in QA runner/protocol edits plus the new policy. Different decisions may alter production, RNG consumption and pressure through real farm state. Not an identical-action replay, causal wall/magic isolation, human activity, performance or long-term balance acceptance."
+}
