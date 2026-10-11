@@ -1,0 +1,46 @@
+{
+  "input": "docs/qa/integrated-spiritual-survival/pilot-v64-common-passive-712-seven/state.json.gz",
+  "inputSha256": "71d1fd1d5d8ca2910bb1ef5e4fd018d6f18f1778761505bbf946a097faea6618",
+  "sourceHashes": {
+    "tools/probe-native-replant-access.mjs": "74e955ffa72b25fd26e4292e3d009b8b02966b1abe16c6c7bfe33cf63f08f37b",
+    "tools/native-campaign-plots.mjs": "800951f763c3a164236e2aca5c92b9f9a65596160aceb2f1969bab90555f90fa",
+    "src/world/navigation.js": "21b82f33c62581436a6cef702b66af272ae9d3b096cb2b20ee858f0a50196743"
+  },
+  "day": 8,
+  "time": 0,
+  "living": 0,
+  "attempts": [
+    {
+      "attempt": 1,
+      "point": {
+        "x": 88.5,
+        "z": 0,
+        "centerId": "structure-2"
+      },
+      "reason": "active"
+    }
+  ],
+  "plotSearch": {
+    "plots": 1,
+    "transitions": [
+      {
+        "day": 8,
+        "time": 0,
+        "key": "2,1",
+        "bounds": [
+          -24,
+          -72,
+          216,
+          168
+        ],
+        "centerId": "structure-2"
+      }
+    ],
+    "checksPerDecision": 8,
+    "fluidClearance": 1.5,
+    "fluidClearanceRejected": 0,
+    "scope": "Native finite resident regions; every placement requires legal outward and return paths. Optional sampled fluid margin is a player placement preference, not a production restriction or farm size cap."
+  },
+  "snapshotUnchanged": true,
+  "scope": "Fresh bounded plot search on terminal snapshot only. Does not reconstruct historical cash timing or the campaign plot cursor; not a recovery or survival demonstration."
+}
