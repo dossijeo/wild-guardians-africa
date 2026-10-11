@@ -52,7 +52,24 @@ pending message is not marked shown merely because the current one was closed.
   needed correction. Those are QA fixture defects, corrected for `browser-v2/`.
   Only browser-v2 screenshots are current visual evidence.
 
-The full suite is also running; its pending log is not staged as a passed result.
+The first CI suite finished with 3,980 passes, two failures and one skip. Both
+failures were the generated SFX catalogue checks: this fix shifted source line
+references and hashes while the stored inventory still described the old code.
+The inventory was regenerated and compared with its predecessor, removing only
+line references and source hashes for the comparison. All other fields,
+assignments, categories and exact audio hashes remain identical (126 sounds,
+100 assigned, 26 unassigned). All three catalogue tests now pass. The original
+failed CI log is retained compressed; a fresh CI run is still required.
+
+Windows CI passed for runtime head `c6db2c09`, including packaged WebView2
+loading, genuine minimization/restoration and manual save confirmation after
+IndexedDB commit. Downloaded original JSON artifacts and their hashes are in
+`windows-ci/`. World readiness waits were 154.8 seconds for smoke and 136.9
+seconds for visibility on the CI runner; these are functional observations,
+not an isolated loading-performance comparison or physical mobile acceptance.
+
+The local full suite is also running against its original launch; its pending
+log is not staged as a passed result or relabeled as the regenerated inventory.
 The independent 100-night campaign retains its frozen original source and is
 unmodified. These fixes must not be described as changes already applied to
 that running campaign.

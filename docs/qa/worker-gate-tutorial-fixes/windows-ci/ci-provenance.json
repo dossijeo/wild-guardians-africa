@@ -1,0 +1,53 @@
+{
+  "runId": 38146708214,
+  "headSha": "c6db2c0924a89c9b14fb1d92afd8bc070b350ce4",
+  "conclusion": "success",
+  "rows": [
+    {
+      "name": "desktop-smoke",
+      "sha256": "30cca1471cbbc67b8031de131c051cb972dee79cc378045b0720cdf1da803804",
+      "ok": true,
+      "errors": [],
+      "worldWaitMs": 154834.8999999999,
+      "manualSaveFeedback": null,
+      "checkNames": [
+        "audio",
+        "audioSeconds",
+        "loadingAtFinish",
+        "loadingBudget",
+        "menu",
+        "models",
+        "saveKeys",
+        "storage",
+        "webgl2",
+        "worker",
+        "world"
+      ]
+    },
+    {
+      "name": "desktop-visibility",
+      "sha256": "71e53af04908722d15acf0fc38f395ff152429df2257ebe36febf618b289fe08",
+      "ok": true,
+      "errors": [],
+      "worldWaitMs": 136914.3999999999,
+      "manualSaveFeedback": "confirmed-after-IndexedDB-commit",
+      "checkNames": [
+        "audio",
+        "audioSeconds",
+        "loadingAtFinish",
+        "loadingBudget",
+        "manualSaveFeedback",
+        "menu",
+        "models",
+        "saveBackend",
+        "saveKeys",
+        "storage",
+        "visibility",
+        "webgl2",
+        "worker",
+        "world"
+      ]
+    }
+  ],
+  "scope": "Packaged Windows CI functional evidence only. CI worldWaitMs is not an isolated performance benchmark or a physical-mobile acceptance."
+}
