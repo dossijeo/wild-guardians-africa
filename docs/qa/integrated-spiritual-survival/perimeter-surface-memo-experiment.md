@@ -11,3 +11,9 @@ Version one uses a fresh `Map.keys()` iterator on every eviction. Its full nativ
 The independent probes preserve complete cold and warmed physical proof objects, serialized snapshot immutability and full source guards. They compare against the recorded unmodified v90 proof. Only the internal `regions` Set-identity diagnostic is excluded from semantic equality; all outputs remain stored. A mismatch throws and prevents acceptance. Timings include a CPU-profiled cold call and a subsequent warm call, so cold/warm differences are not an AB/BA optimization benchmark.
 
 Acceptance requires the native proof to finish with matching physical conclusions, useful timing evidence and tolerable storage cost. Any successful candidate still needs repeated controlled benchmarks before integration. Live v92/v93 campaign code remains unchanged.
+
+## Version two native result: rejected
+
+The FIFO-cursor variant finished normally. It preserved both complete physical conclusions against the unmodified baseline and left the serialized snapshot unchanged. Its profiled cold query took 77,078.20 ms and the warm query 39,355.93 ms. Reference values were 24,717.96 and 10,536.23 ms. These observations were collected with other native processes active, not in isolated AB/BA runs, and do not quantify a general slowdown. They provide no evidence sufficient to promote the cache.
+
+The bounded memo recorded 22,974,103 hits, 20,893,093 misses and 20,860,325 evictions, with 32,768 peak entries and no epoch invalidations. More than twenty million exact scalar misses and continuous turnover make this reuse strategy unpromising on the retained proof workload. It is rejected for integration; no further capacity increase or production change is authorized by these observations. Raw timing, full proof output, counters and CPU profile are preserved as negative evidence. Version one remains a separate live diagnostic until its own process completes.
