@@ -1,0 +1,161 @@
+{
+  "scope": "Retained native ledger/raid/defense observations. Post-impact failed capture; not a pre-impact replay or proof of actual actor crossing.",
+  "reportSha256": "799d041cb4cbbe95eaeb1a13d83af86b29554087a361f979ae2f775529452b16",
+  "dailyPrefixExactlyMatchesV51": true,
+  "completedRows": 13,
+  "raids": [
+    {
+      "id": "raid-12-night",
+      "exposure": 72,
+      "destroyed": 0,
+      "wallHits": 49,
+      "wallHpLost": 1103,
+      "ruined": [],
+      "shieldContacts": 4
+    },
+    {
+      "id": "raid-13-night",
+      "exposure": 103,
+      "destroyed": 4,
+      "wallHits": 43,
+      "wallHpLost": 1041,
+      "ruined": [
+        "structure-4310",
+        "structure-4359",
+        "structure-4330",
+        "structure-4351",
+        "structure-4358",
+        "structure-4357"
+      ],
+      "shieldContacts": 3
+    },
+    {
+      "id": "raid-14-night",
+      "exposure": 77,
+      "destroyed": 53,
+      "wallHits": 0,
+      "wallHpLost": 0,
+      "ruined": [],
+      "shieldContacts": 2
+    }
+  ],
+  "defense": [
+    {
+      "day": 12,
+      "first": {
+        "day": 12,
+        "time": 0,
+        "protectedCash": 210,
+        "pendingRepairCoins": 0,
+        "attempts": [],
+        "paidCost": 0,
+        "paidPieces": 0,
+        "remainingCost": 20,
+        "complete": false,
+        "bounds": [
+          53,
+          -16,
+          107,
+          20
+        ],
+        "reason": "maintaining-paid-native-contour"
+      },
+      "last": {
+        "day": 12,
+        "time": 295.00000000000836,
+        "protectedCash": 210,
+        "pendingRepairCoins": 13.2,
+        "attempts": [],
+        "paidCost": 0,
+        "paidPieces": 0,
+        "remainingCost": 0,
+        "complete": true,
+        "bounds": [
+          53,
+          -16,
+          107,
+          20
+        ],
+        "reason": "existing-paid-native-contour"
+      }
+    },
+    {
+      "day": 13,
+      "first": {
+        "day": 13,
+        "time": 0,
+        "protectedCash": 210,
+        "pendingRepairCoins": 0,
+        "attempts": [],
+        "paidCost": 0,
+        "paidPieces": 0,
+        "remainingCost": 0,
+        "complete": true,
+        "bounds": [
+          53,
+          -16,
+          107,
+          20
+        ],
+        "reason": "existing-paid-native-contour"
+      },
+      "last": {
+        "day": 13,
+        "time": 295.0000000000085,
+        "protectedCash": 210,
+        "pendingRepairCoins": 99.3,
+        "attempts": [],
+        "paidCost": 0,
+        "paidPieces": 0,
+        "remainingCost": 0,
+        "complete": true,
+        "bounds": [
+          53,
+          -16,
+          107,
+          20
+        ],
+        "reason": "existing-paid-native-contour"
+      }
+    },
+    {
+      "day": 14,
+      "first": {
+        "day": 14,
+        "time": 0,
+        "protectedCash": 210,
+        "pendingRepairCoins": 0,
+        "attempts": [],
+        "paidCost": 0,
+        "paidPieces": 0,
+        "remainingCost": 120,
+        "complete": false,
+        "bounds": [
+          53,
+          -16,
+          107,
+          20
+        ],
+        "reason": "maintaining-paid-native-contour"
+      },
+      "last": {
+        "day": 14,
+        "time": 295.0000000000082,
+        "protectedCash": 210,
+        "pendingRepairCoins": 187.3,
+        "attempts": [],
+        "paidCost": 0,
+        "paidPieces": 0,
+        "remainingCost": 20,
+        "complete": false,
+        "bounds": [
+          53,
+          -16,
+          107,
+          20
+        ],
+        "reason": "maintaining-paid-native-contour"
+      }
+    }
+  ]
+}
