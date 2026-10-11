@@ -1,0 +1,97 @@
+{
+  "input": "docs/qa/integrated-spiritual-survival/pilot-v59-common-good-q9-breach-first-2026-fourteen/partial-state.json.gz",
+  "inputSha256": "b12539c2eff33d65204ed41656e60a47763be8eb0e1b693d534392f4ea06aa6d",
+  "sourceHashes": {
+    "tools/probe-native-entry-bounds.mjs": "3e64469621dbe1232f09c66d933a6aed8b03c6de4da957a530cd5b425c5fb2c1",
+    "src/simulation/raids.js": "e74e5049eabde4d7a2cc424c8d375252e6bc2f03b9298731ed298724c2663c3b",
+    "src/simulation/raid-exterior-entry.js": "3ac5b8776b8cfc0db533555088f01f5417375d5d40ada1a924845c6ac711e8c4",
+    "src/simulation/raid-exterior-connectivity.js": "d7557a805f0bd3e7f80344ee7b4621c64827afa40c70762c778944ad1bf456c1",
+    "src/simulation/raid-exterior-detour.js": "d80f387663e9740e04cf6116e3e7202f41188efebc1df8869c83bf38d26a42b4",
+    "src/world/navigation.js": "21b82f33c62581436a6cef702b66af272ae9d3b096cb2b20ee858f0a50196743"
+  },
+  "group": [
+    "warthog",
+    "lion",
+    "warthog",
+    "warthog",
+    "warthog",
+    "warthog",
+    "warthog",
+    "warthog",
+    "warthog",
+    "warthog",
+    "buffalo",
+    "warthog",
+    "hyena",
+    "warthog",
+    "warthog",
+    "warthog"
+  ],
+  "originalBounds": [
+    -24,
+    -120,
+    216,
+    120
+  ],
+  "view": {
+    "eye": {
+      "x": 112.70247532024266,
+      "z": 21.57367599590944
+    },
+    "target": {
+      "x": 96,
+      "z": -9
+    }
+  },
+  "rows": [
+    {
+      "padding": 0,
+      "bounds": [
+        -24,
+        -120,
+        216,
+        120
+      ],
+      "actors": 0,
+      "entry": null,
+      "milliseconds": 3116.7515000000003
+    },
+    {
+      "padding": 24,
+      "bounds": [
+        -48,
+        -144,
+        240,
+        144
+      ],
+      "actors": 0,
+      "entry": null,
+      "milliseconds": 10085.1762
+    },
+    {
+      "padding": 48,
+      "bounds": [
+        -72,
+        -168,
+        264,
+        168
+      ],
+      "actors": 0,
+      "entry": null,
+      "milliseconds": 76666.6881
+    },
+    {
+      "padding": 96,
+      "bounds": [
+        -120,
+        -216,
+        312,
+        216
+      ],
+      "actors": 0,
+      "entry": null,
+      "milliseconds": 365522.0142
+    }
+  ],
+  "scope": "Read-only copied-state native complete-wave selection. Bounds expansion is diagnostic only, not resident chunks, actual spawn, GPU/frame time or campaign completion."
+}
