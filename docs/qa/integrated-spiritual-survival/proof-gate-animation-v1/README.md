@@ -17,3 +17,11 @@ The first comparison stopped because reusedComponents differed by one. That fiel
 50 cache/stable/native tests passed before the final guard hardening, including original real-delivery/native-paid-state regression. After the guard was extended to also reject overridden segment, component, terrain, prop and placement methods, 50 focused cache/guard tests passed. The benchmark source hashes are preserved inside the full benchmark; final-source-hashes.json records the stricter guard and its added test. Guard hardening does not change accepted native calculations; no post-hardening full campaign benchmark is claimed.
 
 Reproduce: node tools/benchmark-proof-gate-animation.mjs FRESH_OUTPUT.json. This remains an opt-in QA candidate. Do not patch a running campaign or treat this one snapshot as all-biome validation. A new frozen integration must include current main's navigation fixes and further native coverage before campaign calibration uses it.
+
+## Native topology regression
+
+Additional 61 focused tests pass, including gate removal/movement/rotation/conversion, obstacle removal/damage, crop movement/destruction, river level, terrain query and suppression invalidation while gate-animation reuse is enabled.
+
+The first native breach fixture wrongly assumed that withholding its single proposed wall piece necessarily opened the historical perimeter. Both the candidate and uncached native reference still returned positive protection. The failed test source and raw output are retained in insufficient-breach-fixture-test.js.gz and insufficient-breach-fixture-negative.txt.gz; this was not evidence of a cache disagreement.
+
+The corrected test first certifies the native layout, changes gate phase, then removes the existing walls using Game.removeWall, including native topology invalidation and refunds. Both candidate and uncached reference then explicitly return native-animal-route-through-perimeter. Certification itself leaves the serialized post-removal state unchanged. This native test passes on the final guarded code (31.4 seconds including fixture setup). It is a controlled topology regression, not an economically valid campaign or all-biome performance claim.

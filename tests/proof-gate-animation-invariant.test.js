@@ -33,3 +33,19 @@ test('native-shaped navigators with overridden physical methods are rejected bef
   assert.throws(()=>nativePerimeterReusedCandidateV2({},nav,{},[],{gateAnimationInvariant:true}),/requires native/,method);
  }
 });
+for(const [name,change] of [
+ ['gate removed',f=>f.state.structures.splice(0,1)],
+ ['gate moved',f=>f.gate.x++],
+ ['gate rotated',f=>f.gate.yaw=.7],
+ ['gate becomes solid wall',f=>f.gate.gate=false],
+ ['obstacle removed',f=>f.view.obstacles.splice(0,1)],
+ ['obstacle damaged',f=>f.view.obstacles[0].hp--],
+ ['crop moved',f=>f.state.plants[0].x++],
+ ['crop destroyed',f=>f.state.plants[0].alive=false],
+ ['river level changed',f=>f.view.field.riverLevel=4],
+ ['terrain query changed',f=>f.view.field.height=()=>4],
+ ['new suppression',f=>f.state.suppressed.push('tree')]
+])test(`gate-phase invariant still invalidates physical change: ${name}`,()=>{
+ const f=fixture();f.query(true);f.gate.gateOpen=.5;f.query(true);assert.equal(f.calls(),1);
+ change(f);f.query(true);assert.equal(f.calls(),2);
+});
