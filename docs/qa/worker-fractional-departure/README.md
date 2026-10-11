@@ -1,0 +1,15 @@
+# Fractional worker departure candidate — not accepted for integration
+
+Branch `codex/worker-fractional-departure` is isolated from the source-frozen reference/recovery campaigns. No economy, player policy, military recipe or active process was changed. The original valid-but-grid-disconnected worker failure remains in `docs/qa/integrated-spiritual-survival/recovery-worker-fractional-origin/`.
+
+The original seed-712 terminal snapshot is preserved as a test fixture. A bounded 3 m fractional patch search finds a swept connection to the ordinary navigation grid. Every local node and edge uses the native worker view, terrain/fluid/solid/gate collision checks. It applies only to departure statuses from a valid origin with no ordinary grid seed. It never ignores obstacles or relocates the actor. Ordinary active tasks do not use this fallback.
+
+Local search yields after eight nodes and delegates its tail to native `findPathSteps` without synchronously draining it. At most eight searches are active per navigation world; attempts cap at 4,096 slices, local patch at 625 positions, tail candidates at eight and failed-key cache at 256. Failed attempts are reused until their pose, destination, avoided terrain or topology changes. Caches are ephemeral; saved movement is resumed/replanned through native rules.
+
+The current native archived replay physically reaches the village with maximum per-step displacement 0.24 m. Domain result, clock, ledger, plants, RNG and tasks remain unchanged. Gate animation is presentation-only on the copy. Reload during movement also succeeds. Twenty-eight functional tests pass, including existing slope/wall recovery and real obstruction blocking. These tests do not certify a campaign victory.
+
+Performance remains a blocker. The first synchronous tail candidate solved the route but produced a 1,285 ms query. Its negative timing is preserved. The cooperative version's three cold-navigation diagnoses (under concurrent CPU load) produced 253 calls each: p95 45.84/22.49/25.22 ms and maximum 138.60/107.11/149.63 ms. Initial ordinary route preparation cost 421.62/122.90/57.39 ms, recorded separately. These are domain query measurements, not isolated GPU/FPS or whole-campaign-speed benchmarks. Splitting the tail reduced the worst blocking query but has not made the candidate acceptable for mobile integration.
+
+The initial cooperative parser tests retained a former 100-call synchronous helper budget and therefore failed two route assertions before search completion. The negative is retained; the helper now allows the actual bounded cooperative limit. Native movement was independently verified through its real step/reload test. No economic or defeat expectation was weakened.
+
+Next: reduce per-slice collision/search work, test no-route termination and dynamic blockers broadly, review peak latency and reuse, then rerun the relevant regression/build before considering integration. Do not merge or patch running campaigns with this unfinished candidate.

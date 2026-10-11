@@ -1,0 +1,156 @@
+TAP version 13
+# (node:22944) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: archived valid fractional origin obtains a wholly native swept route to the village
+ok 1 - archived valid fractional origin obtains a wholly native swept route to the village
+  ---
+  duration_ms: 3311.6649
+  ...
+# Subtest: native departure moves continuously and survives reload without income, clock or task changes
+ok 2 - native departure moves continuously and survives reload without income, clock or task changes
+  ---
+  duration_ms: 3366.2504
+  ...
+# Subtest: local connector never ignores a new enclosing solid, and failure is cached until topology changes
+ok 3 - local connector never ignores a new enclosing solid, and failure is cached until topology changes
+  ---
+  duration_ms: 1798.3207
+  ...
+# Subtest: ordinary active work receives no fractional departure exception
+ok 4 - ordinary active work receives no fractional departure exception
+  ---
+  duration_ms: 1120.8559
+  ...
+# (node:54144) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: returning worker leaves a marginal slope physically and reaches home without changing ordinary terrain rules
+ok 5 - returning worker leaves a marginal slope physically and reaches home without changing ordinary terrain rules
+  ---
+  duration_ms: 27.4742
+  ...
+# Subtest: idle workers cannot use slope recovery to reach tasks
+ok 6 - idle workers cannot use slope recovery to reach tasks
+  ---
+  duration_ms: 1.6801
+  ...
+# Subtest: walking workers cannot use slope recovery to reach tasks
+ok 7 - walking workers cannot use slope recovery to reach tasks
+  ---
+  duration_ms: 0.5187
+  ...
+# Subtest: acting workers cannot use slope recovery to reach tasks
+ok 8 - acting workers cannot use slope recovery to reach tasks
+  ---
+  duration_ms: 0.5998
+  ...
+# Subtest: carrying workers cannot use slope recovery to reach tasks
+ok 9 - carrying workers cannot use slope recovery to reach tasks
+  ---
+  duration_ms: 0.6382
+  ...
+# Subtest: steep slope, fluid, a flat invalid plateau and intervening structures cannot be escaped
+ok 10 - steep slope, fluid, a flat invalid plateau and intervening structures cannot be escaped
+  ---
+  duration_ms: 3.2076
+  ...
+# Subtest: a new water strip and blocked native return tail both prevent recovery
+ok 11 - a new water strip and blocked native return tail both prevent recovery
+  ---
+  duration_ms: 7.179
+  ...
+# Subtest: failed recovery is bounded and memoized until the route epoch changes
+ok 12 - failed recovery is bounded and memoized until the route epoch changes
+  ---
+  duration_ms: 5.6186
+  ...
+# Subtest: no new destination route is sought when the start is already valid
+ok 13 - no new destination route is sought when the start is already valid
+  ---
+  duration_ms: 1.4716
+  ...
+# Subtest: a valid endpoint cannot justify first moving into a worse slope
+ok 14 - a valid endpoint cannot justify first moving into a worse slope
+  ---
+  duration_ms: 7.6523
+  ...
+# Subtest: saving a partial physical exit preserves the route and the following movement
+ok 15 - saving a partial physical exit preserves the route and the following movement
+  ---
+  duration_ms: 15.8756
+  ...
+# (node:37396) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: an existing wall overlap exits through the nearest face without changing the actor
+ok 16 - an existing wall overlap exits through the nearest face without changing the actor
+  ---
+  duration_ms: 32.1646
+  ...
+# Subtest: ordinary tasks and valid origins do not receive a wall collision exception
+ok 17 - ordinary tasks and valid origins do not receive a wall collision exception
+  ---
+  duration_ms: 3.5545
+  ...
+# Subtest: recovery preserves water blocking
+ok 18 - recovery preserves water blocking
+  ---
+  duration_ms: 6.7151
+  ...
+# Subtest: recovery preserves lava blocking
+ok 19 - recovery preserves lava blocking
+  ---
+  duration_ms: 4.409
+  ...
+# Subtest: recovery preserves steep blocking
+ok 20 - recovery preserves steep blocking
+  ---
+  duration_ms: 0.7189
+  ...
+# Subtest: recovery preserves solid blocking
+ok 21 - recovery preserves solid blocking
+  ---
+  duration_ms: 0.4056
+  ...
+# Subtest: recovery preserves prop blocking
+ok 22 - recovery preserves prop blocking
+  ---
+  duration_ms: 0.7864
+  ...
+# Subtest: recovery preserves second-wall blocking
+ok 23 - recovery preserves second-wall blocking
+  ---
+  duration_ms: 0.6131
+  ...
+# Subtest: recovery preserves gate blocking
+ok 24 - recovery preserves gate blocking
+  ---
+  duration_ms: 0.2672
+  ...
+# Subtest: rotated wall uses its nearest world-space face
+ok 25 - rotated wall uses its nearest world-space face
+  ---
+  duration_ms: 1.9723
+  ...
+# Subtest: native movement leaves continuously and resumes from a serialized mid-prefix pose
+ok 26 - native movement leaves continuously and resumes from a serialized mid-prefix pose
+  ---
+  duration_ms: 10.9035
+  ...
+# Subtest: a retreating animal blocks the outward prefix until it leaves
+ok 27 - a retreating animal blocks the outward prefix until it leaves
+  ---
+  duration_ms: 18.599
+  ...
+# Subtest: changed navigation revalidates recovery against a new solid obstruction
+ok 28 - changed navigation revalidates recovery against a new solid obstruction
+  ---
+  duration_ms: 5.2567
+  ...
+1..28
+# tests 28
+# suites 0
+# pass 28
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10555.1624
