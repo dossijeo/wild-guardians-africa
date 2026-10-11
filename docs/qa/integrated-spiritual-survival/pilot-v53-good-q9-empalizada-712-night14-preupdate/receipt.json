@@ -1,0 +1,9 @@
+{
+  "status": "stopped-early-calibration",
+  "message": "Captured native frame before night 14 spawn and impacts",
+  "stack": "Error: Captured native frame before night 14 spawn and impacts\n    at calibrationStop (file:///C:/Users/PC/.codex/worktrees/qa-v40-short-yield/tools/run_native_campaign.mjs:33:53)\n    at onBeforeTick (file:///C:/Users/PC/.codex/worktrees/qa-v40-short-yield/tools/capture-native-night-entry.mjs:30:24)\n    at simulateNativeCampaign (file:///C:/Users/PC/.codex/worktrees/qa-v40-short-yield/tools/native-campaign-runner.mjs:175:18)\n    at async runNativeCampaignCase (file:///C:/Users/PC/.codex/worktrees/qa-v40-short-yield/tools/run_native_campaign.mjs:51:11)\n    at async captureNativeNightEntry (file:///C:/Users/PC/.codex/worktrees/qa-v40-short-yield/tools/capture-native-night-entry.mjs:24:15)\n    at async file:///C:/Users/PC/.codex/worktrees/qa-v40-short-yield/tools/capture-native-night-entry.mjs:39:16",
+  "finishedAt": "2026-10-11T01:24:27.939Z",
+  "nativeResult": null,
+  "completedDailyRows": 13,
+  "scope": "Calibration stopped cooperatively; retained partial evidence is not defeat or completed horizon"
+}
