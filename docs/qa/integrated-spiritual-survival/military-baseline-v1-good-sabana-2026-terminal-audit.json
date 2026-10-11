@@ -1,0 +1,49 @@
+{
+  "cases": [
+    {
+      "directory": "docs/qa/integrated-spiritual-survival/military-baseline-v1-good-sabana-2026",
+      "seed": "2026",
+      "strategy": "good",
+      "status": "observed-native-defeat",
+      "result": "defeat",
+      "defeatPhase": "after-incursion-before-dawn",
+      "victoryPhase": null,
+      "postgameDays": 0,
+      "daytimeRaids": 0,
+      "terminalDay": 38,
+      "completedNights": 37,
+      "money": 31,
+      "living": 0,
+      "centerHp": [],
+      "destroyed": 1006,
+      "totals": {
+        "income": 48331,
+        "refunds": 0,
+        "wages": 19312,
+        "seeds": 24872,
+        "walls": 530,
+        "centers": 0,
+        "villages": 0,
+        "repairs": 4286,
+        "otherCredits": 0,
+        "otherDebits": 0
+      },
+      "strikes": {
+        "assigned": 2731,
+        "consumed": 2731,
+        "unused": 0
+      },
+      "postIntroduction": {
+        "exposure": 5638,
+        "losses": 1006,
+        "weightedDestroyedFraction": 0.1784320681092586,
+        "unprotectedReferenceFraction": 0.2187326888967719,
+        "protectedReferenceFraction": 0.03696181269953884,
+        "scope": "Nighttime references are hypotheses only, never applied damage; exposure is the native census at each raid spawn"
+      },
+      "ledgerAndDeliveryMatch": true,
+      "sourceHashesMatch": true,
+      "scope": "Native terminal result and ledger only; a single hundred-night victory does not establish the strategy/seed matrix, human activity or general release acceptance"
+    }
+  ]
+}
