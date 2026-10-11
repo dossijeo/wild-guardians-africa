@@ -1,0 +1,53 @@
+{
+  "status": "verified-complete-perimeter-proof-equivalence",
+  "inputs": [
+    "docs/qa/integrated-spiritual-survival/contact-perimeter-lattice-native-a.json",
+    "docs/qa/integrated-spiritual-survival/contact-perimeter-lattice-tiled-b.json",
+    "docs/qa/integrated-spiritual-survival/contact-perimeter-lattice-tiled-c.json",
+    "docs/qa/integrated-spiritual-survival/contact-perimeter-lattice-native-d.json"
+  ],
+  "sameRecordedSources": true,
+  "inputSha256": "849be18207f413a72493cb21eee5f05e218c81a2975da127f057dcc3cb70c4bc",
+  "contourSha256": "efa49c28221a2a207080b5fb82b1b20dc6b840f6e610fdb63ecc84b09429b2b7",
+  "proofSha256": "6ad116c18e3fa444de094b641450c53af55b3e2b69ce299a9634b1758eae246e",
+  "living": 123,
+  "workers": 10,
+  "milliseconds": [
+    21266.4322,
+    12895.529400000001,
+    12853.638,
+    21055.933800000003
+  ],
+  "nativeMean": 21161.183,
+  "tiledMean": 12874.583700000001,
+  "observedReduction": 0.3915943309974683,
+  "tileStats": [
+    {
+      "side": 32,
+      "capacity": 16,
+      "tiles": 12,
+      "requests": 111190368,
+      "hits": 111186932,
+      "misses": 3436,
+      "evictions": 0,
+      "fallbacks": 0,
+      "invalidations": 0,
+      "typedArrayBytes": 110592,
+      "maximumTypedArrayBytes": 147456
+    },
+    {
+      "side": 32,
+      "capacity": 16,
+      "tiles": 12,
+      "requests": 111190368,
+      "hits": 111186932,
+      "misses": 3436,
+      "evictions": 0,
+      "fallbacks": 0,
+      "invalidations": 0,
+      "typedArrayBytes": 110592,
+      "maximumTypedArrayBytes": 147456
+    }
+  ],
+  "scope": "Fresh-process AB/BA complete retained 123-crop Canyon perimeter proof. Exact certificate and service-result equivalence; proof output does not encode every route vertex. Concurrent local CPU observations, not controlled hardware, GPU, total RAM, game frame time or economic acceptance."
+}
