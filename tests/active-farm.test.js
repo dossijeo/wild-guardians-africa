@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {simulateActiveFarm} from '../tools/check_active_farm.mjs';
 import {cropSpec} from '../src/simulation/rules.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
+import {add,rational} from '../src/simulation/money.js';
 const species=['mijo','girasol','sorgo','maiz','batata','algodon','yuca','platano'];
 for(const diversifyDay of [null,20])test(`Sabana/Mapungubwe/712/olderFemale: ${diversifyDay?'mixed eight-crop':'sunflower'} farm sustains paid work, real deliveries and raids through night 100`,()=>{
   const report=simulateActiveFarm({diversifyDay,profile:'olderFemale',repairBelowHp:540}),s=report.state;
@@ -26,7 +27,11 @@ for(const diversifyDay of [null,20])test(`Sabana/Mapungubwe/712/olderFemale: ${d
     assert.ok(!sources.has(plant.id));sources.add(plant.id);assert.ok(plant.growth>=cropSpec(plant.species).growth_seconds);
     assert.ok(plant.water.every(w=>['manual','magic'].includes(w.status)),'Each picked plant must have satisfied every mandatory watering');
     if(crate.delivered){
-      const n=BigInt(crate.value.n),d=BigInt(crate.value.d);assert.equal(s.ledger.entries[`deliver:${crate.id}`].n,String((n+d-1n)/d));
+      const bonus=crate.multiplyIncome??rational(0);
+      assert.equal(bonus.d,'1');assert.ok(BigInt(bonus.n)>=0n);
+      if(BigInt(bonus.n)>0n)assert.ok(crate.multiplyPower&&crate.multiplyPowerSettled,'Additional income requires a settled crop entitlement');
+      const total=add(crate.value,bonus),n=BigInt(total.n),d=BigInt(total.d);
+      assert.deepEqual(s.ledger.entries[`deliver:${crate.id}`],rational((n+d-1n)/d));
       assert.equal(crate.carrierId,null);
     }else assert.ok(!Object.hasOwn(s.ledger.entries,`deliver:${crate.id}`));
   }
