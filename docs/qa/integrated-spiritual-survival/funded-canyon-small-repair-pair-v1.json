@@ -1,0 +1,36 @@
+{
+  "status": "verified-native-paid-repair-pair",
+  "inputs": [
+    "docs/qa/integrated-spiritual-survival/funded-canyon-small-repair-day-v1.json",
+    "docs/qa/integrated-spiritual-survival/funded-canyon-small-no-wall-repair-day-v1.json"
+  ],
+  "reportHashes": [
+    "d6d6e86e68e8ca0b6bb301d1533b70dccc20fd92bec3ac7b3687f97e41855cae",
+    "89939b91fdd69def92bf7709b19ada52da1c0d6db9a6ec0618318d30e594c115"
+  ],
+  "sameEngineSources": true,
+  "rows": [
+    {
+      "defense": "paid-perimeter",
+      "income": 88,
+      "wages": 30,
+      "repairCoins": 4,
+      "net": 54,
+      "opening": 368,
+      "closing": 422,
+      "repairPendingAtReload": true
+    },
+    {
+      "defense": "native-wall-removal",
+      "income": 77,
+      "wages": 30,
+      "repairCoins": 27,
+      "net": 20,
+      "opening": 678,
+      "closing": 698,
+      "repairPendingAtReload": true
+    }
+  ],
+  "observedDay2NetDifference": 34,
+  "scope": "Second-day native ledger reconciliation and one physical repair after the retained first-night comparison. Same wages and no new crops or magic. Fewer surviving crops in the no-wall case are actual prior damage. No extrapolation to wall payback, larger hordes or campaign survival; cash levels retain genuine wall-removal refunds."
+}

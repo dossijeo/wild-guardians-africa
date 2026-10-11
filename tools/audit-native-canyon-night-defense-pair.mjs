@@ -3,7 +3,8 @@ import {readFileSync,writeFileSync,existsSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {createHash} from 'node:crypto';
 import {deserialize} from '../src/persistence/snapshots.js';
-const [protectedPath,controlPath,output]=process.argv.slice(2);assert(protectedPath&&controlPath&&output&&!existsSync(output));
+const [protectedPath,controlPath,output,pieceCount='34']=process.argv.slice(2);assert(protectedPath&&controlPath&&output&&!existsSync(output));
+const expectedWallPieces=Number(pieceCount);assert(Number.isSafeInteger(expectedWallPieces)&&expectedWallPieces>0);
 const hash=b=>createHash('sha256').update(b).digest('hex');
 const reports=[protectedPath,controlPath].map(p=>JSON.parse(readFileSync(p)));
 const states=reports.map(r=>{const bytes=readFileSync(r.input);assert.equal(hash(bytes),r.inputSha256);return deserialize(gunzipSync(bytes).toString());});
@@ -12,10 +13,10 @@ assert.deepEqual(reports[0].sourceHashes,reports[1].sourceHashes);
 for(const k of ['seed','biome','culture','day','time','elapsed','rng','nightPlan','suppressed'])assert.deepEqual(states[0][k],states[1][k],k+' differs');
 assert.deepEqual(states[0].plants,states[1].plants,'Crop state differs before the night');
 assert.equal(states[0].plants.filter(p=>p.alive).length,8);
-assert.equal(states[0].structures.filter(p=>p.kind==='wall').length,34);assert.equal(states[1].structures.filter(p=>p.kind==='wall').length,0);
+assert.equal(states[0].structures.filter(p=>p.kind==='wall').length,expectedWallPieces);assert.equal(states[1].structures.filter(p=>p.kind==='wall').length,0);
 const hits=r=>r.events.filter(e=>e.type==='StructureHit').map(e=>({kind:e.structureHit.kind,damage:e.structureHit.previousHp-e.structureHit.hp}));
 const result={status:'verified-native-first-night-defense-pair',inputs:[protectedPath,controlPath],inputReportHashes:[protectedPath,controlPath].map(p=>hash(readFileSync(p))),
- sameEngineSources:true,sameRngAndNightPlan:true,sameFullCropState:true,nightPlan:states[0].nightPlan,
+ expectedWallPieces,sameEngineSources:true,sameRngAndNightPlan:true,sameFullCropState:true,nightPlan:states[0].nightPlan,
  rows:reports.map((r,i)=>({defense:i===0?'paid-perimeter':'native-wall-removal',opening:r.opening,closing:r.closing,logicalHits:r.logicalHits,logicalMisses:r.logicalMisses,
  structureHits:hits(r),cropsDestroyed:r.cropDestroyed,livingAfter:r.living,
  retreats:r.events.filter(e=>e.type==='AnimalRetreating').map(e=>({species:e.species,hitsRemaining:e.hitsRemaining,reason:e.reason}))})),
