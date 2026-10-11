@@ -1,0 +1,50 @@
+{
+  "input": "docs/qa/economic-candidates-a518/h100-terminal/gran-canon-saheliana-state.json.gz",
+  "inputSha256": "9f6418a2f1dc6e7178d182cc55d9cdf795e2e021fdfc99dce953a4fd209d6915",
+  "biome": "gran-canon",
+  "culture": "saheliana",
+  "livingCrops": 2689,
+  "eligibleWorkers": 1,
+  "stateUnchanged": true,
+  "sourceHashes": {
+    "tools/benchmark-native-worker-service-proof.mjs": "446024fbed06e89bda13bbe452d91ac4eb39506a71112a8a5ebf4bd1c5393e15",
+    "tools/native-worker-service-proof.mjs": "092d4c8b4092599387ea239a899d33e99f8783939561b702c08a10f8d7a86d6f",
+    "src/world/navigation.js": "21b82f33c62581436a6cef702b66af272ae9d3b096cb2b20ee858f0a50196743",
+    "src/world/work-points.js": "cb741c085c97c046f6e0e477bb83b6f81c2e953c7c3ed14cf0d4a42920ba7939",
+    "src/world/centers.js": "7a826b2bf3bb0793b0e4453c3a9ae487741f2ddf41c79433434091806739a7f4",
+    "public/content/biome-canyons.json": "a0da0d39766ef48e44ef82bc9b9ab6093bce0ae2bf6abd3035a626792823ff6d"
+  },
+  "samples": [
+    {
+      "phase": "cold",
+      "cpuMilliseconds": 79.7844,
+      "valid": false,
+      "reason": "native-worker-service-route-unproven",
+      "workersChecked": 0,
+      "cropsChecked": 0,
+      "failedWorkerId": "worker-336518",
+      "failedTargetId": "plant-703242"
+    },
+    {
+      "phase": "warm",
+      "cpuMilliseconds": 3.863800000000083,
+      "valid": false,
+      "reason": "native-worker-service-route-unproven",
+      "workersChecked": 0,
+      "cropsChecked": 0,
+      "failedWorkerId": "worker-336518",
+      "failedTargetId": "plant-703242"
+    },
+    {
+      "phase": "warm",
+      "cpuMilliseconds": 2.503900000000158,
+      "valid": false,
+      "reason": "native-worker-service-route-unproven",
+      "workersChecked": 0,
+      "cropsChecked": 0,
+      "failedWorkerId": "worker-336518",
+      "failedTargetId": "plant-703242"
+    }
+  ],
+  "scope": "Current standalone QA helper over retained historical native geometry. Concurrent local CPU observations only, not a controlled benchmark, historical campaign replay, GPU/frame-time or economic acceptance. Early rejection measures only the visited prefix, not a complete dense-farm proof. Warm calls reuse exact native navigation caches."
+}
