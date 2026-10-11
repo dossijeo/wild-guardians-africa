@@ -1,10 +1,10 @@
 // Exceptional recovery after a slide or streamed building changes the local
 // constraints. Ordinary clear positions require only one indexed point query.
-export function constrainCameraToTerrain(point,motion,field){
+export function constrainCameraToTerrain(point,motion,field,maxClearance=20){
  const clamp=p=>{
   const ground=field.surface(p[0],p[2]);
   if(!Number.isFinite(ground))throw Error('Invalid camera terrain height');
-  return [p[0],Math.max(ground+2,Math.min(ground+20,p[1])),p[2]];
+  return [p[0],Math.max(ground+2,Math.min(ground+maxClearance,p[1])),p[2]];
  };
  const initial=clamp(point),encountered=new Set();
  let hit=motion.index.sweep(initial,initial,motion.radius);

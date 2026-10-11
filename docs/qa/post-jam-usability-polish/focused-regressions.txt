@@ -1,0 +1,680 @@
+TAP version 13
+# Subtest: registry preserves independent center and village horizontal/vertical margins through damage
+ok 1 - registry preserves independent center and village horizontal/vertical margins through damage
+  ---
+  duration_ms: 20.854
+  ...
+# Subtest: shared ancestors update once per sync while parent moves, reparenting and manual matrices stay observable
+ok 2 - shared ancestors update once per sync while parent moves, reparenting and manual matrices stay observable
+  ---
+  duration_ms: 21.0132
+  ...
+# Subtest: registry updates native state, transform, replacement and removal without rebuilding idle volumes
+ok 3 - registry updates native state, transform, replacement and removal without rebuilding idle volumes
+  ---
+  duration_ms: 2.5751
+  ...
+# Subtest: village registry uses independent unit boxes and excludes unrelated decorative meshes
+ok 4 - village registry uses independent unit boxes and excludes unrelated decorative meshes
+  ---
+  duration_ms: 4.8471
+  ...
+# Subtest: pose resolver keeps desired eye separate from correction through synchronous updates and focus
+ok 5 - pose resolver keeps desired eye separate from correction through synchronous updates and focus
+  ---
+  duration_ms: 103.5269
+  ...
+# Subtest: fast pan cannot tunnel through a house and oblique pan slides beside it
+ok 6 - fast pan cannot tunnel through a house and oblique pan slides beside it
+  ---
+  duration_ms: 91.1865
+  ...
+# Subtest: approach decelerates while retreat converges smoothly to raw intent
+ok 7 - approach decelerates while retreat converges smoothly to raw intent
+  ---
+  duration_ms: 6.5959
+  ...
+# Subtest: finite roof allows overflight and upward recovery from a loaded volume
+ok 8 - finite roof allows overflight and upward recovery from a loaded volume
+  ---
+  duration_ms: 75.354
+  ...
+# Subtest: opposing faces of overlapping houses cannot trap recovery in an oscillation
+ok 9 - opposing faces of overlapping houses cannot trap recovery in an oscillation
+  ---
+  duration_ms: 7.3134
+  ...
+# Subtest: focus reset chooses safe destination rather than sweeping through intervening buildings
+ok 10 - focus reset chooses safe destination rather than sweeping through intervening buildings
+  ---
+  duration_ms: 1.2939
+  ...
+# Subtest: rotated volumes and deletion preserve safety without trapping an idle camera
+ok 11 - rotated volumes and deletion preserve safety without trapping an idle camera
+  ---
+  duration_ms: 71.5928
+  ...
+# (node:53400) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: authored camera route drives native controls, preserves simulation and restores damping
+ok 12 - authored camera route drives native controls, preserves simulation and restores damping
+  ---
+  duration_ms: 479.0939
+  ...
+# Subtest: model volume honors offset pivots, nonuniform scale, parent yaw and configurable margin
+ok 13 - model volume honors offset pivots, nonuniform scale, parent yaw and configurable margin
+  ---
+  duration_ms: 35.8874
+  ...
+# Subtest: unsupported tilt, shear and invalid inputs fail rather than misrepresenting a model
+ok 14 - unsupported tilt, shear and invalid inputs fail rather than misrepresenting a model
+  ---
+  duration_ms: 3.212
+  ...
+# Subtest: horizontal clearance does not inflate the roof or change scalar margin compatibility
+ok 15 - horizontal clearance does not inflate the roof or change scalar margin compatibility
+  ---
+  duration_ms: 55.107
+  ...
+# (node:26512) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: terrain floor and a tall house cannot bounce recovery below ground forever
+ok 16 - terrain floor and a tall house cannot bounce recovery below ground forever
+  ---
+  duration_ms: 17.5047
+  ...
+# Subtest: recovery respects ceiling and finite roofs still allow overflight
+ok 17 - recovery respects ceiling and finite roofs still allow overflight
+  ---
+  duration_ms: 1.4888
+  ...
+# Subtest: candidate terrain height is resampled after lateral recovery on a cliff
+ok 18 - candidate terrain height is resampled after lateral recovery on a cliff
+  ---
+  duration_ms: 1.8199
+  ...
+# Subtest: overlapping buildings expand the encountered envelope without scanning the scene
+ok 19 - overlapping buildings expand the encountered envelope without scanning the scene
+  ---
+  duration_ms: 3.7274
+  ...
+# Subtest: clear poses remain stable and retain the native altitude range
+ok 20 - clear poses remain stable and retain the native altitude range
+  ---
+  duration_ms: 3.2142
+  ...
+# Subtest: bounded recovery reports unresolved pathological nesting rather than claiming safety
+ok 21 - bounded recovery reports unresolved pathological nesting rather than claiming safety
+  ---
+  duration_ms: 15.7449
+  ...
+# Subtest: scene resolver reconciles terrain after focus recovery and remains stable while idle
+ok 22 - scene resolver reconciles terrain after focus recovery and remains stable while idle
+  ---
+  duration_ms: 77.5473
+  ...
+# Subtest: tree volume matches native chunk transform, authored pivot, scale and finite roof
+ok 23 - tree volume matches native chunk transform, authored pivot, scale and finite roof
+  ---
+  duration_ms: 12.977
+  ...
+# Subtest: unchanged revision does no scene work; streaming and suppression rebuild only changed chunks
+ok 24 - unchanged revision does no scene work; streaming and suppression rebuild only changed chunks
+  ---
+  duration_ms: 3.5545
+  ...
+# Subtest: small trees, shrubs and props are excluded; clear preserves shared building volumes and source ownership
+ok 25 - small trees, shrubs and props are excluded; clear preserves shared building volumes and source ownership
+  ---
+  duration_ms: 1.6139
+  ...
+# Subtest: explicit invalidation updates edited source data and malformed replacement preserves previous volume
+ok 26 - explicit invalidation updates edited source data and malformed replacement preserves previous volume
+  ---
+  duration_ms: 2.0177
+  ...
+# Subtest: six native biome packs preserve deterministic tree IDs, world positions and metadata ownership
+ok 27 - six native biome packs preserve deterministic tree IDs, world positions and metadata ownership
+  ---
+  duration_ms: 17489.8116
+  ...
+# (node:8388) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: wall volumes follow finite native part envelopes, gate hinge and deletion
+ok 28 - wall volumes follow finite native part envelopes, gate hinge and deletion
+  ---
+  duration_ms: 14.3185
+  ...
+# Subtest: contextual height permits tall roof overflight and preserves intent leaving its neighborhood
+ok 29 - contextual height permits tall roof overflight and preserves intent leaving its neighborhood
+  ---
+  duration_ms: 4692.0171
+  ...
+# Subtest: indexed neighborhood query excludes distant populations and retains large intersecting bounds
+ok 30 - indexed neighborhood query excludes distant populations and retains large intersecting bounds
+  ---
+  duration_ms: 17.201
+  ...
+# Subtest: building focus has a contextual visual distance with a gradual boundary and crops stay close
+ok 31 - building focus has a contextual visual distance with a gradual boundary and crops stay close
+  ---
+  duration_ms: 63.7073
+  ...
+# Subtest: indexed sweeps match direct sweeps through negative cells, corners and roofs
+ok 32 - indexed sweeps match direct sweeps through negative cells, corners and roofs
+  ---
+  duration_ms: 92.3113
+  ...
+# Subtest: descriptor changes remove old buckets and caller mutation cannot corrupt ownership
+ok 33 - descriptor changes remove old buckets and caller mutation cannot corrupt ownership
+  ---
+  duration_ms: 4.8375
+  ...
+# Subtest: large volumes and long queries use bounded fallback without losing collisions
+ok 34 - large volumes and long queries use bounded fallback without losing collisions
+  ---
+  duration_ms: 0.7276
+  ...
+# Subtest: local queries exclude distant buildings and cleanup releases all owned descriptors
+ok 35 - local queries exclude distant buildings and cleanup releases all owned descriptors
+  ---
+  duration_ms: 108.9614
+  ...
+# Subtest: invalid updates preserve the previous valid descriptor
+ok 36 - invalid updates preserve the previous valid descriptor
+  ---
+  duration_ms: 1.1436
+  ...
+# Subtest: coordinates beyond safe integer grid addressing use bounded fallback
+ok 37 - coordinates beyond safe integer grid addressing use bounded fallback
+  ---
+  duration_ms: 0.4455
+  ...
+# Subtest: oriented finite volumes preserve collision fractions and world-space normals
+ok 38 - oriented finite volumes preserve collision fractions and world-space normals
+  ---
+  duration_ms: 6.4489
+  ...
+# Subtest: rotated narrow house permits empty corners of its conservative world bounds
+ok 39 - rotated narrow house permits empty corners of its conservative world bounds
+  ---
+  duration_ms: 2.1945
+  ...
+# Subtest: index uses rotated bounds and removes their memberships when rotation changes
+ok 40 - index uses rotated bounds and removes their memberships when rotation changes
+  ---
+  duration_ms: 4.8263
+  ...
+# Subtest: indexed and direct oriented sweeps agree for a rotated multi-house settlement
+ok 41 - indexed and direct oriented sweeps agree for a rotated multi-house settlement
+  ---
+  duration_ms: 171.8823
+  ...
+# Subtest: invalid rotation cannot replace an existing valid volume
+ok 42 - invalid rotation cannot replace an existing valid volume
+  ---
+  duration_ms: 1.4905
+  ...
+# Subtest: fast movement cannot tunnel through a finite building
+ok 43 - fast movement cannot tunnel through a finite building
+  ---
+  duration_ms: 8.2345
+  ...
+# Subtest: overflight is allowed above the finite roof, and a descent detects that roof
+ok 44 - overflight is allowed above the finite roof, and a descent detects that roof
+  ---
+  duration_ms: 0.5044
+  ...
+# Subtest: rounded sphere corners preserve a diagonal path rejected by an expanded AABB
+ok 45 - rounded sphere corners preserve a diagonal path rejected by an expanded AABB
+  ---
+  duration_ms: 0.5194
+  ...
+# Subtest: starting inside a newly loaded volume returns a finite nearest exit direction
+ok 46 - starting inside a newly loaded volume returns a finite nearest exit direction
+  ---
+  duration_ms: 0.3682
+  ...
+# Subtest: stationary safe camera and outward movement remain unobstructed
+ok 47 - stationary safe camera and outward movement remain unobstructed
+  ---
+  duration_ms: 0.4806
+  ...
+# Subtest: selection uses the nearest obstacle rather than collection order
+ok 48 - selection uses the nearest obstacle rather than collection order
+  ---
+  duration_ms: 0.5816
+  ...
+# Subtest: zero radius ray and tangent sphere contact are included
+ok 49 - zero radius ray and tangent sphere contact are included
+  ---
+  duration_ms: 0.6538
+  ...
+# Subtest: translated buildings and camera trajectories preserve the collision fraction
+ok 50 - translated buildings and camera trajectories preserve the collision fraction
+  ---
+  duration_ms: 0.5089
+  ...
+# Subtest: invalid geometry and radii are rejected
+ok 51 - invalid geometry and radii are rejected
+  ---
+  duration_ms: 0.9824
+  ...
+# Subtest: seeded trajectories agree with an independent convex-distance oracle
+ok 52 - seeded trajectories agree with an independent convex-distance oracle
+  ---
+  duration_ms: 230.7032
+  ...
+# Subtest: web exit never invokes native APIs or saves
+ok 53 - web exit never invokes native APIs or saves
+  ---
+  duration_ms: 4.689
+  ...
+# Subtest: native exit waits for committed persistence and coalesces clicks
+ok 54 - native exit waits for committed persistence and coalesces clicks
+  ---
+  duration_ms: 3.0501
+  ...
+# Subtest: failed save prevents native exit and permits retry
+ok 55 - failed save prevents native exit and permits retry
+  ---
+  duration_ms: 0.6198
+  ...
+# Subtest: native failure is reported rather than hidden
+ok 56 - native failure is reported rather than hidden
+  ---
+  duration_ms: 1.2745
+  ...
+# Subtest: approach reverses through the whole transition without changing height
+ok 57 - approach reverses through the whole transition without changing height
+  ---
+  duration_ms: 3.2141
+  ...
+# Subtest: orbit keeps distance and completes a full turn around a rotated starting direction
+ok 58 - orbit keeps distance and completes a full turn around a rotated starting direction
+  ---
+  duration_ms: 1.4859
+  ...
+# Subtest: lateral sweep visits both sides and returns to its starting pose
+ok 59 - lateral sweep visits both sides and returns to its starting pose
+  ---
+  duration_ms: 1.1948
+  ...
+# Subtest: native far paths traverse the configured 100–140 band and keep rotated orbital distance
+ok 60 - native far paths traverse the configured 100–140 band and keep rotated orbital distance
+  ---
+  duration_ms: 1.861
+  ...
+# Subtest: SFX viewer pauses menu music, blocks gesture/visibility starts and resumes without changing preference or position
+ok 61 - SFX viewer pauses menu music, blocks gesture/visibility starts and resumes without changing preference or position
+  ---
+  duration_ms: 7.4625
+  ...
+# Subtest: closing SFX respects muted music and hidden documents; unrelated labs do not change music
+ok 62 - closing SFX respects muted music and hidden documents; unrelated labs do not change music
+  ---
+  duration_ms: 6.6854
+  ...
+# Subtest: replacing SFX with SFX does not restart music; replacing it with another lab restores once
+ok 63 - replacing SFX with SFX does not restart music; replacing it with another lab restores once
+  ---
+  duration_ms: 1.9953
+  ...
+# Subtest: late play resolution cannot reactivate menu music inside SFX; rejected autoplay remains handled
+ok 64 - late play resolution cannot reactivate menu music inside SFX; rejected autoplay remains handled
+  ---
+  duration_ms: 9.3187
+  ...
+# Subtest: actual native starter and gesture handlers retain the SFX guard despite later function declarations
+ok 65 - actual native starter and gesture handlers retain the SFX guard despite later function declarations
+  ---
+  duration_ms: 17.8474
+  ...
+# Subtest: actual sanctuary buttons use the full-screen controller, including regenerated menu
+ok 66 - actual sanctuary buttons use the full-screen controller, including regenerated menu
+  ---
+  duration_ms: 7.5514
+  ...
+# Subtest: lab is a body-level screen, frees its iframe and restores catalogue focus/inert state
+ok 67 - lab is a body-level screen, frees its iframe and restores catalogue focus/inert state
+  ---
+  duration_ms: 2.8893
+  ...
+# Subtest: reopening releases the old lab and unknown keys cannot replace a live viewer
+ok 68 - reopening releases the old lab and unknown keys cannot replace a live viewer
+  ---
+  duration_ms: 2.3015
+  ...
+# Subtest: Escape closes only the lab before the sanctuary handles navigation
+ok 69 - Escape closes only the lab before the sanctuary handles navigation
+  ---
+  duration_ms: 1.9882
+  ...
+# Subtest: focused iframe Escape closes the viewer and releases its child listener
+ok 70 - focused iframe Escape closes the viewer and releases its child listener
+  ---
+  duration_ms: 41.5997
+  ...
+# Subtest: lab-consumed Escape stays local and reloading replaces the child listener
+ok 71 - lab-consumed Escape stays local and reloading replaces the child listener
+  ---
+  duration_ms: 6.1192
+  ...
+# (node:48744) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: camera heading 0: the complete epic group appears just behind the eye, without overlaps
+ok 72 - camera heading 0: the complete epic group appears just behind the eye, without overlaps
+  ---
+  duration_ms: 81.9866
+  ...
+# Subtest: camera heading 1.5707963267948966: the complete epic group appears just behind the eye, without overlaps
+ok 73 - camera heading 1.5707963267948966: the complete epic group appears just behind the eye, without overlaps
+  ---
+  duration_ms: 5.5952
+  ...
+# Subtest: camera heading 3.141592653589793: the complete epic group appears just behind the eye, without overlaps
+ok 74 - camera heading 3.141592653589793: the complete epic group appears just behind the eye, without overlaps
+  ---
+  duration_ms: 4.4463
+  ...
+# Subtest: camera heading 4.71238898038469: the complete epic group appears just behind the eye, without overlaps
+ok 75 - camera heading 4.71238898038469: the complete epic group appears just behind the eye, without overlaps
+  ---
+  duration_ms: 17.3704
+  ...
+# Subtest: a blocked camera rear falls back to a legal entry instead of placing bodies in obstacles
+ok 76 - a blocked camera rear falls back to a legal entry instead of placing bodies in obstacles
+  ---
+  duration_ms: 29.6485
+  ...
+# Subtest: disconnected water behind the camera uses the near farm side with bounded route searches
+ok 77 - disconnected water behind the camera uses the near farm side with bounded route searches
+  ---
+  duration_ms: 2.1591
+  ...
+# Subtest: camera metadata is copied without invalidating routes, and rendering supplies the actual eye and target
+ok 78 - camera metadata is copied without invalidating routes, and rendering supplies the actual eye and target
+  ---
+  duration_ms: 4.7809
+  ...
+# Subtest: sabana/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 79 - sabana/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 3066.4356
+  ...
+# Subtest: gran-rio/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 80 - gran-rio/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1428.6277
+  ...
+# Subtest: manglares/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 81 - manglares/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 2894.9953
+  ...
+# Subtest: volcanes/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 82 - volcanes/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1625.2952
+  ...
+# Subtest: gran-canon/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 83 - gran-canon/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1549.3375
+  ...
+# Subtest: desierto/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 84 - desierto/warthog: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 7794.4355
+  ...
+# Subtest: sabana/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 85 - sabana/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 622.7846
+  ...
+# Subtest: gran-rio/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 86 - gran-rio/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 725.5253
+  ...
+# Subtest: manglares/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 87 - manglares/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1659.7878
+  ...
+# Subtest: volcanes/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 88 - volcanes/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 597.5402
+  ...
+# Subtest: gran-canon/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 89 - gran-canon/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1001.3337
+  ...
+# Subtest: desierto/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 90 - desierto/hyena: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 5911.42
+  ...
+# Subtest: sabana/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 91 - sabana/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 598.2522
+  ...
+# Subtest: gran-rio/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 92 - gran-rio/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 717.2844
+  ...
+# Subtest: manglares/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 93 - manglares/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 2161.1484
+  ...
+# Subtest: volcanes/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 94 - volcanes/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 998.6308
+  ...
+# Subtest: gran-canon/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 95 - gran-canon/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1420.3143
+  ...
+# Subtest: desierto/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 96 - desierto/buffalo: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 6561.4463
+  ...
+# Subtest: sabana/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 97 - sabana/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1034.4357
+  ...
+# Subtest: gran-rio/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 98 - gran-rio/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 947.3497
+  ...
+# Subtest: manglares/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 99 - manglares/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 2266.1609
+  ...
+# Subtest: volcanes/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 100 - volcanes/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 992.5562
+  ...
+# Subtest: gran-canon/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 101 - gran-canon/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1344.7856
+  ...
+# Subtest: desierto/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 102 - desierto/lion: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 5756.2012
+  ...
+# Subtest: sabana/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 103 - sabana/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 888.7128
+  ...
+# Subtest: gran-rio/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 104 - gran-rio/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1499.4907
+  ...
+# Subtest: manglares/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 105 - manglares/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 2582.5852
+  ...
+# Subtest: volcanes/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 106 - volcanes/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 751.5819
+  ...
+# Subtest: gran-canon/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 107 - gran-canon/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 1191.4764
+  ...
+# Subtest: desierto/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+ok 108 - desierto/rhino: real opening terrain keeps the mandatory animal near the initial camera or on the connected near farm side
+  ---
+  duration_ms: 7803.8431
+  ...
+# Subtest: travel tracks the approaching animal until farm entry, then leaves camera there once per incursion
+ok 109 - travel tracks the approaching animal until farm entry, then leaves camera there once per incursion
+  ---
+  duration_ms: 13.654
+  ...
+# Subtest: entry during the initial trip freezes its destination without a snap or further pursuit
+ok 110 - entry during the initial trip freezes its destination without a snap or further pursuit
+  ---
+  duration_ms: 2.9388
+  ...
+# Subtest: manual input cancels ongoing approach tracking without restarting it
+ok 111 - manual input cancels ongoing approach tracking without restarting it
+  ---
+  duration_ms: 1.1841
+  ...
+# Subtest: hidden pause freezes tracking after initial travel and resumes only when visible
+ok 112 - hidden pause freezes tracking after initial travel and resumes only when visible
+  ---
+  duration_ms: 1.2827
+  ...
+# Subtest: manual camera input cancels a trip without snapping or restarting, and holds off an unstarted trip
+ok 113 - manual camera input cancels a trip without snapping or restarting, and holds off an unstarted trip
+  ---
+  duration_ms: 0.7538
+  ...
+# Subtest: menu and hidden pauses hold the trip, while tutorial action pauses permit the visual arrival
+ok 114 - menu and hidden pauses hold the trip, while tutorial action pauses permit the visual arrival
+  ---
+  duration_ms: 0.6248
+  ...
+# Subtest: a departing animal or ended raid stops the trip; saved focus does not replay on reload
+ok 115 - a departing animal or ended raid stops the trip; saved focus does not replay on reload
+  ---
+  duration_ms: 2.6904
+  ...
+# Subtest: sabana: travel to an arrival preserves terrain clearance and centres the actual animal
+ok 116 - sabana: travel to an arrival preserves terrain clearance and centres the actual animal
+  ---
+  duration_ms: 1041.7829
+  ...
+# Subtest: gran-rio: travel to an arrival preserves terrain clearance and centres the actual animal
+ok 117 - gran-rio: travel to an arrival preserves terrain clearance and centres the actual animal
+  ---
+  duration_ms: 1906.8404
+  ...
+# Subtest: manglares: travel to an arrival preserves terrain clearance and centres the actual animal
+ok 118 - manglares: travel to an arrival preserves terrain clearance and centres the actual animal
+  ---
+  duration_ms: 965.2028
+  ...
+# Subtest: volcanes: travel to an arrival preserves terrain clearance and centres the actual animal
+ok 119 - volcanes: travel to an arrival preserves terrain clearance and centres the actual animal
+  ---
+  duration_ms: 1567.0238
+  ...
+# Subtest: gran-canon: travel to an arrival preserves terrain clearance and centres the actual animal
+ok 120 - gran-canon: travel to an arrival preserves terrain clearance and centres the actual animal
+  ---
+  duration_ms: 1520.8128
+  ...
+# Subtest: desierto: travel to an arrival preserves terrain clearance and centres the actual animal
+ok 121 - desierto: travel to an arrival preserves terrain clearance and centres the actual animal
+  ---
+  duration_ms: 7981.2443
+  ...
+# Subtest: terrain shadow VP matches the native light and quantized focus through positive, negative and distant targets
+ok 122 - terrain shadow VP matches the native light and quantized focus through positive, negative and distant targets
+  ---
+  duration_ms: 12.8127
+  ...
+# Subtest: focus ignores terrain height and sub-grid movement but advances at the native grid boundary
+ok 123 - focus ignores terrain height and sub-grid movement but advances at the native grid boundary
+  ---
+  duration_ms: 1.4257
+  ...
+# Subtest: quality changes replace allocated targets once and same resolution retains GPU resources
+ok 124 - quality changes replace allocated targets once and same resolution retains GPU resources
+  ---
+  duration_ms: 3.7575
+  ...
+# (node:38040) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: synchronous OrbitControls zoom uses raw intent instead of a cliff-corrected radius
+ok 125 - synchronous OrbitControls zoom uses raw intent instead of a cliff-corrected radius
+  ---
+  duration_ms: 90.3461
+  ...
+# Subtest: intent hook handles field changes and preserves external pan edits and update return values
+ok 126 - intent hook handles field changes and preserves external pan edits and update return values
+  ---
+  duration_ms: 3.0691
+  ...
+# Subtest: terrain camera tilt, distance, target and clearance reproduce the native instantaneous pose
+ok 127 - terrain camera tilt, distance, target and clearance reproduce the native instantaneous pose
+  ---
+  duration_ms: 137.0187
+  ...
+# Subtest: actual camera stays above rendered triangles in six biomes and across negative chunk boundaries
+ok 128 - actual camera stays above rendered triangles in six biomes and across negative chunk boundaries
+  ---
+  duration_ms: 3687.466
+  ...
+# Subtest: focus keeps unrestricted travel and native canyon/home angles without altering simulation state
+ok 129 - focus keeps unrestricted travel and native canyon/home angles without altering simulation state
+  ---
+  duration_ms: 4.9707
+  ...
+# Subtest: focus consumes pending damping before applying the new destination; unchanged frames retain the same eye
+ok 130 - focus consumes pending damping before applying the new destination; unchanged frames retain the same eye
+  ---
+  duration_ms: 34.7122
+  ...
+# Subtest: real OrbitControls do not turn a cliff height correction into a moving camera on idle frames
+ok 131 - real OrbitControls do not turn a cliff height correction into a moving camera on idle frames
+  ---
+  duration_ms: 44.1912
+  ...
+# Subtest: picking uses the protected camera even when input arrives before the next rendered frame
+ok 132 - picking uses the protected camera even when input arrives before the next rendered frame
+  ---
+  duration_ms: 2.8861
+  ...
+1..132
+# tests 132
+# suites 0
+# pass 132
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 71753.3064

@@ -1,0 +1,117 @@
+/* Shared library presentation only. Original scripts and lab state remain owned
+   by each demonstration; resizing never reconstructs its scene. */
+.lab-controls-toggle{display:none}
+@media(max-width:900px){
+ html[data-library-lab] .panel,html[data-library-lab] aside,html[data-library-lab] .player{backdrop-filter:none}
+ html[data-library-lab] button,html[data-library-lab] select{min-height:34px}
+ html[data-library-lab] dialog,html[data-library-lab] .modal{max-height:calc(100dvh - 20px);overflow:auto}
+ html[data-library-lab] .lab-controls-toggle{display:block;position:fixed;z-index:8;right:max(8px,env(safe-area-inset-right));top:64px;padding:6px 10px;font-size:12px;background:#263326;color:#f0ebdb;border:1px solid #847650;border-radius:8px}
+ html[data-library-lab=crops] .topbar{top:5px;left:6px;right:6px;height:48px;padding:0 10px;gap:6px}
+ html[data-library-lab=crops] .brand strong{font-size:13px;letter-spacing:1px}
+ html[data-library-lab=crops] .brand small{font-size:7px;letter-spacing:1px}
+ html[data-library-lab=crops] .brand svg{display:none}
+ html[data-library-lab=crops] .top-actions button{padding:5px 8px;font-size:11px}
+ html[data-library-lab=crops] .stats{top:61px;left:6px;gap:4px}
+ html[data-library-lab=crops] .stat{padding:5px 8px;min-width:56px!important}
+ html[data-library-lab=crops] .stat .num{font-size:15px}
+ html[data-library-lab=crops] .stat small{font-size:7px}
+ html[data-library-lab=crops] .tools{top:107px;right:6px;padding:3px}
+ html[data-library-lab=crops] .scene-tag{top:111px;left:8px;font-size:9px;max-width:60%}
+ html[data-library-lab=crops] .sidebar{left:6px;right:6px;bottom:142px;top:auto;width:auto;height:99px;display:block}
+ html[data-library-lab=crops] .crop-grid{display:flex;overflow-x:auto;overflow-y:hidden;padding:6px;gap:5px;height:100%}
+ html[data-library-lab=crops] .crop-card{flex:0 0 72px;min-height:0}
+ html[data-library-lab=crops] .crop-card .thumb{height:58px}
+ html[data-library-lab=crops] .crop-card .info{padding:4px 5px}
+ html[data-library-lab=crops] .crop-card strong{font-size:10px}
+ html[data-library-lab=crops] .side-header,html[data-library-lab=crops] .side-footer,html[data-library-lab=crops] .crop-card small{display:none}
+ html[data-library-lab=crops] .timeline{left:6px;right:6px;bottom:max(6px,env(safe-area-inset-bottom));padding:6px;min-height:126px;gap:4px;display:grid;grid-template-columns:122px minmax(0,1fr)}
+ html[data-library-lab=crops] .timeline button{padding:4px 6px;font-size:10px}
+ html[data-library-lab=crops] .timeline .time-cluster{min-width:122px;grid-row:1;grid-column:1}
+ html[data-library-lab=crops] .timeline .clock strong{font-size:14px;white-space:nowrap}
+ html[data-library-lab=crops] .timeline .speeds{gap:2px}
+ html[data-library-lab=crops] .timeline .speeds button{padding:4px;min-width:25px}
+ html[data-library-lab=crops] .timeline .harvest-all{grid-column:1/-1;width:100%}
+ html[data-library-lab=crops] #labControls{width:100%;justify-content:space-between;grid-column:1/-1}
+ html[data-library-lab=crops] .inspector{top:154px;right:6px;width:190px;max-height:calc(100dvh - 370px);overflow:auto;padding:10px}
+ html[data-library-lab=crops] .empty-hint{top:40%;max-width:220px}
+ html[data-library-lab=crops].lab-controls-hidden .sidebar{display:none}
+ html[data-library-lab=walls] .header{padding:0 8px;gap:7px}
+ html[data-library-lab=walls] .brand-name{font-size:17px}
+ html[data-library-lab=walls] .brand-note{font-size:7px}
+ html[data-library-lab=walls] .app{grid-template-columns:minmax(0,1fr);grid-template-rows:48px minmax(180px,1fr) 174px}
+ html[data-library-lab=walls] .sidebar{grid-row:3;padding:8px;gap:8px;overflow:auto}
+ html[data-library-lab=walls] .sidebar-section{margin:0}
+ html[data-library-lab=walls] .sidebar h2{font-size:15px;margin:4px 0}
+ html[data-library-lab=walls] .stage{grid-row:2;grid-column:1}
+ html[data-library-lab=walls] .stage-top{top:8px;left:8px;right:8px}
+ html[data-library-lab=walls] .scene-sub,html[data-library-lab=walls] .mobile-hint{display:none}
+ html[data-library-lab=walls] .stage-stats{gap:8px}
+ html[data-library-lab=walls] .canvas-controls{gap:3px}
+ html[data-library-lab=destruction] header{top:8px;left:8px;right:8px}
+ html[data-library-lab=destruction] .brand .eyebrow{font-size:8px}
+ html[data-library-lab=destruction] header h1{font-size:17px}
+ html[data-library-lab=destruction] #sceneHost{inset:0 0 205px}
+ html[data-library-lab=destruction] aside{top:auto;left:6px;right:6px;bottom:max(6px,env(safe-area-inset-bottom));width:auto;max-height:194px;padding:12px;overflow:auto}
+ html[data-library-lab=destruction] .percent{font-size:32px}
+ html[data-library-lab=destruction] .scene-note{display:none}
+ html[data-library-lab=destruction] .lab-controls-toggle{top:65px}
+ html[data-library-lab=destruction].lab-controls-hidden aside{display:none}
+ html[data-library-lab=destruction].lab-controls-hidden #sceneHost{bottom:0}
+ html[data-library-lab=sfx] .wrap{padding:12px 10px 174px}
+ html[data-library-lab=sfx] header{padding-bottom:10px;gap:8px}
+ html[data-library-lab=sfx] .brand{font-size:19px}
+ html[data-library-lab=sfx] .intro{padding:10px 0}
+ html[data-library-lab=sfx] .intro h1{font-size:22px;margin:0 0 5px}
+ html[data-library-lab=sfx] .intro p{font-size:11px;line-height:1.4}
+ html[data-library-lab=sfx] .stats{gap:5px;margin:8px 0}
+ html[data-library-lab=sfx] .stat{padding:8px 6px}
+ html[data-library-lab=sfx] .stat b{font-size:17px}
+ html[data-library-lab=sfx] .stat small{font-size:8px}
+ html[data-library-lab=sfx] .toolbar{padding:8px;top:0;background:#223127;backdrop-filter:none}
+ html[data-library-lab=sfx] .searchrow{gap:6px}
+ html[data-library-lab=sfx] .searchrow select{max-width:40%;font-size:11px;padding:6px}
+ html[data-library-lab=sfx] .filterrow{gap:6px;flex-wrap:wrap}
+ html[data-library-lab=sfx] .sortbox{font-size:10px}
+ html[data-library-lab=sfx] .player{padding:7px 9px max(7px,env(safe-area-inset-bottom))}
+ html[data-library-lab=sfx] .player-head{gap:6px}
+ html[data-library-lab=sfx] .now-title{font-size:13px}
+ html[data-library-lab=sfx] .now-meta{font-size:9px}
+ html[data-library-lab=sfx] .transport{gap:5px;flex-wrap:wrap}
+ html[data-library-lab=sfx] .waveblock{min-width:90px;flex:1}
+ html[data-library-lab=sfx] .volume-wrap{max-width:100px}
+ html[data-library-lab=sfx] .player .icon{width:34px;height:34px;padding:6px}
+ html[data-library-lab=sfx] .play-main{width:38px;height:38px}
+}
+@media(max-height:500px) and (min-width:600px){
+ html[data-library-lab=crops] .sidebar{top:60px;bottom:74px;left:6px;right:auto;width:154px;height:auto}
+ html[data-library-lab=crops] .crop-grid{display:grid;grid-template-columns:1fr 1fr;overflow-x:hidden;overflow-y:auto}
+ html[data-library-lab=crops] .stats{left:168px}
+ html[data-library-lab=crops] .scene-tag{left:170px;top:108px}
+ html[data-library-lab=crops] .timeline{min-height:60px;display:flex;flex-wrap:nowrap}
+ html[data-library-lab=crops] .timeline .harvest-all{width:auto}
+ html[data-library-lab=crops] #labControls{width:auto;flex-wrap:wrap}
+ html[data-library-lab=crops] .inspector{max-height:calc(100dvh - 180px);top:104px}
+ html[data-library-lab=walls] .app{grid-template-columns:184px minmax(0,1fr);grid-template-rows:48px minmax(0,1fr)}
+ html[data-library-lab=walls] .sidebar{grid-row:2;grid-column:1;display:block}
+ html[data-library-lab=walls] .stage{grid-row:2;grid-column:2}
+ html[data-library-lab=walls] .material-list{gap:4px}
+ html[data-library-lab=walls] .material-list{grid-template-columns:minmax(0,1fr)}
+ html[data-library-lab=walls] .material{flex-direction:row;text-align:left;height:54px;gap:6px;padding:4px}
+ html[data-library-lab=walls] .material-image{width:48px;height:44px;flex:none}
+ html[data-library-lab=walls] .material-text{flex:1;min-width:0;overflow:visible}
+ html[data-library-lab=walls] .material-name{font-size:10px;white-space:normal}
+ html[data-library-lab=walls] .material[data-material=reforzado] .material-name{font-size:10px}
+ html[data-library-lab=walls] .tools{grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+ html[data-library-lab=walls] .tool{padding:3px;font-size:10px;gap:3px;min-width:0}
+ html[data-library-lab=walls] .canvas-controls{top:58px;right:7px;bottom:7px;overflow-y:auto}
+ html[data-library-lab=walls] .control-group{display:grid;grid-template-columns:repeat(2,34px);padding:3px}
+ html[data-library-lab=walls] .control{width:34px;height:34px}
+ html[data-library-lab=walls] .control-sep{display:none}
+ html[data-library-lab=destruction] #sceneHost{inset:0 222px 0 0}
+ html[data-library-lab=destruction] aside{top:64px;bottom:6px;left:auto;right:6px;width:210px;max-height:none;padding:10px}
+ html[data-library-lab=destruction] .lab-controls-toggle{top:8px;right:225px}
+ html[data-library-lab=destruction].lab-controls-hidden #sceneHost{right:0}
+ html[data-library-lab=sfx] .intro,html[data-library-lab=sfx] .stats{display:none}
+ html[data-library-lab=sfx] .wrap{padding-bottom:140px}
+}
+@media(prefers-reduced-motion:reduce){html[data-library-lab] *{scroll-behavior:auto;transition:none!important}}

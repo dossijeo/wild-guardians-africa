@@ -1,0 +1,26 @@
+name: Usability CPU performance
+on:
+  workflow_dispatch:
+  push:
+    branches: [feature/post-jam-usability-polish]
+    paths: ['tools/benchmark_camera_usability.mjs', 'src/rendering/**', '.github/workflows/usability-performance.yml']
+permissions:
+  contents: read
+jobs:
+  camera:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - run: node tools/benchmark_camera_usability.mjs camera-usability-cpu.json
+      - uses: actions/upload-artifact@v7
+        with:
+          name: camera-usability-cpu.json
+          path: camera-usability-cpu.json
+          archive: false
+          retention-days: 7
