@@ -9,6 +9,7 @@ import {centerServicePoint,centerDeliveryPoint} from '../src/world/centers.js';
 import * as Game from '../src/simulation/game.js';
 import {nativeWorkerServiceProof} from '../tools/native-worker-service-proof.mjs';
 import {nativeWorkerServiceProofV2} from '../tools/native-worker-service-proof-v2.mjs';
+import {nativePerimeterServiceCandidate} from '../tools/native-perimeter-service-candidate.mjs';
 const root=new URL('../docs/qa/integrated-spiritual-survival/',import.meta.url);
 function fixture(){
  const s=deserialize(gunzipSync(readFileSync(new URL('pilot-v97-q14-good-zarzas-canyon-712-seven/partial-state.json.gz',root))).toString());
@@ -18,7 +19,7 @@ function fixture(){
  const quote=Game.quoteWallChain(s,'zarzas',contour.candidate.points,nav,{smooth:false,snap:false});
  const view=nav.forBuildingPlacement({id:'qa-empty',x:1e12,z:1e12,radius:0,kind:'house'},quote.suppressed??[]);
  const updates=new Map(quote.updates.map(p=>[p.id,p]));view.obstacles=[...nav.obstacles.map(p=>updates.has(p.id)?{...p,...updates.get(p.id)}:p),...quote.pieces];
- return {s,nav,view,quote};
+ return {s,nav,view,quote,contour};
 }
 test('retained Canyon contour permits native watering although first worker cannot route to crop centre',()=>{
  const {s,nav,view,quote}=fixture(),before=serialize(s),worker=s.workers.find(w=>!w.incapacitated&&w.status!=='home');
@@ -90,4 +91,18 @@ test('independent centres separated by a solid barrier need local worker access,
  const old=nativeWorkerServiceProof(s,nav);assert.equal(old.valid,false);assert.equal(old.workerId,'worker-b');
  const proof=nativeWorkerServiceProofV2(s,nav);assert(proof.valid);assert.equal(proof.checks.workers.length,2);assert.equal(proof.checks.crops.length,2);
  assert.deepEqual(proof.checks.workers.map(w=>w.centerId),['a','b']);
+});
+test('isolated full perimeter candidate retains the original animal geometry checks verbatim',()=>{
+ const old=readFileSync(new URL('../tools/native-perimeter-proof.mjs',import.meta.url),'utf8').replace(/\r\n/g,'\n');
+ const candidate=readFileSync(new URL('../tools/native-perimeter-service-candidate.mjs',import.meta.url),'utf8').replace(/\r\n/g,'\n');
+ const prefix=old.split(" const worker=s.workers.find(")[0];
+ assert(candidate.includes(prefix.replace('export function nativePerimeterProof(', 'export function nativePerimeterServiceCandidate(')));
+});
+test('isolated full Canyon perimeter candidate requires positive animal enclosure and real service routes',()=>{
+ const {s,nav,quote,contour}=fixture(),before=serialize(s);
+ const proof=nativePerimeterServiceCandidate(s,nav,quote,contour.candidate.bounds,{outline:contour.candidate.points});
+ assert(proof.valid);assert(proof.checks.length>0);
+ assert(proof.checks.every(c=>c.completeClosedComponent||c.services?.valid));
+ assert.equal(proof.workerService.checks.workers.length,10);assert.equal(proof.workerService.checks.crops.length,123);
+ assert.equal(serialize(s),before);
 });

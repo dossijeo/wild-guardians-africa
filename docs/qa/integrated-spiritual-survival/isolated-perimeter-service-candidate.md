@@ -1,0 +1,9 @@
+# Isolated full perimeter service candidate
+
+The standalone `native-perimeter-service-candidate.mjs` preserves the current animal-body, exterior-route, positive complete-component and all-service-pose enclosure checks. Only its worker tail uses the associated-centre v2 service proof. A source regression compares the entire preceding animal-check section against the frozen original (normalizing line endings and the exported function name), so this experiment cannot silently weaken animal geometry.
+
+On retained Canyon shoreline candidate 5, the full native proof is valid: every tested animal radius obtains either a positive complete closed component or a positive service-component certificate. All ten live workers and all 123 living crops have the required native service/return paths. Serialized state is unchanged. The quoted 56-piece/560-coin proposal remains hypothetical; the saved farm does not receive walls or free currency. Gate movement, funded purchases, dynamic attack interception and actual repairs remain unverified for this contour.
+
+The combined native contour/service/component regression passes 16/16 tests. Its first run passed 15/16: the source-preservation assertion compared original CRLF with the generated LF candidate. Normalizing only line endings corrected that diagnostic; no animal algorithm changed. The actual full-perimeter native test passed both runs. Concurrent suite runtimes are not isolated CPU or GPU performance measurements.
+
+The active v105 campaign still imports the old perimeter proof. The new full candidate is deliberately a separate module; no source imported by that campaign has changed. v1's full dense-farm CPU result is rejected for repeated planning, and v2's equivalent dense measurement is still pending. Do not wire this candidate into the campaign until cost and gate/interception regressions are reviewed. Preserve the original proof and all negative evidence during the eventual transition.

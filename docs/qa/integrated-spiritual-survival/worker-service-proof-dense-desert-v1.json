@@ -1,0 +1,50 @@
+{
+  "input": "docs/qa/campaign-ci/current-3324d17d-terminals/desierto-mapungubwe-37876742125/desierto-mapungubwe-state.json.gz",
+  "inputSha256": "f04bfda7d4bef240394fec1c55b285bfc7c5b53040d2f3d6f6c9037ed73eb1fb",
+  "biome": "desierto",
+  "culture": "mapungubwe",
+  "livingCrops": 2592,
+  "eligibleWorkers": 278,
+  "stateUnchanged": true,
+  "sourceHashes": {
+    "tools/benchmark-native-worker-service-proof.mjs": "446024fbed06e89bda13bbe452d91ac4eb39506a71112a8a5ebf4bd1c5393e15",
+    "tools/native-worker-service-proof.mjs": "092d4c8b4092599387ea239a899d33e99f8783939561b702c08a10f8d7a86d6f",
+    "src/world/navigation.js": "21b82f33c62581436a6cef702b66af272ae9d3b096cb2b20ee858f0a50196743",
+    "src/world/work-points.js": "cb741c085c97c046f6e0e477bb83b6f81c2e953c7c3ed14cf0d4a42920ba7939",
+    "src/world/centers.js": "7a826b2bf3bb0793b0e4453c3a9ae487741f2ddf41c79433434091806739a7f4",
+    "public/content/biome-desert.json": "8cae57f05d6d07b20ee3ffe65c9519648c458ce0f2d33b7b62b967bfb00b274b"
+  },
+  "samples": [
+    {
+      "phase": "cold",
+      "cpuMilliseconds": 156596.5666,
+      "valid": true,
+      "reason": "native-worker-and-all-crop-service-routes",
+      "workersChecked": 278,
+      "cropsChecked": 2592,
+      "failedWorkerId": null,
+      "failedTargetId": null
+    },
+    {
+      "phase": "warm",
+      "cpuMilliseconds": 175875.9092,
+      "valid": true,
+      "reason": "native-worker-and-all-crop-service-routes",
+      "workersChecked": 278,
+      "cropsChecked": 2592,
+      "failedWorkerId": null,
+      "failedTargetId": null
+    },
+    {
+      "phase": "warm",
+      "cpuMilliseconds": 180494.22339999996,
+      "valid": true,
+      "reason": "native-worker-and-all-crop-service-routes",
+      "workersChecked": 278,
+      "cropsChecked": 2592,
+      "failedWorkerId": null,
+      "failedTargetId": null
+    }
+  ],
+  "scope": "Current standalone QA helper over retained historical native geometry. Concurrent local CPU observations only, not a controlled benchmark, historical campaign replay, GPU/frame-time or economic acceptance. Early rejection measures only the visited prefix, not a complete dense-farm proof. Warm calls reuse exact native navigation caches."
+}
