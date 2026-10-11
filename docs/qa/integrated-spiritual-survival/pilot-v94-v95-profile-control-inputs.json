@@ -1,0 +1,28 @@
+{
+  "status": "verified-input-control",
+  "cases": [
+    "pilot-v94-boundary-q9-passive-older-712-seven",
+    "pilot-v95-boundary-q9-passive-young-712-seven"
+  ],
+  "allFrozenSourceHashesIdentical": true,
+  "onlyPlayerOptionDifference": "profile",
+  "profiles": [
+    {
+      "id": "olderFemale",
+      "name": "Mujer mayor",
+      "wage": 30,
+      "speed": 1,
+      "male": false,
+      "end": 300
+    },
+    {
+      "id": "youngFemale",
+      "name": "Mujer joven",
+      "wage": 40,
+      "speed": 1.5,
+      "male": false,
+      "end": 300
+    }
+  ],
+  "scope": "Frozen input comparison only; no outcome, profitability or activity acceptance."
+}
