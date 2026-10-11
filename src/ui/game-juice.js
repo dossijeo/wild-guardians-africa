@@ -50,8 +50,8 @@ export class GameJuice {
    }
    this.pending.clear();this.flushAt=0;
   }
-  if(this.pendingDawn){if(now>this.pendingDawn.deadline)this.pendingDawn=null;else if(!blocked){const {night}=this.pendingDawn;this.add('juice-dawn'+(MILESTONES.has(night)?' milestone':''),this.copy().night(night),null,1900);this.pendingDawn=null;}}
-  if(now>(this.savedUntil??0))this.saved.classList.remove('visible');
+  if(this.pendingDawn){if(now>this.pendingDawn.deadline)this.pendingDawn=null;else if(!blocked&&!this.stage.querySelector('.notice-card')){const {night}=this.pendingDawn;this.add('juice-dawn'+(MILESTONES.has(night)?' milestone':''),this.copy().night(night),null,1900);this.pendingDawn=null;}}
+  if(now>(this.savedUntil??0)){this.saved.classList.remove('visible');if(this.saved.textContent)this.saved.textContent='';}
   for(const effect of [...this.effects]){
    if(now>=effect.end){this.remove(effect);continue;}
    if(effect.point){const {x,z}=effect.point;this.vector.set(x,this.world.nav.field.surface(x,z)+.12,z).project(this.world.camera);effect.node.hidden=this.vector.z<-1||this.vector.z>1||Math.abs(this.vector.x)>1||Math.abs(this.vector.y)>1;effect.node.style.left=`${(this.vector.x*.5+.5)*this.stage.clientWidth}px`;effect.node.style.top=`${(-this.vector.y*.5+.5)*this.stage.clientHeight}px`;}
@@ -63,5 +63,5 @@ export class GameJuice {
   const camera=this.world.camera,x=camera.position.x,y=camera.position.y,amount=(this.shakeAmount??.025)*Math.sin((this.shakeUntil-now)*.11)*(this.shakeUntil-now)/130;
   try{camera.position.x+=amount;camera.position.y+=amount*.4;camera.updateMatrixWorld();return draw();}finally{camera.position.x=x;camera.position.y=y;camera.updateMatrixWorld();}
  }
- dispose(){this.disposed=true;for(const animation of this.animations)animation.cancel();this.animations.clear();this.root.remove();this.saved.remove();this.effects.length=0;this.pending.clear();this.world.presentationDraw=null;}
+ dispose(){this.disposed=true;this.model.dispose();for(const animation of this.animations)animation.cancel();this.animations.clear();this.root.remove();this.saved.remove();this.effects.length=0;this.pending.clear();this.world.presentationDraw=null;}
 }

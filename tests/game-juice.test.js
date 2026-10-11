@@ -6,6 +6,7 @@ import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {clearNavigation} from './clear-navigation.js';
 import {GameJuiceModel} from '../src/ui/game-juice-model.js';
 import {saveGame} from '../src/app/save-game.js';
+import {observeSettlements} from '../src/simulation/settlement-observers.js';
 
 test('real paid placements use confirmed transaction IDs and never displayed prices',()=>{
  const state=Game.newGame({seed:712}),model=new GameJuiceModel(state),nav=clearNavigation();
@@ -26,6 +27,18 @@ test('unsettled delivery and rejected command cannot present invented coins',()=
  const state=Game.newGame({seed:712}),model=new GameJuiceModel(state);
  Game.emit(state,'CrateDelivered',{targetId:'not-paid'});assert.deepEqual(model.consume(state),[]);
  assert.throws(()=>Game.plant(state,'bad','unknown',8,0,clearNavigation()));assert.equal(model.consume(state).filter(r=>r.kind==='money').length,0);
+});
+test('500 settlements are exact even when native event history truncates at 200; unsubscription is clean',()=>{
+ const state=Game.newGame({seed:712}),model=new GameJuiceModel(state);
+ for(let i=0;i<500;i++){transact(state.ledger,`deliver:${i}`,rational(45));Game.emit(state,'CrateDelivered',{targetId:String(i)});}
+ assert.equal(state.events.length,200);assert.equal(model.consume(state).find(r=>r.kind==='money').value,22500n);
+ assert.equal(transact(state.ledger,'deliver:499',rational(45)),false);assert.deepEqual(model.consume(state),[]);
+ model.dispose();transact(state.ledger,'later',rational(2));assert.deepEqual(model.consume(state),[]);
+});
+test('external settlement observer failures cannot change settlement or save data',()=>{
+ const state=Game.newGame({seed:712}),before=Object.keys(state.ledger),originalError=console.error;let args;
+ const release=observeSettlements(state.ledger,(...values)=>{args=values;throw Error('decorative failure');});console.error=()=>{};
+ try{assert.equal(transact(state.ledger,'confirmed',rational(9)),true);assert.deepEqual(args,['confirmed','9','1']);assert.deepEqual(Object.keys(state.ledger),before);assert.equal(state.ledger.entries.confirmed.n,'9');assert.equal(JSON.parse(serialize(state)).ledger.entries.confirmed.n,'9');}finally{release();console.error=originalError;}
 });
 test('Dawn celebration uses completed nights, not raids, and history never replays',()=>{
  const state=Game.newGame({seed:712}),model=new GameJuiceModel(state);state.completedNights=10;state.day=11;

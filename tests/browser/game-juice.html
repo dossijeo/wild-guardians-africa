@@ -6,16 +6,18 @@
 import '../../src/ui/styles.css';
 import * as Game from '../../src/simulation/game.js';
 import {GameJuice} from '../../src/ui/game-juice.js';
+import {GameJuiceModel} from '../../src/ui/game-juice-model.js';
 import {hudMarkup,ASSETS,layoutHud} from '../../src/ui/native-hud.js';
 import {rational,transact,numberOf} from '../../src/simulation/money.js';
 import {clearNavigation} from '../clear-navigation.js';
 import {saveGame} from '../../src/app/save-game.js';
 import {Vector3,PerspectiveCamera} from 'three';
+const deliveries=Math.max(1,Math.min(100,Number(new URLSearchParams(location.search).get('deliveries')??100)));
 const stage=document.querySelector('#stage');stage.innerHTML=hudMarkup+'<div id="events"></div><div id="placementBanner"></div><div id="fixture">Isolated native HUD / presentation fixture. No world renderer or audio. Transactions and placement commands use the real engine.</div>';
 for(const img of stage.querySelectorAll('[data-sprite]'))img.src=ASSETS[img.dataset.sprite].src;
 layoutHud(stage);window.addEventListener('resize',()=>layoutHud(stage));
 const state=Game.newGame({seed:712}),nav=clearNavigation();Game.placeStructure(state,'qa-center',{x:4,z:0},nav);state.day=5;
-let stamp=performance.now(),blocked=false,language='es',held=null;
+let stamp=performance.now(),blocked=false,language='es',held=null,benchmarking=false;
 const world={nav:{field:{surface:()=>0}},camera:new PerspectiveCamera(42,innerWidth/innerHeight,.1,100),raidCamera:{}};world.camera.position.set(15,12,15);world.camera.lookAt(new Vector3(4,0,0));world.camera.updateMatrixWorld();
 const juice=new GameJuice(stage,state,world,{priority:()=>blocked,language:()=>language,now:()=>held??performance.now()});const report={scope:'Native DOM presentation fixture; no GPU renderer. ABBA measures JS+DOM scheduling, not GPU time.',checks:{},benchmarks:[]};let sequence=0;
 function refresh(){document.querySelector('#moneyValue').textContent=numberOf(state.ledger.balance);document.querySelector('#report').textContent=JSON.stringify(report);}
@@ -32,16 +34,19 @@ document.querySelector('#collapse').onclick=()=>{emit('StructureRuined',{targetI
 document.querySelector('#save').onclick=async()=>{const before=state.messages.length;await saveGame(state,{save:()=>Promise.resolve()},{confirm:true,onConfirm:()=>juice.savedSuccessfully()});report.checks.saveNoSimulationMessage=state.messages.length===before;refresh();};
 document.querySelector('#priority').onclick=()=>{blocked=!blocked;document.querySelector('#fixture').textContent='Mandatory dialog priority: '+blocked;};
 document.querySelector('#language').onclick=()=>{language=language==='es'?'en':'es';document.documentElement.lang=language;};
-document.querySelector('#hold').onclick=()=>{held=performance.now()+200;juice.update(state);for(const a of document.getAnimations()){a.pause();a.currentTime=300;}};
+function freeze(){held=performance.now()+150;juice.update(state);for(const a of document.getAnimations()){a.pause();a.currentTime=Math.min(300,Number(a.effect.getTiming().duration)*.5);}}
+let captureNext=false;document.querySelector('#hold').onclick=freeze;
+const capture=document.createElement('button');capture.textContent='Capture next';capture.id='capture';document.querySelector('aside').append(capture);capture.onclick=()=>{held=null;captureNext=true;};
+document.addEventListener('click',e=>{if(captureNext&&e.target.id!=='capture'){captureNext=false;freeze();}});
 document.querySelector('#cleanup').onclick=()=>{juice.dispose();report.checks.cleanup=stage.querySelectorAll('.game-juice,.juice-saved').length===0;refresh();};
 document.querySelector('#stress').onclick=async()=>{
- const counts=[],timings={A:[],B:[]};
- for(const mode of ['A','B','B','A'])for(let frame=0;frame<180;frame++){
-  const started=performance.now();if(mode==='B'){for(let i=0;i<100;i++){const id='stress-'+sequence++;transact(state.ledger,`deliver:${id}`,rational(45));Game.emit(state,'CrateDelivered',{targetId:id});}juice.process(state);juice.update(state);counts.push(juice.effects.length);}
+ const counts=[],timings={A:[],B:[]};benchmarking=true;
+ for(const mode of ['A','B','B','A']){juice.pending.clear();juice.flushAt=0;juice.model.dispose();if(mode==='B')juice.model=new GameJuiceModel(state);for(const effect of [...juice.effects])juice.remove(effect);for(let frame=0;frame<180;frame++){
+  const started=performance.now();for(let i=0;i<deliveries;i++){const id='stress-'+sequence++;transact(state.ledger,`deliver:${id}`,rational(45));Game.emit(state,'CrateDelivered',{targetId:id});}if(mode==='B'){juice.process(state);juice.update(state);counts.push(juice.effects.length);}
   timings[mode].push(performance.now()-started);await new Promise(requestAnimationFrame);
- }
+ }}benchmarking=false;juice.model=new GameJuiceModel(state);
  const stats=a=>{a.sort((x,y)=>x-y);return {median:a[Math.floor(a.length/2)],p95:a[Math.floor(a.length*.95)],max:a.at(-1)}};
- report.benchmarks.push({workload:'100 confirmed deliveries/frame, 360 active frames, ABBA, 36,000 real ledger settlements',off:stats(timings.A),on:stats(timings.B),maxEffects:Math.max(...counts),maxAllowed:4});report.checks.bounded=counts.every(n=>n<=4);refresh();
+ report.benchmarks.push({workload:`${deliveries} confirmed deliveries/frame, 360 active frames, ABBA, ${deliveries*720} real ledger settlements (identical work in A and B)`,off:stats(timings.A),on:stats(timings.B),maxEffects:Math.max(...counts),maxAllowed:4});report.checks.bounded=counts.every(n=>n<=4);refresh();
 };
-function frame(now){if(!juice.disposed)juice.update(state);stamp=now;requestAnimationFrame(frame);}requestAnimationFrame(frame);refresh();
+function frame(now){if(!juice.disposed&&!benchmarking)juice.update(state);stamp=now;requestAnimationFrame(frame);}requestAnimationFrame(frame);refresh();
 </script></html>
