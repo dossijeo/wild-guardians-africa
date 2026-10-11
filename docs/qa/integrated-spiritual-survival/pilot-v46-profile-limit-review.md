@@ -1,0 +1,9 @@
+# Young-profile pilot: fixed-profile harness stop, not native defeat
+
+The Q10 passive seed-712 empalizada trial completed nine nights. It stopped at dawn ten because its fixed `youngFemale` policy requested a daily contract that the remaining 39 coins cannot pay. Receipt status is `incomplete-harness-error`, with message `Q5 no affordable daily contract`; native result remains null. Preserve the original receipt and compressed partial state without relabelling it as defeat.
+
+The saved native state is day 10 / time 0, nine completed nights, no active raid and a hiring pause. Zero crops remain; the centre is alive at 432 HP. A 30-coin older worker remains a legal hiring option. Whether a player can recover by changing worker profile and/or liquidating wall pieces is not evaluated by this fixed-profile script. No native Game Over is recorded.
+
+The young profile retains its original 40 wage, 1.5 speed and 300-second shift. Day seven ends with 282 coins and no crops after deliveries and perimeter expenditure. Q10 chooses two young workers on day eight, pays 80 wages and 67 actual repairs, buys ten seedlings for 50 and delivers five for 55; closing cash is 100 with no surviving field. Day nine pays one worker 40 and repairs 21, with no seeds or income, leaving 39. Faster movement does not, in this single pilot, establish sustainable agriculture or justify a wage change.
+
+This exposes the limit of a fixed-profile experiment, not a model-wide requirement to reduce prices. A responsible mixed-profile policy must allow a cheaper native contract when the chosen profile is unaffordable. Implement and test such decisions before accepting that strategy; do not grant wages, invent deliveries or count an unaffordable optional profile as irreversibility. The completed journal may be checked for accounting, but the terminal economic acceptance auditor must continue rejecting this incomplete-harness receipt.
