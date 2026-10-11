@@ -19,10 +19,11 @@ import {nativeStablePlanPerimeterProof} from './native-stable-plan-perimeter-pro
 const options={smooth:false,snap:false};
 const sameSlot=(q,w)=>w.kind==='wall'&&Math.hypot(q.x-w.x,q.z-w.z)<.35&&Math.abs(Math.sin(q.angle+(w.yaw??0)))<.18;
 const matches=(q,w)=>w.status==='intact'&&w.hp>0&&sameSlot(q,w);
-export function createNativeFundedDefensePolicy({startDay=6,material='zarzas',interval=5,chunkPieces=8,maxSlots=256,repairWalls=true,obstacleAware=false,shoreRouting=false,repairPolicy='legacy',funding:defenseFunding='contour',pieceReserve=0,perimeterQa='legacy'}={}){
+export function createNativeFundedDefensePolicy({startDay=6,material='zarzas',interval=5,chunkPieces=8,maxSlots=256,repairWalls=true,obstacleAware=false,shoreRouting=false,repairPolicy='legacy',funding:defenseFunding='contour',pieceReserve=0,perimeterQa='legacy',gateAnimationInvariant=false}={}){
  if(!['legacy','incremental-v3','worker-first-v4','stable-plan-v5'].includes(perimeterQa))throw Error('Unknown perimeter QA candidate');
+ if(typeof gateAnimationInvariant!=='boolean'||gateAnimationInvariant&&perimeterQa!=='stable-plan-v5')throw Error('Gate phase invariant requires stable-plan-v5 QA');
  const nativePerimeterProof=perimeterQa==='stable-plan-v5'?nativeStablePlanPerimeterProof:nativePerimeterProofBase;
- const proofOptions=perimeterQa!=='legacy'?{workerServiceProof:nativeWorkerServiceProofV3,incrementalCrops:true,workersFirst:['worker-first-v4','stable-plan-v5'].includes(perimeterQa)}:{};
+ const proofOptions=perimeterQa!=='legacy'?{gateAnimationInvariant,workerServiceProof:nativeWorkerServiceProofV3,incrementalCrops:true,workersFirst:['worker-first-v4','stable-plan-v5'].includes(perimeterQa)}:{};
  if(!['contour','rolling'].includes(defenseFunding))throw Error('Unknown defense funding choice');
  if(![0,1].includes(pieceReserve)||pieceReserve&&defenseFunding!=='rolling')throw Error('Invalid rolling piece reserve');
  if(!['legacy','breach-first'].includes(repairPolicy))throw Error('Unknown native repair policy');
@@ -162,5 +163,5 @@ export function createNativeFundedDefensePolicy({startDay=6,material='zarzas',in
   row.reason=row.complete?'paid-native-contour-completed':'paid-native-contour-in-progress';
   if(row.complete){completed=planned;planned=null;remainingCost=0;}return 1;
  }
- return {act,reserve:s=>s.day<startDay?0:defenseFunding==='contour'?remainingCost:pieceReserve&&planned&&remainingCost>0?2*Math.min(spec.cost,remainingCost):0,report:()=>structuredClone({startDay,material,interval,chunkPieces,maxSlots,obstacleAware,shoreRouting,repairPolicy,funding:defenseFunding,pieceReserve,perimeterQa,discretionaryNewWallFraction:defenseFunding==='rolling'?.5:1,planned,completed,remainingCost,repairRequests,coverageDiagnostics,history,paidCost:history.reduce((n,r)=>n+r.paidCost,0),paidPieces:history.reduce((n,r)=>n+r.paidPieces,0),scope:'Saved actual funds and paid native partial strokes; complete geometric coverage is not a universal interception guarantee.'})};
+ return {act,reserve:s=>s.day<startDay?0:defenseFunding==='contour'?remainingCost:pieceReserve&&planned&&remainingCost>0?2*Math.min(spec.cost,remainingCost):0,report:()=>structuredClone({startDay,material,interval,chunkPieces,maxSlots,obstacleAware,shoreRouting,repairPolicy,funding:defenseFunding,pieceReserve,perimeterQa,gateAnimationInvariant,discretionaryNewWallFraction:defenseFunding==='rolling'?.5:1,planned,completed,remainingCost,repairRequests,coverageDiagnostics,history,paidCost:history.reduce((n,r)=>n+r.paidCost,0),paidPieces:history.reduce((n,r)=>n+r.paidPieces,0),scope:'Saved actual funds and paid native partial strokes; complete geometric coverage is not a universal interception guarantee.'})};
 }

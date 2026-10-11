@@ -20,3 +20,9 @@ All eight physical certificate hashes agree: 51e98dd76e1b54964ce9fd8f9a93a2be3c2
 Equality omits only terrain memo diagnostics and the already-proven component reuse counter. Validity, native service poses, blocked/certified counts, connectors, regions and full original proof remain recorded. Actual wall-removal invalidation, customized-adapter rejection and the separate 30 biome/culture native gate-phase cases are documented in adjacent QA folders.
 
 This verifies the quote/proof/purchase pipeline on one retained snapshot, not a full funded-defense policy campaign. Integration into a newly frozen campaign protocol and broader CI remain pending. This result cannot approve the economic balance, statistical survival targets or main integration.
+
+## Funded policy opt-in
+
+The funded defense factory now accepts gateAnimationInvariant=false. True is allowed only with stable-plan-v5; non-boolean values and unsupported protocols reject explicitly. The option reaches both prospective quotes and actual paid-contour completion checks. It is reported for provenance. Existing campaign launchers and frozen profiles do not enable it, and no strategy decision, reserve, price or military parameter changes.
+
+Tests: node --test tests/native-funded-completion-certificate.test.js tests/proof-gate-animation-invariant.test.js. All 21 pass, zero failures/skips, 24.39 seconds in this run. The retained eight-crop Canyon fixture executes eight actual funded policy decisions with normal native ticks between them; both stable-plan variants finish a paid enclosure. Their complete serialized native states, including payments, RNG, workers and geometry, must be byte-identical. An independent uncached native proof verifies completion. This is a bounded functional replay, not a full campaign or a policy timing benchmark. Raw results are retained in funded-policy-integration.txt.gz.
