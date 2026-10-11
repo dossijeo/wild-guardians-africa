@@ -1,0 +1,38 @@
+{
+  "id": "military-only-policy-freeze-v1",
+  "baselineCampaign": "campaign-v118-q15-good-sabana-123-hundred",
+  "baselineSource": "9a7aa1825f30876d764783d5b1e89559cf6f7eb9",
+  "common": {
+    "days": 100,
+    "labourPolicy": "q15",
+    "profile": "olderFemale",
+    "cropPolicy": "cashflow",
+    "defensePolicy": "shore",
+    "defenseMaterial": "zarzas",
+    "repairPolicy": "breach-first",
+    "defenseFunding": "rolling",
+    "defensePieceReserve": 0,
+    "perimeterQa": "stable-plan-v5",
+    "reserveMaintenance": true
+  },
+  "profiles": {
+    "good": {"strategy": "good", "defenseStartDay": 6},
+    "normal": {"strategy": "good", "defenseStartDay": 10, "reserveMaintenance": false},
+    "bad": {"strategy": "bad", "defenseStartDay": 6}
+  },
+  "matchedSeeds": [712, 123, 2026],
+  "heldOutSeeds": [811, 1947, 4099, 6037, 9011],
+  "initialSites": [
+    {"biome": "sabana", "culture": "mapungubwe"},
+    {"biome": "gran-canon", "culture": "saheliana"}
+  ],
+  "heldOutSites": [
+    {"biome": "gran-rio", "culture": "mapungubwe"},
+    {"biome": "volcanes", "culture": "saheliana"}
+  ],
+  "militaryTuningAllowed": ["animalDamage", "attackRadius", "animalCountAndComposition"],
+  "cropHitPoints": 1,
+  "economicEarlyStop": false,
+  "targets": {"good": [0.85, 0.95], "normal": [0.50, 0.70], "bad": [0.05, 0.20]},
+  "status": "profiles-frozen; military baseline incomplete; no final balance acceptance"
+}
