@@ -1,0 +1,44 @@
+{
+  "sourceSha256": "acebcf4d0ad4d1b55db513e1ac59a9cc755b5b98b9ff046fad72b7617fdb62f9",
+  "profile": "olderFemale",
+  "originalDailyWage": 30,
+  "shiftEnd": 300,
+  "rows": [
+    {
+      "time": 0,
+      "expectedExactIntegerCost": 30,
+      "observedNativeCost": 30
+    },
+    {
+      "time": 50,
+      "expectedExactIntegerCost": 25,
+      "observedNativeCost": 25
+    },
+    {
+      "time": 100,
+      "expectedExactIntegerCost": 20,
+      "observedNativeCost": 21
+    },
+    {
+      "time": 150,
+      "expectedExactIntegerCost": 15,
+      "observedNativeCost": 15
+    },
+    {
+      "time": 200,
+      "expectedExactIntegerCost": 10,
+      "observedNativeCost": 11
+    },
+    {
+      "time": 250,
+      "expectedExactIntegerCost": 5,
+      "observedNativeCost": 5
+    },
+    {
+      "time": 300,
+      "expectedExactIntegerCost": null,
+      "nativeRejection": "La jornada de este perfil ya ha terminado"
+    }
+  ],
+  "scope": "Read-only exact-integer boundary diagnosis; no change to historical charges, running campaigns or production. Shift-end hiring remains forbidden. Fix deferred until imported sources can be changed safely."
+}
