@@ -1,0 +1,768 @@
+{
+  "status": "paid-native-static-contour-verified",
+  "seed": 712,
+  "biome": "gran-canon",
+  "culture": "saheliana",
+  "initialCashAfterCentre": 700,
+  "closingCash": 290,
+  "paidSeeds": 40,
+  "paidWages": 30,
+  "paid": {
+    "cost": 340,
+    "pieces": 34,
+    "gates": 1,
+    "actualProof": {
+      "valid": true,
+      "reason": "native-complete-components-and-worker-service-routes",
+      "checks": [
+        {
+          "radius": 1.1,
+          "inside": {
+            "x": -13.5,
+            "z": 64.7
+          },
+          "anchorKind": "crop-contact",
+          "anchorTargetId": "plant-13",
+          "outside": {
+            "x": -13.5,
+            "z": 74
+          },
+          "completeClosedComponent": false,
+          "services": {
+            "valid": true,
+            "reason": "native-service-poses-in-positive-closed-components",
+            "poses": 288,
+            "blocked": 267,
+            "certified": 21,
+            "physicalConnectors": 0,
+            "emptyNativeOrigins": 0,
+            "regions": 3,
+            "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+          }
+        },
+        {
+          "radius": 0.9,
+          "inside": {
+            "x": -13.5,
+            "z": 63
+          },
+          "anchorKind": "crop-pivot",
+          "anchorTargetId": "plant-13",
+          "outside": {
+            "x": -13.5,
+            "z": 74
+          },
+          "completeClosedComponent": false,
+          "services": {
+            "valid": true,
+            "reason": "native-service-poses-in-positive-closed-components",
+            "poses": 288,
+            "blocked": 259,
+            "certified": 29,
+            "physicalConnectors": 0,
+            "emptyNativeOrigins": 0,
+            "regions": 4,
+            "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+          }
+        },
+        {
+          "radius": 0.97,
+          "inside": {
+            "x": -13.5,
+            "z": 63
+          },
+          "anchorKind": "crop-pivot",
+          "anchorTargetId": "plant-13",
+          "outside": {
+            "x": -13.5,
+            "z": 74
+          },
+          "completeClosedComponent": false,
+          "services": {
+            "valid": true,
+            "reason": "native-service-poses-in-positive-closed-components",
+            "poses": 288,
+            "blocked": 263,
+            "certified": 25,
+            "physicalConnectors": 0,
+            "emptyNativeOrigins": 0,
+            "regions": 4,
+            "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+          }
+        },
+        {
+          "radius": 0.85,
+          "inside": {
+            "x": -13.5,
+            "z": 63
+          },
+          "anchorKind": "crop-pivot",
+          "anchorTargetId": "plant-13",
+          "outside": {
+            "x": -13.5,
+            "z": 74
+          },
+          "completeClosedComponent": false,
+          "services": {
+            "valid": true,
+            "reason": "native-service-poses-in-positive-closed-components",
+            "poses": 288,
+            "blocked": 256,
+            "certified": 32,
+            "physicalConnectors": 0,
+            "emptyNativeOrigins": 0,
+            "regions": 6,
+            "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+          }
+        },
+        {
+          "radius": 1.55,
+          "inside": {
+            "x": -14.322769379584944,
+            "z": 64.98634099489927
+          },
+          "anchorKind": "crop-contact",
+          "anchorTargetId": "plant-13",
+          "outside": {
+            "x": -14.322769379584944,
+            "z": 74
+          },
+          "completeClosedComponent": false,
+          "services": {
+            "valid": true,
+            "reason": "native-service-poses-in-positive-closed-components",
+            "poses": 288,
+            "blocked": 284,
+            "certified": 4,
+            "physicalConnectors": 0,
+            "emptyNativeOrigins": 0,
+            "regions": 3,
+            "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+          }
+        }
+      ],
+      "workerService": {
+        "valid": true,
+        "reason": "native-associated-centre-and-all-crop-service-routes",
+        "checks": {
+          "workers": [
+            {
+              "workerId": "worker-20",
+              "centerId": "structure-2",
+              "via": "centre-service",
+              "destination": {
+                "x": -13.147470503294713,
+                "z": 59.05401533842087
+              }
+            }
+          ],
+          "crops": [
+            {
+              "targetId": "plant-3",
+              "centerId": "structure-2",
+              "wateringDestination": {
+                "x": -13.054416479324336,
+                "z": 59.20025375836355,
+                "id": "water-point-plant-3-0"
+              },
+              "deliveryDestination": {
+                "x": -13.148805655109468,
+                "z": 58.499809390917456
+              }
+            },
+            {
+              "targetId": "plant-5",
+              "centerId": "structure-2",
+              "wateringDestination": {
+                "x": -13.21016454519945,
+                "z": 59.22224977715172,
+                "id": "water-point-plant-5-0"
+              },
+              "deliveryDestination": {
+                "x": -13.147991537388751,
+                "z": 59.99980894905889
+              }
+            },
+            {
+              "targetId": "plant-7",
+              "centerId": "structure-2",
+              "wateringDestination": {
+                "x": -13.359600411029348,
+                "z": 57.81803909161902,
+                "id": "water-point-plant-7-0"
+              },
+              "deliveryDestination": {
+                "x": -13.171221465083816,
+                "z": 56.9580951030794
+              }
+            },
+            {
+              "targetId": "plant-9",
+              "centerId": "structure-2",
+              "wateringDestination": {
+                "x": -13.381598992677349,
+                "z": 60.67848846540966,
+                "id": "water-point-plant-9-0"
+              },
+              "deliveryDestination": {
+                "x": -13.210837875370327,
+                "z": 61.537980354266104
+              }
+            },
+            {
+              "targetId": "plant-11",
+              "centerId": "structure-2",
+              "wateringDestination": {
+                "x": -13.418072787371955,
+                "z": 56.325946688249914,
+                "id": "water-point-plant-11-0"
+              },
+              "deliveryDestination": {
+                "x": -13.59467227145441,
+                "z": 55.537009426000985
+              }
+            },
+            {
+              "targetId": "plant-13",
+              "centerId": "structure-2",
+              "wateringDestination": {
+                "x": -13.426142960174824,
+                "z": 62.17329259246801,
+                "id": "water-point-plant-13-0"
+              },
+              "deliveryDestination": {
+                "x": -13.716920809950993,
+                "z": 62.905513849266676
+              }
+            },
+            {
+              "targetId": "plant-15",
+              "centerId": "structure-2",
+              "wateringDestination": {
+                "x": -13.442245869057409,
+                "z": 54.82798820061585,
+                "id": "water-point-plant-15-0"
+              },
+              "deliveryDestination": {
+                "x": -14.074060406547021,
+                "z": 54.33907758005748
+              }
+            },
+            {
+              "targetId": "plant-17",
+              "centerId": "structure-2",
+              "wateringDestination": {
+                "x": -14.246969298505693,
+                "z": 54.34906269151399,
+                "id": "water-point-plant-17-1"
+              },
+              "deliveryDestination": {
+                "x": -14.820788906860631,
+                "z": 53.73760334612158
+              }
+            }
+          ]
+        },
+        "scope": "Predictive static access only. All workers linked to their operational centre, all living crops serviced and returned. No paid construction, motion, animated gates, animal interception or economic approval."
+      },
+      "scope": "Predictive native geometry only; no paid protection or campaign outcome."
+    }
+  },
+  "attempts": [
+    {
+      "padding": 3,
+      "bounds": [
+        -29.5,
+        50.25,
+        -10.25,
+        68
+      ],
+      "points": [
+        [
+          -29.5,
+          53.75
+        ],
+        [
+          -29.25,
+          53.75
+        ],
+        [
+          -29.25,
+          53.5
+        ],
+        [
+          -28.5,
+          53.5
+        ],
+        [
+          -28.5,
+          51.5
+        ],
+        [
+          -25.5,
+          51.5
+        ],
+        [
+          -25.5,
+          50.25
+        ],
+        [
+          -14.5,
+          50.25
+        ],
+        [
+          -14.5,
+          50.5
+        ],
+        [
+          -14,
+          50.5
+        ],
+        [
+          -14,
+          51
+        ],
+        [
+          -10.25,
+          51
+        ],
+        [
+          -10.25,
+          66.25
+        ],
+        [
+          -11.25,
+          66.25
+        ],
+        [
+          -11.25,
+          66.5
+        ],
+        [
+          -12,
+          66.5
+        ],
+        [
+          -12,
+          67
+        ],
+        [
+          -12.5,
+          67
+        ],
+        [
+          -12.5,
+          67.25
+        ],
+        [
+          -14.25,
+          67.25
+        ],
+        [
+          -14.25,
+          68
+        ],
+        [
+          -25.75,
+          68
+        ],
+        [
+          -25.75,
+          67.25
+        ],
+        [
+          -26,
+          67.25
+        ],
+        [
+          -26,
+          66.75
+        ],
+        [
+          -26.25,
+          66.75
+        ],
+        [
+          -26.25,
+          66.25
+        ],
+        [
+          -26.5,
+          66.25
+        ],
+        [
+          -26.5,
+          65.5
+        ],
+        [
+          -26.75,
+          65.5
+        ],
+        [
+          -26.75,
+          65
+        ],
+        [
+          -27,
+          65
+        ],
+        [
+          -27,
+          64.5
+        ],
+        [
+          -27.25,
+          64.5
+        ],
+        [
+          -27.25,
+          63.75
+        ],
+        [
+          -27.5,
+          63.75
+        ],
+        [
+          -27.5,
+          63.25
+        ],
+        [
+          -27.75,
+          63.25
+        ],
+        [
+          -27.75,
+          62.5
+        ],
+        [
+          -28,
+          62.5
+        ],
+        [
+          -28,
+          62
+        ],
+        [
+          -28.25,
+          62
+        ],
+        [
+          -28.25,
+          61.25
+        ],
+        [
+          -28.5,
+          61.25
+        ],
+        [
+          -28.5,
+          60.5
+        ],
+        [
+          -28.75,
+          60.5
+        ],
+        [
+          -28.75,
+          60
+        ],
+        [
+          -29,
+          60
+        ],
+        [
+          -29,
+          59.5
+        ],
+        [
+          -29.25,
+          59.5
+        ],
+        [
+          -29.25,
+          58.75
+        ],
+        [
+          -29.5,
+          58.75
+        ],
+        [
+          -29.5,
+          53.75
+        ]
+      ],
+      "cost": 340,
+      "pieces": 34,
+      "gates": 1,
+      "proof": {
+        "valid": true,
+        "reason": "native-complete-components-and-worker-service-routes",
+        "checks": [
+          {
+            "radius": 1.1,
+            "inside": {
+              "x": -13.5,
+              "z": 64.7
+            },
+            "anchorKind": "crop-contact",
+            "anchorTargetId": "plant-13",
+            "outside": {
+              "x": -13.5,
+              "z": 74
+            },
+            "completeClosedComponent": false,
+            "services": {
+              "valid": true,
+              "reason": "native-service-poses-in-positive-closed-components",
+              "poses": 288,
+              "blocked": 267,
+              "certified": 21,
+              "physicalConnectors": 0,
+              "emptyNativeOrigins": 0,
+              "regions": 3,
+              "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+            }
+          },
+          {
+            "radius": 0.9,
+            "inside": {
+              "x": -13.5,
+              "z": 63
+            },
+            "anchorKind": "crop-pivot",
+            "anchorTargetId": "plant-13",
+            "outside": {
+              "x": -13.5,
+              "z": 74
+            },
+            "completeClosedComponent": false,
+            "services": {
+              "valid": true,
+              "reason": "native-service-poses-in-positive-closed-components",
+              "poses": 288,
+              "blocked": 259,
+              "certified": 29,
+              "physicalConnectors": 0,
+              "emptyNativeOrigins": 0,
+              "regions": 4,
+              "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+            }
+          },
+          {
+            "radius": 0.97,
+            "inside": {
+              "x": -13.5,
+              "z": 63
+            },
+            "anchorKind": "crop-pivot",
+            "anchorTargetId": "plant-13",
+            "outside": {
+              "x": -13.5,
+              "z": 74
+            },
+            "completeClosedComponent": false,
+            "services": {
+              "valid": true,
+              "reason": "native-service-poses-in-positive-closed-components",
+              "poses": 288,
+              "blocked": 263,
+              "certified": 25,
+              "physicalConnectors": 0,
+              "emptyNativeOrigins": 0,
+              "regions": 4,
+              "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+            }
+          },
+          {
+            "radius": 0.85,
+            "inside": {
+              "x": -13.5,
+              "z": 63
+            },
+            "anchorKind": "crop-pivot",
+            "anchorTargetId": "plant-13",
+            "outside": {
+              "x": -13.5,
+              "z": 74
+            },
+            "completeClosedComponent": false,
+            "services": {
+              "valid": true,
+              "reason": "native-service-poses-in-positive-closed-components",
+              "poses": 288,
+              "blocked": 256,
+              "certified": 32,
+              "physicalConnectors": 0,
+              "emptyNativeOrigins": 0,
+              "regions": 6,
+              "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+            }
+          },
+          {
+            "radius": 1.55,
+            "inside": {
+              "x": -14.322769379584944,
+              "z": 64.98634099489927
+            },
+            "anchorKind": "crop-contact",
+            "anchorTargetId": "plant-13",
+            "outside": {
+              "x": -14.322769379584944,
+              "z": 74
+            },
+            "completeClosedComponent": false,
+            "services": {
+              "valid": true,
+              "reason": "native-service-poses-in-positive-closed-components",
+              "poses": 288,
+              "blocked": 284,
+              "certified": 4,
+              "physicalConnectors": 0,
+              "emptyNativeOrigins": 0,
+              "regions": 3,
+              "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+            }
+          }
+        ],
+        "workerService": {
+          "valid": true,
+          "reason": "native-associated-centre-and-all-crop-service-routes",
+          "checks": {
+            "workers": [
+              {
+                "workerId": "worker-20",
+                "centerId": "structure-2",
+                "via": "centre-service",
+                "destination": {
+                  "x": -13.147470503294713,
+                  "z": 59.05401533842087
+                }
+              }
+            ],
+            "crops": [
+              {
+                "targetId": "plant-3",
+                "centerId": "structure-2",
+                "wateringDestination": {
+                  "x": -13.054416479324336,
+                  "z": 59.20025375836355,
+                  "id": "water-point-plant-3-0"
+                },
+                "deliveryDestination": {
+                  "x": -13.148805655109468,
+                  "z": 58.499809390917456
+                }
+              },
+              {
+                "targetId": "plant-5",
+                "centerId": "structure-2",
+                "wateringDestination": {
+                  "x": -13.21016454519945,
+                  "z": 59.22224977715172,
+                  "id": "water-point-plant-5-0"
+                },
+                "deliveryDestination": {
+                  "x": -13.147991537388751,
+                  "z": 59.99980894905889
+                }
+              },
+              {
+                "targetId": "plant-7",
+                "centerId": "structure-2",
+                "wateringDestination": {
+                  "x": -13.359600411029348,
+                  "z": 57.81803909161902,
+                  "id": "water-point-plant-7-0"
+                },
+                "deliveryDestination": {
+                  "x": -13.171221465083816,
+                  "z": 56.9580951030794
+                }
+              },
+              {
+                "targetId": "plant-9",
+                "centerId": "structure-2",
+                "wateringDestination": {
+                  "x": -13.381598992677349,
+                  "z": 60.67848846540966,
+                  "id": "water-point-plant-9-0"
+                },
+                "deliveryDestination": {
+                  "x": -13.210837875370327,
+                  "z": 61.537980354266104
+                }
+              },
+              {
+                "targetId": "plant-11",
+                "centerId": "structure-2",
+                "wateringDestination": {
+                  "x": -13.418072787371955,
+                  "z": 56.325946688249914,
+                  "id": "water-point-plant-11-0"
+                },
+                "deliveryDestination": {
+                  "x": -13.59467227145441,
+                  "z": 55.537009426000985
+                }
+              },
+              {
+                "targetId": "plant-13",
+                "centerId": "structure-2",
+                "wateringDestination": {
+                  "x": -13.426142960174824,
+                  "z": 62.17329259246801,
+                  "id": "water-point-plant-13-0"
+                },
+                "deliveryDestination": {
+                  "x": -13.716920809950993,
+                  "z": 62.905513849266676
+                }
+              },
+              {
+                "targetId": "plant-15",
+                "centerId": "structure-2",
+                "wateringDestination": {
+                  "x": -13.442245869057409,
+                  "z": 54.82798820061585,
+                  "id": "water-point-plant-15-0"
+                },
+                "deliveryDestination": {
+                  "x": -14.074060406547021,
+                  "z": 54.33907758005748
+                }
+              },
+              {
+                "targetId": "plant-17",
+                "centerId": "structure-2",
+                "wateringDestination": {
+                  "x": -14.246969298505693,
+                  "z": 54.34906269151399,
+                  "id": "water-point-plant-17-1"
+                },
+                "deliveryDestination": {
+                  "x": -14.820788906860631,
+                  "z": 53.73760334612158
+                }
+              }
+            ]
+          },
+          "scope": "Predictive static access only. All workers linked to their operational centre, all living crops serviced and returned. No paid construction, motion, animated gates, animal interception or economic approval."
+        },
+        "scope": "Predictive native geometry only; no paid protection or campaign outcome."
+      }
+    }
+  ],
+  "cpuMilliseconds": 1176.9694000000002,
+  "sourceHashes": {
+    "tools/probe-native-paid-canyon-contact-contour.mjs": "665ec5a601d79c1965e8503b429daa5b5381b5692936e8dcb1eec178b2160b3e",
+    "tools/native-interior-attack-anchor.mjs": "4ecd39956d1bc93afef519910d67e797213faa4a3529a6cd273559d11a86da03",
+    "tools/check_opening.mjs": "b69f5bd13d097062a02ce438dfec04f91a8e8d62735e12b5fc90bfc27a653a93",
+    "tools/native-shore-defense-contour.mjs": "27fab001e24ff1f44b5b3789f3f88c5b50d0486d776b2fda3460d1f8bfe93187",
+    "tools/native-perimeter-contact-candidate.mjs": "d47d45febd42ada9faf2b5102453306698669e0a52c2ecbdf5eed5491353c0b9",
+    "tools/native-worker-service-proof-v2.mjs": "86e53164024dacdfc4cf633303a9c1b43503f3ffdd3352d054955129630662ce",
+    "src/simulation/game.js": "b216594fd241d10746d7d9b3a7802f7a6eca41c2709d25edd6501f5834e80c6f",
+    "src/world/navigation.js": "21b82f33c62581436a6cef702b66af272ae9d3b096cb2b20ee858f0a50196743"
+  },
+  "snapshotPath": "docs/qa/integrated-spiritual-survival/native-paid-canyon-contact-contour-v1-state.json.gz",
+  "scope": "Eight-plant legal-command procedural functional fixture with initial 1500, native 800 centre, actual seed/hire/wall debits and save/reload. No cash grants, crops moved, artificial damage, worker movement, gate animation, attack replay, economic campaign, human activity or performance acceptance."
+}
