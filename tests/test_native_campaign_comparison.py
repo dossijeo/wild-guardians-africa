@@ -34,6 +34,11 @@ class EvidenceIntegrity(unittest.TestCase):
     def test_matching_frozen_rules_are_comparable(self):
         self.assertEqual(len(comparison.collect(self.paths)), 2)
 
+    def test_defense_funding_change_cannot_be_hidden(self):
+        self.modify('report', lambda q: q['policy'].update(defenseFunding='rolling'))
+        with self.assertRaisesRegex(ValueError, 'funding choices differ'):
+            comparison.collect(self.paths)
+
     def test_changed_crop_health_cannot_be_hidden(self):
         self.modify('report', lambda q: q.update(protocol={'cropHitPoints': 1}))
         with self.assertRaisesRegex(ValueError, 'crop resistance differs'):

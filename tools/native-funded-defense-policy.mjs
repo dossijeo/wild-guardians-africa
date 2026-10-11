@@ -15,7 +15,8 @@ import {breachRepairFunding,settledRepairQuote} from './native-repair-funding.mj
 const options={smooth:false,snap:false};
 const sameSlot=(q,w)=>w.kind==='wall'&&Math.hypot(q.x-w.x,q.z-w.z)<.35&&Math.abs(Math.sin(q.angle+(w.yaw??0)))<.18;
 const matches=(q,w)=>w.status==='intact'&&w.hp>0&&sameSlot(q,w);
-export function createNativeFundedDefensePolicy({startDay=6,material='zarzas',interval=5,chunkPieces=8,maxSlots=256,repairWalls=true,obstacleAware=false,shoreRouting=false,repairPolicy='legacy'}={}){
+export function createNativeFundedDefensePolicy({startDay=6,material='zarzas',interval=5,chunkPieces=8,maxSlots=256,repairWalls=true,obstacleAware=false,shoreRouting=false,repairPolicy='legacy',funding:defenseFunding='contour'}={}){
+ if(!['contour','rolling'].includes(defenseFunding))throw Error('Unknown defense funding choice');
  if(!['legacy','breach-first'].includes(repairPolicy))throw Error('Unknown native repair policy');
  if(!Number.isSafeInteger(startDay)||startDay<1||!Number.isFinite(interval)||interval<=0||!Number.isSafeInteger(chunkPieces)||chunkPieces<1||!Number.isSafeInteger(maxSlots)||maxSlots<4||chunkPieces>maxSlots||maxSlots>256)throw Error('Invalid bounded funded defense policy');
  const spec=wallSpec(material),history=[],owned=new Set();let next=-Infinity,planned=null,completed=null,remainingCost=0,repairRequests=0,failedPlanning=null;
@@ -114,18 +115,30 @@ export function createNativeFundedDefensePolicy({startDay=6,material='zarzas',in
   if(!plan){remainingCost=0;planned=null;row.reason='geometry-changed-or-repair-pending';return 0;}
   remainingCost=plan.cost;row.remainingCost=remainingCost;
   if(!plan.pieces.length){row.complete=coverage(s,nav);row.reason=row.complete?'existing-complete-contour':'existing-contour-not-certified';if(row.complete){completed=planned;planned=null;}remainingCost=0;return 0;}
-  const funds=Math.max(0,numberOf(s.ledger.balance)-protectedCash-pending),count=Math.min(chunkPieces,Math.floor(funds/spec.cost),plan.pieces.length);
+  // Rolling is a QA player allocation, not a ledger debit or maintenance fee.
+  // Pending real repairs retain priority; split only discretionary new-wall cash.
+  const available=Math.max(0,numberOf(s.ledger.balance)-protectedCash-pending);
+  const funds=defenseFunding==='rolling'?Math.floor(available/2):available,count=Math.min(chunkPieces,Math.floor(funds/spec.cost),plan.pieces.length);
   if(!count){row.reason='saving-actual-cash-for-native-perimeter';return 0;}
-  const purchase=Game.previewWallChain(s,material,planned.points,nav,{...options,maxPieces:count});
+  let purchase=Game.previewWallChain(s,material,planned.points,nav,{...options,maxPieces:count});
   if(purchase.pieces.length!==count){row.reason='native-partial-preview-rejected';return 0;}
+  // The actual native quote is authoritative; keep rolling purchases inside
+  // the allocation even if a future quote differs from base-price estimation.
+  let quotedCount=count;
+  while(defenseFunding==='rolling'&&purchase.cost>funds&&quotedCount>0){
+   quotedCount--;
+   if(!quotedCount){row.reason='saving-for-native-quote';return 0;}
+   purchase=Game.previewWallChain(s,material,planned.points,nav,{...options,maxPieces:quotedCount});
+   if(purchase.pieces.length!==quotedCount){row.reason='native-partial-preview-rejected';return 0;}
+  }
   const id=command('wall'),cash=numberOf(s.ledger.balance);
-  if(!Game.buildWallChain(s,id,material,planned.points,nav,{...options,maxPieces:count})){row.reason='native-build-rejected';return 0;}
-  row.paidCost=cash-numberOf(s.ledger.balance);row.paidPieces=count;row.paymentId=id;row.ids=purchase.pieces.map(w=>w.id);row.nativeSuppressedProps=[...purchase.suppressed];
+  if(!Game.buildWallChain(s,id,material,planned.points,nav,{...options,maxPieces:quotedCount})){row.reason='native-build-rejected';return 0;}
+  row.paidCost=cash-numberOf(s.ledger.balance);row.paidPieces=quotedCount;row.paymentId=id;row.ids=purchase.pieces.map(w=>w.id);row.nativeSuppressedProps=[...purchase.suppressed];
   if(!row.nativeSuppressedProps.every(id=>s.suppressed.includes(id)))throw Error('Native vegetation removal receipt mismatch');
   if(row.paidCost!==purchase.cost||!row.ids.every(id=>s.structures.some(w=>w.id===id)))throw Error('Funded native wall settlement mismatch');
   row.complete=coverage(s,nav);remainingCost=Game.quoteWallChain(s,material,planned.points,nav,options).cost;row.remainingCost=remainingCost;
   row.reason=row.complete?'paid-native-contour-completed':'paid-native-contour-in-progress';
   if(row.complete){completed=planned;planned=null;remainingCost=0;}return 1;
  }
- return {act,reserve:s=>s.day>=startDay?remainingCost:0,report:()=>structuredClone({startDay,material,interval,chunkPieces,maxSlots,obstacleAware,shoreRouting,repairPolicy,planned,completed,remainingCost,repairRequests,history,paidCost:history.reduce((n,r)=>n+r.paidCost,0),paidPieces:history.reduce((n,r)=>n+r.paidPieces,0),scope:'Saved actual funds and paid native partial strokes; complete geometric coverage is not a universal interception guarantee.'})};
+ return {act,reserve:s=>defenseFunding==='contour'&&s.day>=startDay?remainingCost:0,report:()=>structuredClone({startDay,material,interval,chunkPieces,maxSlots,obstacleAware,shoreRouting,repairPolicy,funding:defenseFunding,discretionaryNewWallFraction:defenseFunding==='rolling'?.5:1,planned,completed,remainingCost,repairRequests,history,paidCost:history.reduce((n,r)=>n+r.paidCost,0),paidPieces:history.reduce((n,r)=>n+r.paidPieces,0),scope:'Saved actual funds and paid native partial strokes; complete geometric coverage is not a universal interception guarantee.'})};
 }

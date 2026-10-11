@@ -47,6 +47,24 @@ test('paid wage protection can postpone purchases while preserving a real future
  const {s,nav,options}=fixture(),policy=createNativeFundedDefensePolicy({startDay:1});options.reserve=numberOf(s.ledger.balance)-5;
  const before=serialize(s);assert.equal(policy.act(s,nav,options),0);assert.equal(serialize(s),before);assert(policy.reserve(s)>0);assert.equal(policy.report().paidPieces,0);
 });
+
+test('rolling investment buys a paid partial wall while preserving replant cash, not an unpaid-contour debt',()=>{
+ const {s,nav,options}=fixture(),before=numberOf(s.ledger.balance);
+ const policy=createNativeFundedDefensePolicy({startDay:1,material:'empalizada',funding:'rolling'});
+ options.reserve=before-100;
+ assert.equal(policy.act(s,nav,options),1);
+ const r=policy.report(),purchase=r.history.find(h=>h.paidCost);
+ assert.equal(purchase.paidCost,40);assert.equal(purchase.paidPieces,2);
+ assert.equal(numberOf(s.ledger.entries[purchase.paymentId]),-40);
+ assert.equal(numberOf(s.ledger.balance),before-40);
+ assert.ok(r.remainingCost>0);assert.equal(policy.reserve(s),0);
+ assert.equal(r.discretionaryNewWallFraction,.5);
+ const c=s.structures.find(c=>c.kind==='center');
+ assert.equal(Game.plant(s,'rolling-real-replant','mijo',c.x+6,c.z+4,nav),true);
+ assert.equal(numberOf(s.ledger.balance),before-45);
+ assert.equal(numberOf(s.ledger.entries['rolling-real-replant']),-5);
+ assert.throws(()=>createNativeFundedDefensePolicy({funding:'free-walls'}));
+});
 test('funded defense remains opt-in and cannot lock funds before its declared day',()=>{
  const {s,nav,options}=fixture(),policy=createNativeFundedDefensePolicy({startDay:6}),before=serialize(s);assert.equal(policy.act(s,nav,options),0);assert.equal(policy.reserve(s),0);assert.equal(serialize(s),before);
  assert.throws(()=>createNativeFundedDefensePolicy({chunkPieces:0}));

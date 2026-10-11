@@ -32,6 +32,8 @@ def collect(directories, *, vary_defense_material=False):
             if report[key] != first[key]:
                 raise ValueError(f'{path}: {key} differs')
         # Strategies may differ; rules and player-policy implementations may not.
+        if report['policy'].get('defenseFunding', 'contour') != first['policy'].get('defenseFunding', 'contour'):
+            raise ValueError(f'{path}: defense funding choices differ')
         for key in ('profile', 'cropPolicy', 'defensePolicy', 'defenseStartDay', 'plotFluidClearance'):
             if report['policy'][key] != first['policy'][key]:
                 raise ValueError(f'{path}: policy setting {key} differs')

@@ -23,6 +23,14 @@ test('defense material is an explicit native player choice with unchanged defaul
  assert.throws(()=>parseNativeCampaignArgs(['--out','fixture','--defense-material','empalizada']),/requires funded/);
  assert.throws(()=>parseNativeCampaignArgs(['--out','fixture','--defense-policy','shore','--defense-material','free-invincible-wall']),/Material desconocido/);
 });
+
+test('rolling defense spending is opt-in and recorded in campaign provenance',()=>{
+ assert.equal(parseNativeCampaignArgs(['--out','fixture']).defenseFunding,'contour');
+ const o=parseNativeCampaignArgs(['--out','fixture','--defense-policy','shore','--defense-funding','rolling']);
+ assert.equal(o.defenseFunding,'rolling');
+ assert.throws(()=>parseNativeCampaignArgs(['--out','fixture','--defense-funding','rolling']),/funding/);
+ assert.throws(()=>parseNativeCampaignArgs(['--out','fixture','--defense-policy','shore','--defense-funding','unlimited']),/funding/);
+});
 test('cooperative calibration stop preserves partial receipt without inventing native defeat',async()=>{
  const out=mkdtempSync(join(tmpdir(),'native-stop-contract-'));
  try{
