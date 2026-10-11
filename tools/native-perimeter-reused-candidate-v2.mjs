@@ -9,7 +9,7 @@ import {operational} from '../src/simulation/rules.js';
 import {nativeReusedServiceComponentProofV2} from './native-reused-service-component-proof-v2.mjs';
 import {staticAnimalCertificate} from './static-animal-certificate-cache.mjs';
 const proofViews=new WeakMap();
-export function nativePerimeterReusedCandidateV2(s,nav,plan,bounds,{cache=true,outline=null}={}){
+export function nativePerimeterReusedCandidateV2(s,nav,plan,bounds,{cache=true,outline=null,workerServiceProof=nativeWorkerServiceProofV2}={}){
  // Native epochs invalidate obstacle/terrain/suppression changes. Bounds and
  // living crops are rechecked below on every call; they do not alter graph
  // geometry. Retain only one bounded native-query view per navigator.
@@ -26,7 +26,7 @@ export function nativePerimeterReusedCandidateV2(s,nav,plan,bounds,{cache=true,o
  if(!animals.valid)return animals;
  const checks=animals.checks;
  const coverage=animals.retainedCoverage?{animalCertificateCoverage:animals.retainedCoverage}:{};
- const workerService=nativeWorkerServiceProofV2(s,view);
+ const workerService=workerServiceProof(s,view);
  if(!workerService.valid)return {...workerService,animalChecks:checks,...coverage};
  return {valid:true,reason:'native-complete-components-and-worker-service-routes',checks,workerService,...coverage,scope:'Predictive native geometry only; no paid protection or campaign outcome.'};
  function certifyAnimals(){
