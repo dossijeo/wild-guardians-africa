@@ -14,8 +14,12 @@ Implemented candidates:
   neighborhoods are indexed and cached. User orbit intent remains independent
   from corrections. Production activation is a candidate on this branch only.
 
-Acceptance is **pending**. Directed tests and a web build have passed, but they
-do not prove complete visual, performance, streaming or packaged Windows QA.
+Final functional, visual, isolated CPU and packaged Windows acceptance is complete.
+Validate 38163747763 passes 3992 tests, zero failures and one skip, build, asset/audio
+verification and itch.io packaging; Windows 38160568081 passes the real packaged
+Exit and persisted restart. Productive sources remain 49242c78. Integration travels
+through the feature PR and its own checks. Physical Android was not executed.
+The candidate/pending notes below are preserved development history.
 
 `before/` retains the failed ANGLE GL screenshot backend attempt: corrupted
 readback is not positive visual evidence. `before-default/` retains subsequent
@@ -249,3 +253,9 @@ The same isolated hosted CPU run measures 1,000 walls: changing one gate B1/B2 p
 Validate [38160565608](https://github.com/dossijeo/wild-guardians-africa/actions/runs/38160565608) completed 3,991 passing checks, one failure and one skip. The sole failure was the generated SFX catalogue inventory retaining the old scene.js hash after queued camera invalidation. Regeneration changes only that source hash: all 126 rows, classifications, assignments, file hashes and metadata remain exactly equal. Three focused catalogue checks pass. The negative full log is retained under validate-38160565608; a fresh complete gate must pass before PR/integration. No audit was removed or relaxed and no productive code changed in this correction.
 
 Camera wall/gate bounds are conservative finite native mesh envelopes. Where frame and articulated leaf share a mesh, the envelope may also protect the open passage. Overflight remains available; this is a camera presentation limitation, not a navigation or simulation change.
+
+## Complete validation and release review
+
+[Validate38163747763](https://github.com/dossijeo/wild-guardians-africa/actions/runs/38163747763) is SUCCESS on cae8ac15: 3993 tests, 3992 pass, zero fail, one skip (2101539.883 ms total test duration). Asset/web/audio/plan/balance/syntax verification, web build, relative web package and direct itch.io packaging all pass. The full raw log is preserved as validate-38163747763/run.log.gz.
+
+Later closure changes are documentation/evidence only. Camera, Library, native exit and QA sources retain the exact productive version accepted by final Windows f9232977 and Validate cae8ac15; source-manifest.json identifies those files. The PR must still pass its automatically required checks before merging. No physical Android acceptance or isolated local GPU timing is claimed.

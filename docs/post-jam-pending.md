@@ -1,18 +1,26 @@
 # Tareas pendientes posteriores a la Jam
 
-## Pulido de usabilidad en validación independiente — 11 de octubre
+## Pulido de usabilidad — implementado y validado, 11 de octubre
 
-La rama `feature/post-jam-usability-polish` desarrolla, por encargo posterior del
-usuario, la protección contextual de cámara, los layouts móviles de los cuatro
-labs y la salida nativa Windows. No altera la rama de balance ni sus campañas.
-La QA funcional/visual de navegador y las pruebas dirigidas pasan. La salida
-mediante botón real y recuperación del guardado se han probado en ejecutable
-Windows empaquetado; la candidata final espera sus checks completos de CI y el
-benchmark CPU aislado. No se declara aún fusionada ni publicada.
+Cámara contextual, layouts móviles de los cuatro labs y salida nativa Windows
+están implementados y validados en `feature/post-jam-usability-polish`. La
+entrega se integra mediante su PR; al incorporar este commit a `main`, estas
+implementaciones quedan entregadas sin alterar balance ni campañas.
 
-[Evidencia, negativos y límites](qa/post-jam-usability-polish/README.md).
-Android físico no se ha ejecutado; touch/orientación se verifican por emulación.
-Las entradas anteriores se conservan como historial y no sustituyen este estado.
+Cámara conserva giro, desplazamiento, inclinación y sobrevuelo, con volúmenes
+finitos e invalidación incremental. Biblioteca supera capturas reales en Chrome
+1280×720, 844×390, 390×844 y 360×640, controles, ES/EN, touch/orientación emulados
+y restauración musical del lab SFX. Salida Tauri termina realmente el proceso
+empaquetado con código 0 y recupera exactamente el guardado al reiniciar.
+
+Validate38163747763: 3992 pass, cero fallos, un skip, build y paquete itch.io
+correctos. Windows38160568081: build, WebView2, recuperación de ventana y botón
+Salir/reinicio correctos. El benchmark CPU aislado cubre una puerta animada y
+destrucciones múltiples en 1000 piezas. Los checks de la PR cierran la integración.
+
+[Evidencia, negativos, fuentes y límites](qa/post-jam-usability-polish/README.md).
+Android físico no se ha ejecutado; no se confunde emulación de Chrome con esa
+aceptación. Las entradas anteriores se conservan como historial.
 
 ## Feedback de guardado y salida Windows — pendiente, sin desplazar balance
 
@@ -459,14 +467,14 @@ Avance experimental de iluminación: [modelo con material real y atlas con gradi
 
 ## Protección de cámara en primeros planos (pedido el 6 de octubre de 2026)
 
-Avance del 11 de octubre en `feature/post-jam-usability-polish`, todavía sin
-integrar: protección contextual finita, sobrevuelo, partes de murallas/puertas y
-pulido de los cuatro labs en móvil. [Evidencia y gates pendientes](qa/post-jam-usability-polish/README.md).
-Biblioteca supera controles, ES/EN, orientación y tamaños emulados; cámara
-supera recorridos geométricos y está en revisión visual/rendimiento. Salida
-Tauri implementada, pendiente de aceptación mediante proceso empaquetado y
-recuperación de guardado. No marcar estas tres tareas como cerradas hasta
-completar QA y CI. No se ha acreditado aceptación Android física.
+Actualización del 11 de octubre: implementación y QA completas en la rama
+`feature/post-jam-usability-polish`, entregada mediante PR. La protección
+contextual finita, sobrevuelo, murallas/puertas y los cuatro labs móviles cuentan
+con [evidencia y CI](qa/post-jam-usability-polish/README.md). La salida nativa
+se ha verificado mediante proceso Windows empaquetado y recuperación exacta
+tras reinicio. Android físico conserva aceptación no ejecutada; las pruebas de
+viewports/touch/orientación son emulación en Chrome. Se conserva debajo la
+especificación histórica.
 
 - Seguir la [especificación independiente de protección de cámara](camera-close-protection-post-jam.md), junto a distancia de dibujado/impostores/horizonte pero sin confundir sus objetivos.
 - Evitar penetraciones y ampliaciones problemáticas con soft collision y volúmenes de exclusión finitos, márgenes contextuales por categoría/modelo y desaceleración suave.
