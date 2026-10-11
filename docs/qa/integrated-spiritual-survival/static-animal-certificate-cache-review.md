@@ -17,3 +17,11 @@ The same stopped v111 snapshot used in the previous diagnosis was measured again
 An initial whole-object comparison intentionally failed because it compared terrain execution counters as if they were physical outcomes (624 requests in the cached call versus about 78 million in the original first call). The final comparison excludes **only** that named execution-diagnostic object; it does not remove target, worker, route, pose or physical-certificate fields.
 
 These are isolated sequential cold/warm observations, not statistical ABBA acceptance or a complete-day measurement. The first certification remains expensive, and new crops/harvests or geometry changes can invalidate reuse. A short native progression test must measure that invalidation frequency and total runtime before any new long campaign is considered. This evidence does not establish acceptable whole-campaign performance, successful worker navigation or campaign victory.
+
+## Five-second native progression: not yet acceptable
+
+`probe-short-native-recertification.mjs` advances a copy of the retained native snapshot through twenty actual 0.25-second `Game.tick` calls and certifies at 0, 2.5 and 5 simulated seconds. No player commands, synthetic income or crop removal are injected. The original saved snapshot and campaign directory remain untouched. Results and exact source hashes are retained in `v111-five-second-native-recertification.jsonl`.
+
+Living census falls naturally 178 → 175 → 169, and confirmed ledger entries rise 1306 → 1308 → 1311. Navigation epoch remains 84. Each changed census correctly invalidates the current exact-target certificate cache. Certification times are 10,554 / 13,128 / 12,649 ms. Native tick time totals 134.12 ms, while total wall time is 36,567.42 ms for five simulated seconds. Result stays null; this is not a completed campaign, economic failure or observed player strategy.
+
+This negative result rejects approval of the current cache as sufficient for long campaigns. The next candidate must investigate retaining positive coverage for unchanged surviving targets when other targets are harvested, or finer per-target reuse, while invalidating new/moved targets and changed geometry. Historical certificate counters must be explicitly distinguished from newly executed work. The long-campaign embargo remains active.
