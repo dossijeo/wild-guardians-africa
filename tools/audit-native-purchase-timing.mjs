@@ -1,0 +1,20 @@
+import assert from 'node:assert/strict';
+import {readFileSync,writeFileSync,existsSync} from 'node:fs';
+const [original,replay,output]=process.argv.slice(2);
+if(!original||!replay||!output||existsSync(output))throw Error('Provide original, replay and fresh output');
+const read=(dir,name)=>JSON.parse(readFileSync(dir+'/'+name));
+const a=read(original,'report.json'),b=read(replay,'report.json');
+assert.deepEqual(b.daily,a.daily,'Telemetry replay changed daily native results');
+const old=read(original,'source.json').sourceHashes,now=read(replay,'source.json').sourceHashes;
+for(const [p,h]of Object.entries(old))assert.equal(now[p],h,'Historical runtime hash changed: '+p);
+assert.equal(read(replay,'receipt.json').status,'observed-horizon');
+const rows=read(replay,'purchase-decisions.json').decisions;
+const days=[...new Set(rows.map(r=>r.day))].map(day=>{
+ const observations=rows.filter(r=>r.day===day);
+ const funded=observations.filter(r=>r.balance>=r.labourReserve+r.maintenanceReserve+r.defenseReserve+r.seedCost);
+ const early=funded.filter(r=>r.time<280);
+ const byReason=Object.fromEntries([...new Set(observations.map(r=>r.reason))].map(reason=>[reason,observations.filter(r=>r.reason===reason).length]));
+ return {day,observations:observations.length,byReason,firstFunded:funded[0]??null,lastFunded:funded.at(-1)??null,fundedBefore280:early.length,fundedBudgetBefore280:early.filter(r=>r.reason==='budget').length,samples:early.filter(r=>r.reason==='budget').slice(0,4),lastObservations:observations.slice(-3)};
+});
+writeFileSync(output,JSON.stringify({original,replay,allHistoricalSourceHashesMatch:true,dailyRowsExactlyMatch:true,days,scope:'Post-decision funding screen for elder shifts, excluding nonzero postgame savings because these pilots end at seven nights. A funded observation does not itself prove that placement was attempted or was legal; action-side diagnostics may still be necessary.'},null,2)+'\n');
+console.log(JSON.stringify(days.map(d=>({day:d.day,fundedBefore280:d.fundedBefore280,fundedBudgetBefore280:d.fundedBudgetBefore280,firstFundedTime:d.firstFunded?.time??null,lastFundedTime:d.lastFunded?.time??null}))));
