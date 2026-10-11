@@ -1,0 +1,848 @@
+{
+  "snapshotPath": "docs/qa/integrated-spiritual-survival/pilot-v97-q14-good-zarzas-canyon-712-seven/partial-state.json.gz",
+  "snapshotSha256": "849be18207f413a72493cb21eee5f05e218c81a2975da127f057dcc3cb70c4bc",
+  "contoursPath": "docs/qa/integrated-spiritual-survival/canyon-q14-predefeat-shore-refined-v2.json",
+  "contoursSha256": "efa49c28221a2a207080b5fb82b1b20dc6b840f6e610fdb63ecc84b09429b2b7",
+  "index": 5,
+  "rejectedReason": "native-worker-route-blocked",
+  "quote": {
+    "cost": 560,
+    "pieces": 56,
+    "suppressed": []
+  },
+  "sourceHashes": {
+    "tools/probe-native-contour-worker-access.mjs": "0dfb88ca4d4854898973f270e858e6d4e6a5e1ef38b5ad43076e1212dffc2d86",
+    "public/content/biome-canyons.json": "a0da0d39766ef48e44ef82bc9b9ab6093bce0ae2bf6abd3035a626792823ff6d",
+    "src/world/navigation.js": "21b82f33c62581436a6cef702b66af272ae9d3b096cb2b20ee858f0a50196743",
+    "src/world/centers.js": "7a826b2bf3bb0793b0e4453c3a9ae487741f2ddf41c79433434091806739a7f4",
+    "src/world/work-points.js": "cb741c085c97c046f6e0e477bb83b6f81c2e953c7c3ed14cf0d4a42920ba7939",
+    "src/simulation/game.js": "b216594fd241d10746d7d9b3a7802f7a6eca41c2709d25edd6501f5834e80c6f"
+  },
+  "cpuMilliseconds": 870.5104000000001,
+  "stateUnchanged": true,
+  "results": [
+    {
+      "view": "original",
+      "origin": {
+        "id": "worker-2161",
+        "type": "live-worker",
+        "x": -13.569992528177217,
+        "z": 57.31525238337267,
+        "status": "fleeing"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": false,
+      "pathPoints": 0,
+      "wateringRouteFound": true,
+      "wateringDestination": {
+        "x": -19.18921240311441,
+        "z": 71.230382517336,
+        "id": "water-point-plant-1350-0"
+      },
+      "cpuMilliseconds": 7.320899999999995
+    },
+    {
+      "view": "original",
+      "origin": {
+        "id": "worker-2672",
+        "type": "live-worker",
+        "x": -17.86075663987355,
+        "z": 74.8206658968798,
+        "status": "walking"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 1,
+      "wateringRouteFound": true,
+      "wateringDestination": {
+        "x": -19.082954071240675,
+        "z": 72.71761597899244,
+        "id": "water-point-plant-1350-0"
+      },
+      "cpuMilliseconds": 1.0255000000000223
+    },
+    {
+      "view": "original",
+      "origin": {
+        "id": "worker-2673",
+        "type": "live-worker",
+        "x": -17.189243977423402,
+        "z": 68.4293777972463,
+        "status": "carrying"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 1,
+      "wateringRouteFound": true,
+      "wateringDestination": {
+        "x": -19.049052824401475,
+        "z": 71.3031882285583,
+        "id": "water-point-plant-1350-0"
+      },
+      "cpuMilliseconds": 0.7325000000000159
+    },
+    {
+      "view": "original",
+      "origin": {
+        "id": "worker-2674",
+        "type": "live-worker",
+        "x": -23.87929542263709,
+        "z": 53.335624225406406,
+        "status": "walking"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 3,
+      "wateringRouteFound": true,
+      "wateringDestination": {
+        "x": -19.689597109956647,
+        "z": 71.19194496728497,
+        "id": "water-point-plant-1350-0"
+      },
+      "cpuMilliseconds": 29.732899999999972
+    },
+    {
+      "view": "original",
+      "origin": {
+        "id": "worker-2675",
+        "type": "live-worker",
+        "x": -19.13588525131658,
+        "z": 65,
+        "status": "walking"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 1,
+      "wateringRouteFound": true,
+      "wateringDestination": {
+        "x": -19.456884683349134,
+        "z": 71.1711205941332,
+        "id": "water-point-plant-1350-0"
+      },
+      "cpuMilliseconds": 0.7186000000000377
+    },
+    {
+      "view": "original",
+      "origin": {
+        "id": "worker-2676",
+        "type": "live-worker",
+        "x": -28.327432105521158,
+        "z": 49.774219477417525,
+        "status": "carrying"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 2,
+      "wateringRouteFound": true,
+      "wateringDestination": {
+        "x": -19.806371991335897,
+        "z": 71.22861410245916,
+        "id": "water-point-plant-1350-0"
+      },
+      "cpuMilliseconds": 23.407600000000002
+    },
+    {
+      "view": "original",
+      "origin": {
+        "id": "worker-2677",
+        "type": "live-worker",
+        "x": -19.5,
+        "z": 72,
+        "status": "acting"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 1,
+      "wateringRouteFound": true,
+      "wateringDestination": {
+        "x": -19.5,
+        "z": 72.83,
+        "id": "water-point-plant-1350-0"
+      },
+      "cpuMilliseconds": 0.15739999999999554
+    },
+    {
+      "view": "original",
+      "origin": {
+        "id": "worker-2678",
+        "type": "live-worker",
+        "x": -15,
+        "z": 70.5,
+        "status": "acting"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 1,
+      "wateringRouteFound": true,
+      "wateringDestination": {
+        "x": -18.712592862618074,
+        "z": 71.73753095420602,
+        "id": "water-point-plant-1350-0"
+      },
+      "cpuMilliseconds": 0.2688999999999737
+    },
+    {
+      "view": "original",
+      "origin": {
+        "id": "worker-2793",
+        "type": "live-worker",
+        "x": -27,
+        "z": 60.007042864010245,
+        "status": "walking"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 2,
+      "wateringRouteFound": true,
+      "wateringDestination": {
+        "x": -19.940084840177743,
+        "z": 71.29627751673992,
+        "id": "water-point-plant-1350-0"
+      },
+      "cpuMilliseconds": 5.845100000000002
+    },
+    {
+      "view": "original",
+      "origin": {
+        "id": "worker-2979",
+        "type": "live-worker",
+        "x": -42.114330466405654,
+        "z": 37.14115212568172,
+        "status": "walking"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 2,
+      "wateringRouteFound": true,
+      "wateringDestination": {
+        "x": -19.9517234087404,
+        "z": 71.30369118776511,
+        "id": "water-point-plant-1350-0"
+      },
+      "cpuMilliseconds": 74.0831
+    },
+    {
+      "view": "original",
+      "origin": {
+        "id": "structure-2",
+        "type": "centre-service",
+        "x": -13.147470503294713,
+        "z": 59.05401533842087
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 2,
+      "wateringRouteFound": true,
+      "wateringDestination": {
+        "x": -19.134369824292396,
+        "z": 71.2548727795792,
+        "id": "water-point-plant-1350-0"
+      },
+      "cpuMilliseconds": 7.413700000000006
+    },
+    {
+      "view": "quoted-obstacles",
+      "origin": {
+        "id": "worker-2161",
+        "type": "live-worker",
+        "x": -13.569992528177217,
+        "z": 57.31525238337267,
+        "status": "fleeing"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": false,
+      "pathPoints": 0,
+      "wateringRouteFound": true,
+      "wateringDestination": {
+        "x": -19.18921240311441,
+        "z": 71.230382517336,
+        "id": "water-point-plant-1350-0"
+      },
+      "cpuMilliseconds": 9.06800000000004
+    },
+    {
+      "view": "quoted-obstacles",
+      "origin": {
+        "id": "worker-2672",
+        "type": "live-worker",
+        "x": -17.86075663987355,
+        "z": 74.8206658968798,
+        "status": "walking"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 1,
+      "wateringRouteFound": true,
+      "wateringDestination": {
+        "x": -19.082954071240675,
+        "z": 72.71761597899244,
+        "id": "water-point-plant-1350-0"
+      },
+      "cpuMilliseconds": 0.7737999999999943
+    },
+    {
+      "view": "quoted-obstacles",
+      "origin": {
+        "id": "worker-2673",
+        "type": "live-worker",
+        "x": -17.189243977423402,
+        "z": 68.4293777972463,
+        "status": "carrying"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 1,
+      "wateringRouteFound": true,
+      "wateringDestination": {
+        "x": -19.049052824401475,
+        "z": 71.3031882285583,
+        "id": "water-point-plant-1350-0"
+      },
+      "cpuMilliseconds": 0.9365999999999985
+    },
+    {
+      "view": "quoted-obstacles",
+      "origin": {
+        "id": "worker-2674",
+        "type": "live-worker",
+        "x": -23.87929542263709,
+        "z": 53.335624225406406,
+        "status": "walking"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 3,
+      "wateringRouteFound": true,
+      "wateringDestination": {
+        "x": -19.689597109956647,
+        "z": 71.19194496728497,
+        "id": "water-point-plant-1350-0"
+      },
+      "cpuMilliseconds": 46.22460000000001
+    },
+    {
+      "view": "quoted-obstacles",
+      "origin": {
+        "id": "worker-2675",
+        "type": "live-worker",
+        "x": -19.13588525131658,
+        "z": 65,
+        "status": "walking"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 1,
+      "wateringRouteFound": true,
+      "wateringDestination": {
+        "x": -19.456884683349134,
+        "z": 71.1711205941332,
+        "id": "water-point-plant-1350-0"
+      },
+      "cpuMilliseconds": 1.7744000000000142
+    },
+    {
+      "view": "quoted-obstacles",
+      "origin": {
+        "id": "worker-2676",
+        "type": "live-worker",
+        "x": -28.327432105521158,
+        "z": 49.774219477417525,
+        "status": "carrying"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 2,
+      "wateringRouteFound": true,
+      "wateringDestination": {
+        "x": -19.806371991335897,
+        "z": 71.22861410245916,
+        "id": "water-point-plant-1350-0"
+      },
+      "cpuMilliseconds": 34.21760000000006
+    },
+    {
+      "view": "quoted-obstacles",
+      "origin": {
+        "id": "worker-2677",
+        "type": "live-worker",
+        "x": -19.5,
+        "z": 72,
+        "status": "acting"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 1,
+      "wateringRouteFound": true,
+      "wateringDestination": {
+        "x": -19.5,
+        "z": 72.83,
+        "id": "water-point-plant-1350-0"
+      },
+      "cpuMilliseconds": 0.2300999999999931
+    },
+    {
+      "view": "quoted-obstacles",
+      "origin": {
+        "id": "worker-2678",
+        "type": "live-worker",
+        "x": -15,
+        "z": 70.5,
+        "status": "acting"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 1,
+      "wateringRouteFound": true,
+      "wateringDestination": {
+        "x": -18.712592862618074,
+        "z": 71.73753095420602,
+        "id": "water-point-plant-1350-0"
+      },
+      "cpuMilliseconds": 0.38210000000003674
+    },
+    {
+      "view": "quoted-obstacles",
+      "origin": {
+        "id": "worker-2793",
+        "type": "live-worker",
+        "x": -27,
+        "z": 60.007042864010245,
+        "status": "walking"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 2,
+      "wateringRouteFound": true,
+      "wateringDestination": {
+        "x": -19.940084840177743,
+        "z": 71.29627751673992,
+        "id": "water-point-plant-1350-0"
+      },
+      "cpuMilliseconds": 5.299199999999928
+    },
+    {
+      "view": "quoted-obstacles",
+      "origin": {
+        "id": "worker-2979",
+        "type": "live-worker",
+        "x": -42.114330466405654,
+        "z": 37.14115212568172,
+        "status": "walking"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 4,
+      "wateringRouteFound": true,
+      "wateringDestination": {
+        "x": -19.9517234087404,
+        "z": 71.30369118776511,
+        "id": "water-point-plant-1350-0"
+      },
+      "cpuMilliseconds": 290.4603000000001
+    },
+    {
+      "view": "quoted-obstacles",
+      "origin": {
+        "id": "structure-2",
+        "type": "centre-service",
+        "x": -13.147470503294713,
+        "z": 59.05401533842087
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 2,
+      "wateringRouteFound": true,
+      "wateringDestination": {
+        "x": -19.134369824292396,
+        "z": 71.2548727795792,
+        "id": "water-point-plant-1350-0"
+      },
+      "cpuMilliseconds": 11.31639999999993
+    },
+    {
+      "view": "quoted-obstacles-and-suppression",
+      "origin": {
+        "id": "worker-2161",
+        "type": "live-worker",
+        "x": -13.569992528177217,
+        "z": 57.31525238337267,
+        "status": "fleeing"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": false,
+      "pathPoints": 0,
+      "wateringRouteFound": true,
+      "wateringDestination": {
+        "x": -19.18921240311441,
+        "z": 71.230382517336,
+        "id": "water-point-plant-1350-0"
+      },
+      "cpuMilliseconds": 3.6235999999998967
+    },
+    {
+      "view": "quoted-obstacles-and-suppression",
+      "origin": {
+        "id": "worker-2672",
+        "type": "live-worker",
+        "x": -17.86075663987355,
+        "z": 74.8206658968798,
+        "status": "walking"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 1,
+      "wateringRouteFound": true,
+      "wateringDestination": {
+        "x": -19.082954071240675,
+        "z": 72.71761597899244,
+        "id": "water-point-plant-1350-0"
+      },
+      "cpuMilliseconds": 0.5849999999999227
+    },
+    {
+      "view": "quoted-obstacles-and-suppression",
+      "origin": {
+        "id": "worker-2673",
+        "type": "live-worker",
+        "x": -17.189243977423402,
+        "z": 68.4293777972463,
+        "status": "carrying"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 1,
+      "wateringRouteFound": true,
+      "wateringDestination": {
+        "x": -19.049052824401475,
+        "z": 71.3031882285583,
+        "id": "water-point-plant-1350-0"
+      },
+      "cpuMilliseconds": 0.6311000000000604
+    },
+    {
+      "view": "quoted-obstacles-and-suppression",
+      "origin": {
+        "id": "worker-2674",
+        "type": "live-worker",
+        "x": -23.87929542263709,
+        "z": 53.335624225406406,
+        "status": "walking"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 3,
+      "wateringRouteFound": true,
+      "wateringDestination": {
+        "x": -19.689597109956647,
+        "z": 71.19194496728497,
+        "id": "water-point-plant-1350-0"
+      },
+      "cpuMilliseconds": 30.40089999999998
+    },
+    {
+      "view": "quoted-obstacles-and-suppression",
+      "origin": {
+        "id": "worker-2675",
+        "type": "live-worker",
+        "x": -19.13588525131658,
+        "z": 65,
+        "status": "walking"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 1,
+      "wateringRouteFound": true,
+      "wateringDestination": {
+        "x": -19.456884683349134,
+        "z": 71.1711205941332,
+        "id": "water-point-plant-1350-0"
+      },
+      "cpuMilliseconds": 0.7755999999999403
+    },
+    {
+      "view": "quoted-obstacles-and-suppression",
+      "origin": {
+        "id": "worker-2676",
+        "type": "live-worker",
+        "x": -28.327432105521158,
+        "z": 49.774219477417525,
+        "status": "carrying"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 2,
+      "wateringRouteFound": true,
+      "wateringDestination": {
+        "x": -19.806371991335897,
+        "z": 71.22861410245916,
+        "id": "water-point-plant-1350-0"
+      },
+      "cpuMilliseconds": 24.603000000000065
+    },
+    {
+      "view": "quoted-obstacles-and-suppression",
+      "origin": {
+        "id": "worker-2677",
+        "type": "live-worker",
+        "x": -19.5,
+        "z": 72,
+        "status": "acting"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 1,
+      "wateringRouteFound": true,
+      "wateringDestination": {
+        "x": -19.5,
+        "z": 72.83,
+        "id": "water-point-plant-1350-0"
+      },
+      "cpuMilliseconds": 0.3450999999998885
+    },
+    {
+      "view": "quoted-obstacles-and-suppression",
+      "origin": {
+        "id": "worker-2678",
+        "type": "live-worker",
+        "x": -15,
+        "z": 70.5,
+        "status": "acting"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 1,
+      "wateringRouteFound": true,
+      "wateringDestination": {
+        "x": -18.712592862618074,
+        "z": 71.73753095420602,
+        "id": "water-point-plant-1350-0"
+      },
+      "cpuMilliseconds": 0.5947999999999638
+    },
+    {
+      "view": "quoted-obstacles-and-suppression",
+      "origin": {
+        "id": "worker-2793",
+        "type": "live-worker",
+        "x": -27,
+        "z": 60.007042864010245,
+        "status": "walking"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 2,
+      "wateringRouteFound": true,
+      "wateringDestination": {
+        "x": -19.940084840177743,
+        "z": 71.29627751673992,
+        "id": "water-point-plant-1350-0"
+      },
+      "cpuMilliseconds": 4.934000000000083
+    },
+    {
+      "view": "quoted-obstacles-and-suppression",
+      "origin": {
+        "id": "worker-2979",
+        "type": "live-worker",
+        "x": -42.114330466405654,
+        "z": 37.14115212568172,
+        "status": "walking"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 4,
+      "wateringRouteFound": true,
+      "wateringDestination": {
+        "x": -19.9517234087404,
+        "z": 71.30369118776511,
+        "id": "water-point-plant-1350-0"
+      },
+      "cpuMilliseconds": 222.00840000000005
+    },
+    {
+      "view": "quoted-obstacles-and-suppression",
+      "origin": {
+        "id": "structure-2",
+        "type": "centre-service",
+        "x": -13.147470503294713,
+        "z": 59.05401533842087
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 2,
+      "wateringRouteFound": true,
+      "wateringDestination": {
+        "x": -19.134369824292396,
+        "z": 71.2548727795792,
+        "id": "water-point-plant-1350-0"
+      },
+      "cpuMilliseconds": 19.105099999999993
+    }
+  ],
+  "scope": "Static centre-point and native watering-service routes to each view's first body-valid living crop only; compares live worker and centre origins, and quoted suppression. A bounded failure does not prove inaccessibility. No paid construction, movement, task execution, perimeter approval, campaign replay or GPU benchmark."
+}

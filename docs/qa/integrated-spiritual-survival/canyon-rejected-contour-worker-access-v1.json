@@ -1,0 +1,649 @@
+{
+  "snapshotPath": "docs/qa/integrated-spiritual-survival/pilot-v97-q14-good-zarzas-canyon-712-seven/partial-state.json.gz",
+  "snapshotSha256": "849be18207f413a72493cb21eee5f05e218c81a2975da127f057dcc3cb70c4bc",
+  "contoursPath": "docs/qa/integrated-spiritual-survival/canyon-q14-predefeat-shore-refined-v2.json",
+  "contoursSha256": "efa49c28221a2a207080b5fb82b1b20dc6b840f6e610fdb63ecc84b09429b2b7",
+  "index": 5,
+  "rejectedReason": "native-worker-route-blocked",
+  "quote": {
+    "cost": 560,
+    "pieces": 56,
+    "suppressed": []
+  },
+  "sourceHashes": {
+    "tools/probe-native-contour-worker-access.mjs": "dc414011bf3b3893066bf5183b14b97c8fc91b7e4cb273c93110940da4c057f4",
+    "public/content/biome-canyons.json": "a0da0d39766ef48e44ef82bc9b9ab6093bce0ae2bf6abd3035a626792823ff6d",
+    "src/world/navigation.js": "21b82f33c62581436a6cef702b66af272ae9d3b096cb2b20ee858f0a50196743",
+    "src/world/centers.js": "7a826b2bf3bb0793b0e4453c3a9ae487741f2ddf41c79433434091806739a7f4",
+    "src/simulation/game.js": "b216594fd241d10746d7d9b3a7802f7a6eca41c2709d25edd6501f5834e80c6f"
+  },
+  "cpuMilliseconds": 618.2047,
+  "stateUnchanged": true,
+  "results": [
+    {
+      "view": "original",
+      "origin": {
+        "id": "worker-2161",
+        "type": "live-worker",
+        "x": -13.569992528177217,
+        "z": 57.31525238337267,
+        "status": "fleeing"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": false,
+      "pathPoints": 0,
+      "cpuMilliseconds": 1.3798999999999637
+    },
+    {
+      "view": "original",
+      "origin": {
+        "id": "worker-2672",
+        "type": "live-worker",
+        "x": -17.86075663987355,
+        "z": 74.8206658968798,
+        "status": "walking"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 1,
+      "cpuMilliseconds": 0.7433999999999514
+    },
+    {
+      "view": "original",
+      "origin": {
+        "id": "worker-2673",
+        "type": "live-worker",
+        "x": -17.189243977423402,
+        "z": 68.4293777972463,
+        "status": "carrying"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 1,
+      "cpuMilliseconds": 0.5405000000000086
+    },
+    {
+      "view": "original",
+      "origin": {
+        "id": "worker-2674",
+        "type": "live-worker",
+        "x": -23.87929542263709,
+        "z": 53.335624225406406,
+        "status": "walking"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 3,
+      "cpuMilliseconds": 17.068600000000004
+    },
+    {
+      "view": "original",
+      "origin": {
+        "id": "worker-2675",
+        "type": "live-worker",
+        "x": -19.13588525131658,
+        "z": 65,
+        "status": "walking"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 1,
+      "cpuMilliseconds": 0.25720000000001164
+    },
+    {
+      "view": "original",
+      "origin": {
+        "id": "worker-2676",
+        "type": "live-worker",
+        "x": -28.327432105521158,
+        "z": 49.774219477417525,
+        "status": "carrying"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 2,
+      "cpuMilliseconds": 9.05970000000002
+    },
+    {
+      "view": "original",
+      "origin": {
+        "id": "worker-2677",
+        "type": "live-worker",
+        "x": -19.5,
+        "z": 72,
+        "status": "acting"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 1,
+      "cpuMilliseconds": 0.058300000000031105
+    },
+    {
+      "view": "original",
+      "origin": {
+        "id": "worker-2678",
+        "type": "live-worker",
+        "x": -15,
+        "z": 70.5,
+        "status": "acting"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 1,
+      "cpuMilliseconds": 0.14479999999997517
+    },
+    {
+      "view": "original",
+      "origin": {
+        "id": "worker-2793",
+        "type": "live-worker",
+        "x": -27,
+        "z": 60.007042864010245,
+        "status": "walking"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 2,
+      "cpuMilliseconds": 1.0517999999999574
+    },
+    {
+      "view": "original",
+      "origin": {
+        "id": "worker-2979",
+        "type": "live-worker",
+        "x": -42.114330466405654,
+        "z": 37.14115212568172,
+        "status": "walking"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 2,
+      "cpuMilliseconds": 54.42679999999996
+    },
+    {
+      "view": "original",
+      "origin": {
+        "id": "structure-2",
+        "type": "centre-service",
+        "x": -13.147470503294713,
+        "z": 59.05401533842087
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 2,
+      "cpuMilliseconds": 7.83159999999998
+    },
+    {
+      "view": "quoted-obstacles",
+      "origin": {
+        "id": "worker-2161",
+        "type": "live-worker",
+        "x": -13.569992528177217,
+        "z": 57.31525238337267,
+        "status": "fleeing"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": false,
+      "pathPoints": 0,
+      "cpuMilliseconds": 0.9857000000000085
+    },
+    {
+      "view": "quoted-obstacles",
+      "origin": {
+        "id": "worker-2672",
+        "type": "live-worker",
+        "x": -17.86075663987355,
+        "z": 74.8206658968798,
+        "status": "walking"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 1,
+      "cpuMilliseconds": 0.8772000000000162
+    },
+    {
+      "view": "quoted-obstacles",
+      "origin": {
+        "id": "worker-2673",
+        "type": "live-worker",
+        "x": -17.189243977423402,
+        "z": 68.4293777972463,
+        "status": "carrying"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 1,
+      "cpuMilliseconds": 0.5942999999999756
+    },
+    {
+      "view": "quoted-obstacles",
+      "origin": {
+        "id": "worker-2674",
+        "type": "live-worker",
+        "x": -23.87929542263709,
+        "z": 53.335624225406406,
+        "status": "walking"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 3,
+      "cpuMilliseconds": 33.66119999999995
+    },
+    {
+      "view": "quoted-obstacles",
+      "origin": {
+        "id": "worker-2675",
+        "type": "live-worker",
+        "x": -19.13588525131658,
+        "z": 65,
+        "status": "walking"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 1,
+      "cpuMilliseconds": 0.806699999999978
+    },
+    {
+      "view": "quoted-obstacles",
+      "origin": {
+        "id": "worker-2676",
+        "type": "live-worker",
+        "x": -28.327432105521158,
+        "z": 49.774219477417525,
+        "status": "carrying"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 2,
+      "cpuMilliseconds": 21.51740000000001
+    },
+    {
+      "view": "quoted-obstacles",
+      "origin": {
+        "id": "worker-2677",
+        "type": "live-worker",
+        "x": -19.5,
+        "z": 72,
+        "status": "acting"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 1,
+      "cpuMilliseconds": 0.13230000000004338
+    },
+    {
+      "view": "quoted-obstacles",
+      "origin": {
+        "id": "worker-2678",
+        "type": "live-worker",
+        "x": -15,
+        "z": 70.5,
+        "status": "acting"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 1,
+      "cpuMilliseconds": 0.32920000000001437
+    },
+    {
+      "view": "quoted-obstacles",
+      "origin": {
+        "id": "worker-2793",
+        "type": "live-worker",
+        "x": -27,
+        "z": 60.007042864010245,
+        "status": "walking"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 2,
+      "cpuMilliseconds": 2.007000000000005
+    },
+    {
+      "view": "quoted-obstacles",
+      "origin": {
+        "id": "worker-2979",
+        "type": "live-worker",
+        "x": -42.114330466405654,
+        "z": 37.14115212568172,
+        "status": "walking"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 4,
+      "cpuMilliseconds": 194.00919999999996
+    },
+    {
+      "view": "quoted-obstacles",
+      "origin": {
+        "id": "structure-2",
+        "type": "centre-service",
+        "x": -13.147470503294713,
+        "z": 59.05401533842087
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 2,
+      "cpuMilliseconds": 12.409999999999968
+    },
+    {
+      "view": "quoted-obstacles-and-suppression",
+      "origin": {
+        "id": "worker-2161",
+        "type": "live-worker",
+        "x": -13.569992528177217,
+        "z": 57.31525238337267,
+        "status": "fleeing"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": false,
+      "pathPoints": 0,
+      "cpuMilliseconds": 0.8158999999999423
+    },
+    {
+      "view": "quoted-obstacles-and-suppression",
+      "origin": {
+        "id": "worker-2672",
+        "type": "live-worker",
+        "x": -17.86075663987355,
+        "z": 74.8206658968798,
+        "status": "walking"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 1,
+      "cpuMilliseconds": 2.7712999999999965
+    },
+    {
+      "view": "quoted-obstacles-and-suppression",
+      "origin": {
+        "id": "worker-2673",
+        "type": "live-worker",
+        "x": -17.189243977423402,
+        "z": 68.4293777972463,
+        "status": "carrying"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 1,
+      "cpuMilliseconds": 0.3243999999999687
+    },
+    {
+      "view": "quoted-obstacles-and-suppression",
+      "origin": {
+        "id": "worker-2674",
+        "type": "live-worker",
+        "x": -23.87929542263709,
+        "z": 53.335624225406406,
+        "status": "walking"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 3,
+      "cpuMilliseconds": 17.468000000000075
+    },
+    {
+      "view": "quoted-obstacles-and-suppression",
+      "origin": {
+        "id": "worker-2675",
+        "type": "live-worker",
+        "x": -19.13588525131658,
+        "z": 65,
+        "status": "walking"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 1,
+      "cpuMilliseconds": 0.45150000000001
+    },
+    {
+      "view": "quoted-obstacles-and-suppression",
+      "origin": {
+        "id": "worker-2676",
+        "type": "live-worker",
+        "x": -28.327432105521158,
+        "z": 49.774219477417525,
+        "status": "carrying"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 2,
+      "cpuMilliseconds": 14.158400000000029
+    },
+    {
+      "view": "quoted-obstacles-and-suppression",
+      "origin": {
+        "id": "worker-2677",
+        "type": "live-worker",
+        "x": -19.5,
+        "z": 72,
+        "status": "acting"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 1,
+      "cpuMilliseconds": 0.09249999999997272
+    },
+    {
+      "view": "quoted-obstacles-and-suppression",
+      "origin": {
+        "id": "worker-2678",
+        "type": "live-worker",
+        "x": -15,
+        "z": 70.5,
+        "status": "acting"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 1,
+      "cpuMilliseconds": 0.25540000000000873
+    },
+    {
+      "view": "quoted-obstacles-and-suppression",
+      "origin": {
+        "id": "worker-2793",
+        "type": "live-worker",
+        "x": -27,
+        "z": 60.007042864010245,
+        "status": "walking"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 2,
+      "cpuMilliseconds": 1.1789999999999736
+    },
+    {
+      "view": "quoted-obstacles-and-suppression",
+      "origin": {
+        "id": "worker-2979",
+        "type": "live-worker",
+        "x": -42.114330466405654,
+        "z": 37.14115212568172,
+        "status": "walking"
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 4,
+      "cpuMilliseconds": 202.78880000000004
+    },
+    {
+      "view": "quoted-obstacles-and-suppression",
+      "origin": {
+        "id": "structure-2",
+        "type": "centre-service",
+        "x": -13.147470503294713,
+        "z": 59.05401533842087
+      },
+      "destination": {
+        "id": "plant-1350",
+        "x": -19.5,
+        "z": 72
+      },
+      "startBodyValid": true,
+      "routeFound": true,
+      "pathPoints": 2,
+      "cpuMilliseconds": 9.544499999999971
+    }
+  ],
+  "scope": "Static routes to each view's first body-valid living crop only; compares live worker and centre origins, and quoted suppression. A bounded failure does not prove inaccessibility. No paid construction, movement, task execution, perimeter approval, campaign replay or GPU benchmark."
+}
