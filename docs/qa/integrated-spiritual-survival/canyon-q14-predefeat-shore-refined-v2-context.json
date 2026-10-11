@@ -1,0 +1,36 @@
+{
+  "status": "rejected-hypothetical-contours",
+  "input": "docs/qa/integrated-spiritual-survival/pilot-v97-q14-good-zarzas-canyon-712-seven/partial-state.json.gz",
+  "inputSha256": "849be18207f413a72493cb21eee5f05e218c81a2975da127f057dcc3cb70c4bc",
+  "inputFileStillMatches": true,
+  "proposals": 9,
+  "validProposals": 0,
+  "reasons": {
+    "no-clear-exterior-probe": 1,
+    "native-service-origin-unproven": 4,
+    "native-worker-route-blocked": 4
+  },
+  "retainedSourceDifferences": [
+    {
+      "path": "src/simulation/raids.js",
+      "before": "e74e5049eabde4d7a2cc424c8d375252e6bc2f03b9298731ed298724c2663c3b",
+      "after": "8daa672b4a92831166fbde7be3c10cc6e123d3d8fadac008c791210fef9ebcfd"
+    },
+    {
+      "path": "tools/native-campaign-runner.mjs",
+      "before": "0e5bdf19a0931601fcb3eeb53ef5606da927c34f3001be1e307a8b6d1db06100",
+      "after": "2311066df411b753ee42570835b85648d53a789414db1d5d65e3f2c47af139e1"
+    },
+    {
+      "path": "tools/native-campaign-protocol.mjs",
+      "before": "98f91cfaf59919050478238497e141e662047621575d05100fdd303abcb9bd41",
+      "after": "6e81c04b6522e188abb829e66cc6a109c26467c8c75297cc9e31d4256949ba3b"
+    },
+    {
+      "path": "tools/run_native_campaign.mjs",
+      "before": "0d7c2bf17cff2f97f467de3c6e3748a584c9595f7dd15ec6b4787d91f7a13a87",
+      "after": "facde90c8f2db6bfa876eaa71926d4b73eba88fdaaad99576b55a9f500bc18b6"
+    }
+  ],
+  "scope": "Pre-defeat Q14 state tested with current exact recorded geometry helpers. Raid bounded retry and Q15 runner/protocol edits are explicit source differences, not an identical-source campaign replay. All proposed walls remain unpaid; no game result was cleared or native state altered."
+}
