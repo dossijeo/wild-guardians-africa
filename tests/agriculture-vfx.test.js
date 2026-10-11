@@ -34,7 +34,7 @@ for(const [kind,duration,cooldown] of [['growth',30,0],['multiply',15,0]])test(`
  Game.cast(s,'cast',kind,6,0,nav);const id=s.spells[0].id,g=graphics();
  try {
   Game.advanceReal(s,1.2,nav);assert.ok(Math.abs(s.time-301)<1e-7);
-  assert.ok(Math.abs(s.plants[0].growth-(kind==='growth'?31.5:31))<1e-7);
+  assert.ok(Math.abs(s.plants[0].growth-(kind==='growth'?31+(180*15/195)/30:31))<1e-7);
   const plant=JSON.stringify(s.plants[0]),before=serialize(s);g.manager.update(s);assert.equal(serialize(s),before);
   assert.ok(Math.abs(g.manager.effects.get(id).native.time-2)<1e-7);
   Game.pause(s,'menu');Game.advanceReal(s,100,nav);g.manager.update(s);assert.equal(JSON.stringify(s.plants[0]),plant);

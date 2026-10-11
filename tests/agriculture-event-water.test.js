@@ -39,12 +39,17 @@ test('successful manual or magical water clears season, but a request without du
   }
 });
 
-test('Growth consumes season once; a saved later checkpoint freezes at its original tolerance',()=>{
+test('fractional Growth retains season until required watering; a saved later checkpoint keeps original tolerance',()=>{
   let s=farm();Game.plant(s,'seed','platano',6,0,nav);const p=s.plants[0];waterPlant(p);
   p.growth=94;season(s,.3);Game.cast(s,'growth','growth',p.x,p.z,nav);
-  const coins=JSON.stringify(s.ledger);Game.tick(s,1,nav);assert.equal(p.water[1].status,'magic');
+  const coins=JSON.stringify(s.ledger);Game.tick(s,1,nav);assert.equal(p.water[1].status,'due');
+  close(p.toleranceBonus,.3);assert.equal(waterPlant(p),true);assert.equal(p.water[1].status,'manual');
   s=deserialize(serialize(s));const restored=s.plants[0];assert.equal(restored.toleranceBonus,0);
-  Game.tick(s,29,nav);close(restored.growth,139);assert.equal(s.spells.length,0);
+  // First request receives 180*15/195 seconds of extra growth over 30 seconds.
+  // The first second stops receiving magical acceleration at the checkpoint
+  // until the explicit watering above; that remainder grows at the base rate.
+  const extraRate=(180*15/195)/30,untilDue=1/(1+extraRate);
+  Game.tick(s,29,nav);close(restored.growth,94+30+extraRate*(29+untilDue));assert.equal(s.spells.length,0);
   Game.tick(s,100,nav);close(restored.growth,213.75);close(restored.water[2].wait,23.75);
   assert.equal(restored.water[2].status,'due');assert.equal(restored.alive,true);
   assert.equal(s.tasks.filter(t=>t.kind==='water'&&t.targetId===restored.id).length,1);

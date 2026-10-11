@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import * as Game from '../src/simulation/game.js';
 import {rational} from '../src/simulation/money.js';
-import {spawnRaid,updateRaid} from '../src/simulation/raids.js';
+import {spawnRaid,updateRaid,reachableApproach} from '../src/simulation/raids.js';
 import {animalSpec,collapseThreshold} from '../src/simulation/rules.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {structureAlertSound,WALL_HIT_SOUNDS} from '../src/audio/structure-audio.js';
@@ -72,7 +72,15 @@ test('simultaneous critical crossings group one warning while preserving each ma
  const state=fixture('mapungubwe',true),walls=[];
  for(let i=0;i<3;i++){Game.placeStructure(state,'wall-'+i,{kind:'wall',material:'zarzas',x:10+i*5,z:0},nav);walls.push(state.structures.at(-1));}
  spawnRaid(state,{group:['warthog','warthog','warthog']},nav);const hits=[];
- for(const [index,wall] of walls.entries()){wall.hp=collapseThreshold(wall)*2+10;hits.push(hit(state,wall,index));}
+ for(const [index,wall] of walls.entries()){
+  // Domain audio fixture: explicitly stage each body at its own valid contact,
+  // rather than asking a distant committed attack to damage another wall.
+  const animal=state.raid.animals[index],approach=reachableApproach(animal,wall,nav);
+  assert(approach);Object.assign(animal,{x:approach.point.x,z:approach.point.z,approach:approach.point,path:null});
+  wall.hp=collapseThreshold(wall)*2+10;const event=hit(state,wall,index);
+  assert.equal(event.targetId,wall.id);hits.push(event);
+ }
+ assert.equal(new Set(hits.map(e=>e.id)).size,3);
  const {audio,sources}=audioFixture();audio.process(hits,{state});await flush();
  assert.equal(sources.filter(s=>s.buffer.url===bank.items.find(i=>i.id==='game_wall_critical').audio.url).length,1);
  assert.equal(sources.filter(s=>s.buffer.url===bank.items.find(i=>i.id==='wall_hit_thorns').audio.url).length,3);audio.stop();

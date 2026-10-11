@@ -12,7 +12,7 @@ function fixture(){
  return {s,nav};
 }
 function until(s,nav,check,seconds=240){for(let i=0;!check()&&i<seconds*20;i++)Game.tick(s,.05,nav);assert.ok(check());}
-for(const reloadAt of ['none','active','expired','carrying'])test(`marked sprout earns double only after physical collection and delivery (${reloadAt})`,()=>{
+for(const reloadAt of ['none','active','expired','carrying'])test(`marked sprout settles its diluted bonus only after physical collection and delivery (${reloadAt})`,()=>{
  let {s,nav}=fixture();Game.cast(s,'multiply','multiply',8,4,nav);
  assert.equal(s.plants[0].multiplyHarvest,true);assert.equal(s.plants[0].growth,0);
  const cash=numberOf(s.ledger.balance);
@@ -22,10 +22,12 @@ for(const reloadAt of ['none','active','expired','carrying'])test(`marked sprout
  until(s,nav,()=>s.crates.length===1);
  assert.equal(s.plants[0].alive,false);assert.equal(s.plants[0].multiplyHarvest,false);
  assert.equal(s.plants[0].water.every(w=>w.status==='manual'),true);
- assert.equal(numberOf(s.crates[0].value),22);assert.equal(s.crates[0].delivered,false);assert.equal(numberOf(s.ledger.balance),cash);
+ assert.equal(numberOf(s.crates[0].value),11);assert.equal(numberOf(s.crates[0].multiplyPower.amount),132/13);
+ assert.equal(s.crates[0].multiplyPowerSettled,undefined);assert.equal(s.crates[0].delivered,false);assert.equal(numberOf(s.ledger.balance),cash);
  if(reloadAt==='carrying'){s=deserialize(serialize(s));nav.setState(s);}
- until(s,nav,()=>s.crates[0].delivered,60);assert.equal(numberOf(s.ledger.balance),cash+22);
- Game.tick(s,10,nav);assert.equal(s.crates.length,1);assert.equal(numberOf(s.ledger.balance),cash+22);
+ until(s,nav,()=>s.crates[0].delivered,60);assert.equal(numberOf(s.ledger.balance),cash+21);
+ assert.equal(numberOf(s.crates[0].multiplyIncome),10);assert.equal(s.crates[0].multiplyPowerSettled,true);
+ Game.tick(s,10,nav);assert.equal(s.crates.length,1);assert.equal(numberOf(s.ledger.balance),cash+21);
  assert.equal(s.events.filter(e=>e.type==='CrateDelivered').length,1);
 });
 test('targeted exposure never includes neighbouring new sprouts, even during the active interval',()=>{
@@ -54,7 +56,7 @@ test('saved exposure fields reject malformed state while accepting older absent 
  s.spells.push({id:'bad',kind:'multiply',x:0,z:0,radius:2.2,remaining:15,exposureApplied:1});assert.throws(()=>serialize(s));
 });
 
-test('repeated casts mark the same slow-growing crop without stacking beyond double',()=>{
+test('repeated casts retain one diluted slow-crop entitlement across dawn without stacking',()=>{
  const {s,nav}=fixture();Game.plant(s,'slow','yuca',20,4,nav);const p=s.plants.at(-1);
  Game.cast(s,'first','multiply',p.x,p.z,nav);Game.tick(s,120,nav);
  assert.equal(p.multiplyHarvest,true);assert.equal(s.cooldowns.multiply,0);
@@ -63,5 +65,9 @@ test('repeated casts mark the same slow-growing crop without stacking beyond dou
  s.nightPlan={done:true,group:[]};s.eventPlan=null;Game.tick(s,300,nav);
  Game.hire(s,'next-day',{olderFemale:1});s.dayPlan={done:true};
  until(s,nav,()=>s.crates.some(c=>c.sourcePlantId===p.id),295);
- const crate=s.crates.find(c=>c.sourcePlantId===p.id);assert.equal(numberOf(crate.value),64);
+ const crate=s.crates.find(c=>c.sourcePlantId===p.id);assert.equal(numberOf(crate.value),32);
+ assert.equal(numberOf(crate.multiplyPower.amount),132/13);assert.equal(crate.multiplyPower.day,101);
+ until(s,nav,()=>crate.delivered,60);assert.equal(numberOf(crate.multiplyIncome),10);
+ assert.equal(s.agriculturalPower.days[101].multiply.applications,2);
+ assert.equal(numberOf(s.agriculturalPower.days[101].multiply.committed),132/13);
 });
