@@ -1,0 +1,117 @@
+{
+  "snapshotSha256": "6c18f80706046641fc4714b5158838c2447879094a72598e33d8d9c6bcb68312",
+  "initial": {
+    "day": 16,
+    "completedNights": 15,
+    "ledger": {
+      "balance": {
+        "n": "642",
+        "d": "1"
+      },
+      "sha256": "fb04c0244dd9ab34334427668a41e44e4eaa12eda1ed9c408759be6e9f319d27"
+    },
+    "remaining": [
+      {
+        "id": "animal-14151",
+        "hits": 6,
+        "exit": {
+          "x": 214.2,
+          "z": -5
+        }
+      },
+      {
+        "id": "animal-14152",
+        "hits": 0,
+        "exit": {
+          "x": 214.2,
+          "z": 0
+        }
+      }
+    ]
+  },
+  "steps": 2277,
+  "simulatedSeconds": 227.70000000000002,
+  "reloaded": true,
+  "moves": {
+    "animal-14151": 236.27798597563697,
+    "animal-14152": 135.95666031626033,
+    "animal-14156": 309.196418468528,
+    "animal-14157": 291.4349060596203,
+    "animal-14158": 309.6998017008999
+  },
+  "endings": [
+    {
+      "id": "animal-14151",
+      "status": "gone",
+      "hits": 0,
+      "position": {
+        "x": 214.2,
+        "z": -5
+      },
+      "exit": {
+        "x": 214.2,
+        "z": -5
+      }
+    },
+    {
+      "id": "animal-14152",
+      "status": "gone",
+      "hits": 0,
+      "position": {
+        "x": 214.2,
+        "z": 0
+      },
+      "exit": {
+        "x": 214.2,
+        "z": 0
+      }
+    },
+    {
+      "id": "animal-14156",
+      "status": "gone",
+      "hits": 0,
+      "position": {
+        "x": 214.65,
+        "z": -6
+      },
+      "exit": {
+        "x": 214.65,
+        "z": -6
+      }
+    },
+    {
+      "id": "animal-14157",
+      "status": "gone",
+      "hits": 0,
+      "position": {
+        "x": 214.65,
+        "z": 0
+      },
+      "exit": {
+        "x": 214.65,
+        "z": 0
+      }
+    },
+    {
+      "id": "animal-14158",
+      "status": "gone",
+      "hits": 0,
+      "position": {
+        "x": 214.65,
+        "z": 5
+      },
+      "exit": {
+        "x": 214.65,
+        "z": 5
+      }
+    }
+  ],
+  "raidEnded": true,
+  "day": 17,
+  "completedNights": 16,
+  "result": null,
+  "remaining": [],
+  "ledgerUnchanged": true,
+  "cpuMilliseconds": 3085.1457,
+  "scope": "Native snapshot replay with physical movement assertions and reload; no campaign, GPU or human-activity acceptance."
+}
