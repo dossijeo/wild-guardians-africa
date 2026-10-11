@@ -8,17 +8,19 @@ import {centerFootprint} from '../src/world/centers.js';
 import {operational} from '../src/simulation/rules.js';
 import {nativeReusedServiceComponentProofV2} from './native-reused-service-component-proof-v2.mjs';
 import {staticAnimalCertificate} from './static-animal-certificate-cache.mjs';
+import {installProofWallBroadphase} from './proof-wall-broadphase-candidate.mjs';
 const proofViews=new WeakMap();
-export function nativePerimeterReusedCandidateV2(s,nav,plan,bounds,{cache=true,outline=null,workerServiceProof=nativeWorkerServiceProofV2,incrementalCrops=false,workersFirst=false}={}){
+export function nativePerimeterReusedCandidateV2(s,nav,plan,bounds,{cache=true,outline=null,workerServiceProof=nativeWorkerServiceProofV2,incrementalCrops=false,workersFirst=false,wallBroadphase=false}={}){
  // Native epochs invalidate obstacle/terrain/suppression changes. Bounds and
  // living crops are rechecked below on every call; they do not alter graph
  // geometry. Retain only one bounded native-query view per navigator.
- const key=JSON.stringify([nav.version,plan.pieces,plan.updates,plan.suppressed??[]]),old=cache?proofViews.get(nav):null;
+ const key=JSON.stringify([nav.version,plan.pieces,plan.updates,plan.suppressed??[],wallBroadphase]),old=cache?proofViews.get(nav):null;
  let view=old?.key===key&&old.state===s?old.view:null;
  if(!view){
   const updates=new Map(plan.updates.map(q=>[q.id,q]));
   view=nav.forBuildingPlacement({id:'qa-empty-proposal',x:1e12,z:1e12,radius:0,kind:'house'});
   view.obstacles=[...nav.obstacles.map(w=>updates.has(w.id)?{...w,...updates.get(w.id)}:w),...plan.pieces];
+  if(wallBroadphase)installProofWallBroadphase(view,Math.max(...Object.values(ANIMAL_ACTIONS.animals).map(a=>a.presentation.footprint.radius),...s.workers.map(w=>w.radius??.28),.28));
   if(cache)proofViews.set(nav,{key,state:s,view});
  }
  // Optional QA precondition: reject an unserviceable proposed layout before

@@ -1,0 +1,33 @@
+import assert from 'node:assert/strict';
+import {readFileSync,writeFileSync,existsSync} from 'node:fs';
+import {gunzipSync} from 'node:zlib';
+import {createHash} from 'node:crypto';
+import {performance} from 'node:perf_hooks';
+import {deserialize,serialize} from '../src/persistence/snapshots.js';
+import {Navigation,BIOME_IDS} from '../src/world/navigation.js';
+import * as Game from '../src/simulation/game.js';
+import {nativeStablePlanPerimeterProof} from './native-stable-plan-perimeter-proof.mjs';
+import {nativeWorkerServiceProofV3} from './native-worker-service-proof-v3.mjs';
+const output=process.argv[2];assert(output&&!existsSync(output),'Fresh output required');
+const root=new URL('../docs/qa/integrated-spiritual-survival/campaign-v115-q15-good-sabana-123-hundred/',import.meta.url);
+const bytes=readFileSync(new URL('partial-state.json.gz',root)),text=gunzipSync(bytes).toString();
+const trace=JSON.parse(readFileSync(new URL('partial.json',root))).receipts.defense.planned;
+const hash=value=>createHash('sha256').update(value).digest('hex');
+const rows=[];let expectedProof,expectedPaid;
+for(const arm of ['baseline','candidate','candidate','baseline']){
+ const s=deserialize(text),profile=JSON.parse(readFileSync(new URL('../public/content/biome-'+BIOME_IDS[s.biome]+'.json',import.meta.url))).profile;
+ const nav=new Navigation(s.seed,s.biome,profile);nav.setState(s);
+ const before=serialize(s),plan=Game.quoteWallChain(s,'zarzas',trace.points,nav,{smooth:false,snap:false}),quote=JSON.stringify(plan);
+ const started=performance.now();
+ const proof=nativeStablePlanPerimeterProof(s,nav,plan,trace.bounds,{outline:trace.points,workersFirst:true,incrementalCrops:true,workerServiceProof:nativeWorkerServiceProofV3,wallBroadphase:arm==='candidate',cache:false});
+ const milliseconds=performance.now()-started;
+ const {terrainTileDiagnostics,terrainMemoDiagnostics,...physical}=proof;
+ assert.equal(serialize(s),before);assert.equal(JSON.stringify(plan),quote);assert(proof.valid,proof.reason);
+ if(expectedProof)assert.deepEqual(physical,expectedProof);else expectedProof=physical;
+ assert(Game.buildWallChain(s,'qa-broadphase-paid','zarzas',trace.points,nav,{smooth:false,snap:false}));
+ const paid=serialize(s);if(expectedPaid)assert.equal(paid,expectedPaid);else expectedPaid=paid;
+ rows.push({arm,milliseconds,physicalCertificateSha256:hash(JSON.stringify(physical)),paidStateSha256:hash(paid),quoteSha256:hash(quote),cropCount:s.plants.filter(p=>p.alive).length,proposedPieces:plan.pieces.length});
+ console.log(JSON.stringify(rows.at(-1)));
+}
+const paths=['tools/benchmark-proof-wall-broadphase.mjs','tools/proof-wall-broadphase-candidate.mjs','tools/native-perimeter-reused-candidate-v2.mjs','tools/native-stable-plan-perimeter-proof.mjs','src/world/navigation.js','src/world/wall-collision-frame.js'];
+writeFileSync(output,JSON.stringify({scope:'Four cold native certifications AB/BA under concurrent CPU load. Exact physical certificate, unchanged quote/read-only state and identical paid construction. Not isolated hardware, live campaign or GPU acceptance.',snapshotSha256:hash(bytes),rows,sourceHashes:Object.fromEntries(paths.map(p=>[p,hash(readFileSync(new URL('../'+p,import.meta.url)))]))},null,2)+'\n',{flag:'wx'});

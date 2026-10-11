@@ -1,0 +1,50 @@
+{
+  "scope": "Four cold native certifications AB/BA under concurrent CPU load. Exact physical certificate, unchanged quote/read-only state and identical paid construction. Not isolated hardware, live campaign or GPU acceptance.",
+  "snapshotSha256": "6ecab8f0978876d60df697e26402f65fb46f40c5234d0553e57145b663c84aa0",
+  "rows": [
+    {
+      "arm": "baseline",
+      "milliseconds": 34580.4969,
+      "physicalCertificateSha256": "1eddd04e5446dae49e8691caa410280e4bb9086960ed17331831aa044d5c8a44",
+      "paidStateSha256": "96c1f1de4aa81e5f350de5622271d071bc6faee1b4167781383ba720f7fc3cff",
+      "quoteSha256": "7020e75ac2e21c8643e436e384e91e3257a1e99ad1a9b1ab5e193d525ef2345f",
+      "cropCount": 233,
+      "proposedPieces": 1
+    },
+    {
+      "arm": "candidate",
+      "milliseconds": 37184.8429,
+      "physicalCertificateSha256": "1eddd04e5446dae49e8691caa410280e4bb9086960ed17331831aa044d5c8a44",
+      "paidStateSha256": "96c1f1de4aa81e5f350de5622271d071bc6faee1b4167781383ba720f7fc3cff",
+      "quoteSha256": "7020e75ac2e21c8643e436e384e91e3257a1e99ad1a9b1ab5e193d525ef2345f",
+      "cropCount": 233,
+      "proposedPieces": 1
+    },
+    {
+      "arm": "candidate",
+      "milliseconds": 35334.272,
+      "physicalCertificateSha256": "1eddd04e5446dae49e8691caa410280e4bb9086960ed17331831aa044d5c8a44",
+      "paidStateSha256": "96c1f1de4aa81e5f350de5622271d071bc6faee1b4167781383ba720f7fc3cff",
+      "quoteSha256": "7020e75ac2e21c8643e436e384e91e3257a1e99ad1a9b1ab5e193d525ef2345f",
+      "cropCount": 233,
+      "proposedPieces": 1
+    },
+    {
+      "arm": "baseline",
+      "milliseconds": 34860.230699999986,
+      "physicalCertificateSha256": "1eddd04e5446dae49e8691caa410280e4bb9086960ed17331831aa044d5c8a44",
+      "paidStateSha256": "96c1f1de4aa81e5f350de5622271d071bc6faee1b4167781383ba720f7fc3cff",
+      "quoteSha256": "7020e75ac2e21c8643e436e384e91e3257a1e99ad1a9b1ab5e193d525ef2345f",
+      "cropCount": 233,
+      "proposedPieces": 1
+    }
+  ],
+  "sourceHashes": {
+    "tools/benchmark-proof-wall-broadphase.mjs": "80ff739290040d75c74a2ec296dd958f20756dfb2d021049cc89a6b2d874fdda",
+    "tools/proof-wall-broadphase-candidate.mjs": "7f6af8454eb22843fe6715b38a39efd27de7bba93decabcafabf582842d0ae19",
+    "tools/native-perimeter-reused-candidate-v2.mjs": "fe66d8e6e2db805505b4b3e9ae5d88b4b64de08e0736cc84434e26cdf25e7580",
+    "tools/native-stable-plan-perimeter-proof.mjs": "f04011a1faa2225eff757402da4036d6bab68ffd2132d927e968e7f74e5e2c08",
+    "src/world/navigation.js": "21b82f33c62581436a6cef702b66af272ae9d3b096cb2b20ee858f0a50196743",
+    "src/world/wall-collision-frame.js": "88f456e37302c17e03663863f9ce33744c2d7f20f43e876a236049c91e77c8c3"
+  }
+}
