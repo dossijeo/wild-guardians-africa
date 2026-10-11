@@ -157,3 +157,24 @@ actual scene. The production render loop was not changed for this correction.
 
 The English `Controls` label is now asserted both on entry and after ES/EN
 round-trip in v8. Its small portrait crop capture is retained as visual evidence.
+
+
+## Structural invalidation review
+
+The main review identified that crate/actor creation and retirement could mark
+camera volumes dirty. The candidate now invalidates only relevant building/wall
+meshes and registered building deletions. Worker/crate simulation is untouched.
+Twenty-one focused geometry/registry/controller checks pass after this change.
+The CPU benchmark now additionally covers 100/1,000 native wall envelopes in
+stable, forced-dirty and changing-hinge scenarios. Forced dirty deliberately
+measures the full production refresh/filter path rather than motion alone.
+A dedicated isolated Windows CPU job preserves these results independently of
+the expensive packaged build. The clear-path report remains valid but alone is
+not the acceptance evidence for structural refresh cost.
+
+Final packaged run 38157033900 passed build, WebView2 smoke, genuine minimization
+and recovery, then actual native menu Exit/restart. Raw process records confirm
+create and restore exited=true, exitCode=0 (127842 and 89849 ms respectively).
+These elapsed times include world startup and QA, not Exit latency. Restore
+reports restartRestored=true, no errors; nativeProcess is recorded only after
+the workflow observed actual process termination.
