@@ -1,6 +1,7 @@
 // Exact, bounded QA-only terrain queries. Solid/prop collisions still execute
 // in native testWalkable. No coordinate quantisation or gameplay modification.
 import {Navigation} from '../src/world/navigation.js';
+import {evictOldest} from '../src/world/fifo-eviction.js';
 const adapters=new WeakMap();
 export function installTerrainValidityMemo(nav,{capacity=65536}={}){
  if(!Number.isSafeInteger(capacity)||capacity<1||capacity>131072)throw Error('Invalid terrain memo capacity');
@@ -26,7 +27,7 @@ export function installTerrainValidityMemo(nav,{capacity=65536}={}){
    if(hit){hits++;maxEntries=Math.max(maxEntries,cache.entries.size);if(prior)prior.peak=Math.max(prior.peak,hit.peak);return hit.valid;}
    misses++;const sweep={peak:0};this.workerSweep=sweep;let valid;
    try{valid=original.call(this,x,z,radius,worker,allowFluid);}finally{this.workerSweep=prior;if(prior)prior.peak=Math.max(prior.peak,sweep.peak);}
-   if(cache.entries.size>=capacity){cache.entries.delete(cache.entries.keys().next().value);evictions++;}
+   if(cache.entries.size>=capacity){evictOldest(cache.entries);evictions++;}
    cache.entries.set(key,{valid,peak:sweep.peak});maxEntries=Math.max(maxEntries,cache.entries.size);return valid;
   }
   adapter={capacity,installation:0,terrainValid,reset(){requests=hits=misses=evictions=fallbacks=maxEntries=0;},stats:()=>({capacity,requests,hits,misses,evictions,fallbacks,maxEntries})};adapters.set(nav,adapter);

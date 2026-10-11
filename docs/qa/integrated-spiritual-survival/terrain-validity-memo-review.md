@@ -39,3 +39,19 @@ Use `probe-stopped-contour-recertification.mjs candidate-terrain-memo STOPPED_DI
 FRESH_OUTPUT` and compare the output with
 `compare-terrain-memo-recertification.mjs BASELINE CANDIDATE FRESH_OUTPUT`.
 All reports are sequential observations, not statistical AB/BA acceptance.
+
+## FIFO correction: benefit remains unproven, option stays disabled
+
+The second candidate uses the existing reusable `evictOldest` cursor. Its cold
+time fell to **12,939.01 ms**; warm time was **4.68 ms**. The complete physical
+certificate still matches, and cache hits/misses/evictions remain identical to
+the first candidate. This establishes that the initial eviction implementation
+was costly; it does **not** establish a net benefit over the historical
+11,054.64 ms candidate without the memo. There is no justification for enabling
+the additional cache on the strength of these sequential observations.
+
+15 affected tests passed after the FIFO change, zero failures/skips. The original
+negative candidate is frozen at `172036d7`. Both raw results and their full
+physical-certificate comparisons are retained. The campaign remains stopped.
+Further work should reduce redundant queries/certification structurally rather
+than adding this cache to production or the campaign by default.
