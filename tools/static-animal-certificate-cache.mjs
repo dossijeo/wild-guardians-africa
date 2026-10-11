@@ -1,7 +1,7 @@
 // One positive static certificate per native proof view. Workers are deliberately
 // excluded: their access is checked separately on every query.
 const entries=new WeakMap();
-export function staticAnimalCertificate(state,view,plan,bounds,outline,compute,{cache=true}={}){
+export function staticAnimalCertificate(state,view,plan,bounds,outline,compute,{cache=true,extend=null}={}){
  const field=view.field;
  const targets=state.plants.filter(p=>p.alive).map(p=>[p.id,p.x,p.z,p.kind,p.centerId,p.species]),targetKey=JSON.stringify(targets);
  const signature=JSON.stringify([view.version,plan,bounds,outline,
@@ -26,6 +26,24 @@ export function staticAnimalCertificate(state,view,plan,bounds,outline,compute,{
   if(anchored&&index===targets.length){
    const proof=structuredClone(old.proof);
    proof.retainedCoverage={certifiedCropCount:old.targets.length,currentCropCount:targets.length,removedCropIds:old.targets.filter(target=>!liveIds.has(target[0])).map(target=>target[0]),retiredAnchorTargetIds:[...new Set(checks.map(check=>check.anchorTargetId).filter(id=>!liveIds.has(id)))],scope:'Positive superset certificate; surviving targets unchanged. Original anchor coordinates and exterior origins remain geometric references, not necessarily living targets. Counters describe original certification.'};
+   return proof;
+  }
+  // Opt-in experiment: unchanged surviving tuples may share the original
+  // geometry certificate, but each added target needs a fresh physical proof.
+  const original=new Map(old.targets.map((target,i)=>[target[0],{target,index:i}]));
+  let previous=-1,unchanged=anchored&&new Set(targets.map(t=>t[0])).size===targets.length;
+  for(const target of targets){const prior=original.get(target[0]);if(!prior)continue;
+   if(prior.index<=previous||JSON.stringify(prior.target)!==JSON.stringify(target)){unchanged=false;break;}previous=prior.index;
+  }
+  const added=targets.filter(target=>!original.has(target[0]));
+  if(extend&&unchanged&&added.length){
+   const proof=extend(structuredClone(old.proof),state.plants.filter(p=>p.alive&&added.some(t=>t[0]===p.id)));
+   if(proof.valid===true){
+    const certifiedTargets=[...old.targets,...added],liveIds=new Set(targets.map(t=>t[0]));
+    proof.retainedCoverage={certifiedCropCount:certifiedTargets.length,currentCropCount:targets.length,removedCropIds:certifiedTargets.filter(t=>!liveIds.has(t[0])).map(t=>t[0]),retiredAnchorTargetIds:[...new Set(checks.map(c=>c.anchorTargetId).filter(id=>!liveIds.has(id)))],scope:'Original positive target coverage retained; new targets physically certified from original exterior origins and 32-pose conventions. Geometry and surviving target tuples unchanged.'};
+    entries.set(view,{state,signature,methods,targets:certifiedTargets,targetKey,proof:structuredClone(proof)});
+   }
+   // Failed additions are never cached as positive or interpreted as coverage.
    return proof;
   }
  }

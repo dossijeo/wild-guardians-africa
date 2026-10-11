@@ -71,3 +71,27 @@ for(const [name,check] of [
  const query=()=>staticAnimalCertificate(f.state,f.view,f.plan,f.bounds,f.outline,()=>{calls++;return {valid:true,checks:[check]};});
  query();f.state.plants[0].alive=false;query();assert.equal(calls,2);
 });
+
+test('opt-in additions require fresh proof and retain only positive cumulative coverage',()=>{
+ const f=anchoredFixture();f.query();f.state.plants.push({id:'new',alive:true,x:4,z:5,species:'mijo'});
+ let extended=0,cold=0;
+ const query=()=>staticAnimalCertificate(f.state,f.view,f.plan,f.bounds,f.outline,()=>{cold++;return {valid:true};},{extend:(proof,added)=>{extended++;assert.deepEqual(added.map(p=>p.id),['new']);return proof;}});
+ const proof=query();assert.equal(proof.valid,true);assert.equal(proof.retainedCoverage.certifiedCropCount,3);assert.equal(cold,0);assert.equal(extended,1);
+ proof.checks[0].inside.x=999;assert.equal(query().checks[0].inside.x,1);assert.equal(extended,1);
+ f.state.plants[0].alive=false;
+ assert.deepEqual(query().retainedCoverage.retiredAnchorTargetIds,['crop']);assert.equal(cold,0);
+});
+test('failed additions remain failed on repeated attempts without replacing original positive coverage',()=>{
+ const f=anchoredFixture();f.query();f.state.plants.push({id:'exposed',alive:true,x:20,z:20});let extended=0;
+ const query=()=>staticAnimalCertificate(f.state,f.view,f.plan,f.bounds,f.outline,()=>{throw Error('Unexpected cold recomputation');},{extend:()=>{extended++;return {valid:false,reason:'physically-open'};}});
+ assert.equal(query().valid,false);assert.equal(query().valid,false);assert.equal(extended,2);
+ f.state.plants.pop();assert.equal(query().valid,true);
+});
+for(const [name,mutate] of [
+ ['moved survivor',f=>f.state.plants[0].x++],['reordered survivors',f=>f.state.plants.reverse()],
+ ['geometry change',f=>f.view.version++],['suppression change',f=>f.state.suppressed.push('tree')]
+])test(`opt-in extension invalidates on ${name}`,()=>{
+ const f=anchoredFixture();f.query();mutate(f);f.state.plants.push({id:'new',alive:true,x:4,z:5});let cold=0;
+ staticAnimalCertificate(f.state,f.view,f.plan,f.bounds,f.outline,()=>{cold++;return {valid:false};},{extend:()=>{throw Error('Invalid extension');}});
+ assert.equal(cold,1);
+});

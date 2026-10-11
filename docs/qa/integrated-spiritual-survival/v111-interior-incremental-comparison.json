@@ -1,0 +1,51 @@
+{
+  "scope": "Sequential frozen-snapshot comparison; not AB/BA or campaign acceptance",
+  "baselinePath": "docs/qa/integrated-spiritual-survival/v111-interior-plant-certificate-cost.json",
+  "candidatePath": "docs/qa/integrated-spiritual-survival/v111-interior-plant-incremental-candidate.json",
+  "snapshotSha256": "a7a7d012f02004f07b9e3f2c22e9d8087ccd0d5f436f80abd1df708a9208ee7e",
+  "nativePlacementsMoneyAndWorkerCoverageEqual": true,
+  "rows": [
+    {
+      "label": "initial-cold",
+      "valid": true,
+      "baselineMs": 10864.6184,
+      "candidateMs": 10821.8475,
+      "deltaMs": -42.77089999999953
+    },
+    {
+      "label": "initial-warm",
+      "valid": true,
+      "baselineMs": 56.32250000000022,
+      "candidateMs": 49.392900000000736,
+      "deltaMs": -6.929599999999482
+    },
+    {
+      "label": "after-1-native-plants",
+      "valid": true,
+      "baselineMs": 12707.7274,
+      "candidateMs": 113.87950000000092,
+      "deltaMs": -12593.847899999999
+    },
+    {
+      "label": "repeat-1",
+      "valid": true,
+      "baselineMs": 36.49919999999838,
+      "candidateMs": 37.35889999999927,
+      "deltaMs": 0.8597000000008848
+    },
+    {
+      "label": "after-5-native-plants",
+      "valid": true,
+      "baselineMs": 13035.559199999996,
+      "candidateMs": 312.795900000001,
+      "deltaMs": -12722.763299999995
+    },
+    {
+      "label": "repeat-5",
+      "valid": true,
+      "baselineMs": 38.19789999999921,
+      "candidateMs": 40.7559999999994,
+      "deltaMs": 2.558100000000195
+    }
+  ]
+}

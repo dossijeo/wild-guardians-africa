@@ -9,7 +9,7 @@ import {operational} from '../src/simulation/rules.js';
 import {nativeReusedServiceComponentProofV2} from './native-reused-service-component-proof-v2.mjs';
 import {staticAnimalCertificate} from './static-animal-certificate-cache.mjs';
 const proofViews=new WeakMap();
-export function nativePerimeterReusedCandidateV2(s,nav,plan,bounds,{cache=true,outline=null,workerServiceProof=nativeWorkerServiceProofV2}={}){
+export function nativePerimeterReusedCandidateV2(s,nav,plan,bounds,{cache=true,outline=null,workerServiceProof=nativeWorkerServiceProofV2,incrementalCrops=false}={}){
  // Native epochs invalidate obstacle/terrain/suppression changes. Bounds and
  // living crops are rechecked below on every call; they do not alter graph
  // geometry. Retain only one bounded native-query view per navigator.
@@ -22,13 +22,22 @@ export function nativePerimeterReusedCandidateV2(s,nav,plan,bounds,{cache=true,o
   if(cache)proofViews.set(nav,{key,state:s,view});
  }
  const land=[...s.plants.filter(p=>p.alive),...s.structures.filter(operational).flatMap(c=>centerFootprint(c,s).footprint)],radii=[...new Set(Object.values(ANIMAL_ACTIONS.animals).map(a=>a.presentation.footprint.radius))];
- const animals=staticAnimalCertificate(s,view,plan,bounds,outline,()=>certifyAnimals(),{cache});
+ const animals=staticAnimalCertificate(s,view,plan,bounds,outline,()=>certifyAnimals(),{cache,extend:incrementalCrops&&outline?extendAnimals:null});
  if(!animals.valid)return animals;
  const checks=animals.checks;
  const coverage=animals.retainedCoverage?{animalCertificateCoverage:animals.retainedCoverage}:{};
  const workerService=workerServiceProof(s,view);
  if(!workerService.valid)return {...workerService,animalChecks:checks,...coverage};
  return {valid:true,reason:'native-complete-components-and-worker-service-routes',checks,workerService,...coverage,scope:'Predictive native geometry only; no paid protection or campaign outcome.'};
+ function extendAnimals(proof,added){
+  for(const check of proof.checks){
+   const services=nativeReusedServiceComponentProofV2(s,view,added,check.radius,check.outside,outline);
+   if(!services.valid)return {valid:false,reason:services.reason,checks:proof.checks,incrementalFailure:{radius:check.radius,targetIds:added.map(p=>p.id),services}};
+   const prior=check.incrementalServices;
+   check.incrementalServices={batches:(prior?.batches??0)+1,poses:(prior?.poses??0)+services.poses,blocked:(prior?.blocked??0)+services.blocked,certified:(prior?.certified??0)+services.certified,latestTargetIds:added.map(p=>p.id),latest:services};
+  }
+  return proof;
+ }
  function certifyAnimals(){
  const checks=[];
  for(const radius of radii){

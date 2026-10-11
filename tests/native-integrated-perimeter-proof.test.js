@@ -8,6 +8,8 @@ import {nativeIntegratedPerimeterProof} from '../tools/native-integrated-perimet
 import {nativePerimeterReusedCandidateV2} from '../tools/native-perimeter-reused-candidate-v2.mjs';
 import {nativeReusedServiceComponentProofV2} from '../tools/native-reused-service-component-proof-v2.mjs';
 import {operational} from '../src/simulation/rules.js';
+import {plant} from '../src/simulation/game.js';
+import {containsPoint,edgeDistance} from '../src/world/footprints.js';
 const root=new URL('../docs/qa/integrated-spiritual-survival/',import.meta.url),plan={pieces:[],updates:[],suppressed:[]};
 function fixture(){
  const s=deserialize(gunzipSync(readFileSync(new URL('native-paid-canyon-contact-contour-v1-state.json.gz',root))).toString());
@@ -15,6 +17,38 @@ function fixture(){
  const profile=JSON.parse(readFileSync(new URL('../public/content/biome-'+BIOME_IDS[s.biome]+'.json',import.meta.url))).profile;
  const nav=new Navigation(s.seed,s.biome,profile);nav.setState(s);return {s,nav,contour};
 }
+
+test('incremental new crop coverage matches independent complete native certification',()=>{
+ const {s,nav,contour}=fixture();
+ const first=nativeIntegratedPerimeterProof(s,nav,plan,contour.bounds,{outline:contour.points,incrementalCrops:true});assert(first.valid);
+ const polygon=contour.points.map(([x,z])=>({x,z}));let added;
+ outer:for(let z=Math.ceil(contour.bounds[1])+1;z<contour.bounds[3]-1;z+=1.2)for(let x=Math.ceil(contour.bounds[0])+1;x<contour.bounds[2]-1;x+=1.2){
+  if(!containsPoint(polygon,x,z)||polygon.some((p,i)=>edgeDistance(p,polygon[(i+1)%polygon.length],x,z)<2.5)||s.plants.some(p=>p.alive&&Math.hypot(p.x-x,p.z-z)<1.1))continue;
+  const placement=nav.placement(x,z,.4);if(!placement.valid||placement.suppress?.length)continue;
+  plant(s,'qa-incremental-native-seed','mijo',x,z,nav);added=s.plants.at(-1);break outer;
+ }
+ assert(added,'Native fixture needs a legal interior seed');
+ const before=serialize(s),incremental=nativeIntegratedPerimeterProof(s,nav,plan,contour.bounds,{outline:contour.points,incrementalCrops:true});
+ assert(incremental.valid,JSON.stringify({reason:incremental.reason,targetId:incremental.targetId,incrementalFailure:incremental.incrementalFailure,added}));assert(incremental.animalCertificateCoverage);
+ for(const check of incremental.checks){
+  assert.deepEqual(check.incrementalServices.latestTargetIds,[added.id]);assert.equal(check.incrementalServices.latest.poses,32);
+  const independent=nav.forBuildingPlacement({id:'qa-empty-independent',x:1e12,z:1e12,radius:0,kind:'house'});independent.obstacles=[...nav.obstacles];
+  const complete=nativeReusedServiceComponentProofV2(s,independent,[...s.plants.filter(p=>p.alive),...s.structures.filter(operational)],check.radius,check.outside,contour.points);
+  assert(complete.valid,'Every current target must independently pass all native poses from the retained exterior origin');
+ }
+ const full=nativeIntegratedPerimeterProof(s,nav,plan,contour.bounds,{outline:contour.points,cache:false});
+ assert(full.valid);assert.deepEqual(incremental.workerService,full.workerService);assert.equal(serialize(s),before);
+});
+
+test('a legal near-boundary new crop with an unproven native origin is not certified',()=>{
+ const {s,nav,contour}=fixture();
+ assert(nativeIntegratedPerimeterProof(s,nav,plan,contour.bounds,{outline:contour.points,incrementalCrops:true}).valid);
+ assert(plant(s,'qa-near-boundary-seed','mijo',-24.400000000000002,52,nav));
+ const before=serialize(s),candidate=nativeIntegratedPerimeterProof(s,nav,plan,contour.bounds,{outline:contour.points,incrementalCrops:true});
+ assert.equal(candidate.valid,false);assert.equal(candidate.reason,'native-service-origin-unproven');
+ const complete=nativeIntegratedPerimeterProof(s,nav,plan,contour.bounds,{outline:contour.points,cache:false});
+ assert.equal(complete.valid,false,'Complete native certification also cannot prove this target');assert.equal(serialize(s),before);
+});
 test('integrated QA proof preserves certificates and restores terrain resource ownership',()=>{
  const a=fixture(),b=fixture(),before=serialize(b.s),original=b.nav.field.lattice;
  const expected=nativePerimeterReusedCandidateV2(a.s,a.nav,plan,a.contour.bounds,{outline:a.contour.points,cache:false});
