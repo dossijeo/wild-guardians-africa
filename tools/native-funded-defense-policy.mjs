@@ -9,6 +9,7 @@ import {obstacleAwareContour} from './native-obstacle-aware-contour.mjs';
 import {nativeIntegratedPerimeterProof as nativePerimeterProof} from './native-integrated-perimeter-proof.mjs';
 import {nativePaidContourProof} from './native-paid-contour-proof.mjs';
 import {nativeWorkerServiceProofV3} from './native-worker-service-proof-v3.mjs';
+import {nativeProofFailureDetails} from './native-proof-failure-details.mjs';
 import {containsPoint} from '../src/world/footprints.js';
 import {centerFootprint} from '../src/world/centers.js';
 import {operational} from '../src/simulation/rules.js';
@@ -31,7 +32,7 @@ export function createNativeFundedDefensePolicy({startDay=6,material='zarzas',in
   if(!obstacleAware)return fullStroke;
   const plan=Game.quoteWallChain(s,material,candidate.points,nav,options);
   const proof=nativePaidContourProof(s,nav,plan,candidate.bounds,{outline:candidate.points,...proofOptions});
-  coverageDiagnostics={time:s.time,pieces:plan.pieces.length,updates:plan.updates.length,valid:proof.valid,reason:proof.reason,targetId:proof.targetId??proof.checks?.at(-1)?.services?.targetId??null};
+  coverageDiagnostics={time:s.time,pieces:plan.pieces.length,updates:plan.updates.length,...nativeProofFailureDetails(proof)};
   return !plan.pieces.length&&!plan.updates.length&&proof.valid;
  };
  const quote=(s,nav,candidate,detail={})=>{
