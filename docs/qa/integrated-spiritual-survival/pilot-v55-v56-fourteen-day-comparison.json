@@ -1,0 +1,194 @@
+{
+  "sourceHashesMatch": true,
+  "goodFirstFourteenDaysExactlyReproduceV54": true,
+  "matchingFullOpeningPrefix": 5,
+  "good": {
+    "totals": {
+      "income": 9304,
+      "wages": 3379,
+      "seeds": 4231,
+      "walls": 1480,
+      "repairs": 704
+    },
+    "cash": 210,
+    "living": 92,
+    "loss": {
+      "exposure": 717,
+      "destroyed": 26,
+      "scope": "Weighted observed repeated per-night exposures, not a unique-plant probability or enforced target"
+    }
+  },
+  "noWalls": {
+    "totals": {
+      "income": 14139,
+      "wages": 5524,
+      "seeds": 8762,
+      "walls": 0,
+      "repairs": 0
+    },
+    "cash": 553,
+    "living": 75,
+    "loss": {
+      "exposure": 1753,
+      "destroyed": 537,
+      "scope": "Weighted observed repeated per-night exposures, not a unique-plant probability or enforced target"
+    }
+  },
+  "daily": [
+    {
+      "day": 1,
+      "goodCash": 221,
+      "noWallsCash": 221,
+      "goodLive": 102,
+      "noWallsLive": 102,
+      "goodLoss": 0,
+      "noWallsLoss": 0,
+      "goodRepair": 0,
+      "noWallsRepair": 0
+    },
+    {
+      "day": 2,
+      "goodCash": 193,
+      "noWallsCash": 193,
+      "goodLive": 119,
+      "noWallsLive": 119,
+      "goodLoss": 0,
+      "noWallsLoss": 0,
+      "goodRepair": 0,
+      "noWallsRepair": 0
+    },
+    {
+      "day": 3,
+      "goodCash": 273,
+      "noWallsCash": 273,
+      "goodLive": 135,
+      "noWallsLive": 135,
+      "goodLoss": 0,
+      "noWallsLoss": 0,
+      "goodRepair": 0,
+      "noWallsRepair": 0
+    },
+    {
+      "day": 4,
+      "goodCash": 356,
+      "noWallsCash": 356,
+      "goodLive": 158,
+      "noWallsLive": 158,
+      "goodLoss": 0,
+      "noWallsLoss": 0,
+      "goodRepair": 0,
+      "noWallsRepair": 0
+    },
+    {
+      "day": 5,
+      "goodCash": 633,
+      "noWallsCash": 633,
+      "goodLive": 187,
+      "noWallsLive": 187,
+      "goodLoss": 0,
+      "noWallsLoss": 0,
+      "goodRepair": 0,
+      "noWallsRepair": 0
+    },
+    {
+      "day": 6,
+      "goodCash": 511,
+      "noWallsCash": 748,
+      "goodLive": 76,
+      "noWallsLive": 183,
+      "goodLoss": 19,
+      "noWallsLoss": 15,
+      "goodRepair": 0,
+      "noWallsRepair": 0
+    },
+    {
+      "day": 7,
+      "goodCash": 362,
+      "noWallsCash": 839,
+      "goodLive": 41,
+      "noWallsLive": 177,
+      "goodLoss": 0,
+      "noWallsLoss": 42,
+      "goodRepair": 0,
+      "noWallsRepair": 0
+    },
+    {
+      "day": 8,
+      "goodCash": 213,
+      "noWallsCash": 709,
+      "goodLive": 78,
+      "noWallsLive": 186,
+      "goodLoss": 0,
+      "noWallsLoss": 39,
+      "goodRepair": 72,
+      "noWallsRepair": 0
+    },
+    {
+      "day": 9,
+      "goodCash": 259,
+      "noWallsCash": 792,
+      "goodLive": 64,
+      "noWallsLive": 150,
+      "goodLoss": 0,
+      "noWallsLoss": 66,
+      "goodRepair": 0,
+      "noWallsRepair": 0
+    },
+    {
+      "day": 10,
+      "goodCash": 236,
+      "noWallsCash": 570,
+      "goodLive": 82,
+      "noWallsLive": 140,
+      "goodLoss": 0,
+      "noWallsLoss": 55,
+      "goodRepair": 161,
+      "noWallsRepair": 0
+    },
+    {
+      "day": 11,
+      "goodCash": 245,
+      "noWallsCash": 540,
+      "goodLive": 97,
+      "noWallsLive": 127,
+      "goodLoss": 0,
+      "noWallsLoss": 83,
+      "goodRepair": 122,
+      "noWallsRepair": 0
+    },
+    {
+      "day": 12,
+      "goodCash": 265,
+      "noWallsCash": 544,
+      "goodLive": 84,
+      "noWallsLive": 95,
+      "goodLoss": 0,
+      "noWallsLoss": 89,
+      "goodRepair": 110,
+      "noWallsRepair": 0
+    },
+    {
+      "day": 13,
+      "goodCash": 492,
+      "noWallsCash": 664,
+      "goodLive": 77,
+      "noWallsLive": 83,
+      "goodLoss": 7,
+      "noWallsLoss": 82,
+      "goodRepair": 0,
+      "noWallsRepair": 0
+    },
+    {
+      "day": 14,
+      "goodCash": 210,
+      "noWallsCash": 553,
+      "goodLive": 92,
+      "noWallsLive": 75,
+      "goodLoss": 0,
+      "noWallsLoss": 66,
+      "goodRepair": 239,
+      "noWallsRepair": 0
+    }
+  ],
+  "scope": "Same native code, seed, crop/hiring/magic choices and price rules. Real defense decisions cause divergent field value, pressure, RNG and resulting attack compositions; not identical cohort attacks. Shield permitted in both. Cash does not include inventory or wall values."
+}
