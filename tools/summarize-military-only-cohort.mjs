@@ -6,11 +6,18 @@ import {frozenPolicies,frozenMilitaryOptions} from './run-military-only-calibrat
 
 export function frozenMilitaryIdentityIssues(profile,site,receipt,report,source,referenceHashes){
  const expected=frozenMilitaryOptions(profile,{...site,out:'.cache-identity-only'}),issues=[];
- for(const key of ['seed','biome','culture','strategy','labourPolicy'])if(report?.[key]!==expected[key])issues.push('report.'+key);
+ // Native reports serialize the seed as canonical decimal text; launch
+ // provenance stores the numeric seed. Accept those two representations
+ // without coercing arbitrary or malformed strings into the expected seed.
+ if(report?.seed!==expected.seed&&report?.seed!==String(expected.seed))issues.push('report.seed');
+ for(const key of ['biome','culture','strategy','labourPolicy'])if(report?.[key]!==expected[key])issues.push('report.'+key);
  for(const key of ['profile','cropPolicy','defensePolicy','defenseStartDay','defenseMaterial','repairPolicy','defenseFunding','defensePieceReserve','reserveMaintenance']){
   if(report?.policy?.[key]!==expected[key])issues.push('report.policy.'+key);
  }
- if(receipt?.options?.days!==100)issues.push('receipt.options.days');
+ // The final native receipt replaces the running receipt and omits options.
+ // The immutable launch provenance remains the evidence of requested scope.
+ if(source?.arguments?.days!==100)issues.push('source.arguments.days');
+ if(receipt?.options&&receipt.options.days!==100)issues.push('receipt.options.days');
  if(source?.arguments?.perimeterQa!==expected.perimeterQa)issues.push('source.arguments.perimeterQa');
  if(source?.protocol?.cropHitPoints!==1)issues.push('source.protocol.cropHitPoints');
  for(const [path,hash] of Object.entries(referenceHashes??{}))if(source?.sourceHashes?.[path]!==hash)issues.push('frozen-source:'+path);
