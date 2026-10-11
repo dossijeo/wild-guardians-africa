@@ -40,6 +40,7 @@ export function nativeCampaignProvenance(options){
  paths.push('tools/native-campaign-crop-policy.mjs','tools/native-shore-defense-contour.mjs','tools/native-service-component-proof.mjs');
  paths.push('tools/native-repair-funding.mjs');
  paths.push('tools/native-q9-labour-policy.mjs','tools/native-q10-labour-policy.mjs','tools/native-q12-labour-policy.mjs');
+ paths.push('tools/native-q13-labour-policy.mjs');
  for(const path of paths)p.sourceHashes[path]=createHash('sha256').update(readFileSync(new URL(path,root))).digest('hex');
  return {...p,protocol:{...campaignProtocolForLabour(options.labourPolicy),profile:options.profile??'olderFemale',plotFluidClearance:options.plotFluidClearance??0,defenseMaterial:options.defenseMaterial??'zarzas',repairPolicy:options.repairPolicy??'legacy',cropHitPoints:CROP_HIT_POINTS}};
 }

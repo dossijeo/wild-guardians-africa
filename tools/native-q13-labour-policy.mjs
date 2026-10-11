@@ -19,9 +19,11 @@ export function q13FundedRenewalPlan(plan,wage){
   reason:safe===0n?'payable one-worker recovery; renewal unfunded':'fund full crew renewal and seed before dawn hire'};
 }
 export function createQ13LabourPolicy({profile='olderFemale'}={}){
- const base=createQ12LabourPolicy({profile});
+ const base=createQ12LabourPolicy({profile}),decisions=[];
  return {...base,dawn(s,options={}){
   const plan=base.dawn(s,options),p=PROFILES.find(p=>p.id===plan.profile);
-  return q13FundedRenewalPlan(plan,p.wage);
- },report:()=>({...base.report(),fundedRenewal:'Q13: current wage + next wage + pending paid repair quote + one seed; no forecast income. Native emergency one-worker contract when full renewal is not fundable. Experimental QA policy, not production mechanics or validated balance.'})};
+  const funded=q13FundedRenewalPlan(plan,p.wage);
+  decisions.push({day:s.day,profile:funded.profile,proposedStaff:plan.staff,staff:funded.staff,cost:funded.cost,cash:funded.cash,risk:funded.risk});
+  return funded;
+ },report:()=>({baseProposals:base.report(),fundedRenewals:structuredClone(decisions),fundedRenewal:'Q13: current wage + next wage + pending repair quote + one seed; no forecast income. Native emergency one-worker contract when full renewal is not fundable. Experimental QA policy, not production mechanics or validated balance.'})};
 }

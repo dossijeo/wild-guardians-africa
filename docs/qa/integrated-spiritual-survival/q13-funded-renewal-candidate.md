@@ -23,7 +23,10 @@ The first run had an incorrect test assertion expecting a successful hire to
 return true; the native API succeeds via ledger settlement and returns no
 success boolean. The corrected test asserts the actual settled debit.
 
-The helper is not yet imported by the campaign runner or production. Current
-v68 continues unchanged. Integration requires a newly frozen QA protocol,
-short native pilots and comparison with the retained negative results. This
-funding screen neither approves balance nor fabricates activity time.
+After v68 completed normally, Q13 was exposed as an explicit campaign CLI
+choice and added to the frozen source manifest. The legacy default and Q9/Q12
+dispatch remain unchanged. Q13 records its screened proposal separately from
+base Q12 proposals, avoiding ambiguity with actual paid contract history.
+The combined Q13/Q12/Q10/CLI regression suite passes. Short native pilots and
+comparison with retained negative results are still required. This funding
+screen is never production logic, balance approval or fabricated activity time.

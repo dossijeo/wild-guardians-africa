@@ -6,6 +6,7 @@ import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import * as Game from '../src/simulation/game.js';
 import {numberOf} from '../src/simulation/money.js';
 import {q13FundedRenewalPlan,createQ13LabourPolicy} from '../tools/native-q13-labour-policy.mjs';
+import {parseNativeCampaignArgs,nativeCampaignProvenance} from '../tools/run_native_campaign.mjs';
 const plan=cash=>({staff:2,cost:60,cash,pendingRepair:0,seedCost:5,profile:'olderFemale',selection:{olderFemale:2}});
 test('diagnostic late renewal retains seed capital instead of paying every affordable worker',()=>{
  const input=plan(91),original=JSON.stringify(input),p=q13FundedRenewalPlan(input,30);
@@ -36,4 +37,11 @@ test('retained native recovery state settles an actual contract and cannot charg
  p.hired(s,proposal.staff,{daily:true});assert.equal(p.reserve(),30);assert.equal(numberOf(s.ledger.balance),9);
  const loaded=deserialize(serialize(s)),saved=serialize(loaded);
  assert.equal(Game.hire(loaded,'q13-retained-native-hire',proposal.selection),false);assert.equal(serialize(loaded),saved);
+});
+test('explicit Q13 launch freezes its funding chain without changing legacy default',()=>{
+ const legacy=parseNativeCampaignArgs(['--out','unused-q13-default']);assert.equal(legacy.labourPolicy,'legacy');
+ const o=parseNativeCampaignArgs(['--out','unused-q13-launch','--labour-policy','q13']);
+ assert.equal(o.labourPolicy,'q13');const p=nativeCampaignProvenance(o);
+ assert.match(p.protocol.id,/-q13$/);
+ for(const f of ['tools/native-q9-labour-policy.mjs','tools/native-q10-labour-policy.mjs','tools/native-q12-labour-policy.mjs','tools/native-q13-labour-policy.mjs'])assert.match(p.sourceHashes[f],/^[a-f0-9]{64}$/);
 });
