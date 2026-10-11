@@ -16,7 +16,7 @@ function fixture(centers=2){
   return s;
 }
 function destroy(s,center){center.hp=0;center.status='ruined';for(const w of s.workers.filter(w=>w.centerId===center.id))w.status='fleeing';}
-function endRaid(s){s.raid={id:'fixture-raid',animals:[]};updateRaid(s,.1,nav);}
+function endRaid(s){s.raid={id:'fixture-raid',animals:[],reservations:{}};updateRaid(s,.1,nav);}
 test('Raid destruction reassigns only displaced employees locally without another wage',()=>{
   const s=fixture(),[lost,survivor]=s.structures,original=s.workers.map(w=>({...w}));destroy(s,lost);
   const cash=numberOf(s.ledger.balance);endRaid(s);

@@ -6,6 +6,7 @@ import {waterPlant,isMature} from '../src/simulation/crops.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {castPickedSpell} from '../src/app/spell-placement.js';
 import {ToolSession} from '../src/ui/tool-session.js';
+import {numberOf} from '../src/simulation/money.js';
 const nav={placement:()=>({valid:true}),setState(){},path:(_a,b)=>[{x:b.x,z:b.z}]};
 function farm(){
  const s=Game.newGame({slotId:'single-plant',seed:712});Game.resume(s,'intro');
@@ -26,21 +27,32 @@ test('day-one native agricultural commands have no cooldown, no worker requireme
  assert.equal(s.cooldowns.growth,0);
  assert.throws(()=>Game.cast(s,'overlap','multiply',a.x,a.z,nav,a.id),/solaparse/);
  Game.tick(s,10,nav);
- assert.ok(Math.abs(a.growth-15)<1e-7);assert.ok(Math.abs(b.growth-15)<1e-7);assert.ok(Math.abs(c.growth-10)<1e-7);
+ // Independent shared-budget oracle: E(T)=180*T/(180+T). Each
+ // application receives its marginal entitlement over the 30-second effect.
+ const first=180*15/(180+15),second=180*30/(180+30)-first;
+ assert.ok(Math.abs(a.growth-(10+first/3))<1e-7);
+ assert.ok(Math.abs(b.growth-(10+second/3))<1e-7);assert.ok(Math.abs(c.growth-10)<1e-7);
  assert.equal(s.rng,rng);
  assert.equal(castPickedSpell(s,'empty','multiply',{entityId:null,point:{x:c.x,z:c.z}},nav),false);
  assert.equal(castPickedSpell(s,'c','multiply',{entityId:c.id,point:null},nav),true);
  assert.equal(c.multiplyHarvest,true);assert.equal(a.multiplyHarvest,undefined);assert.equal(b.multiplyHarvest,undefined);
  assert.equal(s.cooldowns.multiply,0);
 });
-test('per-target growth repeats to maturity; snapshots preserve targets, watering and bonus without RNG changes',()=>{
- let s=farm();const id=s.plants[0].id;
- for(let n=0;n<4&&!isMature(s.plants[0]);n++){
+test('per-target fractional growth repeats with required watering; reload preserves bounded power through maturity',()=>{
+ let s=farm();const id=s.plants[0].id,rng=s.rng;let applications=0;
+ for(let n=0;n<8&&!isMature(s.plants[0]);n++){
   const p=s.plants[0];Game.cast(s,'growth-'+n,'growth',p.x,p.z,nav,p.id);
+  applications++;
   s=deserialize(serialize(s));assert.equal(s.spells[0].targetPlantId,id);
-  Game.tick(s,30,nav);assert.equal(s.cooldowns.growth,0);
+  // This worker-free unit fixture explicitly supplies required watering.
+  // Fractional Growth must not satisfy the second checkpoint for free.
+  for(let second=0;second<30;second++){waterPlant(s.plants[0]);Game.tick(s,1,nav);}
+  assert.equal(s.cooldowns.growth,0);
  }
  assert.equal(isMature(s.plants[0]),true);
+ assert(applications>4);assert.equal(s.rng,rng);
+ assert(s.plants[0].water.every(w=>w.status==='manual'));
+ assert(numberOf(s.plants[0].growthPowerCommitted)<=15);
  assert.throws(()=>Game.cast(s,'mature','growth',6,0,nav,id),/madura/);
  const ended=s.events.filter(e=>e.type==='AgriculturalSpellEnded');
  assert.ok(ended.every(e=>e.growthSecondsAdded>=0&&e.growthSecondsAdded<=15+1e-7));

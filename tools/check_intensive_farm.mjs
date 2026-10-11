@@ -5,7 +5,7 @@ import {pathToFileURL} from 'node:url';
 import {createOpeningWorld} from './check_opening.mjs';
 import * as Game from '../src/simulation/game.js';
 import {cropSpec,permission,operational} from '../src/simulation/rules.js';
-import {numberOf} from '../src/simulation/money.js';
+import {numberOf,add,rational} from '../src/simulation/money.js';
 import {PROFILES,hiringCost} from '../src/simulation/workforce.js';
 import {isMature} from '../src/simulation/crops.js';
 import {centerServicePoint} from '../src/world/centers.js';
@@ -145,7 +145,13 @@ export function auditIntensiveFarm(report,{victory=false}={}){
   assert.equal(crate.species,p.species);assert.ok(p.growth>=cropSpec(p.species).growth_seconds);
   assert.ok(p.water.every(w=>['manual','magic'].includes(w.status)));
   const charge=s.ledger.entries['deliver:'+crate.id];
-  if(crate.delivered){assert.ok(charge);assert.equal(charge.n,String((BigInt(crate.value.n)+BigInt(crate.value.d)-1n)/BigInt(crate.value.d)));assert.equal(crate.carrierId,null);}
+  if(crate.delivered){
+   const bonus=crate.multiplyIncome??rational(0);
+   assert.equal(bonus.d,'1');assert(BigInt(bonus.n)>=0n);
+   if(BigInt(bonus.n)>0n)assert.ok(crate.multiplyPower&&crate.multiplyPowerSettled,'Only settled spiritual power provides extra income');
+   const total=add(crate.value,bonus);
+   assert.ok(charge);assert.equal(charge.n,String((BigInt(total.n)+BigInt(total.d)-1n)/BigInt(total.d)));assert.equal(crate.carrierId,null);
+  }
   else assert.equal(charge,undefined);
  }
  assert.equal(report.counts.CrateDelivered??0,s.crates.filter(c=>c.delivered).length);

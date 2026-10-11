@@ -17,6 +17,7 @@ test('Original balance preserves unrelated values with explicit player revisions
  original.initial_money=1500;
  original.postgame.additional_village_cost={formula:'round1000(50000 * 1.6^(n-2))',min_n:2,initial_village_ordinal:1,variant:'proposed',rounding:'nearest thousand, half upward, exact integer fractions'};
  original.raids.max_animals=null;
+ original.raids.crop_hit_points=1;
  original.animals.forEach((a,i)=>{a.structure_hit_damage=[20,25,35,40,60][i];a.max_per_raid=null;});
  original.workers.older_wage=30;original.workers.young_wage=40;
  const revisions=JSON.parse(fs.readFileSync(new URL('../content/balance/player_revisions.json',import.meta.url),'utf8'));
