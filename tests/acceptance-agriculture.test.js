@@ -202,21 +202,28 @@ test('QA-033: Multiply marks survive expiry before the physical pickup',()=>{
   const s=farm(),p=sow(s,'mijo',70);ripe(p);Game.rebuildTasks(s);Game.openInitialHiring(s);Game.hire(s,'hire',{olderMale:1});
   Game.cast(s,'multiply','multiply',p.x,p.z,nav);Game.harvest(s,'harvest',p.id);
   for(let i=0;i<2400&&s.crates.length===0;i++)grow(s,.05);
-  assert.equal(s.crates.length,1);assert.equal(s.spells.length,0);close(numberOf(s.crates[0].value),26.4);
-  const balance=numberOf(s.ledger.balance);for(let i=0;i<2000&&!s.crates[0].delivered;i++)grow(s,.05);assert.equal(numberOf(s.ledger.balance),balance+27);
+  assert.equal(s.crates.length,1);assert.equal(s.spells.length,0);close(numberOf(s.crates[0].value),13.2);
+  // Frozen budget 132 and first request 11 commit 132/13 bonus coins;
+  // the crate keeps its ordinary male yield until physical settlement.
+  assert.deepEqual(s.crates[0].multiplyPower.amount,rational(132,13));
+  const balance=numberOf(s.ledger.balance);for(let i=0;i<2000&&!s.crates[0].delivered;i++)grow(s,.05);assert.equal(numberOf(s.ledger.balance),balance+24);
+  assert.equal(numberOf(s.crates[0].multiplyIncome),10);assert.equal(s.crates[0].multiplyPowerSettled,true);
   assert.equal(s.events.filter(e=>e.type==='CropPicked').length,1);
 });
 
-test('QA-034: male pickup within Multiply fixes one 26.4-valued crate, rounds delivery to 27 and survives reload',()=>{
+test('QA-034: male pickup retains its ordinary yield and shared Multiply entitlement through one paid delivery and reload',()=>{
   let s=farm();const p=sow(s);ripe(p);Game.rebuildTasks(s);Game.openInitialHiring(s);Game.hire(s,'hire',{olderMale:1});
   Game.harvest(s,'harvest',p.id);
   for(let i=0;i<1200&&s.workers[0].status!=='acting';i++)grow(s,.05);
   assert.equal(s.workers[0].status,'acting');Game.cast(s,'multiply','multiply',p.x,p.z,nav);
   for(let i=0;i<100&&s.crates.length===0;i++)grow(s,.05);
-  assert.equal(s.crates.length,1);assert.ok(s.spells[0].remaining>0);close(numberOf(s.crates[0].value),26.4);
+  assert.equal(s.crates.length,1);assert.ok(s.spells[0].remaining>0);close(numberOf(s.crates[0].value),13.2);
+  assert.deepEqual(s.crates[0].multiplyPower.amount,rational(132,13));
   const value=JSON.stringify(s.crates[0].value),balance=numberOf(s.ledger.balance);
   s=deserialize(serialize(s));grow(s,30);assert.equal(s.spells.length,0);assert.equal(JSON.stringify(s.crates[0].value),value);
-  assert.equal(numberOf(s.ledger.balance),balance+27);assert.equal(s.crates[0].delivered,true);
-  grow(s,30);assert.equal(numberOf(s.ledger.balance),balance+27);
+  assert.equal(numberOf(s.ledger.balance),balance+24);assert.equal(s.crates[0].delivered,true);
+  assert.equal(numberOf(s.crates[0].multiplyIncome),10);assert.equal(s.crates[0].multiplyPowerSettled,true);
+  const settled=JSON.stringify(s.agriculturalPower);s=deserialize(serialize(s));assert.equal(JSON.stringify(s.agriculturalPower),settled);
+  grow(s,30);assert.equal(numberOf(s.ledger.balance),balance+24);
   assert.equal(Object.keys(s.ledger.entries).filter(id=>id.startsWith('deliver:')).length,1);
 });
