@@ -7,7 +7,11 @@ const a=read(original,'report.json'),b=read(replay,'report.json');
 assert.deepEqual(b.daily,a.daily,'Telemetry replay changed daily native results');
 const old=read(original,'source.json').sourceHashes,now=read(replay,'source.json').sourceHashes;
 for(const [p,h]of Object.entries(old))assert.equal(now[p],h,'Historical runtime hash changed: '+p);
-assert.equal(read(replay,'receipt.json').status,'observed-horizon');
+const originalReceipt=read(original,'receipt.json'),replayReceipt=read(replay,'receipt.json');
+assert(['observed-horizon','observed-native-defeat'].includes(originalReceipt.status),'Original must be native terminal evidence');
+assert.equal(replayReceipt.status,originalReceipt.status,'Replay must preserve the original native outcome');
+assert.equal(replayReceipt.result,originalReceipt.result);
+assert.equal(replayReceipt.completedNights,originalReceipt.completedNights);
 const rows=read(replay,'purchase-decisions.json').decisions;
 const days=[...new Set(rows.map(r=>r.day))].map(day=>{
  const observations=rows.filter(r=>r.day===day);
