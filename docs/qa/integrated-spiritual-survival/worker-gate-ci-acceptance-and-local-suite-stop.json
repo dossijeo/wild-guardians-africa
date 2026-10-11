@@ -1,0 +1,41 @@
+{
+  "observedAt": "2026-10-11T15:51:35.6373358Z",
+  "status": "interrupted-redundant-local-suite",
+  "reason": "Fresh official CI completed the full suite successfully; free CPU for the unchanged native balance campaign. Partial local log is not a passing result.",
+  "ci": {
+    "conclusion": "success",
+    "headSha": "4d2ba09b636666f3942c104852237251ce1b995d",
+    "status": "completed"
+  },
+  "ciTests": {
+    "fail": 0,
+    "skipped": 1,
+    "pass": 3982
+  },
+  "localLaunchHead": "c6db2c0924a89c9b14fb1d92afd8bc070b350ce4",
+  "processes": [
+    {
+      "ProcessId": 5004,
+      "ParentProcessId": 52888,
+      "ExecutablePath": "C:\\Program Files\\nodejs\\node.exe",
+      "CommandLine": "\"C:\\Program Files\\nodejs\\node.exe\" --test tests"
+    },
+    {
+      "ProcessId": 33196,
+      "ParentProcessId": 5004,
+      "ExecutablePath": "C:\\Program Files\\nodejs\\node.exe",
+      "CommandLine": "\"C:\\Program Files\\nodejs\\node.exe\" C:\\Users\\PC\\.codex\\worktrees\\worker-gate-tutorial-fixes\\wild-guardians-africa\\tests\\active-farm.test.js"
+    }
+  ],
+  "untouched": [
+    33044,
+    33592
+  ],
+  "localResult": "interrupted-not-a-complete-suite-result",
+  "note": "Outer shell returned 0 after process termination; this is not acceptance of the incomplete local suite. Official fresh CI is the acceptance evidence.",
+  "log": {
+    "artifact": "worker-gate-local-suite-interrupted.txt.gz",
+    "uncompressedBytes": 99287,
+    "sha256": "76529f2fb144e6a6b4c39aae1e37e37940898229ef8f34501a01f6380c9a46c0"
+  }
+}
