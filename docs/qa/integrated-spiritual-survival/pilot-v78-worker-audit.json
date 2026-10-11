@@ -1,0 +1,176 @@
+{
+  "profile": "olderFemale",
+  "originalWage": 30,
+  "originalShiftEnd": 300,
+  "daily": [
+    {
+      "day": 1,
+      "profile": "olderFemale",
+      "profiles": [
+        "olderFemale"
+      ],
+      "paidCoins": 180,
+      "paidContractSeconds": 1800,
+      "deliveredCoins": 350,
+      "deliveredCrates": 25,
+      "distinctDeliveringWorkers": 6,
+      "incomePerPaidWorkerSecond": 0.19444444444444445,
+      "wagesPerDeliveredCrate": 7.2,
+      "actualNetCashflow": -479,
+      "seedExpenditure": 649,
+      "repairExpenditure": 0,
+      "observedWorkload": {
+        "samples": 29,
+        "summedActive": 174,
+        "summedBusy": 174,
+        "summedPending": 1024,
+        "busyFraction": 1
+      }
+    },
+    {
+      "day": 2,
+      "profile": "olderFemale",
+      "profiles": [
+        "olderFemale"
+      ],
+      "paidCoins": 180,
+      "paidContractSeconds": 1800,
+      "deliveredCoins": 422,
+      "deliveredCrates": 37,
+      "distinctDeliveringWorkers": 6,
+      "incomePerPaidWorkerSecond": 0.23444444444444446,
+      "wagesPerDeliveredCrate": 4.864864864864865,
+      "actualNetCashflow": -28,
+      "seedExpenditure": 270,
+      "repairExpenditure": 0,
+      "observedWorkload": {
+        "samples": 29,
+        "summedActive": 174,
+        "summedBusy": 174,
+        "summedPending": 2667,
+        "busyFraction": 1
+      }
+    },
+    {
+      "day": 3,
+      "profile": "olderFemale",
+      "profiles": [
+        "olderFemale"
+      ],
+      "paidCoins": 205,
+      "paidContractSeconds": 2049.9999999999995,
+      "deliveredCoins": 565,
+      "deliveredCrates": 40,
+      "distinctDeliveringWorkers": 7,
+      "incomePerPaidWorkerSecond": 0.27560975609756105,
+      "wagesPerDeliveredCrate": 5.125,
+      "actualNetCashflow": 80,
+      "seedExpenditure": 280,
+      "repairExpenditure": 0,
+      "observedWorkload": {
+        "samples": 29,
+        "summedActive": 198,
+        "summedBusy": 198,
+        "summedPending": 3064,
+        "busyFraction": 1
+      }
+    },
+    {
+      "day": 4,
+      "profile": "olderFemale",
+      "profiles": [
+        "olderFemale"
+      ],
+      "paidCoins": 276,
+      "paidContractSeconds": 2740.000000000003,
+      "deliveredCoins": 811,
+      "deliveredCrates": 66,
+      "distinctDeliveringWorkers": 10,
+      "incomePerPaidWorkerSecond": 0.2959854014598537,
+      "wagesPerDeliveredCrate": 4.181818181818182,
+      "actualNetCashflow": 83,
+      "seedExpenditure": 452,
+      "repairExpenditure": 0,
+      "observedWorkload": {
+        "samples": 29,
+        "summedActive": 264,
+        "summedBusy": 264,
+        "summedPending": 3611,
+        "busyFraction": 1
+      }
+    },
+    {
+      "day": 5,
+      "profile": "olderFemale",
+      "profiles": [
+        "olderFemale"
+      ],
+      "paidCoins": 348,
+      "paidContractSeconds": 3479.9999999999995,
+      "deliveredCoins": 1285,
+      "deliveredCrates": 103,
+      "distinctDeliveringWorkers": 12,
+      "incomePerPaidWorkerSecond": 0.36925287356321845,
+      "wagesPerDeliveredCrate": 3.378640776699029,
+      "actualNetCashflow": 277,
+      "seedExpenditure": 660,
+      "repairExpenditure": 0,
+      "observedWorkload": {
+        "samples": 29,
+        "summedActive": 336,
+        "summedBusy": 336,
+        "summedPending": 3880,
+        "busyFraction": 1
+      }
+    },
+    {
+      "day": 6,
+      "profile": "olderFemale",
+      "profiles": [
+        "olderFemale"
+      ],
+      "paidCoins": 386,
+      "paidContractSeconds": 3860,
+      "deliveredCoins": 887,
+      "deliveredCrates": 72,
+      "distinctDeliveringWorkers": 13,
+      "incomePerPaidWorkerSecond": 0.22979274611398964,
+      "wagesPerDeliveredCrate": 5.361111111111111,
+      "actualNetCashflow": -64,
+      "seedExpenditure": 345,
+      "repairExpenditure": 0,
+      "observedWorkload": {
+        "samples": 29,
+        "summedActive": 373,
+        "summedBusy": 373,
+        "summedPending": 4285,
+        "busyFraction": 1
+      }
+    },
+    {
+      "day": 7,
+      "profile": "olderFemale",
+      "profiles": [
+        "olderFemale"
+      ],
+      "paidCoins": 416,
+      "paidContractSeconds": 4160,
+      "deliveredCoins": 1498,
+      "deliveredCrates": 127,
+      "distinctDeliveringWorkers": 14,
+      "incomePerPaidWorkerSecond": 0.36009615384615384,
+      "wagesPerDeliveredCrate": 3.2755905511811023,
+      "actualNetCashflow": 52,
+      "seedExpenditure": 670,
+      "repairExpenditure": 0,
+      "observedWorkload": {
+        "samples": 29,
+        "summedActive": 402,
+        "summedBusy": 402,
+        "summedPending": 3901,
+        "busyFraction": 1
+      }
+    }
+  ],
+  "scope": "Native paid contracts and delivered cashflow only. Contract capacity is not measured working time. Busy fractions are discrete snapshots, not continuous utilization or human activity. Deliveries may originate in earlier crop/contract cycles; ratios do not prove causal worker profitability or forecast future income."
+}
