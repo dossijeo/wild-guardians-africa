@@ -1,0 +1,13 @@
+# Worker-service precondition: stopped v113 experiment
+
+The complete v113 originals are published at `edc327d9`. A slow day-11 policy search performed full animal checks before nine worker-service rejections. No crop losses, prices, damage or worker rules are modified by this experiment.
+
+`workersFirst` is an opt-in option of the experimental perimeter certificate. The existing default order is unchanged. It constructs the same proposed native geometry, executes the native worker-service proof and rejects a failed necessary precondition before animal certification. It explicitly records `animalCertificateSkipped`; this rejection does not claim anything about animal protection. When workers pass, the full animal proof remains mandatory and worker results are not calculated twice. Neither failed worker service nor open animal access is waived.
+
+The nine recoverable rectangular proposals on the copied stopped snapshot all reject worker `worker-9842` in 34–99 ms with the new order. Shore/routed polygons are excluded because their exact trace cannot be reconstructed from the recorded bounds. The stopped snapshot follows the original search by one native tick; historical counters are not a same-state timing baseline. One original animal-origin rejection becomes a worker-service rejection, because both are necessary conditions and workers are checked first. The validity remains false; diagnostic precedence is intentionally different in that case.
+
+For the first rectangular proposal, cold sequential AB/BA runs use identical source hashes, snapshot bytes and native quote. Original order takes 22,361 and 23,134 ms; worker-first takes 77 and 90 ms. All four preserve state and return the exact same native worker rejection checks, reason and ID. The mean falls from 22,748 to 83 ms, approximately 99.63% less time for this **one rejected QA proposal**. This is not a whole-campaign, gameplay frame-time, GPU or economic improvement claim. Raw observations and the comparison are retained alongside this review.
+
+Sixteen tests pass across worker-first, integrated perimeter and worker-service v3 contracts. They verify that worker rejection skips animal work, successful worker access preserves the complete physical certificate, open animal access still fails, state remains unchanged, and terrain resources restore correctly. The full positive comparison uses the existing paid native Gran Cañón fixture.
+
+Campaign CLI/policy activation remains unchanged in this commit. Further integration must preserve the earlier candidate labels/defaults, include source provenance, review diagnostic-precedence effects on retry policy and check the full policy on the retained snapshot before another long run. A hundred-night result is still missing.

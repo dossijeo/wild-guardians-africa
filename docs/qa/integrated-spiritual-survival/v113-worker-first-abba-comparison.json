@@ -1,0 +1,41 @@
+{
+  "order": [
+    "A1",
+    "B1",
+    "B2",
+    "A2"
+  ],
+  "snapshotSha256": "b16754994ce99a38c11871ddb0b5373d0c37869a2352c5068163553a724e1af4",
+  "sourceHashesIdentical": true,
+  "workerRejectionExactlyIdentical": true,
+  "originalMeanMilliseconds": 22747.592449999996,
+  "workerFirstMeanMilliseconds": 83.44954999999996,
+  "reductionPercent": 99.63314996880032,
+  "runs": [
+    {
+      "label": "A1",
+      "mode": "original",
+      "milliseconds": 22360.964399999997,
+      "animalCertificateSkipped": false
+    },
+    {
+      "label": "B1",
+      "mode": "worker-first",
+      "milliseconds": 77.02129999999994,
+      "animalCertificateSkipped": true
+    },
+    {
+      "label": "B2",
+      "mode": "worker-first",
+      "milliseconds": 89.87779999999998,
+      "animalCertificateSkipped": true
+    },
+    {
+      "label": "A2",
+      "mode": "original",
+      "milliseconds": 23134.2205,
+      "animalCertificateSkipped": false
+    }
+  ],
+  "scope": "Same stopped snapshot and first native rectangular quote, sequential cold AB/BA; two observations per variant, no other local benchmark/test concurrent. This measures one rejected QA proposal, not the whole policy/campaign, game FPS, GPU or balance acceptance."
+}

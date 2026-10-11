@@ -9,7 +9,7 @@ import {operational} from '../src/simulation/rules.js';
 import {nativeReusedServiceComponentProofV2} from './native-reused-service-component-proof-v2.mjs';
 import {staticAnimalCertificate} from './static-animal-certificate-cache.mjs';
 const proofViews=new WeakMap();
-export function nativePerimeterReusedCandidateV2(s,nav,plan,bounds,{cache=true,outline=null,workerServiceProof=nativeWorkerServiceProofV2,incrementalCrops=false}={}){
+export function nativePerimeterReusedCandidateV2(s,nav,plan,bounds,{cache=true,outline=null,workerServiceProof=nativeWorkerServiceProofV2,incrementalCrops=false,workersFirst=false}={}){
  // Native epochs invalidate obstacle/terrain/suppression changes. Bounds and
  // living crops are rechecked below on every call; they do not alter graph
  // geometry. Retain only one bounded native-query view per navigator.
@@ -21,12 +21,17 @@ export function nativePerimeterReusedCandidateV2(s,nav,plan,bounds,{cache=true,o
   view.obstacles=[...nav.obstacles.map(w=>updates.has(w.id)?{...w,...updates.get(w.id)}:w),...plan.pieces];
   if(cache)proofViews.set(nav,{key,state:s,view});
  }
+ // Optional QA precondition: reject an unserviceable proposed layout before
+ // its expensive animal certificate. A passing worker check never substitutes
+ // for animal access validation, and the original ordering remains default.
+ const precheckedWorkers=workersFirst?workerServiceProof(s,view):null;
+ if(precheckedWorkers&&!precheckedWorkers.valid)return {...precheckedWorkers,animalCertificateSkipped:true,scope:'Worker service rejected before animal certification; no animal protection claimed.'};
  const land=[...s.plants.filter(p=>p.alive),...s.structures.filter(operational).flatMap(c=>centerFootprint(c,s).footprint)],radii=[...new Set(Object.values(ANIMAL_ACTIONS.animals).map(a=>a.presentation.footprint.radius))];
  const animals=staticAnimalCertificate(s,view,plan,bounds,outline,()=>certifyAnimals(),{cache,extend:incrementalCrops&&outline?extendAnimals:null});
  if(!animals.valid)return animals;
  const checks=animals.checks;
  const coverage=animals.retainedCoverage?{animalCertificateCoverage:animals.retainedCoverage}:{};
- const workerService=workerServiceProof(s,view);
+ const workerService=precheckedWorkers??workerServiceProof(s,view);
  if(!workerService.valid)return {...workerService,animalChecks:checks,...coverage};
  return {valid:true,reason:'native-complete-components-and-worker-service-routes',checks,workerService,...coverage,scope:'Predictive native geometry only; no paid protection or campaign outcome.'};
  function extendAnimals(proof,added){
