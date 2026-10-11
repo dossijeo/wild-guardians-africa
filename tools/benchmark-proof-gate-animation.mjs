@@ -8,11 +8,15 @@ import {Navigation,BIOME_IDS} from '../src/world/navigation.js';
 import * as Game from '../src/simulation/game.js';
 import {nativeStablePlanPerimeterProof} from './native-stable-plan-perimeter-proof.mjs';
 import {nativeWorkerServiceProofV3} from './native-worker-service-proof-v3.mjs';
+import {nativeCampaignProvenance} from './run_native_campaign.mjs';
 const output=process.argv[2];assert(output&&!existsSync(output),'Fresh output required');
 const root=new URL('../docs/qa/integrated-spiritual-survival/campaign-v115-q15-good-sabana-123-hundred/',import.meta.url);
 const bytes=readFileSync(new URL('partial-state.json.gz',root)),text=gunzipSync(bytes).toString();
 const trace=JSON.parse(readFileSync(new URL('partial.json',root))).receipts.defense.planned;
 const hash=value=>createHash('sha256').update(value).digest('hex'),rows=[],expected=new Map();let expectedPaid;
+// Freeze all gameplay/world/content dependencies before the first arm. The
+// former seven-file list alone could miss changes to imported native rules.
+const runtimeProvenance=nativeCampaignProvenance({labourPolicy:'q15',perimeterQa:'stable-plan-v5'});
 // Only this counter records whether an already-proven component was found
 // warm. Keep validity, poses, blocked/certified counts, connectors and regions
 // in the equality oracle; retain the complete original proof in each row.
@@ -44,4 +48,6 @@ for(const arm of ['baseline','candidate','candidate','baseline']){
  const paid=serialize(s);if(expectedPaid)assert.equal(paid,expectedPaid);else expectedPaid=paid;
 }
 const paths=['tools/benchmark-proof-gate-animation.mjs','tools/proof-geometry-signature-candidate.mjs','tools/native-perimeter-reused-candidate-v2.mjs','tools/static-animal-certificate-cache.mjs','tools/native-stable-plan-perimeter-proof.mjs','tools/stable-prospective-wall-plan-candidate.mjs','src/world/navigation.js'];
-writeFileSync(output,JSON.stringify({scope:'AB/BA native cold and changed-gate-phase certification on retained snapshot. Controlled gate phase is diagnostic input, not physical motion or a campaign. Full certificates/quotes/state match and absent workers still reject. Concurrent CPU timings, not isolated hardware/GPU or campaign acceptance.',snapshotSha256:hash(bytes),rows,paidStateSha256:hash(expectedPaid),sourceHashes:Object.fromEntries(paths.map(p=>[p,hash(readFileSync(new URL('../'+p,import.meta.url)))]))},null,2)+'\n',{flag:'wx'});
+const sourceHashes={...runtimeProvenance.sourceHashes,...Object.fromEntries(paths.map(p=>[p,hash(readFileSync(new URL('../'+p,import.meta.url)))]))};
+for(const [path,expectedHash] of Object.entries(runtimeProvenance.sourceHashes))assert.equal(hash(readFileSync(new URL('../'+path,import.meta.url))),expectedHash,'Source changed during benchmark: '+path);
+writeFileSync(output,JSON.stringify({scope:'AB/BA native cold and changed-gate-phase certification on retained snapshot. Controlled gate phase is diagnostic input, not physical motion or a campaign. Full certificates/quotes/state match and absent workers still reject. Concurrent CPU timings, not isolated hardware/GPU or campaign acceptance.',snapshotSha256:hash(bytes),rows,paidStateSha256:hash(expectedPaid),sourceHashes,runtimeProvenance},null,2)+'\n',{flag:'wx'});
