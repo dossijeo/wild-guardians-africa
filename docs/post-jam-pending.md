@@ -1,5 +1,19 @@
 # Tareas pendientes posteriores a la Jam
 
+## Pulido de usabilidad en validación independiente — 11 de octubre
+
+La rama `feature/post-jam-usability-polish` desarrolla, por encargo posterior del
+usuario, la protección contextual de cámara, los layouts móviles de los cuatro
+labs y la salida nativa Windows. No altera la rama de balance ni sus campañas.
+La QA funcional/visual de navegador y las pruebas dirigidas pasan. La salida
+mediante botón real y recuperación del guardado se han probado en ejecutable
+Windows empaquetado; la candidata final espera sus checks completos de CI y el
+benchmark CPU aislado. No se declara aún fusionada ni publicada.
+
+[Evidencia, negativos y límites](qa/post-jam-usability-polish/README.md).
+Android físico no se ha ejecutado; touch/orientación se verifican por emulación.
+Las entradas anteriores se conservan como historial y no sustituyen este estado.
+
 ## Feedback de guardado y salida Windows — pendiente, sin desplazar balance
 
 Solicitud del10 de octubre:
