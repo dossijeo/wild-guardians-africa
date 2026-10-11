@@ -32,3 +32,13 @@ After that acknowledgement, the Canyon entry selector gained one +24 m bank-form
 The exact failed snapshot now passes its full-wave regression, including all ten actors, unchanged serialized state/RNG, original nav bounds, non-overlapping bodies, clear exit segments, positive exterior certificates and fewer than twenty sparse required chunks. The combined entry, residency, camera, wave-readiness and natural-defense regression passes 77 tests. These tests do not establish completed combat or economic survival.
 
 The next retained-night replay uses an explicitly recorded 90-second wall-clock observation allowance because the cold selection regression took about 37 seconds under concurrent tests. This allowance affects only the diagnostic observer, not simulated time, native attacks, production loading or campaign rules. Native readiness must still actually complete.
+
+## Retained-night native replay completed
+
+The real preparation worker completed in 44,992.88 ms. The full replay ended normally after 93,575.20 ms of wall time, with the native night finished at day eight, time zero. All nine warthogs and the hyena appeared; all 29 assigned hits were consumed through native attacks. The verified raid evidence reports 26 crop contacts destroying 26 plants, three wall contacts causing 63 actual wall HP loss, no centre contacts and no remaining hit budgets at retirement. Living crops fell from 70 to 44. There was no native defeat and no synthetic damage, income, target movement or reduced wave.
+
+The replay deliberately performs no new player shield or agricultural-magic commands after loading the snapshot. It is not a continuation of the passive player's full decision policy, and its 37.14% crop loss is not an accepted defended-strategy destruction rate. Actual whole-campaign pilots must execute their normal shield decisions. No one may append this replay as a completed economic day to the failed original campaign.
+
+The original snapshot hash remains unchanged; all recorded source hashes were stable throughout the replay. The observation allowance did not alter simulated elapsed time. Native residency/body/exterior regression and the complete combat evidence support relaunching source-frozen short campaigns, not integrating balance into main.
+
+The production web build passed in 11.80 seconds. Existing large-chunk and mixed static/dynamic atmosphere-import warnings remain; this is not browser visual or performance acceptance.
