@@ -1,0 +1,53 @@
+{
+  "cases": [
+    {
+      "directory": "docs/qa/integrated-spiritual-survival/military-baseline-v1-normal-sabana-712",
+      "seed": "712",
+      "strategy": "good",
+      "status": "observed-native-defeat",
+      "result": "defeat",
+      "defeatPhase": "after-incursion-before-dawn",
+      "victoryPhase": null,
+      "postgameDays": 0,
+      "daytimeRaids": 0,
+      "terminalDay": 31,
+      "completedNights": 30,
+      "money": 31,
+      "living": 0,
+      "centerHp": [],
+      "destroyed": 552,
+      "totals": {
+        "income": 23532,
+        "refunds": 0,
+        "wages": 9591,
+        "seeds": 12085,
+        "walls": 560,
+        "centers": 0,
+        "villages": 0,
+        "repairs": 1965,
+        "otherCredits": 0,
+        "otherDebits": 0
+      },
+      "strikes": {
+        "assigned": 1500,
+        "consumed": 1500,
+        "unused": 0
+      },
+      "postIntroduction": {
+        "exposure": 2783,
+        "losses": 552,
+        "weightedDestroyedFraction": 0.19834710743801653,
+        "unprotectedReferenceFraction": 0.21492148760330582,
+        "protectedReferenceFraction": 0.03641735537190082,
+        "scope": "Nighttime references are hypotheses only, never applied damage; exposure is the native census at each raid spawn"
+      },
+      "ledgerAndDeliveryMatch": true,
+      "sourceHashesMatch": true,
+      "scope": "Native terminal result and ledger only; a single hundred-night victory does not establish the strategy/seed matrix, human activity or general release acceptance"
+    }
+  ],
+  "frozenProfile": "normal",
+  "internalStrategy": "good",
+  "profileIdentityVerified": true,
+  "profileMeaning": "Frozen normal profile reuses the good policy engine, with defense beginning day 10 and no maintenance reserve. This is not the frozen good profile."
+}
