@@ -100,7 +100,7 @@ export function placeStructure(s,id,{kind='center',material='zarzas',gate=false,
   return commit(s,id,kind==='center'?'center':'wall',()=>{
     ensurePurchaseBudget(s,cost);transact(s.ledger,id,rational(-cost));
     s.nextId++;s.sequence++;s.structures.push(entity);
-    s.suppressed.push(...suppression);nav.setState(s);emit(s,'PlacementCommitted',{kind,targetId:s.structures.at(-1).id,presentation:{x,z}});
+    s.suppressed.push(...suppression);nav.setState(s);emit(s,'PlacementCommitted',{paymentId:id,kind,targetId:s.structures.at(-1).id,presentation:{x,z}});
     if(kind==='center'){recoverDisplacedWorkers(s);enqueueLooseCrates(s);}
     if(kind==='center'&&s.tutorial.step==='center')s.tutorial.step='plant';
   });
@@ -189,7 +189,7 @@ export function buildWallChain(s,id,material,points,nav,options={}) {
     ensurePurchaseBudget(s,plan.cost);transact(s.ledger,id,rational(-plan.cost));
     for(const update of plan.updates){const existing=s.structures.find(e=>e.id===update.id);if(existing)Object.assign(existing,update);}
     s.structures.push(...newPieces);s.nextId+=newPieces.length;s.sequence+=newPieces.length;s.suppressed.push(...plan.suppressed.filter(key=>!s.suppressed.includes(key)));nav.setState(s);
-    emit(s,'WallChainBuilt',{material,count:newPieces.length,gates:plan.gates,targetId:newPieces[0].id,presentation:{x:newPieces[0].x,z:newPieces[0].z}});
+    emit(s,'WallChainBuilt',{paymentId:id,material,count:newPieces.length,gates:plan.gates,targetId:newPieces[0].id,presentation:{x:newPieces[0].x,z:newPieces[0].z}});
   });
 }
 export function removeWall(s,id,targetId,nav) {
@@ -200,7 +200,7 @@ export function removeWall(s,id,targetId,nav) {
     s.tasks=s.tasks.filter(t=>t.targetId!==targetId);s.structures=s.structures.filter(e=>e.id!==targetId);nav.setState(s);
     const refund=wallRefund(target);transact(s.ledger,id,refund);
     // Removal opens the graph: never call ensureAutomaticGates here or on reload.
-    emit(s,'WallRemoved',{targetId,refund:numberOf(refund)});
+    emit(s,'WallRemoved',{paymentId:id,targetId,refund:numberOf(refund)});
   });
 }
 export function plant(s,id,species,x,z,nav) {
@@ -215,7 +215,7 @@ export function plant(s,id,species,x,z,nav) {
     s.plants.push(p);enqueue(s,center.id,'initial',p.id);
     const removedProps=check.suppress??[];s.suppressed.push(...removedProps);
     if(nav.syncCropPlacement)nav.syncCropPlacement(s,removedProps);else nav.setState(s);
-    emit(s,'CropPlaced',{targetId:p.id});
+    emit(s,'CropPlaced',{paymentId:id,targetId:p.id});
     if(s.tutorial.step==='plant')s.tutorial.step='hire';
   });
 }
@@ -248,7 +248,7 @@ export function hireAdditional(s,id,selection,centerId){
   const usedPeople=new Set(s.workers.map(w=>w.personId));
   for(const p of PROFILES)for(let i=0;i<(selection[p.id]??0);i++)addHiredWorker(s,p.id,centerId,usedPeople);
   for(const p of PROFILES)s.hiringSelection[p.id]=(s.hiringSelection[p.id]??0)+(selection[p.id]??0);
-  s.commandIds.push(id);emit(s,'HiringConfirmed',{count:total,additional:true,centerId,cost});return true;
+  s.commandIds.push(id);emit(s,'HiringConfirmed',{paymentId:id,count:total,additional:true,centerId,cost});return true;
 }
 export function hire(s,id,selection) {
   if(s.hiringPaidDay===s.day)return false;
@@ -266,7 +266,7 @@ export function hire(s,id,selection) {
   for(const [centerId,profiles] of Object.entries(assigned))for(const p of profiles)add(p,centerId);
   if(!centers.length)for(const p of PROFILES)for(let i=0;i<(selection[p.id]??0);i++)add(p.id,null);
   s.commandIds.push(id);s.hiringSelection={...selection};s.hiringPaidDay=s.day;s.initialPreparation=false;resume(s,'hiring');rebuildTasks(s);planDay(s);
-  if(s.tutorial.step==='hire')s.tutorial.step='observe';emit(s,'HiringConfirmed',{count:total,cost});
+  if(s.tutorial.step==='hire')s.tutorial.step='observe';emit(s,'HiringConfirmed',{paymentId:id,count:total,cost});
 }
 export function openInitialHiring(s) {if(s.structures.some(operational)&&s.plants.some(p=>p.alive)&&s.hiringPaidDay!==s.day)pause(s,'hiring');}
 function queueMatureHarvest(s,p,queue) {
@@ -590,7 +590,7 @@ export function foundVillage(s,id,culture,x,z,payload,nav) {
       const nearestRoute=nearestVillageRoute(nav,departure,s.villages);
       if(nearestRoute){center.culture??=centerCulture(center,s);center.villageId=nearestRoute.v.id;}
     }
-    emit(s,'VillageFounded',{culture,x,z,targetId:s.villages.at(-1).id,presentation:{x,z}});
+    emit(s,'VillageFounded',{paymentId:id,culture,x,z,targetId:s.villages.at(-1).id,presentation:{x,z}});
   });
 }
 export function nightEntryPending(s){return !s.raid&&!s.result&&!!s.nightPlan?.group?.length&&!s.nightPlan.done&&s.time>=s.nightPlan.at;}

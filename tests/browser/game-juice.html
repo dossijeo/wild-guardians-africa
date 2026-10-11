@@ -1,0 +1,47 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Game Juice - isolated presentation QA</title>
+<script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js"}}</script>
+<link rel="stylesheet" href="/content/fonts.css"><link rel="stylesheet" href="/ui-theme.css?v=2"><link rel="stylesheet" href="/content/hud.css"><style>body{margin:0}#stage{background:linear-gradient(#a5b5b0,#dbd0a7 45%,#807449)}aside{position:fixed;z-index:80;bottom:4px;left:8px;max-width:calc(100% - 16px);display:flex;gap:3px;flex-wrap:wrap}aside button{font-size:11px;padding:5px}#report{display:none}#fixture{position:absolute;top:45%;left:12%;color:#243a2d;font-size:13px;max-width:50%}</style>
+<main id="stage" class="game"></main><aside><button id="income">Income</button><button id="expense">Expense</button><button id="dawn">Dawn</button><button id="place">Plant</button><button id="build">Build</button><button id="magic">Magic</button><button id="ready">Ready</button><button id="critical">Critical</button><button id="collapse">Collapse</button><button id="save">Save</button><button id="priority">Priority</button><button id="language">ES / EN</button><button id="stress">Stress + ABBA</button><button id="cleanup">Cleanup</button><button id="hold">Hold capture</button></aside><p id="report"></p>
+<script type="module">
+import '../../src/ui/styles.css';
+import * as Game from '../../src/simulation/game.js';
+import {GameJuice} from '../../src/ui/game-juice.js';
+import {hudMarkup,ASSETS,layoutHud} from '../../src/ui/native-hud.js';
+import {rational,transact,numberOf} from '../../src/simulation/money.js';
+import {clearNavigation} from '../clear-navigation.js';
+import {saveGame} from '../../src/app/save-game.js';
+import {Vector3,PerspectiveCamera} from 'three';
+const stage=document.querySelector('#stage');stage.innerHTML=hudMarkup+'<div id="events"></div><div id="placementBanner"></div><div id="fixture">Isolated native HUD / presentation fixture. No world renderer or audio. Transactions and placement commands use the real engine.</div>';
+for(const img of stage.querySelectorAll('[data-sprite]'))img.src=ASSETS[img.dataset.sprite].src;
+layoutHud(stage);window.addEventListener('resize',()=>layoutHud(stage));
+const state=Game.newGame({seed:712}),nav=clearNavigation();Game.placeStructure(state,'qa-center',{x:4,z:0},nav);state.day=5;
+let stamp=performance.now(),blocked=false,language='es',held=null;
+const world={nav:{field:{surface:()=>0}},camera:new PerspectiveCamera(42,innerWidth/innerHeight,.1,100),raidCamera:{}};world.camera.position.set(15,12,15);world.camera.lookAt(new Vector3(4,0,0));world.camera.updateMatrixWorld();
+const juice=new GameJuice(stage,state,world,{priority:()=>blocked,language:()=>language,now:()=>held??performance.now()});const report={scope:'Native DOM presentation fixture; no GPU renderer. ABBA measures JS+DOM scheduling, not GPU time.',checks:{},benchmarks:[]};let sequence=0;
+function refresh(){document.querySelector('#moneyValue').textContent=numberOf(state.ledger.balance);document.querySelector('#report').textContent=JSON.stringify(report);}
+function emit(type,detail){Game.emit(state,type,detail);juice.process(state);refresh();}
+document.querySelector('#income').onclick=()=>{const id='crate-'+sequence++;transact(state.ledger,`deliver:${id}`,rational(45));emit('CrateDelivered',{targetId:id});};
+document.querySelector('#expense').onclick=()=>{const id='hire-'+sequence++;transact(state.ledger,id,rational(-30));emit('HiringConfirmed',{paymentId:id,count:1,cost:30});};
+document.querySelector('#dawn').onclick=()=>{state.completedNights=10;emit('Dawn');};
+document.querySelector('#place').onclick=()=>{Game.plant(state,'plant-'+sequence++,'mijo',8+sequence*1.2,0,nav);juice.process(state);refresh();};
+document.querySelector('#build').onclick=()=>{Game.buildWallChain(state,'wall-'+sequence++,'zarzas',[[3,8],[10,8]],nav);juice.process(state);refresh();};
+document.querySelector('#magic').onclick=()=>{Game.cast(state,'magic-'+sequence++,'growth',8,0,nav);juice.process(state);refresh();};
+document.querySelector('#ready').onclick=()=>{state.cooldowns.shield=1;juice.process(state);state.cooldowns.shield=0;juice.process(state);refresh();};
+document.querySelector('#critical').onclick=()=>{const event=document.createElement('div');event.className='notice-card urgent';event.textContent=language==='es'?'El poblado necesita ayuda':'The village needs help';document.querySelector('#events').replaceChildren(event);emit('StructureHit',{targetId:state.structures[0].id,structureHit:{hp:20,maxHp:600}});};
+document.querySelector('#collapse').onclick=()=>{emit('StructureRuined',{targetId:state.structures[0].id});const before=world.camera.position.clone();world.presentationDraw(()=>{});report.checks.exactCameraRestore=world.camera.position.equals(before);refresh();};
+document.querySelector('#save').onclick=async()=>{const before=state.messages.length;await saveGame(state,{save:()=>Promise.resolve()},{confirm:true,onConfirm:()=>juice.savedSuccessfully()});report.checks.saveNoSimulationMessage=state.messages.length===before;refresh();};
+document.querySelector('#priority').onclick=()=>{blocked=!blocked;document.querySelector('#fixture').textContent='Mandatory dialog priority: '+blocked;};
+document.querySelector('#language').onclick=()=>{language=language==='es'?'en':'es';document.documentElement.lang=language;};
+document.querySelector('#hold').onclick=()=>{held=performance.now()+200;juice.update(state);for(const a of document.getAnimations()){a.pause();a.currentTime=300;}};
+document.querySelector('#cleanup').onclick=()=>{juice.dispose();report.checks.cleanup=stage.querySelectorAll('.game-juice,.juice-saved').length===0;refresh();};
+document.querySelector('#stress').onclick=async()=>{
+ const counts=[],timings={A:[],B:[]};
+ for(const mode of ['A','B','B','A'])for(let frame=0;frame<180;frame++){
+  const started=performance.now();if(mode==='B'){for(let i=0;i<100;i++){const id='stress-'+sequence++;transact(state.ledger,`deliver:${id}`,rational(45));Game.emit(state,'CrateDelivered',{targetId:id});}juice.process(state);juice.update(state);counts.push(juice.effects.length);}
+  timings[mode].push(performance.now()-started);await new Promise(requestAnimationFrame);
+ }
+ const stats=a=>{a.sort((x,y)=>x-y);return {median:a[Math.floor(a.length/2)],p95:a[Math.floor(a.length*.95)],max:a.at(-1)}};
+ report.benchmarks.push({workload:'100 confirmed deliveries/frame, 360 active frames, ABBA, 36,000 real ledger settlements',off:stats(timings.A),on:stats(timings.B),maxEffects:Math.max(...counts),maxAllowed:4});report.checks.bounded=counts.every(n=>n<=4);refresh();
+};
+function frame(now){if(!juice.disposed)juice.update(state);stamp=now;requestAnimationFrame(frame);}requestAnimationFrame(frame);refresh();
+</script></html>
