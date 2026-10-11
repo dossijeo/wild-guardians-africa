@@ -1,0 +1,22 @@
+# Current integration: gate-phase certificate reuse
+
+Source revision 36a744a6, experimental branch codex/raid-recovery-validation. This is a QA certification optimization, not an animal balance change or production rendering benchmark. No running campaign was modified. gateAnimationInvariant remains disabled by default.
+
+Command: node tools/benchmark-proof-gate-animation.mjs .cache-gate-invariant-current-integration.json
+
+The retained native snapshot contains 233 living crops and one gate. Order is A/B/B/A; each arm runs a cold phase and a controlled gate-phase change. Phase changes are diagnostic inputs, not a simulated cinematic or animated traversal. Native quote, physical certificate, serialized state and real paid wall purchase are checked across arms. Missing workers must still reject. All 462 recorded dependency hashes were verified unchanged during the run. Full proofs and hashes are retained in report.json.gz.
+
+| Arm | Cold certification ms | Changed gate phase ms |
+|---|---:|---:|
+| A baseline | 31727.78 | 32261.80 |
+| B candidate | 33692.02 | 223.20 |
+| B candidate | 32465.89 | 180.52 |
+| A baseline | 31516.04 | 30077.08 |
+
+Changed-phase means: baseline 31169.44 ms, candidate 201.86 ms, approximately 99.35% less local certification time. Cold means: baseline 31621.91 ms, candidate 33078.96 ms; this concurrent-CPU run does not demonstrate a cold-load improvement. A native campaign was running concurrently, so these are not isolated hardware measurements or a prediction of total campaign acceleration.
+
+All eight physical certificate hashes agree: 51e98dd76e1b54964ce9fd8f9a93a2be3c220af98da0e57a31802e2971492d93. Quote hash: 7020e75ac2e21c8643e436e384e91e3257a1e99ad1a9b1ab5e193d525ef2345f. Paid state hash: 73b9a8923cd9596d60d25d21632a4774568d36b8e0abac99c6c04a0d05f3fd83.
+
+Equality omits only terrain memo diagnostics and the already-proven component reuse counter. Validity, native service poses, blocked/certified counts, connectors, regions and full original proof remain recorded. Actual wall-removal invalidation, customized-adapter rejection and the separate 30 biome/culture native gate-phase cases are documented in adjacent QA folders.
+
+This verifies the quote/proof/purchase pipeline on one retained snapshot, not a full funded-defense policy campaign. Integration into a newly frozen campaign protocol and broader CI remain pending. This result cannot approve the economic balance, statistical survival targets or main integration.
