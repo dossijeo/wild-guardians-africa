@@ -1,0 +1,2019 @@
+{
+  "status": "no-certified-incremental-contour",
+  "input": "docs/qa/integrated-spiritual-survival/native-paid-canyon-eight-crop-service-v2-state.json.gz",
+  "inputSha256": "5499e3eaec2e36cae49796f7f0a591d3413cf5abe7cec7e237598475ceec6be6",
+  "snapshotPath": "docs/qa/integrated-spiritual-survival/funded-canyon-small-integrated-v1-state.json.gz",
+  "parameters": {
+    "startDay": 1,
+    "material": "zarzas",
+    "interval": 5,
+    "chunkPieces": 8,
+    "obstacleAware": true,
+    "shoreRouting": true,
+    "repairPolicy": "breach-first",
+    "funding": "contour"
+  },
+  "opening": 630,
+  "closing": 320,
+  "entries": [
+    {
+      "id": "small-funded-wall-0",
+      "coins": -80
+    },
+    {
+      "id": "small-funded-wall-1",
+      "coins": -80
+    },
+    {
+      "id": "small-funded-wall-2",
+      "coins": -80
+    },
+    {
+      "id": "small-funded-wall-3",
+      "coins": -70
+    }
+  ],
+  "reconciliationDifference": 0,
+  "decisions": [
+    {
+      "iteration": 0,
+      "time": 0,
+      "opening": 630,
+      "closing": 550,
+      "actions": 1,
+      "cpuMilliseconds": 349.8557,
+      "lastHistory": {
+        "day": 1,
+        "time": 0,
+        "protectedCash": 30,
+        "repairFunding": {
+          "policy": "breach-first",
+          "breached": false,
+          "protectedCash": 30,
+          "pendingQuotedCoins": 0
+        },
+        "pendingRepairCoins": 0,
+        "attempts": [
+          {
+            "bounds": [
+              -30.520000000000003,
+              50.14,
+              -8.72,
+              69.76
+            ],
+            "expectedPieces": 39,
+            "legalPieces": 31,
+            "nativeVegetationRemoval": 0,
+            "reason": "native-placement-omissions",
+            "nativeBarrierProof": {
+              "valid": false,
+              "reason": "no-clear-interior-crop",
+              "checks": [],
+              "terrainTileDiagnostics": {
+                "side": 32,
+                "capacity": 16,
+                "tiles": 2,
+                "requests": 285,
+                "hits": 222,
+                "misses": 63,
+                "evictions": 0,
+                "fallbacks": 0,
+                "invalidations": 0,
+                "typedArrayBytes": 18432,
+                "maximumTypedArrayBytes": 147456
+              },
+              "integrationVersion": "contact-service-reuse-v2"
+            },
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -30.520000000000003,
+              50.14,
+              -8.72,
+              69.76
+            ],
+            "routing": "no-bounded-clear-corner",
+            "routed": true,
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -32.7,
+              50.14,
+              -6.540000000000001,
+              69.76
+            ],
+            "expectedPieces": 43,
+            "legalPieces": 31,
+            "nativeVegetationRemoval": 0,
+            "reason": "native-placement-omissions",
+            "nativeBarrierProof": {
+              "valid": false,
+              "reason": "no-clear-interior-crop",
+              "checks": [],
+              "terrainTileDiagnostics": {
+                "side": 32,
+                "capacity": 16,
+                "tiles": 2,
+                "requests": 285,
+                "hits": 222,
+                "misses": 63,
+                "evictions": 0,
+                "fallbacks": 0,
+                "invalidations": 0,
+                "typedArrayBytes": 18432,
+                "maximumTypedArrayBytes": 147456
+              },
+              "integrationVersion": "contact-service-reuse-v2"
+            },
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -32.7,
+              50.14,
+              -6.540000000000001,
+              69.76
+            ],
+            "routing": "no-bounded-clear-corner",
+            "routed": true,
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -30.520000000000003,
+              47.96,
+              -8.72,
+              71.94000000000001
+            ],
+            "expectedPieces": 43,
+            "legalPieces": 33,
+            "nativeVegetationRemoval": 0,
+            "reason": "native-placement-omissions",
+            "nativeBarrierProof": {
+              "valid": false,
+              "reason": "no-clear-interior-crop",
+              "checks": [],
+              "terrainTileDiagnostics": {
+                "side": 32,
+                "capacity": 16,
+                "tiles": 2,
+                "requests": 285,
+                "hits": 222,
+                "misses": 63,
+                "evictions": 0,
+                "fallbacks": 0,
+                "invalidations": 0,
+                "typedArrayBytes": 18432,
+                "maximumTypedArrayBytes": 147456
+              },
+              "integrationVersion": "contact-service-reuse-v2"
+            },
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -30.520000000000003,
+              47.96,
+              -8.72,
+              71.94000000000001
+            ],
+            "routing": "no-bounded-clear-corner",
+            "routed": true,
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -32.7,
+              47.96,
+              -6.540000000000001,
+              71.94000000000001
+            ],
+            "expectedPieces": 47,
+            "legalPieces": 33,
+            "nativeVegetationRemoval": 0,
+            "reason": "native-placement-omissions",
+            "nativeBarrierProof": {
+              "valid": false,
+              "reason": "no-clear-interior-crop",
+              "checks": [],
+              "terrainTileDiagnostics": {
+                "side": 32,
+                "capacity": 16,
+                "tiles": 2,
+                "requests": 285,
+                "hits": 222,
+                "misses": 63,
+                "evictions": 0,
+                "fallbacks": 0,
+                "invalidations": 0,
+                "typedArrayBytes": 18432,
+                "maximumTypedArrayBytes": 147456
+              },
+              "integrationVersion": "contact-service-reuse-v2"
+            },
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -32.7,
+              47.96,
+              -6.540000000000001,
+              71.94000000000001
+            ],
+            "routing": "no-bounded-clear-corner",
+            "routed": true,
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -34.88,
+              50.14,
+              -4.36,
+              69.76
+            ],
+            "expectedPieces": 47,
+            "legalPieces": 33,
+            "nativeVegetationRemoval": 0,
+            "reason": "native-placement-omissions",
+            "nativeBarrierProof": {
+              "valid": false,
+              "reason": "no-clear-interior-crop",
+              "checks": [],
+              "terrainTileDiagnostics": {
+                "side": 32,
+                "capacity": 16,
+                "tiles": 2,
+                "requests": 285,
+                "hits": 222,
+                "misses": 63,
+                "evictions": 0,
+                "fallbacks": 0,
+                "invalidations": 0,
+                "typedArrayBytes": 18432,
+                "maximumTypedArrayBytes": 147456
+              },
+              "integrationVersion": "contact-service-reuse-v2"
+            },
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -34.88,
+              50.14,
+              -4.36,
+              69.76
+            ],
+            "routing": "no-bounded-clear-corner",
+            "routed": true,
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -30.520000000000003,
+              45.78,
+              -8.72,
+              74.12
+            ],
+            "expectedPieces": 47,
+            "legalPieces": 36,
+            "nativeVegetationRemoval": 0,
+            "reason": "native-placement-omissions",
+            "nativeBarrierProof": {
+              "valid": false,
+              "reason": "no-clear-interior-crop",
+              "checks": [],
+              "terrainTileDiagnostics": {
+                "side": 32,
+                "capacity": 16,
+                "tiles": 2,
+                "requests": 285,
+                "hits": 222,
+                "misses": 63,
+                "evictions": 0,
+                "fallbacks": 0,
+                "invalidations": 0,
+                "typedArrayBytes": 18432,
+                "maximumTypedArrayBytes": 147456
+              },
+              "integrationVersion": "contact-service-reuse-v2"
+            },
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -30.520000000000003,
+              45.78,
+              -8.72,
+              74.12
+            ],
+            "routing": "no-bounded-side-route",
+            "routed": true,
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -34.88,
+              47.96,
+              -4.36,
+              71.94000000000001
+            ],
+            "expectedPieces": 51,
+            "legalPieces": 35,
+            "nativeVegetationRemoval": 0,
+            "reason": "native-placement-omissions",
+            "nativeBarrierProof": {
+              "valid": false,
+              "reason": "no-clear-interior-crop",
+              "checks": [],
+              "terrainTileDiagnostics": {
+                "side": 32,
+                "capacity": 16,
+                "tiles": 2,
+                "requests": 285,
+                "hits": 222,
+                "misses": 63,
+                "evictions": 0,
+                "fallbacks": 0,
+                "invalidations": 0,
+                "typedArrayBytes": 18432,
+                "maximumTypedArrayBytes": 147456
+              },
+              "integrationVersion": "contact-service-reuse-v2"
+            },
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -34.88,
+              47.96,
+              -4.36,
+              71.94000000000001
+            ],
+            "routing": "no-bounded-clear-corner",
+            "routed": true,
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -32.7,
+              45.78,
+              -6.540000000000001,
+              74.12
+            ],
+            "expectedPieces": 50,
+            "legalPieces": 35,
+            "nativeVegetationRemoval": 0,
+            "reason": "native-placement-omissions",
+            "nativeBarrierProof": {
+              "valid": false,
+              "reason": "no-clear-interior-crop",
+              "checks": [],
+              "terrainTileDiagnostics": {
+                "side": 32,
+                "capacity": 16,
+                "tiles": 2,
+                "requests": 285,
+                "hits": 222,
+                "misses": 63,
+                "evictions": 0,
+                "fallbacks": 0,
+                "invalidations": 0,
+                "typedArrayBytes": 18432,
+                "maximumTypedArrayBytes": 147456
+              },
+              "integrationVersion": "contact-service-reuse-v2"
+            },
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -32.7,
+              45.78,
+              -6.540000000000001,
+              74.12
+            ],
+            "routing": "no-bounded-clear-corner",
+            "routed": true,
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -34.88,
+              45.78,
+              -4.36,
+              74.12
+            ],
+            "expectedPieces": 54,
+            "legalPieces": 36,
+            "nativeVegetationRemoval": 0,
+            "reason": "native-placement-omissions",
+            "nativeBarrierProof": {
+              "valid": false,
+              "reason": "no-clear-interior-crop",
+              "checks": [],
+              "terrainTileDiagnostics": {
+                "side": 32,
+                "capacity": 16,
+                "tiles": 2,
+                "requests": 285,
+                "hits": 222,
+                "misses": 63,
+                "evictions": 0,
+                "fallbacks": 0,
+                "invalidations": 0,
+                "typedArrayBytes": 18432,
+                "maximumTypedArrayBytes": 147456
+              },
+              "integrationVersion": "contact-service-reuse-v2"
+            },
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -34.88,
+              45.78,
+              -4.36,
+              74.12
+            ],
+            "routing": "no-bounded-clear-corner",
+            "routed": true,
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -28.5,
+              51.25,
+              -11.25,
+              67
+            ],
+            "shore": true,
+            "parameters": {
+              "padding": 2,
+              "step": 0.25,
+              "maxCells": 30000,
+              "waterFringe": 0
+            },
+            "expectedPieces": 31,
+            "legalPieces": 31,
+            "nativeVegetationRemoval": 0,
+            "reason": "complete-native-legal-quote",
+            "legal": true,
+            "cost": 310
+          }
+        ],
+        "paidCost": 80,
+        "paidPieces": 8,
+        "remainingCost": 230,
+        "complete": false,
+        "bounds": [
+          -28.5,
+          51.25,
+          -11.25,
+          67
+        ],
+        "paymentId": "small-funded-wall-0",
+        "ids": [
+          "structure-29",
+          "structure-30",
+          "structure-31",
+          "structure-32",
+          "structure-33",
+          "structure-34",
+          "structure-35",
+          "structure-36"
+        ],
+        "nativeSuppressedProps": [],
+        "reason": "paid-native-contour-in-progress"
+      }
+    },
+    {
+      "iteration": 1,
+      "time": 4.999999999999998,
+      "opening": 550,
+      "closing": 550,
+      "actions": 0,
+      "cpuMilliseconds": 0.22220000000015716,
+      "lastHistory": {
+        "day": 1,
+        "time": 0,
+        "protectedCash": 30,
+        "repairFunding": {
+          "policy": "breach-first",
+          "breached": false,
+          "protectedCash": 30,
+          "pendingQuotedCoins": 0
+        },
+        "pendingRepairCoins": 0,
+        "attempts": [
+          {
+            "bounds": [
+              -30.520000000000003,
+              50.14,
+              -8.72,
+              69.76
+            ],
+            "expectedPieces": 39,
+            "legalPieces": 31,
+            "nativeVegetationRemoval": 0,
+            "reason": "native-placement-omissions",
+            "nativeBarrierProof": {
+              "valid": false,
+              "reason": "no-clear-interior-crop",
+              "checks": [],
+              "terrainTileDiagnostics": {
+                "side": 32,
+                "capacity": 16,
+                "tiles": 2,
+                "requests": 285,
+                "hits": 222,
+                "misses": 63,
+                "evictions": 0,
+                "fallbacks": 0,
+                "invalidations": 0,
+                "typedArrayBytes": 18432,
+                "maximumTypedArrayBytes": 147456
+              },
+              "integrationVersion": "contact-service-reuse-v2"
+            },
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -30.520000000000003,
+              50.14,
+              -8.72,
+              69.76
+            ],
+            "routing": "no-bounded-clear-corner",
+            "routed": true,
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -32.7,
+              50.14,
+              -6.540000000000001,
+              69.76
+            ],
+            "expectedPieces": 43,
+            "legalPieces": 31,
+            "nativeVegetationRemoval": 0,
+            "reason": "native-placement-omissions",
+            "nativeBarrierProof": {
+              "valid": false,
+              "reason": "no-clear-interior-crop",
+              "checks": [],
+              "terrainTileDiagnostics": {
+                "side": 32,
+                "capacity": 16,
+                "tiles": 2,
+                "requests": 285,
+                "hits": 222,
+                "misses": 63,
+                "evictions": 0,
+                "fallbacks": 0,
+                "invalidations": 0,
+                "typedArrayBytes": 18432,
+                "maximumTypedArrayBytes": 147456
+              },
+              "integrationVersion": "contact-service-reuse-v2"
+            },
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -32.7,
+              50.14,
+              -6.540000000000001,
+              69.76
+            ],
+            "routing": "no-bounded-clear-corner",
+            "routed": true,
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -30.520000000000003,
+              47.96,
+              -8.72,
+              71.94000000000001
+            ],
+            "expectedPieces": 43,
+            "legalPieces": 33,
+            "nativeVegetationRemoval": 0,
+            "reason": "native-placement-omissions",
+            "nativeBarrierProof": {
+              "valid": false,
+              "reason": "no-clear-interior-crop",
+              "checks": [],
+              "terrainTileDiagnostics": {
+                "side": 32,
+                "capacity": 16,
+                "tiles": 2,
+                "requests": 285,
+                "hits": 222,
+                "misses": 63,
+                "evictions": 0,
+                "fallbacks": 0,
+                "invalidations": 0,
+                "typedArrayBytes": 18432,
+                "maximumTypedArrayBytes": 147456
+              },
+              "integrationVersion": "contact-service-reuse-v2"
+            },
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -30.520000000000003,
+              47.96,
+              -8.72,
+              71.94000000000001
+            ],
+            "routing": "no-bounded-clear-corner",
+            "routed": true,
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -32.7,
+              47.96,
+              -6.540000000000001,
+              71.94000000000001
+            ],
+            "expectedPieces": 47,
+            "legalPieces": 33,
+            "nativeVegetationRemoval": 0,
+            "reason": "native-placement-omissions",
+            "nativeBarrierProof": {
+              "valid": false,
+              "reason": "no-clear-interior-crop",
+              "checks": [],
+              "terrainTileDiagnostics": {
+                "side": 32,
+                "capacity": 16,
+                "tiles": 2,
+                "requests": 285,
+                "hits": 222,
+                "misses": 63,
+                "evictions": 0,
+                "fallbacks": 0,
+                "invalidations": 0,
+                "typedArrayBytes": 18432,
+                "maximumTypedArrayBytes": 147456
+              },
+              "integrationVersion": "contact-service-reuse-v2"
+            },
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -32.7,
+              47.96,
+              -6.540000000000001,
+              71.94000000000001
+            ],
+            "routing": "no-bounded-clear-corner",
+            "routed": true,
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -34.88,
+              50.14,
+              -4.36,
+              69.76
+            ],
+            "expectedPieces": 47,
+            "legalPieces": 33,
+            "nativeVegetationRemoval": 0,
+            "reason": "native-placement-omissions",
+            "nativeBarrierProof": {
+              "valid": false,
+              "reason": "no-clear-interior-crop",
+              "checks": [],
+              "terrainTileDiagnostics": {
+                "side": 32,
+                "capacity": 16,
+                "tiles": 2,
+                "requests": 285,
+                "hits": 222,
+                "misses": 63,
+                "evictions": 0,
+                "fallbacks": 0,
+                "invalidations": 0,
+                "typedArrayBytes": 18432,
+                "maximumTypedArrayBytes": 147456
+              },
+              "integrationVersion": "contact-service-reuse-v2"
+            },
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -34.88,
+              50.14,
+              -4.36,
+              69.76
+            ],
+            "routing": "no-bounded-clear-corner",
+            "routed": true,
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -30.520000000000003,
+              45.78,
+              -8.72,
+              74.12
+            ],
+            "expectedPieces": 47,
+            "legalPieces": 36,
+            "nativeVegetationRemoval": 0,
+            "reason": "native-placement-omissions",
+            "nativeBarrierProof": {
+              "valid": false,
+              "reason": "no-clear-interior-crop",
+              "checks": [],
+              "terrainTileDiagnostics": {
+                "side": 32,
+                "capacity": 16,
+                "tiles": 2,
+                "requests": 285,
+                "hits": 222,
+                "misses": 63,
+                "evictions": 0,
+                "fallbacks": 0,
+                "invalidations": 0,
+                "typedArrayBytes": 18432,
+                "maximumTypedArrayBytes": 147456
+              },
+              "integrationVersion": "contact-service-reuse-v2"
+            },
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -30.520000000000003,
+              45.78,
+              -8.72,
+              74.12
+            ],
+            "routing": "no-bounded-side-route",
+            "routed": true,
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -34.88,
+              47.96,
+              -4.36,
+              71.94000000000001
+            ],
+            "expectedPieces": 51,
+            "legalPieces": 35,
+            "nativeVegetationRemoval": 0,
+            "reason": "native-placement-omissions",
+            "nativeBarrierProof": {
+              "valid": false,
+              "reason": "no-clear-interior-crop",
+              "checks": [],
+              "terrainTileDiagnostics": {
+                "side": 32,
+                "capacity": 16,
+                "tiles": 2,
+                "requests": 285,
+                "hits": 222,
+                "misses": 63,
+                "evictions": 0,
+                "fallbacks": 0,
+                "invalidations": 0,
+                "typedArrayBytes": 18432,
+                "maximumTypedArrayBytes": 147456
+              },
+              "integrationVersion": "contact-service-reuse-v2"
+            },
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -34.88,
+              47.96,
+              -4.36,
+              71.94000000000001
+            ],
+            "routing": "no-bounded-clear-corner",
+            "routed": true,
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -32.7,
+              45.78,
+              -6.540000000000001,
+              74.12
+            ],
+            "expectedPieces": 50,
+            "legalPieces": 35,
+            "nativeVegetationRemoval": 0,
+            "reason": "native-placement-omissions",
+            "nativeBarrierProof": {
+              "valid": false,
+              "reason": "no-clear-interior-crop",
+              "checks": [],
+              "terrainTileDiagnostics": {
+                "side": 32,
+                "capacity": 16,
+                "tiles": 2,
+                "requests": 285,
+                "hits": 222,
+                "misses": 63,
+                "evictions": 0,
+                "fallbacks": 0,
+                "invalidations": 0,
+                "typedArrayBytes": 18432,
+                "maximumTypedArrayBytes": 147456
+              },
+              "integrationVersion": "contact-service-reuse-v2"
+            },
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -32.7,
+              45.78,
+              -6.540000000000001,
+              74.12
+            ],
+            "routing": "no-bounded-clear-corner",
+            "routed": true,
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -34.88,
+              45.78,
+              -4.36,
+              74.12
+            ],
+            "expectedPieces": 54,
+            "legalPieces": 36,
+            "nativeVegetationRemoval": 0,
+            "reason": "native-placement-omissions",
+            "nativeBarrierProof": {
+              "valid": false,
+              "reason": "no-clear-interior-crop",
+              "checks": [],
+              "terrainTileDiagnostics": {
+                "side": 32,
+                "capacity": 16,
+                "tiles": 2,
+                "requests": 285,
+                "hits": 222,
+                "misses": 63,
+                "evictions": 0,
+                "fallbacks": 0,
+                "invalidations": 0,
+                "typedArrayBytes": 18432,
+                "maximumTypedArrayBytes": 147456
+              },
+              "integrationVersion": "contact-service-reuse-v2"
+            },
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -34.88,
+              45.78,
+              -4.36,
+              74.12
+            ],
+            "routing": "no-bounded-clear-corner",
+            "routed": true,
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -28.5,
+              51.25,
+              -11.25,
+              67
+            ],
+            "shore": true,
+            "parameters": {
+              "padding": 2,
+              "step": 0.25,
+              "maxCells": 30000,
+              "waterFringe": 0
+            },
+            "expectedPieces": 31,
+            "legalPieces": 31,
+            "nativeVegetationRemoval": 0,
+            "reason": "complete-native-legal-quote",
+            "legal": true,
+            "cost": 310
+          }
+        ],
+        "paidCost": 80,
+        "paidPieces": 8,
+        "remainingCost": 230,
+        "complete": false,
+        "bounds": [
+          -28.5,
+          51.25,
+          -11.25,
+          67
+        ],
+        "paymentId": "small-funded-wall-0",
+        "ids": [
+          "structure-29",
+          "structure-30",
+          "structure-31",
+          "structure-32",
+          "structure-33",
+          "structure-34",
+          "structure-35",
+          "structure-36"
+        ],
+        "nativeSuppressedProps": [],
+        "reason": "paid-native-contour-in-progress"
+      }
+    },
+    {
+      "iteration": 2,
+      "time": 9.99999999999998,
+      "opening": 550,
+      "closing": 470,
+      "actions": 1,
+      "cpuMilliseconds": 62.346900000000005,
+      "lastHistory": {
+        "day": 1,
+        "time": 9.99999999999998,
+        "protectedCash": 30,
+        "repairFunding": {
+          "policy": "breach-first",
+          "breached": false,
+          "protectedCash": 30,
+          "pendingQuotedCoins": 0
+        },
+        "pendingRepairCoins": 0,
+        "attempts": [],
+        "paidCost": 80,
+        "paidPieces": 8,
+        "remainingCost": 150,
+        "complete": false,
+        "bounds": [
+          -28.5,
+          51.25,
+          -11.25,
+          67
+        ],
+        "paymentId": "small-funded-wall-1",
+        "ids": [
+          "structure-37",
+          "structure-38",
+          "structure-39",
+          "structure-40",
+          "structure-41",
+          "structure-42",
+          "structure-43",
+          "structure-44"
+        ],
+        "nativeSuppressedProps": [],
+        "reason": "paid-native-contour-in-progress"
+      }
+    },
+    {
+      "iteration": 3,
+      "time": 14.999999999999963,
+      "opening": 470,
+      "closing": 470,
+      "actions": 0,
+      "cpuMilliseconds": 0.42010000000004766,
+      "lastHistory": {
+        "day": 1,
+        "time": 9.99999999999998,
+        "protectedCash": 30,
+        "repairFunding": {
+          "policy": "breach-first",
+          "breached": false,
+          "protectedCash": 30,
+          "pendingQuotedCoins": 0
+        },
+        "pendingRepairCoins": 0,
+        "attempts": [],
+        "paidCost": 80,
+        "paidPieces": 8,
+        "remainingCost": 150,
+        "complete": false,
+        "bounds": [
+          -28.5,
+          51.25,
+          -11.25,
+          67
+        ],
+        "paymentId": "small-funded-wall-1",
+        "ids": [
+          "structure-37",
+          "structure-38",
+          "structure-39",
+          "structure-40",
+          "structure-41",
+          "structure-42",
+          "structure-43",
+          "structure-44"
+        ],
+        "nativeSuppressedProps": [],
+        "reason": "paid-native-contour-in-progress"
+      }
+    },
+    {
+      "iteration": 4,
+      "time": 20.000000000000014,
+      "opening": 470,
+      "closing": 390,
+      "actions": 1,
+      "cpuMilliseconds": 32.22180000000003,
+      "lastHistory": {
+        "day": 1,
+        "time": 20.000000000000014,
+        "protectedCash": 30,
+        "repairFunding": {
+          "policy": "breach-first",
+          "breached": false,
+          "protectedCash": 30,
+          "pendingQuotedCoins": 0
+        },
+        "pendingRepairCoins": 0,
+        "attempts": [],
+        "paidCost": 80,
+        "paidPieces": 8,
+        "remainingCost": 70,
+        "complete": false,
+        "bounds": [
+          -28.5,
+          51.25,
+          -11.25,
+          67
+        ],
+        "paymentId": "small-funded-wall-2",
+        "ids": [
+          "structure-45",
+          "structure-46",
+          "structure-47",
+          "structure-48",
+          "structure-49",
+          "structure-50",
+          "structure-51",
+          "structure-52"
+        ],
+        "nativeSuppressedProps": [],
+        "reason": "paid-native-contour-in-progress"
+      }
+    },
+    {
+      "iteration": 5,
+      "time": 25.000000000000085,
+      "opening": 390,
+      "closing": 320,
+      "actions": 1,
+      "cpuMilliseconds": 14.638599999999997,
+      "lastHistory": {
+        "day": 1,
+        "time": 25.000000000000085,
+        "protectedCash": 30,
+        "repairFunding": {
+          "policy": "breach-first",
+          "breached": false,
+          "protectedCash": 30,
+          "pendingQuotedCoins": 0
+        },
+        "pendingRepairCoins": 0,
+        "attempts": [],
+        "paidCost": 70,
+        "paidPieces": 7,
+        "remainingCost": 0,
+        "complete": true,
+        "bounds": [
+          -28.5,
+          51.25,
+          -11.25,
+          67
+        ],
+        "paymentId": "small-funded-wall-3",
+        "ids": [
+          "structure-53",
+          "structure-54",
+          "structure-55",
+          "structure-56",
+          "structure-57",
+          "structure-58",
+          "structure-59"
+        ],
+        "nativeSuppressedProps": [],
+        "reason": "paid-native-contour-completed"
+      }
+    }
+  ],
+  "policy": {
+    "startDay": 1,
+    "material": "zarzas",
+    "interval": 5,
+    "chunkPieces": 8,
+    "maxSlots": 256,
+    "obstacleAware": true,
+    "shoreRouting": true,
+    "repairPolicy": "breach-first",
+    "funding": "contour",
+    "discretionaryNewWallFraction": 1,
+    "planned": null,
+    "completed": {
+      "bounds": [
+        -28.5,
+        51.25,
+        -11.25,
+        67
+      ],
+      "points": [
+        [
+          -28.5,
+          54.75
+        ],
+        [
+          -28.25,
+          54.75
+        ],
+        [
+          -28.25,
+          54.5
+        ],
+        [
+          -27.5,
+          54.5
+        ],
+        [
+          -27.5,
+          52.5
+        ],
+        [
+          -24.5,
+          52.5
+        ],
+        [
+          -24.5,
+          51.25
+        ],
+        [
+          -15.5,
+          51.25
+        ],
+        [
+          -15.5,
+          51.5
+        ],
+        [
+          -15,
+          51.5
+        ],
+        [
+          -15,
+          52
+        ],
+        [
+          -11.25,
+          52
+        ],
+        [
+          -11.25,
+          65.25
+        ],
+        [
+          -12.25,
+          65.25
+        ],
+        [
+          -12.25,
+          65.5
+        ],
+        [
+          -13,
+          65.5
+        ],
+        [
+          -13,
+          66
+        ],
+        [
+          -13.5,
+          66
+        ],
+        [
+          -13.5,
+          66.25
+        ],
+        [
+          -15.25,
+          66.25
+        ],
+        [
+          -15.25,
+          67
+        ],
+        [
+          -25,
+          67
+        ],
+        [
+          -25,
+          65.75
+        ],
+        [
+          -26.5,
+          65.75
+        ],
+        [
+          -26.5,
+          65
+        ],
+        [
+          -26.75,
+          65
+        ],
+        [
+          -26.75,
+          64.5
+        ],
+        [
+          -27,
+          64.5
+        ],
+        [
+          -27,
+          64
+        ],
+        [
+          -27.25,
+          64
+        ],
+        [
+          -27.25,
+          63.25
+        ],
+        [
+          -27.5,
+          63.25
+        ],
+        [
+          -27.5,
+          62.5
+        ],
+        [
+          -27.75,
+          62.5
+        ],
+        [
+          -27.75,
+          62.25
+        ],
+        [
+          -28,
+          62.25
+        ],
+        [
+          -28,
+          61.5
+        ],
+        [
+          -28.25,
+          61.5
+        ],
+        [
+          -28.25,
+          60.75
+        ],
+        [
+          -28.5,
+          60.75
+        ],
+        [
+          -28.5,
+          54.75
+        ]
+      ],
+      "routed": true,
+      "shoreRouted": true,
+      "shoreParameters": {
+        "padding": 2,
+        "step": 0.25,
+        "maxCells": 30000,
+        "waterFringe": 0
+      }
+    },
+    "remainingCost": 0,
+    "repairRequests": 0,
+    "history": [
+      {
+        "day": 1,
+        "time": 0,
+        "protectedCash": 30,
+        "repairFunding": {
+          "policy": "breach-first",
+          "breached": false,
+          "protectedCash": 30,
+          "pendingQuotedCoins": 0
+        },
+        "pendingRepairCoins": 0,
+        "attempts": [
+          {
+            "bounds": [
+              -30.520000000000003,
+              50.14,
+              -8.72,
+              69.76
+            ],
+            "expectedPieces": 39,
+            "legalPieces": 31,
+            "nativeVegetationRemoval": 0,
+            "reason": "native-placement-omissions",
+            "nativeBarrierProof": {
+              "valid": false,
+              "reason": "no-clear-interior-crop",
+              "checks": [],
+              "terrainTileDiagnostics": {
+                "side": 32,
+                "capacity": 16,
+                "tiles": 2,
+                "requests": 285,
+                "hits": 222,
+                "misses": 63,
+                "evictions": 0,
+                "fallbacks": 0,
+                "invalidations": 0,
+                "typedArrayBytes": 18432,
+                "maximumTypedArrayBytes": 147456
+              },
+              "integrationVersion": "contact-service-reuse-v2"
+            },
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -30.520000000000003,
+              50.14,
+              -8.72,
+              69.76
+            ],
+            "routing": "no-bounded-clear-corner",
+            "routed": true,
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -32.7,
+              50.14,
+              -6.540000000000001,
+              69.76
+            ],
+            "expectedPieces": 43,
+            "legalPieces": 31,
+            "nativeVegetationRemoval": 0,
+            "reason": "native-placement-omissions",
+            "nativeBarrierProof": {
+              "valid": false,
+              "reason": "no-clear-interior-crop",
+              "checks": [],
+              "terrainTileDiagnostics": {
+                "side": 32,
+                "capacity": 16,
+                "tiles": 2,
+                "requests": 285,
+                "hits": 222,
+                "misses": 63,
+                "evictions": 0,
+                "fallbacks": 0,
+                "invalidations": 0,
+                "typedArrayBytes": 18432,
+                "maximumTypedArrayBytes": 147456
+              },
+              "integrationVersion": "contact-service-reuse-v2"
+            },
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -32.7,
+              50.14,
+              -6.540000000000001,
+              69.76
+            ],
+            "routing": "no-bounded-clear-corner",
+            "routed": true,
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -30.520000000000003,
+              47.96,
+              -8.72,
+              71.94000000000001
+            ],
+            "expectedPieces": 43,
+            "legalPieces": 33,
+            "nativeVegetationRemoval": 0,
+            "reason": "native-placement-omissions",
+            "nativeBarrierProof": {
+              "valid": false,
+              "reason": "no-clear-interior-crop",
+              "checks": [],
+              "terrainTileDiagnostics": {
+                "side": 32,
+                "capacity": 16,
+                "tiles": 2,
+                "requests": 285,
+                "hits": 222,
+                "misses": 63,
+                "evictions": 0,
+                "fallbacks": 0,
+                "invalidations": 0,
+                "typedArrayBytes": 18432,
+                "maximumTypedArrayBytes": 147456
+              },
+              "integrationVersion": "contact-service-reuse-v2"
+            },
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -30.520000000000003,
+              47.96,
+              -8.72,
+              71.94000000000001
+            ],
+            "routing": "no-bounded-clear-corner",
+            "routed": true,
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -32.7,
+              47.96,
+              -6.540000000000001,
+              71.94000000000001
+            ],
+            "expectedPieces": 47,
+            "legalPieces": 33,
+            "nativeVegetationRemoval": 0,
+            "reason": "native-placement-omissions",
+            "nativeBarrierProof": {
+              "valid": false,
+              "reason": "no-clear-interior-crop",
+              "checks": [],
+              "terrainTileDiagnostics": {
+                "side": 32,
+                "capacity": 16,
+                "tiles": 2,
+                "requests": 285,
+                "hits": 222,
+                "misses": 63,
+                "evictions": 0,
+                "fallbacks": 0,
+                "invalidations": 0,
+                "typedArrayBytes": 18432,
+                "maximumTypedArrayBytes": 147456
+              },
+              "integrationVersion": "contact-service-reuse-v2"
+            },
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -32.7,
+              47.96,
+              -6.540000000000001,
+              71.94000000000001
+            ],
+            "routing": "no-bounded-clear-corner",
+            "routed": true,
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -34.88,
+              50.14,
+              -4.36,
+              69.76
+            ],
+            "expectedPieces": 47,
+            "legalPieces": 33,
+            "nativeVegetationRemoval": 0,
+            "reason": "native-placement-omissions",
+            "nativeBarrierProof": {
+              "valid": false,
+              "reason": "no-clear-interior-crop",
+              "checks": [],
+              "terrainTileDiagnostics": {
+                "side": 32,
+                "capacity": 16,
+                "tiles": 2,
+                "requests": 285,
+                "hits": 222,
+                "misses": 63,
+                "evictions": 0,
+                "fallbacks": 0,
+                "invalidations": 0,
+                "typedArrayBytes": 18432,
+                "maximumTypedArrayBytes": 147456
+              },
+              "integrationVersion": "contact-service-reuse-v2"
+            },
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -34.88,
+              50.14,
+              -4.36,
+              69.76
+            ],
+            "routing": "no-bounded-clear-corner",
+            "routed": true,
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -30.520000000000003,
+              45.78,
+              -8.72,
+              74.12
+            ],
+            "expectedPieces": 47,
+            "legalPieces": 36,
+            "nativeVegetationRemoval": 0,
+            "reason": "native-placement-omissions",
+            "nativeBarrierProof": {
+              "valid": false,
+              "reason": "no-clear-interior-crop",
+              "checks": [],
+              "terrainTileDiagnostics": {
+                "side": 32,
+                "capacity": 16,
+                "tiles": 2,
+                "requests": 285,
+                "hits": 222,
+                "misses": 63,
+                "evictions": 0,
+                "fallbacks": 0,
+                "invalidations": 0,
+                "typedArrayBytes": 18432,
+                "maximumTypedArrayBytes": 147456
+              },
+              "integrationVersion": "contact-service-reuse-v2"
+            },
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -30.520000000000003,
+              45.78,
+              -8.72,
+              74.12
+            ],
+            "routing": "no-bounded-side-route",
+            "routed": true,
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -34.88,
+              47.96,
+              -4.36,
+              71.94000000000001
+            ],
+            "expectedPieces": 51,
+            "legalPieces": 35,
+            "nativeVegetationRemoval": 0,
+            "reason": "native-placement-omissions",
+            "nativeBarrierProof": {
+              "valid": false,
+              "reason": "no-clear-interior-crop",
+              "checks": [],
+              "terrainTileDiagnostics": {
+                "side": 32,
+                "capacity": 16,
+                "tiles": 2,
+                "requests": 285,
+                "hits": 222,
+                "misses": 63,
+                "evictions": 0,
+                "fallbacks": 0,
+                "invalidations": 0,
+                "typedArrayBytes": 18432,
+                "maximumTypedArrayBytes": 147456
+              },
+              "integrationVersion": "contact-service-reuse-v2"
+            },
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -34.88,
+              47.96,
+              -4.36,
+              71.94000000000001
+            ],
+            "routing": "no-bounded-clear-corner",
+            "routed": true,
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -32.7,
+              45.78,
+              -6.540000000000001,
+              74.12
+            ],
+            "expectedPieces": 50,
+            "legalPieces": 35,
+            "nativeVegetationRemoval": 0,
+            "reason": "native-placement-omissions",
+            "nativeBarrierProof": {
+              "valid": false,
+              "reason": "no-clear-interior-crop",
+              "checks": [],
+              "terrainTileDiagnostics": {
+                "side": 32,
+                "capacity": 16,
+                "tiles": 2,
+                "requests": 285,
+                "hits": 222,
+                "misses": 63,
+                "evictions": 0,
+                "fallbacks": 0,
+                "invalidations": 0,
+                "typedArrayBytes": 18432,
+                "maximumTypedArrayBytes": 147456
+              },
+              "integrationVersion": "contact-service-reuse-v2"
+            },
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -32.7,
+              45.78,
+              -6.540000000000001,
+              74.12
+            ],
+            "routing": "no-bounded-clear-corner",
+            "routed": true,
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -34.88,
+              45.78,
+              -4.36,
+              74.12
+            ],
+            "expectedPieces": 54,
+            "legalPieces": 36,
+            "nativeVegetationRemoval": 0,
+            "reason": "native-placement-omissions",
+            "nativeBarrierProof": {
+              "valid": false,
+              "reason": "no-clear-interior-crop",
+              "checks": [],
+              "terrainTileDiagnostics": {
+                "side": 32,
+                "capacity": 16,
+                "tiles": 2,
+                "requests": 285,
+                "hits": 222,
+                "misses": 63,
+                "evictions": 0,
+                "fallbacks": 0,
+                "invalidations": 0,
+                "typedArrayBytes": 18432,
+                "maximumTypedArrayBytes": 147456
+              },
+              "integrationVersion": "contact-service-reuse-v2"
+            },
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -34.88,
+              45.78,
+              -4.36,
+              74.12
+            ],
+            "routing": "no-bounded-clear-corner",
+            "routed": true,
+            "legal": false,
+            "cost": null
+          },
+          {
+            "bounds": [
+              -28.5,
+              51.25,
+              -11.25,
+              67
+            ],
+            "shore": true,
+            "parameters": {
+              "padding": 2,
+              "step": 0.25,
+              "maxCells": 30000,
+              "waterFringe": 0
+            },
+            "expectedPieces": 31,
+            "legalPieces": 31,
+            "nativeVegetationRemoval": 0,
+            "reason": "complete-native-legal-quote",
+            "legal": true,
+            "cost": 310
+          }
+        ],
+        "paidCost": 80,
+        "paidPieces": 8,
+        "remainingCost": 230,
+        "complete": false,
+        "bounds": [
+          -28.5,
+          51.25,
+          -11.25,
+          67
+        ],
+        "paymentId": "small-funded-wall-0",
+        "ids": [
+          "structure-29",
+          "structure-30",
+          "structure-31",
+          "structure-32",
+          "structure-33",
+          "structure-34",
+          "structure-35",
+          "structure-36"
+        ],
+        "nativeSuppressedProps": [],
+        "reason": "paid-native-contour-in-progress"
+      },
+      {
+        "day": 1,
+        "time": 9.99999999999998,
+        "protectedCash": 30,
+        "repairFunding": {
+          "policy": "breach-first",
+          "breached": false,
+          "protectedCash": 30,
+          "pendingQuotedCoins": 0
+        },
+        "pendingRepairCoins": 0,
+        "attempts": [],
+        "paidCost": 80,
+        "paidPieces": 8,
+        "remainingCost": 150,
+        "complete": false,
+        "bounds": [
+          -28.5,
+          51.25,
+          -11.25,
+          67
+        ],
+        "paymentId": "small-funded-wall-1",
+        "ids": [
+          "structure-37",
+          "structure-38",
+          "structure-39",
+          "structure-40",
+          "structure-41",
+          "structure-42",
+          "structure-43",
+          "structure-44"
+        ],
+        "nativeSuppressedProps": [],
+        "reason": "paid-native-contour-in-progress"
+      },
+      {
+        "day": 1,
+        "time": 20.000000000000014,
+        "protectedCash": 30,
+        "repairFunding": {
+          "policy": "breach-first",
+          "breached": false,
+          "protectedCash": 30,
+          "pendingQuotedCoins": 0
+        },
+        "pendingRepairCoins": 0,
+        "attempts": [],
+        "paidCost": 80,
+        "paidPieces": 8,
+        "remainingCost": 70,
+        "complete": false,
+        "bounds": [
+          -28.5,
+          51.25,
+          -11.25,
+          67
+        ],
+        "paymentId": "small-funded-wall-2",
+        "ids": [
+          "structure-45",
+          "structure-46",
+          "structure-47",
+          "structure-48",
+          "structure-49",
+          "structure-50",
+          "structure-51",
+          "structure-52"
+        ],
+        "nativeSuppressedProps": [],
+        "reason": "paid-native-contour-in-progress"
+      },
+      {
+        "day": 1,
+        "time": 25.000000000000085,
+        "protectedCash": 30,
+        "repairFunding": {
+          "policy": "breach-first",
+          "breached": false,
+          "protectedCash": 30,
+          "pendingQuotedCoins": 0
+        },
+        "pendingRepairCoins": 0,
+        "attempts": [],
+        "paidCost": 70,
+        "paidPieces": 7,
+        "remainingCost": 0,
+        "complete": true,
+        "bounds": [
+          -28.5,
+          51.25,
+          -11.25,
+          67
+        ],
+        "paymentId": "small-funded-wall-3",
+        "ids": [
+          "structure-53",
+          "structure-54",
+          "structure-55",
+          "structure-56",
+          "structure-57",
+          "structure-58",
+          "structure-59"
+        ],
+        "nativeSuppressedProps": [],
+        "reason": "paid-native-contour-completed"
+      }
+    ],
+    "paidCost": 310,
+    "paidPieces": 31,
+    "scope": "Saved actual funds and paid native partial strokes; complete geometric coverage is not a universal interception guarantee."
+  },
+  "actualProof": {
+    "valid": false,
+    "reason": "native-service-origin-unproven",
+    "checks": [
+      {
+        "radius": 1.1,
+        "inside": {
+          "x": -14.444469396133323,
+          "z": 64.41349834091433
+        },
+        "anchorKind": "crop-contact",
+        "anchorTargetId": "plant-13",
+        "outside": {
+          "x": -14.444469396133323,
+          "z": 73
+        },
+        "completeClosedComponent": false,
+        "services": {
+          "valid": true,
+          "reason": "native-service-poses-in-positive-closed-components",
+          "poses": 288,
+          "blocked": 284,
+          "certified": 4,
+          "physicalConnectors": 0,
+          "emptyNativeOrigins": 0,
+          "reusedComponents": 4,
+          "regions": 1,
+          "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+        }
+      },
+      {
+        "radius": 0.9,
+        "inside": {
+          "x": -13.5,
+          "z": 63
+        },
+        "anchorKind": "crop-pivot",
+        "anchorTargetId": "plant-13",
+        "outside": {
+          "x": -13.5,
+          "z": 73
+        },
+        "completeClosedComponent": false,
+        "services": {
+          "valid": false,
+          "reason": "native-service-origin-unproven",
+          "targetId": "structure-2",
+          "point": {
+            "x": -25.388687585316287,
+            "z": 64.88811156793726
+          },
+          "poses": 283,
+          "blocked": 269,
+          "certified": 13
+        }
+      }
+    ],
+    "terrainTileDiagnostics": {
+      "side": 32,
+      "capacity": 16,
+      "tiles": 4,
+      "requests": 61653,
+      "hits": 61259,
+      "misses": 394,
+      "evictions": 0,
+      "fallbacks": 0,
+      "invalidations": 0,
+      "typedArrayBytes": 36864,
+      "maximumTypedArrayBytes": 147456
+    },
+    "integrationVersion": "contact-service-reuse-v2"
+  },
+  "living": 8,
+  "wallPieces": 31,
+  "gates": 1,
+  "time": 25.000000000000085,
+  "totalCpuObservationMilliseconds": 1440.8805,
+  "sourceHashes": {
+    "tools/probe-native-funded-canyon-small.mjs": "8cd734664b347364e831cfc804a68933dac33053888f99b0d258e74132c23680",
+    "tools/native-funded-defense-policy.mjs": "a3b5d4e6d32766c5580ad30aee9d815d1cdb400440d377d4d85381bf03327b69",
+    "tools/native-integrated-perimeter-proof.mjs": "13aca83bb1795e2a0f0226696707a6eada54ecde2ed513156e78a3189462a8c5",
+    "tools/native-perimeter-reused-candidate-v2.mjs": "844b2afcc78f938b4ae1510b481175e40fdff858506d23352ebcf19581c6ab5f",
+    "tools/native-reused-service-component-proof-v2.mjs": "49876084e57a8502d6e4e343ff8ebc4a014673c1c7440379b0c3321b84cd2eed",
+    "tools/native-interior-attack-anchor.mjs": "4ecd39956d1bc93afef519910d67e797213faa4a3529a6cd273559d11a86da03",
+    "tools/native-worker-service-proof-v2.mjs": "86e53164024dacdfc4cf633303a9c1b43503f3ffdd3352d054955129630662ce",
+    "tools/terrain-lattice-tile-candidate.mjs": "a678a40f9835f2dc8e0bf30d7f478fceba7a1bd5aff450ffd46edf3a472f0fbe",
+    "src/simulation/game.js": "b216594fd241d10746d7d9b3a7802f7a6eca41c2709d25edd6501f5834e80c6f",
+    "src/world/navigation.js": "21b82f33c62581436a6cef702b66af272ae9d3b096cb2b20ee858f0a50196743",
+    "public/content/biome-canyons.json": "a0da0d39766ef48e44ef82bc9b9ab6093bce0ae2bf6abd3035a626792823ff6d"
+  },
+  "scope": "Actual native eight-crop opening snapshot, funded policy decisions and incremental purchases, five-second native worker advances, maximum 16 functional decisions. No money grants or geometry edits. Early fixture horizon is not a farming quota or balance campaign. No night attack, manual human activity or performance acceptance."
+}
