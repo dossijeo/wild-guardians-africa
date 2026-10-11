@@ -1,13 +1,14 @@
 // One positive static certificate per native proof view. Workers are deliberately
 // excluded: their access is checked separately on every query.
 const entries=new WeakMap();
-export function staticAnimalCertificate(state,view,plan,bounds,outline,compute,{cache=true,extend=null}={}){
+import {proofGeometrySignature} from './proof-geometry-signature-candidate.mjs';
+export function staticAnimalCertificate(state,view,plan,bounds,outline,compute,{cache=true,extend=null,gateAnimationInvariant=false}={}){
  const field=view.field;
  const targets=state.plants.filter(p=>p.alive).map(p=>[p.id,p.x,p.z,p.kind,p.centerId,p.species]),targetKey=JSON.stringify(targets);
- const signature=JSON.stringify([view.version,plan,bounds,outline,
+ const signature=proofGeometrySignature([view.version,plan,bounds,outline,
   view.obstacles,state.structures,state.villages,state.culture,state.suppressed,
   field?.c,field?.settlementSite,field?.seed,field?.phase,field?.riverLevel,
-  field?.canyon,field?.riverActive,field?.pondsActive,field?.wetland,field?.desert,field?.featureCell]);
+  field?.canyon,field?.riverActive,field?.pondsActive,field?.wetland,field?.desert,field?.featureCell],gateAnimationInvariant);
  const methods=[field,field?.heightCache,field?.height,field?.surface,field?.slope,field?.waterInfo,
   field?.raw,field?.naturalHeight,field?.riverBase,field?.riverX,field?.nearbyPonds,
   view.walkable,view.segmentClear,view.approachPath,view.approachGroupBlocked,view.testWalkable,view.testSegmentClear,

@@ -9,12 +9,16 @@ import {operational} from '../src/simulation/rules.js';
 import {nativeReusedServiceComponentProofV2} from './native-reused-service-component-proof-v2.mjs';
 import {staticAnimalCertificate} from './static-animal-certificate-cache.mjs';
 import {installProofWallBroadphase} from './proof-wall-broadphase-candidate.mjs';
+import {proofGeometrySignature} from './proof-geometry-signature-candidate.mjs';
+import {Navigation} from '../src/world/navigation.js';
+import {nativeWorkerServiceProofV3} from './native-worker-service-proof-v3.mjs';
 const proofViews=new WeakMap();
-export function nativePerimeterReusedCandidateV2(s,nav,plan,bounds,{cache=true,outline=null,workerServiceProof=nativeWorkerServiceProofV2,incrementalCrops=false,workersFirst=false,wallBroadphase=false}={}){
+export function nativePerimeterReusedCandidateV2(s,nav,plan,bounds,{cache=true,outline=null,workerServiceProof=nativeWorkerServiceProofV2,incrementalCrops=false,workersFirst=false,wallBroadphase=false,gateAnimationInvariant=false}={}){
+ if(gateAnimationInvariant&&(!(nav instanceof Navigation)||![nativeWorkerServiceProofV2,nativeWorkerServiceProofV3].includes(workerServiceProof)||['walkable','path','approachPath','approachGroupBlocked','segmentClear','testSegmentClear','testWalkable','workerMotionClear','coarseSegmentClear','terrainValid','propsAt','forBuildingPlacement'].some(key=>nav[key]!==Navigation.prototype[key])))throw Error('Gate invariant requires native geometry and worker proof');
  // Native epochs invalidate obstacle/terrain/suppression changes. Bounds and
  // living crops are rechecked below on every call; they do not alter graph
  // geometry. Retain only one bounded native-query view per navigator.
- const key=JSON.stringify([nav.version,plan.pieces,plan.updates,plan.suppressed??[],wallBroadphase]),old=cache?proofViews.get(nav):null;
+ const key=proofGeometrySignature([nav.version,plan.pieces,plan.updates,plan.suppressed??[],wallBroadphase,gateAnimationInvariant],gateAnimationInvariant),old=cache?proofViews.get(nav):null;
  let view=old?.key===key&&old.state===s?old.view:null;
  if(!view){
   const updates=new Map(plan.updates.map(q=>[q.id,q]));
@@ -29,7 +33,7 @@ export function nativePerimeterReusedCandidateV2(s,nav,plan,bounds,{cache=true,o
  const precheckedWorkers=workersFirst?workerServiceProof(s,view):null;
  if(precheckedWorkers&&!precheckedWorkers.valid)return {...precheckedWorkers,animalCertificateSkipped:true,scope:'Worker service rejected before animal certification; no animal protection claimed.'};
  const land=[...s.plants.filter(p=>p.alive),...s.structures.filter(operational).flatMap(c=>centerFootprint(c,s).footprint)],radii=[...new Set(Object.values(ANIMAL_ACTIONS.animals).map(a=>a.presentation.footprint.radius))];
- const animals=staticAnimalCertificate(s,view,plan,bounds,outline,()=>certifyAnimals(),{cache,extend:incrementalCrops&&outline?extendAnimals:null});
+ const animals=staticAnimalCertificate(s,view,plan,bounds,outline,()=>certifyAnimals(),{cache,extend:incrementalCrops&&outline?extendAnimals:null,gateAnimationInvariant});
  if(!animals.valid)return animals;
  const checks=animals.checks;
  const coverage=animals.retainedCoverage?{animalCertificateCoverage:animals.retainedCoverage}:{};
