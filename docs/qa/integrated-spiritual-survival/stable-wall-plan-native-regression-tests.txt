@@ -1,0 +1,438 @@
+TAP version 13
+# (node:3420) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a building completes an open wall stroke and the door is on the village-to-crop side
+ok 1 - a building completes an open wall stroke and the door is on the village-to-crop side
+  ---
+  duration_ms: 76.0674
+  ...
+# Subtest: a natural canyon cliff completes the enclosure without placing a gate into the cliff
+ok 2 - a natural canyon cliff completes the enclosure without placing a gate into the cliff
+  ---
+  duration_ms: 26.2865
+  ...
+# Subtest: the native Grand Canyon cliff closes a paid perimeter with a traversable door
+ok 3 - the native Grand Canyon cliff closes a paid perimeter with a traversable door
+  ---
+  duration_ms: 2416.5274
+  ...
+# Subtest: a genuinely open wall beside a building does not receive an unnecessary gate
+ok 4 - a genuinely open wall beside a building does not receive an unnecessary gate
+  ---
+  duration_ms: 3.7506
+  ...
+# Subtest: closing a mixed-material perimeter converts the latest new piece and preserves every older piece
+ok 5 - closing a mixed-material perimeter converts the latest new piece and preserves every older piece
+  ---
+  duration_ms: 9.133
+  ...
+# Subtest: the recorded native perimeter keeps skipped rock modules and creates one accessible gate
+ok 6 - the recorded native perimeter keeps skipped rock modules and creates one accessible gate
+  ---
+  duration_ms: 525.0557
+  ...
+# Subtest: incremental zarzas closure and rebuilding preserve the other materials
+ok 7 - incremental zarzas closure and rebuilding preserve the other materials
+  ---
+  duration_ms: 10.5337
+  ...
+# Subtest: incremental empalizada closure and rebuilding preserve the other materials
+ok 8 - incremental empalizada closure and rebuilding preserve the other materials
+  ---
+  duration_ms: 7.645
+  ...
+# Subtest: incremental adobe closure and rebuilding preserve the other materials
+ok 9 - incremental adobe closure and rebuilding preserve the other materials
+  ---
+  duration_ms: 9.735
+  ...
+# Subtest: incremental piedra closure and rebuilding preserve the other materials
+ok 10 - incremental piedra closure and rebuilding preserve the other materials
+  ---
+  duration_ms: 6.3138
+  ...
+# Subtest: incremental reforzado closure and rebuilding preserve the other materials
+ok 11 - incremental reforzado closure and rebuilding preserve the other materials
+  ---
+  duration_ms: 6.8621
+  ...
+# Subtest: rebuilding several removed blocks adds a door only when the final gap closes
+ok 12 - rebuilding several removed blocks adds a door only when the final gap closes
+  ---
+  duration_ms: 3.5251
+  ...
+# Subtest: an existing usable gate survives later perimeter edits without adding another door
+ok 13 - an existing usable gate survives later perimeter edits without adding another door
+  ---
+  duration_ms: 3.1488
+  ...
+# Subtest: an existing zarzas door is preserved when multiple gaps are rebuilt with other materials
+ok 14 - an existing zarzas door is preserved when multiple gaps are rebuilt with other materials
+  ---
+  duration_ms: 6.1335
+  ...
+# Subtest: an existing empalizada door is preserved when multiple gaps are rebuilt with other materials
+ok 15 - an existing empalizada door is preserved when multiple gaps are rebuilt with other materials
+  ---
+  duration_ms: 8.5953
+  ...
+# Subtest: an existing adobe door is preserved when multiple gaps are rebuilt with other materials
+ok 16 - an existing adobe door is preserved when multiple gaps are rebuilt with other materials
+  ---
+  duration_ms: 5.7231
+  ...
+# Subtest: an existing piedra door is preserved when multiple gaps are rebuilt with other materials
+ok 17 - an existing piedra door is preserved when multiple gaps are rebuilt with other materials
+  ---
+  duration_ms: 5.8163
+  ...
+# Subtest: an existing reforzado door is preserved when multiple gaps are rebuilt with other materials
+ok 18 - an existing reforzado door is preserved when multiple gaps are rebuilt with other materials
+  ---
+  duration_ms: 5.9016
+  ...
+# Subtest: an obstructed approach to an existing door does not make the planner create a second door
+ok 19 - an obstructed approach to an existing door does not make the planner create a second door
+  ---
+  duration_ms: 4.5827
+  ...
+# (node:47844) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: animals detour on land around a finite river; workers cross directly
+ok 20 - animals detour on land around a finite river; workers cross directly
+  ---
+  duration_ms: 34.8212
+  ...
+# Subtest: river completes a paid U perimeter without water wall pieces and preserves worker access on reload
+ok 21 - river completes a paid U perimeter without water wall pieces and preserves worker access on reload
+  ---
+  duration_ms: 71.2965
+  ...
+# Subtest: a mixed river and cliff perimeter creates a door on the last paid stroke and preserves it after rebuilding
+ok 22 - a mixed river and cliff perimeter creates a door on the last paid stroke and preserves it after rebuilding
+  ---
+  duration_ms: 31.1818
+  ...
+# Subtest: land-access witness rejects a naturally isolated farm and accepts a verified same-bank approach
+ok 23 - land-access witness rejects a naturally isolated farm and accepts a verified same-bank approach
+  ---
+  duration_ms: 2.1547
+  ...
+# Subtest: a real area impact cannot damage crops on the opposite river bank
+ok 24 - a real area impact cannot damage crops on the opposite river bank
+  ---
+  duration_ms: 3.2344
+  ...
+# Subtest: cooperative canyon initialization preserves the deterministic synchronous site
+ok 25 - cooperative canyon initialization preserves the deterministic synchronous site
+  ---
+  duration_ms: 4212.0035
+  ...
+# Subtest: native mixed canyon waves retain all 16 dry bodies without overlap and deterministic placement
+ok 26 - native mixed canyon waves retain all 16 dry bodies without overlap and deterministic placement
+  ---
+  duration_ms: 2914.9484
+  ...
+# Subtest: a native canyon column physically arrives and attacks, with no water landings
+ok 27 - a native canyon column physically arrives and attacks, with no water landings
+  ---
+  duration_ms: 2612.6236
+  ...
+# (node:34316) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: incremental new crop coverage matches independent complete native certification
+ok 28 - incremental new crop coverage matches independent complete native certification
+  ---
+  duration_ms: 1565.9021
+  ...
+# Subtest: a legal near-boundary new crop with an unproven native origin is not certified
+ok 29 - a legal near-boundary new crop with an unproven native origin is not certified
+  ---
+  duration_ms: 798.698
+  ...
+# Subtest: integrated QA proof preserves certificates and restores terrain resource ownership
+ok 30 - integrated QA proof preserves certificates and restores terrain resource ownership
+  ---
+  duration_ms: 1359.1512
+  ...
+# Subtest: an exception in the proof also restores the native lattice method
+ok 31 - an exception in the proof also restores the native lattice method
+  ---
+  duration_ms: 8.0517
+  ...
+# Subtest: reusing an animal certificate still requires a fresh worker-service check
+ok 32 - reusing an animal certificate still requires a fresh worker-service check
+  ---
+  duration_ms: 605.0906
+  ...
+# Subtest: optional exact terrain memo preserves the entire physical certificate
+ok 33 - optional exact terrain memo preserves the entire physical certificate
+  ---
+  duration_ms: 1219.6409
+  ...
+# Subtest: terrain memo and lattice are both restored when certification throws
+ok 34 - terrain memo and lattice are both restored when certification throws
+  ---
+  duration_ms: 6.7139
+  ...
+# Subtest: retired anchor coverage is freshly reproducible from original geometric origins and rejects opened walls
+ok 35 - retired anchor coverage is freshly reproducible from original geometric origins and rejects opened walls
+  ---
+  duration_ms: 681.6494
+  ...
+# Subtest: retains first provisional IDs only, including previews and gate updates
+ok 36 - retains first provisional IDs only, including previews and gate updates
+  ---
+  duration_ms: 5.2115
+  ...
+# Subtest: invalidates on native epoch
+ok 37 - invalidates on native epoch
+  ---
+  duration_ms: 0.4437
+  ...
+# Subtest: invalidates on actual damage
+ok 38 - invalidates on actual damage
+  ---
+  duration_ms: 0.2873
+  ...
+# Subtest: invalidates on obstacle
+ok 39 - invalidates on obstacle
+  ---
+  duration_ms: 0.3189
+  ...
+# Subtest: invalidates on suppression
+ok 40 - invalidates on suppression
+  ---
+  duration_ms: 0.5418
+  ...
+# Subtest: invalidates on gate selection
+ok 41 - invalidates on gate selection
+  ---
+  duration_ms: 0.3332
+  ...
+# Subtest: invalidates on position
+ok 42 - invalidates on position
+  ---
+  duration_ms: 0.2506
+  ...
+# Subtest: invalidates on price
+ok 43 - invalidates on price
+  ---
+  duration_ms: 0.2719
+  ...
+# Subtest: invalidates on actual gate update
+ok 44 - invalidates on actual gate update
+  ---
+  duration_ms: 0.4
+  ...
+# Subtest: invalidates on additional piece
+ok 45 - invalidates on additional piece
+  ---
+  duration_ms: 0.4459
+  ...
+# Subtest: a real structure claiming a retained alias forces fresh native metadata
+ok 46 - a real structure claiming a retained alias forces fresh native metadata
+  ---
+  duration_ms: 0.2878
+  ...
+# Subtest: a currently conflicting native quote is never transformed
+ok 47 - a currently conflicting native quote is never transformed
+  ---
+  duration_ms: 2.8971
+  ...
+# Subtest: state identities and navigator identities never share aliases
+ok 48 - state identities and navigator identities never share aliases
+  ---
+  duration_ms: 0.9078
+  ...
+# Subtest: unsupported and empty plans discard prior record
+ok 49 - unsupported and empty plans discard prior record
+  ---
+  duration_ms: 1.2531
+  ...
+# Subtest: duplicate virtual IDs never enter the alias record
+ok 50 - duplicate virtual IDs never enter the alias record
+  ---
+  duration_ms: 0.51
+  ...
+# (node:53100) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native hires change virtual IDs but actual paid wall IDs, gates and ledger remain exact
+ok 51 - native hires change virtual IDs but actual paid wall IDs, gates and ledger remain exact
+  ---
+  duration_ms: 60.8517
+  ...
+# Subtest: native removal and mixed-material reconstruction invalidate old virtual aliases without adding a second gate
+ok 52 - native removal and mixed-material reconstruction invalidate old virtual aliases without adding a second gate
+  ---
+  duration_ms: 19.6014
+  ...
+# Subtest: native river closure retains the chosen gate and aliases never become actual purchase identifiers
+ok 53 - native river closure retains the chosen gate and aliases never become actual purchase identifiers
+  ---
+  duration_ms: 40.8905
+  ...
+# Subtest: identical static proof is reused despite worker movement; returned diagnostics are isolated
+ok 54 - identical static proof is reused despite worker movement; returned diagnostics are isolated
+  ---
+  duration_ms: 5.6929
+  ...
+# Subtest: static certificate invalidates on crop added
+ok 55 - static certificate invalidates on crop added
+  ---
+  duration_ms: 0.5184
+  ...
+# Subtest: static certificate invalidates on crop destroyed
+ok 56 - static certificate invalidates on crop destroyed
+  ---
+  duration_ms: 0.2511
+  ...
+# Subtest: static certificate invalidates on crop moved
+ok 57 - static certificate invalidates on crop moved
+  ---
+  duration_ms: 0.2679
+  ...
+# Subtest: static certificate invalidates on wall damaged
+ok 58 - static certificate invalidates on wall damaged
+  ---
+  duration_ms: 0.2502
+  ...
+# Subtest: static certificate invalidates on geometry epoch
+ok 59 - static certificate invalidates on geometry epoch
+  ---
+  duration_ms: 0.2282
+  ...
+# Subtest: static certificate invalidates on obstacle geometry
+ok 60 - static certificate invalidates on obstacle geometry
+  ---
+  duration_ms: 0.2617
+  ...
+# Subtest: static certificate invalidates on proposal update
+ok 61 - static certificate invalidates on proposal update
+  ---
+  duration_ms: 0.3045
+  ...
+# Subtest: static certificate invalidates on bounds
+ok 62 - static certificate invalidates on bounds
+  ---
+  duration_ms: 2.192
+  ...
+# Subtest: static certificate invalidates on outline
+ok 63 - static certificate invalidates on outline
+  ---
+  duration_ms: 0.6912
+  ...
+# Subtest: static certificate invalidates on suppression
+ok 64 - static certificate invalidates on suppression
+  ---
+  duration_ms: 0.3907
+  ...
+# Subtest: static certificate invalidates on terrain configuration
+ok 65 - static certificate invalidates on terrain configuration
+  ---
+  duration_ms: 0.2396
+  ...
+# Subtest: static certificate invalidates on terrain cache replacement
+ok 66 - static certificate invalidates on terrain cache replacement
+  ---
+  duration_ms: 0.222
+  ...
+# Subtest: static certificate invalidates on terrain function replacement
+ok 67 - static certificate invalidates on terrain function replacement
+  ---
+  duration_ms: 0.3291
+  ...
+# Subtest: static certificate invalidates on navigation adapter replacement
+ok 68 - static certificate invalidates on navigation adapter replacement
+  ---
+  duration_ms: 0.2746
+  ...
+# Subtest: negative proofs and explicitly uncached probes are never reused
+ok 69 - negative proofs and explicitly uncached probes are never reused
+  ---
+  duration_ms: 0.378
+  ...
+# Subtest: harvested nonanchor targets retain positive coverage with explicit historical census
+ok 70 - harvested nonanchor targets retain positive coverage with explicit historical census
+  ---
+  duration_ms: 1.5884
+  ...
+# Subtest: superset reuse rejects survivor moved
+ok 71 - superset reuse rejects survivor moved
+  ---
+  duration_ms: 0.5769
+  ...
+# Subtest: superset reuse rejects new target replaces harvested target
+ok 72 - superset reuse rejects new target replaces harvested target
+  ---
+  duration_ms: 0.3597
+  ...
+# Subtest: superset reuse rejects remaining targets reordered
+ok 73 - superset reuse rejects remaining targets reordered
+  ---
+  duration_ms: 0.4095
+  ...
+# Subtest: superset reuse rejects all targets removed
+ok 74 - superset reuse rejects all targets removed
+  ---
+  duration_ms: 0.3361
+  ...
+# Subtest: harvested anchor survives only as an explicit geometric reference covering unchanged survivors
+ok 75 - harvested anchor survives only as an explicit geometric reference covering unchanged survivors
+  ---
+  duration_ms: 0.3947
+  ...
+# Subtest: retired-anchor reuse rejects unknown original target
+ok 76 - retired-anchor reuse rejects unknown original target
+  ---
+  duration_ms: 0.3265
+  ...
+# Subtest: retired-anchor reuse rejects missing geometric coordinates
+ok 77 - retired-anchor reuse rejects missing geometric coordinates
+  ---
+  duration_ms: 0.1848
+  ...
+# Subtest: retired-anchor reuse rejects nonfinite exterior coordinate
+ok 78 - retired-anchor reuse rejects nonfinite exterior coordinate
+  ---
+  duration_ms: 0.3285
+  ...
+# Subtest: opt-in additions require fresh proof and retain only positive cumulative coverage
+ok 79 - opt-in additions require fresh proof and retain only positive cumulative coverage
+  ---
+  duration_ms: 0.896
+  ...
+# Subtest: failed additions remain failed on repeated attempts without replacing original positive coverage
+ok 80 - failed additions remain failed on repeated attempts without replacing original positive coverage
+  ---
+  duration_ms: 0.4691
+  ...
+# Subtest: opt-in extension invalidates on moved survivor
+ok 81 - opt-in extension invalidates on moved survivor
+  ---
+  duration_ms: 0.3328
+  ...
+# Subtest: opt-in extension invalidates on reordered survivors
+ok 82 - opt-in extension invalidates on reordered survivors
+  ---
+  duration_ms: 0.2996
+  ...
+# Subtest: opt-in extension invalidates on geometry change
+ok 83 - opt-in extension invalidates on geometry change
+  ---
+  duration_ms: 0.1949
+  ...
+# Subtest: opt-in extension invalidates on suppression change
+ok 84 - opt-in extension invalidates on suppression change
+  ---
+  duration_ms: 0.1848
+  ...
+1..84
+# tests 84
+# suites 0
+# pass 84
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10203.9587

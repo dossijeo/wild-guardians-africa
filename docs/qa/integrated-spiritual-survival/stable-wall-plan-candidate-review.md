@@ -62,7 +62,20 @@ the existing positive-certificate cache tests, incremental native target coverag
 worker access and exact terrain/fluids checks. Evidence:
 `stable-wall-plan-candidate-tests.txt`.
 
-This warrants further native candidate validation for actual purchases, edited
-perimeters and mixed materials before enabling it in a future campaign protocol.
+The follow-up `stable-wall-plan-native-commands.test.js` exercises native hiring,
+paid chain construction, removal, mixed-material reconstruction, reload and river
+closure. Aliases are never passed to a real purchase: paid IDs, chosen gates and
+ledger match the unmodified native run exactly. An existing gate remains single
+after a stone rebuild in a thorn perimeter. A river closure retains worker access.
+The expanded regression records 84 passing tests in
+`stable-wall-plan-native-regression-tests.txt`; the earlier 74-test evidence is
+preserved separately. Two initial test-fixture assumptions were corrected: new
+games have independent slot UUIDs, and native navigation restoration advances its
+epoch. The comparisons now share the fixture slot ID and test immutability after
+that explicit native restoration, without weakening physical or ledger checks.
+
+These checks support a future opt-in campaign protocol; the candidate has not
+been enabled in the current campaign or production. They cover representative
+native commands, not an entire campaign across every biome and material.
 It does not justify changing the live v116 protocol or asserting 100-night
 survival, economic acceptance, broader biome acceptance or player inactivity.
