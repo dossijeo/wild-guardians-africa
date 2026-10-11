@@ -55,7 +55,8 @@ export function villageSavingsForState(policy,state,income,spent){
 }
 
 export function campaignProtocolForLabour(name='legacy'){
- if(!['legacy','q4','q5','q6','q7','q8','q9'].includes(name))throw Error('Unknown native labour policy');
+ if(!['legacy','q4','q5','q6','q7','q8','q9','q12'].includes(name))throw Error('Unknown native labour policy');
+ if(name==='q12')return Object.freeze({...campaignProtocolForLabour('q9'),id:NATIVE_CAMPAIGN_PROTOCOL.id+'-q12',dawnFunding:'Q10 empty-field funding forecast; preferred profile unless no preferred contract is affordable, then cheaper same-sex profile',profileChanges:'dawn only; native paid selection recorded per contract; original wages and shifts'});
  if(name==='q9')return Object.freeze({...campaignProtocolForLabour('q8'),id:NATIVE_CAMPAIGN_PROTOCOL.id+'-q9',renewalWorkUnitsPerWorker:6,dawnRenewal:'at most previous crew and ceiling(max(living,pending)/6) per productive centre; native wages and Q8 trial gates unchanged'});
  if(name==='q8')return Object.freeze({...campaignProtocolForLabour('q7'),id:NATIVE_CAMPAIGN_PROTOCOL.id+'-q8',openingStaff:6});
  if(name==='q7')return Object.freeze({...campaignProtocolForLabour('q6'),id:NATIVE_CAMPAIGN_PROTOCOL.id+'-q7',openingStaff:3,lastTrialTime:180,trialGate:'last new worker physical delivery and center settled replacement margin >= proportional salary + full next wage; current cash affordability remains separate'});

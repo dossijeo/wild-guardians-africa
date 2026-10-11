@@ -9,18 +9,22 @@ export function auditNativeWorkerThroughput(report){
  const deliveryIds=new Set(),hireIds=new Set(),daily=[];
  for(const row of report.daily){
   const hires=report.labourHistory.filter(h=>h.day===row.day);
-  let paidCoins=0,contractSeconds=0;
+  let paidCoins=0,contractSeconds=0;const dayProfiles=new Set();
   for(const h of hires){
    assert.ok(h.id&&!hireIds.has(h.id),'Duplicate paid hire');hireIds.add(h.id);
    assert.ok(['daily','additional'].includes(h.kind));
    const count=h.kind==='daily'?h.staff:h.count;
-   assert.ok(Number.isSafeInteger(count)&&count>0);assert.ok(Number.isFinite(h.time)&&h.time>=0&&h.time<=profile.end);
+   assert.ok(Number.isSafeInteger(count)&&count>0);assert.ok(Number.isFinite(h.time)&&h.time>=0);
    if(h.kind==='daily')assert.equal(h.time,0,'Daily renewal must start at dawn');
-   const expected=hiringCost({[profile.id]:count},h.kind==='daily'?{}:{time:h.time});
+   const selection=h.selection??{[h.profile??profile.id]:count};
+   assert.equal(Object.values(selection).reduce((n,v)=>n+v,0),count,'Selected profiles must cover declared contract count');
+   if(h.profile!==undefined)assert.ok(Object.entries(selection).every(([id,n])=>!n||id===h.profile),'Declared profile contradicts selection');
+   const expected=hiringCost(selection,h.kind==='daily'?{}:{time:h.time});
    assert.equal(h.paidCoins,expected,'Hire differs from original native wage');
    const payment=row.finance.entries.find(e=>e.id===h.id);
    assert.ok(payment&&payment.category==='wages');assert.equal(payment.coins,-expected);
-   paidCoins+=expected;contractSeconds+=count*(profile.end-h.time);
+   paidCoins+=expected;
+   for(const [id,n] of Object.entries(selection))if(n){const p=PROFILES.find(p=>p.id===id);dayProfiles.add(id);contractSeconds+=n*(p.end-h.time);}
   }
   assert.equal(paidCoins,row.finance.wages,'All wages need declared paid contracts');
   const deliveries=report.nativeEvidence.deliveries.filter(d=>d.day===row.day),workers=new Set();let deliveredCoins=0;
@@ -33,13 +37,14 @@ export function auditNativeWorkerThroughput(report){
   }
   assert.equal(deliveredCoins,row.finance.income,'Income must reconcile to native delivery receipts');
   assert.equal(deliveries.length,row.delivered);
-  const observations=report.labourObservations.filter(o=>o.day===row.day&&o.time<profile.end);
+  const shiftEnd=dayProfiles.size?Math.max(...[...dayProfiles].map(id=>PROFILES.find(p=>p.id===id).end)):profile.end;
+  const observations=report.labourObservations.filter(o=>o.day===row.day&&o.time<shiftEnd);
   let active=0,busy=0,pending=0;
   for(const o of observations)for(const c of o.workload){
    for(const value of [c.active,c.busy,c.pending])assert.ok(Number.isSafeInteger(value)&&value>=0);
    assert.ok(c.busy<=c.active);active+=c.active;busy+=c.busy;pending+=c.pending;
   }
-  daily.push({day:row.day,profile:profile.id,paidCoins,paidContractSeconds:contractSeconds,deliveredCoins,deliveredCrates:deliveries.length,distinctDeliveringWorkers:workers.size,
+  daily.push({day:row.day,profile:dayProfiles.size===1?[...dayProfiles][0]:dayProfiles.size?'mixed':profile.id,profiles:[...dayProfiles],paidCoins,paidContractSeconds:contractSeconds,deliveredCoins,deliveredCrates:deliveries.length,distinctDeliveringWorkers:workers.size,
    incomePerPaidWorkerSecond:contractSeconds?deliveredCoins/contractSeconds:null,
    wagesPerDeliveredCrate:deliveries.length?paidCoins/deliveries.length:null,
    actualNetCashflow:row.finance.net,seedExpenditure:row.finance.seeds,repairExpenditure:row.finance.repairs,
