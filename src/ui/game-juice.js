@@ -1,3 +1,4 @@
+import {ScreenOverlays} from './screen-overlays.js';
 import {Vector3} from 'three';
 import {GameJuiceModel} from './game-juice-model.js';
 import {spellUnlocked} from '../simulation/rules.js';
@@ -6,11 +7,11 @@ import './game-juice.css';
 const COPY={es:{night:n=>`Noche ${n} superada`,saved:'Partida guardada'},en:{night:n=>`Night ${n} survived`,saved:'Game saved'}};
 const MILESTONES=new Set([10,25,50,75,100]);
 export class GameJuice {
- constructor(stage,state,world,{now=()=>performance.now(),priority=()=>false,language=()=>globalThis.WildGuardiansLanguage?.getLanguage?.()??document.documentElement.lang}={}){
-  this.stage=stage;this.world=world;this.now=now;this.priority=priority;this.language=language;this.model=new GameJuiceModel(state);this.vector=new Vector3();this.effects=[];this.animations=new Set();this.pending=new Map();this.flushAt=0;this.shakeUntil=0;this.lastShake=-Infinity;this.pendingDawn=null;
+ constructor(stage,state,world,{now=()=>performance.now(),priority=()=>false,allowResult=()=>false,language=()=>globalThis.WildGuardiansLanguage?.getLanguage?.()??document.documentElement.lang}={}){
+  this.allowResult=allowResult;this.stage=stage;this.world=world;this.now=now;this.priority=priority;this.language=language;this.model=new GameJuiceModel(state);this.vector=new Vector3();this.effects=[];this.animations=new Set();this.pending=new Map();this.flushAt=0;this.shakeUntil=0;this.lastShake=-Infinity;this.pendingDawn=null;
   this.motion=matchMedia('(prefers-reduced-motion: reduce)');this.root=document.createElement('div');this.root.className='game-juice';this.root.setAttribute('aria-hidden','true');this.root.dataset.noI18n='';stage.append(this.root);
   this.saved=document.createElement('div');this.saved.className='juice-saved';this.saved.role='status';this.saved.setAttribute('aria-live','polite');this.saved.dataset.noI18n='';stage.append(this.saved);
-  world.presentationDraw=draw=>this.draw(draw);
+  this.overlays=new ScreenOverlays(stage,{now,quality:()=>world.quality??'media',reduced:()=>this.motion.matches});world.presentationDraw=draw=>this.draw(draw);
  }
  copy(){return COPY[String(this.language()).startsWith('es')?'es':'en'];}
  pulse(node,frames=[{scale:'1'},{scale:'1.065'},{scale:'1'}],duration=280){
@@ -26,20 +27,21 @@ export class GameJuice {
  savedSuccessfully(){if(this.disposed)return;this.saved.textContent='✓ '+this.copy().saved;this.saved.classList.add('visible');this.savedUntil=this.now()+2200;this.pulse(this.saved);}
  process(state){
   for(const event of this.model.consume(state)){
-   if(event.kind==='money'){
+   if(event.kind==='overlay')this.overlays.request(event.effect);
+   else if(event.kind==='money'){
     const sign=event.value>0n?'income':'expense';this.pending.set(sign,(this.pending.get(sign)??0n)+event.value);if(!this.flushAt)this.flushAt=this.now()+120;
    }else if(event.kind==='dawn')this.pendingDawn={night:event.night,deadline:this.now()+12000};
    else if(event.kind==='placement'&&!this.priority())this.add('juice-ring '+(event.crop?'crop':'building'),'',{x:event.x,z:event.z},380);
    else if(event.kind==='magic'){
-    this.pulse(this.stage.querySelector(`[data-spell="${event.spell}"]`)??this.stage.querySelector('[data-menu="magic"]'));
+    this.overlays.request(event.spell);this.pulse(this.stage.querySelector(`[data-spell="${event.spell}"]`)??this.stage.querySelector('[data-menu="magic"]'));
     if(!this.priority())this.add('juice-ring magic','',{x:event.x,z:event.z},420);
    }else if(event.kind==='ready'&&spellUnlocked(state,event.spell))this.pulse(this.stage.querySelector(`[data-spell="${event.spell}"]`)??this.stage.querySelector('[data-menu="magic"]'));
-   else if(event.kind==='critical')this.pulse(this.stage.querySelector('.notice-card.urgent'));
+   else if(event.kind==='critical'){this.overlays.request('critical');this.pulse(this.stage.querySelector('.notice-card.urgent'));}
    else if(event.kind==='collapse'&&!this.motion.matches&&this.now()-this.lastShake>300&&!this.world.raidCamera?.travel&&!this.world.raidCamera?.manual){this.lastShake=this.now();this.shakeUntil=this.now()+130;this.shakeAmount=state.structures.find(s=>s.id===event.targetId)?.kind==='center'?.05:.025;}
   }
  }
  update(state){
-  const now=this.now(),blocked=this.priority();
+  const now=this.now(),blocked=this.priority();this.overlays.update({blocked:blocked||document.hidden,allowResult:!document.hidden&&this.allowResult()});
   this.root.hidden=blocked||document.hidden;
   if(this.flushAt&&now>=this.flushAt){
    for(const [sign,value] of this.pending){
@@ -50,7 +52,7 @@ export class GameJuice {
    }
    this.pending.clear();this.flushAt=0;
   }
-  if(this.pendingDawn){if(now>this.pendingDawn.deadline)this.pendingDawn=null;else if(!blocked&&!this.stage.querySelector('.notice-card')){const {night}=this.pendingDawn;this.add('juice-dawn'+(MILESTONES.has(night)?' milestone':''),this.copy().night(night),null,1900);this.pendingDawn=null;}}
+  if(this.pendingDawn){if(now>this.pendingDawn.deadline)this.pendingDawn=null;else if(!blocked&&!this.stage.querySelector('.notice-card')){const {night}=this.pendingDawn;this.overlays.request('dawn');this.add('juice-dawn'+(MILESTONES.has(night)?' milestone':''),this.copy().night(night),null,1900);this.pendingDawn=null;}}
   if(now>(this.savedUntil??0)){this.saved.classList.remove('visible');if(this.saved.textContent)this.saved.textContent='';}
   for(const effect of [...this.effects]){
    if(now>=effect.end){this.remove(effect);continue;}
@@ -63,5 +65,5 @@ export class GameJuice {
   const camera=this.world.camera,x=camera.position.x,y=camera.position.y,amount=(this.shakeAmount??.025)*Math.sin((this.shakeUntil-now)*.11)*(this.shakeUntil-now)/130;
   try{camera.position.x+=amount;camera.position.y+=amount*.4;camera.updateMatrixWorld();return draw();}finally{camera.position.x=x;camera.position.y=y;camera.updateMatrixWorld();}
  }
- dispose(){this.disposed=true;this.model.dispose();for(const animation of this.animations)animation.cancel();this.animations.clear();this.root.remove();this.saved.remove();this.effects.length=0;this.pending.clear();this.world.presentationDraw=null;}
+ dispose(){this.disposed=true;this.overlays.dispose();this.model.dispose();for(const animation of this.animations)animation.cancel();this.animations.clear();this.root.remove();this.saved.remove();this.effects.length=0;this.pending.clear();this.world.presentationDraw=null;}
 }

@@ -9,6 +9,7 @@ export class GameJuiceModel {
   if(this.day!==state.day){this.day=state.day;this.critical.clear();}
   const income=this.income,expense=this.expense;this.income=0n;this.expense=0n;let entities;
   for(const e of fresh){
+   if(['RaidSpawned','NightStarted','CampaignWon','GameOver'].includes(e.type))out.push({kind:'overlay',effect:{RaidSpawned:'raid',NightStarted:'nightfall',CampaignWon:'victory',GameOver:'defeat'}[e.type]});
    if(e.type==='Dawn'&&!state.result&&state.completedNights>0)out.push({kind:'dawn',night:state.completedNights});
    if(['CropPlaced','PlacementCommitted','WallChainBuilt','VillageFounded'].includes(e.type)){
     let point=e.presentation;

@@ -9,3 +9,5 @@
 @keyframes juice-panel-in{from{opacity:.4;transform:translateY(4px)}to{opacity:1;transform:none}}
 @keyframes juice-urgent{50%{box-shadow:0 0 10px #e7a25466}}
 @media(prefers-reduced-motion:reduce){.game-juice>span,.notice-card,.notice-card.urgent,.dialog,.hiring-panel,.native-panel-host .panel{animation:none}#stage button:active{scale:1}.juice-saved{transition:none}}
+
+.juice-overlay{position:absolute;inset:0;width:100%;height:100%;z-index:9;pointer-events:none;contain:strict}.juice-overlay[hidden]{display:none}
