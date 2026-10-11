@@ -1,0 +1,19 @@
+{
+  "scope": "Exact physical certificate comparison on stopped snapshot, ignoring only terrain execution counters; not whole-campaign acceptance",
+  "snapshotSha256": "a7a7d012f02004f07b9e3f2c22e9d8087ccd0d5f436f80abd1df708a9208ee7e",
+  "coldPhysicalCertificateExactlyEqual": true,
+  "warmPhysicalCertificateExactlyEqual": true,
+  "beforeWarmMs": 11719.619499999999,
+  "afterWarmMs": 3.5244000000002416,
+  "firstCallMs": 11054.6355,
+  "probeSourceHashes": {
+    "tools/native-perimeter-proof.mjs": "b313186b5974a5663280d9b850dee99014bffd8fcf013623585a008c7e373cc1",
+    "tools/native-integrated-perimeter-proof.mjs": "13aca83bb1795e2a0f0226696707a6eada54ecde2ed513156e78a3189462a8c5",
+    "tools/native-perimeter-reused-candidate-v2.mjs": "b781994f96f44436d48ec48c6f3c4cf7e9631096a3c195afaf7ab8da685aec60",
+    "tools/static-animal-certificate-cache.mjs": "dc6b8c960efdc8b935e23cc49c796c8772b8dd93d0b9a5cb891b0983677da996",
+    "tools/native-reused-service-component-proof-v2.mjs": "49876084e57a8502d6e4e343ff8ebc4a014673c1c7440379b0c3321b84cd2eed",
+    "tools/native-worker-service-proof-v2.mjs": "86e53164024dacdfc4cf633303a9c1b43503f3ffdd3352d054955129630662ce",
+    "tools/terrain-lattice-tile-candidate.mjs": "a678a40f9835f2dc8e0bf30d7f478fceba7a1bd5aff450ffd46edf3a472f0fbe",
+    "src/world/building-route-shortcut.js": "7d3b395bff205718541bd4a18cf8798ebef34b8dd8f0f9eec9634c1d82ca333c"
+  }
+}

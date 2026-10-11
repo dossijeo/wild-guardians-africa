@@ -1,0 +1,362 @@
+{
+  "scope": "Two read-only contour certifications on one stopped native snapshot; not campaign completion, GPU, or statistical ABBA",
+  "mode": "candidate",
+  "snapshotSha256": "a7a7d012f02004f07b9e3f2c22e9d8087ccd0d5f436f80abd1df708a9208ee7e",
+  "sourceDifferences": [
+    {
+      "path": "src/world/building-route-shortcut.js",
+      "expected": "9542fa1922d60c3f2a08f583f28842d0959ec95532a3333e4cf9f09eb2363ee2",
+      "actual": "7d3b395bff205718541bd4a18cf8798ebef34b8dd8f0f9eec9634c1d82ca333c"
+    },
+    {
+      "path": "tools/native-campaign-runner.mjs",
+      "expected": "2311066df411b753ee42570835b85648d53a789414db1d5d65e3f2c47af139e1",
+      "actual": "660c8cd8e23c7d23b9735538104e284c7c0a243b3544d92bb0f9ffb010f2baa4"
+    },
+    {
+      "path": "tools/run_native_campaign.mjs",
+      "expected": "facde90c8f2db6bfa876eaa71926d4b73eba88fdaaad99576b55a9f500bc18b6",
+      "actual": "387308b87d85fe7b26a865d86367f24df8249a78e4c46547be9284f177e62364"
+    },
+    {
+      "path": "tools/native-funded-defense-policy.mjs",
+      "expected": "8eaeb316984e798bee2edfa872c1613970c7611515c36187e9d0c487f81b0b8d",
+      "actual": "32287a94d301c86288a92a4adf189c89d12b642a381d2db5e99b728b23aa02d2"
+    }
+  ],
+  "probeSourceHashes": {
+    "tools/native-perimeter-proof.mjs": "b313186b5974a5663280d9b850dee99014bffd8fcf013623585a008c7e373cc1",
+    "tools/native-integrated-perimeter-proof.mjs": "13aca83bb1795e2a0f0226696707a6eada54ecde2ed513156e78a3189462a8c5",
+    "tools/native-perimeter-reused-candidate-v2.mjs": "b781994f96f44436d48ec48c6f3c4cf7e9631096a3c195afaf7ab8da685aec60",
+    "tools/static-animal-certificate-cache.mjs": "dc6b8c960efdc8b935e23cc49c796c8772b8dd93d0b9a5cb891b0983677da996",
+    "tools/native-reused-service-component-proof-v2.mjs": "49876084e57a8502d6e4e343ff8ebc4a014673c1c7440379b0c3321b84cd2eed",
+    "tools/native-worker-service-proof-v2.mjs": "86e53164024dacdfc4cf633303a9c1b43503f3ffdd3352d054955129630662ce",
+    "tools/terrain-lattice-tile-candidate.mjs": "a678a40f9835f2dc8e0bf30d7f478fceba7a1bd5aff450ffd46edf3a472f0fbe",
+    "src/world/building-route-shortcut.js": "7d3b395bff205718541bd4a18cf8798ebef34b8dd8f0f9eec9634c1d82ca333c"
+  },
+  "day": 9,
+  "time": 36.000000000000085,
+  "plants": 178,
+  "stateUnchanged": true,
+  "runs": [
+    {
+      "temperature": "cold",
+      "milliseconds": 11054.6355,
+      "proof": {
+        "valid": false,
+        "reason": "native-worker-centre-service-unproven",
+        "workerId": "worker-6087",
+        "checks": {
+          "workers": [],
+          "crops": []
+        },
+        "animalChecks": [
+          {
+            "radius": 1.1,
+            "inside": {
+              "x": 96,
+              "z": 9
+            },
+            "anchorKind": "crop-pivot",
+            "anchorTargetId": "plant-5148",
+            "outside": {
+              "x": 96,
+              "z": -20
+            },
+            "completeClosedComponent": false,
+            "services": {
+              "valid": true,
+              "reason": "native-service-poses-in-positive-closed-components",
+              "poses": 5728,
+              "blocked": 792,
+              "certified": 4936,
+              "physicalConnectors": 0,
+              "emptyNativeOrigins": 0,
+              "reusedComponents": 4936,
+              "regions": 1,
+              "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+            }
+          },
+          {
+            "radius": 0.9,
+            "inside": {
+              "x": 96,
+              "z": 9
+            },
+            "anchorKind": "crop-pivot",
+            "anchorTargetId": "plant-5148",
+            "outside": {
+              "x": 96,
+              "z": -20
+            },
+            "completeClosedComponent": false,
+            "services": {
+              "valid": true,
+              "reason": "native-service-poses-in-positive-closed-components",
+              "poses": 5728,
+              "blocked": 573,
+              "certified": 5155,
+              "physicalConnectors": 0,
+              "emptyNativeOrigins": 0,
+              "reusedComponents": 5155,
+              "regions": 1,
+              "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+            }
+          },
+          {
+            "radius": 0.97,
+            "inside": {
+              "x": 96,
+              "z": 9
+            },
+            "anchorKind": "crop-pivot",
+            "anchorTargetId": "plant-5148",
+            "outside": {
+              "x": 96,
+              "z": -20
+            },
+            "completeClosedComponent": false,
+            "services": {
+              "valid": true,
+              "reason": "native-service-poses-in-positive-closed-components",
+              "poses": 5728,
+              "blocked": 660,
+              "certified": 5068,
+              "physicalConnectors": 0,
+              "emptyNativeOrigins": 0,
+              "reusedComponents": 5068,
+              "regions": 1,
+              "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+            }
+          },
+          {
+            "radius": 0.85,
+            "inside": {
+              "x": 96,
+              "z": 9
+            },
+            "anchorKind": "crop-pivot",
+            "anchorTargetId": "plant-5148",
+            "outside": {
+              "x": 96,
+              "z": -20
+            },
+            "completeClosedComponent": false,
+            "services": {
+              "valid": true,
+              "reason": "native-service-poses-in-positive-closed-components",
+              "poses": 5728,
+              "blocked": 517,
+              "certified": 5211,
+              "physicalConnectors": 0,
+              "emptyNativeOrigins": 0,
+              "reusedComponents": 5211,
+              "regions": 1,
+              "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+            }
+          },
+          {
+            "radius": 1.55,
+            "inside": {
+              "x": 96,
+              "z": 9
+            },
+            "anchorKind": "crop-pivot",
+            "anchorTargetId": "plant-5148",
+            "outside": {
+              "x": 96,
+              "z": -20
+            },
+            "completeClosedComponent": false,
+            "services": {
+              "valid": true,
+              "reason": "native-service-poses-in-positive-closed-components",
+              "poses": 5728,
+              "blocked": 1345,
+              "certified": 4383,
+              "physicalConnectors": 0,
+              "emptyNativeOrigins": 0,
+              "reusedComponents": 4383,
+              "regions": 1,
+              "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+            }
+          }
+        ],
+        "terrainTileDiagnostics": {
+          "side": 32,
+          "capacity": 16,
+          "tiles": 16,
+          "requests": 78213921,
+          "hits": 78206442,
+          "misses": 7479,
+          "evictions": 19,
+          "fallbacks": 0,
+          "invalidations": 0,
+          "typedArrayBytes": 147456,
+          "maximumTypedArrayBytes": 147456
+        },
+        "integrationVersion": "contact-service-reuse-v2"
+      }
+    },
+    {
+      "temperature": "warm",
+      "milliseconds": 3.5244000000002416,
+      "proof": {
+        "valid": false,
+        "reason": "native-worker-centre-service-unproven",
+        "workerId": "worker-6087",
+        "checks": {
+          "workers": [],
+          "crops": []
+        },
+        "animalChecks": [
+          {
+            "radius": 1.1,
+            "inside": {
+              "x": 96,
+              "z": 9
+            },
+            "anchorKind": "crop-pivot",
+            "anchorTargetId": "plant-5148",
+            "outside": {
+              "x": 96,
+              "z": -20
+            },
+            "completeClosedComponent": false,
+            "services": {
+              "valid": true,
+              "reason": "native-service-poses-in-positive-closed-components",
+              "poses": 5728,
+              "blocked": 792,
+              "certified": 4936,
+              "physicalConnectors": 0,
+              "emptyNativeOrigins": 0,
+              "reusedComponents": 4936,
+              "regions": 1,
+              "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+            }
+          },
+          {
+            "radius": 0.9,
+            "inside": {
+              "x": 96,
+              "z": 9
+            },
+            "anchorKind": "crop-pivot",
+            "anchorTargetId": "plant-5148",
+            "outside": {
+              "x": 96,
+              "z": -20
+            },
+            "completeClosedComponent": false,
+            "services": {
+              "valid": true,
+              "reason": "native-service-poses-in-positive-closed-components",
+              "poses": 5728,
+              "blocked": 573,
+              "certified": 5155,
+              "physicalConnectors": 0,
+              "emptyNativeOrigins": 0,
+              "reusedComponents": 5155,
+              "regions": 1,
+              "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+            }
+          },
+          {
+            "radius": 0.97,
+            "inside": {
+              "x": 96,
+              "z": 9
+            },
+            "anchorKind": "crop-pivot",
+            "anchorTargetId": "plant-5148",
+            "outside": {
+              "x": 96,
+              "z": -20
+            },
+            "completeClosedComponent": false,
+            "services": {
+              "valid": true,
+              "reason": "native-service-poses-in-positive-closed-components",
+              "poses": 5728,
+              "blocked": 660,
+              "certified": 5068,
+              "physicalConnectors": 0,
+              "emptyNativeOrigins": 0,
+              "reusedComponents": 5068,
+              "regions": 1,
+              "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+            }
+          },
+          {
+            "radius": 0.85,
+            "inside": {
+              "x": 96,
+              "z": 9
+            },
+            "anchorKind": "crop-pivot",
+            "anchorTargetId": "plant-5148",
+            "outside": {
+              "x": 96,
+              "z": -20
+            },
+            "completeClosedComponent": false,
+            "services": {
+              "valid": true,
+              "reason": "native-service-poses-in-positive-closed-components",
+              "poses": 5728,
+              "blocked": 517,
+              "certified": 5211,
+              "physicalConnectors": 0,
+              "emptyNativeOrigins": 0,
+              "reusedComponents": 5211,
+              "regions": 1,
+              "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+            }
+          },
+          {
+            "radius": 1.55,
+            "inside": {
+              "x": 96,
+              "z": 9
+            },
+            "anchorKind": "crop-pivot",
+            "anchorTargetId": "plant-5148",
+            "outside": {
+              "x": 96,
+              "z": -20
+            },
+            "completeClosedComponent": false,
+            "services": {
+              "valid": true,
+              "reason": "native-service-poses-in-positive-closed-components",
+              "poses": 5728,
+              "blocked": 1345,
+              "certified": 4383,
+              "physicalConnectors": 0,
+              "emptyNativeOrigins": 0,
+              "reusedComponents": 4383,
+              "regions": 1,
+              "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+            }
+          }
+        ],
+        "terrainTileDiagnostics": {
+          "side": 32,
+          "capacity": 16,
+          "tiles": 2,
+          "requests": 624,
+          "hits": 583,
+          "misses": 41,
+          "evictions": 0,
+          "fallbacks": 0,
+          "invalidations": 0,
+          "typedArrayBytes": 18432,
+          "maximumTypedArrayBytes": 147456
+        },
+        "integrationVersion": "contact-service-reuse-v2"
+      }
+    }
+  ],
+  "toolSha256": "540b25642816d753274eaff8befc209f8d4054827d4fe2ce67ac19a1a60c88de"
+}

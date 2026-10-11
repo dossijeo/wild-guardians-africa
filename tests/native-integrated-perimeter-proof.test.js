@@ -27,3 +27,12 @@ test('an exception in the proof also restores the native lattice method',()=>{
  assert.throws(()=>nativeIntegratedPerimeterProof(s,nav,{pieces:[],updates:null},contour.bounds,{outline:contour.points}));
  assert.equal(nav.field.lattice,original);assert.equal(Object.hasOwn(nav.field,'lattice'),false);assert.equal(serialize(s),before);
 });
+
+test('reusing an animal certificate still requires a fresh worker-service check',()=>{
+ const {s,nav,contour}=fixture();
+ const first=nativeIntegratedPerimeterProof(s,nav,plan,contour.bounds,{outline:contour.points});assert.equal(first.valid,true);
+ s.workers=[];
+ const second=nativeIntegratedPerimeterProof(s,nav,plan,contour.bounds,{outline:contour.points});
+ assert.equal(second.valid,false);assert.equal(second.reason,'worker-passage-not-observable');
+ assert.deepEqual(second.animalChecks,first.checks,'retained static certificate is independent of worker availability');
+});

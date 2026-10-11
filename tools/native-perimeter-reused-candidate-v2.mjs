@@ -7,6 +7,7 @@ import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
 import {centerFootprint} from '../src/world/centers.js';
 import {operational} from '../src/simulation/rules.js';
 import {nativeReusedServiceComponentProofV2} from './native-reused-service-component-proof-v2.mjs';
+import {staticAnimalCertificate} from './static-animal-certificate-cache.mjs';
 const proofViews=new WeakMap();
 export function nativePerimeterReusedCandidateV2(s,nav,plan,bounds,{cache=true,outline=null}={}){
  // Native epochs invalidate obstacle/terrain/suppression changes. Bounds and
@@ -21,6 +22,13 @@ export function nativePerimeterReusedCandidateV2(s,nav,plan,bounds,{cache=true,o
   if(cache)proofViews.set(nav,{key,state:s,view});
  }
  const land=[...s.plants.filter(p=>p.alive),...s.structures.filter(operational).flatMap(c=>centerFootprint(c,s).footprint)],radii=[...new Set(Object.values(ANIMAL_ACTIONS.animals).map(a=>a.presentation.footprint.radius))];
+ const animals=staticAnimalCertificate(s,view,plan,bounds,outline,()=>certifyAnimals(),{cache});
+ if(!animals.valid)return animals;
+ const checks=animals.checks;
+ const workerService=nativeWorkerServiceProofV2(s,view);
+ if(!workerService.valid)return {...workerService,animalChecks:checks};
+ return {valid:true,reason:'native-complete-components-and-worker-service-routes',checks,workerService,scope:'Predictive native geometry only; no paid protection or campaign outcome.'};
+ function certifyAnimals(){
  const checks=[];
  for(const radius of radii){
   const inside=nativeInteriorAttackAnchor(s,view,radius,outline);
@@ -37,7 +45,6 @@ export function nativePerimeterReusedCandidateV2(s,nav,plan,bounds,{cache=true,o
    if(!services.valid)return {valid:false,reason:services.reason,checks};
   }
  }
- const workerService=nativeWorkerServiceProofV2(s,view);
- if(!workerService.valid)return {...workerService,animalChecks:checks};
- return {valid:true,reason:'native-complete-components-and-worker-service-routes',checks,workerService,scope:'Predictive native geometry only; no paid protection or campaign outcome.'};
+ return {valid:true,checks};
+ }
 }

@@ -33,5 +33,6 @@ for(const temperature of ['cold','warm']){
  assert.equal(serialize(state),before,'Read-only certificate must not mutate snapshot');
  runs.push({temperature,milliseconds,proof,...(tileDiagnostics?{tileDiagnostics}:{})});console.log(JSON.stringify({status:'query-finished',mode,temperature,milliseconds,valid:proof.valid,reason:proof.reason}));
 }
-const report={scope:'Two read-only contour certifications on one stopped native snapshot; not campaign completion, GPU, or statistical ABBA',mode,snapshotSha256:sha(bytes),sourceDifferences,day:state.day,time:state.time,plants:state.plants.filter(p=>p.alive).length,stateUnchanged:true,runs,toolSha256:sha(readFileSync(new URL(import.meta.url)))};
+const probeSourceHashes=Object.fromEntries(['tools/native-perimeter-proof.mjs','tools/native-integrated-perimeter-proof.mjs','tools/native-perimeter-reused-candidate-v2.mjs','tools/static-animal-certificate-cache.mjs','tools/native-reused-service-component-proof-v2.mjs','tools/native-worker-service-proof-v2.mjs','tools/terrain-lattice-tile-candidate.mjs','src/world/building-route-shortcut.js'].map(path=>[path,sha(readFileSync(path))]));
+const report={scope:'Two read-only contour certifications on one stopped native snapshot; not campaign completion, GPU, or statistical ABBA',mode,snapshotSha256:sha(bytes),sourceDifferences,probeSourceHashes,day:state.day,time:state.time,plants:state.plants.filter(p=>p.alive).length,stateUnchanged:true,runs,toolSha256:sha(readFileSync(new URL(import.meta.url)))};
 writeFileSync(output,JSON.stringify(report,null,2)+'\n',{flag:'wx'});
