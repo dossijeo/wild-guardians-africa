@@ -1,0 +1,11 @@
+# Current pressure capacity evidence, separated from legacy bounds
+
+Prepared from production-synchronized experimental source 8d2f67178d189580d7b59ec214ac94c342ae3c07. The archived two-HP tier-composition report is retained byte-for-byte (SHA256 a70e93ce2c3c042205c8e36c7dc498e3364c11eb5cddd0ff7f64466a4d544ed7). Its historical filenames and source hashes do not make it evidence of the current one-HP, area-impact, progressive-wave mechanics. Its two original tests are now explicitly historical; current source provenance is verified by the new independent report/test. No historical source hash was refreshed to disguise changed mechanics.
+
+The new audit calls preparePressureNight directly on controlled inventories, with native seed 712, native prices, unlocks, EMA and candidate 4. It checks that planning is deterministic and does not mutate the input. The 60 combinations cover nights 1, 5, 6, 21, 50 and 100; inventories 0, 23, 50, 200 and 500; millet and equal cyclic mixtures. These inputs are descriptor diagnostics, not funded farms, paid placements or simulated player actions.
+
+Each row records actual selected animal descriptors, strike budgets, native species damage/radii, wave sizes, before-recovery count, pressure, military Q and reference geometry. Requested agricultural HP and structural damage are alternative allocations of the same strikes; they must not be added. Overkill and half-point peripheral hits must not be converted mechanically into a number of deaths. Native one-HP destruction and half-point wound accumulation are tested separately using applyCropImpact.
+
+An additional controlled loss-case inventory of 16 millet and 7 maize plants gives V=295; retained EMA=675.7898549476145 on night 36 reproduces 19 pre-recovery animals versus 4 actual candidate descriptors. This confirms the planning response, not four realized deaths or campaign survival. The live campaign still runs its frozen source.
+
+21 selected tests pass, including exact current source hashes, report reproduction, species unlocks, wave cap, Q feasibility and physical crop HP semantics. No production balance, economy, damage, radius, count, policy or simulation was changed. Reproduce with node tools/audit-current-raid-capacity.mjs FRESH_DIRECTORY; the tool refuses to overwrite existing evidence. Full native calibration and all-biome campaigns remain pending.
