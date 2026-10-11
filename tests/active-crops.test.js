@@ -47,12 +47,14 @@ test('physical harvest retires an indexed crop while its crate is still carried 
   assert.equal(s.crates[0].delivered,true);assert.equal(s.plants.length,1);
 });
 
-test('a real second animal strike retires the cached crop without removing its damage history',()=>{
+test('a real first animal strike retires the one-HP cached crop without removing its damage history',()=>{
   const s=Game.newGame({seed:712,slotId:'active-destruction'}),nav=new Navigation(712,'sabana',{});
   nav.field={blocked:()=>false,slope:()=>0,surface:()=>0};nav.propsAt=()=>[];nav.activeBounds=[-48,-48,48,48];nav.setState(s);
   Game.placeStructure(s,'center',{x:-12,z:0},nav);Game.plant(s,'seed','mijo',8,4,nav);
   const p=s.plants[0];assert.deepEqual(activeCrops(s.plants),[p]);
   s.day=6;s.time=320;s.initialPreparation=false;s.dayPlan={done:true};s.nightPlan={done:true};spawnRaid(s,{group:['warthog']},nav);
   for(let i=0;i<6000&&p.alive;i++)Game.tick(s,.05,nav);
-  assert.equal(p.alive,false);assert.equal(p.attackHits,2);assert.deepEqual(activeCrops(s.plants),[]);assert.equal(s.plants[0],p);
+  assert.equal(p.alive,false);assert.equal(p.attackHits,1);assert.deepEqual(activeCrops(s.plants),[]);assert.equal(s.plants[0],p);
+  assert.equal(s.events.filter(e=>e.type==='CropHit'&&e.targetId===p.id).length,1);
+  assert.equal(s.events.filter(e=>e.type==='CropDestroyed'&&e.targetId===p.id).length,1);
 });

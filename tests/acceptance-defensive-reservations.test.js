@@ -34,12 +34,14 @@ test('QA-096: legacy duplicate wall claims migrate individually and a ruined tar
  hitStructure(root,root.maxHp,s.elapsed);nav.setState(s);Game.tick(s,.05,nav);exclusive(s);assert.ok(!s.raid.reservations['structure:'+root.id]);
  const loaded=saved(s),fresh=navigation(loaded);Game.tick(s,.05,nav);Game.tick(loaded,.05,fresh);assert.equal(serialize(loaded),serialize(s));exclusive(s);
 });
-test('QA-096: actual paid contiguous crop groups remain exclusive through destruction and reload',()=>{
+test('QA-096: individual paid crops remain exclusively reserved through destruction and reload',()=>{
  const {s,nav}=fixture('mapungubwe',false,true);assert.equal(s.raid.animals.filter(a=>a.reservation?.startsWith('crop:')).length,3);assert.equal(new Set(s.raid.animals.map(a=>a.reservation)).size,3);
+ assert.equal(contiguousGroup(s.plants,s.plants[0]).length,2,'Connected pairs remain search groups, not exclusive attack leases');
  const loaded=saved(s),fresh=navigation(loaded);let steps=0;
  while((s.raid||loaded.raid)&&steps++<3000){
   Game.tick(s,.05,nav);Game.tick(loaded,.05,fresh);assert.equal(serialize(loaded),serialize(s));
   if(s.raid){exclusive(s);for(const p of s.plants.filter(p=>p.alive))assert.ok(s.raid.animals.filter(a=>a.targetId===p.id).length<=1);}
  }
- assert.equal(s.raid,null);assert.equal(loaded.raid,null);assert.equal(s.events.filter(e=>e.type==='CropDestroyed').length,3);assert.equal(s.events.filter(e=>e.type==='CropHit').length,6);
+ assert.equal(s.raid,null);assert.equal(loaded.raid,null);assert.equal(s.events.filter(e=>e.type==='CropDestroyed').length,6);assert.equal(s.events.filter(e=>e.type==='CropHit').length,6);
+ assert.equal(new Set(s.events.filter(e=>e.type==='CropHit').map(e=>e.targetId)).size,6,'Each one-HP crop receives its own physical impact');
 });
