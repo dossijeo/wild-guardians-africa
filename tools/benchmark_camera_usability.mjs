@@ -29,7 +29,7 @@ for(const count of [100,1000])for(const scenario of ['walls-stable','walls-dirty
  const world={camera,controls,nav:{field},objects,chunks:new Map(),chunkRevision:1,state:{villages:[],structures}};
  for(const arm of ['A1','B1','B2','A2']){
   const active=arm.startsWith('B'),before=performance.now();WorldScene.prototype.setCameraExclusion.call(world,active,{trees:true});focusTerrainCamera(camera,controls,field,{x:0,z:0,distance:25});const preparationMs=performance.now()-before;
-  const update=i=>{if(scenario!=='walls-stable')world.cameraVolumesDirty=true;if(scenario==='gate-changing'){const root=objects.get(i%count);root.gateOpen=i%2;root.parts[0].mesh.rotation.y=(i%2)*Math.PI/2;}camera.position.set(Math.sin(i*.015)*25,8,Math.cos(i*.015)*25);protectTerrainCamera(camera,controls,field);};
+  const update=i=>{if(scenario!=='walls-stable')world.cameraVolumesDirty=true;if(scenario==='gate-changing'){const root=objects.get(i%count);root.gateOpen=1-root.gateOpen;root.parts[0].mesh.rotation.y=root.gateOpen*Math.PI/2;}camera.position.set(Math.sin(i*.015)*25,8,Math.cos(i*.015)*25);protectTerrainCamera(camera,controls,field);};
   for(let i=0;i<500;i++)update(i);const samples=[];for(let i=0;i<2000;i++){const t=performance.now();update(i);samples.push(performance.now()-t);}samples.sort((a,b)=>a-b);
   rows.push({count,scenario,arm,active,preparationMs,p50Ms:samples[1000],p95Ms:samples[1900],p99Ms:samples[1980],maxMs:samples.at(-1),volumes:world.cameraExclusion?.registry.index.records.size??0,localCandidates:world.cameraExclusion?.registry.index.lastCandidates??0,cpuOnly:true,isolatedHostedRunner:!!process.env.GITHUB_ACTIONS});
  }
