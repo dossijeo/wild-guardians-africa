@@ -88,7 +88,7 @@ jobs:
             $result = Get-Content -Raw -LiteralPath $report | ConvertFrom-Json
             if ($process.ExitCode -ne 0 -or -not $result.ok -or -not $result.checks.exitButtonFound) { throw "Native menu exit failed: $stage" }
             if ($stage -eq 'restore' -and -not $result.checks.restartRestored) { throw 'Native persistence restart failed' }
-            "Native menu exit $stage: process ended with code 0" >> $env:GITHUB_STEP_SUMMARY
+            "Native menu exit ${stage}: process ended with code 0" >> $env:GITHUB_STEP_SUMMARY
           }
       - uses: actions/upload-artifact@v7
         if: always()
