@@ -74,3 +74,25 @@ test('rejects a report whose daily observations differ from the preserved ledger
  const inconsistent=run(f=>{f.report.daily=structuredClone(f.rows);f.report.daily[0].living=8;});
  assert.notEqual(inconsistent.status,0);assert.match(inconsistent.stderr,/preserved daily ledger rows differ/);
 });
+
+test('additional daytime raids are counted without replacing mandatory nighttime raids',()=>{
+ const valid=run(f=>{f.report.raidEvidence.raids.push({...structuredClone(f.report.raidEvidence.raids[0]),daytime:true,id:'day-raid'});f.report.counts.RaidSpawned=2;});
+ assert.equal(valid.status,0,valid.stderr);assert.match(valid.stdout,/"daytimeRaids": 1/);
+ for(const mutate of [f=>f.report.raidEvidence.raids[0].daytime=true,f=>f.report.raidEvidence.raids.push(structuredClone(f.report.raidEvidence.raids[0])),f=>f.report.counts.RaidSpawned=2])assert.notEqual(run(mutate).status,0);
+});
+
+function peacefulPostgame(f){
+ hundredNightVictory(f);
+ const first=f.rows[0];
+ for(let day=101;day<=180;day++)f.rows.push({...structuredClone(first),day,result:null,money:100+day*5,finance:{...structuredClone(first.finance),opening:100+(day-1)*5,closing:100+day*5,entries:[{id:'deliver:crate-'+day,coins:10,category:'income'},{id:'hire-'+day,coins:-5,category:'wages'}]}});
+ f.receipt.result=f.report.result=null;f.receipt.completedNights=f.report.completedNights=180;f.report.money=1000;
+ f.report.counts.CampaignWon=1;f.report.counts.PostgameStarted=1;f.report.counts.RaidSpawned=100;f.report.peaceAfter100=true;
+ f.report.nativeEvidence.deliveries=f.rows.map(d=>({paymentId:d.finance.entries[0].id,coins:10}));
+ f.state={result:null,postgame:true,completedNights:180,day:181,time:0,raid:null,ledger:{balance:{n:'1000',d:'1'}},events:[{type:'Dawn'}]};
+}
+test('peaceful 180-day parser contract requires recorded victory and actual postgame, not 180 raids',()=>{
+ const valid=run(peacefulPostgame);assert.equal(valid.status,0,valid.stderr);assert.match(valid.stdout,/"postgameDays": 80/);
+ for(const mutate of [f=>f.state.postgame=false,f=>f.rows[99].result=null,f=>f.report.counts.CampaignWon=0,f=>f.report.counts.PostgameStarted=2,f=>f.report.counts.GameOver=1,f=>f.state.time=10,f=>f.state.raid={},f=>f.report.raidEvidence.raids.push({...structuredClone(f.report.raidEvidence.raids[0]),day:101,daytime:true})]){
+  const rejected=run(f=>{peacefulPostgame(f);mutate(f);});assert.notEqual(rejected.status,0);
+ }
+});

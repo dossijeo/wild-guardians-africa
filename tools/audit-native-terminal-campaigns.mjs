@@ -17,6 +17,7 @@ const cases=dirs.map(dir=>{
  assert.deepEqual(report.daily,rows,'Report and preserved daily ledger rows differ');
  let defeatPhase=defeated?'during-terminal-night':null;
  let victoryPhase=null;
+ let postgameDays=0;
  if(won){
   assert.equal(receipt.completedNights,100,'Victory requires exactly one hundred completed nights');
   assert.equal(rows.length,100,'Victory requires one hundred complete daily ledger rows');
@@ -28,6 +29,18 @@ const cases=dirs.map(dir=>{
   assert.ok(ended>=0&&wonAt>ended,'Victory must follow the completed hundredth native raid');
   assert(!state.events.some(e=>e.type==='GameOver'),'Victory snapshot contains a defeat event');
   victoryPhase='dawn-after-hundredth-night';
+ }
+ if(!defeated&&!won&&receipt.completedNights>100){
+  const state=JSON.parse(gunzipSync(readFileSync(join(root,'state.json.gz'))));
+  assert.equal(state.postgame,true,'Long horizon requires actual postgame');assert.equal(state.result,null);
+  assert.equal(state.completedNights,receipt.completedNights);assert.equal(state.day,receipt.completedNights+1);
+  assert.equal(state.time,0);assert.equal(state.raid,null);
+  assert.equal(state.ledger.balance.d,'1');assert.equal(BigInt(state.ledger.balance.n),BigInt(report.money));
+  assert.equal(rows[99]?.result,'victory','Postgame requires the recorded hundredth-night victory');
+  assert(rows.slice(100).every(row=>row.result===null),'Postgame contains another terminal result');
+  assert.equal(report.counts.CampaignWon,1);assert.equal(report.counts.PostgameStarted,1);
+  assert.equal(report.counts.GameOver??0,0);assert.equal(report.peaceAfter100,true);
+  postgameDays=receipt.completedNights-100;
  }
 
  if(defeated&&rows.length===receipt.completedNights){
@@ -76,13 +89,22 @@ const cases=dirs.map(dir=>{
  assert.equal(delivered.size,incomeIds.size);
  assert.equal(report.money,rows.at(-1).money);
  const raids=report.raidEvidence.raids;
- assert.equal(raids.length,rows.length);
+ const raidIds=new Set(),nightRaids=new Map();
+ const combatDays=Math.min(receipt.completedNights,100);
+ for(const raid of raids){
+  assert(Number.isSafeInteger(raid.day)&&raid.day>=1&&raid.day<=rows.length,'Raid outside recorded days');
+  if(postgameDays)assert(raid.day<=100,'Postgame raid violates permanent peace');
+  if(raid.id!==undefined){assert(!raidIds.has(raid.id),'Duplicate observed raid');raidIds.add(raid.id);}
+  if(!raid.daytime){assert(!nightRaids.has(raid.day),'Duplicate nighttime raid');nightRaids.set(raid.day,raid);}
+ }
+ for(let day=1;day<=combatDays;day++)assert(nightRaids.has(day),'Missing completed-night incursion');
+ if(report.counts.RaidSpawned!==undefined)assert.equal(report.counts.RaidSpawned,raids.length,'Spawn counter/observer mismatch');
  let assigned=0,consumed=0,unused=0;
  for(const r of raids){assert.equal(r.ended,true);for(const v of Object.values(r.species)){
   assert.equal(v.initialHitBudget,v.observedBudgetConsumed+v.unconsumedOrUnobservedBudget);
   assigned+=v.initialHitBudget;consumed+=v.observedBudgetConsumed;unused+=v.unconsumedOrUnobservedBudget;
  }}
- const postIntroduction=raids.filter(r=>r.day>=6);
+ const postIntroduction=raids.filter(r=>r.day>=6&&!r.daytime);
  const exposure=postIntroduction.reduce((n,r)=>n+r.exposedLivingAtSpawn,0);
  const losses=postIntroduction.reduce((n,r)=>n+r.cropsDestroyed,0);
  for(const r of postIntroduction){
@@ -90,6 +112,6 @@ const cases=dirs.map(dir=>{
   assert.ok(r.cropsDestroyed<=r.exposedLivingAtSpawn);
  }
  const reference=(base,slope)=>exposure?postIntroduction.reduce((n,r)=>n+r.exposedLivingAtSpawn*(base+slope*(r.day-1)),0)/exposure:null;
- return {directory:dir,seed:report.seed,strategy:report.strategy,status:receipt.status,result:report.result,defeatPhase,victoryPhase,terminalDay:rows.at(-1).day,completedNights:receipt.completedNights,money:report.money,living:rows.at(-1).living,centerHp:rows.at(-1).centerHp,destroyed:report.counts.CropDestroyed??0,totals,strikes:{assigned,consumed,unused},postIntroduction:{exposure,losses,weightedDestroyedFraction:exposure?losses/exposure:null,unprotectedReferenceFraction:reference(.2057,.0007),protectedReferenceFraction:reference(.0351,.0001),scope:'References are hypotheses only, never applied damage; exposure is the native census at each raid spawn'},ledgerAndDeliveryMatch:true,sourceHashesMatch:true,scope:'Native terminal result and ledger only; a single hundred-night victory does not establish the strategy/seed matrix, human activity or general release acceptance'};
+ return {directory:dir,seed:report.seed,strategy:report.strategy,status:receipt.status,result:report.result,defeatPhase,victoryPhase,postgameDays,daytimeRaids:raids.filter(r=>r.daytime).length,terminalDay:rows.at(-1).day,completedNights:receipt.completedNights,money:report.money,living:rows.at(-1).living,centerHp:rows.at(-1).centerHp,destroyed:report.counts.CropDestroyed??0,totals,strikes:{assigned,consumed,unused},postIntroduction:{exposure,losses,weightedDestroyedFraction:exposure?losses/exposure:null,unprotectedReferenceFraction:reference(.2057,.0007),protectedReferenceFraction:reference(.0351,.0001),scope:'Nighttime references are hypotheses only, never applied damage; exposure is the native census at each raid spawn'},ledgerAndDeliveryMatch:true,sourceHashesMatch:true,scope:'Native terminal result and ledger only; a single hundred-night victory does not establish the strategy/seed matrix, human activity or general release acceptance'};
 });
 console.log(JSON.stringify({cases},null,2));
