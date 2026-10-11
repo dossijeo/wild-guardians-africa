@@ -8,6 +8,7 @@ import {HIRING_RESERVE} from '../src/simulation/budget.js';
 import {obstacleAwareContour} from './native-obstacle-aware-contour.mjs';
 import {nativeIntegratedPerimeterProof as nativePerimeterProof} from './native-integrated-perimeter-proof.mjs';
 import {nativePaidContourProof} from './native-paid-contour-proof.mjs';
+import {nativeWorkerServiceProofV3} from './native-worker-service-proof-v3.mjs';
 import {containsPoint} from '../src/world/footprints.js';
 import {centerFootprint} from '../src/world/centers.js';
 import {operational} from '../src/simulation/rules.js';
@@ -16,7 +17,9 @@ import {breachRepairFunding,settledRepairQuote} from './native-repair-funding.mj
 const options={smooth:false,snap:false};
 const sameSlot=(q,w)=>w.kind==='wall'&&Math.hypot(q.x-w.x,q.z-w.z)<.35&&Math.abs(Math.sin(q.angle+(w.yaw??0)))<.18;
 const matches=(q,w)=>w.status==='intact'&&w.hp>0&&sameSlot(q,w);
-export function createNativeFundedDefensePolicy({startDay=6,material='zarzas',interval=5,chunkPieces=8,maxSlots=256,repairWalls=true,obstacleAware=false,shoreRouting=false,repairPolicy='legacy',funding:defenseFunding='contour',pieceReserve=0}={}){
+export function createNativeFundedDefensePolicy({startDay=6,material='zarzas',interval=5,chunkPieces=8,maxSlots=256,repairWalls=true,obstacleAware=false,shoreRouting=false,repairPolicy='legacy',funding:defenseFunding='contour',pieceReserve=0,perimeterQa='legacy'}={}){
+ if(!['legacy','incremental-v3'].includes(perimeterQa))throw Error('Unknown perimeter QA candidate');
+ const proofOptions=perimeterQa==='incremental-v3'?{workerServiceProof:nativeWorkerServiceProofV3,incrementalCrops:true}:{};
  if(!['contour','rolling'].includes(defenseFunding))throw Error('Unknown defense funding choice');
  if(![0,1].includes(pieceReserve)||pieceReserve&&defenseFunding!=='rolling')throw Error('Invalid rolling piece reserve');
  if(!['legacy','breach-first'].includes(repairPolicy))throw Error('Unknown native repair policy');
@@ -27,7 +30,7 @@ export function createNativeFundedDefensePolicy({startDay=6,material='zarzas',in
   const fullStroke=wallStroke(candidate.points,[],options).every(q=>s.structures.some(w=>matches(q,w)));
   if(!obstacleAware)return fullStroke;
   const plan=Game.quoteWallChain(s,material,candidate.points,nav,options);
-  const proof=nativePaidContourProof(s,nav,plan,candidate.bounds,{outline:candidate.points});
+  const proof=nativePaidContourProof(s,nav,plan,candidate.bounds,{outline:candidate.points,...proofOptions});
   coverageDiagnostics={time:s.time,pieces:plan.pieces.length,updates:plan.updates.length,valid:proof.valid,reason:proof.reason,targetId:proof.targetId??proof.checks?.at(-1)?.services?.targetId??null};
   return !plan.pieces.length&&!plan.updates.length&&proof.valid;
  };
@@ -46,7 +49,7 @@ export function createNativeFundedDefensePolicy({startDay=6,material='zarzas',in
   // Slot coverage alone cannot certify the actual contact geometry, especially
   // after incremental automatic gate selection. Keep the full native proof.
   if(obstacleAware){
-   detail.nativeBarrierProof=nativePerimeterProof(s,nav,plan,candidate.bounds,{outline:candidate.points});
+   detail.nativeBarrierProof=nativePerimeterProof(s,nav,plan,candidate.bounds,{outline:candidate.points,...proofOptions});
    if(!detail.nativeBarrierProof.valid){detail.reason=detail.nativeBarrierProof.reason;return null;}
   }
   // Small vegetation cleared by a legal native purchase is allowed. Never
@@ -156,5 +159,5 @@ export function createNativeFundedDefensePolicy({startDay=6,material='zarzas',in
   row.reason=row.complete?'paid-native-contour-completed':'paid-native-contour-in-progress';
   if(row.complete){completed=planned;planned=null;remainingCost=0;}return 1;
  }
- return {act,reserve:s=>s.day<startDay?0:defenseFunding==='contour'?remainingCost:pieceReserve&&planned&&remainingCost>0?2*Math.min(spec.cost,remainingCost):0,report:()=>structuredClone({startDay,material,interval,chunkPieces,maxSlots,obstacleAware,shoreRouting,repairPolicy,funding:defenseFunding,pieceReserve,discretionaryNewWallFraction:defenseFunding==='rolling'?.5:1,planned,completed,remainingCost,repairRequests,coverageDiagnostics,history,paidCost:history.reduce((n,r)=>n+r.paidCost,0),paidPieces:history.reduce((n,r)=>n+r.paidPieces,0),scope:'Saved actual funds and paid native partial strokes; complete geometric coverage is not a universal interception guarantee.'})};
+ return {act,reserve:s=>s.day<startDay?0:defenseFunding==='contour'?remainingCost:pieceReserve&&planned&&remainingCost>0?2*Math.min(spec.cost,remainingCost):0,report:()=>structuredClone({startDay,material,interval,chunkPieces,maxSlots,obstacleAware,shoreRouting,repairPolicy,funding:defenseFunding,pieceReserve,perimeterQa,discretionaryNewWallFraction:defenseFunding==='rolling'?.5:1,planned,completed,remainingCost,repairRequests,coverageDiagnostics,history,paidCost:history.reduce((n,r)=>n+r.paidCost,0),paidPieces:history.reduce((n,r)=>n+r.paidPieces,0),scope:'Saved actual funds and paid native partial strokes; complete geometric coverage is not a universal interception guarantee.'})};
 }

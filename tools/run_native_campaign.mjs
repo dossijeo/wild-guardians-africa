@@ -12,7 +12,7 @@ import {BIOME_IDS} from '../src/world/navigation.js';
 import {intensiveRunProvenance} from './intensive-run-provenance.mjs';
 import {NATIVE_CAMPAIGN_PROTOCOL,nativeCampaignStrategy,campaignProtocolForLabour} from './native-campaign-protocol.mjs';
 export function parseNativeCampaignArgs(args){
- const allowed=new Set(['out','days','seed','strategy','biome','culture','stop-file','stop-cash','stop-min-day','labour-policy','defense-policy','defense-start-day','defense-material','crop-policy','profile','plot-fluid-clearance','repair-policy','defense-funding','defense-piece-reserve']),o={days:7,seed:712,strategy:'good',biome:'sabana',culture:'mapungubwe',profile:'olderFemale'};
+ const allowed=new Set(['out','days','seed','strategy','biome','culture','stop-file','stop-cash','stop-min-day','labour-policy','defense-policy','defense-start-day','defense-material','crop-policy','profile','plot-fluid-clearance','repair-policy','defense-funding','defense-piece-reserve','perimeter-qa']),o={days:7,seed:712,strategy:'good',biome:'sabana',culture:'mapungubwe',profile:'olderFemale'};
  for(let i=0;i<args.length;i+=2){const k=args[i]?.replace(/^--/,'');if(!allowed.has(k)||args[i+1]===undefined)throw Error('Use --out DIR --days 1..180 --seed INTEGER --strategy expansive|good|bad|no-walls|no-shield --biome NAME --culture NAME');o[k]=args[i+1];}
  for(const k of ['days','seed'])o[k]=Number(o[k]);
  if(!Number.isSafeInteger(o.days)||o.days<1||o.days>180||!Number.isSafeInteger(o.seed)||o.seed<0)throw Error('Invalid native days/seed');
@@ -33,6 +33,7 @@ export function parseNativeCampaignArgs(args){
  o.repairPolicy=o['repair-policy']??'legacy';delete o['repair-policy'];if(!['legacy','breach-first'].includes(o.repairPolicy)||o.repairPolicy!=='legacy'&&!['funded','routed','shore'].includes(o.defensePolicy))throw Error('Unsupported native repair policy');
  o.defenseFunding=o['defense-funding']??'contour';delete o['defense-funding'];if(!['contour','rolling'].includes(o.defenseFunding)||o.defenseFunding==='rolling'&&!['funded','routed','shore'].includes(o.defensePolicy))throw Error('Unsupported defense funding choice');
  o.defensePieceReserve=Number(o['defense-piece-reserve']??0);delete o['defense-piece-reserve'];if(![0,1].includes(o.defensePieceReserve)||o.defensePieceReserve&&o.defenseFunding!=='rolling')throw Error('Invalid rolling piece reserve');
+ o.perimeterQa=o['perimeter-qa']??'legacy';delete o['perimeter-qa'];if(!['legacy','incremental-v3'].includes(o.perimeterQa))throw Error('Unknown perimeter QA candidate');
  nativeCampaignStrategy(o.strategy);if(!o.out)throw Error('Explicit output directory required');o.out=resolve(o.out);return o;
 }
 export function calibrationStop(reason){const error=Error(reason);error.code='NATIVE_CALIBRATION_STOP';return error;}
@@ -48,18 +49,22 @@ export function nativeCampaignProvenance(options){
  paths.push('tools/native-q14-labour-policy.mjs');
  paths.push('tools/native-q15-labour-policy.mjs');
  paths.push('tools/native-integrated-perimeter-proof.mjs','tools/native-perimeter-reused-candidate-v2.mjs','tools/native-reused-service-component-proof-v2.mjs','tools/native-interior-attack-anchor.mjs','tools/native-worker-service-proof-v2.mjs','tools/terrain-lattice-tile-candidate.mjs');
+ paths.push('tools/native-worker-service-proof-v3.mjs','tools/static-animal-certificate-cache.mjs','src/world/worker-wall-overlap-recovery.js');
  for(const path of paths)p.sourceHashes[path]=createHash('sha256').update(readFileSync(new URL(path,root))).digest('hex');
- return {...p,protocol:{...campaignProtocolForLabour(options.labourPolicy),profile:options.profile??'olderFemale',plotFluidClearance:options.plotFluidClearance??0,defenseMaterial:options.defenseMaterial??'zarzas',repairPolicy:options.repairPolicy??'legacy',defenseFunding:options.defenseFunding??'contour',defensePieceReserve:options.defensePieceReserve??0,cropHitPoints:CROP_HIT_POINTS}};
+ return {...p,protocol:{...campaignProtocolForLabour(options.labourPolicy),profile:options.profile??'olderFemale',plotFluidClearance:options.plotFluidClearance??0,defenseMaterial:options.defenseMaterial??'zarzas',repairPolicy:options.repairPolicy??'legacy',defenseFunding:options.defenseFunding??'contour',defensePieceReserve:options.defensePieceReserve??0,perimeterQa:options.perimeterQa??'legacy',cropHitPoints:CROP_HIT_POINTS}};
 }
 export async function runNativeCampaignCase(options,{run=simulateNativeCampaign,provenance=nativeCampaignProvenance}={}){
  const out=options.out;if(existsSync(out)&&readdirSync(out).length)throw Error('Refusing to overwrite original campaign evidence');mkdirSync(out,{recursive:true});
  const save=(name,value)=>writeFileSync(resolve(out,name),JSON.stringify(value,null,2)+'\n');
- const inputs=provenance(options);save('source.json',inputs);save('protocol.json',{...campaignProtocolForLabour(options.labourPolicy),profile:options.profile??'olderFemale',plotFluidClearance:options.plotFluidClearance??0,defenseMaterial:options.defenseMaterial??'zarzas',repairPolicy:options.repairPolicy??'legacy',defenseFunding:options.defenseFunding??'contour',defensePieceReserve:options.defensePieceReserve??0,cropHitPoints:CROP_HIT_POINTS});
- save('receipt.json',{status:'running',options,startedAt:inputs.startedAt});
+ const inputs=provenance(options);save('source.json',inputs);save('protocol.json',{...campaignProtocolForLabour(options.labourPolicy),profile:options.profile??'olderFemale',plotFluidClearance:options.plotFluidClearance??0,defenseMaterial:options.defenseMaterial??'zarzas',repairPolicy:options.repairPolicy??'legacy',defenseFunding:options.defenseFunding??'contour',defensePieceReserve:options.defensePieceReserve??0,perimeterQa:options.perimeterQa??'legacy',cropHitPoints:CROP_HIT_POINTS});
+ const progressStarted=Date.now();let progressLast=0;
+ save('receipt.json',{status:'running',options,startedAt:inputs.startedAt,processId:process.pid});
  try{
   if(inputs.trackedChanges.length)throw Error('Freeze tracked runtime before launching native pilot');
   const r=await run({...options,slotId:`native-${options.strategy}-${options.seed}`,
-   onTick:()=>{if(options['stop-file']&&existsSync(options['stop-file']))throw calibrationStop('Requested calibration stop file detected');},
+   onTick:s=>{if(options['stop-file']&&existsSync(options['stop-file']))throw calibrationStop('Requested calibration stop file detected');
+    const now=Date.now();if(s&&now-progressLast>=5000){progressLast=now;save('progress.json',{observedAt:new Date(now).toISOString(),processId:process.pid,day:s.day,time:s.time,elapsed:s.elapsed,living:s.plants.filter(p=>p.alive).length,workers:s.workers.length,wallMilliseconds:now-progressStarted,result:s.result});}
+   },
    onDay:row=>{
     appendFileSync(resolve(out,'days.jsonl'),JSON.stringify(row)+'\n');
     if(options['stop-cash']!==undefined&&row.day>=options['stop-min-day']&&row.money>=options['stop-cash'])throw calibrationStop(`Calibration cash ceiling ${options['stop-cash']} reached on day ${row.day}`);

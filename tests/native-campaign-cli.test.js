@@ -5,6 +5,11 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {parseNativeCampaignArgs,runNativeCampaignCase} from '../tools/run_native_campaign.mjs';
 const fakeProvenance=()=>({trackedChanges:[],startedAt:'fixture',sourceHashes:{fixture:'synthetic'}});
+test('incremental perimeter QA is explicit and invalid choices are rejected',()=>{
+ assert.equal(parseNativeCampaignArgs(['--out','fixture']).perimeterQa,'legacy');
+ assert.equal(parseNativeCampaignArgs(['--out','fixture','--perimeter-qa','incremental-v3']).perimeterQa,'incremental-v3');
+ assert.throws(()=>parseNativeCampaignArgs(['--out','fixture','--perimeter-qa','ignore-workers']),/perimeter QA/);
+});
 test('CLI fixes baseline defaults, accepts100 combat +80peace days and refuses invalid cases',()=>{
  const o=parseNativeCampaignArgs(['--out','fixture']);assert.equal(o.days,7);assert.equal(o.seed,712);
  assert.equal(parseNativeCampaignArgs(['--out','fixture','--biome','gran-canon']).biome,'gran-canon');
