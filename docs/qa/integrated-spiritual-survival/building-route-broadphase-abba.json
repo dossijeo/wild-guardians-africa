@@ -1,0 +1,33 @@
+{
+  "scope": "isolated candidate generation CPU; synthetic obstacles, not end-to-end campaign or GPU",
+  "baselineCommit": "513b30bf",
+  "baselineSha256": "9542fa1922d60c3f2a08f583f28842d0959ec95532a3333e4cf9f09eb2363ee2",
+  "candidateSha256": "34e5a84f99474d107aa0b7d49bef64750904b7f6404210d1a2c3a65c2d447082",
+  "seed": 712,
+  "obstacles": 300,
+  "queries": 400,
+  "equivalentRouteAndCollisionTraces": 1200,
+  "iterationsPerBatch": 20000,
+  "runs": [
+    {
+      "label": "A",
+      "milliseconds": 3166.8073
+    },
+    {
+      "label": "B",
+      "milliseconds": 7464.395599999999
+    },
+    {
+      "label": "B",
+      "milliseconds": 2167.742
+    },
+    {
+      "label": "A",
+      "milliseconds": 3283.549100000002
+    }
+  ],
+  "baselineMeanMs": 3225.178200000001,
+  "candidateMeanMs": 4816.068799999999,
+  "reductionPercent": -49.327215469830385,
+  "concurrentCampaign": true
+}

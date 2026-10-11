@@ -28,9 +28,14 @@ export function shortenBuildingRoute(nav,start,end,route,radius,ignore){
 // edge is still validated by native navigation; no terrain-dependent cache.
 export function findBuildingRoute(nav,start,end,radius,ignore,maximumLength){
  const candidates=[];
+ // Reject distant vertices before evaluating their projection onto the segment.
+ // Inclusive bounds only remove impossible candidates; the original strict
+ // distance test still decides admission and preserves candidate ordering.
+ const reach=radius+2,minX=Math.min(start.x,end.x)-reach,maxX=Math.max(start.x,end.x)+reach,
+  minZ=Math.min(start.z,end.z)-reach,maxZ=Math.max(start.z,end.z)+reach;
  for(const obstacle of nav.obstacles){
   if(obstacle.id===ignore||!['center','house'].includes(obstacle.kind)||!obstacle.footprint?.length)continue;
-  if(!obstacle.footprint.some(p=>edgeDistance(start,end,p.x,p.z)<radius+2))continue;
+  if(!obstacle.footprint.some(p=>p.x>=minX&&p.x<=maxX&&p.z>=minZ&&p.z<=maxZ&&edgeDistance(start,end,p.x,p.z)<reach))continue;
   for(const corner of corners(obstacle))for(const clearance of [.05,.3,.55,1]){
    const reach=radius+clearance,point={x:corner.x+corner.nx*reach,z:corner.z+corner.nz*reach};
    const proposed=distance(start,point)+distance(point,end);
@@ -38,7 +43,7 @@ export function findBuildingRoute(nav,start,end,radius,ignore,maximumLength){
   }
  }
  candidates.sort((a,b)=>a.length-b.length);
- // At most 48 candidates per destination/topology change, never per frame.
+ // At most 48 candidates per query, including repeated watering probes.
  // Every candidate must pass the same swept body, slope and fluid tests as A*.
  for(const {point} of candidates.slice(0,48)){
   if(nav.walkable(point.x,point.z,radius,ignore,true)&&nav.segmentClear(start,point,radius,ignore,true)&&nav.segmentClear(point,end,radius,ignore,true))return [point,{x:end.x,z:end.z}];

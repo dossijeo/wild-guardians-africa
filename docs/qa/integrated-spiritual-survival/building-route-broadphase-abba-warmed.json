@@ -1,0 +1,77 @@
+{
+  "scope": "isolated candidate generation CPU; synthetic obstacles, not end-to-end campaign or GPU",
+  "baselineCommit": "513b30bf",
+  "baselineSha256": "9542fa1922d60c3f2a08f583f28842d0959ec95532a3333e4cf9f09eb2363ee2",
+  "candidateSha256": "34e5a84f99474d107aa0b7d49bef64750904b7f6404210d1a2c3a65c2d447082",
+  "seed": 712,
+  "obstacles": 300,
+  "queries": 400,
+  "equivalentRouteAndCollisionTraces": 1200,
+  "iterationsPerBatch": 10000,
+  "runs": [
+    {
+      "round": 1,
+      "label": "A",
+      "milliseconds": 1166.9139
+    },
+    {
+      "round": 1,
+      "label": "B",
+      "milliseconds": 301.81700000000023
+    },
+    {
+      "round": 1,
+      "label": "B",
+      "milliseconds": 260.1688000000004
+    },
+    {
+      "round": 1,
+      "label": "A",
+      "milliseconds": 1245.0176999999999
+    },
+    {
+      "round": 2,
+      "label": "A",
+      "milliseconds": 1254.9406
+    },
+    {
+      "round": 2,
+      "label": "B",
+      "milliseconds": 299.20740000000023
+    },
+    {
+      "round": 2,
+      "label": "B",
+      "milliseconds": 305.9318000000003
+    },
+    {
+      "round": 2,
+      "label": "A",
+      "milliseconds": 1465.665
+    },
+    {
+      "round": 3,
+      "label": "A",
+      "milliseconds": 1907.8978000000006
+    },
+    {
+      "round": 3,
+      "label": "B",
+      "milliseconds": 518.9238000000005
+    },
+    {
+      "round": 3,
+      "label": "B",
+      "milliseconds": 563.732
+    },
+    {
+      "round": 3,
+      "label": "A",
+      "milliseconds": 1695.5097000000005
+    }
+  ],
+  "baselineMeanMs": 1455.9907833333334,
+  "candidateMeanMs": 374.9634666666669,
+  "reductionPercent": 74.24685163128377,
+  "concurrentCampaign": true
+}
