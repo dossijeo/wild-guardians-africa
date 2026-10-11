@@ -1,0 +1,35 @@
+// Diagnose the exact saved planned contour, not a fresh policy search.
+import assert from 'node:assert/strict';
+import {readFileSync,writeFileSync,existsSync} from 'node:fs';
+import {gunzipSync} from 'node:zlib';
+import {createHash} from 'node:crypto';
+import {performance} from 'node:perf_hooks';
+import {deserialize,serialize} from '../src/persistence/snapshots.js';
+import {Navigation,BIOME_IDS} from '../src/world/navigation.js';
+import * as Game from '../src/simulation/game.js';
+import {nativeIntegratedPerimeterProof} from './native-integrated-perimeter-proof.mjs';
+import {nativeWorkerServiceProofV3} from './native-worker-service-proof-v3.mjs';
+
+const [directory,output]=process.argv.slice(2);
+assert(directory&&output&&!existsSync(output),'Pass retained stopped directory and fresh output');
+const read=name=>JSON.parse(readFileSync(directory+'/'+name));
+assert.equal(read('receipt.json').status,'stopped-early-calibration');
+const source=read('source.json'),hash=bytes=>createHash('sha256').update(bytes).digest('hex');
+for(const [path,value] of Object.entries(source.sourceHashes))assert.equal(hash(readFileSync(path)),value,'Retained runtime mismatch: '+path);
+const bytes=readFileSync(directory+'/partial-state.json.gz');
+const s=deserialize(gunzipSync(bytes).toString()),retained=read('partial.json').receipts.defense;
+assert(retained.planned?.points?.length&&retained.planned?.bounds?.length,'No retained in-progress contour');
+assert.equal(retained.perimeterQa,'worker-first-v4');
+const before=serialize(s),nav=new Navigation(s.seed,s.biome,JSON.parse(readFileSync(`public/content/biome-${BIOME_IDS[s.biome]}.json`)).profile);
+nav.setState(s);
+const quoteStarted=performance.now();
+const plan=Game.quoteWallChain(s,retained.material,retained.planned.points,nav,{smooth:false,snap:false});
+const quoteMilliseconds=performance.now()-quoteStarted;
+assert(Array.isArray(plan.pieces)&&Array.isArray(plan.updates)&&Number.isSafeInteger(plan.cost),'Malformed native quote');
+const proofStarted=performance.now();
+const proof=nativeIntegratedPerimeterProof(s,nav,plan,retained.planned.bounds,{outline:retained.planned.points,workerServiceProof:nativeWorkerServiceProofV3,incrementalCrops:true,workersFirst:true});
+const proofMilliseconds=performance.now()-proofStarted;
+assert.equal(serialize(s),before,'Diagnostic changed the copied native state');
+const result={scope:'One cold native proof for the exact planned contour on a copied stopped snapshot. No purchases, fresh contour search, campaign restart or gameplay changes. Concurrent workloads may affect wall times; this is a hotspot diagnostic, not an isolated performance acceptance benchmark.',snapshotSha256:hash(bytes),sourceManifestSha256:hash(readFileSync(directory+'/source.json')),probeSha256:hash(readFileSync('tools/probe-retained-planned-perimeter.mjs')),day:s.day,time:s.time,living:s.plants.filter(p=>p.alive).length,retainedRemainingCost:retained.remainingCost,quote:{milliseconds:quoteMilliseconds,cost:plan.cost,pieces:plan.pieces.length,updates:plan.updates.length},proof:{milliseconds:proofMilliseconds,valid:proof.valid,reason:proof.reason,animalChecks:proof.checks?.length??0,animalCertificateSkipped:proof.animalCertificateSkipped??false,terrainTileDiagnostics:proof.terrainTileDiagnostics},stateUnchanged:true};
+writeFileSync(output,JSON.stringify(result,null,2)+'\n',{flag:'wx'});
+console.log(JSON.stringify(result));

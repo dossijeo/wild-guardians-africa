@@ -1,0 +1,210 @@
+{
+  "scope": "V8 sampling of one cold retained planned-contour proof during a concurrent campaign. CPU hotspot diagnostic only, not an isolated benchmark or gameplay frame measurement.",
+  "profileSha256": "db140e44484a900b38cbc0f05a700b1e16ad4754b1d18cb07f02282853243e29",
+  "sampledMilliseconds": 22785.208999999777,
+  "samples": 21684,
+  "self": [
+    {
+      "frame": "lattice @ file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/tools/terrain-lattice-tile-candidate.mjs:9",
+      "milliseconds": 3905.345999999993,
+      "percent": 17.139829614905143
+    },
+    {
+      "frame": "coarseSegmentClear @ file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/src/world/navigation.js:474",
+      "milliseconds": 3132.099999999999,
+      "percent": 13.746198246415162
+    },
+    {
+      "frame": "wallCollisionBounds @ file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/src/world/wall-collision-frame.js:18",
+      "milliseconds": 2637.496999999997,
+      "percent": 11.57547863616271
+    },
+    {
+      "frame": "fluidInside @ file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/src/world/terrain.js:420",
+      "milliseconds": 2311.7700000000004,
+      "percent": 10.145924050993006
+    },
+    {
+      "frame": "animalSegmentClearance @ file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/src/world/animal-segment-clearance.js:6",
+      "milliseconds": 1758.2659999999976,
+      "percent": 7.71669902172069
+    },
+    {
+      "frame": "terrainValid @ file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/src/world/navigation.js:131",
+      "milliseconds": 1242.906999999999,
+      "percent": 5.454885228395364
+    },
+    {
+      "frame": "surface @ file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/src/world/terrain.js:412",
+      "milliseconds": 830.475999999999,
+      "percent": 3.644803082561179
+    },
+    {
+      "frame": "riverX @ file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/src/world/terrain.js:298",
+      "milliseconds": 606.0879999999993,
+      "percent": 2.6600063225226735
+    },
+    {
+      "frame": "propsAt @ file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/src/world/navigation.js:56",
+      "milliseconds": 604.3319999999995,
+      "percent": 2.652299568549077
+    },
+    {
+      "frame": "slope @ file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/src/world/terrain.js:419",
+      "milliseconds": 593.0909999999998,
+      "percent": 2.602964932206703
+    },
+    {
+      "frame": "(garbage collector) @ (runtime):0",
+      "milliseconds": 514.7339999999997,
+      "percent": 2.2590707857891705
+    },
+    {
+      "frame": "nativeReusedServiceComponentProofV2 @ file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/tools/native-reused-service-component-proof-v2.mjs:6",
+      "milliseconds": 492.99499999999944,
+      "percent": 2.163662400463407
+    },
+    {
+      "frame": "walkable @ file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/src/world/navigation.js:143",
+      "milliseconds": 472.34599999999983,
+      "percent": 2.073037820280711
+    },
+    {
+      "frame": "wallCollisionFrame @ file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/src/world/wall-collision-frame.js:5",
+      "milliseconds": 391.84999999999985,
+      "percent": 1.719756004871422
+    },
+    {
+      "frame": "cachedFractionalWalkability @ file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/src/world/fractional-walkability-cache.js:6",
+      "milliseconds": 360.5019999999999,
+      "percent": 1.5821755244817084
+    },
+    {
+      "frame": "edgeDistance @ file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/src/world/footprints.js:9",
+      "milliseconds": 335.6969999999996,
+      "percent": 1.4733110413865542
+    },
+    {
+      "frame": "sweptFootprintDistance @ file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/src/world/footprints.js:19",
+      "milliseconds": 303.5189999999998,
+      "percent": 1.3320878469888198
+    },
+    {
+      "frame": "(anonymous) @ file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/src/world/navigation.js:154",
+      "milliseconds": 287.765,
+      "percent": 1.262946501829335
+    },
+    {
+      "frame": "distance @ file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/src/world/navigation.js:19",
+      "milliseconds": 269.7320000000002,
+      "percent": 1.1838030539899933
+    },
+    {
+      "frame": "segmentDistance @ file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/src/world/footprints.js:14",
+      "milliseconds": 266.4529999999999,
+      "percent": 1.1694121392522778
+    }
+  ],
+  "inclusive": [
+    {
+      "frame": "(root) @ (runtime):0",
+      "milliseconds": 22785.208999999777,
+      "percent": 100
+    },
+    {
+      "frame": "evaluate @ (runtime):0",
+      "milliseconds": 22102.834999999865,
+      "percent": 97.005188760832
+    },
+    {
+      "frame": "run @ node:internal/modules/esm/module_job:213",
+      "milliseconds": 22101.800999999865,
+      "percent": 97.00065072916418
+    },
+    {
+      "frame": "(anonymous) @ file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/tools/probe-retained-planned-perimeter.mjs:1",
+      "milliseconds": 22100.778999999864,
+      "percent": 96.99616536324105
+    },
+    {
+      "frame": "nativeIntegratedPerimeterProof @ file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/tools/native-integrated-perimeter-proof.mjs:5",
+      "milliseconds": 21810.3999999999,
+      "percent": 95.72174650669261
+    },
+    {
+      "frame": "nativePerimeterReusedCandidateV2 @ file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/tools/native-perimeter-reused-candidate-v2.mjs:12",
+      "milliseconds": 21809.3659999999,
+      "percent": 95.71720847502479
+    },
+    {
+      "frame": "staticAnimalCertificate @ file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/tools/static-animal-certificate-cache.mjs:4",
+      "milliseconds": 21202.14999999996,
+      "percent": 93.05225157250113
+    },
+    {
+      "frame": "certifyAnimals @ file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/tools/native-perimeter-reused-candidate-v2.mjs:46",
+      "milliseconds": 21200.096999999965,
+      "percent": 93.04324134134636
+    },
+    {
+      "frame": "staticAnimalCertificate.cache.cache @ file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/tools/native-perimeter-reused-candidate-v2.mjs:30",
+      "milliseconds": 21200.096999999965,
+      "percent": 93.04324134134636
+    },
+    {
+      "frame": "nativeReusedServiceComponentProofV2 @ file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/tools/native-reused-service-component-proof-v2.mjs:6",
+      "milliseconds": 20579.18099999996,
+      "percent": 90.31815771362976
+    },
+    {
+      "frame": "segmentClear @ file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/src/world/navigation.js:405",
+      "milliseconds": 18710.16200000021,
+      "percent": 82.11538459006627
+    },
+    {
+      "frame": "testSegmentClear @ file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/src/world/navigation.js:461",
+      "milliseconds": 18684.37000000022,
+      "percent": 82.00218834947006
+    },
+    {
+      "frame": "animalSegmentClearance @ file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/src/world/animal-segment-clearance.js:6",
+      "milliseconds": 18261.080000000242,
+      "percent": 80.14444809349969
+    },
+    {
+      "frame": "coarseSegmentClear @ file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/src/world/navigation.js:474",
+      "milliseconds": 16767.693000000403,
+      "percent": 73.59025322085292
+    },
+    {
+      "frame": "terrainValid @ file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/src/world/navigation.js:131",
+      "milliseconds": 9436.702000000023,
+      "percent": 41.41591152400716
+    },
+    {
+      "frame": "slope @ file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/src/world/terrain.js:419",
+      "milliseconds": 5226.985999999992,
+      "percent": 22.94025918305179
+    },
+    {
+      "frame": "surface @ file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/src/world/terrain.js:412",
+      "milliseconds": 4609.734999999989,
+      "percent": 20.23126055152724
+    },
+    {
+      "frame": "lattice @ file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/tools/terrain-lattice-tile-candidate.mjs:9",
+      "milliseconds": 3916.0379999999927,
+      "percent": 17.18675479342775
+    },
+    {
+      "frame": "fluidAt @ file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/src/world/fluid-placement.js:3",
+      "milliseconds": 3028.810000000007,
+      "percent": 13.292877848959106
+    },
+    {
+      "frame": "wallCollisionBounds @ file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/src/world/wall-collision-frame.js:18",
+      "milliseconds": 3027.287000000005,
+      "percent": 13.28619368819498
+    }
+  ]
+}
