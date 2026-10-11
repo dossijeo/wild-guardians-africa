@@ -6,9 +6,9 @@ import {join} from 'node:path';
 import {tmpdir} from 'node:os';
 import {spawnSync} from 'node:child_process';
 
-function audit(report){
+function audit(report,options={}){
  const dir=mkdtempSync(join(tmpdir(),'wild-guardians-disabled-defense-')),output=join(dir,'audit.json');
- writeFileSync(join(dir,'receipt.json'),JSON.stringify({status:'observed-horizon'}));
+ writeFileSync(join(dir,'receipt.json'),JSON.stringify({status:'observed-horizon',options}));
  writeFileSync(join(dir,'report.json'),JSON.stringify(report));
  const child=spawnSync(process.execPath,['tools/audit-native-defense-allocation.mjs',dir,output],{encoding:'utf8',timeout:30000});
  return {child,output};
@@ -26,4 +26,30 @@ test('disabled defense cannot hide wall payments or carry an active policy',()=>
 test('active native defense still rejects a mismatched funding mode',()=>{
  const report=fixture();report.policy.defend=true;report.defense={funding:'contour',history:[]};
  const {child,output}=audit(report);assert.notEqual(child.status,0);assert.equal(existsSync(output),false);
+});
+
+
+test('next-piece earmark must agree across launch, report protocol and active defense',()=>{
+ const report=fixture();report.policy.defend=true;report.policy.defensePieceReserve=1;
+ report.protocol={defensePieceReserve:1};report.defense={funding:'rolling',pieceReserve:1,history:[]};
+ // The helper intentionally uses historical launch options: this mismatch cannot pass.
+ const {child,output}=audit(report);assert.notEqual(child.status,0);assert.equal(existsSync(output),false);
+});
+
+test('unknown or contour-only next-piece earmarks cannot be certified',()=>{
+ for(const mutate of [r=>{r.policy.defensePieceReserve=2;},r=>{r.policy.defensePieceReserve=1;r.policy.defenseFunding='contour';}]){
+  const report=fixture();mutate(report);const {child,output}=audit(report);assert.notEqual(child.status,0);assert.equal(existsSync(output),false);
+ }
+});
+
+
+test('declared rolling next-piece earmark is accepted when all authoritative records agree',()=>{
+ const report=fixture();report.policy.defend=true;report.policy.defensePieceReserve=1;
+ report.protocol={defensePieceReserve:1};report.defense={funding:'rolling',pieceReserve:1,history:[]};
+ const {child,output}=audit(report,{defensePieceReserve:1});assert.equal(child.status,0,child.stderr);
+ assert.equal(JSON.parse(readFileSync(output)).pieceReserve,1);
+ for(const mutate of [r=>{r.protocol.defensePieceReserve=0;},r=>{r.defense.pieceReserve=0;}]){
+  const changed=structuredClone(report);mutate(changed);const rejected=audit(changed,{defensePieceReserve:1});
+  assert.notEqual(rejected.child.status,0);assert.equal(existsSync(rejected.output),false);
+ }
 });
