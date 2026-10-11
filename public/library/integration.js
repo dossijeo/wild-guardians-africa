@@ -1,5 +1,13 @@
 export function integrateLibraryLab(document,key){
   document.documentElement.dataset.libraryLab=key;
+  const responsive=document.createElement('link');responsive.rel='stylesheet';responsive.href='library/mobile.css';document.head.append(responsive);
+  if(['crops','destruction'].includes(key)){
+    const toggle=document.createElement('button');toggle.type='button';toggle.className='lab-controls-toggle';toggle.dataset.noI18n='';
+    const panel=document.querySelector(key==='crops'?'.sidebar':'aside');
+    const update=()=>{const open=!document.documentElement.classList.contains('lab-controls-hidden');toggle.textContent=(document.documentElement.lang.startsWith('es')?'Controles':'Controls')+(open?' ▾':' ▸');toggle.setAttribute('aria-expanded',String(open));};
+    toggle.onclick=()=>{document.documentElement.classList.toggle('lab-controls-hidden');update();};
+    if(panel){panel.id||='lab-controls';toggle.setAttribute('aria-controls',panel.id);document.body.append(toggle);update();new MutationObserver(update).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});}
+  }
   const fonts=document.createElement('link');fonts.rel='stylesheet';fonts.href='content/fonts.css';document.head.append(fonts);
   const style=document.createElement('style');style.textContent=`
     html[data-library-lab] body{font-family:Banga,system-ui,sans-serif}
