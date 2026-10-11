@@ -14,7 +14,8 @@ const hash=b=>createHash('sha256').update(b).digest('hex'),inputBytes=readFileSy
 let s=deserialize(gunzipSync(inputBytes).toString()),nav;
 const profilePath='public/content/biome-'+BIOME_IDS[s.biome]+'.json',profile=JSON.parse(readFileSync(profilePath)).profile;
 const attach=()=>{nav=new Navigation(s.seed,s.biome,profile);nav.setState(s);};attach();
-assert.equal(s.time,0);assert.equal(s.day,1);assert.equal(s.pauses.length,0);assert.equal(s.workers.length,1);
+assert(s.time>=0&&s.time<150);assert.equal(s.day,1);assert.equal(s.pauses.length,0);assert.equal(s.workers.length,1);
+const startingTime=s.time;
 const opening=numberOf(s.ledger.balance),initialEntries=new Set(Object.keys(s.ledger.entries)),seen=new Set(s.events.map(e=>e.id)),events=[],trace=[],began=performance.now();
 const replantPositions=s.plants.map(p=>({x:p.x,z:p.z,species:p.species}));
 let replanted=false,replantCount=0;
@@ -35,7 +36,7 @@ const entries=Object.entries(s.ledger.entries).filter(([id])=>!initialEntries.ha
 const income=entries.filter(e=>e.id.startsWith('deliver:')).reduce((n,e)=>n+e.coins,0),otherNet=entries.filter(e=>!e.id.startsWith('deliver:')).reduce((n,e)=>n+e.coins,0),closing=numberOf(s.ledger.balance);
 assert.equal(closing,opening+income+otherNet);assert.equal(hash(readFileSync(input)),hash(inputBytes));
 const paths=['tools/probe-native-paid-canyon-worker-day-replant.mjs','src/simulation/game.js','src/simulation/crops.js','src/simulation/tasks.js','src/simulation/gates.js','src/simulation/locomotion.js','src/world/navigation.js','src/world/work-points.js','src/persistence/snapshots.js',profilePath];
-const result={status:'observed-native-worker-day',input,inputSha256:hash(inputBytes),snapshotPath,stopReason,day:s.day,time:s.time,result:s.result,pauses:s.pauses,
+const result={status:'observed-native-worker-day',input,inputSha256:hash(inputBytes),snapshotPath,stopReason,startingTime,day:s.day,time:s.time,result:s.result,pauses:s.pauses,
  opening,closing,income,otherNet,entries,replantCount,reconciliationDifference:closing-opening-income-otherNet,reloaded,steps,distanceMetres:distance,maximumGateOpen,
  wateredPlants:[...new Set(events.filter(e=>e.type==='WaterSatisfied').map(e=>e.targetId))],waterEvents:events.filter(e=>e.type==='WaterSatisfied').length,
  deliveredCrates:s.crates.filter(c=>c.delivered).length,living:s.plants.filter(p=>p.alive).length,events,trace,cpuObservationMilliseconds:performance.now()-began,

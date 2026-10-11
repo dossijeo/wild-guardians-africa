@@ -1,0 +1,4416 @@
+{
+  "status": "observed-native-paid-repair",
+  "input": "docs/qa/integrated-spiritual-survival/funded-canyon-small-night-v1-state.json.gz",
+  "inputSha256": "1986615584176e92affb3384bb1099efccf70e49e13f7da94f8eea7ddd943506",
+  "snapshotPath": "docs/qa/integrated-spiritual-survival/funded-canyon-small-repair-day-v1-state.json.gz",
+  "opening": 368,
+  "closing": 422,
+  "income": 88,
+  "expectedCost": 4,
+  "requestedTarget": {
+    "id": "structure-52",
+    "hp": 60,
+    "maxHp": 100,
+    "cost": 10
+  },
+  "finalTarget": {
+    "id": "structure-52",
+    "hp": 100,
+    "status": "intact"
+  },
+  "requestCharged": false,
+  "repeatedCommandRejected": true,
+  "payments": [
+    {
+      "id": "repair:task-126",
+      "coins": -4
+    }
+  ],
+  "repairs": [
+    {
+      "id": "event-194",
+      "type": "RepairApplied",
+      "workerId": "worker-117",
+      "targetId": "structure-52",
+      "repair": {
+        "taskId": "task-126",
+        "paymentId": "repair:task-126",
+        "paidCoins": 4,
+        "previousHp": 60,
+        "previousStatus": "intact",
+        "restoredHp": 100,
+        "maxHp": 100
+      },
+      "presentation": {
+        "elapsed": 731.4000000000199,
+        "x": -17.216410256410256,
+        "z": 69.16000000000003,
+        "yaw": 1.008877544980366
+      },
+      "time": 131.49999999999682
+    }
+  ],
+  "entries": [
+    {
+      "id": "repair-day-hire",
+      "coins": -30
+    },
+    {
+      "id": "repair:task-126",
+      "coins": -4
+    },
+    {
+      "id": "deliver:crate-138",
+      "coins": 11
+    },
+    {
+      "id": "deliver:crate-139",
+      "coins": 11
+    },
+    {
+      "id": "deliver:crate-141",
+      "coins": 11
+    },
+    {
+      "id": "deliver:crate-143",
+      "coins": 11
+    },
+    {
+      "id": "deliver:crate-145",
+      "coins": 11
+    },
+    {
+      "id": "deliver:crate-147",
+      "coins": 11
+    },
+    {
+      "id": "deliver:crate-149",
+      "coins": 11
+    },
+    {
+      "id": "deliver:crate-150",
+      "coins": 11
+    }
+  ],
+  "reconciliationDifference": 0,
+  "reload": {
+    "time": 25.000000000000085,
+    "pendingRepair": true,
+    "targetHp": 60
+  },
+  "day": 2,
+  "time": 300,
+  "result": null,
+  "pauses": [],
+  "events": [
+    {
+      "id": "event-183",
+      "type": "WaterSatisfied",
+      "workerId": "worker-117",
+      "targetId": "plant-84",
+      "time": 41.50000000000032
+    },
+    {
+      "id": "event-184",
+      "type": "WaterSatisfied",
+      "workerId": "worker-117",
+      "targetId": "plant-86",
+      "time": 49.000000000000426
+    },
+    {
+      "id": "event-185",
+      "type": "WaterSatisfied",
+      "workerId": "worker-117",
+      "targetId": "plant-88",
+      "time": 57.00000000000054
+    },
+    {
+      "id": "event-186",
+      "type": "WaterSatisfied",
+      "workerId": "worker-117",
+      "targetId": "plant-90",
+      "time": 65.50000000000055
+    },
+    {
+      "id": "event-187",
+      "type": "WaterSatisfied",
+      "workerId": "worker-117",
+      "targetId": "plant-92",
+      "time": 74.50000000000004
+    },
+    {
+      "id": "event-188",
+      "type": "WaterSatisfied",
+      "workerId": "worker-117",
+      "targetId": "plant-94",
+      "time": 84.49999999999947
+    },
+    {
+      "id": "event-189",
+      "type": "WaterSatisfied",
+      "workerId": "worker-117",
+      "targetId": "plant-96",
+      "time": 94.4999999999989
+    },
+    {
+      "id": "event-190",
+      "type": "WaterSatisfied",
+      "workerId": "worker-117",
+      "targetId": "plant-98",
+      "time": 102.99999999999842
+    },
+    {
+      "id": "event-194",
+      "type": "RepairApplied",
+      "workerId": "worker-117",
+      "targetId": "structure-52",
+      "repair": {
+        "taskId": "task-126",
+        "paymentId": "repair:task-126",
+        "paidCoins": 4,
+        "previousHp": 60,
+        "previousStatus": "intact",
+        "restoredHp": 100,
+        "maxHp": 100
+      },
+      "presentation": {
+        "elapsed": 731.4000000000199,
+        "x": -17.216410256410256,
+        "z": 69.16000000000003,
+        "yaw": 1.008877544980366
+      },
+      "time": 131.49999999999682
+    },
+    {
+      "id": "event-197",
+      "type": "WaterSatisfied",
+      "workerId": "worker-117",
+      "targetId": "plant-84",
+      "time": 144.99999999999605
+    },
+    {
+      "id": "event-198",
+      "type": "WaterSatisfied",
+      "workerId": "worker-117",
+      "targetId": "plant-86",
+      "time": 148.49999999999585
+    },
+    {
+      "id": "event-199",
+      "type": "WaterSatisfied",
+      "workerId": "worker-117",
+      "targetId": "plant-88",
+      "time": 153.49999999999557
+    },
+    {
+      "id": "event-201",
+      "type": "WaterSatisfied",
+      "workerId": "worker-117",
+      "targetId": "plant-90",
+      "time": 159.49999999999523
+    },
+    {
+      "id": "event-203",
+      "type": "WaterSatisfied",
+      "workerId": "worker-117",
+      "targetId": "plant-92",
+      "time": 166.9999999999948
+    },
+    {
+      "id": "event-205",
+      "type": "WaterSatisfied",
+      "workerId": "worker-117",
+      "targetId": "plant-94",
+      "time": 175.9999999999943
+    },
+    {
+      "id": "event-206",
+      "type": "CropMatured",
+      "targetId": "plant-84",
+      "time": 181.49999999999397
+    },
+    {
+      "id": "event-207",
+      "type": "HarvestRequested",
+      "targetId": "plant-84",
+      "count": 1,
+      "automatic": true,
+      "time": 181.49999999999397
+    },
+    {
+      "id": "event-209",
+      "type": "WaterSatisfied",
+      "workerId": "worker-117",
+      "targetId": "plant-96",
+      "time": 185.99999999999372
+    },
+    {
+      "id": "event-210",
+      "type": "CropMatured",
+      "targetId": "plant-86",
+      "time": 188.99999999999355
+    },
+    {
+      "id": "event-211",
+      "type": "HarvestRequested",
+      "targetId": "plant-86",
+      "count": 1,
+      "automatic": true,
+      "time": 188.99999999999355
+    },
+    {
+      "id": "event-213",
+      "type": "WaterSatisfied",
+      "workerId": "worker-117",
+      "targetId": "plant-98",
+      "time": 190.49999999999346
+    },
+    {
+      "id": "event-214",
+      "type": "CropMatured",
+      "targetId": "plant-88",
+      "time": 196.9999999999931
+    },
+    {
+      "id": "event-215",
+      "type": "HarvestRequested",
+      "targetId": "plant-88",
+      "count": 1,
+      "automatic": true,
+      "time": 196.9999999999931
+    },
+    {
+      "id": "event-217",
+      "type": "CropPicked",
+      "workerId": "worker-117",
+      "targetId": "plant-84",
+      "time": 197.99999999999304
+    },
+    {
+      "id": "event-218",
+      "type": "CrateDelivered",
+      "workerId": "worker-117",
+      "targetId": "crate-138",
+      "multiplyIncome": {
+        "n": "0",
+        "d": "1"
+      },
+      "time": 197.99999999999304
+    },
+    {
+      "id": "event-219",
+      "type": "CropPicked",
+      "workerId": "worker-117",
+      "targetId": "plant-86",
+      "time": 202.99999999999275
+    },
+    {
+      "id": "event-220",
+      "type": "CrateDelivered",
+      "workerId": "worker-117",
+      "targetId": "crate-139",
+      "multiplyIncome": {
+        "n": "0",
+        "d": "1"
+      },
+      "time": 203.49999999999272
+    },
+    {
+      "id": "event-221",
+      "type": "CropMatured",
+      "targetId": "plant-90",
+      "time": 205.4999999999926
+    },
+    {
+      "id": "event-222",
+      "type": "HarvestRequested",
+      "targetId": "plant-90",
+      "count": 1,
+      "automatic": true,
+      "time": 205.4999999999926
+    },
+    {
+      "id": "event-224",
+      "type": "CropPicked",
+      "workerId": "worker-117",
+      "targetId": "plant-88",
+      "time": 209.49999999999238
+    },
+    {
+      "id": "event-225",
+      "type": "CrateDelivered",
+      "workerId": "worker-117",
+      "targetId": "crate-141",
+      "multiplyIncome": {
+        "n": "0",
+        "d": "1"
+      },
+      "time": 209.99999999999235
+    },
+    {
+      "id": "event-226",
+      "type": "CropMatured",
+      "targetId": "plant-92",
+      "time": 214.4999999999921
+    },
+    {
+      "id": "event-227",
+      "type": "HarvestRequested",
+      "targetId": "plant-92",
+      "count": 1,
+      "automatic": true,
+      "time": 214.4999999999921
+    },
+    {
+      "id": "event-229",
+      "type": "CropPicked",
+      "workerId": "worker-117",
+      "targetId": "plant-90",
+      "time": 217.49999999999193
+    },
+    {
+      "id": "event-230",
+      "type": "CrateDelivered",
+      "workerId": "worker-117",
+      "targetId": "crate-143",
+      "multiplyIncome": {
+        "n": "0",
+        "d": "1"
+      },
+      "time": 217.9999999999919
+    },
+    {
+      "id": "event-231",
+      "type": "CropMatured",
+      "targetId": "plant-94",
+      "time": 224.49999999999153
+    },
+    {
+      "id": "event-232",
+      "type": "HarvestRequested",
+      "targetId": "plant-94",
+      "count": 1,
+      "automatic": true,
+      "time": 224.49999999999153
+    },
+    {
+      "id": "event-234",
+      "type": "CropPicked",
+      "workerId": "worker-117",
+      "targetId": "plant-92",
+      "time": 226.9999999999914
+    },
+    {
+      "id": "event-235",
+      "type": "CrateDelivered",
+      "workerId": "worker-117",
+      "targetId": "crate-145",
+      "multiplyIncome": {
+        "n": "0",
+        "d": "1"
+      },
+      "time": 227.49999999999136
+    },
+    {
+      "id": "event-236",
+      "type": "CropMatured",
+      "targetId": "plant-96",
+      "time": 234.49999999999096
+    },
+    {
+      "id": "event-237",
+      "type": "HarvestRequested",
+      "targetId": "plant-96",
+      "count": 1,
+      "automatic": true,
+      "time": 234.49999999999096
+    },
+    {
+      "id": "event-239",
+      "type": "CropPicked",
+      "workerId": "worker-117",
+      "targetId": "plant-94",
+      "time": 237.99999999999076
+    },
+    {
+      "id": "event-240",
+      "type": "CrateDelivered",
+      "workerId": "worker-117",
+      "targetId": "crate-147",
+      "multiplyIncome": {
+        "n": "0",
+        "d": "1"
+      },
+      "time": 238.49999999999073
+    },
+    {
+      "id": "event-241",
+      "type": "CropMatured",
+      "targetId": "plant-98",
+      "time": 242.99999999999048
+    },
+    {
+      "id": "event-242",
+      "type": "HarvestRequested",
+      "targetId": "plant-98",
+      "count": 1,
+      "automatic": true,
+      "time": 242.99999999999048
+    },
+    {
+      "id": "event-244",
+      "type": "CropPicked",
+      "workerId": "worker-117",
+      "targetId": "plant-96",
+      "time": 250
+    },
+    {
+      "id": "event-245",
+      "type": "CrateDelivered",
+      "workerId": "worker-117",
+      "targetId": "crate-149",
+      "multiplyIncome": {
+        "n": "0",
+        "d": "1"
+      },
+      "time": 250.99999999999994
+    },
+    {
+      "id": "event-246",
+      "type": "CropPicked",
+      "workerId": "worker-117",
+      "targetId": "plant-98",
+      "time": 255.4999999999997
+    },
+    {
+      "id": "event-247",
+      "type": "CrateDelivered",
+      "workerId": "worker-117",
+      "targetId": "crate-150",
+      "multiplyIncome": {
+        "n": "0",
+        "d": "1"
+      },
+      "time": 255.4999999999997
+    },
+    {
+      "id": "event-248",
+      "type": "NightStarted",
+      "time": 300
+    }
+  ],
+  "trace": [
+    {
+      "time": 0.9999999999999999,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -43.88236480611845,
+          "z": 8.395473240437045,
+          "status": "walking",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 2.0000000000000004,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -43.735028611142404,
+          "z": 10.790946480874084,
+          "status": "walking",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 3.0000000000000013,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -43.587692416166355,
+          "z": 13.186419721311122,
+          "status": "walking",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 4.000000000000002,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -43.44035622119031,
+          "z": 15.58189296174816,
+          "status": "walking",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 4.999999999999998,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -43.29302002621426,
+          "z": 17.977366202185216,
+          "status": "walking",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 5.999999999999995,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -43.14568383123821,
+          "z": 20.372839442622272,
+          "status": "walking",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 6.999999999999991,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -42.99834763626216,
+          "z": 22.768312683059328,
+          "status": "walking",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 7.999999999999988,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -42.85101144128611,
+          "z": 25.163785923496384,
+          "status": "walking",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 8.999999999999984,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -42.70367524631006,
+          "z": 27.55925916393344,
+          "status": "walking",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 9.99999999999998,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -42.556339051334014,
+          "z": 29.954732404370496,
+          "status": "walking",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 10.999999999999977,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -42.409002856357965,
+          "z": 32.35020564480756,
+          "status": "walking",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 11.999999999999973,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -42.26166666138183,
+          "z": 34.745678885244686,
+          "status": "walking",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 12.99999999999997,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -42.11433046640569,
+          "z": 37.14115212568181,
+          "status": "walking",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 13.999999999999966,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -41.71505166953656,
+          "z": 39.45591732874152,
+          "status": "walking",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 14.999999999999963,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -40.443054213529,
+          "z": 41.491113258353664,
+          "status": "walking",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 15.99999999999996,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -39.17105675752145,
+          "z": 43.52630918796581,
+          "status": "walking",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 16.99999999999997,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -37.899059301513894,
+          "z": 45.56150511757795,
+          "status": "walking",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 17.999999999999986,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -36.62706184550634,
+          "z": 47.596701047190095,
+          "status": "walking",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 19,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -35.355064389498786,
+          "z": 49.63189697680224,
+          "status": "walking",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 20.000000000000014,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -34.083066933491175,
+          "z": 51.66709290641438,
+          "status": "walking",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 21.00000000000003,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -32.81106947748356,
+          "z": 53.702288836026526,
+          "status": "walking",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 22.000000000000043,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -31.793471512677456,
+          "z": 55.33044557971624,
+          "status": "walking",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 23.000000000000057,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -30.903073293472094,
+          "z": 56.75508273044474,
+          "status": "walking",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 24.00000000000007,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -29.631075837464433,
+          "z": 58.790278660056885,
+          "status": "walking",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 25.000000000000085,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -28.359078381456808,
+          "z": 60.82547458966904,
+          "status": "walking",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 26.0000000000001,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -27.087080925449214,
+          "z": 62.86067051928125,
+          "status": "walking",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 27.000000000000114,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -25.000332672381624,
+          "z": 63.999833663809206,
+          "status": "walking",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 28.000000000000128,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -22.836439916529578,
+          "z": 65,
+          "status": "walking",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 29.000000000000142,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -20.436439916529558,
+          "z": 65,
+          "status": "walking",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 30.000000000000156,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -18.036439916529538,
+          "z": 65,
+          "status": "walking",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 31.00000000000017,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -15.636439916529522,
+          "z": 65,
+          "status": "walking",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 32.000000000000185,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -14.345030227808806,
+          "z": 63.362575569521994,
+          "status": "walking",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 33.0000000000002,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.45369260455895,
+          "z": 61.13423151139736,
+          "status": "walking",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 34.00000000000021,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.082759190145946,
+          "z": 59.217502687515754,
+          "status": "acting",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 35.00000000000023,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.082759190145946,
+          "z": 59.217502687515754,
+          "status": "acting",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 36.00000000000024,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.082759190145946,
+          "z": 59.217502687515754,
+          "status": "acting",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 37.000000000000256,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.082759190145946,
+          "z": 59.217502687515754,
+          "status": "acting",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 38.00000000000027,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.082759190145946,
+          "z": 59.217502687515754,
+          "status": "acting",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 39.000000000000284,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.082759190145946,
+          "z": 59.217502687515754,
+          "status": "acting",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 40.0000000000003,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.082759190145946,
+          "z": 59.217502687515754,
+          "status": "acting",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 41.00000000000031,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.082759190145946,
+          "z": 59.217502687515754,
+          "status": "acting",
+          "taskId": "task-118"
+        }
+      ]
+    },
+    {
+      "time": 42.00000000000033,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.109478142848506,
+          "z": 59.26761166101108,
+          "status": "acting",
+          "taskId": "task-119"
+        }
+      ]
+    },
+    {
+      "time": 43.00000000000034,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.109478142848506,
+          "z": 59.26761166101108,
+          "status": "acting",
+          "taskId": "task-119"
+        }
+      ]
+    },
+    {
+      "time": 44.000000000000355,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.109478142848506,
+          "z": 59.26761166101108,
+          "status": "acting",
+          "taskId": "task-119"
+        }
+      ]
+    },
+    {
+      "time": 45.00000000000037,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.109478142848506,
+          "z": 59.26761166101108,
+          "status": "acting",
+          "taskId": "task-119"
+        }
+      ]
+    },
+    {
+      "time": 46.000000000000384,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.109478142848506,
+          "z": 59.26761166101108,
+          "status": "acting",
+          "taskId": "task-119"
+        }
+      ]
+    },
+    {
+      "time": 47.0000000000004,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.109478142848506,
+          "z": 59.26761166101108,
+          "status": "acting",
+          "taskId": "task-119"
+        }
+      ]
+    },
+    {
+      "time": 48.00000000000041,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.109478142848506,
+          "z": 59.26761166101108,
+          "status": "acting",
+          "taskId": "task-119"
+        }
+      ]
+    },
+    {
+      "time": 49.000000000000426,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.272408208732125,
+          "z": 58.321538834199565,
+          "status": "walking",
+          "taskId": "task-120"
+        }
+      ]
+    },
+    {
+      "time": 50.00000000000044,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.35913338053812,
+          "z": 57.817958798180804,
+          "status": "acting",
+          "taskId": "task-120"
+        }
+      ]
+    },
+    {
+      "time": 51.000000000000455,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.35913338053812,
+          "z": 57.817958798180804,
+          "status": "acting",
+          "taskId": "task-120"
+        }
+      ]
+    },
+    {
+      "time": 52.00000000000047,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.35913338053812,
+          "z": 57.817958798180804,
+          "status": "acting",
+          "taskId": "task-120"
+        }
+      ]
+    },
+    {
+      "time": 53.00000000000048,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.35913338053812,
+          "z": 57.817958798180804,
+          "status": "acting",
+          "taskId": "task-120"
+        }
+      ]
+    },
+    {
+      "time": 54.0000000000005,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.35913338053812,
+          "z": 57.817958798180804,
+          "status": "acting",
+          "taskId": "task-120"
+        }
+      ]
+    },
+    {
+      "time": 55.00000000000051,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.35913338053812,
+          "z": 57.817958798180804,
+          "status": "acting",
+          "taskId": "task-120"
+        }
+      ]
+    },
+    {
+      "time": 56.000000000000526,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.35913338053812,
+          "z": 57.817958798180804,
+          "status": "acting",
+          "taskId": "task-120"
+        }
+      ]
+    },
+    {
+      "time": 57.00000000000054,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.395833973845017,
+          "z": 58.777257013779554,
+          "status": "walking",
+          "taskId": "task-121"
+        }
+      ]
+    },
+    {
+      "time": 58.000000000000554,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.468269278703412,
+          "z": 60.670606751096926,
+          "status": "acting",
+          "taskId": "task-121"
+        }
+      ]
+    },
+    {
+      "time": 59.00000000000057,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.468269278703412,
+          "z": 60.670606751096926,
+          "status": "acting",
+          "taskId": "task-121"
+        }
+      ]
+    },
+    {
+      "time": 60.00000000000058,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.468269278703412,
+          "z": 60.670606751096926,
+          "status": "acting",
+          "taskId": "task-121"
+        }
+      ]
+    },
+    {
+      "time": 61.0000000000006,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.468269278703412,
+          "z": 60.670606751096926,
+          "status": "acting",
+          "taskId": "task-121"
+        }
+      ]
+    },
+    {
+      "time": 62.00000000000061,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.468269278703412,
+          "z": 60.670606751096926,
+          "status": "acting",
+          "taskId": "task-121"
+        }
+      ]
+    },
+    {
+      "time": 63.000000000000625,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.468269278703412,
+          "z": 60.670606751096926,
+          "status": "acting",
+          "taskId": "task-121"
+        }
+      ]
+    },
+    {
+      "time": 64.00000000000064,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.468269278703412,
+          "z": 60.670606751096926,
+          "status": "acting",
+          "taskId": "task-121"
+        }
+      ]
+    },
+    {
+      "time": 65.00000000000058,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.468269278703412,
+          "z": 60.670606751096926,
+          "status": "acting",
+          "taskId": "task-121"
+        }
+      ]
+    },
+    {
+      "time": 66.00000000000053,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.481524409245981,
+          "z": 58.51064742242555,
+          "status": "walking",
+          "taskId": "task-122"
+        }
+      ]
+    },
+    {
+      "time": 67.00000000000047,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.494906593356331,
+          "z": 56.329984371665375,
+          "status": "acting",
+          "taskId": "task-122"
+        }
+      ]
+    },
+    {
+      "time": 68.00000000000041,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.494906593356331,
+          "z": 56.329984371665375,
+          "status": "acting",
+          "taskId": "task-122"
+        }
+      ]
+    },
+    {
+      "time": 69.00000000000036,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.494906593356331,
+          "z": 56.329984371665375,
+          "status": "acting",
+          "taskId": "task-122"
+        }
+      ]
+    },
+    {
+      "time": 70.0000000000003,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.494906593356331,
+          "z": 56.329984371665375,
+          "status": "acting",
+          "taskId": "task-122"
+        }
+      ]
+    },
+    {
+      "time": 71.00000000000024,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.494906593356331,
+          "z": 56.329984371665375,
+          "status": "acting",
+          "taskId": "task-122"
+        }
+      ]
+    },
+    {
+      "time": 72.00000000000018,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.494906593356331,
+          "z": 56.329984371665375,
+          "status": "acting",
+          "taskId": "task-122"
+        }
+      ]
+    },
+    {
+      "time": 73.00000000000013,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.494906593356331,
+          "z": 56.329984371665375,
+          "status": "acting",
+          "taskId": "task-122"
+        }
+      ]
+    },
+    {
+      "time": 74.00000000000007,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.494906593356331,
+          "z": 56.329984371665375,
+          "status": "acting",
+          "taskId": "task-122"
+        }
+      ]
+    },
+    {
+      "time": 75.00000000000001,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.496189487002056,
+          "z": 58.00998388183913,
+          "status": "walking",
+          "taskId": "task-123"
+        }
+      ]
+    },
+    {
+      "time": 75.99999999999996,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.498022192210236,
+          "z": 60.40998318208736,
+          "status": "walking",
+          "taskId": "task-123"
+        }
+      ]
+    },
+    {
+      "time": 76.9999999999999,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.499366189448839,
+          "z": 62.17000024199751,
+          "status": "acting",
+          "taskId": "task-123"
+        }
+      ]
+    },
+    {
+      "time": 77.99999999999984,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.499366189448839,
+          "z": 62.17000024199751,
+          "status": "acting",
+          "taskId": "task-123"
+        }
+      ]
+    },
+    {
+      "time": 78.99999999999979,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.499366189448839,
+          "z": 62.17000024199751,
+          "status": "acting",
+          "taskId": "task-123"
+        }
+      ]
+    },
+    {
+      "time": 79.99999999999973,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.499366189448839,
+          "z": 62.17000024199751,
+          "status": "acting",
+          "taskId": "task-123"
+        }
+      ]
+    },
+    {
+      "time": 80.99999999999967,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.499366189448839,
+          "z": 62.17000024199751,
+          "status": "acting",
+          "taskId": "task-123"
+        }
+      ]
+    },
+    {
+      "time": 81.99999999999962,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.499366189448839,
+          "z": 62.17000024199751,
+          "status": "acting",
+          "taskId": "task-123"
+        }
+      ]
+    },
+    {
+      "time": 82.99999999999956,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.499366189448839,
+          "z": 62.17000024199751,
+          "status": "acting",
+          "taskId": "task-123"
+        }
+      ]
+    },
+    {
+      "time": 83.9999999999995,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.499366189448839,
+          "z": 62.17000024199751,
+          "status": "acting",
+          "taskId": "task-123"
+        }
+      ]
+    },
+    {
+      "time": 84.99999999999945,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.499533757471584,
+          "z": 60.010000248497256,
+          "status": "walking",
+          "taskId": "task-124"
+        }
+      ]
+    },
+    {
+      "time": 85.99999999999939,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.499719944163525,
+          "z": 57.61000025571919,
+          "status": "walking",
+          "taskId": "task-124"
+        }
+      ]
+    },
+    {
+      "time": 86.99999999999933,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.499906130855466,
+          "z": 55.21000026294113,
+          "status": "walking",
+          "taskId": "task-124"
+        }
+      ]
+    },
+    {
+      "time": 87.99999999999928,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.499935610435704,
+          "z": 54.8299999975024,
+          "status": "acting",
+          "taskId": "task-124"
+        }
+      ]
+    },
+    {
+      "time": 88.99999999999922,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.499935610435704,
+          "z": 54.8299999975024,
+          "status": "acting",
+          "taskId": "task-124"
+        }
+      ]
+    },
+    {
+      "time": 89.99999999999916,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.499935610435704,
+          "z": 54.8299999975024,
+          "status": "acting",
+          "taskId": "task-124"
+        }
+      ]
+    },
+    {
+      "time": 90.9999999999991,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.499935610435704,
+          "z": 54.8299999975024,
+          "status": "acting",
+          "taskId": "task-124"
+        }
+      ]
+    },
+    {
+      "time": 91.99999999999905,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.499935610435704,
+          "z": 54.8299999975024,
+          "status": "acting",
+          "taskId": "task-124"
+        }
+      ]
+    },
+    {
+      "time": 92.99999999999899,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.499935610435704,
+          "z": 54.8299999975024,
+          "status": "acting",
+          "taskId": "task-124"
+        }
+      ]
+    },
+    {
+      "time": 93.99999999999893,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.499935610435704,
+          "z": 54.8299999975024,
+          "status": "acting",
+          "taskId": "task-124"
+        }
+      ]
+    },
+    {
+      "time": 94.99999999999888,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.972430357357947,
+          "z": 54.56856412748666,
+          "status": "walking",
+          "taskId": "task-125"
+        }
+      ]
+    },
+    {
+      "time": 95.99999999999882,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -14.273758074175067,
+          "z": 54.40183661502418,
+          "status": "acting",
+          "taskId": "task-125"
+        }
+      ]
+    },
+    {
+      "time": 96.99999999999876,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -14.273758074175067,
+          "z": 54.40183661502418,
+          "status": "acting",
+          "taskId": "task-125"
+        }
+      ]
+    },
+    {
+      "time": 97.9999999999987,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -14.273758074175067,
+          "z": 54.40183661502418,
+          "status": "acting",
+          "taskId": "task-125"
+        }
+      ]
+    },
+    {
+      "time": 98.99999999999865,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -14.273758074175067,
+          "z": 54.40183661502418,
+          "status": "acting",
+          "taskId": "task-125"
+        }
+      ]
+    },
+    {
+      "time": 99.9999999999986,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -14.273758074175067,
+          "z": 54.40183661502418,
+          "status": "acting",
+          "taskId": "task-125"
+        }
+      ]
+    },
+    {
+      "time": 100.99999999999854,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -14.273758074175067,
+          "z": 54.40183661502418,
+          "status": "acting",
+          "taskId": "task-125"
+        }
+      ]
+    },
+    {
+      "time": 101.99999999999848,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -14.273758074175067,
+          "z": 54.40183661502418,
+          "status": "acting",
+          "taskId": "task-125"
+        }
+      ]
+    },
+    {
+      "time": 102.99999999999842,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -14.561897236679659,
+          "z": 54.25367513881949,
+          "status": "walking",
+          "taskId": "task-126"
+        }
+      ]
+    },
+    {
+      "time": 103.99999999999837,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -15.522361111694966,
+          "z": 53.759803551470526,
+          "status": "walking",
+          "taskId": "task-126"
+        }
+      ]
+    },
+    {
+      "time": 104.99999999999831,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -16.482824986710273,
+          "z": 53.265931964121556,
+          "status": "walking",
+          "taskId": "task-126"
+        }
+      ]
+    },
+    {
+      "time": 105.99999999999825,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -17.498459112432517,
+          "z": 53,
+          "status": "walking",
+          "taskId": "task-126"
+        }
+      ]
+    },
+    {
+      "time": 106.9999999999982,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -18.578459112432522,
+          "z": 53,
+          "status": "walking",
+          "taskId": "task-126"
+        }
+      ]
+    },
+    {
+      "time": 107.99999999999814,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -19.658459112432528,
+          "z": 53,
+          "status": "walking",
+          "taskId": "task-126"
+        }
+      ]
+    },
+    {
+      "time": 108.99999999999808,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -20.738459112432533,
+          "z": 53,
+          "status": "walking",
+          "taskId": "task-126"
+        }
+      ]
+    },
+    {
+      "time": 109.99999999999802,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -21.81845911243254,
+          "z": 53,
+          "status": "walking",
+          "taskId": "task-126"
+        }
+      ]
+    },
+    {
+      "time": 110.99999999999797,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -22.898459112432544,
+          "z": 53,
+          "status": "walking",
+          "taskId": "task-126"
+        }
+      ]
+    },
+    {
+      "time": 111.99999999999791,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -23.97845911243255,
+          "z": 53,
+          "status": "walking",
+          "taskId": "task-126"
+        }
+      ]
+    },
+    {
+      "time": 112.99999999999785,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -25.026143709860698,
+          "z": 53.052287419721395,
+          "status": "walking",
+          "taskId": "task-126"
+        }
+      ]
+    },
+    {
+      "time": 113.9999999999978,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -25.509134393000643,
+          "z": 54.018268786001286,
+          "status": "walking",
+          "taskId": "task-126"
+        }
+      ]
+    },
+    {
+      "time": 114.99999999999774,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -25.99212507614059,
+          "z": 54.98425015228118,
+          "status": "walking",
+          "taskId": "task-126"
+        }
+      ]
+    },
+    {
+      "time": 115.99999999999768,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -26.475115759280534,
+          "z": 55.95023151856107,
+          "status": "walking",
+          "taskId": "task-126"
+        }
+      ]
+    },
+    {
+      "time": 116.99999999999763,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -26.95810644242048,
+          "z": 56.91621288484096,
+          "status": "walking",
+          "taskId": "task-126"
+        }
+      ]
+    },
+    {
+      "time": 117.99999999999757,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -27,
+          "z": 57.98632315743293,
+          "status": "walking",
+          "taskId": "task-126"
+        }
+      ]
+    },
+    {
+      "time": 118.99999999999751,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -27,
+          "z": 59.72632315743296,
+          "status": "walking",
+          "taskId": "task-126"
+        }
+      ]
+    },
+    {
+      "time": 119.99999999999746,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -27,
+          "z": 62.12632315743298,
+          "status": "walking",
+          "taskId": "task-126"
+        }
+      ]
+    },
+    {
+      "time": 120.9999999999974,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -26.689315619934344,
+          "z": 63.19561488485945,
+          "status": "walking",
+          "taskId": "task-126"
+        }
+      ]
+    },
+    {
+      "time": 121.99999999999734,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -25.775382552667832,
+          "z": 63.77105067498448,
+          "status": "walking",
+          "taskId": "task-126"
+        }
+      ]
+    },
+    {
+      "time": 122.99999999999729,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -24.86144948540132,
+          "z": 64.3464864651095,
+          "status": "walking",
+          "taskId": "task-126"
+        }
+      ]
+    },
+    {
+      "time": 123.99999999999723,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -23.947516418134807,
+          "z": 64.92192225523453,
+          "status": "walking",
+          "taskId": "task-126"
+        }
+      ]
+    },
+    {
+      "time": 124.99999999999717,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -23.033583350868295,
+          "z": 65.49735804535956,
+          "status": "walking",
+          "taskId": "task-126"
+        }
+      ]
+    },
+    {
+      "time": 125.99999999999712,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -22.119650283601782,
+          "z": 66.07279383548459,
+          "status": "walking",
+          "taskId": "task-126"
+        }
+      ]
+    },
+    {
+      "time": 126.99999999999706,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -21.20571721633527,
+          "z": 66.64822962560962,
+          "status": "walking",
+          "taskId": "task-126"
+        }
+      ]
+    },
+    {
+      "time": 127.999999999997,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -20.291784149068757,
+          "z": 67.22366541573464,
+          "status": "walking",
+          "taskId": "task-126"
+        }
+      ]
+    },
+    {
+      "time": 128.99999999999696,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -19.377851081802245,
+          "z": 67.79910120585967,
+          "status": "walking",
+          "taskId": "task-126"
+        }
+      ]
+    },
+    {
+      "time": 129.9999999999969,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -18.463918014535732,
+          "z": 68.3745369959847,
+          "status": "walking",
+          "taskId": "task-126"
+        }
+      ]
+    },
+    {
+      "time": 130.99999999999685,
+      "targetHp": 60,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -17.549984947269238,
+          "z": 68.94997278610974,
+          "status": "walking",
+          "taskId": "task-126"
+        }
+      ]
+    },
+    {
+      "time": 131.9999999999968,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -16.932723677290944,
+          "z": 68.57739728388245,
+          "status": "walking",
+          "taskId": "task-127"
+        }
+      ]
+    },
+    {
+      "time": 132.99999999999673,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -16.45991271209209,
+          "z": 67.60639275701982,
+          "status": "walking",
+          "taskId": "task-127"
+        }
+      ]
+    },
+    {
+      "time": 133.99999999999667,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -15.987101746893236,
+          "z": 66.63538823015719,
+          "status": "walking",
+          "taskId": "task-127"
+        }
+      ]
+    },
+    {
+      "time": 134.99999999999662,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -15.514290781694362,
+          "z": 65.66438370329456,
+          "status": "walking",
+          "taskId": "task-127"
+        }
+      ]
+    },
+    {
+      "time": 135.99999999999656,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -15.041479816495487,
+          "z": 64.69337917643193,
+          "status": "walking",
+          "taskId": "task-127"
+        }
+      ]
+    },
+    {
+      "time": 136.9999999999965,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -14.568668851296612,
+          "z": 63.7223746495693,
+          "status": "walking",
+          "taskId": "task-127"
+        }
+      ]
+    },
+    {
+      "time": 137.99999999999645,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -14.095857886097738,
+          "z": 62.751370122706675,
+          "status": "walking",
+          "taskId": "task-127"
+        }
+      ]
+    },
+    {
+      "time": 138.9999999999964,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.623046920898863,
+          "z": 61.780365595844046,
+          "status": "walking",
+          "taskId": "task-127"
+        }
+      ]
+    },
+    {
+      "time": 139.99999999999633,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.331904612975537,
+          "z": 60.755111594180654,
+          "status": "walking",
+          "taskId": "task-127"
+        }
+      ]
+    },
+    {
+      "time": 140.99999999999628,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.194856499172522,
+          "z": 59.6838423402099,
+          "status": "walking",
+          "taskId": "task-127"
+        }
+      ]
+    },
+    {
+      "time": 141.99999999999622,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.139021098461734,
+          "z": 59.24739161932967,
+          "status": "acting",
+          "taskId": "task-127"
+        }
+      ]
+    },
+    {
+      "time": 142.99999999999616,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.139021098461734,
+          "z": 59.24739161932967,
+          "status": "acting",
+          "taskId": "task-127"
+        }
+      ]
+    },
+    {
+      "time": 143.9999999999961,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.139021098461734,
+          "z": 59.24739161932967,
+          "status": "acting",
+          "taskId": "task-127"
+        }
+      ]
+    },
+    {
+      "time": 144.99999999999605,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.141053957016052,
+          "z": 59.25162994566447,
+          "status": "acting",
+          "taskId": "task-128"
+        }
+      ]
+    },
+    {
+      "time": 145.999999999996,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.141053957016052,
+          "z": 59.25162994566447,
+          "status": "acting",
+          "taskId": "task-128"
+        }
+      ]
+    },
+    {
+      "time": 146.99999999999594,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.141053957016052,
+          "z": 59.25162994566447,
+          "status": "acting",
+          "taskId": "task-128"
+        }
+      ]
+    },
+    {
+      "time": 147.99999999999588,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.141053957016052,
+          "z": 59.25162994566447,
+          "status": "acting",
+          "taskId": "task-128"
+        }
+      ]
+    },
+    {
+      "time": 148.99999999999582,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.2430674566846,
+          "z": 58.61171022735176,
+          "status": "walking",
+          "taskId": "task-129"
+        }
+      ]
+    },
+    {
+      "time": 149.99999999999577,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.369334560609728,
+          "z": 57.81965025648074,
+          "status": "acting",
+          "taskId": "task-129"
+        }
+      ]
+    },
+    {
+      "time": 150.9999999999957,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.369334560609728,
+          "z": 57.81965025648074,
+          "status": "acting",
+          "taskId": "task-129"
+        }
+      ]
+    },
+    {
+      "time": 151.99999999999565,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.369334560609728,
+          "z": 57.81965025648074,
+          "status": "acting",
+          "taskId": "task-129"
+        }
+      ]
+    },
+    {
+      "time": 152.9999999999956,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.369334560609728,
+          "z": 57.81965025648074,
+          "status": "acting",
+          "taskId": "task-129"
+        }
+      ]
+    },
+    {
+      "time": 153.99999999999554,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.399990303292908,
+          "z": 58.68310623418924,
+          "status": "walking",
+          "taskId": "task-130"
+        }
+      ]
+    },
+    {
+      "time": 154.99999999999548,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.438309981646883,
+          "z": 59.76242620632486,
+          "status": "walking",
+          "taskId": "task-130"
+        }
+      ]
+    },
+    {
+      "time": 155.99999999999542,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.470550617561296,
+          "z": 60.67052261400688,
+          "status": "acting",
+          "taskId": "task-130"
+        }
+      ]
+    },
+    {
+      "time": 156.99999999999537,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.470550617561296,
+          "z": 60.67052261400688,
+          "status": "acting",
+          "taskId": "task-130"
+        }
+      ]
+    },
+    {
+      "time": 157.9999999999953,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.470550617561296,
+          "z": 60.67052261400688,
+          "status": "acting",
+          "taskId": "task-130"
+        }
+      ]
+    },
+    {
+      "time": 158.99999999999525,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.470550617561296,
+          "z": 60.67052261400688,
+          "status": "acting",
+          "taskId": "task-130"
+        }
+      ]
+    },
+    {
+      "time": 159.9999999999952,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.474856443814168,
+          "z": 59.914534876103495,
+          "status": "walking",
+          "taskId": "task-131"
+        }
+      ]
+    },
+    {
+      "time": 160.99999999999514,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.481007624175415,
+          "z": 58.83455239338438,
+          "status": "walking",
+          "taskId": "task-131"
+        }
+      ]
+    },
+    {
+      "time": 161.99999999999508,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.487158804536675,
+          "z": 57.75456991066526,
+          "status": "walking",
+          "taskId": "task-131"
+        }
+      ]
+    },
+    {
+      "time": 162.99999999999503,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.493309984897932,
+          "z": 56.67458742794614,
+          "status": "walking",
+          "taskId": "task-131"
+        }
+      ]
+    },
+    {
+      "time": 163.99999999999497,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.495272703981628,
+          "z": 56.329986537645254,
+          "status": "acting",
+          "taskId": "task-131"
+        }
+      ]
+    },
+    {
+      "time": 164.9999999999949,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.495272703981628,
+          "z": 56.329986537645254,
+          "status": "acting",
+          "taskId": "task-131"
+        }
+      ]
+    },
+    {
+      "time": 165.99999999999486,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.495272703981628,
+          "z": 56.329986537645254,
+          "status": "acting",
+          "taskId": "task-131"
+        }
+      ]
+    },
+    {
+      "time": 166.9999999999948,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.495425791481265,
+          "z": 56.54598648339575,
+          "status": "walking",
+          "taskId": "task-132"
+        }
+      ]
+    },
+    {
+      "time": 167.99999999999474,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.496191228979455,
+          "z": 57.625986212148234,
+          "status": "walking",
+          "taskId": "task-132"
+        }
+      ]
+    },
+    {
+      "time": 168.99999999999469,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.496956666477656,
+          "z": 58.70598594090072,
+          "status": "walking",
+          "taskId": "task-132"
+        }
+      ]
+    },
+    {
+      "time": 169.99999999999463,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.497722103975857,
+          "z": 59.7859856696532,
+          "status": "walking",
+          "taskId": "task-132"
+        }
+      ]
+    },
+    {
+      "time": 170.99999999999457,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.498487541474057,
+          "z": 60.865985398405684,
+          "status": "walking",
+          "taskId": "task-132"
+        }
+      ]
+    },
+    {
+      "time": 171.99999999999451,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.499252978972258,
+          "z": 61.94598512715817,
+          "status": "walking",
+          "taskId": "task-132"
+        }
+      ]
+    },
+    {
+      "time": 172.99999999999446,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.499411747107866,
+          "z": 62.17000020845874,
+          "status": "acting",
+          "taskId": "task-132"
+        }
+      ]
+    },
+    {
+      "time": 173.9999999999944,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.499411747107866,
+          "z": 62.17000020845874,
+          "status": "acting",
+          "taskId": "task-132"
+        }
+      ]
+    },
+    {
+      "time": 174.99999999999434,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.499411747107866,
+          "z": 62.17000020845874,
+          "status": "acting",
+          "taskId": "task-132"
+        }
+      ]
+    },
+    {
+      "time": 175.9999999999943,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.499435075618477,
+          "z": 61.84600020929859,
+          "status": "walking",
+          "taskId": "task-133"
+        }
+      ]
+    },
+    {
+      "time": 176.99999999999423,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.499512837320514,
+          "z": 60.766000212098085,
+          "status": "walking",
+          "taskId": "task-133"
+        }
+      ]
+    },
+    {
+      "time": 177.99999999999417,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.499590599022552,
+          "z": 59.68600021489758,
+          "status": "walking",
+          "taskId": "task-133"
+        }
+      ]
+    },
+    {
+      "time": 178.99999999999412,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.49966836072459,
+          "z": 58.60600021769708,
+          "status": "walking",
+          "taskId": "task-133"
+        }
+      ]
+    },
+    {
+      "time": 179.99999999999406,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.499746122426627,
+          "z": 57.52600022049658,
+          "status": "walking",
+          "taskId": "task-133"
+        }
+      ]
+    },
+    {
+      "time": 180.999999999994,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.499823884128665,
+          "z": 56.446000223296075,
+          "status": "walking",
+          "taskId": "task-133"
+        }
+      ]
+    },
+    {
+      "time": 181.99999999999395,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.499901645830702,
+          "z": 55.36600022609557,
+          "status": "walking",
+          "taskId": "task-133"
+        }
+      ]
+    },
+    {
+      "time": 182.9999999999939,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.499940238691952,
+          "z": 54.829999997848546,
+          "status": "acting",
+          "taskId": "task-133"
+        }
+      ]
+    },
+    {
+      "time": 183.99999999999383,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.499940238691952,
+          "z": 54.829999997848546,
+          "status": "acting",
+          "taskId": "task-133"
+        }
+      ]
+    },
+    {
+      "time": 184.99999999999378,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.499940238691952,
+          "z": 54.829999997848546,
+          "status": "acting",
+          "taskId": "task-133"
+        }
+      ]
+    },
+    {
+      "time": 185.99999999999372,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.594439119726555,
+          "z": 54.777712700316464,
+          "status": "walking",
+          "taskId": "task-134"
+        }
+      ]
+    },
+    {
+      "time": 186.99999999999366,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -14.273758599456292,
+          "z": 54.401837564366886,
+          "status": "acting",
+          "taskId": "task-134"
+        }
+      ]
+    },
+    {
+      "time": 187.9999999999936,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -14.273758599456292,
+          "z": 54.401837564366886,
+          "status": "acting",
+          "taskId": "task-134"
+        }
+      ]
+    },
+    {
+      "time": 188.99999999999355,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -14.273758599456292,
+          "z": 54.401837564366886,
+          "status": "acting",
+          "taskId": "task-134"
+        }
+      ]
+    },
+    {
+      "time": 189.9999999999935,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -14.273758599456292,
+          "z": 54.401837564366886,
+          "status": "acting",
+          "taskId": "task-134"
+        }
+      ]
+    },
+    {
+      "time": 190.99999999999343,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -14.05186778362914,
+          "z": 55.23685880113369,
+          "status": "walking",
+          "taskId": "task-135"
+        }
+      ]
+    },
+    {
+      "time": 191.99999999999338,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.774504263845191,
+          "z": 56.2806353470922,
+          "status": "walking",
+          "taskId": "task-135"
+        }
+      ]
+    },
+    {
+      "time": 192.99999999999332,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.617680136405408,
+          "z": 57.34643300205115,
+          "status": "walking",
+          "taskId": "task-135"
+        }
+      ]
+    },
+    {
+      "time": 193.99999999999326,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.508073727841772,
+          "z": 58.42085677096258,
+          "status": "walking",
+          "taskId": "task-135"
+        }
+      ]
+    },
+    {
+      "time": 194.9999999999932,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.5,
+          "z": 58.5,
+          "status": "acting",
+          "taskId": "task-135"
+        }
+      ]
+    },
+    {
+      "time": 195.99999999999315,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.5,
+          "z": 58.5,
+          "status": "acting",
+          "taskId": "task-135"
+        }
+      ]
+    },
+    {
+      "time": 196.9999999999931,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.5,
+          "z": 58.5,
+          "status": "acting",
+          "taskId": "task-135"
+        }
+      ]
+    },
+    {
+      "time": 197.99999999999304,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.35963615168614,
+          "z": 58.60737351080882,
+          "status": "walking",
+          "taskId": "task-136"
+        }
+      ]
+    },
+    {
+      "time": 198.99999999999298,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.467941412025258,
+          "z": 59.68192921926832,
+          "status": "walking",
+          "taskId": "task-136"
+        }
+      ]
+    },
+    {
+      "time": 199.99999999999292,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.5,
+          "z": 60,
+          "status": "acting",
+          "taskId": "task-136"
+        }
+      ]
+    },
+    {
+      "time": 200.99999999999287,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.5,
+          "z": 60,
+          "status": "acting",
+          "taskId": "task-136"
+        }
+      ]
+    },
+    {
+      "time": 201.9999999999928,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.5,
+          "z": 60,
+          "status": "acting",
+          "taskId": "task-136"
+        }
+      ]
+    },
+    {
+      "time": 202.99999999999275,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.39200001590691,
+          "z": 59.99994138351547,
+          "status": "carrying",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 203.9999999999927,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.397180506966029,
+          "z": 59.02916292439686,
+          "status": "walking",
+          "taskId": "task-137"
+        }
+      ]
+    },
+    {
+      "time": 204.99999999999264,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.4518349503377,
+          "z": 57.950546731388584,
+          "status": "walking",
+          "taskId": "task-137"
+        }
+      ]
+    },
+    {
+      "time": 205.99999999999258,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.5,
+          "z": 57,
+          "status": "acting",
+          "taskId": "task-137"
+        }
+      ]
+    },
+    {
+      "time": 206.99999999999253,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.5,
+          "z": 57,
+          "status": "acting",
+          "taskId": "task-137"
+        }
+      ]
+    },
+    {
+      "time": 207.99999999999247,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.5,
+          "z": 57,
+          "status": "acting",
+          "taskId": "task-137"
+        }
+      ]
+    },
+    {
+      "time": 208.9999999999924,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.5,
+          "z": 57,
+          "status": "acting",
+          "taskId": "task-137"
+        }
+      ]
+    },
+    {
+      "time": 209.99999999999235,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.378965661003384,
+          "z": 57.307246883130794,
+          "status": "walking",
+          "taskId": "task-140"
+        }
+      ]
+    },
+    {
+      "time": 210.9999999999923,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.410129588631637,
+          "z": 58.386797164319596,
+          "status": "walking",
+          "taskId": "task-140"
+        }
+      ]
+    },
+    {
+      "time": 211.99999999999224,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.441293516259906,
+          "z": 59.4663474455084,
+          "status": "walking",
+          "taskId": "task-140"
+        }
+      ]
+    },
+    {
+      "time": 212.99999999999218,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.472457443888176,
+          "z": 60.5458977266972,
+          "status": "walking",
+          "taskId": "task-140"
+        }
+      ]
+    },
+    {
+      "time": 213.99999999999213,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.5,
+          "z": 61.5,
+          "status": "acting",
+          "taskId": "task-140"
+        }
+      ]
+    },
+    {
+      "time": 214.99999999999207,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.5,
+          "z": 61.5,
+          "status": "acting",
+          "taskId": "task-140"
+        }
+      ]
+    },
+    {
+      "time": 215.999999999992,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.5,
+          "z": 61.5,
+          "status": "acting",
+          "taskId": "task-140"
+        }
+      ]
+    },
+    {
+      "time": 216.99999999999196,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.5,
+          "z": 61.5,
+          "status": "acting",
+          "taskId": "task-140"
+        }
+      ]
+    },
+    {
+      "time": 217.9999999999919,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.415663266411272,
+          "z": 61.07998414872023,
+          "status": "walking",
+          "taskId": "task-142"
+        }
+      ]
+    },
+    {
+      "time": 218.99999999999184,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.431984687433637,
+          "z": 60.00010748390346,
+          "status": "walking",
+          "taskId": "task-142"
+        }
+      ]
+    },
+    {
+      "time": 219.9999999999918,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.448306108455991,
+          "z": 58.9202308190867,
+          "status": "walking",
+          "taskId": "task-142"
+        }
+      ]
+    },
+    {
+      "time": 220.99999999999173,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.464627529478346,
+          "z": 57.84035415426993,
+          "status": "walking",
+          "taskId": "task-142"
+        }
+      ]
+    },
+    {
+      "time": 221.99999999999167,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.480948950500698,
+          "z": 56.760477489453166,
+          "status": "walking",
+          "taskId": "task-142"
+        }
+      ]
+    },
+    {
+      "time": 222.99999999999162,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.497270371523053,
+          "z": 55.6806008246364,
+          "status": "walking",
+          "taskId": "task-142"
+        }
+      ]
+    },
+    {
+      "time": 223.99999999999156,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.5,
+          "z": 55.5,
+          "status": "acting",
+          "taskId": "task-142"
+        }
+      ]
+    },
+    {
+      "time": 224.9999999999915,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.5,
+          "z": 55.5,
+          "status": "acting",
+          "taskId": "task-142"
+        }
+      ]
+    },
+    {
+      "time": 225.99999999999145,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.5,
+          "z": 55.5,
+          "status": "acting",
+          "taskId": "task-142"
+        }
+      ]
+    },
+    {
+      "time": 226.9999999999914,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.701174565628602,
+          "z": 55.578643462183095,
+          "status": "carrying",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 227.99999999999133,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.680565430162476,
+          "z": 56.57663039361167,
+          "status": "walking",
+          "taskId": "task-144"
+        }
+      ]
+    },
+    {
+      "time": 228.99999999999127,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.610001176112233,
+          "z": 57.6533997549809,
+          "status": "walking",
+          "taskId": "task-144"
+        }
+      ]
+    },
+    {
+      "time": 229.99999999999122,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.587785912398443,
+          "z": 58.73317125027899,
+          "status": "walking",
+          "taskId": "task-144"
+        }
+      ]
+    },
+    {
+      "time": 230.99999999999116,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.56557064868466,
+          "z": 59.81294274557708,
+          "status": "walking",
+          "taskId": "task-144"
+        }
+      ]
+    },
+    {
+      "time": 231.9999999999911,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.543355384970887,
+          "z": 60.89271424087517,
+          "status": "walking",
+          "taskId": "task-144"
+        }
+      ]
+    },
+    {
+      "time": 232.99999999999105,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.521140121257112,
+          "z": 61.97248573617326,
+          "status": "walking",
+          "taskId": "task-144"
+        }
+      ]
+    },
+    {
+      "time": 233.999999999991,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.5,
+          "z": 63,
+          "status": "acting",
+          "taskId": "task-144"
+        }
+      ]
+    },
+    {
+      "time": 234.99999999999093,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.5,
+          "z": 63,
+          "status": "acting",
+          "taskId": "task-144"
+        }
+      ]
+    },
+    {
+      "time": 235.99999999999088,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.5,
+          "z": 63,
+          "status": "acting",
+          "taskId": "task-144"
+        }
+      ]
+    },
+    {
+      "time": 236.99999999999082,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.5,
+          "z": 63,
+          "status": "acting",
+          "taskId": "task-144"
+        }
+      ]
+    },
+    {
+      "time": 237.99999999999076,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.89605883904269,
+          "z": 62.82748508465597,
+          "status": "carrying",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 238.9999999999907,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.745069991187608,
+          "z": 61.866118124251656,
+          "status": "walking",
+          "taskId": "task-146"
+        }
+      ]
+    },
+    {
+      "time": 239.99999999999065,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.643426952154275,
+          "z": 60.79353292919234,
+          "status": "walking",
+          "taskId": "task-146"
+        }
+      ]
+    },
+    {
+      "time": 240.9999999999906,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.620630772379142,
+          "z": 59.713773542019595,
+          "status": "walking",
+          "taskId": "task-146"
+        }
+      ]
+    },
+    {
+      "time": 241.99999999999054,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.59783459260401,
+          "z": 58.63401415484685,
+          "status": "walking",
+          "taskId": "task-146"
+        }
+      ]
+    },
+    {
+      "time": 242.99999999999048,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.575038412828876,
+          "z": 57.55425476767411,
+          "status": "walking",
+          "taskId": "task-146"
+        }
+      ]
+    },
+    {
+      "time": 243.99999999999042,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.552242233053743,
+          "z": 56.47449538050137,
+          "status": "walking",
+          "taskId": "task-146"
+        }
+      ]
+    },
+    {
+      "time": 244.99999999999037,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.52944605327861,
+          "z": 55.394735993328624,
+          "status": "walking",
+          "taskId": "task-146"
+        }
+      ]
+    },
+    {
+      "time": 245.9999999999903,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.506649873503477,
+          "z": 54.31497660615588,
+          "status": "walking",
+          "taskId": "task-146"
+        }
+      ]
+    },
+    {
+      "time": 246.99999999999025,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.5,
+          "z": 54,
+          "status": "acting",
+          "taskId": "task-146"
+        }
+      ]
+    },
+    {
+      "time": 247.9999999999902,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.5,
+          "z": 54,
+          "status": "acting",
+          "taskId": "task-146"
+        }
+      ]
+    },
+    {
+      "time": 248.99999999999014,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.5,
+          "z": 54,
+          "status": "acting",
+          "taskId": "task-146"
+        }
+      ]
+    },
+    {
+      "time": 250,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -13.592989991290079,
+          "z": 54.054925963986726,
+          "status": "carrying",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 250.99999999999994,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -14.432720385657886,
+          "z": 54.33175081614824,
+          "status": "walking",
+          "taskId": "task-148"
+        }
+      ]
+    },
+    {
+      "time": 251.9999999999999,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -15,
+          "z": 54,
+          "status": "acting",
+          "taskId": "task-148"
+        }
+      ]
+    },
+    {
+      "time": 252.99999999999983,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -15,
+          "z": 54,
+          "status": "acting",
+          "taskId": "task-148"
+        }
+      ]
+    },
+    {
+      "time": 253.99999999999977,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -15,
+          "z": 54,
+          "status": "acting",
+          "taskId": "task-148"
+        }
+      ]
+    },
+    {
+      "time": 254.99999999999972,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -15,
+          "z": 54,
+          "status": "acting",
+          "taskId": "task-148"
+        }
+      ]
+    },
+    {
+      "time": 255.99999999999966,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -14.933586978356812,
+          "z": 53.9027596208033,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 256.9999999999999,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -14.933586978356812,
+          "z": 53.9027596208033,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 258.0000000000001,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -14.933586978356812,
+          "z": 53.9027596208033,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 259.00000000000034,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -14.933586978356812,
+          "z": 53.9027596208033,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 260.00000000000057,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -14.933586978356812,
+          "z": 53.9027596208033,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 261.0000000000008,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -14.933586978356812,
+          "z": 53.9027596208033,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 262.000000000001,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -14.933586978356812,
+          "z": 53.9027596208033,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 263.00000000000125,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -14.933586978356812,
+          "z": 53.9027596208033,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 264.0000000000015,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -14.933586978356812,
+          "z": 53.9027596208033,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 265.0000000000017,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -14.933586978356812,
+          "z": 53.9027596208033,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 266.00000000000193,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -14.933586978356812,
+          "z": 53.9027596208033,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 267.00000000000216,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -14.933586978356812,
+          "z": 53.9027596208033,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 268.0000000000024,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -15.539418596762827,
+          "z": 53.28675308663379,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 269.0000000000026,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -16.29670811977034,
+          "z": 52.516744918921894,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 270.00000000000284,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 271.00000000000307,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 272.0000000000033,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 273.0000000000035,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 274.00000000000375,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 275.000000000004,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 276.0000000000042,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 277.00000000000443,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 278.00000000000466,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 279.0000000000049,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 280.0000000000051,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 281.00000000000534,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 282.00000000000557,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 283.0000000000058,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 284.000000000006,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 285.00000000000625,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 286.0000000000065,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 287.0000000000067,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 288.00000000000693,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 289.00000000000716,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 290.0000000000074,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 291.0000000000076,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 292.00000000000784,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 293.0000000000081,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 294.0000000000083,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 295.0000000000085,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 296.00000000000875,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 297.000000000009,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 298.0000000000092,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 299.00000000000944,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "idle",
+          "taskId": null
+        }
+      ]
+    },
+    {
+      "time": 300,
+      "targetHp": 100,
+      "workers": [
+        {
+          "id": "worker-117",
+          "x": -16.669204008081422,
+          "z": 52.13799297831728,
+          "status": "returning",
+          "taskId": null
+        }
+      ]
+    }
+  ],
+  "sourceHashes": {
+    "tools/probe-native-canyon-paid-repair-day.mjs": "a573493ea494a65224332f7065a90cbba634698d81da17a2314acde0ceb0f551",
+    "src/simulation/game.js": "b216594fd241d10746d7d9b3a7802f7a6eca41c2709d25edd6501f5834e80c6f",
+    "src/simulation/tasks.js": "97909386cb23254856ca20157250b58cbf868152c5b36495600dd803bec70f92",
+    "src/simulation/rules.js": "8a1852489bccf1e31bbb59ed0bd9cf31f0b2bfe7aeb0798513155cbba1af4435",
+    "src/simulation/money.js": "f98e4454e9899e42e61ff4e1b37785de8a6a759a44a909bcd47abae7842938f9",
+    "src/world/work-points.js": "cb741c085c97c046f6e0e477bb83b6f81c2e953c7c3ed14cf0d4a42920ba7939",
+    "src/world/navigation.js": "21b82f33c62581436a6cef702b66af272ae9d3b096cb2b20ee858f0a50196743",
+    "src/persistence/snapshots.js": "0b95f044daec22d7e0de3fc840ab7c5d551e870733fa1addddf3ad0239c53457",
+    "public/content/biome-canyons.json": "a0da0d39766ef48e44ef82bc9b9ab6093bce0ae2bf6abd3035a626792823ff6d"
+  },
+  "scope": "Actual day-2 hire and repair request on retained native night damage. No damage edits, cash grants, forced completion or path overrides. Normal crop deliveries and worker movement, passive reload at second 25, exact ledger reconciliation. Single paid functional repair, not maintenance calibration or long campaign acceptance."
+}
