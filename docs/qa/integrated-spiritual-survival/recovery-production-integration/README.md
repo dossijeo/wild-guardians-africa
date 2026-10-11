@@ -1,0 +1,11 @@
+# Recovery candidate integrated with current production
+
+Experimental branch codex/raid-recovery-validation, integration 4d4cf2df76282ac7973cf6245c53d391280a2362; current main 93dff2380345a03890986a2295156642a69d4e5a is an ancestor. Main PR 23 worker seam/invalid-origin recovery and tutorial interruption fixes, PR 22 presentation settlement observers/Game Juice, and PR 24 camera/library/native exit changes are preserved. This is not a balance merge into main.
+
+Normalized three-way merging resolved line-ending-only conflicts in game.js and tutorial/controller.js without discarding either branch. main.js preserves both GameJuice disposal and manual magic activity cleanup. Current native seam recovery is retained exactly. Post-jam documentation records actual PR 24 integration; the SFX inventory was regenerated for combined source locations, with all 126 original byte files, 100 assignments and 26 pending entries unchanged.
+
+48 focused tests passed after PR 23 integration; 74 targeted tests passed after PR 24 integration (camera, native exit contract, gate return, tutorial interruption, agricultural budgets, military pressure, individual target reservations, presentation and SFX audit). Web build passes in 20.20 seconds; Vite still reports large bundles. These local tests are separate from PR 24's production CI, not a claim that the experimental full suite passes.
+
+Economic, crop, agricultural power, workforce, rule and raid sources match prior technical head 28db1c01 ignoring line endings. Military candidate 4 and committed-target fix remain unchanged. No prices, wages, productivity, magic budgets, animal hit budgets or virtual-player policy were altered during this synchronization.
+
+Live baseline and recovery campaigns continue in their original frozen worktrees and do not contain these new production fixes or gate-animation cache candidate. Do not attribute their results to this combined source or patch them in place. Existing campaign provenance launchers intentionally reject new non-military source differences; future campaigns need an explicitly reviewed, frozen technical baseline and native performance validation. Full suite, all-biome cache validation and statistical balance acceptance remain pending.
