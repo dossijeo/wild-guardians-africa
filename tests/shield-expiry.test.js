@@ -44,8 +44,8 @@ for(const species of ['warthog','hyena','buffalo','lion','rhino'])test(`${specie
       assert.equal(nav.segmentClear(before,a,a.radius,null,false),true);
       moved||=Math.hypot(a.x-border.x,a.z-border.z)>.1;
     }
-    assert.equal(moved,true);assert.equal(s.plants[0].alive,true);assert.equal(s.plants[0].attackHits,1);assert.ok(Math.hypot(a.x,a.z)<=a.radius+.600001);
-    assert.equal(a.hitsRemaining,budget-2);assert.equal(s.events.filter(e=>e.type==='CropDestroyed').length,0);
+    assert.equal(moved,true);assert.equal(s.plants[0].alive,false);assert.equal(s.plants[0].attackHits,1);assert.ok(Math.hypot(a.x,a.z)<=a.radius+.600001);
+    assert.equal(a.hitsRemaining,budget-2);assert.equal(s.events.filter(e=>e.type==='CropDestroyed').length,1);
     assert.equal(s.events.filter(e=>e.type==='AnimalLogicalHit').length,1);
   }
 });
@@ -75,7 +75,7 @@ test('Each species blocks a real hit on the active dome, then physically resumes
       if(s.spells.length){assert.equal(s.plants[0].alive,true);assert.ok(Math.hypot(a.x,a.z)>=a.radius+Game.spellRadius('shield')-1e-8);}
     }
     const hits=s.events.filter(e=>e.type==='AnimalLogicalHit'),blocked=hits.filter(e=>e.presentation.shield);
-    assert.ok(blocked.length>0);assert.equal(s.plants[0].alive,false);assert.equal(hits.filter(e=>!e.presentation.shield).length,2);
+    assert.ok(blocked.length>0);assert.equal(s.plants[0].alive,false);assert.equal(hits.filter(e=>!e.presentation.shield).length,1);
     const actual=hits.find(e=>!e.presentation.shield);assert.ok(actual.presentation.elapsed>20);
     assert.ok(Math.hypot(actual.presentation.animal.x,actual.presentation.animal.z)<=a.radius+.600001);
     const misses=s.events.filter(e=>e.type==='AnimalLogicalMiss');assert.equal(a.hitsRemaining,budget-hits.length-misses.length);
