@@ -95,6 +95,18 @@
  html[data-library-lab=walls] .sidebar{grid-row:2;grid-column:1;display:block}
  html[data-library-lab=walls] .stage{grid-row:2;grid-column:2}
  html[data-library-lab=walls] .material-list{gap:4px}
+ html[data-library-lab=walls] .material-list{grid-template-columns:minmax(0,1fr)}
+ html[data-library-lab=walls] .material{flex-direction:row;text-align:left;height:54px;gap:6px;padding:4px}
+ html[data-library-lab=walls] .material-image{width:48px;height:44px;flex:none}
+ html[data-library-lab=walls] .material-text{flex:1;min-width:0;overflow:visible}
+ html[data-library-lab=walls] .material-name{font-size:10px;white-space:normal}
+ html[data-library-lab=walls] .material[data-material=reforzado] .material-name{font-size:10px}
+ html[data-library-lab=walls] .tools{grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+ html[data-library-lab=walls] .tool{padding:3px;font-size:10px;gap:3px;min-width:0}
+ html[data-library-lab=walls] .canvas-controls{top:58px;right:7px;bottom:7px;overflow-y:auto}
+ html[data-library-lab=walls] .control-group{display:grid;grid-template-columns:repeat(2,34px);padding:3px}
+ html[data-library-lab=walls] .control{width:34px;height:34px}
+ html[data-library-lab=walls] .control-sep{display:none}
  html[data-library-lab=destruction] #sceneHost{inset:0 222px 0 0}
  html[data-library-lab=destruction] aside{top:64px;bottom:6px;left:auto;right:6px;width:210px;max-height:none;padding:10px}
  html[data-library-lab=destruction] .lab-controls-toggle{top:8px;right:225px}

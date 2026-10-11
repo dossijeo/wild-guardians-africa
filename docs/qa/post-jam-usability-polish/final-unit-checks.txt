@@ -1,0 +1,114 @@
+TAP version 13
+# Subtest: registry preserves independent center and village horizontal/vertical margins through damage
+ok 1 - registry preserves independent center and village horizontal/vertical margins through damage
+  ---
+  duration_ms: 40.8992
+  ...
+# Subtest: shared ancestors update once per sync while parent moves, reparenting and manual matrices stay observable
+ok 2 - shared ancestors update once per sync while parent moves, reparenting and manual matrices stay observable
+  ---
+  duration_ms: 14.1397
+  ...
+# Subtest: registry updates native state, transform, replacement and removal without rebuilding idle volumes
+ok 3 - registry updates native state, transform, replacement and removal without rebuilding idle volumes
+  ---
+  duration_ms: 3.4092
+  ...
+# Subtest: village registry uses independent unit boxes and excludes unrelated decorative meshes
+ok 4 - village registry uses independent unit boxes and excludes unrelated decorative meshes
+  ---
+  duration_ms: 6.2598
+  ...
+# Subtest: pose resolver keeps desired eye separate from correction through synchronous updates and focus
+ok 5 - pose resolver keeps desired eye separate from correction through synchronous updates and focus
+  ---
+  duration_ms: 77.8745
+  ...
+# (node:35392) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: terrain floor and a tall house cannot bounce recovery below ground forever
+ok 6 - terrain floor and a tall house cannot bounce recovery below ground forever
+  ---
+  duration_ms: 9.1509
+  ...
+# Subtest: recovery respects ceiling and finite roofs still allow overflight
+ok 7 - recovery respects ceiling and finite roofs still allow overflight
+  ---
+  duration_ms: 1.7445
+  ...
+# Subtest: candidate terrain height is resampled after lateral recovery on a cliff
+ok 8 - candidate terrain height is resampled after lateral recovery on a cliff
+  ---
+  duration_ms: 3.8447
+  ...
+# Subtest: overlapping buildings expand the encountered envelope without scanning the scene
+ok 9 - overlapping buildings expand the encountered envelope without scanning the scene
+  ---
+  duration_ms: 3.0516
+  ...
+# Subtest: clear poses remain stable and retain the native altitude range
+ok 10 - clear poses remain stable and retain the native altitude range
+  ---
+  duration_ms: 5.2373
+  ...
+# Subtest: bounded recovery reports unresolved pathological nesting rather than claiming safety
+ok 11 - bounded recovery reports unresolved pathological nesting rather than claiming safety
+  ---
+  duration_ms: 16.4685
+  ...
+# Subtest: scene resolver reconciles terrain after focus recovery and remains stable while idle
+ok 12 - scene resolver reconciles terrain after focus recovery and remains stable while idle
+  ---
+  duration_ms: 87.381
+  ...
+# (node:21160) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: wall volumes follow finite native part envelopes, gate hinge and deletion
+ok 13 - wall volumes follow finite native part envelopes, gate hinge and deletion
+  ---
+  duration_ms: 12.6093
+  ...
+# Subtest: contextual height permits tall roof overflight and preserves intent leaving its neighborhood
+ok 14 - contextual height permits tall roof overflight and preserves intent leaving its neighborhood
+  ---
+  duration_ms: 1764.2445
+  ...
+# Subtest: indexed neighborhood query excludes distant populations and retains large intersecting bounds
+ok 15 - indexed neighborhood query excludes distant populations and retains large intersecting bounds
+  ---
+  duration_ms: 12.8069
+  ...
+# Subtest: building focus has a contextual visual distance with a gradual boundary and crops stay close
+ok 16 - building focus has a contextual visual distance with a gradual boundary and crops stay close
+  ---
+  duration_ms: 14.5481
+  ...
+# Subtest: web exit never invokes native APIs or saves
+ok 17 - web exit never invokes native APIs or saves
+  ---
+  duration_ms: 5.5687
+  ...
+# Subtest: native exit waits for committed persistence and coalesces clicks
+ok 18 - native exit waits for committed persistence and coalesces clicks
+  ---
+  duration_ms: 1.6177
+  ...
+# Subtest: failed save prevents native exit and permits retry
+ok 19 - failed save prevents native exit and permits retry
+  ---
+  duration_ms: 0.5176
+  ...
+# Subtest: native failure is reported rather than hidden
+ok 20 - native failure is reported rather than hidden
+  ---
+  duration_ms: 0.99
+  ...
+1..20
+# tests 20
+# suites 0
+# pass 20
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3182.7305

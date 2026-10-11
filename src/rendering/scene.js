@@ -221,7 +221,7 @@ export class WorldScene {
   }
   setCameraExclusion(enabled,options={}){
     this.releaseCameraExclusion?.();this.releaseCameraExclusion=null;this.cameraExclusion=null;
-    if(!enabled)return;
+    if(!enabled){if(this.controls)this.controls.maxDistance=65;return;}
     const registry=new CameraBuildingRegistry(options),motion=new CameraExclusionMotion(registry.index,options);let last=performance.now();
     const trees=options.trees?new CameraTreeRegistry(registry.index,options.trees===true?{}:options.trees):null;
     const walls=new CameraWallRegistry(registry.index,options.walls);
@@ -250,6 +250,21 @@ export class WorldScene {
       // Descending remains a player action; crossing its edge cannot slam the
       // camera down onto the roof merely because the ordinary ceiling resumes.
       clearance=Math.max(20,roofCache.roof,previous?.altitude??20);if(this.controls)this.controls.maxDistance=Math.max(65,clearance+4);return clearance;
+    };
+    resolve.minimumDistance=target=>{
+      // Only a large building at the point of interest restricts close zoom.
+      // Nearby crops/NPCs retain the ordinary four-metre orbital distance.
+      let minimum=4;const ground=this.nav.field.surface(target[0],target[2]);
+      for(const box of registry.index.queryXZ(target[0]-3,target[2]-3,target[0]+3,target[2]+3)){
+        if(String(box.id).startsWith('camera-tree:')||String(box.id).startsWith('camera-wall:'))continue;
+        const cx=(box.min[0]+box.max[0])/2,cz=(box.min[2]+box.max[2])/2,c=Math.cos(box.yaw??0),s=Math.sin(box.yaw??0),dx=target[0]-cx,dz=target[2]-cz;
+        const x=c*dx-s*dz+cx,z=s*dx+c*dz+cz;
+        const separation=Math.hypot(Math.max(box.min[0]-x,x-box.max[0],0),Math.max(box.min[2]-z,z-box.max[2],0));
+        const weight=Math.max(0,1-separation/3);
+        const span=Math.max(box.worldMax[0]-box.worldMin[0],box.worldMax[2]-box.worldMin[2]);
+        minimum=Math.max(minimum,4+Math.max(0,box.worldMax[1]-ground+span*.45-4)*weight);
+      }
+      return minimum;
     };
     this.cameraVolumesDirty=true;
     const release=installCameraPoseResolver(this.camera,resolve);
@@ -496,7 +511,7 @@ export class WorldScene {
     this.raidEntryPreparer?.update(s);
     this.prepareUpcomingAnimalRigs(s);
     const desired=new Set();
-    for(const v of s.villages){desired.add(v.id);if(!this.objects.has(v.id)){const mesh=this.villageMesh(v);this.objects.set(v.id,mesh);this.scene.add(mesh);}}
+    for(const v of s.villages){desired.add(v.id);if(!this.objects.has(v.id)){const mesh=this.villageMesh(v);this.objects.set(v.id,mesh);this.scene.add(mesh);this.cameraVolumesDirty=true;}}
     const visiblePlants=s.plants.filter(p=>p.alive&&Math.hypot(p.x-this.controls.target.x,p.z-this.controls.target.z)<140);
     if(visiblePlants.length>this.cropBatch.capacity)loadingSyncWitness(this.onLoadingSpan,'sync-crop-resize',()=>{this.cropBatch.dispose();this.cropBatch=createCropBatch(this.scene,this.renderer,this.cropGltf,this.cropBridgeData,2**Math.ceil(Math.log2(visiblePlants.length)));});
     if(this.onLoadingSpan)loadingSyncWitness(this.onLoadingSpan,'sync-crop-update',()=>this.cropBatch.update(visiblePlants,s.elapsed,(x,z)=>this.nav.field.surface(x,z),this.renderOrigin,this.nav.field));

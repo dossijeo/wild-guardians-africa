@@ -31,6 +31,8 @@ jobs:
         with:
           workspaces: src-tauri -> target
       - run: npm ci
+      - name: Measure isolated camera resolver CPU cost
+        run: node tools/benchmark_camera_usability.mjs "${{ runner.temp }}/camera-usability-cpu.json"
       - id: desktop-build
         run: npm run desktop:build
       - name: Check Windows executable and installer
@@ -82,12 +84,15 @@ jobs:
           $binary = (Resolve-Path src-tauri/target/release/wild-guardians-africa.exe).Path
           foreach ($stage in @('create', 'restore')) {
             $report = Join-Path $env:RUNNER_TEMP "desktop-exit-$stage.json"
+            $started = Get-Date
             $process = Start-Process -FilePath $binary -ArgumentList '--exit-qa-report', $report, '--exit-qa-stage', $stage, '--exit-qa-fixture', $fixture -WindowStyle Hidden -PassThru
             if (-not $process.WaitForExit(420000)) { Stop-Process -Id $process.Id; throw "Menu exit $stage did not terminate application" }
             if (-not (Test-Path -LiteralPath $report)) { throw "Missing exit report $stage" }
             $result = Get-Content -Raw -LiteralPath $report | ConvertFrom-Json
             if ($process.ExitCode -ne 0 -or -not $result.ok -or -not $result.checks.exitButtonFound) { throw "Native menu exit failed: $stage" }
             if ($stage -eq 'restore' -and -not $result.checks.restartRestored) { throw 'Native persistence restart failed' }
+            $result | Add-Member -NotePropertyName nativeProcess -NotePropertyValue @{ exited = $true; exitCode = $process.ExitCode; elapsedMs = ((Get-Date) - $started).TotalMilliseconds }
+            $result | ConvertTo-Json -Depth 100 | Set-Content -LiteralPath $report
             "Native menu exit ${stage}: process ended with code 0" >> $env:GITHUB_STEP_SUMMARY
           }
       - uses: actions/upload-artifact@v7
@@ -131,4 +136,10 @@ jobs:
         with:
           name: windows-cargo-lock
           path: src-tauri/Cargo.lock
+          retention-days: 7
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          path: ${{ runner.temp }}/camera-usability-cpu.json
+          archive: false
           retention-days: 7

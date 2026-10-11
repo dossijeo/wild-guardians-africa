@@ -6,7 +6,7 @@ function updateSharedParent(node,parents){
  updateSharedParent(node.parent,parents);node.updateWorldMatrix(false,false);parents.add(node);
 }
 export class CameraBuildingRegistry {
- constructor({centerMargin=.6,villageMargin=.6,...indexOptions}={}){
+ constructor({centerMargin=null,villageMargin=null,...indexOptions}={}){
   this.index=new CameraVolumeIndex(indexOptions);this.roots=new Map();this.centerMargin=centerMargin;this.villageMargin=villageMargin;this.revisions=0;
  }
  remove(id){const record=this.roots.get(id);if(!record)return;for(const key of record.ids)this.index.delete(key);this.roots.delete(id);}
@@ -18,7 +18,13 @@ export class CameraBuildingRegistry {
    const old=this.roots.get(entity.id),matrix=root.matrixWorld.elements;
    if(old?.root===root&&old.state===state&&old.ash===ash&&old.matrix.every((x,i)=>x===matrix[i]))continue;
    this.remove(entity.id);root.updateWorldMatrix(false,true);const ids=[];
-   const add=(id,bounds,matrix,margin)=>{this.index.set(id,cameraModelVolume(id,bounds,matrix,margin));ids.push(id);};
+   const add=(id,bounds,matrix,margin)=>{
+    // Large roofs need a visual buffer as well as geometric non-penetration.
+    // Derive it once from this model's world size; small objects keep their own
+    // tighter registries and there is no universal camera zoom restriction.
+    if(margin===null){const size=bounds.getSize(new THREE.Vector3()),scale=new THREE.Vector3().setFromMatrixScale(matrix),span=Math.max(size.x*Math.abs(scale.x),size.z*Math.abs(scale.z));margin={horizontal:Math.max(1.2,Math.min(3,span*.1)),vertical:Math.max(2,Math.min(6,span*.2))};}
+    this.index.set(id,cameraModelVolume(id,bounds,matrix,margin));ids.push(id);
+   };
    if(native){
     const bounds=root.template.culling.boxes[state].clone();if(ash&&state!=='ash')bounds.union(root.template.culling.boxes.ash);
     add(entity.id+':center',bounds,root.matrixWorld,this.centerMargin);

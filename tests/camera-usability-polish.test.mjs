@@ -5,7 +5,7 @@ import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {WorldScene} from '../src/rendering/scene.js';
 import {CameraVolumeIndex} from '../src/rendering/camera-volume-index.js';
 import {CameraWallRegistry} from '../src/rendering/camera-wall-registry.js';
-import {focusTerrainCamera,protectTerrainCamera,installTerrainCameraIntent} from '../src/rendering/terrain-camera.js';
+import {focusTerrainCamera,protectTerrainCamera,installTerrainCameraIntent,nativeCameraPose} from '../src/rendering/terrain-camera.js';
 test('wall volumes follow finite native part envelopes, gate hinge and deletion',()=>{
  const index=new CameraVolumeIndex(),registry=new CameraWallRegistry(index),root=new THREE.Group();root.userData.nativeWall=true;root.stageKey='gate';root.visual=0;root.gateOpen=0;
  const mesh=new THREE.Mesh(new THREE.BoxGeometry(3,4,.4));root.add(mesh);root.parts=[{mesh}];const objects=new Map([[1,root]]),entities=[{id:1}];
@@ -32,4 +32,15 @@ test('contextual height permits tall roof overflight and preserves intent leavin
 test('indexed neighborhood query excludes distant populations and retains large intersecting bounds',()=>{
  const index=new CameraVolumeIndex();for(let i=0;i<1000;i++)index.set(i,{min:[i*20,0,0],max:[i*20+3,8,3]});
  assert.deepEqual(index.queryXZ(-5,-5,5,5).map(x=>x.id),[0]);
+});
+test('building focus has a contextual visual distance with a gradual boundary and crops stay close',()=>{
+ const field={surface:()=>0},camera=new THREE.PerspectiveCamera(),controls=new OrbitControls(camera,null),root=new THREE.Group();
+ root.userData.nativeBuilding=true;root.damage=0;const bounds=new THREE.Box3(new THREE.Vector3(-6,0,-6),new THREE.Vector3(6,10,6));root.template={culling:{boxes:{still:bounds,fall:bounds,ash:bounds}}};
+ const world={camera,controls,nav:{field},objects:new Map([[1,root]]),state:{villages:[],structures:[{id:1,kind:'center'}]}};
+ WorldScene.prototype.setCameraExclusion.call(world,true);focusTerrainCamera(camera,controls,field,{x:0,z:0,distance:4});
+ assert.ok(camera.position.distanceTo(controls.target)>17,'Building zoom must remain outside problematic roof close-up');
+ let previous=camera.position.distanceTo(controls.target);
+ for(let x=7;x<=14;x+=.1){focusTerrainCamera(camera,controls,field,{x,z:0,distance:4});const distance=camera.position.distanceTo(controls.target);assert.ok(Math.abs(distance-previous)<5,'Boundary must not abruptly toggle the building radius');previous=distance;}
+ focusTerrainCamera(camera,controls,field,{x:50,z:0,distance:4});const ordinary=nativeCameraPose(field,[50,0,0],controls.getAzimuthalAngle(),controls.getPolarAngle(),4);assert.ok(camera.position.distanceTo(new THREE.Vector3(...ordinary.eye))<.2,'Crops/NPC location retains ordinary terrain-safe close zoom');
+ WorldScene.prototype.setCameraExclusion.call(world,false);assert.equal(controls.maxDistance,65);
 });

@@ -33,9 +33,9 @@ function applyPose(camera,controls,field,desiredPose,rawEye,context='move'){
   lastPose.set(camera,{field,pose,desiredPose,rawEye});return pose;
 }
 
-function cameraPose(field,target,theta,phi,distance,maxClearance=20){
+function cameraPose(field,target,theta,phi,distance,maxClearance=20,minDistance=4){
   phi=clamp(phi,TERRAIN_CAMERA.minPhi,TERRAIN_CAMERA.maxPhi);
-  distance=clamp(distance,4,Math.min(Math.max(65,maxClearance+4),maxClearance/Math.max(.19,Math.cos(phi))));
+  distance=clamp(distance,minDistance,Math.max(minDistance,Math.min(Math.max(65,maxClearance+4),maxClearance/Math.max(.19,Math.cos(phi)))));
   const aim=[target[0],field.surface(target[0],target[2])+.18,target[2]];
   const eye=[aim[0]+distance*Math.sin(phi)*Math.sin(theta),aim[1]+distance*Math.cos(phi),aim[2]+distance*Math.sin(phi)*Math.cos(theta)];
   const rawEye=eye.slice(),ground=field.surface(eye[0],eye[2]);eye[1]=clamp(eye[1],ground+2,ground+maxClearance);
@@ -43,7 +43,8 @@ function cameraPose(field,target,theta,phi,distance,maxClearance=20){
 }
 function contextualPose(camera,field,target,theta,phi,distance){
  const clearance=poseResolvers.get(camera)?.clearance?.(target,distance,lastPose.get(camera)?.pose)??20;
- return cameraPose(field,target,theta,phi,distance,clearance);
+ const minDistance=poseResolvers.get(camera)?.minimumDistance?.(target)??4;
+ return cameraPose(field,target,theta,phi,distance,clearance,minDistance);
 }
 export function nativeCameraPose(field,target,theta,phi,distance){return cameraPose(field,target,theta,phi,distance).pose;}
 

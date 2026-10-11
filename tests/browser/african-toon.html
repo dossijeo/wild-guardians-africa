@@ -46,7 +46,7 @@ async function load(){tinifyVillageMaps=null;tinifyVillageEnabled=true;document.
  // Explicit visual fixture actors, not a claimed gameplay scenario. No persistence.
  const profiles=['olderMale','olderFemale','youngMale','youngFemale'];
  state.workers=profiles.map((profile,i)=>({id:'qa-worker-'+profile,profile,x:center.x+(i-1.5)*3,z:center.z+10,status:'idle',path:[],taskId:null}));
- state.raid={animals:['warthog','hyena','buffalo','lion','rhino'].map((species,i)=>({id:'qa-animal-'+species,species,x:center.x+(i-2)*4,z:center.z+17,status:'idle',hitsRemaining:4,path:[],heading:0}))};
+ state.raid={animals:['warthog','hyena','buffalo','lion','rhino'].map((species,i)=>({id:'qa-animal-'+species,species,x:center.x+(i-2)*4,z:center.z+17,status:'idle',hitsRemaining:4,path:[],heading:0,radius:.6,exit:{x:center.x+(i-2)*4,z:center.z+17}}))};
  const crops=['maiz','algodon','girasol','platano','sorgo','mijo','yuca','batata'];
  state.plants=crops.flatMap((species,i)=>[1,.4806].map((ratio,j)=>({id:'qa-plant-'+i+'-'+j,species,alive:true,growth:cropSpec(species).growth_seconds*ratio,x:center.x+30+(i-3.5)*2,z:center.z+10+j*3})));
  for(const [i,material] of ['zarzas','empalizada','adobe','reforzado','piedra'].entries())for(const gate of [false,true])state.structures.push({id:'qa-wall-'+material+'-'+gate,kind:'wall',material,gate,x:center.x+30+(i-2)*4,z:center.z+18+(gate?4:0),yaw:0,hp:100,maxHp:100,status:'intact',collapseRemaining:0,gateOpen:.4});

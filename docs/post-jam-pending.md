@@ -445,6 +445,15 @@ Avance experimental de iluminación: [modelo con material real y atlas con gradi
 
 ## Protección de cámara en primeros planos (pedido el 6 de octubre de 2026)
 
+Avance del 11 de octubre en `feature/post-jam-usability-polish`, todavía sin
+integrar: protección contextual finita, sobrevuelo, partes de murallas/puertas y
+pulido de los cuatro labs en móvil. [Evidencia y gates pendientes](qa/post-jam-usability-polish/README.md).
+Biblioteca supera controles, ES/EN, orientación y tamaños emulados; cámara
+supera recorridos geométricos y está en revisión visual/rendimiento. Salida
+Tauri implementada, pendiente de aceptación mediante proceso empaquetado y
+recuperación de guardado. No marcar estas tres tareas como cerradas hasta
+completar QA y CI. No se ha acreditado aceptación Android física.
+
 - Seguir la [especificación independiente de protección de cámara](camera-close-protection-post-jam.md), junto a distancia de dibujado/impostores/horizonte pero sin confundir sus objetivos.
 - Evitar penetraciones y ampliaciones problemáticas con soft collision y volúmenes de exclusión finitos, márgenes contextuales por categoría/modelo y desaceleración suave.
 - Conservar360°, desplazamiento, zoom, inclinación y sobrevuelo. No aumentar simplemente una distancia mínima global ni crear columnas/paredes invisibles.
