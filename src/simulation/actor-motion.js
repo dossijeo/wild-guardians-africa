@@ -99,12 +99,17 @@ export function prepareActorMotion(state,actor,nav,worker){
     // has no physically clear yield; never relax clearance or move either body.
     if(String(actor.id)<String(opposing.id)&&yieldPoint(opposing,actor,state.workers.includes(opposing)))return;
     const point=yieldPoint(actor,opposing,worker);
-    if(point)actor.path=[point,...actor.path];
+    if(point){actor.path=[point,...actor.path];return true;}
+    return false;
   };
   // Old saves may retain a long connector created by a remote yield. Repair
   // its next local section through native terrain search before advancing;
   // never let the occupied endpoint justify crossing a prop on the way back.
   if(!rejoin&&length>horizon&&!clear(next,next)&&!staticClear(actor,goal)){
+    // A long retained connector can be blocked by both terrain and opposing
+    // bodies. Its terrain detour cannot start until traffic has room to pass;
+    // use the same swept, terrain-valid yield before searching that connector.
+    if(yieldToOpposing())return (a,b)=>clear(a,b)&&staticClear(a,b);
     if(!(nav.walkable?.(goal.x,goal.z,radius(actor),null,worker)??true)){
       for(const candidate of [Math.min(length,look+horizon),Math.min(length,look+2*horizon)]){
         const point={x:actor.x+(next.x-actor.x)*candidate/length,z:actor.z+(next.z-actor.z)*candidate/length};
