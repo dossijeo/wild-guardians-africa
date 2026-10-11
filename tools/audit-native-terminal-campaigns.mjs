@@ -14,6 +14,7 @@ const cases=dirs.map(dir=>{
  const defeated=receipt.status==='observed-native-defeat',won=receipt.status==='observed-horizon'&&receipt.result==='victory';
  assert.equal(receipt.result,defeated?'defeat':won?'victory':null);assert.equal(report.result,receipt.result);
  const rows=readFileSync(join(root,'days.jsonl'),'utf8').trim().split(/\r?\n/).map(JSON.parse);
+ assert.deepEqual(report.daily,rows,'Report and preserved daily ledger rows differ');
  let defeatPhase=defeated?'during-terminal-night':null;
  let victoryPhase=null;
  if(won){

@@ -13,6 +13,7 @@ function run(change=()=>{}){
  const fixture={receipt:{status:'observed-horizon',result:null,completedNights:1},source:{sourceHashes:{fixture:'synthetic-unit-data'}},rows:[{day:1,money:105,living:9,centerHp:[600],result:null,finance}],report:{result:null,completedNights:1,money:105,seed:1,strategy:'good',counts:{CropDestroyed:1},nativeEvidence:{status:'verified',coverageLost:false,deliveries:[{paymentId:'deliver:crate-1',coins:10}]},raidEvidence:{status:'verified',coverageLost:false,issues:[],raids:[{day:1,ended:true,exposedLivingAtSpawn:10,cropsDestroyed:1,species:{warthog:{initialHitBudget:1,observedBudgetConsumed:1,unconsumedOrUnobservedBudget:0}}}]},entryTransport:{preparer:{failed:0},workerFailure:null}}};
  try{
   change(fixture);
+  fixture.report.daily??=structuredClone(fixture.rows);
   for(const k of ['receipt','source','report'])writeFileSync(join(dir,k+'.json'),JSON.stringify(fixture[k]));
   if(fixture.state)writeFileSync(join(dir,'state.json.gz'),gzipSync(JSON.stringify(fixture.state)));
   writeFileSync(join(dir,'days.jsonl'),fixture.rows.map(d=>JSON.stringify(d)).join('\n')+'\n');
@@ -66,4 +67,10 @@ test('accepts hundred-night victory only with complete ledgers and the native vi
  for(const mutate of [f=>{delete f.state;},f=>{f.receipt.completedNights=99;},f=>{f.rows.pop();},f=>{f.state.raid={};},f=>{f.state.events.reverse();},f=>{f.state.events.push({type:'GameOver'});},f=>{f.state.ledger.balance.n='601';},f=>{f.state.postgame=true;},f=>{f.state.time=600;}]){
   const rejected=run(f=>{hundredNightVictory(f);mutate(f);});assert.notEqual(rejected.status,0);
  }
+});
+
+
+test('rejects a report whose daily observations differ from the preserved ledger rows',()=>{
+ const inconsistent=run(f=>{f.report.daily=structuredClone(f.rows);f.report.daily[0].living=8;});
+ assert.notEqual(inconsistent.status,0);assert.match(inconsistent.stderr,/preserved daily ledger rows differ/);
 });
