@@ -1,0 +1,151 @@
+{
+  "scope": "Archived native strikes with a secondary healthy reference lattice diagnostic",
+  "inputSha256": "ad3392c8277f92241a073796c3a1c47a3ca74821f723bd04ca78b4999418527e",
+  "healthyCropHp": 1,
+  "caveats": [
+    "Reference plants are hypothetical; actual positions, occlusion and wounds are not recomputed.",
+    "Ratios are diagnostic, not a causal estimate of defense or route efficiency.",
+    "No native pressure budget, raid, damage, income or campaign source is modified."
+  ],
+  "formula": "H * (min(HP,D) + k * min(HP,0.5*D)), k=(recordedArea-1)/0.5",
+  "raids": [
+    {
+      "day": 1,
+      "excluded": "No pressure reference envelope (introductory mechanics)"
+    },
+    {
+      "day": 2,
+      "excluded": "No pressure reference envelope (introductory mechanics)"
+    },
+    {
+      "day": 3,
+      "excluded": "No pressure reference envelope (introductory mechanics)"
+    },
+    {
+      "day": 4,
+      "excluded": "No pressure reference envelope (introductory mechanics)"
+    },
+    {
+      "day": 5,
+      "excluded": "No pressure reference envelope (introductory mechanics)"
+    },
+    {
+      "day": 6,
+      "species": [
+        {
+          "species": "warthog",
+          "assignedHits": 24,
+          "referencePeripheralPlants": 0,
+          "rawForce": 24,
+          "healthyReferenceHp": 24
+        },
+        {
+          "species": "hyena",
+          "assignedHits": 3,
+          "referencePeripheralPlants": 0,
+          "rawForce": 3,
+          "healthyReferenceHp": 3
+        }
+      ],
+      "rawForce": 27,
+      "healthyReferenceHp": 27,
+      "referenceOverkill": 0,
+      "observedEffectiveHp": 27,
+      "observedPlantsDestroyed": 27,
+      "rawEfficiency": 1,
+      "healthyReferenceRatio": 1
+    },
+    {
+      "day": 7,
+      "species": [
+        {
+          "species": "warthog",
+          "assignedHits": 29,
+          "referencePeripheralPlants": 0,
+          "rawForce": 29,
+          "healthyReferenceHp": 29
+        },
+        {
+          "species": "hyena",
+          "assignedHits": 5,
+          "referencePeripheralPlants": 0,
+          "rawForce": 5,
+          "healthyReferenceHp": 5
+        }
+      ],
+      "rawForce": 34,
+      "healthyReferenceHp": 34,
+      "referenceOverkill": 0,
+      "observedEffectiveHp": 0,
+      "observedPlantsDestroyed": 0,
+      "rawEfficiency": 0,
+      "healthyReferenceRatio": 0
+    },
+    {
+      "day": 8,
+      "species": [
+        {
+          "species": "warthog",
+          "assignedHits": 30,
+          "referencePeripheralPlants": 0,
+          "rawForce": 30,
+          "healthyReferenceHp": 30
+        },
+        {
+          "species": "hyena",
+          "assignedHits": 4,
+          "referencePeripheralPlants": 0,
+          "rawForce": 4,
+          "healthyReferenceHp": 4
+        },
+        {
+          "species": "buffalo",
+          "assignedHits": 5,
+          "referencePeripheralPlants": 1,
+          "rawForce": 15,
+          "healthyReferenceHp": 10
+        }
+      ],
+      "rawForce": 49,
+      "healthyReferenceHp": 44,
+      "referenceOverkill": 5,
+      "observedEffectiveHp": 0,
+      "observedPlantsDestroyed": 0,
+      "rawEfficiency": 0,
+      "healthyReferenceRatio": 0
+    },
+    {
+      "day": 9,
+      "species": [
+        {
+          "species": "warthog",
+          "assignedHits": 41,
+          "referencePeripheralPlants": 0,
+          "rawForce": 41,
+          "healthyReferenceHp": 41
+        },
+        {
+          "species": "hyena",
+          "assignedHits": 3,
+          "referencePeripheralPlants": 0,
+          "rawForce": 3,
+          "healthyReferenceHp": 3
+        },
+        {
+          "species": "buffalo",
+          "assignedHits": 5,
+          "referencePeripheralPlants": 1,
+          "rawForce": 15,
+          "healthyReferenceHp": 10
+        }
+      ],
+      "rawForce": 59,
+      "healthyReferenceHp": 54,
+      "referenceOverkill": 5,
+      "observedEffectiveHp": 0,
+      "observedPlantsDestroyed": 0,
+      "rawEfficiency": 0,
+      "healthyReferenceRatio": 0
+    }
+  ]
+}
