@@ -1,0 +1,60 @@
+TAP version 13
+# Subtest: accepts consistent fixture and rejects subtotal corruption despite unchanged saldo
+ok 1 - accepts consistent fixture and rejects subtotal corruption despite unchanged saldo
+  ---
+  duration_ms: 509.4513
+  ...
+# Subtest: rejects missing physical-delivery observation, duplicate entry and incorrect credit sign
+ok 2 - rejects missing physical-delivery observation, duplicate entry and incorrect credit sign
+  ---
+  duration_ms: 558.8211
+  ...
+# Subtest: rejects transport failures and incomplete native strike accounting
+ok 3 - rejects transport failures and incomplete native strike accounting
+  ---
+  duration_ms: 381.9158
+  ...
+# Subtest: accepts terminal defeat row without inventing an extra completed night
+ok 4 - accepts terminal defeat row without inventing an extra completed night
+  ---
+  duration_ms: 367.8196
+  ...
+# Subtest: pre-dawn defeat needs actual terminal state, exhausted recovery and correctly ordered native events
+ok 5 - pre-dawn defeat needs actual terminal state, exhausted recovery and correctly ordered native events
+  ---
+  duration_ms: 2412.7302
+  ...
+# Subtest: accepts dawn economic defeat only with consistent native terminal snapshot evidence
+ok 6 - accepts dawn economic defeat only with consistent native terminal snapshot evidence
+  ---
+  duration_ms: 1306.6168
+  ...
+# Subtest: accepts hundred-night victory only with complete ledgers and the native victory snapshot
+ok 7 - accepts hundred-night victory only with complete ledgers and the native victory snapshot
+  ---
+  duration_ms: 2192.4803
+  ...
+# Subtest: rejects a report whose daily observations differ from the preserved ledger rows
+ok 8 - rejects a report whose daily observations differ from the preserved ledger rows
+  ---
+  duration_ms: 165.4776
+  ...
+# Subtest: additional daytime raids are counted without replacing mandatory nighttime raids
+ok 9 - additional daytime raids are counted without replacing mandatory nighttime raids
+  ---
+  duration_ms: 729.1056
+  ...
+# Subtest: peaceful 180-day parser contract requires recorded victory and actual postgame, not 180 raids
+ok 10 - peaceful 180-day parser contract requires recorded victory and actual postgame, not 180 raids
+  ---
+  duration_ms: 1831.6988
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10711.9809

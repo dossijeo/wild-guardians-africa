@@ -1,0 +1,51 @@
+{
+  "cases": [
+    {
+      "directory": "docs/qa/integrated-spiritual-survival/campaign-v116-q15-good-sabana-123-hundred",
+      "seed": "123",
+      "strategy": "good",
+      "status": "observed-native-defeat",
+      "result": "defeat",
+      "defeatPhase": "dawn-after-completed-night",
+      "victoryPhase": null,
+      "postgameDays": 0,
+      "daytimeRaids": 0,
+      "terminalDay": 30,
+      "completedNights": 30,
+      "money": 32,
+      "living": 0,
+      "centerHp": [
+        177
+      ],
+      "destroyed": 122,
+      "totals": {
+        "income": 23176,
+        "refunds": 0,
+        "wages": 10445,
+        "seeds": 9507,
+        "walls": 1040,
+        "centers": 0,
+        "villages": 0,
+        "repairs": 2852,
+        "otherCredits": 0,
+        "otherDebits": 0
+      },
+      "strikes": {
+        "assigned": 1502,
+        "consumed": 1502,
+        "unused": 0
+      },
+      "postIntroduction": {
+        "exposure": 2868,
+        "losses": 122,
+        "weightedDestroyedFraction": 0.042538354253835425,
+        "unprotectedReferenceFraction": 0.2139572175732217,
+        "protectedReferenceFraction": 0.03627960251046025,
+        "scope": "Nighttime references are hypotheses only, never applied damage; exposure is the native census at each raid spawn"
+      },
+      "ledgerAndDeliveryMatch": true,
+      "sourceHashesMatch": true,
+      "scope": "Native terminal result and ledger only; a single hundred-night victory does not establish the strategy/seed matrix, human activity or general release acceptance"
+    }
+  ]
+}

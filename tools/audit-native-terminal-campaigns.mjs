@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {resolve,join} from 'node:path';
 import {gunzipSync} from 'node:zlib';
+import {BALANCE} from '../src/simulation/balance.js';
+import {operational} from '../src/simulation/rules.js';
 
 const dirs=process.argv.slice(2);
 assert.ok(dirs.length,'Pass terminal campaign directories');
@@ -53,7 +55,22 @@ const cases=dirs.map(dir=>{
   const over=state.events.findLastIndex(e=>e.type==='GameOver'),ended=state.events.findLastIndex(e=>e.type==='RaidEnded');
   assert.ok(ended>=0&&over>ended,'Dawn defeat requires a completed native raid followed by GameOver');
   defeatPhase='dawn-after-completed-night';
- }else assert.equal(rows.length,receipt.completedNights+(defeated?1:0));
+ }else {
+  assert.equal(rows.length,receipt.completedNights+(defeated?1:0));
+  if(defeated){
+   const state=JSON.parse(gunzipSync(readFileSync(join(root,'state.json.gz'))));
+   assert.equal(state.result,'defeat');assert.equal(state.completedNights,receipt.completedNights);
+   assert.equal(state.day,rows.at(-1).day);assert.equal(state.raid,null);
+   assert(Number.isFinite(state.time)&&state.time>=0&&state.time<=600);
+   assert.equal(state.ledger.balance.d,'1');assert.equal(BigInt(state.ledger.balance.n),BigInt(report.money));
+   const over=state.events.findLastIndex(e=>e.type==='GameOver'),ended=state.events.findLastIndex(e=>e.type==='RaidEnded');
+   assert(ended>=0&&over>ended,'Pre-dawn defeat requires completed native incursion and GameOver');
+   assert(state.structures.some(c=>c.kind==='center'),'Defeat snapshot lacks original center state');
+   assert(!state.structures.some(operational),'Pre-dawn defeat must have no operational center');
+   assert(BigInt(state.ledger.balance.n)<BigInt(BALANCE.work_center.cost),'Pre-dawn defeat still affords a replacement center');
+   defeatPhase='after-incursion-before-dawn';
+  }
+ }
  assert.equal(report.completedNights,receipt.completedNights);
  assert.equal(rows.at(-1).result,receipt.result);
  assert.equal(report.nativeEvidence.status,'verified');assert.equal(report.nativeEvidence.coverageLost,false);

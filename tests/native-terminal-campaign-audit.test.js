@@ -38,8 +38,23 @@ test('rejects transport failures and incomplete native strike accounting',()=>{
  assert.notEqual(run(f=>{f.report.raidEvidence.raids[0].species.warthog.observedBudgetConsumed=0;}).status,0);
 });
 test('accepts terminal defeat row without inventing an extra completed night',()=>{
- assert.equal(run(f=>{f.receipt.status='observed-native-defeat';f.receipt.result='defeat';f.receipt.completedNights=0;f.report.result='defeat';f.report.completedNights=0;f.rows[0].result='defeat';}).status,0);
+ const r=run(preDawnDefeat);assert.equal(r.status,0,r.stderr);assert.match(r.stdout,/after-incursion-before-dawn/);
  assert.notEqual(run(f=>{f.receipt.status='incomplete-harness-error';}).status,0);
+});
+
+function preDawnDefeat(f){
+ f.receipt.status='observed-native-defeat';f.receipt.result='defeat';f.receipt.completedNights=0;
+ f.report.result='defeat';f.report.completedNights=0;f.rows[0].result='defeat';
+ f.state={result:'defeat',day:1,time:550,completedNights:0,raid:null,structures:[{kind:'center',status:'ruined'}],ledger:{balance:{n:'105',d:'1'}},events:[{type:'RaidEnded'},{type:'GameOver'}]};
+}
+test('pre-dawn defeat needs actual terminal state, exhausted recovery and correctly ordered native events',()=>{
+ for(const mutate of [f=>delete f.state,f=>{f.state.raid={};},f=>{f.state.events.reverse();},f=>{f.state.events=[];},f=>{f.state.structures[0].status='intact';},f=>{f.state.structures=[];},f=>{f.state.ledger.balance.n='106';},f=>{f.state.day=2;},f=>{f.state.completedNights=1;}]){
+  assert.notEqual(run(f=>{preDawnDefeat(f);mutate(f);}).status,0);
+ }
+ // Ledger still reconciles, but the native last-center defeat condition does
+ // not hold when the player can pay for a replacement. Never count it as loss.
+ const r=run(f=>{preDawnDefeat(f);f.rows[0].finance.opening=800;f.rows[0].finance.closing=805;f.rows[0].money=f.report.money=805;f.state.ledger.balance.n='805';});
+ assert.notEqual(r.status,0);assert.match(r.stderr,/affords a replacement center/);
 });
 
 test('accepts dawn economic defeat only with consistent native terminal snapshot evidence',()=>{
