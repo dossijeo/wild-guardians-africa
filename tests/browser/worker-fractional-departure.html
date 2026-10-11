@@ -1,0 +1,62 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QA: salida fraccionaria archivada</title>
+<style>body{margin:0;font:13px system-ui;background:#d5c8ad}header{position:fixed;z-index:2;background:#fffdf0e8;padding:8px;max-width:95vw}button{padding:8px;margin:2px}canvas{display:block;width:100vw;height:100vh}#status{display:block;max-width:85vw}</style>
+<header>QA aislado: snapshot nativo, suelo procedural, trabajador/murallas originales. Edificios = proxies transparentes de colisión.<br>
+<button id="run">Iniciar recorrido</button><button id="step">Avanzar 0,1 s</button><button id="reload">Guardar/cargar copia</button><button id="overview">Vista general</button><span id="status">Cargando…</span></header><canvas id="world"></canvas>
+<script type="module">
+import * as THREE from 'three';
+import {clone} from 'three/addons/utils/SkeletonUtils.js';
+import {Assets,json} from '../../src/rendering/assets.js';
+import {NativeWall} from '../../src/rendering/walls.js';
+import {applyWorkerPose} from '../../src/rendering/worker-actions.js';
+import {Navigation,BIOME_IDS} from '../../src/world/navigation.js';
+import {walkTo} from '../../src/simulation/game.js';
+import {advanceGateLeaves} from '../../src/simulation/gates.js';
+import {deserialize,serialize} from '../../src/persistence/snapshots.js';
+const errors=[];addEventListener('error',e=>errors.push(e.message));addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
+const response=await fetch('../fixtures/worker-fractional-departure/state.json.gz');if(!response.ok)throw Error('Missing original snapshot');
+const bytes=await response.arrayBuffer(),signature=new Uint8Array(bytes);
+// Static servers can transparently decode Content-Encoding: gzip already.
+const text=signature[0]===31&&signature[1]===139?await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).text():new TextDecoder().decode(bytes);
+let s=deserialize(text),w=s.workers.find(p=>p.id==='worker-52429');
+const profile=(await json('../../content/biome-'+BIOME_IDS[s.biome]+'.json')).profile;
+function navigation(){const n=new Navigation(s.seed,s.biome,profile);n.setState(s);return n;}
+let nav=navigation();const village=s.villages.find(v=>v.id===w.villageId),end={...(village.entry??village),id:'home-'+village.id};
+const domain=()=>JSON.stringify([s.result,s.day,s.time,s.elapsed,s.ledger,s.plants,s.rng,s.tasks]),originalDomain=domain();
+const renderer=new THREE.WebGLRenderer({canvas:document.querySelector('canvas'),antialias:true});renderer.setPixelRatio(1);
+const scene=new THREE.Scene();scene.background=new THREE.Color('#d3dac6');scene.add(new THREE.HemisphereLight('#fff4df','#706746',2));
+const sun=new THREE.DirectionalLight('#fff3db',3);sun.position.set(-4,8,5);scene.add(sun);
+const camera=new THREE.PerspectiveCamera(40,1,.1,250);let overview=false;
+const positions=[],indices=[],minX=54,minZ=-28,side=64;
+for(let z=0;z<=side;z++)for(let x=0;x<=side;x++)positions.push(minX+x,nav.workerSurface(minX+x,minZ+z),minZ+z);
+for(let z=0;z<side;z++)for(let x=0;x<side;x++){const a=z*(side+1)+x,b=a+1,d=a+side+1,c=d+1;indices.push(a,d,b,b,d,c);}
+const ground=new THREE.BufferGeometry();ground.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));ground.setIndex(indices);ground.computeVertexNormals();
+scene.add(new THREE.Mesh(ground,new THREE.MeshStandardMaterial({color:'#cfb988',roughness:1})));
+const assets=new Assets(),prototypes=await assets.walls(await json('../../content/walls.json')),libraries=await json('../../content/worker-actions.json'),library=libraries[w.profile];
+const gltf=await assets.model(library.url),model=clone(gltf.scene),root=new THREE.Group();root.add(model);scene.add(root);
+const data={model,mixer:new THREE.AnimationMixer(model),clips:gltf.animations,name:null},walls=new Map();
+for(const p of s.structures.filter(p=>p.kind==='wall'&&p.status!=='ruined')){const mesh=new NativeWall(prototypes,p);mesh.position.set(p.x,nav.workerSurface(p.x,p.z),p.z);mesh.rotation.y=p.yaw;scene.add(mesh);walls.set(p.id,mesh);}
+const proxyMaterial=new THREE.MeshStandardMaterial({color:'#887e68',transparent:true,opacity:.18,depthWrite:false});
+for(const p of nav.obstacles.filter(p=>p.kind!=='wall'&&p.footprint?.length)){
+ const shape=new THREE.Shape(p.footprint.map(v=>new THREE.Vector2(v.x,-v.z))),g=new THREE.ExtrudeGeometry(shape,{depth:p.kind==='center'?5:3,bevelEnabled:false});g.rotateX(-Math.PI/2);
+ const mesh=new THREE.Mesh(g,proxyMaterial);mesh.position.y=nav.workerSurface(p.x,p.z);scene.add(mesh);
+}
+const trail=new THREE.BufferGeometry(),trailPoints=new Float32Array(1201*3);trail.setAttribute('position',new THREE.BufferAttribute(trailPoints,3));trail.setDrawRange(0,0);const trailLine=new THREE.Line(trail,new THREE.LineBasicMaterial({color:'#2269b8'}));trailLine.frustumCulled=false;scene.add(trailLine);
+let running=false,reached=false,steps=0,reloads=0,maximumStep=0;const updateTimes=[];
+function sync(){
+ root.position.set(w.x,nav.workerSurface(w.x,w.z),w.z);root.rotation.y=w.heading??0;applyWorkerPose(data,w,null,s.elapsed+steps*.1,library);
+ for(const p of s.structures)walls.get(p.id)?.update(p);
+ if(overview){camera.position.set(85,72,75);camera.lookAt(84,12,0);}else{camera.position.set(w.x+7,root.position.y+13,w.z+18);camera.lookAt(w.x,root.position.y+.8,w.z);}
+ document.querySelector('#status').textContent=`${reached?'Llegó al poblado':'Buscando/caminando'} · pasos ${steps}/1200 · (${w.x.toFixed(2)}, ${w.z.toFixed(2)}) · recargas ${reloads}`;
+}
+function step(){if(reached||steps>=1200){running=false;return;}const before={x:w.x,z:w.z},at=performance.now();
+ advanceGateLeaves({...s,result:null,initialPreparation:false,pauses:[]},.1);reached=walkTo(s,w,end,.1,nav,{motion:{flight:true}});updateTimes.push(performance.now()-at);
+ const distance=Math.hypot(w.x-before.x,w.z-before.z);maximumStep=Math.max(maximumStep,distance);if(distance>.24000001)throw Error('Excessive movement');
+ trailPoints.set([w.x,nav.workerSurface(w.x,w.z)+.03,w.z],steps*3);steps++;trail.attributes.position.needsUpdate=true;trail.setDrawRange(0,steps);if(reached)running=false;sync();
+}
+document.querySelector('#run').onclick=()=>running=!running;document.querySelector('#step').onclick=step;
+document.querySelector('#reload').onclick=()=>{s=deserialize(serialize(s));w=s.workers.find(p=>p.id==='worker-52429');nav=navigation();reloads++;sync();};
+document.querySelector('#overview').onclick=()=>{overview=!overview;sync();};
+window.qa={ready:true,progress:()=>({steps,reached}),report:()=>({reached,steps,reloads,x:w.x,z:w.z,maximumStep,domainUnchanged:domain()===originalDomain,errors:[...errors],updateTimes,scope:'Isolated native movement copy, real procedural ground and original worker/wall assets, transparent building collision proxies. No farming, clock advance, campaign outcome or mobile/GPU acceptance.'})};
+function resize(){renderer.setSize(innerWidth,innerHeight,false);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();}addEventListener('resize',resize);resize();sync();
+renderer.setAnimationLoop(()=>{if(running)step();renderer.render(scene,camera);});
+</script></html>
