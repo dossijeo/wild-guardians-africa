@@ -1,0 +1,117 @@
+{
+  "scope": "Four cold prospective proofs in AB/BA order on identical copies of a stopped snapshot. Concurrent v116 and other workloads limit timing attribution; not isolated performance acceptance, game frame time or a promoted optimization.",
+  "snapshotSha256": "6ecab8f0978876d60df697e26402f65fb46f40c5234d0553e57145b663c84aa0",
+  "sourceHashes": {
+    "tools/compare-planned-perimeter-last-tile.mjs": "719f7d3354e60e14da067fb70942ec84381dd897b0a524177f126553497bf624",
+    "tools/terrain-lattice-last-tile-candidate.mjs": "a5e51b43e0f346ec54d0dae317ac65b50c436baeea982f687e6058ef87c19d46",
+    "tools/terrain-lattice-tile-candidate.mjs": "a678a40f9835f2dc8e0bf30d7f478fceba7a1bd5aff450ffd46edf3a472f0fbe",
+    "tools/native-integrated-perimeter-proof.mjs": "a83a898a588f77171d9d9266cbe3ff82da71c1d6e7c99205ffb99f5ff250e7e9"
+  },
+  "runs": [
+    {
+      "mode": "baseline",
+      "milliseconds": 32234.490499999996,
+      "physicalCertificateSha256": "1eddd04e5446dae49e8691caa410280e4bb9086960ed17331831aa044d5c8a44",
+      "physicalCertificateExactlyEqual": true,
+      "stateUnchanged": true,
+      "quote": {
+        "cost": 10,
+        "pieces": 1,
+        "updates": 1
+      },
+      "terrainTileDiagnostics": {
+        "side": 32,
+        "capacity": 16,
+        "tiles": 6,
+        "requests": 103539255,
+        "hits": 103537608,
+        "misses": 1647,
+        "evictions": 0,
+        "fallbacks": 0,
+        "invalidations": 0,
+        "typedArrayBytes": 55296,
+        "maximumTypedArrayBytes": 147456
+      }
+    },
+    {
+      "mode": "candidate",
+      "milliseconds": 22646.0153,
+      "physicalCertificateSha256": "1eddd04e5446dae49e8691caa410280e4bb9086960ed17331831aa044d5c8a44",
+      "physicalCertificateExactlyEqual": true,
+      "stateUnchanged": true,
+      "quote": {
+        "cost": 10,
+        "pieces": 1,
+        "updates": 1
+      },
+      "terrainTileDiagnostics": {
+        "side": 32,
+        "capacity": 16,
+        "tiles": 6,
+        "requests": 103539255,
+        "hits": 103537608,
+        "misses": 1647,
+        "evictions": 0,
+        "fallbacks": 0,
+        "invalidations": 0,
+        "lastTileHits": 97166588,
+        "tileLookups": 6372667,
+        "typedArrayBytes": 55296,
+        "maximumTypedArrayBytes": 147456
+      }
+    },
+    {
+      "mode": "candidate",
+      "milliseconds": 24426.462400000004,
+      "physicalCertificateSha256": "1eddd04e5446dae49e8691caa410280e4bb9086960ed17331831aa044d5c8a44",
+      "physicalCertificateExactlyEqual": true,
+      "stateUnchanged": true,
+      "quote": {
+        "cost": 10,
+        "pieces": 1,
+        "updates": 1
+      },
+      "terrainTileDiagnostics": {
+        "side": 32,
+        "capacity": 16,
+        "tiles": 6,
+        "requests": 103539255,
+        "hits": 103537608,
+        "misses": 1647,
+        "evictions": 0,
+        "fallbacks": 0,
+        "invalidations": 0,
+        "lastTileHits": 97166588,
+        "tileLookups": 6372667,
+        "typedArrayBytes": 55296,
+        "maximumTypedArrayBytes": 147456
+      }
+    },
+    {
+      "mode": "baseline",
+      "milliseconds": 27205.5512,
+      "physicalCertificateSha256": "1eddd04e5446dae49e8691caa410280e4bb9086960ed17331831aa044d5c8a44",
+      "physicalCertificateExactlyEqual": true,
+      "stateUnchanged": true,
+      "quote": {
+        "cost": 10,
+        "pieces": 1,
+        "updates": 1
+      },
+      "terrainTileDiagnostics": {
+        "side": 32,
+        "capacity": 16,
+        "tiles": 6,
+        "requests": 103539255,
+        "hits": 103537608,
+        "misses": 1647,
+        "evictions": 0,
+        "fallbacks": 0,
+        "invalidations": 0,
+        "typedArrayBytes": 55296,
+        "maximumTypedArrayBytes": 147456
+      }
+    }
+  ],
+  "status": "completed-four-cold-proofs"
+}

@@ -1,0 +1,262 @@
+TAP version 13
+# (node:28328) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: incremental new crop coverage matches independent complete native certification
+ok 1 - incremental new crop coverage matches independent complete native certification
+  ---
+  duration_ms: 1872.5655
+  ...
+# Subtest: a legal near-boundary new crop with an unproven native origin is not certified
+ok 2 - a legal near-boundary new crop with an unproven native origin is not certified
+  ---
+  duration_ms: 854.171
+  ...
+# Subtest: integrated QA proof preserves certificates and restores terrain resource ownership
+ok 3 - integrated QA proof preserves certificates and restores terrain resource ownership
+  ---
+  duration_ms: 1883.2598
+  ...
+# Subtest: an exception in the proof also restores the native lattice method
+ok 4 - an exception in the proof also restores the native lattice method
+  ---
+  duration_ms: 9.318
+  ...
+# Subtest: reusing an animal certificate still requires a fresh worker-service check
+ok 5 - reusing an animal certificate still requires a fresh worker-service check
+  ---
+  duration_ms: 856.6687
+  ...
+# Subtest: optional exact terrain memo preserves the entire physical certificate
+ok 6 - optional exact terrain memo preserves the entire physical certificate
+  ---
+  duration_ms: 1395.5155
+  ...
+# Subtest: terrain memo and lattice are both restored when certification throws
+ok 7 - terrain memo and lattice are both restored when certification throws
+  ---
+  duration_ms: 6.1608
+  ...
+# Subtest: retired anchor coverage is freshly reproducible from original geometric origins and rejects opened walls
+ok 8 - retired anchor coverage is freshly reproducible from original geometric origins and rejects opened walls
+  ---
+  duration_ms: 740.9528
+  ...
+# Subtest: last-tile shortcut preserves native surfaces, slopes and water: sabana
+ok 9 - last-tile shortcut preserves native surfaces, slopes and water: sabana
+  ---
+  duration_ms: 57.9056
+  ...
+# Subtest: last-tile shortcut preserves native surfaces, slopes and water: gran-rio
+ok 10 - last-tile shortcut preserves native surfaces, slopes and water: gran-rio
+  ---
+  duration_ms: 39.6138
+  ...
+# Subtest: last-tile shortcut preserves native surfaces, slopes and water: manglares
+ok 11 - last-tile shortcut preserves native surfaces, slopes and water: manglares
+  ---
+  duration_ms: 17.734
+  ...
+# Subtest: last-tile shortcut preserves native surfaces, slopes and water: volcanes
+ok 12 - last-tile shortcut preserves native surfaces, slopes and water: volcanes
+  ---
+  duration_ms: 27.3743
+  ...
+# Subtest: last-tile shortcut preserves native surfaces, slopes and water: gran-canon
+ok 13 - last-tile shortcut preserves native surfaces, slopes and water: gran-canon
+  ---
+  duration_ms: 28.4673
+  ...
+# Subtest: last-tile shortcut preserves native surfaces, slopes and water: desierto
+ok 14 - last-tile shortcut preserves native surfaces, slopes and water: desierto
+  ---
+  duration_ms: 32.954
+  ...
+# Subtest: exact original adapter arithmetic at boundaries and safe-integer limits: 4
+ok 15 - exact original adapter arithmetic at boundaries and safe-integer limits: 4
+  ---
+  duration_ms: 8.0096
+  ...
+# Subtest: exact original adapter arithmetic at boundaries and safe-integer limits: 7
+ok 16 - exact original adapter arithmetic at boundaries and safe-integer limits: 7
+  ---
+  duration_ms: 3.5327
+  ...
+# Subtest: exact original adapter arithmetic at boundaries and safe-integer limits: 32
+ok 17 - exact original adapter arithmetic at boundaries and safe-integer limits: 32
+  ---
+  duration_ms: 8.1774
+  ...
+# Subtest: exact original adapter arithmetic at boundaries and safe-integer limits: 63
+ok 18 - exact original adapter arithmetic at boundaries and safe-integer limits: 63
+  ---
+  duration_ms: 25.8909
+  ...
+# Subtest: exact original adapter arithmetic at boundaries and safe-integer limits: 64
+ok 19 - exact original adapter arithmetic at boundaries and safe-integer limits: 64
+  ---
+  duration_ms: 22.8001
+  ...
+# Subtest: provider replacement, explicit invalidation and non-numeric values remain native
+ok 20 - provider replacement, explicit invalidation and non-numeric values remain native
+  ---
+  duration_ms: 5.4845
+  ...
+# Subtest: exact native surface, slope and fluids with lattice tiles: sabana / 1
+ok 21 - exact native surface, slope and fluids with lattice tiles: sabana / 1
+  ---
+  duration_ms: 48.2041
+  ...
+# Subtest: exact native surface, slope and fluids with lattice tiles: gran-rio / 1
+ok 22 - exact native surface, slope and fluids with lattice tiles: gran-rio / 1
+  ---
+  duration_ms: 18.9148
+  ...
+# Subtest: exact native surface, slope and fluids with lattice tiles: manglares / 1
+ok 23 - exact native surface, slope and fluids with lattice tiles: manglares / 1
+  ---
+  duration_ms: 8.5162
+  ...
+# Subtest: exact native surface, slope and fluids with lattice tiles: volcanes / 1
+ok 24 - exact native surface, slope and fluids with lattice tiles: volcanes / 1
+  ---
+  duration_ms: 21.8633
+  ...
+# Subtest: exact native surface, slope and fluids with lattice tiles: gran-canon / 1
+ok 25 - exact native surface, slope and fluids with lattice tiles: gran-canon / 1
+  ---
+  duration_ms: 14.4481
+  ...
+# Subtest: exact native surface, slope and fluids with lattice tiles: desierto / 1
+ok 26 - exact native surface, slope and fluids with lattice tiles: desierto / 1
+  ---
+  duration_ms: 15.5496
+  ...
+# Subtest: exact native surface, slope and fluids with lattice tiles: sabana / 712
+ok 27 - exact native surface, slope and fluids with lattice tiles: sabana / 712
+  ---
+  duration_ms: 34.845
+  ...
+# Subtest: exact native surface, slope and fluids with lattice tiles: gran-rio / 712
+ok 28 - exact native surface, slope and fluids with lattice tiles: gran-rio / 712
+  ---
+  duration_ms: 17.7709
+  ...
+# Subtest: exact native surface, slope and fluids with lattice tiles: manglares / 712
+ok 29 - exact native surface, slope and fluids with lattice tiles: manglares / 712
+  ---
+  duration_ms: 10.5779
+  ...
+# Subtest: exact native surface, slope and fluids with lattice tiles: volcanes / 712
+ok 30 - exact native surface, slope and fluids with lattice tiles: volcanes / 712
+  ---
+  duration_ms: 16.2124
+  ...
+# Subtest: exact native surface, slope and fluids with lattice tiles: gran-canon / 712
+ok 31 - exact native surface, slope and fluids with lattice tiles: gran-canon / 712
+  ---
+  duration_ms: 9.6957
+  ...
+# Subtest: exact native surface, slope and fluids with lattice tiles: desierto / 712
+ok 32 - exact native surface, slope and fluids with lattice tiles: desierto / 712
+  ---
+  duration_ms: 29.1647
+  ...
+# Subtest: exact native surface, slope and fluids with lattice tiles: sabana / 2026
+ok 33 - exact native surface, slope and fluids with lattice tiles: sabana / 2026
+  ---
+  duration_ms: 10.0846
+  ...
+# Subtest: exact native surface, slope and fluids with lattice tiles: gran-rio / 2026
+ok 34 - exact native surface, slope and fluids with lattice tiles: gran-rio / 2026
+  ---
+  duration_ms: 8.4431
+  ...
+# Subtest: exact native surface, slope and fluids with lattice tiles: manglares / 2026
+ok 35 - exact native surface, slope and fluids with lattice tiles: manglares / 2026
+  ---
+  duration_ms: 8.2379
+  ...
+# Subtest: exact native surface, slope and fluids with lattice tiles: volcanes / 2026
+ok 36 - exact native surface, slope and fluids with lattice tiles: volcanes / 2026
+  ---
+  duration_ms: 8.6467
+  ...
+# Subtest: exact native surface, slope and fluids with lattice tiles: gran-canon / 2026
+ok 37 - exact native surface, slope and fluids with lattice tiles: gran-canon / 2026
+  ---
+  duration_ms: 8.617
+  ...
+# Subtest: exact native surface, slope and fluids with lattice tiles: desierto / 2026
+ok 38 - exact native surface, slope and fluids with lattice tiles: desierto / 2026
+  ---
+  duration_ms: 5.6389
+  ...
+# Subtest: bounded tiles preserve negative boundaries, custom undefined values and explicit invalidation
+ok 39 - bounded tiles preserve negative boundaries, custom undefined values and explicit invalidation
+  ---
+  duration_ms: 0.749
+  ...
+# Subtest: non-lattice inputs use the original method and configuration is bounded
+ok 40 - non-lattice inputs use the original method and configuration is bounded
+  ---
+  duration_ms: 1.6688
+  ...
+# Subtest: exact terrain result and slope sweep with memo: sabana
+ok 41 - exact terrain result and slope sweep with memo: sabana
+  ---
+  duration_ms: 41.1842
+  ...
+# Subtest: exact terrain result and slope sweep with memo: gran-rio
+ok 42 - exact terrain result and slope sweep with memo: gran-rio
+  ---
+  duration_ms: 14.7545
+  ...
+# Subtest: exact terrain result and slope sweep with memo: manglares
+ok 43 - exact terrain result and slope sweep with memo: manglares
+  ---
+  duration_ms: 15.0303
+  ...
+# Subtest: exact terrain result and slope sweep with memo: volcanes
+ok 44 - exact terrain result and slope sweep with memo: volcanes
+  ---
+  duration_ms: 15.7344
+  ...
+# Subtest: exact terrain result and slope sweep with memo: gran-canon
+ok 45 - exact terrain result and slope sweep with memo: gran-canon
+  ---
+  duration_ms: 36.8745
+  ...
+# Subtest: exact terrain result and slope sweep with memo: desierto
+ok 46 - exact terrain result and slope sweep with memo: desierto
+  ---
+  duration_ms: 8.0726
+  ...
+# Subtest: capacity eviction, query defaults, and configuration changes between installations
+ok 47 - capacity eviction, query defaults, and configuration changes between installations
+  ---
+  duration_ms: 4.5401
+  ...
+# Subtest: method replacement invalidates values and thrown queries restore slope sweep
+ok 48 - method replacement invalidates values and thrown queries restore slope sweep
+  ---
+  duration_ms: 2.5024
+  ...
+# Subtest: nested and custom adapters are rejected, leaving ownership intact
+ok 49 - nested and custom adapters are rejected, leaving ownership intact
+  ---
+  duration_ms: 1.8418
+  ...
+# Subtest: terrain values are shared by geometric views but obstacle checks are not cached
+ok 50 - terrain values are shared by geometric views but obstacle checks are not cached
+  ---
+  duration_ms: 2.8507
+  ...
+1..50
+# tests 50
+# suites 0
+# pass 50
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 8075.8173
