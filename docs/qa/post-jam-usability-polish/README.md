@@ -239,3 +239,13 @@ and was cooperatively cancelled rather than repeating a 45-minute known failure.
 Only that owned CI run was cancelled; campaigns and unrelated processes were not
 touched. Final mandatory checks must validate the corrected fixture HEAD. The
 production sources remain exactly 49242c78; this correction is test-only.
+
+## Final packaged Windows proof and catalogue correction
+
+Windows [38160568081](https://github.com/dossijeo/wild-guardians-africa/actions/runs/38160568081) passed on f9232977. Its productive files are identical to 49242c78. Create and restore reports both show ok=true, errors=[], real Exit button found, nativeProcess.exited=true and exitCode=0. Restart reports restartRestored=true; committed versus previous ledger, plants, structures and villages are deeply equal. Elapsed 153480/168513 ms include world loading and QA, not Exit latency. Raw reports and log are preserved under raw-reports/windows-38160568081.
+
+The same isolated hosted CPU run measures 1,000 walls: changing one gate B1/B2 p95 .0619/.0664 ms, p99 .0986/.0971 ms; ten removals/reappearances p95 .0928/.0862 ms, p99 .1480/.1145 ms. Maxima .4805/.6736 ms and 1.6901/1.5860 ms respectively. Synthetic descriptor inputs exercise productive registries/resolution; this is not a GPU or physical Android benchmark.
+
+Validate [38160565608](https://github.com/dossijeo/wild-guardians-africa/actions/runs/38160565608) completed 3,991 passing checks, one failure and one skip. The sole failure was the generated SFX catalogue inventory retaining the old scene.js hash after queued camera invalidation. Regeneration changes only that source hash: all 126 rows, classifications, assignments, file hashes and metadata remain exactly equal. Three focused catalogue checks pass. The negative full log is retained under validate-38160565608; a fresh complete gate must pass before PR/integration. No audit was removed or relaxed and no productive code changed in this correction.
+
+Camera wall/gate bounds are conservative finite native mesh envelopes. Where frame and articulated leaf share a mesh, the envelope may also protect the open passage. Overflight remains available; this is a camera presentation limitation, not a navigation or simulation change.
