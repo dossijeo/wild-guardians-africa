@@ -19,6 +19,9 @@ function firstCare(s,p){assert.equal(waterPlant(p),true);Game.rebuildTasks(s);}
 function grow(s,seconds){s.eventPlan=null;Game.tick(s,seconds,nav);}
 function castGrowth(s,p){Game.cast(s,'growth','growth',p.x,p.z,nav);}
 const close=(actual,expected)=>assert.ok(Math.abs(actual-expected)<1e-7,`${actual} != ${expected}`);
+// Independent frozen daily-power oracle: budget 180, first request 15;
+// 180*15/(180+15) extra growth seconds distributed over the 30-second effect.
+const firstGrowthRate=1+(180*15/(180+15))/30;
 
 test('QA-017/019: eight canonical plant commands charge 309 and create only the approved checkpoints',()=>{
   const s=farm(),species=['mijo','girasol','sorgo','maiz','batata','algodon','yuca','platano'];
@@ -115,10 +118,10 @@ test('QA-015: large real frames stop at each dawn and charge only an explicitly 
   assert.equal(Object.keys(s.ledger.entries).filter(id=>id.startsWith('hire-day-')).length,2);
 });
 
-test('QA-029/031: Growth cannot cure dry pre-existing debt; manual watering resumes its 1.5 rate',()=>{
+test('QA-029/031: Growth cannot cure dry pre-existing debt; manual watering resumes its committed diluted rate',()=>{
   const s=farm(),p=sow(s,'maiz');firstCare(s,p);grow(s,126);close(p.growth,126);
   castGrowth(s,p);grow(s,10);close(p.growth,126);assert.equal(p.water[1].status,'due');
-  assert.equal(waterPlant(p),true);Game.rebuildTasks(s);grow(s,15);close(p.growth,148.5);
+  assert.equal(waterPlant(p),true);Game.rebuildTasks(s);grow(s,15);close(p.growth,126+15*firstGrowthRate);
   close(s.spells[0].remaining,5);assert.equal(p.water[1].status,'manual');
   assert.equal(numberOf(s.ledger.balance),9992);
 });
@@ -130,24 +133,28 @@ test('QA-024/029: Growth on a newly paid sprout never completes its initial sowi
   firstCare(s,p);grow(s,1);close(p.growth,1);
 });
 
-test('QA-030/032: a checkpoint at the exact Growth expiry is satisfied once with no deferred water task',()=>{
-  const s=farm(),p=sow(s,'maiz');firstCare(s,p);grow(s,45);castGrowth(s,p);grow(s,30);
-  close(p.growth,90);assert.equal(p.water[1].status,'magic');assert.equal(p.water[2].status,'future');
-  assert.equal(s.spells.length,0);assert.equal(s.tasks.filter(t=>t.kind==='water').length,0);
-  Game.rebuildTasks(s);grow(s,1);close(p.growth,91);assert.equal(s.tasks.filter(t=>t.kind==='water').length,0);
+test('QA-030/032: a checkpoint at fractional Growth expiry retains exactly one real watering debt',()=>{
+  const s=farm(),p=sow(s,'maiz');firstCare(s,p);grow(s,90-30*firstGrowthRate);castGrowth(s,p);grow(s,30);
+  close(p.growth,90);assert.equal(p.water[1].status,'due');assert.equal(p.water[2].status,'future');
+  assert.equal(s.spells.length,0);assert.equal(s.tasks.filter(t=>t.kind==='water').length,1);
+  Game.rebuildTasks(s);grow(s,1);close(p.growth,91);assert.equal(s.tasks.filter(t=>t.kind==='water').length,1);
+  assert.equal(waterPlant(p),true);assert.equal(waterPlant(p),false);Game.rebuildTasks(s);
+  assert.equal(p.water[1].status,'manual');assert.equal(s.tasks.filter(t=>t.kind==='water').length,0);
   assert.equal(p.water.length,3);
 });
 
-test('QA-030: each canonical species satisfies only the threshold crossed within the 30-second Growth effect',()=>{
+test('QA-030: fractional Growth in each species preserves crossed watering checkpoints and their dry tolerance',()=>{
   for(const species of ['mijo','girasol','sorgo','maiz','batata','algodon','yuca','platano']){
     const s=farm(),p=sow(s,species);firstCare(s,p);const start=p.water[1].at-1;grow(s,start);
-    castGrowth(s,p);grow(s,30);close(p.growth,start+45);
-    assert.equal(p.water[1].status,'magic');assert.ok(p.water.slice(2).every(w=>w.status==='future'));
-    assert.equal(s.spells.length,0);Game.rebuildTasks(s);assert.equal(s.tasks.length,0);
+    castGrowth(s,p);grow(s,30);
+    close(p.growth,start+1+Math.min(30-1/firstGrowthRate,cropSpec(species).derived_tolerance_seconds));
+    assert.equal(p.water[1].status,'due');assert.ok(p.water.slice(2).every(w=>w.status==='future'));
+    assert.equal(s.spells.length,0);Game.rebuildTasks(s);assert.equal(s.tasks.length,1);
+    assert.equal(s.tasks[0].kind,'water');assert.equal(s.tasks[0].targetId,p.id);
   }
 });
 
-test('QA-029/031: an actual worker waters dry sunflower during Growth, then the next checkpoint is satisfied by magic',()=>{
+test('QA-029/031: an actual worker waters dry sunflower during Growth and must also water its next checkpoint',()=>{
   const s=farm(),p=sow(s,'girasol');firstCare(s,p);grow(s,96);close(p.growth,96);
   Game.openInitialHiring(s);Game.hire(s,'hire',{olderFemale:1});
   for(let i=0;i<600&&s.workers[0].status==='arriving';i++)grow(s,.05);
@@ -156,9 +163,12 @@ test('QA-029/031: an actual worker waters dry sunflower during Growth, then the 
   for(let i=0;i<600&&!watered;i++){
     close(p.growth,96);grow(s,.05);watered=s.events.some(e=>e.type==='WaterSatisfied'&&e.targetId===p.id);
   }
-  assert.equal(watered,true);assert.equal(p.water[1].status,'manual');assert.ok(s.spells[0]?.remaining>16);
-  grow(s,16);close(p.growth,120);assert.equal(p.water[2].status,'magic');
+  const timeToNextCheckpoint=24/firstGrowthRate;
+  assert.equal(watered,true);assert.equal(p.water[1].status,'manual');assert.ok(s.spells[0]?.remaining>timeToNextCheckpoint);
+  grow(s,timeToNextCheckpoint);close(p.growth,120);assert.equal(p.water[2].status,'due');
   assert.equal(s.events.filter(e=>e.type==='WaterSatisfied'&&e.targetId===p.id).length,1);
+  for(let i=0;i<600&&p.water[2].status==='due';i++)grow(s,.05);
+  assert.equal(p.water[2].status,'manual');assert.equal(s.events.filter(e=>e.type==='WaterSatisfied'&&e.targetId===p.id).length,2);
 });
 
 function ripe(p){p.growth=cropSpec(p.species).growth_seconds;p.water.forEach(w=>{w.status='manual';w.wait=0;});}
