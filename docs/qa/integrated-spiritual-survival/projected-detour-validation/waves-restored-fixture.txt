@@ -1,0 +1,102 @@
+TAP version 13
+# (node:22260) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: only all-gone previous actors permit valid1..16 next-wave preparation
+ok 1 - only all-gone previous actors permit valid1..16 next-wave preparation
+  ---
+  duration_ms: 449.373
+  ...
+# Subtest: malformed/finished waves do not escape active raid veto
+ok 2 - malformed/finished waves do not escape active raid veto
+  ---
+  duration_ms: 2806.4833
+  ...
+# Subtest: request copies current workers/incapacitation and wave owner without former raid actors
+ok 3 - request copies current workers/incapacitation and wave owner without former raid actors
+  ---
+  duration_ms: 290.8791
+  ...
+# Subtest: native complete16-actor prepared entry remains exterior/legal and keeps exact state/RNG through reload
+ok 4 - native complete16-actor prepared entry remains exterior/legal and keeps exact state/RNG through reload
+  ---
+  duration_ms: 572.6371
+  ...
+# Subtest: retained paid closed enclosure prepares an exterior mixed next wave from its inside camera
+ok 5 - retained paid closed enclosure prepares an exterior mixed next wave from its inside camera
+  ---
+  duration_ms: 1761.1867
+  ...
+# Subtest: wave-index: stale wave reply cannot install or be taken
+ok 6 - wave-index: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 275.3221
+  ...
+# Subtest: raid-id: stale wave reply cannot install or be taken
+ok 7 - raid-id: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 297.8479
+  ...
+# Subtest: camera: stale wave reply cannot install or be taken
+ok 8 - camera: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 266.5566
+  ...
+# Subtest: topology: stale wave reply cannot install or be taken
+ok 9 - topology: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 313.5972
+  ...
+# Subtest: bounds: stale wave reply cannot install or be taken
+ok 10 - bounds: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 268.7448
+  ...
+# Subtest: rng: stale wave reply cannot install or be taken
+ok 11 - rng: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 220.2095
+  ...
+# Subtest: worker: stale wave reply cannot install or be taken
+ok 12 - worker: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 247.2287
+  ...
+# Subtest: worker-position: stale wave reply cannot install or be taken
+ok 13 - worker-position: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 243.4245
+  ...
+# Subtest: worker-incap: stale wave reply cannot install or be taken
+ok 14 - worker-incap: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 229.9502
+  ...
+# Subtest: finished: stale wave reply cannot install or be taken
+ok 15 - finished: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 218.656
+  ...
+# Subtest: active-actor: stale wave reply cannot install or be taken
+ok 16 - active-actor: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 319.4735
+  ...
+# Subtest: accepted wave cannot leak through changed identity and disposal rejects delayed reply
+ok 17 - accepted wave cannot leak through changed identity and disposal rejects delayed reply
+  ---
+  duration_ms: 642.4248
+  ...
+# Subtest: result/postgame remove readiness; ordinary no-raid key stays byte-identical
+ok 18 - result/postgame remove readiness; ordinary no-raid key stays byte-identical
+  ---
+  duration_ms: 308.126
+  ...
+1..18
+# tests 18
+# suites 0
+# pass 18
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10039.4127

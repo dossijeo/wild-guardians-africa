@@ -1,0 +1,116 @@
+TAP version 13
+# (node:21500) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: an exit root certifies its birth through an actual native segment
+ok 1 - an exit root certifies its birth through an actual native segment
+  ---
+  duration_ms: 9.6273
+  ...
+# Subtest: a multi-radius chain uses existing endpoints and recomputes the exterior root at each radius
+ok 2 - a multi-radius chain uses existing endpoints and recomputes the exterior root at each radius
+  ---
+  duration_ms: 5.2891
+  ...
+# Subtest: a small exterior root cannot lend its footprint through a narrow corridor to a larger actor
+ok 3 - a small exterior root cannot lend its footprint through a narrow corridor to a larger actor
+  ---
+  duration_ms: 1.139
+  ...
+# Subtest: native fluid rejects an apparently shared exterior certificate
+ok 4 - native fluid rejects an apparently shared exterior certificate
+  ---
+  duration_ms: 1.5419
+  ...
+# Subtest: native slope rejects an apparently shared exterior certificate
+ok 5 - native slope rejects an apparently shared exterior certificate
+  ---
+  duration_ms: 1.1353
+  ...
+# Subtest: native solid rejects an apparently shared exterior certificate
+ok 6 - native solid rejects an apparently shared exterior certificate
+  ---
+  duration_ms: 1.267
+  ...
+# Subtest: the endpoint graph adds at most its explicit root and directed edge query bounds
+ok 7 - the endpoint graph adds at most its explicit root and directed edge query bounds
+  ---
+  duration_ms: 1.3827
+  ...
+# Subtest: exact frozen good day6 keeps its complete cohort and deterministic spawn
+ok 8 - exact frozen good day6 keeps its complete cohort and deterministic spawn
+  ---
+  duration_ms: 1573.5634
+  ...
+# Subtest: exact frozen expansive day6 keeps its complete cohort and deterministic spawn
+ok 9 - exact frozen expansive day6 keeps its complete cohort and deterministic spawn
+  ---
+  duration_ms: 1189.7059
+  ...
+# Subtest: a new live wall invalidates a previously accepted endpoint connector
+ok 10 - a new live wall invalidates a previously accepted endpoint connector
+  ---
+  duration_ms: 0.9954
+  ...
+# Subtest: graph bounds reject the whole oversized unresolved candidate rather than thinning it
+ok 11 - graph bounds reject the whole oversized unresolved candidate rather than thinning it
+  ---
+  duration_ms: 0.8258
+  ...
+# (node:50340) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a positive detour is checked at real radius and never lends a larger footprint
+ok 12 - a positive detour is checked at real radius and never lends a larger footprint
+  ---
+  duration_ms: 2.1325
+  ...
+# Subtest: a false or incomplete path cannot certify exterior connectivity
+ok 13 - a false or incomplete path cannot certify exterior connectivity
+  ---
+  duration_ms: 0.4469
+  ...
+# Subtest: a navigation epoch change invalidates the complete positive certificate
+ok 14 - a navigation epoch change invalidates the complete positive certificate
+  ---
+  duration_ms: 0.6003
+  ...
+# Subtest: a sealed component uses at most four searches and never accepts a partial horde
+ok 15 - a sealed component uses at most four searches and never accepts a partial horde
+  ---
+  duration_ms: 0.2754
+  ...
+# Subtest: the detour cannot cross a native closed enclosure
+ok 16 - the detour cannot cross a native closed enclosure
+  ---
+  duration_ms: 1296.058
+  ...
+# Subtest: the detour cannot cross a native mixed-cliff enclosure
+ok 17 - the detour cannot cross a native mixed-cliff enclosure
+  ---
+  duration_ms: 602.4286
+  ...
+# Subtest: a route formation keeps all animals, spacing and clear retreat segments
+ok 18 - a route formation keeps all animals, spacing and clear retreat segments
+  ---
+  duration_ms: 1.9072
+  ...
+# Subtest: retained seed-2026 night10 admits all sixteen actors through a deterministic physical exterior route
+ok 19 - retained seed-2026 night10 admits all sixteen actors through a deterministic physical exterior route
+  ---
+  duration_ms: 5696.5361
+  ...
+# (node:50980) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: retained night13 selects all sixteen bodies on a certified projected exterior lane without changing state
+ok 20 - retained night13 selects all sixteen bodies on a certified projected exterior lane without changing state
+  ---
+  duration_ms: 7945.1216
+  ...
+1..20
+# tests 20
+# suites 0
+# pass 20
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 8259.9839

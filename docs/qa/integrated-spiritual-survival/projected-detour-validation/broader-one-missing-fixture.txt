@@ -1,0 +1,452 @@
+TAP version 13
+# (node:6468) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: sabana: prepared native entry preserves the entire original post-spawn state
+ok 1 - sabana: prepared native entry preserves the entire original post-spawn state
+  ---
+  duration_ms: 1329.4162
+  ...
+# Subtest: gran-rio: prepared native entry preserves the entire original post-spawn state
+ok 2 - gran-rio: prepared native entry preserves the entire original post-spawn state
+  ---
+  duration_ms: 852.1082
+  ...
+# Subtest: manglares: prepared native entry preserves the entire original post-spawn state
+ok 3 - manglares: prepared native entry preserves the entire original post-spawn state
+  ---
+  duration_ms: 608.9788
+  ...
+# Subtest: volcanes: prepared native entry preserves the entire original post-spawn state
+ok 4 - volcanes: prepared native entry preserves the entire original post-spawn state
+  ---
+  duration_ms: 815.4498
+  ...
+# Subtest: gran-canon: prepared native entry preserves the entire original post-spawn state
+ok 5 - gran-canon: prepared native entry preserves the entire original post-spawn state
+  ---
+  duration_ms: 2999.7847
+  ...
+# Subtest: desierto: prepared native entry preserves the entire original post-spawn state
+ok 6 - desierto: prepared native entry preserves the entire original post-spawn state
+  ---
+  duration_ms: 3514.8488
+  ...
+# Subtest: camera: obsolete worker replies cannot supply an entry
+ok 7 - camera: obsolete worker replies cannot supply an entry
+  ---
+  duration_ms: 370.5553
+  ...
+# Subtest: bounds: obsolete worker replies cannot supply an entry
+ok 8 - bounds: obsolete worker replies cannot supply an entry
+  ---
+  duration_ms: 327.4458
+  ...
+# Subtest: geometry: obsolete worker replies cannot supply an entry
+ok 9 - geometry: obsolete worker replies cannot supply an entry
+  ---
+  duration_ms: 388.0168
+  ...
+# Subtest: group: obsolete worker replies cannot supply an entry
+ok 10 - group: obsolete worker replies cannot supply an entry
+  ---
+  duration_ms: 372.3335
+  ...
+# Subtest: collapse: obsolete worker replies cannot supply an entry
+ok 11 - collapse: obsolete worker replies cannot supply an entry
+  ---
+  duration_ms: 276.2167
+  ...
+# Subtest: rng: obsolete worker replies cannot supply an entry
+ok 12 - rng: obsolete worker replies cannot supply an entry
+  ---
+  duration_ms: 291.1908
+  ...
+# Subtest: a reply accepted before the camera moves is also rejected at the actual spawn
+ok 13 - a reply accepted before the camera moves is also rejected at the actual spawn
+  ---
+  duration_ms: 363.0108
+  ...
+# Subtest: preparation bounds outstanding work, reports failure, and never survives disposal
+ok 14 - preparation bounds outstanding work, reports failure, and never survives disposal
+  ---
+  duration_ms: 286.8094
+  ...
+# Subtest: prepared camera failure still uses the original boundary fallback and RNG
+ok 15 - prepared camera failure still uses the original boundary fallback and RNG
+  ---
+  duration_ms: 378.6158
+  ...
+# (node:34524) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: residency pins actual sparse birth/exit chunks without generating the expanded rectangle
+ok 16 - residency pins actual sparse birth/exit chunks without generating the expanded rectangle
+  ---
+  duration_ms: 4.7424
+  ...
+# Subtest: pins are evicted and bounds restored after cancellation, without disrupting normal chunks
+ok 17 - pins are evicted and bounds restored after cancellation, without disrupting normal chunks
+  ---
+  duration_ms: 1.8084
+  ...
+# Subtest: active actor next-step corridor remains pinned and all demand disappears after real departure
+ok 18 - active actor next-step corridor remains pinned and all demand disappears after real departure
+  ---
+  duration_ms: 0.6319
+  ...
+# Subtest: bounds refresh retains validated sparse demand while a new full worker key is prepared
+ok 19 - bounds refresh retains validated sparse demand while a new full worker key is prepared
+  ---
+  duration_ms: 10.2671
+  ...
+# Subtest: headless driver waits for the same retained daytime owner instead of the nighttime key
+ok 20 - headless driver waits for the same retained daytime owner instead of the nighttime key
+  ---
+  duration_ms: 36.9432
+  ...
+# (node:15092) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: an exit root certifies its birth through an actual native segment
+ok 21 - an exit root certifies its birth through an actual native segment
+  ---
+  duration_ms: 15.7022
+  ...
+# Subtest: a multi-radius chain uses existing endpoints and recomputes the exterior root at each radius
+ok 22 - a multi-radius chain uses existing endpoints and recomputes the exterior root at each radius
+  ---
+  duration_ms: 10.5289
+  ...
+# Subtest: a small exterior root cannot lend its footprint through a narrow corridor to a larger actor
+ok 23 - a small exterior root cannot lend its footprint through a narrow corridor to a larger actor
+  ---
+  duration_ms: 1.7791
+  ...
+# Subtest: native fluid rejects an apparently shared exterior certificate
+ok 24 - native fluid rejects an apparently shared exterior certificate
+  ---
+  duration_ms: 2.7824
+  ...
+# Subtest: native slope rejects an apparently shared exterior certificate
+ok 25 - native slope rejects an apparently shared exterior certificate
+  ---
+  duration_ms: 1.4012
+  ...
+# Subtest: native solid rejects an apparently shared exterior certificate
+ok 26 - native solid rejects an apparently shared exterior certificate
+  ---
+  duration_ms: 1.4807
+  ...
+# Subtest: the endpoint graph adds at most its explicit root and directed edge query bounds
+ok 27 - the endpoint graph adds at most its explicit root and directed edge query bounds
+  ---
+  duration_ms: 1.6552
+  ...
+# Subtest: exact frozen good day6 keeps its complete cohort and deterministic spawn
+ok 28 - exact frozen good day6 keeps its complete cohort and deterministic spawn
+  ---
+  duration_ms: 2273.1669
+  ...
+# Subtest: exact frozen expansive day6 keeps its complete cohort and deterministic spawn
+ok 29 - exact frozen expansive day6 keeps its complete cohort and deterministic spawn
+  ---
+  duration_ms: 1831.9734
+  ...
+# Subtest: a new live wall invalidates a previously accepted endpoint connector
+ok 30 - a new live wall invalidates a previously accepted endpoint connector
+  ---
+  duration_ms: 1.7712
+  ...
+# Subtest: graph bounds reject the whole oversized unresolved candidate rather than thinning it
+ok 31 - graph bounds reject the whole oversized unresolved candidate rather than thinning it
+  ---
+  duration_ms: 1.3071
+  ...
+# (node:51504) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a positive detour is checked at real radius and never lends a larger footprint
+ok 32 - a positive detour is checked at real radius and never lends a larger footprint
+  ---
+  duration_ms: 3.554
+  ...
+# Subtest: a false or incomplete path cannot certify exterior connectivity
+ok 33 - a false or incomplete path cannot certify exterior connectivity
+  ---
+  duration_ms: 0.4155
+  ...
+# Subtest: a navigation epoch change invalidates the complete positive certificate
+ok 34 - a navigation epoch change invalidates the complete positive certificate
+  ---
+  duration_ms: 0.5277
+  ...
+# Subtest: a sealed component uses at most four searches and never accepts a partial horde
+ok 35 - a sealed component uses at most four searches and never accepts a partial horde
+  ---
+  duration_ms: 0.2906
+  ...
+# Subtest: the detour cannot cross a native closed enclosure
+ok 36 - the detour cannot cross a native closed enclosure
+  ---
+  duration_ms: 1798.9164
+  ...
+# Subtest: the detour cannot cross a native mixed-cliff enclosure
+ok 37 - the detour cannot cross a native mixed-cliff enclosure
+  ---
+  duration_ms: 722.3271
+  ...
+# Subtest: a route formation keeps all animals, spacing and clear retreat segments
+ok 38 - a route formation keeps all animals, spacing and clear retreat segments
+  ---
+  duration_ms: 1.9861
+  ...
+# Subtest: retained seed-2026 night10 admits all sixteen actors through a deterministic physical exterior route
+ok 39 - retained seed-2026 night10 admits all sixteen actors through a deterministic physical exterior route
+  ---
+  duration_ms: 8151.2531
+  ...
+# (node:19080) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: whole group exterior native entry: closed
+ok 40 - whole group exterior native entry: closed
+  ---
+  duration_ms: 139.2972
+  ...
+# Subtest: whole group exterior native entry: open
+ok 41 - whole group exterior native entry: open
+  ---
+  duration_ms: 33.0353
+  ...
+# Subtest: whole group exterior native entry: gate
+ok 42 - whole group exterior native entry: gate
+  ---
+  duration_ms: 43.2513
+  ...
+# Subtest: whole group exterior native entry: separate
+ok 43 - whole group exterior native entry: separate
+  ---
+  duration_ms: 22.4353
+  ...
+# Subtest: whole group exterior native entry: concave
+ok 44 - whole group exterior native entry: concave
+  ---
+  duration_ms: 59.6728
+  ...
+# Subtest: whole group exterior native entry: no-walls
+ok 45 - whole group exterior native entry: no-walls
+  ---
+  duration_ms: 3.2156
+  ...
+# Subtest: whole group exterior native entry: clipped-bounds
+ok 46 - whole group exterior native entry: clipped-bounds
+  ---
+  duration_ms: 27.2308
+  ...
+# Subtest: closed 40m enclosure starts physically outside then hits a wall
+ok 47 - closed 40m enclosure starts physically outside then hits a wall
+  ---
+  duration_ms: 315.3016
+  ...
+# Subtest: closed 320m enclosure starts physically outside then hits a wall
+ok 48 - closed 320m enclosure starts physically outside then hits a wall
+  ---
+  duration_ms: 9290.6649
+  ...
+# Subtest: residency handshake preserves pending night/RNG and reload creates exactly one complete group
+ok 49 - residency handshake preserves pending night/RNG and reload creates exactly one complete group
+  ---
+  duration_ms: 756.3495
+  ...
+# Subtest: worker preparation uses the same exterior choice without changing state or RNG
+ok 50 - worker preparation uses the same exterior choice without changing state or RNG
+  ---
+  duration_ms: 629.3649
+  ...
+# Subtest: expanded bounds have sparse finite chunk demand and release when raid disappears
+ok 51 - expanded bounds have sparse finite chunk demand and release when raid disappears
+  ---
+  duration_ms: 30.0322
+  ...
+# Subtest: native sabana opening: whole group keeps genuine terrain and fluid legality
+ok 52 - native sabana opening: whole group keeps genuine terrain and fluid legality
+  ---
+  duration_ms: 411.6519
+  ...
+# Subtest: native gran-rio opening: whole group keeps genuine terrain and fluid legality
+ok 53 - native gran-rio opening: whole group keeps genuine terrain and fluid legality
+  ---
+  duration_ms: 403.2712
+  ...
+# Subtest: native manglares opening: whole group keeps genuine terrain and fluid legality
+ok 54 - native manglares opening: whole group keeps genuine terrain and fluid legality
+  ---
+  duration_ms: 360.8348
+  ...
+# Subtest: native volcanes opening: whole group keeps genuine terrain and fluid legality
+ok 55 - native volcanes opening: whole group keeps genuine terrain and fluid legality
+  ---
+  duration_ms: 318.7892
+  ...
+# Subtest: native gran-canon opening: whole group keeps genuine terrain and fluid legality
+ok 56 - native gran-canon opening: whole group keeps genuine terrain and fluid legality
+  ---
+  duration_ms: 1836.9744
+  ...
+# Subtest: native desierto opening: whole group keeps genuine terrain and fluid legality
+ok 57 - native desierto opening: whole group keeps genuine terrain and fluid legality
+  ---
+  duration_ms: 2114.6405
+  ...
+# Subtest: a whole 32 cohort is neither thinned nor rerolled when a single near-camera lane cannot fit
+ok 58 - a whole 32 cohort is neither thinned nor rerolled when a single near-camera lane cannot fit
+  ---
+  duration_ms: 44.8108
+  ...
+# Subtest: a whole 72 cohort is neither thinned nor rerolled when a single near-camera lane cannot fit
+ok 59 - a whole 72 cohort is neither thinned nor rerolled when a single near-camera lane cannot fit
+  ---
+  duration_ms: 54.3363
+  ...
+# Subtest: a wall closing a natural cliff pocket cannot admit births in its enclosed interior beyond the wall AABB
+ok 60 - a wall closing a natural cliff pocket cannot admit births in its enclosed interior beyond the wall AABB
+  ---
+  duration_ms: 53.5088
+  ...
+# Subtest: failed whole-group selection is memoized, reports once and retries after native obstacle epoch changes
+ok 61 - failed whole-group selection is memoized, reports once and retries after native obstacle epoch changes
+  ---
+  duration_ms: 20.8212
+  ...
+# Subtest: view invalidation replaces prior sparse demand before whole-group residency can commit
+ok 62 - view invalidation replaces prior sparse demand before whole-group residency can commit
+  ---
+  duration_ms: 19.5614
+  ...
+# Subtest: retained daytime entry owns readiness across night and both groups spawn sequentially with native ticks
+ok 63 - retained daytime entry owns readiness across night and both groups spawn sequentially with native ticks
+  ---
+  duration_ms: 211.8685
+  ...
+# (node:41368) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: retained night13 selects all sixteen bodies on a certified projected exterior lane without changing state
+ok 64 - retained night13 selects all sixteen bodies on a certified projected exterior lane without changing state
+  ---
+  duration_ms: 11112.0726
+  ...
+# Subtest: failed projected proofs stay bounded and never accept a partial or uncertified wave
+ok 65 - failed projected proofs stay bounded and never accept a partial or uncertified wave
+  ---
+  duration_ms: 2.2879
+  ...
+# (node:2120) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: only all-gone previous actors permit valid1..16 next-wave preparation
+ok 66 - only all-gone previous actors permit valid1..16 next-wave preparation
+  ---
+  duration_ms: 737.2097
+  ...
+# Subtest: malformed/finished waves do not escape active raid veto
+ok 67 - malformed/finished waves do not escape active raid veto
+  ---
+  duration_ms: 3649.8758
+  ...
+# Subtest: request copies current workers/incapacitation and wave owner without former raid actors
+ok 68 - request copies current workers/incapacitation and wave owner without former raid actors
+  ---
+  duration_ms: 367.392
+  ...
+# Subtest: native complete16-actor prepared entry remains exterior/legal and keeps exact state/RNG through reload
+ok 69 - native complete16-actor prepared entry remains exterior/legal and keeps exact state/RNG through reload
+  ---
+  duration_ms: 646.2767
+  ...
+# Subtest: retained paid closed enclosure prepares an exterior mixed next wave from its inside camera
+not ok 70 - retained paid closed enclosure prepares an exterior mixed next wave from its inside camera
+  ---
+  duration_ms: 1.503
+  location: 'file:///C:/Users/PC/.codex/worktrees/qa-v40-short-yield/tests/raid-wave-entry-readiness.test.js:51:1'
+  failureType: 'testCodeFailure'
+  error: "ENOENT: no such file or directory, open 'C:\\Users\\PC\\.codex\\worktrees\\qa-v40-short-yield\\docs\\qa\\paid-enclosure-entry-risk\\native-original\\paid-enclosure-entry-04.json'"
+  code: 'ENOENT'
+  stack: |-
+    readFileSync (node:fs:453:20)
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/qa-v40-short-yield/tests/raid-wave-entry-readiness.test.js:52:28)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+# Subtest: wave-index: stale wave reply cannot install or be taken
+ok 71 - wave-index: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 371.4232
+  ...
+# Subtest: raid-id: stale wave reply cannot install or be taken
+ok 72 - raid-id: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 415.9459
+  ...
+# Subtest: camera: stale wave reply cannot install or be taken
+ok 73 - camera: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 413.3762
+  ...
+# Subtest: topology: stale wave reply cannot install or be taken
+ok 74 - topology: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 379.39
+  ...
+# Subtest: bounds: stale wave reply cannot install or be taken
+ok 75 - bounds: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 362.2441
+  ...
+# Subtest: rng: stale wave reply cannot install or be taken
+ok 76 - rng: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 295.1596
+  ...
+# Subtest: worker: stale wave reply cannot install or be taken
+ok 77 - worker: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 392.7816
+  ...
+# Subtest: worker-position: stale wave reply cannot install or be taken
+ok 78 - worker-position: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 348.2583
+  ...
+# Subtest: worker-incap: stale wave reply cannot install or be taken
+ok 79 - worker-incap: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 400.7227
+  ...
+# Subtest: finished: stale wave reply cannot install or be taken
+ok 80 - finished: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 357.2752
+  ...
+# Subtest: active-actor: stale wave reply cannot install or be taken
+ok 81 - active-actor: stale wave reply cannot install or be taken
+  ---
+  duration_ms: 296.5481
+  ...
+# Subtest: accepted wave cannot leak through changed identity and disposal rejects delayed reply
+ok 82 - accepted wave cannot leak through changed identity and disposal rejects delayed reply
+  ---
+  duration_ms: 320.7496
+  ...
+# Subtest: result/postgame remove readiness; ordinary no-raid key stays byte-identical
+ok 83 - result/postgame remove readiness; ordinary no-raid key stays byte-identical
+  ---
+  duration_ms: 365.3988
+  ...
+1..83
+# tests 83
+# suites 0
+# pass 82
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 17705.1337

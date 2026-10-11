@@ -1,0 +1,1154 @@
+{
+  "distinctPassedCases": 98,
+  "sourceHashes": {
+    "src/simulation/raid-exterior-entry.js": "b0b66880814b077dcc6ef55c6115b1401c1f838ff0c2ee617e03b90eac65877d",
+    "tests/raid-projected-detour.test.js": "536f2a622b667d1c51dda5d6429ecb88964d2d3eee28899b9e09af80f6786884"
+  },
+  "logs": [
+    {
+      "name": "initial-missing-fixtures.txt",
+      "sha256": "fa1fcf5f40c94e502d05b9b9317ccdfd3aa5a9fd107844118fe065c12a878a83"
+    },
+    {
+      "name": "focused-restored-fixtures.txt",
+      "sha256": "16e7a8e535816de0b547f8e8ee33e188e87a6f8eb4066aeeede8774b368b0557"
+    },
+    {
+      "name": "broader-one-missing-fixture.txt",
+      "sha256": "4bf0dc84191bd66283b12806b3ae228be1a1221963cd4f25cd705c687af3715f"
+    },
+    {
+      "name": "waves-restored-fixture.txt",
+      "sha256": "b9a0dbda024b9cbf4f2edf8fe962fb0811738d0c9e0d804e7b1efe93e81300ed"
+    },
+    {
+      "name": "reload-and-projected.txt",
+      "sha256": "73610ecf3f55dcb92439d131544d91f077fdf82ad432eab7b5562e1cd2ba7c4d"
+    }
+  ],
+  "cases": [
+    {
+      "name": "an exit root certifies its birth through an actual native segment",
+      "observations": [
+        {
+          "log": "initial-missing-fixtures.txt",
+          "status": "ok"
+        },
+        {
+          "log": "focused-restored-fixtures.txt",
+          "status": "ok"
+        },
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "a multi-radius chain uses existing endpoints and recomputes the exterior root at each radius",
+      "observations": [
+        {
+          "log": "initial-missing-fixtures.txt",
+          "status": "ok"
+        },
+        {
+          "log": "focused-restored-fixtures.txt",
+          "status": "ok"
+        },
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "a small exterior root cannot lend its footprint through a narrow corridor to a larger actor",
+      "observations": [
+        {
+          "log": "initial-missing-fixtures.txt",
+          "status": "ok"
+        },
+        {
+          "log": "focused-restored-fixtures.txt",
+          "status": "ok"
+        },
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "native fluid rejects an apparently shared exterior certificate",
+      "observations": [
+        {
+          "log": "initial-missing-fixtures.txt",
+          "status": "ok"
+        },
+        {
+          "log": "focused-restored-fixtures.txt",
+          "status": "ok"
+        },
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "native slope rejects an apparently shared exterior certificate",
+      "observations": [
+        {
+          "log": "initial-missing-fixtures.txt",
+          "status": "ok"
+        },
+        {
+          "log": "focused-restored-fixtures.txt",
+          "status": "ok"
+        },
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "native solid rejects an apparently shared exterior certificate",
+      "observations": [
+        {
+          "log": "initial-missing-fixtures.txt",
+          "status": "ok"
+        },
+        {
+          "log": "focused-restored-fixtures.txt",
+          "status": "ok"
+        },
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "the endpoint graph adds at most its explicit root and directed edge query bounds",
+      "observations": [
+        {
+          "log": "initial-missing-fixtures.txt",
+          "status": "ok"
+        },
+        {
+          "log": "focused-restored-fixtures.txt",
+          "status": "ok"
+        },
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "exact frozen good day6 keeps its complete cohort and deterministic spawn",
+      "observations": [
+        {
+          "log": "initial-missing-fixtures.txt",
+          "status": "not ok"
+        },
+        {
+          "log": "focused-restored-fixtures.txt",
+          "status": "ok"
+        },
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "exact frozen expansive day6 keeps its complete cohort and deterministic spawn",
+      "observations": [
+        {
+          "log": "initial-missing-fixtures.txt",
+          "status": "not ok"
+        },
+        {
+          "log": "focused-restored-fixtures.txt",
+          "status": "ok"
+        },
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "a new live wall invalidates a previously accepted endpoint connector",
+      "observations": [
+        {
+          "log": "initial-missing-fixtures.txt",
+          "status": "ok"
+        },
+        {
+          "log": "focused-restored-fixtures.txt",
+          "status": "ok"
+        },
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "graph bounds reject the whole oversized unresolved candidate rather than thinning it",
+      "observations": [
+        {
+          "log": "initial-missing-fixtures.txt",
+          "status": "ok"
+        },
+        {
+          "log": "focused-restored-fixtures.txt",
+          "status": "ok"
+        },
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "a positive detour is checked at real radius and never lends a larger footprint",
+      "observations": [
+        {
+          "log": "initial-missing-fixtures.txt",
+          "status": "ok"
+        },
+        {
+          "log": "focused-restored-fixtures.txt",
+          "status": "ok"
+        },
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "a false or incomplete path cannot certify exterior connectivity",
+      "observations": [
+        {
+          "log": "initial-missing-fixtures.txt",
+          "status": "ok"
+        },
+        {
+          "log": "focused-restored-fixtures.txt",
+          "status": "ok"
+        },
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "a navigation epoch change invalidates the complete positive certificate",
+      "observations": [
+        {
+          "log": "initial-missing-fixtures.txt",
+          "status": "ok"
+        },
+        {
+          "log": "focused-restored-fixtures.txt",
+          "status": "ok"
+        },
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "a sealed component uses at most four searches and never accepts a partial horde",
+      "observations": [
+        {
+          "log": "initial-missing-fixtures.txt",
+          "status": "ok"
+        },
+        {
+          "log": "focused-restored-fixtures.txt",
+          "status": "ok"
+        },
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "the detour cannot cross a native closed enclosure",
+      "observations": [
+        {
+          "log": "initial-missing-fixtures.txt",
+          "status": "ok"
+        },
+        {
+          "log": "focused-restored-fixtures.txt",
+          "status": "ok"
+        },
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "the detour cannot cross a native mixed-cliff enclosure",
+      "observations": [
+        {
+          "log": "initial-missing-fixtures.txt",
+          "status": "ok"
+        },
+        {
+          "log": "focused-restored-fixtures.txt",
+          "status": "ok"
+        },
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "a route formation keeps all animals, spacing and clear retreat segments",
+      "observations": [
+        {
+          "log": "initial-missing-fixtures.txt",
+          "status": "ok"
+        },
+        {
+          "log": "focused-restored-fixtures.txt",
+          "status": "ok"
+        },
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "retained seed-2026 night10 admits all sixteen actors through a deterministic physical exterior route",
+      "observations": [
+        {
+          "log": "initial-missing-fixtures.txt",
+          "status": "not ok"
+        },
+        {
+          "log": "focused-restored-fixtures.txt",
+          "status": "ok"
+        },
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "retained night13 selects all sixteen bodies on a certified projected exterior lane without changing state",
+      "observations": [
+        {
+          "log": "initial-missing-fixtures.txt",
+          "status": "not ok"
+        },
+        {
+          "log": "focused-restored-fixtures.txt",
+          "status": "ok"
+        },
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        },
+        {
+          "log": "reload-and-projected.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "sabana: prepared native entry preserves the entire original post-spawn state",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "gran-rio: prepared native entry preserves the entire original post-spawn state",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "manglares: prepared native entry preserves the entire original post-spawn state",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "volcanes: prepared native entry preserves the entire original post-spawn state",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "gran-canon: prepared native entry preserves the entire original post-spawn state",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "desierto: prepared native entry preserves the entire original post-spawn state",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "camera: obsolete worker replies cannot supply an entry",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "bounds: obsolete worker replies cannot supply an entry",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "geometry: obsolete worker replies cannot supply an entry",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "group: obsolete worker replies cannot supply an entry",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "collapse: obsolete worker replies cannot supply an entry",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "rng: obsolete worker replies cannot supply an entry",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "a reply accepted before the camera moves is also rejected at the actual spawn",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "preparation bounds outstanding work, reports failure, and never survives disposal",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "prepared camera failure still uses the original boundary fallback and RNG",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "residency pins actual sparse birth/exit chunks without generating the expanded rectangle",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "pins are evicted and bounds restored after cancellation, without disrupting normal chunks",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "active actor next-step corridor remains pinned and all demand disappears after real departure",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "bounds refresh retains validated sparse demand while a new full worker key is prepared",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "headless driver waits for the same retained daytime owner instead of the nighttime key",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "whole group exterior native entry: closed",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "whole group exterior native entry: open",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "whole group exterior native entry: gate",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "whole group exterior native entry: separate",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "whole group exterior native entry: concave",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "whole group exterior native entry: no-walls",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "whole group exterior native entry: clipped-bounds",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "closed 40m enclosure starts physically outside then hits a wall",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "closed 320m enclosure starts physically outside then hits a wall",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "residency handshake preserves pending night/RNG and reload creates exactly one complete group",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "worker preparation uses the same exterior choice without changing state or RNG",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "expanded bounds have sparse finite chunk demand and release when raid disappears",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "native sabana opening: whole group keeps genuine terrain and fluid legality",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "native gran-rio opening: whole group keeps genuine terrain and fluid legality",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "native manglares opening: whole group keeps genuine terrain and fluid legality",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "native volcanes opening: whole group keeps genuine terrain and fluid legality",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "native gran-canon opening: whole group keeps genuine terrain and fluid legality",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "native desierto opening: whole group keeps genuine terrain and fluid legality",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "a whole 32 cohort is neither thinned nor rerolled when a single near-camera lane cannot fit",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "a whole 72 cohort is neither thinned nor rerolled when a single near-camera lane cannot fit",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "a wall closing a natural cliff pocket cannot admit births in its enclosed interior beyond the wall AABB",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "failed whole-group selection is memoized, reports once and retries after native obstacle epoch changes",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "view invalidation replaces prior sparse demand before whole-group residency can commit",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "retained daytime entry owns readiness across night and both groups spawn sequentially with native ticks",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "failed projected proofs stay bounded and never accept a partial or uncertified wave",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        },
+        {
+          "log": "reload-and-projected.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "only all-gone previous actors permit valid1..16 next-wave preparation",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        },
+        {
+          "log": "waves-restored-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "malformed/finished waves do not escape active raid veto",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        },
+        {
+          "log": "waves-restored-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "request copies current workers/incapacitation and wave owner without former raid actors",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        },
+        {
+          "log": "waves-restored-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "native complete16-actor prepared entry remains exterior/legal and keeps exact state/RNG through reload",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        },
+        {
+          "log": "waves-restored-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "retained paid closed enclosure prepares an exterior mixed next wave from its inside camera",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "not ok"
+        },
+        {
+          "log": "waves-restored-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "wave-index: stale wave reply cannot install or be taken",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        },
+        {
+          "log": "waves-restored-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "raid-id: stale wave reply cannot install or be taken",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        },
+        {
+          "log": "waves-restored-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "camera: stale wave reply cannot install or be taken",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        },
+        {
+          "log": "waves-restored-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "topology: stale wave reply cannot install or be taken",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        },
+        {
+          "log": "waves-restored-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "bounds: stale wave reply cannot install or be taken",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        },
+        {
+          "log": "waves-restored-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "rng: stale wave reply cannot install or be taken",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        },
+        {
+          "log": "waves-restored-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "worker: stale wave reply cannot install or be taken",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        },
+        {
+          "log": "waves-restored-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "worker-position: stale wave reply cannot install or be taken",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        },
+        {
+          "log": "waves-restored-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "worker-incap: stale wave reply cannot install or be taken",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        },
+        {
+          "log": "waves-restored-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "finished: stale wave reply cannot install or be taken",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        },
+        {
+          "log": "waves-restored-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "active-actor: stale wave reply cannot install or be taken",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        },
+        {
+          "log": "waves-restored-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "accepted wave cannot leak through changed identity and disposal rejects delayed reply",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        },
+        {
+          "log": "waves-restored-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "result/postgame remove readiness; ordinary no-raid key stays byte-identical",
+      "observations": [
+        {
+          "log": "broader-one-missing-fixture.txt",
+          "status": "ok"
+        },
+        {
+          "log": "waves-restored-fixture.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "QA-145: warthog six live checkpoints reload identically across all five native center cultures",
+      "observations": [
+        {
+          "log": "reload-and-projected.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "QA-145: hyena six live checkpoints reload identically across all five native center cultures",
+      "observations": [
+        {
+          "log": "reload-and-projected.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "QA-145: buffalo six live checkpoints reload identically across all five native center cultures",
+      "observations": [
+        {
+          "log": "reload-and-projected.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "QA-145: lion six live checkpoints reload identically across all five native center cultures",
+      "observations": [
+        {
+          "log": "reload-and-projected.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "QA-145: rhino six live checkpoints reload identically across all five native center cultures",
+      "observations": [
+        {
+          "log": "reload-and-projected.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "QA-099: warthog both naturally selected native combos consume exactly one hit after the complete clip, including reload",
+      "observations": [
+        {
+          "log": "reload-and-projected.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "QA-099: hyena both naturally selected native combos consume exactly one hit after the complete clip, including reload",
+      "observations": [
+        {
+          "log": "reload-and-projected.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "QA-099: buffalo both naturally selected native combos consume exactly one hit after the complete clip, including reload",
+      "observations": [
+        {
+          "log": "reload-and-projected.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "QA-099: lion both naturally selected native combos consume exactly one hit after the complete clip, including reload",
+      "observations": [
+        {
+          "log": "reload-and-projected.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "QA-099: rhino both naturally selected native combos consume exactly one hit after the complete clip, including reload",
+      "observations": [
+        {
+          "log": "reload-and-projected.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "QA-097: warthog a destroyed crop releases its reservation and retargets with the same remaining budget",
+      "observations": [
+        {
+          "log": "reload-and-projected.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "QA-097: hyena a destroyed crop releases its reservation and retargets with the same remaining budget",
+      "observations": [
+        {
+          "log": "reload-and-projected.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "QA-097: buffalo a destroyed crop releases its reservation and retargets with the same remaining budget",
+      "observations": [
+        {
+          "log": "reload-and-projected.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "QA-097: lion a destroyed crop releases its reservation and retargets with the same remaining budget",
+      "observations": [
+        {
+          "log": "reload-and-projected.txt",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "name": "QA-097: rhino a destroyed crop releases its reservation and retargets with the same remaining budget",
+      "observations": [
+        {
+          "log": "reload-and-projected.txt",
+          "status": "ok"
+        }
+      ]
+    }
+  ],
+  "scope": "Candidate-tree raw test logs, including missing sparse fixtures and corrected runs. Unique test names need a real passing observation. Common-tree extra checks and build are separate."
+}
