@@ -13,6 +13,7 @@ export function animalExitConnector(actor,end,nav){
  let search=actor.exitConnectorSearch;
  if(!search||search.key!==key)search=actor.exitConnectorSearch={key,next:0};
  const heading=Math.atan2(end.x-actor.x,end.z-actor.z);
+ const radialStart=search.next;
  const limit=Math.min(distances.length*angles,search.next+budget);
  for(;search.next<limit;){
   const index=search.next++,sample=index%angles;
@@ -26,6 +27,9 @@ export function animalExitConnector(actor,end,nav){
   return [point,{x:end.x,z:end.z}];
  }
  if(search.next===distances.length*angles){
+  // Completing the radial slice is already this tick's work. Resume the
+  // lattice fallbacks next tick instead of stacking both on its final slice.
+  if(search.next!==radialStart)return null;
   const path=fractionalExit(actor,end,nav,search,radius);if(path)return path;
   // A lattice can still miss a passage narrower than its cell spacing. Use
   // footprint-derived physical corners only after the unchanged search ends.

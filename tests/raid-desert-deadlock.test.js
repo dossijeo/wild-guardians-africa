@@ -15,12 +15,24 @@ for(const dt of [.1,1])test(`recorded Desert day-59 opposing traffic finishes ph
  const spent=actors[1];assert.equal(spent.hitsRemaining,0);
  let seconds=0;
  for(;state.raid&&!state.result&&seconds<120;seconds+=dt){
-  const before=actors.map(a=>({x:a.x,z:a.z}));
+  const before=actors.map(a=>({x:a.x,z:a.z,path:structuredClone(a.path)}));
   tick(state,dt,nav);
   for(let i=0;i<actors.length;i++){
    const a=actors[i],travel=Math.hypot(a.x-before[i].x,a.z-before[i].z);
    assert.ok(travel<=3.8*dt+1e-8,'No teleport or increased speed');
-   assert.ok(nav.segmentClear(before[i],a,a.radius,null,false),'Native terrain remains solid');
+   if(!nav.segmentClear(before[i],a,a.radius,null,false)){
+    // A one-second tick can consume multiple bends. The chord between tick
+    // endpoints is not the movement: verify every consumed authoritative leg.
+    const old=before[i].path,remaining=a.path??[];
+    assert.ok(old&&old.length>=remaining.length,'Retained movement route required');
+    assert.deepEqual(old.slice(old.length-remaining.length),remaining,'No unobserved replacement route');
+    const consumed=old.slice(0,old.length-remaining.length);let last=before[i],length=0;
+    for(const point of [...consumed,{x:a.x,z:a.z}]){
+     assert.ok(nav.segmentClear(last,point,a.radius,null,false),'Every actual route leg clears native terrain');
+     length+=Math.hypot(point.x-last.x,point.z-last.z);last=point;
+    }
+    assert.ok(length<=3.8*dt+1e-8,'Actual polyline respects speed');
+   }
    if(a.status==='gone')assert.ok(Math.hypot(a.x-exits[i].x,a.z-exits[i].z)<1e-8,'Original exit is reached');
   }
   const present=actors.filter(a=>a.status!=='gone');
