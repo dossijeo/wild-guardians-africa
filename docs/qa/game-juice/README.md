@@ -1,4 +1,4 @@
-# Game Juice — presentation QA, integration pending
+# Game Juice â€” presentation QA, integration pending
 
 Branch: `feature/game-juice-polish`. Baseline: `origin/main` at
 `8f3c00218a38d302556247ca07bd6a4fe348d08c`. Its baseline CI is red. The
@@ -30,8 +30,12 @@ Confirmed placements and magic activations add brief projected DOM rings; the
 native VFX/SFX remain intact. Dawn alone queues a night-survived celebration,
 never RaidEnded. Tutorial narration and mandatory surfaces take priority. A
 celebration conflicting for more than twelve seconds is discarded; notices also
-take precedence. Milestones 10/25/50/75/100 get a warm ornament. Fresh critical
-warnings pulse once, and collapse uses a nonstacking 130 ms draw-only camera
+take precedence. Milestones 10/25/50/75/100 get a warm ornament.
+The victory surface has higher priority: Dawn with `state.result='victory'` is
+discarded rather than displaying an additional night-100 banner. The milestone
+decoration includes 100 for presentation fixtures, but normal campaign victory
+uses its existing mandatory celebration. No victory rule changes.
+Fresh critical warnings pulse once, and collapse uses a nonstacking 130 ms draw-only camera
 offset with exact restoration in `finally`. Automated/manual camera travel and
 reduced-motion preferences suppress this offset. There is no saved camera
 mutation. Buttons, panels and cards use short transform/opacity microanimations.
@@ -58,10 +62,10 @@ audio. Dawn, critical and collapse buttons provide synthetic presentation events
 not claims of a completed raid. Capture-next freezes only QA animations at a
 visible intermediate frame; production durations are unchanged. Its language
 switch controls juice copy; the HUD artwork labels retain the fixture's Spanish
-locale. Screenshots cover desktop 1280×720, mobile portrait 390×844 and mobile
-landscape 844×390:
+locale. Screenshots cover desktop 1280Ã—720, mobile portrait 390Ã—844 and mobile
+landscape 844Ã—390:
 
-- `economy-desktop.jpg`: exact +45 / −30, separated signs.
+- `economy-desktop.jpg`: exact +45 / âˆ’30, separated signs.
 - `dawn-desktop-es.jpg`, `dawn-portrait-en-final.jpg`: celebration and safe areas.
 - `build-desktop.jpg`, `plant-landscape.jpg`, `magic-landscape.jpg`: native command
   confirmation, subtle projected ring and existing action icon.
@@ -73,8 +77,8 @@ landscape 844×390:
 `dawn-save-portrait-en.jpg` is retained BEFORE the safe-area correction; its old
 top-center save toast overlapped the coin HUD. It is diagnostic, not final QA.
 The final portrait save image replaces that layout. Native sky/world rendering
-and audio are not benchmarked by the presentation fixture. Physical mobile and
-packaged Windows acceptance are not claimed by these browser screenshots.
+and audio are not benchmarked by the presentation fixture. Physical mobile acceptance is not claimed by these browser screenshots.
+Packaged Windows evidence is recorded separately below.
 
 ## Performance scope
 
@@ -92,15 +96,77 @@ case, 72,000 settlements. The resource cap remains four, including during bursts
 A median 0.60 ms / p95 0.80 ms; B median 0.90 ms / p95 2.10 ms, maximum
 5.80 ms. Only one grouped number was active under this synthetic stress load.
 No GPU savings or hardware-wide frame-time result is inferred from these values.
-The browser fixture does not model the concurrent renderer cost of a thousand
-crops or a large live raid. The final integration still needs the complete CI
-and broader gameplay regression gate.
+The presentation-only fixture does not model a concurrent renderer. The
+additional native rendered comparison below covers a dense 500-crop farm; it
+does not claim physical mobile GPU acceptance or a thousand-crop frame rate.
+Complete CI remains the integration gate.
 
 `stress-first-unpaired-diagnostic.json` lacks an identical A workload and is
 explicitly rejected as a comparative benchmark. Other development reports are
 retained rather than silently replaced. `build-final.txt`: successful build,
 11.96 seconds, with preexisting large-chunk warnings. Browser syntax validation
 is recorded separately.
+
+## Native rendered gameplay comparison
+
+`tests/browser/game-juice-world.html` uses the actual WorldScene, Navigation,
+models, shaders, shadows, worker pickup/transport/delivery and native animal
+attacks. Explicit QA initial credit pays for 500 legal crops of eight species,
+an 800-coin center and twenty workers. Native botanical functions prepare mature
+fixture plants before timing; this preparation is not simulated worker production
+or balance evidence. The fixture excludes audio/autosave/tutorial controllers.
+It holds the camera fixed, disables draw-only shaking and fixes each simulation
+step at 0.1 seconds. ABBA uses fresh scene/navigation owners from the same frozen
+snapshot for every lot, with assets/chunks warmed first. Four 400-frame lots per
+scenario are run; the first 200 frames per lot warm the active scenario, the last
+200 are measured. `world-rendered-abba-final.json` retains raw samples;
+`world-rendered-abba-summary.json` pools equal A/B sample counts.
+
+Each daylight lot performs 58 native pickups and 52 paid physical deliveries.
+Each night lot spawns five species and performs thirteen physical crop impacts,
+destroying six crops. Every paired final serialized state is exactly identical,
+and every measured frame's draw-call/triangle counts are exactly identical.
+Juice disposal removes its DOM with identical renderer memory/program counts.
+Daylight has at most one grouped temporary effect; attacks create no redundant
+per-hit effect. `world-deliveries-desktop.jpg` and `world-raid-desktop.jpg` show the
+actual rendered farm; fixture clock/day labels are static artwork, not telemetry.
+
+| Scenario / measurement | A off median / p95 | B on median / p95 |
+| --- | --- | --- |
+| Deliveries: presentation CPU | 0.0 / 0.0 ms | 0.1 / 1.2 ms |
+| Deliveries: render submission CPU | 39.2 / 66.1 ms | 40.8 / 76.2 ms |
+| Deliveries: RAF interval | 129.3 / 148.7 ms | 131.8 / 149.3 ms |
+| Raid: presentation CPU | 0.0 / 0.0 ms | 0.1 / 0.2 ms |
+| Raid: render submission CPU | 28.2 / 38.4 ms | 27.1 / 34.0 ms |
+| Raid: RAF interval | 100.1 / 183.0 ms | 100.4 / 180.0 ms |
+
+Day calls/triangles median: 584 / 10,084,402 in both conditions. Night:
+248 / 9,514,887 in both. No GPU timer-query claim. RAF includes native rendering,
+GPU/CPU contention and fixture report serialization, outside the separately timed
+presentation/render work. Root CPU campaign and short native QA run concurrently;
+these full frame rates do not represent isolated production-device performance.
+Render medians/p95 vary both with and without juice, including an off A2 night
+median of 30.4 ms versus on B1 26.2 ms. The ~1.9% daylight RAF median difference
+and ~0.3% night difference do not establish a GPU regression. Measured presentation
+cost is small and bounded, with no added WebGL submissions or resources.
+`world-reused-owner-diagnostic.json` preserves the rejected preliminary setup:
+reusing scene/navigation owners across cloned states caused different simulation
+state, so those results are not acceptance evidence.
+
+## Packaged Windows persistence evidence
+
+[Build Windows desktop run 38125618478](https://github.com/dossijeo/wild-guardians-africa/actions/runs/38125618478)
+passed at source commit `6a96c2ec`. `windows-6a96/desktop-smoke.json` and
+`windows-6a96/desktop-visibility.json` preserve its published JSON artifacts.
+The native smoke clicks the real manual save command, waits for the new primary
+IndexedDB record, then requires the visible `Partida guardada` / `Game saved`
+class/text. Receipt: `checks.saveBackend=IndexedDB` and
+`checks.manualSaveFeedback=confirmed-after-IndexedDB-commit`. The native
+minimize/restore check also passes after five minutes. These are actual packaged
+WebView2 checks, not a mock repository. Failure/autosave silence remain covered by
+automated unit tests. No new save format or native OS behavior is introduced.
+GitHub's v7 single-file artifact endpoint returned raw JSON despite its `/zip`
+route; files were validated as JSON and saved without changing their contents.
 
 ## Baseline CI blocker, not bypassed
 
@@ -130,7 +196,7 @@ items remain unchanged. No audio assignment or audible-acceptance claim changes.
 The original failed results, snapshots and historical reports remain untouched.
 A broad development suite excluded the two long campaign files only
 to avoid duplicating root's live campaigns; it is NOT a full acceptance run and
-does not substitute for CI. Its original failed receipt is retained. Root is
+does not substitute for CI. Its original failed receipt is retained. Root has
 reviewed the baseline classification; no merge with red checks.
 
 ### QA-only reconciliation
