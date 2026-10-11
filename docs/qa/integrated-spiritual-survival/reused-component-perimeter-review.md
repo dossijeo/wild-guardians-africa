@@ -1,0 +1,11 @@
+# Reuse of positive animal origin certificates
+
+The isolated candidate preserves each body/contact check and direct physical escape test. Before repeating animal A*, it enumerates every usable native 3 × 3 origin connector. Reuse is allowed only if at least one connector exists, every connector belongs to a positively completed native closed component wholly inside the contour, and no component node can connect to the outside endpoint under the native A* completion distance. Otherwise the original native search and positive component checks still run. Empty or bounded failed frontiers never certify enclosure.
+
+Version 1 repeats the region's endpoint-node inspection for every connector. It preserves the certificate but is rejected for cost: 25,142.18 ms on the retained 123-crop Canyon contour. Its code, report and hashes remain intact.
+
+Version 2 caches that inspection with the already cached per-component contour check. It records the same original certificates and service results, with the new reuse count excluded only for comparison. It reuses 14,140 component certificates and reduces lattice query count from 111,190,368 to 59,710,638. Its first complete observation takes 7,042.72 ms, compared with the prior tiled observation's 12,895.53 ms. This is preliminary timing across isolated helper versions under concurrent CPU load, not an AB/BA-controlled performance claim.
+
+The strict retained comparison confirms equal input and contour hashes, unchanged terrain/navigation sources and common helpers, unchanged serialized state and exact original certificate results. New helper/tool filenames and hashes are recorded separately. Both versions pass the three functional regressions (six total): native paid small contour equivalence, rejection of the physically open no-wall control and rejection of failed routes without positive certificates.
+
+This is still too costly for repeated synchronous interactive planning. Neither version is imported by the live v105 campaign or production. Further gates include paired measurements, wider geometry/epoch regressions, dense-farm costs and a bounded execution strategy that preserves all physical requirements. No balance parameters changed and no native campaign outcome is credited to this isolated experiment.

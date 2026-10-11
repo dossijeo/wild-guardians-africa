@@ -1,0 +1,31 @@
+{
+  "status": "verified-normalized-perimeter-certificates",
+  "inputs": [
+    "contact-perimeter-lattice-tiled-b.json",
+    "reused-perimeter-tiled-initial-v1.json",
+    "reused-perimeter-tiled-v2-initial.json"
+  ],
+  "inputSha256": "849be18207f413a72493cb21eee5f05e218c81a2975da127f057dcc3cb70c4bc",
+  "contourSha256": "efa49c28221a2a207080b5fb82b1b20dc6b840f6e610fdb63ecc84b09429b2b7",
+  "rows": [
+    {
+      "name": "contact-perimeter-lattice-tiled-b.json",
+      "milliseconds": 12895.529400000001,
+      "latticeQueries": 111190368,
+      "reusedComponents": 0
+    },
+    {
+      "name": "reused-perimeter-tiled-initial-v1.json",
+      "milliseconds": 25142.1777,
+      "latticeQueries": 59710638,
+      "reusedComponents": 14140
+    },
+    {
+      "name": "reused-perimeter-tiled-v2-initial.json",
+      "milliseconds": 7042.7228000000005,
+      "latticeQueries": 59710638,
+      "reusedComponents": 14140
+    }
+  ],
+  "scope": "Exact original certificates excluding only new reuse-count diagnostic. Terrain/navigation/game inputs and common helpers unchanged. Different isolated helper/tool sources are declared in individual reports. Preliminary timings, not an AB/BA comparison or production acceptance."
+}

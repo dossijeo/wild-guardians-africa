@@ -1,0 +1,1876 @@
+{
+  "input": "docs/qa/integrated-spiritual-survival/pilot-v97-q14-good-zarzas-canyon-712-seven/partial-state.json.gz",
+  "inputSha256": "849be18207f413a72493cb21eee5f05e218c81a2975da127f057dcc3cb70c4bc",
+  "contourPath": "docs/qa/integrated-spiritual-survival/canyon-q14-predefeat-shore-refined-v2.json",
+  "contourSha256": "efa49c28221a2a207080b5fb82b1b20dc6b840f6e610fdb63ecc84b09429b2b7",
+  "variant": "tiled",
+  "milliseconds": 7042.7228000000005,
+  "proof": {
+    "valid": true,
+    "reason": "native-complete-components-and-worker-service-routes",
+    "checks": [
+      {
+        "radius": 1.1,
+        "inside": {
+          "x": -19.5,
+          "z": 72
+        },
+        "anchorKind": "crop-pivot",
+        "anchorTargetId": "plant-1350",
+        "outside": {
+          "x": -39,
+          "z": 72
+        },
+        "completeClosedComponent": false,
+        "services": {
+          "valid": true,
+          "reason": "native-service-poses-in-positive-closed-components",
+          "poses": 3968,
+          "blocked": 1140,
+          "certified": 2828,
+          "physicalConnectors": 0,
+          "emptyNativeOrigins": 0,
+          "reusedComponents": 2826,
+          "regions": 3,
+          "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+        }
+      },
+      {
+        "radius": 0.9,
+        "inside": {
+          "x": -19.5,
+          "z": 72
+        },
+        "anchorKind": "crop-pivot",
+        "anchorTargetId": "plant-1350",
+        "outside": {
+          "x": -39,
+          "z": 72
+        },
+        "completeClosedComponent": false,
+        "services": {
+          "valid": true,
+          "reason": "native-service-poses-in-positive-closed-components",
+          "poses": 3968,
+          "blocked": 957,
+          "certified": 3011,
+          "physicalConnectors": 0,
+          "emptyNativeOrigins": 0,
+          "reusedComponents": 3007,
+          "regions": 5,
+          "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+        }
+      },
+      {
+        "radius": 0.97,
+        "inside": {
+          "x": -19.5,
+          "z": 72
+        },
+        "anchorKind": "crop-pivot",
+        "anchorTargetId": "plant-1350",
+        "outside": {
+          "x": -39,
+          "z": 72
+        },
+        "completeClosedComponent": false,
+        "services": {
+          "valid": true,
+          "reason": "native-service-poses-in-positive-closed-components",
+          "poses": 3968,
+          "blocked": 1024,
+          "certified": 2944,
+          "physicalConnectors": 1,
+          "emptyNativeOrigins": 0,
+          "reusedComponents": 2940,
+          "regions": 4,
+          "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+        }
+      },
+      {
+        "radius": 0.85,
+        "inside": {
+          "x": -19.5,
+          "z": 72
+        },
+        "anchorKind": "crop-pivot",
+        "anchorTargetId": "plant-1350",
+        "outside": {
+          "x": -39,
+          "z": 72
+        },
+        "completeClosedComponent": false,
+        "services": {
+          "valid": true,
+          "reason": "native-service-poses-in-positive-closed-components",
+          "poses": 3968,
+          "blocked": 914,
+          "certified": 3054,
+          "physicalConnectors": 0,
+          "emptyNativeOrigins": 0,
+          "reusedComponents": 3050,
+          "regions": 5,
+          "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+        }
+      },
+      {
+        "radius": 1.55,
+        "inside": {
+          "x": -19.5,
+          "z": 72
+        },
+        "anchorKind": "crop-pivot",
+        "anchorTargetId": "plant-1350",
+        "outside": {
+          "x": -39,
+          "z": 72
+        },
+        "completeClosedComponent": false,
+        "services": {
+          "valid": true,
+          "reason": "native-service-poses-in-positive-closed-components",
+          "poses": 3968,
+          "blocked": 1649,
+          "certified": 2319,
+          "physicalConnectors": 0,
+          "emptyNativeOrigins": 0,
+          "reusedComponents": 2317,
+          "regions": 3,
+          "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+        }
+      }
+    ],
+    "workerService": {
+      "valid": true,
+      "reason": "native-associated-centre-and-all-crop-service-routes",
+      "checks": {
+        "workers": [
+          {
+            "workerId": "worker-2161",
+            "centerId": "structure-2",
+            "via": "centre-service",
+            "destination": {
+              "x": -13.147470503294713,
+              "z": 59.05401533842087
+            }
+          },
+          {
+            "workerId": "worker-2672",
+            "centerId": "structure-2",
+            "via": "centre-service",
+            "destination": {
+              "x": -13.147470503294713,
+              "z": 59.05401533842087
+            }
+          },
+          {
+            "workerId": "worker-2673",
+            "centerId": "structure-2",
+            "via": "centre-service",
+            "destination": {
+              "x": -13.147470503294713,
+              "z": 59.05401533842087
+            }
+          },
+          {
+            "workerId": "worker-2674",
+            "centerId": "structure-2",
+            "via": "centre-service",
+            "destination": {
+              "x": -13.147470503294713,
+              "z": 59.05401533842087
+            }
+          },
+          {
+            "workerId": "worker-2675",
+            "centerId": "structure-2",
+            "via": "centre-service",
+            "destination": {
+              "x": -13.147470503294713,
+              "z": 59.05401533842087
+            }
+          },
+          {
+            "workerId": "worker-2676",
+            "centerId": "structure-2",
+            "via": "centre-service",
+            "destination": {
+              "x": -13.147470503294713,
+              "z": 59.05401533842087
+            }
+          },
+          {
+            "workerId": "worker-2677",
+            "centerId": "structure-2",
+            "via": "centre-service",
+            "destination": {
+              "x": -13.147470503294713,
+              "z": 59.05401533842087
+            }
+          },
+          {
+            "workerId": "worker-2678",
+            "centerId": "structure-2",
+            "via": "centre-service",
+            "destination": {
+              "x": -13.147470503294713,
+              "z": 59.05401533842087
+            }
+          },
+          {
+            "workerId": "worker-2793",
+            "centerId": "structure-2",
+            "via": "centre-service",
+            "destination": {
+              "x": -13.147470503294713,
+              "z": 59.05401533842087
+            }
+          },
+          {
+            "workerId": "worker-2979",
+            "centerId": "structure-2",
+            "via": "centre-service",
+            "destination": {
+              "x": -13.147470503294713,
+              "z": 59.05401533842087
+            }
+          }
+        ],
+        "crops": [
+          {
+            "targetId": "plant-1350",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -19.134369824292396,
+              "z": 71.2548727795792,
+              "id": "water-point-plant-1350-0"
+            },
+            "deliveryDestination": {
+              "x": -19.45111087601209,
+              "z": 65.4638236880387
+            }
+          },
+          {
+            "targetId": "plant-1356",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -18.9859895701071,
+              "z": 51.651684952995936,
+              "id": "water-point-plant-1356-0"
+            },
+            "deliveryDestination": {
+              "x": -19.50654683823837,
+              "z": 52.64162115331971
+            }
+          },
+          {
+            "targetId": "plant-1358",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -20.43484581459296,
+              "z": 66.89213426917048,
+              "id": "water-point-plant-1358-0"
+            },
+            "deliveryDestination": {
+              "x": -20.984684061773656,
+              "z": 65.4523529066453
+            }
+          },
+          {
+            "targetId": "plant-1363",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -17.777582309113654,
+              "z": 75.70035609751541,
+              "id": "water-point-plant-1363-0"
+            },
+            "deliveryDestination": {
+              "x": -17.917537690250526,
+              "z": 65.4752944694321
+            }
+          },
+          {
+            "targetId": "plant-1366",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -14.867390375093128,
+              "z": 69.68066204324342,
+              "id": "water-point-plant-1366-0"
+            },
+            "deliveryDestination": {
+              "x": -17.192900261354165,
+              "z": 65.41297140252131
+            }
+          },
+          {
+            "targetId": "plant-1369",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -14.848018822991905,
+              "z": 68.18403325935721,
+              "id": "water-point-plant-1369-0"
+            },
+            "deliveryDestination": {
+              "x": -16.694730673463962,
+              "z": 65.19136033255329
+            }
+          },
+          {
+            "targetId": "plant-1371",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -22.072292144681278,
+              "z": 44.21131286400477,
+              "id": "water-point-plant-1371-0"
+            },
+            "deliveryDestination": {
+              "x": -22.495918817418236,
+              "z": 52.629707309068976
+            }
+          },
+          {
+            "targetId": "plant-1375",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -21.963896938698028,
+              "z": 48.63363515343031,
+              "id": "water-point-plant-1375-0"
+            },
+            "deliveryDestination": {
+              "x": -22.496215201578444,
+              "z": 52.629707496461556
+            }
+          },
+          {
+            "targetId": "plant-1378",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -23.377015674171723,
+              "z": 50.04844373437235,
+              "id": "water-point-plant-1378-0"
+            },
+            "deliveryDestination": {
+              "x": -22.781586914481778,
+              "z": 52.68258656254917
+            }
+          },
+          {
+            "targetId": "plant-1383",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -29.217396640697494,
+              "z": 50.72353665340875,
+              "id": "water-point-plant-1383-1"
+            },
+            "deliveryDestination": {
+              "x": -25.94394158956296,
+              "z": 54.088471266681864
+            }
+          },
+          {
+            "targetId": "plant-1386",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -26.384984375617545,
+              "z": 47.057365034573806,
+              "id": "water-point-plant-1386-0"
+            },
+            "deliveryDestination": {
+              "x": -24.244177735807718,
+              "z": 53.27714379849226
+            }
+          },
+          {
+            "targetId": "plant-1388",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -26.123422186793203,
+              "z": 45.54794596176446,
+              "id": "water-point-plant-1388-4"
+            },
+            "deliveryDestination": {
+              "x": -22.764141018157652,
+              "z": 52.67613912930874
+            }
+          },
+          {
+            "targetId": "plant-1391",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -27.82643053470924,
+              "z": 48.48497853089381,
+              "id": "water-point-plant-1391-0"
+            },
+            "deliveryDestination": {
+              "x": -25.656968643351526,
+              "z": 53.853509796168936
+            }
+          },
+          {
+            "targetId": "plant-1395",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -12.06572138490669,
+              "z": 72.67260607956914,
+              "id": "water-point-plant-1395-0"
+            },
+            "deliveryDestination": {
+              "x": -15.86197939739006,
+              "z": 64.82081093587728
+            }
+          },
+          {
+            "targetId": "plant-1398",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -13.484558794476527,
+              "z": 77.17014364545906,
+              "id": "water-point-plant-1398-0"
+            },
+            "deliveryDestination": {
+              "x": -17.279021350157073,
+              "z": 65.44437703825304
+            }
+          },
+          {
+            "targetId": "plant-1400",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -23.525063052161304,
+              "z": 44.18068707610595,
+              "id": "water-point-plant-1400-0"
+            },
+            "deliveryDestination": {
+              "x": -22.615400652286187,
+              "z": 52.63873409079013
+            }
+          },
+          {
+            "targetId": "plant-1402",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -12.050177309082613,
+              "z": 77.17151811265832,
+              "id": "water-point-plant-1402-0"
+            },
+            "deliveryDestination": {
+              "x": -17.20384254636876,
+              "z": 65.41759234492588
+            }
+          },
+          {
+            "targetId": "plant-1405",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -14.894426695387669,
+              "z": 72.67674167034082,
+              "id": "water-point-plant-1405-0"
+            },
+            "deliveryDestination": {
+              "x": -17.29069133953393,
+              "z": 65.4477929935808
+            }
+          },
+          {
+            "targetId": "plant-1408",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -14.919228193671513,
+              "z": 77.17393952079618,
+              "id": "water-point-plant-1408-0"
+            },
+            "deliveryDestination": {
+              "x": -17.36148788172645,
+              "z": 65.46449503606256
+            }
+          },
+          {
+            "targetId": "plant-1412",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -16.3553766282679,
+              "z": 77.18269706941132,
+              "id": "water-point-plant-1412-0"
+            },
+            "deliveryDestination": {
+              "x": -17.44913494457859,
+              "z": 65.47603591959911
+            }
+          },
+          {
+            "targetId": "plant-1414",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -29.277959677656174,
+              "z": 49.90933821335129,
+              "id": "water-point-plant-1414-0"
+            },
+            "deliveryDestination": {
+              "x": -25.850683414058057,
+              "z": 53.985836344460616
+            }
+          },
+          {
+            "targetId": "plant-1420",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -22.100898187201512,
+              "z": 42.72774840640221,
+              "id": "water-point-plant-1420-0"
+            },
+            "deliveryDestination": {
+              "x": -22.495871884755374,
+              "z": 52.6297072894657
+            }
+          },
+          {
+            "targetId": "plant-1423",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -17.79406410784557,
+              "z": 77.19595372749912,
+              "id": "water-point-plant-1423-0"
+            },
+            "deliveryDestination": {
+              "x": -17.90631865638272,
+              "z": 65.47537838527396
+            }
+          },
+          {
+            "targetId": "plant-1425",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -26.41735397817155,
+              "z": 45.591120641872266,
+              "id": "water-point-plant-1425-0"
+            },
+            "deliveryDestination": {
+              "x": -23.72077173184921,
+              "z": 53.06430872197497
+            }
+          },
+          {
+            "targetId": "plant-1427",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -27.857468908503034,
+              "z": 47.025408218873395,
+              "id": "water-point-plant-1427-0"
+            },
+            "deliveryDestination": {
+              "x": -25.531342659290427,
+              "z": 53.80054980245077
+            }
+          },
+          {
+            "targetId": "plant-2430",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -10.624528800946951,
+              "z": 75.6793949928652,
+              "id": "water-point-plant-2430-0"
+            },
+            "deliveryDestination": {
+              "x": -15.724174719550431,
+              "z": 64.75949197822482
+            }
+          },
+          {
+            "targetId": "plant-2432",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -9.706726856466874,
+              "z": 76.0647562173351,
+              "id": "water-point-plant-2432-1"
+            },
+            "deliveryDestination": {
+              "x": -15.124229639029046,
+              "z": 64.47414810891111
+            }
+          },
+          {
+            "targetId": "plant-2435",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -10.614866330760076,
+              "z": 77.17798678474266,
+              "id": "water-point-plant-2435-0"
+            },
+            "deliveryDestination": {
+              "x": -16.28131663994507,
+              "z": 65.0074034595959
+            }
+          },
+          {
+            "targetId": "plant-2439",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -9.177492415357664,
+              "z": 77.18920012179916,
+              "id": "water-point-plant-2439-0"
+            },
+            "deliveryDestination": {
+              "x": -15.40903522776122,
+              "z": 64.61892078803125
+            }
+          },
+          {
+            "targetId": "plant-2441",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -13.21016454519945,
+              "z": 59.22224977715172,
+              "id": "water-point-plant-2441-0"
+            },
+            "deliveryDestination": {
+              "x": -13.147991537388751,
+              "z": 59.99980894905889
+            }
+          },
+          {
+            "targetId": "plant-2443",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -20.42058201109263,
+              "z": 51.59428511181969,
+              "id": "water-point-plant-2443-0"
+            },
+            "deliveryDestination": {
+              "x": -21.006522982014953,
+              "z": 52.635639199959236
+            }
+          },
+          {
+            "targetId": "plant-2445",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -20.19116263405474,
+              "z": 49.95955871582042,
+              "id": "water-point-plant-2445-4"
+            },
+            "deliveryDestination": {
+              "x": -19.512528791598843,
+              "z": 52.64159729709629
+            }
+          },
+          {
+            "targetId": "plant-2448",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -22.00512493780905,
+              "z": 66.66633225407563,
+              "id": "water-point-plant-2448-4"
+            },
+            "deliveryDestination": {
+              "x": -22.48379857863147,
+              "z": 65.43767595267624
+            }
+          },
+          {
+            "targetId": "plant-2450",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -19.0532292792816,
+              "z": 68.30050309285261,
+              "id": "water-point-plant-2450-0"
+            },
+            "deliveryDestination": {
+              "x": -19.47354894374771,
+              "z": 65.46365585635498
+            }
+          },
+          {
+            "targetId": "plant-2453",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -16.26669473823582,
+              "z": 69.70346459285658,
+              "id": "water-point-plant-2453-0"
+            },
+            "deliveryDestination": {
+              "x": -17.372894966093803,
+              "z": 65.46655848320653
+            }
+          },
+          {
+            "targetId": "plant-2457",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -21.871066799886222,
+              "z": 51.54161151187419,
+              "id": "water-point-plant-2457-0"
+            },
+            "deliveryDestination": {
+              "x": -22.497022706731297,
+              "z": 52.629708564140415
+            }
+          },
+          {
+            "targetId": "plant-2460",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -20.472982425928787,
+              "z": 50.14121172526717,
+              "id": "water-point-plant-2460-0"
+            },
+            "deliveryDestination": {
+              "x": -21.01250493537543,
+              "z": 52.63561534373582
+            }
+          },
+          {
+            "targetId": "plant-2464",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -21.884006932456455,
+              "z": 66.94371541389475,
+              "id": "water-point-plant-2464-0"
+            },
+            "deliveryDestination": {
+              "x": -22.440617114875653,
+              "z": 65.43892007711472
+            }
+          },
+          {
+            "targetId": "plant-2468",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -20.48567763456333,
+              "z": 68.34856120440088,
+              "id": "water-point-plant-2468-0"
+            },
+            "deliveryDestination": {
+              "x": -20.973465027905846,
+              "z": 65.45243682248716
+            }
+          },
+          {
+            "targetId": "plant-2470",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -23.57092453908283,
+              "z": 51.78951126058274,
+              "id": "water-point-plant-2470-3"
+            },
+            "deliveryDestination": {
+              "x": -23.763471904676322,
+              "z": 53.0816720966444
+            }
+          },
+          {
+            "targetId": "plant-2472",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -23.55256871653504,
+              "z": 66.69907456438987,
+              "id": "water-point-plant-2472-4"
+            },
+            "deliveryDestination": {
+              "x": -23.595175615529033,
+              "z": 65.12961316195683
+            }
+          },
+          {
+            "targetId": "plant-2779",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -13.477406812494195,
+              "z": 71.1703075582613,
+              "id": "water-point-plant-2779-0"
+            },
+            "deliveryDestination": {
+              "x": -16.556925995624333,
+              "z": 65.13004137490083
+            }
+          },
+          {
+            "targetId": "plant-2788",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -12.073279964018793,
+              "z": 71.17324124021974,
+              "id": "water-point-plant-2788-0"
+            },
+            "deliveryDestination": {
+              "x": -15.41826097013298,
+              "z": 64.6232674959854
+            }
+          },
+          {
+            "targetId": "plant-2791",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -14.882427273872358,
+              "z": 71.17836951488464,
+              "id": "water-point-plant-2791-0"
+            },
+            "deliveryDestination": {
+              "x": -17.250195189462715,
+              "z": 65.43510237109264
+            }
+          },
+          {
+            "targetId": "plant-2795",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -19.097224104588165,
+              "z": 69.77427858094501,
+              "id": "water-point-plant-2795-0"
+            },
+            "deliveryDestination": {
+              "x": -19.4623299098799,
+              "z": 65.46373977219683
+            }
+          },
+          {
+            "targetId": "plant-2798",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -24.73456290838324,
+              "z": 53.67905443019528,
+              "id": "water-point-plant-2798-1"
+            },
+            "deliveryDestination": {
+              "x": -25.57404283211754,
+              "z": 53.8179131771202
+            }
+          },
+          {
+            "targetId": "plant-2800",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -21.91938888199283,
+              "z": 50.09311949019271,
+              "id": "water-point-plant-2800-0"
+            },
+            "deliveryDestination": {
+              "x": -22.4964648389655,
+              "z": 52.629707739490115
+            }
+          },
+          {
+            "targetId": "plant-2802",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -16.291924555662842,
+              "z": 71.19650475454804,
+              "id": "water-point-plant-2802-0"
+            },
+            "deliveryDestination": {
+              "x": -17.40031155668962,
+              "z": 65.47082469351778
+            }
+          },
+          {
+            "targetId": "plant-2804",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -23.33349149271901,
+              "z": 51.49463765497793,
+              "id": "water-point-plant-2804-0"
+            },
+            "deliveryDestination": {
+              "x": -23.240065900717816,
+              "z": 52.86883702012711
+            }
+          },
+          {
+            "targetId": "plant-2807",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -20.519324764387648,
+              "z": 48.67664711472747,
+              "id": "water-point-plant-2807-0"
+            },
+            "deliveryDestination": {
+              "x": -21.0184868887359,
+              "z": 52.6355914875124
+            }
+          },
+          {
+            "targetId": "plant-2810",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -21.931418065490135,
+              "z": 68.39533928211846,
+              "id": "water-point-plant-2810-0"
+            },
+            "deliveryDestination": {
+              "x": -22.397435651119842,
+              "z": 65.44016420155319
+            }
+          },
+          {
+            "targetId": "plant-2812",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -23.3449876897465,
+              "z": 66.99023645342534,
+              "id": "water-point-plant-2812-0"
+            },
+            "deliveryDestination": {
+              "x": -23.088655705187243,
+              "z": 65.3647497722515
+            }
+          },
+          {
+            "targetId": "plant-2814",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -17.708684114420294,
+              "z": 71.22280307848725,
+              "id": "water-point-plant-2814-0"
+            },
+            "deliveryDestination": {
+              "x": -17.951194791853954,
+              "z": 65.4750427219065
+            }
+          },
+          {
+            "targetId": "plant-2817",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -26.96683165920249,
+              "z": 57.67066299903553,
+              "id": "water-point-plant-2817-3"
+            },
+            "deliveryDestination": {
+              "x": -27.06977481690052,
+              "z": 58.50011532631251
+            }
+          },
+          {
+            "targetId": "plant-2822",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -20.53045471699705,
+              "z": 69.81558256362825,
+              "id": "water-point-plant-2822-0"
+            },
+            "deliveryDestination": {
+              "x": -20.96224599403804,
+              "z": 65.45252073832903
+            }
+          },
+          {
+            "targetId": "plant-2825",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -27.056548722197864,
+              "z": 59.17192860089374,
+              "id": "water-point-plant-2825-3"
+            },
+            "deliveryDestination": {
+              "x": -27.067295570033732,
+              "z": 60.00011122852463
+            }
+          },
+          {
+            "targetId": "plant-2827",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -24.76681077608417,
+              "z": 52.88901614610926,
+              "id": "water-point-plant-2827-0"
+            },
+            "deliveryDestination": {
+              "x": -25.050636828159035,
+              "z": 53.60507810060291
+            }
+          },
+          {
+            "targetId": "plant-2829",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -26.87826087220271,
+              "z": 56.17897650169855,
+              "id": "water-point-plant-2829-3"
+            },
+            "deliveryDestination": {
+              "x": -27.06061823476369,
+              "z": 56.99918972810968
+            }
+          },
+          {
+            "targetId": "plant-2831",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -10.6496196404625,
+              "z": 72.68359693582896,
+              "id": "water-point-plant-2831-0"
+            },
+            "deliveryDestination": {
+              "x": -15.102181515843224,
+              "z": 64.46291998380842
+            }
+          },
+          {
+            "targetId": "plant-2834",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -26.220274377168277,
+              "z": 54.284478387755,
+              "id": "water-point-plant-2834-0"
+            },
+            "deliveryDestination": {
+              "x": -26.10494074772488,
+              "z": 54.397722065518884
+            }
+          },
+          {
+            "targetId": "plant-2838",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -24.804732160578798,
+              "z": 51.453323980687735,
+              "id": "water-point-plant-2838-0"
+            },
+            "deliveryDestination": {
+              "x": -24.52723082420053,
+              "z": 53.392243024085616
+            }
+          },
+          {
+            "targetId": "plant-2840",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -21.97482872366538,
+              "z": 69.85727522957873,
+              "id": "water-point-plant-2840-0"
+            },
+            "deliveryDestination": {
+              "x": -22.366091245206768,
+              "z": 65.4410650909908
+            }
+          },
+          {
+            "targetId": "plant-2842",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -20.559848185480927,
+              "z": 47.203680595281384,
+              "id": "water-point-plant-2842-0"
+            },
+            "deliveryDestination": {
+              "x": -21.024468842096372,
+              "z": 52.635567631288986
+            }
+          },
+          {
+            "targetId": "plant-2844",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -16.312365590635014,
+              "z": 72.6914869645935,
+              "id": "water-point-plant-2844-0"
+            },
+            "deliveryDestination": {
+              "x": -17.418628349002976,
+              "z": 65.47313536279417
+            }
+          },
+          {
+            "targetId": "plant-2848",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -20.569549887731796,
+              "z": 71.2903432513896,
+              "id": "water-point-plant-2848-0"
+            },
+            "deliveryDestination": {
+              "x": -20.95102696017023,
+              "z": 65.45260465417088
+            }
+          },
+          {
+            "targetId": "plant-2850",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -17.735708115128094,
+              "z": 72.71320282182073,
+              "id": "water-point-plant-2850-0"
+            },
+            "deliveryDestination": {
+              "x": -17.939975757986147,
+              "z": 65.47512663774837
+            }
+          },
+          {
+            "targetId": "plant-2852",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -26.249736136529993,
+              "z": 52.854970611700544,
+              "id": "water-point-plant-2852-0"
+            },
+            "deliveryDestination": {
+              "x": -25.813392774837244,
+              "z": 53.953421651683676
+            }
+          },
+          {
+            "targetId": "plant-2855",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -23.41852397661775,
+              "z": 48.592271588235974,
+              "id": "water-point-plant-2855-0"
+            },
+            "deliveryDestination": {
+              "x": -22.70917359942383,
+              "z": 52.658753441511905
+            }
+          },
+          {
+            "targetId": "plant-2858",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -24.843461841536843,
+              "z": 50.00779685552572,
+              "id": "water-point-plant-2858-0"
+            },
+            "deliveryDestination": {
+              "x": -24.00382482024202,
+              "z": 53.17940794756833
+            }
+          },
+          {
+            "targetId": "plant-2860",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -22.00413968868727,
+              "z": 47.1655993927768,
+              "id": "water-point-plant-2860-0"
+            },
+            "deliveryDestination": {
+              "x": -22.49607363680048,
+              "z": 52.62970739325735
+            }
+          },
+          {
+            "targetId": "plant-2864",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -27.69138386924424,
+              "z": 55.687189617985574,
+              "id": "water-point-plant-2864-0"
+            },
+            "deliveryDestination": {
+              "x": -26.908902286021238,
+              "z": 56.207008689801796
+            }
+          },
+          {
+            "targetId": "plant-2866",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -19.165890160048306,
+              "z": 72.74021673166129,
+              "id": "water-point-plant-2866-0"
+            },
+            "deliveryDestination": {
+              "x": -19.43989184214428,
+              "z": 65.46390760388056
+            }
+          },
+          {
+            "targetId": "plant-2868",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -13.481655068004027,
+              "z": 74.17020275761482,
+              "id": "water-point-plant-2868-0"
+            },
+            "deliveryDestination": {
+              "x": -17.21990883279616,
+              "z": 65.4240344029401
+            }
+          },
+          {
+            "targetId": "plant-2871",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -12.059572626234463,
+              "z": 74.17214065071201,
+              "id": "water-point-plant-2871-0"
+            },
+            "deliveryDestination": {
+              "x": -16.4191213177847,
+              "z": 65.06872241724837
+            }
+          },
+          {
+            "targetId": "plant-2873",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -26.197632150075385,
+              "z": 50.78761866040691,
+              "id": "water-point-plant-2873-1"
+            },
+            "deliveryDestination": {
+              "x": -25.649926884457127,
+              "z": 53.850132016988425
+            }
+          },
+          {
+            "targetId": "plant-2877",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -14.904218703206041,
+              "z": 74.17554506297526,
+              "id": "water-point-plant-2877-0"
+            },
+            "deliveryDestination": {
+              "x": -17.32058609430168,
+              "z": 65.45567634597718
+            }
+          },
+          {
+            "targetId": "plant-2880",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -20.595154827681615,
+              "z": 45.7245691039856,
+              "id": "water-point-plant-2880-0"
+            },
+            "deliveryDestination": {
+              "x": -21.030450795456844,
+              "z": 52.635543775065564
+            }
+          },
+          {
+            "targetId": "plant-2882",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -27.711620164037782,
+              "z": 54.25953272288517,
+              "id": "water-point-plant-2882-0"
+            },
+            "deliveryDestination": {
+              "x": -26.3522782047316,
+              "z": 54.95434614680852
+            }
+          },
+          {
+            "targetId": "plant-2885",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -10.635941859962214,
+              "z": 74.18120832276456,
+              "id": "water-point-plant-2885-0"
+            },
+            "deliveryDestination": {
+              "x": -15.412382402299556,
+              "z": 64.62051443516135
+            }
+          },
+          {
+            "targetId": "plant-2890",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -16.329231766978403,
+              "z": 74.18775729576026,
+              "id": "water-point-plant-2890-0"
+            },
+            "deliveryDestination": {
+              "x": -17.43171156622351,
+              "z": 65.47452376894238
+            }
+          },
+          {
+            "targetId": "plant-2893",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -20.60360740561235,
+              "z": 72.77077238730652,
+              "id": "water-point-plant-2893-0"
+            },
+            "deliveryDestination": {
+              "x": -20.939807926302418,
+              "z": 65.45268857001275
+            }
+          },
+          {
+            "targetId": "plant-2895",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -24.881493306793516,
+              "z": 48.553488455578595,
+              "id": "water-point-plant-2895-0"
+            },
+            "deliveryDestination": {
+              "x": -23.480418816283514,
+              "z": 52.96657287105104
+            }
+          },
+          {
+            "targetId": "plant-2898",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -24.627905083970763,
+              "z": 47.04280310014191,
+              "id": "water-point-plant-2898-4"
+            },
+            "deliveryDestination": {
+              "x": -22.665287378325683,
+              "z": 52.64791887909298
+            }
+          },
+          {
+            "targetId": "plant-2901",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -17.758363033812266,
+              "z": 74.20595240912677,
+              "id": "water-point-plant-2901-0"
+            },
+            "deliveryDestination": {
+              "x": -17.928756724118337,
+              "z": 65.47521055359023
+            }
+          },
+          {
+            "targetId": "plant-2903",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -27.736648795262468,
+              "z": 52.825875648408655,
+              "id": "water-point-plant-2903-0"
+            },
+            "deliveryDestination": {
+              "x": -25.978405636116918,
+              "z": 54.13743091113964
+            }
+          },
+          {
+            "targetId": "plant-2905",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -26.31674599094469,
+              "z": 49.971236627513015,
+              "id": "water-point-plant-2905-0"
+            },
+            "deliveryDestination": {
+              "x": -25.290989743724733,
+              "z": 53.702813951526835
+            }
+          },
+          {
+            "targetId": "plant-2907",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -22.040171315045246,
+              "z": 45.69098305369436,
+              "id": "water-point-plant-2907-0"
+            },
+            "deliveryDestination": {
+              "x": -22.49598245267044,
+              "z": 52.62970734004626
+            }
+          },
+          {
+            "targetId": "plant-2913",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -19.19282420271346,
+              "z": 74.22893383580825,
+              "id": "water-point-plant-2913-0"
+            },
+            "deliveryDestination": {
+              "x": -19.428672808276474,
+              "z": 65.46399151972243
+            }
+          },
+          {
+            "targetId": "plant-2916",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -27.707627268669892,
+              "z": 50.752926216193494,
+              "id": "water-point-plant-2916-1"
+            },
+            "deliveryDestination": {
+              "x": -25.84047792463664,
+              "z": 53.976558412278656
+            }
+          },
+          {
+            "targetId": "plant-2918",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -21.259414448939946,
+              "z": 44.28841876162429,
+              "id": "water-point-plant-2918-2"
+            },
+            "deliveryDestination": {
+              "x": -21.036432748817315,
+              "z": 52.63551991884215
+            }
+          },
+          {
+            "targetId": "plant-2921",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -19.21601629268831,
+              "z": 75.72009407363355,
+              "id": "water-point-plant-2921-0"
+            },
+            "deliveryDestination": {
+              "x": -19.417453774408663,
+              "z": 65.46407543556428
+            }
+          },
+          {
+            "targetId": "plant-2923",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -13.054416479324336,
+              "z": 59.20025375836355,
+              "id": "water-point-plant-2923-0"
+            },
+            "deliveryDestination": {
+              "x": -13.148805655109468,
+              "z": 58.499809390917456
+            }
+          },
+          {
+            "targetId": "plant-2925",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -13.359600411029348,
+              "z": 57.81803909161902,
+              "id": "water-point-plant-2925-0"
+            },
+            "deliveryDestination": {
+              "x": -13.171221465083816,
+              "z": 56.9580951030794
+            }
+          },
+          {
+            "targetId": "plant-2934",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -13.381598992677349,
+              "z": 60.67848846540966,
+              "id": "water-point-plant-2934-0"
+            },
+            "deliveryDestination": {
+              "x": -13.210837875370327,
+              "z": 61.537980354266104
+            }
+          },
+          {
+            "targetId": "plant-2936",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -13.418072787371955,
+              "z": 56.325946688249914,
+              "id": "water-point-plant-2936-0"
+            },
+            "deliveryDestination": {
+              "x": -13.59467227145441,
+              "z": 55.537009426000985
+            }
+          },
+          {
+            "targetId": "plant-2938",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -13.426142960174824,
+              "z": 62.17329259246801,
+              "id": "water-point-plant-2938-0"
+            },
+            "deliveryDestination": {
+              "x": -13.716920809950993,
+              "z": 62.905513849266676
+            }
+          },
+          {
+            "targetId": "plant-2942",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -13.442245869057409,
+              "z": 54.82798820061585,
+              "id": "water-point-plant-2942-0"
+            },
+            "deliveryDestination": {
+              "x": -14.074060406547021,
+              "z": 54.33907758005748
+            }
+          },
+          {
+            "targetId": "plant-2944",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -14.246969298505693,
+              "z": 54.34906269151399,
+              "id": "water-point-plant-2944-1"
+            },
+            "deliveryDestination": {
+              "x": -14.820788906860631,
+              "z": 53.73760334612158
+            }
+          },
+          {
+            "targetId": "plant-2946",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -13.446384650275725,
+              "z": 63.67173350045173,
+              "id": "water-point-plant-2946-0"
+            },
+            "deliveryDestination": {
+              "x": -14.172606885313343,
+              "z": 63.795015662530616
+            }
+          },
+          {
+            "targetId": "plant-2948",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -14.732705016468142,
+              "z": 63.714217974385576,
+              "id": "water-point-plant-2948-0"
+            },
+            "deliveryDestination": {
+              "x": -15.036037146285754,
+              "z": 64.42923560850035
+            }
+          },
+          {
+            "targetId": "plant-2951",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -13.457929167074932,
+              "z": 65.17106692368021,
+              "id": "water-point-plant-2951-0"
+            },
+            "deliveryDestination": {
+              "x": -14.777438580272765,
+              "z": 64.28473675335505
+            }
+          },
+          {
+            "targetId": "plant-2955",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -14.786111228182,
+              "z": 65.19803267317789,
+              "id": "water-point-plant-2955-0"
+            },
+            "deliveryDestination": {
+              "x": -15.58044683267468,
+              "z": 64.6955373698111
+            }
+          },
+          {
+            "targetId": "plant-2958",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -16.12201652947397,
+              "z": 53.23893741007551,
+              "id": "water-point-plant-2958-0"
+            },
+            "deliveryDestination": {
+              "x": -16.67529638160879,
+              "z": 52.917747208592466
+            }
+          },
+          {
+            "targetId": "plant-2961",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -16.13921975953386,
+              "z": 65.25251246292049,
+              "id": "water-point-plant-2961-0"
+            },
+            "deliveryDestination": {
+              "x": -16.83253535130359,
+              "z": 65.25267929020575
+            }
+          },
+          {
+            "targetId": "plant-2963",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -17.50611208213158,
+              "z": 53.16706425821175,
+              "id": "water-point-plant-2963-0"
+            },
+            "deliveryDestination": {
+              "x": -18.000588741101318,
+              "z": 52.6476269629036
+            }
+          },
+          {
+            "targetId": "plant-2967",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -13.465386518254858,
+              "z": 66.6707220569185,
+              "id": "water-point-plant-2967-0"
+            },
+            "deliveryDestination": {
+              "x": -15.05808526947158,
+              "z": 64.44046373360304
+            }
+          },
+          {
+            "targetId": "plant-2970",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -17.52466152233275,
+              "z": 65.31959326013848,
+              "id": "water-point-plant-2970-0"
+            },
+            "deliveryDestination": {
+              "x": -17.996070927325192,
+              "z": 65.47470705853905
+            }
+          },
+          {
+            "targetId": "plant-2972",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -14.822176303636443,
+              "z": 66.68927271353951,
+              "id": "water-point-plant-2972-0"
+            },
+            "deliveryDestination": {
+              "x": -16.13758875306932,
+              "z": 64.9434488511822
+            }
+          },
+          {
+            "targetId": "plant-2974",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -16.193783388223036,
+              "z": 66.728552408344,
+              "id": "water-point-plant-2974-0"
+            },
+            "deliveryDestination": {
+              "x": -17.240083317184748,
+              "z": 65.43156056494854
+            }
+          },
+          {
+            "targetId": "plant-2976",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -18.670101120173015,
+              "z": 52.512955665244014,
+              "id": "water-point-plant-2976-1"
+            },
+            "deliveryDestination": {
+              "x": -19.5005648848779,
+              "z": 52.641645009543126
+            }
+          },
+          {
+            "targetId": "plant-2981",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -18.93984959738359,
+              "z": 65.38752018282341,
+              "id": "water-point-plant-2981-0"
+            },
+            "deliveryDestination": {
+              "x": -19.49598701148333,
+              "z": 65.46348802467124
+            }
+          },
+          {
+            "targetId": "plant-2984",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -17.586519484546542,
+              "z": 66.78032377881415,
+              "id": "water-point-plant-2984-0"
+            },
+            "deliveryDestination": {
+              "x": -17.984851893457382,
+              "z": 65.47479097438091
+            }
+          },
+          {
+            "targetId": "plant-2986",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -13.470599606976549,
+              "z": 68.17052087615778,
+              "id": "water-point-plant-2986-0"
+            },
+            "deliveryDestination": {
+              "x": -15.44264215483505,
+              "z": 64.63421841215865
+            }
+          },
+          {
+            "targetId": "plant-2989",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -12.095126301428435,
+              "z": 68.17546923236513,
+              "id": "water-point-plant-2989-0"
+            },
+            "deliveryDestination": {
+              "x": -14.839827225093181,
+              "z": 64.32678922197444
+            }
+          },
+          {
+            "targetId": "plant-2991",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -20.173351084878753,
+              "z": 52.42549113389089,
+              "id": "water-point-plant-2991-1"
+            },
+            "deliveryDestination": {
+              "x": -21.00054102865448,
+              "z": 52.63566305618266
+            }
+          },
+          {
+            "targetId": "plant-2994",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -20.45008516296769,
+              "z": 66.62168615234033,
+              "id": "water-point-plant-2994-4"
+            },
+            "deliveryDestination": {
+              "x": -20.995903095641463,
+              "z": 65.45226899080343
+            }
+          },
+          {
+            "targetId": "plant-2997",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -16.234884776835433,
+              "z": 68.21347986774246,
+              "id": "water-point-plant-2997-0"
+            },
+            "deliveryDestination": {
+              "x": -17.32760136458662,
+              "z": 65.45734857003596
+            }
+          },
+          {
+            "targetId": "plant-2999",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -19.00109366144663,
+              "z": 66.83668072140841,
+              "id": "water-point-plant-2999-0"
+            },
+            "deliveryDestination": {
+              "x": -19.48476797761552,
+              "z": 65.4635719405131
+            }
+          },
+          {
+            "targetId": "plant-3001",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -17.63605812184055,
+              "z": 68.25404671103227,
+              "id": "water-point-plant-3001-0"
+            },
+            "deliveryDestination": {
+              "x": -17.973632859589575,
+              "z": 65.47487489022278
+            }
+          },
+          {
+            "targetId": "plant-3003",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -22.023672947070835,
+              "z": 51.82028495775964,
+              "id": "water-point-plant-3003-3"
+            },
+            "deliveryDestination": {
+              "x": -22.4993806814114,
+              "z": 52.629716346965054
+            }
+          },
+          {
+            "targetId": "plant-3006",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -13.474448611529542,
+              "z": 69.67039339048725,
+              "id": "water-point-plant-3006-0"
+            },
+            "deliveryDestination": {
+              "x": -15.99978407522969,
+              "z": 64.88212989352974
+            }
+          },
+          {
+            "targetId": "plant-3008",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -12.082793258142122,
+              "z": 69.67413967500175,
+              "id": "water-point-plant-3008-0"
+            },
+            "deliveryDestination": {
+              "x": -15.080133392657402,
+              "z": 64.45169185870573
+            }
+          },
+          {
+            "targetId": "plant-3010",
+            "centerId": "structure-2",
+            "wateringDestination": {
+              "x": -17.67603276945219,
+              "z": 69.73583690645833,
+              "id": "water-point-plant-3010-0"
+            },
+            "deliveryDestination": {
+              "x": -17.962413825721764,
+              "z": 65.47495880606465
+            }
+          }
+        ]
+      },
+      "scope": "Predictive static access only. All workers linked to their operational centre, all living crops serviced and returned. No paid construction, motion, animated gates, animal interception or economic approval."
+    },
+    "scope": "Predictive native geometry only; no paid protection or campaign outcome."
+  },
+  "proofSha256": "8a4692a692e6b211b3be31839483cb679458155f557e959f2324105e9d7148b1",
+  "tileStats": {
+    "side": 32,
+    "capacity": 16,
+    "tiles": 12,
+    "requests": 59710638,
+    "hits": 59707202,
+    "misses": 3436,
+    "evictions": 0,
+    "fallbacks": 0,
+    "invalidations": 0,
+    "typedArrayBytes": 110592,
+    "maximumTypedArrayBytes": 147456
+  },
+  "stateUnchanged": true,
+  "living": 123,
+  "workers": 10,
+  "sourceHashes": {
+    "tools/benchmark-native-reused-perimeter-v2.mjs": "ecd4b9c367eb32446c69990e2fb9f4bc364a446929568ff93799d9e5c4a2050f",
+    "tools/native-perimeter-reused-candidate-v2.mjs": "844b2afcc78f938b4ae1510b481175e40fdff858506d23352ebcf19581c6ab5f",
+    "tools/native-interior-attack-anchor.mjs": "4ecd39956d1bc93afef519910d67e797213faa4a3529a6cd273559d11a86da03",
+    "tools/native-worker-service-proof-v2.mjs": "86e53164024dacdfc4cf633303a9c1b43503f3ffdd3352d054955129630662ce",
+    "tools/native-reused-service-component-proof-v2.mjs": "49876084e57a8502d6e4e343ff8ebc4a014673c1c7440379b0c3321b84cd2eed",
+    "tools/terrain-lattice-tile-candidate.mjs": "a678a40f9835f2dc8e0bf30d7f478fceba7a1bd5aff450ffd46edf3a472f0fbe",
+    "src/world/terrain.js": "f5e0937e2c235b5e4fd495a4ce5e7baa9fc518d1b194de20b3458fe65d7afc59",
+    "src/world/navigation.js": "21b82f33c62581436a6cef702b66af272ae9d3b096cb2b20ee858f0a50196743",
+    "src/world/work-points.js": "cb741c085c97c046f6e0e477bb83b6f81c2e953c7c3ed14cf0d4a42920ba7939",
+    "src/world/centers.js": "7a826b2bf3bb0793b0e4453c3a9ae487741f2ddf41c79433434091806739a7f4",
+    "public/content/biome-canyons.json": "a0da0d39766ef48e44ef82bc9b9ab6093bce0ae2bf6abd3035a626792823ff6d"
+  },
+  "scope": "One fresh-process complete isolated perimeter/worker proof over retained geometry. Integer terrain tile cache only; no state changes or production integration. Concurrent instrumented CPU observations, not controlled hardware, interactive frame time, GPU, total RAM or economic acceptance."
+}
