@@ -1,0 +1,202 @@
+{
+  "capturedAt": "2026-10-11T00:13:20.137Z",
+  "phase": "live day-eight checkpoint, not terminal acceptance",
+  "sourceHead": "e5e9a6f975bd413d037c8ffef97348bf79d38c63",
+  "sourceManifestSha256": "1aaf760d15e8f1fb9ed563b45f236adbab46c263f7d6b0cc30f05bb7fdd4bb53",
+  "firstSevenRowsIdentical": false,
+  "firstSevenAggregateDifferences": [
+    {
+      "day": 7,
+      "key": "actions",
+      "new": 27,
+      "old": 28
+    }
+  ],
+  "comparisonLimitation": "Short physical yields also changed raid timing and delivery ordering; a same-source Q9 control is needed for causal labour-policy attribution.",
+  "newPolicy": {
+    "completeDailyRows": 8,
+    "ignoredUnterminatedTail": false,
+    "ledgerRowsChecked": 933,
+    "daily": [
+      {
+        "day": 1,
+        "money": 203,
+        "living": 93,
+        "staff": 6,
+        "planted": 119,
+        "delivered": 27,
+        "destroyed": 0,
+        "income": 297,
+        "wages": 180,
+        "seeds": 614,
+        "walls": 0,
+        "repairs": 0,
+        "net": -497,
+        "diagnostics": {
+          "noDeliveredIncome": false,
+          "noNewPlanting": false,
+          "cashBelowNextWageReserve": false,
+          "scope": "Uses the journal declared next-wage reserve; diagnostic only, never a terminal verdict"
+        }
+      },
+      {
+        "day": 2,
+        "money": 230,
+        "living": 102,
+        "staff": 6,
+        "planted": 51,
+        "delivered": 42,
+        "destroyed": 0,
+        "income": 462,
+        "wages": 180,
+        "seeds": 255,
+        "walls": 0,
+        "repairs": 0,
+        "net": 27,
+        "diagnostics": {
+          "noDeliveredIncome": false,
+          "noNewPlanting": false,
+          "cashBelowNextWageReserve": false,
+          "scope": "Uses the journal declared next-wage reserve; diagnostic only, never a terminal verdict"
+        }
+      },
+      {
+        "day": 3,
+        "money": 299,
+        "living": 117,
+        "staff": 6,
+        "planted": 62,
+        "delivered": 47,
+        "destroyed": 0,
+        "income": 559,
+        "wages": 180,
+        "seeds": 310,
+        "walls": 0,
+        "repairs": 0,
+        "net": 69,
+        "diagnostics": {
+          "noDeliveredIncome": false,
+          "noNewPlanting": false,
+          "cashBelowNextWageReserve": false,
+          "scope": "Uses the journal declared next-wage reserve; diagnostic only, never a terminal verdict"
+        }
+      },
+      {
+        "day": 4,
+        "money": 210,
+        "living": 153,
+        "staff": 6,
+        "planted": 85,
+        "delivered": 49,
+        "destroyed": 0,
+        "income": 539,
+        "wages": 203,
+        "seeds": 425,
+        "walls": 0,
+        "repairs": 0,
+        "net": -89,
+        "diagnostics": {
+          "noDeliveredIncome": false,
+          "noNewPlanting": false,
+          "cashBelowNextWageReserve": false,
+          "scope": "Uses the journal declared next-wage reserve; diagnostic only, never a terminal verdict"
+        }
+      },
+      {
+        "day": 5,
+        "money": 212,
+        "living": 149,
+        "staff": 7,
+        "planted": 28,
+        "delivered": 32,
+        "destroyed": 0,
+        "income": 352,
+        "wages": 210,
+        "seeds": 140,
+        "walls": 0,
+        "repairs": 0,
+        "net": 2,
+        "diagnostics": {
+          "noDeliveredIncome": false,
+          "noNewPlanting": false,
+          "cashBelowNextWageReserve": false,
+          "scope": "Uses the journal declared next-wage reserve; diagnostic only, never a terminal verdict"
+        }
+      },
+      {
+        "day": 6,
+        "money": 287,
+        "living": 59,
+        "staff": 7,
+        "planted": 0,
+        "delivered": 75,
+        "destroyed": 15,
+        "income": 825,
+        "wages": 210,
+        "seeds": 0,
+        "walls": 540,
+        "repairs": 0,
+        "net": 75,
+        "diagnostics": {
+          "noDeliveredIncome": false,
+          "noNewPlanting": true,
+          "cashBelowNextWageReserve": false,
+          "scope": "Uses the journal declared next-wage reserve; diagnostic only, never a terminal verdict"
+        }
+      },
+      {
+        "day": 7,
+        "money": 332,
+        "living": 0,
+        "staff": 7,
+        "planted": 11,
+        "delivered": 70,
+        "destroyed": 0,
+        "income": 770,
+        "wages": 210,
+        "seeds": 55,
+        "walls": 460,
+        "repairs": 0,
+        "net": 45,
+        "diagnostics": {
+          "noDeliveredIncome": false,
+          "noNewPlanting": false,
+          "cashBelowNextWageReserve": false,
+          "scope": "Uses the journal declared next-wage reserve; diagnostic only, never a terminal verdict"
+        }
+      },
+      {
+        "day": 8,
+        "money": 136,
+        "living": 24,
+        "staff": 3,
+        "planted": 38,
+        "delivered": 14,
+        "destroyed": 0,
+        "income": 154,
+        "wages": 90,
+        "seeds": 190,
+        "walls": 0,
+        "repairs": 70,
+        "net": -196,
+        "diagnostics": {
+          "noDeliveredIncome": false,
+          "noNewPlanting": false,
+          "cashBelowNextWageReserve": false,
+          "scope": "Uses the journal declared next-wage reserve; diagnostic only, never a terminal verdict"
+        }
+      }
+    ],
+    "scope": "Completed daily journal accounting only. Does not prove final native result, delivery geometry, route validity, performance, or human activity."
+  },
+  "priorQ9Day8": {
+    "money": 33,
+    "living": 37,
+    "staff": 1,
+    "income": 0,
+    "wages": 30,
+    "seeds": 199,
+    "repairs": 70,
+    "delivered": 0
+  }
+}
