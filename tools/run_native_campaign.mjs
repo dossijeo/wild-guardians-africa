@@ -8,6 +8,7 @@ import {serialize} from '../src/persistence/snapshots.js';
 import {simulateNativeCampaign} from './native-campaign-runner.mjs';
 import {PROFILES} from '../src/simulation/workforce.js';
 import {wallSpec} from '../src/simulation/rules.js';
+import {BIOME_IDS} from '../src/world/navigation.js';
 import {intensiveRunProvenance} from './intensive-run-provenance.mjs';
 import {NATIVE_CAMPAIGN_PROTOCOL,nativeCampaignStrategy,campaignProtocolForLabour} from './native-campaign-protocol.mjs';
 export function parseNativeCampaignArgs(args){
@@ -15,6 +16,7 @@ export function parseNativeCampaignArgs(args){
  for(let i=0;i<args.length;i+=2){const k=args[i]?.replace(/^--/,'');if(!allowed.has(k)||args[i+1]===undefined)throw Error('Use --out DIR --days 1..180 --seed INTEGER --strategy expansive|good|bad|no-walls|no-shield --biome NAME --culture NAME');o[k]=args[i+1];}
  for(const k of ['days','seed'])o[k]=Number(o[k]);
  if(!Number.isSafeInteger(o.days)||o.days<1||o.days>180||!Number.isSafeInteger(o.seed)||o.seed<0)throw Error('Invalid native days/seed');
+ if(!Object.hasOwn(BIOME_IDS,o.biome))throw Error('Unknown native biome: '+o.biome);
  if(!PROFILES.some(p=>p.id===o.profile))throw Error('Unknown native worker profile');
  o.plotFluidClearance=Number(o['plot-fluid-clearance']??0);delete o['plot-fluid-clearance'];if(!Number.isFinite(o.plotFluidClearance)||o.plotFluidClearance<0||o.plotFluidClearance>3)throw Error('Invalid plot fluid clearance');
  if(o['stop-cash']!==undefined||o['stop-min-day']!==undefined){
