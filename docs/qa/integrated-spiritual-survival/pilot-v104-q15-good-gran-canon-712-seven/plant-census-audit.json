@@ -1,0 +1,105 @@
+{
+  "cases": [
+    {
+      "directory": "docs/qa/integrated-spiritual-survival/pilot-v104-q15-good-gran-canon-712-seven",
+      "seed": "712",
+      "strategy": "good",
+      "status": "observed-horizon",
+      "initialLiving": 1,
+      "living": 103,
+      "picked": 158,
+      "destroyed": 64,
+      "species": {
+        "mijo": {
+          "purchased": 323,
+          "living": 103,
+          "picked": 156,
+          "destroyed": 64
+        },
+        "yuca": {
+          "purchased": 2,
+          "living": 0,
+          "picked": 2,
+          "destroyed": 0
+        }
+      },
+      "money": 120,
+      "liveSeedReplacementCost": 515,
+      "liveBaseHarvestPotential": 1133,
+      "daily": [
+        {
+          "day": 1,
+          "openingLiving": 1,
+          "planted": 64,
+          "pickedFromCensus": 1,
+          "destroyed": 2,
+          "closingLiving": 62,
+          "delivered": 1,
+          "undeliveredCrates": 0
+        },
+        {
+          "day": 2,
+          "openingLiving": 62,
+          "planted": 68,
+          "pickedFromCensus": 40,
+          "destroyed": 0,
+          "closingLiving": 90,
+          "delivered": 40,
+          "undeliveredCrates": 0
+        },
+        {
+          "day": 3,
+          "openingLiving": 90,
+          "planted": 37,
+          "pickedFromCensus": 22,
+          "destroyed": 4,
+          "closingLiving": 101,
+          "delivered": 22,
+          "undeliveredCrates": 0
+        },
+        {
+          "day": 4,
+          "openingLiving": 101,
+          "planted": 56,
+          "pickedFromCensus": 35,
+          "destroyed": 0,
+          "closingLiving": 122,
+          "delivered": 35,
+          "undeliveredCrates": 0
+        },
+        {
+          "day": 5,
+          "openingLiving": 122,
+          "planted": 48,
+          "pickedFromCensus": 30,
+          "destroyed": 5,
+          "closingLiving": 135,
+          "delivered": 30,
+          "undeliveredCrates": 0
+        },
+        {
+          "day": 6,
+          "openingLiving": 135,
+          "planted": 10,
+          "pickedFromCensus": 9,
+          "destroyed": 23,
+          "closingLiving": 113,
+          "delivered": 9,
+          "undeliveredCrates": 0
+        },
+        {
+          "day": 7,
+          "openingLiving": 113,
+          "planted": 41,
+          "pickedFromCensus": 21,
+          "destroyed": 30,
+          "closingLiving": 103,
+          "delivered": 21,
+          "undeliveredCrates": 0
+        }
+      ],
+      "snapshotUnchanged": true,
+      "scope": "Population counts reconcile native placement/pick/destruction/delivery aggregates with the snapshot. Daily picked counts are inferred from population conservation. Replacement cost and harvest potential are not spendable cash, delivered income or forecasts of guaranteed profit."
+    }
+  ]
+}

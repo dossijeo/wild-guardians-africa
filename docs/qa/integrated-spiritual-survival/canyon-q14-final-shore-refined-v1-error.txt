@@ -1,0 +1,13 @@
+file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/src/simulation/game.js:170
+  if(!permission(s,'wall'))throw new Error('Esta acción no está disponible ahora');
+                                 ^
+
+Error: Esta acción no está disponible ahora
+    at Module.quoteWallChain (file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/src/simulation/game.js:170:34)
+    at file:///C:/Users/PC/.codex/worktrees/agricultural-single-plant-magic/wild-guardians-africa/tools/probe-native-placement-contour.mjs:17:155
+    at ModuleJob.run (node:internal/modules/esm/module_job:218:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:329:24)
+    at async loadESM (node:internal/process/esm_loader:28:7)
+    at async handleMainPromise (node:internal/modules/run_main:113:12)
+
+Node.js v20.11.0
