@@ -30,3 +30,9 @@ base Q12 proposals, avoiding ambiguity with actual paid contract history.
 The combined Q13/Q12/Q10/CLI regression suite passes. Short native pilots and
 comparison with retained negative results are still required. This funding
 screen is never production logic, balance approval or fabricated activity time.
+
+Status after pilots v69/v70: rejected for long calibration. Both suffered
+native dawn-8 insolvency with most living crops still awaiting first watering.
+Reducing crews while retaining aggressive purchases strands service capacity.
+See `pilot-v69-v70-q13-rejection-review.md`; preserve Q13 as a failed opt-in
+experiment rather than using it to approve balance or changing native prices.

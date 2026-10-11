@@ -1,0 +1,61 @@
+{
+  "id": "native-spiritual-survival-v6-paid-productive-center-maintenance-q13",
+  "seeds": [
+    712,
+    123,
+    2026
+  ],
+  "strategies": [
+    "expansive",
+    "good",
+    "bad",
+    "no-walls",
+    "passive",
+    "no-shield"
+  ],
+  "centerRepairByStrategy": {
+    "expansive": true,
+    "good": true,
+    "bad": false,
+    "no-walls": true,
+    "passive": true,
+    "no-shield": true
+  },
+  "shieldByStrategy": {
+    "expansive": true,
+    "good": true,
+    "bad": true,
+    "no-walls": true,
+    "passive": true,
+    "no-shield": false
+  },
+  "defensePriority": "physical walls and repairs before discretionary village savings; wages protected",
+  "daySeconds": 300,
+  "combatNights": 100,
+  "postgamePeaceNights": 80,
+  "minDailyCropPurchases": 60,
+  "strictMaximumIdleFraction": 0.25,
+  "profile": "olderFemale",
+  "plantsPerWorker": 6,
+  "plotSpacing": 1.5,
+  "plantDecisionSeconds": 1,
+  "seedPricing": "constant production prices",
+  "income": "native CrateDelivered only",
+  "damage": "native contacts/occlusion only; no assumed exposure",
+  "labourPolicy": "10s incremental measured-service queue ratio; full selected-crew next wage; funded dawn continuity",
+  "evaluationSeconds": 10,
+  "serviceWindowSeconds": 30,
+  "backlogPerWorker": 6,
+  "maximumClearanceSeconds": 60,
+  "dawnFunding": "Q12 proposal screened by current wage + next wage + pending repair reserve + seed; no forecast income; explicit one-worker emergency if renewal unfunded",
+  "openingStaff": 6,
+  "lastTrialTime": 180,
+  "trialGate": "last new worker physical delivery and center settled replacement margin >= proportional salary + full next wage; current cash affordability remains separate",
+  "renewalWorkUnitsPerWorker": 6,
+  "dawnRenewal": "at most previous crew and ceiling(max(living,pending)/6) per productive centre; native wages and Q8 trial gates unchanged",
+  "profileChanges": "dawn only; native paid selection recorded per contract; original wages and shifts",
+  "plotFluidClearance": 1.5,
+  "defenseMaterial": "empalizada",
+  "repairPolicy": "breach-first",
+  "cropHitPoints": 1
+}
