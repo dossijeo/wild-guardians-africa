@@ -189,3 +189,34 @@ hinge and ten-piece removal/reappearance per frame. Earlier global dirty results
 and the first static-hinge diagnostic are retained, not used as acceptance for
 this optimized path. Packaged source e07 passed native Exit; the final PR CI must
 also build/check the later rendering-only invalidation changes before merge.
+
+
+## Isolated structural CPU cost
+
+Hosted Windows run [38159425730](https://github.com/dossijeo/wild-guardians-africa/actions/runs/38159425730)
+measures source 49242c78, 500 warm-up + 2,000 measured updates per structural
+arm, ABBA, and 1,000 wall envelopes with 15 nearby sweep candidates. All arms
+are labelled CPU-only: there is no renderer, live simulation or physical mobile.
+
+| Scenario / protection enabled | B1 p95 ms | B2 p95 ms | B1 p99 ms | B2 p99 ms |
+|---|---:|---:|---:|---:|
+| Stable walls | .0601 | .0447 | .0910 | .0603 |
+| Forced global dirty reference | .5552 | .5466 | .6888 | .7200 |
+| One gate changing every update, partial refresh | .0694 | .0915 | .0974 | .1622 |
+| Ten removals + previous ten reappear, partial refresh | .1394 | .0986 | .2520 | .1590 |
+
+Gate maximums .651/.661 ms; multi-removal maximums 2.594/1.709 ms. Forced global
+refresh is an intentionally adverse reference, not the normal animated-gate path.
+The unchanged clear path and contextual minimum use indexed local queries.
+The older global-refresh run 38159176187 recorded gate p95 .2881/.3458 ms, but
+these are different hosted runners; do not infer an exact percentage speedup.
+Both raw reports are preserved. The optimized dynamic path has bounded observed
+cost and is substantially smaller than reexamining the whole perimeter in the
+same run. No FPS or physical mobile performance claim is made.
+
+After the per-entity change, build and 23 focused tests pass; camera-dynamics-v4
+repeats actual rendering, gestures, rotation/damage, streaming and portrait
+resize with no exceptions or conflicts. Final mandatory Windows/Validate checks
+must run against the final branch HEAD before PR and integration. Their complete
+results and final review will be linked in the PR; previous packaged native
+proof remains preserved and is not substituted for checking the newer renderer.
