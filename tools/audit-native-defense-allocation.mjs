@@ -13,7 +13,19 @@ const pieceReserve=r.policy.defensePieceReserve??0;
 assert([0,1].includes(pieceReserve),'Unknown next-piece reserve policy');
 assert(!pieceReserve||mode==='rolling','Next-piece earmark requires rolling allocation');
 assert.equal(r.protocol?.defensePieceReserve??0,pieceReserve,'Report protocol/policy next-piece reserve mismatch');
-assert.equal(receipt.options?.defensePieceReserve??0,pieceReserve,'Launch options/policy next-piece reserve mismatch');
+// Final receipts replace the running receipt and omit options. The immutable
+// source manifest retains the actual launch arguments and protocol.
+const sourcePath=directory+'/source.json';
+const source=existsSync(sourcePath)?JSON.parse(readFileSync(sourcePath,'utf8')):null;
+const launch=receipt.options??source?.arguments;
+assert(launch||pieceReserve===0,'Opt-in policy requires preserved launch evidence');
+assert.equal(launch?.defensePieceReserve??0,pieceReserve,'Launch options/policy next-piece reserve mismatch');
+if(source){
+ assert.equal(source.arguments?.defensePieceReserve??0,pieceReserve,'Source launch/policy next-piece reserve mismatch');
+ assert.equal(source.protocol?.defensePieceReserve??0,pieceReserve,'Source protocol/policy next-piece reserve mismatch');
+ const protocol=JSON.parse(readFileSync(directory+'/protocol.json','utf8'));
+ assert.equal(protocol.defensePieceReserve??0,pieceReserve,'Frozen protocol/policy next-piece reserve mismatch');
+}
 if(defenseActive){
  assert.equal(r.defense?.funding??'contour',mode);
  assert.equal(r.defense?.pieceReserve??0,pieceReserve,'Active defense next-piece reserve mismatch');

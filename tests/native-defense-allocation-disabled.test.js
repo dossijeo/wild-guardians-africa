@@ -6,10 +6,11 @@ import {join} from 'node:path';
 import {tmpdir} from 'node:os';
 import {spawnSync} from 'node:child_process';
 
-function audit(report,options={}){
+function audit(report,options={},source){
  const dir=mkdtempSync(join(tmpdir(),'wild-guardians-disabled-defense-')),output=join(dir,'audit.json');
- writeFileSync(join(dir,'receipt.json'),JSON.stringify({status:'observed-horizon',options}));
+ writeFileSync(join(dir,'receipt.json'),JSON.stringify({status:'observed-horizon',...(options===null?{}:{options})}));
  writeFileSync(join(dir,'report.json'),JSON.stringify(report));
+ if(source){writeFileSync(join(dir,'source.json'),JSON.stringify(source));writeFileSync(join(dir,'protocol.json'),JSON.stringify(source.protocol));}
  const child=spawnSync(process.execPath,['tools/audit-native-defense-allocation.mjs',dir,output],{encoding:'utf8',timeout:30000});
  return {child,output};
 }
@@ -17,6 +18,20 @@ const fixture=()=>({policy:{defend:false,defenseFunding:'rolling'},defense:null,
 test('disabled native defense verifies no active policy and no actual wall spending',()=>{
  const {child,output}=audit(fixture());assert.equal(child.status,0,child.stderr);
  const result=JSON.parse(readFileSync(output));assert.equal(result.defenseActive,false);assert.equal(result.mode,'rolling');assert.equal(result.purchases,0);
+});
+
+test('terminal receipts without options require matching frozen opt-in launch evidence',()=>{
+ const report=fixture();report.policy.defend=true;report.policy.defensePieceReserve=1;
+ report.protocol={defensePieceReserve:1};report.defense={funding:'rolling',pieceReserve:1,history:[]};
+ const source={arguments:{defensePieceReserve:1},protocol:{defensePieceReserve:1}};
+ const valid=audit(report,undefined,source);
+ // Explicit undefined uses the helper default {}; null models the actual final receipt.
+ assert.notEqual(valid.child.status,0);
+ const terminal=audit(report,null,source);assert.equal(terminal.child.status,0,terminal.child.stderr);
+ assert.notEqual(audit(report,null).child.status,0);
+ for(const mutate of [s=>s.arguments.defensePieceReserve=0,s=>s.protocol.defensePieceReserve=0]){
+  const changed=structuredClone(source);mutate(changed);assert.notEqual(audit(report,null,changed).child.status,0);
+ }
 });
 test('disabled defense cannot hide wall payments or carry an active policy',()=>{
  for(const mutate of [r=>{r.daily[0].finance.walls=10;},r=>{r.daily[0].finance.entries.push({id:'wall',coins:-10,category:'walls'});},r=>{r.defense={funding:'rolling',history:[]};}]){
