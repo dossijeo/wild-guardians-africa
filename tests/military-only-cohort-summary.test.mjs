@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {classifyMilitaryCase,summarizeMilitaryCases,wilsonInterval,auditNativeMilitaryCase} from '../tools/summarize-military-only-cohort.mjs';
+import {classifyMilitaryCase,summarizeMilitaryCases,wilsonInterval,auditNativeMilitaryCase,frozenMilitaryIdentityIssues} from '../tools/summarize-military-only-cohort.mjs';
+import {frozenMilitaryOptions} from '../tools/run-military-only-calibration.mjs';
 import {fileURLToPath} from 'node:url';
 test('fragility, timeout and short completed horizons never count as defeats or wins',()=>{
  assert.equal(classifyMilitaryCase({status:'running'},{money:0,completedNights:12}),'running');
@@ -19,6 +20,17 @@ test('read-only audit validates preserved native defeat and rejects absent termi
  assert.equal(r.facts.completedNights,30);assert.equal(r.facts.money,32);
  assert.equal(r.facts.ledgerAndDeliveryMatch,true);
  assert.equal(auditNativeMilitaryCase(directory+'/missing-terminal-evidence').status,'failed');
+});
+test('a good execution cannot be relabeled normal merely because both use strategy good',()=>{
+ const site={seed:123,biome:'sabana',culture:'mapungubwe'},o=frozenMilitaryOptions('good',{...site,out:'.cache-config-fixture'});
+ // Configuration fixture only, not a campaign or a native outcome.
+ const report={...site,strategy:o.strategy,labourPolicy:o.labourPolicy,policy:o};
+ const receipt={options:o},reference={'src/runtime.js':'frozen'},source={arguments:o,protocol:{cropHitPoints:1},sourceHashes:reference};
+ assert.deepEqual(frozenMilitaryIdentityIssues('good',site,receipt,report,source,reference),[]);
+ const mislabeled=frozenMilitaryIdentityIssues('normal',site,receipt,report,source,reference);
+ assert(mislabeled.includes('report.policy.defenseStartDay'));assert(mislabeled.includes('report.policy.reserveMaintenance'));
+ assert(frozenMilitaryIdentityIssues('good',site,receipt,report,{...source,sourceHashes:{'src/runtime.js':'different'}},reference).includes('frozen-source:src/runtime.js'));
+ assert(frozenMilitaryIdentityIssues('good',site,receipt,report,{...source,protocol:{cropHitPoints:2}},reference).includes('source.protocol.cropHitPoints'));
 });
 test('mixed censored evidence is excluded from denominators, not treated as losing seeds',()=>{
  const r=summarizeMilitaryCases([{profile:'good',status:'survived-100'},{profile:'good',status:'native-defeat'},{profile:'good',status:'running'},{profile:'good',status:'incomplete-review-required'}]);

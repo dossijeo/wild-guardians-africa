@@ -78,6 +78,14 @@ audits avoid confusing the original v118 launcher with the additional wrapper
 and manifest hashes recorded by subsequent baseline cases; all 451 shared
 runtime hashes are independently required to match at launch.
 
+The summarizer also checks each terminal case's recorded seed, site, strategy,
+labour policy, worker profile, crop choice, defense/repair choices, maintenance
+reserve, 100-night request, perimeter recipe and one-hit crop rule against this
+manifest. All shared runtime hashes must match v118. A good execution cannot be
+counted as normal merely because both use the native `good` strategy module.
+Six focused tests pass with this identity check; wrong profile choices, source
+hashes or crop HP remain unresolved rather than changing the sample's win rate.
+
 ## Authorized calibration and stopping
 
 Change only animal crop/structure damage, attack radii and actual animal counts,

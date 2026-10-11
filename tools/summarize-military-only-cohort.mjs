@@ -2,7 +2,21 @@ import {existsSync,readFileSync,writeFileSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {execFileSync} from 'node:child_process';
-import {frozenPolicies} from './run-military-only-calibration.mjs';
+import {frozenPolicies,frozenMilitaryOptions} from './run-military-only-calibration.mjs';
+
+export function frozenMilitaryIdentityIssues(profile,site,receipt,report,source,referenceHashes){
+ const expected=frozenMilitaryOptions(profile,{...site,out:'.cache-identity-only'}),issues=[];
+ for(const key of ['seed','biome','culture','strategy','labourPolicy'])if(report?.[key]!==expected[key])issues.push('report.'+key);
+ for(const key of ['profile','cropPolicy','defensePolicy','defenseStartDay','defenseMaterial','repairPolicy','defenseFunding','defensePieceReserve','reserveMaintenance']){
+  if(report?.policy?.[key]!==expected[key])issues.push('report.policy.'+key);
+ }
+ if(receipt?.options?.days!==100)issues.push('receipt.options.days');
+ if(source?.arguments?.perimeterQa!==expected.perimeterQa)issues.push('source.arguments.perimeterQa');
+ if(source?.protocol?.cropHitPoints!==1)issues.push('source.protocol.cropHitPoints');
+ for(const [path,hash] of Object.entries(referenceHashes??{}))if(source?.sourceHashes?.[path]!==hash)issues.push('frozen-source:'+path);
+ if(!referenceHashes||!Object.keys(referenceHashes).length)issues.push('missing-frozen-source-reference');
+ return issues;
+}
 
 export function classifyMilitaryCase(receipt,report){
  if(!receipt)return 'not-started';
@@ -37,17 +51,20 @@ export function auditNativeMilitaryCase(directory){
 }
 export function observeBaselineCohort(root){
  const read=path=>existsSync(path)?JSON.parse(readFileSync(path,'utf8').replace(/^\uFEFF/,'')):null;
+ const reference=read(resolve(root,frozenPolicies.baselineCampaign,'source.json'));
  const cases=[];
  for(const site of frozenPolicies.initialSites)for(const profile of Object.keys(frozenPolicies.profiles))for(const seed of frozenPolicies.matchedSeeds){
   const directory=profile==='good'&&seed===123&&site.biome==='sabana'?frozenPolicies.baselineCampaign:`military-baseline-v1-${profile}-${site.biome}-${seed}`;
-  const path=resolve(root,directory),receipt=read(resolve(path,'receipt.json')),report=read(resolve(path,'report.json')),progress=read(resolve(path,'progress.json'));
+  const path=resolve(root,directory),receipt=read(resolve(path,'receipt.json')),report=read(resolve(path,'report.json')),progress=read(resolve(path,'progress.json')),source=read(resolve(path,'source.json'));
+  let identityIssues=[];
   let status=classifyMilitaryCase(receipt,report),terminalAudit=null;
   if(['native-defeat','survived-100'].includes(status)){
    terminalAudit=auditNativeMilitaryCase(path);
-   if(terminalAudit.status!=='verified')status='incomplete-review-required';
+   identityIssues=frozenMilitaryIdentityIssues(profile,{seed,...site},receipt,report,source,reference?.sourceHashes);
+   if(terminalAudit.status!=='verified'||identityIssues.length)status='incomplete-review-required';
   }
   // Progress is a file observation, not independent confirmation of a live PID.
-  cases.push({profile,seed,...site,directory,status,terminalAudit,nativeResult:report?.result??null,completedNights:report?.completedNights??null,lastRecordedProgress:progress??null,finalMoney:report?.money??null});
+  cases.push({profile,seed,...site,directory,status,terminalAudit,identityIssues,nativeResult:report?.result??null,completedNights:report?.completedNights??null,lastRecordedProgress:progress??null,finalMoney:report?.money??null});
  }
  return {observedAt:new Date().toISOString(),policyFreeze:frozenPolicies.id,cases,profiles:summarizeMilitaryCases(cases),scope:'Only terminal native reports passing snapshot, ledger, physical-delivery and strike audits enter the win-rate denominator. Progress files do not prove a live process. Small screening cohorts cannot certify target population win rates; no configuration accepted automatically. Each case is audited separately; common frozen runtime hashes are independently enforced by the launch provenance.'};
 }
