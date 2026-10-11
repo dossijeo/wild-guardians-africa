@@ -1,0 +1,29 @@
+{
+  "cases": [
+    {
+      "original": "pilot-v64-common-passive-712-seven",
+      "current": "pilot-v73-q9-passive-rolling-712-seven",
+      "firstFiveDailyRowsExactlyMatch": true,
+      "unchangedNativeAndContentHashes": 360,
+      "changedSourceHashKeys": [
+        "tools/native-campaign-runner.mjs",
+        "tools/native-campaign-protocol.mjs",
+        "tools/run_native_campaign.mjs",
+        "tools/native-funded-defense-policy.mjs"
+      ]
+    },
+    {
+      "original": "pilot-v61-common-good-712-fourteen",
+      "current": "pilot-v74-q9-good-rolling-712-seven",
+      "firstFiveDailyRowsExactlyMatch": true,
+      "unchangedNativeAndContentHashes": 360,
+      "changedSourceHashKeys": [
+        "tools/native-campaign-runner.mjs",
+        "tools/native-campaign-protocol.mjs",
+        "tools/run_native_campaign.mjs",
+        "tools/native-funded-defense-policy.mjs"
+      ]
+    }
+  ],
+  "scope": "Before day-six player investment decisions; QA policy source differs, native and content hashes do not."
+}
