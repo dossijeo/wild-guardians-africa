@@ -5,6 +5,7 @@ import {Navigation} from '../src/world/navigation.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {rational} from '../src/simulation/money.js';
 import {createQ14LabourPolicy} from '../tools/native-q14-labour-policy.mjs';
+import {parseNativeCampaignArgs,nativeCampaignProvenance} from '../tools/run_native_campaign.mjs';
 function fixture(){
  const s=Game.newGame({seed:712,slotId:'q14-unit'}),nav=new Navigation(712,'sabana');
  nav.field={canyon:false,riverLevel:0,surface:()=>0,slope:()=>0,fluidInside:()=>false};nav.propsAt=()=>[];nav.setState(s);
@@ -47,4 +48,11 @@ test('native paid additional hire clears the intention and reserves only the act
  q.hired(s,1,{id:'q14-paid-hire',centerId:plan.centerId,workerIds:s.workers.filter(w=>!before.has(w.id)).map(w=>w.id)});
  assert.equal(q.reserve(),210);assert.equal(q.report().plannedHireBudget.reservation,null);assert.equal(s.workers.length,7);
  assert.equal(q.report().history.at(-1).paidCoins,-Number(s.ledger.entries['q14-paid-hire'].n));
+});
+
+test('Q14 is explicit opt-in with its exact source in frozen provenance',()=>{
+ const options=parseNativeCampaignArgs(['--out','q14-fixture','--labour-policy','q14']);
+ assert.equal(options.labourPolicy,'q14');const source=nativeCampaignProvenance(options);
+ assert(source.protocol.id.endsWith('-q14'));assert(source.sourceHashes['tools/native-q14-labour-policy.mjs']);
+ assert.equal(parseNativeCampaignArgs(['--out','default-fixture']).labourPolicy,'legacy');
 });

@@ -38,6 +38,7 @@ import {createQ8LabourPolicy} from './native-q8-labour-policy.mjs';
 import {createQ9LabourPolicy} from './native-q9-labour-policy.mjs';
 import {createQ12LabourPolicy} from './native-q12-labour-policy.mjs';
 import {createQ13LabourPolicy} from './native-q13-labour-policy.mjs';
+import {createQ14LabourPolicy} from './native-q14-labour-policy.mjs';
 import {campaignCropChoice} from './native-campaign-crop-policy.mjs';
 
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
@@ -45,7 +46,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
  if(!Number.isSafeInteger(days)||days<1||days>180)throw Error('Native protocol permits1–180 days only');
  if(!Number.isSafeInteger(plantsPerWorker)||plantsPerWorker<1)throw new Error('Plants per worker must be a positive integer');
  if(!['legacy','cashflow'].includes(cropPolicy))throw Error('Unknown crop policy');
- const protocol={...campaignProtocolForLabour(labourPolicy),profile,plotFluidClearance,defenseMaterial,repairPolicy,defenseFunding,cropHitPoints:CROP_HIT_POINTS},q4=labourPolicy==='q4',q5=['q5','q6','q7','q8','q9','q12','q13'].includes(labourPolicy),q6=['q6','q7','q8','q9','q12','q13'].includes(labourPolicy),q7=['q7','q8','q9','q12','q13'].includes(labourPolicy),labourHistory=[],labourObservations=[],labourReasons={};
+ const protocol={...campaignProtocolForLabour(labourPolicy),profile,plotFluidClearance,defenseMaterial,repairPolicy,defenseFunding,cropHitPoints:CROP_HIT_POINTS},q4=labourPolicy==='q4',q5=['q5','q6','q7','q8','q9','q12','q13','q14'].includes(labourPolicy),q6=['q6','q7','q8','q9','q12','q13','q14'].includes(labourPolicy),q7=['q7','q8','q9','q12','q13','q14'].includes(labourPolicy),labourHistory=[],labourObservations=[],labourReasons={};
  const policy=nativeCampaignStrategy(strategy),agriculturalMagic=createAgriculturalMagicPolicy({mode:policy.agriculturalMagic});defend=policy.defend;middayHiring=policy.middayHiring;plantsPerWorker=6;
  if(typeof Game.nightEntryPending!=='function')throw Error('Native pending entry handshake is not integrated; no campaign started');
  const opening=createOpeningWorld(world),nav=opening.nav;let s=opening.s,sequence=0;
@@ -56,7 +57,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
  if(!['contour','rolling'].includes(defenseFunding)||defenseFunding==='rolling'&&!['funded','routed','shore'].includes(defensePolicy))throw Error('Unsupported defense funding choice');
  if(defenseMaterial!=='zarzas'&&!['funded','routed','shore'].includes(defensePolicy))throw Error('Explicit defense material requires funded/routed/shore policy');
  if(!Number.isSafeInteger(defenseStartDay)||defenseStartDay<1||defenseStartDay!==1&&!['closed','funded','routed','shore'].includes(defensePolicy))throw Error('Explicit defense start requires closed/funded/routed policy and positive integer day');
- const q5Policy=labourPolicy==='q13'?createQ13LabourPolicy({profile}):labourPolicy==='q12'?createQ12LabourPolicy({profile}):labourPolicy==='q9'?createQ9LabourPolicy({profile}):labourPolicy==='q8'?createQ8LabourPolicy({profile}):q7?createQ7LabourPolicy({profile}):q6?createQ6LabourPolicy({profile}):q5?createQ5LabourPolicy({profile}):null;
+ const q5Policy=labourPolicy==='q14'?createQ14LabourPolicy({profile}):labourPolicy==='q13'?createQ13LabourPolicy({profile}):labourPolicy==='q12'?createQ12LabourPolicy({profile}):labourPolicy==='q9'?createQ9LabourPolicy({profile}):labourPolicy==='q8'?createQ8LabourPolicy({profile}):q7?createQ7LabourPolicy({profile}):q6?createQ6LabourPolicy({profile}):q5?createQ5LabourPolicy({profile}):null;
  const defense=defend?(['funded','routed','shore'].includes(defensePolicy)?createNativeFundedDefensePolicy({startDay:defenseStartDay,material:defenseMaterial,repairWalls:policy.repair,obstacleAware:['routed','shore'].includes(defensePolicy),shoreRouting:defensePolicy==='shore',repairPolicy,funding:defenseFunding}):defensePolicy==='closed'?createNativeClosedDefensePolicy({startDay:defenseStartDay,repairWalls:policy.repair}):defensePolicy==='expanding'?createNativeExpandingDefensePolicy({repairWalls:policy.repair,reserveMode:'none'}):createFarmDefensePolicy()):null;
  const driver=new NativeCampaignEntryDriver(nav);let partialEvidence=()=>({});
  try {

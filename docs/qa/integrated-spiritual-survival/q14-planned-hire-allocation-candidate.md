@@ -11,3 +11,7 @@ The intention expires at the existing day-180-second hiring cutoff, a new day, a
 Three new tests exercise an actual native worker/task fixture: measured cash reservation with world immutability, save/reload observation without duplicate effects, expiration, unblocked startup, daily reset and a real paid additional hire with exact ledger receipt. Explicit unit funding and flat-terrain fixtures are not economic campaign evidence. The combined Q7/Q9/Q14 regression passes. Initial test failure was a null evaluation-window expectation, corrected without relaxing the budgeting behavior.
 
 Next step is explicit opt-in runner/provenance integration after the current source-frozen budget-gate replay finishes, followed by short native campaigns. Do not approve longer campaigns, human inactivity, protected survival or economic recovery from these unit tests.
+
+## Explicit runner integration
+
+After v96 ended normally, Q14 was registered as an opt-in labour policy, with the existing Q5/Q6/Q7 command and evidence paths preserved. The policy module is included in frozen source hashes. The default remains legacy; historical Q9 remains selectable. The combined labour and funded-defense regression passes 29 tests, including parser/provenance checks. Short native Q14 campaigns are still required before any profitability claim.
