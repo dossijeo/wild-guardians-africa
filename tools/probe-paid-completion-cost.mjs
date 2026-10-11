@@ -1,0 +1,30 @@
+import {readFileSync,writeFileSync} from 'node:fs';
+import {resolve,join} from 'node:path';
+import {gunzipSync} from 'node:zlib';
+import {createHash} from 'node:crypto';
+import {performance} from 'node:perf_hooks';
+import assert from 'node:assert/strict';
+import {deserialize,serialize} from '../src/persistence/snapshots.js';
+import {Navigation,BIOME_IDS} from '../src/world/navigation.js';
+import * as Game from '../src/simulation/game.js';
+import {nativePaidContourProof} from './native-paid-contour-proof.mjs';
+
+const [directory,output]=process.argv.slice(2);
+if(!directory||!output)throw Error('Stopped campaign directory and fresh output required');
+const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
+assert.equal(JSON.parse(readFileSync(join(directory,'receipt.json'))).status,'stopped-early-calibration');
+const source=JSON.parse(readFileSync(join(directory,'source.json'))),sourceDifferences=[];
+for(const [path,expected] of Object.entries(source.sourceHashes)){const actual=sha(readFileSync(resolve(path)));if(actual!==expected)sourceDifferences.push({path,expected,actual});}
+const bytes=readFileSync(join(directory,'partial-state.json.gz')),state=deserialize(gunzipSync(bytes).toString());
+const partial=JSON.parse(readFileSync(join(directory,'partial.json'))),defense=partial.receipts.defense,candidate=defense.planned??defense.completed;
+assert(candidate,'Snapshot must retain a planned or completed contour');
+const profile=JSON.parse(readFileSync(`public/content/biome-${BIOME_IDS[state.biome]}.json`)).profile;
+const nav=new Navigation(state.seed,state.biome,profile);nav.setState(state);const before=serialize(state);
+const started=performance.now(),plan=Game.quoteWallChain(state,defense.material,candidate.points,nav,{smooth:false,snap:false});
+const quoteMs=performance.now()-started,eligible=Boolean(plan.pieces.length||plan.updates.length);
+const proofStarted=performance.now();let proof;
+if(eligible)for(let i=0;i<1000;i++)proof=nativePaidContourProof(state,nav,plan,candidate.bounds,{outline:candidate.points});
+const deferredProofMs=performance.now()-proofStarted;
+if(eligible){assert.equal(proof.valid,false);assert.equal(proof.deferred,true);}assert.equal(serialize(state),before);
+const report={scope:'Native stopped snapshot, read-only wall quote; no baseline exhaustive timing or campaign acceptance',snapshotSha256:sha(bytes),sourceDifferences,day:state.day,time:state.time,living:state.plants.filter(p=>p.alive).length,quoteMs,proposedPieces:plan.pieces.length,proposedUpdates:plan.updates.length,deferredProofEligible:eligible,deferredProofIterations:eligible?1000:0,deferredProofMs:eligible?deferredProofMs:null,proof:proof??null,stateUnchanged:true,toolSha256:sha(readFileSync(new URL(import.meta.url)))};
+writeFileSync(output,JSON.stringify(report,null,2)+'\n',{flag:'wx'});console.log(JSON.stringify(report,null,2));
