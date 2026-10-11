@@ -7,6 +7,7 @@ import {Navigation,BIOME_IDS} from '../src/world/navigation.js';
 import {wateringRoute,canWaterFrom} from '../src/world/work-points.js';
 import {centerServicePoint,centerDeliveryPoint} from '../src/world/centers.js';
 import * as Game from '../src/simulation/game.js';
+import {nativeWorkerServiceProof} from '../tools/native-worker-service-proof.mjs';
 const root=new URL('../docs/qa/integrated-spiritual-survival/',import.meta.url);
 function fixture(){
  const s=deserialize(gunzipSync(readFileSync(new URL('pilot-v97-q14-good-zarzas-canyon-712-seven/partial-state.json.gz',root))).toString());
@@ -40,4 +41,29 @@ test('native watering route still rejects a crop surrounded by a solid footprint
   footprint:[{x:plant.x-5,z:plant.z-5},{x:plant.x+5,z:plant.z-5},{x:plant.x+5,z:plant.z+5},{x:plant.x-5,z:plant.z+5}]});
  assert.equal(wateringRoute(worker,plant,blocked),null);
  assert.equal(serialize(s),before);
+});
+test('experimental worker service proof checks all live actors and all living crops',()=>{
+ const {s,view}=fixture(),before=serialize(s),proof=nativeWorkerServiceProof(s,view);
+ assert(proof.valid);assert.equal(proof.checks.workers.length,10);assert.equal(proof.checks.crops.length,123);
+ assert.equal(serialize(s),before);
+});
+test('experimental service proof does not accept missing workers or an orphan crop',()=>{
+ const {s,view}=fixture();
+ const missing={...s,workers:[]};assert.equal(nativeWorkerServiceProof(missing,view).reason,'worker-passage-not-observable');
+ const orphan={...s,plants:s.plants.map(p=>p.alive?{...p,centerId:'missing-centre'}:p)};
+ const rejected=nativeWorkerServiceProof(orphan,view);assert.equal(rejected.valid,false);assert.equal(rejected.reason,'native-crop-centre-not-operational');
+});
+test('experimental service proof rejects an obstructed route instead of skipping the worker',()=>{
+ const {s,view}=fixture();
+ const blocked=view.forBuildingPlacement({id:'total-service-blocker',kind:'house',x:-15,z:60,radius:200,
+  footprint:[{x:-200,z:-200},{x:200,z:-200},{x:200,z:200},{x:-200,z:200}]});
+ const rejected=nativeWorkerServiceProof(s,blocked);assert.equal(rejected.valid,false);
+ assert.equal(rejected.reason,'no-clear-worker-service-crop');
+});
+test('experimental service proof requires the physical return route, not only successful watering',()=>{
+ const {s,view}=fixture(),blockedReturn=Object.create(view),path=view.path.bind(view);
+ blockedReturn.path=(start,...args)=>start.id?.startsWith('water-point-')?null:path(start,...args);
+ const rejected=nativeWorkerServiceProof(s,blockedReturn);
+ assert.equal(rejected.valid,false);assert.equal(rejected.reason,'native-crop-delivery-route-unproven');
+ assert.equal(rejected.checks.workers.length,10);assert.equal(rejected.checks.crops.length,0);
 });
