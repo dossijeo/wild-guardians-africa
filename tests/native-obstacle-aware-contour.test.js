@@ -39,8 +39,16 @@ test('bounded native contour routes around real obstacles without modifying the 
 test('routed savings uses actual cash and cannot promote proposed walls into live protection',()=>{
  const {s,nav}=snapshot(),before=serialize(s),p=createNativeFundedDefensePolicy({obstacleAware:true});
  assert.equal(p.act(s,nav,{command:k=>'routed-'+k,reserve:330}),0);
- const r=p.report();assert.equal(r.remainingCost,740);assert.equal(r.paidPieces,0);assert.equal(r.completed,null);
- assert(r.history[0].attempts.some(a=>a.routed&&a.legal));assert.equal(serialize(s),before);
+ const r=p.report();assert(r.planned);assert.equal(r.paidPieces,0);assert.equal(r.completed,null);
+ // Savings refer to the selected physically certified contour, which can
+ // differ from the first geometry-only routed proposal checked above.
+ const selected=Game.quoteWallChain(s,'zarzas',r.planned.points,nav,{smooth:false,snap:false});
+ assert.equal(r.remainingCost,selected.cost);assert.equal(p.reserve(s),selected.cost);
+ assert.equal(selected.cost,530);assert.equal(selected.pieces.length,53);
+ const accepted=r.history[0].attempts.find(a=>a.legal&&a.cost===selected.cost);
+ assert(accepted);assert.equal(accepted.nativeBarrierProof.valid,true);
+ assert.deepEqual(accepted.bounds,r.planned.bounds);
+ assert.equal(serialize(s),before);
 });
 test('native perimeter proof rejects an open quote instead of claiming isolation from a bounded path failure',()=>{
  const {s,nav}=snapshot(),candidate=closedDefenseContours(s)[0],before=serialize(s);

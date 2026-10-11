@@ -8,7 +8,9 @@ import {parseNativeCampaignArgs} from '../tools/run_native_campaign.mjs';
 // No simulated passage of time, income or campaign acceptance is implied.
 function fixture(){const s=Game.newGame({seed:712,slotId:'shield-control'}),nav=new Navigation(712,'sabana');s.day=5;nav.field={canyon:false,riverLevel:0,surface:()=>0,slope:()=>0,fluidInside:()=>false};nav.propsAt=()=>[];nav.setState(s);Game.placeStructure(s,'center',{x:-15,z:0},nav);Game.plant(s,'seed','mijo',0,0,nav);Game.plant(s,'seed-growth','mijo',6,0,nav);Game.plant(s,'seed-multiply','mijo',8,0,nav);Game.openInitialHiring(s);Game.hire(s,'hire',{olderFemale:1});return {s,nav};}
 test('E uses exactly D productive settings except explicit shield permission, retaining all existing shield defaults',()=>{
- const {shield:d,...D}=nativeCampaignStrategy('no-walls'),{shield:e,...E}=nativeCampaignStrategy('no-shield');assert.deepEqual(E,D);assert.equal(d,true);assert.equal(e,false);assert.equal(E.defend,false);assert.equal(E.repair,false);
+ const {shield:d,...D}=nativeCampaignStrategy('no-walls'),{shield:e,...E}=nativeCampaignStrategy('no-shield');assert.deepEqual(E,D);assert.equal(d,true);assert.equal(e,false);assert.equal(E.defend,false);
+ // Neither builds walls; existing productive settings retain center repair.
+ assert.equal(E.repair,true);
  for(const name of ['expansive','good','bad','no-walls'])assert.equal(nativeCampaignStrategy(name).shield,true);
  assert.equal(NATIVE_CAMPAIGN_PROTOCOL.strategies.length,6);assert.equal(NATIVE_CAMPAIGN_PROTOCOL.shieldByStrategy['no-shield'],false);assert.equal(parseNativeCampaignArgs(['--out','fixture','--strategy','no-shield']).strategy,'no-shield');
 });
