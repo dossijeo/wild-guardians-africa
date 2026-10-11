@@ -1,0 +1,238 @@
+TAP version 13
+# (node:35720) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: QA-017/019: eight canonical plant commands charge 309 and create only the approved checkpoints
+ok 1 - QA-017/019: eight canonical plant commands charge 309 and create only the approved checkpoints # SKIP test name does not match pattern
+  ---
+  duration_ms: 10.415
+  ...
+# Subtest: QA-009/018: attended millet and banana require 140/570 daylight seconds across an accelerated night
+ok 2 - QA-009/018: attended millet and banana require 140/570 daylight seconds across an accelerated night # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.2275
+  ...
+# Subtest: QA-019: physical care completes exactly the canonical number of waterings for every species, with no water charge
+ok 3 - QA-019: physical care completes exactly the canonical number of waterings for every species, with no water charge # SKIP test name does not match pattern
+  ---
+  duration_ms: 5.5344
+  ...
+# Subtest: QA-015/020/021: one large step preserves banana checkpoint debt and freezes at 23.75 daylight seconds overdue
+ok 4 - QA-015/020/021: one large step preserves banana checkpoint debt and freezes at 23.75 daylight seconds overdue # SKIP test name does not match pattern
+  ---
+  duration_ms: 4.2068
+  ...
+# Subtest: QA-022: ten seconds of remaining banana tolerance survive the full night then run out in daylight
+ok 5 - QA-022: ten seconds of remaining banana tolerance survive the full night then run out in daylight # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.2641
+  ...
+# Subtest: QA-023: an automatically requested mature plant without staff remains stable through four dawns without water or deterioration
+ok 6 - QA-023: an automatically requested mature plant without staff remains stable through four dawns without water or deterioration # SKIP test name does not match pattern
+  ---
+  duration_ms: 1.3724
+  ...
+# Subtest: QA-024: first-care debt gates growth and long-tolerance cassava waits below maturity until final watering
+ok 7 - QA-024: first-care debt gates growth and long-tolerance cassava waits below maturity until final watering # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.4479
+  ...
+# Subtest: QA-015: large real frames stop at each dawn and charge only an explicitly confirmed daily contract once
+ok 8 - QA-015: large real frames stop at each dawn and charge only an explicitly confirmed daily contract once # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.3467
+  ...
+# Subtest: QA-029/031: Growth cannot cure dry pre-existing debt; manual watering resumes its 1.5 rate
+not ok 9 - QA-029/031: Growth cannot cure dry pre-existing debt; manual watering resumes its 1.5 rate
+  ---
+  duration_ms: 60.3422
+  location: 'file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/tests/acceptance-agriculture.test.js:118:1'
+  failureType: 'testCodeFailure'
+  error: '147.92307692307452 != 148.5'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    close (file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/tests/acceptance-agriculture.test.js:21:39)
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/tests/acceptance-agriculture.test.js:121:68)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+# Subtest: QA-024/029: Growth on a newly paid sprout never completes its initial sowing/watering task
+ok 10 - QA-024/029: Growth on a newly paid sprout never completes its initial sowing/watering task # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.2615
+  ...
+# Subtest: QA-030/032: a checkpoint at the exact Growth expiry is satisfied once with no deferred water task
+ok 11 - QA-030/032: a checkpoint at the exact Growth expiry is satisfied once with no deferred water task # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1827
+  ...
+# Subtest: QA-030: each canonical species satisfies only the threshold crossed within the 30-second Growth effect
+ok 12 - QA-030: each canonical species satisfies only the threshold crossed within the 30-second Growth effect # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1204
+  ...
+# Subtest: QA-029/031: an actual worker waters dry sunflower during Growth, then the next checkpoint is satisfied by magic
+ok 13 - QA-029/031: an actual worker waters dry sunflower during Growth, then the next checkpoint is satisfied by magic # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1186
+  ...
+# Subtest: QA-025/026/028: mixed group harvest reserves distinct plants for two workers and pays each delivered crate once
+ok 14 - QA-025/026/028: mixed group harvest reserves distinct plants for two workers and pays each delivered crate once # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.3326
+  ...
+# Subtest: QA-027: automatic maturity preserves an older watering task and adds each harvest once in creation order
+ok 15 - QA-027: automatic maturity preserves an older watering task and adds each harvest once in creation order # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1539
+  ...
+# Subtest: QA-033: Multiply marks survive expiry before the physical pickup
+ok 16 - QA-033: Multiply marks survive expiry before the physical pickup # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1931
+  ...
+# Subtest: QA-034: male pickup within Multiply fixes one 26.4-valued crate, rounds delivery to 27 and survives reload
+ok 17 - QA-034: male pickup within Multiply fixes one 26.4-valued crate, rounds delivery to 27 and survives reload # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.2689
+  ...
+# (node:53824) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: QA-096: mapungubwe simultaneous center approaches remain independent and replay exactly
+ok 18 - QA-096: mapungubwe simultaneous center approaches remain independent and replay exactly # SKIP test name does not match pattern
+  ---
+  duration_ms: 2.7165
+  ...
+# Subtest: QA-096: saheliana simultaneous center approaches remain independent and replay exactly
+ok 19 - QA-096: saheliana simultaneous center approaches remain independent and replay exactly # SKIP test name does not match pattern
+  ---
+  duration_ms: 1.6389
+  ...
+# Subtest: QA-096: suajili simultaneous center approaches remain independent and replay exactly
+ok 20 - QA-096: suajili simultaneous center approaches remain independent and replay exactly # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1822
+  ...
+# Subtest: QA-096: musgum simultaneous center approaches remain independent and replay exactly
+ok 21 - QA-096: musgum simultaneous center approaches remain independent and replay exactly # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.179
+  ...
+# Subtest: QA-096: etiope simultaneous center approaches remain independent and replay exactly
+ok 22 - QA-096: etiope simultaneous center approaches remain independent and replay exactly # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1503
+  ...
+# Subtest: QA-096: aggregate defensive value outranks the 800-coin centre even though every piece costs less
+ok 23 - QA-096: aggregate defensive value outranks the 800-coin centre even though every piece costs less # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1305
+  ...
+# Subtest: QA-096: legacy duplicate wall claims migrate individually and a ruined target frees only its lease
+ok 24 - QA-096: legacy duplicate wall claims migrate individually and a ruined target frees only its lease # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1306
+  ...
+# Subtest: QA-096: actual paid contiguous crop groups remain exclusive through destruction and reload
+not ok 25 - QA-096: actual paid contiguous crop groups remain exclusive through destruction and reload
+  ---
+  duration_ms: 1772.7409
+  location: 'file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/tests/acceptance-defensive-reservations.test.js:37:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    6 !== 3
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 3
+  actual: 6
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/tests/acceptance-defensive-reservations.test.js:44:66)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+# (node:44912) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: QA-087: all ten attraction boundaries select the exact confirmed tier
+ok 26 - QA-087: all ten attraction boundaries select the exact confirmed tier # SKIP test name does not match pattern
+  ---
+  duration_ms: 2.6271
+  ...
+# Subtest: QA-087: actual living plant base values drive night planning independently of cash, crates, maturity and yield bonuses
+ok 27 - QA-087: actual living plant base values drive night planning independently of cash, crates, maturity and yield bonuses # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.4737
+  ...
+# Subtest: QA-088 revised: the first-night clock spawns one mandatory warthog with zero attraction and preserves its plan on reload
+ok 28 - QA-088 revised: the first-night clock spawns one mandatory warthog with zero attraction and preserves its plan on reload # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.2577
+  ...
+# Subtest: QA-089 pressure revision: campaign nights use fresh timing and two draws per budgeted actor
+not ok 29 - QA-089 pressure revision: campaign nights use fresh timing and two draws per budgeted actor
+  ---
+  duration_ms: 34.0846
+  location: 'file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/tests/acceptance-raid-planning.test.js:56:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    7 !== 6
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 6
+  actual: 7
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/perimeter-suppression-proof/wild-guardians-africa/tests/acceptance-raid-planning.test.js:62:264)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+# Subtest: QA-090: budget three chooses precisely three warthogs or one unlocked hyena
+ok 30 - QA-090: budget three chooses precisely three warthogs or one unlocked hyena # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.2651
+  ...
+# Subtest: QA-091: sixteen night and four daytime budgets exactly match an independent Cartesian count oracle
+ok 31 - QA-091: sixteen night and four daytime budgets exactly match an independent Cartesian count oracle # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.3172
+  ...
+# Subtest: QA-092: all 120 unlocked-order permutations and repeated IDs preserve the same unweighted composition list
+ok 32 - QA-092: all 120 unlocked-order permutations and repeated IDs preserve the same unweighted composition list # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.4253
+  ...
+# Subtest: QA-093: affordable locked lions and rhinos cannot enter the legal composition pool
+ok 33 - QA-093: affordable locked lions and rhinos cannot enter the legal composition pool # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1904
+  ...
+1..33
+# tests 33
+# suites 0
+# pass 0
+# fail 3
+# cancelled 0
+# skipped 30
+# todo 0
+# duration_ms 2603.7512
