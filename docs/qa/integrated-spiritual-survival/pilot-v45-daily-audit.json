@@ -1,0 +1,134 @@
+{
+  "completeDailyRows": 6,
+  "ignoredUnterminatedTail": false,
+  "ledgerRowsChecked": 388,
+  "daily": [
+    {
+      "day": 1,
+      "money": 64,
+      "living": 92,
+      "staff": 6,
+      "planted": 94,
+      "delivered": 3,
+      "destroyed": 0,
+      "income": 33,
+      "wages": 180,
+      "seeds": 489,
+      "walls": 0,
+      "repairs": 0,
+      "net": -636,
+      "diagnostics": {
+        "noDeliveredIncome": false,
+        "noNewPlanting": false,
+        "cashBelowNextWageReserve": true,
+        "scope": "Uses the journal declared next-wage reserve; diagnostic only, never a terminal verdict"
+      }
+    },
+    {
+      "day": 2,
+      "money": 79,
+      "living": 143,
+      "staff": 2,
+      "planted": 106,
+      "delivered": 55,
+      "destroyed": 0,
+      "income": 605,
+      "wages": 60,
+      "seeds": 530,
+      "walls": 0,
+      "repairs": 0,
+      "net": 15,
+      "diagnostics": {
+        "noDeliveredIncome": false,
+        "noNewPlanting": false,
+        "cashBelowNextWageReserve": false,
+        "scope": "Uses the journal declared next-wage reserve; diagnostic only, never a terminal verdict"
+      }
+    },
+    {
+      "day": 3,
+      "money": 34,
+      "living": 146,
+      "staff": 2,
+      "planted": 8,
+      "delivered": 5,
+      "destroyed": 0,
+      "income": 55,
+      "wages": 60,
+      "seeds": 40,
+      "walls": 0,
+      "repairs": 0,
+      "net": -45,
+      "diagnostics": {
+        "noDeliveredIncome": false,
+        "noNewPlanting": false,
+        "cashBelowNextWageReserve": true,
+        "scope": "Uses the journal declared next-wage reserve; diagnostic only, never a terminal verdict"
+      }
+    },
+    {
+      "day": 4,
+      "money": 54,
+      "living": 166,
+      "staff": 1,
+      "planted": 38,
+      "delivered": 18,
+      "destroyed": 0,
+      "income": 240,
+      "wages": 30,
+      "seeds": 190,
+      "walls": 0,
+      "repairs": 0,
+      "net": 20,
+      "diagnostics": {
+        "noDeliveredIncome": false,
+        "noNewPlanting": false,
+        "cashBelowNextWageReserve": false,
+        "scope": "Uses the journal declared next-wage reserve; diagnostic only, never a terminal verdict"
+      }
+    },
+    {
+      "day": 5,
+      "money": 33,
+      "living": 181,
+      "staff": 1,
+      "planted": 29,
+      "delivered": 14,
+      "destroyed": 0,
+      "income": 154,
+      "wages": 30,
+      "seeds": 145,
+      "walls": 0,
+      "repairs": 0,
+      "net": -21,
+      "diagnostics": {
+        "noDeliveredIncome": false,
+        "noNewPlanting": false,
+        "cashBelowNextWageReserve": false,
+        "scope": "Uses the journal declared next-wage reserve; diagnostic only, never a terminal verdict"
+      }
+    },
+    {
+      "day": 6,
+      "money": 31,
+      "living": 157,
+      "staff": 1,
+      "planted": 0,
+      "delivered": 8,
+      "destroyed": 16,
+      "income": 88,
+      "wages": 30,
+      "seeds": 0,
+      "walls": 60,
+      "repairs": 0,
+      "net": -2,
+      "diagnostics": {
+        "noDeliveredIncome": false,
+        "noNewPlanting": true,
+        "cashBelowNextWageReserve": false,
+        "scope": "Uses the journal declared next-wage reserve; diagnostic only, never a terminal verdict"
+      }
+    }
+  ],
+  "scope": "Completed daily journal accounting only. Does not prove final native result, delivery geometry, route validity, performance, or human activity."
+}
