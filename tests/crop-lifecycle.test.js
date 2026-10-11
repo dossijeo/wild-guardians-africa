@@ -45,9 +45,19 @@ test('optional higher staffing pays normal wages while the default twelve-plant 
  assert.equal(oldState.ledger.balance.n,'409');
  assert.equal(baseline.counts.CrateDelivered,28);assert.equal(baseline.money,423);
  assert.equal(baseline.state.crates.filter(c=>c.delivered).length,28);
- assert.equal(createHash('sha256').update(serialize(baseline.state)).digest('hex'),'d2d067f5aea3cbfc860e720bd119d8a565056a85e2a8adb6bd8642ecfd7b773f');
+ const originalGolden=gunzipSync(readFileSync(new URL('../docs/qa/watering-geometric-preflight/watering-abba-fast--1-B-state.json.gz',import.meta.url))).toString();
+ assert.equal(createHash('sha256').update(originalGolden).digest('hex'),'d2d067f5aea3cbfc860e720bd119d8a565056a85e2a8adb6bd8642ecfd7b773f');
+ assert.equal(createHash('sha256').update(serialize(baseline.state)).digest('hex'),'b15f2d354fc95507f01eac9b75d5336c0aab8d4f44e0be4f081c35c45362dd5f');
+ const observerEvents=baseline.state.events.filter(e=>e.raidFacts);
+ assert.equal(observerEvents.length,1);
+ assert.deepEqual(observerEvents[0].raidFacts,{id:'raid-1-night',day:1,daytime:false,elapsed:370.50227023613576,exposedLiving:69,exposedWounded:0,actors:[{id:'animal-354',species:'warthog',hitsRemaining:2,spawn:{x:104.08471694415393,z:31.712077660375723},exit:{x:105.52299355996654,z:34.34482534604684}}]});
+ // The sole difference from the preserved golden is native observer metadata.
+ // Compare every simulation/economic field exactly, without replacing history.
+ const withoutObserver=structuredClone(baseline.state);
+ for(const e of withoutObserver.events)delete e.raidFacts;
+ assert.equal(serialize(withoutObserver),originalGolden);
  assert.deepEqual(baseline.state.tutorial.shownToday,{day:2,ids:[]});
- const historical=structuredClone(baseline.state);delete historical.tutorial.shownToday;
+ const historical=structuredClone(withoutObserver);delete historical.tutorial.shownToday;
  assert.equal(createHash('sha256').update(serialize(historical)).digest('hex'),'bd6c05e62b22f091f0ca46d69182bc984ce1c78367ffdfe45122b0bba0fdc70d');
  assert.ok(auditIntensiveFarm(baseline));
  assert.equal(serialize(simulateIntensiveFarm({...options,plantsPerWorker:12}).state),serialize(baseline.state));

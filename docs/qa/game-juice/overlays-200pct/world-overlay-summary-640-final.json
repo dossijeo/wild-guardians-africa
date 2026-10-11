@@ -1,0 +1,79 @@
+{
+  "scope": "Actual WorldScene/native commands, ABBA same frozen snapshots/camera/media/shadows. Explicit fixture credit and botanical pre-growth, not economy/balance acceptance. No audio/autosave, no GPU queries. Root native CPU optimization may be concurrent; 100-night campaign stopped. Largest victory recipe on B is presentation-only stress, not a game victory.",
+  "concurrency": "Root explicitly suspended probes/tests during measurement; 100-night campaign stopped. No local build/tests concurrent. No GPU timer queries.",
+  "comparisons": {
+    "off": {
+      "simulationMs": {
+        "median": 1.1999999284744263,
+        "p95": 5.5,
+        "max": 11.900000095367432
+      },
+      "presentationMs": {
+        "median": 0,
+        "p95": 0,
+        "max": 0.10000002384185791
+      },
+      "renderCpuMs": {
+        "median": 35,
+        "p95": 68.89999997615814,
+        "max": 128.40000009536743
+      },
+      "interval": {
+        "median": 123.70000004768372,
+        "p95": 142.19999992847443,
+        "max": 210.89999997615814
+      },
+      "calls": {
+        "median": 584,
+        "p95": 740,
+        "max": 804
+      },
+      "triangles": {
+        "median": 10084402,
+        "p95": 10328391,
+        "max": 10402166
+      }
+    },
+    "on": {
+      "simulationMs": {
+        "median": 1.2000000476837158,
+        "p95": 5.200000047683716,
+        "max": 12.300000071525574
+      },
+      "presentationMs": {
+        "median": 0.8000000715255737,
+        "p95": 1.7999999523162842,
+        "max": 2.6999999284744263
+      },
+      "renderCpuMs": {
+        "median": 34.799999952316284,
+        "p95": 83.89999997615814,
+        "max": 170.70000004768372
+      },
+      "interval": {
+        "median": 124.70000004768372,
+        "p95": 146.19999992847443,
+        "max": 258.3000000715256
+      },
+      "calls": {
+        "median": 584,
+        "p95": 740,
+        "max": 804
+      },
+      "triangles": {
+        "median": 10084402,
+        "p95": 10328391,
+        "max": 10402166
+      }
+    }
+  },
+  "nativeIntegrity": {
+    "allExactState": true,
+    "allExactSubmissions": true,
+    "allCleanup": true,
+    "eventsPerLot": {
+      "CropPicked": 58,
+      "CrateDelivered": 52
+    }
+  }
+}

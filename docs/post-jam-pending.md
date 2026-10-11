@@ -8,6 +8,9 @@ Solicitud del10 de octubre:
   resultado real del guardado. Ahora parece que no hace nada. Revisar confirmación
   de éxito y error sin anunciar éxito antes de que la persistencia termine; cubrir
   español e inglés y no disparar un guardado adicional para mostrar el mensaje.
+  Implementado y probado en `feature/game-juice-polish`, pendiente de integración
+  con CI correcta: [evidencia y límites](qa/game-juice/README.md). No darlo por
+  publicado hasta fusionar esa rama; el ejecutable Windows requiere aceptación.
 - **Salir del menú principal en Windows:** cerrar realmente la aplicación Tauri
   desde ese botón, con su API/capacidad correspondiente y prueba del ejecutable.
   El comportamiento web debe tratarse por separado, sin suponer que el navegador

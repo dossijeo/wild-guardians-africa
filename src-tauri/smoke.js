@@ -72,6 +72,10 @@
       while(!text||text===previous){if(performance.now()>deadline)throw Error('IndexedDB save did not commit');await wait(50);text=await readSlot();}
       const snapshot=JSON.parse(text);
       report.checks.saveBackend='IndexedDB';
+      // Native acceptance checks the presentation after the real commit, not
+      // just the save button or compilation. This runs only in smoke mode.
+      await until(()=>/Partida guardada|Game saved/.test(document.querySelector('.juice-saved.visible')?.textContent??''));
+      report.checks.manualSaveFeedback='confirmed-after-IndexedDB-commit';
       if(snapshot.slotId!==fixture.slotId)throw Error('Wrong visibility slot');
       if(resume)document.querySelector('#resume').click();
       return snapshot;

@@ -28,7 +28,17 @@ test('QA-011: one real frame straddling raid arrival matches two frames split at
   close(whole.time,split.time);close(whole.elapsed,split.elapsed);
   close(whole.raid.animals[0].x,split.raid.animals[0].x);
   close(whole.raid.animals[0].z,split.raid.animals[0].z);
-  assert.deepEqual(whole.events,split.events);
+  assert.equal(whole.events.length,split.events.length);
+  for(let i=0;i<whole.events.length;i++){
+    const a=structuredClone(whole.events[i]),b=structuredClone(split.events[i]);
+    if(a.raidFacts||b.raidFacts){
+      // Native elapsed time is already checked with epsilon above. Fractional
+      // frame boundaries also reach observer metadata; keep every other field exact.
+      close(a.raidFacts.elapsed,b.raidFacts.elapsed);
+      delete a.raidFacts.elapsed;delete b.raidFacts.elapsed;
+    }
+    assert.deepEqual(a,b);
+  }
 });
 
 test('QA-009/010/015: 300 real daytime seconds and 60 calm-night seconds reach one blocked dawn',()=>{

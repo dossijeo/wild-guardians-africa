@@ -1,0 +1,45 @@
+TAP version 13
+# Subtest: current selector finds an exterior entry without unnecessary QA expansion or changing live state
+ok 1 - current selector finds an exterior entry without unnecessary QA expansion or changing live state
+  ---
+  duration_ms: 42.6226
+  ...
+# Subtest: entry chunk demand includes whole bodies and exits at negative and positive seams
+ok 2 - entry chunk demand includes whole bodies and exits at negative and positive seams
+  ---
+  duration_ms: 0.1804
+  ...
+# Subtest: evidence retains the successful native wall impact and bounded failure
+ok 3 - evidence retains the successful native wall impact and bounded failure
+  ---
+  duration_ms: 4.3275
+  ...
+# Subtest: isolated exterior candidate preserves RNG, state and view and separates the complete epic group
+ok 4 - isolated exterior candidate preserves RNG, state and view and separates the complete epic group
+  ---
+  duration_ms: 30.4938
+  ...
+# Subtest: current production and isolated candidate both intercept the controlled enclosure at its wall
+ok 5 - current production and isolated candidate both intercept the controlled enclosure at its wall
+  ---
+  duration_ms: 1427.7156
+  ...
+# Subtest: near-cardinal and diagonal headings keep the projected entry bounded
+ok 6 - near-cardinal and diagonal headings keep the projected entry bounded
+  ---
+  duration_ms: 10.4726
+  ...
+# Subtest: retained candidate evidence covers four headings and complete group with its original source hashes
+ok 7 - retained candidate evidence covers four headings and complete group with its original source hashes
+  ---
+  duration_ms: 4.3821
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1692.0332

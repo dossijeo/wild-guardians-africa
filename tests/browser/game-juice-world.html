@@ -1,0 +1,74 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Game juice — native rendered ABBA</title>
+<link rel="stylesheet" href="/content/fonts.css"><link rel="stylesheet" href="/content/hud.css"><link rel="stylesheet" href="/ui-theme.css">
+<style>body{margin:0}canvas{position:absolute;inset:0;width:100%;height:100%}aside{position:fixed;z-index:80;bottom:4px;left:8px;background:#fff8d9ed;padding:8px;max-width:60%;font:12px system-ui}aside button{padding:7px}#report{display:none}</style>
+<main id="stage" class="game"><canvas id="world"></canvas></main><aside><strong>Native rendered QA: 500 paid crops, real workers/attacks; explicit initial QA credit and botanical setup.</strong><p id="status">Preparing…</p><button id="day" disabled>ABBA deliveries</button><button id="night" disabled>ABBA raid</button><button id="overlay" disabled>ABBA overlay stress</button></aside><pre id="report"></pre>
+<script type="module">
+import '../../src/ui/styles.css';
+import * as Game from '../../src/simulation/game.js';
+import {rational,numberOf} from '../../src/simulation/money.js';
+import {cropSpec} from '../../src/simulation/rules.js';
+import {waterPlant,advancePlant} from '../../src/simulation/crops.js';
+import {serialize,deserialize} from '../../src/persistence/snapshots.js';
+import {Navigation} from '../../src/world/navigation.js';
+import {findInitialLocationAsync} from '../../src/world/villages.js';
+import {WorldScene} from '../../src/rendering/scene.js';
+import {json} from '../../src/rendering/assets.js';
+import {GameJuice} from '../../src/ui/game-juice.js';
+import {hudMarkup,ASSETS,layoutHud} from '../../src/ui/native-hud.js';
+const stage=document.querySelector('#stage');stage.insertAdjacentHTML('beforeend',hudMarkup+'<div id="events"></div><div id="notices"></div><div id="placementBanner"></div>');
+for(const img of stage.querySelectorAll('[data-sprite]'))img.src=ASSETS[img.dataset.sprite].src;
+layoutHud(stage);window.addEventListener('resize',()=>layoutHud(stage));
+const status=document.querySelector('#status'),output={scope:'Actual WorldScene/native commands, ABBA same frozen snapshots/camera/media/shadows. Explicit fixture credit and botanical pre-growth, not economy/balance acceptance. No audio/autosave, no GPU queries. Root native CPU optimization may be concurrent; 100-night campaign stopped. Largest victory recipe on B is presentation-only stress, not a game victory.',lots:[],errors:[]};
+const assert=(v,m)=>{if(!v)throw Error(m)},raf=()=>new Promise(requestAnimationFrame),yieldUI=()=>new Promise(r=>setTimeout(r,0));
+const species=['maiz','algodon','girasol','platano','sorgo','mijo','yuca','batata'];
+const pack=await json('/content/biome-savanna.json'),payload=(await json('/content/villages.json')).find(v=>v.id==='mapungubwe');
+let state=Game.newGame({seed:712,slotId:'qa-game-juice-world'}),nav=new Navigation(712,'sabana',pack.profile),world,juice=null,busy=true;
+const publish=()=>{document.querySelector('#report').textContent=JSON.stringify(output);document.querySelector('#moneyValue').textContent=numberOf(state.ledger.balance);};
+const stats=a=>{const s=[...a].sort((a,b)=>a-b);return {median:s[Math.floor(s.length*.5)],p95:s[Math.floor(s.length*.95)],max:s.at(-1)};};
+try{
+ const initial=await findInitialLocationAsync(nav,payload);Object.assign(state.villages[0],initial);state.suppressed.push(...initial.suppress);nav.setState(state);state.ledger.balance=rational(1000000);Game.resume(state,'intro');Game.placeStructure(state,'paid-center',initial.center,nav);const farm=state.structures[0];
+ for(let radius=7;radius<90&&state.plants.length<500;radius+=1.5){for(let i=0,n=Math.ceil(2*Math.PI*radius/1.5);i<n&&state.plants.length<500;i++){
+  const x=farm.x+Math.cos(i/n*Math.PI*2)*radius,z=farm.z+Math.sin(i/n*Math.PI*2)*radius;
+  if(nav.placement(x,z,.4).valid&&!state.plants.some(p=>Math.hypot(x-p.x,z-p.z)<1.1))Game.plant(state,'paid-crop-'+state.plants.length,species[state.plants.length%8],x,z,nav);
+ }status.textContent='Paid crops '+state.plants.length+'/500';await yieldUI();}
+ assert(state.plants.length===500,'500 legal paid crops required');
+ // Native botanical preparation is an explicit fixture; income is still paid
+ // only by real worker pickup/transport/delivery during the measured continuation.
+ for(const p of state.plants){waterPlant(p);const goal=cropSpec(p.species).growth_seconds;
+  while(p.growth<goal-1e-8){const next=p.water.find(w=>w.status==='future');advancePlant(p,Math.min(goal-p.growth,next?next.at-p.growth:Infinity));while(waterPlant(p)){};}
+ }
+ state.initialPreparation=false;state.tutorial.step='done';state.day=40;state.time=0;state.elapsed=39*600;state.completedNights=39;state.nightPlan={done:true};Game.openInitialHiring(state);Game.hire(state,'paid-workers',{olderMale:20});state.dayPlan={done:true};
+ world=new WorldScene(document.querySelector('#world'),()=>{});world.onError=e=>{output.errors.push(String(e));publish();};world.qualitySetting('media');await world.load(state,nav,payload);world.focusFarm();world.render(0);await world.whenChunksReady();
+ for(let i=0;i<1200&&!world.actorsReady();i++){await raf();world.render(0);}assert(world.actorsReady(),'Workers ready');
+ const base=serialize(state),pose={eye:world.camera.position.toArray(),target:world.controls.target.toArray()};output.fixture={seed:712,crops:500,species,workers:20,paidBalance:state.ledger.balance.n,pose};
+ async function compare(night,continuousOverlay=false){if(busy)return;busy=true;document.querySelectorAll('aside button').forEach(b=>b.disabled=true);let expected=null,expectedCalls=null;
+  try{for(const [label,on] of [['A1',false],['B1',true],['B2',true],['A2',false]]){
+   juice?.dispose();juice=null;world.dispose();const canvas=document.querySelector('#world');canvas.replaceWith(canvas.cloneNode(false));state=deserialize(base);if(night){state.time=323;state.nightPlan={at:323,group:['warthog','hyena','buffalo','lion','rhino'],done:false};}
+   nav=new Navigation(712,'sabana',pack.profile);nav.setState(state);world=new WorldScene(document.querySelector('#world'),()=>{});world.onError=e=>{output.errors.push(String(e));publish();};world.qualitySetting('media');await world.load(state,nav,payload);world.camera.position.fromArray(pose.eye);world.controls.target.fromArray(pose.target);world.controls.update();world.raidCamera.beginManual();world.render(0);await world.whenChunksReady();
+   for(let i=0;i<1200&&!world.actorsReady();i++){await raf();world.render(0);}assert(world.actorsReady(),'Workers ready before timed simulation');
+   if(on)juice=new GameJuice(stage,state,world,{language:()=> 'es'});
+   const samples=[],events={},seen=new Set(state.events.map(e=>e.id));let maxEffects=0,maxActive=0,previous=null;
+   // Cache/model readiness before timing, including native residency preparation.
+   for(let i=0;i<30;i++){await raf();world.render(0);}await world.whenChunksReady();
+   for(let step=0;step<400;step++){
+    await raf();assert(!document.hidden,'Benchmark must be visible');const start=performance.now(),interval=previous===null?null:start-previous;previous=start;
+    Game.advanceReal(state,.1,nav);const simulationMs=performance.now()-start;
+    const presentationStart=performance.now();juice?.process(state);if(continuousOverlay&&juice)juice.overlays.request('victory');juice?.update(state);const presentationMs=performance.now()-presentationStart;maxEffects=Math.max(maxEffects,juice?.effects.length??0);
+    world.renderer.info.autoReset=false;world.renderer.info.reset();const renderStart=performance.now();world.render(.1);const renderCpuMs=performance.now()-renderStart;
+    if(step>=200)samples.push({simulationMs,presentationMs,renderCpuMs,interval,calls:world.renderer.info.render.calls,triangles:world.renderer.info.render.triangles});
+    for(const e of state.events)if(!seen.has(e.id)){seen.add(e.id);events[e.type]=(events[e.type]??0)+1;}
+    maxActive=Math.max(maxActive,state.raid?.animals.filter(a=>a.status!=='gone').length??0);publish();
+   }
+   const result=serialize(state),calls=samples.map(s=>[s.calls,s.triangles]);expected??=result;
+   if(result!==expected){const differences=[];function diff(a,b,p=''){if(JSON.stringify(a)===JSON.stringify(b))return;if(a&&b&&typeof a==='object'&&typeof b==='object'){for(const k of new Set([...Object.keys(a),...Object.keys(b)]))diff(a[k],b[k],p+'/'+k);}else differences.push({path:p,expected:a,actual:b});}diff(JSON.parse(expected),JSON.parse(result));output.stateDifferences=differences.slice(0,100);publish();}
+   assert(result===expected,'Native final simulation differs between paired runs');expectedCalls??=JSON.stringify(calls);assert(JSON.stringify(calls)===expectedCalls,'Native per-frame submissions differ between paired runs');
+   assert(maxEffects<=4,'Bounded DOM cap');const memory={...world.renderer.info.memory},programs=world.renderer.info.programs.length;juice?.dispose();juice=null;assert(stage.querySelectorAll('.game-juice,.juice-saved,.juice-overlay').length===0,'Owned DOM cleaned');
+   assert(JSON.stringify(memory)===JSON.stringify(world.renderer.info.memory)&&programs===world.renderer.info.programs.length,'Juice allocated renderer resources');
+   output.lots.push({scenario:continuousOverlay?'overlay-stress':night?'raid':'deliveries',label,on,events,maxActive,maxEffects,cleanup:true,exactState:true,exactSubmissions:true,memory,programs,cpu:Object.fromEntries(['simulationMs','presentationMs','renderCpuMs','interval','calls','triangles'].map(k=>[k,stats(samples.map(s=>s[k]))])),samples});publish();status.textContent=(night?'Raid ':'Deliveries ')+label+' complete';
+  }assert(output.lots.filter(l=>l.scenario===(continuousOverlay?'overlay-stress':night?'raid':'deliveries')).some(l=>night?(l.events.CropHit??0)+(l.events.StructureHit??0)>1:(l.events.CrateDelivered??0)>0),'Real native deliveries/attacks required');}
+  catch(e){output.errors.push(String(e));status.textContent='FAIL '+e.message;publish();console.error(e);}
+  finally{busy=false;document.querySelectorAll('aside button').forEach(b=>b.disabled=false);}
+ }
+ busy=false;document.querySelectorAll('aside button').forEach(b=>b.disabled=false);document.querySelector('#day').onclick=()=>compare(false);document.querySelector('#night').onclick=()=>compare(true);document.querySelector('#overlay').onclick=()=>compare(false,true);status.textContent='Ready: actual native world';publish();
+}catch(e){output.errors.push(String(e));status.textContent='FAIL '+e.message;publish();console.error(e);}
+</script></html>

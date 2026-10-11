@@ -17,7 +17,11 @@ test('native capacity separates two-hit healthy crops from one-hit wounded crops
  assert.ok(control.freshCropHitsRequired>r.maxHits);
 });
 test('capacity evidence reproduces with current native sources',()=>{
- const saved=JSON.parse(readFileSync(new URL('../docs/qa/native-economic-balance/capacity.json',import.meta.url))),r=capacityAudit();
+ const saved=JSON.parse(readFileSync(new URL('../docs/qa/native-economic-balance/main-8f3c0021-capacity/capacity.json',import.meta.url))),r=capacityAudit();
+ // Preserve the original capacity evidence. Current main added raid observers,
+ // changing source provenance without changing any native capacity calculation.
+ const historical=JSON.parse(readFileSync(new URL('../docs/qa/native-economic-balance/capacity.json',import.meta.url)));
+ for(const k of Object.keys(r))assert.deepEqual(saved[k],historical[k]);
  for(const k of Object.keys(r))assert.deepEqual(saved[k],r[k]);
  for(const [p,sha] of Object.entries(saved.sourceHashes))assert.equal(createHash('sha256').update(readFileSync(new URL('../'+p,import.meta.url))).digest('hex'),sha);
 });

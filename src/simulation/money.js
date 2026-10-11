@@ -1,3 +1,4 @@
+import {notifySettlement} from './settlement-observers.js';
 // Rational intermediates preserve exact repair/modifier calculations; settlement rounds to whole coins.
 const gcd = (a,b) => b ? gcd(b,a%b) : a;
 export function rational(n, d=1n) {
@@ -33,6 +34,7 @@ export function transact(ledger,id,delta) {
   if(compare(next,rational(0))<0) throw new Error('Fondos insuficientes');
   ledger.balance=next;
   ledger.entries[id]=delta;
+  notifySettlement(ledger,id,delta);
   return true;
 }
 export function formatMoney(value,locale='es-ES') {
