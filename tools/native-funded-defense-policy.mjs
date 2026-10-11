@@ -6,7 +6,7 @@ import {numberOf} from '../src/simulation/money.js';
 import {permission,wallSpec} from '../src/simulation/rules.js';
 import {HIRING_RESERVE} from '../src/simulation/budget.js';
 import {obstacleAwareContour} from './native-obstacle-aware-contour.mjs';
-import {nativePerimeterProof} from './native-perimeter-proof.mjs';
+import {nativeIntegratedPerimeterProof as nativePerimeterProof} from './native-integrated-perimeter-proof.mjs';
 import {containsPoint} from '../src/world/footprints.js';
 import {centerFootprint} from '../src/world/centers.js';
 import {operational} from '../src/simulation/rules.js';
@@ -106,7 +106,7 @@ export function createNativeFundedDefensePolicy({startDay=6,material='zarzas',in
   const row={day:s.day,time:s.time,protectedCash,repairFunding,pendingRepairCoins:pending,attempts,paidCost:0,paidPieces:0,remainingCost,complete:false};history.push(row);
   if(!planned){
    remainingCost=0;row.reason='no-bounded-legal-contour';
-   const transient=attempts.some(a=>['worker-passage-not-observable','native-worker-route-blocked'].includes(a.nativeBarrierProof?.reason));
+   const transient=attempts.some(a=>['worker-passage-not-observable','native-worker-route-blocked','native-worker-centre-not-operational','native-worker-centre-service-unproven','native-centre-crop-service-unproven','native-crop-delivery-route-unproven'].includes(a.nativeBarrierProof?.reason));
    failedPlanning=transient?null:{nav,field:nav.field,signature,index:history.length-1};return 0;
   }
   failedPlanning=null;
