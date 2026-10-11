@@ -1,0 +1,13 @@
+# Live recovery campaign CPU diagnostic
+
+The v4 good/Sabana/Mapungubwe/712 campaign remains running in its original worktree, PID 30420, source `39aaf3b9bdc262c6ea938285a79c2a82e6d9576c`. Slow progression at day 23 is not labelled defeat or a deadlock. At 19:07:31 UTC its simulated time was 151; at 19:12:33 UTC it was 161. CPU use continues increasing. This wall-clock cost warrants diagnosis rather than a balance or policy adjustment.
+
+A ten-second CPU sampling session attached to the existing Node process, using a 2,000-microsecond sampling interval. The endpoint was verified as the recovery launcher in the original worktree. Only Profiler enable/setSamplingInterval/start/stop/disable commands were sent; no breakpoint, Runtime evaluation, game-state mutation or restart occurred. The client disconnected after capture. Sampling has overhead and is a diagnostic intervention, so these timings are not an uninstrumented performance benchmark.
+
+The complete profile contains 4,653 samples and 10,504.268 ms of summed sample deltas. Inclusive time in the virtual defense policy's `quote` is 90.883%; `nativeStablePlanPerimeterProof` accounts for 89.882%, and animal certification under that proof accounts for about 74.3%. These percentages overlap through the stack and must not be added. Worker-service certification accounts for about 15.6%, also nested in the quote. The sample principally captures the virtual player's predictive geometric validation before wall purchase, not the normal worker update or a GPU/render frame.
+
+This changes the next investigation: inspect how prospective perimeter proofs and their caches invalidate, and compare any optimization against identical native decisions, quotes, purchases and state. Do not remove physical validation, weaken enclosure criteria, optimize the frozen player's choices or change military/economic parameters to hide this cost. The sample alone does not prove repeated calls or a safe cache shortcut, and cannot estimate whole-campaign speedup.
+
+`source-audit.json` verifies all 454 frozen campaign source hashes still match and retains the subsequent progress observation. Raw profiler data, the stack aggregation, and the executed capture/analysis scripts are retained here. No campaign receipt or result was overwritten. No new campaign was launched and no current source was patched.
+
+Node's process inspector activation mechanism was verified against its [official documentation](https://beta.docs.nodejs.org/permissions#process_debugprocess-and-cross-process-inspector-activation); the operating-system PID and launcher command line were independently checked before attaching. The profile is a local QA diagnostic, not physical mobile, Windows game, GPU or statistical balance acceptance.
