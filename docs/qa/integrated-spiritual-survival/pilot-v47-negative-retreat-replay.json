@@ -1,0 +1,62 @@
+{
+  "snapshotSha256": "24feedf817d0c164e9903e3150aaf076ac677f9722df89200a557eb088a7e2ef",
+  "initial": {
+    "day": 20,
+    "completedNights": 19,
+    "ledger": {
+      "balance": {
+        "n": "807",
+        "d": "1"
+      },
+      "sha256": "03eddd3cd45adcbed20363881063e28970a1614dde2524583787cbe995100f87"
+    },
+    "remaining": [
+      {
+        "id": "animal-18948",
+        "hits": 0,
+        "exit": {
+          "x": 115.36702724132388,
+          "z": 25.97166892995604
+        }
+      }
+    ]
+  },
+  "steps": 4000,
+  "simulatedSeconds": 400,
+  "reloaded": true,
+  "moves": {
+    "animal-18948": 0
+  },
+  "endings": [
+    {
+      "id": "animal-18948",
+      "status": "retreating",
+      "hits": 0,
+      "position": {
+        "x": 104.19330705083277,
+        "z": 2.738757631320875
+      },
+      "exit": {
+        "x": 115.36702724132388,
+        "z": 25.97166892995604
+      }
+    }
+  ],
+  "raidEnded": false,
+  "day": 20,
+  "completedNights": 19,
+  "result": null,
+  "remaining": [
+    {
+      "id": "animal-18948",
+      "status": "retreating",
+      "hits": 0,
+      "x": 104.19330705083277,
+      "z": 2.738757631320875
+    }
+  ],
+  "ledgerUnchanged": true,
+  "cpuMilliseconds": 1897.9066,
+  "scope": "Native snapshot replay with physical movement assertions and reload; no campaign, GPU or human-activity acceptance.",
+  "validationOutcome": "Rejected: raidEnded=false; native raid completion assertion failed after 4000 ticks."
+}
