@@ -220,3 +220,22 @@ resize with no exceptions or conflicts. Final mandatory Windows/Validate checks
 must run against the final branch HEAD before PR and integration. Their complete
 results and final review will be linked in the PR; previous packaged native
 proof remains preserved and is not substituted for checking the newer renderer.
+
+
+## Full-suite negative and corrected CPU fixture
+
+Validate 38157036578 completed 3,989 passing checks, one failure and one skip.
+The failure is `world-load-initial-far.test.js`: its CPU-only WorldScene fixture
+provided only `controls.target`, so the newly enabled camera update attempted
+`controls.update()` on an incomplete double. The fixture now uses real
+`OrbitControls(camera, null)` and real object/chunk Maps. Its original early
+region ownership assertions are unchanged. The corrected callpath and six
+camera checks pass (7/7). An intermediate cleanup attempt called dispose on a
+never-connected null DOM; this negative is also retained, and cleanup now runs
+only when a DOM was connected. No production camera/controller check was removed.
+
+The queued final validation 38159714135 still contained the known old fixture
+and was cooperatively cancelled rather than repeating a 45-minute known failure.
+Only that owned CI run was cancelled; campaigns and unrelated processes were not
+touched. Final mandatory checks must validate the corrected fixture HEAD. The
+production sources remain exactly 49242c78; this correction is test-only.
