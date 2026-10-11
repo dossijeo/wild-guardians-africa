@@ -7,23 +7,28 @@
   "logs": [
     {
       "name": "initial-missing-fixtures.txt",
-      "sha256": "fa1fcf5f40c94e502d05b9b9317ccdfd3aa5a9fd107844118fe065c12a878a83"
+      "sha256": "d2e652984aa1143f1258b5a9d2df889879480a241677be5cce6936935f7b6d48",
+      "originalSha256": "fa1fcf5f40c94e502d05b9b9317ccdfd3aa5a9fd107844118fe065c12a878a83"
     },
     {
       "name": "focused-restored-fixtures.txt",
-      "sha256": "16e7a8e535816de0b547f8e8ee33e188e87a6f8eb4066aeeede8774b368b0557"
+      "sha256": "297e0b95c0d3a7d73f34259e509c5bbfd8b425cb775d3674b3d512e6810d4348",
+      "originalSha256": "16e7a8e535816de0b547f8e8ee33e188e87a6f8eb4066aeeede8774b368b0557"
     },
     {
       "name": "broader-one-missing-fixture.txt",
-      "sha256": "4bf0dc84191bd66283b12806b3ae228be1a1221963cd4f25cd705c687af3715f"
+      "sha256": "d7ec8765d5ca71c3d22d8b6633d259d943a8fcb6ad55b5a230fccd1b83c16c43",
+      "originalSha256": "4bf0dc84191bd66283b12806b3ae228be1a1221963cd4f25cd705c687af3715f"
     },
     {
       "name": "waves-restored-fixture.txt",
-      "sha256": "b9a0dbda024b9cbf4f2edf8fe962fb0811738d0c9e0d804e7b1efe93e81300ed"
+      "sha256": "835ece7605320401c59146c7642e1d38e235f689d4bd88e31e6b52a80c363c6c",
+      "originalSha256": "b9a0dbda024b9cbf4f2edf8fe962fb0811738d0c9e0d804e7b1efe93e81300ed"
     },
     {
       "name": "reload-and-projected.txt",
-      "sha256": "73610ecf3f55dcb92439d131544d91f077fdf82ad432eab7b5562e1cd2ba7c4d"
+      "sha256": "08b5dc0e370db5e54bf7fc60e1d229c0ae910330744c9ff1abd846915e106ede",
+      "originalSha256": "73610ecf3f55dcb92439d131544d91f077fdf82ad432eab7b5562e1cd2ba7c4d"
     }
   ],
   "cases": [
@@ -1150,5 +1155,6 @@
       ]
     }
   ],
-  "scope": "Candidate-tree raw test logs, including missing sparse fixtures and corrected runs. Unique test names need a real passing observation. Common-tree extra checks and build are separate."
+  "scope": "Candidate-tree raw test logs, including missing sparse fixtures and corrected runs. Unique test names need a real passing observation. Common-tree extra checks and build are separate.",
+  "normalization": "Archived text uses LF and trims trailing whitespace. Original byte SHA retained separately; original local cache logs are preserved."
 }
