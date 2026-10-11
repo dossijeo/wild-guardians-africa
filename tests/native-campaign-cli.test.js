@@ -3,8 +3,37 @@ import assert from 'node:assert/strict';
 import {mkdtempSync,readFileSync,rmSync,writeFileSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
-import {parseNativeCampaignArgs,runNativeCampaignCase} from '../tools/run_native_campaign.mjs';
+import {parseNativeCampaignArgs,runNativeCampaignCase,nativeCampaignProvenance} from '../tools/run_native_campaign.mjs';
+import {createHash} from 'node:crypto';
 const fakeProvenance=()=>({trackedChanges:[],startedAt:'fixture',sourceHashes:{fixture:'synthetic'}});
+
+test('gate-phase certificate reuse is explicit, strict and included in complete dependency provenance',()=>{
+ const base=['--out','fixture','--perimeter-qa','stable-plan-v5'];
+ const normal=parseNativeCampaignArgs(base),enabled=parseNativeCampaignArgs([...base,'--gate-animation-invariant','true']);
+ assert.equal(normal.gateAnimationInvariant,false);assert.equal(enabled.gateAnimationInvariant,true);
+ assert.deepEqual({...enabled,gateAnimationInvariant:false},normal,'No player-policy option may change');
+ for(const value of ['1','yes','TRUE',''])assert.throws(()=>parseNativeCampaignArgs([...base,'--gate-animation-invariant',value]),/must be true or false/);
+ assert.throws(()=>parseNativeCampaignArgs(['--out','fixture','--gate-animation-invariant','true']),/requires stable-plan/);
+ const provenance=nativeCampaignProvenance(enabled);
+ assert.equal(provenance.protocol.gateAnimationInvariant,true);
+ const path='tools/proof-geometry-signature-candidate.mjs';
+ assert.equal(provenance.sourceHashes[path],createHash('sha256').update(readFileSync(new URL('../'+path,import.meta.url))).digest('hex'));
+});
+
+test('campaign journal records and forwards the explicit QA option before running',async()=>{
+ const out=mkdtempSync(join(tmpdir(),'native-gate-protocol-'));
+ try{
+  const options=parseNativeCampaignArgs(['--out',out,'--perimeter-qa','stable-plan-v5','--gate-animation-invariant','true']);
+  await runNativeCampaignCase(options,{provenance:fakeProvenance,run:async received=>{
+   assert.equal(received.gateAnimationInvariant,true);
+   assert.equal(JSON.parse(readFileSync(join(out,'protocol.json'),'utf8')).gateAnimationInvariant,true);
+   assert.equal(JSON.parse(readFileSync(join(out,'receipt.json'),'utf8')).options.gateAnimationInvariant,true);
+   throw Error('Deliberate journal fixture stop; no native campaign executed');
+  }});
+  const receipt=JSON.parse(readFileSync(join(out,'receipt.json'),'utf8'));
+  assert.equal(receipt.status,'incomplete-harness-error');
+ }finally{rmSync(out,{recursive:true,force:true});}
+});
 test('incremental perimeter QA is explicit and invalid choices are rejected',()=>{
  assert.equal(parseNativeCampaignArgs(['--out','fixture']).perimeterQa,'legacy');
  assert.equal(parseNativeCampaignArgs(['--out','fixture','--perimeter-qa','incremental-v3']).perimeterQa,'incremental-v3');
