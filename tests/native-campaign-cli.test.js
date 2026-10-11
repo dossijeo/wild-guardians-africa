@@ -64,3 +64,12 @@ test('partial tool error keeps original daily journal, source receipt and native
   await assert.rejects(()=>runNativeCampaignCase({out},{run,provenance:fakeProvenance}),/overwrite/);
  }finally{rmSync(out,{recursive:true,force:true});}
 });
+
+
+test('rolling next-piece reserve is explicit, bounded and never silently changes historical policies',()=>{
+ assert.equal(parseNativeCampaignArgs(['--out','fixture']).defensePieceReserve,0);
+ const args=['--out','fixture','--defense-policy','shore','--defense-funding','rolling','--defense-piece-reserve'];
+ assert.equal(parseNativeCampaignArgs([...args,'1']).defensePieceReserve,1);
+ for(const value of ['2','-1','NaN'])assert.throws(()=>parseNativeCampaignArgs([...args,value]),/piece reserve/);
+ assert.throws(()=>parseNativeCampaignArgs(['--out','fixture','--defense-piece-reserve','1']),/piece reserve/);
+});

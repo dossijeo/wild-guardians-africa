@@ -1,0 +1,9 @@
+# Rolling defense next-piece earmark candidate
+
+The v107 good-management Canyon pilot paid zero walls: 98 of 100 defense decisions waited for cash despite a valid contour. Its outcome exactly matched v109 without walls and cannot establish structural defense efficacy. This candidate changes only the QA player allocation, not production prices, damage, salaries, raids or ledger rules.
+
+Explicit opt-in: --defense-piece-reserve 1 with --defense-funding rolling. Default 0 preserves historical allocation. After a legal outstanding contour has been chosen, seed purchases and discretionary additional hiring retain enough cash for the next base-price piece within the existing 50% rolling wall allocation: twice the lesser of piece price and remaining native quote. For zarzas this is 20 coins to fund a real 10-coin piece. Wage and pending repair protections remain separate and prior. No reserve is charged to the ledger; it releases before the declared start, without a selected plan, or after completion. Invalidated plans are cleared at the next eligible funded geometry check.
+
+The opt-in flag is recorded in source provenance, saved protocol, policy and defense report. No crop quota or maximum was added. Candidate campaigns must be identified separately from historical controls because player policy changes; no result is accepted on unit tests alone.
+
+Validation: 17 focused native-funded-defense and campaign-CLI tests pass, including confirmed native one-piece payment from existing cash, no debit while saving, release after paid completion, unchanged opt-out and strict flag validation. Initial CLI test invocation failed because the new worktree lacked its declared three dependency; npm ci installed the existing lockfile dependencies and the entire focused run passed. No package or lockfile changes.

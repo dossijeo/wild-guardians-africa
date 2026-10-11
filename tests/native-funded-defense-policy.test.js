@@ -102,3 +102,30 @@ test('unfunded recertification defers geometry without changing commands, state 
   assert.equal(serialize(candidate.s),serialize(baseline.s));assert.equal(b.report().paidCost,a.report().paidCost);
  }
 });
+
+
+test('rolling next-piece earmark preserves small delivery surpluses for a real purchase without charging a fee',()=>{
+ const {s,nav,options}=fixture(),cash=numberOf(s.ledger.balance),policy=createNativeFundedDefensePolicy({startDay:1,funding:'rolling',pieceReserve:1});
+ assert.equal(policy.reserve(s),0);
+ options.reserve=cash-11;const before=serialize(s);
+ assert.equal(policy.act(s,nav,options),0);assert.equal(serialize(s),before);
+ assert.equal(policy.reserve(s),20);assert.equal(policy.report().paidCost,0);
+ assert.equal(policy.report().pieceReserve,1);
+ // Release nine existing coins from protected cash; no synthetic income is credited.
+ options.reserve=cash-20;s.elapsed+=6;
+ assert.equal(policy.act(s,nav,options),1);
+ assert.equal(numberOf(s.ledger.balance),cash-10);
+ assert.equal(policy.report().paidPieces,1);
+ assert.equal(numberOf(s.ledger.entries[policy.report().history.at(-1).paymentId]),-10);
+ assert.equal(policy.reserve(s),20);
+});
+
+test('rolling next-piece earmark releases after actual native completion and remains opt-in',()=>{
+ const {s,nav,options}=fixture(),policy=createNativeFundedDefensePolicy({startDay:1,funding:'rolling',pieceReserve:1});
+ for(let i=0;i<30&&!policy.report().completed;i++){policy.act(s,nav,options);Game.tick(s,5,nav);}
+ assert(policy.report().completed);assert.equal(policy.reserve(s),0);
+ assert.equal(policy.report().paidCost,policy.report().paidPieces*10);
+ assert.throws(()=>createNativeFundedDefensePolicy({pieceReserve:1}),/piece reserve/);
+ assert.throws(()=>createNativeFundedDefensePolicy({funding:'rolling',pieceReserve:2}),/piece reserve/);
+ const later=createNativeFundedDefensePolicy({startDay:s.day+1,funding:'rolling',pieceReserve:1});assert.equal(later.reserve(s),0);
+});
