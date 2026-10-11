@@ -22,3 +22,13 @@ The misleading original comment claiming checks never occurred per frame was cor
 Each case has eight building footprints, rather than the synthetic workload's 300. After 50 warm-ups per implementation, three ABBA rounds measure 500 native watering queries per batch. Fixture 1 means: A 458.54 ms, B 437.12 ms (4.67% lower). Fixture 10: A 925.55 ms, B 872.84 ms (5.70% lower). Some individual rounds reverse the ordering and timings vary substantially under concurrent CPU load. These data do **not** establish a robust end-to-end improvement. Preserve the complete samples in `native-watering-broadphase-abba.json`; do not extrapolate the earlier 74% result to the native campaign.
 
 The candidate is a small exact rejection optimization, not a solution to all day-8 navigation costs. Further investigation should target repeated candidate construction and native terrain/collision work without weakening physical correctness or changing the running campaign.
+
+## Bounded geometric candidate reuse
+
+The next candidate retains at most 128 exact geometric query results (at most 48 corner candidates each) per navigator. Keys include both endpoints, body radius, ignored ID and maximum route length. Navigation epoch and obstacle-array replacement invalidate the cache. Non-finite inputs and unsupported ignored-ID types bypass it. No terrain permission, reachable path, failed path, collision result or usable route is cached here: every call still executes the same native physical tests in the same order. Working and returned points are copied so callers cannot mutate cached coordinates.
+
+34 focused tests passed across building shortcuts, recorded watering detours, crop navigation cache and navigation epochs. Additional tests verify changing physical admission without a geometry change, caller mutation, topology/obstacle identity invalidation and bounded eviction.
+
+Final ABBA evidence is `native-watering-geometric-candidates-final-abba.json`, candidate SHA `7d3b395bff205718541bd4a18cf8798ebef34b8dd8f0f9eec9634c1d82ca333c`. Fixture 1: A 175.90 ms / B 153.40 ms (12.79% reduction); fixture 10: A 424.99 ms / B 358.90 ms (15.55%). Routes, ordered collision query arguments and state remain exactly equal to the original. These remain warm-query microbenchmarks under concurrent CPU load, not proof of acceptable whole-campaign performance. No long campaign is approved by this evidence.
+
+The user requested stopping v111 and withholding further 100-night campaigns until simulator performance is acceptable. Its cooperative stop was requested in the original checkout, without applying either optimization to that run.

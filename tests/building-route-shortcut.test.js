@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {deserialize} from '../src/persistence/snapshots.js';
 import {Navigation,BIOME_IDS} from '../src/world/navigation.js';
-import {shortenBuildingRoute} from '../src/world/building-route-shortcut.js';
+import {shortenBuildingRoute,findBuildingRoute} from '../src/world/building-route-shortcut.js';
 import {centerFootprint} from '../src/world/centers.js';
 import {CENTER_GEOMETRIES} from '../src/world/center-geometries.js';
 const start={x:-15.10406224583656,z:53.49417272598826},end={x:-13.37303336523354,z:59.320231353738734};
@@ -47,4 +47,30 @@ test('native swept fluid tests reject all short corner routes across a pond',()=
  nav.walkCache.clear();nav.segmentCache.clear();nav.workerRouteCache.clear();
  clearRoute(nav,start,long);
  assert.equal(shortenBuildingRoute(nav,start,end,long,.28,null),long);
+});
+
+test('geometric candidate reuse never caches physical admission or exposes shared route points',()=>{
+ const {nav}=native(),long=[{x:-27,z:53},{x:-27,z:65},end];
+ const first=findBuildingRoute(nav,start,end,.28,null,60);assert.ok(first);
+ const expected=structuredClone(first);first[0].x+=500;
+ assert.deepEqual(findBuildingRoute(nav,start,end,.28,null,60),expected);
+ const nativeSegment=nav.segmentClear;let checks=0;
+ nav.segmentClear=()=>{checks++;return false;};
+ assert.equal(findBuildingRoute(nav,start,end,.28,null,60),null);assert.ok(checks>0);
+ nav.segmentClear=nativeSegment;
+ assert.deepEqual(findBuildingRoute(nav,start,end,.28,null,60),expected);
+ assert.ok(shortenBuildingRoute(nav,start,end,long,.28,null));
+});
+
+test('candidate cache is bounded and invalidates for topology epoch and obstacle identity',()=>{
+ let reads=0;
+ const footprint=[{x:-1,z:-1},{x:1,z:-1},{x:1,z:1},{x:-1,z:1}];
+ const obstacle={id:'house',kind:'house',get footprint(){reads++;return footprint;}};
+ const nav={version:1,obstacles:[obstacle],walkable:()=>false,segmentClear:()=>false};
+ const a={x:-3,z:0},b={x:3,z:0},query=(limit=20)=>findBuildingRoute(nav,a,b,.28,null,limit);
+ query();const initial=reads;query();assert.equal(reads,initial);
+ nav.version++;query();assert.ok(reads>initial);const epoch=reads;
+ nav.obstacles=[obstacle];query();assert.ok(reads>epoch);
+ for(let i=0;i<129;i++)query(30+i);
+ const filled=reads;query();assert.ok(reads>filled,'oldest exact query was evicted');
 });

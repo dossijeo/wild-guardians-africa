@@ -3,6 +3,8 @@ import {edgeDistance} from './footprints.js';
 // Fractional corners supplement an existing route; they never relax clearance.
 // Cache authored corner directions only, not terrain-dependent usable points.
 const cornerCache=new WeakMap();
+const candidateCaches=new WeakMap();
+const CANDIDATE_QUERY_LIMIT=128;
 function corners(obstacle){
  if(cornerCache.has(obstacle))return cornerCache.get(obstacle);
  const polygon=obstacle.footprint,result=[];
@@ -27,6 +29,25 @@ export function shortenBuildingRoute(nav,start,end,route,radius,ignore){
 // A bounded one-corner probe can also precede a full grid search. Each accepted
 // edge is still validated by native navigation; no terrain-dependent cache.
 export function findBuildingRoute(nav,start,end,radius,ignore,maximumLength){
+ const candidates=buildingCandidates(nav,start,end,radius,ignore,maximumLength);
+ // Geometry-only candidates are reusable; their physical admission is not.
+ // Every query still executes the native swept body, slope and fluid checks.
+ for(const {point:coordinates} of candidates){
+  const point={...coordinates};
+  if(nav.walkable(point.x,point.z,radius,ignore,true)&&nav.segmentClear(start,point,radius,ignore,true)&&nav.segmentClear(point,end,radius,ignore,true))return [point,{x:end.x,z:end.z}];
+ }
+ return null;
+}
+function buildingCandidates(nav,start,end,radius,ignore,maximumLength){
+ let cache,key;
+ if(Number.isSafeInteger(nav.version)&&[start.x,start.z,end.x,end.z,radius,maximumLength].every(Number.isFinite)&&(ignore===null||typeof ignore==='string')){
+  cache=candidateCaches.get(nav);
+  if(!cache||cache.version!==nav.version||cache.obstacles!==nav.obstacles){
+   cache={version:nav.version,obstacles:nav.obstacles,entries:new Map()};candidateCaches.set(nav,cache);
+  }
+  key=JSON.stringify([start.x,start.z,end.x,end.z,radius,ignore,maximumLength]);
+  if(cache.entries.has(key))return cache.entries.get(key);
+ }
  const candidates=[];
  // Reject distant vertices before evaluating their projection onto the segment.
  // Inclusive bounds only remove impossible candidates; the original strict
@@ -43,10 +64,10 @@ export function findBuildingRoute(nav,start,end,radius,ignore,maximumLength){
   }
  }
  candidates.sort((a,b)=>a.length-b.length);
- // At most 48 candidates per query, including repeated watering probes.
- // Every candidate must pass the same swept body, slope and fluid tests as A*.
- for(const {point} of candidates.slice(0,48)){
-  if(nav.walkable(point.x,point.z,radius,ignore,true)&&nav.segmentClear(start,point,radius,ignore,true)&&nav.segmentClear(point,end,radius,ignore,true))return [point,{x:end.x,z:end.z}];
+ const selected=candidates.slice(0,48);
+ if(cache){
+  if(cache.entries.size>=CANDIDATE_QUERY_LIMIT)cache.entries.delete(cache.entries.keys().next().value);
+  cache.entries.set(key,selected);
  }
- return null;
+ return selected;
 }
