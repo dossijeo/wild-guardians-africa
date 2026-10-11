@@ -1,0 +1,33 @@
+{
+  "directory": "docs/qa/integrated-spiritual-survival/pilot-v86-q9-good-rolling-zarzas-123-fourteen",
+  "status": "observed-cpu-diagnostic",
+  "snapshotSha256": "bad19c6b4c616f966460338966d24d1a019c4c4f6853e627b3037952674ad608",
+  "toolSha256": "1dc0bec9e5302ab6f261c8bd72e4bb52962cc75009daf2350962c4e71b73dfe4",
+  "fullFrozenSourcesMatch": true,
+  "start": {
+    "day": 8,
+    "time": 200.99999999999213
+  },
+  "tick": {
+    "milliseconds": 67.77140000000003,
+    "calls": {
+      "path": 0,
+      "segmentClear": 0,
+      "walkable": 0,
+      "placement": 0
+    },
+    "elapsedAdvanced": 0.2000000000007276
+  },
+  "quote": {
+    "milliseconds": 206.69370000000004,
+    "calls": {
+      "path": 0,
+      "segmentClear": 1,
+      "walkable": 46,
+      "placement": 0
+    },
+    "pieces": 28,
+    "updates": 1
+  },
+  "scope": "One cold-navigation native 0.2-second tick and one native quote on separate restored copies. No campaign result or frame/GPU/performance acceptance; source profile and JIT/caches differ from a running world. Original snapshot and quote state unchanged."
+}

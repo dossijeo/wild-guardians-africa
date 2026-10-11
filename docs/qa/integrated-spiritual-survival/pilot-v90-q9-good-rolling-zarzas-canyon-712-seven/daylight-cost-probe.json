@@ -1,0 +1,33 @@
+{
+  "directory": "docs/qa/integrated-spiritual-survival/pilot-v90-q9-good-rolling-zarzas-canyon-712-seven",
+  "status": "observed-cpu-diagnostic",
+  "snapshotSha256": "bf193cf625f19b9fe86731e30ebb445ebb2d7ce3f4489d52d7dbf7a455f39ab1",
+  "toolSha256": "1dc0bec9e5302ab6f261c8bd72e4bb52962cc75009daf2350962c4e71b73dfe4",
+  "fullFrozenSourcesMatch": true,
+  "start": {
+    "day": 6,
+    "time": 150.99999999999525
+  },
+  "tick": {
+    "milliseconds": 32.93950000000001,
+    "calls": {
+      "path": 0,
+      "segmentClear": 0,
+      "walkable": 0,
+      "placement": 0
+    },
+    "elapsedAdvanced": 0.1999999999998181
+  },
+  "quote": {
+    "milliseconds": 155.1791,
+    "calls": {
+      "path": 1,
+      "segmentClear": 5,
+      "walkable": 171,
+      "placement": 0
+    },
+    "pieces": 60,
+    "updates": 5
+  },
+  "scope": "One cold-navigation native 0.2-second tick and one native quote on separate restored copies. No campaign result or frame/GPU/performance acceptance; source profile and JIT/caches differ from a running world. Original snapshot and quote state unchanged."
+}

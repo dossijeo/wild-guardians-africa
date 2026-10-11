@@ -39,12 +39,16 @@ earlier allocation. See [v81](pilot-v81-zarzas-twentyone-review.md),
 [v87/v88](pilot-v87-v88-fourteen-review.md). The three active seeds survived
 seven nights with identical full frozen sources and player policy.
 
-Live observations at this update: v86 extends active seed 123 to fourteen
-nights; v89 extends active seed 2026 to twenty-one; v90 begins seven nights
-in Gran Canyon/Saheliana, seed 712. v89/v90 preserve all v87 source hashes.
-Their running receipts are not terminal acceptance. Require exact source/prefix
-equality and native audits before using results. Do not modify imported code
-while campaigns run.
+v89 completed twenty-one nights for active seed 2026: 167 crops, 600 coins,
+centre intact and 1,923 paid repair coins. Its fourteen-day v87 prefix and full
+sources match exactly. v86 (seed 123) and v90 (Gran Canyon/Saheliana) stopped
+cooperatively for CPU diagnosis during daytime after seven/five complete rows.
+Both native results are null; neither is defeat or completed requested horizon.
+All three processes are terminal. See [the retained review and narrow CPU
+probes](pilot-v89-twentyone-and-stopped-daylight-review.md). v91's existing
+three-worker passive policy survived seven nights but left 88 first-water tasks;
+all have static native routes from their center. Reject its long extension;
+see [the capacity review](pilot-v91-passive-three-worker-review.md).
 
 Passive defense from day one did not resolve viability: by day five v88 had
 paid 250 wall coins and retained 31 crops, versus v79's 149 crops before its
