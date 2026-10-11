@@ -1,0 +1,153 @@
+{
+  "scope": "native watering queries on two recorded Canyon fixtures, warm navigation caches; not total campaign duration or GPU",
+  "baselineCommit": "513b30bf",
+  "baselineSha256": "9542fa1922d60c3f2a08f583f28842d0959ec95532a3333e4cf9f09eb2363ee2",
+  "candidateSha256": "34e5a84f99474d107aa0b7d49bef64750904b7f6404210d1a2c3a65c2d447082",
+  "concurrentCampaign": true,
+  "cases": [
+    {
+      "fixture": "1",
+      "fixtureSha256": "9cb17a2bc61507dfe5a3330367169c39b1037f44de10dcba3c820da1827fcea8",
+      "buildingObstacles": 8,
+      "exactRouteAndQueryTrace": true,
+      "iterationsPerBatch": 500,
+      "runs": [
+        {
+          "round": 1,
+          "label": "A",
+          "milliseconds": 309.845
+        },
+        {
+          "round": 1,
+          "label": "B",
+          "milliseconds": 313.0872999999999
+        },
+        {
+          "round": 1,
+          "label": "B",
+          "milliseconds": 321.7775999999999
+        },
+        {
+          "round": 1,
+          "label": "A",
+          "milliseconds": 368.7129
+        },
+        {
+          "round": 2,
+          "label": "A",
+          "milliseconds": 476.8590999999999
+        },
+        {
+          "round": 2,
+          "label": "B",
+          "milliseconds": 316.7778000000003
+        },
+        {
+          "round": 2,
+          "label": "B",
+          "milliseconds": 313.0617000000002
+        },
+        {
+          "round": 2,
+          "label": "A",
+          "milliseconds": 452.7926000000002
+        },
+        {
+          "round": 3,
+          "label": "A",
+          "milliseconds": 569.7321000000002
+        },
+        {
+          "round": 3,
+          "label": "B",
+          "milliseconds": 578.8844999999997
+        },
+        {
+          "round": 3,
+          "label": "B",
+          "milliseconds": 779.1563000000006
+        },
+        {
+          "round": 3,
+          "label": "A",
+          "milliseconds": 573.2752999999993
+        }
+      ],
+      "baselineMeanMs": 458.5361666666666,
+      "candidateMeanMs": 437.12420000000003,
+      "reductionPercent": 4.669635292308794
+    },
+    {
+      "fixture": "10",
+      "fixtureSha256": "4036a5cb5818d1cff20ad58088aad3da601163f4b17106b594abd40579418c5c",
+      "buildingObstacles": 8,
+      "exactRouteAndQueryTrace": true,
+      "iterationsPerBatch": 500,
+      "runs": [
+        {
+          "round": 1,
+          "label": "A",
+          "milliseconds": 1230.4380999999994
+        },
+        {
+          "round": 1,
+          "label": "B",
+          "milliseconds": 1178.564299999999
+        },
+        {
+          "round": 1,
+          "label": "B",
+          "milliseconds": 1023.9429999999993
+        },
+        {
+          "round": 1,
+          "label": "A",
+          "milliseconds": 787.6503000000012
+        },
+        {
+          "round": 2,
+          "label": "A",
+          "milliseconds": 907.1291999999994
+        },
+        {
+          "round": 2,
+          "label": "B",
+          "milliseconds": 848.4701999999997
+        },
+        {
+          "round": 2,
+          "label": "B",
+          "milliseconds": 826.6026000000002
+        },
+        {
+          "round": 2,
+          "label": "A",
+          "milliseconds": 775.0249000000003
+        },
+        {
+          "round": 3,
+          "label": "A",
+          "milliseconds": 1058.0171999999984
+        },
+        {
+          "round": 3,
+          "label": "B",
+          "milliseconds": 664.7831000000006
+        },
+        {
+          "round": 3,
+          "label": "B",
+          "milliseconds": 694.6550000000007
+        },
+        {
+          "round": 3,
+          "label": "A",
+          "milliseconds": 795.0426999999981
+        }
+      ],
+      "baselineMeanMs": 925.5503999999995,
+      "candidateMeanMs": 872.8363666666665,
+      "reductionPercent": 5.695425482321981
+    }
+  ]
+}

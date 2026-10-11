@@ -14,3 +14,11 @@ The day-8 CLI profile identified `findBuildingRoute` as a major CPU consumer. It
 This experiment uses 300 synthetic house footprints and 400 fixed queries. It is neither an end-to-end campaign benchmark nor a GPU or gameplay FPS measurement. It does not prove a 74% reduction in total campaign duration. Native regression tests verify route legality, but end-to-end timing and larger representative layouts remain to be measured before production integration. The negative initial measurement is preserved rather than discarded.
 
 The misleading original comment claiming checks never occurred per frame was corrected: the bound is per query, and watering can repeat those queries.
+
+## Recorded native watering follow-up
+
+`node tools/benchmark-native-watering-broadphase.mjs FRESH_OUTPUT.json` compares the original corner-route function against the candidate inside the unchanged native `wateringRoute`, using the two compressed Canyon detour snapshots. Independent navigators use the same snapshot, profile and worker/crop. Both routes and the full ordered `walkable`/`segmentClear`/`path` argument traces are identical; route selection leaves the serialized state unchanged.
+
+Each case has eight building footprints, rather than the synthetic workload's 300. After 50 warm-ups per implementation, three ABBA rounds measure 500 native watering queries per batch. Fixture 1 means: A 458.54 ms, B 437.12 ms (4.67% lower). Fixture 10: A 925.55 ms, B 872.84 ms (5.70% lower). Some individual rounds reverse the ordering and timings vary substantially under concurrent CPU load. These data do **not** establish a robust end-to-end improvement. Preserve the complete samples in `native-watering-broadphase-abba.json`; do not extrapolate the earlier 74% result to the native campaign.
+
+The candidate is a small exact rejection optimization, not a solution to all day-8 navigation costs. Further investigation should target repeated candidate construction and native terrain/collision work without weakening physical correctness or changing the running campaign.
