@@ -1,0 +1,656 @@
+TAP version 13
+# Subtest: a building completes an open wall stroke and the door is on the village-to-crop side
+ok 1 - a building completes an open wall stroke and the door is on the village-to-crop side
+  ---
+  duration_ms: 433.3873
+  ...
+# Subtest: a natural canyon cliff completes the enclosure without placing a gate into the cliff
+ok 2 - a natural canyon cliff completes the enclosure without placing a gate into the cliff
+  ---
+  duration_ms: 25.2277
+  ...
+# Subtest: the native Grand Canyon cliff closes a paid perimeter with a traversable door
+ok 3 - the native Grand Canyon cliff closes a paid perimeter with a traversable door
+  ---
+  duration_ms: 1958.0755
+  ...
+# Subtest: a genuinely open wall beside a building does not receive an unnecessary gate
+ok 4 - a genuinely open wall beside a building does not receive an unnecessary gate
+  ---
+  duration_ms: 6.1792
+  ...
+# Subtest: closing a mixed-material perimeter converts the latest new piece and preserves every older piece
+ok 5 - closing a mixed-material perimeter converts the latest new piece and preserves every older piece
+  ---
+  duration_ms: 38.0572
+  ...
+# Subtest: the recorded native perimeter keeps skipped rock modules and creates one accessible gate
+ok 6 - the recorded native perimeter keeps skipped rock modules and creates one accessible gate
+  ---
+  duration_ms: 1247.2397
+  ...
+# Subtest: incremental zarzas closure and rebuilding preserve the other materials
+ok 7 - incremental zarzas closure and rebuilding preserve the other materials
+  ---
+  duration_ms: 13.0595
+  ...
+# Subtest: incremental empalizada closure and rebuilding preserve the other materials
+ok 8 - incremental empalizada closure and rebuilding preserve the other materials
+  ---
+  duration_ms: 26.4392
+  ...
+# Subtest: incremental adobe closure and rebuilding preserve the other materials
+ok 9 - incremental adobe closure and rebuilding preserve the other materials
+  ---
+  duration_ms: 11.9641
+  ...
+# Subtest: incremental piedra closure and rebuilding preserve the other materials
+ok 10 - incremental piedra closure and rebuilding preserve the other materials
+  ---
+  duration_ms: 10.6082
+  ...
+# Subtest: incremental reforzado closure and rebuilding preserve the other materials
+ok 11 - incremental reforzado closure and rebuilding preserve the other materials
+  ---
+  duration_ms: 16.1319
+  ...
+# Subtest: rebuilding several removed blocks adds a door only when the final gap closes
+ok 12 - rebuilding several removed blocks adds a door only when the final gap closes
+  ---
+  duration_ms: 66.9595
+  ...
+# Subtest: an existing usable gate survives later perimeter edits without adding another door
+ok 13 - an existing usable gate survives later perimeter edits without adding another door
+  ---
+  duration_ms: 10.1383
+  ...
+# Subtest: an existing zarzas door is preserved when multiple gaps are rebuilt with other materials
+ok 14 - an existing zarzas door is preserved when multiple gaps are rebuilt with other materials
+  ---
+  duration_ms: 67.2725
+  ...
+# Subtest: an existing empalizada door is preserved when multiple gaps are rebuilt with other materials
+ok 15 - an existing empalizada door is preserved when multiple gaps are rebuilt with other materials
+  ---
+  duration_ms: 18.2221
+  ...
+# Subtest: an existing adobe door is preserved when multiple gaps are rebuilt with other materials
+ok 16 - an existing adobe door is preserved when multiple gaps are rebuilt with other materials
+  ---
+  duration_ms: 28.8481
+  ...
+# Subtest: an existing piedra door is preserved when multiple gaps are rebuilt with other materials
+ok 17 - an existing piedra door is preserved when multiple gaps are rebuilt with other materials
+  ---
+  duration_ms: 70.2779
+  ...
+# Subtest: an existing reforzado door is preserved when multiple gaps are rebuilt with other materials
+ok 18 - an existing reforzado door is preserved when multiple gaps are rebuilt with other materials
+  ---
+  duration_ms: 20.3651
+  ...
+# Subtest: an obstructed approach to an existing door does not make the planner create a second door
+ok 19 - an obstructed approach to an existing door does not make the planner create a second door
+  ---
+  duration_ms: 80.3994
+  ...
+# Subtest: Gate frames retain original mesh hashes and the height of all four exported bodies
+ok 20 - Gate frames retain original mesh hashes and the height of all four exported bodies
+  ---
+  duration_ms: 1995.5112
+  ...
+# Subtest: Worker controllers pass through open native arches while their pillars remain solid
+ok 21 - Worker controllers pass through open native arches while their pillars remain solid
+  ---
+  duration_ms: 39.4698
+  ...
+# Subtest: Short modules preserve their actual opening width instead of ignoring the whole gate
+ok 22 - Short modules preserve their actual opening width instead of ignoring the whole gate
+  ---
+  duration_ms: 0.9102
+  ...
+# Subtest: Frame transforms are cached and update when placement or scale changes
+ok 23 - Frame transforms are cached and update when placement or scale changes
+  ---
+  duration_ms: 1.1378
+  ...
+# Subtest: Convex frame projection retains side boundaries and a positive controller clearance
+ok 24 - Convex frame projection retains side boundaries and a positive controller clearance
+  ---
+  duration_ms: 0.3975
+  ...
+# Subtest: Every original triangle below native body height is covered by the physical frame projection
+ok 25 - Every original triangle below native body height is covered by the physical frame projection
+  ---
+  duration_ms: 94.5241
+  ...
+# Subtest: Workers request a near crossing and wait without spending run distance or movement phases
+ok 26 - Workers request a near crossing and wait without spending run distance or movement phases
+  ---
+  duration_ms: 7.8198
+  ...
+# Subtest: All four native profiles wait in Idle and preserve the crate carrying pose
+ok 27 - All four native profiles wait in Idle and preserve the crate carrying pose
+  ---
+  duration_ms: 0.7957
+  ...
+# Subtest: Pauses, preparation and end states freeze leaf clocks; closing waits for body occupancy
+ok 28 - Pauses, preparation and end states freeze leaf clocks; closing waits for body occupancy
+  ---
+  duration_ms: 1.2159
+  ...
+# Subtest: Passing beside a closed gate does not request opening or stop a worker
+ok 29 - Passing beside a closed gate does not request opening or stop a worker
+  ---
+  duration_ms: 0.4444
+  ...
+# Subtest: Collapsing gates hold crossing until rubble; legacy occupants restore a safe open pose
+ok 30 - Collapsing gates hold crossing until rubble; legacy occupants restore a safe open pose
+  ---
+  duration_ms: 0.4481
+  ...
+# Subtest: Physical collision uses current leaf phase while route planning includes the opened leaf
+ok 31 - Physical collision uses current leaf phase while route planning includes the opened leaf
+  ---
+  duration_ms: 73.266
+  ...
+# Subtest: Paid workers cross three original leaf materials without penetrating a closing or moving leaf
+ok 32 - Paid workers cross three original leaf materials without penetrating a closing or moving leaf
+  ---
+  duration_ms: 719.3007
+  ...
+# Subtest: Opening and waiting persist exactly through save/reload and reject malformed phases
+ok 33 - Opening and waiting persist exactly through save/reload and reject malformed phases
+  ---
+  duration_ms: 8.2631
+  ...
+# Subtest: Encounter pushes cannot drive a worker through a closed gate or its moving sweep
+ok 34 - Encounter pushes cannot drive a worker through a closed gate or its moving sweep
+  ---
+  duration_ms: 26.2523
+  ...
+# Subtest: A large locomotion step approaches safely and cannot jump through a closed leaf
+ok 35 - A large locomotion step approaches safely and cannot jump through a closed leaf
+  ---
+  duration_ms: 6.1401
+  ...
+# Subtest: Fractional gate portals connect enclosed grid regions and retain exact swept collisions
+ok 36 - Fractional gate portals connect enclosed grid regions and retain exact swept collisions
+  ---
+  duration_ms: 381.1913
+  ...
+# Subtest: zarzas: a real harvested crate waits, crosses and charges only on delivery
+ok 37 - zarzas: a real harvested crate waits, crosses and charges only on delivery
+  ---
+  duration_ms: 278.9117
+  ...
+# Subtest: empalizada: a real harvested crate waits, crosses and charges only on delivery
+ok 38 - empalizada: a real harvested crate waits, crosses and charges only on delivery
+  ---
+  duration_ms: 230.2996
+  ...
+# Subtest: reforzado: a real harvested crate waits, crosses and charges only on delivery
+ok 39 - reforzado: a real harvested crate waits, crosses and charges only on delivery
+  ---
+  duration_ms: 233.6973
+  ...
+# Subtest: closeAfter cannot retire loading or playing voice on a caption timer; real ended closes once
+ok 40 - closeAfter cannot retire loading or playing voice on a caption timer; real ended closes once
+  ---
+  duration_ms: 8.2628
+  ...
+# Subtest: a superseded ended callback cannot close the next presentation
+ok 41 - a superseded ended callback cannot close the next presentation
+  ---
+  duration_ms: 1.5629
+  ...
+# Subtest: closeAfter retains timed fallback when media is unavailable or no voice exists
+ok 42 - closeAfter retains timed fallback when media is unavailable or no voice exists
+  ---
+  duration_ms: 2.5181
+  ...
+# (node:50688) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: completing placement immediately advances the visible text and hand without acknowledging the old instruction
+ok 43 - completing placement immediately advances the visible text and hand without acknowledging the old instruction
+  ---
+  duration_ms: 27.1146
+  ...
+# Subtest: actual paid worker watering, automatic pickup and delivery advance explanations without extra clicks
+ok 44 - actual paid worker watering, automatic pickup and delivery advance explanations without extra clicks
+  ---
+  duration_ms: 428.0087
+  ...
+# Subtest: reload preserves unfinished instructions but advances instructions whose actions already completed
+ok 45 - reload preserves unfinished instructions but advances instructions whose actions already completed
+  ---
+  duration_ms: 38.5616
+  ...
+# (node:22708) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: HUD then world guidance stops the clock through center and seed placement, without blocking commands
+ok 46 - HUD then world guidance stops the clock through center and seed placement, without blocking commands
+  ---
+  duration_ms: 70.5468
+  ...
+# Subtest: informational readings run; automatic text dismissal retains the hand; explicit dismissal releases it
+ok 47 - informational readings run; automatic text dismissal retains the hand; explicit dismissal releases it
+  ---
+  duration_ms: 4.4438
+  ...
+# Subtest: absent or inaccessible guidance cannot retain a pause; other pause reasons remain independent
+ok 48 - absent or inaccessible guidance cannot retain a pause; other pause reasons remain independent
+  ---
+  duration_ms: 25.1613
+  ...
+# Subtest: loading clears presentation-only pauses and reconstructs them from current actionable guidance
+ok 49 - loading clears presentation-only pauses and reconstructs them from current actionable guidance
+  ---
+  duration_ms: 21.3979
+  ...
+# Subtest: queries and hidden time do not consume a message; one reading stays visible until dismissed
+ok 50 - queries and hidden time do not consume a message; one reading stays visible until dismissed
+  ---
+  duration_ms: 154.1008
+  ...
+# Subtest: daily history is saved per game, including non-catalogue warning IDs, without changing legacy saves
+ok 51 - daily history is saved per game, including non-catalogue warning IDs, without changing legacy saves
+  ---
+  duration_ms: 9.1562
+  ...
+# Subtest: real dawn clears the old daily history before hiring opens
+ok 52 - real dawn clears the old daily history before hiring opens
+  ---
+  duration_ms: 48.7164
+  ...
+# Subtest: the daily gate also rejects a non-magic message queued again after controller recreation
+ok 53 - the daily gate also rejects a non-magic message queued again after controller recreation
+  ---
+  duration_ms: 1.9927
+  ...
+# Subtest: first-night defence warning updates when the raid starts and remains accurate after withdrawal
+ok 54 - first-night defence warning updates when the raid starts and remains accurate after withdrawal
+  ---
+  duration_ms: 60.3772
+  ...
+# Subtest: a delayed defence message survives reload without announcing a first raid that already happened
+ok 55 - a delayed defence message survives reload without announcing a first raid that already happened
+  ---
+  duration_ms: 18.027
+  ...
+# Subtest: liberation removes unread and queued defence warnings without acknowledging them
+ok 56 - liberation removes unread and queued defence warnings without acknowledging them
+  ---
+  duration_ms: 43.119
+  ...
+# Subtest: follow-up defence explanation has complete English and Spanish translations
+ok 57 - follow-up defence explanation has complete English and Spanish translations
+  ---
+  duration_ms: 4.3972
+  ...
+# (node:50952) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: the first center and first seed follow HUD selection, legal 3D placement, then remove both hints
+ok 58 - the first center and first seed follow HUD selection, legal 3D placement, then remove both hints
+  ---
+  duration_ms: 129.2627
+  ...
+# Subtest: choosing a guided placement reveals its exact legal world target without moving the camera again on unrelated tools
+ok 59 - choosing a guided placement reveals its exact legal world target without moving the camera again on unrelated tools
+  ---
+  duration_ms: 19.2532
+  ...
+# Subtest: closing, skipping, hidden presentation and terminal states remove both kinds of guidance
+ok 60 - closing, skipping, hidden presentation and terminal states remove both kinds of guidance
+  ---
+  duration_ms: 6.0785
+  ...
+# Subtest: the world hint never offers a forbidden building position or an inaccessible crop grid cell
+ok 61 - the world hint never offers a forbidden building position or an inaccessible crop grid cell
+  ---
+  duration_ms: 58.5346
+  ...
+# Subtest: automatic message timeout preserves actionable guidance across reload, while explicit dismissal removes it
+ok 62 - automatic message timeout preserves actionable guidance across reload, while explicit dismissal removes it
+  ---
+  duration_ms: 12.421
+  ...
+# Subtest: a new game repeats both HUD and world placement guidance after a previous tutorial was completed
+ok 63 - a new game repeats both HUD and world placement guidance after a previous tutorial was completed
+  ---
+  duration_ms: 2.5753
+  ...
+# Subtest: the first seed hint leaves billboard clearance instead of pointing above a neighbouring roof
+ok 64 - the first seed hint leaves billboard clearance instead of pointing above a neighbouring roof
+  ---
+  duration_ms: 1.2159
+  ...
+# Subtest: interrupting the displayed voice by opening a panel acknowledges it exactly once
+ok 65 - interrupting the displayed voice by opening a panel acknowledges it exactly once
+  ---
+  duration_ms: 202.215
+  ...
+# Subtest: background hiding preserves an unfinished message instead of acknowledging it
+ok 66 - background hiding preserves an unfinished message instead of acknowledging it
+  ---
+  duration_ms: 6.2349
+  ...
+# Subtest: dismissal records the daily ID even when presentation was queried without recording
+ok 67 - dismissal records the daily ID even when presentation was queried without recording
+  ---
+  duration_ms: 50.1252
+  ...
+# Subtest: shield appears once per day without pausing, including a completed global tutorial
+ok 68 - shield appears once per day without pausing, including a completed global tutorial
+  ---
+  duration_ms: 49.8724
+  ...
+# Subtest: shield waits for availability, removes obsolete advice when cast or animals leave, and preserves menu pauses
+ok 69 - shield waits for availability, removes obsolete advice when cast or animals leave, and preserves menu pauses
+  ---
+  duration_ms: 1.4821
+  ...
+# Subtest: saved acknowledged raids do not replay shield advice; an unfinished reminder remains readable after restoration
+ok 70 - saved acknowledged raids do not replay shield advice; an unfinished reminder remains readable after restoration
+  ---
+  duration_ms: 3.4518
+  ...
+# Subtest: an arriving raid takes priority over ordinary advice and leaves that explanation queued
+ok 71 - an arriving raid takes priority over ordinary advice and leaves that explanation queued
+  ---
+  duration_ms: 0.8583
+  ...
+# Subtest: render-frequency updates reuse the peaceful plant check until simulated time advances
+ok 72 - render-frequency updates reuse the peaceful plant check until simulated time advances
+  ---
+  duration_ms: 1.3677
+  ...
+# Subtest: growth cannot repeat today and receives its full reading time on the following day
+ok 73 - growth cannot repeat today and receives its full reading time on the following day
+  ---
+  duration_ms: 1.1966
+  ...
+# Subtest: multiply requires working labour and unmarked live crops, with a gap between peaceful reminders
+ok 74 - multiply requires working labour and unmarked live crops, with a gap between peaceful reminders
+  ---
+  duration_ms: 1.0911
+  ...
+# Subtest: new reminders are bilingual and saved reminder times reject corrupt values
+ok 75 - new reminders are bilingual and saved reminder times reject corrupt values
+  ---
+  duration_ms: 1.4638
+  ...
+# Subtest: Basic readings advance only manually and do not create, plant or pay anything
+ok 76 - Basic readings advance only manually and do not create, plant or pay anything
+  ---
+  duration_ms: 139.5946
+  ...
+# Subtest: An already placed native center is recognized without charging a second one
+ok 77 - An already placed native center is recognized without charging a second one
+  ---
+  duration_ms: 6729.7707
+  ...
+# Subtest: The native farm resumes physical worker actions after reading, and completes only after a paid delivery
+ok 78 - The native farm resumes physical worker actions after reading, and completes only after a paid delivery
+  ---
+  duration_ms: 2395.7386
+  ...
+# Subtest: Only a previously completed basic tutorial can be skipped; new magic still interrupts the second slot
+ok 79 - Only a previously completed basic tutorial can be skipped; new magic still interrupts the second slot
+  ---
+  duration_ms: 1.4044
+  ...
+# Subtest: The first unknown raid and Shield pause together; known later raids never add another tutorial pause
+ok 80 - The first unknown raid and Shield pause together; known later raids never add another tutorial pause
+  ---
+  duration_ms: 0.966
+  ...
+# Subtest: Growth, Multiply and recovery have independent IDs; repeats and unrelated pauses remain intact
+ok 81 - Growth, Multiply and recovery have independent IDs; repeats and unrelated pauses remain intact
+  ---
+  duration_ms: 0.6783
+  ...
+# Subtest: Loading preserves an unfinished reading and queue without replaying its sound or silently acknowledging it
+ok 82 - Loading preserves an unfinished reading and queue without replaying its sound or silently acknowledging it
+  ---
+  duration_ms: 2.9462
+  ...
+# Subtest: Global profile writes merge seen IDs and malformed or unknown data cannot silence messages
+ok 83 - Global profile writes merge seen IDs and malformed or unknown data cannot silence messages
+  ---
+  duration_ms: 1.8215
+  ...
+# Subtest: Storage failure leaves the slot acknowledged and playable without manufacturing a global completion
+ok 84 - Storage failure leaves the slot acknowledged and playable without manufacturing a global completion
+  ---
+  duration_ms: 0.9592
+  ...
+# Subtest: Victory is narrated per campaign before the result choices, and expansion appears after hiring
+ok 85 - Victory is narrated per campaign before the result choices, and expansion appears after hiring
+  ---
+  duration_ms: 0.9715
+  ...
+# Subtest: Snapshots reject unknown tutorial IDs and incoherent modal pauses while retaining legacy slots
+ok 86 - Snapshots reject unknown tutorial IDs and incoherent modal pauses while retaining legacy slots
+  ---
+  duration_ms: 1.6681
+  ...
+# Subtest: A loaded defeat takes priority over an unfinished explanation without marking that message seen
+ok 87 - A loaded defeat takes priority over an unfinished explanation without marking that message seen
+  ---
+  duration_ms: 0.3938
+  ...
+# Subtest: Profile memory lives outside slot listings and never changes another slot snapshot
+ok 88 - Profile memory lives outside slot listings and never changes another slot snapshot
+  ---
+  duration_ms: 11.1855
+  ...
+# Subtest: a first paid crop completed after day one still closes the basic tutorial after actual delivery
+ok 89 - a first paid crop completed after day one still closes the basic tutorial after actual delivery
+  ---
+  duration_ms: 854.9487
+  ...
+# Subtest: an expired raid instruction is dropped unread while the Shield lesson remains available
+ok 90 - an expired raid instruction is dropped unread while the Shield lesson remains available
+  ---
+  duration_ms: 1.0304
+  ...
+# Subtest: a deliberately finished basic tutorial is not reopened by missing early game entities
+ok 91 - a deliberately finished basic tutorial is not reopened by missing early game entities
+  ---
+  duration_ms: 0.2987
+  ...
+# Subtest: zarzas: existing worker at a module seam exits the new automatic gate
+ok 92 - zarzas: existing worker at a module seam exits the new automatic gate
+  ---
+  duration_ms: 1874.9914
+  ...
+# Subtest: zarzas: existing worker inside exits the new automatic gate
+ok 93 - zarzas: existing worker inside exits the new automatic gate
+  ---
+  duration_ms: 1104.5561
+  ...
+# Subtest: empalizada: existing worker at a module seam exits the new automatic gate
+ok 94 - empalizada: existing worker at a module seam exits the new automatic gate
+  ---
+  duration_ms: 910.5476
+  ...
+# Subtest: empalizada: existing worker inside exits the new automatic gate
+ok 95 - empalizada: existing worker inside exits the new automatic gate
+  ---
+  duration_ms: 506.4199
+  ...
+# Subtest: adobe: existing worker at a module seam exits the new automatic gate
+ok 96 - adobe: existing worker at a module seam exits the new automatic gate
+  ---
+  duration_ms: 464.5743
+  ...
+# Subtest: adobe: existing worker inside exits the new automatic gate
+ok 97 - adobe: existing worker inside exits the new automatic gate
+  ---
+  duration_ms: 84.174
+  ...
+# Subtest: piedra: existing worker at a module seam exits the new automatic gate
+ok 98 - piedra: existing worker at a module seam exits the new automatic gate
+  ---
+  duration_ms: 65.1503
+  ...
+# Subtest: piedra: existing worker inside exits the new automatic gate
+ok 99 - piedra: existing worker inside exits the new automatic gate
+  ---
+  duration_ms: 121.7585
+  ...
+# Subtest: reforzado: existing worker at a module seam exits the new automatic gate
+ok 100 - reforzado: existing worker at a module seam exits the new automatic gate
+  ---
+  duration_ms: 122.3486
+  ...
+# Subtest: reforzado: existing worker inside exits the new automatic gate
+ok 101 - reforzado: existing worker inside exits the new automatic gate
+  ---
+  duration_ms: 98.7937
+  ...
+# Subtest: a blocked return origin does not start a fresh broad search every tick
+ok 102 - a blocked return origin does not start a fresh broad search every tick
+  ---
+  duration_ms: 120.6446
+  ...
+# Subtest: return search resumes bounded native slices rather than draining synchronously
+ok 103 - return search resumes bounded native slices rather than draining synchronously
+  ---
+  duration_ms: 6.9542
+  ...
+# Subtest: ordinary worker tasks never start a return search
+ok 104 - ordinary worker tasks never start a return search
+  ---
+  duration_ms: 0.7426
+  ...
+# Subtest: failed search memo follows exact origin, destination and navigation epoch
+ok 105 - failed search memo follows exact origin, destination and navigation epoch
+  ---
+  duration_ms: 1.0286
+  ...
+# Subtest: only eight pending searches retain native frontier memory per navigation
+ok 106 - only eight pending searches retain native frontier memory per navigation
+  ---
+  duration_ms: 1.0278
+  ...
+# Subtest: a never-ending iterator is abandoned and memoized at its explicit total bound
+ok 107 - a never-ending iterator is abandoned and memoized at its explicit total bound
+  ---
+  duration_ms: 21.3048
+  ...
+# Subtest: native worker avoidance view is used for the wider search
+ok 108 - native worker avoidance view is used for the wider search
+  ---
+  duration_ms: 0.5303
+  ...
+# Subtest: wider native return does not cross water
+ok 109 - wider native return does not cross water
+  ---
+  duration_ms: 1.4955
+  ...
+# Subtest: wider native return does not cross lava
+ok 110 - wider native return does not cross lava
+  ---
+  duration_ms: 0.2959
+  ...
+# Subtest: wider native return does not cross solid
+ok 111 - wider native return does not cross solid
+  ---
+  duration_ms: 2.7458
+  ...
+# Subtest: wider native return does not cross steep
+ok 112 - wider native return does not cross steep
+  ---
+  duration_ms: 2.1354
+  ...
+# Subtest: a real closed wall ring cannot be escaped by enlarging the search corridor
+ok 113 - a real closed wall ring cannot be escaped by enlarging the search corridor
+  ---
+  duration_ms: 8.952
+  ...
+# Subtest: a new navigation epoch abandons the pending return proof
+ok 114 - a new navigation epoch abandons the pending return proof
+  ---
+  duration_ms: 0.5867
+  ...
+# Subtest: dry canyon cliffs retain their worker-surface slope restriction
+ok 115 - dry canyon cliffs retain their worker-surface slope restriction
+  ---
+  duration_ms: 0.4514
+  ...
+# Subtest: an existing wall overlap exits through the nearest face without changing the actor
+ok 116 - an existing wall overlap exits through the nearest face without changing the actor
+  ---
+  duration_ms: 26.9486
+  ...
+# Subtest: ordinary tasks and valid origins do not receive a wall collision exception
+ok 117 - ordinary tasks and valid origins do not receive a wall collision exception
+  ---
+  duration_ms: 0.7761
+  ...
+# Subtest: recovery preserves water blocking
+ok 118 - recovery preserves water blocking
+  ---
+  duration_ms: 0.6023
+  ...
+# Subtest: recovery preserves lava blocking
+ok 119 - recovery preserves lava blocking
+  ---
+  duration_ms: 0.5454
+  ...
+# Subtest: recovery preserves steep blocking
+ok 120 - recovery preserves steep blocking
+  ---
+  duration_ms: 0.4566
+  ...
+# Subtest: recovery preserves solid blocking
+ok 121 - recovery preserves solid blocking
+  ---
+  duration_ms: 0.6973
+  ...
+# Subtest: recovery preserves prop blocking
+ok 122 - recovery preserves prop blocking
+  ---
+  duration_ms: 0.4472
+  ...
+# Subtest: recovery preserves second-wall blocking
+ok 123 - recovery preserves second-wall blocking
+  ---
+  duration_ms: 0.4705
+  ...
+# Subtest: recovery preserves gate blocking
+ok 124 - recovery preserves gate blocking
+  ---
+  duration_ms: 0.1898
+  ...
+# Subtest: rotated wall uses its nearest world-space face
+ok 125 - rotated wall uses its nearest world-space face
+  ---
+  duration_ms: 1.1544
+  ...
+# Subtest: native movement leaves continuously and resumes from a serialized mid-prefix pose
+ok 126 - native movement leaves continuously and resumes from a serialized mid-prefix pose
+  ---
+  duration_ms: 16.0669
+  ...
+# Subtest: a retreating animal blocks the outward prefix until it leaves
+ok 127 - a retreating animal blocks the outward prefix until it leaves
+  ---
+  duration_ms: 5.0253
+  ...
+# Subtest: changed navigation revalidates recovery against a new solid obstruction
+ok 128 - changed navigation revalidates recovery against a new solid obstruction
+  ---
+  duration_ms: 2.4224
+  ...
+1..128
+# tests 128
+# suites 0
+# pass 128
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 34869.0647

@@ -28,6 +28,7 @@ import {villageLayout,findVillageEntry,nearestVillageRoute} from '../world/villa
 import {LOCOMOTION as L} from './locomotion-calibration.js';
 import {dailyRunMetres,urgentWork,moveWorker,movePath,movePathWithGates} from './locomotion.js';
 import {workerSlopeRecoveryPath} from '../world/worker-slope-recovery.js';
+import {workerWallOverlapRecoveryPath} from '../world/worker-wall-overlap-recovery.js';
 import {createUrgencyPass} from './work-urgency.js';
 import {repairRoute,wateringRoute,canWaterFrom} from '../world/work-points.js';
 import {updateIdle,cancelIdle} from './idle.js';
@@ -391,7 +392,8 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
       if(!w.path)w.path=animalSlopeRecoveryPath(nav,w,destination,w.radius??.28);
     }
     if(!w.path&&worker&&!ignore&&['fleeing','returning','incapacitated'].includes(w.status)){
-      w.path=workerSlopeRecoveryPath(nav,w,destination,w.radius??.28);
+      w.path=workerWallOverlapRecoveryPath(nav,w,destination,w.radius??.28);
+      if(!w.path)w.path=workerSlopeRecoveryPath(nav,w,destination,w.radius??.28);
       if(!w.path)w.path=workerReturnRoute(nav,w,destination,w.radius??.28);
     }
     w.pathVersion=nav.version;

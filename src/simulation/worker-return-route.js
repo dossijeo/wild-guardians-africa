@@ -7,6 +7,10 @@ const MAX_ACTIVE=8,MAX_SLICES=4096;
 // gate graph and swept edges. Keep at most eight resumable searches per world.
 export function workerReturnRoute(nav,actor,end,radius=.28){
  if(!['fleeing','returning','incapacitated'].includes(actor.status)||!nav.findPathSteps)return null;
+ // walkTo has already tried the bounded physical overlap/slope recovery.
+ // A still-invalid origin cannot seed this ordinary swept-body search; do
+ // not spend thousands of wider A* slices on the same enclosed body.
+ if(nav.walkable&&!nav.walkable(actor.x,actor.z,radius,null,true))return null;
  let memo=searches.get(nav);
  if(!memo||memo.version!==nav.version){memo={version:nav.version,active:new Map(),failed:new Set()};searches.set(nav,memo);}
  const key=navigationPathKey(actor,end,radius,null,true,32)+JSON.stringify(actor.terrainAvoidance??[]);
