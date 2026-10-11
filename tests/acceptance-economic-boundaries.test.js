@@ -100,14 +100,24 @@ test('QA-132: an unaffordable remembered selection does not defeat an otherwise 
  assert.equal(Game.hire(loaded,'repeat',{olderFemale:1}),false);assert.equal(loaded.workers.length,1);
 });
 
-test('QA-134: final horde resolves before victory; an undefended insolvent farm can lose',()=>{
- for(const culture of Game.CULTURES)for(const capital of [105,1000]){
+test('QA-134: natural final raid resolves before the exact surviving-center insolvency/victory boundary',()=>{
+ for(const culture of Game.CULTURES)for(const capital of [34,35,105,1000]){
   const {s,nav}=farm(culture);s.day=100;s.completedNights=99;s.time=299.9;s.dayPlan={done:true};s.ledger.balance=rational(capital);
   Game.tick(s,.1,nav);assert.equal(s.time,300);assert.equal(s.result,null);assert.equal(s.completedNights,99);
   assert.equal(s.events.filter(e=>e.type==='NightStarted').length,1);assert.equal(s.events.filter(e=>e.type==='CampaignWon').length,0);
   for(let i=0;!s.result&&i<1200;i++){Game.tick(s,1,nav);if(s.raid){assert.equal(s.completedNights,99);assert.equal(s.events.filter(e=>e.type==='CampaignWon').length,0);}}
-  if(capital===105){assert.equal(s.result,'defeat');assert.equal(s.completedNights,99);assert.equal(s.events.filter(e=>e.type==='CampaignWon').length,0);}
-  else {assert.equal(s.result,'victory');assert.equal(s.raid,null);assert.equal(s.completedNights,100);assert.equal(s.day,101);assert.equal(s.events.filter(e=>e.type==='CampaignWon').length,1);}
+  // The current-value recovery plan does not guarantee destruction of an
+  // empty farm's intact center. Its surviving-center requirement is the
+  // approved 30-coin wage plus the cheapest five-coin seed, not 105 coins.
+  assert(s.structures.some(operational));assert.equal(dawnMinimum(s),35);
+  assert(s.events.some(e=>e.type==='StructureHit'),'Physical attack required');
+  assert.equal(s.raid,null);assert.equal(s.completedNights,100);assert.equal(s.day,101);
+  const defeat=capital<35;assert.equal(s.result,defeat?'defeat':'victory');
+  assert.equal(s.events.filter(e=>e.type==='CampaignWon').length,defeat?0:1);
+  assert.equal(s.events.filter(e=>e.type==='GameOver').length,defeat?1:0);
+  const ended=s.events.findIndex(e=>e.type==='RaidEnded');
+  assert(ended>=0&&s.events.findIndex(e=>e.type===(defeat?'GameOver':'CampaignWon'))>ended);
+  assert.equal(numberOf(s.ledger.balance),capital);
  }
 });
 
