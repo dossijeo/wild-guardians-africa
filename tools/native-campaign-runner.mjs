@@ -37,6 +37,7 @@ import {createQ7LabourPolicy} from './native-q7-labour-policy.mjs';
 import {createQ8LabourPolicy} from './native-q8-labour-policy.mjs';
 import {createQ9LabourPolicy} from './native-q9-labour-policy.mjs';
 import {createQ10LabourPolicy} from './native-q10-labour-policy.mjs';
+import {createQ11LabourPolicy} from './native-q11-labour-policy.mjs';
 import {campaignCropChoice} from './native-campaign-crop-policy.mjs';
 
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
@@ -44,7 +45,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
  if(!Number.isSafeInteger(days)||days<1||days>180)throw Error('Native protocol permits1–180 days only');
  if(!Number.isSafeInteger(plantsPerWorker)||plantsPerWorker<1)throw new Error('Plants per worker must be a positive integer');
  if(!['legacy','cashflow'].includes(cropPolicy))throw Error('Unknown crop policy');
- const protocol={...campaignProtocolForLabour(labourPolicy),profile,plotFluidClearance,defenseMaterial,cropHitPoints:CROP_HIT_POINTS},q4=labourPolicy==='q4',q5=['q5','q6','q7','q8','q9','q10'].includes(labourPolicy),q6=['q6','q7','q8','q9','q10'].includes(labourPolicy),q7=['q7','q8','q9','q10'].includes(labourPolicy),labourHistory=[],labourObservations=[],labourReasons={};
+ const protocol={...campaignProtocolForLabour(labourPolicy),profile,plotFluidClearance,defenseMaterial,cropHitPoints:CROP_HIT_POINTS},q4=labourPolicy==='q4',q5=['q5','q6','q7','q8','q9','q10','q11'].includes(labourPolicy),q6=['q6','q7','q8','q9','q10','q11'].includes(labourPolicy),q7=['q7','q8','q9','q10','q11'].includes(labourPolicy),labourHistory=[],labourObservations=[],labourReasons={};
  const policy=nativeCampaignStrategy(strategy),agriculturalMagic=createAgriculturalMagicPolicy({mode:policy.agriculturalMagic});defend=policy.defend;middayHiring=policy.middayHiring;plantsPerWorker=6;
  if(typeof Game.nightEntryPending!=='function')throw Error('Native pending entry handshake is not integrated; no campaign started');
  const opening=createOpeningWorld(world),nav=opening.nav;let s=opening.s,sequence=0;
@@ -53,7 +54,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
  wallSpec(defenseMaterial);
  if(defenseMaterial!=='zarzas'&&!['funded','routed','shore'].includes(defensePolicy))throw Error('Explicit defense material requires funded/routed/shore policy');
  if(!Number.isSafeInteger(defenseStartDay)||defenseStartDay<1||defenseStartDay!==1&&!['closed','funded','routed','shore'].includes(defensePolicy))throw Error('Explicit defense start requires closed/funded/routed policy and positive integer day');
- const q5Policy=labourPolicy==='q10'?createQ10LabourPolicy({profile}):labourPolicy==='q9'?createQ9LabourPolicy({profile}):labourPolicy==='q8'?createQ8LabourPolicy({profile}):q7?createQ7LabourPolicy({profile}):q6?createQ6LabourPolicy({profile}):q5?createQ5LabourPolicy({profile}):null;
+ const q5Policy=labourPolicy==='q11'?createQ11LabourPolicy({profile}):labourPolicy==='q10'?createQ10LabourPolicy({profile}):labourPolicy==='q9'?createQ9LabourPolicy({profile}):labourPolicy==='q8'?createQ8LabourPolicy({profile}):q7?createQ7LabourPolicy({profile}):q6?createQ6LabourPolicy({profile}):q5?createQ5LabourPolicy({profile}):null;
  const defense=defend?(['funded','routed','shore'].includes(defensePolicy)?createNativeFundedDefensePolicy({startDay:defenseStartDay,material:defenseMaterial,repairWalls:policy.repair,obstacleAware:['routed','shore'].includes(defensePolicy),shoreRouting:defensePolicy==='shore'}):defensePolicy==='closed'?createNativeClosedDefensePolicy({startDay:defenseStartDay,repairWalls:policy.repair}):defensePolicy==='expanding'?createNativeExpandingDefensePolicy({repairWalls:policy.repair,reserveMode:'none'}):createFarmDefensePolicy()):null;
  const driver=new NativeCampaignEntryDriver(nav);let partialEvidence=()=>({});
  try {
@@ -74,9 +75,10 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
  const nextSpecies=()=>campaignCropChoice({policy:cropPolicy,mixed,day:s.day,cash:numberOf(s.ledger.balance),purchased:plantedSequence,reserved:labourReserve()+maintenanceReserve()+(defense?.reserve(s)??0)});
  const labourReserve=(additional=0)=>q5?q5Policy.reserve():q4?q4RecoveryReserve(s,worker.wage):policy.cashPolicy==='progressive-village'?Math.max(nextWages,Math.ceil((s.plants.filter(p=>p.alive).length+additional)/plantsPerWorker)*worker.wage):nextWages;
  const maintenanceReserve=()=>policy.repair?s.tasks.filter(t=>t.kind==='repair').reduce((n,t)=>{const c=s.structures.find(c=>c.id===t.targetId);return n+(c?Math.ceil(numberOf(Game.repairCost(c))):0);},0):0;
+ const plantingLabourReserve=()=>q5Policy?.plantingReserve?.(s)??labourReserve(1);
  const savingsReserve=(additional=0)=>Math.min(villageSavingsForState(policy,s,settledDeliveryIncome,expansion?.paidVillageCoins()??0),Math.max(0,numberOf(s.ledger.balance)-labourReserve(additional)-maintenanceReserve()-cropSpec(nextSpecies()).plant_cost));
  const plant=()=>{
-  const species=nextSpecies();if(q6&&!q5Policy.canSpend(s,cropSpec(species).plant_cost,{pendingRepair:maintenanceReserve()}))return false;if(numberOf(s.ledger.balance)<labourReserve(1)+maintenanceReserve()+(defense?.reserve(s)??0)+savingsReserve(1)+cropSpec(species).plant_cost)return false;
+  const species=nextSpecies();if(q6&&!q5Policy.canSpend(s,cropSpec(species).plant_cost,{pendingRepair:maintenanceReserve()}))return false;if(numberOf(s.ledger.balance)<plantingLabourReserve()+maintenanceReserve()+(defense?.reserve(s)??0)+savingsReserve(1)+cropSpec(species).plant_cost)return false;
   const p=choosePlot();if(!p)return false;
   if(!Game.plant(s,command('plant'),species,p.x,p.z,nav))return false;plantedSequence++;maximumLiving=Math.max(maximumLiving,s.plants.filter(p=>p.alive).length);return true;
  };
@@ -163,7 +165,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
    if(onDecision)onDecision(Object.freeze({day:s.day,time:s.time,seconds:dt,
     actions:decision.actions,reason:decision.reason,balance:numberOf(s.ledger.balance),
     seedCost:cropSpec(nextSpecies()).plant_cost,nextWages,
-    labourReserve:labourReserve(1),maintenanceReserve:maintenanceReserve(),
+    labourReserve:labourReserve(1),plantingLabourReserve:plantingLabourReserve(),maintenanceReserve:maintenanceReserve(),
     defenseReserve:defense?.reserve(s)??0,living:s.plants.filter(p=>p.alive).length,
     pendingTasks:s.tasks.length,...(q6?q5Policy.workingCapital(s):{})}));
    raidEvidence.observe(s);

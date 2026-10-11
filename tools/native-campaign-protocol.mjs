@@ -55,7 +55,8 @@ export function villageSavingsForState(policy,state,income,spent){
 }
 
 export function campaignProtocolForLabour(name='legacy'){
- if(!['legacy','q4','q5','q6','q7','q8','q9','q10'].includes(name))throw Error('Unknown native labour policy');
+ if(!['legacy','q4','q5','q6','q7','q8','q9','q10','q11'].includes(name))throw Error('Unknown native labour policy');
+ if(name==='q11')return Object.freeze({...campaignProtocolForLabour('q10'),id:NATIVE_CAMPAIGN_PROTOCOL.id+'-q11',plantingReserve:'native minimum until simulated second 140, linear full crew renewal target by second 300; repair and additional-hire reserves unchanged'});
  if(name==='q10')return Object.freeze({...campaignProtocolForLabour('q9'),id:NATIVE_CAMPAIGN_PROTOCOL.id+'-q10',emptyFieldRenewal:'funded replanting forecast from cash less actual repair quotes and two crew wages; Q9 unchanged for existing crops'});
  if(name==='q9')return Object.freeze({...campaignProtocolForLabour('q8'),id:NATIVE_CAMPAIGN_PROTOCOL.id+'-q9',renewalWorkUnitsPerWorker:6,dawnRenewal:'at most previous crew and ceiling(max(living,pending)/6) per productive centre; native wages and Q8 trial gates unchanged'});
  if(name==='q8')return Object.freeze({...campaignProtocolForLabour('q7'),id:NATIVE_CAMPAIGN_PROTOCOL.id+'-q8',openingStaff:6});
