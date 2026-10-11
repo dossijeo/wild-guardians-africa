@@ -1,0 +1,737 @@
+{
+  "firstFourteenDaysExactlyMatchV56": true,
+  "sourceHashesMatchDefended": true,
+  "day": 20,
+  "time": 600,
+  "result": "defeat",
+  "survivedNights": 19,
+  "money": 31,
+  "living": 0,
+  "lastCenterDestroyed": true,
+  "nativeReason": "Cayó el último centro; faltan monedas para que otro nazca.",
+  "raidEndedBeforeGameOver": true,
+  "assignedHits": 935,
+  "unusedHits": 11,
+  "lastRaid": {
+    "id": "raid-20-night",
+    "day": 20,
+    "daytime": false,
+    "spawnElapsed": 12226.262368921054,
+    "exposureStatus": "exact-native-spawn",
+    "observedAt": 12230.100000025399,
+    "ended": true,
+    "species": {
+      "warthog": {
+        "generated": 15,
+        "initialHitBudget": 41,
+        "maximumStructureDamage": 902,
+        "contacts": 35,
+        "misses": 3,
+        "cropHits": 18,
+        "structureHits": 9,
+        "shieldContacts": 8,
+        "workerHits": 0,
+        "workerIncapacitations": 0,
+        "observedBudgetConsumed": 38,
+        "unconsumedOrUnobservedBudget": 3
+      },
+      "buffalo": {
+        "generated": 1,
+        "initialHitBudget": 4,
+        "maximumStructureDamage": 152,
+        "contacts": 3,
+        "misses": 1,
+        "cropHits": 0,
+        "structureHits": 3,
+        "shieldContacts": 0,
+        "workerHits": 0,
+        "workerIncapacitations": 0,
+        "observedBudgetConsumed": 4,
+        "unconsumedOrUnobservedBudget": 0
+      },
+      "hyena": {
+        "generated": 1,
+        "initialHitBudget": 4,
+        "maximumStructureDamage": 108,
+        "contacts": 3,
+        "misses": 1,
+        "cropHits": 0,
+        "structureHits": 3,
+        "shieldContacts": 0,
+        "workerHits": 0,
+        "workerIncapacitations": 0,
+        "observedBudgetConsumed": 4,
+        "unconsumedOrUnobservedBudget": 0
+      }
+    },
+    "cropHits": 18,
+    "cropsDestroyed": 18,
+    "cropReplacementCost": 90,
+    "lostBaseHarvestValue": 198,
+    "structureHits": 15,
+    "wallHits": 0,
+    "centerHits": 15,
+    "structureHpLost": 393,
+    "wallHpLost": 0,
+    "structuresRuined": [
+      "structure-2"
+    ],
+    "shieldContacts": 8,
+    "misses": 5,
+    "logicalContacts": 41,
+    "workerHits": 0,
+    "workerIncapacitations": 0,
+    "actors": [
+      {
+        "id": "animal-15863",
+        "species": "warthog",
+        "spawn": {
+          "x": 211.65,
+          "z": -6
+        },
+        "exit": {
+          "x": 214.65,
+          "z": -6
+        }
+      },
+      {
+        "id": "animal-15864",
+        "species": "warthog",
+        "spawn": {
+          "x": 211.65,
+          "z": -2
+        },
+        "exit": {
+          "x": 214.65,
+          "z": -2
+        }
+      },
+      {
+        "id": "animal-15865",
+        "species": "warthog",
+        "spawn": {
+          "x": 211.65,
+          "z": 2
+        },
+        "exit": {
+          "x": 214.65,
+          "z": 2
+        }
+      },
+      {
+        "id": "animal-15866",
+        "species": "warthog",
+        "spawn": {
+          "x": 211.65,
+          "z": 6
+        },
+        "exit": {
+          "x": 214.65,
+          "z": 6
+        }
+      },
+      {
+        "id": "animal-15867",
+        "species": "warthog",
+        "spawn": {
+          "x": 211.65,
+          "z": 10
+        },
+        "exit": {
+          "x": 214.65,
+          "z": 10
+        }
+      },
+      {
+        "id": "animal-15868",
+        "species": "warthog",
+        "spawn": {
+          "x": 211.65,
+          "z": 16
+        },
+        "exit": {
+          "x": 214.65,
+          "z": 16
+        }
+      },
+      {
+        "id": "animal-15869",
+        "species": "buffalo",
+        "spawn": {
+          "x": 211.65,
+          "z": 20
+        },
+        "exit": {
+          "x": 214.65,
+          "z": 20
+        }
+      },
+      {
+        "id": "animal-15870",
+        "species": "warthog",
+        "spawn": {
+          "x": 211.65,
+          "z": 24
+        },
+        "exit": {
+          "x": 214.65,
+          "z": 24
+        }
+      },
+      {
+        "id": "animal-15871",
+        "species": "warthog",
+        "spawn": {
+          "x": 211.65,
+          "z": 28
+        },
+        "exit": {
+          "x": 214.65,
+          "z": 28
+        }
+      },
+      {
+        "id": "animal-15872",
+        "species": "warthog",
+        "spawn": {
+          "x": 211.65,
+          "z": 32
+        },
+        "exit": {
+          "x": 214.65,
+          "z": 32
+        }
+      },
+      {
+        "id": "animal-15873",
+        "species": "warthog",
+        "spawn": {
+          "x": 211.65,
+          "z": 36
+        },
+        "exit": {
+          "x": 214.65,
+          "z": 36
+        }
+      },
+      {
+        "id": "animal-15874",
+        "species": "warthog",
+        "spawn": {
+          "x": 211.65,
+          "z": 40
+        },
+        "exit": {
+          "x": 214.65,
+          "z": 40
+        }
+      },
+      {
+        "id": "animal-15875",
+        "species": "warthog",
+        "spawn": {
+          "x": 211.65,
+          "z": 44
+        },
+        "exit": {
+          "x": 214.65,
+          "z": 44
+        }
+      },
+      {
+        "id": "animal-15876",
+        "species": "warthog",
+        "spawn": {
+          "x": 211.65,
+          "z": 48
+        },
+        "exit": {
+          "x": 214.65,
+          "z": 48
+        }
+      },
+      {
+        "id": "animal-15877",
+        "species": "warthog",
+        "spawn": {
+          "x": 211.65,
+          "z": 52
+        },
+        "exit": {
+          "x": 214.65,
+          "z": 52
+        }
+      },
+      {
+        "id": "animal-15878",
+        "species": "hyena",
+        "spawn": {
+          "x": 211.65,
+          "z": 56
+        },
+        "exit": {
+          "x": 214.65,
+          "z": 56
+        }
+      },
+      {
+        "id": "animal-15880",
+        "species": "warthog",
+        "spawn": {
+          "x": 111.18869448991569,
+          "z": 34.794181937769594
+        },
+        "exit": {
+          "x": 112.6269711057283,
+          "z": 37.426929623440714
+        }
+      }
+    ],
+    "pressureFacts": {
+      "night": 20,
+      "observedValue": 198,
+      "capturedValue": 198,
+      "effectiveValue": 785.0923830360455,
+      "pressure": 0.18418412427206943,
+      "targetAnimals": 17,
+      "areaCap": 2,
+      "introductory": false,
+      "candidateVersion": 3,
+      "budget": 96,
+      "potential": 57,
+      "composition": {
+        "warthog": 15,
+        "hyena": 1,
+        "buffalo": 1,
+        "lion": 0,
+        "rhino": 0
+      },
+      "referenceEnvelope": {
+        "rows": [
+          {
+            "id": "warthog",
+            "minHits": 2,
+            "maxHits": 4,
+            "cropDamage": 1,
+            "structureDamage": 22,
+            "attackRadius": 0.7386786660971345,
+            "areaCap": 2,
+            "count": 15,
+            "area": 1,
+            "minProduct": 30,
+            "meanProduct": 45,
+            "maxProduct": 60,
+            "minStructureProduct": 660,
+            "meanStructureProduct": 990,
+            "maxStructureProduct": 1320
+          },
+          {
+            "id": "hyena",
+            "minHits": 3,
+            "maxHits": 5,
+            "cropDamage": 1,
+            "structureDamage": 27,
+            "attackRadius": 1.266306284737945,
+            "areaCap": 2,
+            "count": 1,
+            "area": 1,
+            "minProduct": 3,
+            "meanProduct": 4,
+            "maxProduct": 5,
+            "minStructureProduct": 81,
+            "meanStructureProduct": 108,
+            "maxStructureProduct": 135
+          },
+          {
+            "id": "buffalo",
+            "minHits": 4,
+            "maxHits": 6,
+            "cropDamage": 2,
+            "structureDamage": 38,
+            "attackRadius": 2.1105104745632417,
+            "areaCap": 2,
+            "count": 1,
+            "area": 1.5,
+            "minProduct": 12,
+            "meanProduct": 15,
+            "maxProduct": 18,
+            "minStructureProduct": 152,
+            "meanStructureProduct": 190,
+            "maxStructureProduct": 228
+          },
+          {
+            "id": "lion",
+            "minHits": 4,
+            "maxHits": 7,
+            "cropDamage": 2,
+            "structureDamage": 44,
+            "attackRadius": 1.6884083796505935,
+            "areaCap": 2,
+            "count": 0,
+            "area": 1.5,
+            "minProduct": 0,
+            "meanProduct": 0,
+            "maxProduct": 0,
+            "minStructureProduct": 0,
+            "meanStructureProduct": 0,
+            "maxStructureProduct": 0
+          },
+          {
+            "id": "rhino",
+            "minHits": 5,
+            "maxHits": 8,
+            "cropDamage": 3,
+            "structureDamage": 66,
+            "attackRadius": 2.954714664388538,
+            "areaCap": 2,
+            "count": 0,
+            "area": 1.5,
+            "minProduct": 0,
+            "meanProduct": 0,
+            "maxProduct": 0,
+            "minStructureProduct": 0,
+            "meanStructureProduct": 0,
+            "maxStructureProduct": 0
+          }
+        ],
+        "min": 45,
+        "mean": 64,
+        "max": 83,
+        "structure": {
+          "min": 893,
+          "mean": 1288,
+          "max": 1683,
+          "scope": "Alternative all-hits-on-structures envelope, not additive with agricultural damage"
+        },
+        "q": 96,
+        "feasible": true,
+        "units": "Reference agricultural HP-points; no loss fraction or ledger debit"
+      },
+      "compositionAdjustments": [],
+      "qRaisedForRangeSafety": false
+    },
+    "waves": [
+      {
+        "index": 0,
+        "elapsed": 12226.262368921054,
+        "actors": 16
+      },
+      {
+        "index": 1,
+        "elapsed": 12352.500000025775,
+        "actors": 1,
+        "exposedLiving": 0
+      }
+    ],
+    "livingBeforeSpawnObservation": 18,
+    "livingAfterSpawnObservation": 18,
+    "exposedLivingAtSpawn": 18,
+    "exposedWoundedAtSpawn": 0,
+    "initialCropDamage": 0,
+    "routeUnavailableAttempts": 25,
+    "agriculturalHpDamage": 18,
+    "centralHpDamage": 18,
+    "lossesByCropSpecies": {
+      "mijo": {
+        "destroyed": 18,
+        "seedReplacementCost": 90,
+        "lostBaseHarvestValue": 198
+      }
+    },
+    "retirements": [
+      {
+        "id": "animal-15865",
+        "species": "warthog",
+        "hitsRemaining": 0,
+        "reason": "budget-exhausted"
+      },
+      {
+        "id": "animal-15867",
+        "species": "warthog",
+        "hitsRemaining": 0,
+        "reason": "budget-exhausted"
+      },
+      {
+        "id": "animal-15870",
+        "species": "warthog",
+        "hitsRemaining": 0,
+        "reason": "budget-exhausted"
+      },
+      {
+        "id": "animal-15864",
+        "species": "warthog",
+        "hitsRemaining": 0,
+        "reason": "budget-exhausted"
+      },
+      {
+        "id": "animal-15877",
+        "species": "warthog",
+        "hitsRemaining": 0,
+        "reason": "budget-exhausted"
+      },
+      {
+        "id": "animal-15868",
+        "species": "warthog",
+        "hitsRemaining": 0,
+        "reason": "budget-exhausted"
+      },
+      {
+        "id": "animal-15871",
+        "species": "warthog",
+        "hitsRemaining": 0,
+        "reason": "budget-exhausted"
+      },
+      {
+        "id": "animal-15866",
+        "species": "warthog",
+        "hitsRemaining": 0,
+        "reason": "budget-exhausted"
+      },
+      {
+        "id": "animal-15863",
+        "species": "warthog",
+        "hitsRemaining": 0,
+        "reason": "budget-exhausted"
+      },
+      {
+        "id": "animal-15873",
+        "species": "warthog",
+        "hitsRemaining": 0,
+        "reason": "budget-exhausted"
+      },
+      {
+        "id": "animal-15876",
+        "species": "warthog",
+        "hitsRemaining": 0,
+        "reason": "budget-exhausted"
+      },
+      {
+        "id": "animal-15878",
+        "species": "hyena",
+        "hitsRemaining": 0,
+        "reason": "budget-exhausted"
+      },
+      {
+        "id": "animal-15875",
+        "species": "warthog",
+        "hitsRemaining": 0,
+        "reason": "budget-exhausted"
+      },
+      {
+        "id": "animal-15869",
+        "species": "buffalo",
+        "hitsRemaining": 0,
+        "reason": "budget-exhausted"
+      },
+      {
+        "id": "animal-15874",
+        "species": "warthog",
+        "hitsRemaining": 1,
+        "reason": "no-reachable-unleased-target"
+      },
+      {
+        "id": "animal-15872",
+        "species": "warthog",
+        "hitsRemaining": 0,
+        "reason": "budget-exhausted"
+      },
+      {
+        "id": "animal-15880",
+        "species": "warthog",
+        "hitsRemaining": 2,
+        "reason": "no-reachable-unleased-target"
+      }
+    ],
+    "targetUnavailableAttempts": 13,
+    "endedAt": 12353.400000025778,
+    "woundedAfterAttack": 0,
+    "plantsReached": 18,
+    "potentialAgriculturalHp": 57,
+    "effectiveAgriculturalHp": 18,
+    "agriculturalEfficiency": 0.3157894736842105,
+    "destroyedFraction": 1
+  },
+  "daily": [
+    {
+      "day": 1,
+      "unwalledCash": 221,
+      "unwalledLive": 102,
+      "unwalledLoss": 0,
+      "defendedCash": 221,
+      "defendedLive": 102,
+      "defendedLoss": 0
+    },
+    {
+      "day": 2,
+      "unwalledCash": 193,
+      "unwalledLive": 119,
+      "unwalledLoss": 0,
+      "defendedCash": 193,
+      "defendedLive": 119,
+      "defendedLoss": 0
+    },
+    {
+      "day": 3,
+      "unwalledCash": 273,
+      "unwalledLive": 135,
+      "unwalledLoss": 0,
+      "defendedCash": 273,
+      "defendedLive": 135,
+      "defendedLoss": 0
+    },
+    {
+      "day": 4,
+      "unwalledCash": 356,
+      "unwalledLive": 158,
+      "unwalledLoss": 0,
+      "defendedCash": 356,
+      "defendedLive": 158,
+      "defendedLoss": 0
+    },
+    {
+      "day": 5,
+      "unwalledCash": 633,
+      "unwalledLive": 187,
+      "unwalledLoss": 0,
+      "defendedCash": 633,
+      "defendedLive": 187,
+      "defendedLoss": 0
+    },
+    {
+      "day": 6,
+      "unwalledCash": 748,
+      "unwalledLive": 183,
+      "unwalledLoss": 15,
+      "defendedCash": 511,
+      "defendedLive": 76,
+      "defendedLoss": 19
+    },
+    {
+      "day": 7,
+      "unwalledCash": 839,
+      "unwalledLive": 177,
+      "unwalledLoss": 42,
+      "defendedCash": 362,
+      "defendedLive": 41,
+      "defendedLoss": 0
+    },
+    {
+      "day": 8,
+      "unwalledCash": 709,
+      "unwalledLive": 186,
+      "unwalledLoss": 39,
+      "defendedCash": 213,
+      "defendedLive": 78,
+      "defendedLoss": 0
+    },
+    {
+      "day": 9,
+      "unwalledCash": 792,
+      "unwalledLive": 150,
+      "unwalledLoss": 66,
+      "defendedCash": 259,
+      "defendedLive": 64,
+      "defendedLoss": 0
+    },
+    {
+      "day": 10,
+      "unwalledCash": 570,
+      "unwalledLive": 140,
+      "unwalledLoss": 55,
+      "defendedCash": 236,
+      "defendedLive": 82,
+      "defendedLoss": 0
+    },
+    {
+      "day": 11,
+      "unwalledCash": 540,
+      "unwalledLive": 127,
+      "unwalledLoss": 83,
+      "defendedCash": 245,
+      "defendedLive": 97,
+      "defendedLoss": 0
+    },
+    {
+      "day": 12,
+      "unwalledCash": 544,
+      "unwalledLive": 95,
+      "unwalledLoss": 89,
+      "defendedCash": 265,
+      "defendedLive": 84,
+      "defendedLoss": 0
+    },
+    {
+      "day": 13,
+      "unwalledCash": 664,
+      "unwalledLive": 83,
+      "unwalledLoss": 82,
+      "defendedCash": 492,
+      "defendedLive": 77,
+      "defendedLoss": 7
+    },
+    {
+      "day": 14,
+      "unwalledCash": 553,
+      "unwalledLive": 75,
+      "unwalledLoss": 66,
+      "defendedCash": 210,
+      "defendedLive": 92,
+      "defendedLoss": 0
+    },
+    {
+      "day": 15,
+      "unwalledCash": 481,
+      "unwalledLive": 52,
+      "unwalledLoss": 51,
+      "defendedCash": 386,
+      "defendedLive": 79,
+      "defendedLoss": 0
+    },
+    {
+      "day": 16,
+      "unwalledCash": 308,
+      "unwalledLive": 72,
+      "unwalledLoss": 52,
+      "defendedCash": 356,
+      "defendedLive": 74,
+      "defendedLoss": 0
+    },
+    {
+      "day": 17,
+      "unwalledCash": 309,
+      "unwalledLive": 53,
+      "unwalledLoss": 61,
+      "defendedCash": 309,
+      "defendedLive": 83,
+      "defendedLoss": 0
+    },
+    {
+      "day": 18,
+      "unwalledCash": 295,
+      "unwalledLive": 22,
+      "unwalledLoss": 65,
+      "defendedCash": 302,
+      "defendedLive": 61,
+      "defendedLoss": 0
+    },
+    {
+      "day": 19,
+      "unwalledCash": 151,
+      "unwalledLive": 0,
+      "unwalledLoss": 46,
+      "defendedCash": 336,
+      "defendedLive": 62,
+      "defendedLoss": 0
+    },
+    {
+      "day": 20,
+      "unwalledCash": 31,
+      "unwalledLive": 0,
+      "unwalledLoss": 18,
+      "defendedCash": 324,
+      "defendedLive": 53,
+      "defendedLoss": 0
+    }
+  ],
+  "scope": "Native night-20 loss of last center followed by GameOver after raid termination, 31 coins below unchanged 800 reconstruction price. Not a timeout, injected defeat or bookkeeping recurrence. Unused strikes retained, not retroactively spent."
+}
