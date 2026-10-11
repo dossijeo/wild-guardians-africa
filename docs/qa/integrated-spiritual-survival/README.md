@@ -19,6 +19,9 @@ No new prices or invisible losses were introduced in the recent diagnostics.
 | v68, good/empalizada/contour, seed 712 | 21 survived; 59 plants, 365 coins; 1,553 paid repairs | Stock declines; no sustainable 100-night or postgame proof |
 | v75/v76, passive/good rolling empalizada | Passive defeats after night 12; good 14 ends with 20 plants | Neither ever closes its contour; reject long extension |
 | v79/v80, passive/good rolling zarzas | Passive loses centre during night 13; good 14 ends with 163 plants, 476 coins | Passive allocation failure unresolved; one active seed is insufficient |
+| v81, good rolling zarzas, seed 712 | 21 survived; 146 plants, 550 coins; 1,530 paid repairs | No 100-night survival or later wage/pressure sustainability proof |
+| v87, good rolling zarzas, seed 2026 | 14 survived; 196 plants, 597 coins; 854 paid repairs | Seed 123 extension and 21-night cross-seed coverage still pending |
+| v88, passive early zarzas, seed 712 | Native dawn defeat after night 11; 30 coins, no crops, centre alive | Early investment/renewal/replanting policy remains unsatisfactory |
 
 Good zarzas first records a complete contour on day nine, with 266 actual wall
 contacts and 561 paid repair coins by day fourteen. This is physical native
@@ -28,10 +31,28 @@ cases exactly reproduce their seven-night prefixes. See
 [the contact/repair review](native-defense-contact-cost-review.md) and
 [the retained parameter index](retained-experiment-index-v2.md).
 
-Running at this checkpoint: v81 extends good zarzas to 21 nights; v82 replays
-passive zarzas with scalar purchase telemetry. Their live receipts are not
-terminal acceptance. Require exact source/prefix or replay equality before
-using their results. Do not modify campaign-imported code while either runs.
+The 21-night v81 observation and scalar passive replay v82 are terminal and
+audited. v82 exactly reproduces v79's defeat and daily rows; it disproves a
+funded post-decision budget stall in that trace, without approving the policy's
+earlier allocation. See [v81](pilot-v81-zarzas-twentyone-review.md),
+[v82](pilot-v82-passive-purchase-timing-review.md) and
+[v87/v88](pilot-v87-v88-fourteen-review.md). The three active seeds survived
+seven nights with identical full frozen sources and player policy.
+
+Live observations at this update: v86 extends active seed 123 to fourteen
+nights; v89 extends active seed 2026 to twenty-one; v90 begins seven nights
+in Gran Canyon/Saheliana, seed 712. v89/v90 preserve all v87 source hashes.
+Their running receipts are not terminal acceptance. Require exact source/prefix
+equality and native audits before using results. Do not modify imported code
+while campaigns run.
+
+Passive defense from day one did not resolve viability: by day five v88 had
+paid 250 wall coins and retained 31 crops, versus v79's 149 crops before its
+day-six wall start. Its first-five-day income was 1,111 versus 2,209. These
+are observations under different defense choices, not a controlled magic
+effect or permission to force a win. Future recovery experiments must use
+real affordable contracts, replacement seeds and paid maintenance, preserving
+the current failed policies and their evidence.
 
 Remaining gates include coherent 7/14/21 pilots across seeds 712/123/2026 and
 both requested biome/culture pairs, all six real strategies, optional rather
