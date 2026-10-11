@@ -68,6 +68,16 @@ an 85–95% win rate. Held-out seeds and sites are predeclared in the manifest.
 Report raw wins/denominators and uncertainty; do not count incomplete runs as
 losses. Expand the sample before claiming statistical acceptance.
 
+The cohort summarizer now invokes the read-only terminal auditor for each
+candidate completed case. Snapshot, ledger, delivery, observer coverage and
+strike accounting failures become unresolved cases, excluded from both wins
+and defeats. Five focused tests pass, including validation of the preserved
+real v116 defeat and rejection of absent terminal evidence. That historical
+case verifies the auditor only; it is not added to the new cohort. Individual
+audits avoid confusing the original v118 launcher with the additional wrapper
+and manifest hashes recorded by subsequent baseline cases; all 451 shared
+runtime hashes are independently required to match at launch.
+
 ## Authorized calibration and stopping
 
 Change only animal crop/structure damage, attack radii and actual animal counts,

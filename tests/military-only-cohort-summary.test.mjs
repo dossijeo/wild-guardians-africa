@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {classifyMilitaryCase,summarizeMilitaryCases,wilsonInterval} from '../tools/summarize-military-only-cohort.mjs';
+import {classifyMilitaryCase,summarizeMilitaryCases,wilsonInterval,auditNativeMilitaryCase} from '../tools/summarize-military-only-cohort.mjs';
+import {fileURLToPath} from 'node:url';
 test('fragility, timeout and short completed horizons never count as defeats or wins',()=>{
  assert.equal(classifyMilitaryCase({status:'running'},{money:0,completedNights:12}),'running');
  assert.equal(classifyMilitaryCase({status:'incomplete-harness-error'},{result:null,completedNights:99}),'incomplete-review-required');
@@ -10,6 +11,14 @@ test('fragility, timeout and short completed horizons never count as defeats or 
  assert.equal(classifyMilitaryCase({status:'observed-horizon'},{completedNights:100}),'survived-100');
  assert.equal(classifyMilitaryCase({status:'observed-horizon'},{completedNights:100,result:'economic'}),'incomplete-review-required');
  assert.equal(classifyMilitaryCase({status:'observed-native-defeat'},{completedNights:100,result:'victory'}),'incomplete-review-required');
+});
+test('read-only audit validates preserved native defeat and rejects absent terminal evidence',()=>{
+ const directory=fileURLToPath(new URL('../docs/qa/integrated-spiritual-survival/campaign-v116-q15-good-sabana-123-hundred',import.meta.url));
+ const r=auditNativeMilitaryCase(directory);
+ assert.equal(r.status,'verified',r.message);assert.equal(r.facts.result,'defeat');
+ assert.equal(r.facts.completedNights,30);assert.equal(r.facts.money,32);
+ assert.equal(r.facts.ledgerAndDeliveryMatch,true);
+ assert.equal(auditNativeMilitaryCase(directory+'/missing-terminal-evidence').status,'failed');
 });
 test('mixed censored evidence is excluded from denominators, not treated as losing seeds',()=>{
  const r=summarizeMilitaryCases([{profile:'good',status:'survived-100'},{profile:'good',status:'native-defeat'},{profile:'good',status:'running'},{profile:'good',status:'incomplete-review-required'}]);

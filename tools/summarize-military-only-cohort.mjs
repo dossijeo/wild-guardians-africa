@@ -1,6 +1,7 @@
 import {existsSync,readFileSync,writeFileSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {execFileSync} from 'node:child_process';
 import {frozenPolicies} from './run-military-only-calibration.mjs';
 
 export function classifyMilitaryCase(receipt,report){
@@ -24,16 +25,31 @@ export function summarizeMilitaryCases(cases){
   return [profile,{planned:rows.length,wins,nativeDefeats:losses,completed:total,unresolved:rows.length-total,winRate:total?wins/total:null,wilson95: wilsonInterval(wins,total),target:frozenPolicies.targets[profile],accepted:false}];
  }));
 }
+export function auditNativeMilitaryCase(directory){
+ try{
+  const stdout=execFileSync(process.execPath,[fileURLToPath(new URL('./audit-native-terminal-campaigns.mjs',import.meta.url)),resolve(directory)],{encoding:'utf8',stdio:['ignore','pipe','pipe']});
+  const facts=JSON.parse(stdout).cases;
+  if(facts.length!==1)throw Error('Expected exactly one audited case');
+  return {status:'verified',facts:facts[0]};
+ }catch(error){
+  return {status:'failed',message:String(error.stderr??error.message).slice(0,2000)};
+ }
+}
 export function observeBaselineCohort(root){
  const read=path=>existsSync(path)?JSON.parse(readFileSync(path,'utf8').replace(/^\uFEFF/,'')):null;
  const cases=[];
  for(const site of frozenPolicies.initialSites)for(const profile of Object.keys(frozenPolicies.profiles))for(const seed of frozenPolicies.matchedSeeds){
   const directory=profile==='good'&&seed===123&&site.biome==='sabana'?frozenPolicies.baselineCampaign:`military-baseline-v1-${profile}-${site.biome}-${seed}`;
   const path=resolve(root,directory),receipt=read(resolve(path,'receipt.json')),report=read(resolve(path,'report.json')),progress=read(resolve(path,'progress.json'));
+  let status=classifyMilitaryCase(receipt,report),terminalAudit=null;
+  if(['native-defeat','survived-100'].includes(status)){
+   terminalAudit=auditNativeMilitaryCase(path);
+   if(terminalAudit.status!=='verified')status='incomplete-review-required';
+  }
   // Progress is a file observation, not independent confirmation of a live PID.
-  cases.push({profile,seed,...site,directory,status:classifyMilitaryCase(receipt,report),nativeResult:report?.result??null,completedNights:report?.completedNights??null,lastRecordedProgress:progress??null,finalMoney:report?.money??null});
+  cases.push({profile,seed,...site,directory,status,terminalAudit,nativeResult:report?.result??null,completedNights:report?.completedNights??null,lastRecordedProgress:progress??null,finalMoney:report?.money??null});
  }
- return {observedAt:new Date().toISOString(),policyFreeze:frozenPolicies.id,cases,profiles:summarizeMilitaryCases(cases),scope:'Only terminal native reports enter the win-rate denominator. Progress files do not prove a live process. Small screening cohorts cannot certify target population win rates; no configuration accepted automatically.'};
+ return {observedAt:new Date().toISOString(),policyFreeze:frozenPolicies.id,cases,profiles:summarizeMilitaryCases(cases),scope:'Only terminal native reports passing snapshot, ledger, physical-delivery and strike audits enter the win-rate denominator. Progress files do not prove a live process. Small screening cohorts cannot certify target population win rates; no configuration accepted automatically. Each case is audited separately; common frozen runtime hashes are independently enforced by the launch provenance.'};
 }
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
  const [root,out,...extra]=process.argv.slice(2);
