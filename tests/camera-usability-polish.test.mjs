@@ -44,3 +44,21 @@ test('building focus has a contextual visual distance with a gradual boundary an
  focusTerrainCamera(camera,controls,field,{x:50,z:0,distance:4});const ordinary=nativeCameraPose(field,[50,0,0],controls.getAzimuthalAngle(),controls.getPolarAngle(),4);assert.ok(camera.position.distanceTo(new THREE.Vector3(...ordinary.eye))<.2,'Crops/NPC location retains ordinary terrain-safe close zoom');
  WorldScene.prototype.setCameraExclusion.call(world,false);assert.equal(controls.maxDistance,65);
 });
+
+test('partial wall refresh retains unrelated pieces and removes explicit destroyed pieces',()=>{
+ const index=new CameraVolumeIndex(),registry=new CameraWallRegistry(index),objects=new Map(),entities=[];
+ for(let id=0;id<3;id++){const root=new THREE.Group(),mesh=new THREE.Mesh(new THREE.BoxGeometry(3,4,.4));root.userData.nativeWall=true;root.gateOpen=0;root.stageKey='still';root.position.x=id*10;root.add(mesh);root.parts=[{mesh}];objects.set(id,root);entities.push({id});}
+ registry.sync(objects,entities);objects.get(0).gateOpen=1;objects.get(0).parts[0].mesh.position.x=4;
+ registry.sync(objects,[entities[0]],{partial:true});assert.equal(index.records.size,3);assert(index.sweep([10,2,0],[10,2,0],.3));
+ registry.remove(0);registry.remove(2);assert.equal(index.records.size,1);assert(index.sweep([10,2,0],[10,2,0],.3));
+ for(const root of objects.values())root.parts[0].mesh.geometry.dispose();
+});
+test('queued gate updates and multiple destruction keep other native camera records intact',()=>{
+ const camera=new THREE.PerspectiveCamera(),controls={target:new THREE.Vector3(),maxDistance:65},field={surface:()=>0},objects=new Map(),structures=[];
+ for(let id=0;id<20;id++){const root=new THREE.Group(),mesh=new THREE.Mesh(new THREE.BoxGeometry(3,4,.4));root.userData.nativeWall=true;root.gateOpen=0;root.stageKey='still';root.position.set(id*6,0,20);root.add(mesh);root.parts=[{mesh}];objects.set(id,root);structures.push({id,kind:'wall'});}
+ const world={camera,controls,nav:{field},objects,chunks:new Map(),chunkRevision:1,state:{villages:[],structures}};
+ WorldScene.prototype.setCameraExclusion.call(world,true,{trees:true});focusTerrainCamera(camera,controls,field,{x:0,z:0,distance:25});assert.equal(world.cameraExclusion.registry.index.records.size,20);
+ objects.get(0).gateOpen=1;objects.get(0).parts[0].mesh.position.x=4;world.cameraDirtyEntities.set(0,structures[0]);world.cameraVolumesDirty=true;protectTerrainCamera(camera,controls,field);assert.equal(world.cameraExclusion.registry.index.records.size,20);assert.equal(world.cameraDirtyEntities.size,0);
+ for(const id of [2,3,4])world.cameraDirtyEntities.set(id,null);world.cameraVolumesDirty=true;protectTerrainCamera(camera,controls,field);assert.equal(world.cameraExclusion.registry.index.records.size,17);assert(world.cameraExclusion.walls.roots.has(10));
+ WorldScene.prototype.setCameraExclusion.call(world,false);for(const root of objects.values())root.parts[0].mesh.geometry.dispose();
+});

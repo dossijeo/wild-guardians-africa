@@ -226,7 +226,19 @@ export class WorldScene {
     const trees=options.trees?new CameraTreeRegistry(registry.index,options.trees===true?{}:options.trees):null;
     const walls=new CameraWallRegistry(registry.index,options.walls);
     this.cameraExclusion={registry,motion,trees,walls};let clearance=20,roofCache=null;
-    const refresh=()=>{if(!this.state||!this.cameraVolumesDirty)return;registry.sync(this.objects,[...this.state.villages,...this.state.structures.filter(e=>e.kind==='center')]);walls.sync(this.objects,this.state.structures.filter(e=>e.kind==='wall'));this.cameraVolumesDirty=false;};
+    this.cameraDirtyEntities=new Map();
+    const refresh=()=>{
+      if(!this.state||!this.cameraVolumesDirty)return;
+      if(this.cameraDirtyEntities.size){
+        for(const [id,entity] of this.cameraDirtyEntities){
+          if(!entity){registry.remove(id);walls.remove(id);}
+          else if(entity.kind==='wall')walls.sync(this.objects,[entity],{partial:true});
+          else registry.sync(this.objects,[entity],{partial:true});
+        }
+        this.cameraDirtyEntities.clear();
+      }else{registry.sync(this.objects,[...this.state.villages,...this.state.structures.filter(e=>e.kind==='center')]);walls.sync(this.objects,this.state.structures.filter(e=>e.kind==='wall'));}
+      this.cameraVolumesDirty=false;
+    };
     const resolve=(pose,previous,context)=>{
       const now=performance.now(),seconds=Math.max(0,(now-last)/1000);last=now;
       refresh();
@@ -511,7 +523,7 @@ export class WorldScene {
     this.raidEntryPreparer?.update(s);
     this.prepareUpcomingAnimalRigs(s);
     const desired=new Set();
-    for(const v of s.villages){desired.add(v.id);if(!this.objects.has(v.id)){const mesh=this.villageMesh(v);this.objects.set(v.id,mesh);this.scene.add(mesh);this.cameraVolumesDirty=true;}}
+    for(const v of s.villages){desired.add(v.id);if(!this.objects.has(v.id)){const mesh=this.villageMesh(v);this.objects.set(v.id,mesh);this.scene.add(mesh);this.cameraVolumesDirty=true;this.cameraDirtyEntities?.set(v.id,v);}}
     const visiblePlants=s.plants.filter(p=>p.alive&&Math.hypot(p.x-this.controls.target.x,p.z-this.controls.target.z)<140);
     if(visiblePlants.length>this.cropBatch.capacity)loadingSyncWitness(this.onLoadingSpan,'sync-crop-resize',()=>{this.cropBatch.dispose();this.cropBatch=createCropBatch(this.scene,this.renderer,this.cropGltf,this.cropBridgeData,2**Math.ceil(Math.log2(visiblePlants.length)));});
     if(this.onLoadingSpan)loadingSyncWitness(this.onLoadingSpan,'sync-crop-update',()=>this.cropBatch.update(visiblePlants,s.elapsed,(x,z)=>this.nav.field.surface(x,z),this.renderOrigin,this.nav.field));
@@ -526,7 +538,7 @@ export class WorldScene {
         else if('profile' in e||'hitsRemaining' in e) {mesh=new THREE.Group();}
         else if(e.kind==='shield')mesh=new THREE.Group();
         else mesh=new THREE.Group();
-      mesh.userData.entityId=e.id;this.objects.set(e.id,mesh);this.scene.add(mesh);if(e.kind==='center'||e.kind==='wall')this.cameraVolumesDirty=true;
+      mesh.userData.entityId=e.id;this.objects.set(e.id,mesh);this.scene.add(mesh);if(e.kind==='center'||e.kind==='wall'){this.cameraVolumesDirty=true;this.cameraDirtyEntities?.set(e.id,e);}
       }
       mesh.position.set(e.x,('profile' in e||'hitsRemaining' in e?this.nav.actorSurface(e.x,e.z):this.nav.field.surface(e.x,e.z))+.025,e.z);
       if(!('value' in e)&&('profile' in e||'hitsRemaining' in e)&&!this.mixers.has(e.id))this.requestActor(e,'profile' in e?'worker':'animal',mesh);
@@ -536,7 +548,7 @@ export class WorldScene {
       else if(e.kind==='center')mesh.update(e,s.elapsed);
       if(e.kind==='wall'||e.kind==='center'){
         const key=[mesh.stageKey,mesh.gateOpen,mesh.visual,mesh.damage,mesh.position.x,mesh.position.y,mesh.position.z,mesh.rotation.y].join('|');
-        if(mesh.userData.cameraVolumeKey!==key){mesh.userData.cameraVolumeKey=key;this.cameraVolumesDirty=true;}
+        if(mesh.userData.cameraVolumeKey!==key){mesh.userData.cameraVolumeKey=key;this.cameraVolumesDirty=true;this.cameraDirtyEntities?.set(e.id,e);}
       }
       if(e.species&&'growth' in e) {
         const growth=e.growth/cropSpec(e.species).growth_seconds,stage=growth>=1?4:Math.max(0,marks.findIndex(m=>growth<m)-1),key=`${cropIds.indexOf(e.species)}:${stage}`;
@@ -545,7 +557,7 @@ export class WorldScene {
       }
       if(!('value' in e)&&('profile' in e||'hitsRemaining' in e))this.updateActor(e,dt,'profile' in e?'worker':'animal');
     }
-    for(const [id,mesh] of this.objects)if(!desired.has(id)){this.scene.remove(mesh);if(mesh.userData.nativeWall||mesh.userData.nativeBuilding)mesh.dispose();releaseActorRig(this.mixers.get(id));this.objects.delete(id);this.mixers.delete(id);if(mesh.userData.nativeWall||mesh.userData.nativeBuilding||mesh.userData.units||this.cameraExclusion?.registry.roots.has(id))this.cameraVolumesDirty=true;}
+    for(const [id,mesh] of this.objects)if(!desired.has(id)){this.scene.remove(mesh);if(mesh.userData.nativeWall||mesh.userData.nativeBuilding)mesh.dispose();releaseActorRig(this.mixers.get(id));this.objects.delete(id);this.mixers.delete(id);if(mesh.userData.nativeWall||mesh.userData.nativeBuilding||mesh.userData.units||this.cameraExclusion?.registry.roots.has(id)){this.cameraVolumesDirty=true;this.cameraDirtyEntities?.set(id,null);}}
     const night=s.time>=300,tint=night?'#263747':this.pack.profile.bg;
     this.renderer.setClearColor(tint);this.scene.fog=null;this.destructionPass.night=skyNight(s);this.destructionPass.nightLight=1.12;this.sun.intensity=3-2.6*this.destructionPass.night;this.ambient.intensity=2-.9*this.destructionPass.night;
     updateShadowCamera(this.sun,this.controls.target);

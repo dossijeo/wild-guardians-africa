@@ -6,7 +6,7 @@ import {cameraModelVolume} from './camera-model-volume.js';
 export class CameraWallRegistry{
  constructor(index,{margin={horizontal:.25,vertical:.12}}={}){this.index=index;this.margin=margin;this.roots=new Map();}
  remove(id){for(const key of this.roots.get(id)?.ids??[])this.index.delete(key);this.roots.delete(id);}
- sync(objects,entities){
+ sync(objects,entities,{partial=false}={}){
   const alive=new Set();
   for(const entity of entities){
    const root=objects.get(entity.id);if(!root?.userData.nativeWall)continue;alive.add(entity.id);
@@ -21,7 +21,7 @@ export class CameraWallRegistry{
    }
    this.roots.set(entity.id,{signature,ids});
   }
-  for(const id of this.roots.keys())if(!alive.has(id))this.remove(id);
+  if(!partial)for(const id of this.roots.keys())if(!alive.has(id))this.remove(id);
  }
  clear(){for(const id of [...this.roots.keys()])this.remove(id);}
 }

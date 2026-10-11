@@ -10,7 +10,7 @@ export class CameraBuildingRegistry {
   this.index=new CameraVolumeIndex(indexOptions);this.roots=new Map();this.centerMargin=centerMargin;this.villageMargin=villageMargin;this.revisions=0;
  }
  remove(id){const record=this.roots.get(id);if(!record)return;for(const key of record.ids)this.index.delete(key);this.roots.delete(id);}
- sync(objects,entities){
+ sync(objects,entities,{partial=false}={}){
   const alive=new Set();let parents;
   for(const entity of entities){
    const root=objects.get(entity.id);if(!root)continue;alive.add(entity.id);if(root.parent)updateSharedParent(root.parent,parents??=new Set());root.updateWorldMatrix(false,false);
@@ -34,7 +34,7 @@ export class CameraBuildingRegistry {
    });
    this.roots.set(entity.id,{root,state,ash,matrix:matrix.slice(),ids});this.revisions++;
   }
-  for(const id of this.roots.keys())if(!alive.has(id))this.remove(id);
+  if(!partial)for(const id of this.roots.keys())if(!alive.has(id))this.remove(id);
  }
  clear(){this.index.clear();this.roots.clear();}
 }

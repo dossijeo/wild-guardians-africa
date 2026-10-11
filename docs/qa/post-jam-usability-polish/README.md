@@ -178,3 +178,14 @@ create and restore exited=true, exitCode=0 (127842 and 89849 ms respectively).
 These elapsed times include world startup and QA, not Exit latency. Restore
 reports restartRestored=true, no errors; nativeProcess is recorded only after
 the workflow observed actual process termination.
+
+
+The structural refresh path subsequently became a queued per-entity update:
+changing one gate updates only that gate; deletion explicitly retires its own
+records and retains untouched pieces. The global fallback remains for initial
+registration/reset. Twenty-three focused tests, including partial retention and
+multiple removals, pass. The final CPU benchmark includes a genuine alternating
+hinge and ten-piece removal/reappearance per frame. Earlier global dirty results
+and the first static-hinge diagnostic are retained, not used as acceptance for
+this optimized path. Packaged source e07 passed native Exit; the final PR CI must
+also build/check the later rendering-only invalidation changes before merge.
