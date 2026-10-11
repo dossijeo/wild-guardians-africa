@@ -246,12 +246,21 @@ export class Navigation {
     return null;
   }
   smoothPath(start,path,radius,ignore,worker){
+    const search=this.smoothPathSteps(start,path,radius,ignore,worker);let step;
+    do{step=search.next();}while(!step.done);return step.value;
+  }
+  *smoothPathSteps(start,path,radius,ignore,worker){
     const route=[];let anchor=start,index=0;
+    let checks=0;
     while(index<path.length){
       let next=index;
       // Bound shortcut checks. Routes are computed only on destination or
       // obstacle changes, never per rendered frame; collision tests are shared.
-      for(let j=Math.min(path.length-1,index+32);j>index;j--)if(this.segmentClear(anchor,path[j],radius,ignore,worker)){next=j;break;}
+      for(let j=Math.min(path.length-1,index+32);j>index;j--){
+        const clear=this.segmentClear(anchor,path[j],radius,ignore,worker);
+        if(++checks%4===0)yield null;
+        if(clear){next=j;break;}
+      }
       anchor=path[next];route.push(anchor);index=next+1;
     }
     return route;

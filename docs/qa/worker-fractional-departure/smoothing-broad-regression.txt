@@ -1,0 +1,363 @@
+TAP version 13
+# (node:32876) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Workers request a near crossing and wait without spending run distance or movement phases
+ok 1 - Workers request a near crossing and wait without spending run distance or movement phases
+  ---
+  duration_ms: 8.8071
+  ...
+# Subtest: All four native profiles wait in Idle and preserve the crate carrying pose
+ok 2 - All four native profiles wait in Idle and preserve the crate carrying pose
+  ---
+  duration_ms: 0.7783
+  ...
+# Subtest: Pauses, preparation and end states freeze leaf clocks; closing waits for body occupancy
+ok 3 - Pauses, preparation and end states freeze leaf clocks; closing waits for body occupancy
+  ---
+  duration_ms: 3.0767
+  ...
+# Subtest: Passing beside a closed gate does not request opening or stop a worker
+ok 4 - Passing beside a closed gate does not request opening or stop a worker
+  ---
+  duration_ms: 0.5336
+  ...
+# Subtest: Collapsing gates hold crossing until rubble; legacy occupants restore a safe open pose
+ok 5 - Collapsing gates hold crossing until rubble; legacy occupants restore a safe open pose
+  ---
+  duration_ms: 0.7149
+  ...
+# Subtest: Physical collision uses current leaf phase while route planning includes the opened leaf
+ok 6 - Physical collision uses current leaf phase while route planning includes the opened leaf
+  ---
+  duration_ms: 111.9596
+  ...
+# Subtest: Paid workers cross three original leaf materials without penetrating a closing or moving leaf
+ok 7 - Paid workers cross three original leaf materials without penetrating a closing or moving leaf
+  ---
+  duration_ms: 944.188
+  ...
+# Subtest: Opening and waiting persist exactly through save/reload and reject malformed phases
+ok 8 - Opening and waiting persist exactly through save/reload and reject malformed phases
+  ---
+  duration_ms: 11.6809
+  ...
+# Subtest: Encounter pushes cannot drive a worker through a closed gate or its moving sweep
+ok 9 - Encounter pushes cannot drive a worker through a closed gate or its moving sweep
+  ---
+  duration_ms: 40.3683
+  ...
+# Subtest: A large locomotion step approaches safely and cannot jump through a closed leaf
+ok 10 - A large locomotion step approaches safely and cannot jump through a closed leaf
+  ---
+  duration_ms: 2.9437
+  ...
+# Subtest: Fractional gate portals connect enclosed grid regions and retain exact swept collisions
+ok 11 - Fractional gate portals connect enclosed grid regions and retain exact swept collisions
+  ---
+  duration_ms: 321.9621
+  ...
+# Subtest: zarzas: a real harvested crate waits, crosses and charges only on delivery
+ok 12 - zarzas: a real harvested crate waits, crosses and charges only on delivery
+  ---
+  duration_ms: 463.5985
+  ...
+# Subtest: empalizada: a real harvested crate waits, crosses and charges only on delivery
+ok 13 - empalizada: a real harvested crate waits, crosses and charges only on delivery
+  ---
+  duration_ms: 433.7987
+  ...
+# Subtest: reforzado: a real harvested crate waits, crosses and charges only on delivery
+ok 14 - reforzado: a real harvested crate waits, crosses and charges only on delivery
+  ---
+  duration_ms: 283.5899
+  ...
+# Subtest: Conservative obstacle bounds preserve exact point/segment collision results for all cultures and rotations
+ok 15 - Conservative obstacle bounds preserve exact point/segment collision results for all cultures and rotations
+  ---
+  duration_ms: 761.9816
+  ...
+# Subtest: Bounds include tangencies and narrow crossings; setState replaces geometry bounds and previews fall back to exact polygons
+ok 16 - Bounds include tangencies and narrow crossings; setState replaces geometry bounds and previews fall back to exact polygons
+  ---
+  duration_ms: 2.3142
+  ...
+# Subtest: Repeated overlapping A* searches preserve waypoint order while reusing cell geometry
+ok 17 - Repeated overlapping A* searches preserve waypoint order while reusing cell geometry
+  ---
+  duration_ms: 548.2034
+  ...
+# Subtest: Geometry epochs, actor permissions and proposed buildings cannot contaminate neighbor results
+ok 18 - Geometry epochs, actor permissions and proposed buildings cannot contaminate neighbor results
+  ---
+  duration_ms: 5.1165
+  ...
+# Subtest: Transient neighbor graph stays bounded and route arrays cannot mutate its cached points
+ok 19 - Transient neighbor graph stays bounded and route arrays cannot mutate its cached points
+  ---
+  duration_ms: 121.3769
+  ...
+# Subtest: A direct segment cannot tunnel through a small prop between valid sampled endpoints
+ok 20 - A direct segment cannot tunnel through a small prop between valid sampled endpoints
+  ---
+  duration_ms: 59.2724
+  ...
+# Subtest: Directed edge caches retain collision semantics and invalidate when structures or shields change
+ok 21 - Directed edge caches retain collision semantics and invalidate when structures or shields change
+  ---
+  duration_ms: 2.1065
+  ...
+# Subtest: Failed routes are reused only for identical endpoints and clear when an obstacle changes
+ok 22 - Failed routes are reused only for identical endpoints and clear when an obstacle changes
+  ---
+  duration_ms: 1.5031
+  ...
+# Subtest: Exhaustively explored enclosed regions reject other unreachable targets without another flood search
+ok 23 - Exhaustively explored enclosed regions reject other unreachable targets without another flood search
+  ---
+  duration_ms: 12.6785
+  ...
+# Subtest: A search touching corridor bounds does not certify a globally closed region
+ok 24 - A search touching corridor bounds does not certify a globally closed region
+  ---
+  duration_ms: 199.557
+  ...
+# Subtest: Region reuse matches fresh searches across origins, endpoints, radii and actor permissions
+ok 25 - Region reuse matches fresh searches across origins, endpoints, radii and actor permissions
+  ---
+  duration_ms: 2238.0225
+  ...
+# Subtest: A diagonal grid edge with valid corners still detours around an intervening prop
+ok 26 - A diagonal grid edge with valid corners still detours around an intervening prop
+  ---
+  duration_ms: 3.421
+  ...
+# Subtest: Fractional positions connect to a valid grid point even when their rounded start cell is blocked
+ok 27 - Fractional positions connect to a valid grid point even when their rounded start cell is blocked
+  ---
+  duration_ms: 3.9492
+  ...
+# Subtest: Swept paths respect native polygon edges, rotated walls and worker-only gate passage
+ok 28 - Swept paths respect native polygon edges, rotated walls and worker-only gate passage
+  ---
+  duration_ms: 2.3947
+  ...
+# Subtest: Every repair waypoint remains outside rotated native wall footprints and wider gates
+ok 29 - Every repair waypoint remains outside rotated native wall footprints and wider gates
+  ---
+  duration_ms: 10.3784
+  ...
+# Subtest: Center repair paths go around the center footprint and reject a completely inaccessible destination
+ok 30 - Center repair paths go around the center footprint and reject a completely inaccessible destination
+  ---
+  duration_ms: 1.8846
+  ...
+# Subtest: Wider searches find physical detours beyond the local corridor without reusing its cached failure
+ok 31 - Wider searches find physical detours beyond the local corridor without reusing its cached failure
+  ---
+  duration_ms: 348.0622
+  ...
+# (node:28244) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: archived valid fractional origin obtains a wholly native swept route to the village
+ok 32 - archived valid fractional origin obtains a wholly native swept route to the village
+  ---
+  duration_ms: 2458.7127
+  ...
+# Subtest: native departure moves continuously and survives reload without income, clock or task changes
+ok 33 - native departure moves continuously and survives reload without income, clock or task changes
+  ---
+  duration_ms: 2448.8756
+  ...
+# Subtest: local connector never ignores a new enclosing solid, and failure is cached until topology changes
+ok 34 - local connector never ignores a new enclosing solid, and failure is cached until topology changes
+  ---
+  duration_ms: 2587.5363
+  ...
+# Subtest: ordinary active work receives no fractional departure exception
+ok 35 - ordinary active work receives no fractional departure exception
+  ---
+  duration_ms: 1204.7751
+  ...
+# Subtest: smaller native search quanta preserve the exact route and final explored region
+ok 36 - smaller native search quanta preserve the exact route and final explored region
+  ---
+  duration_ms: 3262.7022
+  ...
+# Subtest: topology changes invalidate an in-progress search before returning its old route
+ok 37 - topology changes invalidate an in-progress search before returning its old route
+  ---
+  duration_ms: 197.2458
+  ...
+# Subtest: removed actors cannot retain all eight active search slots
+ok 38 - removed actors cannot retain all eight active search slots
+  ---
+  duration_ms: 1715.1785
+  ...
+# Subtest: cooperative smoothing preserves the existing bounded shortcut recipe
+ok 39 - cooperative smoothing preserves the existing bounded shortcut recipe
+  ---
+  duration_ms: 1447.2156
+  ...
+# (node:38780) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: zarzas: existing worker at a module seam exits the new automatic gate
+ok 40 - zarzas: existing worker at a module seam exits the new automatic gate
+  ---
+  duration_ms: 249.1017
+  ...
+# Subtest: zarzas: existing worker inside exits the new automatic gate
+ok 41 - zarzas: existing worker inside exits the new automatic gate
+  ---
+  duration_ms: 113.0562
+  ...
+# Subtest: empalizada: existing worker at a module seam exits the new automatic gate
+ok 42 - empalizada: existing worker at a module seam exits the new automatic gate
+  ---
+  duration_ms: 124.6265
+  ...
+# Subtest: empalizada: existing worker inside exits the new automatic gate
+ok 43 - empalizada: existing worker inside exits the new automatic gate
+  ---
+  duration_ms: 60.4582
+  ...
+# Subtest: adobe: existing worker at a module seam exits the new automatic gate
+ok 44 - adobe: existing worker at a module seam exits the new automatic gate
+  ---
+  duration_ms: 37.9206
+  ...
+# Subtest: adobe: existing worker inside exits the new automatic gate
+ok 45 - adobe: existing worker inside exits the new automatic gate
+  ---
+  duration_ms: 43.1038
+  ...
+# Subtest: piedra: existing worker at a module seam exits the new automatic gate
+ok 46 - piedra: existing worker at a module seam exits the new automatic gate
+  ---
+  duration_ms: 39.2824
+  ...
+# Subtest: piedra: existing worker inside exits the new automatic gate
+ok 47 - piedra: existing worker inside exits the new automatic gate
+  ---
+  duration_ms: 61.2252
+  ...
+# Subtest: reforzado: existing worker at a module seam exits the new automatic gate
+ok 48 - reforzado: existing worker at a module seam exits the new automatic gate
+  ---
+  duration_ms: 86.526
+  ...
+# Subtest: reforzado: existing worker inside exits the new automatic gate
+ok 49 - reforzado: existing worker inside exits the new automatic gate
+  ---
+  duration_ms: 46.9773
+  ...
+# Subtest: a blocked return origin does not start a fresh broad search every tick
+ok 50 - a blocked return origin does not start a fresh broad search every tick
+  ---
+  duration_ms: 82.304
+  ...
+# Subtest: return search resumes bounded native slices rather than draining synchronously
+ok 51 - return search resumes bounded native slices rather than draining synchronously
+  ---
+  duration_ms: 35.6147
+  ...
+# Subtest: ordinary worker tasks never start a return search
+ok 52 - ordinary worker tasks never start a return search
+  ---
+  duration_ms: 0.7977
+  ...
+# Subtest: failed search memo follows exact origin, destination and navigation epoch
+ok 53 - failed search memo follows exact origin, destination and navigation epoch
+  ---
+  duration_ms: 0.7858
+  ...
+# Subtest: only eight pending searches retain native frontier memory per navigation
+ok 54 - only eight pending searches retain native frontier memory per navigation
+  ---
+  duration_ms: 1.1926
+  ...
+# Subtest: a never-ending iterator is abandoned and memoized at its explicit total bound
+ok 55 - a never-ending iterator is abandoned and memoized at its explicit total bound
+  ---
+  duration_ms: 22.5842
+  ...
+# Subtest: native worker avoidance view is used for the wider search
+ok 56 - native worker avoidance view is used for the wider search
+  ---
+  duration_ms: 0.5272
+  ...
+# Subtest: wider native return does not cross water
+ok 57 - wider native return does not cross water
+  ---
+  duration_ms: 1.4481
+  ...
+# Subtest: wider native return does not cross lava
+ok 58 - wider native return does not cross lava
+  ---
+  duration_ms: 0.5621
+  ...
+# Subtest: wider native return does not cross solid
+ok 59 - wider native return does not cross solid
+  ---
+  duration_ms: 0.8124
+  ...
+# Subtest: wider native return does not cross steep
+ok 60 - wider native return does not cross steep
+  ---
+  duration_ms: 4.8406
+  ...
+# Subtest: a real closed wall ring cannot be escaped by enlarging the search corridor
+ok 61 - a real closed wall ring cannot be escaped by enlarging the search corridor
+  ---
+  duration_ms: 17.8586
+  ...
+# Subtest: a new navigation epoch abandons the pending return proof
+ok 62 - a new navigation epoch abandons the pending return proof
+  ---
+  duration_ms: 0.7032
+  ...
+# Subtest: dry canyon cliffs retain their worker-surface slope restriction
+ok 63 - dry canyon cliffs retain their worker-surface slope restriction
+  ---
+  duration_ms: 0.7574
+  ...
+# (node:19624) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: refinement catches a narrow steep strip missed by the ordinary coarse samples
+ok 64 - refinement catches a narrow steep strip missed by the ordinary coarse samples
+  ---
+  duration_ms: 29.8697
+  ...
+# Subtest: a risky restored connector is rejected and replanned without teleporting the worker
+ok 65 - a risky restored connector is rejected and replanned without teleporting the worker
+  ---
+  duration_ms: 34.8341
+  ...
+# Subtest: dynamic blockers retain priority and never create a terrain avoidance point
+ok 66 - dynamic blockers retain priority and never create a terrain avoidance point
+  ---
+  duration_ms: 0.5867
+  ...
+# Subtest: shared terrain-risk metadata retains its peak and actual geometry changes invalidate it
+ok 67 - shared terrain-risk metadata retains its peak and actual geometry changes invalidate it
+  ---
+  duration_ms: 0.8504
+  ...
+# Subtest: private avoided-point views are isolated per worker, bounded and replaced on geometry changes
+ok 68 - private avoided-point views are isolated per worker, bounded and replaced on geometry changes
+  ---
+  duration_ms: 24.7517
+  ...
+# Subtest: optional learned terrain points round-trip and malformed or oversized save data is rejected
+ok 69 - optional learned terrain points round-trip and malformed or oversized save data is rejected
+  ---
+  duration_ms: 10.2689
+  ...
+1..69
+# tests 69
+# suites 0
+# pass 69
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 16691.2068

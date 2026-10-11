@@ -15,7 +15,7 @@ function* search(nav,actor,end,radius){
    // Reuse the native resumable A*: do not synchronously drain a large
    // ordinary search merely to connect this short fractional prefix.
    const tail=yield*nav.findPathSteps(grid,end,radius,null,true,16,{yieldEvery:4});
-   if(tail){const prefix=[];for(let node=head;node>0;node=queue[node].parent)prefix.push({x:queue[node].x,z:queue[node].z});prefix.reverse();return [...prefix,grid,...tail];}
+   if(tail){const prefix=[];for(let node=head;node>0;node=queue[node].parent)prefix.push({x:queue[node].x,z:queue[node].z});prefix.reverse();const route=[...prefix,grid,...tail];return nav.smoothPathSteps?yield*nav.smoothPathSteps(actor,route,radius,null,true):route;}
   }
   for(const [dx,dz] of offsets){
    const ix=point.ix+dx,iz=point.iz+dz,id=`${ix},${iz}`;

@@ -62,3 +62,13 @@ test('removed actors cannot retain all eight active search slots',()=>{
  }
  s.workers=[w];assert(connector(nav,w,end),'Removed pending actors must free bounded search slots');
 });
+test('cooperative smoothing preserves the existing bounded shortcut recipe',()=>{
+ const {s,w,end}=world(),grid={x:103,z:14},nav=navigation(s),search=nav.findPathSteps(grid,end,.28,null,true);let step;
+ do{step=search.next();}while(!step.done);
+ const reference=JSON.parse(readFileSync(new URL('./fixtures/worker-fractional-departure/smoothing-reference.json',import.meta.url)));
+ const raw=step.value,expected=reference.expected,cooperative=nav.smoothPathSteps(grid,raw,.28,null,true);let slices=0;
+ assert.deepEqual(raw,reference.raw);assert.deepEqual(nav.smoothPath(grid,raw,.28,null,true),expected);
+ do{step=cooperative.next();slices++;}while(!step.done);
+ assert.deepEqual(step.value,expected);assert(slices>1);assert(expected.length<raw.length);
+ let previous=grid;for(const p of expected){assert(nav.segmentClear(previous,p,.28,null,true));previous=p;}
+});
