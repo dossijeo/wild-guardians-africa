@@ -1,0 +1,11 @@
+# Native funded Canyon functional fixture: retained negative
+
+The standalone probe creates a real seed-712 Canyon/Saheliana procedural world through the existing opening helper. Its 1,500 initial coins pay the native 800-coin centre, eight mijo seedlings for 40 coins, and one older female worker for 30 coins. No cash, growth, crop positions, damage or outcome is granted or overwritten.
+
+The resulting balance is exactly 630 coins. Three bounded shoreline proposals, with padding 3/2/4 and fringe 0.2, quote native costs 340/310/360. All are affordable with the real 30-coin reserve, but every full prospective proof rejects `no-clear-interior-crop` before worker-service certification. No wall command is issued and no wall money is charged. The actual eight-plant/one-worker snapshot is retained and save/reload serialization matches exactly. This is a rejected funded geometry proposal, not an economic defeat, paid perimeter, actual attack or campaign result.
+
+The eight-crop fixture differs from the previously passing day-six 123-crop snapshot. The full proof currently bootstraps animal geometry from a crop-centre body position. A service-pose/bootstrap investigation may be needed; a body-invalid pivot alone must not be confused with a timed route failure or proof that an animal can never attack from another pose. Keep the positive complete-component and all-attack-service checks intact. Do not simply accept the missing pivot as natural protection or relax collision checks to obtain a paid wall.
+
+The first probe attempt used a smaller planting search rectangle and found only five native legal plots; it failed the eight-crop fixture precondition without writing a successful result. Its error is retained. The corrected search uses the existing opening test's larger rectangle and plants only eight genuinely valid positions. The eight-plant count is a functional fixture, not a production planting cap or balance policy. All original campaign inputs and sources remain unchanged.
+
+Remaining gates are a valid affordable real-terrain trace, native paid construction, observable worker/gate movement, animal interception, destruction and actually paid maintenance. This negative experiment approves none of those gates.
