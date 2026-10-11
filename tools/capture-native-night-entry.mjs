@@ -13,22 +13,24 @@ export function nightEntryReady(s,night){
 export function nightEntryUnhit(s,night){
  return nightEntryReady(s,night)&&s.raid.animals.length>0&&s.raid.animals.every(a=>a.attackId==null&&a.hitApplied!==true);
 }
+export function nightFramePending(s,night,dt){
+ return s.day===night&&!s.raid&&s.nightPlan?.night===night&&
+  Number.isFinite(s.nightPlan.at)&&Number.isFinite(dt)&&dt>0&&
+  s.time>=300&&s.time<600&&s.time+dt>=s.nightPlan.at;
+}
 export async function captureNativeNightEntry(night,options){
  assert.ok(Number.isSafeInteger(night)&&night>0&&night<=options.days);
  let captured=false;
  const result=await runNativeCampaignCase(options,{
   provenance:o=>({...nativeCampaignProvenance(o),captureObserver:{night,
    sourceSha256:createHash('sha256').update(readFileSync(fileURLToPath(import.meta.url))).digest('hex'),
-   scope:'Observer stops cooperatively at native night entry; not a campaign completion.'}}),
-  run:o=>simulateNativeCampaign({...o,onTick:(s,nav)=>{
-   o.onTick?.(s,nav);
-   if(!nightEntryReady(s,night))return;
-   // Reject a late capture rather than silently presenting it as pre-impact.
-   assert.ok(nightEntryUnhit(s,night),'Capture missed the first native attack');
-   captured=true;throw calibrationStop(`Captured native night ${night} entry before the first impact`);
+   scope:'Observer stops before the unchanged native update spanning scheduled night spawn. Actors are not spawned yet; not campaign completion.'}}),
+  run:o=>simulateNativeCampaign({...o,onBeforeTick:(s,nav,dt)=>{
+   if(!nightFramePending(s,night,dt))return;
+   captured=true;throw calibrationStop(`Captured native frame before night ${night} spawn and impacts`);
   }})
  });
- assert.ok(captured,'Requested night entry was never captured');
+ assert.ok(captured,`Requested pre-spawn frame was not captured: ${result.receipt.message??result.receipt.status}`);
  assert.equal(result.receipt.status,'stopped-early-calibration');
  return result;
 }
