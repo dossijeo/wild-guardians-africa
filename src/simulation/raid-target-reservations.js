@@ -23,7 +23,14 @@ export function reconcileTargetReservations(state,release){
  for(const a of raid.animals){
   if(!active(a)||!a.targetId)continue;
   const target=byId.get(a.targetId);
-  if(!target||('alive' in target?!target.alive:target.status!=='intact'||target.hp<=0)){release(state,a);continue;}
+  if(!target||('alive' in target?!target.alive:target.status!=='intact'||target.hp<=0)){
+   // Drop ownership immediately, but a started clip must finish against its
+   // original target. The native resolver then records one miss and spends
+   // its strike without retargeting or losing the presentation identifier.
+   if(a.status==='attacking'){a.reservation=null;a.path=null;}
+   else release(state,a);
+   continue;
+  }
   const key=targetReservationKey(target,a);
   if(claimed.has(key)||a.approach&&approaches.some(other=>Math.hypot(a.approach.x-other.approach.x,a.approach.z-other.approach.z)<(a.radius??.28)+(other.radius??.28)+.1)){
    release(state,a);a.status='walking';a.attackRemaining=0;a.attackId=null;a.hitApplied=false;continue;

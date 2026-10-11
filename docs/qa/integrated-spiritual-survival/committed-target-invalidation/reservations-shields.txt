@@ -1,0 +1,104 @@
+TAP version 13
+# (node:49932) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: 100 connected mijo plants allow independent attacks from 1 animals
+ok 1 - 100 connected mijo plants allow independent attacks from 1 animals
+  ---
+  duration_ms: 131.5389
+  ...
+# Subtest: 100 connected mijo plants allow independent attacks from 2 animals
+ok 2 - 100 connected mijo plants allow independent attacks from 2 animals
+  ---
+  duration_ms: 36.0494
+  ...
+# Subtest: 100 connected mijo plants allow independent attacks from 5 animals
+ok 3 - 100 connected mijo plants allow independent attacks from 5 animals
+  ---
+  duration_ms: 198.3121
+  ...
+# Subtest: 100 connected mijo plants allow independent attacks from 12 animals
+ok 4 - 100 connected mijo plants allow independent attacks from 12 animals
+  ---
+  duration_ms: 912.0717
+  ...
+# Subtest: centers permit physically independent simultaneous approach claims
+ok 5 - centers permit physically independent simultaneous approach claims
+  ---
+  duration_ms: 105.578
+  ...
+# Subtest: individual claims and native RNG replay exactly after a save/reload
+ok 6 - individual claims and native RNG replay exactly after a save/reload
+  ---
+  duration_ms: 2043.4278
+  ...
+# Subtest: destroying one reserved crop frees only that target and preserves other leases
+ok 7 - destroying one reserved crop frees only that target and preserves other leases
+  ---
+  duration_ms: 98.5929
+  ...
+# Subtest: actual saturation stages valid waiters and retires after no-progress bound without spending hits
+ok 8 - actual saturation stages valid waiters and retires after no-progress bound without spending hits
+  ---
+  duration_ms: 19.7796
+  ...
+# Subtest: legacy group saves migrate to individual claims without extra RNG draws
+ok 9 - legacy group saves migrate to individual claims without extra RNG draws
+  ---
+  duration_ms: 9.3655
+  ...
+# Subtest: group accessibility uses a complete native component certificate and invalidates when walls open
+ok 10 - group accessibility uses a complete native component certificate and invalidates when walls open
+  ---
+  duration_ms: 84.3256
+  ...
+# Subtest: a protected connected perimeter allows simultaneous attacks on separate pieces
+ok 11 - a protected connected perimeter allows simultaneous attacks on separate pieces
+  ---
+  duration_ms: 159.5377
+  ...
+# (node:32868) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: warthog: a committed border attack cannot damage its distant crop when the Shield expires
+ok 12 - warthog: a committed border attack cannot damage its distant crop when the Shield expires
+  ---
+  duration_ms: 323.2641
+  ...
+# Subtest: hyena: a committed border attack cannot damage its distant crop when the Shield expires
+ok 13 - hyena: a committed border attack cannot damage its distant crop when the Shield expires
+  ---
+  duration_ms: 116.4051
+  ...
+# Subtest: buffalo: a committed border attack cannot damage its distant crop when the Shield expires
+ok 14 - buffalo: a committed border attack cannot damage its distant crop when the Shield expires
+  ---
+  duration_ms: 99.7295
+  ...
+# Subtest: lion: a committed border attack cannot damage its distant crop when the Shield expires
+ok 15 - lion: a committed border attack cannot damage its distant crop when the Shield expires
+  ---
+  duration_ms: 90.9429
+  ...
+# Subtest: rhino: a committed border attack cannot damage its distant crop when the Shield expires
+ok 16 - rhino: a committed border attack cannot damage its distant crop when the Shield expires
+  ---
+  duration_ms: 83.0901
+  ...
+# Subtest: All native species: Shield placement checks the whole body against real Navigation, without moving or teleporting it
+ok 17 - All native species: Shield placement checks the whole body against real Navigation, without moving or teleporting it
+  ---
+  duration_ms: 21.4093
+  ...
+# Subtest: Each species blocks a real hit on the active dome, then physically resumes its crop attack after expiry
+ok 18 - Each species blocks a real hit on the active dome, then physically resumes its crop attack after expiry
+  ---
+  duration_ms: 126.8643
+  ...
+1..18
+# tests 18
+# suites 0
+# pass 18
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4430.4055

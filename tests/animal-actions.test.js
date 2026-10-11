@@ -38,8 +38,23 @@ test('An invalidated target cannot be replaced underneath a committed attack or 
   const {s,animal,center,duration}=fixture('warthog','Weapon_Combo_2');
   center.status='ruined';center.hp=0;s.structures.push({...center,id:'replacement',status:'intact',hp:600,x:8});
   updateRaid(s,duration/2,nav);assert.equal(animal.targetId,center.id);assert.equal(s.structures[1].hp,600);
+  assert.equal(animal.reservation,null);assert.deepEqual(s.raid.reservations,{});
+  const loaded=deserialize(serialize(s));
+  updateRaid(loaded,duration/2,nav);
   updateRaid(s,duration/2,nav);assert.equal(animal.hitsRemaining,0);assert.equal(s.structures[1].hp,600);
   assert.equal(s.events.filter(e=>e.type==='AnimalLogicalHit').length,0);assert.equal(s.events.filter(e=>e.type==='AnimalLogicalMiss').length,1);
+  const miss=s.events.find(e=>e.type==='AnimalLogicalMiss');assert.equal(miss.targetId,center.id);assert.equal(miss.attackId,'attack-test');
+  assert.deepEqual(loaded.events,s.events);assert.equal(loaded.raid.animals[0].hitsRemaining,0);
+  updateRaid(s,.01,nav);assert.equal(animal.status,'retreating');assert.equal(s.events.filter(e=>e.type==='AnimalLogicalMiss').length,1);
+});
+test('Removing a committed target keeps its identity until exactly one native miss, including reload',()=>{
+  const {s,animal,center,duration}=fixture('hyena','Weapon_Combo');s.structures=[];
+  updateRaid(s,duration/2,nav);assert.equal(animal.targetId,center.id);assert.equal(animal.status,'attacking');
+  assert.equal(animal.hitsRemaining,1);assert.deepEqual(s.raid.reservations,{});
+  const loaded=deserialize(serialize(s));updateRaid(loaded,duration/2,nav);updateRaid(s,duration/2,nav);
+  assert.deepEqual(loaded.events,s.events);assert.equal(animal.hitsRemaining,0);assert.equal(animal.targetId,null);
+  const misses=s.events.filter(e=>e.type==='AnimalLogicalMiss');assert.equal(misses.length,1);assert.equal(misses[0].targetId,center.id);
+  assert.equal(s.events.filter(e=>e.type==='AnimalLogicalHit').length,0);
 });
 test('Exhausting a budget during an attack finishes its presentation without granting another hit',()=>{
   const {s,animal,center,duration}=fixture('lion','Weapon_Combo');animal.hitsRemaining=0;
