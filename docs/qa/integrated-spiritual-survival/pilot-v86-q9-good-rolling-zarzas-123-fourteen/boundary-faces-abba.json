@@ -1,0 +1,85 @@
+{
+  "status": "verified-graph-equivalence",
+  "directory": "docs/qa/integrated-spiritual-survival/pilot-v86-q9-good-rolling-zarzas-123-fourteen",
+  "snapshotSha256": "bad19c6b4c616f966460338966d24d1a019c4c4f6853e627b3037952674ad608",
+  "toolSha256": "78a506a608222595ac6bba08ae248b18545feabe143a10fb1776234e67ed4f6f",
+  "sourceDifferences": [
+    {
+      "path": "src/world/boundary-faces.js",
+      "expected": "d55f44fc65151a46085096ebb588f79ec6020f508d075f820a161bc3cf18d53f",
+      "actual": "ad7d52a0740e4735ce33538f550dfa9a682cacef04637add33ea944785d9c285"
+    }
+  ],
+  "pieces": 262,
+  "physicalWalls": 81,
+  "virtualEdges": 181,
+  "faces": 10,
+  "inputSha256": "697b6c13efc8b31c5fa001e965971ef0f70429a8a9720169a9b766880487d4a4",
+  "samples": [
+    {
+      "order": "AB",
+      "baseline": 12.32549999999992,
+      "candidate": 2.022100000000023
+    },
+    {
+      "order": "BA",
+      "candidate": 3.746499999999969,
+      "baseline": 8.482900000000086
+    },
+    {
+      "order": "AB",
+      "baseline": 10.245699999999943,
+      "candidate": 2.506599999999935
+    },
+    {
+      "order": "BA",
+      "candidate": 1.9100000000000819,
+      "baseline": 10.698499999999967
+    },
+    {
+      "order": "AB",
+      "baseline": 12.130800000000136,
+      "candidate": 1.4968000000001211
+    },
+    {
+      "order": "BA",
+      "candidate": 1.2002999999999702,
+      "baseline": 86.93579999999997
+    },
+    {
+      "order": "AB",
+      "baseline": 78.22739999999999,
+      "candidate": 1.8575999999998203
+    },
+    {
+      "order": "BA",
+      "candidate": 1.3428000000001248,
+      "baseline": 79.79939999999988
+    },
+    {
+      "order": "AB",
+      "baseline": 7.944600000000037,
+      "candidate": 1.8804000000000087
+    },
+    {
+      "order": "BA",
+      "candidate": 2.36629999999991,
+      "baseline": 10.373299999999972
+    },
+    {
+      "order": "AB",
+      "baseline": 10.319600000000037,
+      "candidate": 1.9188000000001466
+    },
+    {
+      "order": "BA",
+      "candidate": 1.7540000000001328,
+      "baseline": 9.807399999999916
+    }
+  ],
+  "medianMilliseconds": {
+    "baseline": 10.53589999999997,
+    "candidate": 1.8952000000000453
+  },
+  "scope": "Exact face outputs/order on fixed augmented geometry derived from a native quote; twelve warmed AB/BA CPU pairs. Does not measure complete quotes, simulation throughput, rendering/GPU or total campaign improvement. No campaign state changed."
+}

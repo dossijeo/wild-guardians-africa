@@ -1,0 +1,69 @@
+{
+  "directory": "docs/qa/integrated-spiritual-survival/pilot-v90-q9-good-rolling-zarzas-canyon-712-seven",
+  "status": "observed-cpu-diagnostic",
+  "snapshotSha256": "bf193cf625f19b9fe86731e30ebb445ebb2d7ce3f4489d52d7dbf7a455f39ab1",
+  "toolSha256": "3de86c124f5fd55cf50542eb41e232f0e99c6f8f791219d900c70884136c49bc",
+  "fullFrozenSourcesMatch": true,
+  "start": {
+    "day": 6,
+    "time": 150.99999999999525
+  },
+  "profiling": true,
+  "profilePaths": [
+    "docs/qa/integrated-spiritual-survival/pilot-v90-q9-good-rolling-zarzas-canyon-712-seven/daylight-profile-probe.json.tick.cpuprofile",
+    "docs/qa/integrated-spiritual-survival/pilot-v90-q9-good-rolling-zarzas-canyon-712-seven/daylight-profile-probe.json.quote.cpuprofile"
+  ],
+  "tick": {
+    "count": 20,
+    "milliseconds": 94.64220000000017,
+    "samples": [
+      30.939900000000023,
+      1.134299999999996,
+      1.2197999999999638,
+      3.5113000000000056,
+      1.8985999999999876,
+      0.7238000000000397,
+      0.5488000000000284,
+      0.4416999999999689,
+      0.39859999999998763,
+      2.790900000000022,
+      0.49610000000001264,
+      0.4907000000000039,
+      43.73670000000004,
+      3.109800000000007,
+      0.5636000000000081,
+      0.5212000000000216,
+      0.5614000000000487,
+      0.44760000000002265,
+      0.6567000000000007,
+      0.45069999999998345
+    ],
+    "calls": {
+      "path": 2,
+      "segmentClear": 828,
+      "walkable": 1552,
+      "placement": 0
+    },
+    "elapsedAdvanced": 3.999999999996362
+  },
+  "quote": {
+    "count": 5,
+    "milliseconds": 531.4364,
+    "samples": [
+      161.23590000000002,
+      107.66790000000003,
+      103.59299999999996,
+      132.1024,
+      26.837200000000053
+    ],
+    "calls": {
+      "path": 5,
+      "segmentClear": 25,
+      "walkable": 851,
+      "placement": 0
+    },
+    "pieces": 60,
+    "updates": 5
+  },
+  "scope": "Bounded native 0.2-second ticks and repeated native quotes on separate restored copies, initially cold navigation. Optional CPU profiles add overhead. No campaign result or frame/GPU/performance acceptance; JIT/caches differ from a running world. Original snapshot and quote state unchanged."
+}

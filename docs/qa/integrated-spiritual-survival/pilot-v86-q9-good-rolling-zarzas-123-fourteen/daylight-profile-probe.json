@@ -1,0 +1,69 @@
+{
+  "directory": "docs/qa/integrated-spiritual-survival/pilot-v86-q9-good-rolling-zarzas-123-fourteen",
+  "status": "observed-cpu-diagnostic",
+  "snapshotSha256": "bad19c6b4c616f966460338966d24d1a019c4c4f6853e627b3037952674ad608",
+  "toolSha256": "3de86c124f5fd55cf50542eb41e232f0e99c6f8f791219d900c70884136c49bc",
+  "fullFrozenSourcesMatch": true,
+  "start": {
+    "day": 8,
+    "time": 200.99999999999213
+  },
+  "profiling": true,
+  "profilePaths": [
+    "docs/qa/integrated-spiritual-survival/pilot-v86-q9-good-rolling-zarzas-123-fourteen/daylight-profile-probe.json.tick.cpuprofile",
+    "docs/qa/integrated-spiritual-survival/pilot-v86-q9-good-rolling-zarzas-123-fourteen/daylight-profile-probe.json.quote.cpuprofile"
+  ],
+  "tick": {
+    "count": 20,
+    "milliseconds": 215.1947,
+    "samples": [
+      71.04579999999999,
+      5.128600000000006,
+      7.589500000000044,
+      1.5877000000000407,
+      1.2478999999999587,
+      1.2980999999999767,
+      1.6037999999999784,
+      2.8964999999999463,
+      2.073099999999954,
+      3.7888000000000375,
+      3.529899999999998,
+      1.5154999999999745,
+      1.7305000000000064,
+      1.8359000000000378,
+      1.984199999999987,
+      1.3307000000000926,
+      5.046199999999999,
+      37.20659999999998,
+      60.237300000000005,
+      2.518100000000004
+    ],
+    "calls": {
+      "path": 13,
+      "segmentClear": 512,
+      "walkable": 1193,
+      "placement": 0
+    },
+    "elapsedAdvanced": 4.000000000014552
+  },
+  "quote": {
+    "count": 5,
+    "milliseconds": 599.5701000000004,
+    "samples": [
+      155.45069999999998,
+      110.33050000000014,
+      125.71270000000004,
+      111.94870000000014,
+      96.12750000000005
+    ],
+    "calls": {
+      "path": 0,
+      "segmentClear": 5,
+      "walkable": 230,
+      "placement": 0
+    },
+    "pieces": 28,
+    "updates": 1
+  },
+  "scope": "Bounded native 0.2-second ticks and repeated native quotes on separate restored copies, initially cold navigation. Optional CPU profiles add overhead. No campaign result or frame/GPU/performance acceptance; JIT/caches differ from a running world. Original snapshot and quote state unchanged."
+}

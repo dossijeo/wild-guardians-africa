@@ -4,26 +4,19 @@ function endpoints(p){const h=2.18*p.scaleX/2,dx=Math.cos(p.angle)*h,dz=Math.sin
 function pointSegment(p,a,b){const dx=b[0]-a[0],dz=b[1]-a[1],l=dx*dx+dz*dz;if(!l)return dist(p,a);let t=clamp(((p[0]-a[0])*dx+(p[1]-a[1])*dz)/l,0,1);return dist(p,[a[0]+t*dx,a[1]+t*dz]);}
 export function boundaryFaces(pieces){
   const EPS=.10,cross=(a,b)=>a[0]*b[1]-a[1]*b[0];
-  const segs=pieces.filter(p=>p.hp>0&&!p.collapse).map(p=>{const [a,b]=endpoints(p);const dx=b[0]-a[0],dz=b[1]-a[1],margin=EPS+1e-6*Math.max(Math.abs(dx),Math.abs(dz));return{p,a,b,d:[dx,dz],cuts:[0,1],box:[Math.min(a[0],b[0])-margin,Math.min(a[1],b[1])-margin,Math.max(a[0],b[0])+margin,Math.max(a[1],b[1])+margin]};});
+  const segs=pieces.filter(p=>p.hp>0&&!p.collapse).map(p=>{const [a,b]=endpoints(p);return{p,a,b,d:[b[0]-a[0],b[1]-a[1]],cuts:[0,1]};});
   // Split the logical graph at crossings and T junctions. Rendering remains
   // modular; an intersection cannot silently create or delete a visual piece.
   for(let i=0;i<segs.length;i++)for(let j=i+1;j<segs.length;j++){
-   const a=segs[i],b=segs[j];if(a.box[2]<b.box[0]||b.box[2]<a.box[0]||a.box[3]<b.box[1]||b.box[3]<a.box[1])continue;const den=cross(a.d,b.d),v=[b.a[0]-a.a[0],b.a[1]-a.a[1]];
+   const a=segs[i],b=segs[j],den=cross(a.d,b.d),v=[b.a[0]-a.a[0],b.a[1]-a.a[1]];
    if(Math.abs(den)>1e-8){const t=cross(v,b.d)/den,u=cross(v,a.d)/den;if(t>=-1e-6&&t<=1+1e-6&&u>=-1e-6&&u<=1+1e-6){a.cuts.push(clamp(t,0,1));b.cuts.push(clamp(u,0,1));}}
    for(const [s,o]of [[a,b],[b,a]])for(const q of [o.a,o.b]){
     const l=s.d[0]*s.d[0]+s.d[1]*s.d[1];if(l<1e-8)continue;const t=((q[0]-s.a[0])*s.d[0]+(q[1]-s.a[1])*s.d[1])/l;
     if(t>0&&t<1&&pointSegment(q,s.a,s.b)<EPS)s.cuts.push(t);
    }
   }
-  const nodes=[],edges=[],edgeKeys=new Set(),nodeCells=new Map(),cellSize=EPS*2;
-  // Preserve the earliest matching node, rather than choosing a closest one.
-  const node=(q)=>{
-   const cx=Math.floor(q[0]/cellSize),cz=Math.floor(q[1]/cellSize),indexed=Number.isSafeInteger(cx)&&Number.isSafeInteger(cz);let id=-1;
-   if(indexed){for(let x=cx-1;x<=cx+1;x++)for(let z=cz-1;z<=cz+1;z++)for(const candidate of nodeCells.get(x+':'+z)??[]){if((id<0||candidate<id)&&dist(nodes[candidate].q,q)<EPS)id=candidate;}}
-   else id=nodes.findIndex(n=>dist(n.q,q)<EPS);
-   if(id<0){id=nodes.length;nodes.push({q,out:[]});if(indexed){const key=cx+':'+cz;if(!nodeCells.has(key))nodeCells.set(key,[]);nodeCells.get(key).push(id);}}
-   return id;
-  };
+  const nodes=[],edges=[],edgeKeys=new Set();
+  const node=(q)=>{let id=nodes.findIndex(n=>dist(n.q,q)<EPS);if(id<0){id=nodes.length;nodes.push({q,out:[]});}return id;};
   for(const s of segs){
    const ts=s.cuts.sort((a,b)=>a-b).filter((t,i,a)=>i===0||Math.abs(t-a[i-1])>1e-5);
    for(let i=1;i<ts.length;i++){
