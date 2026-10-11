@@ -1,0 +1,415 @@
+TAP version 13
+# Subtest: QA-011: accelerated night splits at raid arrival before moving the animal at normal speed
+ok 1 - QA-011: accelerated night splits at raid arrival before moving the animal at normal speed
+  ---
+  duration_ms: 32.4729
+  ...
+# Subtest: QA-011: one real frame straddling raid arrival matches two frames split at its boundary
+not ok 2 - QA-011: one real frame straddling raid arrival matches two frames split at its boundary
+  ---
+  duration_ms: 8.9673
+  location: 'file:///C:/Users/PC/.codex/worktrees/game-juice-polish/wild-guardians-africa/tests/acceptance-clock.test.js:25:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected ... Lines skipped
+    
+      [
+        {
+    ...
+            day: 1,
+            daytime: false,
+    +       elapsed: 0.05000000000001137,
+    -       elapsed: 0.05,
+            exposedLiving: 0,
+    ...
+          type: 'RaidSpawned'
+        }
+      ]
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0:
+      id: 'event-2'
+      type: 'PlacementCommitted'
+      kind: 'center'
+      targetId: 'structure-2'
+      presentation:
+        x: 4
+        z: 0
+    1:
+      id: 'event-4'
+      type: 'RaidSpawned'
+      raidFacts:
+        id: 'raid-1-night'
+        day: 1
+        daytime: false
+        elapsed: 0.05
+        exposedLiving: 0
+        exposedWounded: 0
+        actors:
+          0:
+            id: 'animal-3'
+            species: 'warthog'
+            hitsRemaining: 2
+            spawn:
+              x: -115.65
+              z: 0
+            exit:
+              x: -118.65
+              z: 0
+  actual:
+    0:
+      id: 'event-2'
+      type: 'PlacementCommitted'
+      kind: 'center'
+      targetId: 'structure-2'
+      presentation:
+        x: 4
+        z: 0
+    1:
+      id: 'event-4'
+      type: 'RaidSpawned'
+      raidFacts:
+        id: 'raid-1-night'
+        day: 1
+        daytime: false
+        elapsed: 0.05000000000001137
+        exposedLiving: 0
+        exposedWounded: 0
+        actors:
+          0:
+            id: 'animal-3'
+            species: 'warthog'
+            hitsRemaining: 2
+            spawn:
+              x: -115.65
+              z: 0
+            exit:
+              x: -118.65
+              z: 0
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/game-juice-polish/wild-guardians-africa/tests/acceptance-clock.test.js:31:10)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async startSubtest (node:internal/test_runner/harness:216:3)
+  ...
+# Subtest: QA-009/010/015: 300 real daytime seconds and 60 calm-night seconds reach one blocked dawn
+ok 3 - QA-009/010/015: 300 real daytime seconds and 60 calm-night seconds reach one blocked dawn
+  ---
+  duration_ms: 286.224
+  ...
+# Subtest: QA-009/010: fractional daylight-to-night frame uses each side of the boundary at its own speed
+ok 4 - QA-009/010: fractional daylight-to-night frame uses each side of the boundary at its own speed
+  ---
+  duration_ms: 0.7308
+  ...
+# Subtest: QA-010: a full calm night preserves growth and remaining water tolerance
+ok 5 - QA-010: a full calm night preserves growth and remaining water tolerance
+  ---
+  duration_ms: 32.2853
+  ...
+# Subtest: QA-012/013: only the last animal leaving restores accelerated night and emits one end
+ok 6 - QA-012/013: only the last animal leaving restores accelerated night and emits one end
+  ---
+  duration_ms: 4.1211
+  ...
+# Subtest: QA-007/014: blocked real-time advances preserve every field until all pause causes clear
+ok 7 - QA-007/014: blocked real-time advances preserve every field until all pause causes clear
+  ---
+  duration_ms: 1.0843
+  ...
+# Subtest: lifecycle brackets watering and work changes, distinguishes pickup from settled delivery and retains terminal evidence across reloads
+ok 8 - lifecycle brackets watering and work changes, distinguishes pickup from settled delivery and retains terminal evidence across reloads
+  ---
+  duration_ms: 9.7753
+  ...
+# Subtest: optional higher staffing pays normal wages while the default twelve-plant strategy matches the explicit policy and geometry-only route baseline
+not ok 9 - optional higher staffing pays normal wages while the default twelve-plant strategy matches the explicit policy and geometry-only route baseline
+  ---
+  duration_ms: 2015.0897
+  location: 'file:///C:/Users/PC/.codex/worktrees/game-juice-polish/wild-guardians-africa/tests/crop-lifecycle.test.js:35:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'b15f2d354fc95507f01eac9b75d5336c0aab8d4f44e0be4f081c35c45362dd5f'
+    - 'd2d067f5aea3cbfc860e720bd119d8a565056a85e2a8adb6bd8642ecfd7b773f'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'd2d067f5aea3cbfc860e720bd119d8a565056a85e2a8adb6bd8642ecfd7b773f'
+  actual: 'b15f2d354fc95507f01eac9b75d5336c0aab8d4f44e0be4f081c35c45362dd5f'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/game-juice-polish/wild-guardians-africa/tests/crop-lifecycle.test.js:48:9)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async startSubtest (node:internal/test_runner/harness:216:3)
+  ...
+# Subtest: a crop with pending watering is recorded as destroyed only after actual hit-state changes
+ok 10 - a crop with pending watering is recorded as destroyed only after actual hit-state changes
+  ---
+  duration_ms: 1.3935
+  ...
+# Subtest: native paid farming with lifecycle observation preserves the complete state and requires physical crate delivery
+ok 11 - native paid farming with lifecycle observation preserves the complete state and requires physical crate delivery
+  ---
+  duration_ms: 3142.1625
+  ...
+# Subtest: bounded expansion finds an exterior entry without changing live bounds, RNG or camera
+not ok 12 - bounded expansion finds an exterior entry without changing live bounds, RNG or camera
+  ---
+  duration_ms: 71.3509
+  location: 'file:///C:/Users/PC/.codex/worktrees/game-juice-polish/wild-guardians-africa/tests/expanded-raid-entry-experiment.test.js:9:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    0 !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 0
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/game-juice-polish/wild-guardians-africa/tests/expanded-raid-entry-experiment.test.js:12:9)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.start (node:internal/test_runner/test:542:17)
+    startSubtest (node:internal/test_runner/harness:216:17)
+  ...
+# Subtest: entry chunk demand includes whole bodies and exits at negative and positive seams
+ok 13 - entry chunk demand includes whole bodies and exits at negative and positive seams
+  ---
+  duration_ms: 1.7089
+  ...
+# Subtest: evidence retains the successful native wall impact and bounded failure
+not ok 14 - evidence retains the successful native wall impact and bounded failure
+  ---
+  duration_ms: 10.8594
+  location: 'file:///C:/Users/PC/.codex/worktrees/game-juice-polish/wild-guardians-africa/tests/expanded-raid-entry-experiment.test.js:22:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + '5c88e8fcd5b703a23e3fbabe5f7b60d356eaae6375d7cdc28f169f6f7e82ba0f'
+    - '79d66a3e3e34e08f862e16510d9ecc5ebbc7a37600ac5c03893cbab928d95c3a'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: '79d66a3e3e34e08f862e16510d9ecc5ebbc7a37600ac5c03893cbab928d95c3a'
+  actual: '5c88e8fcd5b703a23e3fbabe5f7b60d356eaae6375d7cdc28f169f6f7e82ba0f'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/game-juice-polish/wild-guardians-africa/tests/expanded-raid-entry-experiment.test.js:26:61)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+# Subtest: isolated exterior candidate preserves RNG, state and view and separates the complete epic group
+ok 15 - isolated exterior candidate preserves RNG, state and view and separates the complete epic group
+  ---
+  duration_ms: 58.6862
+  ...
+# Subtest: first native hit changes from crop to wall in the controlled enclosure
+not ok 16 - first native hit changes from crop to wall in the controlled enclosure
+  ---
+  duration_ms: 2536.8325
+  location: 'file:///C:/Users/PC/.codex/worktrees/game-juice-polish/wild-guardians-africa/tests/exterior-raid-entry-experiment.test.js:22:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'StructureHit'
+    - 'CropHit'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'CropHit'
+  actual: 'StructureHit'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/game-juice-polish/wild-guardians-africa/tests/exterior-raid-entry-experiment.test.js:24:9)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async startSubtest (node:internal/test_runner/harness:216:3)
+  ...
+# Subtest: near-cardinal and diagonal headings keep the projected entry bounded
+ok 17 - near-cardinal and diagonal headings keep the projected entry bounded
+  ---
+  duration_ms: 16.7344
+  ...
+# Subtest: retained candidate evidence covers four headings and complete group with current source hashes
+not ok 18 - retained candidate evidence covers four headings and complete group with current source hashes
+  ---
+  duration_ms: 8.6504
+  location: 'file:///C:/Users/PC/.codex/worktrees/game-juice-polish/wild-guardians-africa/tests/exterior-raid-entry-experiment.test.js:38:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + '5c88e8fcd5b703a23e3fbabe5f7b60d356eaae6375d7cdc28f169f6f7e82ba0f'
+    - '79d66a3e3e34e08f862e16510d9ecc5ebbc7a37600ac5c03893cbab928d95c3a'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: '79d66a3e3e34e08f862e16510d9ecc5ebbc7a37600ac5c03893cbab928d95c3a'
+  actual: '5c88e8fcd5b703a23e3fbabe5f7b60d356eaae6375d7cdc28f169f6f7e82ba0f'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/game-juice-polish/wild-guardians-africa/tests/exterior-raid-entry-experiment.test.js:46:64)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+# Subtest: native capacity separates two-hit healthy crops from one-hit wounded crops
+ok 19 - native capacity separates two-hit healthy crops from one-hit wounded crops
+  ---
+  duration_ms: 14.516
+  ...
+# Subtest: capacity evidence reproduces with current native sources
+not ok 20 - capacity evidence reproduces with current native sources
+  ---
+  duration_ms: 68.7209
+  location: 'file:///C:/Users/PC/.codex/worktrees/game-juice-polish/wild-guardians-africa/tests/native-raid-capacity-audit.test.js:19:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + '5c88e8fcd5b703a23e3fbabe5f7b60d356eaae6375d7cdc28f169f6f7e82ba0f'
+    - 'd341d05afa32af4ebb7de65044b29ac54ba2c0ab5628f53300994bbaeb8ccd40'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'd341d05afa32af4ebb7de65044b29ac54ba2c0ab5628f53300994bbaeb8ccd40'
+  actual: '5c88e8fcd5b703a23e3fbabe5f7b60d356eaae6375d7cdc28f169f6f7e82ba0f'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/game-juice-polish/wild-guardians-africa/tests/native-raid-capacity-audit.test.js:22:65)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async startSubtest (node:internal/test_runner/harness:216:3)
+  ...
+# Subtest: exterior witnesses preserve nearby entries through openings and between separate enclosures
+ok 21 - exterior witnesses preserve nearby entries through openings and between separate enclosures
+  ---
+  duration_ms: 50.9271
+  ...
+# Subtest: closed and concave walls including animal-blocking gate do not provide a false exterior witness
+ok 22 - closed and concave walls including animal-blocking gate do not provide a false exterior witness
+  ---
+  duration_ms: 40.2816
+  ...
+# Subtest: clipped active bounds remain an explicit failure instead of accepting an interior spawn
+not ok 23 - clipped active bounds remain an explicit failure instead of accepting an interior spawn
+  ---
+  duration_ms: 29.6237
+  location: 'file:///C:/Users/PC/.codex/worktrees/game-juice-polish/wild-guardians-africa/tests/raid-entry-topology-experiment.test.js:28:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + {
+    +   entries: [
+    +     {
+    +       x: -10,
+    +       z: 25.42
+    +     }
+    +   ],
+    +   exits: [
+    +     {
+    +       x: -10,
+    +       z: 28.42
+    +     }
+    +   ],
+    +   selectionBounds: [
+    +     -53.1,
+    +     -20.78,
+    +     33.1,
+    +     65.42
+    +   ]
+    + }
+    - null
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  actual:
+    entries:
+      0:
+        x: -10
+        z: 25.42
+    exits:
+      0:
+        x: -10
+        z: 28.42
+    selectionBounds:
+      0: -53.1
+      1: -20.78
+      2: 33.1
+      3: 65.42
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/game-juice-polish/wild-guardians-africa/tests/raid-entry-topology-experiment.test.js:30:9)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+# Subtest: retained paired topology results cover actual native first impacts and current sources
+not ok 24 - retained paired topology results cover actual native first impacts and current sources
+  ---
+  duration_ms: 15.9982
+  location: 'file:///C:/Users/PC/.codex/worktrees/game-juice-polish/wild-guardians-africa/tests/raid-entry-topology-experiment.test.js:32:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + '5c88e8fcd5b703a23e3fbabe5f7b60d356eaae6375d7cdc28f169f6f7e82ba0f'
+    - '79d66a3e3e34e08f862e16510d9ecc5ebbc7a37600ac5c03893cbab928d95c3a'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: '79d66a3e3e34e08f862e16510d9ecc5ebbc7a37600ac5c03893cbab928d95c3a'
+  actual: '5c88e8fcd5b703a23e3fbabe5f7b60d356eaae6375d7cdc28f169f6f7e82ba0f'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/game-juice-polish/wild-guardians-africa/tests/raid-entry-topology-experiment.test.js:43:64)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+1..24
+# tests 24
+# suites 0
+# pass 15
+# fail 9
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5786.3944

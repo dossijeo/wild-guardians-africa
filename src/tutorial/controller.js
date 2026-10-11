@@ -144,6 +144,7 @@ export class TutorialController {
   }
   dismiss({automatic=false,message=this.presentation({record:false})}={}){
     if(!message)return false;
+    recordTutorialMessageToday(this.state,message.id);
     if(message.reading&&this.state.tutorial.reading===message.id)this.acknowledge();
     const t=this.state.tutorial;
     t.dismissed=[...new Set([...(t.dismissed??[]),message.id+':'+(message.variant??'')])];

@@ -1,0 +1,146 @@
+{
+  "scope": "Actual WorldScene/native commands, ABBA same frozen snapshots/camera/media/shadows. Explicit fixture credit and botanical pre-growth, not economy/balance acceptance. No audio/autosave, no GPU queries. Root CPU campaign concurrent.",
+  "errors": [],
+  "scenarios": {
+    "deliveries": {
+      "False": {
+        "simulationMs": {
+          "median": 1.2999999523162842,
+          "p95": 6.200000047683716,
+          "max": 19.100000023841858
+        },
+        "presentationMs": {
+          "median": 0,
+          "p95": 0,
+          "max": 0.10000002384185791
+        },
+        "renderCpuMs": {
+          "median": 39.199999928474426,
+          "p95": 66.10000002384186,
+          "max": 153.70000004768372
+        },
+        "interval": {
+          "median": 129.29999995231628,
+          "p95": 148.70000004768372,
+          "max": 406.7999999523163
+        },
+        "calls": {
+          "median": 584,
+          "p95": 740,
+          "max": 804
+        },
+        "triangles": {
+          "median": 10084402,
+          "p95": 10328391,
+          "max": 10402166
+        }
+      },
+      "True": {
+        "simulationMs": {
+          "median": 1.399999976158142,
+          "p95": 6.700000047683716,
+          "max": 14.899999976158142
+        },
+        "presentationMs": {
+          "median": 0.10000002384185791,
+          "p95": 1.1999999284744263,
+          "max": 2.600000023841858
+        },
+        "renderCpuMs": {
+          "median": 40.800000071525574,
+          "p95": 76.20000004768372,
+          "max": 135.39999997615814
+        },
+        "interval": {
+          "median": 131.80000007152557,
+          "p95": 149.29999995231628,
+          "max": 369.60000002384186
+        },
+        "calls": {
+          "median": 584,
+          "p95": 740,
+          "max": 804
+        },
+        "triangles": {
+          "median": 10084402,
+          "p95": 10328391,
+          "max": 10402166
+        }
+      },
+      "allExactState": true,
+      "allExactSubmissions": true,
+      "maxEffects": 1,
+      "cleanup": true
+    },
+    "raid": {
+      "False": {
+        "simulationMs": {
+          "median": 1.2999999523162842,
+          "p95": 6,
+          "max": 193.60000002384186
+        },
+        "presentationMs": {
+          "median": 0,
+          "p95": 0,
+          "max": 0.10000002384185791
+        },
+        "renderCpuMs": {
+          "median": 28.199999928474426,
+          "p95": 38.40000009536743,
+          "max": 108.89999997615814
+        },
+        "interval": {
+          "median": 100.10000002384186,
+          "p95": 183,
+          "max": 262.2999999523163
+        },
+        "calls": {
+          "median": 248,
+          "p95": 272,
+          "max": 275
+        },
+        "triangles": {
+          "median": 9514887,
+          "p95": 9545369,
+          "max": 9548177
+        }
+      },
+      "True": {
+        "simulationMs": {
+          "median": 1.1999999284744263,
+          "p95": 7.100000023841858,
+          "max": 114.30000007152557
+        },
+        "presentationMs": {
+          "median": 0.09999990463256836,
+          "p95": 0.19999992847442627,
+          "max": 1.100000023841858
+        },
+        "renderCpuMs": {
+          "median": 27.09999990463257,
+          "p95": 34,
+          "max": 99.10000002384186
+        },
+        "interval": {
+          "median": 100.39999997615814,
+          "p95": 180,
+          "max": 263.10000002384186
+        },
+        "calls": {
+          "median": 248,
+          "p95": 272,
+          "max": 275
+        },
+        "triangles": {
+          "median": 9514887,
+          "p95": 9545369,
+          "max": 9548177
+        }
+      },
+      "allExactState": true,
+      "allExactSubmissions": true,
+      "maxEffects": 0,
+      "cleanup": true
+    }
+  }
+}

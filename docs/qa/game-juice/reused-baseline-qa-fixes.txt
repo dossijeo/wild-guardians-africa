@@ -1,0 +1,80 @@
+TAP version 13
+# Subtest: QA-011: accelerated night splits at raid arrival before moving the animal at normal speed
+ok 1 - QA-011: accelerated night splits at raid arrival before moving the animal at normal speed
+  ---
+  duration_ms: 19.1537
+  ...
+# Subtest: QA-011: one real frame straddling raid arrival matches two frames split at its boundary
+ok 2 - QA-011: one real frame straddling raid arrival matches two frames split at its boundary
+  ---
+  duration_ms: 4.1137
+  ...
+# Subtest: QA-009/010/015: 300 real daytime seconds and 60 calm-night seconds reach one blocked dawn
+ok 3 - QA-009/010/015: 300 real daytime seconds and 60 calm-night seconds reach one blocked dawn
+  ---
+  duration_ms: 249.3132
+  ...
+# Subtest: QA-009/010: fractional daylight-to-night frame uses each side of the boundary at its own speed
+ok 4 - QA-009/010: fractional daylight-to-night frame uses each side of the boundary at its own speed
+  ---
+  duration_ms: 0.7302
+  ...
+# Subtest: QA-010: a full calm night preserves growth and remaining water tolerance
+ok 5 - QA-010: a full calm night preserves growth and remaining water tolerance
+  ---
+  duration_ms: 29.134
+  ...
+# Subtest: QA-012/013: only the last animal leaving restores accelerated night and emits one end
+ok 6 - QA-012/013: only the last animal leaving restores accelerated night and emits one end
+  ---
+  duration_ms: 4.0911
+  ...
+# Subtest: QA-007/014: blocked real-time advances preserve every field until all pause causes clear
+ok 7 - QA-007/014: blocked real-time advances preserve every field until all pause causes clear
+  ---
+  duration_ms: 0.848
+  ...
+# Subtest: current selector finds an exterior entry without unnecessary QA expansion or changing live state
+ok 8 - current selector finds an exterior entry without unnecessary QA expansion or changing live state
+  ---
+  duration_ms: 62.7484
+  ...
+# Subtest: entry chunk demand includes whole bodies and exits at negative and positive seams
+ok 9 - entry chunk demand includes whole bodies and exits at negative and positive seams
+  ---
+  duration_ms: 0.3082
+  ...
+# Subtest: evidence retains the successful native wall impact and bounded failure
+ok 10 - evidence retains the successful native wall impact and bounded failure
+  ---
+  duration_ms: 7.1619
+  ...
+# Subtest: isolated exterior candidate preserves RNG, state and view and separates the complete epic group
+ok 11 - isolated exterior candidate preserves RNG, state and view and separates the complete epic group
+  ---
+  duration_ms: 45.9707
+  ...
+# Subtest: current production and isolated candidate both intercept the controlled enclosure at its wall
+ok 12 - current production and isolated candidate both intercept the controlled enclosure at its wall
+  ---
+  duration_ms: 1910.9884
+  ...
+# Subtest: near-cardinal and diagonal headings keep the projected entry bounded
+ok 13 - near-cardinal and diagonal headings keep the projected entry bounded
+  ---
+  duration_ms: 13.775
+  ...
+# Subtest: retained candidate evidence covers four headings and complete group with its original source hashes
+ok 14 - retained candidate evidence covers four headings and complete group with its original source hashes
+  ---
+  duration_ms: 6.6798
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2302.4952
