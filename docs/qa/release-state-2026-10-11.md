@@ -17,8 +17,12 @@ The save-feedback task is implemented by this PR. Actual application exit from t
 
 ## Balance remains experimental
 
-Campaign v114 is running on independently frozen source `a983ce7c`, with worker-first-v4 perimeter QA. Its launch manifests and captured accounting reviews are under `integrated-spiritual-survival/`. Do not pull new main runtime into the running campaign or treat the presentation merge as integration of balance.
+Campaign v116 is running on independently frozen runtime recorded at `52cc1a1e`, with worker-first-v4 perimeter QA. It retains the same 449 manifested runtime hashes as v115; later documentation-only commits do not change the loaded campaign sources. Launch manifests and captured accounting reviews are under `integrated-spiritual-survival/`. Do not pull new main runtime into the running campaign or treat the presentation merge as integration of balance.
 
-The six-day accounting capture reconciles 877 transactions and all seven initially completed daily JSON rows match stopped v113. This is prefix evidence only. Integrated responsible 100-night survival, authentic poor-management defeat, the comparative seed/strategy/biome matrix, postgame expansion through day 180 and defensible human activity measurement remain unproven.
+v114 ended with an incomplete harness error during the eleventh-night retreat. The world-aligned native retreat connector fix is preserved at `9636a126`. v115 subsequently completed night eleven and was stopped cooperatively on day twelve because prospective perimeter checks remained slow. Neither interruption is a native economic defeat or completed 100-night horizon; the original evidence remains retained.
+
+The v116 ten-day accounting capture reconciles 1,833 transactions and every captured daily row matches stopped v115 exactly. Its closing balance is 974. This is prefix evidence only. The v115 raid review separately records all 328 assigned attack-budget units consumed by 83 animals through eleven ended encounters; it does not establish matched-strategy wall efficacy or 100-night balance.
+
+Integrated responsible 100-night survival, authentic poor-management defeat, the comparative seed/strategy/biome matrix, postgame expansion through day 180 and defensible human activity measurement remain unproven. Prospective perimeter certification still causes expensive QA intervals; the retry is not performance approval and is not a game rendering benchmark.
 
 The explicit accepted physical Pixel Wake Lock test and user-accepted camera traveling remain closed unless a new regression is observed. Low-resolution library layout and SFX listening review retain their documented lower priority. This scoped update does not certify any other outstanding master-plan requirement.

@@ -1,20 +1,22 @@
 # Tareas pendientes posteriores a la Jam
 
-## Feedback de guardado y salida Windows — pendiente, sin desplazar balance
+## Feedback de guardado integrado; salida Windows pendiente — prioridad balance
 
-Solicitud del10 de octubre:
+Actualización del 11 de octubre sobre la solicitud del 10:
 
-- **Guardar partida:** el botón debe dar feedback visible al jugador sobre el
-  resultado real del guardado. Ahora parece que no hace nada. Revisar confirmación
-  de éxito y error sin anunciar éxito antes de que la persistencia termine; cubrir
-  español e inglés y no disparar un guardado adicional para mostrar el mensaje.
-- **Salir del menú principal en Windows:** cerrar realmente la aplicación Tauri
-  desde ese botón, con su API/capacidad correspondiente y prueba del ejecutable.
-  El comportamiento web debe tratarse por separado, sin suponer que el navegador
-  permite cerrar una pestaña abierta por el usuario.
+- **Guardar partida:** integrado mediante PR 22 (`f0f6e1d`). La confirmación
+  responde al resultado real de persistencia, sin guardado adicional ni
+  confirmaciones constantes por autoguardado. El smoke Windows conservado
+  registra `confirmed-after-IndexedDB-commit`; la evidencia y su alcance figuran
+  en [el estado de release](qa/release-state-2026-10-11.md).
+- **Salir del menú principal en Windows:** sigue pendiente cerrar realmente
+  Tauri desde ese botón y comprobar el ejecutable. Esta tarea no formaba parte
+  de la PR de game juice. El comportamiento web requiere tratarse por separado.
 
-No implementar todavía. La prioridad actual sigue siendo el equilibrio económico
-con ataques y defensa físicos y campañas nativas comparativas100/180 días.
+No desplazar el balance para implementar la salida Windows. La prioridad actual
+sigue siendo el equilibrio económico con ataques y defensa físicos y campañas
+nativas comparativas de 100/180 días. Las entradas históricas siguientes se
+conservan; sus estados antiguos deben leerse junto al registro de release actual.
 
 ## Estado vigente de las integraciones (9 de octubre)
 
@@ -37,7 +39,7 @@ con ataques y defensa físicos y campañas nativas comparativas100/180 días.
 
 Este documento conserva entradas cronológicas y candidatos descartados. Sus
 resultados históricos no equivalen a aceptación de main actual. El
-[registro de gates vigentes](qa/release-open-gates-2026-10-09.md) delimita el
+[registro de estado actual](qa/release-state-2026-10-11.md) delimita el
 trabajo que aún falta y prevalece sobre las etapas antiguas de esta lista.
 
 - **Biblioteca:** PR8 cubrió una entrada distinta. La entrada real del menú
