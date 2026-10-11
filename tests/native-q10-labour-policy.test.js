@@ -1,7 +1,11 @@
 // Synthetic planning fixtures only, not native economic campaign evidence.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {q10EmptyFieldPlan} from '../tools/native-q10-labour-policy.mjs';
+import {q10EmptyFieldPlan,createQ10LabourPolicy} from '../tools/native-q10-labour-policy.mjs';
+import {parseNativeCampaignArgs,nativeCampaignProvenance} from '../tools/run_native_campaign.mjs';
+import * as Game from '../src/simulation/game.js';
+import {Navigation} from '../src/world/navigation.js';
+import {rational,numberOf} from '../src/simulation/money.js';
 const state=()=>({day:8,time:0,plants:[],workers:[],tasks:[],structures:[{id:'center',kind:'center',hp:600,maxHp:600,status:'intact',cost:800}]});
 const plan=(cash=332)=>({staff:1,cost:30,cash,desired:1,pendingRepair:0,seedCost:5,recoveryReserve:30,afterPayment:cash-30});
 
@@ -31,4 +35,26 @@ test('capital forecast scales without a crop quota and rejects unsafe planning i
  assert.ok(2*p.cost+5<=10000);assert.equal(p.replanting.forecastOnly,true);
  assert.throws(()=>q10EmptyFieldPlan(s,plan(Number.MAX_SAFE_INTEGER+1),30));
  assert.throws(()=>q10EmptyFieldPlan(s,{...plan(),seedCost:0},30));
+});
+
+test('Q10 is opt-in and source-hashed, retaining opening crew and individual-hit rules',()=>{
+ const options=parseNativeCampaignArgs(['--out','fixture','--labour-policy','q10']);
+ assert.equal(options.labourPolicy,'q10');
+ const evidence=nativeCampaignProvenance(options);
+ assert.ok(evidence.sourceHashes['tools/native-q10-labour-policy.mjs']);
+ assert.match(evidence.protocol.id,/-q10$/);assert.equal(evidence.protocol.openingStaff,6);
+ assert.equal(evidence.protocol.cropHitPoints,1);assert.equal(evidence.protocol.renewalWorkUnitsPerWorker,6);
+ assert.equal(parseNativeCampaignArgs(['--out','fixture']).labourPolicy,'legacy');
+});
+
+test('funded renewal uses a native paid hire and protects the actual full next wage',()=>{
+ const s=Game.newGame({seed:712,slotId:'q10-native-command-fixture'}),nav=new Navigation(712,'sabana');
+ nav.field={canyon:false,riverLevel:0,surface:()=>0,slope:()=>0,fluidInside:()=>false};nav.propsAt=()=>[];nav.setState(s);
+ assert.ok(Game.placeStructure(s,'center',{x:-15,z:0},nav));
+ // Explicit opening budget fixture, never campaign income or a delivery.
+ s.day=8;s.time=0;s.ledger.balance=rational(332);s.pauses=['hiring'];
+ const q=createQ10LabourPolicy(),p=q.dawn(s,{seedCost:5,pendingRepair:0});
+ assert.equal(p.staff,4);Game.hire(s,'q10-hire',{olderFemale:p.staff});q.hired(s,p.staff,{daily:true});
+ assert.equal(numberOf(s.ledger.entries['q10-hire']),-120);assert.equal(numberOf(s.ledger.balance),212);
+ assert.equal(s.workers.length,4);assert.equal(q.reserve(),120);assert.equal(s.plants.length,0);
 });

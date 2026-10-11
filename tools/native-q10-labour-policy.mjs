@@ -1,4 +1,4 @@
-// Unintegrated QA candidate: anticipate paid replanting after an empty harvest.
+// Opt-in QA candidate: anticipate paid replanting after an empty harvest.
 // No native rules, purchases, wage settlement or income are altered here.
 import {createQ9LabourPolicy,Q9_SETTINGS} from './native-q9-labour-policy.mjs';
 import {q4Workload} from './native-q4-labour-policy.mjs';
@@ -39,5 +39,5 @@ export function createQ10LabourPolicy({profile='olderFemale'}={}){
  const base=createQ9LabourPolicy({profile}),worker=PROFILES.find(p=>p.id===profile);
  if(!worker)throw Error('Unknown Q10 profile');
  return {...base,dawn(s,options={}){return q10EmptyFieldPlan(s,base.dawn(s,options),worker.wage);},
-  report:()=>({...base.report(),replantingPolicy:'funded empty-field forecast; Q9 otherwise; not integrated into campaign runner yet'})};
+  report:()=>({...base.report(),replantingPolicy:'funded empty-field forecast; Q9 otherwise; opt-in Q10 campaign policy'})};
 }

@@ -37,7 +37,7 @@ export function nativeCampaignProvenance(options){
  const paths=['src/simulation/crop-impact-health.js','src/simulation/agricultural-power.js','tools/native-agricultural-magic.mjs','tools/native-campaign-runner.mjs','tools/native-campaign-protocol.mjs','tools/native-q4-labour-policy.mjs','tools/native-q5-labour-policy.mjs','tools/native-q6-labour-policy.mjs','tools/native-campaign-finance.mjs','tools/native-campaign-evidence.mjs','tools/repair-settlement-evidence.mjs','tools/native-raid-campaign-evidence.mjs','tools/native-campaign-entry-driver.mjs','tools/native-campaign-expansion.mjs','tools/native-campaign-plots.mjs','tools/native-expanding-defense-policy.mjs','tools/node-raid-entry-transport.mjs','tools/node-raid-entry-worker.mjs','tools/run_native_campaign.mjs'];
  paths.push('tools/native-closed-defense-policy.mjs','tools/native-funded-defense-policy.mjs','tools/native-obstacle-aware-contour.mjs','tools/native-perimeter-proof.mjs','tools/native-q7-labour-policy.mjs','tools/native-q8-labour-policy.mjs');
  paths.push('tools/native-campaign-crop-policy.mjs','tools/native-shore-defense-contour.mjs','tools/native-service-component-proof.mjs');
- paths.push('tools/native-q9-labour-policy.mjs');
+ paths.push('tools/native-q9-labour-policy.mjs','tools/native-q10-labour-policy.mjs');
  for(const path of paths)p.sourceHashes[path]=createHash('sha256').update(readFileSync(new URL(path,root))).digest('hex');
  return {...p,protocol:{...campaignProtocolForLabour(options.labourPolicy),profile:options.profile??'olderFemale',plotFluidClearance:options.plotFluidClearance??0,defenseMaterial:options.defenseMaterial??'zarzas',cropHitPoints:CROP_HIT_POINTS}};
 }
