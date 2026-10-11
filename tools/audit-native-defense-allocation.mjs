@@ -8,7 +8,12 @@ const r=JSON.parse(readFileSync(directory+'/report.json'));
 const receipt=JSON.parse(readFileSync(directory+'/receipt.json'));
 assert(['observed-horizon','observed-native-defeat'].includes(receipt.status),'Campaign must be terminal');
 const mode=r.policy.defenseFunding??'contour';
-assert.equal(r.defense?.funding??'contour',mode);
+const defenseActive=r.policy.defend===true;
+if(defenseActive)assert.equal(r.defense?.funding??'contour',mode);
+else{
+ assert.equal(r.defense,null,'Disabled defense must not carry an active wall policy');
+ assert(r.daily.every(day=>day.finance.walls===0&&!day.finance.entries.some(e=>e.category==='walls')),'Disabled defense has actual wall spending');
+}
 const integer=n=>{assert(Number.isSafeInteger(n),'Expected exact integer coins');return BigInt(n);};
 const purchases=new Map();
 for(const h of r.defense?.history??[])if(h.paidCost){assert(!purchases.has(h.paymentId),'Duplicate paid wall history');purchases.set(h.paymentId,h);}
@@ -43,5 +48,5 @@ for(const day of r.daily){
  assert.equal(balance,integer(day.finance.closing));assert.equal(balance,integer(day.money));previous=balance;
 }
 assert.equal(purchases.size,0,'Paid history without actual native debit');
-writeFileSync(output,JSON.stringify({directory,mode,status:'verified',purchases:observations.length,observations,scope:'Actual daily native settlement order and paid wall history. Requires separate terminal, census, source and delivery audits. Does not establish survival, exact chosen-seed protection, human activity or performance.'},null,2)+'\n');
+writeFileSync(output,JSON.stringify({directory,mode,defenseActive,status:'verified',purchases:observations.length,observations,scope:'Actual daily native settlement order and paid wall history; declared funding is inactive when defenseActive is false, and zero actual wall spending is required. Requires separate terminal, census, source and delivery audits. Does not establish survival, exact chosen-seed protection, human activity or performance.'},null,2)+'\n');
 console.log(JSON.stringify({mode,status:'verified',purchases:observations.length}));
