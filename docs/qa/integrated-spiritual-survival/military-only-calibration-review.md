@@ -48,6 +48,20 @@ an incomplete harness case, never a defeat. The launcher deliberately refuses
 changed baseline runtime sources; subsequent military candidates need their own
 explicit reviewed source freeze before using the same policy manifest.
 
+The user's subsequent permission allows the already-finished player improvement
+to remain, then freezes further changes. The completed recovery funding fix
+(`6064dc48`, retaining 35 rather than 30 coins for native hire plus seed when
+appropriate) is already in v118 and in this source freeze. It is not applied
+again mid-campaign. The proposed worker-profile comparison was not completed or
+validated; it is not run under this permission. Profiles remain olderFemale.
+
+The serial baseline queue was started after the freeze commit `bc6241fd`. It
+waits for the current v118 and the separate production regression suite before
+launching the other 17 matched cases. It verifies a native terminal receipt for
+v118 first; a technical exit stops the queue for review. Cases finish at native
+defeat or 100 nights, without an economic-fragility stop. Waiting and queued
+cases are not completed simulation evidence.
+
 Initial paired sites: Sabana/Mapungubwe and Gran Cañón/Saheliana, seeds 712, 123,
 2026. These six cases per profile are a screening cohort, insufficient to certify
 an 85–95% win rate. Held-out seeds and sites are predeclared in the manifest.
