@@ -1,0 +1,49 @@
+{
+  "observedAt": "2026-10-12T03:15:54.388Z",
+  "sourceHashes": {
+    "src/world/work-points.js": "3415a5926ef2a83b9bcdfa41ec380d35b9a9845b17695c55aa23f1d687a7f809",
+    "src/world/watering-route-cache.js": "81a563c070a67be12fea57fa046757d79ad6192a5a761b43ac6d61ceb5bd0a1f",
+    "src/simulation/game.js": "5046b8cda6c1ba7e79da574e5bc523ffd79be365dba74b92c10ba4b331d10eb4",
+    "src/world/navigation.js": "9d44b740809c2d3c0273342364f8b3511e26ada24bea82acd60bda84a8072751"
+  },
+  "fixtureHash": "8b24d512f940b93a0b2abeef58792e56c1023ff59b8e00595f4c806cd2b21fad",
+  "rows": [
+    {
+      "variant": "A",
+      "ticks": 3000,
+      "initialHeap": 5667896,
+      "retainedHeap": 13652392,
+      "retainedDelta": 7984496,
+      "sampledPeakHeap": 48281336,
+      "stateHash": "03e5cae1283ce879829db7541e861b308238c22e46dcf879009fa5cb246f03cb"
+    },
+    {
+      "variant": "B",
+      "ticks": 3000,
+      "initialHeap": 6987600,
+      "retainedHeap": 15254488,
+      "retainedDelta": 8266888,
+      "sampledPeakHeap": 54295624,
+      "stateHash": "03e5cae1283ce879829db7541e861b308238c22e46dcf879009fa5cb246f03cb"
+    },
+    {
+      "variant": "B",
+      "ticks": 3000,
+      "initialHeap": 7425928,
+      "retainedHeap": 15235592,
+      "retainedDelta": 7809664,
+      "sampledPeakHeap": 55403640,
+      "stateHash": "03e5cae1283ce879829db7541e861b308238c22e46dcf879009fa5cb246f03cb"
+    },
+    {
+      "variant": "A",
+      "ticks": 3000,
+      "initialHeap": 7405368,
+      "retainedHeap": 14115648,
+      "retainedDelta": 6710280,
+      "sampledPeakHeap": 49183312,
+      "stateHash": "03e5cae1283ce879829db7541e861b308238c22e46dcf879009fa5cb246f03cb"
+    }
+  ],
+  "scope": "AB/BA process-local JavaScript heap probes with forced GC before/after 300 simulated seconds in a historically pre-funded 500-crop fixture. Peak sampled every 50 ticks, not an absolute peak, OS RAM or GPU/VRAM metric. Active native navigation/state remain alive at after-GC measurement. No campaign mutation or new funding."
+}
