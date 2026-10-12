@@ -67,3 +67,29 @@ explicitly rejected. The original failing log is retained.
 partial goal coverage, whole-zone containment, intersecting possible service
 origins, radii, worker portal exclusion, invalid first service points, cache
 epochs, positive detours, body sweeps and gates across all biome/culture pairs.
+
+## Center hull follow-up, 2026-10-12
+
+The center approach certificate now encloses its authored footprint and the
+actor clearance before rejecting an approach region. A crop-sized focus circle
+could exclude a valid center boundary approach. The new regression constructs
+exactly that case. The 468-source-input guard passes.
+
+Six complete native reservation fixtures (1/2/5/12 animals, connected walls,
+center-only) retain identical per-step and final state hashes against the
+archived original navigation: 1,973 ticks in all. A persisted night-16 raid
+replay runs 2,278 physical ticks including save/reload, movement and all exits;
+its final full state hash is identical. Its isolated runtime was 2,432 ms
+(original) and 2,517 ms (candidate), so this ordinary raid is not faster.
+
+The hostile night-9 mid-tick candidate completes in 8,060 ms after the hull
+fix. The original control exceeded 38,400 individual approach calls and did
+not complete during roughly an hour of isolated runtime; its trace was
+retained before the owned QA process was stopped. The baseline did not produce
+an output state, so semantic equality on this pathological tick and a
+quantified total speedup remain unproven. This branch is experimental and
+must not be merged on this evidence alone.
+
+The sparse checkout omits `docs/qa/populated-raids/*.json`; those six fixture-
+dependent raid-navigation-warmth tests fail ENOENT locally. The 22 tests
+covering changed navigation, reservations, source guard and comparator pass.

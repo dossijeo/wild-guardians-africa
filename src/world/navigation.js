@@ -290,7 +290,16 @@ export class Navigation {
     if(!cache||cache.version!==this.version){cache={version:this.version,entries:new Map()};approachRegionCertificates.set(this,cache);}
     const minX=Math.floor((bounds?.[0]??focus.x)-reach)-2,maxX=Math.ceil((bounds?.[2]??focus.x)+reach)+2,minZ=Math.floor((bounds?.[1]??focus.z)-reach)-2,maxZ=Math.ceil((bounds?.[3]??focus.z)+reach)+2;
     if((maxX-minX+1)*(maxZ-minZ+1)>4096)return false;
-    if(boundedApproachRegionBlocked(this,start,radius,minX,minZ,maxX,maxZ))return true;
+    if(focus.kind==='center'&&!bounds){
+      // Centre attack poses use the authored hull plus radial body clearance,
+      // not the crop-sized focus circle. Enclose every possible service origin
+      // before making a new bounded-region inference; preserve the older
+      // finite-component logic below as the ordinary fallback.
+      const points=centerFootprint(focus,this.state).footprint,padding=radius+.5+2;
+      const cx0=Math.floor(Math.min(...points.map(p=>p.x))-padding),cz0=Math.floor(Math.min(...points.map(p=>p.z))-padding);
+      const cx1=Math.ceil(Math.max(...points.map(p=>p.x))+padding),cz1=Math.ceil(Math.max(...points.map(p=>p.z))+padding);
+      if((cx1-cx0+1)*(cz1-cz0+1)<=4096&&boundedApproachRegionBlocked(this,start,radius,cx0,cz0,cx1,cz1))return true;
+    }else if(boundedApproachRegionBlocked(this,start,radius,minX,minZ,maxX,maxZ))return true;
     const certificateKey=`${radius}:${minX}:${minZ}:${maxX}:${maxZ}`;
     let region=cache.entries.get(certificateKey)??this.closedRegions.get(regionKey(Math.round(focus.x),Math.round(focus.z)));
     if(!region)for(let z=minZ;z<=maxZ&&!region;z++)for(let x=minX;x<=maxX&&!region;x++)region=this.closedRegions.get(regionKey(x,z));
