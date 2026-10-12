@@ -8,10 +8,14 @@ export const UNUSED_WORKER_LAB_MODELS=new Set([
   'assets/a748ca0cea0d4d0d4abd95071577a8457e63f22433e618be77934c079f4cf89c.glb',
   'assets/db01314e4e0a03f4e1aaa31e8207cee85a42294edffb003633282bb574ef28cd.glb'
 ]);
+// Superseded crop lab payload; both gameplay and the linked Library lab use
+// the repaired 40-state crop GLB from crops-v4.json.
+export const UNUSED_CROP_LAB_MODEL='assets/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb';
+const UNUSED_LAB_MODELS=new Set([...UNUSED_WORKER_LAB_MODELS,UNUSED_CROP_LAB_MODEL]);
 export function publicText(text,path,manifest){
   if(path==='content/models.json'){
     const models=JSON.parse(text);
-    if(Array.isArray(models))text=JSON.stringify(models.filter(model=>!UNUSED_WORKER_LAB_MODELS.has(model.url.replace(/^\//,''))));
+    if(Array.isArray(models))text=JSON.stringify(models.filter(model=>!UNUSED_LAB_MODELS.has(model.url.replace(/^\//,''))));
   }
   for(const item of manifest.records)text=text.replaceAll('/'+item.source,'/'+item.runtime);
   if(path==='library.html')text=text.replace("const get=", "import {decodeWebGlb} from './runtime/glb-legacy.js';\nconst get=").replace('return response[type]();',"const result=await response[type]();return type==='arrayBuffer'&&url.endsWith('.glb')?decodeWebGlb(result):result;");
@@ -32,12 +36,12 @@ export function webPackagePlugin(){
       if(JSON.stringify(originals)!==JSON.stringify(covered))throw Error('GLB inventory changed: run npm run assets:compress before building');
       function walk(dir){for(const name of readdirSync(dir)){const file=resolve(dir,name);if(statSync(file).isDirectory())walk(file);else if(['.html','.js','.json','.css'].includes(extname(file))&&!relative(dist,file).replaceAll('\\','/').startsWith('assets/')){const path=relative(dist,file).replaceAll('\\','/');writeFileSync(file,publicText(readFileSync(file,'utf8'),path,mapping));}}}
       walk(dist);for(const item of mapping.records)rmSync(resolve(dist,item.source));
-      for(const item of mapping.records.filter(item=>UNUSED_WORKER_LAB_MODELS.has(item.source))){
+      for(const item of mapping.records.filter(item=>UNUSED_LAB_MODELS.has(item.source))){
         const target=resolve(dist,item.runtime);
-        if(!target.startsWith(resolve(dist,'assets')+sep))throw Error('Worker model path escapes package');
+        if(!target.startsWith(resolve(dist,'assets')+sep))throw Error('Unused lab model path escapes package');
         rmSync(target,{force:true});
       }
-      writeFileSync(resolve(dist,'content/web-assets.json'),JSON.stringify({...mapping,records:mapping.records.filter(item=>!UNUSED_WORKER_LAB_MODELS.has(item.source))},null,2)+'\n');
+      writeFileSync(resolve(dist,'content/web-assets.json'),JSON.stringify({...mapping,records:mapping.records.filter(item=>!UNUSED_LAB_MODELS.has(item.source))},null,2)+'\n');
       // The four worker reference labs are retained in source but have no menu entry.
       // Exclude them from both the itch.io ZIP and the Tauri frontend bundle.
       for(const name of ['worker-older-male','worker-older-female','worker-young-male','worker-young-female']){
