@@ -2,7 +2,6 @@ import {commitAgriculturalPower,consumeGrowthPower,settleMultiplyPower} from './
 import {activeRaidEntryPlan} from '../world/raid-entry-data.js';
 import {animalExitConnector} from './animal-exit-connectors.js';
 import {workerReturnRoute} from './worker-return-route.js';
-import {beginAssignedWorkerRouteStep,assignedWorkerRouteStep} from './worker-assigned-route.js';
 import {workerRiskClearance} from './worker-route-clearance.js';
 import {resolveFluidPlacement} from '../world/fluid-placement.js';
 import {ensurePurchaseBudget,HIRING_RESERVE} from './budget.js';
@@ -407,15 +406,9 @@ export function cast(s,id,kind,x,z,nav,targetPlantId) {
     emit(s,'SpellActivated',{kind,x,z,targetPlantId:target?.id,benefited:area.power?.benefited??false,power:area.power??null,duration:spec.duration_seconds});
   });
 }
-export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignore=null,worker=true,motion=null,expandRoute=false,routeVia=null,incrementalReplan=false}={}) {
+export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignore=null,worker=true,motion=null,expandRoute=false,routeVia=null}={}) {
   const previous={x:w.x,z:w.z};
   if(worker)w.running=false;
-  if(incrementalReplan&&worker&&w.path&&w.pathVersion!==nav.version){
-    const route=assignedWorkerRouteStep(nav,w,destination,w.radius??.28,ignore);
-    if(route.pending)return false;
-    w.path=route.path;w.destinationId=destination.id;w.pathVersion=nav.version;
-    if(!w.path)return false;
-  }
   if(!w.path||w.destinationId!==destination.id||w.pathVersion!==nav.version) {
     w.path=worker&&nav.workerPath?nav.workerPath(w,destination,w.radius??.28,ignore):nav.path(w,destination,w.radius??.28,ignore,worker);w.destinationId=destination.id;
     // The local search corridor is not a physical enclosure. Exhausted animals
@@ -512,7 +505,6 @@ function reserveAvailableTasks(s,nav){
   });
 }
 function updateWorkers(s,dt,nav) {
-  beginAssignedWorkerRouteStep(nav);
   // Task removals/rebuilds replace the array; enqueues change its length.
   // Unchanged queues can reuse their index while reservation fields stay live.
   const findPlant=workerEntityLookup(()=>s.plants,{reuse:true,appendOnly:true}),findCrate=workerEntityLookup(()=>s.crates,{reuse:true,appendOnly:true}),findTask=workerEntityLookup(()=>s.tasks,{reuse:true});
@@ -587,7 +579,7 @@ function updateWorkers(s,dt,nav) {
           }
           destination=w.taskApproach.destination;
         }
-        if(walkTo(s,w,destination,dt,nav,{motion:{urgent:(urgency?urgency.urgent(w):urgentWork(s,w))},incrementalReplan:t.kind==='repair'||t.kind==='harvest'})) {
+        if(walkTo(s,w,destination,dt,nav,{motion:{urgent:(urgency?urgency.urgent(w):urgentWork(s,w))}})) {
           if(t.kind==='repair'){completeTask(s,w,t,target,nav);urgency?.invalidate();continue;}
           if(t.kind==='initial'||t.kind==='water')w.heading=Math.atan2(target.x-w.x,target.z-w.z);
           w.status='acting';w.actionRemaining=(t.kind==='initial'?7.2:t.kind==='water'?3.4:t.kind==='harvest'?3.6:t.kind==='repair'?3.8:1)/p.speed;
