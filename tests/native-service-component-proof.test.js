@@ -52,3 +52,18 @@ test('a body-valid pose with a solid obstacle blocking crop contact is not an at
  const clear={...v,obstacles:[]};
  assert.equal(nativeServiceComponentProof(s,clear,[crop],radius,outside,outline).reason,'native-service-origin-unproven');
 });
+test('native positive service certificates reuse unchanged crops but check new crops and geometry epochs',()=>{
+ const s={structures:[]},v=view();v.state=s;v.version=1;v.approachRegionBlocked=()=>true;
+ const segment=v.segmentClear;let segments=0;
+ v.segmentClear=(...args)=>{segments++;return segment(...args);};
+ const first={id:'first',x:0,z:0},second={id:'second',x:1,z:1};
+ const a=nativeServiceComponentProof(s,v,[first],radius,outside,outline);
+ assert(a.valid);assert.equal(segments,64);
+ const b=nativeServiceComponentProof(s,v,[first],radius,outside,outline);
+ assert.deepEqual(b,a);assert.equal(segments,64,'Identical physical service remains certified');
+ const c=nativeServiceComponentProof(s,v,[first,second],radius,outside,outline);
+ assert(c.valid);assert.equal(c.poses,64);assert.equal(segments,128,'Only the new target needs its 32 poses');
+ v.version++;
+ const d=nativeServiceComponentProof(s,v,[first,second],radius,outside,outline);
+ assert.deepEqual(d,c);assert.equal(segments,256,'Geometry epoch invalidates all certificates');
+});

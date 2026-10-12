@@ -3,13 +3,33 @@
 import {containsPoint} from '../src/world/footprints.js';
 import {centerBoundaryPoint} from '../src/world/centers.js';
 import {agriculturalRayClear} from '../src/simulation/raid-agricultural-impact.js';
+const positiveServiceCertificates=new WeakMap();
 export function nativeServiceComponentProof(s,view,targets,radius,outside,outline){
  const polygon=outline.map(([x,z])=>({x,z})),regions=new Map();let poses=0,blocked=0,certified=0,physicalConnectors=0,emptyNativeOrigins=0;
+ // A native predictive view has a stable state and geometry epoch. Reuse only
+ // successful per-target service certificates; new crops still receive all 32
+ // physical pose checks. Ad-hoc/mutable diagnostic views take the full path.
+ const cacheable=view.state===s&&Number.isSafeInteger(view.version);
+ const cacheKey=cacheable?JSON.stringify([view.version,radius,outside.x,outside.z,outline,s.structures.map(c=>[c.id,c.kind,c.status,c.hp,c.x,c.z,c.yaw])]):null;
+ let scopes=cacheable?positiveServiceCertificates.get(view):null;
+ if(cacheable&&!scopes){scopes=new Map();positiveServiceCertificates.set(view,scopes);}
+ let cache=scopes?.get(cacheKey);
+ if(cacheable&&!cache){cache={targets:new WeakMap()};if(scopes.size>=16)scopes.delete(scopes.keys().next().value);scopes.set(cacheKey,cache);}
+ let targetRegions=null;
  const enclosed=region=>{
+  targetRegions?.add(region);
   if(regions.has(region))return regions.get(region);
   const valid=[...region].every(id=>{const [x,z]=id.split(',').map(Number);return containsPoint(polygon,x,z);});regions.set(region,valid);return valid;
  };
  for(const target of targets){
+  const saved=cache?.targets.get(target);
+  if(saved&&saved.x===target.x&&saved.z===target.z&&saved.kind===target.kind&&saved.alive===target.alive){
+   for(const region of saved.regions)enclosed(region);
+   poses+=saved.poses;blocked+=saved.blocked;certified+=saved.certified;physicalConnectors+=saved.physicalConnectors;emptyNativeOrigins+=saved.emptyNativeOrigins;
+   continue;
+  }
+  const start={poses,blocked,certified,physicalConnectors,emptyNativeOrigins};
+  targetRegions=cache?new Set():null;
   const angle=Math.atan2(outside.x-target.x,outside.z-target.z),reach=.6+radius;
   for(let i=0;i<32;i++){
    const a=angle+i*Math.PI/16,point=target.kind==='center'?centerBoundaryPoint(target,a,radius+.5,s):{x:target.x+Math.sin(a)*reach,z:target.z+Math.cos(a)*reach};poses++;
@@ -63,6 +83,11 @@ export function nativeServiceComponentProof(s,view,targets,radius,outside,outlin
    }
    certified++;
   }
+  if(cache)cache.targets.set(target,{x:target.x,z:target.z,kind:target.kind,alive:target.alive,
+   poses:poses-start.poses,blocked:blocked-start.blocked,certified:certified-start.certified,
+   physicalConnectors:physicalConnectors-start.physicalConnectors,emptyNativeOrigins:emptyNativeOrigins-start.emptyNativeOrigins,
+   regions:[...targetRegions]});
+  targetRegions=null;
  }
  return {valid:true,reason:'native-service-poses-in-positive-closed-components',poses,blocked,certified,physicalConnectors,emptyNativeOrigins,regions:regions.size,
   scope:'Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof.'};
