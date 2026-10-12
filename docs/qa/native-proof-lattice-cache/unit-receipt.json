@@ -1,0 +1,39 @@
+{
+  "scope": "QA OFF prototype before expensive ABBA",
+  "parent": "b2345e03",
+  "tests": 15,
+  "pass": 15,
+  "durationMs": 2674.4251,
+  "policyTests": 14,
+  "policyPass": 14,
+  "policyDurationMs": 3664.7362,
+  "firstPolicyAttempt": "10pass/4ENOENT missing sparse tracked fixture, retained negative; no runtime change to fix",
+  "files": {
+    "lattice-cache-tests-01.log.gz": {
+      "rawSHA": "e6d78153ce68fbe75f2660ac531d669f9fb300b7c2a5e03106d62a5639e3b1cb",
+      "gzipSHA": "55c031bc2c8b6785b4d242502ae08ec91ed5e2151886885e296b992a1ac32d06"
+    },
+    "lattice-cache-tests-02.log.gz": {
+      "rawSHA": "56efb3aa63bd6b783641857d6fe38fd52dd920ae3980ce5d4626d832b48542d7",
+      "gzipSHA": "733f7b4694c319ec7a0e5933a996baaca650be20b4a0c6681ca5a87181bb37d7"
+    },
+    "lattice-cache-tests-03.log.gz": {
+      "rawSHA": "df2d67c62decbcd6df12e2ed1c96134c4130b17bf6a9e3544d5a0a243cabfdf3",
+      "gzipSHA": "3aceaacc8711f06f5667360cfa770eea0bf6d738455b5b6cbdcbee258db4b869"
+    },
+    "lattice-cache-policy-regressions.log.gz": {
+      "rawSHA": "156a3ea10b30500835c43c8d9ed10e784bd5b49eac7b00e11c1f37f4a0e653ad",
+      "gzipSHA": "8b0ce925f2d2d9bf2a888dacd8876a07301cfc8350abdd7183380c69155034bd"
+    },
+    "lattice-cache-policy-regressions-02.log.gz": {
+      "rawSHA": "6f68088d8485dcf7e74d93b87d2d6ee0a438dc6aaa899de59f3461917064c381",
+      "gzipSHA": "8c0e9044d9773c6dba7bf94e50601bbd6aa4c3fbb6ecae22da7bc73c825f3bb2"
+    }
+  },
+  "sourceHashes": {
+    "tools/native-proof-lattice-cache.mjs": "ee3fe2ad62f1cabb56d279f1013ee4358bedfbaa2264ef8c509267666255c66c",
+    "tools/native-perimeter-proof.mjs": "617eb33994cf89114faf3fb2a9959bcff0cf7ce0409af2ed0ba9f0c80b6e6bc6",
+    "tools/replay_native_lattice_cache.mjs": "2dac7875d8a038bd49f4a94876273584c91037596332dca5418e89e47ea47cbf",
+    "tests/native-proof-lattice-cache.test.js": "f145007d7783a666ff2ca5d8d60eb80a88e0bae05978fefa1c0d32153230ae7e"
+  }
+}
