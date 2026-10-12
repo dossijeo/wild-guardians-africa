@@ -3,6 +3,7 @@ import {chooseRaidEntry,warmRaidApproaches} from '../simulation/raids.js';
 import {animalSpec,randomInt} from '../simulation/rules.js';
 import {ANIMAL_ACTIONS} from '../simulation/animal-actions-data.js';
 import {raidNavigationWarmth,navigationPathKey} from './raid-navigation-warmth.js';
+import {raidTargetFingerprint} from '../simulation/raid-target-fingerprint.js';
 
 export function computeRaidEntry(request){
   const {state,profile,group,bounds,view,key,token}=request;
@@ -21,6 +22,6 @@ export function computeRaidEntry(request){
     }
     return route;
   };
-  warmRaidApproaches(state,specs,entry,nav);
-  return {key,token,entry,warmth:raidNavigationWarmth(nav)};
+  const targetFingerprint=raidTargetFingerprint(state,nav),targetChoices=warmRaidApproaches(state,specs,entry,nav);
+  return {key,token,entry,warmth:raidNavigationWarmth(nav),targetFingerprint,targetChoices};
 }

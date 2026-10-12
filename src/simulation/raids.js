@@ -25,7 +25,12 @@ import {activeChunkRegion,validActiveBounds} from '../world/active-region.js';
 import {defensiveGroups} from './defensive-groups.js';
 import {targetReservationKey,targetReserved,reservedApproachClear,reconcileTargetReservations} from './raid-target-reservations.js';
 import {applyCropImpact,cropImpactDamage,CROP_HIT_POINTS} from './crop-impact-health.js';
+import {raidTargetFingerprint} from './raid-target-fingerprint.js';
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z),entrySelections=new WeakMap();
+const validPreparedTargetChoice=choice=>choice===null||!!choice&&typeof choice.targetId==='string'&&choice.targetId.length>0&&
+  (choice.shieldId===null||typeof choice.shieldId==='string')&&choice.approach&&
+  [choice.approach.point?.x,choice.approach.point?.z].every(Number.isFinite)&&
+  Array.isArray(choice.approach.path)&&choice.approach.path.length<=4096&&choice.approach.path.every(point=>Number.isFinite(point?.x)&&Number.isFinite(point?.z));
 export function planNight(s) {
   const prepared=preparePressureNight(s);
   s.nightPlan=prepared.plan;s.raidPressureMemory=prepared.memory;s.rng=prepared.rng;
@@ -191,6 +196,9 @@ export function spawnRaid(s,plan,nav,daytime=false) {
     hitsRemaining:plan.actors?.[i]?.hits??(plan.introductory&&!daytime?spec.hit_budget_min:randomInt(s,spec.hit_budget_min,spec.hit_budget_max)),...(plan.actors?.[i]?.damageProfile?{damageProfile:structuredClone(plan.actors[i].damageProfile)}:{}),status:'entering',targetId:null,reservation:null,path:null,attackRemaining:0,attackId:null,hitApplied:false}));
   if(wave){previous.animals.push(...animals);previous.waveIndex=plan.index;delete previous.pendingWavePlan;}
   else s.raid={id:`raid-${s.day}-${daytime?'day':'night'}`,animals,encounters:[],reservations:{},daytime,...(plan.pressureVersion===1?{waves:structuredClone(plan.waves),waveIndex:0,pressureFacts:structuredClone(plan.pressureFacts)}:{})};
+  nav.preparedRaidTargets=prepared?.targetChoices?.length===animals.length&&prepared.targetChoices.every(validPreparedTargetChoice)&&prepared.targetFingerprint===raidTargetFingerprint(s,nav)&&!plan.introductory?
+    {raidId:s.raid.id,fingerprint:prepared.targetFingerprint,startIndex:s.raid.animals.length-animals.length,animalIds:animals.map(a=>a.id),choices:prepared.targetChoices}:null;
+  trace?.({stage:'target-hint',prepared:!!prepared,choices:prepared?.targetChoices?.length??0,accepted:!!nav.preparedRaidTargets});
   if(plan.introductory&&!daytime){
     const count=s.plants.filter(p=>p.alive).length;
     s.raid.introPlantCount=count;s.raid.introCropLimit=Math.max(0,Math.min(count-1,Math.ceil(count*.2)));s.raid.introCropsDestroyed=0;
@@ -269,25 +277,29 @@ function targetFor(s,a,nav) {
   return null;
 }
 export function warmRaidApproaches(state,specs,entry,nav){
-  if(!entry)return;
+  if(!entry)return [];
   // Preview chooses only which static queries to warm. No preview choice,
   // reservation, motion or damage is copied back into the real simulation.
   const preview={...state,raid:{reservations:{},animals:specs.map(({radius},i)=>({id:`preview-${i}`,...entry.entries[i],radius,status:'entering',hitsRemaining:1}))}};
-  const originalState=nav.state;
+  const originalState=nav.state,choices=[];
   try{
     nav.state=preview;
     for(const animal of preview.raid.animals){
       const selected=targetFor(preview,animal,nav);
+      choices.push(selected?{targetId:selected.target.id,approach:selected.approach,shieldId:selected.shieldId}:null);
       if(selected){preview.raid.reservations[selected.reservation]=animal.id;animal.targetId=selected.target.id;animal.approach=selected.approach.point;}
     }
   }finally{nav.state=originalState;}
+  return choices;
 }
 export function updateRaid(s,dt,nav) {
   if(!s.raid)return;
   reconcileTargetReservations(s,release);
   updateWorkerEncounters(s,nav);
   observeWaitProgress(s);liveWaitQueue(s.raid);
-  for(const a of s.raid.animals) {
+  const preparedTargets=nav.preparedRaidTargets?.raidId===s.raid.id&&nav.preparedRaidTargets.fingerprint===raidTargetFingerprint(s,nav)?nav.preparedRaidTargets:null;
+  nav.preparedRaidTargets=null;
+  for(const [animalIndex,a] of s.raid.animals.entries()) {
     if(a.status==='gone')continue;
     if(a.status==='attacking'){
       a.attackDuration??=ANIMAL_ACTIONS.animals[a.species].clips[a.animation].duration;
@@ -354,7 +366,14 @@ export function updateRaid(s,dt,nav) {
         wait.epoch=epoch;wait.retryAt=s.elapsed+1;
       }
       const targetStarted=nav.__nativeTickPhaseTrace?performance.now():0;
-      const selected=targetFor(s,a,nav);
+      let selected=null;
+      const preparedIndex=animalIndex-(preparedTargets?.startIndex??0),hint=preparedTargets?.choices[preparedIndex];
+      if(preparedTargets&&a.id===preparedTargets.animalIds[preparedIndex]&&hint){
+        const hinted=raidTarget(s,hint.targetId),shield=hinted?spellAt(s,'shield',hinted):null;
+        if(hinted&&hint.shieldId===(shield?.id??null)&&!targetReserved(s,a,hinted)&&reservedApproachClear(s,a,hint.approach.point)&&actorSegmentClear(hint.approach.point,hint.approach.point,a,actorBlockers(s,a,false)))
+          selected={target:hinted,reservation:targetReservationKey(hinted,a),approach:hint.approach,shieldId:hint.shieldId};
+      }
+      if(!selected)selected=targetFor(s,a,nav);
       if(nav.__nativeTickPhaseTrace)nav.__nativeTickPhaseTrace({phase:'target-selection',time:s.time,animalId:a.id,milliseconds:performance.now()-targetStarted,found:!!selected,targetKind:selected?.target.kind??(selected?.target.alive!==undefined?'crop':null)});
       if(!selected){
         emit(s,'AnimalTargetUnavailable',{targetId:a.id,species:a.species,hitsRemaining:a.hitsRemaining});

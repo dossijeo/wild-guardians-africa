@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {RaidEntryPreparer} from '../src/world/raid-entry-preparer.js';
 import {computeRaidEntry} from '../src/world/compute-raid-entry.js';
-import {spawnRaid} from '../src/simulation/raids.js';
+import {spawnRaid,updateRaid} from '../src/simulation/raids.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {Navigation} from '../src/world/navigation.js';
 import {createOpeningWorld} from '../tools/check_opening.mjs';
@@ -22,6 +22,19 @@ for(const biome of ['sabana','gran-rio','manglares','volcanes','gran-canon','des
  const reference=deserialize(original),referenceNav=new Navigation(s.seed,s.biome,nav.profile);referenceNav.setState(reference);referenceNav.setActiveBounds(nav.activeBounds);referenceNav.setRaidView(nav.raidView.eye,nav.raidView.target);
  spawnRaid(reference,{group},referenceNav);spawnRaid(s,{group},nav);
  assert.equal(serialize(s),serialize(reference));assert.equal(preparer.stats.used,1);preparer.dispose();assert.equal(nav.preparedRaidEntry,undefined);
+ assert(nav.preparedRaidTargets,'Worker target choices should be available before the first raid update');
+ updateRaid(reference,0,referenceNav);updateRaid(s,0,nav);
+ assert.equal(serialize(s),serialize(reference),'Prepared choices must reproduce native target ordering, reservations and routes');
+});
+test('a changed crop rejects prepared target choices without changing the native entry',()=>{
+ const {s,nav}=createOpeningWorld(),center=s.structures[0],group=['warthog'];
+ s.nightPlan={at:400,group,done:false};nav.setActiveBounds([center.x-120,center.z-120,center.x+120,center.z+120]);nav.setRaidView({x:center.x+16,z:center.z+20},center);
+ const worker=fakeWorker(),preparer=new RaidEntryPreparer(nav,{createWorker:()=>worker});preparer.update(s);
+ worker.onmessage({data:computeRaidEntry(worker.requests[0])});
+ s.plants.push({id:'late-crop',species:'mijo',x:center.x+5,z:center.z,alive:true,attackHitPoints:1});
+ assert(spawnRaid(s,{group},nav));assert.equal(nav.preparedRaidTargets,null);
+ updateRaid(s,0,nav);assert(s.raid.animals[0].targetId);
+ preparer.dispose();
 });
 for(const change of ['camera','bounds','geometry','group','collapse','rng'])test(`${change}: obsolete worker replies cannot supply an entry`,()=>{
  const {s,nav,worker,preparer}=prepareFixture(),request=worker.requests[0];
