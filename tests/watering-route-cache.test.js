@@ -9,6 +9,10 @@ import {Navigation} from '../src/world/navigation.js';
 import {deserialize,serialize} from '../src/persistence/snapshots.js';
 const worker={x:0,z:4,radius:.28},plant={id:'p',x:0,z:0,species:'mijo'};
 const world=()=>({version:1,state:{},field:{},obstacles:[],suppressed:new Set()});
+test('signed zero retains the native atan2 approach direction',()=>{
+ const nav={version:1,state:{},walkable:()=>true,path:(_a,b)=>[{x:b.x,z:b.z}]},p={id:'origin',x:0,z:0,species:'mijo'};
+ for(const w of [{x:0,z:0},{x:-0,z:-0}])assert.deepEqual(wateringRoute(w,p,nav),reference(w,p,nav));
+});
 test('an exact successful query is reused without sharing its mutable route',()=>{
  const nav=world();let queries=0;const compute=()=>{queries++;return {destination:{x:1,z:2,id:'point'},path:[{x:1,z:2}]};};
  const first=cachedWateringRoute(worker,plant,nav,compute);first.path[0].x=999;first.path.shift();first.destination.z=999;

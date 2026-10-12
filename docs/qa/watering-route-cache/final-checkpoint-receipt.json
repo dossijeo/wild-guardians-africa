@@ -1,0 +1,20 @@
+{
+  "observedAt": "2026-10-12T00:48:42.143Z",
+  "scope": "Experimental exact-query cache checkpoint; no live campaign source modified, no main integration.",
+  "sourceSha256": {
+    "src/world/work-points.js": "3415a5926ef2a83b9bcdfa41ec380d35b9a9845b17695c55aa23f1d687a7f809",
+    "src/world/watering-route-cache.js": "3f6c9134be3a02f6cc74484127cf1930dbe7009377eb40178b01b19420d9ea36",
+    "tools/benchmark-watering-route-cache.mjs": "ad1c6416e205bb6dc146727234263022287dd815be4000fd3d4ca43134310140",
+    "tools/check-watering-cache-native-tick.mjs": "d0ac516050b897bfe359089fe84f8b89b2a327a9f35f07e572126c5f18b8b825",
+    "tests/fixtures/watering-route-v1-reference.mjs": "03125f102f5193ba6a48652745e2c4baacdb639175b10549a0163cd91ae2b8d4"
+  },
+  "evidenceSha256": {
+    "native-query-abba-signed-zero.json": "b3056f3a9fe736a980cbd984a1eeac0511c43e80965476603417662d96c13a7f",
+    "native-tick-parity-abba-signed-zero.json": "52e6a0b4edab25cf98d63067cb6691a29f421079b39dde702630c9f842809ae8",
+    "signed-zero-before.txt.gz": "19fbd25401630678d5b369d06d814de574b039f8e319e106a333cde80a63af3c",
+    "signed-zero-after.txt.gz": "c4bdc963623e8f0deb4d5a0ff5afc6fba096653cd9abe45a8a24d3c5ad8efded",
+    "web-build-final.txt.gz": "7d103f46836b10d4b129f3609a75bc9a571c2ab4a4ffd1cff29b57855f75d926"
+  },
+  "finalWebBuildSeconds": 24.28,
+  "fullRegression": "Pending on separate main-based worker-departure branch; this cache candidate has directed parity/unit evidence only."
+}

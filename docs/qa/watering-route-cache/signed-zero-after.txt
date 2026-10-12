@@ -1,0 +1,55 @@
+TAP version 13
+# Subtest: signed zero retains the native atan2 approach direction
+ok 1 - signed zero retains the native atan2 approach direction
+  ---
+  duration_ms: 7.7139
+  ...
+# Subtest: an exact successful query is reused without sharing its mutable route
+ok 2 - an exact successful query is reused without sharing its mutable route
+  ---
+  duration_ms: 0.7465
+  ...
+# Subtest: unreachable exact queries are reused; geometry epochs and world identities reopen them
+ok 3 - unreachable exact queries are reused; geometry epochs and world identities reopen them
+  ---
+  duration_ms: 1.2549
+  ...
+# Subtest: coordinates, body radius, species, crop identity and avoided terrain remain exact inputs
+ok 4 - coordinates, body radius, species, crop identity and avoided terrain remain exact inputs
+  ---
+  duration_ms: 0.7207
+  ...
+# Subtest: changed query implementations invalidate, and unversioned adapters are never memoized
+ok 5 - changed query implementations invalidate, and unversioned adapters are never memoized
+  ---
+  duration_ms: 0.379
+  ...
+# Subtest: a geometry change during computation cannot publish under the previous epoch
+ok 6 - a geometry change during computation cannot publish under the previous epoch
+  ---
+  duration_ms: 0.2746
+  ...
+# Subtest: entry and point budgets evict or reject instead of retaining unbounded queries
+ok 7 - entry and point budgets evict or reject instead of retaining unbounded queries
+  ---
+  duration_ms: 128.5524
+  ...
+# Subtest: native canyon 1 matches frozen uncached routes, including repeats and reload
+ok 8 - native canyon 1 matches frozen uncached routes, including repeats and reload
+  ---
+  duration_ms: 195.2993
+  ...
+# Subtest: native canyon 10 matches frozen uncached routes, including repeats and reload
+ok 9 - native canyon 10 matches frozen uncached routes, including repeats and reload
+  ---
+  duration_ms: 162.8339
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1087.1235

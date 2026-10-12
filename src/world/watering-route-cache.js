@@ -11,7 +11,8 @@ export function cachedWateringRoute(worker,plant,nav,compute){
     ![worker.x,worker.z,plant.x,plant.z,radius].every(Number.isFinite))return compute(worker,plant,nav);
  const epoch=[compute,...context(nav)];let cache=worlds.get(nav);
  if(!cache||!same(cache.epoch,epoch)){cache={epoch,entries:new Map(),points:0};worlds.set(nav,cache);}
- const key=JSON.stringify([worker.x,worker.z,radius,plant.x,plant.z,String(plant.id),plant.species,worker.terrainAvoidance??null]);
+ // JSON normally folds -0 into 0, although atan2 can choose the opposite side.
+ const key=JSON.stringify([worker.x,worker.z,radius,plant.x,plant.z,String(plant.id),plant.species,worker.terrainAvoidance??null],(_key,value)=>Object.is(value,-0)?{negativeZero:true}:value);
  if(cache.entries.has(key))return copy(cache.entries.get(key));
  const route=compute(worker,plant,nav),points=route?.path.length??0;
  // An injected navigator may change its epoch during the query. Do not admit

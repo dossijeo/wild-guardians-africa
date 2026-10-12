@@ -1,0 +1,105 @@
+TAP version 13
+# Subtest: signed zero retains the native atan2 approach direction
+not ok 1 - signed zero retains the native atan2 approach direction
+  ---
+  duration_ms: 12.9641
+  location: 'file:///C:/Users/PC/.codex/worktrees/watering-route-cache/wild-guardians-africa/tests/watering-route-cache.test.js:12:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+
+      {
+        destination: {
+          id: 'water-point-origin-0',
+    +     x: 0,
+    +     z: 0.83
+    -     x: -1.0164568432923031e-16,
+    -     z: -0.83
+        },
+        path: [
+          {
+    +       x: 0,
+    +       z: 0.83
+    -       x: -1.0164568432923031e-16,
+    -       z: -0.83
+          }
+        ]
+      }
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    destination:
+      x: -1.0164568432923031e-16
+      z: -0.83
+      id: 'water-point-origin-0'
+    path:
+      0:
+        x: -1.0164568432923031e-16
+        z: -0.83
+  actual:
+    destination:
+      x: 0
+      z: 0.83
+      id: 'water-point-origin-0'
+    path:
+      0:
+        x: 0
+        z: 0.83
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/watering-route-cache/wild-guardians-africa/tests/watering-route-cache.test.js:14:48)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.start (node:internal/test_runner/test:542:17)
+    startSubtest (node:internal/test_runner/harness:216:17)
+  ...
+# Subtest: an exact successful query is reused without sharing its mutable route
+ok 2 - an exact successful query is reused without sharing its mutable route # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.482
+  ...
+# Subtest: unreachable exact queries are reused; geometry epochs and world identities reopen them
+ok 3 - unreachable exact queries are reused; geometry epochs and world identities reopen them # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1723
+  ...
+# Subtest: coordinates, body radius, species, crop identity and avoided terrain remain exact inputs
+ok 4 - coordinates, body radius, species, crop identity and avoided terrain remain exact inputs # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1421
+  ...
+# Subtest: changed query implementations invalidate, and unversioned adapters are never memoized
+ok 5 - changed query implementations invalidate, and unversioned adapters are never memoized # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1534
+  ...
+# Subtest: a geometry change during computation cannot publish under the previous epoch
+ok 6 - a geometry change during computation cannot publish under the previous epoch # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1226
+  ...
+# Subtest: entry and point budgets evict or reject instead of retaining unbounded queries
+ok 7 - entry and point budgets evict or reject instead of retaining unbounded queries # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1314
+  ...
+# Subtest: native canyon 1 matches frozen uncached routes, including repeats and reload
+ok 8 - native canyon 1 matches frozen uncached routes, including repeats and reload # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1408
+  ...
+# Subtest: native canyon 10 matches frozen uncached routes, including repeats and reload
+ok 9 - native canyon 10 matches frozen uncached routes, including repeats and reload # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1889
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 8
+# todo 0
+# duration_ms 384.8404
