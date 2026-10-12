@@ -9,13 +9,6 @@ if(rm.matches){parallax=false;el('parallax').checked=false}
 function scene(){return flat[index]}
 function limit(){return Math.max(minimum,scene().audio[language].durationSeconds+0.8)}
 function imageFor(s){return data.images[s.id]||''}
-function layerMotion(camera,depth){
-  // Percent offsets are relative to the 16:9 panel. The 8% initial overscan
-  // keeps both background and foreground inside the crop at either extreme.
-  const factor=2.5+5.5*depth;
-  const x=camera.panXPercent*factor,y=camera.panYPercent*factor;
-  return {startX:-x/2,endX:x/2,startY:-y/2,endY:y/2,startScale:1.08,endScale:1.08+(camera.zoom-1)*(1+depth*0.35)};
-}
 function setStatus(es,en){el('audioStatus').textContent=language==='ES'?es:en}
 function releaseVoice(){voice.pause();voice.removeAttribute('src');voice.load()}
 function setPlaying(value){playing=value;stage.classList.toggle('playing',playing);el('toggle').textContent=playing?(language==='ES'?'Pausa':'Pause'):(language==='ES'?'Reproducir':'Play');el('toggle').setAttribute('aria-label',el('toggle').textContent)}
@@ -43,14 +36,14 @@ function render(){
     art.removeAttribute('src');
     const nodes=s.layers.map(layer=>{
       const img=new Image();img.alt='';img.src=data.images[layer.image];
-      const motion=layerMotion(s.camera,layer.depth);
-      img.style.setProperty('--layer-start-x',`${motion.startX}%`);
-      img.style.setProperty('--layer-end-x',`${motion.endX}%`);
-      img.style.setProperty('--layer-start-y',`${motion.startY}%`);
-      img.style.setProperty('--layer-end-y',`${motion.endY}%`);
+      const motion=layer.motion;
+      if(!motion)throw new Error('Missing motion for '+s.id+' '+layer.image);
+      img.style.setProperty('--layer-start-x',`${motion.startXPercent}%`);
+      img.style.setProperty('--layer-end-x',`${motion.endXPercent}%`);
+      img.style.setProperty('--layer-start-y','0%');
+      img.style.setProperty('--layer-end-y','0%');
       img.style.setProperty('--layer-start-scale',motion.startScale);
       img.style.setProperty('--layer-end-scale',motion.endScale);
-      img.style.setProperty('--duration',`${limit()}s`);
       return img;
     });
     const nextStack=document.createElement('div');nextStack.className='layers';nextStack.replaceChildren(...nodes);
@@ -104,7 +97,7 @@ el('toggle').onclick=()=>{
   if(playing){voice.pause();setPlaying(false)}
   else{if(voice.ended){elapsed=0;voice.currentTime=0}setPlaying(true);last=0;if(visibleGeneration===generation)startVoice(generation)}
 };
-el('duration').oninput=e=>{minimum=Number(e.target.value);elapsed=Math.min(elapsed,limit());activeStack.querySelectorAll('img').forEach(img=>img.style.setProperty('--duration',`${limit()}s`));updateTime()};
+el('duration').oninput=e=>{minimum=Number(e.target.value);elapsed=Math.min(elapsed,limit());updateTime()};
 el('language').onchange=e=>{language=e.target.value;document.documentElement.lang=language.toLowerCase();jump(index)};
 el('parallax').onchange=e=>{parallax=e.target.checked;stage.classList.toggle('no-parallax',!parallax)};
 el('texts').onchange=e=>stage.classList.toggle('captions-off',!e.target.checked);

@@ -4,7 +4,7 @@ const fs=require('node:fs');
 const vm=require('node:vm');
 
 class Element{
-  constructor(){this.children=[];this.attributes={};this.style={values:{},setProperty(name,value){this.values[name]=value}};this.classList={add(){},remove(){},toggle(){}};this.textContent='';this.checked=true}
+  constructor(){this.children=[];this.attributes={};this.style={values:{},setProperty(name,value){this.values[name]=value}};const classes=new Set();this.classList={add:name=>classes.add(name),remove:name=>classes.delete(name),toggle:(name,on)=>on===undefined?(classes.has(name)?(classes.delete(name),false):(classes.add(name),true)):(on?(classes.add(name),true):(classes.delete(name),false)),contains:name=>classes.has(name)};this.textContent='';this.checked=true}
   replaceChildren(...children){this.children=children}
   appendChild(child){this.children.push(child)}
   remove(){}
@@ -23,7 +23,7 @@ class FakeAudio{
 }
 const elements=new Map();
 const get=id=>{if(!elements.has(id))elements.set(id,new Element());return elements.get(id)};
-const makeScene=(id,number)=>({id,act:1,scene:number,audio:{ES:{durationSeconds:12},EN:{durationSeconds:8.5}},camera:{panXPercent:0.5,panYPercent:0.2,zoom:1.04},layers:[{image:`layers/${id}-background.webp`,depth:0},{image:`layers/${id}-foreground.webp`,depth:0.9}],narrationRaw:`${number}.  Texto ES`,narrationRawEN:`${number}.  Exact EN`,artDirection:'woodcut'});
+const makeScene=(id,number)=>({id,act:1,scene:number,audio:{ES:{durationSeconds:12},EN:{durationSeconds:8.5}},camera:{panXPercent:0.5,panYPercent:0.2,zoom:1.04},layers:[{image:`layers/${id}-background.webp`,depth:0,motion:{startXPercent:-2.5,endXPercent:2.5,startScale:1.16,endScale:1.2}},{image:`layers/${id}-foreground.webp`,depth:0.9,motion:{startXPercent:-7,endXPercent:7,startScale:1,endScale:1.018}}],narrationRaw:`${number}.  Texto ES`,narrationRawEN:`${number}.  Exact EN`,artDirection:'woodcut'});
 const payload={manifest:{acts:[{number:1,roman:'I',title:'Título',titleEN:'Title',afterNight:10,closingRaw:'CIERRE',closingRawEN:'CLOSURE',scenes:[makeScene('01',1),makeScene('02',2)]}]},images:{'layers/01-background.webp':'img1b','layers/01-foreground.webp':'img1f','layers/02-background.webp':'img2b','layers/02-foreground.webp':'img2f'},audio:{'01-ES':'voice1es','01-EN':'voice1en','02-ES':'voice2es','02-EN':'voice2en'}};
 get('inline-data').textContent=JSON.stringify(payload);
 const raf=[];const timers=[];
@@ -39,13 +39,16 @@ async function tick(time){
   const voice=FakeAudio.last;
   const [background,foreground]=FakeImage.all;
   const delta=img=>Math.abs(parseFloat(img.style.values['--layer-end-x'])-parseFloat(img.style.values['--layer-start-x']));
-  assert.ok(delta(background)>1,'background has measurable movement');
+  assert.ok(delta(background)>=5,'background has measurable movement');
   assert.ok(delta(foreground)>delta(background)*2,'foreground moves at a different speed');
-  assert.ok(parseFloat(foreground.style.values['--layer-end-scale'])>parseFloat(background.style.values['--layer-end-scale']),'camera.zoom adds depth-aware zoom');
+  assert.ok(parseFloat(background.style.values['--layer-end-scale'])>parseFloat(background.style.values['--layer-start-scale']),'camera.zoom reaches background');
+  assert.ok(parseFloat(foreground.style.values['--layer-end-scale'])>parseFloat(foreground.style.values['--layer-start-scale']),'camera.zoom reaches foreground');
   const css=fs.readFileSync(require('node:path').join(__dirname,'viewer.template.html'),'utf8');
+  assert.match(css,/animation:layer-drift 6s ease-in-out infinite alternate both/,'full track repeats within six seconds');
   assert.match(css,/\.stage\.playing \.layers img\{animation-play-state:running\}/);
   assert.match(css,/\.stage\.no-parallax \.layers img\{animation:none;transform:none\}/);
   assert.match(css,/@media\(prefers-reduced-motion:reduce\)\{\.stage \.layers img\{animation:none!important;transform:none!important\}\}/);
+  assert.ok(get('stage').classList.contains('playing'),'animation is enabled while playing');
   assert.equal(voice.src,'voice1es');assert.equal(voice.playCount,0,'voice waits for decoded illustration');
   await tick(1000);await tick(1050);assert.equal(voice.playCount,1);
   get('next').onclick();get('prev').onclick();
@@ -53,8 +56,10 @@ async function tick(time){
   const before=voice.playCount;await tick(1100);await tick(1150);assert.equal(voice.playCount,before+1,'stale navigation does not play');
   get('language').onchange({target:{value:'EN'}});await tick(1200);await tick(1250);
   assert.equal(voice.src,'voice1en');assert.equal(get('caption').textContent,'1.  Exact EN');
-  const pauses=voice.pauseCount;get('toggle').onclick();assert.equal(voice.pauseCount,pauses+1);
-  const plays=voice.playCount;get('toggle').onclick();assert.equal(voice.playCount,plays+1);
+  const pauses=voice.pauseCount;get('toggle').onclick();assert.equal(voice.pauseCount,pauses+1);assert.ok(!get('stage').classList.contains('playing'),'pause freezes motion');
+  const plays=voice.playCount;get('toggle').onclick();assert.equal(voice.playCount,plays+1);assert.ok(get('stage').classList.contains('playing'),'resume restarts motion');
+  get('parallax').onchange({target:{checked:false}});assert.ok(get('stage').classList.contains('no-parallax'),'user switch disables motion');
+  get('parallax').onchange({target:{checked:true}});assert.ok(!get('stage').classList.contains('no-parallax'),'user switch restores motion');
   get('duration').oninput({target:{value:'6'}});
   await tick(2000);await tick(20000);
   assert.equal(voice.src,'voice1en','scene does not advance before narration ends');

@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 
 from PIL import Image, ImageDraw
+from render_motion_preview import render as render_scene
 
 
 ROOT = Path(__file__).parent
@@ -13,26 +14,7 @@ ROOT = Path(__file__).parent
 def render(scene_id: str, pan_fraction: float) -> Image.Image:
     manifest = json.loads((ROOT / "cinematics-manifest.json").read_text(encoding="utf-8"))
     scene = next(s for a in manifest["acts"] for s in a["scenes"] if s["id"] == scene_id)
-    size = (1672, 941)
-    composite = Image.new("RGBA", size, (0, 0, 0, 0))
-    for layer in scene["layers"]:
-        source = Image.open(ROOT / layer["image"].replace(".webp", ".png")).convert("RGBA")
-        assert source.size == size
-        depth = layer["depth"]
-        factor = 2.5 + 5.5 * depth
-        x = scene["camera"]["panXPercent"] * factor
-        y = scene["camera"]["panYPercent"] * factor
-        offset_x = -x / 2 if pan_fraction == 0 else x / 2
-        offset_y = -y / 2 if pan_fraction == 0 else y / 2
-        zoom = 1.08 if pan_fraction == 0 else 1.08 + (scene["camera"]["zoom"] - 1) * (1 + depth * 0.35)
-        resized = source.resize((round(size[0] * zoom), round(size[1] * zoom)), Image.Resampling.LANCZOS)
-        left = round((size[0] - resized.width) / 2 + size[0] * offset_x / 100)
-        top = round((size[1] - resized.height) / 2 + size[1] * offset_y / 100)
-        plate = Image.new("RGBA", size, (0, 0, 0, 0))
-        plate.paste(resized, (left, top))
-        composite.alpha_composite(plate)
-    assert composite.getchannel("A").getextrema() == (255, 255), f"Uncovered edge in scene {scene_id}"
-    return composite.convert("RGB")
+    return render_scene(scene, pan_fraction)
 
 
 def main() -> None:
