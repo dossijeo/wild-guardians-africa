@@ -40,7 +40,7 @@ def main() -> None:
     layers = json.loads((ROOT / "tinify-layers-report.json").read_text(encoding="utf-8"))
     layer_provenance = json.loads((ROOT / "layers/provenance.json").read_text(encoding="utf-8"))
     audio = json.loads((ROOT / "audio-report.json").read_text(encoding="utf-8"))
-    assert len(base) == 50 and len(source_provenance) == 50 and len(layers) == 101 and len(layer_provenance) == 50 and len(audio) == 100
+    assert len(base) == 50 and len(source_provenance) == 50 and len(layers) == 105 and len(layer_provenance) == 50 and len(audio) == 100
     for s in scenes:
         sid = s["id"]
         image = ROOT / s["image"]
@@ -48,7 +48,7 @@ def main() -> None:
         assert digest(ROOT / "sources" / f"scene-{sid}.png") == base[sid]["sourceSha256"] == source_provenance[sid]["pngSha256"]
         with Image.open(image) as im:
             assert im.format == "WEBP" and im.size == (1672, 941)
-        assert len(s["layers"]) == (3 if sid == "01" else 2)
+        assert len(s["layers"]) == (3 if sid in {"01", "31", "35", "41", "47"} else 2)
         assert s["layers"][0]["depth"] == 0
         for layer in s["layers"]:
             path = ROOT / layer["image"]
@@ -76,16 +76,16 @@ def main() -> None:
     assert match
     bundle = json.loads(match.group(1))
     assert bundle["manifest"] == m
-    assert len(bundle["images"]) == 101 and len(bundle["audio"]) == 100
+    assert len(bundle["images"]) == 105 and len(bundle["audio"]) == 100
     assert all(k.startswith("layers/") for k in bundle["images"])
     assert all(x.startswith("data:image/webp;base64,") for x in bundle["images"].values())
     assert all(x.startswith("data:audio/ogg;codecs=opus;base64,") for x in bundle["audio"].values())
     assert "__INLINE_DATA__" not in html and "__VIEWER_SCRIPT__" not in html
     assert not re.search(r"<script[^>]+src=|<link[^>]+href=", html)
     print("PASS: 50 ES + 50 EN scene paragraphs and 10 + 10 closures match DOCX exactly")
-    print("PASS: 50 Tinify base WebP and 101 Tinify layers decode at 1672x941; 51 alpha cutouts")
+    print("PASS: 50 Tinify base WebP and 105 Tinify layers decode at 1672x941; 55 alpha cutouts")
     print("PASS: 100 mono Opus outputs match ZIP provenance and scene timing")
-    print("PASS: offline HTML embeds only 101 layer WebP and 100 Opus tracks, no external scripts/styles")
+    print("PASS: offline HTML embeds only 105 layer WebP and 100 Opus tracks, no external scripts/styles")
 
 
 if __name__ == "__main__":

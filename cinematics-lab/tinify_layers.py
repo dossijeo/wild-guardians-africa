@@ -2,9 +2,11 @@
 
 import base64
 import hashlib
+import http.client
 import io
 import json
 import os
+import time
 from pathlib import Path
 
 from PIL import Image
@@ -21,8 +23,8 @@ def main() -> None:
     report_path = root / "tinify-layers-report.json"
     report = json.loads(report_path.read_text(encoding="utf-8")) if report_path.exists() else {}
     sources = sorted((root / "layers").glob("scene-??-*.png"))
-    if len(sources) != 101:
-        raise RuntimeError(f"Expected 101 layer sources, found {len(sources)}")
+    if len(sources) != 105:
+        raise RuntimeError(f"Expected 105 layer sources, found {len(sources)}")
     for source in sources:
         raw = source.read_bytes()
         target = source.with_suffix(".webp")
@@ -33,7 +35,15 @@ def main() -> None:
         location = headers.get("Location")
         if not location or not location.startswith("https://api.tinify.com/output/"):
             raise RuntimeError(f"Invalid Tinify output location for {source.name}")
-        webp, result_headers = request(location, auth, b'{"convert":{"type":"image/webp"}}', "application/json")
+        for attempt in range(4):
+            try:
+                webp, result_headers = request(location, auth, b'{"convert":{"type":"image/webp"}}', "application/json")
+                break
+            except http.client.IncompleteRead:
+                if attempt == 3:
+                    raise
+                print(f"{source.stem}: truncated Tinify transfer; retrying ({attempt + 1}/3)", flush=True)
+                time.sleep(2 ** attempt)
         with Image.open(io.BytesIO(webp)) as image:
             image.load()
             if image.format != "WEBP":
