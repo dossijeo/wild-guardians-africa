@@ -1,0 +1,635 @@
+{
+  "scope": "Read-only retained payload/source analysis, no simulation or timing added; static repetition is not measured fractional-hit count",
+  "producerSource": "3c1a1232f830b92bd581f48fc19d9f9dca799a3d",
+  "verifiedPayloads": 13,
+  "sourceFacts": [
+    {
+      "path": "src/world/navigation.js",
+      "sha": "21b82f33c62581436a6cef702b66af272ae9d3b096cb2b20ee858f0a50196743",
+      "matches": [
+        {
+          "pattern": "segmentClear(start,end,radius,ignore,worker) {",
+          "line": 405
+        },
+        {
+          "pattern": "const grid=Number.isInteger(start.x)",
+          "line": 408
+        },
+        {
+          "pattern": "if(!this.walkable(point.x,point.z,radius,ignore,worker)||!this.segmentClear(start,point",
+          "line": 338
+        },
+        {
+          "pattern": "const known=open.values()",
+          "line": 360
+        }
+      ]
+    },
+    {
+      "path": "src/world/animal-segment-clearance.js",
+      "sha": "aef7212f4f95dce395c2fabf3171dc8cfa309b403e1def3a97a14e5991e3a704",
+      "matches": [
+        {
+          "pattern": "must run even when",
+          "line": 8
+        },
+        {
+          "pattern": "nav.coarseSegmentClear",
+          "line": 10
+        }
+      ]
+    },
+    {
+      "path": "src/world/terrain.js",
+      "sha": "f5e0937e2c235b5e4fd495a4ce5e7baa9fc518d1b194de20b3458fe65d7afc59",
+      "matches": [
+        {
+          "pattern": "slope(x,z)",
+          "line": 163
+        },
+        {
+          "pattern": "surface(x,z)",
+          "line": 108
+        }
+      ]
+    },
+    {
+      "path": "tools/native-service-component-proof.mjs",
+      "sha": "9da170fe43cad62dbf2fceea0aee616767b5ea7da9d68ce54257885f57c1f7dc",
+      "matches": [
+        {
+          "pattern": "view.approachPath(outside,point",
+          "line": 24
+        },
+        {
+          "pattern": "!view.segmentClear(point,q",
+          "line": 31
+        }
+      ]
+    }
+  ],
+  "arms": [
+    {
+      "label": "A1",
+      "actMs": 79925.8557,
+      "lattice": {
+        "proofs": 11,
+        "surfaceCalls": 150011093,
+        "latticeCalls": 450033279,
+        "nativeLatticeCalls": 15823163,
+        "hits": 434210116,
+        "capacityBypasses": 0,
+        "coordinateBypasses": 15786647,
+        "coarseCollisionCalls": 1364074,
+        "epochInvalidations": 0,
+        "maxEntries": 13843,
+        "mode": "flat"
+      },
+      "spatial": {
+        "proofs": 11,
+        "indexedWalls": 0,
+        "alwaysRetained": 0,
+        "queries": 0,
+        "potentialCandidates": 0,
+        "actualCandidates": 0,
+        "fullFallbacks": 0,
+        "cellsVisited": 0,
+        "enabled": false
+      }
+    },
+    {
+      "label": "B1",
+      "actMs": 68173.10720000001,
+      "lattice": {
+        "proofs": 11,
+        "surfaceCalls": 150011093,
+        "latticeCalls": 450033279,
+        "nativeLatticeCalls": 15823163,
+        "hits": 434210116,
+        "capacityBypasses": 0,
+        "coordinateBypasses": 15786647,
+        "coarseCollisionCalls": 1364074,
+        "epochInvalidations": 0,
+        "maxEntries": 13843,
+        "mode": "flat"
+      },
+      "spatial": {
+        "proofs": 11,
+        "indexedWalls": 1358,
+        "alwaysRetained": 119,
+        "queries": 1477262,
+        "potentialCandidates": 192607552,
+        "actualCandidates": 28478927,
+        "fullFallbacks": 0,
+        "cellsVisited": 2749546,
+        "enabled": true
+      }
+    },
+    {
+      "label": "B2",
+      "actMs": 72682.86260000002,
+      "lattice": {
+        "proofs": 11,
+        "surfaceCalls": 150011093,
+        "latticeCalls": 450033279,
+        "nativeLatticeCalls": 15823163,
+        "hits": 434210116,
+        "capacityBypasses": 0,
+        "coordinateBypasses": 15786647,
+        "coarseCollisionCalls": 1364074,
+        "epochInvalidations": 0,
+        "maxEntries": 13843,
+        "mode": "flat"
+      },
+      "spatial": {
+        "proofs": 11,
+        "indexedWalls": 1358,
+        "alwaysRetained": 119,
+        "queries": 1477262,
+        "potentialCandidates": 192607552,
+        "actualCandidates": 28478927,
+        "fullFallbacks": 0,
+        "cellsVisited": 2749546,
+        "enabled": true
+      }
+    },
+    {
+      "label": "A2",
+      "actMs": 89642.47750000001,
+      "lattice": {
+        "proofs": 11,
+        "surfaceCalls": 150011093,
+        "latticeCalls": 450033279,
+        "nativeLatticeCalls": 15823163,
+        "hits": 434210116,
+        "capacityBypasses": 0,
+        "coordinateBypasses": 15786647,
+        "coarseCollisionCalls": 1364074,
+        "epochInvalidations": 0,
+        "maxEntries": 13843,
+        "mode": "flat"
+      },
+      "spatial": {
+        "proofs": 11,
+        "indexedWalls": 0,
+        "alwaysRetained": 0,
+        "queries": 0,
+        "potentialCandidates": 0,
+        "actualCandidates": 0,
+        "fullFallbacks": 0,
+        "cellsVisited": 0,
+        "enabled": false
+      }
+    }
+  ],
+  "proofs": [
+    {
+      "attempt": 0,
+      "bounds": [
+        71.94000000000001,
+        -15.260000000000002,
+        104.64000000000001,
+        15.260000000000002
+      ],
+      "result": "no-complete-native-component-certificate",
+      "checks": [
+        {
+          "radius": 1.1,
+          "closed": false,
+          "services": null,
+          "poses": 0
+        }
+      ]
+    },
+    {
+      "attempt": 2,
+      "bounds": [
+        69.76,
+        -15.260000000000002,
+        106.82000000000002,
+        15.260000000000002
+      ],
+      "result": "no-complete-native-component-certificate",
+      "checks": [
+        {
+          "radius": 1.1,
+          "closed": false,
+          "services": null,
+          "poses": 0
+        }
+      ]
+    },
+    {
+      "attempt": 4,
+      "bounds": [
+        71.94000000000001,
+        -17.44,
+        104.64000000000001,
+        17.44
+      ],
+      "result": "no-complete-native-component-certificate",
+      "checks": [
+        {
+          "radius": 1.1,
+          "closed": false,
+          "services": null,
+          "poses": 0
+        }
+      ]
+    },
+    {
+      "attempt": 6,
+      "bounds": [
+        69.76,
+        -17.44,
+        106.82000000000002,
+        17.44
+      ],
+      "result": "no-complete-native-component-certificate",
+      "checks": [
+        {
+          "radius": 1.1,
+          "closed": false,
+          "services": null,
+          "poses": 0
+        }
+      ]
+    },
+    {
+      "attempt": 10,
+      "bounds": [
+        71.94000000000001,
+        -19.62,
+        104.64000000000001,
+        19.62
+      ],
+      "result": "no-complete-native-component-certificate",
+      "checks": [
+        {
+          "radius": 1.1,
+          "closed": false,
+          "services": null,
+          "poses": 0
+        }
+      ]
+    },
+    {
+      "attempt": 12,
+      "bounds": [
+        67.58000000000001,
+        -17.44,
+        109.00000000000001,
+        17.44
+      ],
+      "result": "no-complete-native-component-certificate",
+      "checks": [
+        {
+          "radius": 1.1,
+          "closed": false,
+          "services": null,
+          "poses": 0
+        }
+      ]
+    },
+    {
+      "attempt": 14,
+      "bounds": [
+        69.76,
+        -19.62,
+        106.82000000000002,
+        19.62
+      ],
+      "result": "no-complete-native-component-certificate",
+      "checks": [
+        {
+          "radius": 1.1,
+          "closed": false,
+          "services": null,
+          "poses": 0
+        }
+      ]
+    },
+    {
+      "attempt": 16,
+      "bounds": [
+        67.58000000000001,
+        -19.62,
+        109.00000000000001,
+        19.62
+      ],
+      "result": "no-complete-native-component-certificate",
+      "checks": [
+        {
+          "radius": 1.1,
+          "closed": false,
+          "services": null,
+          "poses": 0
+        }
+      ]
+    },
+    {
+      "attempt": 18,
+      "bounds": [
+        74.5,
+        -14,
+        102.75,
+        14.25
+      ],
+      "result": "native-worker-route-blocked",
+      "checks": [
+        {
+          "radius": 1.1,
+          "closed": false,
+          "services": "native-service-poses-in-positive-closed-components",
+          "poses": 5664
+        },
+        {
+          "radius": 0.9,
+          "closed": false,
+          "services": "native-service-poses-in-positive-closed-components",
+          "poses": 5664
+        },
+        {
+          "radius": 0.97,
+          "closed": false,
+          "services": "native-service-poses-in-positive-closed-components",
+          "poses": 5664
+        },
+        {
+          "radius": 0.85,
+          "closed": false,
+          "services": "native-service-poses-in-positive-closed-components",
+          "poses": 5664
+        },
+        {
+          "radius": 1.55,
+          "closed": false,
+          "services": "native-service-poses-in-positive-closed-components",
+          "poses": 5664
+        }
+      ]
+    },
+    {
+      "attempt": 19,
+      "bounds": [
+        73.5,
+        -15,
+        103.75,
+        15.25
+      ],
+      "result": "native-worker-route-blocked",
+      "checks": [
+        {
+          "radius": 1.1,
+          "closed": false,
+          "services": "native-service-poses-in-positive-closed-components",
+          "poses": 5664
+        },
+        {
+          "radius": 0.9,
+          "closed": false,
+          "services": "native-service-poses-in-positive-closed-components",
+          "poses": 5664
+        },
+        {
+          "radius": 0.97,
+          "closed": false,
+          "services": "native-service-poses-in-positive-closed-components",
+          "poses": 5664
+        },
+        {
+          "radius": 0.85,
+          "closed": false,
+          "services": "native-service-poses-in-positive-closed-components",
+          "poses": 5664
+        },
+        {
+          "radius": 1.55,
+          "closed": false,
+          "services": "native-service-poses-in-positive-closed-components",
+          "poses": 5664
+        }
+      ]
+    },
+    {
+      "attempt": 20,
+      "bounds": [
+        72.5,
+        -16,
+        104.75,
+        16.25
+      ],
+      "result": "native-worker-route-blocked",
+      "checks": [
+        {
+          "radius": 1.1,
+          "closed": false,
+          "services": "native-service-poses-in-positive-closed-components",
+          "poses": 5664
+        },
+        {
+          "radius": 0.9,
+          "closed": false,
+          "services": "native-service-poses-in-positive-closed-components",
+          "poses": 5664
+        },
+        {
+          "radius": 0.97,
+          "closed": false,
+          "services": "native-service-poses-in-positive-closed-components",
+          "poses": 5664
+        },
+        {
+          "radius": 0.85,
+          "closed": false,
+          "services": "native-service-poses-in-positive-closed-components",
+          "poses": 5664
+        },
+        {
+          "radius": 1.55,
+          "closed": false,
+          "services": "native-service-poses-in-positive-closed-components",
+          "poses": 5664
+        }
+      ]
+    }
+  ],
+  "totalServicePoses": 84960,
+  "existingProfileScope": "Earlier flat profiled run65a9: describes same unchanged native functions, NOT spatial run70s breakdown",
+  "earlierDisjointProfile": [
+    {
+      "label": "A1",
+      "buckets": {
+        "coarsePipeline": 131.112023000015,
+        "surfaceOther": 2.2529009999999987,
+        "other": 30.395705000000248
+      },
+      "topExclusive": [
+        {
+          "fn": "lattice@terrain.js:411",
+          "seconds": 48.89387600000124
+        },
+        {
+          "fn": "coarseSegmentClear@navigation.js:474",
+          "seconds": 18.691374999999933
+        },
+        {
+          "fn": "wallCollisionBounds@wall-collision-frame.js:18",
+          "seconds": 12.365730999999904
+        },
+        {
+          "fn": "fluidInside@terrain.js:420",
+          "seconds": 11.123132999999957
+        },
+        {
+          "fn": "surface@terrain.js:412",
+          "seconds": 9.618536999999977
+        },
+        {
+          "fn": "shadow.coarseSegmentClear@native-proof-lattice-cache.mjs:37",
+          "seconds": 8.655039999999968
+        },
+        {
+          "fn": "shadowField.lattice@native-proof-lattice-cache.mjs:18",
+          "seconds": 8.14553899999997
+        },
+        {
+          "fn": "terrainValid@navigation.js:131",
+          "seconds": 6.25571499999997
+        }
+      ]
+    },
+    {
+      "label": "B1",
+      "buckets": {
+        "coarsePipeline": 104.18218100000817,
+        "surfaceOther": 1.613961999999998,
+        "other": 30.6444200000001
+      },
+      "topExclusive": [
+        {
+          "fn": "coarseSegmentClear@navigation.js:474",
+          "seconds": 20.72797000000024
+        },
+        {
+          "fn": "shadowField.lattice@native-proof-lattice-cache.mjs:27",
+          "seconds": 16.16977999999991
+        },
+        {
+          "fn": "fluidInside@terrain.js:420",
+          "seconds": 12.996368999999934
+        },
+        {
+          "fn": "wallCollisionBounds@wall-collision-frame.js:18",
+          "seconds": 12.567434999999918
+        },
+        {
+          "fn": "shadow.coarseSegmentClear@native-proof-lattice-cache.mjs:37",
+          "seconds": 8.84433099999993
+        },
+        {
+          "fn": "shadowField.surface@native-proof-lattice-cache.mjs:17",
+          "seconds": 7.097011999999976
+        },
+        {
+          "fn": "surface@terrain.js:412",
+          "seconds": 7.006678999999985
+        },
+        {
+          "fn": "terrainValid@navigation.js:131",
+          "seconds": 5.798477000000001
+        }
+      ]
+    },
+    {
+      "label": "B2",
+      "buckets": {
+        "coarsePipeline": 102.72976900000776,
+        "surfaceOther": 1.5454320000000012,
+        "other": 29.387100999999983
+      },
+      "topExclusive": [
+        {
+          "fn": "coarseSegmentClear@navigation.js:474",
+          "seconds": 20.79318499999979
+        },
+        {
+          "fn": "shadowField.lattice@native-proof-lattice-cache.mjs:27",
+          "seconds": 16.021601999999817
+        },
+        {
+          "fn": "fluidInside@terrain.js:420",
+          "seconds": 12.74553199999988
+        },
+        {
+          "fn": "wallCollisionBounds@wall-collision-frame.js:18",
+          "seconds": 12.243324999999938
+        },
+        {
+          "fn": "shadow.coarseSegmentClear@native-proof-lattice-cache.mjs:37",
+          "seconds": 8.460333999999982
+        },
+        {
+          "fn": "surface@terrain.js:412",
+          "seconds": 6.996729000000011
+        },
+        {
+          "fn": "shadowField.surface@native-proof-lattice-cache.mjs:17",
+          "seconds": 6.873041000000003
+        },
+        {
+          "fn": "terrainValid@navigation.js:131",
+          "seconds": 5.512315999999979
+        }
+      ]
+    },
+    {
+      "label": "A2",
+      "buckets": {
+        "coarsePipeline": 148.69759700002152,
+        "surfaceOther": 2.444990999999999,
+        "other": 32.36613500000038
+      },
+      "topExclusive": [
+        {
+          "fn": "lattice@terrain.js:411",
+          "seconds": 51.50221400000199
+        },
+        {
+          "fn": "coarseSegmentClear@navigation.js:474",
+          "seconds": 21.490858999999883
+        },
+        {
+          "fn": "fluidInside@terrain.js:420",
+          "seconds": 13.056418999999742
+        },
+        {
+          "fn": "wallCollisionBounds@wall-collision-frame.js:18",
+          "seconds": 12.198891999999844
+        },
+        {
+          "fn": "shadowField.lattice@native-proof-lattice-cache.mjs:18",
+          "seconds": 11.642074999999885
+        },
+        {
+          "fn": "shadow.coarseSegmentClear@native-proof-lattice-cache.mjs:37",
+          "seconds": 8.878960999999919
+        },
+        {
+          "fn": "surface@terrain.js:412",
+          "seconds": 8.860644999999918
+        },
+        {
+          "fn": "shadowField.surface@native-proof-lattice-cache.mjs:17",
+          "seconds": 7.63462799999996
+        }
+      ]
+    }
+  ],
+  "unknowns": [
+    "fractional segment unique keys/hit rate in full expensive fixture",
+    "cache key/lookup and bounded memory cost",
+    "net runtime saving with spatial+flat+fractional",
+    "fraction of150M surface calls eliminated"
+  ]
+}

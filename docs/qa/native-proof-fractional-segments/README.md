@@ -1,0 +1,25 @@
+# Directed fractional segment certificate design and isolated prototype (OFF)
+
+## Measured baseline and reproducible diagnosis
+
+Retained spatial ABBA3c1a has11proofs,150011093surface calls and1364074coarse calls; mean70.428seconds per proof policyact. Eight rectangles reject at first radius. Three distinct shore geometries each verify5664service poses at five radii (84960total), then reject worker route. They are not eleven identical cacheable whole reports. Earlier65a9 profiler places most samples inside coarse/terrain pipeline; those profile seconds do NOT describe the later spatial70s decomposition.
+
+`node tools/diagnose_fractional_segment_repetition.mjs docs/qa/native-proof-wall-spatial-index/protected-replay-3c1a docs/qa/native-proof-flat-lattice/protected-replay-65a9 NEW_OUTPUT`
+
+Read-only tool verifies all13original payload hashes, attribution hashes and four unchanged native/source hashes, derives exact proof enumeration and source line anchors. diagnostic.json is reproducible without simulation/profiling and does not include its own output file in input hashes. No claim of measured fractional hit count.
+
+Native segmentClear caches directed edges only if both endpoints are integer. For a service pose, reverse A* findPathSteps checks pose→integer origin connectors; nativeServiceComponentProof then checks those directed connectors again when confirming the positively exhausted component. AnimalSegmentClearance intentionally runs its live solid/prop/coarse test each time, even when near-limit terrain refinement has a memo. Repeating full fractional connector tests is therefore a concrete static opportunity, not evidence that production should ignore live geometry. The prior shared component shortcut saved only4–5%; the prior generic terrainValid cache regressed about48% because lookup costs overwhelmed cheap operations.
+
+## Candidate contract
+
+New helper withNativeFractionalSegmentCache defaults modeoff. Synchronous trusted read-only QA callback only, never live gameplay/render/worker navigation. Canonical native navigation and TerrainField functions required; custom adapters fall back without caching. For modecache, only finite directed fractional queries with ignore===null, worker===false, no active workerSweep and no signed-zero coordinate/radius may use the Map. Grid/worker/otherignore/nonfinite/sweep calls retain native segmentClear. Direction/radius exact key, no quantization or rounding; signed-zero bypass prevents key conflation. Miss ALWAYS executes original segmentClear→testSegmentClear→AnimalSegmentClearance, including solids, gates, props, quarter-metre terrain and applicable fine refinement. False and true results both memoized.
+
+One bounded65536-entry FIFO memo per private lease; no global/navigation/chunk cache injection or persistent save field. Owner field/chunks/obstacle references, deep physical config/profile/suppression/terrain/obstacle signature, native methods and epoch checked before returning; changes reject the whole result. No accepted certificate after async use. Finally clears cache; escaped view resumes original navigator. As with existing QA leases, callback must not transiently mutate then restore physical inputs: this is a trusted pure-call contract, not an adversarial isolation system. Warm native navigation caches may differ, but complete physical report/action/saved state must not. No production flag was wired or activated.
+
+The miss operates on the actual receiver, so it composes outside the existing private spatial and flat lattice leases without losing their fields/geometry. This avoids duplicating collision rules. Proposed future bounded ABBA would use spatial+flat botharms, fractional diagnose/cache A/B, same retained legal day8 fixture and full snapshot/action/report equality, with raw evidence before assertions. Add new counts for eligiblequeries/hits/misses/bypass/entries/evictions and measure key/lookup/memory rather than predict speed from hits. No expensive ABBA is launched until coordination after cinematic edits; Q15/100 remain stopped.
+
+## Directed evidence only
+
+Nine tests pass1249.3963ms: all six native biome segment outcomes, reversedirection, mixed gates, topology/suppression/field/epoch invalidation, renewedlease, signedzero/grid/worker/sweep bypass, bounded FIFO, async/custom fallback and cleanup. A paid Canyon gate/crop complete positive report and explicitly opened negative match exactly with fractional+spatial+flat composition, serialized Game state unchanged. First test attempt7/8passed: renewal fixture incorrectly incremented undefinedepoch intoNaN; changed to native integer epoch increment, retaining original negative log. Assertions and helper untouched by that fixture correction.
+
+No full expensive-fixture equivalence or performance improvement is claimed yet. Crop prices/800center/30minimumwage, damage/magic/strategy/RNG/calendar untouched. Inactivity is outside acceptance by explicit user instruction.

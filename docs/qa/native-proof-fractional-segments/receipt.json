@@ -1,0 +1,28 @@
+{
+  "scope": "CPU directed tests plus read-only diagnosis, not expensive full fixture or campaign",
+  "base": "60e436a7",
+  "tests": {
+    "passed": 9,
+    "total": 9,
+    "durationMs": 1249.3963
+  },
+  "heavyBenchmark": false,
+  "payloads": {
+    "first-negative-tests.log.gz": {
+      "rawSHA": "d184779e1fb00bdb28ede1cad87ab8d9dca6c555e071ff89f1f104b4b01a3a5f",
+      "gzipSHA": "e73280b668b9d5f2af7da25609b7c1452c374cffeec68ba1dfcdaec4008bb40a"
+    },
+    "tests.log.gz": {
+      "rawSHA": "86968f7678a070bdc9e61a775e844590069d01ef2ca24f9d64433ff01a3cf9ea",
+      "gzipSHA": "793673b3080be87610eba80cd18b8154236a70ae94b5423557121e6d5209ce7c"
+    },
+    "diagnostic.json": {
+      "rawSHA": "983d544d3a79d4b00746cb426b2daef2178e75b606f6cf4ae77d6ae81ae5c883"
+    }
+  },
+  "sourceHashes": {
+    "tools/native-proof-fractional-segment-cache.mjs": "f2d7455eea7cb86acb8d564f44b524d83618b5c5fc7eb4cee89dc9376f1065da",
+    "tests/native-proof-fractional-segment-cache.test.js": "7d4ead9610f7294c07314932e8bec2c51c01bdf09c649031114d7afb49c79899",
+    "tools/diagnose_fractional_segment_repetition.mjs": "3382f0600af1eb224bb5136c806356de2bd6a66471233e52d363db35d51b3ca5"
+  }
+}
