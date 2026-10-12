@@ -59,7 +59,7 @@ export class CampaignCinematics{
     this.element.querySelector('.campaign-cinema__status')?.remove();
     const previous=this.element.querySelector('.campaign-cinema__scene');
     this.element.insertBefore(stack,this.element.querySelector('.campaign-cinema__veil'));
-    requestAnimationFrame(()=>{stack.classList.add('is-visible');this.element.querySelector('.campaign-cinema__veil')?.classList.add('is-clear');});
+    requestAnimationFrame(()=>{if(token!==this.token||!stack.isConnected)return;stack.classList.add('is-visible');this.element?.querySelector('.campaign-cinema__veil')?.classList.add('is-clear');});
     if(previous){await sleep(DELAY);previous.remove();}
     if(token!==this.token)return;
     this.voice.pause();this.voice.src=imageUrl(scene.audio[lang].file);this.voice.load();
