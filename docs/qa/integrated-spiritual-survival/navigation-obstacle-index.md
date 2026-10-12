@@ -24,8 +24,17 @@ seed-123 checkpoint replay also produced the same serialized final state
 with and without the index (`day13-v150-native-cache-baseline-t192.json.gz` and
 `day13-v153-spatial-obstacles-t192.json.gz`). Its approximately 83 obstacles
 did **not** show a clear timing gain: other navigation work dominates that
-particular spike. A continuous native pilot is still required before treating
-this as a generally accepted performance change.
+particular spike.
+
+A continuous 14-night native pilot with the frozen good/Q15/cashflow/shore
+policy is retained in `pilot-v154-spatial-obstacle-index/`. All 14 daily
+money and delivery totals match `pilot-v132-route-preservation-frozen/`
+exactly, including the final 828 coins. During day 13, the same 422 timing
+samples accumulated 14,942 ms before and 14,032 ms with the index; p95 was
+139 versus 136 ms. The maximum remained essentially unchanged, 910 versus
+914 ms. This is evidence of a small aggregate CPU reduction with unchanged
+gameplay, but **not** a fix for the worst frame. The 100-night campaign remains
+on hold until that separate spike is reduced.
 
 The abandoned incremental task-routing pilots are retained separately as
 negative evidence. In `pilot-v147-fair-incremental-routing`, deliveries fell
