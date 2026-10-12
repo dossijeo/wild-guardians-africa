@@ -21,12 +21,19 @@ test('a valid direct route or native detour rejects the proposed defense',()=>{
 });
 test('only a positive closed-region certificate may bypass the full animal route',()=>{
  const certified=view();certified.approachRegionBlocked=()=>true;
+ const segment=certified.segmentClear;let segments=0;
+ certified.segmentClear=(...args)=>{segments++;return segment(...args);};
  certified.approachPath=()=>{throw Error('A certified pose must not repeat A*');};
  assert.equal(nativeServiceComponentProof({},certified,targets,radius,outside,outline).valid,true);
+ assert.equal(segments,64); // One direct rejection and one physical connector per pose.
  const uncertified=view();uncertified.approachRegionBlocked=()=>false;
  let searched=0;uncertified.approachPath=()=>{searched++;return [{x:0,z:0}];};
  assert.equal(nativeServiceComponentProof({},uncertified,targets,radius,outside,outline).reason,'native-service-route-open');
  assert.equal(searched,1);
+});
+test('a closed-region certificate without a physical connector cannot prove service access',()=>{
+ const v=view();v.approachRegionBlocked=()=>true;v.segmentClear=()=>false;
+ assert.equal(nativeServiceComponentProof({},v,targets,radius,outside,outline).reason,'native-service-origin-unproven');
 });
 test('an empty origin frontier remains unproven without a positive physical connector',()=>{
  const v=view();v.walkable=(x,z)=>!Number.isInteger(x)||!Number.isInteger(z);v.closedRegions.clear();

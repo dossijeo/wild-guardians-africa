@@ -22,7 +22,23 @@ export function nativeServiceComponentProof(s,view,targets,radius,outside,outlin
    // Reuse a *positive* native closed-component certificate when every
    // walkable origin connector around this pose belongs to that component.
    // Otherwise retain the original full A* query and all checks below.
-   if(!view.approachRegionBlocked?.(outside,point,radius,0)&&view.approachPath(outside,point,radius,32))return {valid:false,reason:'native-service-route-open',targetId:target.id,point,poses,blocked,certified};
+   const closed=view.approachRegionBlocked?.(outside,point,radius,0)===true;
+   if(!closed&&view.approachPath(outside,point,radius,32))return {valid:false,reason:'native-service-route-open',targetId:target.id,point,poses,blocked,certified};
+   if(closed){
+    // The native certificate proves that *every* walkable 3x3 connector is
+    // in the same closed region. One clear body-width connector then proves
+    // that this fractional service pose belongs to that enclosed region.
+    // Avoid rechecking the remaining eight directed segments for each pose.
+    let linked=false;
+    for(let dz=-1;dz<=1&&!linked;dz++)for(let dx=-1;dx<=1&&!linked;dx++){
+     const q={x:Math.round(point.x)+dx,z:Math.round(point.z)+dz};
+     if(!view.walkable(q.x,q.z,radius,null,false)||!view.segmentClear(point,q,radius,null,false))continue;
+     const region=view.closedRegions.get(`${radius}:null:false|${q.x},${q.z}`);
+     if(!region||!enclosed(region))return {valid:false,reason:'native-service-component-unproven',targetId:target.id,point,poses,blocked,certified};
+     linked=true;
+    }
+    if(linked){certified++;continue;}
+   }
    // These are exactly the animal A* origin connectors (no worker portals).
    // Require positively exhausted, boundary-free components for every usable
    // connector. Narrow poses with no connectors remain unproven, not accepted.
