@@ -1,0 +1,9 @@
+# Original recovery campaign: technical stop in night 41
+
+The original candidate-4 good/123/Sabana/Mapungubwe process ended at 2026-10-12T04:59:54.324Z with `incomplete-harness-error`: the native incursion did not finish within the runner's bounded day interval. Its native game result is null, completed nights are 40, and 40 daily rows were recorded. This is neither economic defeat nor 100-night acceptance.
+
+The preserved partial state is day 41, time 600, with 122 living crops. All animals except `animal-44975` have gone. That lion is retreating at (83.1585388681782, 13.180865429942449), has zero remaining hits and no path, and targets its original exit (214.65, -54). Its serialized exit-connector search records `next=192` and `fine.visited=4096`. These observations locate the failure; they do not yet prove whether the exit is geometrically unreachable, the search cap is insufficient or the search state/retry logic is defective.
+
+The original process/session was checked terminal; it was not restarted. All 464 originally recorded source hashes still match disk. Original receipt, partial report/snapshot, completed journal, progress, protocol and source manifest are retained losslessly with hashes in `preservation-receipt.json`. Unarchived originals remain in their original directory. The oversized original error/stack is preserved rather than replaced by this scalar summary.
+
+Next work: reproduce the exact retreat in an isolated diagnostic, retaining collisions and physical movement. Do not remove/teleport the lion, reset budgets, force dawn or change military/economic parameters to count the campaign as successful. Any technical fix needs native clearance/reload regressions and separate provenance before another long run. Exclude this incomplete campaign from military victory/defeat denominators while retaining its 40 completed days as historical evidence.
