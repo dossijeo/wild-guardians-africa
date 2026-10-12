@@ -49,10 +49,35 @@ function formation(state,specs,bounds,nav,camera,eye,focus,dx,dz,box,radius,witn
  }
  return {entries,exits,selectionBounds:bounds};
 }
+function splitExteriorFormation(state,specs,bounds,side,nav,base,camera,box,focus){
+ if(specs.length!==16||!nav.raidView)return null;
+ const halves=[specs.slice(0,8),specs.slice(8)],first=exteriorRaidEntry(state,halves[0],bounds,side,nav,base,camera);
+ const near=entry=>!!entry?.entries&&entry.entries.every(p=>distance(p,focus)<70);
+ if(!near(first))return null;
+ const separated=second=>['entries','exits'].every(a=>['entries','exits'].every(b=>first[a].every((p,i)=>second[b].every((q,j)=>distance(p,q)>halves[0][i].radius+halves[1][j].radius+1))));
+ const centroid=first.entries.reduce((sum,p)=>({x:sum.x+p.x/first.entries.length,z:sum.z+p.z/first.entries.length}),{x:0,z:0});
+ const opposite=Math.atan2(centroid.x-focus.x,centroid.z-focus.z)+Math.PI;
+ for(let i=0;i<16;i++){
+  const angle=opposite+(i===0?0:Math.ceil(i/2)*(i%2?1:-1)*Math.PI/8),eye={x:focus.x+Math.sin(angle)*38,z:focus.z+Math.cos(angle)*38};
+  const candidate=exteriorRaidEntry(state,halves[1],bounds,i%4,localView(nav,eye,focus),base,camera);
+  if(!near(candidate)||!separated(candidate))continue;
+  const joined={entries:[...first.entries,...candidate.entries],exits:[...first.exits,...candidate.exits]};
+  if(!groupWitness(joined,specs,box,nav))continue;
+  const boxes=[bounds,first.selectionBounds,candidate.selectionBounds].filter(Boolean);
+  joined.selectionBounds=[Math.min(...boxes.map(b=>b[0])),Math.min(...boxes.map(b=>b[1])),Math.max(...boxes.map(b=>b[2])),Math.max(...boxes.map(b=>b[3]))];
+  return joined;
+ }
+ return null;
+}
 export function exteriorRaidEntry(state,specs,bounds,side,nav,base,camera){
  const box=raidWallEnvelope(state,nav),entry=base(state,specs,bounds,side,nav);
- if(groupWitness(entry,specs,box,nav))return entry;
  const focus=state.structures.find(t=>t.kind==='center'&&t.hp>0&&t.status!=='collapsing')??state.villages[0];
+ const valid=groupWitness(entry,specs,box,nav);
+ if(focus&&specs.length===16&&(!valid||entry.entries.some(p=>distance(p,focus)>=70))){
+  const split=splitExteriorFormation(state,specs,bounds,side,nav,base,camera,box,focus);
+  if(split)return split;
+ }
+ if(valid)return entry;
  if(!focus)return null;
  const view=nav.raidView,heading=view?Math.atan2(view.eye.x-view.target.x,view.eye.z-view.target.z):side*Math.PI/2;
  const radius=Math.max(...specs.map(s=>s.radius)),padding=(radius*2+1.1)*(specs.length+6)+20;

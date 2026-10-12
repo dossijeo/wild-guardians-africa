@@ -36,6 +36,6 @@ try{
  }
 }finally{await driver.dispose();}
 assert.equal(hash(readFileSync(input)),hash(bytes));
-const report={scope:'Copied native checkpoint advanced through real game ticks and production-equivalent Node entry transport, but without virtual-player decisions, spells or repairs. CPU diagnostic only; not an economic/raid campaign result or rendering frame-time.',input,inputSha256:hash(bytes),day:s.day,startTime,endTime:s.time,raid:!!s.raid,samples,phaseTrace,entryTransport:driver.report(),stateSha256:hash(serialize(s))};
+const report={scope:'Copied native checkpoint advanced through real game ticks and production-equivalent Node entry transport, but without virtual-player decisions, spells or repairs. CPU diagnostic only; not an economic/raid campaign result or rendering frame-time.',input,inputSha256:hash(bytes),day:s.day,startTime,endTime:s.time,raid:!!s.raid,samples,phaseTrace,raidActors:s.raid?.animals.map(a=>({species:a.species,spawn:a.spawn,status:a.status,hitsRemaining:a.hitsRemaining,targetId:a.targetId}))??[],entryTransport:driver.report(),stateSha256:hash(serialize(s))};
 writeFileSync(output,JSON.stringify(report,null,2)+'\n');
 console.log(JSON.stringify({day:report.day,endTime:report.endTime,raid:report.raid,samples:samples.length,totalMs:samples.reduce((n,r)=>n+r.milliseconds,0),maximumMs:Math.max(...samples.map(r=>r.milliseconds))}));
