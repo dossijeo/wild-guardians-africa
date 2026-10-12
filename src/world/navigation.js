@@ -15,6 +15,7 @@ import {validActiveBounds} from './active-region.js';
 import {wallCollisionFrame,wallCollisionPolygon,wallCollisionBounds} from './wall-collision-frame.js';
 import {shortenBuildingRoute} from './building-route-shortcut.js';
 import {animalSegmentClearance} from './animal-segment-clearance.js';
+import {warmFailedApproach} from './approach-failure-warmth.js';
 export const BIOME_IDS={sabana:'savanna','gran-rio':'grand_river',manglares:'mangrove',volcanes:'volcanoes','gran-canon':'canyons',desierto:'desert'};
 export const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 const approachRegionCertificates=new WeakMap();
@@ -270,7 +271,7 @@ export class Navigation {
     // the service point: an enclosed island then proves failure after exploring
     // its finite component, rather than repeatedly exploring the outer land.
     const reverse=this.path(end,start,radius,null,false,margin);
-    if(!reverse)return null;
+    if(!reverse){warmFailedApproach(this,end,start,radius,margin);return null;}
     return [...reverse.slice(0,-1).reverse(),{x:end.x,z:end.z}];
   }
   approachGroupBlocked(start,targets,radius,reach){

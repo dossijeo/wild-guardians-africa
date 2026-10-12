@@ -1,0 +1,46 @@
+{
+  "chronology": "B/A/A/B",
+  "summary": [
+    {
+      "label": "B1",
+      "mode": "candidate",
+      "ms": 2295.8807,
+      "queries": 256,
+      "unchanged": true,
+      "matching": true,
+      "heapUsedAtEnd": 44040920
+    },
+    {
+      "label": "A1",
+      "mode": "baseline",
+      "ms": 15112.1419,
+      "queries": 256,
+      "unchanged": true,
+      "matching": true,
+      "heapUsedAtEnd": 88008360
+    },
+    {
+      "label": "A2",
+      "mode": "baseline",
+      "ms": 14448.1607,
+      "queries": 256,
+      "unchanged": true,
+      "matching": true,
+      "heapUsedAtEnd": 92140280
+    },
+    {
+      "label": "B2",
+      "mode": "candidate",
+      "ms": 2297.314,
+      "queries": 256,
+      "unchanged": true,
+      "matching": true,
+      "heapUsedAtEnd": 53781264
+    }
+  ],
+  "sourceHashes": {
+    "src/world/navigation.js": "c55ce8c7a0951185a6096c25fe4fb845876e04647f7433e75df7f68073ccbe1c",
+    "src/world/approach-failure-warmth.js": "9d997f455471d6ab6a9122d5474ee6e59ce907c3b3293c0cd6c327d000831cb0",
+    "tools/check-hostile-approach-witness.mjs": "dc8adfa90fdc5e7b41af37364fdab7c6cde97c3ac344014f6fe8541840347eee"
+  }
+}
