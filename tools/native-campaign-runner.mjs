@@ -12,6 +12,7 @@ import {PROFILES,hiringCost} from '../src/simulation/workforce.js';
 import {isMature} from '../src/simulation/crops.js';
 import {centerServicePoint} from '../src/world/centers.js';
 import {activeChunkRegion} from '../src/world/active-region.js';
+import {activeRaidEntryPlan} from '../src/world/raid-entry-data.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {nativeCameraPose} from '../src/rendering/terrain-camera.js';
 import assert from 'node:assert/strict';
@@ -158,11 +159,18 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
   while(s.day===day&&!s.result){
    if(s.pauses.length)throw new Error('Unexpected pause: '+s.pauses);
    await driver.advancePresentation(s);
-   if(Game.nightEntryPending(s)&&s.time>=600)await driver.waitForEntry(s);
    const beforeRepairs=new Set(s.tasks.filter(t=>t.kind==='repair').map(t=>t.id));
    const decisionStarted=onStepTiming?performance.now():0,decision=act(),decisionMilliseconds=onStepTiming?performance.now()-decisionStarted:null;actions+=decision.actions;
    const centerRequests=s.tasks.filter(t=>t.kind==='repair'&&!beforeRepairs.has(t.id)&&s.structures.some(c=>c.id===t.targetId&&c.kind==='center')).length;
    const dt=s.time<300||s.raid?1:5;
+   // A coarse native tick may cross the scheduled raid time in one call.
+   // Wait for the already requested entry before that tick; otherwise the
+   // simulation falls back to a costly synchronous whole-group search.
+   const entryPlan=activeRaidEntryPlan(s);
+   if(entryPlan?.group?.length&&!entryPlan.done&&s.time+dt>=entryPlan.at){
+    await driver.advancePresentation(s);
+    await driver.waitForEntry(s);
+   }
    evidence?.decision(s,{seconds:dt,reason:decision.reason,otherActions:Math.max(0,decision.actions-centerRequests-(decision.magicActions??0))});
    // Optional evidence only: immutable scalar observations, not navigation or
    // game commands. Values describe the state after this strategy's decision.

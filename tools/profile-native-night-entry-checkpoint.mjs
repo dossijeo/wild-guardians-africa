@@ -10,6 +10,7 @@ import {nativeCameraPose} from '../src/rendering/terrain-camera.js';
 import {activeChunkRegion} from '../src/world/active-region.js';
 import {createOpeningWorld} from './check_opening.mjs';
 import {NativeCampaignEntryDriver} from './native-campaign-entry-driver.mjs';
+import {activeRaidEntryPlan} from '../src/world/raid-entry-data.js';
 import * as Game from '../src/simulation/game.js';
 
 const [input,output,untilText='390',traceMode='',traceTimeText='385']=process.argv.slice(2),until=Number(untilText),traceTime=Number(traceTimeText);
@@ -42,10 +43,15 @@ const driver=new NativeCampaignEntryDriver(nav),samples=[],phaseTrace=[];let rai
 try{
  while(s.day===startDay&&s.time<until&&!s.result){
   await driver.advancePresentation(s);
-  if(Game.nightEntryPending(s)&&s.time>=600)await driver.waitForEntry(s);
-  const time=s.time,dt=s.time<300||s.raid?1:5,started=performance.now();
-  if(traceMode==='trace'&&Math.abs(time-traceTime)<1e-6)nav.__nativeTickPhaseTrace=stage=>phaseTrace.push({...stage,tickStartTime:time});
-  try{Game.tick(s,dt,nav);}finally{delete nav.__nativeTickPhaseTrace;}
+  const time=s.time,dt=s.time<300||s.raid?1:5;
+  const entryPlan=activeRaidEntryPlan(s);
+  if(entryPlan?.group?.length&&!entryPlan.done&&s.time+dt>=entryPlan.at)await driver.waitForEntry(s);
+  const started=performance.now();
+  if(traceMode==='trace'&&Math.abs(time-traceTime)<1e-6){
+   nav.__nativeTickPhaseTrace=stage=>phaseTrace.push({...stage,tickStartTime:time});
+   nav.__nativeRaidSpawnTrace=stage=>phaseTrace.push({phase:'spawn-'+stage.stage,...stage,tickStartTime:time});
+  }
+  try{Game.tick(s,dt,nav);}finally{delete nav.__nativeTickPhaseTrace;delete nav.__nativeRaidSpawnTrace;}
   samples.push({time,dt,milliseconds:performance.now()-started,raidActors:s.raid?.animals.length??0,activeActors:s.raid?.animals.filter(a=>a.status!=='gone').length??0,workers:s.workers.length,plants:s.plants.length});
   await driver.advancePresentation(s);
   if(s.raid&&raidReloaded!==s.raid.id){raidReloaded=s.raid.id;s=deserialize(serialize(s));nav.setState(s);}
