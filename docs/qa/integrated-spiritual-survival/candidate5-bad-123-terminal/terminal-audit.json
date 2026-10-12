@@ -1,0 +1,51 @@
+{
+  "cases": [
+    {
+      "directory": "docs/qa/integrated-spiritual-survival/candidate5-bad-123-sabana-mapungubwe-hundred",
+      "seed": "123",
+      "strategy": "bad",
+      "status": "observed-native-defeat",
+      "result": "defeat",
+      "defeatPhase": "dawn-after-completed-night",
+      "victoryPhase": null,
+      "postgameDays": 0,
+      "daytimeRaids": 0,
+      "terminalDay": 15,
+      "completedNights": 15,
+      "money": 18,
+      "living": 68,
+      "centerHp": [
+        600
+      ],
+      "destroyed": 254,
+      "totals": {
+        "income": 3147,
+        "refunds": 0,
+        "wages": 990,
+        "seeds": 2839,
+        "walls": 0,
+        "centers": 0,
+        "villages": 0,
+        "repairs": 0,
+        "otherCredits": 0,
+        "otherDebits": 0
+      },
+      "strikes": {
+        "assigned": 336,
+        "consumed": 336,
+        "unused": 0
+      },
+      "postIntroduction": {
+        "exposure": 1982,
+        "losses": 254,
+        "weightedDestroyedFraction": 0.12815338042381433,
+        "unprotectedReferenceFraction": 0.2117729061553986,
+        "protectedReferenceFraction": 0.0359675580221998,
+        "scope": "Nighttime references are hypotheses only, never applied damage; exposure is the native census at each raid spawn"
+      },
+      "ledgerAndDeliveryMatch": true,
+      "sourceHashesMatch": true,
+      "scope": "Native terminal result and ledger only; a single hundred-night victory does not establish the strategy/seed matrix, human activity or general release acceptance"
+    }
+  ]
+}

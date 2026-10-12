@@ -1,0 +1,525 @@
+{
+  "observedAt": "2026-10-12T05:57:10.291Z",
+  "scope": "Read-only live prefixes; exact common source inventory, unique journal transactions and arithmetic only. No terminal outcome, physical-event observer or victory-rate acceptance.",
+  "cases": [
+    {
+      "profile": "good",
+      "name": "candidate5-good-123-hundred",
+      "receiptStatus": "running",
+      "pid": 26648,
+      "sourceCommit": "f1f9d089bd6a60278595a0e0d707897eb9eabbcf",
+      "sourceFamily": {
+        "family": "loss-pressure-and-retreat-v5",
+        "arm": "candidate",
+        "militaryCandidate": 5,
+        "changed": [],
+        "playerProfile": "good",
+        "policyFreeze": "military-only-policy-freeze-v1",
+        "reviewSha256": "d1b7744156c0c5db412c64a1e8f9126c647a776531e033f6ac01ba8c8c5ea034",
+        "scope": "Frozen 100-night policies and economics; candidate5 versus candidate4 shares repaired retreat and worker/watering runtime. No survival acceptance inferred from source verification."
+      },
+      "checkedSources": 469,
+      "changes": [],
+      "progress": {
+        "observedAt": "2026-10-12T05:56:55.156Z",
+        "processId": 26648,
+        "day": 10,
+        "time": 190.99999999999267,
+        "elapsed": 5591.0000000020855,
+        "living": 239,
+        "workers": 19,
+        "wallMilliseconds": 562689,
+        "result": null
+      },
+      "audit": {
+        "scope": "captured-completed-row-accounting-only",
+        "provesCampaignCompletion": false,
+        "provesPhysicalDeliveries": false,
+        "provesHumanActivity": false,
+        "prefixSha256": "826c7697d1bae72a80a8329eaadad2106660431f283a9b45e0fc03287348ed9f",
+        "capturedRows": 9,
+        "ignoredIncompleteTail": 0,
+        "transactions": 1580,
+        "opening": 700,
+        "closing": 928,
+        "totals": {
+          "income": "8417",
+          "refunds": "0",
+          "wages": "3020",
+          "seeds": "4559",
+          "walls": "480",
+          "centers": "0",
+          "villages": "0",
+          "repairs": "130",
+          "otherCredits": "0",
+          "otherDebits": "0"
+        },
+        "days": [
+          {
+            "day": 1,
+            "money": 231,
+            "living": 100,
+            "destroyed": 0,
+            "income": 350,
+            "wages": 180,
+            "seeds": 639,
+            "walls": 0,
+            "repairs": 0
+          },
+          {
+            "day": 2,
+            "money": 343,
+            "living": 107,
+            "destroyed": 0,
+            "income": 646,
+            "wages": 224,
+            "seeds": 310,
+            "walls": 0,
+            "repairs": 0
+          },
+          {
+            "day": 3,
+            "money": 445,
+            "living": 157,
+            "destroyed": 0,
+            "income": 1078,
+            "wages": 266,
+            "seeds": 710,
+            "walls": 0,
+            "repairs": 0
+          },
+          {
+            "day": 4,
+            "money": 487,
+            "living": 169,
+            "destroyed": 0,
+            "income": 607,
+            "wages": 270,
+            "seeds": 295,
+            "walls": 0,
+            "repairs": 0
+          },
+          {
+            "day": 5,
+            "money": 508,
+            "living": 179,
+            "destroyed": 0,
+            "income": 551,
+            "wages": 270,
+            "seeds": 260,
+            "walls": 0,
+            "repairs": 0
+          },
+          {
+            "day": 6,
+            "money": 430,
+            "living": 189,
+            "destroyed": 19,
+            "income": 1075,
+            "wages": 343,
+            "seeds": 480,
+            "walls": 330,
+            "repairs": 0
+          },
+          {
+            "day": 7,
+            "money": 818,
+            "living": 200,
+            "destroyed": 0,
+            "income": 1573,
+            "wages": 432,
+            "seeds": 603,
+            "walls": 150,
+            "repairs": 0
+          },
+          {
+            "day": 8,
+            "money": 823,
+            "living": 232,
+            "destroyed": 0,
+            "income": 1279,
+            "wages": 500,
+            "seeds": 718,
+            "walls": 0,
+            "repairs": 56
+          },
+          {
+            "day": 9,
+            "money": 928,
+            "living": 228,
+            "destroyed": 6,
+            "income": 1258,
+            "wages": 535,
+            "seeds": 544,
+            "walls": 0,
+            "repairs": 74
+          }
+        ]
+      }
+    },
+    {
+      "profile": "normal",
+      "name": "candidate5-normal-123-sabana-mapungubwe-hundred",
+      "receiptStatus": "running",
+      "pid": 44960,
+      "sourceCommit": "e5587b9b06ea3627600a07e9adefaa05cf6b8a25",
+      "sourceFamily": {
+        "family": "loss-pressure-and-retreat-v5",
+        "arm": "candidate",
+        "militaryCandidate": 5,
+        "changed": [],
+        "playerProfile": "normal",
+        "policyFreeze": "military-only-policy-freeze-v1",
+        "reviewSha256": "d1b7744156c0c5db412c64a1e8f9126c647a776531e033f6ac01ba8c8c5ea034",
+        "scope": "Frozen 100-night policies and economics; candidate5 versus candidate4 shares repaired retreat and worker/watering runtime. No survival acceptance inferred from source verification."
+      },
+      "checkedSources": 469,
+      "changes": [],
+      "progress": {
+        "observedAt": "2026-10-12T05:55:23.952Z",
+        "processId": 44960,
+        "day": 9,
+        "time": 190.99999999999267,
+        "elapsed": 4990.999999999991,
+        "living": 261,
+        "workers": 19,
+        "wallMilliseconds": 40877,
+        "result": null
+      },
+      "audit": {
+        "scope": "captured-completed-row-accounting-only",
+        "provesCampaignCompletion": false,
+        "provesPhysicalDeliveries": false,
+        "provesHumanActivity": false,
+        "prefixSha256": "8184be4124acc3d987d87ad5c6aead327739c640b3d782340c14107ecfab6bc7",
+        "capturedRows": 8,
+        "ignoredIncompleteTail": 0,
+        "transactions": 1365,
+        "opening": 700,
+        "closing": 663,
+        "totals": {
+          "income": "6920",
+          "refunds": "0",
+          "wages": "2513",
+          "seeds": "4444",
+          "walls": "0",
+          "centers": "0",
+          "villages": "0",
+          "repairs": "0",
+          "otherCredits": "0",
+          "otherDebits": "0"
+        },
+        "days": [
+          {
+            "day": 1,
+            "money": 231,
+            "living": 100,
+            "destroyed": 0,
+            "income": 350,
+            "wages": 180,
+            "seeds": 639,
+            "walls": 0,
+            "repairs": 0
+          },
+          {
+            "day": 2,
+            "money": 343,
+            "living": 107,
+            "destroyed": 0,
+            "income": 646,
+            "wages": 224,
+            "seeds": 310,
+            "walls": 0,
+            "repairs": 0
+          },
+          {
+            "day": 3,
+            "money": 445,
+            "living": 157,
+            "destroyed": 0,
+            "income": 1078,
+            "wages": 266,
+            "seeds": 710,
+            "walls": 0,
+            "repairs": 0
+          },
+          {
+            "day": 4,
+            "money": 487,
+            "living": 169,
+            "destroyed": 0,
+            "income": 607,
+            "wages": 270,
+            "seeds": 295,
+            "walls": 0,
+            "repairs": 0
+          },
+          {
+            "day": 5,
+            "money": 508,
+            "living": 179,
+            "destroyed": 0,
+            "income": 551,
+            "wages": 270,
+            "seeds": 260,
+            "walls": 0,
+            "repairs": 0
+          },
+          {
+            "day": 6,
+            "money": 455,
+            "living": 239,
+            "destroyed": 17,
+            "income": 1107,
+            "wages": 365,
+            "seeds": 795,
+            "walls": 0,
+            "repairs": 0
+          },
+          {
+            "day": 7,
+            "money": 695,
+            "living": 221,
+            "destroyed": 33,
+            "income": 1203,
+            "wages": 439,
+            "seeds": 524,
+            "walls": 0,
+            "repairs": 0
+          },
+          {
+            "day": 8,
+            "money": 663,
+            "living": 236,
+            "destroyed": 42,
+            "income": 1378,
+            "wages": 499,
+            "seeds": 911,
+            "walls": 0,
+            "repairs": 0
+          }
+        ]
+      }
+    },
+    {
+      "profile": "bad",
+      "name": "candidate5-bad-123-sabana-mapungubwe-hundred",
+      "receiptStatus": "observed-native-defeat",
+      "sourceCommit": "e5587b9b06ea3627600a07e9adefaa05cf6b8a25",
+      "sourceFamily": {
+        "family": "loss-pressure-and-retreat-v5",
+        "arm": "candidate",
+        "militaryCandidate": 5,
+        "changed": [],
+        "playerProfile": "bad",
+        "policyFreeze": "military-only-policy-freeze-v1",
+        "reviewSha256": "d1b7744156c0c5db412c64a1e8f9126c647a776531e033f6ac01ba8c8c5ea034",
+        "scope": "Frozen 100-night policies and economics; candidate5 versus candidate4 shares repaired retreat and worker/watering runtime. No survival acceptance inferred from source verification."
+      },
+      "checkedSources": 469,
+      "changes": [],
+      "progress": {
+        "observedAt": "2026-10-12T05:57:06.354Z",
+        "processId": 51512,
+        "day": 14,
+        "time": 600,
+        "elapsed": 8522.900000012354,
+        "living": 90,
+        "workers": 1,
+        "wallMilliseconds": 125239,
+        "result": null
+      },
+      "audit": {
+        "scope": "captured-completed-row-accounting-only",
+        "provesCampaignCompletion": false,
+        "provesPhysicalDeliveries": false,
+        "provesHumanActivity": false,
+        "prefixSha256": "8ec826a2385a11b2b69874b136d208684357112d0f87abd37641505aeb5b7b9e",
+        "capturedRows": 15,
+        "ignoredIncompleteTail": 0,
+        "transactions": 823,
+        "opening": 700,
+        "closing": 18,
+        "totals": {
+          "income": "3147",
+          "refunds": "0",
+          "wages": "990",
+          "seeds": "2839",
+          "walls": "0",
+          "centers": "0",
+          "villages": "0",
+          "repairs": "0",
+          "otherCredits": "0",
+          "otherDebits": "0"
+        },
+        "days": [
+          {
+            "day": 1,
+            "money": 216,
+            "living": 98,
+            "destroyed": 0,
+            "income": 335,
+            "wages": 180,
+            "seeds": 639,
+            "walls": 0,
+            "repairs": 0
+          },
+          {
+            "day": 2,
+            "money": 204,
+            "living": 110,
+            "destroyed": 0,
+            "income": 418,
+            "wages": 180,
+            "seeds": 250,
+            "walls": 0,
+            "repairs": 0
+          },
+          {
+            "day": 3,
+            "money": 164,
+            "living": 128,
+            "destroyed": 0,
+            "income": 315,
+            "wages": 150,
+            "seeds": 205,
+            "walls": 0,
+            "repairs": 0
+          },
+          {
+            "day": 4,
+            "money": 122,
+            "living": 204,
+            "destroyed": 0,
+            "income": 803,
+            "wages": 120,
+            "seeds": 725,
+            "walls": 0,
+            "repairs": 0
+          },
+          {
+            "day": 5,
+            "money": 64,
+            "living": 237,
+            "destroyed": 0,
+            "income": 272,
+            "wages": 60,
+            "seeds": 270,
+            "walls": 0,
+            "repairs": 0
+          },
+          {
+            "day": 6,
+            "money": 41,
+            "living": 257,
+            "destroyed": 11,
+            "income": 267,
+            "wages": 30,
+            "seeds": 260,
+            "walls": 0,
+            "repairs": 0
+          },
+          {
+            "day": 7,
+            "money": 31,
+            "living": 246,
+            "destroyed": 12,
+            "income": 40,
+            "wages": 30,
+            "seeds": 20,
+            "walls": 0,
+            "repairs": 0
+          },
+          {
+            "day": 8,
+            "money": 34,
+            "living": 223,
+            "destroyed": 23,
+            "income": 48,
+            "wages": 30,
+            "seeds": 15,
+            "walls": 0,
+            "repairs": 0
+          },
+          {
+            "day": 9,
+            "money": 33,
+            "living": 211,
+            "destroyed": 23,
+            "income": 124,
+            "wages": 30,
+            "seeds": 95,
+            "walls": 0,
+            "repairs": 0
+          },
+          {
+            "day": 10,
+            "money": 30,
+            "living": 207,
+            "destroyed": 27,
+            "income": 197,
+            "wages": 30,
+            "seeds": 170,
+            "walls": 0,
+            "repairs": 0
+          },
+          {
+            "day": 11,
+            "money": 33,
+            "living": 173,
+            "destroyed": 37,
+            "income": 68,
+            "wages": 30,
+            "seeds": 35,
+            "walls": 0,
+            "repairs": 0
+          },
+          {
+            "day": 12,
+            "money": 31,
+            "living": 133,
+            "destroyed": 42,
+            "income": 53,
+            "wages": 30,
+            "seeds": 25,
+            "walls": 0,
+            "repairs": 0
+          },
+          {
+            "day": 13,
+            "money": 32,
+            "living": 120,
+            "destroyed": 28,
+            "income": 146,
+            "wages": 30,
+            "seeds": 115,
+            "walls": 0,
+            "repairs": 0
+          },
+          {
+            "day": 14,
+            "money": 32,
+            "living": 90,
+            "destroyed": 30,
+            "income": 45,
+            "wages": 30,
+            "seeds": 15,
+            "walls": 0,
+            "repairs": 0
+          },
+          {
+            "day": 15,
+            "money": 18,
+            "living": 68,
+            "destroyed": 21,
+            "income": 16,
+            "wages": 30,
+            "seeds": 0,
+            "walls": 0,
+            "repairs": 0
+          }
+        ]
+      }
+    }
+  ]
+}
