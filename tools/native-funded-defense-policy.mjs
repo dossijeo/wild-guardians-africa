@@ -62,8 +62,8 @@ export function createNativeFundedDefensePolicy({startDay=6,material='zarzas',in
   const onePieceFunded=(defenseFunding==='rolling'?Math.floor(discretionary/2):discretionary)>=spec.cost;
   // A previously paid trace can be held without re-quoting it while no new
   // piece is affordable. A funded attempt must still revalidate everything.
-  if(obstacleAware&&completed&&planned===completed&&!onePieceFunded){
-   history.push({day:s.day,time:s.time,protectedCash,repairFunding,pendingRepairCoins:pending,attempts:[],paidCost:0,paidPieces:0,remainingCost,complete:false,bounds:completed.bounds,reason:'unfunded-paid-contour-check-deferred',geometryCheckDeferred:true});
+  if(obstacleAware&&planned&&!onePieceFunded){
+   history.push({day:s.day,time:s.time,protectedCash,repairFunding,pendingRepairCoins:pending,attempts:[],paidCost:0,paidPieces:0,remainingCost,complete:false,bounds:planned.bounds,reason:'unfunded-paid-contour-check-deferred',geometryCheckDeferred:true});
    return 0;
   }
   if(obstacleAware&&completed&&!planned){

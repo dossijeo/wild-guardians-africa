@@ -1,0 +1,549 @@
+{
+  "scope": "Sampled CPU including profiler and harness overhead, all campaign phases. Diagnostic ranking only, not an uninstrumented wall-time or gameplay frame-time measurement.",
+  "input": ".cache/CPU.20261012.202122.7380.0.001.cpuprofile",
+  "samples": 445222,
+  "totalMicros": 462930471,
+  "contexts": [
+    {
+      "name": "act",
+      "micros": 312512345,
+      "percent": 67.50740436785809
+    },
+    {
+      "name": "Game.tick",
+      "micros": 128246931,
+      "percent": 27.70328138542429
+    },
+    {
+      "name": "other",
+      "micros": 19620603,
+      "percent": 4.238347706431275
+    },
+    {
+      "name": "choosePlot",
+      "micros": 2041672,
+      "percent": 0.44103210479743943
+    },
+    {
+      "name": "maintenanceReserve",
+      "micros": 220120,
+      "percent": 0.04754925713239559
+    },
+    {
+      "name": "plant",
+      "micros": 190928,
+      "percent": 0.04124334256666375
+    },
+    {
+      "name": "collect",
+      "micros": 52521,
+      "percent": 0.011345332245368657
+    },
+    {
+      "name": "hire",
+      "micros": 20666,
+      "percent": 0.004464169307187385
+    },
+    {
+      "name": "nextSpecies",
+      "micros": 17481,
+      "percent": 0.0037761610209495152
+    },
+    {
+      "name": "labourReserve",
+      "micros": 4121,
+      "percent": 0.0008901984764792032
+    },
+    {
+      "name": "savingsReserve",
+      "micros": 3083,
+      "percent": 0.000665974739865417
+    }
+  ],
+  "actChildren": [
+    {
+      "name": "act file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/tools/native-funded-defense-policy.mjs:49",
+      "micros": 312069172,
+      "percent": 67.41167228112751
+    },
+    {
+      "name": "additional file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/tools/native-q14-labour-policy.mjs:16",
+      "micros": 165977,
+      "percent": 0.03585354829667283
+    },
+    {
+      "name": "act file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/tools/native-agricultural-magic.mjs:23",
+      "micros": 133083,
+      "percent": 0.028747945606717257
+    },
+    {
+      "name": "(root) :0",
+      "micros": 91008,
+      "percent": 0.0196591077280804
+    },
+    {
+      "name": "observe file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/tools/native-agricultural-magic.mjs:15",
+      "micros": 14207,
+      "percent": 0.0030689273854258774
+    },
+    {
+      "name": " file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/tools/native-campaign-runner.mjs:96",
+      "micros": 13676,
+      "percent": 0.0029542233351928134
+    },
+    {
+      "name": "cast file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/tools/native-campaign-runner.mjs:91",
+      "micros": 7250,
+      "percent": 0.0015661099137282755
+    },
+    {
+      "name": "permission file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/simulation/rules.js:13",
+      "micros": 7172,
+      "percent": 0.0015492607312081646
+    },
+    {
+      "name": "cropSpec file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/simulation/rules.js:5",
+      "micros": 2097,
+      "percent": 0.0004529837915983716
+    },
+    {
+      "name": "additional file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/tools/native-q7-labour-policy.mjs:30",
+      "micros": 2053,
+      "percent": 0.0004434791245357448
+    },
+    {
+      "name": "hired file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/tools/native-q14-labour-policy.mjs:25",
+      "micros": 2047,
+      "percent": 0.0004421830335726593
+    },
+    {
+      "name": "operational file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/simulation/rules.js:11",
+      "micros": 1529,
+      "percent": 0.0003302871804262805
+    },
+    {
+      "name": "reserve file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/tools/native-funded-defense-policy.mjs:171",
+      "micros": 1026,
+      "percent": 0.00022163155468761528
+    },
+    {
+      "name": "distance file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/tools/native-campaign-runner.mjs:45",
+      "micros": 1026,
+      "percent": 0.00022163155468761528
+    },
+    {
+      "name": "hireAdditional file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/simulation/game.js:248",
+      "micros": 1022,
+      "percent": 0.0002207674940455583
+    }
+  ],
+  "defenseChildren": [
+    {
+      "name": "quote file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/tools/native-funded-defense-policy.mjs:30",
+      "micros": 179999735,
+      "percent": 38.88267164854655
+    },
+    {
+      "name": "coverage file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/tools/native-funded-defense-policy.mjs:23",
+      "micros": 116518907,
+      "percent": 25.169850398549375
+    },
+    {
+      "name": "obstacleAwareContour file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/tools/native-obstacle-aware-contour.mjs:6",
+      "micros": 14503911,
+      "percent": 3.1330646627493226
+    },
+    {
+      "name": "quoteWallChain file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/simulation/game.js:169",
+      "micros": 417409,
+      "percent": 0.09016667213509046
+    },
+    {
+      "name": "buildWallChain file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/simulation/game.js:191",
+      "micros": 234169,
+      "percent": 0.05058405412246022
+    },
+    {
+      "name": "previewWallChain file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/simulation/game.js:186",
+      "micros": 233982,
+      "percent": 0.05054365928744405
+    },
+    {
+      "name": "shoreDefenseContours file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/tools/native-shore-defense-contour.mjs:6",
+      "micros": 57010,
+      "percent": 0.012315024300917103
+    },
+    {
+      "name": "(root) :0",
+      "micros": 39104,
+      "percent": 0.008447056836749033
+    },
+    {
+      "name": "breachRepairFunding file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/tools/native-repair-funding.mjs:11",
+      "micros": 25084,
+      "percent": 0.0054185242863393195
+    },
+    {
+      "name": " file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/tools/native-funded-defense-policy.mjs:74",
+      "micros": 16060,
+      "percent": 0.0034692034778587735
+    },
+    {
+      "name": " file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/tools/native-funded-defense-policy.mjs:56",
+      "micros": 11394,
+      "percent": 0.0024612767388993064
+    },
+    {
+      "name": " file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/tools/native-funded-defense-policy.mjs:71",
+      "micros": 2093,
+      "percent": 0.0004521197309563146
+    },
+    {
+      "name": " file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/tools/native-funded-defense-policy.mjs:72",
+      "micros": 2055,
+      "percent": 0.0004439111548567733
+    },
+    {
+      "name": " file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/tools/native-funded-defense-policy.mjs:57",
+      "micros": 2051,
+      "percent": 0.00044304709421471634
+    },
+    {
+      "name": "requestRepair file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/simulation/game.js:340",
+      "micros": 2024,
+      "percent": 0.0004372146848808317
+    },
+    {
+      "name": "permission file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/simulation/rules.js:13",
+      "micros": 1074,
+      "percent": 0.00023200028239229903
+    },
+    {
+      "name": "settledRepairQuote file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/tools/native-repair-funding.mjs:4",
+      "micros": 1068,
+      "percent": 0.00023070419142921358
+    },
+    {
+      "name": " file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/tools/native-funded-defense-policy.mjs:166",
+      "micros": 1029,
+      "percent": 0.00022227960016915803
+    },
+    {
+      "name": " file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/tools/native-funded-defense-policy.mjs:53",
+      "micros": 1026,
+      "percent": 0.00022163155468761528
+    },
+    {
+      "name": "wallStroke file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/wall-layout.js:9",
+      "micros": 1025,
+      "percent": 0.00022141553952710104
+    },
+    {
+      "name": "closedDefenseContours file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/tools/native-closed-defense-policy.mjs:11",
+      "micros": 1023,
+      "percent": 0.00022098350920607255
+    }
+  ],
+  "topSelf": [
+    {
+      "name": "lattice file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/terrain.js:411",
+      "micros": 99506016,
+      "percent": 21.49480801837302
+    },
+    {
+      "name": "coarseSegmentClear file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/navigation.js:474",
+      "micros": 34455781,
+      "percent": 7.44297106335867
+    },
+    {
+      "name": "wallCollisionBounds file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/wall-collision-frame.js:18",
+      "micros": 30509455,
+      "percent": 6.5905048190271325
+    },
+    {
+      "name": "fluidInside file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/terrain.js:420",
+      "micros": 28879523,
+      "percent": 6.2384147964198275
+    },
+    {
+      "name": "slope file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/terrain.js:419",
+      "micros": 26163292,
+      "percent": 5.6516677209610595
+    },
+    {
+      "name": "surface file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/terrain.js:412",
+      "micros": 21505387,
+      "percent": 4.645489624725956
+    },
+    {
+      "name": "animalSegmentClearance file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/animal-segment-clearance.js:6",
+      "micros": 19449908,
+      "percent": 4.201474998607297
+    },
+    {
+      "name": "(garbage collector) :0",
+      "micros": 16947524,
+      "percent": 3.660922117179018
+    },
+    {
+      "name": "terrainValid file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/navigation.js:131",
+      "micros": 14723661,
+      "percent": 3.1805339942723276
+    },
+    {
+      "name": "walkable file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/navigation.js:143",
+      "micros": 14360940,
+      "percent": 3.1021807592354405
+    },
+    {
+      "name": "propsAt file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/navigation.js:56",
+      "micros": 13342176,
+      "percent": 2.882112290249306
+    },
+    {
+      "name": "cachedFractionalWalkability file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/fractional-walkability-cache.js:6",
+      "micros": 13134666,
+      "percent": 2.837286984290995
+    },
+    {
+      "name": " file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/navigation.js:154",
+      "micros": 10681672,
+      "percent": 2.3074030916405155
+    },
+    {
+      "name": "sweptFootprintDistance file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/footprints.js:19",
+      "micros": 9373314,
+      "percent": 2.024777928260419
+    },
+    {
+      "name": "testWalkable file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/navigation.js:151",
+      "micros": 8556228,
+      "percent": 1.8482749648164767
+    },
+    {
+      "name": "segmentDistance file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/footprints.js:14",
+      "micros": 8256714,
+      "percent": 1.783575400030213
+    },
+    {
+      "name": "edgeDistance file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/footprints.js:9",
+      "micros": 8095701,
+      "percent": 1.748794150990333
+    },
+    {
+      "name": "findPathSteps file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/navigation.js:328",
+      "micros": 7533448,
+      "percent": 1.6273389789457173
+    },
+    {
+      "name": "riverX file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/terrain.js:298",
+      "micros": 7249323,
+      "percent": 1.5659636714646075
+    },
+    {
+      "name": "wallCollisionFrame file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/wall-collision-frame.js:5",
+      "micros": 6369589,
+      "percent": 1.3759277902447686
+    },
+    {
+      "name": "distance file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/navigation.js:19",
+      "micros": 6141102,
+      "percent": 1.3265711342643505
+    },
+    {
+      "name": "approachRegionBlocked file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/navigation.js:273",
+      "micros": 6102874,
+      "percent": 1.318313306708212
+    },
+    {
+      "name": "nativeServiceComponentProof file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/tools/native-service-component-proof.mjs:6",
+      "micros": 4485009,
+      "percent": 0.9688299390428331
+    },
+    {
+      "name": "testSegmentClear file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/navigation.js:461",
+      "micros": 3234608,
+      "percent": 0.6987243663206607
+    },
+    {
+      "name": "wateringRoute file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/work-points.js:46",
+      "micros": 2550172,
+      "percent": 0.550875813918933
+    },
+    {
+      "name": "nativePerimeterProof file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/tools/native-perimeter-proof.mjs:8",
+      "micros": 2139994,
+      "percent": 0.462271147409521
+    },
+    {
+      "name": "segmentClear file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/navigation.js:405",
+      "micros": 2033888,
+      "percent": 0.43935064278799657
+    },
+    {
+      "name": "searchNeighbors file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/navigation.js:313",
+      "micros": 2032740,
+      "percent": 0.4391026573837262
+    },
+    {
+      "name": "findPath file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/navigation.js:324",
+      "micros": 1684202,
+      "percent": 0.3638131653684123
+    },
+    {
+      "name": "evictOldest file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/fifo-eviction.js:5",
+      "micros": 1548413,
+      "percent": 0.3344806827373435
+    },
+    {
+      "name": "tickScoped file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/simulation/game.js:645",
+      "micros": 1451294,
+      "percent": 0.31350150636336055
+    },
+    {
+      "name": "fluidAt file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/fluid-placement.js:3",
+      "micros": 1447098,
+      "percent": 0.3125951067498428
+    },
+    {
+      "name": "agriculturalRayClear file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/simulation/raid-agricultural-impact.js:41",
+      "micros": 1258890,
+      "percent": 0.2719393254197778
+    },
+    {
+      "name": "walkTo file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/simulation/game.js:409",
+      "micros": 1138388,
+      "percent": 0.24590906654749023
+    },
+    {
+      "name": "path file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/navigation.js:217",
+      "micros": 1075555,
+      "percent": 0.2323361859668987
+    },
+    {
+      "name": "reserveTasks file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/simulation/tasks.js:30",
+      "micros": 868085,
+      "percent": 0.1875195206150083
+    },
+    {
+      "name": "updateWorkers file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/simulation/game.js:505",
+      "micros": 830819,
+      "percent": 0.17946949964328446
+    },
+    {
+      "name": "gcd file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/simulation/money.js:2",
+      "micros": 788301,
+      "percent": 0.1702849670485398
+    },
+    {
+      "name": "chunk file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/navigation.js:47",
+      "micros": 783705,
+      "percent": 0.16929216137081632
+    },
+    {
+      "name": " file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/navigation.js:360",
+      "micros": 712830,
+      "percent": 0.1539820868693692
+    },
+    {
+      "name": "moveWorker file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/simulation/locomotion.js:43",
+      "micros": 645698,
+      "percent": 0.13948055711372692
+    },
+    {
+      "name": " file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/simulation/tasks.js:16",
+      "micros": 576429,
+      "percent": 0.12451740296006568
+    },
+    {
+      "name": "wallCollisionPolygon file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/wall-collision-frame.js:27",
+      "micros": 548301,
+      "percent": 0.118441328525121
+    },
+    {
+      "name": " file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/simulation/game.js:643",
+      "micros": 527749,
+      "percent": 0.11400178494623224
+    },
+    {
+      "name": "pond file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/terrain.js:326",
+      "micros": 527632,
+      "percent": 0.11397651117245207
+    },
+    {
+      "name": "pop file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/search-frontier.js:13",
+      "micros": 517564,
+      "percent": 0.11180167053639466
+    },
+    {
+      "name": " file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/gate-passages.js:26",
+      "micros": 510766,
+      "percent": 0.11033319947521882
+    },
+    {
+      "name": "wallPlacement file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/navigation.js:177",
+      "micros": 478053,
+      "percent": 0.10326669552931632
+    },
+    {
+      "name": " file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/navigation.js:488",
+      "micros": 461520,
+      "percent": 0.09969531688053432
+    },
+    {
+      "name": "reachableApproach file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/simulation/raids.js:204",
+      "micros": 419071,
+      "percent": 0.09052568933186513
+    },
+    {
+      "name": "existsSync :0",
+      "micros": 401517,
+      "percent": 0.08673375920419807
+    },
+    {
+      "name": "targetFor file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/simulation/raids.js:229",
+      "micros": 394397,
+      "percent": 0.08519573126133666
+    },
+    {
+      "name": "side file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/footprints.js:15",
+      "micros": 393686,
+      "percent": 0.08504214448221102
+    },
+    {
+      "name": "findBuildingRoute file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/building-route-shortcut.js:29",
+      "micros": 385572,
+      "percent": 0.08328939746979844
+    },
+    {
+      "name": "boundaryFaces file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/boundary-faces.js:5",
+      "micros": 355442,
+      "percent": 0.07678086068350425
+    },
+    {
+      "name": "advancePlant file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/simulation/crops.js:16",
+      "micros": 342913,
+      "percent": 0.07407440673742127
+    },
+    {
+      "name": "navigationPathKey file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/raid-navigation-warmth.js:7",
+      "micros": 333547,
+      "percent": 0.07205120874404485
+    },
+    {
+      "name": "gateTriggerRadius file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/world/gate-passages.js:26",
+      "micros": 275462,
+      "percent": 0.05950396814557493
+    },
+    {
+      "name": " file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/simulation/tasks.js:73",
+      "micros": 268426,
+      "percent": 0.057984085476196705
+    },
+    {
+      "name": " file:///C:/Users/PC/source/repos/wild-guardians-campaign-unfunded-geometry-guard/src/simulation/game.js:500",
+      "micros": 262032,
+      "percent": 0.05660288453986862
+    }
+  ]
+}

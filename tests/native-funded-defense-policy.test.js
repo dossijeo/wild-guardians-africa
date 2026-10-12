@@ -66,6 +66,24 @@ test('rolling investment buys a paid partial wall while preserving replant cash,
  assert.equal(numberOf(s.ledger.entries['rolling-real-replant']),-5);
  assert.throws(()=>createNativeFundedDefensePolicy({funding:'free-walls'}));
 });
+test('an unfunded partial contour defers native recertification until another piece can be bought',()=>{
+ const {s,nav,options}=fixture(),policy=createNativeFundedDefensePolicy({startDay:1,obstacleAware:true,funding:'rolling'});
+ assert.equal(policy.act(s,nav,options),1);
+ const paid=policy.report().paidPieces,planned=policy.report().planned;
+ assert(paid>0&&planned&&!policy.report().completed);
+ options.reserve=numberOf(s.ledger.balance)-5;
+ let placements=0;const original=nav.wallPlacement.bind(nav);
+ nav.wallPlacement=(...args)=>{placements++;return original(...args);};
+ s.elapsed+=6;
+ assert.equal(policy.act(s,nav,options),0);
+ assert.equal(placements,0);
+ assert.equal(policy.report().history.at(-1).geometryCheckDeferred,true);
+ assert.deepEqual(policy.report().planned,planned);
+ assert.equal(policy.report().paidPieces,paid);
+ options.reserve=160;s.elapsed+=6;
+ assert.equal(policy.act(s,nav,options),1);
+ assert(policy.report().paidPieces>paid);
+});
 test('funded defense remains opt-in and cannot lock funds before its declared day',()=>{
  const {s,nav,options}=fixture(),policy=createNativeFundedDefensePolicy({startDay:6}),before=serialize(s);assert.equal(policy.act(s,nav,options),0);assert.equal(policy.reserve(s),0);assert.equal(serialize(s),before);
  assert.throws(()=>createNativeFundedDefensePolicy({chunkPieces:0}));
