@@ -1,0 +1,9 @@
+# Native campaign magic parity (technical pilot)
+
+Base: `94cced8525415c1cc6b3015505b1d40497fb6a7b` (`main`). This branch changes only the campaign harness and its tests. Game rules, animal pressure, prices, workers, and crop behavior remain unchanged.
+
+The previous native campaign runner still used area targeting, day-3/day-5 unlocks, and agricultural cooldown checks. Those decisions no longer represent the playable single-plant magic rules. It now uses the existing `createAgriculturalMagicPolicy` and `castPickedSpell`, which resolve an exact plant ID, use the game's daily shared power budget, and wait for physical harvest and crate delivery before income enters the ledger. The four existing strategy profiles retain their non-magic decisions. Their agricultural cadence comes from the previously prepared policy: expansive 1 s, good and no-walls 4 s, bad 25 s. These are simulated decision opportunities, not credited activity time.
+
+Verification on seed 712, Sabana/Mapungubwe, good strategy, native game ticks, seven nights, no native evidence observer: 33 s wall time; 440 accepted individual magic applications; 653 additional coins attributed to delivered multiplied crates; final balance 1,021 and 150 living plants. The first day alone recorded 65 accepted applications beginning at time 0. This is a parity and runtime pilot, **not** balance acceptance or evidence of a 100-night victory. No campaign was stopped for economic fragility; the seven-night horizon was selected before launch to bound the performance check. No inactivity target is applied.
+
+Checks: targeted magic/runner tests 4/4, native protocol/finance/opening tests 9/9, `npm run test:playable` 185/185, browser script syntax 169/169. The full 100-night campaign remains pending a measured runtime budget and a frozen integrated combat-policy baseline.

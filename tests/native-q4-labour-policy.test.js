@@ -30,6 +30,6 @@ test('Q4 additions use native proportional ceil, real saturated FIFO backlog, hi
 });
 test('Q4 same productive labour recipe for defended and no-wall strategies; legacy protocol untouched',()=>{
  assert.equal(parseNativeCampaignArgs(['--out','fixture','--labour-policy','q4']).labourPolicy,'q4');
- assert.equal(campaignProtocolForLabour('legacy').id,'native-constant-economy-v3');assert.match(campaignProtocolForLabour('q4').id,/-q4$/);
+ assert.equal(campaignProtocolForLabour('legacy').id,'native-constant-economy-v4-individual-magic');assert.match(campaignProtocolForLabour('q4').id,/-q4$/);
  for(const name of ['good','expansive','no-walls'])assert.equal(nativeCampaignStrategy(name).middayHiring,true);assert.equal(nativeCampaignStrategy('bad').middayHiring,false);assert.throws(()=>campaignProtocolForLabour('fake'));
 });

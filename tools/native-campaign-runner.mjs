@@ -4,9 +4,10 @@ import {pathToFileURL} from 'node:url';
 import {createOpeningWorld} from './check_opening.mjs';
 import * as Game from '../src/simulation/game.js';
 import {cropSpec,permission,operational} from '../src/simulation/rules.js';
+import {agriculturalPowerReport} from '../src/simulation/agricultural-power.js';
 import {numberOf} from '../src/simulation/money.js';
 import {PROFILES,hiringCost} from '../src/simulation/workforce.js';
-import {isMature} from '../src/simulation/crops.js';
+import {createAgriculturalMagicPolicy} from './native-agricultural-magic.mjs';
 import {centerServicePoint} from '../src/world/centers.js';
 import {activeChunkRegion} from '../src/world/active-region.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
@@ -32,7 +33,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
  if(!Number.isSafeInteger(days)||days<1||days>180)throw Error('Native protocol permits1–180 days only');
  if(!Number.isSafeInteger(plantsPerWorker)||plantsPerWorker<1)throw new Error('Plants per worker must be a positive integer');
  const protocol=campaignProtocolForLabour(labourPolicy),q4=labourPolicy==='q4',labourHistory=[],labourReasons={};
- const policy=nativeCampaignStrategy(strategy);defend=policy.defend;middayHiring=policy.middayHiring;plantsPerWorker=6;
+ const policy=nativeCampaignStrategy(strategy),agriculturalMagic=createAgriculturalMagicPolicy({mode:policy.agriculturalMagic});defend=policy.defend;middayHiring=policy.middayHiring;plantsPerWorker=6;
  if(typeof Game.nightEntryPending!=='function')throw Error('Native pending entry handshake is not integrated; no campaign started');
  const opening=createOpeningWorld(world),nav=opening.nav;let s=opening.s,sequence=0;
  const worker=PROFILES.find(p=>p.id===profile);if(!worker)throw new Error('Unknown worker profile');
@@ -50,7 +51,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
  const expansion=policy.foundVillages?createNativeCampaignExpansion():null;
  const daily=[],counts={},seen=new Set(),savedRaids=new Set(),additionalHiring={count:0,cost:0};let maximumLiving=0,reloads=0,settledDeliveryIncome=0;
  let financeStart=campaignFinanceCheckpoint(s);
- partialEvidence=()=>({currentFinance:campaignFinanceDelta(financeStart,s),daily:structuredClone(daily),nativeEvidence:evidence?.report(s)??null,raidEvidence:raidEvidence.report(s),labourHistory,labourReasons,defense:defense?.report(s)??null,expansion:expansion?.report()??null});
+ partialEvidence=()=>({currentFinance:campaignFinanceDelta(financeStart,s),daily:structuredClone(daily),agriculturalMagic:agriculturalMagic.report(s),nativeEvidence:evidence?.report(s)??null,raidEvidence:raidEvidence.report(s),labourHistory,labourReasons,defense:defense?.report(s)??null,expansion:expansion?.report()??null});
  const collect=()=>{for(const e of s.events)if(!seen.has(e.id)){seen.add(e.id);counts[e.type]=(counts[e.type]??0)+1;if(e.type==='CrateDelivered'){const q=s.ledger.entries['deliver:'+e.targetId];assert.ok(q&&q.d==='1'&&Number(q.n)>0);settledDeliveryIncome+=Number(q.n);}if(e.type==='HiringConfirmed'&&e.additional){additionalHiring.count+=e.count;additionalHiring.cost+=e.cost;}}};
  const plotSearch=createNativeCampaignPlots(nav,()=>s);
  const choosePlot=()=>{const p=plotSearch.choose();if(p&&!plots.some(q=>q.x===p.x&&q.z===p.z))plots.push(p);return p;};
@@ -63,25 +64,18 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
   const p=choosePlot();if(!p)return false;
   if(!Game.plant(s,command('plant'),species,p.x,p.z,nav))return false;plantedSequence++;maximumLiving=Math.max(maximumLiving,s.plants.filter(p=>p.alive).length);return true;
  };
- const canCast=(kind,p)=>permission(s,kind)&&s.cooldowns[kind]===0&&
-  !s.spells.some(a=>distance(a,p)<a.radius+Game.spellRadius(kind))&&
-  (kind!=='shield'||!s.raid?.animals.some(a=>a.status!=='gone'&&distance(a,p)<a.radius+Game.spellRadius(kind)));
- const cast=(kind,p)=>canCast(kind,p)&&Game.cast(s,command(kind),kind,p.x,p.z,nav);
- const bestMagicPoint=(kind,plants)=>{
-  let best=null,score=0;
-  for(const p of plants)if(canCast(kind,p)){
-   const coverage=plants.reduce((total,q)=>total+Number(distance(p,q)<=Game.spellRadius(kind)),0);
-   if(coverage>score){best=p;score=coverage;}
-  }
-  return best;
- };
+ const canCastShield=p=>permission(s,'shield')&&s.cooldowns.shield===0&&
+  !s.spells.some(a=>distance(a,p)<a.radius+Game.spellRadius('shield'))&&
+  !s.raid?.animals.some(a=>a.status!=='gone'&&distance(a,p)<a.radius+Game.spellRadius('shield'));
+ const castShield=p=>canCastShield(p)&&Game.cast(s,command('shield'),'shield',p.x,p.z,nav);
  const act=()=>{
+  agriculturalMagic.observe(s);
   let actions=0;
   if(s.raid){
    const threats=s.raid.animals.filter(a=>a.hitsRemaining>0).map(a=>({a,target:[...s.plants,...s.structures].find(t=>t.id===a.targetId)}));
    threats.sort((a,b)=>Number(b.target?.kind==='center')-Number(a.target?.kind==='center'));
    for(const {a,target} of threats){
-    if(target&&distance(a,target)<8&&!Game.spellAt(s,'shield',target)&&cast('shield',target)){actions++;break;}
+    if(target&&distance(a,target)<8&&!Game.spellAt(s,'shield',target)&&castShield(target)){actions++;break;}
    }
    return {actions,reason:actions?'active':'incursion'};
   }
@@ -108,11 +102,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
   // takes priority. Still retain wages and already requested native repairs.
   if(defense)actions+=defense.act(s,nav,{command,reserve:labourReserve()+maintenanceReserve()});
   if(expansion)actions+=expansion.act(s,nav,{command,reserve:labourReserve()+maintenanceReserve(),villageSavings:savingsReserve()});
-  const live=s.plants.filter(p=>p.alive);
-  for(const kind of ['multiply','growth'])if(s.day>=(kind==='multiply'?5:3)&&s.cooldowns[kind]===0){
-   const eligible=live.filter(p=>kind==='multiply'?!p.multiplyHarvest:!isMature(p)&&p.water.every(w=>w.status!=='due'));
-   const point=bestMagicPoint(kind,eligible);if(point&&cast(kind,point))actions++;
-  }
+  actions+=Number(agriculturalMagic.act(s,nav,command));
   // Replant as money arrives. No fixed plot or plant-count limit.
   if(s.time<worker.end-20){if(burstPlanting){while(plant())actions++;}else if(plant())actions++;}
   return {actions,reason:actions?'active':s.time>=worker.end-20?'shift-end':plotSearch.reason()==='space'?'space':plotSearch.reason()==='searching'?'navigation':'budget'};
@@ -152,7 +142,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
     pendingTasks:s.tasks.length}));
    raidEvidence.observe(s);
    const tickStart=s.elapsed,tickTime=s.time;
-   Game.tick(s,dt,nav);evidence?.finishDecision(s);
+   Game.tick(s,dt,nav);agriculturalMagic.observe(s);evidence?.finishDecision(s);
    const actualDt=s.elapsed-tickStart,daylightDt=tickTime<300?Math.min(actualDt,300-tickTime):0;daylightSeconds+=daylightDt;
    if(!decision.actions){idle[decision.reason]=(idle[decision.reason]??0)+actualDt;unoccupiedSeconds+=daylightDt;idleRun+=daylightDt;longestIdle=Math.max(longestIdle,idleRun);}else idleRun=0;
    collect();evidence?.observe(s);raidEvidence.observe(s);onTick?.(s,nav);await driver.advancePresentation(s);
@@ -160,7 +150,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
    if(s.elapsed-start>2400)throw new Error(`Unfinished real incursion on day ${day}: ${JSON.stringify(s.raid)}`);
   }
   const finance=campaignFinanceDelta(financeStart,s);
-  const row={day,before,finance,daylightSeconds,unoccupiedSeconds,money:numberOf(s.ledger.balance),staff:initialStaff,wages:finance.wages,nextLabourReserve:labourReserve(),maintenanceReserve:maintenanceReserve(),pendingTasks:s.tasks.length,planted:(counts.CropPlaced??0)-(baseline.CropPlaced??0),delivered:(counts.CrateDelivered??0)-(baseline.CrateDelivered??0),destroyed:(counts.CropDestroyed??0)-(baseline.CropDestroyed??0),living:s.plants.filter(p=>p.alive).length,centerHp:s.structures.filter(operational).map(c=>c.hp),actions,longestIdle,idle,result:s.result};
+  const row={day,before,finance,agriculturalPower:agriculturalPowerReport(s,day),daylightSeconds,unoccupiedSeconds,money:numberOf(s.ledger.balance),staff:initialStaff,wages:finance.wages,nextLabourReserve:labourReserve(),maintenanceReserve:maintenanceReserve(),pendingTasks:s.tasks.length,planted:(counts.CropPlaced??0)-(baseline.CropPlaced??0),delivered:(counts.CrateDelivered??0)-(baseline.CrateDelivered??0),destroyed:(counts.CropDestroyed??0)-(baseline.CropDestroyed??0),living:s.plants.filter(p=>p.alive).length,centerHp:s.structures.filter(operational).map(c=>c.hp),actions,longestIdle,idle,result:s.result};
   row.additionalStaff=additionalHiring.count-additionalBaseline.count;row.additionalWages=additionalHiring.cost-additionalBaseline.cost;
   daily.push(row);onDay?.(row);
   if(s.result==='victory'&&s.day<=days){Game.continuePostgame(s);collect();}
@@ -168,6 +158,6 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
  }
  const idleRuns=daily.map(r=>r.longestIdle).sort((a,b)=>a-b),unoccupied=daily.reduce((n,r)=>n+r.unoccupiedSeconds,0),daylight=daily.reduce((n,r)=>n+r.daylightSeconds,0);
  const activity={daylightSeconds:daylight,unoccupiedSeconds:unoccupied,unoccupiedFraction:daylight?unoccupied/daylight:null,longestIdle:Math.max(...idleRuns),p90LongestIdle:idleRuns[Math.ceil(idleRuns.length*.9)-1]};
- return {protocol,strategy,labourPolicy,labourHistory,labourReasons,raidEvidence:raidEvidence.report(s),entryTransport:driver.report(),peaceAfter100:true,expansion:expansion?.report()??null,plotSearch:plotSearch.report(),...(evidence?{nativeEvidence:evidence.report(s)}:{}),biome:s.biome,culture:s.culture,seed:s.seed,policy:{profile,mixed,middayHiring,plantsPerWorker,defend,cashPolicy:policy.cashPolicy,reserveMaintenance,burstPlanting,cameraEntry,defensePolicy},defense:defense?.report(s)??null,additionalHiring,result:s.result,completedNights:s.completedNights,money:numberOf(s.ledger.balance),maximumLiving,plots:plots.length,reloads,counts,activity,daily,state:s,nav};
+ return {protocol,agriculturalMagic:agriculturalMagic.report(s),strategy,labourPolicy,labourHistory,labourReasons,raidEvidence:raidEvidence.report(s),entryTransport:driver.report(),peaceAfter100:true,expansion:expansion?.report()??null,plotSearch:plotSearch.report(),...(evidence?{nativeEvidence:evidence.report(s)}:{}),biome:s.biome,culture:s.culture,seed:s.seed,policy:{profile,mixed,middayHiring,plantsPerWorker,defend,cashPolicy:policy.cashPolicy,agriculturalMagic:policy.agriculturalMagic,reserveMaintenance,burstPlanting,cameraEntry,defensePolicy},defense:defense?.report(s)??null,additionalHiring,result:s.result,completedNights:s.completedNights,money:numberOf(s.ledger.balance),maximumLiving,plots:plots.length,reloads,counts,activity,daily,state:s,nav};
  } catch(error){let receipts;try{receipts=partialEvidence();}catch(e){receipts={evidenceError:e.message};}error.nativeCampaignPartial={strategy,seed:s.seed,day:s.day,time:s.time,result:s.result,state:serialize(s),entryTransport:driver.report(),receipts};throw error;} finally {await driver.dispose();}
 }
