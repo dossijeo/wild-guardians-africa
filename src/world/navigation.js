@@ -113,6 +113,31 @@ export class Navigation {
     if(this.state!==state||previousStatus!=='intact'||center.status!=='intact'||!unchanged){this.setState(state);return;}
     obstacle.hp=center.hp;obstacle.maxHp=center.maxHp;obstacle.collapseRemaining=center.collapseRemaining;
   }
+  syncWallRepair(state,wall,previousStatus) {
+    const old=this.obstacles.find(o=>o.id===wall.id&&o.kind==='wall');
+    if(this.state===state&&previousStatus==='intact'&&wall.status==='intact'&&old?.status==='intact'&&
+      old.x===wall.x&&old.z===wall.z&&old.yaw===wall.yaw&&old.material===wall.material&&
+      old.gate===wall.gate&&old.gateOpen===wall.gateOpen){
+      old.hp=wall.hp;old.maxHp=wall.maxHp;old.collapseRemaining=wall.collapseRemaining;
+      old.wallPresentation=wall.wallPresentation;return;
+    }
+    const previousVersion=this.version;
+    this.setState(state);
+    // A rebuilt solid wall changes topology, but routes wholly outside its
+    // expanded bounds remain valid. Preserve only those active worker paths;
+    // every intersecting path replans against the new collision geometry.
+    if(previousStatus!=='ruined'||wall.status!=='intact'||wall.gate||!Number.isSafeInteger(previousVersion))return;
+    for(const worker of state.workers){
+      if(worker.pathVersion!==previousVersion||!Array.isArray(worker.path)||!worker.path.length)continue;
+      const bounds=wallCollisionBounds(wall,worker.radius??.28);
+      let from=worker,clear=true;
+      for(const point of worker.path){
+        if(!outsideNavigationBounds(from,point,bounds,0)){clear=false;break;}
+        from=point;
+      }
+      if(clear)worker.pathVersion=this.version;
+    }
+  }
   forBuildingPlacement(building,suppress=[]) {
     // Route the proposed footprint without polluting live paths or caches.
     return Object.assign(Object.create(this),{
