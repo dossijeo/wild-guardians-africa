@@ -1,0 +1,20 @@
+(node:52944) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+node:internal/process/esm_loader:34
+      internalBinding('errors').triggerUncaughtException(
+                                ^
+
+AssertionError [ERR_ASSERTION]: Catalogue audit is stale; regenerate and review it.
+    at file:///C:/Users/PC/.codex/worktrees/worker-fractional-main/wild-guardians-africa/tools/audit_sfx_catalog.mjs:141:44
+    at ModuleJob.run (node:internal/modules/esm/module_job:218:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:329:24)
+    at async loadESM (node:internal/process/esm_loader:28:7)
+    at async handleMainPromise (node:internal/modules/run_main:113:12) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 'f4f9a55eec46c97917072b19b3a214c52d9de4669ac6e714b14d872faa3ef832',
+  expected: '19142dab8040d98d6fc8464b2d7909dc29f2b9035488169e4e4d6f1b2aa2b40e',
+  operator: 'strictEqual'
+}
+
+Node.js v20.11.0
