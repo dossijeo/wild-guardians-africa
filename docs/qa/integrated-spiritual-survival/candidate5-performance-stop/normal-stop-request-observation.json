@@ -1,0 +1,45 @@
+{
+  "observedAt": "2026-10-12T06:25:02.577Z",
+  "requested": {
+    "requestedAt": "2026-10-12T06:05:25.815Z",
+    "reason": "Disproportionate native simulation CPU cost after defensive/perimeter workload; technical cooperative stop, not economic loss or policy calibration"
+  },
+  "receipt": {
+    "status": "running",
+    "options": {
+      "days": 100,
+      "labourPolicy": "q15",
+      "profile": "olderFemale",
+      "cropPolicy": "cashflow",
+      "defensePolicy": "shore",
+      "defenseMaterial": "zarzas",
+      "repairPolicy": "breach-first",
+      "defenseFunding": "rolling",
+      "defensePieceReserve": 0,
+      "perimeterQa": "stable-plan-v5",
+      "reserveMaintenance": false,
+      "strategy": "good",
+      "defenseStartDay": 10,
+      "seed": 123,
+      "biome": "sabana",
+      "culture": "mapungubwe",
+      "out": "C:\\Users\\PC\\.codex\\worktrees\\raid-recovery-perf\\wild-guardians-africa\\docs\\qa\\integrated-spiritual-survival\\candidate5-normal-123-sabana-mapungubwe-hundred",
+      "gateAnimationInvariant": true,
+      "stop-file": "C:\\Users\\PC\\.codex\\worktrees\\raid-recovery-perf\\wild-guardians-africa\\docs\\qa\\integrated-spiritual-survival\\candidate5-normal-123-sabana-mapungubwe-hundred\\stop-requested"
+    },
+    "startedAt": "2026-10-12T05:54:41.071Z",
+    "processId": 44960
+  },
+  "progress": {
+    "observedAt": "2026-10-12T05:55:23.952Z",
+    "processId": 44960,
+    "day": 9,
+    "time": 190.99999999999267,
+    "elapsed": 4990.999999999991,
+    "living": 261,
+    "workers": 19,
+    "wallMilliseconds": 40877,
+    "result": null
+  },
+  "scope": "Cooperative stop request outstanding at observation; stale progress is not terminal state. Process presence is checked separately; do not force a defeat or claim an archived snapshot before the callback returns."
+}
