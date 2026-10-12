@@ -16,8 +16,16 @@ The cache uses exact coordinates (including signed zero), body radius, crop iden
 
 Measurements ran on a shared machine with the frozen experimental campaign still running. Absolute timings include contention and are not physical mobile or GPU acceptance.
 
-## Pending acceptance
+## Complete working-day replay
 
-The main-based 300-second native replays for 50, 200 and 500 crops are still running. Each arm uses 3,000 native ticks and compares every serialized state. The fixtures were previously funded explicitly for QA; the replay adds no funding or synthetic deliveries. They are not survival campaigns or player-activity measurements.
+The main-based 300-second native replays for 50, 200 and 500 crops completed: all 12 arms pass, with every serialized state identical at each of 3,000 ticks. The fixtures were previously funded explicitly for QA; the replay adds no funding or synthetic deliveries. They are not survival campaigns or player-activity measurements. `dense-full-day-abba.json.gz` retains the original report losslessly; `evidence-manifest.json` records its original hash and the preserved validation logs, including the initial failed test run.
 
-Do not claim a general healthy-farm speedup, open a completed-feature PR or merge this backport until those results and the final diff are reviewed. Earlier experimental-base measurements found no clear full-day benefit in the accessible 500-crop case; that neutral result remains preserved on `codex/watering-route-cache`.
+| Crops | A (ms) | B (ms) | B (ms) | A (ms) | Native path calls A/B |
+|---|---:|---:|---:|---:|---:|
+| 50 | 1892.64 | 1675.66 | 1324.43 | 1386.96 | 157 / 150 |
+| 200 | 5651.58 | 5650.60 | 5442.11 | 6217.47 | 323 / 275 |
+| 500 | 14459.42 | 12654.06 | 12661.15 | 14219.33 | 318 / 177 |
+
+The 500-crop run reduced aggregate tick CPU by about 11.7% using the mean of each pair. This is one contended desktop experiment, not a guaranteed gameplay/FPS gain. Smaller runs show warm-up/timing variability. Balance and plan verification also pass. No experimental campaign parameters were changed.
+
+Final review and PR/CI acceptance remain pending. Earlier experimental-base measurements found no clear full-day benefit in the accessible 500-crop case; that neutral result remains preserved on `codex/watering-route-cache`. Neither result proves acceleration of the experimental 100-night campaign.
