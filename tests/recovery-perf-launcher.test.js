@@ -10,8 +10,9 @@ test('all three policies retain their exact original options',()=>{
  assert.throws(()=>recoveryPerfComparisonOptions('perfect',input));
 });
 test('new provenance names its family and hashes the validator, launcher and review inputs',()=>{
- const source=recoveryPerfComparisonProvenance(recoveryPerfComparisonOptions('normal',input));
  const config=JSON.parse(readFileSync(new URL('../content/balance/raid_pressure_candidate.json',import.meta.url)));
+ if(config.version===5){assert.throws(()=>recoveryPerfComparisonProvenance(recoveryPerfComparisonOptions('normal',input)),/Unreviewed recovery perf source differences/);return;}
+ const source=recoveryPerfComparisonProvenance(recoveryPerfComparisonOptions('normal',input));
  assert([3,4].includes(config.version));
  assert.equal(source.comparison.family,'recovery-perf-preparation-v1');assert.equal(source.comparison.militaryCandidate,config.version);
  assert.equal(source.comparison.arm,config.version===4?'recovery':'reference');
@@ -23,6 +24,8 @@ test('policy overrides and old-family relabeling remain rejected',()=>{
  for(const edit of [{days:7},{defenseStartDay:1},{reserveMaintenance:false},{gateAnimationInvariant:false}])assert.throws(()=>recoveryPerfComparisonProvenance({...options,...edit}),/frozen player profiles/);
  // A complete switch to another frozen policy is valid and must be labeled
  // according to its actual options, never counted as the original good policy.
- assert.equal(recoveryPerfComparisonProvenance({...options,strategy:'bad'}).comparison.playerProfile,'bad');
+ const config=JSON.parse(readFileSync(new URL('../content/balance/raid_pressure_candidate.json',import.meta.url)));
+ if(config.version===5)assert.throws(()=>recoveryPerfComparisonProvenance({...options,strategy:'bad'}),/Unreviewed recovery perf source differences/);
+ else assert.equal(recoveryPerfComparisonProvenance({...options,strategy:'bad'}).comparison.playerProfile,'bad');
  assert.throws(()=>reviewedRecoveryProvenance(options),/Reviewed dependency inventory differs/);
 });

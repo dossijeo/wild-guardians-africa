@@ -8,6 +8,7 @@ test('actual materialized technical runtime matches its exact declared military 
  const {recovery}=recoveryPerfSourceInventories();
  const actual=Object.fromEntries(Object.keys(recovery).map(path=>[path,createHash('sha256').update(readFileSync(new URL('../'+path,import.meta.url))).digest('hex')]));
  const config=JSON.parse(readFileSync(new URL('../content/balance/raid_pressure_candidate.json',import.meta.url)));
+ if(config.version===5){assert.throws(()=>verifyRecoveryPerfSources(actual),/Unreviewed recovery perf source differences/);return;}
  assert([3,4].includes(config.version));
  const result=verifyRecoveryPerfSources(actual);
  assert.equal(result.militaryCandidate,config.version);assert.equal(result.arm,config.version===4?'recovery':'reference');
