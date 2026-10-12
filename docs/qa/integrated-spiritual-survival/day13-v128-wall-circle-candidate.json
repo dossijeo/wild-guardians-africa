@@ -1,0 +1,339 @@
+{
+  "scope": "Copied native checkpoint advanced through real game ticks and production-equivalent Node entry transport, but without virtual-player decisions, spells or repairs. CPU diagnostic only; not an economic/raid campaign result or rendering frame-time.",
+  "input": "docs/qa/integrated-spiritual-survival/pilot-v128-day13-split-entry/checkpoint-state.json.gz",
+  "inputSha256": "7b9adb178ee14446943cf4801545a7b20129c45330b837e04ca2808bc07ce1fb",
+  "day": 13,
+  "startTime": 390.00000000002046,
+  "endTime": 455.00000000003524,
+  "raid": true,
+  "samples": [
+    {
+      "time": 390.00000000002046,
+      "dt": 5,
+      "milliseconds": 31.57729999999998,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 25,
+      "plants": 1138
+    },
+    {
+      "time": 395.0000000000216,
+      "dt": 5,
+      "milliseconds": 7.0067000000000235,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 25,
+      "plants": 1138
+    },
+    {
+      "time": 400.00000000002274,
+      "dt": 5,
+      "milliseconds": 10.29890000000006,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 25,
+      "plants": 1138
+    },
+    {
+      "time": 405.0000000000239,
+      "dt": 5,
+      "milliseconds": 11.155199999999923,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 25,
+      "plants": 1138
+    },
+    {
+      "time": 410.000000000025,
+      "dt": 5,
+      "milliseconds": 6.947300000000041,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 25,
+      "plants": 1138
+    },
+    {
+      "time": 415.00000000002615,
+      "dt": 5,
+      "milliseconds": 7.310399999999959,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 25,
+      "plants": 1138
+    },
+    {
+      "time": 420.0000000000273,
+      "dt": 5,
+      "milliseconds": 6.442000000000007,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 25,
+      "plants": 1138
+    },
+    {
+      "time": 425.0000000000284,
+      "dt": 5,
+      "milliseconds": 5.224199999999996,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 25,
+      "plants": 1138
+    },
+    {
+      "time": 430.00000000002956,
+      "dt": 5,
+      "milliseconds": 7.725400000000036,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 25,
+      "plants": 1138
+    },
+    {
+      "time": 435.0000000000307,
+      "dt": 5,
+      "milliseconds": 7.880499999999984,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 25,
+      "plants": 1138
+    },
+    {
+      "time": 440.00000000003183,
+      "dt": 5,
+      "milliseconds": 7.5540999999999485,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 25,
+      "plants": 1138
+    },
+    {
+      "time": 445.00000000003297,
+      "dt": 5,
+      "milliseconds": 7.307799999999929,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 25,
+      "plants": 1138
+    },
+    {
+      "time": 450.0000000000341,
+      "dt": 5,
+      "milliseconds": 2777.0917,
+      "raidActors": 16,
+      "activeActors": 16,
+      "workers": 25,
+      "plants": 1138
+    }
+  ],
+  "phaseTrace": [],
+  "pathStats": {
+    "calls": 0,
+    "failed": 0,
+    "milliseconds": 0
+  },
+  "queryStats": {
+    "walkable": {
+      "calls": 0,
+      "milliseconds": 0
+    },
+    "segmentClear": {
+      "calls": 0,
+      "milliseconds": 0
+    },
+    "terrainValid": {
+      "calls": 0,
+      "milliseconds": 0
+    },
+    "coarseSegmentClear": {
+      "calls": 0,
+      "milliseconds": 0
+    },
+    "ring": {
+      "calls": 0,
+      "rejected": 0,
+      "milliseconds": 0
+    }
+  },
+  "raidActors": [
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 105.53272817127304,
+        "z": 30.92102552167879
+      },
+      "status": "entering",
+      "hitsRemaining": 2,
+      "targetId": "structure-4403"
+    },
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 96.84466080855834,
+        "z": 35.6673383538604
+      },
+      "status": "entering",
+      "hitsRemaining": 2,
+      "targetId": "structure-4425"
+    },
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 104.5544078714516,
+        "z": 36.01346004663415
+      },
+      "status": "entering",
+      "hitsRemaining": 4,
+      "targetId": "structure-4424"
+    },
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 107.45043032568984,
+        "z": 34.43135576924028
+      },
+      "status": "entering",
+      "hitsRemaining": 4,
+      "targetId": "structure-4393"
+    },
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 93.94863835432011,
+        "z": 37.24944263125427
+      },
+      "status": "entering",
+      "hitsRemaining": 3,
+      "targetId": "structure-4445"
+    },
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 95.86634050873691,
+        "z": 40.75977287881576
+      },
+      "status": "entering",
+      "hitsRemaining": 2,
+      "targetId": "structure-4446"
+    },
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 111.32477307974949,
+        "z": 27.756816966891048
+      },
+      "status": "entering",
+      "hitsRemaining": 2,
+      "targetId": "structure-4369"
+    },
+    {
+      "species": "hyena",
+      "spawn": {
+        "x": 98.66647785525431,
+        "z": 39.00215208904382
+      },
+      "status": "entering",
+      "hitsRemaining": 3,
+      "targetId": "structure-4447"
+    },
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 62.21329762610436,
+        "z": -35.49430242192514
+      },
+      "status": "entering",
+      "hitsRemaining": 2,
+      "targetId": "structure-4224"
+    },
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 65.12551536050663,
+        "z": -37.04639387136777
+      },
+      "status": "entering",
+      "hitsRemaining": 2,
+      "targetId": "structure-4225"
+    },
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 59.30107989170209,
+        "z": -33.94221097248252
+      },
+      "status": "entering",
+      "hitsRemaining": 4,
+      "targetId": "structure-4247"
+    },
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 60.331974657082995,
+        "z": -39.02426331210972
+      },
+      "status": "entering",
+      "hitsRemaining": 4,
+      "targetId": "structure-4248"
+    },
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 57.419756922680726,
+        "z": -37.472171862667096
+      },
+      "status": "entering",
+      "hitsRemaining": 2,
+      "targetId": "structure-4265"
+    },
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 70.94995082931118,
+        "z": -40.15057677025302
+      },
+      "status": "entering",
+      "hitsRemaining": 4,
+      "targetId": "structure-4266"
+    },
+    {
+      "species": "buffalo",
+      "spawn": {
+        "x": 56.450005153793015,
+        "z": -32.275395794108896
+      },
+      "status": "entering",
+      "hitsRemaining": 6,
+      "targetId": "structure-4267"
+    },
+    {
+      "species": "lion",
+      "spawn": {
+        "x": 69.18621054585364,
+        "z": -43.459915104801055
+      },
+      "status": "entering",
+      "hitsRemaining": 5,
+      "targetId": "structure-4268"
+    }
+  ],
+  "eventCounts": {
+    "RaidSpawned": 1
+  },
+  "damagedStructures": [],
+  "entryTransport": {
+    "mode": "real-node-worker-with-production-cooperative-fallback",
+    "updates": 26,
+    "waits": [],
+    "readyContexts": [],
+    "preparer": {
+      "requests": 1,
+      "accepted": 0,
+      "obsolete": 0,
+      "used": 0,
+      "failed": 0
+    },
+    "workerFailure": null,
+    "scope": "Wall-clock waits are separate from simulated activity; no clock, RNG or geometry patches"
+  },
+  "stateSha256": "9868e1dd5abf2c93468c467ea01091f4087f7a0405863867dc7003f2aa97c62e"
+}
