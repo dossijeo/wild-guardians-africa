@@ -50,6 +50,18 @@ export function candidateTaskRouteStep(nav,worker,task,target){
   attempt={key,destinations,index:0,iterator:null};
   memo.candidates.set(worker,attempt);
  }
+ // Even after the A* budget is spent, cheap direct routes can keep the crew
+ // productive. Probe a destination only once per attempt; failed probes stay
+ // in the pending iterator instead of repeating collision tests each tick.
+ if(!attempt.directChecked){
+  attempt.directChecked=true;
+  for(const destination of attempt.destinations){
+   if(nav.walkable(destination.x,destination.z,radius,null,true)&&nav.segmentClear(worker,destination,radius,null,true)){
+    memo.candidates.delete(worker);
+    return {pending:false,route:{destination,path:[{x:destination.x,z:destination.z}]}};
+   }
+  }
+ }
  while(memo.remaining>0){
   const destination=attempt.destinations[attempt.index];
   if(!destination){memo.candidates.delete(worker);return {pending:false,route:null};}

@@ -70,11 +70,12 @@ export function reserveTasks(state,canExecute=()=>true) {
     // in one pass; sort only when its route actually fails. The fallback keeps
     // the same distance/id order and never queries the first candidate twice.
     let worker;
+    let pending=false;
     if(workers.length<8){
       workers.sort((a,b)=>Math.hypot(a.x-target.x,a.z-target.z)-Math.hypot(b.x-target.x,b.z-target.z)||a.id.localeCompare(b.id));
       for(const candidate of workers){
         const result=canExecute(candidate,t,target);
-        if(result===TASK_ROUTE_PENDING)return TASK_ROUTE_PENDING;
+        if(result===TASK_ROUTE_PENDING){pending=true;break;}
         if(result){worker=candidate;break;}
       }
     }else{
@@ -87,18 +88,21 @@ export function reserveTasks(state,canExecute=()=>true) {
         if((distance-nearestDistance||candidate.id.localeCompare(nearest.id))<0){nearest=candidate;nearestDistance=distance;}
       }
       const first=canExecute(nearest,t,target);
-      if(first===TASK_ROUTE_PENDING)return TASK_ROUTE_PENDING;
+      if(first===TASK_ROUTE_PENDING){pending=true;}
       worker=first?nearest:null;
-      if(!worker){
+      if(!worker&&!pending){
         workers.sort((a,b)=>distances.get(a)-distances.get(b)||a.id.localeCompare(b.id));
         for(const candidate of workers){
           if(candidate===nearest)continue;
           const result=canExecute(candidate,t,target);
-          if(result===TASK_ROUTE_PENDING)return TASK_ROUTE_PENDING;
+          if(result===TASK_ROUTE_PENDING){pending=true;break;}
           if(result){worker=candidate;break;}
         }
       }
     }
+    // A difficult earlier route must not keep an entire crew idle. The task
+    // stays available while later tasks with a proven route can be reserved.
+    if(pending)continue;
     t.blocked=!worker && workers.length>0;
     if(worker) { cancelIdle(worker);t.workerId=worker.id;worker.taskId=t.id;worker.status='walking';workers.splice(workers.indexOf(worker),1); }
   }

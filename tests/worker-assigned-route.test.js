@@ -4,6 +4,7 @@ import {beginAssignedWorkerRouteStep,assignedWorkerRouteStep,candidateTaskRouteS
 
 function navigation(yields){
  const nav={version:1,obstacles:[],searches:0,steps:0,
+  walkable(){return false;},segmentClear(){return false;},
   *findPathSteps(start,end){
    this.searches++;
    for(let i=0;i<yields;i++){this.steps++;yield null;}
@@ -44,4 +45,14 @@ test('a completed failed route is distinct from a still pending search',()=>{
  const worker={id:'w',x:0,z:0},task={id:'t',kind:'harvest'},target={id:'crop',x:2,z:0};
  beginAssignedWorkerRouteStep(nav);
  assert.deepEqual(candidateTaskRouteStep(nav,worker,task,target),{pending:false,route:null});
+});
+
+test('direct candidate route remains available after the incremental search budget is consumed',()=>{
+ const nav=navigation(100),worker={id:'w',x:0,z:0},task={id:'t',kind:'harvest'},target={id:'crop',x:2,z:0};
+ beginAssignedWorkerRouteStep(nav);
+ assert.equal(candidateTaskRouteStep(nav,worker,task,target).pending,true);
+ const other={id:'other',x:3,z:0};
+ nav.walkable=()=>true;nav.segmentClear=()=>true;
+ assert.deepEqual(candidateTaskRouteStep(nav,worker,{id:'next',kind:'harvest'},other),{pending:false,route:{destination:other,path:[{x:3,z:0}]}});
+ assert.equal(nav.searches,1);
 });
