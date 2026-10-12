@@ -61,3 +61,7 @@ local 100-night suite was run after that refresh; final CI must supply its
 own result. The composite local evidence is not advertised as a fresh
 4,003-test all-green run. Main integration remains conditional on final review
 and the required successful CI checks.
+
+Readable historical logs normalize line endings/trailing whitespace. Their
+`.original.gz` counterparts retain the exact original bytes; no negative
+result or measured timing was removed during formatting cleanup.
