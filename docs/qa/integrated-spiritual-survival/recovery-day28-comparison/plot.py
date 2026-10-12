@@ -45,4 +45,4 @@ for day in range(1, max(r['capturedRows'] for r in reports) + 1):
     rows.append('| ' + ' | '.join(cells) + ' |')
 header = '| Día | C3 saldo | C3 plantas | C3 pérdidas | C3 ingresos | C3 reparaciones | C4 saldo | C4 plantas | C4 pérdidas | C4 ingresos | C4 reparaciones |\n'
 separator = '|---|' + '---:|' * 10 + '\n'
-(root / 'daily-table.md').write_text(header + separator + '\n'.join(rows) + '\n', encoding='utf-8')
+(root / 'daily-table.md').write_bytes((header + separator + '\n'.join(rows) + '\n').encode('utf-8'))
