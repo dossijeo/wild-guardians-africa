@@ -21,3 +21,43 @@ The dedicated Vite server uses port 5218 and a worktree-local dependency cache. 
 ## Integration gates
 
 Before any PR/merge: finish build/package/assets verification, broader/full suite and final source-scope review on this main-based branch. Keep original failures and comparisons. Do not claim economic/horde balance acceptance, include experimental balance files or merge an unverified build. Saved movement replays and no-path/dynamic-object bounds are directed regression evidence; they do not prove every possible generated landscape.
+
+## Completed local validation and original negatives
+
+The original full suite on frozen `f1cda984` completes 4,001 tests: 3,999 pass
+and two fail, with zero skips/cancellations, in 10,019,286.6922 ms. Its complete
+original TAP is preserved losslessly. Both failures are the stale SFX source
+inventory/hash and source-line assertions. The original legacy paid-work
+sunflower and eight-crop fixtures each pass all 100 nights. They use main's
+original gameplay, not the frozen experimental good/normal/bad horde policies,
+and do not approve the new economic/military model.
+
+After the original suite terminates, the actual SFX inventory is regenerated
+and deep-compared to the reviewed untracked preview. Only source hashes for
+game.js/navigation.js and source line locations differ. All 126 original clip
+byte identities, 100 assignments, 26 unassigned entries, classifications,
+selectors, alternatives and audible-verification flags remain identical.
+No audio asset or runtime binding is changed.
+
+The first directed rerun raced the still-running inventory generator and read
+the old metadata. That original 11-pass/two-fail log is preserved; it is not
+relabelled as a new functional failure. After waiting for the generator's
+successful terminal result, the 13 directed checks pass with zero failures or
+skips. This includes the three real catalogue/location checks and ten worker
+connector checks. New controlled native-tick/reload tests reach the village
+with `home` status, bounded motion and unchanged ledger; they explicitly clear
+terminal status and remove gameplay entities in a **copy** for isolated
+locomotion, not resurrection of the historical campaign.
+
+Earlier 69 directed navigation/gate checks pass. Web build passes in 20.14 s;
+web package verification passes (722 files, 445,654,474 bytes, 860 relative
+links, 22 runtime GLBs). Asset, balance and master-plan arithmetic checks pass.
+The existing large JS-chunk warning remains. Browser acceptance and its
+rendering/mobile limitations are documented above.
+
+Runtime source is unchanged since the frozen full suite. The final change
+adds only metadata refresh, directed tests and QA evidence. No second complete
+local 100-night suite was run after that refresh; final CI must supply its
+own result. The composite local evidence is not advertised as a fresh
+4,003-test all-green run. Main integration remains conditional on final review
+and the required successful CI checks.

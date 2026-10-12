@@ -5,12 +5,26 @@ import {gunzipSync} from 'node:zlib';
 import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import {Navigation,BIOME_IDS} from '../src/world/navigation.js';
 import {workerFractionalConnector} from '../src/world/worker-fractional-connector.js';
-import {walkTo} from '../src/simulation/game.js';
+import {walkTo,tick} from '../src/simulation/game.js';
 import {advanceGateLeaves} from '../src/simulation/gates.js';
 const snapshot=new URL('./fixtures/worker-fractional-departure/state.json.gz',import.meta.url);
 function world(){const s=deserialize(gunzipSync(readFileSync(snapshot)).toString()),w=s.workers[0],v=s.villages[0],end={...(v.entry??v),id:'home-'+v.id};return {s,w,end,nav:navigation(s)};}
 function navigation(s){const p=JSON.parse(readFileSync(new URL('../public/content/biome-'+BIOME_IDS[s.biome]+'.json',import.meta.url))).profile,n=new Navigation(s.seed,s.biome,p);n.setState(s);return n;}
 function connector(nav,w,end){for(let i=0;i<4096;i++){const path=workerFractionalConnector(nav,w,end);if(path)return path;}return null;}
+for(const reload of [false,true])test(`native tick completes isolated departure as home${reload?' after mid-search reload':''}`,()=>{
+ let {s,w,nav}=world();
+ // This copy is an isolated locomotion fixture, not a resumed lost campaign.
+ s.result=null;s.pauses=[];s.time=400;s.raid=null;s.spells=[];
+ s.dayPlan={at:0,done:true,group:[]};s.nightPlan={at:500,done:true,group:[]};
+ s.plants=[];s.tasks=[];s.crates=[];s.workers=[w];nav=navigation(s);
+ const ledger=JSON.stringify(s.ledger),version=nav.version;let reloaded=false;
+ for(let i=0;i<1200&&w.status!=='home';i++){
+  const x=w.x,z=w.z;tick(s,.1,nav);assert(Math.hypot(w.x-x,w.z-z)<=.240000001);
+  if(reload&&i===100){s=deserialize(serialize(s));w=s.workers[0];nav=navigation(s);reloaded=true;}
+ }
+ assert.equal(w.status,'home');assert.equal(reloaded,reload);assert.equal(nav.version,version);
+ assert.equal(JSON.stringify(s.ledger),ledger);assert.equal(s.day,65);assert.equal(s.tasks.length,0);assert.equal(s.crates.length,0);assert.equal(s.raid,null);
+});
 test('archived valid fractional origin obtains a wholly native swept route to the village',()=>{
  const {s,w,nav,end}=world(),before=serialize(s);
  assert(nav.walkable(w.x,w.z,.28,null,true));assert.equal(nav.workerPath(w,end,.28,null),null);
