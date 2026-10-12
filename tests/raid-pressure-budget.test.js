@@ -20,7 +20,7 @@ test('P follows independent formula with clamping and growing/retiring agricultu
  assert.ok(Math.abs(raidPressure(50,1000)-(.45*49/99+.55*Math.log(2)/Math.log(26)))<1e-14);
  assert.equal(raidPressure(400,1e9),1);
  const memory=updateRaidPressureMemory(updateRaidPressureMemory(null,6,1000),7,0);
- const retired=raidPressureSummary(7,0,memory);assert.equal(retired.effectiveValue,memory.ema);
+ const retired=raidPressureSummary(7,0,memory);assert.equal(retired.effectiveValue,0);assert.equal(retired.pressure,0);
  assert.equal(raidPressureSummary(7,9000,memory).effectiveValue,9000);
  assert.throws(()=>raidPressureSummary(8,0,memory));
 });

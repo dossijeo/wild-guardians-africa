@@ -1,7 +1,8 @@
 // Pure, unintegrated candidate. No clock, state, command or damage mutations.
 import {BALANCE as B} from './balance.js';
 const THIRD_RAID_PRESSURE_CANDIDATE=Object.freeze({version:3,emaAlpha:1/3,referenceSpacing:1.5,referenceConeRadians:Math.PI/2,peripheralWeight:.5,qMeanMultiplier:1.5,activeWaveLimit:16,countPower:.5,introCountStart:8,introCountRise:2,hitPressureSteps:4});
-export const RAID_PRESSURE_CANDIDATE=Object.freeze({...THIRD_RAID_PRESSURE_CANDIDATE,version:4,populationValueScale:1000});
+const FOURTH_RAID_PRESSURE_CANDIDATE=Object.freeze({...THIRD_RAID_PRESSURE_CANDIDATE,version:4,populationValueScale:1000});
+export const RAID_PRESSURE_CANDIDATE=Object.freeze({...FOURTH_RAID_PRESSURE_CANDIDATE,version:5});
 // Saved plans retain their original budget recipe; missing provenance means v1.
 const LEGACY_RAID_PRESSURE_CANDIDATE=Object.freeze({version:1,emaAlpha:1/3,referenceSpacing:1.5,referenceConeRadians:Math.PI/2,peripheralWeight:.5,qMeanMultiplier:1,activeWaveLimit:16});
 const SECOND_RAID_PRESSURE_CANDIDATE=Object.freeze({version:2,emaAlpha:1/3,referenceSpacing:1.5,referenceConeRadians:Math.PI/2,peripheralWeight:.5,qMeanMultiplier:1.5,activeWaveLimit:16});
@@ -9,6 +10,7 @@ export function raidPressureCandidateForVersion(version=1){
  if(version===1)return LEGACY_RAID_PRESSURE_CANDIDATE;
  if(version===2)return SECOND_RAID_PRESSURE_CANDIDATE;
  if(version===3)return THIRD_RAID_PRESSURE_CANDIDATE;
+ if(version===4)return FOURTH_RAID_PRESSURE_CANDIDATE;
  if(version===RAID_PRESSURE_CANDIDATE.version)return RAID_PRESSURE_CANDIDATE;
  throw Error('Unknown raid pressure candidate version');
 }
@@ -41,8 +43,7 @@ export function raidAnimalCount(d,p,config=RAID_PRESSURE_CANDIDATE){
  const count=Math.round(4+30*Math.pow(p,power));
  return start===null?count:Math.min(count,start+rise*Math.min(d-6,34));
 }
-// Quantity-only recovery response. EMA still determines species/hits/damage;
-// the current living harvest value limits how many attackers that farm faces.
+// The current living harvest value limits how many attackers that farm faces.
 // One physical animal remains guaranteed; never a synthetic loss percentage.
 export function raidRecoveryAnimalCount(d,p,value,config=RAID_PRESSURE_CANDIDATE){
  finite(value,'current agricultural value');
@@ -55,7 +56,14 @@ export function raidRecoveryAnimalCount(d,p,value,config=RAID_PRESSURE_CANDIDATE
 export function raidPressureSummary(d,value,memory,config=RAID_PRESSURE_CANDIDATE){
  day(d);finite(value,'agricultural value');validateRaidPressureMemory(memory);if(memory.lastDay!==d)throw Error('Plan requires current night EMA sample');
  // EMA is idempotent; caller owns/persists a selected plan, never rerolls it.
- const effectiveValue=Math.max(value,memory.ema),p=raidPressure(d,effectiveValue);
+ // v5 responds to losses at the next plan: historical wealth cannot keep
+ // intensity high on a diminished farm. Time pressure also needs agriculture
+ // to support it; the old absolute day floor caused recovery death spirals.
+ // Keep the EMA for historical recipes/save compatibility and diagnostics.
+ const effectiveValue=config.version>=5?value:Math.max(value,memory.ema);
+ const p=config.version>=5
+  ?Math.max(0,Math.min(1,.45*(d-1)/99*(value/(value+config.populationValueScale))+.55*Math.log1p(value/1000)/Math.log(26)))
+  :raidPressure(d,effectiveValue);
  return {night:d,observedValue:value,capturedValue:memory.sample,effectiveValue,pressure:p,targetAnimals:raidRecoveryAnimalCount(d,p,value,config),areaCap:1+Math.floor(6*p),introductory:d<=5};
 }
 export function raidSpeciesPressure(id,p,balance=B,config=RAID_PRESSURE_CANDIDATE){
@@ -165,6 +173,6 @@ function equalConfig(a,b){
  const ka=Object.keys(a).sort(),kb=Object.keys(b).sort();return ka.length===kb.length&&ka.every((k,i)=>k===kb[i]&&equalConfig(a[k],b[k]));
 }
 export function validateRaidPressureConfiguration(json,balance=B){
- const expected={version:4,population:{base:4,span:30,pressurePower:.5,introStartAtNight6:8,introRisePerNight:2,currentValueScale:1000,recovery:'max(1, round(base count * current value / (current value + scale)))'},hitPressureSteps:4,status:'pure-unintegrated-candidate',pressure:{dayWeight:.45,valueWeight:.55,valueScale:1000,logDenominator:26,firstNight:1,lastNight:100},ema:{alpha:1/3,nominalWindowNights:5,update:'once-per-night-plan',effective:'max(current agricultural value, EMA)'},composition:{initial:[1,0,0,0,0],final:SHARES,species:IDS,interpolation:'linear-pressure; renormalize native unlocked; Hamilton integer rounding'},reference:{spacing:1.5,coneRadians:Math.PI/2,centralWeight:1,peripheralWeight:.5},q:{meanMultiplier:1.5,unit:'reference agricultural HP points',round:'floor half-point',feasibility:'at least cheapest legal capped worst-case product',selection:'adjust composition before RNG; full native-range hit rolls'},waveActiveLimit:16,speciesCropBaseDamage:CROP,speciesBaseAttackRadii:RADII,structureRounding:'Math.round'};
+ const expected={version:5,population:{base:4,span:30,pressurePower:.5,introStartAtNight6:8,introRisePerNight:2,currentValueScale:1000,recovery:'max(1, round(base count * current value / (current value + scale)))'},hitPressureSteps:4,status:'pure-unintegrated-candidate',pressure:{dayWeight:.45,valueWeight:.55,valueScale:1000,logDenominator:26,firstNight:1,lastNight:100,dayRecovery:'current value / (current value + population scale)'},ema:{alpha:1/3,nominalWindowNights:5,update:'once-per-night-plan',effective:'current agricultural value; EMA retained only for historical plans and diagnostics'},composition:{initial:[1,0,0,0,0],final:SHARES,species:IDS,interpolation:'linear-pressure; renormalize native unlocked; Hamilton integer rounding'},reference:{spacing:1.5,coneRadians:Math.PI/2,centralWeight:1,peripheralWeight:.5},q:{meanMultiplier:1.5,unit:'reference agricultural HP points',round:'floor half-point',feasibility:'at least cheapest legal capped worst-case product',selection:'adjust composition before RNG; full native-range hit rolls'},waveActiveLimit:16,speciesCropBaseDamage:CROP,speciesBaseAttackRadii:RADII,structureRounding:'Math.round'};
  if(!equalConfig(json,expected))throw Error('Canonical pressure config/runtime drift');validateRaidPressureSource(balance);return json;
 }
