@@ -210,8 +210,8 @@ function release(s,a) {if(a.reservation&&s.raid.reservations[a.reservation]===a.
 export function reachableApproach(a,target,nav,shield=null){
   const focus=shield??target,r=shield?shield.radius+a.radius+.1:(target.kind==='wall'?1.2:.6)+a.radius;
   const angle=Math.atan2(a.x-focus.x,a.z-focus.z);
+  if(nav.approachRegionBlocked?.(a,focus,a.radius,r)||(!shield&&target.kind!=='center'&&nav.approachRingBlocked?.(a,focus,a.radius,r,angle)))return null;
   for(let sample=0;sample<32;sample++){
-    if(nav.approachRegionBlocked?.(a,focus,a.radius,r))return null;
     const offset=sample===0?0:Math.ceil(sample/2)*(sample%2?1:-1)*Math.PI/16;
     const point={id:`approach-${target.id}-${shield?.id??'direct'}-${sample}`,...(!shield&&target.kind==='center'?centerBoundaryPoint(target,angle+offset,a.radius+.5,nav.state):{x:focus.x+Math.sin(angle+offset)*r,z:focus.z+Math.cos(angle+offset)*r})};
     if(nav.state?.raid&&!reservedApproachClear(nav.state,a,point))continue;
@@ -234,8 +234,8 @@ export function raidTarget(s,id){
 }
 function targetFor(s,a,nav) {
   const trace=nav.__nativeTickPhaseTrace;
-  let groupMilliseconds=0,approachMilliseconds=0,groupChecks=0,approachChecks=0;
-  const detail=()=>trace?.({phase:'target-detail',time:s.time,animalId:a.id,groupMilliseconds,approachMilliseconds,groupChecks,approachChecks});
+  let groupMilliseconds=0,approachMilliseconds=0,groupChecks=0,approachChecks=0,groupRejected=0;
+  const detail=()=>trace?.({phase:'target-detail',time:s.time,animalId:a.id,groupMilliseconds,approachMilliseconds,groupChecks,approachChecks,groupRejected,cropGroupSizes:groups.map(g=>g.targets.length),closedRegions:nav.closedRegions?.size,searchedRegions:nav.searchedRegions?.length});
   const groups=[],seen=new Set(),components=createCropGrouping(s.plants);
   for(const p of components.living)if(!seen.has(p.id)) {
     const group=components.group(p);group.forEach(p=>seen.add(p.id));const id=group.map(p=>p.id).sort()[0];
@@ -249,7 +249,7 @@ function targetFor(s,a,nav) {
     const groupStarted=trace?performance.now():0;
     const groupBlocked=nav.approachGroupBlocked?.(a,group.targets,a.radius,.6+a.radius);
     if(trace){groupChecks++;groupMilliseconds+=performance.now()-groupStarted;}
-    if(groupBlocked)break;
+    if(groupBlocked){groupRejected++;break;}
     if(targetReserved(s,a,p))continue;
     const shield=spellAt(s,'shield',p),approachStarted=trace?performance.now():0,approach=reachableApproach(a,p,nav,shield);
     if(trace){approachChecks++;approachMilliseconds+=performance.now()-approachStarted;}

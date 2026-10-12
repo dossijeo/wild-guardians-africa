@@ -1,0 +1,1393 @@
+{
+  "scope": "Copied native checkpoint advanced through real game ticks and production-equivalent Node entry transport, but without virtual-player decisions, spells or repairs. CPU diagnostic only; not an economic/raid campaign result or rendering frame-time.",
+  "input": "docs/qa/integrated-spiritual-survival/pilot-v128-day13-split-entry/checkpoint-state.json.gz",
+  "inputSha256": "7b9adb178ee14446943cf4801545a7b20129c45330b837e04ca2808bc07ce1fb",
+  "day": 13,
+  "startTime": 390.00000000002046,
+  "endTime": 455.00000000003524,
+  "raid": true,
+  "samples": [
+    {
+      "time": 390.00000000002046,
+      "dt": 5,
+      "milliseconds": 30.599300000000028,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 25,
+      "plants": 1138
+    },
+    {
+      "time": 395.0000000000216,
+      "dt": 5,
+      "milliseconds": 7.747500000000002,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 25,
+      "plants": 1138
+    },
+    {
+      "time": 400.00000000002274,
+      "dt": 5,
+      "milliseconds": 11.30559999999997,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 25,
+      "plants": 1138
+    },
+    {
+      "time": 405.0000000000239,
+      "dt": 5,
+      "milliseconds": 9.623499999999979,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 25,
+      "plants": 1138
+    },
+    {
+      "time": 410.000000000025,
+      "dt": 5,
+      "milliseconds": 10.543500000000051,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 25,
+      "plants": 1138
+    },
+    {
+      "time": 415.00000000002615,
+      "dt": 5,
+      "milliseconds": 9.889400000000023,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 25,
+      "plants": 1138
+    },
+    {
+      "time": 420.0000000000273,
+      "dt": 5,
+      "milliseconds": 6.964300000000037,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 25,
+      "plants": 1138
+    },
+    {
+      "time": 425.0000000000284,
+      "dt": 5,
+      "milliseconds": 7.1836999999999875,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 25,
+      "plants": 1138
+    },
+    {
+      "time": 430.00000000002956,
+      "dt": 5,
+      "milliseconds": 4.287399999999991,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 25,
+      "plants": 1138
+    },
+    {
+      "time": 435.0000000000307,
+      "dt": 5,
+      "milliseconds": 6.576099999999997,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 25,
+      "plants": 1138
+    },
+    {
+      "time": 440.00000000003183,
+      "dt": 5,
+      "milliseconds": 6.005499999999984,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 25,
+      "plants": 1138
+    },
+    {
+      "time": 445.00000000003297,
+      "dt": 5,
+      "milliseconds": 6.503899999999987,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 25,
+      "plants": 1138
+    },
+    {
+      "time": 450.0000000000341,
+      "dt": 5,
+      "milliseconds": 10013.3646,
+      "raidActors": 16,
+      "activeActors": 16,
+      "workers": 25,
+      "plants": 1138
+    }
+  ],
+  "phaseTrace": [
+    {
+      "phase": "raid-update",
+      "time": 450.10000000003413,
+      "milliseconds": 0.01470000000000482,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 450.10000000003413,
+      "milliseconds": 0.22640000000001237,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 450.20000000003415,
+      "milliseconds": 0.0050999999999703505,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 450.20000000003415,
+      "milliseconds": 0.07110000000000127,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 450.3000000000342,
+      "milliseconds": 0.0006000000000199179,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 450.3000000000342,
+      "milliseconds": 0.08150000000000546,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 450.4000000000342,
+      "milliseconds": 0.0005999999999630745,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 450.4000000000342,
+      "milliseconds": 0.06629999999995562,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 450.5000000000342,
+      "milliseconds": 0.001799999999946067,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 450.5000000000342,
+      "milliseconds": 0.09640000000001692,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 450.60000000003424,
+      "milliseconds": 0.001599999999996271,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 450.60000000003424,
+      "milliseconds": 0.19489999999996144,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 450.70000000003427,
+      "milliseconds": 0.001099999999951251,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 450.70000000003427,
+      "milliseconds": 0.19700000000000273,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 450.8000000000343,
+      "milliseconds": 0.001699999999971169,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 450.8000000000343,
+      "milliseconds": 0.14240000000000919,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 450.9000000000343,
+      "milliseconds": 0.0011000000000080945,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 450.9000000000343,
+      "milliseconds": 0.120900000000006,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 451.00000000003433,
+      "milliseconds": 0.0009000000000014552,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 451.00000000003433,
+      "milliseconds": 0.1272000000000162,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 451.10000000003436,
+      "milliseconds": 0.0007999999999697138,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 451.10000000003436,
+      "milliseconds": 0.127900000000011,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 451.2000000000344,
+      "milliseconds": 0.0010000000000331966,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 451.2000000000344,
+      "milliseconds": 0.11379999999996926,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 451.3000000000344,
+      "milliseconds": 0.0009999999999763531,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 451.3000000000344,
+      "milliseconds": 0.11940000000004147,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 451.4000000000344,
+      "milliseconds": 0.0009000000000014552,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 451.4000000000344,
+      "milliseconds": 0.13259999999996808,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 451.50000000003445,
+      "milliseconds": 0.0008000000000265572,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 451.50000000003445,
+      "milliseconds": 0.1250999999999749,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 451.60000000003447,
+      "milliseconds": 0.0006000000000199179,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 451.60000000003447,
+      "milliseconds": 0.12560000000001992,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 451.7000000000345,
+      "milliseconds": 0.004800000000045657,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 451.7000000000345,
+      "milliseconds": 0.2296000000000049,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 451.8000000000345,
+      "milliseconds": 0.0020000000000095497,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 451.8000000000345,
+      "milliseconds": 0.13470000000000937,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 451.90000000003454,
+      "milliseconds": 0.0013999999999896318,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 451.90000000003454,
+      "milliseconds": 0.2756999999999721,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 452.00000000003456,
+      "milliseconds": 0.005799999999965166,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 452.00000000003456,
+      "milliseconds": 0.1786000000000172,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 452.1000000000346,
+      "milliseconds": 0.0013000000000147338,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 452.1000000000346,
+      "milliseconds": 0.12119999999998754,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 452.2000000000346,
+      "milliseconds": 0.0013999999999896318,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 452.2000000000346,
+      "milliseconds": 0.14350000000001728,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 452.30000000003463,
+      "milliseconds": 0.0011999999999829924,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 452.30000000003463,
+      "milliseconds": 0.14489999999995007,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 452.40000000003465,
+      "milliseconds": 0.0012000000000398359,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 452.40000000003465,
+      "milliseconds": 0.1461999999999648,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 452.5000000000347,
+      "milliseconds": 0.0013999999999896318,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 452.5000000000347,
+      "milliseconds": 0.12210000000004584,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 452.6000000000347,
+      "milliseconds": 0.0014999999999645297,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 452.6000000000347,
+      "milliseconds": 0.1360000000000241,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 452.7000000000347,
+      "milliseconds": 0.0009999999999763531,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 452.7000000000347,
+      "milliseconds": 0.1257999999999697,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 452.80000000003474,
+      "milliseconds": 0.0006999999999948159,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 452.80000000003474,
+      "milliseconds": 0.08839999999997872,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 452.90000000003477,
+      "milliseconds": 0.0004999999999881766,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 452.90000000003477,
+      "milliseconds": 0.08539999999999281,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 453.0000000000348,
+      "milliseconds": 0.0005999999999630745,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 453.0000000000348,
+      "milliseconds": 0.17309999999997672,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 453.1000000000348,
+      "milliseconds": 0.0026000000000294676,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 453.1000000000348,
+      "milliseconds": 0.18209999999999127,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 453.20000000003483,
+      "milliseconds": 0.0008000000000265572,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 453.20000000003483,
+      "milliseconds": 0.08920000000000528,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 453.30000000003486,
+      "milliseconds": 0.0006000000000199179,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 453.30000000003486,
+      "milliseconds": 0.07019999999999982,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 453.4000000000349,
+      "milliseconds": 0.0003999999999564352,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 453.4000000000349,
+      "milliseconds": 0.07990000000000919,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 453.5000000000349,
+      "milliseconds": 0.0006000000000199179,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 453.5000000000349,
+      "milliseconds": 0.07450000000000045,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 453.6000000000349,
+      "milliseconds": 0.0009000000000014552,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 453.6000000000349,
+      "milliseconds": 0.09099999999995134,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 453.70000000003495,
+      "milliseconds": 0.0009000000000014552,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 453.70000000003495,
+      "milliseconds": 0.07040000000000646,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 453.80000000003497,
+      "milliseconds": 0.0004000000000132786,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 453.80000000003497,
+      "milliseconds": 0.06970000000001164,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 453.900000000035,
+      "milliseconds": 0.0009000000000014552,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 453.900000000035,
+      "milliseconds": 0.07019999999999982,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 454.000000000035,
+      "milliseconds": 0.0004999999999881766,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 454.000000000035,
+      "milliseconds": 0.08389999999997144,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 454.10000000003504,
+      "milliseconds": 0.0006000000000199179,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 454.10000000003504,
+      "milliseconds": 0.11170000000004165,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 454.20000000003506,
+      "milliseconds": 0.0007999999999697138,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 454.20000000003506,
+      "milliseconds": 0.07190000000002783,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 454.3000000000351,
+      "milliseconds": 0.0006000000000199179,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 454.3000000000351,
+      "milliseconds": 0.07280000000002929,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 454.4000000000351,
+      "milliseconds": 0.0004999999999881766,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 454.4000000000351,
+      "milliseconds": 0.08530000000001792,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 454.42440601368435,
+      "milliseconds": 0.0004000000000132786,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 454.42440601368435,
+      "milliseconds": 0.06819999999999027,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "target-detail",
+      "time": 454.52440601368437,
+      "animalId": "animal-11928",
+      "groupMilliseconds": 11.276599999999917,
+      "approachMilliseconds": 456.55559999999923,
+      "groupChecks": 179,
+      "approachChecks": 178,
+      "groupRejected": 2,
+      "cropGroupSizes": [
+        174,
+        2,
+        1,
+        1,
+        1
+      ],
+      "closedRegions": 460,
+      "searchedRegions": 4,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "target-selection",
+      "time": 454.52440601368437,
+      "animalId": "animal-11928",
+      "milliseconds": 487.25850000000014,
+      "found": true,
+      "targetKind": "wall",
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "target-detail",
+      "time": 454.52440601368437,
+      "animalId": "animal-11929",
+      "groupMilliseconds": 7.286899999999605,
+      "approachMilliseconds": 386.2974000000013,
+      "groupChecks": 179,
+      "approachChecks": 178,
+      "groupRejected": 2,
+      "cropGroupSizes": [
+        174,
+        2,
+        1,
+        1,
+        1
+      ],
+      "closedRegions": 460,
+      "searchedRegions": 4,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "target-selection",
+      "time": 454.52440601368437,
+      "animalId": "animal-11929",
+      "milliseconds": 396.45730000000003,
+      "found": true,
+      "targetKind": "wall",
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "target-detail",
+      "time": 454.52440601368437,
+      "animalId": "animal-11930",
+      "groupMilliseconds": 8.308199999997214,
+      "approachMilliseconds": 385.2071999999994,
+      "groupChecks": 179,
+      "approachChecks": 178,
+      "groupRejected": 2,
+      "cropGroupSizes": [
+        174,
+        2,
+        1,
+        1,
+        1
+      ],
+      "closedRegions": 460,
+      "searchedRegions": 4,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "target-selection",
+      "time": 454.52440601368437,
+      "animalId": "animal-11930",
+      "milliseconds": 395.3307,
+      "found": true,
+      "targetKind": "wall",
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "target-detail",
+      "time": 454.52440601368437,
+      "animalId": "animal-11931",
+      "groupMilliseconds": 10.612099999997554,
+      "approachMilliseconds": 551.4851000000003,
+      "groupChecks": 179,
+      "approachChecks": 178,
+      "groupRejected": 2,
+      "cropGroupSizes": [
+        174,
+        2,
+        1,
+        1,
+        1
+      ],
+      "closedRegions": 460,
+      "searchedRegions": 4,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "target-selection",
+      "time": 454.52440601368437,
+      "animalId": "animal-11931",
+      "milliseconds": 566.1554999999998,
+      "found": true,
+      "targetKind": "wall",
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "target-detail",
+      "time": 454.52440601368437,
+      "animalId": "animal-11932",
+      "groupMilliseconds": 8.611299999997755,
+      "approachMilliseconds": 448.5799000000038,
+      "groupChecks": 179,
+      "approachChecks": 178,
+      "groupRejected": 2,
+      "cropGroupSizes": [
+        174,
+        2,
+        1,
+        1,
+        1
+      ],
+      "closedRegions": 460,
+      "searchedRegions": 4,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "target-selection",
+      "time": 454.52440601368437,
+      "animalId": "animal-11932",
+      "milliseconds": 459.5798,
+      "found": true,
+      "targetKind": "wall",
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "target-detail",
+      "time": 454.52440601368437,
+      "animalId": "animal-11933",
+      "groupMilliseconds": 10.364199999994526,
+      "approachMilliseconds": 504.1729999999902,
+      "groupChecks": 179,
+      "approachChecks": 178,
+      "groupRejected": 2,
+      "cropGroupSizes": [
+        174,
+        2,
+        1,
+        1,
+        1
+      ],
+      "closedRegions": 460,
+      "searchedRegions": 4,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "target-selection",
+      "time": 454.52440601368437,
+      "animalId": "animal-11933",
+      "milliseconds": 517.7523000000001,
+      "found": true,
+      "targetKind": "wall",
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "target-detail",
+      "time": 454.52440601368437,
+      "animalId": "animal-11934",
+      "groupMilliseconds": 9.18119999999908,
+      "approachMilliseconds": 558.910900000008,
+      "groupChecks": 179,
+      "approachChecks": 179,
+      "groupRejected": 2,
+      "cropGroupSizes": [
+        174,
+        2,
+        1,
+        1,
+        1
+      ],
+      "closedRegions": 478,
+      "searchedRegions": 6,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "target-selection",
+      "time": 454.52440601368437,
+      "animalId": "animal-11934",
+      "milliseconds": 570.9390999999996,
+      "found": true,
+      "targetKind": "wall",
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "target-detail",
+      "time": 454.52440601368437,
+      "animalId": "animal-11935",
+      "groupMilliseconds": 8.072299999993447,
+      "approachMilliseconds": 615.3340000000026,
+      "groupChecks": 179,
+      "approachChecks": 178,
+      "groupRejected": 2,
+      "cropGroupSizes": [
+        174,
+        2,
+        1,
+        1,
+        1
+      ],
+      "closedRegions": 938,
+      "searchedRegions": 7,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "target-selection",
+      "time": 454.52440601368437,
+      "animalId": "animal-11935",
+      "milliseconds": 626.6508999999996,
+      "found": true,
+      "targetKind": "wall",
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "target-detail",
+      "time": 454.52440601368437,
+      "animalId": "animal-11936",
+      "groupMilliseconds": 9.50539999999637,
+      "approachMilliseconds": 515.8148999999985,
+      "groupChecks": 179,
+      "approachChecks": 178,
+      "groupRejected": 2,
+      "cropGroupSizes": [
+        174,
+        2,
+        1,
+        1,
+        1
+      ],
+      "closedRegions": 938,
+      "searchedRegions": 7,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "target-selection",
+      "time": 454.52440601368437,
+      "animalId": "animal-11936",
+      "milliseconds": 528.2156000000004,
+      "found": true,
+      "targetKind": "wall",
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "target-detail",
+      "time": 454.52440601368437,
+      "animalId": "animal-11937",
+      "groupMilliseconds": 11.318799999997282,
+      "approachMilliseconds": 535.8120000000054,
+      "groupChecks": 179,
+      "approachChecks": 178,
+      "groupRejected": 2,
+      "cropGroupSizes": [
+        174,
+        2,
+        1,
+        1,
+        1
+      ],
+      "closedRegions": 938,
+      "searchedRegions": 7,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "target-selection",
+      "time": 454.52440601368437,
+      "animalId": "animal-11937",
+      "milliseconds": 549.1526000000003,
+      "found": true,
+      "targetKind": "wall",
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "target-detail",
+      "time": 454.52440601368437,
+      "animalId": "animal-11938",
+      "groupMilliseconds": 11.516500000012456,
+      "approachMilliseconds": 520.4610000000066,
+      "groupChecks": 179,
+      "approachChecks": 178,
+      "groupRejected": 2,
+      "cropGroupSizes": [
+        174,
+        2,
+        1,
+        1,
+        1
+      ],
+      "closedRegions": 938,
+      "searchedRegions": 7,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "target-selection",
+      "time": 454.52440601368437,
+      "animalId": "animal-11938",
+      "milliseconds": 534.1090999999997,
+      "found": true,
+      "targetKind": "wall",
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "target-detail",
+      "time": 454.52440601368437,
+      "animalId": "animal-11939",
+      "groupMilliseconds": 10.409599999998136,
+      "approachMilliseconds": 529.206500000003,
+      "groupChecks": 179,
+      "approachChecks": 178,
+      "groupRejected": 2,
+      "cropGroupSizes": [
+        174,
+        2,
+        1,
+        1,
+        1
+      ],
+      "closedRegions": 938,
+      "searchedRegions": 7,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "target-selection",
+      "time": 454.52440601368437,
+      "animalId": "animal-11939",
+      "milliseconds": 542.7978999999996,
+      "found": true,
+      "targetKind": "wall",
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "target-detail",
+      "time": 454.52440601368437,
+      "animalId": "animal-11940",
+      "groupMilliseconds": 11.330999999990127,
+      "approachMilliseconds": 495.3313999999964,
+      "groupChecks": 179,
+      "approachChecks": 178,
+      "groupRejected": 2,
+      "cropGroupSizes": [
+        174,
+        2,
+        1,
+        1,
+        1
+      ],
+      "closedRegions": 938,
+      "searchedRegions": 7,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "target-selection",
+      "time": 454.52440601368437,
+      "animalId": "animal-11940",
+      "milliseconds": 509.46230000000105,
+      "found": true,
+      "targetKind": "wall",
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "target-detail",
+      "time": 454.52440601368437,
+      "animalId": "animal-11941",
+      "groupMilliseconds": 10.61340000000746,
+      "approachMilliseconds": 516.7063000000016,
+      "groupChecks": 179,
+      "approachChecks": 178,
+      "groupRejected": 2,
+      "cropGroupSizes": [
+        174,
+        2,
+        1,
+        1,
+        1
+      ],
+      "closedRegions": 938,
+      "searchedRegions": 7,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "target-selection",
+      "time": 454.52440601368437,
+      "animalId": "animal-11941",
+      "milliseconds": 529.6408999999985,
+      "found": true,
+      "targetKind": "wall",
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "target-detail",
+      "time": 454.52440601368437,
+      "animalId": "animal-11942",
+      "groupMilliseconds": 7.46900000000096,
+      "approachMilliseconds": 690.0779999999868,
+      "groupChecks": 179,
+      "approachChecks": 179,
+      "groupRejected": 1,
+      "cropGroupSizes": [
+        174,
+        2,
+        1,
+        1,
+        1
+      ],
+      "closedRegions": 1391,
+      "searchedRegions": 8,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "target-selection",
+      "time": 454.52440601368437,
+      "animalId": "animal-11942",
+      "milliseconds": 699.3575000000001,
+      "found": true,
+      "targetKind": "wall",
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "target-detail",
+      "time": 454.52440601368437,
+      "animalId": "animal-11943",
+      "groupMilliseconds": 9.671999999993204,
+      "approachMilliseconds": 811.0764999999974,
+      "groupChecks": 179,
+      "approachChecks": 178,
+      "groupRejected": 2,
+      "cropGroupSizes": [
+        174,
+        2,
+        1,
+        1,
+        1
+      ],
+      "closedRegions": 1878,
+      "searchedRegions": 9,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "target-selection",
+      "time": 454.52440601368437,
+      "animalId": "animal-11943",
+      "milliseconds": 823.2307000000001,
+      "found": true,
+      "targetKind": "wall",
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 454.52440601368437,
+      "milliseconds": 8760.5069,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 454.52440601368437,
+      "milliseconds": 0.23080000000118162,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 454.6244060136844,
+      "milliseconds": 9.427299999999377,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 454.6244060136844,
+      "milliseconds": 0.13409999999930733,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 454.7244060136844,
+      "milliseconds": 11.795000000000073,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 454.7244060136844,
+      "milliseconds": 0.15459999999984575,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 454.82440601368444,
+      "milliseconds": 10.0666999999994,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 454.82440601368444,
+      "milliseconds": 0.14240000000063446,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 454.92440601368446,
+      "milliseconds": 9.057399999999689,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 454.92440601368446,
+      "milliseconds": 0.11790000000110012,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "raid-update",
+      "time": 455.00000000003524,
+      "milliseconds": 7.205299999999625,
+      "tickStartTime": 450.0000000000341
+    },
+    {
+      "phase": "worker-update",
+      "time": 455.00000000003524,
+      "milliseconds": 0.1540000000004511,
+      "tickStartTime": 450.0000000000341
+    }
+  ],
+  "pathStats": {
+    "calls": 18584,
+    "failed": 18566,
+    "milliseconds": 8118.245399999939
+  },
+  "raidActors": [
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 105.53272817127304,
+        "z": 30.92102552167879
+      },
+      "status": "entering",
+      "hitsRemaining": 2,
+      "targetId": "structure-4403"
+    },
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 96.84466080855834,
+        "z": 35.6673383538604
+      },
+      "status": "entering",
+      "hitsRemaining": 2,
+      "targetId": "structure-4425"
+    },
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 104.5544078714516,
+        "z": 36.01346004663415
+      },
+      "status": "entering",
+      "hitsRemaining": 4,
+      "targetId": "structure-4424"
+    },
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 107.45043032568984,
+        "z": 34.43135576924028
+      },
+      "status": "entering",
+      "hitsRemaining": 4,
+      "targetId": "structure-4393"
+    },
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 93.94863835432011,
+        "z": 37.24944263125427
+      },
+      "status": "entering",
+      "hitsRemaining": 3,
+      "targetId": "structure-4445"
+    },
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 95.86634050873691,
+        "z": 40.75977287881576
+      },
+      "status": "entering",
+      "hitsRemaining": 2,
+      "targetId": "structure-4446"
+    },
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 111.32477307974949,
+        "z": 27.756816966891048
+      },
+      "status": "entering",
+      "hitsRemaining": 2,
+      "targetId": "structure-4369"
+    },
+    {
+      "species": "hyena",
+      "spawn": {
+        "x": 98.66647785525431,
+        "z": 39.00215208904382
+      },
+      "status": "entering",
+      "hitsRemaining": 3,
+      "targetId": "structure-4447"
+    },
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 62.21329762610436,
+        "z": -35.49430242192514
+      },
+      "status": "entering",
+      "hitsRemaining": 2,
+      "targetId": "structure-4224"
+    },
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 65.12551536050663,
+        "z": -37.04639387136777
+      },
+      "status": "entering",
+      "hitsRemaining": 2,
+      "targetId": "structure-4225"
+    },
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 59.30107989170209,
+        "z": -33.94221097248252
+      },
+      "status": "entering",
+      "hitsRemaining": 4,
+      "targetId": "structure-4247"
+    },
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 60.331974657082995,
+        "z": -39.02426331210972
+      },
+      "status": "entering",
+      "hitsRemaining": 4,
+      "targetId": "structure-4248"
+    },
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 57.419756922680726,
+        "z": -37.472171862667096
+      },
+      "status": "entering",
+      "hitsRemaining": 2,
+      "targetId": "structure-4265"
+    },
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 70.94995082931118,
+        "z": -40.15057677025302
+      },
+      "status": "entering",
+      "hitsRemaining": 4,
+      "targetId": "structure-4266"
+    },
+    {
+      "species": "buffalo",
+      "spawn": {
+        "x": 56.450005153793015,
+        "z": -32.275395794108896
+      },
+      "status": "entering",
+      "hitsRemaining": 6,
+      "targetId": "structure-4267"
+    },
+    {
+      "species": "lion",
+      "spawn": {
+        "x": 69.18621054585364,
+        "z": -43.459915104801055
+      },
+      "status": "entering",
+      "hitsRemaining": 5,
+      "targetId": "structure-4268"
+    }
+  ],
+  "eventCounts": {
+    "RaidSpawned": 1
+  },
+  "damagedStructures": [],
+  "entryTransport": {
+    "mode": "real-node-worker-with-production-cooperative-fallback",
+    "updates": 26,
+    "waits": [],
+    "readyContexts": [],
+    "preparer": {
+      "requests": 1,
+      "accepted": 0,
+      "obsolete": 1,
+      "used": 0,
+      "failed": 0
+    },
+    "workerFailure": null,
+    "scope": "Wall-clock waits are separate from simulated activity; no clock, RNG or geometry patches"
+  },
+  "stateSha256": "9868e1dd5abf2c93468c467ea01091f4087f7a0405863867dc7003f2aa97c62e"
+}

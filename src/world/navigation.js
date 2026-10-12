@@ -270,6 +270,38 @@ export class Navigation {
     for(const t of targets){bounds[0]=Math.min(bounds[0],t.x);bounds[1]=Math.min(bounds[1],t.z);bounds[2]=Math.max(bounds[2],t.x);bounds[3]=Math.max(bounds[3],t.z);}
     return this.approachRegionBlocked(start,targets[0],radius,reach,bounds);
   }
+  approachRingBlocked(start,focus,radius,reach,angle){
+    // A previous exhaustive native search may have certified an enclosed
+    // component. Reject this target only when EVERY one of its 32 real
+    // service points is non-walkable or has all native start connectors in a
+    // certified component that cannot contain the actor. Unknown terrain
+    // always falls back to the ordinary path search.
+    if(!this.closedRegions.size)return false;
+    const key=(x,z)=>`${x},${z}`,regionKey=(x,z)=>`${radius}:null:false|${key(x,z)}`;
+    const sx=Math.round(start.x),sz=Math.round(start.z);
+    const actorCells=[];
+    for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){
+      const cell={x:sx+dx,z:sz+dz};
+      if(this.walkable(cell.x,cell.z,radius,null,false)&&this.segmentClear(start,cell,radius,null,false))actorCells.push(key(cell.x,cell.z));
+    }
+    for(let sample=0;sample<32;sample++){
+      const offset=sample===0?0:Math.ceil(sample/2)*(sample%2?1:-1)*Math.PI/16;
+      const point={x:focus.x+Math.sin(angle+offset)*reach,z:focus.z+Math.cos(angle+offset)*reach};
+      if(!this.walkable(point.x,point.z,radius,null,false))continue;
+      if(this.segmentClear(point,start,radius,null,false))return false;
+      const px=Math.round(point.x),pz=Math.round(point.z);
+      for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){
+        const cell={x:px+dx,z:pz+dz};
+        // Include even cells whose short connector is blocked. This may
+        // prevent a proof, but avoids an expensive segment test and can never
+        // exclude a route the native search would accept.
+        if(!this.walkable(cell.x,cell.z,radius,null,false))continue;
+        const region=this.closedRegions.get(regionKey(cell.x,cell.z));
+        if(!region||actorCells.some(k=>region.has(k)))return false;
+      }
+    }
+    return true;
+  }
   approachRegionBlocked(start,focus,radius,reach,bounds=null){
     // Only a COMPLETE native closed-component certificate can reject every
     // service point. All possible 3x3 origin connectors must belong to that

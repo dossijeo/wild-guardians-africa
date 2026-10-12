@@ -1,0 +1,41 @@
+{
+  "scope": "Diagnostic grid reachability only; not a replacement for native path, collision or campaign validation",
+  "results": [
+    {
+      "actor": "warthog",
+      "radius": 1.1,
+      "start": {
+        "x": 105.53272817127304,
+        "z": 30.92102552167879
+      },
+      "bounds": [
+        44,
+        -44,
+        138,
+        63
+      ],
+      "visited": 6956,
+      "cropsWithReachableGridWithin3m": 10,
+      "cropsWithPlausibleNativeApproach": 0,
+      "approachExamples": []
+    },
+    {
+      "actor": "warthog",
+      "radius": 1.1,
+      "start": {
+        "x": 62.21329762610436,
+        "z": -35.49430242192514
+      },
+      "bounds": [
+        30,
+        -67,
+        133,
+        44
+      ],
+      "visited": 7845,
+      "cropsWithReachableGridWithin3m": 10,
+      "cropsWithPlausibleNativeApproach": 0,
+      "approachExamples": []
+    }
+  ]
+}
