@@ -1,0 +1,368 @@
+{
+  "observedAt": "2026-10-12T01:50:42.395Z",
+  "gameSourceSha256": "be99c1dd2dca1a13db8a0862c99a63b2a06ea085895f18b298881b0621ee632b",
+  "sourceSha256": {
+    "src/world/work-points.js": "3415a5926ef2a83b9bcdfa41ec380d35b9a9845b17695c55aa23f1d687a7f809",
+    "src/world/watering-route-cache.js": "3f6c9134be3a02f6cc74484127cf1930dbe7009377eb40178b01b19420d9ea36",
+    "tests/fixtures/watering-route-v1-reference.mjs": "03125f102f5193ba6a48652745e2c4baacdb639175b10549a0163cd91ae2b8d4",
+    "tools/watering-cache-control-game.mjs": "8667b78e3c1377c0852764481994f0f4bde58c0c0ec2b676dc404cafe696f01b",
+    "tools/check-watering-cache-dense-tick.mjs": "c87d9f5c54b8ee42b70026e2487efdfc86e452866cd5d37982097cb88c7ded53"
+  },
+  "scope": "AB/BA short native replays of existing pre-funded 50/200/500-plant Sabana fixtures. No new fixture funding, prices, magic policy, player actions, geometry or production mutations. Not a survival campaign, whole-day throughput or GPU benchmark.",
+  "rows": [
+    {
+      "count": 50,
+      "fixturePath": "docs/qa/integrated-spiritual-survival/native-power-50-200-500-v2/fixture-50.json",
+      "fixtureSha256": "8aae90d7dc12e67a5a84daa788917db6be9aa3a89578d49bf8998f88cea4c9ee",
+      "steps": 10,
+      "dt": 0.1,
+      "allTickStatesIdentical": true,
+      "arms": [
+        {
+          "variant": "A",
+          "tickMilliseconds": 527.6923999999995,
+          "totalMilliseconds": 550.8549000000003,
+          "snapshots": [
+            "36ef08563774eeab84257cb4177d6bcd83700c4477ea8a388aad9654c76934ac",
+            "21095f7779a19c8acc5308142cebb1fad54b907ebe7f4c492d4f117277aa887d",
+            "b99a3496d6069aaa40707553dccb5e3d10801762e6905927a014b57033d691bc",
+            "bb1e88a4347bfb089aeebbbb79b5e776a56232f8fdc56aebbbd6027295024723",
+            "7891f47c99f98432c064ff0af133e58c6e65a1c39a4e3eccc40d8dca1078a69b",
+            "8fabb6b0f44ec152f8f4e379c3c3b8eb9577b87af50d714f150f34760240642d",
+            "61f31797e0af1e0056806dd9f538efcb3c3a5ad0497540095ff67d83349f6d42",
+            "f3ff08c4520fe8203550c57047de413581126c2a369b21420dfffbff54bf45e5",
+            "b204381f40813e2a2e24ada1e091028f0530d66881e6baaa5424c54cc32e5861",
+            "ee06448578035f3c1dea5bea8606cf728d8819d416468099b696c8a0529ea71c"
+          ],
+          "calls": {
+            "walkable": 5655,
+            "segmentClear": 4525,
+            "path": 10
+          },
+          "workers": 5,
+          "elapsedAdvance": 0.9999999999999999,
+          "ledgerUnchanged": true,
+          "events": 52,
+          "finalSha256": "ee06448578035f3c1dea5bea8606cf728d8819d416468099b696c8a0529ea71c"
+        },
+        {
+          "variant": "B",
+          "tickMilliseconds": 314.8256999999994,
+          "totalMilliseconds": 328.4747000000002,
+          "snapshots": [
+            "36ef08563774eeab84257cb4177d6bcd83700c4477ea8a388aad9654c76934ac",
+            "21095f7779a19c8acc5308142cebb1fad54b907ebe7f4c492d4f117277aa887d",
+            "b99a3496d6069aaa40707553dccb5e3d10801762e6905927a014b57033d691bc",
+            "bb1e88a4347bfb089aeebbbb79b5e776a56232f8fdc56aebbbd6027295024723",
+            "7891f47c99f98432c064ff0af133e58c6e65a1c39a4e3eccc40d8dca1078a69b",
+            "8fabb6b0f44ec152f8f4e379c3c3b8eb9577b87af50d714f150f34760240642d",
+            "61f31797e0af1e0056806dd9f538efcb3c3a5ad0497540095ff67d83349f6d42",
+            "f3ff08c4520fe8203550c57047de413581126c2a369b21420dfffbff54bf45e5",
+            "b204381f40813e2a2e24ada1e091028f0530d66881e6baaa5424c54cc32e5861",
+            "ee06448578035f3c1dea5bea8606cf728d8819d416468099b696c8a0529ea71c"
+          ],
+          "calls": {
+            "walkable": 4425,
+            "segmentClear": 3165,
+            "path": 5
+          },
+          "workers": 5,
+          "elapsedAdvance": 0.9999999999999999,
+          "ledgerUnchanged": true,
+          "events": 52,
+          "finalSha256": "ee06448578035f3c1dea5bea8606cf728d8819d416468099b696c8a0529ea71c"
+        },
+        {
+          "variant": "B",
+          "tickMilliseconds": 315.2762000000016,
+          "totalMilliseconds": 330.0349000000001,
+          "snapshots": [
+            "36ef08563774eeab84257cb4177d6bcd83700c4477ea8a388aad9654c76934ac",
+            "21095f7779a19c8acc5308142cebb1fad54b907ebe7f4c492d4f117277aa887d",
+            "b99a3496d6069aaa40707553dccb5e3d10801762e6905927a014b57033d691bc",
+            "bb1e88a4347bfb089aeebbbb79b5e776a56232f8fdc56aebbbd6027295024723",
+            "7891f47c99f98432c064ff0af133e58c6e65a1c39a4e3eccc40d8dca1078a69b",
+            "8fabb6b0f44ec152f8f4e379c3c3b8eb9577b87af50d714f150f34760240642d",
+            "61f31797e0af1e0056806dd9f538efcb3c3a5ad0497540095ff67d83349f6d42",
+            "f3ff08c4520fe8203550c57047de413581126c2a369b21420dfffbff54bf45e5",
+            "b204381f40813e2a2e24ada1e091028f0530d66881e6baaa5424c54cc32e5861",
+            "ee06448578035f3c1dea5bea8606cf728d8819d416468099b696c8a0529ea71c"
+          ],
+          "calls": {
+            "walkable": 4425,
+            "segmentClear": 3165,
+            "path": 5
+          },
+          "workers": 5,
+          "elapsedAdvance": 0.9999999999999999,
+          "ledgerUnchanged": true,
+          "events": 52,
+          "finalSha256": "ee06448578035f3c1dea5bea8606cf728d8819d416468099b696c8a0529ea71c"
+        },
+        {
+          "variant": "A",
+          "tickMilliseconds": 291.1498999999985,
+          "totalMilliseconds": 302.9888000000001,
+          "snapshots": [
+            "36ef08563774eeab84257cb4177d6bcd83700c4477ea8a388aad9654c76934ac",
+            "21095f7779a19c8acc5308142cebb1fad54b907ebe7f4c492d4f117277aa887d",
+            "b99a3496d6069aaa40707553dccb5e3d10801762e6905927a014b57033d691bc",
+            "bb1e88a4347bfb089aeebbbb79b5e776a56232f8fdc56aebbbd6027295024723",
+            "7891f47c99f98432c064ff0af133e58c6e65a1c39a4e3eccc40d8dca1078a69b",
+            "8fabb6b0f44ec152f8f4e379c3c3b8eb9577b87af50d714f150f34760240642d",
+            "61f31797e0af1e0056806dd9f538efcb3c3a5ad0497540095ff67d83349f6d42",
+            "f3ff08c4520fe8203550c57047de413581126c2a369b21420dfffbff54bf45e5",
+            "b204381f40813e2a2e24ada1e091028f0530d66881e6baaa5424c54cc32e5861",
+            "ee06448578035f3c1dea5bea8606cf728d8819d416468099b696c8a0529ea71c"
+          ],
+          "calls": {
+            "walkable": 5655,
+            "segmentClear": 4525,
+            "path": 10
+          },
+          "workers": 5,
+          "elapsedAdvance": 0.9999999999999999,
+          "ledgerUnchanged": true,
+          "events": 52,
+          "finalSha256": "ee06448578035f3c1dea5bea8606cf728d8819d416468099b696c8a0529ea71c"
+        }
+      ]
+    },
+    {
+      "count": 200,
+      "fixturePath": "docs/qa/integrated-spiritual-survival/native-power-50-200-500-v2/fixture-200.json",
+      "fixtureSha256": "ab2cac7654ecd7c5620b3ea43d32866fa4005d44f6d80b2c01c07e05fd9760fe",
+      "steps": 10,
+      "dt": 0.1,
+      "allTickStatesIdentical": true,
+      "arms": [
+        {
+          "variant": "A",
+          "tickMilliseconds": 485.65419999999995,
+          "totalMilliseconds": 531.8719000000001,
+          "snapshots": [
+            "50bba7a37f6058259478c6c86f3a409c4c159cee2bc6983baa1d1302b66f5f49",
+            "9038d9d3d39551879bf73d6885311356be785f2f3ca709204f32143b69b19c26",
+            "3e246213b1e147c38edc57d0c7c2f2571ebbb5b2d0c4c124d7976ce8ddc7168c",
+            "497ab3a08b8630d0b214011a2c1060e6b9b1ae59650276b92375db8f41d98d16",
+            "88c20016b34be725815e6038734551eb57dc9ed1f4f3b8bf7db2ac7405cc38b5",
+            "28c77cfbd2b24a29620808d1358c2bd70a2d25bdd8e246b6e14d6f13106f4d88",
+            "66a2648ec2ca67a77440ccf390d8fd98080fbdcd92340a5bf62fd4a4f23103a4",
+            "128278413d66ffb73475fb143bc4d950e2cf97b2f6f9378706c1e0e7bbd7bd94",
+            "e7d63f2915cd596b3c8273704d418e109c6f05327e2ab959c40f5e90cd53b0ab",
+            "9071c5236316bf849965f36a857987d9745f7db39f39b6a8e98e1fc3fac9ca67"
+          ],
+          "calls": {
+            "walkable": 12465,
+            "segmentClear": 15016,
+            "path": 40
+          },
+          "workers": 20,
+          "elapsedAdvance": 0.9999999999999999,
+          "ledgerUnchanged": true,
+          "events": 200,
+          "finalSha256": "9071c5236316bf849965f36a857987d9745f7db39f39b6a8e98e1fc3fac9ca67"
+        },
+        {
+          "variant": "B",
+          "tickMilliseconds": 468.8246999999992,
+          "totalMilliseconds": 508.83550000000014,
+          "snapshots": [
+            "50bba7a37f6058259478c6c86f3a409c4c159cee2bc6983baa1d1302b66f5f49",
+            "9038d9d3d39551879bf73d6885311356be785f2f3ca709204f32143b69b19c26",
+            "3e246213b1e147c38edc57d0c7c2f2571ebbb5b2d0c4c124d7976ce8ddc7168c",
+            "497ab3a08b8630d0b214011a2c1060e6b9b1ae59650276b92375db8f41d98d16",
+            "88c20016b34be725815e6038734551eb57dc9ed1f4f3b8bf7db2ac7405cc38b5",
+            "28c77cfbd2b24a29620808d1358c2bd70a2d25bdd8e246b6e14d6f13106f4d88",
+            "66a2648ec2ca67a77440ccf390d8fd98080fbdcd92340a5bf62fd4a4f23103a4",
+            "128278413d66ffb73475fb143bc4d950e2cf97b2f6f9378706c1e0e7bbd7bd94",
+            "e7d63f2915cd596b3c8273704d418e109c6f05327e2ab959c40f5e90cd53b0ab",
+            "9071c5236316bf849965f36a857987d9745f7db39f39b6a8e98e1fc3fac9ca67"
+          ],
+          "calls": {
+            "walkable": 7929,
+            "segmentClear": 10066,
+            "path": 20
+          },
+          "workers": 20,
+          "elapsedAdvance": 0.9999999999999999,
+          "ledgerUnchanged": true,
+          "events": 200,
+          "finalSha256": "9071c5236316bf849965f36a857987d9745f7db39f39b6a8e98e1fc3fac9ca67"
+        },
+        {
+          "variant": "B",
+          "tickMilliseconds": 286.4856,
+          "totalMilliseconds": 315.22850000000017,
+          "snapshots": [
+            "50bba7a37f6058259478c6c86f3a409c4c159cee2bc6983baa1d1302b66f5f49",
+            "9038d9d3d39551879bf73d6885311356be785f2f3ca709204f32143b69b19c26",
+            "3e246213b1e147c38edc57d0c7c2f2571ebbb5b2d0c4c124d7976ce8ddc7168c",
+            "497ab3a08b8630d0b214011a2c1060e6b9b1ae59650276b92375db8f41d98d16",
+            "88c20016b34be725815e6038734551eb57dc9ed1f4f3b8bf7db2ac7405cc38b5",
+            "28c77cfbd2b24a29620808d1358c2bd70a2d25bdd8e246b6e14d6f13106f4d88",
+            "66a2648ec2ca67a77440ccf390d8fd98080fbdcd92340a5bf62fd4a4f23103a4",
+            "128278413d66ffb73475fb143bc4d950e2cf97b2f6f9378706c1e0e7bbd7bd94",
+            "e7d63f2915cd596b3c8273704d418e109c6f05327e2ab959c40f5e90cd53b0ab",
+            "9071c5236316bf849965f36a857987d9745f7db39f39b6a8e98e1fc3fac9ca67"
+          ],
+          "calls": {
+            "walkable": 7929,
+            "segmentClear": 10066,
+            "path": 20
+          },
+          "workers": 20,
+          "elapsedAdvance": 0.9999999999999999,
+          "ledgerUnchanged": true,
+          "events": 200,
+          "finalSha256": "9071c5236316bf849965f36a857987d9745f7db39f39b6a8e98e1fc3fac9ca67"
+        },
+        {
+          "variant": "A",
+          "tickMilliseconds": 328.90489999999954,
+          "totalMilliseconds": 381.7470000000003,
+          "snapshots": [
+            "50bba7a37f6058259478c6c86f3a409c4c159cee2bc6983baa1d1302b66f5f49",
+            "9038d9d3d39551879bf73d6885311356be785f2f3ca709204f32143b69b19c26",
+            "3e246213b1e147c38edc57d0c7c2f2571ebbb5b2d0c4c124d7976ce8ddc7168c",
+            "497ab3a08b8630d0b214011a2c1060e6b9b1ae59650276b92375db8f41d98d16",
+            "88c20016b34be725815e6038734551eb57dc9ed1f4f3b8bf7db2ac7405cc38b5",
+            "28c77cfbd2b24a29620808d1358c2bd70a2d25bdd8e246b6e14d6f13106f4d88",
+            "66a2648ec2ca67a77440ccf390d8fd98080fbdcd92340a5bf62fd4a4f23103a4",
+            "128278413d66ffb73475fb143bc4d950e2cf97b2f6f9378706c1e0e7bbd7bd94",
+            "e7d63f2915cd596b3c8273704d418e109c6f05327e2ab959c40f5e90cd53b0ab",
+            "9071c5236316bf849965f36a857987d9745f7db39f39b6a8e98e1fc3fac9ca67"
+          ],
+          "calls": {
+            "walkable": 12465,
+            "segmentClear": 15016,
+            "path": 40
+          },
+          "workers": 20,
+          "elapsedAdvance": 0.9999999999999999,
+          "ledgerUnchanged": true,
+          "events": 200,
+          "finalSha256": "9071c5236316bf849965f36a857987d9745f7db39f39b6a8e98e1fc3fac9ca67"
+        }
+      ]
+    },
+    {
+      "count": 500,
+      "fixturePath": "docs/qa/integrated-spiritual-survival/native-power-50-200-500-v2/fixture-500.json",
+      "fixtureSha256": "8b24d512f940b93a0b2abeef58792e56c1023ff59b8e00595f4c806cd2b21fad",
+      "steps": 10,
+      "dt": 0.1,
+      "allTickStatesIdentical": true,
+      "arms": [
+        {
+          "variant": "A",
+          "tickMilliseconds": 1140.7264999999998,
+          "totalMilliseconds": 1281.7060000000001,
+          "snapshots": [
+            "2f2e69fa18885f551d858fa06983a5c83826469fe5b85057f517d33b46ea43e7",
+            "c3c7ba7172cee5110a7405d36ebd773516f9f2f80109eda1a8999d743430abde",
+            "1669bafda0ef4ac06892a212b6d97f136ee7fa2ad4b27ce110cf9c3428bb876d",
+            "1a5eca70475467bcee37e5435fa41fb78d9c8b6f85194094721e681f6352e3c1",
+            "4b549ee5466cc2cf107456350d533df938e896a66cd892f77778606483351bd4",
+            "dada886bed8210ba087189b0e969dead0d4848c1346b684cd466bac0760619e6",
+            "8f80892e42442102228c03972eaa52903282a1b39eea072e8e3ee5521e39aae5",
+            "f02daccd8ae104cbfacf2cd4a6f65cc919f6664f8a171b0703660b1801f3e398",
+            "5c63fe68d19be515d37e161f696c548fccb7025632bbf8ca3d2d3757c528b0d0",
+            "dab6f3a7cf1edd53bed0d7e7b0d2675d5669b525abaee4298386305d8c1be702"
+          ],
+          "calls": {
+            "walkable": 27253,
+            "segmentClear": 37829,
+            "path": 100
+          },
+          "workers": 50,
+          "elapsedAdvance": 0.9999999999999999,
+          "ledgerUnchanged": true,
+          "events": 200,
+          "finalSha256": "dab6f3a7cf1edd53bed0d7e7b0d2675d5669b525abaee4298386305d8c1be702"
+        },
+        {
+          "variant": "B",
+          "tickMilliseconds": 819.9328000000005,
+          "totalMilliseconds": 901.2453000000005,
+          "snapshots": [
+            "2f2e69fa18885f551d858fa06983a5c83826469fe5b85057f517d33b46ea43e7",
+            "c3c7ba7172cee5110a7405d36ebd773516f9f2f80109eda1a8999d743430abde",
+            "1669bafda0ef4ac06892a212b6d97f136ee7fa2ad4b27ce110cf9c3428bb876d",
+            "1a5eca70475467bcee37e5435fa41fb78d9c8b6f85194094721e681f6352e3c1",
+            "4b549ee5466cc2cf107456350d533df938e896a66cd892f77778606483351bd4",
+            "dada886bed8210ba087189b0e969dead0d4848c1346b684cd466bac0760619e6",
+            "8f80892e42442102228c03972eaa52903282a1b39eea072e8e3ee5521e39aae5",
+            "f02daccd8ae104cbfacf2cd4a6f65cc919f6664f8a171b0703660b1801f3e398",
+            "5c63fe68d19be515d37e161f696c548fccb7025632bbf8ca3d2d3757c528b0d0",
+            "dab6f3a7cf1edd53bed0d7e7b0d2675d5669b525abaee4298386305d8c1be702"
+          ],
+          "calls": {
+            "walkable": 15721,
+            "segmentClear": 24779,
+            "path": 50
+          },
+          "workers": 50,
+          "elapsedAdvance": 0.9999999999999999,
+          "ledgerUnchanged": true,
+          "events": 200,
+          "finalSha256": "dab6f3a7cf1edd53bed0d7e7b0d2675d5669b525abaee4298386305d8c1be702"
+        },
+        {
+          "variant": "B",
+          "tickMilliseconds": 903.6491999999962,
+          "totalMilliseconds": 1054.0380999999998,
+          "snapshots": [
+            "2f2e69fa18885f551d858fa06983a5c83826469fe5b85057f517d33b46ea43e7",
+            "c3c7ba7172cee5110a7405d36ebd773516f9f2f80109eda1a8999d743430abde",
+            "1669bafda0ef4ac06892a212b6d97f136ee7fa2ad4b27ce110cf9c3428bb876d",
+            "1a5eca70475467bcee37e5435fa41fb78d9c8b6f85194094721e681f6352e3c1",
+            "4b549ee5466cc2cf107456350d533df938e896a66cd892f77778606483351bd4",
+            "dada886bed8210ba087189b0e969dead0d4848c1346b684cd466bac0760619e6",
+            "8f80892e42442102228c03972eaa52903282a1b39eea072e8e3ee5521e39aae5",
+            "f02daccd8ae104cbfacf2cd4a6f65cc919f6664f8a171b0703660b1801f3e398",
+            "5c63fe68d19be515d37e161f696c548fccb7025632bbf8ca3d2d3757c528b0d0",
+            "dab6f3a7cf1edd53bed0d7e7b0d2675d5669b525abaee4298386305d8c1be702"
+          ],
+          "calls": {
+            "walkable": 15721,
+            "segmentClear": 24779,
+            "path": 50
+          },
+          "workers": 50,
+          "elapsedAdvance": 0.9999999999999999,
+          "ledgerUnchanged": true,
+          "events": 200,
+          "finalSha256": "dab6f3a7cf1edd53bed0d7e7b0d2675d5669b525abaee4298386305d8c1be702"
+        },
+        {
+          "variant": "A",
+          "tickMilliseconds": 956.7650000000049,
+          "totalMilliseconds": 1034.6836000000003,
+          "snapshots": [
+            "2f2e69fa18885f551d858fa06983a5c83826469fe5b85057f517d33b46ea43e7",
+            "c3c7ba7172cee5110a7405d36ebd773516f9f2f80109eda1a8999d743430abde",
+            "1669bafda0ef4ac06892a212b6d97f136ee7fa2ad4b27ce110cf9c3428bb876d",
+            "1a5eca70475467bcee37e5435fa41fb78d9c8b6f85194094721e681f6352e3c1",
+            "4b549ee5466cc2cf107456350d533df938e896a66cd892f77778606483351bd4",
+            "dada886bed8210ba087189b0e969dead0d4848c1346b684cd466bac0760619e6",
+            "8f80892e42442102228c03972eaa52903282a1b39eea072e8e3ee5521e39aae5",
+            "f02daccd8ae104cbfacf2cd4a6f65cc919f6664f8a171b0703660b1801f3e398",
+            "5c63fe68d19be515d37e161f696c548fccb7025632bbf8ca3d2d3757c528b0d0",
+            "dab6f3a7cf1edd53bed0d7e7b0d2675d5669b525abaee4298386305d8c1be702"
+          ],
+          "calls": {
+            "walkable": 27253,
+            "segmentClear": 37829,
+            "path": 100
+          },
+          "workers": 50,
+          "elapsedAdvance": 0.9999999999999999,
+          "ledgerUnchanged": true,
+          "events": 200,
+          "finalSha256": "dab6f3a7cf1edd53bed0d7e7b0d2675d5669b525abaee4298386305d8c1be702"
+        }
+      ]
+    }
+  ]
+}

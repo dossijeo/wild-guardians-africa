@@ -133,3 +133,30 @@ The final web build passes in 24.28 seconds. The existing large-chunk warning
 remains. `final-checkpoint-receipt.json` ties the final source and evidence
 hashes together; this build is from experimental ancestry, not a production
 release artifact.
+
+## Existing dense fixtures: 50 / 200 / 500 plants
+
+`dense-native-tick-abba.json` reuses the already archived pre-funded Sabana
+fixtures from agricultural-power QA. No plants, money, prices, contracts,
+magic decisions or geometry are added by the new runner. Each arm starts
+from identical original bytes, runs ten native 0.1-second ticks, and matches
+the complete serialized state at every tick. These are short startup/crew
+movement samples, not new campaigns or whole-day production measurements.
+
+| Plants | A tick ms | B tick ms | B tick ms | A tick ms | Native path calls A / B |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 50 | 527.69 | 314.83 | 315.28 | 291.15 | 10 / 5 |
+| 200 | 485.65 | 468.82 | 286.49 | 328.90 | 40 / 20 |
+| 500 | 1,140.73 | 819.93 | 903.65 | 956.77 | 100 / 50 |
+
+Counters consistently show fewer duplicate route/segment/walkability queries.
+Cold/JIT effects and concurrent jobs make timings noisy: the final warm A
+case at 50 plants is faster than the measured B cases. Do not claim uniform
+acceleration, steady-state FPS, complete-day throughput or release acceptance
+from these samples. Sustained dense-farm coverage remains pending.
+
+The QA-only control import adapter is now shared by both replay runners.
+`shared-control-regression.json` repeats the four original Canyon cases for
+five ticks per arm and retains exact state parity. This refactor changes no
+production module or active campaign source. Historical runner implementations
+and evidence remain recoverable from their committed versions.
