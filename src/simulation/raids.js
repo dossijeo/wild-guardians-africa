@@ -156,6 +156,9 @@ export function chooseRaidEntry(s,specs,bounds,preferredSide,nav){
   return bank?{...bank,selectionBounds:expanded}:null;
 }
 export function spawnRaid(s,plan,nav,daytime=false) {
+  const trace=nav.__nativeRaidSpawnTrace;
+  const traceStart=trace?performance.now():0;
+  const mark=trace?(stage)=>trace({stage,elapsedMilliseconds:performance.now()-traceStart}):null;
   const previous=s.raid,wave=previous&&eligiblePendingRaidWavePlan(s)===plan;
   if(previous&&!wave)return false;if(s.postgame)return;
   let group=plan.group;
@@ -168,17 +171,20 @@ export function spawnRaid(s,plan,nav,daytime=false) {
   const specs=group.map(id=>({spec:animalSpec(id),radius:ANIMAL_ACTIONS.animals[id].presentation.footprint.radius}));
   const bounds=validActiveBounds(nav.activeBounds)?[...nav.activeBounds]:activeChunkRegion(focus).bounds;
   const prepared=nav.preparedRaidEntry?.(s,group,bounds);
+  mark?.('prepared-entry');
   if(prepared)warmRaidNavigation(nav,prepared.warmth);
   const preferredSide=randomInt({rng:s.rng},0,3);
   const selectionKey=raidEntryKey(s,nav,group,bounds)??JSON.stringify([s.rng,nav.version,group,bounds,nav.raidView,s.structures.map(t=>[t.id,t.status,t.hp>0])]);
   if(nav.raidEntryDemand?.key!==selectionKey)delete nav.raidEntryDemand;
   let cache=entrySelections.get(nav);if(!cache){cache=new Map();entrySelections.set(nav,cache);}let cached=cache.get(selectionKey);
   if(!prepared&&!cached){cached={key:selectionKey,entry:chooseRaidEntry(s,specs,bounds,preferredSide,nav)};if(cache.size>=4)cache.delete(cache.keys().next().value);cache.set(selectionKey,cached);}
+  mark?.('selected-entry');
   const entry=prepared?prepared.entry:cached.entry;
   const entries=entry?.entries,exits=entry?.exits;
-  if(!entries){if(nav.raidEntryFailure?.key!==selectionKey){nav.raidEntryFailure={key:selectionKey,version:nav.version,group:[...group],bounds:[...bounds]};if(!s.messages.at(-1)?.text.includes('incursión espera una entrada físicamente exterior'))notice(s,'La incursión espera una entrada físicamente exterior transitable para su grupo completo.');}return false;}
+  if(!entries){mark?.('no-entry');if(nav.raidEntryFailure?.key!==selectionKey){nav.raidEntryFailure={key:selectionKey,version:nav.version,group:[...group],bounds:[...bounds]};if(!s.messages.at(-1)?.text.includes('incursión espera una entrada físicamente exterior'))notice(s,'La incursión espera una entrada físicamente exterior transitable para su grupo completo.');}return false;}
   nav.raidEntryDemand={entry,radii:specs.map(v=>v.radius),key:selectionKey};
-  if(nav.raidEntryResident&&!nav.raidEntryResident(entry,specs.map(v=>v.radius)))return false;
+  if(nav.raidEntryResident&&!nav.raidEntryResident(entry,specs.map(v=>v.radius))){mark?.('not-resident');return false;}
+  mark?.('resident-entry');
   if(entry.selectionBounds)nav.setActiveBounds?.(includeRaidBounds(bounds,raidEntryChunks(entry,specs.map(v=>v.radius))));
   randomInt(s,0,3);delete nav.raidEntryFailure;delete nav.raidEntryDemand;
   const animals=specs.map(({spec,radius},i)=>({id:`animal-${s.nextId++}`,species:spec.id,...entries[i],spawn:{...entries[i]},exit:{...exits[i]},radius,
@@ -198,7 +204,7 @@ export function spawnRaid(s,plan,nav,daytime=false) {
   s.tasks=s.tasks.filter(t=>t.kind!=='repair');
   if(!wave)notice(s,RAID_NOTICE_TEXT,animals[0].id);
   const exposed=s.plants.filter(p=>p.alive);
-  emit(s,wave?'RaidWaveSpawned':'RaidSpawned',{raidFacts:{id:s.raid.id,day:s.day,daytime,elapsed:s.elapsed,waveIndex:s.raid.waveIndex??0,pressureFacts:s.raid.pressureFacts??null,exposedLiving:exposed.length,exposedWounded:exposed.filter(p=>(p.attackHits??0)>0).length,actors:animals.map(a=>({id:a.id,species:a.species,hitsRemaining:a.hitsRemaining,...(a.damageProfile?{damageProfile:structuredClone(a.damageProfile)}:{}),spawn:{...a.spawn},exit:{...a.exit}}))}});return true;
+  emit(s,wave?'RaidWaveSpawned':'RaidSpawned',{raidFacts:{id:s.raid.id,day:s.day,daytime,elapsed:s.elapsed,waveIndex:s.raid.waveIndex??0,pressureFacts:s.raid.pressureFacts??null,exposedLiving:exposed.length,exposedWounded:exposed.filter(p=>(p.attackHits??0)>0).length,actors:animals.map(a=>({id:a.id,species:a.species,hitsRemaining:a.hitsRemaining,...(a.damageProfile?{damageProfile:structuredClone(a.damageProfile)}:{}),spawn:{...a.spawn},exit:{...a.exit}}))}});mark?.('spawned');return true;
 }
 function release(s,a) {if(a.reservation&&s.raid.reservations[a.reservation]===a.id){delete s.raid.reservations[a.reservation];s.raid.waitRevision=((s.raid.waitRevision??0)+1)>>>0;}a.reservation=null;a.targetId=null;a.path=null;a.approach=null;a.approachShieldId=null;}
 export function reachableApproach(a,target,nav,shield=null){
