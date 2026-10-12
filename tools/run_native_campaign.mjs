@@ -11,7 +11,7 @@ import {wallSpec} from '../src/simulation/rules.js';
 import {intensiveRunProvenance} from './intensive-run-provenance.mjs';
 import {NATIVE_CAMPAIGN_PROTOCOL,nativeCampaignStrategy,campaignProtocolForLabour} from './native-campaign-protocol.mjs';
 export function parseNativeCampaignArgs(args){
- const allowed=new Set(['out','days','seed','strategy','biome','culture','stop-file','stop-cash','stop-min-day','labour-policy','defense-policy','defense-start-day','defense-material','crop-policy','profile','plot-fluid-clearance','repair-policy','defense-funding','checkpoint-day','checkpoint-time','checkpoint-stop']),o={days:7,seed:712,strategy:'good',biome:'sabana',culture:'mapungubwe',profile:'olderFemale'};
+ const allowed=new Set(['out','days','seed','strategy','biome','culture','stop-file','stop-cash','stop-min-day','labour-policy','defense-policy','defense-start-day','defense-material','crop-policy','profile','plot-fluid-clearance','repair-policy','defense-funding','checkpoint-day','checkpoint-time','checkpoint-stop','timing-day']),o={days:7,seed:712,strategy:'good',biome:'sabana',culture:'mapungubwe',profile:'olderFemale'};
  for(let i=0;i<args.length;i+=2){const k=args[i]?.replace(/^--/,'');if(!allowed.has(k)||args[i+1]===undefined)throw Error('Use --out DIR --days 1..180 --seed INTEGER --strategy expansive|good|bad|no-walls|no-shield --biome NAME --culture NAME');o[k]=args[i+1];}
  for(const k of ['days','seed'])o[k]=Number(o[k]);
  if(!Number.isSafeInteger(o.days)||o.days<1||o.days>180||!Number.isSafeInteger(o.seed)||o.seed<0)throw Error('Invalid native days/seed');
@@ -27,6 +27,7 @@ export function parseNativeCampaignArgs(args){
   if(!Number.isSafeInteger(o.checkpointDay)||o.checkpointDay<1||o.checkpointDay>o.days||!Number.isFinite(o.checkpointTime)||o.checkpointTime<0||o.checkpointTime>=600||!['yes','no',undefined].includes(o['checkpoint-stop']))throw Error('Invalid native checkpoint');
   delete o['checkpoint-day'];delete o['checkpoint-time'];delete o['checkpoint-stop'];
  }
+ if(o['timing-day']!==undefined){o.timingDay=Number(o['timing-day']);delete o['timing-day'];if(!Number.isSafeInteger(o.timingDay)||o.timingDay<1||o.timingDay>o.days)throw Error('Invalid native timing day');}
  o.labourPolicy=o['labour-policy']??'legacy';delete o['labour-policy'];campaignProtocolForLabour(o.labourPolicy);
  o.cropPolicy=o['crop-policy']??'legacy';delete o['crop-policy'];if(!['legacy','cashflow'].includes(o.cropPolicy))throw Error('Unknown crop policy');
  o.defensePolicy=o['defense-policy']??'expanding';delete o['defense-policy'];if(!['legacy','expanding','closed','funded','routed','shore'].includes(o.defensePolicy))throw Error('Unknown defense policy');
@@ -59,8 +60,9 @@ export async function runNativeCampaignCase(options,{run=simulateNativeCampaign,
  save('receipt.json',{status:'running',options,startedAt:inputs.startedAt});
  try{
   if(inputs.trackedChanges.length)throw Error('Freeze tracked runtime before launching native pilot');
-  const {checkpointDay,checkpointTime,checkpointStop,...campaignOptions}=options;let checkpointSaved=false;
+  const {checkpointDay,checkpointTime,checkpointStop,timingDay,...campaignOptions}=options;let checkpointSaved=false;
   const r=await run({...campaignOptions,slotId:`native-${options.strategy}-${options.seed}`,
+   ...(timingDay?{onStepTiming:row=>{if(row.day===timingDay)appendFileSync(resolve(out,'timings.jsonl'),JSON.stringify(row)+'\n');}}:{}),
    onTick:s=>{
     if(options['stop-file']&&existsSync(options['stop-file']))throw calibrationStop('Requested calibration stop file detected');
     if(!checkpointSaved&&checkpointDay&&s.day===checkpointDay&&s.time+1e-6>=checkpointTime){

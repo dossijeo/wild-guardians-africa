@@ -15,6 +15,7 @@ import {activeChunkRegion} from '../src/world/active-region.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {nativeCameraPose} from '../src/rendering/terrain-camera.js';
 import assert from 'node:assert/strict';
+import {performance} from 'node:perf_hooks';
 import {mkdirSync,writeFileSync} from 'node:fs';
 import {intensiveRunProvenance} from './intensive-run-provenance.mjs';
 import {createFarmDefensePolicy} from './farm-defense-policy.mjs';
@@ -43,7 +44,7 @@ import {createQ15LabourPolicy} from './native-q15-labour-policy.mjs';
 import {campaignCropChoice} from './native-campaign-crop-policy.mjs';
 
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
-export async function simulateNativeCampaign({days=100,strategy='good',labourPolicy='legacy',profile='olderFemale',mixed=true,cropPolicy='legacy',middayHiring=false,plantsPerWorker=12,defend=false,reserveLabourGrowth=true,reserveMaintenance=true,burstPlanting=false,cameraEntry=true,defensePolicy='expanding',defenseStartDay=1,defenseMaterial='zarzas',repairPolicy='legacy',defenseFunding='contour',plotFluidClearance=0,nativeEvidence=true,onDay,onTick,onDecision,...world}={}){
+export async function simulateNativeCampaign({days=100,strategy='good',labourPolicy='legacy',profile='olderFemale',mixed=true,cropPolicy='legacy',middayHiring=false,plantsPerWorker=12,defend=false,reserveLabourGrowth=true,reserveMaintenance=true,burstPlanting=false,cameraEntry=true,defensePolicy='expanding',defenseStartDay=1,defenseMaterial='zarzas',repairPolicy='legacy',defenseFunding='contour',plotFluidClearance=0,nativeEvidence=true,onDay,onTick,onDecision,onStepTiming,...world}={}){
  if(!Number.isSafeInteger(days)||days<1||days>180)throw Error('Native protocol permits1–180 days only');
  if(!Number.isSafeInteger(plantsPerWorker)||plantsPerWorker<1)throw new Error('Plants per worker must be a positive integer');
  if(!['legacy','cashflow'].includes(cropPolicy))throw Error('Unknown crop policy');
@@ -159,7 +160,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
    await driver.advancePresentation(s);
    if(Game.nightEntryPending(s)&&s.time>=600)await driver.waitForEntry(s);
    const beforeRepairs=new Set(s.tasks.filter(t=>t.kind==='repair').map(t=>t.id));
-   const decision=act();actions+=decision.actions;
+   const decisionStarted=onStepTiming?performance.now():0,decision=act(),decisionMilliseconds=onStepTiming?performance.now()-decisionStarted:null;actions+=decision.actions;
    const centerRequests=s.tasks.filter(t=>t.kind==='repair'&&!beforeRepairs.has(t.id)&&s.structures.some(c=>c.id===t.targetId&&c.kind==='center')).length;
    const dt=s.time<300||s.raid?1:5;
    evidence?.decision(s,{seconds:dt,reason:decision.reason,otherActions:Math.max(0,decision.actions-centerRequests-(decision.magicActions??0))});
@@ -173,10 +174,13 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
     pendingTasks:s.tasks.length,...(q6?q5Policy.workingCapital(s):{})}));
    raidEvidence.observe(s);
    const tickStart=s.elapsed,tickTime=s.time;
-   Game.tick(s,dt,nav);agriculturalMagic.observe(s);evidence?.finishDecision(s);
+   const nativeTickStarted=onStepTiming?performance.now():0;
+   Game.tick(s,dt,nav);const tickMilliseconds=onStepTiming?performance.now()-nativeTickStarted:null;agriculturalMagic.observe(s);evidence?.finishDecision(s);
    const actualDt=s.elapsed-tickStart,daylightDt=tickTime<300?Math.min(actualDt,300-tickTime):0;daylightSeconds+=daylightDt;
    if(decision.actions===(decision.magicActions??0)){idle[decision.reason]=(idle[decision.reason]??0)+actualDt;unoccupiedSeconds+=daylightDt;idleRun+=daylightDt;longestIdle=Math.max(longestIdle,idleRun);}else idleRun=0;
-   collect();q5Policy?.observe(s);evidence?.observe(s);raidEvidence.observe(s);onTick?.(s,nav);await driver.advancePresentation(s);
+   collect();q5Policy?.observe(s);evidence?.observe(s);raidEvidence.observe(s);
+   onStepTiming?.({day,time:tickTime,dt,decisionMilliseconds,tickMilliseconds,raid:!!s.raid,workers:s.workers.length,plants:s.plants.length});
+   onTick?.(s,nav);await driver.advancePresentation(s);
    if(s.raid&&!savedRaids.has(s.raid.id)){savedRaids.add(s.raid.id);s=deserialize(serialize(s));nav.setState(s);reloads++;}
    if(s.elapsed-start>2400)throw new Error(`Unfinished real incursion on day ${day}: ${JSON.stringify(s.raid)}`);
   }

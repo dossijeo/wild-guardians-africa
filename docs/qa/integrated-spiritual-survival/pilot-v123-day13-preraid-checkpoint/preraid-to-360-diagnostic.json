@@ -1,0 +1,180 @@
+{
+  "scope": "Copied native checkpoint advanced through real game ticks and production-equivalent Node entry transport, but without virtual-player decisions, spells or repairs. CPU diagnostic only; not an economic/raid campaign result or rendering frame-time.",
+  "input": "docs/qa/integrated-spiritual-survival/pilot-v123-day13-preraid-checkpoint/checkpoint-state.json.gz",
+  "inputSha256": "3984ddc1c78c9e219d45da147f30ab0c6f81d749b57ac647b0c5bf3396dd5b69",
+  "day": 13,
+  "startTime": 295.0000000000082,
+  "endTime": 360.00000000001364,
+  "raid": false,
+  "samples": [
+    {
+      "time": 295.0000000000082,
+      "dt": 1,
+      "milliseconds": 810.8909000000001,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 27,
+      "plants": 1147
+    },
+    {
+      "time": 296.0000000000084,
+      "dt": 1,
+      "milliseconds": 26.570400000000063,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 27,
+      "plants": 1147
+    },
+    {
+      "time": 297.00000000000864,
+      "dt": 1,
+      "milliseconds": 24.20659999999998,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 27,
+      "plants": 1147
+    },
+    {
+      "time": 298.00000000000887,
+      "dt": 1,
+      "milliseconds": 49.3608999999999,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 27,
+      "plants": 1147
+    },
+    {
+      "time": 299.0000000000091,
+      "dt": 1,
+      "milliseconds": 31.42470000000003,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 27,
+      "plants": 1147
+    },
+    {
+      "time": 300,
+      "dt": 5,
+      "milliseconds": 235.9081000000001,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 27,
+      "plants": 1147
+    },
+    {
+      "time": 305.00000000000114,
+      "dt": 5,
+      "milliseconds": 37.609100000000126,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 27,
+      "plants": 1147
+    },
+    {
+      "time": 310.0000000000023,
+      "dt": 5,
+      "milliseconds": 27.719899999999825,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 27,
+      "plants": 1147
+    },
+    {
+      "time": 315.0000000000034,
+      "dt": 5,
+      "milliseconds": 32.23890000000006,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 27,
+      "plants": 1147
+    },
+    {
+      "time": 320.00000000000455,
+      "dt": 5,
+      "milliseconds": 24.838200000000143,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 27,
+      "plants": 1147
+    },
+    {
+      "time": 325.0000000000057,
+      "dt": 5,
+      "milliseconds": 18.188499999999976,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 27,
+      "plants": 1147
+    },
+    {
+      "time": 330.0000000000068,
+      "dt": 5,
+      "milliseconds": 18.660100000000057,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 27,
+      "plants": 1147
+    },
+    {
+      "time": 335.00000000000796,
+      "dt": 5,
+      "milliseconds": 11.098500000000058,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 27,
+      "plants": 1147
+    },
+    {
+      "time": 340.0000000000091,
+      "dt": 5,
+      "milliseconds": 5.508599999999888,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 27,
+      "plants": 1147
+    },
+    {
+      "time": 345.00000000001023,
+      "dt": 5,
+      "milliseconds": 6.25,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 27,
+      "plants": 1147
+    },
+    {
+      "time": 350.00000000001137,
+      "dt": 5,
+      "milliseconds": 8.661799999999857,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 27,
+      "plants": 1147
+    },
+    {
+      "time": 355.0000000000125,
+      "dt": 5,
+      "milliseconds": 5.366800000000012,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 27,
+      "plants": 1147
+    }
+  ],
+  "entryTransport": {
+    "mode": "real-node-worker-with-production-cooperative-fallback",
+    "updates": 34,
+    "waits": [],
+    "readyContexts": [],
+    "preparer": {
+      "requests": 1,
+      "accepted": 0,
+      "obsolete": 0,
+      "used": 0,
+      "failed": 0
+    },
+    "workerFailure": null,
+    "scope": "Wall-clock waits are separate from simulated activity; no clock, RNG or geometry patches"
+  },
+  "stateSha256": "bd22830a6353af7992874b97799ec367168ae8a43ebd60e20a3ede6e7fd47dc7"
+}

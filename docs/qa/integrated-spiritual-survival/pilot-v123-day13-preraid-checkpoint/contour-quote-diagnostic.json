@@ -1,0 +1,142 @@
+{
+  "scope": "Read-only retained candidate at one saved state. For an after-dusk checkpoint, daylight permission is temporarily restored on a disposable copy; this is not a replay or campaign certificate.",
+  "day": 13,
+  "sourceTime": 295.0000000000082,
+  "sourceRaid": false,
+  "quoteTime": 295.0000000000082,
+  "candidateBounds": [
+    74.5,
+    -14,
+    102.75,
+    14.25
+  ],
+  "shoreRouted": true,
+  "plannedPieces": 6,
+  "legalPieces": 0,
+  "updates": 0,
+  "suppressed": 0,
+  "quoteMs": 31.463599999999985,
+  "proofMs": 2595.5109,
+  "repeatMs": 3.7831999999998516,
+  "proof": {
+    "valid": false,
+    "reason": "native-worker-route-blocked",
+    "checks": [
+      {
+        "radius": 1.1,
+        "inside": {
+          "x": 85.5,
+          "z": 12
+        },
+        "outside": {
+          "x": 108.75,
+          "z": 12
+        },
+        "completeClosedComponent": false,
+        "services": {
+          "valid": true,
+          "reason": "native-service-poses-in-positive-closed-components",
+          "poses": 5344,
+          "blocked": 692,
+          "certified": 4652,
+          "physicalConnectors": 0,
+          "emptyNativeOrigins": 0,
+          "regions": 1,
+          "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+        }
+      },
+      {
+        "radius": 0.9,
+        "inside": {
+          "x": 85.5,
+          "z": 12
+        },
+        "outside": {
+          "x": 108.75,
+          "z": 12
+        },
+        "completeClosedComponent": false,
+        "services": {
+          "valid": true,
+          "reason": "native-service-poses-in-positive-closed-components",
+          "poses": 5344,
+          "blocked": 499,
+          "certified": 4845,
+          "physicalConnectors": 0,
+          "emptyNativeOrigins": 0,
+          "regions": 1,
+          "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+        }
+      },
+      {
+        "radius": 0.97,
+        "inside": {
+          "x": 85.5,
+          "z": 12
+        },
+        "outside": {
+          "x": 108.75,
+          "z": 12
+        },
+        "completeClosedComponent": false,
+        "services": {
+          "valid": true,
+          "reason": "native-service-poses-in-positive-closed-components",
+          "poses": 5344,
+          "blocked": 580,
+          "certified": 4764,
+          "physicalConnectors": 0,
+          "emptyNativeOrigins": 0,
+          "regions": 1,
+          "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+        }
+      },
+      {
+        "radius": 0.85,
+        "inside": {
+          "x": 85.5,
+          "z": 12
+        },
+        "outside": {
+          "x": 108.75,
+          "z": 12
+        },
+        "completeClosedComponent": false,
+        "services": {
+          "valid": true,
+          "reason": "native-service-poses-in-positive-closed-components",
+          "poses": 5344,
+          "blocked": 451,
+          "certified": 4893,
+          "physicalConnectors": 0,
+          "emptyNativeOrigins": 0,
+          "regions": 1,
+          "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+        }
+      },
+      {
+        "radius": 1.55,
+        "inside": {
+          "x": 85.5,
+          "z": 12
+        },
+        "outside": {
+          "x": 108.75,
+          "z": 12
+        },
+        "completeClosedComponent": false,
+        "services": {
+          "valid": true,
+          "reason": "native-service-poses-in-positive-closed-components",
+          "poses": 5344,
+          "blocked": 1200,
+          "certified": 4144,
+          "physicalConnectors": 0,
+          "emptyNativeOrigins": 0,
+          "regions": 1,
+          "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+        }
+      }
+    ]
+  }
+}
