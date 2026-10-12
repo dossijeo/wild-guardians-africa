@@ -1,0 +1,27 @@
+import assert from 'node:assert/strict';
+import {readFileSync,writeFileSync} from 'node:fs';
+import {gunzipSync} from 'node:zlib';
+import {createHash} from 'node:crypto';
+import {serialize,deserialize} from './src/persistence/snapshots.js';
+import {Navigation,BIOME_IDS} from './src/world/navigation.js';
+import {tick} from './src/simulation/game.js';
+const bytes=readFileSync('tests/fixtures/worker-fractional-departure/state.json.gz');
+function navigation(s){const profile=JSON.parse(readFileSync('public/content/biome-'+BIOME_IDS[s.biome]+'.json')).profile;const nav=new Navigation(s.seed,s.biome,profile);nav.setState(s);return nav;}
+const rows=[];
+for(const reload of [false,true]){
+ let s=deserialize(gunzipSync(bytes).toString());
+ // Explicit isolated locomotion fixture, not a resumed lost campaign.
+ s.result=null;s.pauses=[];s.time=400;s.raid=null;s.spells=[];
+ s.dayPlan={at:0,done:true,group:[]};s.nightPlan={at:500,done:true,group:[]};
+ s.plants=[];s.tasks=[];s.crates=[];s.workers=[s.workers.find(w=>w.id==='worker-52429')];
+ let nav=navigation(s),worker=s.workers[0];const initialVersion=nav.version,ledger=JSON.stringify(s.ledger),start={x:worker.x,z:worker.z};
+ let steps=0,maxStep=0,reloads=0;
+ for(;steps<1200&&worker.status!=='home';steps++){
+  const before={x:worker.x,z:worker.z};tick(s,.1,nav);maxStep=Math.max(maxStep,Math.hypot(worker.x-before.x,worker.z-before.z));
+  if(reload&&steps===100){s=deserialize(serialize(s));worker=s.workers[0];nav=navigation(s);reloads++;}
+ }
+ assert.equal(worker.status,'home');assert.equal(JSON.stringify(s.ledger),ledger);assert.equal(nav.version,initialVersion);assert(maxStep<=.240000001);assert.equal(s.day,65);assert.equal(s.tasks.length,0);assert.equal(s.crates.length,0);assert.equal(s.raid,null);assert.equal(s.result,null);
+ rows.push({reload,steps,reloads,start,end:{x:worker.x,z:worker.z},status:worker.status,maxStep,navigationVersion:nav.version,ledgerUnchanged:true,clockAdvanced:s.time-400});
+}
+const result={observedAt:new Date().toISOString(),originalSnapshotSha256:createHash('sha256').update(bytes).digest('hex'),scope:'Synthetic isolated locomotion fixture derived from archived geometry; actual native tick and persistence. Explicitly removes crops/tasks/crates/raids/spells and clears terminal result in a copy. Not revival, survival, economy, multiplayer occupancy or campaign evidence.',rows};
+writeFileSync('.cache-main-native-tick-regression.json',JSON.stringify(result,null,2)+'\n',{flag:'wx'});console.log(JSON.stringify(result,null,2));
