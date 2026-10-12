@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
-import {publicText} from './web-package.mjs';
+import {publicText,UNUSED_WORKER_LAB_MODELS} from './web-package.mjs';
 import {readFile,readdir,stat} from 'node:fs/promises';
 import {resolve,extname,dirname,relative} from 'node:path';
 const root=resolve('dist'),manifest=JSON.parse(await readFile('content/manifests/web-assets.json','utf8'));let files=0,bytes=0,links=0;
@@ -18,7 +18,16 @@ for(const record of spiritManifest.records){
  assert.equal(createHash('sha256').update(bytes).digest('hex'),record.sha256,'Original Spirit clip changed in package: '+record.path);
 }
 async function exists(file){return inventory.has(relative(root,file).replaceAll('\\','/'));}
-for(const item of manifest.records){assert(!await exists(resolve(root,item.source)),'Original GLB duplicated in dist');assert(await exists(resolve(root,item.runtime)),'Runtime GLB missing');}
+for(const item of manifest.records){
+ assert(!await exists(resolve(root,item.source)),'Original GLB duplicated in dist');
+ assert.equal(await exists(resolve(root,item.runtime)),!UNUSED_WORKER_LAB_MODELS.has(item.source),'Incorrect runtime GLB inventory: '+item.source);
+}
+const packagedModels=JSON.parse(await readFile(resolve(root,'content/models.json'),'utf8'));
+const packagedAssets=JSON.parse(await readFile(resolve(root,'content/web-assets.json'),'utf8'));
+for(const source of UNUSED_WORKER_LAB_MODELS){
+ assert(!packagedModels.some(model=>model.url.replace(/^\//,'')===source),'Unused worker lab model listed in runtime catalogue');
+ assert(!packagedAssets.records.some(item=>item.source===source),'Unused worker lab model listed in runtime asset map');
+}
 const musicManifest=JSON.parse(await readFile('content/manifests/audio-runtime.json','utf8'));
 const sfxManifest=JSON.parse(await readFile('content/manifests/sfx-runtime.json','utf8'));
 const audioManifest={records:[...musicManifest.records,...sfxManifest.records]};
@@ -72,4 +81,4 @@ const groundBake=JSON.parse(await readFile('content/manifests/mangrove-ground-ba
 for(const url of groundBake.archiveOnly)assert(!await exists(resolve(root,url.slice(1))),'Original mangrove texture duplicated in package');
 for(const item of Object.values({...groundBake.maps,...Object.fromEntries(Object.entries(groundBake.mudMaps??{}).map(([k,v])=>['mud-'+k,v]))}))assert(await exists(resolve(root,item.url.slice(1))),'Baked mangrove texture missing');
 
-console.log(`PASS: ${files} files / ${bytes} bytes, ${links} relative links, ${manifest.records.length} runtime GLBs, no original GLBs, demo village or superseded ground duplicates`);
+console.log(`PASS: ${files} files / ${bytes} bytes, ${links} relative links, ${packagedAssets.records.filter(item=>item.runtime.endsWith('.glb')).length} runtime GLBs, no unused worker labs, original GLBs, demo village or superseded ground duplicates`);
