@@ -1,5 +1,6 @@
 import {centerGeometry} from './centers.js';
 import {findBuildingRoute} from './building-route-shortcut.js';
+import {cachedWateringRoute} from './watering-route-cache.js';
 // Service points outside the same footprints used by Navigation.
 export function repairRoute(worker,target,nav){
   const radius=.28,clearance=.1;
@@ -34,6 +35,9 @@ export function canWaterFrom(worker,plant,nav){
   return Math.abs(nav.workerSurface(worker.x,worker.z)-nav.field.surface(plant.x,plant.z))<=.5;
 }
 export function wateringRoute(worker,plant,nav){
+  return cachedWateringRoute(worker,plant,nav,computeWateringRoute);
+}
+function computeWateringRoute(worker,plant,nav){
   const radius=worker.radius??.28,standOff=(plant.species==='platano'?.65:.45)+radius+.1;
   const angle=Math.atan2(worker.x-plant.x,worker.z-plant.z);
   // Bounded geometric probe before an expensive A* fallback. Every edge
