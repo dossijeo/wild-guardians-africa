@@ -37,8 +37,10 @@ test('impossible connector searches are bounded, exhausted once and reset on geo
  let calls=0;const nav={version:1,walkable:()=>{calls++;return false;},segmentClear:()=>false};
  const actor={x:0,z:0,radius:1},end={x:10,z:10};
  for(let i=0;i<30;i++){const before=calls;assert.equal(animalExitConnector(actor,end,nav),null);assert.ok(calls-before<=16);}
- assert.equal(calls,200);animalExitConnector(actor,end,nav);assert.equal(calls,200);
- nav.version++;animalExitConnector(actor,end,nav);assert.equal(calls,208);
+ // The later quarter-metre fallback adds eight genuine native checks to the
+ // original 200. Once exhausted, stationary retries perform no new queries.
+ assert.equal(calls,208);animalExitConnector(actor,end,nav);assert.equal(calls,208);
+ nav.version++;animalExitConnector(actor,end,nav);assert.equal(calls,216);
 });
 test('snapshot rejects corrupt connector cursors while older snapshots remain valid',()=>{
  const s=load();assert.doesNotThrow(()=>serialize(s));

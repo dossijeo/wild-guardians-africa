@@ -13,6 +13,7 @@ export function animalExitConnector(actor,end,nav){
  let search=actor.exitConnectorSearch;
  if(!search||search.key!==key)search=actor.exitConnectorSearch={key,next:0};
  const heading=Math.atan2(end.x-actor.x,end.z-actor.z);
+ const ringWasPending=search.next<distances.length*angles;
  const limit=Math.min(distances.length*angles,search.next+budget);
  for(;search.next<limit;){
   const index=search.next++,sample=index%angles;
@@ -25,6 +26,10 @@ export function animalExitConnector(actor,end,nav){
   delete actor.exitConnectorSearch;
   return [point,{x:end.x,z:end.z}];
  }
+ // Completing the radial phase must not also drain the fractional and
+ // quarter-metre phases in this same simulation tick. Large hordes would
+ // otherwise multiply the worst-case navigation work on one frame.
+ if(ringWasPending)return null;
  if(search.next===distances.length*angles){
   const path=fractionalExit(actor,end,nav,search,radius);if(path)return path;
   // A lattice can still miss a passage narrower than its cell spacing. Use
