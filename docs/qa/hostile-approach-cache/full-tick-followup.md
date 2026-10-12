@@ -93,3 +93,28 @@ must not be merged on this evidence alone.
 The sparse checkout omits `docs/qa/populated-raids/*.json`; those six fixture-
 dependent raid-navigation-warmth tests fail ENOENT locally. The 22 tests
 covering changed navigation, reservations, source guard and comparator pass.
+
+## Navigation cache probes (diagnostic only)
+
+A CPU profile of the completed candidate tick attributed ~2.07 s of sampled
+self time to `TerrainField.lattice` and ~0.58 s to slope computation. The
+frozen input and complete output SHA-256 remained unchanged across four
+isolated, opt-in cache probes:
+
+| Probe | Single tick | Output hash equal |
+| --- | ---: | :---: |
+| Current branch | 7,466 ms | reference |
+| Larger height-cache capacity (100,000) | 6,478 ms | yes |
+| Numeric lattice keys (12,000 capacity) | 5,007 ms | yes |
+| Numeric keys + 100,000 capacity | 4,411 ms | yes |
+| Existing last-tile adapter (48 × 32² cells) | 4,231 ms | yes |
+| Fractional walkability cache 65,536 (from 8,192) | 5,213 ms | yes |
+| Last-tile adapter + larger fractional cache | 3,787 ms | yes |
+
+All timings are isolated single-process observations under a shared but
+uncontrolled Windows host, not a statistically accepted speedup. The
+fractional-cache source was restored after the probe; the tile adapters were
+installed only through ignored `.cache` preload scripts. No production module,
+recipe, policy or live campaign received these experimental changes. Even
+3,787 ms is unacceptable as a gameplay frame, so the hundred-night campaign
+remains paused pending a way to distribute or avoid synchronous cold searches.
