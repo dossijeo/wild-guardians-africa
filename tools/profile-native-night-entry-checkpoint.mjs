@@ -12,7 +12,7 @@ import {createOpeningWorld} from './check_opening.mjs';
 import {NativeCampaignEntryDriver} from './native-campaign-entry-driver.mjs';
 import * as Game from '../src/simulation/game.js';
 
-const [input,output,untilText='390']=process.argv.slice(2),until=Number(untilText);
+const [input,output,untilText='390',traceMode='']=process.argv.slice(2),until=Number(untilText);
 assert(input&&output&&Number.isFinite(until)&&until>=300&&until<=600);
 const bytes=readFileSync(input),hash=value=>createHash('sha256').update(value).digest('hex');
 let s=deserialize(gunzipSync(bytes).toString());
@@ -22,19 +22,20 @@ const {nav}=createOpeningWorld({seed:s.seed,biome:s.biome,culture:s.culture,terr
 const center=s.structures.find(c=>c.kind==='center'&&c.hp>0);assert(center);
 const pose=nativeCameraPose(nav.field,[center.x,0,center.z],nav.field.canyon?0:.5,nav.field.canyon?1.18:1.16,nav.field.canyon?34:38);
 nav.setRaidView({x:pose.eye[0],z:pose.eye[2]},center);nav.setActiveBounds(activeChunkRegion({x:pose.eye[0],z:pose.eye[2]}).bounds);
-const driver=new NativeCampaignEntryDriver(nav),samples=[];let raidReloaded=null;
+const driver=new NativeCampaignEntryDriver(nav),samples=[],phaseTrace=[];let raidReloaded=null;
 try{
  while(s.time<until&&!s.result){
   await driver.advancePresentation(s);
   if(Game.nightEntryPending(s)&&s.time>=600)await driver.waitForEntry(s);
   const time=s.time,dt=s.time<300||s.raid?1:5,started=performance.now();
-  Game.tick(s,dt,nav);
+  if(traceMode==='trace'&&Math.abs(time-385)<1e-6)nav.__nativeTickPhaseTrace=stage=>phaseTrace.push({...stage,tickStartTime:time});
+  try{Game.tick(s,dt,nav);}finally{delete nav.__nativeTickPhaseTrace;}
   samples.push({time,dt,milliseconds:performance.now()-started,raidActors:s.raid?.animals.length??0,activeActors:s.raid?.animals.filter(a=>a.status!=='gone').length??0,workers:s.workers.length,plants:s.plants.length});
   await driver.advancePresentation(s);
   if(s.raid&&raidReloaded!==s.raid.id){raidReloaded=s.raid.id;s=deserialize(serialize(s));nav.setState(s);}
  }
 }finally{await driver.dispose();}
 assert.equal(hash(readFileSync(input)),hash(bytes));
-const report={scope:'Copied native checkpoint advanced through real game ticks and production-equivalent Node entry transport, but without virtual-player decisions, spells or repairs. CPU diagnostic only; not an economic/raid campaign result or rendering frame-time.',input,inputSha256:hash(bytes),day:s.day,startTime,endTime:s.time,raid:!!s.raid,samples,entryTransport:driver.report(),stateSha256:hash(serialize(s))};
+const report={scope:'Copied native checkpoint advanced through real game ticks and production-equivalent Node entry transport, but without virtual-player decisions, spells or repairs. CPU diagnostic only; not an economic/raid campaign result or rendering frame-time.',input,inputSha256:hash(bytes),day:s.day,startTime,endTime:s.time,raid:!!s.raid,samples,phaseTrace,entryTransport:driver.report(),stateSha256:hash(serialize(s))};
 writeFileSync(output,JSON.stringify(report,null,2)+'\n');
 console.log(JSON.stringify({day:report.day,endTime:report.endTime,raid:report.raid,samples:samples.length,totalMs:samples.reduce((n,r)=>n+r.milliseconds,0),maximumMs:Math.max(...samples.map(r=>r.milliseconds))}));

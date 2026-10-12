@@ -177,7 +177,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
    const nativeTickStarted=onStepTiming?performance.now():0;
    const traceThisTick=tickTraceTarget?.day===day&&Math.abs(tickTraceTarget.time-tickTime)<1e-6;
    if(traceThisTick&&onRaidSpawnTrace)nav.__nativeRaidSpawnTrace=stage=>onRaidSpawnTrace({day,time:tickTime,...stage});
-   if(traceThisTick&&onTickPhaseTrace)nav.__nativeTickPhaseTrace=stage=>onTickPhaseTrace({day,time:tickTime,...stage});
+   if(traceThisTick&&onTickPhaseTrace)nav.__nativeTickPhaseTrace=stage=>onTickPhaseTrace({...stage,day,tickStartTime:tickTime});
    try{Game.tick(s,dt,nav);}finally{if(traceThisTick){delete nav.__nativeRaidSpawnTrace;delete nav.__nativeTickPhaseTrace;}}
    const tickMilliseconds=onStepTiming?performance.now()-nativeTickStarted:null;agriculturalMagic.observe(s);evidence?.finishDecision(s);
    const actualDt=s.elapsed-tickStart,daylightDt=tickTime<300?Math.min(actualDt,300-tickTime):0;daylightSeconds+=daylightDt;

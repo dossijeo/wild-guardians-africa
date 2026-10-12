@@ -68,7 +68,7 @@ export async function runNativeCampaignCase(options,{run=simulateNativeCampaign,
    ...((raidTraceDay||phaseTraceDay)?{tickTraceTarget:{day:phaseTraceDay??raidTraceDay,time:phaseTraceTime??raidTraceTime}}:{}),
    ...(timingDay?{onStepTiming:row=>{if(row.day===timingDay)appendFileSync(resolve(out,'timings.jsonl'),JSON.stringify(row)+'\n');}}:{}),
    ...(raidTraceDay?{onRaidSpawnTrace:row=>{if(row.day===raidTraceDay&&Math.abs(row.time-raidTraceTime)<1e-6)appendFileSync(resolve(out,'raid-spawn-trace.jsonl'),JSON.stringify(row)+'\n');}}:{}),
-   ...(phaseTraceDay?{onTickPhaseTrace:row=>{if(row.day===phaseTraceDay&&Math.abs(row.time-phaseTraceTime)<1e-6)appendFileSync(resolve(out,'tick-phase-trace.jsonl'),JSON.stringify(row)+'\n');}}:{}),
+   ...(phaseTraceDay?{onTickPhaseTrace:row=>{if(row.day===phaseTraceDay&&Math.abs(row.tickStartTime-phaseTraceTime)<1e-6)appendFileSync(resolve(out,'tick-phase-trace.jsonl'),JSON.stringify(row)+'\n');}}:{}),
    onTick:s=>{
     if(options['stop-file']&&existsSync(options['stop-file']))throw calibrationStop('Requested calibration stop file detected');
     if(!checkpointSaved&&checkpointDay&&s.day===checkpointDay&&s.time+1e-6>=checkpointTime){
