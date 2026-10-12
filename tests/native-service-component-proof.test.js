@@ -19,6 +19,15 @@ test('a valid direct route or native detour rejects the proposed defense',()=>{
  const v=view();v.segmentClear=()=>true;assert.equal(nativeServiceComponentProof({},v,targets,radius,outside,outline).reason,'native-service-direct-route-open');
  v.segmentClear=(_a,b)=>b.x!==20;v.approachPath=()=>[{x:0,z:0}];assert.equal(nativeServiceComponentProof({},v,targets,radius,outside,outline).reason,'native-service-route-open');
 });
+test('only a positive closed-region certificate may bypass the full animal route',()=>{
+ const certified=view();certified.approachRegionBlocked=()=>true;
+ certified.approachPath=()=>{throw Error('A certified pose must not repeat A*');};
+ assert.equal(nativeServiceComponentProof({},certified,targets,radius,outside,outline).valid,true);
+ const uncertified=view();uncertified.approachRegionBlocked=()=>false;
+ let searched=0;uncertified.approachPath=()=>{searched++;return [{x:0,z:0}];};
+ assert.equal(nativeServiceComponentProof({},uncertified,targets,radius,outside,outline).reason,'native-service-route-open');
+ assert.equal(searched,1);
+});
 test('an empty origin frontier remains unproven without a positive physical connector',()=>{
  const v=view();v.walkable=(x,z)=>!Number.isInteger(x)||!Number.isInteger(z);v.closedRegions.clear();
  const proof=nativeServiceComponentProof({},v,targets,radius,outside,outline);assert.equal(proof.valid,false);assert.equal(proof.reason,'native-service-origin-unproven');

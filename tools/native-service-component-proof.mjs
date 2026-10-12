@@ -19,7 +19,10 @@ export function nativeServiceComponentProof(s,view,targets,radius,outside,outlin
    // an enclosure certificate for a position that cannot perform the attack.
    if(target.alive===true&&!agriculturalRayClear(s,view,point,target)){blocked++;continue;}
    if(view.segmentClear(point,outside,radius,null,false))return {valid:false,reason:'native-service-direct-route-open',targetId:target.id,point,poses,blocked,certified};
-   if(view.approachPath(outside,point,radius,32))return {valid:false,reason:'native-service-route-open',targetId:target.id,point,poses,blocked,certified};
+   // Reuse a *positive* native closed-component certificate when every
+   // walkable origin connector around this pose belongs to that component.
+   // Otherwise retain the original full A* query and all checks below.
+   if(!view.approachRegionBlocked?.(outside,point,radius,0)&&view.approachPath(outside,point,radius,32))return {valid:false,reason:'native-service-route-open',targetId:target.id,point,poses,blocked,certified};
    // These are exactly the animal A* origin connectors (no worker portals).
    // Require positively exhausted, boundary-free components for every usable
    // connector. Narrow poses with no connectors remain unproven, not accepted.
