@@ -6,8 +6,12 @@ import {operational} from '../src/simulation/rules.js';
 import {nativeServiceComponentProof} from './native-service-component-proof.mjs';
 import {withNativeProofLatticeCache} from './native-proof-lattice-cache.mjs';
 import {withNativeWallBroadphase} from './native-proof-wall-broadphase.mjs';
+import {withNativeWallSpatialIndex} from './native-proof-wall-spatial-index.mjs';
+let spatialIndex=false,spatialTotals={proofs:0,indexedWalls:0,alwaysRetained:0,queries:0,potentialCandidates:0,actualCandidates:0,fullFallbacks:0,cellsVisited:0};
+export function setNativePerimeterSpatialIndex(enabled){if(typeof enabled!=='boolean'||enabled&&wallBroadphase)throw Error('Explicit exclusive QA spatial flag required');spatialIndex=enabled;spatialTotals={proofs:0,indexedWalls:0,alwaysRetained:0,queries:0,potentialCandidates:0,actualCandidates:0,fullFallbacks:0,cellsVisited:0};}
+export function nativePerimeterSpatialDiagnostics(){return {...spatialTotals,enabled:spatialIndex};}
 let wallBroadphase=false,wallTotals={proofs:0,eligibleWalls:0,boundQueries:0,conservativeHits:0,unsupportedQueries:0};
-export function setNativePerimeterWallBroadphase(enabled){if(typeof enabled!=='boolean')throw Error('Explicit QA wall flag required');wallBroadphase=enabled;wallTotals={proofs:0,eligibleWalls:0,boundQueries:0,conservativeHits:0,unsupportedQueries:0};}
+export function setNativePerimeterWallBroadphase(enabled){if(typeof enabled!=='boolean'||enabled&&spatialIndex)throw Error('Explicit exclusive QA wall flag required');wallBroadphase=enabled;wallTotals={proofs:0,eligibleWalls:0,boundQueries:0,conservativeHits:0,unsupportedQueries:0};}
 export function nativePerimeterWallDiagnostics(){return {...wallTotals,enabled:wallBroadphase};}
 const proofViews=new WeakMap();
 let latticeMode='off',latticeTotals={proofs:0,surfaceCalls:0,latticeCalls:0,nativeLatticeCalls:0,hits:0,capacityBypasses:0,coordinateBypasses:0,coarseCollisionCalls:0,epochInvalidations:0,maxEntries:0};
@@ -29,7 +33,7 @@ export function nativePerimeterProof(s,nav,plan,bounds,{cache=true,outline=null,
   view.obstacles=[...nav.obstacles.map(w=>updates.has(w.id)?{...w,...updates.get(w.id)}:w),...plan.pieces];
   if(cache)proofViews.set(nav,{key,state:s,view});
  }
- return withNativeWallBroadphase(view,broadView=>withNativeProofLatticeCache(broadView,privateView=>evaluatePerimeter(s,privateView,bounds,outline,sharedCertificate),{mode:latticeMode==='flat'?'cache':latticeMode,storage:latticeMode==='flat'?'flat':'nested',onDiagnostics:r=>{latticeTotals.proofs++;for(const k of ['surfaceCalls','latticeCalls','nativeLatticeCalls','hits','capacityBypasses','coordinateBypasses','coarseCollisionCalls','epochInvalidations'])latticeTotals[k]+=r[k];latticeTotals.maxEntries=Math.max(latticeTotals.maxEntries,r.entries);}}),{enabled:wallBroadphase,onDiagnostics:r=>{wallTotals.proofs++;for(const k of ['eligibleWalls','boundQueries','conservativeHits','unsupportedQueries'])wallTotals[k]+=r[k];}});
+ return withNativeWallSpatialIndex(view,indexView=>withNativeWallBroadphase(indexView,broadView=>withNativeProofLatticeCache(broadView,privateView=>evaluatePerimeter(s,privateView,bounds,outline,sharedCertificate),{mode:latticeMode==='flat'?'cache':latticeMode,storage:latticeMode==='flat'?'flat':'nested',onDiagnostics:r=>{latticeTotals.proofs++;for(const k of ['surfaceCalls','latticeCalls','nativeLatticeCalls','hits','capacityBypasses','coordinateBypasses','coarseCollisionCalls','epochInvalidations'])latticeTotals[k]+=r[k];latticeTotals.maxEntries=Math.max(latticeTotals.maxEntries,r.entries);}}),{enabled:wallBroadphase,onDiagnostics:r=>{wallTotals.proofs++;for(const k of ['eligibleWalls','boundQueries','conservativeHits','unsupportedQueries'])wallTotals[k]+=r[k];}}),{enabled:spatialIndex,onDiagnostics:r=>{spatialTotals.proofs++;for(const k of ['indexedWalls','alwaysRetained','queries','potentialCandidates','actualCandidates','fullFallbacks','cellsVisited'])spatialTotals[k]+=r[k];}});
 }
 function evaluatePerimeter(s,view,bounds,outline,sharedCertificate){
  const land=[...s.plants.filter(p=>p.alive),...s.structures.filter(operational).flatMap(c=>centerFootprint(c,s).footprint)],radii=[...new Set(Object.values(ANIMAL_ACTIONS.animals).map(a=>a.presentation.footprint.radius))];
