@@ -2,6 +2,7 @@ import {cachedFractionalWalkability} from './fractional-walkability-cache.js';
 import {ViewMap,ViewSet,trimViewRegions} from './worker-view-cache.js';
 import {fluidAt,footprintFluidSample,FLUID_PLACEMENT_REASON} from './fluid-placement.js';
 import {navigationBounds,outsideNavigationBounds} from './navigation-bounds.js';
+import {buildNavigationObstacleIndex,segmentNavigationObstacles} from './navigation-obstacle-index.js';
 import {navigationPathKey} from './raid-navigation-warmth.js';
 import {navigationQueryResult,rememberNavigationQuery} from './navigation-query-scope.js';
 import {villageTerrainSite} from './settlement-terrain.js';
@@ -32,6 +33,7 @@ export class Navigation {
     this.walkCache.clear();this.segmentCache.clear();this.failedPaths.clear();this.closedRegions.clear();
     this.searchedRegions=[];this.searchNeighborCache=new Map();
     this.obstacleBounds=new WeakMap(this.obstacles.map(o=>[o,navigationBounds(o)]));
+    this.obstacleIndex=buildNavigationObstacleIndex(this.obstacles);
   }
   setActiveBounds(bounds){
     if(!validActiveBounds(bounds))throw new RangeError('Invalid active terrain bounds');
@@ -95,6 +97,7 @@ export class Navigation {
     for(const v of state.villages)for(const b of v.buildings??[])if(b.kind!=='Zona común')this.obstacles.push({...b,id:`${v.id}:${b.key}`,radius:b.radius??2.8,kind:'house'});
     for(const area of state.spells)if(area.kind==='shield'&&area.remaining>0)this.obstacles.push({...area,kind:'shield'});
     this.obstacleBounds=new WeakMap(this.obstacles.map(o=>[o,navigationBounds(o)]));
+    this.obstacleIndex=buildNavigationObstacleIndex(this.obstacles);
   }
   syncCropPlacement(state,removedProps=[]) {
     // Crops are not navigation obstacles. Replanting already cleared ground
@@ -528,7 +531,7 @@ export class Navigation {
     if(this.workerRouteCache.size>=10000)evictOldest(this.workerRouteCache);this.workerRouteCache.set(key,{valid,peak:sweep.peak});return valid;
   }
   coarseSegmentClear(start,end,radius,ignore,worker,escapeProps=false) {
-    for(const obstacle of this.obstacles){
+    for(const obstacle of segmentNavigationObstacles(this,start,end,radius)){
       if(obstacle.id===ignore||worker&&obstacle.kind==='shield')continue;
       if(outsideNavigationBounds(start,end,this.obstacleBounds?.get(obstacle),radius))continue;
       if(worker&&obstacle.gate){const frames=gateFrameFootprints(obstacle);if(frames?.some(p=>sweptFootprintDistance(start,end,p)<radius))return false;continue;}
