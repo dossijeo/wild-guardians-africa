@@ -41,3 +41,7 @@ The campaign remains active: subsequent observation is day 19, time 300,
 acceptance is inferred. Original receipts and journals remain untouched.
 Raw profile (lossless gzip), executed capture/aggregation scripts and source
 audits are retained beside this report.
+
+The readable script copies normalize mixed line endings and trailing blank
+lines. Their `.original.gz` counterparts preserve the exact executed bytes;
+no original capture or result has been discarded.

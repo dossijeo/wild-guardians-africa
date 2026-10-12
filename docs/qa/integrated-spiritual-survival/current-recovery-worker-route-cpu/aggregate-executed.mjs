@@ -10,4 +10,3 @@ for(let i=0;i<profile.samples.length;i++){
 const rows=m=>[...m].sort((a,b)=>b[1]-a[1]).slice(0,25).map(([id,us])=>({function:nodes.get(id).callFrame.functionName,url:nodes.get(id).callFrame.url,line:nodes.get(id).callFrame.lineNumber+1,milliseconds:us/1000,fraction:us/total}));
 const report={pid:51388,sampleCount:profile.samples.length,sampledMilliseconds:total/1000,scope:'Ten-second live diagnostic sample; sampling overhead exists. No mutation, restart, breakpoint or application expression evaluation.',self:rows(self),inclusive:rows(inclusive)};
 writeFileSync('.cache-current-recovery-cpu-summary.json',JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));
-

@@ -29,4 +29,3 @@ try {
  $null=Command 5 'Profiler.disable'
  Write-Output ('samples='+$result.profile.samples.Count)
 }finally{$client.Abort();$client.Dispose();$cancel.Dispose()}
-
