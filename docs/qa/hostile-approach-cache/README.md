@@ -1,5 +1,8 @@
 # Native hostile approach failure working set — experimental
 
+Historical first candidate `1f80db65`. The full-tick follow-up in
+`full-tick-followup.md` supersedes its acceptance scope and implementation.
+
 Branch: `codex/hostile-approach-failure-cache`, based on `ffa18f2e`.
 This is a technical optimization candidate. No production integration, military
 recalibration, policy change, or campaign restart uses it yet.

@@ -1,0 +1,150 @@
+TAP version 13
+# Subtest: Failed-approach warming is bounded and scoped to actor coordinates, radius and geometry epoch
+ok 1 - Failed-approach warming is bounded and scoped to actor coordinates, radius and geometry epoch
+  ---
+  duration_ms: 2.3939
+  ...
+# Subtest: Other search margins retain the original computation; a replaced search cannot reuse old warming state
+ok 2 - Other search margins retain the original computation; a replaced search cannot reuse old warming state
+  ---
+  duration_ms: 0.7128
+  ...
+# Subtest: An expanded success is discarded, not substituted for a failed native approach
+ok 3 - An expanded success is discarded, not substituted for a failed native approach
+  ---
+  duration_ms: 0.7867
+  ...
+# Subtest: A successful approach preserves every original waypoint and performs no wider search
+ok 4 - A successful approach preserves every original waypoint and performs no wider search
+  ---
+  duration_ms: 0.3151
+  ...
+# Subtest: Native warming preserves positive and negative paths, including a detour outside the original corridor
+ok 5 - Native warming preserves positive and negative paths, including a detour outside the original corridor
+  ---
+  duration_ms: 906.837
+  ...
+# Subtest: Early generator cancellation cannot install an exhaustive failure certificate
+ok 6 - Early generator cancellation cannot install an exhaustive failure certificate
+  ---
+  duration_ms: 1.1321
+  ...
+# Subtest: Repeated overlapping A* searches preserve waypoint order while reusing cell geometry
+ok 7 - Repeated overlapping A* searches preserve waypoint order while reusing cell geometry
+  ---
+  duration_ms: 163.3316
+  ...
+# Subtest: Geometry epochs, actor permissions and proposed buildings cannot contaminate neighbor results
+ok 8 - Geometry epochs, actor permissions and proposed buildings cannot contaminate neighbor results
+  ---
+  duration_ms: 4.0522
+  ...
+# Subtest: Transient neighbor graph stays bounded and route arrays cannot mutate its cached points
+ok 9 - Transient neighbor graph stays bounded and route arrays cannot mutate its cached points
+  ---
+  duration_ms: 34.4056
+  ...
+# Subtest: A direct segment cannot tunnel through a small prop between valid sampled endpoints
+ok 10 - A direct segment cannot tunnel through a small prop between valid sampled endpoints
+  ---
+  duration_ms: 8.5584
+  ...
+# Subtest: Directed edge caches retain collision semantics and invalidate when structures or shields change
+ok 11 - Directed edge caches retain collision semantics and invalidate when structures or shields change
+  ---
+  duration_ms: 1.4682
+  ...
+# Subtest: Failed routes are reused only for identical endpoints and clear when an obstacle changes
+ok 12 - Failed routes are reused only for identical endpoints and clear when an obstacle changes
+  ---
+  duration_ms: 0.7633
+  ...
+# Subtest: Exhaustively explored enclosed regions reject other unreachable targets without another flood search
+ok 13 - Exhaustively explored enclosed regions reject other unreachable targets without another flood search
+  ---
+  duration_ms: 4.8369
+  ...
+# Subtest: A search touching corridor bounds does not certify a globally closed region
+ok 14 - A search touching corridor bounds does not certify a globally closed region
+  ---
+  duration_ms: 53.1626
+  ...
+# Subtest: Region reuse matches fresh searches across origins, endpoints, radii and actor permissions
+ok 15 - Region reuse matches fresh searches across origins, endpoints, radii and actor permissions
+  ---
+  duration_ms: 742.6777
+  ...
+# Subtest: A diagonal grid edge with valid corners still detours around an intervening prop
+ok 16 - A diagonal grid edge with valid corners still detours around an intervening prop
+  ---
+  duration_ms: 0.9611
+  ...
+# Subtest: Fractional positions connect to a valid grid point even when their rounded start cell is blocked
+ok 17 - Fractional positions connect to a valid grid point even when their rounded start cell is blocked
+  ---
+  duration_ms: 0.8169
+  ...
+# Subtest: Swept paths respect native polygon edges, rotated walls and worker-only gate passage
+ok 18 - Swept paths respect native polygon edges, rotated walls and worker-only gate passage
+  ---
+  duration_ms: 0.9021
+  ...
+# Subtest: Every repair waypoint remains outside rotated native wall footprints and wider gates
+ok 19 - Every repair waypoint remains outside rotated native wall footprints and wider gates
+  ---
+  duration_ms: 2.6168
+  ...
+# Subtest: Center repair paths go around the center footprint and reject a completely inaccessible destination
+ok 20 - Center repair paths go around the center footprint and reject a completely inaccessible destination
+  ---
+  duration_ms: 0.5399
+  ...
+# Subtest: Wider searches find physical detours beyond the local corridor without reusing its cached failure
+ok 21 - Wider searches find physical detours beyond the local corridor without reusing its cached failure
+  ---
+  duration_ms: 93.3906
+  ...
+# Subtest: An exhaustive directed region rejects a reverse route only with verified incoming boundary and all destination connectors
+ok 22 - An exhaustive directed region rejects a reverse route only with verified incoming boundary and all destination connectors
+  ---
+  duration_ms: 2.8819
+  ...
+# Subtest: A one-way incoming connection cannot be treated as a symmetric failure
+not ok 23 - A one-way incoming connection cannot be treated as a symmetric failure
+  ---
+  duration_ms: 2.3886
+  location: 'file:///C:/Users/PC/.codex/worktrees/hostile-neighbor-cache/tests/reverse-failure-certificate.test.js:7:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + undefined
+    - false
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/hostile-neighbor-cache/tests/reverse-failure-certificate.test.js:9:94)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async startSubtest (node:internal/test_runner/harness:216:3)
+  ...
+# Subtest: Partial goal connector coverage, shared origins and worker portals cannot be rejected
+ok 24 - Partial goal connector coverage, shared origins and worker portals cannot be rejected
+  ---
+  duration_ms: 0.1916
+  ...
+1..24
+# tests 24
+# suites 0
+# pass 23
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1105.207

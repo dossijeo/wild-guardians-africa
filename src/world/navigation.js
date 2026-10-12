@@ -16,6 +16,7 @@ import {wallCollisionFrame,wallCollisionPolygon,wallCollisionBounds} from './wal
 import {shortenBuildingRoute} from './building-route-shortcut.js';
 import {animalSegmentClearance} from './animal-segment-clearance.js';
 import {warmFailedApproach} from './approach-failure-warmth.js';
+import {reverseFailureCertified,boundedApproachRegionBlocked} from './reverse-failure-certificate.js';
 export const BIOME_IDS={sabana:'savanna','gran-rio':'grand_river',manglares:'mangrove',volcanes:'volcanoes','gran-canon':'canyons',desierto:'desert'};
 export const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 const approachRegionCertificates=new WeakMap();
@@ -289,6 +290,7 @@ export class Navigation {
     if(!cache||cache.version!==this.version){cache={version:this.version,entries:new Map()};approachRegionCertificates.set(this,cache);}
     const minX=Math.floor((bounds?.[0]??focus.x)-reach)-2,maxX=Math.ceil((bounds?.[2]??focus.x)+reach)+2,minZ=Math.floor((bounds?.[1]??focus.z)-reach)-2,maxZ=Math.ceil((bounds?.[3]??focus.z)+reach)+2;
     if((maxX-minX+1)*(maxZ-minZ+1)>4096)return false;
+    if(boundedApproachRegionBlocked(this,start,radius,minX,minZ,maxX,maxZ))return true;
     const certificateKey=`${radius}:${minX}:${minZ}:${maxX}:${maxZ}`;
     let region=cache.entries.get(certificateKey)??this.closedRegions.get(regionKey(Math.round(focus.x),Math.round(focus.z)));
     if(!region)for(let z=minZ;z<=maxZ&&!region;z++)for(let x=minX;x<=maxX&&!region;x++)region=this.closedRegions.get(regionKey(x,z));
@@ -367,6 +369,7 @@ export class Navigation {
       if(searched.radius!==radius||searched.ignore!==ignore||searched.worker!==worker||
         minX<searched.minX||maxX>searched.maxX||minZ<searched.minZ||maxZ>searched.maxZ)continue;
       if(open.length&&open.values().every(p=>searched.nodes.has(key(p.x,p.z)))&&!reachesEnd(searched.nodes))return null;
+      if(reverseFailureCertified(this,searched,open.values(),end,radius,ignore,worker))return null;
     }
     const known=open.values().map(p=>this.closedRegions.get(regionKey(key(p.x,p.z))));
     if(known.length&&known.every(Boolean)){

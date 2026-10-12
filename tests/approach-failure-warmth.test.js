@@ -3,9 +3,9 @@ import {warmFailedApproach} from '../src/world/approach-failure-warmth.js';
 import {Navigation} from '../src/world/navigation.js';
 
 test('Failed-approach warming is bounded and scoped to actor coordinates, radius and geometry epoch',()=>{
- const calls=[],nav={version:1,findPath(...args){calls.push(args);return null;}},a={x:10,z:20},p={x:0,z:0};
+ const calls=[],nav={version:1,walkable:()=>true,findPath(...args){calls.push(args);return null;}},a={x:10,z:20},p={x:0,z:0};
  warmFailedApproach(nav,p,a,.97,32);warmFailedApproach(nav,{x:1,z:1},a,.97,32);
- assert.equal(calls.length,1);assert.deepEqual(calls[0],[p,a,.97,null,false,48]);
+ assert.equal(calls.length,1);assert.deepEqual(calls[0],[a,p,.97,null,false,64]);
  warmFailedApproach(nav,p,a,.28,32);warmFailedApproach(nav,p,{x:10.1,z:20},.97,32);assert.equal(calls.length,3);
  nav.version++;warmFailedApproach(nav,p,a,.97,32);assert.equal(calls.length,4);
  for(let i=0;i<129;i++)warmFailedApproach(nav,p,{x:i,z:200},.97,32);
@@ -13,15 +13,21 @@ test('Failed-approach warming is bounded and scoped to actor coordinates, radius
 });
 
 test('Other search margins retain the original computation; a replaced search cannot reuse old warming state',()=>{
- let n=0;const nav={version:1,findPath(){n++;return null;}},p={x:0,z:0},a={x:1,z:1};
+ let n=0;const nav={version:1,walkable:()=>true,findPath(){n++;return null;}},p={x:0,z:0},a={x:1,z:1};
  for(const margin of [16,24,48])warmFailedApproach(nav,p,a,.9,margin);assert.equal(n,0);
  warmFailedApproach(nav,p,a,.9,32);nav.findPath=()=>{n++;return null;};warmFailedApproach(nav,p,a,.9,32);assert.equal(n,2);
 });
 
 test('An expanded success is discarded, not substituted for a failed native approach',()=>{
  const nav=new Navigation(123,'sabana',{}),calls=[];
- nav.path=()=>null;nav.findPath=(...args)=>{calls.push(args);return [{x:99,z:99}];};
+ nav.walkable=()=>true;nav.path=()=>null;nav.findPath=(...args)=>{calls.push(args);return [{x:99,z:99}];};
  assert.equal(nav.approachPath({x:1,z:1},{x:2,z:2},.9,32),null);assert.equal(calls.length,1);
+});
+
+test('An invalid service point cannot spend the sole warming attempt before a valid angle',()=>{
+ const calls=[],nav={version:1,walkable:x=>x!==0,findPath(...args){calls.push(args);return null;}},actor={x:10,z:10};
+ warmFailedApproach(nav,{x:0,z:0},actor,.9,32);assert.equal(calls.length,0);
+ warmFailedApproach(nav,{x:1,z:0},actor,.9,32);assert.equal(calls.length,1);
 });
 
 test('A successful approach preserves every original waypoint and performs no wider search',()=>{
