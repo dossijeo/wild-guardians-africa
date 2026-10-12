@@ -46,7 +46,7 @@ def main() -> None:
         raise ValueError("Missing or duplicate inline markers")
     script = (ROOT / "viewer.js").read_text(encoding="utf-8")
     out = ROOT / ("preview-acto-01-escena-01.html" if args.sample else "wild-guardians-cinematics-lab.html")
-    out.write_text(template.replace("__INLINE_DATA__", data).replace("__VIEWER_SCRIPT__", script), encoding="utf-8")
+    out.write_bytes(template.replace("__INLINE_DATA__", data).replace("__VIEWER_SCRIPT__", script).replace("\r\n", "\n").encode("utf-8"))
     print(f"Built {out.name}: {len(scenes)} scene(s), {out.stat().st_size:,} bytes")
 
 
