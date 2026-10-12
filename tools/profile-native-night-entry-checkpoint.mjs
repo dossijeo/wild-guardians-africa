@@ -20,14 +20,14 @@ assert(!s.result&&!s.raid&&s.time>=0&&s.time<until&&s.pauses.length===0);
 const startTime=s.time,startDay=s.day,startEventIds=new Set(s.events.map(e=>e.id)),startHp=new Map(s.structures.map(v=>[v.id,v.hp]));
 const {nav}=createOpeningWorld({seed:s.seed,biome:s.biome,culture:s.culture,terrainVersion:s.terrainVersion});nav.setState(s);
 const pathStats={calls:0,failed:0,milliseconds:0};
-const queryStats={walkable:{calls:0,milliseconds:0},segmentClear:{calls:0,milliseconds:0},ring:{calls:0,rejected:0,milliseconds:0}};
+const queryStats={walkable:{calls:0,milliseconds:0},segmentClear:{calls:0,milliseconds:0},terrainValid:{calls:0,milliseconds:0},coarseSegmentClear:{calls:0,milliseconds:0},ring:{calls:0,rejected:0,milliseconds:0}};
 if(traceMode==='trace'){
  const originalPath=nav.path;
  nav.path=function(...args){const active=!!this.__nativeTickPhaseTrace,started=active?performance.now():0,result=originalPath.apply(this,args);
   if(active){pathStats.calls++;if(!result)pathStats.failed++;pathStats.milliseconds+=performance.now()-started;}
   return result;
  };
- for(const [name,bucket] of [['walkable',queryStats.walkable],['segmentClear',queryStats.segmentClear],['approachRingBlocked',queryStats.ring]]){
+ for(const [name,bucket] of [['walkable',queryStats.walkable],['segmentClear',queryStats.segmentClear],['terrainValid',queryStats.terrainValid],['coarseSegmentClear',queryStats.coarseSegmentClear],['approachRingBlocked',queryStats.ring]]){
   const original=nav[name];if(!original)continue;
   nav[name]=function(...args){const active=!!this.__nativeTickPhaseTrace,started=active?performance.now():0,result=original.apply(this,args);
    if(active){bucket.calls++;bucket.milliseconds+=performance.now()-started;if(name==='approachRingBlocked'&&result)bucket.rejected++;}

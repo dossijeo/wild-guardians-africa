@@ -291,12 +291,11 @@ export class Navigation {
       if(this.segmentClear(point,start,radius,null,false))return false;
       const px=Math.round(point.x),pz=Math.round(point.z);
       for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){
-        const cell={x:px+dx,z:pz+dz};
+        const x=px+dx,z=pz+dz;
         // Include even cells whose short connector is blocked. This may
-        // prevent a proof, but avoids an expensive segment test and can never
-        // exclude a route the native search would accept.
-        if(!this.walkable(cell.x,cell.z,radius,null,false))continue;
-        const region=this.closedRegions.get(regionKey(cell.x,cell.z));
+        // prevent a proof, but can never exclude a valid native route.
+        if(!this.walkable(x,z,radius,null,false))continue;
+        const region=this.closedRegions.get(regionKey(x,z));
         if(!region||actorCells.some(k=>region.has(k)))return false;
       }
     }
