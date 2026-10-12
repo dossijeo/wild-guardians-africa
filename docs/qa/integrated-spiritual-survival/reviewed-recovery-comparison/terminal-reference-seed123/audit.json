@@ -1,0 +1,172 @@
+{
+  "observedAt": "2026-10-12T01:10:13.703Z",
+  "cases": [
+    {
+      "arm": "reference",
+      "profile": "good",
+      "seed": 123,
+      "biome": "sabana",
+      "culture": "mapungubwe",
+      "directory": "C:\\Users\\PC\\.codex\\worktrees\\raid-recovery-current-reference\\wild-guardians-africa\\docs\\qa\\integrated-spiritual-survival\\reference-current-good-123",
+      "status": "native-defeat",
+      "identityIssues": [],
+      "terminalAudit": {
+        "status": "verified",
+        "facts": {
+          "directory": "C:\\Users\\PC\\.codex\\worktrees\\raid-recovery-current-reference\\wild-guardians-africa\\docs\\qa\\integrated-spiritual-survival\\reference-current-good-123",
+          "seed": "123",
+          "strategy": "good",
+          "status": "observed-native-defeat",
+          "result": "defeat",
+          "defeatPhase": "dawn-after-completed-night",
+          "victoryPhase": null,
+          "postgameDays": 0,
+          "daytimeRaids": 0,
+          "terminalDay": 33,
+          "completedNights": 33,
+          "money": 32,
+          "living": 0,
+          "centerHp": [
+            600
+          ],
+          "destroyed": 125,
+          "totals": {
+            "income": 26197,
+            "refunds": 0,
+            "wages": 11949,
+            "seeds": 10465,
+            "walls": 1040,
+            "centers": 0,
+            "villages": 0,
+            "repairs": 3411,
+            "otherCredits": 0,
+            "otherDebits": 0
+          },
+          "strikes": {
+            "assigned": 1768,
+            "consumed": 1768,
+            "unused": 0
+          },
+          "postIntroduction": {
+            "exposure": 3279,
+            "losses": 125,
+            "weightedDestroyedFraction": 0.03812137846904544,
+            "unprotectedReferenceFraction": 0.21480811222933818,
+            "protectedReferenceFraction": 0.036401158889905465,
+            "scope": "Nighttime references are hypotheses only, never applied damage; exposure is the native census at each raid spawn"
+          },
+          "ledgerAndDeliveryMatch": true,
+          "sourceHashesMatch": true,
+          "scope": "Native terminal result and ledger only; a single hundred-night victory does not establish the strategy/seed matrix, human activity or general release acceptance"
+        }
+      },
+      "nativeResult": "defeat",
+      "completedNights": 33,
+      "lastRecordedProgress": {
+        "observedAt": "2026-10-12T00:50:27.898Z",
+        "processId": 51084,
+        "day": 33,
+        "time": 489.0000000000429,
+        "elapsed": 20600.49999997819,
+        "living": 1,
+        "workers": 1,
+        "wallMilliseconds": 12060915,
+        "result": null
+      }
+    }
+  ],
+  "arms": {
+    "reference": {
+      "good": {
+        "planned": 1,
+        "wins": 0,
+        "nativeDefeats": 1,
+        "completed": 1,
+        "unresolved": 0,
+        "winRate": 0,
+        "wilson95": [
+          0,
+          0.7934506856227626
+        ],
+        "target": [
+          0.85,
+          0.95
+        ],
+        "accepted": false
+      },
+      "normal": {
+        "planned": 0,
+        "wins": 0,
+        "nativeDefeats": 0,
+        "completed": 0,
+        "unresolved": 0,
+        "winRate": null,
+        "wilson95": null,
+        "target": [
+          0.5,
+          0.7
+        ],
+        "accepted": false
+      },
+      "bad": {
+        "planned": 0,
+        "wins": 0,
+        "nativeDefeats": 0,
+        "completed": 0,
+        "unresolved": 0,
+        "winRate": null,
+        "wilson95": null,
+        "target": [
+          0.05,
+          0.2
+        ],
+        "accepted": false
+      }
+    },
+    "recovery": {
+      "good": {
+        "planned": 0,
+        "wins": 0,
+        "nativeDefeats": 0,
+        "completed": 0,
+        "unresolved": 0,
+        "winRate": null,
+        "wilson95": null,
+        "target": [
+          0.85,
+          0.95
+        ],
+        "accepted": false
+      },
+      "normal": {
+        "planned": 0,
+        "wins": 0,
+        "nativeDefeats": 0,
+        "completed": 0,
+        "unresolved": 0,
+        "winRate": null,
+        "wilson95": null,
+        "target": [
+          0.5,
+          0.7
+        ],
+        "accepted": false
+      },
+      "bad": {
+        "planned": 0,
+        "wins": 0,
+        "nativeDefeats": 0,
+        "completed": 0,
+        "unresolved": 0,
+        "winRate": null,
+        "wilson95": null,
+        "target": [
+          0.05,
+          0.2
+        ],
+        "accepted": false
+      }
+    }
+  },
+  "scope": "Only independently audited terminal native outcomes enter each arm denominator. Files marked running do not confirm a live PID. Small cohorts do not approve population win-rate targets."
+}
