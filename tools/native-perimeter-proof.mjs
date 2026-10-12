@@ -4,8 +4,12 @@ import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
 import {centerFootprint} from '../src/world/centers.js';
 import {operational} from '../src/simulation/rules.js';
 import {nativeServiceComponentProof} from './native-service-component-proof.mjs';
+import {withNativeProofTerrainQueryCache} from './native-proof-terrain-query-cache.mjs';
 const proofViews=new WeakMap();
-export function nativePerimeterProof(s,nav,plan,bounds,{cache=true,outline=null}={}){
+let terrainQueryCacheEnabled=false,lastTerrainQueryCache=null,terrainTotals={proofs:0,queries:0,hits:0,misses:0,bypassed:0,invalidations:0,peakEntries:0};
+export function setNativePerimeterTerrainQueryCache(enabled){if(typeof enabled!=='boolean')throw Error('Expected explicit QA cache flag');terrainQueryCacheEnabled=enabled;lastTerrainQueryCache=null;terrainTotals={proofs:0,queries:0,hits:0,misses:0,bypassed:0,invalidations:0,peakEntries:0};}
+export function nativePerimeterTerrainQueryDiagnostics(){return {last:lastTerrainQueryCache&&{...lastTerrainQueryCache},totals:{...terrainTotals}};}
+export function nativePerimeterProof(s,nav,plan,bounds,{cache=true,outline=null,terrainCache=terrainQueryCacheEnabled}={}){
  // Native epochs invalidate obstacle/terrain/suppression changes. Bounds and
  // living crops are rechecked below on every call; they do not alter graph
  // geometry. Retain only one bounded native-query view per navigator.
@@ -17,6 +21,9 @@ export function nativePerimeterProof(s,nav,plan,bounds,{cache=true,outline=null}
   view.obstacles=[...nav.obstacles.map(w=>updates.has(w.id)?{...w,...updates.get(w.id)}:w),...plan.pieces];
   if(cache)proofViews.set(nav,{key,state:s,view});
  }
+ return withNativeProofTerrainQueryCache(view,cached=>evaluatePerimeterProof(s,cached,bounds,outline),{enabled:terrainCache,onDiagnostics:stats=>{lastTerrainQueryCache=stats;terrainTotals.proofs++;for(const k of ['queries','hits','misses','bypassed','invalidations'])terrainTotals[k]+=stats[k];terrainTotals.peakEntries=Math.max(terrainTotals.peakEntries,stats.peakEntries);}});
+}
+function evaluatePerimeterProof(s,view,bounds,outline){
  const land=[...s.plants.filter(p=>p.alive),...s.structures.filter(operational).flatMap(c=>centerFootprint(c,s).footprint)],radii=[...new Set(Object.values(ANIMAL_ACTIONS.animals).map(a=>a.presentation.footprint.radius))];
  const checks=[];
  for(const radius of radii){
