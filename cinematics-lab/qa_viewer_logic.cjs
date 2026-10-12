@@ -4,7 +4,7 @@ const fs=require('node:fs');
 const vm=require('node:vm');
 
 class Element{
-  constructor(){this.children=[];this.attributes={};this.style={setProperty(){}};this.classList={add(){},remove(){},toggle(){}};this.textContent='';this.checked=true}
+  constructor(){this.children=[];this.attributes={};this.style={values:{},setProperty(name,value){this.values[name]=value}};this.classList={add(){},remove(){},toggle(){}};this.textContent='';this.checked=true}
   replaceChildren(...children){this.children=children}
   appendChild(child){this.children.push(child)}
   remove(){}
@@ -12,7 +12,8 @@ class Element{
   setAttribute(name,value){this.attributes[name]=value}
   querySelectorAll(){return this.children}
 }
-class FakeImage extends Element{decode(){return Promise.resolve()}}
+class FakeImage extends Element{constructor(){super();FakeImage.all.push(this)}decode(){return Promise.resolve()}}
+FakeImage.all=[];
 class FakeAudio{
   constructor(){this.src='';this.currentTime=0;this.ended=false;this.playCount=0;this.pauseCount=0;FakeAudio.last=this}
   play(){this.playCount++;return Promise.resolve()}
@@ -22,7 +23,7 @@ class FakeAudio{
 }
 const elements=new Map();
 const get=id=>{if(!elements.has(id))elements.set(id,new Element());return elements.get(id)};
-const makeScene=(id,number)=>({id,act:1,scene:number,audio:{ES:{durationSeconds:12},EN:{durationSeconds:8.5}},camera:{panXPercent:0.5,panYPercent:0.2},layers:[{image:`layers/${id}-background.webp`,depth:0},{image:`layers/${id}-foreground.webp`,depth:0.9}],narrationRaw:`${number}.  Texto ES`,narrationRawEN:`${number}.  Exact EN`,artDirection:'woodcut'});
+const makeScene=(id,number)=>({id,act:1,scene:number,audio:{ES:{durationSeconds:12},EN:{durationSeconds:8.5}},camera:{panXPercent:0.5,panYPercent:0.2,zoom:1.04},layers:[{image:`layers/${id}-background.webp`,depth:0},{image:`layers/${id}-foreground.webp`,depth:0.9}],narrationRaw:`${number}.  Texto ES`,narrationRawEN:`${number}.  Exact EN`,artDirection:'woodcut'});
 const payload={manifest:{acts:[{number:1,roman:'I',title:'Título',titleEN:'Title',afterNight:10,closingRaw:'CIERRE',closingRawEN:'CLOSURE',scenes:[makeScene('01',1),makeScene('02',2)]}]},images:{'layers/01-background.webp':'img1b','layers/01-foreground.webp':'img1f','layers/02-background.webp':'img2b','layers/02-foreground.webp':'img2f'},audio:{'01-ES':'voice1es','01-EN':'voice1en','02-ES':'voice2es','02-EN':'voice2en'}};
 get('inline-data').textContent=JSON.stringify(payload);
 const raf=[];const timers=[];
@@ -36,6 +37,15 @@ async function tick(time){
 }
 (async()=>{
   const voice=FakeAudio.last;
+  const [background,foreground]=FakeImage.all;
+  const delta=img=>Math.abs(parseFloat(img.style.values['--layer-end-x'])-parseFloat(img.style.values['--layer-start-x']));
+  assert.ok(delta(background)>1,'background has measurable movement');
+  assert.ok(delta(foreground)>delta(background)*2,'foreground moves at a different speed');
+  assert.ok(parseFloat(foreground.style.values['--layer-end-scale'])>parseFloat(background.style.values['--layer-end-scale']),'camera.zoom adds depth-aware zoom');
+  const css=fs.readFileSync(require('node:path').join(__dirname,'viewer.template.html'),'utf8');
+  assert.match(css,/\.stage\.playing \.layers img\{animation-play-state:running\}/);
+  assert.match(css,/\.stage\.no-parallax \.layers img\{animation:none;transform:none\}/);
+  assert.match(css,/@media\(prefers-reduced-motion:reduce\)\{\.stage \.layers img\{animation:none!important;transform:none!important\}\}/);
   assert.equal(voice.src,'voice1es');assert.equal(voice.playCount,0,'voice waits for decoded illustration');
   await tick(1000);await tick(1050);assert.equal(voice.playCount,1);
   get('next').onclick();get('prev').onclick();

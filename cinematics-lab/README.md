@@ -15,6 +15,7 @@ Para reconstruir el proyecto con las fuentes externas originales:
 5. `python qa_static.py RUTA_GUION_ES.docx RUTA_GUION_EN.docx RUTA_ARCHIVO_100_MP3.zip`
 
 `node qa_viewer_logic.cjs` comprueba navegación rápida, cambio de idioma, pausa y espera al fin de la voz con un DOM/audio simulado. Es una prueba de lógica, no una sustitución de la aceptación visual en navegador.
+`python qa_motion.py` reconstruye ambos extremos del movimiento de las 50 escenas a resolución completa y verifica que fondo y sujeto focal tengan recorridos diferentes sin descubrir bordes.
 
 Los pasos 1–3 usan `python-docx`, Pillow y `ffmpeg`/`ffprobe` instalados localmente. Las imágenes se generaron y editaron con `image_gen`; `sources/provenance.json` y `layers/provenance.json` preservan la relación entre salida de generación, escena y hash. `tinify_assets.py` y `tinify_layers.py` envían los PNG a Tinify y convierten la salida a WebP usando exclusivamente `TINIFY_API_KEY` del entorno del proceso; la credencial no se guarda en el proyecto. Los informes `tinify-report.json` y `tinify-layers-report.json` permiten verificar que la conversión ocurrió realmente. Repetir estos pasos de Tinify requiere una credencial y cuota válidas.
 
