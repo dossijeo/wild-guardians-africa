@@ -1,0 +1,2801 @@
+{
+  "observedAt": "2026-10-12T03:57:22.547Z",
+  "base": "41797669",
+  "comparedToLiveSourceManifest": true,
+  "changed": [
+    "src/simulation/game.js",
+    "src/world/navigation.js",
+    "src/world/work-points.js"
+  ],
+  "newModules": {
+    "src/world/worker-fractional-connector.js": "3ae53c6218313d7aa7e1a542b2847cca8adbd0eb10dcf00df33ebdb5ddc4e32d",
+    "src/world/watering-route-cache.js": "81a563c070a67be12fea57fa046757d79ad6192a5a761b43ac6d61ceb5bd0a1f"
+  },
+  "rows": [
+    {
+      "path": "src/app/autosave-events.js",
+      "before": "28c3d64f89b4acea15f6995dc09046a9ea540b5feb80d5a7bcfd02218bec63db",
+      "after": "28c3d64f89b4acea15f6995dc09046a9ea540b5feb80d5a7bcfd02218bec63db",
+      "materialized": true
+    },
+    {
+      "path": "src/app/desktop-exit.js",
+      "before": "67ec473c63cc7a2d0d948e5034b10a9c29576de9bd6e805832e6b15ff67b182b",
+      "after": "67ec473c63cc7a2d0d948e5034b10a9c29576de9bd6e805832e6b15ff67b182b",
+      "materialized": true
+    },
+    {
+      "path": "src/app/far-world-loading.js",
+      "before": "82d7599875669ec56aa1bb7f155ebeffabbb777a88e11b569a6c456d94b03065",
+      "after": "82d7599875669ec56aa1bb7f155ebeffabbb777a88e11b569a6c456d94b03065",
+      "materialized": true
+    },
+    {
+      "path": "src/app/frame-delta.js",
+      "before": "78164ea684ae4f3eb4e84cb0fec0b716b615248dab9c5811a90fcd1a7ebf078e",
+      "after": "78164ea684ae4f3eb4e84cb0fec0b716b615248dab9c5811a90fcd1a7ebf078e",
+      "materialized": true
+    },
+    {
+      "path": "src/app/loading-audio-qa.js",
+      "before": "f1522754c5eae6a62196e159f40f1bd9a31a2cb4c1fc9f198f31240dc963fa60",
+      "after": "f1522754c5eae6a62196e159f40f1bd9a31a2cb4c1fc9f198f31240dc963fa60",
+      "materialized": true
+    },
+    {
+      "path": "src/app/loading-downloads.js",
+      "before": "34dda467ec9becf1b9cbe82eb5c5d40f0aa1d8f3383f9b3a3f236b46a1befdf3",
+      "after": "34dda467ec9becf1b9cbe82eb5c5d40f0aa1d8f3383f9b3a3f236b46a1befdf3",
+      "materialized": true
+    },
+    {
+      "path": "src/app/loading-gameplay-gpu-qa.js",
+      "before": "b422e36a1bef66baec0248bd965996193c955e3632788a8f23e30c862dca757f",
+      "after": "b422e36a1bef66baec0248bd965996193c955e3632788a8f23e30c862dca757f",
+      "materialized": true
+    },
+    {
+      "path": "src/app/loading-gpu-qa.js",
+      "before": "179e3ab460c9644174d1dea2f8679f960b46d9ee91ce6ed0c2db5e23f1bcd010",
+      "after": "179e3ab460c9644174d1dea2f8679f960b46d9ee91ce6ed0c2db5e23f1bcd010",
+      "materialized": true
+    },
+    {
+      "path": "src/app/loading-progress-qa.js",
+      "before": "ea4259d372e95d944697be39676aba216b1e4088745f18909748b403db98eccd",
+      "after": "ea4259d372e95d944697be39676aba216b1e4088745f18909748b403db98eccd",
+      "materialized": true
+    },
+    {
+      "path": "src/app/loading-progress.js",
+      "before": "806b60554f8d46dbb779e11d0fecdeb677d58f2384aeee6415225769e1e78df3",
+      "after": "806b60554f8d46dbb779e11d0fecdeb677d58f2384aeee6415225769e1e78df3",
+      "materialized": true
+    },
+    {
+      "path": "src/app/loading-recipe.js",
+      "before": "50f27dfec385959739ba7bf8c426c3843cba100f32bac5e4153971daa31bbb21",
+      "after": "50f27dfec385959739ba7bf8c426c3843cba100f32bac5e4153971daa31bbb21",
+      "materialized": true
+    },
+    {
+      "path": "src/app/loading-transfer-owner.js",
+      "before": "84155bf2184afbd8de8ca839e67775890c4af1ea87b2f5074d72ee2de4c71920",
+      "after": "84155bf2184afbd8de8ca839e67775890c4af1ea87b2f5074d72ee2de4c71920",
+      "materialized": true
+    },
+    {
+      "path": "src/app/loading-visual-qa.js",
+      "before": "03fee3a2e1518119fd10730e2c6f381808ee6ff2518123aa71c628da4c5d0dad",
+      "after": "03fee3a2e1518119fd10730e2c6f381808ee6ff2518123aa71c628da4c5d0dad",
+      "materialized": true
+    },
+    {
+      "path": "src/app/main.js",
+      "before": "253a8f5bebf06e132f7fab04d1e44f5b2d292df38e7a4e25ede2e1b59465d3fc",
+      "after": "253a8f5bebf06e132f7fab04d1e44f5b2d292df38e7a4e25ede2e1b59465d3fc",
+      "materialized": true
+    },
+    {
+      "path": "src/app/native-loading-trace.js",
+      "before": "c48d23eebdd1e03e173f4b6dcfde5d54fce6ab5bc7c6b99cb204aa3a8f3bc43a",
+      "after": "c48d23eebdd1e03e173f4b6dcfde5d54fce6ab5bc7c6b99cb204aa3a8f3bc43a",
+      "materialized": true
+    },
+    {
+      "path": "src/app/notices.js",
+      "before": "ee91cc8a043ab97ea51d6b00e2f29af6f59e9957ec64226b4514f2d479243de3",
+      "after": "ee91cc8a043ab97ea51d6b00e2f29af6f59e9957ec64226b4514f2d479243de3",
+      "materialized": true
+    },
+    {
+      "path": "src/app/plant-placement.js",
+      "before": "a13b105fe9ab8920e4b15fecaad85b7bb66bdbf5534b329b7d88deb7c303a141",
+      "after": "a13b105fe9ab8920e4b15fecaad85b7bb66bdbf5534b329b7d88deb7c303a141",
+      "materialized": true
+    },
+    {
+      "path": "src/app/resume-loaded-world.js",
+      "before": "e256ac9acda5855518152ee285709994a107d922619a8277f4313c070f90da21",
+      "after": "e256ac9acda5855518152ee285709994a107d922619a8277f4313c070f90da21",
+      "materialized": true
+    },
+    {
+      "path": "src/app/save-game.js",
+      "before": "5d6cd65b73575145c6e4642cbe83fa535430fd23c4f38f7a16087398c310a9d2",
+      "after": "5d6cd65b73575145c6e4642cbe83fa535430fd23c4f38f7a16087398c310a9d2",
+      "materialized": true
+    },
+    {
+      "path": "src/app/spell-placement.js",
+      "before": "31fc42fb627669b761fe74cf585f3efd3dc7c1db82c350b3b2093b9fb2dfede9",
+      "after": "31fc42fb627669b761fe74cf585f3efd3dc7c1db82c350b3b2093b9fb2dfede9",
+      "materialized": true
+    },
+    {
+      "path": "src/app/tool-label.js",
+      "before": "de4f9c702921dea547446ae3564723c1917b85c7bc3107a85199c74087269a12",
+      "after": "de4f9c702921dea547446ae3564723c1917b85c7bc3107a85199c74087269a12",
+      "materialized": true
+    },
+    {
+      "path": "src/app/world-resolution.js",
+      "before": "066ddfa71023cfda9353a8bd8ecad164d3a9977ac13aafbe8a5dc14d084efdaa",
+      "after": "066ddfa71023cfda9353a8bd8ecad164d3a9977ac13aafbe8a5dc14d084efdaa",
+      "materialized": true
+    },
+    {
+      "path": "src/audio/ambient-audio.js",
+      "before": "e626380b26b39ca39acbf44bb48913dd60bf68a16ea7f991f2e6d7fbb6f4f9e8",
+      "after": "e626380b26b39ca39acbf44bb48913dd60bf68a16ea7f991f2e6d7fbb6f4f9e8",
+      "materialized": true
+    },
+    {
+      "path": "src/audio/animal-audio.js",
+      "before": "5e1d90a8110b0fa8e8999c1f48dbde540f60ece9aad51272d2f129fd22abe1b9",
+      "after": "5e1d90a8110b0fa8e8999c1f48dbde540f60ece9aad51272d2f129fd22abe1b9",
+      "materialized": true
+    },
+    {
+      "path": "src/audio/audio.js",
+      "before": "d2164036571e83cbaec80225a71716119010a358d0d3d37f1df8d7c59e21364f",
+      "after": "d2164036571e83cbaec80225a71716119010a358d0d3d37f1df8d7c59e21364f",
+      "materialized": true
+    },
+    {
+      "path": "src/audio/destruction-audio.js",
+      "before": "94de98cf0f807f9a598ae1212545d3a306faa6ccb3dae5ec7ec0ebe6741debec",
+      "after": "94de98cf0f807f9a598ae1212545d3a306faa6ccb3dae5ec7ec0ebe6741debec",
+      "materialized": true
+    },
+    {
+      "path": "src/audio/farm-actions-data.js",
+      "before": "c656f548c7c75728aa74f103ab76f4695f6e5baf2085080349bc1d5633b98560",
+      "after": "c656f548c7c75728aa74f103ab76f4695f6e5baf2085080349bc1d5633b98560",
+      "materialized": true
+    },
+    {
+      "path": "src/audio/farm-contact-audio.js",
+      "before": "aa60c1e122395555491a9e9d23cc5a51ec4e412f920e79db2988af020c6a6700",
+      "after": "aa60c1e122395555491a9e9d23cc5a51ec4e412f920e79db2988af020c6a6700",
+      "materialized": true
+    },
+    {
+      "path": "src/audio/guardian-audio.js",
+      "before": "6b9453056c0ece148ca4e6d895dadc7f8d5cebc901d16744478a2d047afb2ae8",
+      "after": "6b9453056c0ece148ca4e6d895dadc7f8d5cebc901d16744478a2d047afb2ae8",
+      "materialized": true
+    },
+    {
+      "path": "src/audio/loading-audio.js",
+      "before": "4be394acbcbdb7b40402a75cd06e03f9049795245f09774a036963e71778935b",
+      "after": "4be394acbcbdb7b40402a75cd06e03f9049795245f09774a036963e71778935b",
+      "materialized": true
+    },
+    {
+      "path": "src/audio/movement-audio.js",
+      "before": "52439fae0d1dd7c30a59bf5ae6074bd17fa38fd3ed1349f0f24c0911dbee1669",
+      "after": "52439fae0d1dd7c30a59bf5ae6074bd17fa38fd3ed1349f0f24c0911dbee1669",
+      "materialized": true
+    },
+    {
+      "path": "src/audio/music-disk-cache.js",
+      "before": "b694cf5ec582c34ab71f28f7d3fb2a6afa8fbca6ee8a37e868feb90d73a29d8e",
+      "after": "b694cf5ec582c34ab71f28f7d3fb2a6afa8fbca6ee8a37e868feb90d73a29d8e",
+      "materialized": true
+    },
+    {
+      "path": "src/audio/music-load-queue.js",
+      "before": "32fd558b5a95a1495c387e99cdf335d6361cd6a70a7e702da2754ee05b78db46",
+      "after": "32fd558b5a95a1495c387e99cdf335d6361cd6a70a7e702da2754ee05b78db46",
+      "materialized": true
+    },
+    {
+      "path": "src/audio/music-mixer.js",
+      "before": "d455f91a3e180214a56865886447244b72e48e4d5e4d46c7468efd11cacfab2b",
+      "after": "d455f91a3e180214a56865886447244b72e48e4d5e4d46c7468efd11cacfab2b",
+      "materialized": true
+    },
+    {
+      "path": "src/audio/music-policy.js",
+      "before": "7be642794e96f63352943801a432ae6a77577cbd830870e3bc53020289e22d7e",
+      "after": "7be642794e96f63352943801a432ae6a77577cbd830870e3bc53020289e22d7e",
+      "materialized": true
+    },
+    {
+      "path": "src/audio/music-range-reader.js",
+      "before": "7be7b2d77b2d9a060da4d975625cbbc4cc043793ef6c6ff0f5b4a20764551a6c",
+      "after": "7be7b2d77b2d9a060da4d975625cbbc4cc043793ef6c6ff0f5b4a20764551a6c",
+      "materialized": true
+    },
+    {
+      "path": "src/audio/music-stream.js",
+      "before": "f539aae18edef4e1f0fde8ed5d7bb4816217c950f88ece1e68b48f95d06d1735",
+      "after": "f539aae18edef4e1f0fde8ed5d7bb4816217c950f88ece1e68b48f95d06d1735",
+      "materialized": true
+    },
+    {
+      "path": "src/audio/music-transport.js",
+      "before": "7290b935bfc8d3c49ebc970c111a489cbd125106d8f30509df318495bee64ab1",
+      "after": "7290b935bfc8d3c49ebc970c111a489cbd125106d8f30509df318495bee64ab1",
+      "materialized": true
+    },
+    {
+      "path": "src/audio/music-window-pool.js",
+      "before": "3971737a096fe090ac6f58a88848a622730a8b4c1d6db3def7af5fb261142db7",
+      "after": "3971737a096fe090ac6f58a88848a622730a8b4c1d6db3def7af5fb261142db7",
+      "materialized": true
+    },
+    {
+      "path": "src/audio/music-window-transport.js",
+      "before": "9bb65ad7236c8135386b04398311398d57abaaefad1eedfc8fb64b6f862c75f7",
+      "after": "9bb65ad7236c8135386b04398311398d57abaaefad1eedfc8fb64b6f862c75f7",
+      "materialized": true
+    },
+    {
+      "path": "src/audio/opus-window-recipe.js",
+      "before": "d14a3e960f4df218c52cffcb383484569984f2bb3145e428c2ad7daa0f30576a",
+      "after": "d14a3e960f4df218c52cffcb383484569984f2bb3145e428c2ad7daa0f30576a",
+      "materialized": true
+    },
+    {
+      "path": "src/audio/power-ready-audio.js",
+      "before": "6df7f06ba1c42b13215fdf5e1c74395cd941551f00fb4b773345f3666fa79800",
+      "after": "6df7f06ba1c42b13215fdf5e1c74395cd941551f00fb4b773345f3666fa79800",
+      "materialized": true
+    },
+    {
+      "path": "src/audio/raid-arrival-audio.js",
+      "before": "02e719b9ea457e7a516fce6a011f336d5da9d18dae2fee7eb44d81a67f9181d7",
+      "after": "02e719b9ea457e7a516fce6a011f336d5da9d18dae2fee7eb44d81a67f9181d7",
+      "materialized": true
+    },
+    {
+      "path": "src/audio/spirit-voice.js",
+      "before": "d6c83b842e16ac8732406c6408a2ed2d26aefc5306d179e93dc970d6ddd2f5d0",
+      "after": "d6c83b842e16ac8732406c6408a2ed2d26aefc5306d179e93dc970d6ddd2f5d0",
+      "materialized": true
+    },
+    {
+      "path": "src/audio/start-window-music.js",
+      "before": "7c0400baedcbcd9391fbb64ffc272f5a674b589308489cbdd181df2756952bf3",
+      "after": "7c0400baedcbcd9391fbb64ffc272f5a674b589308489cbdd181df2756952bf3",
+      "materialized": true
+    },
+    {
+      "path": "src/audio/structure-audio.js",
+      "before": "0a0f3faf70eea7c4597146880f34a80049c067510ac3f2af5efaaf744274da21",
+      "after": "0a0f3faf70eea7c4597146880f34a80049c067510ac3f2af5efaaf744274da21",
+      "materialized": true
+    },
+    {
+      "path": "src/audio/ui-audio.js",
+      "before": "5ce70f1ae025c9b94652ebe434ccc1d78e4c4c5bbf3922936a167488ab1e9472",
+      "after": "5ce70f1ae025c9b94652ebe434ccc1d78e4c4c5bbf3922936a167488ab1e9472",
+      "materialized": true
+    },
+    {
+      "path": "src/audio/unlock-audio.js",
+      "before": "0ca86929a579abce2a48afa457f69d4c9aee658c0142566a0645b992a64e6f4c",
+      "after": "0ca86929a579abce2a48afa457f69d4c9aee658c0142566a0645b992a64e6f4c",
+      "materialized": true
+    },
+    {
+      "path": "src/audio/work-audio.js",
+      "before": "4ff3ec8a45bd446d1f0f9606cafb157f3666aedbc1d3d8bbf69ba6c2c9f23d37",
+      "after": "4ff3ec8a45bd446d1f0f9606cafb157f3666aedbc1d3d8bbf69ba6c2c9f23d37",
+      "materialized": true
+    },
+    {
+      "path": "src/audio/worker-audio.js",
+      "before": "08f03288dfc052fe07e7b0349aee620d3ece46278abbede81c80200d3ebbdec4",
+      "after": "08f03288dfc052fe07e7b0349aee620d3ece46278abbede81c80200d3ebbdec4",
+      "materialized": true
+    },
+    {
+      "path": "src/persistence/browser-saves.js",
+      "before": "615aec54e704e207734581542b048812c88870bf2fd84c1173d31abd60f12454",
+      "after": "615aec54e704e207734581542b048812c88870bf2fd84c1173d31abd60f12454",
+      "materialized": true
+    },
+    {
+      "path": "src/persistence/exit-connector-snapshot.js",
+      "before": "18f309b964cf27d9adef05cf37fef35d55615e0fb6c8aac2e066081627ba03f3",
+      "after": "18f309b964cf27d9adef05cf37fef35d55615e0fb6c8aac2e066081627ba03f3",
+      "materialized": true
+    },
+    {
+      "path": "src/persistence/raid-contention-snapshot.js",
+      "before": "558d18f382fde7fe1d23bf80234327ef0dbf4a843aa88fbf22ed510dcd677f0d",
+      "after": "558d18f382fde7fe1d23bf80234327ef0dbf4a843aa88fbf22ed510dcd677f0d",
+      "materialized": true
+    },
+    {
+      "path": "src/persistence/raid-pressure-snapshot.js",
+      "before": "9d43194a704ea3f324bb57cf12247750fa87ee4006720125b593da484ad6634c",
+      "after": "9d43194a704ea3f324bb57cf12247750fa87ee4006720125b593da484ad6634c",
+      "materialized": true
+    },
+    {
+      "path": "src/persistence/snapshot-decode-worker.js",
+      "before": "c6f4a0730aad0fe3336ebfcd711c9b8982655e7abb033fe32ab321f2ee6fd643",
+      "after": "c6f4a0730aad0fe3336ebfcd711c9b8982655e7abb033fe32ab321f2ee6fd643",
+      "materialized": true
+    },
+    {
+      "path": "src/persistence/snapshot-decoder.js",
+      "before": "716dfb5337d4af867f3a25e422d317679c32a0c6d2acacffe973c60365401881",
+      "after": "716dfb5337d4af867f3a25e422d317679c32a0c6d2acacffe973c60365401881",
+      "materialized": true
+    },
+    {
+      "path": "src/persistence/snapshot-stream.js",
+      "before": "8eba763cec972bd3ef7935f60c0b57131298057d875a86f01f12af50e010df5e",
+      "after": "8eba763cec972bd3ef7935f60c0b57131298057d875a86f01f12af50e010df5e",
+      "materialized": true
+    },
+    {
+      "path": "src/persistence/snapshots.js",
+      "before": "0b95f044daec22d7e0de3fc840ab7c5d551e870733fa1addddf3ad0239c53457",
+      "after": "0b95f044daec22d7e0de3fc840ab7c5d551e870733fa1addddf3ad0239c53457",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/african-toon-source.js",
+      "before": "38f19f485e448fcf381732ae2e4267012a3fee19cfbec17925bd06f86221bff4",
+      "after": "38f19f485e448fcf381732ae2e4267012a3fee19cfbec17925bd06f86221bff4",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/african-toon.js",
+      "before": "168c176ade6a1fba87cfc282a291da38cfd1f0611cd59d09df59d531a11b0138",
+      "after": "168c176ade6a1fba87cfc282a291da38cfd1f0611cd59d09df59d531a11b0138",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/agriculture-vfx.js",
+      "before": "d848d4922381475c49c16c2dd8237ee2c6e985fa6a268e74336cdf45f50cc05c",
+      "after": "d848d4922381475c49c16c2dd8237ee2c6e985fa6a268e74336cdf45f50cc05c",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/animal-actions.js",
+      "before": "e61c4673216dcda4df00c621cd0ddac422ef6d4dab629b86d037ab5b438e2e1f",
+      "after": "e61c4673216dcda4df00c621cd0ddac422ef6d4dab629b86d037ab5b438e2e1f",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/animal-preload.js",
+      "before": "e518990bdd7292783eee32c34c34908ad068d36ef0424c57c51564d13288c5e6",
+      "after": "e518990bdd7292783eee32c34c34908ad068d36ef0424c57c51564d13288c5e6",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/asset-clip.js",
+      "before": "bca12e2ff388660b3552751747c7b318929485fd513c03dcf6e31fb2b3422db9",
+      "after": "bca12e2ff388660b3552751747c7b318929485fd513c03dcf6e31fb2b3422db9",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/asset-fetch.js",
+      "before": "2674a18a07907d750da642d7f2a4bfc4d29f3569b4e557985319c471432e2171",
+      "after": "2674a18a07907d750da642d7f2a4bfc4d29f3569b4e557985319c471432e2171",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/asset-groups.js",
+      "before": "85e0e0d3b18ba144cd4db3876bb030b403de59c8f9aa5331c1a140f980a8d152",
+      "after": "85e0e0d3b18ba144cd4db3876bb030b403de59c8f9aa5331c1a140f980a8d152",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/asset-lod.js",
+      "before": "de24f135bdd804094399ba599746de1bec7d60e672fd8d04d9afa8f77848e740",
+      "after": "de24f135bdd804094399ba599746de1bec7d60e672fd8d04d9afa8f77848e740",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/asset-shadows.js",
+      "before": "d3b4218d0abe271aaa5f07848cf3acb649fa1f5cc187b77a832e3fc6574d86f8",
+      "after": "d3b4218d0abe271aaa5f07848cf3acb649fa1f5cc187b77a832e3fc6574d86f8",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/asset-surface.js",
+      "before": "372130bd53cbe45211c0431b4c86f7534a3a1c34b9ee76adfed3c456db10bf4f",
+      "after": "372130bd53cbe45211c0431b4c86f7534a3a1c34b9ee76adfed3c456db10bf4f",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/asset-transfer.js",
+      "before": "7c0db4ccf829d8759cd78a749bff382fb10d9ce7d15be2766dda7ca03b119454",
+      "after": "7c0db4ccf829d8759cd78a749bff382fb10d9ce7d15be2766dda7ca03b119454",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/asset-url.js",
+      "before": "7ae72fe0b9e040bd08419dd4746cf5c1d20d46521aa31a057a6586e021b587d2",
+      "after": "7ae72fe0b9e040bd08419dd4746cf5c1d20d46521aa31a057a6586e021b587d2",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/assets.js",
+      "before": "a013c25c0a96d7af114b81f5a4088fd04f445a3016b51c4290cab25d01e3b65e",
+      "after": "a013c25c0a96d7af114b81f5a4088fd04f445a3016b51c4290cab25d01e3b65e",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/attack-vfx.js",
+      "before": "53f924a1cdd7f63a6b3695b24dedef10dd5d7eb3d521f32110c9ed8c10ee2be2",
+      "after": "53f924a1cdd7f63a6b3695b24dedef10dd5d7eb3d521f32110c9ed8c10ee2be2",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/biome-backdrop.js",
+      "before": "817f88c341beee88113d5003f70adc0da203b974ddbf4887962a3482d4f70e95",
+      "after": "817f88c341beee88113d5003f70adc0da203b974ddbf4887962a3482d4f70e95",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/biome-ground.js",
+      "before": "77daf3037906a91fb6d0b63c95f3f7ee11ad606653b219d83c9417adc4607bc4",
+      "after": "77daf3037906a91fb6d0b63c95f3f7ee11ad606653b219d83c9417adc4607bc4",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/biome-material-source.js",
+      "before": "b1868d2b0f01b2f1a7380c975fd31d9e86acd03aab5c2bbf197ecad2f193fb3d",
+      "after": "b1868d2b0f01b2f1a7380c975fd31d9e86acd03aab5c2bbf197ecad2f193fb3d",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/biome-tangents-worker.js",
+      "before": "5eb8f93bbe1c8c047b2de5b3039a312e7778d75bb108c0257d95a8b6ca33067e",
+      "after": "5eb8f93bbe1c8c047b2de5b3039a312e7778d75bb108c0257d95a8b6ca33067e",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/biome-tangents.js",
+      "before": "8e8a1e3523280635285d7d37a18d7c343069ba9c3b3f31127e42c25957c555b4",
+      "after": "8e8a1e3523280635285d7d37a18d7c343069ba9c3b3f31127e42c25957c555b4",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/building-bounds.js",
+      "before": "0af18ca567c72446ff1268d5017dd0b43c11ee3b26b5ec175986415f16826f2d",
+      "after": "0af18ca567c72446ff1268d5017dd0b43c11ee3b26b5ec175986415f16826f2d",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/building-data-worker.js",
+      "before": "a3f2ac25a441585f274c18f5b3fdb75b72c5cb2f2d172f3bc4776095e230de2b",
+      "after": "a3f2ac25a441585f274c18f5b3fdb75b72c5cb2f2d172f3bc4776095e230de2b",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/building-depth.js",
+      "before": "ddc80b1c25da23cc3096c5be5c9f318a3e5064c3b2653c598b40fdafde50471c",
+      "after": "ddc80b1c25da23cc3096c5be5c9f318a3e5064c3b2653c598b40fdafde50471c",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/building-effects.js",
+      "before": "3749b6cea1becba3cc9b6bd23c02315a89dcdd4927f81e51e2104689c622dd9e",
+      "after": "3749b6cea1becba3cc9b6bd23c02315a89dcdd4927f81e51e2104689c622dd9e",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/buildings.js",
+      "before": "e30b9a477817ce55c887326b05a8afc7f4d0f6da6a895ed995686a775325a109",
+      "after": "e30b9a477817ce55c887326b05a8afc7f4d0f6da6a895ed995686a775325a109",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/camera-building-registry.js",
+      "before": "452c31c63455d78bc20b2f91a49677b352e21b63eb6e3a7a064dbadc16a6b925",
+      "after": "452c31c63455d78bc20b2f91a49677b352e21b63eb6e3a7a064dbadc16a6b925",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/camera-exclusion-motion.js",
+      "before": "dc1c5b4199970bdfa187b4f86cba3ff962e1bce52ee1bb9945e69bfe62c12bc9",
+      "after": "dc1c5b4199970bdfa187b4f86cba3ff962e1bce52ee1bb9945e69bfe62c12bc9",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/camera-model-volume.js",
+      "before": "b75005ef3d281451a44ebf48b45d5ac13f204b67430e6b57775a9cbeb885c8a7",
+      "after": "b75005ef3d281451a44ebf48b45d5ac13f204b67430e6b57775a9cbeb885c8a7",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/camera-terrain-exclusion.js",
+      "before": "bbd3b98c5e7ef77d2f1452d3ae53dc40fd2d6ddec8d68bf2b62083814858027c",
+      "after": "bbd3b98c5e7ef77d2f1452d3ae53dc40fd2d6ddec8d68bf2b62083814858027c",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/camera-tree-registry.js",
+      "before": "c633f402f22599ab12f13c84a3ef09719c97c40f3373c8078b9b1ed76396e522",
+      "after": "c633f402f22599ab12f13c84a3ef09719c97c40f3373c8078b9b1ed76396e522",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/camera-volume-index.js",
+      "before": "d04b316915c1b1d1c239a487eec5a47d03d89f6a09a3b301218557767ded5d1f",
+      "after": "d04b316915c1b1d1c239a487eec5a47d03d89f6a09a3b301218557767ded5d1f",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/camera-volume-sweep.js",
+      "before": "54d7f404ea832400668993fc77a7e39d7ece2c0c64994c404ff6f1c02e0c5e31",
+      "after": "54d7f404ea832400668993fc77a7e39d7ece2c0c64994c404ff6f1c02e0c5e31",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/camera-wall-registry.js",
+      "before": "9161c4403c03959323206049240b549d55cc1beaaae2a314f29ee6d8f98707c6",
+      "after": "9161c4403c03959323206049240b549d55cc1beaaae2a314f29ee6d8f98707c6",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/chunk-data.js",
+      "before": "d2c1bd2459ac16da31a649344f6dff59e18eb0a969a3a981d2e712eba57eb487",
+      "after": "d2c1bd2459ac16da31a649344f6dff59e18eb0a969a3a981d2e712eba57eb487",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/chunk-stream.js",
+      "before": "cd82962e009960ca28816b5202abe66ec8485d3023c4d2aff1305a97c1f476c8",
+      "after": "cd82962e009960ca28816b5202abe66ec8485d3023c4d2aff1305a97c1f476c8",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/chunk-worker.js",
+      "before": "594b3758b1311dab41b79d296d3c58efa8a2a3e5ded10c3d27194d36533b166c",
+      "after": "594b3758b1311dab41b79d296d3c58efa8a2a3e5ded10c3d27194d36533b166c",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/clone-runtime-material.js",
+      "before": "77e41dc3042a669438aef6d1ed7a56fc2c28c029e2619721f9d9cab3ad3bbbad",
+      "after": "77e41dc3042a669438aef6d1ed7a56fc2c28c029e2619721f9d9cab3ad3bbbad",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/contact-source.js",
+      "before": "26afee12b1afbdfda8657d0ca317b131500c16a6646d4882e1ca5934b3fe7b33",
+      "after": "26afee12b1afbdfda8657d0ca317b131500c16a6646d4882e1ca5934b3fe7b33",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/contacts.js",
+      "before": "eeae21abfdf8e48f7842e2b1fc832291a12c1e3eff7e25a51cca5da413f2a52c",
+      "after": "eeae21abfdf8e48f7842e2b1fc832291a12c1e3eff7e25a51cca5da413f2a52c",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/crop-batch.js",
+      "before": "96f37896195dda9cbf2c2e2e9570c982305c83cdb1e20b3e36671b7754ab233c",
+      "after": "96f37896195dda9cbf2c2e2e9570c982305c83cdb1e20b3e36671b7754ab233c",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/crop-library.js",
+      "before": "1f6308773529e162d449129a90a31b448e48696a6b766c30fe678401c21842ef",
+      "after": "1f6308773529e162d449129a90a31b448e48696a6b766c30fe678401c21842ef",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/depth-capture.js",
+      "before": "3269257416d858eff9223027645a22ffeec07e2c84b84005d3b900b18e246ad6",
+      "after": "3269257416d858eff9223027645a22ffeec07e2c84b84005d3b900b18e246ad6",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/depth-recipes.js",
+      "before": "ff697ff3246bd6497d7ce847e7007a8791976fc9845778cf00df268a2b26b316",
+      "after": "ff697ff3246bd6497d7ce847e7007a8791976fc9845778cf00df268a2b26b316",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/destruction-effects-native.js",
+      "before": "0f3e27f5b379370c53e5472a921b6c983708abf07fa65bd08cc1fe829e473aae",
+      "after": "0f3e27f5b379370c53e5472a921b6c983708abf07fa65bd08cc1fe829e473aae",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/destruction-native.js",
+      "before": "363ffd6447b051739da75d65a6a2be1431094f0df588361158de83023ceab7b4",
+      "after": "363ffd6447b051739da75d65a6a2be1431094f0df588361158de83023ceab7b4",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/environment-endpoints.js",
+      "before": "bf8379c4818c57ae5191cc6bd61bd40a48c969dcb6433e3dc4e6ba74ce27d62e",
+      "after": "bf8379c4818c57ae5191cc6bd61bd40a48c969dcb6433e3dc4e6ba74ce27d62e",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/far-atmosphere.js",
+      "before": "1f157b5843f5c19aa57130492522c10dd3af56090e28fad44a5efba72bd18f86",
+      "after": "1f157b5843f5c19aa57130492522c10dd3af56090e28fad44a5efba72bd18f86",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/far-vegetation-profile.js",
+      "before": "b3412df451e16101ed07b13d8a0594a1d42fe6ec11b77a1f6e8362db18c57413",
+      "after": "b3412df451e16101ed07b13d8a0594a1d42fe6ec11b77a1f6e8362db18c57413",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/far-vegetation.js",
+      "before": "7f983687f854f624f375afe52b421ad79ceb3fbcc1c6d7f5d443a32f1d93165f",
+      "after": "7f983687f854f624f375afe52b421ad79ceb3fbcc1c6d7f5d443a32f1d93165f",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/farm-focus.js",
+      "before": "a976981220f0784169e17f0fa6bd716a3b7a7176f67f7c9e2ecd1b8d01f39fab",
+      "after": "a976981220f0784169e17f0fa6bd716a3b7a7176f67f7c9e2ecd1b8d01f39fab",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/fine-noise.js",
+      "before": "fedb902cb8431f52edf06fb01be28a6c23b011b2dae05b945b0cdbde6d3c3fa8",
+      "after": "fedb902cb8431f52edf06fb01be28a6c23b011b2dae05b945b0cdbde6d3c3fa8",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/fixed-pose.js",
+      "before": "5fbff66fd8ee54a68855a1b5903647d400295b4ef87648326f8e7d26719f13bb",
+      "after": "5fbff66fd8ee54a68855a1b5903647d400295b4ef87648326f8e7d26719f13bb",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/fluid-lighting-source.js",
+      "before": "f35a4dff50adcdc0a7b9480a000dc94a79208ced8187bd14186f63c1656fb0e8",
+      "after": "f35a4dff50adcdc0a7b9480a000dc94a79208ced8187bd14186f63c1656fb0e8",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/fluid-preload.js",
+      "before": "aae24fef19edf75416fb1d4b61560a5446cc504965a471859a8a21d03886c060",
+      "after": "aae24fef19edf75416fb1d4b61560a5446cc504965a471859a8a21d03886c060",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/footsteps-data.js",
+      "before": "9e861fef77c65cd909930657e88e7b0e72f09b1631d3d49eaeb04dc78506e467",
+      "after": "9e861fef77c65cd909930657e88e7b0e72f09b1631d3d49eaeb04dc78506e467",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/gate-articulation.js",
+      "before": "c05c2657f550203f1a6f37367bf090622f65b9da5234b1bfb68a0d34fcfaa130",
+      "after": "c05c2657f550203f1a6f37367bf090622f65b9da5234b1bfb68a0d34fcfaa130",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/gl-resource-epoch.js",
+      "before": "861fd3bacd4a0347a9c9852d1fdd2fbc2700707b759f89523c97507ec5c72313",
+      "after": "861fd3bacd4a0347a9c9852d1fdd2fbc2700707b759f89523c97507ec5c72313",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/ground-lighting-source.js",
+      "before": "4453d69137a12c28d5cc9ad04420335cb6c7c19be40bbb1486f3dc361902b7f6",
+      "after": "4453d69137a12c28d5cc9ad04420335cb6c7c19be40bbb1486f3dc361902b7f6",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/ground-mask.js",
+      "before": "d857b1ff241ff7ad75df7d89884a28268ea66663bfd2bac98c2ea35259db0c5f",
+      "after": "d857b1ff241ff7ad75df7d89884a28268ea66663bfd2bac98c2ea35259db0c5f",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/hand-terrain.js",
+      "before": "02a770bd3376f5e3e3c362d1da8497f9b792b8bbc23a854f1c940cda3f3c4542",
+      "after": "02a770bd3376f5e3e3c362d1da8497f9b792b8bbc23a854f1c940cda3f3c4542",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/hand-visual-scale.js",
+      "before": "ac9b8838f06365f5bd1d136e5c6e25cdda53b890dbc27dbff6aab975fa8cd871",
+      "after": "ac9b8838f06365f5bd1d136e5c6e25cdda53b890dbc27dbff6aab975fa8cd871",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/hands-native.js",
+      "before": "3ba7d1cc7197960fb58b190cd4f75c4eb00831d977210596e53da003635e44eb",
+      "after": "3ba7d1cc7197960fb58b190cd4f75c4eb00831d977210596e53da003635e44eb",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/hands.js",
+      "before": "1a9187e2d71418e8ef6abe82a3834aa58b7af12befe21d7f67236be4429dcf60",
+      "after": "1a9187e2d71418e8ef6abe82a3834aa58b7af12befe21d7f67236be4429dcf60",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/horizon-data.js",
+      "before": "ec545f5afa5b79f5e21c1ef9bd4fa3a451e5b8d23dcae4abd10c5e7364ffcdc7",
+      "after": "ec545f5afa5b79f5e21c1ef9bd4fa3a451e5b8d23dcae4abd10c5e7364ffcdc7",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/horizon-generator.js",
+      "before": "9da8145f8d4193c49251e448d307a70d1448cb107adc3553c1adf004eb6565b9",
+      "after": "9da8145f8d4193c49251e448d307a70d1448cb107adc3553c1adf004eb6565b9",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/horizon-source.js",
+      "before": "4df34a186796651bc9501d19c2a335bb50ed05e58c5a840b104a83ef8b4b18ce",
+      "after": "4df34a186796651bc9501d19c2a335bb50ed05e58c5a840b104a83ef8b4b18ce",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/horizon-worker.js",
+      "before": "74bdd8ce171318209f53fe9d18f13945db97ff2f3c5706645b1066b30cb82ed4",
+      "after": "74bdd8ce171318209f53fe9d18f13945db97ff2f3c5706645b1066b30cb82ed4",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/horizon.js",
+      "before": "5e61386b2f7f765b6e0df24b5dcd1fa7880721da50a1a02243c3ed585785188b",
+      "after": "5e61386b2f7f765b6e0df24b5dcd1fa7880721da50a1a02243c3ed585785188b",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/initial-crop-capacity.js",
+      "before": "dd6caa4f7ee9e6a69dbc4b6cafab6ece0b72b35ef707748227853d4c2312e5dc",
+      "after": "dd6caa4f7ee9e6a69dbc4b6cafab6ece0b72b35ef707748227853d4c2312e5dc",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/initial-far-region.js",
+      "before": "04c9c8deb20ccca583dc0bb4641ab62a44a806d3addf40df76367764a6d4e87b",
+      "after": "04c9c8deb20ccca583dc0bb4641ab62a44a806d3addf40df76367764a6d4e87b",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/loading-cinematic.js",
+      "before": "644f4dfc67b9ff794381bd5dd530c4bc58293bc1bd037565231e7aedba2e7206",
+      "after": "644f4dfc67b9ff794381bd5dd530c4bc58293bc1bd037565231e7aedba2e7206",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/loading-diorama.js",
+      "before": "f1b54c76d1a64e7d6294857b29c41179bbe68c886c5496e4b6f84bb5d9734d67",
+      "after": "f1b54c76d1a64e7d6294857b29c41179bbe68c886c5496e4b6f84bb5d9734d67",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/loading-focus-light.js",
+      "before": "6ce9ff60f3fa68e2ee1f5e3393163de42819604671451ac983e3cf4562b21c9a",
+      "after": "6ce9ff60f3fa68e2ee1f5e3393163de42819604671451ac983e3cf4562b21c9a",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/loading-frame-slack.js",
+      "before": "7ccff810f10c5a8660bfac051a453c566825995f24e1f862b27c006358ea55f5",
+      "after": "7ccff810f10c5a8660bfac051a453c566825995f24e1f862b27c006358ea55f5",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/loading-image-decoder.js",
+      "before": "88b3d1a980847f2c1d3325310b2d36d6b38643387ebb8d9ba9f43f6c7cb638a3",
+      "after": "88b3d1a980847f2c1d3325310b2d36d6b38643387ebb8d9ba9f43f6c7cb638a3",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/loading-image-worker.js",
+      "before": "489cfb5e55d348d01dc1bd1c5b0b33a9de79897eeae2252d15509292f1ddb27f",
+      "after": "489cfb5e55d348d01dc1bd1c5b0b33a9de79897eeae2252d15509292f1ddb27f",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/loading-image.js",
+      "before": "60257a2298746183697a6d05a4132e7afa87fa3fd9bbf4707ea9aa88c817bcf7",
+      "after": "60257a2298746183697a6d05a4132e7afa87fa3fd9bbf4707ea9aa88c817bcf7",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/loading-mist.js",
+      "before": "aea4e364952d63ffa681cea0e70c8fedace3c501d8e2ecdf598e9beda4d4630c",
+      "after": "aea4e364952d63ffa681cea0e70c8fedace3c501d8e2ecdf598e9beda4d4630c",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/loading-orbit.js",
+      "before": "c3bda6cc138454d9890f70710ebe0bc72fbc359115123c745a0a4ba8459e3ab4",
+      "after": "c3bda6cc138454d9890f70710ebe0bc72fbc359115123c745a0a4ba8459e3ab4",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/loading-plants.js",
+      "before": "e0e30746fdaf3d616c59aa01c146f7061f23878ef6ebf5c44c722dec5b32b854",
+      "after": "e0e30746fdaf3d616c59aa01c146f7061f23878ef6ebf5c44c722dec5b32b854",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/loading-programs.js",
+      "before": "dbf8a88021bc47d1ffdf2ae8bad8dad9c7a74671e9d8a2338f90f3f9eb511c54",
+      "after": "dbf8a88021bc47d1ffdf2ae8bad8dad9c7a74671e9d8a2338f90f3f9eb511c54",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/loading-sparkles.js",
+      "before": "6ddbd3659e6d05fd94b87902f63b897bca2c530a37279f683e937c24e7f6e3b2",
+      "after": "6ddbd3659e6d05fd94b87902f63b897bca2c530a37279f683e937c24e7f6e3b2",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/loading-sync-queue.js",
+      "before": "b348ead57264bbe8a2a3107022957129a9639312d5910e7b7576589863ab0592",
+      "after": "b348ead57264bbe8a2a3107022957129a9639312d5910e7b7576589863ab0592",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/loading-sync-witness.js",
+      "before": "bb02d552af8fc6aaace81960e3f32bfff63fd7b58727f4cdccf3bc605afe74ed",
+      "after": "bb02d552af8fc6aaace81960e3f32bfff63fd7b58727f4cdccf3bc605afe74ed",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/loading-texture-owner.js",
+      "before": "5920c3567fe43888a300655bd1bd01b8ca2181405e2dc86192fe2a5984cc451b",
+      "after": "5920c3567fe43888a300655bd1bd01b8ca2181405e2dc86192fe2a5984cc451b",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/loading-textures.js",
+      "before": "61781eb644e83762b2be46bf7a84b010c347b28b89c2b25743905083df88142f",
+      "after": "61781eb644e83762b2be46bf7a84b010c347b28b89c2b25743905083df88142f",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/loading-yield-budget.js",
+      "before": "576ae137b4ef2e156547ca74704c244a2c4891a283a86ee590ca04c972d72c17",
+      "after": "576ae137b4ef2e156547ca74704c244a2c4891a283a86ee590ca04c972d72c17",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/locomotion-contact.js",
+      "before": "7bb834c9a38f24df8b98697e178c163e6b85913b532530bbf219502e02bcf4c4",
+      "after": "7bb834c9a38f24df8b98697e178c163e6b85913b532530bbf219502e02bcf4c4",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/locomotion-vfx.js",
+      "before": "b190573bb77339942e7854ba4f3492d53a42d80bf4c02c3519d4bdc20d01f6be",
+      "after": "b190573bb77339942e7854ba4f3492d53a42d80bf4c02c3519d4bdc20d01f6be",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/lod-source.js",
+      "before": "49a0917e60b6f0649e6e5ae6b0e5a40984872f086e1ed22f8b8773fc41774723",
+      "after": "49a0917e60b6f0649e6e5ae6b0e5a40984872f086e1ed22f8b8773fc41774723",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/material-registry.js",
+      "before": "559425eced77d9c70f1f468a3f44712fbb7e6dac4a81c02ac6ec6144e63d1981",
+      "after": "559425eced77d9c70f1f468a3f44712fbb7e6dac4a81c02ac6ec6144e63d1981",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/material-vfx.js",
+      "before": "7260b6378fbed29b785929df19b6bcd692395a90bab9fe89a15c782a4ad049d9",
+      "after": "7260b6378fbed29b785929df19b6bcd692395a90bab9fe89a15c782a4ad049d9",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/mountain-arc-composition.js",
+      "before": "2e74be75749c1315a9544424d86b2140c891dcbb5cffcc6a5dd9d2a92c8ea2f4",
+      "after": "2e74be75749c1315a9544424d86b2140c891dcbb5cffcc6a5dd9d2a92c8ea2f4",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/mountain-arcs.js",
+      "before": "fc64efaa3cc4168fda88292688572ba0135fc59d9e71647f93510f3f8e6dff04",
+      "after": "fc64efaa3cc4168fda88292688572ba0135fc59d9e71647f93510f3f8e6dff04",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/mountain-backdrop-profile.js",
+      "before": "489e08ef7229ffe0cdd4c98115ade9b8c795bd681510557286cb7cea1e788198",
+      "after": "489e08ef7229ffe0cdd4c98115ade9b8c795bd681510557286cb7cea1e788198",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/mud-patches.js",
+      "before": "82a822646d59aff574941ecfedacd186b9615a62d6746c034cd12c045ec3a086",
+      "after": "82a822646d59aff574941ecfedacd186b9615a62d6746c034cd12c045ec3a086",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/native-shadow-source.js",
+      "before": "a24df807db7dece526688fde33f95029bf2ccef8d4087df432c31edb51ac4099",
+      "after": "a24df807db7dece526688fde33f95029bf2ccef8d4087df432c31edb51ac4099",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/native-shadow.js",
+      "before": "90cb5c1944c08a7eff86623dbcc676510bd2320b0cbffeea4fd20109957ccf9e",
+      "after": "90cb5c1944c08a7eff86623dbcc676510bd2320b0cbffeea4fd20109957ccf9e",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/obstruction-source.js",
+      "before": "303b17569e81b1432ff09cecb6e18c8fbf765940435703aaf420eb80fa03c3eb",
+      "after": "303b17569e81b1432ff09cecb6e18c8fbf765940435703aaf420eb80fa03c3eb",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/obstruction.js",
+      "before": "87e067bce2e334443c20df7b0fd7a5149464cc1645e0307d8682c8185ebc12c7",
+      "after": "87e067bce2e334443c20df7b0fd7a5149464cc1645e0307d8682c8185ebc12c7",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/prepare-biome-tangents.js",
+      "before": "00d7d4dd6c80d343d21db92daec9edb28872801df79c1940082ad57e4fb1e79e",
+      "after": "00d7d4dd6c80d343d21db92daec9edb28872801df79c1940082ad57e4fb1e79e",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/prepare-building-data.js",
+      "before": "2d5eecda046c6da98195d94a6ad83fa65173671b5f5178e9a701076677f9c72f",
+      "after": "2d5eecda046c6da98195d94a6ad83fa65173671b5f5178e9a701076677f9c72f",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/prepare-sky-pixels.js",
+      "before": "96c09dfa37ad3ce0262390fdb5424dc22fd427315f7f5d5e23794c623e5be1fd",
+      "after": "96c09dfa37ad3ce0262390fdb5424dc22fd427315f7f5d5e23794c623e5be1fd",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/program-bindings.js",
+      "before": "14921c6249d4e0a42b809a5b318958a2e6950898133933cf982b99e58f70a575",
+      "after": "14921c6249d4e0a42b809a5b318958a2e6950898133933cf982b99e58f70a575",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/prop-transition-residency.js",
+      "before": "6037b6a984e7b1739ee538922a373205739b281e02cf018a2af2445f291450c5",
+      "after": "6037b6a984e7b1739ee538922a373205739b281e02cf018a2af2445f291450c5",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/raid-camera.js",
+      "before": "1a122a88450d0444f8773dd3086d572e898e2763e642aef829f41bc465031b95",
+      "after": "1a122a88450d0444f8773dd3086d572e898e2763e642aef829f41bc465031b95",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/render-origin.js",
+      "before": "92aa71a8f0da4880af1111059fb954f68927ca0e53ec2fcb09bd4b3fe4b2c3ef",
+      "after": "92aa71a8f0da4880af1111059fb954f68927ca0e53ec2fcb09bd4b3fe4b2c3ef",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/render-quality.js",
+      "before": "efa709167aec19bdcbf8e424fd9c3a900d18aea4e0041cda415ae55f1ea70dee",
+      "after": "efa709167aec19bdcbf8e424fd9c3a900d18aea4e0041cda415ae55f1ea70dee",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/resident-props.js",
+      "before": "6fcf03c592f3dda144a41ab09654f361f5d8fc03414facc1a8ea2fdacc645167",
+      "after": "6fcf03c592f3dda144a41ab09654f361f5d8fc03414facc1a8ea2fdacc645167",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/scene.js",
+      "before": "e9a2dd528c5c69ee43d1f897b42f808e981618790c07d3c326990a51626232fa",
+      "after": "e9a2dd528c5c69ee43d1f897b42f808e981618790c07d3c326990a51626232fa",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/screen-preload.js",
+      "before": "25583d9cabcc1eec4b8cfbcc2740adc8b06960e1db7c7179c37de5b69ee9c925",
+      "after": "25583d9cabcc1eec4b8cfbcc2740adc8b06960e1db7c7179c37de5b69ee9c925",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/screen-target.js",
+      "before": "4773a43804b5c8d8d1253abaca1de7e7862f5c558470ac66bc46091390c5b3ca",
+      "after": "4773a43804b5c8d8d1253abaca1de7e7862f5c558470ac66bc46091390c5b3ca",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/shader-failure.js",
+      "before": "f001066980209d98e42c4e2dea9cc917ae0a4fc5c07ee6c2a46cdefe7d3d8330",
+      "after": "f001066980209d98e42c4e2dea9cc917ae0a4fc5c07ee6c2a46cdefe7d3d8330",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/shadow-cache.js",
+      "before": "acbd6427e6df859b8d07c5d14f15131ec4317962cc4026e97ee9070be37a28d6",
+      "after": "acbd6427e6df859b8d07c5d14f15131ec4317962cc4026e97ee9070be37a28d6",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/shadow-camera.js",
+      "before": "16878af5582368a089b1a8184722a402728f20995dda4abd5b6ff178ee8ffdaf",
+      "after": "16878af5582368a089b1a8184722a402728f20995dda4abd5b6ff178ee8ffdaf",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/shield-vfx.js",
+      "before": "929869d13254b267c16d3aea5065b19775e0642a266bb93130798c66357b1bcd",
+      "after": "929869d13254b267c16d3aea5065b19775e0642a266bb93130798c66357b1bcd",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/skin-envelope.js",
+      "before": "11f3c2558c3fff79e602032c5cea5998f06c011013514ba1c84f7490b64de7cb",
+      "after": "11f3c2558c3fff79e602032c5cea5998f06c011013514ba1c84f7490b64de7cb",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/sky-pixels-worker.js",
+      "before": "b8795e5d54361938e782403fe8fc48ae491416280cf0ba1acee61558f033416a",
+      "after": "b8795e5d54361938e782403fe8fc48ae491416280cf0ba1acee61558f033416a",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/sky-pixels.js",
+      "before": "873e99b22d3ece66b5b7535bf7e3022cc87074b90129833a50a84b92ad7e4e39",
+      "after": "873e99b22d3ece66b5b7535bf7e3022cc87074b90129833a50a84b92ad7e4e39",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/sky-source.js",
+      "before": "c721eeb78b426e9ed427929f6ffbab43aeee393d8b6148f777e998d41ca8516e",
+      "after": "c721eeb78b426e9ed427929f6ffbab43aeee393d8b6148f777e998d41ca8516e",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/sky.js",
+      "before": "68bdb13271abb34d9fe0ca11d86de153e3371061d83652e852648ef554e25dd9",
+      "after": "68bdb13271abb34d9fe0ca11d86de153e3371061d83652e852648ef554e25dd9",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/spell-preview.js",
+      "before": "1165b8c28ae96f0002146c0e8bfe605454b97a7dea9569c60e46fac2f68ca432",
+      "after": "1165b8c28ae96f0002146c0e8bfe605454b97a7dea9569c60e46fac2f68ca432",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/standard-depth.js",
+      "before": "2ae5fc20702dddb52adf6342306869ba0ce0f7e19ddf57094560239058467a25",
+      "after": "2ae5fc20702dddb52adf6342306869ba0ce0f7e19ddf57094560239058467a25",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/step-ripples.js",
+      "before": "53e2c0e2d933cf3395d552fa88c03dd6956bb553fedf7ea752320ae9d1fc3af0",
+      "after": "53e2c0e2d933cf3395d552fa88c03dd6956bb553fedf7ea752320ae9d1fc3af0",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/surface-alpha.js",
+      "before": "364f5e80b46b8025f63a9a3f2107e182f356cd2a84b5e939e48394dddde857fa",
+      "after": "364f5e80b46b8025f63a9a3f2107e182f356cd2a84b5e939e48394dddde857fa",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/surface-source.js",
+      "before": "1ef6e828e008b8b5835ba5c6a65cb76c6ce9a89932ae5a92ef53b219e3fd2c37",
+      "after": "1ef6e828e008b8b5835ba5c6a65cb76c6ce9a89932ae5a92ef53b219e3fd2c37",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/terrain-camera.js",
+      "before": "08e4ebc2816d153c5637f40fdae6eefb669223304af2728a974af6b66235aa29",
+      "after": "08e4ebc2816d153c5637f40fdae6eefb669223304af2728a974af6b66235aa29",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/terrain-geometry.js",
+      "before": "6d162ef4c8bca76720cfd4f7e1b1137d18ac27c89475fb89dcd77c6e9770469a",
+      "after": "6d162ef4c8bca76720cfd4f7e1b1137d18ac27c89475fb89dcd77c6e9770469a",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/terrain-source.js",
+      "before": "65342c7cd1294539a841d825b0e41b01387d3b80d9f22dbe6945ed4eb2b4b21e",
+      "after": "65342c7cd1294539a841d825b0e41b01387d3b80d9f22dbe6945ed4eb2b4b21e",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/terrain-surface.js",
+      "before": "a818d56f862efc03229ee5c99c49e8a9d9d9424f14451fc187e622a0fb95a9c7",
+      "after": "a818d56f862efc03229ee5c99c49e8a9d9d9424f14451fc187e622a0fb95a9c7",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/tutorial-hand-target.js",
+      "before": "ead03c2cf173dd5ebe6ae1d436c01d7c017d4a092ff5efce0c43aff9a2500a1e",
+      "after": "ead03c2cf173dd5ebe6ae1d436c01d7c017d4a092ff5efce0c43aff9a2500a1e",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/tutorial-placement-focus.js",
+      "before": "ef3ae824af73a8e7ce597196568b0655095c52c81b5dcf40e22044beee4d5973",
+      "after": "ef3ae824af73a8e7ce597196568b0655095c52c81b5dcf40e22044beee4d5973",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/vfx-native.js",
+      "before": "abf38e604a91454343fe4f2f1d0afe36a366d4b9cbcdfaeb97c0764ef069b61a",
+      "after": "abf38e604a91454343fe4f2f1d0afe36a366d4b9cbcdfaeb97c0764ef069b61a",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/vfx-preload.js",
+      "before": "fdb806b3ac11fd5687030aade54dd2b00d5e623defa482769fd9c2f90ad20dcb",
+      "after": "fdb806b3ac11fd5687030aade54dd2b00d5e623defa482769fd9c2f90ad20dcb",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/vfx.js",
+      "before": "fd7a97a7189e73aa7a2587d026c2e4213873dfc40964da893894623c01d1f6f2",
+      "after": "fd7a97a7189e73aa7a2587d026c2e4213873dfc40964da893894623c01d1f6f2",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/volcanic-source.js",
+      "before": "e0ceca36d4a0e22a7242193cfd1a779f6099b6084e70cf8550803142d4a06bb7",
+      "after": "e0ceca36d4a0e22a7242193cfd1a779f6099b6084e70cf8550803142d4a06bb7",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/wall-drawing.js",
+      "before": "944cb30fd586bebaaee9de0870f4a156d2791112d077608240938a1e83265e0e",
+      "after": "944cb30fd586bebaaee9de0870f4a156d2791112d077608240938a1e83265e0e",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/wall-stroke-preview.js",
+      "before": "041270fbbbc0b97ce55de34f6fc2f349b4ee9b851eedb1fd5b34a66d2b8d9a68",
+      "after": "041270fbbbc0b97ce55de34f6fc2f349b4ee9b851eedb1fd5b34a66d2b8d9a68",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/walls-native.js",
+      "before": "a88132dfbb75cea63be1ff9a54746b55f094f8faf045a2c4d9a7e39ac6e074df",
+      "after": "a88132dfbb75cea63be1ff9a54746b55f094f8faf045a2c4d9a7e39ac6e074df",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/walls.js",
+      "before": "aee132b99503aeb9699a9a077270b476d2691b7c390f66b8c4d15c2e6c22f05a",
+      "after": "aee132b99503aeb9699a9a077270b476d2691b7c390f66b8c4d15c2e6c22f05a",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/water-data.js",
+      "before": "2f25d944f51fc0ce465fe210ea84498d6b66cd15f285e6536697f6ea7b04eb87",
+      "after": "2f25d944f51fc0ce465fe210ea84498d6b66cd15f285e6536697f6ea7b04eb87",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/water-geometry.js",
+      "before": "e9349620761793a2b2ca9fab30a1405e5b1f3c18f57b2aa02819760084849536",
+      "after": "e9349620761793a2b2ca9fab30a1405e5b1f3c18f57b2aa02819760084849536",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/water-source.js",
+      "before": "f30b9423d15c34d3192ff9fd2650b26eb6ab27f1e1399fc85037ac2d7fa39a04",
+      "after": "f30b9423d15c34d3192ff9fd2650b26eb6ab27f1e1399fc85037ac2d7fa39a04",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/watering-emitter.js",
+      "before": "212f848d7bc520c6e6085668f75aad9799c4adc8a79be44e93db12d64eed8c7c",
+      "after": "212f848d7bc520c6e6085668f75aad9799c4adc8a79be44e93db12d64eed8c7c",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/work-target-index.js",
+      "before": "ba471df2ac8bb30d0c284ba66cab543c65846889e6f76e311f0c888b72cc9f8b",
+      "after": "ba471df2ac8bb30d0c284ba66cab543c65846889e6f76e311f0c888b72cc9f8b",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/work-vfx.js",
+      "before": "63b37240a14fdea400715597138b62d75b51e31daa5210bfa1510f8b637dbe43",
+      "after": "63b37240a14fdea400715597138b62d75b51e31daa5210bfa1510f8b637dbe43",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/worker-actions.js",
+      "before": "8d08e86a5a8be9485bf890c5c2afcea5660c524b0227dc90a4060a1a5931518d",
+      "after": "8d08e86a5a8be9485bf890c5c2afcea5660c524b0227dc90a4060a1a5931518d",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/worker-tool-visibility.js",
+      "before": "a41b8479af4b8d34744147a4641b3cbce1fcfe1135169cf4cfa8cf421a654e8a",
+      "after": "a41b8479af4b8d34744147a4641b3cbce1fcfe1135169cf4cfa8cf421a654e8a",
+      "materialized": true
+    },
+    {
+      "path": "src/rendering/world-atmosphere.js",
+      "before": "d45957a6d2c8b0f58f4a185ee22efff28f617a8f40b5f43b576a3769559b9099",
+      "after": "d45957a6d2c8b0f58f4a185ee22efff28f617a8f40b5f43b576a3769559b9099",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/active-crops.js",
+      "before": "64e8fab6f86309ddc629c48238aa5826c2cd12cf28fd9e433fc80a1e82cbce52",
+      "after": "64e8fab6f86309ddc629c48238aa5826c2cd12cf28fd9e433fc80a1e82cbce52",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/actor-fluid-clearance.js",
+      "before": "d5a3bce4eeaeb649cc2b1a47c1a23b8188106ac84fcb8ec1b7fb92a6ae9e3df4",
+      "after": "d5a3bce4eeaeb649cc2b1a47c1a23b8188106ac84fcb8ec1b7fb92a6ae9e3df4",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/actor-motion.js",
+      "before": "d79a027a4e3e2933592039904ccb3f6226c7d97cd215299eb7b55fde733371cc",
+      "after": "d79a027a4e3e2933592039904ccb3f6226c7d97cd215299eb7b55fde733371cc",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/agricultural-power.js",
+      "before": "a0d1e0557e6c045b772ee414b9d133642786744fe21b2a925b18f8e4568afe3b",
+      "after": "a0d1e0557e6c045b772ee414b9d133642786744fe21b2a925b18f8e4568afe3b",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/animal-actions-data.js",
+      "before": "4128cd5e0d3ebc77beceeb5147ed0164a58add9d2e2f7e609519552854a29163",
+      "after": "4128cd5e0d3ebc77beceeb5147ed0164a58add9d2e2f7e609519552854a29163",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/animal-exit-connectors.js",
+      "before": "9fde8398d970b875f19004df7b1a1e7908cd93cc4837b6834a1ee2440f73caa1",
+      "after": "9fde8398d970b875f19004df7b1a1e7908cd93cc4837b6834a1ee2440f73caa1",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/animal-footprint-connectors.js",
+      "before": "d79ff9944b820eb0e23fca6adb3ba462e8ce46b25088b08a29da588b98e54abd",
+      "after": "d79ff9944b820eb0e23fca6adb3ba462e8ce46b25088b08a29da588b98e54abd",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/animal-grid-exit-bridge.js",
+      "before": "a61ed44bf78de503285a5302c8954c53c109e74fa0dc6f40ef4dee4795fd4ff6",
+      "after": "a61ed44bf78de503285a5302c8954c53c109e74fa0dc6f40ef4dee4795fd4ff6",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/animal-route-clearance.js",
+      "before": "d7035a80efcf906a5af429d405d9e03c61df3e3b72e8247ac155507dc060e339",
+      "after": "d7035a80efcf906a5af429d405d9e03c61df3e3b72e8247ac155507dc060e339",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/animal-slope-recovery.js",
+      "before": "0f7dba5129ed27498d4f888716197bcb418062b1ece718c6b60b60b007065ae4",
+      "after": "0f7dba5129ed27498d4f888716197bcb418062b1ece718c6b60b60b007065ae4",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/balance.js",
+      "before": "5bd6c9663c020d0ce65dca045686c95e3beb3a59886f240e95a30b249b0492cf",
+      "after": "5bd6c9663c020d0ce65dca045686c95e3beb3a59886f240e95a30b249b0492cf",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/budget.js",
+      "before": "1d2172cb2e726faa1079ca6599193152b75d0a0df5e6fd8b75513457db1ecae8",
+      "after": "1d2172cb2e726faa1079ca6599193152b75d0a0df5e6fd8b75513457db1ecae8",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/canyon-raid-formation.js",
+      "before": "f50e40eb022df46e04bf47da89d7039b0ec00c77c1a8de7cf2b3a5b85d10e2ca",
+      "after": "f50e40eb022df46e04bf47da89d7039b0ec00c77c1a8de7cf2b3a5b85d10e2ca",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/crop-components.js",
+      "before": "941d4a1296d61d525940e99b8825fa416a9fead796233ca87f38428951af8844",
+      "after": "941d4a1296d61d525940e99b8825fa416a9fead796233ca87f38428951af8844",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/crop-impact-health.js",
+      "before": "84349eeecbfa5fa3e92e50b91f718e6e97d9278b132f562424af2545ac88ffaa",
+      "after": "84349eeecbfa5fa3e92e50b91f718e6e97d9278b132f562424af2545ac88ffaa",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/crops.js",
+      "before": "659c4d4457d18e32a8f99168b59ca34ec5dd62c38fb42336906bbd3b2be37d8b",
+      "after": "659c4d4457d18e32a8f99168b59ca34ec5dd62c38fb42336906bbd3b2be37d8b",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/defensive-groups.js",
+      "before": "9baf067afa9d882ef8fffb56164a0a55b73dc5da1f7a716291614bf5c48d146e",
+      "after": "9baf067afa9d882ef8fffb56164a0a55b73dc5da1f7a716291614bf5c48d146e",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/encounters.js",
+      "before": "5c55e938e8bf4d0aa24f57f4bfd0fe32bc5e5bab452c8fb1a6a5c2eac1d3f53c",
+      "after": "5c55e938e8bf4d0aa24f57f4bfd0fe32bc5e5bab452c8fb1a6a5c2eac1d3f53c",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/events.js",
+      "before": "000aeda60cd156a77ee4026031fd64b7a6e15273b0402060f5691a993fff719a",
+      "after": "000aeda60cd156a77ee4026031fd64b7a6e15273b0402060f5691a993fff719a",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/game.js",
+      "before": "be99c1dd2dca1a13db8a0862c99a63b2a06ea085895f18b298881b0621ee632b",
+      "after": "b6a122228adcc39bf581b9cb73b3273dbfbde5ee2d1b7d381188d9b1b6bb4a0b",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/gates.js",
+      "before": "07af1e6aa93653f7aeed8e1622533331cc534a95aaae5b9607d4c1b9f00f7734",
+      "after": "07af1e6aa93653f7aeed8e1622533331cc534a95aaae5b9607d4c1b9f00f7734",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/idle.js",
+      "before": "f4db64b55d5274d9166110b91ae3667846a88a4796abf5f9a48869e602028ba5",
+      "after": "f4db64b55d5274d9166110b91ae3667846a88a4796abf5f9a48869e602028ba5",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/locomotion-calibration.js",
+      "before": "5296866d7b463db2761497c576050d2fa4b6d5af2cc0bf1ebf0bdae4cda02e86",
+      "after": "5296866d7b463db2761497c576050d2fa4b6d5af2cc0bf1ebf0bdae4cda02e86",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/locomotion.js",
+      "before": "8019c30d12424f253a7904fea9ee8f76208b4396eb476325408ee33425e2b6cc",
+      "after": "8019c30d12424f253a7904fea9ee8f76208b4396eb476325408ee33425e2b6cc",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/money.js",
+      "before": "17d50a3f28b7db202a9a80b57a53d4f312ad35593191bacff0e47f823e15708d",
+      "after": "17d50a3f28b7db202a9a80b57a53d4f312ad35593191bacff0e47f823e15708d",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/raid-agricultural-impact.js",
+      "before": "475aef39c9d152e409f80cedd51b2f9e099ddbfd687f0212643f0bec93ef6435",
+      "after": "475aef39c9d152e409f80cedd51b2f9e099ddbfd687f0212643f0bec93ef6435",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/raid-composition-index.js",
+      "before": "21bd73be8ede1b7d9449eafe8a0fe0ed89a339eeb9e7523ab78017efb3546322",
+      "after": "21bd73be8ede1b7d9449eafe8a0fe0ed89a339eeb9e7523ab78017efb3546322",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/raid-contention.js",
+      "before": "e915994e1d4fbe3ee1328cd8fc79d4c842769e13a3838d361b10157c00f5972d",
+      "after": "e915994e1d4fbe3ee1328cd8fc79d4c842769e13a3838d361b10157c00f5972d",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/raid-exterior-connectivity.js",
+      "before": "d7557a805f0bd3e7f80344ee7b4621c64827afa40c70762c778944ad1bf456c1",
+      "after": "d7557a805f0bd3e7f80344ee7b4621c64827afa40c70762c778944ad1bf456c1",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/raid-exterior-detour.js",
+      "before": "d80f387663e9740e04cf6116e3e7202f41188efebc1df8869c83bf38d26a42b4",
+      "after": "d80f387663e9740e04cf6116e3e7202f41188efebc1df8869c83bf38d26a42b4",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/raid-exterior-entry.js",
+      "before": "b0b66880814b077dcc6ef55c6115b1401c1f838ff0c2ee617e03b90eac65877d",
+      "after": "b0b66880814b077dcc6ef55c6115b1401c1f838ff0c2ee617e03b90eac65877d",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/raid-notice.js",
+      "before": "58181d603aa786d49f58093a316816414e1429f8a3546277f792a1c1af64f422",
+      "after": "58181d603aa786d49f58093a316816414e1429f8a3546277f792a1c1af64f422",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/raid-pressure-budget.js",
+      "before": "11a5f3b8f0351854a2f13a75a12caacfbf9e59e8359446d98e81636827d1860d",
+      "after": "11a5f3b8f0351854a2f13a75a12caacfbf9e59e8359446d98e81636827d1860d",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/raid-pressure-plan.js",
+      "before": "c7ee59edb65e4ff657a48537ab480454ccbe48ddec920cb987c3b8250ea0ebd9",
+      "after": "c7ee59edb65e4ff657a48537ab480454ccbe48ddec920cb987c3b8250ea0ebd9",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/raid-target-reservations.js",
+      "before": "3d3c86ed25e4bb157f04261e597b982f95898dc8f5f0c989e0bef8b10c87c23b",
+      "after": "3d3c86ed25e4bb157f04261e597b982f95898dc8f5f0c989e0bef8b10c87c23b",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/raids.js",
+      "before": "8daa672b4a92831166fbde7be3c10cc6e123d3d8fadac008c791210fef9ebcfd",
+      "after": "8daa672b4a92831166fbde7be3c10cc6e123d3d8fadac008c791210fef9ebcfd",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/rules.js",
+      "before": "8a1852489bccf1e31bbb59ed0bd9cf31f0b2bfe7aeb0798513155cbba1af4435",
+      "after": "8a1852489bccf1e31bbb59ed0bd9cf31f0b2bfe7aeb0798513155cbba1af4435",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/settlement-observers.js",
+      "before": "ddf96eeb60a2cbf0fbeb422442fb519672887900986c30e96c444adf99136932",
+      "after": "ddf96eeb60a2cbf0fbeb422442fb519672887900986c30e96c444adf99136932",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/structure-presentation.js",
+      "before": "a6f1a4464b612ae433dae8cc60e5af002434b0b1a6ff12806688ce787db40fb4",
+      "after": "a6f1a4464b612ae433dae8cc60e5af002434b0b1a6ff12806688ce787db40fb4",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/tasks.js",
+      "before": "97909386cb23254856ca20157250b58cbf868152c5b36495600dd803bec70f92",
+      "after": "97909386cb23254856ca20157250b58cbf868152c5b36495600dd803bec70f92",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/village-expansion-price.js",
+      "before": "45899b8f6e4221b621998aae87ac26a7b9cb5839a9befb5a4d6dc96bc8f9107a",
+      "after": "45899b8f6e4221b621998aae87ac26a7b9cb5839a9befb5a4d6dc96bc8f9107a",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/work-urgency.js",
+      "before": "7beb9462c24b6aac3124e3103cb7eaa48d5d026540793ce5b623a3cda513b0ca",
+      "after": "7beb9462c24b6aac3124e3103cb7eaa48d5d026540793ce5b623a3cda513b0ca",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/worker-entity-lookup.js",
+      "before": "f41dabef4422f1e8b638cfdb4e40e38270b72d3541752edc6207b175c0b807c3",
+      "after": "f41dabef4422f1e8b638cfdb4e40e38270b72d3541752edc6207b175c0b807c3",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/worker-return-route.js",
+      "before": "8b3c8c87f88bbed47fadcf8896417cc2dc8c55ea75db74fda9d67091df7c3f7c",
+      "after": "8b3c8c87f88bbed47fadcf8896417cc2dc8c55ea75db74fda9d67091df7c3f7c",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/worker-route-clearance.js",
+      "before": "36f855f7ca81a20cd852d543da36dfe42746f48429d58d6af482d531a9b8a7c4",
+      "after": "36f855f7ca81a20cd852d543da36dfe42746f48429d58d6af482d531a9b8a7c4",
+      "materialized": true
+    },
+    {
+      "path": "src/simulation/workforce.js",
+      "before": "36a82b57781279a4e2f0ff01ec68a65c7a5570ec59049acf140da4efd66e1ec9",
+      "after": "36a82b57781279a4e2f0ff01ec68a65c7a5570ec59049acf140da4efd66e1ec9",
+      "materialized": true
+    },
+    {
+      "path": "src/tutorial/action-pause.js",
+      "before": "c4340cc95f70d51f66574321511b944cd2fd675dc77c1b1b095a62a7c1c9a442",
+      "after": "c4340cc95f70d51f66574321511b944cd2fd675dc77c1b1b095a62a7c1c9a442",
+      "materialized": true
+    },
+    {
+      "path": "src/tutorial/agricultural-guide.js",
+      "before": "8b21d59a25d1902945b0888a6068df77e9a8bd38157e3fefd6f62d3064f35bae",
+      "after": "8b21d59a25d1902945b0888a6068df77e9a8bd38157e3fefd6f62d3064f35bae",
+      "materialized": true
+    },
+    {
+      "path": "src/tutorial/controller.js",
+      "before": "3b592376289f746e7593370fb1c223b6a1c73bea3fe903805c555afeb619f2ae",
+      "after": "3b592376289f746e7593370fb1c223b6a1c73bea3fe903805c555afeb619f2ae",
+      "materialized": true
+    },
+    {
+      "path": "src/tutorial/daily-messages.js",
+      "before": "927dedb695cb78146cb3beb02a8aa53774d727650424e0a7c0589596a0c22b99",
+      "after": "927dedb695cb78146cb3beb02a8aa53774d727650424e0a7c0589596a0c22b99",
+      "materialized": true
+    },
+    {
+      "path": "src/tutorial/guardian-copy.js",
+      "before": "dcf7ad0fe82aa4485551aec9725435b1b411ffda5a477fe62fdbcd547f44a3c3",
+      "after": "dcf7ad0fe82aa4485551aec9725435b1b411ffda5a477fe62fdbcd547f44a3c3",
+      "materialized": true
+    },
+    {
+      "path": "src/tutorial/magic-reminders.js",
+      "before": "cee5b479b67839ecf3512946fb8bef636a862122d00f1f24086b1f5b75a8e270",
+      "after": "cee5b479b67839ecf3512946fb8bef636a862122d00f1f24086b1f5b75a8e270",
+      "materialized": true
+    },
+    {
+      "path": "src/tutorial/messages.js",
+      "before": "91435c600ea72046710c8e8dadab14dfbe165763197e62b6bd83dacceec0219f",
+      "after": "91435c600ea72046710c8e8dadab14dfbe165763197e62b6bd83dacceec0219f",
+      "materialized": true
+    },
+    {
+      "path": "src/tutorial/profile.js",
+      "before": "eb7b4a8eb8e92838a53d819c3c8aaa94358ac2fa226c73bbdc7fc64f88644559",
+      "after": "eb7b4a8eb8e92838a53d819c3c8aaa94358ac2fa226c73bbdc7fc64f88644559",
+      "materialized": true
+    },
+    {
+      "path": "src/ui/agricultural-notice.js",
+      "before": "a321ba9c7df5b32d7cdd0de1c4650bd634f71ac8f79c4ef0d65510796f8db9c7",
+      "after": "a321ba9c7df5b32d7cdd0de1c4650bd634f71ac8f79c4ef0d65510796f8db9c7",
+      "materialized": true
+    },
+    {
+      "path": "src/ui/build-permissions.js",
+      "before": "d317484aaed6435d43879aa55f15935240eed6db2bf894146130c5aec2ff1cb0",
+      "after": "d317484aaed6435d43879aa55f15935240eed6db2bf894146130c5aec2ff1cb0",
+      "materialized": true
+    },
+    {
+      "path": "src/ui/command-feedback.js",
+      "before": "8203183badd332f6cd142e716cffea93103aeb9d242495874f64a54ff7cb22f3",
+      "after": "8203183badd332f6cd142e716cffea93103aeb9d242495874f64a54ff7cb22f3",
+      "materialized": true
+    },
+    {
+      "path": "src/ui/event-cards.js",
+      "before": "d1f0cc60effe2655119a129bb59f29324723a152971e6ac10d40c9e373448187",
+      "after": "d1f0cc60effe2655119a129bb59f29324723a152971e6ac10d40c9e373448187",
+      "materialized": true
+    },
+    {
+      "path": "src/ui/frame-image-loader.js",
+      "before": "324d62f80c60b180192b417ef8d60f94d4273304355edd005b314ac8a2fd109d",
+      "after": "324d62f80c60b180192b417ef8d60f94d4273304355edd005b314ac8a2fd109d",
+      "materialized": true
+    },
+    {
+      "path": "src/ui/game-juice-model.js",
+      "before": "abf56e73915b672ab712d0c27a6f65faa59f33522b52d16ee1b04cb725c41c8c",
+      "after": "abf56e73915b672ab712d0c27a6f65faa59f33522b52d16ee1b04cb725c41c8c",
+      "materialized": true
+    },
+    {
+      "path": "src/ui/game-juice.js",
+      "before": "a3b85e57bc4ac33873ebc29a7c262fb907cbd0aa509ec3dc56887a8711a63e1c",
+      "after": "a3b85e57bc4ac33873ebc29a7c262fb907cbd0aa509ec3dc56887a8711a63e1c",
+      "materialized": true
+    },
+    {
+      "path": "src/ui/game-surfaces.js",
+      "before": "2b8899430d5aabdf44583ab38ad611b459e88342235479e6c7aa6c1cede6de21",
+      "after": "2b8899430d5aabdf44583ab38ad611b459e88342235479e6c7aa6c1cede6de21",
+      "materialized": true
+    },
+    {
+      "path": "src/ui/guardian-lifecycle.js",
+      "before": "2c90773032acc173d4f30870b5a48a95735b947d32bf99592c8f71dacd8c24ce",
+      "after": "2c90773032acc173d4f30870b5a48a95735b947d32bf99592c8f71dacd8c24ce",
+      "materialized": true
+    },
+    {
+      "path": "src/ui/guardian-native.js",
+      "before": "70f5e8fa1df98208a7a37945aefd41a0938c18b2e1a7d17289b4ed000b0f6f5d",
+      "after": "70f5e8fa1df98208a7a37945aefd41a0938c18b2e1a7d17289b4ed000b0f6f5d",
+      "materialized": true
+    },
+    {
+      "path": "src/ui/guardian.js",
+      "before": "35403e83cef7c413d0937efc5804d46bececd62402c66302923ca4e1863efa6e",
+      "after": "35403e83cef7c413d0937efc5804d46bececd62402c66302923ca4e1863efa6e",
+      "materialized": true
+    },
+    {
+      "path": "src/ui/hiring-confirmation.js",
+      "before": "a70e61255fc1b9b59175d41fc38596523e27e5b3ef39a2da87cafd3be387ee06",
+      "after": "a70e61255fc1b9b59175d41fc38596523e27e5b3ef39a2da87cafd3be387ee06",
+      "materialized": true
+    },
+    {
+      "path": "src/ui/hud-shortcuts.js",
+      "before": "39024e7a9bc074d6160b46103d162c8b7906a19b7aebd1b2fb80b314184cad49",
+      "after": "39024e7a9bc074d6160b46103d162c8b7906a19b7aebd1b2fb80b314184cad49",
+      "materialized": true
+    },
+    {
+      "path": "src/ui/library-viewer.js",
+      "before": "0913ec57ce4e540a99b21c1d31bef34c68078a58de0d62512df3ea55a89b4514",
+      "after": "0913ec57ce4e540a99b21c1d31bef34c68078a58de0d62512df3ea55a89b4514",
+      "materialized": true
+    },
+    {
+      "path": "src/ui/loading-copy.js",
+      "before": "d665171d52cf50996e224ba464125630e679cdb55ffe73f335809a80eaf00465",
+      "after": "d665171d52cf50996e224ba464125630e679cdb55ffe73f335809a80eaf00465",
+      "materialized": true
+    },
+    {
+      "path": "src/ui/loading-failure.js",
+      "before": "31d5f28eec912ba2e0a26cc6ae563e212a771892c5b818de3db840c8a2e05f3a",
+      "after": "31d5f28eec912ba2e0a26cc6ae563e212a771892c5b818de3db840c8a2e05f3a",
+      "materialized": true
+    },
+    {
+      "path": "src/ui/loading-frame-preparation.js",
+      "before": "c31df92a6db5a76d230419dafa8f2667073d8992c51737229dc2dc14452f625a",
+      "after": "c31df92a6db5a76d230419dafa8f2667073d8992c51737229dc2dc14452f625a",
+      "materialized": true
+    },
+    {
+      "path": "src/ui/loading-frame.js",
+      "before": "3ad080e90e424bb1a733ee05871041e322855242eb6a11f66d07461d5f771704",
+      "after": "3ad080e90e424bb1a733ee05871041e322855242eb6a11f66d07461d5f771704",
+      "materialized": true
+    },
+    {
+      "path": "src/ui/loading-ornament-loader.js",
+      "before": "064dcb0d857be6d71ff31a86bd954df2d29b630387aab719d54bba4da201a25d",
+      "after": "064dcb0d857be6d71ff31a86bd954df2d29b630387aab719d54bba4da201a25d",
+      "materialized": true
+    },
+    {
+      "path": "src/ui/loading-overlay.js",
+      "before": "622ab041155fbcaa91d3487263879d98132cd9a2e357cf9cb713d1145352fce2",
+      "after": "622ab041155fbcaa91d3487263879d98132cd9a2e357cf9cb713d1145352fce2",
+      "materialized": true
+    },
+    {
+      "path": "src/ui/manual-magic-activity.js",
+      "before": "cbd8e70b3549201e9a5876dcbbb63e314ba98527bf81769e0fb2101b7ae9f2f6",
+      "after": "cbd8e70b3549201e9a5876dcbbb63e314ba98527bf81769e0fb2101b7ae9f2f6",
+      "materialized": true
+    },
+    {
+      "path": "src/ui/menu-integration.js",
+      "before": "21a58c1716b35cdc5362bb1a8a3fffa747f44f1cb64afb05ea20f5676d24c92e",
+      "after": "21a58c1716b35cdc5362bb1a8a3fffa747f44f1cb64afb05ea20f5676d24c92e",
+      "materialized": true
+    },
+    {
+      "path": "src/ui/native-hud.js",
+      "before": "85ed488d5b91e270cd56e9c2e9fcb9d2b012f31c00899be3d63b168851145cb5",
+      "after": "85ed488d5b91e270cd56e9c2e9fcb9d2b012f31c00899be3d63b168851145cb5",
+      "materialized": true
+    },
+    {
+      "path": "src/ui/overlay-painter.js",
+      "before": "f363817313ed1d815d56d5caa17ada91992d3feba04f591f94e09adee05a922b",
+      "after": "f363817313ed1d815d56d5caa17ada91992d3feba04f591f94e09adee05a922b",
+      "materialized": true
+    },
+    {
+      "path": "src/ui/overlay-policy.js",
+      "before": "03c4f16b8afff3e39b6568f1efe1678ffa04c8ee329ceceabcda8d352228f04c",
+      "after": "03c4f16b8afff3e39b6568f1efe1678ffa04c8ee329ceceabcda8d352228f04c",
+      "materialized": true
+    },
+    {
+      "path": "src/ui/precise-tap.js",
+      "before": "82dce3df6c3ae29c503029d33d91f12d976205ba32d2bc9f88a5740c956035ee",
+      "after": "82dce3df6c3ae29c503029d33d91f12d976205ba32d2bc9f88a5740c956035ee",
+      "materialized": true
+    },
+    {
+      "path": "src/ui/screen-overlays.js",
+      "before": "eb1ddf86fc477d378e42916da58c1cbf7df356234f9c5e4733c2de1d58319fdc",
+      "after": "eb1ddf86fc477d378e42916da58c1cbf7df356234f9c5e4733c2de1d58319fdc",
+      "materialized": true
+    },
+    {
+      "path": "src/ui/screen-wake-lock.js",
+      "before": "e13f1bc7fb570e5fe29565b0c4c4488b68f4c3af740b893129d16df38ad93253",
+      "after": "e13f1bc7fb570e5fe29565b0c4c4488b68f4c3af740b893129d16df38ad93253",
+      "materialized": true
+    },
+    {
+      "path": "src/ui/spell-cards.js",
+      "before": "da1e2726aaa727b0255c828d3f12e77e127bcad359ec3d6866cb7af947d4f23f",
+      "after": "da1e2726aaa727b0255c828d3f12e77e127bcad359ec3d6866cb7af947d4f23f",
+      "materialized": true
+    },
+    {
+      "path": "src/ui/tool-session.js",
+      "before": "50f5460dad46136cd7613437e491c23b0e9992148f04721b7bc1ebbb1209cb9c",
+      "after": "50f5460dad46136cd7613437e491c23b0e9992148f04721b7bc1ebbb1209cb9c",
+      "materialized": true
+    },
+    {
+      "path": "src/ui/tutorial-hud-hand.js",
+      "before": "9e4a0257be06ad63ea4ac0be8a8a8a77f499682b74f952d4953bbb783e6e3ae5",
+      "after": "9e4a0257be06ad63ea4ac0be8a8a8a77f499682b74f952d4953bbb783e6e3ae5",
+      "materialized": true
+    },
+    {
+      "path": "src/world/active-region.js",
+      "before": "9aec19f69cd36b28a29ccc9424dd5e9ede71bd7b97971d9e1972eca0716f51d3",
+      "after": "9aec19f69cd36b28a29ccc9424dd5e9ede71bd7b97971d9e1972eca0716f51d3",
+      "materialized": true
+    },
+    {
+      "path": "src/world/animal-segment-clearance.js",
+      "before": "aef7212f4f95dce395c2fabf3171dc8cfa309b403e1def3a97a14e5991e3a704",
+      "after": "aef7212f4f95dce395c2fabf3171dc8cfa309b403e1def3a97a14e5991e3a704",
+      "materialized": true
+    },
+    {
+      "path": "src/world/boundary-faces.js",
+      "before": "ad7d52a0740e4735ce33538f550dfa9a682cacef04637add33ea944785d9c285",
+      "after": "ad7d52a0740e4735ce33538f550dfa9a682cacef04637add33ea944785d9c285",
+      "materialized": true
+    },
+    {
+      "path": "src/world/boundary-gates.js",
+      "before": "7ee50ec9cf8009ab6564cb15e5b8582c6ef5c49a9050fd61b4eb4d348893b898",
+      "after": "7ee50ec9cf8009ab6564cb15e5b8582c6ef5c49a9050fd61b4eb4d348893b898",
+      "materialized": true
+    },
+    {
+      "path": "src/world/building-route-shortcut.js",
+      "before": "7d3b395bff205718541bd4a18cf8798ebef34b8dd8f0f9eec9634c1d82ca333c",
+      "after": "7d3b395bff205718541bd4a18cf8798ebef34b8dd8f0f9eec9634c1d82ca333c",
+      "materialized": true
+    },
+    {
+      "path": "src/world/canyon-land-access.js",
+      "before": "3433faf147e341d57a48345dbea050ae094d15b8c8bca9be6e7c82689c43c0ed",
+      "after": "3433faf147e341d57a48345dbea050ae094d15b8c8bca9be6e7c82689c43c0ed",
+      "materialized": true
+    },
+    {
+      "path": "src/world/center-geometries.js",
+      "before": "328364dd12920003aedae1bdbb18d4b3d645f40ac5b61cdb68a1b9b235a5fccc",
+      "after": "328364dd12920003aedae1bdbb18d4b3d645f40ac5b61cdb68a1b9b235a5fccc",
+      "materialized": true
+    },
+    {
+      "path": "src/world/centers.js",
+      "before": "7a826b2bf3bb0793b0e4453c3a9ae487741f2ddf41c79433434091806739a7f4",
+      "after": "7a826b2bf3bb0793b0e4453c3a9ae487741f2ddf41c79433434091806739a7f4",
+      "materialized": true
+    },
+    {
+      "path": "src/world/compute-hiring-routes.js",
+      "before": "370b677b38a603cd710227a44a78cd51db2d0a28e481624e30d8d264c3699440",
+      "after": "370b677b38a603cd710227a44a78cd51db2d0a28e481624e30d8d264c3699440",
+      "materialized": true
+    },
+    {
+      "path": "src/world/compute-raid-entry.js",
+      "before": "aa13a37c5bee05faf90f974ef619f9fde4dc230ca42f4abd414d6055c09c79dc",
+      "after": "aa13a37c5bee05faf90f974ef619f9fde4dc230ca42f4abd414d6055c09c79dc",
+      "materialized": true
+    },
+    {
+      "path": "src/world/farm-envelope.js",
+      "before": "6a5f1fd9d8df4c69b77e8e84be02e7517886a9ca02b9790d4a178b1a5bd563c6",
+      "after": "6a5f1fd9d8df4c69b77e8e84be02e7517886a9ca02b9790d4a178b1a5bd563c6",
+      "materialized": true
+    },
+    {
+      "path": "src/world/fifo-eviction.js",
+      "before": "08996afff0f43b0bd7aa45e045c806854eb2fd38f2458d881f8e55c2fbb52337",
+      "after": "08996afff0f43b0bd7aa45e045c806854eb2fd38f2458d881f8e55c2fbb52337",
+      "materialized": true
+    },
+    {
+      "path": "src/world/fluid-placement.js",
+      "before": "2e62c30835c6df4836209e0bad89b20f7cb301a4c23ceb17bb2dbbff0e02a301",
+      "after": "2e62c30835c6df4836209e0bad89b20f7cb301a4c23ceb17bb2dbbff0e02a301",
+      "materialized": true
+    },
+    {
+      "path": "src/world/footprints.js",
+      "before": "f212560aa1bff61cc562e922bf2b4234132d324a8a0c02b2199946772cb19560",
+      "after": "f212560aa1bff61cc562e922bf2b4234132d324a8a0c02b2199946772cb19560",
+      "materialized": true
+    },
+    {
+      "path": "src/world/fractional-walkability-cache.js",
+      "before": "9a5d3b0df8fc12c73568772881970a4390a62d25aff990892706929ee141f123",
+      "after": "9a5d3b0df8fc12c73568772881970a4390a62d25aff990892706929ee141f123",
+      "materialized": true
+    },
+    {
+      "path": "src/world/gate-frames-native.js",
+      "before": "4d97346d68ffa74fdd1d69a8aff988c6ac1159c8768cded92d99b424bab25e57",
+      "after": "4d97346d68ffa74fdd1d69a8aff988c6ac1159c8768cded92d99b424bab25e57",
+      "materialized": true
+    },
+    {
+      "path": "src/world/gate-passages.js",
+      "before": "905acc98a6eeca43aeae0bc7dfa14004b027d4d77abd4a968e4087b06a65283e",
+      "after": "905acc98a6eeca43aeae0bc7dfa14004b027d4d77abd4a968e4087b06a65283e",
+      "materialized": true
+    },
+    {
+      "path": "src/world/hiring-route-preparer.js",
+      "before": "179cdbb6eed898e8e31d88811da5bef5ff0958fba61b8ded409a4eb8f93a67d1",
+      "after": "179cdbb6eed898e8e31d88811da5bef5ff0958fba61b8ded409a4eb8f93a67d1",
+      "materialized": true
+    },
+    {
+      "path": "src/world/hiring-route-worker.js",
+      "before": "23591e77e663215c4c8f5e94a75f8980b90bdaa07c7ac49199de7b351f69ca02",
+      "after": "23591e77e663215c4c8f5e94a75f8980b90bdaa07c7ac49199de7b351f69ca02",
+      "materialized": true
+    },
+    {
+      "path": "src/world/initial-location-worker.js",
+      "before": "9fc01ea6209f81e4080faee9895f3188584d7494baa96d091e7fe284b46e8832",
+      "after": "9fc01ea6209f81e4080faee9895f3188584d7494baa96d091e7fe284b46e8832",
+      "materialized": true
+    },
+    {
+      "path": "src/world/navigation-bounds.js",
+      "before": "c3f572b86b96d03c6edcf78974d9fe48ab79293b2e6ba8a79dbd418563dd644d",
+      "after": "c3f572b86b96d03c6edcf78974d9fe48ab79293b2e6ba8a79dbd418563dd644d",
+      "materialized": true
+    },
+    {
+      "path": "src/world/navigation-query-scope.js",
+      "before": "b968e12a328b9bb14e0a7891d773a944a9ad6245ae19575f5d71ee4db917fb16",
+      "after": "b968e12a328b9bb14e0a7891d773a944a9ad6245ae19575f5d71ee4db917fb16",
+      "materialized": true
+    },
+    {
+      "path": "src/world/navigation.js",
+      "before": "21b82f33c62581436a6cef702b66af272ae9d3b096cb2b20ee858f0a50196743",
+      "after": "3c2ebefd925c322f9fc98014c6a21a775fd79e6176fa93edfbd4526ae1b705d5",
+      "materialized": true
+    },
+    {
+      "path": "src/world/nearby-plant-placement.js",
+      "before": "2df5716a2348060f4074e0b752ebb8081d662c1fd410f38aed3e1a07b307b692",
+      "after": "2df5716a2348060f4074e0b752ebb8081d662c1fd410f38aed3e1a07b307b692",
+      "materialized": true
+    },
+    {
+      "path": "src/world/prepare-initial-location.js",
+      "before": "fefe56b60cbd85c14f20eba3b430252c6474b197445b5c1ae8ae9ffcd4c8b1c9",
+      "after": "fefe56b60cbd85c14f20eba3b430252c6474b197445b5c1ae8ae9ffcd4c8b1c9",
+      "materialized": true
+    },
+    {
+      "path": "src/world/raid-entry-data.js",
+      "before": "8cbeebc9b1d9ae64efa8719dbbabd8f1c393b7f7a0b65ccac6eded131aa5cc66",
+      "after": "8cbeebc9b1d9ae64efa8719dbbabd8f1c393b7f7a0b65ccac6eded131aa5cc66",
+      "materialized": true
+    },
+    {
+      "path": "src/world/raid-entry-preparer.js",
+      "before": "641e8cf63637312820370535dffaab7a21f602fa52624fd65b9426e8ae950886",
+      "after": "641e8cf63637312820370535dffaab7a21f602fa52624fd65b9426e8ae950886",
+      "materialized": true
+    },
+    {
+      "path": "src/world/raid-entry-residency.js",
+      "before": "5781134723da7eb94b4d314f7ab5f0323ee72cfa43792cf223a87b21c327a7af",
+      "after": "5781134723da7eb94b4d314f7ab5f0323ee72cfa43792cf223a87b21c327a7af",
+      "materialized": true
+    },
+    {
+      "path": "src/world/raid-entry-worker.js",
+      "before": "3c626edb8ff3d5fa42a104f3ed4ea71de9c485ca59e452f4d0fd0c7b9dd32066",
+      "after": "3c626edb8ff3d5fa42a104f3ed4ea71de9c485ca59e452f4d0fd0c7b9dd32066",
+      "materialized": true
+    },
+    {
+      "path": "src/world/raid-navigation-warmth.js",
+      "before": "d7ec9874ad7971a46d05ce71cb7adceaa3f6052133bc9fe810fdfef6a534ea88",
+      "after": "d7ec9874ad7971a46d05ce71cb7adceaa3f6052133bc9fe810fdfef6a534ea88",
+      "materialized": true
+    },
+    {
+      "path": "src/world/search-frontier.js",
+      "before": "9c494f4a4a695fd01171d51b6dcc0843ac19c4056e36d2f822a0af1cab06a773",
+      "after": "9c494f4a4a695fd01171d51b6dcc0843ac19c4056e36d2f822a0af1cab06a773",
+      "materialized": true
+    },
+    {
+      "path": "src/world/settlement-terrain.js",
+      "before": "874b8a17775d3ef70a7326d49f51eca0887597cea257cccd625cb389b49f144f",
+      "after": "874b8a17775d3ef70a7326d49f51eca0887597cea257cccd625cb389b49f144f",
+      "materialized": true
+    },
+    {
+      "path": "src/world/terrain.js",
+      "before": "f5e0937e2c235b5e4fd495a4ce5e7baa9fc518d1b194de20b3458fe65d7afc59",
+      "after": "f5e0937e2c235b5e4fd495a4ce5e7baa9fc518d1b194de20b3458fe65d7afc59",
+      "materialized": true
+    },
+    {
+      "path": "src/world/villages.js",
+      "before": "6bf27fa24ead18f521106b95e7497125c8031e5b9eae6004e4e0e814fd2e43ab",
+      "after": "6bf27fa24ead18f521106b95e7497125c8031e5b9eae6004e4e0e814fd2e43ab",
+      "materialized": true
+    },
+    {
+      "path": "src/world/wall-collision-frame.js",
+      "before": "88f456e37302c17e03663863f9ce33744c2d7f20f43e876a236049c91e77c8c3",
+      "after": "88f456e37302c17e03663863f9ce33744c2d7f20f43e876a236049c91e77c8c3",
+      "materialized": true
+    },
+    {
+      "path": "src/world/wall-layout-native.js",
+      "before": "67a4b121835679a1510977e66dbbb612faa120f5899d206cab00b6ef44beb8b1",
+      "after": "67a4b121835679a1510977e66dbbb612faa120f5899d206cab00b6ef44beb8b1",
+      "materialized": true
+    },
+    {
+      "path": "src/world/wall-layout.js",
+      "before": "c74a70ecd45e121d0e5d04b406962c1dff1039bda6d5df593333fbd63e1d4d8a",
+      "after": "c74a70ecd45e121d0e5d04b406962c1dff1039bda6d5df593333fbd63e1d4d8a",
+      "materialized": true
+    },
+    {
+      "path": "src/world/wall-stroke-sampling.js",
+      "before": "0b2da0982b076f4fdf34af03967c04606cc574cf1b54956fdf1cbc347c22ecd2",
+      "after": "0b2da0982b076f4fdf34af03967c04606cc574cf1b54956fdf1cbc347c22ecd2",
+      "materialized": true
+    },
+    {
+      "path": "src/world/work-points.js",
+      "before": "cb741c085c97c046f6e0e477bb83b6f81c2e953c7c3ed14cf0d4a42920ba7939",
+      "after": "3415a5926ef2a83b9bcdfa41ec380d35b9a9845b17695c55aa23f1d687a7f809",
+      "materialized": true
+    },
+    {
+      "path": "src/world/worker-slope-recovery.js",
+      "before": "6ef690dd055479608ac164b4adadc1f033036f60d837c2b176ca2998c3a3c1bd",
+      "after": "6ef690dd055479608ac164b4adadc1f033036f60d837c2b176ca2998c3a3c1bd",
+      "materialized": true
+    },
+    {
+      "path": "src/world/worker-view-cache.js",
+      "before": "e2ab2c508bd2be1590cf9db75163eb5f9ac70081d9576cb8c7a3ce8e2703467c",
+      "after": "e2ab2c508bd2be1590cf9db75163eb5f9ac70081d9576cb8c7a3ce8e2703467c",
+      "materialized": true
+    },
+    {
+      "path": "src/world/worker-wall-overlap-recovery.js",
+      "before": "d7ec920a2070b6a2a505410f8fccfb9d5019a46c587a897b304c9d558a1d3d88",
+      "after": "d7ec920a2070b6a2a505410f8fccfb9d5019a46c587a897b304c9d558a1d3d88",
+      "materialized": true
+    },
+    {
+      "path": "public/content/animal-actions.json",
+      "before": "6401c54f72fe0e61cbf24265fe38cbcc617b8bf05de6c1ddc2f752f71373242f",
+      "after": "6401c54f72fe0e61cbf24265fe38cbcc617b8bf05de6c1ddc2f752f71373242f",
+      "materialized": true
+    },
+    {
+      "path": "public/content/biome-canyons.json",
+      "before": "a0da0d39766ef48e44ef82bc9b9ab6093bce0ae2bf6abd3035a626792823ff6d",
+      "after": "a0da0d39766ef48e44ef82bc9b9ab6093bce0ae2bf6abd3035a626792823ff6d",
+      "materialized": true
+    },
+    {
+      "path": "public/content/biome-desert.json",
+      "before": "8cae57f05d6d07b20ee3ffe65c9519648c458ce0f2d33b7b62b967bfb00b274b",
+      "after": "8cae57f05d6d07b20ee3ffe65c9519648c458ce0f2d33b7b62b967bfb00b274b",
+      "materialized": true
+    },
+    {
+      "path": "public/content/biome-grand_river.json",
+      "before": "880e1a5289d5b680fe46f12bdef54a9341d9820d3f6cec1a3f4c54c21e470ef4",
+      "after": "880e1a5289d5b680fe46f12bdef54a9341d9820d3f6cec1a3f4c54c21e470ef4",
+      "materialized": true
+    },
+    {
+      "path": "public/content/biome-mangrove.json",
+      "before": "9bd02d6eedd5b83eec901fdd2cf93cc9856a55232b896013d1856bc806ee16df",
+      "after": "9bd02d6eedd5b83eec901fdd2cf93cc9856a55232b896013d1856bc806ee16df",
+      "materialized": true
+    },
+    {
+      "path": "public/content/biome-savanna.json",
+      "before": "adb68fd97b2c45ef681313d4bc3418c3aac76101857391b961521f5cddfc4411",
+      "after": "adb68fd97b2c45ef681313d4bc3418c3aac76101857391b961521f5cddfc4411",
+      "materialized": true
+    },
+    {
+      "path": "public/content/biome-volcanoes.json",
+      "before": "d7c8b89243aca0ae88b725f044bdc4b3a4b092b65b724cefe17c4df29a1cd2f0",
+      "after": "d7c8b89243aca0ae88b725f044bdc4b3a4b092b65b724cefe17c4df29a1cd2f0",
+      "materialized": true
+    },
+    {
+      "path": "public/content/crop-bridges.json",
+      "before": "1cb26e0d61bdb0aa780d6976e54c57537b8cf9fe77518b49691b9c4cd292185f",
+      "after": "1cb26e0d61bdb0aa780d6976e54c57537b8cf9fe77518b49691b9c4cd292185f",
+      "materialized": true
+    },
+    {
+      "path": "public/content/crop-thumbnails.json",
+      "before": "57be74f06d62265809d730246169c3cdfe88a71deeef71b9e3804a114ac4b536",
+      "after": "57be74f06d62265809d730246169c3cdfe88a71deeef71b9e3804a114ac4b536",
+      "materialized": true
+    },
+    {
+      "path": "public/content/destruction.json",
+      "before": "681fc0d6cec4c62ca373ca9bc80391e3e2165ec3eb3d50614845f8ec4475eeb1",
+      "after": "681fc0d6cec4c62ca373ca9bc80391e3e2165ec3eb3d50614845f8ec4475eeb1",
+      "materialized": true
+    },
+    {
+      "path": "public/content/far-vegetation.json",
+      "before": "fe553e32a655b864794815eb1474d65f930701b3e699ad3aa9626c2232618373",
+      "after": "fe553e32a655b864794815eb1474d65f930701b3e699ad3aa9626c2232618373",
+      "materialized": true
+    },
+    {
+      "path": "public/content/fonts.json",
+      "before": "1527f33b986e4dcf76e73438f9f768082df97a1ec56ee8c1a90a312a10aec520",
+      "after": "1527f33b986e4dcf76e73438f9f768082df97a1ec56ee8c1a90a312a10aec520",
+      "materialized": true
+    },
+    {
+      "path": "public/content/footsteps.json",
+      "before": "992ba46e056c565431612bea7bebd10c558f009f4369d41968bbbbe3b46c4a37",
+      "after": "992ba46e056c565431612bea7bebd10c558f009f4369d41968bbbbe3b46c4a37",
+      "materialized": true
+    },
+    {
+      "path": "public/content/game-juice/provenance.json",
+      "before": "22587272cae2df78a3543f6eb9576d9c04c43e29243233c9a56be6bc84033eae",
+      "after": "22587272cae2df78a3543f6eb9576d9c04c43e29243233c9a56be6bc84033eae",
+      "materialized": true
+    },
+    {
+      "path": "public/content/ground-materials.json",
+      "before": "f21f6ec1582f57e3b5346021894f54a46a785f8b22d9eca6eb2154440e1fa5f5",
+      "after": "f21f6ec1582f57e3b5346021894f54a46a785f8b22d9eca6eb2154440e1fa5f5",
+      "materialized": true
+    },
+    {
+      "path": "public/content/menu.json",
+      "before": "f638c82972a50785609aa3700b1075743569a692862f6af2e2ad80616e3a03f2",
+      "after": "f638c82972a50785609aa3700b1075743569a692862f6af2e2ad80616e3a03f2",
+      "materialized": true
+    },
+    {
+      "path": "public/content/models.json",
+      "before": "9fbdddec82c57f60777cec4751142cf06db58bf99916ebb403c80e8c98ddacc1",
+      "after": "9fbdddec82c57f60777cec4751142cf06db58bf99916ebb403c80e8c98ddacc1",
+      "materialized": true
+    },
+    {
+      "path": "public/content/music-a.json",
+      "before": "6552725306c2c226e0ac8c44f4f179e944cdfb11e92cf6b147285129a0ad66dd",
+      "after": "6552725306c2c226e0ac8c44f4f179e944cdfb11e92cf6b147285129a0ad66dd",
+      "materialized": true
+    },
+    {
+      "path": "public/content/music-b.json",
+      "before": "45097265d2d27aafd2bc73b54d1e024a476299931c29ee01f210cfebf039b70d",
+      "after": "45097265d2d27aafd2bc73b54d1e024a476299931c29ee01f210cfebf039b70d",
+      "materialized": true
+    },
+    {
+      "path": "public/content/music-opus-windows-a.json",
+      "before": "8bff80e89e8ec6a3b1fe6a560d4b20baaa9771251069946abf3f8680193b17a7",
+      "after": "8bff80e89e8ec6a3b1fe6a560d4b20baaa9771251069946abf3f8680193b17a7",
+      "materialized": true
+    },
+    {
+      "path": "public/content/music-opus-windows-b.json",
+      "before": "a6c7b35a8c137bd1c46f3129fa5847c2247f5b1ba1c622765705ab6a1857604c",
+      "after": "a6c7b35a8c137bd1c46f3129fa5847c2247f5b1ba1c622765705ab6a1857604c",
+      "materialized": true
+    },
+    {
+      "path": "public/content/music-windows-a.json",
+      "before": "23a9b77e0e3c5f652aaa746f7d8084465e176dcd2cd129b565160bf2761bc183",
+      "after": "23a9b77e0e3c5f652aaa746f7d8084465e176dcd2cd129b565160bf2761bc183",
+      "materialized": true
+    },
+    {
+      "path": "public/content/music-windows-b.json",
+      "before": "57dbab4a6bed78d3f487e449191dbfa9a7cc28c7319c50ce3b4eb8efed30ab4e",
+      "after": "57dbab4a6bed78d3f487e449191dbfa9a7cc28c7319c50ce3b4eb8efed30ab4e",
+      "materialized": true
+    },
+    {
+      "path": "public/content/selector.json",
+      "before": "4118e691a59d52dd5323fdc1557761e667e2fedd38177aecab0a7374bf91c7b5",
+      "after": "4118e691a59d52dd5323fdc1557761e667e2fedd38177aecab0a7374bf91c7b5",
+      "materialized": true
+    },
+    {
+      "path": "public/content/sfx-opus.json",
+      "before": "24cc11c1dc4fa2df298e4f38431b92635d511ec87463b532c3add41b6f58863c",
+      "after": "24cc11c1dc4fa2df298e4f38431b92635d511ec87463b532c3add41b6f58863c",
+      "materialized": true
+    },
+    {
+      "path": "public/content/sfx-routing-opus.json",
+      "before": "2b9d3f8f1165384bb145614862d0d775bcdecf0ca435c39b040b7492ce8794ca",
+      "after": "2b9d3f8f1165384bb145614862d0d775bcdecf0ca435c39b040b7492ce8794ca",
+      "materialized": true
+    },
+    {
+      "path": "public/content/sfx-routing.json",
+      "before": "c39ba039cde2ff77ef55e8d7fa4748c51d5f139cf29887a538ea61552f9ecae6",
+      "after": "c39ba039cde2ff77ef55e8d7fa4748c51d5f139cf29887a538ea61552f9ecae6",
+      "materialized": true
+    },
+    {
+      "path": "public/content/sfx.json",
+      "before": "f4ca1c4444065d9f05a0365e096305fdf3282ec6f58d9377a8610f55538b9bee",
+      "after": "f4ca1c4444065d9f05a0365e096305fdf3282ec6f58d9377a8610f55538b9bee",
+      "materialized": true
+    },
+    {
+      "path": "public/content/skies.json",
+      "before": "23f43d8ae86ac8bee44e9a709a3a9098c07ac2b3377294025320192be98da901",
+      "after": "23f43d8ae86ac8bee44e9a709a3a9098c07ac2b3377294025320192be98da901",
+      "materialized": true
+    },
+    {
+      "path": "public/content/vfx.json",
+      "before": "a2bccaa634cebefe607936a5b2a03f34ee9039e282880d1959623b01ca95ed30",
+      "after": "a2bccaa634cebefe607936a5b2a03f34ee9039e282880d1959623b01ca95ed30",
+      "materialized": true
+    },
+    {
+      "path": "public/content/villages.json",
+      "before": "316ca88b0dc20e6c15a7d9e877480ba0c013bde8f8c21efa5438e064d004603f",
+      "after": "316ca88b0dc20e6c15a7d9e877480ba0c013bde8f8c21efa5438e064d004603f",
+      "materialized": true
+    },
+    {
+      "path": "public/content/walls.json",
+      "before": "0f6eaf0a7bf4816243d9cf888e6cadb96c03e18c55f97208faaf9ec21f2fea30",
+      "after": "0f6eaf0a7bf4816243d9cf888e6cadb96c03e18c55f97208faaf9ec21f2fea30",
+      "materialized": true
+    },
+    {
+      "path": "public/content/watering-emitters.json",
+      "before": "7abd692e31564050a8c769e6b1d2d5a14830a4c603de08a4eb2ffd831889d209",
+      "after": "7abd692e31564050a8c769e6b1d2d5a14830a4c603de08a4eb2ffd831889d209",
+      "materialized": true
+    },
+    {
+      "path": "public/content/worker-actions.json",
+      "before": "505e351c454c114304d73e253ce3e45bc3650735f1673267214af3a29e7ab135",
+      "after": "505e351c454c114304d73e253ce3e45bc3650735f1673267214af3a29e7ab135",
+      "materialized": true
+    },
+    {
+      "path": "content/manifests/agricultural-spirit-voices.json",
+      "before": "e533b0d47500ebf9bfbc36a3fbb9d8d4cc12d3d6c2d6550943859028cd3a34bf",
+      "after": "e533b0d47500ebf9bfbc36a3fbb9d8d4cc12d3d6c2d6550943859028cd3a34bf",
+      "materialized": true
+    },
+    {
+      "path": "content/manifests/animal-actions.json",
+      "before": "6401c54f72fe0e61cbf24265fe38cbcc617b8bf05de6c1ddc2f752f71373242f",
+      "after": "6401c54f72fe0e61cbf24265fe38cbcc617b8bf05de6c1ddc2f752f71373242f",
+      "materialized": true
+    },
+    {
+      "path": "content/manifests/assets.json",
+      "before": "404062fff178d964b59a254e627103df946847fa4455dbb1420dda84a5dc25f8",
+      "after": "404062fff178d964b59a254e627103df946847fa4455dbb1420dda84a5dc25f8",
+      "materialized": true
+    },
+    {
+      "path": "content/manifests/audio-runtime.json",
+      "before": "9f5ccf21f5cf1c596286bc85c4b9cb8ab4ebfed628237c093752de3e6a31e783",
+      "after": "9f5ccf21f5cf1c596286bc85c4b9cb8ab4ebfed628237c093752de3e6a31e783",
+      "materialized": true
+    },
+    {
+      "path": "content/manifests/biome-lab-update.json",
+      "before": "215bb87b07e7cf5751e60af9345543919bedc43498840fcbb0e2a13d2aaa1dc9",
+      "after": "215bb87b07e7cf5751e60af9345543919bedc43498840fcbb0e2a13d2aaa1dc9",
+      "materialized": true
+    },
+    {
+      "path": "content/manifests/building-scale-audit.json",
+      "before": "f9191ba634dd09f3b1cf09e37c1a8eb7d4d05d54fa582f0766abf3dcfe067bda",
+      "after": "f9191ba634dd09f3b1cf09e37c1a8eb7d4d05d54fa582f0766abf3dcfe067bda",
+      "materialized": true
+    },
+    {
+      "path": "content/manifests/center-footprints.json",
+      "before": "aee7d8367e42d30600abe2f4560e86caad0abefaf14f1f5c217846a7be8e817a",
+      "after": "aee7d8367e42d30600abe2f4560e86caad0abefaf14f1f5c217846a7be8e817a",
+      "materialized": true
+    },
+    {
+      "path": "content/manifests/crops-v4.json",
+      "before": "9a08f6af296649083ff80ce3556de69e953d978e8d3300c11df176ce3550f008",
+      "after": "9a08f6af296649083ff80ce3556de69e953d978e8d3300c11df176ce3550f008",
+      "materialized": true
+    },
+    {
+      "path": "content/manifests/cultivos_geometria_extraida.json",
+      "before": "6b589b1d88263d9c2ecb28a8aaeb23866d6bf72bfab137ad5f27c11943d538e6",
+      "after": "6b589b1d88263d9c2ecb28a8aaeb23866d6bf72bfab137ad5f27c11943d538e6",
+      "materialized": true
+    },
+    {
+      "path": "content/manifests/destruction-native.json",
+      "before": "28aba7e781b214908df04760d8a931d134be344e09114721e9ca1d5a0ecb8af5",
+      "after": "28aba7e781b214908df04760d8a931d134be344e09114721e9ca1d5a0ecb8af5",
+      "materialized": true
+    },
+    {
+      "path": "content/manifests/embedded-color-recipes.json",
+      "before": "8f4787271261e026450f9fe52a6e23f583588e8607a28ad2cf072c5a5c7c849c",
+      "after": "8f4787271261e026450f9fe52a6e23f583588e8607a28ad2cf072c5a5c7c849c",
+      "materialized": true
+    },
+    {
+      "path": "content/manifests/farm-actions.json",
+      "before": "e6bf6a715f39750d10661ba50e1b20e23e262e17c7710a6f636992f5fbeb032e",
+      "after": "e6bf6a715f39750d10661ba50e1b20e23e262e17c7710a6f636992f5fbeb032e",
+      "materialized": true
+    },
+    {
+      "path": "content/manifests/footsteps.json",
+      "before": "992ba46e056c565431612bea7bebd10c558f009f4369d41968bbbbe3b46c4a37",
+      "after": "992ba46e056c565431612bea7bebd10c558f009f4369d41968bbbbe3b46c4a37",
+      "materialized": true
+    },
+    {
+      "path": "content/manifests/fuentes_auditadas.json",
+      "before": "f49d280b016f0603ac97df6304a934837e4f1782eff0853bf8d1f7386fa07fa0",
+      "after": "f49d280b016f0603ac97df6304a934837e4f1782eff0853bf8d1f7386fa07fa0",
+      "materialized": true
+    },
+    {
+      "path": "content/manifests/gate-frames-native.json",
+      "before": "0f02472ccdf45631485b29ad21d295afc8341e647bbc561b8c7438ea47b00d4d",
+      "after": "0f02472ccdf45631485b29ad21d295afc8341e647bbc561b8c7438ea47b00d4d",
+      "materialized": true
+    },
+    {
+      "path": "content/manifests/gate-leaf-calibration.json",
+      "before": "b74b76592bc834f14a975ba6046d583892706b36037ad0f9d368a5d6792fce60",
+      "after": "b74b76592bc834f14a975ba6046d583892706b36037ad0f9d368a5d6792fce60",
+      "materialized": true
+    },
+    {
+      "path": "content/manifests/guardian-native.json",
+      "before": "9bab0ec128b1741cf74d1183e08d81417ced290e01d9effb1ae452e1423d7bcc",
+      "after": "9bab0ec128b1741cf74d1183e08d81417ced290e01d9effb1ae452e1423d7bcc",
+      "materialized": true
+    },
+    {
+      "path": "content/manifests/hands-native.json",
+      "before": "da7f3a0a72d44d53ded213dd7c28a36e4219da229448b7b0a2c4b8e6e275edfe",
+      "after": "da7f3a0a72d44d53ded213dd7c28a36e4219da229448b7b0a2c4b8e6e275edfe",
+      "materialized": true
+    },
+    {
+      "path": "content/manifests/image-runtime.json",
+      "before": "fbe78456de7b36060db779067e1f7f04b82bf633d359a3b3f053168365ad8d62",
+      "after": "fbe78456de7b36060db779067e1f7f04b82bf633d359a3b3f053168365ad8d62",
+      "materialized": true
+    },
+    {
+      "path": "content/manifests/mangrove-ground-bake.json",
+      "before": "651dd309f10ef9009e01cfefcd4b31e4b57880737a84386b10812247bdb828a2",
+      "after": "651dd309f10ef9009e01cfefcd4b31e4b57880737a84386b10812247bdb828a2",
+      "materialized": true
+    },
+    {
+      "path": "content/manifests/sfx_catalogo_extraido.json",
+      "before": "52f25357ec0eed49f3f6e459f109f16a43eb5bfeacebf2822d11cd1e67c26878",
+      "after": "52f25357ec0eed49f3f6e459f109f16a43eb5bfeacebf2822d11cd1e67c26878",
+      "materialized": true
+    },
+    {
+      "path": "content/manifests/sfx_mapeo_implementacion.json",
+      "before": "c525d20bb9da4f038215d38a0e181cbefebf78c5caecf22d5a190e381378ecd9",
+      "after": "c525d20bb9da4f038215d38a0e181cbefebf78c5caecf22d5a190e381378ecd9",
+      "materialized": true
+    },
+    {
+      "path": "content/manifests/sfx-runtime.json",
+      "before": "449b3f5b7e82dfd80d91f2d4a8f8da256d4a7f150c83dc20d4ce25d05edb53c4",
+      "after": "449b3f5b7e82dfd80d91f2d4a8f8da256d4a7f150c83dc20d4ce25d05edb53c4",
+      "materialized": true
+    },
+    {
+      "path": "content/manifests/spirit-voices.json",
+      "before": "f34c3df0f2fa8f201506fe6b7b902223ccc3994805874b2624636f2da74e73be",
+      "after": "f34c3df0f2fa8f201506fe6b7b902223ccc3994805874b2624636f2da74e73be",
+      "materialized": true
+    },
+    {
+      "path": "content/manifests/vfx_catalogo_extraido.json",
+      "before": "b9b0c12d79277e7a875b24a987e9f5ae78f0ef50e2339973efde3d0c2338ce5e",
+      "after": "b9b0c12d79277e7a875b24a987e9f5ae78f0ef50e2339973efde3d0c2338ce5e",
+      "materialized": true
+    },
+    {
+      "path": "content/manifests/vfx_mapeo_implementacion.json",
+      "before": "28caa69ea25f7a892be116ec6db9d931d412bc93843b4f48c592551204082da9",
+      "after": "28caa69ea25f7a892be116ec6db9d931d412bc93843b4f48c592551204082da9",
+      "materialized": true
+    },
+    {
+      "path": "content/manifests/vfx-native.json",
+      "before": "37c62b9eb9f564419fa941ee2911903168f71de592401b8bdafa7e170c2dd5f1",
+      "after": "37c62b9eb9f564419fa941ee2911903168f71de592401b8bdafa7e170c2dd5f1",
+      "materialized": true
+    },
+    {
+      "path": "content/manifests/wall-layout-native.json",
+      "before": "197204bfc5ecad553967bd714b49458c721621ae4d2b1b2e68be628b1b919c9f",
+      "after": "197204bfc5ecad553967bd714b49458c721621ae4d2b1b2e68be628b1b919c9f",
+      "materialized": true
+    },
+    {
+      "path": "content/manifests/walls-native.json",
+      "before": "05fbce6f24c502a992b1600856d732a893f797d9e06cd421f1c8caa78e21d3a9",
+      "after": "05fbce6f24c502a992b1600856d732a893f797d9e06cd421f1c8caa78e21d3a9",
+      "materialized": true
+    },
+    {
+      "path": "content/manifests/web-assets-verification.json",
+      "before": "0d901dfb48cefe4ab3c8ad89534a49dd137d6ac7f17d38aa581084eca6bcba8d",
+      "after": "0d901dfb48cefe4ab3c8ad89534a49dd137d6ac7f17d38aa581084eca6bcba8d",
+      "materialized": true
+    },
+    {
+      "path": "content/manifests/web-assets.json",
+      "before": "fed88f8bcfce8f2296764a41324c20ad663f74f4a9dc17cd1f32b6179623bd41",
+      "after": "fed88f8bcfce8f2296764a41324c20ad663f74f4a9dc17cd1f32b6179623bd41",
+      "materialized": true
+    },
+    {
+      "path": "content/manifests/worker-actions.json",
+      "before": "505e351c454c114304d73e253ce3e45bc3650735f1673267214af3a29e7ab135",
+      "after": "505e351c454c114304d73e253ce3e45bc3650735f1673267214af3a29e7ab135",
+      "materialized": true
+    },
+    {
+      "path": "content/manifests/worker-locomotion.json",
+      "before": "8905960fe50c1d2c6ac991b55b0b006bc8b8c34bfb44e84e6d42d65098d00333",
+      "after": "8905960fe50c1d2c6ac991b55b0b006bc8b8c34bfb44e84e6d42d65098d00333",
+      "materialized": true
+    },
+    {
+      "path": "package-lock.json",
+      "before": "cb8395bd8e817615de46643c72b5a94e5a7e1f00d3f6f5b45357b67042808b30",
+      "after": "cb8395bd8e817615de46643c72b5a94e5a7e1f00d3f6f5b45357b67042808b30",
+      "materialized": true
+    },
+    {
+      "path": "tools/check_intensive_farm.mjs",
+      "before": "1be373426ba23d2a05990f388ce0279dadbb494503356b99940bc8975d4e759c",
+      "after": "1be373426ba23d2a05990f388ce0279dadbb494503356b99940bc8975d4e759c",
+      "materialized": true
+    },
+    {
+      "path": "tools/farm-defense-policy.mjs",
+      "before": "1b48e5d76fb3df35ab8dd205345a94dda46d48b0ff1a1b64a25ccafff730be22",
+      "after": "1b48e5d76fb3df35ab8dd205345a94dda46d48b0ff1a1b64a25ccafff730be22",
+      "materialized": true
+    },
+    {
+      "path": "tools/check_intensive_matrix.mjs",
+      "before": "d653db3454316cf7b73cf1e3b24cba821a0b3cc19b054bbca50ff3825593806c",
+      "after": "d653db3454316cf7b73cf1e3b24cba821a0b3cc19b054bbca50ff3825593806c",
+      "materialized": true
+    },
+    {
+      "path": "tools/check_intensive_case.mjs",
+      "before": "1017a24548741eee6108702a487926987187df6d10f61cbd3e21114b78acf619",
+      "after": "1017a24548741eee6108702a487926987187df6d10f61cbd3e21114b78acf619",
+      "materialized": true
+    },
+    {
+      "path": "tools/check_intensive_matrix_parallel.mjs",
+      "before": "2a7d5de221539a7e722c3325fb009559c1ceebed384706945055013541ef3f53",
+      "after": "2a7d5de221539a7e722c3325fb009559c1ceebed384706945055013541ef3f53",
+      "materialized": true
+    },
+    {
+      "path": "tools/summarize_intensive_farm.mjs",
+      "before": "08a84070cca6cfd6cd4067e2d7125dafe194f0e5f83a7ad9c6591cc70cf9805c",
+      "after": "08a84070cca6cfd6cd4067e2d7125dafe194f0e5f83a7ad9c6591cc70cf9805c",
+      "materialized": true
+    },
+    {
+      "path": "tools/intensive-activity-acceptance.mjs",
+      "before": "9bddadc646e49e12fce4b2a0c8af2933dbb14524c76fd0c6c3c8fbcff7db61e9",
+      "after": "9bddadc646e49e12fce4b2a0c8af2933dbb14524c76fd0c6c3c8fbcff7db61e9",
+      "materialized": true
+    },
+    {
+      "path": "docs/qa/intensive-acceptance-policy.json",
+      "before": "f463ede2279390e14e85fa94845f4b2c10e4970f0f173c32885e3638acc69bf4",
+      "after": "f463ede2279390e14e85fa94845f4b2c10e4970f0f173c32885e3638acc69bf4",
+      "materialized": false
+    },
+    {
+      "path": "tools/check_opening.mjs",
+      "before": "b69f5bd13d097062a02ce438dfec04f91a8e8d62735e12b5fc90bfc27a653a93",
+      "after": "b69f5bd13d097062a02ce438dfec04f91a8e8d62735e12b5fc90bfc27a653a93",
+      "materialized": true
+    },
+    {
+      "path": "tools/intensive-run-provenance.mjs",
+      "before": "2a080368bde34fd0f073f4890b1e8533767e8646421da309c0ab26d41da19346",
+      "after": "2a080368bde34fd0f073f4890b1e8533767e8646421da309c0ab26d41da19346",
+      "materialized": true
+    },
+    {
+      "path": "tools/intensive-heartbeat.mjs",
+      "before": "61935ea6bc521719ff3eb0b5a4738d27f38fc2861b10a617f2f4b6bb616083f7",
+      "after": "61935ea6bc521719ff3eb0b5a4738d27f38fc2861b10a617f2f4b6bb616083f7",
+      "materialized": true
+    },
+    {
+      "path": "tools/intensive-blocked-checkpoint.mjs",
+      "before": "7e56190cc6b15344b1cac7193dca38f7dde7c37b48480ac1ba6119ce94f107fa",
+      "after": "7e56190cc6b15344b1cac7193dca38f7dde7c37b48480ac1ba6119ce94f107fa",
+      "materialized": true
+    },
+    {
+      "path": "content/balance/raid_pressure_candidate.json",
+      "before": "b1bf1263f25928f960a81e3ae6cbb5de4fd3a712ef99e648ad71d3abdc3de1c0",
+      "after": "b1bf1263f25928f960a81e3ae6cbb5de4fd3a712ef99e648ad71d3abdc3de1c0",
+      "materialized": true
+    },
+    {
+      "path": "content/balance/player_revisions.json",
+      "before": "1db2e6e2d980dec43ed0da4e7a2ca869e7b3bf1cb41fe47f85880a4edeaf90ee",
+      "after": "1db2e6e2d980dec43ed0da4e7a2ca869e7b3bf1cb41fe47f85880a4edeaf90ee",
+      "materialized": true
+    },
+    {
+      "path": "tools/native-agricultural-magic.mjs",
+      "before": "c872dfd083e5f403f26461a6c7b9ab038dbe8cdca73851cd1ded60356aa20f27",
+      "after": "c872dfd083e5f403f26461a6c7b9ab038dbe8cdca73851cd1ded60356aa20f27",
+      "materialized": true
+    },
+    {
+      "path": "tools/native-campaign-runner.mjs",
+      "before": "072faa05c92eda1d625d01603b9c79dd57a41239ac2fb0edfb421e7389b5d42f",
+      "after": "072faa05c92eda1d625d01603b9c79dd57a41239ac2fb0edfb421e7389b5d42f",
+      "materialized": true
+    },
+    {
+      "path": "tools/native-campaign-protocol.mjs",
+      "before": "6e81c04b6522e188abb829e66cc6a109c26467c8c75297cc9e31d4256949ba3b",
+      "after": "6e81c04b6522e188abb829e66cc6a109c26467c8c75297cc9e31d4256949ba3b",
+      "materialized": true
+    },
+    {
+      "path": "tools/native-q4-labour-policy.mjs",
+      "before": "884444c6952a6c7ba9b6dc89cc03c0287fae5448dce80bf636b65c2d4867c4b9",
+      "after": "884444c6952a6c7ba9b6dc89cc03c0287fae5448dce80bf636b65c2d4867c4b9",
+      "materialized": true
+    },
+    {
+      "path": "tools/native-q5-labour-policy.mjs",
+      "before": "1a1b22f0e98607dfa4a6067055443e650f55d51e72fafa1f3452aa5d7e23c197",
+      "after": "1a1b22f0e98607dfa4a6067055443e650f55d51e72fafa1f3452aa5d7e23c197",
+      "materialized": true
+    },
+    {
+      "path": "tools/native-q6-labour-policy.mjs",
+      "before": "1e2465e5f423b61a0ba19bfa46d319a54c1fd16ee0cd662aff0edf13b5248324",
+      "after": "1e2465e5f423b61a0ba19bfa46d319a54c1fd16ee0cd662aff0edf13b5248324",
+      "materialized": true
+    },
+    {
+      "path": "tools/native-campaign-finance.mjs",
+      "before": "e3418b669c2a32f847a3a172d790fe1641116254df1bace92071219fd0a4f6e1",
+      "after": "e3418b669c2a32f847a3a172d790fe1641116254df1bace92071219fd0a4f6e1",
+      "materialized": true
+    },
+    {
+      "path": "tools/native-campaign-evidence.mjs",
+      "before": "0f61dbd3e284336098aef947b427d6c7073fe4c14c8741c4b5b2136e561a0ffd",
+      "after": "0f61dbd3e284336098aef947b427d6c7073fe4c14c8741c4b5b2136e561a0ffd",
+      "materialized": true
+    },
+    {
+      "path": "tools/repair-settlement-evidence.mjs",
+      "before": "26a91352f6e115facf0443c5072402f505ce878abd659dc0a20834c845529742",
+      "after": "26a91352f6e115facf0443c5072402f505ce878abd659dc0a20834c845529742",
+      "materialized": true
+    },
+    {
+      "path": "tools/native-raid-campaign-evidence.mjs",
+      "before": "a89da492aef4f5e24a9e45c07ad4f391381218b12c32d20da154ee81d314e737",
+      "after": "a89da492aef4f5e24a9e45c07ad4f391381218b12c32d20da154ee81d314e737",
+      "materialized": true
+    },
+    {
+      "path": "tools/native-campaign-entry-driver.mjs",
+      "before": "aacaf4be228645324be2612e09ba016b81f57e3b1e9f27e39c71ff8e77323f04",
+      "after": "aacaf4be228645324be2612e09ba016b81f57e3b1e9f27e39c71ff8e77323f04",
+      "materialized": true
+    },
+    {
+      "path": "tools/native-campaign-expansion.mjs",
+      "before": "dd9de71fc1a5aa373d85b9c4457fd3b83602ed0eb743e1522015962efc74586f",
+      "after": "dd9de71fc1a5aa373d85b9c4457fd3b83602ed0eb743e1522015962efc74586f",
+      "materialized": true
+    },
+    {
+      "path": "tools/native-campaign-plots.mjs",
+      "before": "800951f763c3a164236e2aca5c92b9f9a65596160aceb2f1969bab90555f90fa",
+      "after": "800951f763c3a164236e2aca5c92b9f9a65596160aceb2f1969bab90555f90fa",
+      "materialized": true
+    },
+    {
+      "path": "tools/native-expanding-defense-policy.mjs",
+      "before": "b2be22f0a47aa529bd2edca812aa306da42848efb130606a7729e3bf92659e3f",
+      "after": "b2be22f0a47aa529bd2edca812aa306da42848efb130606a7729e3bf92659e3f",
+      "materialized": true
+    },
+    {
+      "path": "tools/node-raid-entry-transport.mjs",
+      "before": "4be53fd745b88024e180285e8308c4bada5b2f548632065806fff01a03253787",
+      "after": "4be53fd745b88024e180285e8308c4bada5b2f548632065806fff01a03253787",
+      "materialized": true
+    },
+    {
+      "path": "tools/node-raid-entry-worker.mjs",
+      "before": "68b5e4f27d55c2dac715a712543be5a9fea2575f20bfdfae92d918457efd9791",
+      "after": "68b5e4f27d55c2dac715a712543be5a9fea2575f20bfdfae92d918457efd9791",
+      "materialized": true
+    },
+    {
+      "path": "tools/run_native_campaign.mjs",
+      "before": "4b4326b6a2b1b9c89ae609dea885f67e92e552e9409f9e0594cd7bb4563119b9",
+      "after": "4b4326b6a2b1b9c89ae609dea885f67e92e552e9409f9e0594cd7bb4563119b9",
+      "materialized": true
+    },
+    {
+      "path": "tools/native-closed-defense-policy.mjs",
+      "before": "8748231be05e3694e58a7c1e4d4dcfd6bde1bff888297c7700022c8985b95faa",
+      "after": "8748231be05e3694e58a7c1e4d4dcfd6bde1bff888297c7700022c8985b95faa",
+      "materialized": true
+    },
+    {
+      "path": "tools/native-funded-defense-policy.mjs",
+      "before": "3499029310b27ebc6c6a249c531b59a21b22ec87cd20bb1a84f0a53db52f47b1",
+      "after": "3499029310b27ebc6c6a249c531b59a21b22ec87cd20bb1a84f0a53db52f47b1",
+      "materialized": true
+    },
+    {
+      "path": "tools/native-obstacle-aware-contour.mjs",
+      "before": "0f186e0a6a55022102b814c845a89f6cf4157dfc49631b351b927146df73e02c",
+      "after": "0f186e0a6a55022102b814c845a89f6cf4157dfc49631b351b927146df73e02c",
+      "materialized": true
+    },
+    {
+      "path": "tools/native-perimeter-proof.mjs",
+      "before": "b313186b5974a5663280d9b850dee99014bffd8fcf013623585a008c7e373cc1",
+      "after": "b313186b5974a5663280d9b850dee99014bffd8fcf013623585a008c7e373cc1",
+      "materialized": true
+    },
+    {
+      "path": "tools/native-q7-labour-policy.mjs",
+      "before": "4d3081350bd8638d4f931a22f27dc6d2ab5a0c84c4172d8373edd18719990ee5",
+      "after": "4d3081350bd8638d4f931a22f27dc6d2ab5a0c84c4172d8373edd18719990ee5",
+      "materialized": true
+    },
+    {
+      "path": "tools/native-q8-labour-policy.mjs",
+      "before": "7cbdee329d22316ef154c4ae49feff8d702dc18766bf53e20b51bf1be47f4f09",
+      "after": "7cbdee329d22316ef154c4ae49feff8d702dc18766bf53e20b51bf1be47f4f09",
+      "materialized": true
+    },
+    {
+      "path": "tools/native-campaign-crop-policy.mjs",
+      "before": "c4dc1184ac62f1a4087203acb2cd637bf2720dbac5fb91881498ad2ed28f5ac1",
+      "after": "c4dc1184ac62f1a4087203acb2cd637bf2720dbac5fb91881498ad2ed28f5ac1",
+      "materialized": true
+    },
+    {
+      "path": "tools/native-shore-defense-contour.mjs",
+      "before": "27fab001e24ff1f44b5b3789f3f88c5b50d0486d776b2fda3460d1f8bfe93187",
+      "after": "27fab001e24ff1f44b5b3789f3f88c5b50d0486d776b2fda3460d1f8bfe93187",
+      "materialized": true
+    },
+    {
+      "path": "tools/native-service-component-proof.mjs",
+      "before": "bdfe46d94d989ccb86bcb85cbb73ea434951eaa23bf484a4ddc640238d83a28e",
+      "after": "bdfe46d94d989ccb86bcb85cbb73ea434951eaa23bf484a4ddc640238d83a28e",
+      "materialized": true
+    },
+    {
+      "path": "tools/native-repair-funding.mjs",
+      "before": "5da925310d109b56ae4cd206574a225497840a6988acd0fc55c8761ff00b6ebc",
+      "after": "5da925310d109b56ae4cd206574a225497840a6988acd0fc55c8761ff00b6ebc",
+      "materialized": true
+    },
+    {
+      "path": "tools/native-q9-labour-policy.mjs",
+      "before": "cf2116a71960e24c1ede7c8a0fe5c6a523ad887a82465cbcc4332edd65e693d8",
+      "after": "cf2116a71960e24c1ede7c8a0fe5c6a523ad887a82465cbcc4332edd65e693d8",
+      "materialized": true
+    },
+    {
+      "path": "tools/native-q10-labour-policy.mjs",
+      "before": "e1548c51a578a9d2e8fd9cb17e22540036ee5009c838e2f517638e38f65f115f",
+      "after": "e1548c51a578a9d2e8fd9cb17e22540036ee5009c838e2f517638e38f65f115f",
+      "materialized": true
+    },
+    {
+      "path": "tools/native-q12-labour-policy.mjs",
+      "before": "ed0df9a4f40d054081d2fe18efd89407e439c2579c3305415900b543d9f8b2e8",
+      "after": "ed0df9a4f40d054081d2fe18efd89407e439c2579c3305415900b543d9f8b2e8",
+      "materialized": true
+    },
+    {
+      "path": "tools/native-q13-labour-policy.mjs",
+      "before": "63747c1642636f2bc6957403268251cfed0e08a8b69e4066dfe90139b74aa9fd",
+      "after": "63747c1642636f2bc6957403268251cfed0e08a8b69e4066dfe90139b74aa9fd",
+      "materialized": true
+    },
+    {
+      "path": "tools/native-q14-labour-policy.mjs",
+      "before": "6a2148ad94d8ac8ba14d54221cdd46aae84a2406fc945519821167ea61854762",
+      "after": "6a2148ad94d8ac8ba14d54221cdd46aae84a2406fc945519821167ea61854762",
+      "materialized": true
+    },
+    {
+      "path": "tools/native-q15-labour-policy.mjs",
+      "before": "c156565ae1a37483505b2883cdea4162f2d8bbc4c7909a672958d992692ed691",
+      "after": "c156565ae1a37483505b2883cdea4162f2d8bbc4c7909a672958d992692ed691",
+      "materialized": true
+    },
+    {
+      "path": "tools/native-integrated-perimeter-proof.mjs",
+      "before": "a83a898a588f77171d9d9266cbe3ff82da71c1d6e7c99205ffb99f5ff250e7e9",
+      "after": "a83a898a588f77171d9d9266cbe3ff82da71c1d6e7c99205ffb99f5ff250e7e9",
+      "materialized": true
+    },
+    {
+      "path": "tools/native-perimeter-reused-candidate-v2.mjs",
+      "before": "1dddb372e6b9c33c3634b77a3146a4d5bf4eaafe550d05bc89fe0f09bf3d308a",
+      "after": "1dddb372e6b9c33c3634b77a3146a4d5bf4eaafe550d05bc89fe0f09bf3d308a",
+      "materialized": true
+    },
+    {
+      "path": "tools/native-reused-service-component-proof-v2.mjs",
+      "before": "49876084e57a8502d6e4e343ff8ebc4a014673c1c7440379b0c3321b84cd2eed",
+      "after": "49876084e57a8502d6e4e343ff8ebc4a014673c1c7440379b0c3321b84cd2eed",
+      "materialized": true
+    },
+    {
+      "path": "tools/native-interior-attack-anchor.mjs",
+      "before": "4ecd39956d1bc93afef519910d67e797213faa4a3529a6cd273559d11a86da03",
+      "after": "4ecd39956d1bc93afef519910d67e797213faa4a3529a6cd273559d11a86da03",
+      "materialized": true
+    },
+    {
+      "path": "tools/native-worker-service-proof-v2.mjs",
+      "before": "86e53164024dacdfc4cf633303a9c1b43503f3ffdd3352d054955129630662ce",
+      "after": "86e53164024dacdfc4cf633303a9c1b43503f3ffdd3352d054955129630662ce",
+      "materialized": true
+    },
+    {
+      "path": "tools/terrain-lattice-tile-candidate.mjs",
+      "before": "a678a40f9835f2dc8e0bf30d7f478fceba7a1bd5aff450ffd46edf3a472f0fbe",
+      "after": "a678a40f9835f2dc8e0bf30d7f478fceba7a1bd5aff450ffd46edf3a472f0fbe",
+      "materialized": true
+    },
+    {
+      "path": "tools/native-worker-service-proof-v3.mjs",
+      "before": "6456c76eed308886195d62a8776a4f41c93bd20d71a51cf3d68e10018698fa10",
+      "after": "6456c76eed308886195d62a8776a4f41c93bd20d71a51cf3d68e10018698fa10",
+      "materialized": true
+    },
+    {
+      "path": "tools/static-animal-certificate-cache.mjs",
+      "before": "8451c7e28feec79c0f44b71b35b69a53efc8097ea49135d89d62becf25ab339d",
+      "after": "8451c7e28feec79c0f44b71b35b69a53efc8097ea49135d89d62becf25ab339d",
+      "materialized": true
+    },
+    {
+      "path": "tools/native-proof-failure-details.mjs",
+      "before": "faffadd6d3ab0a15911f91efca4bd62c22c7a01c42c156e890fde1583896da9d",
+      "after": "faffadd6d3ab0a15911f91efca4bd62c22c7a01c42c156e890fde1583896da9d",
+      "materialized": true
+    },
+    {
+      "path": "tools/proof-geometry-signature-candidate.mjs",
+      "before": "509844f64d1001ddd6c9ce72e1102dcf31d351ba62cd590f60d8c69ca6841bbe",
+      "after": "509844f64d1001ddd6c9ce72e1102dcf31d351ba62cd590f60d8c69ca6841bbe",
+      "materialized": true
+    },
+    {
+      "path": "tools/native-stable-plan-perimeter-proof.mjs",
+      "before": "283b0a651dd6310a776c290704ce329aa96247a608c239a4ccd2cd5cb1b94280",
+      "after": "283b0a651dd6310a776c290704ce329aa96247a608c239a4ccd2cd5cb1b94280",
+      "materialized": true
+    },
+    {
+      "path": "tools/stable-prospective-wall-plan-candidate.mjs",
+      "before": "4cb894787269ca45d9e3bc12e7a82fba80836d58f84b05ebe1399c602c3b95ce",
+      "after": "4cb894787269ca45d9e3bc12e7a82fba80836d58f84b05ebe1399c602c3b95ce",
+      "materialized": true
+    },
+    {
+      "path": "tools/run-reviewed-recovery-comparison.mjs",
+      "before": "4950a824d84a6e67fcaf0c1c9405284cc693d9f5e38c7b01c76c24f84c8fb1e0",
+      "after": "4950a824d84a6e67fcaf0c1c9405284cc693d9f5e38c7b01c76c24f84c8fb1e0",
+      "materialized": true
+    },
+    {
+      "path": "tools/run-military-only-calibration.mjs",
+      "before": "763c7140fdf6dfef72110577fca4a459a7851bb79b97aceff2d81325e542dda4",
+      "after": "763c7140fdf6dfef72110577fca4a459a7851bb79b97aceff2d81325e542dda4",
+      "materialized": true
+    },
+    {
+      "path": "docs/qa/integrated-spiritual-survival/military-only-policy-freeze-v1.json",
+      "before": "81163683b828961d6244fad5a89634312b5c605883730c2cc9b8b60affb1eed2",
+      "after": "81163683b828961d6244fad5a89634312b5c605883730c2cc9b8b60affb1eed2",
+      "materialized": true
+    }
+  ],
+  "scope": "Sparse checkout: materialized files hashed from disk; omitted unchanged files hashed from base Git objects. This is a change audit, not certification that a full campaign can run with omitted fixtures/assets."
+}
