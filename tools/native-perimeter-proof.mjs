@@ -5,7 +5,11 @@ import {centerFootprint} from '../src/world/centers.js';
 import {operational} from '../src/simulation/rules.js';
 import {nativeServiceComponentProof} from './native-service-component-proof.mjs';
 const proofViews=new WeakMap();
-export function nativePerimeterProof(s,nav,plan,bounds,{cache=true,outline=null}={}){
+let serviceCertificateEnabled=false,certificateTotals={proofs:0,queries:0,certificates:0};
+export function setNativePerimeterServiceCertificate(enabled){if(typeof enabled!=='boolean')throw Error('Expected explicit QA certificate flag');serviceCertificateEnabled=enabled;certificateTotals={proofs:0,queries:0,certificates:0};}
+export function nativePerimeterServiceCertificateDiagnostics(){return {...certificateTotals};}
+export function nativePerimeterProof(s,nav,plan,bounds,{cache=true,outline=null,sharedCertificate=serviceCertificateEnabled}={}){
+ certificateTotals.proofs++;
  // Native epochs invalidate obstacle/terrain/suppression changes. Bounds and
  // living crops are rechecked below on every call; they do not alter graph
  // geometry. Retain only one bounded native-query view per navigator.
@@ -30,7 +34,7 @@ export function nativePerimeterProof(s,nav,plan,bounds,{cache=true,outline=null}
   if(!complete){
    if(!outline)return {valid:false,reason:'no-complete-native-component-certificate',checks};
    const targets=[...s.plants.filter(p=>p.alive),...s.structures.filter(operational)];
-   const services=nativeServiceComponentProof(s,view,targets,radius,outside,outline);checks.at(-1).services=services;
+   const services=nativeServiceComponentProof(s,view,targets,radius,outside,outline,{sharedCertificate,onCertificate:r=>{certificateTotals.queries++;certificateTotals.certificates+=Number(r.certificate);}});checks.at(-1).services=services;
    if(!services.valid)return {valid:false,reason:services.reason,checks};
   }
  }

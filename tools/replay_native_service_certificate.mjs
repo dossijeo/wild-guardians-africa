@@ -1,0 +1,22 @@
+import assert from 'node:assert/strict';
+import {readFileSync,writeFileSync,mkdirSync,existsSync} from 'node:fs';import {createHash} from 'node:crypto';import {gunzipSync,gzipSync} from 'node:zlib';import {resolve} from 'node:path';
+import {serialize,deserialize} from '../src/persistence/snapshots.js';import {Navigation,BIOME_IDS} from '../src/world/navigation.js';import * as Game from '../src/simulation/game.js';
+import {createNativeFundedDefensePolicy} from './native-funded-defense-policy.mjs';
+import {setNativePerimeterServiceCertificate,nativePerimeterServiceCertificateDiagnostics} from './native-perimeter-proof.mjs';
+import {nativeCampaignProvenance} from './run_native_campaign.mjs';
+const input=resolve(process.argv[2]??'docs/qa/native-balance-parallel-short/native-original/state.json.gz'),out=resolve(process.argv[3]??'.cache/service-certificate-abba');if(existsSync(out))throw Error('New output directory required');mkdirSync(out,{recursive:true});
+const original=gunzipSync(readFileSync(input)),sha=b=>createHash('sha256').update(b).digest('hex'),provenance=nativeCampaignProvenance({days:7,seed:123,strategy:'good',biome:'sabana',culture:'mapungubwe',profile:'olderFemale',labourPolicy:'q15'});
+for(const p of ['tools/native-closed-approach-certificate.mjs','tools/replay_native_service_certificate.mjs','tests/native-service-shared-certificate.test.js'])provenance.sourceHashes[p]=sha(readFileSync(p));
+assert.deepEqual(provenance.trackedChanges,[]);writeFileSync(out+'/launch.json',JSON.stringify({pid:process.pid,startedAt:new Date().toISOString(),input,inputSHA:sha(original),order:['A1','B1','B2','A2'],provenance,scope:'Same bounded independent protected legal fixture as terrain-cache negative: exact day8 snapshot, one native hire, one fresh frozen defense policy act, one native tick. Not a campaign or reconstruction of original in-memory Q15 history.'},null,2)+'\n');
+const checkSources=()=>{for(const[p,h]of Object.entries(provenance.sourceHashes))assert.equal(sha(readFileSync(p)),h,p);};
+const arms=[];try{
+ for(const label of ['A1','B1','B2','A2']){
+  checkSources();const enabled=label[0]==='B',s=deserialize(original.toString()),profile=JSON.parse(readFileSync('public/content/biome-'+BIOME_IDS[s.biome]+'.json')).profile,nav=new Navigation(s.seed,s.biome,profile);nav.setState(s);assert.equal(s.day,8);assert.equal(s.time,0);assert.ok(s.pauses.includes('hiring'));
+  const initial=serialize(s);Game.hire(s,'proof-cache-native-hire',{olderFemale:1});const prepared=serialize(s),policy=createNativeFundedDefensePolicy({startDay:6,material:'zarzas',repairWalls:true,obstacleAware:true,shoreRouting:true,repairPolicy:'breach-first',funding:'rolling'});let id=0;
+  setNativePerimeterServiceCertificate(enabled);const start=performance.now(),action=policy.act(s,nav,{command:k=>'proof-cache-'+k+'-'+id++,reserve:35}),actMs=performance.now()-start,tickStart=performance.now();Game.tick(s,1,nav);const tickMs=performance.now()-tickStart,final=serialize(s),decision=policy.report();
+  const row={label,enabled,initialSHA:sha(initial),preparedSHA:sha(prepared),finalSHA:sha(final),action,actMs,tickMs,certificate:nativePerimeterServiceCertificateDiagnostics(),decision};arms.push(row);writeFileSync(out+'/'+label+'-state.json.gz',gzipSync(Buffer.from(final)));writeFileSync(out+'/'+label+'.json',JSON.stringify(row,null,2)+'\n');checkSources();
+  if(arms.length>1){assert.equal(row.initialSHA,arms[0].initialSHA);assert.equal(row.preparedSHA,arms[0].preparedSHA);assert.equal(row.finalSHA,arms[0].finalSHA,'Full ledger/workers/crops/clock/RNG/events state must remain byte-identical');assert.equal(row.action,arms[0].action);assert.deepEqual(row.decision,arms[0].decision,'Complete defense decision/proof report must match');}
+  console.log(JSON.stringify({label,actMs,tickMs,action,finalSHA:row.finalSHA,certificate:row.certificate}));
+ }
+ writeFileSync(out+'/summary.json',JSON.stringify({status:'passed-exact-parity',finishedAt:new Date().toISOString(),arms:arms.map(({decision,...r})=>r)},null,2)+'\n');
+}catch(error){writeFileSync(out+'/failure.json',JSON.stringify({status:'failed-or-partial',message:error.message,stack:error.stack,completedArms:arms.length},null,2)+'\n');throw error;}finally{setNativePerimeterServiceCertificate(false);}
