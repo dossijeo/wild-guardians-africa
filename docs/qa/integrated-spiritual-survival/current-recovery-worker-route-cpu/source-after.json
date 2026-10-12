@@ -1,0 +1,25 @@
+{
+  "observedAt": "2026-10-12T00:12:44.955Z",
+  "pid": 51388,
+  "checkedFiles": 464,
+  "differences": [],
+  "progress": {
+    "observedAt": "2026-10-12T00:12:28.482Z",
+    "processId": 51388,
+    "day": 19,
+    "time": 300,
+    "elapsed": 11231.600000021852,
+    "living": 260,
+    "workers": 23,
+    "wallMilliseconds": 8095996,
+    "result": null
+  },
+  "commands": [
+    "Profiler.enable",
+    "Profiler.setSamplingInterval interval=2000",
+    "Profiler.start",
+    "Profiler.stop",
+    "Profiler.disable"
+  ],
+  "listener": "Verified 127.0.0.1:9229 belongs to PID 51388; client disconnected after capture."
+}
