@@ -29,4 +29,12 @@ The main-based 300-second native replays for 50, 200 and 500 crops completed: al
 
 The 500-crop run reduced aggregate tick CPU by about 11.7% using the mean of each pair. This is one contended desktop experiment, not a guaranteed gameplay/FPS gain. Smaller runs show warm-up/timing variability. Balance and plan verification also pass. No experimental campaign parameters were changed.
 
-Final review and PR/CI acceptance remain pending. Earlier experimental-base measurements found no clear full-day benefit in the accessible 500-crop case; that neutral result remains preserved on `codex/watering-route-cache`. Neither result proves acceleration of the experimental 100-night campaign.
+Earlier experimental-base measurements found no clear full-day benefit in the accessible 500-crop case; that neutral result remains preserved on `codex/watering-route-cache`. Neither result proves acceleration of the experimental 100-night campaign.
+
+## Synchronization after PR25 integration
+
+PR25 was merged to main as `fc4c3a81` after both final-head Windows and Validate game workflows passed. This branch incorporates that main commit. The runtime diff relative to main is still restricted to the two watering files. All five combined worker/watering runtime files exactly match the hashes from the earlier native composition proof.
+
+On the actual synchronized branch, 105/105 worker, gate, task, watering and SFX regressions pass. The new web build passes in 20.25 seconds; the package check passes with 722 files, 445,657,170 bytes, 860 relative links and 22 runtime GLBs. Original logs and source hashes are retained in `main-sync-receipt.json` and its listed archives. The existing bundle warning remains.
+
+Both CI workflows also passed on the preceding standalone cache head `ccb808d4`. The synchronized head needs its own CI acceptance before merge; old-head success is not represented as a check on the updated head. No frozen military campaign sources or policies were changed.
