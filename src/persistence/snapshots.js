@@ -12,6 +12,7 @@ export function validateSnapshot(state) {
   if(!state || state.saveVersion!==SAVE_VERSION || typeof state.slotId!=='string')throw new Error('Guardado incompatible');
   validatePressureSnapshot(state);
   if(!Number.isFinite(state.time)||state.time<0||state.time>600 || !Number.isSafeInteger(state.day)||state.day<1)throw new Error('Reloj inválido');
+  if(state.cinematicSeenAct!==undefined&&(!Number.isSafeInteger(state.cinematicSeenAct)||state.cinematicSeenAct<0||state.cinematicSeenAct>10||state.cinematicSeenAct>Math.floor((state.completedNights??0)/10)))throw new Error('Progreso de cinemáticas inválido');
   if(!state.ledger||!wholeMoney(state.ledger.balance)||BigInt(state.ledger.balance.n)<0n)throw new Error('Saldo inválido');
   if(!state.ledger.entries||typeof state.ledger.entries!=='object'||Array.isArray(state.ledger.entries)||!Object.values(state.ledger.entries).every(wholeMoney))throw new Error('Libro monetario inválido');
   const tutorial=state.tutorial,validIds=ids=>Array.isArray(ids)&&ids.every(id=>TUTORIAL_IDS.includes(id))&&new Set(ids).size===ids.length;

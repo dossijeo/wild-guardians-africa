@@ -1,6 +1,8 @@
 import {createDesktopExit} from './desktop-exit.js';
 import {preloadScreenOverlays} from '../ui/screen-overlays.js';
 import {GameJuice} from '../ui/game-juice.js';
+import {CampaignCinematics} from '../ui/campaign-cinematics.js';
+import {dueCinematicAct,finishCinematicAct,initializeCinematicProgress} from './campaign-cinematics.js';
 import {installLoadingGameplayGpuQa} from './loading-gameplay-gpu-qa.js';
 import {LibraryViewer} from '../ui/library-viewer.js';
 import {EventCards} from '../ui/event-cards.js';
@@ -81,6 +83,7 @@ for(const item of Object.values(ASSETS))item.src=assetUrl(item.src);
 const loadFrameImages=createFrameImageLoader(ASSETS),loadLoadingFrameImages=createLoadingFrameLoader(loadFrameImages);
 const screenWakeLock=new GameScreenWakeLock();screenWakeLock.setActive(true);
 let juice=null;
+let campaignCinema=null;
 let selector,thumbnails,state=null,nav=null,world=null,tool=null,selection=null,screen='menu',lastFrame=0,starting=false,raidLoading=null,lastUI=0,villageCatalog=null,pendingVillage=null;
 let preparedLoading=null,loadingDiorama=null,loadingProgress=null,loadingCinema=null,loadingMature=null,loadingDiagnostic=null,loadingGeneration=0,loadingAudio=null,loadingOverlay=null,loadingTransfers=null;
 function prepareLoadingScene(){
@@ -122,7 +125,7 @@ function safe(action){if(leaving)return;commandFeedback='';try{const result=acti
 function save({confirm=false}={}){const owner=juice;return saveGame(state,saves,{confirm,onError:error,onConfirm:()=>owner?.savedSuccessfully()});}
 const exitDesktop=createDesktopExit({host:window,save,hasGame:()=>!!state,onError:failure=>error(moneyLocale().startsWith('es')?'No se pudo cerrar la aplicación: '+failure.message:'Could not close the application: '+failure.message)});
 function bind(id,fn){document.getElementById(id)?.addEventListener('click',()=>safe(fn));}
-function clearWorld(){juice?.dispose();juice=null;gameplayGpuQa?.close();clearLoadingPresentation();libraryViewer?.dispose();libraryViewer=null;dialogVoice.stop();raidLoading?.remove();raidLoading=null;noticeLifetime.reset();eventCards=null;surfaces.reset();uiAudio.reset();toolSession.clear();manualMagicActivity.reset();budgetWarningUntil=0;lastBudgetBalance=Infinity;reserveWarningShown=false;pendingVillage=null;commandFeedback='';setTutorialInteraction(false);tutorial=null;hudHand?.dispose();hudHand=null;guardian?.dispose();guardian=null;world?.dispose();world=null;nav=null;audio.stop();tool=null;selection=null;document.querySelector('#native-hud-style')?.remove();}
+function clearWorld(){campaignCinema?.dispose();campaignCinema=null;juice?.dispose();juice=null;gameplayGpuQa?.close();clearLoadingPresentation();libraryViewer?.dispose();libraryViewer=null;dialogVoice.stop();raidLoading?.remove();raidLoading=null;noticeLifetime.reset();eventCards=null;surfaces.reset();uiAudio.reset();toolSession.clear();manualMagicActivity.reset();budgetWarningUntil=0;lastBudgetBalance=Infinity;reserveWarningShown=false;pendingVillage=null;commandFeedback='';setTutorialInteraction(false);tutorial=null;hudHand?.dispose();hudHand=null;guardian?.dispose();guardian=null;world?.dispose();world=null;nav=null;audio.stop();tool=null;selection=null;document.querySelector('#native-hud-style')?.remove();}
 let leaving=false;
 async function menu() {
   if(leaving)return;leaving=true;
@@ -196,7 +199,7 @@ async function startGame(loaded=null,{slotId,preview}={}) {
     }
     nav.setState(next);
     for(const village of next.villages)if(!village.entry)village.entry=findVillageEntry(nav,[],village.x,village.z);
-    state=next;audio.remember(state.events);loadingProgress.update('configuration');
+    state=next;initializeCinematicProgress(state);audio.remember(state.events);loadingProgress.update('configuration');
     resumeLoadedWorld(state,{hidden:document.hidden});
     if(document.hidden)audio.suspend();
     const nativeStyle=document.createElement('link');nativeStyle.id='native-hud-style';nativeStyle.rel='stylesheet';nativeStyle.href=assetUrl('/content/hud.css');document.head.append(nativeStyle);
@@ -221,7 +224,7 @@ async function startGame(loaded=null,{slotId,preview}={}) {
     loadingProgress.update('visible-ready');loadingDiorama.loadingReady=true;loadingDiorama.stopPlanting();loadingDiorama.render(0,1,{ready:true});
     if(!loadingDiorama.plants.mature)await new Promise((resolve,reject)=>{loadingMature={resolve,reject};});assertLoading();loadingProgress.confirmReady();
     loadingCinema.start();await loadingCinema.finished;assertLoading();progressQa?.cameraPose('cinematic-completed',world);loadingCinema=null;loadingDiorama.dispose();loadingDiorama=null;loadingAudio?.dispose();loadingAudio=null;world.loadingActorQueue?.dispose();progressQa?.lifecycle('app-cinematic-restored-before-controls');progressQa?.close(loadingProgress,loadingTransfers);loadingTransfers.dispose();loadingTransfers=null;world.onLoadingSpan=null;world.onLoadingActorQueue=null;world.onLoadingGpuDraw=null;world.controls.enabled=true;clearInterval(loadingDiagnostic);loadingDiagnostic=null;
-    world.render(0);loadingOverlay?.dispose();loadingOverlay=null;document.querySelector('#stage').classList.remove('world-loading');document.querySelector('#stage').setAttribute('aria-busy','false');tutorial=new TutorialController(state,tutorialProfile,{onError:e=>error('No se ha podido guardar la memoria del tutorial: '+e.message),isNarrating:id=>guardian?.voice?.active&&guardian?.key?.startsWith(id+':')});screen='game';juice=new GameJuice(document.querySelector('#stage'),state,world,{allowResult:()=>surfaces.active==='result'&&!guardian?.voice?.active&&!state?.tutorial?.reading,priority:()=>!!surfaces.active||!!guardian?.voice?.active||!!tutorial?.presentation({record:false})||!!document.hidden});screenWakeLock.setActive(true);bind('pause',pauseDialog);lastFrame=performance.now();updateUI(true);save();audio.gameplay(state.day).catch(()=>{});
+    world.render(0);loadingOverlay?.dispose();loadingOverlay=null;document.querySelector('#stage').classList.remove('world-loading');document.querySelector('#stage').setAttribute('aria-busy','false');tutorial=new TutorialController(state,tutorialProfile,{onError:e=>error('No se ha podido guardar la memoria del tutorial: '+e.message),isNarrating:id=>guardian?.voice?.active&&guardian?.key?.startsWith(id+':')});screen='game';juice=new GameJuice(document.querySelector('#stage'),state,world,{allowResult:()=>surfaces.active==='result'&&!guardian?.voice?.active&&!state?.tutorial?.reading,priority:()=>!!surfaces.active||!!guardian?.voice?.active||!!tutorial?.presentation({record:false})||!!document.hidden});screenWakeLock.setActive(true);bind('pause',pauseDialog);lastFrame=performance.now();updateUI(true);save();if(!campaignCinema?.active)audio.gameplay(state.day).catch(()=>{});
   } catch(e){if(loadingToken===loadingGeneration){loadingProgress?.fail(e);state=null;clearWorld();releasePreparedLoading();menu();error(e.message,{loadingFailure:true});}}finally{if(loadingToken===loadingGeneration){starting=false;const stats=document.querySelector('#stats');if(stats)stats.textContent='';}}
 }
 function guidedHudAction(action,open){
@@ -315,8 +318,20 @@ function closeSurface(){
 }
 function armTool(value){tool=toolSession.select(value,performance.now()/1000);world?.focusTutorialPlacement(value.kind);}
 function cancelTool(){if(pendingVillage)cancelVillagePreview();tool=null;toolSession.clear();commandFeedback='';}
+function startDueCinematic(){
+  if(campaignCinema||document.hidden)return false;
+  const act=dueCinematicAct(state);if(!act)return false;
+  guardian?.hide({immediate:true,interrupt:true});dialogVoice.stop();
+  if(audio.musicGain)audio.musicGain.gain.value=0;
+  const owner=new CampaignCinematics({host:document.body,onError:failure=>error((moneyLocale().startsWith('es')?'No se pudo reproducir la cinemática: ':'Could not play cinematic: ')+failure.message),onComplete:()=>{
+    if(campaignCinema!==owner)return;
+    campaignCinema=null;finishCinematicAct(state,act);audio.volume();save();updateUI(true);
+  }});
+  campaignCinema=owner;owner.play(act);return true;
+}
 function updateUI(force=false) {
   if(screen!=='game'||!state)return;
+  if(campaignCinema||startDueCinematic())return;
   const now=performance.now();if(!force&&now-lastUI<200)return;lastUI=now;
   manualMagicActivity.update(state);
   if(tool&&(['plant','center','wall'].includes(tool.kind)||tool.kind==='spell'&&tool.spell!=='shield')&&toolSession.expired(now/1000,tool.kind==='wall'&&world.wallDrawing.active))cancelTool();
@@ -480,10 +495,10 @@ function libraryScreen() {
   clearWorld();screen='library';app.innerHTML=`<main class="screen"><header class="topbar"><div class="brand">Biblioteca</div>${button('back','← Volver','ghost')}</header><h2>Los archivos del poblado</h2><p class="muted">Laboratorios originales aislados de tus partidas. Los recursos se cargan al abrir cada demostración.</p><div class="library-grid">${[['crops','Cultivos','Ocho especies, cinco etapas y transiciones locales.'],['walls','Bastión','Materiales, puertas reforzadas y estados de daño.'],['destruction','Destrucción','Daño normalizado y colapso de los edificios.'],['sfx','Sonidos','126 sonidos originales, con usos y reservas documentados.']].map(([id,title,description])=>`<article class="library-card"><h3>${title}</h3><p class="muted">${description}</p><button data-demo="${id}">Abrir demostración →</button></article>`).join('')}</div><p class="muted">Modelos originales Meshy · Audio original ElevenLabs y paquetes musicales suministrados · Ga Maamli y Banga bajo SIL OFL.</p></main>`;
   bind('back',menu);document.querySelectorAll('[data-demo]').forEach(el=>el.onclick=()=>{libraryViewer=new LibraryViewer(app,el.dataset.demo,{onBack:libraryScreen,onMenu:menu});});
 }
-document.addEventListener('visibilitychange',()=>{if(state){if(document.hidden){Game.pause(state,'hidden');guardian?.hide({immediate:true});dialogVoice.stop();audio.suspend();}else {Game.resume(state,'hidden');lastFrame=performance.now();audio.resume();narrateResultDialog();}}});
-document.addEventListener('keydown',e=>hudShortcut(e,document,{enabled:screen==='game'&&!!state&&!starting&&!tutorial?.presentation({record:false})?.blocking&&!document.querySelector('#modal')?.children.length}));
-document.addEventListener('keydown',e=>{if(leaving)return;if(e.key==='Escape'&&state&&screen==='game'&&!starting){if(tutorial?.presentation({record:false})?.blocking){tutorial.dismiss({automatic:true});save();}else if(surfaces.active){closeSurface();}else if(tool){tool=null;commandFeedback='';hideHudPanel();}else if(state.pauses.includes('menu')){Game.resume(state,'menu');document.querySelector('#modal').innerHTML='';}else pauseDialog();updateUI(true);}});
-document.addEventListener('pointerdown',()=>{audio.unlock().then(()=>screen==='loading'?loadingAudio?.start():screen==='menu'?audio.menu():state?audio.gameplay(state.day):null).catch(()=>{});});
+document.addEventListener('visibilitychange',()=>{if(state){if(document.hidden){Game.pause(state,'hidden');guardian?.hide({immediate:true});dialogVoice.stop();campaignCinema?.voice.pause();audio.suspend();}else {Game.resume(state,'hidden');lastFrame=performance.now();audio.resume();if(campaignCinema?.active)campaignCinema.voice.play().catch(()=>{});else narrateResultDialog();}}});
+document.addEventListener('keydown',e=>hudShortcut(e,document,{enabled:screen==='game'&&!!state&&!starting&&!campaignCinema?.active&&!tutorial?.presentation({record:false})?.blocking&&!document.querySelector('#modal')?.children.length}));
+document.addEventListener('keydown',e=>{if(leaving)return;if(e.key==='Escape'&&campaignCinema?.active){e.preventDefault();campaignCinema.finish();return;}if(e.key==='Escape'&&state&&screen==='game'&&!starting){if(tutorial?.presentation({record:false})?.blocking){tutorial.dismiss({automatic:true});save();}else if(surfaces.active){closeSurface();}else if(tool){tool=null;commandFeedback='';hideHudPanel();}else if(state.pauses.includes('menu')){Game.resume(state,'menu');document.querySelector('#modal').innerHTML='';}else pauseDialog();updateUI(true);}});
+document.addEventListener('pointerdown',()=>{if(campaignCinema?.active)return;audio.unlock().then(()=>screen==='loading'?loadingAudio?.start():screen==='menu'?audio.menu():state?audio.gameplay(state.day):null).catch(()=>{});});
 window.addEventListener('pagehide',()=>{guardian?.voice?.dispose();dialogVoice.dispose();});
 window.addEventListener('wild-guardians:language-change',()=>{if(state){dialogVoice.stop();if(guardian){guardian.voice?.stop();guardian.key=null;}updateUI(true);narrateResultDialog();}const draft=document.querySelector('#hireConfirm');if(draft){document.querySelector('#crewCount0').dispatchEvent(new Event('input'));for(const [i,profile] of NPC_TYPES.entries()){const pace=document.querySelector(`[data-crew-card="${i}"] .hire-stats b`);if(pace)pace.textContent='×'+profile.speed.toLocaleString(moneyLocale(),{minimumFractionDigits:2,maximumFractionDigits:2});}}});
 window.addEventListener('beforeunload',()=>{screenWakeLock.dispose();if(state)save();});
@@ -507,7 +522,7 @@ function frame(now) {
   }
   if(screen==='game'&&world&&state&&!state.pauses.includes('runtime-error')) {
     const eventIndex=state.events.at(-1)?.id;
-    try {tutorial?.update();if(tutorial?.advance(dt,{visible:!guardian?.voice?.active&&!surfaces.active&&!document.hidden&&!state.pauses.includes('menu')&&now>=budgetWarningUntil}))save();refreshTutorialGuidance();if(world.actorsReady())Game.advanceReal(state,dt,nav);tutorial?.update();juice?.process(state);if(gameplayGpuQa)gameplayGpuQa.frame(now,world.renderer,()=>world.render(dt));else world.render(dt);updateRaidLoading();audio.process(state.events,{state,listener:world.controls.target});audio.updateMusic(state);audio.updateUnlocks(state);audio.updateAmbient(state,{listener:world.controls.target,waterRevision:nav.version,waterAt:(x,z)=>({...nav.field.waterInfo(x,z),active:!!(nav.field.wetland||nav.field.riverActive)})});audio.updateFarmActors(state,{listener:world.controls.target});audio.updateAnimals(state,{listener:world.controls.target});audio.updateMovement(state,{listener:world.controls.target,surfaceAt:world.movementSurfaceAt});updateUI();guardian?.update();juice?.update(state);}
+    try {if(!campaignCinema?.active){tutorial?.update();if(tutorial?.advance(dt,{visible:!guardian?.voice?.active&&!surfaces.active&&!document.hidden&&!state.pauses.includes('menu')&&now>=budgetWarningUntil}))save();refreshTutorialGuidance();if(world.actorsReady())Game.advanceReal(state,dt,nav);tutorial?.update();juice?.process(state);if(gameplayGpuQa)gameplayGpuQa.frame(now,world.renderer,()=>world.render(dt));else world.render(dt);updateRaidLoading();audio.process(state.events,{state,listener:world.controls.target});audio.updateMusic(state);audio.updateUnlocks(state);audio.updateAmbient(state,{listener:world.controls.target,waterRevision:nav.version,waterAt:(x,z)=>({...nav.field.waterInfo(x,z),active:!!(nav.field.wetland||nav.field.riverActive)})});audio.updateFarmActors(state,{listener:world.controls.target});audio.updateAnimals(state,{listener:world.controls.target});audio.updateMovement(state,{listener:world.controls.target,surfaceAt:world.movementSurfaceAt});updateUI();guardian?.update();juice?.update(state);}}
     catch(e){Game.pause(state,'runtime-error');guardian?.hide({immediate:true});dialogVoice.stop();error(e.message);console.error(e);}
     if(autosaveEventAfter(state.events,eventIndex))save();
   }
