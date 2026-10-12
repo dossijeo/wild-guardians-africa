@@ -23,6 +23,13 @@ records (151 alive) at the checkpoint. Its worker phase consumed 1,991 ms over
 50 ticks; the raid phase consumed less than 1 ms. The main peaks coincide with
 repeated task-reachability scans and route-cache invalidations.
 
+Follow-up per-query attribution refined this diagnosis: the two idle workers
+account for the *number* of calls, but their cached failures are usually cheap.
+Several already-walking workers dominate the expensive queries immediately
+after navigation invalidation. The route-preservation experiment below targets
+those active paths. Do not interpret the 8,673-call count alone as a timing
+profile.
+
 The two invalidations at times 141.2 and 142.5 came from physical repairs of
 walls whose previous status was **ruined**. Rebuilding those pieces changes
 collision geometry. An experimental shortcut that kept the route epoch across
@@ -31,8 +38,6 @@ routes. It was reverted; production files and balance parameters are unchanged.
 Unchanged-geometry repair tests passed during the experiment, but they do not
 justify applying the shortcut to the ruined walls in this checkpoint.
 
-Next optimization must bound or reuse the expensive task-reachability work
-without suppressing legitimate retests after topology changes. Preserve task
-priority, deterministic assignment, native worker movement and save/reload
-behavior. Recheck this exact checkpoint and an uninterrupted pilot before
-starting the 100-night campaign.
+The next experiment, documented in `day13-wall-route-preservation.md`, keeps
+active worker paths only when they cannot touch the rebuilt wall. The 100-night
+campaign remains gated by the remaining long frames.
