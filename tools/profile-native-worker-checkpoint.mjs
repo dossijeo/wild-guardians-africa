@@ -15,7 +15,8 @@ const queries=[],ticks=[],phases=[],invalidations=[];const path=nav.path,setStat
 nav.setState=function(state){invalidations.push({time:state.time,versionBefore:this.version,stack:new Error().stack?.split('\n').slice(2,5)});return setState.call(this,state);};
 if(!compact)nav.path=function(start,end,radius,ignore,worker,margin){
  const begun=performance.now(),result=path.call(this,start,end,radius,ignore,worker,margin);
- queries.push({time:s.time,startId:start?.id??null,endId:end?.id??null,worker:worker!==false,radius,margin:margin??16,milliseconds:performance.now()-begun,found:!!result});
+ const milliseconds=performance.now()-begun;
+ queries.push({time:s.time,startId:start?.id??null,endId:end?.id??null,worker:worker!==false,radius,margin:margin??16,milliseconds,found:!!result,...(milliseconds>50?{stack:new Error().stack?.split('\n').slice(2,6)}:{})});
  return result;
 };
 for(let i=0;i<Math.ceil(seconds/.1)&&!s.result;i++){

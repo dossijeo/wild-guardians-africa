@@ -11,7 +11,7 @@ function failedWaterRouteCache(nav){
   return cache.entries;
 }
 // Service points outside the same footprints used by Navigation.
-export function repairRoute(worker,target,nav){
+export function repairRoutePoints(worker,target,nav){
   const radius=.28,clearance=.1;
   let points;
   if(target.kind==='center'){
@@ -26,8 +26,12 @@ export function repairRoute(worker,target,nav){
     points=[[0,depth],[0,-depth],[width,0],[-width,0]].map(([x,z])=>({x:target.x+x*c+z*s,z:target.z-x*s+z*c}));
     points.sort((a,b)=>Math.hypot(a.x-worker.x,a.z-worker.z)-Math.hypot(b.x-worker.x,b.z-worker.z));
   }
-  for(const [index,point] of points.entries()){
-    const destination={...point,id:`repair-point-${target.id}-${index}`},path=nav.path(worker,destination,radius,null,true);
+  return points.map((point,index)=>({...point,id:`repair-point-${target.id}-${index}`}));
+}
+export function repairRoute(worker,target,nav){
+  const radius=.28;
+  for(const destination of repairRoutePoints(worker,target,nav)){
+    const path=nav.path(worker,destination,radius,null,true);
     if(path)return {destination,path};
   }
   return null;

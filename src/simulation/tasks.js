@@ -1,5 +1,6 @@
 import {contractExpired} from './workforce.js';
 import {cancelIdle} from './idle.js';
+export const TASK_ROUTE_PENDING=Symbol('task-route-pending');
 
 export function enqueue(state,centerId,kind,targetId) {
   if(!centerId || state.tasks.some(t=>t.kind===kind&&t.targetId===targetId))return null;
@@ -71,7 +72,11 @@ export function reserveTasks(state,canExecute=()=>true) {
     let worker;
     if(workers.length<8){
       workers.sort((a,b)=>Math.hypot(a.x-target.x,a.z-target.z)-Math.hypot(b.x-target.x,b.z-target.z)||a.id.localeCompare(b.id));
-      worker=workers.find(w=>canExecute(w,t,target));
+      for(const candidate of workers){
+        const result=canExecute(candidate,t,target);
+        if(result===TASK_ROUTE_PENDING)return TASK_ROUTE_PENDING;
+        if(result){worker=candidate;break;}
+      }
     }else{
       const distances=new Map();
       let nearest=workers[0],nearestDistance=Math.hypot(nearest.x-target.x,nearest.z-target.z);
@@ -81,10 +86,17 @@ export function reserveTasks(state,canExecute=()=>true) {
         distances.set(candidate,distance);
         if((distance-nearestDistance||candidate.id.localeCompare(nearest.id))<0){nearest=candidate;nearestDistance=distance;}
       }
-      worker=canExecute(nearest,t,target)?nearest:null;
+      const first=canExecute(nearest,t,target);
+      if(first===TASK_ROUTE_PENDING)return TASK_ROUTE_PENDING;
+      worker=first?nearest:null;
       if(!worker){
         workers.sort((a,b)=>distances.get(a)-distances.get(b)||a.id.localeCompare(b.id));
-        worker=workers.find(w=>w!==nearest&&canExecute(w,t,target));
+        for(const candidate of workers){
+          if(candidate===nearest)continue;
+          const result=canExecute(candidate,t,target);
+          if(result===TASK_ROUTE_PENDING)return TASK_ROUTE_PENDING;
+          if(result){worker=candidate;break;}
+        }
       }
     }
     t.blocked=!worker && workers.length>0;
