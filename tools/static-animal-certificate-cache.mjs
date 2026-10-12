@@ -1,6 +1,7 @@
 // One positive static certificate per native proof view. Workers are deliberately
 // excluded: their access is checked separately on every query.
 const entries=new WeakMap();
+const openRoutes=new WeakMap();
 import {proofGeometrySignature} from './proof-geometry-signature-candidate.mjs';
 export function staticAnimalCertificate(state,view,plan,bounds,outline,compute,{cache=true,extend=null,gateAnimationInvariant=false}={}){
  const field=view.field;
@@ -13,6 +14,10 @@ export function staticAnimalCertificate(state,view,plan,bounds,outline,compute,{
   field?.raw,field?.naturalHeight,field?.riverBase,field?.riverX,field?.nearbyPonds,
   view.walkable,view.segmentClear,view.approachPath,view.approachGroupBlocked,view.testWalkable,view.testSegmentClear,
   view.terrainValid,view.propsAt];
+ // Reuse only physically demonstrated open routes under exactly these inputs.
+ // Search exhaustion, absence of proof and worker failures are not witnesses.
+ const negative=cache?openRoutes.get(view):null;
+ if(negative?.state===state&&negative.signature===signature&&negative.targetKey===targetKey&&methods.every((value,i)=>value===negative.methods[i]))return structuredClone(negative.proof);
  const old=cache?entries.get(view):null;
  if(old?.state===state&&old.signature===signature&&methods.every((value,i)=>value===old.methods[i])){
   if(old.targetKey===targetKey)return structuredClone(old.proof);
@@ -49,6 +54,8 @@ export function staticAnimalCertificate(state,view,plan,bounds,outline,compute,{
   }
  }
  const proof=compute();
+ if(cache&&proof.valid===false&&['native-service-direct-route-open','native-service-route-open'].includes(proof.reason))openRoutes.set(view,{state,signature,methods,targetKey,proof:structuredClone(proof)});
+ else openRoutes.delete(view);
  if(cache&&proof.valid===true)entries.set(view,{state,signature,methods,targets,targetKey,proof:structuredClone(proof)});
  else entries.delete(view);
  return proof;

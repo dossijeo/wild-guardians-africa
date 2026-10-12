@@ -1,0 +1,11 @@
+import fs from 'node:fs';import z from 'node:zlib';import {performance} from 'node:perf_hooks';import {createHash} from 'node:crypto';
+import {deserialize,serialize} from '../src/persistence/snapshots.js';import {Navigation,BIOME_IDS} from '../src/world/navigation.js';import * as Game from '../src/simulation/game.js';import {nativeStablePlanPerimeterProof} from './native-stable-plan-perimeter-proof.mjs';import {nativeWorkerServiceProofV3} from './native-worker-service-proof-v3.mjs';
+const original=new URL('../docs/qa/integrated-spiritual-survival/candidate5-performance-stop/good/',import.meta.url);const output=process.argv[2];if(!output)throw Error('Pass a fresh output JSON path');
+const state=deserialize(z.gunzipSync(fs.readFileSync(new URL('partial-state.json.gz',original))).toString()),partial=JSON.parse(z.gunzipSync(fs.readFileSync(new URL('partial.json.gz',original)))),contour=partial.receipts.defense.completed;
+const nav=new Navigation(state.seed,state.biome,JSON.parse(fs.readFileSync('public/content/biome-'+BIOME_IDS[state.biome]+'.json')).profile);nav.setState(state);
+const hash=s=>createHash('sha256').update(s).digest('hex'),before=hash(serialize(state));
+console.log(JSON.stringify({phase:'quote-start',at:new Date().toISOString()}));
+const quote=Game.quoteWallChain(state,'zarzas',contour.points,nav,{smooth:false,snap:false});console.log(JSON.stringify({phase:'quote-ready',pieces:quote.pieces.length,updates:quote.updates.length}));
+const options={outline:contour.points,gateAnimationInvariant:true,workerServiceProof:nativeWorkerServiceProofV3,incrementalCrops:true,workersFirst:true},results=[];
+for(let i=0;i<2;i++){console.log(JSON.stringify({phase:'proof-start',index:i,at:new Date().toISOString()}));const at=performance.now(),proof=nativeStablePlanPerimeterProof(state,nav,quote,contour.bounds,options);results.push({index:i,ms:performance.now()-at,valid:proof.valid,reason:proof.reason,proof});console.log(JSON.stringify({phase:'proof-finished',index:i,ms:results.at(-1).ms,valid:proof.valid,reason:proof.reason}));}
+const unchanged=hash(serialize(state))===before;fs.writeFileSync(output,JSON.stringify({scope:'Retained good day10 completed contour; native quote and full physical proof, two calls; no world advance or gameplay mutation',unchanged,results},null,2)+'\n',{flag:'wx'});console.log(JSON.stringify({unchanged}));
