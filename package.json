@@ -8,6 +8,7 @@
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1",
     "test": "node --test tests",
+    "test:playable": "node tools/run_playable_tests.mjs",
     "verify:assets": "python tools/verify_assets.py",
     "verify:browser-syntax": "node tools/check_browser_script_syntax.mjs",
     "verify:plan": "python docs/plan/verificar_reglas.py",
