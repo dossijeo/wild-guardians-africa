@@ -508,7 +508,7 @@ export function idleFarmAnchor(s,worker,center,livingCandidates=null){
 function reserveAvailableTasks(s,nav){
   if(!s.raid&&s.time<300)reserveTasks(s,(w,t,target)=>{
     if(s.time>=profile(w).end)return false;
-    const result=t.kind==='initial'||t.kind==='water'?{pending:false,route:wateringRoute(w,target,nav)}:candidateTaskRouteStep(nav,w,t,target);
+    const result=s.tasks.length<=8?{pending:false,route:t.kind==='repair'?repairRoute(w,target,nav):t.kind==='initial'||t.kind==='water'?wateringRoute(w,target,nav):{destination:target,path:nav.path(w,target,.28,null,true)}}:candidateTaskRouteStep(nav,w,t,target,s.tasks.length);
     if(result.pending)return TASK_ROUTE_PENDING;
     if(!result.route)return false;
     if(!w.terrainAvoidance?.length){
@@ -587,14 +587,14 @@ function updateWorkers(s,dt,nav) {
           }
           destination=w.taskApproach.destination;
         }else if(t.kind==='initial'||t.kind==='water'){
-          if(w.taskApproach?.taskId!==t.id||w.path===null||w.pathVersion!==nav.version){
+          if(w.taskApproach?.taskId!==t.id||w.path===null){
             const route=wateringRoute(w,target,nav);
             if(!route){releaseTask(s,w);w.status='idle';continue;}
             w.taskApproach={taskId:t.id,destination:route.destination};w.path=route.path;w.destinationId=route.destination.id;w.pathVersion=nav.version;
           }
           destination=w.taskApproach.destination;
         }
-        if(walkTo(s,w,destination,dt,nav,{motion:{urgent:(urgency?urgency.urgent(w):urgentWork(s,w))},incrementalReplan:t.kind==='repair'||t.kind==='harvest'})) {
+        if(walkTo(s,w,destination,dt,nav,{motion:{urgent:(urgency?urgency.urgent(w):urgentWork(s,w))},incrementalReplan:true})) {
           if(t.kind==='repair'){completeTask(s,w,t,target,nav);urgency?.invalidate();continue;}
           if(t.kind==='initial'||t.kind==='water')w.heading=Math.atan2(target.x-w.x,target.z-w.z);
           w.status='acting';w.actionRemaining=(t.kind==='initial'?7.2:t.kind==='water'?3.4:t.kind==='harvest'?3.6:t.kind==='repair'?3.8:1)/p.speed;

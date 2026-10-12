@@ -47,6 +47,14 @@ export function canWaterFrom(worker,plant,nav){
   // the plateau above it. River crossing permission does not extend the spout.
   return Math.abs(nav.workerSurface(worker.x,worker.z)-nav.field.surface(plant.x,plant.z))<=.5;
 }
+export function wateringRoutePoints(worker,plant,nav){
+ const radius=worker.radius??.28,standOff=(plant.species==='platano'?.65:.45)+radius+.1;
+ const angle=Math.atan2(worker.x-plant.x,worker.z-plant.z);
+ return [0,1,-1,2,-2,3,-3,4].map((offset,index)=>{
+  const yaw=angle+offset*Math.PI/4;
+  return {x:plant.x+Math.sin(yaw)*standOff,z:plant.z+Math.cos(yaw)*standOff,id:`water-point-${plant.id}-${index}`};
+ }).filter(point=>canWaterFrom({...point,radius},plant,nav));
+}
 export function wateringRoute(worker,plant,nav){
   const radius=worker.radius??.28,standOff=(plant.species==='platano'?.65:.45)+radius+.1;
   // An idle worker retries blocked tasks every 0.1 simulated seconds. Exact

@@ -1,18 +1,18 @@
 import {shortenBuildingRoute} from '../world/building-route-shortcut.js';
-import {repairRoute,repairRoutePoints} from '../world/work-points.js';
+import {repairRoute,repairRoutePoints,wateringRoute,wateringRoutePoints} from '../world/work-points.js';
 
 const searches=new WeakMap();
-const TOTAL_SLICES_PER_STEP=40,MAX_SLICES_PER_WORKER=4;
+const TOTAL_SLICES_PER_STEP=40,MAX_SLICES_PER_WORKER=4,MAX_CANDIDATE_SEARCHES_PER_STEP=1;
 function memoFor(nav){
  let memo=searches.get(nav);
- if(!memo||memo.version!==nav.version){memo={version:nav.version,remaining:TOTAL_SLICES_PER_STEP,active:new Map(),candidates:new Map()};searches.set(nav,memo);}
+ if(!memo||memo.version!==nav.version){memo={version:nav.version,remaining:TOTAL_SLICES_PER_STEP,step:0,candidateSearches:0,active:new Map(),candidates:new Map()};searches.set(nav,memo);}
  return memo;
 }
 
 // The native grid iterator yields every eight explored nodes. Keeping this
 // transient search outside the save avoids persisting a large A* frontier;
 // a reload safely restarts the same route against the restored geometry.
-export function beginAssignedWorkerRouteStep(nav){memoFor(nav).remaining=TOTAL_SLICES_PER_STEP;}
+export function beginAssignedWorkerRouteStep(nav){const memo=memoFor(nav);memo.remaining=TOTAL_SLICES_PER_STEP;memo.candidateSearches=0;memo.step++;}
 export function assignedWorkerRouteStep(nav,worker,end,radius,ignore=null){
  if(!nav.findPathSteps)return {pending:false,path:nav.workerPath?nav.workerPath(worker,end,radius,ignore):nav.path(worker,end,radius,ignore,true)};
  const memo=memoFor(nav),signature=JSON.stringify(worker.terrainAvoidance??[]);
@@ -37,45 +37,40 @@ export function assignedWorkerRouteStep(nav,worker,end,radius,ignore=null){
 
 // Eligibility must finish the nearest candidate before considering another
 // worker or a later task. A pending result is distinct from a proven failure.
-export function candidateTaskRouteStep(nav,worker,task,target){
- const radius=.28;
+export function candidateTaskRouteStep(nav,worker,task,target,queuedTaskCount=1){
+ const radius=task.kind==='initial'||task.kind==='water'?worker.radius??.28:.28;
  if(!nav.findPathSteps){
-  const route=task.kind==='repair'?repairRoute(worker,target,nav):{destination:target,path:nav.path(worker,target,radius,null,true)};
+  const route=task.kind==='repair'?repairRoute(worker,target,nav):task.kind==='initial'||task.kind==='water'?wateringRoute(worker,target,nav):{destination:target,path:nav.path(worker,target,radius,null,true)};
   return {pending:false,route:route?.path?route:null};
  }
  const memo=memoFor(nav),key=JSON.stringify([nav.version,worker.x,worker.z,task.id,task.kind,target.id,target.x,target.z]);
- let attempt=memo.candidates.get(worker);
+ const identity=JSON.stringify([worker.id,task.id]);
+ let attempt=memo.candidates.get(identity);
  if(attempt?.key!==key){
-  const destinations=task.kind==='repair'?repairRoutePoints(worker,target,nav):[target];
+  const destinations=task.kind==='repair'?repairRoutePoints(worker,target,nav):task.kind==='initial'||task.kind==='water'?wateringRoutePoints(worker,target,nav):[target];
   attempt={key,destinations,index:0,iterator:null};
-  memo.candidates.set(worker,attempt);
+  memo.candidates.set(identity,attempt);
  }
- // Even after the A* budget is spent, cheap direct routes can keep the crew
- // productive. Probe a destination only once per attempt; failed probes stay
- // in the pending iterator instead of repeating collision tests each tick.
- if(!attempt.directChecked){
-  attempt.directChecked=true;
-  for(const destination of attempt.destinations){
-   if(nav.walkable(destination.x,destination.z,radius,null,true)&&nav.segmentClear(worker,destination,radius,null,true)){
-    memo.candidates.delete(worker);
-    return {pending:false,route:{destination,path:[{x:destination.x,z:destination.z}]}};
-   }
-  }
- }
- while(memo.remaining>0){
+ if(attempt.finished)return {pending:false,route:null};
+ if((attempt.nextStep??0)>memo.step||(queuedTaskCount>8&&memo.candidateSearches>=MAX_CANDIDATE_SEARCHES_PER_STEP))return {pending:true,route:null};
+ memo.candidateSearches++;
+ let slices=0;
+ while(memo.remaining>0&&slices<MAX_SLICES_PER_WORKER){
   const destination=attempt.destinations[attempt.index];
-  if(!destination){memo.candidates.delete(worker);return {pending:false,route:null};}
+  if(!destination){attempt.finished=true;return {pending:false,route:null};}
   attempt.iterator??=nav.findPathSteps({x:worker.x,z:worker.z},{x:destination.x,z:destination.z},radius,null,true,16);
   memo.remaining--;
+  slices++;
   const step=attempt.iterator.next();
   if(!step.done)continue;
   attempt.iterator=null;
   if(step.value){
-   memo.candidates.delete(worker);
+   memo.candidates.delete(identity);
    const smoothed=nav.smoothPath(worker,step.value,radius,null,true);
    return {pending:false,route:{destination,path:shortenBuildingRoute(nav,worker,destination,smoothed,radius,null)}};
   }
   attempt.index++;
  }
+ attempt.nextStep=memo.step+(queuedTaskCount<=8?1:Math.ceil(queuedTaskCount/MAX_CANDIDATE_SEARCHES_PER_STEP));
  return {pending:true,route:null};
 }
