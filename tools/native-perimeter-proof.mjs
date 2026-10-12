@@ -5,6 +5,10 @@ import {centerFootprint} from '../src/world/centers.js';
 import {operational} from '../src/simulation/rules.js';
 import {nativeServiceComponentProof} from './native-service-component-proof.mjs';
 import {withNativeProofLatticeCache} from './native-proof-lattice-cache.mjs';
+import {withNativeWallBroadphase} from './native-proof-wall-broadphase.mjs';
+let wallBroadphase=false,wallTotals={proofs:0,eligibleWalls:0,boundQueries:0,conservativeHits:0,unsupportedQueries:0};
+export function setNativePerimeterWallBroadphase(enabled){if(typeof enabled!=='boolean')throw Error('Explicit QA wall flag required');wallBroadphase=enabled;wallTotals={proofs:0,eligibleWalls:0,boundQueries:0,conservativeHits:0,unsupportedQueries:0};}
+export function nativePerimeterWallDiagnostics(){return {...wallTotals,enabled:wallBroadphase};}
 const proofViews=new WeakMap();
 let latticeMode='off',latticeTotals={proofs:0,surfaceCalls:0,latticeCalls:0,nativeLatticeCalls:0,hits:0,capacityBypasses:0,coordinateBypasses:0,coarseCollisionCalls:0,epochInvalidations:0,maxEntries:0};
 export function setNativePerimeterLatticeMode(mode){if(!['off','diagnose','cache','flat'].includes(mode))throw Error('Invalid QA lattice mode');latticeMode=mode;latticeTotals={proofs:0,surfaceCalls:0,latticeCalls:0,nativeLatticeCalls:0,hits:0,capacityBypasses:0,coordinateBypasses:0,coarseCollisionCalls:0,epochInvalidations:0,maxEntries:0};}
@@ -25,7 +29,7 @@ export function nativePerimeterProof(s,nav,plan,bounds,{cache=true,outline=null,
   view.obstacles=[...nav.obstacles.map(w=>updates.has(w.id)?{...w,...updates.get(w.id)}:w),...plan.pieces];
   if(cache)proofViews.set(nav,{key,state:s,view});
  }
- return withNativeProofLatticeCache(view,privateView=>evaluatePerimeter(s,privateView,bounds,outline,sharedCertificate),{mode:latticeMode==='flat'?'cache':latticeMode,storage:latticeMode==='flat'?'flat':'nested',onDiagnostics:r=>{latticeTotals.proofs++;for(const k of ['surfaceCalls','latticeCalls','nativeLatticeCalls','hits','capacityBypasses','coordinateBypasses','coarseCollisionCalls','epochInvalidations'])latticeTotals[k]+=r[k];latticeTotals.maxEntries=Math.max(latticeTotals.maxEntries,r.entries);}});
+ return withNativeWallBroadphase(view,broadView=>withNativeProofLatticeCache(broadView,privateView=>evaluatePerimeter(s,privateView,bounds,outline,sharedCertificate),{mode:latticeMode==='flat'?'cache':latticeMode,storage:latticeMode==='flat'?'flat':'nested',onDiagnostics:r=>{latticeTotals.proofs++;for(const k of ['surfaceCalls','latticeCalls','nativeLatticeCalls','hits','capacityBypasses','coordinateBypasses','coarseCollisionCalls','epochInvalidations'])latticeTotals[k]+=r[k];latticeTotals.maxEntries=Math.max(latticeTotals.maxEntries,r.entries);}}),{enabled:wallBroadphase,onDiagnostics:r=>{wallTotals.proofs++;for(const k of ['eligibleWalls','boundQueries','conservativeHits','unsupportedQueries'])wallTotals[k]+=r[k];}});
 }
 function evaluatePerimeter(s,view,bounds,outline,sharedCertificate){
  const land=[...s.plants.filter(p=>p.alive),...s.structures.filter(operational).flatMap(c=>centerFootprint(c,s).footprint)],radii=[...new Set(Object.values(ANIMAL_ACTIONS.animals).map(a=>a.presentation.footprint.radius))];
