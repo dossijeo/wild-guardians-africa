@@ -3,7 +3,7 @@ const data=JSON.parse(document.getElementById('inline-data').textContent);
 const acts=data.manifest.acts,flat=acts.flatMap(a=>a.scenes);
 const el=id=>document.getElementById(id),art=el('art'),stage=el('stage'),voice=new Audio();
 voice.preload='none';
-let index=0,language='ES',playing=true,elapsed=0,last=0,minimum=10,parallax=true,preloaded=[],generation=0,visibleGeneration=0,activeStack=el('layers');
+let index=0,language='ES',playing=true,elapsed=0,last=0,minimum=10,parallax=true,preloaded=[],generation=0,visibleGeneration=0,activeStack=el('layers'),retiringStack=null;
 const rm=matchMedia('(prefers-reduced-motion: reduce)');
 if(rm.matches){parallax=false;el('parallax').checked=false}
 function scene(){return flat[index]}
@@ -30,6 +30,7 @@ function preloadNext(){
 }
 function render(){
   const token=++generation,s=scene(),a=acts[s.act-1];
+  if(retiringStack){retiringStack.remove();retiringStack=null}
   last=0;releaseVoice();art.classList.remove('visible');art.alt=s.artDirection;
   if(s.layers.length){
     art.removeAttribute('src');
@@ -47,8 +48,8 @@ function render(){
       stage.appendChild(nextStack);
       requestAnimationFrame(()=>{
         if(token!==generation){nextStack.remove();return}
-        nextStack.classList.add('ready');oldStack.classList.remove('ready');activeStack=nextStack;visibleGeneration=token;last=0;
-        setTimeout(()=>oldStack.remove(),500);
+        nextStack.classList.add('ready');oldStack.classList.remove('ready');activeStack=nextStack;retiringStack=oldStack;visibleGeneration=token;last=0;
+        setTimeout(()=>{oldStack.remove();if(retiringStack===oldStack)retiringStack=null},500);
         setTimeout(()=>{if(token===generation&&playing)startVoice(token)},120);
       });
     });
