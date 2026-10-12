@@ -79,8 +79,10 @@ export function prepareActorMotion(state,actor,nav,worker){
   const yieldPoint=(body,other,isWorker)=>{
     const bodies=body===actor?blockers:actorBlockers(state,body,isWorker);
     const angle=Math.atan2(body.x-other.x,body.z-other.z),r=radius(body)+radius(other)+.5;
-    for(const offset of [0,Math.PI/8,-Math.PI/8,Math.PI/4,-Math.PI/4]){
-      const point={x:body.x+Math.sin(angle+offset)*r,z:body.z+Math.cos(angle+offset)*r};
+    // Retain the original roomy yield first. Tight wall corridors may permit
+    // only a short lateral step; each fallback is still a swept body movement.
+    for(const reach of [r,1,.5,.25])for(const offset of (reach===r?[0,Math.PI/8,-Math.PI/8,Math.PI/4,-Math.PI/4]:[0,Math.PI/8,-Math.PI/8,Math.PI/4,-Math.PI/4,Math.PI/2,-Math.PI/2])){
+      const point={x:body.x+Math.sin(angle+offset)*reach,z:body.z+Math.cos(angle+offset)*reach};
       if(!actorSegmentClear(body,point,body,bodies))continue;
       const terrain=nav.segmentClear?.(body,point,radius(body),null,isWorker)??nav.workerMotionClear?.(body,point,radius(body))??true;
       if(terrain)return point;

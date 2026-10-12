@@ -2,7 +2,7 @@ import {permission,spellUnlocked} from '../simulation/rules.js';
 import {isMature} from '../simulation/crops.js';
 
 export const REPEATABLE_MAGIC_IDS=new Set(['reminder.shield','reminder.growth','reminder.multiply']);
-const ready=(s,kind)=>spellUnlocked(s,kind)&&s.cooldowns[kind]===0&&permission(s.pauses.length?{...s,pauses:[]}:s,kind);
+const ready=(s,kind)=>spellUnlocked(s,kind)&&(kind!=='shield'||s.cooldowns[kind]===0)&&permission(s.pauses.length?{...s,pauses:[]}:s,kind);
 const farmBounds=new WeakMap();
 export function shieldReminderKey(s){
  if(!s.raid?.id||!ready(s,'shield'))return null;
@@ -22,7 +22,7 @@ export function usefulPeacefulMagic(s){
  const kinds=[];
  // Stop as soon as one useful plant is found. Check at most once per two
  // simulated seconds; wind and render frames do not invalidate this result.
- const free=p=>!s.spells.some(a=>a.remaining>0&&Math.hypot(p.x-a.x,p.z-a.z)<=a.radius);
+ const free=p=>!s.spells.some(a=>a.remaining>0&&(a.targetPlantId!==undefined?a.targetPlantId===p.id:Math.hypot(p.x-a.x,p.z-a.z)<=a.radius));
  if(ready(s,'growth')&&s.plants.some(p=>p.alive&&!isMature(p)&&p.water.every(w=>w.status!=='due')&&free(p)))kinds.push('growth');
  if(ready(s,'multiply')&&s.plants.some(p=>p.alive&&!p.multiplyHarvest&&free(p)))kinds.push('multiply');
  return kinds;

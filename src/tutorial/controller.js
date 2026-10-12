@@ -7,6 +7,10 @@ import {dailyTutorialMessages,tutorialMessageShownToday,recordTutorialMessageTod
 const known=new Set(TUTORIAL_IDS),reason='tutorial-reading';
 const delivered=s=>s.crates.some(c=>c.delivered)||s.events.some(e=>e.type==='CrateDelivered');
 function readingActionCompleted(s,id){
+  if(['magic.growth','magic.multiply'].includes(id)){
+    const start=s.events.findLastIndex(e=>e.type==='TutorialMessageStarted'&&e.messageId===id);
+    return start>=0&&s.events.slice(start+1).some(e=>e.type==='SpellActivated'&&e.kind===id.slice(6)&&e.benefited);
+  }
   if(id==='basic.center')return s.structures.some(c=>c.kind==='center'&&operational(c));
   if(id==='basic.plant')return s.plants.length>0;
   if(id==='basic.hiring')return s.hiringPaidDay!=null;
@@ -72,8 +76,13 @@ export class TutorialController {
     enqueue('mechanic.defenses',!s.postgame&&s.result!=='victory'&&(s.day>1||s.time>=240));
     enqueue('mechanic.first-raid',!!s.raid);
     enqueue('magic.shield',!!s.raid);
-    enqueue('magic.growth',s.day>=3);
-    enqueue('magic.multiply',s.day>=5);
+    // Availability is day one; teach after the basic flow rather than interrupting its hands.
+    const live=s.plants.filter(p=>p.alive);
+    const watered=live.length>0&&live.every(p=>p.water[0].status!=='due'&&!p.water.some(w=>w.status==='due'));
+    const working=s.hiringPaidDay===s.day&&s.workers.length>0;
+    const teachAgriculture=!s.raid&&((working&&watered)||s.day>1);
+    enqueue('magic.growth',teachAgriculture);
+    enqueue('magic.multiply',teachAgriculture&&this.seen('magic.growth',globalSeen));
     enqueue('worker.recovery',s.workers.some(w=>w.incapacitated)||s.people.some(p=>p.recoveryUntil>=s.day));
     enqueue('campaign.liberation',s.result==='victory',true);
     enqueue('world.expansion',s.postgame&&!s.result);
@@ -83,7 +92,7 @@ export class TutorialController {
     }
     const repeatable=[];
     if(shieldKey&&(memo.shieldRaid!==shieldKey||t.reading==='reminder.shield'))repeatable.push(this.seen('magic.shield',globalSeen)?'reminder.shield':'magic.shield');
-    for(const kind of this.usefulMagic??[])if(!s.raid&&s.time<300&&s.cooldowns[kind]===0&&this.seen('magic.'+kind,globalSeen)&&(t.reading==='reminder.'+kind||s.elapsed-(memo[kind+'At']??0)>=120&&s.elapsed-(memo.lastAt??0)>=75))repeatable.push('reminder.'+kind);
+    for(const kind of this.usefulMagic??[])if(!s.raid&&s.time<300&&this.seen('magic.'+kind,globalSeen)&&(t.reading==='reminder.'+kind||s.elapsed-(memo[kind+'At']??0)>=120&&s.elapsed-(memo.lastAt??0)>=75))repeatable.push('reminder.'+kind);
     t.pending=t.pending.filter(id=>!REPEATABLE_MAGIC_IDS.has(id)||repeatable.includes(id));
     if(REPEATABLE_MAGIC_IDS.has(t.reading)&&!repeatable.includes(t.reading))t.reading=null;
     for(const id of repeatable)if(!tutorialMessageShownToday(s,id)&&!t.pending.includes(id)&&t.reading!==id)t.pending.push(id);
@@ -105,7 +114,8 @@ export class TutorialController {
       if(s.result==='victory')t.reading=t.pending.includes('campaign.liberation')?'campaign.liberation':null;
       else {
         const urgent=s.raid&&['mechanic.first-raid','magic.shield'].find(id=>t.pending.includes(id));
-        t.reading=urgentShield||urgent||t.pending.shift()||null;
+        const expansion=s.postgame&&t.pending.includes('world.expansion')?'world.expansion':null;
+        t.reading=urgentShield||urgent||expansion||t.pending.shift()||null;
       }
     }
     if(t.reading){t.pending=t.pending.filter(id=>id!==t.reading);recordMagicReminder(s,t.reading);this.presentationAge=0;this.presentationKey=null;emit(s,'TutorialMessageStarted',{messageId:t.reading});}

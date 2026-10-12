@@ -1,3 +1,4 @@
+import {commitAgriculturalPower,consumeGrowthPower,settleMultiplyPower} from './agricultural-power.js';
 import {activeRaidEntryPlan} from '../world/raid-entry-data.js';
 import {animalExitConnector} from './animal-exit-connectors.js';
 import {workerReturnRoute} from './worker-return-route.js';
@@ -165,7 +166,9 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
   const updates=converted.map(p=>({id:p.entityId,gate:true,autoGate:true,maxHp:p.maxHp,hp:p.hp})).filter(update=>{const piece=[...s.structures,...newPieces].find(p=>p.id===update.id),candidate={...piece,...update};return nav.wallPlacement(candidate).valid&&!cropOverlap(candidate);});
   return updates;
 }
-export function previewWallChain(s,material,points,nav,options={}) {
+// Geometry/price quote is read-only and may describe a future purchase. Actual
+// preview/build still enforce available cash and the native hiring reserve.
+export function quoteWallChain(s,material,points,nav,options={}) {
   if(!permission(s,'wall'))throw new Error('Esta acción no está disponible ahora');
   const spec=wallSpec(material),slots=wallStroke(points,s.structures,{...options,maxPieces:Infinity});
   const cropOverlap=piece=>{const c=Math.cos(piece.yaw),sn=Math.sin(piece.yaw),scale=piece.gate?(piece.material==='reforzado'?1.6:['adobe','piedra'].includes(piece.material)?1.4:1):1;return s.plants.some(p=>p.alive&&Math.abs((p.x-piece.x)*c-(p.z-piece.z)*sn)<1.09*(piece.baseScaleX??1)*scale+.4&&Math.abs((p.x-piece.x)*sn+(p.z-piece.z)*c)<.22*scale+.4);};
@@ -180,8 +183,12 @@ export function previewWallChain(s,material,points,nav,options={}) {
     for(const key of check.suppress??[])suppressed.add(key);
   }
   const cost=spec.cost*newPieces.length;
-  if(compare(s.ledger.balance,rational(cost))<0)throw new Error('No hay monedas suficientes para todo el trazado');
   return {pieces:newPieces,previewPieces:checks,updates,suppressed:[...suppressed],cost,gates:updates.length};
+}
+export function previewWallChain(s,material,points,nav,options={}) {
+  const plan=quoteWallChain(s,material,points,nav,options);
+  if(compare(s.ledger.balance,rational(plan.cost))<0)throw new Error('No hay monedas suficientes para todo el trazado');
+  return plan;
 }
 export function buildWallChain(s,id,material,points,nav,options={}) {
   if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
@@ -340,37 +347,65 @@ export function requestRepair(s,id,targetId) {
     const center=nearest(s.structures.filter(operational),target);enqueue(s,center.id,'repair',targetId);emit(s,'RepairRequested',{targetId});
   });
 }
-export const spellRadius=id=>({shield:1.95,growth:2.6,multiply:2.2})[id]; // Calibrated against 1.5 m planting pitch; area, not plant cap.
-export function spellAt(s,id,p) {return s.spells.find(a=>a.kind===id&&a.remaining>0&&dist(a,p)<=a.radius);}
+export const spellRadius=id=>({shield:1.95,growth:.65,multiply:.65})[id]; // Agricultural radius is visual only; gameplay uses the plant identity.
+const agriculturalSpellIndex=new WeakMap();
+export function spellAt(s,id,p) {
+  if(!s.spells.length)return undefined;
+  let index=agriculturalSpellIndex.get(s);
+  if(!index||index.source!==s.spells||index.length!==s.spells.length){
+    index={source:s.spells,length:s.spells.length,targets:new Map(),areas:[]};
+    for(const a of s.spells)if(a.targetPlantId!==undefined){
+      if(!index.targets.has(a.kind))index.targets.set(a.kind,new Map());
+      index.targets.get(a.kind).set(a.targetPlantId,a);
+    }else index.areas.push(a);
+    agriculturalSpellIndex.set(s,index);
+  }
+  const a=index.targets.get(id)?.get(p.id);
+  return a?.remaining>0?a:index.areas.find(a=>a.kind===id&&a.remaining>0&&dist(a,p)<=a.radius);
+}
 function markMultiplyTargets(s,area){
-  for(const p of s.plants)if(p.alive&&dist(area,p)<=area.radius)p.multiplyHarvest=true;
+  for(const p of s.plants)if(p.alive&&(area.targetPlantId!==undefined?p.id===area.targetPlantId:dist(area,p)<=area.radius))p.multiplyHarvest=true;
   area.exposureApplied=true;
 }
-export function previewSpell(s,kind,x,z,nav) {
+export function previewSpell(s,kind,x,z,nav,targetPlantId) {
   const draft={kind,x,z,radius:spellRadius(kind),valid:false,reason:null};
   try {
-    validateSpell(s,kind,x,z,nav);draft.valid=true;
+    validateSpell(s,kind,x,z,nav,targetPlantId);draft.valid=true;
   } catch(error) {draft.reason=error.message;}
   return draft;
 }
-function validateSpell(s,kind,x,z,nav) {
+function agriculturalTarget(s,kind,x,z,targetPlantId){
+  if(kind==='shield')return null;
+  const p=s.plants.find(p=>p.alive&&(targetPlantId!==undefined?p.id===targetPlantId:p.x===x&&p.z===z));
+  if(!p||p.x!==x||p.z!==z)throw new Error('Selecciona una planta para aplicar esta magia');
+  if(kind==='growth'&&isMature(p))throw new Error('Esta planta ya está madura');
+  return p;
+}
+function validateSpell(s,kind,x,z,nav,targetPlantId) {
   const spec=B.spells.find(p=>p.id===kind);if(!spec)throw new Error('Magia desconocida');
   if(!spellUnlocked(s,kind))throw new Error('El Espíritu todavía no ha revelado esta magia');
-  if(s.cooldowns[kind]>0)throw new Error('La magia está recargando');
+  if(kind==='shield'&&s.cooldowns[kind]>0)throw new Error('La magia está recargando');
   if(!Number.isFinite(x)||!Number.isFinite(z))throw new Error('Ubicación mágica inválida');
   const radius=spellRadius(kind);
-  if(s.spells.some(a=>a.remaining>0&&dist(a,{x,z})<a.radius+radius))throw new Error('Las áreas mágicas no pueden solaparse');
+  const target=agriculturalTarget(s,kind,x,z,targetPlantId);
+  if(s.spells.some(a=>a.remaining>0&&(target?
+    a.targetPlantId!==undefined?a.targetPlantId===target.id||dist(a,target)<1e-6:dist(a,target)<=a.radius:
+    a.targetPlantId!==undefined?dist(a,{x,z})<=radius:dist(a,{x,z})<a.radius+radius)))throw new Error('Las áreas mágicas no pueden solaparse');
   if(kind==='shield'&&s.raid?.animals.some(a=>a.status!=='gone'&&dist(a,{x,z})<radius+a.radius))throw new Error('El Escudo solapa un animal');
   if(!permission(s,kind))throw new Error('Esta acción no está disponible ahora');
   return spec;
 }
-export function cast(s,id,kind,x,z,nav) {
+export function cast(s,id,kind,x,z,nav,targetPlantId) {
   if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
-  const spec=validateSpell(s,kind,x,z,nav),radius=spellRadius(kind);
+  const spec=validateSpell(s,kind,x,z,nav,targetPlantId),radius=spellRadius(kind);
+  const target=agriculturalTarget(s,kind,x,z,targetPlantId);
   return commit(s,id,kind,()=>{
     const area={id:`spell-${s.nextId++}`,kind,x,z,radius,remaining:spec.duration_seconds};
-    if(kind==='multiply')markMultiplyTargets(s,area);
-    s.spells.push(area);s.cooldowns[kind]=spec.cooldown_seconds;nav.setState(s);emit(s,'SpellActivated',{kind,x,z});
+    if(target)area.targetPlantId=target.id;
+    if(target){area.power=commitAgriculturalPower(s,target,kind,cropSpec(target.species).base_harvest_value);if(kind==='multiply'){target.multiplyHarvest=true;area.exposureApplied=true;}}
+    s.spells.push(area);s.cooldowns[kind]=kind==='shield'?spec.cooldown_seconds:0;
+    if(kind==='shield')nav.setState(s);
+    emit(s,'SpellActivated',{kind,x,z,targetPlantId:target?.id,benefited:area.power?.benefited??false,power:area.power??null,duration:spec.duration_seconds});
   });
 }
 export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignore=null,worker=true,motion=null,expandRoute=false,routeVia=null}={}) {
@@ -420,11 +455,11 @@ function completeTask(s,w,t,target,nav) {
     if(isMature(target)&&target.harvestRequested) {
       let value=rational(cropSpec(target.species).base_harvest_value);
       if(profile(w).male)value=multiply(value,6,5);
-      if(target.multiplyHarvest||spellAt(s,'multiply',target))value=multiply(value,2);
+      if(!target.multiplyPower&&(target.multiplyHarvest||spellAt(s,'multiply',target)))value=multiply(value,2);
       if(target.harvestBonus)value=multiply(value,100+target.harvestBonus,100);
       target.alive=false;target.harvestRequested=false;target.multiplyHarvest=false;
       cropBecameInactive(s.plants);
-      const crate={id:`crate-${s.nextId++}`,sourcePlantId:target.id,species:target.species,x:w.x,z:w.z,value,profile:w.profile,carrierId:w.id,delivered:false,centerId:w.centerId};s.crates.push(crate);w.crateId=crate.id;w.status='carrying';w.path=null;emit(s,'CropPicked',{workerId:w.id,targetId:target.id});
+      const crate={id:`crate-${s.nextId++}`,sourcePlantId:target.id,species:target.species,x:w.x,z:w.z,value,multiplyPower:target.multiplyPower??null,profile:w.profile,carrierId:w.id,delivered:false,centerId:w.centerId};delete target.multiplyPower;s.crates.push(crate);w.crateId=crate.id;w.status='carrying';w.path=null;emit(s,'CropPicked',{workerId:w.id,targetId:target.id});
     }
   } else if(t.kind==='crate') {target.carrierId=w.id;w.crateId=target.id;target.centerId=w.centerId;w.status='carrying';w.path=null;}
   else if(t.kind==='repair') {
@@ -515,7 +550,7 @@ function updateWorkers(s,dt,nav) {
         const delivered=walkTo(s,w,{...w.deliveryApproach,id:`delivery-${center.id}-${crate.id}`},dt,nav,{motion:{carrying:true}});
         crate.x=w.x;crate.z=w.z;
         if(delivered) {
-          transact(s.ledger,`deliver:${crate.id}`,crate.value);crate.delivered=true;crate.carrierId=null;w.crateId=null;w.deliveryApproach=null;w.status=ended?'returning':'idle';w.path=null;emit(s,'CrateDelivered',{workerId:w.id,targetId:crate.id});
+          const extraIncome=settleMultiplyPower(s,crate);transact(s.ledger,`deliver:${crate.id}`,add(crate.value,extraIncome));crate.multiplyIncome=extraIncome;crate.delivered=true;crate.carrierId=null;w.crateId=null;w.deliveryApproach=null;w.status=ended?'returning':'idle';w.path=null;emit(s,'CrateDelivered',{workerId:w.id,targetId:crate.id,multiplyIncome:crate.multiplyIncome});
           if(s.tutorial.step==='observe'||s.tutorial.step==='harvest'){s.tutorial.step='done';if(!s.tutorial.basicSkipped)emit(s,'TutorialCompleted',{workerId:w.id,targetId:crate.id});}
         }
         continue;
@@ -597,11 +632,13 @@ export function foundVillage(s,id,culture,x,z,payload,nav) {
     emit(s,'VillageFounded',{culture,x,z,targetId:s.villages.at(-1).id,presentation:{x,z}});
   });
 }
-export function nightEntryPending(s){return !s.raid&&!s.result&&!!s.nightPlan?.group?.length&&!s.nightPlan.done&&s.time>=s.nightPlan.at;}
+export function nightEntryPending(s){const plan=activeRaidEntryPlan(s);return !s.result&&!!plan?.group?.length&&!plan.done&&s.time>=plan.at;}
 function clockBoundaries(s){
   return [250,300,600,...(s.dayPlan&&!s.dayPlan.done?[s.dayPlan.at]:[]),...(s.nightPlan&&!s.nightPlan.done?[s.nightPlan.at]:[])].filter(Number.isFinite);
 }
 function prepareClockEvents(s,nav){
+  const wave=s.raid?.pendingWavePlan;
+  if(wave&&!wave.done&&s.time>=wave.at)spawnRaid(s,wave,nav);
   if(s.time>=300 && !s.nightPlan){planNight(s);selectEvent(s);emit(s,'NightStarted');}
   if(s.dayPlan&&!s.dayPlan.done&&s.time>=s.dayPlan.at){s.dayPlan.done=s.postgame||spawnRaid(s,s.dayPlan,nav,true)!==false;}
   if(s.nightPlan&&!s.nightPlan.done&&s.time>=s.nightPlan.at&&(!s.dayPlan||activeRaidEntryPlan(s)!==s.dayPlan)){s.nightPlan.done=!s.nightPlan.group?.length||spawnRaid(s,s.nightPlan,nav)!==false;}
@@ -626,6 +663,7 @@ function tickScoped(s,seconds,nav) {
     const nextTime=Math.min(600,s.time+step);
     s.time=clockEdges.find(boundary=>Math.abs(nextTime-boundary)<1e-9)??nextTime;
     for(const kind of Object.keys(s.cooldowns)) {
+      if(kind!=='shield'){s.cooldowns[kind]=0;continue;}
       const remaining=s.cooldowns[kind]-step;
       s.cooldowns[kind]=remaining>1e-9?remaining:0;
     }
@@ -636,16 +674,18 @@ function tickScoped(s,seconds,nav) {
       const enqueueCrop=taskEnqueuer(s);
       for(const p of activeCrops(s.plants)) {
         if(!p.alive)continue;
-        const before=isMature(p);advancePlant(p,step,!!spellAt(s,'growth',p));
+        const before=isMature(p),growthSpell=spellAt(s,'growth',p),extra=advancePlant(p,step,growthSpell?.power?growthSpell.power.intensity:!!growthSpell);
+        if(growthSpell&&extra>0){growthSpell.growthSecondsAdded=(growthSpell.growthSecondsAdded??0)+extra;consumeGrowthPower(s,growthSpell,extra);}
         if(!before&&isMature(p)){emit(s,'CropMatured',{targetId:p.id});if(s.tutorial.step==='observe')s.tutorial.step='harvest';}
         if(!p.harvestRequested)queueMatureHarvest(s,p,enqueueCrop);
         if(p.alive&&p.water.some(w=>w.status==='due')&&p.centerId&&s.structures.some(c=>c.id===p.centerId&&operational(c)))enqueueCrop(p.centerId,p.water[0].status==='due'?'initial':'water',p.id);
       }
     }
-    const spellCount=s.spells.length;
+    const shieldsBefore=s.spells.filter(a=>a.kind==='shield').length;
     for(const spell of s.spells)spell.remaining=Math.max(0,spell.remaining-step);
+    for(const a of s.spells)if(a.remaining<=1e-9&&a.targetPlantId!==undefined)emit(s,'AgriculturalSpellEnded',{spellId:a.id,kind:a.kind,targetPlantId:a.targetPlantId,growthSecondsAdded:a.growthSecondsAdded??0});
     s.spells=s.spells.filter(a=>a.remaining>1e-9);
-    if(s.spells.length!==spellCount)nav.setState(s);
+    if(s.spells.filter(a=>a.kind==='shield').length!==shieldsBefore)nav.setState(s);
     advanceGateLeaves(s,step);updateRaid(s,step,nav);updateWorkers(s,step,nav);
     // Arrival is an event at the end of this interval. Newly spawned animals
     // must not move for time that elapsed before they existed.

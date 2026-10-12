@@ -1,7 +1,9 @@
 import {exteriorGroupWitness} from './raid-exterior-connectivity.js';
+import {prepareExteriorDetour,detourRaidFormation} from './raid-exterior-detour.js';
 import {wallCollisionFrame} from '../world/wall-collision-frame.js';
 const outside=(p,r,b)=>p.x-r>b[2]||p.x+r<b[0]||p.z-r>b[3]||p.z+r<b[1];
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
+export const PROJECTED_DETOUR_LIMIT=4;
 function extend(box,x,z){box[0]=Math.min(box[0],x);box[1]=Math.min(box[1],z);box[2]=Math.max(box[2],x);box[3]=Math.max(box[3],z);}
 export function raidWallEnvelope(state,nav){
  let box=null;
@@ -36,13 +38,13 @@ export function exteriorRaidWitness(p,r,box,nav){
 }
 function groupWitness(entry,specs,box,nav){return exteriorGroupWitness(entry,specs,box,nav,exteriorRaidWitness);}
 function localView(nav,eye,focus){const local=Object.create(nav);local.raidView={eye,target:focus};return local;}
-function formation(state,specs,bounds,nav,camera,eye,focus,dx,dz,box,radius){
+function formation(state,specs,bounds,nav,camera,eye,focus,dx,dz,box,radius,witness=exteriorRaidWitness){
  const entries=[],exits=[],columns=Math.ceil(Math.sqrt(specs.length)),spacing=radius*2+4;
  for(let j=0;j<specs.length;j++){
   const lateral=(j%columns-(columns-1)/2)*spacing,back=Math.floor(j/columns)*spacing;
   const anchor={x:eye.x+dx*back-dz*lateral,z:eye.z+dz*back+dx*lateral},single=localView(nav,anchor,focus);
   const piece=camera(state,[specs[j]],bounds,single,single.raidView,0);
-  if(!groupWitness(piece,[specs[j]],box,nav)||entries.some((p,k)=>distance(p,piece.entries[0])<=specs[k].radius+specs[j].radius+1))return null;
+  if(!exteriorGroupWitness(piece,[specs[j]],box,nav,witness)||entries.some((p,k)=>distance(p,piece.entries[0])<=specs[k].radius+specs[j].radius+1))return null;
   entries.push(piece.entries[0]);exits.push(piece.exits[0]);
  }
  return {entries,exits,selectionBounds:bounds};
@@ -56,15 +58,47 @@ export function exteriorRaidEntry(state,specs,bounds,side,nav,base,camera){
  const radius=Math.max(...specs.map(s=>s.radius)),padding=(radius*2+1.1)*(specs.length+6)+20;
  // Direct geometric projection, not successive full-region ring loads.
  // Sixteen directions; no new A* searches in projected camera/formation paths.
+ const projected=[];
  for(let i=0;i<16;i++){
   const angle=heading+(i===0?0:Math.ceil(i/2)*(i%2?-1:1)*Math.PI/8),dx=Math.sin(angle),dz=Math.cos(angle);
   const positive=box?crossings(focus,dx,dz,box,radius):[];if(box&&!positive.length)continue;
   const t=box?Math.min(...positive):Math.max(8,view?distance(view.eye,focus):0);
   const eye={x:focus.x+dx*t,z:focus.z+dz*t};
   const expanded=[Math.min(bounds[0],eye.x-padding),Math.min(bounds[1],eye.z-padding),Math.max(bounds[2],eye.x+padding),Math.max(bounds[3],eye.z+padding)];
+  projected.push({eye,expanded});
   const local=localView(nav,eye,focus),candidate=camera(state,specs,expanded,local,local.raidView,0);
   if(groupWitness(candidate,specs,box,nav))return {...candidate,selectionBounds:expanded};
   const grid=formation(state,specs,expanded,nav,camera,eye,focus,dx,dz,box,radius);if(grid)return grid;
+ }
+ // Only after every existing fast candidate failed. One largest-body route
+ // can certify smaller neighbors through their own collision-checked edges.
+ if(view){
+  const widest=specs.find(s=>s.radius===radius),seed=camera(state,[widest],bounds,nav,view,0);
+  const proof=seed&&prepareExteriorDetour(seed.entries[0],radius,box,nav,exteriorRaidWitness);
+  if(proof){
+   const witness=(p,r,b,n)=>exteriorRaidWitness(p,r,b,n)||proof.witness(p,r);
+   const dx=Math.sin(heading),dz=Math.cos(heading);
+   const grid=formation(state,specs,bounds,nav,camera,view.eye,focus,dx,dz,box,radius,witness);
+   if(grid)return grid;
+   // A crowded near-camera patch can fit fewer bodies than the pending wave.
+   // Use separated positions on the same positively certified exterior route.
+   const along=detourRaidFormation(proof,specs,bounds,nav);if(along)return along;
+  }
+ }
+ // The original near-camera seed can lie inside a closed defense, even when
+ // the projected candidates have valid exterior lanes with a bend. Reuse
+ // their deterministic positions only after every earlier candidate failed.
+ // A positive full-radius route still has to certify every birth and exit.
+ if(box){
+  const widest=specs.find(s=>s.radius===radius);let attempts=0;
+  for(const {eye,expanded} of projected){
+   const local=localView(nav,eye,focus),seed=camera(state,[widest],expanded,local,local.raidView,0);
+   if(!seed||!outside(seed.entries[0],radius,box))continue;
+   if(attempts++>=PROJECTED_DETOUR_LIMIT)break;
+   const proof=prepareExteriorDetour(seed.entries[0],radius,box,nav,exteriorRaidWitness);
+   if(!proof)continue;
+   const along=detourRaidFormation(proof,specs,expanded,nav);if(along)return along;
+  }
  }
  return null;
 }

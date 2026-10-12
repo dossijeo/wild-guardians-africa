@@ -1,3 +1,4 @@
+import {canyonLandAccessSteps} from './canyon-land-access.js';
 import {TerrainField,canyonFrame} from './terrain.js';
 import {villageTerrainSite} from './settlement-terrain.js';
 import {centerFootprint,centerServicePoint} from './centers.js';
@@ -86,18 +87,19 @@ function* initialLocations(nav,payload,legacy=false) {
     const shape=centerFootprint(center);
     const centerCheck=nav.placementFootprint(shape);
     if(!centerCheck.valid||layout.some(b=>b.kind!=='Zona común'&&b.footprint&&footprintsOverlap(shape.footprint,b.footprint)))continue;
-    let workable=0;
+    let workable=0,landAccess=null;const farmPoints=[];
     const oldObstacles=nav.obstacles,oldSuppressed=nav.suppressed;
     nav.obstacles=[...(oldObstacles??[]),{id:'initial-center',kind:'center',...shape},...layout.filter(b=>b.kind!=='Zona común').map(b=>({...b,kind:'house'}))];
     nav.suppressed=new Set([...(oldSuppressed??[]),...checks.flatMap(c=>c.suppress??[]),...(centerCheck.suppress??[])]);nav.walkCache?.clear();nav.segmentCache?.clear();nav.failedPaths?.clear();nav.closedRegions?.clear();nav.portalGraphs?.clear();nav.searchedRegions=[];
     try {
       const departure=centerServicePoint(center,null,.8);
-      for(let dz=-9;dz<=9&&workable<12;dz+=1.5)for(let dx=4.5;dx<=15&&workable<12;dx+=1.5){
+      for(let dz=-9;dz<=9&&(workable<12||canyon&&!landAccess);dz+=1.5)for(let dx=4.5;dx<=15&&(workable<12||canyon&&!landAccess);dx+=1.5){
         const point={x:Math.round((center.x+dx)/1.5)*1.5,z:Math.round((center.z+dz)/1.5)*1.5};
-        if(nav.placement(point.x,point.z,.4).valid&&nav.path(departure,point,.28,null,true)&&nav.path(point,departure,.28,null,true))workable++;
+        if(nav.placement(point.x,point.z,.4).valid&&nav.path(departure,point,.28,null,true)&&nav.path(point,departure,.28,null,true)){workable++;farmPoints.push(point);if(canyon&&workable>=12&&!landAccess)landAccess=yield* canyonLandAccessSteps(nav,[point],{fastOnly:true});}
       }
+      if(canyon&&workable>=12&&!landAccess)landAccess=yield* canyonLandAccessSteps(nav,farmPoints);
     }finally{nav.obstacles=oldObstacles;nav.suppressed=oldSuppressed;nav.walkCache?.clear();nav.segmentCache?.clear();nav.failedPaths?.clear();nav.closedRegions?.clear();nav.portalGraphs?.clear();nav.searchedRegions=[];}
-    if(workable<12)continue;
+    if(workable<12||canyon&&!landAccess)continue;
     const entry=findVillageEntry(nav,layout,x,z,centerServicePoint(center,null,.8),[{id:'initial-center',kind:'center',...shape}]);
     if(entry)return {x,z,buildings:layout,center,entry,...(terrainSite?{terrainSite}:{}),suppress:[...new Set(checks.flatMap(c=>c.suppress??[]))]};
   }

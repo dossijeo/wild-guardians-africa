@@ -1,3 +1,4 @@
+import {cachedFractionalWalkability} from './fractional-walkability-cache.js';
 import {ViewMap,ViewSet,trimViewRegions} from './worker-view-cache.js';
 import {fluidAt,footprintFluidSample,FLUID_PLACEMENT_REASON} from './fluid-placement.js';
 import {navigationBounds,outsideNavigationBounds} from './navigation-bounds.js';
@@ -11,15 +12,26 @@ import {SearchFrontier} from './search-frontier.js';
 import {evictOldest} from './fifo-eviction.js';
 import {gateFrameFootprints,gateSwingPolygon,gatePortalPoints} from './gate-passages.js';
 import {validActiveBounds} from './active-region.js';
-import {wallCollisionFrame,wallCollisionPolygon} from './wall-collision-frame.js';
+import {wallCollisionFrame,wallCollisionPolygon,wallCollisionBounds} from './wall-collision-frame.js';
 import {shortenBuildingRoute} from './building-route-shortcut.js';
 import {animalSegmentClearance} from './animal-segment-clearance.js';
 export const BIOME_IDS={sabana:'savanna','gran-rio':'grand_river',manglares:'mangrove',volcanes:'volcanoes','gran-canon':'canyons',desierto:'desert'};
 export const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
+const approachRegionCertificates=new WeakMap();
 export class Navigation {
   constructor(seed,biome,profile) {
     this.config={seed:String(seed),biome:BIOME_IDS[biome]??biome,relief:1,density:1,river:true,n:1,cx:0,cz:0,layers:[true,true,true,true,true,true]};
     this.field=new TerrainField(this.config);this.profile=profile;this.chunks=new Map();this.obstacles=[];this.suppressed=new Set();this.walkCache=new Map();this.segmentCache=new Map();this.failedPaths=new Set();this.closedRegions=new Map();this.searchedRegions=[];this.searchNeighborCache=new Map();
+  }
+  invalidateGeometryQueries(){
+    // In-place editor/connector geometry edits must invalidate exact as well
+    // as integer coordinates, and rebuild broad-phase collision bounds.
+    this.version=(this.version??0)+1;
+    if(Object.hasOwn(this,'state')&&this.state)this.state.navigationVersion=this.version;
+    this.workerRouteCache=new Map();this.portalGraphs=new Map();this.preparedPaths=null;
+    this.walkCache.clear();this.segmentCache.clear();this.failedPaths.clear();this.closedRegions.clear();
+    this.searchedRegions=[];this.searchNeighborCache=new Map();
+    this.obstacleBounds=new WeakMap(this.obstacles.map(o=>[o,navigationBounds(o)]));
   }
   setActiveBounds(bounds){
     if(!validActiveBounds(bounds))throw new RangeError('Invalid active terrain bounds');
@@ -120,7 +132,7 @@ export class Navigation {
     // Keep all five samples and their order without six temporary arrays.
     for(let sample=0;sample<5;sample++) {
       const dx=sample===1?radius:sample===2?-radius:0,dz=sample===3?radius:sample===4?-radius:0;
-      if(!allowFluid&&!this.field.canyon&&fluidAt(this.field,x+dx,z+dz))return false;
+      if(!allowFluid&&!(worker&&this.field.canyon)&&fluidAt(this.field,x+dx,z+dz))return false;
       if(this.field.canyon){
         const surface=(px,pz)=>this.workerSurface(px,pz);
         const value=Math.hypot(surface(x+dx+.8,z+dz)-surface(x+dx-.8,z+dz),surface(x+dx,z+dz+.8)-surface(x+dx,z+dz-.8))/1.6;if(this.workerSweep)this.workerSweep.peak=Math.max(this.workerSweep.peak,value);if(value>.5)return false;
@@ -130,6 +142,7 @@ export class Navigation {
   }
   walkable(x,z,radius=.3,ignore=null,worker=false) {
     const exact=Number.isInteger(x)&&Number.isInteger(z),key=`${x},${z}:${radius}:${ignore}:${worker}`;
+    if(!exact)return cachedFractionalWalkability(this,x,z,radius,ignore,worker);
     if(exact&&this.walkCache.has(key))return this.walkCache.get(key);
     const result=this.testWalkable(x,z,radius,ignore,worker);
     if(exact){if(this.walkCache.size>=50000)evictOldest(this.walkCache);this.walkCache.set(key,result);}
@@ -143,6 +156,7 @@ export class Navigation {
       if(outsideNavigationBounds(point,point,this.obstacleBounds?.get(o),radius))return false;
       if(worker&&o.gate){const frames=gateFrameFootprints(o);return frames?frames.some(p=>footprintDistance(p,x,z)<radius):false;}
       if(o.kind==='wall'){
+        if(outsideNavigationBounds(point,point,wallCollisionBounds(o,radius),0))return false;
         const {c,s,width,depth}=wallCollisionFrame(o),dx=x-o.x,dz=z-o.z;
         const localX=dx*c-dz*s,localZ=dx*s+dz*c;
         return Math.abs(localX)<width+radius&&Math.abs(localZ)<depth+radius;
@@ -251,13 +265,42 @@ export class Navigation {
     }
     return route;
   }
-  approachPath(start,end,radius){
+  approachPath(start,end,radius,margin=16){
     // Animal routes have symmetric terrain/solid collision rules. Search from
     // the service point: an enclosed island then proves failure after exploring
     // its finite component, rather than repeatedly exploring the outer land.
-    const reverse=this.path(end,start,radius,null,false);
+    const reverse=this.path(end,start,radius,null,false,margin);
     if(!reverse)return null;
     return [...reverse.slice(0,-1).reverse(),{x:end.x,z:end.z}];
+  }
+  approachGroupBlocked(start,targets,radius,reach){
+    if(!targets.length)return false;
+    const bounds=[Infinity,Infinity,-Infinity,-Infinity];
+    for(const t of targets){bounds[0]=Math.min(bounds[0],t.x);bounds[1]=Math.min(bounds[1],t.z);bounds[2]=Math.max(bounds[2],t.x);bounds[3]=Math.max(bounds[3],t.z);}
+    return this.approachRegionBlocked(start,targets[0],radius,reach,bounds);
+  }
+  approachRegionBlocked(start,focus,radius,reach,bounds=null){
+    // Only a COMPLETE native closed-component certificate can reject every
+    // service point. All possible 3x3 origin connectors must belong to that
+    // same component; near its boundary fall back to ordinary path searches.
+    const key=(x,z)=>`${x},${z}`,regionKey=(x,z)=>`${radius}:null:false|${key(x,z)}`;
+    let cache=approachRegionCertificates.get(this);
+    if(!cache||cache.version!==this.version){cache={version:this.version,entries:new Map()};approachRegionCertificates.set(this,cache);}
+    const minX=Math.floor((bounds?.[0]??focus.x)-reach)-2,maxX=Math.ceil((bounds?.[2]??focus.x)+reach)+2,minZ=Math.floor((bounds?.[1]??focus.z)-reach)-2,maxZ=Math.ceil((bounds?.[3]??focus.z)+reach)+2;
+    if((maxX-minX+1)*(maxZ-minZ+1)>4096)return false;
+    const certificateKey=`${radius}:${minX}:${minZ}:${maxX}:${maxZ}`;
+    let region=cache.entries.get(certificateKey)??this.closedRegions.get(regionKey(Math.round(focus.x),Math.round(focus.z)));
+    if(!region)for(let z=minZ;z<=maxZ&&!region;z++)for(let x=minX;x<=maxX&&!region;x++)region=this.closedRegions.get(regionKey(x,z));
+    if(!region)return false;
+    if(!cache.entries.has(certificateKey)){
+      for(let z=minZ;z<=maxZ;z++)for(let x=minX;x<=maxX;x++)if(!region.has(key(x,z))&&this.walkable(x,z,radius,null,false))return false;
+      if(cache.entries.size>=512)evictOldest(cache.entries);cache.entries.set(certificateKey,region);
+    }
+    // A connection to any destination grid cell means the actor may reach the
+    // island. No negative inference from merely crossing a wall visually.
+    const ex=Math.round(start.x),ez=Math.round(start.z);
+    for(let z=ez-1;z<=ez+1;z++)for(let x=ex-1;x<=ex+1;x++)if(region.has(key(x,z)))return false;
+    return true;
   }
   portalGraph(radius,ignore){
     this.portalGraphs??=new Map();const cacheKey=`${radius}:${ignore}`;
@@ -291,10 +334,10 @@ export class Navigation {
     const search=this.findPathSteps(start,end,radius,ignore,worker,margin);let step;
     do{step=search.next();}while(!step.done);return step.value;
   }
-  *findPathSteps(start,end,radius=.3,ignore=null,worker=true,margin=16,{yieldEvery=8}={}) {
+  *findPathSteps(start,end,radius=.3,ignore=null,worker=true,margin=16,{skipDirect=false,yieldEvery=8}={}) {
     if(!Number.isSafeInteger(yieldEvery)||yieldEvery<1||yieldEvery>8)throw Error('Invalid navigation yield quantum');
     if(!this.walkable(end.x,end.z,radius,ignore,worker))return null;
-    if(this.segmentClear(start,end,radius,ignore,worker))return [{x:end.x,z:end.z}];
+    if(!skipDirect&&this.segmentClear(start,end,radius,ignore,worker))return [{x:end.x,z:end.z}];
     // A* on a local corridor. Search bounds are a technical route limit, not world bounds.
     const cell=1,key=(x,z)=>`${x},${z}`,sx=Math.round(start.x),sz=Math.round(start.z),ex=Math.round(end.x),ez=Math.round(end.z);
     const maxVisited=12000*Math.max(1,(margin/16)**2),minX=Math.min(sx,ex)-margin,maxX=Math.max(sx,ex)+margin,minZ=Math.min(sz,ez)-margin,maxZ=Math.max(sz,ez)+margin;
@@ -444,6 +487,7 @@ export class Navigation {
       if(outsideNavigationBounds(start,end,this.obstacleBounds?.get(obstacle),radius))continue;
       if(worker&&obstacle.gate){const frames=gateFrameFootprints(obstacle);if(frames?.some(p=>sweptFootprintDistance(start,end,p)<radius))return false;continue;}
       if(obstacle.kind==='wall'){
+        if(outsideNavigationBounds(start,end,wallCollisionBounds(obstacle,radius),0))continue;
         const polygon=wallCollisionPolygon(obstacle,radius);
         if(sweptFootprintDistance(start,end,polygon)<1e-9)return false;
       }else if(obstacle.footprint){
