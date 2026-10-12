@@ -9,7 +9,7 @@ import {nativeCameraPose} from '../src/rendering/terrain-camera.js';
 import {activeChunkRegion} from '../src/world/active-region.js';
 import {createOpeningWorld} from './check_opening.mjs';
 import {NativeCampaignEntryDriver} from './native-campaign-entry-driver.mjs';
-import {activeRaidEntryPlan} from '../src/world/raid-entry-data.js';
+import {activeRaidEntryPlan,raidEntryKey} from '../src/world/raid-entry-data.js';
 import * as Game from '../src/simulation/game.js';
 
 const [input,output,untilText='498']=process.argv.slice(2),until=Number(untilText);
@@ -22,7 +22,16 @@ const center=s.structures.find(c=>c.kind==='center'&&c.hp>0);assert(center);
 const pose=nativeCameraPose(nav.field,[center.x,0,center.z],nav.field.canyon?0:.5,nav.field.canyon?1.18:1.16,nav.field.canyon?34:38);
 nav.setRaidView({x:pose.eye[0],z:pose.eye[2]},center);
 nav.setActiveBounds(activeChunkRegion({x:pose.eye[0],z:pose.eye[2]}).bounds);
-const driver=new NativeCampaignEntryDriver(nav),samples=[],spawnTrace=[];
+const driver=new NativeCampaignEntryDriver(nav),samples=[],spawnTrace=[],entryKeyComparisons=[];
+const takePrepared=nav.preparedRaidEntry;
+nav.preparedRaidEntry=(state,group,bounds)=>{
+ const ready=driver.preparer.ready,actual=takePrepared(state,group,bounds);
+ if(ready){
+  const expected=JSON.parse(ready.key),current=JSON.parse(raidEntryKey(state,nav,group,bounds));
+  entryKeyComparisons.push({time:state.time,used:!!actual,changedInputs:expected.map((part,index)=>JSON.stringify(part)===JSON.stringify(current[index])?null:index).filter(index=>index!==null)});
+ }
+ return actual;
+};
 try {
  while(s.time<until&&!s.result){
   await driver.advancePresentation(s);
@@ -35,6 +44,6 @@ try {
   await driver.advancePresentation(s);
  }
 }finally{await driver.dispose();}
-const report={scope:'Exact active-raid checkpoint, production-equivalent entry worker, no virtual-player decisions',input,day:s.day,endTime:s.time,samples,spawnTrace,entryTransport:driver.report()};
+const report={scope:'Exact active-raid checkpoint, production-equivalent entry worker, no virtual-player decisions',input,day:s.day,endTime:s.time,samples,spawnTrace,entryKeyComparisons,entryTransport:driver.report()};
 writeFileSync(output,JSON.stringify(report,null,2)+'\n');
 console.log(JSON.stringify({samples:samples.length,maxTickMs:Math.max(...samples.map(row=>row.milliseconds)),waits:report.entryTransport.waits.length,spawnTrace:spawnTrace.length}));

@@ -1,0 +1,126 @@
+{
+  "scope": "Exact active-raid checkpoint, production-equivalent entry worker, no virtual-player decisions",
+  "input": "docs/qa/integrated-spiritual-survival/pilot-v155-day13-time492-attribution/checkpoint-state.json.gz",
+  "day": 13,
+  "endTime": 498.00000000004496,
+  "samples": [
+    {
+      "time": 492.0000000000436,
+      "milliseconds": 48.182500000000005,
+      "activeActors": 1,
+      "pendingAt": null
+    },
+    {
+      "time": 493.0000000000438,
+      "milliseconds": 3.0330000000000155,
+      "activeActors": 0,
+      "pendingAt": 494.700000000044
+    },
+    {
+      "time": 494.00000000004405,
+      "milliseconds": 20.863000000000284,
+      "activeActors": 3,
+      "pendingAt": null
+    },
+    {
+      "time": 495.0000000000443,
+      "milliseconds": 10.148800000000392,
+      "activeActors": 3,
+      "pendingAt": null
+    },
+    {
+      "time": 496.0000000000445,
+      "milliseconds": 17.989000000000033,
+      "activeActors": 3,
+      "pendingAt": null
+    },
+    {
+      "time": 497.00000000004474,
+      "milliseconds": 10.27350000000024,
+      "activeActors": 3,
+      "pendingAt": null
+    }
+  ],
+  "spawnTrace": [
+    {
+      "tickStart": 494.00000000004405,
+      "stage": "prepared-entry",
+      "elapsedMilliseconds": 0.3919999999998254
+    },
+    {
+      "tickStart": 494.00000000004405,
+      "stage": "selected-entry",
+      "elapsedMilliseconds": 1.8521999999998116
+    },
+    {
+      "tickStart": 494.00000000004405,
+      "stage": "resident-entry",
+      "elapsedMilliseconds": 1.9142000000001644
+    },
+    {
+      "tickStart": 494.00000000004405,
+      "stage": "target-hint",
+      "prepared": true,
+      "choices": 3,
+      "accepted": true
+    },
+    {
+      "tickStart": 494.00000000004405,
+      "stage": "spawned",
+      "elapsedMilliseconds": 4.277399999999943
+    }
+  ],
+  "entryKeyComparisons": [
+    {
+      "time": 494.7000000000442,
+      "used": true,
+      "changedInputs": []
+    }
+  ],
+  "entryTransport": {
+    "mode": "real-node-worker-with-production-cooperative-fallback",
+    "updates": 21565,
+    "waits": [
+      {
+        "day": 13,
+        "time": 494.00000000004405,
+        "elapsed": 7702.000000009497,
+        "key": "[\"123\",\"sabana\",\"mapungubwe\",\"4.1.10.3\",2427632232,3,[\"warthog\",\"warthog\",\"buffalo\"],[-24,-72,216,168],{\"eye\":{\"x\":99.70247532024266,\"z\":30.57367599590944},\"target\":{\"x\":83,\"z\":0}},[[\"structure-2\",\"intact\",true],[\"structure-4224\",\"ruined\",false],[\"structure-4225\",\"ruined\",false],[\"structure-4247\",\"ruined\",false],[\"structure-4248\",\"intact\",true],[\"structure-4265\",\"intact\",true],[\"structure-4266\",\"ruined\",false],[\"structure-4267\",\"intact\",true],[\"structure-4268\",\"ruined\",false],[\"structure-4269\",\"ruined\",false],[\"structure-4291\",\"intact\",true],[\"structure-4305\",\"intact\",true],[\"structure-4325\",\"intact\",true],[\"structure-4326\",\"intact\",true],[\"structure-4327\",\"intact\",true],[\"structure-4348\",\"intact\",true],[\"structure-4349\",\"intact\",true],[\"structure-4350\",\"intact\",true],[\"structure-4351\",\"intact\",true],[\"structure-4367\",\"intact\",true],[\"structure-4368\",\"intact\",true],[\"structure-4369\",\"intact\",true],[\"structure-4392\",\"intact\",true],[\"structure-4393\",\"intact\",true],[\"structure-4403\",\"ruined\",false],[\"structure-4424\",\"intact\",true],[\"structure-4425\",\"intact\",true],[\"structure-4445\",\"intact\",true],[\"structure-4446\",\"intact\",true],[\"structure-4447\",\"intact\",true],[\"structure-4468\",\"intact\",true],[\"structure-4469\",\"intact\",true],[\"structure-4493\",\"intact\",true],[\"structure-4626\",\"intact\",true],[\"structure-5145\",\"intact\",true],[\"structure-5168\",\"intact\",true],[\"structure-5189\",\"intact\",true],[\"structure-5190\",\"intact\",true],[\"structure-5191\",\"intact\",true],[\"structure-5213\",\"intact\",true],[\"structure-5214\",\"intact\",true],[\"structure-5215\",\"intact\",true],[\"structure-5216\",\"intact\",true],[\"structure-5217\",\"intact\",true],[\"structure-5245\",\"intact\",true],[\"structure-5246\",\"intact\",true],[\"structure-5275\",\"intact\",true],[\"structure-5276\",\"intact\",true],[\"structure-5277\",\"intact\",true],[\"structure-5278\",\"intact\",true],[\"structure-5279\",\"intact\",true],[\"structure-5280\",\"intact\",true],[\"structure-5281\",\"intact\",true],[\"structure-5310\",\"intact\",true],[\"structure-5311\",\"intact\",true],[\"structure-5312\",\"intact\",true],[\"structure-5337\",\"intact\",true],[\"structure-5541\",\"intact\",true],[\"structure-5542\",\"intact\",true],[\"structure-5543\",\"intact\",true],[\"structure-5564\",\"intact\",true],[\"structure-5585\",\"intact\",true],[\"structure-5586\",\"intact\",true],[\"structure-5587\",\"intact\",true],[\"structure-5609\",\"intact\",true],[\"structure-5610\",\"intact\",true],[\"structure-5630\",\"intact\",true],[\"structure-5671\",\"intact\",true],[\"structure-5672\",\"intact\",true],[\"structure-5673\",\"intact\",true],[\"structure-5674\",\"intact\",true],[\"structure-5695\",\"intact\",true],[\"structure-5696\",\"intact\",true],[\"structure-5717\",\"intact\",true],[\"structure-5718\",\"intact\",true],[\"structure-5719\",\"intact\",true],[\"structure-5720\",\"intact\",true],[\"structure-5721\",\"intact\",true],[\"structure-5728\",\"intact\",true],[\"structure-6319\",\"intact\",true],[\"structure-6341\",\"intact\",true],[\"structure-6359\",\"intact\",true],[\"structure-6360\",\"intact\",true]],[\"wave\",\"raid-13-night\",1,[]]]",
+        "updates": 21553,
+        "waitMilliseconds": 2309.4873,
+        "group": [
+          "warthog",
+          "warthog",
+          "buffalo"
+        ],
+        "entryActors": 3,
+        "diagnostics": null
+      }
+    ],
+    "readyContexts": [
+      {
+        "key": "[\"123\",\"sabana\",\"mapungubwe\",\"4.1.10.3\",2427632232,3,[\"warthog\",\"warthog\",\"buffalo\"],[-24,-72,216,168],{\"eye\":{\"x\":99.70247532024266,\"z\":30.57367599590944},\"target\":{\"x\":83,\"z\":0}},[[\"structure-2\",\"intact\",true],[\"structure-4224\",\"ruined\",false],[\"structure-4225\",\"ruined\",false],[\"structure-4247\",\"ruined\",false],[\"structure-4248\",\"intact\",true],[\"structure-4265\",\"intact\",true],[\"structure-4266\",\"ruined\",false],[\"structure-4267\",\"intact\",true],[\"structure-4268\",\"ruined\",false],[\"structure-4269\",\"ruined\",false],[\"structure-4291\",\"intact\",true],[\"structure-4305\",\"intact\",true],[\"structure-4325\",\"intact\",true],[\"structure-4326\",\"intact\",true],[\"structure-4327\",\"intact\",true],[\"structure-4348\",\"intact\",true],[\"structure-4349\",\"intact\",true],[\"structure-4350\",\"intact\",true],[\"structure-4351\",\"intact\",true],[\"structure-4367\",\"intact\",true],[\"structure-4368\",\"intact\",true],[\"structure-4369\",\"intact\",true],[\"structure-4392\",\"intact\",true],[\"structure-4393\",\"intact\",true],[\"structure-4403\",\"ruined\",false],[\"structure-4424\",\"intact\",true],[\"structure-4425\",\"intact\",true],[\"structure-4445\",\"intact\",true],[\"structure-4446\",\"intact\",true],[\"structure-4447\",\"intact\",true],[\"structure-4468\",\"intact\",true],[\"structure-4469\",\"intact\",true],[\"structure-4493\",\"intact\",true],[\"structure-4626\",\"intact\",true],[\"structure-5145\",\"intact\",true],[\"structure-5168\",\"intact\",true],[\"structure-5189\",\"intact\",true],[\"structure-5190\",\"intact\",true],[\"structure-5191\",\"intact\",true],[\"structure-5213\",\"intact\",true],[\"structure-5214\",\"intact\",true],[\"structure-5215\",\"intact\",true],[\"structure-5216\",\"intact\",true],[\"structure-5217\",\"intact\",true],[\"structure-5245\",\"intact\",true],[\"structure-5246\",\"intact\",true],[\"structure-5275\",\"intact\",true],[\"structure-5276\",\"intact\",true],[\"structure-5277\",\"intact\",true],[\"structure-5278\",\"intact\",true],[\"structure-5279\",\"intact\",true],[\"structure-5280\",\"intact\",true],[\"structure-5281\",\"intact\",true],[\"structure-5310\",\"intact\",true],[\"structure-5311\",\"intact\",true],[\"structure-5312\",\"intact\",true],[\"structure-5337\",\"intact\",true],[\"structure-5541\",\"intact\",true],[\"structure-5542\",\"intact\",true],[\"structure-5543\",\"intact\",true],[\"structure-5564\",\"intact\",true],[\"structure-5585\",\"intact\",true],[\"structure-5586\",\"intact\",true],[\"structure-5587\",\"intact\",true],[\"structure-5609\",\"intact\",true],[\"structure-5610\",\"intact\",true],[\"structure-5630\",\"intact\",true],[\"structure-5671\",\"intact\",true],[\"structure-5672\",\"intact\",true],[\"structure-5673\",\"intact\",true],[\"structure-5674\",\"intact\",true],[\"structure-5695\",\"intact\",true],[\"structure-5696\",\"intact\",true],[\"structure-5717\",\"intact\",true],[\"structure-5718\",\"intact\",true],[\"structure-5719\",\"intact\",true],[\"structure-5720\",\"intact\",true],[\"structure-5721\",\"intact\",true],[\"structure-5728\",\"intact\",true],[\"structure-6319\",\"intact\",true],[\"structure-6341\",\"intact\",true],[\"structure-6359\",\"intact\",true],[\"structure-6360\",\"intact\",true]],[\"wave\",\"raid-13-night\",1,[]]]",
+        "token": 1,
+        "day": 13,
+        "time": 494.00000000004405,
+        "elapsed": 7702.000000009497,
+        "group": [
+          "warthog",
+          "warthog",
+          "buffalo"
+        ],
+        "entryActors": 3,
+        "diagnostics": null
+      }
+    ],
+    "preparer": {
+      "requests": 1,
+      "accepted": 1,
+      "obsolete": 0,
+      "used": 1,
+      "failed": 0
+    },
+    "workerFailure": null,
+    "scope": "Wall-clock waits are separate from simulated activity; no clock, RNG or geometry patches"
+  }
+}

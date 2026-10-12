@@ -3,7 +3,9 @@ import assert from 'node:assert/strict';
 import {createOpeningWorld} from '../tools/check_opening.mjs';
 import {RaidEntryPreparer} from '../src/world/raid-entry-preparer.js';
 import {computeRaidEntry} from '../src/world/compute-raid-entry.js';
-import {activeRaidEntryPlan,eligiblePendingRaidWavePlan,raidEntryKey,raidEntryRequest} from '../src/world/raid-entry-data.js';
+import {activeRaidEntryPlan,eligiblePendingRaidWavePlan,preparableRaidWavePlan,raidEntryKey,raidEntryRequest} from '../src/world/raid-entry-data.js';
+import {nextPressureWave} from '../src/simulation/raid-pressure-plan.js';
+import {spawnRaid} from '../src/simulation/raids.js';
 import {raidEntryChunks,raidResidentDemand} from '../src/world/raid-entry-residency.js';
 import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
@@ -24,6 +26,19 @@ test('only all-gone previous actors permit valid1..16 next-wave preparation',()=
  for(const status of ['entering','walking','attacking','retreating']){s.raid.animals[0].status=status;preparer.update(s);assert.equal(activeRaidEntryPlan(s),null);assert.equal(worker.requests.length,0);assert.equal(raidEntryKey(s,nav,s.raid.pendingWavePlan.group),null);}
  s.raid.animals[0].status='gone';const before=serialize(s);preparer.update(s);assert.equal(worker.requests.length,1);assert.equal(activeRaidEntryPlan(s),s.raid.pendingWavePlan);assert.equal(serialize(s),before);preparer.dispose();
 });
+test('retreating cohort can prepare next wave but cannot spawn it early',()=>{
+ const {s,nav,worker,preparer}=fixture(['warthog']);
+ const next=s.raid.pendingWavePlan;delete s.raid.pendingWavePlan;
+ s.raid.waveIndex=0;s.raid.waves=[[{species:'warthog',hits:1}],next.actors];
+ s.raid.animals[0].status='retreating';
+ const preview=preparableRaidWavePlan(s),key=raidEntryKey(s,nav,preview.group),before=JSON.stringify(s);
+ assert.deepEqual(preview.group,next.group);assert.equal(eligiblePendingRaidWavePlan(s),null);
+ assert.equal(spawnRaid(s,preview,nav),false);assert.equal(JSON.stringify(s),before);
+ preparer.update(s);assert.equal(worker.requests.length,1);
+ s.raid.animals[0].status='gone';s.raid.pendingWavePlan=nextPressureWave(s.raid,s.time);
+ assert.equal(raidEntryKey(s,nav,next.group),key);
+ preparer.dispose();
+});
 test('malformed/finished waves do not escape active raid veto',()=>{
  for(const mutate of [p=>p.index=0,p=>p.index=-1,p=>p.done=true,p=>p.at=NaN,p=>p.group=[],p=>p.group=Array(17).fill('warthog'),p=>p.group[0]='unknown',p=>p.actors=[],p=>p.actors[0].species='rhino']){
   const {s,worker,preparer}=fixture();mutate(s.raid.pendingWavePlan);assert.equal(eligiblePendingRaidWavePlan(s),null);preparer.update(s);assert.equal(worker.requests.length,0);preparer.dispose();
@@ -35,6 +50,16 @@ test('request copies current workers/incapacitation and wave owner without forme
  const before=serialize(s);preparer.update(s);const request=worker.requests[0];
  assert.deepEqual(request.waveContext,{raidId:'fixture-raid',index:1});assert.equal(request.state.raid,undefined);assert.deepEqual(request.state.workers,[{id:'fixture-worker',x:center.x+8,z:center.z+8,status:'incapacitated',incapacitated:true}]);
  request.state.workers[0].x+=1;assert.equal(serialize(s),before);preparer.dispose();
+});
+test('moving non-incapacitated workers do not invalidate a prepared wave',()=>{
+ const {s,nav,worker,preparer}=fixture(['warthog']);
+ s.workers=[{id:'fleeing-worker',x:1,z:2,status:'fleeing',incapacitated:false}];
+ preparer.update(s);const request=worker.requests[0],key=request.key;
+ s.workers[0].x+=1;s.workers[0].z+=1;
+ assert.equal(raidEntryKey(s,nav,s.raid.pendingWavePlan.group),key);
+ worker.onmessage({data:{key,token:request.token,entry:null}});
+ assert.equal(preparer.stats.accepted,1);assert.equal(worker.requests.length,1);
+ preparer.dispose();
 });
 test('native complete16-actor prepared entry remains exterior/legal and keeps exact state/RNG through reload',()=>{
  const {s,nav,worker,preparer}=fixture(Array(16).fill('warthog'));const before=serialize(s),rng=s.rng;preparer.update(s);
@@ -59,7 +84,7 @@ test('retained paid closed enclosure prepares an exterior mixed next wave from i
  for(let i=0;i<group.length;i++){const r=ANIMAL_ACTIONS.animals[group[i]].presentation.footprint.radius,a=reply.entry.entries[i],exit=reply.entry.exits[i];assert.ok(nav.walkable(a.x,a.z,r,null,false));assert.ok(nav.walkable(exit.x,exit.z,r,null,false));assert.ok(nav.segmentClear(a,exit,r,null,false));assert.ok(nav.segmentClear(exit,a,r,null,false));}
  worker.onmessage({data:reply});assert.equal(p.stats.accepted,1);assert.equal(serialize(s),before);p.dispose();
 });
-for(const change of ['wave-index','raid-id','camera','topology','bounds','rng','worker','worker-position','worker-incap','finished','active-actor'])test(`${change}: stale wave reply cannot install or be taken`,()=>{
+for(const change of ['wave-index','raid-id','camera','topology','bounds','rng','incapacitated-worker','incapacitated-worker-position','finished','active-actor'])test(`${change}: stale wave reply cannot install or be taken`,()=>{
  const {s,nav,worker,preparer}=fixture(['warthog']);preparer.update(s);const request=worker.requests[0];
  if(change==='wave-index')s.raid.pendingWavePlan.index++;
  if(change==='raid-id')s.raid.id+='-next';
@@ -67,11 +92,25 @@ for(const change of ['wave-index','raid-id','camera','topology','bounds','rng','
  if(change==='topology')nav.setState(s);
  if(change==='bounds')nav.setActiveBounds([...nav.activeBounds.slice(0,3),nav.activeBounds[3]+48]);
  if(change==='rng')s.rng++;
- if(change==='worker')s.workers.push({id:'blocker',x:0,z:0,status:'fleeing',incapacitated:false});
- if(change==='worker-position'||change==='worker-incap'){s.workers.push({id:'blocker',x:0,z:0,status:'working',incapacitated:false});worker.onmessage({data:{key:request.key,token:request.token,entry:null}});preparer.update(s);const current=worker.requests.at(-1);if(change==='worker-position')s.workers[0].x++;else s.workers[0].incapacitated=true;worker.onmessage({data:{key:current.key,token:current.token,entry:null}});assert.equal(preparer.stats.obsolete,2);assert.equal(preparer.ready,undefined);preparer.dispose();return;}
+ if(change==='incapacitated-worker')s.workers.push({id:'blocker',x:0,z:0,status:'incapacitated',incapacitated:true});
+ if(change==='incapacitated-worker-position'){
+  s.workers.push({id:'blocker',x:0,z:0,status:'working',incapacitated:true});
+  worker.onmessage({data:{key:request.key,token:request.token,entry:null}});preparer.update(s);const current=worker.requests.at(-1);
+  s.workers[0].x++;worker.onmessage({data:{key:current.key,token:current.token,entry:null}});assert.equal(preparer.stats.obsolete,2);assert.equal(preparer.ready,undefined);preparer.dispose();return;
+ }
  if(change==='finished')s.raid.pendingWavePlan.done=true;
  if(change==='active-actor')s.raid.animals[0].status='retreating';
  worker.onmessage({data:{key:request.key,token:request.token,entry:null}});assert.equal(preparer.stats.obsolete,1);assert.equal(preparer.ready,undefined);assert.equal(nav.preparedRaidEntry(s,s.raid.pendingWavePlan.group,nav.activeBounds),undefined);preparer.dispose();
+});
+test('a worker becoming incapacitated invalidates prepared wave entry',()=>{
+ const {s,nav,worker,preparer}=fixture(['warthog']);
+ s.workers=[{id:'blocker',x:0,z:0,status:'working',incapacitated:false}];
+ preparer.update(s);const request=worker.requests[0];
+ s.workers[0].incapacitated=true;
+ assert.notEqual(raidEntryKey(s,nav,s.raid.pendingWavePlan.group),request.key);
+ worker.onmessage({data:{key:request.key,token:request.token,entry:null}});
+ assert.equal(preparer.stats.obsolete,1);assert.equal(preparer.ready,undefined);
+ preparer.dispose();
 });
 test('accepted wave cannot leak through changed identity and disposal rejects delayed reply',()=>{
  const {s,nav,worker,preparer}=fixture(['warthog']);preparer.update(s);const request=worker.requests[0];worker.onmessage({data:{...request,entry:null}});
