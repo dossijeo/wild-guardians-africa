@@ -1,6 +1,7 @@
 import {activeRaidEntryPlan} from '../world/raid-entry-data.js';
 import {animalExitConnector} from './animal-exit-connectors.js';
 import {workerReturnRoute} from './worker-return-route.js';
+import {workerFractionalConnector} from '../world/worker-fractional-connector.js';
 import {workerRiskClearance} from './worker-route-clearance.js';
 import {resolveFluidPlacement} from '../world/fluid-placement.js';
 import {ensurePurchaseBudget,HIRING_RESERVE} from './budget.js';
@@ -394,6 +395,7 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     if(!w.path&&worker&&!ignore&&['fleeing','returning','incapacitated'].includes(w.status)){
       w.path=workerWallOverlapRecoveryPath(nav,w,destination,w.radius??.28);
       if(!w.path)w.path=workerSlopeRecoveryPath(nav,w,destination,w.radius??.28);
+      if(!w.path)w.path=workerFractionalConnector(nav,w,destination,w.radius??.28);
       if(!w.path)w.path=workerReturnRoute(nav,w,destination,w.radius??.28);
     }
     w.pathVersion=nav.version;
