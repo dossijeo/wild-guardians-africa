@@ -7,6 +7,7 @@ The cache uses exact coordinates (including signed zero), body radius, crop iden
 ## Completed checks
 
 - Focused navigation/watering suite: 41/41 passed. The first run failed one existing test because it replaces terrain callbacks without changing the navigation epoch. The cache now observes those callback identities; the existing test was not weakened or modified.
+- Final expanded regression suite: 92/92 passed, including gate closure/return, worker return and overlap recovery, task reservations, crop queues, navigation epochs and a dedicated terrain-callback replacement test. The latter was added after the benchmarks; runtime sources did not change.
 - SFX catalogue check: 126 original files, 100 assigned, 26 unassigned; not stale.
 - Web build: passed in 22.99 seconds. The existing large-bundle warning remains.
 - Web package: 722 files, 445,651,286 bytes, 860 relative links and 22 runtime GLBs; passed.

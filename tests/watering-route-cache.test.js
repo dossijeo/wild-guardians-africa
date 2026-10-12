@@ -36,6 +36,15 @@ test('changed query implementations invalidate, and unversioned adapters are nev
  nav.walkable=()=>true;cachedWateringRoute(worker,plant,nav,compute);assert.equal(queries,2);
  delete nav.version;cachedWateringRoute(worker,plant,nav,compute);cachedWateringRoute(worker,plant,nav,compute);assert.equal(queries,4);
 });
+test('replacing terrain callbacks invalidates even without an adapter epoch change',()=>{
+ const nav=world();let queries=0;const compute=()=>{queries++;return null;};
+ cachedWateringRoute(worker,plant,nav,compute);
+ for(const key of ['surface','blocked','slope','waterInfo','canyon','riverLevel']){
+  const before=queries;nav.field[key]=()=>0;
+  cachedWateringRoute(worker,plant,nav,compute);assert.equal(queries,before+1);
+  cachedWateringRoute(worker,plant,nav,compute);assert.equal(queries,before+1);
+ }
+});
 test('a geometry change during computation cannot publish under the previous epoch',()=>{
  const nav=world();let queries=0;const compute=()=>{queries++;nav.version++;return null;};
  cachedWateringRoute(worker,plant,nav,compute);cachedWateringRoute(worker,plant,nav,compute);assert.equal(queries,2);
