@@ -1,10 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {beginAssignedWorkerRouteStep,assignedWorkerRouteStep,candidateTaskRouteStep} from '../src/simulation/worker-assigned-route.js';
+import {beginAssignedWorkerRouteStep,assignedWorkerRouteStep} from '../src/simulation/worker-assigned-route.js';
 
 function navigation(yields){
  const nav={version:1,obstacles:[],searches:0,steps:0,
-  walkable(){return false;},segmentClear(){return false;},
   *findPathSteps(start,end){
    this.searches++;
    for(let i=0;i<yields;i++){this.steps++;yield null;}
@@ -28,39 +27,4 @@ test('assigned worker retains a pending route across simulation steps and restar
  assert.equal(assignedWorkerRouteStep(nav,worker,end,.28).pending,true);
  beginAssignedWorkerRouteStep(nav);
  assert.deepEqual(assignedWorkerRouteStep(nav,worker,end,.28),{pending:false,path:[{x:2,z:0}]});
-});
-
-test('candidate route exhaustion is pending until the iterator proves reachability',()=>{
- const nav=navigation(45),worker={id:'w',x:0,z:0},task={id:'t',kind:'harvest'},target={id:'crop',x:2,z:0};
- beginAssignedWorkerRouteStep(nav);
- assert.deepEqual(candidateTaskRouteStep(nav,worker,task,target),{pending:true,route:null});
- assert.equal(nav.steps,4);
- for(let i=0;i<10;i++){beginAssignedWorkerRouteStep(nav);assert.equal(candidateTaskRouteStep(nav,worker,task,target).pending,true);}
- beginAssignedWorkerRouteStep(nav);
- assert.deepEqual(candidateTaskRouteStep(nav,worker,task,target),{pending:false,route:{destination:target,path:[{x:2,z:0}]}});
- assert.equal(nav.searches,1);
-});
-
-test('a completed failed route is distinct from a still pending search',()=>{
- const nav=navigation(0);nav.findPathSteps=function*(){yield null;return null;};
- const worker={id:'w',x:0,z:0},task={id:'t',kind:'harvest'},target={id:'crop',x:2,z:0};
- beginAssignedWorkerRouteStep(nav);
- assert.deepEqual(candidateTaskRouteStep(nav,worker,task,target),{pending:false,route:null});
-});
-
-test('two pending tasks for the same worker retain independent search frontiers',()=>{
- const nav=navigation(8),worker={id:'w',x:0,z:0};
- const first={id:'first',kind:'harvest'},second={id:'second',kind:'harvest'};
- const a={id:'a',x:2,z:0},b={id:'b',x:3,z:0};
- beginAssignedWorkerRouteStep(nav);
- assert.equal(candidateTaskRouteStep(nav,worker,first,a,2).pending,true);
- assert.equal(candidateTaskRouteStep(nav,worker,second,b,2).pending,true);
- assert.equal(nav.searches,2);
- beginAssignedWorkerRouteStep(nav);
- assert.equal(candidateTaskRouteStep(nav,worker,first,a,2).pending,true);
- assert.equal(candidateTaskRouteStep(nav,worker,second,b,2).pending,true);
- assert.equal(nav.searches,2);
- beginAssignedWorkerRouteStep(nav);
- assert.deepEqual(candidateTaskRouteStep(nav,worker,first,a,2).route,{destination:a,path:[{x:2,z:0}]});
- assert.deepEqual(candidateTaskRouteStep(nav,worker,second,b,2).route,{destination:b,path:[{x:3,z:0}]});
 });

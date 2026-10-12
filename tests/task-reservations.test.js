@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {reserveTasks,TASK_ROUTE_PENDING} from '../src/simulation/tasks.js';
+import {reserveTasks} from '../src/simulation/tasks.js';
 import {contractExpired} from '../src/simulation/workforce.js';
 import {cancelIdle} from '../src/simulation/idle.js';
 function reference(state,canExecute){
@@ -13,22 +13,6 @@ function reference(state,canExecute){
  }
 }
 function state(){return {day:2,plants:[{id:'plot',x:0,z:0}],crates:[],structures:[],tasks:[{id:'task',created:1,targetId:'plot',centerId:'center',workerId:null,blocked:false}],workers:[1,2,3,4].map(i=>({id:'worker-'+i,x:i,z:0,centerId:'center',status:'idle',taskId:null,incapacitated:false,contractDay:2}))};}
-
-test('pending route keeps its priority among available workers without idling the whole crew',()=>{
- for(const workerCount of [4,12]){
-  const s=state();s.workers=Array.from({length:workerCount},(_,i)=>({id:`worker-${i}`,x:i+1,z:0,centerId:'center',status:'idle',taskId:null,contractDay:2}));
-  s.plants.push({id:'next-plot',x:30,z:0});
-  s.tasks.push({id:'next-task',created:2,targetId:'next-plot',centerId:'center',workerId:null,blocked:false});
-  let ready=false;const attempted=[];
-  const reach=(w,t)=>{attempted.push([t.id,w.id]);return t.id==='task'&&!ready?TASK_ROUTE_PENDING:true;};
-  reserveTasks(s,reach);
-  assert.deepEqual(attempted,[['task','worker-0'],['next-task',`worker-${workerCount-1}`]]);
-  assert.equal(s.tasks[0].workerId,null);assert.equal(s.tasks[0].blocked,false);
-  assert.equal(s.tasks[1].workerId,`worker-${workerCount-1}`);
-  ready=true;reserveTasks(s,reach);
-  assert.equal(s.tasks[0].workerId,'worker-0');
- }
-});
 
 test('large historical farm keeps identical FIFO reservations for crops, loose crates and repairs',()=>{
  const s=state();

@@ -11,7 +11,7 @@ function failedWaterRouteCache(nav){
   return cache.entries;
 }
 // Service points outside the same footprints used by Navigation.
-export function repairRoutePoints(worker,target,nav){
+export function repairRoute(worker,target,nav){
   const radius=.28,clearance=.1;
   let points;
   if(target.kind==='center'){
@@ -26,12 +26,8 @@ export function repairRoutePoints(worker,target,nav){
     points=[[0,depth],[0,-depth],[width,0],[-width,0]].map(([x,z])=>({x:target.x+x*c+z*s,z:target.z-x*s+z*c}));
     points.sort((a,b)=>Math.hypot(a.x-worker.x,a.z-worker.z)-Math.hypot(b.x-worker.x,b.z-worker.z));
   }
-  return points.map((point,index)=>({...point,id:`repair-point-${target.id}-${index}`}));
-}
-export function repairRoute(worker,target,nav){
-  const radius=.28;
-  for(const destination of repairRoutePoints(worker,target,nav)){
-    const path=nav.path(worker,destination,radius,null,true);
+  for(const [index,point] of points.entries()){
+    const destination={...point,id:`repair-point-${target.id}-${index}`},path=nav.path(worker,destination,radius,null,true);
     if(path)return {destination,path};
   }
   return null;
@@ -46,14 +42,6 @@ export function canWaterFrom(worker,plant,nav){
   // A close point on the canyon floor is not a watering point for a crop on
   // the plateau above it. River crossing permission does not extend the spout.
   return Math.abs(nav.workerSurface(worker.x,worker.z)-nav.field.surface(plant.x,plant.z))<=.5;
-}
-export function wateringRoutePoints(worker,plant,nav){
- const radius=worker.radius??.28,standOff=(plant.species==='platano'?.65:.45)+radius+.1;
- const angle=Math.atan2(worker.x-plant.x,worker.z-plant.z);
- return [0,1,-1,2,-2,3,-3,4].map((offset,index)=>{
-  const yaw=angle+offset*Math.PI/4;
-  return {x:plant.x+Math.sin(yaw)*standOff,z:plant.z+Math.cos(yaw)*standOff,id:`water-point-${plant.id}-${index}`};
- }).filter(point=>canWaterFrom({...point,radius},plant,nav));
 }
 export function wateringRoute(worker,plant,nav){
   const radius=worker.radius??.28,standOff=(plant.species==='platano'?.65:.45)+radius+.1;

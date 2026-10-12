@@ -2,7 +2,7 @@ import {commitAgriculturalPower,consumeGrowthPower,settleMultiplyPower} from './
 import {activeRaidEntryPlan} from '../world/raid-entry-data.js';
 import {animalExitConnector} from './animal-exit-connectors.js';
 import {workerReturnRoute} from './worker-return-route.js';
-import {beginAssignedWorkerRouteStep,assignedWorkerRouteStep,candidateTaskRouteStep} from './worker-assigned-route.js';
+import {beginAssignedWorkerRouteStep,assignedWorkerRouteStep} from './worker-assigned-route.js';
 import {workerRiskClearance} from './worker-route-clearance.js';
 import {resolveFluidPlacement} from '../world/fluid-placement.js';
 import {ensurePurchaseBudget,HIRING_RESERVE} from './budget.js';
@@ -22,7 +22,7 @@ import {spellUnlocked,permission,operational,cropSpec,wallSpec,structureHealth,d
 import {createPlant,advancePlant,waterPlant,isMature,contiguousGroup} from './crops.js';
 import {activeCrops,cropBecameInactive} from './active-crops.js';
 import {workerEntityLookup} from './worker-entity-lookup.js';
-import {enqueue,taskEnqueuer,reserveTasks,releaseTask,TASK_ROUTE_PENDING} from './tasks.js';
+import {enqueue,taskEnqueuer,reserveTasks,releaseTask} from './tasks.js';
 import {planNight,updateRaid,spawnRaid,planDay} from './raids.js';
 import {wallStroke,wallLayout,wallStrokeLine} from '../world/wall-layout.js';
 import {selectEvent,applyEvent} from './events.js';
@@ -508,14 +508,7 @@ export function idleFarmAnchor(s,worker,center,livingCandidates=null){
 function reserveAvailableTasks(s,nav){
   if(!s.raid&&s.time<300)reserveTasks(s,(w,t,target)=>{
     if(s.time>=profile(w).end)return false;
-    const result=s.tasks.length<=8?{pending:false,route:t.kind==='repair'?repairRoute(w,target,nav):t.kind==='initial'||t.kind==='water'?wateringRoute(w,target,nav):{destination:target,path:nav.path(w,target,.28,null,true)}}:candidateTaskRouteStep(nav,w,t,target,s.tasks.length);
-    if(result.pending)return TASK_ROUTE_PENDING;
-    if(!result.route)return false;
-    if(!w.terrainAvoidance?.length){
-      w.path=result.route.path;w.destinationId=result.route.destination.id;w.pathVersion=nav.version;
-      if(t.kind==='repair'||t.kind==='initial'||t.kind==='water')w.taskApproach={taskId:t.id,destination:result.route.destination};
-    }
-    return true;
+    return t.kind==='repair'?!!repairRoute(w,target,nav):t.kind==='initial'||t.kind==='water'?!!wateringRoute(w,target,nav):!!nav.path(w,target,.28,null,true);
   });
 }
 function updateWorkers(s,dt,nav) {
@@ -587,14 +580,14 @@ function updateWorkers(s,dt,nav) {
           }
           destination=w.taskApproach.destination;
         }else if(t.kind==='initial'||t.kind==='water'){
-          if(w.taskApproach?.taskId!==t.id||w.path===null){
+          if(w.taskApproach?.taskId!==t.id||w.path===null||w.pathVersion!==nav.version){
             const route=wateringRoute(w,target,nav);
             if(!route){releaseTask(s,w);w.status='idle';continue;}
             w.taskApproach={taskId:t.id,destination:route.destination};w.path=route.path;w.destinationId=route.destination.id;w.pathVersion=nav.version;
           }
           destination=w.taskApproach.destination;
         }
-        if(walkTo(s,w,destination,dt,nav,{motion:{urgent:(urgency?urgency.urgent(w):urgentWork(s,w))},incrementalReplan:true})) {
+        if(walkTo(s,w,destination,dt,nav,{motion:{urgent:(urgency?urgency.urgent(w):urgentWork(s,w))},incrementalReplan:t.kind==='repair'||t.kind==='harvest'})) {
           if(t.kind==='repair'){completeTask(s,w,t,target,nav);urgency?.invalidate();continue;}
           if(t.kind==='initial'||t.kind==='water')w.heading=Math.atan2(target.x-w.x,target.z-w.z);
           w.status='acting';w.actionRemaining=(t.kind==='initial'?7.2:t.kind==='water'?3.4:t.kind==='harvest'?3.6:t.kind==='repair'?3.8:1)/p.speed;
