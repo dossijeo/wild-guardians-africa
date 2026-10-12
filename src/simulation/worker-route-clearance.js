@@ -21,7 +21,7 @@ export function workerRiskClearance(actor,nav,{radius,ignore},dynamicClear){
    record={nav,version:nav.version,radius,ignore,path:actor.path,point,px:point.x,pz:point.z,boundary,risky:!risk.valid||risk.peak>=.46};
   }
   if(record.risky)nav.workerMotionStats.guarded++;
-  if(record.risky?!nav.terrainValid(end.x,end.z,radius,true):!actorFluidClear(nav,end,radius)){
+  if(record.risky?!nav.terrainValid(end.x,end.z,radius,true):!actorFluidClear(nav,end,radius,true)){
     // Retain the existing marginal, improving recovery, never a new task exception.
     const recovering=['fleeing','returning','incapacitated'].includes(actor.status)&&!nav.terrainValid(start.x,start.z,radius,true);
     const before=recovering?peak(nav,start,radius):Infinity,after=recovering?peak(nav,end,radius):Infinity;

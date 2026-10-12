@@ -1,5 +1,6 @@
 import {SearchFrontier} from '../world/search-frontier.js';
 import {animalFootprintConnector} from './animal-footprint-connectors.js';
+import {animalGridExitBridge} from './animal-grid-exit-bridge.js';
 const distances=[4,8,12,16,24,32];
 const angles=32,budget=8;
 // An open fractional corridor can have no usable one-metre grid cells. Try
@@ -28,7 +29,18 @@ export function animalExitConnector(actor,end,nav){
   const path=fractionalExit(actor,end,nav,search,radius);if(path)return path;
   // A lattice can still miss a passage narrower than its cell spacing. Use
   // footprint-derived physical corners only after the unchanged search ends.
-  if(search.fine?.visited&&(search.fine.visited>=4096||!search.fine.items.length))return animalFootprintConnector(actor,end,nav);
+  if(search.fine?.visited&&(search.fine.visited>=4096||!search.fine.items.length)){
+   const bridge=animalGridExitBridge(actor,end,nav);
+   if(bridge.path){delete actor.exitConnectorSearch;return bridge.path;}
+   if(bridge.pending)return null;
+   // A narrow bent corridor may need a quarter-metre lateral adjustment that
+   // both lattices above miss. Retain the same bounded frontier and native
+   // swept tests; this never changes the animal's radius or wall collision.
+   const quarter=fractionalExit(actor,end,nav,search,radius,.25,'quarter');
+   if(quarter)return quarter;
+   if(search.quarter?.items.length&&search.quarter.visited<4096)return null;
+   return animalFootprintConnector(actor,end,nav);
+  }
  }
  return null;
 }
@@ -37,9 +49,9 @@ export function animalExitConnector(actor,end,nav){
 // miss a winding, physically open corridor. Search a half-metre lattice
 // anchored to the actual actor, retaining its bounded frontier across ticks
 // and saves. Native swept checks remain the sole definition of clearance.
-function fractionalExit(actor,end,nav,search,radius){
- const maxNodes=4096,step=.5;
- const fine=search.fine??= {items:[],sequence:0,costs:{'0,0':0},previous:{},visited:0,nodeCount:1};
+function fractionalExit(actor,end,nav,search,radius,step=.5,field='fine'){
+ const maxNodes=4096;
+ const fine=search[field]??= {items:[],sequence:0,costs:{'0,0':0},previous:{},visited:0,nodeCount:1};
  const frontier=new SearchFrontier();frontier.items=fine.items;frontier.sequence=fine.sequence;
  if(!fine.visited&&!frontier.length)frontier.push({i:0,j:0,g:0,f:Math.hypot(end.x-actor.x,end.z-actor.z)});
  const point=(i,j)=>({x:actor.x+i*step,z:actor.z+j*step});

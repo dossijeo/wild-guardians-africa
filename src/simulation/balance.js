@@ -305,7 +305,8 @@ export const BALANCE = {
     "worker_collision_knockback_m": [
       1.5,
       2
-    ]
+    ],
+    "crop_hit_points": 1
   },
   "spells": [
     {
@@ -324,27 +325,31 @@ export const BALANCE = {
       "id": "growth",
       "name": "Crecimiento",
       "duration_seconds": 30,
-      "cooldown_seconds": 90,
-      "unlock": "day_3",
+      "cooldown_seconds": 0,
+      "unlock": "day_1",
       "coverage_reference_plants": [
-        9,
-        10
+        1,
+        1
       ],
       "growth_multiplier": 1.5,
-      "radius_m": null
+      "radius_m": null,
+      "available_day": 1,
+      "target": "single-plant"
     },
     {
       "id": "multiply",
       "name": "Multiplicar",
       "duration_seconds": 15,
-      "cooldown_seconds": 120,
-      "unlock": "day_5",
+      "cooldown_seconds": 0,
+      "unlock": "day_1",
       "coverage_reference_plants": [
-        6,
-        8
+        1,
+        1
       ],
       "harvest_multiplier": 2,
-      "radius_m": null
+      "radius_m": null,
+      "available_day": 1,
+      "target": "single-plant"
     }
   ],
   "no_overlap_between_spell_areas": true,
@@ -369,10 +374,11 @@ export const BALANCE = {
     "attacks": false,
     "max_villages": null,
     "additional_village_cost": {
-      "formula": "2000",
+      "formula": "round1000(50000 * 1.6^(n-2))",
       "min_n": 2,
       "initial_village_ordinal": 1,
-      "fixed_cost": 2000
+      "variant": "proposed",
+      "rounding": "nearest thousand, half upward, exact integer fractions"
     },
     "culture_stats_differ": false
   },

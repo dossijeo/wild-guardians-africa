@@ -1,7 +1,13 @@
-import {previewCenter} from '../simulation/game.js';
+import {agriculturalGuidePlant} from '../tutorial/agricultural-guide.js';
+import {previewSpell,previewCenter} from '../simulation/game.js';
 import {centerGeometry,centerServicePoint} from '../world/centers.js';
 // World hands appear only after the corresponding placement tool is chosen.
-export function tutorialHandTarget(state,nav,toolKind=null){
+export function tutorialHandTarget(state,nav,toolKind=null,toolSpell=null){
+  const reading=state.tutorial.reading;
+  if(state.day===1&&!state.result&&!state.raid&&!state.tutorial.basicSkipped&&['magic.growth','magic.multiply'].includes(reading)&&toolKind==='spell'&&toolSpell===reading.slice(6)){
+    const plant=agriculturalGuidePlant(state,toolSpell,p=>previewSpell(state,toolSpell,p.x,p.z,nav,p.id).valid);
+    return plant?{kind:'tap',target:plant.id,minimumScreenHeight:40,position:[plant.x,nav.field.surface(plant.x,plant.z)+.025,plant.z]}:null;
+  }
   const step=state.tutorial.step;
   if(state.day!==1||state.result||state.tutorial.basicSkipped||!['center','plant'].includes(step)||toolKind!==step)return null;
   if(state.tutorial.dismissed?.includes('basic.'+step+':')&&!state.tutorial.guideAfterAuto?.includes('basic.'+step))return null;

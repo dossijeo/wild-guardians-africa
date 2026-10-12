@@ -1,4 +1,5 @@
 import {raidEntryChunks,raidResidentDemand,includeRaidBounds} from '../world/raid-entry-residency.js';
+import {PreciseTap} from '../ui/precise-tap.js';
 import {startInitialFarRegion} from './initial-far-region.js';
 import {LoadingSyncQueue} from './loading-sync-queue.js';
 import {initialCropCapacity} from './initial-crop-capacity.js';
@@ -107,8 +108,11 @@ export class WorldScene {
     canvas.addEventListener('pointerup',()=>this.raidCamera?.endManual(),listenerOptions);
     canvas.addEventListener('pointercancel',()=>this.raidCamera?.endManual(),listenerOptions);
     canvas.addEventListener('wheel',()=>this.raidCamera?.cancel(),listenerOptions);
-    let down=null;canvas.addEventListener('pointerdown',e=>{if(e.button===0&&!e.shiftKey)down=[e.clientX,e.clientY];},listenerOptions);canvas.addEventListener('pointerup',e=>{if(this.controls.enabled&&this.state&&down&&Math.hypot(e.clientX-down[0],e.clientY-down[1])<5)onPick(this.pick(e));down=null;},listenerOptions);
-    canvas.addEventListener('pointercancel',()=>{down=null;},listenerOptions);
+    const tap=new PreciseTap();
+    canvas.addEventListener('pointerdown',e=>tap.down(e),listenerOptions);
+    canvas.addEventListener('pointermove',e=>tap.move(e),listenerOptions);
+    canvas.addEventListener('pointerup',e=>{const gesture=tap.up(e);if(this.controls.enabled&&this.state&&gesture)onPick({...this.pick(e),...gesture});},listenerOptions);
+    canvas.addEventListener('pointercancel',e=>tap.up(e,true),listenerOptions);
     this.resizeObserver=new ResizeObserver(()=>this.resize());this.resizeObserver.observe(canvas);this.quality='media';this.resize();
     canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();this.onContextLost?.();},listenerOptions);canvas.addEventListener('webglcontextrestored',()=>this.onContextRestored?.(),listenerOptions);
   }
@@ -608,10 +612,10 @@ export class WorldScene {
     return boxes.filter(b=>b.max[0]>=loX&&b.min[0]<=hiX&&b.max[2]>=loZ&&b.min[2]<=hiZ);
   }
   tutorialGuideTarget(){
-    const step=this.state.tutorial.step,key=step+':'+this.tutorialToolKind+':'+this.nav.version;
+    const step=this.state.tutorial.step,magicGuide=['magic.growth','magic.multiply'].includes(this.state.tutorial.reading),key=step+':'+this.tutorialToolKind+':'+this.nav.version+(magicGuide?':'+this.state.tutorial.reading+':'+this.tutorialSpellKind+':'+this.state.spells.length+':'+this.state.plants.length+':'+Math.floor(this.state.elapsed*5):'');
     let config=null;
-    if(this.tutorialHandsEnabled!==false&&this.state.day===1&&!this.state.result&&step!=='done'){
-      if(this.handTargetKey!==key){this.handTargetKey=key;this.handTargetCache=tutorialHandTarget(this.state,this.nav,this.tutorialToolKind);}config=this.handTargetCache;
+    if(this.tutorialHandsEnabled!==false&&this.state.day===1&&!this.state.result&&(step!=='done'||magicGuide)){
+      if(this.handTargetKey!==key){this.handTargetKey=key;this.handTargetCache=tutorialHandTarget(this.state,this.nav,this.tutorialToolKind,this.tutorialSpellKind);}config=this.handTargetCache;
     }
     return config;
   }

@@ -30,6 +30,7 @@ import {castPickedSpell} from './spell-placement.js';
 import {plantNearTouch} from './plant-placement.js';
 import {UiAudio,guidedPlacementKind} from '../audio/ui-audio.js';
 import {ToolSession} from '../ui/tool-session.js';
+import {ManualMagicActivity,bindMagicSelectionContact} from '../ui/manual-magic-activity.js';
 import {RESERVE_MESSAGE,HIRING_RESERVE,BUDGET_WARNING_THRESHOLD} from '../simulation/budget.js';
 import {GameSurfaces} from '../ui/game-surfaces.js';
 import {resumeLoadedWorld} from './resume-loaded-world.js';
@@ -43,7 +44,7 @@ import {BALANCE as B} from '../simulation/balance.js';
 import {villageCost} from '../simulation/rules.js';
 import * as Game from '../simulation/game.js';
 import {PROFILES} from '../simulation/workforce.js';
-import {formatMoney,numberOf} from '../simulation/money.js';
+import {formatMoney,formatWholeCoins,numberOf} from '../simulation/money.js';
 import {isMature} from '../simulation/crops.js';
 import {cropSpec,permission,operational,attraction} from '../simulation/rules.js';
 import {BrowserSaveRepository} from '../persistence/browser-saves.js';
@@ -106,6 +107,8 @@ if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading'))i
 const dialogVoice=new SpiritVoice({url:assetUrl,volume:()=>settings.sfx});
 let commandFeedback='',hudSize='',frameImages=null,guardian=null,eventCards=null,hudHand=null,tutorial=null,tutorialInert=null,tutorialFocus=null;
 const surfaces=new GameSurfaces(),toolSession=new ToolSession();
+const manualMagicActivity=new ManualMagicActivity();
+if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-magic-activity'))globalThis.wildGuardiansMagicActivity=()=>manualMagicActivity.report(state);
 let libraryViewer=null;
 let budgetWarningUntil=0,lastBudgetBalance=Infinity,reserveWarningShown=false;
 const tutorialProfile=new TutorialProfile(localStorage);
@@ -119,7 +122,7 @@ function safe(action){if(leaving)return;commandFeedback='';try{const result=acti
 function save({confirm=false}={}){const owner=juice;return saveGame(state,saves,{confirm,onError:error,onConfirm:()=>owner?.savedSuccessfully()});}
 const exitDesktop=createDesktopExit({host:window,save,hasGame:()=>!!state,onError:failure=>error(moneyLocale().startsWith('es')?'No se pudo cerrar la aplicación: '+failure.message:'Could not close the application: '+failure.message)});
 function bind(id,fn){document.getElementById(id)?.addEventListener('click',()=>safe(fn));}
-function clearWorld(){juice?.dispose();juice=null;gameplayGpuQa?.close();clearLoadingPresentation();libraryViewer?.dispose();libraryViewer=null;dialogVoice.stop();raidLoading?.remove();raidLoading=null;noticeLifetime.reset();eventCards=null;surfaces.reset();uiAudio.reset();toolSession.clear();budgetWarningUntil=0;lastBudgetBalance=Infinity;reserveWarningShown=false;pendingVillage=null;commandFeedback='';setTutorialInteraction(false);tutorial=null;hudHand?.dispose();hudHand=null;guardian?.dispose();guardian=null;world?.dispose();world=null;nav=null;audio.stop();tool=null;selection=null;document.querySelector('#native-hud-style')?.remove();}
+function clearWorld(){juice?.dispose();juice=null;gameplayGpuQa?.close();clearLoadingPresentation();libraryViewer?.dispose();libraryViewer=null;dialogVoice.stop();raidLoading?.remove();raidLoading=null;noticeLifetime.reset();eventCards=null;surfaces.reset();uiAudio.reset();toolSession.clear();manualMagicActivity.reset();budgetWarningUntil=0;lastBudgetBalance=Infinity;reserveWarningShown=false;pendingVillage=null;commandFeedback='';setTutorialInteraction(false);tutorial=null;hudHand?.dispose();hudHand=null;guardian?.dispose();guardian=null;world?.dispose();world=null;nav=null;audio.stop();tool=null;selection=null;document.querySelector('#native-hud-style')?.remove();}
 let leaving=false;
 async function menu() {
   if(leaving)return;leaving=true;
@@ -226,13 +229,17 @@ function guidedHudAction(action,open){
   open();
   if(surfaces.active==='panel')uiAudio.guidedTouch(action,{guided});
 }
-function onPick({entityId,point}) {
+function onPick({entityId,point,gestureSeconds=null}) {
   if(!state||screen!=='game')return;
   safe(()=>{
     if(state.pauses.includes('hiring')){if(surfaces.active!=='hiring')hiringDialog();return;}
     const pickedPlant=state.plants.find(p=>p.id===entityId&&p.alive);
     if(tool?.kind==='spell'){
-      if(castPickedSpell(state,commandId(),tool.spell,{entityId,point},nav))save();return;
+      const applicationStarted=performance.now();
+      if(castPickedSpell(state,commandId(),tool.spell,{entityId,point},nav)){
+        manualMagicActivity.applied(state,state.spells.at(-1),{gestureSeconds,applicationCpuSeconds:(performance.now()-applicationStarted)/1000,benefited:state.events.at(-1).benefited});
+        toolSession.used(performance.now()/1000);save();
+      }return;
     }
     if(pickedPlant&&tool?.kind!=='spell'&&tool?.kind!=='plant'){cancelTool();closeSurface();selection=null;return;}
     const pickedCenter=state.structures.find(s=>s.id===entityId&&s.kind==='center'&&operational(s));
@@ -269,7 +276,7 @@ function toolPanel(type) {
   showHudPanel({plant:'Cultivar',wall:'Defensas',spell:'Magias del Espíritu'}[type],content);
   document.querySelectorAll('[data-crop]').forEach(el=>el.onclick=()=>{armTool({kind:'plant',species:el.dataset.crop});hideHudPanel();updateUI(true);});
   document.querySelectorAll('[data-wall]').forEach(el=>el.onclick=()=>{armTool({kind:'wall',material:el.dataset.wall,gate:document.querySelector('#gate').checked});hideHudPanel();updateUI(true);});
-  document.querySelectorAll('[data-spell]').forEach(el=>el.onclick=()=>{if(el.disabled)return;armTool({kind:'spell',spell:el.dataset.spell});hideHudPanel({silent:true});uiAudio.selectSpell(el.dataset.spell);updateUI(true);});
+  document.querySelectorAll('[data-spell]').forEach(el=>{const contact=bindMagicSelectionContact(el);el.onclick=e=>{if(el.disabled)return;const seconds=contact();manualMagicActivity.selected(state.day,el.dataset.spell,e.isTrusted&&e.detail>0?seconds:null);armTool({kind:'spell',spell:el.dataset.spell});hideHudPanel({silent:true});uiAudio.selectSpell(el.dataset.spell);updateUI(true);};});
 }
 function showHudPanel(title,body){
  if(!openSurface('panel',title))return false;
@@ -311,7 +318,8 @@ function cancelTool(){if(pendingVillage)cancelVillagePreview();tool=null;toolSes
 function updateUI(force=false) {
   if(screen!=='game'||!state)return;
   const now=performance.now();if(!force&&now-lastUI<200)return;lastUI=now;
-  if(tool&&['plant','center','wall'].includes(tool.kind)&&toolSession.expired(now/1000,tool.kind==='wall'&&world.wallDrawing.active))cancelTool();
+  manualMagicActivity.update(state);
+  if(tool&&(['plant','center','wall'].includes(tool.kind)||tool.kind==='spell'&&tool.spell!=='shield')&&toolSession.expired(now/1000,tool.kind==='wall'&&world.wallDrawing.active))cancelTool();
   if(state.day===1&&state.initialPreparation&&!tool&&!surfaces.active&&state.plants.some(p=>p.alive)&&state.structures.some(operational))Game.openInitialHiring(state);
   const balance=numberOf(state.ledger.balance);if(balance>lastBudgetBalance&&balance>BUDGET_WARNING_THRESHOLD)reserveWarningShown=false;if(balance<=BUDGET_WARNING_THRESHOLD&&lastBudgetBalance>BUDGET_WARNING_THRESHOLD&&!reserveWarningShown){reserveWarningShown=true;budgetWarningUntil=now+18000;}lastBudgetBalance=balance;
   world.wallDrawing.setEnabled(tool?.kind==='wall'&&!tool.gate&&permission(state,'wall'));
@@ -364,12 +372,12 @@ function buildPanel(){
 function cancelVillagePreview(){world?.clearVillagePreview();pendingVillage=null;if(tool?.kind==='village')tool=null;hideHudPanel();}
 function villageCulturePanel() {
   if(state.pauses.includes('hiring'))return;
-  showHudPanel('Un nuevo poblado',`<div><p>Coste: ${localMoney({n:String(villageCost(state.villages.length+1)),d:'1'})} monedas</p><div class="action-grid">${selector.cultures.map(c=>`<button data-village-culture="${c.id}">${c.name}</button>`).join('')}</div></div>`);
+  showHudPanel('Un nuevo poblado',`<div><p>Coste: ${formatWholeCoins(villageCost(state.villages.length+1),moneyLocale())} monedas</p><div class="action-grid">${selector.cultures.map(c=>`<button data-village-culture="${c.id}">${c.name}</button>`).join('')}</div></div>`);
   document.querySelectorAll('[data-village-culture]').forEach(el=>el.onclick=()=>safe(async()=>{const culture=el.dataset.villageCulture,payload=villageCatalog.find(v=>v.id===(culture==='saheliana'?'saheliano':culture));await world.ensureVillage(culture,payload);armTool({kind:'village',culture});if(pendingVillage){pendingVillage=Game.previewVillage(state,culture,pendingVillage.x,pendingVillage.z,payload,nav);world.showVillagePreview(pendingVillage);villageConfirmPanel();}else hideHudPanel();}));
 }
 function villageConfirmPanel() {
   if(state.pauses.includes('hiring'))return;
-  const p=pendingVillage;showHudPanel('Fundar poblado',`<div><p>${p.valid?'Ubicación válida':'Ubicación inválida: '+esc(p.reason)}</p><p>${localMoney({n:String(p.cost),d:'1'})} monedas. Toca otra posición para recolocar.</p>${button('found-village','Confirmar poblado')}${button('change-village-culture','Cambiar cultura')}${button('cancel-village','Cancelar')}</div>`);document.querySelector('#found-village').disabled=!p.valid||!permission(state,'village');
+  const p=pendingVillage;showHudPanel('Fundar poblado',`<div><p>${p.valid?'Ubicación válida':'Ubicación inválida: '+esc(p.reason)}</p><p>${formatWholeCoins(p.cost,moneyLocale())} monedas. Toca otra posición para recolocar.</p>${button('found-village','Confirmar poblado')}${button('change-village-culture','Cambiar cultura')}${button('cancel-village','Cancelar')}</div>`);document.querySelector('#found-village').disabled=!p.valid||!permission(state,'village');
   bind('change-village-culture',villageCulturePanel);bind('found-village',()=>{const payload=villageCatalog.find(v=>v.id===(p.culture==='saheliana'?'saheliano':p.culture));Game.foundVillage(state,commandId(),p.culture,p.x,p.z,payload,nav);world.clearVillagePreview();pendingVillage=null;tool=null;hideHudPanel();save();world.syncResidentProps();});bind('cancel-village',cancelVillagePreview);
 }
 function contextPanel() {
@@ -393,9 +401,9 @@ const budgetWarningVisible=()=>performance.now()<budgetWarningUntil&&(!tutorialM
 function refreshTutorialGuidance(){
   const warning=budgetWarningVisible(),message=tutorial?.presentation({record:false});
   const guideAllowed=!surfaces.active&&!warning&&!state.pauses.some(p=>['menu','hiring','hidden','context-lost'].includes(p));
-  hudHand??=new TutorialHudHand(document.querySelector('#stage'));hudHand.show(guideAllowed?tutorialHudHandTarget(state,message,tool?.kind):null);
-  const guidedStep=message?.id==='basic.'+state.tutorial.step||state.tutorial.guideAfterAuto?.includes('basic.'+state.tutorial.step);
-  world.tutorialToolKind=tool?.kind??null;world.tutorialHandsEnabled=guideAllowed&&guidedStep;
+  hudHand??=new TutorialHudHand(document.querySelector('#stage'));hudHand.show(guideAllowed?tutorialHudHandTarget(state,message,tool?.kind,tool?.spell):null);
+  const guidedStep=['magic.growth','magic.multiply'].includes(message?.id)||message?.id==='basic.'+state.tutorial.step||state.tutorial.guideAfterAuto?.includes('basic.'+state.tutorial.step);
+  world.tutorialToolKind=tool?.kind??null;world.tutorialSpellKind=tool?.spell??null;world.tutorialHandsEnabled=guideAllowed&&guidedStep;
   syncTutorialActionPause(state,{hudTarget:!hudHand.image.hidden,worldTarget:guideAllowed?world.tutorialGuideTarget():null,selectionOpen:surfaces.active==='panel'&&guidedStep});
 }
 function narrator() {
