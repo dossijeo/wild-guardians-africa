@@ -11,7 +11,10 @@ test('all three policies retain their exact original options',()=>{
 });
 test('new provenance names its family and hashes the validator, launcher and review inputs',()=>{
  const source=recoveryPerfComparisonProvenance(recoveryPerfComparisonOptions('normal',input));
- assert.equal(source.comparison.family,'recovery-perf-preparation-v1');assert.equal(source.comparison.arm,'recovery');
+ const config=JSON.parse(readFileSync(new URL('../content/balance/raid_pressure_candidate.json',import.meta.url)));
+ assert([3,4].includes(config.version));
+ assert.equal(source.comparison.family,'recovery-perf-preparation-v1');assert.equal(source.comparison.militaryCandidate,config.version);
+ assert.equal(source.comparison.arm,config.version===4?'recovery':'reference');
  assert.equal(source.comparison.playerProfile,'normal');assert.equal(Object.keys(source.sourceHashes).length,470);
  for(const path of ['tools/run-reviewed-recovery-perf-comparison.mjs','tools/reviewed-recovery-perf-sources.mjs','docs/qa/integrated-spiritual-survival/recovery-perf-preparation/complete-source.json.gz'])assert.equal(source.sourceHashes[path],createHash('sha256').update(readFileSync(new URL('../'+path,import.meta.url))).digest('hex'));
 });

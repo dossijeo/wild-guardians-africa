@@ -4,10 +4,13 @@ import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {recoveryPerfSourceInventories,verifyRecoveryPerfSources} from '../tools/reviewed-recovery-perf-sources.mjs';
 const different='0'.repeat(64);
-test('actual materialized technical runtime matches the new recovery family',()=>{
+test('actual materialized technical runtime matches its exact declared military arm',()=>{
  const {recovery}=recoveryPerfSourceInventories();
  const actual=Object.fromEntries(Object.keys(recovery).map(path=>[path,createHash('sha256').update(readFileSync(new URL('../'+path,import.meta.url))).digest('hex')]));
- assert.equal(verifyRecoveryPerfSources(actual).arm,'recovery');
+ const config=JSON.parse(readFileSync(new URL('../content/balance/raid_pressure_candidate.json',import.meta.url)));
+ assert([3,4].includes(config.version));
+ const result=verifyRecoveryPerfSources(actual);
+ assert.equal(result.militaryCandidate,config.version);assert.equal(result.arm,config.version===4?'recovery':'reference');
 });
 test('prospective matched reference differs only in the three original military files',()=>{
  const {recovery,reference}=recoveryPerfSourceInventories(),result=verifyRecoveryPerfSources(reference);
