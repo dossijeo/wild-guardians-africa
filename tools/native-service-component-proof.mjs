@@ -3,7 +3,8 @@
 import {containsPoint} from '../src/world/footprints.js';
 import {centerBoundaryPoint} from '../src/world/centers.js';
 import {agriculturalRayClear} from '../src/simulation/raid-agricultural-impact.js';
-export function nativeServiceComponentProof(s,view,targets,radius,outside,outline){
+import {nativeClosedApproachCertificate} from './native-closed-approach-certificate.mjs';
+export function nativeServiceComponentProof(s,view,targets,radius,outside,outline,{sharedCertificate=false,onCertificate=()=>{}}={}){
  const polygon=outline.map(([x,z])=>({x,z})),regions=new Map();let poses=0,blocked=0,certified=0,physicalConnectors=0,emptyNativeOrigins=0;
  const enclosed=region=>{
   if(regions.has(region))return regions.get(region);
@@ -19,7 +20,8 @@ export function nativeServiceComponentProof(s,view,targets,radius,outside,outlin
    // an enclosure certificate for a position that cannot perform the attack.
    if(target.alive===true&&!agriculturalRayClear(s,view,point,target)){blocked++;continue;}
    if(view.segmentClear(point,outside,radius,null,false))return {valid:false,reason:'native-service-direct-route-open',targetId:target.id,point,poses,blocked,certified};
-   if(view.approachPath(outside,point,radius,32))return {valid:false,reason:'native-service-route-open',targetId:target.id,point,poses,blocked,certified};
+   const certificate=sharedCertificate&&nativeClosedApproachCertificate(view,outside,point,radius);if(sharedCertificate)onCertificate({certificate});
+   if(!certificate&&view.approachPath(outside,point,radius,32))return {valid:false,reason:'native-service-route-open',targetId:target.id,point,poses,blocked,certified};
    // These are exactly the animal A* origin connectors (no worker portals).
    // Require positively exhausted, boundary-free components for every usable
    // connector. Narrow poses with no connectors remain unproven, not accepted.
