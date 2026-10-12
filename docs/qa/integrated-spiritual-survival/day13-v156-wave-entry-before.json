@@ -1,0 +1,88 @@
+{
+  "scope": "Exact active-raid checkpoint, production-equivalent entry worker, no virtual-player decisions",
+  "input": "docs/qa/integrated-spiritual-survival/pilot-v155-day13-time492-attribution/checkpoint-state.json.gz",
+  "day": 13,
+  "endTime": 498.00000000004496,
+  "samples": [
+    {
+      "time": 492.0000000000436,
+      "milliseconds": 36.2287,
+      "activeActors": 1,
+      "pendingAt": null
+    },
+    {
+      "time": 493.0000000000438,
+      "milliseconds": 1153.8998,
+      "activeActors": 3,
+      "pendingAt": null
+    },
+    {
+      "time": 494.00000000004405,
+      "milliseconds": 16.548999999999978,
+      "activeActors": 3,
+      "pendingAt": null
+    },
+    {
+      "time": 495.0000000000443,
+      "milliseconds": 12.545100000000048,
+      "activeActors": 3,
+      "pendingAt": null
+    },
+    {
+      "time": 496.0000000000445,
+      "milliseconds": 8.159800000000132,
+      "activeActors": 3,
+      "pendingAt": null
+    },
+    {
+      "time": 497.00000000004474,
+      "milliseconds": 10.285700000000134,
+      "activeActors": 3,
+      "pendingAt": null
+    }
+  ],
+  "spawnTrace": [
+    {
+      "tickStart": 493.0000000000438,
+      "stage": "prepared-entry",
+      "elapsedMilliseconds": 0.40800000000001546
+    },
+    {
+      "tickStart": 493.0000000000438,
+      "stage": "selected-entry",
+      "elapsedMilliseconds": 809.9313
+    },
+    {
+      "tickStart": 493.0000000000438,
+      "stage": "resident-entry",
+      "elapsedMilliseconds": 810.0344
+    },
+    {
+      "tickStart": 493.0000000000438,
+      "stage": "target-hint",
+      "prepared": false,
+      "choices": 0,
+      "accepted": false
+    },
+    {
+      "tickStart": 493.0000000000438,
+      "stage": "spawned",
+      "elapsedMilliseconds": 810.7953
+    }
+  ],
+  "entryTransport": {
+    "mode": "real-node-worker-with-production-cooperative-fallback",
+    "updates": 12,
+    "waits": [],
+    "readyContexts": [],
+    "preparer": {
+      "requests": 0,
+      "accepted": 0,
+      "obsolete": 0,
+      "used": 0,
+      "failed": 0
+    },
+    "workerFailure": null,
+    "scope": "Wall-clock waits are separate from simulated activity; no clock, RNG or geometry patches"
+  }
+}

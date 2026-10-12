@@ -1,0 +1,119 @@
+{
+  "scope": "Exact active-raid checkpoint, production-equivalent entry worker, no virtual-player decisions",
+  "input": "docs/qa/integrated-spiritual-survival/pilot-v155-day13-time492-attribution/checkpoint-state.json.gz",
+  "day": 13,
+  "endTime": 498.00000000004496,
+  "samples": [
+    {
+      "time": 492.0000000000436,
+      "milliseconds": 51.85480000000001,
+      "activeActors": 1,
+      "pendingAt": null
+    },
+    {
+      "time": 493.0000000000438,
+      "milliseconds": 3.6263000000000147,
+      "activeActors": 0,
+      "pendingAt": 494.700000000044
+    },
+    {
+      "time": 494.00000000004405,
+      "milliseconds": 1275.9717999999998,
+      "activeActors": 3,
+      "pendingAt": null
+    },
+    {
+      "time": 495.0000000000443,
+      "milliseconds": 22.435699999999997,
+      "activeActors": 3,
+      "pendingAt": null
+    },
+    {
+      "time": 496.0000000000445,
+      "milliseconds": 13.354899999999816,
+      "activeActors": 3,
+      "pendingAt": null
+    },
+    {
+      "time": 497.00000000004474,
+      "milliseconds": 10.012099999999919,
+      "activeActors": 3,
+      "pendingAt": null
+    }
+  ],
+  "spawnTrace": [
+    {
+      "tickStart": 494.00000000004405,
+      "stage": "prepared-entry",
+      "elapsedMilliseconds": 0.18469999999979336
+    },
+    {
+      "tickStart": 494.00000000004405,
+      "stage": "selected-entry",
+      "elapsedMilliseconds": 842.634
+    },
+    {
+      "tickStart": 494.00000000004405,
+      "stage": "resident-entry",
+      "elapsedMilliseconds": 842.9157999999998
+    },
+    {
+      "tickStart": 494.00000000004405,
+      "stage": "target-hint",
+      "prepared": false,
+      "choices": 0,
+      "accepted": false
+    },
+    {
+      "tickStart": 494.00000000004405,
+      "stage": "spawned",
+      "elapsedMilliseconds": 844.0135
+    }
+  ],
+  "entryTransport": {
+    "mode": "real-node-worker-with-production-cooperative-fallback",
+    "updates": 14850,
+    "waits": [
+      {
+        "day": 13,
+        "time": 494.00000000004405,
+        "elapsed": 7702.000000009497,
+        "key": "[\"123\",\"sabana\",\"mapungubwe\",\"4.1.10.3\",2427632232,3,[\"warthog\",\"warthog\",\"buffalo\"],[-24,-72,216,168],{\"eye\":{\"x\":99.70247532024266,\"z\":30.57367599590944},\"target\":{\"x\":83,\"z\":0}},[[\"structure-2\",\"intact\",true],[\"structure-4224\",\"ruined\",false],[\"structure-4225\",\"ruined\",false],[\"structure-4247\",\"ruined\",false],[\"structure-4248\",\"intact\",true],[\"structure-4265\",\"intact\",true],[\"structure-4266\",\"ruined\",false],[\"structure-4267\",\"intact\",true],[\"structure-4268\",\"ruined\",false],[\"structure-4269\",\"ruined\",false],[\"structure-4291\",\"intact\",true],[\"structure-4305\",\"intact\",true],[\"structure-4325\",\"intact\",true],[\"structure-4326\",\"intact\",true],[\"structure-4327\",\"intact\",true],[\"structure-4348\",\"intact\",true],[\"structure-4349\",\"intact\",true],[\"structure-4350\",\"intact\",true],[\"structure-4351\",\"intact\",true],[\"structure-4367\",\"intact\",true],[\"structure-4368\",\"intact\",true],[\"structure-4369\",\"intact\",true],[\"structure-4392\",\"intact\",true],[\"structure-4393\",\"intact\",true],[\"structure-4403\",\"ruined\",false],[\"structure-4424\",\"intact\",true],[\"structure-4425\",\"intact\",true],[\"structure-4445\",\"intact\",true],[\"structure-4446\",\"intact\",true],[\"structure-4447\",\"intact\",true],[\"structure-4468\",\"intact\",true],[\"structure-4469\",\"intact\",true],[\"structure-4493\",\"intact\",true],[\"structure-4626\",\"intact\",true],[\"structure-5145\",\"intact\",true],[\"structure-5168\",\"intact\",true],[\"structure-5189\",\"intact\",true],[\"structure-5190\",\"intact\",true],[\"structure-5191\",\"intact\",true],[\"structure-5213\",\"intact\",true],[\"structure-5214\",\"intact\",true],[\"structure-5215\",\"intact\",true],[\"structure-5216\",\"intact\",true],[\"structure-5217\",\"intact\",true],[\"structure-5245\",\"intact\",true],[\"structure-5246\",\"intact\",true],[\"structure-5275\",\"intact\",true],[\"structure-5276\",\"intact\",true],[\"structure-5277\",\"intact\",true],[\"structure-5278\",\"intact\",true],[\"structure-5279\",\"intact\",true],[\"structure-5280\",\"intact\",true],[\"structure-5281\",\"intact\",true],[\"structure-5310\",\"intact\",true],[\"structure-5311\",\"intact\",true],[\"structure-5312\",\"intact\",true],[\"structure-5337\",\"intact\",true],[\"structure-5541\",\"intact\",true],[\"structure-5542\",\"intact\",true],[\"structure-5543\",\"intact\",true],[\"structure-5564\",\"intact\",true],[\"structure-5585\",\"intact\",true],[\"structure-5586\",\"intact\",true],[\"structure-5587\",\"intact\",true],[\"structure-5609\",\"intact\",true],[\"structure-5610\",\"intact\",true],[\"structure-5630\",\"intact\",true],[\"structure-5671\",\"intact\",true],[\"structure-5672\",\"intact\",true],[\"structure-5673\",\"intact\",true],[\"structure-5674\",\"intact\",true],[\"structure-5695\",\"intact\",true],[\"structure-5696\",\"intact\",true],[\"structure-5717\",\"intact\",true],[\"structure-5718\",\"intact\",true],[\"structure-5719\",\"intact\",true],[\"structure-5720\",\"intact\",true],[\"structure-5721\",\"intact\",true],[\"structure-5728\",\"intact\",true],[\"structure-6319\",\"intact\",true],[\"structure-6341\",\"intact\",true],[\"structure-6359\",\"intact\",true],[\"structure-6360\",\"intact\",true]],[\"wave\",\"raid-13-night\",1,[[\"worker-9134\",97.01000000000002,-14.660000000000002,\"fleeing\",false],[\"worker-9135\",63.68821965194561,-6.355071679334317,\"fleeing\",false],[\"worker-9141\",101.86000000000001,-14.169999999999995,\"fleeing\",false],[\"worker-10202\",82.8448617752405,15.339921014423162,\"fleeing\",false],[\"worker-10209\",101.86000000000001,7.63000000000001,\"fleeing\",false],[\"worker-10213\",83.39082276554618,15.234915332953333,\"fleeing\",false],[\"worker-11355\",60,0,\"home\",false],[\"worker-11356\",60,0,\"home\",false],[\"worker-11357\",95.84425991891332,15.105905073429327,\"fleeing\",false],[\"worker-11358\",60,0,\"home\",false],[\"worker-11359\",63.68821965194561,-6.355071679334317,\"fleeing\",false],[\"worker-11360\",60,0,\"home\",false],[\"worker-11361\",60,0,\"home\",false],[\"worker-11362\",60,0,\"home\",false],[\"worker-11363\",60,0,\"home\",false],[\"worker-11364\",60,0,\"home\",false],[\"worker-11365\",60,0,\"home\",false],[\"worker-11366\",60,0,\"home\",false],[\"worker-11367\",60,0,\"home\",false],[\"worker-11368\",60,0,\"home\",false],[\"worker-11369\",60,0,\"home\",false],[\"worker-11371\",60,0,\"home\",false],[\"worker-11373\",60,0,\"home\",false]]]]",
+        "updates": 14838,
+        "waitMilliseconds": 1505.9785,
+        "group": [
+          "warthog",
+          "warthog",
+          "buffalo"
+        ],
+        "entryActors": 3,
+        "diagnostics": null
+      }
+    ],
+    "readyContexts": [
+      {
+        "key": "[\"123\",\"sabana\",\"mapungubwe\",\"4.1.10.3\",2427632232,3,[\"warthog\",\"warthog\",\"buffalo\"],[-24,-72,216,168],{\"eye\":{\"x\":99.70247532024266,\"z\":30.57367599590944},\"target\":{\"x\":83,\"z\":0}},[[\"structure-2\",\"intact\",true],[\"structure-4224\",\"ruined\",false],[\"structure-4225\",\"ruined\",false],[\"structure-4247\",\"ruined\",false],[\"structure-4248\",\"intact\",true],[\"structure-4265\",\"intact\",true],[\"structure-4266\",\"ruined\",false],[\"structure-4267\",\"intact\",true],[\"structure-4268\",\"ruined\",false],[\"structure-4269\",\"ruined\",false],[\"structure-4291\",\"intact\",true],[\"structure-4305\",\"intact\",true],[\"structure-4325\",\"intact\",true],[\"structure-4326\",\"intact\",true],[\"structure-4327\",\"intact\",true],[\"structure-4348\",\"intact\",true],[\"structure-4349\",\"intact\",true],[\"structure-4350\",\"intact\",true],[\"structure-4351\",\"intact\",true],[\"structure-4367\",\"intact\",true],[\"structure-4368\",\"intact\",true],[\"structure-4369\",\"intact\",true],[\"structure-4392\",\"intact\",true],[\"structure-4393\",\"intact\",true],[\"structure-4403\",\"ruined\",false],[\"structure-4424\",\"intact\",true],[\"structure-4425\",\"intact\",true],[\"structure-4445\",\"intact\",true],[\"structure-4446\",\"intact\",true],[\"structure-4447\",\"intact\",true],[\"structure-4468\",\"intact\",true],[\"structure-4469\",\"intact\",true],[\"structure-4493\",\"intact\",true],[\"structure-4626\",\"intact\",true],[\"structure-5145\",\"intact\",true],[\"structure-5168\",\"intact\",true],[\"structure-5189\",\"intact\",true],[\"structure-5190\",\"intact\",true],[\"structure-5191\",\"intact\",true],[\"structure-5213\",\"intact\",true],[\"structure-5214\",\"intact\",true],[\"structure-5215\",\"intact\",true],[\"structure-5216\",\"intact\",true],[\"structure-5217\",\"intact\",true],[\"structure-5245\",\"intact\",true],[\"structure-5246\",\"intact\",true],[\"structure-5275\",\"intact\",true],[\"structure-5276\",\"intact\",true],[\"structure-5277\",\"intact\",true],[\"structure-5278\",\"intact\",true],[\"structure-5279\",\"intact\",true],[\"structure-5280\",\"intact\",true],[\"structure-5281\",\"intact\",true],[\"structure-5310\",\"intact\",true],[\"structure-5311\",\"intact\",true],[\"structure-5312\",\"intact\",true],[\"structure-5337\",\"intact\",true],[\"structure-5541\",\"intact\",true],[\"structure-5542\",\"intact\",true],[\"structure-5543\",\"intact\",true],[\"structure-5564\",\"intact\",true],[\"structure-5585\",\"intact\",true],[\"structure-5586\",\"intact\",true],[\"structure-5587\",\"intact\",true],[\"structure-5609\",\"intact\",true],[\"structure-5610\",\"intact\",true],[\"structure-5630\",\"intact\",true],[\"structure-5671\",\"intact\",true],[\"structure-5672\",\"intact\",true],[\"structure-5673\",\"intact\",true],[\"structure-5674\",\"intact\",true],[\"structure-5695\",\"intact\",true],[\"structure-5696\",\"intact\",true],[\"structure-5717\",\"intact\",true],[\"structure-5718\",\"intact\",true],[\"structure-5719\",\"intact\",true],[\"structure-5720\",\"intact\",true],[\"structure-5721\",\"intact\",true],[\"structure-5728\",\"intact\",true],[\"structure-6319\",\"intact\",true],[\"structure-6341\",\"intact\",true],[\"structure-6359\",\"intact\",true],[\"structure-6360\",\"intact\",true]],[\"wave\",\"raid-13-night\",1,[[\"worker-9134\",97.01000000000002,-14.660000000000002,\"fleeing\",false],[\"worker-9135\",63.68821965194561,-6.355071679334317,\"fleeing\",false],[\"worker-9141\",101.86000000000001,-14.169999999999995,\"fleeing\",false],[\"worker-10202\",82.8448617752405,15.339921014423162,\"fleeing\",false],[\"worker-10209\",101.86000000000001,7.63000000000001,\"fleeing\",false],[\"worker-10213\",83.39082276554618,15.234915332953333,\"fleeing\",false],[\"worker-11355\",60,0,\"home\",false],[\"worker-11356\",60,0,\"home\",false],[\"worker-11357\",95.84425991891332,15.105905073429327,\"fleeing\",false],[\"worker-11358\",60,0,\"home\",false],[\"worker-11359\",63.68821965194561,-6.355071679334317,\"fleeing\",false],[\"worker-11360\",60,0,\"home\",false],[\"worker-11361\",60,0,\"home\",false],[\"worker-11362\",60,0,\"home\",false],[\"worker-11363\",60,0,\"home\",false],[\"worker-11364\",60,0,\"home\",false],[\"worker-11365\",60,0,\"home\",false],[\"worker-11366\",60,0,\"home\",false],[\"worker-11367\",60,0,\"home\",false],[\"worker-11368\",60,0,\"home\",false],[\"worker-11369\",60,0,\"home\",false],[\"worker-11371\",60,0,\"home\",false],[\"worker-11373\",60,0,\"home\",false]]]]",
+        "token": 1,
+        "day": 13,
+        "time": 494.00000000004405,
+        "elapsed": 7702.000000009497,
+        "group": [
+          "warthog",
+          "warthog",
+          "buffalo"
+        ],
+        "entryActors": 3,
+        "diagnostics": null
+      }
+    ],
+    "preparer": {
+      "requests": 1,
+      "accepted": 1,
+      "obsolete": 0,
+      "used": 0,
+      "failed": 0
+    },
+    "workerFailure": null,
+    "scope": "Wall-clock waits are separate from simulated activity; no clock, RNG or geometry patches"
+  }
+}
