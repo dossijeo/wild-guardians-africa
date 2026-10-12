@@ -1,5 +1,15 @@
 import {centerGeometry} from './centers.js';
 import {findBuildingRoute} from './building-route-shortcut.js';
+const failedWaterRoutes=new WeakMap(),FAILED_ROUTE_LIMIT=8192;
+function failedWaterRouteCache(nav){
+  if(!Number.isSafeInteger(nav.version)||!nav.state)return null;
+  let cache=failedWaterRoutes.get(nav);
+  if(!cache||cache.version!==nav.version||cache.field!==nav.field||cache.obstacles!==nav.obstacles){
+    cache={version:nav.version,field:nav.field,obstacles:nav.obstacles,entries:new Set()};
+    failedWaterRoutes.set(nav,cache);
+  }
+  return cache.entries;
+}
 // Service points outside the same footprints used by Navigation.
 export function repairRoute(worker,target,nav){
   const radius=.28,clearance=.1;
@@ -35,6 +45,11 @@ export function canWaterFrom(worker,plant,nav){
 }
 export function wateringRoute(worker,plant,nav){
   const radius=worker.radius??.28,standOff=(plant.species==='platano'?.65:.45)+radius+.1;
+  // An idle worker retries blocked tasks every 0.1 simulated seconds. Exact
+  // negative results stay negative while both actor coordinates and the live
+  // navigation epoch are unchanged; a move or topology update retries fully.
+  const failures=failedWaterRouteCache(nav),key=failures?JSON.stringify([worker.x,worker.z,radius,plant.id,plant.x,plant.z,plant.species]):null;
+  if(key&&failures.has(key))return null;
   const angle=Math.atan2(worker.x-plant.x,worker.z-plant.z);
   // Bounded geometric probe before an expensive A* fallback. Every edge
   // uses the same native body, terrain, slope and fluid constraints.
@@ -56,5 +71,6 @@ export function wateringRoute(worker,plant,nav){
     const path=nav.path(worker,destination,radius,null,true);
     if(path)return {destination,path};
   }
+  if(key){if(failures.size>=FAILED_ROUTE_LIMIT)failures.delete(failures.values().next().value);failures.add(key);}
   return null;
 }
