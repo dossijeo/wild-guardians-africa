@@ -1,0 +1,94 @@
+{
+  "observedAt": "2026-10-12T02:12:22.130Z",
+  "scope": "Original reports remain untracked in the worktree; lossless archives and exact source/byte hashes retained.",
+  "records": [
+    {
+      "file": "dense-500-sixty-seconds-abba.json",
+      "originalBytes": 195434,
+      "originalSha256": "0230953951bf111c4400fa391575eb9ae7dbba5d12e8720e05c0e0c46fb024f4",
+      "compressed": "dense-500-sixty-seconds-abba.json.gz",
+      "rows": [
+        {
+          "count": 500,
+          "steps": 600,
+          "allTickStatesIdentical": true,
+          "workers": 50,
+          "tickMilliseconds": [
+            2987.4632000000156,
+            2604.0405999999957,
+            2341.312199999971,
+            2457.919399999966
+          ],
+          "nativePathCalls": [
+            116,
+            58,
+            58,
+            116
+          ]
+        }
+      ]
+    },
+    {
+      "file": "dense-full-day-abba.json",
+      "originalBytes": 2888324,
+      "originalSha256": "13a9e60b84ff929d6f4592704f1613d74249a3590fbdd706488d83515ea6f9ad",
+      "compressed": "dense-full-day-abba.json.gz",
+      "rows": [
+        {
+          "count": 50,
+          "steps": 3000,
+          "allTickStatesIdentical": true,
+          "workers": 5,
+          "tickMilliseconds": [
+            1628.3929999999991,
+            1359.6127999999972,
+            1216.6124999998665,
+            1210.875399999848
+          ],
+          "nativePathCalls": [
+            157,
+            150,
+            150,
+            157
+          ]
+        },
+        {
+          "count": 200,
+          "steps": 3000,
+          "allTickStatesIdentical": true,
+          "workers": 20,
+          "tickMilliseconds": [
+            4746.856099999928,
+            4373.9924000001265,
+            4649.032899999991,
+            4482.589800000234
+          ],
+          "nativePathCalls": [
+            323,
+            275,
+            275,
+            323
+          ]
+        },
+        {
+          "count": 500,
+          "steps": 3000,
+          "allTickStatesIdentical": true,
+          "workers": 50,
+          "tickMilliseconds": [
+            12690.733999999939,
+            12692.755799999577,
+            12870.710300000152,
+            12974.255599999597
+          ],
+          "nativePathCalls": [
+            318,
+            177,
+            177,
+            318
+          ]
+        }
+      ]
+    }
+  ]
+}

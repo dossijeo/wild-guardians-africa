@@ -153,10 +153,45 @@ Counters consistently show fewer duplicate route/segment/walkability queries.
 Cold/JIT effects and concurrent jobs make timings noisy: the final warm A
 case at 50 plants is faster than the measured B cases. Do not claim uniform
 acceleration, steady-state FPS, complete-day throughput or release acceptance
-from these samples. Sustained dense-farm coverage remains pending.
+from these samples. The longer follow-up is recorded below.
 
 The QA-only control import adapter is now shared by both replay runners.
 `shared-control-regression.json` repeats the four original Canyon cases for
 five ticks per arm and retains exact state parity. This refactor changes no
 production module or active campaign source. Historical runner implementations
 and evidence remain recoverable from their committed versions.
+
+## Sixty seconds and a complete dense working day
+
+The 500-plant replay first spans 600 ticks (60 simulated seconds), retaining
+full state parity in all AB/BA arms. The follow-up then runs **3,000 ticks / 300
+seconds** for each original 50/200/500 fixture, still without new funding,
+manual actions, geometry, magic decisions or economic-rule changes. All full
+serialized states match at every tick, including movement, water/growth/tasks,
+crate delivery, events, ledger, RNG and the day/night boundary at time 300.
+The ledger changes during the working day and remains identical between arms;
+this replay is not an independent campaign ledger/physical-event audit.
+
+| Plants / workers | A tick ms | B tick ms | B tick ms | A tick ms | Native path calls A / B |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 50 / 5 | 1,628.39 | 1,359.61 | 1,216.61 | 1,210.88 | 157 / 150 |
+| 200 / 20 | 4,746.86 | 4,373.99 | 4,649.03 | 4,482.59 | 323 / 275 |
+| 500 / 50 | 12,690.73 | 12,692.76 | 12,870.71 | 12,974.26 | 318 / 177 |
+
+The complete accessible 500-plant day shows practically unchanged total tick
+cost despite fewer geometric queries. Do not advertise a broad dense-farm,
+FPS or whole-campaign speedup. Strong savings remain specific to repeated
+unavailable approaches in the separately documented collision fixtures and
+exact-query microbenchmark. This limits the acceptance claim rather than
+discarding the neutral result.
+
+Reports are retained losslessly as `dense-500-sixty-seconds-abba.json.gz` and
+`dense-full-day-abba.json.gz`; their original bytes remain in the worktree.
+`dense-day-archive-manifest.json` records byte hashes and confirms every replay
+source still matches its recorded hash. Progress/stdout logs retain raw bytes
+in gzip, with readable whitespace-normalized copies.
+
+The runner accepts a bounded tick count up to 3,000 and an optional subset of
+`50,200,500`, and reports every 100 ticks. Example: `node
+tools/check-watering-cache-dense-tick.mjs FRESH.json 3000`. This is working-day
+compatibility coverage, not 100-night survival or production integration.
