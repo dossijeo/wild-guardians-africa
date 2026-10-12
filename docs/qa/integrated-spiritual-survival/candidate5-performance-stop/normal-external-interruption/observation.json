@@ -1,0 +1,39 @@
+{
+  "observedAt": "2026-10-12T06:39:06.903Z",
+  "execSession": 8125,
+  "exitCode": 1,
+  "processId": 44960,
+  "processPresent": false,
+  "receiptStatus": "running",
+  "nativeTerminalResult": null,
+  "completedRows": 8,
+  "partialSnapshotAvailable": false,
+  "userEvidence": "User reported cleaning hung processes and possibly killing simulations, and requested relaunch.",
+  "classification": "externally interrupted after host cleanup; stale receipt is not live or native defeat; exact termination cause not independently recorded",
+  "files": [
+    {
+      "name": "days.jsonl",
+      "sha256": "8184be4124acc3d987d87ad5c6aead327739c640b3d782340c14107ecfab6bc7"
+    },
+    {
+      "name": "progress.json",
+      "sha256": "ce41fe4727b03f49573c79b3a9549b094df2baacba121e79ea69f8f52d54078c"
+    },
+    {
+      "name": "protocol.json",
+      "sha256": "85759c8382a8f517ea7c6547f418fb01a4b9be3767ab78308d1769aca7450c08"
+    },
+    {
+      "name": "receipt.json",
+      "sha256": "9f6a528c17820fe1922da0cf7632e6b3b887dbb8b58c58deee6e039f1901577b"
+    },
+    {
+      "name": "source.json",
+      "sha256": "2c186e2b675dfe303122eec6bf76125e70e6e4c06cbad8fa5596c197dd85644c"
+    },
+    {
+      "name": "stop-requested",
+      "sha256": "e13a8ecf774700cfef0194261862fbdd5c48a4e8a8dbc663a9dc67aeef2291d0"
+    }
+  ]
+}
