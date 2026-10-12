@@ -11,7 +11,7 @@ import {wallSpec} from '../src/simulation/rules.js';
 import {intensiveRunProvenance} from './intensive-run-provenance.mjs';
 import {NATIVE_CAMPAIGN_PROTOCOL,nativeCampaignStrategy,campaignProtocolForLabour} from './native-campaign-protocol.mjs';
 export function parseNativeCampaignArgs(args){
- const allowed=new Set(['out','days','seed','strategy','biome','culture','stop-file','stop-cash','stop-min-day','labour-policy','defense-policy','defense-start-day','defense-material','crop-policy','profile','plot-fluid-clearance','repair-policy','defense-funding']),o={days:7,seed:712,strategy:'good',biome:'sabana',culture:'mapungubwe',profile:'olderFemale'};
+ const allowed=new Set(['out','days','seed','strategy','biome','culture','stop-file','stop-cash','stop-min-day','labour-policy','defense-policy','defense-start-day','defense-material','crop-policy','profile','plot-fluid-clearance','repair-policy','defense-funding','checkpoint-day','checkpoint-time','checkpoint-stop']),o={days:7,seed:712,strategy:'good',biome:'sabana',culture:'mapungubwe',profile:'olderFemale'};
  for(let i=0;i<args.length;i+=2){const k=args[i]?.replace(/^--/,'');if(!allowed.has(k)||args[i+1]===undefined)throw Error('Use --out DIR --days 1..180 --seed INTEGER --strategy expansive|good|bad|no-walls|no-shield --biome NAME --culture NAME');o[k]=args[i+1];}
  for(const k of ['days','seed'])o[k]=Number(o[k]);
  if(!Number.isSafeInteger(o.days)||o.days<1||o.days>180||!Number.isSafeInteger(o.seed)||o.seed<0)throw Error('Invalid native days/seed');
@@ -22,6 +22,11 @@ export function parseNativeCampaignArgs(args){
   if(!Number.isSafeInteger(o['stop-cash'])||o['stop-cash']<1||!Number.isSafeInteger(o['stop-min-day'])||o['stop-min-day']<1)throw Error('Cash calibration stop requires positive --stop-cash and --stop-min-day');
  }
  if(o['stop-file'])o['stop-file']=resolve(o['stop-file']);
+ if(o['checkpoint-day']!==undefined||o['checkpoint-time']!==undefined||o['checkpoint-stop']!==undefined){
+  o.checkpointDay=Number(o['checkpoint-day']);o.checkpointTime=Number(o['checkpoint-time']);o.checkpointStop=o['checkpoint-stop']==='yes';
+  if(!Number.isSafeInteger(o.checkpointDay)||o.checkpointDay<1||o.checkpointDay>o.days||!Number.isFinite(o.checkpointTime)||o.checkpointTime<0||o.checkpointTime>=600||!['yes','no',undefined].includes(o['checkpoint-stop']))throw Error('Invalid native checkpoint');
+  delete o['checkpoint-day'];delete o['checkpoint-time'];delete o['checkpoint-stop'];
+ }
  o.labourPolicy=o['labour-policy']??'legacy';delete o['labour-policy'];campaignProtocolForLabour(o.labourPolicy);
  o.cropPolicy=o['crop-policy']??'legacy';delete o['crop-policy'];if(!['legacy','cashflow'].includes(o.cropPolicy))throw Error('Unknown crop policy');
  o.defensePolicy=o['defense-policy']??'expanding';delete o['defense-policy'];if(!['legacy','expanding','closed','funded','routed','shore'].includes(o.defensePolicy))throw Error('Unknown defense policy');
@@ -54,8 +59,16 @@ export async function runNativeCampaignCase(options,{run=simulateNativeCampaign,
  save('receipt.json',{status:'running',options,startedAt:inputs.startedAt});
  try{
   if(inputs.trackedChanges.length)throw Error('Freeze tracked runtime before launching native pilot');
-  const r=await run({...options,slotId:`native-${options.strategy}-${options.seed}`,
-   onTick:()=>{if(options['stop-file']&&existsSync(options['stop-file']))throw calibrationStop('Requested calibration stop file detected');},
+  const {checkpointDay,checkpointTime,checkpointStop,...campaignOptions}=options;let checkpointSaved=false;
+  const r=await run({...campaignOptions,slotId:`native-${options.strategy}-${options.seed}`,
+   onTick:s=>{
+    if(options['stop-file']&&existsSync(options['stop-file']))throw calibrationStop('Requested calibration stop file detected');
+    if(!checkpointSaved&&checkpointDay&&s.day===checkpointDay&&s.time+1e-6>=checkpointTime){
+     writeFileSync(resolve(out,'checkpoint-state.json.gz'),gzipSync(Buffer.from(serialize(s))));
+     save('checkpoint.json',{day:s.day,time:s.time,elapsed:s.elapsed,raid:!!s.raid,scope:'Exact native state copied after a real tick; no player, economy, raid or navigation rule changed'});
+     checkpointSaved=true;if(checkpointStop)throw calibrationStop('Requested native checkpoint captured');
+    }
+   },
    onDay:row=>{
     appendFileSync(resolve(out,'days.jsonl'),JSON.stringify(row)+'\n');
     if(options['stop-cash']!==undefined&&row.day>=options['stop-min-day']&&row.money>=options['stop-cash'])throw calibrationStop(`Calibration cash ceiling ${options['stop-cash']} reached on day ${row.day}`);
