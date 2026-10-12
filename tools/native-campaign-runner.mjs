@@ -44,7 +44,7 @@ import {createQ15LabourPolicy} from './native-q15-labour-policy.mjs';
 import {campaignCropChoice} from './native-campaign-crop-policy.mjs';
 
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
-export async function simulateNativeCampaign({days=100,strategy='good',labourPolicy='legacy',profile='olderFemale',mixed=true,cropPolicy='legacy',middayHiring=false,plantsPerWorker=12,defend=false,reserveLabourGrowth=true,reserveMaintenance=true,burstPlanting=false,cameraEntry=true,defensePolicy='expanding',defenseStartDay=1,defenseMaterial='zarzas',repairPolicy='legacy',defenseFunding='contour',plotFluidClearance=0,nativeEvidence=true,onDay,onTick,onDecision,onStepTiming,onRaidSpawnTrace,...world}={}){
+export async function simulateNativeCampaign({days=100,strategy='good',labourPolicy='legacy',profile='olderFemale',mixed=true,cropPolicy='legacy',middayHiring=false,plantsPerWorker=12,defend=false,reserveLabourGrowth=true,reserveMaintenance=true,burstPlanting=false,cameraEntry=true,defensePolicy='expanding',defenseStartDay=1,defenseMaterial='zarzas',repairPolicy='legacy',defenseFunding='contour',plotFluidClearance=0,nativeEvidence=true,onDay,onTick,onDecision,onStepTiming,onRaidSpawnTrace,onTickPhaseTrace,tickTraceTarget,...world}={}){
  if(!Number.isSafeInteger(days)||days<1||days>180)throw Error('Native protocol permits1–180 days only');
  if(!Number.isSafeInteger(plantsPerWorker)||plantsPerWorker<1)throw new Error('Plants per worker must be a positive integer');
  if(!['legacy','cashflow'].includes(cropPolicy))throw Error('Unknown crop policy');
@@ -175,8 +175,10 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
    raidEvidence.observe(s);
    const tickStart=s.elapsed,tickTime=s.time;
    const nativeTickStarted=onStepTiming?performance.now():0;
-   if(onRaidSpawnTrace)nav.__nativeRaidSpawnTrace=stage=>onRaidSpawnTrace({day,time:tickTime,...stage});
-   try{Game.tick(s,dt,nav);}finally{if(onRaidSpawnTrace)delete nav.__nativeRaidSpawnTrace;}
+   const traceThisTick=tickTraceTarget?.day===day&&Math.abs(tickTraceTarget.time-tickTime)<1e-6;
+   if(traceThisTick&&onRaidSpawnTrace)nav.__nativeRaidSpawnTrace=stage=>onRaidSpawnTrace({day,time:tickTime,...stage});
+   if(traceThisTick&&onTickPhaseTrace)nav.__nativeTickPhaseTrace=stage=>onTickPhaseTrace({day,time:tickTime,...stage});
+   try{Game.tick(s,dt,nav);}finally{if(traceThisTick){delete nav.__nativeRaidSpawnTrace;delete nav.__nativeTickPhaseTrace;}}
    const tickMilliseconds=onStepTiming?performance.now()-nativeTickStarted:null;agriculturalMagic.observe(s);evidence?.finishDecision(s);
    const actualDt=s.elapsed-tickStart,daylightDt=tickTime<300?Math.min(actualDt,300-tickTime):0;daylightSeconds+=daylightDt;
    if(decision.actions===(decision.magicActions??0)){idle[decision.reason]=(idle[decision.reason]??0)+actualDt;unoccupiedSeconds+=daylightDt;idleRun+=daylightDt;longestIdle=Math.max(longestIdle,idleRun);}else idleRun=0;

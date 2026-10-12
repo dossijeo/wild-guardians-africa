@@ -682,7 +682,14 @@ function tickScoped(s,seconds,nav) {
     for(const a of s.spells)if(a.remaining<=1e-9&&a.targetPlantId!==undefined)emit(s,'AgriculturalSpellEnded',{spellId:a.id,kind:a.kind,targetPlantId:a.targetPlantId,growthSecondsAdded:a.growthSecondsAdded??0});
     s.spells=s.spells.filter(a=>a.remaining>1e-9);
     if(s.spells.filter(a=>a.kind==='shield').length!==shieldsBefore)nav.setState(s);
-    advanceGateLeaves(s,step);updateRaid(s,step,nav);updateWorkers(s,step,nav);
+    advanceGateLeaves(s,step);
+    const phaseTrace=nav.__nativeTickPhaseTrace;
+    const raidStarted=phaseTrace?performance.now():0;
+    updateRaid(s,step,nav);
+    if(phaseTrace)phaseTrace({phase:'raid-update',time:s.time,milliseconds:performance.now()-raidStarted});
+    const workersStarted=phaseTrace?performance.now():0;
+    updateWorkers(s,step,nav);
+    if(phaseTrace)phaseTrace({phase:'worker-update',time:s.time,milliseconds:performance.now()-workersStarted});
     // Arrival is an event at the end of this interval. Newly spawned animals
     // must not move for time that elapsed before they existed.
     prepareClockEvents(s,nav);

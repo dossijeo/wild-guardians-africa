@@ -344,7 +344,9 @@ export function updateRaid(s,dt,nav) {
         if(wait.epoch===epoch&&s.elapsed<wait.retryAt)continue;
         wait.epoch=epoch;wait.retryAt=s.elapsed+1;
       }
+      const targetStarted=nav.__nativeTickPhaseTrace?performance.now():0;
       const selected=targetFor(s,a,nav);
+      if(nav.__nativeTickPhaseTrace)nav.__nativeTickPhaseTrace({phase:'target-selection',time:s.time,animalId:a.id,milliseconds:performance.now()-targetStarted,found:!!selected});
       if(!selected){
         emit(s,'AnimalTargetUnavailable',{targetId:a.id,species:a.species,hitsRemaining:a.hitsRemaining});
         if(occupiedEligibleGroup(s,a,p=>canAttackCrop(s,p)))enqueueWait(s,a);
