@@ -1,0 +1,406 @@
+TAP version 13
+# Subtest: Failed-approach warming is bounded and scoped to actor coordinates, radius and geometry epoch
+ok 1 - Failed-approach warming is bounded and scoped to actor coordinates, radius and geometry epoch
+  ---
+  duration_ms: 4.5275
+  ...
+# Subtest: Other search margins retain the original computation; a replaced search cannot reuse old warming state
+ok 2 - Other search margins retain the original computation; a replaced search cannot reuse old warming state
+  ---
+  duration_ms: 0.343
+  ...
+# Subtest: An expanded success is discarded, not substituted for a failed native approach
+ok 3 - An expanded success is discarded, not substituted for a failed native approach
+  ---
+  duration_ms: 1.8982
+  ...
+# Subtest: An invalid service point cannot spend the sole warming attempt before a valid angle
+ok 4 - An invalid service point cannot spend the sole warming attempt before a valid angle
+  ---
+  duration_ms: 0.4574
+  ...
+# Subtest: Existing closed-island certificates avoid re-exploring the outside component
+ok 5 - Existing closed-island certificates avoid re-exploring the outside component
+  ---
+  duration_ms: 0.4573
+  ...
+# Subtest: A successful approach preserves every original waypoint and performs no wider search
+ok 6 - A successful approach preserves every original waypoint and performs no wider search
+  ---
+  duration_ms: 0.2974
+  ...
+# Subtest: Native warming preserves positive and negative paths, including a detour outside the original corridor
+ok 7 - Native warming preserves positive and negative paths, including a detour outside the original corridor
+  ---
+  duration_ms: 1135.1436
+  ...
+# Subtest: Early generator cancellation cannot install an exhaustive failure certificate
+ok 8 - Early generator cancellation cannot install an exhaustive failure certificate
+  ---
+  duration_ms: 1.9415
+  ...
+# (node:22044) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: sabana/mapungubwe: native hostile gate geometry is invariant across animation phases
+ok 9 - sabana/mapungubwe: native hostile gate geometry is invariant across animation phases
+  ---
+  duration_ms: 550.1717
+  ...
+# Subtest: sabana/saheliana: native hostile gate geometry is invariant across animation phases
+ok 10 - sabana/saheliana: native hostile gate geometry is invariant across animation phases
+  ---
+  duration_ms: 432.6832
+  ...
+# Subtest: sabana/suajili: native hostile gate geometry is invariant across animation phases
+ok 11 - sabana/suajili: native hostile gate geometry is invariant across animation phases
+  ---
+  duration_ms: 253.2018
+  ...
+# Subtest: sabana/musgum: native hostile gate geometry is invariant across animation phases
+ok 12 - sabana/musgum: native hostile gate geometry is invariant across animation phases
+  ---
+  duration_ms: 222.4393
+  ...
+# Subtest: sabana/etiope: native hostile gate geometry is invariant across animation phases
+ok 13 - sabana/etiope: native hostile gate geometry is invariant across animation phases
+  ---
+  duration_ms: 283.8424
+  ...
+# Subtest: gran-rio/mapungubwe: native hostile gate geometry is invariant across animation phases
+ok 14 - gran-rio/mapungubwe: native hostile gate geometry is invariant across animation phases
+  ---
+  duration_ms: 181.1512
+  ...
+# Subtest: gran-rio/saheliana: native hostile gate geometry is invariant across animation phases
+ok 15 - gran-rio/saheliana: native hostile gate geometry is invariant across animation phases
+  ---
+  duration_ms: 266.8006
+  ...
+# Subtest: gran-rio/suajili: native hostile gate geometry is invariant across animation phases
+ok 16 - gran-rio/suajili: native hostile gate geometry is invariant across animation phases
+  ---
+  duration_ms: 211.6967
+  ...
+# Subtest: gran-rio/musgum: native hostile gate geometry is invariant across animation phases
+ok 17 - gran-rio/musgum: native hostile gate geometry is invariant across animation phases
+  ---
+  duration_ms: 204.8667
+  ...
+# Subtest: gran-rio/etiope: native hostile gate geometry is invariant across animation phases
+ok 18 - gran-rio/etiope: native hostile gate geometry is invariant across animation phases
+  ---
+  duration_ms: 309.2147
+  ...
+# Subtest: manglares/mapungubwe: native hostile gate geometry is invariant across animation phases
+ok 19 - manglares/mapungubwe: native hostile gate geometry is invariant across animation phases
+  ---
+  duration_ms: 222.4954
+  ...
+# Subtest: manglares/saheliana: native hostile gate geometry is invariant across animation phases
+ok 20 - manglares/saheliana: native hostile gate geometry is invariant across animation phases
+  ---
+  duration_ms: 365.0552
+  ...
+# Subtest: manglares/suajili: native hostile gate geometry is invariant across animation phases
+ok 21 - manglares/suajili: native hostile gate geometry is invariant across animation phases
+  ---
+  duration_ms: 276.8366
+  ...
+# Subtest: manglares/musgum: native hostile gate geometry is invariant across animation phases
+ok 22 - manglares/musgum: native hostile gate geometry is invariant across animation phases
+  ---
+  duration_ms: 200.3527
+  ...
+# Subtest: manglares/etiope: native hostile gate geometry is invariant across animation phases
+ok 23 - manglares/etiope: native hostile gate geometry is invariant across animation phases
+  ---
+  duration_ms: 344.5348
+  ...
+# Subtest: volcanes/mapungubwe: native hostile gate geometry is invariant across animation phases
+ok 24 - volcanes/mapungubwe: native hostile gate geometry is invariant across animation phases
+  ---
+  duration_ms: 264.0553
+  ...
+# Subtest: volcanes/saheliana: native hostile gate geometry is invariant across animation phases
+ok 25 - volcanes/saheliana: native hostile gate geometry is invariant across animation phases
+  ---
+  duration_ms: 377.9575
+  ...
+# Subtest: volcanes/suajili: native hostile gate geometry is invariant across animation phases
+ok 26 - volcanes/suajili: native hostile gate geometry is invariant across animation phases
+  ---
+  duration_ms: 270.1194
+  ...
+# Subtest: volcanes/musgum: native hostile gate geometry is invariant across animation phases
+ok 27 - volcanes/musgum: native hostile gate geometry is invariant across animation phases
+  ---
+  duration_ms: 271.8421
+  ...
+# Subtest: volcanes/etiope: native hostile gate geometry is invariant across animation phases
+ok 28 - volcanes/etiope: native hostile gate geometry is invariant across animation phases
+  ---
+  duration_ms: 399.6225
+  ...
+# Subtest: gran-canon/mapungubwe: native hostile gate geometry is invariant across animation phases
+ok 29 - gran-canon/mapungubwe: native hostile gate geometry is invariant across animation phases
+  ---
+  duration_ms: 1741.874
+  ...
+# Subtest: gran-canon/saheliana: native hostile gate geometry is invariant across animation phases
+ok 30 - gran-canon/saheliana: native hostile gate geometry is invariant across animation phases
+  ---
+  duration_ms: 1533.045
+  ...
+# Subtest: gran-canon/suajili: native hostile gate geometry is invariant across animation phases
+ok 31 - gran-canon/suajili: native hostile gate geometry is invariant across animation phases
+  ---
+  duration_ms: 3441.6603
+  ...
+# Subtest: gran-canon/musgum: native hostile gate geometry is invariant across animation phases
+ok 32 - gran-canon/musgum: native hostile gate geometry is invariant across animation phases
+  ---
+  duration_ms: 4404.3185
+  ...
+# Subtest: gran-canon/etiope: native hostile gate geometry is invariant across animation phases
+ok 33 - gran-canon/etiope: native hostile gate geometry is invariant across animation phases
+  ---
+  duration_ms: 683.5447
+  ...
+# Subtest: desierto/mapungubwe: native hostile gate geometry is invariant across animation phases
+ok 34 - desierto/mapungubwe: native hostile gate geometry is invariant across animation phases
+  ---
+  duration_ms: 2245.9795
+  ...
+# Subtest: desierto/saheliana: native hostile gate geometry is invariant across animation phases
+ok 35 - desierto/saheliana: native hostile gate geometry is invariant across animation phases
+  ---
+  duration_ms: 373.9175
+  ...
+# Subtest: desierto/suajili: native hostile gate geometry is invariant across animation phases
+ok 36 - desierto/suajili: native hostile gate geometry is invariant across animation phases
+  ---
+  duration_ms: 446.7207
+  ...
+# Subtest: desierto/musgum: native hostile gate geometry is invariant across animation phases
+ok 37 - desierto/musgum: native hostile gate geometry is invariant across animation phases
+  ---
+  duration_ms: 349.0782
+  ...
+# Subtest: desierto/etiope: native hostile gate geometry is invariant across animation phases
+ok 38 - desierto/etiope: native hostile gate geometry is invariant across animation phases
+  ---
+  duration_ms: 437.3221
+  ...
+# (node:32796) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Fresh navigation restores the saved route epoch without changing the snapshot; genuine mutations invalidate paths
+ok 39 - Fresh navigation restores the saved route epoch without changing the snapshot; genuine mutations invalidate paths
+  ---
+  duration_ms: 6.4546
+  ...
+# Subtest: Legacy or invalid epochs conservatively invalidate instead of trusting old persisted paths
+ok 40 - Legacy or invalid epochs conservatively invalidate instead of trusting old persisted paths
+  ---
+  duration_ms: 1.2338
+  ...
+# Subtest: geometry invalidation rebuilds enlarged footprints and placement views preserve the live epoch
+ok 41 - geometry invalidation rebuilds enlarged footprints and placement views preserve the live epoch
+  ---
+  duration_ms: 2.097
+  ...
+# Subtest: one failure beyond capacity retains recent failed routes and evicts only the oldest
+ok 42 - one failure beyond capacity retains recent failed routes and evicts only the oldest
+  ---
+  duration_ms: 143.8342
+  ...
+# Subtest: geometry invalidation still retries previously failed routes after capacity eviction
+ok 43 - geometry invalidation still retries previously failed routes after capacity eviction
+  ---
+  duration_ms: 222.2922
+  ...
+# Subtest: Repeated overlapping A* searches preserve waypoint order while reusing cell geometry
+ok 44 - Repeated overlapping A* searches preserve waypoint order while reusing cell geometry
+  ---
+  duration_ms: 186.4604
+  ...
+# Subtest: Geometry epochs, actor permissions and proposed buildings cannot contaminate neighbor results
+ok 45 - Geometry epochs, actor permissions and proposed buildings cannot contaminate neighbor results
+  ---
+  duration_ms: 15.8908
+  ...
+# Subtest: Transient neighbor graph stays bounded and route arrays cannot mutate its cached points
+ok 46 - Transient neighbor graph stays bounded and route arrays cannot mutate its cached points
+  ---
+  duration_ms: 71.2891
+  ...
+# Subtest: A direct segment cannot tunnel through a small prop between valid sampled endpoints
+ok 47 - A direct segment cannot tunnel through a small prop between valid sampled endpoints
+  ---
+  duration_ms: 12.9648
+  ...
+# Subtest: Directed edge caches retain collision semantics and invalidate when structures or shields change
+ok 48 - Directed edge caches retain collision semantics and invalidate when structures or shields change
+  ---
+  duration_ms: 3.1054
+  ...
+# Subtest: Failed routes are reused only for identical endpoints and clear when an obstacle changes
+ok 49 - Failed routes are reused only for identical endpoints and clear when an obstacle changes
+  ---
+  duration_ms: 0.9227
+  ...
+# Subtest: Exhaustively explored enclosed regions reject other unreachable targets without another flood search
+ok 50 - Exhaustively explored enclosed regions reject other unreachable targets without another flood search
+  ---
+  duration_ms: 7.0839
+  ...
+# Subtest: A search touching corridor bounds does not certify a globally closed region
+ok 51 - A search touching corridor bounds does not certify a globally closed region
+  ---
+  duration_ms: 69.5293
+  ...
+# Subtest: Region reuse matches fresh searches across origins, endpoints, radii and actor permissions
+ok 52 - Region reuse matches fresh searches across origins, endpoints, radii and actor permissions
+  ---
+  duration_ms: 868.3586
+  ...
+# Subtest: A diagonal grid edge with valid corners still detours around an intervening prop
+ok 53 - A diagonal grid edge with valid corners still detours around an intervening prop
+  ---
+  duration_ms: 1.5271
+  ...
+# Subtest: Fractional positions connect to a valid grid point even when their rounded start cell is blocked
+ok 54 - Fractional positions connect to a valid grid point even when their rounded start cell is blocked
+  ---
+  duration_ms: 0.9702
+  ...
+# Subtest: Swept paths respect native polygon edges, rotated walls and worker-only gate passage
+ok 55 - Swept paths respect native polygon edges, rotated walls and worker-only gate passage
+  ---
+  duration_ms: 1.0017
+  ...
+# Subtest: Every repair waypoint remains outside rotated native wall footprints and wider gates
+ok 56 - Every repair waypoint remains outside rotated native wall footprints and wider gates
+  ---
+  duration_ms: 2.7101
+  ...
+# Subtest: Center repair paths go around the center footprint and reject a completely inaccessible destination
+ok 57 - Center repair paths go around the center footprint and reject a completely inaccessible destination
+  ---
+  duration_ms: 0.5129
+  ...
+# Subtest: Wider searches find physical detours beyond the local corridor without reusing its cached failure
+ok 58 - Wider searches find physical detours beyond the local corridor without reusing its cached failure
+  ---
+  duration_ms: 108.6962
+  ...
+# (node:53736) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: warthog: native body radius controls entry, approach, shield exclusion and survives reload
+ok 59 - warthog: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 22.2945
+  ...
+# Subtest: hyena: native body radius controls entry, approach, shield exclusion and survives reload
+ok 60 - hyena: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 1.5758
+  ...
+# Subtest: buffalo: native body radius controls entry, approach, shield exclusion and survives reload
+ok 61 - buffalo: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 0.9486
+  ...
+# Subtest: lion: native body radius controls entry, approach, shield exclusion and survives reload
+ok 62 - lion: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 0.9856
+  ...
+# Subtest: rhino: native body radius controls entry, approach, shield exclusion and survives reload
+ok 63 - rhino: native body radius controls entry, approach, shield exclusion and survives reload
+  ---
+  duration_ms: 1.6753
+  ...
+# Subtest: warthog: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 64 - warthog: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 3.9537
+  ...
+# Subtest: hyena: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 65 - hyena: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.613
+  ...
+# Subtest: buffalo: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 66 - buffalo: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.5831
+  ...
+# Subtest: lion: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 67 - lion: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.4829
+  ...
+# Subtest: rhino: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+ok 68 - rhino: swept native body fits clear passages and rejects narrower structure, rock and shield gaps
+  ---
+  duration_ms: 0.4656
+  ...
+# Subtest: Approach selection tries another side when the direct contact point is blocked, without ignoring the building
+ok 69 - Approach selection tries another side when the direct contact point is blocked, without ignoring the building
+  ---
+  duration_ms: 1.0555
+  ...
+# Subtest: The selected contact point persists while walking and across an active-raid save/load
+ok 70 - The selected contact point persists while walking and across an active-raid save/load
+  ---
+  duration_ms: 10.3496
+  ...
+# Subtest: A full legal five-animal composition changes entry side together when a large animal cannot enter
+ok 71 - A full legal five-animal composition changes entry side together when a large animal cannot enter
+  ---
+  duration_ms: 7.1837
+  ...
+# Subtest: An impossible full-group entry does not silently drop the animals that could not fit
+ok 72 - An impossible full-group entry does not silently drop the animals that could not fit
+  ---
+  duration_ms: 37.3236
+  ...
+# Subtest: Local entry/exit validation leaves the actual crop target priority unchanged
+ok 73 - Local entry/exit validation leaves the actual crop target priority unchanged
+  ---
+  duration_ms: 3.0481
+  ...
+# Subtest: A reachable crop permits entry when every structure approach is blocked
+ok 74 - A reachable crop permits entry when every structure approach is blocked
+  ---
+  duration_ms: 1.4117
+  ...
+# Subtest: An exhaustive directed region rejects a reverse route only with verified incoming boundary and all destination connectors
+ok 75 - An exhaustive directed region rejects a reverse route only with verified incoming boundary and all destination connectors
+  ---
+  duration_ms: 2.5234
+  ...
+# Subtest: Group accessibility can reject only a fully covered, disjoint service zone with incoming proof
+ok 76 - Group accessibility can reject only a fully covered, disjoint service zone with incoming proof
+  ---
+  duration_ms: 0.631
+  ...
+# Subtest: A one-way incoming connection cannot be treated as a symmetric failure
+ok 77 - A one-way incoming connection cannot be treated as a symmetric failure
+  ---
+  duration_ms: 0.5743
+  ...
+# Subtest: Partial goal connector coverage, shared origins and worker portals cannot be rejected
+ok 78 - Partial goal connector coverage, shared origins and worker portals cannot be rejected
+  ---
+  duration_ms: 0.332
+  ...
+1..78
+# tests 78
+# suites 0
+# pass 78
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 21879.8405

@@ -30,6 +30,15 @@ test('An invalid service point cannot spend the sole warming attempt before a va
  warmFailedApproach(nav,{x:1,z:0},actor,.9,32);assert.equal(calls.length,1);
 });
 
+test('Existing closed-island certificates avoid re-exploring the outside component',()=>{
+ const keys=new Map();for(let z=-1;z<=1;z++)for(let x=-1;x<=1;x++)keys.set(`.9:null:false|${x},${z}`,new Set());
+ // Match the exact native numeric key representation.
+ const closedRegions=new Map([...keys].map(([k,v])=>[k.replace('.9:','0.9:'),v]));
+ let calls=0;const nav={version:1,closedRegions,walkable:()=>true,segmentClear:()=>true,findPath(){calls++;return null;}};
+ warmFailedApproach(nav,{x:0,z:0},{x:10,z:10},.9,32);assert.equal(calls,0);
+ closedRegions.delete('0.9:null:false|1,1');warmFailedApproach(nav,{x:0,z:0},{x:10,z:10},.9,32);assert.equal(calls,1);
+});
+
 test('A successful approach preserves every original waypoint and performs no wider search',()=>{
  const nav=new Navigation(123,'sabana',{});nav.path=()=>[{x:2,z:2},{x:1,z:2},{x:1,z:1}];nav.findPath=()=>{throw Error('Unexpected warm search');};
  assert.deepEqual(nav.approachPath({x:1,z:1},{x:2,z:2},.9,32),[{x:1,z:2},{x:2,z:2},{x:2,z:2}]);
