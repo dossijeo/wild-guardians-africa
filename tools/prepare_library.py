@@ -2,11 +2,7 @@
 import pathlib,json,shutil
 root=pathlib.Path(__file__).resolve().parents[1]
 manifest=json.loads((root/'content/manifests/assets.json').read_text(encoding='utf-8'))
-selected={'crops':'Bioma_Cultivos','walls':'Bastion_Lab','destruction':'BIOMA_Destruccion','sfx':'Wild_Guardians_SFX',
- 'worker-older-male':'Quata_Character_Lab_Ganadero_Mayor',
- 'worker-older-female':'Quata_Character_Lab_Amara_Mayor',
- 'worker-young-male':'Quata_Character_Lab_Kofi_Joven',
- 'worker-young-female':'Quata_Character_Lab_Amara_Joven'}
+selected={'crops':'Bioma_Cultivos','walls':'Bastion_Lab','destruction':'BIOMA_Destruccion','sfx':'Wild_Guardians_SFX'}
 result={}
 for key,prefix in selected.items():
     source=next(s for s in manifest['sources'] if s['file'].startswith(prefix))

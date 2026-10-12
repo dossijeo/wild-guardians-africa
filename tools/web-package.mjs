@@ -4,7 +4,6 @@ export function publicText(text,path,manifest){
   for(const item of manifest.records)text=text.replaceAll('/'+item.source,'/'+item.runtime);
   if(path==='library.html')text=text.replace("const get=", "import {decodeWebGlb} from './runtime/glb-legacy.js';\nconst get=").replace('return response[type]();',"const result=await response[type]();return type==='arrayBuffer'&&url.endsWith('.glb')?decodeWebGlb(result):result;");
   if(path==='menu/native.js')text=text.replace('return await (await fetch(el.textContent.trim())).arrayBuffer();','return await window.decodeWebGlb(await (await fetch(el.textContent.trim())).arrayBuffer());');
-  if(path.startsWith('library/worker-'))text=text.replaceAll('j.textures[slot.index].source','(j.textures[slot.index].extensions?.EXT_texture_webp?.source??j.textures[slot.index].source)');
   if(path==='library/destruction/script-5.js')text=text.replaceAll('json.textures[index].source','(json.textures[index].extensions?.EXT_texture_webp?.source??json.textures[index].source)');
   if(path==='menu/index.html')text=text.replace('<script src="/menu/native.js"></script>',`<script type="module">import {decodeWebGlb} from '/runtime/glb-legacy.js';window.decodeWebGlb=decodeWebGlb;const script=document.createElement('script');script.src='/menu/native.js';document.body.append(script);</script>`);
   // JSON and injected library scripts resolve from the game/library document.
@@ -21,6 +20,13 @@ export function webPackagePlugin(){
       if(JSON.stringify(originals)!==JSON.stringify(covered))throw Error('GLB inventory changed: run npm run assets:compress before building');
       function walk(dir){for(const name of readdirSync(dir)){const file=resolve(dir,name);if(statSync(file).isDirectory())walk(file);else if(['.html','.js','.json','.css'].includes(extname(file))&&!relative(dist,file).replaceAll('\\','/').startsWith('assets/')){const path=relative(dist,file).replaceAll('\\','/');writeFileSync(file,publicText(readFileSync(file,'utf8'),path,mapping));}}}
       walk(dist);for(const item of mapping.records)rmSync(resolve(dist,item.source));writeFileSync(resolve(dist,'content/web-assets.json'),JSON.stringify(mapping,null,2)+'\n');
+      // The four worker reference labs are retained in source but have no menu entry.
+      // Exclude them from both the itch.io ZIP and the Tauri frontend bundle.
+      for(const name of ['worker-older-male','worker-older-female','worker-young-male','worker-young-female']){
+        const target=resolve(dist,'library',name);
+        if(!target.startsWith(resolve(dist,'library')+sep))throw Error('Worker lab path escapes package');
+        rmSync(target,{recursive:true,force:true});
+      }
       // Keep demo village and superseded combined ground maps in the source
       // archive. Ship native cultures and the three final baked maps only.
       for(const archive of ['biome-lab-update.json','mangrove-ground-bake.json']){

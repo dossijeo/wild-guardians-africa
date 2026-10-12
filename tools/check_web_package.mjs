@@ -7,6 +7,10 @@ const root=resolve('dist'),manifest=JSON.parse(await readFile('content/manifests
 const inventory=new Set();
 async function collect(dir){for(const name of await readdir(dir)){const path=resolve(dir,name);if((await stat(path)).isDirectory())await collect(path);else inventory.add(relative(root,path).replaceAll('\\','/'));}}
 await collect(root);
+const libraryManifest=JSON.parse(await readFile(resolve(root,'library/manifest.json'),'utf8'));
+assert.deepEqual(Object.keys(libraryManifest).sort(),['crops','destruction','sfx','walls'],'Only linked Library labs should ship');
+for(const name of ['worker-older-male','worker-older-female','worker-young-male','worker-young-female'])
+ assert(![...inventory].some(path=>path.startsWith(`library/${name}/`)),`Unused ${name} lab must not ship`);
 const spiritManifest=JSON.parse(await readFile('content/manifests/spirit-voices.json','utf8'));
 assert.equal(spiritManifest.records.length,54);
 for(const record of spiritManifest.records){
