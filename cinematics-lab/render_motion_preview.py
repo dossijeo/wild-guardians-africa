@@ -16,11 +16,12 @@ def render(scene: dict, fraction: float) -> Image.Image:
     for layer in scene["layers"]:
         motion = layer["motion"]
         x = motion["startXPercent"] + fraction * (motion["endXPercent"] - motion["startXPercent"])
+        y = motion["startYPercent"] + fraction * (motion["endYPercent"] - motion["startYPercent"])
         scale = motion["startScale"] + fraction * (motion["endScale"] - motion["startScale"])
         source = Image.open(ROOT / layer["image"]).convert("RGBA")
         resized = source.resize((round(SIZE[0] * scale), round(SIZE[1] * scale)), Image.Resampling.LANCZOS)
         left = round((SIZE[0] - resized.width) / 2 + SIZE[0] * x / 100)
-        top = round((SIZE[1] - resized.height) / 2)
+        top = round((SIZE[1] - resized.height) / 2 + SIZE[1] * y / 100)
         plate = Image.new("RGBA", SIZE, (0, 0, 0, 0))
         plate.paste(resized, (left, top))
         composite.alpha_composite(plate)
@@ -39,7 +40,11 @@ def main() -> None:
         scene = by_id[scene_id]
         frames = [render(scene, n / 27).resize((836, 470), Image.Resampling.LANCZOS) for n in range(28)]
         gif = ROOT / f"preview-parallax-scene-{scene_id}.gif"
-        frames[0].save(gif, save_all=True, append_images=frames[1:], duration=[180] * 27 + [900], loop=0, optimize=True)
+        seconds = max(10, scene["audio"]["ES"]["durationSeconds"] + 0.8)
+        total_centiseconds = round(seconds * 100)
+        base, extra = divmod(total_centiseconds - 1, 27)
+        durations = [(base + (n < extra)) * 10 for n in range(27)] + [10]
+        frames[0].save(gif, save_all=True, append_images=frames[1:], duration=durations, loop=0, optimize=True)
         sheet = Image.new("RGB", (900, 215), "#f0e4d0")
         draw = ImageDraw.Draw(sheet)
         for col, (fraction, label) in enumerate(((0, "inicio"), (0.5, "medio"), (1, "extremo"))):
@@ -48,7 +53,7 @@ def main() -> None:
             draw.text((col * 300 + 4, 185), f"{scene_id} / {label}", fill="#211b16")
         contact = ROOT / f"contact-parallax-scene-{scene_id}-three-positions.jpg"
         sheet.save(contact, quality=87)
-        print(f"{scene_id}: {gif.name} ({gif.stat().st_size:,} B), {contact.name}")
+        print(f"{scene_id}: {gif.name} ({gif.stat().st_size:,} B; {seconds:.2f}s scene), {contact.name}")
 
 
 if __name__ == "__main__":

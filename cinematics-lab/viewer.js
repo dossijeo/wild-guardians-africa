@@ -40,10 +40,11 @@ function render(){
       if(!motion)throw new Error('Missing motion for '+s.id+' '+layer.image);
       img.style.setProperty('--layer-start-x',`${motion.startXPercent}%`);
       img.style.setProperty('--layer-end-x',`${motion.endXPercent}%`);
-      img.style.setProperty('--layer-start-y','0%');
-      img.style.setProperty('--layer-end-y','0%');
+      img.style.setProperty('--layer-start-y',`${motion.startYPercent}%`);
+      img.style.setProperty('--layer-end-y',`${motion.endYPercent}%`);
       img.style.setProperty('--layer-start-scale',motion.startScale);
       img.style.setProperty('--layer-end-scale',motion.endScale);
+      img.style.setProperty('--duration',`${limit()}s`);
       return img;
     });
     const nextStack=document.createElement('div');nextStack.className='layers';nextStack.replaceChildren(...nodes);
@@ -97,7 +98,7 @@ el('toggle').onclick=()=>{
   if(playing){voice.pause();setPlaying(false)}
   else{if(voice.ended){elapsed=0;voice.currentTime=0}setPlaying(true);last=0;if(visibleGeneration===generation)startVoice(generation)}
 };
-el('duration').oninput=e=>{minimum=Number(e.target.value);elapsed=Math.min(elapsed,limit());updateTime()};
+el('duration').oninput=e=>{minimum=Number(e.target.value);elapsed=Math.min(elapsed,limit());activeStack.querySelectorAll('img').forEach(img=>img.style.setProperty('--duration',`${limit()}s`));updateTime()};
 el('language').onchange=e=>{language=e.target.value;document.documentElement.lang=language.toLowerCase();jump(index)};
 el('parallax').onchange=e=>{parallax=e.target.checked;stage.classList.toggle('no-parallax',!parallax)};
 el('texts').onchange=e=>stage.classList.toggle('captions-off',!e.target.checked);

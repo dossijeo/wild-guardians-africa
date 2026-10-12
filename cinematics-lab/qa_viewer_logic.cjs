@@ -23,7 +23,7 @@ class FakeAudio{
 }
 const elements=new Map();
 const get=id=>{if(!elements.has(id))elements.set(id,new Element());return elements.get(id)};
-const makeScene=(id,number)=>({id,act:1,scene:number,audio:{ES:{durationSeconds:12},EN:{durationSeconds:8.5}},camera:{panXPercent:0.5,panYPercent:0.2,zoom:1.04},layers:[{image:`layers/${id}-background.webp`,depth:0,motion:{startXPercent:-2.5,endXPercent:2.5,startScale:1.16,endScale:1.2}},{image:`layers/${id}-foreground.webp`,depth:0.9,motion:{startXPercent:-7,endXPercent:7,startScale:1,endScale:1.018}}],narrationRaw:`${number}.  Texto ES`,narrationRawEN:`${number}.  Exact EN`,artDirection:'woodcut'});
+const makeScene=(id,number)=>({id,act:1,scene:number,audio:{ES:{durationSeconds:12},EN:{durationSeconds:8.5}},camera:{panXPercent:0.5,panYPercent:0.2,zoom:1.04},layers:[{image:`layers/${id}-background.webp`,depth:0,motion:{startXPercent:-0.78125,endXPercent:0.78125,startYPercent:-0.3125,endYPercent:0.3125,startScale:1.08,endScale:1.12}},{image:`layers/${id}-foreground.webp`,depth:0.9,motion:{startXPercent:-2.328125,endXPercent:2.328125,startYPercent:-0.93125,endYPercent:0.93125,startScale:1.08,endScale:1.1326}}],narrationRaw:`${number}.  Texto ES`,narrationRawEN:`${number}.  Exact EN`,artDirection:'woodcut'});
 const payload={manifest:{acts:[{number:1,roman:'I',title:'Título',titleEN:'Title',afterNight:10,closingRaw:'CIERRE',closingRawEN:'CLOSURE',scenes:[makeScene('01',1),makeScene('02',2)]}]},images:{'layers/01-background.webp':'img1b','layers/01-foreground.webp':'img1f','layers/02-background.webp':'img2b','layers/02-foreground.webp':'img2f'},audio:{'01-ES':'voice1es','01-EN':'voice1en','02-ES':'voice2es','02-EN':'voice2en'}};
 get('inline-data').textContent=JSON.stringify(payload);
 const raf=[];const timers=[];
@@ -39,12 +39,14 @@ async function tick(time){
   const voice=FakeAudio.last;
   const [background,foreground]=FakeImage.all;
   const delta=img=>Math.abs(parseFloat(img.style.values['--layer-end-x'])-parseFloat(img.style.values['--layer-start-x']));
-  assert.ok(delta(background)>=5,'background has measurable movement');
+  assert.ok(delta(background)>1,'background has measurable movement');
   assert.ok(delta(foreground)>delta(background)*2,'foreground moves at a different speed');
   assert.ok(parseFloat(background.style.values['--layer-end-scale'])>parseFloat(background.style.values['--layer-start-scale']),'camera.zoom reaches background');
   assert.ok(parseFloat(foreground.style.values['--layer-end-scale'])>parseFloat(foreground.style.values['--layer-start-scale']),'camera.zoom reaches foreground');
   const css=fs.readFileSync(require('node:path').join(__dirname,'viewer.template.html'),'utf8');
-  assert.match(css,/animation:layer-drift 6s ease-in-out infinite alternate both/,'full track repeats within six seconds');
+  assert.match(css,/animation:layer-drift var\(--duration\) linear both/,'one slow track lasts for the entire scene');
+  assert.doesNotMatch(css,/animation:layer-drift[^;]*infinite/,'the scene motion does not loop');
+  assert.equal(background.style.values['--duration'],'12.8s','scene voice plus margin sets movement duration');
   assert.match(css,/\.stage\.playing \.layers img\{animation-play-state:running\}/);
   assert.match(css,/\.stage\.no-parallax \.layers img\{animation:none;transform:none\}/);
   assert.match(css,/@media\(prefers-reduced-motion:reduce\)\{\.stage \.layers img\{animation:none!important;transform:none!important\}\}/);
@@ -60,7 +62,8 @@ async function tick(time){
   const plays=voice.playCount;get('toggle').onclick();assert.equal(voice.playCount,plays+1);assert.ok(get('stage').classList.contains('playing'),'resume restarts motion');
   get('parallax').onchange({target:{checked:false}});assert.ok(get('stage').classList.contains('no-parallax'),'user switch disables motion');
   get('parallax').onchange({target:{checked:true}});assert.ok(!get('stage').classList.contains('no-parallax'),'user switch restores motion');
-  get('duration').oninput({target:{value:'6'}});
+  get('duration').oninput({target:{value:'20'}});
+  assert.ok(FakeImage.all.some(img=>img.style.values['--duration']==='20s'),'manual scene duration also changes motion timing');
   await tick(2000);await tick(20000);
   assert.equal(voice.src,'voice1en','scene does not advance before narration ends');
   voice.ended=true;await tick(22000);
