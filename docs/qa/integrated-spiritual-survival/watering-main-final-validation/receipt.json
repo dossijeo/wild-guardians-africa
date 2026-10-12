@@ -1,0 +1,29 @@
+{
+  "observedAt": "2026-10-12T04:25:36.977Z",
+  "head": "e9cd42cc402395248fb2c650d5234bcbd4a79213",
+  "merge": "63a28057842c4501c1e7852e86b0daf22d3580c7",
+  "validateRun": 38200470981,
+  "windowsRun": 38200471004,
+  "files": {
+    "validate-workflow.json": {
+      "source": ".cache-watering-final-validation.json",
+      "bytes": 3850,
+      "sha256": "ce07c8518ede729e19e660a06c069861527b8a3d3fa048fa82a92dba1d9f90ab"
+    },
+    "windows-workflow.json": {
+      "source": ".cache-watering-final-windows.json",
+      "bytes": 4460,
+      "sha256": "f4b51dda982fa9255d173e5fdc3a162bf8aa5620578e0b89adbdd7b01763addd"
+    },
+    "validate-full.log.gz": {
+      "source": ".cache-watering-final-validation.log",
+      "bytes": 2136437,
+      "sha256": "5a7b6fe136a7db9d41fc02ecd83d264d76ab7378a48c9f5b72287c833634d923"
+    },
+    "post-merge-51.tap.gz": {
+      "source": ".cache-post-merge-watering-tests.txt",
+      "bytes": 11236,
+      "sha256": "808de961aa0edd62b06bb2c6757846ee6ae0f9252286adb39c0ce8e9ee86f05c"
+    }
+  }
+}
