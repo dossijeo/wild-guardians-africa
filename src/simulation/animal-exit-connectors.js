@@ -3,6 +3,7 @@ import {animalFootprintConnector} from './animal-footprint-connectors.js';
 import {animalGridExitBridge} from './animal-grid-exit-bridge.js';
 const distances=[4,8,12,16,24,32];
 const angles=32,budget=8;
+const halfSearchLimit=16384;
 // An open fractional corridor can have no usable one-metre grid cells. Try
 // a bounded physical connector after normal static routing fails. Every leg
 // uses the original swept collision rules; no obstacle or body is removed.
@@ -37,6 +38,12 @@ export function animalExitConnector(actor,end,nav){
    const bridge=animalGridExitBridge(actor,end,nav);
    if(bridge.path){delete actor.exitConnectorSearch;return bridge.path;}
    if(bridge.pending)return null;
+   // Preserve the existing grid-bridge priority: it resolves historical
+   // narrow passages sooner than a larger lattice. Extend only after that
+   // route has exhausted, and resume on the next tick, never twice this tick.
+   if(search.fine.visited>=4096&&search.fine.visited<halfSearchLimit&&search.fine.items.length){
+    search.fine.limit=halfSearchLimit;return null;
+   }
    // A narrow bent corridor may need a quarter-metre lateral adjustment that
    // both lattices above miss. Retain the same bounded frontier and native
    // swept tests; this never changes the animal's radius or wall collision.
@@ -54,8 +61,12 @@ export function animalExitConnector(actor,end,nav){
 // anchored to the actual actor, retaining its bounded frontier across ticks
 // and saves. Native swept checks remain the sole definition of clearance.
 function fractionalExit(actor,end,nav,search,radius,step=.5,field='fine'){
- const maxNodes=4096;
+ const maxNodes=search[field]?.limit??4096;
  const fine=search[field]??= {items:[],sequence:0,costs:{'0,0':0},previous:{},visited:0,nodeCount:1};
+ // A saved 4096-node frontier may continue under the larger bounded search.
+ // Persist its bound so validation retains strict limits for legacy/quarter
+ // frontiers; increasing total work never increases the eight-pop tick slice.
+ fine.limit=maxNodes;
  const frontier=new SearchFrontier();frontier.items=fine.items;frontier.sequence=fine.sequence;
  if(!fine.visited&&!frontier.length)frontier.push({i:0,j:0,g:0,f:Math.hypot(end.x-actor.x,end.z-actor.z)});
  const point=(i,j)=>({x:actor.x+i*step,z:actor.z+j*step});

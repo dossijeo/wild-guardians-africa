@@ -1,0 +1,61 @@
+{
+  "scope": "Retained night41 connector only; AB/BA capped vs expanded; 2000-call diagnostic cutoff; timer overhead included; JSON bytes are not measured RAM or GPU frame time",
+  "rows": [
+    {
+      "arm": "A",
+      "cap": 4096,
+      "calls": 2000,
+      "pathPoints": null,
+      "validNativeSegments": false,
+      "totalMs": 1214.2422000000001,
+      "p50Ms": 0.009500000000116415,
+      "p95Ms": 1.5611000000000104,
+      "p99Ms": 4.607400000000098,
+      "maxMs": 212.45579999999995,
+      "maxNodes": 2598,
+      "sampledSearchJSONBytes": 327499
+    },
+    {
+      "arm": "B",
+      "cap": 16384,
+      "calls": 1238,
+      "pathPoints": 161,
+      "validNativeSegments": true,
+      "totalMs": 3138.1759,
+      "p50Ms": 1.9239999999999782,
+      "p95Ms": 5.042500000000018,
+      "p99Ms": 8.09900000000016,
+      "maxMs": 161.88450000000012,
+      "maxNodes": 6953,
+      "sampledSearchJSONBytes": 519618
+    },
+    {
+      "arm": "B",
+      "cap": 16384,
+      "calls": 1238,
+      "pathPoints": 161,
+      "validNativeSegments": true,
+      "totalMs": 3164.9061,
+      "p50Ms": 1.9942000000000917,
+      "p95Ms": 4.477100000000064,
+      "p99Ms": 7.520300000000134,
+      "maxMs": 207.17569999999978,
+      "maxNodes": 6953,
+      "sampledSearchJSONBytes": 519618
+    },
+    {
+      "arm": "A",
+      "cap": 4096,
+      "calls": 2000,
+      "pathPoints": null,
+      "validNativeSegments": false,
+      "totalMs": 1105.2003000000004,
+      "p50Ms": 0.007300000001123408,
+      "p95Ms": 1.6477000000013504,
+      "p99Ms": 3.564700000000812,
+      "maxMs": 219.14090000000033,
+      "maxNodes": 2598,
+      "sampledSearchJSONBytes": 327499
+    }
+  ]
+}

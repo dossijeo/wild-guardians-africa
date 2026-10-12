@@ -1,4 +1,3 @@
-const maxNodes=4096,maxInsertions=32769;
 const record=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
 const index=value=>Number.isSafeInteger(value)&&Math.abs(value)<=128;
 function coordinate(key){
@@ -10,7 +9,9 @@ const before=(a,b)=>a.value.f<b.value.f||a.value.f===b.value.f&&a.order<b.order;
 
 // Persistence-boundary validation only. Strictly increasing parent costs prove
 // acyclicity in linear time without repeatedly walking every ancestry chain.
-export function validExitFrontier(fine){
+export function validExitFrontier(fine,maximum=16384){
+ const maxNodes=fine?.limit??4096,maxInsertions=maxNodes*8+1;
+ if((maxNodes!==4096&&maxNodes!==16384)||maxNodes>maximum)return false;
  if(!record(fine)||!Array.isArray(fine.items)||fine.items.length>maxNodes||
    !Number.isSafeInteger(fine.sequence)||fine.sequence<0||fine.sequence>maxInsertions||
    !Number.isSafeInteger(fine.visited)||fine.visited<0||fine.visited>maxNodes||
