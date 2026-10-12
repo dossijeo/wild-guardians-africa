@@ -1,0 +1,247 @@
+{
+  "observedAt": "2026-10-12T02:44:13.913Z",
+  "gitHead": "93dff2380345a03890986a2295156642a69d4e5a",
+  "node": "v20.11.0",
+  "scope": "AB/BA CPU microbenchmark: exact repeated queries on two recorded Canyon scenes and two explicitly synthetic enclosing solids. Not a dense farm, moving-crew replay, render/GPU benchmark or complete campaign speedup.",
+  "sourceSha256": {
+    "src/world/work-points.js": "3415a5926ef2a83b9bcdfa41ec380d35b9a9845b17695c55aa23f1d687a7f809",
+    "src/world/watering-route-cache.js": "81a563c070a67be12fea57fa046757d79ad6192a5a761b43ac6d61ceb5bd0a1f",
+    "tests/fixtures/watering-route-v1-reference.mjs": "03125f102f5193ba6a48652745e2c4baacdb639175b10549a0163cd91ae2b8d4"
+  },
+  "rows": [
+    {
+      "variant": "A",
+      "rounds": 32,
+      "queries": 128,
+      "prepareMilliseconds": 63.29820000000001,
+      "coldMilliseconds": 146.8247,
+      "queryMilliseconds": 532.6095,
+      "p95Milliseconds": 7.60349999999994,
+      "maxMilliseconds": 18.22829999999999,
+      "heapBefore": 5736960,
+      "heapAfter": 5864192,
+      "retainedHeapDelta": 127232,
+      "answerSha256": "7abb066e56aaf97cd35d902d7a9eaec4d784c386c0efecb90d11e53fd63117b4",
+      "statesUnchanged": true,
+      "cases": [
+        {
+          "label": "canyon-1-original",
+          "reachable": true,
+          "nativeCalls": {
+            "walkable": 2496,
+            "segmentClear": 3200,
+            "path": 0
+          }
+        },
+        {
+          "label": "canyon-1-enclosed",
+          "reachable": false,
+          "nativeCalls": {
+            "walkable": 8096,
+            "segmentClear": 5760,
+            "path": 256
+          }
+        },
+        {
+          "label": "canyon-10-original",
+          "reachable": true,
+          "nativeCalls": {
+            "walkable": 4320,
+            "segmentClear": 5824,
+            "path": 0
+          }
+        },
+        {
+          "label": "canyon-10-enclosed",
+          "reachable": false,
+          "nativeCalls": {
+            "walkable": 5024,
+            "segmentClear": 4224,
+            "path": 160
+          }
+        }
+      ]
+    },
+    {
+      "variant": "B",
+      "rounds": 32,
+      "queries": 128,
+      "prepareMilliseconds": 60.65229999999997,
+      "coldMilliseconds": 67.71550000000002,
+      "queryMilliseconds": 3.8005000000000564,
+      "p95Milliseconds": 0.023700000000189902,
+      "maxMilliseconds": 0.3993000000000393,
+      "heapBefore": 5893320,
+      "heapAfter": 5905240,
+      "retainedHeapDelta": 11920,
+      "answerSha256": "7abb066e56aaf97cd35d902d7a9eaec4d784c386c0efecb90d11e53fd63117b4",
+      "statesUnchanged": true,
+      "cases": [
+        {
+          "label": "canyon-1-original",
+          "reachable": true,
+          "nativeCalls": {
+            "walkable": 0,
+            "segmentClear": 0,
+            "path": 0
+          }
+        },
+        {
+          "label": "canyon-1-enclosed",
+          "reachable": false,
+          "nativeCalls": {
+            "walkable": 0,
+            "segmentClear": 0,
+            "path": 0
+          }
+        },
+        {
+          "label": "canyon-10-original",
+          "reachable": true,
+          "nativeCalls": {
+            "walkable": 0,
+            "segmentClear": 0,
+            "path": 0
+          }
+        },
+        {
+          "label": "canyon-10-enclosed",
+          "reachable": false,
+          "nativeCalls": {
+            "walkable": 0,
+            "segmentClear": 0,
+            "path": 0
+          }
+        }
+      ]
+    },
+    {
+      "variant": "B",
+      "rounds": 32,
+      "queries": 128,
+      "prepareMilliseconds": 43.12850000000003,
+      "coldMilliseconds": 68.59429999999998,
+      "queryMilliseconds": 3.2981999999999516,
+      "p95Milliseconds": 0.01960000000008222,
+      "maxMilliseconds": 0.09729999999990468,
+      "heapBefore": 5942256,
+      "heapAfter": 6200592,
+      "retainedHeapDelta": 258336,
+      "answerSha256": "7abb066e56aaf97cd35d902d7a9eaec4d784c386c0efecb90d11e53fd63117b4",
+      "statesUnchanged": true,
+      "cases": [
+        {
+          "label": "canyon-1-original",
+          "reachable": true,
+          "nativeCalls": {
+            "walkable": 0,
+            "segmentClear": 0,
+            "path": 0
+          }
+        },
+        {
+          "label": "canyon-1-enclosed",
+          "reachable": false,
+          "nativeCalls": {
+            "walkable": 0,
+            "segmentClear": 0,
+            "path": 0
+          }
+        },
+        {
+          "label": "canyon-10-original",
+          "reachable": true,
+          "nativeCalls": {
+            "walkable": 0,
+            "segmentClear": 0,
+            "path": 0
+          }
+        },
+        {
+          "label": "canyon-10-enclosed",
+          "reachable": false,
+          "nativeCalls": {
+            "walkable": 0,
+            "segmentClear": 0,
+            "path": 0
+          }
+        }
+      ]
+    },
+    {
+      "variant": "A",
+      "rounds": 32,
+      "queries": 128,
+      "prepareMilliseconds": 48.0465999999999,
+      "coldMilliseconds": 43.98069999999984,
+      "queryMilliseconds": 499.87829999999985,
+      "p95Milliseconds": 7.0090000000000146,
+      "maxMilliseconds": 19.318199999999933,
+      "heapBefore": 6118544,
+      "heapAfter": 6247512,
+      "retainedHeapDelta": 128968,
+      "answerSha256": "7abb066e56aaf97cd35d902d7a9eaec4d784c386c0efecb90d11e53fd63117b4",
+      "statesUnchanged": true,
+      "cases": [
+        {
+          "label": "canyon-1-original",
+          "reachable": true,
+          "nativeCalls": {
+            "walkable": 2496,
+            "segmentClear": 3200,
+            "path": 0
+          }
+        },
+        {
+          "label": "canyon-1-enclosed",
+          "reachable": false,
+          "nativeCalls": {
+            "walkable": 8096,
+            "segmentClear": 5760,
+            "path": 256
+          }
+        },
+        {
+          "label": "canyon-10-original",
+          "reachable": true,
+          "nativeCalls": {
+            "walkable": 4320,
+            "segmentClear": 5824,
+            "path": 0
+          }
+        },
+        {
+          "label": "canyon-10-enclosed",
+          "reachable": false,
+          "nativeCalls": {
+            "walkable": 5024,
+            "segmentClear": 4224,
+            "path": 160
+          }
+        }
+      ]
+    }
+  ],
+  "memory": [
+    {
+      "kind": "null",
+      "entriesRequested": 8192,
+      "before": 5974784,
+      "filled": 7105496,
+      "released": 6021128,
+      "filledDelta": 1130712,
+      "releasedDelta": 46344,
+      "scope": "Synthetic cache-storage/GC probe; not peak application RAM or VRAM."
+    },
+    {
+      "kind": "positive",
+      "entriesRequested": 8192,
+      "before": 6022088,
+      "filled": 9800208,
+      "released": 6026912,
+      "filledDelta": 3778120,
+      "releasedDelta": 4824,
+      "scope": "Synthetic cache-storage/GC probe; not peak application RAM or VRAM."
+    }
+  ]
+}
