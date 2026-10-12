@@ -6,8 +6,8 @@ import {operational} from '../src/simulation/rules.js';
 import {nativeServiceComponentProof} from './native-service-component-proof.mjs';
 import {withNativeProofLatticeCache} from './native-proof-lattice-cache.mjs';
 const proofViews=new WeakMap();
-let latticeMode='off',latticeTotals={proofs:0,surfaceCalls:0,latticeCalls:0,nativeLatticeCalls:0,hits:0,capacityBypasses:0,coarseCollisionCalls:0,epochInvalidations:0,maxEntries:0};
-export function setNativePerimeterLatticeMode(mode){if(!['off','diagnose','cache'].includes(mode))throw Error('Invalid QA lattice mode');latticeMode=mode;latticeTotals={proofs:0,surfaceCalls:0,latticeCalls:0,nativeLatticeCalls:0,hits:0,capacityBypasses:0,coarseCollisionCalls:0,epochInvalidations:0,maxEntries:0};}
+let latticeMode='off',latticeTotals={proofs:0,surfaceCalls:0,latticeCalls:0,nativeLatticeCalls:0,hits:0,capacityBypasses:0,coordinateBypasses:0,coarseCollisionCalls:0,epochInvalidations:0,maxEntries:0};
+export function setNativePerimeterLatticeMode(mode){if(!['off','diagnose','cache','flat'].includes(mode))throw Error('Invalid QA lattice mode');latticeMode=mode;latticeTotals={proofs:0,surfaceCalls:0,latticeCalls:0,nativeLatticeCalls:0,hits:0,capacityBypasses:0,coordinateBypasses:0,coarseCollisionCalls:0,epochInvalidations:0,maxEntries:0};}
 export function nativePerimeterLatticeDiagnostics(){return {...latticeTotals,mode:latticeMode};}
 let serviceCertificateEnabled=false,certificateTotals={proofs:0,queries:0,certificates:0};
 export function setNativePerimeterServiceCertificate(enabled){if(typeof enabled!=='boolean')throw Error('Expected explicit QA certificate flag');serviceCertificateEnabled=enabled;certificateTotals={proofs:0,queries:0,certificates:0};}
@@ -25,7 +25,7 @@ export function nativePerimeterProof(s,nav,plan,bounds,{cache=true,outline=null,
   view.obstacles=[...nav.obstacles.map(w=>updates.has(w.id)?{...w,...updates.get(w.id)}:w),...plan.pieces];
   if(cache)proofViews.set(nav,{key,state:s,view});
  }
- return withNativeProofLatticeCache(view,privateView=>evaluatePerimeter(s,privateView,bounds,outline,sharedCertificate),{mode:latticeMode,onDiagnostics:r=>{latticeTotals.proofs++;for(const k of ['surfaceCalls','latticeCalls','nativeLatticeCalls','hits','capacityBypasses','coarseCollisionCalls','epochInvalidations'])latticeTotals[k]+=r[k];latticeTotals.maxEntries=Math.max(latticeTotals.maxEntries,r.entries);}});
+ return withNativeProofLatticeCache(view,privateView=>evaluatePerimeter(s,privateView,bounds,outline,sharedCertificate),{mode:latticeMode==='flat'?'cache':latticeMode,storage:latticeMode==='flat'?'flat':'nested',onDiagnostics:r=>{latticeTotals.proofs++;for(const k of ['surfaceCalls','latticeCalls','nativeLatticeCalls','hits','capacityBypasses','coordinateBypasses','coarseCollisionCalls','epochInvalidations'])latticeTotals[k]+=r[k];latticeTotals.maxEntries=Math.max(latticeTotals.maxEntries,r.entries);}});
 }
 function evaluatePerimeter(s,view,bounds,outline,sharedCertificate){
  const land=[...s.plants.filter(p=>p.alive),...s.structures.filter(operational).flatMap(c=>centerFootprint(c,s).footprint)],radii=[...new Set(Object.values(ANIMAL_ACTIONS.animals).map(a=>a.presentation.footprint.radius))];
