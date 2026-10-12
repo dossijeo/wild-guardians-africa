@@ -102,3 +102,36 @@ test('unfunded recertification defers geometry without changing commands, state 
   assert.equal(serialize(candidate.s),serialize(baseline.s));assert.equal(b.report().paidCost,a.report().paidCost);
  }
 });
+
+test('a paid contour with one removed piece waits for funds without repeated native quotes',()=>{
+ const worlds=[fixture(),fixture()],policies=[referencePolicy({startDay:1,obstacleAware:true,funding:'rolling'}),createNativeFundedDefensePolicy({startDay:1,obstacleAware:true,funding:'rolling'})];
+ for(let i=0;i<20&&!policies[0].report().completed;i++)for(let k=0;k<2;k++){
+  policies[k].act(worlds[k].s,worlds[k].nav,worlds[k].options);
+  Game.tick(worlds[k].s,5,worlds[k].nav);
+ }
+ assert(policies.every(p=>p.report().completed));
+ assert.equal(serialize(worlds[0].s),serialize(worlds[1].s));
+ const missing=worlds[0].s.structures.find(w=>w.kind==='wall'&&!w.gate);
+ for(const w of worlds){
+  assert(Game.removeWall(w.s,'remove-paid-piece',missing.id,w.nav));
+  w.options.reserve=numberOf(w.s.ledger.balance)-5;
+  Game.tick(w.s,5,w.nav);
+ }
+ let oldChecks=0,newChecks=0;
+ for(const [i,count] of [[0,()=>oldChecks++],[1,()=>newChecks++]]){
+  const nav=worlds[i].nav,original=nav.wallPlacement.bind(nav);
+  nav.wallPlacement=(...args)=>{count();return original(...args);};
+ }
+ assert.equal(policies[0].act(worlds[0].s,worlds[0].nav,worlds[0].options),0);
+ assert.equal(policies[1].act(worlds[1].s,worlds[1].nav,worlds[1].options),0);
+ assert(newChecks<oldChecks,'Unfunded paid contour must avoid redundant placement queries');
+ assert.equal(serialize(worlds[0].s),serialize(worlds[1].s));
+ assert.equal(policies[1].report().history.at(-1).geometryCheckDeferred,true);
+ for(let k=0;k<2;k++){
+  worlds[k].options.reserve=160;
+  Game.tick(worlds[k].s,5,worlds[k].nav);
+ }
+ assert.equal(policies[0].act(worlds[0].s,worlds[0].nav,worlds[0].options),1);
+ assert.equal(policies[1].act(worlds[1].s,worlds[1].nav,worlds[1].options),1);
+ assert.equal(serialize(worlds[0].s),serialize(worlds[1].s));
+});

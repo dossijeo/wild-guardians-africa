@@ -58,17 +58,37 @@ export function createNativeFundedDefensePolicy({startDay=6,material='zarzas',in
    const cost=quoteRepair(w);if(numberOf(s.ledger.balance)>=(funding?.protectedCash??protectedCash)+pending+cost&&Game.requestRepair(s,command('repair'),w.id)){pending+=cost;repairRequests++;}
   }
   const repairFunding={policy:repairPolicy,breached:funding?.breached??null,protectedCash:funding?.protectedCash??protectedCash,pendingQuotedCoins:pending};
+  const discretionary=Math.max(0,numberOf(s.ledger.balance)-protectedCash-pending);
+  const onePieceFunded=(defenseFunding==='rolling'?Math.floor(discretionary/2):discretionary)>=spec.cost;
+  // A previously paid trace can be held without re-quoting it while no new
+  // piece is affordable. A funded attempt must still revalidate everything.
+  if(obstacleAware&&completed&&planned===completed&&!onePieceFunded){
+   history.push({day:s.day,time:s.time,protectedCash,repairFunding,pendingRepairCoins:pending,attempts:[],paidCost:0,paidPieces:0,remainingCost,complete:false,bounds:completed.bounds,reason:'unfunded-paid-contour-check-deferred',geometryCheckDeferred:true});
+   return 0;
+  }
   if(obstacleAware&&completed&&!planned){
    const polygon=completed.points.slice(0,-1).map(([x,z])=>({x,z}));
    const land=[...s.plants.filter(p=>p.alive),...s.structures.filter(operational).flatMap(c=>centerFootprint(c,s).footprint)];
    if(land.every(p=>containsPoint(polygon,p.x,p.z))){
     const slots=wallStroke(completed.points,[],options);
     const damaged=s.structures.filter(w=>slots.some(q=>sameSlot(q,w))&&(w.status!=='intact'||w.hp<=0));
-    if(damaged.length||coverage(s,nav,completed)){
+    if(damaged.length){
      // Broken paid walls are repaired/rebuilt through native worker tasks.
      // Never buy a second perimeter merely to route around our own damage.
      remainingCost=damaged.filter(w=>!s.tasks.some(t=>t.kind==='repair'&&t.targetId===w.id)).reduce((sum,w)=>sum+numberOf(Game.repairCost(w)),0);
-     history.push({day:s.day,time:s.time,protectedCash,repairFunding,pendingRepairCoins:pending,attempts:[],paidCost:0,paidPieces:0,remainingCost,complete:!damaged.length,bounds:completed.bounds,reason:damaged.length?'maintaining-paid-native-contour':'existing-paid-native-contour'});
+     history.push({day:s.day,time:s.time,protectedCash,repairFunding,pendingRepairCoins:pending,attempts:[],paidCost:0,paidPieces:0,remainingCost,complete:false,bounds:completed.bounds,reason:'maintaining-paid-native-contour'});
+     return 0;
+    }
+    if(!onePieceFunded){
+     // Preserve the exact paid trace in case a piece is missing. No wall
+     // command can succeed before the protected balance funds one piece.
+     planned=completed;remainingCost=0;
+     history.push({day:s.day,time:s.time,protectedCash,repairFunding,pendingRepairCoins:pending,attempts:[],paidCost:0,paidPieces:0,remainingCost,complete:false,bounds:completed.bounds,reason:'unfunded-paid-contour-check-deferred',geometryCheckDeferred:true});
+     return 0;
+    }
+    if(coverage(s,nav,completed)){
+     remainingCost=0;
+     history.push({day:s.day,time:s.time,protectedCash,repairFunding,pendingRepairCoins:pending,attempts:[],paidCost:0,paidPieces:0,remainingCost,complete:true,bounds:completed.bounds,reason:'existing-paid-native-contour'});
      return 0;
     }
     // A deleted piece without a repairable entity must be repurchased along
