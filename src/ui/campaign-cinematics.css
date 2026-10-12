@@ -1,0 +1,14 @@
+.campaign-cinema{position:fixed;inset:0;z-index:1000;background:#050503;color:#fff5dc;overflow:hidden;isolation:isolate;font-family:Banga,sans-serif;opacity:0;transition:opacity .55s ease}
+.campaign-cinema.is-open{opacity:1}
+.campaign-cinema__scene{position:absolute;inset:0;overflow:hidden;opacity:0;transition:opacity .45s ease}
+.campaign-cinema__scene.is-visible{opacity:1}
+.campaign-cinema__layer{position:absolute;left:50%;top:50%;width:max(100vw,177.778dvh);height:max(100dvh,56.25vw);translate:-50% -50%;object-fit:fill;animation:campaign-layer-drift var(--scene-duration) linear both;will-change:transform}
+@keyframes campaign-layer-drift{from{transform:translate3d(var(--sx),var(--sy),0) scale(var(--ss))}to{transform:translate3d(var(--ex),var(--ey),0) scale(var(--es))}}
+.campaign-cinema__shade{position:absolute;inset:40% 0 0;background:linear-gradient(transparent,#100e0ace);pointer-events:none}
+.campaign-cinema__caption{position:absolute;left:max(4vw,env(safe-area-inset-left));right:clamp(8rem,18vw,15rem);bottom:calc(4vh + env(safe-area-inset-bottom));z-index:2;text-shadow:0 2px 12px #000,0 1px 4px #000;font-size:clamp(1rem,2.3vw,1.8rem);line-height:1.28;max-width:70ch;margin:0}
+.campaign-cinema__skip{position:absolute;right:calc(2.5vw + env(safe-area-inset-right));bottom:calc(3vh + env(safe-area-inset-bottom));z-index:3;padding:.55em .9em;font-size:clamp(.8rem,1.4vw,1rem);border:1px solid #eacb92;border-radius:9px;background:#1e2c21dc;color:#fff5dc;min-height:40px}
+.campaign-cinema__veil{position:absolute;inset:0;z-index:4;background:#050503;opacity:1;pointer-events:none;transition:opacity .55s ease}
+.campaign-cinema__veil.is-clear{opacity:0}
+.campaign-cinema__status{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:5;color:#fff5dc;text-align:center}
+@media(max-width:600px){.campaign-cinema__caption{left:calc(4vw + env(safe-area-inset-left));right:calc(4vw + env(safe-area-inset-right));bottom:calc(4.8rem + env(safe-area-inset-bottom));font-size:clamp(.9rem,3.5vw,1.25rem)}.campaign-cinema__skip{bottom:calc(.7rem + env(safe-area-inset-bottom));right:calc(.8rem + env(safe-area-inset-right))}}
+@media(prefers-reduced-motion:reduce){.campaign-cinema__layer{animation:none;transform:none!important}.campaign-cinema,.campaign-cinema__scene,.campaign-cinema__veil{transition-duration:.12s}}
