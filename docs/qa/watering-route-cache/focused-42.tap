@@ -1,0 +1,222 @@
+TAP version 13
+# Subtest: recorded canyon route uses the physical corner corridor instead of walking around the entire center
+ok 1 - recorded canyon route uses the physical corner corridor instead of walking around the entire center
+  ---
+  duration_ms: 452.0808
+  ...
+# Subtest: new solids invalidate the shortcut rather than reusing a terrain-dependent cached corner route
+ok 2 - new solids invalidate the shortcut rather than reusing a terrain-dependent cached corner route
+  ---
+  duration_ms: 190.9513
+  ...
+# Subtest: suajili/0: corner candidates preserve rotated authored solid clearance
+ok 3 - suajili/0: corner candidates preserve rotated authored solid clearance
+  ---
+  duration_ms: 12.8023
+  ...
+# Subtest: suajili/0.67: corner candidates preserve rotated authored solid clearance
+ok 4 - suajili/0.67: corner candidates preserve rotated authored solid clearance
+  ---
+  duration_ms: 1.9174
+  ...
+# Subtest: suajili/1.8: corner candidates preserve rotated authored solid clearance
+ok 5 - suajili/1.8: corner candidates preserve rotated authored solid clearance
+  ---
+  duration_ms: 1.2303
+  ...
+# Subtest: etiope/0: corner candidates preserve rotated authored solid clearance
+ok 6 - etiope/0: corner candidates preserve rotated authored solid clearance
+  ---
+  duration_ms: 1.268
+  ...
+# Subtest: etiope/0.67: corner candidates preserve rotated authored solid clearance
+ok 7 - etiope/0.67: corner candidates preserve rotated authored solid clearance
+  ---
+  duration_ms: 1.2694
+  ...
+# Subtest: etiope/1.8: corner candidates preserve rotated authored solid clearance
+ok 8 - etiope/1.8: corner candidates preserve rotated authored solid clearance
+  ---
+  duration_ms: 1.0688
+  ...
+# Subtest: mapungubwe/0: corner candidates preserve rotated authored solid clearance
+ok 9 - mapungubwe/0: corner candidates preserve rotated authored solid clearance
+  ---
+  duration_ms: 5.2359
+  ...
+# Subtest: mapungubwe/0.67: corner candidates preserve rotated authored solid clearance
+ok 10 - mapungubwe/0.67: corner candidates preserve rotated authored solid clearance
+  ---
+  duration_ms: 1.7733
+  ...
+# Subtest: mapungubwe/1.8: corner candidates preserve rotated authored solid clearance
+ok 11 - mapungubwe/1.8: corner candidates preserve rotated authored solid clearance
+  ---
+  duration_ms: 1.1596
+  ...
+# Subtest: saheliana/0: corner candidates preserve rotated authored solid clearance
+ok 12 - saheliana/0: corner candidates preserve rotated authored solid clearance
+  ---
+  duration_ms: 0.6468
+  ...
+# Subtest: saheliana/0.67: corner candidates preserve rotated authored solid clearance
+ok 13 - saheliana/0.67: corner candidates preserve rotated authored solid clearance
+  ---
+  duration_ms: 0.5784
+  ...
+# Subtest: saheliana/1.8: corner candidates preserve rotated authored solid clearance
+ok 14 - saheliana/1.8: corner candidates preserve rotated authored solid clearance
+  ---
+  duration_ms: 0.6586
+  ...
+# Subtest: musgum/0: corner candidates preserve rotated authored solid clearance
+ok 15 - musgum/0: corner candidates preserve rotated authored solid clearance
+  ---
+  duration_ms: 0.7415
+  ...
+# Subtest: musgum/0.67: corner candidates preserve rotated authored solid clearance
+ok 16 - musgum/0.67: corner candidates preserve rotated authored solid clearance
+  ---
+  duration_ms: 1.0641
+  ...
+# Subtest: musgum/1.8: corner candidates preserve rotated authored solid clearance
+ok 17 - musgum/1.8: corner candidates preserve rotated authored solid clearance
+  ---
+  duration_ms: 1.1539
+  ...
+# Subtest: fractional candidates do not bypass fluid restrictions or increase work without a large detour
+ok 18 - fractional candidates do not bypass fluid restrictions or increase work without a large detour
+  ---
+  duration_ms: 137.7071
+  ...
+# Subtest: native swept fluid tests reject all short corner routes across a pond
+ok 19 - native swept fluid tests reject all short corner routes across a pond
+  ---
+  duration_ms: 115.5751
+  ...
+# Subtest: geometric candidate reuse never caches physical admission or exposes shared route points
+ok 20 - geometric candidate reuse never caches physical admission or exposes shared route points
+  ---
+  duration_ms: 23.7123
+  ...
+# Subtest: candidate cache is bounded and invalidates for topology epoch and obstacle identity
+ok 21 - candidate cache is bounded and invalidates for topology epoch and obstacle identity
+  ---
+  duration_ms: 7.6163
+  ...
+# (node:51376) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: watering cannot bridge a canyon cliff even when horizontal coordinates are close
+ok 22 - watering cannot bridge a canyon cliff even when horizontal coordinates are close
+  ---
+  duration_ms: 6.8777
+  ...
+# Subtest: a saved watering action on the wrong elevation never irrigates or starts growth
+ok 23 - a saved watering action on the wrong elevation never irrigates or starts growth
+  ---
+  duration_ms: 39.5863
+  ...
+# Subtest: a legally planted native canyon plateau crop stays dormant without a physical worker route
+ok 24 - a legally planted native canyon plateau crop stays dormant without a physical worker route
+  ---
+  duration_ms: 33830.8181
+  ...
+# Subtest: olderMale: paid first watering stands outside the crop and faces it; reload preserves the approach
+ok 25 - olderMale: paid first watering stands outside the crop and faces it; reload preserves the approach
+  ---
+  duration_ms: 43.0885
+  ...
+# Subtest: olderFemale: paid first watering stands outside the crop and faces it; reload preserves the approach
+ok 26 - olderFemale: paid first watering stands outside the crop and faces it; reload preserves the approach
+  ---
+  duration_ms: 40.0182
+  ...
+# Subtest: youngMale: paid first watering stands outside the crop and faces it; reload preserves the approach
+ok 27 - youngMale: paid first watering stands outside the crop and faces it; reload preserves the approach
+  ---
+  duration_ms: 42.84
+  ...
+# Subtest: youngFemale: paid first watering stands outside the crop and faces it; reload preserves the approach
+ok 28 - youngFemale: paid first watering stands outside the crop and faces it; reload preserves the approach
+  ---
+  duration_ms: 27.7983
+  ...
+# Subtest: watering approaches avoid solids and fluid, except canyon water, and reject inaccessible slopes
+ok 29 - watering approaches avoid solids and fluid, except canyon water, and reject inaccessible slopes
+  ---
+  duration_ms: 2.5566
+  ...
+# Subtest: native Canyon watering detour 1 uses a shorter physically valid side
+ok 30 - native Canyon watering detour 1 uses a shorter physically valid side
+  ---
+  duration_ms: 253.4359
+  ...
+# Subtest: native Canyon watering detour 10 uses a shorter physically valid side
+ok 31 - native Canyon watering detour 10 uses a shorter physically valid side
+  ---
+  duration_ms: 145.0463
+  ...
+# Subtest: ordinary unobstructed watering keeps its single path query
+ok 32 - ordinary unobstructed watering keeps its single path query
+  ---
+  duration_ms: 1.1029
+  ...
+# Subtest: unsuccessful preflight is bounded and retains the ordinary A* fallback
+ok 33 - unsuccessful preflight is bounded and retains the ordinary A* fallback
+  ---
+  duration_ms: 3.7669
+  ...
+# Subtest: clear native approach avoids A* and retains the near-side stand-off
+ok 34 - clear native approach avoids A* and retains the near-side stand-off
+  ---
+  duration_ms: 0.4333
+  ...
+# Subtest: an exact successful query is reused without sharing its mutable route
+ok 35 - an exact successful query is reused without sharing its mutable route
+  ---
+  duration_ms: 4.3995
+  ...
+# Subtest: unreachable exact queries are reused; geometry epochs and world identities reopen them
+ok 36 - unreachable exact queries are reused; geometry epochs and world identities reopen them
+  ---
+  duration_ms: 2.7292
+  ...
+# Subtest: coordinates, body radius, species, crop identity and avoided terrain remain exact inputs
+ok 37 - coordinates, body radius, species, crop identity and avoided terrain remain exact inputs
+  ---
+  duration_ms: 0.6316
+  ...
+# Subtest: changed query implementations invalidate, and unversioned adapters are never memoized
+ok 38 - changed query implementations invalidate, and unversioned adapters are never memoized
+  ---
+  duration_ms: 0.3727
+  ...
+# Subtest: a geometry change during computation cannot publish under the previous epoch
+ok 39 - a geometry change during computation cannot publish under the previous epoch
+  ---
+  duration_ms: 0.4056
+  ...
+# Subtest: entry and point budgets evict or reject instead of retaining unbounded queries
+ok 40 - entry and point budgets evict or reject instead of retaining unbounded queries
+  ---
+  duration_ms: 83.4183
+  ...
+# Subtest: native canyon 1 matches frozen uncached routes, including repeats and reload
+ok 41 - native canyon 1 matches frozen uncached routes, including repeats and reload
+  ---
+  duration_ms: 224.0186
+  ...
+# Subtest: native canyon 10 matches frozen uncached routes, including repeats and reload
+ok 42 - native canyon 10 matches frozen uncached routes, including repeats and reload
+  ---
+  duration_ms: 180.023
+  ...
+1..42
+# tests 42
+# suites 0
+# pass 42
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 35376.4124

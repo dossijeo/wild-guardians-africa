@@ -1,0 +1,50 @@
+TAP version 13
+# Subtest: an exact successful query is reused without sharing its mutable route
+ok 1 - an exact successful query is reused without sharing its mutable route
+  ---
+  duration_ms: 5.0865
+  ...
+# Subtest: unreachable exact queries are reused; geometry epochs and world identities reopen them
+ok 2 - unreachable exact queries are reused; geometry epochs and world identities reopen them
+  ---
+  duration_ms: 1.8344
+  ...
+# Subtest: coordinates, body radius, species, crop identity and avoided terrain remain exact inputs
+ok 3 - coordinates, body radius, species, crop identity and avoided terrain remain exact inputs
+  ---
+  duration_ms: 1.3659
+  ...
+# Subtest: changed query implementations invalidate, and unversioned adapters are never memoized
+ok 4 - changed query implementations invalidate, and unversioned adapters are never memoized
+  ---
+  duration_ms: 0.6246
+  ...
+# Subtest: a geometry change during computation cannot publish under the previous epoch
+ok 5 - a geometry change during computation cannot publish under the previous epoch
+  ---
+  duration_ms: 0.4361
+  ...
+# Subtest: entry and point budgets evict or reject instead of retaining unbounded queries
+ok 6 - entry and point budgets evict or reject instead of retaining unbounded queries
+  ---
+  duration_ms: 73.0919
+  ...
+# Subtest: native canyon 1 matches frozen uncached routes, including repeats and reload
+ok 7 - native canyon 1 matches frozen uncached routes, including repeats and reload
+  ---
+  duration_ms: 169.4093
+  ...
+# Subtest: native canyon 10 matches frozen uncached routes, including repeats and reload
+ok 8 - native canyon 10 matches frozen uncached routes, including repeats and reload
+  ---
+  duration_ms: 165.3628
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 963.7657
