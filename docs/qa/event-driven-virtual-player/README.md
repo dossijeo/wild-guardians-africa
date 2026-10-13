@@ -339,6 +339,23 @@ seconds and candidate 3.44/3.43 seconds, also with identical states. See
 The 94 focused navigation, actor-motion and raid tests and the web build
 passed. The remaining 16-second day-12 slice still prevents treating the
 100-night campaign runtime as solved.
+The retained native replay showed 55,242 approach attempts but only 5,668
+distinct actor/rounded-service-cell combinations; 55,144 attempts reused a
+combination at least once (`day12-approach-cell-reuse.json`). A candidate
+that combined several exhausted-region certificates to reject a whole cell
+preserved the state but did not improve time: reference 16.21/17.00 seconds,
+candidate 16.81/16.58 seconds. It was removed; the comparison is saved as
+`day12-composite-region-proof-abba.json`.
+
+The V8 CPU profile in `day12-native-astar.cpuprofile` was captured with
+`tools/experiments/replay-native-tick.mjs` from the same frozen snapshot.
+Largest self-time samples were `findPathSteps` 5.64 s, `findPath` 2.34 s,
+`searchNeighbors` 2.11 s, and procedural terrain `lattice` 1.62 s; garbage
+collection accounted for 0.97 s. Raising the search-neighbor cache from
+4,096 to 8,192 entries was tested and removed: reference 15.91/17.33 s,
+candidate 16.87/17.81 s (`day12-neighbor-cache-8192-abba.json`). The larger
+cache did not relieve the repeated A* work and offered no favorable
+memory/time tradeoff.
 The focused simulation, rendering, and virtual-player regressions passed,
 and the web build passed. The full repository suite was attempted but stopped
 after its legacy `campaign.test.js` child continued consuming CPU for more

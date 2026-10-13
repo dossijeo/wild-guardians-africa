@@ -1,0 +1,107 @@
+{
+  "input": "docs/qa/event-driven-virtual-player/pilot-expansive-sabana-123-day12-before-365/checkpoint-state.json.gz",
+  "day": 12,
+  "time": 370.0000000000159,
+  "historyBefore": 1194,
+  "livingAfter": 266,
+  "tickMilliseconds": 16247.4485,
+  "phases": {
+    "raid-update": {
+      "calls": 51,
+      "milliseconds": 15112.845899999995,
+      "maxMilliseconds": 13610.456499999998,
+      "approachMilliseconds": 0,
+      "groupMilliseconds": 0,
+      "approachChecks": 0,
+      "groupChecks": 0
+    },
+    "target-selection": {
+      "calls": 17,
+      "milliseconds": 15035.859000000002,
+      "maxMilliseconds": 2490.4943,
+      "approachMilliseconds": 0,
+      "groupMilliseconds": 0,
+      "approachChecks": 0,
+      "groupChecks": 0
+    },
+    "target-detail": {
+      "calls": 17,
+      "milliseconds": 280.2318999999984,
+      "maxMilliseconds": 51.507399999984045,
+      "approachMilliseconds": 13766.591699999972,
+      "groupMilliseconds": 280.2318999999984,
+      "approachChecks": 1923,
+      "groupChecks": 1924
+    },
+    "worker-update": {
+      "calls": 51,
+      "milliseconds": 48.76539999999696,
+      "maxMilliseconds": 29.961900000000014,
+      "approachMilliseconds": 0,
+      "groupMilliseconds": 0,
+      "approachChecks": 0,
+      "groupChecks": 0
+    }
+  },
+  "calls": {
+    "approachPath": {
+      "count": 55242,
+      "success": 22,
+      "milliseconds": 12557.69390000036
+    },
+    "approachReachability": {
+      "count": 125,
+      "milliseconds": 916.9934999999932
+    },
+    "approachGroupBlocked": {
+      "count": 1924,
+      "rejected": 0,
+      "milliseconds": 278.5521000000051
+    }
+  },
+  "segments": {
+    "short": {
+      "count": 69501,
+      "rejected": 4854,
+      "milliseconds": 2577.954499999698
+    },
+    "medium": {
+      "count": 1912,
+      "rejected": 519,
+      "milliseconds": 170.09460000002363
+    },
+    "long": {
+      "count": 61564,
+      "rejected": 61484,
+      "milliseconds": 1608.1636999998946
+    }
+  },
+  "approachCellReuse": {
+    "unique": 5668,
+    "topCounts": [
+      20,
+      20,
+      20,
+      20,
+      20,
+      20,
+      20,
+      20,
+      20,
+      20,
+      19,
+      19,
+      19,
+      19,
+      19,
+      19,
+      19,
+      19,
+      19,
+      19
+    ],
+    "repeatedCells": 5570,
+    "repeatedCalls": 55144
+  },
+  "stateChanged": true
+}

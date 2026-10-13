@@ -19,6 +19,7 @@ nav.setRaidView({x:pose.eye[0],z:pose.eye[2]},center);
 nav.setActiveBounds(activeChunkRegion({x:pose.eye[0],z:pose.eye[2]}).bounds);
 const phases=new Map();
 const calls={approachPath:{count:0,success:0,milliseconds:0},approachReachability:{count:0,milliseconds:0},approachGroupBlocked:{count:0,rejected:0,milliseconds:0}};
+const approachCells=new Map();
 const segments={short:{count:0,rejected:0,milliseconds:0},medium:{count:0,rejected:0,milliseconds:0},long:{count:0,rejected:0,milliseconds:0}};
 const segmentClear=nav.segmentClear.bind(nav);
 nav.segmentClear=(start,end,...args)=>{
@@ -34,6 +35,10 @@ for(const name of Object.keys(calls)){
   try{result=original(...args);return result;}
   finally{
    metric.count++;metric.milliseconds+=performance.now()-started;
+   if(name==='approachPath'){
+    const [actor,point,radius]=args,k=JSON.stringify([actor.x,actor.z,Math.round(point.x),Math.round(point.z),radius]);
+    approachCells.set(k,(approachCells.get(k)??0)+1);
+   }
    if(name==='approachPath'&&result)metric.success++;
    if(name==='approachGroupBlocked'&&result)metric.rejected++;
   }
@@ -50,5 +55,6 @@ nav.__nativeTickPhaseTrace=row=>{
  phases.set(row.phase,value);
 };
 const before=serialize(s),started=performance.now();Game.tick(s,5,nav);
-const result={input,day:s.day,time:s.time,historyBefore:JSON.parse(before).plants.length,livingAfter:s.plants.filter(p=>p.alive).length,tickMilliseconds:performance.now()-started,phases:Object.fromEntries([...phases].sort((a,b)=>b[1].milliseconds-a[1].milliseconds)),calls,segments,stateChanged:serialize(s)!==before};
+const approachCellFrequencies=[...approachCells.values()].sort((a,b)=>b-a);
+const result={input,day:s.day,time:s.time,historyBefore:JSON.parse(before).plants.length,livingAfter:s.plants.filter(p=>p.alive).length,tickMilliseconds:performance.now()-started,phases:Object.fromEntries([...phases].sort((a,b)=>b[1].milliseconds-a[1].milliseconds)),calls,segments,approachCellReuse:{unique:approachCells.size,topCounts:approachCellFrequencies.slice(0,20),repeatedCells:approachCellFrequencies.filter(n=>n>1).length,repeatedCalls:approachCellFrequencies.filter(n=>n>1).reduce((a,b)=>a+b,0)},stateChanged:serialize(s)!==before};
 writeFileSync(output,JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));
