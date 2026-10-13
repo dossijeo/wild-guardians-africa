@@ -8,6 +8,7 @@ import {Navigation} from '../../src/world/navigation.js';
 import {TerrainField} from '../../src/world/terrain.js';
 import {nativeTerrainBuffer} from '../../src/rendering/terrain-geometry.js';
 import {nativeWaterBuffer} from '../../src/rendering/water-geometry.js';
+import {SpatialSurfaceView} from '../../src/world/hierarchical-wasm/spatial-surface-view.js';
 
 const status=document.querySelector('#status'),now=()=>performance.now();
 function request(worker,message){
@@ -69,8 +70,14 @@ try{
     format:sceneFormat?'scene':'raw',settlement:settlement?{x:10,z:8,hx:7,hz:6}:null});
   const candidateSecond=await request(candidate,{id:4,seed,cx:1,cz:0,radius:1.1,
     format:sceneFormat?'scene':'raw'});
-  let topology=null,multipleSettlements=null;
+  let topology=null,multipleSettlements=null,surfaceView=null;
   if(sceneFormat){
+    const view=new SpatialSurfaceView();view.install(candidateFirst.data);view.install(candidateSecond.data);
+    const query={x:30.3,z:5.7};
+    const exact=await request(candidate,{id:190,op:'surface',...query});
+    if(Math.abs(view.surface(query.x,query.z)-exact.value)>.00002)
+      throw Error('Transferred terrain view differs from WASM surface');
+    surfaceView={sample:query,height:view.surface(query.x,query.z),difference:Math.abs(view.surface(query.x,query.z)-exact.value)};
     let crossing=null,id=5;
     for(let z=-18;z<=18;z++){
       const edge=await request(candidate,{id:id++,op:'edge',x:23,z,nx:24,nz:z});
@@ -156,10 +163,11 @@ try{
     ...result.timing,three:prepareThree(result.data,result.cx,result.cz),
     props:sceneFormat?result.data.instances.reduce((n,list)=>n+list.length,0):result.data.count,
     metrics:result.metrics}));
-  window.qaStats={seed,sceneFormat,settlement,current,spatial,topology,multipleSettlements,
+  window.qaStats={seed,sceneFormat,settlement,current,spatial,topology,multipleSettlements,surfaceView,
     checks:{transferLengths:true,terrainSeam:true,wallEdit:!!topology,
       evictionRegeneration:topology?.sameVisualPayload===true,
-      multipleSettlements:multipleSettlements?.sameFirstSettlement===true}};window.qaReady=true;
+      multipleSettlements:multipleSettlements?.sameFirstSettlement===true,
+      surfaceView:surfaceView?.difference<=.00002}};window.qaReady=true;
   status.textContent=JSON.stringify(window.qaStats,null,2);
 }catch(error){window.qaError=String(error.stack??error);status.textContent=window.qaError;}
 </script></body></html>

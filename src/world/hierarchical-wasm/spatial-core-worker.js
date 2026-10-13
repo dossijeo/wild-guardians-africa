@@ -40,6 +40,7 @@ self.onmessage=async({data:request})=>{
         case 'chunk-remove':value=wasm.spatial_remove_chunk(request.cx,request.cz);break;
         case 'settlement-add':value=wasm.spatial_add_settlement(request.x,request.z,request.hx,request.hz);break;
         case 'profile':value=wasm.spatial_select_nav_profile(request.worker?1:0);break;
+        case 'surface':value=wasm.spatial_surface(request.x,request.z);break;
         default:throw Error(`Unknown spatial operation: ${request.op}`);
       }
       self.postMessage({id:request.id,value,

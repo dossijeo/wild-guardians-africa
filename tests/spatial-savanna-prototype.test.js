@@ -5,6 +5,7 @@ import {createSpatialSavannaPrototype} from '../src/world/hierarchical-wasm/spat
 import {nativeTerrainBuffer} from '../src/rendering/terrain-geometry.js';
 import {nativeWaterBuffer} from '../src/rendering/water-geometry.js';
 import {chunkTransferables} from '../src/rendering/chunk-data.js';
+import {SpatialSurfaceView} from '../src/world/hierarchical-wasm/spatial-surface-view.js';
 
 const module=new WebAssembly.Module(readFileSync(new URL('../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
 function validRoute(core,start,result){
@@ -81,6 +82,34 @@ test('a WASM chunk uses the production render payload contract and transfers wit
   assert.equal(ground.getAttribute('normal').count,2401);
   assert(received.instances.reduce((count,slot)=>count+slot.length,0)>0);
   ground.dispose();river?.dispose();
+});
+test('the JS surface view samples only transferred WASM triangles across chunks and site updates',()=>{
+  const core=createSpatialSavannaPrototype(module),view=new SpatialSurfaceView();
+  core.generate(712,0,0);
+  for(const cx of [0,1]){
+    if(cx)core.addChunk(cx,0);
+    view.install(core.chunkPayload());
+    for(let i=0;i<250;i++){
+      const x=cx*48-23.9+(i*.61803398875%1)*47.8;
+      const z=-23.9+(i*.41421356237%1)*47.8;
+      assert(Math.abs(view.surface(x,z)-core.surface(x,z))<.00002,`surface mismatch at ${x},${z}`);
+    }
+  }
+  assert.equal(view.size,2);
+  core.selectChunk(1,0);
+  assert(Math.abs(view.surface(24,0)-core.surface(24,0))<.00002);
+  assert.equal(view.surface(96,0),undefined,'unloaded terrain remains unknown');
+  core.selectChunk(0,0);
+  const before=Float32Array.from(core.chunkPayload().terrain.positions);
+  core.setSettlement(10,8,7,6);
+  view.install(core.chunkPayload());
+  assert.notDeepEqual(Array.from(core.chunkPayload().terrain.positions),Array.from(before));
+  assert(Math.abs(view.surface(14,10)-core.surface(14,10))<.00002);
+  core.removeChunk(1,0);view.remove(1,0);
+  assert.equal(view.surface(25,0),undefined);
+  assert(Math.abs(view.surface(24,0)-core.surface(24,0))<.00002,
+    'the west chunk retains its shared edge when its neighbor is evicted');
+  view.clear();assert.equal(view.size,0);
 });
 test('a settlement command flattens and clears the same C++ terrain used for navigation',()=>{
   const core=createSpatialSavannaPrototype(module);

@@ -2,6 +2,7 @@
 #include <array>
 #include <cmath>
 #include <cstdint>
+#include <limits>
 #include <unordered_map>
 #include <vector>
 
@@ -623,6 +624,12 @@ float spatial_add_settlement(float x,float z,float hx,float hz){
   return float(site.y);
 }
 int spatial_sector_slots(){return lazy_sector_slots();}
+float spatial_surface(float x,float z){
+  if(!std::isfinite(x)||!std::isfinite(z)||loadedChunks.empty()||
+    x<chunkX*side-24||x>chunkX*side+24||z<chunkZ*side-24||z>chunkZ*side+24)
+    return std::numeric_limits<float>::quiet_NaN();
+  return float(surface(x,z));
+}
 float* spatial_heights_ptr(){return heights.data();}
 float* spatial_colors_ptr(){return colors.data();}
 uint8_t* spatial_water_ptr(){return water.data();}

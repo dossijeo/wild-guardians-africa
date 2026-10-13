@@ -107,6 +107,7 @@ export function createSpatialSavannaPrototype(module){
     walkable:(x,z)=>Boolean(wasm.spatial_walkable(x,z)),
     edge:(x,z,nx,nz)=>Boolean(wasm.spatial_edge(x,z,nx,nz)),
     propBlocked:(x,z)=>Boolean(wasm.spatial_prop_blocked(x,z)),
+    surface:(x,z)=>wasm.spatial_surface(x,z),
     metrics:()=>({memoryBytes:wasm.memory.buffer.byteLength,loadedChunks:wasm.spatial_chunk_count(),loadedSectors:wasm.lazy_loaded_sectors(),
       sectorSlots:wasm.spatial_sector_slots(),
       sectorUpdates:wasm.lazy_sector_updates(),haloProps:wasm.spatial_halo_prop_count()})};
